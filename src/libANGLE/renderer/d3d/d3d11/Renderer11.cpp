@@ -1639,9 +1639,7 @@ gl::Error Renderer11::drawElements(const gl::Context *context,
         return gl::NoError();
     }
 
-    const gl::IndexRange &indexRange =
-        context->getParams<gl::HasIndexRange>().getIndexRange().value();
-    indexInfo.indexRange = indexRange;
+    indexInfo.indexRange = context->getParams<gl::HasIndexRange>().getIndexRange().value();
 
     ANGLE_TRY(mStateManager.applyIndexBuffer(context, indices, count, type, &indexInfo));
     size_t vertexCount = indexInfo.indexRange.vertexCount();
@@ -1902,7 +1900,7 @@ gl::Error Renderer11::drawLineLoop(const gl::Context *context,
     const d3d11::Buffer &d3dIndexBuffer = indexBuffer->getBuffer();
     DXGI_FORMAT indexFormat      = indexBuffer->getIndexFormat();
 
-    mStateManager.setIndexBuffer(d3dIndexBuffer.get(), indexFormat, offset, false);
+    mStateManager.setIndexBuffer(d3dIndexBuffer.get(), indexFormat, offset);
 
     UINT indexCount = static_cast<UINT>(mScratchIndexDataBuffer.size());
 
@@ -1985,7 +1983,7 @@ gl::Error Renderer11::drawTriangleFan(const gl::Context *context,
     const d3d11::Buffer &d3dIndexBuffer = indexBuffer->getBuffer();
     DXGI_FORMAT indexFormat      = indexBuffer->getIndexFormat();
 
-    mStateManager.setIndexBuffer(d3dIndexBuffer.get(), indexFormat, offset, false);
+    mStateManager.setIndexBuffer(d3dIndexBuffer.get(), indexFormat, offset);
 
     UINT indexCount = static_cast<UINT>(mScratchIndexDataBuffer.size());
 

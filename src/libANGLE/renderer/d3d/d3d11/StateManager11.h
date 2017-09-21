@@ -244,10 +244,7 @@ class StateManager11 final : angle::NonCopyable
                                GLenum type,
                                TranslatedIndexData *indexInfo);
 
-    void setIndexBuffer(ID3D11Buffer *buffer,
-                        DXGI_FORMAT indexFormat,
-                        unsigned int offset,
-                        bool indicesChanged);
+    bool setIndexBuffer(ID3D11Buffer *buffer, DXGI_FORMAT indexFormat, unsigned int offset);
 
     gl::Error updateVertexOffsetsForPointSpritesEmulation(GLint startVertex,
                                                           GLsizei emulatedInstanceId);

@@ -2490,12 +2490,6 @@ gl::Error StateManager11::applyVertexBuffer(const gl::Context *context,
 
     ANGLE_TRY(syncCurrentValueAttribs(state));
 
-    // If index information is passed, mark it with the current changed status.
-    if (indexInfo)
-    {
-        indexInfo->srcIndexData.srcIndicesChanged = mAppliedIBChanged;
-    }
-
     if (!mLastFirstVertex.valid() || mLastFirstVertex.value() != first)
     {
         mLastFirstVertex    = first;
@@ -2586,16 +2580,16 @@ gl::Error StateManager11::applyIndexBuffer(const gl::Context *context,
         buffer                     = indexBuffer->getBuffer().get();
     }
 
-    mAppliedIBChanged = false;
-    setIndexBuffer(buffer, bufferFormat, indexInfo->startOffset, true);
+    // Track dirty indices in the index range cache.
+    indexInfo->srcIndexData.srcIndicesChanged =
+        setIndexBuffer(buffer, bufferFormat, indexInfo->startOffset);
 
     return gl::NoError();
 }
 
-void StateManager11::setIndexBuffer(ID3D11Buffer *buffer,
+bool StateManager11::setIndexBuffer(ID3D11Buffer *buffer,
                                     DXGI_FORMAT indexFormat,
-                                    unsigned int offset,
-                                    bool indicesChanged)
+                                    unsigned int offset)
 {
     if (buffer != mAppliedIB || indexFormat != mAppliedIBFormat || offset != mAppliedIBOffset)
     {
@@ -2604,12 +2598,10 @@ void StateManager11::setIndexBuffer(ID3D11Buffer *buffer,
         mAppliedIB       = buffer;
         mAppliedIBFormat = indexFormat;
         mAppliedIBOffset = offset;
-
-        if (indicesChanged)
-        {
-            mAppliedIBChanged = true;
-        }
+        return true;
     }
+
+    return false;
 }
 
 // Vertex buffer is invalidated outside this function.

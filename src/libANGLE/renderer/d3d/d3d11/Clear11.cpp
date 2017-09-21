@@ -796,7 +796,7 @@ gl::Error Clear11::clearFramebuffer(const gl::Context *context,
     stateManager->setPixelConstantBuffer(0, &mConstantBuffer);
 
     // Bind IL & VB if needed
-    stateManager->setIndexBuffer(nullptr, DXGI_FORMAT_UNKNOWN, 0, false);
+    stateManager->setIndexBuffer(nullptr, DXGI_FORMAT_UNKNOWN, 0);
     stateManager->setInputLayout(il);
 
     if (useVertexBuffer())

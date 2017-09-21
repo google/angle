@@ -263,8 +263,7 @@ gl::Error InputLayoutCache::applyVertexBuffers(
             // non-indexed rendering path in ANGLE (DrawArrays). This means that applyIndexBuffer()
             // on the renderer will not be called and setting this buffer here ensures that the
             // rendering path will contain the correct index buffers.
-            stateManager->setIndexBuffer(mPointSpriteIndexBuffer.get(), DXGI_FORMAT_R16_UINT, 0,
-                                         false);
+            stateManager->setIndexBuffer(mPointSpriteIndexBuffer.get(), DXGI_FORMAT_R16_UINT, 0);
         }
     }
 
