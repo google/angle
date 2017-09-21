@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "54e5fb9d_f3c9144a",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2024,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-21T13:57:27Z",
+      "side": 1,
+      "message": "Can you remove the \"static\" and put these functions in the anonymous namespace at the top of the file?",
+      "revId": "95edacf3b07b19af953380001a689b37272b8be4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
