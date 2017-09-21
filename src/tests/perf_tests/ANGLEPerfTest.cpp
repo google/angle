@@ -27,6 +27,8 @@ void OverrideWorkaroundsD3D(angle::PlatformMethods *platform, angle::Workarounds
 }
 }  // namespace
 
+bool g_OnlyOneRunFrame = false;
+
 ANGLEPerfTest::ANGLEPerfTest(const std::string &name, const std::string &suffix)
     : mName(name),
       mSuffix(suffix),
@@ -58,7 +60,7 @@ void ANGLEPerfTest::run()
         {
             ++mNumStepsPerformed;
         }
-        if (mTimer->getElapsedTime() > mRunTimeSeconds)
+        if (mTimer->getElapsedTime() > mRunTimeSeconds || g_OnlyOneRunFrame)
         {
             mRunning = false;
         }

@@ -120,4 +120,6 @@ class ANGLERenderTest : public ANGLEPerfTest
     angle::PlatformMethods mPlatformMethods;
 };
 
+extern bool g_OnlyOneRunFrame;
+
 #endif // PERF_TESTS_ANGLE_PERF_TEST_H_
