@@ -33,7 +33,7 @@ namespace
 gl::Error MarkAttachmentsDirty(const gl::Context *context,
                                const gl::FramebufferAttachment *attachment)
 {
-    if (attachment && attachment->type() == GL_TEXTURE)
+    if (attachment->type() == GL_TEXTURE)
     {
         gl::Texture *texture = attachment->getTexture();
 
@@ -98,16 +98,19 @@ Framebuffer11::~Framebuffer11()
 
 gl::Error Framebuffer11::markAttachmentsDirty(const gl::Context *context) const
 {
-    for (const auto &colorAttachment : mState.getColorAttachments())
+    const auto &colorAttachments = mState.getColorAttachments();
+    for (size_t drawBuffer : mState.getEnabledDrawBuffers())
     {
-        if (colorAttachment.isAttached())
-        {
-            ANGLE_TRY(MarkAttachmentsDirty(context, &colorAttachment));
-        }
+        const gl::FramebufferAttachment &colorAttachment = colorAttachments[drawBuffer];
+        ASSERT(colorAttachment.isAttached());
+        ANGLE_TRY(MarkAttachmentsDirty(context, &colorAttachment));
     }
 
-    ANGLE_TRY(MarkAttachmentsDirty(context, mState.getDepthAttachment()));
-    ANGLE_TRY(MarkAttachmentsDirty(context, mState.getStencilAttachment()));
+    auto dsAttachment = mState.getDepthOrStencilAttachment();
+    if (dsAttachment)
+    {
+        ANGLE_TRY(MarkAttachmentsDirty(context, dsAttachment));
+    }
 
     return gl::NoError();
 }
