@@ -84,7 +84,7 @@ class FramebufferD3D : public FramebufferImpl
                          const gl::Rectangle &area,
                          GLenum format,
                          GLenum type,
-                         void *pixels) const override;
+                         void *pixels) override;
 
     gl::Error blit(const gl::Context *context,
                    const gl::Rectangle &sourceArea,
@@ -108,7 +108,7 @@ class FramebufferD3D : public FramebufferImpl
                                      GLenum type,
                                      size_t outputPitch,
                                      const gl::PixelPackState &pack,
-                                     uint8_t *pixels) const = 0;
+                                     uint8_t *pixels) = 0;
 
     virtual gl::Error blitImpl(const gl::Context *context,
                                const gl::Rectangle &sourceArea,

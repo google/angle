@@ -65,7 +65,7 @@ class Framebuffer11 : public FramebufferD3D, public OnRenderTargetDirtyReceiver
                              GLenum type,
                              size_t outputPitch,
                              const gl::PixelPackState &pack,
-                             uint8_t *pixels) const override;
+                             uint8_t *pixels) override;
 
     gl::Error blitImpl(const gl::Context *context,
                        const gl::Rectangle &sourceArea,

@@ -83,7 +83,7 @@ gl::Error Framebuffer9::readPixelsImpl(const gl::Context *context,
                                        GLenum type,
                                        size_t outputPitch,
                                        const gl::PixelPackState &pack,
-                                       uint8_t *pixels) const
+                                       uint8_t *pixels)
 {
     ASSERT(pack.pixelBuffer.get() == nullptr);
 

@@ -239,7 +239,7 @@ gl::Error FramebufferD3D::readPixels(const gl::Context *context,
                                      const gl::Rectangle &origArea,
                                      GLenum format,
                                      GLenum type,
-                                     void *pixels) const
+                                     void *pixels)
 {
     // Clip read area to framebuffer.
     const gl::Extents fbSize = getState().getReadAttachment()->getSize();

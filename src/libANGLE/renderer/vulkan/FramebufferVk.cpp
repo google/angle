@@ -81,12 +81,20 @@ FramebufferVk *FramebufferVk::CreateDefaultFBO(const gl::FramebufferState &state
 }
 
 FramebufferVk::FramebufferVk(const gl::FramebufferState &state)
-    : FramebufferImpl(state), mBackbuffer(nullptr), mRenderPass(), mFramebuffer()
+    : FramebufferImpl(state),
+      mBackbuffer(nullptr),
+      mRenderPass(),
+      mFramebuffer(),
+      mInRenderPass(false)
 {
 }
 
 FramebufferVk::FramebufferVk(const gl::FramebufferState &state, WindowSurfaceVk *backbuffer)
-    : FramebufferImpl(state), mBackbuffer(backbuffer), mRenderPass(), mFramebuffer()
+    : FramebufferImpl(state),
+      mBackbuffer(backbuffer),
+      mRenderPass(),
+      mFramebuffer(),
+      mInRenderPass(false)
 {
 }
 
@@ -96,6 +104,8 @@ FramebufferVk::~FramebufferVk()
 
 void FramebufferVk::destroy(const gl::Context *context)
 {
+    ASSERT(!mInRenderPass);
+
     VkDevice device = GetImplAs<ContextVk>(context)->getDevice();
 
     mRenderPass.destroy(device);
@@ -257,7 +267,7 @@ gl::Error FramebufferVk::readPixels(const gl::Context *context,
                                     const gl::Rectangle &area,
                                     GLenum format,
                                     GLenum type,
-                                    void *pixels) const
+                                    void *pixels)
 {
     const auto &glState         = context->getGLState();
     const auto *readFramebuffer = glState.getReadFramebuffer();
@@ -277,6 +287,9 @@ gl::Error FramebufferVk::readPixels(const gl::Context *context,
 
     vk::CommandBuffer *commandBuffer = nullptr;
     ANGLE_TRY(contextVk->getStartedCommandBuffer(&commandBuffer));
+
+    // End render pass if we're in one.
+    endRenderPass(commandBuffer);
 
     stagingImage.getImage().changeLayoutTop(VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_GENERAL,
                                             commandBuffer);
@@ -543,12 +556,19 @@ gl::Error FramebufferVk::getSamplePosition(size_t index, GLfloat *xy) const
     return gl::InternalError() << "getSamplePosition is unimplemented.";
 }
 
-gl::Error FramebufferVk::beginRenderPass(const gl::Context *context,
-                                         VkDevice device,
-                                         vk::CommandBuffer *commandBuffer,
-                                         Serial queueSerial,
-                                         const gl::State &glState)
+gl::Error FramebufferVk::ensureInRenderPass(const gl::Context *context,
+                                            VkDevice device,
+                                            vk::CommandBuffer *commandBuffer,
+                                            Serial queueSerial,
+                                            const gl::State &glState)
 {
+    if (mInRenderPass)
+    {
+        return gl::NoError();
+    }
+
+    mInRenderPass = true;
+
     // TODO(jmadill): Cache render targets.
     for (const auto &colorAttachment : mState.getColorAttachments())
     {
@@ -605,6 +625,15 @@ gl::Error FramebufferVk::beginRenderPass(const gl::Context *context,
     }
 
     return gl::NoError();
+}
+
+void FramebufferVk::endRenderPass(vk::CommandBuffer *commandBuffer)
+{
+    if (mInRenderPass)
+    {
+        commandBuffer->endRenderPass();
+        mInRenderPass = false;
+    }
 }
 
 }  // namespace rx

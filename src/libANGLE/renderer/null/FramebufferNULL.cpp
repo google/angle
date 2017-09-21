@@ -116,7 +116,7 @@ gl::Error FramebufferNULL::readPixels(const gl::Context *context,
                                       const gl::Rectangle &origArea,
                                       GLenum format,
                                       GLenum type,
-                                      void *ptrOrOffset) const
+                                      void *ptrOrOffset)
 {
     const gl::PixelPackState &packState = context->getGLState().getPackState();
 

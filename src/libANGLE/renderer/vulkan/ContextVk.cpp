@@ -317,14 +317,13 @@ gl::Error ContextVk::drawArrays(const gl::Context *context, GLenum mode, GLint f
 
     vk::CommandBuffer *commandBuffer = nullptr;
     ANGLE_TRY(mRenderer->getStartedCommandBuffer(&commandBuffer));
-    ANGLE_TRY(vkFBO->beginRenderPass(context, device, commandBuffer, queueSerial, state));
+    ANGLE_TRY(vkFBO->ensureInRenderPass(context, device, commandBuffer, queueSerial, state));
 
     commandBuffer->bindPipeline(VK_PIPELINE_BIND_POINT_GRAPHICS, mCurrentPipeline);
     // TODO(jmadill): the queue serial should be bound to the pipeline.
     setQueueSerial(queueSerial);
     commandBuffer->bindVertexBuffers(0, vertexHandles, vertexOffsets);
     commandBuffer->draw(count, 1, first, 0);
-    commandBuffer->endRenderPass();
 
     return gl::NoError();
 }

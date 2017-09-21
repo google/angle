@@ -420,13 +420,14 @@ FramebufferImpl *WindowSurfaceVk::createDefaultFramebuffer(const gl::Framebuffer
 egl::Error WindowSurfaceVk::swap(const gl::Context *context)
 {
     const DisplayVk *displayVk = GetImplAs<DisplayVk>(context->getCurrentDisplay());
-    return swapImpl(displayVk->getRenderer()).toEGL(EGL_BAD_ALLOC);
-}
+    RendererVk *renderer       = displayVk->getRenderer();
 
-vk::Error WindowSurfaceVk::swapImpl(RendererVk *renderer)
-{
     vk::CommandBuffer *currentCB = nullptr;
     ANGLE_TRY(renderer->getStartedCommandBuffer(&currentCB));
+
+    // End render pass
+    FramebufferVk *framebufferVk = GetImplAs<FramebufferVk>(mState.defaultFramebuffer);
+    framebufferVk->endRenderPass(currentCB);
 
     auto *image = &mSwapchainImages[mCurrentSwapchainImageIndex];
 

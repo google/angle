@@ -68,7 +68,7 @@ class FramebufferVk : public FramebufferImpl, public ResourceVk
                          const gl::Rectangle &area,
                          GLenum format,
                          GLenum type,
-                         void *pixels) const override;
+                         void *pixels) override;
 
     gl::Error blit(const gl::Context *context,
                    const gl::Rectangle &sourceArea,
@@ -83,11 +83,14 @@ class FramebufferVk : public FramebufferImpl, public ResourceVk
 
     gl::Error getSamplePosition(size_t index, GLfloat *xy) const override;
 
-    gl::Error beginRenderPass(const gl::Context *context,
-                              VkDevice device,
-                              vk::CommandBuffer *commandBuffer,
-                              Serial queueSerial,
-                              const gl::State &glState);
+    gl::Error ensureInRenderPass(const gl::Context *context,
+                                 VkDevice device,
+                                 vk::CommandBuffer *commandBuffer,
+                                 Serial queueSerial,
+                                 const gl::State &glState);
+    void endRenderPass(vk::CommandBuffer *commandBuffer);
+
+    bool isInRenderPass() const { return mInRenderPass; }
 
     gl::ErrorOrResult<vk::RenderPass *> getRenderPass(const gl::Context *context, VkDevice device);
 
@@ -102,6 +105,7 @@ class FramebufferVk : public FramebufferImpl, public ResourceVk
 
     vk::RenderPass mRenderPass;
     vk::Framebuffer mFramebuffer;
+    bool mInRenderPass;
 };
 
 }  // namespace rx
