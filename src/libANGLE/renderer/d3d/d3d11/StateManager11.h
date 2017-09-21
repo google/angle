@@ -161,14 +161,14 @@ class StateManager11 final : angle::NonCopyable
     // These invalidations methods are called externally.
 
     // Called from TextureStorage11.
-    void invalidateBoundViews(const gl::Context *context);
+    void invalidateBoundViews();
 
     // Called from VertexArray11::updateVertexAttribStorage.
     void invalidateCurrentValueAttrib(size_t attribIndex);
 
     // Checks are done on a framebuffer state change to trigger other state changes.
     // The Context is allowed to be nullptr for these methods, when called in EGL init code.
-    void invalidateRenderTarget(const gl::Context *context);
+    void invalidateRenderTarget();
 
     // Called by instanced point sprite emulation.
     void invalidateVertexBuffer();
@@ -331,7 +331,7 @@ class StateManager11 final : angle::NonCopyable
     void invalidateConstantBuffer(unsigned int slot);
 
     // Called by the Framebuffer11 directly.
-    void dirtyDrawFramebuffer();
+    void processFramebufferInvalidation(const gl::Context *context);
 
     enum DirtyBitType
     {
@@ -393,6 +393,7 @@ class StateManager11 final : angle::NonCopyable
 
     // Render target variables
     gl::Extents mViewportBounds;
+    bool mRenderTargetIsDirty;
 
     // EGL_ANGLE_experimental_present_path variables
     bool mCurPresentPathFastEnabled;

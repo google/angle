@@ -536,6 +536,7 @@ StateManager11::StateManager11(Renderer11 *renderer)
       mCurNear(0.0f),
       mCurFar(0.0f),
       mViewportBounds(),
+      mRenderTargetIsDirty(true),
       mCurPresentPathFastEnabled(false),
       mCurPresentPathFastColorBufferHeight(0),
       mDirtyCurrentValueAttribs(),
@@ -928,7 +929,7 @@ void StateManager11::syncState(const gl::Context *context, const gl::State::Dirt
                 }
                 break;
             case gl::State::DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING:
-                invalidateRenderTarget(context);
+                invalidateRenderTarget();
                 if (mIsMultiviewEnabled)
                 {
                     handleMultiviewDrawFramebufferChange(context);
@@ -951,7 +952,7 @@ void StateManager11::syncState(const gl::Context *context, const gl::State::Dirt
             {
                 mInternalDirtyBits.set(DIRTY_BIT_SHADERS);
                 invalidateVertexBuffer();
-                invalidateRenderTarget(context);
+                invalidateRenderTarget();
                 invalidateTexturesAndSamplers();
                 invalidateProgramUniforms();
                 invalidateProgramUniformBuffers();
@@ -1290,8 +1291,21 @@ void StateManager11::syncViewport(const gl::Context *context)
     mShaderConstants.onViewportChange(viewport, adjustViewport, is9_3, mCurPresentPathFastEnabled);
 }
 
-void StateManager11::invalidateRenderTarget(const gl::Context *context)
+void StateManager11::invalidateRenderTarget()
 {
+    mRenderTargetIsDirty = true;
+}
+
+void StateManager11::processFramebufferInvalidation(const gl::Context *context)
+{
+    if (!mRenderTargetIsDirty)
+    {
+        return;
+    }
+
+    ASSERT(context);
+
+    mRenderTargetIsDirty = false;
     mInternalDirtyBits.set(DIRTY_BIT_RENDER_TARGET);
 
     // The pixel shader is dependent on the output layout.
@@ -1300,19 +1314,8 @@ void StateManager11::invalidateRenderTarget(const gl::Context *context)
     // The D3D11 blend state is heavily dependent on the current render target.
     mInternalDirtyBits.set(DIRTY_BIT_BLEND_STATE);
 
-    // nullptr only on display initialization.
-    if (!context)
-    {
-        return;
-    }
-
     gl::Framebuffer *fbo = context->getGLState().getDrawFramebuffer();
-
-    // nullptr fbo can occur in some egl events like display initialization.
-    if (!fbo)
-    {
-        return;
-    }
+    ASSERT(fbo);
 
     // Disable the depth test/depth write if we are using a stencil-only attachment.
     // This is because ANGLE emulates stencil-only with D24S8 on D3D11 - we should neither read
@@ -1354,12 +1357,12 @@ void StateManager11::invalidateRenderTarget(const gl::Context *context)
     }
 }
 
-void StateManager11::invalidateBoundViews(const gl::Context *context)
+void StateManager11::invalidateBoundViews()
 {
     mCurVertexSRVs.clear();
     mCurPixelSRVs.clear();
 
-    invalidateRenderTarget(context);
+    invalidateRenderTarget();
 }
 
 void StateManager11::invalidateVertexBuffer()
@@ -1843,6 +1846,9 @@ gl::Error StateManager11::updateState(const gl::Context *context, GLenum drawMod
     auto *programD3D    = GetImplAs<ProgramD3D>(glState.getProgram());
 
     // TODO(jmadill): Use dirty bits.
+    processFramebufferInvalidation(context);
+
+    // TODO(jmadill): Use dirty bits.
     if (programD3D->updateSamplerMapping() == ProgramD3D::SamplerMapping::WasDirty)
     {
         invalidateTexturesAndSamplers();
@@ -1960,9 +1966,7 @@ gl::Error StateManager11::updateState(const gl::Context *context, GLenum drawMod
     ANGLE_TRY(syncTransformFeedbackBuffers(context));
 
     // Check that we haven't set any dirty bits in the flushing of the dirty bits loop.
-    // TODO(jmadill): Fix FL 9_3 RenderTarget dirtying in call to syncTextures.
-    ASSERT(mInternalDirtyBits.none() ||
-           mRenderer->getRenderer11DeviceCaps().featureLevel <= D3D_FEATURE_LEVEL_9_3);
+    ASSERT(mInternalDirtyBits.none());
 
     return gl::NoError();
 }

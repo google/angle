@@ -818,7 +818,7 @@ gl::Error TextureStorage11_2D::onDestroy(const gl::Context *context)
     {
         // If the keyed mutex is released that will unbind it and cause the state cache to become
         // desynchronized.
-        mRenderer->getStateManager()->invalidateBoundViews(context);
+        mRenderer->getStateManager()->invalidateBoundViews();
     }
 
     // Invalidate RenderTargets.
@@ -1312,7 +1312,7 @@ gl::Error TextureStorage11_External::onDestroy(const gl::Context *context)
     {
         // If the keyed mutex is released that will unbind it and cause the state cache to become
         // desynchronized.
-        mRenderer->getStateManager()->invalidateBoundViews(context);
+        mRenderer->getStateManager()->invalidateBoundViews();
     }
 
     return gl::NoError();

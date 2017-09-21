@@ -440,7 +440,7 @@ void Framebuffer11::syncState(const gl::Context *context,
     FramebufferD3D::syncState(context, dirtyBits);
 
     // Call this last to allow the state manager to take advantage of the cached render targets.
-    mRenderer->getStateManager()->invalidateRenderTarget(context);
+    mRenderer->getStateManager()->invalidateRenderTarget();
 
     // Call this to syncViewport for framebuffer default parameters.
     if (mState.getDefaultWidth() != 0 || mState.getDefaultHeight() != 0)
@@ -465,7 +465,7 @@ void Framebuffer11::signal(size_t channelID, const gl::Context *context)
 
     // Notify the context we need to re-validate the RenderTarget.
     // TODO(jmadill): Check that we're the active draw framebuffer.
-    mRenderer->getStateManager()->invalidateRenderTarget(context);
+    mRenderer->getStateManager()->invalidateRenderTarget();
 }
 
 gl::Error Framebuffer11::getSamplePosition(size_t index, GLfloat *xy) const
