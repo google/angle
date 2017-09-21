@@ -317,12 +317,16 @@ class ResourceManager11 final : angle::NonCopyable
 
     void onReleaseGeneric(ResourceType resourceType, ID3D11DeviceChild *resource);
 
+    void setAllocationsInitialized(bool initialize);
+
   private:
     void incrResource(ResourceType resourceType, size_t memorySize);
     void decrResource(ResourceType resourceType, size_t memorySize);
 
     template <typename T>
     GetInitDataFromD3D11<T> *createInitDataIfNeeded(const GetDescFromD3D11<T> *desc);
+
+    bool mInitializeAllocations;
 
     std::array<size_t, NumResourceTypes> mAllocatedResourceCounts;
     std::array<size_t, NumResourceTypes> mAllocatedResourceDeviceMemory;

@@ -153,11 +153,6 @@ GLint TextureD3D::getBaseLevelDepth() const
     return (baseImage ? baseImage->getDepth() : 0);
 }
 
-bool TextureD3D::shouldForceReleaseImagesOnSetImage(const uint8_t *pixels) const
-{
-    return mRenderer->isRobustResourceInitEnabled() && pixels == nullptr;
-}
-
 // Note: "base level image" is loosely defined to be any image from the base level,
 // where in the base of 2D array textures and cube maps there are several. Don't use
 // the base level image for anything except querying texture format and size.
@@ -849,8 +844,7 @@ gl::Error TextureD3D_2D::setImage(const gl::Context *context,
     bool fastUnpacked = false;
     GLint level       = static_cast<GLint>(imageLevel);
 
-    ANGLE_TRY(redefineImage(context, level, internalFormatInfo.sizedInternalFormat, size,
-                            shouldForceReleaseImagesOnSetImage(pixels)));
+    ANGLE_TRY(redefineImage(context, level, internalFormatInfo.sizedInternalFormat, size, false));
 
     gl::ImageIndex index = gl::ImageIndex::Make2D(level);
 
@@ -921,8 +915,7 @@ gl::Error TextureD3D_2D::setCompressedImage(const gl::Context *context,
     GLint level = static_cast<GLint>(imageLevel);
 
     // compressed formats don't have separate sized internal formats-- we can just use the compressed format directly
-    ANGLE_TRY(redefineImage(context, level, internalFormat, size,
-                            shouldForceReleaseImagesOnSetImage(pixels)));
+    ANGLE_TRY(redefineImage(context, level, internalFormat, size, false));
 
     return setCompressedImageImpl(context, gl::ImageIndex::Make2D(level), unpack, pixels, 0);
 }
@@ -958,7 +951,7 @@ gl::Error TextureD3D_2D::copyImage(const gl::Context *context,
         gl::GetInternalFormatInfo(internalFormat, GL_UNSIGNED_BYTE);
     gl::Extents sourceExtents(origSourceArea.width, origSourceArea.height, 1);
     ANGLE_TRY(redefineImage(context, level, internalFormatInfo.sizedInternalFormat, sourceExtents,
-                            mRenderer->isRobustResourceInitEnabled()));
+                            false));
 
     gl::Extents fbSize = source->getReadColorbuffer()->getSize();
 
@@ -973,7 +966,7 @@ gl::Error TextureD3D_2D::copyImage(const gl::Context *context,
     // TODO(fjhenigman): When robust resource is fully implemented look into making it a
     // prerequisite for WebGL and deleting this code.
     if (outside &&
-        (context->getExtensions().webglCompatibility || mRenderer->isRobustResourceInitEnabled()))
+        (context->getExtensions().webglCompatibility || context->isRobustResourceInitEnabled()))
     {
         angle::MemoryBuffer *zero;
         ANGLE_TRY(context->getZeroFilledBuffer(
@@ -1645,8 +1638,7 @@ gl::Error TextureD3D_Cube::setImage(const gl::Context *context,
     gl::ImageIndex index       = gl::ImageIndex::MakeCube(target, static_cast<GLint>(level));
 
     ANGLE_TRY(redefineImage(context, index.layerIndex, static_cast<GLint>(level),
-                            internalFormatInfo.sizedInternalFormat, size,
-                            shouldForceReleaseImagesOnSetImage(pixels)));
+                            internalFormatInfo.sizedInternalFormat, size, false));
 
     return setImageImpl(context, index, type, unpack, pixels, 0);
 }
@@ -1681,7 +1673,7 @@ gl::Error TextureD3D_Cube::setCompressedImage(const gl::Context *context,
     size_t faceIndex = gl::CubeMapTextureTargetToLayerIndex(target);
 
     ANGLE_TRY(redefineImage(context, static_cast<int>(faceIndex), static_cast<GLint>(level),
-                            internalFormat, size, shouldForceReleaseImagesOnSetImage(pixels)));
+                            internalFormat, size, false));
 
     gl::ImageIndex index = gl::ImageIndex::MakeCube(target, static_cast<GLint>(level));
     return setCompressedImageImpl(context, index, unpack, pixels, 0);
@@ -1719,8 +1711,7 @@ gl::Error TextureD3D_Cube::copyImage(const gl::Context *context,
 
     gl::Extents size(origSourceArea.width, origSourceArea.height, 1);
     ANGLE_TRY(redefineImage(context, static_cast<int>(faceIndex), level,
-                            internalFormatInfo.sizedInternalFormat, size,
-                            mRenderer->isRobustResourceInitEnabled()));
+                            internalFormatInfo.sizedInternalFormat, size, false));
 
     gl::Extents fbSize = source->getReadColorbuffer()->getSize();
 
@@ -1735,7 +1726,7 @@ gl::Error TextureD3D_Cube::copyImage(const gl::Context *context,
     // TODO(fjhenigman): When robust resource is fully implemented look into making it a
     // prerequisite for WebGL and deleting this code.
     if (outside && context->getExtensions().webglCompatibility &&
-        !mRenderer->isRobustResourceInitEnabled())
+        !context->isRobustResourceInitEnabled())
     {
         angle::MemoryBuffer *zero;
         ANGLE_TRY(context->getZeroFilledBuffer(
@@ -2388,8 +2379,7 @@ gl::Error TextureD3D_3D::setImage(const gl::Context *context,
     const gl::InternalFormat &internalFormatInfo = gl::GetInternalFormatInfo(internalFormat, type);
 
     GLint level = static_cast<GLint>(imageLevel);
-    ANGLE_TRY(redefineImage(context, level, internalFormatInfo.sizedInternalFormat, size,
-                            shouldForceReleaseImagesOnSetImage(pixels)));
+    ANGLE_TRY(redefineImage(context, level, internalFormatInfo.sizedInternalFormat, size, false));
 
     bool fastUnpacked = false;
 
@@ -2465,8 +2455,7 @@ gl::Error TextureD3D_3D::setCompressedImage(const gl::Context *context,
 
     GLint level = static_cast<GLint>(imageLevel);
     // compressed formats don't have separate sized internal formats-- we can just use the compressed format directly
-    ANGLE_TRY(redefineImage(context, level, internalFormat, size,
-                            shouldForceReleaseImagesOnSetImage(pixels)));
+    ANGLE_TRY(redefineImage(context, level, internalFormat, size, false));
 
     gl::ImageIndex index = gl::ImageIndex::Make3D(level);
     return setCompressedImageImpl(context, index, unpack, pixels, 0);
@@ -2935,8 +2924,7 @@ gl::Error TextureD3D_2DArray::setImage(const gl::Context *context,
     const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(internalFormat, type);
 
     GLint level = static_cast<GLint>(imageLevel);
-    ANGLE_TRY(redefineImage(context, level, formatInfo.sizedInternalFormat, size,
-                            shouldForceReleaseImagesOnSetImage(pixels)));
+    ANGLE_TRY(redefineImage(context, level, formatInfo.sizedInternalFormat, size, false));
 
     GLsizei inputDepthPitch              = 0;
     ANGLE_TRY_RESULT(formatInfo.computeDepthPitch(type, size.width, size.height, unpack.alignment,
@@ -2999,8 +2987,7 @@ gl::Error TextureD3D_2DArray::setCompressedImage(const gl::Context *context,
 
     GLint level = static_cast<GLint>(imageLevel);
     // compressed formats don't have separate sized internal formats-- we can just use the compressed format directly
-    ANGLE_TRY(redefineImage(context, level, internalFormat, size,
-                            shouldForceReleaseImagesOnSetImage(pixels)));
+    ANGLE_TRY(redefineImage(context, level, internalFormat, size, false));
 
     const gl::InternalFormat &formatInfo = gl::GetSizedInternalFormatInfo(internalFormat);
     GLsizei inputDepthPitch              = 0;

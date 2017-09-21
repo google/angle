@@ -267,11 +267,6 @@ angle::WorkerThreadPool *RendererD3D::getWorkerThreadPool()
     return &mWorkerThreadPool;
 }
 
-bool RendererD3D::isRobustResourceInitEnabled() const
-{
-    return mDisplay->isRobustResourceInitEnabled();
-}
-
 Serial RendererD3D::generateSerial()
 {
     return mSerialFactory.generate();

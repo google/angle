@@ -311,8 +311,6 @@ class RendererD3D : public BufferFactoryD3D
 
     angle::WorkerThreadPool *getWorkerThreadPool();
 
-    bool isRobustResourceInitEnabled() const;
-
     size_t getBoundFramebufferTextures(const gl::ContextState &data,
                                        FramebufferTextureArray *outTextureArray);
 

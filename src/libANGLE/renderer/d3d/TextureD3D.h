@@ -173,8 +173,6 @@ class TextureD3D : public TextureImpl
 
     GLint getBaseLevelDepth() const;
 
-    bool shouldForceReleaseImagesOnSetImage(const uint8_t *pixels) const;
-
     RendererD3D *mRenderer;
 
     bool mDirtyImages;
