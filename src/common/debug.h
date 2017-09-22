@@ -259,16 +259,18 @@ constexpr LogSeverity LOG_ASSERT = LOG_EVENT;
 #endif
 
 #if defined(ANGLE_TRACE_ENABLED) || defined(ANGLE_ENABLE_ASSERTS)
-#define UNIMPLEMENTED()                                                           \
-    {                                                                             \
-        ERR() << "\t! Unimplemented: " << __FUNCTION__ << "(" << __LINE__ << ")"; \
-        ASSERT(NOASSERT_UNIMPLEMENTED);                                           \
-    }                                                                             \
+#define UNIMPLEMENTED()                                                                      \
+    {                                                                                        \
+        ERR() << "\t! Unimplemented: " << __FUNCTION__ << "(" << __FILE__ << ":" << __LINE__ \
+              << ")";                                                                        \
+        ASSERT(NOASSERT_UNIMPLEMENTED);                                                      \
+    }                                                                                        \
     ANGLE_EMPTY_STATEMENT
 
 // A macro for code which is not expected to be reached under valid assumptions
-#define UNREACHABLE()                                                                  \
-    ((ERR() << "\t! Unreachable reached: " << __FUNCTION__ << "(" << __LINE__ << ")"), \
+#define UNREACHABLE()                                                                            \
+    ((ERR() << "\t! Unreachable reached: " << __FUNCTION__ << "(" << __FILE__ << ":" << __LINE__ \
+            << ")"),                                                                             \
      ASSERT(false))
 #else
 #define UNIMPLEMENTED()                 \
