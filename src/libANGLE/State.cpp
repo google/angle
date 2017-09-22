@@ -2531,6 +2531,8 @@ Error State::clearUnclearedActiveTextures(const Context *context)
         return NoError();
     }
 
+    ASSERT(!mDirtyObjects.any());
+
     for (auto textureIndex : mActiveTexturesMask)
     {
         Texture *texture = mCompleteTextureCache[textureIndex];
