@@ -89,7 +89,7 @@ std::array<angle::Vector3, 4> GetIndexedQuadVertices()
     return vertices;
 }
 
-static constexpr GLushort IndexedQuadIndices[6] = {0, 1, 2, 0, 2, 3};
+static constexpr std::array<GLushort, 6> IndexedQuadIndices = {{0, 1, 2, 0, 2, 3}};
 
 }  // anonymous namespace
 
@@ -190,6 +190,12 @@ std::array<angle::Vector3, 6> ANGLETestBase::GetQuadVertices()
     vertices[4] = angle::Vector3(1.0f, -1.0f, 0.5f);
     vertices[5] = angle::Vector3(1.0f, 1.0f, 0.5f);
     return vertices;
+}
+
+// static
+std::array<GLushort, 6> ANGLETestBase::GetQuadIndices()
+{
+    return angle::IndexedQuadIndices;
 }
 
 ANGLETestBase::ANGLETestBase(const angle::PlatformParameters &params)
@@ -383,7 +389,7 @@ void ANGLETestBase::setupIndexedQuadIndexBuffer()
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mQuadIndexBuffer);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(angle::IndexedQuadIndices),
-                 angle::IndexedQuadIndices, GL_STATIC_DRAW);
+                 angle::IndexedQuadIndices.data(), GL_STATIC_DRAW);
 }
 
 // static
@@ -552,7 +558,7 @@ void ANGLETestBase::drawIndexedQuad(GLuint program,
     }
     else
     {
-        indices = angle::IndexedQuadIndices;
+        indices = angle::IndexedQuadIndices.data();
     }
 
     if (!restrictedRange)

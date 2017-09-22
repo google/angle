@@ -35,53 +35,37 @@ VkFormat GetNativeVertexFormat(gl::VertexFormatType vertexFormat)
             UNREACHABLE();
             return VK_FORMAT_UNDEFINED;
         case gl::VERTEX_FORMAT_SBYTE1:
-            UNIMPLEMENTED();
-            return VK_FORMAT_UNDEFINED;
+            return VK_FORMAT_R8_SINT;
         case gl::VERTEX_FORMAT_SBYTE1_NORM:
-            UNIMPLEMENTED();
-            return VK_FORMAT_UNDEFINED;
+            return VK_FORMAT_R8_SNORM;
         case gl::VERTEX_FORMAT_SBYTE2:
-            UNIMPLEMENTED();
-            return VK_FORMAT_UNDEFINED;
+            return VK_FORMAT_R8G8_SINT;
         case gl::VERTEX_FORMAT_SBYTE2_NORM:
-            UNIMPLEMENTED();
-            return VK_FORMAT_UNDEFINED;
+            return VK_FORMAT_R8G8_SNORM;
         case gl::VERTEX_FORMAT_SBYTE3:
-            UNIMPLEMENTED();
-            return VK_FORMAT_UNDEFINED;
+            return VK_FORMAT_R8G8B8_SINT;
         case gl::VERTEX_FORMAT_SBYTE3_NORM:
-            UNIMPLEMENTED();
-            return VK_FORMAT_UNDEFINED;
+            return VK_FORMAT_R8G8B8_SNORM;
         case gl::VERTEX_FORMAT_SBYTE4:
-            UNIMPLEMENTED();
-            return VK_FORMAT_UNDEFINED;
+            return VK_FORMAT_R8G8B8A8_SINT;
         case gl::VERTEX_FORMAT_SBYTE4_NORM:
-            UNIMPLEMENTED();
-            return VK_FORMAT_UNDEFINED;
+            return VK_FORMAT_R8G8B8A8_SNORM;
         case gl::VERTEX_FORMAT_UBYTE1:
-            UNIMPLEMENTED();
-            return VK_FORMAT_UNDEFINED;
+            return VK_FORMAT_R8_UINT;
         case gl::VERTEX_FORMAT_UBYTE1_NORM:
-            UNIMPLEMENTED();
-            return VK_FORMAT_UNDEFINED;
+            return VK_FORMAT_R8_UNORM;
         case gl::VERTEX_FORMAT_UBYTE2:
-            UNIMPLEMENTED();
-            return VK_FORMAT_UNDEFINED;
+            return VK_FORMAT_R8G8_UINT;
         case gl::VERTEX_FORMAT_UBYTE2_NORM:
-            UNIMPLEMENTED();
-            return VK_FORMAT_UNDEFINED;
+            return VK_FORMAT_R8G8_UNORM;
         case gl::VERTEX_FORMAT_UBYTE3:
-            UNIMPLEMENTED();
-            return VK_FORMAT_UNDEFINED;
+            return VK_FORMAT_R8G8B8_UINT;
         case gl::VERTEX_FORMAT_UBYTE3_NORM:
-            UNIMPLEMENTED();
-            return VK_FORMAT_UNDEFINED;
+            return VK_FORMAT_R8G8B8_UNORM;
         case gl::VERTEX_FORMAT_UBYTE4:
-            UNIMPLEMENTED();
-            return VK_FORMAT_UNDEFINED;
+            return VK_FORMAT_R8G8B8A8_UINT;
         case gl::VERTEX_FORMAT_UBYTE4_NORM:
-            UNIMPLEMENTED();
-            return VK_FORMAT_UNDEFINED;
+            return VK_FORMAT_R8G8B8A8_UNORM;
         case gl::VERTEX_FORMAT_SSHORT1:
             UNIMPLEMENTED();
             return VK_FORMAT_UNDEFINED;

@@ -142,13 +142,6 @@ TEST_P(SimpleOperationTest, LinkProgramWithUniforms)
 
 TEST_P(SimpleOperationTest, LinkProgramWithAttributes)
 {
-    if (IsVulkan())
-    {
-        // TODO(jmadill): Complete Vulkan implementation.
-        std::cout << "Test skipped on Vulkan." << std::endl;
-        return;
-    }
-
     const std::string vsSource =
         R"(attribute vec4 a_input;
         void main()
@@ -267,6 +260,74 @@ TEST_P(SimpleOperationTest, DrawQuadAndSwap)
     }
 
     EXPECT_GL_NO_ERROR();
+}
+
+// Tests a shader program with more than one vertex attribute, with vertex buffers.
+TEST_P(SimpleOperationTest, ThreeVertexAttributes)
+{
+    const std::string vertexShader =
+        R"(attribute vec2 position;
+attribute vec4 color1;
+attribute vec4 color2;
+varying vec4 color;
+void main()
+{
+    gl_Position = vec4(position, 0, 1);
+    color = color1 + color2;
+})";
+
+    const std::string fragmentShader =
+        R"(precision mediump float;
+varying vec4 color;
+void main()
+{
+    gl_FragColor = color;
+}
+)";
+
+    ANGLE_GL_PROGRAM(program, vertexShader, fragmentShader);
+
+    glUseProgram(program);
+
+    GLint color1Loc = glGetAttribLocation(program, "color1");
+    GLint color2Loc = glGetAttribLocation(program, "color2");
+    ASSERT_NE(-1, color1Loc);
+    ASSERT_NE(-1, color2Loc);
+
+    const auto &indices = GetQuadIndices();
+
+    // Make colored corners with red == x or 1 -x , and green = y or 1 - y.
+
+    std::array<GLColor, 4> baseColors1 = {
+        {GLColor::black, GLColor::red, GLColor::green, GLColor::yellow}};
+    std::array<GLColor, 4> baseColors2 = {
+        {GLColor::yellow, GLColor::green, GLColor::red, GLColor::black}};
+
+    std::vector<GLColor> colors1;
+    std::vector<GLColor> colors2;
+
+    for (GLushort index : indices)
+    {
+        colors1.push_back(baseColors1[index]);
+        colors2.push_back(baseColors2[index]);
+    }
+
+    GLBuffer color1Buffer;
+    glBindBuffer(GL_ARRAY_BUFFER, color1Buffer);
+    glBufferData(GL_ARRAY_BUFFER, colors1.size() * sizeof(GLColor), colors1.data(), GL_STATIC_DRAW);
+    glVertexAttribPointer(color1Loc, 4, GL_UNSIGNED_BYTE, GL_TRUE, 0, nullptr);
+    glEnableVertexAttribArray(color1Loc);
+
+    GLBuffer color2Buffer;
+    glBindBuffer(GL_ARRAY_BUFFER, color2Buffer);
+    glBufferData(GL_ARRAY_BUFFER, colors2.size() * sizeof(GLColor), colors2.data(), GL_STATIC_DRAW);
+    glVertexAttribPointer(color2Loc, 4, GL_UNSIGNED_BYTE, GL_TRUE, 0, nullptr);
+    glEnableVertexAttribArray(color2Loc);
+
+    // Draw a non-indexed quad with all vertex buffers. Should draw yellow to the entire window.
+    drawQuad(program, "position", 0.5f, 1.0f, true);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), GLColor::yellow);
 }
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.

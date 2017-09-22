@@ -152,6 +152,16 @@ GLColor32F ReadColor32F(GLint x, GLint y);
 
 #define EXPECT_PIXEL_COLOR32F_EQ(x, y, angleColor) EXPECT_EQ(angleColor, angle::ReadColor32F(x, y))
 
+#define EXPECT_PIXEL_RECT_EQ(x, y, width, height, color)                                           \
+    \
+{                                                                                           \
+        std::vector<GLColor> actualColors(width *height);                                          \
+        glReadPixels((x), (y), (width), (height), GL_RGBA, GL_UNSIGNED_BYTE, actualColors.data()); \
+        std::vector<GLColor> expectedColors(width *height, color);                                 \
+        EXPECT_EQ(expectedColors, actualColors);                                                   \
+    \
+}
+
 #define EXPECT_PIXEL_NEAR(x, y, r, g, b, a, abs_error) \
 { \
     GLubyte pixel[4]; \
@@ -258,6 +268,7 @@ class ANGLETestBase
                            GLuint numInstances);
 
     static std::array<angle::Vector3, 6> GetQuadVertices();
+    static std::array<GLushort, 6> GetQuadIndices();
     void drawIndexedQuad(GLuint program,
                          const std::string &positionAttribName,
                          GLfloat positionAttribZ);
