@@ -3176,8 +3176,52 @@ gl::Error Renderer9::clearRenderTarget(RenderTargetD3D *renderTarget,
                                        const float clearDepthValue,
                                        const unsigned int clearStencilValue)
 {
-    // TODO(jmadill): D3D9 implementation.
-    // UNIMPLEMENTED();
+    D3DCOLOR color =
+        D3DCOLOR_ARGB(gl::unorm<8>(clearColorValue.alpha), gl::unorm<8>(clearColorValue.red),
+                      gl::unorm<8>(clearColorValue.green), gl::unorm<8>(clearColorValue.blue));
+    float depth   = clearDepthValue;
+    DWORD stencil = clearStencilValue & 0x000000FF;
+
+    unsigned int renderTargetSerial        = renderTarget->getSerial();
+    RenderTarget9 *renderTarget9           = GetAs<RenderTarget9>(renderTarget);
+    IDirect3DSurface9 *renderTargetSurface = renderTarget9->getSurface();
+    ASSERT(renderTargetSurface);
+
+    DWORD dxClearFlags = 0;
+
+    const gl::InternalFormat &internalFormatInfo =
+        gl::GetSizedInternalFormatInfo(renderTarget->getInternalFormat());
+    if (internalFormatInfo.depthBits > 0 || internalFormatInfo.stencilBits > 0)
+    {
+        dxClearFlags = D3DCLEAR_ZBUFFER | D3DCLEAR_STENCIL;
+        if (mAppliedDepthStencilSerial != renderTargetSerial)
+        {
+            mDevice->SetDepthStencilSurface(renderTargetSurface);
+        }
+    }
+    else
+    {
+        dxClearFlags = D3DCLEAR_TARGET;
+        if (mAppliedRenderTargetSerial != renderTargetSerial)
+        {
+            mDevice->SetRenderTarget(0, renderTargetSurface);
+        }
+    }
+    SafeRelease(renderTargetSurface);
+
+    D3DVIEWPORT9 viewport;
+    viewport.X      = 0;
+    viewport.Y      = 0;
+    viewport.Width  = renderTarget->getWidth();
+    viewport.Height = renderTarget->getHeight();
+    mDevice->SetViewport(&viewport);
+
+    mDevice->SetRenderState(D3DRS_SCISSORTESTENABLE, FALSE);
+
+    mDevice->Clear(0, nullptr, dxClearFlags, color, depth, stencil);
+
+    markAllStateDirty();
+
     return gl::NoError();
 }
 

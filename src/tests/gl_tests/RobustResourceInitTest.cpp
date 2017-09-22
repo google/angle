@@ -208,7 +208,7 @@ class RobustResourceInitTest : public ANGLETest
         }
 
         // TODO(jmadill): Other back-end support.
-        if (!IsD3D11())
+        if (!IsD3D11() && !IsD3D9())
         {
             return false;
         }
