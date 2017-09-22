@@ -21,6 +21,7 @@
 #include "libANGLE/Uniform.h"
 #include "libANGLE/VertexArray.h"
 #include "libANGLE/formatutils.h"
+#include "libANGLE/queryconversions.h"
 #include "libANGLE/validationES2.h"
 #include "libANGLE/validationES3.h"
 
@@ -33,6 +34,7 @@ namespace gl
 {
 namespace
 {
+
 bool ValidateDrawAttribs(ValidationContext *context,
                          GLint primcount,
                          GLint maxVertex,

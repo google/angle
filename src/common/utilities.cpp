@@ -766,43 +766,6 @@ std::string ParseResourceName(const std::string &name, size_t *outSubscript)
     return name.substr(0, open);
 }
 
-template <>
-GLuint ConvertToGLuint(GLfloat param)
-{
-    return uiround<GLuint>(param);
-}
-
-template <>
-GLint ConvertToGLint(uint32_t param)
-{
-    uint32_t max = static_cast<uint32_t>(std::numeric_limits<GLint>::max());
-    return static_cast<GLint>(param >= max ? max : param);
-}
-
-template <>
-GLint ConvertToGLint(uint64_t param)
-{
-    uint64_t max = static_cast<uint64_t>(std::numeric_limits<GLint>::max());
-    return static_cast<GLint>(param >= max ? max : param);
-}
-
-template <>
-GLint ConvertToGLint(GLfloat param)
-{
-    return iround<GLint>(param);
-}
-
-template <>
-GLint ConvertFromGLfloat(GLfloat param)
-{
-    return iround<GLint>(param);
-}
-template <>
-GLuint ConvertFromGLfloat(GLfloat param)
-{
-    return uiround<GLuint>(param);
-}
-
 unsigned int ParseAndStripArrayIndex(std::string *name)
 {
     unsigned int subscript = GL_INVALID_INDEX;

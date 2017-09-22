@@ -60,37 +60,38 @@ inline unsigned int ceilPow2(unsigned int x)
     return x;
 }
 
-inline int clampToInt(unsigned int x)
-{
-    return static_cast<int>(std::min(x, static_cast<unsigned int>(std::numeric_limits<int>::max())));
-}
-
 template <typename DestT, typename SrcT>
 inline DestT clampCast(SrcT value)
 {
-    static const DestT destLo = std::numeric_limits<DestT>::min();
-    static const DestT destHi = std::numeric_limits<DestT>::max();
-    static const SrcT srcLo = static_cast<SrcT>(destLo);
-    static const SrcT srcHi = static_cast<SrcT>(destHi);
+    // For floating-point types with denormalization, min returns the minimum positive normalized
+    // value. To find the value that has no values less than it, use numeric_limits::lowest.
+    constexpr const long double destLo =
+        static_cast<long double>(std::numeric_limits<DestT>::lowest());
+    constexpr const long double destHi =
+        static_cast<long double>(std::numeric_limits<DestT>::max());
+    constexpr const long double srcLo =
+        static_cast<long double>(std::numeric_limits<SrcT>::lowest());
+    constexpr long double srcHi = static_cast<long double>(std::numeric_limits<SrcT>::max());
 
-    // When value is outside of or equal to the limits for DestT we use the DestT limit directly.
-    // This avoids undefined behaviors due to loss of precision when converting from floats to
-    // integers:
-    //    destHi for ints is 2147483647 but the closest float number is around 2147483648, so when
-    //  doing a conversion from float to int we run into an UB because the float is outside of the
-    //  range representable by the int.
-    if (value <= srcLo)
+    if (destHi < srcHi)
     {
-        return destLo;
+        DestT destMax = std::numeric_limits<DestT>::max();
+        if (value >= static_cast<SrcT>(destMax))
+        {
+            return destMax;
+        }
     }
-    else if (value >= srcHi)
+
+    if (destLo > srcLo)
     {
-        return destHi;
+        DestT destLow = std::numeric_limits<DestT>::lowest();
+        if (value <= static_cast<SrcT>(destLow))
+        {
+            return destLow;
+        }
     }
-    else
-    {
-        return static_cast<DestT>(value);
-    }
+
+    return static_cast<DestT>(value);
 }
 
 template<typename T, typename MIN, typename MAX>
