@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f0212463_be66884f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 8
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-09-24T02:00:37Z",
+      "side": 1,
+      "message": "When framebuffer has no attachments, the pixel shader will be recompiled to drop \u0027SV_TARGET\u0027. On Intel drivers, when using a pixel shader with no \u0027SV_TARGET\u0027 in a draw, the pixels are always generated even if they should be discard by \u0027discard\u0027 statements.\n\nPlease correct me if I am wrong.",
+      "range": {
+        "startLine": 14,
+        "startChar": 3,
+        "endLine": 17,
+        "endChar": 40
+      },
+      "revId": "af507932b6529240f08cd1740b255c4fc0d279f7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5c608269_ab2dd474",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 8
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-09-24T02:00:37Z",
+      "side": 1,
+      "message": "nit: unnecessary",
+      "range": {
+        "startLine": 22,
+        "startChar": 51,
+        "endLine": 22,
+        "endChar": 63
+      },
+      "revId": "af507932b6529240f08cd1740b255c4fc0d279f7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "770dfaa6_5c07f51f",
+        "filename": "include/platform/WorkaroundsD3D.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-09-24T02:00:37Z",
+      "side": 1,
+      "message": "When the pixel shader expects a render target view bound to a slot but none is bound, the behavior of the Intel and NVidia drivers are different: ......",
+      "range": {
+        "startLine": 116,
+        "startChar": 7,
+        "endLine": 117,
+        "endChar": 58
+      },
+      "revId": "af507932b6529240f08cd1740b255c4fc0d279f7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "de3990fe_fec9195e",
+        "filename": "include/platform/WorkaroundsD3D.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-09-24T02:00:37Z",
+      "side": 1,
+      "message": "nit: unnecessary",
+      "range": {
+        "startLine": 119,
+        "startChar": 72,
+        "endLine": 119,
+        "endChar": 84
+      },
+      "revId": "af507932b6529240f08cd1740b255c4fc0d279f7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "af76f132_1ddf773c",
+        "filename": "include/platform/WorkaroundsD3D.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-09-24T02:00:37Z",
+      "side": 1,
+      "message": "1. This patch actually adds two workarounds for two Intel driver issues, I believe you should use two booleans to enable/disable them separately.\n2. The name of the boolean variable should indicate how the workaround works:\ne.g. selectViewInGeometryShader, useSystemMemoryForConstantBuffers, etc.",
+      "range": {
+        "startLine": 121,
+        "startChar": 9,
+        "endLine": 121,
+        "endChar": 37
+      },
+      "revId": "af507932b6529240f08cd1740b255c4fc0d279f7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
