@@ -178,6 +178,24 @@
     },
     {
       "key": {
+        "uuid": "7a73f7ca_7a853712",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 30
+      },
+      "lineNbr": 1106,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-25T21:20:46Z",
+      "side": 1,
+      "message": "On the Vulkan backend for example, discard and invalidate will allow for important optimizations and shouldn\u0027t be no-ops.",
+      "parentUuid": "39948e71_1ce0056c",
+      "revId": "9501864d19885d5508a71bb9d0d05df0f4028de0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "462c0ad0_f2edb076",
         "filename": "src/libANGLE/Framebuffer.cpp",
         "patchSetId": 30
@@ -464,6 +482,24 @@
       "side": 1,
       "message": "Thanks. Any idea how to use that code? Does it have decoding for dxt1/bc1? I didn\u0027t see anything I could use at a first glance, but didn\u0027t look closely.",
       "parentUuid": "bb25eef1_9d8eaa2d",
+      "revId": "9501864d19885d5508a71bb9d0d05df0f4028de0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8e0a0ff1_45a7464d",
+        "filename": "src/tests/gl_tests/RobustResourceInitTest.cpp",
+        "patchSetId": 30
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-25T21:20:46Z",
+      "side": 1,
+      "message": "There is no DXT1 in there, but we could move UncompressXTBlock there so it lives next to similar code.",
+      "parentUuid": "5dddec68_564f9503",
       "revId": "9501864d19885d5508a71bb9d0d05df0f4028de0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
