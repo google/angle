@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c8988358_5fa6d402",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/ResourceManager11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 510,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-25T21:22:25Z",
+      "side": 1,
+      "message": "nit: setInitializeAllocations to match the variable name.",
+      "revId": "56351a519cd0385a47d1357bd1e2549b862162bb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
