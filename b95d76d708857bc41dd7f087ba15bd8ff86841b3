@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4791bfd6_5d03a164",
+        "filename": "src/libANGLE/Uniform.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-25T15:09:02Z",
+      "side": 1,
+      "message": "nit: empty destructors are never required.",
+      "revId": "b95d76d708857bc41dd7f087ba15bd8ff86841b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d9a1e907_788f48c9",
+        "filename": "src/libANGLE/Uniform.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-25T15:09:02Z",
+      "side": 1,
+      "message": "nit: this implies LinkedUniform \"is a\" ShaderRef. It seems that it is more like \"has a\" piece of data about being reference. So things could go like this:\n\n\nstruct StaticUse {\n   StaticUse(); // Would initialize everything to false;\n   void setUsed(shaderType, used);\n   bool compute;\n   bool fragment;\n   bool vertex;\n};\n\n\nThen in LinkedUniform there would be \"StaticUse staticUse\". So that the data can be accessed as \"uniform-\u003estaticUse.compute\".",
+      "revId": "b95d76d708857bc41dd7f087ba15bd8ff86841b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d208af51_18cbd197",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 678,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-25T15:09:02Z",
+      "side": 1,
+      "message": "Geoff: do you think getActiveUniformi should be moved here?\n\nAlso I believe that array_stride, block_index, is_row_major, matrix_stride and offset are simple enough we could directly extract the information in  this function.",
+      "revId": "b95d76d708857bc41dd7f087ba15bd8ff86841b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "12bdcf45_fa77306b",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1306,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-25T15:09:02Z",
+      "side": 1,
+      "message": "nit: no need for std::string explicit conversion I believe.",
+      "revId": "b95d76d708857bc41dd7f087ba15bd8ff86841b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0df937e2_d110e586",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1369,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-25T15:09:02Z",
+      "side": 1,
+      "message": "nit: no need for std::string explicit conversion I believe.",
+      "revId": "b95d76d708857bc41dd7f087ba15bd8ff86841b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
