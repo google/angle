@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "e8bd3364_801da3a4",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 3223,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-25T21:28:41Z",
+      "side": 1,
+      "message": "DIRTY ALL THE THINGS!",
+      "revId": "64a46cb8655dcfd45a6a3875dc0ff0e4c0a1c4f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b39ac195_33dd8503",
         "filename": "src/tests/gl_tests/RobustResourceInitTest.cpp",
         "patchSetId": 3
