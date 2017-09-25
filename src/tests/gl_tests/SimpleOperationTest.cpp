@@ -108,13 +108,6 @@ TEST_P(SimpleOperationTest, LinkProgram)
 
 TEST_P(SimpleOperationTest, LinkProgramWithUniforms)
 {
-    if (IsVulkan())
-    {
-        // TODO(jmadill): Complete Vulkan implementation.
-        std::cout << "Test skipped on Vulkan." << std::endl;
-        return;
-    }
-
     const std::string vsSource =
         R"(void main()
         {

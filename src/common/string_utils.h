@@ -65,6 +65,12 @@ bool EndsWith(const std::string& str, const char* suffix);
 
 // Convert to lower-case.
 void ToLower(std::string *str);
-}
+
+// Replaces the substring 'substring' in 'str' with 'replacement'. Returns true if successful.
+bool ReplaceSubstring(std::string *str,
+                      const std::string &substring,
+                      const std::string &replacement);
+
+}  // namespace angle
 
 #endif // LIBANGLE_STRING_UTILS_H_

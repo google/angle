@@ -13,9 +13,81 @@
 
 #include "angle_gl.h"
 #include "compiler/translator/OutputVulkanGLSL.h"
+#include "compiler/translator/util.h"
 
 namespace sh
 {
+
+class DeclareDefaultUniformsTraverser : public TIntermTraverser
+{
+  public:
+    DeclareDefaultUniformsTraverser(TInfoSinkBase *sink,
+                                    ShHashFunction64 hashFunction,
+                                    NameMap *nameMap)
+        : TIntermTraverser(true, true, true),
+          mSink(sink),
+          mHashFunction(hashFunction),
+          mNameMap(nameMap),
+          mInDefaultUniform(false)
+    {
+    }
+
+    bool visitDeclaration(Visit visit, TIntermDeclaration *node) override
+    {
+        const TIntermSequence &sequence = *(node->getSequence());
+
+        // TODO(jmadill): Compound declarations.
+        ASSERT(sequence.size() == 1);
+
+        TIntermTyped *variable = sequence.front()->getAsTyped();
+        const TType &type      = variable->getType();
+        bool isUniform         = (type.getQualifier() == EvqUniform);
+
+        if (visit == PreVisit)
+        {
+            if (isUniform)
+            {
+                (*mSink) << "    " << GetTypeName(type, mHashFunction, mNameMap) << " ";
+                mInDefaultUniform = true;
+            }
+        }
+        else if (visit == InVisit)
+        {
+            mInDefaultUniform = isUniform;
+        }
+        else if (visit == PostVisit)
+        {
+            if (isUniform)
+            {
+                (*mSink) << ";\n";
+            }
+
+            mInDefaultUniform = false;
+
+            // Remove the uniform declaration from the tree so it isn't parsed again.
+            TIntermSequence emptyReplacement;
+            mMultiReplacements.push_back(NodeReplaceWithMultipleEntry(getParentNode()->getAsBlock(),
+                                                                      node, emptyReplacement));
+        }
+        return true;
+    }
+
+    void visitSymbol(TIntermSymbol *symbol) override
+    {
+        if (mInDefaultUniform)
+        {
+            const TName &name = symbol->getName();
+            ASSERT(name.getString().substr(0, 3) != "gl_");
+            (*mSink) << HashName(name, mHashFunction, mNameMap);
+        }
+    }
+
+  private:
+    TInfoSinkBase *mSink;
+    ShHashFunction64 mHashFunction;
+    NameMap *mNameMap;
+    bool mInDefaultUniform;
+};
 
 TranslatorVulkan::TranslatorVulkan(sh::GLenum type, ShShaderSpec spec)
     : TCompiler(type, spec, SH_GLSL_450_CORE_OUTPUT)
@@ -27,6 +99,18 @@ void TranslatorVulkan::translate(TIntermBlock *root, ShCompileOptions compileOpt
     TInfoSinkBase &sink = getInfoSink().obj;
 
     sink << "#version 450 core\n";
+
+    // Write out default uniforms into a uniform block assigned to a specific set/binding.
+    if (!getUniforms().empty())
+    {
+        sink << "\nlayout(@@ DEFAULT-UNIFORMS-SET-BINDING @@) uniform defaultUniforms\n{\n";
+
+        DeclareDefaultUniformsTraverser defaultTraverser(&sink, getHashFunction(), &getNameMap());
+        root->traverse(&defaultTraverser);
+        defaultTraverser.updateTree();
+
+        sink << "};\n";
+    }
 
     // Declare gl_FragColor and glFragData as webgl_FragColor and webgl_FragData
     // if it's core profile shaders and they are used.

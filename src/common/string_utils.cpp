@@ -187,4 +187,17 @@ void ToLower(std::string *str)
     }
 }
 
+bool ReplaceSubstring(std::string *str,
+                      const std::string &substring,
+                      const std::string &replacement)
+{
+    size_t replacePos = str->find(substring);
+    if (replacePos == std::string::npos)
+    {
+        return false;
+    }
+    str->replace(replacePos, substring.size(), replacement);
+    return true;
+}
+
 }  // namespace angle

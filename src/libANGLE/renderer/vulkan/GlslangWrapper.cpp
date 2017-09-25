@@ -18,6 +18,8 @@
 
 #include <array>
 
+#include "common/string_utils.h"
+
 namespace rx
 {
 
@@ -70,7 +72,7 @@ gl::LinkResult GlslangWrapper::linkProgram(const gl::Context *glContext,
 {
     std::string vertexSource =
         programState.getAttachedVertexShader()->getTranslatedSource(glContext);
-    const std::string &fragmentSource =
+    std::string fragmentSource =
         programState.getAttachedFragmentShader()->getTranslatedSource(glContext);
 
     // Parse attribute locations and replace them in the vertex shader.
@@ -87,10 +89,21 @@ gl::LinkResult GlslangWrapper::linkProgram(const gl::Context *glContext,
 
         std::string locationString = Str(attribute.location);
 
-        size_t replacePos = vertexSource.find(searchString);
-        ASSERT(replacePos != std::string::npos);
-        vertexSource.replace(replacePos, searchString.size(), locationString);
+        bool success = angle::ReplaceSubstring(&vertexSource, searchString, locationString);
+        ASSERT(success);
     }
+
+    // Bind the default uniforms for vertex and fragment shaders.
+    // See corresponding code in OutputVulkanGLSL.cpp.
+    std::stringstream searchStringBuilder;
+    searchStringBuilder << "@@ DEFAULT-UNIFORMS-SET-BINDING @@";
+    std::string searchString = searchStringBuilder.str();
+
+    std::string vertexDefaultUniformsBinding   = "set = 0, binding = 0";
+    std::string fragmentDefaultUniformsBinding = "set = 0, binding = 1";
+
+    angle::ReplaceSubstring(&vertexSource, searchString, vertexDefaultUniformsBinding);
+    angle::ReplaceSubstring(&fragmentSource, searchString, fragmentDefaultUniformsBinding);
 
     std::array<const char *, 2> strings = {{vertexSource.c_str(), fragmentSource.c_str()}};
 

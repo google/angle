@@ -1104,10 +1104,7 @@ void TOutputGLSLBase::visitCodeBlock(TIntermBlock *node)
 
 TString TOutputGLSLBase::getTypeName(const TType &type)
 {
-    if (type.getBasicType() == EbtStruct)
-        return hashName(TName(type.getStruct()->name()));
-    else
-        return type.getBuiltInTypeNameString();
+    return GetTypeName(type, mHashFunction, &mNameMap);
 }
 
 TString TOutputGLSLBase::hashName(const TName &name)

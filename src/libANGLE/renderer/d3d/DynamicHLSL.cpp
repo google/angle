@@ -8,6 +8,7 @@
 
 #include "libANGLE/renderer/d3d/DynamicHLSL.h"
 
+#include "common/string_utils.h"
 #include "common/utilities.h"
 #include "compiler/translator/blocklayoutHLSL.h"
 #include "libANGLE/Context.h"
@@ -272,8 +273,9 @@ std::string DynamicHLSL::generateVertexShaderForInputLayout(
 
     std::string vertexHLSL(sourceShader);
 
-    size_t copyInsertionPos = vertexHLSL.find(VERTEX_ATTRIBUTE_STUB_STRING);
-    vertexHLSL.replace(copyInsertionPos, strlen(VERTEX_ATTRIBUTE_STUB_STRING), structStream.str());
+    bool success =
+        angle::ReplaceSubstring(&vertexHLSL, VERTEX_ATTRIBUTE_STUB_STRING, structStream.str());
+    ASSERT(success);
 
     return vertexHLSL;
 }
@@ -348,9 +350,9 @@ std::string DynamicHLSL::generatePixelShaderForOutputSignature(
 
     std::string pixelHLSL(sourceShader);
 
-    size_t outputInsertionPos = pixelHLSL.find(PIXEL_OUTPUT_STUB_STRING);
-    pixelHLSL.replace(outputInsertionPos, strlen(PIXEL_OUTPUT_STUB_STRING),
-                      declarationStream.str());
+    bool success =
+        angle::ReplaceSubstring(&pixelHLSL, PIXEL_OUTPUT_STUB_STRING, declarationStream.str());
+    ASSERT(success);
 
     return pixelHLSL;
 }

@@ -12,6 +12,7 @@
 #include "angle_gl.h"
 #include <GLSLANG/ShaderLang.h>
 
+#include "compiler/translator/HashNames.h"
 #include "compiler/translator/Operator.h"
 #include "compiler/translator/Types.h"
 
@@ -43,6 +44,8 @@ InterpolationType GetInterpolationType(TQualifier qualifier);
 // Returns array brackets including size with outermost array size first, as specified in GLSL ES
 // 3.10 section 4.1.9.
 TString ArrayString(const TType &type);
+
+TString GetTypeName(const TType &type, ShHashFunction64 hashFunction, NameMap *nameMap);
 
 TType GetShaderVariableBasicType(const sh::ShaderVariable &var);
 

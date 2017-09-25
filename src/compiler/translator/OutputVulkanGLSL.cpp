@@ -58,9 +58,14 @@ void TOutputVulkanGLSL::writeLayoutQualifier(TIntermTyped *variable)
     // This isn't super clean, but it gets the job done.
     // See corresponding code in GlslangWrapper.cpp.
     // TODO(jmadill): Ensure declarations are separated.
+
     TIntermSymbol *symbol = variable->getAsSymbolNode();
     ASSERT(symbol);
-    out << "location = @@ LOCATION-" << symbol->getName().getString() << " @@";
+
+    if (forceLocation)
+    {
+        out << "location = @@ LOCATION-" << symbol->getName().getString() << " @@";
+    }
 
     if (IsImage(type.getBasicType()) && layoutQualifier.imageInternalFormat != EiifUnspecified)
     {
@@ -69,16 +74,6 @@ void TOutputVulkanGLSL::writeLayoutQualifier(TIntermTyped *variable)
     }
 
     out << ") ";
-}
-
-bool TOutputVulkanGLSL::writeVariablePrecision(TPrecision precision)
-{
-    if (precision == EbpUndefined)
-        return false;
-
-    TInfoSinkBase &out = objSink();
-    out << getPrecisionString(precision);
-    return true;
 }
 
 }  // namespace sh

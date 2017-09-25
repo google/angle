@@ -29,7 +29,6 @@ class TOutputVulkanGLSL : public TOutputGLSL
 
   protected:
     void writeLayoutQualifier(TIntermTyped *variable) override;
-    bool writeVariablePrecision(TPrecision precision) override;
 };
 
 }  // namespace sh

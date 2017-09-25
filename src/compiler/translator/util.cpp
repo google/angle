@@ -447,6 +447,14 @@ TString ArrayString(const TType &type)
     return arrayString.str();
 }
 
+TString GetTypeName(const TType &type, ShHashFunction64 hashFunction, NameMap *nameMap)
+{
+    if (type.getBasicType() == EbtStruct)
+        return HashName(TName(type.getStruct()->name()), hashFunction, nameMap);
+    else
+        return type.getBuiltInTypeNameString();
+}
+
 bool IsVaryingOut(TQualifier qualifier)
 {
     switch (qualifier)
