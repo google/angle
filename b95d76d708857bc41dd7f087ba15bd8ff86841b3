@@ -53,6 +53,24 @@
     },
     {
       "key": {
+        "uuid": "19f3796b_06888dab",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 678,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-09-25T15:13:47Z",
+      "side": 1,
+      "message": "Yes, I agree.  Ideally we put all the switch statements in this file and only have simple getters in Program class.",
+      "parentUuid": "d208af51_18cbd197",
+      "revId": "b95d76d708857bc41dd7f087ba15bd8ff86841b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "12bdcf45_fa77306b",
         "filename": "src/libANGLE/queryutils.cpp",
         "patchSetId": 8
