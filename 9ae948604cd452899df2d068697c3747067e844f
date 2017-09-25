@@ -2,6 +2,75 @@
   "comments": [
     {
       "key": {
+        "uuid": "72ddca58_18abff4b",
+        "filename": "src/compiler/translator/OutputVulkanGLSL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-09-25T19:54:57Z",
+      "side": 1,
+      "message": "I don\u0027t see these handled in GlslangWrapper::linkProgram",
+      "range": {
+        "startLine": 46,
+        "startChar": 48,
+        "endLine": 47,
+        "endChar": 43
+      },
+      "revId": "9ae948604cd452899df2d068697c3747067e844f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f60240c8_1031a71a",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 543,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-09-25T19:54:57Z",
+      "side": 1,
+      "message": "Is this related to the rest of CL?",
+      "range": {
+        "startLine": 543,
+        "startChar": 4,
+        "endLine": 543,
+        "endChar": 41
+      },
+      "revId": "9ae948604cd452899df2d068697c3747067e844f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "774267a3_3f3d18d6",
+        "filename": "src/libANGLE/renderer/vulkan/formatutilsvk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-09-25T19:54:57Z",
+      "side": 1,
+      "message": "Is the related to rest of CL?",
+      "range": {
+        "startLine": 38,
+        "startChar": 19,
+        "endLine": 38,
+        "endChar": 36
+      },
+      "revId": "9ae948604cd452899df2d068697c3747067e844f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b908be60_b1cc39db",
         "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
         "patchSetId": 3
