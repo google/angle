@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b908be60_b1cc39db",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 273,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-25T13:53:18Z",
+      "side": 1,
+      "message": "just a heads up that this indeed intentional formatting done with git cl format.",
+      "range": {
+        "startLine": 270,
+        "startChar": 0,
+        "endLine": 273,
+        "endChar": 11
+      },
+      "revId": "9ae948604cd452899df2d068697c3747067e844f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
