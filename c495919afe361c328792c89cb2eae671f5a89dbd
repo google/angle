@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0b303de4_e10e85b7",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-09-25T15:10:26Z",
+      "side": 1,
+      "message": "Please just add a \"if target is multisample 2d, return true\" here.",
+      "revId": "c495919afe361c328792c89cb2eae671f5a89dbd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d4179c2f_98991c20",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1098,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-09-25T15:10:26Z",
+      "side": 1,
+      "message": "Instead making the texture complete indirectly by setting the these parameters, just add a check for 2D multisample textures in completeSamplerCompleteness.",
+      "range": {
+        "startLine": 1090,
+        "startChar": 0,
+        "endLine": 1098,
+        "endChar": 0
+      },
+      "revId": "c495919afe361c328792c89cb2eae671f5a89dbd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
