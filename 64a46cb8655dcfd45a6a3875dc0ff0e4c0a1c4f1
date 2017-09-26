@@ -63,6 +63,30 @@
       "revId": "64a46cb8655dcfd45a6a3875dc0ff0e4c0a1c4f1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "23731418_55e7d3f0",
+        "filename": "src/tests/gl_tests/RobustResourceInitTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-09-26T17:44:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6bf3acb4_34b64b79",
+      "range": {
+        "startLine": 211,
+        "startChar": 23,
+        "endLine": 211,
+        "endChar": 25
+      },
+      "revId": "64a46cb8655dcfd45a6a3875dc0ff0e4c0a1c4f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
