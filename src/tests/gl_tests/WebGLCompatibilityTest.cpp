@@ -552,6 +552,31 @@ TEST_P(WebGLCompatibilityTest, EnableRenderMipmapExtension)
     }
 }
 
+// Test enabling the GL_EXT_blend_minmax extension
+TEST_P(WebGLCompatibilityTest, EnableBlendMinMaxExtension)
+{
+    EXPECT_FALSE(extensionEnabled("GL_EXT_blend_minmax"));
+
+    // This extensions become core in in ES3/WebGL2.
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() >= 3);
+
+    glBlendEquation(GL_MIN);
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+    glBlendEquation(GL_MAX);
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+    if (extensionRequestable("GL_EXT_blend_minmax"))
+    {
+        glRequestExtensionANGLE("GL_EXT_blend_minmax");
+        EXPECT_GL_NO_ERROR();
+
+        glBlendEquation(GL_MIN);
+        glBlendEquation(GL_MAX);
+        EXPECT_GL_NO_ERROR();
+    }
+}
+
 // Verify that the context generates the correct error when the framebuffer attachments are
 // different sizes
 TEST_P(WebGLCompatibilityTest, FramebufferAttachmentSizeMissmatch)
