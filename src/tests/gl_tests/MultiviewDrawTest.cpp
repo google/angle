@@ -438,16 +438,30 @@ class MultiviewOcclusionQueryTest : public MultiviewRenderTest
   protected:
     MultiviewOcclusionQueryTest() {}
 
+    bool requestOcclusionQueryExtension()
+    {
+        if (extensionRequestable("GL_EXT_occlusion_query_boolean"))
+        {
+            glRequestExtensionANGLE("GL_EXT_occlusion_query_boolean");
+        }
+
+        if (!extensionEnabled("GL_EXT_occlusion_query_boolean"))
+        {
+            std::cout << "Test skipped due to missing GL_EXT_occlusion_query_boolean." << std::endl;
+            return false;
+        }
+        return true;
+    }
+
     GLuint drawAndRetrieveOcclusionQueryResult(GLuint program)
     {
-        GLuint query;
-        glGenQueries(1, &query);
-        glBeginQuery(GL_ANY_SAMPLES_PASSED, query);
+        GLQueryEXT query;
+        glBeginQueryEXT(GL_ANY_SAMPLES_PASSED, query);
         drawQuad(program, "vPosition", 0.0f, 1.0f, true);
         glEndQueryEXT(GL_ANY_SAMPLES_PASSED);
 
         GLuint result = GL_TRUE;
-        glGetQueryObjectuiv(query, GL_QUERY_RESULT, &result);
+        glGetQueryObjectuivEXT(query, GL_QUERY_RESULT, &result);
         return result;
     }
 };
@@ -1192,10 +1206,8 @@ TEST_P(MultiviewRenderTest, DivisorOrderOfOperation)
 // transforms geometry to be outside of the clip region.
 TEST_P(MultiviewOcclusionQueryTest, OcclusionQueryNothingVisible)
 {
-    if (!requestMultiviewExtension())
-    {
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(!requestMultiviewExtension());
+    ANGLE_SKIP_TEST_IF(!requestOcclusionQueryExtension());
 
     const std::string vsSource =
         "#version 300 es\n"
@@ -1229,10 +1241,8 @@ TEST_P(MultiviewOcclusionQueryTest, OcclusionQueryNothingVisible)
 // output.
 TEST_P(MultiviewOcclusionQueryTest, OcclusionQueryOnlyLeftVisible)
 {
-    if (!requestMultiviewExtension())
-    {
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(!requestMultiviewExtension());
+    ANGLE_SKIP_TEST_IF(!requestOcclusionQueryExtension());
 
     const std::string vsSource =
         "#version 300 es\n"
@@ -1266,10 +1276,8 @@ TEST_P(MultiviewOcclusionQueryTest, OcclusionQueryOnlyLeftVisible)
 // output.
 TEST_P(MultiviewOcclusionQueryTest, OcclusionQueryOnlyRightVisible)
 {
-    if (!requestMultiviewExtension())
-    {
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(!requestMultiviewExtension());
+    ANGLE_SKIP_TEST_IF(!requestOcclusionQueryExtension());
 
     const std::string vsSource =
         "#version 300 es\n"

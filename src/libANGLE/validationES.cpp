@@ -1064,7 +1064,8 @@ bool ValidQueryType(const Context *context, GLenum queryType)
     {
         case GL_ANY_SAMPLES_PASSED:
         case GL_ANY_SAMPLES_PASSED_CONSERVATIVE:
-            return true;
+            return context->getClientMajorVersion() >= 3 ||
+                   context->getExtensions().occlusionQueryBoolean;
         case GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN:
             return (context->getClientMajorVersion() >= 3);
         case GL_TIME_ELAPSED_EXT:

@@ -172,7 +172,6 @@ Extensions::Extensions()
       maxTextureAnisotropy(0.0f),
       occlusionQueryBoolean(false),
       fence(false),
-      timerQuery(false),
       disjointTimerQuery(false),
       queryCounterBitsTimeElapsed(0),
       queryCounterBitsTimestamp(0),
@@ -647,10 +646,9 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_OES_texture_npot"] = enableableExtension(&Extensions::textureNPOT);
         map["GL_EXT_draw_buffers"] = enableableExtension(&Extensions::drawBuffers);
         map["GL_EXT_texture_filter_anisotropic"] = enableableExtension(&Extensions::textureFilterAnisotropic);
-        map["GL_EXT_occlusion_query_boolean"] = esOnlyExtension(&Extensions::occlusionQueryBoolean);
+        map["GL_EXT_occlusion_query_boolean"] = enableableExtension(&Extensions::occlusionQueryBoolean);
         map["GL_NV_fence"] = esOnlyExtension(&Extensions::fence);
-        map["GL_ANGLE_timer_query"] = esOnlyExtension(&Extensions::timerQuery);
-        map["GL_EXT_disjoint_timer_query"] = esOnlyExtension(&Extensions::disjointTimerQuery);
+        map["GL_EXT_disjoint_timer_query"] = enableableExtension(&Extensions::disjointTimerQuery);
         map["GL_EXT_robustness"] = esOnlyExtension(&Extensions::robustness);
         map["GL_KHR_robust_buffer_access_behavior"] = esOnlyExtension(&Extensions::robustBufferAccessBehavior);
         map["GL_EXT_blend_minmax"] = enableableExtension(&Extensions::blendMinMax);
@@ -683,7 +681,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         //map["GL_KHR_no_error"] = esOnlyExtension(&Extensions::noError);
         map["GL_ANGLE_lossy_etc_decode"] = esOnlyExtension(&Extensions::lossyETCDecode);
         map["GL_CHROMIUM_bind_uniform_location"] = esOnlyExtension(&Extensions::bindUniformLocation);
-        map["GL_CHROMIUM_sync_query"] = esOnlyExtension(&Extensions::syncQuery);
+        map["GL_CHROMIUM_sync_query"] = enableableExtension(&Extensions::syncQuery);
         map["GL_CHROMIUM_copy_texture"] = esOnlyExtension(&Extensions::copyTexture);
         map["GL_CHROMIUM_copy_compressed_texture"] = esOnlyExtension(&Extensions::copyCompressedTexture);
         map["GL_ANGLE_webgl_compatibility"] = esOnlyExtension(&Extensions::webglCompatibility);

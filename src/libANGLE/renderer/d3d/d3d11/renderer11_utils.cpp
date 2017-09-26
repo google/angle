@@ -1411,7 +1411,6 @@ void GenerateCaps(ID3D11Device *device, ID3D11DeviceContext *deviceContext, cons
     extensions->maxTextureAnisotropy = GetMaximumAnisotropy(featureLevel);
     extensions->occlusionQueryBoolean = GetOcclusionQuerySupport(featureLevel);
     extensions->fence = GetEventQuerySupport(featureLevel);
-    extensions->timerQuery = false; // Unimplemented
     extensions->disjointTimerQuery          = true;
     extensions->queryCounterBitsTimeElapsed = 64;
     extensions->queryCounterBitsTimestamp =

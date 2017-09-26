@@ -577,6 +577,71 @@ TEST_P(WebGLCompatibilityTest, EnableBlendMinMaxExtension)
     }
 }
 
+// Test enabling the query extensions
+TEST_P(WebGLCompatibilityTest, EnableQueryExtensions)
+{
+    EXPECT_FALSE(extensionEnabled("GL_EXT_occlusion_query_boolean"));
+    EXPECT_FALSE(extensionEnabled("GL_EXT_disjoint_timer_query"));
+    EXPECT_FALSE(extensionEnabled("GL_CHROMIUM_sync_query"));
+
+    // This extensions become core in in ES3/WebGL2.
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() >= 3);
+
+    GLQueryEXT badQuery;
+
+    glBeginQueryEXT(GL_ANY_SAMPLES_PASSED_EXT, badQuery);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    glBeginQueryEXT(GL_ANY_SAMPLES_PASSED_CONSERVATIVE, badQuery);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    glBeginQueryEXT(GL_TIME_ELAPSED_EXT, badQuery);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    glQueryCounterEXT(GL_TIMESTAMP_EXT, badQuery);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    glBeginQueryEXT(GL_COMMANDS_COMPLETED_CHROMIUM, badQuery);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    if (extensionRequestable("GL_EXT_occlusion_query_boolean"))
+    {
+        glRequestExtensionANGLE("GL_EXT_occlusion_query_boolean");
+        EXPECT_GL_NO_ERROR();
+
+        GLQueryEXT query;
+        glBeginQueryEXT(GL_ANY_SAMPLES_PASSED_EXT, query);
+        glEndQueryEXT(GL_ANY_SAMPLES_PASSED_EXT);
+        EXPECT_GL_NO_ERROR();
+    }
+
+    if (extensionRequestable("GL_EXT_disjoint_timer_query"))
+    {
+        glRequestExtensionANGLE("GL_EXT_disjoint_timer_query");
+        EXPECT_GL_NO_ERROR();
+
+        GLQueryEXT query1;
+        glBeginQueryEXT(GL_TIME_ELAPSED_EXT, query1);
+        glEndQueryEXT(GL_TIME_ELAPSED_EXT);
+        EXPECT_GL_NO_ERROR();
+
+        GLQueryEXT query2;
+        glQueryCounterEXT(query2, GL_TIMESTAMP_EXT);
+        EXPECT_GL_NO_ERROR();
+    }
+
+    if (extensionRequestable("GL_CHROMIUM_sync_query"))
+    {
+        glRequestExtensionANGLE("GL_CHROMIUM_sync_query");
+        EXPECT_GL_NO_ERROR();
+
+        GLQueryEXT query;
+        glBeginQueryEXT(GL_COMMANDS_COMPLETED_CHROMIUM, query);
+        glEndQueryEXT(GL_COMMANDS_COMPLETED_CHROMIUM);
+        EXPECT_GL_NO_ERROR();
+    }
+}
+
 // Verify that the context generates the correct error when the framebuffer attachments are
 // different sizes
 TEST_P(WebGLCompatibilityTest, FramebufferAttachmentSizeMissmatch)
