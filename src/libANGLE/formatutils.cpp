@@ -312,15 +312,24 @@ GLenum InternalFormat::getReadPixelsFormat() const
     return format;
 }
 
-GLenum InternalFormat::getReadPixelsType() const
+GLenum InternalFormat::getReadPixelsType(const Version &version) const
 {
     switch (type)
     {
         case GL_HALF_FLOAT:
-            // The internal format may have a type of GL_HALF_FLOAT but when exposing this type as
-            // the IMPLEMENTATION_READ_TYPE, only HALF_FLOAT_OES is allowed by
-            // OES_texture_half_float
-            return GL_HALF_FLOAT_OES;
+        case GL_HALF_FLOAT_OES:
+            if (version < Version(3, 0))
+            {
+                // The internal format may have a type of GL_HALF_FLOAT but when exposing this type
+                // as the IMPLEMENTATION_READ_TYPE, only HALF_FLOAT_OES is allowed by
+                // OES_texture_half_float.  HALF_FLOAT becomes core in ES3 and is acceptable to use
+                // as an IMPLEMENTATION_READ_TYPE.
+                return GL_HALF_FLOAT_OES;
+            }
+            else
+            {
+                return GL_HALF_FLOAT;
+            }
 
         default:
             return type;

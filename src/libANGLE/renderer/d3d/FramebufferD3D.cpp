@@ -232,7 +232,7 @@ GLenum FramebufferD3D::getImplementationColorReadType(const gl::Context *context
     const gl::InternalFormat &implementationFormatInfo =
         gl::GetSizedInternalFormatInfo(implementationFormat);
 
-    return implementationFormatInfo.getReadPixelsType();
+    return implementationFormatInfo.getReadPixelsType(context->getClientVersion());
 }
 
 gl::Error FramebufferD3D::readPixels(const gl::Context *context,

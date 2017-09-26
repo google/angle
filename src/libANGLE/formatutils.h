@@ -83,7 +83,7 @@ struct InternalFormat
 
     bool isLUMA() const;
     GLenum getReadPixelsFormat() const;
-    GLenum getReadPixelsType() const;
+    GLenum getReadPixelsType(const Version &version) const;
 
     // Return true if the format is a required renderbuffer format in the given version of the core
     // spec. Note that it isn't always clear whether all the rules that apply to core required
