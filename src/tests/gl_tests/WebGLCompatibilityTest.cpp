@@ -521,6 +521,37 @@ TEST_P(WebGLCompatibilityTest, EnableMapBufferExtensions)
     }
 }
 
+// Test enabling the GL_OES_fbo_render_mipmap extension
+TEST_P(WebGLCompatibilityTest, EnableRenderMipmapExtension)
+{
+    EXPECT_FALSE(extensionEnabled("GL_OES_fbo_render_mipmap"));
+
+    // This extensions become core in in ES3/WebGL2.
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() >= 3);
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexImage2D(GL_TEXTURE_2D, 1, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+    EXPECT_GL_NO_ERROR();
+
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 1);
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+    if (extensionRequestable("GL_OES_fbo_render_mipmap"))
+    {
+        glRequestExtensionANGLE("GL_OES_fbo_render_mipmap");
+        EXPECT_GL_NO_ERROR();
+
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 1);
+        EXPECT_GL_NO_ERROR();
+    }
+}
+
 // Verify that the context generates the correct error when the framebuffer attachments are
 // different sizes
 TEST_P(WebGLCompatibilityTest, FramebufferAttachmentSizeMissmatch)

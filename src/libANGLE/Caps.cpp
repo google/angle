@@ -667,7 +667,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_ANGLE_multiview"] = enableableExtension(&Extensions::multiview);
         map["GL_ANGLE_texture_usage"] = esOnlyExtension(&Extensions::textureUsage);
         map["GL_ANGLE_translated_shader_source"] = esOnlyExtension(&Extensions::translatedShaderSource);
-        map["GL_OES_fbo_render_mipmap"] = esOnlyExtension(&Extensions::fboRenderMipmap);
+        map["GL_OES_fbo_render_mipmap"] = enableableExtension(&Extensions::fboRenderMipmap);
         map["GL_EXT_discard_framebuffer"] = esOnlyExtension(&Extensions::discardFramebuffer);
         map["GL_EXT_debug_marker"] = esOnlyExtension(&Extensions::debugMarker);
         map["GL_OES_EGL_image"] = esOnlyExtension(&Extensions::eglImage);
