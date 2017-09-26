@@ -24,9 +24,9 @@
 //  91532 MAC NVIDIA 0x0640 : tex_image_and_sub_image_2d_with_video = PASS FAIL
 
 // Don't run these tests for faster turnover
-998 WIN LINUX : dEQP-GLES3.performance.* = SKIP
-998 WIN LINUX : dEQP-GLES3.stress.* = SKIP
-1101 WIN LINUX : dEQP-GLES3.functional.flush_finish.* = SKIP
+998 DEBUG RELEASE : dEQP-GLES3.performance.* = SKIP
+998 DEBUG RELEASE : dEQP-GLES3.stress.* = SKIP
+1101 DEBUG RELEASE : dEQP-GLES3.functional.flush_finish.* = SKIP
 
 // TODO(jmadill): Figure out why these fail on the bots, but not locally.
 1108 WIN : dEQP-GLES3.functional.shaders.struct.local.dynamic_loop_struct_array_fragment = FAIL
@@ -332,7 +332,6 @@
 // Android only failures
 1487 ANDROID : dEQP-GLES3.functional.fbo.completeness.renderable.texture.color0.red_half_float_oes = FAIL
 1487 ANDROID : dEQP-GLES3.functional.fbo.completeness.renderable.texture.color0.rg_half_float_oes = FAIL
-1527 ANDROID : dEQP-GLES3.functional.flush_finish.* = SKIP
 1530 ANDROID : dEQP-GLES3.functional.negative_api.texture.compressedtexsubimage2d = FAIL
 1530 ANDROID : dEQP-GLES3.functional.negative_api.texture.compressedtexsubimage2d_invalid_size = FAIL
 1530 ANDROID : dEQP-GLES3.functional.negative_api.texture.compressedtexsubimage3d = FAIL
