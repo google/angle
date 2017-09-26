@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "fdcb57c8_2e0c1245",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-09-26T05:08:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0b303de4_e10e85b7",
+      "revId": "c495919afe361c328792c89cb2eae671f5a89dbd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d4179c2f_98991c20",
         "filename": "src/libANGLE/Texture.cpp",
         "patchSetId": 10
@@ -39,6 +57,30 @@
       "revId": "c495919afe361c328792c89cb2eae671f5a89dbd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "da152a77_006e1999",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1098,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-09-26T05:08:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d4179c2f_98991c20",
+      "range": {
+        "startLine": 1090,
+        "startChar": 0,
+        "endLine": 1098,
+        "endChar": 0
+      },
+      "revId": "c495919afe361c328792c89cb2eae671f5a89dbd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
