@@ -65,100 +65,9 @@ static void INTERNAL_GL_APIENTRY LogGLDebugMessage(GLenum source,
                                                    const GLchar *message,
                                                    const void *userParam)
 {
-    std::string sourceText;
-    switch (source)
-    {
-        case GL_DEBUG_SOURCE_API:
-            sourceText = "OpenGL";
-            break;
-        case GL_DEBUG_SOURCE_WINDOW_SYSTEM:
-            sourceText = "Windows";
-            break;
-        case GL_DEBUG_SOURCE_SHADER_COMPILER:
-            sourceText = "Shader Compiler";
-            break;
-        case GL_DEBUG_SOURCE_THIRD_PARTY:
-            sourceText = "Third Party";
-            break;
-        case GL_DEBUG_SOURCE_APPLICATION:
-            sourceText = "Application";
-            break;
-        case GL_DEBUG_SOURCE_OTHER:
-            sourceText = "Other";
-            break;
-        default:
-            sourceText = "UNKNOWN";
-            break;
-    }
-
-    std::string typeText;
-    switch (type)
-    {
-        case GL_DEBUG_TYPE_ERROR:
-            typeText = "Error";
-            break;
-        case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR:
-            typeText = "Deprecated behavior";
-            break;
-        case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:
-            typeText = "Undefined behavior";
-            break;
-        case GL_DEBUG_TYPE_PORTABILITY:
-            typeText = "Portability";
-            break;
-        case GL_DEBUG_TYPE_PERFORMANCE:
-            typeText = "Performance";
-            break;
-        case GL_DEBUG_TYPE_OTHER:
-            typeText = "Other";
-            break;
-        case GL_DEBUG_TYPE_MARKER:
-            typeText = "Marker";
-            break;
-        default:
-            typeText = "UNKNOWN";
-            break;
-    }
-
-    std::string severityText;
-    switch (severity)
-    {
-        case GL_DEBUG_SEVERITY_HIGH:
-            severityText = "High";
-            break;
-        case GL_DEBUG_SEVERITY_MEDIUM:
-            severityText = "Medium";
-            break;
-        case GL_DEBUG_SEVERITY_LOW:
-            severityText = "Low";
-            break;
-        case GL_DEBUG_SEVERITY_NOTIFICATION:
-            severityText = "Notification";
-            break;
-        default:
-            severityText = "UNKNOWN";
-            break;
-    }
-
-    if (type == GL_DEBUG_TYPE_ERROR)
-    {
-        ERR() << std::endl
-              << "\tSource: " << sourceText << std::endl
-              << "\tType: " << typeText << std::endl
-              << "\tID: " << gl::Error(id) << std::endl
-              << "\tSeverity: " << severityText << std::endl
-              << "\tMessage: " << message;
-    }
-    else
-    {
-        // TODO(ynovikov): filter into WARN and INFO if INFO is ever implemented
-        WARN() << std::endl
-               << "\tSource: " << sourceText << std::endl
-               << "\tType: " << typeText << std::endl
-               << "\tID: " << gl::Error(id) << std::endl
-               << "\tSeverity: " << severityText << std::endl
-               << "\tMessage: " << message;
-    }
+    ASSERT(userParam != nullptr);
+    rx::RendererGL *renderer = static_cast<rx::RendererGL *>(const_cast<void *>(userParam));
+    renderer->onDebugMessage(source, type, id, severity, length, message);
 }
 
 namespace rx
@@ -199,7 +108,7 @@ RendererGL::RendererGL(std::unique_ptr<FunctionsGL> functions, const egl::Attrib
                                         nullptr, GL_FALSE);
         mFunctions->debugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION,
                                         0, nullptr, GL_FALSE);
-        mFunctions->debugMessageCallback(&LogGLDebugMessage, nullptr);
+        mFunctions->debugMessageCallback(&LogGLDebugMessage, this);
     }
 
     if (mWorkarounds.initializeCurrentVertexAttributes)
@@ -701,6 +610,29 @@ gl::Error RendererGL::memoryBarrierByRegion(GLbitfield barriers)
 {
     mFunctions->memoryBarrierByRegion(barriers);
     return gl::NoError();
+}
+
+void RendererGL::onDebugMessage(GLenum source,
+                                GLenum type,
+                                GLuint id,
+                                GLenum severity,
+                                GLsizei length,
+                                const GLchar *message)
+{
+    constexpr size_t kMaxDebugMessagesPerNonErrorType = 5;
+    const std::string formattedMessage =
+        nativegl::FormatDebugMessage(source, type, id, severity, length, message);
+    if (type == GL_DEBUG_TYPE_ERROR)
+    {
+        ERR() << std::endl << formattedMessage;
+    }
+    else if (mDebugMessageCounts[id] < kMaxDebugMessagesPerNonErrorType)
+    {
+        // TODO(ynovikov): filter into WARN and INFO if INFO is ever implemented
+        WARN() << std::endl << formattedMessage;
+    }
+
+    mDebugMessageCounts[id]++;
 }
 
 }  // namespace rx
