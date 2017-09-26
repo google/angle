@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "42611a17_13990fde",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-26T23:29:45Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "6eaa01b8_3d794305",
+      "range": {
+        "startLine": 11,
+        "startChar": 41,
+        "endLine": 11,
+        "endChar": 68
+      },
+      "revId": "a3ecb18b3111a36f64b7b1e319dbe8dce606e366",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "c9bf508e_b9e32c76",
         "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
         "patchSetId": 3
@@ -36,6 +60,24 @@
       "writtenOn": "2017-09-26T04:23:31Z",
       "side": 1,
       "message": "So if we run out of images, swap will fail.  Is that what you want?  I\u0027d think it would be preferable to block until an image becomes available.",
+      "revId": "a3ecb18b3111a36f64b7b1e319dbe8dce606e366",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7d72f8f3_a1b118c6",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 480,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-26T23:29:45Z",
+      "side": 1,
+      "message": "Yeah it\u0027s mostly intentional. I left a TODO with more explanation. In a real implementation we\u0027ll probably have to handle timeouts and errors and all sorts of things. For now I wasn\u0027t able to reproduce any wait time. I would be curious to know if we do fail here so I left it in.",
+      "parentUuid": "c9bf508e_b9e32c76",
       "revId": "a3ecb18b3111a36f64b7b1e319dbe8dce606e366",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
