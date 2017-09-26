@@ -182,9 +182,9 @@ ShCompileOptions ShaderD3D::prepareSourceAndReturnOptions(std::stringstream *sha
     return additionalOptions;
 }
 
-bool ShaderD3D::hasUniform(const D3DUniform *d3dUniform) const
+bool ShaderD3D::hasUniform(const std::string &name) const
 {
-    return mUniformRegisterMap.find(d3dUniform->name) != mUniformRegisterMap.end();
+    return mUniformRegisterMap.find(name) != mUniformRegisterMap.end();
 }
 
 const std::map<std::string, unsigned int> &GetUniformRegisterMap(

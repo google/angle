@@ -149,7 +149,7 @@ gl::LinkResult GlslangWrapper::linkProgram(const gl::Context *glContext,
             InsertLayoutSpecifierString(&fragmentSource, samplerUniform.name, setBindingString);
         }
 
-        textureCount += samplerUniform.elementCount();
+        textureCount += samplerUniform.getBasicTypeElementCount();
     }
 
     std::array<const char *, 2> strings = {{vertexSource.c_str(), fragmentSource.c_str()}};

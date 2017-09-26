@@ -88,6 +88,44 @@ class UniformLinker
                                       std::vector<LinkedUniform> *atomicCounterUniforms,
                                       GLenum shaderType);
 
+    ShaderUniformCount flattenArrayOfStructsUniform(
+        const sh::ShaderVariable &uniform,
+        unsigned int arrayNestingIndex,
+        const std::string &namePrefix,
+        const std::string &mappedNamePrefix,
+        std::vector<LinkedUniform> *samplerUniforms,
+        std::vector<LinkedUniform> *imageUniforms,
+        std::vector<LinkedUniform> *atomicCounterUniforms,
+        GLenum shaderType,
+        bool markStaticUse,
+        int binding,
+        int offset,
+        int *location);
+
+    ShaderUniformCount flattenStructUniform(const std::vector<sh::ShaderVariable> &fields,
+                                            const std::string &namePrefix,
+                                            const std::string &mappedNamePrefix,
+                                            std::vector<LinkedUniform> *samplerUniforms,
+                                            std::vector<LinkedUniform> *imageUniforms,
+                                            std::vector<LinkedUniform> *atomicCounterUniforms,
+                                            GLenum shaderType,
+                                            bool markStaticUse,
+                                            int binding,
+                                            int offset,
+                                            int *location);
+
+    ShaderUniformCount flattenArrayUniform(const sh::ShaderVariable &uniform,
+                                           const std::string &fullName,
+                                           const std::string &fullMappedName,
+                                           std::vector<LinkedUniform> *samplerUniforms,
+                                           std::vector<LinkedUniform> *imageUniforms,
+                                           std::vector<LinkedUniform> *atomicCounterUniforms,
+                                           GLenum shaderType,
+                                           bool markStaticUse,
+                                           int binding,
+                                           int offset,
+                                           int *location);
+
     // markStaticUse is given as a separate parameter because it is tracked here at struct
     // granularity.
     ShaderUniformCount flattenUniformImpl(const sh::ShaderVariable &uniform,
@@ -149,21 +187,40 @@ class InterfaceBlockLinker : angle::NonCopyable
                             const std::string &prefix,
                             const std::string &mappedPrefix,
                             int blockIndex,
-                            bool outsideTopLevelArray,
+                            bool singleEntryForTopLevelArray,
                             int topLevelArraySize) const;
+    template <typename VarT>
+    void defineBlockMember(const GetBlockMemberInfo &getMemberInfo,
+                           const VarT &field,
+                           const std::string &fullName,
+                           const std::string &fullMappedName,
+                           int blockIndex,
+                           bool singleEntryForTopLevelArray,
+                           int topLevelArraySize) const;
 
-    virtual void defineBlockMember(const sh::ShaderVariable &field,
-                                   const std::string &fullName,
-                                   const std::string &fullMappedName,
-                                   int blockIndex,
-                                   const sh::BlockMemberInfo &memberInfo,
-                                   int topLevelArraySize) const                 = 0;
+    virtual void defineBlockMemberImpl(const sh::ShaderVariable &field,
+                                       const std::string &fullName,
+                                       const std::string &fullMappedName,
+                                       int blockIndex,
+                                       const sh::BlockMemberInfo &memberInfo,
+                                       int topLevelArraySize) const             = 0;
     virtual size_t getCurrentBlockMemberIndex() const                           = 0;
 
     using ShaderBlocks = std::pair<GLenum, const std::vector<sh::InterfaceBlock> *>;
     std::vector<ShaderBlocks> mShaderBlocks;
 
     std::vector<InterfaceBlock> *mBlocksOut;
+
+  private:
+    template <typename VarT>
+    void defineArrayOfStructsBlockMembers(const GetBlockMemberInfo &getMemberInfo,
+                                          const VarT &field,
+                                          unsigned int arrayNestingIndex,
+                                          const std::string &prefix,
+                                          const std::string &mappedPrefix,
+                                          int blockIndex,
+                                          bool singleEntryForTopLevelArray,
+                                          int topLevelArraySize) const;
 };
 
 class UniformBlockLinker final : public InterfaceBlockLinker
@@ -174,12 +231,12 @@ class UniformBlockLinker final : public InterfaceBlockLinker
     ~UniformBlockLinker() override;
 
   private:
-    void defineBlockMember(const sh::ShaderVariable &field,
-                           const std::string &fullName,
-                           const std::string &fullMappedName,
-                           int blockIndex,
-                           const sh::BlockMemberInfo &memberInfo,
-                           int topLevelArraySize) const override;
+    void defineBlockMemberImpl(const sh::ShaderVariable &field,
+                               const std::string &fullName,
+                               const std::string &fullMappedName,
+                               int blockIndex,
+                               const sh::BlockMemberInfo &memberInfo,
+                               int topLevelArraySize) const override;
     size_t getCurrentBlockMemberIndex() const override;
     std::vector<LinkedUniform> *mUniformsOut;
 };
@@ -192,12 +249,12 @@ class ShaderStorageBlockLinker final : public InterfaceBlockLinker
     ~ShaderStorageBlockLinker() override;
 
   private:
-    void defineBlockMember(const sh::ShaderVariable &field,
-                           const std::string &fullName,
-                           const std::string &fullMappedName,
-                           int blockIndex,
-                           const sh::BlockMemberInfo &memberInfo,
-                           int topLevelArraySize) const override;
+    void defineBlockMemberImpl(const sh::ShaderVariable &field,
+                               const std::string &fullName,
+                               const std::string &fullMappedName,
+                               int blockIndex,
+                               const sh::BlockMemberInfo &memberInfo,
+                               int topLevelArraySize) const override;
     size_t getCurrentBlockMemberIndex() const override;
     std::vector<BufferVariable> *mBufferVariablesOut;
 };

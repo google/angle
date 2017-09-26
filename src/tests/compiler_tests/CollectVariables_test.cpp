@@ -607,7 +607,8 @@ TEST_F(CollectFragmentVariablesTest, OutputVarESSL1FragData)
     const OutputVariable *outputVariable = nullptr;
     validateOutputVariableForShader(fragDataShader, 0u, "gl_FragData", &outputVariable);
     ASSERT_NE(outputVariable, nullptr);
-    EXPECT_EQ(kMaxDrawBuffers, outputVariable->arraySize);
+    ASSERT_EQ(1u, outputVariable->arraySizes.size());
+    EXPECT_EQ(kMaxDrawBuffers, outputVariable->arraySizes.back());
     EXPECT_GLENUM_EQ(GL_FLOAT_VEC4, outputVariable->type);
     EXPECT_GLENUM_EQ(GL_MEDIUM_FLOAT, outputVariable->precision);
 }
@@ -742,7 +743,8 @@ TEST_F(CollectFragmentVariablesTest, OutputVarESSL1EXTBlendFuncExtendedSecondary
     const OutputVariable *outputVariable = nullptr;
     validateOutputVariableForShader(secondaryFragDataShader, 0u, "gl_FragData", &outputVariable);
     ASSERT_NE(outputVariable, nullptr);
-    EXPECT_EQ(kMaxDrawBuffers, outputVariable->arraySize);
+    ASSERT_EQ(1u, outputVariable->arraySizes.size());
+    EXPECT_EQ(kMaxDrawBuffers, outputVariable->arraySizes.back());
     EXPECT_GLENUM_EQ(GL_FLOAT_VEC4, outputVariable->type);
     EXPECT_GLENUM_EQ(GL_MEDIUM_FLOAT, outputVariable->precision);
 
@@ -750,7 +752,8 @@ TEST_F(CollectFragmentVariablesTest, OutputVarESSL1EXTBlendFuncExtendedSecondary
     validateOutputVariableForShader(secondaryFragDataShader, 1u, "gl_SecondaryFragDataEXT",
                                     &outputVariable);
     ASSERT_NE(outputVariable, nullptr);
-    EXPECT_EQ(kMaxDrawBuffers, outputVariable->arraySize);
+    ASSERT_EQ(1u, outputVariable->arraySizes.size());
+    EXPECT_EQ(kMaxDrawBuffers, outputVariable->arraySizes.back());
     EXPECT_GLENUM_EQ(GL_FLOAT_VEC4, outputVariable->type);
     EXPECT_GLENUM_EQ(GL_MEDIUM_FLOAT, outputVariable->precision);
 }
@@ -1347,7 +1350,8 @@ TEST_F(CollectGeometryVariablesTest, CollectInputs)
         EXPECT_GLENUM_EQ(GL_HIGH_FLOAT, varying.precision);
         EXPECT_GLENUM_EQ(GL_FLOAT_VEC4, varying.type);
         EXPECT_FALSE(varying.isInvariant);
-        EXPECT_EQ(1u, varying.arraySize);
+        ASSERT_EQ(1u, varying.arraySizes.size());
+        EXPECT_EQ(1u, varying.arraySizes.back());
     }
 }
 
@@ -1376,7 +1380,8 @@ TEST_F(CollectGeometryVariablesTest, CollectInputArraySizeForUnsizedInput)
 
         const Varying *varying = &inputVaryings[0];
         EXPECT_EQ("texcoord", varying->name);
-        EXPECT_EQ(kArraySizeForInputPrimitives[i], varying->arraySize);
+        ASSERT_EQ(1u, varying->arraySizes.size());
+        EXPECT_EQ(kArraySizeForInputPrimitives[i], varying->arraySizes.back());
     }
 }
 

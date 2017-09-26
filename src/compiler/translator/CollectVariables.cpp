@@ -262,8 +262,7 @@ void CollectVariablesTraverser::setBuiltInInfoFromSymbolTable(const char *name,
     info->name       = name;
     info->mappedName = name;
     info->type       = GLVariableType(type);
-    ASSERT(!type.isArrayOfArrays());
-    info->arraySize = type.isArray() ? type.getOutermostArraySize() : 0;
+    info->arraySizes.assign(type.getArraySizes().begin(), type.getArraySizes().end());
     info->precision = GLVariablePrecision(type);
 }
 
@@ -485,7 +484,8 @@ void CollectVariablesTraverser::visitSymbol(TIntermSymbol *symbol)
                     setBuiltInInfoFromSymbolTable("gl_FragData", &info);
                     if (!IsExtensionEnabled(mExtensionBehavior, TExtension::EXT_draw_buffers))
                     {
-                        info.arraySize = 1;
+                        ASSERT(info.arraySizes.size() == 1u);
+                        info.arraySizes.back() = 1u;
                     }
                     info.staticUse = true;
                     mOutputVariables->push_back(info);
@@ -581,10 +581,7 @@ void CollectVariablesTraverser::setCommonVariableProperties(const TType &type,
     variableOut->name       = name.getString().c_str();
     variableOut->mappedName = getMappedName(name);
 
-    // TODO(oetuaho@nvidia.com): Uniforms can be arrays of arrays, so this assert will need to be
-    // removed.
-    ASSERT(!type.isArrayOfArrays());
-    variableOut->arraySize = type.isArray() ? type.getOutermostArraySize() : 0;
+    variableOut->arraySizes.assign(type.getArraySizes().begin(), type.getArraySizes().end());
 }
 
 Attribute CollectVariablesTraverser::recordAttribute(const TIntermSymbol &variable) const
@@ -677,7 +674,6 @@ void CollectVariablesTraverser::recordInterfaceBlock(const TType &interfaceBlock
         setCommonVariableProperties(fieldType, TName(field->name()), &fieldVariable);
         fieldVariable.isRowMajorLayout =
             (fieldType.getLayoutQualifier().matrixPacking == EmpRowMajor);
-        fieldVariable.isUnsizedArray = fieldType.isUnsizedArray();
         interfaceBlock->fields.push_back(fieldVariable);
     }
 }

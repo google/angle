@@ -623,7 +623,7 @@ vk::Error ProgramVk::initPipelineLayout(ContextVk *context)
 
             VkDescriptorSetLayoutBinding layoutBinding;
 
-            uint32_t elementCount = samplerUniform.elementCount();
+            uint32_t elementCount = samplerUniform.getBasicTypeElementCount();
 
             layoutBinding.binding         = textureCount;
             layoutBinding.descriptorType  = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;

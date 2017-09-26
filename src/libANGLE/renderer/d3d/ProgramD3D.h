@@ -36,11 +36,17 @@ class ShaderExecutableD3D;
 // register indices.
 struct D3DUniform : private angle::NonCopyable
 {
-    D3DUniform(GLenum type, const std::string &nameIn, unsigned int arraySizeIn, bool defaultBlock);
+    D3DUniform(GLenum type,
+               const std::string &nameIn,
+               const std::vector<unsigned int> &arraySizesIn,
+               bool defaultBlock);
     ~D3DUniform();
 
     bool isSampler() const;
-    unsigned int elementCount() const { return std::max(1u, arraySize); }
+
+    bool isArray() const { return !arraySizes.empty(); }
+    unsigned int getArraySizeProduct() const;
+
     bool isReferencedByVertexShader() const;
     bool isReferencedByFragmentShader() const;
     bool isReferencedByComputeShader() const;
@@ -51,7 +57,7 @@ struct D3DUniform : private angle::NonCopyable
     // Duplicated from the GL layer
     const gl::UniformTypeInfo &typeInfo;
     std::string name;  // Names of arrays don't include [0], unlike at the GL layer.
-    unsigned int arraySize;
+    std::vector<unsigned int> arraySizes;
 
     // Pointer to a system copies of the data. Separate pointers for each uniform storage type.
     uint8_t *vsData;
@@ -368,13 +374,29 @@ class ProgramD3D : public ProgramImpl
     void defineUniformBase(const gl::Shader *shader,
                            const sh::Uniform &uniform,
                            D3DUniformMap *uniformMap);
+    void defineStructUniformFields(GLenum shaderType,
+                                   const std::vector<sh::ShaderVariable> &fields,
+                                   const std::string &namePrefix,
+                                   sh::HLSLBlockEncoder *encoder,
+                                   D3DUniformMap *uniformMap);
+    void defineArrayOfStructsUniformFields(GLenum shaderType,
+                                           const sh::ShaderVariable &uniform,
+                                           unsigned int arrayNestingIndex,
+                                           const std::string &prefix,
+                                           sh::HLSLBlockEncoder *encoder,
+                                           D3DUniformMap *uniformMap);
+    void defineArrayUniformElements(GLenum shaderType,
+                                    const sh::ShaderVariable &uniform,
+                                    const std::string &fullName,
+                                    sh::HLSLBlockEncoder *encoder,
+                                    D3DUniformMap *uniformMap);
     void defineUniform(GLenum shaderType,
                        const sh::ShaderVariable &uniform,
                        const std::string &fullName,
                        sh::HLSLBlockEncoder *encoder,
                        D3DUniformMap *uniformMap);
     void assignAllSamplerRegisters();
-    void assignSamplerRegisters(D3DUniform *d3dUniform);
+    void assignSamplerRegisters(size_t uniformIndex);
 
     static void AssignSamplers(unsigned int startSamplerIndex,
                                const gl::UniformTypeInfo &typeInfo,

@@ -770,6 +770,16 @@ std::string ParseResourceName(const std::string &name, std::vector<unsigned int>
     return name.substr(0, baseNameLength);
 }
 
+unsigned int ArraySizeProduct(const std::vector<unsigned int> &arraySizes)
+{
+    unsigned int arraySizeProduct = 1u;
+    for (unsigned int arraySize : arraySizes)
+    {
+        arraySizeProduct *= arraySize;
+    }
+    return arraySizeProduct;
+}
+
 unsigned int ParseArrayIndex(const std::string &name, size_t *nameLengthWithoutArrayIndexOut)
 {
     ASSERT(nameLengthWithoutArrayIndexOut != nullptr);

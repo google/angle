@@ -57,7 +57,7 @@ bool CompareShaderVar(const sh::ShaderVariable &x, const sh::ShaderVariable &y)
 {
     if (x.type == y.type)
     {
-        return x.arraySize > y.arraySize;
+        return x.getArraySizeProduct() > y.getArraySizeProduct();
     }
 
     // Special case for handling structs: we sort these to the end of the list

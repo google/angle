@@ -70,6 +70,10 @@ GLuint GetPrimitiveRestartIndex(GLenum indexType);
 bool IsTriangleMode(GLenum drawMode);
 bool IsIntegerFormat(GLenum unsizedFormat);
 
+// Returns the product of the sizes in the vector, or 1 if the vector is empty. Doesn't currently
+// perform overflow checks.
+unsigned int ArraySizeProduct(const std::vector<unsigned int> &arraySizes);
+
 // Return the array index at the end of name, and write the length of name before the final array
 // index into nameLengthWithoutArrayIndexOut. In case name doesn't include an array index, return
 // GL_INVALID_INDEX and write the length of the original string.

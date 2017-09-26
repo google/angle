@@ -25,14 +25,12 @@ TEST(ShaderVariableTest, FindInfoByMappedName)
     //   A a[3];
     // };
     // B uni[2];
-    ShaderVariable uni;
-    uni.setArraySize(2);
+    ShaderVariable uni(0, 2);
     uni.name = "uni";
     uni.mappedName = "m_uni";
     uni.structName = "B";
     {
-        ShaderVariable a;
-        a.setArraySize(3);
+        ShaderVariable a(0, 3);
         a.name = "a";
         a.mappedName = "m_a";
         a.structName = "A";

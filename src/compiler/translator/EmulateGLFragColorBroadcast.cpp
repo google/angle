@@ -119,7 +119,8 @@ void EmulateGLFragColorBroadcast(TIntermBlock *root,
                 // TODO(zmo): Find a way to keep the original variable information.
                 var.name       = "gl_FragData";
                 var.mappedName = "gl_FragData";
-                var.arraySize  = maxDrawBuffers;
+                var.arraySizes.push_back(maxDrawBuffers);
+                ASSERT(var.arraySizes.size() == 1u);
             }
         }
     }

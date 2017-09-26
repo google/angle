@@ -47,7 +47,7 @@ class ShaderD3D : public ShaderImpl
     // D3D-specific methods
     void uncompile();
 
-    bool hasUniform(const D3DUniform *d3dUniform) const;
+    bool hasUniform(const std::string &name) const;
 
     // Query regular uniforms with their name. Query sampler fields of structs with field selection
     // using dot (.) operator.

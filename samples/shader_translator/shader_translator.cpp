@@ -560,9 +560,14 @@ void PrintVariable(const std::string &prefix, size_t index, const sh::ShaderVari
       default: typeName = "UNKNOWN"; break;
     }
 
-    printf("%s %u : name=%s, mappedName=%s, type=%s, arraySize=%u\n", prefix.c_str(),
+    printf("%s %u : name=%s, mappedName=%s, type=%s, arraySizes=", prefix.c_str(),
            static_cast<unsigned int>(index), var.name.c_str(), var.mappedName.c_str(),
-           typeName.c_str(), var.arraySize);
+           typeName.c_str());
+    for (unsigned int arraySize : var.arraySizes)
+    {
+        printf("%u ", arraySize);
+    }
+    printf("\n");
     if (var.fields.size())
     {
         std::string structPrefix;

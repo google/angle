@@ -71,7 +71,10 @@ std::vector<sh::Varying> MakeVaryings(GLenum type, size_t count, size_t arraySiz
         varying.precision     = GL_MEDIUM_FLOAT;
         varying.name          = strstr.str();
         varying.mappedName    = strstr.str();
-        varying.arraySize     = static_cast<unsigned int>(arraySize);
+        if (arraySize > 0)
+        {
+            varying.arraySizes.push_back(static_cast<unsigned int>(arraySize));
+        }
         varying.staticUse     = true;
         varying.interpolation = sh::INTERPOLATION_FLAT;
         varying.isInvariant   = false;

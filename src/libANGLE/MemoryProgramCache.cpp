@@ -42,7 +42,7 @@ void WriteShaderVar(BinaryOutputStream *stream, const sh::ShaderVariable &var)
     stream->writeInt(var.precision);
     stream->writeString(var.name);
     stream->writeString(var.mappedName);
-    stream->writeInt(var.arraySize);
+    stream->writeIntVector(var.arraySizes);
     stream->writeInt(var.staticUse);
     stream->writeString(var.structName);
     ASSERT(var.fields.empty());
@@ -54,7 +54,7 @@ void LoadShaderVar(BinaryInputStream *stream, sh::ShaderVariable *var)
     var->precision  = stream->readInt<GLenum>();
     var->name       = stream->readString();
     var->mappedName = stream->readString();
-    var->arraySize  = stream->readInt<unsigned int>();
+    stream->readIntVector<unsigned int>(&var->arraySizes);
     var->staticUse  = stream->readBool();
     var->structName = stream->readString();
 }
@@ -334,7 +334,7 @@ LinkResult MemoryProgramCache::Deserialize(const Context *context,
          ++transformFeedbackVaryingIndex)
     {
         sh::Varying varying;
-        stream.readInt(&varying.arraySize);
+        stream.readIntVector<unsigned int>(&varying.arraySizes);
         stream.readInt(&varying.type);
         stream.readString(&varying.name);
 
@@ -508,7 +508,7 @@ void MemoryProgramCache::Serialize(const Context *context,
     stream.writeInt(state.getLinkedTransformFeedbackVaryings().size());
     for (const auto &var : state.getLinkedTransformFeedbackVaryings())
     {
-        stream.writeInt(var.arraySize);
+        stream.writeIntVector(var.arraySizes);
         stream.writeInt(var.type);
         stream.writeString(var.name);
 

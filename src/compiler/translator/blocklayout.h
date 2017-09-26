@@ -73,7 +73,9 @@ class BlockLayoutEncoder
     BlockLayoutEncoder();
     virtual ~BlockLayoutEncoder() {}
 
-    BlockMemberInfo encodeType(GLenum type, unsigned int arraySize, bool isRowMajorMatrix);
+    BlockMemberInfo encodeType(GLenum type,
+                               const std::vector<unsigned int> &arraySizes,
+                               bool isRowMajorMatrix);
 
     size_t getBlockSize() const { return mCurrentOffset * BytesPerComponent; }
 
@@ -92,15 +94,15 @@ class BlockLayoutEncoder
     void nextRegister();
 
     virtual void getBlockLayoutInfo(GLenum type,
-                                    unsigned int arraySize,
+                                    const std::vector<unsigned int> &arraySizes,
                                     bool isRowMajorMatrix,
                                     int *arrayStrideOut,
                                     int *matrixStrideOut) = 0;
     virtual void advanceOffset(GLenum type,
-                               unsigned int arraySize,
+                               const std::vector<unsigned int> &arraySizes,
                                bool isRowMajorMatrix,
                                int arrayStride,
-                               int matrixStride) = 0;
+                               int matrixStride)          = 0;
 };
 
 // Block layout according to the std140 block layout
@@ -116,12 +118,12 @@ class Std140BlockEncoder : public BlockLayoutEncoder
 
   protected:
     void getBlockLayoutInfo(GLenum type,
-                            unsigned int arraySize,
+                            const std::vector<unsigned int> &arraySizes,
                             bool isRowMajorMatrix,
                             int *arrayStrideOut,
                             int *matrixStrideOut) override;
     void advanceOffset(GLenum type,
-                       unsigned int arraySize,
+                       const std::vector<unsigned int> &arraySizes,
                        bool isRowMajorMatrix,
                        int arrayStride,
                        int matrixStride) override;

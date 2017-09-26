@@ -436,7 +436,7 @@ void QueryBufferParameterBase(const Buffer *buffer, GLenum pname, ParamType *par
     }
 }
 
-GLint GetLocationVariableProperty(const sh::VariableWithLocation &var, GLenum prop)
+GLint GetCommonVariableProperty(const sh::ShaderVariable &var, GLenum prop)
 {
     switch (prop)
     {
@@ -444,21 +444,13 @@ GLint GetLocationVariableProperty(const sh::VariableWithLocation &var, GLenum pr
             return clampCast<GLint>(var.type);
 
         case GL_ARRAY_SIZE:
-            // TODO(jie.a.chen@intel.com): check array of array.
-            if (var.isArray() && !var.isStruct())
-            {
-                return clampCast<GLint>(var.elementCount());
-            }
-            return 1;
+            // Queryable variables are guaranteed not to be arrays of arrays or arrays of structs,
+            // see GLES 3.1 spec section 7.3.1.1 page 77.
+            return clampCast<GLint>(var.getBasicTypeElementCount());
 
         case GL_NAME_LENGTH:
-        {
             // ES31 spec p84: This counts the terminating null char.
             return clampCast<GLint>(var.name.size() + 1u);
-        }
-
-        case GL_LOCATION:
-            return var.location;
 
         default:
             UNREACHABLE();
@@ -474,7 +466,7 @@ GLint GetInputResourceProperty(const Program *program, GLuint index, GLenum prop
         case GL_TYPE:
         case GL_ARRAY_SIZE:
         case GL_NAME_LENGTH:
-            return GetLocationVariableProperty(attribute, prop);
+            return GetCommonVariableProperty(attribute, prop);
 
         case GL_LOCATION:
             return program->getAttributeLocation(attribute.name);
@@ -500,7 +492,7 @@ GLint GetOutputResourceProperty(const Program *program, GLuint index, const GLen
         case GL_TYPE:
         case GL_ARRAY_SIZE:
         case GL_NAME_LENGTH:
-            return GetLocationVariableProperty(outputVariable, prop);
+            return GetCommonVariableProperty(outputVariable, prop);
 
         case GL_LOCATION:
             return program->getFragDataLocation(outputVariable.name);
@@ -1369,7 +1361,7 @@ GLint GetUniformResourceProperty(const Program *program, GLuint index, const GLe
         case GL_TYPE:
         case GL_ARRAY_SIZE:
         case GL_NAME_LENGTH:
-            return GetLocationVariableProperty(uniform, resourceProp);
+            return GetCommonVariableProperty(uniform, resourceProp);
 
         case GL_LOCATION:
             return program->getUniformLocation(uniform.name);
@@ -1413,17 +1405,12 @@ GLint GetBufferVariableResourceProperty(const Program *program, GLuint index, co
     switch (prop)
     {
         case GL_TYPE:
-            return clampCast<GLint>(bufferVariable.type);
-
         case GL_ARRAY_SIZE:
-            return clampCast<GLint>(bufferVariable.elementCount());
+        case GL_NAME_LENGTH:
+            return GetCommonVariableProperty(bufferVariable, prop);
 
         case GL_BLOCK_INDEX:
             return bufferVariable.bufferIndex;
-
-        case GL_NAME_LENGTH:
-            // ES31 spec p84: This counts the terminating null char.
-            return clampCast<GLint>(bufferVariable.name.size() + 1u);
 
         case GL_OFFSET:
             return bufferVariable.blockInfo.offset;
