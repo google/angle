@@ -447,6 +447,80 @@ TEST_P(WebGLCompatibilityTest, ExtensionCompilerSpec)
     glDeleteProgram(program);
 }
 
+// Test enabling the GL_NV_pixel_buffer_object extension
+TEST_P(WebGLCompatibilityTest, EnablePixelBufferObjectExtensions)
+{
+    EXPECT_FALSE(extensionEnabled("GL_NV_pixel_buffer_object"));
+    EXPECT_FALSE(extensionEnabled("GL_OES_mapbuffer"));
+    EXPECT_FALSE(extensionEnabled("GL_EXT_map_buffer_range"));
+
+    // These extensions become core in in ES3/WebGL2.
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() >= 3);
+
+    GLBuffer buffer;
+    glBindBuffer(GL_PIXEL_PACK_BUFFER, buffer);
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+    if (extensionRequestable("GL_NV_pixel_buffer_object"))
+    {
+        glRequestExtensionANGLE("GL_NV_pixel_buffer_object");
+        EXPECT_GL_NO_ERROR();
+
+        glBindBuffer(GL_PIXEL_PACK_BUFFER, buffer);
+        EXPECT_GL_NO_ERROR();
+
+        glBufferData(GL_PIXEL_PACK_BUFFER, 4, nullptr, GL_STATIC_DRAW);
+        glReadPixels(0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+        EXPECT_GL_NO_ERROR();
+    }
+}
+
+// Test enabling the GL_OES_mapbuffer and GL_EXT_map_buffer_range extensions
+TEST_P(WebGLCompatibilityTest, EnableMapBufferExtensions)
+{
+    EXPECT_FALSE(extensionEnabled("GL_OES_mapbuffer"));
+    EXPECT_FALSE(extensionEnabled("GL_EXT_map_buffer_range"));
+
+    // These extensions become core in in ES3/WebGL2.
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() >= 3);
+
+    GLBuffer buffer;
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, 4, nullptr, GL_STATIC_DRAW);
+
+    glMapBufferOES(GL_ELEMENT_ARRAY_BUFFER, GL_WRITE_ONLY_OES);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    glMapBufferRangeEXT(GL_ELEMENT_ARRAY_BUFFER, 0, 4, GL_MAP_WRITE_BIT);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    GLint access = 0;
+    glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_ACCESS_OES, &access);
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+    if (extensionRequestable("GL_OES_mapbuffer"))
+    {
+        glRequestExtensionANGLE("GL_OES_mapbuffer");
+        EXPECT_GL_NO_ERROR();
+
+        glMapBufferOES(GL_ELEMENT_ARRAY_BUFFER, GL_WRITE_ONLY_OES);
+        glUnmapBufferOES(GL_ELEMENT_ARRAY_BUFFER);
+        glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_ACCESS_OES, &access);
+        EXPECT_GL_NO_ERROR();
+    }
+
+    if (extensionRequestable("GL_EXT_map_buffer_range"))
+    {
+        glRequestExtensionANGLE("GL_EXT_map_buffer_range");
+        EXPECT_GL_NO_ERROR();
+
+        glMapBufferRangeEXT(GL_ELEMENT_ARRAY_BUFFER, 0, 4, GL_MAP_WRITE_BIT);
+        glUnmapBufferOES(GL_ELEMENT_ARRAY_BUFFER);
+        glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_ACCESS_OES, &access);
+        EXPECT_GL_NO_ERROR();
+    }
+}
+
 // Verify that the context generates the correct error when the framebuffer attachments are
 // different sizes
 TEST_P(WebGLCompatibilityTest, FramebufferAttachmentSizeMissmatch)

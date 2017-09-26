@@ -624,9 +624,9 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_OES_rgb8_rgba8"] = esOnlyExtension(&Extensions::rgb8rgba8);
         map["GL_EXT_texture_format_BGRA8888"] = esOnlyExtension(&Extensions::textureFormatBGRA8888);
         map["GL_EXT_read_format_bgra"] = esOnlyExtension(&Extensions::readFormatBGRA);
-        map["GL_NV_pixel_buffer_object"] = esOnlyExtension(&Extensions::pixelBufferObject);
-        map["GL_OES_mapbuffer"] = esOnlyExtension(&Extensions::mapBuffer);
-        map["GL_EXT_map_buffer_range"] = esOnlyExtension(&Extensions::mapBufferRange);
+        map["GL_NV_pixel_buffer_object"] = enableableExtension(&Extensions::pixelBufferObject);
+        map["GL_OES_mapbuffer"] = enableableExtension(&Extensions::mapBuffer);
+        map["GL_EXT_map_buffer_range"] = enableableExtension(&Extensions::mapBufferRange);
         map["GL_EXT_color_buffer_half_float"] = enableableExtension(&Extensions::colorBufferHalfFloat);
         map["GL_OES_texture_half_float"] = enableableExtension(&Extensions::textureHalfFloat);
         map["GL_OES_texture_half_float_linear"] = enableableExtension(&Extensions::textureHalfFloatLinear);
