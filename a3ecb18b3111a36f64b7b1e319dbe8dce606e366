@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6eaa01b8_3d794305",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-09-26T04:23:31Z",
+      "side": 1,
+      "message": "Framebuffer is a pretty overloaded term.  It makes sense after looking at the code but maybe not to someone just reading the commit message.  How about \"semaphores for each image in the swapchain.\"",
+      "range": {
+        "startLine": 11,
+        "startChar": 41,
+        "endLine": 11,
+        "endChar": 68
+      },
+      "revId": "a3ecb18b3111a36f64b7b1e319dbe8dce606e366",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c9bf508e_b9e32c76",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 480,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-09-26T04:23:31Z",
+      "side": 1,
+      "message": "So if we run out of images, swap will fail.  Is that what you want?  I\u0027d think it would be preferable to block until an image becomes available.",
+      "revId": "a3ecb18b3111a36f64b7b1e319dbe8dce606e366",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eea89a88_a008ada5",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-09-26T04:23:31Z",
+      "side": 1,
+      "message": "Don\u0027t like this name.  It\u0027s not a semaphore but an index into a pool of semaphores.  However if you accept my main suggestion you can do away with this variable.",
+      "revId": "a3ecb18b3111a36f64b7b1e319dbe8dce606e366",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
