@@ -1,0 +1,123 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4a85fbbe_d01e47e5",
+        "filename": "src/libANGLE/State.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 395,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-26T13:14:16Z",
+      "side": 1,
+      "message": "MAX_SAMPLE_MASK_WORDS is 1. We can add a static assert for it and only have \"DIRTY_BIT_SAMPLE_MASK_VALUE\". This leads to simplification in various places.",
+      "revId": "be73f5390717fa7dcf4c03e5018bf8b528f0a82f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7cffacc2_fb11cf1a",
+        "filename": "src/libANGLE/State.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 520,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-26T13:14:16Z",
+      "side": 1,
+      "message": "nit: std::array or a single GLbitfield.",
+      "revId": "be73f5390717fa7dcf4c03e5018bf8b528f0a82f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f31cfab1_6d3f2fb2",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 185,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-26T13:14:16Z",
+      "side": 1,
+      "message": "This can use std::array::fill",
+      "revId": "be73f5390717fa7dcf4c03e5018bf8b528f0a82f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ab79f194_3ed06045",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2016,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-26T13:14:16Z",
+      "side": 1,
+      "message": "This will get simplified to just a case statement.",
+      "revId": "be73f5390717fa7dcf4c03e5018bf8b528f0a82f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6c2f60ab_a9d174e4",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 301,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-26T13:14:16Z",
+      "side": 1,
+      "message": "Since we have an upper bound on the size of this, it could become an std::array\u003cGLbitfield, MAX_SAMPLE_MASK_WORDS\u003e. Since MAX_SAMPLE_MASK_WORDS is 1, this can become a standalone GLbitfield.",
+      "revId": "be73f5390717fa7dcf4c03e5018bf8b528f0a82f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "be02b8e2_5ed4b545",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2330,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-26T13:14:16Z",
+      "side": 1,
+      "message": "nit: can you put this string in ErrorString.h?",
+      "revId": "be73f5390717fa7dcf4c03e5018bf8b528f0a82f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "62cc59c2_0b8593ea",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1327,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-26T13:14:16Z",
+      "side": 1,
+      "message": "nit: can you put this string in ErrorString.h and merge it with the one from validationES3?",
+      "revId": "be73f5390717fa7dcf4c03e5018bf8b528f0a82f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
