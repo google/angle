@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "1c9684cd_dead7b94",
+        "filename": "src/libANGLE/Uniform.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-09-26T06:24:45Z",
+      "side": 1,
+      "message": "It was just for purpose of making destructors of parent classes virtual. Anyway it could have been inlined at least.",
+      "parentUuid": "4791bfd6_5d03a164",
+      "revId": "b95d76d708857bc41dd7f087ba15bd8ff86841b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d9a1e907_788f48c9",
         "filename": "src/libANGLE/Uniform.h",
         "patchSetId": 8
@@ -30,6 +48,24 @@
       "writtenOn": "2017-09-25T15:09:02Z",
       "side": 1,
       "message": "nit: this implies LinkedUniform \"is a\" ShaderRef. It seems that it is more like \"has a\" piece of data about being reference. So things could go like this:\n\n\nstruct StaticUse {\n   StaticUse(); // Would initialize everything to false;\n   void setUsed(shaderType, used);\n   bool compute;\n   bool fragment;\n   bool vertex;\n};\n\n\nThen in LinkedUniform there would be \"StaticUse staticUse\". So that the data can be accessed as \"uniform-\u003estaticUse.compute\".",
+      "revId": "b95d76d708857bc41dd7f087ba15bd8ff86841b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4007a9c9_097cb391",
+        "filename": "src/libANGLE/Uniform.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-09-26T06:24:45Z",
+      "side": 1,
+      "message": "ShaderRef is just not a good name. What has been actually in my mind is ProgramResource. LinkedUniform, AtomicCounterBuffer, UniformBlock, ShaderStorageBlock, BufferVariable all are a ProgramResource. A ProgramResource can be statically used by various shader stages. I had planned to rename it to ProgramSource in follow-up patches for ShaderStorageBlock. Now it seems good as well to do so in this CL.",
+      "parentUuid": "d9a1e907_788f48c9",
       "revId": "b95d76d708857bc41dd7f087ba15bd8ff86841b3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -71,6 +107,24 @@
     },
     {
       "key": {
+        "uuid": "2b92d685_90424cd7",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 678,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-09-26T06:24:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "19f3796b_06888dab",
+      "revId": "b95d76d708857bc41dd7f087ba15bd8ff86841b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "12bdcf45_fa77306b",
         "filename": "src/libANGLE/queryutils.cpp",
         "patchSetId": 8
@@ -88,6 +142,24 @@
     },
     {
       "key": {
+        "uuid": "e7e5c78d_a021c162",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1306,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-09-26T06:24:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "12bdcf45_fa77306b",
+      "revId": "b95d76d708857bc41dd7f087ba15bd8ff86841b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0df937e2_d110e586",
         "filename": "src/libANGLE/queryutils.cpp",
         "patchSetId": 8
@@ -102,6 +174,24 @@
       "revId": "b95d76d708857bc41dd7f087ba15bd8ff86841b3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eff570ec_7388b435",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1369,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-09-26T06:24:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0df937e2_d110e586",
+      "revId": "b95d76d708857bc41dd7f087ba15bd8ff86841b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
