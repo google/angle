@@ -19,6 +19,64 @@
     },
     {
       "key": {
+        "uuid": "d92222c2_149c3cc0",
+        "filename": "src/libANGLE/Constants.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-27T15:46:08Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "158edbc7_2544c1cc",
+      "revId": "eb4801dd955d00b62b191c976272abdcee6d99d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "41618caf_b80e4909",
+        "filename": "src/libANGLE/ErrorStrings.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-27T15:46:08Z",
+      "side": 1,
+      "message": "typo",
+      "range": {
+        "startLine": 91,
+        "startChar": 71,
+        "endLine": 91,
+        "endChar": 77
+      },
+      "revId": "eb4801dd955d00b62b191c976272abdcee6d99d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d060e088_3c747fe1",
+        "filename": "src/libANGLE/State.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 520,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-27T15:46:08Z",
+      "side": 1,
+      "message": "ditto: std::array",
+      "revId": "eb4801dd955d00b62b191c976272abdcee6d99d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f0f65d00_91d1b217",
         "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
         "patchSetId": 5
@@ -36,6 +94,47 @@
         "endLine": 2018,
         "endChar": 62
       },
+      "revId": "eb4801dd955d00b62b191c976272abdcee6d99d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3c0d3608_65b86faa",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2018,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-27T15:46:08Z",
+      "side": 1,
+      "message": "Sounds good, though with an std::array this will need to get the max value from somewhere else.",
+      "parentUuid": "f0f65d00_91d1b217",
+      "range": {
+        "startLine": 2018,
+        "startChar": 19,
+        "endLine": 2018,
+        "endChar": 62
+      },
+      "revId": "eb4801dd955d00b62b191c976272abdcee6d99d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d924f411_73433187",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 301,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-27T15:46:08Z",
+      "side": 1,
+      "message": "I think Geoff meant that he was for std::array but against a standalone GLbitfield, can you make this an std::array?",
       "revId": "eb4801dd955d00b62b191c976272abdcee6d99d4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
