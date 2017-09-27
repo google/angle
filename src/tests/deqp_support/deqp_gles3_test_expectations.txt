@@ -345,11 +345,14 @@
 2137 MAC : dEQP-GLES3.functional.shaders.scoping.valid.local_struct_variable_hides_struct_type_fragment = FAIL
 2137 MAC : dEQP-GLES3.functional.shaders.scoping.valid.local_struct_variable_hides_struct_type_vertex = FAIL
 2137 MAC : dEQP-GLES3.functional.state_query.integers64.max_server_wait_timeout_getfloat = FAIL
-2137 MAC : dEQP-GLES3.functional.state_query.integers64.compressed_texture_formats_getfloat = FAIL
-2137 MAC : dEQP-GLES3.functional.state_query.integers64.compressed_texture_formats_getinteger = FAIL
-2137 MAC : dEQP-GLES3.functional.state_query.integers64.compressed_texture_formats_getinteger64 = FAIL
+2137 MAC : dEQP-GLES3.functional.state_query.integers.compressed_texture_formats_getfloat = FAIL
+2137 MAC : dEQP-GLES3.functional.state_query.integers.compressed_texture_formats_getinteger = FAIL
+2137 MAC : dEQP-GLES3.functional.state_query.integers.compressed_texture_formats_getinteger64 = FAIL
 
 // Mac AMD failures
+2137 MAC AMD : dEQP-GLES3.functional.clipping.point.wide_point_clip = FAIL
+2137 MAC AMD : dEQP-GLES3.functional.clipping.point.wide_point_clip_viewport_center = FAIL
+2137 MAC AMD : dEQP-GLES3.functional.clipping.point.wide_point_clip_viewport_corner = FAIL
 2137 MAC AMD : dEQP-GLES3.functional.fbo.blit.rect.out_of_bounds_nearest = FAIL
 2137 MAC AMD : dEQP-GLES3.functional.shaders.builtin_functions.precision.tanh.highp_* = FAIL
 2137 MAC AMD : dEQP-GLES3.functional.texture.mipmap.2d.projected.* = FAIL
