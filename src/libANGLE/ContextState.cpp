@@ -683,6 +683,10 @@ bool ValidationContext::getQueryParameterInfo(GLenum pname, GLenum *type, unsign
             *type      = GL_INT_64_ANGLEX;
             *numParams = 1;
             return true;
+        case GL_SAMPLE_MASK:
+            *type      = GL_BOOL;
+            *numParams = 1;
+            return true;
     }
 
     return false;
@@ -732,6 +736,7 @@ bool ValidationContext::getIndexedQueryParameterInfo(GLenum target,
         case GL_VERTEX_BINDING_DIVISOR:
         case GL_VERTEX_BINDING_OFFSET:
         case GL_VERTEX_BINDING_STRIDE:
+        case GL_SAMPLE_MASK_VALUE:
         {
             *type      = GL_INT;
             *numParams = 1;

@@ -1073,11 +1073,11 @@ void GL_APIENTRY SampleMaski(GLuint maskNumber, GLbitfield mask)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (mask != ~GLbitfield(0))
+        if (!context->skipValidation() && !ValidateSampleMaski(context, maskNumber))
         {
-            // Setting a non-default sample mask is not implemented yet.
-            UNIMPLEMENTED();
+            return;
         }
+        context->sampleMaski(maskNumber, mask);
     }
 }
 

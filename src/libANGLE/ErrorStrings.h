@@ -87,6 +87,8 @@ ERRMSG(InvalidRenderbufferTarget, "Invalid renderbuffer target.");
 ERRMSG(InvalidRenderbufferTextureParameter, "Invalid parameter name for renderbuffer attachment.");
 ERRMSG(InvalidRenderbufferWidthHeight,
        "Renderbuffer width and height cannot be negative and cannot exceed maximum texture size.");
+ERRMSG(InvalidSampleMaskNumber,
+       "MaskNumber cannot be greater than or equal to the value of MAX_SAMPLE_MASK_WORDS.");
 ERRMSG(InvalidSampler, "Sampler is not valid");
 ERRMSG(InvalidShaderName, "Shader object expected.");
 ERRMSG(InvalidShaderType, "Invalid shader type.");

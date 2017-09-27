@@ -45,6 +45,8 @@ State::State()
       mSampleCoverage(false),
       mSampleCoverageValue(0),
       mSampleCoverageInvert(false),
+      mSampleMask(false),
+      mMaxSampleMaskWords(0),
       mStencilRef(0),
       mStencilBackRef(0),
       mLineWidth(0),
@@ -108,6 +110,11 @@ void State::initialize(const Context *context,
     mSampleCoverage = false;
     mSampleCoverageValue = 1.0f;
     mSampleCoverageInvert = false;
+
+    mMaxSampleMaskWords = caps.maxSampleMaskWords;
+    mSampleMask         = false;
+    mSampleMaskValues.fill(~GLbitfield(0));
+
     mGenerateMipmapHint = GL_DONT_CARE;
     mFragmentShaderDerivativeHint = GL_DONT_CARE;
 
@@ -563,6 +570,35 @@ bool State::getSampleCoverageInvert() const
     return mSampleCoverageInvert;
 }
 
+bool State::isSampleMaskEnabled() const
+{
+    return mSampleMask;
+}
+
+void State::setSampleMaskEnabled(bool enabled)
+{
+    mSampleMask = enabled;
+    mDirtyBits.set(DIRTY_BIT_SAMPLE_MASK_ENABLED);
+}
+
+void State::setSampleMaskParams(GLuint maskNumber, GLbitfield mask)
+{
+    ASSERT(maskNumber < mMaxSampleMaskWords);
+    mSampleMaskValues[maskNumber] = mask;
+    mDirtyBits.set(DIRTY_BIT_SAMPLE_MASK_WORD_0 + maskNumber);
+}
+
+GLbitfield State::getSampleMaskWord(GLuint maskNumber) const
+{
+    ASSERT(maskNumber < mMaxSampleMaskWords);
+    return mSampleMaskValues[maskNumber];
+}
+
+GLuint State::getMaxSampleMaskWords() const
+{
+    return mMaxSampleMaskWords;
+}
+
 void State::setSampleAlphaToOne(bool enabled)
 {
     mSampleAlphaToOne = enabled;
@@ -650,11 +686,7 @@ void State::setEnableFeature(GLenum feature, bool enabled)
       case GL_PRIMITIVE_RESTART_FIXED_INDEX: setPrimitiveRestart(enabled);      break;
       case GL_RASTERIZER_DISCARD:            setRasterizerDiscard(enabled);     break;
       case GL_SAMPLE_MASK:
-          if (enabled)
-          {
-              // Enabling this feature is not implemented yet.
-              UNIMPLEMENTED();
-          }
+          setSampleMaskEnabled(enabled);
           break;
       case GL_DEBUG_OUTPUT_SYNCHRONOUS:
           mDebug.setOutputSynchronous(enabled);
@@ -687,8 +719,7 @@ bool State::getEnableFeature(GLenum feature) const
       case GL_PRIMITIVE_RESTART_FIXED_INDEX: return isPrimitiveRestartEnabled();
       case GL_RASTERIZER_DISCARD:            return isRasterizerDiscardEnabled();
       case GL_SAMPLE_MASK:
-          UNIMPLEMENTED();
-          return false;
+          return isSampleMaskEnabled();
       case GL_DEBUG_OUTPUT_SYNCHRONOUS:
           return mDebug.isOutputSynchronous();
       case GL_DEBUG_OUTPUT:
@@ -1669,6 +1700,9 @@ void State::getBooleanv(GLenum pname, GLboolean *params)
       case GL_POLYGON_OFFSET_FILL:       *params = mRasterizer.polygonOffsetFill; break;
       case GL_SAMPLE_ALPHA_TO_COVERAGE:  *params = mBlend.sampleAlphaToCoverage;  break;
       case GL_SAMPLE_COVERAGE:           *params = mSampleCoverage;               break;
+      case GL_SAMPLE_MASK:
+          *params = mSampleMask;
+          break;
       case GL_SCISSOR_TEST:              *params = mScissorTest;                  break;
       case GL_STENCIL_TEST:              *params = mDepthStencil.stencilTest;     break;
       case GL_DEPTH_TEST:                *params = mDepthStencil.depthTest;       break;
@@ -2084,6 +2118,10 @@ void State::getIntegeri_v(GLenum target, GLuint index, GLint *data)
       case GL_VERTEX_BINDING_STRIDE:
           ASSERT(static_cast<size_t>(index) < mVertexArray->getMaxBindings());
           *data = mVertexArray->getVertexBinding(index).getStride();
+          break;
+      case GL_SAMPLE_MASK_VALUE:
+          ASSERT(static_cast<size_t>(index) < mSampleMaskValues.size());
+          *data = mSampleMaskValues[index];
           break;
       default:
           UNREACHABLE();

@@ -290,6 +290,7 @@ class Context final : public ValidationContext
     void pixelStorei(GLenum pname, GLint param);
     void polygonOffset(GLfloat factor, GLfloat units);
     void sampleCoverage(GLfloat value, GLboolean invert);
+    void sampleMaski(GLuint maskNumber, GLbitfield mask);
     void scissor(GLint x, GLint y, GLsizei width, GLsizei height);
     void stencilFuncSeparate(GLenum face, GLenum func, GLint ref, GLuint mask);
     void stencilMaskSeparate(GLenum face, GLuint mask);

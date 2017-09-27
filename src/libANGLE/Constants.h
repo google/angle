@@ -19,6 +19,9 @@ const size_t kDefaultMaxProgramCacheMemoryBytes = 0;
 
 enum
 {
+    // Implementation upper limits, real maximums depend on the hardware
+    MAX_SAMPLE_MASK_WORDS = 2,
+
     MAX_VERTEX_ATTRIBS         = 16,
     MAX_VERTEX_ATTRIB_BINDINGS = 16,
 
