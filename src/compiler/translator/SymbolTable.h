@@ -227,7 +227,7 @@ class TInterfaceBlockName : public TSymbol
 class TSymbolTableLevel
 {
   public:
-    typedef TMap<TString, TSymbol *> tLevel;
+    typedef TUnorderedMap<TString, TSymbol *> tLevel;
     typedef tLevel::const_iterator const_iterator;
     typedef const tLevel::value_type tLevelPair;
     typedef std::pair<tLevel::iterator, bool> tInsertResult;
