@@ -698,6 +698,121 @@ TEST_P(WebGLCompatibilityTest, EnableInstancedArraysExtension)
     }
 }
 
+// Test enabling the GL_ANGLE_pack_reverse_row_order extension
+TEST_P(WebGLCompatibilityTest, EnablePackReverseRowOrderExtension)
+{
+    EXPECT_FALSE(extensionEnabled("GL_ANGLE_pack_reverse_row_order"));
+
+    GLint result = 0;
+    glGetIntegerv(GL_PACK_REVERSE_ROW_ORDER_ANGLE, &result);
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+    glPixelStorei(GL_PACK_REVERSE_ROW_ORDER_ANGLE, GL_TRUE);
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+    if (extensionRequestable("GL_ANGLE_pack_reverse_row_order"))
+    {
+        glRequestExtensionANGLE("GL_ANGLE_pack_reverse_row_order");
+        EXPECT_GL_NO_ERROR();
+
+        glGetIntegerv(GL_PACK_REVERSE_ROW_ORDER_ANGLE, &result);
+        glPixelStorei(GL_PACK_REVERSE_ROW_ORDER_ANGLE, GL_TRUE);
+        EXPECT_GL_NO_ERROR();
+    }
+}
+
+// Test enabling the GL_EXT_unpack_subimage extension
+TEST_P(WebGLCompatibilityTest, EnablePackUnpackSubImageExtension)
+{
+    EXPECT_FALSE(extensionEnabled("GL_EXT_unpack_subimage"));
+
+    // This extensions become core in in ES3/WebGL2.
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() >= 3);
+
+    constexpr GLenum parameters[] = {
+        GL_UNPACK_ROW_LENGTH_EXT, GL_UNPACK_SKIP_ROWS_EXT, GL_UNPACK_SKIP_PIXELS_EXT,
+    };
+
+    for (GLenum param : parameters)
+    {
+        GLint resultI = 0;
+        glGetIntegerv(param, &resultI);
+        EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+        GLfloat resultF = 0.0f;
+        glGetFloatv(param, &resultF);
+        EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+        glPixelStorei(param, 0);
+        EXPECT_GL_ERROR(GL_INVALID_ENUM);
+    }
+
+    if (extensionRequestable("GL_EXT_unpack_subimage"))
+    {
+        glRequestExtensionANGLE("GL_EXT_unpack_subimage");
+        EXPECT_GL_NO_ERROR();
+
+        for (GLenum param : parameters)
+        {
+            GLint resultI = 0;
+            glGetIntegerv(param, &resultI);
+
+            GLfloat resultF = 0.0f;
+            glGetFloatv(param, &resultF);
+
+            glPixelStorei(param, 0);
+
+            EXPECT_GL_NO_ERROR();
+        }
+    }
+}
+
+// Test enabling the GL_NV_pack_subimage extension
+TEST_P(WebGLCompatibilityTest, EnablePackPackSubImageExtension)
+{
+    EXPECT_FALSE(extensionEnabled("GL_NV_pack_subimage"));
+
+    // This extensions become core in in ES3/WebGL2.
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() >= 3);
+
+    constexpr GLenum parameters[] = {
+        GL_PACK_ROW_LENGTH, GL_PACK_SKIP_ROWS, GL_PACK_SKIP_PIXELS,
+    };
+
+    for (GLenum param : parameters)
+    {
+        GLint resultI = 0;
+        glGetIntegerv(param, &resultI);
+        EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+        GLfloat resultF = 0.0f;
+        glGetFloatv(param, &resultF);
+        EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+        glPixelStorei(param, 0);
+        EXPECT_GL_ERROR(GL_INVALID_ENUM);
+    }
+
+    if (extensionRequestable("GL_NV_pack_subimage"))
+    {
+        glRequestExtensionANGLE("GL_NV_pack_subimage");
+        EXPECT_GL_NO_ERROR();
+
+        for (GLenum param : parameters)
+        {
+            GLint resultI = 0;
+            glGetIntegerv(param, &resultI);
+
+            GLfloat resultF = 0.0f;
+            glGetFloatv(param, &resultF);
+
+            glPixelStorei(param, 0);
+
+            EXPECT_GL_NO_ERROR();
+        }
+    }
+}
+
 // Verify that the context generates the correct error when the framebuffer attachments are
 // different sizes
 TEST_P(WebGLCompatibilityTest, FramebufferAttachmentSizeMissmatch)

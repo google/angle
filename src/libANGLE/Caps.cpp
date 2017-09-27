@@ -652,7 +652,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_ANGLE_framebuffer_blit"] = esOnlyExtension(&Extensions::framebufferBlit);
         map["GL_ANGLE_framebuffer_multisample"] = enableableExtension(&Extensions::framebufferMultisample);
         map["GL_ANGLE_instanced_arrays"] = enableableExtension(&Extensions::instancedArrays);
-        map["GL_ANGLE_pack_reverse_row_order"] = esOnlyExtension(&Extensions::packReverseRowOrder);
+        map["GL_ANGLE_pack_reverse_row_order"] = enableableExtension(&Extensions::packReverseRowOrder);
         map["GL_OES_standard_derivatives"] = enableableExtension(&Extensions::standardDerivatives);
         map["GL_EXT_shader_texture_lod"] = enableableExtension(&Extensions::shaderTextureLOD);
         map["GL_EXT_frag_depth"] = enableableExtension(&Extensions::fragDepth);
@@ -666,8 +666,8 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_OES_EGL_image_external"] = esOnlyExtension(&Extensions::eglImageExternal);
         map["GL_OES_EGL_image_external_essl3"] = esOnlyExtension(&Extensions::eglImageExternalEssl3);
         map["GL_NV_EGL_stream_consumer_external"] = esOnlyExtension(&Extensions::eglStreamConsumerExternal);
-        map["GL_EXT_unpack_subimage"] = esOnlyExtension(&Extensions::unpackSubimage);
-        map["GL_NV_pack_subimage"] = esOnlyExtension(&Extensions::packSubimage);
+        map["GL_EXT_unpack_subimage"] = enableableExtension(&Extensions::unpackSubimage);
+        map["GL_NV_pack_subimage"] = enableableExtension(&Extensions::packSubimage);
         map["GL_EXT_color_buffer_float"] = enableableExtension(&Extensions::colorBufferFloat);
         map["GL_OES_vertex_array_object"] = esOnlyExtension(&Extensions::vertexArrayObject);
         map["GL_KHR_debug"] = esOnlyExtension(&Extensions::debug);
