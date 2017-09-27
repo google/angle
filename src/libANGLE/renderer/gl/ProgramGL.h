@@ -96,6 +96,12 @@ class ProgramGL : public ProgramImpl
     bool getUniformBlockMemberInfo(const std::string &memberUniformName,
                                    const std::string &memberUniformMappedName,
                                    sh::BlockMemberInfo *memberInfoOut) const;
+    bool getShaderStorageBlockMemberInfo(const std::string &memberName,
+                                         const std::string &memberMappedName,
+                                         sh::BlockMemberInfo *memberInfoOut) const;
+    bool getShaderStorageBlockSize(const std::string &blockName,
+                                   const std::string &blockMappedName,
+                                   size_t *sizeOut) const;
     void linkResources(const gl::ProgramLinkedResources &resources);
 
     // Helper function, makes it simpler to type.

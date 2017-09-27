@@ -67,8 +67,8 @@ struct ShaderVariable
     ShaderVariable(const ShaderVariable &other);
     ShaderVariable &operator=(const ShaderVariable &other);
 
-    bool isArray() const { return arraySize > 0; }
-    unsigned int elementCount() const { return std::max(1u, arraySize); }
+    bool isArray() const { return arraySize > 0 || isUnsizedArray; }
+    unsigned int elementCount() const { return isUnsizedArray ? 0 : std::max(1u, arraySize); }
     bool isStruct() const { return !fields.empty(); }
 
     // Array size 0 means not an array when passed to or returned from these functions.
@@ -100,6 +100,7 @@ struct ShaderVariable
     bool staticUse;
     std::vector<ShaderVariable> fields;
     std::string structName;
+    bool isUnsizedArray;
 
   protected:
     bool isSameVariableAtLinkTime(const ShaderVariable &other,

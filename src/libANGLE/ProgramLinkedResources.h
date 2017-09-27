@@ -147,13 +147,16 @@ class InterfaceBlockLinker : angle::NonCopyable
                             const std::vector<VarT> &fields,
                             const std::string &prefix,
                             const std::string &mappedPrefix,
-                            int blockIndex) const;
+                            int blockIndex,
+                            bool outsideTopLevelArray,
+                            int topLevelArraySize) const;
 
     virtual void defineBlockMember(const sh::ShaderVariable &field,
                                    const std::string &fullName,
                                    const std::string &fullMappedName,
                                    int blockIndex,
-                                   const sh::BlockMemberInfo &memberInfo) const = 0;
+                                   const sh::BlockMemberInfo &memberInfo,
+                                   int topLevelArraySize) const                 = 0;
     virtual size_t getCurrentBlockMemberIndex() const                           = 0;
 
     using ShaderBlocks = std::pair<GLenum, const std::vector<sh::InterfaceBlock> *>;
@@ -174,16 +177,17 @@ class UniformBlockLinker final : public InterfaceBlockLinker
                            const std::string &fullName,
                            const std::string &fullMappedName,
                            int blockIndex,
-                           const sh::BlockMemberInfo &memberInfo) const override;
+                           const sh::BlockMemberInfo &memberInfo,
+                           int topLevelArraySize) const override;
     size_t getCurrentBlockMemberIndex() const override;
     std::vector<LinkedUniform> *mUniformsOut;
 };
 
-// TODO(jiajia.qin@intel.com): Add buffer variables support.
 class ShaderStorageBlockLinker final : public InterfaceBlockLinker
 {
   public:
-    ShaderStorageBlockLinker(std::vector<InterfaceBlock> *blocksOut);
+    ShaderStorageBlockLinker(std::vector<InterfaceBlock> *blocksOut,
+                             std::vector<BufferVariable> *bufferVariablesOut);
     virtual ~ShaderStorageBlockLinker();
 
   private:
@@ -191,8 +195,10 @@ class ShaderStorageBlockLinker final : public InterfaceBlockLinker
                            const std::string &fullName,
                            const std::string &fullMappedName,
                            int blockIndex,
-                           const sh::BlockMemberInfo &memberInfo) const override;
+                           const sh::BlockMemberInfo &memberInfo,
+                           int topLevelArraySize) const override;
     size_t getCurrentBlockMemberIndex() const override;
+    std::vector<BufferVariable> *mBufferVariablesOut;
 };
 
 // The link operation is responsible for finishing the link of uniform and interface blocks.

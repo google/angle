@@ -27,22 +27,44 @@ struct InterfaceBlock;
 
 struct BlockMemberInfo
 {
-    BlockMemberInfo() : offset(-1), arrayStride(-1), matrixStride(-1), isRowMajorMatrix(false) {}
+    BlockMemberInfo()
+        : offset(-1),
+          arrayStride(-1),
+          matrixStride(-1),
+          isRowMajorMatrix(false),
+          topLevelArrayStride(-1)
+    {
+    }
 
     BlockMemberInfo(int offset, int arrayStride, int matrixStride, bool isRowMajorMatrix)
         : offset(offset),
           arrayStride(arrayStride),
           matrixStride(matrixStride),
-          isRowMajorMatrix(isRowMajorMatrix)
+          isRowMajorMatrix(isRowMajorMatrix),
+          topLevelArrayStride(-1)
     {
     }
 
-    static BlockMemberInfo getDefaultBlockInfo() { return BlockMemberInfo(-1, -1, -1, false); }
+    BlockMemberInfo(int offset,
+                    int arrayStride,
+                    int matrixStride,
+                    bool isRowMajorMatrix,
+                    int topLevelArrayStride)
+        : offset(offset),
+          arrayStride(arrayStride),
+          matrixStride(matrixStride),
+          isRowMajorMatrix(isRowMajorMatrix),
+          topLevelArrayStride(topLevelArrayStride)
+    {
+    }
+
+    static BlockMemberInfo getDefaultBlockInfo() { return BlockMemberInfo(-1, -1, -1, false, -1); }
 
     int offset;
     int arrayStride;
     int matrixStride;
     bool isRowMajorMatrix;
+    int topLevelArrayStride;  // Only used for shader storage block members.
 };
 
 class BlockLayoutEncoder

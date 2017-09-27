@@ -580,6 +580,60 @@ bool ProgramGL::getUniformBlockMemberInfo(const std::string & /* memberUniformNa
     return true;
 }
 
+bool ProgramGL::getShaderStorageBlockMemberInfo(const std::string & /* memberName */,
+                                                const std::string &memberUniformMappedName,
+                                                sh::BlockMemberInfo *memberInfoOut) const
+{
+    const GLchar *memberNameGLStr = memberUniformMappedName.c_str();
+    GLuint index =
+        mFunctions->getProgramResourceIndex(mProgramID, GL_BUFFER_VARIABLE, memberNameGLStr);
+
+    if (index == GL_INVALID_INDEX)
+    {
+        *memberInfoOut = sh::BlockMemberInfo::getDefaultBlockInfo();
+        return false;
+    }
+
+    constexpr int kPropCount             = 5;
+    std::array<GLenum, kPropCount> props = {
+        {GL_ARRAY_STRIDE, GL_IS_ROW_MAJOR, GL_MATRIX_STRIDE, GL_OFFSET, GL_TOP_LEVEL_ARRAY_STRIDE}};
+    std::array<GLint, kPropCount> params;
+    GLsizei length;
+    mFunctions->getProgramResourceiv(mProgramID, GL_BUFFER_VARIABLE, index, kPropCount,
+                                     props.data(), kPropCount, &length, params.data());
+    ASSERT(kPropCount == length);
+    memberInfoOut->arrayStride         = params[0];
+    memberInfoOut->isRowMajorMatrix    = params[1];
+    memberInfoOut->matrixStride        = params[2];
+    memberInfoOut->offset              = params[3];
+    memberInfoOut->topLevelArrayStride = params[4];
+
+    return true;
+}
+
+bool ProgramGL::getShaderStorageBlockSize(const std::string &name,
+                                          const std::string &mappedName,
+                                          size_t *sizeOut) const
+{
+    const GLchar *nameGLStr = mappedName.c_str();
+    GLuint index =
+        mFunctions->getProgramResourceIndex(mProgramID, GL_SHADER_STORAGE_BLOCK, nameGLStr);
+
+    if (index == GL_INVALID_INDEX)
+    {
+        *sizeOut = 0;
+        return false;
+    }
+
+    GLenum prop    = GL_BUFFER_DATA_SIZE;
+    GLsizei length = 0;
+    GLint dataSize = 0;
+    mFunctions->getProgramResourceiv(mProgramID, GL_SHADER_STORAGE_BLOCK, index, 1, &prop, 1,
+                                     &length, &dataSize);
+    *sizeOut = static_cast<size_t>(dataSize);
+    return true;
+}
+
 void ProgramGL::setPathFragmentInputGen(const std::string &inputName,
                                         GLenum genMode,
                                         GLint components,
@@ -822,18 +876,16 @@ void ProgramGL::linkResources(const gl::ProgramLinkedResources &resources)
 
     resources.uniformBlockLinker.linkBlocks(getUniformBlockSize, getUniformBlockMemberInfo);
 
-    // TODO(jiajia.qin@intel.com): Determine correct shader storage block info.
-    auto getShaderStorageBlockSize = [](const std::string &name, const std::string &mappedName,
-                                        size_t *sizeOut) {
-        *sizeOut = 0;
-        return true;
+    auto getShaderStorageBlockSize = [this](const std::string &name, const std::string &mappedName,
+                                            size_t *sizeOut) {
+        return this->getShaderStorageBlockSize(name, mappedName, sizeOut);
     };
 
-    auto getShaderStorageBlockMemberInfo =
-        [](const std::string &name, const std::string &mappedName, sh::BlockMemberInfo *infoOut) {
-            *infoOut = sh::BlockMemberInfo::getDefaultBlockInfo();
-            return true;
-        };
+    auto getShaderStorageBlockMemberInfo = [this](const std::string &name,
+                                                  const std::string &mappedName,
+                                                  sh::BlockMemberInfo *infoOut) {
+        return this->getShaderStorageBlockMemberInfo(name, mappedName, infoOut);
+    };
     resources.shaderStorageBlockLinker.linkBlocks(getShaderStorageBlockSize,
                                                   getShaderStorageBlockMemberInfo);
 }

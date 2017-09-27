@@ -90,6 +90,38 @@ void LoadShaderVariableBuffer(BinaryInputStream *stream, ShaderVariableBuffer *v
     }
 }
 
+void WriteBufferVariable(BinaryOutputStream *stream, const BufferVariable &var)
+{
+    WriteShaderVar(stream, var);
+
+    stream->writeInt(var.bufferIndex);
+    stream->writeInt(var.blockInfo.offset);
+    stream->writeInt(var.blockInfo.arrayStride);
+    stream->writeInt(var.blockInfo.matrixStride);
+    stream->writeInt(var.blockInfo.isRowMajorMatrix);
+    stream->writeInt(var.blockInfo.topLevelArrayStride);
+    stream->writeInt(var.topLevelArraySize);
+    stream->writeInt(var.vertexStaticUse);
+    stream->writeInt(var.fragmentStaticUse);
+    stream->writeInt(var.computeStaticUse);
+}
+
+void LoadBufferVariable(BinaryInputStream *stream, BufferVariable *var)
+{
+    LoadShaderVar(stream, var);
+
+    var->bufferIndex                   = stream->readInt<int>();
+    var->blockInfo.offset              = stream->readInt<int>();
+    var->blockInfo.arrayStride         = stream->readInt<int>();
+    var->blockInfo.matrixStride        = stream->readInt<int>();
+    var->blockInfo.isRowMajorMatrix    = stream->readBool();
+    var->blockInfo.topLevelArrayStride = stream->readInt<int>();
+    var->topLevelArraySize             = stream->readInt<int>();
+    var->vertexStaticUse               = stream->readBool();
+    var->fragmentStaticUse             = stream->readBool();
+    var->computeStaticUse              = stream->readBool();
+}
+
 void WriteInterfaceBlock(BinaryOutputStream *stream, const InterfaceBlock &block)
 {
     stream->writeString(block.name);
@@ -255,6 +287,15 @@ LinkResult MemoryProgramCache::Deserialize(const Context *context,
         state->mUniformBlocks.push_back(uniformBlock);
 
         state->mActiveUniformBlockBindings.set(uniformBlockIndex, uniformBlock.binding != 0);
+    }
+
+    unsigned int bufferVariableCount = stream.readInt<unsigned int>();
+    ASSERT(state->mBufferVariables.empty());
+    for (unsigned int index = 0; index < bufferVariableCount; ++index)
+    {
+        BufferVariable bufferVariable;
+        LoadBufferVariable(&stream, &bufferVariable);
+        state->mBufferVariables.push_back(bufferVariable);
     }
 
     unsigned int shaderStorageBlockCount = stream.readInt<unsigned int>();
@@ -436,6 +477,12 @@ void MemoryProgramCache::Serialize(const Context *context,
     for (const InterfaceBlock &uniformBlock : state.getUniformBlocks())
     {
         WriteInterfaceBlock(&stream, uniformBlock);
+    }
+
+    stream.writeInt(state.getBufferVariables().size());
+    for (const BufferVariable &bufferVariable : state.getBufferVariables())
+    {
+        WriteBufferVariable(&stream, bufferVariable);
     }
 
     stream.writeInt(state.getShaderStorageBlocks().size());

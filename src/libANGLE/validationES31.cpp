@@ -260,6 +260,12 @@ bool ValidateProgramResourceIndex(const Program *programObject,
         case GL_UNIFORM:
             return (index < static_cast<GLuint>(programObject->getActiveUniformCount()));
 
+        case GL_BUFFER_VARIABLE:
+            return (index < static_cast<GLuint>(programObject->getActiveBufferVariableCount()));
+
+        case GL_SHADER_STORAGE_BLOCK:
+            return (index < static_cast<GLuint>(programObject->getActiveShaderStorageBlockCount()));
+
         case GL_UNIFORM_BLOCK:
             return (index < programObject->getActiveUniformBlockCount());
 
@@ -268,8 +274,6 @@ bool ValidateProgramResourceIndex(const Program *programObject,
 
         // TODO(jie.a.chen@intel.com): more interfaces.
         case GL_TRANSFORM_FEEDBACK_VARYING:
-        case GL_BUFFER_VARIABLE:
-        case GL_SHADER_STORAGE_BLOCK:
             UNIMPLEMENTED();
             return false;
 

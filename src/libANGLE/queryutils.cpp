@@ -539,10 +539,14 @@ GLint QueryProgramInterfaceActiveResources(const Program *program, GLenum progra
         case GL_ATOMIC_COUNTER_BUFFER:
             return clampCast<GLint>(program->getState().getAtomicCounterBuffers().size());
 
+        case GL_BUFFER_VARIABLE:
+            return clampCast<GLint>(program->getState().getBufferVariables().size());
+
+        case GL_SHADER_STORAGE_BLOCK:
+            return clampCast<GLint>(program->getState().getShaderStorageBlocks().size());
+
         // TODO(jie.a.chen@intel.com): more interfaces.
         case GL_TRANSFORM_FEEDBACK_VARYING:
-        case GL_BUFFER_VARIABLE:
-        case GL_SHADER_STORAGE_BLOCK:
             UNIMPLEMENTED();
             return 0;
 
@@ -586,10 +590,18 @@ GLint QueryProgramInterfaceMaxNameLength(const Program *program, GLenum programI
                 FindMaxSize(program->getState().getUniformBlocks(), &InterfaceBlock::name);
             break;
 
+        case GL_BUFFER_VARIABLE:
+            maxNameLength =
+                FindMaxSize(program->getState().getBufferVariables(), &BufferVariable::name);
+            break;
+
+        case GL_SHADER_STORAGE_BLOCK:
+            maxNameLength =
+                FindMaxSize(program->getState().getShaderStorageBlocks(), &InterfaceBlock::name);
+            break;
+
         // TODO(jie.a.chen@intel.com): more interfaces.
         case GL_TRANSFORM_FEEDBACK_VARYING:
-        case GL_BUFFER_VARIABLE:
-        case GL_SHADER_STORAGE_BLOCK:
             UNIMPLEMENTED();
             return 0;
 
@@ -612,10 +624,9 @@ GLint QueryProgramInterfaceMaxNumActiveVariables(const Program *program, GLenum 
             return FindMaxSize(program->getState().getAtomicCounterBuffers(),
                                &AtomicCounterBuffer::memberIndexes);
 
-        // TODO(jie.a.chen@intel.com): more interfaces.
         case GL_SHADER_STORAGE_BLOCK:
-            UNIMPLEMENTED();
-            return 0;
+            return FindMaxSize(program->getState().getShaderStorageBlocks(),
+                               &InterfaceBlock::memberIndexes);
 
         default:
             UNREACHABLE();
@@ -744,6 +755,19 @@ void GetUniformBlockResourceProperty(const Program *program,
 {
     ASSERT(*outputPosition < bufSize);
     const auto &block = program->getUniformBlockByIndex(blockIndex);
+    GetInterfaceBlockResourceProperty(block, pname, params, bufSize, outputPosition);
+}
+
+void GetShaderStorageBlockResourceProperty(const Program *program,
+                                           GLuint blockIndex,
+                                           GLenum pname,
+                                           GLint *params,
+                                           GLsizei bufSize,
+                                           GLsizei *outputPosition)
+
+{
+    ASSERT(*outputPosition < bufSize);
+    const auto &block = program->getShaderStorageBlockByIndex(blockIndex);
     GetInterfaceBlockResourceProperty(block, pname, params, bufSize, outputPosition);
 }
 
@@ -1383,6 +1407,57 @@ GLint GetUniformResourceProperty(const Program *program, GLuint index, const GLe
     }
 }
 
+GLint GetBufferVariableResourceProperty(const Program *program, GLuint index, const GLenum prop)
+{
+    const auto &bufferVariable = program->getBufferVariableByIndex(index);
+    switch (prop)
+    {
+        case GL_TYPE:
+            return clampCast<GLint>(bufferVariable.type);
+
+        case GL_ARRAY_SIZE:
+            return clampCast<GLint>(bufferVariable.elementCount());
+
+        case GL_BLOCK_INDEX:
+            return bufferVariable.bufferIndex;
+
+        case GL_NAME_LENGTH:
+            // ES31 spec p84: This counts the terminating null char.
+            return clampCast<GLint>(bufferVariable.name.size() + 1u);
+
+        case GL_OFFSET:
+            return bufferVariable.blockInfo.offset;
+
+        case GL_ARRAY_STRIDE:
+            return bufferVariable.blockInfo.arrayStride;
+
+        case GL_MATRIX_STRIDE:
+            return bufferVariable.blockInfo.matrixStride;
+
+        case GL_IS_ROW_MAJOR:
+            return static_cast<GLint>(bufferVariable.blockInfo.isRowMajorMatrix);
+
+        case GL_REFERENCED_BY_VERTEX_SHADER:
+            return bufferVariable.vertexStaticUse;
+
+        case GL_REFERENCED_BY_FRAGMENT_SHADER:
+            return bufferVariable.fragmentStaticUse;
+
+        case GL_REFERENCED_BY_COMPUTE_SHADER:
+            return bufferVariable.computeStaticUse;
+
+        case GL_TOP_LEVEL_ARRAY_SIZE:
+            return bufferVariable.topLevelArraySize;
+
+        case GL_TOP_LEVEL_ARRAY_STRIDE:
+            return bufferVariable.blockInfo.topLevelArrayStride;
+
+        default:
+            UNREACHABLE();
+            return 0;
+    }
+}
+
 GLuint QueryProgramResourceIndex(const Program *program,
                                  GLenum programInterface,
                                  const GLchar *name)
@@ -1398,13 +1473,17 @@ GLuint QueryProgramResourceIndex(const Program *program,
         case GL_UNIFORM:
             return program->getState().getUniformIndexFromName(name);
 
+        case GL_BUFFER_VARIABLE:
+            return program->getState().getBufferVariableIndexFromName(name);
+
+        case GL_SHADER_STORAGE_BLOCK:
+            return program->getShaderStorageBlockIndex(name);
+
         case GL_UNIFORM_BLOCK:
             return program->getUniformBlockIndex(name);
 
         // TODO(jie.a.chen@intel.com): more interfaces.
         case GL_TRANSFORM_FEEDBACK_VARYING:
-        case GL_BUFFER_VARIABLE:
-        case GL_SHADER_STORAGE_BLOCK:
             UNIMPLEMENTED();
             return GL_INVALID_INDEX;
 
@@ -1435,14 +1514,20 @@ void QueryProgramResourceName(const Program *program,
             program->getUniformResourceName(index, bufSize, length, name);
             break;
 
+        case GL_BUFFER_VARIABLE:
+            program->getBufferVariableResourceName(index, bufSize, length, name);
+            break;
+
+        case GL_SHADER_STORAGE_BLOCK:
+            program->getActiveShaderStorageBlockName(index, bufSize, length, name);
+            break;
+
         case GL_UNIFORM_BLOCK:
             program->getActiveUniformBlockName(index, bufSize, length, name);
             break;
 
         // TODO(jie.a.chen@intel.com): more interfaces.
         case GL_TRANSFORM_FEEDBACK_VARYING:
-        case GL_BUFFER_VARIABLE:
-        case GL_SHADER_STORAGE_BLOCK:
             UNIMPLEMENTED();
             break;
 
@@ -1509,8 +1594,19 @@ void QueryProgramResourceiv(const Program *program,
                 params[i] = GetUniformResourceProperty(program, index, props[i]);
                 ++pos;
                 break;
+
+            case GL_BUFFER_VARIABLE:
+                params[i] = GetBufferVariableResourceProperty(program, index, props[i]);
+                ++pos;
+                break;
+
             case GL_UNIFORM_BLOCK:
                 GetUniformBlockResourceProperty(program, index, props[i], params, bufSize, &pos);
+                break;
+
+            case GL_SHADER_STORAGE_BLOCK:
+                GetShaderStorageBlockResourceProperty(program, index, props[i], params, bufSize,
+                                                      &pos);
                 break;
 
             case GL_ATOMIC_COUNTER_BUFFER:
@@ -1519,8 +1615,6 @@ void QueryProgramResourceiv(const Program *program,
                 break;
             // TODO(jie.a.chen@intel.com): more interfaces.
             case GL_TRANSFORM_FEEDBACK_VARYING:
-            case GL_BUFFER_VARIABLE:
-            case GL_SHADER_STORAGE_BLOCK:
                 UNIMPLEMENTED();
                 params[i] = GL_INVALID_VALUE;
                 break;

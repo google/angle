@@ -660,6 +660,7 @@ void InterfaceBlockLinker::linkBlocks(const GetBlockSize &getBlockSize,
                         if (block.name == priorBlock.name)
                         {
                             priorBlock.setStaticUse(shaderType, true);
+                            // TODO(jiajia.qin@intel.com): update the block members static use.
                         }
                     }
                 }
@@ -678,7 +679,9 @@ void InterfaceBlockLinker::defineBlockMembers(const GetBlockMemberInfo &getMembe
                                               const std::vector<VarT> &fields,
                                               const std::string &prefix,
                                               const std::string &mappedPrefix,
-                                              int blockIndex) const
+                                              int blockIndex,
+                                              bool outsideTopLevelArray,
+                                              int topLevelArraySize) const
 {
     for (const VarT &field : fields)
     {
@@ -689,14 +692,26 @@ void InterfaceBlockLinker::defineBlockMembers(const GetBlockMemberInfo &getMembe
 
         if (field.isStruct())
         {
-            for (unsigned int arrayElement = 0; arrayElement < field.elementCount(); arrayElement++)
+            int nextArraySize         = topLevelArraySize;
+            unsigned int elementCount = field.elementCount();
+
+            if (outsideTopLevelArray)
+            {
+                nextArraySize = elementCount;
+                // In OpenGL ES 3.10 spec, session 7.3.1.1 'For an active shader storage block
+                // member declared as an array of an aggregate type, an entry will be generated only
+                // for the first array element, regardless of its type.'
+                elementCount = 1;
+            }
+
+            for (unsigned int arrayElement = 0; arrayElement < elementCount; arrayElement++)
             {
                 const std::string elementName =
                     fullName + (field.isArray() ? ArrayString(arrayElement) : "");
                 const std::string elementMappedName =
                     fullMappedName + (field.isArray() ? ArrayString(arrayElement) : "");
                 defineBlockMembers(getMemberInfo, field.fields, elementName, elementMappedName,
-                                   blockIndex);
+                                   blockIndex, false, nextArraySize);
             }
         }
         else
@@ -714,7 +729,8 @@ void InterfaceBlockLinker::defineBlockMembers(const GetBlockMemberInfo &getMembe
                 fullMappedName += "[0]";
             }
 
-            defineBlockMember(field, fullName, fullMappedName, blockIndex, memberInfo);
+            defineBlockMember(field, fullName, fullMappedName, blockIndex, memberInfo,
+                              topLevelArraySize);
         }
     }
 }
@@ -728,11 +744,12 @@ void InterfaceBlockLinker::defineInterfaceBlock(const GetBlockSize &getBlockSize
     std::vector<unsigned int> blockIndexes;
 
     int blockIndex = static_cast<int>(mBlocksOut->size());
-    // Track the first and last uniform index to determine the range of active uniforms in the
-    // block.
+    // Track the first and last block member index to determine the range of active block members in
+    // the block.
     size_t firstBlockMemberIndex = getCurrentBlockMemberIndex();
     defineBlockMembers(getMemberInfo, interfaceBlock.fields, interfaceBlock.fieldPrefix(),
-                       interfaceBlock.fieldMappedPrefix(), blockIndex);
+                       interfaceBlock.fieldMappedPrefix(), blockIndex,
+                       interfaceBlock.blockType == sh::BlockType::BLOCK_BUFFER, 1);
     size_t lastBlockMemberIndex = getCurrentBlockMemberIndex();
 
     for (size_t blockMemberIndex = firstBlockMemberIndex; blockMemberIndex < lastBlockMemberIndex;
@@ -748,23 +765,18 @@ void InterfaceBlockLinker::defineInterfaceBlock(const GetBlockSize &getBlockSize
     for (unsigned int arrayElement = 0; arrayElement < interfaceBlock.elementCount();
          ++arrayElement)
     {
-        // We don't currently have the getBlockSize implemented for SSBOs.
-        // TODO(jiajia.qin@intel.com): Remove the if when we have getBlockSize for SSBOs.
-        if (interfaceBlock.blockType == sh::BlockType::BLOCK_UNIFORM)
+        std::string blockArrayName       = interfaceBlock.name;
+        std::string blockMappedArrayName = interfaceBlock.mappedName;
+        if (interfaceBlock.isArray())
         {
-            std::string blockArrayName       = interfaceBlock.name;
-            std::string blockMappedArrayName = interfaceBlock.mappedName;
-            if (interfaceBlock.isArray())
-            {
-                blockArrayName += ArrayString(arrayElement);
-                blockMappedArrayName += ArrayString(arrayElement);
-            }
+            blockArrayName += ArrayString(arrayElement);
+            blockMappedArrayName += ArrayString(arrayElement);
+        }
 
-            // Don't define this block at all if it's not active in the implementation.
-            if (!getBlockSize(blockArrayName, blockMappedArrayName, &blockSize))
-            {
-                continue;
-            }
+        // Don't define this block at all if it's not active in the implementation.
+        if (!getBlockSize(blockArrayName, blockMappedArrayName, &blockSize))
+        {
+            continue;
         }
 
         InterfaceBlock block(interfaceBlock.name, interfaceBlock.mappedName,
@@ -795,11 +807,13 @@ void UniformBlockLinker::defineBlockMember(const sh::ShaderVariable &field,
                                            const std::string &fullName,
                                            const std::string &fullMappedName,
                                            int blockIndex,
-                                           const sh::BlockMemberInfo &memberInfo) const
+                                           const sh::BlockMemberInfo &memberInfo,
+                                           int /* topLevelArraySize */) const
 {
     LinkedUniform newUniform(field.type, field.precision, fullName, field.arraySize, -1, -1, -1,
                              blockIndex, memberInfo);
     newUniform.mappedName = fullMappedName;
+    // TODO(jiajia.qin@intel.com): update the block memeber static use.
 
     // Since block uniforms have no location, we don't need to store them in the uniform locations
     // list.
@@ -812,8 +826,9 @@ size_t UniformBlockLinker::getCurrentBlockMemberIndex() const
 }
 
 // ShaderStorageBlockLinker implementation.
-ShaderStorageBlockLinker::ShaderStorageBlockLinker(std::vector<InterfaceBlock> *blocksOut)
-    : InterfaceBlockLinker(blocksOut)
+ShaderStorageBlockLinker::ShaderStorageBlockLinker(std::vector<InterfaceBlock> *blocksOut,
+                                                   std::vector<BufferVariable> *bufferVariablesOut)
+    : InterfaceBlockLinker(blocksOut), mBufferVariablesOut(bufferVariablesOut)
 {
 }
 
@@ -825,15 +840,22 @@ void ShaderStorageBlockLinker::defineBlockMember(const sh::ShaderVariable &field
                                                  const std::string &fullName,
                                                  const std::string &fullMappedName,
                                                  int blockIndex,
-                                                 const sh::BlockMemberInfo &memberInfo) const
+                                                 const sh::BlockMemberInfo &memberInfo,
+                                                 int topLevelArraySize) const
 {
-    // TODO(jiajia.qin@intel.com): Add buffer variables support.
+    BufferVariable newBufferVariable(field.type, field.precision, fullName, field.arraySize,
+                                     blockIndex, memberInfo);
+    newBufferVariable.mappedName = fullMappedName;
+    // TODO(jiajia.qin@intel.com): update the block memeber static use.
+
+    newBufferVariable.topLevelArraySize = topLevelArraySize;
+
+    mBufferVariablesOut->push_back(newBufferVariable);
 }
 
 size_t ShaderStorageBlockLinker::getCurrentBlockMemberIndex() const
 {
-    // TODO(jiajia.qin@intel.com): Add buffer variables support.
-    return 0;
+    return mBufferVariablesOut->size();
 }
 
 }  // namespace gl

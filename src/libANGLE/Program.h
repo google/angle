@@ -277,6 +277,7 @@ class ProgramState final : angle::NonCopyable
     {
         return mShaderStorageBlocks;
     }
+    const std::vector<BufferVariable> &getBufferVariables() const { return mBufferVariables; }
     const std::vector<SamplerBinding> &getSamplerBindings() const { return mSamplerBindings; }
     const std::vector<ImageBinding> &getImageBindings() const { return mImageBindings; }
     const sh::WorkGroupSize &getComputeShaderLocalSize() const { return mComputeShaderLocalSize; }
@@ -299,6 +300,8 @@ class ProgramState final : angle::NonCopyable
     bool isSamplerUniformIndex(GLuint index) const;
     GLuint getSamplerIndexFromUniformIndex(GLuint uniformIndex) const;
     GLuint getAttributeLocation(const std::string &name) const;
+
+    GLuint getBufferVariableIndexFromName(const std::string &name) const;
 
     int getNumViews() const { return mNumViews; }
     bool usesMultiview() const { return mNumViews != -1; }
@@ -341,6 +344,7 @@ class ProgramState final : angle::NonCopyable
 
     std::vector<VariableLocation> mUniformLocations;
     std::vector<InterfaceBlock> mUniformBlocks;
+    std::vector<BufferVariable> mBufferVariables;
     std::vector<InterfaceBlock> mShaderStorageBlocks;
     std::vector<AtomicCounterBuffer> mAtomicCounterBuffers;
     RangeUI mSamplerUniformRange;
@@ -453,12 +457,15 @@ class Program final : angle::NonCopyable, public LabeledObject
                           GLenum *type,
                           GLchar *name) const;
     GLint getActiveUniformCount() const;
+    size_t getActiveBufferVariableCount() const;
     GLint getActiveUniformMaxLength() const;
     bool isValidUniformLocation(GLint location) const;
     const LinkedUniform &getUniformByLocation(GLint location) const;
     const VariableLocation &getUniformLocation(GLint location) const;
     const std::vector<VariableLocation> &getUniformLocations() const;
     const LinkedUniform &getUniformByIndex(GLuint index) const;
+
+    const BufferVariable &getBufferVariableByIndex(GLuint index) const;
 
     enum SetUniformResult
     {
@@ -494,19 +501,28 @@ class Program final : angle::NonCopyable, public LabeledObject
     void getUniformiv(const Context *context, GLint location, GLint *params) const;
     void getUniformuiv(const Context *context, GLint location, GLuint *params) const;
 
-    void getActiveUniformBlockName(GLuint uniformBlockIndex, GLsizei bufSize, GLsizei *length, GLchar *uniformBlockName) const;
+    void getActiveUniformBlockName(const GLuint blockIndex,
+                                   GLsizei bufSize,
+                                   GLsizei *length,
+                                   GLchar *blockName) const;
+    void getActiveShaderStorageBlockName(const GLuint blockIndex,
+                                         GLsizei bufSize,
+                                         GLsizei *length,
+                                         GLchar *blockName) const;
     GLuint getActiveUniformBlockCount() const;
     GLuint getActiveAtomicCounterBufferCount() const;
     GLuint getActiveShaderStorageBlockCount() const;
     GLint getActiveUniformBlockMaxLength() const;
 
     GLuint getUniformBlockIndex(const std::string &name) const;
+    GLuint getShaderStorageBlockIndex(const std::string &name) const;
 
     void bindUniformBlock(GLuint uniformBlockIndex, GLuint uniformBlockBinding);
     GLuint getUniformBlockBinding(GLuint uniformBlockIndex) const;
     GLuint getShaderStorageBlockBinding(GLuint shaderStorageBlockIndex) const;
 
     const InterfaceBlock &getUniformBlockByIndex(GLuint index) const;
+    const InterfaceBlock &getShaderStorageBlockByIndex(GLuint index) const;
 
     void setTransformFeedbackVaryings(GLsizei count, const GLchar *const *varyings, GLenum bufferMode);
     void getTransformFeedbackVarying(GLuint index, GLsizei bufSize, GLsizei *length, GLsizei *size, GLenum *type, GLchar *name) const;
@@ -560,6 +576,10 @@ class Program final : angle::NonCopyable, public LabeledObject
     void getInputResourceName(GLuint index, GLsizei bufSize, GLsizei *length, GLchar *name) const;
     void getOutputResourceName(GLuint index, GLsizei bufSize, GLsizei *length, GLchar *name) const;
     void getUniformResourceName(GLuint index, GLsizei bufSize, GLsizei *length, GLchar *name) const;
+    void getBufferVariableResourceName(GLuint index,
+                                       GLsizei bufSize,
+                                       GLsizei *length,
+                                       GLchar *name) const;
     const sh::Attribute &getInputResource(GLuint index) const;
     const sh::OutputVariable &getOutputResource(GLuint index) const;
 

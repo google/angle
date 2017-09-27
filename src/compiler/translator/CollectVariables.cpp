@@ -86,6 +86,19 @@ void MarkStaticallyUsed(ShaderVariable *variable)
     }
 }
 
+ShaderVariable *FindVariableInInterfaceBlock(const TString &name,
+                                             const TInterfaceBlock *interfaceBlock,
+                                             std::vector<InterfaceBlock> *infoList)
+{
+    ASSERT(interfaceBlock);
+    InterfaceBlock *namedBlock = FindVariable(interfaceBlock->name(), infoList);
+    ASSERT(namedBlock);
+
+    // Set static use on the parent interface block here
+    namedBlock->staticUse = true;
+    return FindVariable(name, &namedBlock->fields);
+}
+
 // Traverses the intermediate tree to collect all attributes, uniforms, varyings, fragment outputs,
 // and interface blocks.
 class CollectVariablesTraverser : public TIntermTraverser
@@ -403,13 +416,7 @@ void CollectVariablesTraverser::visitSymbol(TIntermSymbol *symbol)
                 const TInterfaceBlock *interfaceBlock = symbol->getType().getInterfaceBlock();
                 if (interfaceBlock)
                 {
-                    InterfaceBlock *namedBlock =
-                        FindVariable(interfaceBlock->name(), mUniformBlocks);
-                    ASSERT(namedBlock);
-                    var = FindVariable(symbolName, &namedBlock->fields);
-
-                    // Set static use on the parent interface block here
-                    namedBlock->staticUse = true;
+                    var = FindVariableInInterfaceBlock(symbolName, interfaceBlock, mUniformBlocks);
                 }
                 else
                 {
@@ -418,6 +425,13 @@ void CollectVariablesTraverser::visitSymbol(TIntermSymbol *symbol)
 
                 // It's an internal error to reference an undefined user uniform
                 ASSERT(symbolName.compare(0, 3, "gl_") != 0 || var);
+            }
+            break;
+            case EvqBuffer:
+            {
+                const TInterfaceBlock *interfaceBlock = symbol->getType().getInterfaceBlock();
+                var =
+                    FindVariableInInterfaceBlock(symbolName, interfaceBlock, mShaderStorageBlocks);
             }
             break;
             case EvqFragCoord:
@@ -663,6 +677,7 @@ void CollectVariablesTraverser::recordInterfaceBlock(const TType &interfaceBlock
         setCommonVariableProperties(fieldType, TName(field->name()), &fieldVariable);
         fieldVariable.isRowMajorLayout =
             (fieldType.getLayoutQualifier().matrixPacking == EmpRowMajor);
+        fieldVariable.isUnsizedArray = fieldType.isUnsizedArray();
         interfaceBlock->fields.push_back(fieldVariable);
     }
 }
