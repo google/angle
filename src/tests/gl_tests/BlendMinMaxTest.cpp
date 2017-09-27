@@ -158,13 +158,12 @@ class BlendMinMaxTest : public ANGLETest
     void SetUpFramebuffer(GLenum colorFormat)
     {
         glGenFramebuffers(1, &mFramebuffer);
-        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, mFramebuffer);
-        glBindFramebuffer(GL_READ_FRAMEBUFFER, mFramebuffer);
+        glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
 
         glGenRenderbuffers(1, &mColorRenderbuffer);
         glBindRenderbuffer(GL_RENDERBUFFER, mColorRenderbuffer);
         glRenderbufferStorage(GL_RENDERBUFFER, colorFormat, getWindowWidth(), getWindowHeight());
-        glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, mColorRenderbuffer);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, mColorRenderbuffer);
 
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         glClear(GL_COLOR_BUFFER_BIT);

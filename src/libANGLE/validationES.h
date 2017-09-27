@@ -37,7 +37,7 @@ bool ValidTextureExternalTarget(const ValidationContext *context, GLenum target)
 bool ValidTexture2DDestinationTarget(const ValidationContext *context, GLenum target);
 bool ValidTexture3DDestinationTarget(const ValidationContext *context, GLenum target);
 bool ValidTexLevelDestinationTarget(const ValidationContext *context, GLenum target);
-bool ValidFramebufferTarget(GLenum target);
+bool ValidFramebufferTarget(const ValidationContext *context, GLenum target);
 bool ValidBufferType(const ValidationContext *context, BufferBinding target);
 bool ValidBufferParameter(const ValidationContext *context, GLenum pname, GLsizei *numParams);
 bool ValidMipLevel(const ValidationContext *context, GLenum target, GLint level);

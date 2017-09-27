@@ -890,6 +890,37 @@ TEST_P(WebGLCompatibilityTest, EnableRGB8RGBA8Extension)
     }
 }
 
+// Test enabling the GL_ANGLE_framebuffer_blit extension
+TEST_P(WebGLCompatibilityTest, EnableFramebufferBlitExtension)
+{
+    EXPECT_FALSE(extensionEnabled("GL_ANGLE_framebuffer_blit"));
+
+    // This extensions become core in in ES3/WebGL2.
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() >= 3);
+
+    GLFramebuffer fbo;
+
+    glBindFramebuffer(GL_READ_FRAMEBUFFER_ANGLE, fbo);
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+    GLint result;
+    glGetIntegerv(GL_READ_FRAMEBUFFER_BINDING_ANGLE, &result);
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+    glBlitFramebufferANGLE(0, 0, 1, 1, 0, 0, 1, 1, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    if (extensionRequestable("GL_ANGLE_framebuffer_blit"))
+    {
+        glRequestExtensionANGLE("GL_ANGLE_framebuffer_blit");
+        EXPECT_GL_NO_ERROR();
+
+        glBindFramebuffer(GL_READ_FRAMEBUFFER_ANGLE, fbo);
+        glGetIntegerv(GL_READ_FRAMEBUFFER_BINDING_ANGLE, &result);
+        EXPECT_GL_NO_ERROR();
+    }
+}
+
 // Test enabling the GL_OES_get_program_binary extension
 TEST_P(WebGLCompatibilityTest, EnableProgramBinaryExtension)
 {
@@ -3495,12 +3526,12 @@ TEST_P(WebGLCompatibilityTest, DrawBuffers)
     // Clears all the renderbuffers to red.
     auto ClearEverythingToRed = [](GLRenderbuffer *renderbuffers) {
         GLFramebuffer clearFBO;
-        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, clearFBO);
+        glBindFramebuffer(GL_FRAMEBUFFER, clearFBO);
 
         glClearColor(1, 0, 0, 1);
         for (int i = 0; i < 4; ++i)
         {
-            glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER,
+            glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER,
                                       renderbuffers[i]);
             glClear(GL_COLOR_BUFFER_BIT);
         }
@@ -3510,14 +3541,14 @@ TEST_P(WebGLCompatibilityTest, DrawBuffers)
     // Checks that the renderbuffers specified by mask have the correct color
     auto CheckColors = [](GLRenderbuffer *renderbuffers, int mask, GLColor color) {
         GLFramebuffer readFBO;
-        glBindFramebuffer(GL_READ_FRAMEBUFFER, readFBO);
+        glBindFramebuffer(GL_FRAMEBUFFER, readFBO);
 
         for (int i = 0; i < 4; ++i)
         {
             if (mask & (1 << i))
             {
-                glFramebufferRenderbuffer(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-                                          GL_RENDERBUFFER, renderbuffers[i]);
+                glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER,
+                                          renderbuffers[i]);
                 EXPECT_PIXEL_COLOR_EQ(0, 0, color);
             }
         }
@@ -3538,14 +3569,14 @@ TEST_P(WebGLCompatibilityTest, DrawBuffers)
 
     // Initialized the test framebuffer
     GLFramebuffer drawFBO;
-    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, drawFBO);
+    glBindFramebuffer(GL_FRAMEBUFFER, drawFBO);
 
     GLRenderbuffer renderbuffers[4];
     for (int i = 0; i < 4; ++i)
     {
         glBindRenderbuffer(GL_RENDERBUFFER, renderbuffers[i]);
         glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA4, 1, 1);
-        glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_RENDERBUFFER,
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_RENDERBUFFER,
                                   renderbuffers[i]);
     }
 
@@ -3585,7 +3616,7 @@ TEST_P(WebGLCompatibilityTest, DrawBuffers)
     {
         ClearEverythingToRed(renderbuffers);
 
-        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, drawFBO);
+        glBindFramebuffer(GL_FRAMEBUFFER, drawFBO);
         DrawBuffers(useEXT, 4, allDrawBuffers);
         drawQuad(programESSL1, "a_pos", 0.5, 1.0, true);
         ASSERT_GL_NO_ERROR();
@@ -3599,7 +3630,7 @@ TEST_P(WebGLCompatibilityTest, DrawBuffers)
     {
         ClearEverythingToRed(renderbuffers);
 
-        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, drawFBO);
+        glBindFramebuffer(GL_FRAMEBUFFER, drawFBO);
         DrawBuffers(useEXT, 4, halfDrawBuffers);
         drawQuad(programESSL1, "a_pos", 0.5, 1.0, true);
         ASSERT_GL_NO_ERROR();
@@ -3652,7 +3683,7 @@ TEST_P(WebGLCompatibilityTest, DrawBuffers)
     {
         ClearEverythingToRed(renderbuffers);
 
-        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, drawFBO);
+        glBindFramebuffer(GL_FRAMEBUFFER, drawFBO);
         DrawBuffers(useEXT, 4, allDrawBuffers);
         drawQuad(writeOddOutputsProgram, "a_pos", 0.5, 1.0, true);
         ASSERT_GL_NO_ERROR();
@@ -3666,7 +3697,7 @@ TEST_P(WebGLCompatibilityTest, DrawBuffers)
     {
         ClearEverythingToRed(renderbuffers);
 
-        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, drawFBO);
+        glBindFramebuffer(GL_FRAMEBUFFER, drawFBO);
         DrawBuffers(useEXT, 4, halfDrawBuffers);
         drawQuad(writeOddOutputsProgram, "a_pos", 0.5, 1.0, true);
         ASSERT_GL_NO_ERROR();

@@ -171,9 +171,7 @@ bool ValidationContext::getQueryParameterInfo(GLenum pname, GLenum *type, unsign
         case GL_NUM_SHADER_BINARY_FORMATS:
         case GL_NUM_COMPRESSED_TEXTURE_FORMATS:
         case GL_ARRAY_BUFFER_BINDING:
-        // case GL_FRAMEBUFFER_BINDING: // equivalent to DRAW_FRAMEBUFFER_BINDING_ANGLE
-        case GL_DRAW_FRAMEBUFFER_BINDING_ANGLE:
-        case GL_READ_FRAMEBUFFER_BINDING_ANGLE:
+        case GL_FRAMEBUFFER_BINDING:
         case GL_RENDERBUFFER_BINDING:
         case GL_CURRENT_PROGRAM:
         case GL_PACK_ALIGNMENT:
@@ -461,6 +459,16 @@ bool ValidationContext::getQueryParameterInfo(GLenum pname, GLenum *type, unsign
     // Check for ES3.0+ parameter names which are also exposed as ES2 extensions
     switch (pname)
     {
+        // case GL_DRAW_FRAMEBUFFER_BINDING_ANGLE  // equivalent to FRAMEBUFFER_BINDING
+        case GL_READ_FRAMEBUFFER_BINDING_ANGLE:
+            if ((getClientMajorVersion() < 3) && !getExtensions().framebufferBlit)
+            {
+                return false;
+            }
+            *type      = GL_INT;
+            *numParams = 1;
+            return true;
+
         case GL_NUM_PROGRAM_BINARY_FORMATS_OES:
             if ((getClientMajorVersion() < 3) && !getExtensions().getProgramBinary)
             {
