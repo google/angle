@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "158edbc7_2544c1cc",
+        "filename": "src/libANGLE/Constants.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-09-27T04:39:12Z",
+      "side": 1,
+      "message": "I have verified the value of MAX_SAMPLE_MASK_WORDS on Intel OpenGL drivers is 1, and on some NVidia drivers this value is 2. So I suggest we set this constant value as 2, which means ANGLE can support at most 2 sample mask words even if there is a driver that can support more.",
+      "revId": "eb4801dd955d00b62b191c976272abdcee6d99d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f0f65d00_91d1b217",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2018,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-09-27T04:39:12Z",
+      "side": 1,
+      "message": "I add this because State::reset() will call setAllDirtyBits(), where DIRTY_BIT_SAMPLE_MASK_WORD_1 will be set even if MAX_SAMPLE_MASK_WORDS on current platform is 1.",
+      "range": {
+        "startLine": 2018,
+        "startChar": 19,
+        "endLine": 2018,
+        "endChar": 62
+      },
+      "revId": "eb4801dd955d00b62b191c976272abdcee6d99d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

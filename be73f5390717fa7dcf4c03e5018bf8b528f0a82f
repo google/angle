@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "64bd098e_4c6fb88a",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-09-27T04:39:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "acbb4db8_60a6f523",
+      "range": {
+        "startLine": 116,
+        "startChar": 4,
+        "endLine": 120,
+        "endChar": 5
+      },
+      "revId": "be73f5390717fa7dcf4c03e5018bf8b528f0a82f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4a85fbbe_d01e47e5",
         "filename": "src/libANGLE/State.h",
         "patchSetId": 4
@@ -94,6 +118,24 @@
     },
     {
       "key": {
+        "uuid": "006398cb_58c9171d",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 185,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-09-27T04:39:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f0b40c3e_c973f5f8",
+      "revId": "be73f5390717fa7dcf4c03e5018bf8b528f0a82f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ab79f194_3ed06045",
         "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
         "patchSetId": 4
@@ -105,6 +147,24 @@
       "writtenOn": "2017-09-26T13:14:16Z",
       "side": 1,
       "message": "This will get simplified to just a case statement.",
+      "revId": "be73f5390717fa7dcf4c03e5018bf8b528f0a82f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "267aea4e_dac9baba",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2016,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-09-27T04:39:12Z",
+      "side": 1,
+      "message": "If we decide to support 1 or 2 sample mask words then we have to reserve this structure.",
+      "parentUuid": "ab79f194_3ed06045",
       "revId": "be73f5390717fa7dcf4c03e5018bf8b528f0a82f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -146,6 +206,24 @@
     },
     {
       "key": {
+        "uuid": "d9f6a3ae_cd91adcd",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 301,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-09-27T04:39:12Z",
+      "side": 1,
+      "message": "Hi Corentin, I think we should make ANGLE support up to 2 sample mask words, so I take Geoff\u0027s suggestion to make this a vector and change its size according to the MAX_SAMPLE_MASK_WORDS value taken from the driver.",
+      "parentUuid": "5ddaa494_ecb00aff",
+      "revId": "be73f5390717fa7dcf4c03e5018bf8b528f0a82f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "be02b8e2_5ed4b545",
         "filename": "src/libANGLE/validationES3.cpp",
         "patchSetId": 4
@@ -163,6 +241,24 @@
     },
     {
       "key": {
+        "uuid": "b3b14d69_1a407e38",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2330,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-09-27T04:39:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "be02b8e2_5ed4b545",
+      "revId": "be73f5390717fa7dcf4c03e5018bf8b528f0a82f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "62cc59c2_0b8593ea",
         "filename": "src/libANGLE/validationES31.cpp",
         "patchSetId": 4
@@ -177,6 +273,24 @@
       "revId": "be73f5390717fa7dcf4c03e5018bf8b528f0a82f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "82038633_d03f5c7a",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1327,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-09-27T04:39:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "62cc59c2_0b8593ea",
+      "revId": "be73f5390717fa7dcf4c03e5018bf8b528f0a82f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
