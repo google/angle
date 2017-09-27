@@ -642,6 +642,36 @@ TEST_P(WebGLCompatibilityTest, EnableQueryExtensions)
     }
 }
 
+// Test enabling the GL_ANGLE_framebuffer_multisample extension
+TEST_P(WebGLCompatibilityTest, EnableFramebufferMultisampleExtension)
+{
+    EXPECT_FALSE(extensionEnabled("GL_ANGLE_framebuffer_multisample"));
+
+    // This extensions become core in in ES3/WebGL2.
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() >= 3);
+
+    GLint maxSamples = 0;
+    glGetIntegerv(GL_MAX_SAMPLES, &maxSamples);
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+    GLRenderbuffer renderbuffer;
+    glBindRenderbuffer(GL_RENDERBUFFER, renderbuffer);
+    glRenderbufferStorageMultisampleANGLE(GL_RENDERBUFFER, 1, GL_RGBA4, 1, 1);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    if (extensionRequestable("GL_ANGLE_framebuffer_multisample"))
+    {
+        glRequestExtensionANGLE("GL_ANGLE_framebuffer_multisample");
+        EXPECT_GL_NO_ERROR();
+
+        glGetIntegerv(GL_MAX_SAMPLES, &maxSamples);
+        EXPECT_GL_NO_ERROR();
+
+        glRenderbufferStorageMultisampleANGLE(GL_RENDERBUFFER, maxSamples, GL_RGBA4, 1, 1);
+        EXPECT_GL_NO_ERROR();
+    }
+}
+
 // Verify that the context generates the correct error when the framebuffer attachments are
 // different sizes
 TEST_P(WebGLCompatibilityTest, FramebufferAttachmentSizeMissmatch)

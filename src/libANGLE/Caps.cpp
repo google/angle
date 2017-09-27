@@ -650,7 +650,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_KHR_robust_buffer_access_behavior"] = esOnlyExtension(&Extensions::robustBufferAccessBehavior);
         map["GL_EXT_blend_minmax"] = enableableExtension(&Extensions::blendMinMax);
         map["GL_ANGLE_framebuffer_blit"] = esOnlyExtension(&Extensions::framebufferBlit);
-        map["GL_ANGLE_framebuffer_multisample"] = esOnlyExtension(&Extensions::framebufferMultisample);
+        map["GL_ANGLE_framebuffer_multisample"] = enableableExtension(&Extensions::framebufferMultisample);
         map["GL_ANGLE_instanced_arrays"] = esOnlyExtension(&Extensions::instancedArrays);
         map["GL_ANGLE_pack_reverse_row_order"] = esOnlyExtension(&Extensions::packReverseRowOrder);
         map["GL_OES_standard_derivatives"] = enableableExtension(&Extensions::standardDerivatives);

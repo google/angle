@@ -191,11 +191,8 @@ void State::initialize(const Context *context,
     mDebug.setOutputEnabled(debug);
     mDebug.setMaxLoggedMessages(extensions.maxDebugLoggedMessages);
 
-    if (extensions.framebufferMultisample)
-    {
-        mMultiSampling = true;
-        mSampleAlphaToOne = false;
-    }
+    mMultiSampling    = true;
+    mSampleAlphaToOne = false;
 
     mCoverageModulation = GL_NONE;
 
