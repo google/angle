@@ -890,6 +890,68 @@ TEST_P(WebGLCompatibilityTest, EnableRGB8RGBA8Extension)
     }
 }
 
+// Test enabling the GL_OES_get_program_binary extension
+TEST_P(WebGLCompatibilityTest, EnableProgramBinaryExtension)
+{
+    EXPECT_FALSE(extensionEnabled("GL_OES_get_program_binary"));
+
+    // This extensions become core in in ES3/WebGL2.
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() >= 3);
+
+    GLint result = 0;
+    glGetIntegerv(GL_NUM_PROGRAM_BINARY_FORMATS, &result);
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+    glGetIntegerv(GL_PROGRAM_BINARY_FORMATS, &result);
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+    const std::string &vert =
+        "void main()\n"
+        "{\n"
+        "    gl_Position = vec4(0.0, 0.0, 0.0, 1.0);\n"
+        "}\n";
+    const std::string &frag =
+        "precision highp float;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_FragColor = vec4(1.0);\n"
+        "}\n";
+    ANGLE_GL_PROGRAM(program, vert, frag);
+
+    glGetProgramiv(program, GL_PROGRAM_BINARY_LENGTH, &result);
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+    uint8_t tempArray[512];
+    GLenum tempFormat  = 0;
+    GLsizei tempLength = 0;
+    glGetProgramBinaryOES(program, static_cast<GLsizei>(ArraySize(tempArray)), &tempLength,
+                          &tempFormat, tempArray);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    if (extensionRequestable("GL_OES_get_program_binary"))
+    {
+        glRequestExtensionANGLE("GL_OES_get_program_binary");
+        EXPECT_GL_NO_ERROR();
+
+        glGetIntegerv(GL_NUM_PROGRAM_BINARY_FORMATS, &result);
+        glGetIntegerv(GL_PROGRAM_BINARY_FORMATS, &result);
+        EXPECT_GL_NO_ERROR();
+
+        GLint binaryLength = 0;
+        glGetProgramiv(program, GL_PROGRAM_BINARY_LENGTH, &binaryLength);
+        EXPECT_GL_NO_ERROR();
+
+        GLenum binaryFormat;
+        GLsizei writeLength = 0;
+        std::vector<uint8_t> binary(binaryLength);
+        glGetProgramBinaryOES(program, binaryLength, &writeLength, &binaryFormat, binary.data());
+        EXPECT_GL_NO_ERROR();
+
+        glProgramBinaryOES(program, binaryFormat, binary.data(), binaryLength);
+        EXPECT_GL_NO_ERROR();
+    }
+}
+
 // Verify that the context generates the correct error when the framebuffer attachments are
 // different sizes
 TEST_P(WebGLCompatibilityTest, FramebufferAttachmentSizeMismatch)
