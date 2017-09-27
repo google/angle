@@ -184,9 +184,6 @@ Extensions::Extensions()
       packReverseRowOrder(false),
       standardDerivatives(false),
       shaderTextureLOD(false),
-      shaderFramebufferFetch(false),
-      ARMshaderFramebufferFetch(false),
-      NVshaderFramebufferFetch(false),
       fragDepth(false),
       multiview(false),
       maxViews(1u),
@@ -658,9 +655,6 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_ANGLE_pack_reverse_row_order"] = esOnlyExtension(&Extensions::packReverseRowOrder);
         map["GL_OES_standard_derivatives"] = enableableExtension(&Extensions::standardDerivatives);
         map["GL_EXT_shader_texture_lod"] = enableableExtension(&Extensions::shaderTextureLOD);
-        map["GL_NV_shader_framebuffer_fetch"] = esOnlyExtension(&Extensions::NVshaderFramebufferFetch);
-        map["GL_ARM_shader_framebuffer_fetch"] = esOnlyExtension(&Extensions::ARMshaderFramebufferFetch);
-        map["GL_EXT_shader_framebuffer_fetch"] = esOnlyExtension(&Extensions::shaderFramebufferFetch);
         map["GL_EXT_frag_depth"] = enableableExtension(&Extensions::fragDepth);
         map["GL_ANGLE_multiview"] = enableableExtension(&Extensions::multiview);
         map["GL_ANGLE_texture_usage"] = esOnlyExtension(&Extensions::textureUsage);
