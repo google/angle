@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6fef9bfc_5f70bc5e",
+        "filename": "src/common/angleutils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-27T15:39:31Z",
+      "side": 1,
+      "message": "Why is the outermost index in the back? Most people would expect them to be in the reverse order. If it is linked to the way array indices are parsed, maybe we could do a pre-review of the parser changes to understand the reason better.",
+      "revId": "5364cd318682e06583468743af4330ab0527dff1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cc47664f_48da9bdb",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 457,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-27T15:39:31Z",
+      "side": 1,
+      "message": "How about precomputing that compound offset when the location info is created? setUniformMatrix is a very hot function and I\u0027m worried that the extra logic here would cause regressions at draw time when we can instead do work at program link time.",
+      "revId": "5364cd318682e06583468743af4330ab0527dff1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
