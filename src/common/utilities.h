@@ -12,9 +12,10 @@
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
 
-#include "angle_gl.h"
-#include <string>
 #include <math.h>
+#include <string>
+#include <vector>
+#include "angle_gl.h"
 
 #include "common/mathutil.h"
 
@@ -49,10 +50,12 @@ bool IsCubeMapTextureTarget(GLenum target);
 size_t CubeMapTextureTargetToLayerIndex(GLenum target);
 GLenum LayerIndexToCubeMapTextureTarget(size_t index);
 
-// Parse the base resource name and array index.  Returns the base name of the resource.
-// outSubscript is set to GL_INVALID_INDEX if the provided name is not an array or the array index
-// is invalid.
-std::string ParseResourceName(const std::string &name, size_t *outSubscript);
+// Parse the base resource name and array indices. Returns the base name of the resource.
+// If the provided name doesn't index an array, the outSubscripts vector will be empty.
+// If the provided name indexes an array, the outSubscripts vector will contain indices with
+// outermost array indices in the back. If an array index is invalid, GL_INVALID_INDEX is added to
+// outSubscripts.
+std::string ParseResourceName(const std::string &name, std::vector<unsigned int> *outSubscripts);
 
 // Find the range of index values in the provided indices pointer.  Primitive restart indices are
 // only counted in the range if primitive restart is disabled.

@@ -238,8 +238,9 @@ LinkResult MemoryProgramCache::Deserialize(const Context *context,
          uniformIndexIndex++)
     {
         VariableLocation variable;
-        stream.readInt(&variable.element);
+        stream.readIntVector<unsigned int>(&variable.arrayIndices);
         stream.readInt(&variable.index);
+        stream.readInt(&variable.flattenedArrayOffset);
         stream.readBool(&variable.ignored);
 
         state->mUniformLocations.push_back(variable);
@@ -319,8 +320,9 @@ LinkResult MemoryProgramCache::Deserialize(const Context *context,
     {
         int locationIndex = stream.readInt<int>();
         VariableLocation locationData;
-        stream.readInt(&locationData.element);
+        stream.readIntVector<unsigned int>(&locationData.arrayIndices);
         stream.readInt(&locationData.index);
+        stream.readInt(&locationData.flattenedArrayOffset);
         stream.readBool(&locationData.ignored);
         state->mOutputLocations[locationIndex] = locationData;
     }
@@ -427,8 +429,9 @@ void MemoryProgramCache::Serialize(const Context *context,
     stream.writeInt(state.getUniformLocations().size());
     for (const auto &variable : state.getUniformLocations())
     {
-        stream.writeInt(variable.element);
+        stream.writeIntVector(variable.arrayIndices);
         stream.writeIntOrNegOne(variable.index);
+        stream.writeInt(variable.flattenedArrayOffset);
         stream.writeInt(variable.ignored);
     }
 
@@ -481,8 +484,9 @@ void MemoryProgramCache::Serialize(const Context *context,
     for (const auto &outputPair : state.getOutputLocations())
     {
         stream.writeInt(outputPair.first);
-        stream.writeIntOrNegOne(outputPair.second.element);
+        stream.writeIntVector(outputPair.second.arrayIndices);
         stream.writeIntOrNegOne(outputPair.second.index);
+        stream.writeInt(outputPair.second.flattenedArrayOffset);
         stream.writeInt(outputPair.second.ignored);
     }
 

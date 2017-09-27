@@ -160,23 +160,11 @@ inline const char* MakeStaticString(const std::string &str)
     return strings.insert(str).first->c_str();
 }
 
-inline std::string ArrayString(unsigned int i)
-{
-    // We assume UINT_MAX and GL_INVALID_INDEX are equal
-    // See DynamicHLSL.cpp
-    if (i == UINT_MAX)
-    {
-        return "";
-    }
+std::string ArrayString(unsigned int i);
 
-    std::stringstream strstr;
-
-    strstr << "[";
-    strstr << i;
-    strstr << "]";
-
-    return strstr.str();
-}
+// Indices are stored in vectors with the outermost index in the back. In the output of the function
+// the indices are reversed.
+std::string ArrayIndexString(const std::vector<unsigned int> &indices);
 
 inline std::string Str(int i)
 {

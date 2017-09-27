@@ -262,8 +262,7 @@ bool VaryingPacking::packUserVaryings(gl::InfoLog &infoLog,
     // Make sure transform feedback varyings aren't optimized out.
     for (const std::string &transformFeedbackVaryingName : transformFeedbackVaryings)
     {
-        size_t subscript              = GL_INVALID_INDEX;
-        std::string tfVaryingBaseName = ParseResourceName(transformFeedbackVaryingName, &subscript);
+        std::string tfVaryingBaseName = ParseResourceName(transformFeedbackVaryingName, nullptr);
 
         bool found = (uniqueVaryingNames.count(transformFeedbackVaryingName) > 0 ||
                       uniqueVaryingNames.count(tfVaryingBaseName) > 0);

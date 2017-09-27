@@ -138,7 +138,7 @@ struct VariableLocation
     static constexpr unsigned int kUnused = GL_INVALID_INDEX;
 
     VariableLocation();
-    VariableLocation(unsigned int element, unsigned int index);
+    VariableLocation(unsigned int arrayIndex, unsigned int index);
 
     // If used is false, it means this location is only used to fill an empty space in an array,
     // and there is no corresponding uniform variable for this location. It can also mean the
@@ -147,8 +147,17 @@ struct VariableLocation
     void markUnused() { index = kUnused; }
     void markIgnored() { ignored = true; }
 
-    unsigned int element;
+    bool areAllArrayIndicesZero() const;
+
+    // The "arrayIndices" vector stores indices for the GLSL array. "index" is an index of the
+    // location.
+    std::vector<unsigned int> arrayIndices;  // Outermost array indices are in the back.
     unsigned int index;
+
+    unsigned int flattenedArrayOffset;  // For non-nested arrays this is the same as the array
+                                        // index. For arrays of arrays, the indices are converted to
+                                        // a single offset inside a one-dimensional array made up of
+                                        // the elements of the innermost arrays.
 
     // If this location was bound to an unreferenced uniform.  Setting data on this uniform is a
     // no-op.

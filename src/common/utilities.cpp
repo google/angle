@@ -735,35 +735,39 @@ int VariableSortOrder(GLenum type)
     }
 }
 
-std::string ParseResourceName(const std::string &name, size_t *outSubscript)
+std::string ParseResourceName(const std::string &name, std::vector<unsigned int> *outSubscripts)
 {
-    // Strip any trailing array operator and retrieve the subscript
-    size_t open = name.find_last_of('[');
-    size_t close = name.find_last_of(']');
-    bool hasIndex = (open != std::string::npos) && (close == name.length() - 1);
-    if (!hasIndex)
+    if (outSubscripts)
     {
-        if (outSubscript)
+        outSubscripts->clear();
+    }
+    // Strip any trailing array indexing operators and retrieve the subscripts.
+    size_t baseNameLength = name.length();
+    bool hasIndex         = true;
+    while (hasIndex)
+    {
+        size_t open  = name.find_last_of('[', baseNameLength - 1);
+        size_t close = name.find_last_of(']', baseNameLength - 1);
+        hasIndex     = (open != std::string::npos) && (close == baseNameLength - 1);
+        if (hasIndex)
         {
-            *outSubscript = GL_INVALID_INDEX;
+            baseNameLength = open;
+            if (outSubscripts)
+            {
+                int index = atoi(name.substr(open + 1).c_str());
+                if (index >= 0)
+                {
+                    outSubscripts->push_back(index);
+                }
+                else
+                {
+                    outSubscripts->push_back(GL_INVALID_INDEX);
+                }
+            }
         }
-        return name;
     }
 
-    if (outSubscript)
-    {
-        int index = atoi(name.substr(open + 1).c_str());
-        if (index >= 0)
-        {
-            *outSubscript = index;
-        }
-        else
-        {
-            *outSubscript = GL_INVALID_INDEX;
-        }
-    }
-
-    return name.substr(0, open);
+    return name.substr(0, baseNameLength);
 }
 
 unsigned int ParseAndStripArrayIndex(std::string *name)

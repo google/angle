@@ -140,13 +140,16 @@ bool ComparePackedVarying(const PackedVarying &x, const PackedVarying &y)
 template <typename VarT>
 GLuint GetResourceIndexFromName(const std::vector<VarT> &list, const std::string &name)
 {
-    size_t subscript     = GL_INVALID_INDEX;
-    std::string baseName = ParseResourceName(name, &subscript);
+    std::vector<unsigned int> subscripts;
+    std::string baseName = ParseResourceName(name, &subscripts);
 
     // The app is not allowed to specify array indices other than 0 for arrays of basic types
-    if (subscript != 0 && subscript != GL_INVALID_INDEX)
+    for (unsigned int subscript : subscripts)
     {
-        return GL_INVALID_INDEX;
+        if (subscript != 0u)
+        {
+            return GL_INVALID_INDEX;
+        }
     }
 
     for (size_t index = 0; index < list.size(); index++)
@@ -154,7 +157,9 @@ GLuint GetResourceIndexFromName(const std::vector<VarT> &list, const std::string
         const VarT &resource = list[index];
         if (resource.name == baseName)
         {
-            if (resource.isArray() || subscript == GL_INVALID_INDEX)
+            // TODO(oetuaho@nvidia.com): Check array nesting >= number of specified
+            // subscripts once arrays of arrays are supported in ShaderVariable.
+            if ((resource.isArray() || subscripts.empty()) && subscripts.size() <= 1u)
             {
                 return static_cast<GLuint>(index);
             }
@@ -178,14 +183,14 @@ void CopyStringToBuffer(GLchar *buffer, const std::string &string, GLsizei bufSi
 
 bool IncludeSameArrayElement(const std::set<std::string> &nameSet, const std::string &name)
 {
-    size_t subscript     = GL_INVALID_INDEX;
-    std::string baseName = ParseResourceName(name, &subscript);
-    for (auto it = nameSet.begin(); it != nameSet.end(); ++it)
+    std::vector<unsigned int> subscripts;
+    std::string baseName = ParseResourceName(name, &subscripts);
+    for (auto nameInSet : nameSet)
     {
-        size_t arrayIndex     = GL_INVALID_INDEX;
-        std::string arrayName = ParseResourceName(*it, &arrayIndex);
-        if (baseName == arrayName && (subscript == GL_INVALID_INDEX ||
-                                      arrayIndex == GL_INVALID_INDEX || subscript == arrayIndex))
+        std::vector<unsigned int> arrayIndices;
+        std::string arrayName = ParseResourceName(nameInSet, &arrayIndices);
+        if (baseName == arrayName &&
+            (subscripts.empty() || arrayIndices.empty() || subscripts == arrayIndices))
         {
             return true;
         }
@@ -287,13 +292,26 @@ void InfoLog::reset()
 {
 }
 
-VariableLocation::VariableLocation() : element(0), index(kUnused), ignored(false)
+VariableLocation::VariableLocation() : index(kUnused), flattenedArrayOffset(0u), ignored(false)
 {
 }
 
-VariableLocation::VariableLocation(unsigned int element, unsigned int index)
-    : element(element), index(index), ignored(false)
+VariableLocation::VariableLocation(unsigned int arrayIndex, unsigned int index)
+    : arrayIndices(1, arrayIndex), index(index), flattenedArrayOffset(arrayIndex), ignored(false)
 {
+    ASSERT(arrayIndex != GL_INVALID_INDEX);
+}
+
+bool VariableLocation::areAllArrayIndicesZero() const
+{
+    for (unsigned int arrayIndex : arrayIndices)
+    {
+        if (arrayIndex != 0)
+        {
+            return false;
+        }
+    }
+    return true;
 }
 
 void Program::Bindings::bindLocation(GLuint index, const std::string &name)
@@ -344,8 +362,8 @@ const std::string &ProgramState::getLabel()
 
 GLint ProgramState::getUniformLocation(const std::string &name) const
 {
-    size_t subscript     = GL_INVALID_INDEX;
-    std::string baseName = ParseResourceName(name, &subscript);
+    std::vector<unsigned int> subscripts;
+    std::string baseName = ParseResourceName(name, &subscripts);
 
     for (size_t location = 0; location < mUniformLocations.size(); ++location)
     {
@@ -361,15 +379,15 @@ GLint ProgramState::getUniformLocation(const std::string &name) const
         {
             if (uniform.isArray())
             {
-                if (uniformLocation.element == subscript ||
-                    (uniformLocation.element == 0 && subscript == GL_INVALID_INDEX))
+                if (uniformLocation.arrayIndices == subscripts ||
+                    (uniformLocation.areAllArrayIndicesZero() && subscripts.empty()))
                 {
                     return static_cast<GLint>(location);
                 }
             }
             else
             {
-                if (subscript == GL_INVALID_INDEX)
+                if (subscripts.empty())
                 {
                     return static_cast<GLint>(location);
                 }
@@ -1209,8 +1227,10 @@ GLint Program::getFragDataLocation(const std::string &name) const
     {
         const VariableLocation &locationInfo     = outputPair.second;
         const sh::OutputVariable &outputVariable = mState.mOutputVariables[locationInfo.index];
+        ASSERT(locationInfo.arrayIndices.size() <= 1);
         if (outputVariable.name == baseName &&
-            (arrayIndex == GL_INVALID_INDEX || arrayIndex == locationInfo.element))
+            (arrayIndex == GL_INVALID_INDEX || (!locationInfo.arrayIndices.empty() &&
+                                                arrayIndex == locationInfo.arrayIndices.back())))
         {
             return static_cast<GLint>(outputPair.first);
         }
@@ -1685,8 +1705,8 @@ GLint Program::getActiveUniformBlockMaxLength() const
 
 GLuint Program::getUniformBlockIndex(const std::string &name) const
 {
-    size_t subscript     = GL_INVALID_INDEX;
-    std::string baseName = ParseResourceName(name, &subscript);
+    std::vector<unsigned int> subscripts;
+    std::string baseName = ParseResourceName(name, &subscripts);
 
     unsigned int numUniformBlocks = static_cast<unsigned int>(mState.mUniformBlocks.size());
     for (unsigned int blockIndex = 0; blockIndex < numUniformBlocks; blockIndex++)
@@ -1695,9 +1715,10 @@ GLuint Program::getUniformBlockIndex(const std::string &name) const
         if (uniformBlock.name == baseName)
         {
             const bool arrayElementZero =
-                (subscript == GL_INVALID_INDEX &&
-                 (!uniformBlock.isArray || uniformBlock.arrayElement == 0));
-            if (subscript == uniformBlock.arrayElement || arrayElementZero)
+                (subscripts.empty() && (!uniformBlock.isArray || uniformBlock.arrayElement == 0));
+            const bool arrayElementMatches =
+                (subscripts.size() == 1 && subscripts[0] == uniformBlock.arrayElement);
+            if (arrayElementMatches || arrayElementZero)
             {
                 return blockIndex;
             }
@@ -2466,8 +2487,8 @@ bool Program::linkValidateTransformFeedback(const gl::Context *context,
     for (const std::string &tfVaryingName : mState.mTransformFeedbackVaryingNames)
     {
         bool found = false;
-        size_t subscript     = GL_INVALID_INDEX;
-        std::string baseName = ParseResourceName(tfVaryingName, &subscript);
+        std::vector<unsigned int> subscripts;
+        std::string baseName = ParseResourceName(tfVaryingName, &subscripts);
 
         for (const auto &ref : varyings)
         {
@@ -2501,8 +2522,7 @@ bool Program::linkValidateTransformFeedback(const gl::Context *context,
 
                 // TODO(jmadill): Investigate implementation limits on D3D11
                 size_t elementCount =
-                    ((varying->isArray() && subscript == GL_INVALID_INDEX) ? varying->elementCount()
-                                                                           : 1);
+                    ((varying->isArray() && subscripts.empty()) ? varying->elementCount() : 1);
                 size_t componentCount = VariableComponentCount(varying->type) * elementCount;
                 if (mState.mTransformFeedbackBufferMode == GL_SEPARATE_ATTRIBS &&
                     componentCount > caps.maxTransformFeedbackSeparateComponents)
@@ -2577,8 +2597,13 @@ void Program::gatherTransformFeedbackVaryings(const Program::MergedVaryings &var
     mState.mLinkedTransformFeedbackVaryings.clear();
     for (const std::string &tfVaryingName : mState.mTransformFeedbackVaryingNames)
     {
+        std::vector<unsigned int> subscripts;
+        std::string baseName = ParseResourceName(tfVaryingName, &subscripts);
         size_t subscript     = GL_INVALID_INDEX;
-        std::string baseName = ParseResourceName(tfVaryingName, &subscript);
+        if (!subscripts.empty())
+        {
+            subscript = subscripts.back();
+        }
         for (const auto &ref : varyings)
         {
             const sh::Varying *varying = ref.second.get();
@@ -2653,8 +2678,13 @@ std::vector<PackedVarying> Program::getPackedVaryings(
 
         for (const std::string &tfVarying : tfVaryings)
         {
+            std::vector<unsigned int> subscripts;
+            std::string baseName = ParseResourceName(tfVarying, &subscripts);
             size_t subscript     = GL_INVALID_INDEX;
-            std::string baseName = ParseResourceName(tfVarying, &subscript);
+            if (!subscripts.empty())
+            {
+                subscript = subscripts.back();
+            }
             if (uniqueFullNames.count(tfVarying) > 0)
             {
                 continue;
@@ -2742,8 +2772,17 @@ void Program::linkOutputVariables(const Context *context)
         {
             const int location = baseLocation + elementIndex;
             ASSERT(mState.mOutputLocations.count(location) == 0);
-            unsigned int element = outputVariable.isArray() ? elementIndex : GL_INVALID_INDEX;
-            mState.mOutputLocations[location] = VariableLocation(element, outputVariableIndex);
+            if (outputVariable.isArray())
+            {
+                mState.mOutputLocations[location] =
+                    VariableLocation(elementIndex, outputVariableIndex);
+            }
+            else
+            {
+                VariableLocation locationInfo;
+                locationInfo.index                = outputVariableIndex;
+                mState.mOutputLocations[location] = locationInfo;
+            }
         }
     }
 }
@@ -3034,7 +3073,7 @@ void Program::updateSamplerUniform(const VariableLocation &locationInfo,
     std::vector<GLuint> *boundTextureUnits =
         &mState.mSamplerBindings[samplerIndex].boundTextureUnits;
 
-    std::copy(v, v + clampedCount, boundTextureUnits->begin() + locationInfo.element);
+    std::copy(v, v + clampedCount, boundTextureUnits->begin() + locationInfo.flattenedArrayOffset);
 
     // Invalidate the validation cache.
     mCachedValidateSamplersResult.reset();
@@ -3053,7 +3092,8 @@ GLsizei Program::clampUniformCount(const VariableLocation &locationInfo,
 
     // OpenGL ES 3.0.4 spec pg 67: "Values for any array element that exceeds the highest array
     // element index used, as reported by GetActiveUniform, will be ignored by the GL."
-    unsigned int remainingElements = linkedUniform.elementCount() - locationInfo.element;
+    unsigned int remainingElements =
+        linkedUniform.elementCount() - locationInfo.flattenedArrayOffset;
     GLsizei maxElementCount =
         static_cast<GLsizei>(remainingElements * linkedUniform.getElementComponents());
 
@@ -3082,7 +3122,8 @@ GLsizei Program::clampMatrixUniformCount(GLint location,
 
     // OpenGL ES 3.0.4 spec pg 67: "Values for any array element that exceeds the highest array
     // element index used, as reported by GetActiveUniform, will be ignored by the GL."
-    unsigned int remainingElements = linkedUniform.elementCount() - locationInfo.element;
+    unsigned int remainingElements =
+        linkedUniform.elementCount() - locationInfo.flattenedArrayOffset;
     return std::min(count, static_cast<GLsizei>(remainingElements));
 }
 

@@ -46,6 +46,16 @@ class BinaryInputStream : angle::NonCopyable
         *outValue = readInt<IntT>();
     }
 
+    template <class IntT, class VectorElementT>
+    void readIntVector(std::vector<VectorElementT> *param)
+    {
+        unsigned int size = readInt<unsigned int>();
+        for (unsigned int index = 0; index < size; ++index)
+        {
+            param->push_back(readInt<IntT>());
+        }
+    }
+
     bool readBool()
     {
         int value = 0;
@@ -194,6 +204,16 @@ class BinaryOutputStream : angle::NonCopyable
         else
         {
             writeInt(param);
+        }
+    }
+
+    template <class IntT>
+    void writeIntVector(std::vector<IntT> param)
+    {
+        writeInt(param.size());
+        for (IntT element : param)
+        {
+            writeIntOrNegOne(element);
         }
     }
 
