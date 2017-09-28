@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "ab13ea1a_be2b4d0a",
+        "filename": "src/compiler/translator/OutputVulkanGLSL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-28T23:26:20Z",
+      "side": 1,
+      "message": "VertexIn in the same as Attribute. FragmentOut is not, I left a comment with a TODO.",
+      "parentUuid": "72ddca58_18abff4b",
+      "range": {
+        "startLine": 46,
+        "startChar": 48,
+        "endLine": 47,
+        "endChar": 43
+      },
+      "revId": "9ae948604cd452899df2d068697c3747067e844f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f60240c8_1031a71a",
         "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
         "patchSetId": 3
@@ -71,6 +95,30 @@
     },
     {
       "key": {
+        "uuid": "842bc244_aa5762e7",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 543,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-28T23:26:20Z",
+      "side": 1,
+      "message": "This is necessary to run the test, since the test uses varyings, and a max of zero causes the compile and link to fail.",
+      "parentUuid": "f60240c8_1031a71a",
+      "range": {
+        "startLine": 543,
+        "startChar": 4,
+        "endLine": 543,
+        "endChar": 41
+      },
+      "revId": "9ae948604cd452899df2d068697c3747067e844f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "774267a3_3f3d18d6",
         "filename": "src/libANGLE/renderer/vulkan/formatutilsvk.cpp",
         "patchSetId": 3
@@ -82,6 +130,30 @@
       "writtenOn": "2017-09-25T19:54:57Z",
       "side": 1,
       "message": "Is the related to rest of CL?",
+      "range": {
+        "startLine": 38,
+        "startChar": 19,
+        "endLine": 38,
+        "endChar": 36
+      },
+      "revId": "9ae948604cd452899df2d068697c3747067e844f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2db483b8_13ff7c1e",
+        "filename": "src/libANGLE/renderer/vulkan/formatutilsvk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-28T23:26:20Z",
+      "side": 1,
+      "message": "No, I just started replacing these and kept going until I reached the RGBA normalized stuff. I\u0027ll add a comment to the CL description.",
+      "parentUuid": "774267a3_3f3d18d6",
       "range": {
         "startLine": 38,
         "startChar": 19,
