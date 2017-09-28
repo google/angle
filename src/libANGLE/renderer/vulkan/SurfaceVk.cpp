@@ -37,7 +37,7 @@ VkPresentModeKHR GetDesiredPresentMode(const std::vector<VkPresentModeKHR> &pres
     ASSERT(!presentModes.empty());
 
     // Use FIFO mode for v-sync, since it throttles you to the display rate. Mailbox is more
-    // similar to triple-buffering. For now we hard-code Mailbox for perf tseting.
+    // similar to triple-buffering. For now we hard-code Mailbox for perf testing.
     // TODO(jmadill): Properly select present mode and re-create display if changed.
     VkPresentModeKHR bestChoice = VK_PRESENT_MODE_MAILBOX_KHR;
 
@@ -183,23 +183,17 @@ void WindowSurfaceVk::destroy(const egl::Display *display)
 
     rendererVk->finish();
 
-    mImageAvailableSemaphore.destroy(device);
-    mRenderingCompleteSemaphore.destroy(device);
+    mAcquireNextImageSemaphore.destroy(device);
 
-    for (auto &imageView : mSwapchainImageViews)
+    for (auto &swapchainImage : mSwapchainImages)
     {
-        imageView.destroy(device);
-    }
+        // Although we don't own the swapchain image handles, we need to keep our shutdown clean.
+        swapchainImage.image.reset();
 
-    // Although we don't own the swapchain image handles, we need to keep our shutdown clean.
-    for (auto &image : mSwapchainImages)
-    {
-        image.reset();
-    }
-
-    for (auto &framebuffer : mSwapchainFramebuffers)
-    {
-        framebuffer.destroy(device);
+        swapchainImage.imageView.destroy(device);
+        swapchainImage.framebuffer.destroy(device);
+        swapchainImage.imageAcquiredSemaphore.destroy(device);
+        swapchainImage.commandsCompleteSemaphore.destroy(device);
     }
 
     if (mSwapchain)
@@ -365,7 +359,8 @@ vk::Error WindowSurfaceVk::initializeImpl(RendererVk *renderer)
     transparentBlack.float32[3] = 0.0f;
 
     mSwapchainImages.resize(imageCount);
-    mSwapchainImageViews.resize(imageCount);
+
+    ANGLE_TRY(mAcquireNextImageSemaphore.init(device));
 
     for (uint32_t imageIndex = 0; imageIndex < imageCount; ++imageIndex)
     {
@@ -397,14 +392,15 @@ vk::Error WindowSurfaceVk::initializeImpl(RendererVk *renderer)
                               commandBuffer);
         commandBuffer->clearSingleColorImage(image, transparentBlack);
 
-        mSwapchainImages[imageIndex].retain(device, std::move(image));
-        mSwapchainImageViews[imageIndex].retain(device, std::move(imageView));
+        auto &member = mSwapchainImages[imageIndex];
+
+        member.image.retain(device, std::move(image));
+        member.imageView.retain(device, std::move(imageView));
+        ANGLE_TRY(member.imageAcquiredSemaphore.init(device));
+        ANGLE_TRY(member.commandsCompleteSemaphore.init(device));
     }
 
     ANGLE_TRY(renderer->submitAndFinishCommandBuffer(commandBuffer));
-
-    ANGLE_TRY(mImageAvailableSemaphore.init(device));
-    ANGLE_TRY(mRenderingCompleteSemaphore.init(device));
 
     // Get the first available swapchain iamge.
     ANGLE_TRY(nextSwapchainImage(renderer));
@@ -429,20 +425,20 @@ egl::Error WindowSurfaceVk::swap(const gl::Context *context)
     FramebufferVk *framebufferVk = GetImplAs<FramebufferVk>(mState.defaultFramebuffer);
     framebufferVk->endRenderPass(currentCB);
 
-    auto *image = &mSwapchainImages[mCurrentSwapchainImageIndex];
+    auto &image = mSwapchainImages[mCurrentSwapchainImageIndex];
 
-    image->changeLayoutWithStages(VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_PRESENT_SRC_KHR,
-                                  VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
-                                  VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, currentCB);
+    image.image.changeLayoutWithStages(VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_PRESENT_SRC_KHR,
+                                       VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
+                                       VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, currentCB);
 
-    ANGLE_TRY(renderer->submitCommandsWithSync(currentCB, mImageAvailableSemaphore,
-                                               mRenderingCompleteSemaphore));
+    ANGLE_TRY(renderer->submitCommandsWithSync(currentCB, image.imageAcquiredSemaphore,
+                                               image.commandsCompleteSemaphore));
 
     VkPresentInfoKHR presentInfo;
     presentInfo.sType              = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
     presentInfo.pNext              = nullptr;
     presentInfo.waitSemaphoreCount = 1;
-    presentInfo.pWaitSemaphores    = mRenderingCompleteSemaphore.ptr();
+    presentInfo.pWaitSemaphores    = image.commandsCompleteSemaphore.ptr();
     presentInfo.swapchainCount     = 1;
     presentInfo.pSwapchains        = &mSwapchain;
     presentInfo.pImageIndices      = &mCurrentSwapchainImageIndex;
@@ -460,13 +456,20 @@ vk::Error WindowSurfaceVk::nextSwapchainImage(RendererVk *renderer)
 {
     VkDevice device = renderer->getDevice();
 
-    ANGLE_VK_TRY(vkAcquireNextImageKHR(device, mSwapchain, std::numeric_limits<uint64_t>::max(),
-                                       mImageAvailableSemaphore.getHandle(), VK_NULL_HANDLE,
+    // Use a timeout of zero for AcquireNextImage so we don't actually block.
+    // TODO(jmadill): We should handle VK_NOT_READY and block until we can acquire the image.
+    ANGLE_VK_TRY(vkAcquireNextImageKHR(device, mSwapchain, 0,
+                                       mAcquireNextImageSemaphore.getHandle(), VK_NULL_HANDLE,
                                        &mCurrentSwapchainImageIndex));
 
+    auto &image = mSwapchainImages[mCurrentSwapchainImageIndex];
+
+    // Swap the unused swapchain semaphore and the now active spare semaphore.
+    std::swap(image.imageAcquiredSemaphore, mAcquireNextImageSemaphore);
+
     // Update RenderTarget pointers.
-    mRenderTarget.image     = &mSwapchainImages[mCurrentSwapchainImageIndex];
-    mRenderTarget.imageView = &mSwapchainImageViews[mCurrentSwapchainImageIndex];
+    mRenderTarget.image     = &image.image;
+    mRenderTarget.imageView = &image.imageView;
 
     return vk::NoError();
 }
@@ -544,10 +547,12 @@ gl::ErrorOrResult<vk::Framebuffer *> WindowSurfaceVk::getCurrentFramebuffer(
     VkDevice device,
     const vk::RenderPass &compatibleRenderPass)
 {
-    if (!mSwapchainFramebuffers.empty())
+    auto &currentFramebuffer = mSwapchainImages[mCurrentSwapchainImageIndex].framebuffer;
+
+    if (currentFramebuffer.valid())
     {
         // Validation layers should detect if the render pass is really compatible.
-        return &mSwapchainFramebuffers[mCurrentSwapchainImageIndex];
+        return &currentFramebuffer;
     }
 
     VkFramebufferCreateInfo framebufferInfo;
@@ -563,22 +568,18 @@ gl::ErrorOrResult<vk::Framebuffer *> WindowSurfaceVk::getCurrentFramebuffer(
     framebufferInfo.height          = static_cast<uint32_t>(mRenderTarget.extents.height);
     framebufferInfo.layers          = 1;
 
-    mSwapchainFramebuffers.resize(mSwapchainImageViews.size());
-    for (size_t imageIndex = 0; imageIndex < mSwapchainFramebuffers.size(); ++imageIndex)
+    for (auto &swapchainImage : mSwapchainImages)
     {
-        const auto &imageView        = mSwapchainImageViews[imageIndex];
-        VkImageView imageViewHandle  = imageView.getHandle();
-        framebufferInfo.pAttachments = &imageViewHandle;
+        framebufferInfo.pAttachments = swapchainImage.imageView.ptr();
 
         vk::Framebuffer framebuffer;
         ANGLE_TRY(framebuffer.init(device, framebufferInfo));
 
-        mSwapchainFramebuffers[imageIndex].retain(device, std::move(framebuffer));
+        swapchainImage.framebuffer.retain(device, std::move(framebuffer));
     }
 
-    // We should only initialize framebuffers on the first swap.
-    ASSERT(mCurrentSwapchainImageIndex == 0u);
-    return &mSwapchainFramebuffers[mCurrentSwapchainImageIndex];
+    ASSERT(currentFramebuffer.valid());
+    return &currentFramebuffer;
 }
 
 }  // namespace rx
