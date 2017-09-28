@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "aa3d6cd5_6c30027c",
+        "filename": "src/common/third_party/smhasher/README.chromium",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-28T07:15:00Z",
+      "side": 1,
+      "message": "naming convention for ANGLE is README.angle",
+      "revId": "3c4c1a3db173c3c17ca6e665304d74c2ad7b8f9b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
