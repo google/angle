@@ -131,6 +131,24 @@
     },
     {
       "key": {
+        "uuid": "3eb39d23_90dda62a",
+        "filename": "src/common/mathutil.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-09-29T08:38:43Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "6f6b20c7_dcb4c047",
+      "revId": "a44bcda93657c87925f8098126e2532059fc03d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1c0f01d2_2e60f241",
         "filename": "src/libANGLE/queryutils.cpp",
         "patchSetId": 8
@@ -175,6 +193,30 @@
       "revId": "a44bcda93657c87925f8098126e2532059fc03d7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e0d8a130_c91bcf4b",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-09-29T08:38:43Z",
+      "side": 1,
+      "message": "Ack. Thanks for the explanation.",
+      "parentUuid": "44c8429c_3183c9ef",
+      "range": {
+        "startLine": 107,
+        "startChar": 23,
+        "endLine": 107,
+        "endChar": 41
+      },
+      "revId": "a44bcda93657c87925f8098126e2532059fc03d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
