@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "0a8afd32_c70ed7a7",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 8
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-09-29T08:33:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "051cf336_a83c2b0e",
+      "range": {
+        "startLine": 10,
+        "startChar": 35,
+        "endLine": 10,
+        "endChar": 40
+      },
+      "revId": "a44bcda93657c87925f8098126e2532059fc03d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "153c6d16_a66b3c3a",
         "filename": "src/common/mathutil.h",
         "patchSetId": 8
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "5cf310ae_cd11960e",
+        "filename": "src/common/mathutil.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-09-29T08:33:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "153c6d16_a66b3c3a",
+      "range": {
+        "startLine": 66,
+        "startChar": 78,
+        "endLine": 66,
+        "endChar": 87
+      },
+      "revId": "a44bcda93657c87925f8098126e2532059fc03d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "43077dcd_c8a748bb",
         "filename": "src/common/mathutil.h",
         "patchSetId": 8
@@ -65,6 +113,24 @@
     },
     {
       "key": {
+        "uuid": "6f6b20c7_dcb4c047",
+        "filename": "src/common/mathutil.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-09-29T08:33:09Z",
+      "side": 1,
+      "message": "It seems that std::numeric_limits\u003cDestT\u003e::max() is more informative that destMax. And I don\u0027t want destMax messed with destHi, and etc.",
+      "parentUuid": "43077dcd_c8a748bb",
+      "revId": "a44bcda93657c87925f8098126e2532059fc03d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "1c0f01d2_2e60f241",
         "filename": "src/libANGLE/queryutils.cpp",
         "patchSetId": 8
@@ -76,6 +142,30 @@
       "writtenOn": "2017-09-29T04:30:13Z",
       "side": 1,
       "message": "why not \u0027clampCast\u003cGLint\u003e\u0027? In what kind of situation use clampCast and what kind of situation use static_cast?",
+      "range": {
+        "startLine": 107,
+        "startChar": 23,
+        "endLine": 107,
+        "endChar": 41
+      },
+      "revId": "a44bcda93657c87925f8098126e2532059fc03d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "44c8429c_3183c9ef",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-09-29T08:33:09Z",
+      "side": 1,
+      "message": "getFixedSampleLocations returns a value of GLboolean. As GLboolean is within GLint\u0027s range, there is no need to do clamp. clampCast is a bit more expensive than static_cast.",
+      "parentUuid": "1c0f01d2_2e60f241",
       "range": {
         "startLine": 107,
         "startChar": 23,
@@ -111,6 +201,30 @@
     },
     {
       "key": {
+        "uuid": "4d1e4f85_338d6679",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-09-29T08:33:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b95e924c_09e50daf",
+      "range": {
+        "startLine": 110,
+        "startChar": 59,
+        "endLine": 110,
+        "endChar": 77
+      },
+      "revId": "a44bcda93657c87925f8098126e2532059fc03d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dad34960_068bfcb3",
         "filename": "src/libANGLE/queryutils.cpp",
         "patchSetId": 8
@@ -131,6 +245,30 @@
       "revId": "a44bcda93657c87925f8098126e2532059fc03d7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5d226939_ee9b3fba",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-09-29T08:33:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dad34960_068bfcb3",
+      "range": {
+        "startLine": 144,
+        "startChar": 23,
+        "endLine": 144,
+        "endChar": 41
+      },
+      "revId": "a44bcda93657c87925f8098126e2532059fc03d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
