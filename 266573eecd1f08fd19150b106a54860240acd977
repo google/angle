@@ -1,0 +1,147 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "198f04f6_98b2b37e",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1806,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-09-29T07:00:28Z",
+      "side": 1,
+      "message": "Do you need to check mGeometryShaderInputArraySize \u003e 0?",
+      "revId": "266573eecd1f08fd19150b106a54860240acd977",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "29d59788_9d20e929",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1808,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-09-29T07:00:28Z",
+      "side": 1,
+      "message": "I am not very clear about this part. It seems that you have set the array size for the unsized array type. But you still need to traverse the tree on Compiler.cpp to SetGeometryShaderInputArraySize for unsized input declaration. I think the change in Compiler.cpp can be omitted.",
+      "range": {
+        "startLine": 1808,
+        "startChar": 8,
+        "endLine": 1808,
+        "endChar": 60
+      },
+      "revId": "266573eecd1f08fd19150b106a54860240acd977",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b3148415_ad8c0bfe",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2401,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-09-29T07:00:28Z",
+      "side": 1,
+      "message": "Why you need to call arrayType.makeArray(1u)? Can we remove it?",
+      "range": {
+        "startLine": 2401,
+        "startChar": 12,
+        "endLine": 2401,
+        "endChar": 36
+      },
+      "revId": "266573eecd1f08fd19150b106a54860240acd977",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "079bc4f3_59b4f213",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2419,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-09-29T07:00:28Z",
+      "side": 1,
+      "message": "Here you can directly call setGeometryShaderInputArraySize(size, identifierLocation) in line 2789.",
+      "range": {
+        "startLine": 2409,
+        "startChar": 0,
+        "endLine": 2419,
+        "endChar": 26
+      },
+      "revId": "266573eecd1f08fd19150b106a54860240acd977",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "feae4314_f8431951",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2420,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-09-29T07:00:28Z",
+      "side": 1,
+      "message": "Can we remove this line?",
+      "range": {
+        "startLine": 2420,
+        "startChar": 16,
+        "endLine": 2420,
+        "endChar": 26
+      },
+      "revId": "266573eecd1f08fd19150b106a54860240acd977",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "44987d0a_39997512",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2789,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-09-29T07:00:28Z",
+      "side": 1,
+      "message": "How about changing it like below:\n\nvoid TParseContext::setGeometryShaderInputArraySize(unsigned int inputArraySize, const TSourceLoc \u0026line)\n{\n    if (mGeometryShaderInputArraySize \u003d\u003d 0u)\n    {\n        mGeometryShaderInputArraySize \u003d inputArraySize;\n    }\n    else if (mGeometryShaderInputArraySize !\u003d inputArraySize)\n    {\n        error(line, \"input array sizes doesn\u0027t match eariler input primitive or input array size.\", \"layout\");\n    }\n}",
+      "revId": "266573eecd1f08fd19150b106a54860240acd977",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5425338e_7cfd5aa6",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2828,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-09-29T07:00:28Z",
+      "side": 1,
+      "message": "Here you can change it to:\nunsigned int inputArraySize \u003d\n    GetGeometryShaderInputArraySize(mGeometryShaderInputPrimitiveType);\nsetGeometryShaderInputArraySize(inputArraySize, typeQualifier.line);",
+      "revId": "266573eecd1f08fd19150b106a54860240acd977",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
