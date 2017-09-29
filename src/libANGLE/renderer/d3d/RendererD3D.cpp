@@ -316,6 +316,11 @@ unsigned int GetBlendSampleMask(const gl::State &glState, int samples)
         mask = 0xFFFFFFFF;
     }
 
+    if (glState.isSampleMaskEnabled())
+    {
+        mask &= glState.getSampleMaskWord(0);
+    }
+
     return mask;
 }
 

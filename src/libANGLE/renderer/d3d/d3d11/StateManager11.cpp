@@ -1894,7 +1894,8 @@ gl::Error StateManager11::updateState(const gl::Context *context, GLenum drawMod
         invalidateShaders();
     }
 
-    // TODO(jmadill): This can be recomputed only on framebuffer changes.
+    // TODO(jiawei.shao@intel.com): This can be recomputed only on framebuffer or multisample mask
+    // state changes.
     RenderTarget11 *firstRT = framebuffer11->getFirstRenderTarget();
     int samples             = (firstRT ? firstRT->getSamples() : 0);
     unsigned int sampleMask = GetBlendSampleMask(glState, samples);
