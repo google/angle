@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "6ea96caa_1cc94094",
+        "filename": "src/common/mathutil.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-09-30T05:06:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4cf5b28b_e6db2a54",
+      "range": {
+        "startLine": 68,
+        "startChar": 4,
+        "endLine": 68,
+        "endChar": 15
+      },
+      "revId": "7e76a7d32516e2df5942b577feaa44ceb2605677",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f2c19b52_baf9afb7",
         "filename": "src/common/mathutil.h",
         "patchSetId": 9
@@ -36,6 +60,30 @@
       "writtenOn": "2017-09-29T15:22:28Z",
       "side": 1,
       "message": "constexpr const on this too.",
+      "range": {
+        "startLine": 75,
+        "startChar": 8,
+        "endLine": 75,
+        "endChar": 13
+      },
+      "revId": "7e76a7d32516e2df5942b577feaa44ceb2605677",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fb0d38cc_b0d5c7e4",
+        "filename": "src/common/mathutil.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-09-30T05:06:38Z",
+      "side": 1,
+      "message": "The VS compiler is so aggressive that it will complain the below static_cast\u003cSrcT\u003e(destMax) for \"truncation of constant value\" error in case (DestT\u003dGLint64,SrcT\u003dGLint). To suppress it, I have to give up the constexpr optimization.",
+      "parentUuid": "f2c19b52_baf9afb7",
       "range": {
         "startLine": 75,
         "startChar": 8,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "be201cdc_254212ed",
+        "filename": "src/common/mathutil.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-09-30T05:06:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "793eb183_fbc46f7c",
+      "range": {
+        "startLine": 84,
+        "startChar": 8,
+        "endLine": 84,
+        "endChar": 13
+      },
+      "revId": "7e76a7d32516e2df5942b577feaa44ceb2605677",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "73e687bd_668eb8e9",
         "filename": "src/libANGLE/queryutils.cpp",
         "patchSetId": 9
@@ -82,6 +154,30 @@
       "writtenOn": "2017-09-29T15:22:28Z",
       "side": 1,
       "message": "I see a lot of calls in the form of:\n\n   CastFromStateValue\u003cParamType\u003e(pname, clampCast\u003cGLint\u003e(x))\n\nIt would be nice to refactor this into a single call.  Maybe \"CastFromGLIntStateValue\" or adding another template parameter to CastFromStateValue:\n\n   template \u003ctypename QueryT, template sourceT, typename NativeT\u003e\n   QueryT CastFromStateValue(GLenum pname, NativeT value) ...\n\nSo that we can just call CastFromStateValue\u003cParamType, GLint\u003e(x) instead.",
+      "range": {
+        "startLine": 46,
+        "startChar": 22,
+        "endLine": 47,
+        "endChar": 87
+      },
+      "revId": "7e76a7d32516e2df5942b577feaa44ceb2605677",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "71d7fd7d_790725d3",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-09-30T05:06:38Z",
+      "side": 1,
+      "message": "Done!\nThanks for the advice!",
+      "parentUuid": "73e687bd_668eb8e9",
       "range": {
         "startLine": 46,
         "startChar": 22,
@@ -114,6 +210,30 @@
       "revId": "7e76a7d32516e2df5942b577feaa44ceb2605677",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c20cb2f1_b025b85e",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 212,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-09-30T05:06:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b7c8a09d_0e608519",
+      "range": {
+        "startLine": 212,
+        "startChar": 30,
+        "endLine": 212,
+        "endChar": 90
+      },
+      "revId": "7e76a7d32516e2df5942b577feaa44ceb2605677",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
