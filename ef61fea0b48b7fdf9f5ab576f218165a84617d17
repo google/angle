@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "64500b87_f1838975",
+        "filename": "src/libANGLE/queryconversions.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-02T14:40:29Z",
+      "side": 1,
+      "message": "type: that?",
+      "range": {
+        "startLine": 65,
+        "startChar": 49,
+        "endLine": 65,
+        "endChar": 51
+      },
+      "revId": "ef61fea0b48b7fdf9f5ab576f218165a84617d17",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
