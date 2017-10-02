@@ -69,6 +69,9 @@ ContextNULL::ContextNULL(const gl::ContextState &state, AllocationTrackerNULL *a
 
     mExtensions                       = gl::Extensions();
     mExtensions.fence                 = true;
+    mExtensions.pixelBufferObject     = true;
+    mExtensions.mapBuffer             = true;
+    mExtensions.mapBufferRange        = true;
     mExtensions.copyTexture           = true;
     mExtensions.copyCompressedTexture = true;
 
