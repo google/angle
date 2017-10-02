@@ -68,6 +68,7 @@ ContextNULL::ContextNULL(const gl::ContextState &state, AllocationTrackerNULL *a
     mCaps = GenerateMinimumCaps(maxClientVersion);
 
     mExtensions                       = gl::Extensions();
+    mExtensions.fence                 = true;
     mExtensions.copyTexture           = true;
     mExtensions.copyCompressedTexture = true;
 
