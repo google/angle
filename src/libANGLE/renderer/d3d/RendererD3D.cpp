@@ -283,6 +283,11 @@ bool InstancedPointSpritesActive(ProgramD3D *programD3D, GLenum mode)
            mode == GL_POINTS;
 }
 
+gl::Error RendererD3D::initRenderTarget(RenderTargetD3D *renderTarget)
+{
+    return clearRenderTarget(renderTarget, gl::ColorF(0, 0, 0, 0), 1, 0);
+}
+
 unsigned int GetBlendSampleMask(const gl::State &glState, int samples)
 {
     unsigned int mask   = 0;

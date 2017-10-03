@@ -171,4 +171,11 @@ gl::Error TextureVk::setStorageMultisample(const gl::Context *context,
     return gl::InternalError() << "setStorageMultisample is unimplemented.";
 }
 
+gl::Error TextureVk::initializeContents(const gl::Context *context,
+                                        const gl::ImageIndex &imageIndex)
+{
+    UNIMPLEMENTED();
+    return gl::NoError();
+}
+
 }  // namespace rx

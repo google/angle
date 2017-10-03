@@ -248,7 +248,9 @@ void TextureManager::signalAllTexturesDirty() const
     {
         if (texture.second)
         {
-            texture.second->signalDirty();
+            // We don't know if the Texture needs init, but that's ok, since it will only force
+            // a re-check, and will not initialize the pixels if it's not needed.
+            texture.second->signalDirty(InitState::MayNeedInit);
         }
     }
 }

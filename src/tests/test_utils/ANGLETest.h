@@ -78,6 +78,10 @@ struct GLColor
 
     angle::Vector4 toNormalizedVector() const;
 
+    GLubyte &operator[](size_t index) { return (&R)[index]; }
+
+    const GLubyte &operator[](size_t index) const { return (&R)[index]; }
+
     GLubyte R, G, B, A;
 
     static const GLColor black;

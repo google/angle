@@ -151,4 +151,10 @@ gl::Error TextureNULL::setStorageMultisample(const gl::Context *context,
     return gl::NoError();
 }
 
+gl::Error TextureNULL::initializeContents(const gl::Context *context,
+                                          const gl::ImageIndex &imageIndex)
+{
+    return gl::NoError();
+}
+
 }  // namespace rx

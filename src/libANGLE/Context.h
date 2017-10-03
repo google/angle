@@ -947,7 +947,10 @@ class Context final : public ValidationContext
     egl::Surface *getCurrentDrawSurface() const { return mCurrentSurface; }
     egl::Surface *getCurrentReadSurface() const { return mCurrentSurface; }
 
+    bool isRobustResourceInitEnabled() const { return mGLState.isRobustResourceInitEnabled(); }
+
   private:
+    Error prepareForDraw();
     void syncRendererState();
     void syncRendererState(const State::DirtyBits &bitMask, const State::DirtyObjects &objectMask);
     void syncStateForReadPixels();

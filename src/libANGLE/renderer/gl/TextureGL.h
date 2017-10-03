@@ -179,6 +179,9 @@ class TextureGL : public TextureImpl
 
     gl::Error setBaseLevel(const gl::Context *context, GLuint baseLevel) override;
 
+    gl::Error initializeContents(const gl::Context *context,
+                                 const gl::ImageIndex &imageIndex) override;
+
     void setMinFilter(GLenum filter);
     void setMagFilter(GLenum filter);
 

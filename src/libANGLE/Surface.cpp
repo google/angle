@@ -398,6 +398,17 @@ gl::Framebuffer *Surface::createDefaultFramebuffer(const Display *display)
     return new gl::Framebuffer(display, this);
 }
 
+gl::InitState Surface::initState(const gl::ImageIndex & /*imageIndex*/) const
+{
+    // TODO(jmadill): Lazy surface init.
+    return gl::InitState::Initialized;
+}
+
+void Surface::setInitState(const gl::ImageIndex & /*imageIndex*/, gl::InitState /*initState*/)
+{
+    // No-op.
+}
+
 WindowSurface::WindowSurface(rx::EGLImplFactory *implFactory,
                              const egl::Config *config,
                              EGLNativeWindowType window,

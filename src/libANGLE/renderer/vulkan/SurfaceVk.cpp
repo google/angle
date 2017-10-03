@@ -150,6 +150,13 @@ gl::Error OffscreenSurfaceVk::getAttachmentRenderTarget(
     return gl::InternalError();
 }
 
+gl::Error OffscreenSurfaceVk::initializeContents(const gl::Context *context,
+                                                 const gl::ImageIndex &imageIndex)
+{
+    UNIMPLEMENTED();
+    return gl::NoError();
+}
+
 WindowSurfaceVk::WindowSurfaceVk(const egl::SurfaceState &surfaceState,
                                  EGLNativeWindowType window,
                                  EGLint width,
@@ -580,6 +587,13 @@ gl::ErrorOrResult<vk::Framebuffer *> WindowSurfaceVk::getCurrentFramebuffer(
 
     ASSERT(currentFramebuffer.valid());
     return &currentFramebuffer;
+}
+
+gl::Error WindowSurfaceVk::initializeContents(const gl::Context *context,
+                                              const gl::ImageIndex &imageIndex)
+{
+    UNIMPLEMENTED();
+    return gl::NoError();
 }
 
 }  // namespace rx

@@ -30,7 +30,11 @@ class RenderbufferNULL : public RenderbufferImpl
                                     GLenum internalformat,
                                     size_t width,
                                     size_t height) override;
+
     gl::Error setStorageEGLImageTarget(const gl::Context *context, egl::Image *image) override;
+
+    gl::Error initializeContents(const gl::Context *context,
+                                 const gl::ImageIndex &imageIndex) override;
 };
 
 }  // namespace rx

@@ -44,6 +44,9 @@ class RenderbufferGL : public RenderbufferImpl
     virtual gl::Error setStorageEGLImageTarget(const gl::Context *context,
                                                egl::Image *image) override;
 
+    gl::Error initializeContents(const gl::Context *context,
+                                 const gl::ImageIndex &imageIndex) override;
+
     GLuint getRenderbufferID() const;
 
   private:

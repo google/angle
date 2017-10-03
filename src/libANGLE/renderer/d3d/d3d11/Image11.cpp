@@ -571,6 +571,7 @@ gl::Error Image11::createStagingTexture()
             ANGLE_TRY(mRenderer->allocateTexture(desc, formatInfo, &mStagingTexture));
         }
 
+        mStagingTexture.setDebugName("Image11::StagingTexture3D");
         mStagingSubresource = D3D11CalcSubresource(lodOffset, 0, lodOffset + 1);
     }
     else if (mTarget == GL_TEXTURE_2D || mTarget == GL_TEXTURE_2D_ARRAY ||
@@ -605,6 +606,7 @@ gl::Error Image11::createStagingTexture()
             ANGLE_TRY(mRenderer->allocateTexture(desc, formatInfo, &mStagingTexture));
         }
 
+        mStagingTexture.setDebugName("Image11::StagingTexture2D");
         mStagingSubresource = D3D11CalcSubresource(lodOffset, 0, lodOffset + 1);
     }
     else

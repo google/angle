@@ -76,6 +76,9 @@ class Renderbuffer final : public egl::ImageSibling,
     void onDetach(const Context *context) override;
     GLuint getId() const override;
 
+    InitState initState(const ImageIndex &imageIndex) const override;
+    void setInitState(const ImageIndex &imageIndex, InitState initState) override;
+
   private:
     rx::FramebufferAttachmentObjectImpl *getAttachmentImpl() const override { return mRenderbuffer; }
 
@@ -87,8 +90,11 @@ class Renderbuffer final : public egl::ImageSibling,
     GLsizei mHeight;
     Format mFormat;
     GLsizei mSamples;
+
+    // For robust resource init.
+    InitState mInitState;
 };
 
-}
+}  // namespace gl
 
 #endif   // LIBANGLE_RENDERBUFFER_H_

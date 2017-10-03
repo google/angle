@@ -118,4 +118,13 @@ void RenderbufferD3D::deleteRenderTarget(const gl::Context *context)
         SafeDelete(mRenderTarget);
     }
 }
+
+gl::Error RenderbufferD3D::initializeContents(const gl::Context *context,
+                                              const gl::ImageIndex &imageIndex)
+{
+    RenderTargetD3D *renderTarget = nullptr;
+    ANGLE_TRY(getRenderTarget(context, &renderTarget));
+    return mRenderer->initRenderTarget(renderTarget);
+}
+
 }  // namespace rx

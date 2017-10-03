@@ -104,6 +104,9 @@ class TextureVk : public TextureImpl
                                     GLint internalformat,
                                     const gl::Extents &size,
                                     GLboolean fixedSampleLocations) override;
+
+    gl::Error initializeContents(const gl::Context *context,
+                                 const gl::ImageIndex &imageIndex) override;
 };
 
 }  // namespace rx

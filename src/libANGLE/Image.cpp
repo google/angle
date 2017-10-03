@@ -45,7 +45,8 @@ gl::ImageIndex GetImageIndex(EGLenum eglTarget, const egl::AttributeMap &attribs
 }
 }  // anonymous namespace
 
-ImageSibling::ImageSibling(GLuint id) : RefCountObject(id), mSourcesOf(), mTargetOf()
+ImageSibling::ImageSibling(GLuint id)
+    : RefCountObject(id), FramebufferAttachmentObject(), mSourcesOf(), mTargetOf()
 {
 }
 
@@ -99,6 +100,23 @@ void ImageSibling::removeImageSource(egl::Image *imageSource)
     mSourcesOf.erase(imageSource);
 }
 
+bool ImageSibling::isEGLImageTarget() const
+{
+    return (mTargetOf.get() != nullptr);
+}
+
+gl::InitState ImageSibling::sourceEGLImageInitState() const
+{
+    ASSERT(isEGLImageTarget());
+    return mTargetOf->sourceInitState();
+}
+
+void ImageSibling::setSourceEGLImageInitState(gl::InitState initState) const
+{
+    ASSERT(isEGLImageTarget());
+    mTargetOf->setInitState(initState);
+}
+
 ImageState::ImageState(EGLenum target, ImageSibling *buffer, const AttributeMap &attribs)
     : imageIndex(GetImageIndex(target, attribs)), source(buffer), targets()
 {
@@ -110,7 +128,8 @@ Image::Image(rx::EGLImplFactory *factory,
              const AttributeMap &attribs)
     : RefCountObject(0),
       mState(target, buffer, attribs),
-      mImplementation(factory->createImage(mState, target, attribs))
+      mImplementation(factory->createImage(mState, target, attribs)),
+      mOrphanedAndNeedsInit(false)
 {
     ASSERT(mImplementation != nullptr);
     ASSERT(buffer != nullptr);
@@ -153,6 +172,8 @@ gl::Error Image::orphanSibling(const gl::Context *context, ImageSibling *sibling
         // If the sibling is the source, it cannot be a target.
         ASSERT(mState.targets.find(sibling) == mState.targets.end());
         mState.source.set(context, nullptr);
+        mOrphanedAndNeedsInit =
+            (sibling->initState(mState.imageIndex) == gl::InitState::MayNeedInit);
     }
     else
     {
@@ -190,6 +211,31 @@ rx::ImageImpl *Image::getImplementation() const
 Error Image::initialize()
 {
     return mImplementation->initialize();
+}
+
+bool Image::orphaned() const
+{
+    return (mState.source.get() == nullptr);
+}
+
+gl::InitState Image::sourceInitState() const
+{
+    if (orphaned())
+    {
+        return mOrphanedAndNeedsInit ? gl::InitState::MayNeedInit : gl::InitState::Initialized;
+    }
+
+    return mState.source->initState(mState.imageIndex);
+}
+
+void Image::setInitState(gl::InitState initState)
+{
+    if (orphaned())
+    {
+        mOrphanedAndNeedsInit = false;
+    }
+
+    return mState.source->setInitState(mState.imageIndex, initState);
 }
 
 }  // namespace egl

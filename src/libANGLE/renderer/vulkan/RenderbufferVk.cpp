@@ -56,4 +56,11 @@ gl::Error RenderbufferVk::getAttachmentRenderTarget(const gl::Context *context,
     return gl::InternalError();
 }
 
+gl::Error RenderbufferVk::initializeContents(const gl::Context *context,
+                                             const gl::ImageIndex &imageIndex)
+{
+    UNIMPLEMENTED();
+    return gl::NoError();
+}
+
 }  // namespace rx

@@ -575,7 +575,11 @@ gl::Error TextureD3D::ensureRenderTarget(const gl::Context *context)
 
 bool TextureD3D::canCreateRenderTargetForImage(const gl::ImageIndex &index) const
 {
+    if (index.type == GL_TEXTURE_2D_MULTISAMPLE)
+        return true;
+
     ImageD3D *image = getImage(index);
+    ASSERT(image);
     bool levelsComplete = (isImageComplete(index) && isImageComplete(getImageIndex(0, 0)));
     return (image->isRenderableFormat() && levelsComplete);
 }
@@ -667,6 +671,84 @@ gl::Error TextureD3D::releaseTexStorage(const gl::Context *context)
 gl::Error TextureD3D::onDestroy(const gl::Context *context)
 {
     return releaseTexStorage(context);
+}
+
+gl::Error TextureD3D::initializeContents(const gl::Context *context,
+                                         const gl::ImageIndex &imageIndexIn)
+{
+    gl::ImageIndex imageIndex = imageIndexIn;
+
+    // Special case for D3D11 3D textures. We can't create render targets for individual layers of a
+    // 3D texture, so force the clear to the entire mip. There shouldn't ever be a case where we
+    // would lose existing data.
+    if (imageIndex.type == GL_TEXTURE_3D)
+    {
+        imageIndex.layerIndex = gl::ImageIndex::ENTIRE_LEVEL;
+    }
+    else if (imageIndex.type == GL_TEXTURE_2D_ARRAY &&
+             imageIndex.layerIndex == gl::ImageIndex::ENTIRE_LEVEL)
+    {
+        GLsizei layerCount = getLayerCount(imageIndex.mipIndex);
+        for (imageIndex.layerIndex = 0; imageIndex.layerIndex < layerCount; ++imageIndex.layerIndex)
+        {
+            ANGLE_TRY(initializeContents(context, imageIndex));
+        }
+        return gl::NoError();
+    }
+
+    // Force image clean.
+    ImageD3D *image = getImage(imageIndex);
+    if (image)
+    {
+        image->markClean();
+    }
+
+    // Fast path: can use a render target clear.
+    if (canCreateRenderTargetForImage(imageIndex))
+    {
+        ANGLE_TRY(ensureRenderTarget(context));
+        ASSERT(mTexStorage);
+        RenderTargetD3D *renderTarget = nullptr;
+        ANGLE_TRY(mTexStorage->getRenderTarget(context, imageIndex, &renderTarget));
+        ANGLE_TRY(mRenderer->initRenderTarget(renderTarget));
+        return gl::NoError();
+    }
+
+    // Slow path: non-renderable texture or the texture levels aren't set up.
+    const auto &formatInfo = gl::GetSizedInternalFormatInfo(image->getInternalFormat());
+
+    size_t imageBytes = 0;
+    ANGLE_TRY_RESULT(formatInfo.computeRowPitch(formatInfo.type, image->getWidth(), 1, 0),
+                     imageBytes);
+    imageBytes *= image->getHeight() * image->getDepth();
+
+    gl::PixelUnpackState defaultUnpackState;
+
+    angle::MemoryBuffer *zeroBuffer = nullptr;
+    ANGLE_TRY(context->getZeroFilledBuffer(imageBytes, &zeroBuffer));
+    if (shouldUseSetData(image))
+    {
+        ANGLE_TRY(mTexStorage->setData(context, imageIndex, image, nullptr, formatInfo.type,
+                                       defaultUnpackState, zeroBuffer->data()));
+    }
+    else
+    {
+        gl::Box fullImageArea(0, 0, 0, image->getWidth(), image->getHeight(), image->getDepth());
+        ANGLE_TRY(image->loadData(context, fullImageArea, defaultUnpackState, formatInfo.type,
+                                  zeroBuffer->data(), false));
+
+        // Force an update to the tex storage so we avoid problems with subImage and dirty regions.
+        if (mTexStorage)
+        {
+            ANGLE_TRY(commitRegion(context, imageIndex, fullImageArea));
+            image->markClean();
+        }
+        else
+        {
+            mDirtyImages = true;
+        }
+    }
+    return gl::NoError();
 }
 
 TextureD3D_2D::TextureD3D_2D(const gl::TextureState &state, RendererD3D *renderer)
@@ -890,8 +972,8 @@ gl::Error TextureD3D_2D::copyImage(const gl::Context *context,
     // zero it explicitly.
     // TODO(fjhenigman): When robust resource is fully implemented look into making it a
     // prerequisite for WebGL and deleting this code.
-    if (outside && context->getExtensions().webglCompatibility &&
-        !mRenderer->isRobustResourceInitEnabled())
+    if (outside &&
+        (context->getExtensions().webglCompatibility || mRenderer->isRobustResourceInitEnabled()))
     {
         angle::MemoryBuffer *zero;
         ANGLE_TRY(context->getZeroFilledBuffer(
@@ -1725,13 +1807,8 @@ gl::Error TextureD3D_Cube::copySubImage(const gl::Context *context,
     // so we should use the non-rendering copy path.
     if (!canCreateRenderTargetForImage(index) || mRenderer->getWorkarounds().zeroMaxLodWorkaround)
     {
-        gl::Error error = mImageArray[faceIndex][level]->copyFromFramebuffer(context, destOffset,
-                                                                             sourceArea, source);
-        if (error.isError())
-        {
-            return error;
-        }
-
+        ANGLE_TRY(mImageArray[faceIndex][level]->copyFromFramebuffer(context, destOffset,
+                                                                     sourceArea, source));
         mDirtyImages = true;
     }
     else
@@ -2802,6 +2879,7 @@ ImageD3D *TextureD3D_2DArray::getImage(int level, int layer) const
 ImageD3D *TextureD3D_2DArray::getImage(const gl::ImageIndex &index) const
 {
     ASSERT(index.mipIndex < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS);
+    ASSERT(index.layerIndex != gl::ImageIndex::ENTIRE_LEVEL);
     ASSERT((index.layerIndex == 0 && mLayerCounts[index.mipIndex] == 0) ||
            index.layerIndex < mLayerCounts[index.mipIndex]);
     ASSERT(index.type == GL_TEXTURE_2D_ARRAY);

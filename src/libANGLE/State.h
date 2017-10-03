@@ -494,7 +494,9 @@ class State : public OnAttachmentDirtyReceiver, angle::NonCopyable
     const std::vector<Texture *> &getCompleteTextureCache() const { return mCompleteTextureCache; }
 
     // Handle a dirty texture event.
-    void signal(uint32_t textureIndex) override;
+    void signal(size_t textureIndex, InitState initState) override;
+
+    Error clearUnclearedActiveTextures(const Context *context);
 
   private:
     void syncProgramTextures(const Context *context);

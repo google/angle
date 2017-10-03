@@ -52,6 +52,9 @@ class OffscreenSurfaceVk : public SurfaceImpl
                                         const gl::ImageIndex &imageIndex,
                                         FramebufferAttachmentRenderTarget **rtOut) override;
 
+    gl::Error initializeContents(const gl::Context *context,
+                                 const gl::ImageIndex &imageIndex) override;
+
   private:
     EGLint mWidth;
     EGLint mHeight;
@@ -93,6 +96,9 @@ class WindowSurfaceVk : public SurfaceImpl, public ResourceVk
                                         GLenum binding,
                                         const gl::ImageIndex &imageIndex,
                                         FramebufferAttachmentRenderTarget **rtOut) override;
+
+    gl::Error initializeContents(const gl::Context *context,
+                                 const gl::ImageIndex &imageIndex) override;
 
     gl::ErrorOrResult<vk::Framebuffer *> getCurrentFramebuffer(
         VkDevice device,

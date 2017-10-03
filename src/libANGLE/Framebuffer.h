@@ -58,6 +58,7 @@ class FramebufferState final : angle::NonCopyable
     ~FramebufferState();
 
     const std::string &getLabel();
+    size_t getReadIndex() const;
 
     const FramebufferAttachment *getAttachment(GLenum attachment) const;
     const FramebufferAttachment *getReadAttachment() const;
@@ -80,6 +81,7 @@ class FramebufferState final : angle::NonCopyable
 
     bool attachmentsHaveSameDimensions() const;
     bool colorAttachmentsAreUniqueImages() const;
+    Box getDimensions() const;
 
     const FramebufferAttachment *getDrawBuffer(size_t drawBufferIdx) const;
     size_t getDrawBufferCount() const;
@@ -121,6 +123,9 @@ class FramebufferState final : angle::NonCopyable
     FramebufferAttachment mWebGLDepthAttachment;
     FramebufferAttachment mWebGLStencilAttachment;
     bool mWebGLDepthStencilConsistent;
+
+    // Tracks if we need to initialize the resources for each attachment.
+    angle::BitSet<IMPLEMENTATION_MAX_FRAMEBUFFER_ATTACHMENTS + 2> mResourceNeedsInit;
 };
 
 class Framebuffer final : public LabeledObject, public OnAttachmentDirtyReceiver
@@ -265,7 +270,7 @@ class Framebuffer final : public LabeledObject, public OnAttachmentDirtyReceiver
                      const gl::Rectangle &area,
                      GLenum format,
                      GLenum type,
-                     void *pixels) const;
+                     void *pixels);
 
     Error blit(const gl::Context *context,
                const Rectangle &sourceArea,
@@ -273,7 +278,7 @@ class Framebuffer final : public LabeledObject, public OnAttachmentDirtyReceiver
                GLbitfield mask,
                GLenum filter);
 
-    enum DirtyBitType : uint32_t
+    enum DirtyBitType : size_t
     {
         DIRTY_BIT_COLOR_ATTACHMENT_0,
         DIRTY_BIT_COLOR_ATTACHMENT_MAX =
@@ -295,13 +300,17 @@ class Framebuffer final : public LabeledObject, public OnAttachmentDirtyReceiver
 
     void syncState(const Context *context);
 
-    // angle::SignalReceiver implementation
-    void signal(uint32_t token) override;
+    // OnAttachmentChangedReceiver implementation
+    void signal(size_t dirtyBit, InitState state) override;
 
     bool formsRenderingFeedbackLoopWith(const State &state) const;
     bool formsCopyingFeedbackLoopWith(GLuint copyTextureID,
                                       GLint copyTextureLevel,
                                       GLint copyTextureLayer) const;
+
+    Error ensureDrawAttachmentsInitialized(const Context *context);
+    Error ensureReadAttachmentInitialized(const Context *context, GLbitfield blitMask);
+    Box getDimensions() const;
 
   private:
     bool detachResourceById(const Context *context, GLenum resourceType, GLuint resourceId);
@@ -346,6 +355,17 @@ class Framebuffer final : public LabeledObject, public OnAttachmentDirtyReceiver
                           GLuint baseViewIndex,
                           GLenum multiviewLayout,
                           const GLint *viewportOffsets);
+
+    void markDrawAttachmentsInitialized(bool color, bool depth, bool stencil);
+    void markBufferInitialized(GLenum bufferType, GLint bufferIndex);
+    Error ensureBufferInitialized(const Context *context, GLenum bufferType, GLint bufferIndex);
+
+    // Checks that we have a partially masked clear:
+    // * some color channels are masked out
+    // * some stencil values are masked out
+    // * scissor test partially overlaps the framebuffer
+    bool partialClearNeedsInit(const Context *context, bool color, bool depth, bool stencil);
+    bool partialBufferClearNeedsInit(const Context *context, GLenum bufferType);
 
     FramebufferState mState;
     rx::FramebufferImpl *mImpl;

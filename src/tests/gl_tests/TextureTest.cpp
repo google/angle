@@ -1493,9 +1493,8 @@ TEST_P(Texture2DTest, TexStorage)
     EXPECT_PIXEL_EQ(width / 4, height / 4, 255, 0, 0, 255);
 
     // Validate that the region of the texture without data has an alpha of 1.0
-    GLubyte pixel[4];
-    glReadPixels(3 * width / 4, 3 * height / 4, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pixel);
-    EXPECT_EQ(pixel[3], 255);
+    angle::GLColor pixel = ReadColor(3 * width / 4, 3 * height / 4);
+    EXPECT_EQ(255, pixel.A);
 }
 
 // Test that glTexSubImage2D combined with a PBO works properly when glTexStorage2DEXT has initialized the image with a default color.

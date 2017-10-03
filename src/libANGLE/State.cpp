@@ -2399,11 +2399,29 @@ const ImageUnit &State::getImageUnit(GLuint unit) const
 }
 
 // Handle a dirty texture event.
-void State::signal(uint32_t textureIndex)
+void State::signal(size_t textureIndex, InitState initState)
 {
     // Conservatively assume all textures are dirty.
     // TODO(jmadill): More fine-grained update.
     mDirtyObjects.set(DIRTY_OBJECT_PROGRAM_TEXTURES);
+}
+
+Error State::clearUnclearedActiveTextures(const Context *context)
+{
+    if (!mRobustResourceInit)
+    {
+        return NoError();
+    }
+
+    // TODO(jmadill): Investigate improving the speed here.
+    for (Texture *texture : mCompleteTextureCache)
+    {
+        if (texture)
+        {
+            ANGLE_TRY(texture->ensureInitialized(context));
+        }
+    }
+    return NoError();
 }
 
 }  // namespace gl

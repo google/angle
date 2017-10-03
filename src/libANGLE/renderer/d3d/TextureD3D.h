@@ -106,6 +106,9 @@ class TextureD3D : public TextureImpl
                          const float clearDepthValue,
                          const unsigned int clearStencilValue);
 
+    gl::Error initializeContents(const gl::Context *context,
+                                 const gl::ImageIndex &imageIndex) override;
+
   protected:
     gl::Error setImageImpl(const gl::Context *context,
                            const gl::ImageIndex &index,
