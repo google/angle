@@ -150,6 +150,7 @@ class ContextVk : public ContextImpl, public ResourceVk
 
   private:
     gl::Error initPipeline(const gl::Context *context);
+    gl::Error setupDraw(const gl::Context *context, GLenum mode);
 
     RendererVk *mRenderer;
     vk::Pipeline mCurrentPipeline;

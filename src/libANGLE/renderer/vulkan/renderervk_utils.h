@@ -83,6 +83,7 @@ class ResourceVk
 
 namespace vk
 {
+class Buffer;
 class DeviceMemory;
 class Framebuffer;
 class Image;
@@ -230,10 +231,17 @@ class CommandBuffer final : public WrappedObject<CommandBuffer, VkCommandBuffer>
               uint32_t firstVertex,
               uint32_t firstInstance);
 
+    void drawIndexed(uint32_t indexCount,
+                     uint32_t instanceCount,
+                     uint32_t firstIndex,
+                     int32_t vertexOffset,
+                     uint32_t firstInstance);
+
     void bindPipeline(VkPipelineBindPoint pipelineBindPoint, const vk::Pipeline &pipeline);
     void bindVertexBuffers(uint32_t firstBinding,
                            const std::vector<VkBuffer> &buffers,
                            const std::vector<VkDeviceSize> &offsets);
+    void bindIndexBuffer(const vk::Buffer &buffer, VkDeviceSize offset, VkIndexType indexType);
 
   private:
     bool mStarted;

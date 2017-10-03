@@ -428,6 +428,16 @@ void CommandBuffer::draw(uint32_t vertexCount,
     vkCmdDraw(mHandle, vertexCount, instanceCount, firstVertex, firstInstance);
 }
 
+void CommandBuffer::drawIndexed(uint32_t indexCount,
+                                uint32_t instanceCount,
+                                uint32_t firstIndex,
+                                int32_t vertexOffset,
+                                uint32_t firstInstance)
+{
+    ASSERT(valid());
+    vkCmdDrawIndexed(mHandle, indexCount, instanceCount, firstIndex, vertexOffset, firstInstance);
+}
+
 void CommandBuffer::bindPipeline(VkPipelineBindPoint pipelineBindPoint,
                                  const vk::Pipeline &pipeline)
 {
@@ -442,6 +452,14 @@ void CommandBuffer::bindVertexBuffers(uint32_t firstBinding,
     ASSERT(valid() && buffers.size() == offsets.size());
     vkCmdBindVertexBuffers(mHandle, firstBinding, static_cast<uint32_t>(buffers.size()),
                            buffers.data(), offsets.data());
+}
+
+void CommandBuffer::bindIndexBuffer(const vk::Buffer &buffer,
+                                    VkDeviceSize offset,
+                                    VkIndexType indexType)
+{
+    ASSERT(valid());
+    vkCmdBindIndexBuffer(mHandle, buffer.getHandle(), offset, indexType);
 }
 
 // Image implementation.

@@ -10,6 +10,7 @@
 #include "libANGLE/renderer/vulkan/BufferVk.h"
 
 #include "common/debug.h"
+#include "common/utilities.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/renderer/vulkan/ContextVk.h"
 #include "libANGLE/renderer/vulkan/RendererVk.h"
@@ -170,8 +171,19 @@ gl::Error BufferVk::getIndexRange(const gl::Context *context,
                                   bool primitiveRestartEnabled,
                                   gl::IndexRange *outRange)
 {
-    UNIMPLEMENTED();
-    return gl::InternalError();
+    VkDevice device = GetImplAs<ContextVk>(context)->getDevice();
+
+    // TODO(jmadill): Consider keeping a shadow system memory copy in some cases.
+    ASSERT(mBuffer.valid());
+
+    const gl::Type &typeInfo = gl::GetTypeInfo(type);
+
+    uint8_t *mapPointer = nullptr;
+    ANGLE_TRY(mBuffer.getMemory().map(device, offset, typeInfo.bytes * count, 0, &mapPointer));
+
+    *outRange = gl::ComputeIndexRange(type, mapPointer, count, primitiveRestartEnabled);
+
+    return gl::NoError();
 }
 
 vk::Error BufferVk::setDataImpl(VkDevice device, const uint8_t *data, size_t size, size_t offset)

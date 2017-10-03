@@ -235,7 +235,7 @@ TEST_P(SimpleOperationTest, DrawQuad)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
-// Simple repeatd draw and swap test.
+// Simple repeated draw and swap test.
 TEST_P(SimpleOperationTest, DrawQuadAndSwap)
 {
     const std::string &vertexShader =
@@ -260,6 +260,28 @@ TEST_P(SimpleOperationTest, DrawQuadAndSwap)
     }
 
     EXPECT_GL_NO_ERROR();
+}
+
+// Simple indexed quad test.
+TEST_P(SimpleOperationTest, DrawIndexedQuad)
+{
+    const std::string vertexShader =
+        "attribute vec3 position;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_Position = vec4(position, 1);\n"
+        "}";
+    const std::string fragmentShader =
+        "void main()\n"
+        "{\n"
+        "    gl_FragColor = vec4(0, 1, 0, 1);\n"
+        "}";
+    ANGLE_GL_PROGRAM(program, vertexShader, fragmentShader);
+
+    drawIndexedQuad(program.get(), "position", 0.5f, 1.0f, true);
+
+    EXPECT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
 // Tests a shader program with more than one vertex attribute, with vertex buffers.

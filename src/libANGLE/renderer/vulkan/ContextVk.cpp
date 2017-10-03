@@ -35,6 +35,25 @@
 namespace rx
 {
 
+namespace
+{
+
+VkIndexType GetVkIndexType(GLenum glIndexType)
+{
+    switch (glIndexType)
+    {
+        case GL_UNSIGNED_SHORT:
+            return VK_INDEX_TYPE_UINT16;
+        case GL_UNSIGNED_INT:
+            return VK_INDEX_TYPE_UINT32;
+        default:
+            UNREACHABLE();
+            return VK_INDEX_TYPE_MAX_ENUM;
+    }
+}
+
+}  // anonymous namespace
+
 ContextVk::ContextVk(const gl::ContextState &state, RendererVk *renderer)
     : ContextImpl(state), mRenderer(renderer), mCurrentDrawMode(GL_NONE)
 {
@@ -265,7 +284,7 @@ gl::Error ContextVk::initPipeline(const gl::Context *context)
     return gl::NoError();
 }
 
-gl::Error ContextVk::drawArrays(const gl::Context *context, GLenum mode, GLint first, GLsizei count)
+gl::Error ContextVk::setupDraw(const gl::Context *context, GLenum mode)
 {
     if (mode != mCurrentDrawMode)
     {
@@ -323,8 +342,18 @@ gl::Error ContextVk::drawArrays(const gl::Context *context, GLenum mode, GLint f
     // TODO(jmadill): the queue serial should be bound to the pipeline.
     setQueueSerial(queueSerial);
     commandBuffer->bindVertexBuffers(0, vertexHandles, vertexOffsets);
-    commandBuffer->draw(count, 1, first, 0);
 
+    return gl::NoError();
+}
+
+gl::Error ContextVk::drawArrays(const gl::Context *context, GLenum mode, GLint first, GLsizei count)
+{
+    ANGLE_TRY(setupDraw(context, mode));
+
+    vk::CommandBuffer *commandBuffer = nullptr;
+    ANGLE_TRY(mRenderer->getStartedCommandBuffer(&commandBuffer));
+
+    commandBuffer->draw(count, 1, first, 0);
     return gl::NoError();
 }
 
@@ -344,8 +373,35 @@ gl::Error ContextVk::drawElements(const gl::Context *context,
                                   GLenum type,
                                   const void *indices)
 {
-    UNIMPLEMENTED();
-    return gl::InternalError();
+    ANGLE_TRY(setupDraw(context, mode));
+
+    if (indices)
+    {
+        // TODO(jmadill): Buffer offsets and immediate data.
+        UNIMPLEMENTED();
+        return gl::InternalError() << "Only zero-offset index buffers are currently implemented.";
+    }
+
+    if (type == GL_UNSIGNED_BYTE)
+    {
+        // TODO(jmadill): Index translation.
+        UNIMPLEMENTED();
+        return gl::InternalError() << "Unsigned byte translation is not yet implemented.";
+    }
+
+    vk::CommandBuffer *commandBuffer = nullptr;
+    ANGLE_TRY(mRenderer->getStartedCommandBuffer(&commandBuffer));
+
+    const gl::Buffer *elementArrayBuffer =
+        mState.getState().getVertexArray()->getElementArrayBuffer().get();
+    ASSERT(elementArrayBuffer);
+
+    BufferVk *elementArrayBufferVk = GetImplAs<BufferVk>(elementArrayBuffer);
+
+    commandBuffer->bindIndexBuffer(elementArrayBufferVk->getVkBuffer(), 0, GetVkIndexType(type));
+    commandBuffer->drawIndexed(count, 1, 0, 0, 0);
+
+    return gl::NoError();
 }
 
 gl::Error ContextVk::drawElementsInstanced(const gl::Context *context,

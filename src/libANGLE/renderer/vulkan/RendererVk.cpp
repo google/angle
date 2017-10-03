@@ -530,6 +530,7 @@ void RendererVk::generateCaps(gl::Caps *outCaps,
     outCaps->maxTextureImageUnits         = 1;
     outCaps->maxCombinedTextureImageUnits = 1;
     outCaps->max2DTextureSize             = 1024;
+    outCaps->maxElementIndex              = std::numeric_limits<GLuint>::max() - 1;
 
     // Enable this for simple buffer readback testing, but some functionality is missing.
     // TODO(jmadill): Support full mapBufferRange extension.
