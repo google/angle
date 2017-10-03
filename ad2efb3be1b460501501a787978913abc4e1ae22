@@ -22,6 +22,30 @@
       "revId": "ad2efb3be1b460501501a787978913abc4e1ae22",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7a642539_2726b5a2",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-03T18:37:36Z",
+      "side": 1,
+      "message": "I believe the warning only applies to comparing two enums directly. I\u0027ll land this as-is and please follow up if the fix is not sufficient.",
+      "parentUuid": "d977d050_b0c9dda5",
+      "range": {
+        "startLine": 200,
+        "startChar": 14,
+        "endLine": 201,
+        "endChar": 65
+      },
+      "revId": "ad2efb3be1b460501501a787978913abc4e1ae22",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
