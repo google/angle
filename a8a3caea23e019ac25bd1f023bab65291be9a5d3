@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c2dfc0e7_095f5a76",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-03T12:58:47Z",
+      "side": 1,
+      "message": "Before we had a clear \"ConvertToGLenum\". Now we cast a \"Query\" value (in a \"set\" command) to GLint, then \"clamp\" this to GLenum? Why do we need to clamp enum values that are already validated?",
+      "range": {
+        "startLine": 197,
+        "startChar": 30,
+        "endLine": 197,
+        "endChar": 39
+      },
+      "revId": "a8a3caea23e019ac25bd1f023bab65291be9a5d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8264ff8d_88fb46db",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-03T12:58:47Z",
+      "side": 1,
+      "message": "maybe we can keep this method in a more accessible place.",
+      "range": {
+        "startLine": 38,
+        "startChar": 0,
+        "endLine": 42,
+        "endChar": 1
+      },
+      "revId": "a8a3caea23e019ac25bd1f023bab65291be9a5d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
