@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4a9d6b99_27f41007",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1874,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-03T19:42:22Z",
+      "side": 1,
+      "message": "nit: double-space, and wording (\"this method to be called to be done before\" -\u003e \"this method to be called before\")",
+      "range": {
+        "startLine": 1873,
+        "startChar": 35,
+        "endLine": 1874,
+        "endChar": 29
+      },
+      "revId": "04f39d1953036fd511c16c620ca611645a641072",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
