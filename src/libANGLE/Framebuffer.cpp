@@ -197,13 +197,13 @@ bool CheckAttachmentSampleCompleteness(const Context *context,
 }
 
 // Needed to index into the attachment arrays/bitsets.
-static_assert(IMPLEMENTATION_MAX_FRAMEBUFFER_ATTACHMENTS ==
+static_assert(static_cast<size_t>(IMPLEMENTATION_MAX_FRAMEBUFFER_ATTACHMENTS) ==
                   gl::Framebuffer::DIRTY_BIT_COLOR_ATTACHMENT_MAX,
               "Framebuffer Dirty bit mismatch");
-static_assert(IMPLEMENTATION_MAX_FRAMEBUFFER_ATTACHMENTS ==
+static_assert(static_cast<size_t>(IMPLEMENTATION_MAX_FRAMEBUFFER_ATTACHMENTS) ==
                   gl::Framebuffer::DIRTY_BIT_DEPTH_ATTACHMENT,
               "Framebuffer Dirty bit mismatch");
-static_assert(IMPLEMENTATION_MAX_FRAMEBUFFER_ATTACHMENTS + 1 ==
+static_assert(static_cast<size_t>(IMPLEMENTATION_MAX_FRAMEBUFFER_ATTACHMENTS + 1) ==
                   gl::Framebuffer::DIRTY_BIT_STENCIL_ATTACHMENT,
               "Framebuffer Dirty bit mismatch");
 
