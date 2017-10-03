@@ -283,7 +283,8 @@ gl::Error FramebufferVk::readPixels(const gl::Context *context,
     vk::Image *readImage = renderTarget->image;
     vk::StagingImage stagingImage;
     ANGLE_TRY(renderer->createStagingImage(TextureDimension::TEX_2D, *renderTarget->format,
-                                           renderTarget->extents, &stagingImage));
+                                           renderTarget->extents, vk::StagingUsage::Read,
+                                           &stagingImage));
 
     vk::CommandBuffer *commandBuffer = nullptr;
     ANGLE_TRY(contextVk->getStartedCommandBuffer(&commandBuffer));
@@ -331,10 +332,6 @@ gl::Error FramebufferVk::readPixels(const gl::Context *context,
 
     stagingImage.getDeviceMemory().unmap(device);
     renderer->enqueueGarbage(renderer->getCurrentQueueSerial(), std::move(stagingImage));
-
-    stagingImage.getImage().destroy(renderer->getDevice());
-
-    stagingImage.destroy(device);
 
     return vk::NoError();
 }

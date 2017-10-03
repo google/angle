@@ -11,15 +11,17 @@
 #define LIBANGLE_RENDERER_VULKAN_TEXTUREVK_H_
 
 #include "libANGLE/renderer/TextureImpl.h"
+#include "libANGLE/renderer/vulkan/renderervk_utils.h"
 
 namespace rx
 {
 
-class TextureVk : public TextureImpl
+class TextureVk : public TextureImpl, public ResourceVk
 {
   public:
     TextureVk(const gl::TextureState &state);
     ~TextureVk() override;
+    gl::Error onDestroy(const gl::Context *context) override;
 
     gl::Error setImage(const gl::Context *context,
                        GLenum target,
@@ -107,6 +109,12 @@ class TextureVk : public TextureImpl
 
     gl::Error initializeContents(const gl::Context *context,
                                  const gl::ImageIndex &imageIndex) override;
+
+  private:
+    // TODO(jmadill): support a more flexible storage back-end.
+    vk::Image mImage;
+    vk::DeviceMemory mDeviceMemory;
+    vk::ImageView mImageView;
 };
 
 }  // namespace rx

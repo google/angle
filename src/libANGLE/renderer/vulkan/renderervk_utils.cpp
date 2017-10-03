@@ -62,6 +62,7 @@ VkAccessFlags GetBasicLayoutAccessFlags(VkImageLayout layout)
             return VK_ACCESS_TRANSFER_READ_BIT;
         case VK_IMAGE_LAYOUT_UNDEFINED:
         case VK_IMAGE_LAYOUT_GENERAL:
+        case VK_IMAGE_LAYOUT_PREINITIALIZED:
             return 0;
         default:
             // TODO(jmadill): Investigate other flags.
@@ -69,6 +70,23 @@ VkAccessFlags GetBasicLayoutAccessFlags(VkImageLayout layout)
             return 0;
     }
 }
+
+VkImageUsageFlags GetImageUsageFlags(vk::StagingUsage usage)
+{
+    switch (usage)
+    {
+        case vk::StagingUsage::Read:
+            return VK_IMAGE_USAGE_TRANSFER_DST_BIT;
+        case vk::StagingUsage::Write:
+            return VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
+        case vk::StagingUsage::Both:
+            return (VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT);
+        default:
+            UNREACHABLE();
+            return 0;
+    }
+}
+
 }  // anonymous namespace
 
 // Mirrors std_validation_str in loader.h
@@ -459,6 +477,7 @@ Error Image::init(VkDevice device, const VkImageCreateInfo &createInfo)
 {
     ASSERT(!valid());
     ANGLE_VK_TRY(vkCreateImage(device, &createInfo, nullptr, &mHandle));
+    mCurrentLayout = createInfo.initialLayout;
     return NoError();
 }
 
@@ -697,10 +716,11 @@ void StagingImage::retain(VkDevice device, StagingImage &&other)
 
 Error StagingImage::init(VkDevice device,
                          uint32_t queueFamilyIndex,
-                         uint32_t hostVisibleMemoryIndex,
+                         const vk::MemoryProperties &memoryProperties,
                          TextureDimension dimension,
                          VkFormat format,
-                         const gl::Extents &extent)
+                         const gl::Extents &extent,
+                         StagingUsage usage)
 {
     VkImageCreateInfo createInfo;
 
@@ -716,26 +736,30 @@ Error StagingImage::init(VkDevice device,
     createInfo.arrayLayers   = 1;
     createInfo.samples       = VK_SAMPLE_COUNT_1_BIT;
     createInfo.tiling        = VK_IMAGE_TILING_LINEAR;
-    createInfo.usage         = (VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT);
+    createInfo.usage                 = GetImageUsageFlags(usage);
     createInfo.sharingMode   = VK_SHARING_MODE_EXCLUSIVE;
     createInfo.queueFamilyIndexCount = 1;
     createInfo.pQueueFamilyIndices   = &queueFamilyIndex;
-    createInfo.initialLayout         = VK_IMAGE_LAYOUT_UNDEFINED;
+
+    // Use Preinitialized for writable staging images - in these cases we want to map the memory
+    // before we do a copy. For readback images, use an undefined layout.
+    createInfo.initialLayout = usage == vk::StagingUsage::Read ? VK_IMAGE_LAYOUT_UNDEFINED
+                                                               : VK_IMAGE_LAYOUT_PREINITIALIZED;
 
     ANGLE_TRY(mImage.init(device, createInfo));
 
     VkMemoryRequirements memoryRequirements;
     mImage.getMemoryRequirements(device, &memoryRequirements);
 
-    // Ensure we can read this memory.
-    ANGLE_VK_CHECK((memoryRequirements.memoryTypeBits & (1 << hostVisibleMemoryIndex)) != 0,
-                   VK_ERROR_VALIDATION_FAILED_EXT);
+    // Find the right kind of memory index.
+    uint32_t memoryIndex = memoryProperties.findCompatibleMemoryIndex(
+        memoryRequirements.memoryTypeBits, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT);
 
     VkMemoryAllocateInfo allocateInfo;
     allocateInfo.sType           = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
     allocateInfo.pNext           = nullptr;
     allocateInfo.allocationSize  = memoryRequirements.size;
-    allocateInfo.memoryTypeIndex = hostVisibleMemoryIndex;
+    allocateInfo.memoryTypeIndex = memoryIndex;
 
     ANGLE_TRY(mDeviceMemory.allocate(device, allocateInfo));
     ANGLE_TRY(mImage.bindMemory(device, mDeviceMemory));
@@ -869,6 +893,38 @@ Error Fence::init(VkDevice device, const VkFenceCreateInfo &createInfo)
 VkResult Fence::getStatus(VkDevice device) const
 {
     return vkGetFenceStatus(device, mHandle);
+}
+
+// MemoryProperties implementation.
+MemoryProperties::MemoryProperties() : mMemoryProperties{0}
+{
+}
+
+void MemoryProperties::init(VkPhysicalDevice physicalDevice)
+{
+    ASSERT(mMemoryProperties.memoryTypeCount == 0);
+    vkGetPhysicalDeviceMemoryProperties(physicalDevice, &mMemoryProperties);
+    ASSERT(mMemoryProperties.memoryTypeCount > 0);
+}
+
+uint32_t MemoryProperties::findCompatibleMemoryIndex(uint32_t bitMask, uint32_t propertyFlags) const
+{
+    ASSERT(mMemoryProperties.memoryTypeCount > 0);
+
+    // TODO(jmadill): Cache compatible memory indexes after finding them once.
+    for (size_t memoryIndex : angle::BitSet32<32>(bitMask))
+    {
+        ASSERT(memoryIndex < mMemoryProperties.memoryTypeCount);
+
+        if ((mMemoryProperties.memoryTypes[memoryIndex].propertyFlags & propertyFlags) ==
+            propertyFlags)
+        {
+            return static_cast<uint32_t>(memoryIndex);
+        }
+    }
+
+    UNREACHABLE();
+    return std::numeric_limits<uint32_t>::max();
 }
 
 }  // namespace vk

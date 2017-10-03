@@ -66,6 +66,7 @@ class RendererVk : angle::NonCopyable
     vk::Error createStagingImage(TextureDimension dimension,
                                  const vk::Format &format,
                                  const gl::Extents &extent,
+                                 vk::StagingUsage usage,
                                  vk::StagingImage *imageOut);
 
     GlslangWrapper *getGlslangWrapper();
@@ -80,17 +81,21 @@ class RendererVk : angle::NonCopyable
     }
 
     template <typename T>
-    void enqueueGarbageOrDeleteNow(const ResourceVk &resouce, T &&object)
+    void enqueueGarbageOrDeleteNow(const ResourceVk &resource, T &&object)
     {
-        if (resouce.getDeleteSchedule(mLastCompletedQueueSerial) == DeleteSchedule::NOW)
+        if (resource.getDeleteSchedule(mLastCompletedQueueSerial) == DeleteSchedule::NOW)
         {
             object.destroy(mDevice);
         }
         else
         {
-            enqueueGarbage(resouce.getStoredQueueSerial(), std::move(object));
+            enqueueGarbage(resource.getStoredQueueSerial(), std::move(object));
         }
     }
+
+    uint32_t getQueueFamilyIndex() const { return mCurrentQueueFamilyIndex; }
+
+    const vk::MemoryProperties &getMemoryProperties() const { return mMemoryProperties; }
 
   private:
     void ensureCapsInitialized() const;
@@ -122,7 +127,6 @@ class RendererVk : angle::NonCopyable
     VkDevice mDevice;
     vk::CommandPool mCommandPool;
     vk::CommandBuffer mCommandBuffer;
-    uint32_t mHostVisibleMemoryIndex;
     GlslangWrapper *mGlslangWrapper;
     SerialFactory mQueueSerialFactory;
     Serial mLastCompletedQueueSerial;
@@ -130,6 +134,7 @@ class RendererVk : angle::NonCopyable
     std::vector<vk::CommandBufferAndSerial> mInFlightCommands;
     std::vector<vk::FenceAndSerial> mInFlightFences;
     std::vector<std::unique_ptr<vk::IGarbageObject>> mGarbage;
+    vk::MemoryProperties mMemoryProperties;
 };
 
 }  // namespace rx

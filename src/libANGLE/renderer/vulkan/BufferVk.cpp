@@ -27,9 +27,10 @@ BufferVk::~BufferVk()
 
 void BufferVk::destroy(const gl::Context *context)
 {
-    VkDevice device = GetImplAs<ContextVk>(context)->getDevice();
+    ContextVk *contextVk = GetImplAs<ContextVk>(context);
+    RendererVk *renderer = contextVk->getRenderer();
 
-    mBuffer.destroy(device);
+    renderer->enqueueGarbageOrDeleteNow(*this, std::move(mBuffer));
 }
 
 gl::Error BufferVk::setData(const gl::Context *context,

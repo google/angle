@@ -93,7 +93,6 @@ RendererVk::RendererVk()
       mQueue(VK_NULL_HANDLE),
       mCurrentQueueFamilyIndex(std::numeric_limits<uint32_t>::max()),
       mDevice(VK_NULL_HANDLE),
-      mHostVisibleMemoryIndex(std::numeric_limits<uint32_t>::max()),
       mGlslangWrapper(nullptr),
       mLastCompletedQueueSerial(mQueueSerialFactory.generate()),
       mCurrentQueueSerial(mQueueSerialFactory.generate()),
@@ -338,21 +337,8 @@ vk::Error RendererVk::initialize(const egl::AttributeMap &attribs, const char *w
         ANGLE_TRY(initializeDevice(firstGraphicsQueueFamily));
     }
 
-    VkPhysicalDeviceMemoryProperties memoryProperties;
-    vkGetPhysicalDeviceMemoryProperties(mPhysicalDevice, &memoryProperties);
-
-    for (uint32_t memoryIndex = 0; memoryIndex < memoryProperties.memoryTypeCount; ++memoryIndex)
-    {
-        if ((memoryProperties.memoryTypes[memoryIndex].propertyFlags &
-             VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT) != 0)
-        {
-            mHostVisibleMemoryIndex = memoryIndex;
-            break;
-        }
-    }
-
-    ANGLE_VK_CHECK(mHostVisibleMemoryIndex < std::numeric_limits<uint32_t>::max(),
-                   VK_ERROR_INITIALIZATION_FAILED);
+    // Store the physical device memory properties so we can find the right memory pools.
+    mMemoryProperties.init(mPhysicalDevice);
 
     mGlslangWrapper = GlslangWrapper::GetReference();
 
@@ -540,7 +526,10 @@ void RendererVk::generateCaps(gl::Caps *outCaps,
     outCaps->maxDrawBuffers      = 1;
     outCaps->maxVertexAttributes     = gl::MAX_VERTEX_ATTRIBS;
     outCaps->maxVertexAttribBindings = gl::MAX_VERTEX_ATTRIB_BINDINGS;
-    outCaps->maxVaryingVectors       = 16;
+    outCaps->maxVaryingVectors            = 16;
+    outCaps->maxTextureImageUnits         = 1;
+    outCaps->maxCombinedTextureImageUnits = 1;
+    outCaps->max2DTextureSize             = 1024;
 
     // Enable this for simple buffer readback testing, but some functionality is missing.
     // TODO(jmadill): Support full mapBufferRange extension.
@@ -774,13 +763,11 @@ vk::Error RendererVk::submitFrame(const VkSubmitInfo &submitInfo)
 vk::Error RendererVk::createStagingImage(TextureDimension dimension,
                                          const vk::Format &format,
                                          const gl::Extents &extent,
+                                         vk::StagingUsage usage,
                                          vk::StagingImage *imageOut)
 {
-    ASSERT(mHostVisibleMemoryIndex != std::numeric_limits<uint32_t>::max());
-
-    ANGLE_TRY(imageOut->init(mDevice, mCurrentQueueFamilyIndex, mHostVisibleMemoryIndex, dimension,
-                             format.native, extent));
-
+    ANGLE_TRY(imageOut->init(mDevice, mCurrentQueueFamilyIndex, mMemoryProperties, dimension,
+                             format.native, extent, usage));
     return vk::NoError();
 }
 
