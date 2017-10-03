@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c508eafb_4e6cee40",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1173,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-03T20:05:15Z",
+      "side": 1,
+      "message": "nit: is it necessary to explicitly specify \u003cT\u003e? I think you can remove the \u003csh::Attribute\u003e, \u003csh::OutputVariable\u003e, and \u003cLinkedUniform\u003e below.",
+      "range": {
+        "startLine": 1173,
+        "startChar": 19,
+        "endLine": 1173,
+        "endChar": 34
+      },
+      "revId": "5e2b7f9eb73953fc2e9c844c8c051f40dcdbf362",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d4ed1452_c37faf77",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 2981,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-03T20:05:15Z",
+      "side": 1,
+      "message": "if you can remove the base class for ProgramResource, you can make this a helper function that is templated on the resource type. (MarkResourceStaticUse)",
+      "range": {
+        "startLine": 2981,
+        "startChar": 18,
+        "endLine": 2981,
+        "endChar": 25
+      },
+      "revId": "5e2b7f9eb73953fc2e9c844c8c051f40dcdbf362",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bf175ef3_64d51640",
+        "filename": "src/libANGLE/Uniform.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-03T20:05:15Z",
+      "side": 1,
+      "message": "Is there a real need for this base class? It seems you use the \"setUsed\" method in a few places, but this could just as easily be a helper method (MarkResourceStaticUse) templated on the resource type.",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 33,
+        "endChar": 2
+      },
+      "revId": "5e2b7f9eb73953fc2e9c844c8c051f40dcdbf362",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b85ce09f_598177e4",
+        "filename": "src/libANGLE/UniformLinker.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 336,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-03T20:05:15Z",
+      "side": 1,
+      "message": "the type of the shader should be accessible via shader-\u003egetType(). I don\u0027t think you need to pass shaderType to this method.",
+      "range": {
+        "startLine": 336,
+        "startChar": 4,
+        "endLine": 336,
+        "endChar": 21
+      },
+      "revId": "5e2b7f9eb73953fc2e9c844c8c051f40dcdbf362",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "deaf60c2_7aa24a5a",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1262,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-03T20:05:15Z",
+      "side": 1,
+      "message": "please correct me if I\u0027m wrong, but I think you could merge this switch statement with the switch statement on line 1263. Did another reviewer ask you to make this two-stage switch statement?",
+      "range": {
+        "startLine": 1233,
+        "startChar": 0,
+        "endLine": 1262,
+        "endChar": 0
+      },
+      "revId": "5e2b7f9eb73953fc2e9c844c8c051f40dcdbf362",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
