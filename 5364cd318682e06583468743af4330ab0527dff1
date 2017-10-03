@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "4b3c6a30_b79a2d89",
+        "filename": "src/common/angleutils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-03T20:22:16Z",
+      "side": 1,
+      "message": "can you add an ASSERT that this is the case?",
+      "range": {
+        "startLine": 165,
+        "startChar": 4,
+        "endLine": 165,
+        "endChar": 48
+      },
+      "revId": "5364cd318682e06583468743af4330ab0527dff1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6fef9bfc_5f70bc5e",
         "filename": "src/common/angleutils.h",
         "patchSetId": 2
@@ -19,6 +42,139 @@
     },
     {
       "key": {
+        "uuid": "84109aa8_74772b9d",
+        "filename": "src/common/angleutils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-03T20:22:16Z",
+      "side": 1,
+      "message": "This is a legitimate concern I think.",
+      "parentUuid": "6fef9bfc_5f70bc5e",
+      "revId": "5364cd318682e06583468743af4330ab0527dff1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "62019e5b_48be05d7",
+        "filename": "src/common/angleutils_unittest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-03T20:22:16Z",
+      "side": 1,
+      "message": "nit: comment before tests.",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 4
+      },
+      "revId": "5364cd318682e06583468743af4330ab0527dff1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d1be4e30_1b2e4f49",
+        "filename": "src/common/utilities_unittest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-03T20:22:16Z",
+      "side": 1,
+      "message": "nit: you can also use EXPECT_TRUE(indices.empty())",
+      "range": {
+        "startLine": 40,
+        "startChar": 4,
+        "endLine": 40,
+        "endChar": 34
+      },
+      "revId": "5364cd318682e06583468743af4330ab0527dff1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d28b9edf_ece98e5a",
+        "filename": "src/common/utilities_unittest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-03T20:22:16Z",
+      "side": 1,
+      "message": "nit: comment before tests (only necessary to add it for the new test, but feel free to update the old ones if you so choose)",
+      "range": {
+        "startLine": 48,
+        "startChar": 0,
+        "endLine": 48,
+        "endChar": 4
+      },
+      "revId": "5364cd318682e06583468743af4330ab0527dff1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5037e0ab_a8753df9",
+        "filename": "src/libANGLE/MemoryProgramCache.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 241,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-03T20:22:16Z",
+      "side": 1,
+      "message": "nit: can we call these arrayElements or arrayIndices for brevity?",
+      "range": {
+        "startLine": 241,
+        "startChar": 53,
+        "endLine": 241,
+        "endChar": 72
+      },
+      "revId": "5364cd318682e06583468743af4330ab0527dff1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "19318e3c_22e53a13",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 302,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-03T20:22:16Z",
+      "side": 1,
+      "message": "you can also initialize this as \" : arrayName(1, element)\"",
+      "range": {
+        "startLine": 302,
+        "startChar": 4,
+        "endLine": 302,
+        "endChar": 43
+      },
+      "revId": "5364cd318682e06583468743af4330ab0527dff1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "cc47664f_48da9bdb",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 2
@@ -30,6 +186,47 @@
       "writtenOn": "2017-09-27T15:39:31Z",
       "side": 1,
       "message": "How about precomputing that compound offset when the location info is created? setUniformMatrix is a very hot function and I\u0027m worried that the extra logic here would cause regressions at draw time when we can instead do work at program link time.",
+      "revId": "5364cd318682e06583468743af4330ab0527dff1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7ee1b60e_e2a531cb",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 457,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-03T20:22:16Z",
+      "side": 1,
+      "message": "If we\u0027re iterating over arrays in uniform update, I agree this could be a problem. Uniform updates are on the critical path for draw call performance. Please check with the UniformBenchmark if you can.",
+      "parentUuid": "cc47664f_48da9bdb",
+      "revId": "5364cd318682e06583468743af4330ab0527dff1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "732af094_abf325bd",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2172,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-03T20:22:16Z",
+      "side": 1,
+      "message": "I believe this will be a performance problem as Corentin suggested. Please check with the uniforms perf test and see if you can find a solution that doesn\u0027t regress performance.",
+      "range": {
+        "startLine": 2172,
+        "startChar": 45,
+        "endLine": 2172,
+        "endChar": 77
+      },
       "revId": "5364cd318682e06583468743af4330ab0527dff1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
