@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7fe48a42_1c937221",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-10-03T19:40:22Z",
+      "side": 1,
+      "message": "These are actually part of the GL_EXT_multisample_compatibility extension.  It doesn\u0027t make sense to have different defaults based on extension availability.",
+      "range": {
+        "startLine": 194,
+        "startChar": 4,
+        "endLine": 195,
+        "endChar": 30
+      },
+      "revId": "80522e3518fc6686108d64d6117ab32d9dcbf326",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
