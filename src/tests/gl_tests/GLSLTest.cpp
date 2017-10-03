@@ -2840,14 +2840,6 @@ TEST_P(GLSLTest_ES3, InitUninitializedLocals)
         return;
     }
 
-    if (IsOSX() && IsOpenGL())
-    {
-        // http://anglebug.com/2041
-        std::cout << "Test skipped on Mac OpenGL because local variable initialization is disabled."
-                  << std::endl;
-        return;
-    }
-
     const std::string &fragmentShader =
         "#version 300 es\n"
         "precision mediump float;\n"
