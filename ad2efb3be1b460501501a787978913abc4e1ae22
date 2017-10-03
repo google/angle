@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d977d050_b0c9dda5",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1000164
+      },
+      "writtenOn": "2017-10-03T18:25:42Z",
+      "side": 1,
+      "message": "It looks like the error was that you were comparing two different enums. Now you\u0027re comparing a size_t to an enum. Maybe you need to convert them both to size_t? StackOverflow shows a few other ways to get around this error...",
+      "range": {
+        "startLine": 200,
+        "startChar": 14,
+        "endLine": 201,
+        "endChar": 65
+      },
+      "revId": "ad2efb3be1b460501501a787978913abc4e1ae22",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
