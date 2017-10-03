@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a6289981_92ec07fd",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2824,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-03T19:14:06Z",
+      "side": 1,
+      "message": "you end up calling syncDirtyObjects twice - we can micro-optimize this by unpacking syncRendererState. So instead of calling\n\n clearUnclearedTextures\n ensureDrawAttachmentsInitialized\n syncRendererState\n\nwe can call\n\n syncDirtyObjects\n clearUnclearedTextures\n ensureDrawAttachmentsInitialized\n syncState\n clearDirtyBits",
+      "range": {
+        "startLine": 2824,
+        "startChar": 4,
+        "endLine": 2824,
+        "endChar": 21
+      },
+      "revId": "d96fc7a7d9dd4827b2a143c785e207d697633401",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c21a5292_b74400c2",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1860,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-03T19:14:06Z",
+      "side": 1,
+      "message": "nit: you can early return if !color \u0026\u0026 !depth \u0026\u0026 !stencil",
+      "range": {
+        "startLine": 1858,
+        "startChar": 0,
+        "endLine": 1860,
+        "endChar": 92
+      },
+      "revId": "d96fc7a7d9dd4827b2a143c785e207d697633401",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "57953fc1_11f737fe",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1867,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-03T19:14:06Z",
+      "side": 1,
+      "message": "can you add a comment here that if the impl encoutners an error during a a full (non-partial) clear, the attachments will still be marked initialized, but this is intentional to simplify the design?",
+      "range": {
+        "startLine": 1867,
+        "startChar": 4,
+        "endLine": 1867,
+        "endChar": 34
+      },
+      "revId": "d96fc7a7d9dd4827b2a143c785e207d697633401",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f4b255a8_f1a9b70a",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1888,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-03T19:14:06Z",
+      "side": 1,
+      "message": "ditto",
+      "range": {
+        "startLine": 1888,
+        "startChar": 4,
+        "endLine": 1888,
+        "endChar": 25
+      },
+      "revId": "d96fc7a7d9dd4827b2a143c785e207d697633401",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e3d4da12_864d42ae",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2417,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-03T19:14:06Z",
+      "side": 1,
+      "message": "with the prior change, you *should* be able to remove this and avoid calling syncDirtyObjects twice per draw.",
+      "range": {
+        "startLine": 2416,
+        "startChar": 0,
+        "endLine": 2417,
+        "endChar": 30
+      },
+      "revId": "d96fc7a7d9dd4827b2a143c785e207d697633401",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
