@@ -426,18 +426,42 @@ inline GLenum FramebufferBindingToEnum(FramebufferBinding binding)
     }
 }
 
-// Helper class for wrapping an onDestroy function.
 template <typename ObjT, typename ContextT>
-class UniqueObjectPointer : angle::NonCopyable
+class DestroyThenDelete
 {
   public:
-    UniqueObjectPointer(const ContextT *context) : mObject(nullptr), mContext(context) {}
-    UniqueObjectPointer(ObjT *obj, const ContextT *context) : mObject(obj), mContext(context) {}
-    ~UniqueObjectPointer()
+    DestroyThenDelete(const ContextT *context) : mContext(context) {}
+
+    void operator()(ObjT *obj)
+    {
+        ANGLE_SWALLOW_ERR(obj->onDestroy(mContext));
+        delete obj;
+    }
+
+  private:
+    const ContextT *mContext;
+};
+
+// Helper class for wrapping an onDestroy function.
+template <typename ObjT, typename DeleterT>
+class UniqueObjectPointerBase : angle::NonCopyable
+{
+  public:
+    template <typename ContextT>
+    UniqueObjectPointerBase(const ContextT *context) : mObject(nullptr), mDeleter(context)
+    {
+    }
+
+    template <typename ContextT>
+    UniqueObjectPointerBase(ObjT *obj, const ContextT *context) : mObject(obj), mDeleter(context)
+    {
+    }
+
+    ~UniqueObjectPointerBase()
     {
         if (mObject)
         {
-            ANGLE_SWALLOW_ERR(mObject->onDestroy(mContext));
+            mDeleter(mObject);
         }
     }
 
@@ -456,15 +480,19 @@ class UniqueObjectPointer : angle::NonCopyable
     {
         if (mObject)
         {
-            ANGLE_SWALLOW_ERR(mObject->onDestroy(mContext));
+            mDeleter(mObject);
         }
         mObject = obj;
     }
 
   private:
     ObjT *mObject;
-    const ContextT *mContext;
+    DeleterT mDeleter;
 };
+
+template <typename ObjT, typename ContextT>
+using UniqueObjectPointer = UniqueObjectPointerBase<ObjT, DestroyThenDelete<ObjT, ContextT>>;
+
 }  // namespace angle
 
 namespace gl

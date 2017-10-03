@@ -458,4 +458,19 @@ PixmapSurface::~PixmapSurface()
 {
 }
 
+// SurfaceDeleter implementation.
+
+SurfaceDeleter::SurfaceDeleter(const Display *display) : mDisplay(display)
+{
+}
+
+SurfaceDeleter::~SurfaceDeleter()
+{
+}
+
+void SurfaceDeleter::operator()(Surface *surface)
+{
+    ANGLE_SWALLOW_ERR(surface->onDestroy(mDisplay));
+}
+
 }  // namespace egl

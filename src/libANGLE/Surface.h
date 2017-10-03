@@ -215,7 +215,18 @@ class PixmapSurface final : public Surface
     ~PixmapSurface() override;
 };
 
-using SurfacePointer = angle::UniqueObjectPointer<Surface, Display>;
+class SurfaceDeleter final
+{
+  public:
+    SurfaceDeleter(const Display *display);
+    ~SurfaceDeleter();
+    void operator()(Surface *surface);
+
+  private:
+    const Display *mDisplay;
+};
+
+using SurfacePointer = angle::UniqueObjectPointerBase<Surface, SurfaceDeleter>;
 
 }  // namespace egl
 
