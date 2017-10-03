@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "71af7df9_e31747bd",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 37
+      },
+      "lineNbr": 1840,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-03T13:16:34Z",
+      "side": 1,
+      "message": "Done. I don\u0027t know how well we support textures in compute right now, or when this extension will interact with compute, but it seems correct to add right now.",
+      "parentUuid": "ecac70f7_9bd85a80",
+      "revId": "375e2a9170cc052e52bd4c1053cf91549c94981f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "2c8eec82_0dca1cd2",
         "filename": "src/libANGLE/Context.cpp",
         "patchSetId": 37
@@ -30,6 +48,24 @@
       "writtenOn": "2017-09-25T21:20:46Z",
       "side": 1,
       "message": "nit: no need for this anymore since it is done in gl::Texture.",
+      "revId": "375e2a9170cc052e52bd4c1053cf91549c94981f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fe294d5e_0dc27269",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 37
+      },
+      "lineNbr": 2995,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-03T13:16:34Z",
+      "side": 1,
+      "message": "Good catch, Done.",
+      "parentUuid": "2c8eec82_0dca1cd2",
       "revId": "375e2a9170cc052e52bd4c1053cf91549c94981f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true

@@ -196,6 +196,24 @@
     },
     {
       "key": {
+        "uuid": "5fa38582_5306b90b",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 30
+      },
+      "lineNbr": 1106,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-03T13:16:34Z",
+      "side": 1,
+      "message": "On WebGL they have specific restrictions - either they do nothing or the actually clear pixels to zero. We likely won\u0027t be enabling this extension without WebGL for quite some time, so I re-worded and left the TODO.",
+      "parentUuid": "7a73f7ca_7a853712",
+      "revId": "9501864d19885d5508a71bb9d0d05df0f4028de0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "462c0ad0_f2edb076",
         "filename": "src/libANGLE/Framebuffer.cpp",
         "patchSetId": 30
@@ -500,6 +518,24 @@
       "side": 1,
       "message": "There is no DXT1 in there, but we could move UncompressXTBlock there so it lives next to similar code.",
       "parentUuid": "5dddec68_564f9503",
+      "revId": "9501864d19885d5508a71bb9d0d05df0f4028de0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e0de06d7_863dc476",
+        "filename": "src/tests/gl_tests/RobustResourceInitTest.cpp",
+        "patchSetId": 30
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-03T13:16:34Z",
+      "side": 1,
+      "message": "I tried to move this to image_util but it became difficult because GLColor isn\u0027t exposed to image_util and R8G8B8A8 isn\u0027t as flexible as GLColor. Left it here with a TODO.",
+      "parentUuid": "8e0a0ff1_45a7464d",
       "revId": "9501864d19885d5508a71bb9d0d05df0f4028de0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
