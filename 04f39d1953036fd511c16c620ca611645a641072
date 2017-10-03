@@ -22,6 +22,30 @@
       "revId": "04f39d1953036fd511c16c620ca611645a641072",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ac064c17_714d4fa9",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1874,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-10-03T19:51:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4a9d6b99_27f41007",
+      "range": {
+        "startLine": 1873,
+        "startChar": 35,
+        "endLine": 1874,
+        "endChar": 29
+      },
+      "revId": "04f39d1953036fd511c16c620ca611645a641072",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
