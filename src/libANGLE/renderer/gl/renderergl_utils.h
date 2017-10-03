@@ -63,6 +63,8 @@ bool SupportsOcclusionQueries(const FunctionsGL *functions);
 bool SupportsNativeRendering(const FunctionsGL *functions,
                              gl::TextureType type,
                              GLenum internalFormat);
+bool UseTexImage2D(gl::TextureType textureType);
+bool UseTexImage3D(gl::TextureType textureType);
 }
 
 bool CanMapBufferForRead(const FunctionsGL *functions);

@@ -11,6 +11,7 @@
 #include "common/debug.h"
 #include "libANGLE/Caps.h"
 #include "libANGLE/angletypes.h"
+#include "libANGLE/renderer/gl/BlitGL.h"
 #include "libANGLE/renderer/gl/FunctionsGL.h"
 #include "libANGLE/renderer/gl/StateManagerGL.h"
 #include "libANGLE/renderer/gl/formatutilsgl.h"
@@ -22,11 +23,13 @@ RenderbufferGL::RenderbufferGL(const gl::RenderbufferState &state,
                                const FunctionsGL *functions,
                                const WorkaroundsGL &workarounds,
                                StateManagerGL *stateManager,
+                               BlitGL *blitter,
                                const gl::TextureCapsMap &textureCaps)
     : RenderbufferImpl(state),
       mFunctions(functions),
       mWorkarounds(workarounds),
       mStateManager(stateManager),
+      mBlitter(blitter),
       mTextureCaps(textureCaps),
       mRenderbufferID(0)
 {
@@ -51,6 +54,8 @@ gl::Error RenderbufferGL::setStorage(const gl::Context *context,
         nativegl::GetRenderbufferFormat(mFunctions, mWorkarounds, internalformat);
     mFunctions->renderbufferStorage(GL_RENDERBUFFER, renderbufferFormat.internalFormat,
                                     static_cast<GLsizei>(width), static_cast<GLsizei>(height));
+
+    mNativeInternalFormat = renderbufferFormat.internalFormat;
 
     return gl::NoError();
 }
@@ -87,12 +92,16 @@ gl::Error RenderbufferGL::setStorageMultisample(const gl::Context *context,
         } while (error != GL_NO_ERROR);
     }
 
+    mNativeInternalFormat = renderbufferFormat.internalFormat;
+
     return gl::NoError();
 }
 
 gl::Error RenderbufferGL::setStorageEGLImageTarget(const gl::Context *context, egl::Image *image)
 {
-    UNIMPLEMENTED();
+    // TODO(geofflang): If implemented, be sure to update mNativeInternalFormat.
+    // http://anglebug.com/2412
+    UNREACHABLE();
     return gl::InternalError();
 }
 
@@ -104,8 +113,7 @@ GLuint RenderbufferGL::getRenderbufferID() const
 gl::Error RenderbufferGL::initializeContents(const gl::Context *context,
                                              const gl::ImageIndex &imageIndex)
 {
-    // TODO(jmadill):
-    return gl::NoError();
+    return mBlitter->clearRenderbuffer(this, mNativeInternalFormat);
 }
 
 }  // namespace rx

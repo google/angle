@@ -203,7 +203,7 @@ EGLint WindowSurfaceGLX::isPostSubBufferSupported() const
 
 EGLint WindowSurfaceGLX::getSwapBehavior() const
 {
-    return EGL_BUFFER_PRESERVED;
+    return EGL_BUFFER_DESTROYED;
 }
 
 egl::Error WindowSurfaceGLX::checkForResize()

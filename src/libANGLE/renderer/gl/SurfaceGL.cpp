@@ -8,6 +8,8 @@
 
 #include "libANGLE/renderer/gl/SurfaceGL.h"
 
+#include "libANGLE/Surface.h"
+#include "libANGLE/renderer/gl/BlitGL.h"
 #include "libANGLE/renderer/gl/FramebufferGL.h"
 #include "libANGLE/renderer/gl/RendererGL.h"
 
@@ -44,7 +46,8 @@ egl::Error SurfaceGL::unMakeCurrent()
 gl::Error SurfaceGL::initializeContents(const gl::Context *context,
                                         const gl::ImageIndex &imageIndex)
 {
-    // UNIMPLEMENTED();
+    FramebufferGL *framebufferGL = GetImplAs<FramebufferGL>(mState.defaultFramebuffer);
+    ANGLE_TRY(mRenderer->getBlitter()->clearFramebuffer(framebufferGL));
     return gl::NoError();
 }
 

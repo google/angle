@@ -196,22 +196,11 @@ class RobustResourceInitTest : public ANGLETest
         setRobustResourceInit(true);
     }
 
-    bool isSkippedPlatform()
-    {
-        // Skip all tests on the OpenGL backend. It is not fully implemented but still needs to be
-        // exposed to test in Chromium.
-        return IsDesktopOpenGL() || IsOpenGLES();
-    }
-
-    bool hasGLExtension()
-    {
-        return !isSkippedPlatform() && extensionEnabled("GL_ANGLE_robust_resource_initialization");
-    }
+    bool hasGLExtension() { return extensionEnabled("GL_ANGLE_robust_resource_initialization"); }
 
     bool hasEGLExtension()
     {
-        return !isSkippedPlatform() &&
-               eglDisplayExtensionEnabled(getEGLWindow()->getDisplay(),
+        return eglDisplayExtensionEnabled(getEGLWindow()->getDisplay(),
                                           "EGL_ANGLE_robust_resource_initialization");
     }
 
@@ -312,7 +301,7 @@ class RobustResourceInitTestES3 : public RobustResourceInitTest
 // it only works on the implemented renderers
 TEST_P(RobustResourceInitTest, ExpectedRendererSupport)
 {
-    bool shouldHaveSupport = IsD3D11() || IsD3D11_FL93() || IsD3D9();
+    bool shouldHaveSupport = IsD3D11() || IsD3D11_FL93() || IsD3D9() || IsOpenGL() || IsOpenGLES();
     EXPECT_EQ(shouldHaveSupport, hasGLExtension());
     EXPECT_EQ(shouldHaveSupport, hasEGLExtension());
     EXPECT_EQ(shouldHaveSupport, hasRobustSurfaceInit());
@@ -512,7 +501,7 @@ void RobustResourceInitTest::checkCustomFramebufferNonZeroPixels(int fboWidth,
             int index = (y * fboWidth + x);
             if (x >= skipX && x < skipX + skipWidth && y >= skipY && y < skipY + skipHeight)
             {
-                ASSERT_EQ(skip, data[index]);
+                ASSERT_EQ(skip, data[index]) << " at pixel " << x << ", " << y;
             }
             else
             {
@@ -562,6 +551,9 @@ TEST_P(RobustResourceInitTest, ReuploadingClearsTexture)
 TEST_P(RobustResourceInitTest, TexImageThenSubImage)
 {
     ANGLE_SKIP_TEST_IF(!hasGLExtension());
+
+    // http://anglebug.com/2407
+    ANGLE_SKIP_TEST_IF(IsAndroid());
 
     // Put some data into the texture
 
@@ -650,6 +642,11 @@ TEST_P(RobustResourceInitTestES3, BindTexImage)
     // Test skipped because EGL config cannot be used to create pbuffers.
     ANGLE_SKIP_TEST_IF((surfaceType & EGL_PBUFFER_BIT) == 0);
 
+    EGLint bindToSurfaceRGBA = 0;
+    eglGetConfigAttrib(display, config, EGL_BIND_TO_TEXTURE_RGBA, &bindToSurfaceRGBA);
+    // Test skipped because EGL config cannot be used to create pbuffers.
+    ANGLE_SKIP_TEST_IF(bindToSurfaceRGBA == EGL_FALSE);
+
     EGLint attribs[] = {
         EGL_WIDTH,          32,
         EGL_HEIGHT,         32,
@@ -678,7 +675,14 @@ TEST_P(RobustResourceInitTestES3, BindTexImage)
     GLFramebuffer fbo;
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
-    EXPECT_PIXEL_COLOR_EQ(0, 0, clearColor);
+    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE)
+    {
+        EXPECT_PIXEL_COLOR_EQ(0, 0, clearColor);
+    }
+    else
+    {
+        std::cout << "Read pixels check skipped because framebuffer was not complete." << std::endl;
+    }
 
     eglDestroySurface(display, pbuffer);
 }
@@ -720,6 +724,9 @@ TEST_P(RobustResourceInitTest, DrawWithTexture)
 TEST_P(RobustResourceInitTest, ReadingPartiallyInitializedTexture)
 {
     ANGLE_SKIP_TEST_IF(!hasGLExtension());
+
+    // http://anglebug.com/2407
+    ANGLE_SKIP_TEST_IF(IsAndroid());
 
     GLTexture tex;
     setupTexture(&tex);
@@ -786,6 +793,9 @@ TEST_P(RobustResourceInitTest, ReadingOutOfboundsCopiedTexture)
 TEST_P(RobustResourceInitTestES3, MultisampledDepthInitializedCorrectly)
 {
     ANGLE_SKIP_TEST_IF(!hasGLExtension());
+
+    // http://anglebug.com/2407
+    ANGLE_SKIP_TEST_IF(IsAndroid());
 
     const std::string vs = "attribute vec4 position; void main() { gl_Position = position; }";
     const std::string fs = "void main() { gl_FragColor = vec4(1, 0, 0, 1); }";
@@ -1023,6 +1033,9 @@ TEST_P(RobustResourceInitTestES3, BlitFramebufferOutOfBounds)
 {
     ANGLE_SKIP_TEST_IF(!hasGLExtension());
 
+    // http://anglebug.com/2408
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsAMD());
+
     // Initiate data to read framebuffer
     constexpr int size                = 8;
     constexpr GLenum readbufferFormat = GL_RGBA8;
@@ -1170,6 +1183,9 @@ TEST_P(RobustResourceInitTest, MaskedDepthClear)
 {
     ANGLE_SKIP_TEST_IF(!hasGLExtension());
 
+    // http://anglebug.com/2407
+    ANGLE_SKIP_TEST_IF(IsAndroid());
+
     auto clearFunc = [](float depth) {
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClearDepthf(depth);
@@ -1183,6 +1199,9 @@ TEST_P(RobustResourceInitTest, MaskedDepthClear)
 TEST_P(RobustResourceInitTestES3, MaskedDepthClearBuffer)
 {
     ANGLE_SKIP_TEST_IF(!hasGLExtension());
+
+    // http://anglebug.com/2407
+    ANGLE_SKIP_TEST_IF(IsAndroid());
 
     auto clearFunc = [](float depth) {
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -1243,6 +1262,9 @@ TEST_P(RobustResourceInitTest, MaskedStencilClear)
     ANGLE_SKIP_TEST_IF(!hasGLExtension());
     ANGLE_SKIP_TEST_IF(IsD3D11_FL93());
 
+    // http://anglebug.com/2407
+    ANGLE_SKIP_TEST_IF(IsAndroid());
+
     auto clearFunc = [](GLint clearValue) {
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClearStencil(clearValue);
@@ -1256,6 +1278,9 @@ TEST_P(RobustResourceInitTest, MaskedStencilClear)
 TEST_P(RobustResourceInitTestES3, MaskedStencilClearBuffer)
 {
     ANGLE_SKIP_TEST_IF(!hasGLExtension());
+
+    // http://anglebug.com/2407
+    ANGLE_SKIP_TEST_IF(IsAndroid());
 
     auto clearFunc = [](GLint clearValue) {
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);

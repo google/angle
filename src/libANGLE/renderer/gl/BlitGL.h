@@ -19,6 +19,7 @@
 namespace gl
 {
 class Framebuffer;
+struct ImageIndex;
 }
 
 namespace rx
@@ -26,6 +27,7 @@ namespace rx
 
 class FramebufferGL;
 class FunctionsGL;
+class RenderbufferGL;
 class StateManagerGL;
 class TextureGL;
 struct WorkaroundsGL;
@@ -103,6 +105,15 @@ class BlitGL : angle::NonCopyable
                               size_t destLevel,
                               const gl::Rectangle &sourceArea,
                               const gl::Offset &destOffset);
+
+    gl::ErrorOrResult<bool> clearRenderableTexture(TextureGL *source,
+                                                   GLenum sizedInternalFormat,
+                                                   int numTextureLayers,
+                                                   const gl::ImageIndex &imageIndex);
+
+    gl::Error clearRenderbuffer(RenderbufferGL *source, GLenum sizedInternalFormat);
+
+    gl::Error clearFramebuffer(FramebufferGL *source);
 
     gl::Error initializeResources();
 

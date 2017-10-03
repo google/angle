@@ -8,6 +8,7 @@
 
 #include "libANGLE/renderer/gl/BlitGL.h"
 
+#include "common/utilities.h"
 #include "common/vector_utils.h"
 #include "image_util/copyimage.h"
 #include "libANGLE/Context.h"
@@ -16,10 +17,12 @@
 #include "libANGLE/renderer/Format.h"
 #include "libANGLE/renderer/gl/FramebufferGL.h"
 #include "libANGLE/renderer/gl/FunctionsGL.h"
+#include "libANGLE/renderer/gl/RenderbufferGL.h"
 #include "libANGLE/renderer/gl/StateManagerGL.h"
 #include "libANGLE/renderer/gl/TextureGL.h"
 #include "libANGLE/renderer/gl/WorkaroundsGL.h"
 #include "libANGLE/renderer/gl/formatutilsgl.h"
+#include "libANGLE/renderer/gl/renderergl_utils.h"
 #include "libANGLE/renderer/renderer_utils.h"
 
 using angle::Vector2;
@@ -109,6 +112,76 @@ class ScopedGLState : angle::NonCopyable
     StateManagerGL *mStateManager;
     const FunctionsGL *mFunctions;
 };
+
+gl::Error SetClearState(StateManagerGL *stateManager,
+                        bool colorClear,
+                        bool depthClear,
+                        bool stencilClear,
+                        GLbitfield *outClearMask)
+{
+    *outClearMask = 0;
+    if (colorClear)
+    {
+        stateManager->setClearColor(gl::ColorF(0.0f, 0.0f, 0.0f, 0.0f));
+        stateManager->setColorMask(true, true, true, true);
+        *outClearMask |= GL_COLOR_BUFFER_BIT;
+    }
+    if (depthClear)
+    {
+        stateManager->setDepthMask(true);
+        stateManager->setClearDepth(1.0f);
+        *outClearMask |= GL_DEPTH_BUFFER_BIT;
+    }
+    if (stencilClear)
+    {
+        stateManager->setClearStencil(0);
+        *outClearMask |= GL_STENCIL_BUFFER_BIT;
+    }
+
+    stateManager->setScissorTestEnabled(false);
+
+    return gl::NoError();
+}
+
+gl::Error PrepareForClear(StateManagerGL *stateManager,
+                          GLenum sizedInternalFormat,
+                          std::vector<GLenum> *outBindtargets,
+                          GLbitfield *outClearMask)
+{
+    const gl::InternalFormat &internalFormatInfo =
+        gl::GetSizedInternalFormatInfo(sizedInternalFormat);
+    bool bindDepth   = internalFormatInfo.depthBits > 0;
+    bool bindStencil = internalFormatInfo.stencilBits > 0;
+    bool bindColor   = !bindDepth && !bindStencil;
+
+    outBindtargets->clear();
+    if (bindColor)
+    {
+        outBindtargets->push_back(GL_COLOR_ATTACHMENT0);
+    }
+    if (bindDepth)
+    {
+        outBindtargets->push_back(GL_DEPTH_ATTACHMENT);
+    }
+    if (bindStencil)
+    {
+        outBindtargets->push_back(GL_STENCIL_ATTACHMENT);
+    }
+
+    ANGLE_TRY(SetClearState(stateManager, bindColor, bindDepth, bindStencil, outClearMask));
+
+    return gl::NoError();
+}
+
+void UnbindAttachments(const FunctionsGL *functions,
+                       GLenum framebufferTarget,
+                       const std::vector<GLenum> &bindTargets)
+{
+    for (GLenum bindTarget : bindTargets)
+    {
+        functions->framebufferRenderbuffer(framebufferTarget, bindTarget, GL_RENDERBUFFER, 0);
+    }
+}
 
 }  // anonymous namespace
 
@@ -632,6 +705,140 @@ gl::Error BlitGL::copyTexSubImage(TextureGL *source,
     mFunctions->copyTexSubImage2D(ToGLenum(destTarget), static_cast<GLint>(destLevel), destOffset.x,
                                   destOffset.y, sourceArea.x, sourceArea.y, sourceArea.width,
                                   sourceArea.height);
+
+    return gl::NoError();
+}
+
+gl::ErrorOrResult<bool> BlitGL::clearRenderableTexture(TextureGL *source,
+                                                       GLenum sizedInternalFormat,
+                                                       int numTextureLayers,
+                                                       const gl::ImageIndex &imageIndex)
+{
+    ANGLE_TRY(initializeResources());
+
+    std::vector<GLenum> bindTargets;
+    GLbitfield clearMask = 0;
+    ANGLE_TRY(PrepareForClear(mStateManager, sizedInternalFormat, &bindTargets, &clearMask));
+
+    mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mScratchFBO);
+
+    if (nativegl::UseTexImage2D(source->getType()))
+    {
+        ASSERT(numTextureLayers == 1);
+        for (GLenum bindTarget : bindTargets)
+        {
+            mFunctions->framebufferTexture2D(GL_FRAMEBUFFER, bindTarget,
+                                             ToGLenum(imageIndex.target), source->getTextureID(),
+                                             imageIndex.mipIndex);
+        }
+
+        GLenum status = mFunctions->checkFramebufferStatus(GL_FRAMEBUFFER);
+        if (status == GL_FRAMEBUFFER_COMPLETE)
+        {
+            mFunctions->clear(clearMask);
+        }
+        else
+        {
+            UnbindAttachments(mFunctions, GL_FRAMEBUFFER, bindTargets);
+            return false;
+        }
+    }
+    else
+    {
+        ASSERT(nativegl::UseTexImage3D(source->getType()));
+
+        // Check if it's possible to bind all layers of the texture at once
+        if (mFunctions->framebufferTexture && !imageIndex.hasLayer())
+        {
+            for (GLenum bindTarget : bindTargets)
+            {
+                mFunctions->framebufferTexture(GL_FRAMEBUFFER, bindTarget, source->getTextureID(),
+                                               imageIndex.mipIndex);
+            }
+
+            GLenum status = mFunctions->checkFramebufferStatus(GL_FRAMEBUFFER);
+            if (status == GL_FRAMEBUFFER_COMPLETE)
+            {
+                mFunctions->clear(clearMask);
+            }
+            else
+            {
+                UnbindAttachments(mFunctions, GL_FRAMEBUFFER, bindTargets);
+                return false;
+            }
+        }
+        else
+        {
+            GLint firstLayer = 0;
+            GLint layerCount = numTextureLayers;
+            if (imageIndex.hasLayer())
+            {
+                firstLayer = imageIndex.layerIndex;
+                layerCount = imageIndex.numLayers;
+            }
+
+            for (GLint layer = 0; layer < layerCount; layer++)
+            {
+                for (GLenum bindTarget : bindTargets)
+                {
+                    mFunctions->framebufferTextureLayer(GL_FRAMEBUFFER, bindTarget,
+                                                        source->getTextureID(), imageIndex.mipIndex,
+                                                        layer + firstLayer);
+                }
+
+                GLenum status = mFunctions->checkFramebufferStatus(GL_FRAMEBUFFER);
+                if (status == GL_FRAMEBUFFER_COMPLETE)
+                {
+                    mFunctions->clear(clearMask);
+                }
+                else
+                {
+                    UnbindAttachments(mFunctions, GL_FRAMEBUFFER, bindTargets);
+                    return false;
+                }
+            }
+        }
+    }
+
+    UnbindAttachments(mFunctions, GL_FRAMEBUFFER, bindTargets);
+    return true;
+}
+
+gl::Error BlitGL::clearRenderbuffer(RenderbufferGL *source, GLenum sizedInternalFormat)
+{
+    ANGLE_TRY(initializeResources());
+
+    std::vector<GLenum> bindTargets;
+    GLbitfield clearMask = 0;
+    ANGLE_TRY(PrepareForClear(mStateManager, sizedInternalFormat, &bindTargets, &clearMask));
+
+    mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mScratchFBO);
+    for (GLenum bindTarget : bindTargets)
+    {
+        mFunctions->framebufferRenderbuffer(GL_FRAMEBUFFER, bindTarget, GL_RENDERBUFFER,
+                                            source->getRenderbufferID());
+    }
+    mFunctions->clear(clearMask);
+
+    // Unbind
+    for (GLenum bindTarget : bindTargets)
+    {
+        mFunctions->framebufferRenderbuffer(GL_FRAMEBUFFER, bindTarget, GL_RENDERBUFFER, 0);
+    }
+
+    return gl::NoError();
+}
+
+gl::Error BlitGL::clearFramebuffer(FramebufferGL *source)
+{
+    // initializeResources skipped because no local state is used
+
+    // Clear all attachments
+    GLbitfield clearMask = 0;
+    ANGLE_TRY(SetClearState(mStateManager, true, true, true, &clearMask));
+
+    mStateManager->bindFramebuffer(GL_FRAMEBUFFER, source->getFramebufferID());
+    mFunctions->clear(clearMask);
 
     return gl::NoError();
 }
