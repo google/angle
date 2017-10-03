@@ -153,7 +153,7 @@ if (is_win || is_linux || is_mac || is_android) {
   }
 }
 
-if (is_win || is_linux) {
+if (is_win || is_linux || is_android) {
   perftests_gypi = exec_script("//build/gypi_to_gn.py",
                                [
                                  rebase_path("angle_perftests.gypi"),
@@ -168,6 +168,11 @@ if (is_win || is_linux) {
       "../../src/tests",
       "../../util",
     ]
+
+    if (is_android) {
+      use_native_activity = true
+      configs -= [ "//build/config/android:hide_all_but_jni" ]
+    }
 
     sources = rebase_path(perftests_gypi.angle_perf_tests_sources, ".", "../..")
 
@@ -320,7 +325,7 @@ if (build_angle_deqp_tests) {
     sources += [ "//gpu/angle_deqp_tests_main.cc" ]
 
     if (!is_android) {
-      public_deps += ["//third_party/angle:angle_gpu_info_util"]
+      public_deps += [ "//third_party/angle:angle_gpu_info_util" ]
     }
   }
 
