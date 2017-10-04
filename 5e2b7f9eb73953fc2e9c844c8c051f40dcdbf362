@@ -261,6 +261,30 @@
     },
     {
       "key": {
+        "uuid": "42a265e7_0563e2f9",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1262,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-10-04T15:48:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "59fd9746_13c533a4",
+      "range": {
+        "startLine": 1233,
+        "startChar": 0,
+        "endLine": 1262,
+        "endChar": 0
+      },
+      "revId": "5e2b7f9eb73953fc2e9c844c8c051f40dcdbf362",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "90709d20_3834f73b",
         "filename": "src/libANGLE/queryutils.cpp",
         "patchSetId": 11
@@ -281,6 +305,30 @@
       "revId": "5e2b7f9eb73953fc2e9c844c8c051f40dcdbf362",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "459c144b_d4b2b6db",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1302,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-10-04T15:48:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "90709d20_3834f73b",
+      "range": {
+        "startLine": 1302,
+        "startChar": 19,
+        "endLine": 1302,
+        "endChar": 35
+      },
+      "revId": "5e2b7f9eb73953fc2e9c844c8c051f40dcdbf362",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
