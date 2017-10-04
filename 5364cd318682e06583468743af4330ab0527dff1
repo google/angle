@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "325bc56b_4d4575c5",
+        "filename": "src/common/angleutils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-10-04T09:29:52Z",
+      "side": 1,
+      "message": "The file that introduces the ASSERT macro is not included from here, and I\u0027m not sure if we want to include it. If you think the ASSERT is important, the inlining could be removed and the implementation of this function could maybe be moved to angleutils.cpp.",
+      "parentUuid": "4b3c6a30_b79a2d89",
+      "range": {
+        "startLine": 165,
+        "startChar": 4,
+        "endLine": 165,
+        "endChar": 48
+      },
+      "revId": "5364cd318682e06583468743af4330ab0527dff1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6fef9bfc_5f70bc5e",
         "filename": "src/common/angleutils.h",
         "patchSetId": 2
@@ -60,6 +84,24 @@
     },
     {
       "key": {
+        "uuid": "3b66052b_a1197cf0",
+        "filename": "src/common/angleutils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-10-04T09:29:52Z",
+      "side": 1,
+      "message": "This is how it naturally ends up when parsing array sizes, and I think the order should be consistent everywhere.\n\nThe other changes related to arrays of arrays are uploaded as dependencies of this change in gerrit.",
+      "parentUuid": "84109aa8_74772b9d",
+      "revId": "5364cd318682e06583468743af4330ab0527dff1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "62019e5b_48be05d7",
         "filename": "src/common/angleutils_unittest.cpp",
         "patchSetId": 2
@@ -80,6 +122,30 @@
       "revId": "5364cd318682e06583468743af4330ab0527dff1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "33fbd5ec_e7e7938f",
+        "filename": "src/common/angleutils_unittest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-10-04T09:29:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "62019e5b_48be05d7",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 4
+      },
+      "revId": "5364cd318682e06583468743af4330ab0527dff1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -106,6 +172,30 @@
     },
     {
       "key": {
+        "uuid": "bb7e4e9a_36e1cc46",
+        "filename": "src/common/utilities_unittest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-10-04T09:29:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d1be4e30_1b2e4f49",
+      "range": {
+        "startLine": 40,
+        "startChar": 4,
+        "endLine": 40,
+        "endChar": 34
+      },
+      "revId": "5364cd318682e06583468743af4330ab0527dff1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d28b9edf_ece98e5a",
         "filename": "src/common/utilities_unittest.cpp",
         "patchSetId": 2
@@ -126,6 +216,30 @@
       "revId": "5364cd318682e06583468743af4330ab0527dff1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c6c18a13_67d92636",
+        "filename": "src/common/utilities_unittest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-10-04T09:29:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d28b9edf_ece98e5a",
+      "range": {
+        "startLine": 48,
+        "startChar": 0,
+        "endLine": 48,
+        "endChar": 4
+      },
+      "revId": "5364cd318682e06583468743af4330ab0527dff1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -152,6 +266,30 @@
     },
     {
       "key": {
+        "uuid": "15684576_64b2a131",
+        "filename": "src/libANGLE/MemoryProgramCache.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 241,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-10-04T09:29:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5037e0ab_a8753df9",
+      "range": {
+        "startLine": 241,
+        "startChar": 53,
+        "endLine": 241,
+        "endChar": 72
+      },
+      "revId": "5364cd318682e06583468743af4330ab0527dff1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "19318e3c_22e53a13",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 2
@@ -172,6 +310,30 @@
       "revId": "5364cd318682e06583468743af4330ab0527dff1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3e864f6e_32cf52d0",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 302,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-10-04T09:29:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "19318e3c_22e53a13",
+      "range": {
+        "startLine": 302,
+        "startChar": 4,
+        "endLine": 302,
+        "endChar": 43
+      },
+      "revId": "5364cd318682e06583468743af4330ab0527dff1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -210,6 +372,24 @@
     },
     {
       "key": {
+        "uuid": "1c008efc_ca5353cc",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 457,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-10-04T09:29:52Z",
+      "side": 1,
+      "message": "OK, I\u0027ll look into the performance.",
+      "parentUuid": "7ee1b60e_e2a531cb",
+      "revId": "5364cd318682e06583468743af4330ab0527dff1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "732af094_abf325bd",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 2
@@ -230,6 +410,30 @@
       "revId": "5364cd318682e06583468743af4330ab0527dff1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9e21ef7b_c5cf29d0",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2172,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-10-04T09:29:52Z",
+      "side": 1,
+      "message": "Ack, can probably cache the flattened array offset.",
+      "parentUuid": "732af094_abf325bd",
+      "range": {
+        "startLine": 2172,
+        "startChar": 45,
+        "endLine": 2172,
+        "endChar": 77
+      },
+      "revId": "5364cd318682e06583468743af4330ab0527dff1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
