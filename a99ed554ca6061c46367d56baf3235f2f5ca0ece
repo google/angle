@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2efbe9cc_81f2b450",
+        "filename": "src/compiler/translator/OutputVulkanGLSL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-10-04T20:39:59Z",
+      "side": 0,
+      "message": "Why was this removed?\nI don\u0027t understand why this compiles, since writeVariablePrecision is pure virtual in TOutputGLSLBase.",
+      "range": {
+        "startLine": 74,
+        "startChar": 24,
+        "endLine": 74,
+        "endChar": 46
+      },
+      "revId": "a99ed554ca6061c46367d56baf3235f2f5ca0ece",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
