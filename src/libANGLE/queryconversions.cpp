@@ -83,8 +83,6 @@ template GLuint CastFromGLintStateValue<GLuint, GLenum>(GLenum pname, GLenum val
 template GLfloat CastFromGLintStateValue<GLfloat, bool>(GLenum pname, bool value);
 template GLuint CastFromGLintStateValue<GLuint, bool>(GLenum pname, bool value);
 template GLint CastFromGLintStateValue<GLint, bool>(GLenum pname, bool value);
-template GLfloat CastFromGLintStateValue<GLfloat, size_t>(GLenum pname, size_t value);
-template GLint CastFromGLintStateValue<GLint, size_t>(GLenum pname, size_t value);
 
 template <typename QueryT, typename NativeT>
 QueryT CastFromStateValue(GLenum pname, NativeT value)

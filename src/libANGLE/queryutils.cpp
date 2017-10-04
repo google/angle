@@ -89,13 +89,16 @@ void QueryTexLevelParameterBase(const Texture *texture,
                 pname, info->internalFormat ? info->internalFormat : GL_RGBA);
             break;
         case GL_TEXTURE_WIDTH:
-            *params = CastFromGLintStateValue<ParamType>(pname, texture->getWidth(target, level));
+            *params = CastFromGLintStateValue<ParamType>(
+                pname, static_cast<uint32_t>(texture->getWidth(target, level)));
             break;
         case GL_TEXTURE_HEIGHT:
-            *params = CastFromGLintStateValue<ParamType>(pname, texture->getHeight(target, level));
+            *params = CastFromGLintStateValue<ParamType>(
+                pname, static_cast<uint32_t>(texture->getHeight(target, level)));
             break;
         case GL_TEXTURE_DEPTH:
-            *params = CastFromGLintStateValue<ParamType>(pname, texture->getDepth(target, level));
+            *params = CastFromGLintStateValue<ParamType>(
+                pname, static_cast<uint32_t>(texture->getDepth(target, level)));
             break;
         case GL_TEXTURE_SAMPLES:
             *params = CastFromStateValue<ParamType>(pname, texture->getSamples(target, level));
