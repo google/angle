@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "18ae31fc_3647cb37",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 7
+      },
+      "lineNbr": 939,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-04T14:49:58Z",
+      "side": 1,
+      "message": "Couldn\u0027t the grammar be the following? It seems a bit more textbook.\n\n array_specifier_element \u003d\n   | LEFT_BRACKET RIGHT_BRACKET\n   | LEFT_BRACKET constant_expression RIGHT_BRACKET\n\n array_specifier \u003d\n   | array_specifer_element\n   | array_specifier array_specifier_element",
+      "revId": "b162f118aa81f389c0178b4e0f45b96864664ca1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6393dd5a_3af71006",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 7
+      },
+      "lineNbr": 955,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-04T14:49:58Z",
+      "side": 1,
+      "message": "$$-\u003epush_back(0u); and equivalent change in the case below would make the array sizes go in the order they are written in the code.",
+      "revId": "b162f118aa81f389c0178b4e0f45b96864664ca1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
