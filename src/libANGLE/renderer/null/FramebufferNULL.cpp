@@ -179,7 +179,7 @@ gl::Error FramebufferNULL::blit(const gl::Context *context,
     return gl::NoError();
 }
 
-bool FramebufferNULL::checkStatus() const
+bool FramebufferNULL::checkStatus(const gl::Context *context) const
 {
     return true;
 }

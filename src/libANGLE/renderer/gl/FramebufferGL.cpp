@@ -594,7 +594,7 @@ gl::Error FramebufferGL::getSamplePosition(size_t index, GLfloat *xy) const
     return gl::NoError();
 }
 
-bool FramebufferGL::checkStatus() const
+bool FramebufferGL::checkStatus(const gl::Context *context) const
 {
     mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
     GLenum status = mFunctions->checkFramebufferStatus(GL_FRAMEBUFFER);

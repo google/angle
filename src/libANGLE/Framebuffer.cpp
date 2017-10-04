@@ -1125,8 +1125,19 @@ GLenum Framebuffer::checkStatusImpl(const Context *context)
         return GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE;
     }
 
+    // The WebGL conformance tests implicitly define that all framebuffer
+    // attachments must be unique. For example, the same level of a texture can
+    // not be attached to two different color attachments.
+    if (state.getExtensions().webglCompatibility)
+    {
+        if (!mState.colorAttachmentsAreUniqueImages())
+        {
+            return GL_FRAMEBUFFER_UNSUPPORTED;
+        }
+    }
+
     syncState(context);
-    if (!mImpl->checkStatus())
+    if (!mImpl->checkStatus(context))
     {
         return GL_FRAMEBUFFER_UNSUPPORTED;
     }

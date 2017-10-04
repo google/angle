@@ -92,7 +92,7 @@ class FramebufferD3D : public FramebufferImpl
                    GLbitfield mask,
                    GLenum filter) override;
 
-    bool checkStatus() const override;
+    bool checkStatus(const gl::Context *context) const override;
 
     void syncState(const gl::Context *context,
                    const gl::Framebuffer::DirtyBits &dirtyBits) override;

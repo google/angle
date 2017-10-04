@@ -87,7 +87,7 @@ class FramebufferGL : public FramebufferImpl
 
     gl::Error getSamplePosition(size_t index, GLfloat *xy) const override;
 
-    bool checkStatus() const override;
+    bool checkStatus(const gl::Context *context) const override;
 
     void syncState(const gl::Context *context,
                    const gl::Framebuffer::DirtyBits &dirtyBits) override;

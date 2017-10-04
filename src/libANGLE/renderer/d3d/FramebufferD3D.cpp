@@ -285,7 +285,7 @@ gl::Error FramebufferD3D::blit(const gl::Context *context,
     return gl::NoError();
 }
 
-bool FramebufferD3D::checkStatus() const
+bool FramebufferD3D::checkStatus(const gl::Context *context) const
 {
     // if we have both a depth and stencil buffer, they must refer to the same object
     // since we only support packed_depth_stencil and not separate depth and stencil
@@ -295,10 +295,15 @@ bool FramebufferD3D::checkStatus() const
         return false;
     }
 
-    // D3D11 does not allow for overlapping RenderTargetViews
-    if (!mState.colorAttachmentsAreUniqueImages())
+    // D3D11 does not allow for overlapping RenderTargetViews.
+    // If WebGL compatibility is enabled, this has already been checked at a higher level.
+    ASSERT(!context->getExtensions().webglCompatibility || mState.colorAttachmentsAreUniqueImages());
+    if (!context->getExtensions().webglCompatibility)
     {
-        return false;
+        if (!mState.colorAttachmentsAreUniqueImages())
+        {
+            return false;
+        }
     }
 
     // D3D requires all render targets to have the same dimensions.

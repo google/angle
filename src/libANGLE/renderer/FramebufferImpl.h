@@ -78,7 +78,7 @@ class FramebufferImpl : angle::NonCopyable
                            GLbitfield mask,
                            GLenum filter) = 0;
 
-    virtual bool checkStatus() const = 0;
+    virtual bool checkStatus(const gl::Context *context) const = 0;
 
     virtual void syncState(const gl::Context *context,
                            const gl::Framebuffer::DirtyBits &dirtyBits) = 0;
