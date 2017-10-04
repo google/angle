@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "70b61790_1d06ebc0",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-04T02:20:01Z",
+      "side": 1,
+      "message": "It\u0027s true what you say, I just wonder in what circumstance a validated GLenum value would be negative or larger than MAX_INT. Aren\u0027t most of these values (except for say, anisotropy values and base/max levels) restricted to specific enums like GL_CLAMP_TO_EDGE, GL_LINEAR, etc?",
+      "parentUuid": "32c6cde5_e021f255",
+      "range": {
+        "startLine": 197,
+        "startChar": 30,
+        "endLine": 197,
+        "endChar": 39
+      },
+      "revId": "a8a3caea23e019ac25bd1f023bab65291be9a5d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8264ff8d_88fb46db",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 12

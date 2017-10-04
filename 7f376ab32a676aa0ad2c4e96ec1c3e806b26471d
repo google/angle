@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f34c17ed_3a841011",
+        "filename": "src/libANGLE/queryconversions.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-04T02:20:01Z",
+      "side": 1,
+      "message": "sorry but is the pname parameter necessary for this function?",
+      "range": {
+        "startLine": 75,
+        "startChar": 4,
+        "endLine": 75,
+        "endChar": 71
+      },
+      "revId": "7f376ab32a676aa0ad2c4e96ec1c3e806b26471d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
