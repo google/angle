@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "2228c6e9_bb125deb",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-10-04T03:56:17Z",
+      "side": 1,
+      "message": "Yes, you\u0027are right. We don\u0027t need to worry here for a validated enum. But you need to firstly check the GL header for the actually defined value is within the safe range.",
+      "parentUuid": "70b61790_1d06ebc0",
+      "range": {
+        "startLine": 197,
+        "startChar": 30,
+        "endLine": 197,
+        "endChar": 39
+      },
+      "revId": "a8a3caea23e019ac25bd1f023bab65291be9a5d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8264ff8d_88fb46db",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 12
