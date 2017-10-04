@@ -320,8 +320,8 @@ void StateManagerGL::deleteFramebuffer(GLuint fbo)
                     static_cast<angle::FramebufferBinding>(binding));
                 bindFramebuffer(enumValue, 0);
             }
-            mFunctions->deleteFramebuffers(1, &fbo);
         }
+        mFunctions->deleteFramebuffers(1, &fbo);
     }
 }
 
