@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5ae44108_1769665f",
+        "filename": "src/libANGLE/Uniform.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-04T10:36:03Z",
+      "side": 1,
+      "message": "this should be a pointer, according to google style guide.",
+      "range": {
+        "startLine": 24,
+        "startChar": 27,
+        "endLine": 24,
+        "endChar": 38
+      },
+      "revId": "c760c9293a60bd3b19f6dbc80e8ade46b6aac045",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
