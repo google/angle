@@ -22,6 +22,30 @@
       "revId": "a99ed554ca6061c46367d56baf3235f2f5ca0ece",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1c442579_8a325700",
+        "filename": "src/compiler/translator/OutputVulkanGLSL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-04T22:00:24Z",
+      "side": 0,
+      "message": "TOutputVulkanGLSL inherts from TOutputGLSL. It also outputs desktop GLSL right now, where precision statements don\u0027t exist. So it was generating warnings when passed to glslang. I added a mention of this to the issue description.\n\n(It used to inherit from Base, but I found it better just to go directly to GLSL)",
+      "parentUuid": "2efbe9cc_81f2b450",
+      "range": {
+        "startLine": 74,
+        "startChar": 24,
+        "endLine": 74,
+        "endChar": 46
+      },
+      "revId": "a99ed554ca6061c46367d56baf3235f2f5ca0ece",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }

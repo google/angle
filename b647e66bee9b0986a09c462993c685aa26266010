@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "f395c362_0ff85376",
+        "filename": "src/compiler/translator/OutputVulkanGLSL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-04T22:00:24Z",
+      "side": 1,
+      "message": "No problem. I think it\u0027s harmless in any case.",
+      "parentUuid": "27ef56b7_44596013",
+      "range": {
+        "startLine": 65,
+        "startChar": 8,
+        "endLine": 65,
+        "endChar": 21
+      },
+      "revId": "b647e66bee9b0986a09c462993c685aa26266010",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "2e4bea79_8fb0f378",
         "filename": "src/compiler/translator/TranslatorVulkan.cpp",
         "patchSetId": 2
@@ -59,6 +83,30 @@
       "writtenOn": "2017-10-04T20:39:59Z",
       "side": 1,
       "message": "I don\u0027t fully understand the meaning of \"Default\" here and in other places, could you please explain?",
+      "range": {
+        "startLine": 21,
+        "startChar": 13,
+        "endLine": 21,
+        "endChar": 20
+      },
+      "revId": "b647e66bee9b0986a09c462993c685aa26266010",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "77a0912a_2982896f",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-04T22:00:24Z",
+      "side": 1,
+      "message": "Sure. It refers to uniforms in the default block. See the GLES 3.0 spec, and search for \u0027default uniform\u0027. It\u0027s like an invisible block that encapsulates all top-level uniforms - this CL makes it explicit since Vulkan GLSL doesn\u0027t have a default block.",
+      "parentUuid": "2e4bea79_8fb0f378",
       "range": {
         "startLine": 21,
         "startChar": 13,
@@ -94,6 +142,30 @@
     },
     {
       "key": {
+        "uuid": "2a86db96_bafe9aee",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-04T22:00:24Z",
+      "side": 1,
+      "message": "To be honest, I\u0027m not sure exactly if both steps are necessary. I copied the code from OutputGLSL where it sets a variable if it\u0027s inside a declaration.",
+      "parentUuid": "38ff2b9e_3b259054",
+      "range": {
+        "startLine": 56,
+        "startChar": 12,
+        "endLine": 56,
+        "endChar": 29
+      },
+      "revId": "b647e66bee9b0986a09c462993c685aa26266010",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "534c44a5_22f576f5",
         "filename": "src/libANGLE/renderer/vulkan/GlslangWrapper.cpp",
         "patchSetId": 2
@@ -105,6 +177,30 @@
       "writtenOn": "2017-10-04T20:39:59Z",
       "side": 1,
       "message": "Since you can check \"getShaderType() \u003d\u003d GL_FRAGMENT_SHADER\" in TranslatorVulkan::translate, why do you need to do the replacement here and not just write the layout in TranslatorVulkan::translate?",
+      "range": {
+        "startLine": 102,
+        "startChar": 0,
+        "endLine": 104,
+        "endChar": 0
+      },
+      "revId": "b647e66bee9b0986a09c462993c685aa26266010",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "73dad12d_92b63c49",
+        "filename": "src/libANGLE/renderer/vulkan/GlslangWrapper.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-04T22:00:24Z",
+      "side": 1,
+      "message": "I wanted to keep the implementation details (which set and binding to assign) in the libANGLE core rather than bake them into the translator. The string replacement is a bit hacky but I like it better than hard-coding values in the translator itself.",
+      "parentUuid": "534c44a5_22f576f5",
       "range": {
         "startLine": 102,
         "startChar": 0,
