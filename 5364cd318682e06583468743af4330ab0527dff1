@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "d420765f_940c65cb",
+        "filename": "src/common/angleutils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-04T10:43:30Z",
+      "side": 1,
+      "message": "I think it\u0027s pretty reasonable to move the implementation to the cpp, please go ahead with that.",
+      "parentUuid": "325bc56b_4d4575c5",
+      "range": {
+        "startLine": 165,
+        "startChar": 4,
+        "endLine": 165,
+        "endChar": 48
+      },
+      "revId": "5364cd318682e06583468743af4330ab0527dff1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6fef9bfc_5f70bc5e",
         "filename": "src/common/angleutils.h",
         "patchSetId": 2
@@ -96,6 +120,24 @@
       "side": 1,
       "message": "This is how it naturally ends up when parsing array sizes, and I think the order should be consistent everywhere.\n\nThe other changes related to arrays of arrays are uploaded as dependencies of this change in gerrit.",
       "parentUuid": "84109aa8_74772b9d",
+      "revId": "5364cd318682e06583468743af4330ab0527dff1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e9e389ef_0c32b4bf",
+        "filename": "src/common/angleutils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-04T10:43:30Z",
+      "side": 1,
+      "message": "Agree it should be consistent. Would it make sense to prepend instead of append during parsing?",
+      "parentUuid": "3b66052b_a1197cf0",
       "revId": "5364cd318682e06583468743af4330ab0527dff1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -425,6 +467,30 @@
       "side": 1,
       "message": "Ack, can probably cache the flattened array offset.",
       "parentUuid": "732af094_abf325bd",
+      "range": {
+        "startLine": 2172,
+        "startChar": 45,
+        "endLine": 2172,
+        "endChar": 77
+      },
+      "revId": "5364cd318682e06583468743af4330ab0527dff1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9aad6451_b8e19573",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2172,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-04T10:43:30Z",
+      "side": 1,
+      "message": "Thanks!",
+      "parentUuid": "9e21ef7b_c5cf29d0",
       "range": {
         "startLine": 2172,
         "startChar": 45,
