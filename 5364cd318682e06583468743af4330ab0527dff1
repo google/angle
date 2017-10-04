@@ -144,6 +144,24 @@
     },
     {
       "key": {
+        "uuid": "98b8c8c0_b5e43f27",
+        "filename": "src/common/angleutils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-04T14:50:46Z",
+      "side": 1,
+      "message": "Commented on the other CL, it doesn\u0027t seem hard to make the change but maybe I\u0027m missing something.",
+      "parentUuid": "e9e389ef_0c32b4bf",
+      "revId": "5364cd318682e06583468743af4330ab0527dff1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "62019e5b_48be05d7",
         "filename": "src/common/angleutils_unittest.cpp",
         "patchSetId": 2
