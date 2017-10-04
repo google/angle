@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "32c6cde5_e021f255",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-10-04T02:14:16Z",
+      "side": 1,
+      "message": "GLenum is internally defined as unsigned int, so I need to do a cast from signed to unsigned.\nif the param is a GLint -1, the resulting GLenum could be 0, or 0xffffffff. Both are legal as spec is undefined on this:\n    \"When the type of internal state is integer or enum, boolean values of FALSE and TRUE are converted to 0 and 1, respectively. Floating-point values are rounded to the nearest integer. If the resulting value is so large in magnitude that it cannot be represented by the internal state variable, the internal state value is undefined.\"\n\nAnyway it would be handy to keep the ConvertToGLenum wrapper.",
+      "parentUuid": "c2dfc0e7_095f5a76",
+      "range": {
+        "startLine": 197,
+        "startChar": 30,
+        "endLine": 197,
+        "endChar": 39
+      },
+      "revId": "a8a3caea23e019ac25bd1f023bab65291be9a5d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8264ff8d_88fb46db",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 12
@@ -45,6 +69,30 @@
       "revId": "a8a3caea23e019ac25bd1f023bab65291be9a5d3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b8f59564_75c0343e",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-10-04T02:14:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8264ff8d_88fb46db",
+      "range": {
+        "startLine": 38,
+        "startChar": 0,
+        "endLine": 42,
+        "endChar": 1
+      },
+      "revId": "a8a3caea23e019ac25bd1f023bab65291be9a5d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
