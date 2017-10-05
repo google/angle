@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "bb5b0b9b_56eef30c",
+        "filename": "src/common/string_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 199,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-05T01:08:41Z",
+      "side": 1,
+      "message": "Ah, sorry, my bad. What do you mean exactly? I didn\u0027t quite understand. I believe replace does in-place replacement.",
+      "parentUuid": "79b48502_4368c0c0",
+      "range": {
+        "startLine": 199,
+        "startChar": 9,
+        "endLine": 199,
+        "endChar": 16
+      },
+      "revId": "b647e66bee9b0986a09c462993c685aa26266010",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "27ef56b7_44596013",
         "filename": "src/compiler/translator/OutputVulkanGLSL.cpp",
         "patchSetId": 2
@@ -155,6 +179,30 @@
       "side": 1,
       "message": "Thanks. Funny that \"default uniform block\" is not mentioned in ESSL.\nThe name is still a bit unclear, though.\nDeclareDefaultUniformBlockTraverser might be too long.\nMaybe add a comment that you refer to uniforms inside a \"default uniform block\" as \"default uniforms\".",
       "parentUuid": "77a0912a_2982896f",
+      "range": {
+        "startLine": 21,
+        "startChar": 13,
+        "endLine": 21,
+        "endChar": 20
+      },
+      "revId": "b647e66bee9b0986a09c462993c685aa26266010",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9faa92fe_c9687f07",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-05T01:08:41Z",
+      "side": 1,
+      "message": "OK, fair enough, I could have added a comment at least.",
+      "parentUuid": "9c57b197_f62d2f49",
       "range": {
         "startLine": 21,
         "startChar": 13,
