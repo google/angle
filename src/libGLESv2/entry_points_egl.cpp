@@ -574,31 +574,14 @@ EGLBoolean EGLAPIENTRY QueryContext(EGLDisplay dpy, EGLContext ctx, EGLint attri
     Display *display     = static_cast<Display *>(dpy);
     gl::Context *context = static_cast<gl::Context *>(ctx);
 
-    Error error = ValidateContext(display, context);
+    Error error = ValidateQueryContext(display, context, attribute, value);
     if (error.isError())
     {
         thread->setError(error);
         return EGL_FALSE;
     }
 
-    switch (attribute)
-    {
-        case EGL_CONFIG_ID:
-            *value = context->getConfig()->configID;
-            break;
-        case EGL_CONTEXT_CLIENT_TYPE:
-            *value = context->getClientType();
-            break;
-        case EGL_CONTEXT_CLIENT_VERSION:
-            *value = context->getClientMajorVersion();
-            break;
-        case EGL_RENDER_BUFFER:
-            *value = context->getRenderBuffer();
-            break;
-        default:
-            thread->setError(EglBadAttribute());
-            return EGL_FALSE;
-    }
+    QueryContextAttrib(context, attribute, value);
 
     thread->setError(NoError());
     return EGL_TRUE;

@@ -1589,6 +1589,28 @@ void QueryConfigAttrib(const Config *config, EGLint attribute, EGLint *value)
     }
 }
 
+void QueryContextAttrib(const gl::Context *context, EGLint attribute, EGLint *value)
+{
+    switch (attribute)
+    {
+        case EGL_CONFIG_ID:
+            *value = context->getConfig()->configID;
+            break;
+        case EGL_CONTEXT_CLIENT_TYPE:
+            *value = context->getClientType();
+            break;
+        case EGL_CONTEXT_CLIENT_VERSION:
+            *value = context->getClientMajorVersion();
+            break;
+        case EGL_RENDER_BUFFER:
+            *value = context->getRenderBuffer();
+            break;
+        default:
+            UNREACHABLE();
+            break;
+    }
+}
+
 void QuerySurfaceAttrib(const Surface *surface, EGLint attribute, EGLint *value)
 {
     switch (attribute)

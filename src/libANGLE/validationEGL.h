@@ -155,6 +155,10 @@ Error ValidateQuerySurface(const Display *display,
                            const Surface *surface,
                            EGLint attribute,
                            EGLint *value);
+Error ValidateQueryContext(const Display *display,
+                           const gl::Context *context,
+                           EGLint attribute,
+                           EGLint *value);
 
 }  // namespace egl
 

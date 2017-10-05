@@ -152,6 +152,8 @@ class Surface;
 
 void QueryConfigAttrib(const Config *config, EGLint attribute, EGLint *value);
 
+void QueryContextAttrib(const gl::Context *context, EGLint attribute, EGLint *value);
+
 void QuerySurfaceAttrib(const Surface *surface, EGLint attribute, EGLint *value);
 void SetSurfaceAttrib(Surface *surface, EGLint attribute, EGLint value);
 

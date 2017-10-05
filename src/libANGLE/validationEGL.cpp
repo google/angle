@@ -2433,4 +2433,27 @@ Error ValidateQuerySurface(const Display *display,
     return NoError();
 }
 
+Error ValidateQueryContext(const Display *display,
+                           const gl::Context *context,
+                           EGLint attribute,
+                           EGLint *value)
+{
+    ANGLE_TRY(ValidateDisplay(display));
+    ANGLE_TRY(ValidateContext(display, context));
+
+    switch (attribute)
+    {
+        case EGL_CONFIG_ID:
+        case EGL_CONTEXT_CLIENT_TYPE:
+        case EGL_CONTEXT_CLIENT_VERSION:
+        case EGL_RENDER_BUFFER:
+            break;
+
+        default:
+            return EglBadAttribute() << "Invalid context attribute.";
+    }
+
+    return NoError();
+}
+
 }  // namespace egl
