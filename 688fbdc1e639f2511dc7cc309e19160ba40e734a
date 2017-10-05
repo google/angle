@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "94182ea0_1c7991ad",
+        "filename": "extensions/ANGLE_robust_resource_initialization.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-10-05T18:06:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c28a2f8a_6ac14185",
+      "range": {
+        "startLine": 37,
+        "startChar": 4,
+        "endLine": 37,
+        "endChar": 51
+      },
+      "revId": "688fbdc1e639f2511dc7cc309e19160ba40e734a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "012d917e_d07ebcab",
         "filename": "extensions/EGL_ANGLE_robust_resource_initialization.txt",
         "patchSetId": 7
@@ -45,6 +69,30 @@
       "revId": "688fbdc1e639f2511dc7cc309e19160ba40e734a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6d6f5c72_2c215246",
+        "filename": "extensions/EGL_ANGLE_robust_resource_initialization.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-10-05T18:06:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "012d917e_d07ebcab",
+      "range": {
+        "startLine": 40,
+        "startChar": 52,
+        "endLine": 40,
+        "endChar": 60
+      },
+      "revId": "688fbdc1e639f2511dc7cc309e19160ba40e734a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "7c7bfea9_11dc8771",
+        "filename": "extensions/EGL_ANGLE_robust_resource_initialization.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-10-05T18:06:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "62a7080a_83d8694c",
+      "range": {
+        "startLine": 57,
+        "startChar": 8,
+        "endLine": 57,
+        "endChar": 52
+      },
+      "revId": "688fbdc1e639f2511dc7cc309e19160ba40e734a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "594c2ab9_75afe335",
         "filename": "extensions/EGL_ANGLE_robust_resource_initialization.txt",
         "patchSetId": 7
@@ -91,6 +163,30 @@
       "revId": "688fbdc1e639f2511dc7cc309e19160ba40e734a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "30f05de0_5e3eb3e0",
+        "filename": "extensions/EGL_ANGLE_robust_resource_initialization.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-10-05T18:06:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "594c2ab9_75afe335",
+      "range": {
+        "startLine": 64,
+        "startChar": 22,
+        "endLine": 64,
+        "endChar": 70
+      },
+      "revId": "688fbdc1e639f2511dc7cc309e19160ba40e734a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "3baed15f_02586a28",
+        "filename": "extensions/EGL_ANGLE_robust_resource_initialization.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-10-05T18:06:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c337eb4b_b16a0b47",
+      "range": {
+        "startLine": 69,
+        "startChar": 25,
+        "endLine": 69,
+        "endChar": 73
+      },
+      "revId": "688fbdc1e639f2511dc7cc309e19160ba40e734a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e247b95e_6bd1a113",
         "filename": "extensions/EGL_ANGLE_robust_resource_initialization.txt",
         "patchSetId": 7
@@ -140,6 +260,30 @@
     },
     {
       "key": {
+        "uuid": "373d7c35_474fbccf",
+        "filename": "extensions/EGL_ANGLE_robust_resource_initialization.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-10-05T18:06:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e247b95e_6bd1a113",
+      "range": {
+        "startLine": 112,
+        "startChar": 24,
+        "endLine": 113,
+        "endChar": 30
+      },
+      "revId": "688fbdc1e639f2511dc7cc309e19160ba40e734a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3eeb74ba_b16b796f",
         "filename": "src/libANGLE/renderer/gl/DisplayGL.cpp",
         "patchSetId": 7
@@ -151,6 +295,30 @@
       "writtenOn": "2017-10-05T17:45:05Z",
       "side": 1,
       "message": "should we not do this right now? does this break the passthrough?",
+      "range": {
+        "startLine": 114,
+        "startChar": 0,
+        "endLine": 115,
+        "endChar": 29
+      },
+      "revId": "688fbdc1e639f2511dc7cc309e19160ba40e734a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ee1ba55e_dcf8e711",
+        "filename": "src/libANGLE/renderer/gl/DisplayGL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-10-05T18:06:54Z",
+      "side": 1,
+      "message": "It would, the passthrough would fail to initialize without the extension present.  We suppress the WebGL failures related to the functionality right now.\n\nI have the patch for implementing it on OpenGL in my queue but it unblocks more things to land this first.",
+      "parentUuid": "3eeb74ba_b16b796f",
       "range": {
         "startLine": 114,
         "startChar": 0,
