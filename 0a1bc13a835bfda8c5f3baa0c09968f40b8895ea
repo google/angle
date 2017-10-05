@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "af33b679_86e0958a",
+        "filename": "src/libANGLE/renderer/gl/egl/WindowSurfaceEGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-10-05T17:54:33Z",
+      "side": 1,
+      "message": "Yea, not too many for window surfaces that are not ANGLE extensions (https://cs.chromium.org/chromium/src/third_party/angle/src/libANGLE/validationEGL.cpp?l\u003d794)",
+      "parentUuid": "24491c94_74962ad9",
+      "revId": "0a1bc13a835bfda8c5f3baa0c09968f40b8895ea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b93fc94f_65bf5b39",
         "filename": "src/libANGLE/renderer/gl/egl/egl_utils.cpp",
         "patchSetId": 2
