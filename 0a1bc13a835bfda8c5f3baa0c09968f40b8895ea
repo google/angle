@@ -51,6 +51,29 @@
       "revId": "0a1bc13a835bfda8c5f3baa0c09968f40b8895ea",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c6a41c4f_9642809a",
+        "filename": "src/libANGLE/renderer/gl/egl/egl_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-10-05T18:54:19Z",
+      "side": 1,
+      "message": "According to Chrome code style, you don\u0027t need this ASSERT, it has the same effect as crashing later.",
+      "range": {
+        "startLine": 23,
+        "startChar": 4,
+        "endLine": 23,
+        "endChar": 24
+      },
+      "revId": "0a1bc13a835bfda8c5f3baa0c09968f40b8895ea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
