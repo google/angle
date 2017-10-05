@@ -1,0 +1,165 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c28a2f8a_6ac14185",
+        "filename": "extensions/ANGLE_robust_resource_initialization.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-05T17:45:05Z",
+      "side": 1,
+      "message": "cleanup",
+      "range": {
+        "startLine": 37,
+        "startChar": 4,
+        "endLine": 37,
+        "endChar": 51
+      },
+      "revId": "688fbdc1e639f2511dc7cc309e19160ba40e734a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "012d917e_d07ebcab",
+        "filename": "extensions/EGL_ANGLE_robust_resource_initialization.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-05T17:45:05Z",
+      "side": 1,
+      "message": "cleanup",
+      "range": {
+        "startLine": 40,
+        "startChar": 52,
+        "endLine": 40,
+        "endChar": 60
+      },
+      "revId": "688fbdc1e639f2511dc7cc309e19160ba40e734a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "62a7080a_83d8694c",
+        "filename": "extensions/EGL_ANGLE_robust_resource_initialization.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-05T17:45:05Z",
+      "side": 1,
+      "message": "below you use EGL_SURFACE_ and EGL_CONTEXT_ versions of this enum - not sure if you wanted to use the same enum for both or make two enums, but you should clarify that.",
+      "range": {
+        "startLine": 57,
+        "startChar": 8,
+        "endLine": 57,
+        "endChar": 52
+      },
+      "revId": "688fbdc1e639f2511dc7cc309e19160ba40e734a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "594c2ab9_75afe335",
+        "filename": "extensions/EGL_ANGLE_robust_resource_initialization.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-05T17:45:05Z",
+      "side": 1,
+      "message": "cleanup",
+      "range": {
+        "startLine": 64,
+        "startChar": 22,
+        "endLine": 64,
+        "endChar": 70
+      },
+      "revId": "688fbdc1e639f2511dc7cc309e19160ba40e734a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c337eb4b_b16a0b47",
+        "filename": "extensions/EGL_ANGLE_robust_resource_initialization.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-05T17:45:05Z",
+      "side": 1,
+      "message": "cleanup, and so on below",
+      "range": {
+        "startLine": 69,
+        "startChar": 25,
+        "endLine": 69,
+        "endChar": 73
+      },
+      "revId": "688fbdc1e639f2511dc7cc309e19160ba40e734a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e247b95e_6bd1a113",
+        "filename": "extensions/EGL_ANGLE_robust_resource_initialization.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-05T17:45:05Z",
+      "side": 1,
+      "message": "nit: double space",
+      "range": {
+        "startLine": 112,
+        "startChar": 24,
+        "endLine": 113,
+        "endChar": 30
+      },
+      "revId": "688fbdc1e639f2511dc7cc309e19160ba40e734a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3eeb74ba_b16b796f",
+        "filename": "src/libANGLE/renderer/gl/DisplayGL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-05T17:45:05Z",
+      "side": 1,
+      "message": "should we not do this right now? does this break the passthrough?",
+      "range": {
+        "startLine": 114,
+        "startChar": 0,
+        "endLine": 115,
+        "endChar": 29
+      },
+      "revId": "688fbdc1e639f2511dc7cc309e19160ba40e734a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

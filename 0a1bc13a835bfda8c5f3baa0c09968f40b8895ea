@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "80defe50_2bd93a34",
+        "filename": "src/libGLESv2/entry_points_egl.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 601,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-05T17:45:05Z",
+      "side": 0,
+      "message": "nag: ideally some of this refactor would be in (a) split patch(es).",
+      "range": {
+        "startLine": 584,
+        "startChar": 0,
+        "endLine": 601,
+        "endChar": 5
+      },
+      "revId": "0a1bc13a835bfda8c5f3baa0c09968f40b8895ea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
