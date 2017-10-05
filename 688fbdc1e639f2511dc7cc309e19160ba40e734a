@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0aa3d11e_0246d102",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 4025,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-05T17:53:50Z",
+      "side": 0,
+      "message": "I chose the other style intentionally to reduce the indentation level, but very much not a big deal.",
+      "range": {
+        "startLine": 4024,
+        "startChar": 0,
+        "endLine": 4025,
+        "endChar": 5
+      },
+      "revId": "688fbdc1e639f2511dc7cc309e19160ba40e734a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
