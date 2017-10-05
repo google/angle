@@ -1605,6 +1605,9 @@ void QueryContextAttrib(const gl::Context *context, EGLint attribute, EGLint *va
         case EGL_RENDER_BUFFER:
             *value = context->getRenderBuffer();
             break;
+        case EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE:
+            *value = context->isRobustResourceInitEnabled();
+            break;
         default:
             UNREACHABLE();
             break;
@@ -1700,6 +1703,9 @@ void QuerySurfaceAttrib(const Surface *surface, EGLint attribute, EGLint *value)
             break;
         case EGL_DIRECT_COMPOSITION_ANGLE:
             *value = surface->directComposition();
+            break;
+        case EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE:
+            *value = surface->isRobustResourceInitEnabled();
             break;
         default:
             UNREACHABLE();

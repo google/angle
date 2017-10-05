@@ -190,34 +190,20 @@ class RobustResourceInitTest : public ANGLETest
         setConfigGreenBits(8);
         setConfigBlueBits(8);
         setConfigAlphaBits(8);
-    }
 
-    bool hasEGLExtension()
-    {
-        return eglClientExtensionEnabled("EGL_ANGLE_display_robust_resource_initialization");
-    }
-
-    bool hasGLExtension() { return extensionEnabled("GL_ANGLE_robust_resource_initialization"); }
-
-    bool initExtension()
-    {
-        // TODO(jmadill): Convert to context extension.
-        if (!hasEGLExtension())
-        {
-            return false;
-        }
-
-        // TODO(jmadill): Other back-end support.
-        if (!IsD3D11() && !IsD3D9())
-        {
-            return false;
-        }
-
-        TearDown();
         setRobustResourceInit(true);
-        SetUp();
+    }
 
-        return true;
+    bool hasGLExtension()
+    {
+        // Skip all tests on the OpenGL backend. It is not fully implemented but still needs to be
+        // exposed to test in Chromium.
+        if (IsDesktopOpenGL() || IsOpenGLES())
+        {
+            return false;
+        }
+
+        return extensionEnabled("GL_ANGLE_robust_resource_initialization");
     }
 
     void setupTexture(GLTexture *tex);
@@ -300,72 +286,40 @@ class RobustResourceInitTestES3 : public RobustResourceInitTest
                                 GLenum type);
 };
 
-// Display creation should fail if EGL_ANGLE_display_robust_resource_initialization
-// is not available, and succeed otherwise.
-TEST_P(RobustResourceInitTest, ExtensionInit)
+// Robust resource initialization is not based on hardware support or native extensions, check that
+// it only works on the implemented renderers
+TEST_P(RobustResourceInitTest, ExpectedRendererSupport)
 {
-    if (initExtension())
-    {
-        // Robust resource init extension should be available.
-        EXPECT_TRUE(hasGLExtension());
+    bool shouldHaveSupport = IsD3D11() || IsD3D11_FL93() || IsD3D9();
+    EXPECT_EQ(shouldHaveSupport, hasGLExtension());
+}
 
-        // Querying the state value should return true.
+// Tests of the GL_ROBUST_RESOURCE_INITIALIZATION_ANGLE query.
+TEST_P(RobustResourceInitTest, Queries)
+{
+    // If context extension string exposed, check queries.
+    if (extensionEnabled("GL_ANGLE_robust_resource_initialization"))
+    {
         GLboolean enabled = 0;
-        glGetBooleanv(GL_CONTEXT_ROBUST_RESOURCE_INITIALIZATION_ANGLE, &enabled);
-        EXPECT_GL_NO_ERROR();
+        glGetBooleanv(GL_ROBUST_RESOURCE_INITIALIZATION_ANGLE, &enabled);
         EXPECT_GL_TRUE(enabled);
 
-        EXPECT_GL_TRUE(glIsEnabled(GL_CONTEXT_ROBUST_RESOURCE_INITIALIZATION_ANGLE));
+        EXPECT_GL_TRUE(glIsEnabled(GL_ROBUST_RESOURCE_INITIALIZATION_ANGLE));
+        EXPECT_GL_NO_ERROR();
     }
     else
     {
-        // If context extension string exposed, check queries.
-        if (hasGLExtension())
-        {
-            GLboolean enabled = 0;
-            glGetBooleanv(GL_CONTEXT_ROBUST_RESOURCE_INITIALIZATION_ANGLE, &enabled);
-            EXPECT_GL_FALSE(enabled);
-
-            EXPECT_GL_FALSE(glIsEnabled(GL_CONTEXT_ROBUST_RESOURCE_INITIALIZATION_ANGLE));
-            EXPECT_GL_NO_ERROR();
-        }
-        else
-        {
-            // Querying robust resource init should return INVALID_ENUM.
-            GLboolean enabled = 0;
-            glGetBooleanv(GL_CONTEXT_ROBUST_RESOURCE_INITIALIZATION_ANGLE, &enabled);
-            EXPECT_GL_ERROR(GL_INVALID_ENUM);
-        }
+        // Querying robust resource init should return INVALID_ENUM.
+        GLboolean enabled = 0;
+        glGetBooleanv(GL_ROBUST_RESOURCE_INITIALIZATION_ANGLE, &enabled);
+        EXPECT_GL_ERROR(GL_INVALID_ENUM);
     }
-}
-
-// Test queries on a normal, non-robust enabled context.
-TEST_P(RobustResourceInitTest, QueriesOnNonRobustContext)
-{
-    EGLDisplay display = getEGLWindow()->getDisplay();
-    ASSERT_TRUE(display != EGL_NO_DISPLAY);
-
-    if (!hasEGLExtension())
-    {
-        return;
-    }
-
-    // If context extension string exposed, check queries.
-    ASSERT_TRUE(hasGLExtension());
-
-    // Querying robust resource init should return INVALID_ENUM.
-    GLboolean enabled = 0;
-    glGetBooleanv(GL_CONTEXT_ROBUST_RESOURCE_INITIALIZATION_ANGLE, &enabled);
-    EXPECT_GL_FALSE(enabled);
-
-    EXPECT_GL_FALSE(glIsEnabled(GL_CONTEXT_ROBUST_RESOURCE_INITIALIZATION_ANGLE));
-    EXPECT_GL_NO_ERROR();
 }
 
 // Tests that buffers start zero-filled if the data pointer is null.
 TEST_P(RobustResourceInitTest, BufferData)
 {
-    ANGLE_SKIP_TEST_IF(!initExtension());
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
 
     GLBuffer buffer;
     glBindBuffer(GL_ARRAY_BUFFER, buffer);
@@ -410,7 +364,7 @@ TEST_P(RobustResourceInitTest, BufferData)
 // Regression test for passing a zero size init buffer with the extension.
 TEST_P(RobustResourceInitTest, BufferDataZeroSize)
 {
-    ANGLE_SKIP_TEST_IF(!initExtension());
+    ANGLE_SKIP_TEST_IF(!hasGLExtension())
 
     GLBuffer buffer;
     glBindBuffer(GL_ARRAY_BUFFER, buffer);
@@ -549,7 +503,7 @@ void RobustResourceInitTest::checkCustomFramebufferNonZeroPixels(int fboWidth,
 // Reading an uninitialized texture (texImage2D) should succeed with all bytes set to 0.
 TEST_P(RobustResourceInitTest, ReadingUninitializedTexture)
 {
-    ANGLE_SKIP_TEST_IF(!initExtension());
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
 
     GLTexture tex;
     setupTexture(&tex);
@@ -562,7 +516,7 @@ TEST_P(RobustResourceInitTest, ReadingUninitializedTexture)
 // data
 TEST_P(RobustResourceInitTest, ReuploadingClearsTexture)
 {
-    ANGLE_SKIP_TEST_IF(!initExtension());
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
 
     // Put some data into the texture
     std::array<GLColor, kWidth * kHeight> data;
@@ -583,7 +537,7 @@ TEST_P(RobustResourceInitTest, ReuploadingClearsTexture)
 // upload partial data
 TEST_P(RobustResourceInitTest, TexImageThenSubImage)
 {
-    ANGLE_SKIP_TEST_IF(!initExtension());
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
 
     // Put some data into the texture
 
@@ -609,7 +563,7 @@ TEST_P(RobustResourceInitTest, TexImageThenSubImage)
 // Reading an uninitialized texture (texImage3D) should succeed with all bytes set to 0.
 TEST_P(RobustResourceInitTestES3, ReadingUninitialized3DTexture)
 {
-    ANGLE_SKIP_TEST_IF(!initExtension());
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
 
     GLTexture tex;
     setup3DTexture(&tex);
@@ -623,7 +577,7 @@ TEST_P(RobustResourceInitTestES3, ReadingUninitialized3DTexture)
 // conformance suite: copy-texture-image-webgl-specific.html
 TEST_P(RobustResourceInitTestES3, CopyTexSubImage3DTextureWronglyInitialized)
 {
-    ANGLE_SKIP_TEST_IF(!initExtension());
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
 
     constexpr GLint kTextureLayer     = 0;
     constexpr GLint kTextureWidth     = 2;
@@ -659,7 +613,7 @@ TEST_P(RobustResourceInitTestES3, CopyTexSubImage3DTextureWronglyInitialized)
 // Test that binding an EGL surface to a texture does not cause it to be cleared.
 TEST_P(RobustResourceInitTestES3, BindTexImage)
 {
-    ANGLE_SKIP_TEST_IF(!initExtension());
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
 
     EGLWindow *window  = getEGLWindow();
     EGLSurface surface = window->getSurface();
@@ -712,7 +666,7 @@ TEST_P(RobustResourceInitTestES3, BindTexImage)
 // Tests that drawing with an uninitialized Texture works as expected.
 TEST_P(RobustResourceInitTest, DrawWithTexture)
 {
-    ANGLE_SKIP_TEST_IF(!initExtension());
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
 
     GLTexture texture;
     glBindTexture(GL_TEXTURE_2D, texture);
@@ -745,7 +699,7 @@ TEST_P(RobustResourceInitTest, DrawWithTexture)
 // set to 0 and initialized bytes untouched.
 TEST_P(RobustResourceInitTest, ReadingPartiallyInitializedTexture)
 {
-    ANGLE_SKIP_TEST_IF(!initExtension());
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
 
     GLTexture tex;
     setupTexture(&tex);
@@ -760,7 +714,7 @@ TEST_P(RobustResourceInitTest, ReadingPartiallyInitializedTexture)
 // Uninitialized parts of textures initialized via copyTexImage2D should have all bytes set to 0.
 TEST_P(RobustResourceInitTest, UninitializedPartsOfCopied2DTexturesAreBlack)
 {
-    ANGLE_SKIP_TEST_IF(!initExtension());
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
 
     GLTexture tex;
     setupTexture(&tex);
@@ -785,7 +739,7 @@ TEST_P(RobustResourceInitTest, UninitializedPartsOfCopied2DTexturesAreBlack)
 // succeed with all bytes set to 0.
 TEST_P(RobustResourceInitTest, ReadingOutOfboundsCopiedTexture)
 {
-    ANGLE_SKIP_TEST_IF(!initExtension());
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
 
     GLTexture tex;
     setupTexture(&tex);
@@ -811,7 +765,7 @@ TEST_P(RobustResourceInitTest, ReadingOutOfboundsCopiedTexture)
 // Tests resources are initialized properly with multisample resolve.
 TEST_P(RobustResourceInitTestES3, MultisampledDepthInitializedCorrectly)
 {
-    ANGLE_SKIP_TEST_IF(!initExtension());
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
 
     const std::string vs = "attribute vec4 position; void main() { gl_Position = position; }";
     const std::string fs = "void main() { gl_FragColor = vec4(1, 0, 0, 1); }";
@@ -866,7 +820,7 @@ TEST_P(RobustResourceInitTestES3, MultisampledDepthInitializedCorrectly)
 // Basic test that textures are initialized correctly.
 TEST_P(RobustResourceInitTest, Texture)
 {
-    ANGLE_SKIP_TEST_IF(!initExtension());
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
 
     GLTexture texture;
     glBindTexture(GL_TEXTURE_2D, texture);
@@ -884,6 +838,8 @@ void RobustResourceInitTestES3::testIntegerTextureInit(const char *samplerType,
                                                        GLenum internalFormatRGB,
                                                        GLenum type)
 {
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
+
     ANGLE_GL_PROGRAM(program, kSimpleTextureVertexShader,
                      GetSimpleTextureFragmentShader(samplerType));
 
@@ -934,32 +890,32 @@ void RobustResourceInitTestES3::testIntegerTextureInit(const char *samplerType,
 // Simple tests for integer formats that ANGLE must emulate on D3D11.
 TEST_P(RobustResourceInitTestES3, TextureInit_UIntRGB8)
 {
-    ANGLE_SKIP_TEST_IF(!initExtension());
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
     testIntegerTextureInit<uint8_t>("u", GL_RGBA8UI, GL_RGB8UI, GL_UNSIGNED_BYTE);
 }
 
 TEST_P(RobustResourceInitTestES3, TextureInit_UIntRGB32)
 {
-    ANGLE_SKIP_TEST_IF(!initExtension());
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
     testIntegerTextureInit<uint32_t>("u", GL_RGBA32UI, GL_RGB32UI, GL_UNSIGNED_INT);
 }
 
 TEST_P(RobustResourceInitTestES3, TextureInit_IntRGB8)
 {
-    ANGLE_SKIP_TEST_IF(!initExtension());
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
     testIntegerTextureInit<int8_t>("i", GL_RGBA8I, GL_RGB8I, GL_BYTE);
 }
 
 TEST_P(RobustResourceInitTestES3, TextureInit_IntRGB32)
 {
-    ANGLE_SKIP_TEST_IF(!initExtension());
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
     testIntegerTextureInit<int32_t>("i", GL_RGBA32I, GL_RGB32I, GL_INT);
 }
 
 // Basic test that renderbuffers are initialized correctly.
 TEST_P(RobustResourceInitTest, Renderbuffer)
 {
-    ANGLE_SKIP_TEST_IF(!initExtension());
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
 
     GLRenderbuffer renderbuffer;
     glBindRenderbuffer(GL_RENDERBUFFER, renderbuffer);
@@ -975,7 +931,7 @@ TEST_P(RobustResourceInitTest, Renderbuffer)
 // Tests creating mipmaps with robust resource init.
 TEST_P(RobustResourceInitTestES3, GenerateMipmap)
 {
-    ANGLE_SKIP_TEST_IF(!initExtension());
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
 
     constexpr GLint kTextureSize = 16;
 
@@ -1008,7 +964,7 @@ TEST_P(RobustResourceInitTestES3, GenerateMipmap)
 // Test blitting a framebuffer out-of-bounds. Multiple iterations.
 TEST_P(RobustResourceInitTestES3, BlitFramebufferOutOfBounds)
 {
-    ANGLE_SKIP_TEST_IF(!initExtension());
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
 
     // Initiate data to read framebuffer
     constexpr int size                = 8;
@@ -1108,6 +1064,8 @@ TEST_P(RobustResourceInitTestES3, BlitFramebufferOutOfBounds)
 template <typename ClearFunc>
 void RobustResourceInitTest::maskedDepthClear(ClearFunc clearFunc)
 {
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
+
     constexpr int kSize = 16;
 
     // Initialize a FBO with depth and simple color.
@@ -1153,7 +1111,7 @@ void RobustResourceInitTest::maskedDepthClear(ClearFunc clearFunc)
 // Test that clearing a masked depth buffer doesn't mark it clean.
 TEST_P(RobustResourceInitTest, MaskedDepthClear)
 {
-    ANGLE_SKIP_TEST_IF(!initExtension());
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
 
     auto clearFunc = [](float depth) {
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -1167,7 +1125,7 @@ TEST_P(RobustResourceInitTest, MaskedDepthClear)
 // Tests the same as MaskedDepthClear, but using ClearBuffer calls.
 TEST_P(RobustResourceInitTestES3, MaskedDepthClearBuffer)
 {
-    ANGLE_SKIP_TEST_IF(!initExtension());
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
 
     auto clearFunc = [](float depth) {
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -1225,7 +1183,8 @@ void RobustResourceInitTest::maskedStencilClear(ClearFunc clearFunc)
 // Test that clearing a masked stencil buffer doesn't mark it clean.
 TEST_P(RobustResourceInitTest, MaskedStencilClear)
 {
-    ANGLE_SKIP_TEST_IF(!initExtension());
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
+    ANGLE_SKIP_TEST_IF(IsD3D11_FL93());
 
     auto clearFunc = [](GLint clearValue) {
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -1239,7 +1198,7 @@ TEST_P(RobustResourceInitTest, MaskedStencilClear)
 // Test that clearing a masked stencil buffer doesn't mark it clean, with ClearBufferi.
 TEST_P(RobustResourceInitTestES3, MaskedStencilClearBuffer)
 {
-    ANGLE_SKIP_TEST_IF(!initExtension());
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
 
     auto clearFunc = [](GLint clearValue) {
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -1277,7 +1236,8 @@ void VerifyRGBA8PixelRect(InitializedTest inInitialized)
 // Tests that calling CopyTexSubImage2D will initialize the source & destination.
 TEST_P(RobustResourceInitTest, CopyTexSubImage2D)
 {
-    ANGLE_SKIP_TEST_IF(!initExtension());
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
+    ANGLE_SKIP_TEST_IF(IsD3D11_FL93());
 
     constexpr int kDestSize = 4;
     constexpr int kSrcSize  = kDestSize / 2;
@@ -1344,7 +1304,7 @@ TEST_P(RobustResourceInitTest, CopyTexSubImage2D)
 // Tests that calling CopyTexSubImage3D will initialize the source & destination.
 TEST_P(RobustResourceInitTestES3, CopyTexSubImage3D)
 {
-    ANGLE_SKIP_TEST_IF(!initExtension());
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
 
     constexpr int kDestSize = 4;
     constexpr int kSrcSize  = kDestSize / 2;
@@ -1415,7 +1375,7 @@ TEST_P(RobustResourceInitTestES3, CopyTexSubImage3D)
 // Test basic robustness with 2D array textures.
 TEST_P(RobustResourceInitTestES3, Texture2DArray)
 {
-    ANGLE_SKIP_TEST_IF(!initExtension());
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
 
     constexpr int kSize   = 1024;
     constexpr int kLayers = 8;
@@ -1438,7 +1398,7 @@ TEST_P(RobustResourceInitTestES3, Texture2DArray)
 // Taken from WebGL test conformance/extensions/webgl-compressed-texture-s3tc.
 TEST_P(RobustResourceInitTestES3, CompressedSubImage)
 {
-    ANGLE_SKIP_TEST_IF(!initExtension());
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
     ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_texture_compression_dxt1"));
 
     constexpr int width     = 8;
@@ -1516,7 +1476,7 @@ TEST_P(RobustResourceInitTestES3, CompressedSubImage)
 // Tests that a partial scissor still initializes contents as expected.
 TEST_P(RobustResourceInitTest, ClearWithScissor)
 {
-    ANGLE_SKIP_TEST_IF(!initExtension());
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
 
     constexpr int kSize = 16;
 

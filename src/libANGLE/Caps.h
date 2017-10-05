@@ -672,6 +672,9 @@ struct DisplayExtensions
 
     // EGL_ANGLE_program_cache_control
     bool programCacheControl;
+
+    // EGL_ANGLE_robust_resource_initialization
+    bool robustResourceInitialization;
 };
 
 struct DeviceExtensions
@@ -730,9 +733,6 @@ struct ClientExtensions
 
     // EGL_KHR_client_get_all_proc_addresses
     bool clientGetAllProcAddresses;
-
-    // EGL_ANGLE_display_robust_resource_initialization
-    bool displayRobustResourceInitialization;
 };
 
 }  // namespace egl

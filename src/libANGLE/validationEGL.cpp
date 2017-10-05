@@ -398,21 +398,6 @@ Error ValidateGetPlatformDisplayCommon(EGLenum platform,
                     }
                     break;
 
-                case EGL_DISPLAY_ROBUST_RESOURCE_INITIALIZATION_ANGLE:
-                    if (!clientExtensions.displayRobustResourceInitialization)
-                    {
-                        return EglBadAttribute()
-                               << "Attribute EGL_DISPLAY_ROBUST_RESOURCE_INITIALIZATION_ANGLE "
-                                  "requires EGL_ANGLE_display_robust_resource_initialization.";
-                    }
-                    if (value != EGL_TRUE && value != EGL_FALSE)
-                    {
-                        return EglBadAttribute() << "EGL_DISPLAY_ROBUST_RESOURCE_"
-                                                    "INITIALIZATION_ANGLE must be either "
-                                                    "EGL_TRUE or EGL_FALSE.";
-                    }
-                    break;
-
                 default:
                     break;
             }
@@ -726,6 +711,19 @@ Error ValidateCreateContext(Display *display, Config *configuration, gl::Context
               }
               break;
 
+          case EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE:
+              if (!display->getExtensions().robustResourceInitialization)
+              {
+                  return EglBadAttribute() << "Attribute EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE "
+                                              "requires EGL_ANGLE_robust_resource_initialization.";
+              }
+              if (value != EGL_TRUE && value != EGL_FALSE)
+              {
+                  return EglBadAttribute() << "EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE must be "
+                                              "either EGL_TRUE or EGL_FALSE.";
+              }
+              break;
+
           default:
               return EglBadAttribute() << "Unknown attribute.";
         }
@@ -875,6 +873,19 @@ Error ValidateCreateWindowSurface(Display *display, Config *config, EGLNativeWin
               }
               break;
 
+          case EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE:
+              if (!display->getExtensions().robustResourceInitialization)
+              {
+                  return EglBadAttribute() << "Attribute EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE "
+                                              "requires EGL_ANGLE_robust_resource_initialization.";
+              }
+              if (value != EGL_TRUE && value != EGL_FALSE)
+              {
+                  return EglBadAttribute() << "EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE must be "
+                                              "either EGL_TRUE or EGL_FALSE.";
+              }
+              break;
+
           default:
               return EglBadAttribute();
         }
@@ -950,6 +961,19 @@ Error ValidateCreatePbufferSurface(Display *display, Config *config, const Attri
                   return EglBadAttribute()
                          << "EGL_FLEXIBLE_SURFACE_COMPATIBILITY_SUPPORTED_ANGLE cannot be used "
                             "without EGL_ANGLE_flexible_surface_compatibility support.";
+              }
+              break;
+
+          case EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE:
+              if (!display->getExtensions().robustResourceInitialization)
+              {
+                  return EglBadAttribute() << "Attribute EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE "
+                                              "requires EGL_ANGLE_robust_resource_initialization.";
+              }
+              if (value != EGL_TRUE && value != EGL_FALSE)
+              {
+                  return EglBadAttribute() << "EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE must be "
+                                              "either EGL_TRUE or EGL_FALSE.";
               }
               break;
 
@@ -2426,6 +2450,15 @@ Error ValidateQuerySurface(const Display *display,
             }
             break;
 
+        case EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE:
+            if (!display->getExtensions().robustResourceInitialization)
+            {
+                return EglBadAttribute() << "EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE cannot be "
+                                            "used without EGL_ANGLE_robust_resource_initialization "
+                                            "support.";
+            }
+            break;
+
         default:
             return EglBadAttribute() << "Invalid surface attribute.";
     }
@@ -2447,6 +2480,15 @@ Error ValidateQueryContext(const Display *display,
         case EGL_CONTEXT_CLIENT_TYPE:
         case EGL_CONTEXT_CLIENT_VERSION:
         case EGL_RENDER_BUFFER:
+            break;
+
+        case EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE:
+            if (!display->getExtensions().robustResourceInitialization)
+            {
+                return EglBadAttribute() << "EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE cannot be "
+                                            "used without EGL_ANGLE_robust_resource_initialization "
+                                            "support.";
+            }
             break;
 
         default:

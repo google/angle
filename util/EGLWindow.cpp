@@ -210,20 +210,6 @@ bool EGLWindow::initializeDisplayAndSurface(OSWindow *osWindow)
         displayAttributes.push_back(reinterpret_cast<EGLAttrib>(mPlatformMethods));
     }
 
-    if (mRobustResourceInit.valid() &&
-        !ClientExtensionEnabled("EGL_ANGLE_display_robust_resource_initialization"))
-    {
-        // Non-default state requested without the extension present
-        destroyGL();
-        return false;
-    }
-
-    if (mRobustResourceInit.valid())
-    {
-        displayAttributes.push_back(EGL_DISPLAY_ROBUST_RESOURCE_INITIALIZATION_ANGLE);
-        displayAttributes.push_back(mRobustResourceInit.value() ? EGL_TRUE : EGL_FALSE);
-    }
-
     displayAttributes.push_back(EGL_NONE);
 
     mDisplay = eglGetPlatformDisplay(EGL_PLATFORM_ANGLE_ANGLE,
@@ -289,6 +275,14 @@ bool EGLWindow::initializeDisplayAndSurface(OSWindow *osWindow)
     {
         surfaceAttributes.push_back(EGL_POST_SUB_BUFFER_SUPPORTED_NV);
         surfaceAttributes.push_back(EGL_TRUE);
+    }
+
+    bool hasRobustResourceInit =
+        strstr(displayExtensions, "EGL_ANGLE_robust_resource_initialization") != nullptr;
+    if (hasRobustResourceInit && mRobustResourceInit.valid())
+    {
+        surfaceAttributes.push_back(EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE);
+        surfaceAttributes.push_back(mRobustResourceInit.value() ? EGL_TRUE : EGL_FALSE);
     }
 
     surfaceAttributes.push_back(EGL_NONE);
@@ -410,6 +404,14 @@ bool EGLWindow::initializeContext()
         {
             contextAttributes.push_back(EGL_CONTEXT_PROGRAM_BINARY_CACHE_ENABLED_ANGLE);
             contextAttributes.push_back(mContextProgramCacheEnabled.value() ? EGL_TRUE : EGL_FALSE);
+        }
+
+        bool hasRobustResourceInit =
+            strstr(displayExtensions, "EGL_ANGLE_robust_resource_initialization") != nullptr;
+        if (hasRobustResourceInit && mRobustResourceInit.valid())
+        {
+            contextAttributes.push_back(EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE);
+            contextAttributes.push_back(mRobustResourceInit.value() ? EGL_TRUE : EGL_FALSE);
         }
     }
     contextAttributes.push_back(EGL_NONE);

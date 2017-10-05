@@ -1087,7 +1087,8 @@ DisplayExtensions::DisplayExtensions()
       surfacelessContext(false),
       displayTextureShareGroup(false),
       createContextClientArrays(false),
-      programCacheControl(false)
+      programCacheControl(false),
+      robustResourceInitialization(false)
 {
 }
 
@@ -1131,6 +1132,7 @@ std::vector<std::string> DisplayExtensions::getStrings() const
     InsertExtensionString("EGL_ANGLE_display_texture_share_group",               displayTextureShareGroup,           &extensionStrings);
     InsertExtensionString("EGL_ANGLE_create_context_client_arrays",              createContextClientArrays,          &extensionStrings);
     InsertExtensionString("EGL_ANGLE_program_cache_control",                     programCacheControl,                &extensionStrings);
+    InsertExtensionString("EGL_ANGLE_robust_resource_initialization",            robustResourceInitialization,       &extensionStrings);
     // TODO(jmadill): Enable this when complete.
     //InsertExtensionString("KHR_create_context_no_error",                       createContextNoError,               &extensionStrings);
     // clang-format on
@@ -1165,8 +1167,7 @@ ClientExtensions::ClientExtensions()
       deviceCreationD3D11(false),
       x11Visual(false),
       experimentalPresentPath(false),
-      clientGetAllProcAddresses(false),
-      displayRobustResourceInitialization(false)
+      clientGetAllProcAddresses(false)
 {
 }
 
@@ -1189,7 +1190,6 @@ std::vector<std::string> ClientExtensions::getStrings() const
     InsertExtensionString("EGL_ANGLE_x11_visual",                  x11Visual,                 &extensionStrings);
     InsertExtensionString("EGL_ANGLE_experimental_present_path",   experimentalPresentPath,   &extensionStrings);
     InsertExtensionString("EGL_KHR_client_get_all_proc_addresses", clientGetAllProcAddresses, &extensionStrings);
-    InsertExtensionString("EGL_ANGLE_display_robust_resource_initialization", displayRobustResourceInitialization, &extensionStrings);
     // clang-format on
 
     return extensionStrings;

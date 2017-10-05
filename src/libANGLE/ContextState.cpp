@@ -451,7 +451,7 @@ bool ValidationContext::getQueryParameterInfo(GLenum pname, GLenum *type, unsign
     }
 
     if (getExtensions().robustResourceInitialization &&
-        pname == GL_CONTEXT_ROBUST_RESOURCE_INITIALIZATION_ANGLE)
+        pname == GL_ROBUST_RESOURCE_INITIALIZATION_ANGLE)
     {
         *type      = GL_BOOL;
         *numParams = 1;

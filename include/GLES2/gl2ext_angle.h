@@ -29,7 +29,7 @@ GL_APICALL void GL_APIENTRY glRequestExtensionANGLE (const GLchar *name);
 
 #ifndef GL_ANGLE_robust_resource_initialization
 #define GL_ANGLE_robust_resource_initialization 1
-#define GL_CONTEXT_ROBUST_RESOURCE_INITIALIZATION_ANGLE 0x93AB
+#define GL_ROBUST_RESOURCE_INITIALIZATION_ANGLE 0x93AB
 #endif /* GL_ANGLE_robust_resource_initialization */
 
 #ifndef GL_CHROMIUM_framebuffer_mixed_samples

@@ -249,6 +249,8 @@ void DisplayCGL::generateExtensions(egl::DisplayExtensions *outExtensions) const
 
     // Contexts are virtualized so textures can be shared globally
     outExtensions->displayTextureShareGroup = true;
+
+    DisplayGL::generateExtensions(outExtensions);
 }
 
 void DisplayCGL::generateCaps(egl::Caps *outCaps) const

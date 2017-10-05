@@ -110,6 +110,8 @@ void DisplayEGL::generateExtensions(egl::DisplayExtensions *outExtensions) const
 
     // Surfaceless contexts are emulated even if there is no native support.
     outExtensions->surfacelessContext = true;
+
+    DisplayGL::generateExtensions(outExtensions);
 }
 
 void DisplayEGL::generateCaps(egl::Caps *outCaps) const

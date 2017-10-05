@@ -728,7 +728,7 @@ bool State::getEnableFeature(GLenum feature) const
           return areClientArraysEnabled();
       case GL_FRAMEBUFFER_SRGB_EXT:
           return getFramebufferSRGB();
-      case GL_CONTEXT_ROBUST_RESOURCE_INITIALIZATION_ANGLE:
+      case GL_ROBUST_RESOURCE_INITIALIZATION_ANGLE:
           return mRobustResourceInit;
       case GL_PROGRAM_CACHE_ENABLED_ANGLE:
           return mProgramBinaryCacheEnabled;
@@ -1735,7 +1735,7 @@ void State::getBooleanv(GLenum pname, GLboolean *params)
       case GL_FRAMEBUFFER_SRGB_EXT:
           *params = getFramebufferSRGB() ? GL_TRUE : GL_FALSE;
           break;
-      case GL_CONTEXT_ROBUST_RESOURCE_INITIALIZATION_ANGLE:
+      case GL_ROBUST_RESOURCE_INITIALIZATION_ANGLE:
           *params = mRobustResourceInit ? GL_TRUE : GL_FALSE;
           break;
       case GL_PROGRAM_CACHE_ENABLED_ANGLE:

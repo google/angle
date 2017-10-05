@@ -123,6 +123,8 @@ class Surface : public gl::FramebufferAttachmentObject
     gl::InitState initState(const gl::ImageIndex &imageIndex) const override;
     void setInitState(const gl::ImageIndex &imageIndex, gl::InitState initState) override;
 
+    bool isRobustResourceInitEnabled() const { return mRobustResourceInitialization; }
+
   protected:
     Surface(EGLint surfaceType, const egl::Config *config, const AttributeMap &attributes);
     virtual ~Surface();
@@ -159,6 +161,8 @@ class Surface : public gl::FramebufferAttachmentObject
     size_t mFixedHeight;
 
     bool mDirectComposition;
+
+    bool mRobustResourceInitialization;
 
     EGLenum mTextureFormat;
     EGLenum mTextureTarget;

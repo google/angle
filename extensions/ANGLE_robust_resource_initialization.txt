@@ -1,10 +1,10 @@
 Name
 
-    ANGLE_robust_resource_initialization.txt
+    ANGLE_robust_resource_initialization
 
 Name Strings
 
-    ANGLE_robust_resource_intialization
+    GL_ANGLE_robust_resource_intialization
 
 Contributors
 
@@ -21,7 +21,7 @@ Status
 
 Version
 
-    Version 1, January 7, 2015
+    Version 3, September 19, 2017
 
 Number
 
@@ -34,7 +34,7 @@ Dependencies
     This extension is written against the wording of the OpenGL ES
     3.1 specification.
 
-    EGL_ANGLE_create_context_robust_initialization is required to request a
+    EGL_ANGLE_robust_initialization is required to request a
     context that supports this extension, and resource initialization.
 
 Overview
@@ -57,7 +57,7 @@ New Tokens
     Accepted by the <value> parameter of GetBooleanv, GetIntegerv,
     GetFloatv, GetDoublev, GetInteger64v, and IsEnabled:
 
-        CONTEXT_ROBUST_RESOURCE_INITIALIZATION_ANGLE    0x93A7
+        ROBUST_RESOURCE_INITIALIZATION_ANGLE    0x93A7
 
 Additions to Chapter 6 of the OpenGL ES 3.1 Specification (Buffer
 Objects)
@@ -141,3 +141,4 @@ Revision History
 
     Version 1, 2015/01/07 - first draft.
     Version 2, 2017/03/07 - fixed EGL naming and added IsEnabled.
+    Version 3, 2017/09/19 - name cleanup.

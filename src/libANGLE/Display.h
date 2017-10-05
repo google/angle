@@ -158,8 +158,6 @@ class Display final : angle::NonCopyable
 
     const DisplayState &getState() const { return mState; }
 
-    bool isRobustResourceInitEnabled() const;
-
     gl::Context *getProxyContext() const { return mProxyContext.get(); }
 
   private:

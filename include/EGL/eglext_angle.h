@@ -12,10 +12,10 @@
 
 // clang-format off
 
-#ifndef EGL_ANGLE_display_robust_resource_initialization
-#define EGL_ANGLE_display_robust_resource_initialization 1
-#define EGL_DISPLAY_ROBUST_RESOURCE_INITIALIZATION_ANGLE 0x3453
-#endif /* EGL_ANGLE_display_robust_resource_initialization */
+#ifndef EGL_ANGLE_robust_resource_initialization
+#define EGL_ANGLE_robust_resource_initialization 1
+#define EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE 0x3453
+#endif /* EGL_ANGLE_robust_resource_initialization */
 
 #ifndef EGL_ANGLE_keyed_mutex
 #define EGL_ANGLE_keyed_mutex 1

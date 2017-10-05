@@ -210,6 +210,11 @@ bool GetClientArraysEnabled(const egl::AttributeMap &attribs)
     return (attribs.get(EGL_CONTEXT_CLIENT_ARRAYS_ENABLED_ANGLE, EGL_TRUE) == EGL_TRUE);
 }
 
+bool GetRobustResourceInit(const egl::AttributeMap &attribs)
+{
+    return (attribs.get(EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE, EGL_FALSE) == EGL_TRUE);
+}
+
 std::string GetObjectLabelFromPointer(GLsizei length, const GLchar *label)
 {
     std::string labelName;
@@ -257,8 +262,7 @@ Context::Context(rx::EGLImplFactory *implFactory,
                  TextureManager *shareTextures,
                  MemoryProgramCache *memoryProgramCache,
                  const egl::AttributeMap &attribs,
-                 const egl::DisplayExtensions &displayExtensions,
-                 bool robustResourceInit)
+                 const egl::DisplayExtensions &displayExtensions)
 
     : ValidationContext(shareContext,
                         shareTextures,
@@ -289,7 +293,8 @@ Context::Context(rx::EGLImplFactory *implFactory,
 {
     mImplementation->setMemoryProgramCache(memoryProgramCache);
 
-    initCaps(displayExtensions);
+    bool robustResourceInit = GetRobustResourceInit(attribs);
+    initCaps(displayExtensions, robustResourceInit);
     initWorkarounds();
 
     mGLState.initialize(this, GetDebug(attribs), GetBindGeneratesResource(attribs),
@@ -2618,7 +2623,7 @@ bool Context::hasActiveTransformFeedback(GLuint program) const
     return false;
 }
 
-void Context::initCaps(const egl::DisplayExtensions &displayExtensions)
+void Context::initCaps(const egl::DisplayExtensions &displayExtensions, bool robustResourceInit)
 {
     mCaps = mImplementation->getNativeCaps();
 
@@ -2666,8 +2671,7 @@ void Context::initCaps(const egl::DisplayExtensions &displayExtensions)
     mExtensions.robustClientMemory = true;
 
     // Determine robust resource init availability from EGL.
-    mExtensions.robustResourceInitialization =
-        egl::Display::GetClientExtensions().displayRobustResourceInitialization;
+    mExtensions.robustResourceInitialization = robustResourceInit;
 
     // mExtensions.robustBufferAccessBehavior is true only if robust access is true and the backend
     // supports it.

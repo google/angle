@@ -577,6 +577,8 @@ void Renderer9::generateDisplayExtensions(egl::DisplayExtensions *outExtensions)
 
     // D3D9 can be used without an output surface
     outExtensions->surfacelessContext = true;
+
+    outExtensions->robustResourceInitialization = true;
 }
 
 void Renderer9::startScene()

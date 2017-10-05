@@ -48,6 +48,8 @@ class DisplayGL : public DisplayImpl
   protected:
     RendererGL *getRenderer() const { return mRenderer; };
 
+    void generateExtensions(egl::DisplayExtensions *outExtensions) const override;
+
   private:
     virtual const FunctionsGL *getFunctionsGL() const = 0;
     virtual egl::Error makeCurrentSurfaceless(gl::Context *context);
