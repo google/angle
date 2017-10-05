@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "24491c94_74962ad9",
+        "filename": "src/libANGLE/renderer/gl/egl/WindowSurfaceEGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-05T17:51:49Z",
+      "side": 1,
+      "message": "nit: I\u0027m surprised there\u0027s that few, where does the list come from? (Also VG_COLORSPACE for Pbuffers seems useless)",
+      "revId": "0a1bc13a835bfda8c5f3baa0c09968f40b8895ea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b93fc94f_65bf5b39",
+        "filename": "src/libANGLE/renderer/gl/egl/egl_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-05T17:51:49Z",
+      "side": 1,
+      "message": "nit: forwardedAttribs.",
+      "revId": "0a1bc13a835bfda8c5f3baa0c09968f40b8895ea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
