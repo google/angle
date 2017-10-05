@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "2eeaecf0_f281424c",
+        "filename": "src/common/string_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 199,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-10-05T01:16:04Z",
+      "side": 1,
+      "message": "I don\u0027t know how string::replace is implemented, but, if you have \"aabbbbcccccc\" and you want to replace \"bbbb\" with \"xx\", end result being \"aaxxcccccc\", even if you don\u0027t allocate new strings, you have to copy \"xxcccccc\".\nIf you aim for \"aaxx  cccccc\" instead, you only have to copy \"xx  \".\nI\u0027ve heard that shader compilation is a bottleneck on some benchmark, so if you need to do this replacement several times during translation, maybe worthwhile to optimize it.",
+      "parentUuid": "bb5b0b9b_56eef30c",
+      "range": {
+        "startLine": 199,
+        "startChar": 9,
+        "endLine": 199,
+        "endChar": 16
+      },
+      "revId": "b647e66bee9b0986a09c462993c685aa26266010",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "27ef56b7_44596013",
         "filename": "src/compiler/translator/OutputVulkanGLSL.cpp",
         "patchSetId": 2
