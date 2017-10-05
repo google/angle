@@ -14,6 +14,7 @@
 #include <EGL/egl.h>
 
 #include "common/angleutils.h"
+#include "libANGLE/AttributeMap.h"
 #include "libANGLE/Error.h"
 #include "libANGLE/FramebufferAttachment.h"
 #include "libANGLE/RefCountObject.h"
@@ -33,16 +34,16 @@ class EGLImplFactory;
 
 namespace egl
 {
-class AttributeMap;
 class Display;
 struct Config;
 
 struct SurfaceState final : private angle::NonCopyable
 {
-    SurfaceState(const egl::Config *configIn);
+    SurfaceState(const egl::Config *configIn, const AttributeMap &attributesIn);
 
     gl::Framebuffer *defaultFramebuffer;
     const egl::Config *config;
+    AttributeMap attributes;
 };
 
 class Surface : public gl::FramebufferAttachmentObject

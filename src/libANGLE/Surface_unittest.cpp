@@ -25,7 +25,7 @@ namespace
 class MockSurfaceImpl : public rx::SurfaceImpl
 {
   public:
-    MockSurfaceImpl() : SurfaceImpl(mockState), mockState(nullptr) {}
+    MockSurfaceImpl() : SurfaceImpl(mockState), mockState(nullptr, egl::AttributeMap()) {}
     virtual ~MockSurfaceImpl() { destructor(); }
 
     MOCK_METHOD1(destroy, void(const egl::Display *));

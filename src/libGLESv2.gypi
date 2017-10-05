@@ -653,6 +653,8 @@
         [
             'libANGLE/renderer/gl/egl/DisplayEGL.cpp',
             'libANGLE/renderer/gl/egl/DisplayEGL.h',
+            'libANGLE/renderer/gl/egl/egl_utils.cpp',
+            'libANGLE/renderer/gl/egl/egl_utils.h',
             'libANGLE/renderer/gl/egl/FunctionsEGL.cpp',
             'libANGLE/renderer/gl/egl/FunctionsEGL.h',
             'libANGLE/renderer/gl/egl/functionsegl_typedefs.h',

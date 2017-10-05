@@ -26,14 +26,14 @@
 namespace egl
 {
 
-SurfaceState::SurfaceState(const egl::Config *configIn)
-    : defaultFramebuffer(nullptr), config(configIn)
+SurfaceState::SurfaceState(const egl::Config *configIn, const AttributeMap &attributesIn)
+    : defaultFramebuffer(nullptr), config(configIn), attributes(attributesIn)
 {
 }
 
 Surface::Surface(EGLint surfaceType, const egl::Config *config, const AttributeMap &attributes)
     : FramebufferAttachmentObject(),
-      mState(config),
+      mState(config, attributes),
       mImplementation(nullptr),
       mCurrentCount(0),
       mDestroyed(false),

@@ -23,7 +23,6 @@ class SurfaceEGL : public SurfaceGL
     SurfaceEGL(const egl::SurfaceState &state,
                const FunctionsEGL *egl,
                EGLConfig config,
-               const std::vector<EGLint> &attribList,
                RendererGL *renderer);
     ~SurfaceEGL() override;
 
@@ -48,7 +47,6 @@ class SurfaceEGL : public SurfaceGL
   protected:
     const FunctionsEGL *mEGL;
     EGLConfig mConfig;
-    std::vector<EGLint> mAttribList;
     EGLSurface mSurface;
 };
 

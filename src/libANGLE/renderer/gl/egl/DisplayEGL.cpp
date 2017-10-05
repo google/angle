@@ -8,6 +8,8 @@
 
 #include "libANGLE/renderer/gl/egl/DisplayEGL.h"
 
+#include "libANGLE/renderer/gl/egl/egl_utils.h"
+
 namespace rx
 {
 
@@ -48,7 +50,7 @@ egl::Error DisplayEGL::initializeContext(const egl::AttributeMap &eglAttributes)
     static_assert(EGL_CONTEXT_MINOR_VERSION == EGL_CONTEXT_MINOR_VERSION_KHR,
                   "Minor Version define should match");
 
-    std::vector<std::vector<EGLint>> contextAttribLists;
+    std::vector<native_egl::AttributeVector> contextAttribLists;
     if (eglVersion >= gl::Version(1, 5) || mEGL->hasExtension("EGL_KHR_create_context"))
     {
         if (initializeRequested)
@@ -84,7 +86,7 @@ egl::Error DisplayEGL::initializeContext(const egl::AttributeMap &eglAttributes)
         contextAttribLists.push_back({EGL_CONTEXT_CLIENT_VERSION, 2, EGL_NONE});
     }
 
-    for (auto &attribList : contextAttribLists)
+    for (const auto &attribList : contextAttribLists)
     {
         mContext = mEGL->createContext(mConfig, EGL_NO_CONTEXT, attribList.data());
         if (mContext != EGL_NO_CONTEXT)

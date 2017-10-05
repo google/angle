@@ -21,7 +21,6 @@ class WindowSurfaceEGL : public SurfaceEGL
                      const FunctionsEGL *egl,
                      EGLConfig config,
                      EGLNativeWindowType window,
-                     const std::vector<EGLint> &attribList,
                      RendererGL *renderer);
     ~WindowSurfaceEGL() override;
 

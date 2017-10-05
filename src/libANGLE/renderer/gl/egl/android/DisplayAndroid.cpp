@@ -175,7 +175,7 @@ SurfaceImpl *DisplayAndroid::createWindowSurface(const egl::SurfaceState &state,
     success = mEGL->chooseConfig(configAttribList, &config, 1, &numConfig);
     ASSERT(success && numConfig == 1);
 
-    return new WindowSurfaceEGL(state, mEGL, config, window, attribs.toIntVector(), getRenderer());
+    return new WindowSurfaceEGL(state, mEGL, config, window, getRenderer());
 }
 
 SurfaceImpl *DisplayAndroid::createPbufferSurface(const egl::SurfaceState &state,
@@ -189,7 +189,7 @@ SurfaceImpl *DisplayAndroid::createPbufferSurface(const egl::SurfaceState &state
     success = mEGL->chooseConfig(configAttribList, &config, 1, &numConfig);
     ASSERT(success && numConfig == 1);
 
-    return new PbufferSurfaceEGL(state, mEGL, config, attribs.toIntVector(), getRenderer());
+    return new PbufferSurfaceEGL(state, mEGL, config, getRenderer());
 }
 
 SurfaceImpl *DisplayAndroid::createPbufferFromClientBuffer(const egl::SurfaceState &state,
