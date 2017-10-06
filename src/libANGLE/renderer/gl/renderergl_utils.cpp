@@ -1067,7 +1067,9 @@ void GenerateWorkarounds(const FunctionsGL *functions, WorkaroundsGL *workaround
 #endif
 
 #if defined(ANGLE_PLATFORM_ANDROID)
-    workarounds->dontInitializeUninitializedLocals = true;
+    // Triggers a bug on Marshmallow Adreno (4xx?) driver.
+    // http://anglebug.com/2046
+    workarounds->dontInitializeUninitializedLocals = IsQualcomm(vendor);
 #endif
 
     workarounds->finishDoesNotCauseQueriesToBeAvailable =
