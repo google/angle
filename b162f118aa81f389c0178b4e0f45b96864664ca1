@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "e7a3c2c5_9008a5ab",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 7
+      },
+      "lineNbr": 939,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-10-06T13:36:54Z",
+      "side": 1,
+      "message": "I think we should stick to the grammar in the spec just so that it\u0027s easier to compare the implementation against the spec, even if the spec grammar is a bit odd.",
+      "parentUuid": "18ae31fc_3647cb37",
+      "revId": "b162f118aa81f389c0178b4e0f45b96864664ca1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6393dd5a_3af71006",
         "filename": "src/compiler/translator/glslang.y",
         "patchSetId": 7
@@ -30,6 +48,24 @@
       "writtenOn": "2017-10-04T14:49:58Z",
       "side": 1,
       "message": "$$-\u003epush_back(0u); and equivalent change in the case below would make the array sizes go in the order they are written in the code.",
+      "revId": "b162f118aa81f389c0178b4e0f45b96864664ca1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c0024209_a110771b",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 7
+      },
+      "lineNbr": 955,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-10-06T13:36:54Z",
+      "side": 1,
+      "message": "This is not the important part of the code. Remember that array specifiers can be present in one of two locations: as part of the type or as part of the declarator. Both can affect the same variable.\n\nTo implement that we have the helper makeArrays() that makes an existing type into an array of itself. It\u0027s more natural to push to the back of the array sizes vector there.",
+      "parentUuid": "6393dd5a_3af71006",
       "revId": "b162f118aa81f389c0178b4e0f45b96864664ca1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
