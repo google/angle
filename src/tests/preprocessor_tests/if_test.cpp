@@ -958,6 +958,41 @@ TEST_F(IfTest, BitShiftLeftOperatorNegativeLHS)
     preprocess(str, expected);
 }
 
+// Left shift overflows. Note that the intended result is not explicitly specified, but we assume it
+// to do the same operation on the 2's complement bit representation as unsigned shift in C++.
+TEST_F(IfTest, BitShiftLeftOverflow)
+{
+    const char *str =
+        "#if (0x10000 + 0x1) << 28 == 0x10000000\n"
+        "pass\n"
+        "#endif\n";
+    const char *expected =
+        "\n"
+        "pass\n"
+        "\n";
+
+    preprocess(str, expected);
+}
+
+// Left shift of a negative number overflows. Note that the intended result is not explicitly
+// specified, but we assume it to do the same operation on the 2's complement bit representation as
+// unsigned shift in C++.
+TEST_F(IfTest, BitShiftLeftNegativeOverflow)
+{
+    // The bit representation of -5 is 11111111 11111111 11111111 11111011.
+    // Shifting by 30 leaves:          11000000 00000000 00000000 00000000.
+    const char *str =
+        "#if (-5) << 30 == -1073741824\n"
+        "pass\n"
+        "#endif\n";
+    const char *expected =
+        "\n"
+        "pass\n"
+        "\n";
+
+    preprocess(str, expected);
+}
+
 // Undefined shift: shift offset is out of range.
 TEST_F(IfTest, BitShiftRightOperatorNegativeOffset)
 {
