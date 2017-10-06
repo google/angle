@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "cbb34581_986755c4",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 7
+      },
+      "lineNbr": 939,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-06T16:35:11Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "e7a3c2c5_9008a5ab",
+      "revId": "b162f118aa81f389c0178b4e0f45b96864664ca1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6393dd5a_3af71006",
         "filename": "src/compiler/translator/glslang.y",
         "patchSetId": 7
@@ -69,6 +87,24 @@
       "revId": "b162f118aa81f389c0178b4e0f45b96864664ca1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "05e13d06_a49fdec0",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 7
+      },
+      "lineNbr": 955,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-06T16:35:11Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "c0024209_a110771b",
+      "revId": "b162f118aa81f389c0178b4e0f45b96864664ca1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
