@@ -94,6 +94,20 @@ inline DestT clampCast(SrcT value)
     return static_cast<DestT>(value);
 }
 
+// Specialize clampCast for bool->int conversion to avoid MSVS 2015 performance warning when the max
+// value is casted to the source type.
+template <>
+inline unsigned int clampCast(bool value)
+{
+    return static_cast<unsigned int>(value);
+}
+
+template <>
+inline int clampCast(bool value)
+{
+    return static_cast<int>(value);
+}
+
 template<typename T, typename MIN, typename MAX>
 inline T clamp(T x, MIN min, MAX max)
 {
