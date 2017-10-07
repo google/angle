@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4405b3d2_11ea4fc5",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1069,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-10-07T00:12:47Z",
+      "side": 0,
+      "message": "I don\u0027t know if there are non-Android Qualcomm devices, but it would be safe if you keep this.",
+      "range": {
+        "startLine": 1069,
+        "startChar": 0,
+        "endLine": 1069,
+        "endChar": 35
+      },
+      "revId": "a60d35672ed9dba63e5141859fcb25d903de65b5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
