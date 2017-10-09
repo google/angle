@@ -61,4 +61,6 @@ class SampleApplication
     std::unique_ptr<OSWindow> mOSWindow;
 };
 
+EGLint GetDisplayTypeFromArg(const char *displayTypeArg);
+
 #endif // SAMPLE_UTIL_SAMPLE_APPLICATION_H

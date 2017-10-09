@@ -6,6 +6,7 @@
 
 #include <string.h>
 #include <cassert>
+#include <iostream>
 #include <vector>
 
 #include "EGLWindow.h"
@@ -258,6 +259,7 @@ bool EGLWindow::initializeDisplayAndSurface(OSWindow *osWindow)
 
     if (!FindEGLConfig(mDisplay, configAttributes.data(), &mConfig))
     {
+        std::cout << "Could not find a suitable EGL config!" << std::endl;
         destroyGL();
         return false;
     }
