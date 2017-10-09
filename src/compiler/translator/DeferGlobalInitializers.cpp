@@ -29,7 +29,9 @@ namespace
 
 void GetDeferredInitializers(TIntermDeclaration *declaration,
                              bool initializeUninitializedGlobals,
-                             TIntermSequence *deferredInitializersOut)
+                             bool canUseLoopsToInitialize,
+                             TIntermSequence *deferredInitializersOut,
+                             TSymbolTable *symbolTable)
 {
     // SeparateDeclarations should have already been run.
     ASSERT(declaration->getSequence()->size() == 1);
@@ -81,7 +83,8 @@ void GetDeferredInitializers(TIntermDeclaration *declaration,
 
         if (symbolNode->getQualifier() == EvqGlobal && symbolNode->getSymbol() != "")
         {
-            TIntermSequence *initCode = CreateInitCode(symbolNode);
+            TIntermSequence *initCode =
+                CreateInitCode(symbolNode, canUseLoopsToInitialize, symbolTable);
             deferredInitializersOut->insert(deferredInitializersOut->end(), initCode->begin(),
                                             initCode->end());
         }
@@ -117,6 +120,7 @@ void InsertInitCallToMain(TIntermBlock *root,
 
 void DeferGlobalInitializers(TIntermBlock *root,
                              bool initializeUninitializedGlobals,
+                             bool canUseLoopsToInitialize,
                              TSymbolTable *symbolTable)
 {
     TIntermSequence *deferredInitializers = new TIntermSequence();
@@ -129,7 +133,7 @@ void DeferGlobalInitializers(TIntermBlock *root,
         if (declaration)
         {
             GetDeferredInitializers(declaration, initializeUninitializedGlobals,
-                                    deferredInitializers);
+                                    canUseLoopsToInitialize, deferredInitializers, symbolTable);
         }
     }
 

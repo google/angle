@@ -24,6 +24,7 @@ class TSymbolTable;
 
 void DeferGlobalInitializers(TIntermBlock *root,
                              bool initializeUninitializedGlobals,
+                             bool canUseLoopsToInitialize,
                              TSymbolTable *symbolTable);
 
 }  // namespace sh
