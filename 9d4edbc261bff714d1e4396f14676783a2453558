@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "eb69a7c6_99376e33",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 26
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-10-09T12:21:18Z",
+      "side": 1,
+      "message": "Can they have different memory qualifier for same image variable in different shader stage? for example, in vertex shader, image a1 is readonly. But in fragment shader, image a1 is writeonly.",
+      "parentUuid": "8a78af61_ca65c409",
+      "range": {
+        "startLine": 138,
+        "startChar": 4,
+        "endLine": 138,
+        "endChar": 19
+      },
+      "revId": "9d4edbc261bff714d1e4396f14676783a2453558",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ddde735b_3f1a93ac",
         "filename": "src/compiler/translator/UniformHLSL.cpp",
         "patchSetId": 26
@@ -117,6 +141,52 @@
     },
     {
       "key": {
+        "uuid": "0fc70ae5_8710bdcf",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 26
+      },
+      "lineNbr": 2128,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-10-09T12:21:18Z",
+      "side": 1,
+      "message": "Why not regType?",
+      "range": {
+        "startLine": 2128,
+        "startChar": 68,
+        "endLine": 2128,
+        "endChar": 78
+      },
+      "revId": "9d4edbc261bff714d1e4396f14676783a2453558",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "62999cc1_0c112256",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 26
+      },
+      "lineNbr": 2133,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-10-09T12:21:18Z",
+      "side": 1,
+      "message": "Same here",
+      "range": {
+        "startLine": 2133,
+        "startChar": 68,
+        "endLine": 2133,
+        "endChar": 88
+      },
+      "revId": "9d4edbc261bff714d1e4396f14676783a2453558",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "88538e26_e8240ccf",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 26
@@ -133,6 +203,29 @@
         "startChar": 0,
         "endLine": 2442,
         "endChar": 42
+      },
+      "revId": "9d4edbc261bff714d1e4396f14676783a2453558",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0c681b56_ff9e8b50",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.h",
+        "patchSetId": 26
+      },
+      "lineNbr": 521,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-10-09T12:21:18Z",
+      "side": 1,
+      "message": "What are these members used for?",
+      "range": {
+        "startLine": 509,
+        "startChar": 0,
+        "endLine": 521,
+        "endChar": 34
       },
       "revId": "9d4edbc261bff714d1e4396f14676783a2453558",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
@@ -163,6 +256,23 @@
     },
     {
       "key": {
+        "uuid": "22274217_320f4010",
+        "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
+        "patchSetId": 26
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-10-09T12:21:18Z",
+      "side": 1,
+      "message": "Add comment why it\u0027s skipped.",
+      "revId": "9d4edbc261bff714d1e4396f14676783a2453558",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "331982fa_df29d981",
         "filename": "src/tests/gl_tests/UniformTest.cpp",
         "patchSetId": 26
@@ -180,6 +290,23 @@
         "endLine": 903,
         "endChar": 1
       },
+      "revId": "9d4edbc261bff714d1e4396f14676783a2453558",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a55f4e10_8fcd4738",
+        "filename": "src/tests/gl_tests/UniformTest.cpp",
+        "patchSetId": 26
+      },
+      "lineNbr": 932,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-10-09T12:21:18Z",
+      "side": 1,
+      "message": "Add more tests to cover the corner situations that we discussed. Such as, \n1.same image uniform in two shaders but one has no binding, the other has.\n2. with multiple render targets\n3. sample and image co-exist, and still can correctly do rendering.",
       "revId": "9d4edbc261bff714d1e4396f14676783a2453558",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
