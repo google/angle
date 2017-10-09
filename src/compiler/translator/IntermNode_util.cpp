@@ -170,6 +170,37 @@ TIntermConstantUnion *CreateBoolNode(bool value)
     return node;
 }
 
+TIntermSymbol *CreateTempSymbolNode(const TSymbolUniqueId &id,
+                                    const TType &type,
+                                    TQualifier qualifier)
+{
+    TInfoSinkBase symbolNameOut;
+    symbolNameOut << "s" << id.get();
+    TString symbolName = symbolNameOut.c_str();
+
+    TIntermSymbol *node = new TIntermSymbol(id.get(), symbolName, type);
+    node->setInternal(true);
+
+    ASSERT(qualifier == EvqTemporary || qualifier == EvqConst || qualifier == EvqGlobal);
+    node->getTypePointer()->setQualifier(qualifier);
+
+    // TODO(oetuaho): Might be useful to sanitize layout qualifier etc. on the type of the created
+    // symbol. This might need to be done in other places as well.
+    return node;
+}
+
+TIntermDeclaration *CreateTempInitDeclarationNode(const TSymbolUniqueId &id,
+                                                  TIntermTyped *initializer,
+                                                  TQualifier qualifier)
+{
+    ASSERT(initializer != nullptr);
+    TIntermSymbol *tempSymbol = CreateTempSymbolNode(id, initializer->getType(), qualifier);
+    TIntermDeclaration *tempDeclaration = new TIntermDeclaration();
+    TIntermBinary *tempInit             = new TIntermBinary(EOpInitialize, tempSymbol, initializer);
+    tempDeclaration->appendDeclarator(tempInit);
+    return tempDeclaration;
+}
+
 TIntermBlock *EnsureBlock(TIntermNode *node)
 {
     if (node == nullptr)

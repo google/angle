@@ -7,6 +7,7 @@
 #include "compiler/translator/IntermTraverse.h"
 
 #include "compiler/translator/InfoSink.h"
+#include "compiler/translator/IntermNode_util.h"
 #include "compiler/translator/SymbolTable.h"
 
 namespace sh
@@ -169,21 +170,10 @@ void TIntermTraverser::insertStatementInParentBlock(TIntermNode *statement)
 
 TIntermSymbol *TIntermTraverser::createTempSymbol(const TType &type, TQualifier qualifier)
 {
-    // Each traversal uses at most one temporary variable, so the index stays the same within a
-    // single traversal.
-    TInfoSinkBase symbolNameOut;
     ASSERT(mTemporaryId != nullptr);
-    symbolNameOut << "s" << (mTemporaryId->get());
-    TString symbolName = symbolNameOut.c_str();
-
-    TIntermSymbol *node = new TIntermSymbol(mTemporaryId->get(), symbolName, type);
-    node->setInternal(true);
-
-    ASSERT(qualifier == EvqTemporary || qualifier == EvqConst || qualifier == EvqGlobal);
-    node->getTypePointer()->setQualifier(qualifier);
-    // TODO(oetuaho): Might be useful to sanitize layout qualifier etc. on the type of the created
-    // symbol. This might need to be done in other places as well.
-    return node;
+    // nextTemporaryId() needs to be called when the code wants to start using another temporary
+    // symbol.
+    return CreateTempSymbolNode(*mTemporaryId, type, qualifier);
 }
 
 TIntermSymbol *TIntermTraverser::createTempSymbol(const TType &type)
@@ -193,20 +183,17 @@ TIntermSymbol *TIntermTraverser::createTempSymbol(const TType &type)
 
 TIntermDeclaration *TIntermTraverser::createTempDeclaration(const TType &type)
 {
+    ASSERT(mTemporaryId != nullptr);
     TIntermDeclaration *tempDeclaration = new TIntermDeclaration();
-    tempDeclaration->appendDeclarator(createTempSymbol(type));
+    tempDeclaration->appendDeclarator(CreateTempSymbolNode(*mTemporaryId, type, EvqTemporary));
     return tempDeclaration;
 }
 
 TIntermDeclaration *TIntermTraverser::createTempInitDeclaration(TIntermTyped *initializer,
                                                                 TQualifier qualifier)
 {
-    ASSERT(initializer != nullptr);
-    TIntermSymbol *tempSymbol           = createTempSymbol(initializer->getType(), qualifier);
-    TIntermDeclaration *tempDeclaration = new TIntermDeclaration();
-    TIntermBinary *tempInit             = new TIntermBinary(EOpInitialize, tempSymbol, initializer);
-    tempDeclaration->appendDeclarator(tempInit);
-    return tempDeclaration;
+    ASSERT(mTemporaryId != nullptr);
+    return CreateTempInitDeclarationNode(*mTemporaryId, initializer, qualifier);
 }
 
 TIntermDeclaration *TIntermTraverser::createTempInitDeclaration(TIntermTyped *initializer)

@@ -30,6 +30,13 @@ TIntermTyped *CreateZeroNode(const TType &type);
 TIntermConstantUnion *CreateIndexNode(int index);
 TIntermConstantUnion *CreateBoolNode(bool value);
 
+TIntermSymbol *CreateTempSymbolNode(const TSymbolUniqueId &id,
+                                    const TType &type,
+                                    TQualifier qualifier);
+TIntermDeclaration *CreateTempInitDeclarationNode(const TSymbolUniqueId &id,
+                                                  TIntermTyped *initializer,
+                                                  TQualifier qualifier);
+
 // If the input node is nullptr, return nullptr.
 // If the input node is a block node, return it.
 // If the input node is not a block node, put it inside a block node and return that.

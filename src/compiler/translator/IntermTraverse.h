@@ -205,8 +205,8 @@ class TIntermTraverser : angle::NonCopyable
     TIntermSymbol *createTempSymbol(const TType &type);
     // Create a node that declares but doesn't initialize a temporary symbol.
     TIntermDeclaration *createTempDeclaration(const TType &type);
-    // Create a node that initializes the current temporary symbol with initializer having the given
-    // qualifier.
+    // Create a node that initializes the current temporary symbol with initializer. The symbol will
+    // have the given qualifier.
     TIntermDeclaration *createTempInitDeclaration(TIntermTyped *initializer, TQualifier qualifier);
     // Create a node that initializes the current temporary symbol with initializer.
     TIntermDeclaration *createTempInitDeclaration(TIntermTyped *initializer);
