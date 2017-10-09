@@ -129,7 +129,7 @@ gl::Error VertexArrayGL::syncDrawElementsState(const gl::Context *context,
 
 gl::Error VertexArrayGL::syncElementArrayState(const gl::Context *context) const
 {
-    gl::Buffer *elementArrayBuffer = mData.getElementArrayBuffer().get();
+    gl::Buffer *elementArrayBuffer = mState.getElementArrayBuffer().get();
     ASSERT(elementArrayBuffer);
     if (elementArrayBuffer != mAppliedElementArrayBuffer.get())
     {
@@ -191,7 +191,7 @@ gl::Error VertexArrayGL::syncIndexData(const gl::Context *context,
 {
     ASSERT(outIndices);
 
-    gl::Buffer *elementArrayBuffer = mData.getElementArrayBuffer().get();
+    gl::Buffer *elementArrayBuffer = mState.getElementArrayBuffer().get();
 
     // Need to check the range of indices if attributes need to be streamed
     if (elementArrayBuffer != nullptr)
@@ -207,7 +207,7 @@ gl::Error VertexArrayGL::syncIndexData(const gl::Context *context,
         if (attributesNeedStreaming)
         {
             ptrdiff_t elementArrayBufferOffset = reinterpret_cast<ptrdiff_t>(indices);
-            Error error                        = mData.getElementArrayBuffer()->getIndexRange(
+            Error error                        = mState.getElementArrayBuffer()->getIndexRange(
                 context, type, elementArrayBufferOffset, count, primitiveRestartEnabled,
                 outIndexRange);
             if (error.isError())
@@ -277,8 +277,8 @@ void VertexArrayGL::computeStreamingAttributeSizes(const gl::AttributesMask &act
 
     ASSERT(mAttributesNeedStreaming.any());
 
-    const auto &attribs  = mData.getVertexAttributes();
-    const auto &bindings = mData.getVertexBindings();
+    const auto &attribs  = mState.getVertexAttributes();
+    const auto &bindings = mState.getVertexBindings();
 
     gl::AttributesMask attribsToStream = (mAttributesNeedStreaming & activeAttributesMask);
 
@@ -345,8 +345,8 @@ gl::Error VertexArrayGL::streamAttributes(const gl::AttributesMask &activeAttrib
                                                             requiredBufferSize, GL_MAP_WRITE_BIT);
         size_t curBufferOffset = bufferEmptySpace;
 
-        const auto &attribs  = mData.getVertexAttributes();
-        const auto &bindings = mData.getVertexBindings();
+        const auto &attribs  = mState.getVertexAttributes();
+        const auto &bindings = mState.getVertexBindings();
 
         gl::AttributesMask attribsToStream = (mAttributesNeedStreaming & activeAttributesMask);
 
@@ -430,14 +430,14 @@ GLuint VertexArrayGL::getAppliedElementArrayBufferID() const
 
 void VertexArrayGL::updateNeedsStreaming(size_t attribIndex)
 {
-    const auto &attrib  = mData.getVertexAttribute(attribIndex);
-    const auto &binding = mData.getBindingFromAttribIndex(attribIndex);
+    const auto &attrib  = mState.getVertexAttribute(attribIndex);
+    const auto &binding = mState.getBindingFromAttribIndex(attribIndex);
     mAttributesNeedStreaming.set(attribIndex, AttributeNeedsStreaming(attrib, binding));
 }
 
 void VertexArrayGL::updateAttribEnabled(size_t attribIndex)
 {
-    const bool enabled = mData.getVertexAttribute(attribIndex).enabled;
+    const bool enabled = mState.getVertexAttribute(attribIndex).enabled;
     if (mAppliedAttributes[attribIndex].enabled == enabled)
     {
         return;
@@ -459,11 +459,11 @@ void VertexArrayGL::updateAttribEnabled(size_t attribIndex)
 
 void VertexArrayGL::updateAttribPointer(const gl::Context *context, size_t attribIndex)
 {
-    const VertexAttribute &attrib = mData.getVertexAttribute(attribIndex);
+    const VertexAttribute &attrib = mState.getVertexAttribute(attribIndex);
 
     // According to SPEC, VertexAttribPointer should update the binding indexed attribIndex instead
     // of the binding indexed attrib.bindingIndex (unless attribIndex == attrib.bindingIndex).
-    const VertexBinding &binding = mData.getVertexBinding(attribIndex);
+    const VertexBinding &binding = mState.getVertexBinding(attribIndex);
 
     // Since mAttributesNeedStreaming[attribIndex] keeps the value set in the last draw, here we
     // only need to update it when the buffer has been changed. e.g. When we set an attribute to be
@@ -555,7 +555,7 @@ void VertexArrayGL::updateAttribFormat(size_t attribIndex)
 {
     ASSERT(supportVertexAttribBinding());
 
-    const VertexAttribute &attrib = mData.getVertexAttribute(attribIndex);
+    const VertexAttribute &attrib = mState.getVertexAttribute(attribIndex);
     if (SameVertexAttribFormat(mAppliedAttributes[attribIndex], attrib))
     {
         return;
@@ -584,7 +584,7 @@ void VertexArrayGL::updateAttribBinding(size_t attribIndex)
 {
     ASSERT(supportVertexAttribBinding());
 
-    GLuint bindingIndex = mData.getVertexAttribute(attribIndex).bindingIndex;
+    GLuint bindingIndex = mState.getVertexAttribute(attribIndex).bindingIndex;
     if (mAppliedAttributes[attribIndex].bindingIndex == bindingIndex)
     {
         return;
@@ -599,7 +599,7 @@ void VertexArrayGL::updateBindingBuffer(const gl::Context *context, size_t bindi
 {
     ASSERT(supportVertexAttribBinding());
 
-    const VertexBinding &binding = mData.getVertexBinding(bindingIndex);
+    const VertexBinding &binding = mState.getVertexBinding(bindingIndex);
     if (SameVertexBuffer(mAppliedBindings[bindingIndex], binding))
     {
         return;
@@ -623,7 +623,7 @@ void VertexArrayGL::updateBindingBuffer(const gl::Context *context, size_t bindi
 void VertexArrayGL::updateBindingDivisor(size_t bindingIndex)
 {
     GLuint adjustedDivisor =
-        GetAdjustedDivisor(mAppliedNumViews, mData.getVertexBinding(bindingIndex).getDivisor());
+        GetAdjustedDivisor(mAppliedNumViews, mState.getVertexBinding(bindingIndex).getDivisor());
     if (mAppliedBindings[bindingIndex].getDivisor() == adjustedDivisor)
     {
         return;

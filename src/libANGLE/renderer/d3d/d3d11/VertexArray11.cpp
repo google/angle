@@ -63,7 +63,7 @@ void VertexArray11::syncState(const gl::Context *context,
 
         size_t index = gl::VertexArray::GetVertexIndexFromDirtyBit(dirtyBit);
         // TODO(jiawei.shao@intel.com): Vertex Attrib Bindings
-        ASSERT(index == mData.getBindingIndexFromAttribIndex(index));
+        ASSERT(index == mState.getBindingIndexFromAttribIndex(index));
         mAttribsToUpdate.set(index);
     }
 }
@@ -92,8 +92,8 @@ bool VertexArray11::flushAttribUpdates(const gl::Context *context)
 
 void VertexArray11::updateVertexAttribStorage(const gl::Context *context, size_t attribIndex)
 {
-    const auto &attrib = mData.getVertexAttribute(attribIndex);
-    const auto &binding = mData.getBindingFromAttribIndex(attribIndex);
+    const auto &attrib  = mState.getVertexAttribute(attribIndex);
+    const auto &binding = mState.getBindingFromAttribIndex(attribIndex);
 
     // Note: having an unchanged storage type doesn't mean the attribute is clean.
     auto oldStorageType = mAttributeStorageTypes[attribIndex];
@@ -181,8 +181,8 @@ gl::Error VertexArray11::updateDirtyAndDynamicAttribs(const gl::Context *context
     const auto &glState         = context->getGLState();
     const gl::Program *program  = glState.getProgram();
     const auto &activeLocations = program->getActiveAttribLocationsMask();
-    const auto &attribs         = mData.getVertexAttributes();
-    const auto &bindings        = mData.getVertexBindings();
+    const auto &attribs         = mState.getVertexAttributes();
+    const auto &bindings        = mState.getVertexBindings();
     mAppliedNumViewsToDivisor =
         (program != nullptr && program->usesMultiview()) ? program->getNumViews() : 1;
 

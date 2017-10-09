@@ -18,7 +18,7 @@ namespace rx
 class VertexArrayVk : public VertexArrayImpl
 {
   public:
-    VertexArrayVk(const gl::VertexArrayState &data);
+    VertexArrayVk(const gl::VertexArrayState &state);
     void destroy(const gl::Context *context) override;
 
     void syncState(const gl::Context *context,

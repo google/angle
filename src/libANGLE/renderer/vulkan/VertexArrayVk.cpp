@@ -17,7 +17,7 @@
 namespace rx
 {
 
-VertexArrayVk::VertexArrayVk(const gl::VertexArrayState &data) : VertexArrayImpl(data)
+VertexArrayVk::VertexArrayVk(const gl::VertexArrayState &state) : VertexArrayImpl(state)
 {
 }
 
