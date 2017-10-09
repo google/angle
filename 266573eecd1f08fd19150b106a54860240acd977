@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "4c2004e3_594404a8",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1806,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-10-09T03:03:59Z",
+      "side": 1,
+      "message": "If a geometry shader doesn\u0027t have an input primitive declaration, the unsized array inputs cannot be sized, then if one of this inputs is used in the shader, mGeometryShaderInputArraySize will be 0, and we should not report the compile here, instead we should report the error in the specific place:\naddMethods when calling length on it;\naddIndexExpression when indexing it.",
+      "parentUuid": "198f04f6_98b2b37e",
+      "revId": "266573eecd1f08fd19150b106a54860240acd977",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "29d59788_9d20e929",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 10
@@ -30,6 +48,30 @@
       "writtenOn": "2017-09-29T07:00:28Z",
       "side": 1,
       "message": "I am not very clear about this part. It seems that you have set the array size for the unsized array type. But you still need to traverse the tree on Compiler.cpp to SetGeometryShaderInputArraySize for unsized input declaration. I think the change in Compiler.cpp can be omitted.",
+      "range": {
+        "startLine": 1808,
+        "startChar": 8,
+        "endLine": 1808,
+        "endChar": 60
+      },
+      "revId": "266573eecd1f08fd19150b106a54860240acd977",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d6cf2db5_d4988e9a",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1808,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-10-09T03:03:59Z",
+      "side": 1,
+      "message": "According to SPEC (https://www.khronos.org/registry/OpenGL/extensions/EXT/EXT_geometry_shader.txt)\n[4.4.1.gs]\nAll geometry shader input unsized array declarations will be sized by an\nearlier input primitive layout qualifier, when present, as per the following table.\n\nWe should assign size to all references of unsized array inputs during the compilation just as gl_in. Here we handle the input array variables in the shader. We must set it to make these expressions pass out-of-bound checks:\n1. variables in index expressions\n2. calling length function on the variables\n\nThe call of SetGeometryShaderInputArraySize in compiler.cpp is just for the input DECLARATIONS declared before the input primitive declaration, not for all SYMBOLS. According to spec, they should also be set size as soon as we meet a valid input primitive declaration, but we can only mark them unsized at that time. \n\nI believe we should keep SetGeometryShaderInputArraySize because:\n1. The spec requires us to do so. We should set size for all unsized array inputs before doing anything on it.\n2. It will make further operations much easier as we don\u0027t need to treat unsized geometry shader inputs as special cases any more. It can also eliminate potential bugs if someone forget to treat unsized geometry shader inputs as sized arrays.",
+      "parentUuid": "29d59788_9d20e929",
       "range": {
         "startLine": 1808,
         "startChar": 8,
@@ -65,6 +107,30 @@
     },
     {
       "key": {
+        "uuid": "d18d9b09_2920a17d",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2401,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-10-09T03:03:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b3148415_ad8c0bfe",
+      "range": {
+        "startLine": 2401,
+        "startChar": 12,
+        "endLine": 2401,
+        "endChar": 36
+      },
+      "revId": "266573eecd1f08fd19150b106a54860240acd977",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "079bc4f3_59b4f213",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 10
@@ -85,6 +151,30 @@
       "revId": "266573eecd1f08fd19150b106a54860240acd977",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cffd9d7a_52a75b8c",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2419,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-10-09T03:03:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "079bc4f3_59b4f213",
+      "range": {
+        "startLine": 2409,
+        "startChar": 0,
+        "endLine": 2419,
+        "endChar": 26
+      },
+      "revId": "266573eecd1f08fd19150b106a54860240acd977",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -111,6 +201,30 @@
     },
     {
       "key": {
+        "uuid": "0ab8b489_4b1bd406",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2420,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-10-09T03:03:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "feae4314_f8431951",
+      "range": {
+        "startLine": 2420,
+        "startChar": 16,
+        "endLine": 2420,
+        "endChar": 26
+      },
+      "revId": "266573eecd1f08fd19150b106a54860240acd977",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "44987d0a_39997512",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 10
@@ -128,6 +242,24 @@
     },
     {
       "key": {
+        "uuid": "9a3d25c9_82f6c836",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2789,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-10-09T03:03:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "44987d0a_39997512",
+      "revId": "266573eecd1f08fd19150b106a54860240acd977",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5425338e_7cfd5aa6",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 10
@@ -142,6 +274,24 @@
       "revId": "266573eecd1f08fd19150b106a54860240acd977",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "81ae8f98_a1636194",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2828,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-10-09T03:03:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5425338e_7cfd5aa6",
+      "revId": "266573eecd1f08fd19150b106a54860240acd977",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
