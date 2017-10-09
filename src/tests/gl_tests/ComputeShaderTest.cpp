@@ -366,6 +366,66 @@ TEST_P(ComputeShaderTest, ImageArrayWithoutBindingQualifier)
     }
 }
 
+// imageLoad functions
+TEST_P(ComputeShaderTest, ImageLoad)
+{
+    const std::string csSource =
+        "#version 310 es\n"
+        "layout(local_size_x=8) in;\n"
+        "layout(rgba8) uniform highp readonly image2D mImage2DInput;\n"
+        "layout(rgba16i) uniform highp readonly iimageCube mImageCubeInput;\n"
+        "layout(rgba32ui) uniform highp readonly uimage3D mImage3DInput;\n"
+        "void main()\n"
+        "{\n"
+        "    vec4 result2d = imageLoad(mImage2DInput, ivec2(gl_LocalInvocationID.xy));\n"
+        "    ivec4 resultCube = imageLoad(mImageCubeInput, ivec3(gl_LocalInvocationID.xyz));\n"
+        "    uvec4 result3d = imageLoad(mImage3DInput, ivec3(gl_LocalInvocationID.xyz));\n"
+        "}\n";
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, csSource);
+    EXPECT_GL_NO_ERROR();
+}
+
+// imageStore functions
+TEST_P(ComputeShaderTest, ImageStore)
+{
+    const std::string csSource =
+        "#version 310 es\n"
+        "layout(local_size_x=8) in;\n"
+        "layout(rgba16f) uniform highp writeonly imageCube mImageCubeOutput;\n"
+        "layout(r32f) uniform highp writeonly image3D mImage3DOutput;\n"
+        "layout(rgba8ui) uniform highp writeonly uimage2DArray mImage2DArrayOutput;\n"
+        "void main()\n"
+        "{\n"
+        "    imageStore(mImageCubeOutput, ivec3(gl_LocalInvocationID.xyz), vec4(0.0));\n"
+        "    imageStore(mImage3DOutput, ivec3(gl_LocalInvocationID.xyz), vec4(0.0));\n"
+        "    imageStore(mImage2DArrayOutput, ivec3(gl_LocalInvocationID.xyz), uvec4(0));\n"
+        "}\n";
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, csSource);
+    EXPECT_GL_NO_ERROR();
+}
+
+// imageSize functions
+TEST_P(ComputeShaderTest, ImageSize)
+{
+    const std::string csSource =
+        "#version 310 es\n"
+        "layout(local_size_x=8) in;\n"
+        "layout(rgba8) uniform highp readonly imageCube mImageCubeInput;\n"
+        "layout(r32i) uniform highp readonly iimage2D mImage2DInput;\n"
+        "layout(rgba16ui) uniform highp readonly uimage2DArray mImage2DArrayInput;\n"
+        "void main()\n"
+        "{\n"
+        "    ivec2 sizeCube = imageSize(mImageCubeInput);\n"
+        "    ivec2 size2D = imageSize(mImage2DInput);\n"
+        "    ivec3 size2DArray = imageSize(mImage2DArrayInput);\n"
+        "}\n";
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, csSource);
+    EXPECT_GL_NO_ERROR();
+}
+
 // Check that it is not possible to create a compute shader when the context does not support ES
 // 3.10
 TEST_P(ComputeShaderTestES3, NotSupported)

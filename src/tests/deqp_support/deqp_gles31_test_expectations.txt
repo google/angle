@@ -36,6 +36,9 @@
 1442 D3D11 : dEQP-GLES31.functional.vertex_attribute_binding.* = SKIP
 1442 D3D11 : dEQP-GLES31.functional.stencil_texturing.* = SKIP
 1442 D3D11 : dEQP-GLES31.functional.texture.gather.* = SKIP
+// TODO(xinghua.cao@intel.com): FAIL expectation instead of SKIP should be sufficient for OpenGL, but the
+// test expectations parser doesn't support having FAIL for GL and SKIP for D3D with the same test filter.
+1442 OPENGL D3D11 : dEQP-GLES31.functional.image_load_store.* = SKIP
 
 // D3D11 Failing Tests
 1442 D3D11 : dEQP-GLES31.functional.state_query.integer.max_framebuffer_width_* = FAIL
@@ -44,7 +47,6 @@
 1442 D3D11 : dEQP-GLES31.functional.state_query.integer.max_compute_shared_memory_size_* = FAIL
 1442 D3D11 : dEQP-GLES31.functional.state_query.integer.max_compute_atomic_counter_buffers_* = FAIL
 1442 D3D11 : dEQP-GLES31.functional.state_query.integer.max_compute_atomic_counters_* = FAIL
-1442 D3D11 : dEQP-GLES31.functional.state_query.integer.max_compute_image_uniforms_* = FAIL
 1442 D3D11 : dEQP-GLES31.functional.state_query.integer.max_compute_shader_storage_blocks_* = FAIL
 1442 D3D11 : dEQP-GLES31.functional.state_query.integer.max_atomic_counter_buffer_bindings_* = FAIL
 1442 D3D11 : dEQP-GLES31.functional.state_query.integer.max_atomic_counter_buffer_size_* = FAIL
@@ -1207,7 +1209,6 @@
 1442 OPENGL D3D11 : dEQP-GLES31.functional.ubo.random.all_shared_buffer.22 = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.ubo.random.all_shared_buffer.37 = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.ubo.random.all_shared_buffer.38 = FAIL
-1442 OPENGL D3D11 : dEQP-GLES31.functional.image_load_store.* = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.atomic_counter.* = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.stencil_texturing.format.depth32f_stencil8_2d = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.stencil_texturing.format.depth32f_stencil8_2d_array = FAIL

@@ -556,6 +556,11 @@ class TFunctionSymbolInfo
     void setId(const TSymbolUniqueId &functionId);
     const TSymbolUniqueId &getId() const;
 
+    bool isImageFunction() const
+    {
+        return getName() == "imageSize" || getName() == "imageLoad" || getName() == "imageStore";
+    }
+
   private:
     TName mName;
     TSymbolUniqueId *mId;

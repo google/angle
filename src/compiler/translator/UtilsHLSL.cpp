@@ -27,7 +27,7 @@ TString SamplerString(const TBasicType type)
     }
 }
 
-TString SamplerString(HLSLTextureSamplerGroup type)
+TString SamplerString(HLSLTextureGroup type)
 {
     if (type >= HLSL_COMPARISON_SAMPLER_GROUP_BEGIN && type <= HLSL_COMPARISON_SAMPLER_GROUP_END)
     {
@@ -39,7 +39,8 @@ TString SamplerString(HLSLTextureSamplerGroup type)
     }
 }
 
-HLSLTextureSamplerGroup TextureGroup(const TBasicType type)
+HLSLTextureGroup TextureGroup(const TBasicType type, TLayoutImageInternalFormat imageInternalFormat)
+
 {
     switch (type)
     {
@@ -81,24 +82,170 @@ HLSLTextureSamplerGroup TextureGroup(const TBasicType type)
             return HLSL_TEXTURE_CUBE_COMPARISON;
         case EbtSampler2DArrayShadow:
             return HLSL_TEXTURE_2D_ARRAY_COMPARISON;
+        case EbtImage2D:
+        {
+            switch (imageInternalFormat)
+            {
+                case EiifRGBA32F:
+                case EiifRGBA16F:
+                case EiifR32F:
+                    return HLSL_TEXTURE_2D;
+                case EiifRGBA8:
+                    return HLSL_TEXTURE_2D_UNORM;
+                case EiifRGBA8_SNORM:
+                    return HLSL_TEXTURE_2D_SNORM;
+                default:
+                    UNREACHABLE();
+            }
+        }
+        case EbtIImage2D:
+        {
+            switch (imageInternalFormat)
+            {
+                case EiifRGBA32I:
+                case EiifRGBA16I:
+                case EiifRGBA8I:
+                case EiifR32I:
+                    return HLSL_TEXTURE_2D_INT4;
+                default:
+                    UNREACHABLE();
+            }
+        }
+        case EbtUImage2D:
+        {
+            switch (imageInternalFormat)
+            {
+
+                case EiifRGBA32UI:
+                case EiifRGBA16UI:
+                case EiifRGBA8UI:
+                case EiifR32UI:
+                    return HLSL_TEXTURE_2D_UINT4;
+                default:
+                    UNREACHABLE();
+            }
+        }
+        case EbtImage3D:
+        {
+            switch (imageInternalFormat)
+            {
+                case EiifRGBA32F:
+                case EiifRGBA16F:
+                case EiifR32F:
+                    return HLSL_TEXTURE_3D;
+                case EiifRGBA8:
+                    return HLSL_TEXTURE_3D_UNORM;
+                case EiifRGBA8_SNORM:
+                    return HLSL_TEXTURE_3D_SNORM;
+                default:
+                    UNREACHABLE();
+            }
+        }
+        case EbtIImage3D:
+        {
+            switch (imageInternalFormat)
+            {
+                case EiifRGBA32I:
+                case EiifRGBA16I:
+                case EiifRGBA8I:
+                case EiifR32I:
+                    return HLSL_TEXTURE_3D_INT4;
+                default:
+                    UNREACHABLE();
+            }
+        }
+        case EbtUImage3D:
+        {
+            switch (imageInternalFormat)
+            {
+                case EiifRGBA32UI:
+                case EiifRGBA16UI:
+                case EiifRGBA8UI:
+                case EiifR32UI:
+                    return HLSL_TEXTURE_3D_UINT4;
+                default:
+                    UNREACHABLE();
+            }
+        }
+        case EbtImage2DArray:
+        case EbtImageCube:
+        {
+            switch (imageInternalFormat)
+            {
+                case EiifRGBA32F:
+                case EiifRGBA16F:
+                case EiifR32F:
+                    return HLSL_TEXTURE_2D_ARRAY;
+                case EiifRGBA8:
+                    return HLSL_TEXTURE_2D_ARRAY_UNORN;
+                case EiifRGBA8_SNORM:
+                    return HLSL_TEXTURE_2D_ARRAY_SNORM;
+                default:
+                    UNREACHABLE();
+            }
+        }
+        case EbtIImage2DArray:
+        case EbtIImageCube:
+        {
+            switch (imageInternalFormat)
+            {
+                case EiifRGBA32I:
+                case EiifRGBA16I:
+                case EiifRGBA8I:
+                case EiifR32I:
+                    return HLSL_TEXTURE_2D_ARRAY_INT4;
+                default:
+                    UNREACHABLE();
+            }
+        }
+        case EbtUImage2DArray:
+        case EbtUImageCube:
+        {
+            switch (imageInternalFormat)
+            {
+                case EiifRGBA32UI:
+                case EiifRGBA16UI:
+                case EiifRGBA8UI:
+                case EiifR32UI:
+                    return HLSL_TEXTURE_2D_ARRAY_UINT4;
+                default:
+                    UNREACHABLE();
+            }
+        }
         default:
             UNREACHABLE();
     }
     return HLSL_TEXTURE_UNKNOWN;
 }
 
-TString TextureString(const HLSLTextureSamplerGroup type)
+TString TextureString(const HLSLTextureGroup textureGroup)
 {
-    switch (type)
+    switch (textureGroup)
     {
         case HLSL_TEXTURE_2D:
-            return "Texture2D";
+            return "Texture2D<float4>";
         case HLSL_TEXTURE_CUBE:
-            return "TextureCube";
+            return "TextureCube<float4>";
         case HLSL_TEXTURE_2D_ARRAY:
-            return "Texture2DArray";
+            return "Texture2DArray<float4>";
         case HLSL_TEXTURE_3D:
-            return "Texture3D";
+            return "Texture3D<float4>";
+        case HLSL_TEXTURE_2D_UNORM:
+            return "Texture2D<unorm float4>";
+        case HLSL_TEXTURE_CUBE_UNORM:
+            return "TextureCube<unorm float4>";
+        case HLSL_TEXTURE_2D_ARRAY_UNORN:
+            return "Texture2DArray<unorm float4>";
+        case HLSL_TEXTURE_3D_UNORM:
+            return "Texture3D<unorm float4>";
+        case HLSL_TEXTURE_2D_SNORM:
+            return "Texture2D<snorm float4>";
+        case HLSL_TEXTURE_CUBE_SNORM:
+            return "TextureCube<snorm float4>";
+        case HLSL_TEXTURE_2D_ARRAY_SNORM:
+            return "Texture2DArray<snorm float4>";
+        case HLSL_TEXTURE_3D_SNORM:
+            return "Texture3D<snorm float4>";
         case HLSL_TEXTURE_2D_MS:
             return "Texture2DMS<float4>";
         case HLSL_TEXTURE_2D_INT4:
@@ -127,15 +274,15 @@ TString TextureString(const HLSLTextureSamplerGroup type)
             UNREACHABLE();
     }
 
-    return "<unknown texture type>";
+    return "<unknown read texture type>";
 }
 
-TString TextureString(const TBasicType type)
+TString TextureString(const TBasicType type, TLayoutImageInternalFormat imageInternalFormat)
 {
-    return TextureString(TextureGroup(type));
+    return TextureString(TextureGroup(type, imageInternalFormat));
 }
 
-TString TextureGroupSuffix(const HLSLTextureSamplerGroup type)
+TString TextureGroupSuffix(const HLSLTextureGroup type)
 {
     switch (type)
     {
@@ -147,6 +294,22 @@ TString TextureGroupSuffix(const HLSLTextureSamplerGroup type)
             return "2DArray";
         case HLSL_TEXTURE_3D:
             return "3D";
+        case HLSL_TEXTURE_2D_UNORM:
+            return "2D_unorm_float4_";
+        case HLSL_TEXTURE_CUBE_UNORM:
+            return "Cube_unorm_float4_";
+        case HLSL_TEXTURE_2D_ARRAY_UNORN:
+            return "2DArray_unorm_float4_";
+        case HLSL_TEXTURE_3D_UNORM:
+            return "3D_unorm_float4_";
+        case HLSL_TEXTURE_2D_SNORM:
+            return "2D_snorm_float4_";
+        case HLSL_TEXTURE_CUBE_SNORM:
+            return "Cube_snorm_float4_";
+        case HLSL_TEXTURE_2D_ARRAY_SNORM:
+            return "2DArray_snorm_float4_";
+        case HLSL_TEXTURE_3D_SNORM:
+            return "3D_snorm_float4_";
         case HLSL_TEXTURE_2D_MS:
             return "2DMS";
         case HLSL_TEXTURE_2D_INT4:
@@ -178,12 +341,12 @@ TString TextureGroupSuffix(const HLSLTextureSamplerGroup type)
     return "<unknown texture type>";
 }
 
-TString TextureGroupSuffix(const TBasicType type)
+TString TextureGroupSuffix(const TBasicType type, TLayoutImageInternalFormat imageInternalFormat)
 {
-    return TextureGroupSuffix(TextureGroup(type));
+    return TextureGroupSuffix(TextureGroup(type, imageInternalFormat));
 }
 
-TString TextureTypeSuffix(const TBasicType type)
+TString TextureTypeSuffix(const TBasicType type, TLayoutImageInternalFormat imageInternalFormat)
 {
     switch (type)
     {
@@ -193,9 +356,337 @@ TString TextureTypeSuffix(const TBasicType type)
             return "Cube_uint4_";
         case EbtSamplerExternalOES:
             return "_External";
+        case EbtImageCube:
+        {
+            switch (imageInternalFormat)
+            {
+                case EiifRGBA32F:
+                case EiifRGBA16F:
+                case EiifR32F:
+                    return "Cube_float4_";
+                case EiifRGBA8:
+                    return "Cube_unorm_float4_";
+                case EiifRGBA8_SNORM:
+                    return "Cube_snorm_float4_";
+                default:
+                    UNREACHABLE();
+            }
+        }
+        case EbtIImageCube:
+        {
+            switch (imageInternalFormat)
+            {
+                case EiifRGBA32I:
+                case EiifRGBA16I:
+                case EiifRGBA8I:
+                case EiifR32I:
+                    return "Cube_int4_";
+                default:
+                    UNREACHABLE();
+            }
+        }
+        case EbtUImageCube:
+        {
+            switch (imageInternalFormat)
+            {
+                case EiifRGBA32UI:
+                case EiifRGBA16UI:
+                case EiifRGBA8UI:
+                case EiifR32UI:
+                    return "Cube_uint4_";
+                default:
+                    UNREACHABLE();
+            }
+        }
         default:
             // All other types are identified by their group suffix
-            return TextureGroupSuffix(type);
+            return TextureGroupSuffix(type, imageInternalFormat);
+    }
+}
+
+HLSLRWTextureGroup RWTextureGroup(const TBasicType type,
+                                  TLayoutImageInternalFormat imageInternalFormat)
+
+{
+    switch (type)
+    {
+        case EbtImage2D:
+        {
+            switch (imageInternalFormat)
+            {
+                case EiifRGBA32F:
+                case EiifRGBA16F:
+                case EiifR32F:
+                    return HLSL_RWTEXTURE_2D_FLOAT4;
+                case EiifRGBA8:
+                    return HLSL_RWTEXTURE_2D_UNORM;
+                case EiifRGBA8_SNORM:
+                    return HLSL_RWTEXTURE_2D_SNORM;
+                default:
+                    UNREACHABLE();
+            }
+        }
+        case EbtIImage2D:
+        {
+            switch (imageInternalFormat)
+            {
+                case EiifRGBA32I:
+                case EiifRGBA16I:
+                case EiifRGBA8I:
+                case EiifR32I:
+                    return HLSL_RWTEXTURE_2D_INT4;
+                default:
+                    UNREACHABLE();
+            }
+        }
+        case EbtUImage2D:
+        {
+            switch (imageInternalFormat)
+            {
+
+                case EiifRGBA32UI:
+                case EiifRGBA16UI:
+                case EiifRGBA8UI:
+                case EiifR32UI:
+                    return HLSL_RWTEXTURE_2D_UINT4;
+                default:
+                    UNREACHABLE();
+            }
+        }
+        case EbtImage3D:
+        {
+            switch (imageInternalFormat)
+            {
+                case EiifRGBA32F:
+                case EiifRGBA16F:
+                case EiifR32F:
+                    return HLSL_RWTEXTURE_3D_FLOAT4;
+                case EiifRGBA8:
+                    return HLSL_RWTEXTURE_3D_UNORM;
+                case EiifRGBA8_SNORM:
+                    return HLSL_RWTEXTURE_3D_SNORM;
+                default:
+                    UNREACHABLE();
+            }
+        }
+        case EbtIImage3D:
+        {
+            switch (imageInternalFormat)
+            {
+                case EiifRGBA32I:
+                case EiifRGBA16I:
+                case EiifRGBA8I:
+                case EiifR32I:
+                    return HLSL_RWTEXTURE_3D_INT4;
+                default:
+                    UNREACHABLE();
+            }
+        }
+        case EbtUImage3D:
+        {
+            switch (imageInternalFormat)
+            {
+                case EiifRGBA32UI:
+                case EiifRGBA16UI:
+                case EiifRGBA8UI:
+                case EiifR32UI:
+                    return HLSL_RWTEXTURE_3D_UINT4;
+                default:
+                    UNREACHABLE();
+            }
+        }
+        case EbtImage2DArray:
+        case EbtImageCube:
+        {
+            switch (imageInternalFormat)
+            {
+                case EiifRGBA32F:
+                case EiifRGBA16F:
+                case EiifR32F:
+                    return HLSL_RWTEXTURE_2D_ARRAY_FLOAT4;
+                case EiifRGBA8:
+                    return HLSL_RWTEXTURE_2D_ARRAY_UNORN;
+                case EiifRGBA8_SNORM:
+                    return HLSL_RWTEXTURE_2D_ARRAY_SNORM;
+                default:
+                    UNREACHABLE();
+            }
+        }
+        case EbtIImage2DArray:
+        case EbtIImageCube:
+        {
+            switch (imageInternalFormat)
+            {
+                case EiifRGBA32I:
+                case EiifRGBA16I:
+                case EiifRGBA8I:
+                case EiifR32I:
+                    return HLSL_RWTEXTURE_2D_ARRAY_INT4;
+                default:
+                    UNREACHABLE();
+            }
+        }
+        case EbtUImage2DArray:
+        case EbtUImageCube:
+        {
+            switch (imageInternalFormat)
+            {
+                case EiifRGBA32UI:
+                case EiifRGBA16UI:
+                case EiifRGBA8UI:
+                case EiifR32UI:
+                    return HLSL_RWTEXTURE_2D_ARRAY_UINT4;
+                default:
+                    UNREACHABLE();
+            }
+        }
+        default:
+            UNREACHABLE();
+    }
+    return HLSL_RWTEXTURE_UNKNOWN;
+}
+
+TString RWTextureString(const HLSLRWTextureGroup RWTextureGroup)
+{
+    switch (RWTextureGroup)
+    {
+        case HLSL_RWTEXTURE_2D_FLOAT4:
+            return "RWTexture2D<float4>";
+        case HLSL_RWTEXTURE_2D_ARRAY_FLOAT4:
+            return "RWTexture2DArray<float4>";
+        case HLSL_RWTEXTURE_3D_FLOAT4:
+            return "RWTexture3D<float4>";
+        case HLSL_RWTEXTURE_2D_UNORM:
+            return "RWTexture2D<unorm float4>";
+        case HLSL_RWTEXTURE_2D_ARRAY_UNORN:
+            return "RWTexture2DArray<unorm float4>";
+        case HLSL_RWTEXTURE_3D_UNORM:
+            return "RWTexture3D<unorm float4>";
+        case HLSL_RWTEXTURE_2D_SNORM:
+            return "RWTexture2D<snorm float4>";
+        case HLSL_RWTEXTURE_2D_ARRAY_SNORM:
+            return "RWTexture2DArray<snorm float4>";
+        case HLSL_RWTEXTURE_3D_SNORM:
+            return "RWTexture3D<snorm float4>";
+        case HLSL_RWTEXTURE_2D_UINT4:
+            return "RWTexture2D<uint4>";
+        case HLSL_RWTEXTURE_2D_ARRAY_UINT4:
+            return "RWTexture2DArray<uint4>";
+        case HLSL_RWTEXTURE_3D_UINT4:
+            return "RWTexture3D<uint4>";
+        case HLSL_RWTEXTURE_2D_INT4:
+            return "RWTexture2D<int4>";
+        case HLSL_RWTEXTURE_2D_ARRAY_INT4:
+            return "RWTexture2DArray<int4>";
+        case HLSL_RWTEXTURE_3D_INT4:
+            return "RWTexture3D<int4>";
+        default:
+            UNREACHABLE();
+    }
+
+    return "<unknown read and write texture type>";
+}
+
+TString RWTextureString(const TBasicType type, TLayoutImageInternalFormat imageInternalFormat)
+{
+    return RWTextureString(RWTextureGroup(type, imageInternalFormat));
+}
+
+TString RWTextureGroupSuffix(const HLSLRWTextureGroup type)
+{
+    switch (type)
+    {
+        case HLSL_RWTEXTURE_2D_FLOAT4:
+            return "RW2D_float4_";
+        case HLSL_RWTEXTURE_2D_ARRAY_FLOAT4:
+            return "RW2DArray_float4_";
+        case HLSL_RWTEXTURE_3D_FLOAT4:
+            return "RW3D_float4_";
+        case HLSL_RWTEXTURE_2D_UNORM:
+            return "RW2D_unorm_float4_";
+        case HLSL_RWTEXTURE_2D_ARRAY_UNORN:
+            return "RW2DArray_unorm_float4_";
+        case HLSL_RWTEXTURE_3D_UNORM:
+            return "RW3D_unorm_float4_";
+        case HLSL_RWTEXTURE_2D_SNORM:
+            return "RW2D_snorm_float4_";
+        case HLSL_RWTEXTURE_2D_ARRAY_SNORM:
+            return "RW2DArray_snorm_float4_";
+        case HLSL_RWTEXTURE_3D_SNORM:
+            return "RW3D_snorm_float4_";
+        case HLSL_RWTEXTURE_2D_UINT4:
+            return "RW2D_uint4_";
+        case HLSL_RWTEXTURE_2D_ARRAY_UINT4:
+            return "RW2DArray_uint4_";
+        case HLSL_RWTEXTURE_3D_UINT4:
+            return "RW3D_uint4_";
+        case HLSL_RWTEXTURE_2D_INT4:
+            return "RW2D_int4_";
+        case HLSL_RWTEXTURE_2D_ARRAY_INT4:
+            return "RW2DArray_int4_";
+        case HLSL_RWTEXTURE_3D_INT4:
+            return "RW3D_int4_";
+        default:
+            UNREACHABLE();
+    }
+
+    return "<unknown read and write resource>";
+}
+
+TString RWTextureGroupSuffix(const TBasicType type, TLayoutImageInternalFormat imageInternalFormat)
+{
+    return RWTextureGroupSuffix(RWTextureGroup(type, imageInternalFormat));
+}
+
+TString RWTextureTypeSuffix(const TBasicType type, TLayoutImageInternalFormat imageInternalFormat)
+{
+    switch (type)
+    {
+        case EbtImageCube:
+        {
+            switch (imageInternalFormat)
+            {
+                case EiifRGBA32F:
+                case EiifRGBA16F:
+                case EiifR32F:
+                    return "RWCube_float4_";
+                case EiifRGBA8:
+                    return "RWCube_unorm_float4_";
+                case EiifRGBA8_SNORM:
+                    return "RWCube_unorm_float4_";
+                default:
+                    UNREACHABLE();
+            }
+        }
+        case EbtIImageCube:
+        {
+            switch (imageInternalFormat)
+            {
+                case EiifRGBA32I:
+                case EiifRGBA16I:
+                case EiifRGBA8I:
+                case EiifR32I:
+                    return "RWCube_int4_";
+                default:
+                    UNREACHABLE();
+            }
+        }
+        case EbtUImageCube:
+        {
+            switch (imageInternalFormat)
+            {
+                case EiifRGBA32UI:
+                case EiifRGBA16UI:
+                case EiifRGBA8UI:
+                case EiifR32UI:
+                    return "RWCube_uint4_";
+                default:
+                    UNREACHABLE();
+            }
+        }
+        default:
+            // All other types are identified by their group suffix
+            return TextureGroupSuffix(type, imageInternalFormat);
     }
 }
 

@@ -226,6 +226,8 @@
             'compiler/translator/StructureHLSL.h',
             'compiler/translator/TextureFunctionHLSL.cpp',
             'compiler/translator/TextureFunctionHLSL.h',
+            'compiler/translator/ImageFunctionHLSL.cpp',
+            'compiler/translator/ImageFunctionHLSL.h',
             'compiler/translator/TranslatorHLSL.cpp',
             'compiler/translator/TranslatorHLSL.h',
             'compiler/translator/UnfoldShortCircuitToIf.cpp',

@@ -477,6 +477,106 @@ inline bool IsShadowSampler(TBasicType type)
     return false;
 }
 
+inline bool IsImage2D(TBasicType type)
+{
+    switch (type)
+    {
+        case EbtImage2D:
+        case EbtIImage2D:
+        case EbtUImage2D:
+            return true;
+        case EbtImage3D:
+        case EbtIImage3D:
+        case EbtUImage3D:
+        case EbtImage2DArray:
+        case EbtIImage2DArray:
+        case EbtUImage2DArray:
+        case EbtImageCube:
+        case EbtIImageCube:
+        case EbtUImageCube:
+            return false;
+        default:
+            assert(!IsImage(type));
+    }
+
+    return false;
+}
+
+inline bool IsImage3D(TBasicType type)
+{
+    switch (type)
+    {
+        case EbtImage3D:
+        case EbtIImage3D:
+        case EbtUImage3D:
+            return true;
+        case EbtImage2D:
+        case EbtIImage2D:
+        case EbtUImage2D:
+        case EbtImage2DArray:
+        case EbtIImage2DArray:
+        case EbtUImage2DArray:
+        case EbtImageCube:
+        case EbtIImageCube:
+        case EbtUImageCube:
+            return false;
+        default:
+            assert(!IsImage(type));
+    }
+
+    return false;
+}
+
+inline bool IsImage2DArray(TBasicType type)
+{
+    switch (type)
+    {
+        case EbtImage2DArray:
+        case EbtIImage2DArray:
+        case EbtUImage2DArray:
+            return true;
+        case EbtImage2D:
+        case EbtIImage2D:
+        case EbtUImage2D:
+        case EbtImage3D:
+        case EbtIImage3D:
+        case EbtUImage3D:
+        case EbtImageCube:
+        case EbtIImageCube:
+        case EbtUImageCube:
+            return false;
+        default:
+            assert(!IsImage(type));
+    }
+
+    return false;
+}
+
+inline bool IsImageCube(TBasicType type)
+{
+    switch (type)
+    {
+        case EbtImageCube:
+        case EbtIImageCube:
+        case EbtUImageCube:
+            return true;
+        case EbtImage2D:
+        case EbtIImage2D:
+        case EbtUImage2D:
+        case EbtImage3D:
+        case EbtIImage3D:
+        case EbtUImage3D:
+        case EbtImage2DArray:
+        case EbtIImage2DArray:
+        case EbtUImage2DArray:
+            return false;
+        default:
+            assert(!IsImage(type));
+    }
+
+    return false;
+}
+
 inline bool IsInteger(TBasicType type)
 {
     return type == EbtInt || type == EbtUInt;
