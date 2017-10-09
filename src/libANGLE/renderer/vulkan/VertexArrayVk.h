@@ -11,9 +11,11 @@
 #define LIBANGLE_RENDERER_VULKAN_VERTEXARRAYVK_H_
 
 #include "libANGLE/renderer/VertexArrayImpl.h"
+#include "libANGLE/renderer/vulkan/renderervk_utils.h"
 
 namespace rx
 {
+class BufferVk;
 
 class VertexArrayVk : public VertexArrayImpl
 {
@@ -23,6 +25,14 @@ class VertexArrayVk : public VertexArrayImpl
 
     void syncState(const gl::Context *context,
                    const gl::VertexArray::DirtyBits &dirtyBits) override;
+
+    const std::vector<VkBuffer> &getCurrentVertexBufferHandlesCache() const;
+
+    void updateCurrentBufferSerials(const gl::AttributesMask &activeAttribsMask, Serial serial);
+
+  private:
+    std::vector<VkBuffer> mCurrentVertexBufferHandlesCache;
+    std::vector<BufferVk *> mCurrentVkBuffersCache;
 };
 
 }  // namespace rx

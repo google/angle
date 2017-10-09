@@ -11,6 +11,7 @@
 
 #include "common/bitset_utils.h"
 #include "common/debug.h"
+#include "libANGLE/Context.h"
 #include "libANGLE/Program.h"
 #include "libANGLE/renderer/vulkan/BufferVk.h"
 #include "libANGLE/renderer/vulkan/CompilerVk.h"
@@ -77,8 +78,9 @@ gl::Error ContextVk::flush()
 
 gl::Error ContextVk::finish()
 {
-    UNIMPLEMENTED();
-    return gl::InternalError();
+    // TODO(jmadill): Implement finish.
+    // UNIMPLEMENTED();
+    return gl::NoError();
 }
 
 gl::Error ContextVk::initPipeline(const gl::Context *context)
@@ -302,46 +304,29 @@ gl::Error ContextVk::setupDraw(const gl::Context *context, GLenum mode)
     const auto &state     = mState.getState();
     const auto &programGL = state.getProgram();
     const auto &vao       = state.getVertexArray();
-    const auto &attribs   = vao->getVertexAttributes();
-    const auto &bindings  = vao->getVertexBindings();
+    VertexArrayVk *vkVAO  = GetImplAs<VertexArrayVk>(vao);
     const auto *drawFBO   = state.getDrawFramebuffer();
     FramebufferVk *vkFBO  = GetImplAs<FramebufferVk>(drawFBO);
     Serial queueSerial    = mRenderer->getCurrentQueueSerial();
+    uint32_t maxAttrib    = programGL->getState().getMaxActiveAttribLocation();
 
-    // Process vertex attributes
-    // TODO(jmadill): Caching with dirty bits.
-    std::vector<VkBuffer> vertexHandles;
-    std::vector<VkDeviceSize> vertexOffsets;
-
-    for (auto attribIndex : programGL->getActiveAttribLocationsMask())
-    {
-        const auto &attrib  = attribs[attribIndex];
-        const auto &binding = bindings[attrib.bindingIndex];
-        if (attrib.enabled)
-        {
-            // TODO(jmadill): Offset handling.
-            gl::Buffer *bufferGL = binding.getBuffer().get();
-            ASSERT(bufferGL);
-            BufferVk *bufferVk = GetImplAs<BufferVk>(bufferGL);
-            vertexHandles.push_back(bufferVk->getVkBuffer().getHandle());
-            vertexOffsets.push_back(0);
-
-            bufferVk->setQueueSerial(queueSerial);
-        }
-        else
-        {
-            UNIMPLEMENTED();
-        }
-    }
+    // Process vertex attributes. Assume zero offsets for now.
+    // TODO(jmadill): Offset handling.
+    const std::vector<VkBuffer> &vertexHandles = vkVAO->getCurrentVertexBufferHandlesCache();
+    angle::MemoryBuffer *zeroBuf               = nullptr;
+    ANGLE_TRY(context->getZeroFilledBuffer(maxAttrib * sizeof(VkDeviceSize), &zeroBuf));
 
     vk::CommandBuffer *commandBuffer = nullptr;
     ANGLE_TRY(mRenderer->getStartedCommandBuffer(&commandBuffer));
     ANGLE_TRY(vkFBO->ensureInRenderPass(context, device, commandBuffer, queueSerial, state));
 
     commandBuffer->bindPipeline(VK_PIPELINE_BIND_POINT_GRAPHICS, mCurrentPipeline);
+    commandBuffer->bindVertexBuffers(0, maxAttrib, vertexHandles.data(),
+                                     reinterpret_cast<const VkDeviceSize *>(zeroBuf->data()));
+
     // TODO(jmadill): the queue serial should be bound to the pipeline.
     setQueueSerial(queueSerial);
-    commandBuffer->bindVertexBuffers(0, vertexHandles, vertexOffsets);
+    vkVAO->updateCurrentBufferSerials(programGL->getActiveAttribLocationsMask(), queueSerial);
 
     return gl::NoError();
 }

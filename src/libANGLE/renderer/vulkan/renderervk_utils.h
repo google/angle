@@ -239,8 +239,9 @@ class CommandBuffer final : public WrappedObject<CommandBuffer, VkCommandBuffer>
 
     void bindPipeline(VkPipelineBindPoint pipelineBindPoint, const vk::Pipeline &pipeline);
     void bindVertexBuffers(uint32_t firstBinding,
-                           const std::vector<VkBuffer> &buffers,
-                           const std::vector<VkDeviceSize> &offsets);
+                           uint32_t bindingCount,
+                           const VkBuffer *buffers,
+                           const VkDeviceSize *offsets);
     void bindIndexBuffer(const vk::Buffer &buffer, VkDeviceSize offset, VkIndexType indexType);
 
   private:

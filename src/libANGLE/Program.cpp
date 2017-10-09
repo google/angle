@@ -341,6 +341,7 @@ ProgramState::ProgramState()
       mAttachedVertexShader(nullptr),
       mAttachedComputeShader(nullptr),
       mTransformFeedbackBufferMode(GL_INTERLEAVED_ATTRIBS),
+      mMaxActiveAttribLocation(0),
       mSamplerUniformRange(0, 0),
       mImageUniformRange(0, 0),
       mAtomicCounterUniformRange(0, 0),
@@ -847,6 +848,7 @@ void Program::unlink()
 {
     mState.mAttributes.clear();
     mState.mActiveAttribLocationsMask.reset();
+    mState.mMaxActiveAttribLocation = 0;
     mState.mLinkedTransformFeedbackVaryings.clear();
     mState.mUniforms.clear();
     mState.mUniformLocations.clear();
@@ -2134,11 +2136,14 @@ bool Program::linkAttributes(const Context *context, InfoLog &infoLog)
     for (const sh::Attribute &attribute : mState.mAttributes)
     {
         ASSERT(attribute.location != -1);
-        int regs = VariableRegisterCount(attribute.type);
+        unsigned int regs = static_cast<unsigned int>(VariableRegisterCount(attribute.type));
 
-        for (int r = 0; r < regs; r++)
+        for (unsigned int r = 0; r < regs; r++)
         {
-            mState.mActiveAttribLocationsMask.set(attribute.location + r);
+            unsigned int location = static_cast<unsigned int>(attribute.location) + r;
+            mState.mActiveAttribLocationsMask.set(location);
+            mState.mMaxActiveAttribLocation =
+                std::max(mState.mMaxActiveAttribLocation, location + 1);
         }
     }
 

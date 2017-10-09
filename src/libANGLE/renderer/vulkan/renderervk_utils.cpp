@@ -446,12 +446,12 @@ void CommandBuffer::bindPipeline(VkPipelineBindPoint pipelineBindPoint,
 }
 
 void CommandBuffer::bindVertexBuffers(uint32_t firstBinding,
-                                      const std::vector<VkBuffer> &buffers,
-                                      const std::vector<VkDeviceSize> &offsets)
+                                      uint32_t bindingCount,
+                                      const VkBuffer *buffers,
+                                      const VkDeviceSize *offsets)
 {
-    ASSERT(valid() && buffers.size() == offsets.size());
-    vkCmdBindVertexBuffers(mHandle, firstBinding, static_cast<uint32_t>(buffers.size()),
-                           buffers.data(), offsets.data());
+    ASSERT(valid());
+    vkCmdBindVertexBuffers(mHandle, firstBinding, bindingCount, buffers, offsets);
 }
 
 void CommandBuffer::bindIndexBuffer(const vk::Buffer &buffer,
