@@ -169,8 +169,14 @@ gl::Error Sync11::clientWait(GLbitfield flags, GLuint64 timeout, GLenum *outResu
     BOOL success                 = QueryPerformanceCounter(&currentCounter);
     ASSERT(success);
 
-    LONGLONG timeoutInSeconds = static_cast<LONGLONG>(timeout) * static_cast<LONGLONG>(1000000ll);
+    LONGLONG timeoutInSeconds = static_cast<LONGLONG>(timeout / 1000000000ull);
     LONGLONG endCounter       = currentCounter.QuadPart + mCounterFrequency * timeoutInSeconds;
+
+    // Extremely unlikely, but if mCounterFrequency is large enough, endCounter can wrap
+    if (endCounter < currentCounter.QuadPart)
+    {
+        endCounter = MAXLONGLONG;
+    }
 
     int loopCount = 0;
     while (currentCounter.QuadPart < endCounter && !result)
