@@ -3499,6 +3499,45 @@ TEST_P(GLSLTest_ES3, DifferentStatementsInsideSwitch)
     ANGLE_GL_PROGRAM(program, mSimpleVSSource, fragmentShader);
 }
 
+// Test that switch fall-through works correctly.
+// This is a regression test for http://anglebug.com/2178
+TEST_P(GLSLTest_ES3, SwitchFallThroughCodeDuplication)
+{
+    const std::string &fragmentShader =
+        R"(#version 300 es
+
+        precision highp float;
+
+        out vec4 my_FragColor;
+
+        uniform int u_zero;
+
+        void main()
+        {
+            int i = 0;
+            // switch should fall through both cases.
+            switch(u_zero)
+            {
+                case 0:
+                    i += 1;
+                case 1:
+                    i += 2;
+            }
+            if (i == 3)
+            {
+                my_FragColor = vec4(0, 1, 0, 1);
+            }
+            else
+            {
+                my_FragColor = vec4(1, 0, 0, 1);
+            }
+        })";
+
+    ANGLE_GL_PROGRAM(program, mSimpleVSSource, fragmentShader);
+    drawQuad(program.get(), "inputAttribute", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
 ANGLE_INSTANTIATE_TEST(GLSLTest,
                        ES2_D3D9(),

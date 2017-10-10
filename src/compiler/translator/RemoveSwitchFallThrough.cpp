@@ -56,14 +56,16 @@ TIntermBlock *RemoveSwitchFallThroughTraverser::removeFallThrough(TIntermBlock *
     RemoveSwitchFallThroughTraverser rm(statementList);
     ASSERT(statementList);
     statementList->traverse(&rm);
-    bool lastStatementWasBreak = rm.mLastStatementWasBreak;
-    rm.mLastStatementWasBreak  = true;
-    rm.handlePreviousCase();
-    if (!lastStatementWasBreak)
+    ASSERT(rm.mPreviousCase || statementList->getSequence()->empty());
+    if (!rm.mLastStatementWasBreak && rm.mPreviousCase)
     {
+        // Make sure that there's a branch at the end of the final case inside the switch statement.
+        // This also ensures that any cases that fall through to the final case will get the break.
         TIntermBranch *finalBreak = new TIntermBranch(EOpBreak, nullptr);
-        rm.mStatementListOut->getSequence()->push_back(finalBreak);
+        rm.mPreviousCase->getSequence()->push_back(finalBreak);
+        rm.mLastStatementWasBreak = true;
     }
+    rm.handlePreviousCase();
     return rm.mStatementListOut;
 }
 
