@@ -752,6 +752,14 @@ egl::Error Renderer11::initialize()
     return egl::NoError();
 }
 
+HRESULT Renderer11::callD3D11CreateDevice(PFN_D3D11_CREATE_DEVICE createDevice, bool debug)
+{
+    return createDevice(
+        nullptr, mRequestedDriverType, nullptr, debug ? D3D11_CREATE_DEVICE_DEBUG : 0,
+        mAvailableFeatureLevels.data(), static_cast<unsigned int>(mAvailableFeatureLevels.size()),
+        D3D11_SDK_VERSION, &mDevice, &(mRenderer11DeviceCaps.featureLevel), &mDeviceContext);
+}
+
 egl::Error Renderer11::initializeD3DDevice()
 {
     HRESULT result = S_OK;
@@ -789,11 +797,17 @@ egl::Error Renderer11::initializeD3DDevice()
         if (mCreateDebugDevice)
         {
             TRACE_EVENT0("gpu.angle", "D3D11CreateDevice (Debug)");
-            result = D3D11CreateDevice(nullptr, mRequestedDriverType, nullptr,
-                                       D3D11_CREATE_DEVICE_DEBUG, mAvailableFeatureLevels.data(),
-                                       static_cast<unsigned int>(mAvailableFeatureLevels.size()),
-                                       D3D11_SDK_VERSION, &mDevice,
-                                       &(mRenderer11DeviceCaps.featureLevel), &mDeviceContext);
+            result = callD3D11CreateDevice(D3D11CreateDevice, true);
+
+            if (result == E_INVALIDARG && mAvailableFeatureLevels.size() > 1u &&
+                mAvailableFeatureLevels[0] == D3D_FEATURE_LEVEL_11_1)
+            {
+                // On older Windows platforms, D3D11.1 is not supported which returns E_INVALIDARG.
+                // Try again without passing D3D_FEATURE_LEVEL_11_1 in case we have other feature
+                // levels to fall back on.
+                mAvailableFeatureLevels.erase(mAvailableFeatureLevels.begin());
+                result = callD3D11CreateDevice(D3D11CreateDevice, true);
+            }
 
             if (!mDevice || FAILED(result))
             {
@@ -806,10 +820,17 @@ egl::Error Renderer11::initializeD3DDevice()
             SCOPED_ANGLE_HISTOGRAM_TIMER("GPU.ANGLE.D3D11CreateDeviceMS");
             TRACE_EVENT0("gpu.angle", "D3D11CreateDevice");
 
-            result = D3D11CreateDevice(
-                nullptr, mRequestedDriverType, nullptr, 0, mAvailableFeatureLevels.data(),
-                static_cast<unsigned int>(mAvailableFeatureLevels.size()), D3D11_SDK_VERSION,
-                &mDevice, &(mRenderer11DeviceCaps.featureLevel), &mDeviceContext);
+            result = callD3D11CreateDevice(D3D11CreateDevice, false);
+
+            if (result == E_INVALIDARG && mAvailableFeatureLevels.size() > 1u &&
+                mAvailableFeatureLevels[0] == D3D_FEATURE_LEVEL_11_1)
+            {
+                // On older Windows platforms, D3D11.1 is not supported which returns E_INVALIDARG.
+                // Try again without passing D3D_FEATURE_LEVEL_11_1 in case we have other feature
+                // levels to fall back on.
+                mAvailableFeatureLevels.erase(mAvailableFeatureLevels.begin());
+                result = callD3D11CreateDevice(D3D11CreateDevice, false);
+            }
 
             // Cleanup done by destructor
             if (!mDevice || FAILED(result))

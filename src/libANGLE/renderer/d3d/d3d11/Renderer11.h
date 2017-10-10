@@ -501,6 +501,7 @@ class Renderer11 : public RendererD3D
         const gl::TextureCaps &colorBufferFormatCaps,
         const gl::TextureCaps &depthStencilBufferFormatCaps) const;
 
+    HRESULT callD3D11CreateDevice(PFN_D3D11_CREATE_DEVICE createDevice, bool debug);
     egl::Error initializeD3DDevice();
     egl::Error initializeDevice();
     void releaseDeviceResources();
