@@ -550,7 +550,6 @@ StateManager11::StateManager11(Renderer11 *renderer)
       mAppliedIB(nullptr),
       mAppliedIBFormat(DXGI_FORMAT_UNKNOWN),
       mAppliedIBOffset(0),
-      mAppliedIBChanged(false),
       mVertexDataManager(renderer),
       mIndexDataManager(renderer, RENDERER_D3D11),
       mIsMultiviewEnabled(false),
@@ -2504,7 +2503,7 @@ gl::Error StateManager11::applyVertexBuffer(const gl::Context *context,
         mInputLayoutIsDirty = true;
 
         // Determine if we need to update attribs on the next draw.
-        mVertexAttribsNeedTranslation = (vertexArray11->hasDynamicAttrib(context));
+        mVertexAttribsNeedTranslation = (vertexArray11->hasActiveDynamicAttrib(context));
     }
 
     if (!mLastFirstVertex.valid() || mLastFirstVertex.value() != first)

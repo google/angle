@@ -70,11 +70,11 @@ void VertexArray11::syncState(const gl::Context *context,
 
 bool VertexArray11::flushAttribUpdates(const gl::Context *context)
 {
-    const gl::Program *program  = context->getGLState().getProgram();
-    const auto &activeLocations = program->getActiveAttribLocationsMask();
-
     if (mAttribsToUpdate.any())
     {
+        const auto &activeLocations =
+            context->getGLState().getProgram()->getActiveAttribLocationsMask();
+
         // Skip attrib locations the program doesn't use.
         gl::AttributesMask activeToUpdate = mAttribsToUpdate & activeLocations;
 
@@ -161,16 +161,13 @@ void VertexArray11::updateVertexAttribStorage(const gl::Context *context, size_t
     }
 }
 
-bool VertexArray11::hasDynamicAttrib(const gl::Context *context)
+bool VertexArray11::hasActiveDynamicAttrib(const gl::Context *context)
 {
     flushAttribUpdates(context);
-    return mDynamicAttribsMask.any();
-}
-
-bool VertexArray11::hasDirtyOrDynamicAttrib(const gl::Context *context)
-{
-    flushAttribUpdates(context);
-    return mAttribsToTranslate.any() || mDynamicAttribsMask.any();
+    const auto &activeLocations =
+        context->getGLState().getProgram()->getActiveAttribLocationsMask();
+    auto activeDynamicAttribs = (mDynamicAttribsMask & activeLocations);
+    return activeDynamicAttribs.any();
 }
 
 gl::Error VertexArray11::updateDirtyAndDynamicAttribs(const gl::Context *context,
@@ -231,6 +228,10 @@ gl::Error VertexArray11::updateDirtyAndDynamicAttribs(const gl::Context *context
     if (mDynamicAttribsMask.any())
     {
         auto activeDynamicAttribs = (mDynamicAttribsMask & activeLocations);
+        if (activeDynamicAttribs.none())
+        {
+            return gl::NoError();
+        }
 
         for (auto dynamicAttribIndex : activeDynamicAttribs)
         {

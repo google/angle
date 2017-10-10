@@ -310,7 +310,6 @@ class StateManager11 final : angle::NonCopyable
     gl::Error clearTextures(gl::SamplerType samplerType, size_t rangeStart, size_t rangeEnd);
     void handleMultiviewDrawFramebufferChange(const gl::Context *context);
 
-    gl::Error syncVertexAttributes(const gl::Context *context);
     gl::Error syncCurrentValueAttribs(const gl::State &glState);
 
     gl::Error generateSwizzle(const gl::Context *context, gl::Texture *texture);
@@ -481,7 +480,6 @@ class StateManager11 final : angle::NonCopyable
     ID3D11Buffer *mAppliedIB;
     DXGI_FORMAT mAppliedIBFormat;
     unsigned int mAppliedIBOffset;
-    bool mAppliedIBChanged;
 
     // Vertex, index and input layouts
     VertexDataManager mVertexDataManager;

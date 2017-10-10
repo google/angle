@@ -366,7 +366,8 @@ bool DrawCallNeedsTranslation(const gl::Context *context, GLenum mode, GLenum ty
     // Direct drawing doesn't support dynamic attribute storage since it needs the first and count
     // to translate when applyVertexBuffer. GL_LINE_LOOP and GL_TRIANGLE_FAN are not supported
     // either since we need to simulate them in D3D.
-    if (vertexArray11->hasDynamicAttrib(context) || mode == GL_LINE_LOOP || mode == GL_TRIANGLE_FAN)
+    if (vertexArray11->hasActiveDynamicAttrib(context) || mode == GL_LINE_LOOP ||
+        mode == GL_TRIANGLE_FAN)
     {
         return true;
     }
