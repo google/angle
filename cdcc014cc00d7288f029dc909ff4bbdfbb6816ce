@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "eee5e08f_9732a5a4",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 376,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-10T16:13:45Z",
+      "side": 1,
+      "message": "mGeometryShaderInputPrimitiveType must be set otherwise we can error out.\n\n\u003e The geometry shader object in a program must declare this input primitive layout\n\nWhere is this check? I can\u0027t find it in ParseContext nor Compiler. Ensuring we have the input primitive type makes it so we can guarantee all arrays are correctly sized, and removes the need for the changes to ValidateVaryingLocations",
+      "revId": "cdcc014cc00d7288f029dc909ff4bbdfbb6816ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "80295966_73c32be3",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 15
@@ -19,6 +36,199 @@
         "endLine": 1803,
         "endChar": 63
       },
+      "revId": "cdcc014cc00d7288f029dc909ff4bbdfbb6816ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "72351719_10e9e57b",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 1803,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-10T16:13:45Z",
+      "side": 1,
+      "message": "I don\u0027t think we need to handle the implicit sizing of unsized varyings here. The rest of the code cannot rely on having sized symbols for unsized varyings because it is valid to create a symbol without having define the primitive topology. Better keep all symbols for unsized varyings as unsized arrays.",
+      "revId": "cdcc014cc00d7288f029dc909ff4bbdfbb6816ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f175df1b_f76d69c6",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 2390,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-10T16:13:45Z",
+      "side": 1,
+      "message": "Likewise we can avoid setting the array size here.",
+      "revId": "cdcc014cc00d7288f029dc909ff4bbdfbb6816ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cb9a6244_a3119d48",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 5620,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-10T16:13:45Z",
+      "side": 1,
+      "message": "The following pseudo-code should be valid but will cause an error to be generated\n\n in vec4 foo[];\n layout(triangles) in;\n int bar() {\n   return foo.length();\n }\n\nI suggest we do the following:\n\n else if (is unsized \u0026\u0026 is geometry shader input) {\n   if (has input primitive topology) {\n     return CreateConstantNode(input primitive topology size);\n   } else {\n     error\n     return CreateZeroNode..\n   }\n }\n\nedit: ah, that works because of the sizing of symbols. Still not a fan of it so I\u0027m not sure how to proceed.",
+      "revId": "cdcc014cc00d7288f029dc909ff4bbdfbb6816ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cc05b687_efbfea89",
+        "filename": "src/compiler/translator/ParseContext.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 611,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-10T16:13:45Z",
+      "side": 1,
+      "message": "nit: weird formatting, I think putting the comment before the member variable and git cl format will fix it.",
+      "revId": "cdcc014cc00d7288f029dc909ff4bbdfbb6816ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fd8d83a2_a457ae0b",
+        "filename": "src/compiler/translator/ValidateVaryingLocations.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-10T16:13:45Z",
+      "side": 1,
+      "message": "Why are geometry shaders treated separately? At this point in the compilation the array size should have been set from the primitive topology so the previous version of ValidateVaryingLocations should work.",
+      "revId": "cdcc014cc00d7288f029dc909ff4bbdfbb6816ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2137e607_971a940c",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 15
+      },
+      "lineNbr": 753,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-10T16:13:45Z",
+      "side": 1,
+      "message": "This is really only allowed by the geometry shader extension. We could check for it in parseSingleArrayDeclaration.",
+      "revId": "cdcc014cc00d7288f029dc909ff4bbdfbb6816ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "befd95f2_5eb4be51",
+        "filename": "src/tests/compiler_tests/CollectVariables_test.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 1306,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-10T16:13:45Z",
+      "side": 1,
+      "message": "did you mean to make one of texcoord1 and texcoord2 sized? Right now they are the same (up to the location)",
+      "revId": "cdcc014cc00d7288f029dc909ff4bbdfbb6816ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "700c7d7a_3e0b4997",
+        "filename": "src/tests/compiler_tests/CollectVariables_test.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 1342,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-10T16:13:45Z",
+      "side": 1,
+      "message": "after",
+      "range": {
+        "startLine": 1342,
+        "startChar": 35,
+        "endLine": 1342,
+        "endChar": 41
+      },
+      "revId": "cdcc014cc00d7288f029dc909ff4bbdfbb6816ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5bbbb651_eb3d4cb2",
+        "filename": "src/tests/compiler_tests/GeometryShader_test.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 1295,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-10T16:13:45Z",
+      "side": 1,
+      "message": "nit: an input primitive must always be present, can you add it at the end of the shaders?",
+      "revId": "cdcc014cc00d7288f029dc909ff4bbdfbb6816ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5ec1148c_be08fe15",
+        "filename": "src/tests/compiler_tests/GeometryShader_test.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 1333,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-10T16:13:45Z",
+      "side": 1,
+      "message": "ditto.",
+      "revId": "cdcc014cc00d7288f029dc909ff4bbdfbb6816ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0361543c_9b13e277",
+        "filename": "src/tests/compiler_tests/GeometryShader_test.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 1523,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-10T16:13:45Z",
+      "side": 1,
+      "message": "Let\u0027s have a compile failure test for unsized array outputs",
       "revId": "cdcc014cc00d7288f029dc909ff4bbdfbb6816ce",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
