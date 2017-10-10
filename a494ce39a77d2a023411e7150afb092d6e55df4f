@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fd1708ea_c5ea743e",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/TextureStorage9.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1185199
+      },
+      "writtenOn": "2017-10-10T22:10:51Z",
+      "side": 1,
+      "message": "Should I just remove this declaration?",
+      "range": {
+        "startLine": 42,
+        "startChar": 0,
+        "endLine": 44,
+        "endChar": 68
+      },
+      "revId": "a494ce39a77d2a023411e7150afb092d6e55df4f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
