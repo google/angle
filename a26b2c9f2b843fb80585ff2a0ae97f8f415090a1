@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b3f14294_019dfd53",
+        "filename": "src/compiler/translator/UniformHLSL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 297,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-10-10T01:28:12Z",
+      "side": 1,
+      "message": "Do you need to add some flags or add TODO for binding a layer of Texture3D or Texture2DArray as Texture2D?",
+      "revId": "a26b2c9f2b843fb80585ff2a0ae97f8f415090a1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e21f9016_41f722f9",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1350,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-10-10T01:28:12Z",
+      "side": 1,
+      "message": "You should put these initializations into GetMaximumXXX functions just like others here.\ne.g. \ncaps-\u003emaxComputeImageUniforms \u003d GetMaximumComputeImageUniforms(featureLevel)\nIn GetMaximumComputeImageUniforms, you should set this value according to the featureLevel:\n- Only D3D11+ has compute shaders\n- FeatureLevel 11.0 allows using at most 8 UAVs, while FeatureLevel 11.1+ allows using at most 64 UAVs\nhttps://msdn.microsoft.com/en-us/library/windows/desktop/ff476876(v\u003dvs.85).aspx\n\nAt least the TODO should be in GetMaximumComputeImageUniforms not here, as we know D3D9 and D3D10 don\u0027t support compute shaders at all.",
+      "range": {
+        "startLine": 1347,
+        "startChar": 0,
+        "endLine": 1350,
+        "endChar": 38
+      },
+      "revId": "a26b2c9f2b843fb80585ff2a0ae97f8f415090a1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
