@@ -203,12 +203,29 @@ bool RemoveSwitchFallThroughTraverser::visitAggregate(Visit, TIntermAggregate *n
     return false;
 }
 
+bool DoesBlockAlwaysBreak(TIntermBlock *node)
+{
+    if (node->getSequence()->empty())
+    {
+        return false;
+    }
+
+    TIntermBlock *lastStatementAsBlock = node->getSequence()->back()->getAsBlock();
+    if (lastStatementAsBlock)
+    {
+        return DoesBlockAlwaysBreak(lastStatementAsBlock);
+    }
+
+    TIntermBranch *lastStatementAsBranch = node->getSequence()->back()->getAsBranchNode();
+    return lastStatementAsBranch != nullptr;
+}
+
 bool RemoveSwitchFallThroughTraverser::visitBlock(Visit, TIntermBlock *node)
 {
     if (node != mStatementList)
     {
         mPreviousCase->getSequence()->push_back(node);
-        mLastStatementWasBreak = false;
+        mLastStatementWasBreak = DoesBlockAlwaysBreak(node);
         return false;
     }
     return true;
