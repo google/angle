@@ -3477,6 +3477,28 @@ TEST_P(GLSLTest_ES3, NestedArrayLengthMethodsWithSideEffects)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Test that statements inside switch() get translated to correct HLSL.
+TEST_P(GLSLTest_ES3, DifferentStatementsInsideSwitch)
+{
+    const std::string &fragmentShader =
+        R"(#version 300 es
+
+        precision highp float;
+
+        uniform int u;
+
+        void main()
+        {
+            switch (u)
+            {
+                case 0:
+                    ivec2 i;
+                    i.yx;
+            }
+        })";
+    ANGLE_GL_PROGRAM(program, mSimpleVSSource, fragmentShader);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
 ANGLE_INSTANTIATE_TEST(GLSLTest,
                        ES2_D3D9(),
