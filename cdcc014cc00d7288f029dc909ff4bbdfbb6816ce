@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "80295966_73c32be3",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 1803,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-10-10T02:50:14Z",
+      "side": 1,
+      "message": "According to SPEC, the unsized array inputs cannot be sized if there isn\u0027t a valid input primitive declaration.",
+      "range": {
+        "startLine": 1803,
+        "startChar": 14,
+        "endLine": 1803,
+        "endChar": 63
+      },
+      "revId": "cdcc014cc00d7288f029dc909ff4bbdfbb6816ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

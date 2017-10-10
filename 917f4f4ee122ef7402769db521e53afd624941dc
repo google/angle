@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "233390cd_55ade265",
+        "filename": "src/compiler/translator/CollectVariables.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 616,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-10-10T02:50:14Z",
+      "side": 1,
+      "message": "\u0027invariant\u0027 is required in fragment shader inputs in GLSL ES 1.0:\n[GLSL ES 1.0 SPEC Chapter 4.6.1]\nOnly the following variables may be declared as invariant:\n• Built-in special variables output from the vertex shader\n• Varying variables output from the vertex shader\n• Built-in special variables input to the fragment shader\n• Varying variables input to the fragment shader\n• Built-in special variables output from the fragment shader",
+      "parentUuid": "82b607f5_0edb040d",
+      "range": {
+        "startLine": 616,
+        "startChar": 13,
+        "endLine": 616,
+        "endChar": 25
+      },
+      "revId": "917f4f4ee122ef7402769db521e53afd624941dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "9454f560_bdb54fe2",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 14
@@ -36,6 +60,30 @@
       "writtenOn": "2017-10-09T08:41:39Z",
       "side": 1,
       "message": "It seems that you only need to check \u0027if (mGeometryShaderInputArraySize \u003e 0u)\u0027. I think there are situations that mGeometryShaderInputArraySize \u003e 0u and mGeometryShaderInputPrimitiveType is still EptUndefined. For example\n    const std::string \u0026shaderString \u003d\n        \"#version 310 es\\n\"\n        \"#extension GL_OES_geometry_shader : require\\n\"\n        \"in vec4 texcoord1[1];\\n\"\n        \"in vec4 texcoord2[];\\n\"\n        \"layout (points, max_vertices \u003d 1) out;\\n\"\n        \"void main()\\n\"\n        \"{\\n\"\n        \"    int length \u003d texcoord2.length();\\n\"\n        \"}\\n\";\n\nAnd add the end2end test. Thanks.",
+      "range": {
+        "startLine": 2387,
+        "startChar": 0,
+        "endLine": 2387,
+        "endChar": 66
+      },
+      "revId": "917f4f4ee122ef7402769db521e53afd624941dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "04b23315_6e5dbf1d",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 2387,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-10-10T02:50:14Z",
+      "side": 1,
+      "message": "OES_geometry_shader doesn\u0027t allow indexing or calling length on unsized array inputs before a valid input primitive declaration:\n[Chapter 4.4.1.gs]\nFor inputs declared without an array size, including intrinsically declared inputs (i.e., gl_in), a layout must be declared before any use of the method length or other any array use that requires the array size to be known.\n\nSo the example here should not be compiled. This example exposes a bug in the patchset 14. I have added this into GeometryShader_test.cpp.",
+      "parentUuid": "9454f560_bdb54fe2",
       "range": {
         "startLine": 2387,
         "startChar": 0,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "598985f4_5a71e3f3",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 3815,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-10-10T02:50:14Z",
+      "side": 1,
+      "message": "Same before.",
+      "parentUuid": "788eae3e_790c04f3",
+      "range": {
+        "startLine": 3815,
+        "startChar": 13,
+        "endLine": 3815,
+        "endChar": 62
+      },
+      "revId": "917f4f4ee122ef7402769db521e53afd624941dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "9620e6dd_724732bf",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 14
@@ -82,6 +154,30 @@
       "writtenOn": "2017-10-09T08:41:39Z",
       "side": 1,
       "message": "same here.",
+      "range": {
+        "startLine": 5619,
+        "startChar": 12,
+        "endLine": 5619,
+        "endChar": 62
+      },
+      "revId": "917f4f4ee122ef7402769db521e53afd624941dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2e1e50c7_f8c589be",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 5619,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-10-10T02:50:14Z",
+      "side": 1,
+      "message": "Same before.",
+      "parentUuid": "9620e6dd_724732bf",
       "range": {
         "startLine": 5619,
         "startChar": 12,
