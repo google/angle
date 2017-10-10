@@ -2262,16 +2262,16 @@ bool OutputHLSL::visitLoop(Visit visit, TIntermLoop *node)
 
 bool OutputHLSL::visitBranch(Visit visit, TIntermBranch *node)
 {
-    TInfoSinkBase &out = getInfoSink();
-
-    switch (node->getFlowOp())
+    if (visit == PreVisit)
     {
-        case EOpKill:
-            outputTriplet(out, visit, "discard;\n", "", "");
-            break;
-        case EOpBreak:
-            if (visit == PreVisit)
-            {
+        TInfoSinkBase &out = getInfoSink();
+
+        switch (node->getFlowOp())
+        {
+            case EOpKill:
+                out << "discard";
+                break;
+            case EOpBreak:
                 if (mNestedLoopDepth > 1)
                 {
                     mUsesNestedBreak = true;
@@ -2285,35 +2285,25 @@ bool OutputHLSL::visitBranch(Visit visit, TIntermBranch *node)
                 }
                 else
                 {
-                    out << "break;\n";
+                    out << "break";
                 }
-            }
-            break;
-        case EOpContinue:
-            outputTriplet(out, visit, "continue;\n", "", "");
-            break;
-        case EOpReturn:
-            if (visit == PreVisit)
-            {
+                break;
+            case EOpContinue:
+                out << "continue";
+                break;
+            case EOpReturn:
                 if (node->getExpression())
                 {
                     out << "return ";
                 }
                 else
                 {
-                    out << "return;\n";
+                    out << "return";
                 }
-            }
-            else if (visit == PostVisit)
-            {
-                if (node->getExpression())
-                {
-                    out << ";\n";
-                }
-            }
-            break;
-        default:
-            UNREACHABLE();
+                break;
+            default:
+                UNREACHABLE();
+        }
     }
 
     return true;
