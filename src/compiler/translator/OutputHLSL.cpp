@@ -2137,8 +2137,7 @@ bool OutputHLSL::visitSwitch(Visit visit, TIntermSwitch *node)
 
     if (node->getStatementList())
     {
-        node->setStatementList(
-            RemoveSwitchFallThrough::removeFallThrough(node->getStatementList()));
+        node->setStatementList(RemoveSwitchFallThrough(node->getStatementList()));
         outputTriplet(out, visit, "switch (", ") ", "");
         // The curly braces get written when visiting the statementList aggregate
     }
