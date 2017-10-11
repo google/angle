@@ -78,8 +78,7 @@ GPUTestConfig::OS GetCurrentOS() {
   int32_t major_version = 0;
   int32_t minor_version = 0;
   int32_t bugfix_version = 0;
-  base::SysInfo::OperatingSystemVersionNumbers(
-      &major_version, &minor_version, &bugfix_version);
+  angle::GetOperatingSystemVersionNumbers(&major_version, &minor_version, &bugfix_version);
   if (major_version == 10) {
     switch (minor_version) {
       case 5:

@@ -12,16 +12,13 @@
 
 #include "gpu_info.h"
 
-namespace base {
-
-class SysInfo
+namespace angle
 {
-  public:
-    static void OperatingSystemVersionNumbers(int32_t *major_version,
-                                              int32_t *minor_version,
-                                              int32_t *bugfix_version);
-};
 
-} // namespace base
+void GetOperatingSystemVersionNumbers(int32_t *major_version,
+                                      int32_t *minor_version,
+                                      int32_t *bugfix_version);
+
+} // namespace angle
 
 #endif // ANGLE_GPU_TEST_EXPECTATIONS_GPU_TEST_CONFIG_MAC_H_

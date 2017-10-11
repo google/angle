@@ -1,8 +1,6 @@
-diff --git a/src/tests/third_party/gpu_test_expectations/HowToMakeChanges.md b/src/tests/third_party/gpu_test_expectations/HowToMakeChanges.md
-new file mode 100644
-index 000000000..190a3e9c3
---- /dev/null
-+++ b/src/tests/third_party/gpu_test_expectations/HowToMakeChanges.md
+diff -u -rupN gpu_test_expectations_reverted/HowToMakeChanges.md gpu_test_expectations/HowToMakeChanges.md
+--- gpu_test_expectations_reverted/HowToMakeChanges.md	1969-12-31 19:00:00.000000000 -0500
++++ gpu_test_expectations/HowToMakeChanges.md	2016-09-13 10:06:02.000000000 -0400
 @@ -0,0 +1,22 @@
 +Because the ```gpu_test_expectations``` directory is based on parts of Chromium's ```gpu/config```
 +directory, we want to keep a patch of the changes added to make it compile with ANGLE. This
@@ -26,11 +24,9 @@ index 000000000..190a3e9c3
 + * ```git diff HEAD~ (`)ls(`) > angle-mods.patch```,```git add angle-mods.patch```, ```git commit --amend```
 + * ```git rebase -i``` to squash the three patches into one.
 +
-diff --git a/src/tests/third_party/gpu_test_expectations/angle_config.h b/src/tests/third_party/gpu_test_expectations/angle_config.h
-new file mode 100644
-index 000000000..1e67e6279
---- /dev/null
-+++ b/src/tests/third_party/gpu_test_expectations/angle_config.h
+diff -u -rupN gpu_test_expectations_reverted/angle_config.h gpu_test_expectations/angle_config.h
+--- gpu_test_expectations_reverted/angle_config.h	1969-12-31 19:00:00.000000000 -0500
++++ gpu_test_expectations/angle_config.h	2017-09-11 17:18:07.000000000 -0400
 @@ -0,0 +1,73 @@
 +//
 +// Copyright 2015 The ANGLE Project Authors. All rights reserved.
@@ -105,10 +101,9 @@ index 000000000..1e67e6279
 +// clang-format on
 +
 +#endif
-diff --git a/src/tests/third_party/gpu_test_expectations/gpu_info.cc b/src/tests/third_party/gpu_test_expectations/gpu_info.cc
-index e01e17a9a..6632abad4 100644
---- a/src/tests/third_party/gpu_test_expectations/gpu_info.cc
-+++ b/src/tests/third_party/gpu_test_expectations/gpu_info.cc
+diff -u -rupN gpu_test_expectations_reverted/gpu_info.cc gpu_test_expectations/gpu_info.cc
+--- gpu_test_expectations_reverted/gpu_info.cc	2017-10-30 14:30:27.000000000 -0400
++++ gpu_test_expectations/gpu_info.cc	2017-10-27 13:46:39.000000000 -0400
 @@ -4,7 +4,7 @@
  
  #include <stdint.h>
@@ -118,7 +113,7 @@ index e01e17a9a..6632abad4 100644
  
  namespace {
  
-@@ -100,7 +100,7 @@ const GPUInfo::GPUDevice& GPUInfo::active_gpu() const {
+@@ -100,7 +100,7 @@ const GPUInfo::GPUDevice& GPUInfo::activ
      if (secondary_gpu.active)
        return secondary_gpu;
    }
@@ -127,10 +122,9 @@ index e01e17a9a..6632abad4 100644
    return gpu;
  }
  
-diff --git a/src/tests/third_party/gpu_test_expectations/gpu_info.h b/src/tests/third_party/gpu_test_expectations/gpu_info.h
-index 274772e7c..250f1f32e 100644
---- a/src/tests/third_party/gpu_test_expectations/gpu_info.h
-+++ b/src/tests/third_party/gpu_test_expectations/gpu_info.h
+diff -u -rupN gpu_test_expectations_reverted/gpu_info.h gpu_test_expectations/gpu_info.h
+--- gpu_test_expectations_reverted/gpu_info.h	2017-10-30 14:30:27.000000000 -0400
++++ gpu_test_expectations/gpu_info.h	2017-10-27 13:46:39.000000000 -0400
 @@ -2,8 +2,8 @@
  // Use of this source code is governed by a BSD-style license that can be
  // found in the LICENSE file.
@@ -162,10 +156,9 @@ index 274772e7c..250f1f32e 100644
  
 -#endif  // GPU_CONFIG_GPU_INFO_H_
 +#endif  // ANGLE_GPU_CONFIG_GPU_INFO_H_
-diff --git a/src/tests/third_party/gpu_test_expectations/gpu_test_config.cc b/src/tests/third_party/gpu_test_expectations/gpu_test_config.cc
-index 979950943..802885e06 100644
---- a/src/tests/third_party/gpu_test_expectations/gpu_test_config.cc
-+++ b/src/tests/third_party/gpu_test_expectations/gpu_test_config.cc
+diff -u -rupN gpu_test_expectations_reverted/gpu_test_config.cc gpu_test_expectations/gpu_test_config.cc
+--- gpu_test_expectations_reverted/gpu_test_config.cc	2017-10-30 14:30:27.000000000 -0400
++++ gpu_test_expectations/gpu_test_config.cc	2017-10-30 14:44:19.000000000 -0400
 @@ -2,21 +2,53 @@
  // Use of this source code is governed by a BSD-style license that can be
  // found in the LICENSE file.
@@ -228,7 +221,17 @@ index 979950943..802885e06 100644
  namespace gpu {
  
  namespace {
-@@ -76,6 +108,26 @@ GPUTestConfig::OS GetCurrentOS() {
+@@ -46,8 +78,7 @@ GPUTestConfig::OS GetCurrentOS() {
+   int32_t major_version = 0;
+   int32_t minor_version = 0;
+   int32_t bugfix_version = 0;
+-  base::SysInfo::OperatingSystemVersionNumbers(
+-      &major_version, &minor_version, &bugfix_version);
++  angle::GetOperatingSystemVersionNumbers(&major_version, &minor_version, &bugfix_version);
+   if (major_version == 10) {
+     switch (minor_version) {
+       case 5:
+@@ -76,6 +107,26 @@ GPUTestConfig::OS GetCurrentOS() {
    return GPUTestConfig::kOsUnknown;
  }
  
@@ -255,7 +258,7 @@ index 979950943..802885e06 100644
  }  // namespace anonymous
  
  GPUTestConfig::GPUTestConfig()
-@@ -260,7 +312,7 @@ bool GPUTestBotConfig::LoadCurrentConfig(const GPUInfo* gpu_info) {
+@@ -260,7 +311,7 @@ bool GPUTestBotConfig::LoadCurrentConfig
      GPUInfo my_gpu_info;
      CollectInfoResult result = CollectBasicGraphicsInfo(&my_gpu_info);
      if (result != kCollectInfoSuccess) {
@@ -264,7 +267,7 @@ index 979950943..802885e06 100644
        DisableGPUInfoValidation();
        rt = true;
      } else {
-@@ -271,7 +323,7 @@ bool GPUTestBotConfig::LoadCurrentConfig(const GPUInfo* gpu_info) {
+@@ -271,7 +322,7 @@ bool GPUTestBotConfig::LoadCurrentConfig
    }
    set_os(GetCurrentOS());
    if (os() == kOsUnknown) {
@@ -273,10 +276,9 @@ index 979950943..802885e06 100644
      rt = false;
    }
  #if defined(NDEBUG)
-diff --git a/src/tests/third_party/gpu_test_expectations/gpu_test_config.h b/src/tests/third_party/gpu_test_expectations/gpu_test_config.h
-index 66f46fc46..89bf5b156 100644
---- a/src/tests/third_party/gpu_test_expectations/gpu_test_config.h
-+++ b/src/tests/third_party/gpu_test_expectations/gpu_test_config.h
+diff -u -rupN gpu_test_expectations_reverted/gpu_test_config.h gpu_test_expectations/gpu_test_config.h
+--- gpu_test_expectations_reverted/gpu_test_config.h	2017-10-30 14:30:27.000000000 -0400
++++ gpu_test_expectations/gpu_test_config.h	2017-10-27 13:46:39.000000000 -0400
 @@ -2,16 +2,15 @@
  // Use of this source code is governed by a BSD-style license that can be
  // found in the LICENSE file.
@@ -297,19 +299,17 @@ index 66f46fc46..89bf5b156 100644
  
  namespace gpu {
  
-@@ -145,5 +144,5 @@ class GPU_EXPORT GPUTestBotConfig : public GPUTestConfig {
+@@ -145,5 +144,5 @@ class GPU_EXPORT GPUTestBotConfig : publ
  
  }  // namespace gpu
  
 -#endif  // GPU_CONFIG_GPU_TEST_CONFIG_H_
 +#endif  // ANGLE_GPU_CONFIG_GPU_TEST_CONFIG_H_
  
-diff --git a/src/tests/third_party/gpu_test_expectations/gpu_test_config_mac.h b/src/tests/third_party/gpu_test_expectations/gpu_test_config_mac.h
-new file mode 100644
-index 000000000..64d0d1e67
---- /dev/null
-+++ b/src/tests/third_party/gpu_test_expectations/gpu_test_config_mac.h
-@@ -0,0 +1,27 @@
+diff -u -rupN gpu_test_expectations_reverted/gpu_test_config_mac.h gpu_test_expectations/gpu_test_config_mac.h
+--- gpu_test_expectations_reverted/gpu_test_config_mac.h	1969-12-31 19:00:00.000000000 -0500
++++ gpu_test_expectations/gpu_test_config_mac.h	2017-10-30 14:44:19.000000000 -0400
+@@ -0,0 +1,24 @@
 +//
 +// Copyright 2015 The ANGLE Project Authors. All rights reserved.
 +// Use of this source code is governed by a BSD-style license that can be
@@ -324,25 +324,20 @@ index 000000000..64d0d1e67
 +
 +#include "gpu_info.h"
 +
-+namespace base {
-+
-+class SysInfo
++namespace angle
 +{
-+  public:
-+    static void OperatingSystemVersionNumbers(int32_t *major_version,
-+                                              int32_t *minor_version,
-+                                              int32_t *bugfix_version);
-+};
 +
-+} // namespace base
++void GetOperatingSystemVersionNumbers(int32_t *major_version,
++                                      int32_t *minor_version,
++                                      int32_t *bugfix_version);
++
++} // namespace angle
 +
 +#endif // ANGLE_GPU_TEST_EXPECTATIONS_GPU_TEST_CONFIG_MAC_H_
-diff --git a/src/tests/third_party/gpu_test_expectations/gpu_test_config_mac.mm b/src/tests/third_party/gpu_test_expectations/gpu_test_config_mac.mm
-new file mode 100644
-index 000000000..cb27f8a20
---- /dev/null
-+++ b/src/tests/third_party/gpu_test_expectations/gpu_test_config_mac.mm
-@@ -0,0 +1,38 @@
+diff -u -rupN gpu_test_expectations_reverted/gpu_test_config_mac.mm gpu_test_expectations/gpu_test_config_mac.mm
+--- gpu_test_expectations_reverted/gpu_test_config_mac.mm	1969-12-31 19:00:00.000000000 -0500
++++ gpu_test_expectations/gpu_test_config_mac.mm	2017-10-30 14:31:32.000000000 -0400
+@@ -0,0 +1,49 @@
 +// Copyright (c) 2012 The Chromium Authors. All rights reserved.
 +// Use of this source code is governed by a BSD-style license that can be
 +// found in the LICENSE file.
@@ -354,8 +349,6 @@ index 000000000..cb27f8a20
 +
 +#import <Cocoa/Cocoa.h>
 +
-+namespace base {
-+
 +// OSX 10.8 deprecates Gestalt but doesn't make the operatingSystemVersion property part of the
 +// public interface of NSProcessInfo until 10.10. Add a forward declaration.
 +#if !defined(MAC_OS_X_VERSION_10_10) || MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_10
@@ -364,27 +357,39 @@ index 000000000..cb27f8a20
 +@end
 +#endif
 +
-+void SysInfo::OperatingSystemVersionNumbers(int32_t *major_version,
-+                                            int32_t *minor_version,
-+                                            int32_t *bugfix_version)
++namespace angle
++{
++
++void GetOperatingSystemVersionNumbers(int32_t *major_version,
++                                      int32_t *minor_version,
++                                      int32_t *bugfix_version)
 +{
 +#if MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_8
-+  Gestalt(gestaltSystemVersionMajor, reinterpret_cast<SInt32*>(major_version));
-+  Gestalt(gestaltSystemVersionMinor, reinterpret_cast<SInt32*>(minor_version));
-+  Gestalt(gestaltSystemVersionBugFix, reinterpret_cast<SInt32*>(bugfix_version));
++    Gestalt(gestaltSystemVersionMajor, reinterpret_cast<SInt32 *>(major_version));
++    Gestalt(gestaltSystemVersionMinor, reinterpret_cast<SInt32 *>(minor_version));
++    Gestalt(gestaltSystemVersionBugFix, reinterpret_cast<SInt32 *>(bugfix_version));
 +#else
-+  NSOperatingSystemVersion version = [[NSProcessInfo processInfo] operatingSystemVersion];
-+  *major_version = version.majorVersion;
-+  *minor_version = version.minorVersion;
-+  *bugfix_version = version.patchVersion;
++    if (@available(macOS 10.10, *))
++    {
++        NSOperatingSystemVersion version = [[NSProcessInfo processInfo] operatingSystemVersion];
++        *major_version                   = version.majorVersion;
++        *minor_version                   = version.minorVersion;
++        *bugfix_version                  = version.patchVersion;
++    }
++    else
++    {
++        // This can only happen on 10.9
++        *major_version  = 10;
++        *minor_version  = 9;
++        *bugfix_version = 0;
++    }
 +#endif
 +}
 +
-+} // namespace base
-diff --git a/src/tests/third_party/gpu_test_expectations/gpu_test_expectations_parser.cc b/src/tests/third_party/gpu_test_expectations/gpu_test_expectations_parser.cc
-index 7dc8b2ac5..a2d1ee616 100644
---- a/src/tests/third_party/gpu_test_expectations/gpu_test_expectations_parser.cc
-+++ b/src/tests/third_party/gpu_test_expectations/gpu_test_expectations_parser.cc
++} // namespace angle
+diff -u -rupN gpu_test_expectations_reverted/gpu_test_expectations_parser.cc gpu_test_expectations/gpu_test_expectations_parser.cc
+--- gpu_test_expectations_reverted/gpu_test_expectations_parser.cc	2017-10-30 14:30:35.000000000 -0400
++++ gpu_test_expectations/gpu_test_expectations_parser.cc	2017-10-27 13:46:39.000000000 -0400
 @@ -2,17 +2,47 @@
  // Use of this source code is governed by a BSD-style license that can be
  // found in the LICENSE file.
@@ -452,7 +457,7 @@ index 7dc8b2ac5..a2d1ee616 100644
      return kConfigGPUDeviceID;
  
    for (int32_t i = 0; i < kNumberOfExactMatchTokens; ++i) {
-@@ -211,8 +241,8 @@ bool GPUTestExpectationsParser::LoadTestExpectations(const std::string& data) {
+@@ -211,8 +241,8 @@ bool GPUTestExpectationsParser::LoadTest
    return rt;
  }
  
@@ -463,7 +468,7 @@ index 7dc8b2ac5..a2d1ee616 100644
    entries_.clear();
    error_messages_.clear();
  
-@@ -542,20 +572,17 @@ bool GPUTestExpectationsParser::DetectConflictsBetweenEntries() {
+@@ -542,20 +572,17 @@ bool GPUTestExpectationsParser::DetectCo
  
  void GPUTestExpectationsParser::PushErrorMessage(
      const std::string& message, size_t line_number) {
@@ -489,10 +494,9 @@ index 7dc8b2ac5..a2d1ee616 100644
  }
  
  GPUTestExpectationsParser:: GPUTestExpectationEntry::GPUTestExpectationEntry()
-diff --git a/src/tests/third_party/gpu_test_expectations/gpu_test_expectations_parser.h b/src/tests/third_party/gpu_test_expectations/gpu_test_expectations_parser.h
-index d943e44ca..8a56e3da6 100644
---- a/src/tests/third_party/gpu_test_expectations/gpu_test_expectations_parser.h
-+++ b/src/tests/third_party/gpu_test_expectations/gpu_test_expectations_parser.h
+diff -u -rupN gpu_test_expectations_reverted/gpu_test_expectations_parser.h gpu_test_expectations/gpu_test_expectations_parser.h
+--- gpu_test_expectations_reverted/gpu_test_expectations_parser.h	2017-10-30 14:30:35.000000000 -0400
++++ gpu_test_expectations/gpu_test_expectations_parser.h	2017-09-11 17:18:07.000000000 -0400
 @@ -2,8 +2,8 @@
  // Use of this source code is governed by a BSD-style license that can be
  // found in the LICENSE file.
@@ -516,7 +520,7 @@ index d943e44ca..8a56e3da6 100644
  
  namespace gpu {
  
-@@ -34,7 +33,7 @@ class GPU_EXPORT GPUTestExpectationsParser {
+@@ -34,7 +33,7 @@ class GPU_EXPORT GPUTestExpectationsPars
    // save all the entries. Otherwise, generate error messages.
    // Return true if parsing succeeds.
    bool LoadTestExpectations(const std::string& data);
@@ -525,7 +529,7 @@ index d943e44ca..8a56e3da6 100644
  
    // Query error messages from the last LoadTestExpectations() call.
    const std::vector<std::string>& GetErrorMessages() const;
-@@ -87,5 +86,5 @@ class GPU_EXPORT GPUTestExpectationsParser {
+@@ -87,5 +86,5 @@ class GPU_EXPORT GPUTestExpectationsPars
  
  }  // namespace gpu
  

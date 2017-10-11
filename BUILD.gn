@@ -276,6 +276,7 @@ static_library("angle_gpu_info_util") {
     libs += [
       "IOKit.framework",
       "CoreFoundation.framework",
+      "CoreGraphics.framework",
     ]
   }
 }

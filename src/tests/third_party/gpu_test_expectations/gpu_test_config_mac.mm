@@ -9,8 +9,6 @@
 
 #import <Cocoa/Cocoa.h>
 
-namespace base {
-
 // OSX 10.8 deprecates Gestalt but doesn't make the operatingSystemVersion property part of the
 // public interface of NSProcessInfo until 10.10. Add a forward declaration.
 #if !defined(MAC_OS_X_VERSION_10_10) || MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_10
@@ -19,20 +17,33 @@ namespace base {
 @end
 #endif
 
-void SysInfo::OperatingSystemVersionNumbers(int32_t *major_version,
-                                            int32_t *minor_version,
-                                            int32_t *bugfix_version)
+namespace angle
+{
+
+void GetOperatingSystemVersionNumbers(int32_t *major_version,
+                                      int32_t *minor_version,
+                                      int32_t *bugfix_version)
 {
 #if MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_8
-  Gestalt(gestaltSystemVersionMajor, reinterpret_cast<SInt32*>(major_version));
-  Gestalt(gestaltSystemVersionMinor, reinterpret_cast<SInt32*>(minor_version));
-  Gestalt(gestaltSystemVersionBugFix, reinterpret_cast<SInt32*>(bugfix_version));
+    Gestalt(gestaltSystemVersionMajor, reinterpret_cast<SInt32 *>(major_version));
+    Gestalt(gestaltSystemVersionMinor, reinterpret_cast<SInt32 *>(minor_version));
+    Gestalt(gestaltSystemVersionBugFix, reinterpret_cast<SInt32 *>(bugfix_version));
 #else
-  NSOperatingSystemVersion version = [[NSProcessInfo processInfo] operatingSystemVersion];
-  *major_version = version.majorVersion;
-  *minor_version = version.minorVersion;
-  *bugfix_version = version.patchVersion;
+    if (@available(macOS 10.10, *))
+    {
+        NSOperatingSystemVersion version = [[NSProcessInfo processInfo] operatingSystemVersion];
+        *major_version                   = version.majorVersion;
+        *minor_version                   = version.minorVersion;
+        *bugfix_version                  = version.patchVersion;
+    }
+    else
+    {
+        // This can only happen on 10.9
+        *major_version  = 10;
+        *minor_version  = 9;
+        *bugfix_version = 0;
+    }
 #endif
 }
 
-} // namespace base
+} // namespace angle
