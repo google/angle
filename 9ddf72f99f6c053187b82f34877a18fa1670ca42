@@ -22,6 +22,30 @@
       "revId": "9ddf72f99f6c053187b82f34877a18fa1670ca42",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "efc4a704_24c75cf3",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3498,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-10-11T06:34:32Z",
+      "side": 1,
+      "message": "I feel like this is more readable though as long as we\u0027re not specifically interested in testing how the parser handles whitespace.",
+      "parentUuid": "71da6dd2_9e8e7ca4",
+      "range": {
+        "startLine": 3485,
+        "startChar": 0,
+        "endLine": 3498,
+        "endChar": 12
+      },
+      "revId": "9ddf72f99f6c053187b82f34877a18fa1670ca42",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
