@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "af560629_e37c3abf",
+        "filename": "build_overrides/build.gni",
+        "patchSetId": 19
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-11T19:12:32Z",
+      "side": 1,
+      "message": "and use_sysroot\u003dfalse",
+      "revId": "360c37ffb98cf11d0de438604bda7eca30332341",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
