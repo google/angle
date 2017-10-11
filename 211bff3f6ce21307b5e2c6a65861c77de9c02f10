@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4d521d23_34a2b998",
+        "filename": "src/common/gen_uniform_type_table.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-10-11T22:17:36Z",
+      "side": 0,
+      "message": "Changing this line to the following works too, with your modified \u0027texture_types\u0027 table.\n\n  if uniform_type.endswith(sampler_type):\n\nI think that makes it more obvious what\u0027s happening here.",
+      "revId": "211bff3f6ce21307b5e2c6a65861c77de9c02f10",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
