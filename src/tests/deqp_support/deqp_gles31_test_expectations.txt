@@ -61,7 +61,6 @@
 1729 D3D11 : dEQP-GLES31.functional.state_query.indexed.atomic_counter_buffer_* = FAIL
 1951 D3D11 : dEQP-GLES31.functional.state_query.indexed.shader_storage_buffer_* = FAIL
 1442 D3D11 : dEQP-GLES31.functional.state_query.internal_format.renderbuffer.* = FAIL
-1679 D3D11 : dEQP-GLES31.functional.state_query.texture_level.texture_2d_multisample.* = FAIL
 1442 D3D11 : dEQP-GLES31.functional.state_query.program.compute_work_group_size_get_programiv = FAIL
 1442 D3D11 : dEQP-GLES31.functional.layout_binding.ssbo.* = FAIL
 1442 D3D11 : dEQP-GLES31.functional.compute.basic.empty = FAIL
@@ -1253,7 +1252,6 @@
 1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.internal_format.renderbuffer.rgba16ui_samples = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.internal_format.renderbuffer.rgba32i_samples = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.internal_format.renderbuffer.rgba32ui_samples = FAIL
-1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.internal_format.texture_2d_multisample.* = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.internal_format.partial_query.num_sample_counts = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.internal_format.partial_query.samples = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.program.program_separable_get_programiv = FAIL
@@ -1282,7 +1280,6 @@
 1442 OPENGL D3D11 : dEQP-GLES31.functional.debug.negative_coverage.get_error.buffer.framebuffer_texture2d = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.debug.negative_coverage.get_error.buffer.blit_framebuffer = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.debug.negative_coverage.get_error.buffer.invalidate_sub_framebuffer = FAIL
-1442 OPENGL D3D11 : dEQP-GLES31.functional.debug.negative_coverage.get_error.buffer.renderbuffer_storage_multisample = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.debug.negative_coverage.get_error.texture.copyteximage2d_invalid_format = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.debug.negative_coverage.get_error.texture.copyteximage2d_inequal_width_height_cube = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.debug.negative_coverage.get_error.texture.copyteximage2d_max_width_height = FAIL
