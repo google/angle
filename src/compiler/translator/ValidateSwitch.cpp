@@ -25,9 +25,12 @@ class ValidateSwitch : public TIntermTraverser
 
     void visitSymbol(TIntermSymbol *) override;
     void visitConstantUnion(TIntermConstantUnion *) override;
+    bool visitDeclaration(Visit, TIntermDeclaration *) override;
+    bool visitBlock(Visit, TIntermBlock *) override;
     bool visitBinary(Visit, TIntermBinary *) override;
     bool visitUnary(Visit, TIntermUnary *) override;
     bool visitTernary(Visit, TIntermTernary *) override;
+    bool visitSwizzle(Visit, TIntermSwizzle *) override;
     bool visitIfElse(Visit visit, TIntermIfElse *) override;
     bool visitSwitch(Visit, TIntermSwitch *) override;
     bool visitCase(Visit, TIntermCase *node) override;
@@ -96,6 +99,25 @@ void ValidateSwitch::visitConstantUnion(TIntermConstantUnion *)
     mLastStatementWasCase    = false;
 }
 
+bool ValidateSwitch::visitDeclaration(Visit, TIntermDeclaration *)
+{
+    if (!mFirstCaseFound)
+        mStatementBeforeCase = true;
+    mLastStatementWasCase    = false;
+    return true;
+}
+
+bool ValidateSwitch::visitBlock(Visit, TIntermBlock *)
+{
+    if (getParentNode() != nullptr)
+    {
+        if (!mFirstCaseFound)
+            mStatementBeforeCase = true;
+        mLastStatementWasCase    = false;
+    }
+    return true;
+}
+
 bool ValidateSwitch::visitBinary(Visit, TIntermBinary *)
 {
     if (!mFirstCaseFound)
@@ -113,6 +135,14 @@ bool ValidateSwitch::visitUnary(Visit, TIntermUnary *)
 }
 
 bool ValidateSwitch::visitTernary(Visit, TIntermTernary *)
+{
+    if (!mFirstCaseFound)
+        mStatementBeforeCase = true;
+    mLastStatementWasCase    = false;
+    return true;
+}
+
+bool ValidateSwitch::visitSwizzle(Visit, TIntermSwizzle *)
 {
     if (!mFirstCaseFound)
         mStatementBeforeCase = true;

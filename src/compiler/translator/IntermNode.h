@@ -843,10 +843,7 @@ class TIntermTernary : public TIntermTyped
 class TIntermIfElse : public TIntermNode
 {
   public:
-    TIntermIfElse(TIntermTyped *cond, TIntermBlock *trueB, TIntermBlock *falseB)
-        : TIntermNode(), mCondition(cond), mTrueBlock(trueB), mFalseBlock(falseB)
-    {
-    }
+    TIntermIfElse(TIntermTyped *cond, TIntermBlock *trueB, TIntermBlock *falseB);
 
     void traverse(TIntermTraverser *it) override;
     bool replaceChildNode(TIntermNode *original, TIntermNode *replacement) override;
@@ -868,10 +865,7 @@ class TIntermIfElse : public TIntermNode
 class TIntermSwitch : public TIntermNode
 {
   public:
-    TIntermSwitch(TIntermTyped *init, TIntermBlock *statementList)
-        : TIntermNode(), mInit(init), mStatementList(statementList)
-    {
-    }
+    TIntermSwitch(TIntermTyped *init, TIntermBlock *statementList);
 
     void traverse(TIntermTraverser *it) override;
     bool replaceChildNode(TIntermNode *original, TIntermNode *replacement) override;
@@ -880,7 +874,9 @@ class TIntermSwitch : public TIntermNode
 
     TIntermTyped *getInit() { return mInit; }
     TIntermBlock *getStatementList() { return mStatementList; }
-    void setStatementList(TIntermBlock *statementList) { mStatementList = statementList; }
+
+    // Must be called with a non-null statementList.
+    void setStatementList(TIntermBlock *statementList);
 
   protected:
     TIntermTyped *mInit;

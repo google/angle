@@ -11,9 +11,9 @@
 
 namespace sh
 {
-class TIntermNode;
+class TIntermBlock;
 
-void PruneEmptyDeclarations(TIntermNode *root);
+void PruneEmptyDeclarations(TIntermBlock *root);
 }
 
 #endif  // COMPILER_TRANSLATOR_PRUNEEMPTYDECLARATIONS_H_

@@ -5012,3 +5012,54 @@ TEST_F(VertexShaderValidationTest, LocationConflictsOnStructElement)
         FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
     }
 }
+
+// Test that a block can follow the final case in a switch statement.
+// GLSL ES 3.00.5 section 6 and the grammar suggest that an empty block is a statement.
+TEST_F(FragmentShaderValidationTest, SwitchFinalCaseHasEmptyBlock)
+{
+    const std::string &shaderString =
+        R"(#version 300 es
+
+        precision mediump float;
+        uniform int i;
+        void main()
+        {
+            switch (i)
+            {
+                case 0:
+                    break;
+                default:
+                    {}
+            }
+        })";
+
+    if (!compile(shaderString))
+    {
+        FAIL() << "Shader compilation failed, expecting success:\n" << mInfoLog;
+    }
+}
+
+// Test that an empty declaration can follow the final case in a switch statement.
+TEST_F(FragmentShaderValidationTest, SwitchFinalCaseHasEmptyDeclaration)
+{
+    const std::string &shaderString =
+        R"(#version 300 es
+
+        precision mediump float;
+        uniform int i;
+        void main()
+        {
+            switch (i)
+            {
+                case 0:
+                    break;
+                default:
+                    float;
+            }
+        })";
+
+    if (!compile(shaderString))
+    {
+        FAIL() << "Shader compilation failed, expecting success:\n" << mInfoLog;
+    }
+}

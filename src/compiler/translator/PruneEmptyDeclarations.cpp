@@ -19,14 +19,14 @@ namespace
 class PruneEmptyDeclarationsTraverser : private TIntermTraverser
 {
   public:
-    static void apply(TIntermNode *root);
+    static void apply(TIntermBlock *root);
 
   private:
     PruneEmptyDeclarationsTraverser();
     bool visitDeclaration(Visit, TIntermDeclaration *node) override;
 };
 
-void PruneEmptyDeclarationsTraverser::apply(TIntermNode *root)
+void PruneEmptyDeclarationsTraverser::apply(TIntermBlock *root)
 {
     PruneEmptyDeclarationsTraverser prune;
     root->traverse(&prune);
@@ -62,22 +62,10 @@ bool PruneEmptyDeclarationsTraverser::visitDeclaration(Visit, TIntermDeclaration
             else if (sym->getBasicType() != EbtStruct)
             {
                 // Single struct declarations may just declare the struct type and no variables, so
-                // they should not be pruned. All other single empty declarations can be pruned
-                // entirely. Example of an empty declaration that will be pruned:
-                // float;
-                TIntermSequence emptyReplacement;
-                TIntermBlock *parentAsBlock = getParentNode()->getAsBlock();
-                // The declaration may be inside a block or in a loop init expression.
-                ASSERT(parentAsBlock != nullptr || getParentNode()->getAsLoopNode() != nullptr);
-                if (parentAsBlock)
-                {
-                    mMultiReplacements.push_back(
-                        NodeReplaceWithMultipleEntry(parentAsBlock, node, emptyReplacement));
-                }
-                else
-                {
-                    queueReplacement(nullptr, OriginalNode::IS_DROPPED);
-                }
+                // they should not be pruned. If there are entirely empty non-struct declarations,
+                // they result in TIntermDeclaration nodes without any children in the parsing
+                // stage. This will be handled further down in the code.
+                UNREACHABLE();
             }
             else if (sym->getType().getQualifier() != EvqGlobal &&
                      sym->getType().getQualifier() != EvqTemporary)
@@ -102,12 +90,29 @@ bool PruneEmptyDeclarationsTraverser::visitDeclaration(Visit, TIntermDeclaration
             }
         }
     }
+    else
+    {
+        // We have a declaration with no declarators.
+        // The declaration may be either inside a block or in a loop init expression.
+        TIntermBlock *parentAsBlock = getParentNode()->getAsBlock();
+        ASSERT(parentAsBlock != nullptr || getParentNode()->getAsLoopNode() != nullptr);
+        if (parentAsBlock)
+        {
+            TIntermSequence emptyReplacement;
+            mMultiReplacements.push_back(
+                NodeReplaceWithMultipleEntry(parentAsBlock, node, emptyReplacement));
+        }
+        else
+        {
+            queueReplacement(nullptr, OriginalNode::IS_DROPPED);
+        }
+    }
     return false;
 }
 
 }  // namespace
 
-void PruneEmptyDeclarations(TIntermNode *root)
+void PruneEmptyDeclarations(TIntermBlock *root)
 {
     PruneEmptyDeclarationsTraverser::apply(root);
 }

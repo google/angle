@@ -205,7 +205,7 @@ extern void yyerror(YYLTYPE* yylloc, TParseContext* context, void *scanner, cons
 %type <interm.intermNode> condition conditionopt
 %type <interm.intermBlock> translation_unit
 %type <interm.intermNode> function_definition statement simple_statement
-%type <interm.intermBlock> statement_list compound_statement compound_statement_no_new_scope
+%type <interm.intermBlock> statement_list compound_statement_with_scope compound_statement_no_new_scope
 %type <interm.intermNode> declaration_statement selection_statement expression_statement
 %type <interm.intermNode> declaration external_declaration
 %type <interm.intermNode> for_init_statement
@@ -1232,8 +1232,8 @@ declaration_statement
     ;
 
 statement
-    : compound_statement  { $$ = $1; }
-    | simple_statement    { $$ = $1; }
+    : compound_statement_with_scope { $$ = $1; }
+    | simple_statement              { $$ = $1; }
     ;
 
 // Grammar Note:  Labeled statements for SWITCH only; 'goto' is not supported.
@@ -1248,8 +1248,11 @@ simple_statement
     | jump_statement        { $$ = $1; }
     ;
 
-compound_statement
-    : LEFT_BRACE RIGHT_BRACE { $$ = 0; }
+compound_statement_with_scope
+    : LEFT_BRACE RIGHT_BRACE {
+        $$ = new TIntermBlock();
+        $$->setLine(@$);
+    }
     | LEFT_BRACE { context->symbolTable.push(); } statement_list { context->symbolTable.pop(); } RIGHT_BRACE {
         $3->setLine(@$);
         $$ = $3;
@@ -1267,9 +1270,10 @@ statement_with_scope
     ;
 
 compound_statement_no_new_scope
-    // Statement that doesn't create a new scope, for selection_statement, iteration_statement
+    // Statement that doesn't create a new scope for iteration_statement, function definition (scope is created for parameters)
     : LEFT_BRACE RIGHT_BRACE {
-        $$ = nullptr;
+        $$ = new TIntermBlock();
+        $$->setLine(@$);
     }
     | LEFT_BRACE statement_list RIGHT_BRACE {
         $2->setLine(@$);
@@ -1310,8 +1314,10 @@ selection_rest_statement
     }
     ;
 
+// Note that we've diverged from the spec grammar here a bit for the sake of simplicity.
+// We're reusing compound_statement_with_scope instead of having separate rules for switch.
 switch_statement
-    : SWITCH LEFT_PAREN expression RIGHT_PAREN { context->incrSwitchNestingLevel(); } compound_statement {
+    : SWITCH LEFT_PAREN expression RIGHT_PAREN { context->incrSwitchNestingLevel(); } compound_statement_with_scope {
         $$ = context->addSwitch($3, $6, @1);
         context->decrSwitchNestingLevel();
     }

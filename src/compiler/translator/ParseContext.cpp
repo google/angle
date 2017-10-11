@@ -4633,12 +4633,10 @@ TIntermSwitch *TParseContext::addSwitch(TIntermTyped *init,
         return nullptr;
     }
 
-    if (statementList)
+    ASSERT(statementList);
+    if (!ValidateSwitchStatementList(switchType, mDiagnostics, statementList, loc))
     {
-        if (!ValidateSwitchStatementList(switchType, mDiagnostics, statementList, loc))
-        {
-            return nullptr;
-        }
+        return nullptr;
     }
 
     TIntermSwitch *node = new TIntermSwitch(init, statementList);

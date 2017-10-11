@@ -766,11 +766,11 @@ static const yytype_uint16 yyrline[] =
     1157,  1160,  1163,  1166,  1169,  1172,  1180,  1180,  1183,  1183,
     1189,  1192,  1198,  1201,  1208,  1212,  1218,  1221,  1227,  1231,
     1235,  1236,  1242,  1243,  1244,  1245,  1246,  1247,  1248,  1252,
-    1253,  1253,  1253,  1260,  1261,  1265,  1265,  1266,  1266,  1271,
-    1274,  1281,  1285,  1292,  1293,  1297,  1303,  1307,  1314,  1314,
-    1321,  1324,  1330,  1334,  1340,  1340,  1345,  1345,  1349,  1349,
-    1357,  1360,  1366,  1369,  1375,  1379,  1386,  1389,  1392,  1395,
-    1398,  1406,  1412,  1418,  1421,  1427,  1427
+    1256,  1256,  1256,  1263,  1264,  1268,  1268,  1269,  1269,  1274,
+    1278,  1285,  1289,  1296,  1297,  1301,  1307,  1311,  1320,  1320,
+    1327,  1330,  1336,  1340,  1346,  1346,  1351,  1351,  1355,  1355,
+    1363,  1366,  1372,  1375,  1381,  1385,  1392,  1395,  1398,  1401,
+    1404,  1412,  1418,  1424,  1427,  1433,  1433
 };
 #endif
 
@@ -832,7 +832,7 @@ static const char *const yytname[] =
   "$@1", "$@2", "struct_declaration_list", "struct_declaration",
   "struct_declarator_list", "struct_declarator", "initializer",
   "declaration_statement", "statement", "simple_statement",
-  "compound_statement", "$@3", "$@4", "statement_no_new_scope",
+  "compound_statement_with_scope", "$@3", "$@4", "statement_no_new_scope",
   "statement_with_scope", "$@5", "$@6", "compound_statement_no_new_scope",
   "statement_list", "expression_statement", "selection_statement",
   "selection_rest_statement", "switch_statement", "$@7", "case_label",
@@ -4559,7 +4559,10 @@ yyreduce:
 
   case 249:
 
-    { (yyval.interm.intermBlock) = 0; }
+    {
+        (yyval.interm.intermBlock) = new TIntermBlock();
+        (yyval.interm.intermBlock)->setLine((yyloc));
+    }
 
     break;
 
@@ -4623,7 +4626,8 @@ yyreduce:
   case 259:
 
     {
-        (yyval.interm.intermBlock) = nullptr;
+        (yyval.interm.intermBlock) = new TIntermBlock();
+        (yyval.interm.intermBlock)->setLine((yyloc));
     }
 
     break;

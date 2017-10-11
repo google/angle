@@ -2135,20 +2135,13 @@ bool OutputHLSL::visitSwitch(Visit visit, TIntermSwitch *node)
 {
     TInfoSinkBase &out = getInfoSink();
 
-    if (node->getStatementList())
+    ASSERT(node->getStatementList());
+    if (visit == PreVisit)
     {
-        if (visit == PreVisit)
-        {
-            node->setStatementList(RemoveSwitchFallThrough(node->getStatementList()));
-        }
-        outputTriplet(out, visit, "switch (", ") ", "");
-        // The curly braces get written when visiting the statementList block.
+        node->setStatementList(RemoveSwitchFallThrough(node->getStatementList()));
     }
-    else
-    {
-        // No statementList, so it won't output curly braces
-        outputTriplet(out, visit, "switch (", ") {", "}\n");
-    }
+    outputTriplet(out, visit, "switch (", ") ", "");
+    // The curly braces get written when visiting the statementList block.
     return true;
 }
 

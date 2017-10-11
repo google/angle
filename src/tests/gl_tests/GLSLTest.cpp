@@ -3538,6 +3538,48 @@ TEST_P(GLSLTest_ES3, SwitchFallThroughCodeDuplication)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Test that a switch statement with an empty block inside as a final statement compiles.
+TEST_P(GLSLTest_ES3, SwitchFinalCaseHasEmptyBlock)
+{
+    const std::string &fragmentShader =
+        R"(#version 300 es
+
+        precision mediump float;
+        uniform int i;
+        void main()
+        {
+            switch (i)
+            {
+                case 0:
+                    break;
+                default:
+                    {}
+            }
+        })";
+    ANGLE_GL_PROGRAM(program, mSimpleVSSource, fragmentShader);
+}
+
+// Test that a switch statement with an empty declaration inside as a final statement compiles.
+TEST_P(GLSLTest_ES3, SwitchFinalCaseHasEmptyDeclaration)
+{
+    const std::string &fragmentShader =
+        R"(#version 300 es
+
+        precision mediump float;
+        uniform int i;
+        void main()
+        {
+            switch (i)
+            {
+                case 0:
+                    break;
+                default:
+                    float;
+            }
+        })";
+    ANGLE_GL_PROGRAM(program, mSimpleVSSource, fragmentShader);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
 ANGLE_INSTANTIATE_TEST(GLSLTest,
                        ES2_D3D9(),

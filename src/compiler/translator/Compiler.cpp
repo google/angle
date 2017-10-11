@@ -29,6 +29,7 @@
 #include "compiler/translator/RegenerateStructNames.h"
 #include "compiler/translator/RemoveArrayLengthMethod.h"
 #include "compiler/translator/RemoveInvariantDeclaration.h"
+#include "compiler/translator/RemoveNoOpCasesFromEndOfSwitchStatements.h"
 #include "compiler/translator/RemovePow.h"
 #include "compiler/translator/RewriteDoWhile.h"
 #include "compiler/translator/ScalarizeVecAndMatConstructorArgs.h"
@@ -374,6 +375,20 @@ TIntermBlock *TCompiler::compileTreeImpl(const char *const shaderStrings[],
         if (success && (compileOptions & SH_LIMIT_EXPRESSION_COMPLEXITY))
             success = limitExpressionComplexity(root);
 
+        // Prune empty declarations to work around driver bugs and to keep declaration output
+        // simple. We want to do this before most other operations since TIntermDeclaration nodes
+        // without any children are tricky to work with.
+        if (success)
+            PruneEmptyDeclarations(root);
+
+        // In case the last case inside a switch statement is a certain type of no-op, GLSL
+        // compilers in drivers may not accept it. In this case we clean up the dead code from the
+        // end of switch statements. This is also required because PruneEmptyDeclarations may have
+        // left switch statements that only contained an empty declaration inside the final case in
+        // an invalid state. Relies on that PruneEmptyDeclarations has already been run.
+        if (success)
+            RemoveNoOpCasesFromEndOfSwitchStatements(root, &symbolTable);
+
         // Create the function DAG and check there is no recursion
         if (success)
             success = initCallDag(root);
@@ -391,11 +406,6 @@ TIntermBlock *TCompiler::compileTreeImpl(const char *const shaderStrings[],
 
         if (success && !(compileOptions & SH_DONT_PRUNE_UNUSED_FUNCTIONS))
             success = pruneUnusedFunctions(root);
-
-        // Prune empty declarations to work around driver bugs and to keep declaration output
-        // simple.
-        if (success)
-            PruneEmptyDeclarations(root);
 
         if (success && shaderVersion >= 310)
         {

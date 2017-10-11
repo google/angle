@@ -812,16 +812,9 @@ bool TOutputGLSLBase::visitIfElse(Visit visit, TIntermIfElse *node)
 
 bool TOutputGLSLBase::visitSwitch(Visit visit, TIntermSwitch *node)
 {
-    if (node->getStatementList())
-    {
-        writeTriplet(visit, "switch (", ") ", nullptr);
-        // The curly braces get written when visiting the statementList aggregate
-    }
-    else
-    {
-        // No statementList, so it won't output curly braces
-        writeTriplet(visit, "switch (", ") {", "}\n");
-    }
+    ASSERT(node->getStatementList());
+    writeTriplet(visit, "switch (", ") ", nullptr);
+    // The curly braces get written when visiting the statementList aggregate
     return true;
 }
 
