@@ -815,7 +815,7 @@ TEST_P(WebGLCompatibilityTest, EnablePackPackSubImageExtension)
 
 // Verify that the context generates the correct error when the framebuffer attachments are
 // different sizes
-TEST_P(WebGLCompatibilityTest, FramebufferAttachmentSizeMissmatch)
+TEST_P(WebGLCompatibilityTest, FramebufferAttachmentSizeMismatch)
 {
     GLFramebuffer fbo;
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
@@ -1173,6 +1173,62 @@ TEST_P(WebGLCompatibilityTest, DrawElementsBufferOutOfBoundsInIndexBuffer)
     // the historic behavior of WebGL implementations
     glDrawElements(GL_POINTS, 4, GL_UNSIGNED_BYTE, zeroOffset - 1);
     EXPECT_GL_ERROR(GL_INVALID_VALUE);
+}
+
+// Test the checks for OOB in vertex buffrs caused by indices
+TEST_P(WebGLCompatibilityTest, DrawElementsBufferOutOfBoundsInVertexBuffer)
+{
+    const std::string &vert =
+        "attribute float a_pos;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_Position = vec4(a_pos, a_pos, a_pos, 1.0);\n"
+        "}\n";
+
+    const std::string &frag =
+        "precision highp float;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_FragColor = vec4(1.0);\n"
+        "}\n";
+
+    ANGLE_GL_PROGRAM(program, vert, frag);
+
+    GLint posLocation = glGetAttribLocation(program.get(), "a_pos");
+    ASSERT_NE(-1, posLocation);
+    glUseProgram(program.get());
+
+    GLBuffer vertexBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer.get());
+    glBufferData(GL_ARRAY_BUFFER, 8, nullptr, GL_STATIC_DRAW);
+
+    glEnableVertexAttribArray(posLocation);
+
+    const uint8_t *zeroOffset   = nullptr;
+    const uint8_t testIndices[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 255};
+
+    glVertexAttribPointer(0, 1, GL_UNSIGNED_BYTE, GL_FALSE, 0, zeroOffset);
+
+    GLBuffer indexBuffer;
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer.get());
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(testIndices), testIndices, GL_STATIC_DRAW);
+    ASSERT_GL_NO_ERROR();
+
+    // Test touching the end of the vertex buffer is valid
+    glDrawElements(GL_POINTS, 1, GL_UNSIGNED_BYTE, zeroOffset + 7);
+    ASSERT_GL_NO_ERROR();
+
+    // Test touching just after the end of the vertex buffer is invalid
+    glDrawElements(GL_POINTS, 1, GL_UNSIGNED_BYTE, zeroOffset + 8);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    // Test touching the whole vertex buffer is valid
+    glDrawElements(GL_POINTS, 8, GL_UNSIGNED_BYTE, zeroOffset + 0);
+    ASSERT_GL_NO_ERROR();
+
+    // Test an index that would be negative
+    glDrawElements(GL_POINTS, 1, GL_UNSIGNED_BYTE, zeroOffset + 9);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 }
 
 // Test depth range with 'near' more or less than 'far.'
@@ -3036,7 +3092,7 @@ TEST_P(WebGL2CompatibilityTest, FragmentShaderColorBufferTypeMissmatch)
 
 // Verify that errors are generated when the vertex shader intput doesn't match the bound attribute
 // types
-TEST_P(WebGL2CompatibilityTest, VertexShaderAttributeTypeMissmatch)
+TEST_P(WebGL2CompatibilityTest, VertexShaderAttributeTypeMismatch)
 {
     const std::string vertexShader =
         "#version 300 es\n"
