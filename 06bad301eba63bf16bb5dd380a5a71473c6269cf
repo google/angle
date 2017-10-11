@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "537422b6_8a75f636",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 4643,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-11T17:05:28Z",
+      "side": 1,
+      "message": "Replacing the noop by bool temp \u003d false; sounds fine but couldn\u0027t we remove the cases instead until we don\u0027t finish with a noop? Right now this looks like a driver bug workaround that should live in Compiler. Making it simplify the code looks more like dead code elimination that is driver independent.",
+      "revId": "06bad301eba63bf16bb5dd380a5a71473c6269cf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
