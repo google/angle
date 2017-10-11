@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "642066da_6d108c3c",
+        "filename": "src/compiler/translator/InitializeVariables.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-11T15:57:06Z",
+      "side": 1,
+      "message": "nit: I think this comment could live in AddArrayZeroInitStatementList instead.",
+      "revId": "1d11cd7d81c499fab52748e8ee1ea9525b29aeb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
