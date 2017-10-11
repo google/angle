@@ -88,6 +88,13 @@
             'android/third_party/android_native_app_glue.h',
         ],
     },
+    'target_defaults':
+    {
+        'dependencies':
+        [
+            '../gyp/warnings.gyp:gyp_deprecation',
+        ],
+    },
     'targets':
     [
         {

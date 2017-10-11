@@ -41,6 +41,13 @@
             'third_party/rapidjson/include/rapidjson/msinttypes/stdint.h',
         ],
     },
+    'target_defaults':
+    {
+        'dependencies':
+        [
+            '../../gyp/warnings.gyp:gyp_deprecation',
+        ],
+    },
     'conditions':
     [
         # GoogleTest doesn't support WinRT

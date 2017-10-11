@@ -65,6 +65,10 @@ def generateWinRTProjects(generate_args, generation_dir, msvs_version, app_type_
     gyp.main(args)
 
 if __name__ == '__main__':
+    print
+    print '* * * WARNING: GYP IS DEPRECATED * * *'
+    print 'See https://chromium.googlesource.com/angle/angle/+/master/doc/DevSetup.md for new build instructions.'
+    print
     print 'Updating projects from gyp files...'
     sys.stdout.flush()
 
