@@ -158,6 +158,30 @@
     },
     {
       "key": {
+        "uuid": "dc4e1c03_859e5b65",
+        "filename": "src/tests/BUILD.gn",
+        "patchSetId": 18
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-11T13:40:09Z",
+      "side": 1,
+      "message": "Alrighty. Shall we remove this then?",
+      "parentUuid": "15aa4f73_29e1f57b",
+      "range": {
+        "startLine": 34,
+        "startChar": 17,
+        "endLine": 34,
+        "endChar": 30
+      },
+      "revId": "62ab46d00ed7593aff32b5e620eae70788a30ca6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "98661392_5ed58833",
         "filename": "src/tests/BUILD.gn",
         "patchSetId": 18
