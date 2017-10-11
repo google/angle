@@ -69,13 +69,18 @@ config("internal_config") {
 }
 
 config("extra_warnings") {
+  cflags = []
   # Enable more default warnings on Windows.
   if (is_win) {
-    cflags = [
+    cflags += [
       "/we4244",  # Conversion: possible loss of data.
       "/we4456",  # Variable shadowing.
       "/we4458",  # declaration hides class member.
     ]
+  }
+  if (is_clang) {
+    # Remove when crbug.com/428099 is resolved.
+    cflags += ["-Winconsistent-missing-override"]
   }
 }
 

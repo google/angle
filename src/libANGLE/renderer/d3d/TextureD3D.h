@@ -60,7 +60,7 @@ class TextureD3D : public TextureImpl
                          GLenum target,
                          size_t levels,
                          GLenum internalFormat,
-                         const gl::Extents &size);
+                         const gl::Extents &size) override;
 
     gl::Error setStorageMultisample(const gl::Context *context,
                                     GLenum target,
@@ -316,7 +316,7 @@ class TextureD3D_2D : public TextureD3D
 
     bool isValidLevel(int level) const;
     bool isLevelComplete(int level) const;
-    virtual bool isImageComplete(const gl::ImageIndex &index) const;
+    virtual bool isImageComplete(const gl::ImageIndex &index) const override;
 
     gl::Error updateStorageLevel(const gl::Context *context, int level);
 
@@ -452,7 +452,7 @@ class TextureD3D_Cube : public TextureD3D
     bool isValidFaceLevel(int faceIndex, int level) const;
     bool isFaceLevelComplete(int faceIndex, int level) const;
     bool isCubeComplete() const;
-    virtual bool isImageComplete(const gl::ImageIndex &index) const;
+    virtual bool isImageComplete(const gl::ImageIndex &index) const override;
     gl::Error updateStorageFaceLevel(const gl::Context *context, int faceIndex, int level);
 
     gl::Error redefineImage(const gl::Context *context,
@@ -568,7 +568,7 @@ class TextureD3D_3D : public TextureD3D
 
     bool isValidLevel(int level) const;
     bool isLevelComplete(int level) const;
-    virtual bool isImageComplete(const gl::ImageIndex &index) const;
+    virtual bool isImageComplete(const gl::ImageIndex &index) const override;
     gl::Error updateStorageLevel(const gl::Context *context, int level);
 
     gl::Error redefineImage(const gl::Context *context,
@@ -589,8 +589,8 @@ class TextureD3D_2DArray : public TextureD3D
     gl::Error onDestroy(const gl::Context *context) override;
 
     virtual ImageD3D *getImage(int level, int layer) const;
-    virtual ImageD3D *getImage(const gl::ImageIndex &index) const;
-    virtual GLsizei getLayerCount(int level) const;
+    ImageD3D *getImage(const gl::ImageIndex &index) const override;
+    GLsizei getLayerCount(int level) const override;
 
     GLsizei getWidth(GLint level) const;
     GLsizei getHeight(GLint level) const;
@@ -681,7 +681,7 @@ class TextureD3D_2DArray : public TextureD3D
 
     bool isValidLevel(int level) const;
     bool isLevelComplete(int level) const;
-    virtual bool isImageComplete(const gl::ImageIndex &index) const;
+    virtual bool isImageComplete(const gl::ImageIndex &index) const override;
     gl::Error updateStorageLevel(const gl::Context *context, int level);
 
     void deleteImages();
@@ -875,7 +875,7 @@ class TextureD3D_2DMultisample : public TextureD3D
     gl::ImageIndex getImageIndex(GLint mip, GLint layer) const override;
     bool isValidIndex(const gl::ImageIndex &index) const override;
 
-    virtual GLsizei getLayerCount(int level) const;
+    GLsizei getLayerCount(int level) const override;
 
   protected:
     void markAllImagesDirty() override;

@@ -36,7 +36,7 @@ class Image9 : public ImageD3D
 
     D3DFORMAT getD3DFormat() const;
 
-    virtual bool isDirty() const;
+    bool isDirty() const override;
 
     gl::Error setManagedSurface2D(const gl::Context *context,
                                   TextureStorage *storage,
