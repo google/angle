@@ -8,12 +8,6 @@ deps = {
   'buildtools':
     Var('chromium_git') + '/chromium/buildtools.git' + '@' + '98f00fa10dbad2cdbb2e297a66c3d6d5bc3994f3',
 
-  'testing/gmock':
-    Var('chromium_git') + '/external/googlemock.git' + '@' + '0421b6f358139f02e102c9c332ce19a33faf75be', # from svn revision 566
-
-  'testing/gtest':
-    Var('chromium_git') + '/external/github.com/google/googletest.git' + '@' + '6f8a66431cb592dad629028a50b3dd418a408c87',
-
   # Cherry is a dEQP management GUI written in Go. We use it for viewing test results.
   'third_party/cherry':
     Var('android_git') + '/platform/external/cherry' + '@' + 'd2e26b4d864ec2a6757e7f1174e464949ca5bf73',
@@ -23,6 +17,9 @@ deps = {
 
   'third_party/glslang-angle/src':
     Var('android_git') + '/platform/external/shaderc/glslang' + '@' + '1e275c8486325aaab34734ad9a650c0121c5efdb',
+
+  'third_party/googletest/src':
+    Var('chromium_git') + '/external/github.com/google/googletest.git' + '@' + '7f8fefabedf2965980585be8c2bff97458f28e0b',
 
   'third_party/gyp':
     Var('chromium_git') + '/external/gyp' + '@' + 'c6f471687407bf28ddfc63f1a8f47aeb7bf54edc',
