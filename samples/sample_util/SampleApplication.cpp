@@ -11,6 +11,7 @@
 #include "angle_gl.h"
 
 #include <iostream>
+#include <string.h>
 
 namespace
 {
