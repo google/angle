@@ -1,0 +1,159 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "096c4e5a_fe30ba61",
+        "filename": "BUILD.gn",
+        "patchSetId": 18
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-11T01:42:47Z",
+      "side": 1,
+      "message": "what does this mean exactly?",
+      "range": {
+        "startLine": 26,
+        "startChar": 4,
+        "endLine": 26,
+        "endChar": 19
+      },
+      "revId": "62ab46d00ed7593aff32b5e620eae70788a30ca6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d29b2d81_606e449e",
+        "filename": "DEPS",
+        "patchSetId": 18
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-11T01:42:47Z",
+      "side": 1,
+      "message": "try removing this and see if things still work fine. In my testing they seemed to. I would like to avoid depending on base if at all possible.",
+      "range": {
+        "startLine": 8,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 0
+      },
+      "revId": "62ab46d00ed7593aff32b5e620eae70788a30ca6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "46c1c564_4db766ed",
+        "filename": "DEPS",
+        "patchSetId": 18
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-11T01:42:47Z",
+      "side": 1,
+      "message": "I think you should split this into a prior CL and land this right away, since sync clobbers the checkout directory in some cases. Better to get it done.\n\nYou should also update tests.gyp to point to the new locations of the gtest and gmock sources.",
+      "range": {
+        "startLine": 29,
+        "startChar": 0,
+        "endLine": 34,
+        "endChar": 122
+      },
+      "revId": "62ab46d00ed7593aff32b5e620eae70788a30ca6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8fcf49d2_78c6f7b8",
+        "filename": "DEPS",
+        "patchSetId": 18
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-11T01:42:47Z",
+      "side": 1,
+      "message": "this needs to go in tools/ for the hooks to work properly on windows (otherwise the clang hook, which installs the VS toolchain in some cases, will exploderize). please also update .gitignore appropriately.",
+      "range": {
+        "startLine": 36,
+        "startChar": 0,
+        "endLine": 38,
+        "endChar": 0
+      },
+      "revId": "62ab46d00ed7593aff32b5e620eae70788a30ca6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0161eec7_1d985700",
+        "filename": "build/secondary/third_party/libpng/BUILD.gn",
+        "patchSetId": 18
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-11T01:42:47Z",
+      "side": 1,
+      "message": "this file can go in third_party/libpng. Also you can add a README.angle. See Chromium\u0027s example. This file, and all the other new files you add, needs to have a copyright/license header.",
+      "revId": "62ab46d00ed7593aff32b5e620eae70788a30ca6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2a2e9f26_2b963987",
+        "filename": "src/tests/BUILD.gn",
+        "patchSetId": 18
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-11T01:42:47Z",
+      "side": 1,
+      "message": "I see this in the gyp, but any idea what it\u0027s about?",
+      "range": {
+        "startLine": 34,
+        "startChar": 17,
+        "endLine": 34,
+        "endChar": 30
+      },
+      "revId": "62ab46d00ed7593aff32b5e620eae70788a30ca6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "98661392_5ed58833",
+        "filename": "src/tests/BUILD.gn",
+        "patchSetId": 18
+      },
+      "lineNbr": 306,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-11T01:42:47Z",
+      "side": 1,
+      "message": "you can throw these into a common list and include them en masse. it\u0027s fine if some things include gmock even if they don\u0027t currently. I wonder if you could even make an empty source set or group (or other type of target) that is conditional on build_with_chromium - either it includes the chromium ones or the internal ones, and we can just include a dependency on that target.",
+      "range": {
+        "startLine": 303,
+        "startChar": 0,
+        "endLine": 306,
+        "endChar": 26
+      },
+      "revId": "62ab46d00ed7593aff32b5e620eae70788a30ca6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
