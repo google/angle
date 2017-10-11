@@ -66,24 +66,24 @@ class OutputHLSL : public TIntermTraverser
                                                   const size_t size);
 
     // Visit AST nodes and output their code to the body stream
-    void visitSymbol(TIntermSymbol *);
-    void visitRaw(TIntermRaw *);
-    void visitConstantUnion(TIntermConstantUnion *);
+    void visitSymbol(TIntermSymbol *) override;
+    void visitRaw(TIntermRaw *) override;
+    void visitConstantUnion(TIntermConstantUnion *) override;
     bool visitSwizzle(Visit visit, TIntermSwizzle *node) override;
-    bool visitBinary(Visit visit, TIntermBinary *);
-    bool visitUnary(Visit visit, TIntermUnary *);
-    bool visitTernary(Visit visit, TIntermTernary *);
-    bool visitIfElse(Visit visit, TIntermIfElse *);
-    bool visitSwitch(Visit visit, TIntermSwitch *);
-    bool visitCase(Visit visit, TIntermCase *);
+    bool visitBinary(Visit visit, TIntermBinary *) override;
+    bool visitUnary(Visit visit, TIntermUnary *) override;
+    bool visitTernary(Visit visit, TIntermTernary *) override;
+    bool visitIfElse(Visit visit, TIntermIfElse *) override;
+    bool visitSwitch(Visit visit, TIntermSwitch *) override;
+    bool visitCase(Visit visit, TIntermCase *) override;
     bool visitFunctionPrototype(Visit visit, TIntermFunctionPrototype *node) override;
     bool visitFunctionDefinition(Visit visit, TIntermFunctionDefinition *node) override;
-    bool visitAggregate(Visit visit, TIntermAggregate *);
-    bool visitBlock(Visit visit, TIntermBlock *node);
-    bool visitInvariantDeclaration(Visit visit, TIntermInvariantDeclaration *node);
-    bool visitDeclaration(Visit visit, TIntermDeclaration *node);
-    bool visitLoop(Visit visit, TIntermLoop *);
-    bool visitBranch(Visit visit, TIntermBranch *);
+    bool visitAggregate(Visit visit, TIntermAggregate *) override;
+    bool visitBlock(Visit visit, TIntermBlock *node) override;
+    bool visitInvariantDeclaration(Visit visit, TIntermInvariantDeclaration *node) override;
+    bool visitDeclaration(Visit visit, TIntermDeclaration *node) override;
+    bool visitLoop(Visit visit, TIntermLoop *) override;
+    bool visitBranch(Visit visit, TIntermBranch *) override;
 
     bool handleExcessiveLoop(TInfoSinkBase &out, TIntermLoop *node);
 

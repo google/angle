@@ -119,7 +119,10 @@ static_library("preprocessor") {
   sources = rebase_path(compiler_gypi.angle_preprocessor_sources, ".", "src")
 
   configs -= angle_undefine_configs
-  configs += [ ":internal_config" ]
+  configs += [
+    ":extra_warnings",
+    ":internal_config",
+  ]
 
   public_deps = [
     ":angle_common",
@@ -295,7 +298,10 @@ static_library("translator") {
   }
 
   configs -= angle_undefine_configs
-  configs += [ ":internal_config" ]
+  configs += [
+    ":internal_config",
+    ":extra_warnings",
+  ]
   public_configs = [ ":external_config" ]
   if (use_libfuzzer) {
     all_dependent_configs = [ ":translator_disable_pool_alloc" ]
@@ -554,6 +560,7 @@ shared_library("libGLESv2") {
   configs += [
     ":commit_id_config",
     ":debug_annotations_config",
+    ":extra_warnings",
     ":internal_config",
   ]
 
@@ -578,6 +585,7 @@ static_library("libGLESv2_static") {
   configs += [
     ":commit_id_config",
     ":debug_annotations_config",
+    ":extra_warnings",
     ":internal_config",
   ]
 
