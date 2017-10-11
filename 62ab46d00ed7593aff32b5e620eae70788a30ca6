@@ -2,6 +2,40 @@
   "comments": [
     {
       "key": {
+        "uuid": "171eb572_a86f93e7",
+        "filename": "BUILD.gn",
+        "patchSetId": 18
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-11T15:19:24Z",
+      "side": 1,
+      "message": "Should we import the build_overrides here too?",
+      "revId": "62ab46d00ed7593aff32b5e620eae70788a30ca6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "781bfbe4_abcbaa7a",
+        "filename": "BUILD.gn",
+        "patchSetId": 18
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-11T15:19:24Z",
+      "side": 1,
+      "message": "You can add clang_use_chrome_plugins\u003dfalse to the build_overrides instead. Same below.",
+      "revId": "62ab46d00ed7593aff32b5e620eae70788a30ca6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "096c4e5a_fe30ba61",
         "filename": "BUILD.gn",
         "patchSetId": 18
@@ -13,6 +47,30 @@
       "writtenOn": "2017-10-11T01:42:47Z",
       "side": 1,
       "message": "what does this mean exactly?",
+      "range": {
+        "startLine": 26,
+        "startChar": 4,
+        "endLine": 26,
+        "endChar": 19
+      },
+      "revId": "62ab46d00ed7593aff32b5e620eae70788a30ca6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e7f708a3_0c6e90f0",
+        "filename": "BUILD.gn",
+        "patchSetId": 18
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-11T15:19:24Z",
+      "side": 1,
+      "message": "I think it is standard practice to do this, as it makes sure shipped binaries don\u0027t mark all as a dependency.\n\ntestonly: Declares a target must only be used for testing.\n\n  Boolean. Defaults to false.\n\n  When a target is marked \"testonly \u003d true\", it must only be depended on by\n  other test-only targets. Otherwise, GN will issue an error that the\n  depenedency is not allowed.\n\n  This feature is intended to prevent accidentally shipping test code in a\n  final product.\n\nExample\n\n  source_set(\"test_support\") {\n    testonly \u003d true\n    ...\n  }",
+      "parentUuid": "096c4e5a_fe30ba61",
       "range": {
         "startLine": 26,
         "startChar": 4,
@@ -71,6 +129,30 @@
     },
     {
       "key": {
+        "uuid": "4f5f3ee8_2e338275",
+        "filename": "DEPS",
+        "patchSetId": 18
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-11T15:19:24Z",
+      "side": 1,
+      "message": "+1. Weirdly I thought I had already done that in my previous attempt. Chromium must have moved gtest and gmock again.",
+      "parentUuid": "46c1c564_4db766ed",
+      "range": {
+        "startLine": 29,
+        "startChar": 0,
+        "endLine": 34,
+        "endChar": 122
+      },
+      "revId": "62ab46d00ed7593aff32b5e620eae70788a30ca6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8fcf49d2_78c6f7b8",
         "filename": "DEPS",
         "patchSetId": 18
@@ -105,6 +187,92 @@
       "writtenOn": "2017-10-11T01:42:47Z",
       "side": 1,
       "message": "this file can go in third_party/libpng. Also you can add a README.angle. See Chromium\u0027s example. This file, and all the other new files you add, needs to have a copyright/license header.",
+      "revId": "62ab46d00ed7593aff32b5e620eae70788a30ca6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4524e093_6124223b",
+        "filename": "build/secondary/third_party/libpng/BUILD.gn",
+        "patchSetId": 18
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-11T15:19:24Z",
+      "side": 1,
+      "message": "libpng is pulled by the DEPS, so we can\u0027t include it there. build/secondary is the standard place to put BUILD.gn files for dependencies without BUILD.gn. The third_party in the path is forced by GN so this applies to //third_party/libpng, this file isn\u0027t a third_party file so it shouldn\u0027t require a README.angle.",
+      "parentUuid": "0161eec7_1d985700",
+      "revId": "62ab46d00ed7593aff32b5e620eae70788a30ca6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dd184a0a_a5004716",
+        "filename": "build_overrides/build.gni",
+        "patchSetId": 18
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-11T15:19:24Z",
+      "side": 1,
+      "message": "add use_system_xcode\u003dtrue for mac",
+      "revId": "62ab46d00ed7593aff32b5e620eae70788a30ca6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fa01f2f4_99d22f01",
+        "filename": "samples/BUILD.gn",
+        "patchSetId": 18
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-11T15:19:24Z",
+      "side": 1,
+      "message": "ditto: this will disappear.",
+      "revId": "62ab46d00ed7593aff32b5e620eae70788a30ca6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "96215db5_ed6dbf53",
+        "filename": "samples/BUILD.gn",
+        "patchSetId": 18
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-11T15:19:24Z",
+      "side": 1,
+      "message": "Maybe we could define our own \"angle_sample\" target type that removes some of the boilerplate?",
+      "revId": "62ab46d00ed7593aff32b5e620eae70788a30ca6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1b01ab90_48a73228",
+        "filename": "samples/BUILD.gn",
+        "patchSetId": 18
+      },
+      "lineNbr": 235,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-11T15:19:24Z",
+      "side": 1,
+      "message": "nit: testonly\u003dtrue.",
       "revId": "62ab46d00ed7593aff32b5e620eae70788a30ca6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -182,6 +350,159 @@
     },
     {
       "key": {
+        "uuid": "d199c3b5_b7dd650f",
+        "filename": "src/tests/BUILD.gn",
+        "patchSetId": 18
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-11T15:19:24Z",
+      "side": 1,
+      "message": "I think public_configs also apply to the current target so here configs isn\u0027t needed. Likewise for gtest.",
+      "revId": "62ab46d00ed7593aff32b5e620eae70788a30ca6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6373db63_963118fb",
+        "filename": "src/tests/BUILD.gn",
+        "patchSetId": 18
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-11T15:19:24Z",
+      "side": 1,
+      "message": "ditto: this will disappear.",
+      "revId": "62ab46d00ed7593aff32b5e620eae70788a30ca6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c2499a7f_4b721d7f",
+        "filename": "src/tests/BUILD.gn",
+        "patchSetId": 18
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-11T15:19:24Z",
+      "side": 1,
+      "message": "Can we have this with the other imports? Also we should standardize how this is done across all files. I suggest having all GN files do\n  import(\"//build_overrides/build.gni\")\n  import(\u003crelative path to gni/angle.gni\u003e)",
+      "revId": "62ab46d00ed7593aff32b5e620eae70788a30ca6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2690bda8_9d43c083",
+        "filename": "src/tests/BUILD.gn",
+        "patchSetId": 18
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-11T15:19:24Z",
+      "side": 1,
+      "message": "nit: $angle_root + \"/src\"",
+      "revId": "62ab46d00ed7593aff32b5e620eae70788a30ca6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "38ee121a_af7cbfd5",
+        "filename": "src/tests/BUILD.gn",
+        "patchSetId": 18
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-11T15:19:24Z",
+      "side": 1,
+      "message": "This block is repeated multiple times, can we have a config that handles the Chromium / ANGLE difference?",
+      "revId": "62ab46d00ed7593aff32b5e620eae70788a30ca6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1d31b14a_73cc1e80",
+        "filename": "src/tests/BUILD.gn",
+        "patchSetId": 18
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-11T15:19:24Z",
+      "side": 1,
+      "message": "ditto.",
+      "revId": "62ab46d00ed7593aff32b5e620eae70788a30ca6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1f6c31c4_a16cc8d0",
+        "filename": "src/tests/BUILD.gn",
+        "patchSetId": 18
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-11T15:19:24Z",
+      "side": 1,
+      "message": "ditto.",
+      "revId": "62ab46d00ed7593aff32b5e620eae70788a30ca6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4ab1edac_89c0eb32",
+        "filename": "src/tests/BUILD.gn",
+        "patchSetId": 18
+      },
+      "lineNbr": 260,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-11T15:19:24Z",
+      "side": 1,
+      "message": "is_mac too for mac.",
+      "revId": "62ab46d00ed7593aff32b5e620eae70788a30ca6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5bd14062_a4861d3e",
+        "filename": "src/tests/BUILD.gn",
+        "patchSetId": 18
+      },
+      "lineNbr": 302,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-11T15:19:24Z",
+      "side": 1,
+      "message": "ditto",
+      "revId": "62ab46d00ed7593aff32b5e620eae70788a30ca6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "98661392_5ed58833",
         "filename": "src/tests/BUILD.gn",
         "patchSetId": 18
@@ -199,6 +520,108 @@
         "endLine": 306,
         "endChar": 26
       },
+      "revId": "62ab46d00ed7593aff32b5e620eae70788a30ca6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ef4316ae_dfbcf2fb",
+        "filename": "src/tests/BUILD.gn",
+        "patchSetId": 18
+      },
+      "lineNbr": 323,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-11T15:19:24Z",
+      "side": 1,
+      "message": "Set this to true in the build_overrides",
+      "revId": "62ab46d00ed7593aff32b5e620eae70788a30ca6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f084a0bc_323c8a50",
+        "filename": "src/tests/BUILD.gn",
+        "patchSetId": 18
+      },
+      "lineNbr": 324,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-11T15:19:24Z",
+      "side": 1,
+      "message": "Where is dEQP in Chromium? Can we do something with the $angle_root?",
+      "revId": "62ab46d00ed7593aff32b5e620eae70788a30ca6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a82bcd67_cc68f3c5",
+        "filename": "src/tests/BUILD.gn",
+        "patchSetId": 18
+      },
+      "lineNbr": 397,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-11T15:19:24Z",
+      "side": 1,
+      "message": "Let\u0027s just add it unconditionally",
+      "revId": "62ab46d00ed7593aff32b5e620eae70788a30ca6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cfa619fd_47a8335b",
+        "filename": "src/tests/BUILD.gn",
+        "patchSetId": 18
+      },
+      "lineNbr": 443,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-11T15:19:24Z",
+      "side": 1,
+      "message": "ditto. Let\u0027s include gmock too, why not.",
+      "revId": "62ab46d00ed7593aff32b5e620eae70788a30ca6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4afd79fc_471ef81c",
+        "filename": "src/vulkan_support/BUILD.gn",
+        "patchSetId": 18
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-11T15:19:24Z",
+      "side": 1,
+      "message": "Can we angle_root defined in angle.gni?",
+      "revId": "62ab46d00ed7593aff32b5e620eae70788a30ca6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dac292ec_412af1ec",
+        "filename": "src/vulkan_support/BUILD.gn",
+        "patchSetId": 18
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-11T15:19:24Z",
+      "side": 1,
+      "message": "third_party_dir\u003d$angle_root + \"/third_party\"",
       "revId": "62ab46d00ed7593aff32b5e620eae70788a30ca6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
