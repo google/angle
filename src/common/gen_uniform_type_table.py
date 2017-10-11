@@ -72,15 +72,20 @@ all_uniform_types = [
     "GL_UNSIGNED_INT_VEC4"
 ]
 
-# Uniform texture types.
+# Uniform texture types. Be wary of substrings finding the wrong types.
+# e.g. with 2D_MULTISAMPLE/2D_ARRAY and 2D.
 texture_types = {
     "2D": "2D",
-    "CUBE": "CUBE_MAP",
     "2D_ARRAY": "2D_ARRAY",
+    "2D_ARRAY_SHADOW": "2D_ARRAY",
+    "2D_MULTISAMPLE": "2D_MULTISAMPLE",
+    "2D_RECT_ANGLE": "2D",
+    "2D_SHADOW": "2D",
     "3D": "3D",
-    "MULTISAMPLE": "MULTISAMPLE",
+    "CUBE": "CUBE_MAP",
+    "CUBE_SHADOW": "CUBE_MAP",
+    "EXTERNAL_OES": "EXTERNAL_OES",
     "RECT": "RECTANGLE",
-    "EXTERNAL_OES": "EXTERNAL_OES"
 }
 
 template_cpp = """// GENERATED FILE - DO NOT EDIT.
@@ -150,9 +155,12 @@ def get_component_type(uniform_type):
         return "GL_INT"
 
 def get_texture_type(uniform_type):
-    for sampler_type, tex_type in texture_types.items():
-        if sampler_type in uniform_type:
-            return "GL_TEXTURE_" + tex_type
+    if "SAMPLER" in uniform_type:
+        index = uniform_type.find("SAMPLER") + len("SAMPLER") + 1
+        return "GL_TEXTURE_" + texture_types[uniform_type[index:]]
+    if "IMAGE" in uniform_type:
+        index = uniform_type.find("IMAGE") + len("IMAGE") + 1
+        return "GL_TEXTURE_" + texture_types[uniform_type[index:]]
     return "GL_NONE"
 
 def get_transposed_type(uniform_type):
