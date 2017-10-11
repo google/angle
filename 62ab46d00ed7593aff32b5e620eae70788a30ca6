@@ -211,6 +211,24 @@
     },
     {
       "key": {
+        "uuid": "2af2fa38_377148d6",
+        "filename": "build/secondary/third_party/libpng/BUILD.gn",
+        "patchSetId": 18
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-11T15:46:52Z",
+      "side": 1,
+      "message": "You\u0027re right, Chromium only my trick for dependencies with a src/ subdirectory. libpng is actually baked into chromium/src, so it wouldn\u0027t work.",
+      "parentUuid": "4524e093_6124223b",
+      "revId": "62ab46d00ed7593aff32b5e620eae70788a30ca6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "dd184a0a_a5004716",
         "filename": "build_overrides/build.gni",
         "patchSetId": 18
@@ -554,6 +572,24 @@
       "writtenOn": "2017-10-11T15:19:24Z",
       "side": 1,
       "message": "Where is dEQP in Chromium? Can we do something with the $angle_root?",
+      "revId": "62ab46d00ed7593aff32b5e620eae70788a30ca6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "effa2ee8_07240d1d",
+        "filename": "src/tests/BUILD.gn",
+        "patchSetId": 18
+      },
+      "lineNbr": 324,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-11T15:46:52Z",
+      "side": 1,
+      "message": "The dEQP path should be the same in Chromium and without, not sure why there would be a different path needed.",
+      "parentUuid": "f084a0bc_323c8a50",
       "revId": "62ab46d00ed7593aff32b5e620eae70788a30ca6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
