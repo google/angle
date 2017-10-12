@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6425ac37_fac9d083",
+        "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 1230,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-10-12T01:21:39Z",
+      "side": 1,
+      "message": "Unimplemented: gl::Texture::setDepthStencilTextureMode(748)\nFail (glGetTexParameteriv: glGetError() returned GL_INVALID_ENUM)\nthe default state (GL_DEPTH_COMPONENT) is not implemented",
+      "revId": "d357cdb70acd25c6358ad89cb92ca86871cc027c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

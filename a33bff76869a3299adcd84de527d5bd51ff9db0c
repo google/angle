@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "06bb17ad_24e6d017",
+        "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 1230,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-10-12T01:21:39Z",
+      "side": 1,
+      "message": "NotSupported (Test requires extension: GL_EXT_texture_border_clamp)\nUnimplemented: gl::Texture::setDepthStencilTextureMode(748)",
+      "revId": "a33bff76869a3299adcd84de527d5bd51ff9db0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
