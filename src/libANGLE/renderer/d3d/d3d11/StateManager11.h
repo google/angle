@@ -291,10 +291,7 @@ class StateManager11 final : angle::NonCopyable
     gl::Error syncProgram(const gl::Context *context, GLenum drawMode);
 
     gl::Error syncTextures(const gl::Context *context);
-    gl::Error applyTextures(const gl::Context *context,
-                            gl::SamplerType shaderType,
-                            const FramebufferTextureArray &framebufferTextures,
-                            size_t framebufferTextureCount);
+    gl::Error applyTextures(const gl::Context *context, gl::SamplerType shaderType);
 
     gl::Error setSamplerState(const gl::Context *context,
                               gl::SamplerType type,

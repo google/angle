@@ -404,10 +404,7 @@ class Renderer9 : public RendererD3D
     gl::Error applyShaders(const gl::Context *context, GLenum drawMode);
 
     gl::Error applyTextures(const gl::Context *context);
-    gl::Error applyTextures(const gl::Context *context,
-                            gl::SamplerType shaderType,
-                            const FramebufferTextureArray &framebufferTextures,
-                            size_t framebufferTextureCount);
+    gl::Error applyTextures(const gl::Context *context, gl::SamplerType shaderType);
 
     void generateCaps(gl::Caps *outCaps,
                       gl::TextureCapsMap *outTextureCaps,

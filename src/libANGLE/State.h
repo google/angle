@@ -34,8 +34,6 @@ class VertexArray;
 class Context;
 struct Caps;
 
-typedef std::map<GLenum, BindingPointer<Texture>> TextureMap;
-
 class State : public OnAttachmentDirtyReceiver, angle::NonCopyable
 {
   public:

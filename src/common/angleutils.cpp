@@ -14,6 +14,8 @@
 
 namespace angle
 {
+// dirtyPointer is a special value that will make the comparison with any valid pointer fail and
+// force the renderer to re-apply the state.
 const uintptr_t DirtyPointer = std::numeric_limits<uintptr_t>::max();
 }
 

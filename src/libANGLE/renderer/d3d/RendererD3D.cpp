@@ -51,12 +51,7 @@ RendererD3D::~RendererD3D()
 
 void RendererD3D::cleanup()
 {
-    for (auto &incompleteTexture : mIncompleteTextures)
-    {
-        ANGLE_SWALLOW_ERR(incompleteTexture.second->onDestroy(mDisplay->getProxyContext()));
-        incompleteTexture.second.set(mDisplay->getProxyContext(), nullptr);
-    }
-    mIncompleteTextures.clear();
+    mIncompleteTextures.onDestroy(mDisplay->getProxyContext());
 }
 
 bool RendererD3D::skipDraw(const gl::State &glState, GLenum drawMode)
@@ -87,84 +82,11 @@ bool RendererD3D::skipDraw(const gl::State &glState, GLenum drawMode)
     return false;
 }
 
-size_t RendererD3D::getBoundFramebufferTextures(const gl::ContextState &data,
-                                                FramebufferTextureArray *outTextureArray)
-{
-    size_t textureCount = 0;
-
-    const gl::Framebuffer *drawFramebuffer = data.getState().getDrawFramebuffer();
-    for (size_t i = 0; i < drawFramebuffer->getNumColorBuffers(); i++)
-    {
-        const gl::FramebufferAttachment *attachment = drawFramebuffer->getColorbuffer(i);
-        if (attachment && attachment->type() == GL_TEXTURE)
-        {
-            (*outTextureArray)[textureCount++] = attachment->getTexture();
-        }
-    }
-
-    const gl::FramebufferAttachment *depthStencilAttachment =
-        drawFramebuffer->getDepthOrStencilbuffer();
-    if (depthStencilAttachment && depthStencilAttachment->type() == GL_TEXTURE)
-    {
-        (*outTextureArray)[textureCount++] = depthStencilAttachment->getTexture();
-    }
-
-    std::sort(outTextureArray->begin(), outTextureArray->begin() + textureCount);
-
-    return textureCount;
-}
-
 gl::Error RendererD3D::getIncompleteTexture(const gl::Context *context,
                                             GLenum type,
                                             gl::Texture **textureOut)
 {
-    if (mIncompleteTextures.find(type) == mIncompleteTextures.end())
-    {
-        GLImplFactory *implFactory = context->getImplementation();
-        const GLubyte color[] = {0, 0, 0, 255};
-        const gl::Extents colorSize(1, 1, 1);
-        const gl::PixelUnpackState unpack(1, 0);
-        const gl::Box area(0, 0, 0, 1, 1, 1);
-
-        // If a texture is external use a 2D texture for the incomplete texture
-        GLenum createType = (type == GL_TEXTURE_EXTERNAL_OES) ? GL_TEXTURE_2D : type;
-
-        // Skip the API layer to avoid needing to pass the Context and mess with dirty bits.
-        gl::Texture *t =
-            new gl::Texture(implFactory, std::numeric_limits<GLuint>::max(), createType);
-        if (createType == GL_TEXTURE_2D_MULTISAMPLE)
-        {
-            ANGLE_TRY(t->setStorageMultisample(nullptr, createType, 1, GL_RGBA8, colorSize, true));
-        }
-        else
-        {
-            ANGLE_TRY(t->setStorage(nullptr, createType, 1, GL_RGBA8, colorSize));
-        }
-        if (type == GL_TEXTURE_CUBE_MAP)
-        {
-            for (GLenum face = GL_TEXTURE_CUBE_MAP_POSITIVE_X;
-                 face <= GL_TEXTURE_CUBE_MAP_NEGATIVE_Z; face++)
-            {
-                ANGLE_TRY(t->getImplementation()->setSubImage(nullptr, face, 0, area, GL_RGBA8,
-                                                              GL_UNSIGNED_BYTE, unpack, color));
-            }
-        }
-        else if (type == GL_TEXTURE_2D_MULTISAMPLE)
-        {
-            gl::ColorF clearValue(0, 0, 0, 1);
-            gl::ImageIndex index = gl::ImageIndex::Make2DMultisample();
-            ANGLE_TRY(GetImplAs<TextureD3D>(t)->clearLevel(context, index, clearValue, 1.0f, 0));
-        }
-        else
-        {
-            ANGLE_TRY(t->getImplementation()->setSubImage(nullptr, createType, 0, area, GL_RGBA8,
-                                                          GL_UNSIGNED_BYTE, unpack, color));
-        }
-        mIncompleteTextures[type].set(context, t);
-    }
-
-    *textureOut = mIncompleteTextures[type].get();
-    return gl::NoError();
+    return mIncompleteTextures.getIncompleteTexture(context, type, this, textureOut);
 }
 
 GLenum RendererD3D::getResetStatus()
@@ -281,6 +203,17 @@ bool InstancedPointSpritesActive(ProgramD3D *programD3D, GLenum mode)
 gl::Error RendererD3D::initRenderTarget(RenderTargetD3D *renderTarget)
 {
     return clearRenderTarget(renderTarget, gl::ColorF(0, 0, 0, 0), 1, 0);
+}
+
+gl::Error RendererD3D::initializeMultisampleTextureToBlack(const gl::Context *context,
+                                                           gl::Texture *glTexture)
+{
+    ASSERT(glTexture->getTarget() == GL_TEXTURE_2D_MULTISAMPLE);
+    TextureD3D *textureD3D        = GetImplAs<TextureD3D>(glTexture);
+    gl::ImageIndex index          = gl::ImageIndex::Make2DMultisample();
+    RenderTargetD3D *renderTarget = nullptr;
+    ANGLE_TRY(textureD3D->getRenderTarget(context, index, &renderTarget));
+    return clearRenderTarget(renderTarget, gl::ColorF(0.0f, 0.0f, 0.0f, 1.0f), 1.0f, 0);
 }
 
 unsigned int GetBlendSampleMask(const gl::State &glState, int samples)

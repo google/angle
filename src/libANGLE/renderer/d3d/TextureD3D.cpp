@@ -635,23 +635,6 @@ void TextureD3D::syncState(const gl::Texture::DirtyBits &dirtyBits)
     // TODO(geofflang): Use dirty bits
 }
 
-gl::Error TextureD3D::clearLevel(const gl::Context *context,
-                                 const gl::ImageIndex &index,
-                                 const gl::ColorF &clearColorValue,
-                                 const float clearDepthValue,
-                                 const unsigned int clearStencilValue)
-{
-    TextureStorage *storage = nullptr;
-    ANGLE_TRY(getNativeTexture(context, &storage));
-    RenderTargetD3D *renderTargetD3D = nullptr;
-    ANGLE_TRY(storage->getRenderTarget(context, index, &renderTargetD3D));
-
-    ANGLE_TRY(mRenderer->clearRenderTarget(renderTargetD3D, clearColorValue, clearDepthValue,
-                                           clearStencilValue));
-
-    return gl::NoError();
-}
-
 gl::Error TextureD3D::releaseTexStorage(const gl::Context *context)
 {
     if (!mTexStorage)
@@ -3852,8 +3835,7 @@ bool TextureD3D_2DMultisample::isValidIndex(const gl::ImageIndex &index) const
 
 GLsizei TextureD3D_2DMultisample::getLayerCount(int level) const
 {
-    UNIMPLEMENTED();
-    return GLsizei();
+    return 1;
 }
 
 void TextureD3D_2DMultisample::markAllImagesDirty()

@@ -2274,25 +2274,25 @@ void State::syncProgramTextures(const Context *context)
             ASSERT(static_cast<size_t>(textureUnitIndex) < mCompleteTextureCache.size());
             ASSERT(static_cast<size_t>(textureUnitIndex) < newActiveTextures.size());
 
-            if (texture != nullptr)
-            {
-                // Mark the texture binding bit as dirty if the texture completeness changes.
-                // TODO(jmadill): Use specific dirty bit for completeness change.
-                if (texture->isSamplerComplete(context, sampler))
-                {
-                    texture->syncState();
-                    mCompleteTextureCache[textureUnitIndex] = texture;
-                }
-                else
-                {
-                    mCompleteTextureCache[textureUnitIndex] = nullptr;
-                }
+            ASSERT(texture);
 
-                // Bind the texture unconditionally, to recieve completeness change notifications.
-                mCompleteTextureBindings[textureUnitIndex].bind(texture->getDirtyChannel());
-                newActiveTextures.set(textureUnitIndex);
-                mCompleteTexturesMask.set(textureUnitIndex);
+            // Mark the texture binding bit as dirty if the texture completeness changes.
+            // TODO(jmadill): Use specific dirty bit for completeness change.
+            if (texture->isSamplerComplete(context, sampler) &&
+                !mDrawFramebuffer->hasTextureAttachment(texture))
+            {
+                texture->syncState();
+                mCompleteTextureCache[textureUnitIndex] = texture;
             }
+            else
+            {
+                mCompleteTextureCache[textureUnitIndex] = nullptr;
+            }
+
+            // Bind the texture unconditionally, to recieve completeness change notifications.
+            mCompleteTextureBindings[textureUnitIndex].bind(texture->getDirtyChannel());
+            newActiveTextures.set(textureUnitIndex);
+            mCompleteTexturesMask.set(textureUnitIndex);
 
             if (sampler != nullptr)
             {

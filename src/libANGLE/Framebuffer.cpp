@@ -1648,7 +1648,7 @@ void Framebuffer::setAttachmentImpl(const Context *context,
                              &mDirtyStencilAttachmentBinding, type, binding, textureIndex,
                              attachmentObj, numViews, baseViewIndex, multiviewLayout,
                              viewportOffsets);
-            return;
+            break;
         }
 
         case GL_DEPTH:
@@ -1690,6 +1690,8 @@ void Framebuffer::setAttachmentImpl(const Context *context,
         }
         break;
     }
+
+    mAttachedTextures.reset();
 }
 
 void Framebuffer::updateAttachment(const Context *context,
@@ -2142,6 +2144,37 @@ bool Framebuffer::partialBufferClearNeedsInit(const Context *context, GLenum buf
             UNREACHABLE();
             return false;
     }
+}
+
+bool Framebuffer::hasTextureAttachment(const Texture *texture) const
+{
+    if (!mAttachedTextures.valid())
+    {
+        std::set<const FramebufferAttachmentObject *> attachedTextures;
+
+        for (const auto &colorAttachment : mState.mColorAttachments)
+        {
+            if (colorAttachment.isAttached() && colorAttachment.type() == GL_TEXTURE)
+            {
+                attachedTextures.insert(colorAttachment.getResource());
+            }
+        }
+
+        if (mState.mDepthAttachment.isAttached() && mState.mDepthAttachment.type() == GL_TEXTURE)
+        {
+            attachedTextures.insert(mState.mDepthAttachment.getResource());
+        }
+
+        if (mState.mStencilAttachment.isAttached() &&
+            mState.mStencilAttachment.type() == GL_TEXTURE)
+        {
+            attachedTextures.insert(mState.mStencilAttachment.getResource());
+        }
+
+        mAttachedTextures = std::move(attachedTextures);
+    }
+
+    return (mAttachedTextures.value().count(texture) > 0);
 }
 
 }  // namespace gl

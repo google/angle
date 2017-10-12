@@ -312,6 +312,8 @@ class Framebuffer final : public LabeledObject, public OnAttachmentDirtyReceiver
     Error ensureReadAttachmentInitialized(const Context *context, GLbitfield blitMask);
     Box getDimensions() const;
 
+    bool hasTextureAttachment(const Texture *texture) const;
+
   private:
     bool detachResourceById(const Context *context, GLenum resourceType, GLuint resourceId);
     bool detachMatchingAttachment(const Context *context,
@@ -377,6 +379,9 @@ class Framebuffer final : public LabeledObject, public OnAttachmentDirtyReceiver
     OnAttachmentDirtyBinding mDirtyStencilAttachmentBinding;
 
     DirtyBits mDirtyBits;
+
+    // A cache of attached textures for quick validation of feedback loops.
+    mutable Optional<std::set<const FramebufferAttachmentObject *>> mAttachedTextures;
 };
 
 }  // namespace gl

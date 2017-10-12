@@ -13,7 +13,9 @@
 #include "image_util/imageformats.h"
 
 #include "libANGLE/AttributeMap.h"
+#include "libANGLE/Context.h"
 #include "libANGLE/formatutils.h"
+#include "libANGLE/renderer/ContextImpl.h"
 #include "libANGLE/renderer/Format.h"
 
 #include <string.h>
@@ -468,6 +470,88 @@ void CopyImageCHROMIUM(const uint8_t *sourceData,
             writeFunction(sourceColor, colorWriteFunction, destPixelData);
         }
     }
+}
+
+// IncompleteTextureSet implementation.
+IncompleteTextureSet::IncompleteTextureSet()
+{
+}
+
+IncompleteTextureSet::~IncompleteTextureSet()
+{
+}
+
+void IncompleteTextureSet::onDestroy(const gl::Context *context)
+{
+    // Clear incomplete textures.
+    for (auto &incompleteTexture : mIncompleteTextures)
+    {
+        ANGLE_SWALLOW_ERR(incompleteTexture.second->onDestroy(context));
+        incompleteTexture.second.set(context, nullptr);
+    }
+    mIncompleteTextures.clear();
+}
+
+gl::Error IncompleteTextureSet::getIncompleteTexture(
+    const gl::Context *context,
+    GLenum type,
+    MultisampleTextureInitializer *multisampleInitializer,
+    gl::Texture **textureOut)
+{
+    auto iter = mIncompleteTextures.find(type);
+    if (iter != mIncompleteTextures.end())
+    {
+        *textureOut = iter->second.get();
+        return gl::NoError();
+    }
+
+    ContextImpl *implFactory = context->getImplementation();
+
+    const GLubyte color[] = {0, 0, 0, 255};
+    const gl::Extents colorSize(1, 1, 1);
+    const gl::PixelUnpackState unpack(1, 0);
+    const gl::Box area(0, 0, 0, 1, 1, 1);
+
+    // If a texture is external use a 2D texture for the incomplete texture
+    GLenum createType = (type == GL_TEXTURE_EXTERNAL_OES) ? GL_TEXTURE_2D : type;
+
+    gl::Texture *tex = new gl::Texture(implFactory, std::numeric_limits<GLuint>::max(), createType);
+    angle::UniqueObjectPointer<gl::Texture, gl::Context> t(tex, context);
+
+    if (createType == GL_TEXTURE_2D_MULTISAMPLE)
+    {
+        ANGLE_TRY(t->setStorageMultisample(context, createType, 1, GL_RGBA8, colorSize, true));
+    }
+    else
+    {
+        ANGLE_TRY(t->setStorage(context, createType, 1, GL_RGBA8, colorSize));
+    }
+
+    if (type == GL_TEXTURE_CUBE_MAP)
+    {
+        for (GLenum face = GL_TEXTURE_CUBE_MAP_POSITIVE_X; face <= GL_TEXTURE_CUBE_MAP_NEGATIVE_Z;
+             face++)
+        {
+            ANGLE_TRY(
+                t->setSubImage(context, unpack, face, 0, area, GL_RGBA, GL_UNSIGNED_BYTE, color));
+        }
+    }
+    else if (type == GL_TEXTURE_2D_MULTISAMPLE)
+    {
+        // Call a specialized clear function to init a multisample texture.
+        ANGLE_TRY(multisampleInitializer->initializeMultisampleTextureToBlack(context, t.get()));
+    }
+    else
+    {
+        ANGLE_TRY(
+            t->setSubImage(context, unpack, createType, 0, area, GL_RGBA, GL_UNSIGNED_BYTE, color));
+    }
+
+    t->syncState();
+
+    mIncompleteTextures[type].set(context, t.release());
+    *textureOut = mIncompleteTextures[type].get();
+    return gl::NoError();
 }
 
 }  // namespace rx

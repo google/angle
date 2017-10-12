@@ -100,12 +100,6 @@ class TextureD3D : public TextureImpl
 
     void syncState(const gl::Texture::DirtyBits &dirtyBits) override;
 
-    gl::Error clearLevel(const gl::Context *context,
-                         const gl::ImageIndex &index,
-                         const gl::ColorF &clearColorValue,
-                         const float clearDepthValue,
-                         const unsigned int clearStencilValue);
-
     gl::Error initializeContents(const gl::Context *context,
                                  const gl::ImageIndex &imageIndex) override;
 

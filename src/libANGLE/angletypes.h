@@ -17,6 +17,7 @@
 #include <stdint.h>
 
 #include <bitset>
+#include <map>
 #include <unordered_map>
 
 namespace gl
@@ -327,6 +328,9 @@ using DrawBufferMask = angle::BitSet<IMPLEMENTATION_MAX_DRAW_BUFFERS>;
 using ContextID = uintptr_t;
 
 constexpr size_t CUBE_FACE_COUNT = 6;
+
+using TextureMap = std::map<GLenum, BindingPointer<Texture>>;
+
 }  // namespace gl
 
 namespace rx
