@@ -16,6 +16,24 @@
       "revId": "06bad301eba63bf16bb5dd380a5a71473c6269cf",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "89d3954f_06eeaa54",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 4643,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-10-12T10:27:49Z",
+      "side": 1,
+      "message": "You\u0027re right, removing the cases instead is better, somehow I didn\u0027t think of that before. It\u0027s a bit more code to implement but doesn\u0027t have complex interactions with PruneEmptyDeclarations which is nice.",
+      "parentUuid": "537422b6_8a75f636",
+      "revId": "06bad301eba63bf16bb5dd380a5a71473c6269cf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
