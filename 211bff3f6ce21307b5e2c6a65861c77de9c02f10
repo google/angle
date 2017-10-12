@@ -34,6 +34,24 @@
       "revId": "211bff3f6ce21307b5e2c6a65861c77de9c02f10",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "415976a8_e523758e",
+        "filename": "src/common/gen_uniform_type_table.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-10-12T18:34:38Z",
+      "side": 0,
+      "message": "I tried it - it works.",
+      "parentUuid": "c9d473e5_887bafb4",
+      "revId": "211bff3f6ce21307b5e2c6a65861c77de9c02f10",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
