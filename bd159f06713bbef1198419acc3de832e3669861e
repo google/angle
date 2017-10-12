@@ -34,6 +34,24 @@
       "revId": "bd159f06713bbef1198419acc3de832e3669861e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5d39917d_29ba2d48",
+        "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 1251,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-10-12T06:50:07Z",
+      "side": 0,
+      "message": "I took a look at the deqp test case. If es version \u003c 3.2, these unsupported internal format includes GL_RGBA16F, ,GL_R32F, GL_RG32F, GL_RGBA32F, GL_R16F, GL_RG16F, GL_R11F_G11F_B10F. In addition, GL_STENCIL_INDEX8 needs es 3.2 or GL_OES_texture_stencil8 extension.\nes31fInternalFormatQueryTests.cpp:83\nes31fInternalFormatQueryTests.cpp:99",
+      "parentUuid": "95e3f6dd_39a64487",
+      "revId": "bd159f06713bbef1198419acc3de832e3669861e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
