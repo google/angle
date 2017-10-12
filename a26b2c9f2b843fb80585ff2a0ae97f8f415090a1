@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "5d45f7f6_05227ef8",
+        "filename": "src/compiler/translator/UniformHLSL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 297,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-10-12T08:06:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b3f14294_019dfd53",
+      "revId": "a26b2c9f2b843fb80585ff2a0ae97f8f415090a1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e21f9016_41f722f9",
         "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
         "patchSetId": 2
@@ -39,6 +57,30 @@
       "revId": "a26b2c9f2b843fb80585ff2a0ae97f8f415090a1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "368432e9_f8e320ac",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1350,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-10-12T08:06:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e21f9016_41f722f9",
+      "range": {
+        "startLine": 1347,
+        "startChar": 0,
+        "endLine": 1350,
+        "endChar": 38
+      },
+      "revId": "a26b2c9f2b843fb80585ff2a0ae97f8f415090a1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
