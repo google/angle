@@ -1074,7 +1074,6 @@ TEST_P(WebGLCompatibilityTest, DrawArraysBufferOutOfBoundsNonInstanced)
         "}\n";
 
     ANGLE_GL_PROGRAM(program, vert, frag);
-
     GLint posLocation = glGetAttribLocation(program.get(), "a_pos");
     ASSERT_NE(-1, posLocation);
     glUseProgram(program.get());
@@ -1088,28 +1087,176 @@ TEST_P(WebGLCompatibilityTest, DrawArraysBufferOutOfBoundsNonInstanced)
     const uint8_t* zeroOffset = nullptr;
 
     // Test touching the last element is valid.
-    glVertexAttribPointer(0, 1, GL_UNSIGNED_BYTE, GL_FALSE, 0, zeroOffset + 12);
+    glVertexAttribPointer(posLocation, 1, GL_UNSIGNED_BYTE, GL_FALSE, 0, zeroOffset + 12);
     glDrawArrays(GL_POINTS, 0, 4);
     ASSERT_GL_NO_ERROR();
 
     // Test touching the last element + 1 is invalid.
-    glVertexAttribPointer(0, 1, GL_UNSIGNED_BYTE, GL_FALSE, 0, zeroOffset + 13);
+    glVertexAttribPointer(posLocation, 1, GL_UNSIGNED_BYTE, GL_FALSE, 0, zeroOffset + 13);
     glDrawArrays(GL_POINTS, 0, 4);
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 
     // Test touching the last element is valid, using a stride.
-    glVertexAttribPointer(0, 1, GL_UNSIGNED_BYTE, GL_FALSE, 2, zeroOffset + 9);
+    glVertexAttribPointer(posLocation, 1, GL_UNSIGNED_BYTE, GL_FALSE, 2, zeroOffset + 9);
     glDrawArrays(GL_POINTS, 0, 4);
     ASSERT_GL_NO_ERROR();
 
     // Test touching the last element + 1 is invalid, using a stride.
-    glVertexAttribPointer(0, 1, GL_UNSIGNED_BYTE, GL_FALSE, 2, zeroOffset + 10);
+    glVertexAttribPointer(posLocation, 1, GL_UNSIGNED_BYTE, GL_FALSE, 2, zeroOffset + 10);
     glDrawArrays(GL_POINTS, 0, 4);
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 
     // Test any offset is valid if no vertices are drawn.
-    glVertexAttribPointer(0, 1, GL_UNSIGNED_BYTE, GL_FALSE, 0, zeroOffset + 32);
+    glVertexAttribPointer(posLocation, 1, GL_UNSIGNED_BYTE, GL_FALSE, 0, zeroOffset + 32);
     glDrawArrays(GL_POINTS, 0, 0);
+    ASSERT_GL_NO_ERROR();
+
+    // Test a case of overflow that could give a max vertex that's negative
+    constexpr GLint kIntMax = std::numeric_limits<GLint>::max();
+    glVertexAttribPointer(posLocation, 1, GL_UNSIGNED_BYTE, GL_FALSE, 0, zeroOffset + 0);
+    glDrawArrays(GL_POINTS, kIntMax, kIntMax);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+}
+
+// Test the checks for OOB reads in the vertex buffers, instanced version
+TEST_P(WebGL2CompatibilityTest, DrawArraysBufferOutOfBoundsInstanced)
+{
+    const std::string &vert =
+        "attribute float a_pos;\n"
+        "attribute float a_w;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_Position = vec4(a_pos, a_pos, a_pos, a_w);\n"
+        "}\n";
+
+    const std::string &frag =
+        "precision highp float;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_FragColor = vec4(1.0);\n"
+        "}\n";
+
+    ANGLE_GL_PROGRAM(program, vert, frag);
+    GLint posLocation = glGetAttribLocation(program.get(), "a_pos");
+    GLint wLocation = glGetAttribLocation(program.get(), "a_w");
+    ASSERT_NE(-1, posLocation);
+    ASSERT_NE(-1, wLocation);
+    glUseProgram(program.get());
+
+    GLBuffer buffer;
+    glBindBuffer(GL_ARRAY_BUFFER, buffer.get());
+    glBufferData(GL_ARRAY_BUFFER, 16, nullptr, GL_STATIC_DRAW);
+
+    glEnableVertexAttribArray(posLocation);
+    glVertexAttribPointer(posLocation, 1, GL_UNSIGNED_BYTE, GL_FALSE, 0, 0);
+    glVertexAttribDivisor(posLocation, 0);
+
+    glEnableVertexAttribArray(wLocation);
+    glVertexAttribDivisor(wLocation, 1);
+
+    const uint8_t* zeroOffset = nullptr;
+
+    // Test touching the last element is valid.
+    glVertexAttribPointer(wLocation, 1, GL_UNSIGNED_BYTE, GL_FALSE, 0, zeroOffset + 12);
+    glDrawArraysInstanced(GL_POINTS, 0, 1, 4);
+    ASSERT_GL_NO_ERROR();
+
+    // Test touching the last element + 1 is invalid.
+    glVertexAttribPointer(wLocation, 1, GL_UNSIGNED_BYTE, GL_FALSE, 0, zeroOffset + 13);
+    glDrawArraysInstanced(GL_POINTS, 0, 1, 4);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    // Test touching the last element is valid, using a stride.
+    glVertexAttribPointer(wLocation, 1, GL_UNSIGNED_BYTE, GL_FALSE, 2, zeroOffset + 9);
+    glDrawArraysInstanced(GL_POINTS, 0, 1, 4);
+    ASSERT_GL_NO_ERROR();
+
+    // Test touching the last element + 1 is invalid, using a stride.
+    glVertexAttribPointer(wLocation, 1, GL_UNSIGNED_BYTE, GL_FALSE, 2, zeroOffset + 10);
+    glDrawArraysInstanced(GL_POINTS, 0, 1, 4);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    // Test any offset is valid if no vertices are drawn.
+    glVertexAttribPointer(wLocation, 1, GL_UNSIGNED_BYTE, GL_FALSE, 0, zeroOffset + 32);
+    glDrawArraysInstanced(GL_POINTS, 0, 0, 1);
+    ASSERT_GL_NO_ERROR();
+
+    // Test any offset is valid if no primitives are drawn.
+    glVertexAttribPointer(wLocation, 1, GL_UNSIGNED_BYTE, GL_FALSE, 0, zeroOffset + 32);
+    glDrawArraysInstanced(GL_POINTS, 0, 1, 0);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test the checks for OOB reads in the vertex buffers, ANGLE_instanced_arrays version
+TEST_P(WebGLCompatibilityTest, DrawArraysBufferOutOfBoundsInstancedANGLE)
+{
+    ANGLE_SKIP_TEST_IF(!extensionRequestable("GL_ANGLE_instanced_arrays"));
+    glRequestExtensionANGLE("GL_ANGLE_instanced_arrays");
+    EXPECT_GL_NO_ERROR();
+
+    const std::string &vert =
+        "attribute float a_pos;\n"
+        "attribute float a_w;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_Position = vec4(a_pos, a_pos, a_pos, a_w);\n"
+        "}\n";
+
+    const std::string &frag =
+        "precision highp float;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_FragColor = vec4(1.0);\n"
+        "}\n";
+
+    ANGLE_GL_PROGRAM(program, vert, frag);
+    GLint posLocation = glGetAttribLocation(program.get(), "a_pos");
+    GLint wLocation = glGetAttribLocation(program.get(), "a_w");
+    ASSERT_NE(-1, posLocation);
+    ASSERT_NE(-1, wLocation);
+    glUseProgram(program.get());
+
+    GLBuffer buffer;
+    glBindBuffer(GL_ARRAY_BUFFER, buffer.get());
+    glBufferData(GL_ARRAY_BUFFER, 16, nullptr, GL_STATIC_DRAW);
+
+    glEnableVertexAttribArray(posLocation);
+    glVertexAttribPointer(posLocation, 1, GL_UNSIGNED_BYTE, GL_FALSE, 0, 0);
+    glVertexAttribDivisorANGLE(posLocation, 0);
+
+    glEnableVertexAttribArray(wLocation);
+    glVertexAttribDivisorANGLE(wLocation, 1);
+
+    const uint8_t* zeroOffset = nullptr;
+
+    // Test touching the last element is valid.
+    glVertexAttribPointer(wLocation, 1, GL_UNSIGNED_BYTE, GL_FALSE, 0, zeroOffset + 12);
+    glDrawArraysInstancedANGLE(GL_POINTS, 0, 1, 4);
+    ASSERT_GL_NO_ERROR();
+
+    // Test touching the last element + 1 is invalid.
+    glVertexAttribPointer(wLocation, 1, GL_UNSIGNED_BYTE, GL_FALSE, 0, zeroOffset + 13);
+    glDrawArraysInstancedANGLE(GL_POINTS, 0, 1, 4);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    // Test touching the last element is valid, using a stride.
+    glVertexAttribPointer(wLocation, 1, GL_UNSIGNED_BYTE, GL_FALSE, 2, zeroOffset + 9);
+    glDrawArraysInstancedANGLE(GL_POINTS, 0, 1, 4);
+    ASSERT_GL_NO_ERROR();
+
+    // Test touching the last element + 1 is invalid, using a stride.
+    glVertexAttribPointer(wLocation, 1, GL_UNSIGNED_BYTE, GL_FALSE, 2, zeroOffset + 10);
+    glDrawArraysInstancedANGLE(GL_POINTS, 0, 1, 4);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    // Test any offset is valid if no vertices are drawn.
+    glVertexAttribPointer(wLocation, 1, GL_UNSIGNED_BYTE, GL_FALSE, 0, zeroOffset + 32);
+    glDrawArraysInstancedANGLE(GL_POINTS, 0, 0, 1);
+    ASSERT_GL_NO_ERROR();
+
+    // Test any offset is valid if no primitives are drawn.
+    glVertexAttribPointer(wLocation, 1, GL_UNSIGNED_BYTE, GL_FALSE, 0, zeroOffset + 32);
+    glDrawArraysInstancedANGLE(GL_POINTS, 0, 1, 0);
     ASSERT_GL_NO_ERROR();
 }
 
@@ -1131,7 +1278,6 @@ TEST_P(WebGLCompatibilityTest, DrawElementsBufferOutOfBoundsInIndexBuffer)
         "}\n";
 
     ANGLE_GL_PROGRAM(program, vert, frag);
-
     GLint posLocation = glGetAttribLocation(program.get(), "a_pos");
     ASSERT_NE(-1, posLocation);
     glUseProgram(program.get());
@@ -1141,11 +1287,10 @@ TEST_P(WebGLCompatibilityTest, DrawElementsBufferOutOfBoundsInIndexBuffer)
     glBufferData(GL_ARRAY_BUFFER, 16, nullptr, GL_STATIC_DRAW);
 
     glEnableVertexAttribArray(posLocation);
+    glVertexAttribPointer(posLocation, 1, GL_UNSIGNED_BYTE, GL_FALSE, 0, nullptr);
 
     const uint8_t *zeroOffset   = nullptr;
     const uint8_t zeroIndices[] = {0, 0, 0, 0, 0, 0, 0, 0};
-
-    glVertexAttribPointer(0, 1, GL_UNSIGNED_BYTE, GL_FALSE, 0, zeroOffset);
 
     GLBuffer indexBuffer;
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer.get());
@@ -1175,7 +1320,7 @@ TEST_P(WebGLCompatibilityTest, DrawElementsBufferOutOfBoundsInIndexBuffer)
     EXPECT_GL_ERROR(GL_INVALID_VALUE);
 }
 
-// Test the checks for OOB in vertex buffrs caused by indices
+// Test the checks for OOB in vertex buffers caused by indices, non-instanced version
 TEST_P(WebGLCompatibilityTest, DrawElementsBufferOutOfBoundsInVertexBuffer)
 {
     const std::string &vert =
@@ -1193,7 +1338,6 @@ TEST_P(WebGLCompatibilityTest, DrawElementsBufferOutOfBoundsInVertexBuffer)
         "}\n";
 
     ANGLE_GL_PROGRAM(program, vert, frag);
-
     GLint posLocation = glGetAttribLocation(program.get(), "a_pos");
     ASSERT_NE(-1, posLocation);
     glUseProgram(program.get());
@@ -1203,11 +1347,10 @@ TEST_P(WebGLCompatibilityTest, DrawElementsBufferOutOfBoundsInVertexBuffer)
     glBufferData(GL_ARRAY_BUFFER, 8, nullptr, GL_STATIC_DRAW);
 
     glEnableVertexAttribArray(posLocation);
+    glVertexAttribPointer(posLocation, 1, GL_UNSIGNED_BYTE, GL_FALSE, 0, nullptr);
 
     const uint8_t *zeroOffset   = nullptr;
     const uint8_t testIndices[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 255};
-
-    glVertexAttribPointer(0, 1, GL_UNSIGNED_BYTE, GL_FALSE, 0, zeroOffset);
 
     GLBuffer indexBuffer;
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer.get());
@@ -1413,73 +1556,6 @@ TEST_P(WebGLCompatibilityTest, BindAttribLocationLimitation)
     glBindAttribLocation(0, 0, static_cast<const GLchar *>(tooLongString.c_str()));
 
     EXPECT_GL_ERROR(GL_INVALID_VALUE);
-}
-
-// Test the checks for OOB reads in the vertex buffers, instanced version
-TEST_P(WebGL2CompatibilityTest, DrawArraysBufferOutOfBoundsInstanced)
-{
-    const std::string &vert =
-        "attribute float a_pos;\n"
-        "attribute float a_w;\n"
-        "void main()\n"
-        "{\n"
-        "    gl_Position = vec4(a_pos, a_pos, a_pos, a_w);\n"
-        "}\n";
-
-    const std::string &frag =
-        "precision highp float;\n"
-        "void main()\n"
-        "{\n"
-        "    gl_FragColor = vec4(1.0);\n"
-        "}\n";
-
-    ANGLE_GL_PROGRAM(program, vert, frag);
-
-    GLint posLocation = glGetAttribLocation(program.get(), "a_pos");
-    ASSERT_NE(-1, posLocation);
-
-    GLint wLocation = glGetAttribLocation(program.get(), "a_w");
-    ASSERT_NE(-1, wLocation);
-
-    glUseProgram(program.get());
-
-    GLBuffer buffer;
-    glBindBuffer(GL_ARRAY_BUFFER, buffer.get());
-    glBufferData(GL_ARRAY_BUFFER, 16, nullptr, GL_STATIC_DRAW);
-
-    glEnableVertexAttribArray(posLocation);
-    glVertexAttribDivisor(posLocation, 1);
-
-    glEnableVertexAttribArray(wLocation);
-    glVertexAttribPointer(wLocation, 1, GL_UNSIGNED_BYTE, GL_FALSE, 0, 0);
-    glVertexAttribDivisor(wLocation, 0);
-
-    const uint8_t* zeroOffset = nullptr;
-
-    // Test touching the last element is valid.
-    glVertexAttribPointer(0, 1, GL_UNSIGNED_BYTE, GL_FALSE, 0, zeroOffset + 12);
-    glDrawArraysInstanced(GL_POINTS, 0, 1, 4);
-    ASSERT_GL_NO_ERROR();
-
-    // Test touching the last element + 1 is invalid.
-    glVertexAttribPointer(0, 1, GL_UNSIGNED_BYTE, GL_FALSE, 0, zeroOffset + 13);
-    glDrawArraysInstanced(GL_POINTS, 0, 1, 4);
-    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
-
-    // Test touching the last element is valid, using a stride.
-    glVertexAttribPointer(0, 1, GL_UNSIGNED_BYTE, GL_FALSE, 2, zeroOffset + 9);
-    glDrawArraysInstanced(GL_POINTS, 0, 1, 4);
-    ASSERT_GL_NO_ERROR();
-
-    // Test touching the last element + 1 is invalid, using a stride.
-    glVertexAttribPointer(0, 1, GL_UNSIGNED_BYTE, GL_FALSE, 2, zeroOffset + 10);
-    glDrawArraysInstanced(GL_POINTS, 0, 1, 4);
-    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
-
-    // Test any offset is valid if no vertices are drawn.
-    glVertexAttribPointer(0, 1, GL_UNSIGNED_BYTE, GL_FALSE, 0, zeroOffset + 32);
-    glDrawArraysInstanced(GL_POINTS, 0, 1, 0);
-    ASSERT_GL_NO_ERROR();
 }
 
 // Test that having no attributes with a zero divisor is valid in WebGL2
