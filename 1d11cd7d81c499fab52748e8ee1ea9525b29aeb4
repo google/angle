@@ -16,6 +16,24 @@
       "revId": "1d11cd7d81c499fab52748e8ee1ea9525b29aeb4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0e695d33_53a12962",
+        "filename": "src/compiler/translator/InitializeVariables.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-10-12T11:53:30Z",
+      "side": 1,
+      "message": "I wrote a slightly different comment in AddArrayZeroInitSequence.",
+      "parentUuid": "642066da_6d108c3c",
+      "revId": "1d11cd7d81c499fab52748e8ee1ea9525b29aeb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
