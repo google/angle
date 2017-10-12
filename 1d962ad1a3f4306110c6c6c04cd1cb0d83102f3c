@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "217667c0_7b1fc84a",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2990,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-10-12T08:19:26Z",
+      "side": 1,
+      "message": "Linking block members, SSB is quite different from UniformBlock in handling members of array type. There could be top-level arrays, and zero-sized arrays.",
+      "range": {
+        "startLine": 2977,
+        "startChar": 0,
+        "endLine": 2990,
+        "endChar": 69
+      },
+      "revId": "1d962ad1a3f4306110c6c6c04cd1cb0d83102f3c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b418e9a4_df8c6fcb",
+        "filename": "src/libANGLE/Uniform.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-10-12T08:19:26Z",
+      "side": 1,
+      "message": "int bufferIndex;\n    bool vertexStaticUse;\n    bool fragmentStaticUse;\n    bool computeStaticUse;\n\nThese fields are needed as well. please re-consider whether to inherit from sh::ShaderVariable!",
+      "range": {
+        "startLine": 63,
+        "startChar": 0,
+        "endLine": 75,
+        "endChar": 2
+      },
+      "revId": "1d962ad1a3f4306110c6c6c04cd1cb0d83102f3c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
