@@ -155,12 +155,9 @@ def get_component_type(uniform_type):
         return "GL_INT"
 
 def get_texture_type(uniform_type):
-    if "SAMPLER" in uniform_type:
-        index = uniform_type.find("SAMPLER") + len("SAMPLER") + 1
-        return "GL_TEXTURE_" + texture_types[uniform_type[index:]]
-    if "IMAGE" in uniform_type:
-        index = uniform_type.find("IMAGE") + len("IMAGE") + 1
-        return "GL_TEXTURE_" + texture_types[uniform_type[index:]]
+    for sampler_type, tex_type in texture_types.items():
+        if uniform_type.endswith(sampler_type):
+            return "GL_TEXTURE_" + tex_type
     return "GL_NONE"
 
 def get_transposed_type(uniform_type):
