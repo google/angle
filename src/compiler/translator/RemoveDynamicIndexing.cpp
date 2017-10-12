@@ -330,7 +330,7 @@ void RemoveDynamicIndexingTraverser::insertHelperDefinitions(TIntermNode *root)
         insertions.push_back(
             GetIndexFunctionDefinition(type.first, true, *type.second, mSymbolTable));
     }
-    mInsertions.push_back(NodeInsertMultipleEntry(rootBlock, 0, insertions, TIntermSequence()));
+    rootBlock->insertChildNodes(0, insertions);
 }
 
 // Create a call to dyn_index_*() based on an indirect indexing op node
@@ -524,13 +524,12 @@ void RemoveDynamicIndexing(TIntermNode *root, TSymbolTable *symbolTable, int sha
         root->traverse(&traverser);
         traverser.updateTree();
     } while (traverser.usedTreeInsertion());
-    // TOOD(oetuaho@nvidia.com): It might be nicer to add the helper definitions also in the middle
+    // TODO(oetuaho@nvidia.com): It might be nicer to add the helper definitions also in the middle
     // of traversal. Now the tree ends up in an inconsistent state in the middle, since there are
     // function call nodes with no corresponding definition nodes. This needs special handling in
     // TIntermLValueTrackingTraverser, and creates intricacies that are not easily apparent from a
     // superficial reading of the code.
     traverser.insertHelperDefinitions(root);
-    traverser.updateTree();
 }
 
 }  // namespace sh

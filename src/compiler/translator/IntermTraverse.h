@@ -24,17 +24,15 @@ enum Visit
     PostVisit
 };
 
-//
 // For traversing the tree.  User should derive from this class overriding the visit functions,
 // and then pass an object of the subclass to a traverse method of a node.
 //
-// The traverse*() functions may also be overridden do other bookkeeping on the tree to provide
+// The traverse*() functions may also be overridden to do other bookkeeping on the tree to provide
 // contextual information to the visit functions, such as whether the node is the target of an
-// assignment.
+// assignment. This is complex to maintain and so should only be done in special cases.
 //
 // When using this, just fill in the methods for nodes you want visited.
 // Return false from a pre-visit to skip visiting that node's subtree.
-//
 class TIntermTraverser : angle::NonCopyable
 {
   public:
@@ -149,7 +147,8 @@ class TIntermTraverser : angle::NonCopyable
     void incrementParentBlockPos();
     void popParentBlock();
 
-    // To replace a single node with multiple nodes on the parent aggregate node
+    // To replace a single node with multiple nodes in the parent aggregate. May be used with blocks
+    // but also with other nodes like declarations.
     struct NodeReplaceWithMultipleEntry
     {
         NodeReplaceWithMultipleEntry(TIntermAggregateBase *_parent,
@@ -164,30 +163,9 @@ class TIntermTraverser : angle::NonCopyable
         TIntermSequence replacements;
     };
 
-    // To insert multiple nodes on the parent aggregate node
-    struct NodeInsertMultipleEntry
-    {
-        NodeInsertMultipleEntry(TIntermBlock *_parent,
-                                TIntermSequence::size_type _position,
-                                TIntermSequence _insertionsBefore,
-                                TIntermSequence _insertionsAfter)
-            : parent(_parent),
-              position(_position),
-              insertionsBefore(_insertionsBefore),
-              insertionsAfter(_insertionsAfter)
-        {
-        }
-
-        TIntermBlock *parent;
-        TIntermSequence::size_type position;
-        TIntermSequence insertionsBefore;
-        TIntermSequence insertionsAfter;
-    };
-
-    // Helper to insert statements in the parent block (sequence) of the node currently being
-    // traversed.
+    // Helper to insert statements in the parent block of the node currently being traversed.
     // The statements will be inserted before the node being traversed once updateTree is called.
-    // Should only be called during PreVisit or PostVisit from sequence nodes.
+    // Should only be called during PreVisit or PostVisit if called from block nodes.
     // Note that two insertions to the same position in the same block are not supported.
     void insertStatementsInParentBlock(const TIntermSequence &insertions);
 
@@ -244,11 +222,30 @@ class TIntermTraverser : angle::NonCopyable
     // mReplacements/mMultiReplacements, then do them by calling updateTree().
     // Multi replacements are processed after single replacements.
     std::vector<NodeReplaceWithMultipleEntry> mMultiReplacements;
-    std::vector<NodeInsertMultipleEntry> mInsertions;
 
     TSymbolTable *mSymbolTable;
 
   private:
+    // To insert multiple nodes into the parent block.
+    struct NodeInsertMultipleEntry
+    {
+        NodeInsertMultipleEntry(TIntermBlock *_parent,
+                                TIntermSequence::size_type _position,
+                                TIntermSequence _insertionsBefore,
+                                TIntermSequence _insertionsAfter)
+            : parent(_parent),
+              position(_position),
+              insertionsBefore(_insertionsBefore),
+              insertionsAfter(_insertionsAfter)
+        {
+        }
+
+        TIntermBlock *parent;
+        TIntermSequence::size_type position;
+        TIntermSequence insertionsBefore;
+        TIntermSequence insertionsAfter;
+    };
+
     static bool CompareInsertion(const NodeInsertMultipleEntry &a,
                                  const NodeInsertMultipleEntry &b);
 
@@ -283,6 +280,7 @@ class TIntermTraverser : angle::NonCopyable
         TIntermSequence::size_type pos;
     };
 
+    std::vector<NodeInsertMultipleEntry> mInsertions;
     std::vector<NodeUpdateEntry> mReplacements;
 
     // All the nodes from root to the current node during traversing.
