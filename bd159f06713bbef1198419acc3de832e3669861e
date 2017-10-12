@@ -16,6 +16,24 @@
       "revId": "bd159f06713bbef1198419acc3de832e3669861e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "95e3f6dd_39a64487",
+        "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 1251,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-10-12T01:39:11Z",
+      "side": 0,
+      "message": "Could you double check about this? It is strange that deqp for gles3.2 need some texture format support of gles3.2.",
+      "parentUuid": "61ff5e9e_f0f02475",
+      "revId": "bd159f06713bbef1198419acc3de832e3669861e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
