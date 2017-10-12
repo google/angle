@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "968aa6bb_c63fe43c",
+        "filename": "include/platform/WorkaroundsD3D.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-10-12T05:27:59Z",
+      "side": 1,
+      "message": "Need to update the description? I think the warning exists both in Intel and Nvidia.",
+      "range": {
+        "startLine": 116,
+        "startChar": 1,
+        "endLine": 120,
+        "endChar": 35
+      },
+      "revId": "de8e13554f812bc28657881a144a8058c544a068",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
