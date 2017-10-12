@@ -14,6 +14,7 @@
 #include "compiler/translator/IntermNodePatternMatcher.h"
 #include "compiler/translator/OutputHLSL.h"
 #include "compiler/translator/RemoveDynamicIndexing.h"
+#include "compiler/translator/RemoveNoOpCasesFromEndOfSwitchStatements.h"
 #include "compiler/translator/RewriteElseBlocks.h"
 #include "compiler/translator/RewriteTexelFetchOffset.h"
 #include "compiler/translator/RewriteUnaryMinusOperatorInt.h"
@@ -23,6 +24,7 @@
 #include "compiler/translator/SimplifyLoopConditions.h"
 #include "compiler/translator/SplitSequenceOperator.h"
 #include "compiler/translator/UnfoldShortCircuitToIf.h"
+#include "compiler/translator/WrapSwitchStatementsInBlocks.h"
 
 namespace sh
 {
@@ -84,6 +86,15 @@ void TranslatorHLSL::translate(TIntermBlock *root, ShCompileOptions compileOptio
     // in the next release of d3dcompiler.dll, it would be nice to detect the DLL
     // version and only apply the workaround if it is too old.
     sh::BreakVariableAliasingInInnerLoops(root);
+
+    // WrapSwitchStatementsInBlocks should be called after any AST transformations that might
+    // introduce variable declarations inside the main scope of any switch statement.
+    if (WrapSwitchStatementsInBlocks(root))
+    {
+        // The WrapSwitchStatementsInBlocks step might introduce new no-op cases to the end of
+        // switch statements, so make sure to clean up the AST.
+        RemoveNoOpCasesFromEndOfSwitchStatements(root, &getSymbolTable());
+    }
 
     bool precisionEmulation =
         getResources().WEBGL_debug_shader_precision && getPragma().debugShaderPrecision;

@@ -3622,6 +3622,75 @@ TEST_P(GLSLTest_ES3, SwitchBreakOrReturnInsideBlocks)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Test switch/case where a variable is declared inside one of the cases and is accessed by a
+// subsequent case.
+TEST_P(GLSLTest_ES3, SwitchWithVariableDeclarationInside)
+{
+    const std::string &fragmentShader =
+        R"(#version 300 es
+
+        precision highp float;
+        out vec4 my_FragColor;
+
+        uniform int u_zero;
+
+        void main()
+        {
+            my_FragColor = vec4(1, 0, 0, 1);
+            switch (u_zero)
+            {
+                case 0:
+                    ivec2 i;
+                    i = ivec2(1, 0);
+                default:
+                    my_FragColor = vec4(0, i[0], 0, 1);
+            }
+        })";
+
+    ANGLE_GL_PROGRAM(program, mSimpleVSSource, fragmentShader);
+    drawQuad(program.get(), "inputAttribute", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
+// Test nested switch/case where a variable is declared inside one of the cases and is accessed by a
+// subsequent case.
+TEST_P(GLSLTest_ES3, NestedSwitchWithVariableDeclarationInside)
+{
+    const std::string &fragmentShader =
+        R"(#version 300 es
+
+        precision highp float;
+        out vec4 my_FragColor;
+
+        uniform int u_zero;
+        uniform int u_zero2;
+
+        void main()
+        {
+            my_FragColor = vec4(1, 0, 0, 1);
+            switch (u_zero)
+            {
+                case 0:
+                    ivec2 i;
+                    i = ivec2(1, 0);
+                    switch (u_zero2)
+                    {
+                        case 0:
+                            int j;
+                        default:
+                            j = 1;
+                            i *= j;
+                    }
+                default:
+                    my_FragColor = vec4(0, i[0], 0, 1);
+            }
+        })";
+
+    ANGLE_GL_PROGRAM(program, mSimpleVSSource, fragmentShader);
+    drawQuad(program.get(), "inputAttribute", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
 ANGLE_INSTANTIATE_TEST(GLSLTest,
                        ES2_D3D9(),
