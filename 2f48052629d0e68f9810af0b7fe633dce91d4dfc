@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "43510742_4b96ebff",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1379,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-10-13T16:18:02Z",
+      "side": 1,
+      "message": "I think RG32F_EXT is not related to textureStorage, see Caps.cpp::DetermineRGFloatTextureSupport\nand Caps.cpp::DetermineRGFloatTextureSupport.\nif (!context-\u003egetExtensions().textureRG || !context-\u003egetExtensions().textureFloat)",
+      "range": {
+        "startLine": 1379,
+        "startChar": 16,
+        "endLine": 1379,
+        "endChar": 61
+      },
+      "revId": "2f48052629d0e68f9810af0b7fe633dce91d4dfc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5d00b5c8_2b92462d",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 3430,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-10-13T16:18:02Z",
+      "side": 1,
+      "message": "validateTexImageExtensionFormat(GL_RG32F_EXT, \"GL_EXT_texture_rg\",\"GL_OES_texture_float\");",
+      "range": {
+        "startLine": 3430,
+        "startChar": 51,
+        "endLine": 3430,
+        "endChar": 74
+      },
+      "revId": "2f48052629d0e68f9810af0b7fe633dce91d4dfc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
