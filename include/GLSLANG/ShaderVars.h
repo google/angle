@@ -68,6 +68,10 @@ struct ShaderVariable
     unsigned int elementCount() const { return std::max(1u, arraySize); }
     bool isStruct() const { return !fields.empty(); }
 
+    // Array size 0 means not an array when passed to or returned from these functions.
+    unsigned int getOutermostArraySize() const { return arraySize; }
+    void setArraySize(unsigned int size) { arraySize = size; }
+
     // All of the shader's variables are described using nested data
     // structures. This is needed in order to disambiguate similar looking
     // types, such as two structs containing the same fields, but in
