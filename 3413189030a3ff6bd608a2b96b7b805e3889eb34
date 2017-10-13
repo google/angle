@@ -46,6 +46,30 @@
       "revId": "3413189030a3ff6bd608a2b96b7b805e3889eb34",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "064f9dd2_9d309c87",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-13T13:47:35Z",
+      "side": 1,
+      "message": "But, is outermost the major or minor size of a 2D-array? In C++ this would be the minor size.",
+      "parentUuid": "113461b7_38ba1c95",
+      "range": {
+        "startLine": 72,
+        "startChar": 17,
+        "endLine": 72,
+        "endChar": 38
+      },
+      "revId": "3413189030a3ff6bd608a2b96b7b805e3889eb34",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
