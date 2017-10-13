@@ -224,7 +224,8 @@ gl::Error IndexDataManager::prepareIndexData(const gl::Context *context,
     // We should never have to deal with MAX_UINT indices, since we restrict it via
     // MAX_ELEMENT_INDEX.
     ASSERT(!(mRendererClass == RENDERER_D3D11 && !primitiveRestartFixedIndexEnabled &&
-             hasPrimitiveRestartIndex && srcType == GL_UNSIGNED_INT));
+             (hasPrimitiveRestartIndex && translated->indexRange.vertexIndexCount != 0) &&
+             srcType == GL_UNSIGNED_INT));
 
     const GLenum dstType = (srcType == GL_UNSIGNED_INT || primitiveRestartWorkaround)
                                ? GL_UNSIGNED_INT

@@ -158,10 +158,11 @@ void DrawElementsPerfBenchmark::drawBenchmark()
     ASSERT_GL_NO_ERROR();
 }
 
-DrawElementsPerfParams DrawElementsPerfD3D11Params(bool indexBufferChanged)
+DrawElementsPerfParams DrawElementsPerfD3D11Params(bool indexBufferChanged, bool useNullDevice)
 {
     DrawElementsPerfParams params;
-    params.eglParameters      = angle::egl_platform::D3D11();
+    params.eglParameters =
+        useNullDevice ? angle::egl_platform::D3D11_NULL() : angle::egl_platform::D3D11();
     params.indexBufferChanged = indexBufferChanged;
     return params;
 }
@@ -190,8 +191,10 @@ TEST_P(DrawElementsPerfBenchmark, Run)
 ANGLE_INSTANTIATE_TEST(DrawElementsPerfBenchmark,
                        DrawElementsPerfD3D9Params(false),
                        DrawElementsPerfD3D9Params(true),
-                       DrawElementsPerfD3D11Params(false),
-                       DrawElementsPerfD3D11Params(true),
+                       DrawElementsPerfD3D11Params(false, true),
+                       DrawElementsPerfD3D11Params(true, true),
+                       DrawElementsPerfD3D11Params(false, false),
+                       DrawElementsPerfD3D11Params(true, false),
                        DrawElementsPerfOpenGLParams(false),
                        DrawElementsPerfOpenGLParams(true));
 
