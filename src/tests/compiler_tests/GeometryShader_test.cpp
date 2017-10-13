@@ -12,38 +12,25 @@
 #include "compiler/translator/BaseTypes.h"
 #include "compiler/translator/TranslatorESSL.h"
 #include "gtest/gtest.h"
+#include "tests/test_utils/ShaderCompileTreeTest.h"
 #include "tests/test_utils/compiler_test.h"
 
 using namespace sh;
 
-class GeometryShaderTest : public testing::Test
+class GeometryShaderTest : public ShaderCompileTreeTest
 {
   public:
     GeometryShaderTest() {}
 
   protected:
-    void SetUp() override
+    void initResources(ShBuiltInResources *resources) override
     {
-        ShBuiltInResources resources;
-        InitBuiltInResources(&resources);
-        resources.OES_geometry_shader = 1;
-
-        mTranslator = new TranslatorESSL(GL_GEOMETRY_SHADER_OES, SH_GLES3_1_SPEC);
-        ASSERT_TRUE(mTranslator->Init(resources));
+        resources->OES_geometry_shader = 1;
     }
 
-    void TearDown() override { SafeDelete(mTranslator); }
+    GLenum getShaderType() const override { return GL_GEOMETRY_SHADER_OES; }
 
-    // Return true when compilation succeeds
-    bool compile(const std::string &shaderString)
-    {
-        const char *shaderStrings[] = {shaderString.c_str()};
-
-        bool status         = mTranslator->compile(shaderStrings, 1, SH_OBJECT_CODE | SH_VARIABLES);
-        TInfoSink &infoSink = mTranslator->getInfoSink();
-        mInfoLog            = infoSink.info.c_str();
-        return status;
-    }
+    ShShaderSpec getShaderSpec() const override { return SH_GLES3_1_SPEC; }
 
     bool compileGeometryShader(const std::string &statement1, const std::string &statement2)
     {
@@ -121,9 +108,16 @@ class GeometryShaderTest : public testing::Test
         {"lines_adjacency", 4},
         {"triangles", 3},
         {"triangles_adjacency", 6}};
+};
 
-    std::string mInfoLog;
-    TranslatorESSL *mTranslator = nullptr;
+class GeometryShaderOutputCodeTest : public MatchOutputCodeTest
+{
+  public:
+    GeometryShaderOutputCodeTest()
+        : MatchOutputCodeTest(GL_GEOMETRY_SHADER_OES, SH_OBJECT_CODE, SH_ESSL_OUTPUT)
+    {
+        getResources()->OES_geometry_shader = 1;
+    }
 };
 
 // Geometry Shaders are not supported in GLSL ES shaders version lower than 310.
@@ -1534,4 +1528,39 @@ TEST_F(GeometryShaderTest, InvariantOutput)
     {
         FAIL() << "Shader compilation failed, expecting success:\n" << mInfoLog;
     }
+}
+
+// Verify that the member of gl_in won't be incorrectly changed in the output shader string.
+TEST_F(GeometryShaderOutputCodeTest, ValidateGLInMembersInOutputShaderString)
+{
+    const std::string &shaderString1 =
+        R"(#version 310 es
+        #extension GL_OES_geometry_shader : require
+        layout (lines) in;
+        layout (points, max_vertices = 2) out;
+        void main()
+        {
+            vec4 position;
+            for (int i = 0; i < 2; i++)
+            {
+                position = gl_in[i].gl_Position;
+            }
+        })";
+
+    compile(shaderString1);
+    EXPECT_TRUE(foundInESSLCode("].gl_Position"));
+
+    const std::string &shaderString2 =
+        R"(#version 310 es
+        #extension GL_OES_geometry_shader : require
+        layout (points) in;
+        layout (points, max_vertices = 2) out;
+        void main()
+        {
+            vec4 position;
+            position = gl_in[0].gl_Position;
+        })";
+
+    compile(shaderString2);
+    EXPECT_TRUE(foundInESSLCode("].gl_Position"));
 }

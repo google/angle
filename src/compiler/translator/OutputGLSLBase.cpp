@@ -582,9 +582,14 @@ bool TOutputGLSLBase::visitBinary(Visit visit, TIntermBinary *node)
                 const TField *field               = interfaceBlock->fields()[index->getIConst(0)];
 
                 TString fieldName = field->name();
-                ASSERT(!mSymbolTable->findBuiltIn(interfaceBlock->name(), mShaderVersion) ||
-                       interfaceBlock->name() == "gl_PerVertex");
-                fieldName = hashName(TName(fieldName));
+                if (!mSymbolTable->findBuiltIn(interfaceBlock->name(), mShaderVersion))
+                {
+                    fieldName = hashName(TName(fieldName));
+                }
+                else
+                {
+                    ASSERT(interfaceBlock->name() == "gl_PerVertex");
+                }
 
                 out << fieldName;
                 visitChildren = false;

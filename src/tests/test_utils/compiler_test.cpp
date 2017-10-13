@@ -134,7 +134,7 @@ bool MatchOutputCodeTest::compileWithSettings(ShShaderOutput output,
                                               std::string *translatedCode,
                                               std::string *infoLog)
 {
-    return compileTestShader(mShaderType, SH_GLES3_SPEC, output, shaderString, &mResources,
+    return compileTestShader(mShaderType, SH_GLES3_1_SPEC, output, shaderString, &mResources,
                              compileOptions, translatedCode, infoLog);
 }
 
