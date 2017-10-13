@@ -9,6 +9,7 @@
 
 #include "renderervk_utils.h"
 
+#include "libANGLE/renderer/vulkan/ContextVk.h"
 #include "libANGLE/renderer/vulkan/RendererVk.h"
 
 namespace rx
@@ -796,17 +797,9 @@ void Buffer::destroy(VkDevice device)
 {
     if (valid())
     {
-        mMemory.destroy(device);
-
         vkDestroyBuffer(device, mHandle, nullptr);
         mHandle = VK_NULL_HANDLE;
     }
-}
-
-void Buffer::retain(VkDevice device, Buffer &&other)
-{
-    WrappedObject::retain(device, std::move(other));
-    mMemory.retain(device, std::move(other.mMemory));
 }
 
 Error Buffer::init(VkDevice device, const VkBufferCreateInfo &createInfo)
@@ -816,10 +809,10 @@ Error Buffer::init(VkDevice device, const VkBufferCreateInfo &createInfo)
     return NoError();
 }
 
-Error Buffer::bindMemory(VkDevice device)
+Error Buffer::bindMemory(VkDevice device, const DeviceMemory &deviceMemory)
 {
-    ASSERT(valid() && mMemory.valid());
-    ANGLE_VK_TRY(vkBindBufferMemory(device, mHandle, mMemory.getHandle(), 0));
+    ASSERT(valid() && deviceMemory.valid());
+    ANGLE_VK_TRY(vkBindBufferMemory(device, mHandle, deviceMemory.getHandle(), 0));
     return NoError();
 }
 
@@ -945,8 +938,6 @@ uint32_t MemoryProperties::findCompatibleMemoryIndex(uint32_t bitMask, uint32_t 
     return std::numeric_limits<uint32_t>::max();
 }
 
-}  // namespace vk
-
 Optional<uint32_t> FindMemoryType(const VkPhysicalDeviceMemoryProperties &memoryProps,
                                   const VkMemoryRequirements &requirements,
                                   uint32_t propertyFlagMask)
@@ -963,6 +954,47 @@ Optional<uint32_t> FindMemoryType(const VkPhysicalDeviceMemoryProperties &memory
 
     return Optional<uint32_t>::Invalid();
 }
+
+gl::Error AllocateBufferMemory(ContextVk *contextVk,
+                               size_t size,
+                               vk::Buffer *buffer,
+                               vk::DeviceMemory *deviceMemoryOut,
+                               size_t *requiredSizeOut)
+{
+    VkDevice device = contextVk->getDevice();
+
+    // Find a compatible memory pool index. If the index doesn't change, we could cache it.
+    // Not finding a valid memory pool means an out-of-spec driver, or internal error.
+    // TODO(jmadill): More efficient memory allocation.
+    VkMemoryRequirements memoryRequirements;
+    vkGetBufferMemoryRequirements(device, buffer->getHandle(), &memoryRequirements);
+
+    // The requirements size is not always equal to the specified API size.
+    ASSERT(memoryRequirements.size >= size);
+    *requiredSizeOut = static_cast<size_t>(memoryRequirements.size);
+
+    VkPhysicalDeviceMemoryProperties memoryProperties;
+    vkGetPhysicalDeviceMemoryProperties(contextVk->getRenderer()->getPhysicalDevice(),
+                                        &memoryProperties);
+
+    auto memoryTypeIndex =
+        FindMemoryType(memoryProperties, memoryRequirements,
+                       VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+    ANGLE_VK_CHECK(memoryTypeIndex.valid(), VK_ERROR_INCOMPATIBLE_DRIVER);
+
+    VkMemoryAllocateInfo allocInfo;
+    allocInfo.sType           = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+    allocInfo.pNext           = nullptr;
+    allocInfo.memoryTypeIndex = memoryTypeIndex.value();
+    allocInfo.allocationSize  = memoryRequirements.size;
+
+    ANGLE_TRY(deviceMemoryOut->allocate(device, allocInfo));
+    ANGLE_TRY(buffer->bindMemory(device, *deviceMemoryOut));
+
+    return gl::NoError();
+}
+
+}  // namespace vk
 
 namespace gl_vk
 {

@@ -59,7 +59,8 @@ class BufferVk : public BufferImpl, public ResourceVk
     vk::Error setDataImpl(VkDevice device, const uint8_t *data, size_t size, size_t offset);
 
     vk::Buffer mBuffer;
-    size_t mRequiredSize;
+    vk::DeviceMemory mBufferMemory;
+    size_t mCurrentRequiredSize;
 };
 
 }  // namespace rx
