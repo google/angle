@@ -2139,6 +2139,20 @@ bool ValidateBeginTransformFeedback(Context *context, GLenum primitiveMode)
         }
     }
 
+    auto program = context->getGLState().getProgram();
+
+    if (!program)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ProgramNotBound);
+        return false;
+    }
+
+    if (program->getTransformFeedbackVaryingCount() == 0)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), NoTransformFeedbackOutputVariables);
+        return false;
+    }
+
     return true;
 }
 
