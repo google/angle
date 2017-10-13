@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1d96ad94_80dcf777",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-13T13:11:52Z",
+      "side": 1,
+      "message": "what does outermost mean? maybe we should use the term \u0027major\u0027 or \u0027minor\u0027, like with matrices?",
+      "range": {
+        "startLine": 72,
+        "startChar": 17,
+        "endLine": 72,
+        "endChar": 38
+      },
+      "revId": "3413189030a3ff6bd608a2b96b7b805e3889eb34",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
