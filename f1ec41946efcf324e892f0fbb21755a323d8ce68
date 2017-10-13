@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "48c5e895_ff8111be",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 3276,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-10-13T02:34:43Z",
+      "side": 1,
+      "message": "nit: looks like code duplication.\nCan this be shared between D3D11 and D3D9?",
+      "range": {
+        "startLine": 3245,
+        "startChar": 1,
+        "endLine": 3276,
+        "endChar": 0
+      },
+      "revId": "f1ec41946efcf324e892f0fbb21755a323d8ce68",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "de338147_08dc78d2",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 3290,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-10-13T02:34:43Z",
+      "side": 1,
+      "message": "This, too.",
+      "range": {
+        "startLine": 3290,
+        "startChar": 10,
+        "endLine": 3290,
+        "endChar": 34
+      },
+      "revId": "f1ec41946efcf324e892f0fbb21755a323d8ce68",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
