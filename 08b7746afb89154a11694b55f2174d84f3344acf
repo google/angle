@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "456f8b21_4a5344ca",
+        "filename": ".gn",
+        "patchSetId": 24
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-13T18:59:11Z",
+      "side": 1,
+      "message": "# This file is used by the GN meta build system to find the root of the source\n# tree and to set startup options. For documentation on the values set in this\n# file, run \"gn help dotfile\" at the command line.",
+      "parentUuid": "6af13cd3_69eca5a5",
+      "range": {
+        "startLine": 55,
+        "startChar": 0,
+        "endLine": 60,
+        "endChar": 1
+      },
+      "revId": "08b7746afb89154a11694b55f2174d84f3344acf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "81e31ded_8c82b84f",
         "filename": "/COMMIT_MSG",
         "patchSetId": 24
@@ -59,6 +83,30 @@
       "writtenOn": "2017-10-13T13:09:39Z",
       "side": 1,
       "message": "can you add a comment detailing what this file is for? I don\u0027t know how it differs from .gn.",
+      "range": {
+        "startLine": 3,
+        "startChar": 0,
+        "endLine": 3,
+        "endChar": 28
+      },
+      "revId": "08b7746afb89154a11694b55f2174d84f3344acf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1060c054_dd1f18aa",
+        "filename": "build_overrides/build.gni",
+        "patchSetId": 24
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-13T18:59:11Z",
+      "side": 1,
+      "message": "GN executes files in this order:\n.gn (the variable there at least)\nthe GN args for the build folder\ntoolchain GN files\nANGLE GN files that will at some point include build_overrides.\n\nSo I think the options needed at toolchain GN file execution need to be in the .gn, and the others in build_overrides.\n\nOr just put everything in .gn. Actually we should ask dpranke / brettw what\u0027s the best option between split and all in .gn and do what they say.",
+      "parentUuid": "eb512517_07f99753",
       "range": {
         "startLine": 3,
         "startChar": 0,
