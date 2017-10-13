@@ -2,6 +2,103 @@
   "comments": [
     {
       "key": {
+        "uuid": "01c1db35_18af12b4",
+        "filename": "src/compiler/translator/ImageFunctionHLSL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-10-13T16:16:55Z",
+      "side": 1,
+      "message": "Seems like this code could be shared between LOAD and STORE.",
+      "revId": "96ee051ee44f65637a83cdbb6e3ab41bb095f572",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "47087751_3d42b78c",
+        "filename": "src/compiler/translator/ImageFunctionHLSL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-10-13T16:16:55Z",
+      "side": 1,
+      "message": "And here you could just write the final parameter. This way some of the cases could be combined here as well.",
+      "revId": "96ee051ee44f65637a83cdbb6e3ab41bb095f572",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1766abfb_fca02b01",
+        "filename": "src/compiler/translator/ImageFunctionHLSL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-10-13T16:16:55Z",
+      "side": 1,
+      "message": "Seems like this could be replaced just with a static const char *imageReference \u003d \"tex\".",
+      "revId": "96ee051ee44f65637a83cdbb6e3ab41bb095f572",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fde5c338_a7b1f3c5",
+        "filename": "src/compiler/translator/UniformHLSL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 281,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-10-13T16:16:55Z",
+      "side": 1,
+      "message": "nit: typo",
+      "range": {
+        "startLine": 281,
+        "startChar": 23,
+        "endLine": 281,
+        "endChar": 32
+      },
+      "revId": "96ee051ee44f65637a83cdbb6e3ab41bb095f572",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5523bc1b_194d789f",
+        "filename": "src/compiler/translator/UniformHLSL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 297,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-10-13T16:16:55Z",
+      "side": 1,
+      "message": "Here as well.",
+      "range": {
+        "startLine": 297,
+        "startChar": 23,
+        "endLine": 297,
+        "endChar": 32
+      },
+      "revId": "96ee051ee44f65637a83cdbb6e3ab41bb095f572",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "0f935011_bddf3b80",
         "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
         "patchSetId": 10
@@ -13,6 +110,30 @@
       "writtenOn": "2017-10-12T08:06:15Z",
       "side": 1,
       "message": "Skip it to avoid a crash, because memory access qualifier is being unimplemented.",
+      "range": {
+        "startLine": 39,
+        "startChar": 0,
+        "endLine": 39,
+        "endChar": 68
+      },
+      "revId": "96ee051ee44f65637a83cdbb6e3ab41bb095f572",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cc1340f1_cab6e1ab",
+        "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
+        "patchSetId": 10
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-10-13T16:16:55Z",
+      "side": 1,
+      "message": "Can we retain the FAIL expectation on the GL backend and have the skip just for D3D?",
+      "parentUuid": "0f935011_bddf3b80",
       "range": {
         "startLine": 39,
         "startChar": 0,
