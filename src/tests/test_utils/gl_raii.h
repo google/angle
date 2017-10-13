@@ -95,6 +95,15 @@ class GLProgram
         mHandle = CompileProgram(vertexShader, fragmentShader);
     }
 
+    void makeRasterWithTransformFeedback(const std::string &vertexShader,
+                                         const std::string &fragmentShader,
+                                         const std::vector<std::string> &tfVaryings,
+                                         GLenum bufferMode)
+    {
+        mHandle = CompileProgramWithTransformFeedback(vertexShader, fragmentShader, tfVaryings,
+                                                      bufferMode);
+    }
+
     void makeBinaryOES(const std::vector<uint8_t> &binary, GLenum binaryFormat)
     {
         mHandle = LoadBinaryProgramOES(binary, binaryFormat);
@@ -123,6 +132,11 @@ class GLProgram
 #define ANGLE_GL_PROGRAM(name, vertex, fragment) \
     priv::GLProgram name;                        \
     name.makeRaster(vertex, fragment);           \
+    ASSERT_TRUE(name.valid());
+
+#define ANGLE_GL_PROGRAM_TRANSFORM_FEEDBACK(name, vertex, fragment, tfVaryings, bufferMode) \
+    priv::GLProgram name;                                                                   \
+    name.makeRasterWithTransformFeedback(vertex, fragment, tfVaryings, bufferMode);         \
     ASSERT_TRUE(name.valid());
 
 #define ANGLE_GL_COMPUTE_PROGRAM(name, compute) \

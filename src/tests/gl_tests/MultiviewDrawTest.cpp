@@ -706,15 +706,21 @@ TEST_P(MultiviewDrawValidationTest, ActiveTransformFeedback)
     const GLint viewportOffsets[4] = {0, 0, 2, 0};
 
     const std::string &vsSource =
-        "#version 300 es\n"
-        "void main()\n"
-        "{}\n";
+        R"(#version 300 es
+        out float tfVarying;
+        void main()
+        {
+            tfVarying = 1.0;
+        })";
     const std::string &fsSource =
-        "#version 300 es\n"
-        "precision mediump float;\n"
-        "void main()\n"
-        "{}\n";
-    ANGLE_GL_PROGRAM(program, vsSource, fsSource);
+        R"(#version 300 es
+        precision mediump float;
+        void main()
+        {})";
+    std::vector<std::string> tfVaryings;
+    tfVaryings.push_back(std::string("tfVarying"));
+    ANGLE_GL_PROGRAM_TRANSFORM_FEEDBACK(program, vsSource, fsSource, tfVaryings,
+                                        GL_SEPARATE_ATTRIBS);
     glUseProgram(program);
 
     GLBuffer tbo;
@@ -723,6 +729,9 @@ TEST_P(MultiviewDrawValidationTest, ActiveTransformFeedback)
 
     GLTransformFeedback transformFeedback;
     glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, transformFeedback);
+
+    glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, tbo);
+
     glBeginTransformFeedback(GL_TRIANGLES);
     ASSERT_GL_NO_ERROR();
 
