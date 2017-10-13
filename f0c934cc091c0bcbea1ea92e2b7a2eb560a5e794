@@ -2,6 +2,52 @@
   "comments": [
     {
       "key": {
+        "uuid": "fcb61333_3bfddd09",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1285,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-10-13T20:06:19Z",
+      "side": 1,
+      "message": "The validation for the float format extensions should be here instead.",
+      "range": {
+        "startLine": 1284,
+        "startChar": 0,
+        "endLine": 1285,
+        "endChar": 43
+      },
+      "revId": "f0c934cc091c0bcbea1ea92e2b7a2eb560a5e794",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cbe86550_dd66494f",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1383,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-10-13T20:06:19Z",
+      "side": 1,
+      "message": "This shouldn\u0027t be here, the \u0027format\u0027 argument can never be sized.",
+      "range": {
+        "startLine": 1377,
+        "startChar": 0,
+        "endLine": 1383,
+        "endChar": 17
+      },
+      "revId": "f0c934cc091c0bcbea1ea92e2b7a2eb560a5e794",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b6147a5a_5a9da68d",
         "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
         "patchSetId": 11
