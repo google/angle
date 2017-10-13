@@ -75,52 +75,6 @@ void GetDefaultOutputLayoutFromShader(
     }
 }
 
-bool IsRowMajorLayout(const sh::InterfaceBlockField &var)
-{
-    return var.isRowMajorLayout;
-}
-
-bool IsRowMajorLayout(const sh::ShaderVariable &var)
-{
-    return false;
-}
-
-template <typename VarT>
-void GetUniformBlockInfo(const std::vector<VarT> &fields,
-                         const std::string &prefix,
-                         sh::BlockLayoutEncoder *encoder,
-                         bool inRowMajorLayout,
-                         std::map<std::string, sh::BlockMemberInfo> *blockInfoOut)
-{
-    for (const VarT &field : fields)
-    {
-        const std::string &fieldName = (prefix.empty() ? field.name : prefix + "." + field.name);
-
-        if (field.isStruct())
-        {
-            bool rowMajorLayout = (inRowMajorLayout || IsRowMajorLayout(field));
-
-            for (unsigned int arrayElement = 0; arrayElement < field.elementCount(); arrayElement++)
-            {
-                encoder->enterAggregateType();
-
-                const std::string uniformElementName =
-                    fieldName + (field.isArray() ? ArrayString(arrayElement) : "");
-                GetUniformBlockInfo(field.fields, uniformElementName, encoder, rowMajorLayout,
-                                    blockInfoOut);
-
-                encoder->exitAggregateType();
-            }
-        }
-        else
-        {
-            bool isRowMajorMatrix = (gl::IsMatrixType(field.type) && inRowMajorLayout);
-            (*blockInfoOut)[fieldName] =
-                encoder->encodeType(field.type, field.arraySize, isRowMajorMatrix);
-        }
-    }
-}
-
 template <typename T, int cols, int rows>
 bool TransposeExpandMatrix(T *target, const GLfloat *value)
 {
@@ -2331,8 +2285,8 @@ size_t ProgramD3D::getUniformBlockInfo(const sh::InterfaceBlock &interfaceBlock)
         encoder = &hlslEncoder;
     }
 
-    GetUniformBlockInfo(interfaceBlock.fields, interfaceBlock.fieldPrefix(), encoder,
-                        interfaceBlock.isRowMajorLayout, &mBlockInfo);
+    sh::GetUniformBlockInfo(interfaceBlock.fields, interfaceBlock.fieldPrefix(), encoder,
+                            interfaceBlock.isRowMajorLayout, &mBlockInfo);
 
     return encoder->getBlockSize();
 }

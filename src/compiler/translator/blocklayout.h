@@ -11,6 +11,7 @@
 #define COMMON_BLOCKLAYOUT_H_
 
 #include <cstddef>
+#include <map>
 #include <vector>
 
 #include "angle_gl.h"
@@ -103,6 +104,17 @@ class Std140BlockEncoder : public BlockLayoutEncoder
                        int arrayStride,
                        int matrixStride) override;
 };
-}
+
+using BlockLayoutMap = std::map<std::string, BlockMemberInfo>;
+
+// Only valid to call with ShaderVariable, InterfaceBlockField and Uniform.
+template <typename VarT>
+void GetUniformBlockInfo(const std::vector<VarT> &fields,
+                         const std::string &prefix,
+                         sh::BlockLayoutEncoder *encoder,
+                         bool inRowMajorLayout,
+                         BlockLayoutMap *blockLayoutMap);
+
+}  // namespace sh
 
 #endif  // COMMON_BLOCKLAYOUT_H_

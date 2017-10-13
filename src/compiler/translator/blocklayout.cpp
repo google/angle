@@ -15,6 +15,19 @@
 namespace sh
 {
 
+namespace
+{
+bool IsRowMajorLayout(const InterfaceBlockField &var)
+{
+    return var.isRowMajorLayout;
+}
+
+bool IsRowMajorLayout(const ShaderVariable &var)
+{
+    return false;
+}
+}  // anonymous namespace
+
 BlockLayoutEncoder::BlockLayoutEncoder() : mCurrentOffset(0)
 {
 }
@@ -131,4 +144,67 @@ void Std140BlockEncoder::advanceOffset(GLenum type,
         mCurrentOffset += gl::VariableComponentCount(type);
     }
 }
+
+template <typename VarT>
+void GetUniformBlockInfo(const std::vector<VarT> &fields,
+                         const std::string &prefix,
+                         BlockLayoutEncoder *encoder,
+                         bool inRowMajorLayout,
+                         BlockLayoutMap *blockLayoutMap)
+{
+    for (const VarT &field : fields)
+    {
+        // Skip samplers.
+        if (gl::IsSamplerType(field.type))
+        {
+            continue;
+        }
+
+        const std::string &fieldName = (prefix.empty() ? field.name : prefix + "." + field.name);
+
+        if (field.isStruct())
+        {
+            bool rowMajorLayout = (inRowMajorLayout || IsRowMajorLayout(field));
+
+            for (unsigned int arrayElement = 0; arrayElement < field.elementCount(); arrayElement++)
+            {
+                encoder->enterAggregateType();
+
+                const std::string uniformElementName =
+                    fieldName + (field.isArray() ? ArrayString(arrayElement) : "");
+                GetUniformBlockInfo(field.fields, uniformElementName, encoder, rowMajorLayout,
+                                    blockLayoutMap);
+
+                encoder->exitAggregateType();
+            }
+        }
+        else
+        {
+            bool isRowMajorMatrix = (gl::IsMatrixType(field.type) && inRowMajorLayout);
+            const BlockMemberInfo &blockMemberInfo =
+                encoder->encodeType(field.type, field.arraySize, isRowMajorMatrix);
+
+            (*blockLayoutMap)[fieldName] = blockMemberInfo;
+        }
+    }
 }
+
+template void GetUniformBlockInfo(const std::vector<InterfaceBlockField> &,
+                                  const std::string &,
+                                  sh::BlockLayoutEncoder *,
+                                  bool,
+                                  BlockLayoutMap *);
+
+template void GetUniformBlockInfo(const std::vector<Uniform> &,
+                                  const std::string &,
+                                  sh::BlockLayoutEncoder *,
+                                  bool,
+                                  BlockLayoutMap *);
+
+template void GetUniformBlockInfo(const std::vector<ShaderVariable> &,
+                                  const std::string &,
+                                  sh::BlockLayoutEncoder *,
+                                  bool,
+                                  BlockLayoutMap *);
+
+}  // namespace sh
