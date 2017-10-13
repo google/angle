@@ -46,6 +46,16 @@ TString ArrayHelperFunctionName(const char *prefix, const TType &type)
     return fnName.str();
 }
 
+bool IsDeclarationWrittenOut(TIntermDeclaration *node)
+{
+    TIntermSequence *sequence = node->getSequence();
+    TIntermTyped *variable    = (*sequence)[0]->getAsTyped();
+    ASSERT(sequence->size() == 1);
+    ASSERT(variable);
+    return (variable->getQualifier() == EvqTemporary || variable->getQualifier() == EvqGlobal ||
+            variable->getQualifier() == EvqConst);
+}
+
 }  // anonymous namespace
 
 void OutputHLSL::writeFloat(TInfoSinkBase &out, float f)
@@ -1610,21 +1620,33 @@ bool OutputHLSL::visitBlock(Visit visit, TIntermBlock *node)
         out << "{\n";
     }
 
-    for (TIntermSequence::iterator sit = node->getSequence()->begin();
-         sit != node->getSequence()->end(); sit++)
+    for (TIntermNode *statement : *node->getSequence())
     {
-        outputLineDirective(out, (*sit)->getLine().first_line);
+        outputLineDirective(out, statement->getLine().first_line);
 
-        (*sit)->traverse(this);
+        statement->traverse(this);
 
         // Don't output ; after case labels, they're terminated by :
         // This is needed especially since outputting a ; after a case statement would turn empty
         // case statements into non-empty case statements, disallowing fall-through from them.
-        // Also no need to output ; after if statements or sequences. This is done just for
-        // code clarity.
-        if ((*sit)->getAsCaseNode() == nullptr && (*sit)->getAsIfElseNode() == nullptr &&
-            (*sit)->getAsBlock() == nullptr)
+        // Also the output code is clearer if we don't output ; after statements where it is not
+        // needed:
+        //  * if statements
+        //  * switch statements
+        //  * blocks
+        //  * function definitions
+        //  * loops (do-while loops output the semicolon in VisitLoop)
+        //  * declarations that don't generate output.
+        if (statement->getAsCaseNode() == nullptr && statement->getAsIfElseNode() == nullptr &&
+            statement->getAsBlock() == nullptr && statement->getAsLoopNode() == nullptr &&
+            statement->getAsSwitchNode() == nullptr &&
+            statement->getAsFunctionDefinition() == nullptr &&
+            (statement->getAsDeclarationNode() == nullptr ||
+             IsDeclarationWrittenOut(statement->getAsDeclarationNode())) &&
+            statement->getAsInvariantDeclarationNode() == nullptr)
+        {
             out << ";\n";
+        }
     }
 
     if (mInsideFunction)
@@ -1702,7 +1724,6 @@ bool OutputHLSL::visitFunctionDefinition(Visit visit, TIntermFunctionDefinition 
 
 bool OutputHLSL::visitDeclaration(Visit visit, TIntermDeclaration *node)
 {
-    TInfoSinkBase &out = getInfoSink();
     if (visit == PreVisit)
     {
         TIntermSequence *sequence = node->getSequence();
@@ -1710,9 +1731,9 @@ bool OutputHLSL::visitDeclaration(Visit visit, TIntermDeclaration *node)
         ASSERT(sequence->size() == 1);
         ASSERT(variable);
 
-        if ((variable->getQualifier() == EvqTemporary || variable->getQualifier() == EvqGlobal ||
-             variable->getQualifier() == EvqConst))
+        if (IsDeclarationWrittenOut(node))
         {
+            TInfoSinkBase &out = getInfoSink();
             ensureStructDefined(variable->getType());
 
             if (!variable->getAsSymbolNode() ||
@@ -2240,11 +2261,11 @@ bool OutputHLSL::visitLoop(Visit visit, TIntermLoop *node)
     if (node->getType() == ELoopDoWhile)
     {
         outputLineDirective(out, node->getCondition()->getLine().first_line);
-        out << "while(\n";
+        out << "while (";
 
         node->getCondition()->traverse(this);
 
-        out << ");";
+        out << ");\n";
     }
 
     out << "}\n";

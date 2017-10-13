@@ -106,6 +106,7 @@ class TIntermNode : angle::NonCopyable
     virtual TIntermAggregate *getAsAggregate() { return 0; }
     virtual TIntermBlock *getAsBlock() { return nullptr; }
     virtual TIntermFunctionPrototype *getAsFunctionPrototypeNode() { return nullptr; }
+    virtual TIntermInvariantDeclaration *getAsInvariantDeclarationNode() { return nullptr; }
     virtual TIntermDeclaration *getAsDeclarationNode() { return nullptr; }
     virtual TIntermSwizzle *getAsSwizzleNode() { return nullptr; }
     virtual TIntermBinary *getAsBinaryNode() { return 0; }
@@ -794,6 +795,8 @@ class TIntermInvariantDeclaration : public TIntermNode
 {
   public:
     TIntermInvariantDeclaration(TIntermSymbol *symbol, const TSourceLoc &line);
+
+    virtual TIntermInvariantDeclaration *getAsInvariantDeclarationNode() override { return this; }
 
     TIntermSymbol *getSymbol() { return mSymbol; }
 
