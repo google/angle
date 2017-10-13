@@ -22,6 +22,23 @@
       "revId": "150d6992a78e73b9b8ab9bbfe589bdfbb168cc7d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2e47659a_a6ae1fd3",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2152,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-13T16:56:32Z",
+      "side": 1,
+      "message": "Can the error string be put in ErrorStrings.h?",
+      "revId": "150d6992a78e73b9b8ab9bbfe589bdfbb168cc7d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
