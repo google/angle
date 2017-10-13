@@ -16,6 +16,24 @@
       "revId": "360c37ffb98cf11d0de438604bda7eca30332341",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "436903d3_59493b89",
+        "filename": "build_overrides/build.gni",
+        "patchSetId": 19
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-10-13T04:56:52Z",
+      "side": 1,
+      "message": "Had to go in .gn to work.\nWhy don\u0027t we want sysroot?",
+      "parentUuid": "af560629_e37c3abf",
+      "revId": "360c37ffb98cf11d0de438604bda7eca30332341",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
