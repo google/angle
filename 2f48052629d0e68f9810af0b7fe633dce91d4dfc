@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "c2505542_f4abf2f0",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1379,
+      "author": {
+        "id": 1166724
+      },
+      "writtenOn": "2017-10-13T23:20:21Z",
+      "side": 1,
+      "message": "I don\u0027t believe that\u0027s correct - please see Geoff\u0027s comment. Also, gl2ext.h shows these formats _explicitly_ defined under GL_EXT_texture_storage.",
+      "parentUuid": "43510742_4b96ebff",
+      "range": {
+        "startLine": 1379,
+        "startChar": 16,
+        "endLine": 1379,
+        "endChar": 61
+      },
+      "revId": "2f48052629d0e68f9810af0b7fe633dce91d4dfc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5d00b5c8_2b92462d",
         "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
         "patchSetId": 10
