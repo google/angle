@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b6147a5a_5a9da68d",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 3466,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-13T18:05:10Z",
+      "side": 1,
+      "message": "nit: can you split up this test into a few smaller tests? It\u0027s not bad to have a big test, but I don\u0027t think it re-uses much logic between each sub-test.",
+      "range": {
+        "startLine": 3392,
+        "startChar": 0,
+        "endLine": 3466,
+        "endChar": 0
+      },
+      "revId": "f0c934cc091c0bcbea1ea92e2b7a2eb560a5e794",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
