@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6af13cd3_69eca5a5",
+        "filename": ".gn",
+        "patchSetId": 24
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-13T13:09:39Z",
+      "side": 1,
+      "message": "are these defaults for standalone only? maybe you could add a comment to the top of this file if so.",
+      "range": {
+        "startLine": 55,
+        "startChar": 0,
+        "endLine": 60,
+        "endChar": 1
+      },
+      "revId": "08b7746afb89154a11694b55f2174d84f3344acf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "81e31ded_8c82b84f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 24
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-13T13:09:39Z",
+      "side": 1,
+      "message": "nit: you can probably remove this.",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 18,
+        "endChar": 0
+      },
+      "revId": "08b7746afb89154a11694b55f2174d84f3344acf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eb512517_07f99753",
+        "filename": "build_overrides/build.gni",
+        "patchSetId": 24
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-13T13:09:39Z",
+      "side": 1,
+      "message": "can you add a comment detailing what this file is for? I don\u0027t know how it differs from .gn.",
+      "range": {
+        "startLine": 3,
+        "startChar": 0,
+        "endLine": 3,
+        "endChar": 28
+      },
+      "revId": "08b7746afb89154a11694b55f2174d84f3344acf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "730c317f_5421daf3",
+        "filename": "samples/BUILD.gn",
+        "patchSetId": 24
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-13T13:09:39Z",
+      "side": 1,
+      "message": "nice!",
+      "range": {
+        "startLine": 27,
+        "startChar": 0,
+        "endLine": 27,
+        "endChar": 8
+      },
+      "revId": "08b7746afb89154a11694b55f2174d84f3344acf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

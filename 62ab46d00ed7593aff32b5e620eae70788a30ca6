@@ -870,6 +870,24 @@
     },
     {
       "key": {
+        "uuid": "ae1c148f_59de7974",
+        "filename": "src/tests/BUILD.gn",
+        "patchSetId": 18
+      },
+      "lineNbr": 260,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-13T13:09:39Z",
+      "side": 1,
+      "message": "Maybe make a separate change after that removes the if. The build for angle_perftests won\u0027t be tested on the bots unless they build \"all\".",
+      "parentUuid": "1bff4ed0_8526ec25",
+      "revId": "62ab46d00ed7593aff32b5e620eae70788a30ca6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5bd14062_a4861d3e",
         "filename": "src/tests/BUILD.gn",
         "patchSetId": 18
@@ -1040,6 +1058,24 @@
     },
     {
       "key": {
+        "uuid": "2693098e_8c8b467c",
+        "filename": "src/tests/BUILD.gn",
+        "patchSetId": 18
+      },
+      "lineNbr": 324,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-13T13:09:39Z",
+      "side": 1,
+      "message": "OK. I think the path could be //third_party/src/deqp/src, not relative. But, this might be easier once we get rid of the gyp files for dEQP, and move the source file lists into our GN. We also could consider making a separate build file for dEQP and moving it into third_party/deqp.",
+      "parentUuid": "ec931bf3_9b4de667",
+      "revId": "62ab46d00ed7593aff32b5e620eae70788a30ca6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a82bcd67_cc68f3c5",
         "filename": "src/tests/BUILD.gn",
         "patchSetId": 18
@@ -1174,6 +1210,24 @@
       "side": 1,
       "message": "I couldn\u0027t get that to work.  I suspect gypi_to_gn, which will go away soon.",
       "parentUuid": "dac292ec_412af1ec",
+      "revId": "62ab46d00ed7593aff32b5e620eae70788a30ca6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "918ab139_c5c5ca2c",
+        "filename": "src/vulkan_support/BUILD.gn",
+        "patchSetId": 18
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-13T13:09:39Z",
+      "side": 1,
+      "message": "Yep, same as the dEQP thing I suspect.",
+      "parentUuid": "ec6ecaf5_773042a0",
       "revId": "62ab46d00ed7593aff32b5e620eae70788a30ca6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true

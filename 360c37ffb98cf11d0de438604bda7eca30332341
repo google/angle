@@ -34,6 +34,24 @@
       "revId": "360c37ffb98cf11d0de438604bda7eca30332341",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0fd76972_4a1d00f6",
+        "filename": "build_overrides/build.gni",
+        "patchSetId": 19
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-13T13:09:39Z",
+      "side": 1,
+      "message": "I\u0027m also curious about this.. wouldn\u0027t most users use sysroot? Can we override this in gn build arguments if a particular user doesn\u0027t want sysroot?",
+      "parentUuid": "436903d3_59493b89",
+      "revId": "360c37ffb98cf11d0de438604bda7eca30332341",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
