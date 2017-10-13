@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b71db6e4_e5e8976b",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2146,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-13T15:45:21Z",
+      "side": 1,
+      "message": "you can use the ProgramNotBound error template.",
+      "range": {
+        "startLine": 2146,
+        "startChar": 29,
+        "endLine": 2146,
+        "endChar": 45
+      },
+      "revId": "150d6992a78e73b9b8ab9bbfe589bdfbb168cc7d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
