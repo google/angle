@@ -58,6 +58,137 @@ VkIndexType GetVkIndexType(GLenum glIndexType)
 ContextVk::ContextVk(const gl::ContextState &state, RendererVk *renderer)
     : ContextImpl(state), mRenderer(renderer), mCurrentDrawMode(GL_NONE)
 {
+    // The module handle is filled out at draw time.
+    mCurrentShaderStages[0].sType  = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+    mCurrentShaderStages[0].pNext  = nullptr;
+    mCurrentShaderStages[0].flags  = 0;
+    mCurrentShaderStages[0].stage  = VK_SHADER_STAGE_VERTEX_BIT;
+    mCurrentShaderStages[0].module = VK_NULL_HANDLE;
+    mCurrentShaderStages[0].pName  = "main";
+    mCurrentShaderStages[0].pSpecializationInfo = nullptr;
+
+    mCurrentShaderStages[1].sType  = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+    mCurrentShaderStages[1].pNext  = nullptr;
+    mCurrentShaderStages[1].flags  = 0;
+    mCurrentShaderStages[1].stage  = VK_SHADER_STAGE_FRAGMENT_BIT;
+    mCurrentShaderStages[1].module = VK_NULL_HANDLE;
+    mCurrentShaderStages[1].pName  = "main";
+    mCurrentShaderStages[1].pSpecializationInfo = nullptr;
+
+    // The binding descriptions are filled in at draw time.
+    mCurrentVertexInputState.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
+    mCurrentVertexInputState.pNext = nullptr;
+    mCurrentVertexInputState.flags = 0;
+    mCurrentVertexInputState.vertexBindingDescriptionCount   = 0;
+    mCurrentVertexInputState.pVertexBindingDescriptions      = nullptr;
+    mCurrentVertexInputState.vertexAttributeDescriptionCount = 0;
+    mCurrentVertexInputState.pVertexAttributeDescriptions    = nullptr;
+
+    // Primitive topology is filled in at draw time.
+    mCurrentInputAssemblyState.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
+    mCurrentInputAssemblyState.pNext = nullptr;
+    mCurrentInputAssemblyState.flags = 0;
+    mCurrentInputAssemblyState.topology = gl_vk::GetPrimitiveTopology(mCurrentDrawMode);
+    mCurrentInputAssemblyState.primitiveRestartEnable = VK_FALSE;
+
+    // Set initial viewport and scissor state.
+    mCurrentViewportVk.x        = 0.0f;
+    mCurrentViewportVk.y        = 0.0f;
+    mCurrentViewportVk.width    = 0.0f;
+    mCurrentViewportVk.height   = 0.0f;
+    mCurrentViewportVk.minDepth = 0.0f;
+    mCurrentViewportVk.maxDepth = 1.0f;
+
+    mCurrentScissorVk.offset.x      = 0;
+    mCurrentScissorVk.offset.y      = 0;
+    mCurrentScissorVk.extent.width  = 0u;
+    mCurrentScissorVk.extent.height = 0u;
+
+    mCurrentViewportState.sType         = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
+    mCurrentViewportState.pNext         = nullptr;
+    mCurrentViewportState.flags         = 0;
+    mCurrentViewportState.viewportCount = 1;
+    mCurrentViewportState.pViewports    = &mCurrentViewportVk;
+    mCurrentViewportState.scissorCount  = 1;
+    mCurrentViewportState.pScissors     = &mCurrentScissorVk;
+
+    // Set initial rasterizer state.
+    // TODO(jmadill): Extra rasterizer state features.
+    mCurrentRasterState.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
+    mCurrentRasterState.pNext = nullptr;
+    mCurrentRasterState.flags = 0;
+    mCurrentRasterState.depthClampEnable        = VK_FALSE;
+    mCurrentRasterState.rasterizerDiscardEnable = VK_FALSE;
+    mCurrentRasterState.polygonMode             = VK_POLYGON_MODE_FILL;
+    mCurrentRasterState.cullMode                = VK_CULL_MODE_NONE;
+    mCurrentRasterState.frontFace               = VK_FRONT_FACE_COUNTER_CLOCKWISE;
+    mCurrentRasterState.depthBiasEnable         = VK_FALSE;
+    mCurrentRasterState.depthBiasConstantFactor = 0.0f;
+    mCurrentRasterState.depthBiasClamp          = 0.0f;
+    mCurrentRasterState.depthBiasSlopeFactor    = 0.0f;
+    mCurrentRasterState.lineWidth               = 1.0f;
+
+    // Initialize a dummy multisample state.
+    // TODO(jmadill): Multisample state.
+    mCurrentMultisampleState.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
+    mCurrentMultisampleState.pNext = nullptr;
+    mCurrentMultisampleState.flags = 0;
+    mCurrentMultisampleState.rasterizationSamples  = VK_SAMPLE_COUNT_1_BIT;
+    mCurrentMultisampleState.sampleShadingEnable   = VK_FALSE;
+    mCurrentMultisampleState.minSampleShading      = 0.0f;
+    mCurrentMultisampleState.pSampleMask           = nullptr;
+    mCurrentMultisampleState.alphaToCoverageEnable = VK_FALSE;
+    mCurrentMultisampleState.alphaToOneEnable      = VK_FALSE;
+
+    // TODO(jmadill): Depth/stencil state.
+
+    // Initialize a dummy MRT blend state.
+    // TODO(jmadill): Blend state/MRT.
+    mCurrentBlendAttachmentState.blendEnable         = VK_FALSE;
+    mCurrentBlendAttachmentState.srcColorBlendFactor = VK_BLEND_FACTOR_ONE;
+    mCurrentBlendAttachmentState.dstColorBlendFactor = VK_BLEND_FACTOR_ONE;
+    mCurrentBlendAttachmentState.colorBlendOp        = VK_BLEND_OP_ADD;
+    mCurrentBlendAttachmentState.srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE;
+    mCurrentBlendAttachmentState.dstAlphaBlendFactor = VK_BLEND_FACTOR_ONE;
+    mCurrentBlendAttachmentState.alphaBlendOp        = VK_BLEND_OP_ADD;
+    mCurrentBlendAttachmentState.colorWriteMask =
+        (VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT |
+         VK_COLOR_COMPONENT_A_BIT);
+
+    mCurrentBlendState.sType             = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
+    mCurrentBlendState.pNext             = 0;
+    mCurrentBlendState.flags             = 0;
+    mCurrentBlendState.logicOpEnable     = VK_FALSE;
+    mCurrentBlendState.logicOp           = VK_LOGIC_OP_CLEAR;
+    mCurrentBlendState.attachmentCount   = 1;
+    mCurrentBlendState.pAttachments      = &mCurrentBlendAttachmentState;
+    mCurrentBlendState.blendConstants[0] = 0.0f;
+    mCurrentBlendState.blendConstants[1] = 0.0f;
+    mCurrentBlendState.blendConstants[2] = 0.0f;
+    mCurrentBlendState.blendConstants[3] = 0.0f;
+
+    // TODO(jmadill): Dynamic state.
+
+    // The layout and renderpass are filled out at draw time.
+    mCurrentPipelineInfo.sType               = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
+    mCurrentPipelineInfo.pNext               = nullptr;
+    mCurrentPipelineInfo.flags               = 0;
+    mCurrentPipelineInfo.stageCount          = 2;
+    mCurrentPipelineInfo.pStages             = mCurrentShaderStages;
+    mCurrentPipelineInfo.pVertexInputState   = &mCurrentVertexInputState;
+    mCurrentPipelineInfo.pInputAssemblyState = &mCurrentInputAssemblyState;
+    mCurrentPipelineInfo.pTessellationState  = nullptr;
+    mCurrentPipelineInfo.pViewportState      = &mCurrentViewportState;
+    mCurrentPipelineInfo.pRasterizationState = &mCurrentRasterState;
+    mCurrentPipelineInfo.pMultisampleState   = &mCurrentMultisampleState;
+    mCurrentPipelineInfo.pDepthStencilState  = nullptr;
+    mCurrentPipelineInfo.pColorBlendState    = &mCurrentBlendState;
+    mCurrentPipelineInfo.pDynamicState       = nullptr;
+    mCurrentPipelineInfo.layout              = VK_NULL_HANDLE;
+    mCurrentPipelineInfo.renderPass          = VK_NULL_HANDLE;
+    mCurrentPipelineInfo.subpass             = 0;
+    mCurrentPipelineInfo.basePipelineHandle  = VK_NULL_HANDLE;
+    mCurrentPipelineInfo.basePipelineIndex   = 0;
 }
 
 ContextVk::~ContextVk()
@@ -91,164 +222,27 @@ gl::Error ContextVk::initPipeline(const gl::Context *context)
     const auto &state     = mState.getState();
     const auto &programGL = state.getProgram();
     const auto &vao       = state.getVertexArray();
-    const auto &attribs   = vao->getVertexAttributes();
-    const auto &bindings  = vao->getVertexBindings();
     const auto &programVk = GetImplAs<ProgramVk>(programGL);
     const auto *drawFBO   = state.getDrawFramebuffer();
     FramebufferVk *vkFBO  = GetImplAs<FramebufferVk>(drawFBO);
+    VertexArrayVk *vkVAO  = GetImplAs<VertexArrayVk>(vao);
 
-    // { vertex, fragment }
-    VkPipelineShaderStageCreateInfo shaderStages[2];
+    // Ensure the attribs and bindings are updated.
+    vkVAO->updateVertexDescriptions(context);
 
-    shaderStages[0].sType               = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-    shaderStages[0].pNext               = nullptr;
-    shaderStages[0].flags               = 0;
-    shaderStages[0].stage               = VK_SHADER_STAGE_VERTEX_BIT;
-    shaderStages[0].module              = programVk->getLinkedVertexModule().getHandle();
-    shaderStages[0].pName               = "main";
-    shaderStages[0].pSpecializationInfo = nullptr;
-
-    shaderStages[1].sType               = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-    shaderStages[1].pNext               = nullptr;
-    shaderStages[1].flags               = 0;
-    shaderStages[1].stage               = VK_SHADER_STAGE_FRAGMENT_BIT;
-    shaderStages[1].module              = programVk->getLinkedFragmentModule().getHandle();
-    shaderStages[1].pName               = "main";
-    shaderStages[1].pSpecializationInfo = nullptr;
-
-    // Process vertex attributes
-    // TODO(jmadill): Caching with dirty bits.
-    std::vector<VkVertexInputBindingDescription> vertexBindings;
-    std::vector<VkVertexInputAttributeDescription> vertexAttribs;
-
-    for (auto attribIndex : programGL->getActiveAttribLocationsMask())
-    {
-        const auto &attrib  = attribs[attribIndex];
-        const auto &binding = bindings[attrib.bindingIndex];
-        if (attrib.enabled)
-        {
-            VkVertexInputBindingDescription bindingDesc;
-            bindingDesc.binding = static_cast<uint32_t>(vertexBindings.size());
-            bindingDesc.stride  = static_cast<uint32_t>(gl::ComputeVertexAttributeTypeSize(attrib));
-            bindingDesc.inputRate = (binding.getDivisor() > 0 ? VK_VERTEX_INPUT_RATE_INSTANCE
-                                                              : VK_VERTEX_INPUT_RATE_VERTEX);
-
-            gl::VertexFormatType vertexFormatType = gl::GetVertexFormatType(attrib);
-
-            VkVertexInputAttributeDescription attribDesc;
-            attribDesc.binding  = bindingDesc.binding;
-            attribDesc.format   = vk::GetNativeVertexFormat(vertexFormatType);
-            attribDesc.location = static_cast<uint32_t>(attribIndex);
-            attribDesc.offset =
-                static_cast<uint32_t>(ComputeVertexAttributeOffset(attrib, binding));
-
-            vertexBindings.push_back(bindingDesc);
-            vertexAttribs.push_back(attribDesc);
-        }
-        else
-        {
-            UNIMPLEMENTED();
-        }
-    }
+    const auto &vertexBindings = vkVAO->getVertexBindingDescs();
+    const auto &vertexAttribs  = vkVAO->getVertexAttribDescs();
 
     // TODO(jmadill): Validate with ASSERT against physical device limits/caps?
-    VkPipelineVertexInputStateCreateInfo vertexInputState;
-    vertexInputState.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
-    vertexInputState.pNext = nullptr;
-    vertexInputState.flags = 0;
-    vertexInputState.vertexBindingDescriptionCount   = static_cast<uint32_t>(vertexBindings.size());
-    vertexInputState.pVertexBindingDescriptions      = vertexBindings.data();
-    vertexInputState.vertexAttributeDescriptionCount = static_cast<uint32_t>(vertexAttribs.size());
-    vertexInputState.pVertexAttributeDescriptions    = vertexAttribs.data();
+    mCurrentVertexInputState.vertexBindingDescriptionCount =
+        static_cast<uint32_t>(vertexBindings.size());
+    mCurrentVertexInputState.pVertexBindingDescriptions = vertexBindings.data();
+    mCurrentVertexInputState.vertexAttributeDescriptionCount =
+        static_cast<uint32_t>(vertexAttribs.size());
+    mCurrentVertexInputState.pVertexAttributeDescriptions = vertexAttribs.data();
 
-    VkPipelineInputAssemblyStateCreateInfo inputAssemblyState;
-    inputAssemblyState.sType    = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
-    inputAssemblyState.pNext    = nullptr;
-    inputAssemblyState.flags    = 0;
-    inputAssemblyState.topology = gl_vk::GetPrimitiveTopology(mCurrentDrawMode);
-    inputAssemblyState.primitiveRestartEnable = VK_FALSE;
+    mCurrentInputAssemblyState.topology = gl_vk::GetPrimitiveTopology(mCurrentDrawMode);
 
-    const gl::Rectangle &viewportGL = state.getViewport();
-    VkViewport viewportVk;
-    viewportVk.x        = static_cast<float>(viewportGL.x);
-    viewportVk.y        = static_cast<float>(viewportGL.y);
-    viewportVk.width    = static_cast<float>(viewportGL.width);
-    viewportVk.height   = static_cast<float>(viewportGL.height);
-    viewportVk.minDepth = state.getNearPlane();
-    viewportVk.maxDepth = state.getFarPlane();
-
-    // TODO(jmadill): Scissor.
-    VkRect2D scissorVk;
-    scissorVk.offset.x      = viewportGL.x;
-    scissorVk.offset.y      = viewportGL.y;
-    scissorVk.extent.width  = viewportGL.width;
-    scissorVk.extent.height = viewportGL.height;
-
-    VkPipelineViewportStateCreateInfo viewportState;
-    viewportState.sType         = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
-    viewportState.pNext         = nullptr;
-    viewportState.flags         = 0;
-    viewportState.viewportCount = 1;
-    viewportState.pViewports    = &viewportVk;
-    viewportState.scissorCount  = 1;
-    viewportState.pScissors     = &scissorVk;
-
-    // TODO(jmadill): Extra rasterizer state features.
-    VkPipelineRasterizationStateCreateInfo rasterState;
-    rasterState.sType            = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
-    rasterState.pNext            = nullptr;
-    rasterState.flags            = 0;
-    rasterState.depthClampEnable = VK_FALSE;
-    rasterState.rasterizerDiscardEnable = VK_FALSE;
-    rasterState.polygonMode             = VK_POLYGON_MODE_FILL;
-    rasterState.cullMode                = gl_vk::GetCullMode(state.getRasterizerState());
-    rasterState.frontFace               = gl_vk::GetFrontFace(state.getRasterizerState().frontFace);
-    rasterState.depthBiasEnable         = VK_FALSE;
-    rasterState.depthBiasConstantFactor = 0.0f;
-    rasterState.depthBiasClamp          = 0.0f;
-    rasterState.depthBiasSlopeFactor    = 0.0f;
-    rasterState.lineWidth               = state.getLineWidth();
-
-    // TODO(jmadill): Multisample state.
-    VkPipelineMultisampleStateCreateInfo multisampleState;
-    multisampleState.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
-    multisampleState.pNext = nullptr;
-    multisampleState.flags = 0;
-    multisampleState.rasterizationSamples = VK_SAMPLE_COUNT_1_BIT;
-    multisampleState.sampleShadingEnable  = VK_FALSE;
-    multisampleState.minSampleShading     = 0.0f;
-    multisampleState.pSampleMask          = nullptr;
-    multisampleState.alphaToCoverageEnable = VK_FALSE;
-    multisampleState.alphaToOneEnable      = VK_FALSE;
-
-    // TODO(jmadill): Depth/stencil state.
-
-    // TODO(jmadill): Blend state/MRT.
-    VkPipelineColorBlendAttachmentState blendAttachmentState;
-    blendAttachmentState.blendEnable         = VK_FALSE;
-    blendAttachmentState.srcColorBlendFactor = VK_BLEND_FACTOR_ONE;
-    blendAttachmentState.dstColorBlendFactor = VK_BLEND_FACTOR_ONE;
-    blendAttachmentState.colorBlendOp        = VK_BLEND_OP_ADD;
-    blendAttachmentState.srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE;
-    blendAttachmentState.dstAlphaBlendFactor = VK_BLEND_FACTOR_ONE;
-    blendAttachmentState.alphaBlendOp        = VK_BLEND_OP_ADD;
-    blendAttachmentState.colorWriteMask = (VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT |
-                                           VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT);
-
-    VkPipelineColorBlendStateCreateInfo blendState;
-    blendState.sType             = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
-    blendState.pNext             = 0;
-    blendState.flags             = 0;
-    blendState.logicOpEnable     = VK_FALSE;
-    blendState.logicOp           = VK_LOGIC_OP_CLEAR;
-    blendState.attachmentCount   = 1;
-    blendState.pAttachments      = &blendAttachmentState;
-    blendState.blendConstants[0] = 0.0f;
-    blendState.blendConstants[1] = 0.0f;
-    blendState.blendConstants[2] = 0.0f;
-    blendState.blendConstants[3] = 0.0f;
-
-    // TODO(jmadill): Dynamic state.
     vk::RenderPass *renderPass = nullptr;
     ANGLE_TRY_RESULT(vkFBO->getRenderPass(context, device), renderPass);
     ASSERT(renderPass && renderPass->valid());
@@ -257,30 +251,13 @@ gl::Error ContextVk::initPipeline(const gl::Context *context)
     ANGLE_TRY_RESULT(programVk->getPipelineLayout(device), pipelineLayout);
     ASSERT(pipelineLayout && pipelineLayout->valid());
 
-    VkGraphicsPipelineCreateInfo pipelineInfo;
-    pipelineInfo.sType               = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
-    pipelineInfo.pNext               = nullptr;
-    pipelineInfo.flags               = 0;
-    pipelineInfo.stageCount          = 2;
-    pipelineInfo.pStages             = shaderStages;
-    pipelineInfo.pVertexInputState   = &vertexInputState;
-    pipelineInfo.pInputAssemblyState = &inputAssemblyState;
-    pipelineInfo.pTessellationState  = nullptr;
-    pipelineInfo.pViewportState      = &viewportState;
-    pipelineInfo.pRasterizationState = &rasterState;
-    pipelineInfo.pMultisampleState   = &multisampleState;
-    pipelineInfo.pDepthStencilState  = nullptr;
-    pipelineInfo.pColorBlendState    = &blendState;
-    pipelineInfo.pDynamicState       = nullptr;
-    pipelineInfo.layout              = pipelineLayout->getHandle();
-    pipelineInfo.renderPass          = renderPass->getHandle();
-    pipelineInfo.subpass             = 0;
-    pipelineInfo.basePipelineHandle  = VK_NULL_HANDLE;
-    pipelineInfo.basePipelineIndex   = 0;
+    mCurrentPipelineInfo.layout     = pipelineLayout->getHandle();
+    mCurrentPipelineInfo.renderPass = renderPass->getHandle();
 
     vk::Pipeline newPipeline;
-    ANGLE_TRY(newPipeline.initGraphics(device, pipelineInfo));
+    ANGLE_TRY(newPipeline.initGraphics(device, mCurrentPipelineInfo));
 
+    // TODO(jmadill): Don't dispose the current pipeline immediately, it could be in use.
     mCurrentPipeline.retain(device, std::move(newPipeline));
 
     return gl::NoError();
@@ -480,10 +457,255 @@ void ContextVk::popGroupMarker()
 
 void ContextVk::syncState(const gl::Context *context, const gl::State::DirtyBits &dirtyBits)
 {
-    // TODO(jmadill): Vulkan dirty bits.
     if (dirtyBits.any())
     {
         invalidateCurrentPipeline();
+    }
+
+    const auto &glState = context->getGLState();
+
+    // TODO(jmadill): Full dirty bits implementation.
+
+    for (auto dirtyBit : dirtyBits)
+    {
+        switch (dirtyBit)
+        {
+            case gl::State::DIRTY_BIT_SCISSOR_TEST_ENABLED:
+                WARN() << "DIRTY_BIT_SCISSOR_TEST_ENABLED unimplemented";
+                break;
+            case gl::State::DIRTY_BIT_SCISSOR:
+                WARN() << "DIRTY_BIT_SCISSOR unimplemented";
+                break;
+            case gl::State::DIRTY_BIT_VIEWPORT:
+            {
+                const gl::Rectangle &viewportGL = glState.getViewport();
+                mCurrentViewportVk.x            = static_cast<float>(viewportGL.x);
+                mCurrentViewportVk.y            = static_cast<float>(viewportGL.y);
+                mCurrentViewportVk.width        = static_cast<float>(viewportGL.width);
+                mCurrentViewportVk.height       = static_cast<float>(viewportGL.height);
+                mCurrentViewportVk.minDepth     = glState.getNearPlane();
+                mCurrentViewportVk.maxDepth     = glState.getFarPlane();
+
+                // TODO(jmadill): Scissor.
+                mCurrentScissorVk.offset.x      = viewportGL.x;
+                mCurrentScissorVk.offset.y      = viewportGL.y;
+                mCurrentScissorVk.extent.width  = viewportGL.width;
+                mCurrentScissorVk.extent.height = viewportGL.height;
+                break;
+            }
+            case gl::State::DIRTY_BIT_DEPTH_RANGE:
+                WARN() << "DIRTY_BIT_DEPTH_RANGE unimplemented";
+                break;
+            case gl::State::DIRTY_BIT_BLEND_ENABLED:
+                WARN() << "DIRTY_BIT_BLEND_ENABLED unimplemented";
+                break;
+            case gl::State::DIRTY_BIT_BLEND_COLOR:
+                WARN() << "DIRTY_BIT_BLEND_COLOR unimplemented";
+                break;
+            case gl::State::DIRTY_BIT_BLEND_FUNCS:
+                WARN() << "DIRTY_BIT_BLEND_FUNCS unimplemented";
+                break;
+            case gl::State::DIRTY_BIT_BLEND_EQUATIONS:
+                WARN() << "DIRTY_BIT_BLEND_EQUATIONS unimplemented";
+                break;
+            case gl::State::DIRTY_BIT_COLOR_MASK:
+                WARN() << "DIRTY_BIT_COLOR_MASK unimplemented";
+                break;
+            case gl::State::DIRTY_BIT_SAMPLE_ALPHA_TO_COVERAGE_ENABLED:
+                WARN() << "DIRTY_BIT_SAMPLE_ALPHA_TO_COVERAGE_ENABLED unimplemented";
+                break;
+            case gl::State::DIRTY_BIT_SAMPLE_COVERAGE_ENABLED:
+                WARN() << "DIRTY_BIT_SAMPLE_COVERAGE_ENABLED unimplemented";
+                break;
+            case gl::State::DIRTY_BIT_SAMPLE_COVERAGE:
+                WARN() << "DIRTY_BIT_SAMPLE_COVERAGE unimplemented";
+                break;
+            case gl::State::DIRTY_BIT_SAMPLE_MASK_ENABLED:
+                WARN() << "DIRTY_BIT_SAMPLE_MASK_ENABLED unimplemented";
+                break;
+            case gl::State::DIRTY_BIT_SAMPLE_MASK_WORD_0:
+            case gl::State::DIRTY_BIT_SAMPLE_MASK_WORD_0 + 1:
+                WARN() << "DIRTY_BIT_SAMPLE_MASK_WORD unimplemented";
+                break;
+            case gl::State::DIRTY_BIT_DEPTH_TEST_ENABLED:
+                WARN() << "DIRTY_BIT_DEPTH_TEST_ENABLED unimplemented";
+                break;
+            case gl::State::DIRTY_BIT_DEPTH_FUNC:
+                WARN() << "DIRTY_BIT_DEPTH_FUNC unimplemented";
+                break;
+            case gl::State::DIRTY_BIT_DEPTH_MASK:
+                WARN() << "DIRTY_BIT_DEPTH_MASK unimplemented";
+                break;
+            case gl::State::DIRTY_BIT_STENCIL_TEST_ENABLED:
+                WARN() << "DIRTY_BIT_STENCIL_TEST_ENABLED unimplemented";
+                break;
+            case gl::State::DIRTY_BIT_STENCIL_FUNCS_FRONT:
+                WARN() << "DIRTY_BIT_STENCIL_FUNCS_FRONT unimplemented";
+                break;
+            case gl::State::DIRTY_BIT_STENCIL_FUNCS_BACK:
+                WARN() << "DIRTY_BIT_STENCIL_FUNCS_BACK unimplemented";
+                break;
+            case gl::State::DIRTY_BIT_STENCIL_OPS_FRONT:
+                WARN() << "DIRTY_BIT_STENCIL_OPS_FRONT unimplemented";
+                break;
+            case gl::State::DIRTY_BIT_STENCIL_OPS_BACK:
+                WARN() << "DIRTY_BIT_STENCIL_OPS_BACK unimplemented";
+                break;
+            case gl::State::DIRTY_BIT_STENCIL_WRITEMASK_FRONT:
+                WARN() << "DIRTY_BIT_STENCIL_WRITEMASK_FRONT unimplemented";
+                break;
+            case gl::State::DIRTY_BIT_STENCIL_WRITEMASK_BACK:
+                WARN() << "DIRTY_BIT_STENCIL_WRITEMASK_BACK unimplemented";
+                break;
+            case gl::State::DIRTY_BIT_CULL_FACE_ENABLED:
+            case gl::State::DIRTY_BIT_CULL_FACE:
+                mCurrentRasterState.cullMode = gl_vk::GetCullMode(glState.getRasterizerState());
+                break;
+            case gl::State::DIRTY_BIT_FRONT_FACE:
+                mCurrentRasterState.frontFace =
+                    gl_vk::GetFrontFace(glState.getRasterizerState().frontFace);
+                break;
+            case gl::State::DIRTY_BIT_POLYGON_OFFSET_FILL_ENABLED:
+                WARN() << "DIRTY_BIT_POLYGON_OFFSET_FILL_ENABLED unimplemented";
+                break;
+            case gl::State::DIRTY_BIT_POLYGON_OFFSET:
+                WARN() << "DIRTY_BIT_POLYGON_OFFSET unimplemented";
+                break;
+            case gl::State::DIRTY_BIT_RASTERIZER_DISCARD_ENABLED:
+                WARN() << "DIRTY_BIT_RASTERIZER_DISCARD_ENABLED unimplemented";
+                break;
+            case gl::State::DIRTY_BIT_LINE_WIDTH:
+                mCurrentRasterState.lineWidth = glState.getLineWidth();
+                break;
+            case gl::State::DIRTY_BIT_PRIMITIVE_RESTART_ENABLED:
+                WARN() << "DIRTY_BIT_PRIMITIVE_RESTART_ENABLED unimplemented";
+                break;
+            case gl::State::DIRTY_BIT_CLEAR_COLOR:
+                WARN() << "DIRTY_BIT_CLEAR_COLOR unimplemented";
+                break;
+            case gl::State::DIRTY_BIT_CLEAR_DEPTH:
+                WARN() << "DIRTY_BIT_CLEAR_DEPTH unimplemented";
+                break;
+            case gl::State::DIRTY_BIT_CLEAR_STENCIL:
+                WARN() << "DIRTY_BIT_CLEAR_STENCIL unimplemented";
+                break;
+            case gl::State::DIRTY_BIT_UNPACK_ALIGNMENT:
+                WARN() << "DIRTY_BIT_UNPACK_ALIGNMENT unimplemented";
+                break;
+            case gl::State::DIRTY_BIT_UNPACK_ROW_LENGTH:
+                WARN() << "DIRTY_BIT_UNPACK_ROW_LENGTH unimplemented";
+                break;
+            case gl::State::DIRTY_BIT_UNPACK_IMAGE_HEIGHT:
+                WARN() << "DIRTY_BIT_UNPACK_IMAGE_HEIGHT unimplemented";
+                break;
+            case gl::State::DIRTY_BIT_UNPACK_SKIP_IMAGES:
+                WARN() << "DIRTY_BIT_UNPACK_SKIP_IMAGES unimplemented";
+                break;
+            case gl::State::DIRTY_BIT_UNPACK_SKIP_ROWS:
+                WARN() << "DIRTY_BIT_UNPACK_SKIP_ROWS unimplemented";
+                break;
+            case gl::State::DIRTY_BIT_UNPACK_SKIP_PIXELS:
+                WARN() << "DIRTY_BIT_UNPACK_SKIP_PIXELS unimplemented";
+                break;
+            case gl::State::DIRTY_BIT_UNPACK_BUFFER_BINDING:
+                WARN() << "DIRTY_BIT_UNPACK_BUFFER_BINDING unimplemented";
+                break;
+            case gl::State::DIRTY_BIT_PACK_ALIGNMENT:
+                WARN() << "DIRTY_BIT_PACK_ALIGNMENT unimplemented";
+                break;
+            case gl::State::DIRTY_BIT_PACK_REVERSE_ROW_ORDER:
+                WARN() << "DIRTY_BIT_PACK_REVERSE_ROW_ORDER unimplemented";
+                break;
+            case gl::State::DIRTY_BIT_PACK_ROW_LENGTH:
+                WARN() << "DIRTY_BIT_PACK_ROW_LENGTH unimplemented";
+                break;
+            case gl::State::DIRTY_BIT_PACK_SKIP_ROWS:
+                WARN() << "DIRTY_BIT_PACK_SKIP_ROWS unimplemented";
+                break;
+            case gl::State::DIRTY_BIT_PACK_SKIP_PIXELS:
+                WARN() << "DIRTY_BIT_PACK_SKIP_PIXELS unimplemented";
+                break;
+            case gl::State::DIRTY_BIT_PACK_BUFFER_BINDING:
+                WARN() << "DIRTY_BIT_PACK_BUFFER_BINDING unimplemented";
+                break;
+            case gl::State::DIRTY_BIT_DITHER_ENABLED:
+                WARN() << "DIRTY_BIT_DITHER_ENABLED unimplemented";
+                break;
+            case gl::State::DIRTY_BIT_GENERATE_MIPMAP_HINT:
+                WARN() << "DIRTY_BIT_GENERATE_MIPMAP_HINT unimplemented";
+                break;
+            case gl::State::DIRTY_BIT_SHADER_DERIVATIVE_HINT:
+                WARN() << "DIRTY_BIT_SHADER_DERIVATIVE_HINT unimplemented";
+                break;
+            case gl::State::DIRTY_BIT_READ_FRAMEBUFFER_BINDING:
+                WARN() << "DIRTY_BIT_READ_FRAMEBUFFER_BINDING unimplemented";
+                break;
+            case gl::State::DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING:
+                WARN() << "DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING unimplemented";
+                break;
+            case gl::State::DIRTY_BIT_RENDERBUFFER_BINDING:
+                WARN() << "DIRTY_BIT_RENDERBUFFER_BINDING unimplemented";
+                break;
+            case gl::State::DIRTY_BIT_VERTEX_ARRAY_BINDING:
+                WARN() << "DIRTY_BIT_VERTEX_ARRAY_BINDING unimplemented";
+                break;
+            case gl::State::DIRTY_BIT_DRAW_INDIRECT_BUFFER_BINDING:
+                WARN() << "DIRTY_BIT_DRAW_INDIRECT_BUFFER_BINDING unimplemented";
+                break;
+            case gl::State::DIRTY_BIT_PROGRAM_BINDING:
+                WARN() << "DIRTY_BIT_PROGRAM_BINDING unimplemented";
+                break;
+            case gl::State::DIRTY_BIT_PROGRAM_EXECUTABLE:
+            {
+                // { vertex, fragment }
+                ProgramVk *programVk           = GetImplAs<ProgramVk>(glState.getProgram());
+                mCurrentShaderStages[0].module = programVk->getLinkedVertexModule().getHandle();
+                mCurrentShaderStages[1].module = programVk->getLinkedFragmentModule().getHandle();
+
+                // Also invalidate the vertex descriptions cache in the Vertex Array.
+                VertexArrayVk *vaoVk = GetImplAs<VertexArrayVk>(glState.getVertexArray());
+                vaoVk->invalidateVertexDescriptions();
+                break;
+            }
+            case gl::State::DIRTY_BIT_TEXTURE_BINDINGS:
+                WARN() << "DIRTY_BIT_TEXTURE_BINDINGS unimplemented";
+                break;
+            case gl::State::DIRTY_BIT_SAMPLER_BINDINGS:
+                WARN() << "DIRTY_BIT_SAMPLER_BINDINGS unimplemented";
+                break;
+            case gl::State::DIRTY_BIT_MULTISAMPLING:
+                WARN() << "DIRTY_BIT_MULTISAMPLING unimplemented";
+                break;
+            case gl::State::DIRTY_BIT_SAMPLE_ALPHA_TO_ONE:
+                WARN() << "DIRTY_BIT_SAMPLE_ALPHA_TO_ONE unimplemented";
+                break;
+            case gl::State::DIRTY_BIT_COVERAGE_MODULATION:
+                WARN() << "DIRTY_BIT_COVERAGE_MODULATION unimplemented";
+                break;
+            case gl::State::DIRTY_BIT_PATH_RENDERING_MATRIX_MV:
+                WARN() << "DIRTY_BIT_PATH_RENDERING_MATRIX_MV unimplemented";
+                break;
+            case gl::State::DIRTY_BIT_PATH_RENDERING_MATRIX_PROJ:
+                WARN() << "DIRTY_BIT_PATH_RENDERING_MATRIX_PROJ unimplemented";
+                break;
+            case gl::State::DIRTY_BIT_PATH_RENDERING_STENCIL_STATE:
+                WARN() << "DIRTY_BIT_PATH_RENDERING_STENCIL_STATE unimplemented";
+                break;
+            case gl::State::DIRTY_BIT_FRAMEBUFFER_SRGB:
+                WARN() << "DIRTY_BIT_FRAMEBUFFER_SRGB unimplemented";
+                break;
+            default:
+                if (dirtyBit >= gl::State::DIRTY_BIT_CURRENT_VALUE_0 &&
+                    dirtyBit < gl::State::DIRTY_BIT_CURRENT_VALUE_MAX)
+                {
+                    WARN() << "DIRTY_BIT_CURRENT_VALUE unimplemented";
+                }
+                else
+                {
+                    UNREACHABLE();
+                }
+                break;
+        }
     }
 }
 

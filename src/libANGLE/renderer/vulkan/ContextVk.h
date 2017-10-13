@@ -155,6 +155,22 @@ class ContextVk : public ContextImpl, public ResourceVk
     RendererVk *mRenderer;
     vk::Pipeline mCurrentPipeline;
     GLenum mCurrentDrawMode;
+
+    // Keep CreateInfo structures cached so that we can quickly update them when creating
+    // updated pipelines. When we move to a pipeline cache, we will want to use a more compact
+    // structure that we can use to query the pipeline cache in the Renderer.
+    // TODO(jmadill): Update this when we move to a pipeline cache.
+    VkPipelineShaderStageCreateInfo mCurrentShaderStages[2];
+    VkPipelineVertexInputStateCreateInfo mCurrentVertexInputState;
+    VkPipelineInputAssemblyStateCreateInfo mCurrentInputAssemblyState;
+    VkViewport mCurrentViewportVk;
+    VkRect2D mCurrentScissorVk;
+    VkPipelineViewportStateCreateInfo mCurrentViewportState;
+    VkPipelineRasterizationStateCreateInfo mCurrentRasterState;
+    VkPipelineMultisampleStateCreateInfo mCurrentMultisampleState;
+    VkPipelineColorBlendAttachmentState mCurrentBlendAttachmentState;
+    VkPipelineColorBlendStateCreateInfo mCurrentBlendState;
+    VkGraphicsPipelineCreateInfo mCurrentPipelineInfo;
 };
 
 }  // namespace rx
