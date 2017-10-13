@@ -70,6 +70,30 @@
       "revId": "3413189030a3ff6bd608a2b96b7b805e3889eb34",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2337b488_17ed061b",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-10-13T14:01:23Z",
+      "side": 1,
+      "message": "This will be the major size, going by https://en.wikipedia.org/wiki/Row-_and_column-major_order\nNot sure if there\u0027s some misunderstanding here.\n\nNote that GLSL spec doesn\u0027t use \"n-dimensional array\" style terminology. It speaks only of 1D arrays that may contain 1D arrays. I\u0027ve tried to write the code using terminology that\u0027s consistent with the spec. See GLSL ES 3.10 section 4.1.9:\n\n\"An array of arrays can be declared as vec4 a[3][2];  // size-3 array of size-2 array of vec4\n\nwhich declares a one-dimensional array of size 3 of one-dimensional arrays of size 2 of vec4s\"",
+      "parentUuid": "064f9dd2_9d309c87",
+      "range": {
+        "startLine": 72,
+        "startChar": 17,
+        "endLine": 72,
+        "endChar": 38
+      },
+      "revId": "3413189030a3ff6bd608a2b96b7b805e3889eb34",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
