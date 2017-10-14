@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "e14e227c_3c307157",
+        "filename": ".gn",
+        "patchSetId": 24
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-10-14T19:51:52Z",
+      "side": 1,
+      "message": "That comment is already at the top of this file, but I\u0027ll be more explicit that this file is only for stand-alone builds.",
+      "parentUuid": "456f8b21_4a5344ca",
+      "range": {
+        "startLine": 55,
+        "startChar": 0,
+        "endLine": 60,
+        "endChar": 1
+      },
+      "revId": "08b7746afb89154a11694b55f2174d84f3344acf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "81e31ded_8c82b84f",
         "filename": "/COMMIT_MSG",
         "patchSetId": 24
@@ -72,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "035bc491_cb849d6a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 24
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-10-14T19:51:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "81e31ded_8c82b84f",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 18,
+        "endChar": 0
+      },
+      "revId": "08b7746afb89154a11694b55f2174d84f3344acf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8c319b15_1b7641b6",
         "filename": "BUILD.gn",
         "patchSetId": 24
@@ -83,6 +131,30 @@
       "writtenOn": "2017-10-13T18:59:47Z",
       "side": 1,
       "message": "interestingly, this seems to exclude a few specific targets:\n\nminizip\ntranslator_fuzzer\nangle_shader_translator\n\nMinizip seems pretty useless, but maybe we want to explicitly include the other two? And maybe even minizip just for completion.",
+      "range": {
+        "startLine": 19,
+        "startChar": 9,
+        "endLine": 19,
+        "endChar": 12
+      },
+      "revId": "08b7746afb89154a11694b55f2174d84f3344acf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "566f77f4_3a7f42c5",
+        "filename": "BUILD.gn",
+        "patchSetId": 24
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-10-14T19:51:52Z",
+      "side": 1,
+      "message": "Comparing gyp\u0027s \"all\" target to gn\u0027s, I found and fixed a couple discrepancies, but these were not among them.  I added the second two anyway.",
+      "parentUuid": "8c319b15_1b7641b6",
       "range": {
         "startLine": 19,
         "startChar": 9,
@@ -130,6 +202,30 @@
       "side": 1,
       "message": "GN executes files in this order:\n.gn (the variable there at least)\nthe GN args for the build folder\ntoolchain GN files\nANGLE GN files that will at some point include build_overrides.\n\nSo I think the options needed at toolchain GN file execution need to be in the .gn, and the others in build_overrides.\n\nOr just put everything in .gn. Actually we should ask dpranke / brettw what\u0027s the best option between split and all in .gn and do what they say.",
       "parentUuid": "eb512517_07f99753",
+      "range": {
+        "startLine": 3,
+        "startChar": 0,
+        "endLine": 3,
+        "endChar": 28
+      },
+      "revId": "08b7746afb89154a11694b55f2174d84f3344acf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e0259046_babcc38c",
+        "filename": "build_overrides/build.gni",
+        "patchSetId": 24
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-10-14T19:51:52Z",
+      "side": 1,
+      "message": "Moving any of these to .gn doesn\u0027t work.",
+      "parentUuid": "1060c054_dd1f18aa",
       "range": {
         "startLine": 3,
         "startChar": 0,

@@ -52,6 +52,24 @@
       "revId": "360c37ffb98cf11d0de438604bda7eca30332341",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4f3dfbee_e9cec81e",
+        "filename": "build_overrides/build.gni",
+        "patchSetId": 19
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-10-14T19:51:52Z",
+      "side": 1,
+      "message": "I\u0027ve set to false as Corentin asked.  We can change it later if we want, and it can be always be  overridden with \"gn args\" / args.gn.",
+      "parentUuid": "0fd76972_4a1d00f6",
+      "revId": "360c37ffb98cf11d0de438604bda7eca30332341",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
