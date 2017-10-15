@@ -9,8 +9,7 @@ device’s feature set. Failing to do so and assuming sufficient limits typicall
 results in reduced portability.
 
 The various implementation dependent limits can be found in Tables 6.18 – 6.20
-of the [OpenGL ES 2.0.25 specification]
-(http://www.khronos.org/registry/gles/specs/2.0/es_full_spec_2.0.25.pdf).
+of the [OpenGL ES 2.0.25 specification](http://www.khronos.org/registry/gles/specs/2.0/es_full_spec_2.0.25.pdf).
 
 # Capabilities
 
