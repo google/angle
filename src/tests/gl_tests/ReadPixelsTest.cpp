@@ -227,6 +227,9 @@ TEST_P(ReadPixelsPBOTest, ExistingDataPreserved)
 // Test that calling SubData preserves PBO data.
 TEST_P(ReadPixelsPBOTest, SubDataPreservesContents)
 {
+    // anglebug.com/2185
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsNVIDIA() && IsDesktopOpenGL());
+
     glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
     EXPECT_GL_NO_ERROR();
@@ -253,12 +256,10 @@ TEST_P(ReadPixelsPBOTest, SubDataPreservesContents)
 // Same as the prior test, but with an offset.
 TEST_P(ReadPixelsPBOTest, SubDataOffsetPreservesContents)
 {
-    // TODO: re-enable once root cause of http://anglebug.com/1415 is fixed
-    if (IsAndroid() && IsAdreno() && IsOpenGLES())
-    {
-        std::cout << "Test skipped on Adreno OpenGLES on Android." << std::endl;
-        return;
-    }
+    // anglebug.com/1415
+    ANGLE_SKIP_TEST_IF(IsAndroid() && IsAdreno() && IsOpenGLES());
+    // anglebug.com/2185
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsNVIDIA() && IsDesktopOpenGL());
 
     glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
