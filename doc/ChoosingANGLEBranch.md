@@ -13,8 +13,7 @@ Chromium. These branches are named `chromium/####`, where the number is the
 matching Chromium branch. These branches will be created from the revision which
 that Chromium branch points to as its dependency. So, for example, the
 `chromium/2013` branch point is at r28bcf4ff, because [Chromium's dependency
-file for the 2013 branch]
-(http://src.chromium.org/viewvc/chrome/branches/2013/src/DEPS?revision=272741)
+file for the 2013 branch](http://src.chromium.org/viewvc/chrome/branches/2013/src/DEPS?revision=272741)
 uses this ANGLE revision.
 
 It isn't necessary to be familiar with how Chromium's dependency management
