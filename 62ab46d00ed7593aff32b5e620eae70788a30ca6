@@ -906,6 +906,24 @@
     },
     {
       "key": {
+        "uuid": "327052fd_6bf63482",
+        "filename": "src/tests/BUILD.gn",
+        "patchSetId": 18
+      },
+      "lineNbr": 260,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-15T02:14:08Z",
+      "side": 1,
+      "message": "Basically, some bots historically build \"all\" (ChromeOS might have been one of them, not sure if it still is).\n\nThis would lead to a problem where the ANGLE CQ doesn\u0027t catch the breakage and a compile error on a particular OS in angle_perftests (which is the subject of this \"if\") would break a waterfall somewhere and we\u0027d have to revert.\n\nI would probably leave the \"if\" for platforms that we don\u0027t build on the CQ just to safeguard against the \"build all\" problem. Even if a random user builds all it\u0027s annoying if some target fails.\n\nThat being said it might not be hard to get perftests building and testing on all platforms, just think it should be a separate change.",
+      "parentUuid": "c588e29e_2a93b14c",
+      "revId": "62ab46d00ed7593aff32b5e620eae70788a30ca6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5bd14062_a4861d3e",
         "filename": "src/tests/BUILD.gn",
         "patchSetId": 18
