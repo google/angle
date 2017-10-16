@@ -61,7 +61,8 @@ enum VideoCodecProfile {
   DOLBYVISION_PROFILE4,
   DOLBYVISION_PROFILE5,
   DOLBYVISION_PROFILE7,
-  VIDEO_CODEC_PROFILE_MAX = DOLBYVISION_PROFILE7,
+  THEORAPROFILE_ANY,
+  VIDEO_CODEC_PROFILE_MAX = THEORAPROFILE_ANY,
 };
 
 // Specification of a decoding profile supported by a hardware decoder.
@@ -217,9 +218,6 @@ struct GPU_EXPORT GPUInfo {
 
   // True if the current set of outputs supports overlays.
   bool supports_overlays = false;
-
-  // True if the current set of outputs supports HDR.
-  bool hdr = false;
 
   // True only on android when extensions for threaded mailbox sharing are
   // present. Threaded mailbox sharing is used on Android only, so this check
