@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "10b6f49c_b0e53fb0",
+        "filename": "build/secondary/third_party/libpng/BUILD.gn",
+        "patchSetId": 25
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-16T18:33:26Z",
+      "side": 1,
+      "message": "thinking about this more, one suggestion I have before landing is to update the libpng GN -\n\ncan we change DEPS to sync linbpng to third_party/libpng/src, and place this BUILD.gn in third_party/libpng, along with a README.angle? Assuming we\u0027re only using this in standalone, I think this would be a better approach than using secondary, which seems like a specific hack to work with projects which aren\u0027t synced to a src/ subfolder.",
+      "revId": "f1b5982271ab09e05b932c20c1c0d7ed2610df3d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
