@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "99fd69cc_74771b29",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1379,
+      "author": {
+        "id": 1166724
+      },
+      "writtenOn": "2017-10-16T20:26:57Z",
+      "side": 1,
+      "message": "Updated - these formats are no longer permitted.",
+      "parentUuid": "b1dc4cc5_d36c524f",
+      "range": {
+        "startLine": 1379,
+        "startChar": 16,
+        "endLine": 1379,
+        "endChar": 61
+      },
+      "revId": "2f48052629d0e68f9810af0b7fe633dce91d4dfc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e73d8058_6c31ef95",
         "filename": "src/libANGLE/validationES2.cpp",
         "patchSetId": 10
