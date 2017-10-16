@@ -22,6 +22,30 @@
       "revId": "526914b79be4967d461b251bf1d53c9ea8698535",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6bc480f3_b2b963d3",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-16T05:00:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b0e1aeb7_dbedfeaf",
+      "range": {
+        "startLine": 161,
+        "startChar": 7,
+        "endLine": 161,
+        "endChar": 15
+      },
+      "revId": "526914b79be4967d461b251bf1d53c9ea8698535",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
