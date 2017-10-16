@@ -595,7 +595,7 @@ BindingInfo Program::getFragmentInputBindingInfo(const Context *context, GLint i
     ASSERT(fragmentShader);
 
     // Find the actual fragment shader varying we're interested in
-    const std::vector<sh::Varying> &inputs = fragmentShader->getVaryings(context);
+    const std::vector<sh::Varying> &inputs = fragmentShader->getInputVaryings(context);
 
     for (const auto &binding : mFragmentInputBindings)
     {
@@ -1835,8 +1835,8 @@ bool Program::linkVaryings(const Context *context, InfoLog &infoLog) const
 
     ASSERT(vertexShader->getShaderVersion(context) == fragmentShader->getShaderVersion(context));
 
-    const std::vector<sh::Varying> &vertexVaryings   = vertexShader->getVaryings(context);
-    const std::vector<sh::Varying> &fragmentVaryings = fragmentShader->getVaryings(context);
+    const std::vector<sh::Varying> &vertexVaryings   = vertexShader->getOutputVaryings(context);
+    const std::vector<sh::Varying> &fragmentVaryings = fragmentShader->getInputVaryings(context);
 
     std::map<GLuint, std::string> staticFragmentInputLocations;
 
@@ -2413,8 +2413,8 @@ bool Program::linkValidateBuiltInVaryings(const Context *context, InfoLog &infoL
 {
     Shader *vertexShader         = mState.mAttachedVertexShader;
     Shader *fragmentShader       = mState.mAttachedFragmentShader;
-    const auto &vertexVaryings   = vertexShader->getVaryings(context);
-    const auto &fragmentVaryings = fragmentShader->getVaryings(context);
+    const auto &vertexVaryings   = vertexShader->getOutputVaryings(context);
+    const auto &fragmentVaryings = fragmentShader->getInputVaryings(context);
     int shaderVersion            = vertexShader->getShaderVersion(context);
 
     if (shaderVersion != 100)
@@ -2626,12 +2626,12 @@ Program::MergedVaryings Program::getMergedVaryings(const Context *context) const
 {
     MergedVaryings merged;
 
-    for (const sh::Varying &varying : mState.mAttachedVertexShader->getVaryings(context))
+    for (const sh::Varying &varying : mState.mAttachedVertexShader->getOutputVaryings(context))
     {
         merged[varying.name].vertex = &varying;
     }
 
-    for (const sh::Varying &varying : mState.mAttachedFragmentShader->getVaryings(context))
+    for (const sh::Varying &varying : mState.mAttachedFragmentShader->getInputVaryings(context))
     {
         merged[varying.name].fragment = &varying;
     }

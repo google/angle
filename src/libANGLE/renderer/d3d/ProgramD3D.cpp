@@ -1554,8 +1554,8 @@ gl::LinkResult ProgramD3D::link(const gl::Context *context,
 
         // Cache if we use flat shading
         mUsesFlatInterpolation =
-            (FindFlatInterpolationVarying(fragmentShader->getVaryings(context)) ||
-             FindFlatInterpolationVarying(vertexShader->getVaryings(context)));
+            (FindFlatInterpolationVarying(fragmentShader->getInputVaryings(context)) ||
+             FindFlatInterpolationVarying(vertexShader->getOutputVaryings(context)));
 
         if (mRenderer->getMajorShaderModel() >= 4)
         {

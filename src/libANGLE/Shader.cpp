@@ -268,7 +268,8 @@ void Shader::compile(const Context *context)
     mState.mTranslatedSource.clear();
     mInfoLog.clear();
     mState.mShaderVersion = 100;
-    mState.mVaryings.clear();
+    mState.mInputVaryings.clear();
+    mState.mOutputVaryings.clear();
     mState.mUniforms.clear();
     mState.mUniformBlocks.clear();
     mState.mShaderStorageBlocks.clear();
@@ -360,7 +361,6 @@ void Shader::resolveCompile(const Context *context)
     // Gather the shader information
     mState.mShaderVersion = sh::GetShaderVersion(compilerHandle);
 
-    mState.mVaryings        = GetShaderVariables(sh::GetVaryings(compilerHandle));
     mState.mUniforms        = GetShaderVariables(sh::GetUniforms(compilerHandle));
     mState.mUniformBlocks       = GetShaderVariables(sh::GetUniformBlocks(compilerHandle));
     mState.mShaderStorageBlocks = GetShaderVariables(sh::GetShaderStorageBlocks(compilerHandle));
@@ -375,6 +375,7 @@ void Shader::resolveCompile(const Context *context)
         case GL_VERTEX_SHADER:
         {
             {
+                mState.mOutputVaryings = GetShaderVariables(sh::GetOutputVaryings(compilerHandle));
                 mState.mActiveAttributes =
                     GetActiveShaderVariables(sh::GetAttributes(compilerHandle));
                 mState.mNumViews = sh::GetVertexShaderNumViews(compilerHandle);
@@ -383,8 +384,9 @@ void Shader::resolveCompile(const Context *context)
         }
         case GL_FRAGMENT_SHADER:
         {
+            mState.mInputVaryings = GetShaderVariables(sh::GetInputVaryings(compilerHandle));
             // TODO(jmadill): Figure out why we only sort in the FS, and if we need to.
-            std::sort(mState.mVaryings.begin(), mState.mVaryings.end(), CompareShaderVar);
+            std::sort(mState.mInputVaryings.begin(), mState.mInputVaryings.end(), CompareShaderVar);
             mState.mActiveOutputVariables =
                 GetActiveShaderVariables(sh::GetOutputVariables(compilerHandle));
             break;
@@ -441,10 +443,16 @@ int Shader::getShaderVersion(const Context *context)
     return mState.mShaderVersion;
 }
 
-const std::vector<sh::Varying> &Shader::getVaryings(const Context *context)
+const std::vector<sh::Varying> &Shader::getInputVaryings(const Context *context)
 {
     resolveCompile(context);
-    return mState.getVaryings();
+    return mState.getInputVaryings();
+}
+
+const std::vector<sh::Varying> &Shader::getOutputVaryings(const Context *context)
+{
+    resolveCompile(context);
+    return mState.getOutputVaryings();
 }
 
 const std::vector<sh::Uniform> &Shader::getUniforms(const Context *context)
@@ -480,7 +488,9 @@ const std::vector<sh::OutputVariable> &Shader::getActiveOutputVariables(const Co
 std::string Shader::getTransformFeedbackVaryingMappedName(const std::string &tfVaryingName,
                                                           const Context *context)
 {
-    const auto &varyings = getVaryings(context);
+    // TODO(jiawei.shao@intel.com): support transform feedback on geometry shader.
+    ASSERT(mState.getShaderType() == GL_VERTEX_SHADER);
+    const auto &varyings = getOutputVaryings(context);
     auto bracketPos      = tfVaryingName.find("[");
     if (bracketPos != std::string::npos)
     {

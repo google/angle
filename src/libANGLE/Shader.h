@@ -62,7 +62,8 @@ class ShaderState final : angle::NonCopyable
     GLenum getShaderType() const { return mShaderType; }
     int getShaderVersion() const { return mShaderVersion; }
 
-    const std::vector<sh::Varying> &getVaryings() const { return mVaryings; }
+    const std::vector<sh::Varying> &getInputVaryings() const { return mInputVaryings; }
+    const std::vector<sh::Varying> &getOutputVaryings() const { return mOutputVaryings; }
     const std::vector<sh::Uniform> &getUniforms() const { return mUniforms; }
     const std::vector<sh::InterfaceBlock> &getUniformBlocks() const { return mUniformBlocks; }
     const std::vector<sh::InterfaceBlock> &getShaderStorageBlocks() const
@@ -89,7 +90,8 @@ class ShaderState final : angle::NonCopyable
 
     sh::WorkGroupSize mLocalSize;
 
-    std::vector<sh::Varying> mVaryings;
+    std::vector<sh::Varying> mInputVaryings;
+    std::vector<sh::Varying> mOutputVaryings;
     std::vector<sh::Uniform> mUniforms;
     std::vector<sh::InterfaceBlock> mUniformBlocks;
     std::vector<sh::InterfaceBlock> mShaderStorageBlocks;
@@ -151,7 +153,8 @@ class Shader final : angle::NonCopyable, public LabeledObject
 
     int getShaderVersion(const Context *context);
 
-    const std::vector<sh::Varying> &getVaryings(const Context *context);
+    const std::vector<sh::Varying> &getInputVaryings(const Context *context);
+    const std::vector<sh::Varying> &getOutputVaryings(const Context *context);
     const std::vector<sh::Uniform> &getUniforms(const Context *context);
     const std::vector<sh::InterfaceBlock> &getUniformBlocks(const Context *context);
     const std::vector<sh::InterfaceBlock> &getShaderStorageBlocks(const Context *context);
