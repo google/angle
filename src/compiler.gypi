@@ -162,6 +162,8 @@
             'compiler/translator/ValidateVaryingLocations.h',
             'compiler/translator/VariablePacker.cpp',
             'compiler/translator/VariablePacker.h',
+            'compiler/translator/VectorizeVectorScalarArithmetic.cpp',
+            'compiler/translator/VectorizeVectorScalarArithmetic.h',
             'compiler/translator/blocklayout.cpp',
             'compiler/translator/blocklayout.h',
             'compiler/translator/glslang.h',

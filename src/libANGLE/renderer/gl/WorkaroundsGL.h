@@ -133,6 +133,11 @@ struct WorkaroundsGL
     // On some NVIDIA drivers the point size range reported from the API is inconsistent with the
     // actual behavior. Clamp the point size to the value from the API to fix this.
     bool clampPointSize = false;
+
+    // On some NVIDIA drivers certain types of GLSL arithmetic ops mixing vectors and scalars may be
+    // executed incorrectly. Change them in the shader translator. Tracking bug:
+    // http://crbug.com/772651
+    bool rewriteVectorScalarArithmetic = false;
 };
 }  // namespace rx
 

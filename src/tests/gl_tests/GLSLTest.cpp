@@ -3796,6 +3796,65 @@ TEST_P(GLSLTest_ES3, VaryingStructWithInlineDefinition)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Test vector/scalar arithmetic (in this case multiplication and addition). Meant to reproduce a
+// bug that appeared in NVIDIA OpenGL drivers and that is worked around by
+// VectorizeVectorScalarArithmetic AST transform.
+TEST_P(GLSLTest, VectorScalarMultiplyAndAddInLoop)
+{
+    const std::string &fragmentShader =
+        R"(
+
+        precision mediump float;
+
+        void main() {
+            gl_FragColor = vec4(0.0, 0.0, 0.0, 0.0);
+            for (int i = 0; i < 2; i++)
+            {
+                gl_FragColor += (2.0 * gl_FragCoord.x);
+            }
+            if (gl_FragColor.g == gl_FragColor.r &&
+                gl_FragColor.b == gl_FragColor.r &&
+                gl_FragColor.a == gl_FragColor.r)
+            {
+                gl_FragColor = vec4(0, 1, 0, 1);
+            }
+        })";
+
+    ANGLE_GL_PROGRAM(program, mSimpleVSSource, fragmentShader);
+    drawQuad(program.get(), "inputAttribute", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
+// Test vector/scalar arithmetic (in this case compound division and addition). Meant to reproduce a
+// bug that appeared in NVIDIA OpenGL drivers and that is worked around by
+// VectorizeVectorScalarArithmetic AST transform.
+TEST_P(GLSLTest, VectorScalarDivideAndAddInLoop)
+{
+    const std::string &fragmentShader =
+        R"(
+
+        precision mediump float;
+
+        void main() {
+            gl_FragColor = vec4(0.0, 0.0, 0.0, 0.0);
+            for (int i = 0; i < 2; i++)
+            {
+                float x = gl_FragCoord.x;
+                gl_FragColor = gl_FragColor + (x /= 2.0);
+            }
+            if (gl_FragColor.g == gl_FragColor.r &&
+                gl_FragColor.b == gl_FragColor.r &&
+                gl_FragColor.a == gl_FragColor.r)
+            {
+                gl_FragColor = vec4(0, 1, 0, 1);
+            }
+        })";
+
+    ANGLE_GL_PROGRAM(program, mSimpleVSSource, fragmentShader);
+    drawQuad(program.get(), "inputAttribute", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
 ANGLE_INSTANTIATE_TEST(GLSLTest,
                        ES2_D3D9(),

@@ -44,6 +44,7 @@
 #include "compiler/translator/ValidateOutputs.h"
 #include "compiler/translator/ValidateVaryingLocations.h"
 #include "compiler/translator/VariablePacker.h"
+#include "compiler/translator/VectorizeVectorScalarArithmetic.h"
 #include "third_party/compiler/ArrayBoundsClamper.h"
 
 namespace sh
@@ -606,12 +607,18 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
                                        IntermNodePatternMatcher::kNamelessStructDeclaration,
                                    &getSymbolTable(), getShaderVersion());
         }
+
         InitializeUninitializedLocals(root, getShaderVersion());
     }
 
     if (getShaderType() == GL_VERTEX_SHADER && (compileOptions & SH_CLAMP_POINT_SIZE))
     {
         ClampPointSize(root, compileResources.MaxPointSize, &getSymbolTable());
+    }
+
+    if (compileOptions & SH_REWRITE_VECTOR_SCALAR_ARITHMETIC)
+    {
+        VectorizeVectorScalarArithmetic(root, &getSymbolTable());
     }
 
     return true;
