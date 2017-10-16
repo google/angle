@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "6f757268_85029bc8",
+        "filename": "src/compiler/translator/ImageFunctionHLSL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-10-16T10:54:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "01c1db35_18af12b4",
+      "revId": "96ee051ee44f65637a83cdbb6e3ab41bb095f572",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "47087751_3d42b78c",
         "filename": "src/compiler/translator/ImageFunctionHLSL.cpp",
         "patchSetId": 10
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "345111e8_239e7ff6",
+        "filename": "src/compiler/translator/ImageFunctionHLSL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-10-16T10:54:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "47087751_3d42b78c",
+      "revId": "96ee051ee44f65637a83cdbb6e3ab41bb095f572",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1766abfb_fca02b01",
         "filename": "src/compiler/translator/ImageFunctionHLSL.cpp",
         "patchSetId": 10
@@ -47,6 +83,24 @@
       "writtenOn": "2017-10-13T16:16:55Z",
       "side": 1,
       "message": "Seems like this could be replaced just with a static const char *imageReference \u003d \"tex\".",
+      "revId": "96ee051ee44f65637a83cdbb6e3ab41bb095f572",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "14262b92_ed1a1184",
+        "filename": "src/compiler/translator/ImageFunctionHLSL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-10-16T10:54:27Z",
+      "side": 1,
+      "message": "I initialize the image reference in ImageFunctionHLSL::imageFunctionHeader directly.\nIs that OK?",
+      "parentUuid": "1766abfb_fca02b01",
       "revId": "96ee051ee44f65637a83cdbb6e3ab41bb095f572",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -76,6 +130,30 @@
     },
     {
       "key": {
+        "uuid": "ca5beb6b_4a5a1609",
+        "filename": "src/compiler/translator/UniformHLSL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 281,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-10-16T10:54:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fde5c338_a7b1f3c5",
+      "range": {
+        "startLine": 281,
+        "startChar": 23,
+        "endLine": 281,
+        "endChar": 32
+      },
+      "revId": "96ee051ee44f65637a83cdbb6e3ab41bb095f572",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5523bc1b_194d789f",
         "filename": "src/compiler/translator/UniformHLSL.cpp",
         "patchSetId": 10
@@ -96,6 +174,30 @@
       "revId": "96ee051ee44f65637a83cdbb6e3ab41bb095f572",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "20c8b661_4851782e",
+        "filename": "src/compiler/translator/UniformHLSL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 297,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-10-16T10:54:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5523bc1b_194d789f",
+      "range": {
+        "startLine": 297,
+        "startChar": 23,
+        "endLine": 297,
+        "endChar": 32
+      },
+      "revId": "96ee051ee44f65637a83cdbb6e3ab41bb095f572",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -134,6 +236,30 @@
       "side": 1,
       "message": "Can we retain the FAIL expectation on the GL backend and have the skip just for D3D?",
       "parentUuid": "0f935011_bddf3b80",
+      "range": {
+        "startLine": 39,
+        "startChar": 0,
+        "endLine": 39,
+        "endChar": 68
+      },
+      "revId": "96ee051ee44f65637a83cdbb6e3ab41bb095f572",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0afc943c_b8f97579",
+        "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
+        "patchSetId": 10
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-10-16T10:54:27Z",
+      "side": 1,
+      "message": "If I set OPENGL to FAIL, the bot will fail (angle_deqp_gles31_gl_tests on NVIDIA GPU on Linux).\nBut I did not know the cause, I will investigate it in feature.",
+      "parentUuid": "cc1340f1_cab6e1ab",
       "range": {
         "startLine": 39,
         "startChar": 0,
