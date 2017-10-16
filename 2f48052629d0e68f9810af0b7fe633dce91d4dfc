@@ -49,6 +49,53 @@
     },
     {
       "key": {
+        "uuid": "b1dc4cc5_d36c524f",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1379,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-10-16T14:27:14Z",
+      "side": 1,
+      "message": "This is the validation for the \u0027format\u0027 parameter of glTex[Sub]Image2D which does not accept any sized formats.  The validation for these formats for glTexStorage2DExt looks correct (see ref).",
+      "parentUuid": "c2505542_f4abf2f0",
+      "range": {
+        "startLine": 1379,
+        "startChar": 16,
+        "endLine": 1379,
+        "endChar": 61
+      },
+      "revId": "2f48052629d0e68f9810af0b7fe633dce91d4dfc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e73d8058_6c31ef95",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1739,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-10-16T14:27:14Z",
+      "side": 1,
+      "message": "ref",
+      "range": {
+        "startLine": 1735,
+        "startChar": 12,
+        "endLine": 1739,
+        "endChar": 13
+      },
+      "revId": "2f48052629d0e68f9810af0b7fe633dce91d4dfc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5d00b5c8_2b92462d",
         "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
         "patchSetId": 10
