@@ -2,6 +2,52 @@
   "comments": [
     {
       "key": {
+        "uuid": "aa0bfd5f_300eaf85",
+        "filename": "DEPS",
+        "patchSetId": 25
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-16T21:04:51Z",
+      "side": 1,
+      "message": "in addition to the below comment, you might want to ensure you\u0027re using the latest ToT build/ testing/clang repos.",
+      "range": {
+        "startLine": 9,
+        "startChar": 63,
+        "endLine": 9,
+        "endChar": 103
+      },
+      "revId": "f1b5982271ab09e05b932c20c1c0d7ed2610df3d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8252d6f4_955d38ac",
+        "filename": "DEPS",
+        "patchSetId": 25
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-16T21:04:51Z",
+      "side": 1,
+      "message": "one other request - can you use the latest ToT buildtools? This will have a version of GN which uses the latest Windows SDK as the hard-coded version for the VS 2017 projects. This will make loading the generated VS 2017 projects easier.",
+      "range": {
+        "startLine": 12,
+        "startChar": 62,
+        "endLine": 12,
+        "endChar": 102
+      },
+      "revId": "f1b5982271ab09e05b932c20c1c0d7ed2610df3d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "10b6f49c_b0e53fb0",
         "filename": "build/secondary/third_party/libpng/BUILD.gn",
         "patchSetId": 25
