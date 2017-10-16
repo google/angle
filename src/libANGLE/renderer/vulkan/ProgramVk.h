@@ -110,9 +110,12 @@ class ProgramVk : public ProgramImpl
 
     const vk::ShaderModule &getLinkedVertexModule() const;
     const vk::ShaderModule &getLinkedFragmentModule() const;
-    gl::ErrorOrResult<vk::PipelineLayout *> getPipelineLayout(VkDevice device);
+    const vk::PipelineLayout &getPipelineLayout() const;
 
   private:
+    void reset(VkDevice device);
+    vk::Error initPipelineLayout(ContextVk *context);
+
     vk::ShaderModule mLinkedVertexModule;
     vk::ShaderModule mLinkedFragmentModule;
     vk::PipelineLayout mPipelineLayout;

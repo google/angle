@@ -247,11 +247,10 @@ gl::Error ContextVk::initPipeline(const gl::Context *context)
     ANGLE_TRY_RESULT(vkFBO->getRenderPass(context, device), renderPass);
     ASSERT(renderPass && renderPass->valid());
 
-    vk::PipelineLayout *pipelineLayout = nullptr;
-    ANGLE_TRY_RESULT(programVk->getPipelineLayout(device), pipelineLayout);
-    ASSERT(pipelineLayout && pipelineLayout->valid());
+    const vk::PipelineLayout &pipelineLayout = programVk->getPipelineLayout();
+    ASSERT(pipelineLayout.valid());
 
-    mCurrentPipelineInfo.layout     = pipelineLayout->getHandle();
+    mCurrentPipelineInfo.layout     = pipelineLayout.getHandle();
     mCurrentPipelineInfo.renderPass = renderPass->getHandle();
 
     vk::Pipeline newPipeline;

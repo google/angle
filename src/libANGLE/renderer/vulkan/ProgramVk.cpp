@@ -29,7 +29,11 @@ ProgramVk::~ProgramVk()
 void ProgramVk::destroy(const gl::Context *contextImpl)
 {
     VkDevice device = GetImplAs<ContextVk>(contextImpl)->getDevice();
+    reset(device);
+}
 
+void ProgramVk::reset(VkDevice device)
+{
     mLinkedFragmentModule.destroy(device);
     mLinkedVertexModule.destroy(device);
     mPipelineLayout.destroy(device);
@@ -62,9 +66,12 @@ gl::LinkResult ProgramVk::link(const gl::Context *glContext,
                                const gl::VaryingPacking &packing,
                                gl::InfoLog &infoLog)
 {
-    ContextVk *context             = GetImplAs<ContextVk>(glContext);
-    RendererVk *renderer           = context->getRenderer();
+    ContextVk *contextVk           = GetImplAs<ContextVk>(glContext);
+    RendererVk *renderer           = contextVk->getRenderer();
     GlslangWrapper *glslangWrapper = renderer->getGlslangWrapper();
+    VkDevice device                = renderer->getDevice();
+
+    reset(device);
 
     std::vector<uint32_t> vertexCode;
     std::vector<uint32_t> fragmentCode;
@@ -76,10 +83,6 @@ gl::LinkResult ProgramVk::link(const gl::Context *glContext,
         return false;
     }
 
-    vk::ShaderModule vertexModule;
-    vk::ShaderModule fragmentModule;
-    VkDevice device = renderer->getDevice();
-
     {
         VkShaderModuleCreateInfo vertexShaderInfo;
         vertexShaderInfo.sType    = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
@@ -87,7 +90,8 @@ gl::LinkResult ProgramVk::link(const gl::Context *glContext,
         vertexShaderInfo.flags    = 0;
         vertexShaderInfo.codeSize = vertexCode.size() * sizeof(uint32_t);
         vertexShaderInfo.pCode    = vertexCode.data();
-        ANGLE_TRY(vertexModule.init(device, vertexShaderInfo));
+
+        ANGLE_TRY(mLinkedVertexModule.init(device, vertexShaderInfo));
     }
 
     {
@@ -98,11 +102,10 @@ gl::LinkResult ProgramVk::link(const gl::Context *glContext,
         fragmentShaderInfo.codeSize = fragmentCode.size() * sizeof(uint32_t);
         fragmentShaderInfo.pCode    = fragmentCode.data();
 
-        ANGLE_TRY(fragmentModule.init(device, fragmentShaderInfo));
+        ANGLE_TRY(mLinkedFragmentModule.init(device, fragmentShaderInfo));
     }
 
-    mLinkedVertexModule.retain(device, std::move(vertexModule));
-    mLinkedFragmentModule.retain(device, std::move(fragmentModule));
+    ANGLE_TRY(initPipelineLayout(contextVk));
 
     return true;
 }
@@ -286,9 +289,16 @@ const vk::ShaderModule &ProgramVk::getLinkedFragmentModule() const
     return mLinkedFragmentModule;
 }
 
-gl::ErrorOrResult<vk::PipelineLayout *> ProgramVk::getPipelineLayout(VkDevice device)
+const vk::PipelineLayout &ProgramVk::getPipelineLayout() const
 {
-    vk::PipelineLayout newLayout;
+    return mPipelineLayout;
+}
+
+vk::Error ProgramVk::initPipelineLayout(ContextVk *context)
+{
+    ASSERT(!mPipelineLayout.valid());
+
+    VkDevice device = context->getDevice();
 
     // TODO(jmadill): Descriptor sets.
     VkPipelineLayoutCreateInfo createInfo;
@@ -300,10 +310,9 @@ gl::ErrorOrResult<vk::PipelineLayout *> ProgramVk::getPipelineLayout(VkDevice de
     createInfo.pushConstantRangeCount = 0;
     createInfo.pPushConstantRanges    = nullptr;
 
-    ANGLE_TRY(newLayout.init(device, createInfo));
-    mPipelineLayout.retain(device, std::move(newLayout));
+    ANGLE_TRY(mPipelineLayout.init(device, createInfo));
 
-    return &mPipelineLayout;
+    return vk::NoError();
 }
 
 void ProgramVk::getUniformfv(const gl::Context *context, GLint location, GLfloat *params) const
