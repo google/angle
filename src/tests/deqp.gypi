@@ -108,8 +108,6 @@
             '<(deqp_path)/modules/gles31/stress',
             '<(deqp_path)/modules/glshared',
             '<(deqp_path)/modules/glusecases',
-            '<(libpng_path)',
-            '<(zlib_path)',
         ],
         'deqp_gles2_sources':
         [
@@ -1468,7 +1466,12 @@
                             '-fno-exceptions',
                             '-fno-rtti',
                         ],
-                        'include_dirs': ['<@(deqp_include_dirs)'],
+                        'include_dirs':
+                        [
+                            '<@(deqp_include_dirs)'
+                            '<(libpng_path)',
+                            '<(zlib_path)',
+                        ],
                         'defines': ['<@(deqp_defines)'],
                         'defines!': [ '<@(deqp_undefines)' ],
                         'msvs_settings':
