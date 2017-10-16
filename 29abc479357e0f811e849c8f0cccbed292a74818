@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "1f7fec35_c2797318",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 693,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-10-16T12:02:18Z",
+      "side": 1,
+      "message": "Not typo. \u0027put\u0027 is the position in buffer to put new data.",
+      "parentUuid": "24acca51_2e351b03",
+      "range": {
+        "startLine": 693,
+        "startChar": 54,
+        "endLine": 693,
+        "endChar": 57
+      },
+      "revId": "29abc479357e0f811e849c8f0cccbed292a74818",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b62aaaf9_38116d3e",
         "filename": "src/libANGLE/queryutils.cpp",
         "patchSetId": 23
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "c5c0752e_b8b59de4",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 1553,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-10-16T12:02:18Z",
+      "side": 1,
+      "message": "No.",
+      "parentUuid": "b62aaaf9_38116d3e",
+      "range": {
+        "startLine": 1550,
+        "startChar": 0,
+        "endLine": 1553,
+        "endChar": 9
+      },
+      "revId": "29abc479357e0f811e849c8f0cccbed292a74818",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f10ed353_9d46f0ab",
         "filename": "src/libANGLE/queryutils.cpp",
         "patchSetId": 23
@@ -59,6 +107,30 @@
       "writtenOn": "2017-10-16T09:42:04Z",
       "side": 1,
       "message": "In what kind of situation it will happen? Do you need a test for this?",
+      "range": {
+        "startLine": 1558,
+        "startChar": 8,
+        "endLine": 1559,
+        "endChar": 0
+      },
+      "revId": "29abc479357e0f811e849c8f0cccbed292a74818",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a6e7adba_4739d50b",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 1559,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-10-16T12:02:18Z",
+      "side": 1,
+      "message": "The test case GetUniformBlockProperties has already covered this.\nFor most resource properties, one property returns one value. But for GL_ACTIVE_VARIABLES property, it may return many values -- an array of its children indices.",
+      "parentUuid": "f10ed353_9d46f0ab",
       "range": {
         "startLine": 1558,
         "startChar": 8,
