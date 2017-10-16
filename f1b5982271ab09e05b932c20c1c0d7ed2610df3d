@@ -25,6 +25,29 @@
     },
     {
       "key": {
+        "uuid": "d009b087_0a981cfb",
+        "filename": "DEPS",
+        "patchSetId": 25
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-16T21:16:49Z",
+      "side": 1,
+      "message": "also, spacing is a bit oddly indented here",
+      "range": {
+        "startLine": 9,
+        "startChar": 2,
+        "endLine": 9,
+        "endChar": 6
+      },
+      "revId": "f1b5982271ab09e05b932c20c1c0d7ed2610df3d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8252d6f4_955d38ac",
         "filename": "DEPS",
         "patchSetId": 25
