@@ -85,6 +85,29 @@
       "revId": "f1b5982271ab09e05b932c20c1c0d7ed2610df3d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a9484aff_ce19378c",
+        "filename": "src/tests/BUILD.gn",
+        "patchSetId": 25
+      },
+      "lineNbr": 274,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-16T21:50:28Z",
+      "side": 1,
+      "message": "there\u0027s actually a bug here... libpng_path and zlib_path don\u0027t get properly parsed in deqp_include_dirs and get fed into deqp_gypi. I think we should remove them from deqp_include_dirs and manually include them in angle_deqp_support. This can be done either in this patch or a split patch.",
+      "range": {
+        "startLine": 274,
+        "startChar": 2,
+        "endLine": 274,
+        "endChar": 12
+      },
+      "revId": "f1b5982271ab09e05b932c20c1c0d7ed2610df3d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
