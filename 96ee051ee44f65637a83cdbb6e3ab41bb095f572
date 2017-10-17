@@ -107,6 +107,24 @@
     },
     {
       "key": {
+        "uuid": "09e30501_6df985c8",
+        "filename": "src/compiler/translator/ImageFunctionHLSL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-10-17T14:12:25Z",
+      "side": 1,
+      "message": "Yes, seems fine.",
+      "parentUuid": "14262b92_ed1a1184",
+      "revId": "96ee051ee44f65637a83cdbb6e3ab41bb095f572",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fde5c338_a7b1f3c5",
         "filename": "src/compiler/translator/UniformHLSL.cpp",
         "patchSetId": 10
@@ -260,6 +278,30 @@
       "side": 1,
       "message": "If I set OPENGL to FAIL, the bot will fail (angle_deqp_gles31_gl_tests on NVIDIA GPU on Linux).\nBut I did not know the cause, I will investigate it in feature.",
       "parentUuid": "cc1340f1_cab6e1ab",
+      "range": {
+        "startLine": 39,
+        "startChar": 0,
+        "endLine": 39,
+        "endChar": 68
+      },
+      "revId": "96ee051ee44f65637a83cdbb6e3ab41bb095f572",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bb399464_8e0d99a4",
+        "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
+        "patchSetId": 10
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-10-17T14:12:25Z",
+      "side": 1,
+      "message": "It seems strange that this patch would regress GL in any way. Are you sure that you set the expectations correctly?",
+      "parentUuid": "0afc943c_b8f97579",
       "range": {
         "startLine": 39,
         "startChar": 0,

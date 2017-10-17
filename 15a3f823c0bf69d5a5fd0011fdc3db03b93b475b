@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e841989d_53154a6d",
+        "filename": "src/compiler/translator/ImageFunctionHLSL.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-10-17T14:12:25Z",
+      "side": 1,
+      "message": "Could just return \"void\" here without the switch statement.",
+      "revId": "15a3f823c0bf69d5a5fd0011fdc3db03b93b475b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "92b9adae_b9990429",
+        "filename": "src/compiler/translator/ImageFunctionHLSL.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 243,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-10-17T14:12:25Z",
+      "side": 1,
+      "message": "Code style nit: would be neater to have curly braces {} here for consistency, since the other branches have them too.",
+      "revId": "15a3f823c0bf69d5a5fd0011fdc3db03b93b475b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "422ea83a_0e9bd0ec",
+        "filename": "src/compiler/translator/ImageFunctionHLSL.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 258,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-10-17T14:12:25Z",
+      "side": 1,
+      "message": "Add ASSERT(IsImage(type));",
+      "revId": "15a3f823c0bf69d5a5fd0011fdc3db03b93b475b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "948f6fb4_922c1e87",
+        "filename": "src/compiler/translator/ImageFunctionHLSL.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-10-17T14:12:25Z",
+      "side": 1,
+      "message": "This could be made private, that would encapsulate things better. The static functions that need to access ImageFunction can be made into static members of ImageFunctionHLSL.",
+      "revId": "15a3f823c0bf69d5a5fd0011fdc3db03b93b475b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
