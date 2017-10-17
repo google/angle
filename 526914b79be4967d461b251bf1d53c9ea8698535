@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "64cbe49f_9fe5213b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 8
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-10-17T05:18:58Z",
+      "side": 1,
+      "message": "To be precise,\nContextVk gets CreateInfo structures and\nVertexArrayVk gets VkVertexInputBindingDescription and VkVertexInputAttributeDescription.",
+      "revId": "526914b79be4967d461b251bf1d53c9ea8698535",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b0e1aeb7_dbedfeaf",
         "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
         "patchSetId": 8
