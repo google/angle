@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "31b41afe_454a8458",
+        "filename": "src/libANGLE/ErrorStrings.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-17T15:06:22Z",
+      "side": 1,
+      "message": "nit: can you insert this sorted",
+      "range": {
+        "startLine": 168,
+        "startChar": 7,
+        "endLine": 168,
+        "endChar": 41
+      },
+      "revId": "0e5f16fbdd4e096b1c16d99c4201ecdeaa631d5c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6426753d_6c83ccce",
+        "filename": "src/tests/gl_tests/TransformFeedbackTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1359,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-17T15:06:22Z",
+      "side": 1,
+      "message": "nit: can\u0027t you use ANGLE_GL_PROGRAM for this?",
+      "range": {
+        "startLine": 1358,
+        "startChar": 0,
+        "endLine": 1359,
+        "endChar": 28
+      },
+      "revId": "0e5f16fbdd4e096b1c16d99c4201ecdeaa631d5c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
