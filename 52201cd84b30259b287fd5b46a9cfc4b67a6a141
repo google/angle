@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "33d834ee_ca30e935",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 2404,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-10-17T13:46:13Z",
+      "side": 1,
+      "message": "I think we should try to be a bit stricter here and make this case an error. GLSL ES 3.20 spec says:\n\n\"An input can be declared without an array size if there is a previous layout which specifies the size.\"\n\nThis is a bit different from the GS extension spec, which is looser, but we could try to follow ESSL 3.20 either way. If there are no tests that would fail if we require input primitive layout declaration before declaring inputs, then we save a lot of complexity in handling unsized arrays.",
+      "revId": "52201cd84b30259b287fd5b46a9cfc4b67a6a141",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "958079d9_2e51c6b0",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 2410,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-10-17T13:46:13Z",
+      "side": 1,
+      "message": "I don\u0027t think that shader storage block members will actually be parsed here, I think they\u0027d use the struct member list parsing rules instead. So this TODO seems like it might be misplaced.",
+      "revId": "52201cd84b30259b287fd5b46a9cfc4b67a6a141",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b57c8460_2de60095",
+        "filename": "src/compiler/translator/Types.h",
+        "patchSetId": 20
+      },
+      "lineNbr": 350,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-10-17T13:46:13Z",
+      "side": 1,
+      "message": "If this is needed, I\u0027d rather name this makeUnsizedArray. Or alternatively, if this will only be called when the type is not yet an array, add ASSERT(!isArray()).",
+      "revId": "52201cd84b30259b287fd5b46a9cfc4b67a6a141",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
