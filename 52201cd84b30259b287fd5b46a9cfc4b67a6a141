@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "1bb3d224_0f273799",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 2404,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-17T13:49:22Z",
+      "side": 1,
+      "message": "+1 to Olli\u0027s suggestion of primarily targeting ESSL 3.20, and not trying to bend over backwards for a poorly-written extension.",
+      "parentUuid": "33d834ee_ca30e935",
+      "revId": "52201cd84b30259b287fd5b46a9cfc4b67a6a141",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "958079d9_2e51c6b0",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 20
