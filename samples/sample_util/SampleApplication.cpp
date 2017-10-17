@@ -17,7 +17,7 @@ namespace
 {
 using DisplayTypeInfo = std::pair<const char *, EGLint>;
 
-constexpr DisplayTypeInfo kDisplayTypes[] = {
+const DisplayTypeInfo kDisplayTypes[] = {
     {"d3d9", EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE}, {"d3d11", EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE},
     {"gl", EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE}, {"gles", EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE},
     {"null", EGL_PLATFORM_ANGLE_TYPE_NULL_ANGLE}, {"vulkan", EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE}};
