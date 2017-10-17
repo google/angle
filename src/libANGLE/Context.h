@@ -909,6 +909,7 @@ class Context final : public ValidationContext
 
     size_t getExtensionStringCount() const;
 
+    bool isExtensionRequestable(const char *name);
     void requestExtension(const char *name);
     size_t getRequestableExtensionStringCount() const;
 

@@ -2566,12 +2566,23 @@ size_t Context::getExtensionStringCount() const
     return mExtensionStrings.size();
 }
 
+bool Context::isExtensionRequestable(const char *name)
+{
+    const ExtensionInfoMap &extensionInfos = GetExtensionInfoMap();
+    auto extension                         = extensionInfos.find(name);
+
+    const Extensions &nativeExtensions = mImplementation->getNativeExtensions();
+    return extension != extensionInfos.end() && extension->second.Requestable &&
+           nativeExtensions.*(extension->second.ExtensionsMember);
+}
+
 void Context::requestExtension(const char *name)
 {
     const ExtensionInfoMap &extensionInfos = GetExtensionInfoMap();
     ASSERT(extensionInfos.find(name) != extensionInfos.end());
     const auto &extension = extensionInfos.at(name);
     ASSERT(extension.Requestable);
+    ASSERT(mImplementation->getNativeExtensions().*(extension.ExtensionsMember));
 
     if (mExtensions.*(extension.ExtensionsMember))
     {

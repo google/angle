@@ -357,7 +357,7 @@ bool ValidateBufferSubData(ValidationContext *context,
                            GLsizeiptr size,
                            const void *data);
 
-bool ValidateRequestExtensionANGLE(ValidationContext *context, const GLchar *name);
+bool ValidateRequestExtensionANGLE(Context *context, const GLchar *name);
 
 bool ValidateActiveTexture(ValidationContext *context, GLenum texture);
 bool ValidateAttachShader(ValidationContext *context, GLuint program, GLuint shader);

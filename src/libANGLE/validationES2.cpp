@@ -4224,7 +4224,7 @@ bool ValidateBufferSubData(ValidationContext *context,
     return true;
 }
 
-bool ValidateRequestExtensionANGLE(ValidationContext *context, const GLchar *name)
+bool ValidateRequestExtensionANGLE(Context *context, const GLchar *name)
 {
     if (!context->getExtensions().requestExtension)
     {
@@ -4232,9 +4232,7 @@ bool ValidateRequestExtensionANGLE(ValidationContext *context, const GLchar *nam
         return false;
     }
 
-    const ExtensionInfoMap &extensionInfos = GetExtensionInfoMap();
-    auto extension                         = extensionInfos.find(name);
-    if (extension == extensionInfos.end() || !extension->second.Requestable)
+    if (!context->isExtensionRequestable(name))
     {
         context->handleError(InvalidOperation() << "Extension " << name << " is not requestable.");
         return false;
