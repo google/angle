@@ -684,21 +684,21 @@ void DisplayOzone::drawWithTexture(Buffer *buffer)
         };
         // clang-format on
         gl->genBuffers(1, &mVertexBuffer);
-        sm->bindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
+        sm->bindBuffer(gl::BufferBinding::Array, mVertexBuffer);
         gl->bufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
         // window border triangle strip
         const GLuint borderStrip[] = {5, 0, 4, 2, 6, 3, 7, 1, 5, 0};
 
         gl->genBuffers(1, &mIndexBuffer);
-        sm->bindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBuffer);
+        sm->bindBuffer(gl::BufferBinding::ElementArray, mIndexBuffer);
         gl->bufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(borderStrip), borderStrip, GL_STATIC_DRAW);
     }
     else
     {
         sm->useProgram(mProgram);
-        sm->bindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
-        sm->bindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBuffer);
+        sm->bindBuffer(gl::BufferBinding::Array, mVertexBuffer);
+        sm->bindBuffer(gl::BufferBinding::ElementArray, mIndexBuffer);
     }
 
     // convert from pixels to "-1 to 1" space

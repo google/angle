@@ -79,7 +79,7 @@ class MockBufferD3D : public rx::BufferD3D
 
     // BufferImpl
     gl::Error setData(const gl::Context *context,
-                      GLenum target,
+                      gl::BufferBinding target,
                       const void *data,
                       size_t size,
                       gl::BufferUsage) override
@@ -92,7 +92,8 @@ class MockBufferD3D : public rx::BufferD3D
         return gl::NoError();
     }
 
-    MOCK_METHOD5(setSubData, gl::Error(const gl::Context *, GLenum, const void *, size_t, size_t));
+    MOCK_METHOD5(setSubData,
+                 gl::Error(const gl::Context *, gl::BufferBinding, const void *, size_t, size_t));
     MOCK_METHOD5(copySubData,
                  gl::Error(const gl::Context *, BufferImpl *, GLintptr, GLintptr, GLsizeiptr));
     MOCK_METHOD3(map, gl::Error(const gl::Context *context, GLenum, void **));
@@ -167,7 +168,7 @@ IndexDataManagerPerfTest::IndexDataManagerPerfTest()
         indexData[index] = static_cast<GLushort>(index);
     }
     EXPECT_FALSE(mIndexBuffer
-                     .bufferData(nullptr, GL_ARRAY_BUFFER, &indexData[0],
+                     .bufferData(nullptr, gl::BufferBinding::Array, &indexData[0],
                                  indexData.size() * sizeof(GLushort), gl::BufferUsage::StaticDraw)
                      .isError());
 }

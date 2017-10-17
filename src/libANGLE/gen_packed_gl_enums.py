@@ -46,9 +46,7 @@ header_template = """// GENERATED FILE - DO NOT EDIT.
 #ifndef LIBANGLE_PACKEDGLENUMS_AUTOGEN_H_
 #define LIBANGLE_PACKEDGLENUMS_AUTOGEN_H_
 
-#include <GLES2/gl2.h>
-#include <GLES2/gl2ext.h>
-#include <GLES3/gl3.h>
+#include <angle_gl.h>
 
 #include <cstdint>
 

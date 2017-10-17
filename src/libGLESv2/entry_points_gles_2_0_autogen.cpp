@@ -70,11 +70,12 @@ void GL_APIENTRY BindBuffer(GLenum target, GLuint buffer)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::BindBuffer>(target, buffer);
+        BufferBinding targetPacked = FromGLenum<BufferBinding>(target);
+        context->gatherParams<EntryPoint::BindBuffer>(targetPacked, buffer);
 
-        if (context->skipValidation() || ValidateBindBuffer(context, target, buffer))
+        if (context->skipValidation() || ValidateBindBuffer(context, targetPacked, buffer))
         {
-            context->bindBuffer(target, buffer);
+            context->bindBuffer(targetPacked, buffer);
         }
     }
 }
@@ -226,13 +227,14 @@ void GL_APIENTRY BufferData(GLenum target, GLsizeiptr size, const void *data, GL
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        BufferBinding targetPacked = FromGLenum<BufferBinding>(target);
         BufferUsage usagePacked = FromGLenum<BufferUsage>(usage);
-        context->gatherParams<EntryPoint::BufferData>(target, size, data, usagePacked);
+        context->gatherParams<EntryPoint::BufferData>(targetPacked, size, data, usagePacked);
 
         if (context->skipValidation() ||
-            ValidateBufferData(context, target, size, data, usagePacked))
+            ValidateBufferData(context, targetPacked, size, data, usagePacked))
         {
-            context->bufferData(target, size, data, usagePacked);
+            context->bufferData(targetPacked, size, data, usagePacked);
         }
     }
 }
@@ -247,11 +249,13 @@ void GL_APIENTRY BufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, 
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::BufferSubData>(target, offset, size, data);
+        BufferBinding targetPacked = FromGLenum<BufferBinding>(target);
+        context->gatherParams<EntryPoint::BufferSubData>(targetPacked, offset, size, data);
 
-        if (context->skipValidation() || ValidateBufferSubData(context, target, offset, size, data))
+        if (context->skipValidation() ||
+            ValidateBufferSubData(context, targetPacked, offset, size, data))
         {
-            context->bufferSubData(target, offset, size, data);
+            context->bufferSubData(targetPacked, offset, size, data);
         }
     }
 }
@@ -1101,12 +1105,13 @@ void GL_APIENTRY GetBufferParameteriv(GLenum target, GLenum pname, GLint *params
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::GetBufferParameteriv>(target, pname, params);
+        BufferBinding targetPacked = FromGLenum<BufferBinding>(target);
+        context->gatherParams<EntryPoint::GetBufferParameteriv>(targetPacked, pname, params);
 
         if (context->skipValidation() ||
-            ValidateGetBufferParameteriv(context, target, pname, params))
+            ValidateGetBufferParameteriv(context, targetPacked, pname, params))
         {
-            context->getBufferParameteriv(target, pname, params);
+            context->getBufferParameteriv(targetPacked, pname, params);
         }
     }
 }

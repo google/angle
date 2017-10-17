@@ -1,8 +1,70 @@
 {
+    "glBindBuffer": {
+        "target": "BufferBinding"
+    },
+    "glBindBufferBase": {
+        "target": "BufferBinding"
+    },
+    "glBindBufferRange": {
+        "target": "BufferBinding"
+    },
     "glBufferData": {
+        "target": "BufferBinding",
         "usage": "BufferUsage"
+    },
+    "glBufferSubData": {
+        "target": "BufferBinding"
+    },
+    "glCopyBufferSubData": {
+        "readTarget": "BufferBinding",
+        "writeTarget": "BufferBinding"
     },
     "glCullFace": {
         "mode": "CullFaceMode"
+    },
+    "glFlushMappedBufferRange": {
+        "target": "BufferBinding"
+    },
+    "glFlushMappedBufferRangeEXT": {
+        "target": "BufferBinding"
+    },
+    "glGetBufferParameteriv": {
+        "target": "BufferBinding"
+    },
+    "glGetBufferParameterivRobustANGLE": {
+        "target": "BufferBinding"
+    },
+    "glGetBufferParameteri64v": {
+        "target": "BufferBinding"
+    },
+    "glGetBufferParameteri64vRobustANGLE": {
+        "target": "BufferBinding"
+    },
+    "glGetBufferPointerv": {
+        "target": "BufferBinding"
+    },
+    "glGetBufferPointervOES": {
+        "target": "BufferBinding"
+    },
+    "glGetBufferPointervRobustANGLE": {
+        "target": "BufferBinding"
+    },
+    "glMapBuffer": {
+        "target": "BufferBinding"
+    },
+    "glMapBufferOES": {
+        "target": "BufferBinding"
+    },
+    "glMapBufferRange": {
+        "target": "BufferBinding"
+    },
+    "glMapBufferRangeEXT": {
+        "target": "BufferBinding"
+    },
+    "glUnmapBuffer": {
+        "target": "BufferBinding"
+    },
+    "glUnmapBufferOES": {
+        "target": "BufferBinding"
     }
 }

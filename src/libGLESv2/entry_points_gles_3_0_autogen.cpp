@@ -343,11 +343,12 @@ GLboolean GL_APIENTRY UnmapBuffer(GLenum target)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::UnmapBuffer>(target);
+        BufferBinding targetPacked = FromGLenum<BufferBinding>(target);
+        context->gatherParams<EntryPoint::UnmapBuffer>(targetPacked);
 
-        if (context->skipValidation() || ValidateUnmapBuffer(context, target))
+        if (context->skipValidation() || ValidateUnmapBuffer(context, targetPacked))
         {
-            return context->unmapBuffer(target);
+            return context->unmapBuffer(targetPacked);
         }
     }
 
@@ -362,11 +363,13 @@ void GL_APIENTRY GetBufferPointerv(GLenum target, GLenum pname, void **params)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::GetBufferPointerv>(target, pname, params);
+        BufferBinding targetPacked = FromGLenum<BufferBinding>(target);
+        context->gatherParams<EntryPoint::GetBufferPointerv>(targetPacked, pname, params);
 
-        if (context->skipValidation() || ValidateGetBufferPointerv(context, target, pname, params))
+        if (context->skipValidation() ||
+            ValidateGetBufferPointerv(context, targetPacked, pname, params))
         {
-            context->getBufferPointerv(target, pname, params);
+            context->getBufferPointerv(targetPacked, pname, params);
         }
     }
 }
@@ -619,12 +622,13 @@ void *GL_APIENTRY MapBufferRange(GLenum target,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::MapBufferRange>(target, offset, length, access);
+        BufferBinding targetPacked = FromGLenum<BufferBinding>(target);
+        context->gatherParams<EntryPoint::MapBufferRange>(targetPacked, offset, length, access);
 
         if (context->skipValidation() ||
-            ValidateMapBufferRange(context, target, offset, length, access))
+            ValidateMapBufferRange(context, targetPacked, offset, length, access))
         {
-            return context->mapBufferRange(target, offset, length, access);
+            return context->mapBufferRange(targetPacked, offset, length, access);
         }
     }
 
@@ -639,12 +643,13 @@ void GL_APIENTRY FlushMappedBufferRange(GLenum target, GLintptr offset, GLsizeip
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::FlushMappedBufferRange>(target, offset, length);
+        BufferBinding targetPacked = FromGLenum<BufferBinding>(target);
+        context->gatherParams<EntryPoint::FlushMappedBufferRange>(targetPacked, offset, length);
 
         if (context->skipValidation() ||
-            ValidateFlushMappedBufferRange(context, target, offset, length))
+            ValidateFlushMappedBufferRange(context, targetPacked, offset, length))
         {
-            context->flushMappedBufferRange(target, offset, length);
+            context->flushMappedBufferRange(targetPacked, offset, length);
         }
     }
 }
@@ -774,12 +779,14 @@ BindBufferRange(GLenum target, GLuint index, GLuint buffer, GLintptr offset, GLs
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::BindBufferRange>(target, index, buffer, offset, size);
+        BufferBinding targetPacked = FromGLenum<BufferBinding>(target);
+        context->gatherParams<EntryPoint::BindBufferRange>(targetPacked, index, buffer, offset,
+                                                           size);
 
         if (context->skipValidation() ||
-            ValidateBindBufferRange(context, target, index, buffer, offset, size))
+            ValidateBindBufferRange(context, targetPacked, index, buffer, offset, size))
         {
-            context->bindBufferRange(target, index, buffer, offset, size);
+            context->bindBufferRange(targetPacked, index, buffer, offset, size);
         }
     }
 }
@@ -791,11 +798,13 @@ void GL_APIENTRY BindBufferBase(GLenum target, GLuint index, GLuint buffer)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::BindBufferBase>(target, index, buffer);
+        BufferBinding targetPacked = FromGLenum<BufferBinding>(target);
+        context->gatherParams<EntryPoint::BindBufferBase>(targetPacked, index, buffer);
 
-        if (context->skipValidation() || ValidateBindBufferBase(context, target, index, buffer))
+        if (context->skipValidation() ||
+            ValidateBindBufferBase(context, targetPacked, index, buffer))
         {
-            context->bindBufferBase(target, index, buffer);
+            context->bindBufferBase(targetPacked, index, buffer);
         }
     }
 }
@@ -1243,13 +1252,17 @@ void GL_APIENTRY CopyBufferSubData(GLenum readTarget,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::CopyBufferSubData>(readTarget, writeTarget, readOffset,
-                                                             writeOffset, size);
+        BufferBinding readTargetPacked  = FromGLenum<BufferBinding>(readTarget);
+        BufferBinding writeTargetPacked = FromGLenum<BufferBinding>(writeTarget);
+        context->gatherParams<EntryPoint::CopyBufferSubData>(readTargetPacked, writeTargetPacked,
+                                                             readOffset, writeOffset, size);
 
-        if (context->skipValidation() || ValidateCopyBufferSubData(context, readTarget, writeTarget,
-                                                                   readOffset, writeOffset, size))
+        if (context->skipValidation() ||
+            ValidateCopyBufferSubData(context, readTargetPacked, writeTargetPacked, readOffset,
+                                      writeOffset, size))
         {
-            context->copyBufferSubData(readTarget, writeTarget, readOffset, writeOffset, size);
+            context->copyBufferSubData(readTargetPacked, writeTargetPacked, readOffset, writeOffset,
+                                       size);
         }
     }
 }
@@ -1588,12 +1601,13 @@ void GL_APIENTRY GetBufferParameteri64v(GLenum target, GLenum pname, GLint64 *pa
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::GetBufferParameteri64v>(target, pname, params);
+        BufferBinding targetPacked = FromGLenum<BufferBinding>(target);
+        context->gatherParams<EntryPoint::GetBufferParameteri64v>(targetPacked, pname, params);
 
         if (context->skipValidation() ||
-            ValidateGetBufferParameteri64v(context, target, pname, params))
+            ValidateGetBufferParameteri64v(context, targetPacked, pname, params))
         {
-            context->getBufferParameteri64v(target, pname, params);
+            context->getBufferParameteri64v(targetPacked, pname, params);
         }
     }
 }

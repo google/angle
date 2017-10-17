@@ -1142,7 +1142,7 @@ bool ValidateES2TexImageParameters(Context *context,
         }
 
         if (width > 0 && height > 0 && pixels == nullptr &&
-            context->getGLState().getTargetBuffer(GL_PIXEL_UNPACK_BUFFER) == nullptr)
+            context->getGLState().getTargetBuffer(gl::BufferBinding::PixelUnpack) == nullptr)
         {
             ANGLE_VALIDATION_ERR(context, InvalidValue(), PixelDataNull);
             return false;
@@ -2824,12 +2824,15 @@ bool ValidateCompressedTexSubImage2D(Context *context,
     return true;
 }
 
-bool ValidateGetBufferPointervOES(Context *context, GLenum target, GLenum pname, void **params)
+bool ValidateGetBufferPointervOES(Context *context,
+                                  BufferBinding target,
+                                  GLenum pname,
+                                  void **params)
 {
     return ValidateGetBufferPointervBase(context, target, pname, nullptr, params);
 }
 
-bool ValidateMapBufferOES(Context *context, GLenum target, GLenum access)
+bool ValidateMapBufferOES(Context *context, BufferBinding target, GLenum access)
 {
     if (!context->getExtensions().mapBuffer)
     {
@@ -2837,7 +2840,7 @@ bool ValidateMapBufferOES(Context *context, GLenum target, GLenum access)
         return false;
     }
 
-    if (!ValidBufferTarget(context, target))
+    if (!ValidBufferType(context, target))
     {
         ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidBufferTypes);
         return false;
@@ -2866,7 +2869,7 @@ bool ValidateMapBufferOES(Context *context, GLenum target, GLenum access)
     return ValidateMapBufferBase(context, target);
 }
 
-bool ValidateUnmapBufferOES(Context *context, GLenum target)
+bool ValidateUnmapBufferOES(Context *context, BufferBinding target)
 {
     if (!context->getExtensions().mapBuffer)
     {
@@ -2878,7 +2881,7 @@ bool ValidateUnmapBufferOES(Context *context, GLenum target)
 }
 
 bool ValidateMapBufferRangeEXT(Context *context,
-                               GLenum target,
+                               BufferBinding target,
                                GLintptr offset,
                                GLsizeiptr length,
                                GLbitfield access)
@@ -2892,7 +2895,7 @@ bool ValidateMapBufferRangeEXT(Context *context,
     return ValidateMapBufferRangeBase(context, target, offset, length, access);
 }
 
-bool ValidateMapBufferBase(Context *context, GLenum target)
+bool ValidateMapBufferBase(Context *context, BufferBinding target)
 {
     Buffer *buffer = context->getGLState().getTargetBuffer(target);
     ASSERT(buffer != nullptr);
@@ -2917,7 +2920,7 @@ bool ValidateMapBufferBase(Context *context, GLenum target)
 }
 
 bool ValidateFlushMappedBufferRangeEXT(Context *context,
-                                       GLenum target,
+                                       BufferBinding target,
                                        GLintptr offset,
                                        GLsizeiptr length)
 {
@@ -4162,7 +4165,7 @@ bool ValidateCreateShader(Context *context, GLenum type)
 }
 
 bool ValidateBufferData(ValidationContext *context,
-                        GLenum target,
+                        BufferBinding target,
                         GLsizeiptr size,
                         const void *data,
                         BufferUsage usage)
@@ -4198,7 +4201,7 @@ bool ValidateBufferData(ValidationContext *context,
             return false;
     }
 
-    if (!ValidBufferTarget(context, target))
+    if (!ValidBufferType(context, target))
     {
         ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidBufferTypes);
         return false;
@@ -4216,7 +4219,7 @@ bool ValidateBufferData(ValidationContext *context,
 }
 
 bool ValidateBufferSubData(ValidationContext *context,
-                           GLenum target,
+                           BufferBinding target,
                            GLintptr offset,
                            GLsizeiptr size,
                            const void *data)
@@ -4233,7 +4236,7 @@ bool ValidateBufferSubData(ValidationContext *context,
         return false;
     }
 
-    if (!ValidBufferTarget(context, target))
+    if (!ValidBufferType(context, target))
     {
         ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidBufferTypes);
         return false;
@@ -4389,9 +4392,9 @@ bool ValidateBindAttribLocation(ValidationContext *context,
     return GetValidProgram(context, program) != nullptr;
 }
 
-bool ValidateBindBuffer(ValidationContext *context, GLenum target, GLuint buffer)
+bool ValidateBindBuffer(ValidationContext *context, BufferBinding target, GLuint buffer)
 {
-    if (!ValidBufferTarget(context, target))
+    if (!ValidBufferType(context, target))
     {
         ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidBufferTypes);
         return false;
@@ -4702,7 +4705,8 @@ bool ValidateVertexAttribPointer(ValidationContext *context,
     // and the pointer argument is not NULL.
     bool nullBufferAllowed = context->getGLState().areClientArraysEnabled() &&
                              context->getGLState().getVertexArray()->id() == 0;
-    if (!nullBufferAllowed && context->getGLState().getArrayBufferId() == 0 && ptr != nullptr)
+    if (!nullBufferAllowed && context->getGLState().getTargetBuffer(BufferBinding::Array) == 0 &&
+        ptr != nullptr)
     {
         context
             ->handleError(InvalidOperation()
@@ -6169,7 +6173,7 @@ bool ValidateGenerateMipmap(Context *context, GLenum target)
 }
 
 bool ValidateGetBufferParameteriv(ValidationContext *context,
-                                  GLenum target,
+                                  BufferBinding target,
                                   GLenum pname,
                                   GLint *params)
 {

@@ -179,9 +179,11 @@ StateManagerGL::StateManagerGL(const FunctionsGL *functions,
     mTextures[GL_TEXTURE_3D].resize(rendererCaps.maxCombinedTextureImageUnits);
     mTextures[GL_TEXTURE_2D_MULTISAMPLE].resize(rendererCaps.maxCombinedTextureImageUnits);
 
-    mIndexedBuffers[GL_UNIFORM_BUFFER].resize(rendererCaps.maxUniformBufferBindings);
-    mIndexedBuffers[GL_ATOMIC_COUNTER_BUFFER].resize(rendererCaps.maxAtomicCounterBufferBindings);
-    mIndexedBuffers[GL_SHADER_STORAGE_BUFFER].resize(rendererCaps.maxShaderStorageBufferBindings);
+    mIndexedBuffers[gl::BufferBinding::Uniform].resize(rendererCaps.maxUniformBufferBindings);
+    mIndexedBuffers[gl::BufferBinding::AtomicCounter].resize(
+        rendererCaps.maxAtomicCounterBufferBindings);
+    mIndexedBuffers[gl::BufferBinding::ShaderStorage].resize(
+        rendererCaps.maxShaderStorageBufferBindings);
 
     mSampleMaskValues.fill(~GLbitfield(0));
 
@@ -283,29 +285,29 @@ void StateManagerGL::deleteSampler(GLuint sampler)
 
 void StateManagerGL::deleteBuffer(GLuint buffer)
 {
-    if (buffer != 0)
+    if (buffer == 0)
     {
-        for (const auto &bufferTypeIter : mBuffers)
-        {
-            if (bufferTypeIter.second == buffer)
-            {
-                bindBuffer(bufferTypeIter.first, 0);
-            }
-        }
-
-        for (const auto &bufferTypeIter : mIndexedBuffers)
-        {
-            for (size_t bindIndex = 0; bindIndex < bufferTypeIter.second.size(); bindIndex++)
-            {
-                if (bufferTypeIter.second[bindIndex].buffer == buffer)
-                {
-                    bindBufferBase(bufferTypeIter.first, bindIndex, 0);
-                }
-            }
-        }
-
-        mFunctions->deleteBuffers(1, &buffer);
+        return;
     }
+
+    for (auto target : angle::AllEnums<gl::BufferBinding>())
+    {
+        if (mBuffers[target] == buffer)
+        {
+            bindBuffer(target, 0);
+        }
+
+        auto &indexedTarget = mIndexedBuffers[target];
+        for (size_t bindIndex = 0; bindIndex < indexedTarget.size(); ++bindIndex)
+        {
+            if (indexedTarget[bindIndex].buffer == buffer)
+            {
+                bindBufferBase(target, bindIndex, 0);
+            }
+        }
+    }
+
+    mFunctions->deleteBuffers(1, &buffer);
 }
 
 void StateManagerGL::deleteFramebuffer(GLuint fbo)
@@ -392,51 +394,51 @@ void StateManagerGL::bindVertexArray(GLuint vao, GLuint elementArrayBuffer)
 {
     if (mVAO != vao)
     {
-        mVAO                              = vao;
-        mBuffers[GL_ELEMENT_ARRAY_BUFFER] = elementArrayBuffer;
+        mVAO                                      = vao;
+        mBuffers[gl::BufferBinding::ElementArray] = elementArrayBuffer;
         mFunctions->bindVertexArray(vao);
 
         mLocalDirtyBits.set(gl::State::DIRTY_BIT_VERTEX_ARRAY_BINDING);
     }
 }
 
-void StateManagerGL::bindBuffer(GLenum type, GLuint buffer)
+void StateManagerGL::bindBuffer(gl::BufferBinding target, GLuint buffer)
 {
-    if (mBuffers[type] != buffer)
+    if (mBuffers[target] != buffer)
     {
-        mBuffers[type] = buffer;
-        mFunctions->bindBuffer(type, buffer);
+        mBuffers[target] = buffer;
+        mFunctions->bindBuffer(gl::ToGLenum(target), buffer);
     }
 }
 
-void StateManagerGL::bindBufferBase(GLenum type, size_t index, GLuint buffer)
+void StateManagerGL::bindBufferBase(gl::BufferBinding target, size_t index, GLuint buffer)
 {
-    ASSERT(mIndexedBuffers.count(type) > 0);
-    ASSERT(index < mIndexedBuffers[type].size());
-    auto &binding = mIndexedBuffers[type][index];
+    ASSERT(index < mIndexedBuffers[target].size());
+    auto &binding = mIndexedBuffers[target][index];
     if (binding.buffer != buffer || binding.offset != static_cast<size_t>(-1) ||
         binding.size != static_cast<size_t>(-1))
     {
         binding.buffer = buffer;
         binding.offset = static_cast<size_t>(-1);
         binding.size   = static_cast<size_t>(-1);
-        mFunctions->bindBufferBase(type, static_cast<GLuint>(index), buffer);
+        mFunctions->bindBufferBase(gl::ToGLenum(target), static_cast<GLuint>(index), buffer);
     }
 }
 
-void StateManagerGL::bindBufferRange(GLenum type,
+void StateManagerGL::bindBufferRange(gl::BufferBinding target,
                                      size_t index,
                                      GLuint buffer,
                                      size_t offset,
                                      size_t size)
 {
-    auto &binding = mIndexedBuffers[type][index];
+    auto &binding = mIndexedBuffers[target][index];
     if (binding.buffer != buffer || binding.offset != offset || binding.size != size)
     {
         binding.buffer = buffer;
         binding.offset = offset;
         binding.size   = size;
-        mFunctions->bindBufferRange(type, static_cast<GLuint>(index), buffer, offset, size);
+        mFunctions->bindBufferRange(gl::ToGLenum(target), static_cast<GLuint>(index), buffer,
+                                    offset, size);
     }
 }
 
@@ -549,7 +551,7 @@ void StateManagerGL::setPixelUnpackBuffer(const gl::Buffer *pixelBuffer)
     {
         bufferID = GetImplAs<BufferGL>(pixelBuffer)->getBufferID();
     }
-    bindBuffer(GL_PIXEL_UNPACK_BUFFER, bufferID);
+    bindBuffer(gl::BufferBinding::PixelUnpack, bufferID);
 }
 
 void StateManagerGL::setPixelPackState(const gl::PixelPackState &pack)
@@ -594,7 +596,7 @@ void StateManagerGL::setPixelPackBuffer(const gl::Buffer *pixelBuffer)
     {
         bufferID = GetImplAs<BufferGL>(pixelBuffer)->getBufferID();
     }
-    bindBuffer(GL_PIXEL_PACK_BUFFER, bufferID);
+    bindBuffer(gl::BufferBinding::PixelPack, bufferID);
 }
 
 void StateManagerGL::bindFramebuffer(GLenum type, GLuint framebuffer)
@@ -739,10 +741,10 @@ gl::Error StateManagerGL::setDrawIndirectState(const gl::Context *context, GLenu
     }
     bindVertexArray(vaoGL->getVertexArrayID(), vaoGL->getAppliedElementArrayBufferID());
 
-    gl::Buffer *drawIndirectBuffer = glState.getDrawIndirectBuffer();
+    gl::Buffer *drawIndirectBuffer = glState.getTargetBuffer(gl::BufferBinding::DrawIndirect);
     ASSERT(drawIndirectBuffer);
     const BufferGL *bufferGL = GetImplAs<BufferGL>(drawIndirectBuffer);
-    bindBuffer(GL_DRAW_INDIRECT_BUFFER, bufferGL->getBufferID());
+    bindBuffer(gl::BufferBinding::DrawIndirect, bufferGL->getBufferID());
 
     return setGenericDrawState(context);
 }
@@ -858,11 +860,11 @@ void StateManagerGL::setGenericShaderState(const gl::Context *context)
 
             if (uniformBuffer.getSize() == 0)
             {
-                bindBufferBase(GL_UNIFORM_BUFFER, binding, bufferGL->getBufferID());
+                bindBufferBase(gl::BufferBinding::Uniform, binding, bufferGL->getBufferID());
             }
             else
             {
-                bindBufferRange(GL_UNIFORM_BUFFER, binding, bufferGL->getBufferID(),
+                bindBufferRange(gl::BufferBinding::Uniform, binding, bufferGL->getBufferID(),
                                 uniformBuffer.getOffset(), uniformBuffer.getSize());
             }
         }
@@ -908,11 +910,11 @@ void StateManagerGL::setGenericShaderState(const gl::Context *context)
 
             if (buffer.getSize() == 0)
             {
-                bindBufferBase(GL_ATOMIC_COUNTER_BUFFER, binding, bufferGL->getBufferID());
+                bindBufferBase(gl::BufferBinding::AtomicCounter, binding, bufferGL->getBufferID());
             }
             else
             {
-                bindBufferRange(GL_ATOMIC_COUNTER_BUFFER, binding, bufferGL->getBufferID(),
+                bindBufferRange(gl::BufferBinding::AtomicCounter, binding, bufferGL->getBufferID(),
                                 buffer.getOffset(), buffer.getSize());
             }
         }
@@ -982,11 +984,11 @@ void StateManagerGL::updateProgramTextureAndSamplerBindings(const gl::Context *c
 
             if (shaderStorageBuffer.getSize() == 0)
             {
-                bindBufferBase(GL_SHADER_STORAGE_BUFFER, binding, bufferGL->getBufferID());
+                bindBufferBase(gl::BufferBinding::ShaderStorage, binding, bufferGL->getBufferID());
             }
             else
             {
-                bindBufferRange(GL_SHADER_STORAGE_BUFFER, binding, bufferGL->getBufferID(),
+                bindBufferRange(gl::BufferBinding::ShaderStorage, binding, bufferGL->getBufferID(),
                                 shaderStorageBuffer.getOffset(), shaderStorageBuffer.getSize());
             }
         }
@@ -1887,13 +1889,13 @@ void StateManagerGL::syncState(const gl::Context *context, const gl::State::Dirt
                 setPixelUnpackState(state.getUnpackState());
                 break;
             case gl::State::DIRTY_BIT_UNPACK_BUFFER_BINDING:
-                setPixelUnpackBuffer(state.getTargetBuffer(GL_PIXEL_UNPACK_BUFFER));
+                setPixelUnpackBuffer(state.getTargetBuffer(gl::BufferBinding::PixelUnpack));
                 break;
             case gl::State::DIRTY_BIT_PACK_STATE:
                 setPixelPackState(state.getPackState());
                 break;
             case gl::State::DIRTY_BIT_PACK_BUFFER_BINDING:
-                setPixelPackBuffer(state.getTargetBuffer(GL_PIXEL_PACK_BUFFER));
+                setPixelPackBuffer(state.getTargetBuffer(gl::BufferBinding::PixelPack));
                 break;
             case gl::State::DIRTY_BIT_DITHER_ENABLED:
                 setDitherEnabled(state.isDitherEnabled());

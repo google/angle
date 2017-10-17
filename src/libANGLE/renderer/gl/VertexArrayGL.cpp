@@ -134,7 +134,7 @@ gl::Error VertexArrayGL::syncElementArrayState(const gl::Context *context) const
     if (elementArrayBuffer != mAppliedElementArrayBuffer.get())
     {
         const BufferGL *bufferGL = GetImplAs<BufferGL>(elementArrayBuffer);
-        mStateManager->bindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufferGL->getBufferID());
+        mStateManager->bindBuffer(gl::BufferBinding::ElementArray, bufferGL->getBufferID());
         mAppliedElementArrayBuffer.set(context, elementArrayBuffer);
     }
 
@@ -199,7 +199,7 @@ gl::Error VertexArrayGL::syncIndexData(const gl::Context *context,
         if (elementArrayBuffer != mAppliedElementArrayBuffer.get())
         {
             const BufferGL *bufferGL = GetImplAs<BufferGL>(elementArrayBuffer);
-            mStateManager->bindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufferGL->getBufferID());
+            mStateManager->bindBuffer(gl::BufferBinding::ElementArray, bufferGL->getBufferID());
             mAppliedElementArrayBuffer.set(context, elementArrayBuffer);
         }
 
@@ -238,7 +238,7 @@ gl::Error VertexArrayGL::syncIndexData(const gl::Context *context,
             mStreamingElementArrayBufferSize = 0;
         }
 
-        mStateManager->bindBuffer(GL_ELEMENT_ARRAY_BUFFER, mStreamingElementArrayBuffer);
+        mStateManager->bindBuffer(gl::BufferBinding::ElementArray, mStreamingElementArrayBuffer);
         mAppliedElementArrayBuffer.set(context, nullptr);
 
         // Make sure the element array buffer is large enough
@@ -327,7 +327,7 @@ gl::Error VertexArrayGL::streamAttributes(const gl::AttributesMask &activeAttrib
     const size_t bufferEmptySpace   = maxAttributeDataSize * indexRange.start;
     const size_t requiredBufferSize = streamingDataSize + bufferEmptySpace;
 
-    mStateManager->bindBuffer(GL_ARRAY_BUFFER, mStreamingArrayBuffer);
+    mStateManager->bindBuffer(gl::BufferBinding::Array, mStreamingArrayBuffer);
     if (requiredBufferSize > mStreamingArrayBufferSize)
     {
         mFunctions->bufferData(GL_ARRAY_BUFFER, requiredBufferSize, nullptr, GL_DYNAMIC_DRAW);
@@ -506,7 +506,7 @@ void VertexArrayGL::updateAttribPointer(const gl::Context *context, size_t attri
     // is not NULL.
 
     const BufferGL *arrayBufferGL = GetImplAs<BufferGL>(arrayBuffer);
-    mStateManager->bindBuffer(GL_ARRAY_BUFFER, arrayBufferGL->getBufferID());
+    mStateManager->bindBuffer(gl::BufferBinding::Array, arrayBufferGL->getBufferID());
     callVertexAttribPointer(static_cast<GLuint>(attribIndex), attrib, binding.getStride(),
                             binding.getOffset());
 

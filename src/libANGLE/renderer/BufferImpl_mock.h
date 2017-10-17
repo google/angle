@@ -22,9 +22,11 @@ class MockBufferImpl : public BufferImpl
     MockBufferImpl() : BufferImpl(mMockState) {}
     ~MockBufferImpl() { destructor(); }
 
-    MOCK_METHOD5(setData,
-                 gl::Error(const gl::Context *, GLenum, const void *, size_t, gl::BufferUsage));
-    MOCK_METHOD5(setSubData, gl::Error(const gl::Context *, GLenum, const void *, size_t, size_t));
+    MOCK_METHOD5(
+        setData,
+        gl::Error(const gl::Context *, gl::BufferBinding, const void *, size_t, gl::BufferUsage));
+    MOCK_METHOD5(setSubData,
+                 gl::Error(const gl::Context *, gl::BufferBinding, const void *, size_t, size_t));
     MOCK_METHOD5(
         copySubData,
         gl::Error(const gl::Context *contextImpl, BufferImpl *, GLintptr, GLintptr, GLsizeiptr));

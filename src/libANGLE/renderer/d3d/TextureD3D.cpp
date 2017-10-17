@@ -216,7 +216,8 @@ gl::Error TextureD3D::setImageImpl(const gl::Context *context,
                                    ptrdiff_t layerOffset)
 {
     ImageD3D *image = getImage(index);
-    gl::Buffer *unpackBuffer = context->getGLState().getTargetBuffer(GL_PIXEL_UNPACK_BUFFER);
+    gl::Buffer *unpackBuffer =
+        context->getGLState().getTargetBuffer(gl::BufferBinding::PixelUnpack);
     ASSERT(image);
 
     // No-op
@@ -261,7 +262,8 @@ gl::Error TextureD3D::subImage(const gl::Context *context,
 {
     // CPU readback & copy where direct GPU copy is not supported
     const uint8_t *pixelData = nullptr;
-    gl::Buffer *unpackBuffer = context->getGLState().getTargetBuffer(GL_PIXEL_UNPACK_BUFFER);
+    gl::Buffer *unpackBuffer =
+        context->getGLState().getTargetBuffer(gl::BufferBinding::PixelUnpack);
     ANGLE_TRY(GetUnpackPointer(context, unpack, unpackBuffer, pixels, layerOffset, &pixelData));
 
     if (pixelData != nullptr)
@@ -299,7 +301,8 @@ gl::Error TextureD3D::setCompressedImageImpl(const gl::Context *context,
     // We no longer need the "GLenum format" parameter to TexImage to determine what data format "pixels" contains.
     // From our image internal format we know how many channels to expect, and "type" gives the format of pixel's components.
     const uint8_t *pixelData = nullptr;
-    gl::Buffer *unpackBuffer = context->getGLState().getTargetBuffer(GL_PIXEL_UNPACK_BUFFER);
+    gl::Buffer *unpackBuffer =
+        context->getGLState().getTargetBuffer(gl::BufferBinding::PixelUnpack);
     ANGLE_TRY(GetUnpackPointer(context, unpack, unpackBuffer, pixels, layerOffset, &pixelData));
 
     if (pixelData != nullptr)
@@ -322,7 +325,8 @@ gl::Error TextureD3D::subImageCompressed(const gl::Context *context,
                                          ptrdiff_t layerOffset)
 {
     const uint8_t *pixelData = nullptr;
-    gl::Buffer *unpackBuffer = context->getGLState().getTargetBuffer(GL_PIXEL_UNPACK_BUFFER);
+    gl::Buffer *unpackBuffer =
+        context->getGLState().getTargetBuffer(gl::BufferBinding::PixelUnpack);
     ANGLE_TRY(GetUnpackPointer(context, unpack, unpackBuffer, pixels, layerOffset, &pixelData));
 
     if (pixelData != nullptr)
@@ -837,7 +841,8 @@ gl::Error TextureD3D_2D::setImage(const gl::Context *context,
     gl::ImageIndex index = gl::ImageIndex::Make2D(level);
 
     // Attempt a fast gpu copy of the pixel data to the surface
-    gl::Buffer *unpackBuffer = context->getGLState().getTargetBuffer(GL_PIXEL_UNPACK_BUFFER);
+    gl::Buffer *unpackBuffer =
+        context->getGLState().getTargetBuffer(gl::BufferBinding::PixelUnpack);
     if (isFastUnpackable(unpackBuffer, internalFormatInfo.sizedInternalFormat) &&
         isLevelComplete(level))
     {
@@ -878,7 +883,8 @@ gl::Error TextureD3D_2D::setSubImage(const gl::Context *context,
     GLint level          = static_cast<GLint>(imageLevel);
     gl::ImageIndex index = gl::ImageIndex::Make2D(level);
 
-    gl::Buffer *unpackBuffer = context->getGLState().getTargetBuffer(GL_PIXEL_UNPACK_BUFFER);
+    gl::Buffer *unpackBuffer =
+        context->getGLState().getTargetBuffer(gl::BufferBinding::PixelUnpack);
     if (isFastUnpackable(unpackBuffer, getInternalFormat(level)) && isLevelComplete(level))
     {
         RenderTargetD3D *renderTarget = nullptr;
@@ -2394,7 +2400,8 @@ gl::Error TextureD3D_3D::setImage(const gl::Context *context,
     gl::ImageIndex index = gl::ImageIndex::Make3D(level);
 
     // Attempt a fast gpu copy of the pixel data to the surface if the app bound an unpack buffer
-    gl::Buffer *unpackBuffer = context->getGLState().getTargetBuffer(GL_PIXEL_UNPACK_BUFFER);
+    gl::Buffer *unpackBuffer =
+        context->getGLState().getTargetBuffer(gl::BufferBinding::PixelUnpack);
     if (isFastUnpackable(unpackBuffer, internalFormatInfo.sizedInternalFormat) && !size.empty() &&
         isLevelComplete(level))
     {
@@ -2436,7 +2443,8 @@ gl::Error TextureD3D_3D::setSubImage(const gl::Context *context,
     gl::ImageIndex index = gl::ImageIndex::Make3D(level);
 
     // Attempt a fast gpu copy of the pixel data to the surface if the app bound an unpack buffer
-    gl::Buffer *unpackBuffer = context->getGLState().getTargetBuffer(GL_PIXEL_UNPACK_BUFFER);
+    gl::Buffer *unpackBuffer =
+        context->getGLState().getTargetBuffer(gl::BufferBinding::PixelUnpack);
     if (isFastUnpackable(unpackBuffer, getInternalFormat(level)) && isLevelComplete(level))
     {
         RenderTargetD3D *destRenderTarget = nullptr;

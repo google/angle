@@ -9,6 +9,8 @@
 #ifndef LIBANGLE_VALIDATION_ES3_H_
 #define LIBANGLE_VALIDATION_ES3_H_
 
+#include "libANGLE/PackedGLEnums.h"
+
 #include <GLES3/gl3.h>
 
 namespace gl
@@ -213,9 +215,9 @@ bool ValidateCompressedTexImage3DRobustANGLE(Context *context,
 bool ValidateBindVertexArray(Context *context, GLuint array);
 bool ValidateIsVertexArray(Context *context, GLuint array);
 
-bool ValidateBindBufferBase(Context *context, GLenum target, GLuint index, GLuint buffer);
+bool ValidateBindBufferBase(Context *context, BufferBinding target, GLuint index, GLuint buffer);
 bool ValidateBindBufferRange(Context *context,
-                             GLenum target,
+                             BufferBinding target,
                              GLuint index,
                              GLuint buffer,
                              GLintptr offset,
@@ -357,21 +359,21 @@ bool ValidateDeleteVertexArrays(Context *context, GLint n, const GLuint *arrays)
 
 bool ValidateBeginTransformFeedback(Context *context, GLenum primitiveMode);
 
-bool ValidateGetBufferPointerv(Context *context, GLenum target, GLenum pname, void **params);
+bool ValidateGetBufferPointerv(Context *context, BufferBinding target, GLenum pname, void **params);
 bool ValidateGetBufferPointervRobustANGLE(Context *context,
-                                          GLenum target,
+                                          BufferBinding target,
                                           GLenum pname,
                                           GLsizei bufSize,
                                           GLsizei *length,
                                           void **params);
-bool ValidateUnmapBuffer(Context *context, GLenum target);
+bool ValidateUnmapBuffer(Context *context, BufferBinding target);
 bool ValidateMapBufferRange(Context *context,
-                            GLenum target,
+                            BufferBinding target,
                             GLintptr offset,
                             GLsizeiptr length,
                             GLbitfield access);
 bool ValidateFlushMappedBufferRange(Context *context,
-                                    GLenum target,
+                                    BufferBinding target,
                                     GLintptr offset,
                                     GLsizeiptr length);
 
@@ -398,8 +400,8 @@ bool ValidateGetInteger64i_vRobustANGLE(ValidationContext *context,
                                         GLint64 *data);
 
 bool ValidateCopyBufferSubData(ValidationContext *context,
-                               GLenum readTarget,
-                               GLenum writeTarget,
+                               BufferBinding readTarget,
+                               BufferBinding writeTarget,
                                GLintptr readOffset,
                                GLintptr writeOffset,
                                GLsizeiptr size);
@@ -585,7 +587,7 @@ bool ValidateTexStorage3D(Context *context,
 bool ValidateGetVertexAttribIiv(Context *context, GLuint index, GLenum pname, GLint *params);
 bool ValidateGetVertexAttribIuiv(Context *context, GLuint index, GLenum pname, GLuint *params);
 bool ValidateGetBufferParameteri64v(ValidationContext *context,
-                                    GLenum target,
+                                    BufferBinding target,
                                     GLenum pname,
                                     GLint64 *params);
 bool ValidateSamplerParameteri(Context *context, GLuint sampler, GLenum pname, GLint param);

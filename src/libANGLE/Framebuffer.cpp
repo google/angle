@@ -1368,7 +1368,7 @@ Error Framebuffer::readPixels(const gl::Context *context,
     ANGLE_TRY(ensureReadAttachmentInitialized(context, GL_COLOR_BUFFER_BIT));
     ANGLE_TRY(mImpl->readPixels(context, area, format, type, pixels));
 
-    Buffer *unpackBuffer = context->getGLState().getTargetBuffer(GL_PIXEL_UNPACK_BUFFER);
+    Buffer *unpackBuffer = context->getGLState().getTargetBuffer(gl::BufferBinding::PixelUnpack);
     if (unpackBuffer)
     {
         unpackBuffer->onPixelUnpack();

@@ -234,9 +234,12 @@ void State::reset(const Context *context)
         imageUnit.format  = GL_R32UI;
     }
 
-    mArrayBuffer.set(context, nullptr);
-    mDrawIndirectBuffer.set(context, nullptr);
     mRenderbuffer.set(context, nullptr);
+
+    for (auto type : angle::AllEnums<BufferBinding>())
+    {
+        mBoundBuffers[type].set(context, nullptr);
+    }
 
     if (mProgram)
     {
@@ -253,25 +256,16 @@ void State::reset(const Context *context)
         i->second.set(context, nullptr);
     }
 
-    mGenericUniformBuffer.set(context, nullptr);
-    for (BufferVector::iterator bufItr = mUniformBuffers.begin(); bufItr != mUniformBuffers.end(); ++bufItr)
+    for (auto &buf : mUniformBuffers)
     {
-        bufItr->set(context, nullptr);
+        buf.set(context, nullptr);
     }
 
-    mCopyReadBuffer.set(context, nullptr);
-    mCopyWriteBuffer.set(context, nullptr);
-
-    mPixelPackBuffer.set(context, nullptr);
-    mPixelUnpackBuffer.set(context, nullptr);
-
-    mGenericAtomicCounterBuffer.set(context, nullptr);
     for (auto &buf : mAtomicCounterBuffers)
     {
         buf.set(context, nullptr);
     }
 
-    mGenericShaderStorageBuffer.set(context, nullptr);
     for (auto &buf : mShaderStorageBuffers)
     {
         buf.set(context, nullptr);
@@ -1098,12 +1092,6 @@ bool State::removeVertexArrayBinding(GLuint vertexArray)
     return false;
 }
 
-void State::setElementArrayBuffer(const Context *context, Buffer *buffer)
-{
-    getVertexArray()->setElementArrayBuffer(context, buffer);
-    mDirtyObjects.set(DIRTY_OBJECT_VERTEX_ARRAY);
-}
-
 void State::bindVertexBuffer(const Context *context,
                              GLuint bindingIndex,
                              Buffer *boundBuffer,
@@ -1250,34 +1238,62 @@ Query *State::getActiveQuery(GLenum target) const
     return it->second.get();
 }
 
-void State::setArrayBufferBinding(const Context *context, Buffer *buffer)
+void State::setBufferBinding(const Context *context, BufferBinding target, Buffer *buffer)
 {
-    mArrayBuffer.set(context, buffer);
-}
+    mBoundBuffers[target].set(context, buffer);
 
-GLuint State::getArrayBufferId() const
-{
-    return mArrayBuffer.id();
+    switch (target)
+    {
+        case BufferBinding::PixelPack:
+            mDirtyBits.set(DIRTY_BIT_PACK_BUFFER_BINDING);
+            break;
+        case BufferBinding::PixelUnpack:
+            mDirtyBits.set(DIRTY_BIT_UNPACK_BUFFER_BINDING);
+            break;
+        case BufferBinding::DrawIndirect:
+            mDirtyBits.set(DIRTY_BIT_DRAW_INDIRECT_BUFFER_BINDING);
+            break;
+        case BufferBinding::TransformFeedback:
+            if (mTransformFeedback.get() != nullptr)
+            {
+                mTransformFeedback->bindGenericBuffer(context, buffer);
+            }
+            break;
+        case BufferBinding::ElementArray:
+            getVertexArray()->setElementArrayBuffer(context, buffer);
+            mDirtyObjects.set(DIRTY_OBJECT_VERTEX_ARRAY);
+            break;
+        default:
+            break;
+    }
 }
-
-void State::setDrawIndirectBufferBinding(const Context *context, Buffer *buffer)
+void State::setIndexedBufferBinding(const Context *context,
+                                    BufferBinding target,
+                                    GLuint index,
+                                    Buffer *buffer,
+                                    GLintptr offset,
+                                    GLsizeiptr size)
 {
-    mDrawIndirectBuffer.set(context, buffer);
-    mDirtyBits.set(DIRTY_BIT_DRAW_INDIRECT_BUFFER_BINDING);
-}
+    setBufferBinding(context, target, buffer);
 
-void State::setGenericUniformBufferBinding(const Context *context, Buffer *buffer)
-{
-    mGenericUniformBuffer.set(context, buffer);
-}
-
-void State::setIndexedUniformBufferBinding(const Context *context,
-                                           GLuint index,
-                                           Buffer *buffer,
-                                           GLintptr offset,
-                                           GLsizeiptr size)
-{
-    mUniformBuffers[index].set(context, buffer, offset, size);
+    switch (target)
+    {
+        case BufferBinding::TransformFeedback:
+            mTransformFeedback->bindIndexedBuffer(context, index, buffer, offset, size);
+            break;
+        case BufferBinding::Uniform:
+            mUniformBuffers[index].set(context, buffer, offset, size);
+            break;
+        case BufferBinding::AtomicCounter:
+            mAtomicCounterBuffers[index].set(context, buffer, offset, size);
+            break;
+        case BufferBinding::ShaderStorage:
+            mShaderStorageBuffers[index].set(context, buffer, offset, size);
+            break;
+        default:
+            UNREACHABLE();
+            break;
+    }
 }
 
 const OffsetBindingPointer<Buffer> &State::getIndexedUniformBuffer(size_t index) const
@@ -1286,40 +1302,10 @@ const OffsetBindingPointer<Buffer> &State::getIndexedUniformBuffer(size_t index)
     return mUniformBuffers[index];
 }
 
-void State::setGenericAtomicCounterBufferBinding(const Context *context, Buffer *buffer)
-{
-    mGenericAtomicCounterBuffer.set(context, buffer);
-}
-
-void State::setIndexedAtomicCounterBufferBinding(const Context *context,
-                                                 GLuint index,
-                                                 Buffer *buffer,
-                                                 GLintptr offset,
-                                                 GLsizeiptr size)
-{
-    ASSERT(static_cast<size_t>(index) < mAtomicCounterBuffers.size());
-    mAtomicCounterBuffers[index].set(context, buffer, offset, size);
-}
-
 const OffsetBindingPointer<Buffer> &State::getIndexedAtomicCounterBuffer(size_t index) const
 {
     ASSERT(static_cast<size_t>(index) < mAtomicCounterBuffers.size());
     return mAtomicCounterBuffers[index];
-}
-
-void State::setGenericShaderStorageBufferBinding(const Context *context, Buffer *buffer)
-{
-    mGenericShaderStorageBuffer.set(context, buffer);
-}
-
-void State::setIndexedShaderStorageBufferBinding(const Context *context,
-                                                 GLuint index,
-                                                 Buffer *buffer,
-                                                 GLintptr offset,
-                                                 GLsizeiptr size)
-{
-    ASSERT(static_cast<size_t>(index) < mShaderStorageBuffers.size());
-    mShaderStorageBuffers[index].set(context, buffer, offset, size);
 }
 
 const OffsetBindingPointer<Buffer> &State::getIndexedShaderStorageBuffer(size_t index) const
@@ -1328,65 +1314,26 @@ const OffsetBindingPointer<Buffer> &State::getIndexedShaderStorageBuffer(size_t 
     return mShaderStorageBuffers[index];
 }
 
-void State::setCopyReadBufferBinding(const Context *context, Buffer *buffer)
-{
-    mCopyReadBuffer.set(context, buffer);
-}
-
-void State::setCopyWriteBufferBinding(const Context *context, Buffer *buffer)
-{
-    mCopyWriteBuffer.set(context, buffer);
-}
-
-void State::setPixelPackBufferBinding(const Context *context, Buffer *buffer)
-{
-    mPixelPackBuffer.set(context, buffer);
-    mDirtyBits.set(DIRTY_BIT_PACK_BUFFER_BINDING);
-}
-
-void State::setPixelUnpackBufferBinding(const Context *context, Buffer *buffer)
-{
-    mPixelUnpackBuffer.set(context, buffer);
-    mDirtyBits.set(DIRTY_BIT_UNPACK_BUFFER_BINDING);
-}
-
-Buffer *State::getTargetBuffer(GLenum target) const
+Buffer *State::getTargetBuffer(BufferBinding target) const
 {
     switch (target)
     {
-      case GL_ARRAY_BUFFER:              return mArrayBuffer.get();
-      case GL_COPY_READ_BUFFER:          return mCopyReadBuffer.get();
-      case GL_COPY_WRITE_BUFFER:         return mCopyWriteBuffer.get();
-      case GL_ELEMENT_ARRAY_BUFFER:      return getVertexArray()->getElementArrayBuffer().get();
-      case GL_PIXEL_PACK_BUFFER:
-          return mPixelPackBuffer.get();
-      case GL_PIXEL_UNPACK_BUFFER:
-          return mPixelUnpackBuffer.get();
-      case GL_TRANSFORM_FEEDBACK_BUFFER: return mTransformFeedback->getGenericBuffer().get();
-      case GL_UNIFORM_BUFFER:            return mGenericUniformBuffer.get();
-      case GL_ATOMIC_COUNTER_BUFFER:
-          return mGenericAtomicCounterBuffer.get();
-      case GL_SHADER_STORAGE_BUFFER:
-          return mGenericShaderStorageBuffer.get();
-      case GL_DRAW_INDIRECT_BUFFER:
-          return mDrawIndirectBuffer.get();
-      default:
-          UNREACHABLE();
-          return nullptr;
+        case BufferBinding::ElementArray:
+            return getVertexArray()->getElementArrayBuffer().get();
+        case BufferBinding::TransformFeedback:
+            return mTransformFeedback->getGenericBuffer().get();
+        default:
+            return mBoundBuffers[target].get();
     }
 }
 
 void State::detachBuffer(const Context *context, GLuint bufferName)
 {
-    BindingPointer<Buffer> *buffers[] = {
-        &mArrayBuffer,       &mGenericAtomicCounterBuffer, &mCopyReadBuffer,
-        &mCopyWriteBuffer,   &mDrawIndirectBuffer,         &mPixelPackBuffer,
-        &mPixelUnpackBuffer, &mGenericUniformBuffer,       &mGenericShaderStorageBuffer};
-    for (auto buffer : buffers)
+    for (auto &buffer : mBoundBuffers)
     {
-        if (buffer->id() == bufferName)
+        if (buffer.id() == bufferName)
         {
-            buffer->set(context, nullptr);
+            buffer.set(context, nullptr);
         }
     }
 
@@ -1819,11 +1766,15 @@ void State::getIntegerv(const Context *context, GLenum pname, GLint *params)
     // State::getFloatv.
     switch (pname)
     {
-      case GL_ARRAY_BUFFER_BINDING:                     *params = mArrayBuffer.id();                              break;
-      case GL_DRAW_INDIRECT_BUFFER_BINDING:
-          *params = mDrawIndirectBuffer.id();
-          break;
-      case GL_ELEMENT_ARRAY_BUFFER_BINDING:             *params = getVertexArray()->getElementArrayBuffer().id(); break;
+        case GL_ARRAY_BUFFER_BINDING:
+            *params = mBoundBuffers[BufferBinding::Array].id();
+            break;
+        case GL_DRAW_INDIRECT_BUFFER_BINDING:
+            *params = mBoundBuffers[BufferBinding::DrawIndirect].id();
+            break;
+        case GL_ELEMENT_ARRAY_BUFFER_BINDING:
+            *params = getVertexArray()->getElementArrayBuffer().id();
+            break;
         //case GL_FRAMEBUFFER_BINDING:                    // now equivalent to GL_DRAW_FRAMEBUFFER_BINDING_ANGLE
       case GL_DRAW_FRAMEBUFFER_BINDING_ANGLE:           *params = mDrawFramebuffer->id();                         break;
       case GL_READ_FRAMEBUFFER_BINDING_ANGLE:           *params = mReadFramebuffer->id();                         break;
@@ -2031,25 +1982,26 @@ void State::getIntegerv(const Context *context, GLenum pname, GLint *params)
                                         GL_TEXTURE_EXTERNAL_OES);
           break;
       case GL_UNIFORM_BUFFER_BINDING:
-        *params = mGenericUniformBuffer.id();
-        break;
+          *params = mBoundBuffers[BufferBinding::Uniform].id();
+          break;
       case GL_TRANSFORM_FEEDBACK_BINDING:
         *params = mTransformFeedback.id();
         break;
       case GL_TRANSFORM_FEEDBACK_BUFFER_BINDING:
-        *params = mTransformFeedback->getGenericBuffer().id();
-        break;
+          ASSERT(mTransformFeedback.get() != nullptr);
+          *params = mTransformFeedback->getGenericBuffer().id();
+          break;
       case GL_COPY_READ_BUFFER_BINDING:
-        *params = mCopyReadBuffer.id();
-        break;
+          *params = mBoundBuffers[BufferBinding::CopyRead].id();
+          break;
       case GL_COPY_WRITE_BUFFER_BINDING:
-        *params = mCopyWriteBuffer.id();
-        break;
+          *params = mBoundBuffers[BufferBinding::CopyWrite].id();
+          break;
       case GL_PIXEL_PACK_BUFFER_BINDING:
-          *params = mPixelPackBuffer.id();
+          *params = mBoundBuffers[BufferBinding::PixelPack].id();
           break;
       case GL_PIXEL_UNPACK_BUFFER_BINDING:
-          *params = mPixelUnpackBuffer.id();
+          *params = mBoundBuffers[BufferBinding::PixelUnpack].id();
           break;
       case GL_READ_BUFFER:
           *params = mReadFramebuffer->getReadBufferState();
@@ -2076,10 +2028,10 @@ void State::getIntegerv(const Context *context, GLenum pname, GLint *params)
           *params = static_cast<GLint>(mCoverageModulation);
           break;
       case GL_ATOMIC_COUNTER_BUFFER_BINDING:
-          *params = mGenericAtomicCounterBuffer.id();
+          *params = mBoundBuffers[BufferBinding::AtomicCounter].id();
           break;
       case GL_SHADER_STORAGE_BUFFER_BINDING:
-          *params = mGenericShaderStorageBuffer.id();
+          *params = mBoundBuffers[BufferBinding::ShaderStorage].id();
           break;
       default:
         UNREACHABLE();
@@ -2196,9 +2148,9 @@ void State::getBooleani_v(GLenum target, GLuint index, GLboolean *data)
     UNREACHABLE();
 }
 
-bool State::hasMappedBuffer(GLenum target) const
+bool State::hasMappedBuffer(BufferBinding target) const
 {
-    if (target == GL_ARRAY_BUFFER)
+    if (target == BufferBinding::Array)
     {
         const VertexArray *vao     = getVertexArray();
         const auto &vertexAttribs = vao->getVertexAttributes();

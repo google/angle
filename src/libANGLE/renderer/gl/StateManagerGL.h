@@ -54,9 +54,13 @@ class StateManagerGL final : angle::NonCopyable
     void useProgram(GLuint program);
     void forceUseProgram(GLuint program);
     void bindVertexArray(GLuint vao, GLuint elementArrayBuffer);
-    void bindBuffer(GLenum type, GLuint buffer);
-    void bindBufferBase(GLenum type, size_t index, GLuint buffer);
-    void bindBufferRange(GLenum type, size_t index, GLuint buffer, size_t offset, size_t size);
+    void bindBuffer(gl::BufferBinding target, GLuint buffer);
+    void bindBufferBase(gl::BufferBinding target, size_t index, GLuint buffer);
+    void bindBufferRange(gl::BufferBinding target,
+                         size_t index,
+                         GLuint buffer,
+                         size_t offset,
+                         size_t size);
     void activeTexture(size_t unit);
     void bindTexture(GLenum type, GLuint texture);
     void bindSampler(size_t unit, GLuint sampler);
@@ -208,7 +212,7 @@ class StateManagerGL final : angle::NonCopyable
     GLuint mVAO;
     std::vector<gl::VertexAttribCurrentValueData> mVertexAttribCurrentValues;
 
-    std::map<GLenum, GLuint> mBuffers;
+    angle::PackedEnumMap<gl::BufferBinding, GLuint> mBuffers;
 
     struct IndexedBufferBinding
     {
@@ -218,7 +222,7 @@ class StateManagerGL final : angle::NonCopyable
         size_t size;
         GLuint buffer;
     };
-    std::map<GLenum, std::vector<IndexedBufferBinding>> mIndexedBuffers;
+    angle::PackedEnumMap<gl::BufferBinding, std::vector<IndexedBufferBinding>> mIndexedBuffers;
 
     size_t mTextureUnitIndex;
     std::map<GLenum, std::vector<GLuint>> mTextures;

@@ -356,7 +356,7 @@ bool ValidateDrawIndirectBase(Context *context, GLenum mode, const void *indirec
         return false;
     }
 
-    gl::Buffer *drawIndirectBuffer = state.getDrawIndirectBuffer();
+    gl::Buffer *drawIndirectBuffer = state.getTargetBuffer(BufferBinding::DrawIndirect);
     if (!drawIndirectBuffer)
     {
         context->handleError(InvalidOperation() << "zero is bound to DRAW_INDIRECT_BUFFER");
@@ -405,7 +405,7 @@ bool ValidateDrawArraysIndirect(Context *context, GLenum mode, const void *indir
     if (!ValidateDrawIndirectBase(context, mode, indirect))
         return false;
 
-    gl::Buffer *drawIndirectBuffer = state.getDrawIndirectBuffer();
+    gl::Buffer *drawIndirectBuffer = state.getTargetBuffer(BufferBinding::DrawIndirect);
     CheckedNumeric<size_t> checkedOffset(reinterpret_cast<size_t>(indirect));
     // In OpenGL ES3.1 spec, session 10.5, it defines the struct of DrawArraysIndirectCommand
     // which's size is 4 * sizeof(uint).
@@ -439,7 +439,7 @@ bool ValidateDrawElementsIndirect(Context *context, GLenum mode, GLenum type, co
     if (!ValidateDrawIndirectBase(context, mode, indirect))
         return false;
 
-    gl::Buffer *drawIndirectBuffer = state.getDrawIndirectBuffer();
+    gl::Buffer *drawIndirectBuffer = state.getTargetBuffer(BufferBinding::DrawIndirect);
     CheckedNumeric<size_t> checkedOffset(reinterpret_cast<size_t>(indirect));
     // In OpenGL ES3.1 spec, session 10.5, it defines the struct of DrawElementsIndirectCommand
     // which's size is 5 * sizeof(uint).

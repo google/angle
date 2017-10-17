@@ -172,7 +172,8 @@ gl::Error TextureGL::setImage(const gl::Context *context,
                               const gl::PixelUnpackState &unpack,
                               const uint8_t *pixels)
 {
-    const gl::Buffer *unpackBuffer = context->getGLState().getTargetBuffer(GL_PIXEL_UNPACK_BUFFER);
+    const gl::Buffer *unpackBuffer =
+        context->getGLState().getTargetBuffer(gl::BufferBinding::PixelUnpack);
 
     if (mWorkarounds.unpackOverlappingRowsSeparatelyUnpackBuffer && unpackBuffer &&
         unpack.rowLength != 0 && unpack.rowLength < size.width)
@@ -278,7 +279,8 @@ gl::Error TextureGL::setSubImage(const gl::Context *context,
                                  const uint8_t *pixels)
 {
     ASSERT(CompatibleTextureTarget(getTarget(), target));
-    const gl::Buffer *unpackBuffer = context->getGLState().getTargetBuffer(GL_PIXEL_UNPACK_BUFFER);
+    const gl::Buffer *unpackBuffer =
+        context->getGLState().getTargetBuffer(gl::BufferBinding::PixelUnpack);
 
     nativegl::TexSubImageFormat texSubImageFormat =
         nativegl::GetTexSubImageFormat(mFunctions, mWorkarounds, format, type);
@@ -827,7 +829,7 @@ gl::Error TextureGL::setStorage(const gl::Context *context,
         else
         {
             // Make sure no pixel unpack buffer is bound
-            mStateManager->bindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+            mStateManager->bindBuffer(gl::BufferBinding::PixelUnpack, 0);
 
             const gl::InternalFormat &internalFormatInfo =
                 gl::GetSizedInternalFormatInfo(internalFormat);
@@ -920,7 +922,7 @@ gl::Error TextureGL::setStorage(const gl::Context *context,
         else
         {
             // Make sure no pixel unpack buffer is bound
-            mStateManager->bindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+            mStateManager->bindBuffer(gl::BufferBinding::PixelUnpack, 0);
 
             const gl::InternalFormat &internalFormatInfo =
                 gl::GetSizedInternalFormatInfo(internalFormat);

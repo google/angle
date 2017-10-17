@@ -63,7 +63,7 @@ const std::string &Buffer::getLabel() const
 }
 
 Error Buffer::bufferData(const Context *context,
-                         GLenum target,
+                         BufferBinding target,
                          const void *data,
                          GLsizeiptr size,
                          BufferUsage usage)
@@ -90,7 +90,7 @@ Error Buffer::bufferData(const Context *context,
 }
 
 Error Buffer::bufferSubData(const Context *context,
-                            GLenum target,
+                            BufferBinding target,
                             const void *data,
                             GLsizeiptr size,
                             GLintptr offset)

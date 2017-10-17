@@ -284,7 +284,7 @@ gl::Error Framebuffer11::readPixelsImpl(const gl::Context *context,
     const gl::FramebufferAttachment *readAttachment = mState.getReadAttachment();
     ASSERT(readAttachment);
 
-    gl::Buffer *packBuffer = context->getGLState().getTargetBuffer(GL_PIXEL_PACK_BUFFER);
+    gl::Buffer *packBuffer = context->getGLState().getTargetBuffer(gl::BufferBinding::PixelPack);
     if (packBuffer != nullptr)
     {
         Buffer11 *packBufferStorage = GetImplAs<Buffer11>(packBuffer);

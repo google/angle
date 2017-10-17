@@ -37,7 +37,7 @@ class D3D11EmulatedIndexedBufferTest : public ANGLETest
 
         mSourceBuffer      = new rx::Buffer11(mBufferState, mRenderer);
         GLfloat testData[] = { 1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f };
-        gl::Error error    = mSourceBuffer->setData(nullptr, GL_ARRAY_BUFFER, testData,
+        gl::Error error    = mSourceBuffer->setData(nullptr, gl::BufferBinding::Array, testData,
                                                  sizeof(testData), gl::BufferUsage::StaticDraw);
         ASSERT_FALSE(error.isError());
 

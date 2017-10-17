@@ -23,7 +23,7 @@ Buffer9::~Buffer9()
 }
 
 gl::Error Buffer9::setData(const gl::Context *context,
-                           GLenum /*target*/,
+                           gl::BufferBinding /*target*/,
                            const void *data,
                            size_t size,
                            gl::BufferUsage usage)
@@ -56,7 +56,7 @@ gl::Error Buffer9::getData(const gl::Context *context, const uint8_t **outData)
 }
 
 gl::Error Buffer9::setSubData(const gl::Context *context,
-                              GLenum /*target*/,
+                              gl::BufferBinding /*target*/,
                               const void *data,
                               size_t size,
                               size_t offset)

@@ -430,7 +430,7 @@ bool ValidateES3TexImageParametersBase(Context *context,
         }
 
         if (width > 0 && height > 0 && depth > 0 && pixels == nullptr &&
-            context->getGLState().getTargetBuffer(GL_PIXEL_UNPACK_BUFFER) == nullptr)
+            context->getGLState().getTargetBuffer(gl::BufferBinding::PixelUnpack) == nullptr)
         {
             ANGLE_VALIDATION_ERR(context, InvalidValue(), PixelDataNull);
             return false;
@@ -445,7 +445,8 @@ bool ValidateES3TexImageParametersBase(Context *context,
     }
 
     // Check for pixel unpack buffer related API errors
-    gl::Buffer *pixelUnpackBuffer = context->getGLState().getTargetBuffer(GL_PIXEL_UNPACK_BUFFER);
+    gl::Buffer *pixelUnpackBuffer =
+        context->getGLState().getTargetBuffer(BufferBinding::PixelUnpack);
     if (pixelUnpackBuffer != nullptr)
     {
         // ...data is not evenly divisible into the number of bytes needed to store in memory a
@@ -1460,7 +1461,7 @@ bool ValidateIsVertexArray(Context *context, GLuint array)
 }
 
 static bool ValidateBindBufferCommon(Context *context,
-                                     GLenum target,
+                                     BufferBinding target,
                                      GLuint index,
                                      GLuint buffer,
                                      GLintptr offset,
@@ -1488,7 +1489,7 @@ static bool ValidateBindBufferCommon(Context *context,
     const Caps &caps = context->getCaps();
     switch (target)
     {
-        case GL_TRANSFORM_FEEDBACK_BUFFER:
+        case BufferBinding::TransformFeedback:
         {
             if (index >= caps.maxTransformFeedbackSeparateAttributes)
             {
@@ -1514,7 +1515,7 @@ static bool ValidateBindBufferCommon(Context *context,
             }
             break;
         }
-        case GL_UNIFORM_BUFFER:
+        case BufferBinding::Uniform:
         {
             if (index >= caps.maxUniformBufferBindings)
             {
@@ -1533,7 +1534,7 @@ static bool ValidateBindBufferCommon(Context *context,
             }
             break;
         }
-        case GL_ATOMIC_COUNTER_BUFFER:
+        case BufferBinding::AtomicCounter:
         {
             if (context->getClientVersion() < ES_3_1)
             {
@@ -1555,7 +1556,7 @@ static bool ValidateBindBufferCommon(Context *context,
             }
             break;
         }
-        case GL_SHADER_STORAGE_BUFFER:
+        case BufferBinding::ShaderStorage:
         {
             if (context->getClientVersion() < ES_3_1)
             {
@@ -1587,13 +1588,13 @@ static bool ValidateBindBufferCommon(Context *context,
     return true;
 }
 
-bool ValidateBindBufferBase(Context *context, GLenum target, GLuint index, GLuint buffer)
+bool ValidateBindBufferBase(Context *context, BufferBinding target, GLuint index, GLuint buffer)
 {
     return ValidateBindBufferCommon(context, target, index, buffer, 0, 0);
 }
 
 bool ValidateBindBufferRange(Context *context,
-                             GLenum target,
+                             BufferBinding target,
                              GLuint index,
                              GLuint buffer,
                              GLintptr offset,
@@ -2170,13 +2171,13 @@ bool ValidateBeginTransformFeedback(Context *context, GLenum primitiveMode)
     return true;
 }
 
-bool ValidateGetBufferPointerv(Context *context, GLenum target, GLenum pname, void **params)
+bool ValidateGetBufferPointerv(Context *context, BufferBinding target, GLenum pname, void **params)
 {
     return ValidateGetBufferPointervBase(context, target, pname, nullptr, params);
 }
 
 bool ValidateGetBufferPointervRobustANGLE(Context *context,
-                                          GLenum target,
+                                          BufferBinding target,
                                           GLenum pname,
                                           GLsizei bufSize,
                                           GLsizei *length,
@@ -2200,7 +2201,7 @@ bool ValidateGetBufferPointervRobustANGLE(Context *context,
     return true;
 }
 
-bool ValidateUnmapBuffer(Context *context, GLenum target)
+bool ValidateUnmapBuffer(Context *context, BufferBinding target)
 {
     if (context->getClientMajorVersion() < 3)
     {
@@ -2212,7 +2213,7 @@ bool ValidateUnmapBuffer(Context *context, GLenum target)
 }
 
 bool ValidateMapBufferRange(Context *context,
-                            GLenum target,
+                            BufferBinding target,
                             GLintptr offset,
                             GLsizeiptr length,
                             GLbitfield access)
@@ -2227,7 +2228,7 @@ bool ValidateMapBufferRange(Context *context,
 }
 
 bool ValidateFlushMappedBufferRange(Context *context,
-                                    GLenum target,
+                                    BufferBinding target,
                                     GLintptr offset,
                                     GLsizeiptr length)
 {
@@ -2455,8 +2456,8 @@ bool ValidateGetInteger64i_vRobustANGLE(ValidationContext *context,
 }
 
 bool ValidateCopyBufferSubData(ValidationContext *context,
-                               GLenum readTarget,
-                               GLenum writeTarget,
+                               BufferBinding readTarget,
+                               BufferBinding writeTarget,
                                GLintptr readOffset,
                                GLintptr writeOffset,
                                GLsizeiptr size)
@@ -2467,7 +2468,7 @@ bool ValidateCopyBufferSubData(ValidationContext *context,
         return false;
     }
 
-    if (!ValidBufferTarget(context, readTarget) || !ValidBufferTarget(context, writeTarget))
+    if (!ValidBufferType(context, readTarget) || !ValidBufferType(context, writeTarget))
     {
         context->handleError(InvalidEnum() << "Invalid buffer target");
         return false;
@@ -2675,7 +2676,7 @@ bool ValidateVertexAttribIPointer(ValidationContext *context,
     // is bound, zero is bound to the ARRAY_BUFFER buffer object binding point,
     // and the pointer argument is not NULL.
     if (context->getGLState().getVertexArrayId() != 0 &&
-        context->getGLState().getArrayBufferId() == 0 && pointer != nullptr)
+        context->getGLState().getTargetBuffer(BufferBinding::Array) == 0 && pointer != nullptr)
     {
         context
             ->handleError(InvalidOperation()
@@ -3639,7 +3640,7 @@ bool ValidateTexStorage3D(Context *context,
 }
 
 bool ValidateGetBufferParameteri64v(ValidationContext *context,
-                                    GLenum target,
+                                    BufferBinding target,
                                     GLenum pname,
                                     GLint64 *params)
 {

@@ -318,7 +318,7 @@ Buffer11::~Buffer11()
 }
 
 gl::Error Buffer11::setData(const gl::Context *context,
-                            GLenum target,
+                            gl::BufferBinding target,
                             const void *data,
                             size_t size,
                             gl::BufferUsage usage)
@@ -348,7 +348,7 @@ gl::ErrorOrResult<Buffer11::SystemMemoryStorage *> Buffer11::getSystemMemoryStor
 }
 
 gl::Error Buffer11::setSubData(const gl::Context *context,
-                               GLenum target,
+                               gl::BufferBinding target,
                                const void *data,
                                size_t size,
                                size_t offset)
@@ -360,7 +360,7 @@ gl::Error Buffer11::setSubData(const gl::Context *context,
         // Use system memory storage for dynamic buffers.
         // Try using a constant storage for constant buffers
         BufferStorage *writeBuffer = nullptr;
-        if (target == GL_UNIFORM_BUFFER)
+        if (target == gl::BufferBinding::Uniform)
         {
             // If we are a very large uniform buffer, keep system memory storage around so that we
             // aren't forced to read back from a constant buffer. We also check the workaround for

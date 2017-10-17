@@ -430,7 +430,8 @@ Error FramebufferGL::readPixels(const gl::Context *context,
     }
 
     PixelPackState packState     = context->getGLState().getPackState();
-    const gl::Buffer *packBuffer = context->getGLState().getTargetBuffer(GL_PIXEL_PACK_BUFFER);
+    const gl::Buffer *packBuffer =
+        context->getGLState().getTargetBuffer(gl::BufferBinding::PixelPack);
 
     nativegl::ReadPixelsFormat readPixelsFormat =
         nativegl::GetReadPixelsFormat(mFunctions, mWorkarounds, format, type);

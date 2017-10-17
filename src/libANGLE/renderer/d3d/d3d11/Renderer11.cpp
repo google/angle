@@ -1751,7 +1751,7 @@ gl::Error Renderer11::drawArraysIndirect(const gl::Context *context,
         return gl::NoError();
     }
 
-    gl::Buffer *drawIndirectBuffer = glState.getDrawIndirectBuffer();
+    gl::Buffer *drawIndirectBuffer = glState.getTargetBuffer(gl::BufferBinding::DrawIndirect);
     ASSERT(drawIndirectBuffer);
     Buffer11 *storage = GetImplAs<Buffer11>(drawIndirectBuffer);
     uintptr_t offset  = reinterpret_cast<uintptr_t>(indirect);
@@ -1802,7 +1802,7 @@ gl::Error Renderer11::drawElementsIndirect(const gl::Context *context,
         return gl::NoError();
     }
 
-    gl::Buffer *drawIndirectBuffer = glState.getDrawIndirectBuffer();
+    gl::Buffer *drawIndirectBuffer = glState.getTargetBuffer(gl::BufferBinding::DrawIndirect);
     ASSERT(drawIndirectBuffer);
     Buffer11 *storage = GetImplAs<Buffer11>(drawIndirectBuffer);
     uintptr_t offset  = reinterpret_cast<uintptr_t>(indirect);
@@ -3300,7 +3300,7 @@ gl::Error Renderer11::readFromAttachment(const gl::Context *context,
     mDeviceContext->CopySubresourceRegion(stagingHelper.get(), 0, 0, 0, 0, srcTexture->get(),
                                           sourceSubResource, &srcBox);
 
-    gl::Buffer *packBuffer = context->getGLState().getTargetBuffer(GL_PIXEL_PACK_BUFFER);
+    gl::Buffer *packBuffer = context->getGLState().getTargetBuffer(gl::BufferBinding::PixelPack);
     if (!invertTexture)
     {
         PackPixelsParams packParams(safeArea, format, type, outputPitch, pack, packBuffer, 0);

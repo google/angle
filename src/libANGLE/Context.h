@@ -117,8 +117,6 @@ class Context final : public ValidationContext
     GLuint createFenceNV();
     void deleteFenceNV(GLuint fence);
 
-    void bindArrayBuffer(GLuint bufferHandle);
-    void bindElementArrayBuffer(GLuint bufferHandle);
     void bindTexture(GLenum target, GLuint handle);
     void bindReadFramebuffer(GLuint framebufferHandle);
     void bindDrawFramebuffer(GLuint framebufferHandle);
@@ -135,33 +133,8 @@ class Context final : public ValidationContext
                           GLint layer,
                           GLenum access,
                           GLenum format);
-    void bindGenericUniformBuffer(GLuint bufferHandle);
-    void bindIndexedUniformBuffer(GLuint bufferHandle,
-                                  GLuint index,
-                                  GLintptr offset,
-                                  GLsizeiptr size);
-    void bindGenericTransformFeedbackBuffer(GLuint bufferHandle);
-    void bindIndexedTransformFeedbackBuffer(GLuint bufferHandle,
-                                            GLuint index,
-                                            GLintptr offset,
-                                            GLsizeiptr size);
-    void bindGenericAtomicCounterBuffer(GLuint bufferHandle);
-    void bindIndexedAtomicCounterBuffer(GLuint bufferHandle,
-                                        GLuint index,
-                                        GLintptr offset,
-                                        GLsizeiptr size);
-    void bindGenericShaderStorageBuffer(GLuint bufferHandle);
-    void bindIndexedShaderStorageBuffer(GLuint bufferHandle,
-                                        GLuint index,
-                                        GLintptr offset,
-                                        GLsizeiptr size);
-    void bindCopyReadBuffer(GLuint bufferHandle);
-    void bindCopyWriteBuffer(GLuint bufferHandle);
-    void bindPixelPackBuffer(GLuint bufferHandle);
-    void bindPixelUnpackBuffer(GLuint bufferHandle);
     void useProgram(GLuint program);
     void bindTransformFeedback(GLenum target, GLuint transformFeedbackHandle);
-    void bindDrawIndirectBuffer(GLuint bufferHandle);
     void bindProgramPipeline(GLuint pipelineHandle);
 
     void beginQuery(GLenum target, GLuint query);
@@ -176,7 +149,7 @@ class Context final : public ValidationContext
     void vertexAttribDivisor(GLuint index, GLuint divisor);
     void setVertexBindingDivisor(GLuint bindingIndex, GLuint divisor);
 
-    void getBufferParameteriv(GLenum target, GLenum pname, GLint *params);
+    void getBufferParameteriv(BufferBinding target, GLenum pname, GLint *params);
     void getFramebufferAttachmentParameteriv(GLenum target,
                                              GLenum attachment,
                                              GLenum pname,
@@ -577,11 +550,14 @@ class Context final : public ValidationContext
     void flush();
     void finish();
 
-    void getBufferPointerv(GLenum target, GLenum pname, void **params);
-    void *mapBuffer(GLenum target, GLenum access);
-    GLboolean unmapBuffer(GLenum target);
-    void *mapBufferRange(GLenum target, GLintptr offset, GLsizeiptr length, GLbitfield access);
-    void flushMappedBufferRange(GLenum target, GLintptr offset, GLsizeiptr length);
+    void getBufferPointerv(BufferBinding target, GLenum pname, void **params);
+    void *mapBuffer(BufferBinding target, GLenum access);
+    GLboolean unmapBuffer(BufferBinding target);
+    void *mapBufferRange(BufferBinding target,
+                         GLintptr offset,
+                         GLsizeiptr length,
+                         GLbitfield access);
+    void flushMappedBufferRange(BufferBinding target, GLintptr offset, GLsizeiptr length);
 
     void beginTransformFeedback(GLenum primitiveMode);
 
@@ -668,13 +644,13 @@ class Context final : public ValidationContext
                                      GLint components,
                                      const GLfloat *coeffs);
 
-    void bufferData(GLenum target, GLsizeiptr size, const void *data, BufferUsage usage);
-    void bufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, const void *data);
+    void bufferData(BufferBinding target, GLsizeiptr size, const void *data, BufferUsage usage);
+    void bufferSubData(BufferBinding target, GLintptr offset, GLsizeiptr size, const void *data);
     void attachShader(GLuint program, GLuint shader);
     void bindAttribLocation(GLuint program, GLuint index, const GLchar *name);
-    void bindBuffer(GLenum target, GLuint buffer);
-    void bindBufferBase(GLenum target, GLuint index, GLuint buffer);
-    void bindBufferRange(GLenum target,
+    void bindBuffer(BufferBinding target, GLuint buffer);
+    void bindBufferBase(BufferBinding target, GLuint index, GLuint buffer);
+    void bindBufferRange(BufferBinding target,
                          GLuint index,
                          GLuint buffer,
                          GLintptr offset,
@@ -691,8 +667,8 @@ class Context final : public ValidationContext
 
     void getMultisamplefv(GLenum pname, GLuint index, GLfloat *val);
 
-    void copyBufferSubData(GLenum readTarget,
-                           GLenum writeTarget,
+    void copyBufferSubData(BufferBinding readTarget,
+                           BufferBinding writeTarget,
                            GLintptr readOffset,
                            GLintptr writeOffset,
                            GLsizeiptr size);
@@ -876,7 +852,7 @@ class Context final : public ValidationContext
     void waitSync(GLsync sync, GLbitfield flags, GLuint64 timeout);
     void getInteger64v(GLenum pname, GLint64 *params);
 
-    void getBufferParameteri64v(GLenum target, GLenum pname, GLint64 *params);
+    void getBufferParameteri64v(BufferBinding target, GLenum pname, GLint64 *params);
     void genSamplers(GLsizei count, GLuint *samplers);
     void deleteSamplers(GLsizei count, const GLuint *samplers);
     void getInternalformativ(GLenum target,

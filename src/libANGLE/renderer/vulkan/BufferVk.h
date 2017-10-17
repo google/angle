@@ -25,12 +25,12 @@ class BufferVk : public BufferImpl, public ResourceVk
     void destroy(const gl::Context *context) override;
 
     gl::Error setData(const gl::Context *context,
-                      GLenum target,
+                      gl::BufferBinding target,
                       const void *data,
                       size_t size,
                       gl::BufferUsage usage) override;
     gl::Error setSubData(const gl::Context *context,
-                         GLenum target,
+                         gl::BufferBinding target,
                          const void *data,
                          size_t size,
                          size_t offset) override;
