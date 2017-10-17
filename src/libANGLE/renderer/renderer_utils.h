@@ -227,6 +227,7 @@ void CopyImageCHROMIUM(const uint8_t *sourceData,
 class MultisampleTextureInitializer
 {
   public:
+    virtual ~MultisampleTextureInitializer() {}
     virtual gl::Error initializeMultisampleTextureToBlack(const gl::Context *context,
                                                           gl::Texture *glTexture) = 0;
 };
