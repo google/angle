@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "86cf02c5_1ea3971f",
+        "filename": "src/compiler/translator/blocklayout.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-10-17T00:54:19Z",
+      "side": 1,
+      "message": "wondering why you made these two functions, when they do little and nothing.",
+      "revId": "e8fad58ce7e2bfcf5de59c5c71cbaa589ff510ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
