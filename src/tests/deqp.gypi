@@ -1468,7 +1468,7 @@
                         ],
                         'include_dirs':
                         [
-                            '<@(deqp_include_dirs)'
+                            '<@(deqp_include_dirs)',
                             '<(libpng_path)',
                             '<(zlib_path)',
                         ],
