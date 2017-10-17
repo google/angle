@@ -1103,12 +1103,6 @@ bool ValidateFramebufferTextureLayer(Context *context,
         return false;
     }
 
-    if (layer < 0)
-    {
-        context->handleError(InvalidValue());
-        return false;
-    }
-
     if (!ValidateFramebufferTextureBase(context, target, attachment, texture, level))
     {
         return false;
@@ -1117,6 +1111,12 @@ bool ValidateFramebufferTextureLayer(Context *context,
     const gl::Caps &caps = context->getCaps();
     if (texture != 0)
     {
+        if (layer < 0)
+        {
+            context->handleError(InvalidValue());
+            return false;
+        }
+
         gl::Texture *tex = context->getTexture(texture);
         ASSERT(tex);
 
