@@ -17,7 +17,7 @@
         'angle_build_winrt%': '<(angle_build_winrt)',
 
         'deqp_path': '<(DEPTH)/third_party/deqp/src',
-        'libpng_path': '<(DEPTH)/third_party/libpng',
+        'libpng_path': '<(DEPTH)/third_party/libpng/src',
         'zlib_path': '<(DEPTH)/third_party/zlib',
 
         'angle_build_deqp_libraries%' : 0,

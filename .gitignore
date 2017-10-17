@@ -27,7 +27,7 @@
 /third_party/glslang-angle/src
 /third_party/googletest/src
 /third_party/gyp
-/third_party/libpng
+/third_party/libpng/src
 /third_party/spirv-headers/src
 /third_party/spirv-tools-angle/src
 /third_party/vulkan-validation-layers/src

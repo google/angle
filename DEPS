@@ -24,7 +24,7 @@ deps = {
   'third_party/gyp':
     Var('chromium_git') + '/external/gyp' + '@' + 'c6f471687407bf28ddfc63f1a8f47aeb7bf54edc',
 
-  'third_party/libpng':
+  'third_party/libpng/src':
     Var('android_git') + '/platform/external/libpng' + '@' + '094e181e79a3d6c23fd005679025058b7df1ad6c',
 
   'third_party/spirv-headers/src':
