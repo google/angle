@@ -853,6 +853,14 @@ void QueryProgramiv(const Context *context, const Program *program, GLenum pname
         case GL_PROGRAM_SEPARABLE:
             *params = program->isSeparable();
             break;
+        case GL_COMPUTE_WORK_GROUP_SIZE:
+        {
+            const sh::WorkGroupSize &localSize = program->getComputeShaderLocalSize();
+            params[0]                          = localSize[0];
+            params[1]                          = localSize[1];
+            params[2]                          = localSize[2];
+        }
+        break;
         default:
             UNREACHABLE();
             break;

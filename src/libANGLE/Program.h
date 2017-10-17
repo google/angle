@@ -541,6 +541,10 @@ class Program final : angle::NonCopyable, public LabeledObject
     }
 
     const std::vector<ImageBinding> &getImageBindings() const { return mState.mImageBindings; }
+    const sh::WorkGroupSize &getComputeShaderLocalSize() const
+    {
+        return mState.mComputeShaderLocalSize;
+    }
 
     const ProgramState &getState() const { return mState; }
 
