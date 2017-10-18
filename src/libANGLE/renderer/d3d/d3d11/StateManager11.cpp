@@ -1454,6 +1454,11 @@ void StateManager11::setRenderTargets(ID3D11RenderTargetView **rtvs,
         anyDirty = anyDirty || unsetConflictingView(rtvs[rtvIndex]);
     }
 
+    if (dsv)
+    {
+        anyDirty = anyDirty || unsetConflictingView(dsv);
+    }
+
     if (anyDirty)
     {
         mInternalDirtyBits.set(DIRTY_BIT_TEXTURE_AND_SAMPLER_STATE);
