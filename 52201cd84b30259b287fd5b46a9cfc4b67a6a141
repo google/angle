@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "0414ad22_8588dcda",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 2404,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-10-18T04:27:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1bb3d224_0f273799",
+      "revId": "52201cd84b30259b287fd5b46a9cfc4b67a6a141",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "958079d9_2e51c6b0",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 20
@@ -54,6 +72,24 @@
     },
     {
       "key": {
+        "uuid": "b5ca1316_e0819813",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 2410,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-10-18T04:27:26Z",
+      "side": 1,
+      "message": "Done\nThanks to point out this!",
+      "parentUuid": "958079d9_2e51c6b0",
+      "revId": "52201cd84b30259b287fd5b46a9cfc4b67a6a141",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b57c8460_2de60095",
         "filename": "src/compiler/translator/Types.h",
         "patchSetId": 20
@@ -65,6 +101,24 @@
       "writtenOn": "2017-10-17T13:46:13Z",
       "side": 1,
       "message": "If this is needed, I\u0027d rather name this makeUnsizedArray. Or alternatively, if this will only be called when the type is not yet an array, add ASSERT(!isArray()).",
+      "revId": "52201cd84b30259b287fd5b46a9cfc4b67a6a141",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0eb03862_4dde697a",
+        "filename": "src/compiler/translator/Types.h",
+        "patchSetId": 20
+      },
+      "lineNbr": 350,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-10-18T04:27:26Z",
+      "side": 1,
+      "message": "I have removed this function because now we don\u0027t allow unsized array inputs declared before input primitive declaration.",
+      "parentUuid": "b57c8460_2de60095",
       "revId": "52201cd84b30259b287fd5b46a9cfc4b67a6a141",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
