@@ -48,6 +48,54 @@
     },
     {
       "key": {
+        "uuid": "cbbb78ee_4e7ab5d9",
+        "filename": "DEPS",
+        "patchSetId": 25
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-10-18T04:33:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d009b087_0a981cfb",
+      "range": {
+        "startLine": 9,
+        "startChar": 2,
+        "endLine": 9,
+        "endChar": 6
+      },
+      "revId": "f1b5982271ab09e05b932c20c1c0d7ed2610df3d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "82967ddf_65602e77",
+        "filename": "DEPS",
+        "patchSetId": 25
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-10-18T04:33:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "aa0bfd5f_300eaf85",
+      "range": {
+        "startLine": 9,
+        "startChar": 63,
+        "endLine": 9,
+        "endChar": 103
+      },
+      "revId": "f1b5982271ab09e05b932c20c1c0d7ed2610df3d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8252d6f4_955d38ac",
         "filename": "DEPS",
         "patchSetId": 25
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "d51bea03_85db3b09",
+        "filename": "DEPS",
+        "patchSetId": 25
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-10-18T04:33:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8252d6f4_955d38ac",
+      "range": {
+        "startLine": 12,
+        "startChar": 62,
+        "endLine": 12,
+        "endChar": 102
+      },
+      "revId": "f1b5982271ab09e05b932c20c1c0d7ed2610df3d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "10b6f49c_b0e53fb0",
         "filename": "build/secondary/third_party/libpng/BUILD.gn",
         "patchSetId": 25
@@ -85,6 +157,24 @@
       "revId": "f1b5982271ab09e05b932c20c1c0d7ed2610df3d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1f1b6d75_e7ba7fb9",
+        "filename": "build/secondary/third_party/libpng/BUILD.gn",
+        "patchSetId": 25
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-10-18T04:33:35Z",
+      "side": 1,
+      "message": "libpng move done in https://chromium-review.googlesource.com/c/angle/angle/+/722176",
+      "parentUuid": "10b6f49c_b0e53fb0",
+      "revId": "f1b5982271ab09e05b932c20c1c0d7ed2610df3d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
