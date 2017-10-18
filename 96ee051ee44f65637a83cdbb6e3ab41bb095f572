@@ -311,6 +311,30 @@
       "revId": "96ee051ee44f65637a83cdbb6e3ab41bb095f572",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cbde7d73_71d7b60b",
+        "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
+        "patchSetId": 10
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-10-18T12:33:56Z",
+      "side": 1,
+      "message": "I should set the expectations correctly. Patchset 14, I had set GL FAIL, bot could not pass.",
+      "parentUuid": "bb399464_8e0d99a4",
+      "range": {
+        "startLine": 39,
+        "startChar": 0,
+        "endLine": 39,
+        "endChar": 68
+      },
+      "revId": "96ee051ee44f65637a83cdbb6e3ab41bb095f572",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }

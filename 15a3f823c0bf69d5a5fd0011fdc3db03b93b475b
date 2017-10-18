@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "a2bfdfc2_c6cbf839",
+        "filename": "src/compiler/translator/ImageFunctionHLSL.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-10-18T12:33:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e841989d_53154a6d",
+      "revId": "15a3f823c0bf69d5a5fd0011fdc3db03b93b475b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "92b9adae_b9990429",
         "filename": "src/compiler/translator/ImageFunctionHLSL.cpp",
         "patchSetId": 13
@@ -33,6 +51,24 @@
       "revId": "15a3f823c0bf69d5a5fd0011fdc3db03b93b475b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b1aaaf7a_37bb5841",
+        "filename": "src/compiler/translator/ImageFunctionHLSL.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 243,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-10-18T12:33:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "92b9adae_b9990429",
+      "revId": "15a3f823c0bf69d5a5fd0011fdc3db03b93b475b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "c6351853_ed5c7e05",
+        "filename": "src/compiler/translator/ImageFunctionHLSL.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 258,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-10-18T12:33:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "422ea83a_0e9bd0ec",
+      "revId": "15a3f823c0bf69d5a5fd0011fdc3db03b93b475b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "948f6fb4_922c1e87",
         "filename": "src/compiler/translator/ImageFunctionHLSL.h",
         "patchSetId": 13
@@ -67,6 +121,24 @@
       "revId": "15a3f823c0bf69d5a5fd0011fdc3db03b93b475b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d8b07976_12b25fa5",
+        "filename": "src/compiler/translator/ImageFunctionHLSL.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-10-18T12:33:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "948f6fb4_922c1e87",
+      "revId": "15a3f823c0bf69d5a5fd0011fdc3db03b93b475b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
