@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4bacaa54_16d32632",
+        "filename": "src/compiler/translator/ImageFunctionHLSL.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-10-18T12:52:21Z",
+      "side": 1,
+      "message": "Make these static.",
+      "revId": "a3c9ad88be00e2a9dff75f454c5d8bdb5581eb13",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

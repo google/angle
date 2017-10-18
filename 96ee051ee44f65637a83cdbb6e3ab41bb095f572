@@ -335,6 +335,30 @@
       "revId": "96ee051ee44f65637a83cdbb6e3ab41bb095f572",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "827a2d8d_d916f0d8",
+        "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
+        "patchSetId": 10
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-10-18T12:52:21Z",
+      "side": 1,
+      "message": "If you look at the shard output for patch set 14, there\u0027s the following error message:\n\n\"Failed to load test expectations.\n Line 39 and 82 : two entries\u0027 configs overlap\"\n\nThis suggests that this is really a limitation in the test expectation parser. You could add a comment saying: \"TODO: FAIL expectation instead of SKIP should be sufficient for OpenGL, but the test expectations parser doesn\u0027t support having FAIL for D3D and SKIP for GL with the same test filter.\"",
+      "parentUuid": "cbde7d73_71d7b60b",
+      "range": {
+        "startLine": 39,
+        "startChar": 0,
+        "endLine": 39,
+        "endChar": 68
+      },
+      "revId": "96ee051ee44f65637a83cdbb6e3ab41bb095f572",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
