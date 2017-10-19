@@ -216,6 +216,7 @@ class TIntermLoop : public TIntermNode
     TIntermTyped *getExpression() { return mExpr; }
     TIntermBlock *getBody() { return mBody; }
 
+    void setInit(TIntermNode *init) { mInit = init; }
     void setCondition(TIntermTyped *condition) { mCond = condition; }
     void setExpression(TIntermTyped *expression) { mExpr = expression; }
     void setBody(TIntermBlock *body) { mBody = body; }

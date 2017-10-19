@@ -25,7 +25,7 @@
 #include "compiler/translator/IsASTDepthBelowLimit.h"
 #include "compiler/translator/OutputTree.h"
 #include "compiler/translator/ParseContext.h"
-#include "compiler/translator/PruneEmptyDeclarations.h"
+#include "compiler/translator/PruneNoOps.h"
 #include "compiler/translator/RegenerateStructNames.h"
 #include "compiler/translator/RemoveArrayLengthMethod.h"
 #include "compiler/translator/RemoveInvariantDeclaration.h"
@@ -375,17 +375,21 @@ TIntermBlock *TCompiler::compileTreeImpl(const char *const shaderStrings[],
         if (success && (compileOptions & SH_LIMIT_EXPRESSION_COMPLEXITY))
             success = limitExpressionComplexity(root);
 
-        // Prune empty declarations to work around driver bugs and to keep declaration output
-        // simple. We want to do this before most other operations since TIntermDeclaration nodes
-        // without any children are tricky to work with.
+        // We prune no-ops to work around driver bugs and to keep AST processing and output simple.
+        // The following kinds of no-ops are pruned:
+        //   1. Empty declarations "int;".
+        //   2. Literal statements: "1.0;". The ESSL output doesn't define a default precision
+        //      for float, so float literal statements would end up with no precision which is
+        //      invalid ESSL.
+        // After this empty declarations are not allowed in the AST.
         if (success)
-            PruneEmptyDeclarations(root);
+            PruneNoOps(root);
 
         // In case the last case inside a switch statement is a certain type of no-op, GLSL
         // compilers in drivers may not accept it. In this case we clean up the dead code from the
-        // end of switch statements. This is also required because PruneEmptyDeclarations may have
-        // left switch statements that only contained an empty declaration inside the final case in
-        // an invalid state. Relies on that PruneEmptyDeclarations has already been run.
+        // end of switch statements. This is also required because PruneNoOps may have left switch
+        // statements that only contained an empty declaration inside the final case in an invalid
+        // state. Relies on that PruneNoOps has already been run.
         if (success)
             RemoveNoOpCasesFromEndOfSwitchStatements(root, &symbolTable);
 

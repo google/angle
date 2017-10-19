@@ -36,11 +36,13 @@ bool IsEmptyBlock(TIntermNode *node)
     // here. Note that declarations for struct types do contain a nameless child node.
     ASSERT(node->getAsDeclarationNode() == nullptr ||
            !node->getAsDeclarationNode()->getSequence()->empty());
+    // Pure literal statements should also already be pruned.
+    ASSERT(node->getAsConstantUnion() == nullptr);
     return false;
 }
 
 // Return true if all statements in "statements" starting from index i consist only of empty blocks
-// and empty declarations. Returns true also if there are no statements.
+// and no-op statements. Returns true also if there are no statements.
 bool AreEmptyBlocks(TIntermSequence *statements, size_t i)
 {
     for (; i < statements->size(); ++i)

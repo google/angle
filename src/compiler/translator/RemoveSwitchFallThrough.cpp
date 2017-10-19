@@ -97,10 +97,10 @@ void RemoveSwitchFallThroughTraverser::visitSymbol(TIntermSymbol *node)
 
 void RemoveSwitchFallThroughTraverser::visitConstantUnion(TIntermConstantUnion *node)
 {
-    // Conditions of case labels are not traversed, so this is some other constant
-    // Could be just a statement like "0;"
-    mPreviousCase->getSequence()->push_back(node);
-    mLastStatementWasBreak = false;
+    // Conditions of case labels are not traversed, so this is a constant statement like "0;".
+    // These are no-ops so there's no need to add them back to the statement list. Should have
+    // already been pruned out of the AST, in fact.
+    UNREACHABLE();
 }
 
 bool RemoveSwitchFallThroughTraverser::visitDeclaration(Visit, TIntermDeclaration *node)
