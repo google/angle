@@ -359,6 +359,30 @@
       "revId": "96ee051ee44f65637a83cdbb6e3ab41bb095f572",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "149689cb_e0838ad1",
+        "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
+        "patchSetId": 10
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-10-19T01:19:07Z",
+      "side": 1,
+      "message": "Should the TODO be \"... doesn\u0027t support having FAIL for GL and SKIP for D3D with the same test filter.\"?",
+      "parentUuid": "827a2d8d_d916f0d8",
+      "range": {
+        "startLine": 39,
+        "startChar": 0,
+        "endLine": 39,
+        "endChar": 68
+      },
+      "revId": "96ee051ee44f65637a83cdbb6e3ab41bb095f572",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
