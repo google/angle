@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "82ede934_1424c129",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 396,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-19T12:06:17Z",
+      "side": 1,
+      "message": "ok, sorry, I was incorrect, this is only for DrawElementsIndirect. Can you remove this function and put the IndexDataManger::IsStreamingIndexData into the \"if\" like you did for drawElements? I think it\u0027s only used in one place.",
+      "range": {
+        "startLine": 384,
+        "startChar": 0,
+        "endLine": 396,
+        "endChar": 0
+      },
+      "revId": "1e9faf3c5455d27cb9b56cace5738790be164c30",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
