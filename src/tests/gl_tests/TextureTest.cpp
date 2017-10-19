@@ -174,13 +174,6 @@ class Texture2DTest : public TexCoordDrawTest
     // Tests CopyTexSubImage with floating point textures of various formats.
     void testFloatCopySubImage(int sourceImageChannels, int destImageChannels)
     {
-        // TODO(jmadill): Figure out why this is broken on Intel D3D11
-        if (IsIntel() && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
-        {
-            std::cout << "Test skipped on Intel D3D11." << std::endl;
-            return;
-        }
-
         setUpProgram();
 
         if (getClientMajorVersion() < 3)
@@ -2532,9 +2525,9 @@ TEST_P(SamplerTypeMixTestES3, SamplerTypeMixDraw)
 // Calling textureSize() on the samplers hits the D3D sampler metadata workaround.
 TEST_P(TextureSizeTextureArrayTest, BaseLevelVariesInTextureArray)
 {
-    if ((IsAMD() || IsIntel()) && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
+    if (IsAMD() && IsD3D11())
     {
-        std::cout << "Test skipped on Intel and AMD D3D." << std::endl;
+        std::cout << "Test skipped on AMD D3D." << std::endl;
         return;
     }
     glActiveTexture(GL_TEXTURE0);
@@ -2865,12 +2858,6 @@ TEST_P(SamplerInStructAsFunctionParameterTest, SamplerInStructAsFunctionParamete
         return;
     }
 
-    if (IsWindows() && IsIntel() && IsOpenGL())
-    {
-        std::cout << "Test skipped on Windows OpenGL on Intel." << std::endl;
-        return;
-    }
-
     runSamplerInStructTest();
 }
 
@@ -2878,11 +2865,6 @@ TEST_P(SamplerInStructAsFunctionParameterTest, SamplerInStructAsFunctionParamete
 // parameter.
 TEST_P(SamplerInStructArrayAsFunctionParameterTest, SamplerInStructArrayAsFunctionParameter)
 {
-    if (IsIntel() && GetParam().getRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
-    {
-        std::cout << "Test skipped on Intel OpenGL." << std::endl;
-        return;
-    }
     // TODO(ynovikov): re-enable once root cause of http://anglebug.com/1427 is fixed
     if (IsAndroid() && IsAdreno() && IsOpenGLES())
     {
@@ -2896,11 +2878,6 @@ TEST_P(SamplerInStructArrayAsFunctionParameterTest, SamplerInStructArrayAsFuncti
 // parameter.
 TEST_P(SamplerInNestedStructAsFunctionParameterTest, SamplerInNestedStructAsFunctionParameter)
 {
-    if (IsIntel() && GetParam().getRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
-    {
-        std::cout << "Test skipped on Intel OpenGL." << std::endl;
-        return;
-    }
     // TODO(ynovikov): re-enable once root cause of http://anglebug.com/1427 is fixed
     if (IsAndroid() && IsAdreno() && IsOpenGLES())
     {

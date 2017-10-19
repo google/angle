@@ -218,13 +218,6 @@ TEST_P(TransformFeedbackTest, BufferRebinding)
 // afterward.
 TEST_P(TransformFeedbackTest, RecordAndDraw)
 {
-    // TODO(jmadill): Figure out why this fails on Intel.
-    if (IsIntel() && GetParam().getRenderer() == EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
-    {
-        std::cout << "Test skipped on Intel." << std::endl;
-        return;
-    }
-
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
@@ -1058,13 +1051,6 @@ class TransformFeedbackLifetimeTest : public TransformFeedbackTest
 // Tests a bug with state syncing and deleted transform feedback buffers.
 TEST_P(TransformFeedbackLifetimeTest, DeletedBuffer)
 {
-    // TODO(ynovikov): Obscure driver error on Intel HD 530 http://anglebug.com/1879
-    if (IsWindows() && IsIntel() && IsDesktopOpenGL())
-    {
-        std::cout << "Test skipped on Intel OpenGL on Windows." << std::endl;
-        return;
-    }
-
     // First stream vertex data to mTransformFeedbackBuffer.
     glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, mTransformFeedback);
     glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, mTransformFeedbackBuffer);

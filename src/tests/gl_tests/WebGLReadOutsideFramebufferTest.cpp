@@ -359,13 +359,6 @@ TEST_P(WebGLReadOutsideFramebufferTest, ReadPixels)
 // the corresponding source pixel is outside the framebuffer.
 TEST_P(WebGLReadOutsideFramebufferTest, CopyTexSubImage2D)
 {
-    // TODO(fjhenigman): Figure out why this fails on Win10 Intel OpenGL
-    if (IsWindows() && IsIntel() && IsDesktopOpenGL())
-    {
-        std::cout << "Test skipped on Windows OpenGL on Intel." << std::endl;
-        return;
-    }
-
     Main2D(&WebGLReadOutsideFramebufferTest::TestCopyTexSubImage2D, false);
 
 #ifdef _WIN64
@@ -383,13 +376,6 @@ TEST_P(WebGLReadOutsideFramebufferTest, CopyTexSubImage2D)
 // Check that copyTexImage2D sets (0,0,0,0) for pixels outside the framebuffer.
 TEST_P(WebGLReadOutsideFramebufferTest, CopyTexImage2D)
 {
-    // TODO(fjhenigman): Figure out why this fails on Win10 Intel OpenGL
-    if (IsWindows() && IsIntel() && IsDesktopOpenGL())
-    {
-        std::cout << "Test skipped on Windows OpenGL on Intel." << std::endl;
-        return;
-    }
-
     Main2D(&WebGLReadOutsideFramebufferTest::TestCopyTexImage2D, true);
 
 #ifdef _WIN64

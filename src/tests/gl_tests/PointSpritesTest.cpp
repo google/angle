@@ -37,13 +37,6 @@ class PointSpritesTest : public ANGLETest
 // https://www.khronos.org/registry/webgl/sdk/tests/conformance/glsl/variables/gl-pointcoord.html
 TEST_P(PointSpritesTest, PointCoordAndPointSizeCompliance)
 {
-    // TODO(jmadill): figure out why this fails
-    if (IsIntel() && GetParam() == ES2_D3D9())
-    {
-        std::cout << "Test skipped on Intel due to failures." << std::endl;
-        return;
-    }
-
     // TODO(jmadill): Investigate potential AMD driver bug.
     // http://anglebug.com/1643
     if (IsAMD() && IsDesktopOpenGL() && IsWindows())
@@ -151,14 +144,6 @@ TEST_P(PointSpritesTest, PointWithoutAttributesCompliance)
     if (IsAMD() && IsDesktopOpenGL() && IsWindows())
     {
         std::cout << "Test skipped on desktop GL AMD Windows." << std::endl;
-        return;
-    }
-
-    // TODO(jmadill): Figure out why this fails on Intel.
-    // http://anglebug.com/1346
-    if (IsIntel() && IsWindows() && (IsD3D11() || IsD3D9()))
-    {
-        std::cout << "Test skipped on Intel Windows D3D." << std::endl;
         return;
     }
 

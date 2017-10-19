@@ -122,75 +122,30 @@ class D3DImageFormatConversionTest : public ANGLETest
 // Validation test for rx::R4G4B4A4's writeColor functions
 TEST_P(D3DImageFormatConversionTest, WriteColorFunctionR4G4B4A4)
 {
-    // These tests fail on certain Intel machines running an un-updated version of Win7
-    // The tests pass after installing the latest updates from Windows Update.
-    // TODO: reenable these tests once the bots have been updated
-    if (IsIntel() && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
-    {
-        std::cout << "Test skipped on Intel D3D11." << std::endl;
-        return;
-    }
-
     runTest<R4G4B4A4>(GL_RGBA, GL_UNSIGNED_SHORT_4_4_4_4);
 }
 
 // Validation test for rx::R5G5B5A1's writeColor functions
 TEST_P(D3DImageFormatConversionTest, WriteColorFunctionR5G5B5A1)
 {
-    // These tests fail on certain Intel machines running an un-updated version of Win7
-    // The tests pass after installing the latest updates from Windows Update.
-    // TODO: reenable these tests once the bots have been updated
-    if (IsIntel() && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
-    {
-        std::cout << "Test skipped on Intel D3D11." << std::endl;
-        return;
-    }
-
     runTest<R5G5B5A1>(GL_RGBA, GL_UNSIGNED_SHORT_5_5_5_1);
 }
 
 // Validation test for rx::R5G6B5's writeColor functions
 TEST_P(D3DImageFormatConversionTest, WriteColorFunctionR5G6B5)
 {
-    // These tests fail on certain Intel machines running an un-updated version of Win7
-    // The tests pass after installing the latest updates from Windows Update.
-    // TODO: reenable these tests once the bots have been updated
-    if (IsIntel() && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
-    {
-        std::cout << "Test skipped on Intel D3D11." << std::endl;
-        return;
-    }
-
     runTest<R5G6B5>(GL_RGB, GL_UNSIGNED_SHORT_5_6_5);
 }
 
 // Validation test for rx::R8G8B8A8's writeColor functions
 TEST_P(D3DImageFormatConversionTest, WriteColorFunctionR8G8B8A8)
 {
-    // These tests fail on certain Intel machines running an un-updated version of Win7
-    // The tests pass after installing the latest updates from Windows Update.
-    // TODO: reenable these tests once the bots have been updated
-    if (IsIntel() && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
-    {
-        std::cout << "Test skipped on Intel D3D11." << std::endl;
-        return;
-    }
-
     runTest<R8G8B8A8>(GL_RGBA, GL_UNSIGNED_BYTE);
 }
 
 // Validation test for rx::R8G8B8's writeColor functions
 TEST_P(D3DImageFormatConversionTest, WriteColorFunctionR8G8B8)
 {
-    // These tests fail on certain Intel machines running an un-updated version of Win7
-    // The tests pass after installing the latest updates from Windows Update.
-    // TODO: reenable these tests once the bots have been updated
-    if (IsIntel() && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
-    {
-        std::cout << "Test skipped on Intel D3D11." << std::endl;
-        return;
-    }
-
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     runTest<R8G8B8>(GL_RGB, GL_UNSIGNED_BYTE);
 }
