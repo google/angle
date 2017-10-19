@@ -13,7 +13,7 @@ import sys
 script_dir = os.path.dirname(__file__)
 angle_dir = os.path.normpath(os.path.join(script_dir, os.pardir))
 
-sys.path.insert(0, os.path.join(angle_dir, 'third_party', 'gyp', 'pylib'))
+sys.path.insert(0, os.path.join(angle_dir, 'tools', 'gyp', 'pylib'))
 import gyp
 
 def appendCommonArgs(args):
