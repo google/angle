@@ -383,6 +383,30 @@
       "revId": "96ee051ee44f65637a83cdbb6e3ab41bb095f572",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c9052938_f4404417",
+        "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
+        "patchSetId": 10
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-10-19T13:15:26Z",
+      "side": 1,
+      "message": "Ah yes, mixed up GL and D3D in my previous comment. The TODO in the code looks good.",
+      "parentUuid": "149689cb_e0838ad1",
+      "range": {
+        "startLine": 39,
+        "startChar": 0,
+        "endLine": 39,
+        "endChar": 68
+      },
+      "revId": "96ee051ee44f65637a83cdbb6e3ab41bb095f572",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
