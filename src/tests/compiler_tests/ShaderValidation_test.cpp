@@ -5063,3 +5063,27 @@ TEST_F(FragmentShaderValidationTest, SwitchFinalCaseHasEmptyDeclaration)
         FAIL() << "Shader compilation failed, expecting success:\n" << mInfoLog;
     }
 }
+
+// Test that nothing is needed after the final case in a switch statement in ESSL 3.10.
+TEST_F(FragmentShaderValidationTest, SwitchFinalCaseEmptyESSL310)
+{
+    const std::string &shaderString =
+        R"(#version 310 es
+
+        precision mediump float;
+        uniform int i;
+        void main()
+        {
+            switch (i)
+            {
+                case 0:
+                    break;
+                default:
+            }
+        })";
+
+    if (!compile(shaderString))
+    {
+        FAIL() << "Shader compilation failed, expecting success:\n" << mInfoLog;
+    }
+}

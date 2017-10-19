@@ -4640,8 +4640,9 @@ TIntermSwitch *TParseContext::addSwitch(TIntermTyped *init,
     }
 
     ASSERT(statementList);
-    if (!ValidateSwitchStatementList(switchType, mDiagnostics, statementList, loc))
+    if (!ValidateSwitchStatementList(switchType, mShaderVersion, mDiagnostics, statementList, loc))
     {
+        ASSERT(mDiagnostics->numErrors() > 0);
         return nullptr;
     }
 
