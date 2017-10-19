@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a39f5791_6d81a5f5",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 384,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-19T04:12:54Z",
+      "side": 1,
+      "message": "DrawElementsNeedsTranslation",
+      "range": {
+        "startLine": 384,
+        "startChar": 5,
+        "endLine": 384,
+        "endChar": 37
+      },
+      "revId": "9699e59cf68c4776534bbc959986c82fcc972e18",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
