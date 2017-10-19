@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "319e7ddd_98c31fe3",
+        "filename": "src/compiler/translator/UniformHLSL.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 354,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-10-19T19:46:04Z",
+      "side": 1,
+      "message": "nit: rename this something like imageUniformsHLSL41Output or something similar to indicate that it only had entries if we\u0027re outputting SH_HLSL_4_1_OUTPUT",
+      "range": {
+        "startLine": 354,
+        "startChar": 35,
+        "endLine": 354,
+        "endChar": 48
+      },
+      "revId": "6b79eb1a579a37e7d446d00f04c501c6730e3d13",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
