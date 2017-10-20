@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "735af1d6_975a8015",
+        "filename": "src/libANGLE/renderer/gl/FunctionsGL.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 897,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-10-20T14:22:24Z",
+      "side": 0,
+      "message": "Great find on these errors, Yuly.",
+      "parentUuid": "08643d92_bc853754",
+      "range": {
+        "startLine": 897,
+        "startChar": 7,
+        "endLine": 897,
+        "endChar": 29
+      },
+      "revId": "6dee4d8c1f5c00afdc428225b2757fe66a5fd1e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "7821e1e8_e4c5c495",
         "filename": "src/libANGLE/renderer/gl/FunctionsGL.cpp",
         "patchSetId": 13
