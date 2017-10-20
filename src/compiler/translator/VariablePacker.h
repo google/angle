@@ -17,10 +17,10 @@ namespace sh
 {
 
 // Gets how many components in a row a data type takes.
-int GetVariablePackingComponentsPerRow(sh::GLenum type);
+int GetTypePackingComponentsPerRow(sh::GLenum type);
 
 // Gets how many rows a data type takes.
-int GetVariablePackingRows(sh::GLenum type);
+int GetTypePackingRows(sh::GLenum type);
 
 // Returns true if the passed in variables pack in maxVectors.
 // T should be ShaderVariable or one of the subclasses of ShaderVariable.

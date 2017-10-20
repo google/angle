@@ -72,8 +72,8 @@ TEST(VariablePacking, Pack)
     for (size_t tt = 0; tt < ArraySize(types); ++tt)
     {
         sh::GLenum type            = types[tt];
-        int num_rows               = sh::GetVariablePackingRows(type);
-        int num_components_per_row = sh::GetVariablePackingComponentsPerRow(type);
+        int num_rows               = sh::GetTypePackingRows(type);
+        int num_components_per_row = sh::GetTypePackingComponentsPerRow(type);
         // Check 1 of the type.
         vars.clear();
         vars.push_back(sh::ShaderVariable(type, 0));
@@ -139,8 +139,8 @@ TEST(VariablePacking, PackSizes)
             expectedRows       = squareSize;
         }
 
-        EXPECT_EQ(expectedComponents, sh::GetVariablePackingComponentsPerRow(type));
-        EXPECT_EQ(expectedRows, sh::GetVariablePackingRows(type));
+        EXPECT_EQ(expectedComponents, sh::GetTypePackingComponentsPerRow(type));
+        EXPECT_EQ(expectedRows, sh::GetTypePackingRows(type));
     }
 }
 
