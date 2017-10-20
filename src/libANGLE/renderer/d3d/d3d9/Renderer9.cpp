@@ -2920,8 +2920,10 @@ gl::Error Renderer9::copyImage(const gl::Context *context,
                                bool unpackPremultiplyAlpha,
                                bool unpackUnmultiplyAlpha)
 {
-    UNREACHABLE();
-    return gl::NoError();
+    Image9 *dest9 = GetAs<Image9>(dest);
+    Image9 *src9  = GetAs<Image9>(source);
+    return Image9::CopyImage(context, dest9, src9, sourceRect, destOffset, unpackFlipY,
+                             unpackPremultiplyAlpha, unpackUnmultiplyAlpha);
 }
 
 TextureStorage *Renderer9::createTextureStorage2D(SwapChainD3D *swapChain)

@@ -104,24 +104,12 @@ gl::Error Image9::generateMip(IDirect3DSurface9 *destSurface, IDirect3DSurface9 
 gl::Error Image9::generateMipmap(Image9 *dest, Image9 *source)
 {
     IDirect3DSurface9 *sourceSurface = nullptr;
-    gl::Error error = source->getSurface(&sourceSurface);
-    if (error.isError())
-    {
-        return error;
-    }
+    ANGLE_TRY(source->getSurface(&sourceSurface));
 
     IDirect3DSurface9 *destSurface = nullptr;
-    error = dest->getSurface(&destSurface);
-    if (error.isError())
-    {
-        return error;
-    }
+    ANGLE_TRY(dest->getSurface(&destSurface));
 
-    error = generateMip(destSurface, sourceSurface);
-    if (error.isError())
-    {
-        return error;
-    }
+    ANGLE_TRY(generateMip(destSurface, sourceSurface));
 
     dest->markDirty();
 
@@ -167,6 +155,84 @@ gl::Error Image9::copyLockableSurfaces(IDirect3DSurface9 *dest, IDirect3DSurface
 
     source->UnlockRect();
     dest->UnlockRect();
+
+    return gl::NoError();
+}
+
+// static
+gl::Error Image9::CopyImage(const gl::Context *context,
+                            Image9 *dest,
+                            Image9 *source,
+                            const gl::Rectangle &sourceRect,
+                            const gl::Offset &destOffset,
+                            bool unpackFlipY,
+                            bool unpackPremultiplyAlpha,
+                            bool unpackUnmultiplyAlpha)
+{
+    IDirect3DSurface9 *sourceSurface = nullptr;
+    ANGLE_TRY(source->getSurface(&sourceSurface));
+
+    IDirect3DSurface9 *destSurface = nullptr;
+    ANGLE_TRY(dest->getSurface(&destSurface));
+
+    D3DSURFACE_DESC destDesc;
+    HRESULT result = destSurface->GetDesc(&destDesc);
+    ASSERT(SUCCEEDED(result));
+    if (FAILED(result))
+    {
+        return gl::OutOfMemory()
+               << "Failed to query the source surface description for mipmap generation, "
+               << gl::FmtHR(result);
+    }
+    const d3d9::D3DFormat &destD3DFormatInfo = d3d9::GetD3DFormatInfo(destDesc.Format);
+
+    D3DSURFACE_DESC sourceDesc;
+    result = sourceSurface->GetDesc(&sourceDesc);
+    ASSERT(SUCCEEDED(result));
+    if (FAILED(result))
+    {
+        return gl::OutOfMemory()
+               << "Failed to query the destination surface description for mipmap generation, "
+               << gl::FmtHR(result);
+    }
+    const d3d9::D3DFormat &sourceD3DFormatInfo = d3d9::GetD3DFormatInfo(sourceDesc.Format);
+
+    D3DLOCKED_RECT sourceLocked = {0};
+    result                      = sourceSurface->LockRect(&sourceLocked, nullptr, D3DLOCK_READONLY);
+    ASSERT(SUCCEEDED(result));
+    if (FAILED(result))
+    {
+        return gl::OutOfMemory() << "Failed to lock the source surface for CopyImage, "
+                                 << gl::FmtHR(result);
+    }
+
+    D3DLOCKED_RECT destLocked = {0};
+    result                    = destSurface->LockRect(&destLocked, nullptr, 0);
+    ASSERT(SUCCEEDED(result));
+    if (FAILED(result))
+    {
+        sourceSurface->UnlockRect();
+        return gl::OutOfMemory() << "Failed to lock the destination surface for CopyImage, "
+                                 << gl::FmtHR(result);
+    }
+
+    const uint8_t *sourceData = reinterpret_cast<const uint8_t *>(sourceLocked.pBits) +
+                                sourceRect.x * sourceD3DFormatInfo.pixelBytes +
+                                sourceRect.y * sourceLocked.Pitch;
+    uint8_t *destData = reinterpret_cast<uint8_t *>(destLocked.pBits) +
+                        destOffset.x * destD3DFormatInfo.pixelBytes +
+                        destOffset.y * destLocked.Pitch;
+    ASSERT(sourceData && destData);
+
+    CopyImageCHROMIUM(sourceData, sourceLocked.Pitch, sourceD3DFormatInfo.pixelBytes,
+                      sourceD3DFormatInfo.info().colorReadFunction, destData, destLocked.Pitch,
+                      destD3DFormatInfo.pixelBytes, destD3DFormatInfo.info().colorWriteFunction,
+                      gl::GetUnsizedFormat(dest->getInternalFormat()),
+                      destD3DFormatInfo.info().componentType, sourceRect.width, sourceRect.height,
+                      unpackFlipY, unpackPremultiplyAlpha, unpackUnmultiplyAlpha);
+
+    destSurface->UnlockRect();
+    sourceSurface->UnlockRect();
 
     return gl::NoError();
 }

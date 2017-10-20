@@ -110,7 +110,7 @@ gl::Error TextureD3D::getImageAndSyncFromStorage(const gl::Context *context,
                                                  ImageD3D **outImage) const
 {
     ImageD3D *image = getImage(index);
-    if (mTexStorage)
+    if (mTexStorage && mTexStorage->isRenderTarget())
     {
         ANGLE_TRY(image->copyFromTexStorage(context, index, mTexStorage));
     }
@@ -1090,6 +1090,9 @@ gl::Error TextureD3D_2D::copyTexture(const gl::Context *context,
 
         ANGLE_TRY(mRenderer->copyImage(context, destImage, sourceImage, sourceRect, destOffset,
                                        unpackFlipY, unpackPremultiplyAlpha, unpackUnmultiplyAlpha));
+
+        gl::Box destRegion(destOffset, size);
+        ANGLE_TRY(commitRegion(context, destImageIndex, destRegion));
     }
 
     return gl::NoError();
@@ -1134,6 +1137,9 @@ gl::Error TextureD3D_2D::copySubTexture(const gl::Context *context,
 
         ANGLE_TRY(mRenderer->copyImage(context, destImage, sourceImage, sourceArea, destOffset,
                                        unpackFlipY, unpackPremultiplyAlpha, unpackUnmultiplyAlpha));
+
+        gl::Box destRegion(destOffset.x, destOffset.y, 0, sourceArea.width, sourceArea.height, 1);
+        ANGLE_TRY(commitRegion(context, destImageIndex, destRegion));
     }
 
     return gl::NoError();
@@ -1853,6 +1859,9 @@ gl::Error TextureD3D_Cube::copyTexture(const gl::Context *context,
 
         ANGLE_TRY(mRenderer->copyImage(context, destImage, sourceImage, sourceRect, destOffset,
                                        unpackFlipY, unpackPremultiplyAlpha, unpackUnmultiplyAlpha));
+
+        gl::Box destRegion(destOffset, size);
+        ANGLE_TRY(commitRegion(context, destImageIndex, destRegion));
     }
 
     return gl::NoError();
@@ -1900,6 +1909,9 @@ gl::Error TextureD3D_Cube::copySubTexture(const gl::Context *context,
 
         ANGLE_TRY(mRenderer->copyImage(context, destImage, sourceImage, sourceArea, destOffset,
                                        unpackFlipY, unpackPremultiplyAlpha, unpackUnmultiplyAlpha));
+
+        gl::Box destRegion(destOffset.x, destOffset.y, 0, sourceArea.width, sourceArea.height, 1);
+        ANGLE_TRY(commitRegion(context, destImageIndex, destRegion));
     }
 
     return gl::NoError();
