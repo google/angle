@@ -1,0 +1,234 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "08643d92_bc853754",
+        "filename": "src/libANGLE/renderer/gl/FunctionsGL.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 897,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-10-20T04:10:27Z",
+      "side": 0,
+      "message": "This is missing in new code, only appears for GLES.",
+      "range": {
+        "startLine": 897,
+        "startChar": 7,
+        "endLine": 897,
+        "endChar": 29
+      },
+      "revId": "6dee4d8c1f5c00afdc428225b2757fe66a5fd1e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7821e1e8_e4c5c495",
+        "filename": "src/libANGLE/renderer/gl/FunctionsGL.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 900,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-10-20T04:10:27Z",
+      "side": 0,
+      "message": "I don\u0027t see multiple extensions check anywhere in the new code.",
+      "range": {
+        "startLine": 900,
+        "startChar": 44,
+        "endLine": 900,
+        "endChar": 60
+      },
+      "revId": "6dee4d8c1f5c00afdc428225b2757fe66a5fd1e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2f6cb34e_fbee8f39",
+        "filename": "src/libANGLE/renderer/gl/FunctionsGL.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 974,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-10-20T04:10:27Z",
+      "side": 0,
+      "message": "Missing in new code",
+      "range": {
+        "startLine": 974,
+        "startChar": 7,
+        "endLine": 974,
+        "endChar": 30
+      },
+      "revId": "6dee4d8c1f5c00afdc428225b2757fe66a5fd1e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e56e2615_48760947",
+        "filename": "src/libANGLE/renderer/gl/FunctionsGL.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 981,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-10-20T04:10:27Z",
+      "side": 0,
+      "message": "Missing in new code",
+      "range": {
+        "startLine": 981,
+        "startChar": 7,
+        "endLine": 981,
+        "endChar": 28
+      },
+      "revId": "6dee4d8c1f5c00afdc428225b2757fe66a5fd1e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d735f8e5_2c32f66e",
+        "filename": "src/libANGLE/renderer/gl/FunctionsGL.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 1001,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-10-20T04:10:27Z",
+      "side": 0,
+      "message": "Missing in new code",
+      "range": {
+        "startLine": 1001,
+        "startChar": 7,
+        "endLine": 1001,
+        "endChar": 29
+      },
+      "revId": "6dee4d8c1f5c00afdc428225b2757fe66a5fd1e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0a308cba_2242afdc",
+        "filename": "src/libANGLE/renderer/gl/FunctionsGL.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 1039,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-10-20T04:10:27Z",
+      "side": 0,
+      "message": "Missing in new code",
+      "range": {
+        "startLine": 1039,
+        "startChar": 7,
+        "endLine": 1039,
+        "endChar": 24
+      },
+      "revId": "6dee4d8c1f5c00afdc428225b2757fe66a5fd1e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c38c96c2_aefa8f0e",
+        "filename": "src/libANGLE/renderer/gl/FunctionsGL.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 1834,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-10-20T04:10:27Z",
+      "side": 0,
+      "message": "Missing in new code",
+      "range": {
+        "startLine": 1834,
+        "startChar": 7,
+        "endLine": 1834,
+        "endChar": 24
+      },
+      "revId": "6dee4d8c1f5c00afdc428225b2757fe66a5fd1e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7ce5edda_daa92137",
+        "filename": "src/libANGLE/renderer/gl/FunctionsGL.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 1855,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-10-20T04:10:27Z",
+      "side": 0,
+      "message": "Missing in new code",
+      "range": {
+        "startLine": 1855,
+        "startChar": 7,
+        "endLine": 1855,
+        "endChar": 33
+      },
+      "revId": "6dee4d8c1f5c00afdc428225b2757fe66a5fd1e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5e89eb6d_c4ccb525",
+        "filename": "src/libANGLE/renderer/gl/FunctionsGL.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 1866,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-10-20T04:10:27Z",
+      "side": 0,
+      "message": "Missing in new code",
+      "range": {
+        "startLine": 1866,
+        "startChar": 7,
+        "endLine": 1866,
+        "endChar": 23
+      },
+      "revId": "6dee4d8c1f5c00afdc428225b2757fe66a5fd1e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c5735c13_95b428e1",
+        "filename": "src/libANGLE/renderer/gl/FunctionsGL.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 1914,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-10-20T04:10:27Z",
+      "side": 0,
+      "message": "Missing in new code",
+      "range": {
+        "startLine": 1914,
+        "startChar": 7,
+        "endLine": 1914,
+        "endChar": 32
+      },
+      "revId": "6dee4d8c1f5c00afdc428225b2757fe66a5fd1e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
