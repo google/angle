@@ -218,7 +218,7 @@ bool DisplayOzone::Buffer::resize(int32_t width, int32_t height)
 
     gl->genRenderbuffers(1, &mColorBuffer);
     sm->bindRenderbuffer(GL_RENDERBUFFER, mColorBuffer);
-    gl->eglImageTargetRenderbufferStorageOES(GL_RENDERBUFFER, mImage);
+    gl->eGLImageTargetRenderbufferStorageOES(GL_RENDERBUFFER, mImage);
 
     sm->bindFramebuffer(GL_FRAMEBUFFER, mGLFB);
     gl->framebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0_EXT, GL_RENDERBUFFER,
@@ -263,7 +263,7 @@ bool DisplayOzone::Buffer::initialize(int width, int height)
 
 void DisplayOzone::Buffer::bindTexImage()
 {
-    mDisplay->mFunctionsGL->eglImageTargetTexture2DOES(GL_TEXTURE_2D, mImage);
+    mDisplay->mFunctionsGL->eGLImageTargetTexture2DOES(GL_TEXTURE_2D, mImage);
 }
 
 GLuint DisplayOzone::Buffer::getTexture()
@@ -280,7 +280,7 @@ GLuint DisplayOzone::Buffer::getTexture()
     gl->texParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     gl->texParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     ASSERT(mImage != EGL_NO_IMAGE_KHR);
-    gl->eglImageTargetTexture2DOES(GL_TEXTURE_2D, mImage);
+    gl->eGLImageTargetTexture2DOES(GL_TEXTURE_2D, mImage);
     return mTexture;
 }
 

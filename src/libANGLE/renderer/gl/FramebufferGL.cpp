@@ -250,11 +250,11 @@ Error FramebufferGL::invalidate(const gl::Context *context, size_t count, const 
         mFunctions->invalidateFramebuffer(GL_FRAMEBUFFER, static_cast<GLsizei>(count),
                                           finalAttachmentsPtr);
     }
-    else if (mFunctions->discardFramebuffer)
+    else if (mFunctions->discardFramebufferEXT)
     {
         mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
-        mFunctions->discardFramebuffer(GL_FRAMEBUFFER, static_cast<GLsizei>(count),
-                                       finalAttachmentsPtr);
+        mFunctions->discardFramebufferEXT(GL_FRAMEBUFFER, static_cast<GLsizei>(count),
+                                          finalAttachmentsPtr);
     }
 
     return gl::NoError();

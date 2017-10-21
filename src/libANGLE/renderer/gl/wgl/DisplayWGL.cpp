@@ -44,7 +44,7 @@ class FunctionsGLWindows : public FunctionsGL
     ~FunctionsGLWindows() override {}
 
   private:
-    void *loadProcAddress(const std::string &function) override
+    void *loadProcAddress(const std::string &function) const override
     {
         void *proc = reinterpret_cast<void*>(mGetProcAddressWGL(function.c_str()));
         if (!proc)

@@ -574,6 +574,8 @@
             'libANGLE/renderer/gl/CompilerGL.h',
             'libANGLE/renderer/gl/ContextGL.cpp',
             'libANGLE/renderer/gl/ContextGL.h',
+            'libANGLE/renderer/gl/DispatchTableGL_autogen.cpp',
+            'libANGLE/renderer/gl/DispatchTableGL_autogen.h',
             'libANGLE/renderer/gl/DisplayGL.cpp',
             'libANGLE/renderer/gl/DisplayGL.h',
             'libANGLE/renderer/gl/FenceNVGL.cpp',

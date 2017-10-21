@@ -200,7 +200,7 @@ class FunctionsGLEGL : public FunctionsGL
     ~FunctionsGLEGL() override {}
 
   private:
-    void *loadProcAddress(const std::string &function) override
+    void *loadProcAddress(const std::string &function) const override
     {
         return mEGL.getProcAddress(function.c_str());
     }

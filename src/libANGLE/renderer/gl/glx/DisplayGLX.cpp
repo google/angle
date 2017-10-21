@@ -49,7 +49,7 @@ class FunctionsGLGLX : public FunctionsGL
     ~FunctionsGLGLX() override {}
 
   private:
-    void *loadProcAddress(const std::string &function) override
+    void *loadProcAddress(const std::string &function) const override
     {
         return reinterpret_cast<void*>(mGetProc(function.c_str()));
     }

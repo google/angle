@@ -753,6 +753,143 @@ typedef void (INTERNAL_GL_APIENTRY *PFNGLVERTEXARRAYELEMENTBUFFERPROC)(GLuint, G
 typedef void (INTERNAL_GL_APIENTRY *PFNGLVERTEXARRAYVERTEXBUFFERPROC)(GLuint, GLuint, GLuint, GLintptr, GLsizei);
 typedef void (INTERNAL_GL_APIENTRY *PFNGLVERTEXARRAYVERTEXBUFFERSPROC)(GLuint, GLuint, GLsizei, const GLuint *, const GLintptr *, const GLsizei *);
 
+// GL_EXT_discard_framebuffer
+typedef void(INTERNAL_GL_APIENTRY *PFNGLDISCARDFRAMEBUFFEREXTPROC)(GLenum target,
+                                                                   GLsizei numAttachments,
+                                                                   const GLenum *attachments);
+
+// GL_OES_EGL_image
+typedef void *GLeglImageOES;
+typedef void(INTERNAL_GL_APIENTRY *PFNGLEGLIMAGETARGETTEXTURE2DOESPROC)(GLenum target,
+                                                                        GLeglImageOES image);
+typedef void(INTERNAL_GL_APIENTRY *PFNGLEGLIMAGETARGETRENDERBUFFERSTORAGEOESPROC)(
+    GLenum target,
+    GLeglImageOES image);
+
+// NV_path_rendering (originally written against 3.2 compatibility profile)
+typedef void(INTERNAL_GL_APIENTRY *PFNGLMATRIXLOADFEXTPROC)(GLenum matrixMode, const GLfloat *m);
+typedef void(INTERNAL_GL_APIENTRY *PFNGLMATRIXLOADFNVPROC)(GLenum matrixMode, const GLfloat *m);
+typedef void(INTERNAL_GL_APIENTRY *PFNGLMATRIXLOADIDENTITYNVPROC)(GLenum matrixMode);
+typedef GLuint(INTERNAL_GL_APIENTRY *PFNGLGENPATHSNVPROC)(GLsizei range);
+typedef void(INTERNAL_GL_APIENTRY *PFNGLDELETEPATHSNVPROC)(GLuint path, GLsizei range);
+typedef GLboolean(INTERNAL_GL_APIENTRY *PFNGLISPATHNVPROC)(GLuint path);
+typedef void(INTERNAL_GL_APIENTRY *PFNGLPATHCOMMANDSNVPROC)(GLuint path,
+                                                            GLsizei numCommands,
+                                                            const GLubyte *commands,
+                                                            GLsizei numCoords,
+                                                            GLenum coordType,
+                                                            const void *coords);
+typedef void(INTERNAL_GL_APIENTRY *PFNGLPATHPARAMETERINVPROC)(GLuint path,
+                                                              GLenum pname,
+                                                              GLint value);
+typedef void(INTERNAL_GL_APIENTRY *PFNGLPATHPARAMETERFNVPROC)(GLuint path,
+                                                              GLenum pname,
+                                                              GLfloat value);
+typedef void(INTERNAL_GL_APIENTRY *PFNGLGETPATHPARAMETERIVNVPROC)(GLuint path,
+                                                                  GLenum pname,
+                                                                  GLint *value);
+typedef void(INTERNAL_GL_APIENTRY *PFNGLGETPATHPARAMETERFVNVPROC)(GLuint path,
+                                                                  GLenum pname,
+                                                                  GLfloat *value);
+typedef void(INTERNAL_GL_APIENTRY *PFNGLPATHSTENCILFUNCNVPROC)(GLenum func, GLint ref, GLuint mask);
+typedef void(INTERNAL_GL_APIENTRY *PFNGLSTENCILFILLPATHNVPROC)(GLuint path,
+                                                               GLenum fillMode,
+                                                               GLuint mask);
+typedef void(INTERNAL_GL_APIENTRY *PFNGLSTENCILSTROKEPATHNVPROC)(GLuint path,
+                                                                 GLint reference,
+                                                                 GLuint mask);
+typedef void(INTERNAL_GL_APIENTRY *PFNGLCOVERFILLPATHNVPROC)(GLuint path, GLenum coverMode);
+typedef void(INTERNAL_GL_APIENTRY *PFNGLCOVERSTROKEPATHNVPROC)(GLuint path, GLenum coverMode);
+typedef void(INTERNAL_GL_APIENTRY *PFNGLSTENCILTHENCOVERFILLPATHNVPROC)(GLuint path,
+                                                                        GLenum fillMode,
+                                                                        GLuint mask,
+                                                                        GLenum coverMode);
+typedef void(INTERNAL_GL_APIENTRY *PFNGLSTENCILTHENCOVERSTROKEPATHNVPROC)(GLuint path,
+                                                                          GLint reference,
+                                                                          GLuint mask,
+                                                                          GLenum coverMode);
+typedef void(INTERNAL_GL_APIENTRY *PFNGLCOVERFILLPATHINSTANCEDNVPROC)(
+    GLsizei numPaths,
+    GLenum pathNameType,
+    const void *paths,
+    GLuint pathBase,
+    GLenum coverMode,
+    GLenum transformType,
+    const GLfloat *transformValues);
+typedef void(INTERNAL_GL_APIENTRY *PFNGLCOVERSTROKEPATHINSTANCEDNVPROC)(
+    GLsizei numPaths,
+    GLenum pathNameType,
+    const void *paths,
+    GLuint pathBase,
+    GLenum coverMode,
+    GLenum transformType,
+    const GLfloat *transformValues);
+typedef void(INTERNAL_GL_APIENTRY *PFNGLSTENCILFILLPATHINSTANCEDNVPROC)(
+    GLsizei numPaths,
+    GLenum pathNameType,
+    const void *paths,
+    GLuint pathBase,
+    GLenum fillMode,
+    GLuint mask,
+    GLenum transformType,
+    const GLfloat *transformValues);
+typedef void(INTERNAL_GL_APIENTRY *PFNGLSTENCILSTROKEPATHINSTANCEDNVPROC)(
+    GLsizei numPaths,
+    GLenum pathNameType,
+    const void *paths,
+    GLuint pathBase,
+    GLint reference,
+    GLuint mask,
+    GLenum transformType,
+    const GLfloat *transformValues);
+typedef void(INTERNAL_GL_APIENTRY *PFNGLSTENCILTHENCOVERFILLPATHINSTANCEDNVPROC)(
+    GLsizei numPaths,
+    GLenum pathNameType,
+    const void *paths,
+    GLuint pathBase,
+    GLenum fillMode,
+    GLuint mask,
+    GLenum coverMode,
+    GLenum transformType,
+    const GLfloat *transformValues);
+typedef void(INTERNAL_GL_APIENTRY *PFNGLSTENCILTHENCOVERSTROKEPATHINSTANCEDNVPROC)(
+    GLsizei numPaths,
+    GLenum pathNameType,
+    const void *paths,
+    GLuint pathBase,
+    GLint reference,
+    GLuint mask,
+    GLenum coverMode,
+    GLenum transformType,
+    const GLfloat *transformValues);
+
+typedef void(INTERNAL_GL_APIENTRY *PFNGLBINDFRAGMENTINPUTLOCATIONNVPROC)(GLuint program,
+                                                                         GLint location,
+                                                                         const GLchar *name);
+typedef void(INTERNAL_GL_APIENTRY *PFNGLPROGRAMPATHFRAGMENTINPUTGENNVPROC)(GLuint program,
+                                                                           GLint location,
+                                                                           GLenum genMode,
+                                                                           GLint components,
+                                                                           const GLfloat *coeffs);
+
+// ES 3.2
+typedef void(INTERNAL_GL_APIENTRY *PFNGLBLENDBARRIERPROC)(void);
+typedef void(INTERNAL_GL_APIENTRY *PFNGLPRIMITIVEBOUNDINGBOXPROC)(GLfloat minX,
+                                                                  GLfloat minY,
+                                                                  GLfloat minZ,
+                                                                  GLfloat minW,
+                                                                  GLfloat maxX,
+                                                                  GLfloat maxY,
+                                                                  GLfloat maxZ,
+                                                                  GLfloat maxW);
+
+// GL_NV_internalformat_sample_query
+typedef void(INTERNAL_GL_APIENTRY *PFNGLGETINTERNALFORMATSAMPLEIVNVPROC)(GLenum target,
+                                                                         GLenum internalformat,
+                                                                         GLsizei samples,
+                                                                         GLenum pname,
+                                                                         GLsizei bufSize,
+                                                                         GLint *params);
 }
 
 #endif // LIBANGLE_RENDERER_GL_FUNCTIONSGLTYPEDEFS_H_
