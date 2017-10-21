@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "0a8baf80_20344ed8",
+        "filename": "src/libANGLE/renderer/gl/FunctionsGL.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 897,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-10-21T03:21:45Z",
+      "side": 0,
+      "message": "I don\u0027t think this is true for every possible extension, at least I couldn\u0027t find something like this in https://www.khronos.org/registry/OpenGL/extensions/ARB/ARB_ES2_compatibility.txt.\nHowever, for this particular extension,\nhttps://www.khronos.org/registry/OpenGL/extensions/EXT/EXT_texture_storage.txt says:\n\"OpenGL ES 1.0, OpenGL ES 2.0 or OpenGL 1.2 is required\" and \"This extension is written against the OpenGL 3.2 Core Profile specification\". So, it is defined for desktop as well.",
+      "parentUuid": "ad6643b2_73953cd5",
+      "range": {
+        "startLine": 897,
+        "startChar": 7,
+        "endLine": 897,
+        "endChar": 29
+      },
+      "revId": "6dee4d8c1f5c00afdc428225b2757fe66a5fd1e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "7821e1e8_e4c5c495",
         "filename": "src/libANGLE/renderer/gl/FunctionsGL.cpp",
         "patchSetId": 13
