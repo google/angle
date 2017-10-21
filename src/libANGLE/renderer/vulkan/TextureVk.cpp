@@ -154,13 +154,25 @@ gl::Error TextureVk::setImage(const gl::Context *context,
         auto loadFunction = vkFormat.getLoadFunctions()(type);
 
         uint8_t *mapPointer = nullptr;
-        ANGLE_TRY(
-            stagingImage.getDeviceMemory().map(device, 0, stagingImage.getSize(), 0, &mapPointer));
+        ANGLE_TRY(stagingImage.getDeviceMemory().map(device, 0, VK_WHOLE_SIZE, 0, &mapPointer));
 
         const uint8_t *source = pixels + inputSkipBytes;
 
+        // Get the subresource layout. This has important parameters like row pitch.
+        // TODO(jmadill): Fill out this structure based on input parameters.
+        VkImageSubresource subresource;
+        subresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+        subresource.mipLevel   = 0;
+        subresource.arrayLayer = 0;
+
+        VkSubresourceLayout subresourceLayout;
+        vkGetImageSubresourceLayout(device, stagingImage.getImage().getHandle(), &subresource,
+                                    &subresourceLayout);
+
         loadFunction.loadFunction(size.width, size.height, size.depth, source, inputRowPitch,
-                                  inputDepthPitch, mapPointer, inputRowPitch, inputDepthPitch);
+                                  inputDepthPitch, mapPointer,
+                                  static_cast<size_t>(subresourceLayout.rowPitch),
+                                  static_cast<size_t>(subresourceLayout.depthPitch));
 
         stagingImage.getDeviceMemory().unmap(device);
 

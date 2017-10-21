@@ -295,18 +295,29 @@ gl::Error FramebufferVk::readPixels(const gl::Context *context,
     stagingImage.getImage().changeLayoutTop(VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_GENERAL,
                                             commandBuffer);
 
-    gl::Box copyRegion;
-    copyRegion.x      = area.x;
-    copyRegion.y      = area.y;
-    copyRegion.z      = 0;
-    copyRegion.width  = area.width;
-    copyRegion.height = area.height;
-    copyRegion.depth  = 1;
-
     readImage->changeLayoutTop(VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
                                commandBuffer);
-    commandBuffer->copySingleImage(*readImage, stagingImage.getImage(), copyRegion,
-                                   VK_IMAGE_ASPECT_COLOR_BIT);
+
+    VkImageCopy region;
+    region.srcSubresource.aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT;
+    region.srcSubresource.mipLevel       = 0;
+    region.srcSubresource.baseArrayLayer = 0;
+    region.srcSubresource.layerCount     = 1;
+    region.srcOffset.x                   = area.x;
+    region.srcOffset.y                   = area.y;
+    region.srcOffset.z                   = 0;
+    region.dstSubresource.aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT;
+    region.dstSubresource.mipLevel       = 0;
+    region.dstSubresource.baseArrayLayer = 0;
+    region.dstSubresource.layerCount     = 1;
+    region.dstOffset.x                   = 0;
+    region.dstOffset.y                   = 0;
+    region.dstOffset.z                   = 0;
+    region.extent.width                  = area.width;
+    region.extent.height                 = area.height;
+    region.extent.depth                  = 1;
+
+    commandBuffer->copyImage(*readImage, stagingImage.getImage(), 1, &region);
 
     ANGLE_TRY(renderer->submitAndFinishCommandBuffer(commandBuffer));
 

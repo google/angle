@@ -362,12 +362,6 @@ void CommandBuffer::copySingleImage(const vk::Image &srcImage,
                                     const gl::Box &copyRegion,
                                     VkImageAspectFlags aspectMask)
 {
-    ASSERT(valid());
-    ASSERT(srcImage.getCurrentLayout() == VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL ||
-           srcImage.getCurrentLayout() == VK_IMAGE_LAYOUT_GENERAL);
-    ASSERT(destImage.getCurrentLayout() == VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL ||
-           destImage.getCurrentLayout() == VK_IMAGE_LAYOUT_GENERAL);
-
     VkImageCopy region;
     region.srcSubresource.aspectMask     = aspectMask;
     region.srcSubresource.mipLevel       = 0;
@@ -387,8 +381,21 @@ void CommandBuffer::copySingleImage(const vk::Image &srcImage,
     region.extent.height                 = copyRegion.height;
     region.extent.depth                  = copyRegion.depth;
 
-    vkCmdCopyImage(mHandle, srcImage.getHandle(), srcImage.getCurrentLayout(),
-                   destImage.getHandle(), destImage.getCurrentLayout(), 1, &region);
+    copyImage(srcImage, destImage, 1, &region);
+}
+
+void CommandBuffer::copyImage(const vk::Image &srcImage,
+                              const vk::Image &dstImage,
+                              uint32_t regionCount,
+                              const VkImageCopy *regions)
+{
+    ASSERT(valid() && srcImage.valid() && dstImage.valid());
+    ASSERT(srcImage.getCurrentLayout() == VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL ||
+           srcImage.getCurrentLayout() == VK_IMAGE_LAYOUT_GENERAL);
+    ASSERT(dstImage.getCurrentLayout() == VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL ||
+           dstImage.getCurrentLayout() == VK_IMAGE_LAYOUT_GENERAL);
+    vkCmdCopyImage(mHandle, srcImage.getHandle(), srcImage.getCurrentLayout(), dstImage.getHandle(),
+                   dstImage.getCurrentLayout(), 1, regions);
 }
 
 void CommandBuffer::beginRenderPass(const RenderPass &renderPass,

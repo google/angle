@@ -223,6 +223,11 @@ class CommandBuffer final : public WrappedObject<CommandBuffer, VkCommandBuffer>
                          const gl::Box &copyRegion,
                          VkImageAspectFlags aspectMask);
 
+    void copyImage(const vk::Image &srcImage,
+                   const vk::Image &dstImage,
+                   uint32_t regionCount,
+                   const VkImageCopy *regions);
+
     void beginRenderPass(const RenderPass &renderPass,
                          const Framebuffer &framebuffer,
                          const gl::Rectangle &renderArea,
