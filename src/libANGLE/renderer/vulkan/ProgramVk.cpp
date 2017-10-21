@@ -272,7 +272,11 @@ gl::Error ProgramVk::initDefaultUniformBlocks(const gl::Context *glContext)
         const auto &location = locations[locationIndex];
         if (location.used() && !location.ignored)
         {
-            const auto &uniform     = uniforms[location.index];
+            const auto &uniform = uniforms[location.index];
+
+            if (uniform.isSampler())
+                continue;
+
             std::string uniformName = uniform.name;
             if (uniform.isArray())
             {

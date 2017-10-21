@@ -341,6 +341,8 @@ class ANGLETestBase
 
     static OSWindow *GetOSWindow() { return mOSWindow; }
 
+    GLuint get2DTexturedQuadProgram();
+
     angle::PlatformMethods mPlatformMethods;
 
     class ScopedIgnorePlatformMessages : angle::NonCopyable
@@ -357,8 +359,6 @@ class ANGLETestBase
     bool destroyEGLContext();
 
     void checkD3D11SDKLayersMessages();
-
-    GLuint get2DTexturedQuadProgram();
 
     void drawQuad(GLuint program,
                   const std::string &positionAttribName,

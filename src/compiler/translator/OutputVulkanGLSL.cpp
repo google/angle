@@ -42,11 +42,11 @@ void TOutputVulkanGLSL::writeLayoutQualifier(TIntermTyped *variable)
 {
     const TType &type = variable->getType();
 
-    bool forceLocation =
+    bool needsCustomLayout =
         (type.getQualifier() == EvqAttribute || type.getQualifier() == EvqFragmentOut ||
-         type.getQualifier() == EvqVertexIn);
+         type.getQualifier() == EvqVertexIn || IsSampler(type.getBasicType()));
 
-    if (!NeedsToWriteLayoutQualifier(type) && !forceLocation)
+    if (!NeedsToWriteLayoutQualifier(type) && !needsCustomLayout)
     {
         return;
     }
@@ -62,9 +62,9 @@ void TOutputVulkanGLSL::writeLayoutQualifier(TIntermTyped *variable)
     TIntermSymbol *symbol = variable->getAsSymbolNode();
     ASSERT(symbol);
 
-    if (forceLocation)
+    if (needsCustomLayout)
     {
-        out << "location = @@ LOCATION-" << symbol->getName().getString() << " @@";
+        out << "@@ LAYOUT-" << symbol->getName().getString() << " @@";
     }
 
     if (IsImage(type.getBasicType()) && layoutQualifier.imageInternalFormat != EiifUnspecified)

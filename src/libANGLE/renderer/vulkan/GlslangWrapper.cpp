@@ -19,9 +19,27 @@
 #include <array>
 
 #include "common/string_utils.h"
+#include "common/utilities.h"
 
 namespace rx
 {
+
+namespace
+{
+
+void InsertLayoutSpecifierString(std::string *shaderString,
+                                 const std::string &variableName,
+                                 const std::string &layoutString)
+{
+    std::stringstream searchStringBuilder;
+    searchStringBuilder << "@@ LAYOUT-" << variableName << " @@";
+    std::string searchString = searchStringBuilder.str();
+
+    bool success = angle::ReplaceSubstring(shaderString, searchString, layoutString);
+    ASSERT(success);
+}
+
+}  // anonymous namespace
 
 // static
 GlslangWrapper *GlslangWrapper::mInstance = nullptr;
@@ -70,10 +88,11 @@ gl::LinkResult GlslangWrapper::linkProgram(const gl::Context *glContext,
                                            std::vector<uint32_t> *vertexCodeOut,
                                            std::vector<uint32_t> *fragmentCodeOut)
 {
-    std::string vertexSource =
-        programState.getAttachedVertexShader()->getTranslatedSource(glContext);
-    std::string fragmentSource =
-        programState.getAttachedFragmentShader()->getTranslatedSource(glContext);
+    gl::Shader *glVertexShader   = programState.getAttachedVertexShader();
+    gl::Shader *glFragmentShader = programState.getAttachedFragmentShader();
+
+    std::string vertexSource   = glVertexShader->getTranslatedSource(glContext);
+    std::string fragmentSource = glFragmentShader->getTranslatedSource(glContext);
 
     // Parse attribute locations and replace them in the vertex shader.
     // See corresponding code in OutputVulkanGLSL.cpp.
@@ -83,14 +102,8 @@ gl::LinkResult GlslangWrapper::linkProgram(const gl::Context *glContext,
         if (!attribute.staticUse)
             continue;
 
-        std::stringstream searchStringBuilder;
-        searchStringBuilder << "@@ LOCATION-" << attribute.name << " @@";
-        std::string searchString = searchStringBuilder.str();
-
-        std::string locationString = Str(attribute.location);
-
-        bool success = angle::ReplaceSubstring(&vertexSource, searchString, locationString);
-        ASSERT(success);
+        std::string locationString = "location = " + Str(attribute.location);
+        InsertLayoutSpecifierString(&vertexSource, attribute.name, locationString);
     }
 
     // Bind the default uniforms for vertex and fragment shaders.
@@ -104,6 +117,29 @@ gl::LinkResult GlslangWrapper::linkProgram(const gl::Context *glContext,
 
     angle::ReplaceSubstring(&vertexSource, searchString, vertexDefaultUniformsBinding);
     angle::ReplaceSubstring(&fragmentSource, searchString, fragmentDefaultUniformsBinding);
+
+    // Assign textures to a descriptor set and binding.
+    int textureCount     = 0;
+    const auto &uniforms = programState.getUniforms();
+    for (unsigned int uniformIndex : programState.getSamplerUniformRange())
+    {
+        const gl::LinkedUniform &samplerUniform = uniforms[uniformIndex];
+
+        std::string setBindingString = "set = 1, binding = " + Str(textureCount);
+
+        ASSERT(samplerUniform.vertexStaticUse || samplerUniform.fragmentStaticUse);
+        if (samplerUniform.vertexStaticUse)
+        {
+            InsertLayoutSpecifierString(&vertexSource, samplerUniform.name, setBindingString);
+        }
+
+        if (samplerUniform.fragmentStaticUse)
+        {
+            InsertLayoutSpecifierString(&fragmentSource, samplerUniform.name, setBindingString);
+        }
+
+        textureCount += samplerUniform.elementCount();
+    }
 
     std::array<const char *, 2> strings = {{vertexSource.c_str(), fragmentSource.c_str()}};
 

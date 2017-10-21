@@ -463,6 +463,13 @@ TEST_P(SimpleOperationTest, CreateTexture2DWithData)
     ASSERT_GL_NO_ERROR();
 }
 
+// Creates a program with a texture.
+TEST_P(SimpleOperationTest, LinkProgramWithTexture)
+{
+    ASSERT_NE(0u, get2DTexturedQuadProgram());
+    EXPECT_GL_NO_ERROR();
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
 ANGLE_INSTANTIATE_TEST(SimpleOperationTest,
                        ES2_D3D9(),
