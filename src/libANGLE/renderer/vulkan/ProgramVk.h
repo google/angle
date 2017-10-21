@@ -112,13 +112,50 @@ class ProgramVk : public ProgramImpl
     const vk::ShaderModule &getLinkedFragmentModule() const;
     const vk::PipelineLayout &getPipelineLayout() const;
 
+    vk::Error updateUniforms(ContextVk *contextVk);
+
+    VkDescriptorSet getDescriptorSet() const;
+
   private:
     void reset(VkDevice device);
     vk::Error initPipelineLayout(ContextVk *context);
+    vk::Error initDescriptorSets(ContextVk *contextVk);
+    gl::Error initDefaultUniformBlocks(const gl::Context *glContext);
+    vk::Error updateDefaultUniformsDescriptorSet(ContextVk *contextVk);
+
+    template <typename T>
+    void setUniformImpl(GLint location, GLsizei count, const T *v, GLenum entryPointType);
 
     vk::ShaderModule mLinkedVertexModule;
     vk::ShaderModule mLinkedFragmentModule;
     vk::PipelineLayout mPipelineLayout;
+    std::vector<vk::DescriptorSetLayout> mDescriptorSetLayouts;
+
+    // State for the default uniform blocks.
+    struct DefaultUniformBlock final : private angle::NonCopyable
+    {
+        DefaultUniformBlock();
+
+        vk::BufferAndMemory storage;
+
+        // Shadow copies of the shader uniform data.
+        angle::MemoryBuffer uniformData;
+        bool uniformsDirty;
+
+        // Since the default blocks are laid out in std140, this tells us where to write on a call
+        // to a setUniform method. They are arranged in uniform location order.
+        std::vector<sh::BlockMemberInfo> uniformLayout;
+    };
+
+    std::array<DefaultUniformBlock, 2> mDefaultUniformBlocks;
+
+    // This is a special "empty" placeholder buffer for when a shader has no uniforms.
+    // It is necessary because we want to keep a compatible pipeline layout in all cases,
+    // and Vulkan does not tolerate having null handles in a descriptor set.
+    vk::BufferAndMemory mEmptyUniformBlockStorage;
+
+    // Descriptor set for the uniform blocks for this program.
+    VkDescriptorSet mDescriptorSet;
 };
 
 }  // namespace rx

@@ -463,6 +463,19 @@ void CommandBuffer::bindIndexBuffer(const vk::Buffer &buffer,
     vkCmdBindIndexBuffer(mHandle, buffer.getHandle(), offset, indexType);
 }
 
+void CommandBuffer::bindDescriptorSets(VkPipelineBindPoint bindPoint,
+                                       const vk::PipelineLayout &layout,
+                                       uint32_t firstSet,
+                                       uint32_t descriptorSetCount,
+                                       const VkDescriptorSet *descriptorSets,
+                                       uint32_t dynamicOffsetCount,
+                                       const uint32_t *dynamicOffsets)
+{
+    ASSERT(valid());
+    vkCmdBindDescriptorSets(mHandle, bindPoint, layout.getHandle(), firstSet, descriptorSetCount,
+                            descriptorSets, dynamicOffsetCount, dynamicOffsets);
+}
+
 // Image implementation.
 Image::Image() : mCurrentLayout(VK_IMAGE_LAYOUT_UNDEFINED)
 {
@@ -877,6 +890,57 @@ Error PipelineLayout::init(VkDevice device, const VkPipelineLayoutCreateInfo &cr
 {
     ASSERT(!valid());
     ANGLE_VK_TRY(vkCreatePipelineLayout(device, &createInfo, nullptr, &mHandle));
+    return NoError();
+}
+
+// DescriptorSetLayout implementation.
+DescriptorSetLayout::DescriptorSetLayout()
+{
+}
+
+void DescriptorSetLayout::destroy(VkDevice device)
+{
+    if (valid())
+    {
+        vkDestroyDescriptorSetLayout(device, mHandle, nullptr);
+        mHandle = VK_NULL_HANDLE;
+    }
+}
+
+Error DescriptorSetLayout::init(VkDevice device, const VkDescriptorSetLayoutCreateInfo &createInfo)
+{
+    ASSERT(!valid());
+    ANGLE_VK_TRY(vkCreateDescriptorSetLayout(device, &createInfo, nullptr, &mHandle));
+    return NoError();
+}
+
+// DescriptorPool implementation.
+DescriptorPool::DescriptorPool()
+{
+}
+
+void DescriptorPool::destroy(VkDevice device)
+{
+    if (valid())
+    {
+        vkDestroyDescriptorPool(device, mHandle, nullptr);
+        mHandle = VK_NULL_HANDLE;
+    }
+}
+
+Error DescriptorPool::init(VkDevice device, const VkDescriptorPoolCreateInfo &createInfo)
+{
+    ASSERT(!valid());
+    ANGLE_VK_TRY(vkCreateDescriptorPool(device, &createInfo, nullptr, &mHandle));
+    return NoError();
+}
+
+Error DescriptorPool::allocateDescriptorSets(VkDevice device,
+                                             const VkDescriptorSetAllocateInfo &allocInfo,
+                                             VkDescriptorSet *descriptorSetsOut)
+{
+    ASSERT(valid());
+    ANGLE_VK_TRY(vkAllocateDescriptorSets(device, &allocInfo, descriptorSetsOut));
     return NoError();
 }
 

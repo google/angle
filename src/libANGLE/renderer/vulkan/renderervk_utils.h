@@ -90,6 +90,7 @@ class DeviceMemory;
 class Framebuffer;
 class Image;
 class Pipeline;
+class PipelineLayout;
 class RenderPass;
 
 class MemoryProperties final : angle::NonCopyable
@@ -245,6 +246,13 @@ class CommandBuffer final : public WrappedObject<CommandBuffer, VkCommandBuffer>
                            const VkBuffer *buffers,
                            const VkDeviceSize *offsets);
     void bindIndexBuffer(const vk::Buffer &buffer, VkDeviceSize offset, VkIndexType indexType);
+    void bindDescriptorSets(VkPipelineBindPoint bindPoint,
+                            const vk::PipelineLayout &layout,
+                            uint32_t firstSet,
+                            uint32_t descriptorSetCount,
+                            const VkDescriptorSet *descriptorSets,
+                            uint32_t dynamicOffsetCount,
+                            const uint32_t *dynamicOffsets);
 
   private:
     bool mStarted;
@@ -420,6 +428,30 @@ class PipelineLayout final : public WrappedObject<PipelineLayout, VkPipelineLayo
     Error init(VkDevice device, const VkPipelineLayoutCreateInfo &createInfo);
 };
 
+class DescriptorSetLayout final : public WrappedObject<DescriptorSetLayout, VkDescriptorSetLayout>
+{
+  public:
+    DescriptorSetLayout();
+    void destroy(VkDevice device);
+    using WrappedObject::retain;
+
+    Error init(VkDevice device, const VkDescriptorSetLayoutCreateInfo &createInfo);
+};
+
+class DescriptorPool final : public WrappedObject<DescriptorPool, VkDescriptorPool>
+{
+  public:
+    DescriptorPool();
+    void destroy(VkDevice device);
+    using WrappedObject::retain;
+
+    Error init(VkDevice device, const VkDescriptorPoolCreateInfo &createInfo);
+
+    Error allocateDescriptorSets(VkDevice device,
+                                 const VkDescriptorSetAllocateInfo &allocInfo,
+                                 VkDescriptorSet *descriptorSetsOut);
+};
+
 class Fence final : public WrappedObject<Fence, VkFence>
 {
   public:
@@ -507,6 +539,12 @@ gl::Error AllocateBufferMemory(ContextVk *contextVk,
                                vk::Buffer *buffer,
                                vk::DeviceMemory *deviceMemoryOut,
                                size_t *requiredSizeOut);
+
+struct BufferAndMemory final : private angle::NonCopyable
+{
+    vk::Buffer buffer;
+    vk::DeviceMemory memory;
+};
 
 }  // namespace vk
 

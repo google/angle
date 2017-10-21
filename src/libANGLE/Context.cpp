@@ -487,6 +487,8 @@ egl::Error Context::onDestroy(const egl::Display *display)
     mState.mFramebuffers->release(this);
     mState.mPipelines->release(this);
 
+    mImplementation->onDestroy(this);
+
     return egl::NoError();
 }
 

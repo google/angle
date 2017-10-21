@@ -60,14 +60,14 @@ class DeclareDefaultUniformsTraverser : public TIntermTraverser
             if (isUniform)
             {
                 (*mSink) << ";\n";
+
+                // Remove the uniform declaration from the tree so it isn't parsed again.
+                TIntermSequence emptyReplacement;
+                mMultiReplacements.push_back(NodeReplaceWithMultipleEntry(
+                    getParentNode()->getAsBlock(), node, emptyReplacement));
             }
 
             mInDefaultUniform = false;
-
-            // Remove the uniform declaration from the tree so it isn't parsed again.
-            TIntermSequence emptyReplacement;
-            mMultiReplacements.push_back(NodeReplaceWithMultipleEntry(getParentNode()->getAsBlock(),
-                                                                      node, emptyReplacement));
         }
         return true;
     }

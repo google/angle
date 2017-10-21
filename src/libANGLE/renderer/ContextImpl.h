@@ -31,6 +31,8 @@ class ContextImpl : public GLImplFactory
     ContextImpl(const gl::ContextState &state);
     virtual ~ContextImpl();
 
+    virtual void onDestroy(const gl::Context *context) {}
+
     virtual gl::Error initialize() = 0;
 
     // Flush and finish.

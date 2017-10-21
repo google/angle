@@ -277,6 +277,104 @@ TEST_P(SimpleOperationTest, DrawIndexedQuad)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Draw with a fragment uniform.
+TEST_P(SimpleOperationTest, DrawQuadWithFragmentUniform)
+{
+    const std::string &vertexShader =
+        "attribute vec3 position;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_Position = vec4(position, 1);\n"
+        "}";
+    const std::string &fragmentShader =
+        "uniform mediump vec4 color;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_FragColor = color;\n"
+        "}";
+    ANGLE_GL_PROGRAM(program, vertexShader, fragmentShader);
+
+    GLint location = glGetUniformLocation(program, "color");
+    ASSERT_NE(-1, location);
+
+    glUseProgram(program);
+    glUniform4f(location, 0.0f, 1.0f, 0.0f, 1.0f);
+
+    drawQuad(program.get(), "position", 0.5f, 1.0f, true);
+
+    EXPECT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
+// Draw with a vertex uniform.
+TEST_P(SimpleOperationTest, DrawQuadWithVertexUniform)
+{
+    const std::string &vertexShader =
+        "attribute vec3 position;\n"
+        "uniform vec4 color;\n"
+        "varying vec4 vcolor;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_Position = vec4(position, 1);\n"
+        "    vcolor = color;\n"
+        "}";
+    const std::string &fragmentShader =
+        "varying mediump vec4 vcolor;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_FragColor = vcolor;\n"
+        "}";
+    ANGLE_GL_PROGRAM(program, vertexShader, fragmentShader);
+
+    GLint location = glGetUniformLocation(program, "color");
+    ASSERT_NE(-1, location);
+
+    glUseProgram(program);
+    glUniform4f(location, 0.0f, 1.0f, 0.0f, 1.0f);
+
+    drawQuad(program.get(), "position", 0.5f, 1.0f, true);
+
+    EXPECT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
+// Draw with two uniforms.
+TEST_P(SimpleOperationTest, DrawQuadWithTwoUniforms)
+{
+    const std::string &vertexShader =
+        "attribute vec3 position;\n"
+        "uniform vec4 color1;\n"
+        "varying vec4 vcolor1;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_Position = vec4(position, 1);\n"
+        "    vcolor1 = color1;\n"
+        "}";
+    const std::string &fragmentShader =
+        "uniform mediump vec4 color2;\n"
+        "varying mediump vec4 vcolor1;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_FragColor = vcolor1 + color2;\n"
+        "}";
+    ANGLE_GL_PROGRAM(program, vertexShader, fragmentShader);
+
+    GLint location1 = glGetUniformLocation(program, "color1");
+    ASSERT_NE(-1, location1);
+
+    GLint location2 = glGetUniformLocation(program, "color2");
+    ASSERT_NE(-1, location2);
+
+    glUseProgram(program);
+    glUniform4f(location1, 0.0f, 1.0f, 0.0f, 1.0f);
+    glUniform4f(location2, 1.0f, 0.0f, 0.0f, 1.0f);
+
+    drawQuad(program.get(), "position", 0.5f, 1.0f, true);
+
+    EXPECT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::yellow);
+}
+
 // Tests a shader program with more than one vertex attribute, with vertex buffers.
 TEST_P(SimpleOperationTest, ThreeVertexAttributes)
 {
