@@ -22,6 +22,75 @@
       "revId": "482ab5a8d81ed76bfff0dc69fcbc11553620dbeb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9cf0cec2_32cc3425",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-10-21T01:22:27Z",
+      "side": 1,
+      "message": "What do you think about mVertexDefaultUniformsBuffer, etc.?",
+      "range": {
+        "startLine": 138,
+        "startChar": 15,
+        "endLine": 138,
+        "endChar": 43
+      },
+      "revId": "482ab5a8d81ed76bfff0dc69fcbc11553620dbeb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "19d9322a_6e73b73a",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-10-21T01:22:27Z",
+      "side": 1,
+      "message": "What if you would have an array of vk::Buffer and vk::DeviceMemory?\nOr array of a struct with those two.\nYou can have an enum index {vertext, fragment, empty}.\nThen you can iterate over those in for loop, for example in updateDefaultUniformsDescriptorSet().",
+      "range": {
+        "startLine": 140,
+        "startChar": 0,
+        "endLine": 142,
+        "endChar": 0
+      },
+      "revId": "482ab5a8d81ed76bfff0dc69fcbc11553620dbeb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1eb4874b_ec3eec4c",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-10-21T01:22:27Z",
+      "side": 1,
+      "message": "DefaultUniformBlockInfo?",
+      "range": {
+        "startLine": 151,
+        "startChar": 11,
+        "endLine": 151,
+        "endChar": 34
+      },
+      "revId": "482ab5a8d81ed76bfff0dc69fcbc11553620dbeb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
