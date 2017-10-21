@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "f5546d1d_215143b9",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 343,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-21T15:17:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "10bfac97_328451ef",
+      "range": {
+        "startLine": 343,
+        "startChar": 7,
+        "endLine": 343,
+        "endChar": 11
+      },
+      "revId": "482ab5a8d81ed76bfff0dc69fcbc11553620dbeb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9cf0cec2_32cc3425",
         "filename": "src/libANGLE/renderer/vulkan/ProgramVk.h",
         "patchSetId": 16
@@ -45,6 +69,30 @@
       "revId": "482ab5a8d81ed76bfff0dc69fcbc11553620dbeb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "85b2574f_c01fed10",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-21T15:17:54Z",
+      "side": 1,
+      "message": "Redid these",
+      "parentUuid": "9cf0cec2_32cc3425",
+      "range": {
+        "startLine": 138,
+        "startChar": 15,
+        "endLine": 138,
+        "endChar": 43
+      },
+      "revId": "482ab5a8d81ed76bfff0dc69fcbc11553620dbeb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "a3e187e2_c2469e39",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-21T15:17:54Z",
+      "side": 1,
+      "message": "I agree with your suggestion. I redid the uniform block storage to make indexed by a shader enum. This should be more extensible for compute and geometry/tessellation shaders when we get there.",
+      "parentUuid": "19d9322a_6e73b73a",
+      "range": {
+        "startLine": 140,
+        "startChar": 0,
+        "endLine": 142,
+        "endChar": 0
+      },
+      "revId": "482ab5a8d81ed76bfff0dc69fcbc11553620dbeb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1eb4874b_ec3eec4c",
         "filename": "src/libANGLE/renderer/vulkan/ProgramVk.h",
         "patchSetId": 16
@@ -91,6 +163,30 @@
       "revId": "482ab5a8d81ed76bfff0dc69fcbc11553620dbeb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bdf782bb_701af002",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-21T15:17:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1eb4874b_ec3eec4c",
+      "range": {
+        "startLine": 151,
+        "startChar": 11,
+        "endLine": 151,
+        "endChar": 34
+      },
+      "revId": "482ab5a8d81ed76bfff0dc69fcbc11553620dbeb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
