@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "3ecbafd2_617bdb5a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 15
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-22T02:16:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "42e16842_8ec30c1f",
+      "range": {
+        "startLine": 9,
+        "startChar": 34,
+        "endLine": 9,
+        "endChar": 40
+      },
+      "revId": "0f5d51aa76a6a5a699678412b26b8637ebd2d578",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "498862b7_e5a358ca",
         "filename": "/COMMIT_MSG",
         "patchSetId": 15
@@ -45,6 +69,30 @@
       "revId": "0f5d51aa76a6a5a699678412b26b8637ebd2d578",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3324ac1c_d0d88f29",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 15
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-22T02:16:47Z",
+      "side": 1,
+      "message": "I filed a github issue here https://github.com/KhronosGroup/OpenGL-Registry/issues/120. Since I believe it\u0027s low risk I don\u0027t think we need to track this in ANGLE.",
+      "parentUuid": "498862b7_e5a358ca",
+      "range": {
+        "startLine": 27,
+        "startChar": 22,
+        "endLine": 27,
+        "endChar": 35
+      },
+      "revId": "0f5d51aa76a6a5a699678412b26b8637ebd2d578",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "1066b037_98a4e0cb",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 15
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-22T02:16:47Z",
+      "side": 1,
+      "message": "I\u0027m not sure if you saw my prior comment. This CL is not intended to increase speed. If you did see the prior comment, let me know if you have a specific objection to my reasoning. I don\u0027t think we need to add a second issue to track this, but it\u0027s a pretty minor point.\n\nrepost:\n\n\"To clarify the purpose of this patch isn\u0027t to improve performance. It is to unblock adding a NULL GL bindings set that can be use for more complete perf testing for the command buffer.\"",
+      "parentUuid": "d088db53_3c6dddec",
+      "range": {
+        "startLine": 31,
+        "startChar": 4,
+        "endLine": 31,
+        "endChar": 21
+      },
+      "revId": "0f5d51aa76a6a5a699678412b26b8637ebd2d578",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2a70d142_e489ca6a",
         "filename": "src/libANGLE/renderer/gl/DispatchTableGL_autogen.h",
         "patchSetId": 15
@@ -91,6 +163,30 @@
       "revId": "0f5d51aa76a6a5a699678412b26b8637ebd2d578",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7c1ae0c9_cac53aa6",
+        "filename": "src/libANGLE/renderer/gl/DispatchTableGL_autogen.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-22T02:16:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2a70d142_e489ca6a",
+      "range": {
+        "startLine": 29,
+        "startChar": 3,
+        "endLine": 29,
+        "endChar": 10
+      },
+      "revId": "0f5d51aa76a6a5a699678412b26b8637ebd2d578",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
