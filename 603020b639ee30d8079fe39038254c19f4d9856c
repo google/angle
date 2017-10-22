@@ -16,6 +16,24 @@
       "revId": "603020b639ee30d8079fe39038254c19f4d9856c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d81d339d_29316aca",
+        "filename": "src/libANGLE/renderer/gl/FunctionsGL.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 230,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-22T14:55:16Z",
+      "side": 1,
+      "message": "Thanks. I wrote a pretty detailed comment explaining some of these things and left a TODO.",
+      "parentUuid": "1970208b_98f5cda2",
+      "revId": "603020b639ee30d8079fe39038254c19f4d9856c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
