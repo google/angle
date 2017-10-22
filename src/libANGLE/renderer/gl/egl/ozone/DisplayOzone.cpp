@@ -511,7 +511,7 @@ egl::Error DisplayOzone::initialize(egl::Display *display)
     }
 
     mFunctionsGL = mEGL->makeFunctionsGL();
-    mFunctionsGL->initialize();
+    mFunctionsGL->initialize(display->getAttributeMap());
 
     return DisplayGL::initialize(display);
 }

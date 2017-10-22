@@ -292,7 +292,7 @@ egl::Error DisplayGLX::initialize(egl::Display *display)
     }
 
     mFunctionsGL = new FunctionsGLGLX(mGLX.getProc);
-    mFunctionsGL->initialize();
+    mFunctionsGL->initialize(eglAttributes);
 
     // TODO(cwallez, angleproject:1303) Disable the OpenGL ES backend on Linux NVIDIA and Intel as
     // it has problems on our automated testing. An OpenGL ES backend might not trigger this test if

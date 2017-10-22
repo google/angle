@@ -15,6 +15,7 @@
         'angle_enable_d3d9%': 0,
         'angle_enable_d3d11%': 0,
         'angle_enable_gl%': 0,
+        'angle_enable_gl_null%': 0,
         'angle_enable_vulkan%': 0,
         'angle_enable_essl%': 1, # Enable this for all configs by default
         'angle_enable_glsl%': 1, # Enable this for all configs by default
@@ -27,6 +28,7 @@
             ['OS=="win"',
             {
                 'angle_enable_gl%': 1,
+                'angle_enable_gl_null%': 1,
                 'angle_enable_d3d9%': 1,
                 'angle_enable_d3d11%': 1,
                 'angle_enable_hlsl%': 1,
@@ -35,15 +37,18 @@
             ['OS=="linux" and use_x11==1 and chromeos==0',
             {
                 'angle_enable_gl%': 1,
+                'angle_enable_gl_null%': 1,
                 'angle_enable_vulkan%': 1,
             }],
             ['OS=="mac"',
             {
                 'angle_enable_gl%': 1,
+                'angle_enable_gl_null%': 1,
             }],
             ['use_ozone==1',
             {
                 'angle_enable_gl%': 1,
+                'angle_enable_gl_null%': 1,
             }],
         ],
         'angle_enable_null%': 1, # Available on all platforms

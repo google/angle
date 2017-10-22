@@ -15,6 +15,11 @@
 #include "libANGLE/renderer/gl/functionsgl_enums.h"
 #include "libANGLE/renderer/gl/functionsgl_typedefs.h"
 
+namespace egl
+{
+class AttributeMap;
+}  // namespace egl
+
 namespace rx
 {
 
@@ -30,7 +35,7 @@ class FunctionsGL : public DispatchTableGL
     FunctionsGL();
     virtual ~FunctionsGL();
 
-    void initialize();
+    void initialize(const egl::AttributeMap &displayAttributes);
 
     // Version information
     gl::Version version;
@@ -46,6 +51,10 @@ class FunctionsGL : public DispatchTableGL
     bool hasExtension(const std::string &ext) const;
     bool hasGLExtension(const std::string &ext) const;
     bool hasGLESExtension(const std::string &ext) const;
+
+  private:
+    virtual void *loadProcAddress(const std::string &function) const = 0;
+    void initializeDummyFunctionsForNULLDriver(const std::set<std::string> &extensionSet);
 };
 
 }  // namespace rx

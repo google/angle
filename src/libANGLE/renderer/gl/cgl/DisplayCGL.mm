@@ -13,6 +13,7 @@
 #include <EGL/eglext.h>
 
 #include "common/debug.h"
+#include "libANGLE/Display.h"
 #include "libANGLE/renderer/gl/cgl/PbufferSurfaceCGL.h"
 #include "libANGLE/renderer/gl/cgl/WindowSurfaceCGL.h"
 
@@ -91,7 +92,7 @@ egl::Error DisplayCGL::initialize(egl::Display *display)
     }
 
     mFunctions = new FunctionsGLCGL(handle);
-    mFunctions->initialize();
+    mFunctions->initialize(display->getAttributeMap());
 
     return DisplayGL::initialize(display);
 }

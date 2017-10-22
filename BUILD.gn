@@ -396,6 +396,9 @@ config("libANGLE_config") {
     if (use_x11) {
       defines += [ "ANGLE_USE_X11" ]
     }
+    if (angle_enable_gl_null) {
+      defines += [ "ANGLE_ENABLE_OPENGL_NULL" ]
+    }
   }
   if (angle_enable_vulkan) {
     defines += [ "ANGLE_ENABLE_VULKAN" ]
@@ -449,6 +452,9 @@ static_library("libANGLE") {
     sources += rebase_path(gles_gypi.libangle_gl_sources, ".", "src")
     include_dirs += [ "src/third_party/khronos" ]
 
+    if (angle_enable_gl_null) {
+      sources += rebase_path(gles_gypi.libangle_gl_null_sources, ".", "src")
+    }
     if (is_win) {
       sources += rebase_path(gles_gypi.libangle_gl_wgl_sources, ".", "src")
     }

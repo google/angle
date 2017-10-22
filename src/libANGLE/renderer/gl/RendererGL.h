@@ -193,9 +193,6 @@ class RendererGL : angle::NonCopyable
 
     bool mUseDebugOutput;
 
-    // For performance debugging
-    bool mSkipDrawCalls;
-
     mutable bool mCapsInitialized;
     mutable gl::Caps mNativeCaps;
     mutable gl::TextureCapsMap mNativeTextureCaps;

@@ -117,7 +117,7 @@ egl::Error DisplayAndroid::initialize(egl::Display *display)
     mCurrentSurface = mDummyPbuffer;
 
     mFunctionsGL = mEGL->makeFunctionsGL();
-    mFunctionsGL->initialize();
+    mFunctionsGL->initialize(display->getAttributeMap());
 
     return DisplayGL::initialize(display);
 }

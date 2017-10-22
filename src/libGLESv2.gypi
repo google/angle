@@ -620,6 +620,11 @@
             'libANGLE/renderer/gl/renderergl_utils.cpp',
             'libANGLE/renderer/gl/renderergl_utils.h',
         ],
+        'libangle_gl_null_sources':
+        [
+            'libANGLE/renderer/gl/null_functions.cpp',
+            'libANGLE/renderer/gl/null_functions.h',
+        ],
         'libangle_gl_wgl_sources':
         [
             'libANGLE/renderer/gl/wgl/D3DTextureSurfaceWGL.cpp',
@@ -910,6 +915,13 @@
                             'ANGLE_ENABLE_OPENGL',
                         ],
                     }],
+                    ['angle_enable_gl_null==1',
+                    {
+                        'defines':
+                        [
+                            'ANGLE_ENABLE_OPENGL_NULL',
+                        ],
+                    }],
                     ['angle_enable_vulkan==1',
                     {
                         'defines':
@@ -1071,6 +1083,13 @@
                     ],
                     'conditions':
                     [
+                        ['angle_enable_gl_null==1',
+                        {
+                            'sources':
+                            [
+                                '<@(libangle_gl_null_sources)',
+                            ],
+                        }],
                         ['OS=="win"',
                         {
                             'sources':
