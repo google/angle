@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c226c23e_413aa1d5",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1447,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-23T21:39:46Z",
+      "side": 1,
+      "message": "whoops, missed this. We should remove this TODO. Can you do this as a quick follow-up?",
+      "range": {
+        "startLine": 1447,
+        "startChar": 3,
+        "endLine": 1447,
+        "endChar": 64
+      },
+      "revId": "cc4ce4a2dd60a80d31951368e8ba428bcfece7d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
