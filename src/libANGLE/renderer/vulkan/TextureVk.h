@@ -110,11 +110,16 @@ class TextureVk : public TextureImpl, public ResourceVk
     gl::Error initializeContents(const gl::Context *context,
                                  const gl::ImageIndex &imageIndex) override;
 
+    const vk::Image &getImage() const;
+    const vk::ImageView &getImageView() const;
+    const vk::Sampler &getSampler() const;
+
   private:
     // TODO(jmadill): support a more flexible storage back-end.
     vk::Image mImage;
     vk::DeviceMemory mDeviceMemory;
     vk::ImageView mImageView;
+    vk::Sampler mSampler;
 };
 
 }  // namespace rx

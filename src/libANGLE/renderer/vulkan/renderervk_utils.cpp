@@ -951,6 +951,27 @@ Error DescriptorPool::allocateDescriptorSets(VkDevice device,
     return NoError();
 }
 
+// Sampler implementation.
+Sampler::Sampler()
+{
+}
+
+void Sampler::destroy(VkDevice device)
+{
+    if (valid())
+    {
+        vkDestroySampler(device, mHandle, nullptr);
+        mHandle = VK_NULL_HANDLE;
+    }
+}
+
+Error Sampler::init(VkDevice device, const VkSamplerCreateInfo &createInfo)
+{
+    ASSERT(!valid());
+    ANGLE_VK_TRY(vkCreateSampler(device, &createInfo, nullptr, &mHandle));
+    return NoError();
+}
+
 // Fence implementation.
 Fence::Fence()
 {

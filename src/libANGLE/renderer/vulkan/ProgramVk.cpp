@@ -15,6 +15,7 @@
 #include "libANGLE/renderer/vulkan/ContextVk.h"
 #include "libANGLE/renderer/vulkan/GlslangWrapper.h"
 #include "libANGLE/renderer/vulkan/RendererVk.h"
+#include "libANGLE/renderer/vulkan/TextureVk.h"
 
 namespace rx
 {
@@ -134,7 +135,7 @@ ProgramVk::DefaultUniformBlock::DefaultUniformBlock()
 }
 
 ProgramVk::ProgramVk(const gl::ProgramState &state)
-    : ProgramImpl(state), mDefaultUniformBlocks(), mDescriptorSet(VK_NULL_HANDLE)
+    : ProgramImpl(state), mDefaultUniformBlocks(), mDescriptorSetOffset(0), mDirtyTextures(true)
 {
 }
 
@@ -169,7 +170,9 @@ void ProgramVk::reset(VkDevice device)
     mPipelineLayout.destroy(device);
 
     // Descriptor Sets are pool allocated, so do not need to be explicitly freed.
-    mDescriptorSet = VK_NULL_HANDLE;
+    mDescriptorSets.clear();
+    mDescriptorSetOffset = 0;
+    mDirtyTextures       = false;
 }
 
 gl::LinkResult ProgramVk::load(const gl::Context *contextImpl,
@@ -350,6 +353,11 @@ gl::Error ProgramVk::initDefaultUniformBlocks(const gl::Context *glContext)
         }
 
         ANGLE_TRY(updateDefaultUniformsDescriptorSet(contextVk));
+    }
+    else
+    {
+        // If the program has no uniforms, note this in the offset.
+        mDescriptorSetOffset = 1;
     }
 
     return gl::NoError();
@@ -609,6 +617,60 @@ vk::Error ProgramVk::initPipelineLayout(ContextVk *context)
         mDescriptorSetLayouts.push_back(std::move(uniformLayout));
     }
 
+    const auto &samplerBindings = mState.getSamplerBindings();
+
+    if (!samplerBindings.empty())
+    {
+        std::vector<VkDescriptorSetLayoutBinding> textureBindings;
+        uint32_t textureCount = 0;
+        const auto &uniforms  = mState.getUniforms();
+        for (unsigned int uniformIndex : mState.getSamplerUniformRange())
+        {
+            const gl::LinkedUniform &samplerUniform = uniforms[uniformIndex];
+            unsigned int samplerIndex = mState.getSamplerIndexFromUniformIndex(uniformIndex);
+            const gl::SamplerBinding &samplerBinding = samplerBindings[samplerIndex];
+
+            ASSERT(!samplerBinding.unreferenced);
+
+            VkDescriptorSetLayoutBinding layoutBinding;
+
+            uint32_t elementCount = samplerUniform.elementCount();
+
+            layoutBinding.binding         = textureCount;
+            layoutBinding.descriptorType  = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+            layoutBinding.descriptorCount = elementCount;
+
+            layoutBinding.stageFlags = 0;
+            if (samplerUniform.vertexStaticUse)
+            {
+                layoutBinding.stageFlags |= VK_SHADER_STAGE_VERTEX_BIT;
+            }
+            if (samplerUniform.fragmentStaticUse)
+            {
+                layoutBinding.stageFlags |= VK_SHADER_STAGE_FRAGMENT_BIT;
+            }
+
+            layoutBinding.pImmutableSamplers = nullptr;
+
+            textureCount += elementCount;
+
+            textureBindings.push_back(layoutBinding);
+        }
+
+        VkDescriptorSetLayoutCreateInfo textureInfo;
+        textureInfo.sType        = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+        textureInfo.pNext        = nullptr;
+        textureInfo.flags        = 0;
+        textureInfo.bindingCount = static_cast<uint32_t>(textureBindings.size());
+        textureInfo.pBindings    = textureBindings.data();
+
+        vk::DescriptorSetLayout textureLayout;
+        ANGLE_TRY(textureLayout.init(device, textureInfo));
+        mDescriptorSetLayouts.push_back(std::move(textureLayout));
+
+        mDirtyTextures = true;
+    }
+
     VkPipelineLayoutCreateInfo createInfo;
     createInfo.sType                  = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
     createInfo.pNext                  = nullptr;
@@ -625,7 +687,7 @@ vk::Error ProgramVk::initPipelineLayout(ContextVk *context)
 
 vk::Error ProgramVk::initDescriptorSets(ContextVk *contextVk)
 {
-    ASSERT(mDescriptorSet == VK_NULL_HANDLE);
+    ASSERT(mDescriptorSets.empty());
 
     VkDevice device = contextVk->getDevice();
 
@@ -633,16 +695,17 @@ vk::Error ProgramVk::initDescriptorSets(ContextVk *contextVk)
     // TODO(jmadill): Handle descriptor set lifetime.
     vk::DescriptorPool *descriptorPool = contextVk->getDescriptorPool();
 
-    VkDescriptorSetAllocateInfo allocInfo;
-    allocInfo.sType          = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
-    allocInfo.pNext          = nullptr;
-    allocInfo.descriptorPool = descriptorPool->getHandle();
+    uint32_t descriptorSetCount = static_cast<uint32_t>(mDescriptorSetLayouts.size());
 
-    // TODO(jmadill): Handle descriptor set layouts for textures.
-    allocInfo.descriptorSetCount = 1;
+    VkDescriptorSetAllocateInfo allocInfo;
+    allocInfo.sType              = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+    allocInfo.pNext              = nullptr;
+    allocInfo.descriptorPool     = descriptorPool->getHandle();
+    allocInfo.descriptorSetCount = descriptorSetCount;
     allocInfo.pSetLayouts        = mDescriptorSetLayouts[0].ptr();
 
-    ANGLE_TRY(descriptorPool->allocateDescriptorSets(device, allocInfo, &mDescriptorSet));
+    mDescriptorSets.resize(descriptorSetCount, VK_NULL_HANDLE);
+    ANGLE_TRY(descriptorPool->allocateDescriptorSets(device, allocInfo, &mDescriptorSets[0]));
     return vk::NoError();
 }
 
@@ -668,6 +731,8 @@ vk::Error ProgramVk::updateUniforms(ContextVk *contextVk)
     {
         return vk::NoError();
     }
+
+    ASSERT(mDescriptorSetOffset == 0);
 
     VkDevice device = contextVk->getDevice();
 
@@ -712,7 +777,7 @@ vk::Error ProgramVk::updateDefaultUniformsDescriptorSet(ContextVk *contextVk)
 
         writeInfo.sType            = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
         writeInfo.pNext            = nullptr;
-        writeInfo.dstSet           = mDescriptorSet;
+        writeInfo.dstSet           = mDescriptorSets[0];
         writeInfo.dstBinding       = bufferCount;
         writeInfo.dstArrayElement  = 0;
         writeInfo.descriptorCount  = 1;
@@ -731,9 +796,82 @@ vk::Error ProgramVk::updateDefaultUniformsDescriptorSet(ContextVk *contextVk)
     return vk::NoError();
 }
 
-VkDescriptorSet ProgramVk::getDescriptorSet() const
+const std::vector<VkDescriptorSet> &ProgramVk::getDescriptorSets() const
 {
-    return mDescriptorSet;
+    return mDescriptorSets;
+}
+
+uint32_t ProgramVk::getDescriptorSetOffset() const
+{
+    return mDescriptorSetOffset;
+}
+
+void ProgramVk::updateTexturesDescriptorSet(ContextVk *contextVk)
+{
+    if (mState.getSamplerBindings().empty() || !mDirtyTextures)
+    {
+        return;
+    }
+
+    VkDescriptorSet descriptorSet = mDescriptorSets.back();
+
+    // TODO(jmadill): Don't hard-code the texture limit.
+    ShaderTextureArray<VkDescriptorImageInfo> descriptorImageInfo;
+    ShaderTextureArray<VkWriteDescriptorSet> writeDescriptorInfo;
+    uint32_t imageCount = 0;
+
+    const gl::State &glState     = contextVk->getGLState();
+    const auto &completeTextures = glState.getCompleteTextureCache();
+
+    for (const auto &samplerBinding : mState.getSamplerBindings())
+    {
+        ASSERT(!samplerBinding.unreferenced);
+
+        // TODO(jmadill): Sampler arrays
+        ASSERT(samplerBinding.boundTextureUnits.size() == 1);
+
+        GLuint textureUnit         = samplerBinding.boundTextureUnits[0];
+        const gl::Texture *texture = completeTextures[textureUnit];
+
+        // TODO(jmadill): Incomplete textures handling.
+        ASSERT(texture);
+
+        TextureVk *textureVk   = GetImplAs<TextureVk>(texture);
+        const vk::Image &image = textureVk->getImage();
+
+        VkDescriptorImageInfo &imageInfo = descriptorImageInfo[imageCount];
+
+        imageInfo.sampler     = textureVk->getSampler().getHandle();
+        imageInfo.imageView   = textureVk->getImageView().getHandle();
+        imageInfo.imageLayout = image.getCurrentLayout();
+
+        auto &writeInfo = writeDescriptorInfo[imageCount];
+
+        writeInfo.sType            = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+        writeInfo.pNext            = nullptr;
+        writeInfo.dstSet           = descriptorSet;
+        writeInfo.dstBinding       = imageCount;
+        writeInfo.dstArrayElement  = 0;
+        writeInfo.descriptorCount  = 1;
+        writeInfo.descriptorType   = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+        writeInfo.pImageInfo       = &imageInfo;
+        writeInfo.pBufferInfo      = nullptr;
+        writeInfo.pTexelBufferView = nullptr;
+
+        imageCount++;
+    }
+
+    VkDevice device = contextVk->getDevice();
+
+    ASSERT(imageCount > 0);
+    vkUpdateDescriptorSets(device, imageCount, writeDescriptorInfo.data(), 0, nullptr);
+
+    mDirtyTextures = false;
+}
+
+void ProgramVk::invalidateTextures()
+{
+    mDirtyTextures = true;
 }
 
 }  // namespace rx

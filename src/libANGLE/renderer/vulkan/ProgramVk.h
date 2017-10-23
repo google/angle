@@ -10,8 +10,11 @@
 #ifndef LIBANGLE_RENDERER_VULKAN_PROGRAMVK_H_
 #define LIBANGLE_RENDERER_VULKAN_PROGRAMVK_H_
 
+#include "libANGLE/Constants.h"
 #include "libANGLE/renderer/ProgramImpl.h"
 #include "libANGLE/renderer/vulkan/renderervk_utils.h"
+
+#include <array>
 
 namespace rx
 {
@@ -114,7 +117,16 @@ class ProgramVk : public ProgramImpl
 
     vk::Error updateUniforms(ContextVk *contextVk);
 
-    VkDescriptorSet getDescriptorSet() const;
+    const std::vector<VkDescriptorSet> &getDescriptorSets() const;
+
+    // In Vulkan, it is invalid to pass in a NULL descriptor set to vkCmdBindDescriptorSets.
+    // However, it's valid to leave them in an undefined, unbound state, if they are never used.
+    // This means when we want to ignore a descriptor set index, we need to pass in an offset
+    // parameter to BindDescriptorSets, which is an offset into the getDescriptorSets array.
+    uint32_t getDescriptorSetOffset() const;
+
+    void updateTexturesDescriptorSet(ContextVk *contextVk);
+    void invalidateTextures();
 
   private:
     void reset(VkDevice device);
@@ -154,8 +166,13 @@ class ProgramVk : public ProgramImpl
     // and Vulkan does not tolerate having null handles in a descriptor set.
     vk::BufferAndMemory mEmptyUniformBlockStorage;
 
-    // Descriptor set for the uniform blocks for this program.
-    VkDescriptorSet mDescriptorSet;
+    // Descriptor sets for uniform blocks and textures for this program.
+    std::vector<VkDescriptorSet> mDescriptorSets;
+    uint32_t mDescriptorSetOffset;
+    bool mDirtyTextures;
+
+    template <typename T>
+    using ShaderTextureArray = std::array<T, gl::IMPLEMENTATION_MAX_SHADER_TEXTURES>;
 };
 
 }  // namespace rx

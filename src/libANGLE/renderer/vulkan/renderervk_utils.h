@@ -457,6 +457,14 @@ class DescriptorPool final : public WrappedObject<DescriptorPool, VkDescriptorPo
                                  VkDescriptorSet *descriptorSetsOut);
 };
 
+class Sampler final : public WrappedObject<Sampler, VkSampler>
+{
+  public:
+    Sampler();
+    void destroy(VkDevice device);
+    Error init(VkDevice device, const VkSamplerCreateInfo &createInfo);
+};
+
 class Fence final : public WrappedObject<Fence, VkFence>
 {
   public:

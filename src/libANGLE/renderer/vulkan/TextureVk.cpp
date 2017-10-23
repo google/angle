@@ -34,6 +34,7 @@ gl::Error TextureVk::onDestroy(const gl::Context *context)
     renderer->enqueueGarbageOrDeleteNow(*this, std::move(mImage));
     renderer->enqueueGarbageOrDeleteNow(*this, std::move(mDeviceMemory));
     renderer->enqueueGarbageOrDeleteNow(*this, std::move(mImageView));
+    renderer->enqueueGarbageOrDeleteNow(*this, std::move(mSampler));
 
     return gl::NoError();
 }
@@ -77,7 +78,7 @@ gl::Error TextureVk::setImage(const gl::Context *context,
 
     // TODO(jmadill): Are all these image transfer bits necessary?
     imageInfo.usage = (VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT |
-                       VK_IMAGE_USAGE_TRANSFER_SRC_BIT);
+                       VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_SAMPLED_BIT);
     imageInfo.sharingMode           = VK_SHARING_MODE_EXCLUSIVE;
     imageInfo.queueFamilyIndexCount = 0;
     imageInfo.pQueueFamilyIndices   = nullptr;
@@ -124,6 +125,30 @@ gl::Error TextureVk::setImage(const gl::Context *context,
     viewInfo.subresourceRange.layerCount     = 1;
 
     ANGLE_TRY(mImageView.init(device, viewInfo));
+
+    // Create a simple sampler. Force basic parameter settings.
+    // TODO(jmadill): Sampler parameters.
+    VkSamplerCreateInfo samplerInfo;
+    samplerInfo.sType                   = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
+    samplerInfo.pNext                   = nullptr;
+    samplerInfo.flags                   = 0;
+    samplerInfo.magFilter               = VK_FILTER_NEAREST;
+    samplerInfo.minFilter               = VK_FILTER_NEAREST;
+    samplerInfo.mipmapMode              = VK_SAMPLER_MIPMAP_MODE_NEAREST;
+    samplerInfo.addressModeU            = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+    samplerInfo.addressModeV            = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+    samplerInfo.addressModeW            = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+    samplerInfo.mipLodBias              = 0.0f;
+    samplerInfo.anisotropyEnable        = VK_FALSE;
+    samplerInfo.maxAnisotropy           = 1.0f;
+    samplerInfo.compareEnable           = VK_FALSE;
+    samplerInfo.compareOp               = VK_COMPARE_OP_ALWAYS;
+    samplerInfo.minLod                  = 0.0f;
+    samplerInfo.maxLod                  = 1.0f;
+    samplerInfo.borderColor             = VK_BORDER_COLOR_INT_TRANSPARENT_BLACK;
+    samplerInfo.unnormalizedCoordinates = VK_FALSE;
+
+    ANGLE_TRY(mSampler.init(device, samplerInfo));
 
     // Handle initial data.
     // TODO(jmadill): Consider re-using staging texture.
@@ -317,7 +342,7 @@ gl::Error TextureVk::getAttachmentRenderTarget(const gl::Context *context,
 
 void TextureVk::syncState(const gl::Texture::DirtyBits &dirtyBits)
 {
-    UNIMPLEMENTED();
+    // TODO(jmadill): Texture sync state.
 }
 
 gl::Error TextureVk::setStorageMultisample(const gl::Context *context,
@@ -336,6 +361,24 @@ gl::Error TextureVk::initializeContents(const gl::Context *context,
 {
     UNIMPLEMENTED();
     return gl::NoError();
+}
+
+const vk::Image &TextureVk::getImage() const
+{
+    ASSERT(mImage.valid());
+    return mImage;
+}
+
+const vk::ImageView &TextureVk::getImageView() const
+{
+    ASSERT(mImageView.valid());
+    return mImageView;
+}
+
+const vk::Sampler &TextureVk::getSampler() const
+{
+    ASSERT(mSampler.valid());
+    return mSampler;
 }
 
 }  // namespace rx
