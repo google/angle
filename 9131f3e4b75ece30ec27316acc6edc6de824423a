@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d95e16aa_4f42fa1b",
+        "filename": "src/compiler/translator/RemoveDynamicIndexing.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-23T13:49:38Z",
+      "side": 1,
+      "message": "I think it would make sense to rename this class PerformanceDiagnositics since it really is limited to that kind of warning. You could shorten it to\n\nPerformanceDiagnostics perfDiagnostics\n\nor\n\nPerfDiagnostics perfDiagnostics",
+      "range": {
+        "startLine": 18,
+        "startChar": 6,
+        "endLine": 18,
+        "endChar": 24
+      },
+      "revId": "9131f3e4b75ece30ec27316acc6edc6de824423a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
