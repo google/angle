@@ -22,6 +22,30 @@
       "revId": "4621778b63d5efa01beee95993fe1b4aef6912c8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "46745c3f_0e5d3e02",
+        "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-10-23T01:33:47Z",
+      "side": 1,
+      "message": "This test case uses other modules which are not implemented on D3D backend.",
+      "parentUuid": "c64e8a60_cb487f70",
+      "range": {
+        "startLine": 65,
+        "startChar": 5,
+        "endLine": 65,
+        "endChar": 10
+      },
+      "revId": "4621778b63d5efa01beee95993fe1b4aef6912c8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
