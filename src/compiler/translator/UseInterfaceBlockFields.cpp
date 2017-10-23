@@ -22,33 +22,31 @@ namespace sh
 namespace
 {
 
+void AddNodeUseStatements(TIntermTyped *node, TIntermSequence *sequence)
+{
+    if (node->isArray())
+    {
+        for (unsigned int i = 0u; i < node->getOutermostArraySize(); ++i)
+        {
+            TIntermBinary *element =
+                new TIntermBinary(EOpIndexDirect, node->deepCopy(), CreateIndexNode(i));
+            AddNodeUseStatements(element, sequence);
+        }
+    }
+    else
+    {
+        sequence->insert(sequence->begin(), node);
+    }
+}
+
 void AddFieldUseStatements(const ShaderVariable &var,
                            TIntermSequence *sequence,
                            const TSymbolTable &symbolTable)
 {
     TString name = TString(var.name.c_str());
-    if (var.isArray())
-    {
-        size_t pos = name.find_last_of('[');
-        if (pos != TString::npos)
-        {
-            name = name.substr(0, pos);
-        }
-    }
+    ASSERT(name.find_last_of('[') == TString::npos);
     TIntermSymbol *symbol = ReferenceGlobalVariable(name, symbolTable);
-    if (var.isArray())
-    {
-        for (unsigned int i = 0u; i < var.arraySize; ++i)
-        {
-            TIntermBinary *element =
-                new TIntermBinary(EOpIndexDirect, symbol->deepCopy(), CreateIndexNode(i));
-            sequence->insert(sequence->begin(), element);
-        }
-    }
-    else
-    {
-        sequence->insert(sequence->begin(), symbol);
-    }
+    AddNodeUseStatements(symbol, sequence);
 }
 
 void InsertUseCode(const InterfaceBlock &block, TIntermTyped *blockNode, TIntermSequence *sequence)
