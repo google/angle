@@ -1446,9 +1446,16 @@ Error Texture::ensureSubImageInitialized(const Context *context,
     // Pre-initialize the texture contents if necessary.
     // TODO(jmadill): Check if area overlaps the entire texture.
     const auto &imageIndex = GetImageIndexFromDescIndex(target, level);
-    if (initState(imageIndex) == InitState::MayNeedInit)
+    const auto &desc       = mState.getImageDesc(imageIndex);
+    if (desc.initState == InitState::MayNeedInit)
     {
-        ANGLE_TRY(initializeContents(context, imageIndex));
+        bool coversWholeImage = area.x == 0 && area.y == 0 && area.z == 0 &&
+                                area.width == desc.size.width && area.height == desc.size.height &&
+                                area.depth == desc.size.depth;
+        if (!coversWholeImage)
+        {
+            ANGLE_TRY(initializeContents(context, imageIndex));
+        }
         setInitState(imageIndex, InitState::Initialized);
     }
 
