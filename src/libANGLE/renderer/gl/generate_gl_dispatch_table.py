@@ -178,6 +178,8 @@ class DispatchTableGL : angle::NonCopyable
   public:
 {table_data}
 
+  virtual ~DispatchTableGL() = default;
+
   protected:
     virtual void *loadProcAddress(const std::string &function) const = 0;
 

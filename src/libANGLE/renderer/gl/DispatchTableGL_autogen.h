@@ -766,6 +766,8 @@ class DispatchTableGL : angle::NonCopyable
     PFNGLSTENCILTHENCOVERSTROKEPATHINSTANCEDNVPROC stencilThenCoverStrokePathInstancedNV = nullptr;
     PFNGLSTENCILTHENCOVERSTROKEPATHNVPROC stencilThenCoverStrokePathNV                   = nullptr;
 
+    virtual ~DispatchTableGL() = default;
+
   protected:
     virtual void *loadProcAddress(const std::string &function) const = 0;
 
