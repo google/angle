@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3d28a876_7458d4e4",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-23T15:32:35Z",
+      "side": 1,
+      "message": "With this patch, could this member be made private?",
+      "revId": "26ab41247efdfcc9444f6a69797b969d0d61bde3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
