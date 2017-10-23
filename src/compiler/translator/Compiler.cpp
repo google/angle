@@ -626,7 +626,10 @@ bool TCompiler::compile(const char *const shaderStrings[],
             OutputTree(root, infoSink.info);
 
         if (compileOptions & SH_OBJECT_CODE)
-            translate(root, compileOptions);
+        {
+            PerformanceDiagnostics perfDiagnostics(&mDiagnostics);
+            translate(root, compileOptions, &perfDiagnostics);
+        }
 
         // The IntermNode tree doesn't need to be deleted here, since the
         // memory will be freed in a big chunk by the PoolAllocator.

@@ -30,7 +30,9 @@ void TranslatorESSL::initBuiltInFunctionEmulator(BuiltInFunctionEmulator *emu,
     }
 }
 
-void TranslatorESSL::translate(TIntermBlock *root, ShCompileOptions compileOptions)
+void TranslatorESSL::translate(TIntermBlock *root,
+                               ShCompileOptions compileOptions,
+                               PerformanceDiagnostics * /*perfDiagnostics*/)
 {
     // The ESSL output doesn't define a default precision for float, so float literal statements
     // end up with no precision which is invalid ESSL.

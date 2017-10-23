@@ -9,6 +9,7 @@
 
 #include "compiler/translator/RemoveDynamicIndexing.h"
 
+#include "compiler/translator/Diagnostics.h"
 #include "compiler/translator/InfoSink.h"
 #include "compiler/translator/IntermNodePatternMatcher.h"
 #include "compiler/translator/IntermNode_util.h"
@@ -281,7 +282,9 @@ TIntermFunctionDefinition *GetIndexFunctionDefinition(TType type,
 class RemoveDynamicIndexingTraverser : public TLValueTrackingTraverser
 {
   public:
-    RemoveDynamicIndexingTraverser(TSymbolTable *symbolTable, int shaderVersion);
+    RemoveDynamicIndexingTraverser(TSymbolTable *symbolTable,
+                                   int shaderVersion,
+                                   PerformanceDiagnostics *perfDiagnostics);
 
     bool visitBinary(Visit visit, TIntermBinary *node) override;
 
@@ -305,13 +308,18 @@ class RemoveDynamicIndexingTraverser : public TLValueTrackingTraverser
     //   V[j++][i]++.
     // where V is an array of vectors, j++ will only be evaluated once.
     bool mRemoveIndexSideEffectsInSubtree;
+
+    PerformanceDiagnostics *mPerfDiagnostics;
 };
 
-RemoveDynamicIndexingTraverser::RemoveDynamicIndexingTraverser(TSymbolTable *symbolTable,
-                                                               int shaderVersion)
+RemoveDynamicIndexingTraverser::RemoveDynamicIndexingTraverser(
+    TSymbolTable *symbolTable,
+    int shaderVersion,
+    PerformanceDiagnostics *perfDiagnostics)
     : TLValueTrackingTraverser(true, false, false, symbolTable, shaderVersion),
       mUsedTreeInsertion(false),
-      mRemoveIndexSideEffectsInSubtree(false)
+      mRemoveIndexSideEffectsInSubtree(false),
+      mPerfDiagnostics(perfDiagnostics)
 {
 }
 
@@ -398,6 +406,10 @@ bool RemoveDynamicIndexingTraverser::visitBinary(Visit visit, TIntermBinary *nod
         }
         else if (IntermNodePatternMatcher::IsDynamicIndexingOfVectorOrMatrix(node))
         {
+            mPerfDiagnostics->warning(node->getLine(),
+                                      "Performance: dynamic indexing of vectors and "
+                                      "matrices is emulated and can be slow.",
+                                      "[]");
             bool write = isLValueRequiredHere();
 
 #if defined(ANGLE_ENABLE_ASSERTS)
@@ -515,9 +527,12 @@ void RemoveDynamicIndexingTraverser::nextIteration()
 
 }  // namespace
 
-void RemoveDynamicIndexing(TIntermNode *root, TSymbolTable *symbolTable, int shaderVersion)
+void RemoveDynamicIndexing(TIntermNode *root,
+                           TSymbolTable *symbolTable,
+                           int shaderVersion,
+                           PerformanceDiagnostics *perfDiagnostics)
 {
-    RemoveDynamicIndexingTraverser traverser(symbolTable, shaderVersion);
+    RemoveDynamicIndexingTraverser traverser(symbolTable, shaderVersion, perfDiagnostics);
     do
     {
         traverser.nextIteration();

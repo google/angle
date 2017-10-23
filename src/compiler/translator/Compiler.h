@@ -156,8 +156,10 @@ class TCompiler : public TShHandleBase
     // Add emulated functions to the built-in function emulator.
     virtual void initBuiltInFunctionEmulator(BuiltInFunctionEmulator *emu,
                                              ShCompileOptions compileOptions){};
-    // Translate to object code.
-    virtual void translate(TIntermBlock *root, ShCompileOptions compileOptions) = 0;
+    // Translate to object code. May generate performance warnings through the diagnostics.
+    virtual void translate(TIntermBlock *root,
+                           ShCompileOptions compileOptions,
+                           PerformanceDiagnostics *perfDiagnostics) = 0;
     // Insert statements to reference all members in unused uniform blocks with standard and shared
     // layout. This is to work around a Mac driver that treats unused standard/shared
     // uniform blocks as inactive.

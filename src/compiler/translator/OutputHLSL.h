@@ -40,7 +40,8 @@ class OutputHLSL : public TIntermTraverser
                int numRenderTargets,
                const std::vector<Uniform> &uniforms,
                ShCompileOptions compileOptions,
-               TSymbolTable *symbolTable);
+               TSymbolTable *symbolTable,
+               PerformanceDiagnostics *perfDiagnostics);
 
     ~OutputHLSL();
 
@@ -240,6 +241,8 @@ class OutputHLSL : public TIntermTraverser
     // parameter with the other N parameters of the function. This is used to work around that
     // arrays can't be return values in HLSL.
     std::vector<ArrayHelperFunction> mArrayConstructIntoFunctions;
+
+    PerformanceDiagnostics *mPerfDiagnostics;
 
   private:
     TString samplerNamePrefixFromStruct(TIntermTyped *node);

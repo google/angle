@@ -10,6 +10,7 @@
 
 #include "compiler/translator/RemoveSwitchFallThrough.h"
 
+#include "compiler/translator/Diagnostics.h"
 #include "compiler/translator/IntermTraverse.h"
 
 namespace sh
@@ -21,10 +22,12 @@ namespace
 class RemoveSwitchFallThroughTraverser : public TIntermTraverser
 {
   public:
-    static TIntermBlock *removeFallThrough(TIntermBlock *statementList);
+    static TIntermBlock *removeFallThrough(TIntermBlock *statementList,
+                                           PerformanceDiagnostics *perfDiagnostics);
 
   private:
-    RemoveSwitchFallThroughTraverser(TIntermBlock *statementList);
+    RemoveSwitchFallThroughTraverser(TIntermBlock *statementList,
+                                     PerformanceDiagnostics *perfDiagnostics);
 
     void visitSymbol(TIntermSymbol *node) override;
     void visitConstantUnion(TIntermConstantUnion *node) override;
@@ -49,11 +52,14 @@ class RemoveSwitchFallThroughTraverser : public TIntermTraverser
     bool mLastStatementWasBreak;
     TIntermBlock *mPreviousCase;
     std::vector<TIntermBlock *> mCasesSharingBreak;
+    PerformanceDiagnostics *mPerfDiagnostics;
 };
 
-TIntermBlock *RemoveSwitchFallThroughTraverser::removeFallThrough(TIntermBlock *statementList)
+TIntermBlock *RemoveSwitchFallThroughTraverser::removeFallThrough(
+    TIntermBlock *statementList,
+    PerformanceDiagnostics *perfDiagnostics)
 {
-    RemoveSwitchFallThroughTraverser rm(statementList);
+    RemoveSwitchFallThroughTraverser rm(statementList, perfDiagnostics);
     ASSERT(statementList);
     statementList->traverse(&rm);
     ASSERT(rm.mPreviousCase || statementList->getSequence()->empty());
@@ -69,11 +75,14 @@ TIntermBlock *RemoveSwitchFallThroughTraverser::removeFallThrough(TIntermBlock *
     return rm.mStatementListOut;
 }
 
-RemoveSwitchFallThroughTraverser::RemoveSwitchFallThroughTraverser(TIntermBlock *statementList)
+RemoveSwitchFallThroughTraverser::RemoveSwitchFallThroughTraverser(
+    TIntermBlock *statementList,
+    PerformanceDiagnostics *perfDiagnostics)
     : TIntermTraverser(true, false, false),
       mStatementList(statementList),
       mLastStatementWasBreak(false),
-      mPreviousCase(nullptr)
+      mPreviousCase(nullptr),
+      mPerfDiagnostics(perfDiagnostics)
 {
     mStatementListOut = new TIntermBlock();
 }
@@ -158,14 +167,10 @@ void RemoveSwitchFallThroughTraverser::handlePreviousCase()
         mCasesSharingBreak.push_back(mPreviousCase);
     if (mLastStatementWasBreak)
     {
-        bool labelsWithNoStatements = true;
         for (size_t i = 0; i < mCasesSharingBreak.size(); ++i)
         {
-            if (mCasesSharingBreak.at(i)->getSequence()->size() > 1)
-            {
-                labelsWithNoStatements = false;
-            }
-            if (labelsWithNoStatements)
+            ASSERT(!mCasesSharingBreak.at(i)->getSequence()->empty());
+            if (mCasesSharingBreak.at(i)->getSequence()->size() == 1)
             {
                 // Fall-through is allowed in case the label has no statements.
                 outputSequence(mCasesSharingBreak.at(i)->getSequence(), 0);
@@ -173,6 +178,13 @@ void RemoveSwitchFallThroughTraverser::handlePreviousCase()
             else
             {
                 // Include all the statements that this case can fall through under the same label.
+                if (mCasesSharingBreak.size() > i + 1u)
+                {
+                    mPerfDiagnostics->warning(mCasesSharingBreak.at(i)->getLine(),
+                                              "Performance: non-empty fall-through cases in "
+                                              "switch statements generate extra code.",
+                                              "switch");
+                }
                 for (size_t j = i; j < mCasesSharingBreak.size(); ++j)
                 {
                     size_t startIndex =
@@ -192,6 +204,7 @@ bool RemoveSwitchFallThroughTraverser::visitCase(Visit, TIntermCase *node)
     handlePreviousCase();
     mPreviousCase = new TIntermBlock();
     mPreviousCase->getSequence()->push_back(node);
+    mPreviousCase->setLine(node->getLine());
     // Don't traverse the condition of the case statement
     return false;
 }
@@ -248,9 +261,10 @@ bool RemoveSwitchFallThroughTraverser::visitBranch(Visit, TIntermBranch *node)
 
 }  // anonymous namespace
 
-TIntermBlock *RemoveSwitchFallThrough(TIntermBlock *statementList)
+TIntermBlock *RemoveSwitchFallThrough(TIntermBlock *statementList,
+                                      PerformanceDiagnostics *perfDiagnostics)
 {
-    return RemoveSwitchFallThroughTraverser::removeFallThrough(statementList);
+    return RemoveSwitchFallThroughTraverser::removeFallThrough(statementList, perfDiagnostics);
 }
 
 }  // namespace sh

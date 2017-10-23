@@ -121,7 +121,8 @@ OutputHLSL::OutputHLSL(sh::GLenum shaderType,
                        int numRenderTargets,
                        const std::vector<Uniform> &uniforms,
                        ShCompileOptions compileOptions,
-                       TSymbolTable *symbolTable)
+                       TSymbolTable *symbolTable,
+                       PerformanceDiagnostics *perfDiagnostics)
     : TIntermTraverser(true, true, true, symbolTable),
       mShaderType(shaderType),
       mShaderVersion(shaderVersion),
@@ -130,7 +131,8 @@ OutputHLSL::OutputHLSL(sh::GLenum shaderType,
       mOutputType(outputType),
       mCompileOptions(compileOptions),
       mNumRenderTargets(numRenderTargets),
-      mCurrentFunctionMetadata(nullptr)
+      mCurrentFunctionMetadata(nullptr),
+      mPerfDiagnostics(perfDiagnostics)
 {
     mInsideFunction = false;
 
@@ -2173,7 +2175,7 @@ bool OutputHLSL::visitSwitch(Visit visit, TIntermSwitch *node)
     ASSERT(node->getStatementList());
     if (visit == PreVisit)
     {
-        node->setStatementList(RemoveSwitchFallThrough(node->getStatementList()));
+        node->setStatementList(RemoveSwitchFallThrough(node->getStatementList(), mPerfDiagnostics));
     }
     outputTriplet(out, visit, "switch (", ") ", "");
     // The curly braces get written when visiting the statementList block.

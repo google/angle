@@ -24,7 +24,9 @@ class TranslatorHLSL : public TCompiler
     const std::map<std::string, unsigned int> *getUniformRegisterMap() const;
 
   protected:
-    void translate(TIntermBlock *root, ShCompileOptions compileOptions) override;
+    void translate(TIntermBlock *root,
+                   ShCompileOptions compileOptions,
+                   PerformanceDiagnostics *perfDiagnostics) override;
     bool shouldFlattenPragmaStdglInvariantAll() override;
 
     // collectVariables needs to be run always so registers can be assigned.

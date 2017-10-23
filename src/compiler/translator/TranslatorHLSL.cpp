@@ -34,7 +34,9 @@ TranslatorHLSL::TranslatorHLSL(sh::GLenum type, ShShaderSpec spec, ShShaderOutpu
 {
 }
 
-void TranslatorHLSL::translate(TIntermBlock *root, ShCompileOptions compileOptions)
+void TranslatorHLSL::translate(TIntermBlock *root,
+                               ShCompileOptions compileOptions,
+                               PerformanceDiagnostics *perfDiagnostics)
 {
     const ShBuiltInResources &resources = getResources();
     int numRenderTargets                = resources.EXT_draw_buffers ? resources.MaxDrawBuffers : 1;
@@ -71,7 +73,7 @@ void TranslatorHLSL::translate(TIntermBlock *root, ShCompileOptions compileOptio
     if (!shouldRunLoopAndIndexingValidation(compileOptions))
     {
         // HLSL doesn't support dynamic indexing of vectors and matrices.
-        RemoveDynamicIndexing(root, &getSymbolTable(), getShaderVersion());
+        RemoveDynamicIndexing(root, &getSymbolTable(), getShaderVersion(), perfDiagnostics);
     }
 
     // Work around D3D9 bug that would manifest in vertex shaders with selection blocks which
@@ -126,7 +128,7 @@ void TranslatorHLSL::translate(TIntermBlock *root, ShCompileOptions compileOptio
 
     sh::OutputHLSL outputHLSL(getShaderType(), getShaderVersion(), getExtensionBehavior(),
                               getSourcePath(), getOutputType(), numRenderTargets, getUniforms(),
-                              compileOptions, &getSymbolTable());
+                              compileOptions, &getSymbolTable(), perfDiagnostics);
 
     outputHLSL.output(root, getInfoSink().obj);
 
