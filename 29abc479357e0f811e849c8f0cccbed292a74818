@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "d6302960_c4e97f1f",
+        "filename": "src/libANGLE/Uniform.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-23T16:10:44Z",
+      "side": 1,
+      "message": "The name of the function makes it difficult to now how things are updated when just looking at the call. I\u0027m not sure what would be a good name though.\n\nAlso should we consider making that static use flags be bitfields so that this operation becomes a single integer bitwise or?",
+      "revId": "29abc479357e0f811e849c8f0cccbed292a74818",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "24acca51_2e351b03",
         "filename": "src/libANGLE/queryutils.cpp",
         "patchSetId": 23
@@ -70,6 +87,91 @@
       "revId": "29abc479357e0f811e849c8f0cccbed292a74818",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c48d2322_89045a52",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 747,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-23T16:10:44Z",
+      "side": 1,
+      "message": "nit: this could be in GetShaderVariableBufferResourceProperty which would make this function disappear.",
+      "revId": "29abc479357e0f811e849c8f0cccbed292a74818",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5c313193_3c76f791",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 775,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-23T16:10:44Z",
+      "side": 1,
+      "message": "nit: references should always be const so put should be a pointer. This make it so variable that will be modified can be seen easily when the function is called.\nnit: put -\u003e outputPosition?",
+      "revId": "29abc479357e0f811e849c8f0cccbed292a74818",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "48bc3a3c_72c4c898",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 1171,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-23T16:10:44Z",
+      "side": 1,
+      "message": "note to other reviewers: checked that this doesn\u0027t break the \"RobustANGLE\" version of the entry point as an error is generated during validation if params is too small.",
+      "revId": "29abc479357e0f811e849c8f0cccbed292a74818",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "751fb527_8dea2c08",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 1506,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-23T16:10:44Z",
+      "side": 1,
+      "message": "this block can be removed as it is now done at the end of the function.",
+      "revId": "29abc479357e0f811e849c8f0cccbed292a74818",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "062699d2_87420af0",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 1550,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-23T16:10:44Z",
+      "side": 1,
+      "message": "Please comment about this making the output buffer bounds check for all cases writing only one value and that ACTIVE_OUTPUT_VARIABLES needs special casing.",
+      "revId": "29abc479357e0f811e849c8f0cccbed292a74818",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     },
     {
       "key": {
@@ -212,6 +314,74 @@
       "revId": "29abc479357e0f811e849c8f0cccbed292a74818",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "362c933d_e9a89720",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 268,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-23T16:10:44Z",
+      "side": 1,
+      "message": "Should there be a getActiveAtomicCounterBuffers equivalent to getActiveUniformBlockCount?",
+      "revId": "29abc479357e0f811e849c8f0cccbed292a74818",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "73c905fd_2a62547d",
+        "filename": "src/tests/gl_tests/ProgramInterfaceTest.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 472,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-23T16:10:44Z",
+      "side": 1,
+      "message": "This can be replaced by ArraySize(props)",
+      "revId": "29abc479357e0f811e849c8f0cccbed292a74818",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8e33295a_f42c0746",
+        "filename": "src/tests/gl_tests/ProgramInterfaceTest.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 534,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-23T16:10:44Z",
+      "side": 1,
+      "message": "ditto.",
+      "revId": "29abc479357e0f811e849c8f0cccbed292a74818",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0a7cde2f_357969ce",
+        "filename": "src/tests/gl_tests/ProgramInterfaceTest.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 551,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-23T16:10:44Z",
+      "side": 1,
+      "message": "Can we also have tests for bufSize too small, both while querying single value properties, and while querying active variables?",
+      "revId": "29abc479357e0f811e849c8f0cccbed292a74818",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
