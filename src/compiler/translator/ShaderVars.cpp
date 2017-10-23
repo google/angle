@@ -34,9 +34,15 @@ ShaderVariable::ShaderVariable() : type(0), precision(0), arraySize(0), staticUs
 {
 }
 
+ShaderVariable::ShaderVariable(GLenum typeIn)
+    : type(typeIn), precision(0), arraySize(0), staticUse(false)
+{
+}
+
 ShaderVariable::ShaderVariable(GLenum typeIn, unsigned int arraySizeIn)
     : type(typeIn), precision(0), arraySize(arraySizeIn), staticUse(false)
 {
+    ASSERT(arraySizeIn != 0);
 }
 
 ShaderVariable::~ShaderVariable()

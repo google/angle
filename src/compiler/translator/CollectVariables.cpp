@@ -353,34 +353,27 @@ void CollectVariablesTraverser::visitSymbol(TIntermSymbol *symbol)
             info.name          = kName;
             info.mappedName    = kName;
             info.type          = GL_NONE;
-            info.arraySize     = 0;
             info.precision     = GL_NONE;
             info.staticUse     = true;
 
-            ShaderVariable nearInfo;
+            ShaderVariable nearInfo(GL_FLOAT);
             const char kNearName[] = "near";
             nearInfo.name          = kNearName;
             nearInfo.mappedName    = kNearName;
-            nearInfo.type          = GL_FLOAT;
-            nearInfo.arraySize     = 0;
             nearInfo.precision     = GL_HIGH_FLOAT;
             nearInfo.staticUse     = true;
 
-            ShaderVariable farInfo;
+            ShaderVariable farInfo(GL_FLOAT);
             const char kFarName[] = "far";
             farInfo.name          = kFarName;
             farInfo.mappedName    = kFarName;
-            farInfo.type          = GL_FLOAT;
-            farInfo.arraySize     = 0;
             farInfo.precision     = GL_HIGH_FLOAT;
             farInfo.staticUse     = true;
 
-            ShaderVariable diffInfo;
+            ShaderVariable diffInfo(GL_FLOAT);
             const char kDiffName[] = "diff";
             diffInfo.name          = kDiffName;
             diffInfo.mappedName    = kDiffName;
-            diffInfo.type          = GL_FLOAT;
-            diffInfo.arraySize     = 0;
             diffInfo.precision     = GL_HIGH_FLOAT;
             diffInfo.staticUse     = true;
 
@@ -447,7 +440,6 @@ void CollectVariablesTraverser::visitSymbol(TIntermSymbol *symbol)
                     info.name          = kName;
                     info.mappedName    = kName;
                     info.type          = GL_INT;
-                    info.arraySize     = 0;
                     info.precision     = GL_HIGH_INT;  // Defined by spec.
                     info.staticUse     = true;
                     info.location      = -1;

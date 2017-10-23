@@ -88,7 +88,7 @@ class CollectVariablesTest : public testing::Test
                 foundDiff = true;
             }
 
-            EXPECT_EQ(0u, field.arraySize);
+            EXPECT_FALSE(field.isArray());
             EXPECT_FALSE(field.isStruct());
             EXPECT_GLENUM_EQ(GL_HIGH_FLOAT, field.precision);
             EXPECT_TRUE(field.staticUse);
@@ -243,7 +243,7 @@ TEST_F(CollectFragmentVariablesTest, SimpleOutputVar)
 
     const OutputVariable &outputVariable = outputVariables[0];
 
-    EXPECT_EQ(0u, outputVariable.arraySize);
+    EXPECT_FALSE(outputVariable.isArray());
     EXPECT_EQ(-1, outputVariable.location);
     EXPECT_GLENUM_EQ(GL_MEDIUM_FLOAT, outputVariable.precision);
     EXPECT_TRUE(outputVariable.staticUse);
@@ -268,7 +268,7 @@ TEST_F(CollectFragmentVariablesTest, LocationOutputVar)
 
     const OutputVariable &outputVariable = outputVariables[0];
 
-    EXPECT_EQ(0u, outputVariable.arraySize);
+    EXPECT_FALSE(outputVariable.isArray());
     EXPECT_EQ(5, outputVariable.location);
     EXPECT_GLENUM_EQ(GL_MEDIUM_FLOAT, outputVariable.precision);
     EXPECT_TRUE(outputVariable.staticUse);
@@ -292,7 +292,7 @@ TEST_F(CollectVertexVariablesTest, LocationAttribute)
 
     const Attribute &attribute = attributes[0];
 
-    EXPECT_EQ(0u, attribute.arraySize);
+    EXPECT_FALSE(attribute.isArray());
     EXPECT_EQ(5, attribute.location);
     EXPECT_GLENUM_EQ(GL_HIGH_FLOAT, attribute.precision);
     EXPECT_TRUE(attribute.staticUse);
@@ -535,7 +535,7 @@ TEST_F(CollectVertexVariablesTest, VaryingInterpolation)
         varying = &varyings[1];
     }
 
-    EXPECT_EQ(0u, varying->arraySize);
+    EXPECT_FALSE(varying->isArray());
     EXPECT_GLENUM_EQ(GL_MEDIUM_FLOAT, varying->precision);
     EXPECT_TRUE(varying->staticUse);
     EXPECT_GLENUM_EQ(GL_FLOAT, varying->type);
@@ -581,7 +581,7 @@ TEST_F(CollectFragmentVariablesTest, OutputVarESSL1FragColor)
     const OutputVariable *outputVariable = nullptr;
     validateOutputVariableForShader(fragColorShader, 0u, "gl_FragColor", &outputVariable);
     ASSERT_NE(outputVariable, nullptr);
-    EXPECT_EQ(0u, outputVariable->arraySize);
+    EXPECT_FALSE(outputVariable->isArray());
     EXPECT_GLENUM_EQ(GL_FLOAT_VEC4, outputVariable->type);
     EXPECT_GLENUM_EQ(GL_MEDIUM_FLOAT, outputVariable->precision);
 }
@@ -630,7 +630,7 @@ TEST_F(CollectFragmentVariablesTest, OutputVarESSL1FragDepthMediump)
     const OutputVariable *outputVariable = nullptr;
     validateOutputVariableForShader(fragDepthShader, 0u, "gl_FragDepthEXT", &outputVariable);
     ASSERT_NE(outputVariable, nullptr);
-    EXPECT_EQ(0u, outputVariable->arraySize);
+    EXPECT_FALSE(outputVariable->isArray());
     EXPECT_GLENUM_EQ(GL_FLOAT, outputVariable->type);
     EXPECT_GLENUM_EQ(GL_MEDIUM_FLOAT, outputVariable->precision);
 }
@@ -653,7 +653,7 @@ TEST_F(CollectFragmentVariablesTest, OutputVarESSL1FragDepthHighp)
     const OutputVariable *outputVariable = nullptr;
     validateOutputVariableForShader(fragDepthHighShader, 0u, "gl_FragDepthEXT", &outputVariable);
     ASSERT_NE(outputVariable, nullptr);
-    EXPECT_EQ(0u, outputVariable->arraySize);
+    EXPECT_FALSE(outputVariable->isArray());
     EXPECT_GLENUM_EQ(GL_FLOAT, outputVariable->type);
     EXPECT_GLENUM_EQ(GL_HIGH_FLOAT, outputVariable->precision);
 }
@@ -676,7 +676,7 @@ TEST_F(CollectFragmentVariablesTest, OutputVarESSL3FragDepthHighp)
     const OutputVariable *outputVariable = nullptr;
     validateOutputVariableForShader(fragDepthHighShader, 0u, "gl_FragDepth", &outputVariable);
     ASSERT_NE(outputVariable, nullptr);
-    EXPECT_EQ(0u, outputVariable->arraySize);
+    EXPECT_FALSE(outputVariable->isArray());
     EXPECT_GLENUM_EQ(GL_FLOAT, outputVariable->type);
     EXPECT_GLENUM_EQ(GL_HIGH_FLOAT, outputVariable->precision);
 }
@@ -704,7 +704,7 @@ TEST_F(CollectFragmentVariablesTest, OutputVarESSL1EXTBlendFuncExtendedSecondary
     const OutputVariable *outputVariable = nullptr;
     validateOutputVariableForShader(secondaryFragColorShader, 0u, "gl_FragColor", &outputVariable);
     ASSERT_NE(outputVariable, nullptr);
-    EXPECT_EQ(0u, outputVariable->arraySize);
+    EXPECT_FALSE(outputVariable->isArray());
     EXPECT_GLENUM_EQ(GL_FLOAT_VEC4, outputVariable->type);
     EXPECT_GLENUM_EQ(GL_MEDIUM_FLOAT, outputVariable->precision);
 
@@ -712,7 +712,7 @@ TEST_F(CollectFragmentVariablesTest, OutputVarESSL1EXTBlendFuncExtendedSecondary
     validateOutputVariableForShader(secondaryFragColorShader, 1u, "gl_SecondaryFragColorEXT",
                                     &outputVariable);
     ASSERT_NE(outputVariable, nullptr);
-    EXPECT_EQ(0u, outputVariable->arraySize);
+    EXPECT_FALSE(outputVariable->isArray());
     EXPECT_GLENUM_EQ(GL_FLOAT_VEC4, outputVariable->type);
     EXPECT_GLENUM_EQ(GL_MEDIUM_FLOAT, outputVariable->precision);
 }
@@ -831,7 +831,7 @@ TEST_F(CollectHashedVertexVariablesTest, StructUniform)
 
     const Uniform &uniform = uniforms[0];
 
-    EXPECT_EQ(0u, uniform.arraySize);
+    EXPECT_FALSE(uniform.isArray());
     EXPECT_EQ("u", uniform.name);
     EXPECT_EQ("webgl_1", uniform.mappedName);
     EXPECT_TRUE(uniform.staticUse);
@@ -868,14 +868,14 @@ TEST_F(CollectFragmentVariablesTest, MultiDeclaration)
     ASSERT_EQ(2u, uniforms.size());
 
     const Uniform &uniform = uniforms[0];
-    EXPECT_EQ(0u, uniform.arraySize);
+    EXPECT_FALSE(uniform.isArray());
     EXPECT_GLENUM_EQ(GL_MEDIUM_FLOAT, uniform.precision);
     EXPECT_TRUE(uniform.staticUse);
     EXPECT_GLENUM_EQ(GL_FLOAT, uniform.type);
     EXPECT_EQ("uA", uniform.name);
 
     const Uniform &uniformB = uniforms[1];
-    EXPECT_EQ(0u, uniformB.arraySize);
+    EXPECT_FALSE(uniformB.isArray());
     EXPECT_GLENUM_EQ(GL_MEDIUM_FLOAT, uniformB.precision);
     EXPECT_TRUE(uniformB.staticUse);
     EXPECT_GLENUM_EQ(GL_FLOAT, uniformB.type);
@@ -901,7 +901,7 @@ TEST_F(CollectFragmentVariablesTest, EmptyDeclarator)
     ASSERT_EQ(1u, uniforms.size());
 
     const Uniform &uniformB = uniforms[0];
-    EXPECT_EQ(0u, uniformB.arraySize);
+    EXPECT_FALSE(uniformB.isArray());
     EXPECT_GLENUM_EQ(GL_MEDIUM_FLOAT, uniformB.precision);
     EXPECT_TRUE(uniformB.staticUse);
     EXPECT_GLENUM_EQ(GL_FLOAT, uniformB.type);

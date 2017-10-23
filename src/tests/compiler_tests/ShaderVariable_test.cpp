@@ -26,13 +26,13 @@ TEST(ShaderVariableTest, FindInfoByMappedName)
     // };
     // B uni[2];
     ShaderVariable uni;
-    uni.arraySize = 2;
+    uni.setArraySize(2);
     uni.name = "uni";
     uni.mappedName = "m_uni";
     uni.structName = "B";
     {
         ShaderVariable a;
-        a.arraySize = 3;
+        a.setArraySize(3);
         a.name = "a";
         a.mappedName = "m_a";
         a.structName = "A";
@@ -42,7 +42,7 @@ TEST(ShaderVariableTest, FindInfoByMappedName)
             x.mappedName = "m_x";
             a.fields.push_back(x);
 
-            ShaderVariable y(GL_FLOAT_VEC3, 0);
+            ShaderVariable y(GL_FLOAT_VEC3);
             y.name = "y";
             y.mappedName = "m_y";
             a.fields.push_back(y);
@@ -94,17 +94,16 @@ TEST(ShaderVariableTest, IsSameUniformWithDifferentFieldOrder)
     // };
     // uniform A uni;
     Uniform vx_a;
-    vx_a.arraySize = 0;
     vx_a.name = "uni";
     vx_a.mappedName = "m_uni";
     vx_a.structName = "A";
     {
-        ShaderVariable x(GL_FLOAT, 0);
+        ShaderVariable x(GL_FLOAT);
         x.name = "x";
         x.mappedName = "m_x";
         vx_a.fields.push_back(x);
 
-        ShaderVariable y(GL_FLOAT, 0);
+        ShaderVariable y(GL_FLOAT);
         y.name = "y";
         y.mappedName = "m_y";
         vx_a.fields.push_back(y);
@@ -116,17 +115,16 @@ TEST(ShaderVariableTest, IsSameUniformWithDifferentFieldOrder)
     // };
     // uniform A uni;
     Uniform fx_a;
-    fx_a.arraySize = 0;
     fx_a.name = "uni";
     fx_a.mappedName = "m_uni";
     fx_a.structName = "A";
     {
-        ShaderVariable y(GL_FLOAT, 0);
+        ShaderVariable y(GL_FLOAT);
         y.name = "y";
         y.mappedName = "m_y";
         fx_a.fields.push_back(y);
 
-        ShaderVariable x(GL_FLOAT, 0);
+        ShaderVariable x(GL_FLOAT);
         x.name = "x";
         x.mappedName = "m_x";
         fx_a.fields.push_back(x);
@@ -143,17 +141,16 @@ TEST(ShaderVariableTest, IsSameUniformWithDifferentStructNames)
     // };
     // uniform A uni;
     Uniform vx_a;
-    vx_a.arraySize = 0;
     vx_a.name = "uni";
     vx_a.mappedName = "m_uni";
     vx_a.structName = "A";
     {
-        ShaderVariable x(GL_FLOAT, 0);
+        ShaderVariable x(GL_FLOAT);
         x.name = "x";
         x.mappedName = "m_x";
         vx_a.fields.push_back(x);
 
-        ShaderVariable y(GL_FLOAT, 0);
+        ShaderVariable y(GL_FLOAT);
         y.name = "y";
         y.mappedName = "m_y";
         vx_a.fields.push_back(y);
@@ -165,16 +162,15 @@ TEST(ShaderVariableTest, IsSameUniformWithDifferentStructNames)
     // };
     // uniform B uni;
     Uniform fx_a;
-    fx_a.arraySize = 0;
     fx_a.name = "uni";
     fx_a.mappedName = "m_uni";
     {
-        ShaderVariable x(GL_FLOAT, 0);
+        ShaderVariable x(GL_FLOAT);
         x.name = "x";
         x.mappedName = "m_x";
         fx_a.fields.push_back(x);
 
-        ShaderVariable y(GL_FLOAT, 0);
+        ShaderVariable y(GL_FLOAT);
         y.name = "y";
         y.mappedName = "m_y";
         fx_a.fields.push_back(y);
@@ -195,7 +191,6 @@ TEST(ShaderVariableTest, IsSameVaryingWithDifferentInvariance)
     // invariant varying float vary;
     Varying vx;
     vx.type = GL_FLOAT;
-    vx.arraySize = 0;
     vx.precision = GL_MEDIUM_FLOAT;
     vx.name = "vary";
     vx.mappedName = "m_vary";
@@ -205,7 +200,6 @@ TEST(ShaderVariableTest, IsSameVaryingWithDifferentInvariance)
     // varying float vary;
     Varying fx;
     fx.type = GL_FLOAT;
-    fx.arraySize = 0;
     fx.precision = GL_MEDIUM_FLOAT;
     fx.name = "vary";
     fx.mappedName = "m_vary";
@@ -428,7 +422,6 @@ TEST(ShaderVariableTest, IsSameVaryingWithDifferentName)
     // Varying float vary1;
     Varying vx;
     vx.type        = GL_FLOAT;
-    vx.arraySize   = 0;
     vx.precision   = GL_MEDIUM_FLOAT;
     vx.name        = "vary1";
     vx.mappedName  = "m_vary1";
@@ -438,7 +431,6 @@ TEST(ShaderVariableTest, IsSameVaryingWithDifferentName)
     // Varying float vary2;
     Varying fx;
     fx.type        = GL_FLOAT;
-    fx.arraySize   = 0;
     fx.precision   = GL_MEDIUM_FLOAT;
     fx.name        = "vary2";
     fx.mappedName  = "m_vary2";

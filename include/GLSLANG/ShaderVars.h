@@ -59,6 +59,7 @@ enum class BlockType
 struct ShaderVariable
 {
     ShaderVariable();
+    ShaderVariable(GLenum typeIn);
     ShaderVariable(GLenum typeIn, unsigned int arraySizeIn);
     ~ShaderVariable();
     ShaderVariable(const ShaderVariable &other);

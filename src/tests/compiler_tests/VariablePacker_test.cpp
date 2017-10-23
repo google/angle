@@ -60,6 +60,17 @@ static sh::GLenum types[] = {
 static sh::GLenum nonSqMatTypes[] = {GL_FLOAT_MAT2x3, GL_FLOAT_MAT2x4, GL_FLOAT_MAT3x2,
                                      GL_FLOAT_MAT3x4, GL_FLOAT_MAT4x2, GL_FLOAT_MAT4x3};
 
+// Creates either a single variable or an array variable depending on numVars.
+sh::ShaderVariable CreateShaderVariable(sh::GLenum type, int numVars)
+{
+    ASSERT(numVars != 0);
+    if (numVars == 1)
+    {
+        return sh::ShaderVariable(type);
+    }
+    return sh::ShaderVariable(type, numVars);
+}
+
 }  // anonymous namespace
 
 TEST(VariablePacking, Pack)
@@ -76,18 +87,18 @@ TEST(VariablePacking, Pack)
         int num_components_per_row = sh::GetTypePackingComponentsPerRow(type);
         // Check 1 of the type.
         vars.clear();
-        vars.push_back(sh::ShaderVariable(type, 0));
+        vars.push_back(sh::ShaderVariable(type));
         EXPECT_TRUE(CheckVariablesInPackingLimits(kMaxRows, vars));
 
         // Check exactly the right amount of 1 type as an array.
         int num_vars = kMaxRows / num_rows;
         vars.clear();
-        vars.push_back(sh::ShaderVariable(type, num_vars == 1 ? 0 : num_vars));
+        vars.push_back(CreateShaderVariable(type, num_vars));
         EXPECT_TRUE(CheckVariablesInPackingLimits(kMaxRows, vars));
 
         // test too many
         vars.clear();
-        vars.push_back(sh::ShaderVariable(type, num_vars == 0 ? 0 : (num_vars + 1)));
+        vars.push_back(CreateShaderVariable(type, num_vars + 1));
         EXPECT_FALSE(CheckVariablesInPackingLimits(kMaxRows, vars));
 
         // Check exactly the right amount of 1 type as individual vars.
@@ -96,26 +107,26 @@ TEST(VariablePacking, Pack)
         vars.clear();
         for (int ii = 0; ii < num_vars; ++ii)
         {
-            vars.push_back(sh::ShaderVariable(type, 0));
+            vars.push_back(sh::ShaderVariable(type));
         }
         EXPECT_TRUE(CheckVariablesInPackingLimits(kMaxRows, vars));
 
         // Check 1 too many.
-        vars.push_back(sh::ShaderVariable(type, 0));
+        vars.push_back(sh::ShaderVariable(type));
         EXPECT_FALSE(CheckVariablesInPackingLimits(kMaxRows, vars));
     }
 
     // Test example from GLSL ES 3.0 spec chapter 11.
     vars.clear();
-    vars.push_back(sh::ShaderVariable(GL_FLOAT_VEC4, 0));
-    vars.push_back(sh::ShaderVariable(GL_FLOAT_MAT3, 0));
-    vars.push_back(sh::ShaderVariable(GL_FLOAT_MAT3, 0));
+    vars.push_back(sh::ShaderVariable(GL_FLOAT_VEC4));
+    vars.push_back(sh::ShaderVariable(GL_FLOAT_MAT3));
+    vars.push_back(sh::ShaderVariable(GL_FLOAT_MAT3));
     vars.push_back(sh::ShaderVariable(GL_FLOAT_VEC2, 6));
     vars.push_back(sh::ShaderVariable(GL_FLOAT_VEC2, 4));
-    vars.push_back(sh::ShaderVariable(GL_FLOAT_VEC2, 0));
+    vars.push_back(sh::ShaderVariable(GL_FLOAT_VEC2));
     vars.push_back(sh::ShaderVariable(GL_FLOAT, 3));
     vars.push_back(sh::ShaderVariable(GL_FLOAT, 2));
-    vars.push_back(sh::ShaderVariable(GL_FLOAT, 0));
+    vars.push_back(sh::ShaderVariable(GL_FLOAT));
     EXPECT_TRUE(CheckVariablesInPackingLimits(kMaxRows, vars));
 }
 
@@ -158,21 +169,21 @@ TEST(VariablePacking, NonSquareMats)
         int squareSize = std::max(rows, cols);
 
         std::vector<sh::ShaderVariable> vars;
-        vars.push_back(sh::ShaderVariable(type, 0));
+        vars.push_back(sh::ShaderVariable(type));
 
         // Fill columns
         for (int row = 0; row < squareSize; row++)
         {
             for (int col = squareSize; col < 4; ++col)
             {
-                vars.push_back(sh::ShaderVariable(GL_FLOAT, 0));
+                vars.push_back(sh::ShaderVariable(GL_FLOAT));
             }
         }
 
         EXPECT_TRUE(CheckVariablesInPackingLimits(squareSize, vars));
 
         // and one scalar and packing should fail
-        vars.push_back(sh::ShaderVariable(GL_FLOAT, 0));
+        vars.push_back(sh::ShaderVariable(GL_FLOAT));
         EXPECT_FALSE(CheckVariablesInPackingLimits(squareSize, vars));
     }
 }
@@ -218,22 +229,22 @@ TEST(VariablePacking, Struct)
 
     // Test example from GLSL ES 3.0 spec chapter 11, but with structs
     std::vector<sh::ShaderVariable> vars;
-    vars.push_back(sh::ShaderVariable(GL_NONE, 0));
+    vars.push_back(sh::ShaderVariable(GL_NONE));
 
     sh::ShaderVariable &parentStruct = vars[0];
-    parentStruct.fields.push_back(sh::ShaderVariable(GL_FLOAT_VEC4, 0));
-    parentStruct.fields.push_back(sh::ShaderVariable(GL_FLOAT_MAT3, 0));
+    parentStruct.fields.push_back(sh::ShaderVariable(GL_FLOAT_VEC4));
+    parentStruct.fields.push_back(sh::ShaderVariable(GL_FLOAT_MAT3));
 
-    parentStruct.fields.push_back(sh::ShaderVariable(GL_NONE, 0));
+    parentStruct.fields.push_back(sh::ShaderVariable(GL_NONE));
     sh::ShaderVariable &innerStruct = parentStruct.fields.back();
-    innerStruct.fields.push_back(sh::ShaderVariable(GL_FLOAT_MAT3, 0));
+    innerStruct.fields.push_back(sh::ShaderVariable(GL_FLOAT_MAT3));
     innerStruct.fields.push_back(sh::ShaderVariable(GL_FLOAT_VEC2, 6));
     innerStruct.fields.push_back(sh::ShaderVariable(GL_FLOAT_VEC2, 4));
 
-    parentStruct.fields.push_back(sh::ShaderVariable(GL_FLOAT_VEC2, 0));
+    parentStruct.fields.push_back(sh::ShaderVariable(GL_FLOAT_VEC2));
     parentStruct.fields.push_back(sh::ShaderVariable(GL_FLOAT, 3));
     parentStruct.fields.push_back(sh::ShaderVariable(GL_FLOAT, 2));
-    parentStruct.fields.push_back(sh::ShaderVariable(GL_FLOAT, 0));
+    parentStruct.fields.push_back(sh::ShaderVariable(GL_FLOAT));
 
     EXPECT_TRUE(CheckVariablesInPackingLimits(kMaxRows, vars));
 }
