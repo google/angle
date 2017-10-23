@@ -919,8 +919,12 @@ bool IsValidESSLShaderSourceString(const char *str, size_t len, bool lineContinu
                 break;
 
             case ParseState::IN_PREPROCESSOR_DIRECTIVE:
-                // No matter what the character is, just pass it
-                // through. Do not parse comments in this state.
+                // Line-continuation characters may not be permitted.
+                // Otherwise, just pass it through. Do not parse comments in this state.
+                if (!lineContinuationAllowed && c == '\\')
+                {
+                    return false;
+                }
                 pos++;
                 break;
 

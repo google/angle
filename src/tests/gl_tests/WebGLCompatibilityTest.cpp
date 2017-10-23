@@ -1511,6 +1511,39 @@ TEST_P(WebGLCompatibilityTest, InvalidAttributeAndUniformNames)
 }
 
 // Test that line continuation is handled correctly when valdiating shader source
+TEST_P(WebGLCompatibilityTest, ShaderSourceLineContinuation)
+{
+    // Verify that a line continuation character (i.e. backslash) cannot be used
+    // within a preprocessor directive in a ES2 context.
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() >= 3);
+
+    const char *validVert =
+        "#define foo this is a test\n"
+        "precision mediump float;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_Position = vec4(1.0);\n"
+        "}\n";
+
+    const char *invalidVert =
+        "#define foo this \\n"
+        "  is a test\n"
+        "precision mediump float;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_Position = vec4(1.0);\n"
+        "}\n";
+
+    GLuint shader = glCreateShader(GL_VERTEX_SHADER);
+    glShaderSource(shader, 1, &validVert, nullptr);
+    EXPECT_GL_NO_ERROR();
+
+    glShaderSource(shader, 1, &invalidVert, nullptr);
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+    glDeleteShader(shader);
+}
+
+// Test that line continuation is handled correctly when valdiating shader source
 TEST_P(WebGL2CompatibilityTest, ShaderSourceLineContinuation)
 {
     const char *validVert =
