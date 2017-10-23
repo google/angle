@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "adba5097_417bd6b2",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 819,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-10-23T21:07:04Z",
+      "side": 1,
+      "message": "What about IMPLEMENTATION_MAX_ACTIVE_TEXTURES?",
+      "range": {
+        "startLine": 819,
+        "startChar": 38,
+        "endLine": 819,
+        "endChar": 40
+      },
+      "revId": "fd273841ad7792a555610d058bba7356fca9ebe2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4a2fc105_514790fc",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-10-23T21:07:04Z",
+      "side": 1,
+      "message": "This could use a description comment, it wasn\u0027t clear what this is an offset into/of.",
+      "range": {
+        "startLine": 118,
+        "startChar": 4,
+        "endLine": 119,
+        "endChar": 0
+      },
+      "revId": "fd273841ad7792a555610d058bba7356fca9ebe2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
