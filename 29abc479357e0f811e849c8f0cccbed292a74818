@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "4e9d3221_1516bc1a",
+        "filename": "src/libANGLE/Uniform.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-10-24T13:23:02Z",
+      "side": 1,
+      "message": "I tried to encapsulate them into a ShaderRef class, so that we can avoid using these poorly named global template methods.",
+      "parentUuid": "d6302960_c4e97f1f",
+      "revId": "29abc479357e0f811e849c8f0cccbed292a74818",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "24acca51_2e351b03",
         "filename": "src/libANGLE/queryutils.cpp",
         "patchSetId": 23
@@ -107,6 +125,24 @@
     },
     {
       "key": {
+        "uuid": "6f90806a_05699330",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 747,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-10-24T13:23:02Z",
+      "side": 1,
+      "message": "ShaderVaraibleBuffer was designed to cover both interface block and atomic buffer. So it\u0027s nameless as atomic counter buffer has no name and can only be identified by the value of its binding.",
+      "parentUuid": "c48d2322_89045a52",
+      "revId": "29abc479357e0f811e849c8f0cccbed292a74818",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5c313193_3c76f791",
         "filename": "src/libANGLE/queryutils.cpp",
         "patchSetId": 23
@@ -158,6 +194,24 @@
     },
     {
       "key": {
+        "uuid": "1dd34c1b_2c4b1abe",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 1506,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-10-24T13:23:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "751fb527_8dea2c08",
+      "revId": "29abc479357e0f811e849c8f0cccbed292a74818",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "062699d2_87420af0",
         "filename": "src/libANGLE/queryutils.cpp",
         "patchSetId": 23
@@ -172,6 +226,24 @@
       "revId": "29abc479357e0f811e849c8f0cccbed292a74818",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9eb57491_9d3b3253",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 1550,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-10-24T13:23:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "062699d2_87420af0",
+      "revId": "29abc479357e0f811e849c8f0cccbed292a74818",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -334,6 +406,24 @@
     },
     {
       "key": {
+        "uuid": "0b588a80_1cb174d5",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 268,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-10-24T13:23:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "362c933d_e9a89720",
+      "revId": "29abc479357e0f811e849c8f0cccbed292a74818",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "73c905fd_2a62547d",
         "filename": "src/tests/gl_tests/ProgramInterfaceTest.cpp",
         "patchSetId": 23
@@ -345,6 +435,24 @@
       "writtenOn": "2017-10-23T16:10:44Z",
       "side": 1,
       "message": "This can be replaced by ArraySize(props)",
+      "revId": "29abc479357e0f811e849c8f0cccbed292a74818",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f97573f0_f3b1e59e",
+        "filename": "src/tests/gl_tests/ProgramInterfaceTest.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 472,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-10-24T13:23:02Z",
+      "side": 1,
+      "message": "kPropCount is used to define props. So it seems disallowed to use props before defined.",
+      "parentUuid": "73c905fd_2a62547d",
       "revId": "29abc479357e0f811e849c8f0cccbed292a74818",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -379,6 +487,24 @@
       "writtenOn": "2017-10-23T16:10:44Z",
       "side": 1,
       "message": "Can we also have tests for bufSize too small, both while querying single value properties, and while querying active variables?",
+      "revId": "29abc479357e0f811e849c8f0cccbed292a74818",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f322aff5_e915deb7",
+        "filename": "src/tests/gl_tests/ProgramInterfaceTest.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 551,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-10-24T13:23:02Z",
+      "side": 1,
+      "message": "Such cases have already been covered in GetResource and GetUniformBlockProperties respectively.",
+      "parentUuid": "0a7cde2f_357969ce",
       "revId": "29abc479357e0f811e849c8f0cccbed292a74818",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
