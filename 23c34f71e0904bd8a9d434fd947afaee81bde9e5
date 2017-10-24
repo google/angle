@@ -16,6 +16,24 @@
       "revId": "23c34f71e0904bd8a9d434fd947afaee81bde9e5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6f609364_fcbfff7f",
+        "filename": "src/compiler/translator/glslang_lex.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-10-24T10:22:56Z",
+      "side": 1,
+      "message": "Thanks for pointing out this.\nI found I once generated the parser using flex 2.6.4.0-1. I re-generated it with flex 2.6.4.0 then the diff here was gone.",
+      "parentUuid": "57bf6eca_d216133d",
+      "revId": "23c34f71e0904bd8a9d434fd947afaee81bde9e5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
