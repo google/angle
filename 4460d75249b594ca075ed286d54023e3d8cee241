@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "eb863fcf_0ff76aa4",
+        "filename": "src/libANGLE/renderer/gl/formatutilsgl.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 187,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-10-24T02:43:56Z",
+      "side": 1,
+      "message": "Please also revise here to VersionOrExts(2, 0, \"GL_EXT_texture_format_BGRA8888\").",
+      "range": {
+        "startLine": 187,
+        "startChar": 230,
+        "endLine": 187,
+        "endChar": 247
+      },
+      "revId": "4460d75249b594ca075ed286d54023e3d8cee241",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
