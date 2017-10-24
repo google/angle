@@ -494,6 +494,41 @@ TEST_P(SimpleOperationTest, DrawWithTexture)
     EXPECT_PIXEL_COLOR_EQ(w, h, GLColor::yellow);
 }
 
+// Tests rendering to a user framebuffer.
+TEST_P(SimpleOperationTest, RenderToTexture)
+{
+    constexpr int kSize = 16;
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    ASSERT_GL_NO_ERROR();
+
+    GLFramebuffer framebuffer;
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+    ASSERT_GL_NO_ERROR();
+    ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
+    glViewport(0, 0, kSize, kSize);
+
+    const std::string &vertexShader =
+        "attribute vec3 position;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_Position = vec4(position, 1);\n"
+        "}";
+    const std::string &fragmentShader =
+        "void main()\n"
+        "{\n"
+        "    gl_FragColor = vec4(0, 1, 0, 1);\n"
+        "}";
+    ANGLE_GL_PROGRAM(program, vertexShader, fragmentShader);
+    drawQuad(program, "position", 0.5f, 1.0f, true);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
 ANGLE_INSTANTIATE_TEST(SimpleOperationTest,
                        ES2_D3D9(),

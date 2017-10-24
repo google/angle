@@ -11,6 +11,7 @@
 #define LIBANGLE_RENDERER_VULKAN_TEXTUREVK_H_
 
 #include "libANGLE/renderer/TextureImpl.h"
+#include "libANGLE/renderer/vulkan/RenderTargetVk.h"
 #include "libANGLE/renderer/vulkan/renderervk_utils.h"
 
 namespace rx
@@ -120,6 +121,8 @@ class TextureVk : public TextureImpl, public ResourceVk
     vk::DeviceMemory mDeviceMemory;
     vk::ImageView mImageView;
     vk::Sampler mSampler;
+
+    RenderTargetVk mRenderTarget;
 };
 
 }  // namespace rx

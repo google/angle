@@ -150,6 +150,13 @@ gl::Error TextureVk::setImage(const gl::Context *context,
 
     ANGLE_TRY(mSampler.init(device, samplerInfo));
 
+    mRenderTarget.image     = &mImage;
+    mRenderTarget.imageView = &mImageView;
+    mRenderTarget.format    = &vkFormat;
+    mRenderTarget.extents   = size;
+    mRenderTarget.samples   = VK_SAMPLE_COUNT_1_BIT;
+    mRenderTarget.resource  = this;
+
     // Handle initial data.
     // TODO(jmadill): Consider re-using staging texture.
     if (pixels)
@@ -336,8 +343,10 @@ gl::Error TextureVk::getAttachmentRenderTarget(const gl::Context *context,
                                                const gl::ImageIndex &imageIndex,
                                                FramebufferAttachmentRenderTarget **rtOut)
 {
-    UNIMPLEMENTED();
-    return gl::InternalError();
+    ASSERT(imageIndex.type == GL_TEXTURE_2D);
+    ASSERT(imageIndex.mipIndex == 0 && imageIndex.layerIndex == gl::ImageIndex::ENTIRE_LEVEL);
+    *rtOut = &mRenderTarget;
+    return gl::NoError();
 }
 
 void TextureVk::syncState(const gl::Texture::DirtyBits &dirtyBits)

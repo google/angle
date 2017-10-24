@@ -533,6 +533,7 @@ void RendererVk::generateCaps(gl::Caps *outCaps,
     outCaps->maxElementIndex              = std::numeric_limits<GLuint>::max() - 1;
     outCaps->maxFragmentUniformVectors    = 8;
     outCaps->maxVertexUniformVectors      = 8;
+    outCaps->maxColorAttachments          = 1;
 
     // Enable this for simple buffer readback testing, but some functionality is missing.
     // TODO(jmadill): Support full mapBufferRange extension.

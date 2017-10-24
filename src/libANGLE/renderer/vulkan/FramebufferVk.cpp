@@ -359,8 +359,7 @@ gl::Error FramebufferVk::blit(const gl::Context *context,
 
 bool FramebufferVk::checkStatus(const gl::Context *context) const
 {
-    UNIMPLEMENTED();
-    return bool();
+    return true;
 }
 
 void FramebufferVk::syncState(const gl::Context *context,
@@ -618,7 +617,6 @@ gl::Error FramebufferVk::ensureInRenderPass(const gl::Context *context,
     // Updated the cached image layout of the attachments in this FBO.
     // For a default FBO, we need to call through to the WindowSurfaceVk
     // TODO(jmadill): Iterate over all attachments.
-    ASSERT(mBackbuffer);
     RenderTargetVk *renderTarget = nullptr;
     ANGLE_TRY(mState.getFirstColorAttachment()->getRenderTarget(context, &renderTarget));
     renderTarget->image->updateLayout(VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL);
