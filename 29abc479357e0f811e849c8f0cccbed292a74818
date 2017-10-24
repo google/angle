@@ -143,6 +143,24 @@
     },
     {
       "key": {
+        "uuid": "19844a35_67f981a3",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 747,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-24T15:39:31Z",
+      "side": 1,
+      "message": "A got it, I thought AtomicCounter was getting through this function too. Maybe we could just have\n  if (pname \u003d\u003d GL_NAME_LENGTH) {\n    params[..] \u003d ..\n    return;\n  }\n  return GetShaderVariable..",
+      "parentUuid": "6f90806a_05699330",
+      "revId": "29abc479357e0f811e849c8f0cccbed292a74818",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5c313193_3c76f791",
         "filename": "src/libANGLE/queryutils.cpp",
         "patchSetId": 23
@@ -459,6 +477,41 @@
     },
     {
       "key": {
+        "uuid": "0c625a40_8386cdfa",
+        "filename": "src/tests/gl_tests/ProgramInterfaceTest.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 472,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-24T15:39:31Z",
+      "side": 1,
+      "message": "C arrays would work here. Put let\u0027s keep things as is for consistency in this file.",
+      "parentUuid": "f97573f0_f3b1e59e",
+      "revId": "29abc479357e0f811e849c8f0cccbed292a74818",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fbba5993_f11d5675",
+        "filename": "src/tests/gl_tests/ProgramInterfaceTest.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 491,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-24T15:39:31Z",
+      "side": 1,
+      "message": "We should put some arbitrary value in params[8] and check it isn\u0027t written.",
+      "revId": "29abc479357e0f811e849c8f0cccbed292a74818",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8e33295a_f42c0746",
         "filename": "src/tests/gl_tests/ProgramInterfaceTest.cpp",
         "patchSetId": 23
@@ -505,6 +558,24 @@
       "side": 1,
       "message": "Such cases have already been covered in GetResource and GetUniformBlockProperties respectively.",
       "parentUuid": "0a7cde2f_357969ce",
+      "revId": "29abc479357e0f811e849c8f0cccbed292a74818",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "762bfc3e_0a41e4dd",
+        "filename": "src/tests/gl_tests/ProgramInterfaceTest.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 551,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-24T15:39:31Z",
+      "side": 1,
+      "message": "Found the test for the first thing, comments pointing this out would be nice. bufSize end in the middle of the active variable property hasn\u0027t been tested though.",
+      "parentUuid": "f322aff5_e915deb7",
       "revId": "29abc479357e0f811e849c8f0cccbed292a74818",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
