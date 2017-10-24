@@ -34,6 +34,24 @@
       "revId": "23c34f71e0904bd8a9d434fd947afaee81bde9e5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b060783c_98c26676",
+        "filename": "src/compiler/translator/glslang_lex.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-10-24T14:42:29Z",
+      "side": 1,
+      "message": "Right, hadn\u0027t occurred to me that there would actually be more than one version of flex under \"2.6.4.0\" with different output. It might be that I actually had the older version. However, that\u0027s still better to address separately.",
+      "parentUuid": "6f609364_fcbfff7f",
+      "revId": "23c34f71e0904bd8a9d434fd947afaee81bde9e5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
