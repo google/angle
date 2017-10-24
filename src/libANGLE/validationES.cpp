@@ -1170,15 +1170,19 @@ Shader *GetValidShader(ValidationContext *context, GLuint id)
 
 bool ValidateAttachmentTarget(gl::Context *context, GLenum attachment)
 {
-    if (attachment >= GL_COLOR_ATTACHMENT0_EXT && attachment <= GL_COLOR_ATTACHMENT15_EXT)
+    if (attachment >= GL_COLOR_ATTACHMENT1_EXT && attachment <= GL_COLOR_ATTACHMENT15_EXT)
     {
-        const unsigned int colorAttachment = (attachment - GL_COLOR_ATTACHMENT0_EXT);
+        if (context->getClientMajorVersion() < 3 && !context->getExtensions().drawBuffers)
+        {
+            ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidAttachment);
+            return false;
+        }
 
+        // Color attachment 0 is validated below because it is always valid
+        const unsigned int colorAttachment = (attachment - GL_COLOR_ATTACHMENT0_EXT);
         if (colorAttachment >= context->getCaps().maxColorAttachments)
         {
-            context->handleError(
-                InvalidOperation()
-                << "attachment index cannot be greater or equal to MAX_COLOR_ATTACHMENTS.");
+            ANGLE_VALIDATION_ERR(context, InvalidOperation(), InvalidAttachment);
             return false;
         }
     }
@@ -1186,6 +1190,7 @@ bool ValidateAttachmentTarget(gl::Context *context, GLenum attachment)
     {
         switch (attachment)
         {
+            case GL_COLOR_ATTACHMENT0:
             case GL_DEPTH_ATTACHMENT:
             case GL_STENCIL_ATTACHMENT:
                 break;
@@ -1194,13 +1199,13 @@ bool ValidateAttachmentTarget(gl::Context *context, GLenum attachment)
                 if (!context->getExtensions().webglCompatibility &&
                     context->getClientMajorVersion() < 3)
                 {
-                    ANGLE_VALIDATION_ERR(context, InvalidEnum(), EnumNotSupported);
+                    ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidAttachment);
                     return false;
                 }
                 break;
 
             default:
-                ANGLE_VALIDATION_ERR(context, InvalidEnum(), EnumNotSupported);
+                ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidAttachment);
                 return false;
         }
     }
@@ -3854,20 +3859,22 @@ bool ValidateGetFramebufferAttachmentParameterivBase(ValidationContext *context,
         case GL_DEPTH_STENCIL_ATTACHMENT:
             if (clientVersion < 3)
             {
-                context->handleError(InvalidEnum());
+                ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidAttachment);
                 return false;
             }
             break;
 
+        case GL_COLOR_ATTACHMENT0:
         case GL_DEPTH_ATTACHMENT:
         case GL_STENCIL_ATTACHMENT:
             break;
 
         default:
-            if (attachment < GL_COLOR_ATTACHMENT0_EXT ||
+            if ((clientVersion < 3 && !context->getExtensions().drawBuffers) ||
+                attachment < GL_COLOR_ATTACHMENT0_EXT ||
                 (attachment - GL_COLOR_ATTACHMENT0_EXT) >= context->getCaps().maxColorAttachments)
             {
-                context->handleError(InvalidEnum());
+                ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidAttachment);
                 return false;
             }
             break;

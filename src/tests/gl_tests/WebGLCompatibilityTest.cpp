@@ -3443,6 +3443,29 @@ TEST_P(WebGL2CompatibilityTest, VertexShaderAttributeTypeMismatch)
     EXPECT_GL_NO_ERROR();
 }
 
+// Test that it's not possible to query the non-zero color attachments without the drawbuffers
+// extension in WebGL1
+TEST_P(WebGLCompatibilityTest, FramebufferAttachmentQuery)
+{
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() > 2);
+    ANGLE_SKIP_TEST_IF(extensionEnabled("GL_EXT_draw_buffers"));
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    EXPECT_GL_NO_ERROR();
+
+    GLint result;
+    glGetFramebufferAttachmentParameteriv(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1,
+                                          GL_FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE, &result);
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+    GLRenderbuffer renderbuffer;
+    glBindRenderbuffer(GL_RENDERBUFFER, renderbuffer);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA4, 1, 1);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_RENDERBUFFER, renderbuffer);
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
+}
+
 // Tests the WebGL removal of undefined behavior when attachments aren't written to.
 TEST_P(WebGLCompatibilityTest, DrawBuffers)
 {
