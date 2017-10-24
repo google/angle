@@ -1107,6 +1107,47 @@ TEST_P(WebGLCompatibilityTest, ForbidsClientSideArrayBufferEvenNotUsedOnes)
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 }
 
+// Test that passing a null pixel data pointer to TexSubImage calls generates an INVALID_VALUE error
+TEST_P(WebGLCompatibilityTest, NullPixelDataForSubImage)
+{
+    // glTexSubImage2D
+    {
+        GLTexture texture;
+        glBindTexture(GL_TEXTURE_2D, texture);
+
+        // TexImage with null data - OK
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+        EXPECT_GL_NO_ERROR();
+
+        // TexSubImage with zero size and null data - OK
+        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+        EXPECT_GL_NO_ERROR();
+
+        // TexSubImage with non-zero size and null data - Invalid value
+        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+        EXPECT_GL_ERROR(GL_INVALID_VALUE);
+    }
+
+    // glTexSubImage3D
+    if (getClientMajorVersion() >= 3)
+    {
+        GLTexture texture;
+        glBindTexture(GL_TEXTURE_3D, texture);
+
+        // TexImage with null data - OK
+        glTexImage3D(GL_TEXTURE_3D, 0, GL_RGBA, 1, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+        EXPECT_GL_NO_ERROR();
+
+        // TexSubImage with zero size and null data - OK
+        glTexSubImage3D(GL_TEXTURE_3D, 0, 0, 0, 0, 0, 0, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+        EXPECT_GL_NO_ERROR();
+
+        // TexSubImage with non-zero size and null data - Invalid value
+        glTexSubImage3D(GL_TEXTURE_3D, 0, 0, 0, 0, 1, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+        EXPECT_GL_ERROR(GL_INVALID_VALUE);
+    }
+}
+
 // Tests the WebGL requirement of having the same stencil mask, writemask and ref for fron and back
 TEST_P(WebGLCompatibilityTest, RequiresSameStencilMaskAndRef)
 {

@@ -133,6 +133,7 @@ ERRMSG(OffsetMustBeMultipleOfType, "Offset must be a multiple of the passed in d
 ERRMSG(OutsideOfBounds, "Parameter outside of bounds.");
 ERRMSG(ParamOverflow, "The provided parameters overflow with the provided buffer.");
 ERRMSG(PixelDataNotNull, "Pixel data must be null.");
+ERRMSG(PixelDataNull, "Pixel data cannot be null.");
 ERRMSG(ProgramDoesNotExist, "Program doesn't exist.");
 ERRMSG(ProgramNotBound, "A program must be bound.");
 ERRMSG(ProgramNotLinked, "Program not linked.");

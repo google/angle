@@ -1140,6 +1140,13 @@ bool ValidateES2TexImageParameters(Context *context,
             context->handleError(InvalidValue());
             return false;
         }
+
+        if (width > 0 && height > 0 && pixels == nullptr &&
+            context->getGLState().getTargetBuffer(GL_PIXEL_UNPACK_BUFFER) == nullptr)
+        {
+            ANGLE_VALIDATION_ERR(context, InvalidValue(), PixelDataNull);
+            return false;
+        }
     }
     else
     {
