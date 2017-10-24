@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "32a19d45_2975c33d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 27
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-24T15:44:07Z",
+      "side": 1,
+      "message": "The important part is that it implements more of the program queries.\n\n  ES31 program query: support AtomicCounterBuffer and UniformBlock\n\n?",
+      "revId": "a7e734a99063b333b5cd4e9d5a8537c2eed4715b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
