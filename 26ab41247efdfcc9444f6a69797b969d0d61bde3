@@ -16,6 +16,24 @@
       "revId": "26ab41247efdfcc9444f6a69797b969d0d61bde3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bf7dc885_2ba3ebd0",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-10-24T06:49:57Z",
+      "side": 1,
+      "message": "There\u0027s still plenty of code remaining where it makes the most sense to keep directly accessing arraySize for now. Mostly they are sections where implementing arrays of arrays requires changing the code anyway to be aware of arrays of arrays. Changing them beforehand to use getOutermostArraySize() for example will be counterproductive, as it will take code further away from the desired end state rather than closer.",
+      "parentUuid": "3d28a876_7458d4e4",
+      "revId": "26ab41247efdfcc9444f6a69797b969d0d61bde3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
