@@ -3976,6 +3976,7 @@ ANGLE_INSTANTIATE_TEST(Texture2DTest,
 ANGLE_INSTANTIATE_TEST(TextureCubeTest,
                        ES2_D3D9(),
                        ES2_D3D11(),
+                       ES2_D3D11_FL10_0(),
                        ES2_D3D11_FL9_3(),
                        ES2_OPENGL(),
                        ES2_OPENGLES());

@@ -1993,7 +1993,7 @@ gl::Error TextureStorage11_Cube::createRenderTargetSRV(const TextureHelper11 &te
     srvDesc.Texture2DArray.FirstArraySlice = index.layerIndex;
     srvDesc.Texture2DArray.ArraySize       = 1;
 
-    if (mRenderer->getRenderer11DeviceCaps().featureLevel <= D3D_FEATURE_LEVEL_9_3)
+    if (mRenderer->getRenderer11DeviceCaps().featureLevel <= D3D_FEATURE_LEVEL_10_0)
     {
         srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURECUBE;
     }
