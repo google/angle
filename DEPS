@@ -126,6 +126,20 @@ hooks = [
     'pattern': '.',
     'action': ['python', 'tools/clang/scripts/update.py', '--if-needed'],
   },
+
+  # Pull rc binaries using checked-in hashes.
+  {
+    'name': 'rc_win',
+    'pattern': '.',
+    'condition': 'checkout_win and host_os == "win"',
+    'action': [ 'download_from_google_storage',
+                '--no_resume',
+                '--no_auth',
+                '--bucket', 'chromium-browser-clang/rc',
+                '-s', 'build/toolchain/win/rc/win/rc.exe.sha1',
+    ],
+  },
+
   {
     # A change to a .gyp, .gypi, or to GYP itself should run the generator.
     'pattern': '.',
