@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "57bf6eca_d216133d",
+        "filename": "src/compiler/translator/glslang_lex.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-10-24T07:39:02Z",
+      "side": 1,
+      "message": "Changes here don\u0027t make sense to me - the file shouldn\u0027t change if glslang.l hasn\u0027t changed. I made the last commit that touched this file and I tried to make sure that I had the right version of flex then - are you sure that you have the correct version of flex?",
+      "revId": "23c34f71e0904bd8a9d434fd947afaee81bde9e5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
