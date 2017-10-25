@@ -507,6 +507,11 @@ class TParseContext : angle::NonCopyable
                                                             TType type,
                                                             const TSourceLoc &line);
 
+    // Will set the size of the outermost array according to geometry shader input layout.
+    void checkGeometryShaderInputAndSetArraySize(const TSourceLoc &location,
+                                                 const char *token,
+                                                 TType *type);
+
     // Will size any unsized array type so unsized arrays won't need to be taken into account
     // further along the line in parsing.
     void checkIsNotUnsizedArray(const TSourceLoc &line,

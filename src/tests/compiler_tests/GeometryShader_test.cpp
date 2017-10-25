@@ -1271,17 +1271,16 @@ TEST_F(GeometryShaderTest, DeclareUnsizedInputWithoutInputPrimitive)
 TEST_F(GeometryShaderTest, IndexingUnsizedInputDeclaredAfterInputPrimitive)
 {
     const std::string &shaderString =
-        "#version 310 es\n"
-        "#extension GL_OES_geometry_shader : require\n"
-        "layout (points) in;\n"
-        "layout (points, max_vertices = 1) out;\n"
-        "in vec4 texcoord[];\n"
-        "void main()\n"
-        "{\n"
-        "    int index = 0;\n"
-        "    vec4 coord1 = texcoord[0];\n"
-        "    vec4 coord2 = texcoord[index];\n"
-        "}\n";
+        R"(#version 310 es
+        #extension GL_OES_geometry_shader : require
+        layout (points) in;
+        layout (points, max_vertices = 1) out;
+        in vec4 texcoord[], texcoord2[];
+        in vec4[] texcoord3, texcoord4;
+        void main()
+        {
+            vec4 coord = texcoord[0] + texcoord2[0] + texcoord3[0] + texcoord4[0];
+        })";
 
     if (!compile(shaderString))
     {

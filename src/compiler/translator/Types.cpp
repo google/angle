@@ -580,6 +580,7 @@ void TType::sizeUnsizedArrays(const TVector<unsigned int> &arraySizes)
 void TType::sizeOutermostUnsizedArray(unsigned int arraySize)
 {
     ASSERT(isArray());
+    ASSERT(mArraySizes.back() == 0u);
     mArraySizes.back() = arraySize;
 }
 

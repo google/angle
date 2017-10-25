@@ -2264,6 +2264,43 @@ void TParseContext::checkAtomicCounterOffsetIsNotOverlapped(TPublicType &publicT
     type.setLayoutQualifier(qualifier);
 }
 
+void TParseContext::checkGeometryShaderInputAndSetArraySize(const TSourceLoc &location,
+                                                            const char *token,
+                                                            TType *type)
+{
+    if (IsGeometryShaderInput(mShaderType, type->getQualifier()))
+    {
+        if (type->isArray() && type->getOutermostArraySize() == 0u)
+        {
+            // Set size for the unsized geometry shader inputs if they are declared after a valid
+            // input primitive declaration.
+            if (mGeometryShaderInputPrimitiveType != EptUndefined)
+            {
+                ASSERT(mGeometryShaderInputArraySize > 0u);
+                type->sizeOutermostUnsizedArray(mGeometryShaderInputArraySize);
+            }
+            else
+            {
+                // [GLSL ES 3.2 SPEC Chapter 4.4.1.2]
+                // An input can be declared without an array size if there is a previous layout
+                // which specifies the size.
+                error(location,
+                      "Missing a valid input primitive declaration before declaring an unsized "
+                      "array input",
+                      token);
+            }
+        }
+        else if (type->isArray())
+        {
+            setGeometryShaderInputArraySize(type->getOutermostArraySize(), location);
+        }
+        else
+        {
+            error(location, "Geometry shader input variable must be declared as an array", token);
+        }
+    }
+}
+
 TIntermDeclaration *TParseContext::parseSingleDeclaration(
     TPublicType &publicType,
     const TSourceLoc &identifierOrTypeLocation,
@@ -2297,12 +2334,7 @@ TIntermDeclaration *TParseContext::parseSingleDeclaration(
         }
     }
 
-    if (IsGeometryShaderInput(mShaderType, type.getQualifier()))
-    {
-        error(identifierOrTypeLocation,
-              "Geometry shader input varying variable must be declared as an array",
-              identifier.c_str());
-    }
+    checkGeometryShaderInputAndSetArraySize(identifierOrTypeLocation, identifier.c_str(), &type);
 
     declarationQualifierErrorCheck(publicType.qualifier, publicType.layoutQualifier,
                                    identifierOrTypeLocation);
@@ -2375,33 +2407,7 @@ TIntermDeclaration *TParseContext::parseSingleArrayDeclaration(TPublicType &elem
     TType arrayType(elementType);
     arrayType.makeArray(arraySize);
 
-    if (IsGeometryShaderInput(mShaderType, elementType.qualifier))
-    {
-        if (arrayType.isUnsizedArray())
-        {
-            // Set size for the unsized geometry shader inputs if they are declared after a valid
-            // input primitive declaration.
-            if (mGeometryShaderInputPrimitiveType != EptUndefined)
-            {
-                ASSERT(mGeometryShaderInputArraySize > 0u);
-                arrayType.sizeOutermostUnsizedArray(mGeometryShaderInputArraySize);
-            }
-            else
-            {
-                // [GLSL ES 3.2 SPEC Chapter 4.4.1.2]
-                // An input can be declared without an array size if there is a previous layout
-                // which specifies the size.
-                error(indexLocation,
-                      "Missing a valid input primitive declaration before declaring an unsized "
-                      "array input",
-                      "");
-            }
-        }
-        else
-        {
-            setGeometryShaderInputArraySize(arrayType.getOutermostArraySize(), indexLocation);
-        }
-    }
+    checkGeometryShaderInputAndSetArraySize(indexLocation, identifier.c_str(), &arrayType);
 
     checkCanBeDeclaredWithoutInitializer(identifierLocation, identifier, &arrayType);
 
@@ -2566,6 +2572,9 @@ void TParseContext::parseDeclarator(TPublicType &publicType,
 
     TVariable *variable = nullptr;
     TType type(publicType);
+
+    checkGeometryShaderInputAndSetArraySize(identifierLocation, identifier.c_str(), &type);
+
     checkCanBeDeclaredWithoutInitializer(identifierLocation, identifier, &type);
 
     if (IsAtomicCounter(publicType.getBasicType()))
@@ -2604,6 +2613,8 @@ void TParseContext::parseArrayDeclarator(TPublicType &elementType,
     {
         TType arrayType(elementType);
         arrayType.makeArray(arraySize);
+
+        checkGeometryShaderInputAndSetArraySize(identifierLocation, identifier.c_str(), &arrayType);
 
         checkCanBeDeclaredWithoutInitializer(identifierLocation, identifier, &arrayType);
 
