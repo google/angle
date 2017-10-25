@@ -1,0 +1,135 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f668ba6d_ab7073c3",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-10-25T07:19:39Z",
+      "side": 1,
+      "message": "Need we take un-sized array into account?",
+      "range": {
+        "startLine": 67,
+        "startChar": 0,
+        "endLine": 68,
+        "endChar": 73
+      },
+      "revId": "0275b18ab34d18017d5645c63daeb4fd4b7e9708",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9a24d290_5e9b19f3",
+        "filename": "src/compiler/translator/blocklayout.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-10-25T07:19:39Z",
+      "side": 1,
+      "message": "Better to move them into BufferVariable.",
+      "range": {
+        "startLine": 88,
+        "startChar": 0,
+        "endLine": 90,
+        "endChar": 26
+      },
+      "revId": "0275b18ab34d18017d5645c63daeb4fd4b7e9708",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "370c534e_1461e69a",
+        "filename": "src/tests/gl_tests/ProgramInterfaceTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 502,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-10-25T07:19:39Z",
+      "side": 1,
+      "message": "For the property ARRAY_SIZE, a single integer identifying the number of active\narray elements of an active variable is written to params. The array size returned\nis in units of the type associated with the property TYPE. For active variables not\ncorresponding to an array of basic types, the value one is written to params. If the\nvariable is an array whose size is not declared or determined when the program is\nlinked, the value zero is written to params.\n\nblockName1.f1 is not an array of basic types, should it be 1 instead?",
+      "revId": "0275b18ab34d18017d5645c63daeb4fd4b7e9708",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ff85de74_b6841386",
+        "filename": "src/tests/gl_tests/ProgramInterfaceTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 506,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-10-25T07:19:39Z",
+      "side": 1,
+      "message": "\"For active variables not declared as a matrix or array of matrices, zero is written to params.\"\n\nShould this be 0?",
+      "revId": "0275b18ab34d18017d5645c63daeb4fd4b7e9708",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bf4f1566_7db1d696",
+        "filename": "src/tests/gl_tests/ProgramInterfaceTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 510,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-10-25T07:19:39Z",
+      "side": 1,
+      "message": "\"float test2 \u003d instanceName1[1].f1;\"\nf1 is used in vertex shader, why referenced_by_vertex_shader is 0.",
+      "revId": "0275b18ab34d18017d5645c63daeb4fd4b7e9708",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e4530270_614fffcd",
+        "filename": "src/tests/gl_tests/ProgramInterfaceTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 533,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-10-25T07:19:39Z",
+      "side": 1,
+      "message": "same above.",
+      "revId": "0275b18ab34d18017d5645c63daeb4fd4b7e9708",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e7686d16_3e0ee826",
+        "filename": "src/tests/gl_tests/ProgramInterfaceTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 536,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-10-25T07:19:39Z",
+      "side": 1,
+      "message": "same above.",
+      "revId": "0275b18ab34d18017d5645c63daeb4fd4b7e9708",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
