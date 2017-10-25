@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "56c1290f_731c1608",
+        "filename": "src/tests/gl_tests/ProgramInterfaceTest.cpp",
+        "patchSetId": 29
+      },
+      "lineNbr": 499,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-25T14:01:21Z",
+      "side": 1,
+      "message": "We try to avoid using random numbers in tests (or use them with a fixed seed) as it can lead to flakyness. Can this be a constant but unlikely value such as 42, 0xBEEF or friends?",
+      "revId": "384b3d412f9805c9179e637a0d8db0bd53e8d86f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "01de728a_aa1a39a0",
+        "filename": "src/tests/gl_tests/ProgramInterfaceTest.cpp",
+        "patchSetId": 29
+      },
+      "lineNbr": 523,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-25T14:01:21Z",
+      "side": 1,
+      "message": "Thanks for the additional coverage.",
+      "revId": "384b3d412f9805c9179e637a0d8db0bd53e8d86f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
