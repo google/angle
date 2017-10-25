@@ -16,6 +16,24 @@
       "revId": "acacc0f9072b17d9b1baa96a7238d7802cea655f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bcb4e57a_a42ee554",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 2
+      },
+      "lineNbr": 730,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-10-25T18:58:14Z",
+      "side": 1,
+      "message": "Not really - there already was a case like that before. ParseContext::executeInitializer was already doing unsized array sizing and type matching checks before. Only how the unsized array \"size\" is passed to ParseContext is changed. It\u0027s now passed as zero instead of passing a nullptr TIntermTyped node as the size.",
+      "parentUuid": "abfb7cf2_1fae4f53",
+      "revId": "acacc0f9072b17d9b1baa96a7238d7802cea655f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
