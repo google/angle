@@ -441,6 +441,7 @@ class TParseContext : angle::NonCopyable
     // we treat it as always 4 in favour of the original interpretation in
     // "ARB_shader_atomic_counters".
     // TODO(jie.a.chen@intel.com): Double check this once the spec vagueness is resolved.
+    // Note that there may be tests in AtomicCounter_test that will need to be updated as well.
     constexpr static size_t kAtomicCounterArrayStride = 4;
 
     // Returns a clamped index. If it prints out an error message, the token is "[]".
@@ -480,11 +481,9 @@ class TParseContext : angle::NonCopyable
                                            TLayoutImageInternalFormat internalFormat);
     void checkMemoryQualifierIsNotSpecified(const TMemoryQualifier &memoryQualifier,
                                             const TSourceLoc &location);
-    void checkAtomicCounterOffsetIsNotOverlapped(TPublicType &publicType,
-                                                 size_t size,
-                                                 bool forceAppend,
-                                                 const TSourceLoc &loc,
-                                                 TType &type);
+    void checkAtomicCounterOffsetDoesNotOverlap(bool forceAppend,
+                                                const TSourceLoc &loc,
+                                                TType *type);
     void checkBindingIsValid(const TSourceLoc &identifierLocation, const TType &type);
     void checkBindingIsNotSpecified(const TSourceLoc &location, int binding);
     void checkOffsetIsNotSpecified(const TSourceLoc &location, int offset);

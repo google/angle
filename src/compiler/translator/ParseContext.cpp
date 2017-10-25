@@ -2248,30 +2248,35 @@ void TParseContext::checkMemoryQualifierIsNotSpecified(const TMemoryQualifier &m
 
 // Make sure there is no offset overlapping, and store the newly assigned offset to "type" in
 // intermediate tree.
-void TParseContext::checkAtomicCounterOffsetIsNotOverlapped(TPublicType &publicType,
-                                                            size_t size,
-                                                            bool forceAppend,
-                                                            const TSourceLoc &loc,
-                                                            TType &type)
+void TParseContext::checkAtomicCounterOffsetDoesNotOverlap(bool forceAppend,
+                                                           const TSourceLoc &loc,
+                                                           TType *type)
 {
-    auto &bindingState = mAtomicCounterBindingStates[publicType.layoutQualifier.binding];
+    if (!IsAtomicCounter(type->getBasicType()))
+    {
+        return;
+    }
+
+    const size_t size = type->isArray() ? kAtomicCounterArrayStride * type->getArraySizeProduct()
+                                        : kAtomicCounterSize;
+    TLayoutQualifier layoutQualifier = type->getLayoutQualifier();
+    auto &bindingState               = mAtomicCounterBindingStates[layoutQualifier.binding];
     int offset;
-    if (publicType.layoutQualifier.offset == -1 || forceAppend)
+    if (layoutQualifier.offset == -1 || forceAppend)
     {
         offset = bindingState.appendSpan(size);
     }
     else
     {
-        offset = bindingState.insertSpan(publicType.layoutQualifier.offset, size);
+        offset = bindingState.insertSpan(layoutQualifier.offset, size);
     }
     if (offset == -1)
     {
         error(loc, "Offset overlapping", "atomic counter");
         return;
     }
-    TLayoutQualifier qualifier = type.getLayoutQualifier();
-    qualifier.offset           = offset;
-    type.setLayoutQualifier(qualifier);
+    layoutQualifier.offset = offset;
+    type->setLayoutQualifier(layoutQualifier);
 }
 
 void TParseContext::checkGeometryShaderInputAndSetArraySize(const TSourceLoc &location,
@@ -2373,12 +2378,7 @@ TIntermDeclaration *TParseContext::parseSingleDeclaration(
 
         checkCanBeDeclaredWithoutInitializer(identifierOrTypeLocation, identifier, &type);
 
-        if (IsAtomicCounter(publicType.getBasicType()))
-        {
-
-            checkAtomicCounterOffsetIsNotOverlapped(publicType, kAtomicCounterSize, false,
-                                                    identifierOrTypeLocation, type);
-        }
+        checkAtomicCounterOffsetDoesNotOverlap(false, identifierOrTypeLocation, &type);
 
         TVariable *variable = nullptr;
         declareVariable(identifierOrTypeLocation, identifier, type, &variable);
@@ -2421,12 +2421,7 @@ TIntermDeclaration *TParseContext::parseSingleArrayDeclaration(TPublicType &elem
 
     checkCanBeDeclaredWithoutInitializer(identifierLocation, identifier, &arrayType);
 
-    if (IsAtomicCounter(elementType.getBasicType()))
-    {
-        checkAtomicCounterOffsetIsNotOverlapped(
-            elementType, kAtomicCounterArrayStride * arrayType.getArraySizeProduct(), false,
-            identifierLocation, arrayType);
-    }
+    checkAtomicCounterOffsetDoesNotOverlap(false, identifierLocation, &arrayType);
 
     TVariable *variable = nullptr;
     declareVariable(identifierLocation, identifier, arrayType, &variable);
@@ -2587,11 +2582,8 @@ void TParseContext::parseDeclarator(TPublicType &publicType,
 
     checkCanBeDeclaredWithoutInitializer(identifierLocation, identifier, &type);
 
-    if (IsAtomicCounter(publicType.getBasicType()))
-    {
-        checkAtomicCounterOffsetIsNotOverlapped(publicType, kAtomicCounterSize, true,
-                                                identifierLocation, type);
-    }
+    checkAtomicCounterOffsetDoesNotOverlap(true, identifierLocation, &type);
+
     declareVariable(identifierLocation, identifier, type, &variable);
 
     if (variable)
@@ -2628,12 +2620,7 @@ void TParseContext::parseArrayDeclarator(TPublicType &elementType,
 
         checkCanBeDeclaredWithoutInitializer(identifierLocation, identifier, &arrayType);
 
-        if (IsAtomicCounter(elementType.getBasicType()))
-        {
-            checkAtomicCounterOffsetIsNotOverlapped(
-                elementType, kAtomicCounterArrayStride * arrayType.getArraySizeProduct(), true,
-                identifierLocation, arrayType);
-        }
+        checkAtomicCounterOffsetDoesNotOverlap(true, identifierLocation, &arrayType);
 
         TVariable *variable = nullptr;
         declareVariable(identifierLocation, identifier, arrayType, &variable);

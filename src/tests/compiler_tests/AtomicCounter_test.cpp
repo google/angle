@@ -211,3 +211,20 @@ TEST_F(AtomicCounterTest, OffsetMustNotSpecifiedForGlobalLayoutQualifier)
         FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
     }
 }
+
+// Test that offset overlapping leads to compile-time error (ESSL 3.10 section 4.4.6).
+// Note that there is some vagueness in the spec when it comes to this test.
+TEST_F(AtomicCounterTest, BindingOffsetOverlappingForArrays)
+{
+    const std::string &source =
+        "#version 310 es\n"
+        "layout(binding = 2, offset = 4) uniform atomic_uint[2] a;\n"
+        "layout(binding = 2, offset = 8) uniform atomic_uint b;\n"
+        "void main()\n"
+        "{\n"
+        "}\n";
+    if (compile(source))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}
