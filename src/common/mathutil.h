@@ -888,12 +888,12 @@ inline int BitCount(uint32_t bits)
 {
     return static_cast<int>(__popcnt(bits));
 }
-#if defined(ANGLE_X64_CPU)
+#if defined(ANGLE_IS_64_BIT_CPU)
 inline int BitCount(uint64_t bits)
 {
     return static_cast<int>(__popcnt64(bits));
 }
-#endif  // defined(ANGLE_X64_CPU)
+#endif  // defined(ANGLE_IS_64_BIT_CPU)
 #endif  // defined(ANGLE_PLATFORM_WINDOWS)
 
 #if defined(ANGLE_PLATFORM_POSIX)
@@ -902,12 +902,12 @@ inline int BitCount(uint32_t bits)
     return __builtin_popcount(bits);
 }
 
-#if defined(ANGLE_X64_CPU)
+#if defined(ANGLE_IS_64_BIT_CPU)
 inline int BitCount(uint64_t bits)
 {
     return __builtin_popcountll(bits);
 }
-#endif  // defined(ANGLE_X64_CPU)
+#endif  // defined(ANGLE_IS_64_BIT_CPU)
 #endif  // defined(ANGLE_PLATFORM_POSIX)
 
 #if defined(ANGLE_PLATFORM_WINDOWS)
@@ -922,7 +922,7 @@ inline unsigned long ScanForward(uint32_t bits)
     return firstBitIndex;
 }
 
-#if defined(ANGLE_X64_CPU)
+#if defined(ANGLE_IS_64_BIT_CPU)
 inline unsigned long ScanForward(uint64_t bits)
 {
     ASSERT(bits != 0u);
@@ -931,7 +931,7 @@ inline unsigned long ScanForward(uint64_t bits)
     ASSERT(ret != 0u);
     return firstBitIndex;
 }
-#endif  // defined(ANGLE_X64_CPU)
+#endif  // defined(ANGLE_IS_64_BIT_CPU)
 #endif  // defined(ANGLE_PLATFORM_WINDOWS)
 
 #if defined(ANGLE_PLATFORM_POSIX)
@@ -941,13 +941,13 @@ inline unsigned long ScanForward(uint32_t bits)
     return static_cast<unsigned long>(__builtin_ctz(bits));
 }
 
-#if defined(ANGLE_X64_CPU)
+#if defined(ANGLE_IS_64_BIT_CPU)
 inline unsigned long ScanForward(uint64_t bits)
 {
     ASSERT(bits != 0u);
     return static_cast<unsigned long>(__builtin_ctzll(bits));
 }
-#endif  // defined(ANGLE_X64_CPU)
+#endif  // defined(ANGLE_IS_64_BIT_CPU)
 #endif  // defined(ANGLE_PLATFORM_POSIX)
 
 // Return the index of the most significant bit set. Indexing is such that bit 0 is the least

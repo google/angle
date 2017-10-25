@@ -275,11 +275,11 @@ TEST(MathUtilTest, BitCount)
     EXPECT_EQ(32, gl::BitCount(0xFFFFFFFFu));
     EXPECT_EQ(10, gl::BitCount(0x17103121u));
 
-#if defined(ANGLE_X64_CPU)
+#if defined(ANGLE_IS_64_BIT_CPU)
     EXPECT_EQ(0, gl::BitCount(0ull));
     EXPECT_EQ(32, gl::BitCount(0xFFFFFFFFull));
     EXPECT_EQ(10, gl::BitCount(0x17103121ull));
-#endif  // defined(ANGLE_X64_CPU)
+#endif  // defined(ANGLE_IS_64_BIT_CPU)
 }
 
 // Test ScanForward, which scans for the least significant 1 bit from a non-zero integer.
@@ -289,11 +289,11 @@ TEST(MathUtilTest, ScanForward)
     EXPECT_EQ(16ul, gl::ScanForward(0x80010000u));
     EXPECT_EQ(31ul, gl::ScanForward(0x80000000u));
 
-#if defined(ANGLE_X64_CPU)
+#if defined(ANGLE_IS_64_BIT_CPU)
     EXPECT_EQ(0ul, gl::ScanForward(1ull));
     EXPECT_EQ(16ul, gl::ScanForward(0x80010000ull));
     EXPECT_EQ(31ul, gl::ScanForward(0x80000000ull));
-#endif  // defined(ANGLE_X64_CPU)
+#endif  // defined(ANGLE_IS_64_BIT_CPU)
 }
 
 // Test ScanReverse, which scans for the most significant 1 bit from a non-zero integer.

@@ -435,10 +435,10 @@ template <size_t N>
 using BitSet32 = BitSetT<N, uint32_t>;
 
 // ScanForward for 64-bits requires a 64-bit implementation.
-#if defined(ANGLE_X64_CPU)
+#if defined(ANGLE_IS_64_BIT_CPU)
 template <size_t N>
 using BitSet64 = BitSetT<N, uint64_t>;
-#endif  // defined(ANGLE_X64_CPU)
+#endif  // defined(ANGLE_IS_64_BIT_CPU)
 
 namespace priv
 {
@@ -453,7 +453,7 @@ struct GetBitSet
 };
 
 // Prefer 64-bit bitsets on 64-bit CPUs. They seem faster than 32-bit.
-#if defined(ANGLE_X64_CPU)
+#if defined(ANGLE_IS_64_BIT_CPU)
 template <size_t N>
 struct GetBitSet<N, EnableIfBitsFit<N, uint64_t>>
 {
@@ -465,7 +465,7 @@ struct GetBitSet<N, EnableIfBitsFit<N, uint32_t>>
 {
     using Type = BitSet32<N>;
 };
-#endif  // defined(ANGLE_X64_CPU)
+#endif  // defined(ANGLE_IS_64_BIT_CPU)
 
 }  // namespace priv
 

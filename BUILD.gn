@@ -71,11 +71,11 @@ config("internal_config") {
     "EGL_EGLEXT_PROTOTYPES",
   ]
 
-  if (target_cpu == "x86") {
-    defines += [ "ANGLE_X86_CPU" ]
+  if (current_cpu == "x86" || current_cpu == "arm") {
+    defines += [ "ANGLE_IS_32_BIT_CPU" ]
   }
-  if (target_cpu == "x64") {
-    defines += [ "ANGLE_X64_CPU" ]
+  if (current_cpu == "x64" || current_cpu == "arm64") {
+    defines += [ "ANGLE_IS_64_BIT_CPU" ]
   }
 }
 
