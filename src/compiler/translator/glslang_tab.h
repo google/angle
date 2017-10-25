@@ -238,6 +238,7 @@ union YYSTYPE
             TIntermCase *intermCase;
         };
         union {
+            unsigned int arraySize;
             TTypeSpecifierNonArray typeSpecifierNonArray;
             TPublicType type;
             TPrecision precision;

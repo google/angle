@@ -86,6 +86,7 @@ using namespace sh;
             TIntermCase *intermCase;
         };
         union {
+            unsigned int arraySize;
             TTypeSpecifierNonArray typeSpecifierNonArray;
             TPublicType type;
             TPrecision precision;
@@ -217,6 +218,8 @@ extern void yyerror(YYLTYPE* yylloc, TParseContext* context, void *scanner, cons
 
 %type <interm.param> parameter_declaration parameter_declarator parameter_type_specifier
 %type <interm.layoutQualifier> layout_qualifier_id_list layout_qualifier_id
+
+%type <interm.arraySize> array_specifier
 
 %type <interm.type> fully_specified_type type_specifier
 
@@ -681,8 +684,8 @@ parameter_declarator
     : type_specifier identifier {
         $$ = context->parseParameterDeclarator($1, $2.string, @2);
     }
-    | type_specifier identifier LEFT_BRACKET constant_expression RIGHT_BRACKET {
-        $$ = context->parseParameterArrayDeclarator($2.string, @2, $4, @3, &$1);
+    | type_specifier identifier array_specifier {
+        $$ = context->parseParameterArrayDeclarator($2.string, @2, $3, @3, &$1);
     }
     ;
 
@@ -720,19 +723,14 @@ init_declarator_list
         $$ = $1;
         context->parseDeclarator($$.type, @3, *$3.string, $$.intermDeclaration);
     }
-    | init_declarator_list COMMA identifier LEFT_BRACKET constant_expression RIGHT_BRACKET {
+    | init_declarator_list COMMA identifier array_specifier {
         $$ = $1;
-        context->parseArrayDeclarator($$.type, @3, *$3.string, @4, $5, $$.intermDeclaration);
+        context->parseArrayDeclarator($$.type, @3, *$3.string, @4, $4, $$.intermDeclaration);
     }
-    | init_declarator_list COMMA identifier LEFT_BRACKET RIGHT_BRACKET EQUAL initializer {
-        ES3_OR_NEWER("[]", @3, "implicitly sized array");
+    | init_declarator_list COMMA identifier array_specifier EQUAL initializer {
+        ES3_OR_NEWER("=", @5, "first-class arrays (array initializer)");
         $$ = $1;
-        context->parseArrayInitDeclarator($$.type, @3, *$3.string, @4, nullptr, @6, $7, $$.intermDeclaration);
-    }
-    | init_declarator_list COMMA identifier LEFT_BRACKET constant_expression RIGHT_BRACKET EQUAL initializer {
-        ES3_OR_NEWER("=", @7, "first-class arrays (array initializer)");
-        $$ = $1;
-        context->parseArrayInitDeclarator($$.type, @3, *$3.string, @4, $5, @7, $8, $$.intermDeclaration);
+        context->parseArrayInitDeclarator($$.type, @3, *$3.string, @4, $4, @5, $6, $$.intermDeclaration);
     }
     | init_declarator_list COMMA identifier EQUAL initializer {
         $$ = $1;
@@ -749,24 +747,14 @@ single_declaration
         $$.type = $1;
         $$.intermDeclaration = context->parseSingleDeclaration($$.type, @2, *$2.string);
     }
-    | fully_specified_type identifier LEFT_BRACKET RIGHT_BRACKET {
-        ES3_1_ONLY("[]", @3, "implicitly sized array declaration");
+    | fully_specified_type identifier array_specifier {
         $$.type = $1;
-        $$.intermDeclaration = context->parseSingleArrayDeclaration($$.type, @2, *$2.string, @3, nullptr);
+        $$.intermDeclaration = context->parseSingleArrayDeclaration($$.type, @2, *$2.string, @3, $3);
     }
-    | fully_specified_type identifier LEFT_BRACKET constant_expression RIGHT_BRACKET {
+    | fully_specified_type identifier array_specifier EQUAL initializer {
+        ES3_OR_NEWER("[]", @3, "first-class arrays (array initializer)");
         $$.type = $1;
-        $$.intermDeclaration = context->parseSingleArrayDeclaration($$.type, @2, *$2.string, @3, $4);
-    }
-    | fully_specified_type identifier LEFT_BRACKET RIGHT_BRACKET EQUAL initializer {
-        ES3_OR_NEWER("[]", @3, "implicitly sized array");
-        $$.type = $1;
-        $$.intermDeclaration = context->parseSingleArrayInitDeclaration($$.type, @2, *$2.string, @3, nullptr, @5, $6);
-    }
-    | fully_specified_type identifier LEFT_BRACKET constant_expression RIGHT_BRACKET EQUAL initializer {
-        ES3_OR_NEWER("=", @6, "first-class arrays (array initializer)");
-        $$.type = $1;
-        $$.intermDeclaration = context->parseSingleArrayInitDeclaration($$.type, @2, *$2.string, @3, $4, @6, $7);
+        $$.intermDeclaration = context->parseSingleArrayInitDeclaration($$.type, @2, *$2.string, @3, $3, @4, $5);
     }
     | fully_specified_type identifier EQUAL initializer {
         $$.type = $1;
@@ -941,15 +929,22 @@ type_specifier_no_prec
     : type_specifier_nonarray {
         $$.initialize($1, (context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary));
     }
-    | type_specifier_nonarray LEFT_BRACKET RIGHT_BRACKET {
-        ES3_OR_NEWER("[]", @2, "implicitly sized array");
+    | type_specifier_nonarray array_specifier {
         $$.initialize($1, (context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary));
-        $$.setArraySize(0);
+        $$.setArraySize($2);
     }
-    | type_specifier_nonarray LEFT_BRACKET constant_expression RIGHT_BRACKET {
-        $$.initialize($1, (context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary));
-        unsigned int size = context->checkIsValidArraySize(@2, $3);
-        $$.setArraySize(size);
+    ;
+
+array_specifier
+    : LEFT_BRACKET RIGHT_BRACKET {
+        ES3_OR_NEWER("[]", @1, "implicitly sized array");
+        $$ = 0u;
+    }
+    | LEFT_BRACKET constant_expression RIGHT_BRACKET {
+        unsigned int size = context->checkIsValidArraySize(@1, $2);
+        // Make the type an array even if size check failed.
+        // This ensures useless error messages regarding a variable's non-arrayness won't follow.
+        $$ = size;
     }
     ;
 

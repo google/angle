@@ -5104,3 +5104,51 @@ TEST_F(FragmentShaderValidationTest, UnsizedInputs)
         FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
     }
 }
+
+// Test that unsized struct members are not allowed.
+TEST_F(FragmentShaderValidationTest, UnsizedStructMember)
+{
+    const std::string &shaderString =
+        R"(#version 300 es
+
+        precision highp float;
+        out vec4 color;
+
+        struct S
+        {
+            int[] foo;
+        };
+
+        void main()
+        {
+            color = vec4(1.0);
+        })";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}
+
+// Test that unsized parameters without a name are not allowed.
+// GLSL ES 3.10 section 6.1 Function Definitions.
+TEST_F(FragmentShaderValidationTest, UnsizedNamelessParameter)
+{
+    const std::string &shaderString =
+        R"(#version 300 es
+
+        precision highp float;
+        out vec4 color;
+
+        void foo(int[]);
+
+        void main()
+        {
+            color = vec4(1.0);
+        })";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}

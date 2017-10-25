@@ -349,6 +349,9 @@ class TType
     // than there are sizes in arraySizes, defaults to setting array sizes to 1.
     void sizeUnsizedArrays(const TVector<unsigned int> &arraySizes);
 
+    // Will size the outermost array according to arraySize.
+    void sizeOutermostUnsizedArray(unsigned int arraySize);
+
     // Note that the array element type might still be an array type in GLSL ES version >= 3.10.
     void toArrayElementType()
     {
@@ -636,7 +639,6 @@ struct TPublicType
         return typeSpecifierNonArray.userDef->containsType(t);
     }
 
-    bool isUnsizedArray() const { return array && arraySize == 0; }
     void setArraySize(int s)
     {
         array     = true;

@@ -148,7 +148,7 @@ class TParseContext : angle::NonCopyable
     void nonEmptyDeclarationErrorCheck(const TPublicType &publicType,
                                        const TSourceLoc &identifierLocation);
     // Done only for empty declarations.
-    void emptyDeclarationErrorCheck(const TPublicType &publicType, const TSourceLoc &location);
+    void emptyDeclarationErrorCheck(const TType &type, const TSourceLoc &location);
 
     void checkLayoutQualifierSupported(const TSourceLoc &location,
                                        const TString &layoutQualifierName,
@@ -180,7 +180,7 @@ class TParseContext : angle::NonCopyable
     // is not needed in the AST.
     bool executeInitializer(const TSourceLoc &line,
                             const TString &identifier,
-                            const TPublicType &pType,
+                            TType type,
                             TIntermTyped *initializer,
                             TIntermBinary **initNode);
     TIntermNode *addConditionInitializer(const TPublicType &pType,
@@ -205,11 +205,11 @@ class TParseContext : angle::NonCopyable
     TIntermDeclaration *parseSingleDeclaration(TPublicType &publicType,
                                                const TSourceLoc &identifierOrTypeLocation,
                                                const TString &identifier);
-    TIntermDeclaration *parseSingleArrayDeclaration(TPublicType &publicType,
+    TIntermDeclaration *parseSingleArrayDeclaration(TPublicType &elementType,
                                                     const TSourceLoc &identifierLocation,
                                                     const TString &identifier,
                                                     const TSourceLoc &indexLocation,
-                                                    TIntermTyped *indexExpression);
+                                                    unsigned int arraySize);
     TIntermDeclaration *parseSingleInitDeclaration(const TPublicType &publicType,
                                                    const TSourceLoc &identifierLocation,
                                                    const TString &identifier,
@@ -218,11 +218,11 @@ class TParseContext : angle::NonCopyable
 
     // Parse a declaration like "type a[n] = initializer"
     // Note that this does not apply to declarations like "type[n] a = initializer"
-    TIntermDeclaration *parseSingleArrayInitDeclaration(TPublicType &publicType,
+    TIntermDeclaration *parseSingleArrayInitDeclaration(TPublicType &elementType,
                                                         const TSourceLoc &identifierLocation,
                                                         const TString &identifier,
                                                         const TSourceLoc &indexLocation,
-                                                        TIntermTyped *indexExpression,
+                                                        unsigned int arraySize,
                                                         const TSourceLoc &initLocation,
                                                         TIntermTyped *initializer);
 
@@ -236,11 +236,11 @@ class TParseContext : angle::NonCopyable
                          const TSourceLoc &identifierLocation,
                          const TString &identifier,
                          TIntermDeclaration *declarationOut);
-    void parseArrayDeclarator(TPublicType &publicType,
+    void parseArrayDeclarator(TPublicType &elementType,
                               const TSourceLoc &identifierLocation,
                               const TString &identifier,
                               const TSourceLoc &arrayLocation,
-                              TIntermTyped *indexExpression,
+                              unsigned int arraySize,
                               TIntermDeclaration *declarationOut);
     void parseInitDeclarator(const TPublicType &publicType,
                              const TSourceLoc &identifierLocation,
@@ -250,11 +250,11 @@ class TParseContext : angle::NonCopyable
                              TIntermDeclaration *declarationOut);
 
     // Parse a declarator like "a[n] = initializer"
-    void parseArrayInitDeclarator(const TPublicType &publicType,
+    void parseArrayInitDeclarator(const TPublicType &elementType,
                                   const TSourceLoc &identifierLocation,
                                   const TString &identifier,
                                   const TSourceLoc &indexLocation,
-                                  TIntermTyped *indexExpression,
+                                  unsigned int arraySize,
                                   const TSourceLoc &initLocation,
                                   TIntermTyped *initializer,
                                   TIntermDeclaration *declarationOut);
@@ -281,11 +281,12 @@ class TParseContext : angle::NonCopyable
     TParameter parseParameterDeclarator(const TPublicType &publicType,
                                         const TString *name,
                                         const TSourceLoc &nameLoc);
-    TParameter parseParameterArrayDeclarator(const TString *identifier,
-                                             const TSourceLoc &identifierLoc,
-                                             TIntermTyped *arraySize,
+
+    TParameter parseParameterArrayDeclarator(const TString *name,
+                                             const TSourceLoc &nameLoc,
+                                             unsigned int arraySize,
                                              const TSourceLoc &arrayLoc,
-                                             TPublicType *type);
+                                             TPublicType *elementType);
 
     TIntermTyped *addIndexExpression(TIntermTyped *baseExpression,
                                      const TSourceLoc &location,
@@ -453,7 +454,11 @@ class TParseContext : angle::NonCopyable
 
     void checkCanBeDeclaredWithoutInitializer(const TSourceLoc &line,
                                               const TString &identifier,
-                                              TPublicType *type);
+                                              TType *type);
+
+    TParameter parseParameterDeclarator(TType *type,
+                                        const TString *name,
+                                        const TSourceLoc &nameLoc);
 
     bool checkIsValidTypeAndQualifierForArray(const TSourceLoc &indexLocation,
                                               const TPublicType &elementType);
@@ -501,6 +506,13 @@ class TParseContext : angle::NonCopyable
     bool checkUnsizedArrayConstructorArgumentDimensionality(TIntermSequence *arguments,
                                                             TType type,
                                                             const TSourceLoc &line);
+
+    // Will size any unsized array type so unsized arrays won't need to be taken into account
+    // further along the line in parsing.
+    void checkIsNotUnsizedArray(const TSourceLoc &line,
+                                const char *errorMessage,
+                                const char *token,
+                                TType *arrayType);
 
     TIntermTyped *addBinaryMathInternal(TOperator op,
                                         TIntermTyped *left,

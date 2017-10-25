@@ -1030,13 +1030,13 @@ bool TParseContext::checkIsValidTypeAndQualifierForArray(const TSourceLoc &index
 // Enforce non-initializer type/qualifier rules.
 void TParseContext::checkCanBeDeclaredWithoutInitializer(const TSourceLoc &line,
                                                          const TString &identifier,
-                                                         TPublicType *type)
+                                                         TType *type)
 {
     ASSERT(type != nullptr);
-    if (type->qualifier == EvqConst)
+    if (type->getQualifier() == EvqConst)
     {
         // Make the qualifier make sense.
-        type->qualifier = EvqTemporary;
+        type->setQualifier(EvqTemporary);
 
         // Generate informative error messages for ESSL1.
         // In ESSL3 arrays and structures containing arrays can be constant.
@@ -1053,10 +1053,9 @@ void TParseContext::checkCanBeDeclaredWithoutInitializer(const TSourceLoc &line,
         }
         return;
     }
-    if (type->isUnsizedArray())
-    {
-        error(line, "implicitly sized arrays need to be initialized", identifier.c_str());
-    }
+    // This will make the type sized if it isn't sized yet.
+    checkIsNotUnsizedArray(line, "implicitly sized arrays need to be initialized",
+                           identifier.c_str(), type);
 }
 
 // Do some simple checks that are shared between all variable declarations,
@@ -1253,10 +1252,9 @@ void TParseContext::atomicCounterQualifierErrorCheck(const TPublicType &publicTy
     }
 }
 
-void TParseContext::emptyDeclarationErrorCheck(const TPublicType &publicType,
-                                               const TSourceLoc &location)
+void TParseContext::emptyDeclarationErrorCheck(const TType &type, const TSourceLoc &location)
 {
-    if (publicType.isUnsizedArray())
+    if (type.isUnsizedArray())
     {
         // ESSL3 spec section 4.1.9: Array declaration which leaves the size unspecified is an
         // error. It is assumed that this applies to empty declarations as well.
@@ -1317,9 +1315,9 @@ void TParseContext::nonEmptyDeclarationErrorCheck(const TPublicType &publicType,
     {
         // Valid uniform declarations can't be unsized arrays since uniforms can't be initialized.
         // But invalid shaders may still reach here with an unsized array declaration.
-        if (!publicType.isUnsizedArray())
+        TType type(publicType);
+        if (!type.isUnsizedArray())
         {
-            TType type(publicType);
             checkUniformLocationInRange(identifierLocation, type.getLocationCount(),
                                         publicType.layoutQualifier);
         }
@@ -1805,7 +1803,7 @@ TIntermTyped *TParseContext::parseVariableIdentifier(const TSourceLoc &location,
         ASSERT(mGeometryShaderInputArraySize > 0u);
 
         node = new TIntermSymbol(variable->getUniqueId(), variable->getName(), variableType);
-        node->getTypePointer()->setArraySize(0, mGeometryShaderInputArraySize);
+        node->getTypePointer()->sizeOutermostUnsizedArray(mGeometryShaderInputArraySize);
     }
     else
     {
@@ -1822,13 +1820,12 @@ TIntermTyped *TParseContext::parseVariableIdentifier(const TSourceLoc &location,
 // Returns true on success.
 bool TParseContext::executeInitializer(const TSourceLoc &line,
                                        const TString &identifier,
-                                       const TPublicType &pType,
+                                       TType type,
                                        TIntermTyped *initializer,
                                        TIntermBinary **initNode)
 {
     ASSERT(initNode != nullptr);
     ASSERT(*initNode == nullptr);
-    TType type = TType(pType);
 
     TVariable *variable = nullptr;
     if (type.isUnsizedArray())
@@ -1943,7 +1940,8 @@ TIntermNode *TParseContext::addConditionInitializer(const TPublicType &pType,
 {
     checkIsScalarBool(loc, pType);
     TIntermBinary *initNode = nullptr;
-    if (executeInitializer(loc, identifier, pType, initializer, &initNode))
+    TType type(pType);
+    if (executeInitializer(loc, identifier, type, initializer, &initNode))
     {
         // The initializer is valid. The init condition needs to have a node - either the
         // initializer node, or a constant node in case the initialized variable is const and won't
@@ -2315,7 +2313,7 @@ TIntermDeclaration *TParseContext::parseSingleDeclaration(
     TIntermSymbol *symbol = nullptr;
     if (emptyDeclaration)
     {
-        emptyDeclarationErrorCheck(publicType, identifierOrTypeLocation);
+        emptyDeclarationErrorCheck(type, identifierOrTypeLocation);
         // In most cases we don't need to create a symbol node for an empty declaration.
         // But if the empty declaration is declaring a struct type, the symbol node will store that.
         if (type.getBasicType() == EbtStruct)
@@ -2331,7 +2329,7 @@ TIntermDeclaration *TParseContext::parseSingleDeclaration(
     {
         nonEmptyDeclarationErrorCheck(publicType, identifierOrTypeLocation);
 
-        checkCanBeDeclaredWithoutInitializer(identifierOrTypeLocation, identifier, &publicType);
+        checkCanBeDeclaredWithoutInitializer(identifierOrTypeLocation, identifier, &type);
 
         if (IsAtomicCounter(publicType.getBasicType()))
         {
@@ -2359,35 +2357,34 @@ TIntermDeclaration *TParseContext::parseSingleDeclaration(
     return declaration;
 }
 
-TIntermDeclaration *TParseContext::parseSingleArrayDeclaration(TPublicType &publicType,
+TIntermDeclaration *TParseContext::parseSingleArrayDeclaration(TPublicType &elementType,
                                                                const TSourceLoc &identifierLocation,
                                                                const TString &identifier,
                                                                const TSourceLoc &indexLocation,
-                                                               TIntermTyped *indexExpression)
+                                                               unsigned int arraySize)
 {
     mDeferredNonEmptyDeclarationErrorCheck = false;
 
-    declarationQualifierErrorCheck(publicType.qualifier, publicType.layoutQualifier,
+    declarationQualifierErrorCheck(elementType.qualifier, elementType.layoutQualifier,
                                    identifierLocation);
 
-    nonEmptyDeclarationErrorCheck(publicType, identifierLocation);
+    nonEmptyDeclarationErrorCheck(elementType, identifierLocation);
 
-    checkCanBeDeclaredWithoutInitializer(identifierLocation, identifier, &publicType);
+    checkIsValidTypeAndQualifierForArray(indexLocation, elementType);
 
-    checkIsValidTypeAndQualifierForArray(indexLocation, publicType);
+    TType arrayType(elementType);
+    arrayType.makeArray(arraySize);
 
-    TType arrayType(publicType);
-
-    if (indexExpression == nullptr)
+    if (IsGeometryShaderInput(mShaderType, elementType.qualifier))
     {
-        if (IsGeometryShaderInput(mShaderType, publicType.qualifier))
+        if (arrayType.isUnsizedArray())
         {
             // Set size for the unsized geometry shader inputs if they are declared after a valid
             // input primitive declaration.
             if (mGeometryShaderInputPrimitiveType != EptUndefined)
             {
                 ASSERT(mGeometryShaderInputArraySize > 0u);
-                arrayType.makeArray(mGeometryShaderInputArraySize);
+                arrayType.sizeOutermostUnsizedArray(mGeometryShaderInputArraySize);
             }
             else
             {
@@ -2402,27 +2399,17 @@ TIntermDeclaration *TParseContext::parseSingleArrayDeclaration(TPublicType &publ
         }
         else
         {
-            // Unsized array declarations are only allowed in declaring geometry shader inputs.
-            error(indexLocation, "Invalid unsized array declaration", "");
+            setGeometryShaderInputArraySize(arrayType.getOutermostArraySize(), indexLocation);
         }
     }
-    else
+
+    checkCanBeDeclaredWithoutInitializer(identifierLocation, identifier, &arrayType);
+
+    if (IsAtomicCounter(elementType.getBasicType()))
     {
-        unsigned int size = checkIsValidArraySize(identifierLocation, indexExpression);
-        if (IsGeometryShaderInput(mShaderType, publicType.qualifier))
-        {
-            setGeometryShaderInputArraySize(size, indexLocation);
-        }
-
-        // Make the type an array even if size check failed.
-        // This ensures useless error messages regarding the variable's non-arrayness won't follow.
-        arrayType.makeArray(size);
-
-        if (IsAtomicCounter(publicType.getBasicType()))
-        {
-            checkAtomicCounterOffsetIsNotOverlapped(publicType, kAtomicCounterArrayStride * size,
-                                                    false, identifierLocation, arrayType);
-        }
+        checkAtomicCounterOffsetIsNotOverlapped(
+            elementType, kAtomicCounterArrayStride * arrayType.getArraySizeProduct(), false,
+            identifierLocation, arrayType);
     }
 
     TVariable *variable = nullptr;
@@ -2458,7 +2445,8 @@ TIntermDeclaration *TParseContext::parseSingleInitDeclaration(const TPublicType 
     declaration->setLine(identifierLocation);
 
     TIntermBinary *initNode = nullptr;
-    if (executeInitializer(identifierLocation, identifier, publicType, initializer, &initNode))
+    TType type(publicType);
+    if (executeInitializer(identifierLocation, identifier, type, initializer, &initNode))
     {
         if (initNode)
         {
@@ -2469,35 +2457,25 @@ TIntermDeclaration *TParseContext::parseSingleInitDeclaration(const TPublicType 
 }
 
 TIntermDeclaration *TParseContext::parseSingleArrayInitDeclaration(
-    TPublicType &publicType,
+    TPublicType &elementType,
     const TSourceLoc &identifierLocation,
     const TString &identifier,
     const TSourceLoc &indexLocation,
-    TIntermTyped *indexExpression,
+    unsigned int arraySize,
     const TSourceLoc &initLocation,
     TIntermTyped *initializer)
 {
     mDeferredNonEmptyDeclarationErrorCheck = false;
 
-    declarationQualifierErrorCheck(publicType.qualifier, publicType.layoutQualifier,
+    declarationQualifierErrorCheck(elementType.qualifier, elementType.layoutQualifier,
                                    identifierLocation);
 
-    nonEmptyDeclarationErrorCheck(publicType, identifierLocation);
+    nonEmptyDeclarationErrorCheck(elementType, identifierLocation);
 
-    checkIsValidTypeAndQualifierForArray(indexLocation, publicType);
+    checkIsValidTypeAndQualifierForArray(indexLocation, elementType);
 
-    TPublicType arrayType(publicType);
-
-    unsigned int size = 0u;
-    // If indexExpression is nullptr, then the array will eventually get its size implicitly from
-    // the initializer.
-    if (indexExpression != nullptr)
-    {
-        size = checkIsValidArraySize(identifierLocation, indexExpression);
-    }
-    // Make the type an array even if size check failed.
-    // This ensures useless error messages regarding the variable's non-arrayness won't follow.
-    arrayType.setArraySize(size);
+    TType arrayType(elementType);
+    arrayType.makeArray(arraySize);
 
     TIntermDeclaration *declaration = new TIntermDeclaration();
     declaration->setLine(identifierLocation);
@@ -2586,10 +2564,10 @@ void TParseContext::parseDeclarator(TPublicType &publicType,
 
     checkDeclaratorLocationIsNotSpecified(identifierLocation, publicType);
 
-    checkCanBeDeclaredWithoutInitializer(identifierLocation, identifier, &publicType);
-
     TVariable *variable = nullptr;
     TType type(publicType);
+    checkCanBeDeclaredWithoutInitializer(identifierLocation, identifier, &type);
+
     if (IsAtomicCounter(publicType.getBasicType()))
     {
         checkAtomicCounterOffsetIsNotOverlapped(publicType, kAtomicCounterSize, true,
@@ -2605,35 +2583,35 @@ void TParseContext::parseDeclarator(TPublicType &publicType,
     }
 }
 
-void TParseContext::parseArrayDeclarator(TPublicType &publicType,
+void TParseContext::parseArrayDeclarator(TPublicType &elementType,
                                          const TSourceLoc &identifierLocation,
                                          const TString &identifier,
                                          const TSourceLoc &arrayLocation,
-                                         TIntermTyped *indexExpression,
+                                         unsigned int arraySize,
                                          TIntermDeclaration *declarationOut)
 {
     // If the declaration starting this declarator list was empty (example: int,), some checks were
     // not performed.
     if (mDeferredNonEmptyDeclarationErrorCheck)
     {
-        nonEmptyDeclarationErrorCheck(publicType, identifierLocation);
+        nonEmptyDeclarationErrorCheck(elementType, identifierLocation);
         mDeferredNonEmptyDeclarationErrorCheck = false;
     }
 
-    checkDeclaratorLocationIsNotSpecified(identifierLocation, publicType);
+    checkDeclaratorLocationIsNotSpecified(identifierLocation, elementType);
 
-    checkCanBeDeclaredWithoutInitializer(identifierLocation, identifier, &publicType);
-
-    if (checkIsValidTypeAndQualifierForArray(arrayLocation, publicType))
+    if (checkIsValidTypeAndQualifierForArray(arrayLocation, elementType))
     {
-        TType arrayType   = TType(publicType);
-        unsigned int size = checkIsValidArraySize(arrayLocation, indexExpression);
-        arrayType.makeArray(size);
+        TType arrayType(elementType);
+        arrayType.makeArray(arraySize);
 
-        if (IsAtomicCounter(publicType.getBasicType()))
+        checkCanBeDeclaredWithoutInitializer(identifierLocation, identifier, &arrayType);
+
+        if (IsAtomicCounter(elementType.getBasicType()))
         {
-            checkAtomicCounterOffsetIsNotOverlapped(publicType, kAtomicCounterArrayStride * size,
-                                                    true, identifierLocation, arrayType);
+            checkAtomicCounterOffsetIsNotOverlapped(
+                elementType, kAtomicCounterArrayStride * arrayType.getArraySizeProduct(), true,
+                identifierLocation, arrayType);
         }
 
         TVariable *variable = nullptr;
@@ -2667,7 +2645,8 @@ void TParseContext::parseInitDeclarator(const TPublicType &publicType,
     checkDeclaratorLocationIsNotSpecified(identifierLocation, publicType);
 
     TIntermBinary *initNode = nullptr;
-    if (executeInitializer(identifierLocation, identifier, publicType, initializer, &initNode))
+    TType type(publicType);
+    if (executeInitializer(identifierLocation, identifier, type, initializer, &initNode))
     {
         //
         // build the intermediate representation
@@ -2679,11 +2658,11 @@ void TParseContext::parseInitDeclarator(const TPublicType &publicType,
     }
 }
 
-void TParseContext::parseArrayInitDeclarator(const TPublicType &publicType,
+void TParseContext::parseArrayInitDeclarator(const TPublicType &elementType,
                                              const TSourceLoc &identifierLocation,
                                              const TString &identifier,
                                              const TSourceLoc &indexLocation,
-                                             TIntermTyped *indexExpression,
+                                             unsigned int arraySize,
                                              const TSourceLoc &initLocation,
                                              TIntermTyped *initializer,
                                              TIntermDeclaration *declarationOut)
@@ -2692,26 +2671,16 @@ void TParseContext::parseArrayInitDeclarator(const TPublicType &publicType,
     // not performed.
     if (mDeferredNonEmptyDeclarationErrorCheck)
     {
-        nonEmptyDeclarationErrorCheck(publicType, identifierLocation);
+        nonEmptyDeclarationErrorCheck(elementType, identifierLocation);
         mDeferredNonEmptyDeclarationErrorCheck = false;
     }
 
-    checkDeclaratorLocationIsNotSpecified(identifierLocation, publicType);
+    checkDeclaratorLocationIsNotSpecified(identifierLocation, elementType);
 
-    checkIsValidTypeAndQualifierForArray(indexLocation, publicType);
+    checkIsValidTypeAndQualifierForArray(indexLocation, elementType);
 
-    TPublicType arrayType(publicType);
-
-    unsigned int size = 0u;
-    // If indexExpression is nullptr, then the array will eventually get its size implicitly from
-    // the initializer.
-    if (indexExpression != nullptr)
-    {
-        size = checkIsValidArraySize(identifierLocation, indexExpression);
-    }
-    // Make the type an array even if size check failed.
-    // This ensures useless error messages regarding the variable's non-arrayness won't follow.
-    arrayType.setArraySize(size);
+    TType arrayType(elementType);
+    arrayType.makeArray(arraySize);
 
     // initNode will correspond to the whole of "b[n] = initializer".
     TIntermBinary *initNode = nullptr;
@@ -3124,6 +3093,17 @@ TIntermFunctionPrototype *TParseContext::createPrototypeNodeFromFunction(
                     error(location, "redefinition", param.name->c_str());
                 }
             }
+            // Unsized type of a named parameter should have already been checked and sanitized.
+            ASSERT(!param.type->isUnsizedArray());
+        }
+        else
+        {
+            if (param.type->isUnsizedArray())
+            {
+                error(location, "function parameter array must be sized at compile time", "[]");
+                // We don't need to size the arrays since the parameter is unnamed and hence
+                // inaccessible.
+            }
         }
         if (!symbol)
         {
@@ -3389,30 +3369,52 @@ TFunction *TParseContext::addConstructorFunc(const TPublicType &publicType)
     return new TFunction(&symbolTable, nullptr, type, EOpConstruct);
 }
 
-TParameter TParseContext::parseParameterDeclarator(const TPublicType &publicType,
+void TParseContext::checkIsNotUnsizedArray(const TSourceLoc &line,
+                                           const char *errorMessage,
+                                           const char *token,
+                                           TType *arrayType)
+{
+    if (arrayType->isUnsizedArray())
+    {
+        error(line, errorMessage, token);
+        arrayType->sizeUnsizedArrays(TVector<unsigned int>());
+    }
+}
+
+TParameter TParseContext::parseParameterDeclarator(TType *type,
                                                    const TString *name,
                                                    const TSourceLoc &nameLoc)
 {
-    if (publicType.getBasicType() == EbtVoid)
+    ASSERT(type);
+    checkIsNotUnsizedArray(nameLoc, "function parameter array must specify a size", name->c_str(),
+                           type);
+    if (type->getBasicType() == EbtVoid)
     {
         error(nameLoc, "illegal use of type 'void'", name->c_str());
     }
     checkIsNotReserved(nameLoc, *name);
-    TType *type      = new TType(publicType);
     TParameter param = {name, type};
     return param;
 }
 
-TParameter TParseContext::parseParameterArrayDeclarator(const TString *identifier,
-                                                        const TSourceLoc &identifierLoc,
-                                                        TIntermTyped *arraySize,
-                                                        const TSourceLoc &arrayLoc,
-                                                        TPublicType *type)
+TParameter TParseContext::parseParameterDeclarator(const TPublicType &publicType,
+                                                   const TString *name,
+                                                   const TSourceLoc &nameLoc)
 {
-    checkArrayElementIsNotArray(arrayLoc, *type);
-    unsigned int size = checkIsValidArraySize(arrayLoc, arraySize);
-    type->setArraySize(size);
-    return parseParameterDeclarator(*type, identifier, identifierLoc);
+    TType *type = new TType(publicType);
+    return parseParameterDeclarator(type, name, nameLoc);
+}
+
+TParameter TParseContext::parseParameterArrayDeclarator(const TString *name,
+                                                        const TSourceLoc &nameLoc,
+                                                        unsigned int arraySize,
+                                                        const TSourceLoc &arrayLoc,
+                                                        TPublicType *elementType)
+{
+    checkArrayElementIsNotArray(arrayLoc, *elementType);
+    TType *arrayType = new TType(*elementType);
+    arrayType->makeArray(arraySize);
+    return parseParameterDeclarator(arrayType, name, nameLoc);
 }
 
 bool TParseContext::checkUnsizedArrayConstructorArgumentDimensionality(TIntermSequence *arguments,
@@ -4599,23 +4601,26 @@ TFieldList *TParseContext::addStructDeclaratorList(const TPublicType &typeSpecif
 
     checkWorkGroupSizeIsNotSpecified(typeSpecifier.getLine(), typeSpecifier.layoutQualifier);
 
-    for (unsigned int i = 0; i < declaratorList->size(); ++i)
+    for (TField *declarator : *declaratorList)
     {
-        auto declaratorArraySizes = (*declaratorList)[i]->type()->getArraySizes();
+        auto declaratorArraySizes = declarator->type()->getArraySizes();
         // don't allow arrays of arrays
         if (!declaratorArraySizes.empty())
         {
             checkArrayElementIsNotArray(typeSpecifier.getLine(), typeSpecifier);
         }
 
-        TType *type = (*declaratorList)[i]->type();
+        TType *type = declarator->type();
         *type       = TType(typeSpecifier);
         for (unsigned int arraySize : declaratorArraySizes)
         {
             type->makeArray(arraySize);
         }
+        checkIsNotUnsizedArray(typeSpecifier.getLine(),
+                               "array members of structs must specify a size",
+                               declarator->name().c_str(), type);
 
-        checkIsBelowStructNestingLimit(typeSpecifier.getLine(), *(*declaratorList)[i]);
+        checkIsBelowStructNestingLimit(typeSpecifier.getLine(), *declarator);
     }
 
     return declaratorList;
