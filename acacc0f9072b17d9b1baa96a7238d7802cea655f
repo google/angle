@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "abfb7cf2_1fae4f53",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 2
+      },
+      "lineNbr": 730,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-25T14:59:16Z",
+      "side": 1,
+      "message": "This is where a previously unhandled case for [] is added right?",
+      "revId": "acacc0f9072b17d9b1baa96a7238d7802cea655f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
