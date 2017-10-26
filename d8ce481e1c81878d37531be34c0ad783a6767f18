@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f4332100_363b1784",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2948,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-10-26T08:20:03Z",
+      "side": 1,
+      "message": "Need we check this globally?",
+      "range": {
+        "startLine": 2947,
+        "startChar": 0,
+        "endLine": 2948,
+        "endChar": 64
+      },
+      "revId": "d8ce481e1c81878d37531be34c0ad783a6767f18",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1953c453_17d9ec86",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 4129,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-10-26T08:20:03Z",
+      "side": 1,
+      "message": "typo: std430",
+      "range": {
+        "startLine": 4129,
+        "startChar": 43,
+        "endLine": 4129,
+        "endChar": 49
+      },
+      "revId": "d8ce481e1c81878d37531be34c0ad783a6767f18",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
