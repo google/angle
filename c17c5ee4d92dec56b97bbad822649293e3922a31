@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5085683e_d0205f85",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 4126,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-26T16:50:12Z",
+      "side": 1,
+      "message": "Is this check needed? WebGL doesn\u0027t have ES 3.1 support yet, but when it does it should support std430 layout.",
+      "revId": "c17c5ee4d92dec56b97bbad822649293e3922a31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
