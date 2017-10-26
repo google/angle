@@ -14,6 +14,7 @@
 #include "common/bitset_utils.h"
 #include "common/debug.h"
 #include "common/platform.h"
+#include "common/string_utils.h"
 #include "common/utilities.h"
 #include "compiler/translator/blocklayout.h"
 #include "libANGLE/Context.h"
@@ -140,33 +141,71 @@ bool ComparePackedVarying(const PackedVarying &x, const PackedVarying &y)
 template <typename VarT>
 GLuint GetResourceIndexFromName(const std::vector<VarT> &list, const std::string &name)
 {
-    std::vector<unsigned int> subscripts;
-    std::string baseName = ParseResourceName(name, &subscripts);
-
-    // The app is not allowed to specify array indices other than 0 for arrays of basic types
-    for (unsigned int subscript : subscripts)
-    {
-        if (subscript != 0u)
-        {
-            return GL_INVALID_INDEX;
-        }
-    }
-
+    std::string nameAsArrayName = name + "[0]";
     for (size_t index = 0; index < list.size(); index++)
     {
         const VarT &resource = list[index];
-        if (resource.name == baseName)
+        if (resource.name == name || (resource.isArray() && resource.name == nameAsArrayName))
         {
-            // TODO(oetuaho@nvidia.com): Check array nesting >= number of specified
-            // subscripts once arrays of arrays are supported in ShaderVariable.
-            if ((resource.isArray() || subscripts.empty()) && subscripts.size() <= 1u)
-            {
-                return static_cast<GLuint>(index);
-            }
+            return static_cast<GLuint>(index);
         }
     }
 
     return GL_INVALID_INDEX;
+}
+
+template <typename VarT>
+GLint GetVariableLocation(const std::vector<VarT> &list,
+                          const std::vector<VariableLocation> &locationList,
+                          const std::string &name)
+{
+    size_t nameLengthWithoutArrayIndex;
+    unsigned int arrayIndex = ParseArrayIndex(name, &nameLengthWithoutArrayIndex);
+
+    for (size_t location = 0u; location < locationList.size(); ++location)
+    {
+        const VariableLocation &variableLocation = locationList[location];
+        if (!variableLocation.used())
+        {
+            continue;
+        }
+
+        const VarT &variable = list[variableLocation.index];
+
+        if (angle::BeginsWith(variable.name, name))
+        {
+            if (name.length() == variable.name.length())
+            {
+                ASSERT(name == variable.name);
+                // GLES 3.1 November 2016 page 87.
+                // The string exactly matches the name of the active variable.
+                return static_cast<GLint>(location);
+            }
+            if (name.length() + 3u == variable.name.length() && variable.isArray())
+            {
+                ASSERT(name + "[0]" == variable.name);
+                // The string identifies the base name of an active array, where the string would
+                // exactly match the name of the variable if the suffix "[0]" were appended to the
+                // string.
+                return static_cast<GLint>(location);
+            }
+        }
+        if (variable.isArray() && variableLocation.arrayIndices[0] == arrayIndex &&
+            nameLengthWithoutArrayIndex + 3u == variable.name.length() &&
+            angle::BeginsWith(variable.name, name, nameLengthWithoutArrayIndex))
+        {
+            ASSERT(name.substr(0u, nameLengthWithoutArrayIndex) + "[0]" == variable.name);
+            // The string identifies an active element of the array, where the string ends with the
+            // concatenation of the "[" character, an integer (with no "+" sign, extra leading
+            // zeroes, or whitespace) identifying an array element, and the "]" character, the
+            // integer is less than the number of active elements of the array variable, and where
+            // the string would exactly match the enumerated name of the array if the decimal
+            // integer were replaced with zero.
+            return static_cast<GLint>(location);
+        }
+    }
+
+    return -1;
 }
 
 void CopyStringToBuffer(GLchar *buffer, const std::string &string, GLsizei bufSize, GLsizei *length)
@@ -361,44 +400,6 @@ const std::string &ProgramState::getLabel()
     return mLabel;
 }
 
-GLint ProgramState::getUniformLocation(const std::string &name) const
-{
-    std::vector<unsigned int> subscripts;
-    std::string baseName = ParseResourceName(name, &subscripts);
-
-    for (size_t location = 0; location < mUniformLocations.size(); ++location)
-    {
-        const VariableLocation &uniformLocation = mUniformLocations[location];
-        if (!uniformLocation.used())
-        {
-            continue;
-        }
-
-        const LinkedUniform &uniform = mUniforms[uniformLocation.index];
-
-        if (uniform.name == baseName)
-        {
-            if (uniform.isArray())
-            {
-                if (uniformLocation.arrayIndices == subscripts ||
-                    (uniformLocation.areAllArrayIndicesZero() && subscripts.empty()))
-                {
-                    return static_cast<GLint>(location);
-                }
-            }
-            else
-            {
-                if (subscripts.empty())
-                {
-                    return static_cast<GLint>(location);
-                }
-            }
-        }
-    }
-
-    return -1;
-}
-
 GLuint ProgramState::getUniformIndexFromName(const std::string &name) const
 {
     return GetResourceIndexFromName(mUniforms, name);
@@ -576,8 +577,7 @@ void Program::bindAttributeLocation(GLuint index, const char *name)
 
 void Program::bindUniformLocation(GLuint index, const char *name)
 {
-    // Bind the base uniform name only since array indices other than 0 cannot be bound
-    mUniformLocationBindings.bindLocation(index, ParseResourceName(name, nullptr));
+    mUniformLocationBindings.bindLocation(index, name);
 }
 
 void Program::bindFragmentInputLocation(GLint index, const char *name)
@@ -604,12 +604,13 @@ BindingInfo Program::getFragmentInputBindingInfo(const Context *context, GLint i
 
         ret.valid = true;
 
-        std::string originalName = binding.first;
-        unsigned int arrayIndex  = ParseAndStripArrayIndex(&originalName);
+        size_t nameLengthWithoutArrayIndex;
+        unsigned int arrayIndex = ParseArrayIndex(binding.first, &nameLengthWithoutArrayIndex);
 
         for (const auto &in : inputs)
         {
-            if (in.name == originalName)
+            if (in.name.length() == nameLengthWithoutArrayIndex &&
+                angle::BeginsWith(in.name, binding.first, nameLengthWithoutArrayIndex))
             {
                 if (in.isArray())
                 {
@@ -1133,15 +1134,7 @@ GLint Program::getActiveAttributeMaxLength() const
 
 GLuint Program::getInputResourceIndex(const GLchar *name) const
 {
-    for (GLuint attributeIndex = 0; attributeIndex < mState.mAttributes.size(); ++attributeIndex)
-    {
-        const sh::Attribute &attribute = mState.mAttributes[attributeIndex];
-        if (attribute.name == name)
-        {
-            return attributeIndex;
-        }
-    }
-    return GL_INVALID_INDEX;
+    return GetResourceIndexFromName(mState.mAttributes, std::string(name));
 }
 
 GLuint Program::getOutputResourceIndex(const GLchar *name) const
@@ -1179,9 +1172,7 @@ void Program::getResourceName(GLuint index,
 
     if (bufSize > 0)
     {
-        std::string nameWithArray = (resource.isArray() ? resource.name + "[0]" : resource.name);
-
-        CopyStringToBuffer(name, nameWithArray, bufSize, length);
+        CopyStringToBuffer(name, resource.name, bufSize, length);
     }
 }
 
@@ -1223,21 +1214,7 @@ const sh::OutputVariable &Program::getOutputResource(GLuint index) const
 
 GLint Program::getFragDataLocation(const std::string &name) const
 {
-    std::string baseName(name);
-    unsigned int arrayIndex = ParseAndStripArrayIndex(&baseName);
-    for (auto outputPair : mState.mOutputLocations)
-    {
-        const VariableLocation &locationInfo     = outputPair.second;
-        const sh::OutputVariable &outputVariable = mState.mOutputVariables[locationInfo.index];
-        ASSERT(locationInfo.arrayIndices.size() <= 1);
-        if (outputVariable.name == baseName &&
-            (arrayIndex == GL_INVALID_INDEX || (!locationInfo.arrayIndices.empty() &&
-                                                arrayIndex == locationInfo.arrayIndices.back())))
-        {
-            return static_cast<GLint>(outputPair.first);
-        }
-    }
-    return -1;
+    return GetVariableLocation(mState.mOutputVariables, mState.mOutputLocations, name);
 }
 
 void Program::getActiveUniform(GLuint index,
@@ -1256,10 +1233,6 @@ void Program::getActiveUniform(GLuint index,
         if (bufsize > 0)
         {
             std::string string = uniform.name;
-            if (uniform.isArray())
-            {
-                string += "[0]";
-            }
             CopyStringToBuffer(name, string, bufsize, length);
         }
 
@@ -1350,7 +1323,7 @@ const LinkedUniform &Program::getUniformByIndex(GLuint index) const
 
 GLint Program::getUniformLocation(const std::string &name) const
 {
-    return mState.getUniformLocation(name);
+    return GetVariableLocation(mState.mUniforms, mState.mUniformLocations, name);
 }
 
 GLuint Program::getUniformIndex(const std::string &name) const
@@ -2075,6 +2048,11 @@ bool Program::linkAttributes(const Context *context, InfoLog &infoLog)
     // Link attributes that have a binding location
     for (sh::Attribute &attribute : mState.mAttributes)
     {
+        // GLSL ES 3.10 January 2016 section 4.3.4: Vertex shader inputs can't be arrays or
+        // structures, so we don't need to worry about adjusting their names or generating entries
+        // for each member/element (unlike uniforms for example).
+        ASSERT(!attribute.isArray() && !attribute.isStruct());
+
         int bindingLocation = mAttributeBindings.getBinding(attribute.name);
         if (attribute.location == -1 && bindingLocation != -1)
         {
@@ -2772,18 +2750,32 @@ void Program::linkOutputVariables(const Context *context)
     {
         const sh::OutputVariable &outputVariable = mState.mOutputVariables[outputVariableIndex];
 
+        if (outputVariable.isArray())
+        {
+            // We're following the GLES 3.1 November 2016 spec section 7.3.1.1 Naming Active
+            // Resources and including [0] at the end of array variable names.
+            mState.mOutputVariables[outputVariableIndex].name += "[0]";
+            mState.mOutputVariables[outputVariableIndex].mappedName += "[0]";
+        }
+
         // Don't store outputs for gl_FragDepth, gl_FragColor, etc.
         if (outputVariable.isBuiltIn())
             continue;
 
         // Since multiple output locations must be specified, use 0 for non-specified locations.
-        int baseLocation = (outputVariable.location == -1 ? 0 : outputVariable.location);
+        unsigned int baseLocation =
+            (outputVariable.location == -1 ? 0u
+                                           : static_cast<unsigned int>(outputVariable.location));
 
         for (unsigned int elementIndex = 0; elementIndex < outputVariable.elementCount();
              elementIndex++)
         {
-            const int location = baseLocation + elementIndex;
-            ASSERT(mState.mOutputLocations.count(location) == 0);
+            const unsigned int location = baseLocation + elementIndex;
+            if (location >= mState.mOutputLocations.size())
+            {
+                mState.mOutputLocations.resize(location + 1);
+            }
+            ASSERT(!mState.mOutputLocations.at(location).used());
             if (outputVariable.isArray())
             {
                 mState.mOutputLocations[location] =
@@ -2806,7 +2798,7 @@ void Program::setUniformValuesFromBindingQualifiers()
         const auto &samplerUniform = mState.mUniforms[samplerIndex];
         if (samplerUniform.binding != -1)
         {
-            GLint location = mState.getUniformLocation(samplerUniform.name);
+            GLint location = getUniformLocation(samplerUniform.name);
             ASSERT(location != -1);
             std::vector<GLint> boundTextureUnits;
             for (unsigned int elementIndex = 0; elementIndex < samplerUniform.elementCount();
@@ -2942,9 +2934,9 @@ void Program::defineUniformBlockMembers(const std::vector<VarT> &fields,
 {
     for (const VarT &field : fields)
     {
-        const std::string &fullName = (prefix.empty() ? field.name : prefix + "." + field.name);
+        std::string fullName = (prefix.empty() ? field.name : prefix + "." + field.name);
 
-        const std::string &fullMappedName =
+        std::string fullMappedName =
             (mappedPrefix.empty() ? field.mappedName : mappedPrefix + "." + field.mappedName);
 
         if (field.isStruct())
@@ -2966,6 +2958,12 @@ void Program::defineUniformBlockMembers(const std::vector<VarT> &fields,
             if (!mProgram->getUniformBlockMemberInfo(fullName, fullMappedName, &memberInfo))
             {
                 continue;
+            }
+
+            if (field.isArray())
+            {
+                fullName += "[0]";
+                fullMappedName += "[0]";
             }
 
             LinkedUniform newUniform(field.type, field.precision, fullName, field.arraySize, -1, -1,

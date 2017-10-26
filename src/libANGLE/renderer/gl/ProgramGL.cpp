@@ -663,14 +663,15 @@ void ProgramGL::postLink()
         // "Locations for sequential array indices are not required to be sequential."
         const gl::LinkedUniform &uniform = uniforms[entry.index];
         std::stringstream fullNameStr;
-        fullNameStr << uniform.mappedName;
         if (uniform.isArray())
         {
-            for (auto arrayElementIndexIt = entry.arrayIndices.rbegin();
-                 arrayElementIndexIt != entry.arrayIndices.rend(); ++arrayElementIndexIt)
-            {
-                fullNameStr << "[" << (*arrayElementIndexIt) << "]";
-            }
+            ASSERT(angle::EndsWith(uniform.mappedName, "[0]"));
+            fullNameStr << uniform.mappedName.substr(0, uniform.mappedName.length() - 3);
+            fullNameStr << "[" << entry.arrayIndices[0] << "]";
+        }
+        else
+        {
+            fullNameStr << uniform.mappedName;
         }
         const std::string &fullName = fullNameStr.str();
 

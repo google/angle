@@ -1265,9 +1265,15 @@ void DynamicHLSL::getPixelShaderOutputKey(const gl::ContextState &data,
         const auto &shaderOutputVars =
             metadata.getFragmentShader()->getData().getActiveOutputVariables();
 
-        for (auto outputPair : programData.getOutputLocations())
+        for (size_t outputLocationIndex = 0u;
+             outputLocationIndex < programData.getOutputLocations().size(); ++outputLocationIndex)
         {
-            const VariableLocation &outputLocation   = outputPair.second;
+            const VariableLocation &outputLocation =
+                programData.getOutputLocations().at(outputLocationIndex);
+            if (!outputLocation.used())
+            {
+                continue;
+            }
             const sh::ShaderVariable &outputVariable = shaderOutputVars[outputLocation.index];
             const std::string &variableName          = "out_" + outputVariable.name;
 
@@ -1283,7 +1289,7 @@ void DynamicHLSL::getPixelShaderOutputKey(const gl::ContextState &data,
             outputKeyVariable.type        = outputVariable.type;
             outputKeyVariable.name        = variableName + elementString;
             outputKeyVariable.source = variableName + ArrayIndexString(outputLocation.arrayIndices);
-            outputKeyVariable.outputIndex = outputPair.first;
+            outputKeyVariable.outputIndex = outputLocationIndex;
 
             outPixelShaderKey->push_back(outputKeyVariable);
         }

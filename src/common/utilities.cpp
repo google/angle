@@ -770,19 +770,33 @@ std::string ParseResourceName(const std::string &name, std::vector<unsigned int>
     return name.substr(0, baseNameLength);
 }
 
-unsigned int ParseAndStripArrayIndex(std::string *name)
+unsigned int ParseArrayIndex(const std::string &name, size_t *nameLengthWithoutArrayIndexOut)
 {
+    ASSERT(nameLengthWithoutArrayIndexOut != nullptr);
     unsigned int subscript = GL_INVALID_INDEX;
 
     // Strip any trailing array operator and retrieve the subscript
-    size_t open  = name->find_last_of('[');
-    size_t close = name->find_last_of(']');
-    if (open != std::string::npos && close == name->length() - 1)
+    size_t open = name.find_last_of('[');
+    if (open != std::string::npos && name.back() == ']')
     {
-        subscript = atoi(name->c_str() + open + 1);
-        name->erase(open);
+        bool indexIsValidDecimalNumber = true;
+        for (size_t i = open + 1; i < name.length() - 1u; ++i)
+        {
+            if (!isdigit(name[i]))
+            {
+                indexIsValidDecimalNumber = false;
+                break;
+            }
+        }
+        if (indexIsValidDecimalNumber)
+        {
+            subscript                       = atoi(name.c_str() + open + 1);
+            *nameLengthWithoutArrayIndexOut = open;
+            return subscript;
+        }
     }
 
+    *nameLengthWithoutArrayIndexOut = name.length();
     return subscript;
 }
 

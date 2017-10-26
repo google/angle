@@ -275,7 +275,7 @@ class ProgramState final : angle::NonCopyable
     unsigned int getMaxActiveAttribLocation() const { return mMaxActiveAttribLocation; }
     DrawBufferMask getActiveOutputVariables() const { return mActiveOutputVariables; }
     const std::vector<sh::OutputVariable> &getOutputVariables() const { return mOutputVariables; }
-    const std::map<int, VariableLocation> &getOutputLocations() const { return mOutputLocations; }
+    const std::vector<VariableLocation> &getOutputLocations() const { return mOutputLocations; }
     const std::vector<LinkedUniform> &getUniforms() const { return mUniforms; }
     const std::vector<VariableLocation> &getUniformLocations() const { return mUniformLocations; }
     const std::vector<InterfaceBlock> &getUniformBlocks() const { return mUniformBlocks; }
@@ -299,7 +299,6 @@ class ProgramState final : angle::NonCopyable
         return mAtomicCounterBuffers;
     }
 
-    GLint getUniformLocation(const std::string &name) const;
     GLuint getUniformIndexFromName(const std::string &name) const;
     GLuint getUniformIndexFromLocation(GLint location) const;
     Optional<GLuint> getSamplerIndex(GLint location) const;
@@ -340,7 +339,12 @@ class ProgramState final : angle::NonCopyable
     //  4. Atomic counter uniforms
     //  5. Uniform block uniforms
     // This makes opaque uniform validation easier, since we don't need a separate list.
+    // For generating the entries and naming them we follow the spec: GLES 3.1 November 2016 section
+    // 7.3.1.1 Naming Active Resources. There's a separate entry for each struct member and each
+    // inner array of an array of arrays. Names and mapped names of uniforms that are arrays include
+    // [0] in the end. This makes implementation of queries simpler.
     std::vector<LinkedUniform> mUniforms;
+
     std::vector<VariableLocation> mUniformLocations;
     std::vector<InterfaceBlock> mUniformBlocks;
     std::vector<InterfaceBlock> mShaderStorageBlocks;
@@ -355,8 +359,10 @@ class ProgramState final : angle::NonCopyable
     // An array of the images that are used by the program
     std::vector<gl::ImageBinding> mImageBindings;
 
+    // Names and mapped names of output variables that are arrays include [0] in the end, similarly
+    // to uniforms.
     std::vector<sh::OutputVariable> mOutputVariables;
-    std::map<int, VariableLocation> mOutputLocations;
+    std::vector<VariableLocation> mOutputLocations;
     DrawBufferMask mActiveOutputVariables;
 
     // Fragment output variable base types: FLOAT, INT, or UINT.  Ordered by location.

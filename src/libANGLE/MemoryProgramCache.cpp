@@ -316,15 +316,15 @@ LinkResult MemoryProgramCache::Deserialize(const Context *context,
     }
 
     unsigned int outputVarCount = stream.readInt<unsigned int>();
+    ASSERT(state->mOutputLocations.empty());
     for (unsigned int outputIndex = 0; outputIndex < outputVarCount; ++outputIndex)
     {
-        int locationIndex = stream.readInt<int>();
         VariableLocation locationData;
         stream.readIntVector<unsigned int>(&locationData.arrayIndices);
         stream.readInt(&locationData.index);
         stream.readInt(&locationData.flattenedArrayOffset);
         stream.readBool(&locationData.ignored);
-        state->mOutputLocations[locationIndex] = locationData;
+        state->mOutputLocations.push_back(locationData);
     }
 
     unsigned int outputTypeCount = stream.readInt<unsigned int>();
@@ -481,13 +481,12 @@ void MemoryProgramCache::Serialize(const Context *context,
     }
 
     stream.writeInt(state.getOutputLocations().size());
-    for (const auto &outputPair : state.getOutputLocations())
+    for (const auto &outputVar : state.getOutputLocations())
     {
-        stream.writeInt(outputPair.first);
-        stream.writeIntVector(outputPair.second.arrayIndices);
-        stream.writeIntOrNegOne(outputPair.second.index);
-        stream.writeInt(outputPair.second.flattenedArrayOffset);
-        stream.writeInt(outputPair.second.ignored);
+        stream.writeIntVector(outputVar.arrayIndices);
+        stream.writeIntOrNegOne(outputVar.index);
+        stream.writeInt(outputVar.flattenedArrayOffset);
+        stream.writeInt(outputVar.ignored);
     }
 
     stream.writeInt(state.mOutputVariableTypes.size());

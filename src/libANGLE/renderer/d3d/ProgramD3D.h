@@ -50,7 +50,7 @@ struct D3DUniform : private angle::NonCopyable
 
     // Duplicated from the GL layer
     const gl::UniformTypeInfo &typeInfo;
-    std::string name;
+    std::string name;  // Names of arrays don't include [0], unlike at the GL layer.
     unsigned int arraySize;
 
     // Pointer to a system copies of the data. Separate pointers for each uniform storage type.

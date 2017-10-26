@@ -10,6 +10,7 @@
 
 #include "libANGLE/UniformLinker.h"
 
+#include "common/string_utils.h"
 #include "common/utilities.h"
 #include "libANGLE/Caps.h"
 #include "libANGLE/Context.h"
@@ -33,7 +34,21 @@ LinkedUniform *FindUniform(std::vector<LinkedUniform> &list, const std::string &
     return nullptr;
 }
 
-}  // anonymouse namespace
+int GetUniformLocationBinding(const Program::Bindings &uniformLocationBindings,
+                              const sh::Uniform &uniform)
+{
+    int binding = uniformLocationBindings.getBinding(uniform.name);
+    if (uniform.isArray() && binding == -1)
+    {
+        // Bindings for array uniforms can be set either with or without [0] in the end.
+        ASSERT(angle::EndsWith(uniform.name, "[0]"));
+        std::string nameWithoutIndex = uniform.name.substr(0u, uniform.name.length() - 3u);
+        return uniformLocationBindings.getBinding(nameWithoutIndex);
+    }
+    return binding;
+}
+
+}  // anonymous namespace
 
 UniformLinker::UniformLinker(const ProgramState &state) : mState(state)
 {
@@ -191,7 +206,7 @@ bool UniformLinker::indexUniforms(InfoLog &infoLog,
             continue;
         }
 
-        int preSetLocation = uniformLocationBindings.getBinding(uniform.name);
+        int preSetLocation = GetUniformLocationBinding(uniformLocationBindings, uniform);
         int shaderLocation = uniform.location;
 
         if (shaderLocation != -1)
@@ -264,7 +279,7 @@ bool UniformLinker::gatherUniformLocationsAndCheckConflicts(
             continue;
         }
 
-        int apiBoundLocation = uniformLocationBindings.getBinding(uniform.name);
+        int apiBoundLocation = GetUniformLocationBinding(uniformLocationBindings, uniform);
         int shaderLocation   = uniform.location;
 
         if (shaderLocation != -1)
@@ -518,7 +533,19 @@ UniformLinker::ShaderUniformCount UniformLinker::flattenUniformImpl(
     {
         uniformList = atomicCounterUniforms;
     }
-    LinkedUniform *existingUniform = FindUniform(*uniformList, fullName);
+
+    std::string fullNameWithArrayIndex(fullName);
+    std::string fullMappedNameWithArrayIndex(fullMappedName);
+
+    if (uniform.isArray())
+    {
+        // We're following the GLES 3.1 November 2016 spec section 7.3.1.1 Naming Active Resources
+        // and including [0] at the end of array variable names.
+        fullNameWithArrayIndex += "[0]";
+        fullMappedNameWithArrayIndex += "[0]";
+    }
+
+    LinkedUniform *existingUniform = FindUniform(*uniformList, fullNameWithArrayIndex);
     if (existingUniform)
     {
         if (binding != -1)
@@ -541,10 +568,10 @@ UniformLinker::ShaderUniformCount UniformLinker::flattenUniformImpl(
     }
     else
     {
-        LinkedUniform linkedUniform(uniform.type, uniform.precision, fullName, uniform.arraySize,
-                                    binding, offset, *location, -1,
+        LinkedUniform linkedUniform(uniform.type, uniform.precision, fullNameWithArrayIndex,
+                                    uniform.arraySize, binding, offset, *location, -1,
                                     sh::BlockMemberInfo::getDefaultBlockInfo());
-        linkedUniform.mappedName = fullMappedName;
+        linkedUniform.mappedName = fullMappedNameWithArrayIndex;
         linkedUniform.staticUse = markStaticUse;
         if (markStaticUse)
         {

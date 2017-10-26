@@ -75,4 +75,97 @@ TEST(ParseResourceName, TrailingWhitespace)
     EXPECT_TRUE(indices.empty());
 }
 
+// Parse a string without any index.
+TEST(ParseArrayIndex, NoArrayIndex)
+{
+    size_t nameLengthWithoutArrayIndex;
+    EXPECT_EQ(GL_INVALID_INDEX, gl::ParseArrayIndex("foo", &nameLengthWithoutArrayIndex));
+    EXPECT_EQ(3u, nameLengthWithoutArrayIndex);
 }
+
+// Parse an empty string for an array index.
+TEST(ParseArrayIndex, EmptyString)
+{
+    size_t nameLengthWithoutArrayIndex;
+    EXPECT_EQ(GL_INVALID_INDEX, gl::ParseArrayIndex("", &nameLengthWithoutArrayIndex));
+    EXPECT_EQ(0u, nameLengthWithoutArrayIndex);
+}
+
+// A valid array index is parsed correctly from the end of the string.
+TEST(ParseArrayIndex, ArrayIndex)
+{
+    size_t nameLengthWithoutArrayIndex;
+    EXPECT_EQ(123u, gl::ParseArrayIndex("foo[123]", &nameLengthWithoutArrayIndex));
+    EXPECT_EQ(3u, nameLengthWithoutArrayIndex);
+}
+
+// An array index from the middle of the string is not parsed.
+TEST(ParseArrayIndex, ArrayIndexInMiddle)
+{
+    size_t nameLengthWithoutArrayIndex;
+    EXPECT_EQ(GL_INVALID_INDEX, gl::ParseArrayIndex("foo[123].bar", &nameLengthWithoutArrayIndex));
+    EXPECT_EQ(12u, nameLengthWithoutArrayIndex);
+}
+
+// Trailing whitespace in the parsed string is taken into account.
+TEST(ParseArrayIndex, TrailingWhitespace)
+{
+    size_t nameLengthWithoutArrayIndex;
+    EXPECT_EQ(GL_INVALID_INDEX, gl::ParseArrayIndex("foo[123] ", &nameLengthWithoutArrayIndex));
+    EXPECT_EQ(9u, nameLengthWithoutArrayIndex);
+}
+
+// Only the last index is parsed.
+TEST(ParseArrayIndex, MultipleArrayIndices)
+{
+    size_t nameLengthWithoutArrayIndex;
+    EXPECT_EQ(34u, gl::ParseArrayIndex("foo[12][34]", &nameLengthWithoutArrayIndex));
+    EXPECT_EQ(7u, nameLengthWithoutArrayIndex);
+}
+
+// GetProgramResourceLocation spec in GLES 3.1 November 2016 page 87 mentions "decimal" integer.
+// So an integer in hexadecimal format should not parse as an array index.
+TEST(ParseArrayIndex, HexArrayIndex)
+{
+    size_t nameLengthWithoutArrayIndex;
+    EXPECT_EQ(GL_INVALID_INDEX, gl::ParseArrayIndex("foo[0xff]", &nameLengthWithoutArrayIndex));
+    EXPECT_EQ(9u, nameLengthWithoutArrayIndex);
+}
+
+// GetProgramResourceLocation spec in GLES 3.1 November 2016 page 87 mentions that the array
+// index should not contain a leading plus sign.
+TEST(ParseArrayIndex, ArrayIndexLeadingPlus)
+{
+    size_t nameLengthWithoutArrayIndex;
+    EXPECT_EQ(GL_INVALID_INDEX, gl::ParseArrayIndex("foo[+1]", &nameLengthWithoutArrayIndex));
+    EXPECT_EQ(7u, nameLengthWithoutArrayIndex);
+}
+
+// GetProgramResourceLocation spec in GLES 3.1 November 2016 page 87 says that index should not
+// contain whitespace. Test leading whitespace.
+TEST(ParseArrayIndex, ArrayIndexLeadingWhiteSpace)
+{
+    size_t nameLengthWithoutArrayIndex;
+    EXPECT_EQ(GL_INVALID_INDEX, gl::ParseArrayIndex("foo[ 0]", &nameLengthWithoutArrayIndex));
+    EXPECT_EQ(7u, nameLengthWithoutArrayIndex);
+}
+
+// GetProgramResourceLocation spec in GLES 3.1 November 2016 page 87 says that index should not
+// contain whitespace. Test trailing whitespace.
+TEST(ParseArrayIndex, ArrayIndexTrailingWhiteSpace)
+{
+    size_t nameLengthWithoutArrayIndex;
+    EXPECT_EQ(GL_INVALID_INDEX, gl::ParseArrayIndex("foo[0 ]", &nameLengthWithoutArrayIndex));
+    EXPECT_EQ(7u, nameLengthWithoutArrayIndex);
+}
+
+// GetProgramResourceLocation spec in GLES 3.1 November 2016 page 87 says that index should only
+// contain an integer.
+TEST(ParseArrayIndex, ArrayIndexBogus)
+{
+    size_t nameLengthWithoutArrayIndex;
+    EXPECT_EQ(GL_INVALID_INDEX, gl::ParseArrayIndex("foo[0bogus]", &nameLengthWithoutArrayIndex));
+    EXPECT_EQ(11u, nameLengthWithoutArrayIndex);
+}
+
+}  // anonymous namespace
