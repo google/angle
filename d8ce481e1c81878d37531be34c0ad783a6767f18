@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "e9d1c9ee_fe7cb078",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2948,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-10-26T08:41:54Z",
+      "side": 1,
+      "message": "In ESSL 3.10 section 4.4.4, it has below sentences:\n1. \u0027The std430 qualifier is supported only for shader storage blocks; a shader using the std430 qualifier on a uniform block will fail to compile.\u0027\n2. \u0027Layout qualifiers on member declarations cannot use the shared, packed, std140, or std430 qualifiers. These can only be used at global scope or on a block declaration.\u0027",
+      "parentUuid": "f4332100_363b1784",
+      "range": {
+        "startLine": 2947,
+        "startChar": 0,
+        "endLine": 2948,
+        "endChar": 64
+      },
+      "revId": "d8ce481e1c81878d37531be34c0ad783a6767f18",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "1953c453_17d9ec86",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 2
