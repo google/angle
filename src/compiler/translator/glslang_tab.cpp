@@ -4358,7 +4358,7 @@ yyreduce:
   case 229:
 
     {
-        (yyval.interm.fieldList) = (yyvsp[0].interm.fieldList);
+        (yyval.interm.fieldList) = context->addStructFieldList((yyvsp[0].interm.fieldList), (yylsp[0]));
     }
 
     break;

@@ -1187,7 +1187,7 @@ struct_specifier
 
 struct_declaration_list
     : struct_declaration {
-        $$ = $1;
+        $$ = context->addStructFieldList($1, @1);
     }
     | struct_declaration_list struct_declaration {
         $$ = context->combineStructFieldLists($1, $2, @2);

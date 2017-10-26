@@ -4573,19 +4573,39 @@ TField *TParseContext::parseStructArrayDeclarator(TString *identifier,
     return new TField(type, identifier, loc);
 }
 
+void TParseContext::checkDoesNotHaveDuplicateFieldName(const TFieldList::const_iterator begin,
+                                                       const TFieldList::const_iterator end,
+                                                       const TString &name,
+                                                       const TSourceLoc &location)
+{
+    for (auto fieldIter = begin; fieldIter != end; ++fieldIter)
+    {
+        if ((*fieldIter)->name() == name)
+        {
+            error(location, "duplicate field name in structure", name.c_str());
+        }
+    }
+}
+
+TFieldList *TParseContext::addStructFieldList(TFieldList *fields, const TSourceLoc &location)
+{
+    for (TFieldList::const_iterator fieldIter = fields->begin(); fieldIter != fields->end();
+         ++fieldIter)
+    {
+        checkDoesNotHaveDuplicateFieldName(fields->begin(), fieldIter, (*fieldIter)->name(),
+                                           location);
+    }
+    return fields;
+}
+
 TFieldList *TParseContext::combineStructFieldLists(TFieldList *processedFields,
                                                    const TFieldList *newlyAddedFields,
                                                    const TSourceLoc &location)
 {
     for (TField *field : *newlyAddedFields)
     {
-        for (TField *oldField : *processedFields)
-        {
-            if (oldField->name() == field->name())
-            {
-                error(location, "duplicate field name in structure", field->name().c_str());
-            }
-        }
+        checkDoesNotHaveDuplicateFieldName(processedFields->begin(), processedFields->end(),
+                                           field->name(), location);
         processedFields->push_back(field);
     }
     return processedFields;

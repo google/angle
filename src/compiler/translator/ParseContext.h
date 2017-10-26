@@ -306,6 +306,11 @@ class TParseContext : angle::NonCopyable
                                        unsigned int arraySize,
                                        const TSourceLoc &arraySizeLoc);
 
+    void checkDoesNotHaveDuplicateFieldName(const TFieldList::const_iterator begin,
+                                            const TFieldList::const_iterator end,
+                                            const TString &name,
+                                            const TSourceLoc &location);
+    TFieldList *addStructFieldList(TFieldList *fields, const TSourceLoc &location);
     TFieldList *combineStructFieldLists(TFieldList *processedFields,
                                         const TFieldList *newlyAddedFields,
                                         const TSourceLoc &location);

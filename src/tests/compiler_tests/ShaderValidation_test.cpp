@@ -5173,3 +5173,24 @@ TEST_F(FragmentShaderValidationTest, PartiallyUnsizedArrayOfArraysConstructor)
         FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
     }
 }
+
+// Test that duplicate field names in a struct declarator list are validated.
+TEST_F(FragmentShaderValidationTest, DuplicateFieldNamesInStructDeclaratorList)
+{
+    const std::string &shaderString =
+        R"(precision mediump float;
+
+        struct S {
+            float f, f;
+        };
+
+        void main()
+        {
+            gl_FragColor = vec4(1.0);
+        })";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}
