@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "01c72b00_159db3e2",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-10-26T14:04:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "367f6704_1206af04",
+      "range": {
+        "startLine": 40,
+        "startChar": 16,
+        "endLine": 40,
+        "endChar": 19
+      },
+      "revId": "d8ce481e1c81878d37531be34c0ad783a6767f18",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e144b093_0441e909",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 2
@@ -45,6 +69,30 @@
       "revId": "d8ce481e1c81878d37531be34c0ad783a6767f18",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2efcc48f_f0657e41",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 917,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-10-26T14:04:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e144b093_0441e909",
+      "range": {
+        "startLine": 917,
+        "startChar": 36,
+        "endLine": 917,
+        "endChar": 45
+      },
+      "revId": "d8ce481e1c81878d37531be34c0ad783a6767f18",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -130,6 +178,30 @@
       "side": 1,
       "message": "I think this should say std140 as it does?",
       "parentUuid": "1953c453_17d9ec86",
+      "range": {
+        "startLine": 4129,
+        "startChar": 43,
+        "endLine": 4129,
+        "endChar": 49
+      },
+      "revId": "d8ce481e1c81878d37531be34c0ad783a6767f18",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7048cc62_069fa22d",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 4129,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-10-26T14:04:22Z",
+      "side": 1,
+      "message": "Yes, std140 is not a typo. We should use it as it does.",
+      "parentUuid": "d0b066f1_0c9c897c",
       "range": {
         "startLine": 4129,
         "startChar": 43,
