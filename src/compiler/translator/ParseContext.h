@@ -300,7 +300,7 @@ class TParseContext : angle::NonCopyable
     TField *parseStructDeclarator(TString *identifier, const TSourceLoc &loc);
     TField *parseStructArrayDeclarator(TString *identifier,
                                        const TSourceLoc &loc,
-                                       TIntermTyped *arraySize,
+                                       unsigned int arraySize,
                                        const TSourceLoc &arraySizeLoc);
 
     TFieldList *combineStructFieldLists(TFieldList *processedFields,

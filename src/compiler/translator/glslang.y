@@ -1218,8 +1218,8 @@ struct_declarator
     : identifier {
         $$ = context->parseStructDeclarator($1.string, @1);
     }
-    | identifier LEFT_BRACKET constant_expression RIGHT_BRACKET {
-        $$ = context->parseStructArrayDeclarator($1.string, @1, $3, @3);
+    | identifier array_specifier {
+        $$ = context->parseStructArrayDeclarator($1.string, @1, $2, @2);
     }
     ;
 

@@ -4555,14 +4555,13 @@ TField *TParseContext::parseStructDeclarator(TString *identifier, const TSourceL
 
 TField *TParseContext::parseStructArrayDeclarator(TString *identifier,
                                                   const TSourceLoc &loc,
-                                                  TIntermTyped *arraySize,
+                                                  unsigned int arraySize,
                                                   const TSourceLoc &arraySizeLoc)
 {
     checkIsNotReserved(loc, *identifier);
 
     TType *type       = new TType(EbtVoid, EbpUndefined);
-    unsigned int size = checkIsValidArraySize(arraySizeLoc, arraySize);
-    type->makeArray(size);
+    type->makeArray(arraySize);
 
     return new TField(type, identifier, loc);
 }
