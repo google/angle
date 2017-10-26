@@ -91,13 +91,12 @@ class GeometryShaderTest : public ShaderCompileTreeTest
         return sstream.str();
     }
 
+    const std::string kVersion                         = "#version 310 es\n";
+    const std::array<std::string, 2> kExtensionStrings = {
+        {"#extension GL_OES_geometry_shader", "#extension GL_EXT_geometry_shader"}};
     const std::string kHeader =
         "#version 310 es\n"
         "#extension GL_OES_geometry_shader : require\n";
-    const std::string kEmptyBody =
-        "void main()\n"
-        "{\n"
-        "}\n";
     const std::string kInputLayout  = "layout (points) in;\n";
     const std::string kOutputLayout = "layout (points, max_vertices = 1) out;\n";
 
@@ -108,6 +107,29 @@ class GeometryShaderTest : public ShaderCompileTreeTest
         {"lines_adjacency", 4},
         {"triangles", 3},
         {"triangles_adjacency", 6}};
+
+    const std::string kEmptyBody =
+        "void main()\n"
+        "{\n"
+        "}\n";
+    const std::string kShaderBody =
+        R"(layout(triangles, invocations = 2) in;
+        layout(triangle_strip, max_vertices = 3) out;
+        in vec4 i_color[];
+        out vec4 o_color;
+        void main()
+        {
+            int maxValue = gl_MaxGeometryInputComponents;
+            for (int i = 0; i < i_color.length(); i++)
+            {
+                gl_Position = gl_in[i].gl_Position;
+                o_color = i_color[i];
+                gl_PrimitiveID = gl_PrimitiveIDIn;
+                gl_Layer = gl_InvocationID;
+                EmitVertex();
+            }
+            EndPrimitive();
+        })";
 };
 
 class GeometryShaderOutputCodeTest : public MatchOutputCodeTest
@@ -1563,4 +1585,58 @@ TEST_F(GeometryShaderOutputCodeTest, ValidateGLInMembersInOutputShaderString)
 
     compile(shaderString2);
     EXPECT_TRUE(foundInESSLCode("].gl_Position"));
+}
+
+// Verify that Geometry Shaders are supported in GLSL ES version 310 with EXT_geometry_shader
+// enabled.
+TEST_F(GeometryShaderTest, Version310WithEXTExtension)
+{
+    std::ostringstream stream;
+
+    const std::string &kEXTExtensionString = kExtensionStrings[1];
+    ASSERT_TRUE(kEXTExtensionString == "#extension GL_EXT_geometry_shader");
+
+    stream << kVersion << kEXTExtensionString << " : require\n" << kShaderBody;
+
+    if (!compile(stream.str()))
+    {
+        FAIL() << "Shader compilation failed, expecting success:\n" << mInfoLog;
+    }
+}
+
+// Verify that Geometry Shaders are supported in GLSL ES version 310 with mixed using
+// "EXT_geometry_shader" and "OES_geometry_shader" extension strings.
+TEST_F(GeometryShaderTest, MixedUseOESAndEXTExtension)
+{
+    const std::array<std::string, 3> kExtensionBehaviors = {{"require", "disable", "warn"}};
+
+    ASSERT_TRUE(kExtensionStrings.size() == 2u);
+
+    for (const std::string &extensionBehavior1 : kExtensionBehaviors)
+    {
+        for (const std::string &extensionBehavior2 : kExtensionBehaviors)
+        {
+            for (size_t i = 0; i < 2u; ++i)
+            {
+                std::ostringstream stream;
+                stream << kVersion << kExtensionStrings[i] << " : " << extensionBehavior1 << "\n"
+                       << kExtensionStrings[1 - i] << " : " << extensionBehavior2 << "\n"
+                       << kShaderBody;
+
+                bool shouldCompile =
+                    extensionBehavior1 != "disable" || extensionBehavior2 != "disable";
+                if (shouldCompile != compile(stream.str()))
+                {
+                    if (shouldCompile)
+                    {
+                        FAIL() << "Shader compilation failed, expecting success:\n" << mInfoLog;
+                    }
+                    else
+                    {
+                        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+                    }
+                }
+            }
+        }
+    }
 }

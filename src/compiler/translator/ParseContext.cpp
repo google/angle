@@ -1159,6 +1159,7 @@ void TParseContext::checkIsParameterQualifierValid(
 bool TParseContext::checkCanUseExtension(const TSourceLoc &line, TExtension extension)
 {
     ASSERT(extension != TExtension::UNDEFINED);
+    ASSERT(extension != TExtension::EXT_geometry_shader);
     const TExtensionBehavior &extBehavior   = extensionBehavior();
     TExtensionBehavior::const_iterator iter = extBehavior.find(extension);
     if (iter == extBehavior.end())
@@ -1169,11 +1170,53 @@ bool TParseContext::checkCanUseExtension(const TSourceLoc &line, TExtension exte
     // In GLSL ES, an extension's default behavior is "disable".
     if (iter->second == EBhDisable || iter->second == EBhUndefined)
     {
+        // We also need to check EXT_geometry_shader because internally we always use
+        // TExtension::OES_geometry_shader to represent both OES_geometry_shader and
+        // EXT_geometry_shader.
+        if (extension == TExtension::OES_geometry_shader)
+        {
+            TExtensionBehavior::const_iterator iterExt =
+                extBehavior.find(TExtension::EXT_geometry_shader);
+            ASSERT(iterExt != extBehavior.end());
+            if (iterExt->second == EBhUndefined)
+            {
+                error(line, "extension is disabled",
+                      GetExtensionNameString(TExtension::OES_geometry_shader));
+                return false;
+            }
+            if (iterExt->second == EBhDisable)
+            {
+                error(line, "extension is disabled",
+                      GetExtensionNameString(TExtension::EXT_geometry_shader));
+                return false;
+            }
+            if (iterExt->second == EBhWarn)
+            {
+                warning(line, "extension is being used",
+                        GetExtensionNameString(TExtension::EXT_geometry_shader));
+            }
+
+            return true;
+        }
+
         error(line, "extension is disabled", GetExtensionNameString(extension));
         return false;
     }
     if (iter->second == EBhWarn)
     {
+        if (extension == TExtension::OES_geometry_shader)
+        {
+            TExtensionBehavior::const_iterator iterExt =
+                extBehavior.find(TExtension::EXT_geometry_shader);
+            ASSERT(iterExt != extBehavior.end());
+            // We should output no warnings when OES_geometry_shader is declared as "warn" and
+            // EXT_geometry_shader is declared as "require" or "enable".
+            if (iterExt->second == EBhRequire || iterExt->second == EBhEnable)
+            {
+                return true;
+            }
+        }
+
         warning(line, "extension is being used", GetExtensionNameString(extension));
         return true;
     }
@@ -4233,47 +4276,44 @@ TLayoutQualifier TParseContext::parseLayoutQualifier(const TString &qualifierTyp
         checkLayoutQualifierSupported(qualifierTypeLine, qualifierType, 310);
         qualifier.imageInternalFormat = EiifR32UI;
     }
-    else if (qualifierType == "points" && isExtensionEnabled(TExtension::OES_geometry_shader) &&
-             mShaderType == GL_GEOMETRY_SHADER_OES)
+    else if (qualifierType == "points" && mShaderType == GL_GEOMETRY_SHADER_OES &&
+             checkCanUseExtension(qualifierTypeLine, TExtension::OES_geometry_shader))
     {
         checkLayoutQualifierSupported(qualifierTypeLine, qualifierType, 310);
         qualifier.primitiveType = EptPoints;
     }
-    else if (qualifierType == "lines" && isExtensionEnabled(TExtension::OES_geometry_shader) &&
-             mShaderType == GL_GEOMETRY_SHADER_OES)
+    else if (qualifierType == "lines" && mShaderType == GL_GEOMETRY_SHADER_OES &&
+             checkCanUseExtension(qualifierTypeLine, TExtension::OES_geometry_shader))
     {
         checkLayoutQualifierSupported(qualifierTypeLine, qualifierType, 310);
         qualifier.primitiveType = EptLines;
     }
-    else if (qualifierType == "lines_adjacency" &&
-             isExtensionEnabled(TExtension::OES_geometry_shader) &&
-             mShaderType == GL_GEOMETRY_SHADER_OES)
+    else if (qualifierType == "lines_adjacency" && mShaderType == GL_GEOMETRY_SHADER_OES &&
+             checkCanUseExtension(qualifierTypeLine, TExtension::OES_geometry_shader))
     {
         checkLayoutQualifierSupported(qualifierTypeLine, qualifierType, 310);
         qualifier.primitiveType = EptLinesAdjacency;
     }
-    else if (qualifierType == "triangles" && isExtensionEnabled(TExtension::OES_geometry_shader) &&
-             mShaderType == GL_GEOMETRY_SHADER_OES)
+    else if (qualifierType == "triangles" && mShaderType == GL_GEOMETRY_SHADER_OES &&
+             checkCanUseExtension(qualifierTypeLine, TExtension::OES_geometry_shader))
     {
         checkLayoutQualifierSupported(qualifierTypeLine, qualifierType, 310);
         qualifier.primitiveType = EptTriangles;
     }
-    else if (qualifierType == "triangles_adjacency" &&
-             isExtensionEnabled(TExtension::OES_geometry_shader) &&
-             mShaderType == GL_GEOMETRY_SHADER_OES)
+    else if (qualifierType == "triangles_adjacency" && mShaderType == GL_GEOMETRY_SHADER_OES &&
+             checkCanUseExtension(qualifierTypeLine, TExtension::OES_geometry_shader))
     {
         checkLayoutQualifierSupported(qualifierTypeLine, qualifierType, 310);
         qualifier.primitiveType = EptTrianglesAdjacency;
     }
-    else if (qualifierType == "line_strip" && isExtensionEnabled(TExtension::OES_geometry_shader) &&
-             mShaderType == GL_GEOMETRY_SHADER_OES)
+    else if (qualifierType == "line_strip" && mShaderType == GL_GEOMETRY_SHADER_OES &&
+             checkCanUseExtension(qualifierTypeLine, TExtension::OES_geometry_shader))
     {
         checkLayoutQualifierSupported(qualifierTypeLine, qualifierType, 310);
         qualifier.primitiveType = EptLineStrip;
     }
-    else if (qualifierType == "triangle_strip" &&
-             isExtensionEnabled(TExtension::OES_geometry_shader) &&
-             mShaderType == GL_GEOMETRY_SHADER_OES)
+    else if (qualifierType == "triangle_strip" && mShaderType == GL_GEOMETRY_SHADER_OES &&
+             checkCanUseExtension(qualifierTypeLine, TExtension::OES_geometry_shader))
     {
         checkLayoutQualifierSupported(qualifierTypeLine, qualifierType, 310);
         qualifier.primitiveType = EptTriangleStrip;
@@ -4429,15 +4469,13 @@ TLayoutQualifier TParseContext::parseLayoutQualifier(const TString &qualifierTyp
     {
         parseNumViews(intValue, intValueLine, intValueString, &qualifier.numViews);
     }
-    else if (qualifierType == "invocations" &&
-             isExtensionEnabled(TExtension::OES_geometry_shader) &&
-             mShaderType == GL_GEOMETRY_SHADER_OES)
+    else if (qualifierType == "invocations" && mShaderType == GL_GEOMETRY_SHADER_OES &&
+             checkCanUseExtension(qualifierTypeLine, TExtension::OES_geometry_shader))
     {
         parseInvocations(intValue, intValueLine, intValueString, &qualifier.invocations);
     }
-    else if (qualifierType == "max_vertices" &&
-             isExtensionEnabled(TExtension::OES_geometry_shader) &&
-             mShaderType == GL_GEOMETRY_SHADER_OES)
+    else if (qualifierType == "max_vertices" && mShaderType == GL_GEOMETRY_SHADER_OES &&
+             checkCanUseExtension(qualifierTypeLine, TExtension::OES_geometry_shader))
     {
         parseMaxVertices(intValue, intValueLine, intValueString, &qualifier.maxVertices);
     }

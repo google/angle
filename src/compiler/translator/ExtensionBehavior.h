@@ -23,6 +23,7 @@ enum class TExtension
     EXT_blend_func_extended,
     EXT_draw_buffers,
     EXT_frag_depth,
+    EXT_geometry_shader,
     EXT_shader_framebuffer_fetch,
     EXT_shader_texture_lod,
     EXT_YUV_target,

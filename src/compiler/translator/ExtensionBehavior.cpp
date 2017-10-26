@@ -18,6 +18,7 @@
     OP(EXT_blend_func_extended)         \
     OP(EXT_draw_buffers)                \
     OP(EXT_frag_depth)                  \
+    OP(EXT_geometry_shader)             \
     OP(EXT_shader_framebuffer_fetch)    \
     OP(EXT_shader_texture_lod)          \
     OP(EXT_YUV_target)                  \
