@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "79fa6466_101417ea",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2873,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-10-26T06:21:36Z",
+      "side": 0,
+      "message": "This test case failed on windows broadwell driver 4703.",
+      "revId": "6dee4d8c1f5c00afdc428225b2757fe66a5fd1e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "02136f9d_9ccebeb1",
+        "filename": "src/tests/gl_tests/TransformFeedbackTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1067,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-10-26T06:21:36Z",
+      "side": 0,
+      "message": "This test case failed on broadwell windows driver 4703",
+      "revId": "6dee4d8c1f5c00afdc428225b2757fe66a5fd1e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
