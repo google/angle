@@ -3485,8 +3485,10 @@ TIntermTyped *TParseContext::addConstructor(TIntermSequence *arguments,
         }
         TIntermTyped *firstElement = arguments->at(0)->getAsTyped();
         ASSERT(firstElement);
-        type.setArraySize(type.getArraySizes().size() - 1u,
-                          static_cast<unsigned int>(arguments->size()));
+        if (type.getOutermostArraySize() == 0u)
+        {
+            type.sizeOutermostUnsizedArray(static_cast<unsigned int>(arguments->size()));
+        }
         for (size_t i = 0; i < firstElement->getType().getArraySizes().size(); ++i)
         {
             if (type.getArraySizes()[i] == 0u)

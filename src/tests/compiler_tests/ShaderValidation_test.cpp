@@ -5152,3 +5152,24 @@ TEST_F(FragmentShaderValidationTest, UnsizedNamelessParameter)
         FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
     }
 }
+
+// Test that partially unsized array of arrays constructor sizes are validated.
+TEST_F(FragmentShaderValidationTest, PartiallyUnsizedArrayOfArraysConstructor)
+{
+    const std::string &shaderString =
+        R"(#version 310 es
+
+        precision highp float;
+        out vec4 color;
+
+        void main()
+        {
+            int a[][] = int[2][](int[1](1));
+            color = vec4(a[0][0]);
+        })";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}
