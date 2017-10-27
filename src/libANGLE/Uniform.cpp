@@ -46,7 +46,7 @@ void StaticallyUsed::setStaticUse(GLenum shaderType, bool used)
     }
 }
 
-void StaticallyUsed::unionWith(const StaticallyUsed &other)
+void StaticallyUsed::unionReferencesWith(const StaticallyUsed &other)
 {
     vertexStaticUse |= other.vertexStaticUse;
     fragmentStaticUse |= other.fragmentStaticUse;

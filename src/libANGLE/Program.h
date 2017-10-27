@@ -496,6 +496,7 @@ class Program final : angle::NonCopyable, public LabeledObject
 
     void getActiveUniformBlockName(GLuint uniformBlockIndex, GLsizei bufSize, GLsizei *length, GLchar *uniformBlockName) const;
     GLuint getActiveUniformBlockCount() const;
+    GLuint getActiveAtomicCounterBufferCount() const;
     GLuint getActiveShaderStorageBlockCount() const;
     GLint getActiveUniformBlockMaxLength() const;
 

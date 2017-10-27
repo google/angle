@@ -1659,6 +1659,11 @@ GLuint Program::getActiveUniformBlockCount() const
     return static_cast<GLuint>(mState.mUniformBlocks.size());
 }
 
+GLuint Program::getActiveAtomicCounterBufferCount() const
+{
+    return static_cast<GLuint>(mState.mAtomicCounterBuffers.size());
+}
+
 GLuint Program::getActiveShaderStorageBlockCount() const
 {
     return static_cast<GLuint>(mState.mShaderStorageBlocks.size());
@@ -2006,6 +2011,7 @@ bool Program::linkAtomicCounterBuffers()
                 buffer.memberIndexes.push_back(index);
                 uniform.bufferIndex = bufferIndex;
                 found               = true;
+                buffer.unionReferencesWith(uniform);
                 break;
             }
         }
@@ -2014,6 +2020,7 @@ bool Program::linkAtomicCounterBuffers()
             AtomicCounterBuffer atomicCounterBuffer;
             atomicCounterBuffer.binding = uniform.binding;
             atomicCounterBuffer.memberIndexes.push_back(index);
+            atomicCounterBuffer.unionReferencesWith(uniform);
             mState.mAtomicCounterBuffers.push_back(atomicCounterBuffer);
             uniform.bufferIndex = static_cast<int>(mState.mAtomicCounterBuffers.size() - 1);
         }

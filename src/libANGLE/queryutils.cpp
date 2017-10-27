@@ -543,11 +543,13 @@ GLint QueryProgramInterfaceActiveResources(const Program *program, GLenum progra
         case GL_UNIFORM_BLOCK:
             return clampCast<GLint>(program->getState().getUniformBlocks().size());
 
+        case GL_ATOMIC_COUNTER_BUFFER:
+            return clampCast<GLint>(program->getState().getAtomicCounterBuffers().size());
+
         // TODO(jie.a.chen@intel.com): more interfaces.
         case GL_TRANSFORM_FEEDBACK_VARYING:
         case GL_BUFFER_VARIABLE:
         case GL_SHADER_STORAGE_BLOCK:
-        case GL_ATOMIC_COUNTER_BUFFER:
             UNIMPLEMENTED();
             return 0;
 
@@ -613,10 +615,12 @@ GLint QueryProgramInterfaceMaxNumActiveVariables(const Program *program, GLenum 
         case GL_UNIFORM_BLOCK:
             return FindMaxSize(program->getState().getUniformBlocks(),
                                &InterfaceBlock::memberIndexes);
+        case GL_ATOMIC_COUNTER_BUFFER:
+            return FindMaxSize(program->getState().getAtomicCounterBuffers(),
+                               &AtomicCounterBuffer::memberIndexes);
 
         // TODO(jie.a.chen@intel.com): more interfaces.
         case GL_SHADER_STORAGE_BLOCK:
-        case GL_ATOMIC_COUNTER_BUFFER:
             UNIMPLEMENTED();
             return 0;
 
@@ -650,6 +654,117 @@ GLenum GetUniformPropertyEnum(GLenum prop)
         default:
             return prop;
     }
+}
+
+GLenum GetUniformBlockPropertyEnum(GLenum prop)
+{
+    switch (prop)
+    {
+        case GL_UNIFORM_BLOCK_BINDING:
+            return GL_BUFFER_BINDING;
+
+        case GL_UNIFORM_BLOCK_DATA_SIZE:
+            return GL_BUFFER_DATA_SIZE;
+
+        case GL_UNIFORM_BLOCK_NAME_LENGTH:
+            return GL_NAME_LENGTH;
+
+        case GL_UNIFORM_BLOCK_ACTIVE_UNIFORMS:
+            return GL_NUM_ACTIVE_VARIABLES;
+
+        case GL_UNIFORM_BLOCK_ACTIVE_UNIFORM_INDICES:
+            return GL_ACTIVE_VARIABLES;
+
+        case GL_UNIFORM_BLOCK_REFERENCED_BY_VERTEX_SHADER:
+            return GL_REFERENCED_BY_VERTEX_SHADER;
+
+        case GL_UNIFORM_BLOCK_REFERENCED_BY_FRAGMENT_SHADER:
+            return GL_REFERENCED_BY_FRAGMENT_SHADER;
+
+        default:
+            return prop;
+    }
+}
+
+void GetShaderVariableBufferResourceProperty(const ShaderVariableBuffer &buffer,
+                                             GLenum pname,
+                                             GLint *params,
+                                             GLsizei bufSize,
+                                             GLsizei *outputPosition)
+
+{
+    switch (pname)
+    {
+        case GL_BUFFER_BINDING:
+            params[(*outputPosition)++] = buffer.binding;
+            break;
+        case GL_BUFFER_DATA_SIZE:
+            params[(*outputPosition)++] = clampCast<GLint>(buffer.dataSize);
+            break;
+        case GL_NUM_ACTIVE_VARIABLES:
+            params[(*outputPosition)++] = buffer.numActiveVariables();
+            break;
+        case GL_ACTIVE_VARIABLES:
+            for (size_t memberIndex = 0;
+                 memberIndex < buffer.memberIndexes.size() && *outputPosition < bufSize;
+                 ++memberIndex)
+            {
+                params[(*outputPosition)++] = clampCast<GLint>(buffer.memberIndexes[memberIndex]);
+            }
+            break;
+        case GL_REFERENCED_BY_VERTEX_SHADER:
+            params[(*outputPosition)++] = static_cast<GLint>(buffer.vertexStaticUse);
+            break;
+        case GL_REFERENCED_BY_FRAGMENT_SHADER:
+            params[(*outputPosition)++] = static_cast<GLint>(buffer.fragmentStaticUse);
+            break;
+        case GL_REFERENCED_BY_COMPUTE_SHADER:
+            params[(*outputPosition)++] = static_cast<GLint>(buffer.computeStaticUse);
+            break;
+        default:
+            UNREACHABLE();
+            break;
+    }
+}
+
+void GetInterfaceBlockResourceProperty(const InterfaceBlock &block,
+                                       GLenum pname,
+                                       GLint *params,
+                                       GLsizei bufSize,
+                                       GLsizei *outputPosition)
+{
+    if (pname == GL_NAME_LENGTH)
+    {
+        params[(*outputPosition)++] = clampCast<GLint>(block.nameWithArrayIndex().size() + 1);
+        return;
+    }
+    GetShaderVariableBufferResourceProperty(block, pname, params, bufSize, outputPosition);
+}
+
+void GetUniformBlockResourceProperty(const Program *program,
+                                     GLuint blockIndex,
+                                     GLenum pname,
+                                     GLint *params,
+                                     GLsizei bufSize,
+                                     GLsizei *outputPosition)
+
+{
+    ASSERT(*outputPosition < bufSize);
+    const auto &block = program->getUniformBlockByIndex(blockIndex);
+    GetInterfaceBlockResourceProperty(block, pname, params, bufSize, outputPosition);
+}
+
+void GetAtomicCounterBufferResourceProperty(const Program *program,
+                                            GLuint index,
+                                            GLenum pname,
+                                            GLint *params,
+                                            GLsizei bufSize,
+                                            GLsizei *outputPosition)
+
+{
+    ASSERT(*outputPosition < bufSize);
+    const auto &buffer = program->getState().getAtomicCounterBuffers()[index];
+    GetShaderVariableBufferResourceProperty(buffer, pname, params, bufSize, outputPosition);
 }
 
 }  // anonymous namespace
@@ -861,6 +976,9 @@ void QueryProgramiv(const Context *context, const Program *program, GLenum pname
             params[2]                          = localSize[2];
         }
         break;
+        case GL_ACTIVE_ATOMIC_COUNTER_BUFFERS:
+            *params = program->getActiveAtomicCounterBufferCount();
+            break;
         default:
             UNREACHABLE();
             break;
@@ -1044,39 +1162,9 @@ void QueryActiveUniformBlockiv(const Program *program,
                                GLenum pname,
                                GLint *params)
 {
-    const InterfaceBlock &uniformBlock = program->getUniformBlockByIndex(uniformBlockIndex);
-    switch (pname)
-    {
-        case GL_UNIFORM_BLOCK_BINDING:
-            *params = clampCast<GLint>(program->getUniformBlockBinding(uniformBlockIndex));
-            break;
-        case GL_UNIFORM_BLOCK_DATA_SIZE:
-            *params = clampCast<GLint>(uniformBlock.dataSize);
-            break;
-        case GL_UNIFORM_BLOCK_NAME_LENGTH:
-            *params = clampCast<GLint>(uniformBlock.nameWithArrayIndex().size() + 1);
-            break;
-        case GL_UNIFORM_BLOCK_ACTIVE_UNIFORMS:
-            *params = clampCast<GLint>(uniformBlock.memberIndexes.size());
-            break;
-        case GL_UNIFORM_BLOCK_ACTIVE_UNIFORM_INDICES:
-            for (size_t blockMemberIndex = 0; blockMemberIndex < uniformBlock.memberIndexes.size();
-                 blockMemberIndex++)
-            {
-                params[blockMemberIndex] =
-                    clampCast<GLint>(uniformBlock.memberIndexes[blockMemberIndex]);
-            }
-            break;
-        case GL_UNIFORM_BLOCK_REFERENCED_BY_VERTEX_SHADER:
-            *params = static_cast<GLint>(uniformBlock.vertexStaticUse);
-            break;
-        case GL_UNIFORM_BLOCK_REFERENCED_BY_FRAGMENT_SHADER:
-            *params = static_cast<GLint>(uniformBlock.fragmentStaticUse);
-            break;
-        default:
-            UNREACHABLE();
-            break;
-    }
+    GLenum prop = GetUniformBlockPropertyEnum(pname);
+    QueryProgramResourceiv(program, GL_UNIFORM_BLOCK, uniformBlockIndex, 1, &prop,
+                           std::numeric_limits<GLsizei>::max(), nullptr, params);
 }
 
 void QueryInternalFormativ(const TextureCaps &format, GLenum pname, GLsizei bufSize, GLint *params)
@@ -1317,8 +1405,10 @@ GLuint QueryProgramResourceIndex(const Program *program,
         case GL_UNIFORM:
             return program->getState().getUniformIndexFromName(name);
 
-        // TODO(jie.a.chen@intel.com): more interfaces.
         case GL_UNIFORM_BLOCK:
+            return program->getUniformBlockIndex(name);
+
+        // TODO(jie.a.chen@intel.com): more interfaces.
         case GL_TRANSFORM_FEEDBACK_VARYING:
         case GL_BUFFER_VARIABLE:
         case GL_SHADER_STORAGE_BLOCK:
@@ -1352,8 +1442,11 @@ void QueryProgramResourceName(const Program *program,
             program->getUniformResourceName(index, bufSize, length, name);
             break;
 
-        // TODO(jie.a.chen@intel.com): more interfaces.
         case GL_UNIFORM_BLOCK:
+            program->getActiveUniformBlockName(index, bufSize, length, name);
+            break;
+
+        // TODO(jie.a.chen@intel.com): more interfaces.
         case GL_TRANSFORM_FEEDBACK_VARYING:
         case GL_BUFFER_VARIABLE:
         case GL_SHADER_STORAGE_BLOCK:
@@ -1380,14 +1473,6 @@ GLint QueryProgramResourceLocation(const Program *program,
         case GL_UNIFORM:
             return program->getState().getUniformLocation(name);
 
-        // TODO(jie.a.chen@intel.com): more interfaces.
-        case GL_UNIFORM_BLOCK:
-        case GL_TRANSFORM_FEEDBACK_VARYING:
-        case GL_BUFFER_VARIABLE:
-        case GL_SHADER_STORAGE_BLOCK:
-            UNIMPLEMENTED();
-            return -1;
-
         default:
             UNREACHABLE();
             return -1;
@@ -1412,34 +1497,37 @@ void QueryProgramResourceiv(const Program *program,
         return;
     }
 
-    GLsizei count = std::min(propCount, bufSize);
-    if (length != nullptr)
-    {
-        *length = count;
-    }
-
-    for (GLsizei i = 0; i < count; i++)
+    GLsizei pos = 0;
+    for (GLsizei i = 0; i < propCount; i++)
     {
         switch (programInterface)
         {
             case GL_PROGRAM_INPUT:
                 params[i] = GetInputResourceProperty(program, index, props[i]);
+                ++pos;
                 break;
 
             case GL_PROGRAM_OUTPUT:
                 params[i] = GetOutputResourceProperty(program, index, props[i]);
+                ++pos;
                 break;
 
             case GL_UNIFORM:
                 params[i] = GetUniformResourceProperty(program, index, props[i]);
+                ++pos;
+                break;
+            case GL_UNIFORM_BLOCK:
+                GetUniformBlockResourceProperty(program, index, props[i], params, bufSize, &pos);
                 break;
 
+            case GL_ATOMIC_COUNTER_BUFFER:
+                GetAtomicCounterBufferResourceProperty(program, index, props[i], params, bufSize,
+                                                       &pos);
+                break;
             // TODO(jie.a.chen@intel.com): more interfaces.
-            case GL_UNIFORM_BLOCK:
             case GL_TRANSFORM_FEEDBACK_VARYING:
             case GL_BUFFER_VARIABLE:
             case GL_SHADER_STORAGE_BLOCK:
-            case GL_ATOMIC_COUNTER_BUFFER:
                 UNIMPLEMENTED();
                 params[i] = GL_INVALID_VALUE;
                 break;
@@ -1448,6 +1536,17 @@ void QueryProgramResourceiv(const Program *program,
                 UNREACHABLE();
                 params[i] = GL_INVALID_VALUE;
         }
+        if (pos == bufSize)
+        {
+            // Most properties return one value, but GL_ACTIVE_VARIABLES returns an array of values.
+            // This checks not to break buffer bounds for such case.
+            break;
+        }
+    }
+
+    if (length != nullptr)
+    {
+        *length = pos;
     }
 }
 
