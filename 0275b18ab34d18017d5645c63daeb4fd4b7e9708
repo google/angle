@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "f66dee0c_c4c6c954",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-10-27T08:13:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f668ba6d_ab7073c3",
+      "range": {
+        "startLine": 67,
+        "startChar": 0,
+        "endLine": 68,
+        "endChar": 73
+      },
+      "revId": "0275b18ab34d18017d5645c63daeb4fd4b7e9708",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9a24d290_5e9b19f3",
         "filename": "src/compiler/translator/blocklayout.h",
         "patchSetId": 7
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "02f86ff9_5c4cd909",
+        "filename": "src/compiler/translator/blocklayout.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-10-27T08:13:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9a24d290_5e9b19f3",
+      "range": {
+        "startLine": 88,
+        "startChar": 0,
+        "endLine": 90,
+        "endChar": 26
+      },
+      "revId": "0275b18ab34d18017d5645c63daeb4fd4b7e9708",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "370c534e_1461e69a",
         "filename": "src/tests/gl_tests/ProgramInterfaceTest.cpp",
         "patchSetId": 7
@@ -62,6 +110,24 @@
       "revId": "0275b18ab34d18017d5645c63daeb4fd4b7e9708",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "15c9a18b_d5d6c577",
+        "filename": "src/tests/gl_tests/ProgramInterfaceTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 502,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-10-27T08:13:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "370c534e_1461e69a",
+      "revId": "0275b18ab34d18017d5645c63daeb4fd4b7e9708",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -82,6 +148,24 @@
     },
     {
       "key": {
+        "uuid": "097d7182_02089059",
+        "filename": "src/tests/gl_tests/ProgramInterfaceTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 506,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-10-27T08:13:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ff85de74_b6841386",
+      "revId": "0275b18ab34d18017d5645c63daeb4fd4b7e9708",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bf4f1566_7db1d696",
         "filename": "src/tests/gl_tests/ProgramInterfaceTest.cpp",
         "patchSetId": 7
@@ -93,6 +177,24 @@
       "writtenOn": "2017-10-25T07:19:39Z",
       "side": 1,
       "message": "\"float test2 \u003d instanceName1[1].f1;\"\nf1 is used in vertex shader, why referenced_by_vertex_shader is 0.",
+      "revId": "0275b18ab34d18017d5645c63daeb4fd4b7e9708",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "21ac75cd_09b5816e",
+        "filename": "src/tests/gl_tests/ProgramInterfaceTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 510,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-10-27T08:13:11Z",
+      "side": 1,
+      "message": "It\u0027s optimized out by the driver since it\u0027s never actually executed. I have changed the code to let ANGLE to calculate them.",
+      "parentUuid": "bf4f1566_7db1d696",
       "revId": "0275b18ab34d18017d5645c63daeb4fd4b7e9708",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -116,6 +218,24 @@
     },
     {
       "key": {
+        "uuid": "563a7ef2_2c4ba895",
+        "filename": "src/tests/gl_tests/ProgramInterfaceTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 533,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-10-27T08:13:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e4530270_614fffcd",
+      "revId": "0275b18ab34d18017d5645c63daeb4fd4b7e9708",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e7686d16_3e0ee826",
         "filename": "src/tests/gl_tests/ProgramInterfaceTest.cpp",
         "patchSetId": 7
@@ -130,6 +250,24 @@
       "revId": "0275b18ab34d18017d5645c63daeb4fd4b7e9708",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "94d1dfde_2e20936c",
+        "filename": "src/tests/gl_tests/ProgramInterfaceTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 536,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-10-27T08:13:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e7686d16_3e0ee826",
+      "revId": "0275b18ab34d18017d5645c63daeb4fd4b7e9708",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
