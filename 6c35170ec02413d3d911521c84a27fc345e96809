@@ -34,6 +34,23 @@
       "revId": "6c35170ec02413d3d911521c84a27fc345e96809",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0be532c9_2d9081bd",
+        "filename": "src/tests/test_utils/compiler_test.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-27T14:44:45Z",
+      "side": 1,
+      "message": "Same comment as Olli for this change of encapsulation.",
+      "revId": "6c35170ec02413d3d911521c84a27fc345e96809",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
