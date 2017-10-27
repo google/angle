@@ -16,6 +16,24 @@
       "revId": "6c35170ec02413d3d911521c84a27fc345e96809",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "57623f04_d6f477b5",
+        "filename": "src/tests/test_utils/ShaderCompileTreeTest.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-10-27T14:43:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2539909c_9f7d20b0",
+      "revId": "6c35170ec02413d3d911521c84a27fc345e96809",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
