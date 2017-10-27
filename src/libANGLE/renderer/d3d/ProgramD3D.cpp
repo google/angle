@@ -2134,7 +2134,7 @@ void ProgramD3D::setUniformImpl(const gl::VariableLocation &locationInfo,
 {
     D3DUniform *targetUniform = mD3DUniforms[locationInfo.index];
     const int components      = targetUniform->typeInfo.componentCount;
-    unsigned int arrayElementOffset = locationInfo.flattenedArrayOffset;
+    const unsigned int arrayElementOffset = locationInfo.arrayIndex;
 
     if (targetUniform->typeInfo.type == uniformType)
     {
@@ -2174,7 +2174,7 @@ void ProgramD3D::setUniformInternal(GLint location, GLsizei count, const T *v, G
     {
         ASSERT(uniformType == GL_INT);
         size_t size = count * sizeof(T);
-        auto dest   = &targetUniform->mSamplerData[locationInfo.flattenedArrayOffset];
+        auto dest   = &targetUniform->mSamplerData[locationInfo.arrayIndex];
         if (memcmp(dest, v, size) != 0)
         {
             memcpy(dest, v, size);
@@ -2213,7 +2213,7 @@ bool ProgramD3D::setUniformMatrixfvImpl(GLint location,
     D3DUniform *targetUniform = getD3DUniformFromLocation(location);
 
     unsigned int elementCount = targetUniform->elementCount();
-    unsigned int arrayElementOffset = mState.getUniformLocations()[location].flattenedArrayOffset;
+    unsigned int arrayElementOffset = mState.getUniformLocations()[location].arrayIndex;
     unsigned int count =
         std::min(elementCount - arrayElementOffset, static_cast<unsigned int>(countIn));
 
@@ -2666,8 +2666,7 @@ void ProgramD3D::getUniformInternal(GLint location, DestT *dataOut) const
     const gl::LinkedUniform &uniform         = mState.getUniforms()[locationInfo.index];
 
     const D3DUniform *targetUniform = getD3DUniformFromLocation(location);
-    const uint8_t *srcPointer       = targetUniform->getDataPtrToElement(
-        locationInfo.arrayIndices.empty() ? 0u : locationInfo.flattenedArrayOffset);
+    const uint8_t *srcPointer       = targetUniform->getDataPtrToElement(locationInfo.arrayIndex);
 
     if (gl::IsMatrixType(uniform.type))
     {

@@ -667,7 +667,7 @@ void ProgramGL::postLink()
         {
             ASSERT(angle::EndsWith(uniform.mappedName, "[0]"));
             fullNameStr << uniform.mappedName.substr(0, uniform.mappedName.length() - 3);
-            fullNameStr << "[" << entry.arrayIndices[0] << "]";
+            fullNameStr << "[" << entry.arrayIndex << "]";
         }
         else
         {

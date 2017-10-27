@@ -147,17 +147,11 @@ struct VariableLocation
     void markUnused() { index = kUnused; }
     void markIgnored() { ignored = true; }
 
-    bool areAllArrayIndicesZero() const;
-
-    // The "arrayIndices" vector stores indices for the GLSL array. "index" is an index of the
-    // location.
-    std::vector<unsigned int> arrayIndices;  // Outermost array indices are in the back.
+    // "arrayIndex" stores the index of the innermost GLSL array. It's zero for non-arrays.
+    unsigned int arrayIndex;
+    // "index" is an index of the variable. The variable contains the indices for other than the
+    // innermost GLSL arrays.
     unsigned int index;
-
-    unsigned int flattenedArrayOffset;  // For non-nested arrays this is the same as the array
-                                        // index. For arrays of arrays, the indices are converted to
-                                        // a single offset inside a one-dimensional array made up of
-                                        // the elements of the innermost arrays.
 
     // If this location was bound to an unreferenced uniform.  Setting data on this uniform is a
     // no-op.

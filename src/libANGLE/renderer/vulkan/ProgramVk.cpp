@@ -283,7 +283,7 @@ gl::Error ProgramVk::initDefaultUniformBlocks(const gl::Context *glContext)
             std::string uniformName = uniform.name;
             if (uniform.isArray())
             {
-                uniformName += ArrayIndexString(location.arrayIndices);
+                uniformName += ArrayString(location.arrayIndex);
             }
 
             bool found = false;
