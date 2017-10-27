@@ -1198,11 +1198,6 @@
             'third_party/gpu_test_expectations/gpu_test_expectations_parser.cc',
             'third_party/gpu_test_expectations/gpu_test_expectations_parser.h',
         ],
-        'deqp_gpu_test_expectations_sources_mac':
-        [
-            'third_party/gpu_test_expectations/gpu_test_config_mac.mm',
-            'third_party/gpu_test_expectations/gpu_test_config_mac.h',
-        ],
         'conditions':
         [
             ['(OS=="win" or OS=="linux" or OS=="mac")',
@@ -1862,7 +1857,8 @@
                             {
                                 'sources':
                                 [
-                                    '<@(deqp_gpu_test_expectations_sources_mac)',
+                                    'third_party/gpu_test_expectations/gpu_test_config_mac.h',
+                                    'third_party/gpu_test_expectations/gpu_test_config_mac.mm',
                                 ],
                             }],
                         ],
