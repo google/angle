@@ -40,7 +40,7 @@ DrawCallPerfParams DrawCallPerfD3D11Params(bool useNullDevice, bool renderToText
 
 DrawCallPerfParams DrawCallPerfD3D9Params(bool useNullDevice, bool renderToTexture);
 
-DrawCallPerfParams DrawCallPerfOpenGLParams(bool useNullDevice, bool renderToTexture);
+DrawCallPerfParams DrawCallPerfOpenGLOrGLESParams(bool useNullDevice, bool renderToTexture);
 
 DrawCallPerfParams DrawCallPerfValidationOnly();
 

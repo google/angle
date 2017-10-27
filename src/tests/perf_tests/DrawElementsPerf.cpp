@@ -175,10 +175,10 @@ DrawElementsPerfParams DrawElementsPerfD3D9Params(bool indexBufferChanged)
     return params;
 }
 
-DrawElementsPerfParams DrawElementsPerfOpenGLParams(bool indexBufferChanged)
+DrawElementsPerfParams DrawElementsPerfOpenGLOrGLESParams(bool indexBufferChanged)
 {
     DrawElementsPerfParams params;
-    params.eglParameters      = angle::egl_platform::OPENGL();
+    params.eglParameters      = angle::egl_platform::OPENGL_OR_GLES(false);
     params.indexBufferChanged = indexBufferChanged;
     return params;
 }
@@ -195,7 +195,7 @@ ANGLE_INSTANTIATE_TEST(DrawElementsPerfBenchmark,
                        DrawElementsPerfD3D11Params(true, true),
                        DrawElementsPerfD3D11Params(false, false),
                        DrawElementsPerfD3D11Params(true, false),
-                       DrawElementsPerfOpenGLParams(false),
-                       DrawElementsPerfOpenGLParams(true));
+                       DrawElementsPerfOpenGLOrGLESParams(false),
+                       DrawElementsPerfOpenGLOrGLESParams(true));
 
 }  // namespace

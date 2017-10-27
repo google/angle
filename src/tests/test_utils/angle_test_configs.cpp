@@ -373,6 +373,21 @@ EGLPlatformParameters OPENGLES(EGLint major, EGLint minor)
                                  EGL_DONT_CARE);
 }
 
+EGLPlatformParameters OPENGLES_NULL()
+{
+    return EGLPlatformParameters(EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE, EGL_DONT_CARE,
+                                 EGL_DONT_CARE, EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE);
+}
+
+EGLPlatformParameters OPENGL_OR_GLES(bool useNullDevice)
+{
+#if defined(ANGLE_PLATFORM_ANDROID)
+    return useNullDevice ? OPENGLES_NULL() : OPENGLES();
+#else
+    return useNullDevice ? OPENGL_NULL() : OPENGL();
+#endif
+}
+
 EGLPlatformParameters VULKAN()
 {
     return EGLPlatformParameters(EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE);

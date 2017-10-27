@@ -396,8 +396,8 @@ UniformsParams MatrixUniforms(const EGLPlatformParameters &egl, DataMode dataMod
     params.dataMode      = dataMode;
 
     // Reduce the number of uniforms to fit within smaller upper limits on some configs.
-    params.numVertexUniforms   = 100;
-    params.numFragmentUniforms = 100;
+    params.numVertexUniforms   = 64;
+    params.numFragmentUniforms = 64;
 
     return params;
 }
@@ -414,9 +414,9 @@ ANGLE_INSTANTIATE_TEST(UniformsBenchmark,
                        VectorUniforms(D3D11(), DataMode::REPEAT),
                        VectorUniforms(D3D11(), DataMode::UPDATE),
                        VectorUniforms(D3D11_NULL(), DataMode::UPDATE),
-                       VectorUniforms(OPENGL(), DataMode::UPDATE),
-                       VectorUniforms(OPENGL(), DataMode::REPEAT),
-                       VectorUniforms(OPENGL_NULL(), DataMode::UPDATE),
+                       VectorUniforms(OPENGL_OR_GLES(false), DataMode::UPDATE),
+                       VectorUniforms(OPENGL_OR_GLES(false), DataMode::REPEAT),
+                       VectorUniforms(OPENGL_OR_GLES(true), DataMode::UPDATE),
                        MatrixUniforms(D3D11(), DataMode::UPDATE),
-                       MatrixUniforms(OPENGL(), DataMode::UPDATE),
+                       MatrixUniforms(OPENGL_OR_GLES(false), DataMode::UPDATE),
                        VectorUniforms(D3D11_NULL(), DataMode::REPEAT, ProgramMode::MULTIPLE));

@@ -81,6 +81,9 @@ EGLPlatformParameters OPENGL_NULL();
 
 EGLPlatformParameters OPENGLES();
 EGLPlatformParameters OPENGLES(EGLint major, EGLint minor);
+EGLPlatformParameters OPENGLES_NULL();
+
+EGLPlatformParameters OPENGL_OR_GLES(bool useNullDevice);
 
 EGLPlatformParameters VULKAN();
 

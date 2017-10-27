@@ -215,10 +215,10 @@ InterleavedAttributeDataParams D3D9Params()
     return params;
 }
 
-InterleavedAttributeDataParams OpenGLParams()
+InterleavedAttributeDataParams OpenGLOrGLESParams()
 {
     InterleavedAttributeDataParams params;
-    params.eglParameters = egl_platform::OPENGL();
+    params.eglParameters = egl_platform::OPENGL_OR_GLES(false);
     return params;
 }
 
@@ -226,6 +226,6 @@ ANGLE_INSTANTIATE_TEST(InterleavedAttributeDataBenchmark,
                        D3D11Params(),
                        D3D11_9_3Params(),
                        D3D9Params(),
-                       OpenGLParams());
+                       OpenGLOrGLESParams());
 
 }  // anonymous namespace

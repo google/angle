@@ -128,10 +128,10 @@ LinkProgramParams LinkProgramD3D9Params()
     return params;
 }
 
-LinkProgramParams LinkProgramOpenGLParams()
+LinkProgramParams LinkProgramOpenGLOrGLESParams()
 {
     LinkProgramParams params;
-    params.eglParameters = OPENGL();
+    params.eglParameters = OPENGL_OR_GLES(false);
     return params;
 }
 
@@ -143,6 +143,6 @@ TEST_P(LinkProgramBenchmark, Run)
 ANGLE_INSTANTIATE_TEST(LinkProgramBenchmark,
                        LinkProgramD3D11Params(),
                        LinkProgramD3D9Params(),
-                       LinkProgramOpenGLParams());
+                       LinkProgramOpenGLOrGLESParams());
 
 }  // anonymous namespace

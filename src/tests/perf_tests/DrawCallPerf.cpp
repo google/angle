@@ -106,9 +106,9 @@ ANGLE_INSTANTIATE_TEST(DrawCallPerfBenchmark,
                        DrawCallPerfD3D11Params(false, false),
                        DrawCallPerfD3D11Params(true, false),
                        DrawCallPerfD3D11Params(true, true),
-                       DrawCallPerfOpenGLParams(false, false),
-                       DrawCallPerfOpenGLParams(true, false),
-                       DrawCallPerfOpenGLParams(true, true),
+                       DrawCallPerfOpenGLOrGLESParams(false, false),
+                       DrawCallPerfOpenGLOrGLESParams(true, false),
+                       DrawCallPerfOpenGLOrGLESParams(true, true),
                        DrawCallPerfValidationOnly(),
                        DrawCallPerfVulkanParams(false));
 

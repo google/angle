@@ -276,10 +276,10 @@ TexturesParams D3D9Params()
     return params;
 }
 
-TexturesParams OpenGLParams()
+TexturesParams OpenGLOrGLESParams()
 {
     TexturesParams params;
-    params.eglParameters = egl_platform::OPENGL_NULL();
+    params.eglParameters = egl_platform::OPENGL_OR_GLES(true);
     return params;
 }
 
@@ -288,6 +288,6 @@ TEST_P(TexturesBenchmark, Run)
     run();
 }
 
-ANGLE_INSTANTIATE_TEST(TexturesBenchmark, D3D11Params(), D3D9Params(), OpenGLParams());
+ANGLE_INSTANTIATE_TEST(TexturesBenchmark, D3D11Params(), D3D9Params(), OpenGLOrGLESParams());
 
 }  // namespace angle

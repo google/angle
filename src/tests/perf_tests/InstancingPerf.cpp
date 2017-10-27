@@ -344,10 +344,10 @@ InstancingPerfParams InstancingPerfD3D9Params()
     return params;
 }
 
-InstancingPerfParams InstancingPerfOpenGLParams()
+InstancingPerfParams InstancingPerfOpenGLOrGLESParams()
 {
     InstancingPerfParams params;
-    params.eglParameters = OPENGL();
+    params.eglParameters = OPENGL_OR_GLES(false);
     return params;
 }
 
@@ -359,6 +359,6 @@ TEST_P(InstancingPerfBenchmark, Run)
 ANGLE_INSTANTIATE_TEST(InstancingPerfBenchmark,
                        InstancingPerfD3D11Params(),
                        InstancingPerfD3D9Params(),
-                       InstancingPerfOpenGLParams());
+                       InstancingPerfOpenGLOrGLESParams());
 
 }  // anonymous namespace
