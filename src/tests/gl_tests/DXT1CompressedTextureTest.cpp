@@ -192,6 +192,15 @@ TEST_P(DXT1CompressedTextureTest, CompressedTexSubImageValidation)
     glCompressedTexSubImage2D(GL_TEXTURE_2D, 0, 1, 3, pixel_1_width, pixel_1_height,
                               GL_COMPRESSED_RGBA_S3TC_DXT1_EXT, pixel_1_size, pixel_1_data);
     ASSERT_GL_ERROR(GL_INVALID_OPERATION);
+
+    // Set a sub image with a negative offset
+    glCompressedTexSubImage2D(GL_TEXTURE_2D, 0, -1, 0, 4, 4, GL_COMPRESSED_RGBA_S3TC_DXT1_EXT, 8,
+                              pixel_1_data);
+    ASSERT_GL_ERROR(GL_INVALID_VALUE);
+
+    glCompressedTexSubImage2D(GL_TEXTURE_2D, 0, 0, -1, 4, 4, GL_COMPRESSED_RGBA_S3TC_DXT1_EXT, 8,
+                              pixel_1_data);
+    ASSERT_GL_ERROR(GL_INVALID_VALUE);
 }
 
 // Test that it's not possible to call CopyTexSubImage2D on a compressed texture
@@ -283,6 +292,32 @@ TEST_P(DXT1CompressedTextureTestES3, PBOCompressedTexImage)
     EXPECT_GL_NO_ERROR();
 }
 
+// Test validation of glCompressedTexSubImage3D with DXT formats
+TEST_P(DXT1CompressedTextureTestES3, CompressedTexSubImageValidation)
+{
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_texture_compression_dxt1"));
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D_ARRAY, texture.get());
+
+    // Size mip 0 to a large size
+    glCompressedTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_COMPRESSED_RGBA_S3TC_DXT1_EXT, pixel_0_width,
+                           pixel_0_height, 1, 0, pixel_0_size, nullptr);
+    ASSERT_GL_NO_ERROR();
+
+    // Set a sub image with a negative offset
+    glCompressedTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, -1, 0, 0, 4, 4, 1,
+                              GL_COMPRESSED_RGBA_S3TC_DXT1_EXT, 8, pixel_1_data);
+    ASSERT_GL_ERROR(GL_INVALID_VALUE);
+
+    glCompressedTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, -1, 0, 4, 4, 1,
+                              GL_COMPRESSED_RGBA_S3TC_DXT1_EXT, 8, pixel_1_data);
+    ASSERT_GL_ERROR(GL_INVALID_VALUE);
+
+    glCompressedTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, -1, 4, 4, 1,
+                              GL_COMPRESSED_RGBA_S3TC_DXT1_EXT, 8, pixel_1_data);
+    ASSERT_GL_ERROR(GL_INVALID_VALUE);
+}
 
 TEST_P(DXT1CompressedTextureTestD3D11, PBOCompressedTexStorage)
 {

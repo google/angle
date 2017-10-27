@@ -2026,8 +2026,9 @@ bool ValidateCompressedTexSubImage3D(Context *context,
         return false;
     }
 
-    return ValidateES3TexImage3DParameters(context, target, level, GL_NONE, true, true, 0, 0, 0,
-                                           width, height, depth, 0, format, GL_NONE, -1, data);
+    return ValidateES3TexImage3DParameters(context, target, level, GL_NONE, true, true, xoffset,
+                                           yoffset, zoffset, width, height, depth, 0, format,
+                                           GL_NONE, -1, data);
 }
 bool ValidateCompressedTexSubImage3DRobustANGLE(Context *context,
                                                 GLenum target,
