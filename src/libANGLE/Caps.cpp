@@ -617,7 +617,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_OES_element_index_uint"] = enableableExtension(&Extensions::elementIndexUint);
         map["GL_OES_packed_depth_stencil"] = esOnlyExtension(&Extensions::packedDepthStencil);
         map["GL_OES_get_program_binary"] = esOnlyExtension(&Extensions::getProgramBinary);
-        map["GL_OES_rgb8_rgba8"] = esOnlyExtension(&Extensions::rgb8rgba8);
+        map["GL_OES_rgb8_rgba8"] = enableableExtension(&Extensions::rgb8rgba8);
         map["GL_EXT_texture_format_BGRA8888"] = enableableExtension(&Extensions::textureFormatBGRA8888);
         map["GL_EXT_read_format_bgra"] = esOnlyExtension(&Extensions::readFormatBGRA);
         map["GL_NV_pixel_buffer_object"] = enableableExtension(&Extensions::pixelBufferObject);

@@ -118,6 +118,14 @@ class WebGLCompatibilityTest : public ANGLETest
         ANGLE_GL_PROGRAM(samplingProgram, samplingVs, samplingFs);
         glUseProgram(samplingProgram.get());
 
+        // Need RGBA8 renderbuffers for enough precision on the readback
+        if (extensionRequestable("GL_OES_rgb8_rgba8"))
+        {
+            glRequestExtensionANGLE("GL_OES_rgb8_rgba8");
+        }
+        ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_OES_rgb8_rgba8") && getClientMajorVersion() < 3);
+        ASSERT_GL_NO_ERROR();
+
         GLRenderbuffer rbo;
         glBindRenderbuffer(GL_RENDERBUFFER, rbo.get());
         glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, 1, 1);
@@ -813,6 +821,38 @@ TEST_P(WebGLCompatibilityTest, EnablePackPackSubImageExtension)
 
             EXPECT_GL_NO_ERROR();
         }
+    }
+}
+
+TEST_P(WebGLCompatibilityTest, EnableRGB8RGBA8Extension)
+{
+    EXPECT_FALSE(extensionEnabled("GL_OES_rgb8_rgba8"));
+
+    // This extensions become core in in ES3/WebGL2.
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() >= 3);
+
+    GLRenderbuffer renderbuffer;
+    glBindRenderbuffer(GL_RENDERBUFFER, renderbuffer);
+    EXPECT_GL_NO_ERROR();
+
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGB8_OES, 1, 1);
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8_OES, 1, 1);
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+    if (extensionRequestable("GL_OES_rgb8_rgba8"))
+    {
+        glRequestExtensionANGLE("GL_OES_rgb8_rgba8");
+        EXPECT_GL_NO_ERROR();
+
+        EXPECT_TRUE(extensionEnabled("GL_OES_rgb8_rgba8"));
+
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_RGB8_OES, 1, 1);
+        EXPECT_GL_NO_ERROR();
+
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8_OES, 1, 1);
+        EXPECT_GL_NO_ERROR();
     }
 }
 
@@ -3344,7 +3384,7 @@ TEST_P(WebGLCompatibilityTest, DrawBuffers)
     for (int i = 0; i < 4; ++i)
     {
         glBindRenderbuffer(GL_RENDERBUFFER, renderbuffers[i]);
-        glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, 1, 1);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA4, 1, 1);
         glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_RENDERBUFFER,
                                   renderbuffers[i]);
     }
