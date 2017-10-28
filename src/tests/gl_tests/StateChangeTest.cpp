@@ -754,6 +754,7 @@ class SimpleStateChangeTest : public ANGLETest
     }
 
     void simpleDrawWithBuffer(GLBuffer *buffer);
+    void simpleDrawWithColor(const GLColor &color);
 };
 
 constexpr char kSimpleVertexShader[] = R"(attribute vec2 position;
@@ -788,6 +789,15 @@ void SimpleStateChangeTest::simpleDrawWithBuffer(GLBuffer *buffer)
 
     drawQuad(program, "position", 0.5f, 1.0f, true);
     ASSERT_GL_NO_ERROR();
+}
+
+void SimpleStateChangeTest::simpleDrawWithColor(const GLColor &color)
+{
+    std::vector<GLColor> colors(6, color);
+    GLBuffer colorBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
+    glBufferData(GL_ARRAY_BUFFER, colors.size() * sizeof(GLColor), colors.data(), GL_STATIC_DRAW);
+    simpleDrawWithBuffer(&colorBuffer);
 }
 
 // Handles deleting a Buffer when it's being used.
@@ -955,6 +965,47 @@ TEST_P(SimpleStateChangeTest, DeleteFramebufferInUse)
     ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
 
     // Flush via ReadPixels and check red was drawn.
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Tests deleting a Framebuffer that is in use.
+TEST_P(SimpleStateChangeTest, RedefineFramebufferInUse)
+{
+    constexpr int kSize = 16;
+
+    // Create a simple framebuffer.
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    GLFramebuffer framebuffer;
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+    ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
+    glViewport(0, 0, kSize, kSize);
+
+    // Draw red to the framebuffer.
+    simpleDrawWithColor(GLColor::red);
+
+    // Change the framebuffer while the call is in flight to a new texture.
+    GLTexture otherTexture;
+    glBindTexture(GL_TEXTURE_2D, otherTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, otherTexture, 0);
+    ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
+    // Draw green to the framebuffer. Verify the color.
+    simpleDrawWithColor(GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    // Make a new framebuffer so we can read back the first texture and verify red.
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+    ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
     ASSERT_GL_NO_ERROR();
 }

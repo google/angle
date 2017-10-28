@@ -102,6 +102,9 @@ class RendererVk : angle::NonCopyable
     gl::Error ensureInRenderPass(const gl::Context *context, FramebufferVk *framebufferVk);
     void endRenderPass();
 
+    // This is necessary to update the cached current RenderPass Framebuffer.
+    void onReleaseRenderPass(const FramebufferVk *framebufferVk);
+
   private:
     void ensureCapsInitialized() const;
     void generateCaps(gl::Caps *outCaps,

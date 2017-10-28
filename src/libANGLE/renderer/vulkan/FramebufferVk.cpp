@@ -355,13 +355,15 @@ bool FramebufferVk::checkStatus(const gl::Context *context) const
 void FramebufferVk::syncState(const gl::Context *context,
                               const gl::Framebuffer::DirtyBits &dirtyBits)
 {
-    auto contextVk = GetImplAs<ContextVk>(context);
+    ContextVk *contextVk = GetImplAs<ContextVk>(context);
+    RendererVk *renderer = contextVk->getRenderer();
 
     ASSERT(dirtyBits.any());
 
     // TODO(jmadill): Smarter update.
-    mRenderPass.destroy(contextVk->getDevice());
-    mFramebuffer.destroy(contextVk->getDevice());
+    renderer->releaseResource(*this, &mRenderPass);
+    renderer->releaseResource(*this, &mFramebuffer);
+    renderer->onReleaseRenderPass(this);
 
     // TODO(jmadill): Use pipeline cache.
     contextVk->invalidateCurrentPipeline();
