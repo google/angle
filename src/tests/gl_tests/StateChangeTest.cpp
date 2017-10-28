@@ -914,6 +914,51 @@ TEST_P(SimpleStateChangeTest, RedefineTextureInUse)
     EXPECT_PIXEL_COLOR_EQ(w, h, GLColor::white);
 }
 
+const char kSolidColorVertexShader[] = R"(attribute vec2 position;
+void main()
+{
+    gl_Position = vec4(position, 0, 1);
+})";
+
+const char kSolidColorFragmentShader[] = R"(void main()
+{
+    gl_FragColor = vec4(1, 0, 0, 1);
+})";
+
+// Tests deleting a Framebuffer that is in use.
+TEST_P(SimpleStateChangeTest, DeleteFramebufferInUse)
+{
+    constexpr int kSize = 16;
+
+    // Create a simple framebuffer.
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    GLFramebuffer framebuffer;
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+    ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
+    glViewport(0, 0, kSize, kSize);
+
+    // Draw a solid red color to the framebuffer.
+    ANGLE_GL_PROGRAM(program, kSolidColorVertexShader, kSolidColorFragmentShader);
+    drawQuad(program, "position", 0.5f, 1.0f, true);
+
+    // Delete the framebuffer while the call is in flight.
+    framebuffer.reset();
+
+    // Make a new framebuffer so we can read back the texture.
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+    ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
+    // Flush via ReadPixels and check red was drawn.
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    ASSERT_GL_NO_ERROR();
+}
+
 }  // anonymous namespace
 
 ANGLE_INSTANTIATE_TEST(StateChangeTest, ES2_D3D9(), ES2_D3D11(), ES2_OPENGL());

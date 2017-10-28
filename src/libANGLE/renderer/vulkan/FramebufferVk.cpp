@@ -96,11 +96,10 @@ FramebufferVk::~FramebufferVk()
 
 void FramebufferVk::destroy(const gl::Context *context)
 {
-    VkDevice device = GetImplAs<ContextVk>(context)->getDevice();
+    RendererVk *renderer = GetImplAs<ContextVk>(context)->getRenderer();
 
-    // TODO(jmadill): Deferred deletion.
-    mRenderPass.destroy(device);
-    mFramebuffer.destroy(device);
+    renderer->releaseResource(*this, &mRenderPass);
+    renderer->releaseResource(*this, &mFramebuffer);
 }
 
 void FramebufferVk::destroyDefault(const egl::Display *display)
