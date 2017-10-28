@@ -28,6 +28,7 @@
 #include "compiler/translator/PruneNoOps.h"
 #include "compiler/translator/RegenerateStructNames.h"
 #include "compiler/translator/RemoveArrayLengthMethod.h"
+#include "compiler/translator/RemoveEmptySwitchStatements.h"
 #include "compiler/translator/RemoveInvariantDeclaration.h"
 #include "compiler/translator/RemoveNoOpCasesFromEndOfSwitchStatements.h"
 #include "compiler/translator/RemovePow.h"
@@ -392,6 +393,9 @@ TIntermBlock *TCompiler::compileTreeImpl(const char *const shaderStrings[],
         // state. Relies on that PruneNoOps has already been run.
         if (success)
             RemoveNoOpCasesFromEndOfSwitchStatements(root, &symbolTable);
+
+        // Remove empty switch statements - this makes output simpler.
+        RemoveEmptySwitchStatements(root);
 
         // Create the function DAG and check there is no recursion
         if (success)

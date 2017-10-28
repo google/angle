@@ -107,6 +107,8 @@
             'compiler/translator/RegenerateStructNames.h',
             'compiler/translator/RemoveArrayLengthMethod.cpp',
             'compiler/translator/RemoveArrayLengthMethod.h',
+            'compiler/translator/RemoveEmptySwitchStatements.cpp',
+            'compiler/translator/RemoveEmptySwitchStatements.h',
             'compiler/translator/RemoveInvariantDeclaration.cpp',
             'compiler/translator/RemoveInvariantDeclaration.h',
             'compiler/translator/RemoveNoOpCasesFromEndOfSwitchStatements.cpp',
