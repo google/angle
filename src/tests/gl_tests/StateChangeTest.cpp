@@ -73,8 +73,6 @@ class StateChangeTestES3 : public StateChangeTest
     StateChangeTestES3() {}
 };
 
-}  // anonymous namespace
-
 // Ensure that CopyTexImage2D syncs framebuffer changes.
 TEST_P(StateChangeTest, CopyTexImage2DSync)
 {
@@ -740,6 +738,76 @@ TEST_P(StateChangeTestES3, VertexArrayObjectAndDisabledAttributes)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
 }
 
+// Simple state change tests, primarily focused on basic object lifetime and dependency management
+// with back-ends that don't support that automatically (i.e. Vulkan).
+class SimpleStateChangeTest : public ANGLETest
+{
+  protected:
+    SimpleStateChangeTest()
+    {
+        setWindowWidth(64);
+        setWindowHeight(64);
+        setConfigRedBits(8);
+        setConfigGreenBits(8);
+        setConfigBlueBits(8);
+        setConfigAlphaBits(8);
+    }
+
+    void simpleDrawWithBuffer(GLBuffer *buffer);
+};
+
+constexpr char kSimpleVertexShader[] = R"(attribute vec2 position;
+attribute vec4 color;
+varying vec4 vColor;
+void main()
+{
+    gl_Position = vec4(position, 0, 1);
+    vColor = color;
+}
+)";
+
+constexpr char kSimpleFragmentShader[] = R"(precision mediump float;
+varying vec4 vColor;
+void main()
+{
+    gl_FragColor = vColor;
+}
+)";
+
+void SimpleStateChangeTest::simpleDrawWithBuffer(GLBuffer *buffer)
+{
+    ANGLE_GL_PROGRAM(program, kSimpleVertexShader, kSimpleFragmentShader);
+    glUseProgram(program);
+
+    GLint colorLoc = glGetAttribLocation(program, "color");
+    ASSERT_NE(-1, colorLoc);
+
+    glBindBuffer(GL_ARRAY_BUFFER, *buffer);
+    glVertexAttribPointer(colorLoc, 4, GL_UNSIGNED_BYTE, GL_TRUE, 0, nullptr);
+    glEnableVertexAttribArray(colorLoc);
+
+    drawQuad(program, "position", 0.5f, 1.0f, true);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Handles deleting a Buffer when it's being used.
+TEST_P(SimpleStateChangeTest, DeleteBufferInUse)
+{
+    std::vector<GLColor> colorData(6, GLColor::red);
+
+    GLBuffer buffer;
+    glBindBuffer(GL_ARRAY_BUFFER, buffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(GLColor) * colorData.size(), colorData.data(),
+                 GL_STATIC_DRAW);
+
+    simpleDrawWithBuffer(&buffer);
+
+    buffer.reset();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+}
+
+}  // anonymous namespace
+
 ANGLE_INSTANTIATE_TEST(StateChangeTest, ES2_D3D9(), ES2_D3D11(), ES2_OPENGL());
 ANGLE_INSTANTIATE_TEST(StateChangeRenderTest,
                        ES2_D3D9(),
@@ -747,3 +815,5 @@ ANGLE_INSTANTIATE_TEST(StateChangeRenderTest,
                        ES2_OPENGL(),
                        ES2_D3D11_FL9_3());
 ANGLE_INSTANTIATE_TEST(StateChangeTestES3, ES3_D3D11(), ES3_OPENGL());
+
+ANGLE_INSTANTIATE_TEST(SimpleStateChangeTest, ES2_VULKAN(), ES2_OPENGL());
