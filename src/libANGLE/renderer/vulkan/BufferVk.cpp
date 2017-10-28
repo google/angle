@@ -31,6 +31,11 @@ void BufferVk::destroy(const gl::Context *context)
     ContextVk *contextVk = GetImplAs<ContextVk>(context);
     RendererVk *renderer = contextVk->getRenderer();
 
+    release(renderer);
+}
+
+void BufferVk::release(RendererVk *renderer)
+{
     renderer->releaseResource(*this, &mBuffer);
     renderer->releaseResource(*this, &mBufferMemory);
 }
@@ -46,6 +51,9 @@ gl::Error BufferVk::setData(const gl::Context *context,
 
     if (size > mCurrentRequiredSize)
     {
+        // Release and re-create the memory and buffer.
+        release(contextVk->getRenderer());
+
         // TODO(jmadill): Proper usage bit implementation. Likely will involve multiple backing
         // buffers like in D3D11.
         VkBufferCreateInfo createInfo;

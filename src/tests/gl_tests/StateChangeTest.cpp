@@ -806,6 +806,32 @@ TEST_P(SimpleStateChangeTest, DeleteBufferInUse)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
 }
 
+// Tests that resizing a Buffer during a draw works as expected.
+TEST_P(SimpleStateChangeTest, RedefineBufferInUse)
+{
+    std::vector<GLColor> redColorData(6, GLColor::red);
+
+    GLBuffer buffer;
+    glBindBuffer(GL_ARRAY_BUFFER, buffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(GLColor) * redColorData.size(), redColorData.data(),
+                 GL_STATIC_DRAW);
+
+    // Trigger a pull from the buffer.
+    simpleDrawWithBuffer(&buffer);
+
+    // Redefine the buffer that's in-flight.
+    std::vector<GLColor> greenColorData(1024, GLColor::green);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(GLColor) * greenColorData.size(), greenColorData.data(),
+                 GL_STATIC_DRAW);
+
+    // Trigger the flush and verify the first draw worked.
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    // Draw again and verify the new data is correct.
+    simpleDrawWithBuffer(&buffer);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 }  // anonymous namespace
 
 ANGLE_INSTANTIATE_TEST(StateChangeTest, ES2_D3D9(), ES2_D3D11(), ES2_OPENGL());

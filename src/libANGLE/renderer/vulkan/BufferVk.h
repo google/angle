@@ -15,6 +15,7 @@
 
 namespace rx
 {
+class RendererVk;
 
 class BufferVk : public BufferImpl, public ResourceVk
 {
@@ -57,6 +58,7 @@ class BufferVk : public BufferImpl, public ResourceVk
 
   private:
     vk::Error setDataImpl(VkDevice device, const uint8_t *data, size_t size, size_t offset);
+    void release(RendererVk *renderer);
 
     vk::Buffer mBuffer;
     vk::DeviceMemory mBufferMemory;
