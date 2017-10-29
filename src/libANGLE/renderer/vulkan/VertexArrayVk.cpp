@@ -40,7 +40,7 @@ void VertexArrayVk::syncState(const gl::Context *context,
 
     // Invalidate current pipeline.
     // TODO(jmadill): Use pipeline cache.
-    auto contextVk = GetImplAs<ContextVk>(context);
+    auto contextVk = vk::GetImpl(context);
     contextVk->invalidateCurrentPipeline();
 
     // Invalidate the vertex descriptions.
@@ -67,7 +67,7 @@ void VertexArrayVk::syncState(const gl::Context *context,
 
             if (bufferGL)
             {
-                BufferVk *bufferVk                            = GetImplAs<BufferVk>(bufferGL);
+                BufferVk *bufferVk                            = vk::GetImpl(bufferGL);
                 mCurrentVkBuffersCache[attribIndex]           = bufferVk;
                 mCurrentVertexBufferHandlesCache[attribIndex] = bufferVk->getVkBuffer().getHandle();
             }

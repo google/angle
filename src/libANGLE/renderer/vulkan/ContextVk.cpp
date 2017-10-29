@@ -257,10 +257,10 @@ gl::Error ContextVk::initPipeline(const gl::Context *context)
     const auto &state     = mState.getState();
     const auto &programGL = state.getProgram();
     const auto &vao       = state.getVertexArray();
-    const auto &programVk = GetImplAs<ProgramVk>(programGL);
     const auto *drawFBO   = state.getDrawFramebuffer();
-    FramebufferVk *vkFBO  = GetImplAs<FramebufferVk>(drawFBO);
-    VertexArrayVk *vkVAO  = GetImplAs<VertexArrayVk>(vao);
+    ProgramVk *programVk  = vk::GetImpl(programGL);
+    FramebufferVk *vkFBO  = vk::GetImpl(drawFBO);
+    VertexArrayVk *vkVAO  = vk::GetImpl(vao);
 
     // Ensure the attribs and bindings are updated.
     vkVAO->updateVertexDescriptions(context);
@@ -309,11 +309,11 @@ gl::Error ContextVk::setupDraw(const gl::Context *context, GLenum mode)
 
     const auto &state     = mState.getState();
     const auto &programGL = state.getProgram();
-    ProgramVk *programVk  = GetImplAs<ProgramVk>(programGL);
+    ProgramVk *programVk  = vk::GetImpl(programGL);
     const auto &vao       = state.getVertexArray();
-    VertexArrayVk *vkVAO  = GetImplAs<VertexArrayVk>(vao);
+    VertexArrayVk *vkVAO  = vk::GetImpl(vao);
     const auto *drawFBO   = state.getDrawFramebuffer();
-    FramebufferVk *vkFBO  = GetImplAs<FramebufferVk>(drawFBO);
+    FramebufferVk *vkFBO  = vk::GetImpl(drawFBO);
     Serial queueSerial    = mRenderer->getCurrentQueueSerial();
     uint32_t maxAttrib    = programGL->getState().getMaxActiveAttribLocation();
 
@@ -336,7 +336,7 @@ gl::Error ContextVk::setupDraw(const gl::Context *context, GLenum mode)
     vkVAO->updateCurrentBufferSerials(programGL->getActiveAttribLocationsMask(), queueSerial);
 
     // TODO(jmadill): Can probably use more dirty bits here.
-    ContextVk *contextVk = GetImplAs<ContextVk>(context);
+    ContextVk *contextVk = vk::GetImpl(context);
     ANGLE_TRY(programVk->updateUniforms(contextVk));
     programVk->updateTexturesDescriptorSet(contextVk);
 
@@ -406,7 +406,7 @@ gl::Error ContextVk::drawElements(const gl::Context *context,
         mState.getState().getVertexArray()->getElementArrayBuffer().get();
     ASSERT(elementArrayBuffer);
 
-    BufferVk *elementArrayBufferVk = GetImplAs<BufferVk>(elementArrayBuffer);
+    BufferVk *elementArrayBufferVk = vk::GetImpl(elementArrayBuffer);
 
     commandBuffer->bindIndexBuffer(elementArrayBufferVk->getVkBuffer(), 0, GetVkIndexType(type));
     commandBuffer->drawIndexed(count, 1, 0, 0, 0);
@@ -707,12 +707,12 @@ void ContextVk::syncState(const gl::Context *context, const gl::State::DirtyBits
             case gl::State::DIRTY_BIT_PROGRAM_EXECUTABLE:
             {
                 // { vertex, fragment }
-                ProgramVk *programVk           = GetImplAs<ProgramVk>(glState.getProgram());
+                ProgramVk *programVk           = vk::GetImpl(glState.getProgram());
                 mCurrentShaderStages[0].module = programVk->getLinkedVertexModule().getHandle();
                 mCurrentShaderStages[1].module = programVk->getLinkedFragmentModule().getHandle();
 
                 // Also invalidate the vertex descriptions cache in the Vertex Array.
-                VertexArrayVk *vaoVk = GetImplAs<VertexArrayVk>(glState.getVertexArray());
+                VertexArrayVk *vaoVk = vk::GetImpl(glState.getVertexArray());
                 vaoVk->invalidateVertexDescriptions();
 
                 dirtyTextures = true;
@@ -761,7 +761,7 @@ void ContextVk::syncState(const gl::Context *context, const gl::State::DirtyBits
 
     if (dirtyTextures)
     {
-        ProgramVk *programVk = GetImplAs<ProgramVk>(glState.getProgram());
+        ProgramVk *programVk = vk::GetImpl(glState.getProgram());
         programVk->invalidateTextures();
     }
 }

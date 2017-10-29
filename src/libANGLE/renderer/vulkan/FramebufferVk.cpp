@@ -96,7 +96,7 @@ FramebufferVk::~FramebufferVk()
 
 void FramebufferVk::destroy(const gl::Context *context)
 {
-    RendererVk *renderer = GetImplAs<ContextVk>(context)->getRenderer();
+    RendererVk *renderer = vk::GetImpl(context)->getRenderer();
 
     renderer->releaseResource(*this, &mRenderPass);
     renderer->releaseResource(*this, &mFramebuffer);
@@ -104,7 +104,7 @@ void FramebufferVk::destroy(const gl::Context *context)
 
 void FramebufferVk::destroyDefault(const egl::Display *display)
 {
-    VkDevice device = GetImplAs<DisplayVk>(display)->getRenderer()->getDevice();
+    VkDevice device = vk::GetImpl(display)->getRenderer()->getDevice();
 
     mRenderPass.destroy(device);
     mFramebuffer.destroy(device);
@@ -137,7 +137,7 @@ gl::Error FramebufferVk::invalidateSub(const gl::Context *context,
 
 gl::Error FramebufferVk::clear(const gl::Context *context, GLbitfield mask)
 {
-    ContextVk *contextVk = GetImplAs<ContextVk>(context);
+    ContextVk *contextVk = vk::GetImpl(context);
 
     if (mState.getDepthAttachment() && (mask & GL_DEPTH_BUFFER_BIT) != 0)
     {
@@ -266,7 +266,7 @@ gl::Error FramebufferVk::readPixels(const gl::Context *context,
     RenderTargetVk *renderTarget = nullptr;
     ANGLE_TRY(readAttachment->getRenderTarget(context, &renderTarget));
 
-    ContextVk *contextVk = GetImplAs<ContextVk>(context);
+    ContextVk *contextVk = vk::GetImpl(context);
     RendererVk *renderer = contextVk->getRenderer();
     VkDevice device      = renderer->getDevice();
 
@@ -355,7 +355,7 @@ bool FramebufferVk::checkStatus(const gl::Context *context) const
 void FramebufferVk::syncState(const gl::Context *context,
                               const gl::Framebuffer::DirtyBits &dirtyBits)
 {
-    ContextVk *contextVk = GetImplAs<ContextVk>(context);
+    ContextVk *contextVk = vk::GetImpl(context);
     RendererVk *renderer = contextVk->getRenderer();
 
     ASSERT(dirtyBits.any());

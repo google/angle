@@ -183,7 +183,7 @@ WindowSurfaceVk::~WindowSurfaceVk()
 
 void WindowSurfaceVk::destroy(const egl::Display *display)
 {
-    const DisplayVk *displayVk = GetImplAs<DisplayVk>(display);
+    const DisplayVk *displayVk = vk::GetImpl(display);
     RendererVk *rendererVk     = displayVk->getRenderer();
     VkDevice device            = rendererVk->getDevice();
     VkInstance instance        = rendererVk->getInstance();
@@ -218,7 +218,7 @@ void WindowSurfaceVk::destroy(const egl::Display *display)
 
 egl::Error WindowSurfaceVk::initialize(const egl::Display *display)
 {
-    const DisplayVk *displayVk = GetImplAs<DisplayVk>(display);
+    const DisplayVk *displayVk = vk::GetImpl(display);
     return initializeImpl(displayVk->getRenderer()).toEGL(EGL_BAD_SURFACE);
 }
 
@@ -419,7 +419,7 @@ FramebufferImpl *WindowSurfaceVk::createDefaultFramebuffer(const gl::Framebuffer
 
 egl::Error WindowSurfaceVk::swap(const gl::Context *context)
 {
-    const DisplayVk *displayVk = GetImplAs<DisplayVk>(context->getCurrentDisplay());
+    const DisplayVk *displayVk = vk::GetImpl(context->getCurrentDisplay());
     RendererVk *renderer       = displayVk->getRenderer();
 
     vk::CommandBuffer *currentCB = nullptr;

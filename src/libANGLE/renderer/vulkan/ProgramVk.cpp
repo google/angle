@@ -62,7 +62,7 @@ gl::Error InitDefaultUniformBlock(const gl::Context *context,
 
     ANGLE_TRY(storageOut->buffer.init(device, uniformBufferInfo));
 
-    ANGLE_TRY(AllocateBufferMemory(GetImplAs<ContextVk>(context), blockSize, &storageOut->buffer,
+    ANGLE_TRY(AllocateBufferMemory(vk::GetImpl(context), blockSize, &storageOut->buffer,
                                    &storageOut->memory, requiredSizeOut));
 
     return gl::NoError();
@@ -145,7 +145,7 @@ ProgramVk::~ProgramVk()
 
 void ProgramVk::destroy(const gl::Context *contextImpl)
 {
-    VkDevice device = GetImplAs<ContextVk>(contextImpl)->getDevice();
+    VkDevice device = vk::GetImpl(contextImpl)->getDevice();
     reset(device);
 }
 
@@ -202,7 +202,7 @@ gl::LinkResult ProgramVk::link(const gl::Context *glContext,
                                const gl::VaryingPacking &packing,
                                gl::InfoLog &infoLog)
 {
-    ContextVk *contextVk           = GetImplAs<ContextVk>(glContext);
+    ContextVk *contextVk           = vk::GetImpl(glContext);
     RendererVk *renderer           = contextVk->getRenderer();
     GlslangWrapper *glslangWrapper = renderer->getGlslangWrapper();
     VkDevice device                = renderer->getDevice();
@@ -250,7 +250,7 @@ gl::LinkResult ProgramVk::link(const gl::Context *glContext,
 
 gl::Error ProgramVk::initDefaultUniformBlocks(const gl::Context *glContext)
 {
-    ContextVk *contextVk = GetImplAs<ContextVk>(glContext);
+    ContextVk *contextVk = vk::GetImpl(glContext);
     VkDevice device      = contextVk->getDevice();
 
     // Process vertex and fragment uniforms into std140 packing.
@@ -836,7 +836,7 @@ void ProgramVk::updateTexturesDescriptorSet(ContextVk *contextVk)
         // TODO(jmadill): Incomplete textures handling.
         ASSERT(texture);
 
-        TextureVk *textureVk   = GetImplAs<TextureVk>(texture);
+        TextureVk *textureVk   = vk::GetImpl(texture);
         const vk::Image &image = textureVk->getImage();
 
         VkDescriptorImageInfo &imageInfo = descriptorImageInfo[imageCount];

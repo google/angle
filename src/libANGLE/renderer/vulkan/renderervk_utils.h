@@ -19,17 +19,38 @@
 #include "libANGLE/Error.h"
 #include "libANGLE/renderer/renderer_utils.h"
 
+#define ANGLE_GL_OBJECTS_X(PROC) \
+    PROC(Buffer)                 \
+    PROC(Context)                \
+    PROC(Framebuffer)            \
+    PROC(Program)                \
+    PROC(Texture)                \
+    PROC(VertexArray)
+
+#define ANGLE_PRE_DECLARE_OBJECT(OBJ) class OBJ;
+
+namespace egl
+{
+class Display;
+}
+
 namespace gl
 {
 struct Box;
 struct Extents;
 struct RasterizerState;
 struct Rectangle;
+
+ANGLE_GL_OBJECTS_X(ANGLE_PRE_DECLARE_OBJECT);
 }
+
+#define ANGLE_PRE_DECLARE_VK_OBJECT(OBJ) class OBJ##Vk;
 
 namespace rx
 {
-class ContextVk;
+class DisplayVk;
+
+ANGLE_GL_OBJECTS_X(ANGLE_PRE_DECLARE_VK_OBJECT);
 
 const char *VulkanResultString(VkResult result);
 bool HasStandardValidationLayer(const std::vector<VkLayerProperties> &layerProps);
@@ -66,6 +87,35 @@ class ResourceVk
 
 namespace vk
 {
+template <typename T>
+struct ImplTypeHelper;
+
+// clang-format off
+#define ANGLE_IMPL_TYPE_HELPER_GL(OBJ) \
+template<>                             \
+struct ImplTypeHelper<gl::OBJ>         \
+{                                      \
+    using ImplType = OBJ##Vk;          \
+};
+// clang-format on
+
+ANGLE_GL_OBJECTS_X(ANGLE_IMPL_TYPE_HELPER_GL)
+
+template <>
+struct ImplTypeHelper<egl::Display>
+{
+    using ImplType = DisplayVk;
+};
+
+template <typename T>
+using GetImplType = typename ImplTypeHelper<T>::ImplType;
+
+template <typename T>
+GetImplType<T> *GetImpl(const T *glObject)
+{
+    return GetImplAs<GetImplType<T>>(glObject);
+}
+
 class MemoryProperties final : angle::NonCopyable
 {
   public:

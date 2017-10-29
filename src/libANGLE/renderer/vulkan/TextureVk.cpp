@@ -28,7 +28,7 @@ TextureVk::~TextureVk()
 
 gl::Error TextureVk::onDestroy(const gl::Context *context)
 {
-    ContextVk *contextVk = GetImplAs<ContextVk>(context);
+    ContextVk *contextVk = vk::GetImpl(context);
     RendererVk *renderer = contextVk->getRenderer();
 
     renderer->releaseResource(*this, &mImage);
@@ -49,7 +49,7 @@ gl::Error TextureVk::setImage(const gl::Context *context,
                               const gl::PixelUnpackState &unpack,
                               const uint8_t *pixels)
 {
-    ContextVk *contextVk = GetImplAs<ContextVk>(context);
+    ContextVk *contextVk = vk::GetImpl(context);
     RendererVk *renderer = contextVk->getRenderer();
 
     // TODO(jmadill): support multi-level textures.
