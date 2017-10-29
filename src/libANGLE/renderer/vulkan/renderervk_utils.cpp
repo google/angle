@@ -488,14 +488,9 @@ Image::Image() : mCurrentLayout(VK_IMAGE_LAYOUT_UNDEFINED)
 {
 }
 
-Image::Image(VkImage image) : WrappedObject(image), mCurrentLayout(VK_IMAGE_LAYOUT_UNDEFINED)
+void Image::setHandle(VkImage handle)
 {
-}
-
-void Image::retain(VkDevice device, Image &&other)
-{
-    WrappedObject::retain(device, std::move(other));
-    std::swap(mCurrentLayout, other.mCurrentLayout);
+    mHandle = handle;
 }
 
 void Image::reset()
@@ -744,13 +739,6 @@ void StagingImage::destroy(VkDevice device)
 {
     mImage.destroy(device);
     mDeviceMemory.destroy(device);
-}
-
-void StagingImage::retain(VkDevice device, StagingImage &&other)
-{
-    mImage.retain(device, std::move(other.mImage));
-    mDeviceMemory.retain(device, std::move(other.mDeviceMemory));
-    std::swap(mSize, other.mSize);
 }
 
 Error StagingImage::init(VkDevice device,

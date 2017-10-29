@@ -390,19 +390,16 @@ vk::Error WindowSurfaceVk::initializeImpl(RendererVk *renderer)
         imageViewInfo.subresourceRange.baseArrayLayer = 0;
         imageViewInfo.subresourceRange.layerCount     = 1;
 
-        vk::Image image(swapchainImage);
-        vk::ImageView imageView;
-        ANGLE_TRY(imageView.init(device, imageViewInfo));
-
-        // Set transfer dest layout, and clear the image to black.
-        image.changeLayoutTop(VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-                              commandBuffer);
-        commandBuffer->clearSingleColorImage(image, transparentBlack);
-
         auto &member = mSwapchainImages[imageIndex];
 
-        member.image.retain(device, std::move(image));
-        member.imageView.retain(device, std::move(imageView));
+        member.image.setHandle(swapchainImage);
+        ANGLE_TRY(member.imageView.init(device, imageViewInfo));
+
+        // Set transfer dest layout, and clear the image to black.
+        member.image.changeLayoutTop(VK_IMAGE_ASPECT_COLOR_BIT,
+                                     VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, commandBuffer);
+        commandBuffer->clearSingleColorImage(member.image, transparentBlack);
+
         ANGLE_TRY(member.imageAcquiredSemaphore.init(device));
         ANGLE_TRY(member.commandsCompleteSemaphore.init(device));
     }
@@ -578,11 +575,7 @@ gl::ErrorOrResult<vk::Framebuffer *> WindowSurfaceVk::getCurrentFramebuffer(
     for (auto &swapchainImage : mSwapchainImages)
     {
         framebufferInfo.pAttachments = swapchainImage.imageView.ptr();
-
-        vk::Framebuffer framebuffer;
-        ANGLE_TRY(framebuffer.init(device, framebufferInfo));
-
-        swapchainImage.framebuffer.retain(device, std::move(framebuffer));
+        ANGLE_TRY(swapchainImage.framebuffer.init(device, framebufferInfo));
     }
 
     ASSERT(currentFramebuffer.valid());

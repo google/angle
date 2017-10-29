@@ -479,10 +479,7 @@ gl::ErrorOrResult<vk::RenderPass *> FramebufferVk::getRenderPass(const gl::Conte
     renderPassInfo.dependencyCount = 0;
     renderPassInfo.pDependencies   = nullptr;
 
-    vk::RenderPass renderPass;
-    ANGLE_TRY(renderPass.init(device, renderPassInfo));
-
-    mRenderPass.retain(device, std::move(renderPass));
+    ANGLE_TRY(mRenderPass.init(device, renderPassInfo));
 
     return &mRenderPass;
 }
@@ -549,10 +546,7 @@ gl::ErrorOrResult<vk::Framebuffer *> FramebufferVk::getFramebuffer(const gl::Con
     framebufferInfo.height          = static_cast<uint32_t>(attachmentsSize.height);
     framebufferInfo.layers          = 1;
 
-    vk::Framebuffer framebuffer;
-    ANGLE_TRY(framebuffer.init(device, framebufferInfo));
-
-    mFramebuffer.retain(device, std::move(framebuffer));
+    ANGLE_TRY(mFramebuffer.init(device, framebufferInfo));
 
     return &mFramebuffer;
 }

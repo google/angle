@@ -288,11 +288,7 @@ gl::Error ContextVk::initPipeline(const gl::Context *context)
     mCurrentPipelineInfo.layout     = pipelineLayout.getHandle();
     mCurrentPipelineInfo.renderPass = renderPass->getHandle();
 
-    vk::Pipeline newPipeline;
-    ANGLE_TRY(newPipeline.initGraphics(device, mCurrentPipelineInfo));
-
-    // TODO(jmadill): Don't dispose the current pipeline immediately, it could be in use.
-    mCurrentPipeline.retain(device, std::move(newPipeline));
+    ANGLE_TRY(mCurrentPipeline.initGraphics(device, mCurrentPipelineInfo));
 
     return gl::NoError();
 }
