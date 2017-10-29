@@ -86,7 +86,7 @@ gl::Error TextureVk::setImage(const gl::Context *context,
         imageInfo.pNext         = nullptr;
         imageInfo.flags         = 0;
         imageInfo.imageType     = VK_IMAGE_TYPE_2D;
-        imageInfo.format        = vkFormat.native;
+        imageInfo.format        = vkFormat.vkTextureFormat;
         imageInfo.extent.width  = size.width;
         imageInfo.extent.height = size.height;
         imageInfo.extent.depth  = size.depth;
@@ -128,7 +128,7 @@ gl::Error TextureVk::setImage(const gl::Context *context,
         viewInfo.flags                           = 0;
         viewInfo.image                           = mImage.getHandle();
         viewInfo.viewType                        = VK_IMAGE_VIEW_TYPE_2D;
-        viewInfo.format                          = vkFormat.native;
+        viewInfo.format                          = vkFormat.vkTextureFormat;
         viewInfo.components.r                    = VK_COMPONENT_SWIZZLE_R;
         viewInfo.components.g                    = VK_COMPONENT_SWIZZLE_G;
         viewInfo.components.b                    = VK_COMPONENT_SWIZZLE_B;

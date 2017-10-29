@@ -19,16 +19,23 @@ namespace vk
 
 Format::Format()
     : internalFormat(GL_NONE),
-      formatID(angle::Format::ID::NONE),
-      native(VK_FORMAT_UNDEFINED),
+      textureFormatID(angle::Format::ID::NONE),
+      vkTextureFormat(VK_FORMAT_UNDEFINED),
+      bufferFormatID(angle::Format::ID::NONE),
+      vkBufferFormat(VK_FORMAT_UNDEFINED),
       dataInitializerFunction(nullptr),
       loadFunctions()
 {
 }
 
-const angle::Format &Format::format() const
+const angle::Format &Format::textureFormat() const
 {
-    return angle::Format::Get(formatID);
+    return angle::Format::Get(textureFormatID);
+}
+
+const angle::Format &Format::bufferFormat() const
+{
+    return angle::Format::Get(bufferFormatID);
 }
 
 FormatTable::FormatTable()
@@ -47,8 +54,8 @@ void FormatTable::initialize(VkPhysicalDevice physicalDevice, gl::TextureCapsMap
         const angle::Format &angleFormat = angle::Format::Get(formatID);
         mFormatData[formatIndex].initialize(physicalDevice, angleFormat);
 
-        mFormatData[formatIndex].loadFunctions =
-            GetLoadFunctionsMap(mFormatData[formatIndex].internalFormat, formatID);
+        mFormatData[formatIndex].loadFunctions = GetLoadFunctionsMap(
+            mFormatData[formatIndex].internalFormat, mFormatData[formatIndex].textureFormatID);
     }
 }
 

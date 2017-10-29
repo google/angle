@@ -35,11 +35,14 @@ struct Format final : private angle::NonCopyable
     // This is an auto-generated method in vk_format_table_autogen.cpp.
     void initialize(VkPhysicalDevice physicalDevice, const angle::Format &angleFormat);
 
-    const angle::Format &format() const;
+    const angle::Format &textureFormat() const;
+    const angle::Format &bufferFormat() const;
 
     GLenum internalFormat;
-    angle::Format::ID formatID;
-    VkFormat native;
+    angle::Format::ID textureFormatID;
+    VkFormat vkTextureFormat;
+    angle::Format::ID bufferFormatID;
+    VkFormat vkBufferFormat;
     InitializeTextureDataFunction dataInitializerFunction;
     LoadFunctionMap loadFunctions;
 };

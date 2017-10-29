@@ -301,8 +301,8 @@ vk::Error WindowSurfaceVk::initializeImpl(RendererVk *renderer)
     ANGLE_VK_TRY(vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice, mSurface, &surfaceFormatCount,
                                                       surfaceFormats.data()));
 
-    mRenderTarget.format = &GetVkFormatFromConfig(renderer, *mState.config);
-    auto nativeFormat    = mRenderTarget.format->native;
+    mRenderTarget.format  = &GetVkFormatFromConfig(renderer, *mState.config);
+    VkFormat nativeFormat = mRenderTarget.format->vkTextureFormat;
 
     if (surfaceFormatCount == 1u && surfaceFormats[0].format == VK_FORMAT_UNDEFINED)
     {

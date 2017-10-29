@@ -38,7 +38,7 @@ gl::ErrorOrResult<const gl::InternalFormat *> GetReadAttachmentInfo(
     RenderTargetVk *renderTarget = nullptr;
     ANGLE_TRY(readAttachment->getRenderTarget(context, &renderTarget));
 
-    GLenum implFormat = renderTarget->format->format().fboImplementationInternalFormat;
+    GLenum implFormat = renderTarget->format->textureFormat().fboImplementationInternalFormat;
     return &gl::GetSizedInternalFormatInfo(implFormat);
 }
 
@@ -316,7 +316,7 @@ gl::Error FramebufferVk::readPixels(const gl::Context *context,
     ANGLE_TRY(
         stagingImage.getDeviceMemory().map(device, 0, stagingImage.getSize(), 0, &mapPointer));
 
-    const auto &angleFormat = renderTarget->format->format();
+    const auto &angleFormat = renderTarget->format->textureFormat();
 
     // TODO(jmadill): Use pixel bytes from the ANGLE format directly.
     const auto &glFormat = gl::GetSizedInternalFormatInfo(angleFormat.glInternalFormat);
@@ -395,7 +395,7 @@ gl::ErrorOrResult<vk::RenderPass *> FramebufferVk::getRenderPass(const gl::Conte
 
             // TODO(jmadill): We would only need this flag for duplicated attachments.
             colorDesc.flags   = VK_ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT;
-            colorDesc.format  = renderTarget->format->native;
+            colorDesc.format  = renderTarget->format->vkTextureFormat;
             colorDesc.samples = ConvertSamples(colorAttachment.getSamples());
 
             // The load op controls the prior existing depth/color attachment data.
@@ -429,7 +429,7 @@ gl::ErrorOrResult<vk::RenderPass *> FramebufferVk::getRenderPass(const gl::Conte
         ANGLE_TRY(depthStencilAttachment->getRenderTarget(context, &renderTarget));
 
         depthStencilDesc.flags          = 0;
-        depthStencilDesc.format         = renderTarget->format->native;
+        depthStencilDesc.format         = renderTarget->format->vkTextureFormat;
         depthStencilDesc.samples        = ConvertSamples(depthStencilAttachment->getSamples());
         depthStencilDesc.loadOp         = VK_ATTACHMENT_LOAD_OP_CLEAR;
         depthStencilDesc.storeOp        = VK_ATTACHMENT_STORE_OP_STORE;

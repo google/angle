@@ -775,7 +775,7 @@ vk::Error RendererVk::createStagingImage(TextureDimension dimension,
                                          vk::StagingImage *imageOut)
 {
     ANGLE_TRY(imageOut->init(mDevice, mCurrentQueueFamilyIndex, mMemoryProperties, dimension,
-                             format.native, extent, usage));
+                             format.vkTextureFormat, extent, usage));
     return vk::NoError();
 }
 

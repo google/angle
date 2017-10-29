@@ -57,16 +57,18 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
 }}  // namespace rx
 """
 
-empty_format_entry_template = """{space}case angle::Format::ID::{formatName}:
+empty_format_entry_template = """{space}case angle::Format::ID::{format_id}:
 {space}    // This format is not implemented in Vulkan.
 {space}    break;
 """
 
-format_entry_template = """{space}case angle::Format::ID::{formatName}:
+format_entry_template = """{space}case angle::Format::ID::{format_id}:
 {space}{{
-{space}    internalFormat = {internalFormat};
-{space}    formatID = angle::Format::ID::{formatName};
-{space}    native = {vkFormat};
+{space}    internalFormat = {internal_format};
+{space}    textureFormatID = angle::Format::ID::{texture_format_id};
+{space}    vkTextureFormat = {vk_texture_format};
+{space}    bufferFormatID = angle::Format::ID::{buffer_format_id};
+{space}    vkBufferFormat = {vk_buffer_format};
 {space}    dataInitializerFunction = {initializer};
 {space}    break;
 {space}}}
@@ -77,17 +79,44 @@ def gen_format_case(angle, internal_format, vk_map):
     if angle not in vk_map or angle == 'NONE':
         return empty_format_entry_template.format(
             space = '        ',
-            formatName = angle)
+            format_id = angle)
+
+    texture_format_id = angle
+    buffer_format_id = angle
 
     vk_format_name = vk_map[angle]
+    vk_buffer_format = vk_format_name
+    vk_texture_format = vk_format_name
+
+    if isinstance(vk_format_name, dict):
+        info = vk_format_name
+        vk_format_name = info["native"]
+
+        if "buffer" in info:
+            buffer_format_id = info["buffer"]
+            vk_buffer_format = vk_map[buffer_format_id]
+            assert(not isinstance(vk_buffer_format, dict))
+        else:
+            vk_buffer_format = vk_format_name
+
+        if "texture" in info:
+            texture_format_id = info["texture"]
+            vk_texture_format = vk_map[texture_format_id]
+            assert(not isinstance(vk_texture_format, dict))
+        else:
+            vk_texture_format = vk_format_name
+
     initializer = angle_format.get_internal_format_initializer(
-        internal_format, vk_format_name)
+        internal_format, texture_format_id)
 
     return format_entry_template.format(
         space = '        ',
-        internalFormat = internal_format,
-        formatName = angle,
-        vkFormat = vk_format_name,
+        internal_format = internal_format,
+        format_id = angle,
+        texture_format_id = texture_format_id,
+        buffer_format_id = buffer_format_id,
+        vk_buffer_format = vk_buffer_format,
+        vk_texture_format = vk_texture_format,
         initializer = initializer)
 
 input_file_name = 'vk_format_map.json'
