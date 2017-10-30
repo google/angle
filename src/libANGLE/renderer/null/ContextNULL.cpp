@@ -90,6 +90,11 @@ ContextNULL::ContextNULL(const gl::ContextState &state, AllocationTrackerNULL *a
     mExtensions.lossyETCDecode             = true;
     mExtensions.geometryShader             = true;
 
+    mExtensions.eglImage                  = true;
+    mExtensions.eglImageExternal          = true;
+    mExtensions.eglImageExternalEssl3     = true;
+    mExtensions.eglStreamConsumerExternal = true;
+
     const gl::Version maxClientVersion(3, 1);
     mCaps = GenerateMinimumCaps(maxClientVersion, mExtensions);
 

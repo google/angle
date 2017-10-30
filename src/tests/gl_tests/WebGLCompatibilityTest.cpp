@@ -427,6 +427,74 @@ TEST_P(WebGLCompatibilityTest, EnableExtensionTextureFilterAnisotropic)
     }
 }
 
+// Test enabling the EGL image extensions
+TEST_P(WebGLCompatibilityTest, EnableExtensionEGLImage)
+{
+    EXPECT_FALSE(extensionEnabled("GL_OES_EGL_image"));
+    EXPECT_FALSE(extensionEnabled("GL_OES_EGL_image_external"));
+    EXPECT_FALSE(extensionEnabled("GL_OES_EGL_image_external_essl3"));
+    EXPECT_FALSE(extensionEnabled("NV_EGL_stream_consumer_external"));
+
+    const std::string &fragES2 =
+        "#extension GL_OES_EGL_image_external : require\n"
+        "precision highp float;\n"
+        "uniform samplerExternalOES sampler;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_FragColor = texture2D(sampler, vec2(0, 0));\n"
+        "}";
+    EXPECT_EQ(0u, CompileShader(GL_FRAGMENT_SHADER, fragES2));
+
+    const std::string &fragES3 =
+        "#version 300 es\n"
+        "#extension GL_OES_EGL_image_external : require\n"
+        "precision highp float;\n"
+        "uniform samplerExternalOES sampler;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_FragColor = texture(sampler, vec2(0, 0));\n"
+        "}";
+    if (getClientMajorVersion() > 3)
+    {
+        EXPECT_EQ(0u, CompileShader(GL_FRAGMENT_SHADER, fragES3));
+    }
+
+    glBindTexture(GL_TEXTURE_EXTERNAL_OES, 0);
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+    GLint result;
+    glGetIntegerv(GL_TEXTURE_BINDING_EXTERNAL_OES, &result);
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+    if (extensionRequestable("GL_OES_EGL_image_external"))
+    {
+        glRequestExtensionANGLE("GL_OES_EGL_image_external");
+        EXPECT_GL_NO_ERROR();
+        EXPECT_TRUE(extensionEnabled("GL_OES_EGL_image_external"));
+
+        EXPECT_NE(0u, CompileShader(GL_FRAGMENT_SHADER, fragES2));
+
+        glBindTexture(GL_TEXTURE_EXTERNAL_OES, 0);
+        EXPECT_GL_NO_ERROR();
+
+        glGetIntegerv(GL_TEXTURE_BINDING_EXTERNAL_OES, &result);
+        EXPECT_GL_NO_ERROR();
+
+        if (getClientMajorVersion() > 3 && extensionRequestable("GL_OES_EGL_image_external_essl3"))
+        {
+            glRequestExtensionANGLE("GL_OES_EGL_image_external_essl3");
+            EXPECT_GL_NO_ERROR();
+            EXPECT_TRUE(extensionEnabled("GL_OES_EGL_image_external_essl3"));
+
+            EXPECT_NE(0u, CompileShader(GL_FRAGMENT_SHADER, fragES3));
+        }
+        else
+        {
+            EXPECT_EQ(0u, CompileShader(GL_FRAGMENT_SHADER, fragES3));
+        }
+    }
+}
+
 // Verify that shaders are of a compatible spec when the extension is enabled.
 TEST_P(WebGLCompatibilityTest, ExtensionCompilerSpec)
 {

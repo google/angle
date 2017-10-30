@@ -665,10 +665,10 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_OES_fbo_render_mipmap"] = enableableExtension(&Extensions::fboRenderMipmap);
         map["GL_EXT_discard_framebuffer"] = esOnlyExtension(&Extensions::discardFramebuffer);
         map["GL_EXT_debug_marker"] = esOnlyExtension(&Extensions::debugMarker);
-        map["GL_OES_EGL_image"] = esOnlyExtension(&Extensions::eglImage);
-        map["GL_OES_EGL_image_external"] = esOnlyExtension(&Extensions::eglImageExternal);
-        map["GL_OES_EGL_image_external_essl3"] = esOnlyExtension(&Extensions::eglImageExternalEssl3);
-        map["GL_NV_EGL_stream_consumer_external"] = esOnlyExtension(&Extensions::eglStreamConsumerExternal);
+        map["GL_OES_EGL_image"] = enableableExtension(&Extensions::eglImage);
+        map["GL_OES_EGL_image_external"] = enableableExtension(&Extensions::eglImageExternal);
+        map["GL_OES_EGL_image_external_essl3"] = enableableExtension(&Extensions::eglImageExternalEssl3);
+        map["GL_NV_EGL_stream_consumer_external"] = enableableExtension(&Extensions::eglStreamConsumerExternal);
         map["GL_EXT_unpack_subimage"] = enableableExtension(&Extensions::unpackSubimage);
         map["GL_NV_pack_subimage"] = enableableExtension(&Extensions::packSubimage);
         map["GL_EXT_color_buffer_float"] = enableableExtension(&Extensions::colorBufferFloat);
