@@ -2,7 +2,7 @@
 
 There are many situations in which it's useful for WebGL applications to
 transform shaders in various ways. ANGLE's shader translator can be used for
-this purpose: compiling it with [Emscripten](http://emscripten.org/) allows it
+this purpose: compiling it with [Emscripten](http://kripken.github.io/emscripten-site/) allows it
 to be invoked from a web page. This wiki page provides some preliminary details
 about how to do this.
 
@@ -10,14 +10,12 @@ about how to do this.
 
 Pull top of tree ANGLE.
 
-Install the Emscripten toolchain per the [instructions]
-(http://kripken.github.io/emscripten-site/).
+Install the Emscripten toolchain per the [instructions](http://kripken.github.io/emscripten-site/).
 
-Symlink (preferred) or copy the ANGLE directory into ...emsdk/emscripten/master.
+Symlink (preferred) or copy the ANGLE directory into `...emsdk/emscripten/master`.
 
 Put a shader to compile into a file (named with .vert or .frag suffix) in the
-same directory. For example, put the following shader from the [WebGL Aquarium]
-(http://webglsamples.org/aquarium/aquarium.html) into `aq-fish-nm.frag`:
+same directory. For example, put the following shader from the [WebGL Aquarium](http://webglsamples.org/aquarium/aquarium.html) into `aq-fish-nm.frag`:
 
 ```
 precision mediump float;
@@ -76,7 +74,7 @@ together:
 ```
 
 Serve up the resulting translator.html via `python -m SimpleHTTPServer`.
-Navigate the browser to localhost:8000.
+Navigate the browser to `localhost:8000`.
 
 The translator sample will run, displaying its output into the text area on the
 page. Since it isn't receiving any input, it simply outputs a help message and
