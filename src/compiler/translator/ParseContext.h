@@ -262,6 +262,8 @@ class TParseContext : angle::NonCopyable
                                   TIntermTyped *initializer,
                                   TIntermDeclaration *declarationOut);
 
+    TIntermNode *addEmptyStatement(const TSourceLoc &location);
+
     void parseDefaultPrecisionQualifier(const TPrecision precision,
                                         const TPublicType &type,
                                         const TSourceLoc &loc);

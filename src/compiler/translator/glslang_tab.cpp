@@ -4591,7 +4591,7 @@ yyreduce:
 
   case 262:
 
-    { (yyval.interm.intermNode) = 0; }
+    { (yyval.interm.intermNode) = context->addEmptyStatement((yyloc)); }
 
     break;
 

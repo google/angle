@@ -2701,6 +2701,15 @@ void TParseContext::parseArrayInitDeclarator(const TPublicType &elementType,
     }
 }
 
+TIntermNode *TParseContext::addEmptyStatement(const TSourceLoc &location)
+{
+    // It's simpler to parse an empty statement as a constant expression rather than having a
+    // different type of node just for empty statements, that will be pruned from the AST anyway.
+    TIntermNode *node = CreateZeroNode(TType(EbtInt, EbpMedium));
+    node->setLine(location);
+    return node;
+}
+
 void TParseContext::setAtomicCounterBindingDefaultOffset(const TPublicType &publicType,
                                                          const TSourceLoc &location)
 {

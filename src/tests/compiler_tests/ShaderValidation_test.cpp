@@ -5194,3 +5194,31 @@ TEST_F(FragmentShaderValidationTest, DuplicateFieldNamesInStructDeclaratorList)
         FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
     }
 }
+
+// Test that an empty statement is not allowed in switch before the first case.
+TEST_F(FragmentShaderValidationTest, EmptyStatementInSwitchBeforeFirstCase)
+{
+    const std::string &shaderString =
+        R"(#version 300 es
+
+        precision mediump float;
+        uniform int u_zero;
+        out vec4 my_FragColor;
+
+        void main()
+        {
+            switch(u_zero)
+            {
+                    ;
+                case 0:
+                    my_FragColor = vec4(0.0);
+                default:
+                    my_FragColor = vec4(1.0);
+            }
+        })";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}

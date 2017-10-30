@@ -1293,7 +1293,7 @@ statement_list
     ;
 
 expression_statement
-    : SEMICOLON  { $$ = 0; }
+    : SEMICOLON  { $$ = context->addEmptyStatement(@$); }
     | expression SEMICOLON  { $$ = $1; }
     ;
 
