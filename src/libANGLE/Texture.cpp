@@ -57,7 +57,7 @@ InitState DetermineInitState(const Context *context, const uint8_t *pixels)
         return InitState::Initialized;
 
     const auto &glState = context->getGLState();
-    return (pixels == nullptr && glState.getUnpackState().pixelBuffer.get() == nullptr)
+    return (pixels == nullptr && glState.getTargetBuffer(GL_PIXEL_UNPACK_BUFFER) == nullptr)
                ? InitState::MayNeedInit
                : InitState::Initialized;
 }

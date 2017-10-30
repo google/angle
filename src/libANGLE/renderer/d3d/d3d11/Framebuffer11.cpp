@@ -284,12 +284,12 @@ gl::Error Framebuffer11::readPixelsImpl(const gl::Context *context,
     const gl::FramebufferAttachment *readAttachment = mState.getReadAttachment();
     ASSERT(readAttachment);
 
-    gl::Buffer *packBuffer = pack.pixelBuffer.get();
+    gl::Buffer *packBuffer = context->getGLState().getTargetBuffer(GL_PIXEL_PACK_BUFFER);
     if (packBuffer != nullptr)
     {
         Buffer11 *packBufferStorage = GetImplAs<Buffer11>(packBuffer);
         PackPixelsParams packParams(area, format, type, static_cast<GLuint>(outputPitch), pack,
-                                    reinterpret_cast<ptrdiff_t>(pixels));
+                                    packBuffer, reinterpret_cast<ptrdiff_t>(pixels));
 
         return packBufferStorage->packPixels(context, *readAttachment, packParams);
     }

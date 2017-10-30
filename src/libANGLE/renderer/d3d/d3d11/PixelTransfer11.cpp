@@ -153,7 +153,7 @@ gl::Error PixelTransfer11::copyBufferToTexture(const gl::Context *context,
            destArea.y >= 0 && destArea.y + destArea.height <= destSize.height &&
            destArea.z >= 0 && destArea.z + destArea.depth  <= destSize.depth  );
 
-    const gl::Buffer &sourceBuffer = *unpack.pixelBuffer.get();
+    const gl::Buffer &sourceBuffer = *context->getGLState().getTargetBuffer(GL_PIXEL_UNPACK_BUFFER);
 
     ASSERT(mRenderer->supportsFastCopyBufferToTexture(destinationFormat));
 

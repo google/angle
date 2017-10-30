@@ -35,19 +35,19 @@ namespace
 
 gl::Error GetUnpackPointer(const gl::Context *context,
                            const gl::PixelUnpackState &unpack,
+                           gl::Buffer *unpackBuffer,
                            const uint8_t *pixels,
                            ptrdiff_t layerOffset,
                            const uint8_t **pointerOut)
 {
-    if (unpack.pixelBuffer.id() != 0)
+    if (unpackBuffer)
     {
         // Do a CPU readback here, if we have an unpack buffer bound and the fast GPU path is not supported
-        gl::Buffer *pixelBuffer = unpack.pixelBuffer.get();
         ptrdiff_t offset = reinterpret_cast<ptrdiff_t>(pixels);
 
         // TODO: this is the only place outside of renderer that asks for a buffers raw data.
         // This functionality should be moved into renderer and the getData method of BufferImpl removed.
-        BufferD3D *bufferD3D = GetImplAs<BufferD3D>(pixelBuffer);
+        BufferD3D *bufferD3D = GetImplAs<BufferD3D>(unpackBuffer);
         ASSERT(bufferD3D);
         const uint8_t *bufferData = nullptr;
         ANGLE_TRY(bufferD3D->getData(context, &bufferData));
@@ -216,6 +216,7 @@ gl::Error TextureD3D::setImageImpl(const gl::Context *context,
                                    ptrdiff_t layerOffset)
 {
     ImageD3D *image = getImage(index);
+    gl::Buffer *unpackBuffer = context->getGLState().getTargetBuffer(GL_PIXEL_UNPACK_BUFFER);
     ASSERT(image);
 
     // No-op
@@ -227,7 +228,7 @@ gl::Error TextureD3D::setImageImpl(const gl::Context *context,
     // We no longer need the "GLenum format" parameter to TexImage to determine what data format "pixels" contains.
     // From our image internal format we know how many channels to expect, and "type" gives the format of pixel's components.
     const uint8_t *pixelData = nullptr;
-    ANGLE_TRY(GetUnpackPointer(context, unpack, pixels, layerOffset, &pixelData));
+    ANGLE_TRY(GetUnpackPointer(context, unpack, unpackBuffer, pixels, layerOffset, &pixelData));
 
     if (pixelData != nullptr)
     {
@@ -260,7 +261,8 @@ gl::Error TextureD3D::subImage(const gl::Context *context,
 {
     // CPU readback & copy where direct GPU copy is not supported
     const uint8_t *pixelData = nullptr;
-    ANGLE_TRY(GetUnpackPointer(context, unpack, pixels, layerOffset, &pixelData));
+    gl::Buffer *unpackBuffer = context->getGLState().getTargetBuffer(GL_PIXEL_UNPACK_BUFFER);
+    ANGLE_TRY(GetUnpackPointer(context, unpack, unpackBuffer, pixels, layerOffset, &pixelData));
 
     if (pixelData != nullptr)
     {
@@ -297,7 +299,8 @@ gl::Error TextureD3D::setCompressedImageImpl(const gl::Context *context,
     // We no longer need the "GLenum format" parameter to TexImage to determine what data format "pixels" contains.
     // From our image internal format we know how many channels to expect, and "type" gives the format of pixel's components.
     const uint8_t *pixelData = nullptr;
-    ANGLE_TRY(GetUnpackPointer(context, unpack, pixels, layerOffset, &pixelData));
+    gl::Buffer *unpackBuffer = context->getGLState().getTargetBuffer(GL_PIXEL_UNPACK_BUFFER);
+    ANGLE_TRY(GetUnpackPointer(context, unpack, unpackBuffer, pixels, layerOffset, &pixelData));
 
     if (pixelData != nullptr)
     {
@@ -319,7 +322,8 @@ gl::Error TextureD3D::subImageCompressed(const gl::Context *context,
                                          ptrdiff_t layerOffset)
 {
     const uint8_t *pixelData = nullptr;
-    ANGLE_TRY(GetUnpackPointer(context, unpack, pixels, layerOffset, &pixelData));
+    gl::Buffer *unpackBuffer = context->getGLState().getTargetBuffer(GL_PIXEL_UNPACK_BUFFER);
+    ANGLE_TRY(GetUnpackPointer(context, unpack, unpackBuffer, pixels, layerOffset, &pixelData));
 
     if (pixelData != nullptr)
     {
@@ -334,9 +338,10 @@ gl::Error TextureD3D::subImageCompressed(const gl::Context *context,
     return gl::NoError();
 }
 
-bool TextureD3D::isFastUnpackable(const gl::PixelUnpackState &unpack, GLenum sizedInternalFormat)
+bool TextureD3D::isFastUnpackable(const gl::Buffer *unpackBuffer, GLenum sizedInternalFormat)
 {
-    return unpack.pixelBuffer.id() != 0 && mRenderer->supportsFastCopyBufferToTexture(sizedInternalFormat);
+    return unpackBuffer != nullptr &&
+           mRenderer->supportsFastCopyBufferToTexture(sizedInternalFormat);
 }
 
 gl::Error TextureD3D::fastUnpackPixels(const gl::Context *context,
@@ -832,7 +837,9 @@ gl::Error TextureD3D_2D::setImage(const gl::Context *context,
     gl::ImageIndex index = gl::ImageIndex::Make2D(level);
 
     // Attempt a fast gpu copy of the pixel data to the surface
-    if (isFastUnpackable(unpack, internalFormatInfo.sizedInternalFormat) && isLevelComplete(level))
+    gl::Buffer *unpackBuffer = context->getGLState().getTargetBuffer(GL_PIXEL_UNPACK_BUFFER);
+    if (isFastUnpackable(unpackBuffer, internalFormatInfo.sizedInternalFormat) &&
+        isLevelComplete(level))
     {
         // Will try to create RT storage if it does not exist
         RenderTargetD3D *destRenderTarget = nullptr;
@@ -870,7 +877,9 @@ gl::Error TextureD3D_2D::setSubImage(const gl::Context *context,
 
     GLint level          = static_cast<GLint>(imageLevel);
     gl::ImageIndex index = gl::ImageIndex::Make2D(level);
-    if (isFastUnpackable(unpack, getInternalFormat(level)) && isLevelComplete(level))
+
+    gl::Buffer *unpackBuffer = context->getGLState().getTargetBuffer(GL_PIXEL_UNPACK_BUFFER);
+    if (isFastUnpackable(unpackBuffer, getInternalFormat(level)) && isLevelComplete(level))
     {
         RenderTargetD3D *renderTarget = nullptr;
         ANGLE_TRY(getRenderTarget(context, index, &renderTarget));
@@ -954,9 +963,11 @@ gl::Error TextureD3D_2D::copyImage(const gl::Context *context,
         angle::MemoryBuffer *zero;
         ANGLE_TRY(context->getZeroFilledBuffer(
             origSourceArea.width * origSourceArea.height * internalFormatInfo.pixelBytes, &zero));
+        gl::PixelUnpackState unpack;
+        unpack.alignment = 1;
         ANGLE_TRY(setImage(context, target, imageLevel, internalFormat, sourceExtents,
-                           internalFormatInfo.format, internalFormatInfo.type,
-                           gl::PixelUnpackState(1, 0), zero->data()));
+                           internalFormatInfo.format, internalFormatInfo.type, unpack,
+                           zero->data()));
     }
 
     gl::Rectangle sourceArea;
@@ -1720,9 +1731,11 @@ gl::Error TextureD3D_Cube::copyImage(const gl::Context *context,
         angle::MemoryBuffer *zero;
         ANGLE_TRY(context->getZeroFilledBuffer(
             origSourceArea.width * origSourceArea.height * internalFormatInfo.pixelBytes, &zero));
+        gl::PixelUnpackState unpack;
+        unpack.alignment = 1;
         ANGLE_TRY(setImage(context, target, imageLevel, internalFormat, size,
-                           internalFormatInfo.format, internalFormatInfo.type,
-                           gl::PixelUnpackState(1, 0), zero->data()));
+                           internalFormatInfo.format, internalFormatInfo.type, unpack,
+                           zero->data()));
     }
 
     gl::Rectangle sourceArea;
@@ -2381,7 +2394,8 @@ gl::Error TextureD3D_3D::setImage(const gl::Context *context,
     gl::ImageIndex index = gl::ImageIndex::Make3D(level);
 
     // Attempt a fast gpu copy of the pixel data to the surface if the app bound an unpack buffer
-    if (isFastUnpackable(unpack, internalFormatInfo.sizedInternalFormat) && !size.empty() &&
+    gl::Buffer *unpackBuffer = context->getGLState().getTargetBuffer(GL_PIXEL_UNPACK_BUFFER);
+    if (isFastUnpackable(unpackBuffer, internalFormatInfo.sizedInternalFormat) && !size.empty() &&
         isLevelComplete(level))
     {
         // Will try to create RT storage if it does not exist
@@ -2422,7 +2436,8 @@ gl::Error TextureD3D_3D::setSubImage(const gl::Context *context,
     gl::ImageIndex index = gl::ImageIndex::Make3D(level);
 
     // Attempt a fast gpu copy of the pixel data to the surface if the app bound an unpack buffer
-    if (isFastUnpackable(unpack, getInternalFormat(level)) && isLevelComplete(level))
+    gl::Buffer *unpackBuffer = context->getGLState().getTargetBuffer(GL_PIXEL_UNPACK_BUFFER);
+    if (isFastUnpackable(unpackBuffer, getInternalFormat(level)) && isLevelComplete(level))
     {
         RenderTargetD3D *destRenderTarget = nullptr;
         ANGLE_TRY(getRenderTarget(context, index, &destRenderTarget));

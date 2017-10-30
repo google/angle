@@ -130,7 +130,7 @@ class TextureD3D : public TextureImpl
                                  const gl::PixelUnpackState &unpack,
                                  const uint8_t *pixels,
                                  ptrdiff_t layerOffset);
-    bool isFastUnpackable(const gl::PixelUnpackState &unpack, GLenum sizedInternalFormat);
+    bool isFastUnpackable(const gl::Buffer *unpackBuffer, GLenum sizedInternalFormat);
     gl::Error fastUnpackPixels(const gl::Context *context,
                                const gl::PixelUnpackState &unpack,
                                const uint8_t *pixels,

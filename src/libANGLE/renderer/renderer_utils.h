@@ -138,7 +138,7 @@ class FastCopyFunctionMap
     const Entry *mData;
 };
 
-struct PackPixelsParams : private angle::NonCopyable
+struct PackPixelsParams
 {
     PackPixelsParams();
     PackPixelsParams(const gl::Rectangle &area,
@@ -146,8 +146,8 @@ struct PackPixelsParams : private angle::NonCopyable
                      GLenum type,
                      GLuint outputPitch,
                      const gl::PixelPackState &pack,
+                     gl::Buffer *packBufferIn,
                      ptrdiff_t offset);
-    PackPixelsParams(const gl::Context *context, const PackPixelsParams &other);
 
     gl::Rectangle area;
     GLenum format;

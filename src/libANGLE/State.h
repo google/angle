@@ -594,7 +594,9 @@ class State : public OnAttachmentDirtyReceiver, angle::NonCopyable
     BindingPointer<Buffer> mCopyReadBuffer;
     BindingPointer<Buffer> mCopyWriteBuffer;
 
+    BindingPointer<Buffer> mPixelUnpackBuffer;
     PixelUnpackState mUnpack;
+    BindingPointer<Buffer> mPixelPackBuffer;
     PixelPackState mPack;
 
     bool mPrimitiveRestart;

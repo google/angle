@@ -3307,25 +3307,24 @@ gl::Error Renderer11::readFromAttachment(const gl::Context *context,
     mDeviceContext->CopySubresourceRegion(stagingHelper.get(), 0, 0, 0, 0, srcTexture->get(),
                                           sourceSubResource, &srcBox);
 
+    gl::Buffer *packBuffer = context->getGLState().getTargetBuffer(GL_PIXEL_PACK_BUFFER);
     if (!invertTexture)
     {
-        PackPixelsParams packParams(safeArea, format, type, outputPitch, pack, 0);
+        PackPixelsParams packParams(safeArea, format, type, outputPitch, pack, packBuffer, 0);
         return packPixels(stagingHelper, packParams, pixelsOut);
     }
-
-    gl::PixelPackState invertTexturePack;
 
     // Create a new PixelPackState with reversed row order. Note that we can't just assign
     // 'invertTexturePack' to be 'pack' (or memcpy) since that breaks the ref counting/object
     // tracking in the 'pixelBuffer' members, causing leaks. Instead we must use
     // pixelBuffer.set() twice, which performs the addRef/release correctly
+    gl::PixelPackState invertTexturePack;
     invertTexturePack.alignment = pack.alignment;
-    invertTexturePack.pixelBuffer.set(context, pack.pixelBuffer.get());
     invertTexturePack.reverseRowOrder = !pack.reverseRowOrder;
 
-    PackPixelsParams packParams(safeArea, format, type, outputPitch, invertTexturePack, 0);
+    PackPixelsParams packParams(safeArea, format, type, outputPitch, invertTexturePack, packBuffer,
+                                0);
     gl::Error error = packPixels(stagingHelper, packParams, pixelsOut);
-    invertTexturePack.pixelBuffer.set(context, nullptr);
     ANGLE_TRY(error);
     return gl::NoError();
 }

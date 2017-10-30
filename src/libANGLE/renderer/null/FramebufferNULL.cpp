@@ -119,13 +119,14 @@ gl::Error FramebufferNULL::readPixels(const gl::Context *context,
                                       void *ptrOrOffset)
 {
     const gl::PixelPackState &packState = context->getGLState().getPackState();
+    gl::Buffer *packBuffer = context->getGLState().getTargetBuffer(GL_PIXEL_PACK_BUFFER);
 
     // Get the pointer to write to from the argument or the pack buffer
     GLubyte *pixels = nullptr;
-    if (packState.pixelBuffer.get() != nullptr)
+    if (packBuffer != nullptr)
     {
-        BufferNULL *pixelBuffer = GetImplAs<BufferNULL>(packState.pixelBuffer.get());
-        pixels                  = reinterpret_cast<GLubyte *>(pixelBuffer->getDataPtr());
+        BufferNULL *packBufferGL = GetImplAs<BufferNULL>(packBuffer);
+        pixels                     = reinterpret_cast<GLubyte *>(packBufferGL->getDataPtr());
         pixels += reinterpret_cast<intptr_t>(ptrOrOffset);
     }
     else

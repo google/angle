@@ -128,19 +128,9 @@ class StateManagerGL final : angle::NonCopyable
     void setClearStencil(GLint clearStencil);
 
     void setPixelUnpackState(const gl::PixelUnpackState &unpack);
-    void setPixelUnpackState(GLint alignment,
-                             GLint rowLength,
-                             GLint skipRows,
-                             GLint skipPixels,
-                             GLint imageHeight,
-                             GLint skipImages,
-                             GLuint unpackBuffer);
+    void setPixelUnpackBuffer(const gl::Buffer *pixelBuffer);
     void setPixelPackState(const gl::PixelPackState &pack);
-    void setPixelPackState(GLint alignment,
-                           GLint rowLength,
-                           GLint skipRows,
-                           GLint skipPixels,
-                           GLuint packBuffer);
+    void setPixelPackBuffer(const gl::Buffer *pixelBuffer);
 
     void setFramebufferSRGBEnabled(const gl::Context *context, bool enabled);
     void setFramebufferSRGBEnabledForFramebuffer(const gl::Context *context,

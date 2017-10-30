@@ -259,61 +259,22 @@ struct ImageUnit
     GLenum format;
 };
 
-struct PixelStoreStateBase : private angle::NonCopyable
+struct PixelStoreStateBase
 {
-    BindingPointer<Buffer> pixelBuffer;
     GLint alignment   = 4;
     GLint rowLength   = 0;
     GLint skipRows    = 0;
     GLint skipPixels  = 0;
     GLint imageHeight = 0;
     GLint skipImages  = 0;
-
-  protected:
-    void copyFrom(const Context *context, const PixelStoreStateBase &other)
-    {
-        pixelBuffer.set(context, other.pixelBuffer.get());
-        alignment   = other.alignment;
-        rowLength   = other.rowLength;
-        skipRows    = other.skipRows;
-        skipPixels  = other.skipPixels;
-        imageHeight = other.imageHeight;
-        skipImages  = other.skipImages;
-    }
 };
 
 struct PixelUnpackState : PixelStoreStateBase
 {
-    PixelUnpackState() {}
-
-    PixelUnpackState(GLint alignmentIn, GLint rowLengthIn)
-    {
-        alignment = alignmentIn;
-        rowLength = rowLengthIn;
-    }
-
-    void copyFrom(const Context *context, const PixelUnpackState &other)
-    {
-        PixelStoreStateBase::copyFrom(context, other);
-    }
 };
 
 struct PixelPackState : PixelStoreStateBase
 {
-    PixelPackState() {}
-
-    PixelPackState(GLint alignmentIn, bool reverseRowOrderIn)
-        : reverseRowOrder(reverseRowOrderIn)
-    {
-        alignment = alignmentIn;
-    }
-
-    void copyFrom(const Context *context, const PixelPackState &other)
-    {
-        PixelStoreStateBase::copyFrom(context, other);
-        reverseRowOrder = other.reverseRowOrder;
-    }
-
     bool reverseRowOrder = false;
 };
 

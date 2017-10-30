@@ -1473,7 +1473,7 @@ gl::Error Buffer11::PackStorage::packPixels(const gl::Context *context,
     ASSERT(srcTexture.valid());
     unsigned int srcSubresource = renderTarget->getSubresourceIndex();
 
-    mQueuedPackCommand.reset(new PackPixelsParams(context, params));
+    mQueuedPackCommand.reset(new PackPixelsParams(params));
 
     gl::Extents srcTextureSize(params.area.width, params.area.height, 1);
     if (!mStagingTexture.get() || mStagingTexture.getFormat() != srcTexture.getFormat() ||

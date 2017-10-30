@@ -237,27 +237,18 @@ PackPixelsParams::PackPixelsParams(const gl::Rectangle &areaIn,
                                    GLenum typeIn,
                                    GLuint outputPitchIn,
                                    const gl::PixelPackState &packIn,
+                                   gl::Buffer *packBufferIn,
                                    ptrdiff_t offsetIn)
     : area(areaIn),
       format(formatIn),
       type(typeIn),
       outputPitch(outputPitchIn),
-      packBuffer(packIn.pixelBuffer.get()),
-      pack(packIn.alignment, packIn.reverseRowOrder),
+      packBuffer(packBufferIn),
+      pack(),
       offset(offsetIn)
 {
-}
-
-PackPixelsParams::PackPixelsParams(const gl::Context *context, const PackPixelsParams &other)
-    : area(other.area),
-      format(other.format),
-      type(other.type),
-      outputPitch(other.outputPitch),
-      packBuffer(other.packBuffer),
-      pack(),
-      offset(other.offset)
-{
-    pack.copyFrom(context, other.pack);
+    pack.alignment       = packIn.alignment;
+    pack.reverseRowOrder = packIn.reverseRowOrder;
 }
 
 void PackPixels(const PackPixelsParams &params,
@@ -509,7 +500,8 @@ gl::Error IncompleteTextureSet::getIncompleteTexture(
 
     const GLubyte color[] = {0, 0, 0, 255};
     const gl::Extents colorSize(1, 1, 1);
-    const gl::PixelUnpackState unpack(1, 0);
+    gl::PixelUnpackState unpack;
+    unpack.alignment = 1;
     const gl::Box area(0, 0, 0, 1, 1, 1);
 
     // If a texture is external use a 2D texture for the incomplete texture

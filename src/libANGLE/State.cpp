@@ -262,8 +262,8 @@ void State::reset(const Context *context)
     mCopyReadBuffer.set(context, nullptr);
     mCopyWriteBuffer.set(context, nullptr);
 
-    mPack.pixelBuffer.set(context, nullptr);
-    mUnpack.pixelBuffer.set(context, nullptr);
+    mPixelPackBuffer.set(context, nullptr);
+    mPixelUnpackBuffer.set(context, nullptr);
 
     mGenericAtomicCounterBuffer.set(context, nullptr);
     for (auto &buf : mAtomicCounterBuffers)
@@ -1340,13 +1340,13 @@ void State::setCopyWriteBufferBinding(const Context *context, Buffer *buffer)
 
 void State::setPixelPackBufferBinding(const Context *context, Buffer *buffer)
 {
-    mPack.pixelBuffer.set(context, buffer);
+    mPixelPackBuffer.set(context, buffer);
     mDirtyBits.set(DIRTY_BIT_PACK_BUFFER_BINDING);
 }
 
 void State::setPixelUnpackBufferBinding(const Context *context, Buffer *buffer)
 {
-    mUnpack.pixelBuffer.set(context, buffer);
+    mPixelUnpackBuffer.set(context, buffer);
     mDirtyBits.set(DIRTY_BIT_UNPACK_BUFFER_BINDING);
 }
 
@@ -1358,8 +1358,10 @@ Buffer *State::getTargetBuffer(GLenum target) const
       case GL_COPY_READ_BUFFER:          return mCopyReadBuffer.get();
       case GL_COPY_WRITE_BUFFER:         return mCopyWriteBuffer.get();
       case GL_ELEMENT_ARRAY_BUFFER:      return getVertexArray()->getElementArrayBuffer().get();
-      case GL_PIXEL_PACK_BUFFER:         return mPack.pixelBuffer.get();
-      case GL_PIXEL_UNPACK_BUFFER:       return mUnpack.pixelBuffer.get();
+      case GL_PIXEL_PACK_BUFFER:
+          return mPixelPackBuffer.get();
+      case GL_PIXEL_UNPACK_BUFFER:
+          return mPixelUnpackBuffer.get();
       case GL_TRANSFORM_FEEDBACK_BUFFER: return mTransformFeedback->getGenericBuffer().get();
       case GL_UNIFORM_BUFFER:            return mGenericUniformBuffer.get();
       case GL_ATOMIC_COUNTER_BUFFER:
@@ -1377,9 +1379,9 @@ Buffer *State::getTargetBuffer(GLenum target) const
 void State::detachBuffer(const Context *context, GLuint bufferName)
 {
     BindingPointer<Buffer> *buffers[] = {
-        &mArrayBuffer,        &mGenericAtomicCounterBuffer, &mCopyReadBuffer,
-        &mCopyWriteBuffer,    &mDrawIndirectBuffer,         &mPack.pixelBuffer,
-        &mUnpack.pixelBuffer, &mGenericUniformBuffer,       &mGenericShaderStorageBuffer};
+        &mArrayBuffer,       &mGenericAtomicCounterBuffer, &mCopyReadBuffer,
+        &mCopyWriteBuffer,   &mDrawIndirectBuffer,         &mPixelPackBuffer,
+        &mPixelUnpackBuffer, &mGenericUniformBuffer,       &mGenericShaderStorageBuffer};
     for (auto buffer : buffers)
     {
         if (buffer->id() == bufferName)
@@ -2044,11 +2046,11 @@ void State::getIntegerv(const Context *context, GLenum pname, GLint *params)
         *params = mCopyWriteBuffer.id();
         break;
       case GL_PIXEL_PACK_BUFFER_BINDING:
-        *params = mPack.pixelBuffer.id();
-        break;
+          *params = mPixelPackBuffer.id();
+          break;
       case GL_PIXEL_UNPACK_BUFFER_BINDING:
-        *params = mUnpack.pixelBuffer.id();
-        break;
+          *params = mPixelUnpackBuffer.id();
+          break;
       case GL_READ_BUFFER:
           *params = mReadFramebuffer->getReadBufferState();
           break;

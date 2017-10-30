@@ -327,7 +327,8 @@ gl::Error FramebufferVk::readPixels(const gl::Context *context,
     params.format      = format;
     params.type        = type;
     params.outputPitch = inputPitch;
-    params.pack.copyFrom(context, glState.getPackState());
+    params.packBuffer  = glState.getTargetBuffer(GL_PIXEL_UNPACK_BUFFER);
+    params.pack        = glState.getPackState();
 
     PackPixels(params, angleFormat, inputPitch, mapPointer, reinterpret_cast<uint8_t *>(pixels));
 

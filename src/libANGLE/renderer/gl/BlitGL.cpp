@@ -178,6 +178,8 @@ gl::Error BlitGL::copyImageToLUMAWorkaroundTexture(const gl::Context *context,
 
     gl::PixelUnpackState unpack;
     mStateManager->setPixelUnpackState(unpack);
+    mStateManager->setPixelUnpackBuffer(
+        context->getGLState().getTargetBuffer(GL_PIXEL_UNPACK_BUFFER));
     mFunctions->texImage2D(target, static_cast<GLint>(level), internalFormat, sourceArea.width,
                            sourceArea.height, 0, format,
                            source->getImplementationColorReadType(context), nullptr);
@@ -571,7 +573,10 @@ gl::Error BlitGL::copySubTextureCPUReadback(const gl::Context *context,
         readFunction     = angle::ReadColor<angle::R8G8B8A8, GLfloat>;
     }
 
-    mStateManager->setPixelUnpackState(gl::PixelUnpackState(1, 0));
+    gl::PixelUnpackState unpack;
+    unpack.alignment = 1;
+    mStateManager->setPixelUnpackState(unpack);
+    mStateManager->setPixelUnpackBuffer(nullptr);
     mFunctions->readPixels(sourceArea.x, sourceArea.y, sourceArea.width, sourceArea.height,
                            readPixelsFormat, GL_UNSIGNED_BYTE, sourceMemory);
 
@@ -585,7 +590,10 @@ gl::Error BlitGL::copySubTextureCPUReadback(const gl::Context *context,
         destInternalFormatInfo.componentType, sourceArea.width, sourceArea.height, unpackFlipY,
         unpackPremultiplyAlpha, unpackUnmultiplyAlpha);
 
-    mStateManager->setPixelPackState(gl::PixelPackState(1, false));
+    gl::PixelPackState pack;
+    pack.alignment = 1;
+    mStateManager->setPixelPackState(pack);
+    mStateManager->setPixelPackBuffer(nullptr);
 
     nativegl::TexSubImageFormat texSubImageFormat =
         nativegl::GetTexSubImageFormat(mFunctions, mWorkarounds, destFormat, destType);
@@ -678,6 +686,7 @@ void BlitGL::orphanScratchTextures()
         mStateManager->bindTexture(GL_TEXTURE_2D, texture);
         gl::PixelUnpackState unpack;
         mStateManager->setPixelUnpackState(unpack);
+        mStateManager->setPixelUnpackBuffer(nullptr);
         mFunctions->texImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 0, 0, 0, GL_RGBA, GL_UNSIGNED_BYTE,
                                nullptr);
     }
