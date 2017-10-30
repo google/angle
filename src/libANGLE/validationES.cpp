@@ -5403,6 +5403,12 @@ bool ValidateTexParameterBase(Context *context,
             break;
 
         case GL_TEXTURE_USAGE_ANGLE:
+            if (!context->getExtensions().textureUsage)
+            {
+                ANGLE_VALIDATION_ERR(context, InvalidEnum(), EnumNotSupported);
+                return false;
+            }
+
             switch (ConvertToGLenum(params[0]))
             {
                 case GL_NONE:
