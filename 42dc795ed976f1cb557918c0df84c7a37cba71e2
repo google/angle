@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ae625493_6a8fbf36",
+        "filename": "src/tests/compiler_tests/GeometryShader_test.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1540,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-10-30T08:07:00Z",
+      "side": 1,
+      "message": "You could still make the shader sources here multiline strings using R\"()\". GLSLTest has examples. It\u0027s better since then the shader source can be directly copied to another file for example when needed.",
+      "range": {
+        "startLine": 1540,
+        "startChar": 8,
+        "endLine": 1540,
+        "endChar": 9
+      },
+      "revId": "42dc795ed976f1cb557918c0df84c7a37cba71e2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9d377980_dfa6e750",
+        "filename": "src/tests/test_utils/compiler_test.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-10-30T08:07:00Z",
+      "side": 1,
+      "message": "I think we can just change the default to GLES31_SPEC. So far I don\u0027t think we have any tests using this test class that would depend on having a more restricted version of the shader spec.",
+      "range": {
+        "startLine": 147,
+        "startChar": 42,
+        "endLine": 147,
+        "endChar": 53
+      },
+      "revId": "42dc795ed976f1cb557918c0df84c7a37cba71e2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
