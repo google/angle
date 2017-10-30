@@ -3592,7 +3592,7 @@ TEST_P(WebGLCompatibilityTest, InvalidTextureFormat)
     EXPECT_GL_ERROR(GL_INVALID_ENUM);
 
     // Verify formats from enableable extensions.
-    if (!IsAndroid())
+    if (!IsOpenGLES())
     {
         validateTexImageExtensionFormat(GL_RED_EXT, "GL_EXT_texture_rg");
     }
