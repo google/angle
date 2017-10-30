@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "3643f632_d12b7cc5",
+        "filename": "src/tests/compiler_tests/GeometryShader_test.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1540,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-10-30T11:20:54Z",
+      "side": 1,
+      "message": "Done\nI will format other shaders in another patch.",
+      "parentUuid": "ae625493_6a8fbf36",
+      "range": {
+        "startLine": 1540,
+        "startChar": 8,
+        "endLine": 1540,
+        "endChar": 9
+      },
+      "revId": "42dc795ed976f1cb557918c0df84c7a37cba71e2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9d377980_dfa6e750",
         "filename": "src/tests/test_utils/compiler_test.cpp",
         "patchSetId": 9
@@ -45,6 +69,30 @@
       "revId": "42dc795ed976f1cb557918c0df84c7a37cba71e2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "82a18e2a_7718b61e",
+        "filename": "src/tests/test_utils/compiler_test.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-10-30T11:20:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9d377980_dfa6e750",
+      "range": {
+        "startLine": 147,
+        "startChar": 42,
+        "endLine": 147,
+        "endChar": 53
+      },
+      "revId": "42dc795ed976f1cb557918c0df84c7a37cba71e2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
