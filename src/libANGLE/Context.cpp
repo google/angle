@@ -343,14 +343,15 @@ Context::Context(rx::EGLImplFactory *implFactory,
         }
     }
 
-    if (mExtensions.textureRectangle)
+    const Extensions &nativeExtensions = mImplementation->getNativeExtensions();
+    if (nativeExtensions.textureRectangle)
     {
         Texture *zeroTextureRectangle =
             new Texture(mImplementation.get(), 0, GL_TEXTURE_RECTANGLE_ANGLE);
         mZeroTextures[GL_TEXTURE_RECTANGLE_ANGLE].set(this, zeroTextureRectangle);
     }
 
-    if (mExtensions.eglImageExternal || mExtensions.eglStreamConsumerExternal)
+    if (nativeExtensions.eglImageExternal || nativeExtensions.eglStreamConsumerExternal)
     {
         Texture *zeroTextureExternal =
             new Texture(mImplementation.get(), 0, GL_TEXTURE_EXTERNAL_OES);

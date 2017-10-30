@@ -64,9 +64,6 @@ ContextNULL::ContextNULL(const gl::ContextState &state, AllocationTrackerNULL *a
 {
     ASSERT(mAllocationTracker != nullptr);
 
-    const gl::Version maxClientVersion(3, 1);
-    mCaps = GenerateMinimumCaps(maxClientVersion);
-
     mExtensions                       = gl::Extensions();
     mExtensions.fence                 = true;
     mExtensions.instancedArrays       = true;
@@ -75,8 +72,12 @@ ContextNULL::ContextNULL(const gl::ContextState &state, AllocationTrackerNULL *a
     mExtensions.mapBufferRange        = true;
     mExtensions.copyTexture           = true;
     mExtensions.copyCompressedTexture = true;
+    mExtensions.textureRectangle      = true;
 
     mExtensions.rgb8rgba8 = true;
+
+    const gl::Version maxClientVersion(3, 1);
+    mCaps = GenerateMinimumCaps(maxClientVersion, mExtensions);
 
     mTextureCaps = GenerateMinimumTextureCapsMap(maxClientVersion, mExtensions);
 }

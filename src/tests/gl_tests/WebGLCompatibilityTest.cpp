@@ -778,6 +778,34 @@ TEST_P(WebGLCompatibilityTest, EnablePackUnpackSubImageExtension)
     }
 }
 
+TEST_P(WebGLCompatibilityTest, EnableTextureRectangle)
+{
+    EXPECT_FALSE(extensionEnabled("GL_ANGLE_texture_rectangle"));
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_RECTANGLE_ANGLE, texture);
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+    GLint minFilter = 0;
+    glGetTexParameteriv(GL_TEXTURE_RECTANGLE_ANGLE, GL_TEXTURE_MIN_FILTER, &minFilter);
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+    if (extensionRequestable("GL_ANGLE_texture_rectangle"))
+    {
+        glRequestExtensionANGLE("GL_ANGLE_texture_rectangle");
+        EXPECT_GL_NO_ERROR();
+
+        EXPECT_TRUE(extensionEnabled("GL_ANGLE_texture_rectangle"));
+
+        glBindTexture(GL_TEXTURE_RECTANGLE_ANGLE, texture);
+        EXPECT_GL_NO_ERROR();
+
+        glTexImage2D(GL_TEXTURE_RECTANGLE_ANGLE, 0, GL_RGBA, 16, 16, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                     nullptr);
+        EXPECT_GL_NO_ERROR();
+    }
+}
+
 // Test enabling the GL_NV_pack_subimage extension
 TEST_P(WebGLCompatibilityTest, EnablePackPackSubImageExtension)
 {

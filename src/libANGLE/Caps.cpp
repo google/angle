@@ -853,7 +853,7 @@ Caps::Caps()
     }
 }
 
-Caps GenerateMinimumCaps(const Version &clientVersion)
+Caps GenerateMinimumCaps(const Version &clientVersion, const Extensions &extensions)
 {
     Caps caps;
 
@@ -1038,6 +1038,11 @@ Caps GenerateMinimumCaps(const Version &clientVersion)
         caps.maxShaderStorageBlockSize          = 1 << 27;
         caps.maxCombinedShaderStorageBlocks     = 4;
         caps.shaderStorageBufferOffsetAlignment = 256;
+    }
+
+    if (extensions.textureRectangle)
+    {
+        caps.maxRectangleTextureSize = 64;
     }
 
     return caps;

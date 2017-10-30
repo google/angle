@@ -143,9 +143,9 @@ SamplerState SamplerState::CreateDefaultForTarget(GLenum target)
 {
     SamplerState state;
 
-    // According to OES_EGL_image_external: For external textures, the default min filter is
-    // GL_LINEAR and the default s and t wrap modes are GL_CLAMP_TO_EDGE.
-    if (target == GL_TEXTURE_EXTERNAL_OES)
+    // According to OES_EGL_image_external and ARB_texture_rectangle: For external textures, the
+    // default min filter is GL_LINEAR and the default s and t wrap modes are GL_CLAMP_TO_EDGE.
+    if (target == GL_TEXTURE_EXTERNAL_OES || target == GL_TEXTURE_RECTANGLE_ANGLE)
     {
         state.minFilter = GL_LINEAR;
         state.wrapS     = GL_CLAMP_TO_EDGE;

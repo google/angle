@@ -547,7 +547,7 @@ struct Caps
     GLuint maxSamples;
 };
 
-Caps GenerateMinimumCaps(const Version &clientVersion);
+Caps GenerateMinimumCaps(const Version &clientVersion, const Extensions &extensions);
 }
 
 namespace egl

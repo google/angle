@@ -340,6 +340,26 @@ TEST_P(TextureRectangleTest, RenderToRectangle)
     ASSERT_GL_NO_ERROR();
 }
 
+TEST_P(TextureRectangleTest, DefaultSamplerParameters)
+{
+    ANGLE_SKIP_TEST_IF(!checkExtensionSupported());
+
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_RECTANGLE_ANGLE, tex);
+
+    GLint minFilter = 0;
+    glGetTexParameteriv(GL_TEXTURE_RECTANGLE_ANGLE, GL_TEXTURE_MIN_FILTER, &minFilter);
+    EXPECT_EQ(GL_LINEAR, minFilter);
+
+    GLint wrapS = 0;
+    glGetTexParameteriv(GL_TEXTURE_RECTANGLE_ANGLE, GL_TEXTURE_WRAP_S, &wrapS);
+    EXPECT_EQ(GL_CLAMP_TO_EDGE, wrapS);
+
+    GLint wrapT = 0;
+    glGetTexParameteriv(GL_TEXTURE_RECTANGLE_ANGLE, GL_TEXTURE_WRAP_T, &wrapT);
+    EXPECT_EQ(GL_CLAMP_TO_EDGE, wrapT);
+}
+
 // Test glCopyTexImage with rectangle textures
 TEST_P(TextureRectangleTestES3, CopyTexImage)
 {

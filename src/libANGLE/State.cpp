@@ -23,6 +23,7 @@
 #include "libANGLE/VertexArray.h"
 #include "libANGLE/formatutils.h"
 #include "libANGLE/queryconversions.h"
+#include "libANGLE/renderer/ContextImpl.h"
 
 namespace
 {
@@ -84,6 +85,7 @@ void State::initialize(const Context *context,
 {
     const Caps &caps             = context->getCaps();
     const Extensions &extensions = context->getExtensions();
+    const Extensions &nativeExtensions = context->getImplementation()->getNativeExtensions();
     const Version &clientVersion = context->getClientVersion();
 
     mMaxDrawBuffers = caps.maxDrawBuffers;
@@ -158,11 +160,11 @@ void State::initialize(const Context *context,
         mShaderStorageBuffers.resize(caps.maxShaderStorageBufferBindings);
         mImageUnits.resize(caps.maxImageUnits);
     }
-    if (extensions.textureRectangle)
+    if (nativeExtensions.textureRectangle)
     {
         mSamplerTextures[GL_TEXTURE_RECTANGLE_ANGLE].resize(caps.maxCombinedTextureImageUnits);
     }
-    if (extensions.eglImageExternal || extensions.eglStreamConsumerExternal)
+    if (nativeExtensions.eglImageExternal || nativeExtensions.eglStreamConsumerExternal)
     {
         mSamplerTextures[GL_TEXTURE_EXTERNAL_OES].resize(caps.maxCombinedTextureImageUnits);
     }
