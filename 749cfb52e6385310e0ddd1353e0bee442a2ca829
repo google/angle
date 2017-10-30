@@ -1,0 +1,118 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9d127cd7_cfc375cc",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-10-30T02:48:43Z",
+      "side": 1,
+      "message": "Any chance to remove isUnsizedArray? It seems more nature to have arraySize \u003d\u003d 0 to represent un-sized array. Is it possible to let arraySize \u003d\u003d -1 to indicate non-array then?",
+      "revId": "749cfb52e6385310e0ddd1353e0bee442a2ca829",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "97c718ea_bb27d506",
+        "filename": "src/compiler/translator/blocklayout.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-10-30T02:48:43Z",
+      "side": 1,
+      "message": "Prefer to use parent constructor.",
+      "range": {
+        "startLine": 59,
+        "startChar": 0,
+        "endLine": 62,
+        "endChar": 46
+      },
+      "revId": "749cfb52e6385310e0ddd1353e0bee442a2ca829",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "80d80af9_a337d89d",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 3054,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-10-30T02:48:43Z",
+      "side": 1,
+      "message": "Top level only makes sense to member fields other than buffer. isBufferTopLevel seems confusing.\nProbably you can use \"int nestLevel\"!",
+      "range": {
+        "startLine": 3054,
+        "startChar": 47,
+        "endLine": 3054,
+        "endChar": 63
+      },
+      "revId": "749cfb52e6385310e0ddd1353e0bee442a2ca829",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "22672729_31cf4c98",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 3063,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-10-30T02:48:43Z",
+      "side": 1,
+      "message": "Add todo for arrays of arrays.",
+      "revId": "749cfb52e6385310e0ddd1353e0bee442a2ca829",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "afe5a1d9_761cbc1e",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 3071,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-10-30T02:48:43Z",
+      "side": 1,
+      "message": "if (nestLevel \u003d\u003d 0 and blockType \u003d\u003d sh::BlockType::BLOCK_UNIFORM)\n    elementCount \u003d 1;",
+      "revId": "749cfb52e6385310e0ddd1353e0bee442a2ca829",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "472dd788_efb96a7a",
+        "filename": "src/tests/gl_tests/ProgramInterfaceTest.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 539,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-10-30T02:48:43Z",
+      "side": 1,
+      "message": "As the layout is std140, does this mean the stride should known?",
+      "revId": "749cfb52e6385310e0ddd1353e0bee442a2ca829",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
