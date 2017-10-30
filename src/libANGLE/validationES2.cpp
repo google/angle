@@ -306,27 +306,36 @@ bool IsValidCopyTextureDestinationFormatType(Context *context, GLint internalFor
     return true;
 }
 
-bool IsValidCopyTextureDestinationTarget(Context *context, GLenum textureType, GLenum target)
+bool IsValidCopyTextureDestinationTargetEnum(Context *context, GLenum target)
 {
     switch (target)
     {
         case GL_TEXTURE_2D:
-            return textureType == GL_TEXTURE_2D;
-
         case GL_TEXTURE_CUBE_MAP_POSITIVE_X:
         case GL_TEXTURE_CUBE_MAP_NEGATIVE_X:
         case GL_TEXTURE_CUBE_MAP_POSITIVE_Y:
         case GL_TEXTURE_CUBE_MAP_NEGATIVE_Y:
         case GL_TEXTURE_CUBE_MAP_POSITIVE_Z:
         case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z:
-            return textureType == GL_TEXTURE_CUBE_MAP;
+            return true;
 
         case GL_TEXTURE_RECTANGLE_ANGLE:
-            return textureType == GL_TEXTURE_RECTANGLE_ANGLE &&
-                   context->getExtensions().textureRectangle;
+            return context->getExtensions().textureRectangle;
 
         default:
             return false;
+    }
+}
+
+bool IsValidCopyTextureDestinationTarget(Context *context, GLenum textureType, GLenum target)
+{
+    if (IsCubeMapTextureTarget(target))
+    {
+        return textureType == GL_TEXTURE_CUBE_MAP;
+    }
+    else
+    {
+        return textureType == target;
     }
 }
 
@@ -3871,6 +3880,12 @@ bool ValidateCopyTextureCHROMIUM(Context *context,
         return false;
     }
 
+    if (!IsValidCopyTextureDestinationTargetEnum(context, destTarget))
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidTextureTarget);
+        return false;
+    }
+
     const Texture *dest = context->getTexture(destId);
     if (dest == nullptr)
     {
@@ -3990,6 +4005,12 @@ bool ValidateCopySubTextureCHROMIUM(Context *context,
     if (!IsValidCopySubTextureSourceInternalFormat(sourceFormat.info->internalFormat))
     {
         ANGLE_VALIDATION_ERR(context, InvalidOperation(), InvalidInternalFormat);
+        return false;
+    }
+
+    if (!IsValidCopyTextureDestinationTargetEnum(context, destTarget))
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidTextureTarget);
         return false;
     }
 

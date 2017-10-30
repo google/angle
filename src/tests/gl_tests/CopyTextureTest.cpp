@@ -395,6 +395,29 @@ TEST_P(CopyTextureTest, CopySubTextureInvalidTextureIds)
     EXPECT_GL_NO_ERROR();
 }
 
+TEST_P(CopyTextureTest, InvalidTarget)
+{
+    ANGLE_SKIP_TEST_IF(!checkExtensions());
+
+    GLTexture textures[2];
+
+    glBindTexture(GL_TEXTURE_2D, textures[0]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    glBindTexture(GL_TEXTURE_2D, textures[1]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 3, 3, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    // Invalid enum for a completely invalid target
+    glCopySubTextureCHROMIUM(textures[0], 0, GL_INVALID_VALUE, textures[1], 0, 1, 1, 0, 0, 1, 1,
+                             false, false, false);
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+    // Invalid value for a valid target enum but is not valid for the destination texture
+    glCopySubTextureCHROMIUM(textures[0], 0, GL_TEXTURE_CUBE_MAP_POSITIVE_X, textures[1], 0, 1, 1,
+                             0, 0, 1, 1, false, false, false);
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+}
+
 // Test that using an offset in CopySubTexture works correctly
 TEST_P(CopyTextureTest, CopySubTextureOffset)
 {
