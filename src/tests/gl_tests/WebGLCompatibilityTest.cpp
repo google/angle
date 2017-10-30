@@ -235,8 +235,14 @@ class WebGLCompatibilityTest : public ANGLETest
                                  const std::array<GLenum, 2> &drawBuffers,
                                  GLenum expectedError);
 
-    // Called from InvalidTextureFormat
+    // Called from Enable[Compressed]TextureFormatExtensions
     void validateTexImageExtensionFormat(GLenum format, const std::string &extName);
+    void validateCompressedTexImageExtensionFormat(GLenum format,
+                                                   GLsizei width,
+                                                   GLsizei height,
+                                                   GLsizei blockSize,
+                                                   const std::string &extName,
+                                                   bool subImageAllowed);
 
     PFNGLREQUESTEXTENSIONANGLEPROC glRequestExtensionANGLE = nullptr;
 };
@@ -3643,8 +3649,8 @@ void WebGLCompatibilityTest::validateTexImageExtensionFormat(GLenum format,
     }
 }
 
-// Verify that only valid texture formats are allowed.
-TEST_P(WebGLCompatibilityTest, InvalidTextureFormat)
+// Test enabling various non-compressed texture format extensions
+TEST_P(WebGLCompatibilityTest, EnableTextureFormatExtensions)
 {
     ANGLE_SKIP_TEST_IF(IsOzone());
     ANGLE_SKIP_TEST_IF(getClientMajorVersion() != 2);
@@ -3668,6 +3674,114 @@ TEST_P(WebGLCompatibilityTest, InvalidTextureFormat)
 
     validateTexImageExtensionFormat(GL_SRGB_EXT, "GL_EXT_texture_sRGB");
     validateTexImageExtensionFormat(GL_BGRA_EXT, "GL_EXT_texture_format_BGRA8888");
+}
+
+void WebGLCompatibilityTest::validateCompressedTexImageExtensionFormat(GLenum format,
+                                                                       GLsizei width,
+                                                                       GLsizei height,
+                                                                       GLsizei blockSize,
+                                                                       const std::string &extName,
+                                                                       bool subImageAllowed)
+{
+    std::vector<GLubyte> data(blockSize, 0u);
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture.get());
+
+    // Verify texture format fails by default.
+    glCompressedTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, blockSize, data.data());
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+    if (extensionRequestable(extName))
+    {
+        // Verify texture format is allowed once extension is enabled.
+        glRequestExtensionANGLE(extName.c_str());
+        EXPECT_TRUE(extensionEnabled(extName));
+
+        glCompressedTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, blockSize, data.data());
+        EXPECT_GL_NO_ERROR();
+
+        glCompressedTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, format, blockSize,
+                                  data.data());
+        if (subImageAllowed)
+        {
+            EXPECT_GL_NO_ERROR();
+        }
+        else
+        {
+            EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+        }
+    }
+}
+
+// Test enabling GL_EXT_texture_compression_dxt1 for GL_COMPRESSED_RGB_S3TC_DXT1_EXT
+TEST_P(WebGLCompatibilityTest, EnableCompressedTextureExtensionDXT1RGB)
+{
+    validateCompressedTexImageExtensionFormat(GL_COMPRESSED_RGB_S3TC_DXT1_EXT, 4, 4, 8,
+                                              "GL_EXT_texture_compression_dxt1", true);
+}
+
+// Test enabling GL_EXT_texture_compression_dxt1 for GL_COMPRESSED_RGBA_S3TC_DXT1_EXT
+TEST_P(WebGLCompatibilityTest, EnableCompressedTextureExtensionDXT1RGBA)
+{
+    validateCompressedTexImageExtensionFormat(GL_COMPRESSED_RGBA_S3TC_DXT1_EXT, 4, 4, 8,
+                                              "GL_EXT_texture_compression_dxt1", true);
+}
+
+// Test enabling GL_ANGLE_texture_compression_dxt3
+TEST_P(WebGLCompatibilityTest, EnableCompressedTextureExtensionDXT3)
+{
+    validateCompressedTexImageExtensionFormat(GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE, 4, 4, 16,
+                                              "GL_ANGLE_texture_compression_dxt3", true);
+}
+
+// Test enabling GL_ANGLE_texture_compression_dxt5
+TEST_P(WebGLCompatibilityTest, EnableCompressedTextureExtensionDXT5)
+{
+    validateCompressedTexImageExtensionFormat(GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE, 4, 4, 16,
+                                              "GL_ANGLE_texture_compression_dxt5", true);
+}
+
+// Test enabling GL_EXT_texture_compression_s3tc_srgb for GL_COMPRESSED_SRGB_S3TC_DXT1_EXT
+TEST_P(WebGLCompatibilityTest, EnableCompressedTextureExtensionDXT1SRGB)
+{
+    validateCompressedTexImageExtensionFormat(GL_COMPRESSED_SRGB_S3TC_DXT1_EXT, 4, 4, 8,
+                                              "GL_EXT_texture_compression_s3tc_srgb", true);
+}
+
+// Test enabling GL_EXT_texture_compression_s3tc_srgb for GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT
+TEST_P(WebGLCompatibilityTest, EnableCompressedTextureExtensionDXT1SRGBA)
+{
+    validateCompressedTexImageExtensionFormat(GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT, 4, 4, 8,
+                                              "GL_EXT_texture_compression_s3tc_srgb", true);
+}
+
+// Test enabling GL_EXT_texture_compression_s3tc_srgb for GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT
+TEST_P(WebGLCompatibilityTest, EnableCompressedTextureExtensionDXT3SRGBA)
+{
+    validateCompressedTexImageExtensionFormat(GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT, 4, 4, 16,
+                                              "GL_EXT_texture_compression_s3tc_srgb", true);
+}
+
+// Test enabling GL_EXT_texture_compression_s3tc_srgb for GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT
+TEST_P(WebGLCompatibilityTest, EnableCompressedTextureExtensionDXT5SRGBA)
+{
+    validateCompressedTexImageExtensionFormat(GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT, 4, 4, 16,
+                                              "GL_EXT_texture_compression_s3tc_srgb", true);
+}
+
+// Test enabling GL_OES_compressed_ETC1_RGB8_texture
+TEST_P(WebGLCompatibilityTest, EnableCompressedTextureExtensionETC1)
+{
+    validateCompressedTexImageExtensionFormat(GL_ETC1_RGB8_OES, 4, 4, 8,
+                                              "GL_OES_compressed_ETC1_RGB8_texture", false);
+}
+
+// Test enabling GL_ANGLE_lossy_etc_decode
+TEST_P(WebGLCompatibilityTest, EnableCompressedTextureExtensionLossyDecode)
+{
+    validateCompressedTexImageExtensionFormat(GL_ETC1_RGB8_LOSSY_DECODE_ANGLE, 4, 4, 8,
+                                              "GL_ANGLE_lossy_etc_decode", true);
 }
 
 // Linking should fail when corresponding vertex/fragment uniform blocks have different precision

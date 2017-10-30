@@ -766,7 +766,7 @@ static InternalFormatInfoMap BuildInternalFormatInfoMap()
     AddCompressedFormat(&map, GL_COMPRESSED_RGBA_S3TC_DXT1_EXT,   4, 4,  64, 4, GL_RGBA, GL_UNSIGNED_BYTE, false, RequireExt<&Extensions::textureCompressionDXT1>,    NeverSupported, AlwaysSupported);
 
     // From GL_ANGLE_texture_compression_dxt3
-    AddCompressedFormat(&map, GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE, 4, 4, 128, 4, GL_RGBA, GL_UNSIGNED_BYTE, false, RequireExt<&Extensions::textureCompressionDXT5>,    NeverSupported, AlwaysSupported);
+    AddCompressedFormat(&map, GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE, 4, 4, 128, 4, GL_RGBA, GL_UNSIGNED_BYTE, false, RequireExt<&Extensions::textureCompressionDXT3>,    NeverSupported, AlwaysSupported);
 
     // From GL_ANGLE_texture_compression_dxt5
     AddCompressedFormat(&map, GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE, 4, 4, 128, 4, GL_RGBA, GL_UNSIGNED_BYTE, false, RequireExt<&Extensions::textureCompressionDXT5>,    NeverSupported, AlwaysSupported);

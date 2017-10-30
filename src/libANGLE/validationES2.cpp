@@ -1173,7 +1173,7 @@ bool ValidateES2TexImageParameters(Context *context,
                 }
                 break;
             case GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE:
-                if (!context->getExtensions().textureCompressionDXT1)
+                if (!context->getExtensions().textureCompressionDXT3)
                 {
                     ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidInternalFormat);
                     return false;
@@ -1202,6 +1202,11 @@ bool ValidateES2TexImageParameters(Context *context,
                     ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidInternalFormat);
                     return false;
                 }
+                if (isSubImage)
+                {
+                    ANGLE_VALIDATION_ERR(context, InvalidOperation(), InvalidInternalFormat);
+                    return false;
+                }
                 break;
             case GL_ETC1_RGB8_LOSSY_DECODE_ANGLE:
             case GL_COMPRESSED_RGB8_LOSSY_DECODE_ETC2_ANGLE:
@@ -1210,8 +1215,7 @@ bool ValidateES2TexImageParameters(Context *context,
             case GL_COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_LOSSY_DECODE_ETC2_ANGLE:
                 if (!context->getExtensions().lossyETCDecode)
                 {
-                    context->handleError(InvalidEnum()
-                                         << "ANGLE_lossy_etc_decode extension is not supported");
+                    ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidInternalFormat);
                     return false;
                 }
                 break;

@@ -2442,7 +2442,8 @@ bool ValidateCopyTexImageParametersBase(ValidationContext *context,
     }
 
     const gl::InternalFormat &formatInfo =
-        gl::GetInternalFormatInfo(internalformat, GL_UNSIGNED_BYTE);
+        isSubImage ? *texture->getFormat(target, level).info
+                   : gl::GetInternalFormatInfo(internalformat, GL_UNSIGNED_BYTE);
 
     if (formatInfo.depthBits > 0 || formatInfo.compressed)
     {

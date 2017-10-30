@@ -629,13 +629,13 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_OES_texture_float"] = enableableExtension(&Extensions::textureFloat);
         map["GL_OES_texture_float_linear"] = enableableExtension(&Extensions::textureFloatLinear);
         map["GL_EXT_texture_rg"] = enableableExtension(&Extensions::textureRG);
-        map["GL_EXT_texture_compression_dxt1"] = esOnlyExtension(&Extensions::textureCompressionDXT1);
-        map["GL_ANGLE_texture_compression_dxt3"] = esOnlyExtension(&Extensions::textureCompressionDXT3);
-        map["GL_ANGLE_texture_compression_dxt5"] = esOnlyExtension(&Extensions::textureCompressionDXT5);
-        map["GL_EXT_texture_compression_s3tc_srgb"] = esOnlyExtension(&Extensions::textureCompressionS3TCsRGB);
-        map["GL_KHR_texture_compression_astc_hdr"] = esOnlyExtension(&Extensions::textureCompressionASTCHDR);
-        map["GL_KHR_texture_compression_astc_ldr"] = esOnlyExtension(&Extensions::textureCompressionASTCLDR);
-        map["GL_OES_compressed_ETC1_RGB8_texture"] = esOnlyExtension(&Extensions::compressedETC1RGB8Texture);
+        map["GL_EXT_texture_compression_dxt1"] = enableableExtension(&Extensions::textureCompressionDXT1);
+        map["GL_ANGLE_texture_compression_dxt3"] = enableableExtension(&Extensions::textureCompressionDXT3);
+        map["GL_ANGLE_texture_compression_dxt5"] = enableableExtension(&Extensions::textureCompressionDXT5);
+        map["GL_EXT_texture_compression_s3tc_srgb"] = enableableExtension(&Extensions::textureCompressionS3TCsRGB);
+        map["GL_KHR_texture_compression_astc_hdr"] = enableableExtension(&Extensions::textureCompressionASTCHDR);
+        map["GL_KHR_texture_compression_astc_ldr"] = enableableExtension(&Extensions::textureCompressionASTCLDR);
+        map["GL_OES_compressed_ETC1_RGB8_texture"] = enableableExtension(&Extensions::compressedETC1RGB8Texture);
         map["GL_EXT_sRGB"] = enableableExtension(&Extensions::sRGB);
         map["GL_ANGLE_depth_texture"] = esOnlyExtension(&Extensions::depthTextures);
         map["GL_OES_depth32"] = esOnlyExtension(&Extensions::depth32);
@@ -673,7 +673,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_KHR_debug"] = esOnlyExtension(&Extensions::debug);
         // TODO(jmadill): Enable this when complete.
         //map["GL_KHR_no_error"] = esOnlyExtension(&Extensions::noError);
-        map["GL_ANGLE_lossy_etc_decode"] = esOnlyExtension(&Extensions::lossyETCDecode);
+        map["GL_ANGLE_lossy_etc_decode"] = enableableExtension(&Extensions::lossyETCDecode);
         map["GL_CHROMIUM_bind_uniform_location"] = esOnlyExtension(&Extensions::bindUniformLocation);
         map["GL_CHROMIUM_sync_query"] = enableableExtension(&Extensions::syncQuery);
         map["GL_CHROMIUM_copy_texture"] = esOnlyExtension(&Extensions::copyTexture);

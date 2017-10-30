@@ -194,6 +194,22 @@ TEST_P(DXT1CompressedTextureTest, CompressedTexSubImageValidation)
     ASSERT_GL_ERROR(GL_INVALID_OPERATION);
 }
 
+// Test that it's not possible to call CopyTexSubImage2D on a compressed texture
+TEST_P(DXT1CompressedTextureTest, CopyTexSubImage2DDisallowed)
+{
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_texture_compression_dxt1"));
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture.get());
+
+    glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGBA_S3TC_DXT1_EXT, pixel_0_width,
+                           pixel_0_height, 0, pixel_0_size, nullptr);
+    ASSERT_GL_NO_ERROR();
+
+    glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, 4, 4);
+    ASSERT_GL_ERROR(GL_INVALID_OPERATION);
+}
+
 class DXT1CompressedTextureTestES3 : public DXT1CompressedTextureTest { };
 
 class DXT1CompressedTextureTestD3D11 : public DXT1CompressedTextureTest { };
@@ -348,6 +364,23 @@ TEST_P(DXT1CompressedTextureTestD3D11, PBOCompressedTexStorage)
     glDeleteTextures(1, &texture);
 
     EXPECT_GL_NO_ERROR();
+}
+
+// Test validation of glCompressedTexSubImage3D with DXT formats
+TEST_P(DXT1CompressedTextureTestES3, CopyTexSubImage3DDisallowed)
+{
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_texture_compression_dxt1"));
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D_ARRAY, texture.get());
+
+    GLsizei depth = 4;
+    glCompressedTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_COMPRESSED_RGBA_S3TC_DXT1_EXT, pixel_0_width,
+                           pixel_0_height, depth, 0, pixel_0_size * depth, nullptr);
+    ASSERT_GL_NO_ERROR();
+
+    glCopyTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, 0, 0, 0, 4, 4);
+    ASSERT_GL_ERROR(GL_INVALID_OPERATION);
 }
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.

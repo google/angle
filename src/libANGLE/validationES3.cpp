@@ -362,6 +362,12 @@ bool ValidateES3TexImageParametersBase(Context *context,
                                      << "Format must match the internal format of the texture.");
                 return false;
             }
+
+            if (actualInternalFormat == GL_ETC1_RGB8_OES)
+            {
+                ANGLE_VALIDATION_ERR(context, InvalidOperation(), InvalidInternalFormat);
+                return false;
+            }
         }
         else
         {
