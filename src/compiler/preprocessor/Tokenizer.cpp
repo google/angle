@@ -1680,11 +1680,18 @@ case YY_STATE_EOF(COMMENT):
     yylloc->line = yylineno;
     yylval->clear();
 
-    if (YY_START == COMMENT)
+    // Line number overflows fake EOFs to exit early, check for this case.
+    if (yylineno == INT_MAX)
+    {
+        yyextra->diagnostics->report(pp::Diagnostics::PP_TOKENIZER_ERROR,
+                                     pp::SourceLocation(yyfileno, yylineno),
+                                     "Integer overflow on line number");
+    }
+    else if (YY_START == COMMENT)
     {
         yyextra->diagnostics->report(pp::Diagnostics::PP_EOF_IN_COMMENT,
                                      pp::SourceLocation(yyfileno, yylineno),
-                                     "");
+                                     "EOF while in a comment");
     }
     yyterminate();
 }

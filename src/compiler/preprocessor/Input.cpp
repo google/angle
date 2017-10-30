@@ -61,6 +61,11 @@ size_t Input::read(char *buf, size_t maxSize, int *lineNo)
             {
                 // Line continuation of backslash + newline.
                 skipChar();
+                // Fake an EOF if the line number would overflow.
+                if (*lineNo == INT_MAX)
+                {
+                    return 0;
+                }
                 ++(*lineNo);
             }
             else if (c != nullptr && (*c) == '\r')
@@ -70,6 +75,11 @@ size_t Input::read(char *buf, size_t maxSize, int *lineNo)
                 if (c != nullptr && (*c) == '\n')
                 {
                     skipChar();
+                }
+                // Fake an EOF if the line number would overflow.
+                if (*lineNo == INT_MAX)
+                {
+                    return 0;
                 }
                 ++(*lineNo);
             }
