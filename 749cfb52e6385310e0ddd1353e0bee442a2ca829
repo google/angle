@@ -42,6 +42,23 @@
     },
     {
       "key": {
+        "uuid": "8d753583_4b6fe4a8",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 2994,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-10-30T06:16:37Z",
+      "side": 1,
+      "message": "Better to refactor a common interface block traverse method, and then use various visitors to update shader reference and define block members.",
+      "revId": "749cfb52e6385310e0ddd1353e0bee442a2ca829",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "991134af_da0981a8",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 13
@@ -133,6 +150,23 @@
       "writtenOn": "2017-10-30T03:21:51Z",
       "side": 1,
       "message": "we have gotten shader references here. Do we really need to call updateInterfaceBlockMembersShaderReferenced?",
+      "revId": "749cfb52e6385310e0ddd1353e0bee442a2ca829",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "de227699_2bb304f8",
+        "filename": "src/tests/gl_tests/ProgramInterfaceTest.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 537,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-10-30T06:16:37Z",
+      "side": 1,
+      "message": "Better to have a case for both referenced by vertex and fragment shader.",
       "revId": "749cfb52e6385310e0ddd1353e0bee442a2ca829",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
