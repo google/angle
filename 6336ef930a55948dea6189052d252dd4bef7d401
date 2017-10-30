@@ -16,6 +16,24 @@
       "revId": "6336ef930a55948dea6189052d252dd4bef7d401",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2c166fd0_3c8075d0",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 773,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-10-30T20:54:45Z",
+      "side": 1,
+      "message": "Only for WebGL contexts.  Have a patch being prepared to request it automatically for now.",
+      "parentUuid": "63281c3c_3ea22f31",
+      "revId": "6336ef930a55948dea6189052d252dd4bef7d401",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
