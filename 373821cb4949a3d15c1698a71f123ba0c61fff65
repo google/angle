@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "995bd4cf_b94851ef",
+        "filename": "src/libANGLE/Uniform.cpp",
+        "patchSetId": 33
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-31T16:25:12Z",
+      "side": 1,
+      "message": "\u003d default;",
+      "range": {
+        "startLine": 20,
+        "startChar": 42,
+        "endLine": 25,
+        "endChar": 1
+      },
+      "revId": "373821cb4949a3d15c1698a71f123ba0c61fff65",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f33f2c2c_f0cc5419",
+        "filename": "src/libANGLE/Uniform.cpp",
+        "patchSetId": 33
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-31T16:25:12Z",
+      "side": 1,
+      "message": "\u003d default",
+      "range": {
+        "startLine": 48,
+        "startChar": 53,
+        "endLine": 54,
+        "endChar": 1
+      },
+      "revId": "373821cb4949a3d15c1698a71f123ba0c61fff65",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b336ec79_dd04fc0d",
+        "filename": "src/libANGLE/Uniform.h",
+        "patchSetId": 33
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-31T16:25:12Z",
+      "side": 1,
+      "message": "Let\u0027s make this a mixin class that the other classes inherit from. Call it StaticallyUsed, and rename void setRef to setStaticUse. Don\u0027t use the |\u003d operator, instead use \u0027unionWith\u0027. Do define the default assign and copy operations (in the cpp file).",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 36,
+        "endChar": 2
+      },
+      "revId": "373821cb4949a3d15c1698a71f123ba0c61fff65",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
