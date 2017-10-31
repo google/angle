@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "28bfc58e_4669d192",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 796,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-31T19:30:54Z",
+      "side": 1,
+      "message": "nit: we know this is true already so it could be removed.",
+      "range": {
+        "startLine": 796,
+        "startChar": 37,
+        "endLine": 796,
+        "endChar": 87
+      },
+      "revId": "4f8c347ead9aea118e16f6a8214d124a6f8be343",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e7c2bf2b_3bc45f2e",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-31T19:30:54Z",
+      "side": 1,
+      "message": "note: ending right here is ok for correctness but could be suboptimal for perf. We\u0027ll need a good story for command reordering.",
+      "revId": "4f8c347ead9aea118e16f6a8214d124a6f8be343",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
