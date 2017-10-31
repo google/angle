@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0019ff96_a0dec4da",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-31T15:37:42Z",
+      "side": 1,
+      "message": "I\u0027m a bit concerned about this change because all of sudden our uniform validation code will be doing an extra string concatenation, which potentially could trigger an allocation. Could you redesign this method keeping in mind it\u0027s on the critical path for performance?\n\nYou can probably benchmark this with the null gl or d3d11 drivers and one of the uniforms perf tests.",
+      "range": {
+        "startLine": 161,
+        "startChar": 0,
+        "endLine": 161,
+        "endChar": 47
+      },
+      "revId": "ead27e9bfd43378aca379151c1efc5836d7a48d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "25c421c7_17e1169c",
+        "filename": "src/libANGLE/UniformLinker.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-31T15:37:42Z",
+      "side": 1,
+      "message": "don\u0027t do this - pass in const \u0026 and make local copies. modifying parameters can be a problematic design pattern.",
+      "range": {
+        "startLine": 90,
+        "startChar": 42,
+        "endLine": 91,
+        "endChar": 69
+      },
+      "revId": "ead27e9bfd43378aca379151c1efc5836d7a48d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "830a0e79_4f058edf",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1987,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-31T15:37:42Z",
+      "side": 1,
+      "message": "this is a bit awkward. why is this necessary? why don\u0027t we modify the translator to match the spec as well.",
+      "range": {
+        "startLine": 1986,
+        "startChar": 11,
+        "endLine": 1987,
+        "endChar": 46
+      },
+      "revId": "ead27e9bfd43378aca379151c1efc5836d7a48d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
