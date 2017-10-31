@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f631f436_b454689b",
+        "filename": "scripts/bmp_to_nv12.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-31T03:43:23Z",
+      "side": 0,
+      "message": "Is this adding the newline before the EOF or removing it?",
+      "revId": "fb9051a5883151819114dd175f919e7ea5b18910",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
