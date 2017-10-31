@@ -808,6 +808,12 @@ Error StagingImage::init(VkDevice device,
     return NoError();
 }
 
+void StagingImage::dumpResources(Serial serial, std::vector<vk::GarbageObject> *garbageQueue)
+{
+    mImage.dumpResources(serial, garbageQueue);
+    mDeviceMemory.dumpResources(serial, garbageQueue);
+}
+
 // Buffer implementation.
 Buffer::Buffer()
 {
@@ -1084,6 +1090,87 @@ gl::Error AllocateBufferMemory(ContextVk *contextVk,
     ANGLE_TRY(buffer->bindMemory(device, *deviceMemoryOut));
 
     return gl::NoError();
+}
+
+// GarbageObject implementation.
+GarbageObject::GarbageObject()
+    : mSerial(), mHandleType(HandleType::Invalid), mHandle(VK_NULL_HANDLE)
+{
+}
+
+GarbageObject::GarbageObject(const GarbageObject &other) = default;
+
+GarbageObject &GarbageObject::operator=(const GarbageObject &other) = default;
+
+bool GarbageObject::destroyIfComplete(VkDevice device, Serial completedSerial)
+{
+    if (completedSerial >= mSerial)
+    {
+        destroy(device);
+        return true;
+    }
+
+    return false;
+}
+
+void GarbageObject::destroy(VkDevice device)
+{
+    switch (mHandleType)
+    {
+        case HandleType::Semaphore:
+            vkDestroySemaphore(device, reinterpret_cast<VkSemaphore>(mHandle), nullptr);
+            break;
+        case HandleType::CommandBuffer:
+            // Command buffers are pool allocated.
+            UNREACHABLE();
+            break;
+        case HandleType::Fence:
+            vkDestroyFence(device, reinterpret_cast<VkFence>(mHandle), nullptr);
+            break;
+        case HandleType::DeviceMemory:
+            vkFreeMemory(device, reinterpret_cast<VkDeviceMemory>(mHandle), nullptr);
+            break;
+        case HandleType::Buffer:
+            vkDestroyBuffer(device, reinterpret_cast<VkBuffer>(mHandle), nullptr);
+            break;
+        case HandleType::Image:
+            vkDestroyImage(device, reinterpret_cast<VkImage>(mHandle), nullptr);
+            break;
+        case HandleType::ImageView:
+            vkDestroyImageView(device, reinterpret_cast<VkImageView>(mHandle), nullptr);
+            break;
+        case HandleType::ShaderModule:
+            vkDestroyShaderModule(device, reinterpret_cast<VkShaderModule>(mHandle), nullptr);
+            break;
+        case HandleType::PipelineLayout:
+            vkDestroyPipelineLayout(device, reinterpret_cast<VkPipelineLayout>(mHandle), nullptr);
+            break;
+        case HandleType::RenderPass:
+            vkDestroyRenderPass(device, reinterpret_cast<VkRenderPass>(mHandle), nullptr);
+            break;
+        case HandleType::Pipeline:
+            vkDestroyPipeline(device, reinterpret_cast<VkPipeline>(mHandle), nullptr);
+            break;
+        case HandleType::DescriptorSetLayout:
+            vkDestroyDescriptorSetLayout(device, reinterpret_cast<VkDescriptorSetLayout>(mHandle),
+                                         nullptr);
+            break;
+        case HandleType::Sampler:
+            vkDestroySampler(device, reinterpret_cast<VkSampler>(mHandle), nullptr);
+            break;
+        case HandleType::DescriptorPool:
+            vkDestroyDescriptorPool(device, reinterpret_cast<VkDescriptorPool>(mHandle), nullptr);
+            break;
+        case HandleType::Framebuffer:
+            vkDestroyFramebuffer(device, reinterpret_cast<VkFramebuffer>(mHandle), nullptr);
+            break;
+        case HandleType::CommandPool:
+            vkDestroyCommandPool(device, reinterpret_cast<VkCommandPool>(mHandle), nullptr);
+            break;
+        default:
+            UNREACHABLE();
+            break;
+    }
 }
 
 }  // namespace vk

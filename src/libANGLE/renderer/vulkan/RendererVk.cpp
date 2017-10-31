@@ -655,7 +655,7 @@ void RendererVk::freeAllInFlightResources()
 
     for (auto &garbage : mGarbage)
     {
-        garbage->destroy(mDevice);
+        garbage.destroy(mDevice);
     }
     mGarbage.clear();
 }
@@ -706,7 +706,7 @@ vk::Error RendererVk::checkInFlightCommands()
     size_t freeIndex = 0;
     for (; freeIndex < mGarbage.size(); ++freeIndex)
     {
-        if (!mGarbage[freeIndex]->destroyIfComplete(mDevice, finishedSerial))
+        if (!mGarbage[freeIndex].destroyIfComplete(mDevice, finishedSerial))
             break;
     }
 

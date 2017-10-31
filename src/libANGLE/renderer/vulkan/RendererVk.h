@@ -74,22 +74,22 @@ class RendererVk : angle::NonCopyable
     Serial getCurrentQueueSerial() const;
 
     template <typename T>
-    void enqueueGarbage(Serial serial, T &&object)
+    void releaseResource(const ResourceVk &resource, T *object)
     {
-        mGarbage.emplace_back(std::unique_ptr<vk::GarbageObject<T>>(
-            new vk::GarbageObject<T>(serial, std::move(object))));
+        Serial resourceSerial = resource.getQueueSerial();
+        releaseObject(resourceSerial, object);
     }
 
     template <typename T>
-    void enqueueGarbageOrDeleteNow(const ResourceVk &resource, T &&object)
+    void releaseObject(Serial resourceSerial, T *object)
     {
-        if (resource.getDeleteSchedule(mLastCompletedQueueSerial) == DeleteSchedule::NOW)
+        if (resourceSerial <= mLastCompletedQueueSerial)
         {
-            object.destroy(mDevice);
+            object->destroy(mDevice);
         }
         else
         {
-            enqueueGarbage(resource.getStoredQueueSerial(), std::move(object));
+            object->dumpResources(resourceSerial, &mGarbage);
         }
     }
 
@@ -133,7 +133,7 @@ class RendererVk : angle::NonCopyable
     Serial mCurrentQueueSerial;
     std::vector<vk::CommandBufferAndSerial> mInFlightCommands;
     std::vector<vk::FenceAndSerial> mInFlightFences;
-    std::vector<std::unique_ptr<vk::IGarbageObject>> mGarbage;
+    std::vector<vk::GarbageObject> mGarbage;
     vk::MemoryProperties mMemoryProperties;
 };
 

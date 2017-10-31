@@ -885,7 +885,7 @@ std::vector<PathImpl *> ContextVk::createPaths(GLsizei)
 // TODO(jmadill): Use pipeline cache.
 void ContextVk::invalidateCurrentPipeline()
 {
-    mRenderer->enqueueGarbageOrDeleteNow(*this, mCurrentPipeline);
+    mRenderer->releaseResource(*this, &mCurrentPipeline);
 }
 
 gl::Error ContextVk::dispatchCompute(const gl::Context *context,

@@ -342,7 +342,7 @@ gl::Error FramebufferVk::readPixels(const gl::Context *context,
     PackPixels(params, angleFormat, inputPitch, mapPointer, reinterpret_cast<uint8_t *>(pixels));
 
     stagingImage.getDeviceMemory().unmap(device);
-    renderer->enqueueGarbage(renderer->getCurrentQueueSerial(), std::move(stagingImage));
+    renderer->releaseObject(renderer->getCurrentQueueSerial(), &stagingImage);
 
     return vk::NoError();
 }

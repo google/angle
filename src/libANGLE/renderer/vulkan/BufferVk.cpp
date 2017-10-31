@@ -31,8 +31,8 @@ void BufferVk::destroy(const gl::Context *context)
     ContextVk *contextVk = GetImplAs<ContextVk>(context);
     RendererVk *renderer = contextVk->getRenderer();
 
-    renderer->enqueueGarbageOrDeleteNow(*this, std::move(mBuffer));
-    renderer->enqueueGarbageOrDeleteNow(*this, std::move(mBufferMemory));
+    renderer->releaseResource(*this, &mBuffer);
+    renderer->releaseResource(*this, &mBufferMemory);
 }
 
 gl::Error BufferVk::setData(const gl::Context *context,
