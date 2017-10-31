@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "770ab7e0_6c1e0eab",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 436,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-31T21:46:56Z",
+      "side": 1,
+      "message": "git cl format should reformat this a bit.\n\nIf you did this already, it\u0027s possible if you\u0027re running git cl format within an environment which overrides ANGLE\u0027s .clang-format. Maybe try checking out a standalone ANGLE if this is the case, and using that to upload your formatted CLs.",
+      "range": {
+        "startLine": 436,
+        "startChar": 8,
+        "endLine": 436,
+        "endChar": 29
+      },
+      "revId": "5c41e14e165047dd5972795bb81450209b2da4e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
