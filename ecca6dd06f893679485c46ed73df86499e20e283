@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d0919754_7dbcc77a",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 332,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-10-31T07:52:42Z",
+      "side": 1,
+      "message": "Note that attributes can\u0027t be arrays. Need a comment or assert somewhere maybe?",
+      "revId": "ecca6dd06f893679485c46ed73df86499e20e283",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "db36bd3c_63748426",
+        "filename": "src/libANGLE/UniformLinker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 521,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-10-31T07:52:42Z",
+      "side": 1,
+      "message": "TODO: Add comment here about which spec section is this.",
+      "revId": "ecca6dd06f893679485c46ed73df86499e20e283",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
