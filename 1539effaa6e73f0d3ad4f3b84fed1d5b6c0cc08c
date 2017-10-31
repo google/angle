@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "ec298bec_a4608079",
+        "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-31T21:26:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "68a1f9a7_ff3983aa",
+      "revId": "1539effaa6e73f0d3ad4f3b84fed1d5b6c0cc08c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dc77e828_38022f51",
         "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.h",
         "patchSetId": 5
@@ -33,6 +51,24 @@
       "revId": "1539effaa6e73f0d3ad4f3b84fed1d5b6c0cc08c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3c6ad2a9_68544956",
+        "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-10-31T21:26:38Z",
+      "side": 1,
+      "message": "That seems reasonable. Can consider just doing that.",
+      "parentUuid": "dc77e828_38022f51",
+      "revId": "1539effaa6e73f0d3ad4f3b84fed1d5b6c0cc08c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
