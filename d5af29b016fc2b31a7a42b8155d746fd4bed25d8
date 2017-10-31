@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e8839fba_65976bea",
+        "filename": "scripts/generate_format_tables.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-10-31T19:39:10Z",
+      "side": 1,
+      "message": "nit: this also generates the uniform type info, should the name of this script be more generic? Should we also have things like entry-point generation, packed gl enum generation etc be in here?",
+      "revId": "d5af29b016fc2b31a7a42b8155d746fd4bed25d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
