@@ -3618,6 +3618,7 @@ void WebGLCompatibilityTest::validateTexImageExtensionFormat(GLenum format,
 // Verify that only valid texture formats are allowed.
 TEST_P(WebGLCompatibilityTest, InvalidTextureFormat)
 {
+    ANGLE_SKIP_TEST_IF(IsOzone());
     ANGLE_SKIP_TEST_IF(getClientMajorVersion() != 2);
 
     GLTexture texture;
