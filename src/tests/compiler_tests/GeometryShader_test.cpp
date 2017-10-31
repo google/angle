@@ -28,7 +28,7 @@ class GeometryShaderTest : public ShaderCompileTreeTest
         resources->OES_geometry_shader = 1;
     }
 
-    GLenum getShaderType() const override { return GL_GEOMETRY_SHADER_OES; }
+    ::GLenum getShaderType() const override { return GL_GEOMETRY_SHADER_OES; }
 
     ShShaderSpec getShaderSpec() const override { return SH_GLES3_1_SPEC; }
 
