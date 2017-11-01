@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1993b0dd_13cd8189",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 194,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-01T16:04:30Z",
+      "side": 1,
+      "message": "This seems like a good candidate for an overload of angle::BeginsWith that has a size parameter for the second argument (used on line 612 too)",
+      "range": {
+        "startLine": 194,
+        "startChar": 12,
+        "endLine": 194,
+        "endChar": 90
+      },
+      "revId": "cc14d6a42c492ba039ae744f0fb750e5cfd83973",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "65abc7f8_7a536f5d",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-01T16:04:30Z",
+      "side": 1,
+      "message": "nit: this code isn\u0027t particularly performance sensitive but this check could be done before the strncmp.",
+      "range": {
+        "startLine": 195,
+        "startChar": 12,
+        "endLine": 195,
+        "endChar": 70
+      },
+      "revId": "cc14d6a42c492ba039ae744f0fb750e5cfd83973",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cfa50b7d_bb7ec349",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 460,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-01T16:04:30Z",
+      "side": 1,
+      "message": "nit: update this to just return clampCast\u003cGLint\u003e(var.name.size() + 1)",
+      "range": {
+        "startLine": 455,
+        "startChar": 8,
+        "endLine": 460,
+        "endChar": 9
+      },
+      "revId": "cc14d6a42c492ba039ae744f0fb750e5cfd83973",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
