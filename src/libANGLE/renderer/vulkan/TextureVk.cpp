@@ -49,11 +49,25 @@ gl::Error TextureVk::setImage(const gl::Context *context,
                               const gl::PixelUnpackState &unpack,
                               const uint8_t *pixels)
 {
+    ContextVk *contextVk = GetImplAs<ContextVk>(context);
+    RendererVk *renderer = contextVk->getRenderer();
+
     // TODO(jmadill): support multi-level textures.
     ASSERT(level == 0);
 
-    // TODO(jmadill): support texture re-definition.
-    ASSERT(!mImage.valid());
+    if (mImage.valid())
+    {
+        const gl::ImageDesc &desc = mState.getImageDesc(target, level);
+
+        // TODO(jmadill): Consider comparing stored vk::Format.
+        if (desc.size != size ||
+            !gl::Format::SameSized(desc.format, gl::Format(internalFormat, type)))
+        {
+            renderer->releaseResource(*this, &mImage);
+            renderer->releaseResource(*this, &mDeviceMemory);
+            renderer->releaseResource(*this, &mImageView);
+        }
+    }
 
     // TODO(jmadill): support other types of textures.
     ASSERT(target == GL_TEXTURE_2D);
@@ -62,93 +76,99 @@ gl::Error TextureVk::setImage(const gl::Context *context,
     const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(internalFormat, type);
     const vk::Format &vkFormat           = vk::Format::Get(formatInfo.sizedInternalFormat);
 
-    VkImageCreateInfo imageInfo;
-    imageInfo.sType         = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
-    imageInfo.pNext         = nullptr;
-    imageInfo.flags         = 0;
-    imageInfo.imageType     = VK_IMAGE_TYPE_2D;
-    imageInfo.format        = vkFormat.native;
-    imageInfo.extent.width  = size.width;
-    imageInfo.extent.height = size.height;
-    imageInfo.extent.depth  = size.depth;
-    imageInfo.mipLevels     = 1;
-    imageInfo.arrayLayers   = 1;
-    imageInfo.samples       = VK_SAMPLE_COUNT_1_BIT;
-    imageInfo.tiling        = VK_IMAGE_TILING_OPTIMAL;
+    VkDevice device = contextVk->getDevice();
 
-    // TODO(jmadill): Are all these image transfer bits necessary?
-    imageInfo.usage = (VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT |
-                       VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_SAMPLED_BIT);
-    imageInfo.sharingMode           = VK_SHARING_MODE_EXCLUSIVE;
-    imageInfo.queueFamilyIndexCount = 0;
-    imageInfo.pQueueFamilyIndices   = nullptr;
-    imageInfo.initialLayout         = VK_IMAGE_LAYOUT_UNDEFINED;
+    if (!mImage.valid())
+    {
+        ASSERT(!mDeviceMemory.valid() && !mImageView.valid());
 
-    ContextVk *contextVk = GetImplAs<ContextVk>(context);
-    VkDevice device      = contextVk->getDevice();
-    ANGLE_TRY(mImage.init(device, imageInfo));
+        VkImageCreateInfo imageInfo;
+        imageInfo.sType         = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
+        imageInfo.pNext         = nullptr;
+        imageInfo.flags         = 0;
+        imageInfo.imageType     = VK_IMAGE_TYPE_2D;
+        imageInfo.format        = vkFormat.native;
+        imageInfo.extent.width  = size.width;
+        imageInfo.extent.height = size.height;
+        imageInfo.extent.depth  = size.depth;
+        imageInfo.mipLevels     = 1;
+        imageInfo.arrayLayers   = 1;
+        imageInfo.samples       = VK_SAMPLE_COUNT_1_BIT;
+        imageInfo.tiling        = VK_IMAGE_TILING_OPTIMAL;
 
-    // Allocate the device memory for the image.
-    // TODO(jmadill): Use more intelligent device memory allocation.
-    VkMemoryRequirements memoryRequirements;
-    mImage.getMemoryRequirements(device, &memoryRequirements);
+        // TODO(jmadill): Are all these image transfer bits necessary?
+        imageInfo.usage = (VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT |
+                           VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_SAMPLED_BIT);
+        imageInfo.sharingMode           = VK_SHARING_MODE_EXCLUSIVE;
+        imageInfo.queueFamilyIndexCount = 0;
+        imageInfo.pQueueFamilyIndices   = nullptr;
+        imageInfo.initialLayout         = VK_IMAGE_LAYOUT_UNDEFINED;
 
-    RendererVk *renderer = contextVk->getRenderer();
+        ANGLE_TRY(mImage.init(device, imageInfo));
 
-    uint32_t memoryIndex = renderer->getMemoryProperties().findCompatibleMemoryIndex(
-        memoryRequirements.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+        // Allocate the device memory for the image.
+        // TODO(jmadill): Use more intelligent device memory allocation.
+        VkMemoryRequirements memoryRequirements;
+        mImage.getMemoryRequirements(device, &memoryRequirements);
 
-    VkMemoryAllocateInfo allocateInfo;
-    allocateInfo.sType           = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-    allocateInfo.pNext           = nullptr;
-    allocateInfo.allocationSize  = memoryRequirements.size;
-    allocateInfo.memoryTypeIndex = memoryIndex;
+        uint32_t memoryIndex = renderer->getMemoryProperties().findCompatibleMemoryIndex(
+            memoryRequirements.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
 
-    ANGLE_TRY(mDeviceMemory.allocate(device, allocateInfo));
-    ANGLE_TRY(mImage.bindMemory(device, mDeviceMemory));
+        VkMemoryAllocateInfo allocateInfo;
+        allocateInfo.sType           = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+        allocateInfo.pNext           = nullptr;
+        allocateInfo.allocationSize  = memoryRequirements.size;
+        allocateInfo.memoryTypeIndex = memoryIndex;
 
-    VkImageViewCreateInfo viewInfo;
-    viewInfo.sType                           = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
-    viewInfo.pNext                           = nullptr;
-    viewInfo.flags                           = 0;
-    viewInfo.image                           = mImage.getHandle();
-    viewInfo.viewType                        = VK_IMAGE_VIEW_TYPE_2D;
-    viewInfo.format                          = vkFormat.native;
-    viewInfo.components.r                    = VK_COMPONENT_SWIZZLE_R;
-    viewInfo.components.g                    = VK_COMPONENT_SWIZZLE_G;
-    viewInfo.components.b                    = VK_COMPONENT_SWIZZLE_B;
-    viewInfo.components.a                    = VK_COMPONENT_SWIZZLE_A;
-    viewInfo.subresourceRange.aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT;
-    viewInfo.subresourceRange.baseMipLevel   = 0;
-    viewInfo.subresourceRange.levelCount     = 1;
-    viewInfo.subresourceRange.baseArrayLayer = 0;
-    viewInfo.subresourceRange.layerCount     = 1;
+        ANGLE_TRY(mDeviceMemory.allocate(device, allocateInfo));
+        ANGLE_TRY(mImage.bindMemory(device, mDeviceMemory));
 
-    ANGLE_TRY(mImageView.init(device, viewInfo));
+        VkImageViewCreateInfo viewInfo;
+        viewInfo.sType                           = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+        viewInfo.pNext                           = nullptr;
+        viewInfo.flags                           = 0;
+        viewInfo.image                           = mImage.getHandle();
+        viewInfo.viewType                        = VK_IMAGE_VIEW_TYPE_2D;
+        viewInfo.format                          = vkFormat.native;
+        viewInfo.components.r                    = VK_COMPONENT_SWIZZLE_R;
+        viewInfo.components.g                    = VK_COMPONENT_SWIZZLE_G;
+        viewInfo.components.b                    = VK_COMPONENT_SWIZZLE_B;
+        viewInfo.components.a                    = VK_COMPONENT_SWIZZLE_A;
+        viewInfo.subresourceRange.aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT;
+        viewInfo.subresourceRange.baseMipLevel   = 0;
+        viewInfo.subresourceRange.levelCount     = 1;
+        viewInfo.subresourceRange.baseArrayLayer = 0;
+        viewInfo.subresourceRange.layerCount     = 1;
 
-    // Create a simple sampler. Force basic parameter settings.
-    // TODO(jmadill): Sampler parameters.
-    VkSamplerCreateInfo samplerInfo;
-    samplerInfo.sType                   = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
-    samplerInfo.pNext                   = nullptr;
-    samplerInfo.flags                   = 0;
-    samplerInfo.magFilter               = VK_FILTER_NEAREST;
-    samplerInfo.minFilter               = VK_FILTER_NEAREST;
-    samplerInfo.mipmapMode              = VK_SAMPLER_MIPMAP_MODE_NEAREST;
-    samplerInfo.addressModeU            = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
-    samplerInfo.addressModeV            = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
-    samplerInfo.addressModeW            = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
-    samplerInfo.mipLodBias              = 0.0f;
-    samplerInfo.anisotropyEnable        = VK_FALSE;
-    samplerInfo.maxAnisotropy           = 1.0f;
-    samplerInfo.compareEnable           = VK_FALSE;
-    samplerInfo.compareOp               = VK_COMPARE_OP_ALWAYS;
-    samplerInfo.minLod                  = 0.0f;
-    samplerInfo.maxLod                  = 1.0f;
-    samplerInfo.borderColor             = VK_BORDER_COLOR_INT_TRANSPARENT_BLACK;
-    samplerInfo.unnormalizedCoordinates = VK_FALSE;
+        ANGLE_TRY(mImageView.init(device, viewInfo));
+    }
 
-    ANGLE_TRY(mSampler.init(device, samplerInfo));
+    if (!mSampler.valid())
+    {
+        // Create a simple sampler. Force basic parameter settings.
+        // TODO(jmadill): Sampler parameters.
+        VkSamplerCreateInfo samplerInfo;
+        samplerInfo.sType                   = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
+        samplerInfo.pNext                   = nullptr;
+        samplerInfo.flags                   = 0;
+        samplerInfo.magFilter               = VK_FILTER_NEAREST;
+        samplerInfo.minFilter               = VK_FILTER_NEAREST;
+        samplerInfo.mipmapMode              = VK_SAMPLER_MIPMAP_MODE_NEAREST;
+        samplerInfo.addressModeU            = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+        samplerInfo.addressModeV            = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+        samplerInfo.addressModeW            = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+        samplerInfo.mipLodBias              = 0.0f;
+        samplerInfo.anisotropyEnable        = VK_FALSE;
+        samplerInfo.maxAnisotropy           = 1.0f;
+        samplerInfo.compareEnable           = VK_FALSE;
+        samplerInfo.compareOp               = VK_COMPARE_OP_ALWAYS;
+        samplerInfo.minLod                  = 0.0f;
+        samplerInfo.maxLod                  = 1.0f;
+        samplerInfo.borderColor             = VK_BORDER_COLOR_INT_TRANSPARENT_BLACK;
+        samplerInfo.unnormalizedCoordinates = VK_FALSE;
+
+        ANGLE_TRY(mSampler.init(device, samplerInfo));
+    }
 
     mRenderTarget.image     = &mImage;
     mRenderTarget.imageView = &mImageView;
@@ -211,6 +231,10 @@ gl::Error TextureVk::setImage(const gl::Context *context,
         vk::CommandBuffer *commandBuffer = nullptr;
         ANGLE_TRY(contextVk->getStartedCommandBuffer(&commandBuffer));
         setQueueSerial(renderer->getCurrentQueueSerial());
+
+        // Ensure we aren't in a render pass.
+        // TODO(jmadill): Command reordering.
+        renderer->endRenderPass();
 
         stagingImage.getImage().changeLayoutTop(
             VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, commandBuffer);

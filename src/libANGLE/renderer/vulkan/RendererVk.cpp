@@ -96,7 +96,8 @@ RendererVk::RendererVk()
       mGlslangWrapper(nullptr),
       mLastCompletedQueueSerial(mQueueSerialFactory.generate()),
       mCurrentQueueSerial(mQueueSerialFactory.generate()),
-      mInFlightCommands()
+      mInFlightCommands(),
+      mCurrentRenderPassFramebuffer(nullptr)
 {
 }
 
@@ -783,6 +784,33 @@ GlslangWrapper *RendererVk::getGlslangWrapper()
 Serial RendererVk::getCurrentQueueSerial() const
 {
     return mCurrentQueueSerial;
+}
+
+gl::Error RendererVk::ensureInRenderPass(const gl::Context *context, FramebufferVk *framebufferVk)
+{
+    if (mCurrentRenderPassFramebuffer == framebufferVk)
+    {
+        return gl::NoError();
+    }
+
+    if (mCurrentRenderPassFramebuffer)
+    {
+        endRenderPass();
+    }
+    ANGLE_TRY(
+        framebufferVk->beginRenderPass(context, mDevice, &mCommandBuffer, mCurrentQueueSerial));
+    mCurrentRenderPassFramebuffer = framebufferVk;
+    return gl::NoError();
+}
+
+void RendererVk::endRenderPass()
+{
+    if (mCurrentRenderPassFramebuffer)
+    {
+        ASSERT(mCommandBuffer.started());
+        mCommandBuffer.endRenderPass();
+        mCurrentRenderPassFramebuffer = nullptr;
+    }
 }
 
 }  // namespace rx

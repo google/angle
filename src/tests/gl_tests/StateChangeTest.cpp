@@ -832,6 +832,88 @@ TEST_P(SimpleStateChangeTest, RedefineBufferInUse)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Tests that deleting an in-flight Texture does not immediately delete the resource.
+TEST_P(SimpleStateChangeTest, DeleteTextureInUse)
+{
+    std::array<GLColor, 4> colors = {
+        {GLColor::red, GLColor::green, GLColor::blue, GLColor::yellow}};
+
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, colors.data());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    draw2DTexturedQuad(0.5f, 1.0f, true);
+    tex.reset();
+    EXPECT_GL_NO_ERROR();
+
+    int w = getWindowWidth() - 2;
+    int h = getWindowHeight() - 2;
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(w, 0, GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(0, h, GLColor::blue);
+    EXPECT_PIXEL_COLOR_EQ(w, h, GLColor::yellow);
+}
+
+// Tests that redefining an in-flight Texture does not affect the in-flight resource.
+TEST_P(SimpleStateChangeTest, RedefineTextureInUse)
+{
+    std::array<GLColor, 4> colors = {
+        {GLColor::red, GLColor::green, GLColor::blue, GLColor::yellow}};
+
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, colors.data());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    // Draw with the first texture.
+    draw2DTexturedQuad(0.5f, 1.0f, true);
+
+    // Redefine the in-flight texture.
+    constexpr int kBigSize = 32;
+    std::vector<GLColor> bigColors;
+    for (int y = 0; y < kBigSize; ++y)
+    {
+        for (int x = 0; x < kBigSize; ++x)
+        {
+            bool xComp = x < kBigSize / 2;
+            bool yComp = y < kBigSize / 2;
+            if (yComp)
+            {
+                bigColors.push_back(xComp ? GLColor::cyan : GLColor::magenta);
+            }
+            else
+            {
+                bigColors.push_back(xComp ? GLColor::yellow : GLColor::white);
+            }
+        }
+    }
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 32, 32, 0, GL_RGBA, GL_UNSIGNED_BYTE, bigColors.data());
+    EXPECT_GL_NO_ERROR();
+
+    // Verify the first draw had the correct data via ReadPixels.
+    int w = getWindowWidth() - 2;
+    int h = getWindowHeight() - 2;
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(w, 0, GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(0, h, GLColor::blue);
+    EXPECT_PIXEL_COLOR_EQ(w, h, GLColor::yellow);
+
+    // Draw and verify with the redefined data.
+    draw2DTexturedQuad(0.5f, 1.0f, true);
+    EXPECT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::cyan);
+    EXPECT_PIXEL_COLOR_EQ(w, 0, GLColor::magenta);
+    EXPECT_PIXEL_COLOR_EQ(0, h, GLColor::yellow);
+    EXPECT_PIXEL_COLOR_EQ(w, h, GLColor::white);
+}
+
 }  // anonymous namespace
 
 ANGLE_INSTANTIATE_TEST(StateChangeTest, ES2_D3D9(), ES2_D3D11(), ES2_OPENGL());

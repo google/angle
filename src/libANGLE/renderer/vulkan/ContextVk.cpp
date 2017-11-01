@@ -307,7 +307,6 @@ gl::Error ContextVk::setupDraw(const gl::Context *context, GLenum mode)
         ASSERT(mCurrentPipeline.valid());
     }
 
-    VkDevice device       = mRenderer->getDevice();
     const auto &state     = mState.getState();
     const auto &programGL = state.getProgram();
     ProgramVk *programVk  = GetImplAs<ProgramVk>(programGL);
@@ -326,7 +325,7 @@ gl::Error ContextVk::setupDraw(const gl::Context *context, GLenum mode)
 
     vk::CommandBuffer *commandBuffer = nullptr;
     ANGLE_TRY(mRenderer->getStartedCommandBuffer(&commandBuffer));
-    ANGLE_TRY(vkFBO->ensureInRenderPass(context, device, commandBuffer, queueSerial, state));
+    ANGLE_TRY(mRenderer->ensureInRenderPass(context, vkFBO));
 
     commandBuffer->bindPipeline(VK_PIPELINE_BIND_POINT_GRAPHICS, mCurrentPipeline);
     commandBuffer->bindVertexBuffers(0, maxAttrib, vertexHandles.data(),

@@ -24,6 +24,7 @@ class AttributeMap;
 
 namespace rx
 {
+class FramebufferVk;
 class GlslangWrapper;
 
 namespace vk
@@ -97,6 +98,10 @@ class RendererVk : angle::NonCopyable
 
     const vk::MemoryProperties &getMemoryProperties() const { return mMemoryProperties; }
 
+    // TODO(jmadill): Don't keep a single renderpass in the Renderer.
+    gl::Error ensureInRenderPass(const gl::Context *context, FramebufferVk *framebufferVk);
+    void endRenderPass();
+
   private:
     void ensureCapsInitialized() const;
     void generateCaps(gl::Caps *outCaps,
@@ -135,6 +140,9 @@ class RendererVk : angle::NonCopyable
     std::vector<vk::FenceAndSerial> mInFlightFences;
     std::vector<vk::GarbageObject> mGarbage;
     vk::MemoryProperties mMemoryProperties;
+
+    // TODO(jmadill): Don't keep a single renderpass in the Renderer.
+    FramebufferVk *mCurrentRenderPassFramebuffer;
 };
 
 }  // namespace rx

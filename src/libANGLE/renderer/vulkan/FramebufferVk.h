@@ -83,14 +83,10 @@ class FramebufferVk : public FramebufferImpl, public ResourceVk
 
     gl::Error getSamplePosition(size_t index, GLfloat *xy) const override;
 
-    gl::Error ensureInRenderPass(const gl::Context *context,
-                                 VkDevice device,
-                                 vk::CommandBuffer *commandBuffer,
-                                 Serial queueSerial,
-                                 const gl::State &glState);
-    void endRenderPass(vk::CommandBuffer *commandBuffer);
-
-    bool isInRenderPass() const { return mInRenderPass; }
+    gl::Error beginRenderPass(const gl::Context *context,
+                              VkDevice device,
+                              vk::CommandBuffer *commandBuffer,
+                              Serial queueSerial);
 
     gl::ErrorOrResult<vk::RenderPass *> getRenderPass(const gl::Context *context, VkDevice device);
 
@@ -105,7 +101,6 @@ class FramebufferVk : public FramebufferImpl, public ResourceVk
 
     vk::RenderPass mRenderPass;
     vk::Framebuffer mFramebuffer;
-    bool mInRenderPass;
 };
 
 }  // namespace rx

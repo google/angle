@@ -81,20 +81,12 @@ FramebufferVk *FramebufferVk::CreateDefaultFBO(const gl::FramebufferState &state
 }
 
 FramebufferVk::FramebufferVk(const gl::FramebufferState &state)
-    : FramebufferImpl(state),
-      mBackbuffer(nullptr),
-      mRenderPass(),
-      mFramebuffer(),
-      mInRenderPass(false)
+    : FramebufferImpl(state), mBackbuffer(nullptr), mRenderPass(), mFramebuffer()
 {
 }
 
 FramebufferVk::FramebufferVk(const gl::FramebufferState &state, WindowSurfaceVk *backbuffer)
-    : FramebufferImpl(state),
-      mBackbuffer(backbuffer),
-      mRenderPass(),
-      mFramebuffer(),
-      mInRenderPass(false)
+    : FramebufferImpl(state), mBackbuffer(backbuffer), mRenderPass(), mFramebuffer()
 {
 }
 
@@ -104,10 +96,9 @@ FramebufferVk::~FramebufferVk()
 
 void FramebufferVk::destroy(const gl::Context *context)
 {
-    ASSERT(!mInRenderPass);
-
     VkDevice device = GetImplAs<ContextVk>(context)->getDevice();
 
+    // TODO(jmadill): Deferred deletion.
     mRenderPass.destroy(device);
     mFramebuffer.destroy(device);
 }
@@ -290,7 +281,7 @@ gl::Error FramebufferVk::readPixels(const gl::Context *context,
     ANGLE_TRY(contextVk->getStartedCommandBuffer(&commandBuffer));
 
     // End render pass if we're in one.
-    endRenderPass(commandBuffer);
+    renderer->endRenderPass();
 
     stagingImage.getImage().changeLayoutTop(VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_GENERAL,
                                             commandBuffer);
@@ -557,19 +548,11 @@ gl::Error FramebufferVk::getSamplePosition(size_t index, GLfloat *xy) const
     return gl::InternalError() << "getSamplePosition is unimplemented.";
 }
 
-gl::Error FramebufferVk::ensureInRenderPass(const gl::Context *context,
-                                            VkDevice device,
-                                            vk::CommandBuffer *commandBuffer,
-                                            Serial queueSerial,
-                                            const gl::State &glState)
+gl::Error FramebufferVk::beginRenderPass(const gl::Context *context,
+                                         VkDevice device,
+                                         vk::CommandBuffer *commandBuffer,
+                                         Serial queueSerial)
 {
-    if (mInRenderPass)
-    {
-        return gl::NoError();
-    }
-
-    mInRenderPass = true;
-
     // TODO(jmadill): Cache render targets.
     for (const auto &colorAttachment : mState.getColorAttachments())
     {
@@ -598,6 +581,7 @@ gl::Error FramebufferVk::ensureInRenderPass(const gl::Context *context,
     ASSERT(renderPass && renderPass->valid());
 
     // TODO(jmadill): Proper clear value implementation.
+    const gl::State &glState = context->getGLState();
     VkClearColorValue colorClear;
     memset(&colorClear, 0, sizeof(VkClearColorValue));
     colorClear.float32[0] = glState.getColorClearValue().red;
@@ -625,15 +609,6 @@ gl::Error FramebufferVk::ensureInRenderPass(const gl::Context *context,
     }
 
     return gl::NoError();
-}
-
-void FramebufferVk::endRenderPass(vk::CommandBuffer *commandBuffer)
-{
-    if (mInRenderPass)
-    {
-        commandBuffer->endRenderPass();
-        mInRenderPass = false;
-    }
 }
 
 }  // namespace rx
