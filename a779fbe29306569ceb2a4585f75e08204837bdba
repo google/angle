@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9f3a4bcc_ac203330",
+        "filename": "src/libANGLE/renderer/gen_angle_format_table.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 259,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-11-01T18:51:44Z",
+      "side": 1,
+      "message": "I\u0027d eliminate this variable - it\u0027s only used once.\nSame for enum_data.",
+      "revId": "a779fbe29306569ceb2a4585f75e08204837bdba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4df1dc79_ed19f45b",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_table_autogen.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-11-01T18:51:44Z",
+      "side": 1,
+      "message": "don\u0027t need these braces, do we?",
+      "revId": "a779fbe29306569ceb2a4585f75e08204837bdba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
