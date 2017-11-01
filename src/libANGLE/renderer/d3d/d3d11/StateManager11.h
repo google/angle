@@ -295,6 +295,10 @@ class StateManager11 final : angle::NonCopyable
     void setShaderResourceInternal(gl::ShaderType shaderType,
                                    UINT resourceSlot,
                                    const SRVType *srv);
+    template <typename UAVType>
+    void setUnorderedAccessViewInternal(gl::ShaderType shaderType,
+                                        UINT resourceSlot,
+                                        const UAVType *uav);
 
     bool unsetConflictingView(ID3D11View *view);
     bool unsetConflictingSRVs(gl::ShaderType shaderType,
@@ -324,6 +328,7 @@ class StateManager11 final : angle::NonCopyable
 
     gl::Error syncTextures(const gl::Context *context);
     gl::Error applyTextures(const gl::Context *context, gl::ShaderType shaderType);
+    gl::Error syncTexturesForCompute(const gl::Context *context);
 
     gl::Error setSamplerState(const gl::Context *context,
                               gl::ShaderType type,
@@ -334,9 +339,15 @@ class StateManager11 final : angle::NonCopyable
                          gl::ShaderType type,
                          int index,
                          gl::Texture *texture);
+    gl::Error setTextureForImage(const gl::Context *context,
+                                 gl::ShaderType type,
+                                 int index,
+                                 bool readonly,
+                                 const gl::ImageUnit &imageUnit);
 
     // Faster than calling setTexture a jillion times
-    gl::Error clearTextures(gl::ShaderType shaderType, size_t rangeStart, size_t rangeEnd);
+    gl::Error clearSRVs(gl::ShaderType shaderType, size_t rangeStart, size_t rangeEnd);
+    gl::Error clearUAVs(gl::ShaderType shaderType, size_t rangeStart, size_t rangeEnd);
     void handleMultiviewDrawFramebufferChange(const gl::Context *context);
 
     gl::Error syncCurrentValueAttribs(const gl::State &glState);
@@ -432,42 +443,50 @@ class StateManager11 final : angle::NonCopyable
     std::set<Query11 *> mCurrentQueries;
 
     // Currently applied textures
-    struct SRVRecord
+    template <typename DescType>
+    struct ViewRecord
     {
-        uintptr_t srv;
+        uintptr_t view;
         uintptr_t resource;
-        D3D11_SHADER_RESOURCE_VIEW_DESC desc;
+        DescType desc;
     };
 
-    // A cache of current SRVs that also tracks the highest 'used' (non-NULL) SRV
+    // A cache of current Views that also tracks the highest 'used' (non-NULL) View.
     // We might want to investigate a more robust approach that is also fast when there's
-    // a large gap between used SRVs (e.g. if SRV 0 and 7 are non-NULL, this approach will
-    // waste time on SRVs 1-6.)
-    class SRVCache : angle::NonCopyable
+    // a large gap between used Views (e.g. if View 0 and 7 are non-NULL, this approach will
+    // waste time on Views 1-6.)
+    template <typename ViewType, typename DescType>
+    class ViewCache : angle::NonCopyable
     {
       public:
-        SRVCache();
-        ~SRVCache();
+        ViewCache();
+        ~ViewCache();
 
-        void initialize(size_t size) { mCurrentSRVs.resize(size); }
+        void initialize(size_t size) { mCurrentViews.resize(size); }
 
-        size_t size() const { return mCurrentSRVs.size(); }
-        size_t highestUsed() const { return mHighestUsedSRV; }
+        size_t size() const { return mCurrentViews.size(); }
+        size_t highestUsed() const { return mHighestUsedView; }
 
-        const SRVRecord &operator[](size_t index) const { return mCurrentSRVs[index]; }
+        const ViewRecord<DescType> &operator[](size_t index) const { return mCurrentViews[index]; }
         void clear();
-        void update(size_t resourceIndex, ID3D11ShaderResourceView *srv);
+        void update(size_t resourceIndex, ViewType *view);
 
       private:
-        std::vector<SRVRecord> mCurrentSRVs;
-        size_t mHighestUsedSRV;
+        std::vector<ViewRecord<DescType>> mCurrentViews;
+        size_t mHighestUsedView;
     };
 
+    using SRVCache = ViewCache<ID3D11ShaderResourceView, D3D11_SHADER_RESOURCE_VIEW_DESC>;
+    using UAVCache = ViewCache<ID3D11UnorderedAccessView, D3D11_UNORDERED_ACCESS_VIEW_DESC>;
     SRVCache mCurVertexSRVs;
     SRVCache mCurPixelSRVs;
+    SRVCache mCurComputeSRVs;
+    UAVCache mCurComputeUAVs;
+    SRVCache *getSRVCache(gl::ShaderType shaderType);
 
     // A block of NULL pointers, cached so we don't re-allocate every draw call
     std::vector<ID3D11ShaderResourceView *> mNullSRVs;
+    std::vector<ID3D11UnorderedAccessView *> mNullUAVs;
 
     // Current translations of "Current-Value" data - owned by Context, not VertexArray.
     gl::AttributesMask mDirtyCurrentValueAttribs;

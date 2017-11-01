@@ -52,6 +52,9 @@ static constexpr std::array<SamplePositionsArray, 5> kSamplePositions = {
        0.375f,  0.875f,  0.5f,    0.0625f, 0.25f,   0.125f,  0.125f,  0.75f,
        0.0f,    0.5f,    0.9375f, 0.25f,   0.875f,  0.9375f, 0.0625f, 0.0f}}}};
 
+// TODO(xinghua.cao@intel.com): Get a more accurate limit.
+static D3D_FEATURE_LEVEL kMinimumFeatureLevelForES31 = D3D_FEATURE_LEVEL_11_0;
+
 // Helper functor for querying DXGI support. Saves passing the parameters repeatedly.
 class DXGISupportHelper : angle::NonCopyable
 {
@@ -1206,6 +1209,11 @@ gl::Version GetMaximumClientVersion(D3D_FEATURE_LEVEL featureLevel)
             UNREACHABLE();
             return gl::Version(0, 0);
     }
+}
+
+D3D_FEATURE_LEVEL GetMinimumFeatureLevelForES31()
+{
+    return kMinimumFeatureLevelForES31;
 }
 
 unsigned int GetMaxViewportAndScissorRectanglesPerPipeline(D3D_FEATURE_LEVEL featureLevel)

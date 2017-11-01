@@ -170,6 +170,8 @@ struct Uniform : public VariableWithLocation
 
     int binding;
     int offset;
+    bool readonly;
+    bool writeonly;
 
     // Decide whether two uniforms are the same at shader link time,
     // assuming one from vertex shader and the other from fragment shader.

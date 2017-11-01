@@ -17,6 +17,7 @@
 #include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/ProgramImpl.h"
 #include "libANGLE/renderer/d3d/DynamicHLSL.h"
+#include "libANGLE/renderer/d3d/RendererD3D.h"
 #include "platform/WorkaroundsD3D.h"
 
 namespace rx
@@ -31,22 +32,29 @@ class ShaderExecutableD3D;
 #define ANGLE_COMPILE_OPTIMIZATION_LEVEL D3DCOMPILE_OPTIMIZATION_LEVEL1
 #endif
 
+enum class HLSLRegisterType : uint8_t
+{
+    None                = 0,
+    Texture             = 1,
+    UnorderedAccessView = 2
+};
+
 // Helper struct representing a single shader uniform
 // TODO(jmadill): Make uniform blocks shared between all programs, so we don't need separate
 // register indices.
 struct D3DUniform : private angle::NonCopyable
 {
     D3DUniform(GLenum type,
+               HLSLRegisterType reg,
                const std::string &nameIn,
                const std::vector<unsigned int> &arraySizesIn,
                bool defaultBlock);
     ~D3DUniform();
 
     bool isSampler() const;
-
+    bool isImage() const;
     bool isArray() const { return !arraySizes.empty(); }
     unsigned int getArraySizeProduct() const;
-
     bool isReferencedByVertexShader() const;
     bool isReferencedByFragmentShader() const;
     bool isReferencedByComputeShader() const;
@@ -65,6 +73,7 @@ struct D3DUniform : private angle::NonCopyable
     uint8_t *csData;
 
     // Register information.
+    HLSLRegisterType regType;
     unsigned int vsRegisterIndex;
     unsigned int psRegisterIndex;
     unsigned int csRegisterIndex;
@@ -174,6 +183,13 @@ class ProgramD3D : public ProgramImpl
     };
 
     SamplerMapping updateSamplerMapping();
+
+    GLint getImageMapping(gl::ShaderType type,
+                          unsigned int imageIndex,
+                          bool readonly,
+                          const gl::Caps &caps) const;
+    GLuint getUsedImageRange(gl::ShaderType type, bool readonly) const;
+    GLenum getImageTextureType(gl::ShaderType type, unsigned int imageIndex, bool readonly) const;
 
     bool usesPointSize() const { return mUsesPointSize; }
     bool usesPointSpriteEmulation() const;
@@ -368,6 +384,13 @@ class ProgramD3D : public ProgramImpl
         GLenum textureType;
     };
 
+    struct Image
+    {
+        Image();
+        bool active;
+        GLint logicalImageUnit;
+    };
+
     typedef std::map<std::string, D3DUniform *> D3DUniformMap;
 
     void defineUniformsAndAssignRegisters(const gl::Context *context);
@@ -377,22 +400,26 @@ class ProgramD3D : public ProgramImpl
     void defineStructUniformFields(GLenum shaderType,
                                    const std::vector<sh::ShaderVariable> &fields,
                                    const std::string &namePrefix,
+                                   const HLSLRegisterType regType,
                                    sh::HLSLBlockEncoder *encoder,
                                    D3DUniformMap *uniformMap);
     void defineArrayOfStructsUniformFields(GLenum shaderType,
                                            const sh::ShaderVariable &uniform,
                                            unsigned int arrayNestingIndex,
                                            const std::string &prefix,
+                                           const HLSLRegisterType regType,
                                            sh::HLSLBlockEncoder *encoder,
                                            D3DUniformMap *uniformMap);
     void defineArrayUniformElements(GLenum shaderType,
                                     const sh::ShaderVariable &uniform,
                                     const std::string &fullName,
+                                    const HLSLRegisterType regType,
                                     sh::HLSLBlockEncoder *encoder,
                                     D3DUniformMap *uniformMap);
     void defineUniform(GLenum shaderType,
                        const sh::ShaderVariable &uniform,
                        const std::string &fullName,
+                       const HLSLRegisterType regType,
                        sh::HLSLBlockEncoder *encoder,
                        D3DUniformMap *uniformMap);
     void assignAllSamplerRegisters();
@@ -403,6 +430,14 @@ class ProgramD3D : public ProgramImpl
                                unsigned int samplerCount,
                                std::vector<Sampler> &outSamplers,
                                GLuint *outUsedRange);
+
+    void assignAllImageRegisters();
+    void assignImageRegisters(size_t uniformIndex);
+    static void AssignImages(unsigned int startImageIndex,
+                             int startLogicalImageUnit,
+                             unsigned int imageCount,
+                             std::vector<Image> &outImages,
+                             GLuint *outUsedRange);
 
     template <typename DestT>
     void getUniformInternal(GLint location, DestT *dataOut) const;
@@ -491,6 +526,11 @@ class ProgramD3D : public ProgramImpl
     GLuint mUsedComputeSamplerRange;
     bool mDirtySamplerMapping;
 
+    std::vector<Image> mImagesCS;
+    std::vector<Image> mReadonlyImagesCS;
+    GLuint mUsedComputeImageRange;
+    GLuint mUsedComputeReadonlyImageRange;
+
     // Cache for pixel shader output layout to save reallocations.
     std::vector<GLenum> mPixelShaderOutputLayoutCache;
     Optional<size_t> mCachedPixelExecutableIndex;
@@ -507,6 +547,7 @@ class ProgramD3D : public ProgramImpl
 
     std::vector<D3DVarying> mStreamOutVaryings;
     std::vector<D3DUniform *> mD3DUniforms;
+    std::map<std::string, int> mImageBindingMap;
     std::vector<D3DUniformBlock> mD3DUniformBlocks;
 
     bool mVertexUniformsDirty;

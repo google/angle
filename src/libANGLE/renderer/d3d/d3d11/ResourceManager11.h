@@ -42,26 +42,28 @@ using InputElementArray = WrappedArray<D3D11_INPUT_ELEMENT_DESC>;
 using ShaderData        = WrappedArray<uint8_t>;
 
 // Format: ResourceType, D3D11 type, DESC type, init data type.
-#define ANGLE_RESOURCE_TYPE_OP(NAME, OP)                                                     \
-    OP(NAME, BlendState, ID3D11BlendState, D3D11_BLEND_DESC, void)                           \
-    OP(NAME, Buffer, ID3D11Buffer, D3D11_BUFFER_DESC, const D3D11_SUBRESOURCE_DATA)          \
-    OP(NAME, ComputeShader, ID3D11ComputeShader, ShaderData, void)                           \
-    OP(NAME, DepthStencilState, ID3D11DepthStencilState, D3D11_DEPTH_STENCIL_DESC, void)     \
-    OP(NAME, DepthStencilView, ID3D11DepthStencilView, D3D11_DEPTH_STENCIL_VIEW_DESC,        \
-       ID3D11Resource)                                                                       \
-    OP(NAME, GeometryShader, ID3D11GeometryShader, ShaderData,                               \
-       const std::vector<D3D11_SO_DECLARATION_ENTRY>)                                        \
-    OP(NAME, InputLayout, ID3D11InputLayout, InputElementArray, const ShaderData)            \
-    OP(NAME, PixelShader, ID3D11PixelShader, ShaderData, void)                               \
-    OP(NAME, Query, ID3D11Query, D3D11_QUERY_DESC, void)                                     \
-    OP(NAME, RasterizerState, ID3D11RasterizerState, D3D11_RASTERIZER_DESC, void)            \
-    OP(NAME, RenderTargetView, ID3D11RenderTargetView, D3D11_RENDER_TARGET_VIEW_DESC,        \
-       ID3D11Resource)                                                                       \
-    OP(NAME, SamplerState, ID3D11SamplerState, D3D11_SAMPLER_DESC, void)                     \
-    OP(NAME, ShaderResourceView, ID3D11ShaderResourceView, D3D11_SHADER_RESOURCE_VIEW_DESC,  \
-       ID3D11Resource)                                                                       \
-    OP(NAME, Texture2D, ID3D11Texture2D, D3D11_TEXTURE2D_DESC, const D3D11_SUBRESOURCE_DATA) \
-    OP(NAME, Texture3D, ID3D11Texture3D, D3D11_TEXTURE3D_DESC, const D3D11_SUBRESOURCE_DATA) \
+#define ANGLE_RESOURCE_TYPE_OP(NAME, OP)                                                       \
+    OP(NAME, BlendState, ID3D11BlendState, D3D11_BLEND_DESC, void)                             \
+    OP(NAME, Buffer, ID3D11Buffer, D3D11_BUFFER_DESC, const D3D11_SUBRESOURCE_DATA)            \
+    OP(NAME, ComputeShader, ID3D11ComputeShader, ShaderData, void)                             \
+    OP(NAME, DepthStencilState, ID3D11DepthStencilState, D3D11_DEPTH_STENCIL_DESC, void)       \
+    OP(NAME, DepthStencilView, ID3D11DepthStencilView, D3D11_DEPTH_STENCIL_VIEW_DESC,          \
+       ID3D11Resource)                                                                         \
+    OP(NAME, GeometryShader, ID3D11GeometryShader, ShaderData,                                 \
+       const std::vector<D3D11_SO_DECLARATION_ENTRY>)                                          \
+    OP(NAME, InputLayout, ID3D11InputLayout, InputElementArray, const ShaderData)              \
+    OP(NAME, PixelShader, ID3D11PixelShader, ShaderData, void)                                 \
+    OP(NAME, Query, ID3D11Query, D3D11_QUERY_DESC, void)                                       \
+    OP(NAME, RasterizerState, ID3D11RasterizerState, D3D11_RASTERIZER_DESC, void)              \
+    OP(NAME, RenderTargetView, ID3D11RenderTargetView, D3D11_RENDER_TARGET_VIEW_DESC,          \
+       ID3D11Resource)                                                                         \
+    OP(NAME, SamplerState, ID3D11SamplerState, D3D11_SAMPLER_DESC, void)                       \
+    OP(NAME, ShaderResourceView, ID3D11ShaderResourceView, D3D11_SHADER_RESOURCE_VIEW_DESC,    \
+       ID3D11Resource)                                                                         \
+    OP(NAME, UnorderedAccessView, ID3D11UnorderedAccessView, D3D11_UNORDERED_ACCESS_VIEW_DESC, \
+       ID3D11Resource)                                                                         \
+    OP(NAME, Texture2D, ID3D11Texture2D, D3D11_TEXTURE2D_DESC, const D3D11_SUBRESOURCE_DATA)   \
+    OP(NAME, Texture3D, ID3D11Texture3D, D3D11_TEXTURE3D_DESC, const D3D11_SUBRESOURCE_DATA)   \
     OP(NAME, VertexShader, ID3D11VertexShader, ShaderData, void)
 
 #define ANGLE_RESOURCE_TYPE_LIST(NAME, RESTYPE, D3D11TYPE, DESCTYPE, INITDATATYPE) RESTYPE,
@@ -357,6 +359,7 @@ namespace d3d11
 ANGLE_RESOURCE_TYPE_OP(ClassList, ANGLE_RESOURCE_TYPE_CLASS)
 
 using SharedSRV = SharedResource11<ID3D11ShaderResourceView>;
+using SharedUAV = SharedResource11<ID3D11UnorderedAccessView>;
 }  // namespace d3d11
 
 #undef ANGLE_RESOURCE_TYPE_CLASS

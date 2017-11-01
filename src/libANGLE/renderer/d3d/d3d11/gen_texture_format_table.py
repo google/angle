@@ -87,7 +87,7 @@ def get_swizzle_format_id(internal_format, angle_format):
 
     # The format itself can be used for swizzles if it can be accessed as a render target and
     # sampled and the bit count for all 4 channels is the same.
-    if "rtvFormat" in angle_format and "srvFormat" in angle_format and not channels_different and len(angle_format['channels']) == 4:
+    if "rtvFormat" in angle_format and "srvFormat" in angle_format and "uavFormat" in angle_format and not channels_different and len(angle_format['channels']) == 4:
         return angle_format["glInternalFormat"] if "glInternalFormat" in angle_format else internal_format
 
     b = int(math.ceil(float(max_component_bits) / 8) * 8)
@@ -144,6 +144,7 @@ format_entry_template = """{space}{{
 {space}                                 angle::Format::ID::{formatName},
 {space}                                 {texFormat},
 {space}                                 {srvFormat},
+{space}                                 {uavFormat},
 {space}                                 {rtvFormat},
 {space}                                 {dsvFormat},
 {space}                                 {blitSRVFormat},
@@ -159,6 +160,7 @@ split_format_entry_template = """{space}    {condition}
 {space}                                     angle::Format::ID::{formatName},
 {space}                                     {texFormat},
 {space}                                     {srvFormat},
+{space}                                     {uavFormat},
 {space}                                     {rtvFormat},
 {space}                                     {dsvFormat},
 {space}                                     {blitSRVFormat},
@@ -178,6 +180,7 @@ def json_to_table_data(internal_format, format_name, prefix, json):
         "formatName": format_name,
         "texFormat": "DXGI_FORMAT_UNKNOWN",
         "srvFormat": "DXGI_FORMAT_UNKNOWN",
+        "uavFormat": "DXGI_FORMAT_UNKNOWN",
         "rtvFormat": "DXGI_FORMAT_UNKNOWN",
         "dsvFormat": "DXGI_FORMAT_UNKNOWN",
         "condition": prefix,

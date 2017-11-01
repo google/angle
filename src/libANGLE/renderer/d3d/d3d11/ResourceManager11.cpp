@@ -211,6 +211,14 @@ HRESULT CreateResource(ID3D11Device *device,
 }
 
 HRESULT CreateResource(ID3D11Device *device,
+                       const D3D11_UNORDERED_ACCESS_VIEW_DESC *desc,
+                       ID3D11Resource *resource,
+                       ID3D11UnorderedAccessView **resourceOut)
+{
+    return device->CreateUnorderedAccessView(resource, desc, resourceOut);
+}
+
+HRESULT CreateResource(ID3D11Device *device,
                        const D3D11_TEXTURE2D_DESC *desc,
                        const D3D11_SUBRESOURCE_DATA *initData,
                        ID3D11Texture2D **texture)

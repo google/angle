@@ -37,6 +37,7 @@ struct Format final : private angle::NonCopyable
                      angle::Format::ID formatID,
                      DXGI_FORMAT texFormat,
                      DXGI_FORMAT srvFormat,
+                     DXGI_FORMAT uavFormat,
                      DXGI_FORMAT rtvFormat,
                      DXGI_FORMAT dsvFormat,
                      DXGI_FORMAT blitSRVFormat,
@@ -54,6 +55,7 @@ struct Format final : private angle::NonCopyable
 
     DXGI_FORMAT texFormat;
     DXGI_FORMAT srvFormat;
+    DXGI_FORMAT uavFormat;
     DXGI_FORMAT rtvFormat;
     DXGI_FORMAT dsvFormat;
 
@@ -69,6 +71,7 @@ constexpr Format::Format()
       formatID(angle::Format::ID::NONE),
       texFormat(DXGI_FORMAT_UNKNOWN),
       srvFormat(DXGI_FORMAT_UNKNOWN),
+      uavFormat(DXGI_FORMAT_UNKNOWN),
       rtvFormat(DXGI_FORMAT_UNKNOWN),
       dsvFormat(DXGI_FORMAT_UNKNOWN),
       blitSRVFormat(DXGI_FORMAT_UNKNOWN),
@@ -81,6 +84,7 @@ constexpr Format::Format(GLenum internalFormat,
                          angle::Format::ID formatID,
                          DXGI_FORMAT texFormat,
                          DXGI_FORMAT srvFormat,
+                         DXGI_FORMAT uavFormat,
                          DXGI_FORMAT rtvFormat,
                          DXGI_FORMAT dsvFormat,
                          DXGI_FORMAT blitSRVFormat,
@@ -90,6 +94,7 @@ constexpr Format::Format(GLenum internalFormat,
       formatID(formatID),
       texFormat(texFormat),
       srvFormat(srvFormat),
+      uavFormat(uavFormat),
       rtvFormat(rtvFormat),
       dsvFormat(dsvFormat),
       blitSRVFormat(blitSRVFormat),

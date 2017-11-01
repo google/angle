@@ -14,6 +14,7 @@
   "R8G8B8A8_UNORM": {
     "texFormat": "DXGI_FORMAT_R8G8B8A8_UNORM",
     "srvFormat": "DXGI_FORMAT_R8G8B8A8_UNORM",
+    "uavFormat": "DXGI_FORMAT_R8G8B8A8_UNORM",
     "rtvFormat": "DXGI_FORMAT_R8G8B8A8_UNORM",
     "channels": "rgba",
     "componentType": "unorm",
@@ -32,6 +33,7 @@
   "R16G16B16A16_FLOAT": {
     "texFormat": "DXGI_FORMAT_R16G16B16A16_FLOAT",
     "srvFormat": "DXGI_FORMAT_R16G16B16A16_FLOAT",
+    "uavFormat": "DXGI_FORMAT_R16G16B16A16_FLOAT",
     "rtvFormat": "DXGI_FORMAT_R16G16B16A16_FLOAT",
     "channels": "rgba",
     "componentType": "float",
@@ -41,6 +43,7 @@
   "R32G32B32A32_FLOAT": {
     "texFormat": "DXGI_FORMAT_R32G32B32A32_FLOAT",
     "srvFormat": "DXGI_FORMAT_R32G32B32A32_FLOAT",
+    "uavFormat": "DXGI_FORMAT_R32G32B32A32_FLOAT",
     "rtvFormat": "DXGI_FORMAT_R32G32B32A32_FLOAT",
     "channels": "rgba",
     "componentType": "float",
@@ -204,6 +207,7 @@
   "R32_FLOAT": {
     "texFormat": "DXGI_FORMAT_R32_FLOAT",
     "srvFormat": "DXGI_FORMAT_R32_FLOAT",
+    "uavFormat": "DXGI_FORMAT_R32_FLOAT",
     "rtvFormat": "DXGI_FORMAT_R32_FLOAT",
     "channels": "r",
     "componentType": "float",
@@ -213,6 +217,7 @@
   "R32_SINT": {
     "texFormat": "DXGI_FORMAT_R32_SINT",
     "srvFormat": "DXGI_FORMAT_R32_SINT",
+    "uavFormat": "DXGI_FORMAT_R32_SINT",
     "rtvFormat": "DXGI_FORMAT_R32_SINT",
     "channels": "r",
     "componentType": "int",
@@ -222,6 +227,7 @@
   "R32_UINT": {
     "texFormat": "DXGI_FORMAT_R32_UINT",
     "srvFormat": "DXGI_FORMAT_R32_UINT",
+    "uavFormat": "DXGI_FORMAT_R32_UINT",
     "rtvFormat": "DXGI_FORMAT_R32_UINT",
     "channels": "r",
     "componentType": "uint",
@@ -373,6 +379,7 @@
   "R16G16B16A16_SINT": {
     "texFormat": "DXGI_FORMAT_R16G16B16A16_SINT",
     "srvFormat": "DXGI_FORMAT_R16G16B16A16_SINT",
+    "uavFormat": "DXGI_FORMAT_R16G16B16A16_SINT",
     "rtvFormat": "DXGI_FORMAT_R16G16B16A16_SINT",
     "channels": "rgba",
     "componentType": "int",
@@ -382,6 +389,7 @@
   "R16G16B16A16_UINT": {
     "texFormat": "DXGI_FORMAT_R16G16B16A16_UINT",
     "srvFormat": "DXGI_FORMAT_R16G16B16A16_UINT",
+    "uavFormat": "DXGI_FORMAT_R16G16B16A16_UINT",
     "rtvFormat": "DXGI_FORMAT_R16G16B16A16_UINT",
     "channels": "rgba",
     "componentType": "uint",
@@ -391,6 +399,7 @@
   "R32G32B32A32_SINT": {
     "texFormat": "DXGI_FORMAT_R32G32B32A32_SINT",
     "srvFormat": "DXGI_FORMAT_R32G32B32A32_SINT",
+    "uavFormat": "DXGI_FORMAT_R32G32B32A32_SINT",
     "rtvFormat": "DXGI_FORMAT_R32G32B32A32_SINT",
     "channels": "rgba",
     "componentType": "int",
@@ -400,6 +409,7 @@
   "R32G32B32A32_UINT": {
     "texFormat": "DXGI_FORMAT_R32G32B32A32_UINT",
     "srvFormat": "DXGI_FORMAT_R32G32B32A32_UINT",
+    "uavFormat": "DXGI_FORMAT_R32G32B32A32_UINT",
     "rtvFormat": "DXGI_FORMAT_R32G32B32A32_UINT",
     "channels": "rgba",
     "componentType": "uint",
@@ -438,6 +448,7 @@
   "R8G8B8A8_UINT": {
     "texFormat": "DXGI_FORMAT_R8G8B8A8_UINT",
     "srvFormat": "DXGI_FORMAT_R8G8B8A8_UINT",
+    "uavFormat": "DXGI_FORMAT_R8G8B8A8_UINT",
     "rtvFormat": "DXGI_FORMAT_R8G8B8A8_UINT",
     "channels": "rgba",
     "componentType": "uint",
@@ -447,6 +458,7 @@
   "R8G8B8A8_SNORM": {
     "texFormat": "DXGI_FORMAT_R8G8B8A8_SNORM",
     "srvFormat": "DXGI_FORMAT_R8G8B8A8_SNORM",
+    "uavFormat": "DXGI_FORMAT_R8G8B8A8_SNORM",
     "channels": "rgba",
     "componentType": "snorm",
     "bits": { "red": 8, "green": 8, "blue": 8, "alpha": 8 },
