@@ -22,6 +22,30 @@
       "revId": "f76b353ae25e715e0cfe9a36b98f6f3da8d74455",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b2fda682_b28d8ffb",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 828,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-01T16:11:52Z",
+      "side": 1,
+      "message": "You\u0027re right.  The cmd buffer validates this for non-webgl too so I didn\u0027t notice.",
+      "parentUuid": "b832264b_b5e1665d",
+      "range": {
+        "startLine": 827,
+        "startChar": 4,
+        "endLine": 828,
+        "endChar": 37
+      },
+      "revId": "f76b353ae25e715e0cfe9a36b98f6f3da8d74455",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
