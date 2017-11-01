@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "fb44e7a1_bad54933",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 801,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-01T19:24:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6faf1bdc_17059abe",
+      "range": {
+        "startLine": 800,
+        "startChar": 4,
+        "endLine": 801,
+        "endChar": 98
+      },
+      "revId": "c0d796aa2c08c9a08b34f976038d72996ebdc8cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "74703414_53413454",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
         "patchSetId": 6
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "ecd8e533_6f0363dc",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-01T19:24:37Z",
+      "side": 1,
+      "message": "Thanks for the tip. Fixed to sized comparison and left a TODO to look into vk::Format (VkFormat is not what to check, since an emulated RGBA8 may have a different initialization function than non-emulated RGBA8 for instance).",
+      "parentUuid": "74703414_53413454",
+      "range": {
+        "startLine": 62,
+        "startChar": 33,
+        "endLine": 62,
+        "endChar": 83
+      },
+      "revId": "c0d796aa2c08c9a08b34f976038d72996ebdc8cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ccaa6b40_6d2b2d92",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
         "patchSetId": 6
@@ -68,6 +116,30 @@
       "revId": "c0d796aa2c08c9a08b34f976038d72996ebdc8cc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "21435f1b_70bd7cd6",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-01T19:24:37Z",
+      "side": 1,
+      "message": "Think it needs to be called always. There could be a current renderpass started anywhere.",
+      "parentUuid": "ccaa6b40_6d2b2d92",
+      "range": {
+        "startLine": 239,
+        "startChar": 8,
+        "endLine": 239,
+        "endChar": 34
+      },
+      "revId": "c0d796aa2c08c9a08b34f976038d72996ebdc8cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
