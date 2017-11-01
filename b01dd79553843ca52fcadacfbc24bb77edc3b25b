@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "a0b138a3_95167edc",
+        "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 376,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-11-01T05:17:15Z",
+      "side": 1,
+      "message": "If there\u0027s no render target and defaultwith or defaultheight is 0, the fbo is incomplete. So we don\u0027t need to add \u0027defaultWidth !\u003d0 || \u0027defaultHeight !\u003d 0\u0027 here.",
+      "parentUuid": "b034857e_16495f45",
+      "range": {
+        "startLine": 375,
+        "startChar": 8,
+        "endLine": 376,
+        "endChar": 45
+      },
+      "revId": "b01dd79553843ca52fcadacfbc24bb77edc3b25b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "7f80f3b7_7cb1c8b6",
         "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
         "patchSetId": 4
@@ -36,6 +60,30 @@
       "writtenOn": "2017-11-01T02:52:13Z",
       "side": 1,
       "message": "What happens if there are more than one outputs?",
+      "range": {
+        "startLine": 381,
+        "startChar": 16,
+        "endLine": 381,
+        "endChar": 36
+      },
+      "revId": "b01dd79553843ca52fcadacfbc24bb77edc3b25b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4a7a3e18_659e6a5c",
+        "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 381,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-11-01T05:17:15Z",
+      "side": 1,
+      "message": "If there are more than one outputs, only one dummy texture will be added. I wrote a test case with 2 outputs and it could pass with this workaround.",
+      "parentUuid": "7f80f3b7_7cb1c8b6",
       "range": {
         "startLine": 381,
         "startChar": 16,
