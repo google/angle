@@ -15,7 +15,6 @@
 #include "common/utilities.h"
 #include "compiler/translator/BuiltInFunctionEmulator.h"
 #include "compiler/translator/BuiltInFunctionEmulatorHLSL.h"
-#include "compiler/translator/FlagStd140Structs.h"
 #include "compiler/translator/ImageFunctionHLSL.h"
 #include "compiler/translator/InfoSink.h"
 #include "compiler/translator/NodeSearch.h"
@@ -55,6 +54,27 @@ bool IsDeclarationWrittenOut(TIntermDeclaration *node)
     ASSERT(variable);
     return (variable->getQualifier() == EvqTemporary || variable->getQualifier() == EvqGlobal ||
             variable->getQualifier() == EvqConst);
+}
+
+bool IsInStd140InterfaceBlock(TIntermTyped *node)
+{
+    TIntermBinary *binaryNode = node->getAsBinaryNode();
+
+    if (binaryNode)
+    {
+        return IsInStd140InterfaceBlock(binaryNode->getLeft());
+    }
+
+    const TType &type = node->getType();
+
+    // determine if we are in the standard layout
+    const TInterfaceBlock *interfaceBlock = type.getInterfaceBlock();
+    if (interfaceBlock)
+    {
+        return (interfaceBlock->blockStorage() == EbsStd140);
+    }
+
+    return false;
 }
 
 }  // anonymous namespace
@@ -203,9 +223,6 @@ OutputHLSL::~OutputHLSL()
 
 void OutputHLSL::output(TIntermNode *treeRoot, TInfoSinkBase &objSink)
 {
-    const std::vector<TIntermTyped *> &flaggedStructs = FlagStd140ValueStructs(treeRoot);
-    makeFlaggedStructMaps(flaggedStructs);
-
     BuiltInFunctionEmulator builtInFunctionEmulator;
     InitBuiltInFunctionEmulatorForHLSL(&builtInFunctionEmulator);
     if ((mCompileOptions & SH_EMULATE_ISNAN_FLOAT_FUNCTION) != 0)
@@ -221,6 +238,11 @@ void OutputHLSL::output(TIntermNode *treeRoot, TInfoSinkBase &objSink)
     ASSERT(success == CallDAG::INITDAG_SUCCESS);
     mASTMetadataList = CreateASTMetadataHLSL(treeRoot, mCallDag);
 
+    const std::vector<MappedStruct> std140Structs = FlagStd140Structs(treeRoot);
+    // TODO(oetuaho): The std140Structs could be filtered based on which ones actually get used in
+    // the shader code. When we add shader storage blocks we might also consider an alternative
+    // solution, since the struct mapping won't work very well for shader storage blocks.
+
     // Output the body and footer first to determine what has to go in the header
     mInfoSinkStack.push(&mBody);
     treeRoot->traverse(this);
@@ -230,7 +252,7 @@ void OutputHLSL::output(TIntermNode *treeRoot, TInfoSinkBase &objSink)
     mInfoSinkStack.pop();
 
     mInfoSinkStack.push(&mHeader);
-    header(mHeader, &builtInFunctionEmulator);
+    header(mHeader, std140Structs, &builtInFunctionEmulator);
     mInfoSinkStack.pop();
 
     objSink << mHeader.c_str();
@@ -238,33 +260,6 @@ void OutputHLSL::output(TIntermNode *treeRoot, TInfoSinkBase &objSink)
     objSink << mFooter.c_str();
 
     builtInFunctionEmulator.cleanup();
-}
-
-void OutputHLSL::makeFlaggedStructMaps(const std::vector<TIntermTyped *> &flaggedStructs)
-{
-    for (unsigned int structIndex = 0; structIndex < flaggedStructs.size(); structIndex++)
-    {
-        TIntermTyped *flaggedNode = flaggedStructs[structIndex];
-
-        TInfoSinkBase structInfoSink;
-        mInfoSinkStack.push(&structInfoSink);
-
-        // This will mark the necessary block elements as referenced
-        flaggedNode->traverse(this);
-
-        TString structName(structInfoSink.c_str());
-        mInfoSinkStack.pop();
-
-        mFlaggedStructOriginalNames[flaggedNode] = structName;
-
-        for (size_t pos = structName.find('.'); pos != std::string::npos;
-             pos        = structName.find('.'))
-        {
-            structName.erase(pos, 1);
-        }
-
-        mFlaggedStructMappedNames[flaggedNode] = "map" + structName;
-    }
 }
 
 const std::map<std::string, unsigned int> &OutputHLSL::getUniformBlockRegisterMap() const
@@ -277,7 +272,9 @@ const std::map<std::string, unsigned int> &OutputHLSL::getUniformRegisterMap() c
     return mUniformHLSL->getUniformRegisterMap();
 }
 
-TString OutputHLSL::structInitializerString(int indent, const TType &type, const TString &name)
+TString OutputHLSL::structInitializerString(int indent,
+                                            const TType &type,
+                                            const TString &name) const
 {
     TString init;
 
@@ -333,30 +330,77 @@ TString OutputHLSL::structInitializerString(int indent, const TType &type, const
     return init;
 }
 
-void OutputHLSL::header(TInfoSinkBase &out, const BuiltInFunctionEmulator *builtInFunctionEmulator)
+TString OutputHLSL::generateStructMapping(const std::vector<MappedStruct> &std140Structs) const
+{
+    TString mappedStructs;
+
+    for (auto &mappedStruct : std140Structs)
+    {
+        TInterfaceBlock *interfaceBlock =
+            mappedStruct.blockDeclarator->getType().getInterfaceBlock();
+        const TString &interfaceBlockName = interfaceBlock->name();
+        const TName &instanceName         = mappedStruct.blockDeclarator->getName();
+        if (mReferencedUniformBlocks.count(interfaceBlockName) == 0 &&
+            (instanceName.getString() == "" ||
+             mReferencedUniformBlocks.count(instanceName.getString()) == 0))
+        {
+            continue;
+        }
+
+        unsigned int instanceCount = 1u;
+        bool isInstanceArray       = mappedStruct.blockDeclarator->isArray();
+        if (isInstanceArray)
+        {
+            instanceCount = mappedStruct.blockDeclarator->getOutermostArraySize();
+        }
+
+        for (unsigned int instanceArrayIndex = 0; instanceArrayIndex < instanceCount;
+             ++instanceArrayIndex)
+        {
+            TString originalName;
+            TString mappedName("map");
+
+            if (instanceName.getString() != "")
+            {
+                unsigned int instanceStringArrayIndex = GL_INVALID_INDEX;
+                if (isInstanceArray)
+                    instanceStringArrayIndex = instanceArrayIndex;
+                TString instanceString = mUniformHLSL->uniformBlockInstanceString(
+                    *interfaceBlock, instanceStringArrayIndex);
+                originalName += instanceString;
+                mappedName += instanceString;
+                originalName += ".";
+                mappedName += "_";
+            }
+
+            TString fieldName = Decorate(mappedStruct.field->name());
+            originalName += fieldName;
+            mappedName += fieldName;
+
+            TType *structType = mappedStruct.field->type();
+            mappedStructs +=
+                "static " + Decorate(structType->getStruct()->name()) + " " + mappedName;
+
+            if (structType->isArray())
+            {
+                mappedStructs += ArrayString(*mappedStruct.field->type());
+            }
+
+            mappedStructs += " =\n";
+            mappedStructs += structInitializerString(0, *structType, originalName);
+            mappedStructs += ";\n";
+        }
+    }
+    return mappedStructs;
+}
+
+void OutputHLSL::header(TInfoSinkBase &out,
+                        const std::vector<MappedStruct> &std140Structs,
+                        const BuiltInFunctionEmulator *builtInFunctionEmulator) const
 {
     TString varyings;
     TString attributes;
-    TString flaggedStructs;
-
-    for (std::map<TIntermTyped *, TString>::const_iterator flaggedStructIt =
-             mFlaggedStructMappedNames.begin();
-         flaggedStructIt != mFlaggedStructMappedNames.end(); flaggedStructIt++)
-    {
-        TIntermTyped *structNode    = flaggedStructIt->first;
-        const TString &mappedName   = flaggedStructIt->second;
-        const TStructure &structure = *structNode->getType().getStruct();
-        const TString &originalName = mFlaggedStructOriginalNames[structNode];
-
-        flaggedStructs += "static " + Decorate(structure.name()) + " " + mappedName;
-        if (structNode->isArray())
-        {
-            flaggedStructs += ArrayString(structNode->getType());
-        }
-        flaggedStructs += " =\n";
-        flaggedStructs += structInitializerString(0, structNode->getType(), originalName);
-        flaggedStructs += ";\n";
-    }
+    TString mappedStructs = generateStructMapping(std140Structs);
 
     for (ReferencedSymbols::const_iterator varying = mReferencedVaryings.begin();
          varying != mReferencedVaryings.end(); varying++)
@@ -574,11 +618,11 @@ void OutputHLSL::header(TInfoSinkBase &out, const BuiltInFunctionEmulator *built
                    "\n";
         }
 
-        if (!flaggedStructs.empty())
+        if (!mappedStructs.empty())
         {
-            out << "// Std140 Structures accessed by value\n";
+            out << "// Structures from std140 blocks with padding removed\n";
             out << "\n";
-            out << flaggedStructs;
+            out << mappedStructs;
             out << "\n";
         }
 
@@ -687,11 +731,11 @@ void OutputHLSL::header(TInfoSinkBase &out, const BuiltInFunctionEmulator *built
                    "\n";
         }
 
-        if (!flaggedStructs.empty())
+        if (!mappedStructs.empty())
         {
-            out << "// Std140 Structures accessed by value\n";
+            out << "// Structures from std140 blocks with padding removed\n";
             out << "\n";
-            out << flaggedStructs;
+            out << mappedStructs;
             out << "\n";
         }
     }
@@ -820,10 +864,9 @@ void OutputHLSL::visitSymbol(TIntermSymbol *node)
     TInfoSinkBase &out = getInfoSink();
 
     // Handle accessing std140 structs by value
-    if (mFlaggedStructMappedNames.count(node) > 0)
+    if (IsInStd140InterfaceBlock(node) && node->getBasicType() == EbtStruct)
     {
-        out << mFlaggedStructMappedNames[node];
-        return;
+        out << "map";
     }
 
     TString name = node->getSymbol();
@@ -1057,13 +1100,6 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
 {
     TInfoSinkBase &out = getInfoSink();
 
-    // Handle accessing std140 structs by value
-    if (mFlaggedStructMappedNames.count(node) > 0)
-    {
-        out << mFlaggedStructMappedNames[node];
-        return false;
-    }
-
     switch (node->getOp())
     {
         case EOpComma:
@@ -1262,17 +1298,33 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
         }
         break;
         case EOpIndexDirectInterfaceBlock:
+        {
+            bool structInStd140Block =
+                node->getBasicType() == EbtStruct && IsInStd140InterfaceBlock(node->getLeft());
+            if (visit == PreVisit && structInStd140Block)
+            {
+                out << "map";
+            }
             if (visit == InVisit)
             {
                 const TInterfaceBlock *interfaceBlock =
                     node->getLeft()->getType().getInterfaceBlock();
                 const TIntermConstantUnion *index = node->getRight()->getAsConstantUnion();
                 const TField *field               = interfaceBlock->fields()[index->getIConst(0)];
-                out << "." + Decorate(field->name());
+                if (structInStd140Block)
+                {
+                    out << "_";
+                }
+                else
+                {
+                    out << ".";
+                }
+                out << Decorate(field->name());
 
                 return false;
             }
             break;
+        }
         case EOpAdd:
             outputTriplet(out, visit, "(", " + ", ")");
             break;

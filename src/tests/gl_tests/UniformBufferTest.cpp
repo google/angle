@@ -866,31 +866,90 @@ TEST_P(UniformBufferTest, BlockContainingArrayOfStructs)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Test with a block instance array containing an array of structs.
+TEST_P(UniformBufferTest, BlockArrayContainingArrayOfStructs)
+{
+    const std::string &fragmentShader =
+        R"(#version 300 es
+
+        precision highp float;
+        out vec4 my_FragColor;
+        struct light_t
+        {
+            vec4 intensity;
+        };
+
+        layout(std140) uniform lightData { light_t lights[2]; } buffers[2];
+
+        vec4 processLight(vec4 lighting, light_t light)
+        {
+            return lighting + light.intensity;
+        }
+        void main()
+        {
+            vec4 lighting = vec4(0, 0, 0, 1);
+            lighting = processLight(lighting, buffers[0].lights[0]);
+            lighting = processLight(lighting, buffers[1].lights[1]);
+            my_FragColor = lighting;
+        })";
+
+    ANGLE_GL_PROGRAM(program, mVertexShaderSource, fragmentShader);
+    GLint uniformBufferIndex  = glGetUniformBlockIndex(program, "lightData[0]");
+    GLint uniformBuffer2Index = glGetUniformBlockIndex(program, "lightData[1]");
+
+    glBindBuffer(GL_UNIFORM_BUFFER, mUniformBuffer);
+    const GLsizei kStructCount        = 2;
+    const GLsizei kVectorElementCount = 4;
+    const GLsizei kBytesPerElement    = 4;
+    const GLsizei kDataSize           = kStructCount * kVectorElementCount * kBytesPerElement;
+    std::vector<GLubyte> v(kDataSize, 0);
+    float *vAsFloat = reinterpret_cast<float *>(v.data());
+
+    // In the first struct/vector of the first block
+    vAsFloat[1] = 0.5f;
+
+    glBufferData(GL_UNIFORM_BUFFER, kDataSize, v.data(), GL_STATIC_DRAW);
+
+    GLBuffer uniformBuffer2;
+    glBindBuffer(GL_UNIFORM_BUFFER, uniformBuffer2);
+
+    vAsFloat[1] = 0.0f;
+    // In the second struct/vector of the second block
+    vAsFloat[kVectorElementCount + 1] = 0.5f;
+    glBufferData(GL_UNIFORM_BUFFER, kDataSize, v.data(), GL_STATIC_DRAW);
+
+    glBindBufferBase(GL_UNIFORM_BUFFER, 0, mUniformBuffer);
+    glBindBufferBase(GL_UNIFORM_BUFFER, 1, uniformBuffer2);
+    glUniformBlockBinding(program, uniformBufferIndex, 0);
+    glUniformBlockBinding(program, uniformBuffer2Index, 1);
+    drawQuad(program.get(), "position", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 // Test with a block containing an array of structs containing arrays.
 TEST_P(UniformBufferTest, BlockContainingArrayOfStructsContainingArrays)
 {
     const std::string &fragmentShader =
-        "#version 300 es\n"
-        "precision highp float;\n"
-        "out vec4 my_FragColor;\n"
-        "struct light_t {\n"
-        "    vec4 intensity[3];\n"
-        "};\n"
-        "const int maxLights = 2;\n"
-        "layout(std140) uniform lightData { light_t lights[maxLights]; };\n"
-        "vec4 processLight(vec4 lighting, light_t light)\n"
-        "{\n"
-        "    return lighting + light.intensity[1];\n"
-        "}\n"
-        "void main()\n"
-        "{\n"
-        "    vec4 lighting = vec4(0, 0, 0, 1);\n"
-        "    for (int n = 0; n < maxLights; n++)\n"
-        "    {\n"
-        "        lighting = processLight(lighting, lights[n]);\n"
-        "    }\n"
-        "    my_FragColor = lighting;\n"
-        "}\n";
+        R"(#version 300 es
+        precision highp float;
+        out vec4 my_FragColor;
+        struct light_t
+        {
+            vec4 intensity[3];
+        };
+        const int maxLights = 2;
+        layout(std140) uniform lightData { light_t lights[maxLights]; };
+        vec4 processLight(vec4 lighting, light_t light)
+        {
+            return lighting + light.intensity[1];
+        }
+        void main()
+        {
+            vec4 lighting = vec4(0, 0, 0, 1);
+            lighting = processLight(lighting, lights[0]);
+            lighting = processLight(lighting, lights[1]);
+            my_FragColor = lighting;
+        })";
 
     ANGLE_GL_PROGRAM(program, mVertexShaderSource, fragmentShader);
     GLint uniformBufferIndex = glGetUniformBlockIndex(program, "lightData");
@@ -1030,6 +1089,65 @@ TEST_P(UniformBufferTest, UniformBlockInstanceReservedOpenGLName)
 
     vAsFloat[1] = 1.0f;
     vAsFloat[3] = 1.0f;
+
+    glBufferData(GL_UNIFORM_BUFFER, kDataSize, v.data(), GL_STATIC_DRAW);
+    glBindBufferBase(GL_UNIFORM_BUFFER, 0, mUniformBuffer);
+    glUniformBlockBinding(program, uniformBufferIndex, 0);
+    drawQuad(program.get(), "position", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
+// Test that uniform block instance with nested structs that contain vec3s inside is handled
+// correctly. This is meant to test that HLSL structure padding to implement std140 layout works
+// together with uniform blocks.
+TEST_P(UniformBufferTest, Std140UniformBlockInstanceWithNestedStructsContainingVec3s)
+{
+    // Got incorrect test result on non-NVIDIA Android - the alpha channel was not set correctly
+    // from the second vector, possibly the platform doesn't implement std140 packing right?
+    // http://anglebug.com/2217
+    ANGLE_SKIP_TEST_IF(IsAndroid() && !IsNVIDIA());
+
+    const std::string &fragmentShader =
+        R"(#version 300 es
+
+        precision highp float;
+        out vec4 my_FragColor;
+
+        struct Sinner {
+          vec3 v;
+        };
+
+        struct S {
+            Sinner s1;
+            Sinner s2;
+        };
+
+        layout(std140) uniform structBuffer { S s; } buffer;
+
+        void accessStruct(S s)
+        {
+            my_FragColor = vec4(s.s1.v.xy, s.s2.v.xy);
+        }
+
+        void main()
+        {
+            accessStruct(buffer.s);
+        })";
+
+    ANGLE_GL_PROGRAM(program, mVertexShaderSource, fragmentShader);
+    GLint uniformBufferIndex = glGetUniformBlockIndex(program, "structBuffer");
+
+    glBindBuffer(GL_UNIFORM_BUFFER, mUniformBuffer);
+    const GLsizei kVectorsPerBlock         = 2;
+    const GLsizei kElementsPerPaddedVector = 4;
+    const GLsizei kBytesPerElement         = 4;
+    const GLsizei kDataSize = kVectorsPerBlock * kElementsPerPaddedVector * kBytesPerElement;
+    std::vector<GLubyte> v(kDataSize, 0);
+    float *vAsFloat = reinterpret_cast<float *>(v.data());
+
+    // Set second value in each vec3.
+    vAsFloat[1u]      = 1.0f;
+    vAsFloat[4u + 1u] = 1.0f;
 
     glBufferData(GL_UNIFORM_BUFFER, kDataSize, v.data(), GL_STATIC_DRAW);
     glBindBufferBase(GL_UNIFORM_BUFFER, 0, mUniformBuffer);

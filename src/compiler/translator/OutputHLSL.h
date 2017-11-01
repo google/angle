@@ -14,6 +14,7 @@
 #include "angle_gl.h"
 #include "compiler/translator/ASTMetadataHLSL.h"
 #include "compiler/translator/Compiler.h"
+#include "compiler/translator/FlagStd140Structs.h"
 #include "compiler/translator/IntermTraverse.h"
 
 class BuiltInFunctionEmulator;
@@ -61,7 +62,9 @@ class OutputHLSL : public TIntermTraverser
     static bool canWriteAsHLSLLiteral(TIntermTyped *expression);
 
   protected:
-    void header(TInfoSinkBase &out, const BuiltInFunctionEmulator *builtInFunctionEmulator);
+    void header(TInfoSinkBase &out,
+                const std::vector<MappedStruct> &std140Structs,
+                const BuiltInFunctionEmulator *builtInFunctionEmulator) const;
 
     void writeFloat(TInfoSinkBase &out, float f);
     void writeSingleConstant(TInfoSinkBase &out, const TConstantUnion *const constUnion);
@@ -115,7 +118,6 @@ class OutputHLSL : public TIntermTraverser
     void outputAssign(Visit visit, const TType &type, TInfoSinkBase &out);
 
     void writeEmulatedFunctionTriplet(TInfoSinkBase &out, Visit visit, TOperator op);
-    void makeFlaggedStructMaps(const std::vector<TIntermTyped *> &flaggedStructs);
 
     // Returns true if it found a 'same symbol' initializer (initializer that references the
     // variable it's initting)
@@ -204,10 +206,7 @@ class OutputHLSL : public TIntermTraverser
 
     TIntermSymbol *mExcessiveLoopIndex;
 
-    TString structInitializerString(int indent, const TType &type, const TString &name);
-
-    std::map<TIntermTyped *, TString> mFlaggedStructMappedNames;
-    std::map<TIntermTyped *, TString> mFlaggedStructOriginalNames;
+    TString structInitializerString(int indent, const TType &type, const TString &name) const;
 
     struct HelperFunction
     {
@@ -245,6 +244,7 @@ class OutputHLSL : public TIntermTraverser
     PerformanceDiagnostics *mPerfDiagnostics;
 
   private:
+    TString generateStructMapping(const std::vector<MappedStruct> &std140Structs) const;
     TString samplerNamePrefixFromStruct(TIntermTyped *node);
     bool ancestorEvaluatesToSamplerInStruct();
 };
