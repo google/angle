@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "54d6b860_46a3821a",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1193,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-11-01T04:44:51Z",
+      "side": 1,
+      "message": "This function checks if a built-in constant/variable/function defined in an extension can be used in the shader. In current implementation, symbols can only be associated with at most one extension, so all geometry shader related built-ins cannot be associated with both EXT_geometry_shader and OES_geometry_shader.\n\nI use TExtension::OES_geometry_shader in the symbol table, and allow built-ins with TExtension::OES_geometry_shader being supported both under OES_geometry_shader and EXT_geometry_shader.",
+      "range": {
+        "startLine": 1174,
+        "startChar": 0,
+        "endLine": 1193,
+        "endChar": 9
+      },
+      "revId": "c7add7dfed64cfffc736f29cdcc2a347019c1153",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a3904be6_1cbbe09f",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1681,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-11-01T04:44:51Z",
+      "side": 1,
+      "message": "Geometry shader layout qualifiers are valid both under OES_geometry_shader and EXT_geometry_shader.",
+      "range": {
+        "startLine": 1677,
+        "startChar": 0,
+        "endLine": 1681,
+        "endChar": 1
+      },
+      "revId": "c7add7dfed64cfffc736f29cdcc2a347019c1153",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "60dfb762_d11fbb2e",
+        "filename": "src/tests/compiler_tests/GeometryShader_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1695,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-11-01T04:44:51Z",
+      "side": 1,
+      "message": "Here are tests for the situations where there are both OES_geometry_shader and EXT_geometry_shader in one shader.",
+      "range": {
+        "startLine": 1695,
+        "startChar": 0,
+        "endLine": 1695,
+        "endChar": 68
+      },
+      "revId": "c7add7dfed64cfffc736f29cdcc2a347019c1153",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
