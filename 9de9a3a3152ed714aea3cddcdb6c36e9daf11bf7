@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "60159bb9_99b89197",
+        "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-01T17:35:20Z",
+      "side": 1,
+      "message": "I think this can be defined as:\n\n    OBJ##Vk *GetImpl(const OBJ *obj)\n    {\n        return GetImplAs\u003cOBJ##Vk\u003e(obj);\n    }\n\nand one extra overload for DisplayVk and then the helper structs are un-needed.",
+      "range": {
+        "startLine": 94,
+        "startChar": 8,
+        "endLine": 94,
+        "endChar": 33
+      },
+      "revId": "9de9a3a3152ed714aea3cddcdb6c36e9daf11bf7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
