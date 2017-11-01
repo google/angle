@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "61356091_39ca2834",
+        "filename": "src/tests/perf_tests/TexSubImage.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-01T22:46:22Z",
+      "side": 1,
+      "message": "nit: this is a related but separate fix, can you mention this in the CL description?\n\n(also in the future could consider making these small prior patches)",
+      "range": {
+        "startLine": 93,
+        "startChar": 49,
+        "endLine": 93,
+        "endChar": 75
+      },
+      "revId": "89a997d5365d514ad86a292f6feb593f2afa3bd8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4e130040_adf37376",
+        "filename": "src/tests/perf_tests/UniformsPerf.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 405,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-01T22:46:22Z",
+      "side": 1,
+      "message": "is this hitting a resource limit? we could change the test init to clamp, but I think I\u0027d prefer if you just made this 64 everywhere. There\u0027s no need to have 100 as our magic value, 64 should be fine. It\u0027s ok if it rebases the test speed, since it\u0027ll be more portable.\n\n(an alternate solution is to change the parameter name to not use the specific count, but say \"max\" uniforms, where we choose the lesser of (max,100))\n\nagain this should be mentioned in the CL description. (And in future work stuff like this could be a split CL)",
+      "range": {
+        "startLine": 399,
+        "startChar": 0,
+        "endLine": 405,
+        "endChar": 6
+      },
+      "revId": "89a997d5365d514ad86a292f6feb593f2afa3bd8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a9ea6133_7ae0b3c6",
+        "filename": "src/tests/test_utils/angle_test_configs.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 388,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-01T22:46:22Z",
+      "side": 1,
+      "message": "nice, thanks.",
+      "range": {
+        "startLine": 384,
+        "startChar": 0,
+        "endLine": 388,
+        "endChar": 6
+      },
+      "revId": "89a997d5365d514ad86a292f6feb593f2afa3bd8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
