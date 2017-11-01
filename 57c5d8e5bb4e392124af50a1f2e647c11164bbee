@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a36c9a6a_8b4f77fb",
+        "filename": "src/libANGLE/Uniform.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-01T11:08:57Z",
+      "side": 1,
+      "message": "put these in the cpp file so they don\u0027t get inlined.",
+      "range": {
+        "startLine": 26,
+        "startChar": 1,
+        "endLine": 28,
+        "endChar": 67
+      },
+      "revId": "57c5d8e5bb4e392124af50a1f2e647c11164bbee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "57bb6fb4_155e2d55",
+        "filename": "src/libANGLE/Uniform.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-01T11:08:57Z",
+      "side": 1,
+      "message": "nit: I don\u0027t think this is necessarily a child? maybe call it \u0027other\u0027?",
+      "range": {
+        "startLine": 31,
+        "startChar": 41,
+        "endLine": 31,
+        "endChar": 46
+      },
+      "revId": "57c5d8e5bb4e392124af50a1f2e647c11164bbee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
