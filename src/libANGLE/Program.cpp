@@ -3022,7 +3022,7 @@ void Program::defineInterfaceBlock(const sh::InterfaceBlock &interfaceBlock, GLe
             InterfaceBlock block(interfaceBlock.name, interfaceBlock.mappedName, true, arrayElement,
                                  blockBinding + arrayElement);
             block.memberIndexes = blockIndexes;
-            MarkResourceStaticUse(&block, shaderType, interfaceBlock.staticUse);
+            block.setStaticUse(shaderType, interfaceBlock.staticUse);
 
             // Since all block elements in an array share the same active interface blocks, they
             // will all be active once any block member is used. So, since interfaceBlock.name[0]
@@ -3055,7 +3055,7 @@ void Program::defineInterfaceBlock(const sh::InterfaceBlock &interfaceBlock, GLe
         InterfaceBlock block(interfaceBlock.name, interfaceBlock.mappedName, false, 0,
                              blockBinding);
         block.memberIndexes = blockIndexes;
-        MarkResourceStaticUse(&block, shaderType, interfaceBlock.staticUse);
+        block.setStaticUse(shaderType, interfaceBlock.staticUse);
         block.dataSize = static_cast<unsigned int>(blockSize);
         if (interfaceBlock.blockType == sh::BlockType::BLOCK_UNIFORM)
         {

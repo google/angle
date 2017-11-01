@@ -13,21 +13,32 @@
 namespace gl
 {
 
-template <typename T>
-void MarkResourceStaticUse(T *resource, GLenum shaderType, bool used)
+StaticallyUsed::StaticallyUsed()
+    : vertexStaticUse(false), fragmentStaticUse(false), computeStaticUse(false)
+{
+}
+
+StaticallyUsed::~StaticallyUsed()
+{
+}
+
+StaticallyUsed::StaticallyUsed(const StaticallyUsed &rhs) = default;
+StaticallyUsed &StaticallyUsed::operator=(const StaticallyUsed &rhs) = default;
+
+void StaticallyUsed::setStaticUse(GLenum shaderType, bool used)
 {
     switch (shaderType)
     {
         case GL_VERTEX_SHADER:
-            resource->vertexStaticUse = used;
+            vertexStaticUse = used;
             break;
 
         case GL_FRAGMENT_SHADER:
-            resource->fragmentStaticUse = used;
+            fragmentStaticUse = used;
             break;
 
         case GL_COMPUTE_SHADER:
-            resource->computeStaticUse = used;
+            computeStaticUse = used;
             break;
 
         default:
@@ -35,16 +46,15 @@ void MarkResourceStaticUse(T *resource, GLenum shaderType, bool used)
     }
 }
 
-template void MarkResourceStaticUse(LinkedUniform *resource, GLenum shaderType, bool used);
-template void MarkResourceStaticUse(InterfaceBlock *resource, GLenum shaderType, bool used);
+void StaticallyUsed::unionWith(const StaticallyUsed &other)
+{
+    vertexStaticUse |= other.vertexStaticUse;
+    fragmentStaticUse |= other.fragmentStaticUse;
+    computeStaticUse |= other.computeStaticUse;
+}
 
 LinkedUniform::LinkedUniform()
-    : typeInfo(nullptr),
-      bufferIndex(-1),
-      blockInfo(sh::BlockMemberInfo::getDefaultBlockInfo()),
-      vertexStaticUse(false),
-      fragmentStaticUse(false),
-      computeStaticUse(false)
+    : typeInfo(nullptr), bufferIndex(-1), blockInfo(sh::BlockMemberInfo::getDefaultBlockInfo())
 {
 }
 
@@ -57,12 +67,7 @@ LinkedUniform::LinkedUniform(GLenum typeIn,
                              const int locationIn,
                              const int bufferIndexIn,
                              const sh::BlockMemberInfo &blockInfoIn)
-    : typeInfo(&GetUniformTypeInfo(typeIn)),
-      bufferIndex(bufferIndexIn),
-      blockInfo(blockInfoIn),
-      vertexStaticUse(false),
-      fragmentStaticUse(false),
-      computeStaticUse(false)
+    : typeInfo(&GetUniformTypeInfo(typeIn)), bufferIndex(bufferIndexIn), blockInfo(blockInfoIn)
 {
     type      = typeIn;
     precision = precisionIn;
@@ -77,35 +82,26 @@ LinkedUniform::LinkedUniform(const sh::Uniform &uniform)
     : sh::Uniform(uniform),
       typeInfo(&GetUniformTypeInfo(type)),
       bufferIndex(-1),
-      blockInfo(sh::BlockMemberInfo::getDefaultBlockInfo()),
-      vertexStaticUse(false),
-      fragmentStaticUse(false),
-      computeStaticUse(false)
+      blockInfo(sh::BlockMemberInfo::getDefaultBlockInfo())
 {
 }
 
 LinkedUniform::LinkedUniform(const LinkedUniform &uniform)
     : sh::Uniform(uniform),
+      StaticallyUsed(uniform),
       typeInfo(uniform.typeInfo),
       bufferIndex(uniform.bufferIndex),
-      blockInfo(uniform.blockInfo),
-      vertexStaticUse(uniform.vertexStaticUse),
-      fragmentStaticUse(uniform.fragmentStaticUse),
-      computeStaticUse(uniform.computeStaticUse)
-
+      blockInfo(uniform.blockInfo)
 {
 }
 
 LinkedUniform &LinkedUniform::operator=(const LinkedUniform &uniform)
 {
     sh::Uniform::operator=(uniform);
+    StaticallyUsed::operator=(uniform);
     typeInfo             = uniform.typeInfo;
     bufferIndex          = uniform.bufferIndex;
     blockInfo            = uniform.blockInfo;
-    vertexStaticUse      = uniform.vertexStaticUse;
-    fragmentStaticUse    = uniform.fragmentStaticUse;
-    computeStaticUse     = uniform.computeStaticUse;
-
     return *this;
 }
 
@@ -148,13 +144,17 @@ size_t LinkedUniform::getElementComponents() const
     return typeInfo->componentCount;
 }
 
-ShaderVariableBuffer::ShaderVariableBuffer()
-    : binding(0),
-      dataSize(0),
-      vertexStaticUse(false),
-      fragmentStaticUse(false),
-      computeStaticUse(false)
+ShaderVariableBuffer::ShaderVariableBuffer() : binding(0), dataSize(0)
 {
+}
+
+ShaderVariableBuffer::~ShaderVariableBuffer()
+{
+}
+
+int ShaderVariableBuffer::numActiveVariables() const
+{
+    return static_cast<int>(memberIndexes.size());
 }
 
 InterfaceBlock::InterfaceBlock() : isArray(false), arrayElement(0)

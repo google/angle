@@ -20,11 +20,24 @@ namespace gl
 {
 struct UniformTypeInfo;
 
-template <typename T>
-void MarkResourceStaticUse(T *resource, GLenum shaderType, bool used);
+struct StaticallyUsed
+{
+    StaticallyUsed();
+    StaticallyUsed(const StaticallyUsed &rhs);
+    virtual ~StaticallyUsed();
+
+    StaticallyUsed &operator=(const StaticallyUsed &rhs);
+
+    void setStaticUse(GLenum shaderType, bool used);
+    void unionWith(const StaticallyUsed &other);
+
+    bool vertexStaticUse;
+    bool fragmentStaticUse;
+    bool computeStaticUse;
+};
 
 // Helper struct representing a single shader uniform
-struct LinkedUniform : public sh::Uniform
+struct LinkedUniform : public sh::Uniform, public StaticallyUsed
 {
     LinkedUniform();
     LinkedUniform(GLenum type,
@@ -54,27 +67,19 @@ struct LinkedUniform : public sh::Uniform
     // Identifies the containing buffer backed resource -- interface block or atomic counter buffer.
     int bufferIndex;
     sh::BlockMemberInfo blockInfo;
-
-    bool vertexStaticUse;
-    bool fragmentStaticUse;
-    bool computeStaticUse;
 };
 
 // Parent struct for atomic counter, uniform block, and shader storage block buffer, which all
 // contain a group of shader variables, and have a GL buffer backed.
-struct ShaderVariableBuffer
+struct ShaderVariableBuffer : public StaticallyUsed
 {
     ShaderVariableBuffer();
-    virtual ~ShaderVariableBuffer(){};
-    int numActiveVariables() const { return static_cast<int>(memberIndexes.size()); }
+    virtual ~ShaderVariableBuffer();
+    int numActiveVariables() const;
 
     int binding;
     unsigned int dataSize;
     std::vector<unsigned int> memberIndexes;
-
-    bool vertexStaticUse;
-    bool fragmentStaticUse;
-    bool computeStaticUse;
 };
 
 using AtomicCounterBuffer = ShaderVariableBuffer;
