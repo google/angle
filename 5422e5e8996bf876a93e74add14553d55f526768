@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4257f67b_92bbeb1f",
+        "filename": "src/tests/perf_tests/BufferSubData.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 378,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-01T03:22:42Z",
+      "side": 1,
+      "message": "Having to paste this in every config is a bit unmaintainable - can you make a helper method that returns an EGL config, that is exactly this code? You can either make two helpers, one for NULL and one for non-NULL, or have one helper and have a bool parameter. I could call it something like egl_platform::OPENGL_OR_GLES or something like that.",
+      "range": {
+        "startLine": 374,
+        "startChar": 0,
+        "endLine": 378,
+        "endChar": 6
+      },
+      "revId": "5422e5e8996bf876a93e74add14553d55f526768",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
