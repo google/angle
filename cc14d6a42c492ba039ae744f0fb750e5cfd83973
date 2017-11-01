@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "a92bdeb4_bd430c7e",
+        "filename": "src/common/utilities_unittest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-11-01T16:05:01Z",
+      "side": 1,
+      "message": "Can we also have test for when there is no array subscript?",
+      "revId": "cc14d6a42c492ba039ae744f0fb750e5cfd83973",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "1993b0dd_13cd8189",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 4
