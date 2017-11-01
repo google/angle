@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "61c60749_8efbade9",
+        "filename": "src/tests/preprocessor_tests/location_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 300,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-01T08:29:37Z",
+      "side": 1,
+      "message": "typo: continuation",
+      "range": {
+        "startLine": 300,
+        "startChar": 80,
+        "endLine": 300,
+        "endChar": 91
+      },
+      "revId": "4f8f596e2309277460ab0be84d3967f70bcdfef7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a5f1a916_fe9adc62",
+        "filename": "src/tests/preprocessor_tests/location_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 303,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-01T08:29:37Z",
+      "side": 1,
+      "message": "nit: Writing the line number in hex format would make it easier to see that the test is correct.",
+      "range": {
+        "startLine": 303,
+        "startChar": 29,
+        "endLine": 303,
+        "endChar": 39
+      },
+      "revId": "4f8f596e2309277460ab0be84d3967f70bcdfef7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a38af02d_c5c78cf5",
+        "filename": "src/tests/preprocessor_tests/location_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 315,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-01T08:29:37Z",
+      "side": 1,
+      "message": "ditto",
+      "range": {
+        "startLine": 315,
+        "startChar": 82,
+        "endLine": 315,
+        "endChar": 93
+      },
+      "revId": "4f8f596e2309277460ab0be84d3967f70bcdfef7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
