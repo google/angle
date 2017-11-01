@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "757ad4ff_6eb88273",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-01T13:56:17Z",
+      "side": 1,
+      "message": "Hm, I think you might be right, I was getting confused between this and the methods that return uniforms from locations. Thanks anyway for improving the code.",
+      "parentUuid": "ea5418b6_fe44a7c7",
+      "range": {
+        "startLine": 161,
+        "startChar": 0,
+        "endLine": 161,
+        "endChar": 47
+      },
+      "revId": "ead27e9bfd43378aca379151c1efc5836d7a48d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "25c421c7_17e1169c",
         "filename": "src/libANGLE/UniformLinker.h",
         "patchSetId": 3
@@ -131,6 +155,30 @@
       "side": 1,
       "message": "I agree that this is a bit awkward. But changing this is a large amount of work, so I\u0027d rather consider it separately. It can\u0027t easily be changed in the D3D layer without changing the translator as well, as they have some direct interaction. And modifying the translator requires at least three steps: 1. Add support for new variable query interface in translator. 2. Stop using the old variable query interface in Chromium. 3. Remove the old variable query interface.\n\nFor now I added a TODO in the code, do you think that\u0027s OK?",
       "parentUuid": "830a0e79_4f058edf",
+      "range": {
+        "startLine": 1986,
+        "startChar": 11,
+        "endLine": 1987,
+        "endChar": 46
+      },
+      "revId": "ead27e9bfd43378aca379151c1efc5836d7a48d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a398d8b5_7f26a39a",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1987,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-01T13:56:17Z",
+      "side": 1,
+      "message": "That\u0027s fine. It\u0027s a small enough thing we can do it at some future point.",
+      "parentUuid": "57a61dff_6689f917",
       "range": {
         "startLine": 1986,
         "startChar": 11,
