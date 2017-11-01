@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6faf1bdc_17059abe",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 801,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-01T17:26:20Z",
+      "side": 1,
+      "message": "Do an ANGLE_TRY on beginRenderPass before updating the state tracking here.",
+      "range": {
+        "startLine": 800,
+        "startChar": 4,
+        "endLine": 801,
+        "endChar": 98
+      },
+      "revId": "c0d796aa2c08c9a08b34f976038d72996ebdc8cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "74703414_53413454",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-01T17:26:20Z",
+      "side": 1,
+      "message": "internalFormat can be unsized now so you\u0027ll have to compare the type too in the unsized case.  Ideally this would probably check that the VK format didn\u0027t change.",
+      "range": {
+        "startLine": 62,
+        "startChar": 33,
+        "endLine": 62,
+        "endChar": 83
+      },
+      "revId": "c0d796aa2c08c9a08b34f976038d72996ebdc8cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ccaa6b40_6d2b2d92",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-01T17:26:20Z",
+      "side": 1,
+      "message": "Maybe this only needs to be called if mImage or mSampler valid before this call?",
+      "range": {
+        "startLine": 239,
+        "startChar": 8,
+        "endLine": 239,
+        "endChar": 34
+      },
+      "revId": "c0d796aa2c08c9a08b34f976038d72996ebdc8cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
