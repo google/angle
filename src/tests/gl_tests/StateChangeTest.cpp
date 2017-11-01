@@ -601,6 +601,145 @@ TEST_P(StateChangeRenderTest, GenerateMipmap)
     EXPECT_GL_NO_ERROR();
 }
 
+// Tests that D3D11 dirty bit updates don't forget about BufferSubData attrib updates.
+TEST_P(StateChangeTest, VertexBufferUpdatedAfterDraw)
+{
+    const std::string vs =
+        "attribute vec2 position;\n"
+        "attribute vec4 color;\n"
+        "varying vec4 outcolor;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_Position = vec4(position, 0, 1);\n"
+        "    outcolor = color;\n"
+        "}";
+    const std::string fs =
+        "varying mediump vec4 outcolor;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_FragColor = outcolor;\n"
+        "}";
+
+    ANGLE_GL_PROGRAM(program, vs, fs);
+    glUseProgram(program);
+
+    GLint colorLoc = glGetAttribLocation(program, "color");
+    ASSERT_NE(-1, colorLoc);
+    GLint positionLoc = glGetAttribLocation(program, "position");
+    ASSERT_NE(-1, positionLoc);
+
+    setupQuadVertexBuffer(0.5f, 1.0f);
+    glEnableVertexAttribArray(positionLoc);
+    glVertexAttribPointer(positionLoc, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+
+    GLBuffer colorBuf;
+    glBindBuffer(GL_ARRAY_BUFFER, colorBuf);
+    glVertexAttribPointer(colorLoc, 4, GL_UNSIGNED_BYTE, GL_TRUE, 0, nullptr);
+    glEnableVertexAttribArray(colorLoc);
+
+    // Fill with green.
+    std::vector<GLColor> colorData(6, GLColor::green);
+    glBufferData(GL_ARRAY_BUFFER, colorData.size() * sizeof(GLColor), colorData.data(),
+                 GL_STATIC_DRAW);
+
+    // Draw, expect green.
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+    ASSERT_GL_NO_ERROR();
+
+    // Update buffer with red.
+    std::fill(colorData.begin(), colorData.end(), GLColor::red);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, colorData.size() * sizeof(GLColor), colorData.data());
+
+    // Draw, expect red.
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test that switching VAOs keeps the disabled "current value" attributes up-to-date.
+TEST_P(StateChangeTestES3, VertexArrayObjectAndDisabledAttributes)
+{
+    const std::string singleVertexShader =
+        "attribute vec4 position; void main() { gl_Position = position; }";
+    const std::string singleFragmentShader = "void main() { gl_FragColor = vec4(1, 0, 0, 1); }";
+    ANGLE_GL_PROGRAM(singleProgram, singleVertexShader, singleFragmentShader);
+
+    const std::string dualVertexShader =
+        "#version 300 es\n"
+        "in vec4 position;\n"
+        "in vec4 color;\n"
+        "out vec4 varyColor;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_Position = position;\n"
+        "    varyColor = color;\n"
+        "}";
+    const std::string dualFragmentShader =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "in vec4 varyColor;\n"
+        "out vec4 colorOut;\n"
+        "void main()\n"
+        "{\n"
+        "    colorOut = varyColor;\n"
+        "}";
+    ANGLE_GL_PROGRAM(dualProgram, dualVertexShader, dualFragmentShader);
+    GLint positionLocation = glGetAttribLocation(dualProgram, "position");
+    ASSERT_NE(-1, positionLocation);
+    GLint colorLocation = glGetAttribLocation(dualProgram, "color");
+    ASSERT_NE(-1, colorLocation);
+
+    GLint singlePositionLocation = glGetAttribLocation(singleProgram, "position");
+    ASSERT_NE(-1, singlePositionLocation);
+
+    glUseProgram(singleProgram);
+
+    // Initialize position vertex buffer.
+    const auto &quadVertices = GetQuadVertices();
+
+    GLBuffer vertexBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(Vector3) * 6, quadVertices.data(), GL_STATIC_DRAW);
+
+    // Initialize a VAO. Draw with single program.
+    GLVertexArray vertexArray;
+    glBindVertexArray(vertexArray);
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+    glVertexAttribPointer(singlePositionLocation, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glEnableVertexAttribArray(singlePositionLocation);
+
+    // Should draw red.
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    // Draw with a green buffer attribute, without the VAO.
+    glBindVertexArray(0);
+    glUseProgram(dualProgram);
+    glVertexAttribPointer(positionLocation, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glEnableVertexAttribArray(positionLocation);
+
+    std::vector<GLColor> greenColors(6, GLColor::green);
+    GLBuffer greenBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, greenBuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(GLColor) * 6, greenColors.data(), GL_STATIC_DRAW);
+
+    glVertexAttribPointer(colorLocation, 4, GL_UNSIGNED_BYTE, GL_FALSE, 4, nullptr);
+    glEnableVertexAttribArray(colorLocation);
+
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    // Re-bind VAO and try to draw with different program, without changing state.
+    // Should draw black since current value is not initialized.
+    glBindVertexArray(vertexArray);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
+}
+
 ANGLE_INSTANTIATE_TEST(StateChangeTest, ES2_D3D9(), ES2_D3D11(), ES2_OPENGL());
 ANGLE_INSTANTIATE_TEST(StateChangeRenderTest,
                        ES2_D3D9(),
