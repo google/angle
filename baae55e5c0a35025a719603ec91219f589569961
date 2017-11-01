@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "8be661c0_06f09216",
+        "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 384,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-11-01T01:45:10Z",
+      "side": 1,
+      "message": "Thanks for your concerns,Jiajia. I have modified end2end test case in FramebufferTest.cpp.\nIt shows that the code doesn\u0027t affects the completeness of framebuffer, and seems that the attachment will be replaced by the later one if the index of COLOR_ATTACHMENTi are the same.\nStatus of framebuffer isn\u0027t affected because the dummy texture is added to a temp variable colorAttachmentsForRender which will be refreshed in next syncState. \nNot sure if the dummy texture has any other implicated issues.",
+      "parentUuid": "d14a5ddf_d940e617",
+      "range": {
+        "startLine": 384,
+        "startChar": 37,
+        "endLine": 384,
+        "endChar": 57
+      },
+      "revId": "baae55e5c0a35025a719603ec91219f589569961",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "53a092c4_048ee0cf",
         "filename": "src/tests/gl_tests/FramebufferTest.cpp",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2017-10-31T07:05:14Z",
       "side": 1,
       "message": "Offline talked with Yizhou. It seems that if we change the test case location, the workaround needs to do the corresponding change. At least, it indicates that the workaround needs to improve.",
+      "range": {
+        "startLine": 683,
+        "startChar": 20,
+        "endLine": 683,
+        "endChar": 32
+      },
+      "revId": "baae55e5c0a35025a719603ec91219f589569961",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6aa35398_1ac291b5",
+        "filename": "src/tests/gl_tests/FramebufferTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 683,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-11-01T01:45:10Z",
+      "side": 1,
+      "message": "The COLOR_ATTACHMENTi of the dummy texture should match this location in shader. I modified this test case to validate the workaround.",
+      "parentUuid": "53a092c4_048ee0cf",
       "range": {
         "startLine": 683,
         "startChar": 20,
