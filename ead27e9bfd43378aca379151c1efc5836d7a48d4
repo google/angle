@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "ea5418b6_fe44a7c7",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-01T13:21:46Z",
+      "side": 1,
+      "message": "This function already had a for loop, so I wasn\u0027t too worried about adding an allocation here. However, now I wrote an optimized algorithm here without any allocations, it should perform better than before this patch.\n\nThe uniform perf test doesn\u0027t measure getting uniform locations, it just measures setting uniforms.",
+      "parentUuid": "0019ff96_a0dec4da",
+      "range": {
+        "startLine": 161,
+        "startChar": 0,
+        "endLine": 161,
+        "endChar": 47
+      },
+      "revId": "ead27e9bfd43378aca379151c1efc5836d7a48d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "25c421c7_17e1169c",
         "filename": "src/libANGLE/UniformLinker.h",
         "patchSetId": 3
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "72517cc4_ccc569e9",
+        "filename": "src/libANGLE/UniformLinker.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-01T13:21:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "25c421c7_17e1169c",
+      "range": {
+        "startLine": 90,
+        "startChar": 42,
+        "endLine": 91,
+        "endChar": 69
+      },
+      "revId": "ead27e9bfd43378aca379151c1efc5836d7a48d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "830a0e79_4f058edf",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 3
@@ -59,6 +107,30 @@
       "writtenOn": "2017-10-31T15:37:42Z",
       "side": 1,
       "message": "this is a bit awkward. why is this necessary? why don\u0027t we modify the translator to match the spec as well.",
+      "range": {
+        "startLine": 1986,
+        "startChar": 11,
+        "endLine": 1987,
+        "endChar": 46
+      },
+      "revId": "ead27e9bfd43378aca379151c1efc5836d7a48d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "57a61dff_6689f917",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1987,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-01T13:21:46Z",
+      "side": 1,
+      "message": "I agree that this is a bit awkward. But changing this is a large amount of work, so I\u0027d rather consider it separately. It can\u0027t easily be changed in the D3D layer without changing the translator as well, as they have some direct interaction. And modifying the translator requires at least three steps: 1. Add support for new variable query interface in translator. 2. Stop using the old variable query interface in Chromium. 3. Remove the old variable query interface.\n\nFor now I added a TODO in the code, do you think that\u0027s OK?",
+      "parentUuid": "830a0e79_4f058edf",
       "range": {
         "startLine": 1986,
         "startChar": 11,
