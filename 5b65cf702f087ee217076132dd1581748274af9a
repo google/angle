@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4fdc547c_d46ea1bf",
+        "filename": "src/libANGLE/renderer/vulkan/gen_vk_format_table.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-11-01T19:28:57Z",
+      "side": 1,
+      "message": "No big deal, but I usually do it this way to avoid double lookup and repetition of the key string.\n\nbuffer_format_id \u003d info.get(\"buffer\")\nif buffer_format_id is None:\n...\n\nAlso I think this could be one 3-way \u0027if\u0027:\n\nif buffer\nelif texture\nelse",
+      "range": {
+        "startLine": 95,
+        "startChar": 0,
+        "endLine": 96,
+        "endChar": 45
+      },
+      "revId": "5b65cf702f087ee217076132dd1581748274af9a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
