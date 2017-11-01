@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b034857e_16495f45",
+        "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 376,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-11-01T02:52:13Z",
+      "side": 1,
+      "message": "Do you need to add \u0027defaultWidth !\u003d 0 || defaultHeight !\u003d 0\u0027 in the condition? I think your workaround is only needed when the default parameters are set.",
+      "range": {
+        "startLine": 375,
+        "startChar": 8,
+        "endLine": 376,
+        "endChar": 45
+      },
+      "revId": "b01dd79553843ca52fcadacfbc24bb77edc3b25b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7f80f3b7_7cb1c8b6",
+        "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 381,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-11-01T02:52:13Z",
+      "side": 1,
+      "message": "What happens if there are more than one outputs?",
+      "range": {
+        "startLine": 381,
+        "startChar": 16,
+        "endLine": 381,
+        "endChar": 36
+      },
+      "revId": "b01dd79553843ca52fcadacfbc24bb77edc3b25b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
