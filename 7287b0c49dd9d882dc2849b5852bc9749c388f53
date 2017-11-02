@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b3278db7_07004a0e",
+        "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 385,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-02T11:55:35Z",
+      "side": 1,
+      "message": "You can make this faster by using\n\nGLenum i \u003d static_cast\u003cGLenum\u003e(gl::ScanForward(static_cast\u003cuint32_t\u003e(activeProgramOutputs.to_ulong())))\n\nAlso you\u0027ll need to assert that the size of the bitset is \u003c\u003d 32.\n\nLikely this could be a helper function in angle::BitSet.",
+      "range": {
+        "startLine": 378,
+        "startChar": 0,
+        "endLine": 385,
+        "endChar": 9
+      },
+      "revId": "7287b0c49dd9d882dc2849b5852bc9749c388f53",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6cd9fa1b_60e378e8",
+        "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 387,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-02T11:55:35Z",
+      "side": 1,
+      "message": "you\u0027ll need to swallow this error with ANGLE_SWALLOW_ERR. You should leave a TODO there to handle it as well.\n\ngl::Texture *dummyTex \u003d nullptr;\nANGLE_SWALLOW_ERR(mRenderer-\u003egetIncompleteTexture....)\nif (dummyTex)\n{\n....\n}",
+      "range": {
+        "startLine": 387,
+        "startChar": 8,
+        "endLine": 387,
+        "endChar": 99
+      },
+      "revId": "7287b0c49dd9d882dc2849b5852bc9749c388f53",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "47a96dec_2b400cff",
+        "filename": "src/tests/gl_tests/FramebufferTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 676,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-02T11:55:35Z",
+      "side": 1,
+      "message": "is this still necessary?",
+      "range": {
+        "startLine": 673,
+        "startChar": 0,
+        "endLine": 676,
+        "endChar": 5
+      },
+      "revId": "7287b0c49dd9d882dc2849b5852bc9749c388f53",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
