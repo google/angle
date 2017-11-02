@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c33317d4_9f127a6f",
+        "filename": "src/libANGLE/renderer/vulkan/formatutilsvk.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-11-02T15:45:57Z",
+      "side": 1,
+      "message": "My understanding is that the buffer formats will only be useful to make the equivalent of OpenGL \"Texture buffers\" which aren\u0027t in OpenGL ES. Maybe we could skip this?",
+      "revId": "c5f84e5b4686a6f43ed3face51707d40f87e7d6f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1087ab69_2ad73e48",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_map.json",
+        "patchSetId": 5
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-11-02T15:45:57Z",
+      "side": 1,
+      "message": "This would be the only change needed from this patch if we remove bufferFormat.",
+      "revId": "c5f84e5b4686a6f43ed3face51707d40f87e7d6f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
