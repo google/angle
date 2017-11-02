@@ -39,6 +39,30 @@
       "revId": "b4433a283f54ad630a5b292ca2da870c71279f43",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bc76fe05_391003dc",
+        "filename": "src/libANGLE/renderer/vulkan/formatutilsvk.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-02T16:00:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d714a224_171dc232",
+      "range": {
+        "startLine": 35,
+        "startChar": 23,
+        "endLine": 35,
+        "endChar": 31
+      },
+      "revId": "b4433a283f54ad630a5b292ca2da870c71279f43",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
