@@ -22,6 +22,30 @@
       "revId": "c3ad8aa28928fcea7b14a89f083f46ccf45559be",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "debd9113_35b36734",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1698,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-02T18:37:09Z",
+      "side": 1,
+      "message": "Yeah, the multiview bits should almost always be dirty. Really they should be a dirty bit of their own. This is the absolute fastest way to do it until then.",
+      "parentUuid": "337ae0d6_6e817ede",
+      "range": {
+        "startLine": 1698,
+        "startChar": 4,
+        "endLine": 1698,
+        "endChar": 6
+      },
+      "revId": "c3ad8aa28928fcea7b14a89f083f46ccf45559be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
