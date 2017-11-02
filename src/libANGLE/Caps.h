@@ -8,8 +8,9 @@
 #define LIBANGLE_CAPS_H_
 
 #include "angle_gl.h"
-#include "libANGLE/angletypes.h"
 #include "libANGLE/Version.h"
+#include "libANGLE/angletypes.h"
+#include "libANGLE/renderer/Format.h"
 
 #include <map>
 #include <set>
@@ -52,29 +53,32 @@ TextureCaps GenerateMinimumTextureCaps(GLenum internalFormat,
                                        const Version &clientVersion,
                                        const Extensions &extensions);
 
-class TextureCapsMap
+class TextureCapsMap final : angle::NonCopyable
 {
   public:
-    typedef std::map<GLenum, TextureCaps>::const_iterator const_iterator;
+    TextureCapsMap();
+    ~TextureCapsMap();
 
+    // These methods are deprecated. Please use angle::Format for new features.
     void insert(GLenum internalFormat, const TextureCaps &caps);
-    void remove(GLenum internalFormat);
-    void clear();
-
     const TextureCaps &get(GLenum internalFormat) const;
 
-    const_iterator begin() const;
-    const_iterator end() const;
+    void clear();
 
-    size_t size() const;
+    // Prefer using angle::Format methods.
+    const TextureCaps &get(angle::Format::ID formatID) const;
+    void set(angle::Format::ID formatID, const TextureCaps &caps);
 
   private:
-    typedef std::map<GLenum, TextureCaps> InternalFormatToCapsMap;
-    InternalFormatToCapsMap mCapsMap;
+    TextureCaps &get(angle::Format::ID formatID);
+
+    // Indexed by angle::Format::ID
+    std::array<TextureCaps, angle::kNumANGLEFormats> mFormatData;
 };
 
-TextureCapsMap GenerateMinimumTextureCapsMap(const Version &clientVersion,
-                                             const Extensions &extensions);
+void InitMinimumTextureCapsMap(const Version &clientVersion,
+                               const Extensions &extensions,
+                               TextureCapsMap *capsMap);
 
 struct Extensions
 {

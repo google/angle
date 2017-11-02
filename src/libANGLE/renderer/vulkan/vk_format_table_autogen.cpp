@@ -442,6 +442,14 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             break;
         }
 
+        case angle::Format::ID::ETC1_LOSSY_DECODE_R8G8B8_UNORM_BLOCK:
+            // This format is not implemented in Vulkan.
+            break;
+
+        case angle::Format::ID::ETC1_R8G8B8_UNORM_BLOCK:
+            // This format is not implemented in Vulkan.
+            break;
+
         case angle::Format::ID::ETC2_R8G8B8A1_SRGB_BLOCK:
         {
             internalFormat          = GL_COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2;

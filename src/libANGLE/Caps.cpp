@@ -84,59 +84,55 @@ TextureCaps GenerateMinimumTextureCaps(GLenum sizedInternalFormat,
     return caps;
 }
 
-void TextureCapsMap::insert(GLenum internalFormat, const TextureCaps &caps)
+TextureCapsMap::TextureCapsMap()
 {
-    mCapsMap[internalFormat] = caps;
 }
 
-void TextureCapsMap::remove(GLenum internalFormat)
+TextureCapsMap::~TextureCapsMap()
 {
-    InternalFormatToCapsMap::iterator i = mCapsMap.find(internalFormat);
-    if (i != mCapsMap.end())
-    {
-        mCapsMap.erase(i);
-    }
+}
+
+void TextureCapsMap::insert(GLenum internalFormat, const TextureCaps &caps)
+{
+    angle::Format::ID formatID = angle::Format::InternalFormatToID(internalFormat);
+    get(formatID)              = caps;
 }
 
 void TextureCapsMap::clear()
 {
-    mCapsMap.clear();
+    mFormatData.fill(TextureCaps());
 }
 
 const TextureCaps &TextureCapsMap::get(GLenum internalFormat) const
 {
-    static TextureCaps defaultUnsupportedTexture;
-    InternalFormatToCapsMap::const_iterator iter = mCapsMap.find(internalFormat);
-    return (iter != mCapsMap.end()) ? iter->second : defaultUnsupportedTexture;
+    angle::Format::ID formatID = angle::Format::InternalFormatToID(internalFormat);
+    return get(formatID);
 }
 
-TextureCapsMap::const_iterator TextureCapsMap::begin() const
+const TextureCaps &TextureCapsMap::get(angle::Format::ID formatID) const
 {
-    return mCapsMap.begin();
+    return mFormatData[static_cast<size_t>(formatID)];
 }
 
-TextureCapsMap::const_iterator TextureCapsMap::end() const
+TextureCaps &TextureCapsMap::get(angle::Format::ID formatID)
 {
-    return mCapsMap.end();
+    return mFormatData[static_cast<size_t>(formatID)];
 }
 
-size_t TextureCapsMap::size() const
+void TextureCapsMap::set(angle::Format::ID formatID, const TextureCaps &caps)
 {
-    return mCapsMap.size();
+    get(formatID) = caps;
 }
 
-TextureCapsMap GenerateMinimumTextureCapsMap(const Version &clientVersion,
-                                             const Extensions &extensions)
+void InitMinimumTextureCapsMap(const Version &clientVersion,
+                               const Extensions &extensions,
+                               TextureCapsMap *capsMap)
 {
-    TextureCapsMap capsMap;
-
     for (GLenum internalFormat : GetAllSizedInternalFormats())
     {
-        capsMap.insert(internalFormat,
-                       GenerateMinimumTextureCaps(internalFormat, clientVersion, extensions));
+        capsMap->insert(internalFormat,
+                        GenerateMinimumTextureCaps(internalFormat, clientVersion, extensions));
     }
-
-    return capsMap;
 }
 
 Extensions::Extensions()

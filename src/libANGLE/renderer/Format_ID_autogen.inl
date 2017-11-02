@@ -67,6 +67,8 @@ enum class Format::ID
     EAC_R11G11_UNORM_BLOCK,
     EAC_R11_SNORM_BLOCK,
     EAC_R11_UNORM_BLOCK,
+    ETC1_LOSSY_DECODE_R8G8B8_UNORM_BLOCK,
+    ETC1_R8G8B8_UNORM_BLOCK,
     ETC2_R8G8B8A1_SRGB_BLOCK,
     ETC2_R8G8B8A1_UNORM_BLOCK,
     ETC2_R8G8B8A8_SRGB_BLOCK,
@@ -139,6 +141,6 @@ enum class Format::ID
     S8_UINT
 };
 
-constexpr uint32_t kNumANGLEFormats = 125;
+constexpr uint32_t kNumANGLEFormats = 127;
 
 }  // namespace angle

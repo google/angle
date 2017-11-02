@@ -8,6 +8,7 @@
 
 #include "libANGLE/renderer/vulkan/formatutilsvk.h"
 
+#include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/load_functions_table.h"
 
 namespace rx

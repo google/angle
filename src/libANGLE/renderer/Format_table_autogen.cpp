@@ -79,6 +79,8 @@ constexpr Format g_formatInfoTable[] = {
     { Format::ID::EAC_R11G11_UNORM_BLOCK, GL_COMPRESSED_RG11_EAC, GL_COMPRESSED_RG11_EAC, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 11, 11, 0, 0, 0, 0 },
     { Format::ID::EAC_R11_SNORM_BLOCK, GL_COMPRESSED_SIGNED_R11_EAC, GL_COMPRESSED_SIGNED_R11_EAC, nullptr, NoCopyFunctions, nullptr, nullptr, GL_SIGNED_NORMALIZED, 11, 0, 0, 0, 0, 0 },
     { Format::ID::EAC_R11_UNORM_BLOCK, GL_COMPRESSED_R11_EAC, GL_COMPRESSED_R11_EAC, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 11, 0, 0, 0, 0, 0 },
+    { Format::ID::ETC1_LOSSY_DECODE_R8G8B8_UNORM_BLOCK, GL_ETC1_RGB8_LOSSY_DECODE_ANGLE, GL_ETC1_RGB8_LOSSY_DECODE_ANGLE, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 8, 8, 8, 0, 0, 0 },
+    { Format::ID::ETC1_R8G8B8_UNORM_BLOCK, GL_ETC1_RGB8_OES, GL_ETC1_RGB8_OES, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 8, 8, 8, 0, 0, 0 },
     { Format::ID::ETC2_R8G8B8A1_SRGB_BLOCK, GL_COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2, GL_COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 8, 8, 8, 1, 0, 0 },
     { Format::ID::ETC2_R8G8B8A1_UNORM_BLOCK, GL_COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2, GL_COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 8, 8, 8, 1, 0, 0 },
     { Format::ID::ETC2_R8G8B8A8_SRGB_BLOCK, GL_COMPRESSED_SRGB8_ALPHA8_ETC2_EAC, GL_COMPRESSED_SRGB8_ALPHA8_ETC2_EAC, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 8, 8, 8, 8, 0, 0 },
@@ -160,7 +162,7 @@ Format::ID Format::InternalFormatToID(GLenum internalFormat)
         case GL_RGBA16_EXT:
             return Format::ID::R16G16B16A16_UNORM;
         case GL_ETC1_RGB8_LOSSY_DECODE_ANGLE:
-            return Format::ID::NONE;
+            return Format::ID::ETC1_LOSSY_DECODE_R8G8B8_UNORM_BLOCK;
         case GL_RG8I:
             return Format::ID::R8G8_SINT;
         case GL_R16F:
@@ -338,7 +340,7 @@ Format::ID Format::InternalFormatToID(GLenum internalFormat)
         case GL_RGBA:
             return Format::ID::R8G8B8A8_UNORM;
         case GL_ETC1_RGB8_OES:
-            return Format::ID::NONE;
+            return Format::ID::ETC1_R8G8B8_UNORM_BLOCK;
         case GL_DEPTH24_STENCIL8:
             return Format::ID::D24_UNORM_S8_UINT;
         case GL_COMPRESSED_SRGB8_ALPHA8_ASTC_4x4_KHR:

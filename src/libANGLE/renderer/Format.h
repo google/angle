@@ -12,7 +12,6 @@
 #ifndef LIBANGLE_RENDERER_FORMAT_H_
 #define LIBANGLE_RENDERER_FORMAT_H_
 
-#include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/renderer_utils.h"
 
 namespace angle

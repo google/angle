@@ -41,6 +41,7 @@
 #include "libANGLE/queryutils.h"
 #include "libANGLE/renderer/ContextImpl.h"
 #include "libANGLE/renderer/EGLImplFactory.h"
+#include "libANGLE/renderer/Format.h"
 #include "libANGLE/validationES.h"
 
 namespace
@@ -2738,11 +2739,9 @@ void Context::updateCaps()
     mCaps.compressedTextureFormats.clear();
     mTextureCaps.clear();
 
-    for (auto capsIt : mImplementation->getNativeTextureCaps())
+    for (GLenum sizedInternalFormat : GetAllSizedInternalFormats())
     {
-        GLenum sizedInternalFormat = capsIt.first;
-        TextureCaps formatCaps     = capsIt.second;
-
+        TextureCaps formatCaps = mImplementation->getNativeTextureCaps().get(sizedInternalFormat);
         const InternalFormat &formatInfo = GetSizedInternalFormatInfo(sizedInternalFormat);
 
         // Update the format caps based on the client version and extensions.
