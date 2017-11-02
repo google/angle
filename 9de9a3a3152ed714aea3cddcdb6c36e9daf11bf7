@@ -22,6 +22,30 @@
       "revId": "9de9a3a3152ed714aea3cddcdb6c36e9daf11bf7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "01a5fbcb_1849baf3",
+        "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-02T13:21:47Z",
+      "side": 1,
+      "message": "Agree, but I still think I like the helper structs more, it keeps the macro abstraction in the types, rather than in inlined code. This way we could step through the template function if we had to.\n\n(also technically it would be one extra overload for egl::* objects (due to the namespace).)",
+      "parentUuid": "60159bb9_99b89197",
+      "range": {
+        "startLine": 94,
+        "startChar": 8,
+        "endLine": 94,
+        "endChar": 33
+      },
+      "revId": "9de9a3a3152ed714aea3cddcdb6c36e9daf11bf7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
