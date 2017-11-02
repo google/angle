@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "461aeeb8_a6949ba9",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1988,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-11-02T21:44:25Z",
+      "side": 1,
+      "message": "Can this check be combined with gl::MAX_SAMPLE_MASK_WORDS above?",
+      "range": {
+        "startLine": 1988,
+        "startChar": 37,
+        "endLine": 1988,
+        "endChar": 64
+      },
+      "revId": "09a5329a64af9a55f423cef846435e28a57fef26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
