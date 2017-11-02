@@ -573,7 +573,7 @@ class State : public OnAttachmentDirtyReceiver, angle::NonCopyable
     std::vector<Texture *> mCompleteTextureCache;
     std::vector<OnAttachmentDirtyBinding> mCompleteTextureBindings;
     using ActiveTextureMask = angle::BitSet<IMPLEMENTATION_MAX_ACTIVE_TEXTURES>;
-    ActiveTextureMask mCompleteTexturesMask;
+    ActiveTextureMask mActiveTexturesMask;
 
     typedef std::vector<BindingPointer<Sampler>> SamplerBindingVector;
     SamplerBindingVector mSamplers;

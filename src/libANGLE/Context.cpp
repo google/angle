@@ -2838,8 +2838,13 @@ void Context::initWorkarounds()
 Error Context::prepareForDraw()
 {
     syncRendererState();
-    ANGLE_TRY(mGLState.clearUnclearedActiveTextures(this));
-    ANGLE_TRY(mGLState.getDrawFramebuffer()->ensureDrawAttachmentsInitialized(this));
+
+    if (isRobustResourceInitEnabled())
+    {
+        ANGLE_TRY(mGLState.clearUnclearedActiveTextures(this));
+        ANGLE_TRY(mGLState.getDrawFramebuffer()->ensureDrawAttachmentsInitialized(this));
+    }
+
     return NoError();
 }
 
@@ -4283,7 +4288,10 @@ void Context::dispatchCompute(GLuint numGroupsX, GLuint numGroupsY, GLuint numGr
     }
 
     // TODO(jmadill): Dirty bits for compute.
-    ANGLE_CONTEXT_TRY(mGLState.clearUnclearedActiveTextures(this));
+    if (isRobustResourceInitEnabled())
+    {
+        ANGLE_CONTEXT_TRY(mGLState.clearUnclearedActiveTextures(this));
+    }
 
     handleError(mImplementation->dispatchCompute(this, numGroupsX, numGroupsY, numGroupsZ));
 }

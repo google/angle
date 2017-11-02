@@ -2299,8 +2299,8 @@ void State::syncProgramTextures(const Context *context)
 
             // Bind the texture unconditionally, to recieve completeness change notifications.
             mCompleteTextureBindings[textureUnitIndex].bind(texture->getDirtyChannel());
+            mActiveTexturesMask.set(textureUnitIndex);
             newActiveTextures.set(textureUnitIndex);
-            mCompleteTexturesMask.set(textureUnitIndex);
 
             if (sampler != nullptr)
             {
@@ -2310,14 +2310,14 @@ void State::syncProgramTextures(const Context *context)
     }
 
     // Unset now missing textures.
-    ActiveTextureMask negativeMask = mCompleteTexturesMask & ~newActiveTextures;
+    ActiveTextureMask negativeMask = mActiveTexturesMask & ~newActiveTextures;
     if (negativeMask.any())
     {
         for (auto textureIndex : negativeMask)
         {
             mCompleteTextureBindings[textureIndex].reset();
             mCompleteTextureCache[textureIndex] = nullptr;
-            mCompleteTexturesMask.reset(textureIndex);
+            mActiveTexturesMask.reset(textureIndex);
         }
     }
 }
@@ -2422,19 +2422,17 @@ void State::signal(size_t textureIndex, InitState initState)
 
 Error State::clearUnclearedActiveTextures(const Context *context)
 {
-    if (!mRobustResourceInit)
-    {
-        return NoError();
-    }
+    ASSERT(mRobustResourceInit);
 
-    // TODO(jmadill): Investigate improving the speed here.
-    for (Texture *texture : mCompleteTextureCache)
+    for (auto textureIndex : mActiveTexturesMask)
     {
+        Texture *texture = mCompleteTextureCache[textureIndex];
         if (texture)
         {
             ANGLE_TRY(texture->ensureInitialized(context));
         }
     }
+
     return NoError();
 }
 

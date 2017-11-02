@@ -103,14 +103,14 @@ TEST_P(IncompleteTextureTest, IncompleteTexture2D)
 
     // Should be complete - expect red.
     drawQuad(mProgram, "position", 0.5f);
-    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red) << "complete texture should be red";
 
     // Make texture incomplete.
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 
     // Should be incomplete - expect black.
     drawQuad(mProgram, "position", 0.5f);
-    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black) << "incomplete texture should be black";
 
     // Make texture complete by defining the second mip.
     glTexImage2D(GL_TEXTURE_2D, 1, GL_RGBA, kTextureSize >> 1, kTextureSize >> 1, 0, GL_RGBA,
@@ -118,7 +118,7 @@ TEST_P(IncompleteTextureTest, IncompleteTexture2D)
 
     // Should be complete - expect red.
     drawQuad(mProgram, "position", 0.5f);
-    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red) << "mip-complete texture should be red";
 }
 
 // Tests redefining a texture with half the size works as expected.
