@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "337ae0d6_6e817ede",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1698,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-11-02T18:11:17Z",
+      "side": 1,
+      "message": "Is the \u0027if\u0027 necessary?  Worried about the cost of .reset()-ing unconditionally?",
+      "range": {
+        "startLine": 1698,
+        "startChar": 4,
+        "endLine": 1698,
+        "endChar": 6
+      },
+      "revId": "c3ad8aa28928fcea7b14a89f083f46ccf45559be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
