@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "0ba5e1be_d38a8202",
+        "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 376,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-02T14:00:46Z",
+      "side": 1,
+      "message": "nit: colorAttachmentsForRender.empty()",
+      "range": {
+        "startLine": 376,
+        "startChar": 8,
+        "endLine": 376,
+        "endChar": 45
+      },
+      "revId": "7287b0c49dd9d882dc2849b5852bc9749c388f53",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b3278db7_07004a0e",
         "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
         "patchSetId": 6
