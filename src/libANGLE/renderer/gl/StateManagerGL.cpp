@@ -1695,34 +1695,38 @@ void StateManagerGL::syncState(const gl::Context *context, const gl::State::Dirt
     }
 
     // Iterate over and resolve multi-view dirty bits.
-    for (auto dirtyBit : mMultiviewDirtyBits)
+    if (mMultiviewDirtyBits.any())
     {
-        switch (dirtyBit)
+        for (auto dirtyBit : mMultiviewDirtyBits)
         {
-            case MULTIVIEW_DIRTY_BIT_SIDE_BY_SIDE_LAYOUT:
+            switch (dirtyBit)
             {
-                const gl::Framebuffer *drawFramebuffer = state.getDrawFramebuffer();
-                ASSERT(drawFramebuffer != nullptr);
-                setSideBySide(drawFramebuffer->getMultiviewLayout() ==
-                              GL_FRAMEBUFFER_MULTIVIEW_SIDE_BY_SIDE_ANGLE);
+                case MULTIVIEW_DIRTY_BIT_SIDE_BY_SIDE_LAYOUT:
+                {
+                    const gl::Framebuffer *drawFramebuffer = state.getDrawFramebuffer();
+                    ASSERT(drawFramebuffer != nullptr);
+                    setSideBySide(drawFramebuffer->getMultiviewLayout() ==
+                                  GL_FRAMEBUFFER_MULTIVIEW_SIDE_BY_SIDE_ANGLE);
+                }
+                break;
+                case MULTIVIEW_DIRTY_BIT_VIEWPORT_OFFSETS:
+                {
+                    const gl::Framebuffer *drawFramebuffer = state.getDrawFramebuffer();
+                    ASSERT(drawFramebuffer != nullptr);
+                    const std::vector<gl::Offset> *attachmentViewportOffsets =
+                        drawFramebuffer->getViewportOffsets();
+                    const std::vector<gl::Offset> &viewportOffsets =
+                        attachmentViewportOffsets != nullptr
+                            ? *attachmentViewportOffsets
+                            : gl::FramebufferAttachment::GetDefaultViewportOffsetVector();
+                    setViewportOffsets(viewportOffsets);
+                }
+                break;
+                default:
+                    UNREACHABLE();
             }
-            break;
-            case MULTIVIEW_DIRTY_BIT_VIEWPORT_OFFSETS:
-            {
-                const gl::Framebuffer *drawFramebuffer = state.getDrawFramebuffer();
-                ASSERT(drawFramebuffer != nullptr);
-                const std::vector<gl::Offset> *attachmentViewportOffsets =
-                    drawFramebuffer->getViewportOffsets();
-                const std::vector<gl::Offset> &viewportOffsets =
-                    attachmentViewportOffsets != nullptr
-                        ? *attachmentViewportOffsets
-                        : gl::FramebufferAttachment::GetDefaultViewportOffsetVector();
-                setViewportOffsets(viewportOffsets);
-            }
-            break;
-            default:
-                UNREACHABLE();
         }
+        mMultiviewDirtyBits.reset();
     }
 
     const gl::State::DirtyBits &glAndLocalDirtyBits = (glDirtyBits | mLocalDirtyBits);
