@@ -395,7 +395,8 @@ TIntermBlock *TCompiler::compileTreeImpl(const char *const shaderStrings[],
             RemoveNoOpCasesFromEndOfSwitchStatements(root, &symbolTable);
 
         // Remove empty switch statements - this makes output simpler.
-        RemoveEmptySwitchStatements(root);
+        if (success)
+            RemoveEmptySwitchStatements(root);
 
         // Create the function DAG and check there is no recursion
         if (success)
