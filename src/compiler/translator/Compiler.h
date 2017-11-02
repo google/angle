@@ -30,6 +30,7 @@ namespace sh
 {
 
 class TCompiler;
+class TParseContext;
 #ifdef ANGLE_ENABLE_HLSL
 class TranslatorHLSL;
 #endif  // ANGLE_ENABLE_HLSL
@@ -218,11 +219,20 @@ class TCompiler : public TShHandleBase
 
     // Removes unused function declarations and prototypes from the AST
     class UnusedPredicate;
-    bool pruneUnusedFunctions(TIntermBlock *root);
+    void pruneUnusedFunctions(TIntermBlock *root);
 
     TIntermBlock *compileTreeImpl(const char *const shaderStrings[],
                                   size_t numStrings,
                                   const ShCompileOptions compileOptions);
+
+    // Fetches and stores shader metadata that is not stored within the AST itself, such as shader
+    // version.
+    void setASTMetadata(const TParseContext &parseContext);
+
+    // Does checks that need to be run after parsing is complete and returns true if they pass.
+    bool checkAndSimplifyAST(TIntermBlock *root,
+                             const TParseContext &parseContext,
+                             ShCompileOptions compileOptions);
 
     sh::GLenum shaderType;
     ShShaderSpec shaderSpec;
