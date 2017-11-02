@@ -15,6 +15,7 @@
 
 #include "common/angleutils.h"
 #include "libANGLE/Caps.h"
+#include "libANGLE/renderer/vulkan/formatutilsvk.h"
 #include "libANGLE/renderer/vulkan/renderervk_utils.h"
 
 namespace egl
@@ -105,6 +106,12 @@ class RendererVk : angle::NonCopyable
     // This is necessary to update the cached current RenderPass Framebuffer.
     void onReleaseRenderPass(const FramebufferVk *framebufferVk);
 
+    // TODO(jmadill): We could pass angle::Format::ID here.
+    const vk::Format &getFormat(GLenum internalFormat) const
+    {
+        return mFormatTable[internalFormat];
+    }
+
   private:
     void ensureCapsInitialized() const;
     void generateCaps(gl::Caps *outCaps,
@@ -143,6 +150,7 @@ class RendererVk : angle::NonCopyable
     std::vector<vk::FenceAndSerial> mInFlightFences;
     std::vector<vk::GarbageObject> mGarbage;
     vk::MemoryProperties mMemoryProperties;
+    vk::FormatTable mFormatTable;
 
     // TODO(jmadill): Don't keep a single renderpass in the Renderer.
     FramebufferVk *mCurrentRenderPassFramebuffer;

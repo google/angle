@@ -22,845 +22,1004 @@ namespace rx
 namespace vk
 {
 
-// static
-const Format &Format::Get(GLenum internalFormat)
+void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &angleFormat)
 {
-    // clang-format off
-    switch (internalFormat)
+    switch (angleFormat.id)
     {
-        case GL_BGR565_ANGLEX:
-        {
-            static constexpr Format info(GL_BGR565_ANGLEX,
-                                         angle::Format::ID::B5G6R5_UNORM,
-                                         VK_FORMAT_B5G6R5_UNORM_PACK16,
-                                         nullptr);
-            return info;
-        }
-        case GL_BGR5_A1_ANGLEX:
-        {
-            static constexpr Format info(GL_BGR5_A1_ANGLEX,
-                                         angle::Format::ID::B5G5R5A1_UNORM,
-                                         VK_FORMAT_B5G5R5A1_UNORM_PACK16,
-                                         nullptr);
-            return info;
-        }
-        case GL_BGRA4_ANGLEX:
-        {
-            static constexpr Format info(GL_BGRA4_ANGLEX,
-                                         angle::Format::ID::B4G4R4A4_UNORM,
-                                         VK_FORMAT_B4G4R4A4_UNORM_PACK16,
-                                         nullptr);
-            return info;
-        }
-        case GL_BGRA8_EXT:
-        {
-            static constexpr Format info(GL_BGRA8_EXT,
-                                         angle::Format::ID::B8G8R8A8_UNORM,
-                                         VK_FORMAT_B8G8R8A8_UNORM,
-                                         nullptr);
-            return info;
-        }
-        case GL_COMPRESSED_R11_EAC:
-        {
-            static constexpr Format info(GL_COMPRESSED_R11_EAC,
-                                         angle::Format::ID::EAC_R11_UNORM_BLOCK,
-                                         VK_FORMAT_EAC_R11_UNORM_BLOCK,
-                                         nullptr);
-            return info;
-        }
-        case GL_COMPRESSED_RG11_EAC:
-        {
-            static constexpr Format info(GL_COMPRESSED_RG11_EAC,
-                                         angle::Format::ID::EAC_R11G11_UNORM_BLOCK,
-                                         VK_FORMAT_EAC_R11G11_UNORM_BLOCK,
-                                         nullptr);
-            return info;
-        }
-        case GL_COMPRESSED_RGB8_ETC2:
-        {
-            static constexpr Format info(GL_COMPRESSED_RGB8_ETC2,
-                                         angle::Format::ID::ETC2_R8G8B8_UNORM_BLOCK,
-                                         VK_FORMAT_ETC2_R8G8B8_UNORM_BLOCK,
-                                         nullptr);
-            return info;
-        }
-        case GL_COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2:
-        {
-            static constexpr Format info(GL_COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2,
-                                         angle::Format::ID::ETC2_R8G8B8A1_UNORM_BLOCK,
-                                         VK_FORMAT_ETC2_R8G8B8A1_UNORM_BLOCK,
-                                         Initialize4ComponentData<GLubyte, 0x00, 0x00, 0x00, 0xFF>);
-            return info;
-        }
-        case GL_COMPRESSED_RGBA8_ETC2_EAC:
-        {
-            static constexpr Format info(GL_COMPRESSED_RGBA8_ETC2_EAC,
-                                         angle::Format::ID::ETC2_R8G8B8A8_UNORM_BLOCK,
-                                         VK_FORMAT_ETC2_R8G8B8A8_UNORM_BLOCK,
-                                         nullptr);
-            return info;
-        }
-        case GL_COMPRESSED_RGBA_ASTC_10x10_KHR:
-        {
-            static constexpr Format info(GL_COMPRESSED_RGBA_ASTC_10x10_KHR,
-                                         angle::Format::ID::ASTC_10x10_UNORM_BLOCK,
-                                         VK_FORMAT_ASTC_10x10_UNORM_BLOCK,
-                                         nullptr);
-            return info;
-        }
-        case GL_COMPRESSED_RGBA_ASTC_10x5_KHR:
-        {
-            static constexpr Format info(GL_COMPRESSED_RGBA_ASTC_10x5_KHR,
-                                         angle::Format::ID::ASTC_10x5_UNORM_BLOCK,
-                                         VK_FORMAT_ASTC_10x5_UNORM_BLOCK,
-                                         nullptr);
-            return info;
-        }
-        case GL_COMPRESSED_RGBA_ASTC_10x6_KHR:
-        {
-            static constexpr Format info(GL_COMPRESSED_RGBA_ASTC_10x6_KHR,
-                                         angle::Format::ID::ASTC_10x6_UNORM_BLOCK,
-                                         VK_FORMAT_ASTC_10x6_UNORM_BLOCK,
-                                         nullptr);
-            return info;
-        }
-        case GL_COMPRESSED_RGBA_ASTC_10x8_KHR:
-        {
-            static constexpr Format info(GL_COMPRESSED_RGBA_ASTC_10x8_KHR,
-                                         angle::Format::ID::ASTC_10x8_UNORM_BLOCK,
-                                         VK_FORMAT_ASTC_10x8_UNORM_BLOCK,
-                                         nullptr);
-            return info;
-        }
-        case GL_COMPRESSED_RGBA_ASTC_12x10_KHR:
-        {
-            static constexpr Format info(GL_COMPRESSED_RGBA_ASTC_12x10_KHR,
-                                         angle::Format::ID::ASTC_12x10_UNORM_BLOCK,
-                                         VK_FORMAT_ASTC_12x10_UNORM_BLOCK,
-                                         nullptr);
-            return info;
-        }
-        case GL_COMPRESSED_RGBA_ASTC_12x12_KHR:
-        {
-            static constexpr Format info(GL_COMPRESSED_RGBA_ASTC_12x12_KHR,
-                                         angle::Format::ID::ASTC_12x12_UNORM_BLOCK,
-                                         VK_FORMAT_ASTC_12x12_UNORM_BLOCK,
-                                         nullptr);
-            return info;
-        }
-        case GL_COMPRESSED_RGBA_ASTC_4x4_KHR:
-        {
-            static constexpr Format info(GL_COMPRESSED_RGBA_ASTC_4x4_KHR,
-                                         angle::Format::ID::ASTC_4x4_UNORM_BLOCK,
-                                         VK_FORMAT_ASTC_4x4_UNORM_BLOCK,
-                                         nullptr);
-            return info;
-        }
-        case GL_COMPRESSED_RGBA_ASTC_5x4_KHR:
-        {
-            static constexpr Format info(GL_COMPRESSED_RGBA_ASTC_5x4_KHR,
-                                         angle::Format::ID::ASTC_5x4_UNORM_BLOCK,
-                                         VK_FORMAT_ASTC_5x4_UNORM_BLOCK,
-                                         nullptr);
-            return info;
-        }
-        case GL_COMPRESSED_RGBA_ASTC_5x5_KHR:
-        {
-            static constexpr Format info(GL_COMPRESSED_RGBA_ASTC_5x5_KHR,
-                                         angle::Format::ID::ASTC_5x5_UNORM_BLOCK,
-                                         VK_FORMAT_ASTC_5x5_UNORM_BLOCK,
-                                         nullptr);
-            return info;
-        }
-        case GL_COMPRESSED_RGBA_ASTC_6x5_KHR:
-        {
-            static constexpr Format info(GL_COMPRESSED_RGBA_ASTC_6x5_KHR,
-                                         angle::Format::ID::ASTC_6x5_UNORM_BLOCK,
-                                         VK_FORMAT_ASTC_6x5_UNORM_BLOCK,
-                                         nullptr);
-            return info;
-        }
-        case GL_COMPRESSED_RGBA_ASTC_6x6_KHR:
-        {
-            static constexpr Format info(GL_COMPRESSED_RGBA_ASTC_6x6_KHR,
-                                         angle::Format::ID::ASTC_6x6_UNORM_BLOCK,
-                                         VK_FORMAT_ASTC_6x6_UNORM_BLOCK,
-                                         nullptr);
-            return info;
-        }
-        case GL_COMPRESSED_RGBA_ASTC_8x5_KHR:
-        {
-            static constexpr Format info(GL_COMPRESSED_RGBA_ASTC_8x5_KHR,
-                                         angle::Format::ID::ASTC_8x5_UNORM_BLOCK,
-                                         VK_FORMAT_ASTC_8x5_UNORM_BLOCK,
-                                         nullptr);
-            return info;
-        }
-        case GL_COMPRESSED_RGBA_ASTC_8x6_KHR:
-        {
-            static constexpr Format info(GL_COMPRESSED_RGBA_ASTC_8x6_KHR,
-                                         angle::Format::ID::ASTC_8x6_UNORM_BLOCK,
-                                         VK_FORMAT_ASTC_8x6_UNORM_BLOCK,
-                                         nullptr);
-            return info;
-        }
-        case GL_COMPRESSED_RGBA_ASTC_8x8_KHR:
-        {
-            static constexpr Format info(GL_COMPRESSED_RGBA_ASTC_8x8_KHR,
-                                         angle::Format::ID::ASTC_8x8_UNORM_BLOCK,
-                                         VK_FORMAT_ASTC_8x8_UNORM_BLOCK,
-                                         nullptr);
-            return info;
-        }
-        case GL_COMPRESSED_RGBA_S3TC_DXT1_EXT:
-        {
-            static constexpr Format info(GL_COMPRESSED_RGBA_S3TC_DXT1_EXT,
-                                         angle::Format::ID::BC1_RGBA_UNORM_BLOCK,
-                                         VK_FORMAT_BC1_RGBA_UNORM_BLOCK,
-                                         nullptr);
-            return info;
-        }
-        case GL_COMPRESSED_RGB_S3TC_DXT1_EXT:
-        {
-            static constexpr Format info(GL_COMPRESSED_RGB_S3TC_DXT1_EXT,
-                                         angle::Format::ID::BC1_RGB_UNORM_BLOCK,
-                                         VK_FORMAT_BC1_RGB_UNORM_BLOCK,
-                                         nullptr);
-            return info;
-        }
-        case GL_COMPRESSED_SIGNED_R11_EAC:
-        {
-            static constexpr Format info(GL_COMPRESSED_SIGNED_R11_EAC,
-                                         angle::Format::ID::EAC_R11_SNORM_BLOCK,
-                                         VK_FORMAT_EAC_R11_SNORM_BLOCK,
-                                         nullptr);
-            return info;
-        }
-        case GL_COMPRESSED_SIGNED_RG11_EAC:
-        {
-            static constexpr Format info(GL_COMPRESSED_SIGNED_RG11_EAC,
-                                         angle::Format::ID::EAC_R11G11_SNORM_BLOCK,
-                                         VK_FORMAT_EAC_R11G11_SNORM_BLOCK,
-                                         nullptr);
-            return info;
-        }
-        case GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x10_KHR:
-        {
-            static constexpr Format info(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x10_KHR,
-                                         angle::Format::ID::ASTC_10x10_SRGB_BLOCK,
-                                         VK_FORMAT_ASTC_10x10_SRGB_BLOCK,
-                                         nullptr);
-            return info;
-        }
-        case GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x5_KHR:
-        {
-            static constexpr Format info(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x5_KHR,
-                                         angle::Format::ID::ASTC_10x5_SRGB_BLOCK,
-                                         VK_FORMAT_ASTC_10x5_SRGB_BLOCK,
-                                         nullptr);
-            return info;
-        }
-        case GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x6_KHR:
-        {
-            static constexpr Format info(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x6_KHR,
-                                         angle::Format::ID::ASTC_10x6_SRGB_BLOCK,
-                                         VK_FORMAT_ASTC_10x6_SRGB_BLOCK,
-                                         nullptr);
-            return info;
-        }
-        case GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x8_KHR:
-        {
-            static constexpr Format info(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x8_KHR,
-                                         angle::Format::ID::ASTC_10x8_SRGB_BLOCK,
-                                         VK_FORMAT_ASTC_10x8_SRGB_BLOCK,
-                                         nullptr);
-            return info;
-        }
-        case GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x10_KHR:
-        {
-            static constexpr Format info(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x10_KHR,
-                                         angle::Format::ID::ASTC_12x10_SRGB_BLOCK,
-                                         VK_FORMAT_ASTC_12x10_SRGB_BLOCK,
-                                         nullptr);
-            return info;
-        }
-        case GL_COMPRESSED_SRGB8_ALPHA8_ASTC_4x4_KHR:
-        {
-            static constexpr Format info(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_4x4_KHR,
-                                         angle::Format::ID::ASTC_4x4_SRGB_BLOCK,
-                                         VK_FORMAT_ASTC_4x4_SRGB_BLOCK,
-                                         nullptr);
-            return info;
-        }
-        case GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x4_KHR:
-        {
-            static constexpr Format info(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x4_KHR,
-                                         angle::Format::ID::ASTC_5x4_SRGB_BLOCK,
-                                         VK_FORMAT_ASTC_5x4_SRGB_BLOCK,
-                                         nullptr);
-            return info;
-        }
-        case GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x5_KHR:
-        {
-            static constexpr Format info(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x5_KHR,
-                                         angle::Format::ID::ASTC_5x5_SRGB_BLOCK,
-                                         VK_FORMAT_ASTC_5x5_SRGB_BLOCK,
-                                         nullptr);
-            return info;
-        }
-        case GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x5_KHR:
-        {
-            static constexpr Format info(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x5_KHR,
-                                         angle::Format::ID::ASTC_6x5_SRGB_BLOCK,
-                                         VK_FORMAT_ASTC_6x5_SRGB_BLOCK,
-                                         nullptr);
-            return info;
-        }
-        case GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x6_KHR:
-        {
-            static constexpr Format info(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x6_KHR,
-                                         angle::Format::ID::ASTC_6x6_SRGB_BLOCK,
-                                         VK_FORMAT_ASTC_6x6_SRGB_BLOCK,
-                                         nullptr);
-            return info;
-        }
-        case GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x5_KHR:
-        {
-            static constexpr Format info(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x5_KHR,
-                                         angle::Format::ID::ASTC_8x5_SRGB_BLOCK,
-                                         VK_FORMAT_ASTC_8x5_SRGB_BLOCK,
-                                         nullptr);
-            return info;
-        }
-        case GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x6_KHR:
-        {
-            static constexpr Format info(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x6_KHR,
-                                         angle::Format::ID::ASTC_8x6_SRGB_BLOCK,
-                                         VK_FORMAT_ASTC_8x6_SRGB_BLOCK,
-                                         nullptr);
-            return info;
-        }
-        case GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x8_KHR:
-        {
-            static constexpr Format info(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x8_KHR,
-                                         angle::Format::ID::ASTC_8x8_SRGB_BLOCK,
-                                         VK_FORMAT_ASTC_8x8_SRGB_BLOCK,
-                                         nullptr);
-            return info;
-        }
-        case GL_COMPRESSED_SRGB8_ALPHA8_ETC2_EAC:
-        {
-            static constexpr Format info(GL_COMPRESSED_SRGB8_ALPHA8_ETC2_EAC,
-                                         angle::Format::ID::ETC2_R8G8B8A8_SRGB_BLOCK,
-                                         VK_FORMAT_ETC2_R8G8B8A8_SRGB_BLOCK,
-                                         nullptr);
-            return info;
-        }
-        case GL_COMPRESSED_SRGB8_ETC2:
-        {
-            static constexpr Format info(GL_COMPRESSED_SRGB8_ETC2,
-                                         angle::Format::ID::ETC2_R8G8B8_SRGB_BLOCK,
-                                         VK_FORMAT_ETC2_R8G8B8_SRGB_BLOCK,
-                                         nullptr);
-            return info;
-        }
-        case GL_COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2:
-        {
-            static constexpr Format info(GL_COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2,
-                                         angle::Format::ID::ETC2_R8G8B8A1_SRGB_BLOCK,
-                                         VK_FORMAT_ETC2_R8G8B8A1_SRGB_BLOCK,
-                                         nullptr);
-            return info;
-        }
-        case GL_DEPTH24_STENCIL8:
-        {
-            static constexpr Format info(GL_DEPTH24_STENCIL8,
-                                         angle::Format::ID::D24_UNORM_S8_UINT,
-                                         VK_FORMAT_D24_UNORM_S8_UINT,
-                                         nullptr);
-            return info;
-        }
-        case GL_DEPTH_COMPONENT16:
-        {
-            static constexpr Format info(GL_DEPTH_COMPONENT16,
-                                         angle::Format::ID::D16_UNORM,
-                                         VK_FORMAT_D16_UNORM,
-                                         nullptr);
-            return info;
-        }
-        case GL_DEPTH_COMPONENT32F:
-        {
-            static constexpr Format info(GL_DEPTH_COMPONENT32F,
-                                         angle::Format::ID::D32_FLOAT,
-                                         VK_FORMAT_D32_SFLOAT,
-                                         nullptr);
-            return info;
-        }
-        case GL_ETC1_RGB8_LOSSY_DECODE_ANGLE:
-        {
-            static constexpr Format info(GL_ETC1_RGB8_LOSSY_DECODE_ANGLE,
-                                         angle::Format::ID::NONE,
-                                         VK_FORMAT_UNDEFINED,
-                                         nullptr);
-            return info;
-        }
-        case GL_ETC1_RGB8_OES:
-        {
-            static constexpr Format info(GL_ETC1_RGB8_OES,
-                                         angle::Format::ID::NONE,
-                                         VK_FORMAT_UNDEFINED,
-                                         nullptr);
-            return info;
-        }
-        case GL_NONE:
-        {
-            static constexpr Format info(GL_NONE,
-                                         angle::Format::ID::NONE,
-                                         VK_FORMAT_UNDEFINED,
-                                         nullptr);
-            return info;
-        }
-        case GL_R16F:
-        {
-            static constexpr Format info(GL_R16F,
-                                         angle::Format::ID::R16_FLOAT,
-                                         VK_FORMAT_R16_SFLOAT,
-                                         nullptr);
-            return info;
-        }
-        case GL_R16I:
-        {
-            static constexpr Format info(GL_R16I,
-                                         angle::Format::ID::R16_SINT,
-                                         VK_FORMAT_R16_SINT,
-                                         nullptr);
-            return info;
-        }
-        case GL_R16UI:
-        {
-            static constexpr Format info(GL_R16UI,
-                                         angle::Format::ID::R16_UINT,
-                                         VK_FORMAT_R16_UINT,
-                                         nullptr);
-            return info;
-        }
-        case GL_R16_EXT:
-        {
-            static constexpr Format info(GL_R16_EXT,
-                                         angle::Format::ID::R16_UNORM,
-                                         VK_FORMAT_R16_UNORM,
-                                         nullptr);
-            return info;
-        }
-        case GL_R16_SNORM_EXT:
-        {
-            static constexpr Format info(GL_R16_SNORM_EXT,
-                                         angle::Format::ID::R16_SNORM,
-                                         VK_FORMAT_R16_SNORM,
-                                         nullptr);
-            return info;
-        }
-        case GL_R32F:
-        {
-            static constexpr Format info(GL_R32F,
-                                         angle::Format::ID::R32_FLOAT,
-                                         VK_FORMAT_R32_SFLOAT,
-                                         nullptr);
-            return info;
-        }
-        case GL_R32I:
-        {
-            static constexpr Format info(GL_R32I,
-                                         angle::Format::ID::R32_SINT,
-                                         VK_FORMAT_R32_SINT,
-                                         nullptr);
-            return info;
-        }
-        case GL_R32UI:
-        {
-            static constexpr Format info(GL_R32UI,
-                                         angle::Format::ID::R32_UINT,
-                                         VK_FORMAT_R32_UINT,
-                                         nullptr);
-            return info;
-        }
-        case GL_R8:
-        {
-            static constexpr Format info(GL_R8,
-                                         angle::Format::ID::R8_UNORM,
-                                         VK_FORMAT_R8_UNORM,
-                                         nullptr);
-            return info;
-        }
-        case GL_R8I:
-        {
-            static constexpr Format info(GL_R8I,
-                                         angle::Format::ID::R8_SINT,
-                                         VK_FORMAT_R8_SINT,
-                                         nullptr);
-            return info;
-        }
-        case GL_R8UI:
-        {
-            static constexpr Format info(GL_R8UI,
-                                         angle::Format::ID::R8_UINT,
-                                         VK_FORMAT_R8_UINT,
-                                         nullptr);
-            return info;
-        }
-        case GL_R8_SNORM:
-        {
-            static constexpr Format info(GL_R8_SNORM,
-                                         angle::Format::ID::R8_SNORM,
-                                         VK_FORMAT_R8_SNORM,
-                                         nullptr);
-            return info;
-        }
-        case GL_RG16F:
-        {
-            static constexpr Format info(GL_RG16F,
-                                         angle::Format::ID::R16G16_FLOAT,
-                                         VK_FORMAT_R16G16_SFLOAT,
-                                         nullptr);
-            return info;
-        }
-        case GL_RG16I:
-        {
-            static constexpr Format info(GL_RG16I,
-                                         angle::Format::ID::R16G16_SINT,
-                                         VK_FORMAT_R16G16_SINT,
-                                         nullptr);
-            return info;
-        }
-        case GL_RG16UI:
-        {
-            static constexpr Format info(GL_RG16UI,
-                                         angle::Format::ID::R16G16_UINT,
-                                         VK_FORMAT_R16G16_UINT,
-                                         nullptr);
-            return info;
-        }
-        case GL_RG16_EXT:
-        {
-            static constexpr Format info(GL_RG16_EXT,
-                                         angle::Format::ID::R16G16_UNORM,
-                                         VK_FORMAT_R16G16_UNORM,
-                                         nullptr);
-            return info;
-        }
-        case GL_RG16_SNORM_EXT:
-        {
-            static constexpr Format info(GL_RG16_SNORM_EXT,
-                                         angle::Format::ID::R16G16_SNORM,
-                                         VK_FORMAT_R16G16_SNORM,
-                                         nullptr);
-            return info;
-        }
-        case GL_RG32F:
-        {
-            static constexpr Format info(GL_RG32F,
-                                         angle::Format::ID::R32G32_FLOAT,
-                                         VK_FORMAT_R32G32_SFLOAT,
-                                         nullptr);
-            return info;
-        }
-        case GL_RG32I:
-        {
-            static constexpr Format info(GL_RG32I,
-                                         angle::Format::ID::R32G32_SINT,
-                                         VK_FORMAT_R32G32_SINT,
-                                         nullptr);
-            return info;
-        }
-        case GL_RG32UI:
-        {
-            static constexpr Format info(GL_RG32UI,
-                                         angle::Format::ID::R32G32_UINT,
-                                         VK_FORMAT_R32G32_UINT,
-                                         nullptr);
-            return info;
-        }
-        case GL_RG8:
-        {
-            static constexpr Format info(GL_RG8,
-                                         angle::Format::ID::R8G8_UNORM,
-                                         VK_FORMAT_R8G8_UNORM,
-                                         nullptr);
-            return info;
-        }
-        case GL_RG8I:
-        {
-            static constexpr Format info(GL_RG8I,
-                                         angle::Format::ID::R8G8_SINT,
-                                         VK_FORMAT_R8G8_SINT,
-                                         nullptr);
-            return info;
-        }
-        case GL_RG8UI:
-        {
-            static constexpr Format info(GL_RG8UI,
-                                         angle::Format::ID::R8G8_UINT,
-                                         VK_FORMAT_R8G8_UINT,
-                                         nullptr);
-            return info;
-        }
-        case GL_RG8_SNORM:
-        {
-            static constexpr Format info(GL_RG8_SNORM,
-                                         angle::Format::ID::R8G8_SNORM,
-                                         VK_FORMAT_R8G8_SNORM,
-                                         nullptr);
-            return info;
-        }
-        case GL_RGB:
-        {
-            static constexpr Format info(GL_RGB,
-                                         angle::Format::ID::R8G8B8_UNORM,
-                                         VK_FORMAT_R8G8B8_UNORM,
-                                         nullptr);
-            return info;
-        }
-        case GL_RGB16F:
-        {
-            static constexpr Format info(GL_RGB16F,
-                                         angle::Format::ID::R16G16B16_FLOAT,
-                                         VK_FORMAT_R16G16B16_SFLOAT,
-                                         nullptr);
-            return info;
-        }
-        case GL_RGB16I:
-        {
-            static constexpr Format info(GL_RGB16I,
-                                         angle::Format::ID::R16G16B16_SINT,
-                                         VK_FORMAT_R16G16B16_SINT,
-                                         nullptr);
-            return info;
-        }
-        case GL_RGB16UI:
-        {
-            static constexpr Format info(GL_RGB16UI,
-                                         angle::Format::ID::R16G16B16_UINT,
-                                         VK_FORMAT_R16G16B16_UINT,
-                                         nullptr);
-            return info;
-        }
-        case GL_RGB16_EXT:
-        {
-            static constexpr Format info(GL_RGB16_EXT,
-                                         angle::Format::ID::R16G16B16_UNORM,
-                                         VK_FORMAT_R16G16B16_UNORM,
-                                         nullptr);
-            return info;
-        }
-        case GL_RGB16_SNORM_EXT:
-        {
-            static constexpr Format info(GL_RGB16_SNORM_EXT,
-                                         angle::Format::ID::R16G16B16_SNORM,
-                                         VK_FORMAT_R16G16B16_SNORM,
-                                         nullptr);
-            return info;
-        }
-        case GL_RGB32F:
-        {
-            static constexpr Format info(GL_RGB32F,
-                                         angle::Format::ID::R32G32B32_FLOAT,
-                                         VK_FORMAT_R32G32B32_SFLOAT,
-                                         nullptr);
-            return info;
-        }
-        case GL_RGB32I:
-        {
-            static constexpr Format info(GL_RGB32I,
-                                         angle::Format::ID::R32G32B32_SINT,
-                                         VK_FORMAT_R32G32B32_SINT,
-                                         nullptr);
-            return info;
-        }
-        case GL_RGB32UI:
-        {
-            static constexpr Format info(GL_RGB32UI,
-                                         angle::Format::ID::R32G32B32_UINT,
-                                         VK_FORMAT_R32G32B32_UINT,
-                                         nullptr);
-            return info;
-        }
-        case GL_RGB565:
-        {
-            static constexpr Format info(GL_RGB565,
-                                         angle::Format::ID::R5G6B5_UNORM,
-                                         VK_FORMAT_R5G6B5_UNORM_PACK16,
-                                         nullptr);
-            return info;
-        }
-        case GL_RGB5_A1:
-        {
-            static constexpr Format info(GL_RGB5_A1,
-                                         angle::Format::ID::R5G5B5A1_UNORM,
-                                         VK_FORMAT_R5G5B5A1_UNORM_PACK16,
-                                         nullptr);
-            return info;
-        }
-        case GL_RGB8:
-        {
-            static constexpr Format info(GL_RGB8,
-                                         angle::Format::ID::R8G8B8_UNORM,
-                                         VK_FORMAT_R8G8B8_UNORM,
-                                         nullptr);
-            return info;
-        }
-        case GL_RGB8I:
-        {
-            static constexpr Format info(GL_RGB8I,
-                                         angle::Format::ID::R8G8B8_SINT,
-                                         VK_FORMAT_R8G8B8_SINT,
-                                         nullptr);
-            return info;
-        }
-        case GL_RGB8UI:
-        {
-            static constexpr Format info(GL_RGB8UI,
-                                         angle::Format::ID::R8G8B8_UINT,
-                                         VK_FORMAT_R8G8B8_UINT,
-                                         nullptr);
-            return info;
-        }
-        case GL_RGB8_SNORM:
-        {
-            static constexpr Format info(GL_RGB8_SNORM,
-                                         angle::Format::ID::R8G8B8_SNORM,
-                                         VK_FORMAT_R8G8B8_SNORM,
-                                         nullptr);
-            return info;
-        }
-        case GL_RGBA:
-        {
-            static constexpr Format info(GL_RGBA,
-                                         angle::Format::ID::R8G8B8A8_UNORM,
-                                         VK_FORMAT_R8G8B8A8_UNORM,
-                                         nullptr);
-            return info;
-        }
-        case GL_RGBA16F:
-        {
-            static constexpr Format info(GL_RGBA16F,
-                                         angle::Format::ID::R16G16B16A16_FLOAT,
-                                         VK_FORMAT_R16G16B16A16_SFLOAT,
-                                         nullptr);
-            return info;
-        }
-        case GL_RGBA16I:
-        {
-            static constexpr Format info(GL_RGBA16I,
-                                         angle::Format::ID::R16G16B16A16_SINT,
-                                         VK_FORMAT_R16G16B16A16_SINT,
-                                         nullptr);
-            return info;
-        }
-        case GL_RGBA16UI:
-        {
-            static constexpr Format info(GL_RGBA16UI,
-                                         angle::Format::ID::R16G16B16A16_UINT,
-                                         VK_FORMAT_R16G16B16A16_UINT,
-                                         nullptr);
-            return info;
-        }
-        case GL_RGBA16_EXT:
-        {
-            static constexpr Format info(GL_RGBA16_EXT,
-                                         angle::Format::ID::R16G16B16A16_UNORM,
-                                         VK_FORMAT_R16G16B16A16_UNORM,
-                                         nullptr);
-            return info;
-        }
-        case GL_RGBA16_SNORM_EXT:
-        {
-            static constexpr Format info(GL_RGBA16_SNORM_EXT,
-                                         angle::Format::ID::R16G16B16A16_SNORM,
-                                         VK_FORMAT_R16G16B16A16_SNORM,
-                                         nullptr);
-            return info;
-        }
-        case GL_RGBA32F:
-        {
-            static constexpr Format info(GL_RGBA32F,
-                                         angle::Format::ID::R32G32B32A32_FLOAT,
-                                         VK_FORMAT_R32G32B32A32_SFLOAT,
-                                         nullptr);
-            return info;
-        }
-        case GL_RGBA32I:
-        {
-            static constexpr Format info(GL_RGBA32I,
-                                         angle::Format::ID::R32G32B32A32_SINT,
-                                         VK_FORMAT_R32G32B32A32_SINT,
-                                         nullptr);
-            return info;
-        }
-        case GL_RGBA32UI:
-        {
-            static constexpr Format info(GL_RGBA32UI,
-                                         angle::Format::ID::R32G32B32A32_UINT,
-                                         VK_FORMAT_R32G32B32A32_UINT,
-                                         nullptr);
-            return info;
-        }
-        case GL_RGBA4:
-        {
-            static constexpr Format info(GL_RGBA4,
-                                         angle::Format::ID::R4G4B4A4_UNORM,
-                                         VK_FORMAT_R4G4B4A4_UNORM_PACK16,
-                                         nullptr);
-            return info;
-        }
-        case GL_RGBA8:
-        {
-            static constexpr Format info(GL_RGBA8,
-                                         angle::Format::ID::R8G8B8A8_UNORM,
-                                         VK_FORMAT_R8G8B8A8_UNORM,
-                                         nullptr);
-            return info;
-        }
-        case GL_RGBA8I:
-        {
-            static constexpr Format info(GL_RGBA8I,
-                                         angle::Format::ID::R8G8B8A8_SINT,
-                                         VK_FORMAT_R8G8B8A8_SINT,
-                                         nullptr);
-            return info;
-        }
-        case GL_RGBA8UI:
-        {
-            static constexpr Format info(GL_RGBA8UI,
-                                         angle::Format::ID::R8G8B8A8_UINT,
-                                         VK_FORMAT_R8G8B8A8_UINT,
-                                         nullptr);
-            return info;
-        }
-        case GL_RGBA8_SNORM:
-        {
-            static constexpr Format info(GL_RGBA8_SNORM,
-                                         angle::Format::ID::R8G8B8A8_SNORM,
-                                         VK_FORMAT_R8G8B8A8_SNORM,
-                                         nullptr);
-            return info;
-        }
-        case GL_STENCIL_INDEX8:
-        {
-            static constexpr Format info(GL_STENCIL_INDEX8,
-                                         angle::Format::ID::S8_UINT,
-                                         VK_FORMAT_S8_UINT,
-                                         nullptr);
-            return info;
+        case angle::Format::ID::A16_FLOAT:
+            // This format is not implemented in Vulkan.
+            break;
+
+        case angle::Format::ID::A32_FLOAT:
+            // This format is not implemented in Vulkan.
+            break;
+
+        case angle::Format::ID::A8_UNORM:
+            // This format is not implemented in Vulkan.
+            break;
+
+        case angle::Format::ID::ASTC_10x10_SRGB_BLOCK:
+        {
+            internalFormat          = GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x10_KHR;
+            formatID                = angle::Format::ID::ASTC_10x10_SRGB_BLOCK;
+            native                  = VK_FORMAT_ASTC_10x10_SRGB_BLOCK;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::ASTC_10x10_UNORM_BLOCK:
+        {
+            internalFormat          = GL_COMPRESSED_RGBA_ASTC_10x10_KHR;
+            formatID                = angle::Format::ID::ASTC_10x10_UNORM_BLOCK;
+            native                  = VK_FORMAT_ASTC_10x10_UNORM_BLOCK;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::ASTC_10x5_SRGB_BLOCK:
+        {
+            internalFormat          = GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x5_KHR;
+            formatID                = angle::Format::ID::ASTC_10x5_SRGB_BLOCK;
+            native                  = VK_FORMAT_ASTC_10x5_SRGB_BLOCK;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::ASTC_10x5_UNORM_BLOCK:
+        {
+            internalFormat          = GL_COMPRESSED_RGBA_ASTC_10x5_KHR;
+            formatID                = angle::Format::ID::ASTC_10x5_UNORM_BLOCK;
+            native                  = VK_FORMAT_ASTC_10x5_UNORM_BLOCK;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::ASTC_10x6_SRGB_BLOCK:
+        {
+            internalFormat          = GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x6_KHR;
+            formatID                = angle::Format::ID::ASTC_10x6_SRGB_BLOCK;
+            native                  = VK_FORMAT_ASTC_10x6_SRGB_BLOCK;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::ASTC_10x6_UNORM_BLOCK:
+        {
+            internalFormat          = GL_COMPRESSED_RGBA_ASTC_10x6_KHR;
+            formatID                = angle::Format::ID::ASTC_10x6_UNORM_BLOCK;
+            native                  = VK_FORMAT_ASTC_10x6_UNORM_BLOCK;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::ASTC_10x8_SRGB_BLOCK:
+        {
+            internalFormat          = GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x8_KHR;
+            formatID                = angle::Format::ID::ASTC_10x8_SRGB_BLOCK;
+            native                  = VK_FORMAT_ASTC_10x8_SRGB_BLOCK;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::ASTC_10x8_UNORM_BLOCK:
+        {
+            internalFormat          = GL_COMPRESSED_RGBA_ASTC_10x8_KHR;
+            formatID                = angle::Format::ID::ASTC_10x8_UNORM_BLOCK;
+            native                  = VK_FORMAT_ASTC_10x8_UNORM_BLOCK;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::ASTC_12x10_SRGB_BLOCK:
+        {
+            internalFormat          = GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x10_KHR;
+            formatID                = angle::Format::ID::ASTC_12x10_SRGB_BLOCK;
+            native                  = VK_FORMAT_ASTC_12x10_SRGB_BLOCK;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::ASTC_12x10_UNORM_BLOCK:
+        {
+            internalFormat          = GL_COMPRESSED_RGBA_ASTC_12x10_KHR;
+            formatID                = angle::Format::ID::ASTC_12x10_UNORM_BLOCK;
+            native                  = VK_FORMAT_ASTC_12x10_UNORM_BLOCK;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::ASTC_12x12_SRGB_BLOCK:
+            // This format is not implemented in Vulkan.
+            break;
+
+        case angle::Format::ID::ASTC_12x12_UNORM_BLOCK:
+        {
+            internalFormat          = GL_COMPRESSED_RGBA_ASTC_12x12_KHR;
+            formatID                = angle::Format::ID::ASTC_12x12_UNORM_BLOCK;
+            native                  = VK_FORMAT_ASTC_12x12_UNORM_BLOCK;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::ASTC_4x4_SRGB_BLOCK:
+        {
+            internalFormat          = GL_COMPRESSED_SRGB8_ALPHA8_ASTC_4x4_KHR;
+            formatID                = angle::Format::ID::ASTC_4x4_SRGB_BLOCK;
+            native                  = VK_FORMAT_ASTC_4x4_SRGB_BLOCK;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::ASTC_4x4_UNORM_BLOCK:
+        {
+            internalFormat          = GL_COMPRESSED_RGBA_ASTC_4x4_KHR;
+            formatID                = angle::Format::ID::ASTC_4x4_UNORM_BLOCK;
+            native                  = VK_FORMAT_ASTC_4x4_UNORM_BLOCK;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::ASTC_5x4_SRGB_BLOCK:
+        {
+            internalFormat          = GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x4_KHR;
+            formatID                = angle::Format::ID::ASTC_5x4_SRGB_BLOCK;
+            native                  = VK_FORMAT_ASTC_5x4_SRGB_BLOCK;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::ASTC_5x4_UNORM_BLOCK:
+        {
+            internalFormat          = GL_COMPRESSED_RGBA_ASTC_5x4_KHR;
+            formatID                = angle::Format::ID::ASTC_5x4_UNORM_BLOCK;
+            native                  = VK_FORMAT_ASTC_5x4_UNORM_BLOCK;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::ASTC_5x5_SRGB_BLOCK:
+        {
+            internalFormat          = GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x5_KHR;
+            formatID                = angle::Format::ID::ASTC_5x5_SRGB_BLOCK;
+            native                  = VK_FORMAT_ASTC_5x5_SRGB_BLOCK;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::ASTC_5x5_UNORM_BLOCK:
+        {
+            internalFormat          = GL_COMPRESSED_RGBA_ASTC_5x5_KHR;
+            formatID                = angle::Format::ID::ASTC_5x5_UNORM_BLOCK;
+            native                  = VK_FORMAT_ASTC_5x5_UNORM_BLOCK;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::ASTC_6x5_SRGB_BLOCK:
+        {
+            internalFormat          = GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x5_KHR;
+            formatID                = angle::Format::ID::ASTC_6x5_SRGB_BLOCK;
+            native                  = VK_FORMAT_ASTC_6x5_SRGB_BLOCK;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::ASTC_6x5_UNORM_BLOCK:
+        {
+            internalFormat          = GL_COMPRESSED_RGBA_ASTC_6x5_KHR;
+            formatID                = angle::Format::ID::ASTC_6x5_UNORM_BLOCK;
+            native                  = VK_FORMAT_ASTC_6x5_UNORM_BLOCK;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::ASTC_6x6_SRGB_BLOCK:
+        {
+            internalFormat          = GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x6_KHR;
+            formatID                = angle::Format::ID::ASTC_6x6_SRGB_BLOCK;
+            native                  = VK_FORMAT_ASTC_6x6_SRGB_BLOCK;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::ASTC_6x6_UNORM_BLOCK:
+        {
+            internalFormat          = GL_COMPRESSED_RGBA_ASTC_6x6_KHR;
+            formatID                = angle::Format::ID::ASTC_6x6_UNORM_BLOCK;
+            native                  = VK_FORMAT_ASTC_6x6_UNORM_BLOCK;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::ASTC_8x5_SRGB_BLOCK:
+        {
+            internalFormat          = GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x5_KHR;
+            formatID                = angle::Format::ID::ASTC_8x5_SRGB_BLOCK;
+            native                  = VK_FORMAT_ASTC_8x5_SRGB_BLOCK;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::ASTC_8x5_UNORM_BLOCK:
+        {
+            internalFormat          = GL_COMPRESSED_RGBA_ASTC_8x5_KHR;
+            formatID                = angle::Format::ID::ASTC_8x5_UNORM_BLOCK;
+            native                  = VK_FORMAT_ASTC_8x5_UNORM_BLOCK;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::ASTC_8x6_SRGB_BLOCK:
+        {
+            internalFormat          = GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x6_KHR;
+            formatID                = angle::Format::ID::ASTC_8x6_SRGB_BLOCK;
+            native                  = VK_FORMAT_ASTC_8x6_SRGB_BLOCK;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::ASTC_8x6_UNORM_BLOCK:
+        {
+            internalFormat          = GL_COMPRESSED_RGBA_ASTC_8x6_KHR;
+            formatID                = angle::Format::ID::ASTC_8x6_UNORM_BLOCK;
+            native                  = VK_FORMAT_ASTC_8x6_UNORM_BLOCK;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::ASTC_8x8_SRGB_BLOCK:
+        {
+            internalFormat          = GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x8_KHR;
+            formatID                = angle::Format::ID::ASTC_8x8_SRGB_BLOCK;
+            native                  = VK_FORMAT_ASTC_8x8_SRGB_BLOCK;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::ASTC_8x8_UNORM_BLOCK:
+        {
+            internalFormat          = GL_COMPRESSED_RGBA_ASTC_8x8_KHR;
+            formatID                = angle::Format::ID::ASTC_8x8_UNORM_BLOCK;
+            native                  = VK_FORMAT_ASTC_8x8_UNORM_BLOCK;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::B4G4R4A4_UNORM:
+        {
+            internalFormat          = GL_BGRA4_ANGLEX;
+            formatID                = angle::Format::ID::B4G4R4A4_UNORM;
+            native                  = VK_FORMAT_B4G4R4A4_UNORM_PACK16;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::B5G5R5A1_UNORM:
+        {
+            internalFormat          = GL_BGR5_A1_ANGLEX;
+            formatID                = angle::Format::ID::B5G5R5A1_UNORM;
+            native                  = VK_FORMAT_B5G5R5A1_UNORM_PACK16;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::B5G6R5_UNORM:
+        {
+            internalFormat          = GL_BGR565_ANGLEX;
+            formatID                = angle::Format::ID::B5G6R5_UNORM;
+            native                  = VK_FORMAT_B5G6R5_UNORM_PACK16;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::B8G8R8A8_UNORM:
+        {
+            internalFormat          = GL_BGRA8_EXT;
+            formatID                = angle::Format::ID::B8G8R8A8_UNORM;
+            native                  = VK_FORMAT_B8G8R8A8_UNORM;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::B8G8R8X8_UNORM:
+            // This format is not implemented in Vulkan.
+            break;
+
+        case angle::Format::ID::BC1_RGBA_UNORM_BLOCK:
+        {
+            internalFormat          = GL_COMPRESSED_RGBA_S3TC_DXT1_EXT;
+            formatID                = angle::Format::ID::BC1_RGBA_UNORM_BLOCK;
+            native                  = VK_FORMAT_BC1_RGBA_UNORM_BLOCK;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::BC1_RGBA_UNORM_SRGB_BLOCK:
+            // This format is not implemented in Vulkan.
+            break;
+
+        case angle::Format::ID::BC1_RGB_UNORM_BLOCK:
+        {
+            internalFormat          = GL_COMPRESSED_RGB_S3TC_DXT1_EXT;
+            formatID                = angle::Format::ID::BC1_RGB_UNORM_BLOCK;
+            native                  = VK_FORMAT_BC1_RGB_UNORM_BLOCK;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::BC1_RGB_UNORM_SRGB_BLOCK:
+            // This format is not implemented in Vulkan.
+            break;
+
+        case angle::Format::ID::BC2_RGBA_UNORM_BLOCK:
+            // This format is not implemented in Vulkan.
+            break;
+
+        case angle::Format::ID::BC2_RGBA_UNORM_SRGB_BLOCK:
+            // This format is not implemented in Vulkan.
+            break;
+
+        case angle::Format::ID::BC3_RGBA_UNORM_BLOCK:
+            // This format is not implemented in Vulkan.
+            break;
+
+        case angle::Format::ID::BC3_RGBA_UNORM_SRGB_BLOCK:
+            // This format is not implemented in Vulkan.
+            break;
+
+        case angle::Format::ID::D16_UNORM:
+        {
+            internalFormat          = GL_DEPTH_COMPONENT16;
+            formatID                = angle::Format::ID::D16_UNORM;
+            native                  = VK_FORMAT_D16_UNORM;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::D24_UNORM:
+            // This format is not implemented in Vulkan.
+            break;
+
+        case angle::Format::ID::D24_UNORM_S8_UINT:
+        {
+            internalFormat          = GL_DEPTH24_STENCIL8;
+            formatID                = angle::Format::ID::D24_UNORM_S8_UINT;
+            native                  = VK_FORMAT_D24_UNORM_S8_UINT;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::D32_FLOAT:
+        {
+            internalFormat          = GL_DEPTH_COMPONENT32F;
+            formatID                = angle::Format::ID::D32_FLOAT;
+            native                  = VK_FORMAT_D32_SFLOAT;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::D32_FLOAT_S8X24_UINT:
+            // This format is not implemented in Vulkan.
+            break;
+
+        case angle::Format::ID::D32_UNORM:
+            // This format is not implemented in Vulkan.
+            break;
+
+        case angle::Format::ID::EAC_R11G11_SNORM_BLOCK:
+        {
+            internalFormat          = GL_COMPRESSED_SIGNED_RG11_EAC;
+            formatID                = angle::Format::ID::EAC_R11G11_SNORM_BLOCK;
+            native                  = VK_FORMAT_EAC_R11G11_SNORM_BLOCK;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::EAC_R11G11_UNORM_BLOCK:
+        {
+            internalFormat          = GL_COMPRESSED_RG11_EAC;
+            formatID                = angle::Format::ID::EAC_R11G11_UNORM_BLOCK;
+            native                  = VK_FORMAT_EAC_R11G11_UNORM_BLOCK;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::EAC_R11_SNORM_BLOCK:
+        {
+            internalFormat          = GL_COMPRESSED_SIGNED_R11_EAC;
+            formatID                = angle::Format::ID::EAC_R11_SNORM_BLOCK;
+            native                  = VK_FORMAT_EAC_R11_SNORM_BLOCK;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::EAC_R11_UNORM_BLOCK:
+        {
+            internalFormat          = GL_COMPRESSED_R11_EAC;
+            formatID                = angle::Format::ID::EAC_R11_UNORM_BLOCK;
+            native                  = VK_FORMAT_EAC_R11_UNORM_BLOCK;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::ETC2_R8G8B8A1_SRGB_BLOCK:
+        {
+            internalFormat          = GL_COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2;
+            formatID                = angle::Format::ID::ETC2_R8G8B8A1_SRGB_BLOCK;
+            native                  = VK_FORMAT_ETC2_R8G8B8A1_SRGB_BLOCK;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::ETC2_R8G8B8A1_UNORM_BLOCK:
+        {
+            internalFormat          = GL_COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2;
+            formatID                = angle::Format::ID::ETC2_R8G8B8A1_UNORM_BLOCK;
+            native                  = VK_FORMAT_ETC2_R8G8B8A1_UNORM_BLOCK;
+            dataInitializerFunction = Initialize4ComponentData<GLubyte, 0x00, 0x00, 0x00, 0xFF>;
+            break;
+        }
+
+        case angle::Format::ID::ETC2_R8G8B8A8_SRGB_BLOCK:
+        {
+            internalFormat          = GL_COMPRESSED_SRGB8_ALPHA8_ETC2_EAC;
+            formatID                = angle::Format::ID::ETC2_R8G8B8A8_SRGB_BLOCK;
+            native                  = VK_FORMAT_ETC2_R8G8B8A8_SRGB_BLOCK;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::ETC2_R8G8B8A8_UNORM_BLOCK:
+        {
+            internalFormat          = GL_COMPRESSED_RGBA8_ETC2_EAC;
+            formatID                = angle::Format::ID::ETC2_R8G8B8A8_UNORM_BLOCK;
+            native                  = VK_FORMAT_ETC2_R8G8B8A8_UNORM_BLOCK;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::ETC2_R8G8B8_SRGB_BLOCK:
+        {
+            internalFormat          = GL_COMPRESSED_SRGB8_ETC2;
+            formatID                = angle::Format::ID::ETC2_R8G8B8_SRGB_BLOCK;
+            native                  = VK_FORMAT_ETC2_R8G8B8_SRGB_BLOCK;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::ETC2_R8G8B8_UNORM_BLOCK:
+        {
+            internalFormat          = GL_COMPRESSED_RGB8_ETC2;
+            formatID                = angle::Format::ID::ETC2_R8G8B8_UNORM_BLOCK;
+            native                  = VK_FORMAT_ETC2_R8G8B8_UNORM_BLOCK;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::L16A16_FLOAT:
+            // This format is not implemented in Vulkan.
+            break;
+
+        case angle::Format::ID::L16_FLOAT:
+            // This format is not implemented in Vulkan.
+            break;
+
+        case angle::Format::ID::L32A32_FLOAT:
+            // This format is not implemented in Vulkan.
+            break;
+
+        case angle::Format::ID::L32_FLOAT:
+            // This format is not implemented in Vulkan.
+            break;
+
+        case angle::Format::ID::L8A8_UNORM:
+            // This format is not implemented in Vulkan.
+            break;
+
+        case angle::Format::ID::L8_UNORM:
+            // This format is not implemented in Vulkan.
+            break;
+
+        case angle::Format::ID::NONE:
+            // This format is not implemented in Vulkan.
+            break;
+
+        case angle::Format::ID::R10G10B10A2_UINT:
+            // This format is not implemented in Vulkan.
+            break;
+
+        case angle::Format::ID::R10G10B10A2_UNORM:
+            // This format is not implemented in Vulkan.
+            break;
+
+        case angle::Format::ID::R11G11B10_FLOAT:
+            // This format is not implemented in Vulkan.
+            break;
+
+        case angle::Format::ID::R16G16B16A16_FLOAT:
+        {
+            internalFormat          = GL_RGBA16F;
+            formatID                = angle::Format::ID::R16G16B16A16_FLOAT;
+            native                  = VK_FORMAT_R16G16B16A16_SFLOAT;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::R16G16B16A16_SINT:
+        {
+            internalFormat          = GL_RGBA16I;
+            formatID                = angle::Format::ID::R16G16B16A16_SINT;
+            native                  = VK_FORMAT_R16G16B16A16_SINT;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::R16G16B16A16_SNORM:
+        {
+            internalFormat          = GL_RGBA16_SNORM_EXT;
+            formatID                = angle::Format::ID::R16G16B16A16_SNORM;
+            native                  = VK_FORMAT_R16G16B16A16_SNORM;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::R16G16B16A16_UINT:
+        {
+            internalFormat          = GL_RGBA16UI;
+            formatID                = angle::Format::ID::R16G16B16A16_UINT;
+            native                  = VK_FORMAT_R16G16B16A16_UINT;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::R16G16B16A16_UNORM:
+        {
+            internalFormat          = GL_RGBA16_EXT;
+            formatID                = angle::Format::ID::R16G16B16A16_UNORM;
+            native                  = VK_FORMAT_R16G16B16A16_UNORM;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::R16G16B16_FLOAT:
+        {
+            internalFormat          = GL_RGB16F;
+            formatID                = angle::Format::ID::R16G16B16_FLOAT;
+            native                  = VK_FORMAT_R16G16B16_SFLOAT;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::R16G16B16_SINT:
+        {
+            internalFormat          = GL_RGB16I;
+            formatID                = angle::Format::ID::R16G16B16_SINT;
+            native                  = VK_FORMAT_R16G16B16_SINT;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::R16G16B16_SNORM:
+        {
+            internalFormat          = GL_RGB16_SNORM_EXT;
+            formatID                = angle::Format::ID::R16G16B16_SNORM;
+            native                  = VK_FORMAT_R16G16B16_SNORM;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::R16G16B16_UINT:
+        {
+            internalFormat          = GL_RGB16UI;
+            formatID                = angle::Format::ID::R16G16B16_UINT;
+            native                  = VK_FORMAT_R16G16B16_UINT;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::R16G16B16_UNORM:
+        {
+            internalFormat          = GL_RGB16_EXT;
+            formatID                = angle::Format::ID::R16G16B16_UNORM;
+            native                  = VK_FORMAT_R16G16B16_UNORM;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::R16G16_FLOAT:
+        {
+            internalFormat          = GL_RG16F;
+            formatID                = angle::Format::ID::R16G16_FLOAT;
+            native                  = VK_FORMAT_R16G16_SFLOAT;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::R16G16_SINT:
+        {
+            internalFormat          = GL_RG16I;
+            formatID                = angle::Format::ID::R16G16_SINT;
+            native                  = VK_FORMAT_R16G16_SINT;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::R16G16_SNORM:
+        {
+            internalFormat          = GL_RG16_SNORM_EXT;
+            formatID                = angle::Format::ID::R16G16_SNORM;
+            native                  = VK_FORMAT_R16G16_SNORM;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::R16G16_UINT:
+        {
+            internalFormat          = GL_RG16UI;
+            formatID                = angle::Format::ID::R16G16_UINT;
+            native                  = VK_FORMAT_R16G16_UINT;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::R16G16_UNORM:
+        {
+            internalFormat          = GL_RG16_EXT;
+            formatID                = angle::Format::ID::R16G16_UNORM;
+            native                  = VK_FORMAT_R16G16_UNORM;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::R16_FLOAT:
+        {
+            internalFormat          = GL_R16F;
+            formatID                = angle::Format::ID::R16_FLOAT;
+            native                  = VK_FORMAT_R16_SFLOAT;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::R16_SINT:
+        {
+            internalFormat          = GL_R16I;
+            formatID                = angle::Format::ID::R16_SINT;
+            native                  = VK_FORMAT_R16_SINT;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::R16_SNORM:
+        {
+            internalFormat          = GL_R16_SNORM_EXT;
+            formatID                = angle::Format::ID::R16_SNORM;
+            native                  = VK_FORMAT_R16_SNORM;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::R16_UINT:
+        {
+            internalFormat          = GL_R16UI;
+            formatID                = angle::Format::ID::R16_UINT;
+            native                  = VK_FORMAT_R16_UINT;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::R16_UNORM:
+        {
+            internalFormat          = GL_R16_EXT;
+            formatID                = angle::Format::ID::R16_UNORM;
+            native                  = VK_FORMAT_R16_UNORM;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::R32G32B32A32_FLOAT:
+        {
+            internalFormat          = GL_RGBA32F;
+            formatID                = angle::Format::ID::R32G32B32A32_FLOAT;
+            native                  = VK_FORMAT_R32G32B32A32_SFLOAT;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::R32G32B32A32_SINT:
+        {
+            internalFormat          = GL_RGBA32I;
+            formatID                = angle::Format::ID::R32G32B32A32_SINT;
+            native                  = VK_FORMAT_R32G32B32A32_SINT;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::R32G32B32A32_UINT:
+        {
+            internalFormat          = GL_RGBA32UI;
+            formatID                = angle::Format::ID::R32G32B32A32_UINT;
+            native                  = VK_FORMAT_R32G32B32A32_UINT;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::R32G32B32_FLOAT:
+        {
+            internalFormat          = GL_RGB32F;
+            formatID                = angle::Format::ID::R32G32B32_FLOAT;
+            native                  = VK_FORMAT_R32G32B32_SFLOAT;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::R32G32B32_SINT:
+        {
+            internalFormat          = GL_RGB32I;
+            formatID                = angle::Format::ID::R32G32B32_SINT;
+            native                  = VK_FORMAT_R32G32B32_SINT;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::R32G32B32_UINT:
+        {
+            internalFormat          = GL_RGB32UI;
+            formatID                = angle::Format::ID::R32G32B32_UINT;
+            native                  = VK_FORMAT_R32G32B32_UINT;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::R32G32_FLOAT:
+        {
+            internalFormat          = GL_RG32F;
+            formatID                = angle::Format::ID::R32G32_FLOAT;
+            native                  = VK_FORMAT_R32G32_SFLOAT;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::R32G32_SINT:
+        {
+            internalFormat          = GL_RG32I;
+            formatID                = angle::Format::ID::R32G32_SINT;
+            native                  = VK_FORMAT_R32G32_SINT;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::R32G32_UINT:
+        {
+            internalFormat          = GL_RG32UI;
+            formatID                = angle::Format::ID::R32G32_UINT;
+            native                  = VK_FORMAT_R32G32_UINT;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::R32_FLOAT:
+        {
+            internalFormat          = GL_R32F;
+            formatID                = angle::Format::ID::R32_FLOAT;
+            native                  = VK_FORMAT_R32_SFLOAT;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::R32_SINT:
+        {
+            internalFormat          = GL_R32I;
+            formatID                = angle::Format::ID::R32_SINT;
+            native                  = VK_FORMAT_R32_SINT;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::R32_UINT:
+        {
+            internalFormat          = GL_R32UI;
+            formatID                = angle::Format::ID::R32_UINT;
+            native                  = VK_FORMAT_R32_UINT;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::R4G4B4A4_UNORM:
+        {
+            internalFormat          = GL_RGBA4;
+            formatID                = angle::Format::ID::R4G4B4A4_UNORM;
+            native                  = VK_FORMAT_R4G4B4A4_UNORM_PACK16;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::R5G5B5A1_UNORM:
+        {
+            internalFormat          = GL_RGB5_A1;
+            formatID                = angle::Format::ID::R5G5B5A1_UNORM;
+            native                  = VK_FORMAT_R5G5B5A1_UNORM_PACK16;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::R5G6B5_UNORM:
+        {
+            internalFormat          = GL_RGB565;
+            formatID                = angle::Format::ID::R5G6B5_UNORM;
+            native                  = VK_FORMAT_R5G6B5_UNORM_PACK16;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::R8G8B8A8_SINT:
+        {
+            internalFormat          = GL_RGBA8I;
+            formatID                = angle::Format::ID::R8G8B8A8_SINT;
+            native                  = VK_FORMAT_R8G8B8A8_SINT;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::R8G8B8A8_SNORM:
+        {
+            internalFormat          = GL_RGBA8_SNORM;
+            formatID                = angle::Format::ID::R8G8B8A8_SNORM;
+            native                  = VK_FORMAT_R8G8B8A8_SNORM;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::R8G8B8A8_UINT:
+        {
+            internalFormat          = GL_RGBA8UI;
+            formatID                = angle::Format::ID::R8G8B8A8_UINT;
+            native                  = VK_FORMAT_R8G8B8A8_UINT;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::R8G8B8A8_UNORM:
+        {
+            internalFormat          = GL_RGBA8;
+            formatID                = angle::Format::ID::R8G8B8A8_UNORM;
+            native                  = VK_FORMAT_R8G8B8A8_UNORM;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::R8G8B8A8_UNORM_SRGB:
+            // This format is not implemented in Vulkan.
+            break;
+
+        case angle::Format::ID::R8G8B8_SINT:
+        {
+            internalFormat          = GL_RGB8I;
+            formatID                = angle::Format::ID::R8G8B8_SINT;
+            native                  = VK_FORMAT_R8G8B8_SINT;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::R8G8B8_SNORM:
+        {
+            internalFormat          = GL_RGB8_SNORM;
+            formatID                = angle::Format::ID::R8G8B8_SNORM;
+            native                  = VK_FORMAT_R8G8B8_SNORM;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::R8G8B8_UINT:
+        {
+            internalFormat          = GL_RGB8UI;
+            formatID                = angle::Format::ID::R8G8B8_UINT;
+            native                  = VK_FORMAT_R8G8B8_UINT;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::R8G8B8_UNORM:
+        {
+            internalFormat          = GL_RGB8;
+            formatID                = angle::Format::ID::R8G8B8_UNORM;
+            native                  = VK_FORMAT_R8G8B8_UNORM;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::R8G8B8_UNORM_SRGB:
+            // This format is not implemented in Vulkan.
+            break;
+
+        case angle::Format::ID::R8G8_SINT:
+        {
+            internalFormat          = GL_RG8I;
+            formatID                = angle::Format::ID::R8G8_SINT;
+            native                  = VK_FORMAT_R8G8_SINT;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::R8G8_SNORM:
+        {
+            internalFormat          = GL_RG8_SNORM;
+            formatID                = angle::Format::ID::R8G8_SNORM;
+            native                  = VK_FORMAT_R8G8_SNORM;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::R8G8_UINT:
+        {
+            internalFormat          = GL_RG8UI;
+            formatID                = angle::Format::ID::R8G8_UINT;
+            native                  = VK_FORMAT_R8G8_UINT;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::R8G8_UNORM:
+        {
+            internalFormat          = GL_RG8;
+            formatID                = angle::Format::ID::R8G8_UNORM;
+            native                  = VK_FORMAT_R8G8_UNORM;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::R8_SINT:
+        {
+            internalFormat          = GL_R8I;
+            formatID                = angle::Format::ID::R8_SINT;
+            native                  = VK_FORMAT_R8_SINT;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::R8_SNORM:
+        {
+            internalFormat          = GL_R8_SNORM;
+            formatID                = angle::Format::ID::R8_SNORM;
+            native                  = VK_FORMAT_R8_SNORM;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::R8_UINT:
+        {
+            internalFormat          = GL_R8UI;
+            formatID                = angle::Format::ID::R8_UINT;
+            native                  = VK_FORMAT_R8_UINT;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::R8_UNORM:
+        {
+            internalFormat          = GL_R8;
+            formatID                = angle::Format::ID::R8_UNORM;
+            native                  = VK_FORMAT_R8_UNORM;
+            dataInitializerFunction = nullptr;
+            break;
+        }
+
+        case angle::Format::ID::R9G9B9E5_SHAREDEXP:
+            // This format is not implemented in Vulkan.
+            break;
+
+        case angle::Format::ID::S8_UINT:
+        {
+            internalFormat          = GL_STENCIL_INDEX8;
+            formatID                = angle::Format::ID::S8_UINT;
+            native                  = VK_FORMAT_S8_UINT;
+            dataInitializerFunction = nullptr;
+            break;
         }
 
         default:
+            UNREACHABLE();
             break;
     }
-    // clang-format on
-
-    UNREACHABLE();
-    static const Format noInfo(GL_NONE, angle::Format::ID::NONE, VK_FORMAT_UNDEFINED, nullptr);
-    return noInfo;
 }
 
 }  // namespace vk

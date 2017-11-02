@@ -24,10 +24,10 @@ namespace rx
 namespace
 {
 
-const vk::Format &GetVkFormatFromConfig(const egl::Config &config)
+const vk::Format &GetVkFormatFromConfig(RendererVk *renderer, const egl::Config &config)
 {
     // TODO(jmadill): Properly handle format interpretation.
-    return vk::Format::Get(GL_BGRA8_EXT);
+    return renderer->getFormat(GL_BGRA8_EXT);
 }
 
 VkPresentModeKHR GetDesiredPresentMode(const std::vector<VkPresentModeKHR> &presentModes,
@@ -301,7 +301,7 @@ vk::Error WindowSurfaceVk::initializeImpl(RendererVk *renderer)
     ANGLE_VK_TRY(vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice, mSurface, &surfaceFormatCount,
                                                       surfaceFormats.data()));
 
-    mRenderTarget.format = &GetVkFormatFromConfig(*mState.config);
+    mRenderTarget.format = &GetVkFormatFromConfig(renderer, *mState.config);
     auto nativeFormat    = mRenderTarget.format->native;
 
     if (surfaceFormatCount == 1u && surfaceFormats[0].format == VK_FORMAT_UNDEFINED)
@@ -345,7 +345,7 @@ vk::Error WindowSurfaceVk::initializeImpl(RendererVk *renderer)
     swapchainInfo.clipped               = VK_TRUE;
     swapchainInfo.oldSwapchain          = VK_NULL_HANDLE;
 
-    const auto &device = renderer->getDevice();
+    VkDevice device = renderer->getDevice();
     ANGLE_VK_TRY(vkCreateSwapchainKHR(device, &swapchainInfo, nullptr, &mSwapchain));
 
     // Intialize the swapchain image views.

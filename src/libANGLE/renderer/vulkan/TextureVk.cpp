@@ -51,6 +51,7 @@ gl::Error TextureVk::setImage(const gl::Context *context,
 {
     ContextVk *contextVk = vk::GetImpl(context);
     RendererVk *renderer = contextVk->getRenderer();
+    VkDevice device      = contextVk->getDevice();
 
     // TODO(jmadill): support multi-level textures.
     ASSERT(level == 0);
@@ -74,9 +75,7 @@ gl::Error TextureVk::setImage(const gl::Context *context,
 
     // Convert internalFormat to sized internal format.
     const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(internalFormat, type);
-    const vk::Format &vkFormat           = vk::Format::Get(formatInfo.sizedInternalFormat);
-
-    VkDevice device = contextVk->getDevice();
+    const vk::Format &vkFormat           = renderer->getFormat(formatInfo.sizedInternalFormat);
 
     if (!mImage.valid())
     {
@@ -203,7 +202,7 @@ gl::Error TextureVk::setImage(const gl::Context *context,
             formatInfo.computeSkipBytes(inputRowPitch, inputDepthPitch, unpack, applySkipImages),
             inputSkipBytes);
 
-        auto loadFunction = vkFormat.getLoadFunctions()(type);
+        auto loadFunction = vkFormat.loadFunctions(type);
 
         uint8_t *mapPointer = nullptr;
         ANGLE_TRY(stagingImage.getDeviceMemory().map(device, 0, VK_WHOLE_SIZE, 0, &mapPointer));

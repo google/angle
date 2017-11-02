@@ -139,4 +139,6 @@ enum class Format::ID
     S8_UINT
 };
 
+constexpr uint32_t kNumANGLEFormats = 125;
+
 }  // namespace angle

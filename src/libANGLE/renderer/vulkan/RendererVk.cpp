@@ -343,6 +343,9 @@ vk::Error RendererVk::initialize(const egl::AttributeMap &attribs, const char *w
 
     mGlslangWrapper = GlslangWrapper::GetReference();
 
+    // Initialize the format table.
+    mFormatTable.initialize(mPhysicalDevice, &mNativeTextureCaps);
+
     return vk::NoError();
 }
 

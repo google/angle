@@ -16,14 +16,45 @@ namespace rx
 namespace vk
 {
 
+Format::Format()
+    : internalFormat(GL_NONE),
+      formatID(angle::Format::ID::NONE),
+      native(VK_FORMAT_UNDEFINED),
+      dataInitializerFunction(nullptr),
+      loadFunctions()
+{
+}
+
 const angle::Format &Format::format() const
 {
     return angle::Format::Get(formatID);
 }
 
-LoadFunctionMap Format::getLoadFunctions() const
+FormatTable::FormatTable()
 {
-    return GetLoadFunctionsMap(internalFormat, formatID);
+}
+
+FormatTable::~FormatTable()
+{
+}
+
+void FormatTable::initialize(VkPhysicalDevice physicalDevice, gl::TextureCapsMap *textureCapsMap)
+{
+    for (size_t formatIndex = 0; formatIndex < angle::kNumANGLEFormats; ++formatIndex)
+    {
+        angle::Format::ID formatID       = static_cast<angle::Format::ID>(formatIndex);
+        const angle::Format &angleFormat = angle::Format::Get(formatID);
+        mFormatData[formatIndex].initialize(physicalDevice, angleFormat);
+
+        mFormatData[formatIndex].loadFunctions =
+            GetLoadFunctionsMap(mFormatData[formatIndex].internalFormat, formatID);
+    }
+}
+
+const Format &FormatTable::operator[](GLenum internalFormat) const
+{
+    angle::Format::ID formatID = angle::Format::InternalFormatToID(internalFormat);
+    return mFormatData[static_cast<size_t>(formatID)];
 }
 
 // TODO(jmadill): This is temporary. Figure out how to handle format conversions.
