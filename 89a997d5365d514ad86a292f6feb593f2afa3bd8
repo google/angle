@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "60b58eb3_d272030b",
+        "filename": "src/tests/perf_tests/TexSubImage.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-11-02T01:40:51Z",
+      "side": 1,
+      "message": "No, but I\u0027ve seen you do it.\n1. It\u0027s very cumbersome to change 1 CL in the middle of the stack.\n2. All this info is only in gerrit, you don\u0027t see it in your git checkout. I often track history of some line of code in my git checkout, I can\u0027t do it in gerrit. And the relationship information is lost.",
+      "parentUuid": "c51fed2d_4107bae1",
+      "range": {
+        "startLine": 93,
+        "startChar": 49,
+        "endLine": 93,
+        "endChar": 75
+      },
+      "revId": "89a997d5365d514ad86a292f6feb593f2afa3bd8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4e130040_adf37376",
         "filename": "src/tests/perf_tests/UniformsPerf.cpp",
         "patchSetId": 2
