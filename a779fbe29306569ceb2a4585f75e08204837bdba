@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "9ede904c_9772824e",
+        "filename": "src/libANGLE/renderer/gen_angle_format_table.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 259,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-02T14:39:30Z",
+      "side": 1,
+      "message": "enum_data is used twice. I think it cleans up the code to leave it as is.",
+      "parentUuid": "9f3a4bcc_ac203330",
+      "revId": "a779fbe29306569ceb2a4585f75e08204837bdba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "4df1dc79_ed19f45b",
         "filename": "src/libANGLE/renderer/vulkan/vk_format_table_autogen.cpp",
         "patchSetId": 4
@@ -30,6 +48,24 @@
       "writtenOn": "2017-11-01T18:51:44Z",
       "side": 1,
       "message": "don\u0027t need these braces, do we?",
+      "revId": "a779fbe29306569ceb2a4585f75e08204837bdba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6bd8aa40_2d0f45f4",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_table_autogen.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-02T14:39:30Z",
+      "side": 1,
+      "message": "I\u0027m fine with keeping extra braces. In general this prevents us from having to add them later for whatever reason.",
+      "parentUuid": "4df1dc79_ed19f45b",
       "revId": "a779fbe29306569ceb2a4585f75e08204837bdba",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
