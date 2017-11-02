@@ -16,6 +16,24 @@
       "revId": "d5af29b016fc2b31a7a42b8155d746fd4bed25d8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "388a3e7b_efa710b1",
+        "filename": "scripts/generate_format_tables.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-02T13:41:37Z",
+      "side": 1,
+      "message": "Done, added the packed GLenum, dispatch table, entry points, and two missing GL generators. Let me know if there are any more.",
+      "parentUuid": "e8839fba_65976bea",
+      "revId": "d5af29b016fc2b31a7a42b8155d746fd4bed25d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
