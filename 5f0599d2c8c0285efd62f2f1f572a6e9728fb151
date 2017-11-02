@@ -22,6 +22,30 @@
       "revId": "5f0599d2c8c0285efd62f2f1f572a6e9728fb151",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4e6a8994_be521122",
+        "filename": "src/libANGLE/Uniform.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-11-02T03:15:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "29a368d8_9d74ed37",
+      "range": {
+        "startLine": 27,
+        "startChar": 4,
+        "endLine": 27,
+        "endChar": 32
+      },
+      "revId": "5f0599d2c8c0285efd62f2f1f572a6e9728fb151",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
