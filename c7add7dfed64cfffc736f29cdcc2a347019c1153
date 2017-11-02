@@ -2,6 +2,46 @@
   "comments": [
     {
       "key": {
+        "uuid": "69fae668_76046855",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1179,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-02T12:40:55Z",
+      "side": 1,
+      "message": "Writing to iter here can cause a slight problem. If there\u0027s a #extension EXT_geometry_shader : warn directive, then the code would issue a warning, but with \"OES_geometry_shader\" extension string. So add another iterator variable to use instead of iter, and add one more case below that checks for #extension EXT_geometry_shader : warn.",
+      "revId": "c7add7dfed64cfffc736f29cdcc2a347019c1153",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f30e805f_593cf4b0",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1187,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-02T12:40:55Z",
+      "side": 1,
+      "message": "In ANGLE code style, \"else\" isn\u0027t usually used if there\u0027s a return inside the preceding \"if\".",
+      "range": {
+        "startLine": 1187,
+        "startChar": 12,
+        "endLine": 1187,
+        "endChar": 17
+      },
+      "revId": "c7add7dfed64cfffc736f29cdcc2a347019c1153",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "54d6b860_46a3821a",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 4
@@ -25,6 +65,23 @@
     },
     {
       "key": {
+        "uuid": "7061b770_d30c386f",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1677,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-02T12:40:55Z",
+      "side": 1,
+      "message": "Instead of having this function, it could actually be better to run checkCanUseExtension(). Then \"warn\" extension directives would also work.\n\nOther existing use of isExtensionEnabled should probably also be fixed, but that should be done in another patch.",
+      "revId": "c7add7dfed64cfffc736f29cdcc2a347019c1153",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a3904be6_1cbbe09f",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 4
@@ -42,6 +99,23 @@
         "endLine": 1681,
         "endChar": 1
       },
+      "revId": "c7add7dfed64cfffc736f29cdcc2a347019c1153",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7524a965_2948df6a",
+        "filename": "src/tests/compiler_tests/GeometryShader_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1573,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-02T12:40:55Z",
+      "side": 1,
+      "message": "There\u0027s a lot of repeated code in these tests, it would be better to have a template which would be combined with the extension directives to be tested.",
       "revId": "c7add7dfed64cfffc736f29cdcc2a347019c1153",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
