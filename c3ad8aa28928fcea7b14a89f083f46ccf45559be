@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "b92332b1_1cbabca5",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 593,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-03T03:54:01Z",
+      "side": 0,
+      "message": "Yep. Updated description.",
+      "parentUuid": "920bf62f_02aa9f37",
+      "range": {
+        "startLine": 593,
+        "startChar": 49,
+        "endLine": 593,
+        "endChar": 55
+      },
+      "revId": "c3ad8aa28928fcea7b14a89f083f46ccf45559be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3bd19345_432b6728",
         "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
         "patchSetId": 9
@@ -45,6 +69,30 @@
       "revId": "c3ad8aa28928fcea7b14a89f083f46ccf45559be",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3a54dd6f_05e50555",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1365,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-03T03:54:01Z",
+      "side": 0,
+      "message": "Didn\u0027t want to bother since there were only 2 values at most. Left a TODO.",
+      "parentUuid": "3bd19345_432b6728",
+      "range": {
+        "startLine": 1365,
+        "startChar": 70,
+        "endLine": 1365,
+        "endChar": 80
+      },
+      "revId": "c3ad8aa28928fcea7b14a89f083f46ccf45559be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
