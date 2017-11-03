@@ -572,9 +572,8 @@ void ContextVk::syncState(const gl::Context *context, const gl::State::DirtyBits
             case gl::State::DIRTY_BIT_SAMPLE_MASK_ENABLED:
                 WARN() << "DIRTY_BIT_SAMPLE_MASK_ENABLED unimplemented";
                 break;
-            case gl::State::DIRTY_BIT_SAMPLE_MASK_WORD_0:
-            case gl::State::DIRTY_BIT_SAMPLE_MASK_WORD_0 + 1:
-                WARN() << "DIRTY_BIT_SAMPLE_MASK_WORD unimplemented";
+            case gl::State::DIRTY_BIT_SAMPLE_MASK:
+                WARN() << "DIRTY_BIT_SAMPLE_MASK unimplemented";
                 break;
             case gl::State::DIRTY_BIT_DEPTH_TEST_ENABLED:
                 WARN() << "DIRTY_BIT_DEPTH_TEST_ENABLED unimplemented";
@@ -638,44 +637,11 @@ void ContextVk::syncState(const gl::Context *context, const gl::State::DirtyBits
             case gl::State::DIRTY_BIT_CLEAR_STENCIL:
                 WARN() << "DIRTY_BIT_CLEAR_STENCIL unimplemented";
                 break;
-            case gl::State::DIRTY_BIT_UNPACK_ALIGNMENT:
-                WARN() << "DIRTY_BIT_UNPACK_ALIGNMENT unimplemented";
+            case gl::State::DIRTY_BIT_UNPACK_STATE:
+                WARN() << "DIRTY_BIT_UNPACK_STATE unimplemented";
                 break;
-            case gl::State::DIRTY_BIT_UNPACK_ROW_LENGTH:
-                WARN() << "DIRTY_BIT_UNPACK_ROW_LENGTH unimplemented";
-                break;
-            case gl::State::DIRTY_BIT_UNPACK_IMAGE_HEIGHT:
-                WARN() << "DIRTY_BIT_UNPACK_IMAGE_HEIGHT unimplemented";
-                break;
-            case gl::State::DIRTY_BIT_UNPACK_SKIP_IMAGES:
-                WARN() << "DIRTY_BIT_UNPACK_SKIP_IMAGES unimplemented";
-                break;
-            case gl::State::DIRTY_BIT_UNPACK_SKIP_ROWS:
-                WARN() << "DIRTY_BIT_UNPACK_SKIP_ROWS unimplemented";
-                break;
-            case gl::State::DIRTY_BIT_UNPACK_SKIP_PIXELS:
-                WARN() << "DIRTY_BIT_UNPACK_SKIP_PIXELS unimplemented";
-                break;
-            case gl::State::DIRTY_BIT_UNPACK_BUFFER_BINDING:
-                WARN() << "DIRTY_BIT_UNPACK_BUFFER_BINDING unimplemented";
-                break;
-            case gl::State::DIRTY_BIT_PACK_ALIGNMENT:
-                WARN() << "DIRTY_BIT_PACK_ALIGNMENT unimplemented";
-                break;
-            case gl::State::DIRTY_BIT_PACK_REVERSE_ROW_ORDER:
-                WARN() << "DIRTY_BIT_PACK_REVERSE_ROW_ORDER unimplemented";
-                break;
-            case gl::State::DIRTY_BIT_PACK_ROW_LENGTH:
-                WARN() << "DIRTY_BIT_PACK_ROW_LENGTH unimplemented";
-                break;
-            case gl::State::DIRTY_BIT_PACK_SKIP_ROWS:
-                WARN() << "DIRTY_BIT_PACK_SKIP_ROWS unimplemented";
-                break;
-            case gl::State::DIRTY_BIT_PACK_SKIP_PIXELS:
-                WARN() << "DIRTY_BIT_PACK_SKIP_PIXELS unimplemented";
-                break;
-            case gl::State::DIRTY_BIT_PACK_BUFFER_BINDING:
-                WARN() << "DIRTY_BIT_PACK_BUFFER_BINDING unimplemented";
+            case gl::State::DIRTY_BIT_PACK_STATE:
+                WARN() << "DIRTY_BIT_PACK_STATE unimplemented";
                 break;
             case gl::State::DIRTY_BIT_DITHER_ENABLED:
                 WARN() << "DIRTY_BIT_DITHER_ENABLED unimplemented";
@@ -745,16 +711,11 @@ void ContextVk::syncState(const gl::Context *context, const gl::State::DirtyBits
             case gl::State::DIRTY_BIT_FRAMEBUFFER_SRGB:
                 WARN() << "DIRTY_BIT_FRAMEBUFFER_SRGB unimplemented";
                 break;
+            case gl::State::DIRTY_BIT_CURRENT_VALUES:
+                WARN() << "DIRTY_BIT_CURRENT_VALUES unimplemented";
+                break;
             default:
-                if (dirtyBit >= gl::State::DIRTY_BIT_CURRENT_VALUE_0 &&
-                    dirtyBit < gl::State::DIRTY_BIT_CURRENT_VALUE_MAX)
-                {
-                    WARN() << "DIRTY_BIT_CURRENT_VALUE unimplemented";
-                }
-                else
-                {
-                    UNREACHABLE();
-                }
+                UNREACHABLE();
                 break;
         }
     }

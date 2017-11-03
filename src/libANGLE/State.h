@@ -390,9 +390,8 @@ class State : public OnAttachmentDirtyReceiver, angle::NonCopyable
         DIRTY_BIT_SAMPLE_COVERAGE_ENABLED,
         DIRTY_BIT_SAMPLE_COVERAGE,
         DIRTY_BIT_SAMPLE_MASK_ENABLED,
-        DIRTY_BIT_SAMPLE_MASK_WORD_0,
-        DIRTY_BIT_SAMPLE_MASK_WORD_MAX = DIRTY_BIT_SAMPLE_MASK_WORD_0 + MAX_SAMPLE_MASK_WORDS,
-        DIRTY_BIT_DEPTH_TEST_ENABLED   = DIRTY_BIT_SAMPLE_MASK_WORD_MAX,
+        DIRTY_BIT_SAMPLE_MASK,
+        DIRTY_BIT_DEPTH_TEST_ENABLED,
         DIRTY_BIT_DEPTH_FUNC,
         DIRTY_BIT_DEPTH_MASK,
         DIRTY_BIT_STENCIL_TEST_ENABLED,
@@ -413,19 +412,8 @@ class State : public OnAttachmentDirtyReceiver, angle::NonCopyable
         DIRTY_BIT_CLEAR_COLOR,
         DIRTY_BIT_CLEAR_DEPTH,
         DIRTY_BIT_CLEAR_STENCIL,
-        DIRTY_BIT_UNPACK_ALIGNMENT,
-        DIRTY_BIT_UNPACK_ROW_LENGTH,
-        DIRTY_BIT_UNPACK_IMAGE_HEIGHT,
-        DIRTY_BIT_UNPACK_SKIP_IMAGES,
-        DIRTY_BIT_UNPACK_SKIP_ROWS,
-        DIRTY_BIT_UNPACK_SKIP_PIXELS,
-        DIRTY_BIT_UNPACK_BUFFER_BINDING,
-        DIRTY_BIT_PACK_ALIGNMENT,
-        DIRTY_BIT_PACK_REVERSE_ROW_ORDER,
-        DIRTY_BIT_PACK_ROW_LENGTH,
-        DIRTY_BIT_PACK_SKIP_ROWS,
-        DIRTY_BIT_PACK_SKIP_PIXELS,
-        DIRTY_BIT_PACK_BUFFER_BINDING,
+        DIRTY_BIT_UNPACK_STATE,
+        DIRTY_BIT_PACK_STATE,
         DIRTY_BIT_DITHER_ENABLED,
         DIRTY_BIT_GENERATE_MIPMAP_HINT,
         DIRTY_BIT_SHADER_DERIVATIVE_HINT,
@@ -446,11 +434,12 @@ class State : public OnAttachmentDirtyReceiver, angle::NonCopyable
         DIRTY_BIT_PATH_RENDERING_MATRIX_PROJ,  // CHROMIUM_path_rendering path projection matrix
         DIRTY_BIT_PATH_RENDERING_STENCIL_STATE,
         DIRTY_BIT_FRAMEBUFFER_SRGB,  // GL_EXT_sRGB_write_control
-        DIRTY_BIT_CURRENT_VALUE_0,
-        DIRTY_BIT_CURRENT_VALUE_MAX = DIRTY_BIT_CURRENT_VALUE_0 + MAX_VERTEX_ATTRIBS,
-        DIRTY_BIT_INVALID           = DIRTY_BIT_CURRENT_VALUE_MAX,
-        DIRTY_BIT_MAX               = DIRTY_BIT_INVALID,
+        DIRTY_BIT_CURRENT_VALUES,
+        DIRTY_BIT_INVALID,
+        DIRTY_BIT_MAX = DIRTY_BIT_INVALID,
     };
+
+    static_assert(DIRTY_BIT_MAX <= 64, "State dirty bits must be capped at 64");
 
     // TODO(jmadill): Consider storing dirty objects in a list instead of by binding.
     enum DirtyObjectType
@@ -478,6 +467,10 @@ class State : public OnAttachmentDirtyReceiver, angle::NonCopyable
     void syncDirtyObjects(const Context *context, const DirtyObjects &bitset);
     void syncDirtyObject(const Context *context, GLenum target);
     void setObjectDirty(GLenum target);
+
+    // This actually clears the current value dirty bits.
+    // TODO(jmadill): Pass mutable dirty bits into Impl.
+    AttributesMask getAndResetDirtyCurrentValues() const;
 
     void setImageUnit(const Context *context,
                       GLuint unit,
@@ -629,6 +622,7 @@ class State : public OnAttachmentDirtyReceiver, angle::NonCopyable
 
     DirtyBits mDirtyBits;
     DirtyObjects mDirtyObjects;
+    mutable AttributesMask mDirtyCurrentValues;
 };
 
 }  // namespace gl

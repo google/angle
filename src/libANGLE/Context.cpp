@@ -389,23 +389,11 @@ Context::Context(rx::EGLImplFactory *implFactory,
     }
 
     // Initialize dirty bit masks
-    // TODO(jmadill): additional ES3 state
-    mTexImageDirtyBits.set(State::DIRTY_BIT_UNPACK_ALIGNMENT);
-    mTexImageDirtyBits.set(State::DIRTY_BIT_UNPACK_ROW_LENGTH);
-    mTexImageDirtyBits.set(State::DIRTY_BIT_UNPACK_IMAGE_HEIGHT);
-    mTexImageDirtyBits.set(State::DIRTY_BIT_UNPACK_SKIP_IMAGES);
-    mTexImageDirtyBits.set(State::DIRTY_BIT_UNPACK_SKIP_ROWS);
-    mTexImageDirtyBits.set(State::DIRTY_BIT_UNPACK_SKIP_PIXELS);
-    mTexImageDirtyBits.set(State::DIRTY_BIT_UNPACK_BUFFER_BINDING);
+    mTexImageDirtyBits.set(State::DIRTY_BIT_UNPACK_STATE);
     // No dirty objects.
 
     // Readpixels uses the pack state and read FBO
-    mReadPixelsDirtyBits.set(State::DIRTY_BIT_PACK_ALIGNMENT);
-    mReadPixelsDirtyBits.set(State::DIRTY_BIT_PACK_REVERSE_ROW_ORDER);
-    mReadPixelsDirtyBits.set(State::DIRTY_BIT_PACK_ROW_LENGTH);
-    mReadPixelsDirtyBits.set(State::DIRTY_BIT_PACK_SKIP_ROWS);
-    mReadPixelsDirtyBits.set(State::DIRTY_BIT_PACK_SKIP_PIXELS);
-    mReadPixelsDirtyBits.set(State::DIRTY_BIT_PACK_BUFFER_BINDING);
+    mReadPixelsDirtyBits.set(State::DIRTY_BIT_PACK_STATE);
     mReadPixelsDirtyObjects.set(State::DIRTY_OBJECT_READ_FRAMEBUFFER);
 
     mClearDirtyBits.set(State::DIRTY_BIT_RASTERIZER_DISCARD_ENABLED);

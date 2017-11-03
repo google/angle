@@ -514,7 +514,7 @@ void StateManagerGL::setPixelUnpackState(GLint alignment,
         mUnpackAlignment = alignment;
         mFunctions->pixelStorei(GL_UNPACK_ALIGNMENT, mUnpackAlignment);
 
-        mLocalDirtyBits.set(gl::State::DIRTY_BIT_UNPACK_ALIGNMENT);
+        mLocalDirtyBits.set(gl::State::DIRTY_BIT_UNPACK_STATE);
     }
 
     if (mUnpackRowLength != rowLength)
@@ -522,7 +522,7 @@ void StateManagerGL::setPixelUnpackState(GLint alignment,
         mUnpackRowLength = rowLength;
         mFunctions->pixelStorei(GL_UNPACK_ROW_LENGTH, mUnpackRowLength);
 
-        mLocalDirtyBits.set(gl::State::DIRTY_BIT_UNPACK_ROW_LENGTH);
+        mLocalDirtyBits.set(gl::State::DIRTY_BIT_UNPACK_STATE);
     }
 
     if (mUnpackSkipRows != skipRows)
@@ -530,7 +530,7 @@ void StateManagerGL::setPixelUnpackState(GLint alignment,
         mUnpackSkipRows = skipRows;
         mFunctions->pixelStorei(GL_UNPACK_SKIP_ROWS, mUnpackSkipRows);
 
-        mLocalDirtyBits.set(gl::State::DIRTY_BIT_UNPACK_SKIP_ROWS);
+        mLocalDirtyBits.set(gl::State::DIRTY_BIT_UNPACK_STATE);
     }
 
     if (mUnpackSkipPixels != skipPixels)
@@ -538,7 +538,7 @@ void StateManagerGL::setPixelUnpackState(GLint alignment,
         mUnpackSkipPixels = skipPixels;
         mFunctions->pixelStorei(GL_UNPACK_SKIP_PIXELS, mUnpackSkipPixels);
 
-        mLocalDirtyBits.set(gl::State::DIRTY_BIT_UNPACK_SKIP_PIXELS);
+        mLocalDirtyBits.set(gl::State::DIRTY_BIT_UNPACK_STATE);
     }
 
     if (mUnpackImageHeight != imageHeight)
@@ -546,7 +546,7 @@ void StateManagerGL::setPixelUnpackState(GLint alignment,
         mUnpackImageHeight = imageHeight;
         mFunctions->pixelStorei(GL_UNPACK_IMAGE_HEIGHT, mUnpackImageHeight);
 
-        mLocalDirtyBits.set(gl::State::DIRTY_BIT_UNPACK_IMAGE_HEIGHT);
+        mLocalDirtyBits.set(gl::State::DIRTY_BIT_UNPACK_STATE);
     }
 
     if (mUnpackSkipImages != skipImages)
@@ -554,7 +554,7 @@ void StateManagerGL::setPixelUnpackState(GLint alignment,
         mUnpackSkipImages = skipImages;
         mFunctions->pixelStorei(GL_UNPACK_SKIP_IMAGES, mUnpackSkipImages);
 
-        mLocalDirtyBits.set(gl::State::DIRTY_BIT_UNPACK_SKIP_IMAGES);
+        mLocalDirtyBits.set(gl::State::DIRTY_BIT_UNPACK_STATE);
     }
 
     bindBuffer(GL_PIXEL_UNPACK_BUFFER, unpackBuffer);
@@ -582,7 +582,7 @@ void StateManagerGL::setPixelPackState(GLint alignment,
         mPackAlignment = alignment;
         mFunctions->pixelStorei(GL_PACK_ALIGNMENT, mPackAlignment);
 
-        mLocalDirtyBits.set(gl::State::DIRTY_BIT_PACK_ALIGNMENT);
+        mLocalDirtyBits.set(gl::State::DIRTY_BIT_PACK_STATE);
     }
 
     if (mPackRowLength != rowLength)
@@ -590,7 +590,7 @@ void StateManagerGL::setPixelPackState(GLint alignment,
         mPackRowLength = rowLength;
         mFunctions->pixelStorei(GL_PACK_ROW_LENGTH, mPackRowLength);
 
-        mLocalDirtyBits.set(gl::State::DIRTY_BIT_UNPACK_ROW_LENGTH);
+        mLocalDirtyBits.set(gl::State::DIRTY_BIT_PACK_STATE);
     }
 
     if (mPackSkipRows != skipRows)
@@ -598,7 +598,7 @@ void StateManagerGL::setPixelPackState(GLint alignment,
         mPackSkipRows = skipRows;
         mFunctions->pixelStorei(GL_PACK_SKIP_ROWS, mPackSkipRows);
 
-        // TODO: set dirty bit once one exists
+        mLocalDirtyBits.set(gl::State::DIRTY_BIT_PACK_STATE);
     }
 
     if (mPackSkipPixels != skipPixels)
@@ -606,7 +606,7 @@ void StateManagerGL::setPixelPackState(GLint alignment,
         mPackSkipPixels = skipPixels;
         mFunctions->pixelStorei(GL_PACK_SKIP_PIXELS, mPackSkipPixels);
 
-        // TODO: set dirty bit once one exists
+        mLocalDirtyBits.set(gl::State::DIRTY_BIT_PACK_STATE);
     }
 
     bindBuffer(GL_PIXEL_PACK_BUFFER, packBuffer);
@@ -1069,7 +1069,8 @@ void StateManagerGL::setAttributeCurrentData(size_t index,
                 UNREACHABLE();
         }
 
-        mLocalDirtyBits.set(gl::State::DIRTY_BIT_CURRENT_VALUE_0 + index);
+        mLocalDirtyBits.set(gl::State::DIRTY_BIT_CURRENT_VALUES);
+        mLocalDirtyCurrentValues.set(index);
     }
 }
 
@@ -1362,7 +1363,7 @@ void StateManagerGL::setSampleMaski(GLuint maskNumber, GLbitfield mask)
         mSampleMaskValues[maskNumber] = mask;
         mFunctions->sampleMaski(maskNumber, mask);
 
-        mLocalDirtyBits.set(gl::State::DIRTY_BIT_SAMPLE_MASK_WORD_0 + maskNumber);
+        mLocalDirtyBits.set(gl::State::DIRTY_BIT_SAMPLE_MASK);
     }
 }
 
@@ -1673,7 +1674,7 @@ void StateManagerGL::syncState(const gl::Context *context, const gl::State::Dirt
 {
     const gl::State &state = context->getGLState();
 
-    // The the current framebuffer binding sometimes requires resetting the srgb blending
+    // Changing the draw framebuffer binding sometimes requires resetting srgb blending.
     if (glDirtyBits[gl::State::DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING])
     {
         if (mFunctions->standard == STANDARD_GL_DESKTOP)
@@ -1897,56 +1898,10 @@ void StateManagerGL::syncState(const gl::Context *context, const gl::State::Dirt
             case gl::State::DIRTY_BIT_CLEAR_STENCIL:
                 setClearStencil(state.getStencilClearValue());
                 break;
-            case gl::State::DIRTY_BIT_UNPACK_ALIGNMENT:
-                // TODO(jmadill): split this
+            case gl::State::DIRTY_BIT_UNPACK_STATE:
                 setPixelUnpackState(state.getUnpackState());
                 break;
-            case gl::State::DIRTY_BIT_UNPACK_ROW_LENGTH:
-                // TODO(jmadill): split this
-                setPixelUnpackState(state.getUnpackState());
-                break;
-            case gl::State::DIRTY_BIT_UNPACK_IMAGE_HEIGHT:
-                // TODO(jmadill): split this
-                setPixelUnpackState(state.getUnpackState());
-                break;
-            case gl::State::DIRTY_BIT_UNPACK_SKIP_IMAGES:
-                // TODO(jmadill): split this
-                setPixelUnpackState(state.getUnpackState());
-                break;
-            case gl::State::DIRTY_BIT_UNPACK_SKIP_ROWS:
-                // TODO(jmadill): split this
-                setPixelUnpackState(state.getUnpackState());
-                break;
-            case gl::State::DIRTY_BIT_UNPACK_SKIP_PIXELS:
-                // TODO(jmadill): split this
-                setPixelUnpackState(state.getUnpackState());
-                break;
-            case gl::State::DIRTY_BIT_UNPACK_BUFFER_BINDING:
-                // TODO(jmadill): split this
-                setPixelUnpackState(state.getUnpackState());
-                break;
-            case gl::State::DIRTY_BIT_PACK_ALIGNMENT:
-                // TODO(jmadill): split this
-                setPixelPackState(state.getPackState());
-                break;
-            case gl::State::DIRTY_BIT_PACK_REVERSE_ROW_ORDER:
-                // TODO(jmadill): split this
-                setPixelPackState(state.getPackState());
-                break;
-            case gl::State::DIRTY_BIT_PACK_ROW_LENGTH:
-                // TODO(jmadill): split this
-                setPixelPackState(state.getPackState());
-                break;
-            case gl::State::DIRTY_BIT_PACK_SKIP_ROWS:
-                // TODO(jmadill): split this
-                setPixelPackState(state.getPackState());
-                break;
-            case gl::State::DIRTY_BIT_PACK_SKIP_PIXELS:
-                // TODO(jmadill): split this
-                setPixelPackState(state.getPackState());
-                break;
-            case gl::State::DIRTY_BIT_PACK_BUFFER_BINDING:
-                // TODO(jmadill): split this
+            case gl::State::DIRTY_BIT_PACK_STATE:
                 setPixelPackState(state.getPackState());
                 break;
             case gl::State::DIRTY_BIT_DITHER_ENABLED:
@@ -2025,34 +1980,31 @@ void StateManagerGL::syncState(const gl::Context *context, const gl::State::Dirt
             case gl::State::DIRTY_BIT_SAMPLE_MASK_ENABLED:
                 setSampleMaskEnabled(state.isSampleMaskEnabled());
                 break;
-            default:
+            case gl::State::DIRTY_BIT_SAMPLE_MASK:
             {
-                if (dirtyBit >= gl::State::DIRTY_BIT_CURRENT_VALUE_0 &&
-                    dirtyBit < gl::State::DIRTY_BIT_CURRENT_VALUE_MAX)
+                for (GLuint maskNumber = 0; maskNumber < state.getMaxSampleMaskWords();
+                     ++maskNumber)
                 {
-                    size_t attribIndex =
-                        static_cast<size_t>(dirtyBit) - gl::State::DIRTY_BIT_CURRENT_VALUE_0;
+                    setSampleMaski(maskNumber, state.getSampleMaskWord(maskNumber));
+                }
+                break;
+            }
+            case gl::State::DIRTY_BIT_CURRENT_VALUES:
+            {
+                gl::AttributesMask combinedMask =
+                    (state.getAndResetDirtyCurrentValues() | mLocalDirtyCurrentValues);
+                mLocalDirtyCurrentValues.reset();
+
+                for (auto attribIndex : combinedMask)
+                {
                     setAttributeCurrentData(attribIndex,
                                             state.getVertexAttribCurrentValue(attribIndex));
-                    break;
                 }
-                else if (dirtyBit >= gl::State::DIRTY_BIT_SAMPLE_MASK_WORD_0 &&
-                         dirtyBit < gl::State::DIRTY_BIT_SAMPLE_MASK_WORD_MAX)
-                {
-                    GLuint maskNumber =
-                        static_cast<GLuint>(dirtyBit) - gl::State::DIRTY_BIT_SAMPLE_MASK_WORD_0;
-                    // Only set the available sample mask values.
-                    if (maskNumber < state.getMaxSampleMaskWords())
-                    {
-                        setSampleMaski(maskNumber, state.getSampleMaskWord(maskNumber));
-                    }
-                    break;
-                }
-                else
-                {
-                    UNREACHABLE();
-                }
+                break;
             }
+            default:
+                UNREACHABLE();
+                break;
         }
 
         mLocalDirtyBits.reset();

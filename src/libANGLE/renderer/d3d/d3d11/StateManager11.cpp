@@ -969,16 +969,16 @@ void StateManager11::syncState(const gl::Context *context, const gl::State::Dirt
                     }
                     vao11->markAllAttributeDivisorsForAdjustment(numViews);
                 }
+                break;
             }
-            break;
-            default:
-                if (dirtyBit >= gl::State::DIRTY_BIT_CURRENT_VALUE_0 &&
-                    dirtyBit < gl::State::DIRTY_BIT_CURRENT_VALUE_MAX)
+            case gl::State::DIRTY_BIT_CURRENT_VALUES:
+            {
+                for (auto attribIndex : state.getAndResetDirtyCurrentValues())
                 {
-                    size_t attribIndex =
-                        static_cast<size_t>(dirtyBit - gl::State::DIRTY_BIT_CURRENT_VALUE_0);
                     invalidateCurrentValueAttrib(attribIndex);
                 }
+            }
+            default:
                 break;
         }
     }

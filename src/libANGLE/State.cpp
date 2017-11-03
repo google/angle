@@ -585,7 +585,8 @@ void State::setSampleMaskParams(GLuint maskNumber, GLbitfield mask)
 {
     ASSERT(maskNumber < mMaxSampleMaskWords);
     mSampleMaskValues[maskNumber] = mask;
-    mDirtyBits.set(DIRTY_BIT_SAMPLE_MASK_WORD_0 + maskNumber);
+    // TODO(jmadill): Use a child dirty bit if we ever use more than two words.
+    mDirtyBits.set(DIRTY_BIT_SAMPLE_MASK);
 }
 
 GLbitfield State::getSampleMaskWord(GLuint maskNumber) const
@@ -1340,13 +1341,13 @@ void State::setCopyWriteBufferBinding(const Context *context, Buffer *buffer)
 void State::setPixelPackBufferBinding(const Context *context, Buffer *buffer)
 {
     mPack.pixelBuffer.set(context, buffer);
-    mDirtyBits.set(DIRTY_BIT_PACK_BUFFER_BINDING);
+    mDirtyBits.set(DIRTY_BIT_PACK_STATE);
 }
 
 void State::setPixelUnpackBufferBinding(const Context *context, Buffer *buffer)
 {
     mUnpack.pixelBuffer.set(context, buffer);
-    mDirtyBits.set(DIRTY_BIT_UNPACK_BUFFER_BINDING);
+    mDirtyBits.set(DIRTY_BIT_UNPACK_STATE);
 }
 
 Buffer *State::getTargetBuffer(GLenum target) const
@@ -1406,21 +1407,24 @@ void State::setVertexAttribf(GLuint index, const GLfloat values[4])
 {
     ASSERT(static_cast<size_t>(index) < mVertexAttribCurrentValues.size());
     mVertexAttribCurrentValues[index].setFloatValues(values);
-    mDirtyBits.set(DIRTY_BIT_CURRENT_VALUE_0 + index);
+    mDirtyBits.set(DIRTY_BIT_CURRENT_VALUES);
+    mDirtyCurrentValues.set(index);
 }
 
 void State::setVertexAttribu(GLuint index, const GLuint values[4])
 {
     ASSERT(static_cast<size_t>(index) < mVertexAttribCurrentValues.size());
     mVertexAttribCurrentValues[index].setUnsignedIntValues(values);
-    mDirtyBits.set(DIRTY_BIT_CURRENT_VALUE_0 + index);
+    mDirtyBits.set(DIRTY_BIT_CURRENT_VALUES);
+    mDirtyCurrentValues.set(index);
 }
 
 void State::setVertexAttribi(GLuint index, const GLint values[4])
 {
     ASSERT(static_cast<size_t>(index) < mVertexAttribCurrentValues.size());
     mVertexAttribCurrentValues[index].setIntValues(values);
-    mDirtyBits.set(DIRTY_BIT_CURRENT_VALUE_0 + index);
+    mDirtyBits.set(DIRTY_BIT_CURRENT_VALUES);
+    mDirtyCurrentValues.set(index);
 }
 
 void State::setVertexAttribPointer(const Context *context,
@@ -1458,7 +1462,7 @@ const void *State::getVertexAttribPointer(unsigned int attribNum) const
 void State::setPackAlignment(GLint alignment)
 {
     mPack.alignment = alignment;
-    mDirtyBits.set(DIRTY_BIT_PACK_ALIGNMENT);
+    mDirtyBits.set(DIRTY_BIT_PACK_STATE);
 }
 
 GLint State::getPackAlignment() const
@@ -1469,7 +1473,7 @@ GLint State::getPackAlignment() const
 void State::setPackReverseRowOrder(bool reverseRowOrder)
 {
     mPack.reverseRowOrder = reverseRowOrder;
-    mDirtyBits.set(DIRTY_BIT_PACK_REVERSE_ROW_ORDER);
+    mDirtyBits.set(DIRTY_BIT_PACK_STATE);
 }
 
 bool State::getPackReverseRowOrder() const
@@ -1480,7 +1484,7 @@ bool State::getPackReverseRowOrder() const
 void State::setPackRowLength(GLint rowLength)
 {
     mPack.rowLength = rowLength;
-    mDirtyBits.set(DIRTY_BIT_PACK_ROW_LENGTH);
+    mDirtyBits.set(DIRTY_BIT_PACK_STATE);
 }
 
 GLint State::getPackRowLength() const
@@ -1491,7 +1495,7 @@ GLint State::getPackRowLength() const
 void State::setPackSkipRows(GLint skipRows)
 {
     mPack.skipRows = skipRows;
-    mDirtyBits.set(DIRTY_BIT_PACK_SKIP_ROWS);
+    mDirtyBits.set(DIRTY_BIT_PACK_STATE);
 }
 
 GLint State::getPackSkipRows() const
@@ -1502,7 +1506,7 @@ GLint State::getPackSkipRows() const
 void State::setPackSkipPixels(GLint skipPixels)
 {
     mPack.skipPixels = skipPixels;
-    mDirtyBits.set(DIRTY_BIT_PACK_SKIP_PIXELS);
+    mDirtyBits.set(DIRTY_BIT_PACK_STATE);
 }
 
 GLint State::getPackSkipPixels() const
@@ -1523,7 +1527,7 @@ PixelPackState &State::getPackState()
 void State::setUnpackAlignment(GLint alignment)
 {
     mUnpack.alignment = alignment;
-    mDirtyBits.set(DIRTY_BIT_UNPACK_ALIGNMENT);
+    mDirtyBits.set(DIRTY_BIT_UNPACK_STATE);
 }
 
 GLint State::getUnpackAlignment() const
@@ -1534,7 +1538,7 @@ GLint State::getUnpackAlignment() const
 void State::setUnpackRowLength(GLint rowLength)
 {
     mUnpack.rowLength = rowLength;
-    mDirtyBits.set(DIRTY_BIT_UNPACK_ROW_LENGTH);
+    mDirtyBits.set(DIRTY_BIT_UNPACK_STATE);
 }
 
 GLint State::getUnpackRowLength() const
@@ -1545,7 +1549,7 @@ GLint State::getUnpackRowLength() const
 void State::setUnpackImageHeight(GLint imageHeight)
 {
     mUnpack.imageHeight = imageHeight;
-    mDirtyBits.set(DIRTY_BIT_UNPACK_IMAGE_HEIGHT);
+    mDirtyBits.set(DIRTY_BIT_UNPACK_STATE);
 }
 
 GLint State::getUnpackImageHeight() const
@@ -1556,7 +1560,7 @@ GLint State::getUnpackImageHeight() const
 void State::setUnpackSkipImages(GLint skipImages)
 {
     mUnpack.skipImages = skipImages;
-    mDirtyBits.set(DIRTY_BIT_UNPACK_SKIP_IMAGES);
+    mDirtyBits.set(DIRTY_BIT_UNPACK_STATE);
 }
 
 GLint State::getUnpackSkipImages() const
@@ -1567,7 +1571,7 @@ GLint State::getUnpackSkipImages() const
 void State::setUnpackSkipRows(GLint skipRows)
 {
     mUnpack.skipRows = skipRows;
-    mDirtyBits.set(DIRTY_BIT_UNPACK_SKIP_ROWS);
+    mDirtyBits.set(DIRTY_BIT_UNPACK_STATE);
 }
 
 GLint State::getUnpackSkipRows() const
@@ -1578,7 +1582,7 @@ GLint State::getUnpackSkipRows() const
 void State::setUnpackSkipPixels(GLint skipPixels)
 {
     mUnpack.skipPixels = skipPixels;
-    mDirtyBits.set(DIRTY_BIT_UNPACK_SKIP_PIXELS);
+    mDirtyBits.set(DIRTY_BIT_UNPACK_STATE);
 }
 
 GLint State::getUnpackSkipPixels() const
@@ -2434,6 +2438,13 @@ Error State::clearUnclearedActiveTextures(const Context *context)
     }
 
     return NoError();
+}
+
+AttributesMask State::getAndResetDirtyCurrentValues() const
+{
+    AttributesMask retVal = mDirtyCurrentValues;
+    mDirtyCurrentValues.reset();
+    return retVal;
 }
 
 }  // namespace gl

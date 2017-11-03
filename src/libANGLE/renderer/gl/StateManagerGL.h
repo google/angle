@@ -353,6 +353,7 @@ class StateManagerGL final : angle::NonCopyable
     const bool mIsMultiviewEnabled;
 
     gl::State::DirtyBits mLocalDirtyBits;
+    gl::AttributesMask mLocalDirtyCurrentValues;
 
     // ANGLE_multiview dirty bits.
     angle::BitSet<MULTIVIEW_DIRTY_BIT_MAX> mMultiviewDirtyBits;
