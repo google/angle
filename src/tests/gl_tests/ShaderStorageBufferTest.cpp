@@ -134,6 +134,59 @@ TEST_P(ShaderStorageBufferTest31, ShaderStorageBufferReadWrite)
     EXPECT_GL_NO_ERROR();
 }
 
+// Test atomic memory functions.
+TEST_P(ShaderStorageBufferTest31, AtomicMemoryFunctions)
+{
+    ANGLE_SKIP_TEST_IF(IsAMD() && IsDesktopOpenGL() && IsWindows());
+    ANGLE_SKIP_TEST_IF(IsLinux() && IsIntel() && IsOpenGL());
+
+    const std::string &csSource =
+        R"(#version 310 es
+
+        layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
+        layout(binding = 1) buffer blockName {
+            uint data[2];
+        } instanceName;
+
+        void main()
+        {
+            instanceName.data[0] = 0u;
+            instanceName.data[1] = 0u;
+            atomicAdd(instanceName.data[0], 5u);
+            atomicMax(instanceName.data[1], 7u);
+
+        })";
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, csSource);
+
+    glUseProgram(program.get());
+
+    unsigned int bufferData[2] = {0u};
+    // Create shader storage buffer
+    GLBuffer shaderStorageBuffer;
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, shaderStorageBuffer);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(bufferData), nullptr, GL_STATIC_DRAW);
+
+    // Bind shader storage buffer
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, shaderStorageBuffer);
+
+    // Dispath compute
+    glDispatchCompute(1, 1, 1);
+
+    glFinish();
+
+    // Read back shader storage buffer
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, shaderStorageBuffer);
+    void *ptr = glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, sizeof(bufferData), GL_MAP_READ_BIT);
+    memcpy(bufferData, ptr, sizeof(bufferData));
+    glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+    EXPECT_EQ(5u, bufferData[0]);
+    EXPECT_EQ(7u, bufferData[1]);
+
+    EXPECT_GL_NO_ERROR();
+}
+
 ANGLE_INSTANTIATE_TEST(ShaderStorageBufferTest31, ES31_OPENGL(), ES31_OPENGLES());
 
 }  // namespace

@@ -635,6 +635,26 @@ void InsertBuiltInFunctions(sh::GLenum type,
     symbolTable.insertBuiltIn(ESSL3_1_BUILTINS, uint1, "atomicCounterIncrement", atomicCounter);
     symbolTable.insertBuiltIn(ESSL3_1_BUILTINS, uint1, "atomicCounterDecrement", atomicCounter);
 
+    // Insert all atomic memory functions
+    const TType *int1InOut  = TCache::getType(EbtInt, EvqInOut);
+    const TType *uint1InOut = TCache::getType(EbtUInt, EvqInOut);
+    symbolTable.insertBuiltIn(ESSL3_1_BUILTINS, uint1, "atomicAdd", uint1InOut, uint1);
+    symbolTable.insertBuiltIn(ESSL3_1_BUILTINS, int1, "atomicAdd", int1InOut, int1);
+    symbolTable.insertBuiltIn(ESSL3_1_BUILTINS, uint1, "atomicMin", uint1InOut, uint1);
+    symbolTable.insertBuiltIn(ESSL3_1_BUILTINS, int1, "atomicMin", int1InOut, int1);
+    symbolTable.insertBuiltIn(ESSL3_1_BUILTINS, uint1, "atomicMax", uint1InOut, uint1);
+    symbolTable.insertBuiltIn(ESSL3_1_BUILTINS, int1, "atomicMax", int1InOut, int1);
+    symbolTable.insertBuiltIn(ESSL3_1_BUILTINS, uint1, "atomicAnd", uint1InOut, uint1);
+    symbolTable.insertBuiltIn(ESSL3_1_BUILTINS, int1, "atomicAnd", int1InOut, int1);
+    symbolTable.insertBuiltIn(ESSL3_1_BUILTINS, uint1, "atomicOr", uint1InOut, uint1);
+    symbolTable.insertBuiltIn(ESSL3_1_BUILTINS, int1, "atomicOr", int1InOut, int1);
+    symbolTable.insertBuiltIn(ESSL3_1_BUILTINS, uint1, "atomicXor", uint1InOut, uint1);
+    symbolTable.insertBuiltIn(ESSL3_1_BUILTINS, int1, "atomicXor", int1InOut, int1);
+    symbolTable.insertBuiltIn(ESSL3_1_BUILTINS, uint1, "atomicExchange", uint1InOut, uint1);
+    symbolTable.insertBuiltIn(ESSL3_1_BUILTINS, int1, "atomicExchange", int1InOut, int1);
+    symbolTable.insertBuiltIn(ESSL3_1_BUILTINS, uint1, "atomicCompSwap", uint1InOut, uint1, uint1);
+    symbolTable.insertBuiltIn(ESSL3_1_BUILTINS, int1, "atomicCompSwap", int1InOut, int1, int1);
+
     const TType *gimage2D      = TCache::getType(EbtGImage2D);
     const TType *gimage3D      = TCache::getType(EbtGImage3D);
     const TType *gimage2DArray = TCache::getType(EbtGImage2DArray);

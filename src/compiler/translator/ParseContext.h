@@ -417,6 +417,7 @@ class TParseContext : angle::NonCopyable
     void checkImageMemoryAccessForBuiltinFunctions(TIntermAggregate *functionCall);
     void checkImageMemoryAccessForUserDefinedFunctions(const TFunction *functionDefinition,
                                                        const TIntermAggregate *functionCall);
+    void checkAtomicMemoryBuiltinFunctions(TIntermAggregate *functionCall);
     TIntermSequence *createEmptyArgumentsList();
 
     // fnCall is only storing the built-in op, and function name or constructor type. arguments

@@ -80,6 +80,11 @@
 1442 D3D11 : dEQP-GLES31.functional.compute.basic.ubo_to_ssbo_single_group = FAIL
 1442 D3D11 : dEQP-GLES31.functional.compute.basic.ubo_to_ssbo_multiple_invocations = FAIL
 1442 D3D11 : dEQP-GLES31.functional.compute.basic.ubo_to_ssbo_multiple_groups = FAIL
+1442 D3D11 : dEQP-GLES31.functional.compute.basic.shared_atomic_op_single_invocation = FAIL
+1442 D3D11 : dEQP-GLES31.functional.compute.basic.shared_atomic_op_single_group = FAIL
+1442 D3D11 : dEQP-GLES31.functional.compute.basic.shared_atomic_op_multiple_invocations = FAIL
+1442 D3D11 : dEQP-GLES31.functional.compute.basic.shared_atomic_op_multiple_groups = FAIL
+1442 D3D11 : dEQP-GLES31.functional.compute.shared_var.atomic.* = FAIL
 1442 D3D11 : dEQP-GLES31.functional.compute.shared_var.basic_type.* = FAIL
 1442 D3D11 : dEQP-GLES31.functional.compute.shared_var.work_group_size.* = FAIL
 1442 D3D11 : dEQP-GLES31.functional.atomic_counter.* = FAIL
@@ -1176,10 +1181,6 @@
 1442 OPENGL D3D11 : dEQP-GLES31.functional.compute.basic.write_multiple_unsized_arr_multiple_groups = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.compute.basic.ssbo_cmd_barrier_single = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.compute.basic.ssbo_cmd_barrier_multiple = FAIL
-1442 OPENGL D3D11 : dEQP-GLES31.functional.compute.basic.shared_atomic_op_single_invocation = FAIL
-1442 OPENGL D3D11 : dEQP-GLES31.functional.compute.basic.shared_atomic_op_single_group = FAIL
-1442 OPENGL D3D11 : dEQP-GLES31.functional.compute.basic.shared_atomic_op_multiple_invocations = FAIL
-1442 OPENGL D3D11 : dEQP-GLES31.functional.compute.basic.shared_atomic_op_multiple_groups = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.compute.basic.copy_image_to_ssbo_large = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.compute.basic.copy_ssbo_to_image_large = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.compute.basic.image_barrier_single = FAIL
@@ -1188,7 +1189,6 @@
 1442 OPENGL D3D11 : dEQP-GLES31.functional.compute.basic.atomic_counter_single_group = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.compute.basic.atomic_counter_multiple_invocations = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.compute.basic.atomic_counter_multiple_groups = FAIL
-1442 OPENGL D3D11 : dEQP-GLES31.functional.compute.shared_var.atomic.* = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.compute.indirect_dispatch.* = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.ssbo.* = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.ubo.2_level_array.* = FAIL

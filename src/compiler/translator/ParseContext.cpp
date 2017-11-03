@@ -32,6 +32,22 @@ namespace
 
 const int kWebGLMaxStructNesting = 4;
 
+const std::array<const char *, 8> kAtomicBuiltin = {{"atomicAdd", "atomicMin", "atomicMax",
+                                                     "atomicAnd", "atomicOr", "atomicXor",
+                                                     "atomicExchange", "atomicCompSwap"}};
+
+bool IsAtomicBuiltin(const TString &name)
+{
+    for (size_t i = 0; i < kAtomicBuiltin.size(); ++i)
+    {
+        if (name.compare(kAtomicBuiltin[i]) == 0)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
 bool ContainsSampler(const TStructure *structType);
 
 bool ContainsSampler(const TType &type)
@@ -114,6 +130,16 @@ GLuint GetGeometryShaderInputArraySize(TLayoutPrimitiveType primitiveType)
             UNREACHABLE();
             return 0u;
     }
+}
+
+bool IsBufferOrSharedVariable(TIntermTyped *var)
+{
+    if (var->isInterfaceBlock() || var->getQualifier() == EvqBuffer ||
+        var->getQualifier() == EvqShared)
+    {
+        return true;
+    }
+    return false;
 }
 
 }  // namespace
@@ -5592,6 +5618,35 @@ void TParseContext::checkTextureOffsetConst(TIntermAggregate *functionCall)
     }
 }
 
+void TParseContext::checkAtomicMemoryBuiltinFunctions(TIntermAggregate *functionCall)
+{
+    const TString &name = functionCall->getFunctionSymbolInfo()->getName();
+    if (IsAtomicBuiltin(name))
+    {
+        TIntermSequence *arguments = functionCall->getSequence();
+        TIntermTyped *memNode      = (*arguments)[0]->getAsTyped();
+
+        if (IsBufferOrSharedVariable(memNode))
+        {
+            return;
+        }
+
+        while (memNode->getAsBinaryNode())
+        {
+            memNode = memNode->getAsBinaryNode()->getLeft();
+            if (IsBufferOrSharedVariable(memNode))
+            {
+                return;
+            }
+        }
+
+        error(memNode->getLine(),
+              "The value passed to the mem argument of an atomic memory function does not "
+              "correspond to a buffer or shared variable.",
+              functionCall->getFunctionSymbolInfo()->getName().c_str());
+    }
+}
+
 // GLSL ES 3.10 Revision 4, 4.9 Memory Access Qualifiers
 void TParseContext::checkImageMemoryAccessForBuiltinFunctions(TIntermAggregate *functionCall)
 {
@@ -5828,6 +5883,7 @@ TIntermTyped *TParseContext::addNonConstructorFunctionCall(TFunction *fnCall,
                     checkTextureOffsetConst(callNode);
                     checkTextureGather(callNode);
                     checkImageMemoryAccessForBuiltinFunctions(callNode);
+                    checkAtomicMemoryBuiltinFunctions(callNode);
                 }
                 else
                 {
