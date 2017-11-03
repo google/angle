@@ -22,6 +22,30 @@
       "revId": "5b65cf702f087ee217076132dd1581748274af9a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d702be90_889ba519",
+        "filename": "src/libANGLE/renderer/vulkan/gen_vk_format_table.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-03T03:00:27Z",
+      "side": 1,
+      "message": "It can\u0027t be a 3 way if, if both formats are emulated. I played around with this a fair bit but wasn\u0027t satisfied how the code panned out. going to leave it as is if that\u0027s okay.",
+      "parentUuid": "4fdc547c_d46ea1bf",
+      "range": {
+        "startLine": 95,
+        "startChar": 0,
+        "endLine": 96,
+        "endChar": 45
+      },
+      "revId": "5b65cf702f087ee217076132dd1581748274af9a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
