@@ -2527,17 +2527,25 @@ bool ValidateDrawBase(ValidationContext *context, GLenum mode, GLsizei count)
 
     const State &state = context->getGLState();
 
-    // Check for mapped buffers
-    if (state.hasMappedBuffer(GL_ARRAY_BUFFER))
+    const Extensions &extensions = context->getExtensions();
+
+    // WebGL buffers cannot be mapped/unmapped because the MapBufferRange, FlushMappedBufferRange,
+    // and UnmapBuffer entry points are removed from the WebGL 2.0 API.
+    // https://www.khronos.org/registry/webgl/specs/latest/2.0/#5.14
+    if (!extensions.webglCompatibility)
     {
-        context->handleError(InvalidOperation());
-        return false;
+        // Check for mapped buffers
+        // TODO(jmadill): Optimize this check for non - WebGL contexts.
+        if (state.hasMappedBuffer(GL_ARRAY_BUFFER))
+        {
+            context->handleError(InvalidOperation());
+            return false;
+        }
     }
 
     // Note: these separate values are not supported in WebGL, due to D3D's limitations. See
     // Section 6.10 of the WebGL 1.0 spec.
     Framebuffer *framebuffer = state.getDrawFramebuffer();
-    const Extensions &extensions = context->getExtensions();
     if (context->getLimitations().noSeparateStencilRefsAndMasks || extensions.webglCompatibility)
     {
         const FramebufferAttachment *dsAttachment =
@@ -2801,11 +2809,18 @@ bool ValidateDrawElementsCommon(ValidationContext *context,
         return false;
     }
 
-    // Check for mapped buffers
-    if (state.hasMappedBuffer(GL_ELEMENT_ARRAY_BUFFER))
+    // WebGL buffers cannot be mapped/unmapped because the MapBufferRange, FlushMappedBufferRange,
+    // and UnmapBuffer entry points are removed from the WebGL 2.0 API.
+    // https://www.khronos.org/registry/webgl/specs/latest/2.0/#5.14
+    if (!context->getExtensions().webglCompatibility)
     {
-        context->handleError(InvalidOperation() << "Index buffer is mapped.");
-        return false;
+        // Check for mapped buffers
+        // TODO(jmadill): Optimize this check for non - WebGL contexts.
+        if (state.hasMappedBuffer(GL_ELEMENT_ARRAY_BUFFER))
+        {
+            context->handleError(InvalidOperation() << "Index buffer is mapped.");
+            return false;
+        }
     }
 
     const gl::VertexArray *vao     = state.getVertexArray();
