@@ -22,6 +22,30 @@
       "revId": "c048cc8696adc6ca9379218c8eaa64085f104792",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "872ee94a_f1cd7f67",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 392,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-03T10:33:39Z",
+      "side": 1,
+      "message": "No, it should be easy enough to put this in a separate helper. I\u0027ll do that.",
+      "parentUuid": "82fc52b1_7115169b",
+      "range": {
+        "startLine": 336,
+        "startChar": 0,
+        "endLine": 392,
+        "endChar": 5
+      },
+      "revId": "c048cc8696adc6ca9379218c8eaa64085f104792",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
