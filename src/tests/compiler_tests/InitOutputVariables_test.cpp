@@ -162,7 +162,7 @@ class FindStructByName final : public TIntermTraverser
             return;
         }
 
-        TStructure *structure = symbol->getType().getStruct();
+        TStructure *structure = symbol->getTypePointer()->getStruct();
 
         if (structure != nullptr && structure->name() == mStructName)
         {

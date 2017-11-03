@@ -878,11 +878,13 @@ void OutputHLSL::visitSymbol(TIntermSymbol *node)
     }
     else
     {
+        const TType &nodeType = node->getType();
         TQualifier qualifier = node->getQualifier();
+
+        ensureStructDefined(nodeType);
 
         if (qualifier == EvqUniform)
         {
-            const TType &nodeType                 = node->getType();
             const TInterfaceBlock *interfaceBlock = nodeType.getInterfaceBlock();
 
             if (interfaceBlock)
@@ -893,8 +895,6 @@ void OutputHLSL::visitSymbol(TIntermSymbol *node)
             {
                 mReferencedUniforms[name] = node;
             }
-
-            ensureStructDefined(nodeType);
 
             out << DecorateVariableIfNeeded(node->getName());
         }
@@ -1654,7 +1654,7 @@ TString OutputHLSL::samplerNamePrefixFromStruct(TIntermTyped *node)
         }
         case EOpIndexDirectStruct:
         {
-            TStructure *s       = nodeBinary->getLeft()->getAsTyped()->getType().getStruct();
+            const TStructure *s = nodeBinary->getLeft()->getAsTyped()->getType().getStruct();
             int index           = nodeBinary->getRight()->getAsConstantUnion()->getIConst(0);
             const TField *field = s->fields()[index];
 
@@ -1821,7 +1821,8 @@ bool OutputHLSL::visitDeclaration(Visit visit, TIntermDeclaration *node)
             else if (variable->getAsSymbolNode() &&
                      variable->getAsSymbolNode()->getSymbol() == "")  // Type (struct) declaration
             {
-                // Already added to constructor map
+                ASSERT(variable->getBasicType() == EbtStruct);
+                // ensureStructDefined has already been called.
             }
             else
                 UNREACHABLE();
@@ -1992,45 +1993,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
             return false;
         }
         case EOpConstruct:
-            if (node->getBasicType() == EbtStruct)
-            {
-                if (node->getType().isArray())
-                {
-                    UNIMPLEMENTED();
-                }
-                const TString &structName = StructNameString(*node->getType().getStruct());
-                mStructureHLSL->addConstructor(node->getType(), structName, node->getSequence());
-                outputTriplet(out, visit, (structName + "_ctor(").c_str(), ", ", ")");
-            }
-            else
-            {
-                const char *name = "";
-                if (node->getType().getNominalSize() == 1)
-                {
-                    switch (node->getBasicType())
-                    {
-                        case EbtFloat:
-                            name = "vec1";
-                            break;
-                        case EbtInt:
-                            name = "ivec1";
-                            break;
-                        case EbtUInt:
-                            name = "uvec1";
-                            break;
-                        case EbtBool:
-                            name = "bvec1";
-                            break;
-                        default:
-                            UNREACHABLE();
-                    }
-                }
-                else
-                {
-                    name = node->getType().getBuiltInTypeNameString();
-                }
-                outputConstructor(out, visit, node->getType(), name, node->getSequence());
-            }
+            outputConstructor(out, visit, node);
             break;
         case EOpEqualComponentWise:
             outputTriplet(out, visit, "(", " == ", ")");
@@ -2742,21 +2705,23 @@ TString OutputHLSL::initializer(const TType &type)
     return "{" + string + "}";
 }
 
-void OutputHLSL::outputConstructor(TInfoSinkBase &out,
-                                   Visit visit,
-                                   const TType &type,
-                                   const char *name,
-                                   const TIntermSequence *parameters)
+void OutputHLSL::outputConstructor(TInfoSinkBase &out, Visit visit, TIntermAggregate *node)
 {
-    if (type.isArray())
-    {
-        UNIMPLEMENTED();
-    }
+    // Array constructors should have been already pruned from the code.
+    ASSERT(!node->getType().isArray());
 
     if (visit == PreVisit)
     {
-        TString constructorName = mStructureHLSL->addConstructor(type, name, parameters);
-
+        TString constructorName;
+        if (node->getBasicType() == EbtStruct)
+        {
+            constructorName = mStructureHLSL->addStructConstructor(*node->getType().getStruct());
+        }
+        else
+        {
+            constructorName =
+                mStructureHLSL->addBuiltInConstructor(node->getType(), node->getSequence());
+        }
         out << constructorName << "(";
     }
     else if (visit == InVisit)
@@ -2778,7 +2743,7 @@ const TConstantUnion *OutputHLSL::writeConstantUnion(TInfoSinkBase &out,
     const TStructure *structure = type.getStruct();
     if (structure)
     {
-        out << StructNameString(*structure) + "_ctor(";
+        out << mStructureHLSL->addStructConstructor(*structure) << "(";
 
         const TFieldList &fields = structure->fields();
 
@@ -3105,11 +3070,11 @@ TString OutputHLSL::addArrayConstructIntoFunction(const TType &type)
 
 void OutputHLSL::ensureStructDefined(const TType &type)
 {
-    TStructure *structure = type.getStruct();
-
+    const TStructure *structure = type.getStruct();
     if (structure)
     {
-        mStructureHLSL->addConstructor(type, StructNameString(*structure), nullptr);
+        ASSERT(type.getBasicType() == EbtStruct);
+        mStructureHLSL->ensureStructDefined(*structure);
     }
 }
 

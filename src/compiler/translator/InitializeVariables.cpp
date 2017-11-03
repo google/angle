@@ -38,7 +38,7 @@ void AddStructZeroInitSequence(const TIntermTyped *initializedNode,
                                TIntermSequence *initSequenceOut)
 {
     ASSERT(initializedNode->getBasicType() == EbtStruct);
-    TStructure *structType = initializedNode->getType().getStruct();
+    const TStructure *structType = initializedNode->getType().getStruct();
     for (int i = 0; i < static_cast<int>(structType->fields().size()); ++i)
     {
         TIntermBinary *element = new TIntermBinary(EOpIndexDirectStruct,

@@ -817,8 +817,8 @@ TEST_F(DebugShaderPrecisionTest, ConstructorRounding)
     ASSERT_TRUE(foundInAllGLSLCode("v1 = angle_frm(vec4(_uu1, _uu2, angle_frl(_uu3), _uu4))"));
     ASSERT_TRUE(foundInAllGLSLCode("v2 = angle_frm(vec4(_uuiv))"));
 
-    ASSERT_TRUE(foundInHLSLCode("v1 = angle_frm(vec4(_u1, _u2, angle_frl(_u3), _u4))"));
-    ASSERT_TRUE(foundInHLSLCode("v2 = angle_frm(vec4(_uiv))"));
+    ASSERT_TRUE(foundInHLSLCode("v1 = angle_frm(vec4_ctor(_u1, _u2, angle_frl(_u3), _u4))"));
+    ASSERT_TRUE(foundInHLSLCode("v2 = angle_frm(vec4_ctor(_uiv))"));
 }
 
 TEST_F(DebugShaderPrecisionTest, StructConstructorNoRounding)

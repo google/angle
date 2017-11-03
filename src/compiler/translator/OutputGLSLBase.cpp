@@ -306,7 +306,7 @@ void TOutputGLSLBase::writeVariableType(const TType &type)
     // Declare the struct if we have not done so already.
     if (type.getBasicType() == EbtStruct && !structDeclared(type.getStruct()))
     {
-        TStructure *structure = type.getStruct();
+        const TStructure *structure = type.getStruct();
 
         declareStruct(structure);
 

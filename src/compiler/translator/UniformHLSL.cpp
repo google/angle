@@ -38,7 +38,7 @@ static TString InterfaceBlockFieldTypeString(const TField &field, TLayoutBlockSt
     const TType &fieldType                   = *field.type();
     const TLayoutMatrixPacking matrixPacking = fieldType.getLayoutQualifier().matrixPacking;
     ASSERT(matrixPacking != EmpUnspecified);
-    TStructure *structure = fieldType.getStruct();
+    const TStructure *structure = fieldType.getStruct();
 
     if (fieldType.isMatrix())
     {

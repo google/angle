@@ -383,7 +383,8 @@ class TType
 
     bool canBeConstructed() const;
 
-    TStructure *getStruct() const { return structure; }
+    TStructure *getStruct() { return structure; }
+    const TStructure *getStruct() const { return structure; }
     void setStruct(TStructure *s)
     {
         if (structure != s)
