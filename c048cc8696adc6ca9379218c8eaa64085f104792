@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "82fc52b1_7115169b",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 392,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-03T10:24:55Z",
+      "side": 1,
+      "message": "would it be hard to make this a helper method?",
+      "range": {
+        "startLine": 336,
+        "startChar": 0,
+        "endLine": 392,
+        "endChar": 5
+      },
+      "revId": "c048cc8696adc6ca9379218c8eaa64085f104792",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
