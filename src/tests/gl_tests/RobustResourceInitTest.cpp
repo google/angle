@@ -364,7 +364,7 @@ TEST_P(RobustResourceInitTest, BufferData)
 // Regression test for passing a zero size init buffer with the extension.
 TEST_P(RobustResourceInitTest, BufferDataZeroSize)
 {
-    ANGLE_SKIP_TEST_IF(!hasGLExtension())
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
 
     GLBuffer buffer;
     glBindBuffer(GL_ARRAY_BUFFER, buffer);

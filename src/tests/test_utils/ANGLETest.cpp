@@ -127,6 +127,18 @@ GLColor::GLColor(GLuint colorValue) : R(0), G(0), B(0), A(0)
     memcpy(&R, &colorValue, sizeof(GLuint));
 }
 
+testing::AssertionResult GLColor::ExpectNear(const GLColor &expected, const GLColor &err) const
+{
+    testing::AssertionResult result(
+        abs(int(expected.R) - this->R) <= err.R && abs(int(expected.G) - this->G) <= err.G &&
+        abs(int(expected.B) - this->B) <= err.B && abs(int(expected.A) - this->A) <= err.A);
+    if (!bool(result))
+    {
+        result << "Expected " << expected << "+/-" << err << ", was " << *this;
+    }
+    return result;
+}
+
 angle::Vector4 GLColor::toNormalizedVector() const
 {
     return angle::Vector4(ColorNorm(R), ColorNorm(G), ColorNorm(B), ColorNorm(A));
