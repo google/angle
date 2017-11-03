@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "4b1822ba_7497d853",
+        "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 376,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-11-03T05:33:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0ba5e1be_d38a8202",
+      "range": {
+        "startLine": 376,
+        "startChar": 8,
+        "endLine": 376,
+        "endChar": 45
+      },
+      "revId": "7287b0c49dd9d882dc2849b5852bc9749c388f53",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b3278db7_07004a0e",
         "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
         "patchSetId": 6
@@ -45,6 +69,30 @@
       "revId": "7287b0c49dd9d882dc2849b5852bc9749c388f53",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7dfe40dc_616a10dd",
+        "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 385,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-11-03T05:33:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b3278db7_07004a0e",
+      "range": {
+        "startLine": 378,
+        "startChar": 0,
+        "endLine": 385,
+        "endChar": 9
+      },
+      "revId": "7287b0c49dd9d882dc2849b5852bc9749c388f53",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "83361c4c_3d644cb3",
+        "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 387,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-11-03T05:33:27Z",
+      "side": 1,
+      "message": "context-\u003ehandleError() cant\u0027t be used here because context is const. I have no idea how to handle this error. @Jamie, can you give me some suggestion?",
+      "parentUuid": "6cd9fa1b_60e378e8",
+      "range": {
+        "startLine": 387,
+        "startChar": 8,
+        "endLine": 387,
+        "endChar": 99
+      },
+      "revId": "7287b0c49dd9d882dc2849b5852bc9749c388f53",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "47a96dec_2b400cff",
         "filename": "src/tests/gl_tests/FramebufferTest.cpp",
         "patchSetId": 6
@@ -82,6 +154,30 @@
       "writtenOn": "2017-11-02T11:55:35Z",
       "side": 1,
       "message": "is this still necessary?",
+      "range": {
+        "startLine": 673,
+        "startChar": 0,
+        "endLine": 676,
+        "endChar": 5
+      },
+      "revId": "7287b0c49dd9d882dc2849b5852bc9749c388f53",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "de53af71_3d14d142",
+        "filename": "src/tests/gl_tests/FramebufferTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 676,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-11-03T05:33:27Z",
+      "side": 1,
+      "message": "The dummy texture added to colorAttachmentsForRender in FramebufferD3D.cpp is a temp variable, and it\u0027s not sync to state of framebuffer. So OMSetRenderTarget in StateManager11.cpp still set 0 render target.",
+      "parentUuid": "47a96dec_2b400cff",
       "range": {
         "startLine": 673,
         "startChar": 0,
