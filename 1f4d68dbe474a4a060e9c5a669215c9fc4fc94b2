@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b835967b_15654de1",
+        "filename": "src/tests/deqp_support/deqp_gles3_test_expectations.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-04T12:19:34Z",
+      "side": 1,
+      "message": "nit: these can be narrowed to D3D11 NVIDIA, you can even put the device ID although that would be the first use in this file.",
+      "range": {
+        "startLine": 86,
+        "startChar": 5,
+        "endLine": 86,
+        "endChar": 11
+      },
+      "revId": "1f4d68dbe474a4a060e9c5a669215c9fc4fc94b2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
