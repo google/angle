@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a8db45f_ff768f2e",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2872,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-11-04T01:57:22Z",
+      "side": 1,
+      "message": "Seems like the only difference between this function and gatherUniformBlockInfo is getUniformBlocks vs getShaderStorageBlocks. Maybe make these 2 a parameter to 1 function?",
+      "range": {
+        "startLine": 2872,
+        "startChar": 14,
+        "endLine": 2872,
+        "endChar": 42
+      },
+      "revId": "dd3a2c8a0ba996641d35e6370e1a7c65775033b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "372cc339_e5fbf1b1",
+        "filename": "src/libANGLE/UniformLinker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 606,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-11-04T01:57:22Z",
+      "side": 1,
+      "message": "I think the intended usage is clearer if you use * instead of \u0026.\nHave you considered to store some kind of smart pointer in mShaderBlocks, so that we won\u0027t have dangling references and the ownership of blocks will be clear?\nNow it\u0027s relatively safe, since all instances of InterfaceBlockLinker are local to a function. But you can\u0027t keep it this way, can you?",
+      "range": {
+        "startLine": 606,
+        "startChar": 81,
+        "endLine": 606,
+        "endChar": 82
+      },
+      "revId": "dd3a2c8a0ba996641d35e6370e1a7c65775033b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fc388346_928b5f25",
+        "filename": "src/libANGLE/UniformLinker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 635,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-11-04T01:57:22Z",
+      "side": 1,
+      "message": "Old logic called defineInterfaceBlock unconditionally.\nAnd visitedList count was checked only for fragment blocks.\nI think this may work correctly only if you call addShaderBlocks first for vertex and only then for fragment. There is no way to enforce this condition with the current API.",
+      "range": {
+        "startLine": 635,
+        "startChar": 12,
+        "endLine": 635,
+        "endChar": 16
+      },
+      "revId": "dd3a2c8a0ba996641d35e6370e1a7c65775033b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4f41d24f_7c786de4",
+        "filename": "src/libANGLE/UniformLinker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 645,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-11-04T01:57:22Z",
+      "side": 1,
+      "message": "Old name was defineUniformBlockMembers, and I think the new function can still handle only uniforms. See my next comment, I think you\u0027ll only need this function in Uniform sub-class.",
+      "range": {
+        "startLine": 645,
+        "startChar": 27,
+        "endLine": 645,
+        "endChar": 45
+      },
+      "revId": "dd3a2c8a0ba996641d35e6370e1a7c65775033b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "755afa5d_e87d5e8c",
+        "filename": "src/libANGLE/UniformLinker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 698,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-11-04T01:57:22Z",
+      "side": 1,
+      "message": "This check is not as straightforward as \"interfaceBlock.blockType \u003d\u003d sh::BlockType::BLOCK_UNIFORM\". I prefer the old check and assert(mUniformsOut) in it if you\u0027d like. Ideally, you\u0027d use inheritance to distinguish between UniformBlocks and ShaderStorageBlocks, instead of relying on passing mUniformsOut \u003d\u003d null parameter in constructor.",
+      "range": {
+        "startLine": 698,
+        "startChar": 8,
+        "endLine": 698,
+        "endChar": 20
+      },
+      "revId": "dd3a2c8a0ba996641d35e6370e1a7c65775033b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cb9799a0_5e85d417",
+        "filename": "src/libANGLE/UniformLinker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 753,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-11-04T01:57:22Z",
+      "side": 1,
+      "message": "Can you put the following block in a helper function and call it from the array for() loop?",
+      "range": {
+        "startLine": 753,
+        "startChar": 4,
+        "endLine": 753,
+        "endChar": 8
+      },
+      "revId": "dd3a2c8a0ba996641d35e6370e1a7c65775033b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
