@@ -2,8 +2,7 @@
 
 ## Google Style Guide
 
-We generally use the [Google C++ Style Guide]
-(http://google-styleguide.googlecode.com/svn/trunk/cppguide.xml) as a basis for
+We generally use the [Google C++ Style Guide](http://google-styleguide.googlecode.com/svn/trunk/cppguide.xml) as a basis for
 our Coding Standard, however we will deviate from it in a few areas, as noted
 below.
 
@@ -39,8 +38,7 @@ This will catch most of the trivial formatting errors and save you time.
 *   {DO} use nullptr (instead of 0 or NULL) for pointers.
 *   {DO} use size\_t for loop iterators and size values.
 *   {DO} use uint8\_t pointers instead of void pointers to denote binary data.
-*   {DO} use C++11 according to the [Chromium guide on C++11]
-    (http://chromium-cpp.appspot.com/).
+*   {DO} use C++11 according to the [Chromium guide on C++11](http://chromium-cpp.appspot.com/).
 
 ### [Naming ](http://google-styleguide.googlecode.com/svn/trunk/cppguide.xml#Naming)
 
@@ -54,7 +52,7 @@ This will catch most of the trivial formatting errors and save you time.
 
 #### Directory Names
 *   Directory names should be all lowercase, unless following an externally
-    imposed capitalization (eg include/EGL, or src/libGLESv2, etc)
+    imposed capitalization (eg `include/EGL`, or `src/libGLESv2`, etc)
 
 #### Variable Names
 
@@ -66,8 +64,7 @@ guidelines.
 underscore and use CamelCase.
 * global variables (if they must be used): use a **`g_`** prefix.
 * {DEV} variable names: start with lower case and use CamelCase (chosen for consistency)
-* {DEV} function names: Member functions start with lower case and use CamelCase. Non-member functions start with capital letter and
-use CamelCase (chosen for consistency)
+* {DEV} function names: Member functions start with lower case and use CamelCase. Non-member functions start with capital letter and use CamelCase (chosen for consistency)
 * Constants: start with a **`k`** and use CamelCase
 * namespaces: use all lower case
 * Enum Names - use class enums, and the values should be uppercase with underscores.
@@ -91,7 +88,7 @@ use CamelCase (chosen for consistency)
 
 *   {DEV} Avoid excessively long lines. Please keep lines under 100 columns
     long.
-*   Use unix-style newlines.
+*   Use Unix-style newlines.
 *   {DO} use only spaces. No tab characters. Configure your editor to emit
     spaces when you hit the TAB-key.
 *   {DEV} indent 4 spaces at a time.
