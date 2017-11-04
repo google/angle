@@ -82,6 +82,14 @@
 
 // TODO(jmadill, cwallez): triage the failures below into permanent and temporary failures
 
+// Quadro P400
+2222 D3D11 : dEQP-GLES3.functional.shaders.functions.control_flow.return_in_nested_loop_fragment
+2222 D3D11 : dEQP-GLES3.functional.shaders.functions.control_flow.return_in_nested_loop_vertex
+2222 D3D11 : dEQP-GLES3.functional.texture.mipmap.2d.min_lod.linear_nearest
+2222 D3D11 : dEQP-GLES3.functional.texture.mipmap.2d.min_lod.nearest_nearest
+2222 D3D11 : dEQP-GLES3.functional.texture.mipmap.3d.min_lod.linear_nearest
+2222 D3D11 : dEQP-GLES3.functional.texture.mipmap.3d.min_lod.nearest_nearest
+
 // Failing everywhere
 1101 DEBUG RELEASE : dEQP-GLES3.functional.negative_api.texture.compressedtexsubimage2d = FAIL
 1101 DEBUG RELEASE : dEQP-GLES3.functional.negative_api.texture.compressedtexsubimage3d = FAIL
