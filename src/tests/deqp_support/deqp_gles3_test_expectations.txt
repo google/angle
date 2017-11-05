@@ -83,12 +83,14 @@
 // TODO(jmadill, cwallez): triage the failures below into permanent and temporary failures
 
 // Quadro P400
-2222 D3D11 : dEQP-GLES3.functional.shaders.functions.control_flow.return_in_nested_loop_fragment
-2222 D3D11 : dEQP-GLES3.functional.shaders.functions.control_flow.return_in_nested_loop_vertex
-2222 D3D11 : dEQP-GLES3.functional.texture.mipmap.2d.min_lod.linear_nearest
-2222 D3D11 : dEQP-GLES3.functional.texture.mipmap.2d.min_lod.nearest_nearest
-2222 D3D11 : dEQP-GLES3.functional.texture.mipmap.3d.min_lod.linear_nearest
-2222 D3D11 : dEQP-GLES3.functional.texture.mipmap.3d.min_lod.nearest_nearest
+// TODO(jmadill): Narrow to P400 device only: 0x1CB3.
+2222 D3D11 NVIDIA : dEQP-GLES3.functional.shaders.functions.control_flow.return_in_nested_loop_fragment = FAIL
+2222 D3D11 NVIDIA : dEQP-GLES3.functional.shaders.functions.control_flow.return_in_nested_loop_vertex = FAIL
+2222 D3D11 NVIDIA : dEQP-GLES3.functional.texture.mipmap.2d.min_lod.linear_nearest = FAIL
+2222 D3D11 NVIDIA : dEQP-GLES3.functional.texture.mipmap.2d.min_lod.nearest_nearest = FAIL
+2222 D3D11 NVIDIA : dEQP-GLES3.functional.texture.mipmap.3d.min_lod.linear_nearest = FAIL
+2222 D3D11 NVIDIA : dEQP-GLES3.functional.texture.mipmap.3d.min_lod.nearest_nearest = FAIL
+2222 LINUX NVIDIA : dEQP-GLES3.functional.fbo.completeness.samples.rbo2_rbo2_rbo0 = FAIL
 
 // Failing everywhere
 1101 DEBUG RELEASE : dEQP-GLES3.functional.negative_api.texture.compressedtexsubimage2d = FAIL

@@ -277,7 +277,7 @@ bool GPUTestBotConfig::Matches(const GPUTestConfig& config) const {
   if (config.gpu_vendor().size() > 0) {
     bool contained = false;
     for (size_t i = 0; i < config.gpu_vendor().size(); ++i) {
-      if (config.gpu_vendor()[i] == gpu_vendor()[0]) {
+      if (!gpu_vendor().empty() && config.gpu_vendor()[i] == gpu_vendor()[0]) {
         contained = true;
         break;
       }
