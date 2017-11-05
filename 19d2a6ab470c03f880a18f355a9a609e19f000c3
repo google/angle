@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "504dcc79_350c44bf",
+        "filename": "include/EGL/eglext.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 606,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-05T15:48:32Z",
+      "side": 1,
+      "message": "we can\u0027t commit this, the egl header is pulled verbatim from Khronos. Can you explain what bug you were working around and we can find another solution? Or, if this was just an accident from work in progress code, you can simply revert it.",
+      "range": {
+        "startLine": 606,
+        "startChar": 0,
+        "endLine": 606,
+        "endChar": 1
+      },
+      "revId": "19d2a6ab470c03f880a18f355a9a609e19f000c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "60ec982a_73bb1c9f",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-05T15:48:32Z",
+      "side": 1,
+      "message": "tiny nit: just to keep this with ANGLE style, use (A \u0026 B) !\u003d 0;",
+      "range": {
+        "startLine": 182,
+        "startChar": 11,
+        "endLine": 182,
+        "endChar": 15
+      },
+      "revId": "19d2a6ab470c03f880a18f355a9a609e19f000c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "75af9ba0_4a3c1572",
+        "filename": "src/libANGLE/renderer/gl/egl/DisplayEGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-05T15:48:32Z",
+      "side": 1,
+      "message": "make sure to run git cl format again, feels like this might fit on one line. Also see other comment, since we always support createContext you can try making this an ASSERT.",
+      "range": {
+        "startLine": 103,
+        "startChar": 4,
+        "endLine": 103,
+        "endChar": 17
+      },
+      "revId": "19d2a6ab470c03f880a18f355a9a609e19f000c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1ee3966a_68863039",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 788,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-05T15:48:32Z",
+      "side": 1,
+      "message": "I think you can remove this, we always support createContext. Can you try making this an ASSERT with a comment that we need it for createContext?",
+      "range": {
+        "startLine": 788,
+        "startChar": 19,
+        "endLine": 788,
+        "endChar": 33
+      },
+      "revId": "19d2a6ab470c03f880a18f355a9a609e19f000c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
