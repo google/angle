@@ -187,6 +187,30 @@
       "revId": "7287b0c49dd9d882dc2849b5852bc9749c388f53",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ad444aa0_aa53055f",
+        "filename": "src/tests/gl_tests/FramebufferTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 676,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-05T23:49:51Z",
+      "side": 1,
+      "message": "I was unable to reproduce this when I downloaded your patch and tried it locally. I think you could be right in some cases. If you remove this, do you see the warning? We might need a better repro case.",
+      "parentUuid": "de53af71_3d14d142",
+      "range": {
+        "startLine": 673,
+        "startChar": 0,
+        "endLine": 676,
+        "endChar": 5
+      },
+      "revId": "7287b0c49dd9d882dc2849b5852bc9749c388f53",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
