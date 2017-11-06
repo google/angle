@@ -143,6 +143,30 @@
     },
     {
       "key": {
+        "uuid": "e79b8e81_24587fc2",
+        "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 387,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-06T14:24:04Z",
+      "side": 1,
+      "message": "Just use ANGLE_SWALLOW_ERR in these cases, and leave a TODO assigned to me.",
+      "parentUuid": "83361c4c_3d644cb3",
+      "range": {
+        "startLine": 387,
+        "startChar": 8,
+        "endLine": 387,
+        "endChar": 99
+      },
+      "revId": "7287b0c49dd9d882dc2849b5852bc9749c388f53",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "47a96dec_2b400cff",
         "filename": "src/tests/gl_tests/FramebufferTest.cpp",
         "patchSetId": 6
@@ -250,6 +274,30 @@
       "side": 1,
       "message": "Thank you, I was trying with the Debug version. I\u0027ll try again with Release.",
       "parentUuid": "41c8f5d4_5d2fe285",
+      "range": {
+        "startLine": 673,
+        "startChar": 0,
+        "endLine": 676,
+        "endChar": 5
+      },
+      "revId": "7287b0c49dd9d882dc2849b5852bc9749c388f53",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "383bf09f_ed925aec",
+        "filename": "src/tests/gl_tests/FramebufferTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 676,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-06T14:24:04Z",
+      "side": 1,
+      "message": "OK, thanks, I\u0027ve figured it out. When I wrote https://chromium-review.googlesource.com/c/angle/angle/+/578369 , I forgot to change on line in Renderer11.cpp. In Renderer11::initialize, look for ANGLE_SUPPRESS_D3D11_HAZARD_WARNINGS. This check should be changed FROM debug-only (defined(_DEBUG)) to check at runtime if the layers were enabled mCreateDebugDevice. Then you will not see the runtime warning at all.",
+      "parentUuid": "34fc658a_58ef32c4",
       "range": {
         "startLine": 673,
         "startChar": 0,
