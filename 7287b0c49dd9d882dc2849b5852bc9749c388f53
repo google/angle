@@ -211,6 +211,30 @@
       "revId": "7287b0c49dd9d882dc2849b5852bc9749c388f53",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "41c8f5d4_5d2fe285",
+        "filename": "src/tests/gl_tests/FramebufferTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 676,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-11-06T05:11:57Z",
+      "side": 1,
+      "message": "Hi Jamie, this warning can be reproduced on release version on Intel driver \u003c 4815. On latest driver or debug version, it could pass without warning.\nIf I remove the codes, a d3d warning is throwned as the following:\n\n..\\Release_x64\u003eangle_end2end_tests.exe --gtest_filter\u003dFramebufferTest_ES31.RenderingLimitToDefaultFBOSizeWithNoAttachments/ES3_1_D3D11\n[\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d] Running 1 test from 1 test case.\n[----------] Global test environment set-up.\n[----------] 1 test from FramebufferTest_ES31\n[ RUN      ] FramebufferTest_ES31.RenderingLimitToDefaultFBOSizeWithNoAttachments/ES3_1_D3D11\nMessage 0: ID3D11DeviceContext::Draw: The Pixel Shader expects a Render Target View bound to slot 0, but none is bound. This is OK, as writes of an unbound Render Target View are discarded. It is also possible the developer knows the data will not be used anyway. This is only a problem if the developer actually intended to bind a Render Target View here.\nMessage 1: ID3D11DeviceContext::Draw: The Pixel Shader expects a Render Target View bound to slot 0, but none is bound. This is OK, as writes of an unbound Render Target View are discarded. It is also possible the developer knows the data will not be used anyway. This is only a problem if the developer actually intended to bind a Render Target View here.\n..\\..\\src\\tests\\test_utils\\ANGLETest.cpp(729): error: Failed\n2 D3D11 SDK Layers message(s) detected! Test Failed.\n\n[  FAILED  ] FramebufferTest_ES31.RenderingLimitToDefaultFBOSizeWithNoAttachments/ES3_1_D3D11, where GetParam() \u003d ES3_1_D3D11 (59 ms)\n[----------] 1 test from FramebufferTest_ES31 (59 ms total)\n\n[----------] Global test environment tear-down\n[\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d] 1 test from 1 test case ran. (78 ms total)\n[  PASSED  ] 0 tests.\n[  FAILED  ] 1 test, listed below:\n[  FAILED  ] FramebufferTest_ES31.RenderingLimitToDefaultFBOSizeWithNoAttachments/ES3_1_D3D11, where GetParam() \u003d ES3_1_D3D11",
+      "parentUuid": "ad444aa0_aa53055f",
+      "range": {
+        "startLine": 673,
+        "startChar": 0,
+        "endLine": 676,
+        "endChar": 5
+      },
+      "revId": "7287b0c49dd9d882dc2849b5852bc9749c388f53",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
