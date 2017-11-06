@@ -34,6 +34,24 @@
       "revId": "ebb1ea2ddccd055a536c5113c67a8e5c5f5df5d8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5d7b53c3_dcef337a",
+        "filename": "src/tests/third_party/gpu_test_expectations/gpu_test_config.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 280,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-06T17:31:08Z",
+      "side": 1,
+      "message": "Yeah, I\u0027m sorry, I don\u0027t have a better solution either.\n\nFYI any others reading the review, the crash was because gpu_vendor is a vector, and it was of zero size.",
+      "parentUuid": "17f5732c_6fb8f27e",
+      "revId": "ebb1ea2ddccd055a536c5113c67a8e5c5f5df5d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
