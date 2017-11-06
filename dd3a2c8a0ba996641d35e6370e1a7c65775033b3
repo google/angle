@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "0d5c80b0_9f4fc82b",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2872,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-06T00:57:31Z",
+      "side": 1,
+      "message": "I agree it\u0027s not perfect to have the code duplication between the two, but there are enough differences that making a shared function might be harder to maintain than a single one. I\u0027d need to parameterize the type of the InterfaceBlockLinker, the member pointer to querying size and layout info, and the member function for the shader query for the shader blocks.\n\nI think another way to make these functions a bit simpler is to store attached shaders in an array, and iterate over the array. This could be something we look at doing for Geometry shaders (or in general when we have more than three shader attachment points).",
+      "parentUuid": "5a8db45f_ff768f2e",
+      "range": {
+        "startLine": 2872,
+        "startChar": 14,
+        "endLine": 2872,
+        "endChar": 42
+      },
+      "revId": "dd3a2c8a0ba996641d35e6370e1a7c65775033b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "372cc339_e5fbf1b1",
         "filename": "src/libANGLE/UniformLinker.cpp",
         "patchSetId": 3
@@ -45,6 +69,30 @@
       "revId": "dd3a2c8a0ba996641d35e6370e1a7c65775033b3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "285c3e2b_a61da714",
+        "filename": "src/libANGLE/UniformLinker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 606,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-06T00:57:31Z",
+      "side": 1,
+      "message": "Done, I added more comments and made this take a pointer. This class should never be used longer than the duration of a Program::link. If we did want to support that we could copy the contents of the blocks, but I\u0027d like to keep it taking a pointer/reference for speed.",
+      "parentUuid": "372cc339_e5fbf1b1",
+      "range": {
+        "startLine": 606,
+        "startChar": 81,
+        "endLine": 606,
+        "endChar": 82
+      },
+      "revId": "dd3a2c8a0ba996641d35e6370e1a7c65775033b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "9fb07e6d_c6def63e",
+        "filename": "src/libANGLE/UniformLinker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 635,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-06T00:57:31Z",
+      "side": 1,
+      "message": "I can\u0027t think of any reason why it wouldn\u0027t work correctly. I\u0027m not sure what you mean by \u0027no way to enforce this condition with the current API\u0027. I think this design is a bit more flexible since it will facilitate adding more shader types, like Geometry shaders, or tessellation shaders if we get that far.",
+      "parentUuid": "fc388346_928b5f25",
+      "range": {
+        "startLine": 635,
+        "startChar": 12,
+        "endLine": 635,
+        "endChar": 16
+      },
+      "revId": "dd3a2c8a0ba996641d35e6370e1a7c65775033b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4f41d24f_7c786de4",
         "filename": "src/libANGLE/UniformLinker.cpp",
         "patchSetId": 3
@@ -91,6 +163,30 @@
       "revId": "dd3a2c8a0ba996641d35e6370e1a7c65775033b3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0dae40bb_7050c3ec",
+        "filename": "src/libANGLE/UniformLinker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 645,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-06T00:57:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4f41d24f_7c786de4",
+      "range": {
+        "startLine": 645,
+        "startChar": 27,
+        "endLine": 645,
+        "endChar": 45
+      },
+      "revId": "dd3a2c8a0ba996641d35e6370e1a7c65775033b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "7054205a_1f557d27",
+        "filename": "src/libANGLE/UniformLinker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 698,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-06T00:57:31Z",
+      "side": 1,
+      "message": "I like the inheritance idea, I implemented it for SSB and UB varieties. This should make the SSBO implementation easier. Note that SSBs have a member variable type called Buffer Variables, so they share some commonalities with UBOs and Uniforms.",
+      "parentUuid": "755afa5d_e87d5e8c",
+      "range": {
+        "startLine": 698,
+        "startChar": 8,
+        "endLine": 698,
+        "endChar": 20
+      },
+      "revId": "dd3a2c8a0ba996641d35e6370e1a7c65775033b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cb9799a0_5e85d417",
         "filename": "src/libANGLE/UniformLinker.cpp",
         "patchSetId": 3
@@ -137,6 +257,30 @@
       "revId": "dd3a2c8a0ba996641d35e6370e1a7c65775033b3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "181a2b0d_26b8f1e0",
+        "filename": "src/libANGLE/UniformLinker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 753,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-06T00:57:31Z",
+      "side": 1,
+      "message": "Refactored for more code re-use.",
+      "parentUuid": "cb9799a0_5e85d417",
+      "range": {
+        "startLine": 753,
+        "startChar": 4,
+        "endLine": 753,
+        "endChar": 8
+      },
+      "revId": "dd3a2c8a0ba996641d35e6370e1a7c65775033b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
