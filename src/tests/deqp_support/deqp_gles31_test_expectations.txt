@@ -28,7 +28,6 @@
 1659 NVIDIA OPENGL : dEQP-GLES31.functional.draw_indirect.random.10 = SKIP
 1659 NVIDIA OPENGL : dEQP-GLES31.functional.draw_indirect.random.15 = SKIP
 1659 NVIDIA OPENGL : dEQP-GLES31.functional.draw_indirect.random.18 = SKIP
-1920 NVIDIA OPENGL : dEQP-GLES31.functional.layout_binding.ubo.vertex_binding_array = SKIP
 1920 NVIDIA D3D11 : dEQP-GLES31.functional.layout_binding.ubo.vertex_binding_max = SKIP
 1442 OPENGL D3D11 : dEQP-GLES31.functional.program_interface_query.transform_feedback_varying.resource_list.vertex_fragment.builtin_gl_position = SKIP
 1442 OPENGL D3D11 : dEQP-GLES31.functional.program_interface_query.transform_feedback_varying.resource_list.vertex_fragment.default_block_struct_member = SKIP

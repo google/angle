@@ -179,9 +179,9 @@ StateManagerGL::StateManagerGL(const FunctionsGL *functions,
     mTextures[GL_TEXTURE_3D].resize(rendererCaps.maxCombinedTextureImageUnits);
     mTextures[GL_TEXTURE_2D_MULTISAMPLE].resize(rendererCaps.maxCombinedTextureImageUnits);
 
-    mIndexedBuffers[GL_UNIFORM_BUFFER].resize(rendererCaps.maxCombinedUniformBlocks);
-    mIndexedBuffers[GL_ATOMIC_COUNTER_BUFFER].resize(rendererCaps.maxCombinedAtomicCounterBuffers);
-    mIndexedBuffers[GL_SHADER_STORAGE_BUFFER].resize(rendererCaps.maxCombinedShaderStorageBlocks);
+    mIndexedBuffers[GL_UNIFORM_BUFFER].resize(rendererCaps.maxUniformBufferBindings);
+    mIndexedBuffers[GL_ATOMIC_COUNTER_BUFFER].resize(rendererCaps.maxAtomicCounterBufferBindings);
+    mIndexedBuffers[GL_SHADER_STORAGE_BUFFER].resize(rendererCaps.maxShaderStorageBufferBindings);
 
     mSampleMaskValues.fill(~GLbitfield(0));
 
@@ -411,6 +411,8 @@ void StateManagerGL::bindBuffer(GLenum type, GLuint buffer)
 
 void StateManagerGL::bindBufferBase(GLenum type, size_t index, GLuint buffer)
 {
+    ASSERT(mIndexedBuffers.count(type) > 0);
+    ASSERT(index < mIndexedBuffers[type].size());
     auto &binding = mIndexedBuffers[type][index];
     if (binding.buffer != buffer || binding.offset != static_cast<size_t>(-1) ||
         binding.size != static_cast<size_t>(-1))
