@@ -2130,24 +2130,19 @@ angle::WorkaroundsD3D GenerateWorkarounds(const Renderer11DeviceCaps &deviceCaps
 
     if (IsIntel(adapterDesc.VendorId))
     {
+        IntelDriverVersion capsVersion = d3d11_gl::GetIntelDriverVersion(deviceCaps.driverVersion);
+
         workarounds.preAddTexelFetchOffsets           = true;
         workarounds.useSystemMemoryForConstantBuffers = true;
-        workarounds.disableB5G6R5Support =
-            d3d11_gl::GetIntelDriverVersion(deviceCaps.driverVersion) < IntelDriverVersion(4539);
+        workarounds.disableB5G6R5Support              = capsVersion < IntelDriverVersion(4539);
         if (IsSkylake(adapterDesc.DeviceId))
         {
-            workarounds.callClearTwice =
-                d3d11_gl::GetIntelDriverVersion(deviceCaps.driverVersion) <
-                IntelDriverVersion(4771);
-            workarounds.emulateIsnanFloat =
-                d3d11_gl::GetIntelDriverVersion(deviceCaps.driverVersion) <
-                IntelDriverVersion(4542);
+            workarounds.callClearTwice    = capsVersion < IntelDriverVersion(4771);
+            workarounds.emulateIsnanFloat = capsVersion < IntelDriverVersion(4542);
         }
         else if (IsBroadwell(adapterDesc.DeviceId) || IsHaswell(adapterDesc.DeviceId))
         {
-            workarounds.rewriteUnaryMinusOperator =
-                d3d11_gl::GetIntelDriverVersion(deviceCaps.driverVersion) <
-                IntelDriverVersion(4624);
+            workarounds.rewriteUnaryMinusOperator = capsVersion < IntelDriverVersion(4624);
         }
     }
 
