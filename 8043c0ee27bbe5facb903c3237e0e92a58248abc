@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "f6255860_66c31a51",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 237,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-06T15:40:59Z",
+      "side": 1,
+      "message": "It\u0027s a bit hard to think of a better name. \"arraySizeOrOne\" sounds a bit clunky. \"instanceCount\" is odd when you consider that some blocks don\u0027t have an instance name, and that the instance name isn\u0027t used at the API level. So if you want to keep the function maybe \"elementCount\" is the best we can do. I do still think that having no function can be better, but I don\u0027t feel too strongly about this.",
+      "parentUuid": "ff556fb3_2baa88bb",
+      "revId": "8043c0ee27bbe5facb903c3237e0e92a58248abc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b9d2c3a1_36ddbd90",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 9
@@ -116,6 +134,24 @@
       "revId": "8043c0ee27bbe5facb903c3237e0e92a58248abc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "27c6030d_b94be4df",
+        "filename": "src/libANGLE/UniformLinker.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 621,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-06T15:40:59Z",
+      "side": 1,
+      "message": "Renaming the file as a follow up sounds good to me. Not sure what the new name would be though.",
+      "parentUuid": "a55fed3c_622c5ddc",
+      "revId": "8043c0ee27bbe5facb903c3237e0e92a58248abc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -201,6 +237,30 @@
       "side": 1,
       "message": "Would prefer to leave it as indexes for now.\n\n\"Bryan Garner said in the well-known grammar guide, Modern American Usage, that \"indices\" is pretentious and highfalutin\"\n\n:)\n\nhttp://business.nasdaq.com/marketinsite/2016/Indexes-or-Indices-Whats-the-deal.html",
       "parentUuid": "28c22968_77ac17e0",
+      "range": {
+        "startLine": 722,
+        "startChar": 35,
+        "endLine": 722,
+        "endChar": 42
+      },
+      "revId": "8043c0ee27bbe5facb903c3237e0e92a58248abc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "635cb45e_f77a7970",
+        "filename": "src/libANGLE/UniformLinker.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 722,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-06T15:40:59Z",
+      "side": 1,
+      "message": "No further objection to \"indexes\". Just the inconsistency is inconvenient, especially when searching through the code, but probably that won\u0027t be a problem in this case.",
+      "parentUuid": "9c635949_78b7ee66",
       "range": {
         "startLine": 722,
         "startChar": 35,
