@@ -123,7 +123,8 @@ TType::TType(const TPublicType &p)
       primarySize(p.getPrimarySize()),
       secondarySize(p.getSecondarySize()),
       interfaceBlock(0),
-      structure(0)
+      structure(0),
+      mIsStructSpecifier(false)
 {
     ASSERT(primarySize <= 4);
     ASSERT(secondarySize <= 4);
@@ -132,7 +133,10 @@ TType::TType(const TPublicType &p)
         makeArray(p.arraySize);
     }
     if (p.getUserDef())
+    {
         structure = p.getUserDef();
+        mIsStructSpecifier = p.isStructSpecifier();
+    }
 }
 
 bool TStructure::equals(const TStructure &other) const

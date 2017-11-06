@@ -3253,6 +3253,17 @@ TFunction *TParseContext::parseFunctionDeclarator(const TSourceLoc &location, TF
     TFunction *prevDec =
         static_cast<TFunction *>(symbolTable.find(function->getMangledName(), getShaderVersion()));
 
+    for (size_t i = 0u; i < function->getParamCount(); ++i)
+    {
+        auto &param = function->getParam(i);
+        if (param.type->isStructSpecifier())
+        {
+            // ESSL 3.00.6 section 12.10.
+            error(location, "Function parameter type cannot be a structure definition",
+                  param.name->c_str());
+        }
+    }
+
     if (getShaderVersion() >= 300 &&
         symbolTable.hasUnmangledBuiltInForShaderVersion(function->getName().c_str(),
                                                         getShaderVersion()))

@@ -192,7 +192,8 @@ class TType
           primarySize(0),
           secondarySize(0),
           interfaceBlock(nullptr),
-          structure(nullptr)
+          structure(nullptr),
+          mIsStructSpecifier(false)
     {
     }
     explicit TType(TBasicType t, unsigned char ps = 1, unsigned char ss = 1)
@@ -205,7 +206,8 @@ class TType
           primarySize(ps),
           secondarySize(ss),
           interfaceBlock(0),
-          structure(0)
+          structure(0),
+          mIsStructSpecifier(false)
     {
     }
     TType(TBasicType t,
@@ -222,7 +224,8 @@ class TType
           primarySize(ps),
           secondarySize(ss),
           interfaceBlock(0),
-          structure(0)
+          structure(0),
+          mIsStructSpecifier(false)
     {
     }
     explicit TType(const TPublicType &p);
@@ -236,7 +239,8 @@ class TType
           primarySize(1),
           secondarySize(1),
           interfaceBlock(0),
-          structure(userDef)
+          structure(userDef),
+          mIsStructSpecifier(false)
     {
     }
     TType(TInterfaceBlock *interfaceBlockIn,
@@ -251,7 +255,8 @@ class TType
           primarySize(1),
           secondarySize(1),
           interfaceBlock(interfaceBlockIn),
-          structure(0)
+          structure(0),
+          mIsStructSpecifier(false)
     {
     }
 
@@ -477,6 +482,8 @@ class TType
         return structure ? structure->containsSamplers() : false;
     }
 
+    bool isStructSpecifier() const { return mIsStructSpecifier; }
+
     void createSamplerSymbols(const TString &namePrefix,
                               const TString &apiNamePrefix,
                               TVector<TIntermSymbol *> *outputSymbols,
@@ -511,6 +518,7 @@ class TType
 
     // 0 unless this is a struct
     TStructure *structure;
+    bool mIsStructSpecifier;
 
     mutable TString mangled;
 };

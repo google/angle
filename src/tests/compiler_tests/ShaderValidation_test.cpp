@@ -5222,3 +5222,55 @@ TEST_F(FragmentShaderValidationTest, EmptyStatementInSwitchBeforeFirstCase)
         FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
     }
 }
+
+// Test that a nameless struct definition is not allowed as a function parameter type.
+// ESSL 3.00.6 section 12.10. ESSL 3.10 January 2016 section 13.10.
+TEST_F(FragmentShaderValidationTest, NamelessStructDefinitionAsParameterType)
+{
+    const std::string &shaderString =
+        R"(#version 300 es
+
+        precision highp float;
+        out vec4 my_FragColor;
+
+        float foo(struct { float field; } f)
+        {
+            return f.field;
+        }
+
+        void main()
+        {
+            my_FragColor = vec4(0, 1, 0, 1);
+        })";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}
+
+// Test that a named struct definition is not allowed as a function parameter type.
+// ESSL 3.00.6 section 12.10. ESSL 3.10 January 2016 section 13.10.
+TEST_F(FragmentShaderValidationTest, NamedStructDefinitionAsParameterType)
+{
+    const std::string &shaderString =
+        R"(#version 300 es
+
+        precision highp float;
+        out vec4 my_FragColor;
+
+        float foo(struct S { float field; } f)
+        {
+            return f.field;
+        }
+
+        void main()
+        {
+            my_FragColor = vec4(0, 1, 0, 1);
+        })";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}
