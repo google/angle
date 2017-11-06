@@ -1903,7 +1903,13 @@ void StateManagerGL::syncState(const gl::Context *context, const gl::State::Dirt
             case gl::State::DIRTY_BIT_UNPACK_STATE:
                 setPixelUnpackState(state.getUnpackState());
                 break;
+            case gl::State::DIRTY_BIT_UNPACK_BUFFER_BINDING:
+                setPixelUnpackState(state.getUnpackState());
+                break;
             case gl::State::DIRTY_BIT_PACK_STATE:
+                setPixelPackState(state.getPackState());
+                break;
+            case gl::State::DIRTY_BIT_PACK_BUFFER_BINDING:
                 setPixelPackState(state.getPackState());
                 break;
             case gl::State::DIRTY_BIT_DITHER_ENABLED:

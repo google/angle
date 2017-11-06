@@ -390,10 +390,12 @@ Context::Context(rx::EGLImplFactory *implFactory,
 
     // Initialize dirty bit masks
     mTexImageDirtyBits.set(State::DIRTY_BIT_UNPACK_STATE);
+    mTexImageDirtyBits.set(State::DIRTY_BIT_UNPACK_BUFFER_BINDING);
     // No dirty objects.
 
     // Readpixels uses the pack state and read FBO
     mReadPixelsDirtyBits.set(State::DIRTY_BIT_PACK_STATE);
+    mReadPixelsDirtyBits.set(State::DIRTY_BIT_PACK_BUFFER_BINDING);
     mReadPixelsDirtyObjects.set(State::DIRTY_OBJECT_READ_FRAMEBUFFER);
 
     mClearDirtyBits.set(State::DIRTY_BIT_RASTERIZER_DISCARD_ENABLED);

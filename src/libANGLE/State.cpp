@@ -1341,13 +1341,13 @@ void State::setCopyWriteBufferBinding(const Context *context, Buffer *buffer)
 void State::setPixelPackBufferBinding(const Context *context, Buffer *buffer)
 {
     mPack.pixelBuffer.set(context, buffer);
-    mDirtyBits.set(DIRTY_BIT_PACK_STATE);
+    mDirtyBits.set(DIRTY_BIT_PACK_BUFFER_BINDING);
 }
 
 void State::setPixelUnpackBufferBinding(const Context *context, Buffer *buffer)
 {
     mUnpack.pixelBuffer.set(context, buffer);
-    mDirtyBits.set(DIRTY_BIT_UNPACK_STATE);
+    mDirtyBits.set(DIRTY_BIT_UNPACK_BUFFER_BINDING);
 }
 
 Buffer *State::getTargetBuffer(GLenum target) const
