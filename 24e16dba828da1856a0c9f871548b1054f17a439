@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3956485e_c44418de",
+        "filename": "src/libANGLE/MemoryProgramCache.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 277,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-06T21:20:58Z",
+      "side": 1,
+      "message": "Refactor this into a LoadBufferVariable function in MemoryProgramCache.cpp",
+      "range": {
+        "startLine": 266,
+        "startChar": 8,
+        "endLine": 277,
+        "endChar": 73
+      },
+      "revId": "24e16dba828da1856a0c9f871548b1054f17a439",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fac7c994_9076b2e6",
+        "filename": "src/libANGLE/MemoryProgramCache.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 479,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-06T21:20:58Z",
+      "side": 1,
+      "message": "Refactor this too.",
+      "range": {
+        "startLine": 468,
+        "startChar": 0,
+        "endLine": 479,
+        "endChar": 57
+      },
+      "revId": "24e16dba828da1856a0c9f871548b1054f17a439",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a384dde9_bdf213af",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 3026,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-06T21:20:58Z",
+      "side": 1,
+      "message": "What about computeStaticUse and vertexStaticUse?",
+      "range": {
+        "startLine": 3026,
+        "startChar": 24,
+        "endLine": 3026,
+        "endChar": 42
+      },
+      "revId": "24e16dba828da1856a0c9f871548b1054f17a439",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "120f49d6_b5088c3d",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 1425,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-06T21:20:58Z",
+      "side": 1,
+      "message": "nit: un-needed",
+      "range": {
+        "startLine": 1425,
+        "startChar": 8,
+        "endLine": 1425,
+        "endChar": 9
+      },
+      "revId": "24e16dba828da1856a0c9f871548b1054f17a439",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
