@@ -12,7 +12,7 @@
 
 #include "gmock/gmock.h"
 
-#include "libANGLE/UniformLinker.h"
+#include "libANGLE/ProgramLinkedResources.h"
 #include "libANGLE/renderer/ProgramImpl.h"
 
 namespace rx

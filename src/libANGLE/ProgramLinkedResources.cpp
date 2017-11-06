@@ -8,7 +8,7 @@
 // locations. Populates data structures related to uniforms so that they can be stored in program
 // state.
 
-#include "libANGLE/UniformLinker.h"
+#include "libANGLE/ProgramLinkedResources.h"
 
 #include "common/string_utils.h"
 #include "common/utilities.h"
@@ -572,7 +572,7 @@ UniformLinker::ShaderUniformCount UniformLinker::flattenUniformImpl(
                                     uniform.arraySize, binding, offset, *location, -1,
                                     sh::BlockMemberInfo::getDefaultBlockInfo());
         linkedUniform.mappedName = fullMappedNameWithArrayIndex;
-        linkedUniform.staticUse = markStaticUse;
+        linkedUniform.staticUse  = markStaticUse;
         if (markStaticUse)
         {
             linkedUniform.setStaticUse(shaderType, true);
@@ -587,7 +587,7 @@ UniformLinker::ShaderUniformCount UniformLinker::flattenUniformImpl(
     // Likewise, don't count "real" uniforms towards opaque count.
     shaderUniformCount.vectorCount =
         (IsOpaqueType(uniform.type) ? 0 : (VariableRegisterCount(uniform.type) * elementCount));
-    shaderUniformCount.samplerCount = (isSampler ? elementCount : 0);
+    shaderUniformCount.samplerCount       = (isSampler ? elementCount : 0);
     shaderUniformCount.imageCount         = (isImage ? elementCount : 0);
     shaderUniformCount.atomicCounterCount = (isAtomicCounter ? elementCount : 0);
 
