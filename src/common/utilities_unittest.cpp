@@ -168,4 +168,13 @@ TEST(ParseArrayIndex, ArrayIndexBogus)
     EXPECT_EQ(11u, nameLengthWithoutArrayIndex);
 }
 
+// Verify that using an index value out-of-range fails.
+TEST(ParseArrayIndex, ArrayIndexOutOfRange)
+{
+    size_t nameLengthWithoutArrayIndex;
+    EXPECT_EQ(GL_INVALID_INDEX,
+              gl::ParseArrayIndex("foo[4294967296]", &nameLengthWithoutArrayIndex));
+    EXPECT_EQ(15u, nameLengthWithoutArrayIndex);
+}
+
 }  // anonymous namespace

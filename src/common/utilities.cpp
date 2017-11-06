@@ -773,7 +773,6 @@ std::string ParseResourceName(const std::string &name, std::vector<unsigned int>
 unsigned int ParseArrayIndex(const std::string &name, size_t *nameLengthWithoutArrayIndexOut)
 {
     ASSERT(nameLengthWithoutArrayIndexOut != nullptr);
-    unsigned int subscript = GL_INVALID_INDEX;
 
     // Strip any trailing array operator and retrieve the subscript
     size_t open = name.find_last_of('[');
@@ -790,14 +789,22 @@ unsigned int ParseArrayIndex(const std::string &name, size_t *nameLengthWithoutA
         }
         if (indexIsValidDecimalNumber)
         {
-            subscript                       = atoi(name.c_str() + open + 1);
-            *nameLengthWithoutArrayIndexOut = open;
-            return subscript;
+            errno = 0;  // reset global error flag.
+            unsigned long subscript =
+                strtoul(name.c_str() + open + 1, /*endptr*/ nullptr, /*radix*/ 10);
+
+            // Check if resulting integer is out-of-range or conversion error.
+            if ((subscript <= static_cast<unsigned long>(UINT_MAX)) &&
+                !(subscript == ULONG_MAX && errno == ERANGE) && !(errno != 0 && subscript == 0))
+            {
+                *nameLengthWithoutArrayIndexOut = open;
+                return static_cast<unsigned int>(subscript);
+            }
         }
     }
 
     *nameLengthWithoutArrayIndexOut = name.length();
-    return subscript;
+    return GL_INVALID_INDEX;
 }
 
 const char *GetGenericErrorMessage(GLenum error)
