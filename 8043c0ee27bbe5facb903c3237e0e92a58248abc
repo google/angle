@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "ff556fb3_2baa88bb",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 237,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-06T14:45:47Z",
+      "side": 1,
+      "message": "I\u0027d like to use a helper function. What would you recommend as a name?",
+      "parentUuid": "d65b368b_93f8f705",
+      "revId": "8043c0ee27bbe5facb903c3237e0e92a58248abc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b9d2c3a1_36ddbd90",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 9
@@ -42,6 +60,30 @@
     },
     {
       "key": {
+        "uuid": "f849535e_6d08b22d",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 2895,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-06T14:45:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b9d2c3a1_36ddbd90",
+      "range": {
+        "startLine": 2895,
+        "startChar": 31,
+        "endLine": 2895,
+        "endChar": 56
+      },
+      "revId": "8043c0ee27bbe5facb903c3237e0e92a58248abc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "967ff1b7_2bd16c13",
         "filename": "src/libANGLE/UniformLinker.cpp",
         "patchSetId": 9
@@ -53,6 +95,24 @@
       "writtenOn": "2017-11-06T13:54:19Z",
       "side": 1,
       "message": "Any reason why this is in the same file as UniformLinker? On the surface it would make more sense to put it in InterfaceBlockLinker.cpp, as it is intended to eventually handle shader storage blocks as well.",
+      "revId": "8043c0ee27bbe5facb903c3237e0e92a58248abc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a55fed3c_622c5ddc",
+        "filename": "src/libANGLE/UniformLinker.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 621,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-06T14:45:47Z",
+      "side": 1,
+      "message": "They are somewhat closely related. Ideally we could refactor the Uniform linking the same way so the implementation can filter out unused uniforms inside the link call.\n\nMaybe the best thing to do is rename the file, but I was reluctant to do that just because it\u0027s a bit of a hassle. Can do that as a follow up.",
+      "parentUuid": "967ff1b7_2bd16c13",
       "revId": "8043c0ee27bbe5facb903c3237e0e92a58248abc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -82,6 +142,30 @@
     },
     {
       "key": {
+        "uuid": "88c6d1c5_92c2bfd1",
+        "filename": "src/libANGLE/UniformLinker.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 698,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-06T14:45:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "782d7f93_2d7cff39",
+      "range": {
+        "startLine": 698,
+        "startChar": 56,
+        "endLine": 698,
+        "endChar": 64
+      },
+      "revId": "8043c0ee27bbe5facb903c3237e0e92a58248abc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "28c22968_77ac17e0",
         "filename": "src/libANGLE/UniformLinker.cpp",
         "patchSetId": 9
@@ -105,6 +189,30 @@
     },
     {
       "key": {
+        "uuid": "9c635949_78b7ee66",
+        "filename": "src/libANGLE/UniformLinker.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 722,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-06T14:45:47Z",
+      "side": 1,
+      "message": "Would prefer to leave it as indexes for now.\n\n\"Bryan Garner said in the well-known grammar guide, Modern American Usage, that \"indices\" is pretentious and highfalutin\"\n\n:)\n\nhttp://business.nasdaq.com/marketinsite/2016/Indexes-or-Indices-Whats-the-deal.html",
+      "parentUuid": "28c22968_77ac17e0",
+      "range": {
+        "startLine": 722,
+        "startChar": 35,
+        "endLine": 722,
+        "endChar": 42
+      },
+      "revId": "8043c0ee27bbe5facb903c3237e0e92a58248abc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "784d3783_3a2717ed",
         "filename": "src/libANGLE/UniformLinker.cpp",
         "patchSetId": 9
@@ -119,6 +227,24 @@
       "revId": "8043c0ee27bbe5facb903c3237e0e92a58248abc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a39551dd_9a70f210",
+        "filename": "src/libANGLE/UniformLinker.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 745,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-06T14:45:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "784d3783_3a2717ed",
+      "revId": "8043c0ee27bbe5facb903c3237e0e92a58248abc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
