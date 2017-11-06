@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "46756990_cf2a2bdb",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-06T15:55:49Z",
+      "side": 1,
+      "message": "I think we should just remove this condition, we\u0027ve seen this issue on Mac NVIDIA too.  Uploaded a new revision with the fix.",
+      "range": {
+        "startLine": 110,
+        "startChar": 46,
+        "endLine": 110,
+        "endChar": 89
+      },
+      "revId": "0f37c982fab93fb933e21e137b39639c913d4d62",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
