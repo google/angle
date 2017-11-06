@@ -101,6 +101,12 @@ class ShaderState final : angle::NonCopyable
     // ANGLE_multiview.
     int mNumViews;
 
+    // Geometry Shader.
+    GLenum mGeometryShaderInputPrimitiveType;
+    GLenum mGeometryShaderOutputPrimitiveType;
+    int mGeometryShaderInvocations;
+    int mGeometryShaderMaxVertices;
+
     // Indicates if this shader has been successfully compiled
     CompileStatus mCompileStatus;
 };

@@ -241,6 +241,7 @@ class ProgramState final : angle::NonCopyable
     Shader *getAttachedVertexShader() const { return mAttachedVertexShader; }
     Shader *getAttachedFragmentShader() const { return mAttachedFragmentShader; }
     Shader *getAttachedComputeShader() const { return mAttachedComputeShader; }
+    Shader *getAttachedGeometryShader() const { return mAttachedGeometryShader; }
     const std::vector<std::string> &getTransformFeedbackVaryingNames() const
     {
         return mTransformFeedbackVaryingNames;
@@ -316,6 +317,7 @@ class ProgramState final : angle::NonCopyable
     Shader *mAttachedFragmentShader;
     Shader *mAttachedVertexShader;
     Shader *mAttachedComputeShader;
+    Shader *mAttachedGeometryShader;
 
     std::vector<std::string> mTransformFeedbackVaryingNames;
     std::vector<TransformFeedbackVarying> mLinkedTransformFeedbackVaryings;
@@ -392,6 +394,7 @@ class Program final : angle::NonCopyable, public LabeledObject
     const Shader *getAttachedVertexShader() const { return mState.mAttachedVertexShader; }
     const Shader *getAttachedFragmentShader() const { return mState.mAttachedFragmentShader; }
     const Shader *getAttachedComputeShader() const { return mState.mAttachedComputeShader; }
+    const Shader *getAttachedGeometryShader() const { return mState.mAttachedGeometryShader; }
 
     void bindAttributeLocation(GLuint index, const char *name);
     void bindUniformLocation(GLuint index, const char *name);

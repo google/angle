@@ -368,6 +368,14 @@ struct Extensions
 
     // GL_ANGLE_texture_rectangle
     bool textureRectangle;
+
+    // GL_EXT_geometry_shader
+    bool geometryShader;
+    // GL_EXT_geometry_shader (May 31, 2016) Table 20.43gs: Implementation dependent geometry shader
+    // limits
+    // TODO(jiawei.shao@intel.com): add all implementation dependent geometry shader limits.
+    GLuint maxGeometryOutputVertices;
+    GLuint maxGeometryShaderInvocations;
 };
 
 struct ExtensionInfo

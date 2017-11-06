@@ -1034,6 +1034,22 @@ void GenerateCaps(const FunctionsGL *functions,
         caps->maxRectangleTextureSize =
             QuerySingleGLInt(functions, GL_MAX_RECTANGLE_TEXTURE_SIZE_ANGLE);
     }
+
+    // We need at least OpenGL 4.3 to support all features and constants defined in
+    // GL_EXT_geometry_shader.
+    if (functions->isAtLeastGL(gl::Version(4, 3)) || functions->isAtLeastGLES(gl::Version(3, 2)) ||
+        functions->hasGLESExtension("GL_OES_geometry_shader") ||
+        functions->hasGLESExtension("GL_EXT_geometry_shader"))
+    {
+        extensions->geometryShader = true;
+
+        // TODO(jiawei.shao@intel.com): initialize all implementation dependent geometry shader
+        // limits.
+        extensions->maxGeometryOutputVertices =
+            QuerySingleGLInt(functions, GL_MAX_GEOMETRY_OUTPUT_VERTICES_EXT);
+        extensions->maxGeometryShaderInvocations =
+            QuerySingleGLInt(functions, GL_MAX_GEOMETRY_SHADER_INVOCATIONS_EXT);
+    }
 }
 
 void GenerateWorkarounds(const FunctionsGL *functions, WorkaroundsGL *workarounds)

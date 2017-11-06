@@ -79,6 +79,10 @@ ShaderState::ShaderState(GLenum shaderType)
       mShaderType(shaderType),
       mShaderVersion(100),
       mNumViews(-1),
+      mGeometryShaderInputPrimitiveType(GL_INVALID_VALUE),
+      mGeometryShaderOutputPrimitiveType(GL_INVALID_VALUE),
+      mGeometryShaderInvocations(1),
+      mGeometryShaderMaxVertices(-1),
       mCompileStatus(CompileStatus::NOT_COMPILED)
 {
     mLocalSize.fill(-1);
@@ -276,6 +280,10 @@ void Shader::compile(const Context *context)
     mState.mActiveAttributes.clear();
     mState.mActiveOutputVariables.clear();
     mState.mNumViews = -1;
+    mState.mGeometryShaderInputPrimitiveType  = GL_INVALID_VALUE;
+    mState.mGeometryShaderOutputPrimitiveType = GL_INVALID_VALUE;
+    mState.mGeometryShaderInvocations         = 1;
+    mState.mGeometryShaderMaxVertices         = -1;
 
     mState.mCompileStatus = CompileStatus::COMPILE_REQUESTED;
     mBoundCompiler.set(context, context->getCompiler());
@@ -389,6 +397,19 @@ void Shader::resolveCompile(const Context *context)
             std::sort(mState.mInputVaryings.begin(), mState.mInputVaryings.end(), CompareShaderVar);
             mState.mActiveOutputVariables =
                 GetActiveShaderVariables(sh::GetOutputVariables(compilerHandle));
+            break;
+        }
+        case GL_GEOMETRY_SHADER_EXT:
+        {
+            mState.mInputVaryings  = GetShaderVariables(sh::GetInputVaryings(compilerHandle));
+            mState.mOutputVaryings = GetShaderVariables(sh::GetOutputVaryings(compilerHandle));
+
+            mState.mGeometryShaderInputPrimitiveType =
+                sh::GetGeometryShaderInputPrimitiveType(compilerHandle);
+            mState.mGeometryShaderOutputPrimitiveType =
+                sh::GetGeometryShaderOutputPrimitiveType(compilerHandle);
+            mState.mGeometryShaderInvocations = sh::GetGeometryShaderInvocations(compilerHandle);
+            mState.mGeometryShaderMaxVertices = sh::GetGeometryShaderMaxVertices(compilerHandle);
             break;
         }
         default:

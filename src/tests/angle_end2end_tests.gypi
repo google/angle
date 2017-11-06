@@ -45,6 +45,7 @@
             '<(angle_path)/src/tests/gl_tests/FramebufferMultiviewTest.cpp',
             '<(angle_path)/src/tests/gl_tests/FramebufferRenderMipmapTest.cpp',
             '<(angle_path)/src/tests/gl_tests/FramebufferTest.cpp',
+            '<(angle_path)/src/tests/gl_tests/GeometryShaderTest.cpp',
             '<(angle_path)/src/tests/gl_tests/GLSLTest.cpp',
             '<(angle_path)/src/tests/gl_tests/ImageTest.cpp',
             '<(angle_path)/src/tests/gl_tests/IncompleteTextureTest.cpp',

@@ -2535,6 +2535,12 @@ void Context::initCaps(const egl::DisplayExtensions &displayExtensions, bool rob
         mExtensions.maxViews              = 1u;
     }
 
+    if (getClientVersion() < ES_3_1)
+    {
+        // Disable ES3.1+ extensions
+        mExtensions.geometryShader = false;
+    }
+
     if (getClientVersion() > Version(2, 0))
     {
         // FIXME(geofflang): Don't support EXT_sRGB in non-ES2 contexts
