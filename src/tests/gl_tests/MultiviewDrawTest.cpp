@@ -1428,6 +1428,9 @@ TEST_P(MultiviewRenderPrimitiveTest, Points)
         return;
     }
 
+    // Test failing on P400 graphics card (anglebug.com/2228)
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsD3D11() && IsNVIDIA());
+
     const std::string vsSource =
         "#version 300 es\n"
         "#extension GL_OVR_multiview : require\n"
@@ -1867,6 +1870,9 @@ TEST_P(MultiviewRenderTest, DivisorUpdatedOnProgramChange)
         return;
     }
 
+    // Test failing on P400 graphics card (anglebug.com/2228)
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsD3D11() && IsNVIDIA());
+
     GLVertexArray vao;
     glBindVertexArray(vao);
     GLBuffer vbo;
@@ -2012,6 +2018,9 @@ TEST_P(MultiviewRenderTest, FlatInterpolation)
     {
         return;
     }
+
+    // Test failing on P400 graphics card (anglebug.com/2228)
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsD3D11() && IsNVIDIA());
 
     // TODO(mradev): Find out why this fails on Win10 Intel HD 630 D3D11
     // (http://anglebug.com/2062)
