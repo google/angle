@@ -107,7 +107,7 @@ static gl::TextureCaps GenerateTextureFormatCaps(const FunctionsGL *functions,
     {
         GLenum queryInternalFormat = internalFormat;
 
-        if (internalFormat == GL_BGRA8_EXT && functions->standard == STANDARD_GL_DESKTOP)
+        if (internalFormat == GL_BGRA8_EXT)
         {
             // Querying GL_NUM_SAMPLE_COUNTS for GL_BGRA8_EXT generates an INVALID_ENUM on some
             // drivers.  It seems however that allocating a multisampled renderbuffer of this format
