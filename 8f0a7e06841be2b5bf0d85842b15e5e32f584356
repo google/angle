@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b67bbb7f_c3fc061f",
+        "filename": "src/compiler/translator/StructureHLSL.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-11-06T17:24:03Z",
+      "side": 1,
+      "message": "Do you think it would be possible to have these data-structures merged like so:\n\nstruct StructProperties {\n    bool hasConstructor;\n    int postPadding;\n    std::string constructor;\n    std::array\u003cstd::string, 4\u003e declarations;\n}\n\nstd::map\u003cTString, StructProperties\u003e mStructProperties?\n\nIt seems like it could avoid linear search in some places and make the code look simpler.",
+      "revId": "8f0a7e06841be2b5bf0d85842b15e5e32f584356",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
