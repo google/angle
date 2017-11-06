@@ -16,6 +16,24 @@
       "revId": "ebb1ea2ddccd055a536c5113c67a8e5c5f5df5d8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "17f5732c_6fb8f27e",
+        "filename": "src/tests/third_party/gpu_test_expectations/gpu_test_config.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 280,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-11-06T17:12:26Z",
+      "side": 1,
+      "message": "Got it, ok. The proper fix would be to implement gpu info collection on Android but that\u0027s harder as there is no API to do this.",
+      "parentUuid": "e6ead8a7_9f1d9331",
+      "revId": "ebb1ea2ddccd055a536c5113c67a8e5c5f5df5d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
