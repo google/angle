@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e6ead8a7_9f1d9331",
+        "filename": "src/tests/third_party/gpu_test_expectations/gpu_test_config.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 280,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-11-06T17:09:59Z",
+      "side": 1,
+      "message": "how does this fix a crash? Strings should always be null-terminated.",
+      "revId": "ebb1ea2ddccd055a536c5113c67a8e5c5f5df5d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
