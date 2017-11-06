@@ -1,0 +1,124 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d65b368b_93f8f705",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 237,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-06T13:54:19Z",
+      "side": 1,
+      "message": "I\u0027m not a fan of the \"elementCount\" function name, I don\u0027t think it communicates the meaning well. I\u0027ve moved the code away from using it when doing the arrays of arrays work, I think even having the same logic at the call site is often preferable for code readability. But not a big issue, use it or change it as you wish.",
+      "revId": "8043c0ee27bbe5facb903c3237e0e92a58248abc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b9d2c3a1_36ddbd90",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 2895,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-06T13:54:19Z",
+      "side": 1,
+      "message": "I suppose this is also covered by the TODO above? That could be made clearer.",
+      "range": {
+        "startLine": 2895,
+        "startChar": 31,
+        "endLine": 2895,
+        "endChar": 56
+      },
+      "revId": "8043c0ee27bbe5facb903c3237e0e92a58248abc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "967ff1b7_2bd16c13",
+        "filename": "src/libANGLE/UniformLinker.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 621,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-06T13:54:19Z",
+      "side": 1,
+      "message": "Any reason why this is in the same file as UniformLinker? On the surface it would make more sense to put it in InterfaceBlockLinker.cpp, as it is intended to eventually handle shader storage blocks as well.",
+      "revId": "8043c0ee27bbe5facb903c3237e0e92a58248abc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "782d7f93_2d7cff39",
+        "filename": "src/libANGLE/UniformLinker.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 698,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-06T13:54:19Z",
+      "side": 1,
+      "message": "nit: block member",
+      "range": {
+        "startLine": 698,
+        "startChar": 56,
+        "endLine": 698,
+        "endChar": 64
+      },
+      "revId": "8043c0ee27bbe5facb903c3237e0e92a58248abc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "28c22968_77ac17e0",
+        "filename": "src/libANGLE/UniformLinker.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 722,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-06T13:54:19Z",
+      "side": 1,
+      "message": "super-nit: \"indices\" spelling is more common in ANGLE so far.",
+      "range": {
+        "startLine": 722,
+        "startChar": 35,
+        "endLine": 722,
+        "endChar": 42
+      },
+      "revId": "8043c0ee27bbe5facb903c3237e0e92a58248abc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "784d3783_3a2717ed",
+        "filename": "src/libANGLE/UniformLinker.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 745,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-06T13:54:19Z",
+      "side": 1,
+      "message": "Maybe reword the TODO if the only thing left to be done in this part of the code is to remove the if condition.",
+      "revId": "8043c0ee27bbe5facb903c3237e0e92a58248abc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
