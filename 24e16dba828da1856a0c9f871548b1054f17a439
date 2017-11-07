@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "4a29a62a_afb034cc",
+        "filename": "src/libANGLE/MemoryProgramCache.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 277,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-11-07T06:37:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3956485e_c44418de",
+      "range": {
+        "startLine": 266,
+        "startChar": 8,
+        "endLine": 277,
+        "endChar": 73
+      },
+      "revId": "24e16dba828da1856a0c9f871548b1054f17a439",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fac7c994_9076b2e6",
         "filename": "src/libANGLE/MemoryProgramCache.cpp",
         "patchSetId": 16
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "6938384d_434a780e",
+        "filename": "src/libANGLE/MemoryProgramCache.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 479,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-11-07T06:37:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fac7c994_9076b2e6",
+      "range": {
+        "startLine": 468,
+        "startChar": 0,
+        "endLine": 479,
+        "endChar": 57
+      },
+      "revId": "24e16dba828da1856a0c9f871548b1054f17a439",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a384dde9_bdf213af",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 16
@@ -64,6 +112,76 @@
         "startChar": 24,
         "endLine": 3026,
         "endChar": 42
+      },
+      "revId": "24e16dba828da1856a0c9f871548b1054f17a439",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d04fccfc_f71da7e2",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 3026,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-11-07T06:37:22Z",
+      "side": 1,
+      "message": "They will be updated in [1][2] in defineInterfaceBlockMembers.\nWe need updateInterfaceBlockMembersStaticUsed is because the old implementation only updated the block\u0027s fragmentStaticUse, but missed the block members\u0027 shader reference change. You can check gatherVertexAndFragmentBlockInfo\u0027s logic.",
+      "parentUuid": "a384dde9_bdf213af",
+      "range": {
+        "startLine": 3026,
+        "startChar": 24,
+        "endLine": 3026,
+        "endChar": 42
+      },
+      "revId": "24e16dba828da1856a0c9f871548b1054f17a439",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "733ac9af_506d0817",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 3103,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-11-07T06:37:22Z",
+      "side": 1,
+      "message": "[1]",
+      "range": {
+        "startLine": 3103,
+        "startChar": 16,
+        "endLine": 3103,
+        "endChar": 69
+      },
+      "revId": "24e16dba828da1856a0c9f871548b1054f17a439",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "acc506aa_912e7968",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 3130,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-11-07T06:37:22Z",
+      "side": 1,
+      "message": "[2]",
+      "range": {
+        "startLine": 3130,
+        "startChar": 16,
+        "endLine": 3130,
+        "endChar": 76
       },
       "revId": "24e16dba828da1856a0c9f871548b1054f17a439",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
@@ -91,6 +209,30 @@
       "revId": "24e16dba828da1856a0c9f871548b1054f17a439",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8dd94f04_402ed479",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 1425,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-11-07T06:37:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "120f49d6_b5088c3d",
+      "range": {
+        "startLine": 1425,
+        "startChar": 8,
+        "endLine": 1425,
+        "endChar": 9
+      },
+      "revId": "24e16dba828da1856a0c9f871548b1054f17a439",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
