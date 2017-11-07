@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6265f7f9_4f222b33",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2632,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-11-07T08:19:27Z",
+      "side": 1,
+      "message": "change to UAV",
+      "range": {
+        "startLine": 2632,
+        "startChar": 28,
+        "endLine": 2632,
+        "endChar": 31
+      },
+      "revId": "78c367cb02fa253cd57b515da64642106ff8dcb7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6511d626_24c9cc8c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2633,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-11-07T08:19:27Z",
+      "side": 1,
+      "message": "Same here",
+      "range": {
+        "startLine": 2633,
+        "startChar": 32,
+        "endLine": 2633,
+        "endChar": 53
+      },
+      "revId": "78c367cb02fa253cd57b515da64642106ff8dcb7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
