@@ -25,6 +25,29 @@
     },
     {
       "key": {
+        "uuid": "7b1a129f_1201f7d2",
+        "filename": "src/libANGLE/UniformLinker.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 655,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-07T07:55:40Z",
+      "side": 1,
+      "message": "This condition could be outside the for loop.",
+      "range": {
+        "startLine": 655,
+        "startChar": 57,
+        "endLine": 655,
+        "endChar": 72
+      },
+      "revId": "ad6223774b4ead513b4f8b900e118900eef3a2f9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "62a612d6_b8d3b186",
         "filename": "src/libANGLE/UniformLinker.cpp",
         "patchSetId": 12

@@ -167,6 +167,30 @@
     },
     {
       "key": {
+        "uuid": "df852cbc_df0e11cc",
+        "filename": "src/libANGLE/UniformLinker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 635,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-07T07:55:40Z",
+      "side": 1,
+      "message": "I\u0027m pretty sure the new code is correct. The old code had a continue; before defineInterfaceBlock() on subsequent visits, so your point 1 is incorrect. And it shouldn\u0027t matter in which order the addShaderBlocks calls come. If linked interface blocks have the same name, they are required to have exactly the same contents as well, and defineInterfaceBlock will do the same thing regardless of which shader is processed first.\n\nMaybe this code could be a bit cleaner if shaderType was not passed to defineInterfaceBlock, and setting staticUse would happen here whether it\u0027s the first visit of the block or a subsequent visit.",
+      "parentUuid": "6708d23b_557b9352",
+      "range": {
+        "startLine": 635,
+        "startChar": 12,
+        "endLine": 635,
+        "endChar": 16
+      },
+      "revId": "dd3a2c8a0ba996641d35e6370e1a7c65775033b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "4f41d24f_7c786de4",
         "filename": "src/libANGLE/UniformLinker.cpp",
         "patchSetId": 3
