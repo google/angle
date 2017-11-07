@@ -95,7 +95,7 @@ class FramebufferGL : public FramebufferImpl
     GLuint getFramebufferID() const;
     bool isDefault() const;
 
-    void maskOutInactiveOutputDrawBuffers(gl::DrawBufferMask maxSet);
+    void maskOutInactiveOutputDrawBuffers(GLenum binding, gl::DrawBufferMask maxSet);
 
   private:
     void syncClearState(const gl::Context *context, GLbitfield mask);

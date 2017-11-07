@@ -710,7 +710,7 @@ bool FramebufferGL::isDefault() const
     return mIsDefault;
 }
 
-void FramebufferGL::maskOutInactiveOutputDrawBuffers(DrawBufferMask maxSet)
+void FramebufferGL::maskOutInactiveOutputDrawBuffers(GLenum binding, DrawBufferMask maxSet)
 {
     auto targetAppliedDrawBuffers = mState.getEnabledDrawBuffers() & maxSet;
     if (mAppliedEnabledDrawBuffers != targetAppliedDrawBuffers)
@@ -727,7 +727,7 @@ void FramebufferGL::maskOutInactiveOutputDrawBuffers(DrawBufferMask maxSet)
             drawBuffers[i] = targetAppliedDrawBuffers[i] ? stateDrawBuffers[i] : GL_NONE;
         }
 
-        mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
+        mStateManager->bindFramebuffer(binding, mFramebufferID);
         mFunctions->drawBuffers(drawBufferCount, drawBuffers);
     }
 }
