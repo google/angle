@@ -16,6 +16,24 @@
       "revId": "5b83c403f5cd145026268e5bd4f08c9134b02377",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "17ba1998_668f22a1",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-11-07T05:10:46Z",
+      "side": 1,
+      "message": "My former data is from about 48 fps to 49 fps with my patch. However today I tested this more carefully and I found actually the fps isn\u0027t very stable on our test machine (the fps can vary from 47-50). So I remove this inaccurate statement from the commit message.\nSorry for that.",
+      "parentUuid": "26956c2f_771d3118",
+      "revId": "5b83c403f5cd145026268e5bd4f08c9134b02377",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
