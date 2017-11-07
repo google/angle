@@ -425,16 +425,29 @@ static GLenum GetNativeCompressedFormat(const FunctionsGL *functions,
 
 static GLenum GetNativeType(const FunctionsGL *functions,
                             const WorkaroundsGL &workarounds,
+                            GLenum format,
                             GLenum type)
 {
     GLenum result = type;
 
-    if (functions->standard == STANDARD_GL_DESKTOP)
+    if (functions->standard == STANDARD_GL_DESKTOP || functions->isAtLeastGLES(gl::Version(3, 0)))
     {
         if (type == GL_HALF_FLOAT_OES)
         {
-            // The enums differ for the OES half float extensions and desktop GL spec. Update it.
-            result = GL_HALF_FLOAT;
+            switch (format)
+            {
+                case GL_LUMINANCE_ALPHA:
+                case GL_LUMINANCE:
+                case GL_ALPHA:
+                    // In ES3, these formats come from EXT_texture_storage, which uses
+                    // HALF_FLOAT_OES. Other formats (like RGBA) use HALF_FLOAT (non-OES) in ES3.
+                    break;
+                default:
+                    // The enums differ for the OES half float extensions and desktop GL spec.
+                    // Update it.
+                    result = GL_HALF_FLOAT;
+                    break;
+            }
         }
     }
 
@@ -447,7 +460,7 @@ static GLenum GetNativeReadType(const FunctionsGL *functions,
 {
     GLenum result = type;
 
-    if (functions->standard == STANDARD_GL_DESKTOP)
+    if (functions->standard == STANDARD_GL_DESKTOP || functions->isAtLeastGLES(gl::Version(3, 0)))
     {
         if (type == GL_HALF_FLOAT_OES)
         {
@@ -477,7 +490,7 @@ TexImageFormat GetTexImageFormat(const FunctionsGL *functions,
     result.internalFormat = GetNativeInternalFormat(
         functions, workarounds, gl::GetInternalFormatInfo(internalFormat, type));
     result.format = GetNativeFormat(functions, workarounds, format);
-    result.type   = GetNativeType(functions, workarounds, type);
+    result.type   = GetNativeType(functions, workarounds, format, type);
     return result;
 }
 
@@ -488,7 +501,7 @@ TexSubImageFormat GetTexSubImageFormat(const FunctionsGL *functions,
 {
     TexSubImageFormat result;
     result.format = GetNativeFormat(functions, workarounds, format);
-    result.type   = GetNativeType(functions, workarounds, type);
+    result.type   = GetNativeType(functions, workarounds, format, type);
     return result;
 }
 
