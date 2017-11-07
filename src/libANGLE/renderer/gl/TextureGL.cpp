@@ -1344,13 +1344,7 @@ void TextureGL::setLevelInfo(GLenum target,
 {
     ASSERT(levelCount > 0);
 
-    GLuint baseLevel              = mState.getEffectiveBaseLevel();
-    bool needsResync              = level <= baseLevel && level + levelCount >= baseLevel &&
-                       (levelInfo.depthStencilWorkaround || levelInfo.lumaWorkaround.enabled);
-    if (needsResync)
-    {
-        mLocalDirtyBits |= GetLevelWorkaroundDirtyBits();
-    }
+    bool updateWorkarounds = levelInfo.depthStencilWorkaround || levelInfo.lumaWorkaround.enabled;
 
     for (size_t i = level; i < level + levelCount; i++)
     {
@@ -1361,15 +1355,30 @@ void TextureGL::setLevelInfo(GLenum target,
             {
                 size_t index = GetLevelInfoIndex(face, level);
                 ASSERT(index < mLevelInfo.size());
-                mLevelInfo[index] = levelInfo;
+                auto &curLevelInfo = mLevelInfo[index];
+
+                updateWorkarounds |= curLevelInfo.depthStencilWorkaround;
+                updateWorkarounds |= curLevelInfo.lumaWorkaround.enabled;
+
+                curLevelInfo = levelInfo;
             }
         }
         else
         {
             size_t index = GetLevelInfoIndex(target, level);
             ASSERT(index < mLevelInfo.size());
-            mLevelInfo[index] = levelInfo;
+            auto &curLevelInfo = mLevelInfo[index];
+
+            updateWorkarounds |= curLevelInfo.depthStencilWorkaround;
+            updateWorkarounds |= curLevelInfo.lumaWorkaround.enabled;
+
+            curLevelInfo = levelInfo;
         }
+    }
+
+    if (updateWorkarounds)
+    {
+        mLocalDirtyBits |= GetLevelWorkaroundDirtyBits();
     }
 }
 
