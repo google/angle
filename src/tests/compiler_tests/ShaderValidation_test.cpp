@@ -5274,3 +5274,21 @@ TEST_F(FragmentShaderValidationTest, NamedStructDefinitionAsParameterType)
         FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
     }
 }
+
+// Test that an unsized const array doesn't assert.
+TEST_F(FragmentShaderValidationTest, UnsizedConstArray)
+{
+    const std::string &shaderString =
+        R"(#version 300 es
+
+        void main()
+        {
+            const int t[];
+            t[0];
+        })";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}

@@ -1061,7 +1061,6 @@ void TParseContext::checkCanBeDeclaredWithoutInitializer(const TSourceLoc &line,
         {
             error(line, "variables with qualifier 'const' must be initialized", identifier.c_str());
         }
-        return;
     }
     // This will make the type sized if it isn't sized yet.
     checkIsNotUnsizedArray(line, "implicitly sized arrays need to be initialized",
