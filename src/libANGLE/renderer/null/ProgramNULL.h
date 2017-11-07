@@ -29,7 +29,7 @@ class ProgramNULL : public ProgramImpl
     void setSeparable(bool separable) override;
 
     gl::LinkResult link(const gl::Context *context,
-                        const gl::VaryingPacking &packing,
+                        const gl::ProgramLinkedResources &resources,
                         gl::InfoLog &infoLog) override;
     GLboolean validate(const gl::Caps &caps, gl::InfoLog *infoLog) override;
 

@@ -12,6 +12,7 @@
 
 #include "gmock/gmock.h"
 
+#include "libANGLE/UniformLinker.h"
 #include "libANGLE/renderer/ProgramImpl.h"
 
 namespace rx
@@ -29,7 +30,9 @@ class MockProgramImpl : public rx::ProgramImpl
     MOCK_METHOD1(setSeparable, void(bool));
 
     MOCK_METHOD3(link,
-                 gl::LinkResult(const gl::Context *, const gl::VaryingPacking &, gl::InfoLog &));
+                 gl::LinkResult(const gl::Context *,
+                                const gl::ProgramLinkedResources &,
+                                gl::InfoLog &));
     MOCK_METHOD2(validate, GLboolean(const gl::Caps &, gl::InfoLog *));
 
     MOCK_METHOD3(setUniform1fv, void(GLint, GLsizei, const GLfloat *));

@@ -199,7 +199,7 @@ void ProgramVk::setSeparable(bool separable)
 }
 
 gl::LinkResult ProgramVk::link(const gl::Context *glContext,
-                               const gl::VaryingPacking &packing,
+                               const gl::ProgramLinkedResources &resources,
                                gl::InfoLog &infoLog)
 {
     ContextVk *contextVk           = vk::GetImpl(glContext);

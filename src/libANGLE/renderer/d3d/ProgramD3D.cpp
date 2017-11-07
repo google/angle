@@ -16,7 +16,7 @@
 #include "libANGLE/FramebufferAttachment.h"
 #include "libANGLE/Program.h"
 #include "libANGLE/Uniform.h"
-#include "libANGLE/VaryingPacking.h"
+#include "libANGLE/UniformLinker.h"
 #include "libANGLE/VertexArray.h"
 #include "libANGLE/features.h"
 #include "libANGLE/queryconversions.h"
@@ -1480,7 +1480,7 @@ gl::LinkResult ProgramD3D::compileComputeExecutable(const gl::Context *context,
 }
 
 gl::LinkResult ProgramD3D::link(const gl::Context *context,
-                                const gl::VaryingPacking &packing,
+                                const gl::ProgramLinkedResources &resources,
                                 gl::InfoLog &infoLog)
 {
     const auto &data = context->getContextState();
@@ -1535,17 +1535,17 @@ gl::LinkResult ProgramD3D::link(const gl::Context *context,
         // We can fail here because we use one semantic per GLSL varying. D3D11 can pack varyings
         // intelligently, but D3D9 assumes one semantic per register.
         if (mRenderer->getRendererClass() == RENDERER_D3D9 &&
-            packing.getMaxSemanticIndex() > data.getCaps().maxVaryingVectors)
+            resources.varyingPacking.getMaxSemanticIndex() > data.getCaps().maxVaryingVectors)
         {
             infoLog << "Cannot pack these varyings on D3D9.";
             return false;
         }
 
         ProgramD3DMetadata metadata(mRenderer, vertexShaderD3D, fragmentShaderD3D);
-        BuiltinVaryingsD3D builtins(metadata, packing);
+        BuiltinVaryingsD3D builtins(metadata, resources.varyingPacking);
 
-        mDynamicHLSL->generateShaderLinkHLSL(context, mState, metadata, packing, builtins,
-                                             &mPixelHLSL, &mVertexHLSL);
+        mDynamicHLSL->generateShaderLinkHLSL(context, mState, metadata, resources.varyingPacking,
+                                             builtins, &mPixelHLSL, &mVertexHLSL);
 
         mUsesPointSize = vertexShaderD3D->usesPointSize();
         mDynamicHLSL->getPixelShaderOutputKey(data, mState, metadata, &mPixelShaderKey);
@@ -1561,7 +1561,7 @@ gl::LinkResult ProgramD3D::link(const gl::Context *context,
         if (mRenderer->getMajorShaderModel() >= 4)
         {
             mGeometryShaderPreamble = mDynamicHLSL->generateGeometryShaderPreamble(
-                packing, builtins, mHasANGLEMultiviewEnabled,
+                resources.varyingPacking, builtins, mHasANGLEMultiviewEnabled,
                 metadata.canSelectViewInVertexShader());
         }
 
@@ -1569,7 +1569,7 @@ gl::LinkResult ProgramD3D::link(const gl::Context *context,
 
         defineUniformsAndAssignRegisters(context);
 
-        gatherTransformFeedbackVaryings(packing, builtins[SHADER_VERTEX]);
+        gatherTransformFeedbackVaryings(resources.varyingPacking, builtins[SHADER_VERTEX]);
 
         gl::LinkResult result = compileProgramExecutables(context, infoLog);
         if (result.isError())

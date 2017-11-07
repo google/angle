@@ -258,6 +258,53 @@ bool validateInterfaceBlocksCount(GLuint maxInterfaceBlocks,
     return true;
 }
 
+void InitUniformBlockLinker(const gl::Context *context,
+                            const ProgramState &state,
+                            UniformBlockLinker *blockLinker)
+{
+    if (state.getAttachedVertexShader())
+    {
+        blockLinker->addShaderBlocks(GL_VERTEX_SHADER,
+                                     &state.getAttachedVertexShader()->getUniformBlocks(context));
+    }
+
+    if (state.getAttachedFragmentShader())
+    {
+        blockLinker->addShaderBlocks(GL_FRAGMENT_SHADER,
+                                     &state.getAttachedFragmentShader()->getUniformBlocks(context));
+    }
+
+    if (state.getAttachedComputeShader())
+    {
+        blockLinker->addShaderBlocks(GL_COMPUTE_SHADER,
+                                     &state.getAttachedComputeShader()->getUniformBlocks(context));
+    }
+}
+
+void InitShaderStorageBlockLinker(const gl::Context *context,
+                                  const ProgramState &state,
+                                  ShaderStorageBlockLinker *blockLinker)
+{
+    if (state.getAttachedVertexShader())
+    {
+        blockLinker->addShaderBlocks(
+            GL_VERTEX_SHADER, &state.getAttachedVertexShader()->getShaderStorageBlocks(context));
+    }
+
+    if (state.getAttachedFragmentShader())
+    {
+        blockLinker->addShaderBlocks(
+            GL_FRAGMENT_SHADER,
+            &state.getAttachedFragmentShader()->getShaderStorageBlocks(context));
+    }
+
+    if (state.getAttachedComputeShader())
+    {
+        blockLinker->addShaderBlocks(
+            GL_COMPUTE_SHADER, &state.getAttachedComputeShader()->getShaderStorageBlocks(context));
+    }
+}
+
 }  // anonymous namespace
 
 const char *const g_fakepath = "C:\\fakepath";
@@ -736,8 +783,14 @@ Error Program::link(const gl::Context *context)
             return NoError();
         }
 
-        gl::VaryingPacking noPacking(0, PackMode::ANGLE_RELAXED);
-        ANGLE_TRY_RESULT(mProgram->link(context, noPacking, mInfoLog), mLinked);
+        ProgramLinkedResources resources = {{0, PackMode::ANGLE_RELAXED},
+                                            {&mState.mUniformBlocks, &mState.mUniforms},
+                                            {&mState.mShaderStorageBlocks}};
+
+        InitUniformBlockLinker(context, mState, &resources.uniformBlockLinker);
+        InitShaderStorageBlockLinker(context, mState, &resources.shaderStorageBlockLinker);
+
+        ANGLE_TRY_RESULT(mProgram->link(context, resources, mInfoLog), mLinked);
         if (!mLinked)
         {
             return NoError();
@@ -801,9 +854,16 @@ Error Program::link(const gl::Context *context)
         // In WebGL, we use a slightly different handling for packing variables.
         auto packMode = data.getExtensions().webglCompatibility ? PackMode::WEBGL_STRICT
                                                                 : PackMode::ANGLE_RELAXED;
-        VaryingPacking varyingPacking(data.getCaps().maxVaryingVectors, packMode);
-        if (!varyingPacking.packUserVaryings(mInfoLog, packedVaryings,
-                                             mState.getTransformFeedbackVaryingNames()))
+
+        ProgramLinkedResources resources = {{data.getCaps().maxVaryingVectors, packMode},
+                                            {&mState.mUniformBlocks, &mState.mUniforms},
+                                            {&mState.mShaderStorageBlocks}};
+
+        InitUniformBlockLinker(context, mState, &resources.uniformBlockLinker);
+        InitShaderStorageBlockLinker(context, mState, &resources.shaderStorageBlockLinker);
+
+        if (!resources.varyingPacking.packUserVaryings(mInfoLog, packedVaryings,
+                                                       mState.getTransformFeedbackVaryingNames()))
         {
             return NoError();
         }
@@ -813,7 +873,7 @@ Error Program::link(const gl::Context *context)
             return NoError();
         }
 
-        ANGLE_TRY_RESULT(mProgram->link(context, varyingPacking, mInfoLog), mLinked);
+        ANGLE_TRY_RESULT(mProgram->link(context, resources, mInfoLog), mLinked);
         if (!mLinked)
         {
             return NoError();
@@ -2829,24 +2889,7 @@ void Program::gatherAtomicCounterBuffers()
 void Program::gatherUniformBlockInfo(const gl::Context *context)
 {
     UniformBlockLinker blockLinker(&mState.mUniformBlocks, &mState.mUniforms);
-
-    if (mState.mAttachedVertexShader)
-    {
-        blockLinker.addShaderBlocks(GL_VERTEX_SHADER,
-                                    &mState.mAttachedVertexShader->getUniformBlocks(context));
-    }
-
-    if (mState.mAttachedFragmentShader)
-    {
-        blockLinker.addShaderBlocks(GL_FRAGMENT_SHADER,
-                                    &mState.mAttachedFragmentShader->getUniformBlocks(context));
-    }
-
-    if (mState.mAttachedComputeShader)
-    {
-        blockLinker.addShaderBlocks(GL_COMPUTE_SHADER,
-                                    &mState.mAttachedComputeShader->getUniformBlocks(context));
-    }
+    InitUniformBlockLinker(context, mState, &blockLinker);
 
     auto getImplBlockSize = [this](const std::string &name, const std::string &mappedName,
                                    size_t *sizeOut) {
@@ -2864,24 +2907,7 @@ void Program::gatherUniformBlockInfo(const gl::Context *context)
 void Program::gatherShaderStorageBlockInfo(const gl::Context *context)
 {
     ShaderStorageBlockLinker blockLinker(&mState.mShaderStorageBlocks);
-
-    if (mState.mAttachedVertexShader)
-    {
-        blockLinker.addShaderBlocks(GL_VERTEX_SHADER,
-                                    &mState.mAttachedVertexShader->getShaderStorageBlocks(context));
-    }
-
-    if (mState.mAttachedFragmentShader)
-    {
-        blockLinker.addShaderBlocks(
-            GL_FRAGMENT_SHADER, &mState.mAttachedFragmentShader->getShaderStorageBlocks(context));
-    }
-
-    if (mState.mAttachedComputeShader)
-    {
-        blockLinker.addShaderBlocks(
-            GL_COMPUTE_SHADER, &mState.mAttachedComputeShader->getShaderStorageBlocks(context));
-    }
+    InitShaderStorageBlockLinker(context, mState, &blockLinker);
 
     // We don't have a way of determining block info for shader storage blocks yet.
     // TODO(jiajia.qin@intel.com): Determine correct block size and layout.

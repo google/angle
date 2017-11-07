@@ -13,6 +13,7 @@
 
 #include "libANGLE/Program.h"
 #include "libANGLE/Uniform.h"
+#include "libANGLE/VaryingPacking.h"
 
 #include <functional>
 
@@ -192,6 +193,16 @@ class ShaderStorageBlockLinker final : public InterfaceBlockLinker
                            int blockIndex,
                            const sh::BlockMemberInfo &memberInfo) const override;
     size_t getCurrentBlockMemberIndex() const override;
+};
+
+// The link operation is responsible for finishing the link of uniform and interface blocks.
+// This way it can filter out unreferenced resources and still have access to the info.
+// TODO(jmadill): Integrate uniform linking/filtering as well as interface blocks.
+struct ProgramLinkedResources
+{
+    VaryingPacking varyingPacking;
+    UniformBlockLinker uniformBlockLinker;
+    ShaderStorageBlockLinker shaderStorageBlockLinker;
 };
 
 }  // namespace gl
