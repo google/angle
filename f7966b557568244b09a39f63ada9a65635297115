@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d549a853_fc967505",
+        "filename": "src/libANGLE/UniformLinker.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 648,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-07T13:34:19Z",
+      "side": 1,
+      "message": "I don\u0027t think that this code is correct now. The defineInterfaceBlock() call should only be done once per interface block, even if it exists in multiple shader stages.",
+      "revId": "f7966b557568244b09a39f63ada9a65635297115",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
