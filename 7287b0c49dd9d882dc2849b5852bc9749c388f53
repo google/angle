@@ -307,6 +307,30 @@
       "revId": "7287b0c49dd9d882dc2849b5852bc9749c388f53",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3ba41ae4_c53e766c",
+        "filename": "src/tests/gl_tests/FramebufferTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 676,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-11-07T09:45:22Z",
+      "side": 1,
+      "message": "Good to know, thanks.",
+      "parentUuid": "383bf09f_ed925aec",
+      "range": {
+        "startLine": 673,
+        "startChar": 0,
+        "endLine": 676,
+        "endChar": 5
+      },
+      "revId": "7287b0c49dd9d882dc2849b5852bc9749c388f53",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
