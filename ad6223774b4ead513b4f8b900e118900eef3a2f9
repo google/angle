@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3197b38a_4c9542de",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 12
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-11-07T01:03:30Z",
+      "side": 1,
+      "message": "Is something missing here, like ShaderStorageBlockLinker?",
+      "range": {
+        "startLine": 15,
+        "startChar": 60,
+        "endLine": 15,
+        "endChar": 70
+      },
+      "revId": "ad6223774b4ead513b4f8b900e118900eef3a2f9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "62a612d6_b8d3b186",
+        "filename": "src/libANGLE/UniformLinker.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 688,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-11-07T01:03:30Z",
+      "side": 1,
+      "message": "not necessarily uniform anymore",
+      "range": {
+        "startLine": 688,
+        "startChar": 34,
+        "endLine": 688,
+        "endChar": 41
+      },
+      "revId": "ad6223774b4ead513b4f8b900e118900eef3a2f9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3a9c15f0_b1af0275",
+        "filename": "src/libANGLE/UniformLinker.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 690,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-11-07T01:03:30Z",
+      "side": 1,
+      "message": "ditto",
+      "range": {
+        "startLine": 690,
+        "startChar": 34,
+        "endLine": 690,
+        "endChar": 41
+      },
+      "revId": "ad6223774b4ead513b4f8b900e118900eef3a2f9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "55498e2a_01b3f350",
+        "filename": "src/libANGLE/UniformLinker.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-11-07T01:03:30Z",
+      "side": 1,
+      "message": "nit: does not\nStill, I would prefer some kind of reference counting smart pointer. Better safe than sorry.",
+      "range": {
+        "startLine": 130,
+        "startChar": 33,
+        "endLine": 130,
+        "endChar": 36
+      },
+      "revId": "ad6223774b4ead513b4f8b900e118900eef3a2f9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bd04bb7e_dbbd7a44",
+        "filename": "src/libANGLE/UniformLinker.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-11-07T01:03:30Z",
+      "side": 1,
+      "message": "nit: Since you don\u0027t use bufferVariablesOut yet, my personal preference it not to have them in the interface, but add only when you\u0027ll actually do something with them. Like, can you be 100% certain that the eventual type will be LinkedUniform?",
+      "range": {
+        "startLine": 186,
+        "startChar": 29,
+        "endLine": 186,
+        "endChar": 75
+      },
+      "revId": "ad6223774b4ead513b4f8b900e118900eef3a2f9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

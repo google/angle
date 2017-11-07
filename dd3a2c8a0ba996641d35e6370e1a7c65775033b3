@@ -143,6 +143,30 @@
     },
     {
       "key": {
+        "uuid": "6708d23b_557b9352",
+        "filename": "src/libANGLE/UniformLinker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 635,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-11-07T01:03:30Z",
+      "side": 1,
+      "message": "I\u0027m not really familiar with this code, but I observed 2 differences between the old and the new code:\n\n1. Old code called defineInterfaceBlock() unconditionally, for first and for all subsequent visits of block.name. New code will call it only for the first visit. I don\u0027t know if the end result will be the same, or what code is correct - old or new.\n\n2. Old code was iterating over vertex shader first and then over fragment shader. block.staticUse was backwards propagated from fragment shader to vertex shader. The new code will continue doing the same, if addShaderBlocks was called for vertex first and then for fragment. If the order was reversed, it will start propagating block.static use from vertex to fragment. What I\u0027ve meant by \"no way to enforce this condition with the current API\" is that you don\u0027t have control over the order in which addShaderBlocks is called. Again, I don\u0027t know if it\u0027s good or bad, just pointing out the difference.",
+      "parentUuid": "9fb07e6d_c6def63e",
+      "range": {
+        "startLine": 635,
+        "startChar": 12,
+        "endLine": 635,
+        "endChar": 16
+      },
+      "revId": "dd3a2c8a0ba996641d35e6370e1a7c65775033b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "4f41d24f_7c786de4",
         "filename": "src/libANGLE/UniformLinker.cpp",
         "patchSetId": 3
