@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b66b4cc9_3d2f93fc",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-11-07T17:40:57Z",
+      "side": 1,
+      "message": "nit: missing space.",
+      "range": {
+        "startLine": 152,
+        "startChar": 43,
+        "endLine": 152,
+        "endChar": 44
+      },
+      "revId": "938a67e3ddb3744b67f74426ab03a46cb1fb6def",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
