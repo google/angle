@@ -34,6 +34,24 @@
       "revId": "5b83c403f5cd145026268e5bd4f08c9134b02377",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ec01f73c_90fd802c",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-11-07T16:20:45Z",
+      "side": 1,
+      "message": "NP, I was just curious.",
+      "parentUuid": "17ba1998_668f22a1",
+      "revId": "5b83c403f5cd145026268e5bd4f08c9134b02377",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
