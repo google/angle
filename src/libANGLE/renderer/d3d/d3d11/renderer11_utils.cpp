@@ -2079,6 +2079,50 @@ HRESULT SetDebugName(ID3D11DeviceChild *resource, const char *name)
 #endif
 }
 
+// Keep this in cpp file where it has visibility of Renderer11.h, otherwise calling
+// allocateResource is only compatible with Clang and MSVS, which support calling a
+// method on a forward declared class in a template.
+template <ResourceType ResourceT>
+gl::Error LazyResource<ResourceT>::resolveImpl(Renderer11 *renderer,
+                                               const GetDescType<ResourceT> &desc,
+                                               GetInitDataType<ResourceT> *initData,
+                                               const char *name)
+{
+    if (!mResource.valid())
+    {
+        ANGLE_TRY(renderer->allocateResource(desc, initData, &mResource));
+        mResource.setDebugName(name);
+    }
+    return gl::NoError();
+}
+
+template gl::Error LazyResource<ResourceType::BlendState>::resolveImpl(Renderer11 *renderer,
+                                                                       const D3D11_BLEND_DESC &desc,
+                                                                       void *initData,
+                                                                       const char *name);
+template gl::Error LazyResource<ResourceType::ComputeShader>::resolveImpl(Renderer11 *renderer,
+                                                                          const ShaderData &desc,
+                                                                          void *initData,
+                                                                          const char *name);
+template gl::Error LazyResource<ResourceType::GeometryShader>::resolveImpl(
+    Renderer11 *renderer,
+    const ShaderData &desc,
+    const std::vector<D3D11_SO_DECLARATION_ENTRY> *initData,
+    const char *name);
+template gl::Error LazyResource<ResourceType::InputLayout>::resolveImpl(
+    Renderer11 *renderer,
+    const InputElementArray &desc,
+    const ShaderData *initData,
+    const char *name);
+template gl::Error LazyResource<ResourceType::PixelShader>::resolveImpl(Renderer11 *renderer,
+                                                                        const ShaderData &desc,
+                                                                        void *initData,
+                                                                        const char *name);
+template gl::Error LazyResource<ResourceType::VertexShader>::resolveImpl(Renderer11 *renderer,
+                                                                         const ShaderData &desc,
+                                                                         void *initData,
+                                                                         const char *name);
+
 gl::Error LazyInputLayout::resolve(Renderer11 *renderer)
 {
     return resolveImpl(renderer, mInputDesc, &mByteCode, mDebugName);

@@ -197,18 +197,12 @@ class LazyResource : angle::NonCopyable
 
   protected:
     LazyResource(LazyResource &&other) : mResource(std::move(other.mResource)) {}
+
+    // Specialized in the cpp file to avoid MSVS/Clang specific code.
     gl::Error resolveImpl(Renderer11 *renderer,
                           const GetDescType<ResourceT> &desc,
                           GetInitDataType<ResourceT> *initData,
-                          const char *name)
-    {
-        if (!mResource.valid())
-        {
-            ANGLE_TRY(renderer->allocateResource(desc, initData, &mResource));
-            mResource.setDebugName(name);
-        }
-        return gl::NoError();
-    }
+                          const char *name);
 
     Resource11<GetD3D11Type<ResourceT>> mResource;
 };
