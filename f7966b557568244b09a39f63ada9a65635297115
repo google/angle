@@ -34,6 +34,24 @@
       "revId": "f7966b557568244b09a39f63ada9a65635297115",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f1dbb662_9540250b",
+        "filename": "src/libANGLE/UniformLinker.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 648,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-07T15:58:32Z",
+      "side": 1,
+      "message": "Derp. Your suggestion doesn\u0027t work, since priorBlock is not unique. I reverted to the way that I had it before that works.",
+      "parentUuid": "796ed312_2dc28e6a",
+      "revId": "f7966b557568244b09a39f63ada9a65635297115",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
