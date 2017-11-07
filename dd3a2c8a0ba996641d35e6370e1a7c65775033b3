@@ -191,6 +191,30 @@
     },
     {
       "key": {
+        "uuid": "24a51329_03d2ed00",
+        "filename": "src/libANGLE/UniformLinker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 635,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-07T13:25:22Z",
+      "side": 1,
+      "message": "Followed Olli\u0027s suggestion and removed visitedList, and put the staticUse update after the call. Slightly less efficient since it\u0027ll traverse the list of blocks more often, but not a big deal, and it is nice to remove the map.",
+      "parentUuid": "df852cbc_df0e11cc",
+      "range": {
+        "startLine": 635,
+        "startChar": 12,
+        "endLine": 635,
+        "endChar": 16
+      },
+      "revId": "dd3a2c8a0ba996641d35e6370e1a7c65775033b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4f41d24f_7c786de4",
         "filename": "src/libANGLE/UniformLinker.cpp",
         "patchSetId": 3

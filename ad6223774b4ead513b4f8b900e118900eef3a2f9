@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "ab57a37b_8ad3ab69",
+        "filename": "src/libANGLE/UniformLinker.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 655,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-07T13:25:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7b1a129f_1201f7d2",
+      "range": {
+        "startLine": 655,
+        "startChar": 57,
+        "endLine": 655,
+        "endChar": 72
+      },
+      "revId": "ad6223774b4ead513b4f8b900e118900eef3a2f9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "62a612d6_b8d3b186",
         "filename": "src/libANGLE/UniformLinker.cpp",
         "patchSetId": 12
@@ -68,6 +92,30 @@
       "revId": "ad6223774b4ead513b4f8b900e118900eef3a2f9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d09a5231_baf4e606",
+        "filename": "src/libANGLE/UniformLinker.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 688,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-07T13:25:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "62a612d6_b8d3b186",
+      "range": {
+        "startLine": 688,
+        "startChar": 34,
+        "endLine": 688,
+        "endChar": 41
+      },
+      "revId": "ad6223774b4ead513b4f8b900e118900eef3a2f9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -94,6 +142,30 @@
     },
     {
       "key": {
+        "uuid": "49b4b81a_23cb55ba",
+        "filename": "src/libANGLE/UniformLinker.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 690,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-07T13:25:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3a9c15f0_b1af0275",
+      "range": {
+        "startLine": 690,
+        "startChar": 34,
+        "endLine": 690,
+        "endChar": 41
+      },
+      "revId": "ad6223774b4ead513b4f8b900e118900eef3a2f9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "55498e2a_01b3f350",
         "filename": "src/libANGLE/UniformLinker.h",
         "patchSetId": 12
@@ -117,6 +189,30 @@
     },
     {
       "key": {
+        "uuid": "e48c3bbb_2a7e6373",
+        "filename": "src/libANGLE/UniformLinker.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-07T13:25:22Z",
+      "side": 1,
+      "message": "Fixed typo, thanks. I don\u0027t think we want to use heap allocation and reference counting every time we pass a pointer to a helper class. That could be inefficient. This seems like a safe design pattern.",
+      "parentUuid": "55498e2a_01b3f350",
+      "range": {
+        "startLine": 130,
+        "startChar": 33,
+        "endLine": 130,
+        "endChar": 36
+      },
+      "revId": "ad6223774b4ead513b4f8b900e118900eef3a2f9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bd04bb7e_dbbd7a44",
         "filename": "src/libANGLE/UniformLinker.h",
         "patchSetId": 12
@@ -137,6 +233,30 @@
       "revId": "ad6223774b4ead513b4f8b900e118900eef3a2f9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "725131d2_b02f30da",
+        "filename": "src/libANGLE/UniformLinker.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-07T13:25:22Z",
+      "side": 1,
+      "message": "Removed it. They will be of type \"BufferVariable\", I was leaving it to make it a bit clearer on how to use, but should be ok without it.",
+      "parentUuid": "bd04bb7e_dbbd7a44",
+      "range": {
+        "startLine": 186,
+        "startChar": 29,
+        "endLine": 186,
+        "endChar": 75
+      },
+      "revId": "ad6223774b4ead513b4f8b900e118900eef3a2f9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
