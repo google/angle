@@ -16,6 +16,24 @@
       "revId": "8f0a7e06841be2b5bf0d85842b15e5e32f584356",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1cace3a2_695721b0",
+        "filename": "src/compiler/translator/StructureHLSL.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-07T10:25:47Z",
+      "side": 1,
+      "message": "The declarations can\u0027t be stored in a map because their ordering is important. I did put the constructors in the map now, and removed some unnecessary searching.",
+      "parentUuid": "b67bbb7f_c3fc061f",
+      "revId": "8f0a7e06841be2b5bf0d85842b15e5e32f584356",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
