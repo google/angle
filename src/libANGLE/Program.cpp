@@ -2826,71 +2826,76 @@ void Program::gatherAtomicCounterBuffers()
     // TODO(jie.a.chen@intel.com): Get the actual BUFFER_DATA_SIZE from backend for each buffer.
 }
 
-void Program::gatherComputeBlockInfo(const std::vector<sh::InterfaceBlock> &computeBlocks)
+void Program::gatherUniformBlockInfo(const gl::Context *context)
 {
-    for (const sh::InterfaceBlock &computeBlock : computeBlocks)
+    UniformBlockLinker blockLinker(&mState.mUniformBlocks, &mState.mUniforms);
+
+    if (mState.mAttachedVertexShader)
     {
-
-        // Only 'packed' blocks are allowed to be considered inactive.
-        if (!computeBlock.staticUse && computeBlock.layout == sh::BLOCKLAYOUT_PACKED)
-            continue;
-
-        defineInterfaceBlock(computeBlock, GL_COMPUTE_SHADER);
+        blockLinker.addShaderBlocks(GL_VERTEX_SHADER,
+                                    &mState.mAttachedVertexShader->getUniformBlocks(context));
     }
+
+    if (mState.mAttachedFragmentShader)
+    {
+        blockLinker.addShaderBlocks(GL_FRAGMENT_SHADER,
+                                    &mState.mAttachedFragmentShader->getUniformBlocks(context));
+    }
+
+    if (mState.mAttachedComputeShader)
+    {
+        blockLinker.addShaderBlocks(GL_COMPUTE_SHADER,
+                                    &mState.mAttachedComputeShader->getUniformBlocks(context));
+    }
+
+    auto getImplBlockSize = [this](const std::string &name, const std::string &mappedName,
+                                   size_t *sizeOut) {
+        return this->mProgram->getUniformBlockSize(name, mappedName, sizeOut);
+    };
+
+    auto getImplMemberInfo = [this](const std::string &name, const std::string &mappedName,
+                                    sh::BlockMemberInfo *infoOut) {
+        return this->mProgram->getUniformBlockMemberInfo(name, mappedName, infoOut);
+    };
+
+    blockLinker.linkBlocks(getImplBlockSize, getImplMemberInfo);
 }
 
-void Program::gatherVertexAndFragmentBlockInfo(
-    const std::vector<sh::InterfaceBlock> &vertexInterfaceBlocks,
-    const std::vector<sh::InterfaceBlock> &fragmentInterfaceBlocks)
+void Program::gatherShaderStorageBlockInfo(const gl::Context *context)
 {
-    std::set<std::string> visitedList;
+    ShaderStorageBlockLinker blockLinker(&mState.mShaderStorageBlocks);
 
-    for (const sh::InterfaceBlock &vertexBlock : vertexInterfaceBlocks)
+    if (mState.mAttachedVertexShader)
     {
-        // Only 'packed' blocks are allowed to be considered inactive.
-        if (!vertexBlock.staticUse && vertexBlock.layout == sh::BLOCKLAYOUT_PACKED)
-            continue;
-
-        defineInterfaceBlock(vertexBlock, GL_VERTEX_SHADER);
-        visitedList.insert(vertexBlock.name);
+        blockLinker.addShaderBlocks(GL_VERTEX_SHADER,
+                                    &mState.mAttachedVertexShader->getShaderStorageBlocks(context));
     }
 
-    for (const sh::InterfaceBlock &fragmentBlock : fragmentInterfaceBlocks)
+    if (mState.mAttachedFragmentShader)
     {
-        // Only 'packed' blocks are allowed to be considered inactive.
-        if (!fragmentBlock.staticUse && fragmentBlock.layout == sh::BLOCKLAYOUT_PACKED)
-            continue;
-
-        if (visitedList.count(fragmentBlock.name) > 0)
-        {
-            if (fragmentBlock.blockType == sh::BlockType::BLOCK_UNIFORM)
-            {
-                for (InterfaceBlock &block : mState.mUniformBlocks)
-                {
-                    if (block.name == fragmentBlock.name)
-                    {
-                        block.fragmentStaticUse = fragmentBlock.staticUse;
-                    }
-                }
-            }
-            else
-            {
-                ASSERT(fragmentBlock.blockType == sh::BlockType::BLOCK_BUFFER);
-                for (InterfaceBlock &block : mState.mShaderStorageBlocks)
-                {
-                    if (block.name == fragmentBlock.name)
-                    {
-                        block.fragmentStaticUse = fragmentBlock.staticUse;
-                    }
-                }
-            }
-
-            continue;
-        }
-
-        defineInterfaceBlock(fragmentBlock, GL_FRAGMENT_SHADER);
-        visitedList.insert(fragmentBlock.name);
+        blockLinker.addShaderBlocks(
+            GL_FRAGMENT_SHADER, &mState.mAttachedFragmentShader->getShaderStorageBlocks(context));
     }
+
+    if (mState.mAttachedComputeShader)
+    {
+        blockLinker.addShaderBlocks(
+            GL_COMPUTE_SHADER, &mState.mAttachedComputeShader->getShaderStorageBlocks(context));
+    }
+
+    // We don't have a way of determining block info for shader storage blocks yet.
+    // TODO(jiajia.qin@intel.com): Determine correct block size and layout.
+    auto getImplBlockSize = [this](const std::string &name, const std::string &mappedName,
+                                   size_t *sizeOut) {
+        return this->mProgram->getUniformBlockSize(name, mappedName, sizeOut);
+    };
+
+    auto getImplMemberInfo = [this](const std::string &name, const std::string &mappedName,
+                                    sh::BlockMemberInfo *infoOut) {
+        return this->mProgram->getUniformBlockMemberInfo(name, mappedName, infoOut);
+    };
+
+    blockLinker.linkBlocks(getImplBlockSize, getImplMemberInfo);
 }
 
 void Program::gatherInterfaceBlockInfo(const Context *context)
@@ -2898,24 +2903,10 @@ void Program::gatherInterfaceBlockInfo(const Context *context)
     ASSERT(mState.mUniformBlocks.empty());
     ASSERT(mState.mShaderStorageBlocks.empty());
 
-    if (mState.mAttachedComputeShader)
-    {
-        Shader *computeShader = mState.getAttachedComputeShader();
-
-        gatherComputeBlockInfo(computeShader->getUniformBlocks(context));
-        gatherComputeBlockInfo(computeShader->getShaderStorageBlocks(context));
-        return;
-    }
-
-    Shader *vertexShader   = mState.getAttachedVertexShader();
-    Shader *fragmentShader = mState.getAttachedFragmentShader();
-
-    gatherVertexAndFragmentBlockInfo(vertexShader->getUniformBlocks(context),
-                                     fragmentShader->getUniformBlocks(context));
+    gatherUniformBlockInfo(context);
     if (context->getClientVersion() >= Version(3, 1))
     {
-        gatherVertexAndFragmentBlockInfo(vertexShader->getShaderStorageBlocks(context),
-                                         fragmentShader->getShaderStorageBlocks(context));
+        gatherShaderStorageBlockInfo(context);
     }
 
     // Set initial bindings from shader.
@@ -2923,154 +2914,6 @@ void Program::gatherInterfaceBlockInfo(const Context *context)
     {
         InterfaceBlock &uniformBlock = mState.mUniformBlocks[blockIndex];
         bindUniformBlock(blockIndex, uniformBlock.binding);
-    }
-}
-
-template <typename VarT>
-void Program::defineUniformBlockMembers(const std::vector<VarT> &fields,
-                                        const std::string &prefix,
-                                        const std::string &mappedPrefix,
-                                        int blockIndex)
-{
-    for (const VarT &field : fields)
-    {
-        std::string fullName = (prefix.empty() ? field.name : prefix + "." + field.name);
-
-        std::string fullMappedName =
-            (mappedPrefix.empty() ? field.mappedName : mappedPrefix + "." + field.mappedName);
-
-        if (field.isStruct())
-        {
-            for (unsigned int arrayElement = 0; arrayElement < field.elementCount(); arrayElement++)
-            {
-                const std::string uniformElementName =
-                    fullName + (field.isArray() ? ArrayString(arrayElement) : "");
-                const std::string uniformElementMappedName =
-                    fullMappedName + (field.isArray() ? ArrayString(arrayElement) : "");
-                defineUniformBlockMembers(field.fields, uniformElementName,
-                                          uniformElementMappedName, blockIndex);
-            }
-        }
-        else
-        {
-            // If getBlockMemberInfo returns false, the uniform is optimized out.
-            sh::BlockMemberInfo memberInfo;
-            if (!mProgram->getUniformBlockMemberInfo(fullName, fullMappedName, &memberInfo))
-            {
-                continue;
-            }
-
-            if (field.isArray())
-            {
-                fullName += "[0]";
-                fullMappedName += "[0]";
-            }
-
-            LinkedUniform newUniform(field.type, field.precision, fullName, field.arraySize, -1, -1,
-                                     -1, blockIndex, memberInfo);
-            newUniform.mappedName = fullMappedName;
-
-            // Since block uniforms have no location, we don't need to store them in the uniform
-            // locations list.
-            mState.mUniforms.push_back(newUniform);
-        }
-    }
-}
-
-void Program::defineInterfaceBlock(const sh::InterfaceBlock &interfaceBlock, GLenum shaderType)
-{
-    size_t blockSize = 0;
-    std::vector<unsigned int> blockIndexes;
-
-    if (interfaceBlock.blockType == sh::BlockType::BLOCK_UNIFORM)
-    {
-        int blockIndex = static_cast<int>(mState.mUniformBlocks.size());
-        // Track the first and last uniform index to determine the range of active uniforms in the
-        // block.
-        size_t firstBlockUniformIndex = mState.mUniforms.size();
-        defineUniformBlockMembers(interfaceBlock.fields, interfaceBlock.fieldPrefix(),
-                                  interfaceBlock.fieldMappedPrefix(), blockIndex);
-        size_t lastBlockUniformIndex = mState.mUniforms.size();
-
-        for (size_t blockUniformIndex = firstBlockUniformIndex;
-             blockUniformIndex < lastBlockUniformIndex; ++blockUniformIndex)
-        {
-            blockIndexes.push_back(static_cast<unsigned int>(blockUniformIndex));
-        }
-    }
-    else
-    {
-        // TODO(jiajia.qin@intel.com) : Add buffer variables support and calculate the block index.
-        ASSERT(interfaceBlock.blockType == sh::BlockType::BLOCK_BUFFER);
-    }
-    // ESSL 3.10 section 4.4.4 page 58:
-    // Any uniform or shader storage block declared without a binding qualifier is initially
-    // assigned to block binding point zero.
-    int blockBinding = (interfaceBlock.binding == -1 ? 0 : interfaceBlock.binding);
-    if (interfaceBlock.arraySize > 0)
-    {
-        for (unsigned int arrayElement = 0; arrayElement < interfaceBlock.arraySize; ++arrayElement)
-        {
-            // TODO(jiajia.qin@intel.com) : use GetProgramResourceiv to calculate BUFFER_DATA_SIZE
-            // of UniformBlock and ShaderStorageBlock.
-            if (interfaceBlock.blockType == sh::BlockType::BLOCK_UNIFORM)
-            {
-                // Don't define this block at all if it's not active in the implementation.
-                if (!mProgram->getUniformBlockSize(
-                        interfaceBlock.name + ArrayString(arrayElement),
-                        interfaceBlock.mappedName + ArrayString(arrayElement), &blockSize))
-                {
-                    continue;
-                }
-            }
-
-            InterfaceBlock block(interfaceBlock.name, interfaceBlock.mappedName, true, arrayElement,
-                                 blockBinding + arrayElement);
-            block.memberIndexes = blockIndexes;
-            block.setStaticUse(shaderType, interfaceBlock.staticUse);
-
-            // Since all block elements in an array share the same active interface blocks, they
-            // will all be active once any block member is used. So, since interfaceBlock.name[0]
-            // was active, here we will add every block element in the array.
-            block.dataSize = static_cast<unsigned int>(blockSize);
-            if (interfaceBlock.blockType == sh::BlockType::BLOCK_UNIFORM)
-            {
-                mState.mUniformBlocks.push_back(block);
-            }
-            else
-            {
-                ASSERT(interfaceBlock.blockType == sh::BlockType::BLOCK_BUFFER);
-                mState.mShaderStorageBlocks.push_back(block);
-            }
-        }
-    }
-    else
-    {
-        // TODO(jiajia.qin@intel.com) : use GetProgramResourceiv to calculate BUFFER_DATA_SIZE
-        // of UniformBlock and ShaderStorageBlock.
-        if (interfaceBlock.blockType == sh::BlockType::BLOCK_UNIFORM)
-        {
-            if (!mProgram->getUniformBlockSize(interfaceBlock.name, interfaceBlock.mappedName,
-                                               &blockSize))
-            {
-                return;
-            }
-        }
-
-        InterfaceBlock block(interfaceBlock.name, interfaceBlock.mappedName, false, 0,
-                             blockBinding);
-        block.memberIndexes = blockIndexes;
-        block.setStaticUse(shaderType, interfaceBlock.staticUse);
-        block.dataSize = static_cast<unsigned int>(blockSize);
-        if (interfaceBlock.blockType == sh::BlockType::BLOCK_UNIFORM)
-        {
-            mState.mUniformBlocks.push_back(block);
-        }
-        else
-        {
-            ASSERT(interfaceBlock.blockType == sh::BlockType::BLOCK_BUFFER);
-            mState.mShaderStorageBlocks.push_back(block);
-        }
     }
 }
 

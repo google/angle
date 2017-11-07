@@ -466,7 +466,7 @@ UniformLinker::ShaderUniformCount UniformLinker::flattenUniform(
     std::vector<LinkedUniform> *atomicCounterUniforms,
     GLenum shaderType)
 {
-    int location                          = uniform.location;
+    int location = uniform.location;
     ShaderUniformCount shaderUniformCount =
         flattenUniformImpl(uniform, uniform.name, uniform.mappedName, samplerUniforms,
                            imageUniforms, atomicCounterUniforms, shaderType, uniform.staticUse,
@@ -588,7 +588,7 @@ UniformLinker::ShaderUniformCount UniformLinker::flattenUniformImpl(
     shaderUniformCount.vectorCount =
         (IsOpaqueType(uniform.type) ? 0 : (VariableRegisterCount(uniform.type) * elementCount));
     shaderUniformCount.samplerCount = (isSampler ? elementCount : 0);
-    shaderUniformCount.imageCount   = (isImage ? elementCount : 0);
+    shaderUniformCount.imageCount         = (isImage ? elementCount : 0);
     shaderUniformCount.atomicCounterCount = (isAtomicCounter ? elementCount : 0);
 
     if (*location != -1)
@@ -616,6 +616,222 @@ bool UniformLinker::checkMaxCombinedAtomicCounters(const Caps &caps, InfoLog &in
         }
     }
     return true;
+}
+
+// InterfaceBlockLinker implementation.
+InterfaceBlockLinker::InterfaceBlockLinker(std::vector<InterfaceBlock> *blocksOut)
+    : mBlocksOut(blocksOut)
+{
+}
+
+InterfaceBlockLinker::~InterfaceBlockLinker()
+{
+}
+
+void InterfaceBlockLinker::addShaderBlocks(GLenum shader,
+                                           const std::vector<sh::InterfaceBlock> *blocks)
+{
+    mShaderBlocks.push_back(std::make_pair(shader, blocks));
+}
+
+void InterfaceBlockLinker::linkBlocks(const GetBlockSize &getBlockSize,
+                                      const GetBlockMemberInfo &getMemberInfo) const
+{
+    std::set<std::string> visitedList;
+
+    for (const auto &shaderBlocks : mShaderBlocks)
+    {
+        const GLenum shaderType = shaderBlocks.first;
+
+        for (const auto &block : *shaderBlocks.second)
+        {
+            // Only 'packed' blocks are allowed to be considered inactive.
+            if (!block.staticUse && block.layout == sh::BLOCKLAYOUT_PACKED)
+                continue;
+
+            if (visitedList.count(block.name) > 0)
+            {
+                if (block.staticUse)
+                {
+                    for (InterfaceBlock &priorBlock : *mBlocksOut)
+                    {
+                        if (block.name == priorBlock.name)
+                        {
+                            priorBlock.setStaticUse(shaderType, true);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                defineInterfaceBlock(getBlockSize, getMemberInfo, block, shaderType);
+                visitedList.insert(block.name);
+            }
+        }
+    }
+}
+
+template <typename VarT>
+void InterfaceBlockLinker::defineBlockMembers(const GetBlockMemberInfo &getMemberInfo,
+                                              const std::vector<VarT> &fields,
+                                              const std::string &prefix,
+                                              const std::string &mappedPrefix,
+                                              int blockIndex) const
+{
+    for (const VarT &field : fields)
+    {
+        std::string fullName = (prefix.empty() ? field.name : prefix + "." + field.name);
+
+        std::string fullMappedName =
+            (mappedPrefix.empty() ? field.mappedName : mappedPrefix + "." + field.mappedName);
+
+        if (field.isStruct())
+        {
+            for (unsigned int arrayElement = 0; arrayElement < field.elementCount(); arrayElement++)
+            {
+                const std::string elementName =
+                    fullName + (field.isArray() ? ArrayString(arrayElement) : "");
+                const std::string elementMappedName =
+                    fullMappedName + (field.isArray() ? ArrayString(arrayElement) : "");
+                defineBlockMembers(getMemberInfo, field.fields, elementName, elementMappedName,
+                                   blockIndex);
+            }
+        }
+        else
+        {
+            // If getBlockMemberInfo returns false, the variable is optimized out.
+            sh::BlockMemberInfo memberInfo;
+            if (!getMemberInfo(fullName, fullMappedName, &memberInfo))
+            {
+                continue;
+            }
+
+            if (field.isArray())
+            {
+                fullName += "[0]";
+                fullMappedName += "[0]";
+            }
+
+            defineBlockMember(field, fullName, fullMappedName, blockIndex, memberInfo);
+        }
+    }
+}
+
+void InterfaceBlockLinker::defineInterfaceBlock(const GetBlockSize &getBlockSize,
+                                                const GetBlockMemberInfo &getMemberInfo,
+                                                const sh::InterfaceBlock &interfaceBlock,
+                                                GLenum shaderType) const
+{
+    size_t blockSize = 0;
+    std::vector<unsigned int> blockIndexes;
+
+    int blockIndex = static_cast<int>(mBlocksOut->size());
+    // Track the first and last uniform index to determine the range of active uniforms in the
+    // block.
+    size_t firstBlockMemberIndex = getCurrentBlockMemberIndex();
+    defineBlockMembers(getMemberInfo, interfaceBlock.fields, interfaceBlock.fieldPrefix(),
+                       interfaceBlock.fieldMappedPrefix(), blockIndex);
+    size_t lastBlockMemberIndex = getCurrentBlockMemberIndex();
+
+    for (size_t blockMemberIndex = firstBlockMemberIndex; blockMemberIndex < lastBlockMemberIndex;
+         ++blockMemberIndex)
+    {
+        blockIndexes.push_back(static_cast<unsigned int>(blockMemberIndex));
+    }
+
+    // ESSL 3.10 section 4.4.4 page 58:
+    // Any uniform or shader storage block declared without a binding qualifier is initially
+    // assigned to block binding point zero.
+    int blockBinding = (interfaceBlock.binding == -1 ? 0 : interfaceBlock.binding);
+    for (unsigned int arrayElement = 0; arrayElement < interfaceBlock.elementCount();
+         ++arrayElement)
+    {
+        // We don't currently have the getBlockSize implemented for SSBOs.
+        // TODO(jiajia.qin@intel.com): Remove the if when we have getBlockSize for SSBOs.
+        if (interfaceBlock.blockType == sh::BlockType::BLOCK_UNIFORM)
+        {
+            std::string blockArrayName       = interfaceBlock.name;
+            std::string blockMappedArrayName = interfaceBlock.mappedName;
+            if (interfaceBlock.isArray())
+            {
+                blockArrayName += ArrayString(arrayElement);
+                blockMappedArrayName += ArrayString(arrayElement);
+            }
+
+            // Don't define this block at all if it's not active in the implementation.
+            if (!getBlockSize(blockArrayName, blockMappedArrayName, &blockSize))
+            {
+                continue;
+            }
+        }
+
+        InterfaceBlock block(interfaceBlock.name, interfaceBlock.mappedName,
+                             interfaceBlock.isArray(), arrayElement, blockBinding + arrayElement);
+        block.memberIndexes = blockIndexes;
+        block.setStaticUse(shaderType, interfaceBlock.staticUse);
+
+        // Since all block elements in an array share the same active interface blocks, they
+        // will all be active once any block member is used. So, since interfaceBlock.name[0]
+        // was active, here we will add every block element in the array.
+        block.dataSize = static_cast<unsigned int>(blockSize);
+        mBlocksOut->push_back(block);
+    }
+}
+
+// UniformBlockLinker implementation.
+UniformBlockLinker::UniformBlockLinker(std::vector<InterfaceBlock> *blocksOut,
+                                       std::vector<LinkedUniform> *uniformsOut)
+    : InterfaceBlockLinker(blocksOut), mUniformsOut(uniformsOut)
+{
+}
+
+UniformBlockLinker::~UniformBlockLinker()
+{
+}
+
+void UniformBlockLinker::defineBlockMember(const sh::ShaderVariable &field,
+                                           const std::string &fullName,
+                                           const std::string &fullMappedName,
+                                           int blockIndex,
+                                           const sh::BlockMemberInfo &memberInfo) const
+{
+    LinkedUniform newUniform(field.type, field.precision, fullName, field.arraySize, -1, -1, -1,
+                             blockIndex, memberInfo);
+    newUniform.mappedName = fullMappedName;
+
+    // Since block uniforms have no location, we don't need to store them in the uniform locations
+    // list.
+    mUniformsOut->push_back(newUniform);
+}
+
+size_t UniformBlockLinker::getCurrentBlockMemberIndex() const
+{
+    return mUniformsOut->size();
+}
+
+// ShaderStorageBlockLinker implementation.
+ShaderStorageBlockLinker::ShaderStorageBlockLinker(std::vector<InterfaceBlock> *blocksOut)
+    : InterfaceBlockLinker(blocksOut)
+{
+}
+
+ShaderStorageBlockLinker::~ShaderStorageBlockLinker()
+{
+}
+
+void ShaderStorageBlockLinker::defineBlockMember(const sh::ShaderVariable &field,
+                                                 const std::string &fullName,
+                                                 const std::string &fullMappedName,
+                                                 int blockIndex,
+                                                 const sh::BlockMemberInfo &memberInfo) const
+{
+    // TODO(jiajia.qin@intel.com): Add buffer variables support.
+}
+
+size_t ShaderStorageBlockLinker::getCurrentBlockMemberIndex() const
+{
+    // TODO(jiajia.qin@intel.com): Add buffer variables support.
+    return 0;
 }
 
 }  // namespace gl

@@ -233,6 +233,9 @@ struct InterfaceBlock
 
     bool isBuiltIn() const { return name.compare(0, 3, "gl_") == 0; }
 
+    bool isArray() const { return arraySize > 0; }
+    unsigned int elementCount() const { return std::max(1u, arraySize); }
+
     std::string name;
     std::string mappedName;
     std::string instanceName;

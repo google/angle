@@ -646,18 +646,9 @@ class Program final : angle::NonCopyable, public LabeledObject
     void setUniformValuesFromBindingQualifiers();
 
     void gatherAtomicCounterBuffers();
-    void gatherComputeBlockInfo(const std::vector<sh::InterfaceBlock> &computeBlocks);
-    void gatherVertexAndFragmentBlockInfo(
-        const std::vector<sh::InterfaceBlock> &vertexInterfaceBlocks,
-        const std::vector<sh::InterfaceBlock> &fragmentInterfaceBlocks);
+    void gatherUniformBlockInfo(const gl::Context *context);
+    void gatherShaderStorageBlockInfo(const gl::Context *context);
     void gatherInterfaceBlockInfo(const Context *context);
-    template <typename VarT>
-    void defineUniformBlockMembers(const std::vector<VarT> &fields,
-                                   const std::string &prefix,
-                                   const std::string &mappedPrefix,
-                                   int blockIndex);
-
-    void defineInterfaceBlock(const sh::InterfaceBlock &interfaceBlock, GLenum shaderType);
 
     // Both these function update the cached uniform values and return a modified "count"
     // so that the uniform update doesn't overflow the uniform.
