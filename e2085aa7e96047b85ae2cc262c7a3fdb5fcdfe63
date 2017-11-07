@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "61553c84_d67ad969",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-07T12:42:25Z",
+      "side": 1,
+      "message": "this is unnecessary, just use size()",
+      "range": {
+        "startLine": 108,
+        "startChar": 4,
+        "endLine": 108,
+        "endChar": 61
+      },
+      "revId": "e2085aa7e96047b85ae2cc262c7a3fdb5fcdfe63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c971a18c_c9f79410",
+        "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 378,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-07T12:42:25Z",
+      "side": 1,
+      "message": "use size(), currently bits_size() will be 4 and this check is incorrect. also use static_assert since this is a compile-time check",
+      "range": {
+        "startLine": 378,
+        "startChar": 8,
+        "endLine": 378,
+        "endChar": 55
+      },
+      "revId": "e2085aa7e96047b85ae2cc262c7a3fdb5fcdfe63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

@@ -331,6 +331,30 @@
       "revId": "7287b0c49dd9d882dc2849b5852bc9749c388f53",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5c200efa_43a33208",
+        "filename": "src/tests/gl_tests/FramebufferTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 676,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-07T12:42:25Z",
+      "side": 1,
+      "message": "Can you do this change in this CL or a prior CL? It should be an easy fix, and will allow you to remove this warning suppression from the test.",
+      "parentUuid": "3ba41ae4_c53e766c",
+      "range": {
+        "startLine": 673,
+        "startChar": 0,
+        "endLine": 676,
+        "endChar": 5
+      },
+      "revId": "7287b0c49dd9d882dc2849b5852bc9749c388f53",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
