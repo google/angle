@@ -135,7 +135,7 @@ TEST_P(ComputeShaderTest, AttachMultipleShaders)
     GLint linkStatus;
     glGetProgramiv(program, GL_LINK_STATUS, &linkStatus);
 
-    EXPECT_EQ(0, linkStatus);
+    EXPECT_EQ(GL_FALSE, linkStatus);
 
     EXPECT_GL_NO_ERROR();
 }
@@ -190,6 +190,48 @@ TEST_P(ComputeShaderTest, AttachmentCount)
     glDeleteProgram(program);
 
     EXPECT_GL_NO_ERROR();
+}
+
+// Attach a vertex and fragment shader and link, but dispatch compute.
+TEST_P(ComputeShaderTest, DispatchComputeWithRenderingProgram)
+{
+    const std::string vsSource =
+        "#version 310 es\n"
+        "void main()\n"
+        "{\n"
+        "}\n";
+
+    const std::string fsSource =
+        "#version 310 es\n"
+        "void main()\n"
+        "{\n"
+        "}\n";
+
+    GLuint program = glCreateProgram();
+
+    GLuint vs = CompileShader(GL_VERTEX_SHADER, vsSource);
+    GLuint fs = CompileShader(GL_FRAGMENT_SHADER, fsSource);
+
+    EXPECT_NE(0u, vs);
+    EXPECT_NE(0u, fs);
+
+    glAttachShader(program, vs);
+    glDeleteShader(vs);
+
+    glAttachShader(program, fs);
+    glDeleteShader(fs);
+
+    glLinkProgram(program);
+
+    GLint linkStatus;
+    glGetProgramiv(program, GL_LINK_STATUS, &linkStatus);
+    EXPECT_EQ(GL_TRUE, linkStatus);
+
+    EXPECT_GL_NO_ERROR();
+
+    glUseProgram(program);
+    glDispatchCompute(8, 4, 2);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 }
 
 // Access all compute shader special variables.
