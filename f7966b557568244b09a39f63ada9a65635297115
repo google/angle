@@ -16,6 +16,24 @@
       "revId": "f7966b557568244b09a39f63ada9a65635297115",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "796ed312_2dc28e6a",
+        "filename": "src/libANGLE/UniformLinker.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 648,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-07T13:38:35Z",
+      "side": 1,
+      "message": "The way I\u0027d suggest doing this is that you find \"priorBlock\" first. If it doesn\u0027t exist, call defineInterfaceBlock and set priorBlock to the newly defined block. Then set the staticUse flag for shaderType.",
+      "parentUuid": "d549a853_fc967505",
+      "revId": "f7966b557568244b09a39f63ada9a65635297115",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
