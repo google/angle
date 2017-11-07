@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "520d5833_e60734ac",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 1033,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-11-07T23:57:38Z",
+      "side": 0,
+      "message": "A though not necessarily related to this CL - seems like there is an assumption that link() has been called here and in the other place ensure() is called. Why not make it an explicit assert() in all the functions which are supposed to be called after link()?",
+      "range": {
+        "startLine": 1033,
+        "startChar": 4,
+        "endLine": 1033,
+        "endChar": 34
+      },
+      "revId": "29a20992de5a5a35280c43e476b2252caf84d058",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
