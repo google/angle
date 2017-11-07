@@ -78,6 +78,7 @@ ContextNULL::ContextNULL(const gl::ContextState &state, AllocationTrackerNULL *a
     mExtensions.debugMarker            = true;
     mExtensions.translatedShaderSource = true;
 
+    mExtensions.textureStorage             = true;
     mExtensions.rgb8rgba8 = true;
     mExtensions.textureCompressionDXT1     = true;
     mExtensions.textureCompressionDXT3     = true;

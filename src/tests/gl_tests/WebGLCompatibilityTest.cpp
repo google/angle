@@ -482,6 +482,47 @@ TEST_P(WebGLCompatibilityTest, EnablePixelBufferObjectExtensions)
     }
 }
 
+// Test enabling the GL_EXT_texture_storage extension
+TEST_P(WebGLCompatibilityTest, EnableTextureStorage)
+{
+    EXPECT_FALSE(extensionEnabled("GL_EXT_texture_storage"));
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+
+    GLint result;
+    glGetTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_IMMUTABLE_FORMAT, &result);
+    if (getClientMajorVersion() >= 3)
+    {
+        EXPECT_GL_NO_ERROR();
+    }
+    else
+    {
+        EXPECT_GL_ERROR(GL_INVALID_ENUM);
+    }
+
+    if (extensionRequestable("GL_EXT_texture_storage"))
+    {
+        glRequestExtensionANGLE("GL_EXT_texture_storage");
+        EXPECT_GL_NO_ERROR();
+        EXPECT_TRUE(extensionEnabled("GL_EXT_texture_storage"));
+
+        glGetTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_IMMUTABLE_FORMAT, &result);
+        EXPECT_GL_NO_ERROR();
+
+        const GLenum alwaysAcceptableFormats[] = {
+            GL_ALPHA8_EXT, GL_LUMINANCE8_EXT, GL_LUMINANCE8_ALPHA8_EXT,
+        };
+        for (const auto &acceptableFormat : alwaysAcceptableFormats)
+        {
+            GLTexture localTexture;
+            glBindTexture(GL_TEXTURE_2D, localTexture);
+            glTexStorage2DEXT(GL_TEXTURE_2D, 1, acceptableFormat, 1, 1);
+            EXPECT_GL_NO_ERROR();
+        }
+    }
+}
+
 // Test enabling the GL_OES_mapbuffer and GL_EXT_map_buffer_range extensions
 TEST_P(WebGLCompatibilityTest, EnableMapBufferExtensions)
 {
