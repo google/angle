@@ -69,6 +69,24 @@
       "revId": "3a63a7c381bcee66d7c1126eebbec542974a825e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5a61347b_d784cf07",
+        "filename": "src/common/utilities.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 773,
+      "author": {
+        "id": 1166724
+      },
+      "writtenOn": "2017-11-08T18:07:04Z",
+      "side": 1,
+      "message": "Close - \"returning an invalid index _without error_ could still produce a valid location\". \n\nI added the bool return to distinguish the return status of INVALID_INDEX upon (error vs no error). Originally, I had it the way you both described (it\u0027s far more intuitive) but I discovered cases that expected a returned INVALID_INDEX to produce a valid location so simply returning the same value upon error was insufficient.",
+      "parentUuid": "bfdbfc57_41e8b29c",
+      "revId": "3a63a7c381bcee66d7c1126eebbec542974a825e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
