@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3430a05e_909b8abb",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StreamProducerNV12.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-08T18:35:17Z",
+      "side": 1,
+      "message": "My preference is to return the error object and have the egl::Stream::GLTextureDescription as an output argument.  This allows using the ANGLE_TRY macro.",
+      "revId": "4af0f77f85fd432da06aca60cb1b9e01bfdc3ecd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "81ca5030_b360b32a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StreamProducerNV12.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-08T18:35:17Z",
+      "side": 1,
+      "message": "nit: capitalize global function names",
+      "range": {
+        "startLine": 18,
+        "startChar": 41,
+        "endLine": 18,
+        "endChar": 57
+      },
+      "revId": "4af0f77f85fd432da06aca60cb1b9e01bfdc3ecd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e8b6f22b_c1dcb65d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StreamProducerNV12.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-08T18:35:17Z",
+      "side": 1,
+      "message": "nit: we use anonymous namespaces instead of static when possible.",
+      "range": {
+        "startLine": 18,
+        "startChar": 0,
+        "endLine": 18,
+        "endChar": 7
+      },
+      "revId": "4af0f77f85fd432da06aca60cb1b9e01bfdc3ecd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
