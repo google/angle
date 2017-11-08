@@ -383,6 +383,10 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             break;
         }
 
+        case angle::Format::ID::B8G8R8A8_UNORM_SRGB:
+            // This format is not implemented in Vulkan.
+            break;
+
         case angle::Format::ID::B8G8R8X8_UNORM:
             // This format is not implemented in Vulkan.
             break;

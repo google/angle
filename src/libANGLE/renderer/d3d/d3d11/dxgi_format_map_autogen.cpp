@@ -292,7 +292,7 @@ const Format &GetFormat(DXGI_FORMAT dxgiFormat)
         case DXGI_FORMAT_B8G8R8A8_UNORM:
             return Format::Get(Format::ID::B8G8R8A8_UNORM);
         case DXGI_FORMAT_B8G8R8A8_UNORM_SRGB:
-            break;
+            return Format::Get(Format::ID::B8G8R8A8_UNORM_SRGB);
         case DXGI_FORMAT_B8G8R8X8_TYPELESS:
             break;
         case DXGI_FORMAT_B8G8R8X8_UNORM:

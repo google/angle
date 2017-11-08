@@ -150,7 +150,8 @@ class D3DTextureTest : public ANGLETest
                                   EGLint eglTextureTarget,
                                   UINT sampleCount,
                                   UINT sampleQuality,
-                                  UINT bindFlags)
+                                  UINT bindFlags,
+                                  DXGI_FORMAT format)
     {
         EGLWindow *window  = getEGLWindow();
         EGLDisplay display = window->getDisplay();
@@ -163,8 +164,8 @@ class D3DTextureTest : public ANGLETest
 
         ASSERT(mD3D11Device);
         ID3D11Texture2D *texture = nullptr;
-        CD3D11_TEXTURE2D_DESC desc(DXGI_FORMAT_R8G8B8A8_UNORM, static_cast<UINT>(width),
-                                   static_cast<UINT>(height), 1, 1, bindFlags);
+        CD3D11_TEXTURE2D_DESC desc(format, static_cast<UINT>(width), static_cast<UINT>(height), 1,
+                                   1, bindFlags);
         desc.SampleDesc.Count   = sampleCount;
         desc.SampleDesc.Quality = sampleQuality;
         EXPECT_TRUE(SUCCEEDED(mD3D11Device->CreateTexture2D(&desc, nullptr, &texture)));
@@ -186,9 +187,9 @@ class D3DTextureTest : public ANGLETest
     {
         if (mD3D11Device)
         {
-            return createD3D11PBuffer(width, height, eglTextureFormat, eglTextureTarget,
-                                      sampleCount, sampleQuality,
-                                      D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET);
+            return createD3D11PBuffer(
+                width, height, eglTextureFormat, eglTextureTarget, sampleCount, sampleQuality,
+                D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET, DXGI_FORMAT_R8G8B8A8_UNORM);
         }
 
         if (mD3D9Device)
@@ -264,6 +265,31 @@ class D3DTextureTest : public ANGLETest
 
     IDirect3DDevice9 *mD3D9Device = nullptr;
 };
+
+// Test creating pbuffer from textures with several
+// different DXGI formats.
+TEST_P(D3DTextureTest, TestD3D11SupportedFormats)
+{
+    ANGLE_SKIP_TEST_IF(!valid() || !IsD3D11());
+
+    const DXGI_FORMAT formats[] = {DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
+                                   DXGI_FORMAT_B8G8R8A8_UNORM, DXGI_FORMAT_B8G8R8A8_UNORM_SRGB};
+    for (size_t i = 0; i < 4; ++i)
+    {
+        EGLSurface pbuffer = createD3D11PBuffer(32, 32, EGL_TEXTURE_RGBA, EGL_TEXTURE_2D, 1, 0,
+                                                D3D11_BIND_RENDER_TARGET, formats[i]);
+        ASSERT_EGL_SUCCESS();
+        ASSERT_NE(pbuffer, EGL_NO_SURFACE);
+
+        EGLWindow *window  = getEGLWindow();
+        EGLDisplay display = window->getDisplay();
+        eglMakeCurrent(display, pbuffer, pbuffer, window->getContext());
+        ASSERT_EGL_SUCCESS();
+
+        window->makeCurrent();
+        eglDestroySurface(display, pbuffer);
+    }
+}
 
 // Test creating a pbuffer from a d3d surface and clearing it
 TEST_P(D3DTextureTest, Clear)
@@ -449,8 +475,9 @@ TEST_P(D3DTextureTest, NonReadablePBuffer)
 
     constexpr size_t bufferSize = 32;
 
-    EGLSurface pbuffer = createD3D11PBuffer(bufferSize, bufferSize, EGL_TEXTURE_RGBA,
-                                            EGL_TEXTURE_2D, 1, 0, D3D11_BIND_RENDER_TARGET);
+    EGLSurface pbuffer =
+        createD3D11PBuffer(bufferSize, bufferSize, EGL_TEXTURE_RGBA, EGL_TEXTURE_2D, 1, 0,
+                           D3D11_BIND_RENDER_TARGET, DXGI_FORMAT_R8G8B8A8_UNORM);
 
     ASSERT_EGL_SUCCESS();
     ASSERT_NE(pbuffer, EGL_NO_SURFACE);

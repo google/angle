@@ -48,6 +48,7 @@ enum class Format::ID
     B5G5R5A1_UNORM,
     B5G6R5_UNORM,
     B8G8R8A8_UNORM,
+    B8G8R8A8_UNORM_SRGB,
     B8G8R8X8_UNORM,
     BC1_RGBA_UNORM_BLOCK,
     BC1_RGBA_UNORM_SRGB_BLOCK,
@@ -141,6 +142,6 @@ enum class Format::ID
     S8_UINT
 };
 
-constexpr uint32_t kNumANGLEFormats = 127;
+constexpr uint32_t kNumANGLEFormats = 128;
 
 }  // namespace angle
