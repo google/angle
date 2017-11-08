@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e87bb8bc_c93d7bd4",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 711,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-08T13:43:19Z",
+      "side": 1,
+      "message": "nit: the comment needs to be aligned.",
+      "range": {
+        "startLine": 711,
+        "startChar": 1,
+        "endLine": 711,
+        "endChar": 3
+      },
+      "revId": "e207f1f943618de913f14546b2a784a62b2c1181",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
