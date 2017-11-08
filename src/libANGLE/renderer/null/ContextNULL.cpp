@@ -73,7 +73,10 @@ ContextNULL::ContextNULL(const gl::ContextState &state, AllocationTrackerNULL *a
     mExtensions.copyTexture           = true;
     mExtensions.copyCompressedTexture = true;
     mExtensions.textureRectangle      = true;
-    mExtensions.textureUsage          = true;
+    mExtensions.textureUsage           = true;
+    mExtensions.vertexArrayObject      = true;
+    mExtensions.debugMarker            = true;
+    mExtensions.translatedShaderSource = true;
 
     mExtensions.rgb8rgba8 = true;
     mExtensions.textureCompressionDXT1     = true;
