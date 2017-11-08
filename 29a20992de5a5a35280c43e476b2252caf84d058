@@ -22,6 +22,30 @@
       "revId": "29a20992de5a5a35280c43e476b2252caf84d058",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4e6bc336_eb3133a1",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 1033,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-08T14:27:59Z",
+      "side": 0,
+      "message": "Didn\u0027t change anything here. Seems like it would be fine to do that. (It might not be strictly wrong to call this on a non-linked program, it would just mean there are zero blocks)",
+      "parentUuid": "520d5833_e60734ac",
+      "range": {
+        "startLine": 1033,
+        "startChar": 4,
+        "endLine": 1033,
+        "endChar": 34
+      },
+      "revId": "29a20992de5a5a35280c43e476b2252caf84d058",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }

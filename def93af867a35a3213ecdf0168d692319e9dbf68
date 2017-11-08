@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "bef72e25_831c3e99",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 2710,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-08T14:27:59Z",
+      "side": 1,
+      "message": "Done. The difference between ProgramGL and D3D is that the D3D was storing extra state just for uniform info. Made into a private helper class.",
+      "parentUuid": "655cdfee_84f98249",
+      "range": {
+        "startLine": 2710,
+        "startChar": 9,
+        "endLine": 2710,
+        "endChar": 28
+      },
+      "revId": "def93af867a35a3213ecdf0168d692319e9dbf68",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b37c0c82_00205a88",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 17
@@ -69,6 +93,30 @@
       "revId": "def93af867a35a3213ecdf0168d692319e9dbf68",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b26dfb3f_f40ff00b",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 2744,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-08T14:27:59Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "b37c0c82_00205a88",
+      "range": {
+        "startLine": 2744,
+        "startChar": 50,
+        "endLine": 2744,
+        "endChar": 96
+      },
+      "revId": "def93af867a35a3213ecdf0168d692319e9dbf68",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -95,6 +143,30 @@
     },
     {
       "key": {
+        "uuid": "3f1a1dcd_9ebb3ce7",
+        "filename": "src/libANGLE/renderer/gl/ProgramGL.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 826,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-08T14:27:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bd59da5f_a81b2d06",
+      "range": {
+        "startLine": 826,
+        "startChar": 50,
+        "endLine": 826,
+        "endChar": 96
+      },
+      "revId": "def93af867a35a3213ecdf0168d692319e9dbf68",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ed1840f3_51df5d40",
         "filename": "src/tests/gl_tests/UniformBufferTest.cpp",
         "patchSetId": 17
@@ -115,6 +187,30 @@
       "revId": "def93af867a35a3213ecdf0168d692319e9dbf68",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c7b6c273_b162667b",
+        "filename": "src/tests/gl_tests/UniformBufferTest.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 1159,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-08T14:27:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ed1840f3_51df5d40",
+      "range": {
+        "startLine": 1159,
+        "startChar": 13,
+        "endLine": 1159,
+        "endChar": 23
+      },
+      "revId": "def93af867a35a3213ecdf0168d692319e9dbf68",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
