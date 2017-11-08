@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b2cda055_8ccc4053",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-11-08T01:42:05Z",
+      "side": 1,
+      "message": "Although the test data is not very stable (which always happens), I suggest you give the test data and profile data. For example, I would say like this:\nhasMappedBuffer weights more than 1% in Aquarium\u0027s profile data, after this patch being applied, this hotspot disappears, and no new hotspot is introduced. And the FPS of Aquarium is slightly improved. The FPS of other WebGL benchmarks can be slightly improved too, or keep the same at least.",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 11
+      },
+      "revId": "5c0b66f650036ef18ae2026806c70809800ab3e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
