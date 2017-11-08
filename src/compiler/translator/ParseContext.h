@@ -141,6 +141,15 @@ class TParseContext : angle::NonCopyable
     void checkIsParameterQualifierValid(const TSourceLoc &line,
                                         const TTypeQualifierBuilder &typeQualifierBuilder,
                                         TType *type);
+
+    // Check if at least one of the specified extensions can be used, and generate error/warning as
+    // appropriate according to the spec.
+    // This function is only needed for a few different small constant sizes of extension array, and
+    // we want to avoid unnecessary dynamic allocations. That's why checkCanUseOneOfExtensions is a
+    // template function rather than one taking a vector.
+    template <size_t size>
+    bool checkCanUseOneOfExtensions(const TSourceLoc &line,
+                                    const std::array<TExtension, size> &extensions);
     bool checkCanUseExtension(const TSourceLoc &line, TExtension extension);
 
     // Done for all declarations, whether empty or not.
@@ -171,7 +180,7 @@ class TParseContext : angle::NonCopyable
     {
         return mDirectiveHandler.extensionBehavior();
     }
-    bool supportsExtension(TExtension extension);
+
     bool isExtensionEnabled(TExtension extension) const;
     void handleExtensionDirective(const TSourceLoc &loc, const char *extName, const char *behavior);
     void handlePragmaDirective(const TSourceLoc &loc,

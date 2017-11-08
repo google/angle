@@ -1050,7 +1050,9 @@ void InitExtensionBehavior(const ShBuiltInResources &resources, TExtensionBehavi
     }
     if (resources.ARB_texture_rectangle)
     {
-        extBehavior[TExtension::ARB_texture_rectangle] = EBhUndefined;
+        // Special: ARB_texture_rectangle extension does not follow the standard for #extension
+        // directives - it is enabled by default. An extension directive may still disable it.
+        extBehavior[TExtension::ARB_texture_rectangle] = EBhEnable;
     }
     if (resources.EXT_blend_func_extended)
     {
@@ -1097,9 +1099,16 @@ void InitExtensionBehavior(const ShBuiltInResources &resources, TExtensionBehavi
 
 void ResetExtensionBehavior(TExtensionBehavior &extBehavior)
 {
-    for (auto ext_iter = extBehavior.begin(); ext_iter != extBehavior.end(); ++ext_iter)
+    for (auto &ext : extBehavior)
     {
-        ext_iter->second = EBhUndefined;
+        if (ext.first == TExtension::ARB_texture_rectangle)
+        {
+            ext.second = EBhEnable;
+        }
+        else
+        {
+            ext.second = EBhUndefined;
+        }
     }
 }
 

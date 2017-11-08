@@ -2409,14 +2409,16 @@ TEST_P(GLSLTest, ExternalAnd2DSampler)
     }
 
     const std::string fragmentShader =
-        "precision mediump float;\n"
-        "uniform samplerExternalOES tex0;\n"
-        "uniform sampler2D tex1;\n"
-        "void main(void)\n"
-        "{\n"
-        " vec2 uv = vec2(0.0, 0.0);"
-        " gl_FragColor = texture2D(tex0, uv) + texture2D(tex1, uv);\n"
-        "}\n";
+        R"(
+        #extension GL_OES_EGL_image_external : enable
+        precision mediump float;
+        uniform samplerExternalOES tex0;
+        uniform sampler2D tex1;
+        void main(void)
+        {
+            vec2 uv = vec2(0.0, 0.0);
+            gl_FragColor = texture2D(tex0, uv) + texture2D(tex1, uv);
+        })";
 
     ANGLE_GL_PROGRAM(program, mSimpleVSSource, fragmentShader);
 }

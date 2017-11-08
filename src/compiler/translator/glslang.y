@@ -282,7 +282,8 @@ primary_expression
         $$ = context->addScalarLiteral(unionArray, @1);
     }
     | YUVCSCSTANDARDEXTCONSTANT {
-        if (!context->isExtensionEnabled(TExtension::EXT_YUV_target)) {
+        if (!context->checkCanUseExtension(@1, TExtension::EXT_YUV_target))
+        {
            context->error(@1, "unsupported value", $1.string->c_str());
         }
         TConstantUnion *unionArray = new TConstantUnion[1];
@@ -1049,7 +1050,8 @@ type_specifier_nonarray
         $$.setMatrix(4, 3);
     }
     | YUVCSCSTANDARDEXT {
-        if (!context->isExtensionEnabled(TExtension::EXT_YUV_target)) {
+        if (!context->checkCanUseExtension(@1, TExtension::EXT_YUV_target))
+        {
             context->error(@1, "unsupported type", "yuvCscStandardEXT");
         }
         $$.initialize(EbtYuvCscStandardEXT, @1);
@@ -1109,20 +1111,25 @@ type_specifier_nonarray
         $$.initialize(EbtSampler2DArrayShadow, @1);
     }
     | SAMPLER_EXTERNAL_OES {
-        if (!context->supportsExtension(TExtension::OES_EGL_image_external) &&
-            !context->supportsExtension(TExtension::NV_EGL_stream_consumer_external)) {
+        constexpr std::array<TExtension, 3u> extensions{ { TExtension::NV_EGL_stream_consumer_external,
+                                                           TExtension::OES_EGL_image_external_essl3,
+                                                           TExtension::OES_EGL_image_external } };
+        if (!context->checkCanUseOneOfExtensions(@1, extensions))
+        {
             context->error(@1, "unsupported type", "samplerExternalOES");
         }
         $$.initialize(EbtSamplerExternalOES, @1);
     }
     | SAMPLEREXTERNAL2DY2YEXT {
-        if (!context->isExtensionEnabled(TExtension::EXT_YUV_target)) {
+        if (!context->checkCanUseExtension(@1, TExtension::EXT_YUV_target))
+        {
             context->error(@1, "unsupported type", "__samplerExternal2DY2YEXT");
         }
         $$.initialize(EbtSamplerExternal2DY2YEXT, @1);
     }
     | SAMPLER2DRECT {
-        if (!context->supportsExtension(TExtension::ARB_texture_rectangle)) {
+        if (!context->checkCanUseExtension(@1, TExtension::ARB_texture_rectangle))
+        {
             context->error(@1, "unsupported type", "sampler2DRect");
         }
         $$.initialize(EbtSampler2DRect, @1);

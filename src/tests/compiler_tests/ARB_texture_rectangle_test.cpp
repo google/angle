@@ -30,19 +30,6 @@ class ARBTextureRectangleTest : public ARBTextureRectangleTestNoExt
     }
 };
 
-// Check that new types and builtins are disallowed if the extension isn't present in the translator
-// resources
-TEST_F(ARBTextureRectangleTest, NewTypeAndBuiltinsWithoutTranslatorResourceExtension)
-{
-    // The new builtins require Sampler2DRect so we can't test them independently.
-    const std::string &shaderString =
-        "precision mediump float;\n"
-        "uniform sampler2DRect tex;\n"
-        "void main() {\n"
-        "}\n";
-    ASSERT_TRUE(compile(shaderString));
-}
-
 // Check that new types and builtins are usable even with the #extension directive
 // Issue #15 of ARB_texture_rectangle explains that the extension was specified before the
 // #extension mechanism was in place so it doesn't require explicit enabling.
@@ -56,7 +43,10 @@ TEST_F(ARBTextureRectangleTest, NewTypeAndBuiltinsWithoutExtensionDirective)
         "    color = texture2DRectProj(tex, vec3(1.0));"
         "    color = texture2DRectProj(tex, vec4(1.0));"
         "}\n";
-    ASSERT_TRUE(compile(shaderString));
+    if (!compile(shaderString))
+    {
+        FAIL() << "Shader compilation failed, expecting success:\n" << mInfoLog;
+    }
 }
 
 // Test valid usage of the new types and builtins
@@ -71,7 +61,10 @@ TEST_F(ARBTextureRectangleTest, NewTypeAndBuiltingsWithExtensionDirective)
         "    color = texture2DRectProj(tex, vec3(1.0));"
         "    color = texture2DRectProj(tex, vec4(1.0));"
         "}\n";
-    ASSERT_TRUE(compile(shaderString));
+    if (!compile(shaderString))
+    {
+        FAIL() << "Shader compilation failed, expecting success:\n" << mInfoLog;
+    }
 }
 
 // Check that it is not possible to pass a sampler2DRect where sampler2D is expected, and vice versa
@@ -84,7 +77,10 @@ TEST_F(ARBTextureRectangleTest, Rect2DVs2DMismatch)
         "void main() {\n"
         "    vec4 color = texture2D(tex, vec2(1.0));"
         "}\n";
-    ASSERT_FALSE(compile(shaderString1));
+    if (compile(shaderString1))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
 
     const std::string &shaderString2 =
         "#extension GL_ARB_texture_rectangle : require\n"
@@ -93,5 +89,28 @@ TEST_F(ARBTextureRectangleTest, Rect2DVs2DMismatch)
         "void main() {\n"
         "    vec4 color = texture2DRect(tex, vec2(1.0));"
         "}\n";
-    ASSERT_FALSE(compile(shaderString2));
+    if (compile(shaderString2))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}
+
+// Disabling ARB_texture_rectangle in GLSL should work, even if it is enabled by default.
+// See ARB_texture_rectangle spec: "a shader can still include all variations of #extension
+// GL_ARB_texture_rectangle in its source code"
+TEST_F(ARBTextureRectangleTest, DisableARBTextureRectangle)
+{
+    const std::string &shaderString =
+        R"(
+        #extension GL_ARB_texture_rectangle : disable
+
+        precision mediump float;
+
+        uniform sampler2DRect s;
+        void main()
+        {})";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
 }

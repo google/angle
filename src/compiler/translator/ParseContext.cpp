@@ -1156,72 +1156,95 @@ void TParseContext::checkIsParameterQualifierValid(
     }
 }
 
+template <size_t size>
+bool TParseContext::checkCanUseOneOfExtensions(const TSourceLoc &line,
+                                               const std::array<TExtension, size> &extensions)
+{
+    ASSERT(!extensions.empty());
+    const TExtensionBehavior &extBehavior = extensionBehavior();
+
+    bool canUseWithWarning    = false;
+    bool canUseWithoutWarning = false;
+
+    const char *errorMsgString   = "";
+    TExtension errorMsgExtension = TExtension::UNDEFINED;
+
+    for (TExtension extension : extensions)
+    {
+        auto extIter = extBehavior.find(extension);
+        if (canUseWithWarning)
+        {
+            // We already have an extension that we can use, but with a warning.
+            // See if we can use the alternative extension without a warning.
+            if (extIter == extBehavior.end())
+            {
+                continue;
+            }
+            if (extIter->second == EBhEnable || extIter->second == EBhRequire)
+            {
+                canUseWithoutWarning = true;
+                break;
+            }
+            continue;
+        }
+        if (extIter == extBehavior.end())
+        {
+            errorMsgString    = "extension is not supported";
+            errorMsgExtension = extension;
+        }
+        else if (extIter->second == EBhUndefined || extIter->second == EBhDisable)
+        {
+            errorMsgString    = "extension is disabled";
+            errorMsgExtension = extension;
+        }
+        else if (extIter->second == EBhWarn)
+        {
+            errorMsgExtension = extension;
+            canUseWithWarning = true;
+        }
+        else
+        {
+            ASSERT(extIter->second == EBhEnable || extIter->second == EBhRequire);
+            canUseWithoutWarning = true;
+            break;
+        }
+    }
+
+    if (canUseWithoutWarning)
+    {
+        return true;
+    }
+    if (canUseWithWarning)
+    {
+        warning(line, "extension is being used", GetExtensionNameString(errorMsgExtension));
+        return true;
+    }
+    error(line, errorMsgString, GetExtensionNameString(errorMsgExtension));
+    return false;
+}
+
+template bool TParseContext::checkCanUseOneOfExtensions(
+    const TSourceLoc &line,
+    const std::array<TExtension, 1> &extensions);
+template bool TParseContext::checkCanUseOneOfExtensions(
+    const TSourceLoc &line,
+    const std::array<TExtension, 2> &extensions);
+template bool TParseContext::checkCanUseOneOfExtensions(
+    const TSourceLoc &line,
+    const std::array<TExtension, 3> &extensions);
+
 bool TParseContext::checkCanUseExtension(const TSourceLoc &line, TExtension extension)
 {
     ASSERT(extension != TExtension::UNDEFINED);
     ASSERT(extension != TExtension::EXT_geometry_shader);
-    const TExtensionBehavior &extBehavior   = extensionBehavior();
-    TExtensionBehavior::const_iterator iter = extBehavior.find(extension);
-    if (iter == extBehavior.end())
+    if (extension == TExtension::OES_geometry_shader)
     {
-        error(line, "extension is not supported", GetExtensionNameString(extension));
-        return false;
+        // OES_geometry_shader and EXT_geometry_shader are always interchangeable.
+        constexpr std::array<TExtension, 2u> extensions{
+            {TExtension::EXT_geometry_shader, TExtension::OES_geometry_shader}};
+        return checkCanUseOneOfExtensions(line, extensions);
     }
-    // In GLSL ES, an extension's default behavior is "disable".
-    if (iter->second == EBhDisable || iter->second == EBhUndefined)
-    {
-        // We also need to check EXT_geometry_shader because internally we always use
-        // TExtension::OES_geometry_shader to represent both OES_geometry_shader and
-        // EXT_geometry_shader.
-        if (extension == TExtension::OES_geometry_shader)
-        {
-            TExtensionBehavior::const_iterator iterExt =
-                extBehavior.find(TExtension::EXT_geometry_shader);
-            ASSERT(iterExt != extBehavior.end());
-            if (iterExt->second == EBhUndefined)
-            {
-                error(line, "extension is disabled",
-                      GetExtensionNameString(TExtension::OES_geometry_shader));
-                return false;
-            }
-            if (iterExt->second == EBhDisable)
-            {
-                error(line, "extension is disabled",
-                      GetExtensionNameString(TExtension::EXT_geometry_shader));
-                return false;
-            }
-            if (iterExt->second == EBhWarn)
-            {
-                warning(line, "extension is being used",
-                        GetExtensionNameString(TExtension::EXT_geometry_shader));
-            }
-
-            return true;
-        }
-
-        error(line, "extension is disabled", GetExtensionNameString(extension));
-        return false;
-    }
-    if (iter->second == EBhWarn)
-    {
-        if (extension == TExtension::OES_geometry_shader)
-        {
-            TExtensionBehavior::const_iterator iterExt =
-                extBehavior.find(TExtension::EXT_geometry_shader);
-            ASSERT(iterExt != extBehavior.end());
-            // We should output no warnings when OES_geometry_shader is declared as "warn" and
-            // EXT_geometry_shader is declared as "require" or "enable".
-            if (iterExt->second == EBhRequire || iterExt->second == EBhEnable)
-            {
-                return true;
-            }
-        }
-
-        warning(line, "extension is being used", GetExtensionNameString(extension));
-        return true;
-    }
-
-    return true;
+    return checkCanUseOneOfExtensions(line, std::array<TExtension, 1u>{extension});
 }
 
 // ESSL 3.00.6 section 4.8 Empty Declarations: "The combinations of qualifiers that cause
@@ -1678,13 +1701,6 @@ void TParseContext::checkInvariantVariableQualifier(bool invariant,
             error(invariantLocation, "Cannot be qualified as invariant.", "invariant");
         }
     }
-}
-
-bool TParseContext::supportsExtension(TExtension extension)
-{
-    const TExtensionBehavior &extbehavior   = extensionBehavior();
-    TExtensionBehavior::const_iterator iter = extbehavior.find(extension);
-    return (iter != extbehavior.end());
 }
 
 bool TParseContext::isExtensionEnabled(TExtension extension) const
@@ -4206,10 +4222,12 @@ TLayoutQualifier TParseContext::parseLayoutQualifier(const TString &qualifierTyp
         error(qualifierTypeLine, "invalid layout qualifier: location requires an argument",
               qualifierType.c_str());
     }
-    else if (qualifierType == "yuv" && isExtensionEnabled(TExtension::EXT_YUV_target) &&
-             mShaderType == GL_FRAGMENT_SHADER)
+    else if (qualifierType == "yuv" && mShaderType == GL_FRAGMENT_SHADER)
     {
-        qualifier.yuv = true;
+        if (checkCanUseExtension(qualifierTypeLine, TExtension::EXT_YUV_target))
+        {
+            qualifier.yuv = true;
+        }
     }
     else if (qualifierType == "rgba32f")
     {
@@ -4464,10 +4482,12 @@ TLayoutQualifier TParseContext::parseLayoutQualifier(const TString &qualifierTyp
         parseLocalSize(qualifierType, qualifierTypeLine, intValue, intValueLine, intValueString, 2u,
                        &qualifier.localSize);
     }
-    else if (qualifierType == "num_views" && isExtensionEnabled(TExtension::OVR_multiview) &&
-             mShaderType == GL_VERTEX_SHADER)
+    else if (qualifierType == "num_views" && mShaderType == GL_VERTEX_SHADER)
     {
-        parseNumViews(intValue, intValueLine, intValueString, &qualifier.numViews);
+        if (checkCanUseExtension(qualifierTypeLine, TExtension::OVR_multiview))
+        {
+            parseNumViews(intValue, intValueLine, intValueString, &qualifier.numViews);
+        }
     }
     else if (qualifierType == "invocations" && mShaderType == GL_GEOMETRY_SHADER_OES &&
              checkCanUseExtension(qualifierTypeLine, TExtension::OES_geometry_shader))

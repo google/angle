@@ -89,7 +89,8 @@ bool IsExtensionEnabled(const TExtensionBehavior &extBehavior, TExtension extens
 {
     ASSERT(extension != TExtension::UNDEFINED);
     auto iter = extBehavior.find(extension);
-    return iter != extBehavior.end() && (iter->second == EBhEnable || iter->second == EBhRequire);
+    return iter != extBehavior.end() &&
+           (iter->second == EBhEnable || iter->second == EBhRequire || iter->second == EBhWarn);
 }
 
 }  // namespace sh
