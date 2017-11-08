@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "e133037d_ae656e9d",
+        "filename": "src/tests/gl_tests/TextureUploadFormatTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 324,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-08T21:07:27Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "d5025fb3_cd36010e",
+      "range": {
+        "startLine": 324,
+        "startChar": 32,
+        "endLine": 324,
+        "endChar": 35
+      },
+      "revId": "af7fa939985d76995c50fbe2db2690f37bd7261b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c96a2500_e4a8e902",
         "filename": "src/tests/test_utils/ANGLETest.h",
         "patchSetId": 5
@@ -93,6 +117,30 @@
       "revId": "af7fa939985d76995c50fbe2db2690f37bd7261b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dca9e3fb_d8896227",
+        "filename": "src/tests/test_utils/ANGLETest.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-08T21:07:27Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "bad232fd_ca870457",
+      "range": {
+        "startLine": 85,
+        "startChar": 4,
+        "endLine": 85,
+        "endChar": 91
+      },
+      "revId": "af7fa939985d76995c50fbe2db2690f37bd7261b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
