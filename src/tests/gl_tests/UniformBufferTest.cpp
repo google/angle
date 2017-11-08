@@ -1156,6 +1156,46 @@ TEST_P(UniformBufferTest, Std140UniformBlockInstanceWithNestedStructsContainingV
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Tests the detaching shaders from the program and using uniform blocks works.
+// This covers a bug in ANGLE's D3D back-end.
+TEST_P(UniformBufferTest, DetachShaders)
+{
+    GLuint vertexShader = CompileShader(GL_VERTEX_SHADER, mVertexShaderSource);
+    ASSERT_NE(0u, vertexShader);
+    GLuint fragmentShader = CompileShader(GL_FRAGMENT_SHADER, mFragmentShaderSource);
+    ASSERT_NE(0u, fragmentShader);
+
+    GLuint program = glCreateProgram();
+    glAttachShader(program, vertexShader);
+    glAttachShader(program, fragmentShader);
+
+    ASSERT_TRUE(LinkAttachedProgram(program));
+
+    glDetachShader(program, vertexShader);
+    glDetachShader(program, fragmentShader);
+    glDeleteShader(vertexShader);
+    glDeleteShader(fragmentShader);
+
+    glClear(GL_COLOR_BUFFER_BIT);
+    float floatData[4] = {0.5f, 0.75f, 0.25f, 1.0f};
+
+    glBindBuffer(GL_UNIFORM_BUFFER, mUniformBuffer);
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(float) * 4, floatData, GL_STATIC_DRAW);
+
+    glBindBufferBase(GL_UNIFORM_BUFFER, 0, mUniformBuffer);
+
+    GLint uniformBufferIndex = glGetUniformBlockIndex(mProgram, "uni");
+    ASSERT_NE(uniformBufferIndex, -1);
+
+    glUniformBlockBinding(program, uniformBufferIndex, 0);
+    drawQuad(program, "position", 0.5f);
+
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_NEAR(0, 0, 128, 191, 64, 255, 1);
+
+    glDeleteProgram(program);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
 ANGLE_INSTANTIATE_TEST(UniformBufferTest,
                        ES3_D3D11(),

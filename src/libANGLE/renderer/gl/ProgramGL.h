@@ -71,13 +71,6 @@ class ProgramGL : public ProgramImpl
 
     void setUniformBlockBinding(GLuint uniformBlockIndex, GLuint uniformBlockBinding) override;
 
-    bool getUniformBlockSize(const std::string &blockName,
-                             const std::string &blockMappedName,
-                             size_t *sizeOut) const override;
-    bool getUniformBlockMemberInfo(const std::string &memberUniformName,
-                                   const std::string &memberUniformMappedName,
-                                   sh::BlockMemberInfo *memberInfoOut) const override;
-
     void setPathFragmentInputGen(const std::string &inputName,
                                  GLenum genMode,
                                  GLint components,
@@ -96,6 +89,14 @@ class ProgramGL : public ProgramImpl
     bool checkLinkStatus(gl::InfoLog &infoLog);
     void postLink();
     void reapplyUBOBindingsIfNeeded(const gl::Context *context);
+
+    bool getUniformBlockSize(const std::string &blockName,
+                             const std::string &blockMappedName,
+                             size_t *sizeOut) const;
+    bool getUniformBlockMemberInfo(const std::string &memberUniformName,
+                                   const std::string &memberUniformMappedName,
+                                   sh::BlockMemberInfo *memberInfoOut) const;
+    void linkResources(const gl::ProgramLinkedResources &resources);
 
     // Helper function, makes it simpler to type.
     GLint uniLoc(GLint glLocation) const { return mUniformRealLocationMap[glLocation]; }

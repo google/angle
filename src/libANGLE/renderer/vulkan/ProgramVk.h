@@ -94,18 +94,6 @@ class ProgramVk : public ProgramImpl
     // TODO: synchronize in syncState when dirty bits exist.
     void setUniformBlockBinding(GLuint uniformBlockIndex, GLuint uniformBlockBinding) override;
 
-    // May only be called after a successful link operation.
-    // Return false for inactive blocks.
-    bool getUniformBlockSize(const std::string &blockName,
-                             const std::string &blockMappedName,
-                             size_t *sizeOut) const override;
-
-    // May only be called after a successful link operation.
-    // Returns false for inactive members.
-    bool getUniformBlockMemberInfo(const std::string &memberUniformName,
-                                   const std::string &memberUniformMappedName,
-                                   sh::BlockMemberInfo *memberInfoOut) const override;
-
     void setPathFragmentInputGen(const std::string &inputName,
                                  GLenum genMode,
                                  GLint components,

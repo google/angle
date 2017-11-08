@@ -14,6 +14,7 @@
 #include "common/string_utils.h"
 #include "common/utilities.h"
 #include "libANGLE/Context.h"
+#include "libANGLE/ProgramLinkedResources.h"
 #include "libANGLE/Uniform.h"
 #include "libANGLE/renderer/gl/ContextGL.h"
 #include "libANGLE/renderer/gl/FunctionsGL.h"
@@ -212,6 +213,7 @@ gl::LinkResult ProgramGL::link(const gl::Context *context,
         mStateManager->forceUseProgram(mProgramID);
     }
 
+    linkResources(resources);
     postLink();
 
     return true;
@@ -803,6 +805,37 @@ void ProgramGL::markUnusedUniformLocations(std::vector<gl::VariableLocation> *un
             locationRef.markUnused();
         }
     }
+}
+
+void ProgramGL::linkResources(const gl::ProgramLinkedResources &resources)
+{
+    // Gather interface block info.
+    auto getUniformBlockSize = [this](const std::string &name, const std::string &mappedName,
+                                      size_t *sizeOut) {
+        return this->getUniformBlockSize(name, mappedName, sizeOut);
+    };
+
+    auto getUniformBlockMemberInfo = [this](const std::string &name, const std::string &mappedName,
+                                            sh::BlockMemberInfo *infoOut) {
+        return this->getUniformBlockMemberInfo(name, mappedName, infoOut);
+    };
+
+    resources.uniformBlockLinker.linkBlocks(getUniformBlockSize, getUniformBlockMemberInfo);
+
+    // TODO(jiajia.qin@intel.com): Determine correct shader storage block info.
+    auto getShaderStorageBlockSize = [](const std::string &name, const std::string &mappedName,
+                                        size_t *sizeOut) {
+        *sizeOut = 0;
+        return true;
+    };
+
+    auto getShaderStorageBlockMemberInfo =
+        [](const std::string &name, const std::string &mappedName, sh::BlockMemberInfo *infoOut) {
+            *infoOut = sh::BlockMemberInfo::getDefaultBlockInfo();
+            return true;
+        };
+    resources.shaderStorageBlockLinker.linkBlocks(getShaderStorageBlockSize,
+                                                  getShaderStorageBlockMemberInfo);
 }
 
 }  // namespace rx

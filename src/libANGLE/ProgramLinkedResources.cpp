@@ -637,6 +637,8 @@ void InterfaceBlockLinker::addShaderBlocks(GLenum shader,
 void InterfaceBlockLinker::linkBlocks(const GetBlockSize &getBlockSize,
                                       const GetBlockMemberInfo &getMemberInfo) const
 {
+    ASSERT(mBlocksOut->empty());
+
     std::set<std::string> visitedList;
 
     for (const auto &shaderBlocks : mShaderBlocks)

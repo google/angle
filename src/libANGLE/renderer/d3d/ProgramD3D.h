@@ -196,12 +196,6 @@ class ProgramD3D : public ProgramImpl
                         gl::InfoLog &infoLog) override;
     GLboolean validate(const gl::Caps &caps, gl::InfoLog *infoLog) override;
 
-    bool getUniformBlockSize(const std::string &blockName,
-                             const std::string &blockMappedName,
-                             size_t *sizeOut) const override;
-    bool getUniformBlockMemberInfo(const std::string &memberUniformName,
-                                   const std::string &memberUniformMappedName,
-                                   sh::BlockMemberInfo *memberInfoOut) const override;
     void setPathFragmentInputGen(const std::string &inputName,
                                  GLenum genMode,
                                  GLint components,
@@ -428,15 +422,14 @@ class ProgramD3D : public ProgramImpl
     void initAttribLocationsToD3DSemantic(const gl::Context *context);
 
     void reset();
-    void ensureUniformBlocksInitialized();
-
-    void initUniformBlockInfo(const gl::Context *context, gl::Shader *shader);
-    size_t getUniformBlockInfo(const sh::InterfaceBlock &interfaceBlock);
+    void initializeUniformBlocks();
 
     void updateCachedInputLayoutFromShader(const gl::Context *context);
     void updateCachedOutputLayoutFromShader();
     void updateCachedVertexExecutableIndex();
     void updateCachedPixelExecutableIndex();
+
+    void linkResources(const gl::Context *context, const gl::ProgramLinkedResources &resources);
 
     RendererD3D *mRenderer;
     DynamicHLSL *mDynamicHLSL;
@@ -497,9 +490,6 @@ class ProgramD3D : public ProgramImpl
     bool mVertexUniformsDirty;
     bool mFragmentUniformsDirty;
     bool mComputeUniformsDirty;
-
-    std::map<std::string, sh::BlockMemberInfo> mBlockInfo;
-    std::map<std::string, size_t> mBlockDataSizes;
 
     static unsigned int issueSerial();
     static unsigned int mCurrentSerial;

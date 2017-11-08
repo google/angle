@@ -871,7 +871,7 @@ Error Program::link(const gl::Context *context)
     }
 
     gatherAtomicCounterBuffers();
-    gatherInterfaceBlockInfo(context);
+    initInterfaceBlockBindings();
 
     setUniformValuesFromBindingQualifiers();
 
@@ -2874,55 +2874,8 @@ void Program::gatherAtomicCounterBuffers()
     // TODO(jie.a.chen@intel.com): Get the actual BUFFER_DATA_SIZE from backend for each buffer.
 }
 
-void Program::gatherUniformBlockInfo(const gl::Context *context)
+void Program::initInterfaceBlockBindings()
 {
-    UniformBlockLinker blockLinker(&mState.mUniformBlocks, &mState.mUniforms);
-    InitUniformBlockLinker(context, mState, &blockLinker);
-
-    auto getImplBlockSize = [this](const std::string &name, const std::string &mappedName,
-                                   size_t *sizeOut) {
-        return this->mProgram->getUniformBlockSize(name, mappedName, sizeOut);
-    };
-
-    auto getImplMemberInfo = [this](const std::string &name, const std::string &mappedName,
-                                    sh::BlockMemberInfo *infoOut) {
-        return this->mProgram->getUniformBlockMemberInfo(name, mappedName, infoOut);
-    };
-
-    blockLinker.linkBlocks(getImplBlockSize, getImplMemberInfo);
-}
-
-void Program::gatherShaderStorageBlockInfo(const gl::Context *context)
-{
-    ShaderStorageBlockLinker blockLinker(&mState.mShaderStorageBlocks);
-    InitShaderStorageBlockLinker(context, mState, &blockLinker);
-
-    // We don't have a way of determining block info for shader storage blocks yet.
-    // TODO(jiajia.qin@intel.com): Determine correct block size and layout.
-    auto getImplBlockSize = [this](const std::string &name, const std::string &mappedName,
-                                   size_t *sizeOut) {
-        return this->mProgram->getUniformBlockSize(name, mappedName, sizeOut);
-    };
-
-    auto getImplMemberInfo = [this](const std::string &name, const std::string &mappedName,
-                                    sh::BlockMemberInfo *infoOut) {
-        return this->mProgram->getUniformBlockMemberInfo(name, mappedName, infoOut);
-    };
-
-    blockLinker.linkBlocks(getImplBlockSize, getImplMemberInfo);
-}
-
-void Program::gatherInterfaceBlockInfo(const Context *context)
-{
-    ASSERT(mState.mUniformBlocks.empty());
-    ASSERT(mState.mShaderStorageBlocks.empty());
-
-    gatherUniformBlockInfo(context);
-    if (context->getClientVersion() >= Version(3, 1))
-    {
-        gatherShaderStorageBlockInfo(context);
-    }
-
     // Set initial bindings from shader.
     for (unsigned int blockIndex = 0; blockIndex < mState.mUniformBlocks.size(); blockIndex++)
     {

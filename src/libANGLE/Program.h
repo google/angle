@@ -640,9 +640,7 @@ class Program final : angle::NonCopyable, public LabeledObject
     void setUniformValuesFromBindingQualifiers();
 
     void gatherAtomicCounterBuffers();
-    void gatherUniformBlockInfo(const gl::Context *context);
-    void gatherShaderStorageBlockInfo(const gl::Context *context);
-    void gatherInterfaceBlockInfo(const Context *context);
+    void initInterfaceBlockBindings();
 
     // Both these function update the cached uniform values and return a modified "count"
     // so that the uniform update doesn't overflow the uniform.
