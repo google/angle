@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "d5025fb3_cd36010e",
+        "filename": "src/tests/gl_tests/TextureUploadFormatTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 324,
+      "author": {
+        "id": 1184734
+      },
+      "writtenOn": "2017-11-08T20:41:54Z",
+      "side": 1,
+      "message": "While I think it would be nicer that way, it also would likely not have found the luma-workaround-dirty-bits issue, I think? I believe the test objects are torn down between tests, and so we wouldn\u0027t get this sort of passive semi-combinitoric testing.",
+      "parentUuid": "0314e5e4_4cbe8dfc",
+      "range": {
+        "startLine": 324,
+        "startChar": 32,
+        "endLine": 324,
+        "endChar": 35
+      },
+      "revId": "af7fa939985d76995c50fbe2db2690f37bd7261b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "c96a2500_e4a8e902",
         "filename": "src/tests/test_utils/ANGLETest.h",
         "patchSetId": 5
@@ -36,6 +60,30 @@
       "writtenOn": "2017-11-08T16:25:29Z",
       "side": 1,
       "message": "Instead of adding this as a member function, can you put it with our other EXPECT macros below?",
+      "range": {
+        "startLine": 85,
+        "startChar": 4,
+        "endLine": 85,
+        "endChar": 91
+      },
+      "revId": "af7fa939985d76995c50fbe2db2690f37bd7261b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bad232fd_ca870457",
+        "filename": "src/tests/test_utils/ANGLETest.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1184734
+      },
+      "writtenOn": "2017-11-08T20:41:54Z",
+      "side": 1,
+      "message": "The benefit of doing it this way is we have the ability to only build and append an info string on failures. Doing it similar to the existing macros makes it harder to see at-a-glance what failed.",
+      "parentUuid": "c96a2500_e4a8e902",
       "range": {
         "startLine": 85,
         "startChar": 4,
@@ -62,6 +110,24 @@
       "revId": "af7fa939985d76995c50fbe2db2690f37bd7261b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cf91fcbc_6a36d32f",
+        "filename": "src/tests/test_utils/ANGLETest.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 1184734
+      },
+      "writtenOn": "2017-11-08T20:41:54Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "eda44d20_a4f1ee14",
+      "revId": "af7fa939985d76995c50fbe2db2690f37bd7261b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
