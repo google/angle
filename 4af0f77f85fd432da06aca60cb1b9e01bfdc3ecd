@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "508a3aaa_11dcd9e4",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StreamProducerNV12.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1184734
+      },
+      "writtenOn": "2017-11-08T22:57:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3430a05e_909b8abb",
+      "revId": "4af0f77f85fd432da06aca60cb1b9e01bfdc3ecd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "81ca5030_b360b32a",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StreamProducerNV12.cpp",
         "patchSetId": 2
@@ -53,6 +71,54 @@
       "writtenOn": "2017-11-08T18:35:17Z",
       "side": 1,
       "message": "nit: we use anonymous namespaces instead of static when possible.",
+      "range": {
+        "startLine": 18,
+        "startChar": 0,
+        "endLine": 18,
+        "endChar": 7
+      },
+      "revId": "4af0f77f85fd432da06aca60cb1b9e01bfdc3ecd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e612dfee_d14b7ebd",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StreamProducerNV12.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1184734
+      },
+      "writtenOn": "2017-11-08T22:57:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "81ca5030_b360b32a",
+      "range": {
+        "startLine": 18,
+        "startChar": 41,
+        "endLine": 18,
+        "endChar": 57
+      },
+      "revId": "4af0f77f85fd432da06aca60cb1b9e01bfdc3ecd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "abcd9a0b_684a2fd2",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StreamProducerNV12.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1184734
+      },
+      "writtenOn": "2017-11-08T22:57:24Z",
+      "side": 1,
+      "message": "Ok, will fix. I\u0027m curious why though?",
+      "parentUuid": "e8b6f22b_c1dcb65d",
       "range": {
         "startLine": 18,
         "startChar": 0,
