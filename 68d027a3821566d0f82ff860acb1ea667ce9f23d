@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cb7c626d_91e96612",
+        "filename": "src/compiler/translator/VectorizeVectorScalarArithmetic.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-11-08T16:54:49Z",
+      "side": 1,
+      "message": "nit: \"left\" -\u003e \"\".",
+      "revId": "68d027a3821566d0f82ff860acb1ea667ce9f23d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9f4fa2b1_4cebf3ee",
+        "filename": "src/compiler/translator/VectorizeVectorScalarArithmetic.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-11-08T16:54:49Z",
+      "side": 1,
+      "message": "Could we remove some of the nesting in this function with early returns?",
+      "revId": "68d027a3821566d0f82ff860acb1ea667ce9f23d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1289521d_72aebadb",
+        "filename": "src/compiler/translator/VectorizeVectorScalarArithmetic.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-11-08T16:54:49Z",
+      "side": 1,
+      "message": "Shouldn\u0027t this handle EOpDivAssign too?",
+      "revId": "68d027a3821566d0f82ff860acb1ea667ce9f23d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
