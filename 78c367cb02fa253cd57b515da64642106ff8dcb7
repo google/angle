@@ -48,6 +48,29 @@
     },
     {
       "key": {
+        "uuid": "d212e21d_98c6469f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 667,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-11-08T06:30:03Z",
+      "side": 1,
+      "message": "Is it better to use switch-case here?",
+      "range": {
+        "startLine": 667,
+        "startChar": 0,
+        "endLine": 667,
+        "endChar": 40
+      },
+      "revId": "78c367cb02fa253cd57b515da64642106ff8dcb7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "64cafac4_ccf59387",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
         "patchSetId": 7
@@ -59,6 +82,29 @@
       "writtenOn": "2017-11-08T04:45:18Z",
       "side": 1,
       "message": "ASSERT(shaderType \u003d\u003d SHADER_COMPUTE)",
+      "revId": "78c367cb02fa253cd57b515da64642106ff8dcb7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6262625f_aaca755c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1590,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-11-08T06:30:03Z",
+      "side": 1,
+      "message": "Is it better to use switch-case here?",
+      "range": {
+        "startLine": 1590,
+        "startChar": 0,
+        "endLine": 1590,
+        "endChar": 36
+      },
       "revId": "78c367cb02fa253cd57b515da64642106ff8dcb7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -174,6 +220,46 @@
     },
     {
       "key": {
+        "uuid": "a758672e_0f32e8bd",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 251,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-11-08T06:30:03Z",
+      "side": 1,
+      "message": "Why this case still fails?",
+      "revId": "78c367cb02fa253cd57b515da64642106ff8dcb7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f11df045_2c5f795c",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 320,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-11-08T06:30:03Z",
+      "side": 1,
+      "message": "Why this case still fails?",
+      "range": {
+        "startLine": 320,
+        "startChar": 0,
+        "endLine": 320,
+        "endChar": 34
+      },
+      "revId": "78c367cb02fa253cd57b515da64642106ff8dcb7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a9a4838e_8a3c8e58",
         "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
         "patchSetId": 7
@@ -230,6 +316,75 @@
         "startChar": 18,
         "endLine": 433,
         "endChar": 30
+      },
+      "revId": "78c367cb02fa253cd57b515da64642106ff8dcb7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2cbb99bb_9cb3e2cd",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 437,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-11-08T06:30:03Z",
+      "side": 1,
+      "message": "I suggest you also test readonly images.",
+      "range": {
+        "startLine": 437,
+        "startChar": 1,
+        "endLine": 437,
+        "endChar": 77
+      },
+      "revId": "78c367cb02fa253cd57b515da64642106ff8dcb7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d9032f77_84765c33",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 448,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-11-08T06:30:03Z",
+      "side": 1,
+      "message": "Const values should start with \u0027k\u0027:\n\nconstexpr int kWidth \u003d 4, height \u003d 2;\nconstexpr GLuint kInputValues[] \u003d {200, 200, 200, 200, 200, 200, 200, 200};",
+      "range": {
+        "startLine": 447,
+        "startChar": 0,
+        "endLine": 448,
+        "endChar": 68
+      },
+      "revId": "78c367cb02fa253cd57b515da64642106ff8dcb7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "35aa5248_4d674e74",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 464,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-11-08T06:30:03Z",
+      "side": 1,
+      "message": "constexpr GLuint kExpectedValue \u003d 100u;",
+      "range": {
+        "startLine": 464,
+        "startChar": 0,
+        "endLine": 464,
+        "endChar": 31
       },
       "revId": "78c367cb02fa253cd57b515da64642106ff8dcb7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
