@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "655cdfee_84f98249",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 2710,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-08T12:51:24Z",
+      "side": 1,
+      "message": "Also think that a helper is cleaner.",
+      "parentUuid": "0b7221a6_1ec957ef",
+      "range": {
+        "startLine": 2710,
+        "startChar": 9,
+        "endLine": 2710,
+        "endChar": 28
+      },
+      "revId": "def93af867a35a3213ecdf0168d692319e9dbf68",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b37c0c82_00205a88",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 17
@@ -40,6 +64,29 @@
         "startLine": 2744,
         "startChar": 50,
         "endLine": 2744,
+        "endChar": 96
+      },
+      "revId": "def93af867a35a3213ecdf0168d692319e9dbf68",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bd59da5f_a81b2d06",
+        "filename": "src/libANGLE/renderer/gl/ProgramGL.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 826,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-08T12:51:24Z",
+      "side": 1,
+      "message": "Same thing Yuly commented on in ProgramD3D.",
+      "range": {
+        "startLine": 826,
+        "startChar": 50,
+        "endLine": 826,
         "endChar": 96
       },
       "revId": "def93af867a35a3213ecdf0168d692319e9dbf68",
