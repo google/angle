@@ -23,6 +23,7 @@ if "%1" == "release" (
 ::              | Input file         | Entry point            | Type            | Output file                        | Debug |
 call:BuildShader Passthrough2D11.hlsl VS_Passthrough2D         vs_4_0_level_9_3  compiled\passthrough2d11vs.h         %debug%
 call:BuildShader Passthrough2D11.hlsl PS_PassthroughRGBA2D     ps_4_0_level_9_3  compiled\passthroughrgba2d11ps.h     %debug%
+call:BuildShader Passthrough2D11.hlsl PS_PassthroughA2D        ps_4_0_level_9_3  compiled\passthrougha2d11ps.h        %debug%
 call:BuildShader Passthrough2D11.hlsl PS_PassthroughRGBA2DMS   ps_4_1            compiled\passthroughrgba2dms11ps.h   %debug%
 call:BuildShader Passthrough2D11.hlsl PS_PassthroughRGB2D      ps_4_0_level_9_3  compiled\passthroughrgb2d11ps.h      %debug%
 call:BuildShader Passthrough2D11.hlsl PS_PassthroughRG2D       ps_4_0_level_9_3  compiled\passthroughrg2d11ps.h       %debug%
