@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8c83af19_3ccb29bc",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-08T08:32:04Z",
+      "side": 1,
+      "message": "The commit message should include \"TEST\u003dangle_unittests\"",
+      "revId": "3a63a7c381bcee66d7c1126eebbec542974a825e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "85bc2461_3d3c918d",
+        "filename": "src/common/utilities.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 773,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-08T08:32:04Z",
+      "side": 1,
+      "message": "I\u0027d rather just keep the function signature the same as before and just change the implementation to use strtoul and errno checking. If the index is out of range it could be treated as not a valid index. I\u0027m sure we won\u0027t need to support shader arrays with more than 2^31 entries.",
+      "revId": "3a63a7c381bcee66d7c1126eebbec542974a825e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
