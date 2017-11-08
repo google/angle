@@ -2,6 +2,109 @@
   "comments": [
     {
       "key": {
+        "uuid": "bce908cd_af20525d",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 723,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-11-08T04:45:18Z",
+      "side": 1,
+      "message": "Maybe you can use a template for getImageMapping so that you can reuse the code between getReadonlyImageMapping and getImageMapping.",
+      "range": {
+        "startLine": 721,
+        "startChar": 0,
+        "endLine": 723,
+        "endChar": 69
+      },
+      "revId": "78c367cb02fa253cd57b515da64642106ff8dcb7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "baa2b620_2540033f",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2181,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-11-08T04:45:18Z",
+      "side": 1,
+      "message": "Remove it since you have checked in below\n       else if (gl::IsImageType(uniform.type))\n        {\n            if (uniform.readonly)",
+      "range": {
+        "startLine": 2181,
+        "startChar": 44,
+        "endLine": 2181,
+        "endChar": 98
+      },
+      "revId": "78c367cb02fa253cd57b515da64642106ff8dcb7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "64cafac4_ccf59387",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 676,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-11-08T04:45:18Z",
+      "side": 1,
+      "message": "ASSERT(shaderType \u003d\u003d SHADER_COMPUTE)",
+      "revId": "78c367cb02fa253cd57b515da64642106ff8dcb7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fd6cf7e6_89cb9c5d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1603,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-11-08T04:45:18Z",
+      "side": 1,
+      "message": "ASSERT(shaderType \u003d\u003d SHADER_COMPUTE)",
+      "revId": "78c367cb02fa253cd57b515da64642106ff8dcb7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f5796c3a_6ab6aa86",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2564,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-11-08T04:45:18Z",
+      "side": 1,
+      "message": "It seems that setTextureForImage and setRWTextureForImage are almost same. Maybe you can refactor them to one function like below:\nStateManager11::setTextureForImage(const gl::Context *context,\n                                   ShaderType type,\n                                   int index,\n                                   const gl::ImageUnit \u0026imageUnit,\n                                   bool readOnly)\n{\n...\n    TextureStorage11 *storage11 \u003d GetAs\u003cTextureStorage11\u003e(texStorage);\n    if (readOnly)\n    {\n        const d3d11::SharedSRV *textureSRV \u003d nullptr;\n        ANGLE_TRY(storage11-\u003egetSRVForImage(context, imageUnit, \u0026textureSRV));\n        ASSERT(textureSRV-\u003evalid());\n        setShaderResourceInternal(type, index, textureSRV);\n        \n    }\n    else\n    {\n        const d3d11::SharedUAV *textureUAV \u003d nullptr;\n        ANGLE_TRY(storage11-\u003egetUAVForImage(context, imageUnit, \u0026textureUAV));\n        ASSERT(textureUAV-\u003evalid());\n        setUnorderedAccessViewInternal(type, index, textureUAV);\n    }\n    textureImpl-\u003eresetDirty();\n    return gl::NoError();\n}",
+      "range": {
+        "startLine": 2564,
+        "startChar": 26,
+        "endLine": 2564,
+        "endChar": 44
+      },
+      "revId": "78c367cb02fa253cd57b515da64642106ff8dcb7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6265f7f9_4f222b33",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
         "patchSetId": 7
@@ -41,6 +144,92 @@
         "startChar": 32,
         "endLine": 2633,
         "endChar": 53
+      },
+      "revId": "78c367cb02fa253cd57b515da64642106ff8dcb7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "79d3a7c3_b392f096",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 215,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-11-08T04:45:18Z",
+      "side": 1,
+      "message": "It seems that struct SRVKeyForImage and struct UAVKeyForImage are same. Why not merge them to one struct? For example:\n    struct ImageViewKey\n    {\n        ImageViewKey(int level, bool layered, int layer, GLenum access, GLenum format);\n        bool operator\u003c(const ImageViewKey \u0026rhs) const;\n        int level;\n        bool layered;\n        int layer;\n        GLenum access;\n        GLenum format;\n    };\n    typedef std::map\u003cImageViewKey, d3d11::SharedSRV\u003e SRVCacheForImage;\n    typedef std::map\u003cImageViewKey, d3d11::SharedUAV\u003e UAVCacheForImage;\n    ...",
+      "range": {
+        "startLine": 206,
+        "startChar": 0,
+        "endLine": 215,
+        "endChar": 6
+      },
+      "revId": "78c367cb02fa253cd57b515da64642106ff8dcb7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a9a4838e_8a3c8e58",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 429,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-11-08T04:45:18Z",
+      "side": 1,
+      "message": "Please also add a test for imageLoad. I remember there already are glBindImageTexture tests for opengl. Can you just enable those cases for D3D11?",
+      "revId": "78c367cb02fa253cd57b515da64642106ff8dcb7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "96874b66_555aea37",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 432,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-11-08T04:45:18Z",
+      "side": 1,
+      "message": "Don\u0027t prefix with \u0027m\u0027. It usually uses as a class member.",
+      "range": {
+        "startLine": 432,
+        "startChar": 14,
+        "endLine": 432,
+        "endChar": 22
+      },
+      "revId": "78c367cb02fa253cd57b515da64642106ff8dcb7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c191e2cb_a9d8836a",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 433,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-11-08T04:45:18Z",
+      "side": 1,
+      "message": "Same here.",
+      "range": {
+        "startLine": 433,
+        "startChar": 18,
+        "endLine": 433,
+        "endChar": 30
       },
       "revId": "78c367cb02fa253cd57b515da64642106ff8dcb7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
