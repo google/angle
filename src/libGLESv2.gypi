@@ -181,6 +181,7 @@
             'libANGLE/MemoryProgramCache.h',
             'libANGLE/Observer.cpp',
             'libANGLE/Observer.h',
+            'libANGLE/PackedGLEnums.cpp',
             'libANGLE/PackedGLEnums.h',
             'libANGLE/PackedGLEnums_autogen.cpp',
             'libANGLE/PackedGLEnums_autogen.h',

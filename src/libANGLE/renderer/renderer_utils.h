@@ -255,7 +255,7 @@ class IncompleteTextureSet final : angle::NonCopyable
                                    gl::Texture **textureOut);
 
   private:
-    gl::TextureMap mIncompleteTextures;
+    std::map<GLenum, gl::BindingPointer<gl::Texture>> mIncompleteTextures;
 };
 
 }  // namespace rx

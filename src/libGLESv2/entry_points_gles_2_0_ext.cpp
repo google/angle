@@ -615,8 +615,9 @@ ANGLE_EXPORT void GL_APIENTRY CopyTextureCHROMIUM(GLuint sourceId,
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        TextureTarget destTargetPacked = FromGLenum<TextureTarget>(destTarget);
         if (!context->skipValidation() &&
-            !ValidateCopyTextureCHROMIUM(context, sourceId, sourceLevel, destTarget, destId,
+            !ValidateCopyTextureCHROMIUM(context, sourceId, sourceLevel, destTargetPacked, destId,
                                          destLevel, internalFormat, destType, unpackFlipY,
                                          unpackPremultiplyAlpha, unpackUnmultiplyAlpha))
         {
@@ -654,10 +655,12 @@ ANGLE_EXPORT void GL_APIENTRY CopySubTextureCHROMIUM(GLuint sourceId,
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        TextureTarget destTargetPacked = FromGLenum<TextureTarget>(destTarget);
         if (!context->skipValidation() &&
-            !ValidateCopySubTextureCHROMIUM(
-                context, sourceId, sourceLevel, destTarget, destId, destLevel, xoffset, yoffset, x,
-                y, width, height, unpackFlipY, unpackPremultiplyAlpha, unpackUnmultiplyAlpha))
+            !ValidateCopySubTextureCHROMIUM(context, sourceId, sourceLevel, destTargetPacked,
+                                            destId, destLevel, xoffset, yoffset, x, y, width,
+                                            height, unpackFlipY, unpackPremultiplyAlpha,
+                                            unpackUnmultiplyAlpha))
         {
             return;
         }
@@ -922,13 +925,14 @@ ANGLE_EXPORT void GL_APIENTRY GetTexParameterfvRobustANGLE(GLenum target,
     if (context)
     {
         GLsizei numParams = 0;
-        if (!ValidateGetTexParameterfvRobustANGLE(context, target, pname, bufSize, &numParams,
+        TextureType targetPacked = FromGLenum<TextureType>(target);
+        if (!ValidateGetTexParameterfvRobustANGLE(context, targetPacked, pname, bufSize, &numParams,
                                                   params))
         {
             return;
         }
 
-        Texture *texture = context->getTargetTexture(target);
+        Texture *texture = context->getTargetTexture(targetPacked);
         QueryTexParameterfv(texture, pname, params);
         SetRobustLengthParam(length, numParams);
     }
@@ -949,13 +953,14 @@ ANGLE_EXPORT void GL_APIENTRY GetTexParameterivRobustANGLE(GLenum target,
     if (context)
     {
         GLsizei numParams = 0;
-        if (!ValidateGetTexParameterivRobustANGLE(context, target, pname, bufSize, &numParams,
+        TextureType targetPacked = FromGLenum<TextureType>(target);
+        if (!ValidateGetTexParameterivRobustANGLE(context, targetPacked, pname, bufSize, &numParams,
                                                   params))
         {
             return;
         }
 
-        Texture *texture = context->getTargetTexture(target);
+        Texture *texture = context->getTargetTexture(targetPacked);
         QueryTexParameteriv(texture, pname, params);
         SetRobustLengthParam(length, numParams);
     }
@@ -1155,14 +1160,15 @@ ANGLE_EXPORT void GL_APIENTRY TexImage2DRobustANGLE(GLenum target,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateTexImage2DRobust(context, target, level, internalformat, width, height, border,
-                                      format, type, bufSize, pixels))
+        TextureTarget targetPacked = FromGLenum<TextureTarget>(target);
+        if (!ValidateTexImage2DRobust(context, targetPacked, level, internalformat, width, height,
+                                      border, format, type, bufSize, pixels))
         {
             return;
         }
 
-        context->texImage2D(target, level, internalformat, width, height, border, format, type,
-                            pixels);
+        context->texImage2D(targetPacked, level, internalformat, width, height, border, format,
+                            type, pixels);
     }
 }
 
@@ -1179,12 +1185,13 @@ ANGLE_EXPORT void GL_APIENTRY TexParameterfvRobustANGLE(GLenum target,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateTexParameterfvRobustANGLE(context, target, pname, bufSize, params))
+        TextureType targetPacked = FromGLenum<TextureType>(target);
+        if (!ValidateTexParameterfvRobustANGLE(context, targetPacked, pname, bufSize, params))
         {
             return;
         }
 
-        Texture *texture = context->getTargetTexture(target);
+        Texture *texture = context->getTargetTexture(targetPacked);
         SetTexParameterfv(context, texture, pname, params);
     }
 }
@@ -1202,12 +1209,13 @@ ANGLE_EXPORT void GL_APIENTRY TexParameterivRobustANGLE(GLenum target,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateTexParameterivRobustANGLE(context, target, pname, bufSize, params))
+        TextureType targetPacked = FromGLenum<TextureType>(target);
+        if (!ValidateTexParameterivRobustANGLE(context, targetPacked, pname, bufSize, params))
         {
             return;
         }
 
-        Texture *texture = context->getTargetTexture(target);
+        Texture *texture = context->getTargetTexture(targetPacked);
         SetTexParameteriv(context, texture, pname, params);
     }
 }
@@ -1232,13 +1240,14 @@ ANGLE_EXPORT void GL_APIENTRY TexSubImage2DRobustANGLE(GLenum target,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateTexSubImage2DRobustANGLE(context, target, level, xoffset, yoffset, width,
+        TextureTarget targetPacked = FromGLenum<TextureTarget>(target);
+        if (!ValidateTexSubImage2DRobustANGLE(context, targetPacked, level, xoffset, yoffset, width,
                                               height, format, type, bufSize, pixels))
         {
             return;
         }
 
-        context->texSubImage2D(target, level, xoffset, yoffset, width, height, format, type,
+        context->texSubImage2D(targetPacked, level, xoffset, yoffset, width, height, format, type,
                                pixels);
     }
 }
@@ -1264,14 +1273,15 @@ ANGLE_EXPORT void GL_APIENTRY TexImage3DRobustANGLE(GLenum target,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateTexImage3DRobustANGLE(context, target, level, internalformat, width, height,
-                                           depth, border, format, type, bufSize, pixels))
+        TextureType targetPacked = FromGLenum<TextureType>(target);
+        if (!ValidateTexImage3DRobustANGLE(context, targetPacked, level, internalformat, width,
+                                           height, depth, border, format, type, bufSize, pixels))
         {
             return;
         }
 
-        context->texImage3D(target, level, internalformat, width, height, depth, border, format,
-                            type, pixels);
+        context->texImage3D(targetPacked, level, internalformat, width, height, depth, border,
+                            format, type, pixels);
     }
 }
 
@@ -1299,13 +1309,15 @@ ANGLE_EXPORT void GL_APIENTRY TexSubImage3DRobustANGLE(GLenum target,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateTexSubImage3DRobustANGLE(context, target, level, xoffset, yoffset, zoffset,
-                                              width, height, depth, format, type, bufSize, pixels))
+        TextureType targetPacked = FromGLenum<TextureType>(target);
+        if (!ValidateTexSubImage3DRobustANGLE(context, targetPacked, level, xoffset, yoffset,
+                                              zoffset, width, height, depth, format, type, bufSize,
+                                              pixels))
         {
             return;
         }
 
-        context->texSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth,
+        context->texSubImage3D(targetPacked, level, xoffset, yoffset, zoffset, width, height, depth,
                                format, type, pixels);
     }
 }
@@ -1330,14 +1342,15 @@ void GL_APIENTRY CompressedTexImage2DRobustANGLE(GLenum target,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() &&
-            !ValidateCompressedTexImage2DRobustANGLE(context, target, level, internalformat, width,
-                                                     height, border, imageSize, dataSize, data))
+        TextureTarget targetPacked = FromGLenum<TextureTarget>(target);
+        if (!context->skipValidation() && !ValidateCompressedTexImage2DRobustANGLE(
+                                              context, targetPacked, level, internalformat, width,
+                                              height, border, imageSize, dataSize, data))
         {
             return;
         }
 
-        context->compressedTexImage2D(target, level, internalformat, width, height, border,
+        context->compressedTexImage2D(targetPacked, level, internalformat, width, height, border,
                                       imageSize, data);
     }
 }
@@ -1362,15 +1375,16 @@ void GL_APIENTRY CompressedTexSubImage2DRobustANGLE(GLenum target,
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        TextureTarget targetPacked = FromGLenum<TextureTarget>(target);
         if (!context->skipValidation() && !ValidateCompressedTexSubImage2DRobustANGLE(
-                                              context, target, level, xoffset, yoffset, width,
+                                              context, targetPacked, level, xoffset, yoffset, width,
                                               height, format, imageSize, dataSize, data))
         {
             return;
         }
 
-        context->compressedTexSubImage2D(target, level, xoffset, yoffset, width, height, format,
-                                         imageSize, data);
+        context->compressedTexSubImage2D(targetPacked, level, xoffset, yoffset, width, height,
+                                         format, imageSize, data);
     }
 }
 
@@ -1395,15 +1409,16 @@ void GL_APIENTRY CompressedTexImage3DRobustANGLE(GLenum target,
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        TextureType targetPacked = FromGLenum<TextureType>(target);
         if (!context->skipValidation() && !ValidateCompressedTexImage3DRobustANGLE(
-                                              context, target, level, internalformat, width, height,
-                                              depth, border, imageSize, dataSize, data))
+                                              context, targetPacked, level, internalformat, width,
+                                              height, depth, border, imageSize, dataSize, data))
         {
             return;
         }
 
-        context->compressedTexImage3D(target, level, internalformat, width, height, depth, border,
-                                      imageSize, data);
+        context->compressedTexImage3D(targetPacked, level, internalformat, width, height, depth,
+                                      border, imageSize, data);
     }
 }
 
@@ -1431,16 +1446,17 @@ void GL_APIENTRY CompressedTexSubImage3DRobustANGLE(GLenum target,
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        TextureType targetPacked = FromGLenum<TextureType>(target);
         if (!context->skipValidation() &&
-            !ValidateCompressedTexSubImage3DRobustANGLE(context, target, level, xoffset, yoffset,
-                                                        zoffset, width, height, depth, format,
-                                                        imageSize, dataSize, data))
+            !ValidateCompressedTexSubImage3DRobustANGLE(context, targetPacked, level, xoffset,
+                                                        yoffset, zoffset, width, height, depth,
+                                                        format, imageSize, dataSize, data))
         {
             return;
         }
 
-        context->compressedTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height,
-                                         depth, format, imageSize, data);
+        context->compressedTexSubImage3D(targetPacked, level, xoffset, yoffset, zoffset, width,
+                                         height, depth, format, imageSize, data);
     }
 }
 

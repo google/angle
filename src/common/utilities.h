@@ -38,7 +38,6 @@ bool IsSamplerType(GLenum type);
 bool IsImageType(GLenum type);
 bool IsAtomicCounterType(GLenum type);
 bool IsOpaqueType(GLenum type);
-GLenum SamplerTypeToTextureType(GLenum samplerType);
 bool IsMatrixType(GLenum type);
 GLenum TransposeMatrixType(GLenum type);
 int VariableRegisterCount(GLenum type);
@@ -161,9 +160,6 @@ const char *GetGenericErrorMessage(EGLint error);
 
 namespace egl_gl
 {
-GLenum EGLCubeMapTargetToGLCubeMapTarget(EGLenum eglTarget);
-GLenum EGLImageTargetToGLTextureTarget(EGLenum eglTarget);
-GLenum EGLTextureTargetToGLTextureTarget(EGLenum eglTarget);
 GLuint EGLClientBufferToGLObjectHandle(EGLClientBuffer buffer);
 }
 

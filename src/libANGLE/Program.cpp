@@ -519,7 +519,7 @@ VariableLocation::VariableLocation(unsigned int arrayIndex, unsigned int index)
 }
 
 // SamplerBindings implementation.
-SamplerBinding::SamplerBinding(GLenum textureTypeIn, size_t elementCount, bool unreferenced)
+SamplerBinding::SamplerBinding(TextureType textureTypeIn, size_t elementCount, bool unreferenced)
     : textureType(textureTypeIn), boundTextureUnits(elementCount, 0), unreferenced(unreferenced)
 {
 }
@@ -1837,11 +1837,12 @@ bool Program::validateSamplers(InfoLog *infoLog, const Caps &caps)
 
     if (mTextureUnitTypesCache.empty())
     {
-        mTextureUnitTypesCache.resize(caps.maxCombinedTextureImageUnits, GL_NONE);
+        mTextureUnitTypesCache.resize(caps.maxCombinedTextureImageUnits, TextureType::InvalidEnum);
     }
     else
     {
-        std::fill(mTextureUnitTypesCache.begin(), mTextureUnitTypesCache.end(), GL_NONE);
+        std::fill(mTextureUnitTypesCache.begin(), mTextureUnitTypesCache.end(),
+                  TextureType::InvalidEnum);
     }
 
     // if any two active samplers in a program are of different types, but refer to the same
@@ -1852,7 +1853,7 @@ bool Program::validateSamplers(InfoLog *infoLog, const Caps &caps)
         if (samplerBinding.unreferenced)
             continue;
 
-        GLenum textureType = samplerBinding.textureType;
+        TextureType textureType = samplerBinding.textureType;
 
         for (GLuint textureUnit : samplerBinding.boundTextureUnits)
         {
@@ -1869,7 +1870,7 @@ bool Program::validateSamplers(InfoLog *infoLog, const Caps &caps)
                 return false;
             }
 
-            if (mTextureUnitTypesCache[textureUnit] != GL_NONE)
+            if (mTextureUnitTypesCache[textureUnit] != TextureType::InvalidEnum)
             {
                 if (textureType != mTextureUnitTypesCache[textureUnit])
                 {
@@ -2425,7 +2426,7 @@ void Program::linkSamplerAndImageBindings()
     for (unsigned int samplerIndex : mState.mSamplerUniformRange)
     {
         const auto &samplerUniform = mState.mUniforms[samplerIndex];
-        GLenum textureType         = SamplerTypeToTextureType(samplerUniform.type);
+        TextureType textureType    = SamplerTypeToTextureType(samplerUniform.type);
         mState.mSamplerBindings.emplace_back(
             SamplerBinding(textureType, samplerUniform.getBasicTypeElementCount(), false));
     }
@@ -3442,7 +3443,7 @@ bool Program::samplesFromTexture(const gl::State &state, GLuint textureID) const
 
     for (const auto &binding : mState.mSamplerBindings)
     {
-        GLenum textureType = binding.textureType;
+        TextureType textureType = binding.textureType;
         for (const auto &unit : binding.boundTextureUnits)
         {
             GLenum programTextureID = state.getSamplerTextureId(unit, textureType);

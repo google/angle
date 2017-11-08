@@ -375,13 +375,15 @@ void GL_APIENTRY FramebufferTexture2D(GLenum target,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::FramebufferTexture2D>(target, attachment, textarget,
+        TextureTarget textargetPacked = FromGLenum<TextureTarget>(textarget);
+        context->gatherParams<EntryPoint::FramebufferTexture2D>(target, attachment, textargetPacked,
                                                                 texture, level);
 
         if (context->skipValidation() ||
-            ValidateFramebufferTexture2D(context, target, attachment, textarget, texture, level))
+            ValidateFramebufferTexture2D(context, target, attachment, textargetPacked, texture,
+                                         level))
         {
-            context->framebufferTexture2D(target, attachment, textarget, texture, level);
+            context->framebufferTexture2D(target, attachment, textargetPacked, texture, level);
         }
     }
 }
@@ -425,11 +427,12 @@ void GL_APIENTRY GenerateMipmap(GLenum target)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::GenerateMipmap>(target);
+        TextureType targetPacked = FromGLenum<TextureType>(target);
+        context->gatherParams<EntryPoint::GenerateMipmap>(targetPacked);
 
-        if (context->skipValidation() || ValidateGenerateMipmap(context, target))
+        if (context->skipValidation() || ValidateGenerateMipmap(context, targetPacked))
         {
-            context->generateMipmap(target);
+            context->generateMipmap(targetPacked);
         }
     }
 }

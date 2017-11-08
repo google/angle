@@ -173,7 +173,7 @@ class ProgramD3D : public ProgramImpl
     GLint getSamplerMapping(gl::ShaderType type,
                             unsigned int samplerIndex,
                             const gl::Caps &caps) const;
-    GLenum getSamplerTextureType(gl::ShaderType type, unsigned int samplerIndex) const;
+    gl::TextureType getSamplerTextureType(gl::ShaderType type, unsigned int samplerIndex) const;
     GLuint getUsedSamplerRange(gl::ShaderType type) const;
 
     enum SamplerMapping
@@ -381,7 +381,7 @@ class ProgramD3D : public ProgramImpl
 
         bool active;
         GLint logicalTextureUnit;
-        GLenum textureType;
+        gl::TextureType textureType;
     };
 
     struct Image

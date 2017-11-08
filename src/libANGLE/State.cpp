@@ -150,17 +150,17 @@ void State::initialize(const Context *context,
 
     mUniformBuffers.resize(caps.maxUniformBufferBindings);
 
-    mSamplerTextures[GL_TEXTURE_2D].resize(caps.maxCombinedTextureImageUnits);
-    mSamplerTextures[GL_TEXTURE_CUBE_MAP].resize(caps.maxCombinedTextureImageUnits);
+    mSamplerTextures[TextureType::_2D].resize(caps.maxCombinedTextureImageUnits);
+    mSamplerTextures[TextureType::CubeMap].resize(caps.maxCombinedTextureImageUnits);
     if (clientVersion >= Version(3, 0))
     {
         // TODO: These could also be enabled via extension
-        mSamplerTextures[GL_TEXTURE_2D_ARRAY].resize(caps.maxCombinedTextureImageUnits);
-        mSamplerTextures[GL_TEXTURE_3D].resize(caps.maxCombinedTextureImageUnits);
+        mSamplerTextures[TextureType::_2DArray].resize(caps.maxCombinedTextureImageUnits);
+        mSamplerTextures[TextureType::_3D].resize(caps.maxCombinedTextureImageUnits);
     }
     if (clientVersion >= Version(3, 1))
     {
-        mSamplerTextures[GL_TEXTURE_2D_MULTISAMPLE].resize(caps.maxCombinedTextureImageUnits);
+        mSamplerTextures[TextureType::_2DMultisample].resize(caps.maxCombinedTextureImageUnits);
 
         mAtomicCounterBuffers.resize(caps.maxAtomicCounterBufferBindings);
         mShaderStorageBuffers.resize(caps.maxShaderStorageBufferBindings);
@@ -168,11 +168,11 @@ void State::initialize(const Context *context,
     }
     if (nativeExtensions.textureRectangle)
     {
-        mSamplerTextures[GL_TEXTURE_RECTANGLE_ANGLE].resize(caps.maxCombinedTextureImageUnits);
+        mSamplerTextures[TextureType::Rectangle].resize(caps.maxCombinedTextureImageUnits);
     }
     if (nativeExtensions.eglImageExternal || nativeExtensions.eglStreamConsumerExternal)
     {
-        mSamplerTextures[GL_TEXTURE_EXTERNAL_OES].resize(caps.maxCombinedTextureImageUnits);
+        mSamplerTextures[TextureType::External].resize(caps.maxCombinedTextureImageUnits);
     }
     mCompleteTextureCache.resize(caps.maxCombinedTextureImageUnits, nullptr);
     mCompleteTextureBindings.reserve(caps.maxCombinedTextureImageUnits);
@@ -220,10 +220,9 @@ void State::reset(const Context *context)
 {
     for (auto &bindingVec : mSamplerTextures)
     {
-        TextureBindingVector &textureVector = bindingVec.second;
-        for (size_t textureIdx = 0; textureIdx < textureVector.size(); textureIdx++)
+        for (size_t textureIdx = 0; textureIdx < bindingVec.size(); textureIdx++)
         {
-            textureVector[textureIdx].set(context, nullptr);
+            bindingVec[textureIdx].set(context, nullptr);
         }
     }
     for (size_t samplerIdx = 0; samplerIdx < mSamplers.size(); samplerIdx++)
@@ -803,32 +802,28 @@ unsigned int State::getActiveSampler() const
     return static_cast<unsigned int>(mActiveSampler);
 }
 
-void State::setSamplerTexture(const Context *context, GLenum type, Texture *texture)
+void State::setSamplerTexture(const Context *context, TextureType type, Texture *texture)
 {
     mSamplerTextures[type][mActiveSampler].set(context, texture);
     mDirtyBits.set(DIRTY_BIT_TEXTURE_BINDINGS);
     mDirtyObjects.set(DIRTY_OBJECT_PROGRAM_TEXTURES);
 }
 
-Texture *State::getTargetTexture(GLenum target) const
+Texture *State::getTargetTexture(TextureType type) const
 {
-    return getSamplerTexture(static_cast<unsigned int>(mActiveSampler), target);
+    return getSamplerTexture(static_cast<unsigned int>(mActiveSampler), type);
 }
 
-Texture *State::getSamplerTexture(unsigned int sampler, GLenum type) const
+Texture *State::getSamplerTexture(unsigned int sampler, TextureType type) const
 {
-    const auto it = mSamplerTextures.find(type);
-    ASSERT(it != mSamplerTextures.end());
-    ASSERT(sampler < it->second.size());
-    return it->second[sampler].get();
+    ASSERT(sampler < mSamplerTextures[type].size());
+    return mSamplerTextures[type][sampler].get();
 }
 
-GLuint State::getSamplerTextureId(unsigned int sampler, GLenum type) const
+GLuint State::getSamplerTextureId(unsigned int sampler, TextureType type) const
 {
-    const auto it = mSamplerTextures.find(type);
-    ASSERT(it != mSamplerTextures.end());
-    ASSERT(sampler < it->second.size());
-    return it->second[sampler].id();
+    ASSERT(sampler < mSamplerTextures[type].size());
+    return mSamplerTextures[type][sampler].id();
 }
 
 void State::detachTexture(const Context *context, const TextureMap &zeroTextures, GLuint texture)
@@ -842,18 +837,17 @@ void State::detachTexture(const Context *context, const TextureMap &zeroTextures
     // If a texture object is deleted, it is as if all texture units which are bound to that texture object are
     // rebound to texture object zero
 
-    for (auto &bindingVec : mSamplerTextures)
+    for (TextureType type : angle::AllEnums<TextureType>())
     {
-        GLenum textureType = bindingVec.first;
-        TextureBindingVector &textureVector = bindingVec.second;
+        TextureBindingVector &textureVector = mSamplerTextures[type];
         for (BindingPointer<Texture> &binding : textureVector)
         {
             if (binding.id() == texture)
             {
-                auto it = zeroTextures.find(textureType);
-                ASSERT(it != zeroTextures.end());
+                Texture *zeroTexture = zeroTextures[type].get();
+                ASSERT(zeroTexture != nullptr);
                 // Zero textures are the "default" textures instead of NULL
-                binding.set(context, it->second.get());
+                binding.set(context, zeroTexture);
                 mDirtyBits.set(DIRTY_BIT_TEXTURE_BINDINGS);
             }
         }
@@ -891,13 +885,11 @@ void State::detachTexture(const Context *context, const TextureMap &zeroTextures
 
 void State::initializeZeroTextures(const Context *context, const TextureMap &zeroTextures)
 {
-    for (const auto &zeroTexture : zeroTextures)
+    for (TextureType type : angle::AllEnums<TextureType>())
     {
-        auto &samplerTextureArray = mSamplerTextures[zeroTexture.first];
-
-        for (size_t textureUnit = 0; textureUnit < samplerTextureArray.size(); ++textureUnit)
+        for (size_t textureUnit = 0; textureUnit < mSamplerTextures[type].size(); ++textureUnit)
         {
-            samplerTextureArray[textureUnit].set(context, zeroTexture.second.get());
+            mSamplerTextures[type][textureUnit].set(context, zeroTextures[type].get());
         }
     }
 }
@@ -1978,36 +1970,36 @@ void State::getIntegerv(const Context *context, GLenum pname, GLint *params)
         break;
       case GL_TEXTURE_BINDING_2D:
         ASSERT(mActiveSampler < mMaxCombinedTextureImageUnits);
-        *params = getSamplerTextureId(static_cast<unsigned int>(mActiveSampler), GL_TEXTURE_2D);
+        *params = getSamplerTextureId(static_cast<unsigned int>(mActiveSampler), TextureType::_2D);
         break;
       case GL_TEXTURE_BINDING_RECTANGLE_ANGLE:
           ASSERT(mActiveSampler < mMaxCombinedTextureImageUnits);
           *params = getSamplerTextureId(static_cast<unsigned int>(mActiveSampler),
-                                        GL_TEXTURE_RECTANGLE_ANGLE);
+                                        TextureType::Rectangle);
           break;
       case GL_TEXTURE_BINDING_CUBE_MAP:
         ASSERT(mActiveSampler < mMaxCombinedTextureImageUnits);
         *params =
-            getSamplerTextureId(static_cast<unsigned int>(mActiveSampler), GL_TEXTURE_CUBE_MAP);
+            getSamplerTextureId(static_cast<unsigned int>(mActiveSampler), TextureType::CubeMap);
         break;
       case GL_TEXTURE_BINDING_3D:
         ASSERT(mActiveSampler < mMaxCombinedTextureImageUnits);
-        *params = getSamplerTextureId(static_cast<unsigned int>(mActiveSampler), GL_TEXTURE_3D);
+        *params = getSamplerTextureId(static_cast<unsigned int>(mActiveSampler), TextureType::_3D);
         break;
       case GL_TEXTURE_BINDING_2D_ARRAY:
         ASSERT(mActiveSampler < mMaxCombinedTextureImageUnits);
         *params =
-            getSamplerTextureId(static_cast<unsigned int>(mActiveSampler), GL_TEXTURE_2D_ARRAY);
+            getSamplerTextureId(static_cast<unsigned int>(mActiveSampler), TextureType::_2DArray);
         break;
       case GL_TEXTURE_BINDING_2D_MULTISAMPLE:
           ASSERT(mActiveSampler < mMaxCombinedTextureImageUnits);
           *params = getSamplerTextureId(static_cast<unsigned int>(mActiveSampler),
-                                        GL_TEXTURE_2D_MULTISAMPLE);
+                                        TextureType::_2DMultisample);
           break;
       case GL_TEXTURE_BINDING_EXTERNAL_OES:
           ASSERT(mActiveSampler < mMaxCombinedTextureImageUnits);
-          *params = getSamplerTextureId(static_cast<unsigned int>(mActiveSampler),
-                                        GL_TEXTURE_EXTERNAL_OES);
+          *params =
+              getSamplerTextureId(static_cast<unsigned int>(mActiveSampler), TextureType::External);
           break;
       case GL_UNIFORM_BUFFER_BINDING:
           *params = mBoundBuffers[BufferBinding::Uniform].id();
@@ -2296,7 +2288,7 @@ void State::syncProgramTextures(const Context *context)
         if (samplerBinding.unreferenced)
             continue;
 
-        GLenum textureType = samplerBinding.textureType;
+        TextureType textureType = samplerBinding.textureType;
         for (GLuint textureUnitIndex : samplerBinding.boundTextureUnits)
         {
             Texture *texture = getSamplerTexture(textureUnitIndex, textureType);

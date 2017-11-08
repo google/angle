@@ -966,7 +966,7 @@ void StateManagerGL::updateProgramTextureAndSamplerBindings(const gl::Context *c
         if (samplerBinding.unreferenced)
             continue;
 
-        GLenum textureType = samplerBinding.textureType;
+        GLenum textureType = ToGLenum(samplerBinding.textureType);
         for (GLuint textureUnitIndex : samplerBinding.boundTextureUnits)
         {
             gl::Texture *texture = completeTextures[textureUnitIndex];

@@ -316,7 +316,7 @@ using ContextID = uintptr_t;
 
 constexpr size_t CUBE_FACE_COUNT = 6;
 
-using TextureMap = std::map<GLenum, BindingPointer<Texture>>;
+using TextureMap = angle::PackedEnumMap<TextureType, BindingPointer<Texture>>;
 
 template <typename T>
 using AttachmentArray = std::array<T, IMPLEMENTATION_MAX_FRAMEBUFFER_ATTACHMENTS>;

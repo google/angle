@@ -79,6 +79,47 @@ template <>
 CullFaceMode FromGLenum<CullFaceMode>(GLenum from);
 GLenum ToGLenum(CullFaceMode from);
 
+enum class TextureTarget : uint8_t
+{
+    CubeMapNegativeX = 0,
+    CubeMapNegativeY = 1,
+    CubeMapNegativeZ = 2,
+    CubeMapPositiveX = 3,
+    CubeMapPositiveY = 4,
+    CubeMapPositiveZ = 5,
+    External         = 6,
+    Rectangle        = 7,
+    _2D              = 8,
+    _2DArray         = 9,
+    _2DMultisample   = 10,
+    _3D              = 11,
+
+    InvalidEnum = 12,
+    EnumCount   = 12,
+};
+
+template <>
+TextureTarget FromGLenum<TextureTarget>(GLenum from);
+GLenum ToGLenum(TextureTarget from);
+
+enum class TextureType : uint8_t
+{
+    CubeMap        = 0,
+    External       = 1,
+    Rectangle      = 2,
+    _2D            = 3,
+    _2DArray       = 4,
+    _2DMultisample = 5,
+    _3D            = 6,
+
+    InvalidEnum = 7,
+    EnumCount   = 7,
+};
+
+template <>
+TextureType FromGLenum<TextureType>(GLenum from);
+GLenum ToGLenum(TextureType from);
+
 }  // namespace gl
 
 #endif  // LIBANGLE_PACKEDGLENUMS_AUTOGEN_H_

@@ -3218,7 +3218,8 @@ gl::Error Renderer9::applyTextures(const gl::Context *context, gl::ShaderType sh
         }
         else
         {
-            GLenum textureType = programD3D->getSamplerTextureType(shaderType, samplerIndex);
+            GLenum textureType =
+                ToGLenum(programD3D->getSamplerTextureType(shaderType, samplerIndex));
 
             // Texture is not sampler complete or it is in use by the framebuffer.  Bind the
             // incomplete texture.

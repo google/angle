@@ -110,6 +110,7 @@ struct TextureState final : private angle::NonCopyable
     const ImageDesc &getImageDesc(const ImageIndex &imageIndex) const;
 
     GLenum getTarget() const { return mTarget; }
+    TextureType getType() const;
     const SwizzleState &getSwizzleState() const { return mSwizzleState; }
     const SamplerState &getSamplerState() const { return mSamplerState; }
     GLenum getUsage() const { return mUsage; }
@@ -181,6 +182,7 @@ class Texture final : public egl::ImageSibling,
     const std::string &getLabel() const override;
 
     GLenum getTarget() const;
+    TextureType getType() const;
 
     void setSwizzleRed(GLenum swizzleRed);
     GLenum getSwizzleRed() const;
@@ -248,11 +250,15 @@ class Texture final : public egl::ImageSibling,
     const TextureState &getTextureState() const;
 
     size_t getWidth(GLenum target, size_t level) const;
+    size_t getWidth(TextureTarget target, size_t level) const;
     size_t getHeight(GLenum target, size_t level) const;
+    size_t getHeight(TextureTarget target, size_t level) const;
     size_t getDepth(GLenum target, size_t level) const;
+    size_t getDepth(TextureTarget target, size_t level) const;
     GLsizei getSamples(GLenum target, size_t level) const;
     bool getFixedSampleLocations(GLenum target, size_t level) const;
     const Format &getFormat(GLenum target, size_t level) const;
+    const Format &getFormat(TextureTarget target, size_t level) const;
 
     // Returns the value called "q" in the GLES 3.0.4 spec section 3.8.10.
     GLuint getMipmapMaxLevel() const;

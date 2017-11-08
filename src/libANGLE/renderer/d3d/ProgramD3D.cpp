@@ -594,7 +594,8 @@ ProgramD3D::PixelExecutable::~PixelExecutable()
     SafeDelete(mShaderExecutable);
 }
 
-ProgramD3D::Sampler::Sampler() : active(false), logicalTextureUnit(0), textureType(GL_TEXTURE_2D)
+ProgramD3D::Sampler::Sampler()
+    : active(false), logicalTextureUnit(0), textureType(gl::TextureType::_2D)
 {
 }
 
@@ -707,7 +708,8 @@ GLint ProgramD3D::getSamplerMapping(gl::ShaderType type,
 
 // Returns the texture type for a given Direct3D 9 sampler type and
 // index (0-15 for the pixel shader and 0-3 for the vertex shader).
-GLenum ProgramD3D::getSamplerTextureType(gl::ShaderType type, unsigned int samplerIndex) const
+gl::TextureType ProgramD3D::getSamplerTextureType(gl::ShaderType type,
+                                                  unsigned int samplerIndex) const
 {
     switch (type)
     {
@@ -725,9 +727,9 @@ GLenum ProgramD3D::getSamplerTextureType(gl::ShaderType type, unsigned int sampl
             return mSamplersCS[samplerIndex].textureType;
         default:
             UNREACHABLE();
+            return gl::TextureType::InvalidEnum;
     }
 
-    return GL_TEXTURE_2D;
 }
 
 GLuint ProgramD3D::getUsedSamplerRange(gl::ShaderType type) const
@@ -898,7 +900,7 @@ gl::LinkResult ProgramD3D::load(const gl::Context *context,
         Sampler sampler;
         stream->readBool(&sampler.active);
         stream->readInt(&sampler.logicalTextureUnit);
-        stream->readInt(&sampler.textureType);
+        stream->readEnum(&sampler.textureType);
         mSamplersPS.push_back(sampler);
     }
     const unsigned int vsSamplerCount = stream->readInt<unsigned int>();
@@ -907,7 +909,7 @@ gl::LinkResult ProgramD3D::load(const gl::Context *context,
         Sampler sampler;
         stream->readBool(&sampler.active);
         stream->readInt(&sampler.logicalTextureUnit);
-        stream->readInt(&sampler.textureType);
+        stream->readEnum(&sampler.textureType);
         mSamplersVS.push_back(sampler);
     }
 
@@ -917,7 +919,7 @@ gl::LinkResult ProgramD3D::load(const gl::Context *context,
         Sampler sampler;
         stream->readBool(&sampler.active);
         stream->readInt(&sampler.logicalTextureUnit);
-        stream->readInt(&sampler.textureType);
+        stream->readEnum(&sampler.textureType);
         mSamplersCS.push_back(sampler);
     }
 
@@ -1170,7 +1172,7 @@ void ProgramD3D::save(const gl::Context *context, gl::BinaryOutputStream *stream
     {
         stream->writeInt(mSamplersPS[i].active);
         stream->writeInt(mSamplersPS[i].logicalTextureUnit);
-        stream->writeInt(mSamplersPS[i].textureType);
+        stream->writeEnum(mSamplersPS[i].textureType);
     }
 
     stream->writeInt(mSamplersVS.size());
@@ -1178,7 +1180,7 @@ void ProgramD3D::save(const gl::Context *context, gl::BinaryOutputStream *stream
     {
         stream->writeInt(mSamplersVS[i].active);
         stream->writeInt(mSamplersVS[i].logicalTextureUnit);
-        stream->writeInt(mSamplersVS[i].textureType);
+        stream->writeEnum(mSamplersVS[i].textureType);
     }
 
     stream->writeInt(mSamplersCS.size());
@@ -1186,7 +1188,7 @@ void ProgramD3D::save(const gl::Context *context, gl::BinaryOutputStream *stream
     {
         stream->writeInt(mSamplersCS[i].active);
         stream->writeInt(mSamplersCS[i].logicalTextureUnit);
-        stream->writeInt(mSamplersCS[i].textureType);
+        stream->writeEnum(mSamplersCS[i].textureType);
     }
 
     stream->writeInt(mImagesCS.size());
@@ -2616,7 +2618,7 @@ void ProgramD3D::AssignSamplers(unsigned int startSamplerIndex,
         ASSERT(samplerIndex < outSamplers.size());
         Sampler *sampler            = &outSamplers[samplerIndex];
         sampler->active             = true;
-        sampler->textureType        = typeInfo.textureType;
+        sampler->textureType        = gl::FromGLenum<gl::TextureType>(typeInfo.textureType);
         sampler->logicalTextureUnit = 0;
         *outUsedRange               = std::max(samplerIndex + 1, *outUsedRange);
         samplerIndex++;

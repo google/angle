@@ -609,6 +609,11 @@ GLenum Texture::getTarget() const
     return mState.mTarget;
 }
 
+TextureType Texture::getType() const
+{
+    return FromGLenum<TextureType>(getTarget());
+}
+
 void Texture::setSwizzleRed(GLenum swizzleRed)
 {
     mState.mSwizzleState.swizzleRed = swizzleRed;
@@ -858,11 +863,21 @@ size_t Texture::getWidth(GLenum target, size_t level) const
     return mState.getImageDesc(target, level).size.width;
 }
 
+size_t Texture::getWidth(TextureTarget target, size_t level) const
+{
+    return getWidth(ToGLenum(target), level);
+}
+
 size_t Texture::getHeight(GLenum target, size_t level) const
 {
     ASSERT(target == mState.mTarget ||
            (mState.mTarget == GL_TEXTURE_CUBE_MAP && IsCubeMapTextureTarget(target)));
     return mState.getImageDesc(target, level).size.height;
+}
+
+size_t Texture::getHeight(TextureTarget target, size_t level) const
+{
+    return getHeight(ToGLenum(target), level);
 }
 
 size_t Texture::getDepth(GLenum target, size_t level) const
@@ -872,11 +887,21 @@ size_t Texture::getDepth(GLenum target, size_t level) const
     return mState.getImageDesc(target, level).size.depth;
 }
 
+size_t Texture::getDepth(TextureTarget target, size_t level) const
+{
+    return getDepth(ToGLenum(target), level);
+}
+
 const Format &Texture::getFormat(GLenum target, size_t level) const
 {
     ASSERT(target == mState.mTarget ||
            (mState.mTarget == GL_TEXTURE_CUBE_MAP && IsCubeMapTextureTarget(target)));
     return mState.getImageDesc(target, level).format;
+}
+
+const Format &Texture::getFormat(TextureTarget target, size_t level) const
+{
+    return getFormat(ToGLenum(target), level);
 }
 
 GLsizei Texture::getSamples(GLenum target, size_t level) const

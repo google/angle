@@ -8,12 +8,54 @@
     "glBindBufferRange": {
         "target": "BufferBinding"
     },
+    "glBindTexture": {
+        "target": "TextureType"
+    },
     "glBufferData": {
         "target": "BufferBinding",
         "usage": "BufferUsage"
     },
     "glBufferSubData": {
         "target": "BufferBinding"
+    },
+    "glCompressedTexImage2D": {
+        "target": "TextureTarget"
+    },
+    "glCompressedTexImage2DRobustANGLE": {
+        "target": "TextureTarget"
+    },
+    "glCompressedTexImage3D": {
+        "target": "TextureType"
+    },
+    "glCompressedTexImage3DRobustANGLE": {
+        "target": "TextureType"
+    },
+    "glCompressedTexSubImage2D": {
+        "target": "TextureTarget"
+    },
+    "glCompressedTexSubImage2DRobustANGLE": {
+        "target": "TextureTarget"
+    },
+    "glCompressedTexSubImage3D": {
+        "target": "TextureType"
+    },
+    "glCompressedTexSubImage3DRobustANGLE": {
+        "target": "TextureType"
+    },
+    "glCopyTexImage2D": {
+        "target": "TextureTarget"
+    },
+    "glCopyTextureCHROMIUM": {
+        "destTarget": "TextureTarget"
+    },
+    "glCopyTexSubImage2D": {
+        "target": "TextureTarget"
+    },
+    "glCopyTexSubImage3D": {
+        "target": "TextureType"
+    },
+    "glCopySubTextureCHROMIUM": {
+        "destTarget": "TextureTarget"
     },
     "glCopyBufferSubData": {
         "readTarget": "BufferBinding",
@@ -22,11 +64,20 @@
     "glCullFace": {
         "mode": "CullFaceMode"
     },
+    "glEGLImageTargetTexture2DOES": {
+        "target": "TextureType"
+    },
     "glFlushMappedBufferRange": {
         "target": "BufferBinding"
     },
     "glFlushMappedBufferRangeEXT": {
         "target": "BufferBinding"
+    },
+    "glFramebufferTexture2D": {
+        "textarget": "TextureTarget"
+    },
+    "glGenerateMipmap": {
+        "target": "TextureType"
     },
     "glGetBufferParameteriv": {
         "target": "BufferBinding"
@@ -49,6 +100,39 @@
     "glGetBufferPointervRobustANGLE": {
         "target": "BufferBinding"
     },
+    "glGetTexLevelParameterfv": {
+        "target": "TextureTarget"
+    },
+    "glGetTexLevelParameterfvRobustANGLE": {
+        "target": "TextureTarget"
+    },
+    "glGetTexLevelParameteriv": {
+        "target": "TextureTarget"
+    },
+    "glGetTexLevelParameterivRobustANGLE": {
+        "target": "TextureTarget"
+    },
+    "glGetTexParameterfv": {
+        "target": "TextureType"
+    },
+    "glGetTexParameterfvRobustANGLE": {
+        "target": "TextureType"
+    },
+    "glGetTexParameteriv": {
+        "target": "TextureType"
+    },
+    "glGetTexParameterivRobustANGLE": {
+        "target": "TextureType"
+    },
+    "glGetTexParameterIivRobustANGLE": {
+        "target": "TextureType"
+    },
+    "glGetTexParameterIuivRobustANGLE": {
+        "target": "TextureType"
+    },
+    "glGetTexParameterxv": {
+        "target": "TextureType"
+    },
     "glMapBuffer": {
         "target": "BufferBinding"
     },
@@ -60,6 +144,75 @@
     },
     "glMapBufferRangeEXT": {
         "target": "BufferBinding"
+    },
+    "glTexImage2D": {
+        "target": "TextureTarget"
+    },
+    "glTexImage2DRobustANGLE": {
+        "target": "TextureTarget"
+    },
+    "glTexImage3D": {
+        "target": "TextureType"
+    },
+    "glTexImage3DRobustANGLE": {
+        "target": "TextureType"
+    },
+    "glTexParameterf": {
+        "target": "TextureType"
+    },
+    "glTexParameterfv": {
+        "target": "TextureType"
+    },
+    "glTexParameterfvRobustANGLE": {
+        "target": "TextureType"
+    },
+    "glTexParameteri": {
+        "target": "TextureType"
+    },
+    "glTexParameteriv": {
+        "target": "TextureType"
+    },
+    "glTexParameterivRobustANGLE": {
+        "target": "TextureType"
+    },
+    "glTexParameterIivRobustANGLE": {
+        "target": "TextureType"
+    },
+    "glTexParameterIuivRobustANGLE": {
+        "target": "TextureType"
+    },
+    "glTexParameterx": {
+        "target": "TextureType"
+    },
+    "glTexParameterxv": {
+        "target": "TextureType"
+    },
+    "glTexStorage2D": {
+        "target": "TextureType"
+    },
+    "glTexStorage2DEXT": {
+        "target": "TextureType"
+    },
+    "glTexStorage2DMultisample": {
+        "target": "TextureType"
+    },
+    "glTexStorage3D": {
+        "target": "TextureType"
+    },
+    "glTexStorage3DEXT": {
+        "target": "TextureType"
+    },
+    "glTexSubImage2D": {
+        "target": "TextureTarget"
+    },
+    "glTexSubImage2DRobustANGLE": {
+        "target": "TextureTarget"
+    },
+    "glTexSubImage3D": {
+        "target": "TextureType"
+    },
+    "glTexSubImage3DRobustANGLE": {
+        "target": "TextureType"
     },
     "glUnmapBuffer": {
         "target": "BufferBinding"

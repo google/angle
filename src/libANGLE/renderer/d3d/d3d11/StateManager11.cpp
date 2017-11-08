@@ -2349,7 +2349,8 @@ gl::Error StateManager11::applyTextures(const gl::Context *context, gl::ShaderTy
         }
         else
         {
-            GLenum textureType = programD3D->getSamplerTextureType(shaderType, samplerIndex);
+            GLenum textureType =
+                ToGLenum(programD3D->getSamplerTextureType(shaderType, samplerIndex));
 
             // Texture is not sampler complete or it is in use by the framebuffer.  Bind the
             // incomplete texture.
@@ -2840,7 +2841,7 @@ gl::Error StateManager11::generateSwizzlesForShader(const gl::Context *context, 
 
     for (unsigned int i = 0; i < samplerRange; i++)
     {
-        GLenum textureType = programD3D->getSamplerTextureType(type, i);
+        gl::TextureType textureType = programD3D->getSamplerTextureType(type, i);
         GLint textureUnit  = programD3D->getSamplerMapping(type, i, context->getCaps());
         if (textureUnit != -1)
         {

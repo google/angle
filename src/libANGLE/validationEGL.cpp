@@ -1532,7 +1532,7 @@ Error ValidateCreateImageKHR(const Display *display,
             }
 
             EGLAttrib level    = attributes.get(EGL_GL_TEXTURE_LEVEL_KHR, 0);
-            GLenum cubeMapFace = egl_gl::EGLCubeMapTargetToGLCubeMapTarget(target);
+            gl::TextureTarget cubeMapFace = egl_gl::EGLCubeMapTargetToCubeMapTarget(target);
             if (texture->getWidth(cubeMapFace, static_cast<size_t>(level)) == 0 ||
                 texture->getHeight(cubeMapFace, static_cast<size_t>(level)) == 0)
             {
@@ -1821,7 +1821,7 @@ Error ValidateStreamConsumerGLTextureExternalKHR(const Display *display,
     }
 
     // Lookup the texture and ensure it is correct
-    gl::Texture *texture = context->getGLState().getTargetTexture(GL_TEXTURE_EXTERNAL_OES);
+    gl::Texture *texture = context->getGLState().getTargetTexture(gl::TextureType::External);
     if (texture == nullptr || texture->getId() == 0)
     {
         return EglBadAccess() << "No external texture bound";
@@ -2026,7 +2026,7 @@ Error ValidateStreamConsumerGLTextureExternalAttribsNV(const Display *display,
         }
 
         // Lookup the texture and ensure it is correct
-        gl::Texture *texture = context->getGLState().getTargetTexture(GL_TEXTURE_EXTERNAL_OES);
+        gl::Texture *texture = context->getGLState().getTargetTexture(gl::TextureType::External);
         if (texture == nullptr || texture->getId() == 0)
         {
             return EglBadAccess() << "No external texture bound";
@@ -2061,7 +2061,7 @@ Error ValidateStreamConsumerGLTextureExternalAttribsNV(const Display *display,
             if (plane[i] != EGL_NONE)
             {
                 gl::Texture *texture = context->getGLState().getSamplerTexture(
-                    static_cast<unsigned int>(plane[i]), GL_TEXTURE_EXTERNAL_OES);
+                    static_cast<unsigned int>(plane[i]), gl::TextureType::External);
                 if (texture == nullptr || texture->getId() == 0)
                 {
                     return EglBadAccess()

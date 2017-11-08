@@ -174,10 +174,10 @@ class State : public angle::ObserverInterface, angle::NonCopyable
     // Texture binding & active texture unit manipulation
     void setActiveSampler(unsigned int active);
     unsigned int getActiveSampler() const;
-    void setSamplerTexture(const Context *context, GLenum type, Texture *texture);
-    Texture *getTargetTexture(GLenum target) const;
-    Texture *getSamplerTexture(unsigned int sampler, GLenum type) const;
-    GLuint getSamplerTextureId(unsigned int sampler, GLenum type) const;
+    void setSamplerTexture(const Context *context, TextureType type, Texture *texture);
+    Texture *getTargetTexture(TextureType type) const;
+    Texture *getSamplerTexture(unsigned int sampler, TextureType type) const;
+    GLuint getSamplerTextureId(unsigned int sampler, TextureType type) const;
     void detachTexture(const Context *context, const TextureMap &zeroTextures, GLuint texture);
     void initializeZeroTextures(const Context *context, const TextureMap &zeroTextures);
 
@@ -525,7 +525,7 @@ class State : public angle::ObserverInterface, angle::NonCopyable
     size_t mActiveSampler;  // Active texture unit selector - GL_TEXTURE0
 
     typedef std::vector<BindingPointer<Texture>> TextureBindingVector;
-    typedef std::map<GLenum, TextureBindingVector> TextureBindingMap;
+    typedef angle::PackedEnumMap<TextureType, TextureBindingVector> TextureBindingMap;
     TextureBindingMap mSamplerTextures;
 
     // Texture Completeness Caching

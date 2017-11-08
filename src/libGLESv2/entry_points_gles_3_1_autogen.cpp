@@ -465,12 +465,14 @@ void GL_APIENTRY GetTexLevelParameterfv(GLenum target, GLint level, GLenum pname
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::GetTexLevelParameterfv>(target, level, pname, params);
+        TextureTarget targetPacked = FromGLenum<TextureTarget>(target);
+        context->gatherParams<EntryPoint::GetTexLevelParameterfv>(targetPacked, level, pname,
+                                                                  params);
 
         if (context->skipValidation() ||
-            ValidateGetTexLevelParameterfv(context, target, level, pname, params))
+            ValidateGetTexLevelParameterfv(context, targetPacked, level, pname, params))
         {
-            context->getTexLevelParameterfv(target, level, pname, params);
+            context->getTexLevelParameterfv(targetPacked, level, pname, params);
         }
     }
 }
@@ -483,12 +485,14 @@ void GL_APIENTRY GetTexLevelParameteriv(GLenum target, GLint level, GLenum pname
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::GetTexLevelParameteriv>(target, level, pname, params);
+        TextureTarget targetPacked = FromGLenum<TextureTarget>(target);
+        context->gatherParams<EntryPoint::GetTexLevelParameteriv>(targetPacked, level, pname,
+                                                                  params);
 
         if (context->skipValidation() ||
-            ValidateGetTexLevelParameteriv(context, target, level, pname, params))
+            ValidateGetTexLevelParameteriv(context, targetPacked, level, pname, params))
         {
-            context->getTexLevelParameteriv(target, level, pname, params);
+            context->getTexLevelParameteriv(targetPacked, level, pname, params);
         }
     }
 }
@@ -1299,14 +1303,15 @@ void GL_APIENTRY TexStorage2DMultisample(GLenum target,
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        TextureType targetPacked = FromGLenum<TextureType>(target);
         context->gatherParams<EntryPoint::TexStorage2DMultisample>(
-            target, samples, internalformat, width, height, fixedsamplelocations);
+            targetPacked, samples, internalformat, width, height, fixedsamplelocations);
 
         if (context->skipValidation() ||
-            ValidateTexStorage2DMultisample(context, target, samples, internalformat, width, height,
-                                            fixedsamplelocations))
+            ValidateTexStorage2DMultisample(context, targetPacked, samples, internalformat, width,
+                                            height, fixedsamplelocations))
         {
-            context->texStorage2DMultisample(target, samples, internalformat, width, height,
+            context->texStorage2DMultisample(targetPacked, samples, internalformat, width, height,
                                              fixedsamplelocations);
         }
     }

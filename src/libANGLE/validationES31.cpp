@@ -854,7 +854,7 @@ bool ValidateProgramUniformMatrix4x3fv(Context *context,
 }
 
 bool ValidateGetTexLevelParameterBase(Context *context,
-                                      GLenum target,
+                                      TextureTarget target,
                                       GLint level,
                                       GLenum pname,
                                       GLsizei *length)
@@ -870,20 +870,21 @@ bool ValidateGetTexLevelParameterBase(Context *context,
         *length = 0;
     }
 
-    if (!ValidTexLevelDestinationTarget(context, target))
+    TextureType type = TextureTargetToType(target);
+
+    if (!ValidTexLevelDestinationTarget(context, type))
     {
         ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidTextureTarget);
         return false;
     }
 
-    if (context->getTargetTexture(IsCubeMapTextureTarget(target) ? GL_TEXTURE_CUBE_MAP : target) ==
-        nullptr)
+    if (context->getTargetTexture(type) == nullptr)
     {
         context->handleError(InvalidEnum() << "No texture bound.");
         return false;
     }
 
-    if (!ValidMipLevel(context, target, level))
+    if (!ValidMipLevel(context, type, level))
     {
         context->handleError(InvalidValue());
         return false;
@@ -928,7 +929,7 @@ bool ValidateGetTexLevelParameterBase(Context *context,
 }
 
 bool ValidateGetTexLevelParameterfv(Context *context,
-                                    GLenum target,
+                                    TextureTarget target,
                                     GLint level,
                                     GLenum pname,
                                     GLfloat *params)
@@ -937,7 +938,7 @@ bool ValidateGetTexLevelParameterfv(Context *context,
 }
 
 bool ValidateGetTexLevelParameteriv(Context *context,
-                                    GLenum target,
+                                    TextureTarget target,
                                     GLint level,
                                     GLenum pname,
                                     GLint *params)
@@ -946,7 +947,7 @@ bool ValidateGetTexLevelParameteriv(Context *context,
 }
 
 bool ValidateTexStorage2DMultisample(Context *context,
-                                     GLenum target,
+                                     TextureType target,
                                      GLsizei samples,
                                      GLint internalFormat,
                                      GLsizei width,
@@ -959,7 +960,7 @@ bool ValidateTexStorage2DMultisample(Context *context,
         return false;
     }
 
-    if (target != GL_TEXTURE_2D_MULTISAMPLE)
+    if (target != TextureType::_2DMultisample)
     {
         context->handleError(InvalidEnum() << "Target must be TEXTURE_2D_MULTISAMPLE.");
         return false;

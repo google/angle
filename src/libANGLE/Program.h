@@ -213,12 +213,12 @@ struct BindingInfo
 // This small structure encapsulates binding sampler uniforms to active GL textures.
 struct SamplerBinding
 {
-    SamplerBinding(GLenum textureTypeIn, size_t elementCount, bool unreferenced);
+    SamplerBinding(TextureType textureTypeIn, size_t elementCount, bool unreferenced);
     SamplerBinding(const SamplerBinding &other);
     ~SamplerBinding();
 
     // Necessary for retrieving active textures from the GL state.
-    GLenum textureType;
+    TextureType textureType;
 
     // List of all textures bound to this sampler, of type textureType.
     std::vector<GLuint> boundTextureUnits;
@@ -810,7 +810,7 @@ class Program final : angle::NonCopyable, public LabeledObject
 
     // Cache for sampler validation
     Optional<bool> mCachedValidateSamplersResult;
-    std::vector<GLenum> mTextureUnitTypesCache;
+    std::vector<TextureType> mTextureUnitTypesCache;
 };
 }  // namespace gl
 

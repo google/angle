@@ -31,5 +31,30 @@
         "Back": "GL_BACK",
         "Front": "GL_FRONT",
         "FrontAndBack": "GL_FRONT_AND_BACK"
+    },
+    "TextureType":
+    {
+        "_2D": "GL_TEXTURE_2D",
+        "_2DArray": "GL_TEXTURE_2D_ARRAY",
+        "_2DMultisample": "GL_TEXTURE_2D_MULTISAMPLE",
+        "_3D": "GL_TEXTURE_3D",
+        "CubeMap": "GL_TEXTURE_CUBE_MAP",
+        "External": "GL_TEXTURE_EXTERNAL_OES",
+        "Rectangle": "GL_TEXTURE_RECTANGLE_ANGLE"
+    },
+    "TextureTarget":
+    {
+        "_2D": "GL_TEXTURE_2D",
+        "_2DArray": "GL_TEXTURE_2D_ARRAY",
+        "_2DMultisample": "GL_TEXTURE_2D_MULTISAMPLE",
+        "_3D": "GL_TEXTURE_3D",
+        "CubeMapPositiveX": "GL_TEXTURE_CUBE_MAP_POSITIVE_X",
+        "CubeMapNegativeX": "GL_TEXTURE_CUBE_MAP_NEGATIVE_X",
+        "CubeMapPositiveY": "GL_TEXTURE_CUBE_MAP_POSITIVE_Y",
+        "CubeMapNegativeY": "GL_TEXTURE_CUBE_MAP_NEGATIVE_Y",
+        "CubeMapPositiveZ": "GL_TEXTURE_CUBE_MAP_POSITIVE_Z",
+        "CubeMapNegativeZ": "GL_TEXTURE_CUBE_MAP_NEGATIVE_Z",
+        "External": "GL_TEXTURE_EXTERNAL_OES",
+        "Rectangle": "GL_TEXTURE_RECTANGLE_ANGLE"
     }
 }

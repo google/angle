@@ -9,6 +9,8 @@
 #ifndef LIBANGLE_VALIDATION_ES31_H_
 #define LIBANGLE_VALIDATION_ES31_H_
 
+#include "libANGLE/PackedGLEnums.h"
+
 #include <GLES3/gl31.h>
 
 namespace gl
@@ -25,18 +27,18 @@ bool ValidateGetBooleani_vRobustANGLE(Context *context,
                                       GLboolean *data);
 
 bool ValidateGetTexLevelParameterfv(Context *context,
-                                    GLenum target,
+                                    TextureTarget target,
                                     GLint level,
                                     GLenum pname,
                                     GLfloat *params);
 bool ValidateGetTexLevelParameteriv(Context *context,
-                                    GLenum target,
+                                    TextureTarget target,
                                     GLint level,
                                     GLenum pname,
                                     GLint *param);
 
 bool ValidateTexStorage2DMultisample(Context *context,
-                                     GLenum target,
+                                     TextureType target,
                                      GLsizei samples,
                                      GLint internalFormat,
                                      GLsizei width,

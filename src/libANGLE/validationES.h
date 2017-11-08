@@ -32,17 +32,17 @@ class Shader;
 class ValidationContext;
 
 bool IsETC2EACFormat(const GLenum format);
-bool ValidTextureTarget(const ValidationContext *context, GLenum target);
-bool ValidTexture2DTarget(const ValidationContext *context, GLenum target);
-bool ValidTexture3DTarget(const ValidationContext *context, GLenum target);
-bool ValidTextureExternalTarget(const ValidationContext *context, GLenum target);
-bool ValidTexture2DDestinationTarget(const ValidationContext *context, GLenum target);
-bool ValidTexture3DDestinationTarget(const ValidationContext *context, GLenum target);
-bool ValidTexLevelDestinationTarget(const ValidationContext *context, GLenum target);
+bool ValidTextureTarget(const ValidationContext *context, TextureType type);
+bool ValidTexture2DTarget(const ValidationContext *context, TextureType type);
+bool ValidTexture3DTarget(const ValidationContext *context, TextureType target);
+bool ValidTextureExternalTarget(const ValidationContext *context, TextureType target);
+bool ValidTexture2DDestinationTarget(const ValidationContext *context, TextureTarget target);
+bool ValidTexture3DDestinationTarget(const ValidationContext *context, TextureType target);
+bool ValidTexLevelDestinationTarget(const ValidationContext *context, TextureType type);
 bool ValidFramebufferTarget(const ValidationContext *context, GLenum target);
-bool ValidMipLevel(const ValidationContext *context, GLenum target, GLint level);
+bool ValidMipLevel(const ValidationContext *context, TextureType type, GLint level);
 bool ValidImageSizeParameters(ValidationContext *context,
-                              GLenum target,
+                              TextureType target,
                               GLint level,
                               GLsizei width,
                               GLsizei height,
@@ -62,7 +62,7 @@ bool ValidCompressedSubImageSize(const ValidationContext *context,
                                  size_t textureWidth,
                                  size_t textureHeight);
 bool ValidImageDataSize(ValidationContext *context,
-                        GLenum textureTarget,
+                        TextureType texType,
                         GLsizei width,
                         GLsizei height,
                         GLsizei depth,
@@ -240,7 +240,7 @@ bool ValidateRobustStateQuery(ValidationContext *context,
                               unsigned int *numParams);
 
 bool ValidateCopyTexImageParametersBase(ValidationContext *context,
-                                        GLenum target,
+                                        TextureTarget target,
                                         GLint level,
                                         GLenum internalformat,
                                         bool isSubImage,
@@ -337,7 +337,9 @@ bool ValidateDiscardFramebufferBase(Context *context,
 bool ValidateInsertEventMarkerEXT(Context *context, GLsizei length, const char *marker);
 bool ValidatePushGroupMarkerEXT(Context *context, GLsizei length, const char *marker);
 
-bool ValidateEGLImageTargetTexture2DOES(Context *context, GLenum target, GLeglImageOES image);
+bool ValidateEGLImageTargetTexture2DOES(Context *context,
+                                        gl::TextureType type,
+                                        GLeglImageOES image);
 bool ValidateEGLImageTargetRenderbufferStorageOES(Context *context,
                                                   GLenum target,
                                                   GLeglImageOES image);
@@ -439,15 +441,18 @@ bool ValidateGetShaderivRobustANGLE(Context *context,
                                     GLsizei *length,
                                     GLint *params);
 
-bool ValidateGetTexParameterBase(Context *context, GLenum target, GLenum pname, GLsizei *length);
+bool ValidateGetTexParameterBase(Context *context,
+                                 TextureType target,
+                                 GLenum pname,
+                                 GLsizei *length);
 bool ValidateGetTexParameterfvRobustANGLE(Context *context,
-                                          GLenum target,
+                                          TextureType target,
                                           GLenum pname,
                                           GLsizei bufSize,
                                           GLsizei *length,
                                           GLfloat *params);
 bool ValidateGetTexParameterivRobustANGLE(Context *context,
-                                          GLenum target,
+                                          TextureType target,
                                           GLenum pname,
                                           GLsizei bufSize,
                                           GLsizei *length,
@@ -455,17 +460,17 @@ bool ValidateGetTexParameterivRobustANGLE(Context *context,
 
 template <typename ParamType>
 bool ValidateTexParameterBase(Context *context,
-                              GLenum target,
+                              TextureType target,
                               GLenum pname,
                               GLsizei bufSize,
                               const ParamType *params);
 bool ValidateTexParameterfvRobustANGLE(Context *context,
-                                       GLenum target,
+                                       TextureType target,
                                        GLenum pname,
                                        GLsizei bufSize,
                                        const GLfloat *params);
 bool ValidateTexParameterivRobustANGLE(Context *context,
-                                       GLenum target,
+                                       TextureType target,
                                        GLenum pname,
                                        GLsizei bufSize,
                                        const GLint *params);

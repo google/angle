@@ -118,7 +118,7 @@ bool ValidateBlitFramebufferANGLE(Context *context,
 
 bool ValidateClear(ValidationContext *context, GLbitfield mask);
 bool ValidateTexImage2D(Context *context,
-                        GLenum target,
+                        TextureTarget target,
                         GLint level,
                         GLint internalformat,
                         GLsizei width,
@@ -128,7 +128,7 @@ bool ValidateTexImage2D(Context *context,
                         GLenum type,
                         const void *pixels);
 bool ValidateTexImage2DRobust(Context *context,
-                              GLenum target,
+                              TextureTarget target,
                               GLint level,
                               GLint internalformat,
                               GLsizei width,
@@ -139,7 +139,7 @@ bool ValidateTexImage2DRobust(Context *context,
                               GLsizei bufSize,
                               const void *pixels);
 bool ValidateTexSubImage2D(Context *context,
-                           GLenum target,
+                           TextureTarget target,
                            GLint level,
                            GLint xoffset,
                            GLint yoffset,
@@ -149,7 +149,7 @@ bool ValidateTexSubImage2D(Context *context,
                            GLenum type,
                            const void *pixels);
 bool ValidateTexSubImage2DRobustANGLE(Context *context,
-                                      GLenum target,
+                                      TextureTarget target,
                                       GLint level,
                                       GLint xoffset,
                                       GLint yoffset,
@@ -160,7 +160,7 @@ bool ValidateTexSubImage2DRobustANGLE(Context *context,
                                       GLsizei bufSize,
                                       const void *pixels);
 bool ValidateCompressedTexImage2D(Context *context,
-                                  GLenum target,
+                                  TextureTarget target,
                                   GLint level,
                                   GLenum internalformat,
                                   GLsizei width,
@@ -169,7 +169,7 @@ bool ValidateCompressedTexImage2D(Context *context,
                                   GLsizei imageSize,
                                   const void *data);
 bool ValidateCompressedTexSubImage2D(Context *context,
-                                     GLenum target,
+                                     TextureTarget target,
                                      GLint level,
                                      GLint xoffset,
                                      GLint yoffset,
@@ -179,7 +179,7 @@ bool ValidateCompressedTexSubImage2D(Context *context,
                                      GLsizei imageSize,
                                      const void *data);
 bool ValidateCompressedTexImage2DRobustANGLE(Context *context,
-                                             GLenum target,
+                                             TextureTarget target,
                                              GLint level,
                                              GLenum internalformat,
                                              GLsizei width,
@@ -189,7 +189,7 @@ bool ValidateCompressedTexImage2DRobustANGLE(Context *context,
                                              GLsizei dataSize,
                                              const void *data);
 bool ValidateCompressedTexSubImage2DRobustANGLE(Context *context,
-                                                GLenum target,
+                                                TextureTarget target,
                                                 GLint level,
                                                 GLint xoffset,
                                                 GLint yoffset,
@@ -200,7 +200,7 @@ bool ValidateCompressedTexSubImage2DRobustANGLE(Context *context,
                                                 GLsizei dataSize,
                                                 const void *data);
 
-bool ValidateBindTexture(Context *context, GLenum target, GLuint texture);
+bool ValidateBindTexture(Context *context, TextureType target, GLuint texture);
 
 bool ValidateGetBufferPointervOES(Context *context,
                                   BufferBinding target,
@@ -328,7 +328,7 @@ bool ValidateProgramPathFragmentInputGenCHROMIUM(Context *context,
 bool ValidateCopyTextureCHROMIUM(Context *context,
                                  GLuint sourceId,
                                  GLint sourceLevel,
-                                 GLenum destTarget,
+                                 TextureTarget destTarget,
                                  GLuint destId,
                                  GLint destLevel,
                                  GLint internalFormat,
@@ -339,7 +339,7 @@ bool ValidateCopyTextureCHROMIUM(Context *context,
 bool ValidateCopySubTextureCHROMIUM(Context *context,
                                     GLuint sourceId,
                                     GLint sourceLevel,
-                                    GLenum destTarget,
+                                    TextureTarget destTarget,
                                     GLuint destId,
                                     GLint destLevel,
                                     GLint xoffset,
@@ -610,7 +610,7 @@ bool ValidateGetFramebufferAttachmentParameteriv(Context *context,
 bool ValidateGetProgramiv(ValidationContext *context, GLuint program, GLenum pname, GLint *params);
 
 bool ValidateCopyTexImage2D(ValidationContext *context,
-                            GLenum target,
+                            TextureTarget target,
                             GLint level,
                             GLenum internalformat,
                             GLint x,
@@ -620,7 +620,7 @@ bool ValidateCopyTexImage2D(ValidationContext *context,
                             GLint border);
 
 bool ValidateCopyTexSubImage2D(Context *context,
-                               GLenum target,
+                               TextureTarget target,
                                GLint level,
                                GLint xoffset,
                                GLint yoffset,
@@ -643,11 +643,11 @@ bool ValidateFramebufferRenderbuffer(Context *context,
 bool ValidateFramebufferTexture2D(Context *context,
                                   GLenum target,
                                   GLenum attachment,
-                                  GLenum textarget,
+                                  TextureTarget textarget,
                                   GLuint texture,
                                   GLint level);
 bool ValidateGenBuffers(Context *context, GLint n, GLuint *buffers);
-bool ValidateGenerateMipmap(Context *context, GLenum target);
+bool ValidateGenerateMipmap(Context *context, TextureType target);
 bool ValidateGenFramebuffers(Context *context, GLint n, GLuint *framebuffers);
 bool ValidateGenRenderbuffers(Context *context, GLint n, GLuint *renderbuffers);
 bool ValidateGenTextures(Context *context, GLint n, GLuint *textures);
@@ -660,8 +660,8 @@ bool ValidateGetRenderbufferParameteriv(Context *context,
                                         GLenum pname,
                                         GLint *params);
 bool ValidateGetShaderiv(Context *context, GLuint shader, GLenum pname, GLint *params);
-bool ValidateGetTexParameterfv(Context *context, GLenum target, GLenum pname, GLfloat *params);
-bool ValidateGetTexParameteriv(Context *context, GLenum target, GLenum pname, GLint *params);
+bool ValidateGetTexParameterfv(Context *context, TextureType target, GLenum pname, GLfloat *params);
+bool ValidateGetTexParameteriv(Context *context, TextureType target, GLenum pname, GLint *params);
 bool ValidateGetUniformfv(Context *context, GLuint program, GLint location, GLfloat *params);
 bool ValidateGetUniformiv(Context *context, GLuint program, GLint location, GLint *params);
 bool ValidateGetVertexAttribfv(Context *context, GLuint index, GLenum pname, GLfloat *params);
@@ -677,10 +677,16 @@ bool ValidateReadPixels(Context *context,
                         GLenum format,
                         GLenum type,
                         void *pixels);
-bool ValidateTexParameterf(Context *context, GLenum target, GLenum pname, GLfloat param);
-bool ValidateTexParameterfv(Context *context, GLenum target, GLenum pname, const GLfloat *params);
-bool ValidateTexParameteri(Context *context, GLenum target, GLenum pname, GLint param);
-bool ValidateTexParameteriv(Context *context, GLenum target, GLenum pname, const GLint *params);
+bool ValidateTexParameterf(Context *context, TextureType target, GLenum pname, GLfloat param);
+bool ValidateTexParameterfv(Context *context,
+                            TextureType target,
+                            GLenum pname,
+                            const GLfloat *params);
+bool ValidateTexParameteri(Context *context, TextureType target, GLenum pname, GLint param);
+bool ValidateTexParameteriv(Context *context,
+                            TextureType target,
+                            GLenum pname,
+                            const GLint *params);
 bool ValidateUniform1iv(ValidationContext *context,
                         GLint location,
                         GLsizei count,
@@ -702,7 +708,7 @@ bool ValidateIsFenceNV(Context *context, GLuint fence);
 bool ValidateSetFenceNV(Context *context, GLuint fence, GLenum condition);
 bool ValidateTestFenceNV(Context *context, GLuint fence);
 bool ValidateTexStorage2DEXT(Context *context,
-                             GLenum target,
+                             TextureType type,
                              GLsizei levels,
                              GLenum internalformat,
                              GLsizei width,
@@ -726,7 +732,7 @@ bool ValidateTexStorage1DEXT(Context *context,
                              GLenum internalformat,
                              GLsizei width);
 bool ValidateTexStorage3DEXT(Context *context,
-                             GLenum target,
+                             TextureType target,
                              GLsizei levels,
                              GLenum internalformat,
                              GLsizei width,

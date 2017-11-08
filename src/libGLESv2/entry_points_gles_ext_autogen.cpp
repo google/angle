@@ -628,13 +628,14 @@ TexStorage2DEXT(GLenum target, GLsizei levels, GLenum internalformat, GLsizei wi
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::TexStorage2DEXT>(target, levels, internalformat, width,
-                                                           height);
+        TextureType targetPacked = FromGLenum<TextureType>(target);
+        context->gatherParams<EntryPoint::TexStorage2DEXT>(targetPacked, levels, internalformat,
+                                                           width, height);
 
         if (context->skipValidation() ||
-            ValidateTexStorage2DEXT(context, target, levels, internalformat, width, height))
+            ValidateTexStorage2DEXT(context, targetPacked, levels, internalformat, width, height))
         {
-            context->texStorage2D(target, levels, internalformat, width, height);
+            context->texStorage2D(targetPacked, levels, internalformat, width, height);
         }
     }
 }
@@ -654,13 +655,15 @@ void GL_APIENTRY TexStorage3DEXT(GLenum target,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::TexStorage3DEXT>(target, levels, internalformat, width,
-                                                           height, depth);
+        TextureType targetPacked = FromGLenum<TextureType>(target);
+        context->gatherParams<EntryPoint::TexStorage3DEXT>(targetPacked, levels, internalformat,
+                                                           width, height, depth);
 
         if (context->skipValidation() ||
-            ValidateTexStorage3DEXT(context, target, levels, internalformat, width, height, depth))
+            ValidateTexStorage3DEXT(context, targetPacked, levels, internalformat, width, height,
+                                    depth))
         {
-            context->texStorage3D(target, levels, internalformat, width, height, depth);
+            context->texStorage3D(targetPacked, levels, internalformat, width, height, depth);
         }
     }
 }
@@ -1046,11 +1049,13 @@ void GL_APIENTRY EGLImageTargetTexture2DOES(GLenum target, GLeglImageOES image)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::EGLImageTargetTexture2DOES>(target, image);
+        TextureType targetPacked = FromGLenum<TextureType>(target);
+        context->gatherParams<EntryPoint::EGLImageTargetTexture2DOES>(targetPacked, image);
 
-        if (context->skipValidation() || ValidateEGLImageTargetTexture2DOES(context, target, image))
+        if (context->skipValidation() ||
+            ValidateEGLImageTargetTexture2DOES(context, targetPacked, image))
         {
-            context->eGLImageTargetTexture2D(target, image);
+            context->eGLImageTargetTexture2D(targetPacked, image);
         }
     }
 }

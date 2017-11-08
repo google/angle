@@ -227,7 +227,7 @@ bool ValidateGetTexEnvxv(Context *context, GLenum target, GLenum pname, GLfixed 
     return true;
 }
 
-bool ValidateGetTexParameterxv(Context *context, GLenum target, GLenum pname, GLfixed *params)
+bool ValidateGetTexParameterxv(Context *context, TextureType target, GLenum pname, GLfixed *params)
 {
     UNIMPLEMENTED();
     return true;
@@ -553,13 +553,16 @@ bool ValidateTexEnvxv(Context *context, GLenum target, GLenum pname, const GLfix
     return true;
 }
 
-bool ValidateTexParameterx(Context *context, GLenum target, GLenum pname, GLfixed param)
+bool ValidateTexParameterx(Context *context, TextureType target, GLenum pname, GLfixed param)
 {
     UNIMPLEMENTED();
     return true;
 }
 
-bool ValidateTexParameterxv(Context *context, GLenum target, GLenum pname, const GLfixed *params)
+bool ValidateTexParameterxv(Context *context,
+                            TextureType target,
+                            GLenum pname,
+                            const GLfixed *params)
 {
     UNIMPLEMENTED();
     return true;

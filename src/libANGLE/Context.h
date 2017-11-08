@@ -158,7 +158,7 @@ class Context final : public ValidationContext
     void getTexEnvfv(GLenum target, GLenum pname, GLfloat *params);
     void getTexEnviv(GLenum target, GLenum pname, GLint *params);
     void getTexEnvxv(GLenum target, GLenum pname, GLfixed *params);
-    void getTexParameterxv(GLenum target, GLenum pname, GLfixed *params);
+    void getTexParameterxv(TextureType target, GLenum pname, GLfixed *params);
     void lightModelf(GLenum pname, GLfloat param);
     void lightModelfv(GLenum pname, const GLfloat *params);
     void lightModelx(GLenum pname, GLfixed param);
@@ -208,8 +208,8 @@ class Context final : public ValidationContext
     void texEnviv(GLenum target, GLenum pname, const GLint *params);
     void texEnvx(GLenum target, GLenum pname, GLfixed param);
     void texEnvxv(GLenum target, GLenum pname, const GLfixed *params);
-    void texParameterx(GLenum target, GLenum pname, GLfixed param);
-    void texParameterxv(GLenum target, GLenum pname, const GLfixed *params);
+    void texParameterx(TextureType target, GLenum pname, GLfixed param);
+    void texParameterxv(TextureType target, GLenum pname, const GLfixed *params);
     void translatef(GLfloat x, GLfloat y, GLfloat z);
     void translatex(GLfixed x, GLfixed y, GLfixed z);
     void vertexPointer(GLint size, GLenum type, GLsizei stride, const void *pointer);
@@ -237,7 +237,7 @@ class Context final : public ValidationContext
     GLbitfield queryMatrixx(GLfixed *mantissa, GLint *exponent);
 
     // OpenGL ES 2+
-    void bindTexture(GLenum target, GLuint handle);
+    void bindTexture(TextureType target, GLuint handle);
     void bindReadFramebuffer(GLuint framebufferHandle);
     void bindDrawFramebuffer(GLuint framebufferHandle);
     void bindVertexArray(GLuint vertexArrayHandle);
@@ -277,14 +277,14 @@ class Context final : public ValidationContext
                                              GLint *params);
     void getRenderbufferParameteriv(GLenum target, GLenum pname, GLint *params);
 
-    void getTexParameterfv(GLenum target, GLenum pname, GLfloat *params);
-    void getTexParameteriv(GLenum target, GLenum pname, GLint *params);
-    void getTexLevelParameteriv(GLenum target, GLint level, GLenum pname, GLint *params);
-    void getTexLevelParameterfv(GLenum target, GLint level, GLenum pname, GLfloat *params);
-    void texParameterf(GLenum target, GLenum pname, GLfloat param);
-    void texParameterfv(GLenum target, GLenum pname, const GLfloat *params);
-    void texParameteri(GLenum target, GLenum pname, GLint param);
-    void texParameteriv(GLenum target, GLenum pname, const GLint *params);
+    void getTexParameterfv(TextureType target, GLenum pname, GLfloat *params);
+    void getTexParameteriv(TextureType target, GLenum pname, GLint *params);
+    void getTexLevelParameteriv(TextureTarget target, GLint level, GLenum pname, GLint *params);
+    void getTexLevelParameterfv(TextureTarget target, GLint level, GLenum pname, GLfloat *params);
+    void texParameterf(TextureType target, GLenum pname, GLfloat param);
+    void texParameterfv(TextureType target, GLenum pname, const GLfloat *params);
+    void texParameteri(TextureType target, GLenum pname, GLint param);
+    void texParameteriv(TextureType target, GLenum pname, const GLint *params);
 
     void samplerParameteri(GLuint sampler, GLenum pname, GLint param);
     void samplerParameteriv(GLuint sampler, GLenum pname, const GLint *param);
@@ -340,8 +340,8 @@ class Context final : public ValidationContext
                         GLchar *label) const;
     void getObjectPtrLabel(const void *ptr, GLsizei bufSize, GLsizei *length, GLchar *label) const;
 
-    Texture *getTargetTexture(GLenum target) const;
-    Texture *getSamplerTexture(unsigned int sampler, GLenum type) const;
+    Texture *getTargetTexture(TextureType type) const;
+    Texture *getSamplerTexture(unsigned int sampler, TextureType type) const;
 
     Compiler *getCompiler() const;
 
@@ -497,7 +497,7 @@ class Context final : public ValidationContext
                     GLenum type,
                     void *pixels);
 
-    void copyTexImage2D(GLenum target,
+    void copyTexImage2D(TextureTarget target,
                         GLint level,
                         GLenum internalformat,
                         GLint x,
@@ -506,7 +506,7 @@ class Context final : public ValidationContext
                         GLsizei height,
                         GLint border);
 
-    void copyTexSubImage2D(GLenum target,
+    void copyTexSubImage2D(TextureTarget target,
                            GLint level,
                            GLint xoffset,
                            GLint yoffset,
@@ -515,7 +515,7 @@ class Context final : public ValidationContext
                            GLsizei width,
                            GLsizei height);
 
-    void copyTexSubImage3D(GLenum target,
+    void copyTexSubImage3D(TextureType target,
                            GLint level,
                            GLint xoffset,
                            GLint yoffset,
@@ -527,7 +527,7 @@ class Context final : public ValidationContext
 
     void framebufferTexture2D(GLenum target,
                               GLenum attachment,
-                              GLenum textarget,
+                              TextureTarget textarget,
                               GLuint texture,
                               GLint level);
 
@@ -567,7 +567,7 @@ class Context final : public ValidationContext
                                   GLsizei width,
                                   GLsizei height);
 
-    void texImage2D(GLenum target,
+    void texImage2D(TextureTarget target,
                     GLint level,
                     GLint internalformat,
                     GLsizei width,
@@ -576,7 +576,7 @@ class Context final : public ValidationContext
                     GLenum format,
                     GLenum type,
                     const void *pixels);
-    void texImage3D(GLenum target,
+    void texImage3D(TextureType target,
                     GLint level,
                     GLint internalformat,
                     GLsizei width,
@@ -586,7 +586,7 @@ class Context final : public ValidationContext
                     GLenum format,
                     GLenum type,
                     const void *pixels);
-    void texSubImage2D(GLenum target,
+    void texSubImage2D(TextureTarget target,
                        GLint level,
                        GLint xoffset,
                        GLint yoffset,
@@ -595,7 +595,7 @@ class Context final : public ValidationContext
                        GLenum format,
                        GLenum type,
                        const void *pixels);
-    void texSubImage3D(GLenum target,
+    void texSubImage3D(TextureType target,
                        GLint level,
                        GLint xoffset,
                        GLint yoffset,
@@ -606,7 +606,7 @@ class Context final : public ValidationContext
                        GLenum format,
                        GLenum type,
                        const void *pixels);
-    void compressedTexImage2D(GLenum target,
+    void compressedTexImage2D(TextureTarget target,
                               GLint level,
                               GLenum internalformat,
                               GLsizei width,
@@ -614,7 +614,7 @@ class Context final : public ValidationContext
                               GLint border,
                               GLsizei imageSize,
                               const void *data);
-    void compressedTexImage3D(GLenum target,
+    void compressedTexImage3D(TextureType target,
                               GLint level,
                               GLenum internalformat,
                               GLsizei width,
@@ -623,7 +623,7 @@ class Context final : public ValidationContext
                               GLint border,
                               GLsizei imageSize,
                               const void *data);
-    void compressedTexSubImage2D(GLenum target,
+    void compressedTexSubImage2D(TextureTarget target,
                                  GLint level,
                                  GLint xoffset,
                                  GLint yoffset,
@@ -632,7 +632,7 @@ class Context final : public ValidationContext
                                  GLenum format,
                                  GLsizei imageSize,
                                  const void *data);
-    void compressedTexSubImage3D(GLenum target,
+    void compressedTexSubImage3D(TextureType target,
                                  GLint level,
                                  GLint xoffset,
                                  GLint yoffset,
@@ -669,7 +669,7 @@ class Context final : public ValidationContext
                         GLboolean unpackUnmultiplyAlpha);
     void compressedCopyTexture(GLuint sourceId, GLuint destId);
 
-    void generateMipmap(GLenum target);
+    void generateMipmap(TextureType target);
 
     void flush();
     void finish();
@@ -782,7 +782,7 @@ class Context final : public ValidationContext
     void bindFramebuffer(GLenum target, GLuint framebuffer);
     void bindRenderbuffer(GLenum target, GLuint renderbuffer);
 
-    void texStorage2DMultisample(GLenum target,
+    void texStorage2DMultisample(TextureType target,
                                  GLsizei samples,
                                  GLenum internalformat,
                                  GLsizei width,
@@ -1095,7 +1095,7 @@ class Context final : public ValidationContext
                      GLenum type,
                      GLsizei bufSize,
                      void *data);
-    void eGLImageTargetTexture2D(GLenum target, GLeglImageOES image);
+    void eGLImageTargetTexture2D(TextureType target, GLeglImageOES image);
     void eGLImageTargetRenderbufferStorage(GLenum target, GLeglImageOES image);
 
     void getFramebufferParameteriv(GLenum target, GLenum pname, GLint *params);
@@ -1105,12 +1105,12 @@ class Context final : public ValidationContext
     void dispatchComputeIndirect(GLintptr indirect);
 
     void texStorage1D(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width);
-    void texStorage2D(GLenum target,
+    void texStorage2D(TextureType target,
                       GLsizei levels,
                       GLenum internalFormat,
                       GLsizei width,
                       GLsizei height);
-    void texStorage3D(GLenum target,
+    void texStorage3D(TextureType target,
                       GLsizei levels,
                       GLenum internalFormat,
                       GLsizei width,

@@ -15,6 +15,8 @@
 #include <bitset>
 #include <cstddef>
 
+#include <EGL/egl.h>
+
 #include "common/bitset_utils.h"
 
 namespace angle
@@ -130,5 +132,24 @@ template <typename E>
 using PackedEnumBitSet = BitSetT<EnumSize<E>(), uint32_t, E>;
 
 }  // namespace angle
+
+namespace gl
+{
+
+TextureType TextureTargetToType(TextureTarget target);
+TextureTarget NonCubeTextureTypeToTarget(TextureType type);
+
+TextureTarget CubeFaceIndexToTextureTarget(size_t face);
+
+TextureType SamplerTypeToTextureType(GLenum samplerType);
+
+}  // namespace gl
+
+namespace egl_gl
+{
+gl::TextureTarget EGLCubeMapTargetToCubeMapTarget(EGLenum eglTarget);
+gl::TextureTarget EGLImageTargetToTextureTarget(EGLenum eglTarget);
+gl::TextureType EGLTextureTargetToTextureType(EGLenum eglTarget);
+}  // namespace egl_gl
 
 #endif  // LIBANGLE_PACKEDGLENUMS_H_

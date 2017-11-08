@@ -396,7 +396,7 @@ LinkResult MemoryProgramCache::Deserialize(const Context *context,
     unsigned int samplerCount = stream.readInt<unsigned int>();
     for (unsigned int samplerIndex = 0; samplerIndex < samplerCount; ++samplerIndex)
     {
-        GLenum textureType  = stream.readInt<GLenum>();
+        TextureType textureType = stream.readEnum<TextureType>();
         size_t bindingCount = stream.readInt<size_t>();
         bool unreferenced   = stream.readBool();
         state->mSamplerBindings.emplace_back(
@@ -579,7 +579,7 @@ void MemoryProgramCache::Serialize(const Context *context,
     stream.writeInt(state.getSamplerBindings().size());
     for (const auto &samplerBinding : state.getSamplerBindings())
     {
-        stream.writeInt(samplerBinding.textureType);
+        stream.writeEnum(samplerBinding.textureType);
         stream.writeInt(samplerBinding.boundTextureUnits.size());
         stream.writeInt(samplerBinding.unreferenced);
     }
