@@ -87,6 +87,75 @@
       "revId": "3a63a7c381bcee66d7c1126eebbec542974a825e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9f2a10d2_6f327789",
+        "filename": "src/common/utilities.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-08T18:28:05Z",
+      "side": 1,
+      "message": "nit: arrayIndexOut",
+      "range": {
+        "startLine": 78,
+        "startChar": 35,
+        "endLine": 78,
+        "endChar": 47
+      },
+      "revId": "3a63a7c381bcee66d7c1126eebbec542974a825e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "de4b7f01_129c9cff",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 163,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-08T18:28:05Z",
+      "side": 1,
+      "message": "nit: default init (and nameLength without) to be safe",
+      "range": {
+        "startLine": 163,
+        "startChar": 17,
+        "endLine": 163,
+        "endChar": 27
+      },
+      "revId": "3a63a7c381bcee66d7c1126eebbec542974a825e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0dde9307_c3fa2e84",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2603,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-08T18:28:05Z",
+      "side": 1,
+      "message": "nit: default initialize this. also with nameLengthWithoutArrayIndex too, to be safe.",
+      "range": {
+        "startLine": 2603,
+        "startChar": 17,
+        "endLine": 2603,
+        "endChar": 27
+      },
+      "revId": "3a63a7c381bcee66d7c1126eebbec542974a825e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
