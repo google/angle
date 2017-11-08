@@ -51,6 +51,24 @@
       "revId": "3a63a7c381bcee66d7c1126eebbec542974a825e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bfdbfc57_41e8b29c",
+        "filename": "src/common/utilities.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 773,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-08T17:24:42Z",
+      "side": 1,
+      "message": "Did you mean to say \u0027returning an invalid index could still produce a valid location\u0027? Sorry having trouble parsing your intent.\n\nI think Olli was suggesting that the error case also return INVALID_INDEX, which hopefully would then cause the calling code to abort/return invalid index to the calling application. This seems reasonable to me.",
+      "parentUuid": "c8ec8700_2765d31c",
+      "revId": "3a63a7c381bcee66d7c1126eebbec542974a825e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
