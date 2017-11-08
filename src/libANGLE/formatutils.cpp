@@ -1075,7 +1075,7 @@ ErrorOrResult<GLuint> InternalFormat::computeRowPitch(GLenum formatType,
     if (compressed)
     {
         ASSERT(rowLength == 0);
-        return computeCompressedImageSize(formatType, Extents(width, 1, 1));
+        return computeCompressedImageSize(Extents(width, 1, 1));
     }
 
     CheckedNumeric<GLuint> checkedWidth(rowLength > 0 ? rowLength : width);
@@ -1113,8 +1113,7 @@ ErrorOrResult<GLuint> InternalFormat::computeDepthPitch(GLenum formatType,
     return computeDepthPitch(height, imageHeight, rowPitch);
 }
 
-ErrorOrResult<GLuint> InternalFormat::computeCompressedImageSize(GLenum formatType,
-                                                                     const Extents &size) const
+ErrorOrResult<GLuint> InternalFormat::computeCompressedImageSize(const Extents &size) const
 {
     CheckedNumeric<GLuint> checkedWidth(size.width);
     CheckedNumeric<GLuint> checkedHeight(size.height);
@@ -1171,7 +1170,7 @@ ErrorOrResult<GLuint> InternalFormat::computePackUnpackEndByte(
     CheckedNumeric<GLuint> checkedCopyBytes = 0;
     if (compressed)
     {
-        ANGLE_TRY_RESULT(computeCompressedImageSize(formatType, size), checkedCopyBytes);
+        ANGLE_TRY_RESULT(computeCompressedImageSize(size), checkedCopyBytes);
     }
     else if (size.height != 0 && (!is3D || size.depth != 0))
     {
