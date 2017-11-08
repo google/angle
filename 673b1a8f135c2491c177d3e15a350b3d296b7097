@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b992d9b6_7e16b5a1",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 228,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-11-08T04:59:54Z",
+      "side": 1,
+      "message": "EXPECT_EQ(GL_TRUE, linkStatus);",
+      "range": {
+        "startLine": 228,
+        "startChar": 0,
+        "endLine": 228,
+        "endChar": 29
+      },
+      "revId": "673b1a8f135c2491c177d3e15a350b3d296b7097",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
