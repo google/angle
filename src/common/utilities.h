@@ -126,6 +126,8 @@ struct UniformTypeInfo final : angle::NonCopyable
 
 const UniformTypeInfo &GetUniformTypeInfo(GLenum uniformType);
 
+const char *GetGenericErrorMessage(GLenum error);
+
 }  // namespace gl
 
 namespace egl
@@ -137,7 +139,9 @@ size_t CubeMapTextureTargetToLayerIndex(EGLenum target);
 EGLenum LayerIndexToCubeMapTextureTarget(size_t index);
 bool IsTextureTarget(EGLenum target);
 bool IsRenderbufferTarget(EGLenum target);
-}
+
+const char *GetGenericErrorMessage(EGLint error);
+}  // namespace egl
 
 namespace egl_gl
 {

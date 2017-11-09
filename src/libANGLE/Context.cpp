@@ -2153,12 +2153,9 @@ void Context::handleError(const Error &error)
             markContextLost();
         }
 
-        if (!error.getMessage().empty())
-        {
-            auto *debug = &mGLState.getDebug();
-            debug->insertMessage(GL_DEBUG_SOURCE_API, GL_DEBUG_TYPE_ERROR, error.getID(),
-                                 GL_DEBUG_SEVERITY_HIGH, error.getMessage());
-        }
+        ASSERT(!error.getMessage().empty());
+        mGLState.getDebug().insertMessage(GL_DEBUG_SOURCE_API, GL_DEBUG_TYPE_ERROR, error.getID(),
+                                          GL_DEBUG_SEVERITY_HIGH, error.getMessage());
     }
 }
 

@@ -800,6 +800,32 @@ unsigned int ParseArrayIndex(const std::string &name, size_t *nameLengthWithoutA
     return subscript;
 }
 
+const char *GetGenericErrorMessage(GLenum error)
+{
+    switch (error)
+    {
+        case GL_NO_ERROR:
+            return "";
+        case GL_INVALID_ENUM:
+            return "Invalid enum.";
+        case GL_INVALID_VALUE:
+            return "Invalid value.";
+        case GL_INVALID_OPERATION:
+            return "Invalid operation.";
+        case GL_STACK_OVERFLOW:
+            return "Stack overflow.";
+        case GL_STACK_UNDERFLOW:
+            return "Stack underflow.";
+        case GL_OUT_OF_MEMORY:
+            return "Out of memory.";
+        case GL_INVALID_FRAMEBUFFER_OPERATION:
+            return "Invalid framebuffer operation.";
+        default:
+            UNREACHABLE();
+            return "Unknown error.";
+    }
+}
+
 }  // namespace gl
 
 namespace egl
@@ -855,6 +881,51 @@ bool IsRenderbufferTarget(EGLenum target)
 {
     return target == EGL_GL_RENDERBUFFER_KHR;
 }
+
+const char *GetGenericErrorMessage(EGLint error)
+{
+    switch (error)
+    {
+        case EGL_SUCCESS:
+            return "";
+        case EGL_NOT_INITIALIZED:
+            return "Not initialized.";
+        case EGL_BAD_ACCESS:
+            return "Bad access.";
+        case EGL_BAD_ALLOC:
+            return "Bad allocation.";
+        case EGL_BAD_ATTRIBUTE:
+            return "Bad attribute.";
+        case EGL_BAD_CONFIG:
+            return "Bad config.";
+        case EGL_BAD_CONTEXT:
+            return "Bad context.";
+        case EGL_BAD_CURRENT_SURFACE:
+            return "Bad current surface.";
+        case EGL_BAD_DISPLAY:
+            return "Bad display.";
+        case EGL_BAD_MATCH:
+            return "Bad match.";
+        case EGL_BAD_NATIVE_WINDOW:
+            return "Bad native window.";
+        case EGL_BAD_PARAMETER:
+            return "Bad parameter.";
+        case EGL_BAD_SURFACE:
+            return "Bad surface.";
+        case EGL_CONTEXT_LOST:
+            return "Context lost.";
+        case EGL_BAD_STREAM_KHR:
+            return "Bad stream.";
+        case EGL_BAD_STATE_KHR:
+            return "Bad state.";
+        case EGL_BAD_DEVICE_EXT:
+            return "Bad device.";
+        default:
+            UNREACHABLE();
+            return "Unknown error.";
+    }
+}
+
 }  // namespace egl
 
 namespace egl_gl
