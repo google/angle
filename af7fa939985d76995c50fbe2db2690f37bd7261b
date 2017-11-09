@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "17e9d723_4e377bf1",
+        "filename": "src/tests/gl_tests/TextureUploadFormatTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1184734
+      },
+      "writtenOn": "2017-11-09T21:29:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ab56f7a5_8741baff",
+      "range": {
+        "startLine": 5,
+        "startChar": 2,
+        "endLine": 5,
+        "endChar": 0
+      },
+      "revId": "af7fa939985d76995c50fbe2db2690f37bd7261b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e3a25da0_cdef6f08",
         "filename": "src/tests/gl_tests/TextureUploadFormatTest.cpp",
         "patchSetId": 5
@@ -45,6 +69,30 @@
       "revId": "af7fa939985d76995c50fbe2db2690f37bd7261b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7846ac03_06169fb9",
+        "filename": "src/tests/gl_tests/TextureUploadFormatTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1184734
+      },
+      "writtenOn": "2017-11-09T21:29:58Z",
+      "side": 1,
+      "message": "The test doesn\u0027t use the default backbuffer. Since it wants to draw to a single RGBA8 pixel, I just use a renderbuffer.",
+      "parentUuid": "e3a25da0_cdef6f08",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 17,
+        "endChar": 1
+      },
+      "revId": "af7fa939985d76995c50fbe2db2690f37bd7261b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "cad5cf52_8d6cbd4a",
+        "filename": "src/tests/gl_tests/TextureUploadFormatTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1184734
+      },
+      "writtenOn": "2017-11-09T21:29:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e204bfb5_155a1bfe",
+      "range": {
+        "startLine": 100,
+        "startChar": 0,
+        "endLine": 100,
+        "endChar": 7
+      },
+      "revId": "af7fa939985d76995c50fbe2db2690f37bd7261b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "da694d8c_ab23eb03",
         "filename": "src/tests/gl_tests/TextureUploadFormatTest.cpp",
         "patchSetId": 5
@@ -91,6 +163,30 @@
       "revId": "af7fa939985d76995c50fbe2db2690f37bd7261b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5e330e91_1b05a47b",
+        "filename": "src/tests/gl_tests/TextureUploadFormatTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1184734
+      },
+      "writtenOn": "2017-11-09T21:29:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "da694d8c_ab23eb03",
+      "range": {
+        "startLine": 103,
+        "startChar": 11,
+        "endLine": 103,
+        "endChar": 19
+      },
+      "revId": "af7fa939985d76995c50fbe2db2690f37bd7261b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "ddd308cd_7405b296",
+        "filename": "src/tests/gl_tests/TextureUploadFormatTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1184734
+      },
+      "writtenOn": "2017-11-09T21:29:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1c674655_02724e78",
+      "range": {
+        "startLine": 109,
+        "startChar": 11,
+        "endLine": 109,
+        "endChar": 16
+      },
+      "revId": "af7fa939985d76995c50fbe2db2690f37bd7261b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ae27661d_f36954cf",
         "filename": "src/tests/gl_tests/TextureUploadFormatTest.cpp",
         "patchSetId": 5
@@ -137,6 +257,30 @@
       "revId": "af7fa939985d76995c50fbe2db2690f37bd7261b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a621ee6a_bffc34c7",
+        "filename": "src/tests/gl_tests/TextureUploadFormatTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 163,
+      "author": {
+        "id": 1184734
+      },
+      "writtenOn": "2017-11-09T21:29:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ae27661d_f36954cf",
+      "range": {
+        "startLine": 163,
+        "startChar": 0,
+        "endLine": 163,
+        "endChar": 7
+      },
+      "revId": "af7fa939985d76995c50fbe2db2690f37bd7261b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -163,6 +307,30 @@
     },
     {
       "key": {
+        "uuid": "613a31f2_497dc174",
+        "filename": "src/tests/gl_tests/TextureUploadFormatTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 1184734
+      },
+      "writtenOn": "2017-11-09T21:29:58Z",
+      "side": 1,
+      "message": "This is fine, afaict:\n\"Use default capture by reference ([\u0026]) only when the lifetime of the lambda is obviously shorter than any potential captures.\"\nThis is a local lambda, so the lifetime is well-bounded.",
+      "parentUuid": "1a605742_19926a35",
+      "range": {
+        "startLine": 180,
+        "startChar": 49,
+        "endLine": 180,
+        "endChar": 50
+      },
+      "revId": "af7fa939985d76995c50fbe2db2690f37bd7261b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "66bd0564_e2dbc74e",
         "filename": "src/tests/gl_tests/TextureUploadFormatTest.cpp",
         "patchSetId": 5
@@ -183,6 +351,30 @@
       "revId": "af7fa939985d76995c50fbe2db2690f37bd7261b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "59dd6477_b2b5639d",
+        "filename": "src/tests/gl_tests/TextureUploadFormatTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 1184734
+      },
+      "writtenOn": "2017-11-09T21:29:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "66bd0564_e2dbc74e",
+      "range": {
+        "startLine": 193,
+        "startChar": 23,
+        "endLine": 193,
+        "endChar": 31
+      },
+      "revId": "af7fa939985d76995c50fbe2db2690f37bd7261b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -209,6 +401,30 @@
     },
     {
       "key": {
+        "uuid": "4f15167a_e4aa149c",
+        "filename": "src/tests/gl_tests/TextureUploadFormatTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 203,
+      "author": {
+        "id": 1184734
+      },
+      "writtenOn": "2017-11-09T21:29:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "69aed13b_214691cd",
+      "range": {
+        "startLine": 203,
+        "startChar": 0,
+        "endLine": 203,
+        "endChar": 6
+      },
+      "revId": "af7fa939985d76995c50fbe2db2690f37bd7261b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "937e29b1_5efb7fe7",
         "filename": "src/tests/gl_tests/TextureUploadFormatTest.cpp",
         "patchSetId": 5
@@ -232,6 +448,30 @@
     },
     {
       "key": {
+        "uuid": "d2f6a522_6491d3e6",
+        "filename": "src/tests/gl_tests/TextureUploadFormatTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 1184734
+      },
+      "writtenOn": "2017-11-09T21:29:58Z",
+      "side": 1,
+      "message": "Just this code. I named it better and changed it to TEST().",
+      "parentUuid": "937e29b1_5efb7fe7",
+      "range": {
+        "startLine": 205,
+        "startChar": 4,
+        "endLine": 205,
+        "endChar": 13
+      },
+      "revId": "af7fa939985d76995c50fbe2db2690f37bd7261b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "20d27a90_7990b394",
         "filename": "src/tests/gl_tests/TextureUploadFormatTest.cpp",
         "patchSetId": 5
@@ -243,6 +483,30 @@
       "writtenOn": "2017-11-09T19:01:30Z",
       "side": 1,
       "message": "as nice as it is in some ways to have EnumStr, I am reluctant to implement it here for technical debt reasons. Better if ANGLE at some point gets a very robust and correct implementation of GLenum to string that it can use everywhere in common/. For now can you take this out and just dump the enum hex value?",
+      "range": {
+        "startLine": 221,
+        "startChar": 19,
+        "endLine": 221,
+        "endChar": 26
+      },
+      "revId": "af7fa939985d76995c50fbe2db2690f37bd7261b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2315e70c_87752cc3",
+        "filename": "src/tests/gl_tests/TextureUploadFormatTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 221,
+      "author": {
+        "id": 1184734
+      },
+      "writtenOn": "2017-11-09T21:29:58Z",
+      "side": 1,
+      "message": "I want to push back on this here as it makes the printed text really, really easy to read. It also returns the hex value if it doesn\u0027t recognize something. (asserting in debug builds, which I\u0027m totally willing to remove)\n\nI\u0027ll remove this helper if you order me to, though.\n\nI\u0027m also willing to integrate this into ANGLE somewhere. We have one in Gecko, for sure.",
+      "parentUuid": "20d27a90_7990b394",
       "range": {
         "startLine": 221,
         "startChar": 19,
@@ -349,6 +613,30 @@
     },
     {
       "key": {
+        "uuid": "3717cec2_b99d23c0",
+        "filename": "src/tests/gl_tests/TextureUploadFormatTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 324,
+      "author": {
+        "id": 1184734
+      },
+      "writtenOn": "2017-11-09T21:29:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6b5974bf_c736290b",
+      "range": {
+        "startLine": 324,
+        "startChar": 0,
+        "endLine": 324,
+        "endChar": 6
+      },
+      "revId": "af7fa939985d76995c50fbe2db2690f37bd7261b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a8cec61b_fb7dc023",
         "filename": "src/tests/gl_tests/TextureUploadFormatTest.cpp",
         "patchSetId": 5
@@ -369,6 +657,30 @@
       "revId": "af7fa939985d76995c50fbe2db2690f37bd7261b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9deb95b9_be7a54e0",
+        "filename": "src/tests/gl_tests/TextureUploadFormatTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 326,
+      "author": {
+        "id": 1184734
+      },
+      "writtenOn": "2017-11-09T21:29:58Z",
+      "side": 1,
+      "message": "Ok, made everything constexpr that I could. SizedFloat::Encode can\u0027t be, since it uses fabsf and log2f.",
+      "parentUuid": "a8cec61b_fb7dc023",
+      "range": {
+        "startLine": 326,
+        "startChar": 4,
+        "endLine": 326,
+        "endChar": 9
+      },
+      "revId": "af7fa939985d76995c50fbe2db2690f37bd7261b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -395,6 +707,30 @@
     },
     {
       "key": {
+        "uuid": "f6917b80_4affc5d8",
+        "filename": "src/tests/gl_tests/TextureUploadFormatTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 352,
+      "author": {
+        "id": 1184734
+      },
+      "writtenOn": "2017-11-09T21:29:58Z",
+      "side": 1,
+      "message": "I do really like auto. You might have noticed.",
+      "parentUuid": "acca0704_db9d1040",
+      "range": {
+        "startLine": 352,
+        "startChar": 16,
+        "endLine": 352,
+        "endChar": 36
+      },
+      "revId": "af7fa939985d76995c50fbe2db2690f37bd7261b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "781243de_0efeb9b7",
         "filename": "src/tests/gl_tests/TextureUploadFormatTest.cpp",
         "patchSetId": 5
@@ -415,6 +751,30 @@
       "revId": "af7fa939985d76995c50fbe2db2690f37bd7261b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b8934d53_e6415525",
+        "filename": "src/tests/gl_tests/TextureUploadFormatTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 356,
+      "author": {
+        "id": 1184734
+      },
+      "writtenOn": "2017-11-09T21:29:58Z",
+      "side": 1,
+      "message": "I would actually inline these if you didn\u0027t ask for the assert. The variables aren\u0027t ever used again, so I don\u0027t want to bother making separate ones.",
+      "parentUuid": "781243de_0efeb9b7",
+      "range": {
+        "startLine": 356,
+        "startChar": 4,
+        "endLine": 356,
+        "endChar": 8
+      },
+      "revId": "af7fa939985d76995c50fbe2db2690f37bd7261b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -441,6 +801,30 @@
     },
     {
       "key": {
+        "uuid": "ccf69eae_d080fe7a",
+        "filename": "src/tests/gl_tests/TextureUploadFormatTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 364,
+      "author": {
+        "id": 1184734
+      },
+      "writtenOn": "2017-11-09T21:29:58Z",
+      "side": 1,
+      "message": "I use those because it feels really redundant to write a comment when the code is this clear.\nI do want to demarcate \u0027paragraph breaks\u0027 of code, if that makes sense.\n\nI\u0027ll replace with text comments.",
+      "parentUuid": "402ba946_99c93df0",
+      "range": {
+        "startLine": 363,
+        "startChar": 0,
+        "endLine": 364,
+        "endChar": 9
+      },
+      "revId": "af7fa939985d76995c50fbe2db2690f37bd7261b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "20baff3e_45da14fa",
         "filename": "src/tests/gl_tests/TextureUploadFormatTest.cpp",
         "patchSetId": 5
@@ -461,6 +845,30 @@
       "revId": "af7fa939985d76995c50fbe2db2690f37bd7261b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1ee8f6b2_50ae978b",
+        "filename": "src/tests/gl_tests/TextureUploadFormatTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 379,
+      "author": {
+        "id": 1184734
+      },
+      "writtenOn": "2017-11-09T21:29:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "20baff3e_45da14fa",
+      "range": {
+        "startLine": 379,
+        "startChar": 0,
+        "endLine": 379,
+        "endChar": 9
+      },
+      "revId": "af7fa939985d76995c50fbe2db2690f37bd7261b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
