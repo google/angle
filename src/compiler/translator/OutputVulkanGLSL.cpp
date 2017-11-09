@@ -44,7 +44,8 @@ void TOutputVulkanGLSL::writeLayoutQualifier(TIntermTyped *variable)
 
     bool needsCustomLayout =
         (type.getQualifier() == EvqAttribute || type.getQualifier() == EvqFragmentOut ||
-         type.getQualifier() == EvqVertexIn || IsSampler(type.getBasicType()));
+         type.getQualifier() == EvqVertexIn || IsVarying(type.getQualifier()) ||
+         IsSampler(type.getBasicType()));
 
     if (!NeedsToWriteLayoutQualifier(type) && !needsCustomLayout)
     {

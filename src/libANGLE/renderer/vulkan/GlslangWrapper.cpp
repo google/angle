@@ -20,6 +20,7 @@
 
 #include "common/string_utils.h"
 #include "common/utilities.h"
+#include "libANGLE/ProgramLinkedResources.h"
 
 namespace rx
 {
@@ -35,8 +36,7 @@ void InsertLayoutSpecifierString(std::string *shaderString,
     searchStringBuilder << "@@ LAYOUT-" << variableName << " @@";
     std::string searchString = searchStringBuilder.str();
 
-    bool success = angle::ReplaceSubstring(shaderString, searchString, layoutString);
-    ASSERT(success);
+    angle::ReplaceSubstring(shaderString, searchString, layoutString);
 }
 
 }  // anonymous namespace
@@ -85,6 +85,7 @@ GlslangWrapper::~GlslangWrapper()
 
 gl::LinkResult GlslangWrapper::linkProgram(const gl::Context *glContext,
                                            const gl::ProgramState &programState,
+                                           const gl::ProgramLinkedResources &resources,
                                            std::vector<uint32_t> *vertexCodeOut,
                                            std::vector<uint32_t> *fragmentCodeOut)
 {
@@ -104,6 +105,16 @@ gl::LinkResult GlslangWrapper::linkProgram(const gl::Context *glContext,
 
         std::string locationString = "location = " + Str(attribute.location);
         InsertLayoutSpecifierString(&vertexSource, attribute.name, locationString);
+    }
+
+    // Assign varying locations.
+    // TODO(jmadill): This might need to be redone.
+    for (const auto &varyingReg : resources.varyingPacking.getRegisterList())
+    {
+        const auto &varying        = *varyingReg.packedVarying;
+        std::string locationString = "location = " + Str(varyingReg.registerRow);
+        InsertLayoutSpecifierString(&vertexSource, varying.varying->name, locationString);
+        InsertLayoutSpecifierString(&fragmentSource, varying.varying->name, locationString);
     }
 
     // Bind the default uniforms for vertex and fragment shaders.

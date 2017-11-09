@@ -212,8 +212,9 @@ gl::LinkResult ProgramVk::link(const gl::Context *glContext,
     std::vector<uint32_t> vertexCode;
     std::vector<uint32_t> fragmentCode;
     bool linkSuccess = false;
-    ANGLE_TRY_RESULT(glslangWrapper->linkProgram(glContext, mState, &vertexCode, &fragmentCode),
-                     linkSuccess);
+    ANGLE_TRY_RESULT(
+        glslangWrapper->linkProgram(glContext, mState, resources, &vertexCode, &fragmentCode),
+        linkSuccess);
     if (!linkSuccess)
     {
         return false;
