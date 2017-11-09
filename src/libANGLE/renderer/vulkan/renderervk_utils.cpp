@@ -72,7 +72,7 @@ VkAccessFlags GetBasicLayoutAccessFlags(VkImageLayout layout)
     }
 }
 
-VkImageUsageFlags GetImageUsageFlags(vk::StagingUsage usage)
+VkImageUsageFlags GetStagingImageUsageFlags(vk::StagingUsage usage)
 {
     switch (usage)
     {
@@ -82,6 +82,22 @@ VkImageUsageFlags GetImageUsageFlags(vk::StagingUsage usage)
             return VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
         case vk::StagingUsage::Both:
             return (VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT);
+        default:
+            UNREACHABLE();
+            return 0;
+    }
+}
+
+VkImageUsageFlags GetStagingBufferUsageFlags(vk::StagingUsage usage)
+{
+    switch (usage)
+    {
+        case vk::StagingUsage::Read:
+            return VK_BUFFER_USAGE_TRANSFER_DST_BIT;
+        case vk::StagingUsage::Write:
+            return VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
+        case vk::StagingUsage::Both:
+            return (VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_TRANSFER_SRC_BIT);
         default:
             UNREACHABLE();
             return 0;
@@ -331,6 +347,16 @@ void CommandBuffer::singleImageBarrier(VkPipelineStageFlags srcStageMask,
                          nullptr, 1, &imageMemoryBarrier);
 }
 
+void CommandBuffer::singleBufferBarrier(VkPipelineStageFlags srcStageMask,
+                                        VkPipelineStageFlags dstStageMask,
+                                        VkDependencyFlags dependencyFlags,
+                                        const VkBufferMemoryBarrier &bufferBarrier)
+{
+    ASSERT(valid());
+    vkCmdPipelineBarrier(mHandle, srcStageMask, dstStageMask, dependencyFlags, 0, nullptr, 1,
+                         &bufferBarrier, 0, nullptr);
+}
+
 void CommandBuffer::destroy(VkDevice device)
 {
     if (valid())
@@ -339,6 +365,16 @@ void CommandBuffer::destroy(VkDevice device)
         vkFreeCommandBuffers(device, mCommandPool->getHandle(), 1, &mHandle);
         mHandle = VK_NULL_HANDLE;
     }
+}
+
+void CommandBuffer::copyBuffer(const vk::Buffer &srcBuffer,
+                               const vk::Buffer &destBuffer,
+                               uint32_t regionCount,
+                               const VkBufferCopy *regions)
+{
+    ASSERT(valid());
+    ASSERT(srcBuffer.valid() && destBuffer.valid());
+    vkCmdCopyBuffer(mHandle, srcBuffer.getHandle(), destBuffer.getHandle(), regionCount, regions);
 }
 
 void CommandBuffer::clearSingleColorImage(const vk::Image &image, const VkClearColorValue &color)
@@ -763,7 +799,7 @@ Error StagingImage::init(VkDevice device,
     createInfo.arrayLayers   = 1;
     createInfo.samples       = VK_SAMPLE_COUNT_1_BIT;
     createInfo.tiling        = VK_IMAGE_TILING_LINEAR;
-    createInfo.usage                 = GetImageUsageFlags(usage);
+    createInfo.usage                 = GetStagingImageUsageFlags(usage);
     createInfo.sharingMode   = VK_SHARING_MODE_EXCLUSIVE;
     createInfo.queueFamilyIndexCount = 1;
     createInfo.pQueueFamilyIndices   = &queueFamilyIndex;
@@ -1024,6 +1060,43 @@ uint32_t MemoryProperties::findCompatibleMemoryIndex(uint32_t bitMask, uint32_t 
     return std::numeric_limits<uint32_t>::max();
 }
 
+// StagingBuffer implementation.
+StagingBuffer::StagingBuffer() : mSize(0)
+{
+}
+
+void StagingBuffer::destroy(VkDevice device)
+{
+    mBuffer.destroy(device);
+    mDeviceMemory.destroy(device);
+    mSize = 0;
+}
+
+vk::Error StagingBuffer::init(ContextVk *contextVk, VkDeviceSize size, StagingUsage usage)
+{
+    VkBufferCreateInfo createInfo;
+    createInfo.sType                 = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+    createInfo.pNext                 = nullptr;
+    createInfo.flags                 = 0;
+    createInfo.size                  = size;
+    createInfo.usage                 = GetStagingBufferUsageFlags(usage);
+    createInfo.sharingMode           = VK_SHARING_MODE_EXCLUSIVE;
+    createInfo.queueFamilyIndexCount = 0;
+    createInfo.pQueueFamilyIndices   = nullptr;
+
+    ANGLE_TRY(mBuffer.init(contextVk->getDevice(), createInfo));
+    ANGLE_TRY(AllocateBufferMemory(contextVk, static_cast<size_t>(size), &mBuffer, &mDeviceMemory,
+                                   &mSize));
+
+    return vk::NoError();
+}
+
+void StagingBuffer::dumpResources(Serial serial, std::vector<vk::GarbageObject> *garbageQueue)
+{
+    mBuffer.dumpResources(serial, garbageQueue);
+    mDeviceMemory.dumpResources(serial, garbageQueue);
+}
+
 Optional<uint32_t> FindMemoryType(const VkPhysicalDeviceMemoryProperties &memoryProps,
                                   const VkMemoryRequirements &requirements,
                                   uint32_t propertyFlagMask)
@@ -1041,11 +1114,11 @@ Optional<uint32_t> FindMemoryType(const VkPhysicalDeviceMemoryProperties &memory
     return Optional<uint32_t>::Invalid();
 }
 
-gl::Error AllocateBufferMemory(ContextVk *contextVk,
-                               size_t size,
-                               vk::Buffer *buffer,
-                               vk::DeviceMemory *deviceMemoryOut,
-                               size_t *requiredSizeOut)
+Error AllocateBufferMemory(ContextVk *contextVk,
+                           size_t size,
+                           Buffer *buffer,
+                           DeviceMemory *deviceMemoryOut,
+                           size_t *requiredSizeOut)
 {
     VkDevice device = contextVk->getDevice();
 
@@ -1077,7 +1150,7 @@ gl::Error AllocateBufferMemory(ContextVk *contextVk,
     ANGLE_TRY(deviceMemoryOut->allocate(device, allocInfo));
     ANGLE_TRY(buffer->bindMemory(device, *deviceMemoryOut));
 
-    return gl::NoError();
+    return NoError();
 }
 
 // GarbageObject implementation.

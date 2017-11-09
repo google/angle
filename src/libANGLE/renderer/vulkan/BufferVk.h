@@ -57,7 +57,7 @@ class BufferVk : public BufferImpl, public ResourceVk
     const vk::Buffer &getVkBuffer() const;
 
   private:
-    vk::Error setDataImpl(VkDevice device, const uint8_t *data, size_t size, size_t offset);
+    vk::Error setDataImpl(ContextVk *contextVk, const uint8_t *data, size_t size, size_t offset);
     void release(RendererVk *renderer);
 
     vk::Buffer mBuffer;

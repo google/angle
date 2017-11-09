@@ -75,6 +75,9 @@ class RendererVk : angle::NonCopyable
 
     Serial getCurrentQueueSerial() const;
 
+    bool isResourceInUse(const ResourceVk &resource);
+    bool isSerialInUse(Serial serial);
+
     template <typename T>
     void releaseResource(const ResourceVk &resource, T *object)
     {
@@ -85,7 +88,7 @@ class RendererVk : angle::NonCopyable
     template <typename T>
     void releaseObject(Serial resourceSerial, T *object)
     {
-        if (resourceSerial <= mLastCompletedQueueSerial)
+        if (!isSerialInUse(resourceSerial))
         {
             object->destroy(mDevice);
         }

@@ -845,6 +845,32 @@ TEST_P(SimpleStateChangeTest, RedefineBufferInUse)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Tests updating a buffer's contents while in use, without redefining it.
+TEST_P(SimpleStateChangeTest, UpdateBufferInUse)
+{
+    std::vector<GLColor> redColorData(6, GLColor::red);
+
+    GLBuffer buffer;
+    glBindBuffer(GL_ARRAY_BUFFER, buffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(GLColor) * redColorData.size(), redColorData.data(),
+                 GL_STATIC_DRAW);
+
+    // Trigger a pull from the buffer.
+    simpleDrawWithBuffer(&buffer);
+
+    // Update the buffer that's in-flight.
+    std::vector<GLColor> greenColorData(6, GLColor::green);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(GLColor) * greenColorData.size(),
+                    greenColorData.data());
+
+    // Trigger the flush and verify the first draw worked.
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    // Draw again and verify the new data is correct.
+    simpleDrawWithBuffer(&buffer);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 // Tests that deleting an in-flight Texture does not immediately delete the resource.
 TEST_P(SimpleStateChangeTest, DeleteTextureInUse)
 {

@@ -824,4 +824,14 @@ void RendererVk::onReleaseRenderPass(const FramebufferVk *framebufferVk)
     }
 }
 
+bool RendererVk::isResourceInUse(const ResourceVk &resource)
+{
+    return isSerialInUse(resource.getQueueSerial());
+}
+
+bool RendererVk::isSerialInUse(Serial serial)
+{
+    return serial > mLastCompletedQueueSerial;
+}
+
 }  // namespace rx

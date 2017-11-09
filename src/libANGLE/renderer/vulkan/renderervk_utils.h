@@ -324,7 +324,17 @@ class CommandBuffer final : public WrappedObject<CommandBuffer, VkCommandBuffer>
                             VkDependencyFlags dependencyFlags,
                             const VkImageMemoryBarrier &imageMemoryBarrier);
 
+    void singleBufferBarrier(VkPipelineStageFlags srcStageMask,
+                             VkPipelineStageFlags dstStageMask,
+                             VkDependencyFlags dependencyFlags,
+                             const VkBufferMemoryBarrier &bufferBarrier);
+
     void clearSingleColorImage(const vk::Image &image, const VkClearColorValue &color);
+
+    void copyBuffer(const vk::Buffer &srcBuffer,
+                    const vk::Buffer &destBuffer,
+                    uint32_t regionCount,
+                    const VkBufferCopy *regions);
 
     void copySingleImage(const vk::Image &srcImage,
                          const vk::Image &destImage,
@@ -466,35 +476,6 @@ enum class StagingUsage
     Both,
 };
 
-class StagingImage final : angle::NonCopyable
-{
-  public:
-    StagingImage();
-    StagingImage(StagingImage &&other);
-    void destroy(VkDevice device);
-
-    vk::Error init(VkDevice device,
-                   uint32_t queueFamilyIndex,
-                   const MemoryProperties &memoryProperties,
-                   TextureDimension dimension,
-                   VkFormat format,
-                   const gl::Extents &extent,
-                   StagingUsage usage);
-
-    Image &getImage() { return mImage; }
-    const Image &getImage() const { return mImage; }
-    DeviceMemory &getDeviceMemory() { return mDeviceMemory; }
-    const DeviceMemory &getDeviceMemory() const { return mDeviceMemory; }
-    VkDeviceSize getSize() const { return mSize; }
-
-    void dumpResources(Serial serial, std::vector<vk::GarbageObject> *mGarbage);
-
-  private:
-    Image mImage;
-    DeviceMemory mDeviceMemory;
-    VkDeviceSize mSize;
-};
-
 class Buffer final : public WrappedObject<Buffer, VkBuffer>
 {
   public:
@@ -573,6 +554,59 @@ class Fence final : public WrappedObject<Fence, VkFence>
     VkResult getStatus(VkDevice device) const;
 };
 
+// Helper class for managing a CPU/GPU transfer Image.
+class StagingImage final : angle::NonCopyable
+{
+  public:
+    StagingImage();
+    StagingImage(StagingImage &&other);
+    void destroy(VkDevice device);
+
+    vk::Error init(VkDevice device,
+                   uint32_t queueFamilyIndex,
+                   const MemoryProperties &memoryProperties,
+                   TextureDimension dimension,
+                   VkFormat format,
+                   const gl::Extents &extent,
+                   StagingUsage usage);
+
+    Image &getImage() { return mImage; }
+    const Image &getImage() const { return mImage; }
+    DeviceMemory &getDeviceMemory() { return mDeviceMemory; }
+    const DeviceMemory &getDeviceMemory() const { return mDeviceMemory; }
+    VkDeviceSize getSize() const { return mSize; }
+
+    void dumpResources(Serial serial, std::vector<vk::GarbageObject> *garbageQueue);
+
+  private:
+    Image mImage;
+    DeviceMemory mDeviceMemory;
+    VkDeviceSize mSize;
+};
+
+// Similar to StagingImage, for Buffers.
+class StagingBuffer final : angle::NonCopyable
+{
+  public:
+    StagingBuffer();
+    void destroy(VkDevice device);
+
+    vk::Error init(ContextVk *contextVk, VkDeviceSize size, StagingUsage usage);
+
+    Buffer &getBuffer() { return mBuffer; }
+    const Buffer &getBuffer() const { return mBuffer; }
+    DeviceMemory &getDeviceMemory() { return mDeviceMemory; }
+    const DeviceMemory &getDeviceMemory() const { return mDeviceMemory; }
+    size_t getSize() const { return mSize; }
+
+    void dumpResources(Serial serial, std::vector<vk::GarbageObject> *garbageQueue);
+
+  private:
+    Buffer mBuffer;
+    DeviceMemory mDeviceMemory;
+    size_t mSize;
+};
+
 template <typename ObjT>
 class ObjectAndSerial final : angle::NonCopyable
 {
@@ -611,11 +645,11 @@ Optional<uint32_t> FindMemoryType(const VkPhysicalDeviceMemoryProperties &memory
                                   const VkMemoryRequirements &requirements,
                                   uint32_t propertyFlagMask);
 
-gl::Error AllocateBufferMemory(ContextVk *contextVk,
-                               size_t size,
-                               vk::Buffer *buffer,
-                               vk::DeviceMemory *deviceMemoryOut,
-                               size_t *requiredSizeOut);
+Error AllocateBufferMemory(ContextVk *contextVk,
+                           size_t size,
+                           Buffer *buffer,
+                           DeviceMemory *deviceMemoryOut,
+                           size_t *requiredSizeOut);
 
 struct BufferAndMemory final : private angle::NonCopyable
 {

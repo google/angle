@@ -28,7 +28,7 @@ BufferVk::~BufferVk()
 
 void BufferVk::destroy(const gl::Context *context)
 {
-    ContextVk *contextVk = GetImplAs<ContextVk>(context);
+    ContextVk *contextVk = vk::GetImpl(context);
     RendererVk *renderer = contextVk->getRenderer();
 
     release(renderer);
@@ -46,7 +46,7 @@ gl::Error BufferVk::setData(const gl::Context *context,
                             size_t size,
                             gl::BufferUsage usage)
 {
-    ContextVk *contextVk = GetImplAs<ContextVk>(context);
+    ContextVk *contextVk = vk::GetImpl(context);
     auto device          = contextVk->getDevice();
 
     if (size > mCurrentRequiredSize)
@@ -61,7 +61,7 @@ gl::Error BufferVk::setData(const gl::Context *context,
         createInfo.pNext                 = nullptr;
         createInfo.flags                 = 0;
         createInfo.size                  = size;
-        createInfo.usage                 = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
+        createInfo.usage = (VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT);
         createInfo.sharingMode           = VK_SHARING_MODE_EXCLUSIVE;
         createInfo.queueFamilyIndexCount = 0;
         createInfo.pQueueFamilyIndices   = nullptr;
@@ -73,7 +73,7 @@ gl::Error BufferVk::setData(const gl::Context *context,
 
     if (data)
     {
-        ANGLE_TRY(setDataImpl(device, static_cast<const uint8_t *>(data), size, 0));
+        ANGLE_TRY(setDataImpl(contextVk, static_cast<const uint8_t *>(data), size, 0));
     }
 
     return gl::NoError();
@@ -88,9 +88,8 @@ gl::Error BufferVk::setSubData(const gl::Context *context,
     ASSERT(mBuffer.getHandle() != VK_NULL_HANDLE);
     ASSERT(mBufferMemory.getHandle() != VK_NULL_HANDLE);
 
-    VkDevice device = GetImplAs<ContextVk>(context)->getDevice();
-
-    ANGLE_TRY(setDataImpl(device, static_cast<const uint8_t *>(data), size, offset));
+    ContextVk *contextVk = vk::GetImpl(context);
+    ANGLE_TRY(setDataImpl(contextVk, static_cast<const uint8_t *>(data), size, offset));
 
     return gl::NoError();
 }
@@ -110,7 +109,7 @@ gl::Error BufferVk::map(const gl::Context *context, GLenum access, void **mapPtr
     ASSERT(mBuffer.getHandle() != VK_NULL_HANDLE);
     ASSERT(mBufferMemory.getHandle() != VK_NULL_HANDLE);
 
-    VkDevice device = GetImplAs<ContextVk>(context)->getDevice();
+    VkDevice device = vk::GetImpl(context)->getDevice();
 
     ANGLE_TRY(
         mBufferMemory.map(device, 0, mState.getSize(), 0, reinterpret_cast<uint8_t **>(mapPtr)));
@@ -127,7 +126,7 @@ gl::Error BufferVk::mapRange(const gl::Context *context,
     ASSERT(mBuffer.getHandle() != VK_NULL_HANDLE);
     ASSERT(mBufferMemory.getHandle() != VK_NULL_HANDLE);
 
-    VkDevice device = GetImplAs<ContextVk>(context)->getDevice();
+    VkDevice device = vk::GetImpl(context)->getDevice();
 
     ANGLE_TRY(mBufferMemory.map(device, offset, length, 0, reinterpret_cast<uint8_t **>(mapPtr)));
 
@@ -139,7 +138,7 @@ gl::Error BufferVk::unmap(const gl::Context *context, GLboolean *result)
     ASSERT(mBuffer.getHandle() != VK_NULL_HANDLE);
     ASSERT(mBufferMemory.getHandle() != VK_NULL_HANDLE);
 
-    VkDevice device = GetImplAs<ContextVk>(context)->getDevice();
+    VkDevice device = vk::GetImpl(context)->getDevice();
 
     mBufferMemory.unmap(device);
 
@@ -153,7 +152,7 @@ gl::Error BufferVk::getIndexRange(const gl::Context *context,
                                   bool primitiveRestartEnabled,
                                   gl::IndexRange *outRange)
 {
-    VkDevice device = GetImplAs<ContextVk>(context)->getDevice();
+    VkDevice device = vk::GetImpl(context)->getDevice();
 
     // TODO(jmadill): Consider keeping a shadow system memory copy in some cases.
     ASSERT(mBuffer.valid());
@@ -168,15 +167,67 @@ gl::Error BufferVk::getIndexRange(const gl::Context *context,
     return gl::NoError();
 }
 
-vk::Error BufferVk::setDataImpl(VkDevice device, const uint8_t *data, size_t size, size_t offset)
+vk::Error BufferVk::setDataImpl(ContextVk *contextVk,
+                                const uint8_t *data,
+                                size_t size,
+                                size_t offset)
 {
-    uint8_t *mapPointer = nullptr;
-    ANGLE_TRY(mBufferMemory.map(device, offset, size, 0, &mapPointer));
-    ASSERT(mapPointer);
+    RendererVk *renderer = contextVk->getRenderer();
+    VkDevice device      = contextVk->getDevice();
 
-    memcpy(mapPointer, data, size);
+    // Use map when available.
+    if (renderer->isSerialInUse(getQueueSerial()))
+    {
+        vk::StagingBuffer stagingBuffer;
+        ANGLE_TRY(stagingBuffer.init(contextVk, static_cast<VkDeviceSize>(size),
+                                     vk::StagingUsage::Write));
 
-    mBufferMemory.unmap(device);
+        uint8_t *mapPointer = nullptr;
+        ANGLE_TRY(stagingBuffer.getDeviceMemory().map(device, 0, size, 0, &mapPointer));
+        ASSERT(mapPointer);
+
+        memcpy(mapPointer, data, size);
+        stagingBuffer.getDeviceMemory().unmap(device);
+
+        // Enqueue a copy command on the GPU.
+        // TODO(jmadill): Command re-ordering for render passes.
+        renderer->endRenderPass();
+
+        vk::CommandBuffer *commandBuffer = nullptr;
+        ANGLE_TRY(renderer->getStartedCommandBuffer(&commandBuffer));
+
+        // Insert a barrier to ensure reads from the buffer are complete.
+        // TODO(jmadill): Insert minimal barriers.
+        VkBufferMemoryBarrier bufferBarrier;
+        bufferBarrier.sType               = VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER;
+        bufferBarrier.pNext               = nullptr;
+        bufferBarrier.srcAccessMask       = VK_ACCESS_MEMORY_READ_BIT;
+        bufferBarrier.dstAccessMask       = VK_ACCESS_TRANSFER_WRITE_BIT;
+        bufferBarrier.srcQueueFamilyIndex = 0;
+        bufferBarrier.dstQueueFamilyIndex = 0;
+        bufferBarrier.buffer              = mBuffer.getHandle();
+        bufferBarrier.offset              = offset;
+        bufferBarrier.size                = static_cast<VkDeviceSize>(size);
+
+        commandBuffer->singleBufferBarrier(VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
+                                           VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, 0, bufferBarrier);
+
+        VkBufferCopy copyRegion = {offset, 0, size};
+        commandBuffer->copyBuffer(stagingBuffer.getBuffer(), mBuffer, 1, &copyRegion);
+
+        setQueueSerial(renderer->getCurrentQueueSerial());
+        renderer->releaseObject(getQueueSerial(), &stagingBuffer);
+    }
+    else
+    {
+        uint8_t *mapPointer = nullptr;
+        ANGLE_TRY(mBufferMemory.map(device, offset, size, 0, &mapPointer));
+        ASSERT(mapPointer);
+
+        memcpy(mapPointer, data, size);
+
+        mBufferMemory.unmap(device);
+    }
 
     return vk::NoError();
 }
