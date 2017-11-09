@@ -128,6 +128,30 @@
       "revId": "4af0f77f85fd432da06aca60cb1b9e01bfdc3ecd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3713a25b_0771a98d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StreamProducerNV12.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-09T17:15:47Z",
+      "side": 1,
+      "message": "Originally we used static function names but the chromium style prefers anonymous namespaces.  Not a big deal in my opinion and we have both styles in the codebase currently.",
+      "parentUuid": "abcd9a0b_684a2fd2",
+      "range": {
+        "startLine": 18,
+        "startChar": 0,
+        "endLine": 18,
+        "endChar": 7
+      },
+      "revId": "4af0f77f85fd432da06aca60cb1b9e01bfdc3ecd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
