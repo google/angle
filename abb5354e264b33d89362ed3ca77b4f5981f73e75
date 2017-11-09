@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "807b694b_5bff49ef",
+        "filename": "src/libANGLE/PackedGLEnums.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-09T18:50:10Z",
+      "side": 1,
+      "message": "checked https://chromium-cpp.appspot.com/ , seems okay, std::underlying_type was not working in libstdc++ 4.6 but the post was from 2015, so I think we might have updated since then.",
+      "range": {
+        "startLine": 24,
+        "startChar": 41,
+        "endLine": 24,
+        "endChar": 56
+      },
+      "revId": "abb5354e264b33d89362ed3ca77b4f5981f73e75",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

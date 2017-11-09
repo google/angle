@@ -2,6 +2,167 @@
   "comments": [
     {
       "key": {
+        "uuid": "7520d6fe_97712e15",
+        "filename": "scripts/entry_point_packed_gl_enums.json",
+        "patchSetId": 15
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-09T18:50:10Z",
+      "side": 1,
+      "message": "nit: technically this is a buffer binding point (a la BufferBinding) rather than a type, since in GL the same buffer can be used in multiple binding points (doesn\u0027t really have a type). seems minor.",
+      "range": {
+        "startLine": 3,
+        "startChar": 19,
+        "endLine": 3,
+        "endChar": 29
+      },
+      "revId": "7c115bc96dfd19b31fbdf86048e804ea84e857b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b55fbb00_fe45adf6",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 3971,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-09T18:50:10Z",
+      "side": 1,
+      "message": "nice!",
+      "range": {
+        "startLine": 3971,
+        "startChar": 13,
+        "endLine": 3971,
+        "endChar": 29
+      },
+      "revId": "7c115bc96dfd19b31fbdf86048e804ea84e857b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a5e24b9f_da59cec7",
+        "filename": "src/libANGLE/PackedGLEnums.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-09T18:50:10Z",
+      "side": 1,
+      "message": "nit: namespace comment",
+      "range": {
+        "startLine": 108,
+        "startChar": 1,
+        "endLine": 108,
+        "endChar": 0
+      },
+      "revId": "7c115bc96dfd19b31fbdf86048e804ea84e857b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f2bd192e_6d3eaacb",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 1243,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-09T18:50:10Z",
+      "side": 1,
+      "message": "ensure we have a comment somewhere that the mBoundBuffers for transform feedback and element array buffer are only *sometimes* correct. didn\u0027t see one though you might have added already.",
+      "range": {
+        "startLine": 1243,
+        "startChar": 4,
+        "endLine": 1243,
+        "endChar": 47
+      },
+      "revId": "7c115bc96dfd19b31fbdf86048e804ea84e857b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "800d20b2_67b7ec84",
+        "filename": "src/libANGLE/gen_packed_gl_enums.py",
+        "patchSetId": 15
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-09T18:50:10Z",
+      "side": 1,
+      "message": "nit: you can probably just include \"angle_gl.h\" here.",
+      "range": {
+        "startLine": 49,
+        "startChar": 0,
+        "endLine": 52,
+        "endChar": 23
+      },
+      "revId": "7c115bc96dfd19b31fbdf86048e804ea84e857b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f5941f06_f1f601de",
+        "filename": "src/libANGLE/renderer/gl/BufferGL.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-09T18:50:10Z",
+      "side": 1,
+      "message": "nit: can we make these static constexpr?",
+      "range": {
+        "startLine": 26,
+        "startChar": 0,
+        "endLine": 26,
+        "endChar": 12
+      },
+      "revId": "7c115bc96dfd19b31fbdf86048e804ea84e857b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "02513e4e_f091959c",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 777,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-09T18:50:10Z",
+      "side": 1,
+      "message": "nice again.",
+      "range": {
+        "startLine": 777,
+        "startChar": 5,
+        "endLine": 777,
+        "endChar": 20
+      },
+      "revId": "7c115bc96dfd19b31fbdf86048e804ea84e857b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b2db9048_ab1f54c3",
         "filename": "src/libANGLE/validationES2.cpp",
         "patchSetId": 15
@@ -35,6 +196,29 @@
         "startChar": 65,
         "endLine": 2678,
         "endChar": 70
+      },
+      "revId": "7c115bc96dfd19b31fbdf86048e804ea84e857b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "99532285_004df732",
+        "filename": "src/tests/gl_tests/ReadPixelsTest.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-09T18:50:10Z",
+      "side": 1,
+      "message": "Looks like you might have originally called these BufferTargets and renamed to BufferType?",
+      "range": {
+        "startLine": 165,
+        "startChar": 26,
+        "endLine": 165,
+        "endChar": 41
       },
       "revId": "7c115bc96dfd19b31fbdf86048e804ea84e857b1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
