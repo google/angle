@@ -61,7 +61,8 @@ gl::Error BufferVk::setData(const gl::Context *context,
         createInfo.pNext                 = nullptr;
         createInfo.flags                 = 0;
         createInfo.size                  = size;
-        createInfo.usage = (VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT);
+        createInfo.usage = (VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT |
+                            VK_BUFFER_USAGE_INDEX_BUFFER_BIT);
         createInfo.sharingMode           = VK_SHARING_MODE_EXCLUSIVE;
         createInfo.queueFamilyIndexCount = 0;
         createInfo.pQueueFamilyIndices   = nullptr;
