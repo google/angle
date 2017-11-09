@@ -1,0 +1,211 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8d25b585_12964abd",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 20
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-09T13:57:21Z",
+      "side": 1,
+      "message": "update ShaderLang.h version number.",
+      "range": {
+        "startLine": 70,
+        "startChar": 51,
+        "endLine": 70,
+        "endChar": 65
+      },
+      "revId": "cbf61fe68ae3b778b947e6dcc08302f8ce5ca46b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0c9d79a3_e189b081",
+        "filename": "src/compiler/translator/CollectVariables.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 423,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-09T13:57:21Z",
+      "side": 1,
+      "message": "the compiler changes should probably be in a split CL, but it\u0027s ok to leave it for now.",
+      "range": {
+        "startLine": 423,
+        "startChar": 17,
+        "endLine": 423,
+        "endChar": 26
+      },
+      "revId": "cbf61fe68ae3b778b947e6dcc08302f8ce5ca46b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f5ec677a_a6e0b9f2",
+        "filename": "src/compiler/translator/blocklayout.h",
+        "patchSetId": 20
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-09T13:57:21Z",
+      "side": 1,
+      "message": "nit: It\u0027s only -\u003e Only",
+      "range": {
+        "startLine": 67,
+        "startChar": 33,
+        "endLine": 67,
+        "endChar": 42
+      },
+      "revId": "cbf61fe68ae3b778b947e6dcc08302f8ce5ca46b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "96080af2_aae4a025",
+        "filename": "src/libANGLE/ProgramLinkedResources.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 684,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-09T13:57:21Z",
+      "side": 1,
+      "message": "nit: can you call this\n\n\u0027bool outsideTopLevelArray\u0027",
+      "range": {
+        "startLine": 684,
+        "startChar": 51,
+        "endLine": 684,
+        "endChar": 81
+      },
+      "revId": "cbf61fe68ae3b778b947e6dcc08302f8ce5ca46b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1215307a_a46e6577",
+        "filename": "src/libANGLE/ProgramLinkedResources.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 696,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-09T13:57:21Z",
+      "side": 1,
+      "message": "use a local variable, don\u0027t re-assign to parameters.\n\nI would refactor this to\n\nint nextArraySize \u003d topLevelArraySize;\nunsigned int elementCount \u003d field.elementCount();\n\nif (outsideTopLevelArray)\n{\n   nextArraySize \u003d elementCount;\n   elementCount \u003d 1;\n}",
+      "range": {
+        "startLine": 696,
+        "startChar": 12,
+        "endLine": 696,
+        "endChar": 30
+      },
+      "revId": "cbf61fe68ae3b778b947e6dcc08302f8ce5ca46b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "23d67ce3_5da1e06e",
+        "filename": "src/libANGLE/ProgramLinkedResources.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 730,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-09T13:57:21Z",
+      "side": 1,
+      "message": "if you pass in 1 to defineBlockMembers below, I think you can remove this conditional.",
+      "range": {
+        "startLine": 730,
+        "startChar": 30,
+        "endLine": 730,
+        "endChar": 84
+      },
+      "revId": "cbf61fe68ae3b778b947e6dcc08302f8ce5ca46b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "abfd23c6_6aaf5621",
+        "filename": "src/libANGLE/ProgramLinkedResources.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 749,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-09T13:57:21Z",
+      "side": 1,
+      "message": "nit: can you pass in 1 here?",
+      "range": {
+        "startLine": 749,
+        "startChar": 80,
+        "endLine": 749,
+        "endChar": 82
+      },
+      "revId": "cbf61fe68ae3b778b947e6dcc08302f8ce5ca46b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fef08614_8e078ad4",
+        "filename": "src/libANGLE/ProgramLinkedResources.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 814,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-09T13:57:21Z",
+      "side": 1,
+      "message": "is there any need to make this change in this CL? It is missing the static use for the other referenced shaders, I saw you left a TODO. I don\u0027t think it\u0027s bad but maybe this kind of change should be a split CL, in the same place as when and if you fix your TODO.",
+      "range": {
+        "startLine": 814,
+        "startChar": 4,
+        "endLine": 814,
+        "endChar": 57
+      },
+      "revId": "cbf61fe68ae3b778b947e6dcc08302f8ce5ca46b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4faeef82_2efa33f5",
+        "filename": "src/libANGLE/ProgramLinkedResources.h",
+        "patchSetId": 20
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-09T13:57:21Z",
+      "side": 1,
+      "message": "this variable is never referenced.",
+      "range": {
+        "startLine": 168,
+        "startChar": 4,
+        "endLine": 168,
+        "endChar": 29
+      },
+      "revId": "cbf61fe68ae3b778b947e6dcc08302f8ce5ca46b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
