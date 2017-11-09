@@ -235,10 +235,12 @@ gl::Error TextureVk::setImage(const gl::Context *context,
         // TODO(jmadill): Command reordering.
         renderer->endRenderPass();
 
-        stagingImage.getImage().changeLayoutTop(
-            VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, commandBuffer);
-        mImage.changeLayoutTop(VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-                               commandBuffer);
+        stagingImage.getImage().changeLayoutWithStages(
+            VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+            VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, commandBuffer);
+        mImage.changeLayoutWithStages(
+            VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+            VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, commandBuffer);
 
         gl::Box wholeRegion(0, 0, 0, size.width, size.height, size.depth);
         commandBuffer->copySingleImage(stagingImage.getImage(), mImage, wholeRegion,

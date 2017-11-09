@@ -285,8 +285,9 @@ gl::Error FramebufferVk::readPixels(const gl::Context *context,
     stagingImage.getImage().changeLayoutTop(VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_GENERAL,
                                             commandBuffer);
 
-    readImage->changeLayoutTop(VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
-                               commandBuffer);
+    readImage->changeLayoutWithStages(
+        VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+        VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, commandBuffer);
 
     VkImageCopy region;
     region.srcSubresource.aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT;

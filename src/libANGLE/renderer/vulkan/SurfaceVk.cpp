@@ -396,8 +396,9 @@ vk::Error WindowSurfaceVk::initializeImpl(RendererVk *renderer)
         ANGLE_TRY(member.imageView.init(device, imageViewInfo));
 
         // Set transfer dest layout, and clear the image to black.
-        member.image.changeLayoutTop(VK_IMAGE_ASPECT_COLOR_BIT,
-                                     VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, commandBuffer);
+        member.image.changeLayoutWithStages(
+            VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+            VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, commandBuffer);
         commandBuffer->clearSingleColorImage(member.image, transparentBlack);
 
         ANGLE_TRY(member.imageAcquiredSemaphore.init(device));
