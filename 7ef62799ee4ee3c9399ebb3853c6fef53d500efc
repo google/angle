@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0c49c266_f492582a",
+        "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 385,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-09T16:56:32Z",
+      "side": 1,
+      "message": "Do drawing commands still shade as if the framebuffer has the size GL_FRAMEBUFFER_DEFAULT_WIDTH x GL_FRAMEBUFFER_DEFAULT_HEIGHT in this case?  I have a feeling some tests that use atomics or image writes will not work otherwise.",
+      "revId": "7ef62799ee4ee3c9399ebb3853c6fef53d500efc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
