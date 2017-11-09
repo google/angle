@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b2db9048_ab1f54c3",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 4705,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-09T17:13:49Z",
+      "side": 1,
+      "message": "Either this should still check the ID or update to \u003d\u003d nullptr",
+      "revId": "7c115bc96dfd19b31fbdf86048e804ea84e857b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e6714c11_a5010c72",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 2678,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-09T17:13:49Z",
+      "side": 1,
+      "message": "same id comment",
+      "range": {
+        "startLine": 2678,
+        "startChar": 65,
+        "endLine": 2678,
+        "endChar": 70
+      },
+      "revId": "7c115bc96dfd19b31fbdf86048e804ea84e857b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
