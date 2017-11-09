@@ -90,6 +90,24 @@
     },
     {
       "key": {
+        "uuid": "2f72e5c6_c8ece55c",
+        "filename": "src/common/utilities.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 773,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-09T09:09:44Z",
+      "side": 1,
+      "message": "Maybe you didn\u0027t fully understand what I was suggesting. I meant that in case the index is out of range, nameLengthWithoutArrayIndexOut would need to be set to name.length(), and INVALID_INDEX would be returned. If that\u0027s done I don\u0027t think you could get a valid location by querying with an out-of-range index. Or if you have a counterexample, please add a test for it.",
+      "parentUuid": "5a61347b_d784cf07",
+      "revId": "3a63a7c381bcee66d7c1126eebbec542974a825e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "9f2a10d2_6f327789",
         "filename": "src/common/utilities.h",
         "patchSetId": 5
