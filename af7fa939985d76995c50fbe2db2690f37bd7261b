@@ -2,6 +2,259 @@
   "comments": [
     {
       "key": {
+        "uuid": "ab56f7a5_8741baff",
+        "filename": "src/tests/gl_tests/TextureUploadFormatTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-09T19:01:30Z",
+      "side": 1,
+      "message": "top-level comment on the file",
+      "range": {
+        "startLine": 5,
+        "startChar": 2,
+        "endLine": 5,
+        "endChar": 0
+      },
+      "revId": "af7fa939985d76995c50fbe2db2690f37bd7261b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e3a25da0_cdef6f08",
+        "filename": "src/tests/gl_tests/TextureUploadFormatTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-09T19:01:30Z",
+      "side": 1,
+      "message": "in the constructor you should set some default window width/height and channel requirements (depth/stencil need to be explicitly set if you want them)",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 17,
+        "endChar": 1
+      },
+      "revId": "af7fa939985d76995c50fbe2db2690f37bd7261b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e204bfb5_155a1bfe",
+        "filename": "src/tests/gl_tests/TextureUploadFormatTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-09T19:01:30Z",
+      "side": 1,
+      "message": "static is redundant here, you\u0027re already in an anonymous namespace. you can remove it and any below usages.",
+      "range": {
+        "startLine": 100,
+        "startChar": 0,
+        "endLine": 100,
+        "endChar": 7
+      },
+      "revId": "af7fa939985d76995c50fbe2db2690f37bd7261b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "da694d8c_ab23eb03",
+        "filename": "src/tests/gl_tests/TextureUploadFormatTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-09T19:01:30Z",
+      "side": 1,
+      "message": "use static_cast (as per style guide)",
+      "range": {
+        "startLine": 103,
+        "startChar": 11,
+        "endLine": 103,
+        "endChar": 19
+      },
+      "revId": "af7fa939985d76995c50fbe2db2690f37bd7261b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1c674655_02724e78",
+        "filename": "src/tests/gl_tests/TextureUploadFormatTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-09T19:01:30Z",
+      "side": 1,
+      "message": "I think these can be static constexpr",
+      "range": {
+        "startLine": 109,
+        "startChar": 11,
+        "endLine": 109,
+        "endChar": 16
+      },
+      "revId": "af7fa939985d76995c50fbe2db2690f37bd7261b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ae27661d_f36954cf",
+        "filename": "src/tests/gl_tests/TextureUploadFormatTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 163,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-09T19:01:30Z",
+      "side": 1,
+      "message": "nit: use \"using\" syntax",
+      "range": {
+        "startLine": 163,
+        "startChar": 0,
+        "endLine": 163,
+        "endChar": 7
+      },
+      "revId": "af7fa939985d76995c50fbe2db2690f37bd7261b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1a605742_19926a35",
+        "filename": "src/tests/gl_tests/TextureUploadFormatTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-09T19:01:30Z",
+      "side": 1,
+      "message": "nit: prefer using specific captures instead of \"\u0026\". it\u0027s a test, so not a big deal, but the style guide mention this.",
+      "range": {
+        "startLine": 180,
+        "startChar": 49,
+        "endLine": 180,
+        "endChar": 50
+      },
+      "revId": "af7fa939985d76995c50fbe2db2690f37bd7261b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "66bd0564_e2dbc74e",
+        "filename": "src/tests/gl_tests/TextureUploadFormatTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-09T19:01:30Z",
+      "side": 1,
+      "message": "static_cast, and so on throughout the file.",
+      "range": {
+        "startLine": 193,
+        "startChar": 23,
+        "endLine": 193,
+        "endChar": 31
+      },
+      "revId": "af7fa939985d76995c50fbe2db2690f37bd7261b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "69aed13b_214691cd",
+        "filename": "src/tests/gl_tests/TextureUploadFormatTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 203,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-09T19:01:30Z",
+      "side": 1,
+      "message": "comment before each test.",
+      "range": {
+        "startLine": 203,
+        "startChar": 0,
+        "endLine": 203,
+        "endChar": 6
+      },
+      "revId": "af7fa939985d76995c50fbe2db2690f37bd7261b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "937e29b1_5efb7fe7",
+        "filename": "src/tests/gl_tests/TextureUploadFormatTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-09T19:01:30Z",
+      "side": 1,
+      "message": "is this actually testing anything in ANGLE, or just the test code itself?",
+      "range": {
+        "startLine": 205,
+        "startChar": 4,
+        "endLine": 205,
+        "endChar": 13
+      },
+      "revId": "af7fa939985d76995c50fbe2db2690f37bd7261b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "20d27a90_7990b394",
+        "filename": "src/tests/gl_tests/TextureUploadFormatTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 221,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-09T19:01:30Z",
+      "side": 1,
+      "message": "as nice as it is in some ways to have EnumStr, I am reluctant to implement it here for technical debt reasons. Better if ANGLE at some point gets a very robust and correct implementation of GLenum to string that it can use everywhere in common/. For now can you take this out and just dump the enum hex value?",
+      "range": {
+        "startLine": 221,
+        "startChar": 19,
+        "endLine": 221,
+        "endChar": 26
+      },
+      "revId": "af7fa939985d76995c50fbe2db2690f37bd7261b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "0314e5e4_4cbe8dfc",
         "filename": "src/tests/gl_tests/TextureUploadFormatTest.cpp",
         "patchSetId": 5
@@ -70,6 +323,144 @@
       "revId": "af7fa939985d76995c50fbe2db2690f37bd7261b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6b5974bf_c736290b",
+        "filename": "src/tests/gl_tests/TextureUploadFormatTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 324,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-09T19:01:30Z",
+      "side": 1,
+      "message": "test comment",
+      "range": {
+        "startLine": 324,
+        "startChar": 0,
+        "endLine": 324,
+        "endChar": 6
+      },
+      "revId": "af7fa939985d76995c50fbe2db2690f37bd7261b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a8cec61b_fb7dc023",
+        "filename": "src/tests/gl_tests/TextureUploadFormatTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 326,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-09T19:01:30Z",
+      "side": 1,
+      "message": "you can make these constexpr.",
+      "range": {
+        "startLine": 326,
+        "startChar": 4,
+        "endLine": 326,
+        "endChar": 9
+      },
+      "revId": "af7fa939985d76995c50fbe2db2690f37bd7261b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "acca0704_db9d1040",
+        "filename": "src/tests/gl_tests/TextureUploadFormatTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 352,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-09T19:01:30Z",
+      "side": 1,
+      "message": "ASSERT_NE(-1, uTex). also auto seems excessive, this should just be GLint.",
+      "range": {
+        "startLine": 352,
+        "startChar": 16,
+        "endLine": 352,
+        "endChar": 36
+      },
+      "revId": "af7fa939985d76995c50fbe2db2690f37bd7261b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "781243de_0efeb9b7",
+        "filename": "src/tests/gl_tests/TextureUploadFormatTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 356,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-09T19:01:30Z",
+      "side": 1,
+      "message": "same ASSERT here. also making this a different variable would be nice.",
+      "range": {
+        "startLine": 356,
+        "startChar": 4,
+        "endLine": 356,
+        "endChar": 8
+      },
+      "revId": "af7fa939985d76995c50fbe2db2690f37bd7261b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "402ba946_99c93df0",
+        "filename": "src/tests/gl_tests/TextureUploadFormatTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 364,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-09T19:01:30Z",
+      "side": 1,
+      "message": "instead of commenting \"--\", can you comment as to what you\u0027re testing?",
+      "range": {
+        "startLine": 363,
+        "startChar": 0,
+        "endLine": 364,
+        "endChar": 9
+      },
+      "revId": "af7fa939985d76995c50fbe2db2690f37bd7261b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "20baff3e_45da14fa",
+        "filename": "src/tests/gl_tests/TextureUploadFormatTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 379,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-09T19:01:30Z",
+      "side": 1,
+      "message": "same, and so on.",
+      "range": {
+        "startLine": 379,
+        "startChar": 0,
+        "endLine": 379,
+        "endChar": 9
+      },
+      "revId": "af7fa939985d76995c50fbe2db2690f37bd7261b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     },
     {
       "key": {
