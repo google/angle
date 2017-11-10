@@ -32,6 +32,7 @@
 #include "compiler/translator/RemoveInvariantDeclaration.h"
 #include "compiler/translator/RemoveNoOpCasesFromEndOfSwitchStatements.h"
 #include "compiler/translator/RemovePow.h"
+#include "compiler/translator/RemoveUnreferencedVariables.h"
 #include "compiler/translator/RewriteDoWhile.h"
 #include "compiler/translator/ScalarizeVecAndMatConstructorArgs.h"
 #include "compiler/translator/SeparateDeclarations.h"
@@ -468,13 +469,6 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         return false;
     }
 
-    // Built-in function emulation needs to happen after validateLimitations pass.
-    // TODO(jmadill): Remove global pool allocator.
-    GetGlobalPoolAllocator()->lock();
-    initBuiltInFunctionEmulator(&builtInFunctionEmulator, compileOptions);
-    GetGlobalPoolAllocator()->unlock();
-    builtInFunctionEmulator.markBuiltInFunctionsForEmulation(root);
-
     // Clamping uniform array bounds needs to happen after validateLimitations pass.
     if (compileOptions & SH_CLAMP_INDIRECT_ARRAY_BOUNDS)
     {
@@ -508,56 +502,6 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         RemovePow(root);
     }
 
-    if (shouldCollectVariables(compileOptions))
-    {
-        ASSERT(!variablesCollected);
-        CollectVariables(root, &attributes, &outputVariables, &uniforms, &inputVaryings,
-                         &outputVaryings, &uniformBlocks, &shaderStorageBlocks, &inBlocks,
-                         hashFunction, &symbolTable, shaderVersion, shaderType, extensionBehavior);
-        collectInterfaceBlocks();
-        variablesCollected = true;
-        if (compileOptions & SH_USE_UNUSED_STANDARD_SHARED_BLOCKS)
-        {
-            useAllMembersInUnusedStandardAndSharedBlocks(root);
-        }
-        if (compileOptions & SH_ENFORCE_PACKING_RESTRICTIONS)
-        {
-            // Returns true if, after applying the packing rules in the GLSL ES 1.00.17 spec
-            // Appendix A, section 7, the shader does not use too many uniforms.
-            if (!CheckVariablesInPackingLimits(maxUniformVectors, uniforms))
-            {
-                mDiagnostics.globalError("too many uniforms");
-                return false;
-            }
-        }
-        if (compileOptions & SH_INIT_OUTPUT_VARIABLES)
-        {
-            initializeOutputVariables(root);
-        }
-    }
-
-    // gl_Position is always written in compatibility output mode.
-    // It may have been already initialized among other output variables, in that case we don't
-    // need to initialize it twice.
-    if (shaderType == GL_VERTEX_SHADER && !mGLPositionInitialized &&
-        ((compileOptions & SH_INIT_GL_POSITION) || (outputType == SH_GLSL_COMPATIBILITY_OUTPUT)))
-    {
-        initializeGLPosition(root);
-        mGLPositionInitialized = true;
-    }
-
-    // Removing invariant declarations must be done after collecting variables.
-    // Otherwise, built-in invariant declarations don't apply.
-    if (RemoveInvariant(shaderType, shaderVersion, outputType, compileOptions))
-    {
-        sh::RemoveInvariantDeclaration(root);
-    }
-
-    if (compileOptions & SH_SCALARIZE_VEC_AND_MAT_CONSTRUCTOR_ARGS)
-    {
-        ScalarizeVecAndMatConstructorArgs(root, shaderType, fragmentPrecisionHigh, &symbolTable);
-    }
-
     if (compileOptions & SH_REGENERATE_STRUCT_NAMES)
     {
         RegenerateStructNames gen(&symbolTable, shaderVersion);
@@ -589,6 +533,65 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
 
     RemoveArrayLengthMethod(root);
 
+    RemoveUnreferencedVariables(root, &symbolTable);
+
+    // Built-in function emulation needs to happen after validateLimitations pass.
+    // TODO(jmadill): Remove global pool allocator.
+    GetGlobalPoolAllocator()->lock();
+    initBuiltInFunctionEmulator(&builtInFunctionEmulator, compileOptions);
+    GetGlobalPoolAllocator()->unlock();
+    builtInFunctionEmulator.markBuiltInFunctionsForEmulation(root);
+
+    if (compileOptions & SH_SCALARIZE_VEC_AND_MAT_CONSTRUCTOR_ARGS)
+    {
+        ScalarizeVecAndMatConstructorArgs(root, shaderType, fragmentPrecisionHigh, &symbolTable);
+    }
+
+    if (shouldCollectVariables(compileOptions))
+    {
+        ASSERT(!variablesCollected);
+        CollectVariables(root, &attributes, &outputVariables, &uniforms, &inputVaryings,
+                         &outputVaryings, &uniformBlocks, &shaderStorageBlocks, &inBlocks,
+                         hashFunction, &symbolTable, shaderVersion, shaderType, extensionBehavior);
+        collectInterfaceBlocks();
+        variablesCollected = true;
+        if (compileOptions & SH_USE_UNUSED_STANDARD_SHARED_BLOCKS)
+        {
+            useAllMembersInUnusedStandardAndSharedBlocks(root);
+        }
+        if (compileOptions & SH_ENFORCE_PACKING_RESTRICTIONS)
+        {
+            // Returns true if, after applying the packing rules in the GLSL ES 1.00.17 spec
+            // Appendix A, section 7, the shader does not use too many uniforms.
+            if (!CheckVariablesInPackingLimits(maxUniformVectors, uniforms))
+            {
+                mDiagnostics.globalError("too many uniforms");
+                return false;
+            }
+        }
+        if (compileOptions & SH_INIT_OUTPUT_VARIABLES)
+        {
+            initializeOutputVariables(root);
+        }
+    }
+
+    // Removing invariant declarations must be done after collecting variables.
+    // Otherwise, built-in invariant declarations don't apply.
+    if (RemoveInvariant(shaderType, shaderVersion, outputType, compileOptions))
+    {
+        RemoveInvariantDeclaration(root);
+    }
+
+    // gl_Position is always written in compatibility output mode.
+    // It may have been already initialized among other output variables, in that case we don't
+    // need to initialize it twice.
+    if (shaderType == GL_VERTEX_SHADER && !mGLPositionInitialized &&
+        ((compileOptions & SH_INIT_GL_POSITION) || (outputType == SH_GLSL_COMPATIBILITY_OUTPUT)))
+    {
+        initializeGLPosition(root);
+        mGLPositionInitialized = true;
+    }
+
     // DeferGlobalInitializers needs to be run before other AST transformations that generate new
     // statements from expressions. But it's fine to run DeferGlobalInitializers after the above
     // SplitSequenceOperator and RemoveArrayLengthMethod since they only have an effect on the AST
@@ -597,7 +600,6 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         (compileOptions & SH_INITIALIZE_UNINITIALIZED_LOCALS) && !IsOutputHLSL(getOutputType());
     bool canUseLoopsToInitialize = !(compileOptions & SH_DONT_USE_LOOPS_TO_INITIALIZE_VARIABLES);
     DeferGlobalInitializers(root, initializeLocalsAndGlobals, canUseLoopsToInitialize, &symbolTable);
-
 
     if (initializeLocalsAndGlobals)
     {

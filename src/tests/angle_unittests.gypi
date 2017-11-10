@@ -79,6 +79,7 @@
             '<(angle_path)/src/tests/compiler_tests/QualificationOrder_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/RecordConstantPrecision_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/RemovePow_test.cpp',
+            '<(angle_path)/src/tests/compiler_tests/RemoveUnreferencedVariables_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/RewriteDoWhile_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/SamplerMultisample_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/ShaderExtension_test.cpp',
