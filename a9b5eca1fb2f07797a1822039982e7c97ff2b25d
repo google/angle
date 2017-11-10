@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9b61162c_726fc8a0",
+        "filename": "src/common/utilities.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 792,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-10T14:34:05Z",
+      "side": 1,
+      "message": "Nit: Spaces seem to have turned into tabs here?",
+      "revId": "a9b5eca1fb2f07797a1822039982e7c97ff2b25d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e9eddc49_e10cd252",
+        "filename": "src/common/utilities_unittest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-10T14:34:05Z",
+      "side": 1,
+      "message": "Same thing with the tabs. Also add expectation for nameLengthWithoutArrayIndex.",
+      "revId": "a9b5eca1fb2f07797a1822039982e7c97ff2b25d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
