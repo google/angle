@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "906f2bfc_63e6c889",
+        "filename": "scripts/entry_point_packed_gl_enums.json",
+        "patchSetId": 15
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-11-10T22:00:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7520d6fe_97712e15",
+      "range": {
+        "startLine": 3,
+        "startChar": 19,
+        "endLine": 3,
+        "endChar": 29
+      },
+      "revId": "7c115bc96dfd19b31fbdf86048e804ea84e857b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b55fbb00_fe45adf6",
         "filename": "src/libANGLE/Context.cpp",
         "patchSetId": 15
@@ -71,6 +95,30 @@
     },
     {
       "key": {
+        "uuid": "3f7e136f_2ae07efc",
+        "filename": "src/libANGLE/PackedGLEnums.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-11-10T22:00:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a5e24b9f_da59cec7",
+      "range": {
+        "startLine": 108,
+        "startChar": 1,
+        "endLine": 108,
+        "endChar": 0
+      },
+      "revId": "7c115bc96dfd19b31fbdf86048e804ea84e857b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f2bd192e_6d3eaacb",
         "filename": "src/libANGLE/State.cpp",
         "patchSetId": 15
@@ -82,6 +130,30 @@
       "writtenOn": "2017-11-09T18:50:10Z",
       "side": 1,
       "message": "ensure we have a comment somewhere that the mBoundBuffers for transform feedback and element array buffer are only *sometimes* correct. didn\u0027t see one though you might have added already.",
+      "range": {
+        "startLine": 1243,
+        "startChar": 4,
+        "endLine": 1243,
+        "endChar": 47
+      },
+      "revId": "7c115bc96dfd19b31fbdf86048e804ea84e857b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "19fd7760_3a19748b",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 1243,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-11-10T22:00:45Z",
+      "side": 1,
+      "message": "Good point, done.",
+      "parentUuid": "f2bd192e_6d3eaacb",
       "range": {
         "startLine": 1243,
         "startChar": 4,
@@ -117,6 +189,30 @@
     },
     {
       "key": {
+        "uuid": "b0bf38cb_54513621",
+        "filename": "src/libANGLE/gen_packed_gl_enums.py",
+        "patchSetId": 15
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-11-10T22:00:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "800d20b2_67b7ec84",
+      "range": {
+        "startLine": 49,
+        "startChar": 0,
+        "endLine": 52,
+        "endChar": 23
+      },
+      "revId": "7c115bc96dfd19b31fbdf86048e804ea84e857b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f5941f06_f1f601de",
         "filename": "src/libANGLE/renderer/gl/BufferGL.cpp",
         "patchSetId": 15
@@ -137,6 +233,30 @@
       "revId": "7c115bc96dfd19b31fbdf86048e804ea84e857b1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4dec1426_42fa8b6b",
+        "filename": "src/libANGLE/renderer/gl/BufferGL.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-11-10T22:00:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f5941f06_f1f601de",
+      "range": {
+        "startLine": 26,
+        "startChar": 0,
+        "endLine": 26,
+        "endChar": 12
+      },
+      "revId": "7c115bc96dfd19b31fbdf86048e804ea84e857b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -180,6 +300,24 @@
     },
     {
       "key": {
+        "uuid": "098c20a1_e822e700",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 4705,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-11-10T22:00:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b2db9048_ab1f54c3",
+      "revId": "7c115bc96dfd19b31fbdf86048e804ea84e857b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e6714c11_a5010c72",
         "filename": "src/libANGLE/validationES3.cpp",
         "patchSetId": 15
@@ -203,6 +341,30 @@
     },
     {
       "key": {
+        "uuid": "26c02fb6_8409096a",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 2678,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-11-10T22:00:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e6714c11_a5010c72",
+      "range": {
+        "startLine": 2678,
+        "startChar": 65,
+        "endLine": 2678,
+        "endChar": 70
+      },
+      "revId": "7c115bc96dfd19b31fbdf86048e804ea84e857b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "99532285_004df732",
         "filename": "src/tests/gl_tests/ReadPixelsTest.cpp",
         "patchSetId": 15
@@ -214,6 +376,30 @@
       "writtenOn": "2017-11-09T18:50:10Z",
       "side": 1,
       "message": "Looks like you might have originally called these BufferTargets and renamed to BufferType?",
+      "range": {
+        "startLine": 165,
+        "startChar": 26,
+        "endLine": 165,
+        "endChar": 41
+      },
+      "revId": "7c115bc96dfd19b31fbdf86048e804ea84e857b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9ca7052f_9852559e",
+        "filename": "src/tests/gl_tests/ReadPixelsTest.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-11-10T22:00:45Z",
+      "side": 1,
+      "message": "^^",
+      "parentUuid": "99532285_004df732",
       "range": {
         "startLine": 165,
         "startChar": 26,
