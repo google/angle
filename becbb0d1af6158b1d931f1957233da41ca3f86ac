@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "ef82123a_e024a0b4",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1174,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-10T19:31:47Z",
+      "side": 1,
+      "message": "nit: auto is born for this kind of use case.",
+      "range": {
+        "startLine": 1174,
+        "startChar": 8,
+        "endLine": 1174,
+        "endChar": 41
+      },
+      "revId": "becbb0d1af6158b1d931f1957233da41ca3f86ac",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3e2a6748_dc373051",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 2
