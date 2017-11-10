@@ -34,6 +34,24 @@
       "revId": "7ef62799ee4ee3c9399ebb3853c6fef53d500efc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "885562c3_9ffa00e3",
+        "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 385,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-10T19:40:34Z",
+      "side": 1,
+      "message": "This is good to think about. It depends:\n\n- does the Intel driver have the bug when 0 RTs are bound and \u003e0 UAVs are bound?\n- if not, then we don\u0027t need the workaround here, but we can fix this later.\n- if yes, then we don\u0027t have a choice, we can\u0027t support the full number of UAVs anyway\n\nI think we should proceed with the workaround as normal, and change it if necessary when you start implementing the GL features that use UAVs in the D3D11 back-end.",
+      "parentUuid": "bfd703c7_ddaf1860",
+      "revId": "7ef62799ee4ee3c9399ebb3853c6fef53d500efc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
