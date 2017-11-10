@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "be615094_dc1383bc",
+        "filename": "src/compiler/translator/CollectVariables.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-10T11:40:44Z",
+      "side": 1,
+      "message": "I\u0027d leave these two lines out of this function, and keep them inside the switch/case instead. That way it\u0027s clear that the code won\u0027t be looking for the variable in the list of regular uniforms in case it has an interface block association.\n\nThe alternative would be to add an assert that if the interface block is found, the result of FindVariable() !\u003d nullptr, but is that assertion correct? The code would also be less clear that way in my opinion.",
+      "range": {
+        "startLine": 92,
+        "startChar": 4,
+        "endLine": 93,
+        "endChar": 23
+      },
+      "revId": "bf1c23df779b3fece3f5673ceb696de892e34778",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
