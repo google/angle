@@ -16,6 +16,24 @@
       "revId": "7ef62799ee4ee3c9399ebb3853c6fef53d500efc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bfd703c7_ddaf1860",
+        "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 385,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-11-10T10:45:10Z",
+      "side": 1,
+      "message": "Function getIncompleteTexture will create an 1X1 texture, the size is not align to framebuffer\u0027s default size. I\u0027ve debugged the code. In StateManager11.cpp::1929, because syncFramebuffer and syncViewport is before syncBlendstate in which I created the dummy texture, this dummy texutre isn\u0027t set into render target. The passed pixel count remains the same as fbo default size. And the dummy texture will be replaced by new attachment in the next syncState.\n\nHowever, the dummy texture result in output layout remained in pixel shader. I have discussed with Xinghua if the dummy texture will have impact on image writing. We are worried that the dummy output layout might occupy an uav slot. In another word, originally, we could create 8 uav images in pixel shader, but now we can only create 7 uav images. \nAccording to MSDN:\n\"SV_Target[n],where 0 \u003c\u003d n \u003c\u003d 7\tThe output value that will be stored in a render target. The index indicates which of the 8 possibly bound render targets to write to. The value is available to all shaders.\" https://msdn.microsoft.com/en-us/library/windows/desktop/bb509647(v\u003dvs.85).aspx\nHow do you think?",
+      "parentUuid": "0c49c266_f492582a",
+      "revId": "7ef62799ee4ee3c9399ebb3853c6fef53d500efc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
