@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "a7ddaf5d_f5f20b11",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-10T21:02:30Z",
+      "side": 1,
+      "message": "I agree, though I\u0027m not sure how to best implement BufferSubData for all use cases.\n\nThere may be times where we want a staging buffer. Say for large buffers, where we don\u0027t want to stream them out every update, and/or the update size is small, it might be faster to use a staging buffer, possibly a persistent one. Likely it will take some experimentation.",
+      "parentUuid": "d302e3ca_30c34009",
+      "revId": "628bfe150f3b86ecfff2eb2bd94ecd029bcf0d9f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d70d738b_e5e62599",
         "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
         "patchSetId": 4
@@ -33,6 +51,24 @@
       "revId": "628bfe150f3b86ecfff2eb2bd94ecd029bcf0d9f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4be8d71e_0a97f679",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-10T21:02:30Z",
+      "side": 1,
+      "message": "There are two operations needed to complete in order for the update to succeed:\n\na) all pending reads to the current in-use buffer need to finish\nb) the host -\u003e staging buffer transfer needs to finish\n\nOnce a) and b) are done, the vkCmdCopyBuffer can proceed.\n\nThe barrier I have here is for a) and I think you\u0027re proposing b), but unless b) also implies a) I\u0027m pretty sure a) is the one I want. It was actually necessary to fix AMD (interestingly, on NVIDIA it was not necessary).\n\nAside: I spoke to Tobin who works on the validation layers - he was working on implementing a special layer for memory access validation, but wasn\u0027t able to land the work. Hopefully that shapes up in the future so we can make use of that for correctness testing.\n\nLeaving as-is unless you can confirm b) implies a) - I don\u0027t have an AMD machine handy for testing. It seems unlikely as they are for different buffers/device memory.\n\nThe barrier stuff might seem somewhat haphazard right now. I plan on fixing this as my next priority.",
+      "parentUuid": "d70d738b_e5e62599",
+      "revId": "628bfe150f3b86ecfff2eb2bd94ecd029bcf0d9f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "552f21bc_0bd96919",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 209,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-10T21:02:30Z",
+      "side": 1,
+      "message": "I think this is correct as offset - other reads or writes to the buffer before offset should be fine.",
+      "parentUuid": "5753c6b8_6dd666e6",
+      "revId": "628bfe150f3b86ecfff2eb2bd94ecd029bcf0d9f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7e4b7dab_f9977af1",
         "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
         "patchSetId": 4
@@ -67,6 +121,24 @@
       "revId": "628bfe150f3b86ecfff2eb2bd94ecd029bcf0d9f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7dd98cdf_dbcd8f9f",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 217,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-10T21:02:30Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "7e4b7dab_f9977af1",
+      "revId": "628bfe150f3b86ecfff2eb2bd94ecd029bcf0d9f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
