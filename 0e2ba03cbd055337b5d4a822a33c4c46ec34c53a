@@ -16,6 +16,24 @@
       "revId": "0e2ba03cbd055337b5d4a822a33c4c46ec34c53a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1b58182a_a97f9fdf",
+        "filename": "src/compiler/translator/ShaderVars.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-11-10T23:26:10Z",
+      "side": 1,
+      "message": "I think your code will have problems with endianness, Corentin.\nBut, I\u0027m surprised that string::compare is slower than the new code.\nMy expectation was that it should do exactly the same comparison.\n\nI would try to optimize this by making sure that comparison is done only once for each variable, for example, do it when the variable is initialized and store it in a bool.",
+      "parentUuid": "d692c0b5_9f0680dc",
+      "revId": "0e2ba03cbd055337b5d4a822a33c4c46ec34c53a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
