@@ -263,6 +263,7 @@ class State : public OnAttachmentDirtyReceiver, angle::NonCopyable
                                 const void *pointer);
     void setVertexAttribDivisor(const Context *context, GLuint index, GLuint divisor);
     const VertexAttribCurrentValueData &getVertexAttribCurrentValue(size_t attribNum) const;
+    const std::vector<VertexAttribCurrentValueData> &getVertexAttribCurrentValues() const;
     const void *getVertexAttribPointer(unsigned int attribNum) const;
     void bindVertexBuffer(const Context *context,
                           GLuint bindingIndex,

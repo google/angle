@@ -539,10 +539,13 @@ bool ValidateFragmentShaderColorBufferTypeMatch(ValidationContext *context)
 
 bool ValidateVertexShaderAttributeTypeMatch(ValidationContext *context)
 {
+    const auto &glState       = context->getGLState();
     const Program *program = context->getGLState().getProgram();
     const VertexArray *vao = context->getGLState().getVertexArray();
+    const auto &vertexAttribs = vao->getVertexAttributes();
+    const auto &currentValues = glState.getVertexAttribCurrentValues();
 
-    for (const auto &shaderAttribute : program->getAttributes())
+    for (const sh::Attribute &shaderAttribute : program->getAttributes())
     {
         // gl_VertexID and gl_InstanceID are active attributes but don't have a bound attribute.
         if (shaderAttribute.isBuiltIn())
@@ -552,10 +555,9 @@ bool ValidateVertexShaderAttributeTypeMatch(ValidationContext *context)
 
         GLenum shaderInputType = VariableComponentType(shaderAttribute.type);
 
-        const auto &attrib = vao->getVertexAttribute(shaderAttribute.location);
-        const auto &currentValue =
-            context->getGLState().getVertexAttribCurrentValue(shaderAttribute.location);
-        GLenum vertexType = attrib.enabled ? GetVertexAttributeBaseType(attrib) : currentValue.Type;
+        const auto &attrib = vertexAttribs[shaderAttribute.location];
+        GLenum vertexType  = attrib.enabled ? GetVertexAttributeBaseType(attrib)
+                                           : currentValues[shaderAttribute.location].Type;
 
         if (shaderInputType != GL_NONE && vertexType != GL_NONE && shaderInputType != vertexType)
         {

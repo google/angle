@@ -90,7 +90,7 @@ struct ShaderVariable
                               const ShaderVariable **leafVar,
                               std::string* originalFullName) const;
 
-    bool isBuiltIn() const { return name.compare(0, 3, "gl_") == 0; }
+    bool isBuiltIn() const;
 
     GLenum type;
     GLenum precision;
@@ -232,7 +232,7 @@ struct InterfaceBlock
     // Decide whether two interface blocks are the same at shader link time.
     bool isSameInterfaceBlockAtLinkTime(const InterfaceBlock &other) const;
 
-    bool isBuiltIn() const { return name.compare(0, 3, "gl_") == 0; }
+    bool isBuiltIn() const;
 
     bool isArray() const { return arraySize > 0; }
     unsigned int elementCount() const { return std::max(1u, arraySize); }
