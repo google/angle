@@ -34,6 +34,24 @@
       "revId": "0e2ba03cbd055337b5d4a822a33c4c46ec34c53a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2035c2df_f4be8ff3",
+        "filename": "src/compiler/translator/ShaderVars.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-11-10T23:34:25Z",
+      "side": 1,
+      "message": "Damn you\u0027re right, should be\n\nstatic constexpr uint32_t kBuiltinPrefix \u003d (uint32_t(\u0027g\u0027) \u003c\u003c 16) + (uint32_t(\u0027l\u0027) \u003c\u003c 8) + uint32_t(\u0027_\u0027) ;\nuint32_t prefix \u003d *reinterpret_cast\u003cconst uint32_t*\u003e(name.c_str());\nreturn name.size() \u003e\u003d 4 \u0026\u0026 (prefix \u003e\u003e 8) \u003d\u003d kBuiltinPrefix;",
+      "parentUuid": "1b58182a_a97f9fdf",
+      "revId": "0e2ba03cbd055337b5d4a822a33c4c46ec34c53a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
