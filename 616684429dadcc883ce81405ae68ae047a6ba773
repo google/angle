@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6e2975c8_9e60748e",
+        "filename": "src/compiler/translator/CollectVariables.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 425,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-10T08:26:54Z",
+      "side": 1,
+      "message": "This code is mostly duplicate of the case above. Could make a helper function findVariableInInterfaceBlock that would be shared between uniform blocks and shader storage blocks.",
+      "revId": "616684429dadcc883ce81405ae68ae047a6ba773",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
