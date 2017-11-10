@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6cefd68c_578cd372",
+        "filename": "src/compiler/translator/ShaderVars.cpp",
+        "patchSetId": 29
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-11-10T23:53:25Z",
+      "side": 1,
+      "message": "It took me a long time to understand exactly what this means. A non-trivial example here or in the header would help. Logic looks good.",
+      "revId": "6dedb068f2772973d88e8ac90b6fa27352bfd405",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0c32893a_77908dd3",
+        "filename": "src/compiler/translator/VariablePacker.cpp",
+        "patchSetId": 29
+      },
+      "lineNbr": 221,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-11-10T23:53:25Z",
+      "side": 1,
+      "message": "Unrelated to this line, but do we have a check somewhere that getArraySizeProduct won\u0027t cause integer overflows?",
+      "revId": "6dedb068f2772973d88e8ac90b6fa27352bfd405",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

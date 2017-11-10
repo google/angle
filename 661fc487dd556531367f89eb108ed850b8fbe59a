@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "69fcebe8_d84d0ded",
+        "filename": "src/compiler/translator/blocklayout.cpp",
+        "patchSetId": 29
+      },
+      "lineNbr": 157,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-11-10T23:53:25Z",
+      "side": 0,
+      "message": "nit: this could become an assert.",
+      "revId": "661fc487dd556531367f89eb108ed850b8fbe59a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
