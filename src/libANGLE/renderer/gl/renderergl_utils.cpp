@@ -1114,6 +1114,8 @@ void GenerateWorkarounds(const FunctionsGL *functions, WorkaroundsGL *workaround
     workarounds->reapplyUBOBindingsAfterUsingBinaryProgram = true;
 
     workarounds->clampPointSize = true;
+
+    workarounds->dontUseLoopsToInitializeVariables = !IsNvidia(vendor);
 #endif
 }
 

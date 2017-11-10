@@ -138,6 +138,9 @@ struct WorkaroundsGL
     // executed incorrectly. Change them in the shader translator. Tracking bug:
     // http://crbug.com/772651
     bool rewriteVectorScalarArithmetic = false;
+
+    // On some Android devices for loops used to initialize variables hit native GLSL compiler bugs.
+    bool dontUseLoopsToInitializeVariables = false;
 };
 }  // namespace rx
 

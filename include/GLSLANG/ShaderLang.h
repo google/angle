@@ -25,7 +25,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 187
+#define ANGLE_SH_VERSION 188
 
 enum ShShaderSpec
 {
@@ -252,6 +252,10 @@ const ShCompileOptions SH_CLAMP_POINT_SIZE = UINT64_C(1) << 35;
 // This is targeted to work around a bug in NVIDIA OpenGL drivers that was reproducible on NVIDIA
 // driver version 387.92. It works around the most common occurrences of the bug.
 const ShCompileOptions SH_REWRITE_VECTOR_SCALAR_ARITHMETIC = UINT64_C(1) << 36;
+
+// Don't use loops to initialize uninitialized variables. Only has an effect if some kind of
+// variable initialization is turned on.
+const ShCompileOptions SH_DONT_USE_LOOPS_TO_INITIALIZE_VARIABLES = UINT64_C(1) << 37;
 
 // Defines alternate strategies for implementing array index clamping.
 enum ShArrayIndexClampingStrategy
