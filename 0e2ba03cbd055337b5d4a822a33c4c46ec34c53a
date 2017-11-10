@@ -52,6 +52,24 @@
       "revId": "0e2ba03cbd055337b5d4a822a33c4c46ec34c53a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5a9402bb_881b5850",
+        "filename": "src/compiler/translator/ShaderVars.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-11-10T23:56:23Z",
+      "side": 1,
+      "message": "What I\u0027ve meant is that you need to provide different versions of the this code to cover all architectures, which gets complicated and preferably avoided. But the first version seemed to be OK for x86, I think. Sorry if I confused you.",
+      "parentUuid": "2035c2df_f4be8ff3",
+      "revId": "0e2ba03cbd055337b5d4a822a33c4c46ec34c53a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
