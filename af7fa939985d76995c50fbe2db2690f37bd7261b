@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "2961ed8f_65570d6b",
+        "filename": "src/tests/gl_tests/TextureUploadFormatTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-10T19:27:20Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "7846ac03_06169fb9",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 17,
+        "endChar": 1
+      },
+      "revId": "af7fa939985d76995c50fbe2db2690f37bd7261b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e204bfb5_155a1bfe",
         "filename": "src/tests/gl_tests/TextureUploadFormatTest.cpp",
         "patchSetId": 5
@@ -331,6 +355,30 @@
     },
     {
       "key": {
+        "uuid": "3b3ea9b9_c59f3f6b",
+        "filename": "src/tests/gl_tests/TextureUploadFormatTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-10T19:27:20Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "613a31f2_497dc174",
+      "range": {
+        "startLine": 180,
+        "startChar": 49,
+        "endLine": 180,
+        "endChar": 50
+      },
+      "revId": "af7fa939985d76995c50fbe2db2690f37bd7261b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "66bd0564_e2dbc74e",
         "filename": "src/tests/gl_tests/TextureUploadFormatTest.cpp",
         "patchSetId": 5
@@ -507,6 +555,30 @@
       "side": 1,
       "message": "I want to push back on this here as it makes the printed text really, really easy to read. It also returns the hex value if it doesn\u0027t recognize something. (asserting in debug builds, which I\u0027m totally willing to remove)\n\nI\u0027ll remove this helper if you order me to, though.\n\nI\u0027m also willing to integrate this into ANGLE somewhere. We have one in Gecko, for sure.",
       "parentUuid": "20d27a90_7990b394",
+      "range": {
+        "startLine": 221,
+        "startChar": 19,
+        "endLine": 221,
+        "endChar": 26
+      },
+      "revId": "af7fa939985d76995c50fbe2db2690f37bd7261b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ea67721e_e63f1c8a",
+        "filename": "src/tests/gl_tests/TextureUploadFormatTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 221,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-10T19:27:20Z",
+      "side": 1,
+      "message": "This is only for error conditions. I would prefer to move a proper EnumStr implementation to split work (if you want to pursue it) and make sure it is implemented properly.\n\nAside: this is the advice I myself was given when I implemented a quick and hacky version of this a few years ago. :)\n\nA potential CL to fix this could lift the implementation from FF or Chromium.",
+      "parentUuid": "2315e70c_87752cc3",
       "range": {
         "startLine": 221,
         "startChar": 19,
