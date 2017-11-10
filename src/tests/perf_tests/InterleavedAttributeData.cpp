@@ -61,7 +61,10 @@ class InterleavedAttributeDataBenchmark
     GLuint mPositionColorBuffer[2];
 
     // The buffers contain two floats and 3 unsigned bytes per point sprite
-    const size_t mBytesPerSprite = 2 * sizeof(float) + 3;
+    // Has to be aligned for float access on arm
+    const size_t mBytesPerSpriteUnaligned = 2 * sizeof(float) + 3;
+    const size_t mBytesPerSprite =
+        ((mBytesPerSpriteUnaligned + sizeof(float) - 1) / sizeof(float)) * sizeof(float);
 };
 
 InterleavedAttributeDataBenchmark::InterleavedAttributeDataBenchmark()
