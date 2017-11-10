@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d692c0b5_9f0680dc",
+        "filename": "src/compiler/translator/ShaderVars.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-11-10T22:25:35Z",
+      "side": 1,
+      "message": "nit: I Had thought of something like this and wanted to do it with\n\nstatic constexpr uint32_t kBuiltinPrefix \u003d uint32_t(\u0027g\u0027) + (uint32_t(\u0027l\u0027) \u003c\u003c 8) + (uint32_t(\u0027_\u0027)) \u003c\u003c 16;\nuint32_t prefix \u003d *reinterpret_cast\u003cconst uint32_t*\u003e(name.c_str());\nreturn name.size() \u003e\u003d 4 \u0026\u0026 (prefix \u0026 0xFFFFFFu) \u003d\u003d kBuiltinPrefix;\n\nTechnically it could have unaligned loads so it should only be enabled on x86.",
+      "revId": "0e2ba03cbd055337b5d4a822a33c4c46ec34c53a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
