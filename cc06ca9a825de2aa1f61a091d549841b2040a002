@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8b9fcfc3_dd636c0b",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1077,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-10T21:34:19Z",
+      "side": 1,
+      "message": "this is possibly asserting somewhere.",
+      "range": {
+        "startLine": 1077,
+        "startChar": 8,
+        "endLine": 1077,
+        "endChar": 38
+      },
+      "revId": "cc06ca9a825de2aa1f61a091d549841b2040a002",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
