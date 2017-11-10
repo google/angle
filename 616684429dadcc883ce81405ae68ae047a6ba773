@@ -16,6 +16,24 @@
       "revId": "616684429dadcc883ce81405ae68ae047a6ba773",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f6ac5386_11b0846d",
+        "filename": "src/compiler/translator/CollectVariables.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 425,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-11-10T09:20:15Z",
+      "side": 1,
+      "message": "Done. Thanks.",
+      "parentUuid": "6e2975c8_9e60748e",
+      "revId": "616684429dadcc883ce81405ae68ae047a6ba773",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
