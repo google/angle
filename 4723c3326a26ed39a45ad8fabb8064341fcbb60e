@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7910abf9_fc6bca01",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-10T22:16:15Z",
+      "side": 1,
+      "message": "very tiny nit, but two small style typos:\n\n- use \"Bug: \" or \"BUG\u003d\"\n- make the Change-Id: the vary last line",
+      "range": {
+        "startLine": 14,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 22
+      },
+      "revId": "4723c3326a26ed39a45ad8fabb8064341fcbb60e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
