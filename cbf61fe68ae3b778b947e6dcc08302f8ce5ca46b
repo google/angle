@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "04f96908_789df69a",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 20
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-11-10T05:00:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8d25b585_12964abd",
+      "range": {
+        "startLine": 70,
+        "startChar": 51,
+        "endLine": 70,
+        "endChar": 65
+      },
+      "revId": "cbf61fe68ae3b778b947e6dcc08302f8ce5ca46b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0c9d79a3_e189b081",
         "filename": "src/compiler/translator/CollectVariables.cpp",
         "patchSetId": 20
@@ -36,6 +60,30 @@
       "writtenOn": "2017-11-09T13:57:21Z",
       "side": 1,
       "message": "the compiler changes should probably be in a split CL, but it\u0027s ok to leave it for now.",
+      "range": {
+        "startLine": 423,
+        "startChar": 17,
+        "endLine": 423,
+        "endChar": 26
+      },
+      "revId": "cbf61fe68ae3b778b947e6dcc08302f8ce5ca46b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4762cf4a_a0b3a969",
+        "filename": "src/compiler/translator/CollectVariables.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 423,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-11-10T05:00:52Z",
+      "side": 1,
+      "message": "It\u0027s a very simple change. So I will leave it in current implementation. Thanks.",
+      "parentUuid": "0c9d79a3_e189b081",
       "range": {
         "startLine": 423,
         "startChar": 17,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "378e9dcf_8dd1ff9d",
+        "filename": "src/compiler/translator/blocklayout.h",
+        "patchSetId": 20
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-11-10T05:00:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f5ec677a_a6e0b9f2",
+      "range": {
+        "startLine": 67,
+        "startChar": 33,
+        "endLine": 67,
+        "endChar": 42
+      },
+      "revId": "cbf61fe68ae3b778b947e6dcc08302f8ce5ca46b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "96080af2_aae4a025",
         "filename": "src/libANGLE/ProgramLinkedResources.cpp",
         "patchSetId": 20
@@ -91,6 +163,30 @@
       "revId": "cbf61fe68ae3b778b947e6dcc08302f8ce5ca46b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e532aab2_4303c2d2",
+        "filename": "src/libANGLE/ProgramLinkedResources.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 684,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-11-10T05:00:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "96080af2_aae4a025",
+      "range": {
+        "startLine": 684,
+        "startChar": 51,
+        "endLine": 684,
+        "endChar": 81
+      },
+      "revId": "cbf61fe68ae3b778b947e6dcc08302f8ce5ca46b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "eb00fc2b_218dbdd8",
+        "filename": "src/libANGLE/ProgramLinkedResources.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 696,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-11-10T05:00:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1215307a_a46e6577",
+      "range": {
+        "startLine": 696,
+        "startChar": 12,
+        "endLine": 696,
+        "endChar": 30
+      },
+      "revId": "cbf61fe68ae3b778b947e6dcc08302f8ce5ca46b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "23d67ce3_5da1e06e",
         "filename": "src/libANGLE/ProgramLinkedResources.cpp",
         "patchSetId": 20
@@ -137,6 +257,30 @@
       "revId": "cbf61fe68ae3b778b947e6dcc08302f8ce5ca46b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "64e9dc7f_f471e253",
+        "filename": "src/libANGLE/ProgramLinkedResources.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 730,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-11-10T05:00:52Z",
+      "side": 1,
+      "message": "Done. It\u0027s more clear. Thanks.",
+      "parentUuid": "23d67ce3_5da1e06e",
+      "range": {
+        "startLine": 730,
+        "startChar": 30,
+        "endLine": 730,
+        "endChar": 84
+      },
+      "revId": "cbf61fe68ae3b778b947e6dcc08302f8ce5ca46b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -163,6 +307,30 @@
     },
     {
       "key": {
+        "uuid": "cb986806_54b90fec",
+        "filename": "src/libANGLE/ProgramLinkedResources.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 749,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-11-10T05:00:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "abfd23c6_6aaf5621",
+      "range": {
+        "startLine": 749,
+        "startChar": 80,
+        "endLine": 749,
+        "endChar": 82
+      },
+      "revId": "cbf61fe68ae3b778b947e6dcc08302f8ce5ca46b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fef08614_8e078ad4",
         "filename": "src/libANGLE/ProgramLinkedResources.cpp",
         "patchSetId": 20
@@ -174,6 +342,30 @@
       "writtenOn": "2017-11-09T13:57:21Z",
       "side": 1,
       "message": "is there any need to make this change in this CL? It is missing the static use for the other referenced shaders, I saw you left a TODO. I don\u0027t think it\u0027s bad but maybe this kind of change should be a split CL, in the same place as when and if you fix your TODO.",
+      "range": {
+        "startLine": 814,
+        "startChar": 4,
+        "endLine": 814,
+        "endChar": 57
+      },
+      "revId": "cbf61fe68ae3b778b947e6dcc08302f8ce5ca46b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b640662d_f568f990",
+        "filename": "src/libANGLE/ProgramLinkedResources.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 814,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-11-10T05:00:52Z",
+      "side": 1,
+      "message": "I have removed it and leave a TODO here. I will do all this kind of change in a split CL. Thanks.",
+      "parentUuid": "fef08614_8e078ad4",
       "range": {
         "startLine": 814,
         "startChar": 4,
@@ -206,6 +398,30 @@
       "revId": "cbf61fe68ae3b778b947e6dcc08302f8ce5ca46b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f8cefacd_362005ca",
+        "filename": "src/libANGLE/ProgramLinkedResources.h",
+        "patchSetId": 20
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-11-10T05:00:52Z",
+      "side": 1,
+      "message": "Done. Sorry that I forgot to remove it.",
+      "parentUuid": "4faeef82_2efa33f5",
+      "range": {
+        "startLine": 168,
+        "startChar": 4,
+        "endLine": 168,
+        "endChar": 29
+      },
+      "revId": "cbf61fe68ae3b778b947e6dcc08302f8ce5ca46b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
