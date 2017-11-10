@@ -91,8 +91,8 @@
 #define ANGLE_USE_SSE
 #endif
 
-// Mips devices need to include stddef for size_t.
-#if defined(__mips__)
+// Mips and arm devices need to include stddef for size_t.
+#if defined(__mips__) || defined(__arm__) || defined(__aarch64__)
 #include <stddef.h>
 #endif
 
