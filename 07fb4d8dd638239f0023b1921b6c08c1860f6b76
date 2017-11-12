@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fe090db0_9bb168f0",
+        "filename": "src/common/utilities_unittest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 177,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-12T08:47:05Z",
+      "side": 1,
+      "message": "Expectation for nameLengthWithoutArrayIndex still missing.",
+      "revId": "07fb4d8dd638239f0023b1921b6c08c1860f6b76",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
