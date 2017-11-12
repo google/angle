@@ -7,11 +7,13 @@
 //   Tests for ANGLE's internal varying packing algorithm.
 //
 
-#include "libANGLE/VaryingPacking.h"
-
 #include <gtest/gtest.h>
+// 'None' is defined as 'struct None {};' in
+// third_party/googletest/src/googletest/include/gtest/internal/gtest-type-util.h.
+// But 'None' is also define as a numberic constant 0L in <X11/X.h>.
+// So we need to include gtest first to avoid such conflict.
 
-#include "libANGLE/Program.h"
+#include "libANGLE/VaryingPacking.h"
 
 using namespace gl;
 

@@ -13,9 +13,47 @@
 
 #include "common/utilities.h"
 #include "libANGLE/Program.h"
+#include "libANGLE/Shader.h"
 
 namespace gl
 {
+
+namespace
+{
+
+// true if varying x has a higher priority in packing than y
+bool ComparePackedVarying(const PackedVarying &x, const PackedVarying &y)
+{
+    // If the PackedVarying 'x' or 'y' to be compared is an array element, this clones an equivalent
+    // non-array shader variable 'vx' or 'vy' for actual comparison instead.
+    sh::ShaderVariable vx, vy;
+    const sh::ShaderVariable *px, *py;
+    if (x.isArrayElement())
+    {
+        vx           = *x.varying;
+        vx.arraySize = 0;
+        px           = &vx;
+    }
+    else
+    {
+        px = x.varying;
+    }
+
+    if (y.isArrayElement())
+    {
+        vy           = *y.varying;
+        vy.arraySize = 0;
+        py           = &vy;
+    }
+    else
+    {
+        py = y.varying;
+    }
+
+    return gl::CompareShaderVar(*px, *py);
+}
+
+}  // anonymous namespace
 
 // Implementation of VaryingPacking
 VaryingPacking::VaryingPacking(GLuint maxVaryingVectors, PackMode packMode)
@@ -226,74 +264,107 @@ void VaryingPacking::insert(unsigned int registerRow,
     }
 }
 
+bool VaryingPacking::collectAndPackUserVaryings(gl::InfoLog &infoLog,
+                                                const Program::MergedVaryings &mergedVaryings,
+                                                const std::vector<std::string> &tfVaryings)
+{
+    std::set<std::string> uniqueFullNames;
+    mPackedVaryings.clear();
+
+    for (const auto &ref : mergedVaryings)
+    {
+        const sh::Varying *input  = ref.second.vertex;
+        const sh::Varying *output = ref.second.fragment;
+
+        // Only pack statically used varyings that have a matched input or output, plus special
+        // builtins.
+        if (((input && output) || (output && output->isBuiltIn())) && output->staticUse)
+        {
+            // Will get the vertex shader interpolation by default.
+            auto interpolation = ref.second.get()->interpolation;
+
+            // Note that we lose the vertex shader static use information here. The data for the
+            // variable is taken from the fragment shader.
+            if (output->isStruct())
+            {
+                ASSERT(!output->isArray());
+                for (const auto &field : output->fields)
+                {
+                    ASSERT(!field.isStruct() && !field.isArray());
+                    mPackedVaryings.push_back(PackedVarying(field, interpolation, output->name));
+                    uniqueFullNames.insert(mPackedVaryings.back().nameWithArrayIndex());
+                }
+            }
+            else
+            {
+                mPackedVaryings.push_back(PackedVarying(*output, interpolation));
+                uniqueFullNames.insert(mPackedVaryings.back().nameWithArrayIndex());
+            }
+            continue;
+        }
+
+        // Keep Transform FB varyings in the merged list always.
+        if (!input)
+        {
+            continue;
+        }
+
+        for (const std::string &tfVarying : tfVaryings)
+        {
+            std::vector<unsigned int> subscripts;
+            std::string baseName = ParseResourceName(tfVarying, &subscripts);
+            size_t subscript     = GL_INVALID_INDEX;
+            if (!subscripts.empty())
+            {
+                subscript = subscripts.back();
+            }
+            // Already packed for fragment shader.
+            if (uniqueFullNames.count(tfVarying) > 0 || uniqueFullNames.count(baseName) > 0)
+            {
+                continue;
+            }
+            // Array as a whole and array element conflict has already been checked in
+            // linkValidateTransformFeedback.
+            if (baseName == input->name)
+            {
+                // Transform feedback for varying structs is underspecified.
+                // See Khronos bug 9856.
+                // TODO(jmadill): Figure out how to be spec-compliant here.
+                if (!input->isStruct() && tfVarying.compare(0, 3, "gl_") != 0)
+                {
+                    mPackedVaryings.push_back(PackedVarying(*input, input->interpolation));
+                    mPackedVaryings.back().vertexOnly = true;
+                    mPackedVaryings.back().arrayIndex = static_cast<GLuint>(subscript);
+                    uniqueFullNames.insert(tfVarying);
+                }
+                // Continue to match next array element for 'input' if the current match is array
+                // element.
+                if (subscript == GL_INVALID_INDEX)
+                {
+                    break;
+                }
+            }
+        }
+    }
+
+    std::sort(mPackedVaryings.begin(), mPackedVaryings.end(), ComparePackedVarying);
+
+    return packUserVaryings(infoLog, mPackedVaryings, tfVaryings);
+}
+
 // See comment on packVarying.
 bool VaryingPacking::packUserVaryings(gl::InfoLog &infoLog,
                                       const std::vector<PackedVarying> &packedVaryings,
                                       const std::vector<std::string> &transformFeedbackVaryings)
 {
-    std::set<std::string> uniqueVaryingNames;
 
     // "Variables are packed into the registers one at a time so that they each occupy a contiguous
     // subrectangle. No splitting of variables is permitted."
     for (const PackedVarying &packedVarying : packedVaryings)
     {
-        const auto &varying = *packedVarying.varying;
-
-        // Do not assign registers to built-in or unreferenced varyings
-        if (!varying.staticUse && !packedVarying.isStructField())
-        {
-            continue;
-        }
-
-        ASSERT(!varying.isStruct());
-        ASSERT(uniqueVaryingNames.count(packedVarying.nameWithArrayIndex()) == 0);
-
-        if (packVarying(packedVarying))
-        {
-            uniqueVaryingNames.insert(packedVarying.nameWithArrayIndex());
-        }
-        else
+        if (!packVarying(packedVarying))
         {
             infoLog << "Could not pack varying " << packedVarying.nameWithArrayIndex();
-            return false;
-        }
-    }
-
-    // Make sure transform feedback varyings aren't optimized out.
-    for (const std::string &transformFeedbackVaryingName : transformFeedbackVaryings)
-    {
-        std::string tfVaryingBaseName = ParseResourceName(transformFeedbackVaryingName, nullptr);
-
-        bool found = (uniqueVaryingNames.count(transformFeedbackVaryingName) > 0 ||
-                      uniqueVaryingNames.count(tfVaryingBaseName) > 0);
-
-        if (!found)
-        {
-            for (const PackedVarying &packedVarying : packedVaryings)
-            {
-                const auto &varying = *packedVarying.varying;
-                if (tfVaryingBaseName == varying.name)
-                {
-                    // only pack varyings that are not builtins.
-                    if (transformFeedbackVaryingName.compare(0, 3, "gl_") != 0)
-                    {
-                        if (!packVarying(packedVarying))
-                        {
-                            infoLog << "Could not pack varying " << varying.name;
-                            return false;
-                        }
-                        uniqueVaryingNames.insert(packedVarying.nameWithArrayIndex());
-                    }
-                    found = true;
-                    break;
-                }
-            }
-        }
-
-        if (!found)
-        {
-            infoLog << "Transform feedback varying " << transformFeedbackVaryingName
-                    << " does not exist in the vertex shader.";
             return false;
         }
     }
