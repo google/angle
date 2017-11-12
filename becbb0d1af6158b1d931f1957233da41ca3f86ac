@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "5414b6c6_4fabb5cc",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1174,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-12T08:20:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ef82123a_e024a0b4",
+      "range": {
+        "startLine": 1174,
+        "startChar": 8,
+        "endLine": 1174,
+        "endChar": 41
+      },
+      "revId": "becbb0d1af6158b1d931f1957233da41ca3f86ac",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3e2a6748_dc373051",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 2
@@ -36,6 +60,24 @@
       "writtenOn": "2017-11-10T19:30:05Z",
       "side": 1,
       "message": "nit: no need for an else since all the branches above break or continue.",
+      "revId": "becbb0d1af6158b1d931f1957233da41ca3f86ac",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "86790ec6_9e484e18",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1189,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-12T08:20:59Z",
+      "side": 1,
+      "message": "Needed one more continue. Done.",
+      "parentUuid": "3e2a6748_dc373051",
       "revId": "becbb0d1af6158b1d931f1957233da41ca3f86ac",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
