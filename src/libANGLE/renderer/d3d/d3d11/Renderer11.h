@@ -497,7 +497,7 @@ class Renderer11 : public RendererD3D
                                 const gl::Offset &destOffset,
                                 RenderTargetD3D *destRenderTarget);
 
-    gl::SupportedSampleSet generateSampleSetFromCaps(
+    gl::SupportedSampleSet generateSampleSetForEGLConfig(
         const gl::TextureCaps &colorBufferFormatCaps,
         const gl::TextureCaps &depthStencilBufferFormatCaps) const;
 
