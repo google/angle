@@ -1,0 +1,387 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a01a4252_3bb1f2e2",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 10
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-11-13T08:46:38Z",
+      "side": 1,
+      "message": "Is it better to change the title to:\nES31: Support bindImageTexture on Texture2D for compute shaders on D3D",
+      "revId": "1c8aef2f6a87b954c4a10b964c1c8154f7ff0f35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6762ee71_830db30f",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 883,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-11-13T08:46:38Z",
+      "side": 1,
+      "message": "Move this to default",
+      "range": {
+        "startLine": 883,
+        "startChar": 4,
+        "endLine": 883,
+        "endChar": 25
+      },
+      "revId": "1c8aef2f6a87b954c4a10b964c1c8154f7ff0f35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "39560237_792c793f",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1710,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-11-13T08:46:38Z",
+      "side": 1,
+      "message": "maxComputeImageUniforms",
+      "range": {
+        "startLine": 1710,
+        "startChar": 48,
+        "endLine": 1710,
+        "endChar": 61
+      },
+      "revId": "1c8aef2f6a87b954c4a10b964c1c8154f7ff0f35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "837a8ee5_56082553",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2614,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-11-13T08:46:38Z",
+      "side": 1,
+      "message": "UNIMPLEMENTED();",
+      "revId": "1c8aef2f6a87b954c4a10b964c1c8154f7ff0f35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e903bf77_af48d561",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 220,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-11-13T08:46:38Z",
+      "side": 1,
+      "message": "// StateManager11::UAVCache Implementation.\n(As line 182 does)",
+      "revId": "1c8aef2f6a87b954c4a10b964c1c8154f7ff0f35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1f53e51e_2713da91",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 691,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-11-13T08:46:38Z",
+      "side": 1,
+      "message": "It\u0027s better to leave a TODO here.",
+      "revId": "1c8aef2f6a87b954c4a10b964c1c8154f7ff0f35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ac1f4215_27145eb6",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1623,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-11-13T08:46:38Z",
+      "side": 1,
+      "message": "It\u0027s better to leave a TODO here.",
+      "revId": "1c8aef2f6a87b954c4a10b964c1c8154f7ff0f35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e868a307_6c45e8f6",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1707,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-11-13T08:46:38Z",
+      "side": 1,
+      "message": "Should it be caps.maxComputeTextureImageUnits ?",
+      "range": {
+        "startLine": 1707,
+        "startChar": 36,
+        "endLine": 1707,
+        "endChar": 49
+      },
+      "revId": "1c8aef2f6a87b954c4a10b964c1c8154f7ff0f35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0d1cdcbf_cb1ad8d8",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1709,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-11-13T08:46:38Z",
+      "side": 1,
+      "message": "Should it be caps.maxComputeImageUniforms ?",
+      "range": {
+        "startLine": 1709,
+        "startChar": 36,
+        "endLine": 1709,
+        "endChar": 49
+      },
+      "revId": "1c8aef2f6a87b954c4a10b964c1c8154f7ff0f35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5c59d2b5_618be73b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2336,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-11-13T08:46:38Z",
+      "side": 1,
+      "message": "Since this function actually can only apply textures for rendering pipeline, do you think it is better to call it \u0027applyTexturesForRender\u0027 or something else?\n(matching applyTexturesForCompute)\n\nASSERT(shaderType !\u003d SHADER_COMPUTE);",
+      "range": {
+        "startLine": 2336,
+        "startChar": 26,
+        "endLine": 2336,
+        "endChar": 39
+      },
+      "revId": "1c8aef2f6a87b954c4a10b964c1c8154f7ff0f35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7876158f_fa628b78",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2387,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-11-13T08:46:38Z",
+      "side": 1,
+      "message": "Maybe we should call it syncTexturesForRender ?\n(There is a function called syncTexturesForCompute)",
+      "range": {
+        "startLine": 2387,
+        "startChar": 26,
+        "endLine": 2387,
+        "endChar": 38
+      },
+      "revId": "1c8aef2f6a87b954c4a10b964c1c8154f7ff0f35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0c6a14eb_523d69e2",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2481,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-11-13T08:46:38Z",
+      "side": 1,
+      "message": "ASSERT(type !\u003d SHADER_COMPUTE);",
+      "revId": "1c8aef2f6a87b954c4a10b964c1c8154f7ff0f35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b7114ca8_f8fa6ea6",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2880,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-11-13T08:46:38Z",
+      "side": 1,
+      "message": "generateSwizzlesForRender?",
+      "range": {
+        "startLine": 2880,
+        "startChar": 26,
+        "endLine": 2880,
+        "endChar": 42
+      },
+      "revId": "1c8aef2f6a87b954c4a10b964c1c8154f7ff0f35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9e3a5fec_35afe69b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 446,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-11-13T08:46:38Z",
+      "side": 1,
+      "message": "Here you can leave some comments to describe the usage of this struct (just like those on SRVCache)",
+      "revId": "1c8aef2f6a87b954c4a10b964c1c8154f7ff0f35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "16c4b1ba_66744255",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 400,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-11-13T08:46:38Z",
+      "side": 1,
+      "message": "You can directly use imageUnit.layered here.",
+      "range": {
+        "startLine": 400,
+        "startChar": 34,
+        "endLine": 400,
+        "endChar": 66
+      },
+      "revId": "1c8aef2f6a87b954c4a10b964c1c8154f7ff0f35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3c64281b_bc904db3",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 432,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-11-13T08:46:38Z",
+      "side": 1,
+      "message": "You can directly use imageUnit.layered here.",
+      "range": {
+        "startLine": 432,
+        "startChar": 34,
+        "endLine": 432,
+        "endChar": 66
+      },
+      "revId": "1c8aef2f6a87b954c4a10b964c1c8154f7ff0f35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "131b6b1b_098b7a34",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 293,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-11-13T08:46:38Z",
+      "side": 1,
+      "message": "I suggest you do such cleanup in another patch to eliminate make this CL look clearer.\nHere you can just remove the skip on D3D11.",
+      "revId": "1c8aef2f6a87b954c4a10b964c1c8154f7ff0f35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "effdcc55_4501ac33",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 358,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-11-13T08:46:38Z",
+      "side": 1,
+      "message": "You can leave a comment here to explain why it is difficult to support multiple images bound to one image unit on D3D11.",
+      "revId": "1c8aef2f6a87b954c4a10b964c1c8154f7ff0f35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a3f6547_dc0d0616",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 485,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-11-13T08:46:38Z",
+      "side": 1,
+      "message": "kInputValues",
+      "range": {
+        "startLine": 485,
+        "startChar": 21,
+        "endLine": 485,
+        "endChar": 32
+      },
+      "revId": "1c8aef2f6a87b954c4a10b964c1c8154f7ff0f35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
