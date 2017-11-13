@@ -969,6 +969,10 @@
             [
                 'LIBANGLE_IMPLEMENTATION',
             ],
+            'msvs_disabled_warnings':
+            [
+                4577, # 'noexcept' used with no exception handling mode specified; termination on exception is not guaranteed.
+            ],
             'export_dependent_settings':
             [
                 'angle_common',

@@ -603,7 +603,7 @@ bool ProgramGL::getShaderStorageBlockMemberInfo(const std::string & /* memberNam
                                      props.data(), kPropCount, &length, params.data());
     ASSERT(kPropCount == length);
     memberInfoOut->arrayStride         = params[0];
-    memberInfoOut->isRowMajorMatrix    = params[1];
+    memberInfoOut->isRowMajorMatrix    = params[1] != 0;
     memberInfoOut->matrixStride        = params[2];
     memberInfoOut->offset              = params[3];
     memberInfoOut->topLevelArrayStride = params[4];
