@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3e898ea5_f6a09596",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 5611,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-13T18:26:42Z",
+      "side": 1,
+      "message": "nit: put these into an array and use std::find and/or add a helper \"IsAtomicBuiltin\"",
+      "range": {
+        "startLine": 5608,
+        "startChar": 8,
+        "endLine": 5611,
+        "endChar": 82
+      },
+      "revId": "600af85c63aa61c274abac79a6be80ad4277e804",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2aac5fb1_606a34d3",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 5633,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-13T18:26:42Z",
+      "side": 1,
+      "message": "Will need someone familiar with this to comment.",
+      "range": {
+        "startLine": 5616,
+        "startChar": 0,
+        "endLine": 5633,
+        "endChar": 72
+      },
+      "revId": "600af85c63aa61c274abac79a6be80ad4277e804",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
