@@ -111,6 +111,23 @@
     },
     {
       "key": {
+        "uuid": "ff4c97c9_82e3bf4a",
+        "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 1314,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-11-13T19:22:55Z",
+      "side": 1,
+      "message": "Can we use some wildcards here to reduce the number of entries?",
+      "revId": "36d09fb28443c7d7772b9a443fdbcc56496d4245",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "df8a3737_92838b44",
         "filename": "src/tests/gl_tests/GeometryShaderTest.cpp",
         "patchSetId": 7
