@@ -22,6 +22,30 @@
       "revId": "cdfe89a23efaaa3cfb1fa02fbd0b1d4241b0526a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6e3ca302_bfed707a",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3858,
+      "author": {
+        "id": 1166724
+      },
+      "writtenOn": "2017-11-13T21:40:31Z",
+      "side": 1,
+      "message": "I dug a bit deeper here: GL_FRONT does not appear to be a valid attachment target in _any_ ES or WebGL spec but GL_BACK, GL_DEPTH,and GL_STENCIL are permitted (but unused).",
+      "parentUuid": "a3b34c8c_7e5a2d80",
+      "range": {
+        "startLine": 3855,
+        "startChar": 0,
+        "endLine": 3858,
+        "endChar": 24
+      },
+      "revId": "cdfe89a23efaaa3cfb1fa02fbd0b1d4241b0526a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
