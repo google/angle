@@ -1,0 +1,188 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "31eaea69_9c87ca58",
+        "filename": "samples/hello_triangle/HelloTriangle.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-13T23:29:21Z",
+      "side": 1,
+      "message": "we do want to support the multiple attributes - something to look at before seriously thinking about landing.",
+      "range": {
+        "startLine": 34,
+        "startChar": 0,
+        "endLine": 41,
+        "endChar": 0
+      },
+      "revId": "3953ed7d148b11dc5ad223481068238a30190997",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "63c9b736_c5871481",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 332,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-13T23:29:21Z",
+      "side": 1,
+      "message": "keep the descriptive getter function names. code style in angle prefers verbosity vs linux-kernel-like contractions.",
+      "range": {
+        "startLine": 332,
+        "startChar": 58,
+        "endLine": 332,
+        "endChar": 65
+      },
+      "revId": "3953ed7d148b11dc5ad223481068238a30190997",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7e34bd5a_253bd5bb",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-13T23:29:21Z",
+      "side": 1,
+      "message": "we\u0027ll probably have to reorganize this like I was discussing before. The streaming buffer manager will take on more code, and will be likely keep a persistent mapped buffer internally, and be responsible for translating the vertex data, rather than acting like a normal buffer.",
+      "range": {
+        "startLine": 64,
+        "startChar": 34,
+        "endLine": 64,
+        "endChar": 37
+      },
+      "revId": "3953ed7d148b11dc5ad223481068238a30190997",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8ce6e8cd_2d4e9ce3",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-13T23:29:21Z",
+      "side": 1,
+      "message": "As a follow-up, can you also look at setting up the vertex format stuff? Look at VertexBuffer11::storeVertexAttributes. There will be a lot of shared code with the D3D back-ends, and we\u0027ll want to re-use CopyNativeVertexData code, etc (many of the same formats missing in D3D11 will be missing in Vulkan, like GL_FIXED, etc).\n\nIdeally we could work this into vk::Format.\n\nFor now maybe ASSERT where you can and leave TODO for future work.",
+      "range": {
+        "startLine": 71,
+        "startChar": 16,
+        "endLine": 71,
+        "endChar": 22
+      },
+      "revId": "3953ed7d148b11dc5ad223481068238a30190997",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c1c78d84_507c0da0",
+        "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 1183,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-13T23:29:21Z",
+      "side": 1,
+      "message": "This isn\u0027t quite what I had in mind for the StreamingBufferManager:\n\n- if we have multiple attributes, we for sure don\u0027t want to map and unmap multiple times within a single draw call. One option is to reserve space in the buffer, and if we fail, handle this either by splitting up the streaming data (putting the first portion in the available space, the second portion in the new buffer) or entirely in the second buffer.\n- Another possibly better option (what I think we really want to do) is to keep the buffer memory mapped, and flush out regions of memory as we modify them. let me check with piman@ about this idea. See vkFlushMappedMemoryRanges.\n- we also need to handle the possible case where the entire set of streaming data doesn\u0027t fit in the streaming buffer.",
+      "range": {
+        "startLine": 1183,
+        "startChar": 3,
+        "endLine": 1183,
+        "endChar": 33
+      },
+      "revId": "3953ed7d148b11dc5ad223481068238a30190997",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "04aa064b_397d99eb",
+        "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 626,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-13T23:29:21Z",
+      "side": 1,
+      "message": "not what we want to call it, also I would put it outside of the vk:: namespace into its own file. StreamingBufferManager or DynamicBufferManager.",
+      "range": {
+        "startLine": 626,
+        "startChar": 6,
+        "endLine": 626,
+        "endChar": 19
+      },
+      "revId": "3953ed7d148b11dc5ad223481068238a30190997",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d30bd6a4_3e6f14d1",
+        "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 635,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-13T23:29:21Z",
+      "side": 1,
+      "message": "definitely don\u0027t store a pointer to the Context. This class would be owned by a Context or Renderer depending on how the threading situation would work out.",
+      "range": {
+        "startLine": 635,
+        "startChar": 4,
+        "endLine": 635,
+        "endChar": 24
+      },
+      "revId": "3953ed7d148b11dc5ad223481068238a30190997",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d1bd3661_b8a1311b",
+        "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 640,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-13T23:29:21Z",
+      "side": 1,
+      "message": "nit: when naming variables, use descriptive names without contractions.",
+      "range": {
+        "startLine": 640,
+        "startChar": 13,
+        "endLine": 640,
+        "endChar": 17
+      },
+      "revId": "3953ed7d148b11dc5ad223481068238a30190997",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
