@@ -1240,17 +1240,18 @@ Query *State::getActiveQuery(GLenum target) const
 
 void State::setBufferBinding(const Context *context, BufferBinding target, Buffer *buffer)
 {
-    mBoundBuffers[target].set(context, buffer);
-
     switch (target)
     {
         case BufferBinding::PixelPack:
+            mBoundBuffers[target].set(context, buffer);
             mDirtyBits.set(DIRTY_BIT_PACK_BUFFER_BINDING);
             break;
         case BufferBinding::PixelUnpack:
+            mBoundBuffers[target].set(context, buffer);
             mDirtyBits.set(DIRTY_BIT_UNPACK_BUFFER_BINDING);
             break;
         case BufferBinding::DrawIndirect:
+            mBoundBuffers[target].set(context, buffer);
             mDirtyBits.set(DIRTY_BIT_DRAW_INDIRECT_BUFFER_BINDING);
             break;
         case BufferBinding::TransformFeedback:
@@ -1264,6 +1265,7 @@ void State::setBufferBinding(const Context *context, BufferBinding target, Buffe
             mDirtyObjects.set(DIRTY_OBJECT_VERTEX_ARRAY);
             break;
         default:
+            mBoundBuffers[target].set(context, buffer);
             break;
     }
 }
