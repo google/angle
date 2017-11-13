@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ac003a15_9c2d4e1b",
+        "filename": "src/compiler/translator/ShaderLang.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-11-13T02:35:20Z",
+      "side": 1,
+      "message": "I am using GetGeometryShaderPrimitiveTypeEnum to transform both geometry shader input primitives and output primitives.",
+      "revId": "36d09fb28443c7d7772b9a443fdbcc56496d4245",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
