@@ -2537,6 +2537,18 @@ bool ValidateDrawBase(ValidationContext *context, GLenum mode, GLsizei count)
         return false;
     }
 
+    // In OpenGL ES spec for UseProgram at section 7.3, trying to render without
+    // vertex shader stage or fragment shader stage is a undefined behaviour.
+    // But ANGLE should clearly generate an INVALID_OPERATION error instead of
+    // produce undefined result.
+    if (program->isLinked() &&
+        (!program->hasLinkedVertexShader() || !program->hasLinkedFragmentShader()))
+    {
+        context->handleError(InvalidOperation() << "It is a undefined behaviour to render without "
+                                                   "vertex shader stage or fragment shader stage.");
+        return false;
+    }
+
     if (!program->validateSamplers(nullptr, context->getCaps()))
     {
         context->handleError(InvalidOperation());
