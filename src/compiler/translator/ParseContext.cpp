@@ -3318,7 +3318,7 @@ TFunction *TParseContext::parseFunctionDeclarator(const TSourceLoc &location, TF
         {
             // ESSL 3.00.6 section 12.10.
             error(location, "Function parameter type cannot be a structure definition",
-                  param.name->c_str());
+                  function->getName().c_str());
         }
     }
 
