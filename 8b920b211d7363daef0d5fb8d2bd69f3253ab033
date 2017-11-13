@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "68b6b0ca_e97a7896",
+        "filename": "include/platform/Platform.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 267,
+      "author": {
+        "id": 1148065
+      },
+      "writtenOn": "2017-11-13T21:49:52Z",
+      "side": 1,
+      "message": "I tried that locally, but it didn\u0027t work IIRC. I think LIBANGLE_IMPLEMENTATION is (rightly?) not defined when compiling Chrome, and so  __attribute__((visibility (\"default\"))) is not set, which means the functions pointers still reference a hidden type, which then doesn\u0027t get coalesced with the one from ANGLE.\n\nI think we either have to make ANGLE_PLATFORM_EXPORT always define to __attribute__((visibility (\"default\"))) (regardless of LIBANGLE_IMPLEMENTATION), or need another macro",
+      "revId": "8b920b211d7363daef0d5fb8d2bd69f3253ab033",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
