@@ -16,6 +16,138 @@
       "revId": "36d09fb28443c7d7772b9a443fdbcc56496d4245",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d0fda80e_105da06e",
+        "filename": "src/libANGLE/Caps.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 695,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-13T18:19:04Z",
+      "side": 1,
+      "message": "Use enableableExtension.",
+      "range": {
+        "startLine": 695,
+        "startChar": 40,
+        "endLine": 695,
+        "endChar": 55
+      },
+      "revId": "36d09fb28443c7d7772b9a443fdbcc56496d4245",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0febfd92_70d99d55",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 373,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-13T18:19:04Z",
+      "side": 1,
+      "message": "Let\u0027s put both extensions here as separate bools.  The 1:1 mapping of extension strings to members of the Extensions struct is important for enabling extensions.",
+      "range": {
+        "startLine": 373,
+        "startChar": 9,
+        "endLine": 373,
+        "endChar": 26
+      },
+      "revId": "36d09fb28443c7d7772b9a443fdbcc56496d4245",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5f636bb6_84d02541",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 560,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-13T18:19:04Z",
+      "side": 1,
+      "message": "Put these in the Extensions struct under the geometry shader bools.  We can move them to the caps structure once it becomes core and we update validation.",
+      "range": {
+        "startLine": 556,
+        "startChar": 0,
+        "endLine": 560,
+        "endChar": 40
+      },
+      "revId": "36d09fb28443c7d7772b9a443fdbcc56496d4245",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c464d420_3386c876",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 4162,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-13T18:19:04Z",
+      "side": 1,
+      "message": "This validation is not needed.  We just need to make sure that the extension is not exposed before ES 3.1, you can do this in Context::initCaps.",
+      "range": {
+        "startLine": 4158,
+        "startChar": 12,
+        "endLine": 4162,
+        "endChar": 13
+      },
+      "revId": "36d09fb28443c7d7772b9a443fdbcc56496d4245",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "df8a3737_92838b44",
+        "filename": "src/tests/gl_tests/GeometryShaderTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-13T18:19:04Z",
+      "side": 1,
+      "message": "Let\u0027s also add a test that the extension is not exposed before ES 3.1.",
+      "revId": "36d09fb28443c7d7772b9a443fdbcc56496d4245",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e73ae338_0d6a2508",
+        "filename": "src/tests/gl_tests/GeometryShaderTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-13T18:19:04Z",
+      "side": 1,
+      "message": "Put this in a separate test that verifies that If one extension is present, both are.",
+      "range": {
+        "startLine": 25,
+        "startChar": 3,
+        "endLine": 25,
+        "endChar": 60
+      },
+      "revId": "36d09fb28443c7d7772b9a443fdbcc56496d4245",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
