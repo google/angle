@@ -1244,7 +1244,7 @@ bool TParseContext::checkCanUseExtension(const TSourceLoc &line, TExtension exte
             {TExtension::EXT_geometry_shader, TExtension::OES_geometry_shader}};
         return checkCanUseOneOfExtensions(line, extensions);
     }
-    return checkCanUseOneOfExtensions(line, std::array<TExtension, 1u>{extension});
+    return checkCanUseOneOfExtensions(line, std::array<TExtension, 1u>{{extension}});
 }
 
 // ESSL 3.00.6 section 4.8 Empty Declarations: "The combinations of qualifiers that cause
