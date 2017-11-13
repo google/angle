@@ -264,7 +264,7 @@ inline void DefaultCacheProgram(PlatformMethods *platform,
 
 #define ANGLE_PLATFORM_METHOD_DEF(Name, CapsName) CapsName##Func Name = Default##CapsName;
 
-struct PlatformMethods
+ANGLE_PLATFORM_EXPORT struct PlatformMethods
 {
     // User data pointer for any implementation specific members. Put it at the start of the
     // platform structure so it doesn't become overwritten if one version of the platform
