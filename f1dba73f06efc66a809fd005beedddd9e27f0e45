@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "beb1f4cf_2a07d43b",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 3860,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-13T21:44:22Z",
+      "side": 1,
+      "message": "nit: git cl format will fix those tabs.",
+      "range": {
+        "startLine": 3860,
+        "startChar": 0,
+        "endLine": 3860,
+        "endChar": 1
+      },
+      "revId": "f1dba73f06efc66a809fd005beedddd9e27f0e45",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "75bce8a4_feecfbfd",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2911,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-13T21:44:22Z",
+      "side": 1,
+      "message": "nit: EXPECT_GLENUM_EQ",
+      "range": {
+        "startLine": 2911,
+        "startChar": 4,
+        "endLine": 2911,
+        "endChar": 13
+      },
+      "revId": "f1dba73f06efc66a809fd005beedddd9e27f0e45",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
