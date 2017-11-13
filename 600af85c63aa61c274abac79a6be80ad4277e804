@@ -45,6 +45,53 @@
       "revId": "600af85c63aa61c274abac79a6be80ad4277e804",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ee795724_7e4f82bd",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 5633,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-11-13T19:17:25Z",
+      "side": 1,
+      "message": "I think this is correct.",
+      "parentUuid": "2aac5fb1_606a34d3",
+      "range": {
+        "startLine": 5616,
+        "startChar": 0,
+        "endLine": 5633,
+        "endChar": 72
+      },
+      "revId": "600af85c63aa61c274abac79a6be80ad4277e804",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6f7c5608_85df35f6",
+        "filename": "src/tests/compiler_tests/ShaderValidation_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 5513,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-11-13T19:17:25Z",
+      "side": 1,
+      "message": "nit: None -\u003e Non",
+      "range": {
+        "startLine": 5513,
+        "startChar": 50,
+        "endLine": 5513,
+        "endChar": 54
+      },
+      "revId": "600af85c63aa61c274abac79a6be80ad4277e804",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
