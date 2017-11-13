@@ -5505,7 +5505,7 @@ bool ValidateTexParameterBase(Context *context,
             break;
 
         case GL_TEXTURE_BASE_LEVEL:
-            if (params[0] < 0)
+            if (ConvertToGLint(params[0]) < 0)
             {
                 context->handleError(InvalidValue() << "Base level must be at least 0.");
                 return false;
@@ -5531,7 +5531,7 @@ bool ValidateTexParameterBase(Context *context,
             break;
 
         case GL_TEXTURE_MAX_LEVEL:
-            if (params[0] < 0)
+            if (ConvertToGLint(params[0]) < 0)
             {
                 ANGLE_VALIDATION_ERR(context, InvalidValue(), InvalidMipLevel);
                 return false;

@@ -3662,6 +3662,25 @@ TEST_P(Texture2DTestES3, StaleUnpackData)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Ensure that texture parameters passed as floats that are converted to ints are rounded before
+// validating they are less than 0.
+TEST_P(Texture2DTestES3, TextureBaseMaxLevelRoundingValidation)
+{
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+
+    // Use a negative number that will round to zero when converted to an integer
+    // According to the spec(2.3.1 Data Conversion For State - Setting Commands):
+    // "Validation of values performed by state-setting commands is performed after conversion,
+    // unless specified otherwise for a specific command."
+    GLfloat param = -7.30157126e-07f;
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, param);
+    EXPECT_GL_NO_ERROR();
+
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, param);
+    EXPECT_GL_NO_ERROR();
+}
+
 // This test covers a D3D format redefinition bug for 3D textures. The base level format was not
 // being properly checked, and the texture storage of the previous texture format was persisting.
 // This would result in an ASSERT in debug and incorrect rendering in release.
