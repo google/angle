@@ -146,20 +146,12 @@ gl::Error StreamingIndexBufferInterface::reserveBufferSpace(unsigned int size, G
     unsigned int writePos = getWritePosition();
     if (size > curBufferSize)
     {
-        gl::Error error = setBufferSize(std::max(size, 2 * curBufferSize), indexType);
-        if (error.isError())
-        {
-            return error;
-        }
+        ANGLE_TRY(setBufferSize(std::max(size, 2 * curBufferSize), indexType));
         setWritePosition(0);
     }
     else if (writePos + size > curBufferSize || writePos + size < writePos)
     {
-        gl::Error error = discard();
-        if (error.isError())
-        {
-            return error;
-        }
+        ANGLE_TRY(discard());
         setWritePosition(0);
     }
 
@@ -194,4 +186,4 @@ gl::Error StaticIndexBufferInterface::reserveBufferSpace(unsigned int size, GLen
     }
 }
 
-}
+}  // namespace rx

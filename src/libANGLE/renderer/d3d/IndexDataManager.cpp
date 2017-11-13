@@ -99,27 +99,14 @@ gl::Error StreamInIndexBuffer(IndexBufferInterface *buffer,
     }
 
     unsigned int bufferSizeRequired = count << dstTypeInfo.bytesShift;
-    gl::Error error                 = buffer->reserveBufferSpace(bufferSizeRequired, dstType);
-    if (error.isError())
-    {
-        return error;
-    }
+    ANGLE_TRY(buffer->reserveBufferSpace(bufferSizeRequired, dstType));
 
     void *output = nullptr;
-    error        = buffer->mapBuffer(bufferSizeRequired, &output, offset);
-    if (error.isError())
-    {
-        return error;
-    }
+    ANGLE_TRY(buffer->mapBuffer(bufferSizeRequired, &output, offset));
 
     ConvertIndices(srcType, dstType, data, count, output, usePrimitiveRestartFixedIndex);
 
-    error = buffer->unmapBuffer();
-    if (error.isError())
-    {
-        return error;
-    }
-
+    ANGLE_TRY(buffer->unmapBuffer());
     return gl::NoError();
 }
 
@@ -302,19 +289,11 @@ gl::Error IndexDataManager::prepareIndexData(const gl::Context *context,
     if (staticBuffer == nullptr || !offsetAligned)
     {
         const uint8_t *bufferData = nullptr;
-        gl::Error error           = buffer->getData(context, &bufferData);
-        if (error.isError())
-        {
-            return error;
-        }
+        ANGLE_TRY(buffer->getData(context, &bufferData));
         ASSERT(bufferData != nullptr);
 
-        error = streamIndexData(bufferData + offset, count, srcType, dstType,
-                                primitiveRestartFixedIndexEnabled, translated);
-        if (error.isError())
-        {
-            return error;
-        }
+        ANGLE_TRY(streamIndexData(bufferData + offset, count, srcType, dstType,
+                                  primitiveRestartFixedIndexEnabled, translated));
         buffer->promoteStaticUsage(context, count << srcTypeInfo.bytesShift);
     }
     else
@@ -322,21 +301,13 @@ gl::Error IndexDataManager::prepareIndexData(const gl::Context *context,
         if (!staticBufferInitialized)
         {
             const uint8_t *bufferData = nullptr;
-            gl::Error error           = buffer->getData(context, &bufferData);
-            if (error.isError())
-            {
-                return error;
-            }
+            ANGLE_TRY(buffer->getData(context, &bufferData));
             ASSERT(bufferData != nullptr);
 
             unsigned int convertCount =
                 static_cast<unsigned int>(buffer->getSize()) >> srcTypeInfo.bytesShift;
-            error = StreamInIndexBuffer(staticBuffer, bufferData, convertCount, srcType, dstType,
-                                        primitiveRestartFixedIndexEnabled, nullptr);
-            if (error.isError())
-            {
-                return error;
-            }
+            ANGLE_TRY(StreamInIndexBuffer(staticBuffer, bufferData, convertCount, srcType, dstType,
+                                          primitiveRestartFixedIndexEnabled, nullptr));
         }
         ASSERT(offsetAligned && staticBuffer->getIndexType() == dstType);
 
@@ -359,11 +330,7 @@ gl::Error IndexDataManager::streamIndexData(const void *data,
     const gl::Type &dstTypeInfo = gl::GetTypeInfo(dstType);
 
     IndexBufferInterface *indexBuffer = nullptr;
-    gl::Error error                   = getStreamingIndexBuffer(dstType, &indexBuffer);
-    if (error.isError())
-    {
-        return error;
-    }
+    ANGLE_TRY(getStreamingIndexBuffer(dstType, &indexBuffer));
     ASSERT(indexBuffer != nullptr);
 
     unsigned int offset;
