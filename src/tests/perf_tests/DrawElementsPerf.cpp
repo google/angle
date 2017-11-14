@@ -11,6 +11,7 @@
 
 #include "ANGLEPerfTest.h"
 #include "DrawCallPerfParams.h"
+#include "common/utilities.h"
 #include "test_utils/draw_call_perf_utils.h"
 
 namespace
@@ -46,6 +47,11 @@ struct DrawElementsPerfParams final : public DrawCallPerfParams
             strstr << "_index_buffer_changed";
         }
 
+        if (type == GL_UNSIGNED_SHORT)
+        {
+            strstr << "_ushort";
+        }
+
         return strstr.str();
     }
 
@@ -75,8 +81,10 @@ class DrawElementsPerfBenchmark : public ANGLERenderTest,
     GLuint mIndexBuffer = 0;
     GLuint mFBO         = 0;
     GLuint mTexture     = 0;
+    GLsizei mBufferSize = 0;
     int mCount          = 3 * GetParam().numTris;
-    std::vector<GLuint> mIndexData;
+    std::vector<GLuint> mIntIndexData;
+    std::vector<GLushort> mShortIndexData;
 };
 
 DrawElementsPerfBenchmark::DrawElementsPerfBenchmark()
@@ -101,11 +109,22 @@ void DrawElementsPerfBenchmark::initializeBenchmark()
 
     for (int i = 0; i < mCount; i++)
     {
-        mIndexData.push_back(rand() % mCount);
+        mShortIndexData.push_back(rand() % mCount);
+        mIntIndexData.push_back(rand() % mCount);
     }
+
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBuffer);
-    glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(params.type) * mIndexData.size(),
-                    mIndexData.data());
+
+    mBufferSize = gl::ElementTypeSize(params.type) * mCount;
+
+    if (params.type == GL_UNSIGNED_INT)
+    {
+        glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, mBufferSize, mIntIndexData.data());
+    }
+    else
+    {
+        glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, mBufferSize, mShortIndexData.data());
+    }
 
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
     glEnableVertexAttribArray(0);
@@ -149,8 +168,14 @@ void DrawElementsPerfBenchmark::drawBenchmark()
     {
         if (params.indexBufferChanged)
         {
-            glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(params.type) * mIndexData.size(),
-                            mIndexData.data());
+            if (params.type == GL_UNSIGNED_INT)
+            {
+                glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, mBufferSize, mIntIndexData.data());
+            }
+            else
+            {
+                glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, mBufferSize, mShortIndexData.data());
+            }
         }
         glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(mCount), params.type, 0);
     }
@@ -158,12 +183,15 @@ void DrawElementsPerfBenchmark::drawBenchmark()
     ASSERT_GL_NO_ERROR();
 }
 
-DrawElementsPerfParams DrawElementsPerfD3D11Params(bool indexBufferChanged, bool useNullDevice)
+DrawElementsPerfParams DrawElementsPerfD3D11Params(bool indexBufferChanged,
+                                                   bool useNullDevice,
+                                                   GLenum indexType)
 {
     DrawElementsPerfParams params;
     params.eglParameters =
         useNullDevice ? angle::egl_platform::D3D11_NULL() : angle::egl_platform::D3D11();
     params.indexBufferChanged = indexBufferChanged;
+    params.type               = indexType;
     return params;
 }
 
@@ -191,10 +219,11 @@ TEST_P(DrawElementsPerfBenchmark, Run)
 ANGLE_INSTANTIATE_TEST(DrawElementsPerfBenchmark,
                        DrawElementsPerfD3D9Params(false),
                        DrawElementsPerfD3D9Params(true),
-                       DrawElementsPerfD3D11Params(false, true),
-                       DrawElementsPerfD3D11Params(true, true),
-                       DrawElementsPerfD3D11Params(false, false),
-                       DrawElementsPerfD3D11Params(true, false),
+                       DrawElementsPerfD3D11Params(false, true, GL_UNSIGNED_INT),
+                       DrawElementsPerfD3D11Params(true, true, GL_UNSIGNED_INT),
+                       DrawElementsPerfD3D11Params(false, false, GL_UNSIGNED_INT),
+                       DrawElementsPerfD3D11Params(true, false, GL_UNSIGNED_INT),
+                       DrawElementsPerfD3D11Params(false, true, GL_UNSIGNED_SHORT),
                        DrawElementsPerfOpenGLOrGLESParams(false),
                        DrawElementsPerfOpenGLOrGLESParams(true));
 

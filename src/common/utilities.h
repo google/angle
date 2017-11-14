@@ -128,6 +128,8 @@ const UniformTypeInfo &GetUniformTypeInfo(GLenum uniformType);
 
 const char *GetGenericErrorMessage(GLenum error);
 
+unsigned int ElementTypeSize(GLenum elementType);
+
 }  // namespace gl
 
 namespace egl

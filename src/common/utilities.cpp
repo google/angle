@@ -833,6 +833,22 @@ const char *GetGenericErrorMessage(GLenum error)
     }
 }
 
+unsigned int ElementTypeSize(GLenum elementType)
+{
+    switch (elementType)
+    {
+        case GL_UNSIGNED_BYTE:
+            return sizeof(GLubyte);
+        case GL_UNSIGNED_SHORT:
+            return sizeof(GLushort);
+        case GL_UNSIGNED_INT:
+            return sizeof(GLuint);
+        default:
+            UNREACHABLE();
+            return 0;
+    }
+}
+
 }  // namespace gl
 
 namespace egl

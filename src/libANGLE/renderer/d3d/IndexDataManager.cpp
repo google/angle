@@ -241,22 +241,7 @@ gl::Error IndexDataManager::prepareIndexData(const gl::Context *context,
     unsigned int offset = static_cast<unsigned int>(reinterpret_cast<uintptr_t>(indices));
     ASSERT(srcTypeInfo.bytes * static_cast<unsigned int>(count) + offset <= buffer->getSize());
 
-    bool offsetAligned;
-    switch (srcType)
-    {
-        case GL_UNSIGNED_BYTE:
-            offsetAligned = (offset % sizeof(GLubyte) == 0);
-            break;
-        case GL_UNSIGNED_SHORT:
-            offsetAligned = (offset % sizeof(GLushort) == 0);
-            break;
-        case GL_UNSIGNED_INT:
-            offsetAligned = (offset % sizeof(GLuint) == 0);
-            break;
-        default:
-            UNREACHABLE();
-            offsetAligned = false;
-    }
+    bool offsetAligned = (offset % gl::ElementTypeSize(srcType) == 0);
 
     // Case 2a: the buffer can be used directly
     if (offsetAligned && buffer->supportsDirectBinding() && dstType == srcType)
