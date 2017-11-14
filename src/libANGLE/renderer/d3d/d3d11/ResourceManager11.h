@@ -320,8 +320,8 @@ class ResourceManager11 final : angle::NonCopyable
     void setAllocationsInitialized(bool initialize);
 
   private:
-    void incrResource(ResourceType resourceType, size_t memorySize);
-    void decrResource(ResourceType resourceType, size_t memorySize);
+    void incrResource(ResourceType resourceType, uint64_t memorySize);
+    void decrResource(ResourceType resourceType, uint64_t memorySize);
 
     template <typename T>
     GetInitDataFromD3D11<T> *createInitDataIfNeeded(const GetDescFromD3D11<T> *desc);
@@ -329,7 +329,7 @@ class ResourceManager11 final : angle::NonCopyable
     bool mInitializeAllocations;
 
     std::array<size_t, NumResourceTypes> mAllocatedResourceCounts;
-    std::array<size_t, NumResourceTypes> mAllocatedResourceDeviceMemory;
+    std::array<uint64_t, NumResourceTypes> mAllocatedResourceDeviceMemory;
     angle::MemoryBuffer mZeroMemory;
 
     std::vector<D3D11_SUBRESOURCE_DATA> mShadowInitData;

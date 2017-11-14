@@ -23,54 +23,56 @@ constexpr FLOAT kDebugColorInitClearValue[4] = {0.3f, 0.5f, 0.7f, 0.5f};
 constexpr FLOAT kDebugDepthInitValue         = 0.2f;
 constexpr UINT8 kDebugStencilInitValue       = 3;
 
-size_t ComputeMippedMemoryUsage(unsigned int width,
-                                unsigned int height,
-                                unsigned int depth,
-                                size_t pixelSize,
-                                unsigned int mipLevels)
+uint64_t ComputeMippedMemoryUsage(unsigned int width,
+                                  unsigned int height,
+                                  unsigned int depth,
+                                  uint64_t pixelSize,
+                                  unsigned int mipLevels)
 {
-    size_t sizeSum = 0;
+    uint64_t sizeSum = 0;
 
     for (unsigned int level = 0; level < mipLevels; ++level)
     {
         unsigned int mipWidth  = std::max(width >> level, 1u);
         unsigned int mipHeight = std::max(height >> level, 1u);
         unsigned int mipDepth  = std::max(depth >> level, 1u);
-        sizeSum += static_cast<size_t>(mipWidth * mipHeight * mipDepth) * pixelSize;
+        sizeSum += static_cast<uint64_t>(mipWidth * mipHeight * mipDepth) * pixelSize;
     }
 
     return sizeSum;
 }
 
-size_t ComputeMemoryUsage(const D3D11_TEXTURE2D_DESC *desc)
+uint64_t ComputeMemoryUsage(const D3D11_TEXTURE2D_DESC *desc)
 {
     ASSERT(desc);
-    size_t pixelBytes = static_cast<size_t>(d3d11::GetDXGIFormatSizeInfo(desc->Format).pixelBytes);
+    uint64_t pixelBytes =
+        static_cast<uint64_t>(d3d11::GetDXGIFormatSizeInfo(desc->Format).pixelBytes);
     return ComputeMippedMemoryUsage(desc->Width, desc->Height, 1, pixelBytes, desc->MipLevels);
 }
 
-size_t ComputeMemoryUsage(const D3D11_TEXTURE3D_DESC *desc)
+uint64_t ComputeMemoryUsage(const D3D11_TEXTURE3D_DESC *desc)
 {
     ASSERT(desc);
-    size_t pixelBytes = static_cast<size_t>(d3d11::GetDXGIFormatSizeInfo(desc->Format).pixelBytes);
+    uint64_t pixelBytes =
+        static_cast<uint64_t>(d3d11::GetDXGIFormatSizeInfo(desc->Format).pixelBytes);
     return ComputeMippedMemoryUsage(desc->Width, desc->Height, desc->Depth, pixelBytes,
                                     desc->MipLevels);
 }
 
-size_t ComputeMemoryUsage(const D3D11_BUFFER_DESC *desc)
+uint64_t ComputeMemoryUsage(const D3D11_BUFFER_DESC *desc)
 {
     ASSERT(desc);
-    return static_cast<size_t>(desc->ByteWidth);
+    return static_cast<uint64_t>(desc->ByteWidth);
 }
 
 template <typename T>
-size_t ComputeMemoryUsage(const T *desc)
+uint64_t ComputeMemoryUsage(const T *desc)
 {
     return 0;
 }
 
 template <ResourceType ResourceT>
-size_t ComputeGenericMemoryUsage(ID3D11DeviceChild *genericResource)
+uint64_t ComputeGenericMemoryUsage(ID3D11DeviceChild *genericResource)
 {
     auto *typedResource = static_cast<GetD3D11Type<ResourceT> *>(genericResource);
     GetDescType<ResourceT> desc;
@@ -78,7 +80,7 @@ size_t ComputeGenericMemoryUsage(ID3D11DeviceChild *genericResource)
     return ComputeMemoryUsage(&desc);
 }
 
-size_t ComputeGenericMemoryUsage(ResourceType resourceType, ID3D11DeviceChild *resource)
+uint64_t ComputeGenericMemoryUsage(ResourceType resourceType, ID3D11DeviceChild *resource)
 {
     switch (resourceType)
     {
@@ -346,7 +348,7 @@ ResourceManager11::~ResourceManager11()
         ASSERT(count == 0);
     }
 
-    for (size_t memorySize : mAllocatedResourceDeviceMemory)
+    for (uint64_t memorySize : mAllocatedResourceDeviceMemory)
     {
         ASSERT(memorySize == 0);
     }
@@ -391,18 +393,26 @@ gl::Error ResourceManager11::allocate(Renderer11 *renderer,
     return gl::NoError();
 }
 
-void ResourceManager11::incrResource(ResourceType resourceType, size_t memorySize)
+void ResourceManager11::incrResource(ResourceType resourceType, uint64_t memorySize)
 {
-    mAllocatedResourceCounts[ResourceTypeIndex(resourceType)]++;
-    mAllocatedResourceDeviceMemory[ResourceTypeIndex(resourceType)] += memorySize;
+    size_t typeIndex = ResourceTypeIndex(resourceType);
+
+    mAllocatedResourceCounts[typeIndex]++;
+    mAllocatedResourceDeviceMemory[typeIndex] += memorySize;
+
+    // This checks for integer overflow.
+    ASSERT(mAllocatedResourceCounts[typeIndex] > 0);
+    ASSERT(mAllocatedResourceDeviceMemory[typeIndex] >= memorySize);
 }
 
-void ResourceManager11::decrResource(ResourceType resourceType, size_t memorySize)
+void ResourceManager11::decrResource(ResourceType resourceType, uint64_t memorySize)
 {
-    ASSERT(mAllocatedResourceCounts[ResourceTypeIndex(resourceType)] > 0);
-    mAllocatedResourceCounts[ResourceTypeIndex(resourceType)]--;
-    ASSERT(mAllocatedResourceDeviceMemory[ResourceTypeIndex(resourceType)] >= memorySize);
-    mAllocatedResourceDeviceMemory[ResourceTypeIndex(resourceType)] -= memorySize;
+    size_t typeIndex = ResourceTypeIndex(resourceType);
+
+    ASSERT(mAllocatedResourceCounts[typeIndex] > 0);
+    mAllocatedResourceCounts[typeIndex]--;
+    ASSERT(mAllocatedResourceDeviceMemory[typeIndex] >= memorySize);
+    mAllocatedResourceDeviceMemory[typeIndex] -= memorySize;
 }
 
 void ResourceManager11::onReleaseGeneric(ResourceType resourceType, ID3D11DeviceChild *resource)
@@ -423,7 +433,7 @@ const D3D11_SUBRESOURCE_DATA *ResourceManager11::createInitDataIfNeeded<ID3D11Te
         return nullptr;
     }
 
-    size_t requiredSize = ComputeMemoryUsage(desc);
+    size_t requiredSize = static_cast<size_t>(ComputeMemoryUsage(desc));
     if (mZeroMemory.size() < requiredSize)
     {
         mZeroMemory.resize(requiredSize);
@@ -469,7 +479,7 @@ const D3D11_SUBRESOURCE_DATA *ResourceManager11::createInitDataIfNeeded<ID3D11Te
         return nullptr;
     }
 
-    size_t requiredSize = ComputeMemoryUsage(desc);
+    size_t requiredSize = static_cast<size_t>(ComputeMemoryUsage(desc));
     if (mZeroMemory.size() < requiredSize)
     {
         mZeroMemory.resize(requiredSize);
