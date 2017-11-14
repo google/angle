@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cf917f84_e40f89a7",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 4162,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-14T17:40:59Z",
+      "side": 1,
+      "message": "Let\u0027s not make this assumption if we don\u0027t have to.",
+      "range": {
+        "startLine": 4160,
+        "startChar": 12,
+        "endLine": 4162,
+        "endChar": 60
+      },
+      "revId": "72c81ea30ffb9a6beced1b4da746fa1bfaa3ffe0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
