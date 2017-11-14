@@ -47,6 +47,15 @@ enum SamplerType
     SAMPLER_COMPUTE
 };
 
+enum ShaderType
+{
+    SHADER_VERTEX,
+    SHADER_FRAGMENT,
+    SHADER_GEOMETRY,
+    SHADER_COMPUTE,
+    SHADER_TYPE_MAX
+};
+
 struct Rectangle
 {
     Rectangle() : x(0), y(0), width(0), height(0) {}

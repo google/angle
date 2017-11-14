@@ -229,6 +229,8 @@ struct ImageBinding
     std::vector<GLuint> boundImageUnits;
 };
 
+using ShaderStagesMask = angle::BitSet<SHADER_TYPE_MAX>;
+
 class ProgramState final : angle::NonCopyable
 {
   public:
@@ -305,6 +307,8 @@ class ProgramState final : angle::NonCopyable
     int getNumViews() const { return mNumViews; }
     bool usesMultiview() const { return mNumViews != -1; }
 
+    const ShaderStagesMask &getLinkedShaderStages() const { return mLinkedShaderStages; }
+
   private:
     friend class MemoryProgramCache;
     friend class Program;
@@ -368,6 +372,7 @@ class ProgramState final : angle::NonCopyable
 
     bool mBinaryRetrieveableHint;
     bool mSeparable;
+    ShaderStagesMask mLinkedShaderStages;
 
     // ANGLE_multiview.
     int mNumViews;
@@ -409,6 +414,10 @@ class Program final : angle::NonCopyable, public LabeledObject
 
     Error link(const gl::Context *context);
     bool isLinked() const;
+
+    bool hasLinkedVertexShader() const { return mState.mLinkedShaderStages[SHADER_VERTEX]; }
+    bool hasLinkedFragmentShader() const { return mState.mLinkedShaderStages[SHADER_FRAGMENT]; }
+    bool hasLinkedComputeShader() const { return mState.mLinkedShaderStages[SHADER_COMPUTE]; }
 
     Error loadBinary(const Context *context,
                      GLenum binaryFormat,
@@ -635,6 +644,8 @@ class Program final : angle::NonCopyable, public LabeledObject
                       const Bindings &uniformLocationBindings);
     void linkSamplerAndImageBindings();
     bool linkAtomicCounterBuffers();
+
+    void updateLinkedShaderStages();
 
     bool areMatchingInterfaceBlocks(InfoLog &infoLog,
                                     const sh::InterfaceBlock &vertexInterfaceBlock,

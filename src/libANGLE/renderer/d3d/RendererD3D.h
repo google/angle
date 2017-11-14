@@ -18,6 +18,7 @@
 #include "libANGLE/Device.h"
 #include "libANGLE/Version.h"
 #include "libANGLE/WorkerThread.h"
+#include "libANGLE/angletypes.h"
 #include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/d3d/VertexDataManager.h"
 #include "libANGLE/renderer/d3d/formatutilsD3D.h"
@@ -70,15 +71,6 @@ enum RendererClass
 {
     RENDERER_D3D11,
     RENDERER_D3D9
-};
-
-enum ShaderType
-{
-    SHADER_VERTEX,
-    SHADER_PIXEL,
-    SHADER_GEOMETRY,
-    SHADER_COMPUTE,
-    SHADER_TYPE_MAX
 };
 
 // Useful for unit testing
@@ -208,13 +200,13 @@ class RendererD3D : public BufferFactoryD3D, public MultisampleTextureInitialize
     // Shader operations
     virtual gl::Error loadExecutable(const uint8_t *function,
                                      size_t length,
-                                     ShaderType type,
+                                     gl::ShaderType type,
                                      const std::vector<D3DVarying> &streamOutVaryings,
                                      bool separatedOutputBuffers,
-                                     ShaderExecutableD3D **outExecutable) = 0;
+                                     ShaderExecutableD3D **outExecutable)      = 0;
     virtual gl::Error compileToExecutable(gl::InfoLog &infoLog,
                                           const std::string &shaderHLSL,
-                                          ShaderType type,
+                                          gl::ShaderType type,
                                           const std::vector<D3DVarying> &streamOutVaryings,
                                           bool separatedOutputBuffers,
                                           const angle::CompilerWorkaroundsD3D &workarounds,

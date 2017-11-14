@@ -948,6 +948,9 @@ Error Program::link(const gl::Context *context)
 
     setUniformValuesFromBindingQualifiers();
 
+    ASSERT(mLinked);
+    updateLinkedShaderStages();
+
     // Mark implementation-specific unreferenced uniforms as ignored.
     mProgram->markUnusedUniformLocations(&mState.mUniformLocations, &mState.mSamplerBindings);
 
@@ -963,6 +966,24 @@ Error Program::link(const gl::Context *context)
     ANGLE_HISTOGRAM_COUNTS("GPU.ANGLE.ProgramCache.ProgramCacheMissTimeUS", us);
 
     return NoError();
+}
+
+void Program::updateLinkedShaderStages()
+{
+    if (mState.mAttachedVertexShader)
+    {
+        mState.mLinkedShaderStages.set(SHADER_VERTEX);
+    }
+
+    if (mState.mAttachedFragmentShader)
+    {
+        mState.mLinkedShaderStages.set(SHADER_FRAGMENT);
+    }
+
+    if (mState.mAttachedComputeShader)
+    {
+        mState.mLinkedShaderStages.set(SHADER_COMPUTE);
+    }
 }
 
 // Returns the program object to an unlinked state, before re-linking, or at destruction
@@ -985,6 +1006,7 @@ void Program::unlink()
     mState.mSamplerBindings.clear();
     mState.mImageBindings.clear();
     mState.mNumViews = -1;
+    mState.mLinkedShaderStages.reset();
 
     mValidated = false;
 

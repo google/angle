@@ -42,6 +42,38 @@ TEST_P(ComputeShaderTest, LinkComputeProgram)
     EXPECT_GL_NO_ERROR();
 }
 
+// Link a simple compute program. Then detach the shader and dispatch compute.
+// It should be successful.
+TEST_P(ComputeShaderTest, DetachShaderAfterLinkSuccess)
+{
+    const std::string csSource =
+        R"(#version 310 es
+        layout(local_size_x=1) in;
+        void main()
+        {
+        })";
+
+    GLuint program = glCreateProgram();
+
+    GLuint cs = CompileShader(GL_COMPUTE_SHADER, csSource);
+    EXPECT_NE(0u, cs);
+
+    glAttachShader(program, cs);
+    glDeleteShader(cs);
+
+    glLinkProgram(program);
+    GLint linkStatus;
+    glGetProgramiv(program, GL_LINK_STATUS, &linkStatus);
+    EXPECT_EQ(GL_TRUE, linkStatus);
+
+    glDetachShader(program, cs);
+    EXPECT_GL_NO_ERROR();
+
+    glUseProgram(program);
+    glDispatchCompute(8, 4, 2);
+    EXPECT_GL_NO_ERROR();
+}
+
 // link a simple compute program. There is no local size and linking should fail.
 TEST_P(ComputeShaderTest, LinkComputeProgramNoLocalSizeLinkError)
 {

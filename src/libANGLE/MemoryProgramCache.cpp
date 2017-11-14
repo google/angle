@@ -407,6 +407,9 @@ LinkResult MemoryProgramCache::Deserialize(const Context *context,
     unsigned int atomicCounterRangeHigh = stream.readInt<unsigned int>();
     state->mAtomicCounterUniformRange   = RangeUI(atomicCounterRangeLow, atomicCounterRangeHigh);
 
+    static_assert(SHADER_TYPE_MAX <= sizeof(unsigned long) * 8, "Too many shader types");
+    state->mLinkedShaderStages = stream.readInt<unsigned long>();
+
     return program->getImplementation()->load(context, infoLog, &stream);
 }
 
@@ -568,6 +571,8 @@ void MemoryProgramCache::Serialize(const Context *context,
 
     stream.writeInt(state.getAtomicCounterUniformRange().low());
     stream.writeInt(state.getAtomicCounterUniformRange().high());
+
+    stream.writeInt(state.getLinkedShaderStages().to_ulong());
 
     program->getImplementation()->save(context, &stream);
 
