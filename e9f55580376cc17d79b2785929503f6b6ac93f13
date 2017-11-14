@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a507528e_43dcc5c6",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 700,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-11-14T01:13:31Z",
+      "side": 1,
+      "message": "It is not clear to me if this is equivalent to the old code.\nFor example, where is the first revision gets to be initialized to 1 now?\nSeems like this can decrease mLatestBufferStorage revision, which I think was not possible before?",
+      "range": {
+        "startLine": 700,
+        "startChar": 4,
+        "endLine": 700,
+        "endChar": 33
+      },
+      "revId": "e9f55580376cc17d79b2785929503f6b6ac93f13",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f7495240_f26ebdc7",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 932,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-11-14T01:13:31Z",
+      "side": 1,
+      "message": "Is it possible that source \u003d\u003d nullptr? From looking at updateBufferStorage(), I don\u0027t think so.",
+      "range": {
+        "startLine": 932,
+        "startChar": 26,
+        "endLine": 932,
+        "endChar": 32
+      },
+      "revId": "e9f55580376cc17d79b2785929503f6b6ac93f13",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "af2ba329_e5e26157",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 933,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-11-14T01:13:31Z",
+      "side": 1,
+      "message": "Is it possible that mLatestBufferStorage \u003d\u003d nullptr? Looks like onCopyStorage() will be called only if a previous call to getLatestBufferStorage() returned non-NULL, which means that mLatestBufferStorage is not NULL, I think.",
+      "range": {
+        "startLine": 933,
+        "startChar": 8,
+        "endLine": 933,
+        "endChar": 29
+      },
+      "revId": "e9f55580376cc17d79b2785929503f6b6ac93f13",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4db91968_3e01cb8d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 933,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-11-14T01:13:31Z",
+      "side": 1,
+      "message": "The relationship between usage and revision is not clear to me. Maybe you can add a comment on it?",
+      "range": {
+        "startLine": 933,
+        "startChar": 33,
+        "endLine": 933,
+        "endChar": 84
+      },
+      "revId": "e9f55580376cc17d79b2785929503f6b6ac93f13",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
