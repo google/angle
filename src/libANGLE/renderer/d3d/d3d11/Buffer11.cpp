@@ -929,9 +929,11 @@ OnBufferDataDirtyChannel *Buffer11::getDirectBroadcastChannel()
 
 void Buffer11::onCopyStorage(BufferStorage *dest, BufferStorage *source)
 {
-    ASSERT(source);
+    ASSERT(source && mLatestBufferStorage);
     dest->setDataRevision(source->getDataRevision());
-    if (!mLatestBufferStorage || dest->getUsage() < mLatestBufferStorage->getUsage())
+
+    // Only update the latest buffer storage if our usage index is lower. See comment in header.
+    if (dest->getUsage() < mLatestBufferStorage->getUsage())
     {
         mLatestBufferStorage = dest;
     }
