@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "18904882_8c5a09c0",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 700,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-14T02:42:21Z",
+      "side": 1,
+      "message": "in getPackStorage.",
+      "parentUuid": "a507528e_43dcc5c6",
+      "range": {
+        "startLine": 700,
+        "startChar": 4,
+        "endLine": 700,
+        "endChar": 33
+      },
+      "revId": "e9f55580376cc17d79b2785929503f6b6ac93f13",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f7495240_f26ebdc7",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
         "patchSetId": 8
@@ -45,6 +69,30 @@
       "revId": "e9f55580376cc17d79b2785929503f6b6ac93f13",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3d34c3eb_d52c4ce5",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 932,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-14T02:42:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f7495240_f26ebdc7",
+      "range": {
+        "startLine": 932,
+        "startChar": 26,
+        "endLine": 932,
+        "endChar": 32
+      },
+      "revId": "e9f55580376cc17d79b2785929503f6b6ac93f13",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -91,6 +139,54 @@
       "revId": "e9f55580376cc17d79b2785929503f6b6ac93f13",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2151c273_29116d7b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 933,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-14T02:42:21Z",
+      "side": 1,
+      "message": "There\u0027s already one in the header, I\u0027d prefer leaving it there.",
+      "parentUuid": "4db91968_3e01cb8d",
+      "range": {
+        "startLine": 933,
+        "startChar": 33,
+        "endLine": 933,
+        "endChar": 84
+      },
+      "revId": "e9f55580376cc17d79b2785929503f6b6ac93f13",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "603e7965_a74619cb",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 933,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-14T02:42:21Z",
+      "side": 1,
+      "message": "Leaving this as is.",
+      "parentUuid": "af2ba329_e5e26157",
+      "range": {
+        "startLine": 933,
+        "startChar": 8,
+        "endLine": 933,
+        "endChar": 29
+      },
+      "revId": "e9f55580376cc17d79b2785929503f6b6ac93f13",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
