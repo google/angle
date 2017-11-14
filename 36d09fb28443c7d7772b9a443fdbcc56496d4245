@@ -42,6 +42,30 @@
     },
     {
       "key": {
+        "uuid": "beaa9422_123184f9",
+        "filename": "src/libANGLE/Caps.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 695,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-11-14T06:40:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d0fda80e_105da06e",
+      "range": {
+        "startLine": 695,
+        "startChar": 40,
+        "endLine": 695,
+        "endChar": 55
+      },
+      "revId": "36d09fb28443c7d7772b9a443fdbcc56496d4245",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0febfd92_70d99d55",
         "filename": "src/libANGLE/Caps.h",
         "patchSetId": 7
@@ -62,6 +86,30 @@
       "revId": "36d09fb28443c7d7772b9a443fdbcc56496d4245",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cf131fa7_c4ab0515",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 373,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-11-14T06:40:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0febfd92_70d99d55",
+      "range": {
+        "startLine": 373,
+        "startChar": 9,
+        "endLine": 373,
+        "endChar": 26
+      },
+      "revId": "36d09fb28443c7d7772b9a443fdbcc56496d4245",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -88,6 +136,30 @@
     },
     {
       "key": {
+        "uuid": "d3b760e0_b9d21832",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 560,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-11-14T06:40:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5f636bb6_84d02541",
+      "range": {
+        "startLine": 556,
+        "startChar": 0,
+        "endLine": 560,
+        "endChar": 40
+      },
+      "revId": "36d09fb28443c7d7772b9a443fdbcc56496d4245",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c464d420_3386c876",
         "filename": "src/libANGLE/validationES2.cpp",
         "patchSetId": 7
@@ -111,6 +183,30 @@
     },
     {
       "key": {
+        "uuid": "e546358d_cbe0496f",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 4162,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-11-14T06:40:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c464d420_3386c876",
+      "range": {
+        "startLine": 4158,
+        "startChar": 12,
+        "endLine": 4162,
+        "endChar": 13
+      },
+      "revId": "36d09fb28443c7d7772b9a443fdbcc56496d4245",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ff4c97c9_82e3bf4a",
         "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
         "patchSetId": 7
@@ -122,6 +218,24 @@
       "writtenOn": "2017-11-13T19:22:55Z",
       "side": 1,
       "message": "Can we use some wildcards here to reduce the number of entries?",
+      "revId": "36d09fb28443c7d7772b9a443fdbcc56496d4245",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bf2b5824_d967fe7f",
+        "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 1314,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-11-14T06:40:04Z",
+      "side": 1,
+      "message": "I have tried:\n- dEQP-GLES31.functional.shaders.builtin_functions.*_geometry (Patchset 8)\n- dEQP-GLES31.functional.shaders.builtin_functions.common.*_geometry\n  dEQP-GLES31.functional.shaders.builtin_functions.pack_unpack.*_geometry\n  dEQP-GLES31.functional.shaders.builtin_functions.integer.*_geometry (Patchset 9)\nBut none of them can pass CQ. It seems the bots only accept \u0027*\u0027 at the end of an item, so I have to follow this way.",
+      "parentUuid": "ff4c97c9_82e3bf4a",
       "revId": "36d09fb28443c7d7772b9a443fdbcc56496d4245",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -145,6 +259,24 @@
     },
     {
       "key": {
+        "uuid": "6c427044_e98bf283",
+        "filename": "src/tests/gl_tests/GeometryShaderTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-11-14T06:40:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "df8a3737_92838b44",
+      "revId": "36d09fb28443c7d7772b9a443fdbcc56496d4245",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e73ae338_0d6a2508",
         "filename": "src/tests/gl_tests/GeometryShaderTest.cpp",
         "patchSetId": 7
@@ -165,6 +297,30 @@
       "revId": "36d09fb28443c7d7772b9a443fdbcc56496d4245",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "016e0c20_7b754680",
+        "filename": "src/tests/gl_tests/GeometryShaderTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-11-14T06:40:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e73ae338_0d6a2508",
+      "range": {
+        "startLine": 25,
+        "startChar": 3,
+        "endLine": 25,
+        "endChar": 60
+      },
+      "revId": "36d09fb28443c7d7772b9a443fdbcc56496d4245",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
