@@ -50,7 +50,7 @@ class TextureD3D : public TextureImpl
 
     gl::Error getImageAndSyncFromStorage(const gl::Context *context,
                                          const gl::ImageIndex &index,
-                                         ImageD3D **outImage) const;
+                                         ImageD3D **outImage);
 
     GLint getBaseLevelWidth() const;
     GLint getBaseLevelHeight() const;

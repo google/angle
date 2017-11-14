@@ -107,12 +107,13 @@ gl::Error TextureD3D::getNativeTexture(const gl::Context *context, TextureStorag
 
 gl::Error TextureD3D::getImageAndSyncFromStorage(const gl::Context *context,
                                                  const gl::ImageIndex &index,
-                                                 ImageD3D **outImage) const
+                                                 ImageD3D **outImage)
 {
     ImageD3D *image = getImage(index);
     if (mTexStorage && mTexStorage->isRenderTarget())
     {
         ANGLE_TRY(image->copyFromTexStorage(context, index, mTexStorage));
+        mDirtyImages = true;
     }
     *outImage = image;
     return gl::NoError();
@@ -512,6 +513,8 @@ gl::Error TextureD3D::generateMipmapUsingImages(const gl::Context *context, cons
             }
         }
     }
+
+    mDirtyImages = true;
 
     if (mTexStorage)
     {
@@ -1108,6 +1111,8 @@ gl::Error TextureD3D_2D::copyTexture(const gl::Context *context,
         ANGLE_TRY(mRenderer->copyImage(context, destImage, sourceImage, sourceRect, destOffset,
                                        unpackFlipY, unpackPremultiplyAlpha, unpackUnmultiplyAlpha));
 
+        mDirtyImages = true;
+
         gl::Box destRegion(destOffset, size);
         ANGLE_TRY(commitRegion(context, destImageIndex, destRegion));
     }
@@ -1154,6 +1159,8 @@ gl::Error TextureD3D_2D::copySubTexture(const gl::Context *context,
 
         ANGLE_TRY(mRenderer->copyImage(context, destImage, sourceImage, sourceArea, destOffset,
                                        unpackFlipY, unpackPremultiplyAlpha, unpackUnmultiplyAlpha));
+
+        mDirtyImages = true;
 
         gl::Box destRegion(destOffset.x, destOffset.y, 0, sourceArea.width, sourceArea.height, 1);
         ANGLE_TRY(commitRegion(context, destImageIndex, destRegion));
@@ -1454,6 +1461,11 @@ gl::Error TextureD3D_2D::setCompleteTexStorage(const gl::Context *context,
 
 gl::Error TextureD3D_2D::updateStorage(const gl::Context *context)
 {
+    if (!mDirtyImages)
+    {
+        return gl::NoError();
+    }
+
     ASSERT(mTexStorage != nullptr);
     GLint storageLevels = mTexStorage->getLevelCount();
     for (int level = 0; level < storageLevels; level++)
@@ -1464,6 +1476,7 @@ gl::Error TextureD3D_2D::updateStorage(const gl::Context *context)
         }
     }
 
+    mDirtyImages = false;
     return gl::NoError();
 }
 
@@ -1879,6 +1892,8 @@ gl::Error TextureD3D_Cube::copyTexture(const gl::Context *context,
         ANGLE_TRY(mRenderer->copyImage(context, destImage, sourceImage, sourceRect, destOffset,
                                        unpackFlipY, unpackPremultiplyAlpha, unpackUnmultiplyAlpha));
 
+        mDirtyImages = true;
+
         gl::Box destRegion(destOffset, size);
         ANGLE_TRY(commitRegion(context, destImageIndex, destRegion));
     }
@@ -1928,6 +1943,8 @@ gl::Error TextureD3D_Cube::copySubTexture(const gl::Context *context,
 
         ANGLE_TRY(mRenderer->copyImage(context, destImage, sourceImage, sourceArea, destOffset,
                                        unpackFlipY, unpackPremultiplyAlpha, unpackUnmultiplyAlpha));
+
+        mDirtyImages = true;
 
         gl::Box destRegion(destOffset.x, destOffset.y, 0, sourceArea.width, sourceArea.height, 1);
         ANGLE_TRY(commitRegion(context, destImageIndex, destRegion));
@@ -2137,6 +2154,11 @@ gl::Error TextureD3D_Cube::setCompleteTexStorage(const gl::Context *context,
 
 gl::Error TextureD3D_Cube::updateStorage(const gl::Context *context)
 {
+    if (!mDirtyImages)
+    {
+        return gl::NoError();
+    }
+
     ASSERT(mTexStorage != nullptr);
     GLint storageLevels = mTexStorage->getLevelCount();
     for (int face = 0; face < 6; face++)
@@ -2150,6 +2172,7 @@ gl::Error TextureD3D_Cube::updateStorage(const gl::Context *context)
         }
     }
 
+    mDirtyImages = false;
     return gl::NoError();
 }
 
@@ -2541,6 +2564,8 @@ gl::Error TextureD3D_3D::copySubImage(const gl::Context *context,
     }
     ANGLE_TRY(mImageArray[level]->copyFromFramebuffer(context, clippedDestOffset, clippedSourceArea,
                                                       source));
+    mDirtyImages = true;
+
     if (syncTexStorage)
     {
         ANGLE_TRY(updateStorageLevel(context, level));
@@ -2700,6 +2725,11 @@ gl::Error TextureD3D_3D::setCompleteTexStorage(const gl::Context *context,
 
 gl::Error TextureD3D_3D::updateStorage(const gl::Context *context)
 {
+    if (!mDirtyImages)
+    {
+        return gl::NoError();
+    }
+
     ASSERT(mTexStorage != nullptr);
     GLint storageLevels = mTexStorage->getLevelCount();
     for (int level = 0; level < storageLevels; level++)
@@ -2710,6 +2740,7 @@ gl::Error TextureD3D_3D::updateStorage(const gl::Context *context)
         }
     }
 
+    mDirtyImages = false;
     return gl::NoError();
 }
 
@@ -3272,6 +3303,11 @@ gl::Error TextureD3D_2DArray::setCompleteTexStorage(const gl::Context *context,
 
 gl::Error TextureD3D_2DArray::updateStorage(const gl::Context *context)
 {
+    if (!mDirtyImages)
+    {
+        return gl::NoError();
+    }
+
     ASSERT(mTexStorage != nullptr);
     GLint storageLevels = mTexStorage->getLevelCount();
     for (int level = 0; level < storageLevels; level++)
@@ -3282,6 +3318,7 @@ gl::Error TextureD3D_2DArray::updateStorage(const gl::Context *context)
         }
     }
 
+    mDirtyImages = false;
     return gl::NoError();
 }
 
