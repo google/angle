@@ -22,6 +22,30 @@
       "revId": "2fec31578982c3967e322c1cdd864ef83c8432d3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5b1c9ed2_158abcbe",
+        "filename": "src/tests/egl_tests/EGLSanityCheckTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-14T18:35:48Z",
+      "side": 1,
+      "message": "At that point we might have to handle both wiggly and non-wiggly cases.",
+      "parentUuid": "c8b52e8a_e191dd96",
+      "range": {
+        "startLine": 35,
+        "startChar": 36,
+        "endLine": 35,
+        "endChar": 49
+      },
+      "revId": "2fec31578982c3967e322c1cdd864ef83c8432d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
