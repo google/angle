@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "16bf6683_1f680592",
+        "filename": "src/libGLESv2/entry_points_egl.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-14T18:03:58Z",
+      "side": 1,
+      "message": "I really like being able to compile the individual file. So, instead I added a non-auto-generated header.",
+      "parentUuid": "ef6b5176_662e242b",
+      "range": {
+        "startLine": 30,
+        "startChar": 0,
+        "endLine": 31,
+        "endChar": 25
+      },
+      "revId": "484c45eecdb076aff8c9ccc4a83e9306355f53ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f690da12_25388e87",
         "filename": "src/libGLESv2/entry_points_egl.cpp",
         "patchSetId": 3
@@ -71,6 +95,54 @@
     },
     {
       "key": {
+        "uuid": "71cfb73f_7b42108d",
+        "filename": "src/libGLESv2/entry_points_egl.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-14T18:03:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4c725639_5007ae5f",
+      "range": {
+        "startLine": 36,
+        "startChar": 14,
+        "endLine": 36,
+        "endChar": 31
+      },
+      "revId": "484c45eecdb076aff8c9ccc4a83e9306355f53ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2e0cda95_6c71060f",
+        "filename": "src/libGLESv2/entry_points_egl.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-14T18:03:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f690da12_25388e87",
+      "range": {
+        "startLine": 36,
+        "startChar": 5,
+        "endLine": 36,
+        "endChar": 13
+      },
+      "revId": "484c45eecdb076aff8c9ccc4a83e9306355f53ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "162e3a56_ed28f8d3",
         "filename": "src/libGLESv2/entry_points_egl.cpp",
         "patchSetId": 3
@@ -106,6 +178,24 @@
     },
     {
       "key": {
+        "uuid": "c53e4d71_7d42f2d2",
+        "filename": "src/libGLESv2/entry_points_egl.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1179,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-14T18:03:58Z",
+      "side": 1,
+      "message": "std::binary_search returns \"bool\" rather than an iterator so it won\u0027t work unfortunately. But, std::binary_search internally uses std::lower_bound, so that\u0027s the same idea.\n\nAntoine: Done, good catch. Added a regression test.",
+      "parentUuid": "b586e348_e331a059",
+      "revId": "484c45eecdb076aff8c9ccc4a83e9306355f53ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cb250d38_309dadb1",
         "filename": "src/libGLESv2/entry_points_egl.cpp",
         "patchSetId": 3
@@ -120,6 +210,24 @@
       "revId": "484c45eecdb076aff8c9ccc4a83e9306355f53ca",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8471593c_062690cd",
+        "filename": "src/libGLESv2/entry_points_egl.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1180,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-14T18:03:58Z",
+      "side": 1,
+      "message": "Done. I wasn\u0027t sure if this would work, but it seems to.",
+      "parentUuid": "cb250d38_309dadb1",
+      "revId": "484c45eecdb076aff8c9ccc4a83e9306355f53ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
