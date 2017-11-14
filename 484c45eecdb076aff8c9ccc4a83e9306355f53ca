@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "162e3a56_ed28f8d3",
+        "filename": "src/libGLESv2/entry_points_egl.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1179,
+      "author": {
+        "id": 1148065
+      },
+      "writtenOn": "2017-11-14T17:01:42Z",
+      "side": 1,
+      "message": "Do you also need to check that the entry actually matches after the lower_bound? Otherwise you would get a false positive if you try to look up a function that doesn\u0027t exist.",
+      "revId": "484c45eecdb076aff8c9ccc4a83e9306355f53ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cb250d38_309dadb1",
+        "filename": "src/libGLESv2/entry_points_egl.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1180,
+      "author": {
+        "id": 1148065
+      },
+      "writtenOn": "2017-11-14T17:01:42Z",
+      "side": 1,
+      "message": "nit: FindProc can be defined as bool(const ProcEntry\u0026, const char*) and then you can pass procname directly instead of making a temporary ProcEntry.",
+      "revId": "484c45eecdb076aff8c9ccc4a83e9306355f53ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
