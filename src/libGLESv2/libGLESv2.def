@@ -410,7 +410,3 @@ EXPORTS
     glVertexAttribIFormat           @410
     glVertexAttribBinding           @411
     glVertexBindingDivisor          @412
-
-    ; ANGLE Platform Implementation
-    ANGLEGetDisplayPlatform         @290
-    ANGLEResetDisplayPlatform       @291
