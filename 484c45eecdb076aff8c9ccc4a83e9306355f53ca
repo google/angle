@@ -2,6 +2,75 @@
   "comments": [
     {
       "key": {
+        "uuid": "ef6b5176_662e242b",
+        "filename": "src/libGLESv2/entry_points_egl.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-14T17:20:16Z",
+      "side": 1,
+      "message": "Instead of it being extern, could we just include the a header version of the table here?  It would be a fixed sized array and std::begin and std::end would work on it without the need for a size value.",
+      "range": {
+        "startLine": 30,
+        "startChar": 0,
+        "endLine": 31,
+        "endChar": 25
+      },
+      "revId": "484c45eecdb076aff8c9ccc4a83e9306355f53ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f690da12_25388e87",
+        "filename": "src/libGLESv2/entry_points_egl.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-14T17:20:16Z",
+      "side": 1,
+      "message": "nit: CompareProc?",
+      "range": {
+        "startLine": 36,
+        "startChar": 5,
+        "endLine": 36,
+        "endChar": 13
+      },
+      "revId": "484c45eecdb076aff8c9ccc4a83e9306355f53ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4c725639_5007ae5f",
+        "filename": "src/libGLESv2/entry_points_egl.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-14T17:20:16Z",
+      "side": 1,
+      "message": "Can this be a const ref?",
+      "range": {
+        "startLine": 36,
+        "startChar": 14,
+        "endLine": 36,
+        "endChar": 31
+      },
+      "revId": "484c45eecdb076aff8c9ccc4a83e9306355f53ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "162e3a56_ed28f8d3",
         "filename": "src/libGLESv2/entry_points_egl.cpp",
         "patchSetId": 3
@@ -13,6 +82,24 @@
       "writtenOn": "2017-11-14T17:01:42Z",
       "side": 1,
       "message": "Do you also need to check that the entry actually matches after the lower_bound? Otherwise you would get a false positive if you try to look up a function that doesn\u0027t exist.",
+      "revId": "484c45eecdb076aff8c9ccc4a83e9306355f53ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b586e348_e331a059",
+        "filename": "src/libGLESv2/entry_points_egl.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1179,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-14T17:20:16Z",
+      "side": 1,
+      "message": "std::binary_search could work too.",
+      "parentUuid": "162e3a56_ed28f8d3",
       "revId": "484c45eecdb076aff8c9ccc4a83e9306355f53ca",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
