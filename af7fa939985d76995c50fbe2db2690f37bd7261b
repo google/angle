@@ -591,6 +591,30 @@
     },
     {
       "key": {
+        "uuid": "4dfcbae7_1475ac8b",
+        "filename": "src/tests/gl_tests/TextureUploadFormatTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 221,
+      "author": {
+        "id": 1184734
+      },
+      "writtenOn": "2017-11-14T03:54:28Z",
+      "side": 1,
+      "message": "Ok, removing.\n\nWere I king, I would take this here, and promote it to a more general util in a subsequent cset. For something as straightforward as this, I don\u0027t think we need to be too cautious. (I didn\u0027t even bother copying our Gecko implementation in)\n\nI\u0027ll file a subsequent cset to add this to common/.",
+      "parentUuid": "ea67721e_e63f1c8a",
+      "range": {
+        "startLine": 221,
+        "startChar": 19,
+        "endLine": 221,
+        "endChar": 26
+      },
+      "revId": "af7fa939985d76995c50fbe2db2690f37bd7261b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0314e5e4_4cbe8dfc",
         "filename": "src/tests/gl_tests/TextureUploadFormatTest.cpp",
         "patchSetId": 5
