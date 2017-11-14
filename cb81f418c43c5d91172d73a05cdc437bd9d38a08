@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "db96e307_35886c8e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/ResourceManager11.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 323,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-14T21:27:12Z",
+      "side": 1,
+      "message": "Do we need to worry about tracking individual resource sizes greater than 32-bits or can we just store the total in 64 bits?",
+      "range": {
+        "startLine": 323,
+        "startChar": 49,
+        "endLine": 323,
+        "endChar": 57
+      },
+      "revId": "cb81f418c43c5d91172d73a05cdc437bd9d38a08",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
