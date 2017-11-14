@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "b0a65963_dc8bbc5f",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 374,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-14T17:48:34Z",
+      "side": 1,
+      "message": "what\u0027s the rationale for exposing two extensions? I\u0027m not as familiar with the background, but do we have a prior case of exposing two similar extensions in ANGLE?",
+      "range": {
+        "startLine": 373,
+        "startChar": 0,
+        "endLine": 374,
+        "endChar": 27
+      },
+      "revId": "72c81ea30ffb9a6beced1b4da746fa1bfaa3ffe0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "cf917f84_e40f89a7",
         "filename": "src/libANGLE/validationES2.cpp",
         "patchSetId": 11
