@@ -99,28 +99,49 @@ const char ESSL300_MultipleYUVOutputsFailureShader[] =
 
 // Shader that specifies yuvCscStandartEXT type and associated values.
 const char ESSL300_YuvCscStandardEXTShader[] =
-    "precision mediump float;\n"
-    "yuvCscStandardEXT;\n"
-    "yuvCscStandardEXT conv;\n"
-    "yuvCscStandardEXT conv1 = itu_601;\n"
-    "yuvCscStandardEXT conv2 = itu_601_full_range;\n"
-    "yuvCscStandardEXT conv3 = itu_709;\n"
-    "const yuvCscStandardEXT conv4 = itu_709;\n"
-    "yuvCscStandardEXT conv_standard() {\n"
-    "    return itu_601;\n"
-    "}\n"
-    "bool is_itu_601(inout yuvCscStandardEXT csc) {\n"
-    "    csc = itu_601;\n"
-    "    return csc == itu_601;\n"
-    "}\n"
-    "bool is_itu_709(yuvCscStandardEXT csc) {\n"
-    "    return csc == itu_709;\n"
-    "}\n"
-    "void main() { \n"
-    "    yuvCscStandardEXT conv = conv_standard();\n"
-    "    bool csc_check1 = is_itu_601(conv);\n"
-    "    bool csc_check2 = is_itu_709(itu_709);\n"
-    "}\n";
+    R"(precision mediump float;
+    yuvCscStandardEXT;
+    yuvCscStandardEXT conv;
+    yuvCscStandardEXT conv1 = itu_601;
+    yuvCscStandardEXT conv2 = itu_601_full_range;
+    yuvCscStandardEXT conv3 = itu_709;
+    const yuvCscStandardEXT conv4 = itu_709;
+
+    uniform int u;
+    out vec4 my_color;
+
+    yuvCscStandardEXT conv_standard()
+    {
+        switch(u)
+        {
+            case 1:
+                return conv1;
+            case 2:
+                return conv2;
+            case 3:
+                return conv3;
+            default:
+                return conv;
+        }
+    }
+    bool is_itu_601(inout yuvCscStandardEXT csc)
+    {
+        csc = itu_601;
+        return csc == itu_601;
+    }
+    bool is_itu_709(yuvCscStandardEXT csc)
+    {
+        return csc == itu_709;
+    }
+    void main()
+    {
+        yuvCscStandardEXT conv = conv_standard();
+        bool csc_check1 = is_itu_601(conv);
+        bool csc_check2 = is_itu_709(itu_709);
+        if (csc_check1 && csc_check2) {
+            my_color = vec4(0, 1, 0, 1);
+        }
+    })";
 
 // Shader that specifies yuvCscStandartEXT type constructor fails to compile.
 const char ESSL300_YuvCscStandartdEXTConstructFailureShader1[] =
@@ -187,12 +208,17 @@ const char ESSL300_YuvCscStandartdEXTQualifiersFailureShader3[] =
 
 // Shader that specifies yuv_to_rgb() and rgb_to_yuv() built-in functions.
 const char ESSL300_BuiltInFunctionsShader[] =
-    "precision mediump float;\n"
-    "yuvCscStandardEXT conv = itu_601;\n"
-    "void main() { \n"
-    "    vec3 yuv = rgb_2_yuv(vec3(0.0f), conv);\n"
-    "    vec3 rgb = yuv_2_rgb(yuv, itu_601);\n"
-    "}\n";
+    R"(precision mediump float;
+    yuvCscStandardEXT conv = itu_601;
+
+    out vec4 my_color;
+
+    void main()
+    {
+        vec3 yuv = rgb_2_yuv(vec3(0.0f), conv);
+        vec3 rgb = yuv_2_rgb(yuv, itu_601);
+        my_color = vec4(rgb, 1.0);
+    })";
 
 class EXTYUVTargetTest : public testing::TestWithParam<testing::tuple<const char *, const char *>>
 {

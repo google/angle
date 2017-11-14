@@ -387,7 +387,7 @@ TEST_F(TypeTrackingTest, BuiltInAbsSignFunctionFloatResultTypeAndPrecision)
         "void main() {\n"
         "   float fval2 = abs(fval1);\n"
         "   float fval3 = sign(fval1);\n"
-        "   gl_FragColor = vec4(fval1, 0.0, 0.0, 1.0); \n"
+        "   gl_FragColor = vec4(fval1, fval2, fval3, 1.0); \n"
         "}\n";
     compile(shaderString);
     ASSERT_FALSE(foundErrorInIntermediateTree());
@@ -406,7 +406,7 @@ TEST_F(TypeTrackingTest, BuiltInAbsSignFunctionIntResultTypeAndPrecision)
         "void main() {\n"
         "   int ival2 = abs(ival1);\n"
         "   int ival3 = sign(ival1);\n"
-        "   my_FragColor = vec4(0.0, 0.0, 0.0, 1.0); \n"
+        "   my_FragColor = vec4(ival2, ival3, 0, 1); \n"
         "}\n";
     compile(shaderString);
     ASSERT_FALSE(foundErrorInIntermediateTree());
@@ -426,7 +426,7 @@ TEST_F(TypeTrackingTest, BuiltInFloatBitsToIntResultTypeAndPrecision)
         "void main() {\n"
         "   int i = floatBitsToInt(f);\n"
         "   uint u = floatBitsToUint(f);\n"
-        "   my_FragColor = vec4(0.0, 0.0, 0.0, 1.0); \n"
+        "   my_FragColor = vec4(i, int(u), 0, 1); \n"
         "}\n";
     compile(shaderString);
     ASSERT_FALSE(foundErrorInIntermediateTree());

@@ -252,7 +252,7 @@ TEST_F(BufferVariablesTest, AccessReadonlyBufferVariableByInstanceName)
         "} instanceBuffer;\n"
         "void main()\n"
         "{\n"
-        "    float test = instanceBuffer.f;\n"
+        "    gl_Position.x = instanceBuffer.f;\n"
         "}\n";
     if (!compile(source))
     {

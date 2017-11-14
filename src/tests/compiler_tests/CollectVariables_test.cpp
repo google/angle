@@ -940,19 +940,23 @@ TEST_F(CollectVertexVariablesTest, ViewID_OVR)
 TEST_F(CollectGeometryVariablesTest, CollectGLInFields)
 {
     const std::string &shaderString =
-        "#version 310 es\n"
-        "#extension GL_OES_geometry_shader : require\n"
-        "layout (points) in;\n"
-        "layout (points, max_vertices = 2) out;\n"
-        "void main()\n"
-        "{\n"
-        "    vec4 value = gl_in[0].gl_Position;\n"
-        "    vec4 value2 = gl_in[0].gl_Position;\n"
-        "}\n";
+        R"(#version 310 es
+        #extension GL_OES_geometry_shader : require
+
+        layout (points) in;
+        layout (points, max_vertices = 2) out;
+
+        void main()
+        {
+            vec4 value = gl_in[0].gl_Position;
+            vec4 value2 = gl_in[0].gl_Position;
+            gl_Position = value + value2;
+            EmitVertex();
+        })";
 
     compile(shaderString);
 
-    EXPECT_TRUE(mTranslator->getOutputVaryings().empty());
+    EXPECT_EQ(1u, mTranslator->getOutputVaryings().size());
     EXPECT_TRUE(mTranslator->getInputVaryings().empty());
 
     const auto &inBlocks = mTranslator->getInBlocks();
@@ -985,10 +989,10 @@ TEST_F(CollectGeometryVariablesTest, GLInArraySize)
     const GLuint kArraySizeForInputPrimitives[] = {1u, 2u, 4u, 3u, 6u};
 
     const std::string &functionBody =
-        "void main()\n"
-        "{\n"
-        "    vec4 value = gl_in[0].gl_Position;\n"
-        "}\n";
+        R"(void main()
+        {
+            gl_Position = gl_in[0].gl_Position;
+        })";
 
     for (size_t i = 0; i < kInputPrimitives.size(); ++i)
     {
@@ -1007,18 +1011,19 @@ TEST_F(CollectGeometryVariablesTest, GLInArraySize)
 TEST_F(CollectGeometryVariablesTest, CollectPrimitiveIDIn)
 {
     const std::string &shaderString =
-        "#version 310 es\n"
-        "#extension GL_OES_geometry_shader : require\n"
-        "layout (points) in;\n"
-        "layout (points, max_vertices = 2) out;\n"
-        "void main()\n"
-        "{\n"
-        "    int value = gl_PrimitiveIDIn;\n"
-        "}\n";
+        R"(#version 310 es
+        #extension GL_OES_geometry_shader : require
+        layout (points) in;
+        layout (points, max_vertices = 2) out;
+        void main()
+        {
+            gl_Position = vec4(gl_PrimitiveIDIn);
+            EmitVertex();
+        })";
 
     compile(shaderString);
 
-    ASSERT_TRUE(mTranslator->getOutputVaryings().empty());
+    EXPECT_EQ(1u, mTranslator->getOutputVaryings().size());
     ASSERT_TRUE(mTranslator->getInBlocks().empty());
 
     const auto &inputVaryings = mTranslator->getInputVaryings();
@@ -1038,18 +1043,19 @@ TEST_F(CollectGeometryVariablesTest, CollectPrimitiveIDIn)
 TEST_F(CollectGeometryVariablesTest, CollectInvocationID)
 {
     const std::string &shaderString =
-        "#version 310 es\n"
-        "#extension GL_OES_geometry_shader : require\n"
-        "layout (points, invocations = 2) in;\n"
-        "layout (points, max_vertices = 2) out;\n"
-        "void main()\n"
-        "{\n"
-        "    int value = gl_InvocationID;\n"
-        "}\n";
+        R"(#version 310 es
+        #extension GL_OES_geometry_shader : require
+        layout (points, invocations = 2) in;
+        layout (points, max_vertices = 2) out;
+        void main()
+        {
+            gl_Position = vec4(gl_InvocationID);
+            EmitVertex();
+        })";
 
     compile(shaderString);
 
-    ASSERT_TRUE(mTranslator->getOutputVaryings().empty());
+    EXPECT_EQ(1u, mTranslator->getOutputVaryings().size());
     ASSERT_TRUE(mTranslator->getInBlocks().empty());
 
     const auto &inputVaryings = mTranslator->getInputVaryings();
@@ -1069,18 +1075,19 @@ TEST_F(CollectGeometryVariablesTest, CollectInvocationID)
 TEST_F(CollectGeometryVariablesTest, CollectGLInIndexedByExpression)
 {
     const std::string &shaderString =
-        "#version 310 es\n"
-        "#extension GL_OES_geometry_shader : require\n"
-        "layout (triangles, invocations = 2) in;\n"
-        "layout (points, max_vertices = 2) out;\n"
-        "void main()\n"
-        "{\n"
-        "    vec4 value = gl_in[gl_InvocationID + 1].gl_Position;\n"
-        "}\n";
+        R"(#version 310 es
+        #extension GL_OES_geometry_shader : require
+        layout (triangles, invocations = 2) in;
+        layout (points, max_vertices = 2) out;
+        void main()
+        {
+            gl_Position = gl_in[gl_InvocationID + 1].gl_Position;
+            EmitVertex();
+        })";
 
     compile(shaderString);
 
-    ASSERT_TRUE(mTranslator->getOutputVaryings().empty());
+    EXPECT_EQ(1u, mTranslator->getOutputVaryings().size());
 
     const auto &inBlocks = mTranslator->getInBlocks();
     ASSERT_EQ(1u, inBlocks.size());
@@ -1191,12 +1198,15 @@ TEST_F(CollectGeometryVariablesTest, CollectLayer)
 TEST_F(CollectFragmentVariablesOESGeometryShaderTest, CollectPrimitiveID)
 {
     const std::string &shaderString =
-        "#version 310 es\n"
-        "#extension GL_OES_geometry_shader : require\n"
-        "void main()\n"
-        "{\n"
-        "    int value = gl_PrimitiveID;\n"
-        "}\n";
+        R"(#version 310 es
+        #extension GL_OES_geometry_shader : require
+
+        out int my_out;
+
+        void main()
+        {
+            my_out = gl_PrimitiveID;
+        })";
 
     compile(shaderString);
 
@@ -1219,12 +1229,15 @@ TEST_F(CollectFragmentVariablesOESGeometryShaderTest, CollectPrimitiveID)
 TEST_F(CollectFragmentVariablesOESGeometryShaderTest, CollectLayer)
 {
     const std::string &shaderString =
-        "#version 310 es\n"
-        "#extension GL_OES_geometry_shader : require\n"
-        "void main()\n"
-        "{\n"
-        "    int value = gl_Layer;\n"
-        "}\n";
+        R"(#version 310 es
+        #extension GL_OES_geometry_shader : require
+
+        out int my_out;
+
+        void main()
+        {
+            my_out = gl_Layer;
+        })";
 
     compile(shaderString);
 
@@ -1300,21 +1313,22 @@ TEST_F(CollectFragmentVariablesES31Test, CollectInputWithLocation)
 TEST_F(CollectGeometryVariablesTest, CollectInputs)
 {
     const std::string &shaderString =
-        "#version 310 es\n"
-        "#extension GL_OES_geometry_shader : require\n"
-        "layout (points) in;\n"
-        "layout (points, max_vertices = 2) out;\n"
-        "in vec4 texcoord1[];\n"
-        "in vec4 texcoord2[1];\n"
-        "void main()\n"
-        "{\n"
-        "    vec4 coord1 = texcoord1[0];\n"
-        "    vec4 coord2 = texcoord2[0];\n"
-        "}\n";
+        R"(#version 310 es
+        #extension GL_OES_geometry_shader : require
+        layout (points) in;
+        layout (points, max_vertices = 2) out;
+        in vec4 texcoord1[];
+        in vec4 texcoord2[1];
+        void main()
+        {
+            gl_Position = texcoord1[0];
+            gl_Position += texcoord2[0];
+            EmitVertex();
+        })";
 
     compile(shaderString);
 
-    ASSERT_TRUE(mTranslator->getOutputVaryings().empty());
+    EXPECT_EQ(1u, mTranslator->getOutputVaryings().size());
 
     const auto &inputVaryings = mTranslator->getInputVaryings();
     ASSERT_EQ(2u, inputVaryings.size());
@@ -1347,10 +1361,10 @@ TEST_F(CollectGeometryVariablesTest, CollectInputArraySizeForUnsizedInput)
 
     const std::string &kVariableDeclaration = "in vec4 texcoord[];\n";
     const std::string &kFunctionBody =
-        "void main()\n"
-        "{\n"
-        "    vec4 value = texcoord[0];\n"
-        "}\n";
+        R"(void main()
+        {
+            gl_Position = texcoord[0];
+        })";
 
     for (size_t i = 0; i < kInputPrimitives.size(); ++i)
     {
@@ -1382,10 +1396,11 @@ TEST_F(CollectGeometryVariablesTest, CollectInputsWithInterpolationQualifiers)
         {INTERPOLATION_FLAT, INTERPOLATION_SMOOTH, INTERPOLATION_CENTROID}};
 
     const std::string &kFunctionBody =
-        "void main()\n"
-        "{\n"
-        "    vec4 value = texcoord[0];\n"
-        "}\n";
+        R"(void main()
+        {
+            gl_Position = texcoord[0];
+            EmitVertex();
+        })";
 
     for (size_t i = 0; i < kInterpolationQualifiers.size(); ++i)
     {

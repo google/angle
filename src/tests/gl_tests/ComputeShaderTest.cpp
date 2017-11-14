@@ -64,26 +64,26 @@ TEST_P(ComputeShaderTest, LinkComputeProgramNoLocalSizeLinkError)
 TEST_P(ComputeShaderTest, LinkComputeProgramWithUniforms)
 {
     const std::string csSource =
-        "#version 310 es\n"
-        "precision mediump sampler2D;\n"
-        "layout(local_size_x=1) in;\n"
-        "uniform int myUniformInt;\n"
-        "uniform sampler2D myUniformSampler;\n"
-        "void main()\n"
-        "{\n"
-        "int q = myUniformInt;\n"
-        "texture(myUniformSampler, vec2(0.0));\n"
-        "}\n";
+        R"(#version 310 es
+        precision mediump sampler2D;
+        layout(local_size_x=1) in;
+        uniform int myUniformInt;
+        uniform sampler2D myUniformSampler;
+        layout(rgba32i) uniform highp writeonly iimage2D imageOut;
+        void main()
+        {
+            int q = myUniformInt;
+            vec4 v = textureLod(myUniformSampler, vec2(0.0), 0.0);
+            imageStore(imageOut, ivec2(0), ivec4(v) * q);
+        })";
 
     ANGLE_GL_COMPUTE_PROGRAM(program, csSource);
 
-    // It's not possible to validate uniforms are present since they are unreferenced.
-    // TODO(jmadill): Make uniforms referenced.
-    // GLint uniformLoc = glGetUniformLocation(program.get(), "myUniformInt");
-    // EXPECT_NE(-1, uniformLoc);
+    GLint uniformLoc = glGetUniformLocation(program.get(), "myUniformInt");
+    EXPECT_NE(-1, uniformLoc);
 
-    // uniformLoc = glGetUniformLocation(program.get(), "myUniformSampler");
-    // EXPECT_NE(-1, uniformLoc);
+    uniformLoc = glGetUniformLocation(program.get(), "myUniformSampler");
+    EXPECT_NE(-1, uniformLoc);
 
     EXPECT_GL_NO_ERROR();
 }
@@ -238,17 +238,19 @@ TEST_P(ComputeShaderTest, DispatchComputeWithRenderingProgram)
 TEST_P(ComputeShaderTest, AccessAllSpecialVariables)
 {
     const std::string csSource =
-        "#version 310 es\n"
-        "layout(local_size_x=4, local_size_y=3, local_size_z=2) in;\n"
-        "void main()\n"
-        "{\n"
-        "    uvec3 temp1 = gl_NumWorkGroups;\n"
-        "    uvec3 temp2 = gl_WorkGroupSize;\n"
-        "    uvec3 temp3 = gl_WorkGroupID;\n"
-        "    uvec3 temp4 = gl_LocalInvocationID;\n"
-        "    uvec3 temp5 = gl_GlobalInvocationID;\n"
-        "    uint  temp6 = gl_LocalInvocationIndex;\n"
-        "}\n";
+        R"(#version 310 es
+        layout(local_size_x=4, local_size_y=3, local_size_z=2) in;
+        layout(rgba32ui) uniform highp writeonly uimage2D imageOut;
+        void main()
+        {
+            uvec3 temp1 = gl_NumWorkGroups;
+            uvec3 temp2 = gl_WorkGroupSize;
+            uvec3 temp3 = gl_WorkGroupID;
+            uvec3 temp4 = gl_LocalInvocationID;
+            uvec3 temp5 = gl_GlobalInvocationID;
+            uint  temp6 = gl_LocalInvocationIndex;
+            imageStore(imageOut, ivec2(gl_LocalInvocationIndex, 0), uvec4(temp1 + temp2 + temp3 + temp4 + temp5, temp6));
+        })";
 
     ANGLE_GL_COMPUTE_PROGRAM(program, csSource);
 }
@@ -257,14 +259,16 @@ TEST_P(ComputeShaderTest, AccessAllSpecialVariables)
 TEST_P(ComputeShaderTest, AccessPartSpecialVariables)
 {
     const std::string csSource =
-        "#version 310 es\n"
-        "layout(local_size_x=4, local_size_y=3, local_size_z=2) in;\n"
-        "void main()\n"
-        "{\n"
-        "    uvec3 temp1 = gl_WorkGroupSize;\n"
-        "    uvec3 temp2 = gl_WorkGroupID;\n"
-        "    uint  temp3 = gl_LocalInvocationIndex;\n"
-        "}\n";
+        R"(#version 310 es
+        layout(local_size_x=4, local_size_y=3, local_size_z=2) in;
+        layout(rgba32ui) uniform highp writeonly uimage2D imageOut;
+        void main()
+        {
+            uvec3 temp1 = gl_WorkGroupSize;
+            uvec3 temp2 = gl_WorkGroupID;
+            uint  temp3 = gl_LocalInvocationIndex;
+            imageStore(imageOut, ivec2(gl_LocalInvocationIndex, 0), uvec4(temp1 + temp2, temp3));
+        })";
 
     ANGLE_GL_COMPUTE_PROGRAM(program, csSource);
 }
@@ -273,12 +277,14 @@ TEST_P(ComputeShaderTest, AccessPartSpecialVariables)
 TEST_P(ComputeShaderTest, DispatchCompute)
 {
     const std::string csSource =
-        "#version 310 es\n"
-        "layout(local_size_x=4, local_size_y=3, local_size_z=2) in;\n"
-        "void main()\n"
-        "{\n"
-        "    uvec3 temp = gl_NumWorkGroups;\n"
-        "}\n";
+        R"(#version 310 es
+        layout(local_size_x=4, local_size_y=3, local_size_z=2) in;
+        layout(rgba32ui) uniform highp writeonly uimage2D imageOut;
+        void main()
+        {
+            uvec3 temp = gl_NumWorkGroups;
+            imageStore(imageOut, ivec2(0), uvec4(temp, 0u));
+        })";
 
     ANGLE_GL_COMPUTE_PROGRAM(program, csSource);
 
@@ -412,17 +418,19 @@ TEST_P(ComputeShaderTest, ImageArrayWithoutBindingQualifier)
 TEST_P(ComputeShaderTest, ImageLoad)
 {
     const std::string csSource =
-        "#version 310 es\n"
-        "layout(local_size_x=8) in;\n"
-        "layout(rgba8) uniform highp readonly image2D mImage2DInput;\n"
-        "layout(rgba16i) uniform highp readonly iimageCube mImageCubeInput;\n"
-        "layout(rgba32ui) uniform highp readonly uimage3D mImage3DInput;\n"
-        "void main()\n"
-        "{\n"
-        "    vec4 result2d = imageLoad(mImage2DInput, ivec2(gl_LocalInvocationID.xy));\n"
-        "    ivec4 resultCube = imageLoad(mImageCubeInput, ivec3(gl_LocalInvocationID.xyz));\n"
-        "    uvec4 result3d = imageLoad(mImage3DInput, ivec3(gl_LocalInvocationID.xyz));\n"
-        "}\n";
+        R"(#version 310 es
+        layout(local_size_x=8) in;
+        layout(rgba8) uniform highp readonly image2D mImage2DInput;
+        layout(rgba16i) uniform highp readonly iimageCube mImageCubeInput;
+        layout(rgba32ui) uniform highp readonly uimage3D mImage3DInput;
+        layout(r32i) uniform highp writeonly iimage2D imageOut;
+        void main()
+        {
+            vec4 result2d = imageLoad(mImage2DInput, ivec2(gl_LocalInvocationID.xy));
+            ivec4 resultCube = imageLoad(mImageCubeInput, ivec3(gl_LocalInvocationID.xyz));
+            uvec4 result3d = imageLoad(mImage3DInput, ivec3(gl_LocalInvocationID.xyz));
+            imageStore(imageOut, ivec2(gl_LocalInvocationIndex, 0), ivec4(result2d) + resultCube + ivec4(result3d));
+        })";
 
     ANGLE_GL_COMPUTE_PROGRAM(program, csSource);
     EXPECT_GL_NO_ERROR();
@@ -452,17 +460,19 @@ TEST_P(ComputeShaderTest, ImageStore)
 TEST_P(ComputeShaderTest, ImageSize)
 {
     const std::string csSource =
-        "#version 310 es\n"
-        "layout(local_size_x=8) in;\n"
-        "layout(rgba8) uniform highp readonly imageCube mImageCubeInput;\n"
-        "layout(r32i) uniform highp readonly iimage2D mImage2DInput;\n"
-        "layout(rgba16ui) uniform highp readonly uimage2DArray mImage2DArrayInput;\n"
-        "void main()\n"
-        "{\n"
-        "    ivec2 sizeCube = imageSize(mImageCubeInput);\n"
-        "    ivec2 size2D = imageSize(mImage2DInput);\n"
-        "    ivec3 size2DArray = imageSize(mImage2DArrayInput);\n"
-        "}\n";
+        R"(#version 310 es
+        layout(local_size_x=8) in;
+        layout(rgba8) uniform highp readonly imageCube mImageCubeInput;
+        layout(r32i) uniform highp readonly iimage2D mImage2DInput;
+        layout(rgba16ui) uniform highp readonly uimage2DArray mImage2DArrayInput;
+        layout(r32i) uniform highp writeonly iimage2D imageOut;
+        void main()
+        {
+            ivec2 sizeCube = imageSize(mImageCubeInput);
+            ivec2 size2D = imageSize(mImage2DInput);
+            ivec3 size2DArray = imageSize(mImage2DArrayInput);
+            imageStore(imageOut, ivec2(gl_LocalInvocationIndex, 0), ivec4(sizeCube, size2D.x, size2DArray.x));
+        })";
 
     ANGLE_GL_COMPUTE_PROGRAM(program, csSource);
     EXPECT_GL_NO_ERROR();

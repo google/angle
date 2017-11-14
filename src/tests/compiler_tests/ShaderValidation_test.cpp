@@ -2339,17 +2339,19 @@ TEST_F(ComputeShaderValidationTest, InvalidUsageOfWorkGroupSize)
 TEST_F(ComputeShaderValidationTest, CorrectUsageOfComputeBuiltins)
 {
     const std::string &shaderString =
-        "#version 310 es\n"
-        "layout(local_size_x = 12) in;\n"
-        "void main()\n"
-        "{\n"
-        "   uvec3 NumWorkGroups = gl_NumWorkGroups;\n"
-        "   uvec3 WorkGroupSize = gl_WorkGroupSize;\n"
-        "   uvec3 WorkGroupID = gl_WorkGroupID;\n"
-        "   uvec3 GlobalInvocationID = gl_GlobalInvocationID;\n"
-        "   uvec3 LocalInvocationID = gl_LocalInvocationID;\n"
-        "   uint LocalInvocationIndex = gl_LocalInvocationIndex;\n"
-        "}\n";
+        R"(#version 310 es
+        layout(local_size_x=4, local_size_y=3, local_size_z=2) in;
+        layout(rgba32ui) uniform highp writeonly uimage2D imageOut;
+        void main()
+        {
+            uvec3 temp1 = gl_NumWorkGroups;
+            uvec3 temp2 = gl_WorkGroupSize;
+            uvec3 temp3 = gl_WorkGroupID;
+            uvec3 temp4 = gl_LocalInvocationID;
+            uvec3 temp5 = gl_GlobalInvocationID;
+            uint  temp6 = gl_LocalInvocationIndex;
+            imageStore(imageOut, ivec2(0), uvec4(temp1 + temp2 + temp3 + temp4 + temp5, temp6));
+        })";
     if (!compile(shaderString))
     {
         FAIL() << "Shader compilation failed, expecting success:\n" << mInfoLog;
@@ -2589,11 +2591,12 @@ TEST_F(FragmentShaderValidationTest, VariableDeclarationWithInvariantAndLayoutQu
 TEST_F(FragmentShaderValidationTest, ShiftBy32)
 {
     const std::string &shaderString =
-        "#version 300 es\n"
-        "precision mediump float;\n"
-        "void main() {\n"
-        "   uint u = 1u << 32u;\n"
-        "}\n";
+        R"(#version 300 es
+        precision mediump float;
+        out uint my_out;
+        void main() {
+           my_out = 1u << 32u;
+        })";
     if (compile(shaderString))
     {
         if (!hasWarning())
@@ -2614,11 +2617,12 @@ TEST_F(FragmentShaderValidationTest, ShiftBy32)
 TEST_F(FragmentShaderValidationTest, ShiftByNegative)
 {
     const std::string &shaderString =
-        "#version 300 es\n"
-        "precision mediump float;\n"
-        "void main() {\n"
-        "   uint u = 1u << (-1);\n"
-        "}\n";
+        R"(#version 300 es
+        precision mediump float;
+        out uint my_out;
+        void main() {
+           my_out = 1u << (-1);
+        })";
     if (compile(shaderString))
     {
         if (!hasWarning())
@@ -4017,12 +4021,15 @@ TEST_F(FragmentShaderValidationTest, InvalidInterfaceBlockTernaryExpression)
 TEST_F(FragmentShaderValidationTest, BufferAndSharedAsIdentifierOnES3)
 {
     const std::string &shaderString =
-        "#version 300 es\n"
-        "void main()\n"
-        "{\n"
-        "    int buffer;\n"
-        "    int shared;\n"
-        "}\n";
+        R"(#version 300 es
+        precision highp float;
+        out vec4 my_out;
+        void main()
+        {
+            int buffer = 1;
+            int shared = 2;
+            my_out = vec4(buffer + shared);
+        })";
 
     if (!compile(shaderString))
     {
@@ -4558,13 +4565,13 @@ TEST_F(FragmentShaderOESGeometryShaderValidationTest, AssignValueToLayer)
 TEST_F(FragmentShaderOESGeometryShaderValidationTest, GeometryShaderBuiltInConstants)
 {
     const std::string &kShaderHeader =
-        "#version 310 es\n"
-        "#extension GL_OES_geometry_shader : require\n"
-        "precision mediump float;\n"
-        "layout(location = 0) out mediump vec4 fragColor;\n"
-        "void main(void)\n"
-        "{\n"
-        "    int val = ";
+        R"(#version 310 es
+        #extension GL_OES_geometry_shader : require
+        precision mediump float;
+        layout(location = 0) out mediump vec4 fragColor;
+        void main(void)
+        {
+            int val = )";
 
     const std::array<std::string, 9> kGeometryShaderBuiltinConstants = {{
         "gl_MaxGeometryInputComponents", "gl_MaxGeometryOutputComponents",
@@ -4575,9 +4582,9 @@ TEST_F(FragmentShaderOESGeometryShaderValidationTest, GeometryShaderBuiltInConst
     }};
 
     const std::string &kShaderTail =
-        ";\n"
-        "    fragColor = vec4(1.0, 0.0, 0.0, 1.0);\n"
-        "}\n";
+        R"(;
+            fragColor = vec4(val, 0, 0, 1);
+        })";
 
     for (const std::string &kGSBuiltinConstant : kGeometryShaderBuiltinConstants)
     {

@@ -254,18 +254,17 @@ TEST(ShaderVariableTest, IllegalInvariantVarying)
                                               SH_GLSL_COMPATIBILITY_OUTPUT, &resources);
     EXPECT_NE(static_cast<ShHandle>(0), compiler);
 
-    const char *program1[] =
-    {
-        "void foo() {\n"
-        "  vec4 v;\n"
-        "}\n"
-        "varying vec4 v_varying;\n"
-        "invariant v_varying;\n"
-        "void main() {\n"
-        "  foo();\n"
-        "  gl_Position = v_varying;\n"
-        "}"
-    };
+    const char *program1[] = {
+        R"(void foo()
+        {
+        }
+        varying vec4 v_varying;
+        invariant v_varying;
+        void main()
+        {
+           foo();
+           gl_Position = v_varying;
+        })"};
     const char *program2[] =
     {
         "varying vec4 v_varying;\n"

@@ -27,12 +27,13 @@ class PrunePureLiteralStatementsTest : public MatchOutputCodeTest
 TEST_F(PrunePureLiteralStatementsTest, FloatLiteralStatement)
 {
     const std::string shaderString =
-        "precision mediump float;\n"
-        "void main()\n"
-        "{\n"
-        "   float f = 41.0;\n"
-        "   42.0;\n"
-        "}\n";
+        R"(precision mediump float;
+        void main()
+        {
+           float f = 41.0;
+           42.0;
+           gl_FragColor = vec4(f);
+        })";
     compile(shaderString);
     ASSERT_TRUE(foundInCode("41"));
     ASSERT_TRUE(notFoundInCode("42"));
@@ -42,12 +43,13 @@ TEST_F(PrunePureLiteralStatementsTest, FloatLiteralStatement)
 TEST_F(PrunePureLiteralStatementsTest, ConstructorLiteralStatement)
 {
     const std::string shaderString =
-        "precision mediump float;\n"
-        "void main()\n"
-        "{\n"
-        "   vec2 f = vec2(41.0, 41.0);\n"
-        "   vec2(42.0, 42.0);\n"
-        "}\n";
+        R"(precision mediump float;
+        void main()
+        {
+            vec2 f = vec2(41.0, 41.0);
+            vec2(42.0, 42.0);
+            gl_FragColor = vec4(f, 0.0, 0.0);
+        })";
     compile(shaderString);
     ASSERT_TRUE(foundInCode("41"));
     ASSERT_TRUE(notFoundInCode("42"));

@@ -27,14 +27,15 @@ class PackUnpackTest : public MatchOutputCodeTest
 TEST_F(PackUnpackTest, PackSnorm2x16Emulation)
 {
     const std::string &shaderString =
-        "#version 300 es\n"
-        "precision mediump float;\n"
-        "layout(location = 0) out mediump vec4 fragColor;"
-        "void main() {\n"
-        "   vec2 v;\n"
-        "   uint u = packSnorm2x16(v);\n"
-        "   fragColor = vec4(0.0);\n"
-        "}\n";
+        R"(#version 300 es
+        precision mediump float;
+        layout(location = 0) out mediump vec4 fragColor;
+        void main()
+        {
+           vec2 v;
+           uint u = packSnorm2x16(v);
+           fragColor = vec4(u);
+        })";
     compile(shaderString);
     ASSERT_TRUE(foundInCode("uint packSnorm2x16_emu(vec2 v)"));
 }
@@ -43,14 +44,15 @@ TEST_F(PackUnpackTest, PackSnorm2x16Emulation)
 TEST_F(PackUnpackTest, UnpackSnorm2x16Emulation)
 {
     const std::string &shaderString =
-        "#version 300 es\n"
-        "precision mediump float;\n"
-        "layout(location = 0) out mediump vec4 fragColor;"
-        "void main() {\n"
-        "   uint u;\n"
-        "   vec2 v=unpackSnorm2x16(u);\n"
-        "   fragColor = vec4(0.0);\n"
-        "}\n";
+        R"(#version 300 es
+        precision mediump float;
+        layout(location = 0) out mediump vec4 fragColor;
+        void main()
+        {
+           uint u;
+           vec2 v = unpackSnorm2x16(u);
+           fragColor = vec4(v, 0.0, 0.0);
+        })";
     compile(shaderString);
     ASSERT_TRUE(foundInCode("vec2 unpackSnorm2x16_emu(uint u)"));
 }
@@ -59,14 +61,15 @@ TEST_F(PackUnpackTest, UnpackSnorm2x16Emulation)
 TEST_F(PackUnpackTest, PackUnorm2x16Emulation)
 {
     const std::string &shaderString =
-        "#version 300 es\n"
-        "precision mediump float;\n"
-        "layout(location = 0) out mediump vec4 fragColor;"
-        "void main() {\n"
-        "   vec2 v;\n"
-        "   uint u = packUnorm2x16(v);\n"
-        "   fragColor = vec4(0.0);\n"
-        "}\n";
+        R"(#version 300 es
+        precision mediump float;
+        layout(location = 0) out mediump vec4 fragColor;
+        void main()
+        {
+           vec2 v;
+           uint u = packUnorm2x16(v);
+           fragColor = vec4(u);
+        })";
     compile(shaderString);
     ASSERT_TRUE(foundInCode("uint packUnorm2x16_emu(vec2 v)"));
 }
@@ -75,14 +78,15 @@ TEST_F(PackUnpackTest, PackUnorm2x16Emulation)
 TEST_F(PackUnpackTest, UnpackUnorm2x16Emulation)
 {
     const std::string &shaderString =
-        "#version 300 es\n"
-        "precision mediump float;\n"
-        "layout(location = 0) out mediump vec4 fragColor;"
-        "void main() {\n"
-        "   uint u;\n"
-        "   vec2 v=unpackUnorm2x16(u);\n"
-        "   fragColor = vec4(0.0);\n"
-        "}\n";
+        R"(#version 300 es
+        precision mediump float;
+        layout(location = 0) out mediump vec4 fragColor;
+        void main()
+        {
+           uint u;
+           vec2 v = unpackUnorm2x16(u);
+           fragColor = vec4(v, 0.0, 0.0);
+        })";
     compile(shaderString);
     ASSERT_TRUE(foundInCode("vec2 unpackUnorm2x16_emu(uint u)"));
 }
@@ -91,14 +95,15 @@ TEST_F(PackUnpackTest, UnpackUnorm2x16Emulation)
 TEST_F(PackUnpackTest, PackHalf2x16Emulation)
 {
     const std::string &shaderString =
-        "#version 300 es\n"
-        "precision mediump float;\n"
-        "layout(location = 0) out mediump vec4 fragColor;"
-        "void main() {\n"
-        "   vec2 v;\n"
-        "   uint u=packHalf2x16(v);\n"
-        "   fragColor = vec4(0.0);\n"
-        "}\n";
+        R"(#version 300 es
+        precision mediump float;
+        layout(location = 0) out mediump vec4 fragColor;
+        void main()
+        {
+            vec2 v;
+            uint u = packHalf2x16(v);
+            fragColor = vec4(u);
+        })";
     compile(shaderString);
     ASSERT_TRUE(foundInCode("uint packHalf2x16_emu(vec2 v)"));
 }
@@ -107,14 +112,15 @@ TEST_F(PackUnpackTest, PackHalf2x16Emulation)
 TEST_F(PackUnpackTest, UnpackHalf2x16Emulation)
 {
     const std::string &shaderString =
-        "#version 300 es\n"
-        "precision mediump float;\n"
-        "layout(location = 0) out mediump vec4 fragColor;"
-        "void main() {\n"
-        "   uint u;\n"
-        "   vec2 v=unpackHalf2x16(u);\n"
-        "   fragColor = vec4(0.0);\n"
-        "}\n";
+        R"(#version 300 es
+        precision mediump float;
+        layout(location = 0) out mediump vec4 fragColor;
+        void main()
+        {
+            uint u;
+            vec2 v = unpackHalf2x16(u);
+            fragColor = vec4(v, 0.0, 0.0);
+        })";
     compile(shaderString);
     ASSERT_TRUE(foundInCode("vec2 unpackHalf2x16_emu(uint u)"));
 }

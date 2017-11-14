@@ -2474,14 +2474,23 @@ TEST_P(GLSLTest_ES3, LiteralNegativeInfinityOutput)
 TEST_P(GLSLTest_ES3, MultipleDeclarationWithCommaOperator)
 {
     const std::string &fragmentShader =
-        "#version 300 es\n"
-        "precision mediump float;\n"
-        "out vec4 color;\n"
-        "void main(void)\n"
-        "{\n"
-        " float a = 0.0, b = ((gl_FragCoord.x < 0.5 ? a : 0.0), 1.0);\n"
-        " color = vec4(b);\n"
-        "}\n";
+        R"(#version 300 es
+        precision mediump float;
+        out vec4 color;
+
+        uniform float u;
+        float c = 0.0;
+        float sideEffect()
+        {
+            c = u;
+            return c;
+        }
+
+        void main(void)
+        {
+            float a = 0.0, b = ((gl_FragCoord.x < 0.5 ? a : sideEffect()), a);
+            color = vec4(b + c);
+        })";
 
     ANGLE_GL_PROGRAM(program, mSimpleVSSource, fragmentShader);
 }
@@ -2491,17 +2500,26 @@ TEST_P(GLSLTest_ES3, MultipleDeclarationWithCommaOperator)
 TEST_P(GLSLTest_ES3, MultipleDeclarationWithCommaOperatorInForLoop)
 {
     const std::string &fragmentShader =
-        "#version 300 es\n"
-        "precision mediump float;\n"
-        "out vec4 color;\n"
-        "void main(void)\n"
-        "{\n"
-        " for(float a = 0.0, b = ((gl_FragCoord.x < 0.5 ? a : 0.0), 1.0); a < 10.0; a++)\n"
-        " {\n"
-        "  b += 1.0;\n"
-        "  color = vec4(b);\n"
-        " }\n"
-        "}\n";
+        R"(#version 300 es
+        precision mediump float;
+        out vec4 color;
+
+        uniform float u;
+        float c = 0.0;
+        float sideEffect()
+        {
+            c = u;
+            return c;
+        }
+
+        void main(void)
+        {
+            for(float a = 0.0, b = ((gl_FragCoord.x < 0.5 ? a : sideEffect()), a); a < 10.0; a++)
+            {
+                b += 1.0;
+                color = vec4(b);
+            }
+        })";
 
     ANGLE_GL_PROGRAM(program, mSimpleVSSource, fragmentShader);
 }
