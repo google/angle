@@ -28,3 +28,10 @@ TEST(EGLSanityCheckTest, HasGetPlatformDisplayEXT)
 
     ASSERT_NE(eglGetPlatformDisplayEXT, nullptr);
 }
+
+// Checks that calling GetProcAddress for a non-existant function fails.
+TEST(EGLSanityCheckTest, GetProcAddressNegativeTest)
+{
+    auto check = eglGetProcAddress("WigglyWombats");
+    EXPECT_EQ(nullptr, check);
+}

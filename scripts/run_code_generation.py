@@ -116,6 +116,15 @@ generators = {
         ],
         'script': 'src/libANGLE/gen_packed_gl_enums.py',
     },
+    'proc table': {
+        'inputs': [
+            'src/libGLESv2/proc_table_data.json',
+        ],
+        'outputs': [
+            'src/libGLESv2/proc_table_autogen.cpp',
+        ],
+        'script': 'src/libGLESv2/gen_proc_table.py',
+    },
     'Vulkan format': {
         'inputs': [
             'src/libANGLE/renderer/angle_format.py',
@@ -144,7 +153,7 @@ for name, info in sorted(generators.iteritems()):
         input_mtime = os.path.getmtime(finput)
         for foutput in info['outputs']:
             if not os.path.exists(foutput):
-                print('Output' + foutput + ' not found for ' + name + ' table')
+                print('Output ' + foutput + ' not found for ' + name + ' table')
                 dirty = True
             else:
                 output_mtime = os.path.getmtime(foutput)

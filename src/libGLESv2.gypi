@@ -831,6 +831,8 @@
             'libGLESv2/libGLESv2.cpp',
             'libGLESv2/libGLESv2.def',
             'libGLESv2/libGLESv2.rc',
+            'libGLESv2/proc_table.h',
+            'libGLESv2/proc_table_autogen.cpp',
             'libGLESv2/resource.h',
         ],
         'libegl_sources':
