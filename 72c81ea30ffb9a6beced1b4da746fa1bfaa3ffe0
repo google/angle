@@ -121,6 +121,30 @@
     },
     {
       "key": {
+        "uuid": "5fa77eb1_1b649ac3",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 374,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-14T18:41:35Z",
+      "side": 1,
+      "message": "I wouldn\u0027t mind exposing one extension (the EXT one, probably) but I don\u0027t want to miss out on users that were only checking for one of the two.  The OES one seems more official and will likely be more popular over time. Jiawei probably knows more about which extensions are used by various tests.",
+      "parentUuid": "a5c8eec3_67741c52",
+      "range": {
+        "startLine": 373,
+        "startChar": 0,
+        "endLine": 374,
+        "endChar": 27
+      },
+      "revId": "72c81ea30ffb9a6beced1b4da746fa1bfaa3ffe0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "cf917f84_e40f89a7",
         "filename": "src/libANGLE/validationES2.cpp",
         "patchSetId": 11
