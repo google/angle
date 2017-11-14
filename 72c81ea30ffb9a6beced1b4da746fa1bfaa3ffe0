@@ -97,6 +97,30 @@
     },
     {
       "key": {
+        "uuid": "a5c8eec3_67741c52",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 374,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-14T18:13:26Z",
+      "side": 1,
+      "message": "Why\u0027s that? Just so the tests run properly?\n\nI would think it would be better just to have one extension exposed in ANGLE, at least for now, to keep our design consistent (I don\u0027t know of any other cloned extension that we expose in two flavors).",
+      "parentUuid": "25f6821a_cd31d2dd",
+      "range": {
+        "startLine": 373,
+        "startChar": 0,
+        "endLine": 374,
+        "endChar": 27
+      },
+      "revId": "72c81ea30ffb9a6beced1b4da746fa1bfaa3ffe0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "cf917f84_e40f89a7",
         "filename": "src/libANGLE/validationES2.cpp",
         "patchSetId": 11
