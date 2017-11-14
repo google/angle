@@ -22,6 +22,30 @@
       "revId": "cb81f418c43c5d91172d73a05cdc437bd9d38a08",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4fb32289_26e364d4",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/ResourceManager11.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 323,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-14T21:30:13Z",
+      "side": 1,
+      "message": "It\u0027s just easier to work with the numbers if we use uint64_t everywhere, rather than checking on every place we transition between size_t / 64-bit. I doubt in practice we could allocate a single resource that overflowed 32-bits.",
+      "parentUuid": "db96e307_35886c8e",
+      "range": {
+        "startLine": 323,
+        "startChar": 49,
+        "endLine": 323,
+        "endChar": 57
+      },
+      "revId": "cb81f418c43c5d91172d73a05cdc437bd9d38a08",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
