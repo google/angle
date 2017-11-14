@@ -145,6 +145,30 @@
     },
     {
       "key": {
+        "uuid": "a351561a_a1c17784",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 374,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-14T18:46:37Z",
+      "side": 1,
+      "message": "I wouldn\u0027t worry too much about users yet - it\u0027s an experimental extension, possibly targeted at WebGL, and on WebGL we control the full stack that will certainly be exposed to javascript as a single extension. Let\u0027s resolve to pick one of the extensions - I can help guide Jiawei in how to fix dEQP if necessary.\n\nWe can always change our minds later and expose as many flavors as we want, but at that point we might have a more consistent way of doing this (right now we don\u0027t list the prefix on any of our existing extensions).",
+      "parentUuid": "5fa77eb1_1b649ac3",
+      "range": {
+        "startLine": 373,
+        "startChar": 0,
+        "endLine": 374,
+        "endChar": 27
+      },
+      "revId": "72c81ea30ffb9a6beced1b4da746fa1bfaa3ffe0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "cf917f84_e40f89a7",
         "filename": "src/libANGLE/validationES2.cpp",
         "patchSetId": 11
