@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "3ad5f8ac_acc4c22d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 700,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-11-14T04:18:23Z",
+      "side": 1,
+      "message": "getPackStorage calls getBufferStorage, which calls allocateStorage and updateBufferStorage. allocateStorage calls new. PackStorage constructor doesn\u0027t set mDataRevision. Neither does BufferStorage constructor. Thus, mDataRevision is initialized to a random value.\nSo, \"latestBuffer-\u003egetDataRevision() \u003e storage-\u003egetDataRevision()\" check in updateBufferStorage will have random result. Which means either new pack storage revision will be set to be the same as latestBuffer-\u003egetDataRevision(), or will remain a random number smaller than it.\nThen it will be incremented in onStorageUpdate. Which can also cause mLatestBufferStorage to decrease revision.\n\nAm I wrong?",
+      "parentUuid": "18904882_8c5a09c0",
+      "range": {
+        "startLine": 700,
+        "startChar": 4,
+        "endLine": 700,
+        "endChar": 33
+      },
+      "revId": "e9f55580376cc17d79b2785929503f6b6ac93f13",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f7495240_f26ebdc7",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
         "patchSetId": 8
@@ -183,6 +207,54 @@
         "startChar": 8,
         "endLine": 933,
         "endChar": 29
+      },
+      "revId": "e9f55580376cc17d79b2785929503f6b6ac93f13",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f98da1d_e8edd5e9",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 933,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-11-14T04:18:23Z",
+      "side": 1,
+      "message": "Do you think my logic was wrong? Because if it was correct, ASSERT would be easier to understand. Plus, it would be clearer to see that mLastBufferStorage can be initialized only by onStorageUpdate.",
+      "parentUuid": "603e7965_a74619cb",
+      "range": {
+        "startLine": 933,
+        "startChar": 8,
+        "endLine": 933,
+        "endChar": 29
+      },
+      "revId": "e9f55580376cc17d79b2785929503f6b6ac93f13",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "29129cb1_66b0df6d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 933,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-11-14T04:18:23Z",
+      "side": 1,
+      "message": "Ah, now I get it, after seeing that dest and source have same data revision, this would set mLatestsBufferStorage to the smaller usage. Wasn\u0027t as clear in the previous version.",
+      "parentUuid": "2151c273_29116d7b",
+      "range": {
+        "startLine": 933,
+        "startChar": 33,
+        "endLine": 933,
+        "endChar": 84
       },
       "revId": "e9f55580376cc17d79b2785929503f6b6ac93f13",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
