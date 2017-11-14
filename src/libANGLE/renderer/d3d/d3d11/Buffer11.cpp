@@ -295,6 +295,7 @@ Buffer11::Buffer11(const gl::BufferState &state, Renderer11 *renderer)
       mSize(0),
       mMappedStorage(nullptr),
       mBufferStorages({}),
+      mLatestBufferStorage(nullptr),
       mDeallocThresholds({}),
       mIdleness({}),
       mConstantBufferStorageAdditionalSize(0),
@@ -398,7 +399,7 @@ gl::Error Buffer11::setSubData(const gl::Context *context,
         }
 
         ANGLE_TRY(writeBuffer->setData(static_cast<const uint8_t *>(data), offset, size));
-        writeBuffer->setDataRevision(writeBuffer->getDataRevision() + 1);
+        onStorageUpdate(writeBuffer);
 
         // Notify any vertex arrays that we have dirty data.
         // TODO(jmadill): Use a more fine grained notification for data updates.
@@ -465,7 +466,7 @@ gl::Error Buffer11::copySubData(const gl::Context *context,
     CopyResult copyResult = CopyResult::NOT_RECREATED;
     ANGLE_TRY_RESULT(copyDest->copyFromStorage(context, copySource, sourceOffset, size, destOffset),
                      copyResult);
-    copyDest->setDataRevision(copyDest->getDataRevision() + 1);
+    onStorageUpdate(copyDest);
 
     mSize = std::max<size_t>(mSize, destOffset + size);
     invalidateStaticData(context);
@@ -513,7 +514,7 @@ gl::Error Buffer11::mapRange(const gl::Context *context,
     if ((access & GL_MAP_WRITE_BIT) > 0)
     {
         // Update the data revision immediately, since the data might be changed at any time
-        mMappedStorage->setDataRevision(mMappedStorage->getDataRevision() + 1);
+        onStorageUpdate(mMappedStorage);
         invalidateStaticData(context);
     }
 
@@ -545,7 +546,7 @@ gl::Error Buffer11::markTransformFeedbackUsage(const gl::Context *context)
 
     if (transformFeedbackStorage)
     {
-        transformFeedbackStorage->setDataRevision(transformFeedbackStorage->getDataRevision() + 1);
+        onStorageUpdate(transformFeedbackStorage);
     }
 
     invalidateStaticData(context);
@@ -694,12 +695,9 @@ gl::Error Buffer11::packPixels(const gl::Context *context,
     PackStorage *packStorage = nullptr;
     ANGLE_TRY_RESULT(getPackStorage(context), packStorage);
 
-    BufferStorage *latestStorage = nullptr;
-    ANGLE_TRY_RESULT(getLatestBufferStorage(context), latestStorage);
-
     ASSERT(packStorage);
     ANGLE_TRY(packStorage->packPixels(context, readAttachment, params));
-    packStorage->setDataRevision(latestStorage ? latestStorage->getDataRevision() + 1 : 1);
+    onStorageUpdate(packStorage);
 
     return gl::NoError();
 }
@@ -850,7 +848,7 @@ gl::Error Buffer11::updateBufferStorage(const gl::Context *context,
             ANGLE_TRY_RESULT(stagingBuffer->copyFromStorage(context, latestBuffer, 0,
                                                             latestBuffer->getSize(), 0),
                              copyResult);
-            stagingBuffer->setDataRevision(latestBuffer->getDataRevision());
+            onCopyStorage(stagingBuffer, latestBuffer);
 
             latestBuffer = stagingBuffer;
         }
@@ -864,7 +862,7 @@ gl::Error Buffer11::updateBufferStorage(const gl::Context *context,
         {
             updateSerial();
         }
-        storage->setDataRevision(latestBuffer->getDataRevision());
+        onCopyStorage(storage, latestBuffer);
     }
 
     return gl::NoError();
@@ -873,26 +871,13 @@ gl::Error Buffer11::updateBufferStorage(const gl::Context *context,
 gl::ErrorOrResult<Buffer11::BufferStorage *> Buffer11::getLatestBufferStorage(
     const gl::Context *context) const
 {
-    // Even though we iterate over all the direct buffers, it is expected that only
-    // 1 or 2 will be present.
-    BufferStorage *latestStorage = nullptr;
-    DataRevision latestRevision  = 0;
-    for (auto &storage : mBufferStorages)
-    {
-        if (storage && (!latestStorage || storage->getDataRevision() > latestRevision))
-        {
-            latestStorage  = storage;
-            latestRevision = storage->getDataRevision();
-        }
-    }
-
     // resize buffer
-    if (latestStorage && latestStorage->getSize() < mSize)
+    if (mLatestBufferStorage && mLatestBufferStorage->getSize() < mSize)
     {
-        ANGLE_TRY(latestStorage->resize(context, mSize, true));
+        ANGLE_TRY(mLatestBufferStorage->resize(context, mSize, true));
     }
 
-    return latestStorage;
+    return mLatestBufferStorage;
 }
 
 gl::ErrorOrResult<Buffer11::NativeStorage *> Buffer11::getStagingStorage(const gl::Context *context)
@@ -940,6 +925,22 @@ OnBufferDataDirtyChannel *Buffer11::getStaticBroadcastChannel()
 OnBufferDataDirtyChannel *Buffer11::getDirectBroadcastChannel()
 {
     return &mDirectBroadcastChannel;
+}
+
+void Buffer11::onCopyStorage(BufferStorage *dest, BufferStorage *source)
+{
+    ASSERT(source);
+    dest->setDataRevision(source->getDataRevision());
+    if (!mLatestBufferStorage || dest->getUsage() < mLatestBufferStorage->getUsage())
+    {
+        mLatestBufferStorage = dest;
+    }
+}
+
+void Buffer11::onStorageUpdate(BufferStorage *updatedStorage)
+{
+    updatedStorage->setDataRevision(updatedStorage->getDataRevision() + 1);
+    mLatestBufferStorage = updatedStorage;
 }
 
 // Buffer11::BufferStorage implementation
