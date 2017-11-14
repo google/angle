@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "f9f83905_527c66a5",
+        "filename": "samples/hello_triangle/HelloTriangle.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-11-14T23:23:40Z",
+      "side": 1,
+      "message": "It should work but it didn\u0027t.  I\u0027ll look into why.",
+      "parentUuid": "31eaea69_9c87ca58",
+      "range": {
+        "startLine": 34,
+        "startChar": 0,
+        "endLine": 41,
+        "endChar": 0
+      },
+      "revId": "3953ed7d148b11dc5ad223481068238a30190997",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "63c9b736_c5871481",
         "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
         "patchSetId": 13
@@ -36,6 +60,30 @@
       "writtenOn": "2017-11-13T23:29:21Z",
       "side": 1,
       "message": "keep the descriptive getter function names. code style in angle prefers verbosity vs linux-kernel-like contractions.",
+      "range": {
+        "startLine": 332,
+        "startChar": 58,
+        "endLine": 332,
+        "endChar": 65
+      },
+      "revId": "3953ed7d148b11dc5ad223481068238a30190997",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8ac0e827_0127c2fb",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 332,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-11-14T23:23:40Z",
+      "side": 1,
+      "message": "yup, I was being concise at the WIP stage and going to add verbosity when I polish.  :)",
+      "parentUuid": "63c9b736_c5871481",
       "range": {
         "startLine": 332,
         "startChar": 58,
@@ -94,6 +142,30 @@
     },
     {
       "key": {
+        "uuid": "d9a17dc7_b753a071",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-11-14T23:23:40Z",
+      "side": 1,
+      "message": "will do",
+      "parentUuid": "8ce6e8cd_2d4e9ce3",
+      "range": {
+        "startLine": 71,
+        "startChar": 16,
+        "endLine": 71,
+        "endChar": 22
+      },
+      "revId": "3953ed7d148b11dc5ad223481068238a30190997",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "c1c78d84_507c0da0",
         "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.cpp",
         "patchSetId": 13
@@ -105,6 +177,30 @@
       "writtenOn": "2017-11-13T23:29:21Z",
       "side": 1,
       "message": "This isn\u0027t quite what I had in mind for the StreamingBufferManager:\n\n- if we have multiple attributes, we for sure don\u0027t want to map and unmap multiple times within a single draw call. One option is to reserve space in the buffer, and if we fail, handle this either by splitting up the streaming data (putting the first portion in the available space, the second portion in the new buffer) or entirely in the second buffer.\n- Another possibly better option (what I think we really want to do) is to keep the buffer memory mapped, and flush out regions of memory as we modify them. let me check with piman@ about this idea. See vkFlushMappedMemoryRanges.\n- we also need to handle the possible case where the entire set of streaming data doesn\u0027t fit in the streaming buffer.",
+      "range": {
+        "startLine": 1183,
+        "startChar": 3,
+        "endLine": 1183,
+        "endChar": 33
+      },
+      "revId": "3953ed7d148b11dc5ad223481068238a30190997",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "90ade38b_ea198aef",
+        "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 1183,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-11-14T23:23:40Z",
+      "side": 1,
+      "message": "I called them map/unmap but those are poor names.  If you look at the code for processing attributes it calls map multiple times, and only the first time is memory actually mapped (see below \"if(!mPtr)mMemory.map(...)\"  Then it calls unmap once after looping over all attribs.\n\nIf I understand your third point that is handled by \"max(amount, 0x100)\" so it always asks for enough to hold everything.  The default is a small 0x100 so I could easily observe the behavior when it fills.  I\u0027ll bump that up - what is a good amount?",
+      "parentUuid": "c1c78d84_507c0da0",
       "range": {
         "startLine": 1183,
         "startChar": 3,
@@ -140,6 +236,30 @@
     },
     {
       "key": {
+        "uuid": "0bce7d54_3e98b6a1",
+        "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 626,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-11-14T23:23:40Z",
+      "side": 1,
+      "message": "will do",
+      "parentUuid": "04aa064b_397d99eb",
+      "range": {
+        "startLine": 626,
+        "startChar": 6,
+        "endLine": 626,
+        "endChar": 19
+      },
+      "revId": "3953ed7d148b11dc5ad223481068238a30190997",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d30bd6a4_3e6f14d1",
         "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.h",
         "patchSetId": 13
@@ -163,6 +283,30 @@
     },
     {
       "key": {
+        "uuid": "7563f12a_050e0f13",
+        "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 635,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-11-14T23:23:40Z",
+      "side": 1,
+      "message": "Yeah that felt wrong, but it made it a self-contained thing for use by VertexArray.\nOtherwise we have to get the thing from the context, then pass in context on all it\u0027s methods.\nOr add the functions to context, which also feels wrong.",
+      "parentUuid": "d30bd6a4_3e6f14d1",
+      "range": {
+        "startLine": 635,
+        "startChar": 4,
+        "endLine": 635,
+        "endChar": 24
+      },
+      "revId": "3953ed7d148b11dc5ad223481068238a30190997",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d1bd3661_b8a1311b",
         "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.h",
         "patchSetId": 13
@@ -174,6 +318,30 @@
       "writtenOn": "2017-11-13T23:29:21Z",
       "side": 1,
       "message": "nit: when naming variables, use descriptive names without contractions.",
+      "range": {
+        "startLine": 640,
+        "startChar": 13,
+        "endLine": 640,
+        "endChar": 17
+      },
+      "revId": "3953ed7d148b11dc5ad223481068238a30190997",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5978f323_974abbb4",
+        "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 640,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-11-14T23:23:40Z",
+      "side": 1,
+      "message": "yup",
+      "parentUuid": "d1bd3661_b8a1311b",
       "range": {
         "startLine": 640,
         "startChar": 13,
