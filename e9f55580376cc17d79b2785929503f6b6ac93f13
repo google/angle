@@ -97,6 +97,30 @@
     },
     {
       "key": {
+        "uuid": "25291411_f3ab6a02",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 700,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-11-14T22:49:00Z",
+      "side": 1,
+      "message": "Oh, I was confused by mRevision not having Data in it, like in getDataRevision. Looks good to me now.",
+      "parentUuid": "37a1a5ad_c3e02720",
+      "range": {
+        "startLine": 700,
+        "startChar": 4,
+        "endLine": 700,
+        "endChar": 33
+      },
+      "revId": "e9f55580376cc17d79b2785929503f6b6ac93f13",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f7495240_f26ebdc7",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
         "patchSetId": 8
