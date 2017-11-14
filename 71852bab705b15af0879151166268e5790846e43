@@ -1,0 +1,84 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ad08da8a_1c61fdec",
+        "filename": "src/compiler/translator/Initialize.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 639,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-14T08:58:00Z",
+      "side": 1,
+      "message": "You should have the right qualifiers on the parameter types (inout in this case). They are used to determine whether an operation has side effects, which can be relevant to AST transformations.",
+      "range": {
+        "startLine": 639,
+        "startChar": 68,
+        "endLine": 639,
+        "endChar": 73
+      },
+      "revId": "71852bab705b15af0879151166268e5790846e43",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d904e8fd_f60a26af",
+        "filename": "src/tests/compiler_tests/ShaderValidation_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 5301,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-14T08:58:00Z",
+      "side": 1,
+      "message": "Nit: Please use raw string literals for multiline strings.\n\nR\"(string goes here)\"",
+      "revId": "71852bab705b15af0879151166268e5790846e43",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "999a1662_26508d23",
+        "filename": "src/tests/compiler_tests/ShaderValidation_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 5302,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-14T08:58:00Z",
+      "side": 1,
+      "message": "Make the shaders minimal - if they don\u0027t actually use floats, leave \"precision mediump float\" out.\n\nThe output color o_color that\u0027s included in some of the other tests also seems unnecessary.",
+      "revId": "71852bab705b15af0879151166268e5790846e43",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c9124334_93995dfb",
+        "filename": "src/tests/gl_tests/ShaderStorageBufferTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-14T08:58:00Z",
+      "side": 1,
+      "message": "Raw string literal here as well.",
+      "range": {
+        "startLine": 144,
+        "startChar": 8,
+        "endLine": 144,
+        "endChar": 9
+      },
+      "revId": "71852bab705b15af0879151166268e5790846e43",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
