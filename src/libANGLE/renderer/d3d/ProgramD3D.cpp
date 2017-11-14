@@ -2678,30 +2678,16 @@ void ProgramD3D::gatherTransformFeedbackVaryings(const gl::VaryingPacking &varyi
         }
         else
         {
-            std::vector<unsigned int> subscripts;
-            std::string baseName = gl::ParseResourceName(tfVaryingName, &subscripts);
-            size_t subscript     = GL_INVALID_INDEX;
-            if (!subscripts.empty())
-            {
-                subscript = subscripts.back();
-            }
             for (const auto &registerInfo : varyingPacking.getRegisterList())
             {
                 const auto &varying   = *registerInfo.packedVarying->varying;
                 GLenum transposedType = gl::TransposeMatrixType(varying.type);
-                int componentCount = gl::VariableColumnCount(transposedType);
-                ASSERT(!varying.isBuiltIn());
-
-                // Transform feedback for varying structs is underspecified.
-                // See Khronos bug 9856.
-                // TODO(jmadill): Figure out how to be spec-compliant here.
-                if (registerInfo.packedVarying->isStructField() || varying.isStruct())
-                    continue;
+                int componentCount    = gl::VariableColumnCount(transposedType);
+                ASSERT(!varying.isBuiltIn() && !varying.isStruct());
 
                 // There can be more than one register assigned to a particular varying, and each
                 // register needs its own stream out entry.
-                if (baseName == registerInfo.packedVarying->varying->name &&
-                    (subscript == GL_INVALID_INDEX || subscript == registerInfo.varyingArrayIndex))
+                if (registerInfo.tfVaryingName() == tfVaryingName)
                 {
                     mStreamOutVaryings.push_back(D3DVarying(
                         varyingSemantic, registerInfo.semanticIndex, componentCount, outputSlot));

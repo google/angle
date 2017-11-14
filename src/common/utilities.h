@@ -19,6 +19,11 @@
 
 #include "common/mathutil.h"
 
+namespace sh
+{
+struct ShaderVariable;
+}
+
 namespace gl
 {
 
@@ -56,6 +61,11 @@ GLenum LayerIndexToCubeMapTextureTarget(size_t index);
 // outermost array indices in the back. If an array index is invalid, GL_INVALID_INDEX is added to
 // outSubscripts.
 std::string ParseResourceName(const std::string &name, std::vector<unsigned int> *outSubscripts);
+
+// Find the child field which matches 'fullName' == var.name + "." + field.name.
+// Return nullptr if not found.
+const sh::ShaderVariable *FindShaderVarField(const sh::ShaderVariable &var,
+                                             const std::string &fullName);
 
 // Find the range of index values in the provided indices pointer.  Primitive restart indices are
 // only counted in the range if primitive restart is disabled.

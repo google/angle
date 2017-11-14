@@ -201,6 +201,17 @@ struct TransformFeedbackVarying : public sh::Varying
     {
         ASSERT(!isArrayOfArrays());
     }
+
+    TransformFeedbackVarying(const sh::ShaderVariable &field, const sh::Varying &parent)
+        : arrayIndex(GL_INVALID_INDEX)
+    {
+        sh::ShaderVariable *thisVar = this;
+        *thisVar                    = field;
+        interpolation               = parent.interpolation;
+        isInvariant                 = parent.isInvariant;
+        name                        = parent.name + "." + name;
+    }
+
     std::string nameWithArrayIndex() const
     {
         std::stringstream fullNameStr;

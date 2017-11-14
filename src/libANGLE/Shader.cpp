@@ -534,6 +534,12 @@ std::string Shader::getTransformFeedbackVaryingMappedName(const std::string &tfV
             {
                 return varying.mappedName;
             }
+            else if (varying.isStruct())
+            {
+                const auto *field = FindShaderVarField(varying, tfVaryingName);
+                ASSERT(field != nullptr && !field->isStruct() && !field->isArray());
+                return varying.mappedName + "." + field->mappedName;
+            }
         }
     }
     UNREACHABLE();

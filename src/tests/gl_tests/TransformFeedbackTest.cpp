@@ -1129,6 +1129,66 @@ TEST_P(TransformFeedbackTestES31, SameArrayElementVaryings)
     ASSERT_EQ(0u, mProgram);
 }
 
+// Test that program link fails in case to capture array element on a non-array varying.
+TEST_P(TransformFeedbackTestES31, ElementCaptureOnNonArrayVarying)
+{
+    const std::string &vertexShaderSource =
+        "#version 310 es\n"
+        "in vec3 position;\n"
+        "out vec3 outAttrib;\n"
+        "void main() {"
+        "  outAttrib = position;\n"
+        "  gl_Position = vec4(position, 1);\n"
+        "}";
+
+    const std::string &fragmentShaderSource =
+        "#version 310 es\n"
+        "precision mediump float;\n"
+        "out vec4 color;\n"
+        "in vec3 outAttrib;\n"
+        "void main() {\n"
+        "  color = vec4(0);\n"
+        "}";
+
+    std::vector<std::string> tfVaryings;
+    tfVaryings.push_back("outAttrib[1]");
+
+    mProgram = CompileProgramWithTransformFeedback(vertexShaderSource, fragmentShaderSource,
+                                                   tfVaryings, GL_INTERLEAVED_ATTRIBS);
+    ASSERT_EQ(0u, mProgram);
+}
+
+// Test that program link fails in case to capure an outbound array element.
+TEST_P(TransformFeedbackTestES31, CaptureOutboundElement)
+{
+    const std::string &vertexShaderSource =
+        "#version 310 es\n"
+        "in vec3 position;\n"
+        "out vec3 outAttribs[3];\n"
+        "void main() {"
+        "  outAttribs[0] = position;\n"
+        "  outAttribs[1] = vec3(0, 0, 0);\n"
+        "  outAttribs[2] = position;\n"
+        "  gl_Position = vec4(position, 1);\n"
+        "}";
+
+    const std::string &fragmentShaderSource =
+        "#version 310 es\n"
+        "precision mediump float;\n"
+        "out vec4 color;\n"
+        "in vec3 outAttribs[3];\n"
+        "void main() {\n"
+        "  color = vec4(0);\n"
+        "}";
+
+    std::vector<std::string> tfVaryings;
+    tfVaryings.push_back("outAttribs[3]");
+
+    mProgram = CompileProgramWithTransformFeedback(vertexShaderSource, fragmentShaderSource,
+                                                   tfVaryings, GL_INTERLEAVED_ATTRIBS);
+    ASSERT_EQ(0u, mProgram);
+}
+
 // Test transform feedback names can be specified using array element.
 TEST_P(TransformFeedbackTestES31, DifferentArrayElementVaryings)
 {
@@ -1190,6 +1250,125 @@ TEST_P(TransformFeedbackTestES31, DifferentArrayElementVaryings)
     glUnmapBuffer(GL_TRANSFORM_FEEDBACK_BUFFER);
 
     ASSERT_GL_NO_ERROR();
+}
+
+// Test transform feedback varying for base-level members of struct.
+TEST_P(TransformFeedbackTestES31, StructMemberVaryings)
+{
+    const std::string &vertexShaderSource =
+        R"(#version 310 es
+
+        in vec3 position;
+        struct S {
+          vec3 field0;
+          vec3 field1;
+          vec3 field2;
+        };
+        out S s;
+
+        void main() {
+          s.field0 = position;
+          s.field1 = vec3(0, 0, 0);
+          s.field2 = position;
+          gl_Position = vec4(position, 1);
+        })";
+
+    const std::string &fragmentShaderSource =
+        R"(#version 310 es
+
+        precision mediump float;
+        struct S {
+          vec3 field0;
+          vec3 field1;
+          vec3 field2;
+        };
+        out vec4 color;
+        in S s;
+
+        void main() {
+          color = vec4(s.field1, 1);
+        })";
+
+    std::vector<std::string> tfVaryings;
+    tfVaryings.push_back("s.field0");
+    tfVaryings.push_back("s.field2");
+
+    mProgram = CompileProgramWithTransformFeedback(vertexShaderSource, fragmentShaderSource,
+                                                   tfVaryings, GL_INTERLEAVED_ATTRIBS);
+    ASSERT_NE(0u, mProgram);
+
+    glBindBuffer(GL_TRANSFORM_FEEDBACK_BUFFER, mTransformFeedbackBuffer);
+    glBufferData(GL_TRANSFORM_FEEDBACK_BUFFER, sizeof(Vector3) * 2 * 6, nullptr, GL_STREAM_DRAW);
+
+    glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, mTransformFeedback);
+    glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, mTransformFeedbackBuffer);
+
+    glUseProgram(mProgram);
+    glBeginTransformFeedback(GL_TRIANGLES);
+    drawQuad(mProgram, "position", 0.5f);
+    glEndTransformFeedback();
+    glUseProgram(0);
+    ASSERT_GL_NO_ERROR();
+
+    const GLvoid *mapPointer =
+        glMapBufferRange(GL_TRANSFORM_FEEDBACK_BUFFER, 0, sizeof(Vector3) * 2 * 6, GL_MAP_READ_BIT);
+    ASSERT_NE(nullptr, mapPointer);
+
+    const auto &quadVertices = GetQuadVertices();
+
+    const Vector3 *vecPointer = static_cast<const Vector3 *>(mapPointer);
+    for (unsigned int vectorIndex = 0; vectorIndex < 3; ++vectorIndex)
+    {
+        unsigned int stream1Index = vectorIndex * 2;
+        unsigned int stream2Index = vectorIndex * 2 + 1;
+        EXPECT_EQ(quadVertices[vectorIndex], vecPointer[stream1Index]);
+        EXPECT_EQ(quadVertices[vectorIndex], vecPointer[stream2Index]);
+    }
+    glUnmapBuffer(GL_TRANSFORM_FEEDBACK_BUFFER);
+
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test transform feedback varying for struct is not allowed.
+TEST_P(TransformFeedbackTestES31, InvalidStructVaryings)
+{
+    const std::string &vertexShaderSource =
+        R"(#version 310 es
+
+        in vec3 position;
+        struct S {
+          vec3 field0;
+          vec3 field1;
+        };
+        out S s;
+
+        void main() {
+          s.field0 = position;
+          s.field1 = vec3(0, 0, 0);
+          gl_Position = vec4(position, 1);
+        })";
+
+    const std::string &fragmentShaderSource =
+        R"(#version 310 es
+
+        precision mediump float;
+        struct S {
+          vec3 field0;
+          vec3 field1;
+        };
+        out vec4 color;
+        in S s;
+
+        void main() {
+          color = vec4(s.field1, 1);
+        })";
+
+    std::vector<std::string> tfVaryings;
+    tfVaryings.push_back("s");
+
+    mProgram = CompileProgramWithTransformFeedback(vertexShaderSource, fragmentShaderSource,
+                                                   tfVaryings, GL_INTERLEAVED_ATTRIBS);
+    ASSERT_EQ(0u, mProgram);
 }
 
 // Test that nonexistent transform feedback varyings don't assert when linking.

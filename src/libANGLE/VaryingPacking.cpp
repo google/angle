@@ -300,13 +300,13 @@ bool VaryingPacking::collectAndPackUserVaryings(gl::InfoLog &infoLog,
                 {
                     ASSERT(!field.isStruct() && !field.isArray());
                     mPackedVaryings.push_back(PackedVarying(field, interpolation, output->name));
-                    uniqueFullNames.insert(mPackedVaryings.back().nameWithArrayIndex());
+                    uniqueFullNames.insert(mPackedVaryings.back().fullName());
                 }
             }
             else
             {
                 mPackedVaryings.push_back(PackedVarying(*output, interpolation));
-                uniqueFullNames.insert(mPackedVaryings.back().nameWithArrayIndex());
+                uniqueFullNames.insert(mPackedVaryings.back().fullName());
             }
             continue;
         }
@@ -331,16 +331,26 @@ bool VaryingPacking::collectAndPackUserVaryings(gl::InfoLog &infoLog,
             {
                 continue;
             }
+            if (input->isStruct())
+            {
+                const sh::ShaderVariable *field = FindShaderVarField(*input, tfVarying);
+                if (field != nullptr)
+                {
+                    ASSERT(!field->isStruct() && !field->isArray());
+                    mPackedVaryings.emplace_back(*field, input->interpolation, input->name);
+                    mPackedVaryings.back().vertexOnly = true;
+                    mPackedVaryings.back().arrayIndex = GL_INVALID_INDEX;
+                    uniqueFullNames.insert(tfVarying);
+                }
+            }
             // Array as a whole and array element conflict has already been checked in
             // linkValidateTransformFeedback.
-            if (baseName == input->name)
+            else if (baseName == input->name)
             {
-                // Transform feedback for varying structs is underspecified.
-                // See Khronos bug 9856.
-                // TODO(jmadill): Figure out how to be spec-compliant here.
-                if (!input->isStruct() && tfVarying.compare(0, 3, "gl_") != 0)
+                // only pack varyings that are not builtins.
+                if (tfVarying.compare(0, 3, "gl_") != 0)
                 {
-                    mPackedVaryings.push_back(PackedVarying(*input, input->interpolation));
+                    mPackedVaryings.emplace_back(*input, input->interpolation);
                     mPackedVaryings.back().vertexOnly = true;
                     mPackedVaryings.back().arrayIndex = static_cast<GLuint>(subscript);
                     uniqueFullNames.insert(tfVarying);
@@ -372,7 +382,7 @@ bool VaryingPacking::packUserVaryings(gl::InfoLog &infoLog,
     {
         if (!packVarying(packedVarying))
         {
-            infoLog << "Could not pack varying " << packedVarying.nameWithArrayIndex();
+            infoLog << "Could not pack varying " << packedVarying.fullName();
             return false;
         }
     }

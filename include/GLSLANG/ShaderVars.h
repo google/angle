@@ -224,7 +224,7 @@ struct Varying : public VariableWithLocation
 {
     Varying();
     ~Varying();
-    Varying(const Varying &otherg);
+    Varying(const Varying &other);
     Varying &operator=(const Varying &other);
     bool operator==(const Varying &other) const;
     bool operator!=(const Varying &other) const

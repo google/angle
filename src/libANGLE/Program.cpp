@@ -320,6 +320,28 @@ void InitShaderStorageBlockLinker(const gl::Context *context,
     }
 }
 
+// Find the matching varying or field by name.
+const sh::ShaderVariable *FindVaryingOrField(const ProgramMergedVaryings &varyings,
+                                             const std::string &name)
+{
+    const sh::ShaderVariable *var = nullptr;
+    for (const auto &ref : varyings)
+    {
+        const sh::Varying *varying = ref.second.get();
+        if (varying->name == name)
+        {
+            var = varying;
+            break;
+        }
+        var = FindShaderVarField(*varying, name);
+        if (var != nullptr)
+        {
+            break;
+        }
+    }
+    return var;
+}
+
 }  // anonymous namespace
 
 const char *const g_fakepath = "C:\\fakepath";
@@ -2642,91 +2664,113 @@ bool Program::linkValidateTransformFeedback(const gl::Context *context,
                                             const ProgramMergedVaryings &varyings,
                                             const Caps &caps) const
 {
-    size_t totalComponents = 0;
 
+    // Validate the tf names regardless of the actual program varyings.
     std::set<std::string> uniqueNames;
-
     for (const std::string &tfVaryingName : mState.mTransformFeedbackVaryingNames)
     {
-        bool found = false;
-        std::vector<unsigned int> subscripts;
-        std::string baseName = ParseResourceName(tfVaryingName, &subscripts);
-
-        for (const auto &ref : varyings)
-        {
-            const sh::Varying *varying = ref.second.get();
-
-            if (baseName == varying->name)
-            {
-                if (uniqueNames.count(tfVaryingName) > 0)
-                {
-                    infoLog << "Two transform feedback varyings specify the same output variable ("
-                            << tfVaryingName << ").";
-                    return false;
-                }
-                if (context->getClientVersion() >= Version(3, 1))
-                {
-                    if (IncludeSameArrayElement(uniqueNames, tfVaryingName))
-                    {
-                        infoLog
-                            << "Two transform feedback varyings include the same array element ("
-                            << tfVaryingName << ").";
-                        return false;
-                    }
-                }
-                else if (varying->isArray())
-                {
-                    infoLog << "Capture of arrays is undefined and not supported.";
-                    return false;
-                }
-
-                uniqueNames.insert(tfVaryingName);
-
-                // TODO(jmadill): Investigate implementation limits on D3D11
-
-                // GLSL ES 3.10 section 4.3.6: A vertex output can't be an array of arrays.
-                ASSERT(!varying->isArrayOfArrays());
-                size_t elementCount =
-                    ((varying->isArray() && subscripts.empty()) ? varying->getOutermostArraySize()
-                                                                : 1);
-                size_t componentCount = VariableComponentCount(varying->type) * elementCount;
-                if (mState.mTransformFeedbackBufferMode == GL_SEPARATE_ATTRIBS &&
-                    componentCount > caps.maxTransformFeedbackSeparateComponents)
-                {
-                    infoLog << "Transform feedback varying's " << varying->name << " components ("
-                            << componentCount << ") exceed the maximum separate components ("
-                            << caps.maxTransformFeedbackSeparateComponents << ").";
-                    return false;
-                }
-
-                totalComponents += componentCount;
-                found = true;
-                break;
-            }
-        }
         if (context->getClientVersion() < Version(3, 1) &&
             tfVaryingName.find('[') != std::string::npos)
         {
             infoLog << "Capture of array elements is undefined and not supported.";
             return false;
         }
-        if (!found)
+        if (context->getClientVersion() >= Version(3, 1))
+        {
+            if (IncludeSameArrayElement(uniqueNames, tfVaryingName))
+            {
+                infoLog << "Two transform feedback varyings include the same array element ("
+                        << tfVaryingName << ").";
+                return false;
+            }
+        }
+        else
+        {
+            if (uniqueNames.count(tfVaryingName) > 0)
+            {
+                infoLog << "Two transform feedback varyings specify the same output variable ("
+                        << tfVaryingName << ").";
+                return false;
+            }
+        }
+        uniqueNames.insert(tfVaryingName);
+    }
+
+    // Validate against program varyings.
+    size_t totalComponents = 0;
+    for (const std::string &tfVaryingName : mState.mTransformFeedbackVaryingNames)
+    {
+        std::vector<unsigned int> subscripts;
+        std::string baseName = ParseResourceName(tfVaryingName, &subscripts);
+
+        const sh::ShaderVariable *var = FindVaryingOrField(varyings, baseName);
+        if (var == nullptr)
         {
             infoLog << "Transform feedback varying " << tfVaryingName
                     << " does not exist in the vertex shader.";
             return false;
         }
-    }
 
-    if (mState.mTransformFeedbackBufferMode == GL_INTERLEAVED_ATTRIBS &&
-        totalComponents > caps.maxTransformFeedbackInterleavedComponents)
-    {
-        infoLog << "Transform feedback varying total components (" << totalComponents
-                << ") exceed the maximum interleaved components ("
-                << caps.maxTransformFeedbackInterleavedComponents << ").";
-        return false;
-    }
+        // Validate the matching variable.
+        if (var->isStruct())
+        {
+            infoLog << "Struct cannot be captured directly (" << baseName << ").";
+            return false;
+        }
 
+        size_t elementCount   = 0;
+        size_t componentCount = 0;
+
+        if (var->isArray())
+        {
+            if (context->getClientVersion() < Version(3, 1))
+            {
+                infoLog << "Capture of arrays is undefined and not supported.";
+                return false;
+            }
+
+            // GLSL ES 3.10 section 4.3.6: A vertex output can't be an array of arrays.
+            ASSERT(!var->isArrayOfArrays());
+
+            if (!subscripts.empty() && subscripts[0] >= var->getOutermostArraySize())
+            {
+                infoLog << "Cannot capture outbound array element '" << tfVaryingName << "'.";
+                return false;
+            }
+            elementCount = (subscripts.empty() ? var->getOutermostArraySize() : 1);
+        }
+        else
+        {
+            if (!subscripts.empty())
+            {
+                infoLog << "Varying '" << baseName
+                        << "' is not an array to be captured by element.";
+                return false;
+            }
+            elementCount = 1;
+        }
+
+        // TODO(jmadill): Investigate implementation limits on D3D11
+        componentCount = VariableComponentCount(var->type) * elementCount;
+        if (mState.mTransformFeedbackBufferMode == GL_SEPARATE_ATTRIBS &&
+            componentCount > caps.maxTransformFeedbackSeparateComponents)
+        {
+            infoLog << "Transform feedback varying " << tfVaryingName << " components ("
+                    << componentCount << ") exceed the maximum separate components ("
+                    << caps.maxTransformFeedbackSeparateComponents << ").";
+            return false;
+        }
+
+        totalComponents += componentCount;
+        if (mState.mTransformFeedbackBufferMode == GL_INTERLEAVED_ATTRIBS &&
+            totalComponents > caps.maxTransformFeedbackInterleavedComponents)
+        {
+            infoLog << "Transform feedback varying total components (" << totalComponents
+                    << ") exceed the maximum interleaved components ("
+                    << caps.maxTransformFeedbackInterleavedComponents << ").";
+            return false;
+        }
+    }
     return true;
 }
 
@@ -2781,6 +2825,15 @@ void Program::gatherTransformFeedbackVaryings(const ProgramMergedVaryings &varyi
                 mState.mLinkedTransformFeedbackVaryings.emplace_back(
                     *varying, static_cast<GLuint>(subscript));
                 break;
+            }
+            else if (varying->isStruct())
+            {
+                const auto *field = FindShaderVarField(*varying, tfVaryingName);
+                if (field != nullptr)
+                {
+                    mState.mLinkedTransformFeedbackVaryings.emplace_back(*field, *varying);
+                    break;
+                }
             }
         }
     }
