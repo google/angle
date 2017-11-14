@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d02e3548_79c09dab",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 3929,
+      "author": {
+        "id": 1130144
+      },
+      "writtenOn": "2017-11-14T03:46:16Z",
+      "side": 1,
+      "message": "Are you sure we don\u0027t need similar \"IsWebGL1()\" if check here?  My devs tell me we need it in order for framebuffer-object-attachment.html to pass completely, in particular the section titled \"Test calling framebufferRenderbuffer before bindRenderbuffer.\"",
+      "revId": "768cd3c6f0b05172509aa326ca6460bcee822497",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
