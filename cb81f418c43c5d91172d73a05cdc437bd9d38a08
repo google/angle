@@ -46,6 +46,30 @@
       "revId": "cb81f418c43c5d91172d73a05cdc437bd9d38a08",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e659ebf9_41bd11ca",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/ResourceManager11.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 323,
+      "author": {
+        "id": 1184734
+      },
+      "writtenOn": "2017-11-14T21:43:50Z",
+      "side": 1,
+      "message": "I agree that using uint64_t everywhere would be better. FWIW, 8xMSAA RGBA8 at 8k*8k is 2GB, so 16384x16384 is 8GB, so while it\u0027s probably safe to keep u32s for individual resources, we really should transition to u64s.",
+      "parentUuid": "4fb32289_26e364d4",
+      "range": {
+        "startLine": 323,
+        "startChar": 49,
+        "endLine": 323,
+        "endChar": 57
+      },
+      "revId": "cb81f418c43c5d91172d73a05cdc437bd9d38a08",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
