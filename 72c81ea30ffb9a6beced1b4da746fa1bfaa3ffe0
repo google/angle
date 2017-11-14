@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "df0e03cf_94ff286d",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 374,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-14T18:02:40Z",
+      "side": 1,
+      "message": "Is OES backwards-compatible with EXT? Or similar enough that the tests would work if they were corrected?",
+      "parentUuid": "10ee9d56_13206bca",
+      "range": {
+        "startLine": 373,
+        "startChar": 0,
+        "endLine": 374,
+        "endChar": 27
+      },
+      "revId": "72c81ea30ffb9a6beced1b4da746fa1bfaa3ffe0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "cf917f84_e40f89a7",
         "filename": "src/libANGLE/validationES2.cpp",
         "patchSetId": 11
