@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "37a1a5ad_c3e02720",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 700,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-14T13:57:23Z",
+      "side": 1,
+      "message": "mRevision is default initialized to zero in ::BufferStorage. So if the pack storage doesn\u0027t exist and there is another latest storage, it will be sourced from the latest storage and get a copied data revision. Then the storage will be updated here and it will become latest. The previous code was not wrong, but unnecessary.",
+      "parentUuid": "3ad5f8ac_acc4c22d",
+      "range": {
+        "startLine": 700,
+        "startChar": 4,
+        "endLine": 700,
+        "endChar": 33
+      },
+      "revId": "e9f55580376cc17d79b2785929503f6b6ac93f13",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f7495240_f26ebdc7",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
         "patchSetId": 8
@@ -255,6 +279,30 @@
         "startChar": 33,
         "endLine": 933,
         "endChar": 84
+      },
+      "revId": "e9f55580376cc17d79b2785929503f6b6ac93f13",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b0446e34_75ba91b6",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 933,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-14T13:57:23Z",
+      "side": 1,
+      "message": "No, I think you\u0027re correct, but there didn\u0027t seem to be harm in being able to copy a storage if there wasn\u0027t a latest. But you\u0027re right, there should always be a latest storage if there\u0027s any storage at all, so it should probably be an ASSERT.",
+      "parentUuid": "1f98da1d_e8edd5e9",
+      "range": {
+        "startLine": 933,
+        "startChar": 8,
+        "endLine": 933,
+        "endChar": 29
       },
       "revId": "e9f55580376cc17d79b2785929503f6b6ac93f13",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
