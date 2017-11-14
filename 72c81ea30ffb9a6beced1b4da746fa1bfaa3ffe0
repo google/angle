@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "25f6821a_cd31d2dd",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 374,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-14T18:09:58Z",
+      "side": 1,
+      "message": "They are exactly the same spec as far as I can tell (ran them through a diff tool).  I think it makes sense to keep them as separately enableable extensions in the ANGLE frontend.",
+      "parentUuid": "df0e03cf_94ff286d",
+      "range": {
+        "startLine": 373,
+        "startChar": 0,
+        "endLine": 374,
+        "endChar": 27
+      },
+      "revId": "72c81ea30ffb9a6beced1b4da746fa1bfaa3ffe0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "cf917f84_e40f89a7",
         "filename": "src/libANGLE/validationES2.cpp",
         "patchSetId": 11
