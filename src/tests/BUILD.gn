@@ -4,6 +4,7 @@
 
 import("../../gni/angle.gni")
 import("//build/config/chromecast_build.gni")
+import("//build/config/angle_temp.gni")
 import("//testing/test.gni")
 
 unittests_gypi = exec_script("//build/gypi_to_gn.py",
@@ -282,7 +283,7 @@ if (build_angle_deqp_tests) {
 
   config("angle_deqp_support") {
     include_dirs = rebase_path(deqp_gypi.deqp_include_dirs, ".", "../..")
-    if (is_win) {
+    if (is_win && !is_clang) {
       include_dirs += [ "../deqp/src/framework/platform/win32" ]
       cflags = deqp_gypi.deqp_win_cflags
     }
@@ -291,6 +292,12 @@ if (build_angle_deqp_tests) {
     }
     defines = deqp_gypi.deqp_defines
     defines += [ "_MBCS" ]
+
+    if (is_clang) {
+      # TODO(jmadill): Remove this once we fix dEQP.
+      cflags_c = [ "-Wno-unused-local-typedef" ]
+      cflags_cc = [ "-Wno-unused-local-typedef" ]
+    }
 
     # Ask the system headers to expose all the regular function otherwise
     # dEQP doesn't compile and produces warnings about implicitly defined
@@ -318,8 +325,13 @@ if (build_angle_deqp_tests) {
     ]
   }
 
-  if (is_linux || is_android || is_mac) {
-    deqp_undefine_configs += [ "//build/config/gcc:no_exceptions" ]
+  # TODO(jmadill): Fix this once upstream change is landed.
+  if (is_temp_angle) {
+    deqp_undefine_configs += [ "//build/config/compiler:no_exceptions" ]
+  } else {
+    if (is_linux || is_android || is_mac) {
+      deqp_undefine_configs += [ "//build/config/gcc:no_exceptions" ]
+    }
   }
 
   static_library("angle_deqp_decpp") {
@@ -329,6 +341,12 @@ if (build_angle_deqp_tests) {
       "//build/config/compiler:no_chromium_code",
       angle_root + ":internal_config",
     ]
+
+    # TODO(jmadill): Fix this once upstream change is landed.
+    if (is_temp_angle) {
+      public_configs += [ "//build/config/compiler:exceptions" ]
+    }
+
     sources = rebase_path(deqp_gypi.deqp_libtester_decpp_sources, ".", "../..")
   }
 
@@ -352,6 +370,7 @@ if (build_angle_deqp_tests) {
       angle_root + ":libEGL",
       "//third_party/libpng:libpng",
     ]
+
     configs -= deqp_undefine_configs
     public_configs = [ ":angle_deqp_libtester_config" ]
     sources = rebase_path(deqp_gypi.deqp_libtester_sources, ".", "../..")
