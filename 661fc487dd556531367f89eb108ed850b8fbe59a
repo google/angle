@@ -16,6 +16,24 @@
       "revId": "661fc487dd556531367f89eb108ed850b8fbe59a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "69cce899_50c577f8",
+        "filename": "src/compiler/translator/blocklayout.cpp",
+        "patchSetId": 29
+      },
+      "lineNbr": 157,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-15T12:18:34Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "69fcebe8_d84d0ded",
+      "revId": "661fc487dd556531367f89eb108ed850b8fbe59a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }

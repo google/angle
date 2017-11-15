@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "c6ea4679_0edb3724",
+        "filename": "src/compiler/translator/ShaderVars.cpp",
+        "patchSetId": 29
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-15T12:18:34Z",
+      "side": 1,
+      "message": "Done, added example to the header.",
+      "parentUuid": "6cefd68c_578cd372",
+      "revId": "6dedb068f2772973d88e8ac90b6fa27352bfd405",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0c32893a_77908dd3",
         "filename": "src/compiler/translator/VariablePacker.cpp",
         "patchSetId": 29
@@ -30,6 +48,24 @@
       "writtenOn": "2017-11-10T23:53:25Z",
       "side": 1,
       "message": "Unrelated to this line, but do we have a check somewhere that getArraySizeProduct won\u0027t cause integer overflows?",
+      "revId": "6dedb068f2772973d88e8ac90b6fa27352bfd405",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d5e3b2a3_b6c09d9b",
+        "filename": "src/compiler/translator/VariablePacker.cpp",
+        "patchSetId": 29
+      },
+      "lineNbr": 221,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-15T12:18:34Z",
+      "side": 1,
+      "message": "Not yet. I think we\u0027ll eventually want to limit arrays of arrays similarly to how we\u0027re already limiting maximum array size and struct nesting and such, but I intended to add this validation after we have basic API and parsing support in place.",
+      "parentUuid": "0c32893a_77908dd3",
       "revId": "6dedb068f2772973d88e8ac90b6fa27352bfd405",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
