@@ -6,17 +6,17 @@ vars = {
 deps = {
 
   'build':
-    Var('chromium_git') + '/chromium/src/build.git' + '@' + 'f2dd2d1ca74ded8339c6fd458dc9de9d98059f9e',
+    Var('chromium_git') + '/chromium/src/build.git' + '@' + 'bd767a7bd2689943bca4b66009aad279b55487f8',
 
   'buildtools':
-    Var('chromium_git') + '/chromium/buildtools.git' + '@' + 'e043d81e9185a2445fa3ec3fc34a4f69b58d4969',
+    Var('chromium_git') + '/chromium/buildtools.git' + '@' + '93a751e41bd93e373548759c6c5453bd95b6f35e',
 
   'testing':
-    Var('chromium_git') + '/chromium/src/testing' + '@' + 'd57c35d68320b906c43ad3f0ea5d84da3d06f45d',
+    Var('chromium_git') + '/chromium/src/testing' + '@' + '8893f3930ce94c9e5350e0e87ddf159bf1d495b8',
 
   # Cherry is a dEQP management GUI written in Go. We use it for viewing test results.
   'third_party/cherry':
-    Var('android_git') + '/platform/external/cherry' + '@' + 'd2e26b4d864ec2a6757e7f1174e464949ca5bf73',
+    Var('android_git') + '/platform/external/cherry' + '@' + '4f8fb08d33ca5ff05a1c638f04c85bbb8d8b52cc',
 
   'third_party/deqp/src':
     Var('android_git') + '/platform/external/deqp' + '@' + '455d82c60b096e7bd83b6a2f5ed70c61e4bfa759',
@@ -25,7 +25,7 @@ deps = {
     Var('android_git') + '/platform/external/shaderc/glslang' + '@' + '1e275c8486325aaab34734ad9a650c0121c5efdb',
 
   'third_party/googletest/src':
-    Var('chromium_git') + '/external/github.com/google/googletest.git' + '@' + '7f8fefabedf2965980585be8c2bff97458f28e0b',
+    Var('chromium_git') + '/external/github.com/google/googletest.git' + '@' + 'd175c8bf823e709d570772b038757fadf63bc632',
 
   'third_party/libpng/src':
     Var('android_git') + '/platform/external/libpng' + '@' + '094e181e79a3d6c23fd005679025058b7df1ad6c',
@@ -43,11 +43,10 @@ deps = {
     Var('chromium_git') + '/chromium/src/third_party/zlib' + '@' + '24ab14872e8e068ba08cc31cc3d43bcc6d5cb832',
 
   'tools/clang':
-    Var('chromium_git') + '/chromium/src/tools/clang.git' + '@' + 'dce401419c4281e2aad72a9bafb885a9fb9aec59',
+    Var('chromium_git') + '/chromium/src/tools/clang.git' + '@' + 'e70074db10b27867e6c873adc3ac7e5f9ee0ff6e',
 
   'tools/gyp':
-    Var('chromium_git') + '/external/gyp' + '@' + 'c6f471687407bf28ddfc63f1a8f47aeb7bf54edc',
-
+    Var('chromium_git') + '/external/gyp' + '@' + '5e2b3ddde7cda5eb6bc09a5546a76b00e49d888f',
 }
 
 hooks = [
