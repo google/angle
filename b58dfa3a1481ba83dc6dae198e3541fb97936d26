@@ -1,0 +1,211 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ac4fa440_a3655c26",
+        "filename": "extensions/EGL_ANGLE_stream_producer_d3d_texture_nv12.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-15T14:28:11Z",
+      "side": 1,
+      "message": "seems like we might want to rename this extension to make it more general.",
+      "range": {
+        "startLine": 7,
+        "startChar": 4,
+        "endLine": 7,
+        "endChar": 46
+      },
+      "revId": "b58dfa3a1481ba83dc6dae198e3541fb97936d26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2c1ba539_c26b2bf8",
+        "filename": "include/EGL/eglext.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 1059,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-15T14:28:11Z",
+      "side": 1,
+      "message": "this is not correct, since it doesn\u0027t match the official header:\n\nhttps://www.khronos.org/registry/EGL/api/EGL/eglext.h\n\nNot sure why you needed this but you\u0027ll need a solution that works with the official header.",
+      "range": {
+        "startLine": 1057,
+        "startChar": 0,
+        "endLine": 1059,
+        "endChar": 142
+      },
+      "revId": "b58dfa3a1481ba83dc6dae198e3541fb97936d26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c5298391_a3302995",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StreamProducerNV12.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-15T14:28:11Z",
+      "side": 1,
+      "message": "I would recommend you redesign this function to return an error and take an output parameter. There\u0027s ANGLE_SWALLOW_ERR otherwise.",
+      "range": {
+        "startLine": 126,
+        "startChar": 4,
+        "endLine": 126,
+        "endChar": 10
+      },
+      "revId": "b58dfa3a1481ba83dc6dae198e3541fb97936d26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9b6599e9_77db7b6e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StreamProducerNV12.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-15T14:28:11Z",
+      "side": 1,
+      "message": "we should probably rename this class since it isn\u0027t just for NV12",
+      "range": {
+        "startLine": 18,
+        "startChar": 6,
+        "endLine": 18,
+        "endChar": 25
+      },
+      "revId": "b58dfa3a1481ba83dc6dae198e3541fb97936d26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4b51430b_f14c427d",
+        "filename": "src/tests/egl_tests/EGLStreamTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 358,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-15T14:28:11Z",
+      "side": 1,
+      "message": "nit: git cl format",
+      "range": {
+        "startLine": 358,
+        "startChar": 0,
+        "endLine": 358,
+        "endChar": 9
+      },
+      "revId": "b58dfa3a1481ba83dc6dae198e3541fb97936d26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "15bdc716_017f0de6",
+        "filename": "src/tests/egl_tests/EGLStreamTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 363,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-15T14:28:11Z",
+      "side": 1,
+      "message": "nit: data after methods. also you can default init all of these to zero/null/etc.",
+      "range": {
+        "startLine": 359,
+        "startChar": 0,
+        "endLine": 363,
+        "endChar": 23
+      },
+      "revId": "b58dfa3a1481ba83dc6dae198e3541fb97936d26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5be5b112_42c141d8",
+        "filename": "src/tests/egl_tests/EGLStreamTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 402,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-15T14:28:11Z",
+      "side": 1,
+      "message": "you should explicitly reset the Renderbuffer/Framebuffer and other RAII resources before ANGLETest::TearDown because otherwise they\u0027ll be deleted after the Context/renderer. this will lead to weird crashes and bugs on some platforms.",
+      "range": {
+        "startLine": 402,
+        "startChar": 9,
+        "endLine": 402,
+        "endChar": 17
+      },
+      "revId": "b58dfa3a1481ba83dc6dae198e3541fb97936d26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3eb40e9c_3a48f3ff",
+        "filename": "src/tests/egl_tests/EGLStreamTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 474,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-15T14:28:11Z",
+      "side": 1,
+      "message": "check the error code here, you can ASSERT_FALSE(), etc",
+      "range": {
+        "startLine": 474,
+        "startChar": 4,
+        "endLine": 474,
+        "endChar": 10
+      },
+      "revId": "b58dfa3a1481ba83dc6dae198e3541fb97936d26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "341cbe09_7a2d1b16",
+        "filename": "src/tests/egl_tests/EGLStreamTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 475,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-15T14:28:11Z",
+      "side": 1,
+      "message": "for ASSERT_NE and ASSERT_EQ, your expectation should be (expectedValue, actualValue), so in this case, ASSERT_NE(nullptr, texture)",
+      "range": {
+        "startLine": 475,
+        "startChar": 4,
+        "endLine": 475,
+        "endChar": 13
+      },
+      "revId": "b58dfa3a1481ba83dc6dae198e3541fb97936d26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
