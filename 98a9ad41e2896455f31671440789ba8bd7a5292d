@@ -22,6 +22,30 @@
       "revId": "98a9ad41e2896455f31671440789ba8bd7a5292d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d94dfb26_d28d23ad",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-15T17:28:20Z",
+      "side": 1,
+      "message": "I believe it should be pretty safe in most cases as it is now - usually the \"actual\" D3D11 call which does the work is something that happens at the very tail end of the call, and either can\u0027t return an error, or for cases like Map, returns an error before copying is done.\n\nHopefully any errors are very rare, and only occur in situations like OOM. LMK if this seems okay to you.\n\nFor Vulkan let\u0027s make sure we use a more forward-thinking design for any situations like this. Our plan is to eventually sunset the D3D11 back-end.",
+      "parentUuid": "e9ff31c4_fddcc080",
+      "range": {
+        "startLine": 116,
+        "startChar": 8,
+        "endLine": 116,
+        "endChar": 27
+      },
+      "revId": "98a9ad41e2896455f31671440789ba8bd7a5292d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
