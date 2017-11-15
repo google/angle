@@ -122,6 +122,15 @@ TIntermTraverser::~TIntermTraverser()
 {
 }
 
+const TIntermBlock *TIntermTraverser::getParentBlock() const
+{
+    if (!mParentBlockStack.empty())
+    {
+        return mParentBlockStack.back().node;
+    }
+    return nullptr;
+}
+
 void TIntermTraverser::pushParentBlock(TIntermBlock *node)
 {
     mParentBlockStack.push_back(ParentBlock(node, 0));

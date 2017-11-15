@@ -143,6 +143,8 @@ class TIntermTraverser : angle::NonCopyable
         return nullptr;
     }
 
+    const TIntermBlock *getParentBlock() const;
+
     void pushParentBlock(TIntermBlock *node);
     void incrementParentBlockPos();
     void popParentBlock();

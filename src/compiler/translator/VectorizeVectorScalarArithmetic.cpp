@@ -11,6 +11,8 @@
 
 #include "compiler/translator/VectorizeVectorScalarArithmetic.h"
 
+#include <set>
+
 #include "compiler/translator/IntermNode.h"
 #include "compiler/translator/IntermTraverse.h"
 
@@ -29,7 +31,11 @@ class VectorizeVectorScalarArithmeticTraverser : public TIntermTraverser
     }
 
     bool didReplaceScalarsWithVectors() { return mReplaced; }
-    void nextIteration() { mReplaced = false; }
+    void nextIteration()
+    {
+        mReplaced = false;
+        mModifiedBlocks.clear();
+    }
 
   protected:
     bool visitBinary(Visit visit, TIntermBinary *node) override;
@@ -47,6 +53,7 @@ class VectorizeVectorScalarArithmeticTraverser : public TIntermTraverser
                                    TIntermTraverser::OriginalNode *originalNodeFate);
 
     bool mReplaced;
+    std::set<const TIntermBlock *> mModifiedBlocks;
 };
 
 TIntermTyped *VectorizeVectorScalarArithmeticTraverser::Vectorize(
@@ -241,11 +248,17 @@ bool VectorizeVectorScalarArithmeticTraverser::visitAggregate(Visit /*visit*/,
             // leave that be.
             if (!argBinary->getLeft()->hasSideEffects())
             {
-                replaceAssignInsideConstructor(node, argBinary);
-                mReplaced = true;
-                // Don't replace more nodes in the same subtree on this traversal.
-                // However, nodes elsewhere in the tree may still be replaced.
-                return false;
+                const TIntermBlock *parentBlock = getParentBlock();
+                // We can't do more than one insertion to the same block on the same traversal.
+                if (mModifiedBlocks.find(parentBlock) == mModifiedBlocks.end())
+                {
+                    replaceAssignInsideConstructor(node, argBinary);
+                    mModifiedBlocks.insert(parentBlock);
+                    mReplaced = true;
+                    // Don't replace more nodes in the same subtree on this traversal.
+                    // However, nodes elsewhere in the tree may still be replaced.
+                    return false;
+                }
             }
             break;
         }
