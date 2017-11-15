@@ -467,6 +467,8 @@ class TType
     // deepest field (nesting2.field1.position).
     int getDeepestStructNesting() const { return structure ? structure->deepestNesting() : 0; }
 
+    bool isNamelessStruct() const { return structure && structure->name() == ""; }
+
     bool isStructureContainingArrays() const
     {
         return structure ? structure->containsArrays() : false;

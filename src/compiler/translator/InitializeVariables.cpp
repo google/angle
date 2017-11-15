@@ -20,11 +20,6 @@ namespace sh
 namespace
 {
 
-bool IsNamelessStruct(const TIntermTyped *node)
-{
-    return (node->getBasicType() == EbtStruct && node->getType().getStruct()->name() == "");
-}
-
 void AddArrayZeroInitSequence(const TIntermTyped *initializedNode,
                               TIntermSequence *initSequenceOut);
 
@@ -55,7 +50,7 @@ void AddStructZeroInitSequence(const TIntermTyped *initializedNode,
         {
             // Structs can't be defined inside structs, so the type of a struct field can't be a
             // nameless struct.
-            ASSERT(!IsNamelessStruct(element));
+            ASSERT(!element->getType().isNamelessStruct());
             initSequenceOut->push_back(CreateZeroInitAssignment(element));
         }
     }
@@ -159,7 +154,7 @@ class InitializeLocalsTraverser : public TIntermTraverser
                     mShaderVersion == 100;
                 // Nameless struct constructors can't be referred to, so they also need to be
                 // initialized one element at a time.
-                if (arrayConstructorUnavailable || IsNamelessStruct(symbol))
+                if (arrayConstructorUnavailable || symbol->getType().isNamelessStruct())
                 {
                     // SimplifyLoopConditions should have been run so the parent node of this node
                     // should not be a loop.
@@ -195,7 +190,7 @@ TIntermSequence *CreateInitCode(const TIntermTyped *initializedSymbol)
         AddArrayZeroInitSequence(initializedSymbol, initCode);
     }
     else if (initializedSymbol->getType().isStructureContainingArrays() ||
-             IsNamelessStruct(initializedSymbol))
+             initializedSymbol->getType().isNamelessStruct())
     {
         AddStructZeroInitSequence(initializedSymbol, initCode);
     }
