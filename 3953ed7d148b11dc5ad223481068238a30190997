@@ -213,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "edf1af92_b7c85675",
+        "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 1183,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-15T16:50:58Z",
+      "side": 1,
+      "message": "In D3D11 we use a fixed size of 1024*1024 bytes. In Vulkan we could either use a fixed value, or use an initial value that increases somewhat dynamically if we overflow. For now starting with 1024^2 seems fine.\n\nI do think though that the design of keeping the buffer mapped and flushing out ranges (until we fill up) is probably not a bad way to go.",
+      "parentUuid": "90ade38b_ea198aef",
+      "range": {
+        "startLine": 1183,
+        "startChar": 3,
+        "endLine": 1183,
+        "endChar": 33
+      },
+      "revId": "3953ed7d148b11dc5ad223481068238a30190997",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "04aa064b_397d99eb",
         "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.h",
         "patchSetId": 13
