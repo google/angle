@@ -174,7 +174,7 @@ ContextImpl *DisplayNULL::createContext(const gl::ContextState &state)
     return new ContextNULL(state, mAllocationTracker.get());
 }
 
-StreamProducerImpl *DisplayNULL::createStreamProducerD3DTextureNV12(
+StreamProducerImpl *DisplayNULL::createStreamProducerD3DTexture(
     egl::Stream::ConsumerType consumerType,
     const egl::AttributeMap &attribs)
 {

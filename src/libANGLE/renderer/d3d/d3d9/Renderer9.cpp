@@ -906,7 +906,7 @@ IndexBuffer *Renderer9::createIndexBuffer()
     return new IndexBuffer9(this);
 }
 
-StreamProducerImpl *Renderer9::createStreamProducerD3DTextureNV12(
+StreamProducerImpl *Renderer9::createStreamProducerD3DTexture(
     egl::Stream::ConsumerType consumerType,
     const egl::AttributeMap &attribs)
 {

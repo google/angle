@@ -70,15 +70,15 @@ StreamConsumerGLTextureExternalAttribsNV(EGLDisplay dpy,
                                          EGLStreamKHR stream,
                                          const EGLAttrib *attrib_list);
 
-// EGL_ANGLE_stream_producer_d3d_texture_nv12
+// EGL_ANGLE_stream_producer_d3d_texture
 ANGLE_EXPORT EGLBoolean EGLAPIENTRY
-CreateStreamProducerD3DTextureNV12ANGLE(EGLDisplay dpy,
-                                        EGLStreamKHR stream,
-                                        const EGLAttrib *attrib_list);
-ANGLE_EXPORT EGLBoolean EGLAPIENTRY StreamPostD3DTextureNV12ANGLE(EGLDisplay dpy,
-                                                                  EGLStreamKHR stream,
-                                                                  void *texture,
-                                                                  const EGLAttrib *attrib_list);
+CreateStreamProducerD3DTextureANGLE(EGLDisplay dpy,
+                                    EGLStreamKHR stream,
+                                    const EGLAttrib *attrib_list);
+ANGLE_EXPORT EGLBoolean EGLAPIENTRY StreamPostD3DTextureANGLE(EGLDisplay dpy,
+                                                              EGLStreamKHR stream,
+                                                              void *texture,
+                                                              const EGLAttrib *attrib_list);
 
 // EGL_CHROMIUM_get_sync_values
 ANGLE_EXPORT EGLBoolean EGLAPIENTRY GetSyncValuesCHROMIUM(EGLDisplay dpy,

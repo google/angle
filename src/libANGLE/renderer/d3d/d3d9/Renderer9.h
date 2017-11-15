@@ -318,9 +318,8 @@ class Renderer9 : public RendererD3D
     IndexBuffer *createIndexBuffer() override;
 
     // Stream Creation
-    StreamProducerImpl *createStreamProducerD3DTextureNV12(
-        egl::Stream::ConsumerType consumerType,
-        const egl::AttributeMap &attribs) override;
+    StreamProducerImpl *createStreamProducerD3DTexture(egl::Stream::ConsumerType consumerType,
+                                                       const egl::AttributeMap &attribs) override;
 
     // Buffer-to-texture and Texture-to-buffer copies
     bool supportsFastCopyBufferToTexture(GLenum internalFormat) const override;

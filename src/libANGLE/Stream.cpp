@@ -160,16 +160,16 @@ Error Stream::createConsumerGLTextureExternal(const AttributeMap &attributes, gl
     return NoError();
 }
 
-Error Stream::createProducerD3D11TextureNV12(const AttributeMap &attributes)
+Error Stream::createProducerD3D11Texture(const AttributeMap &attributes)
 {
     ASSERT(mState == EGL_STREAM_STATE_CONNECTING_KHR);
-    ASSERT(mConsumerType == ConsumerType::GLTextureYUV);
+    ASSERT(mConsumerType == ConsumerType::GLTextureRGB ||
+           mConsumerType == ConsumerType::GLTextureYUV);
     ASSERT(mProducerType == ProducerType::NoProducer);
-    ASSERT(mPlaneCount == 2);
 
-    mProducerImplementation = mDisplay->getImplementation()->createStreamProducerD3DTextureNV12(
-        mConsumerType, attributes);
-    mProducerType = ProducerType::D3D11TextureNV12;
+    mProducerImplementation =
+        mDisplay->getImplementation()->createStreamProducerD3DTexture(mConsumerType, attributes);
+    mProducerType = ProducerType::D3D11Texture;
     mState        = EGL_STREAM_STATE_EMPTY_KHR;
 
     return NoError();
@@ -182,7 +182,7 @@ Error Stream::consumerAcquire(const gl::Context *context)
            mState == EGL_STREAM_STATE_OLD_FRAME_AVAILABLE_KHR);
     ASSERT(mConsumerType == ConsumerType::GLTextureRGB ||
            mConsumerType == ConsumerType::GLTextureYUV);
-    ASSERT(mProducerType == ProducerType::D3D11TextureNV12);
+    ASSERT(mProducerType == ProducerType::D3D11Texture);
 
     mState = EGL_STREAM_STATE_OLD_FRAME_AVAILABLE_KHR;
     mConsumerFrame++;
@@ -206,7 +206,7 @@ Error Stream::consumerRelease(const gl::Context *context)
            mState == EGL_STREAM_STATE_OLD_FRAME_AVAILABLE_KHR);
     ASSERT(mConsumerType == ConsumerType::GLTextureRGB ||
            mConsumerType == ConsumerType::GLTextureYUV);
-    ASSERT(mProducerType == ProducerType::D3D11TextureNV12);
+    ASSERT(mProducerType == ProducerType::D3D11Texture);
 
     // Release the images
     for (int i = 0; i < mPlaneCount; i++)
@@ -226,23 +226,23 @@ bool Stream::isConsumerBoundToContext(const gl::Context *context) const
     return (context == mContext);
 }
 
-Error Stream::validateD3D11NV12Texture(void *texture) const
+Error Stream::validateD3D11Texture(void *texture, const AttributeMap &attributes) const
 {
     ASSERT(mConsumerType == ConsumerType::GLTextureRGB ||
            mConsumerType == ConsumerType::GLTextureYUV);
-    ASSERT(mProducerType == ProducerType::D3D11TextureNV12);
+    ASSERT(mProducerType == ProducerType::D3D11Texture);
     ASSERT(mProducerImplementation != nullptr);
 
-    return mProducerImplementation->validateD3DNV12Texture(texture);
+    return mProducerImplementation->validateD3DTexture(texture, attributes);
 }
 
-Error Stream::postD3D11NV12Texture(void *texture, const AttributeMap &attributes)
+Error Stream::postD3D11Texture(void *texture, const AttributeMap &attributes)
 {
     ASSERT(mConsumerType == ConsumerType::GLTextureRGB ||
            mConsumerType == ConsumerType::GLTextureYUV);
-    ASSERT(mProducerType == ProducerType::D3D11TextureNV12);
+    ASSERT(mProducerType == ProducerType::D3D11Texture);
 
-    mProducerImplementation->postD3DNV12Texture(texture, attributes);
+    mProducerImplementation->postD3DTexture(texture, attributes);
     mProducerFrame++;
 
     mState = EGL_STREAM_STATE_NEW_FRAME_AVAILABLE_KHR;

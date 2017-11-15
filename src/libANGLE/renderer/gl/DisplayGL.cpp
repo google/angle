@@ -63,7 +63,7 @@ ContextImpl *DisplayGL::createContext(const gl::ContextState &state)
     return new ContextGL(state, mRenderer);
 }
 
-StreamProducerImpl *DisplayGL::createStreamProducerD3DTextureNV12(
+StreamProducerImpl *DisplayGL::createStreamProducerD3DTexture(
     egl::Stream::ConsumerType consumerType,
     const egl::AttributeMap &attribs)
 {

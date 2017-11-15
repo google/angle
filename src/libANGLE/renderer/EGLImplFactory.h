@@ -58,7 +58,7 @@ class EGLImplFactory : angle::NonCopyable
 
     virtual ContextImpl *createContext(const gl::ContextState &state) = 0;
 
-    virtual StreamProducerImpl *createStreamProducerD3DTextureNV12(
+    virtual StreamProducerImpl *createStreamProducerD3DTexture(
         egl::Stream::ConsumerType consumerType,
         const egl::AttributeMap &attribs) = 0;
 };

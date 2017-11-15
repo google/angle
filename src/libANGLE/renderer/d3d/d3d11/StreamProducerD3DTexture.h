@@ -4,7 +4,7 @@
 // found in the LICENSE file.
 //
 
-// StreamProducerNV12.h: Interface for a NV12 texture stream producer
+// StreamProducerD3DTexture.h: Interface for a D3D11 texture stream producer
 
 #ifndef LIBANGLE_RENDERER_D3D_D3D11_STREAM11_H_
 #define LIBANGLE_RENDERER_D3D_D3D11_STREAM11_H_
@@ -15,14 +15,15 @@ namespace rx
 {
 class Renderer11;
 
-class StreamProducerNV12 : public StreamProducerImpl
+class StreamProducerD3DTexture : public StreamProducerImpl
 {
   public:
-    StreamProducerNV12(Renderer11 *renderer);
-    ~StreamProducerNV12() override;
+    StreamProducerD3DTexture(Renderer11 *renderer);
+    ~StreamProducerD3DTexture() override;
 
-    egl::Error validateD3DNV12Texture(void *pointer) const override;
-    void postD3DNV12Texture(void *pointer, const egl::AttributeMap &attributes) override;
+    egl::Error validateD3DTexture(void *pointer,
+                                  const egl::AttributeMap &attributes) const override;
+    void postD3DTexture(void *pointer, const egl::AttributeMap &attributes) override;
     egl::Stream::GLTextureDescription getGLFrameDescription(int planeIndex) override;
 
     // Gets a pointer to the internal D3D texture
@@ -36,8 +37,7 @@ class StreamProducerNV12 : public StreamProducerImpl
 
     ID3D11Texture2D *mTexture;
     UINT mArraySlice;
-    UINT mTextureWidth;
-    UINT mTextureHeight;
+    UINT mPlaneOffset;
 };
 }  // namespace rx
 

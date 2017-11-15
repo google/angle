@@ -164,8 +164,6 @@ class Renderer11 : public RendererD3D
 
     bool getShareHandleSupport() const;
 
-    bool getNV12TextureSupport() const;
-
     int getMajorShaderModel() const override;
     int getMinorShaderModel() const override;
     std::string getShaderModelSuffix() const override;
@@ -299,9 +297,8 @@ class Renderer11 : public RendererD3D
     IndexBuffer *createIndexBuffer() override;
 
     // Stream Creation
-    StreamProducerImpl *createStreamProducerD3DTextureNV12(
-        egl::Stream::ConsumerType consumerType,
-        const egl::AttributeMap &attribs) override;
+    StreamProducerImpl *createStreamProducerD3DTexture(egl::Stream::ConsumerType consumerType,
+                                                       const egl::AttributeMap &attribs) override;
 
     // D3D11-renderer specific methods
     ID3D11Device *getDevice() { return mDevice; }

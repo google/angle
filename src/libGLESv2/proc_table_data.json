@@ -635,9 +635,9 @@
         "eglStreamConsumerGLTextureExternalAttribsNV"
     ],
 
-    "EGL_ANGLE_stream_producer_d3d_texture_nv12": [
-        "eglCreateStreamProducerD3DTextureNV12ANGLE",
-        "eglStreamPostD3DTextureNV12ANGLE"
+    "EGL_ANGLE_stream_producer_d3d_texture": [
+        "eglCreateStreamProducerD3DTextureANGLE",
+        "eglStreamPostD3DTextureANGLE"
     ],
 
     "EGL_CHROMIUM_get_sync_values": [

@@ -64,9 +64,8 @@ class DisplayNULL : public DisplayImpl
 
     ContextImpl *createContext(const gl::ContextState &state) override;
 
-    StreamProducerImpl *createStreamProducerD3DTextureNV12(
-        egl::Stream::ConsumerType consumerType,
-        const egl::AttributeMap &attribs) override;
+    StreamProducerImpl *createStreamProducerD3DTexture(egl::Stream::ConsumerType consumerType,
+                                                       const egl::AttributeMap &attribs) override;
 
   private:
     void generateExtensions(egl::DisplayExtensions *outExtensions) const override;

@@ -344,19 +344,19 @@ EGLBoolean EGLAPIENTRY eglStreamConsumerGLTextureExternalAttribsNV(EGLDisplay dp
     return egl::StreamConsumerGLTextureExternalAttribsNV(dpy, stream, attrib_list);
 }
 
-EGLBoolean EGLAPIENTRY eglCreateStreamProducerD3DTextureNV12ANGLE(EGLDisplay dpy,
-                                                                  EGLStreamKHR stream,
-                                                                  const EGLAttrib *attrib_list)
+EGLBoolean EGLAPIENTRY eglCreateStreamProducerD3DTextureANGLE(EGLDisplay dpy,
+                                                              EGLStreamKHR stream,
+                                                              const EGLAttrib *attrib_list)
 {
-    return egl::CreateStreamProducerD3DTextureNV12ANGLE(dpy, stream, attrib_list);
+    return egl::CreateStreamProducerD3DTextureANGLE(dpy, stream, attrib_list);
 }
 
-EGLBoolean EGLAPIENTRY eglStreamPostD3DTextureNV12ANGLE(EGLDisplay dpy,
-                                                        EGLStreamKHR stream,
-                                                        void *texture,
-                                                        const EGLAttrib *attrib_list)
+EGLBoolean EGLAPIENTRY eglStreamPostD3DTextureANGLE(EGLDisplay dpy,
+                                                    EGLStreamKHR stream,
+                                                    void *texture,
+                                                    const EGLAttrib *attrib_list)
 {
-    return egl::StreamPostD3DTextureNV12ANGLE(dpy, stream, texture, attrib_list);
+    return egl::StreamPostD3DTextureANGLE(dpy, stream, texture, attrib_list);
 }
 
 EGLBoolean EGLAPIENTRY eglGetSyncValuesCHROMIUM(EGLDisplay dpy,

@@ -47,7 +47,7 @@
 #include "libANGLE/renderer/d3d/d3d11/Query11.h"
 #include "libANGLE/renderer/d3d/d3d11/RenderTarget11.h"
 #include "libANGLE/renderer/d3d/d3d11/ShaderExecutable11.h"
-#include "libANGLE/renderer/d3d/d3d11/StreamProducerNV12.h"
+#include "libANGLE/renderer/d3d/d3d11/StreamProducerD3DTexture.h"
 #include "libANGLE/renderer/d3d/d3d11/SwapChain11.h"
 #include "libANGLE/renderer/d3d/d3d11/TextureStorage11.h"
 #include "libANGLE/renderer/d3d/d3d11/TransformFeedback11.h"
@@ -1204,11 +1204,7 @@ void Renderer11::generateDisplayExtensions(egl::DisplayExtensions *outExtensions
     outExtensions->stream                     = true;
     outExtensions->streamConsumerGLTexture    = true;
     outExtensions->streamConsumerGLTextureYUV = true;
-    // Not all D3D11 devices support NV12 textures
-    if (getNV12TextureSupport())
-    {
-        outExtensions->streamProducerD3DTextureNV12 = true;
-    }
+    outExtensions->streamProducerD3DTexture   = true;
 
     outExtensions->flexibleSurfaceCompatibility = true;
     outExtensions->directComposition            = !!mDCompModule;
@@ -2305,18 +2301,6 @@ bool Renderer11::getShareHandleSupport() const
     return true;
 }
 
-bool Renderer11::getNV12TextureSupport() const
-{
-    HRESULT result;
-    UINT formatSupport;
-    result = mDevice->CheckFormatSupport(DXGI_FORMAT_NV12, &formatSupport);
-    if (result == E_FAIL)
-    {
-        return false;
-    }
-    return (formatSupport & D3D11_FORMAT_SUPPORT_TEXTURE2D) != 0;
-}
-
 int Renderer11::getMajorShaderModel() const
 {
     switch (mRenderer11DeviceCaps.featureLevel)
@@ -2996,11 +2980,11 @@ IndexBuffer *Renderer11::createIndexBuffer()
     return new IndexBuffer11(this);
 }
 
-StreamProducerImpl *Renderer11::createStreamProducerD3DTextureNV12(
+StreamProducerImpl *Renderer11::createStreamProducerD3DTexture(
     egl::Stream::ConsumerType consumerType,
     const egl::AttributeMap &attribs)
 {
-    return new StreamProducerNV12(this);
+    return new StreamProducerD3DTexture(this);
 }
 
 bool Renderer11::supportsFastCopyBufferToTexture(GLenum internalFormat) const

@@ -183,7 +183,7 @@ ContextImpl *DisplayVk::createContext(const gl::ContextState &state)
     return new ContextVk(state, mRenderer.get());
 }
 
-StreamProducerImpl *DisplayVk::createStreamProducerD3DTextureNV12(
+StreamProducerImpl *DisplayVk::createStreamProducerD3DTexture(
     egl::Stream::ConsumerType consumerType,
     const egl::AttributeMap &attribs)
 {

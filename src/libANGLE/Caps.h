@@ -678,8 +678,8 @@ struct DisplayExtensions
     // EGL_NV_stream_consumer_gltexture_yuv
     bool streamConsumerGLTextureYUV;
 
-    // EGL_ANGLE_stream_producer_d3d_texture_nv12
-    bool streamProducerD3DTextureNV12;
+    // EGL_ANGLE_stream_producer_d3d_texture
+    bool streamProducerD3DTexture;
 
     // EGL_ANGLE_create_context_webgl_compatibility
     bool createContextWebGLCompatibility;

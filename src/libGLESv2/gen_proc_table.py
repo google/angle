@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!python
 # Copyright 2017 The ANGLE Project Authors. All rights reserved.
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
@@ -65,7 +65,7 @@ for description, functions in json_data.iteritems():
 
 proc_data = [('    {"%s", P(%s)}' % (func, angle_func)) for func, angle_func in sorted(all_functions.iteritems())]
 
-with open(out_file_name, 'wt') as out_file:
+with open(out_file_name, 'wb') as out_file:
     output_cpp = template_cpp.format(
         script_name = sys.argv[0],
         data_source_name = data_source_name,

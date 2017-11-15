@@ -1972,14 +1972,14 @@ Error ValidateStreamConsumerGLTextureExternalAttribsNV(const Display *display,
     return NoError();
 }
 
-Error ValidateCreateStreamProducerD3DTextureNV12ANGLE(const Display *display,
-                                                      const Stream *stream,
-                                                      const AttributeMap &attribs)
+Error ValidateCreateStreamProducerD3DTextureANGLE(const Display *display,
+                                                  const Stream *stream,
+                                                  const AttributeMap &attribs)
 {
     ANGLE_TRY(ValidateDisplay(display));
 
     const DisplayExtensions &displayExtensions = display->getExtensions();
-    if (!displayExtensions.streamProducerD3DTextureNV12)
+    if (!displayExtensions.streamProducerD3DTexture)
     {
         return EglBadAccess() << "Stream producer extension not active";
     }
@@ -1996,24 +1996,38 @@ Error ValidateCreateStreamProducerD3DTextureNV12ANGLE(const Display *display,
         return EglBadState() << "Stream not in connecting state";
     }
 
-    if (stream->getConsumerType() != Stream::ConsumerType::GLTextureYUV ||
-        stream->getPlaneCount() != 2)
+    switch (stream->getConsumerType())
     {
-        return EglBadMatch() << "Incompatible stream consumer type";
+        case Stream::ConsumerType::GLTextureYUV:
+            if (stream->getPlaneCount() != 2)
+            {
+                return EglBadMatch() << "Incompatible stream consumer type";
+            }
+            break;
+
+        case Stream::ConsumerType::GLTextureRGB:
+            if (stream->getPlaneCount() != 1)
+            {
+                return EglBadMatch() << "Incompatible stream consumer type";
+            }
+            break;
+
+        default:
+            return EglBadMatch() << "Incompatible stream consumer type";
     }
 
     return NoError();
 }
 
-Error ValidateStreamPostD3DTextureNV12ANGLE(const Display *display,
-                                            const Stream *stream,
-                                            void *texture,
-                                            const AttributeMap &attribs)
+Error ValidateStreamPostD3DTextureANGLE(const Display *display,
+                                        const Stream *stream,
+                                        void *texture,
+                                        const AttributeMap &attribs)
 {
     ANGLE_TRY(ValidateDisplay(display));
 
     const DisplayExtensions &displayExtensions = display->getExtensions();
-    if (!displayExtensions.streamProducerD3DTextureNV12)
+    if (!displayExtensions.streamProducerD3DTexture)
     {
         return EglBadAccess() << "Stream producer extension not active";
     }
@@ -2033,6 +2047,12 @@ Error ValidateStreamPostD3DTextureNV12ANGLE(const Display *display,
                     return EglBadParameter() << "Invalid subresource index";
                 }
                 break;
+            case EGL_NATIVE_BUFFER_PLANE_OFFSET_IMG:
+                if (value < 0)
+                {
+                    return EglBadParameter() << "Invalid plane offset";
+                }
+                break;
             default:
                 return EglBadAttribute() << "Invalid attribute";
         }
@@ -2045,7 +2065,7 @@ Error ValidateStreamPostD3DTextureNV12ANGLE(const Display *display,
         return EglBadState() << "Stream not fully configured";
     }
 
-    if (stream->getProducerType() != Stream::ProducerType::D3D11TextureNV12)
+    if (stream->getProducerType() != Stream::ProducerType::D3D11Texture)
     {
         return EglBadMatch() << "Incompatible stream producer";
     }
@@ -2055,7 +2075,7 @@ Error ValidateStreamPostD3DTextureNV12ANGLE(const Display *display,
         return EglBadParameter() << "Texture is null";
     }
 
-    return stream->validateD3D11NV12Texture(texture);
+    return stream->validateD3D11Texture(texture, attribs);
 }
 
 Error ValidateGetSyncValuesCHROMIUM(const Display *display,

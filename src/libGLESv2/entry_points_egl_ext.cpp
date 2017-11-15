@@ -657,9 +657,9 @@ EGLBoolean EGLAPIENTRY StreamConsumerGLTextureExternalAttribsNV(EGLDisplay dpy,
     return EGL_TRUE;
 }
 
-EGLBoolean EGLAPIENTRY CreateStreamProducerD3DTextureNV12ANGLE(EGLDisplay dpy,
-                                                               EGLStreamKHR stream,
-                                                               const EGLAttrib *attrib_list)
+EGLBoolean EGLAPIENTRY CreateStreamProducerD3DTextureANGLE(EGLDisplay dpy,
+                                                           EGLStreamKHR stream,
+                                                           const EGLAttrib *attrib_list)
 {
     EVENT(
         "(EGLDisplay dpy = 0x%0.8p, EGLStreamKHR stream = 0x%0.8p, EGLAttrib attrib_list = 0x%0.8p",
@@ -670,15 +670,14 @@ EGLBoolean EGLAPIENTRY CreateStreamProducerD3DTextureNV12ANGLE(EGLDisplay dpy,
     Stream *streamObject    = static_cast<Stream *>(stream);
     AttributeMap attributes = AttributeMap::CreateFromAttribArray(attrib_list);
 
-    Error error =
-        ValidateCreateStreamProducerD3DTextureNV12ANGLE(display, streamObject, attributes);
+    Error error = ValidateCreateStreamProducerD3DTextureANGLE(display, streamObject, attributes);
     if (error.isError())
     {
         thread->setError(error);
         return EGL_FALSE;
     }
 
-    error = streamObject->createProducerD3D11TextureNV12(attributes);
+    error = streamObject->createProducerD3D11Texture(attributes);
     if (error.isError())
     {
         thread->setError(error);
@@ -689,10 +688,10 @@ EGLBoolean EGLAPIENTRY CreateStreamProducerD3DTextureNV12ANGLE(EGLDisplay dpy,
     return EGL_TRUE;
 }
 
-EGLBoolean EGLAPIENTRY StreamPostD3DTextureNV12ANGLE(EGLDisplay dpy,
-                                                     EGLStreamKHR stream,
-                                                     void *texture,
-                                                     const EGLAttrib *attrib_list)
+EGLBoolean EGLAPIENTRY StreamPostD3DTextureANGLE(EGLDisplay dpy,
+                                                 EGLStreamKHR stream,
+                                                 void *texture,
+                                                 const EGLAttrib *attrib_list)
 {
     EVENT(
         "(EGLDisplay dpy = 0x%0.8p, EGLStreamKHR stream = 0x%0.8p, void* texture = 0x%0.8p, "
@@ -704,14 +703,14 @@ EGLBoolean EGLAPIENTRY StreamPostD3DTextureNV12ANGLE(EGLDisplay dpy,
     Stream *streamObject    = static_cast<Stream *>(stream);
     AttributeMap attributes = AttributeMap::CreateFromAttribArray(attrib_list);
 
-    Error error = ValidateStreamPostD3DTextureNV12ANGLE(display, streamObject, texture, attributes);
+    Error error = ValidateStreamPostD3DTextureANGLE(display, streamObject, texture, attributes);
     if (error.isError())
     {
         thread->setError(error);
         return EGL_FALSE;
     }
 
-    error = streamObject->postD3D11NV12Texture(texture, attributes);
+    error = streamObject->postD3D11Texture(texture, attributes);
     if (error.isError())
     {
         thread->setError(error);
