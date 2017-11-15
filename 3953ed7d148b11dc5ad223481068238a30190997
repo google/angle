@@ -331,6 +331,30 @@
     },
     {
       "key": {
+        "uuid": "b265b6b4_7c062cff",
+        "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 635,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-15T16:52:09Z",
+      "side": 1,
+      "message": "Passing around the Context is the way to go, that\u0027s what its there for.",
+      "parentUuid": "7563f12a_050e0f13",
+      "range": {
+        "startLine": 635,
+        "startChar": 4,
+        "endLine": 635,
+        "endChar": 24
+      },
+      "revId": "3953ed7d148b11dc5ad223481068238a30190997",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d1bd3661_b8a1311b",
         "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.h",
         "patchSetId": 13
