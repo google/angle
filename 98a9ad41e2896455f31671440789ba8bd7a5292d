@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e9ff31c4_fddcc080",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-11-15T00:26:19Z",
+      "side": 1,
+      "message": "Is it possible that some of these ANGLE_TRYs will return an error, but the image will be dirty already? I\u0027d prefer making this as atomic as possible, like passing mDirtyImages into copyFromTexStorage and other functions and setting it as close to dirtying the image as possible.\n\nAnother option is to set mDirtyImages before the rest of the code, this may hurt performance, but not correctness.",
+      "range": {
+        "startLine": 116,
+        "startChar": 8,
+        "endLine": 116,
+        "endChar": 27
+      },
+      "revId": "98a9ad41e2896455f31671440789ba8bd7a5292d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
