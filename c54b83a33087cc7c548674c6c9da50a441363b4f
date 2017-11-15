@@ -22,6 +22,30 @@
       "revId": "c54b83a33087cc7c548674c6c9da50a441363b4f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e15a966d_5d2c85dd",
+        "filename": "src/libANGLE/VaryingPacking_unittest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-11-15T07:30:46Z",
+      "side": 1,
+      "message": "Logically VaryingRef is closer to Program than VaryingPacking regarding cohesion. Program is the factory to create VaryingRef, and heavily uses it to gather and validate transform feedback. It is not worth moving it to VaryingPacking just for this minor unpleasure.",
+      "parentUuid": "78d29f63_7e6018ed",
+      "range": {
+        "startLine": 11,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 60
+      },
+      "revId": "c54b83a33087cc7c548674c6c9da50a441363b4f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
