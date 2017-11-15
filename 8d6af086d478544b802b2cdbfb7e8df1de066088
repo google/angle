@@ -46,6 +46,29 @@
       "revId": "8d6af086d478544b802b2cdbfb7e8df1de066088",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b828c332_58de05c8",
+        "filename": "src/libANGLE/VaryingPacking.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 247,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-15T15:48:18Z",
+      "side": 0,
+      "message": "won\u0027t this be a significant behaviour change? you will be packing unreferenced varyings always.",
+      "range": {
+        "startLine": 242,
+        "startChar": 0,
+        "endLine": 247,
+        "endChar": 0
+      },
+      "revId": "8d6af086d478544b802b2cdbfb7e8df1de066088",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }

@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f2dc8cb1_8e502b98",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 882,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-15T15:48:18Z",
+      "side": 1,
+      "message": "I think it might make sense to merge these two methods, since I don\u0027t see you using \"packedVaryings\" anywhere.",
+      "range": {
+        "startLine": 879,
+        "startChar": 0,
+        "endLine": 882,
+        "endChar": 98
+      },
+      "revId": "b813da13928653c2bea945c83228e28fd1c7a587",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ffbe6108_cba7ecad",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2617,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-15T15:48:18Z",
+      "side": 1,
+      "message": "please use the same error message as before.",
+      "range": {
+        "startLine": 2617,
+        "startChar": 24,
+        "endLine": 2617,
+        "endChar": 62
+      },
+      "revId": "b813da13928653c2bea945c83228e28fd1c7a587",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
