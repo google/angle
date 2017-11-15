@@ -46,6 +46,30 @@
       "revId": "dfbf4475c11747720b4d1e0b4065da165a08a2e3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e36254fb_d3b286fd",
+        "filename": "src/libANGLE/Compiler.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-15T22:42:23Z",
+      "side": 1,
+      "message": "That\u0027s fine. We should probably use the same extension in the compiler and in the API, but I\u0027m not particular as to how or which extension.",
+      "parentUuid": "8b5bfe53_ce6427cc",
+      "range": {
+        "startLine": 135,
+        "startChar": 15,
+        "endLine": 135,
+        "endChar": 35
+      },
+      "revId": "dfbf4475c11747720b4d1e0b4065da165a08a2e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
