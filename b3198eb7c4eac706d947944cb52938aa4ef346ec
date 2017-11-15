@@ -22,6 +22,30 @@
       "revId": "b3198eb7c4eac706d947944cb52938aa4ef346ec",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "96f0a44d_073a9384",
+        "filename": "src/common/utilities.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 836,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-15T17:30:21Z",
+      "side": 1,
+      "message": "It does, but I wanted this function to return uint, and it didn\u0027t seem to be a warning to omit the static_cast.",
+      "parentUuid": "5814d627_3469e123",
+      "range": {
+        "startLine": 836,
+        "startChar": 0,
+        "endLine": 836,
+        "endChar": 12
+      },
+      "revId": "b3198eb7c4eac706d947944cb52938aa4ef346ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
