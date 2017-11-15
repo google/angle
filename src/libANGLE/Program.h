@@ -578,6 +578,8 @@ class Program final : angle::NonCopyable, public LabeledObject
     GLsizei getTransformFeedbackVaryingCount() const;
     GLsizei getTransformFeedbackVaryingMaxLength() const;
     GLenum getTransformFeedbackBufferMode() const;
+    GLuint getTransformFeedbackVaryingResourceIndex(const GLchar *name) const;
+    const TransformFeedbackVarying &getTransformFeedbackVaryingResource(GLuint index) const;
 
     static bool LinkValidateInterfaceBlockFields(InfoLog &infoLog,
                                                  const std::string &uniformName,

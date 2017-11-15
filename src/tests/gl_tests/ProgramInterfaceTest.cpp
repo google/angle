@@ -795,6 +795,109 @@ TEST_P(ProgramInterfaceTestES31, GetShaderStorageBlockProperties)
     EXPECT_EQ("blockName1[0]", std::string(name));
 }
 
+// Tests transform feedback varying qeury works correctly.
+TEST_P(ProgramInterfaceTestES31, QueryTransformFeedbackVarying)
+{
+    const std::string &vertexShaderSource =
+        R"(#version 310 es
+
+        in vec3 position;\
+        out float outSingleType;
+        out vec2 outWholeArray[2];
+        out vec3 outArrayElements[16];
+        void main() {
+          outSingleType = 0.0;
+          outWholeArray[0] = vec2(position);
+          outArrayElements[7] = vec3(0, 0, 0);
+          outArrayElements[15] = position;
+          gl_Position = vec4(position, 1);
+        })";
+
+    const std::string &fragmentShaderSource =
+        R"(#version 310 es
+
+        precision mediump float;
+        out vec4 color;
+        in float outSingleType;
+        in vec2 outWholeArray[2];
+        in vec3 outArrayElements[16];
+        void main() {
+          color = vec4(0);
+        })";
+
+    std::vector<std::string> tfVaryings;
+    tfVaryings.push_back("outArrayElements[7]");
+    tfVaryings.push_back("outArrayElements[15]");
+    tfVaryings.push_back("outSingleType");
+    tfVaryings.push_back("outWholeArray");
+
+    GLuint program = CompileProgramWithTransformFeedback(vertexShaderSource, fragmentShaderSource,
+                                                         tfVaryings, GL_INTERLEAVED_ATTRIBS);
+    ASSERT_NE(0u, program);
+
+    GLint num;
+    glGetProgramInterfaceiv(program, GL_TRANSFORM_FEEDBACK_VARYING, GL_ACTIVE_RESOURCES, &num);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(4, num);
+
+    glGetProgramInterfaceiv(program, GL_TRANSFORM_FEEDBACK_VARYING, GL_MAX_NAME_LENGTH, &num);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(21, num);  // outArrayElements[15]
+
+    // GLES 3.10, Page 77:
+    // For TRANSFORM_FEEDBACK_VARYING, the active resource list will use the variable order
+    // specified in the most recent call to TransformFeedbackVaryings before the last call to
+    // LinkProgram.
+    GLuint index =
+        glGetProgramResourceIndex(program, GL_TRANSFORM_FEEDBACK_VARYING, "outArrayElements[7]");
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(0u, index);
+    index =
+        glGetProgramResourceIndex(program, GL_TRANSFORM_FEEDBACK_VARYING, "outArrayElements[15]");
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(1u, index);
+    index = glGetProgramResourceIndex(program, GL_TRANSFORM_FEEDBACK_VARYING, "outSingleType");
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(2u, index);
+    index = glGetProgramResourceIndex(program, GL_TRANSFORM_FEEDBACK_VARYING, "outWholeArray");
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(3u, index);
+
+    // GLES 3.10, Page 80:
+    // For TRANSFORM_FEEDBACK_VARYING resources, name must match one of the variables to be captured
+    // as specified by a previous call to TransformFeedbackVaryings. Otherwise, INVALID_INDEX is
+    // returned.
+    // If name does not match a resource as described above, the value INVALID_INDEX is returned,
+    // but no GL error is generated.
+    index = glGetProgramResourceIndex(program, GL_TRANSFORM_FEEDBACK_VARYING, "outWholeArray[0]");
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(GL_INVALID_INDEX, index);
+
+    GLenum props[]    = {GL_TYPE, GL_ARRAY_SIZE, GL_NAME_LENGTH};
+    GLsizei propCount = static_cast<GLsizei>(ArraySize(props));
+    GLint params[ArraySize(props)];
+    GLsizei length = 0;
+    // Query properties of 'outArrayElements[15]'.
+    glGetProgramResourceiv(program, GL_TRANSFORM_FEEDBACK_VARYING, 1, propCount, props, propCount,
+                           &length, params);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(propCount, length);
+    EXPECT_EQ(GL_FLOAT_VEC3, params[0]);  // type
+    EXPECT_EQ(1, params[1]);              // array_size
+    EXPECT_EQ(21, params[2]);             // name_length
+
+    // Query properties of 'outWholeArray'.
+    glGetProgramResourceiv(program, GL_TRANSFORM_FEEDBACK_VARYING, 3, propCount, props, propCount,
+                           &length, params);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(propCount, length);
+    EXPECT_EQ(GL_FLOAT_VEC2, params[0]);  // type
+    EXPECT_EQ(2, params[1]);              // array_size
+    EXPECT_EQ(14, params[2]);             // name_length
+
+    glDeleteProgram(program);
+}
+
 ANGLE_INSTANTIATE_TEST(ProgramInterfaceTestES31, ES31_OPENGL(), ES31_OPENGLES());
 
 }  // anonymous namespace
