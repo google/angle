@@ -218,8 +218,8 @@ const ShCompileOptions SH_EMULATE_ATAN2_FLOAT_FUNCTION = UINT64_C(1) << 30;
 // "uniform highp uint ViewID_OVR".
 const ShCompileOptions SH_TRANSLATE_VIEWID_OVR_TO_UNIFORM = UINT64_C(1) << 31;
 
-// Set to initialize uninitialized local variables. Should only be used with GLSL output. In HLSL
-// output variables are initialized regardless of if this flag is set.
+// Set to initialize uninitialized local and global temporary variables. Should only be used with
+// GLSL output. In HLSL output variables are initialized regardless of if this flag is set.
 const ShCompileOptions SH_INITIALIZE_UNINITIALIZED_LOCALS = UINT64_C(1) << 32;
 
 // The flag modifies the shader in the following way:

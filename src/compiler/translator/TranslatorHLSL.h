@@ -32,9 +32,6 @@ class TranslatorHLSL : public TCompiler
     // collectVariables needs to be run always so registers can be assigned.
     bool shouldCollectVariables(ShCompileOptions compileOptions) override { return true; }
 
-    // Globals are initialized in output so it is redundant to initialize them in the AST.
-    bool needToInitializeGlobalsInAST() const override { return false; }
-
     std::map<std::string, unsigned int> mUniformBlockRegisterMap;
     std::map<std::string, unsigned int> mUniformRegisterMap;
 };

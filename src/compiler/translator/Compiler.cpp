@@ -45,6 +45,7 @@
 #include "compiler/translator/ValidateVaryingLocations.h"
 #include "compiler/translator/VariablePacker.h"
 #include "compiler/translator/VectorizeVectorScalarArithmetic.h"
+#include "compiler/translator/util.h"
 #include "third_party/compiler/ArrayBoundsClamper.h"
 
 namespace sh
@@ -571,8 +572,6 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
                                     &symbolTable, shaderVersion);
     }
 
-    DeferGlobalInitializers(root, needToInitializeGlobalsInAST(), &symbolTable);
-
     // Split multi declarations and remove calls to array length().
     // Note that SimplifyLoopConditions needs to be run before any other AST transformations
     // that may need to generate new statements from loop conditions or loop expressions.
@@ -590,7 +589,15 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
 
     RemoveArrayLengthMethod(root);
 
-    if ((compileOptions & SH_INITIALIZE_UNINITIALIZED_LOCALS) && getOutputType())
+    // DeferGlobalInitializers needs to be run before other AST transformations that generate new
+    // statements from expressions. But it's fine to run DeferGlobalInitializers after the above
+    // SplitSequenceOperator and RemoveArrayLengthMethod since they only have an effect on the AST
+    // on ESSL >= 3.00, and the initializers that need to be deferred can only exist in ESSL < 3.00.
+    bool initializeLocalsAndGlobals =
+        (compileOptions & SH_INITIALIZE_UNINITIALIZED_LOCALS) && !IsOutputHLSL(getOutputType());
+    DeferGlobalInitializers(root, initializeLocalsAndGlobals, &symbolTable);
+
+    if (initializeLocalsAndGlobals)
     {
         // Initialize uninitialized local variables.
         // In some cases initializing can generate extra statements in the parent block, such as

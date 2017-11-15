@@ -31,73 +31,59 @@ void GetDeferredInitializers(TIntermDeclaration *declaration,
                              bool initializeUninitializedGlobals,
                              TIntermSequence *deferredInitializersOut)
 {
-    // We iterate with an index instead of using an iterator since we're replacing the children of
-    // declaration inside the loop.
-    for (size_t i = 0; i < declaration->getSequence()->size(); ++i)
+    // SeparateDeclarations should have already been run.
+    ASSERT(declaration->getSequence()->size() == 1);
+
+    TIntermNode *declarator = declaration->getSequence()->back();
+    TIntermBinary *init     = declarator->getAsBinaryNode();
+    if (init)
     {
-        TIntermNode *declarator = declaration->getSequence()->at(i);
-        TIntermBinary *init     = declarator->getAsBinaryNode();
-        if (init)
+        TIntermSymbol *symbolNode = init->getLeft()->getAsSymbolNode();
+        ASSERT(symbolNode);
+        TIntermTyped *expression = init->getRight();
+
+        if ((expression->getQualifier() != EvqConst ||
+             (expression->getAsConstantUnion() == nullptr &&
+              !expression->isConstructorWithOnlyConstantUnionParameters())))
         {
-            TIntermSymbol *symbolNode = init->getLeft()->getAsSymbolNode();
-            ASSERT(symbolNode);
-            TIntermTyped *expression = init->getRight();
+            // For variables which are not constant, defer their real initialization until
+            // after we initialize uniforms.
+            // Deferral is done also in any cases where the variable has not been constant
+            // folded, since otherwise there's a chance that HLSL output will generate extra
+            // statements from the initializer expression.
 
-            if ((expression->getQualifier() != EvqConst ||
-                 (expression->getAsConstantUnion() == nullptr &&
-                  !expression->isConstructorWithOnlyConstantUnionParameters())))
+            // Change const global to a regular global if its initialization is deferred.
+            // This can happen if ANGLE has not been able to fold the constant expression used
+            // as an initializer.
+            ASSERT(symbolNode->getQualifier() == EvqConst ||
+                   symbolNode->getQualifier() == EvqGlobal);
+            if (symbolNode->getQualifier() == EvqConst)
             {
-                // For variables which are not constant, defer their real initialization until
-                // after we initialize uniforms.
-                // Deferral is done also in any cases where the variable has not been constant
-                // folded, since otherwise there's a chance that HLSL output will generate extra
-                // statements from the initializer expression.
-                TIntermBinary *deferredInit =
-                    new TIntermBinary(EOpAssign, symbolNode->deepCopy(), init->getRight());
-                deferredInitializersOut->push_back(deferredInit);
-
-                // Change const global to a regular global if its initialization is deferred.
-                // This can happen if ANGLE has not been able to fold the constant expression used
-                // as an initializer.
-                ASSERT(symbolNode->getQualifier() == EvqConst ||
-                       symbolNode->getQualifier() == EvqGlobal);
-                if (symbolNode->getQualifier() == EvqConst)
-                {
-                    // All of the siblings in the same declaration need to have consistent
-                    // qualifiers.
-                    auto *siblings = declaration->getSequence();
-                    for (TIntermNode *siblingNode : *siblings)
-                    {
-                        TIntermBinary *siblingBinary = siblingNode->getAsBinaryNode();
-                        if (siblingBinary)
-                        {
-                            ASSERT(siblingBinary->getOp() == EOpInitialize);
-                            siblingBinary->getLeft()->getTypePointer()->setQualifier(EvqGlobal);
-                        }
-                        siblingNode->getAsTyped()->getTypePointer()->setQualifier(EvqGlobal);
-                    }
-                    // This node is one of the siblings.
-                    ASSERT(symbolNode->getQualifier() == EvqGlobal);
-                }
-                // Remove the initializer from the global scope and just declare the global instead.
-                declaration->replaceChildNode(init, symbolNode);
+                symbolNode->getTypePointer()->setQualifier(EvqGlobal);
             }
+
+            TIntermBinary *deferredInit =
+                new TIntermBinary(EOpAssign, symbolNode->deepCopy(), init->getRight());
+            deferredInitializersOut->push_back(deferredInit);
+
+            // Remove the initializer from the global scope and just declare the global instead.
+            declaration->replaceChildNode(init, symbolNode);
         }
-        else if (initializeUninitializedGlobals)
+    }
+    else if (initializeUninitializedGlobals)
+    {
+        TIntermSymbol *symbolNode = declarator->getAsSymbolNode();
+        ASSERT(symbolNode);
+
+        // Ignore ANGLE internal variables.
+        if (symbolNode->getName().isInternal())
+            return;
+
+        if (symbolNode->getQualifier() == EvqGlobal && symbolNode->getSymbol() != "")
         {
-            TIntermSymbol *symbolNode = declarator->getAsSymbolNode();
-            ASSERT(symbolNode);
-
-            // Ignore ANGLE internal variables.
-            if (symbolNode->getName().isInternal())
-                continue;
-
-            if (symbolNode->getQualifier() == EvqGlobal && symbolNode->getSymbol() != "")
-            {
-                TIntermSequence *initCode = CreateInitCode(symbolNode);
-                deferredInitializersOut->insert(deferredInitializersOut->end(), initCode->begin(),
-                                                initCode->end());
-            }
+            TIntermSequence *initCode = CreateInitCode(symbolNode);
+            deferredInitializersOut->insert(deferredInitializersOut->end(), initCode->begin(),
+                                            initCode->end());
         }
     }
 }
