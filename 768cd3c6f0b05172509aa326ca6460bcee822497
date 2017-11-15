@@ -16,6 +16,24 @@
       "revId": "768cd3c6f0b05172509aa326ca6460bcee822497",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b37e5102_b3828cb9",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 3929,
+      "author": {
+        "id": 1166724
+      },
+      "writtenOn": "2017-11-15T16:57:03Z",
+      "side": 1,
+      "message": "This line cannot be reached unless the depth-stencil attachment was permitted. If it\u0027s permitted, we _only_ need to check if the buffer exists. I believe this code is correct.",
+      "parentUuid": "d02e3548_79c09dab",
+      "revId": "768cd3c6f0b05172509aa326ca6460bcee822497",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
