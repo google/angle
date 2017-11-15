@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "fe4d8043_fda995ae",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 952,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-11-15T08:42:27Z",
+      "side": 1,
+      "message": "You are right, but this function is only called in Program::link after link success.",
+      "parentUuid": "4a0faab0_11f17a65",
+      "range": {
+        "startLine": 952,
+        "startChar": 8,
+        "endLine": 952,
+        "endChar": 36
+      },
+      "revId": "5d8e9758e50185162ab28ecb3e53289b23daa98b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6281dd5d_95c14ef9",
         "filename": "src/libANGLE/Program.h",
         "patchSetId": 5
@@ -45,6 +69,30 @@
       "revId": "5d8e9758e50185162ab28ecb3e53289b23daa98b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "764b8d92_fab0175a",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 415,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-11-15T08:42:27Z",
+      "side": 1,
+      "message": "Good catch.",
+      "parentUuid": "6281dd5d_95c14ef9",
+      "range": {
+        "startLine": 415,
+        "startChar": 4,
+        "endLine": 415,
+        "endChar": 36
+      },
+      "revId": "5d8e9758e50185162ab28ecb3e53289b23daa98b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "cf03b308_aa58c21e",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-11-15T08:42:27Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "c3ae4f7f_c04018a5",
+      "range": {
+        "startLine": 47,
+        "startChar": 7,
+        "endLine": 47,
+        "endChar": 54
+      },
+      "revId": "5d8e9758e50185162ab28ecb3e53289b23daa98b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "81f68ba2_360ce2d1",
         "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
         "patchSetId": 5
@@ -91,6 +163,30 @@
       "revId": "5d8e9758e50185162ab28ecb3e53289b23daa98b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5d7a8b43_37d7ae91",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-11-15T08:42:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "81f68ba2_360ce2d1",
+      "range": {
+        "startLine": 50,
+        "startChar": 0,
+        "endLine": 54,
+        "endChar": 14
+      },
+      "revId": "5d8e9758e50185162ab28ecb3e53289b23daa98b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
