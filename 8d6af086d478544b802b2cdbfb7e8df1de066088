@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "96c50ebd_eee92d76",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-11-15T06:26:29Z",
+      "side": 0,
+      "message": "Not-needed anymore?",
+      "range": {
+        "startLine": 52,
+        "startChar": 0,
+        "endLine": 52,
+        "endChar": 21
+      },
+      "revId": "8d6af086d478544b802b2cdbfb7e8df1de066088",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

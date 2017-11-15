@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "78d29f63_7e6018ed",
+        "filename": "src/libANGLE/VaryingPacking_unittest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-11-15T06:26:29Z",
+      "side": 1,
+      "message": "It\u0027s weird to do this change. You can move the definition of struct VaryingRef to VaryingPacking.h. So in VaryingPacking.h, you don\u0027t need to include Program.h",
+      "range": {
+        "startLine": 11,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 60
+      },
+      "revId": "c54b83a33087cc7c548674c6c9da50a441363b4f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
