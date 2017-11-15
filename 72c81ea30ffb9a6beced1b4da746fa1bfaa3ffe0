@@ -169,6 +169,30 @@
     },
     {
       "key": {
+        "uuid": "0813fef0_b83a8c6f",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 374,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-11-15T00:52:06Z",
+      "side": 1,
+      "message": "Hi Jamie,\n\nAccording to my investigation, OES and EXT extensions are almost same, the only difference is whether the names of the new enums (The value of the enums are same) and new function end with \u0027OES\u0027 or \u0027EXT\u0027 (FramebufferTextureEXT and FramebufferTextureOES). \n\nOES is the most recent version and seems more official, but dEQP tests only support EXT, all the geometry shader related tests will be skipped if EXT is not supported. \ne.g.\nhttps://android.googlesource.com/platform/external/deqp/+/master/modules/gles31/functional/es31fGeometryShaderTests.cpp#123\nhttps://android.googlesource.com/platform/external/deqp/+/master/modules/gles31/functional/es31fGeometryShaderTests.cpp#1874\n\nIt does make the code a bit more strange to support two extensions that actually have same functionalities. For example, in compiler, a built-in symbol can only belong to one extension, so I have to use one integer to represent both OES and EXT extensions.\n\nSo if we don\u0027t want to support both EXT and OES extension strings, we have two more choices:\n1. Only support EXT_geometry_shader\n2. Only support OES_geometry_shader and update dEQP tests to support OES_geometry_shader\n\nWhich one do you prefer?",
+      "parentUuid": "a351561a_a1c17784",
+      "range": {
+        "startLine": 373,
+        "startChar": 0,
+        "endLine": 374,
+        "endChar": 27
+      },
+      "revId": "72c81ea30ffb9a6beced1b4da746fa1bfaa3ffe0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "cf917f84_e40f89a7",
         "filename": "src/libANGLE/validationES2.cpp",
         "patchSetId": 11
