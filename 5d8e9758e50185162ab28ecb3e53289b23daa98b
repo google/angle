@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6281dd5d_95c14ef9",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 415,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-11-15T07:18:13Z",
+      "side": 1,
+      "message": "How about putting it in Private and calling it in Program::link. I think the context don\u0027t need to know it.",
+      "range": {
+        "startLine": 415,
+        "startChar": 4,
+        "endLine": 415,
+        "endChar": 36
+      },
+      "revId": "5d8e9758e50185162ab28ecb3e53289b23daa98b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "81f68ba2_360ce2d1",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-11-15T07:18:13Z",
+      "side": 1,
+      "message": "Use R\"(string here)\"",
+      "range": {
+        "startLine": 50,
+        "startChar": 0,
+        "endLine": 54,
+        "endChar": 14
+      },
+      "revId": "5d8e9758e50185162ab28ecb3e53289b23daa98b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
