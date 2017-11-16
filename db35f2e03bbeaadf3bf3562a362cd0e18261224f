@@ -1,0 +1,140 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "67464941_c5ca9e28",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 526,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-11-16T16:34:46Z",
+      "side": 1,
+      "message": "This can be moved before the builtInFunctionEmulator init because it only touches builtin variables, correct?",
+      "revId": "db35f2e03bbeaadf3bf3562a362cd0e18261224f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "24187a20_b4cf3d9e",
+        "filename": "src/compiler/translator/RemoveUnreferencedVariables.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-11-16T16:34:46Z",
+      "side": 1,
+      "message": "nit: I think we like the using Foo \u003d Bar syntax better now that it is available in the Chromium C++11 style guide.",
+      "revId": "db35f2e03bbeaadf3bf3562a362cd0e18261224f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d15baaad_22ed13a7",
+        "filename": "src/compiler/translator/RemoveUnreferencedVariables.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-11-16T16:34:46Z",
+      "side": 1,
+      "message": "nit: mismatched comment",
+      "revId": "db35f2e03bbeaadf3bf3562a362cd0e18261224f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ea941f1e_60a26331",
+        "filename": "src/compiler/translator/RemoveUnreferencedVariables.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-11-16T16:34:46Z",
+      "side": 1,
+      "message": "This could be more readable if the two cases were more explicitly split:\n\n bool canRemove \u003d false;\n\n TIntermSymbol *symbolNode \u003d ...\n if (symbolNode !\u003d nullptr) {\n      canRemove \u003d ...;\n }\n\n TIntermBinary *initNode \u003d ...\n if (initNode !\u003d nullptr) {\n     canRemove \u003d ...\n }\n\n if (canRemove) {\n     ...\n }",
+      "revId": "db35f2e03bbeaadf3bf3562a362cd0e18261224f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "61b2f67f_c2d8dd46",
+        "filename": "src/compiler/translator/RemoveUnreferencedVariables.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-11-16T16:34:46Z",
+      "side": 1,
+      "message": "Please comment on what\u0027s happening here and why it is important to visit in reverse order so that we can pick up newly unreferenced variables after some declarations are removed.",
+      "revId": "db35f2e03bbeaadf3bf3562a362cd0e18261224f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "48b913c2_aa2f1ec1",
+        "filename": "src/compiler/translator/RemoveUnreferencedVariables.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 194,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-11-16T16:34:46Z",
+      "side": 1,
+      "message": "Ditto, please add a comment explaining what\u0027s happening here and how it is different from the block case.",
+      "revId": "db35f2e03bbeaadf3bf3562a362cd0e18261224f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cd569d47_3e13e4db",
+        "filename": "src/compiler/translator/RemoveUnreferencedVariables.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-11-16T16:34:46Z",
+      "side": 1,
+      "message": "Any reason for this order? The only constraint seems to be that init must be done last.",
+      "revId": "db35f2e03bbeaadf3bf3562a362cd0e18261224f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c399acb4_4503430d",
+        "filename": "src/tests/compiler_tests/RemoveUnreferencedVariables_test.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 329,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-11-16T16:34:46Z",
+      "side": 1,
+      "message": "Can we have a couple more test for the interactions with the pruning of unused functions?",
+      "revId": "db35f2e03bbeaadf3bf3562a362cd0e18261224f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
