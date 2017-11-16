@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "90f0e3c7_7b33d4cd",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 222,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-11-16T16:13:57Z",
+      "side": 1,
+      "message": "Should we add an assert for this?",
+      "range": {
+        "startLine": 221,
+        "startChar": 73,
+        "endLine": 222,
+        "endChar": 15
+      },
+      "revId": "f97d48f93a8777b5470dfa6407684187709f836f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
