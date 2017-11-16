@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "6ae8db77_8875d981",
+        "filename": "src/tests/test_utils/ANGLETest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-16T17:05:35Z",
+      "side": 1,
+      "message": "I agree. I guess the downside of your method is that every time you want to see the helpful output you would need to duplicate the stream output code you have in your test.\n\nCould you change EXPECT_PIXEL_COLOR_NEAR to call your method and inline stream output? If you want to do this as a follow up just to land this, that\u0027s fine.",
+      "parentUuid": "e8ad15ca_9e884ab5",
+      "range": {
+        "startLine": 130,
+        "startChar": 0,
+        "endLine": 130,
+        "endChar": 95
+      },
+      "revId": "fd32f0a658e74b57228a1b5391c2ee74a5e68386",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7b895f22_5bea89a9",
         "filename": "src/tests/test_utils/ANGLETest.h",
         "patchSetId": 10
