@@ -689,6 +689,9 @@ TEST_P(FramebufferTest_ES31, IncompleteMultisampleFixedSampleLocationsTex)
 // object's default width and height.
 TEST_P(FramebufferTest_ES31, RenderingLimitToDefaultFBOSizeWithNoAttachments)
 {
+    // anglebug.com/2253
+    ANGLE_SKIP_TEST_IF(IsLinux() && IsAMD() && IsDesktopOpenGL());
+
     const std::string &vertexShader =
         "#version 310 es\n"
         "in layout(location = 0) highp vec2 a_position;\n\n"
