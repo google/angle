@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1dc179a5_fa91958a",
+        "filename": "src/tests/gl_tests/CopyTextureTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1035,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-16T21:18:53Z",
+      "side": 1,
+      "message": "nit: you can use ANGLE_SKIP_TEST_IF();",
+      "range": {
+        "startLine": 1032,
+        "startChar": 0,
+        "endLine": 1035,
+        "endChar": 5
+      },
+      "revId": "481cb83aaeca6eeb2152d02cdbb7b7767d960fad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
