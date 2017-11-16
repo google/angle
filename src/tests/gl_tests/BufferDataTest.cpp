@@ -404,6 +404,23 @@ TEST_P(BufferDataTest, MapBufferOES)
     EXPECT_EQ(data, actualData);
 }
 
+// Tests a bug where copying buffer data immediately after creation hit a nullptr in D3D11.
+TEST_P(BufferDataTestES3, NoBufferInitDataCopyBug)
+{
+    constexpr GLsizei size = 64;
+
+    GLBuffer sourceBuffer;
+    glBindBuffer(GL_COPY_READ_BUFFER, sourceBuffer);
+    glBufferData(GL_COPY_READ_BUFFER, size, nullptr, GL_STATIC_DRAW);
+
+    GLBuffer destBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, destBuffer);
+    glBufferData(GL_ARRAY_BUFFER, size, nullptr, GL_STATIC_DRAW);
+
+    glCopyBufferSubData(GL_COPY_READ_BUFFER, GL_ARRAY_BUFFER, 0, 0, size);
+    ASSERT_GL_NO_ERROR();
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
 ANGLE_INSTANTIATE_TEST(BufferDataTest, ES2_D3D9(), ES2_D3D11(), ES2_OPENGL(), ES2_OPENGLES());
 ANGLE_INSTANTIATE_TEST(BufferDataTestES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());

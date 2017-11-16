@@ -432,10 +432,12 @@ gl::Error Buffer11::copySubData(const gl::Context *context,
     BufferStorage *copySource = nullptr;
     ANGLE_TRY_RESULT(sourceBuffer->getLatestBufferStorage(context), copySource);
 
-    if (!copySource || !copyDest)
+    if (!copySource)
     {
-        return gl::OutOfMemory() << "Failed to allocate internal staging buffer.";
+        ANGLE_TRY_RESULT(sourceBuffer->getStagingStorage(context), copySource);
     }
+
+    ASSERT(copySource && copyDest);
 
     // A staging buffer is needed if there is no cpu-cpu or gpu-gpu copy path avaiable.
     if (!copyDest->isGPUAccessible() && !copySource->isCPUAccessible(GL_MAP_READ_BIT))
@@ -831,40 +833,46 @@ gl::Error Buffer11::updateBufferStorage(const gl::Context *context,
 
     ASSERT(storage);
 
-    if (latestBuffer && latestBuffer->getDataRevision() > storage->getDataRevision())
+    if (!latestBuffer)
     {
-        // Copy through a staging buffer if we're copying from or to a non-staging, mappable
-        // buffer storage. This is because we can't map a GPU buffer, and copy CPU
-        // data directly. If we're already using a staging buffer we're fine.
-        if (latestBuffer->getUsage() != BUFFER_USAGE_STAGING &&
-            storage->getUsage() != BUFFER_USAGE_STAGING &&
-            (!latestBuffer->isCPUAccessible(GL_MAP_READ_BIT) ||
-             !storage->isCPUAccessible(GL_MAP_WRITE_BIT)))
-        {
-            NativeStorage *stagingBuffer = nullptr;
-            ANGLE_TRY_RESULT(getStagingStorage(context), stagingBuffer);
+        onStorageUpdate(storage);
+        return gl::NoError();
+    }
 
-            CopyResult copyResult = CopyResult::NOT_RECREATED;
-            ANGLE_TRY_RESULT(stagingBuffer->copyFromStorage(context, latestBuffer, 0,
-                                                            latestBuffer->getSize(), 0),
-                             copyResult);
-            onCopyStorage(stagingBuffer, latestBuffer);
+    if (latestBuffer->getDataRevision() <= storage->getDataRevision())
+    {
+        return gl::NoError();
+    }
 
-            latestBuffer = stagingBuffer;
-        }
+    // Copy through a staging buffer if we're copying from or to a non-staging, mappable
+    // buffer storage. This is because we can't map a GPU buffer, and copy CPU
+    // data directly. If we're already using a staging buffer we're fine.
+    if (latestBuffer->getUsage() != BUFFER_USAGE_STAGING &&
+        storage->getUsage() != BUFFER_USAGE_STAGING &&
+        (!latestBuffer->isCPUAccessible(GL_MAP_READ_BIT) ||
+         !storage->isCPUAccessible(GL_MAP_WRITE_BIT)))
+    {
+        NativeStorage *stagingBuffer = nullptr;
+        ANGLE_TRY_RESULT(getStagingStorage(context), stagingBuffer);
 
         CopyResult copyResult = CopyResult::NOT_RECREATED;
         ANGLE_TRY_RESULT(
-            storage->copyFromStorage(context, latestBuffer, sourceOffset, storageSize, 0),
+            stagingBuffer->copyFromStorage(context, latestBuffer, 0, latestBuffer->getSize(), 0),
             copyResult);
-        // If the D3D buffer has been recreated, we should update our serial.
-        if (copyResult == CopyResult::RECREATED)
-        {
-            updateSerial();
-        }
-        onCopyStorage(storage, latestBuffer);
+        onCopyStorage(stagingBuffer, latestBuffer);
+
+        latestBuffer = stagingBuffer;
     }
 
+    CopyResult copyResult = CopyResult::NOT_RECREATED;
+    ANGLE_TRY_RESULT(storage->copyFromStorage(context, latestBuffer, sourceOffset, storageSize, 0),
+                     copyResult);
+    // If the D3D buffer has been recreated, we should update our serial.
+    if (copyResult == CopyResult::RECREATED)
+    {
+        updateSerial();
+    }
+    onCopyStorage(storage, latestBuffer);
     return gl::NoError();
 }
 
