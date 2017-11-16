@@ -139,6 +139,8 @@ TEST_P(ShaderStorageBufferTest31, AtomicMemoryFunctions)
 {
     ANGLE_SKIP_TEST_IF(IsAMD() && IsDesktopOpenGL() && IsWindows());
     ANGLE_SKIP_TEST_IF(IsLinux() && IsIntel() && IsOpenGL());
+    // anglebug.com/2255
+    ANGLE_SKIP_TEST_IF(IsLinux() && IsAMD() && IsDesktopOpenGL());
 
     const std::string &csSource =
         R"(#version 310 es
