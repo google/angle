@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "66941ca6_9a80a493",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-11-16T01:39:19Z",
+      "side": 1,
+      "message": "It\u0027s more like the test case\u0027s name. Do you think \u0027Update linked shader stages after linking\u0027 or \u0027Record linked shader status\u0027 is better? Or something similar?",
+      "range": {
+        "startLine": 7,
+        "startChar": 6,
+        "endLine": 7,
+        "endChar": 33
+      },
+      "revId": "358478b06bec4bab84b037d5aaef75a3f29106f6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "95e5162e_1e9ee189",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-11-16T01:39:19Z",
+      "side": 1,
+      "message": "It\u0027s better to add a comment that why you choose these values.",
+      "range": {
+        "startLine": 34,
+        "startChar": 0,
+        "endLine": 36,
+        "endChar": 37
+      },
+      "revId": "358478b06bec4bab84b037d5aaef75a3f29106f6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
