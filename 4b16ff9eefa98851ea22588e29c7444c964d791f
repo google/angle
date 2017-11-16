@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a2b38c7b_1174461c",
+        "filename": "src/compiler/translator/VectorizeVectorScalarArithmetic.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-11-16T16:16:11Z",
+      "side": 1,
+      "message": "nit: mModifiedBlocks. Right now it sounds like this contains a bunch of things that were inserted in blocks.",
+      "revId": "4b16ff9eefa98851ea22588e29c7444c964d791f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
