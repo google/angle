@@ -26,6 +26,7 @@ namespace gl
 {
 class Context;
 struct Format;
+struct LinkedUniform;
 class Program;
 class Shader;
 class ValidationContext;
@@ -210,23 +211,17 @@ bool ValidateGetQueryObjectui64vRobustANGLE(Context *context,
                                             GLsizei *length,
                                             GLuint64 *params);
 
-bool ValidateProgramUniform(Context *context,
-                            GLenum uniformType,
-                            GLuint program,
-                            GLint location,
-                            GLsizei count);
-bool ValidateProgramUniform1iv(Context *context,
-                               GLuint program,
+bool ValidateUniformCommonBase(ValidationContext *context,
+                               gl::Program *program,
                                GLint location,
                                GLsizei count,
-                               const GLint *value);
-bool ValidateProgramUniformMatrix(Context *context,
-                                  GLenum matrixType,
-                                  GLuint program,
-                                  GLint location,
-                                  GLsizei count,
-                                  GLboolean transpose);
-
+                               const LinkedUniform **uniformOut);
+bool ValidateUniform1ivValue(ValidationContext *context,
+                             GLenum uniformType,
+                             GLsizei count,
+                             const GLint *value);
+bool ValidateUniformValue(ValidationContext *context, GLenum valueType, GLenum uniformType);
+bool ValidateUniformMatrixValue(ValidationContext *context, GLenum valueType, GLenum uniformType);
 bool ValidateUniform(ValidationContext *context, GLenum uniformType, GLint location, GLsizei count);
 bool ValidateUniformMatrix(ValidationContext *context,
                            GLenum matrixType,

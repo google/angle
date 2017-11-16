@@ -18,7 +18,6 @@
 #include "libANGLE/Query.h"
 #include "libANGLE/Texture.h"
 #include "libANGLE/TransformFeedback.h"
-#include "libANGLE/Uniform.h"
 #include "libANGLE/VertexArray.h"
 #include "libANGLE/formatutils.h"
 #include "libANGLE/queryconversions.h"
@@ -391,128 +390,6 @@ bool ValidateTextureSRGBDecodeValue(Context *context, ParamType *params)
     }
 
     return true;
-}
-
-bool ValidateUniformCommonBase(ValidationContext *context,
-                               gl::Program *program,
-                               GLint location,
-                               GLsizei count,
-                               const LinkedUniform **uniformOut)
-{
-    // TODO(Jiajia): Add image uniform check in future.
-    if (count < 0)
-    {
-        ANGLE_VALIDATION_ERR(context, InvalidValue(), NegativeCount);
-        return false;
-    }
-
-    if (!program)
-    {
-        ANGLE_VALIDATION_ERR(context, InvalidOperation(), InvalidProgramName);
-        return false;
-    }
-
-    if (!program->isLinked())
-    {
-        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ProgramNotLinked);
-        return false;
-    }
-
-    if (location == -1)
-    {
-        // Silently ignore the uniform command
-        return false;
-    }
-
-    const auto &uniformLocations = program->getUniformLocations();
-    size_t castedLocation        = static_cast<size_t>(location);
-    if (castedLocation >= uniformLocations.size())
-    {
-        context->handleError(InvalidOperation() << "Invalid uniform location");
-        return false;
-    }
-
-    const auto &uniformLocation = uniformLocations[castedLocation];
-    if (uniformLocation.ignored)
-    {
-        // Silently ignore the uniform command
-        return false;
-    }
-
-    if (!uniformLocation.used())
-    {
-        context->handleError(InvalidOperation());
-        return false;
-    }
-
-    const auto &uniform = program->getUniformByIndex(uniformLocation.index);
-
-    // attempting to write an array to a non-array uniform is an INVALID_OPERATION
-    if (!uniform.isArray() && count > 1)
-    {
-        context->handleError(InvalidOperation());
-        return false;
-    }
-
-    *uniformOut = &uniform;
-    return true;
-}
-
-bool ValidateUniform1ivValue(ValidationContext *context,
-                             GLenum uniformType,
-                             GLsizei count,
-                             const GLint *value)
-{
-    // Value type is GL_INT, because we only get here from glUniform1i{v}.
-    // It is compatible with INT or BOOL.
-    // Do these cheap tests first, for a little extra speed.
-    if (GL_INT == uniformType || GL_BOOL == uniformType)
-    {
-        return true;
-    }
-
-    if (IsSamplerType(uniformType))
-    {
-        // Check that the values are in range.
-        const GLint max = context->getCaps().maxCombinedTextureImageUnits;
-        for (GLsizei i = 0; i < count; ++i)
-        {
-            if (value[i] < 0 || value[i] >= max)
-            {
-                context->handleError(InvalidValue() << "sampler uniform value out of range");
-                return false;
-            }
-        }
-        return true;
-    }
-
-    context->handleError(InvalidOperation() << "wrong type of value for uniform");
-    return false;
-}
-
-bool ValidateUniformValue(ValidationContext *context, GLenum valueType, GLenum uniformType)
-{
-    // Check that the value type is compatible with uniform type.
-    // Do the cheaper test first, for a little extra speed.
-    if (valueType == uniformType || VariableBoolVectorType(valueType) == uniformType)
-    {
-        return true;
-    }
-
-    ANGLE_VALIDATION_ERR(context, InvalidOperation(), UniformSizeMismatch);
-    return false;
-}
-
-bool ValidateUniformMatrixValue(ValidationContext *context, GLenum valueType, GLenum uniformType)
-{
-    // Check that the value type is compatible with uniform type.
-    if (valueType == uniformType)
-    {
-        return true;
-    }
-
-    context->handleError(InvalidOperation() << "wrong type of value for uniform");
-    return false;
 }
 
 bool ValidateFragmentShaderColorBufferTypeMatch(ValidationContext *context)
@@ -2103,62 +1980,126 @@ bool ValidateGetQueryObjectui64vRobustANGLE(Context *context,
     return true;
 }
 
-bool ValidateProgramUniform(gl::Context *context,
-                            GLenum valueType,
-                            GLuint program,
-                            GLint location,
-                            GLsizei count)
-{
-    // Check for ES31 program uniform entry points
-    if (context->getClientVersion() < Version(3, 1))
-    {
-        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES31Required);
-        return false;
-    }
-
-    const LinkedUniform *uniform = nullptr;
-    gl::Program *programObject   = GetValidProgram(context, program);
-    return ValidateUniformCommonBase(context, programObject, location, count, &uniform) &&
-           ValidateUniformValue(context, valueType, uniform->type);
-}
-
-bool ValidateProgramUniform1iv(gl::Context *context,
-                               GLuint program,
+bool ValidateUniformCommonBase(ValidationContext *context,
+                               gl::Program *program,
                                GLint location,
                                GLsizei count,
-                               const GLint *value)
+                               const LinkedUniform **uniformOut)
 {
-    // Check for ES31 program uniform entry points
-    if (context->getClientVersion() < Version(3, 1))
+    // TODO(Jiajia): Add image uniform check in future.
+    if (count < 0)
     {
-        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES31Required);
+        ANGLE_VALIDATION_ERR(context, InvalidValue(), NegativeCount);
         return false;
     }
 
-    const LinkedUniform *uniform = nullptr;
-    gl::Program *programObject   = GetValidProgram(context, program);
-    return ValidateUniformCommonBase(context, programObject, location, count, &uniform) &&
-           ValidateUniform1ivValue(context, uniform->type, count, value);
+    if (!program)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), InvalidProgramName);
+        return false;
+    }
+
+    if (!program->isLinked())
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ProgramNotLinked);
+        return false;
+    }
+
+    if (location == -1)
+    {
+        // Silently ignore the uniform command
+        return false;
+    }
+
+    const auto &uniformLocations = program->getUniformLocations();
+    size_t castedLocation        = static_cast<size_t>(location);
+    if (castedLocation >= uniformLocations.size())
+    {
+        context->handleError(InvalidOperation() << "Invalid uniform location");
+        return false;
+    }
+
+    const auto &uniformLocation = uniformLocations[castedLocation];
+    if (uniformLocation.ignored)
+    {
+        // Silently ignore the uniform command
+        return false;
+    }
+
+    if (!uniformLocation.used())
+    {
+        context->handleError(InvalidOperation());
+        return false;
+    }
+
+    const auto &uniform = program->getUniformByIndex(uniformLocation.index);
+
+    // attempting to write an array to a non-array uniform is an INVALID_OPERATION
+    if (!uniform.isArray() && count > 1)
+    {
+        context->handleError(InvalidOperation());
+        return false;
+    }
+
+    *uniformOut = &uniform;
+    return true;
 }
 
-bool ValidateProgramUniformMatrix(gl::Context *context,
-                                  GLenum valueType,
-                                  GLuint program,
-                                  GLint location,
-                                  GLsizei count,
-                                  GLboolean transpose)
+bool ValidateUniform1ivValue(ValidationContext *context,
+                             GLenum uniformType,
+                             GLsizei count,
+                             const GLint *value)
 {
-    // Check for ES31 program uniform entry points
-    if (context->getClientVersion() < Version(3, 1))
+    // Value type is GL_INT, because we only get here from glUniform1i{v}.
+    // It is compatible with INT or BOOL.
+    // Do these cheap tests first, for a little extra speed.
+    if (GL_INT == uniformType || GL_BOOL == uniformType)
     {
-        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES31Required);
-        return false;
+        return true;
     }
 
-    const LinkedUniform *uniform = nullptr;
-    gl::Program *programObject   = GetValidProgram(context, program);
-    return ValidateUniformCommonBase(context, programObject, location, count, &uniform) &&
-           ValidateUniformMatrixValue(context, valueType, uniform->type);
+    if (IsSamplerType(uniformType))
+    {
+        // Check that the values are in range.
+        const GLint max = context->getCaps().maxCombinedTextureImageUnits;
+        for (GLsizei i = 0; i < count; ++i)
+        {
+            if (value[i] < 0 || value[i] >= max)
+            {
+                context->handleError(InvalidValue() << "sampler uniform value out of range");
+                return false;
+            }
+        }
+        return true;
+    }
+
+    context->handleError(InvalidOperation() << "wrong type of value for uniform");
+    return false;
+}
+
+bool ValidateUniformValue(ValidationContext *context, GLenum valueType, GLenum uniformType)
+{
+    // Check that the value type is compatible with uniform type.
+    // Do the cheaper test first, for a little extra speed.
+    if (valueType == uniformType || VariableBoolVectorType(valueType) == uniformType)
+    {
+        return true;
+    }
+
+    ANGLE_VALIDATION_ERR(context, InvalidOperation(), UniformSizeMismatch);
+    return false;
+}
+
+bool ValidateUniformMatrixValue(ValidationContext *context, GLenum valueType, GLenum uniformType)
+{
+    // Check that the value type is compatible with uniform type.
+    if (valueType == uniformType)
+    {
+        return true;
+    }
+
+    context->handleError(InvalidOperation() << "wrong type of value for uniform");
+    return false;
 }
 
 bool ValidateUniform(ValidationContext *context, GLenum valueType, GLint location, GLsizei count)

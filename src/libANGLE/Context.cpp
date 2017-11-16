@@ -634,6 +634,12 @@ GLuint Context::createProgramPipeline()
     return mState.mPipelines->createProgramPipeline();
 }
 
+GLuint Context::createShaderProgramv(GLenum type, GLsizei count, const GLchar *const *strings)
+{
+    UNIMPLEMENTED();
+    return 0u;
+}
+
 void Context::deleteBuffer(GLuint buffer)
 {
     if (mState.mBuffers->getBuffer(buffer))
@@ -999,6 +1005,11 @@ void Context::bindImageTexture(GLuint unit,
 void Context::useProgram(GLuint program)
 {
     mGLState.setProgram(this, getProgram(program));
+}
+
+void Context::useProgramStages(GLuint pipeline, GLbitfield stages, GLuint program)
+{
+    UNIMPLEMENTED();
 }
 
 void Context::bindTransformFeedback(GLenum target, GLuint transformFeedbackHandle)
@@ -1648,6 +1659,21 @@ void Context::getTexParameteriv(GLenum target, GLenum pname, GLint *params)
     Texture *texture = getTargetTexture(target);
     QueryTexParameteriv(texture, pname, params);
 }
+
+void Context::getTexLevelParameteriv(GLenum target, GLint level, GLenum pname, GLint *params)
+{
+    Texture *texture =
+        getTargetTexture(IsCubeMapTextureTarget(target) ? GL_TEXTURE_CUBE_MAP : target);
+    QueryTexLevelParameteriv(texture, target, level, pname, params);
+}
+
+void Context::getTexLevelParameterfv(GLenum target, GLint level, GLenum pname, GLfloat *params)
+{
+    Texture *texture =
+        getTargetTexture(IsCubeMapTextureTarget(target) ? GL_TEXTURE_CUBE_MAP : target);
+    QueryTexLevelParameterfv(texture, target, level, pname, params);
+}
+
 void Context::texParameterf(GLenum target, GLenum pname, GLfloat param)
 {
     Texture *texture = getTargetTexture(target);
@@ -3455,6 +3481,11 @@ void Context::syncStateForBlit()
     syncRendererState(mBlitDirtyBits, mBlitDirtyObjects);
 }
 
+void Context::activeShaderProgram(GLuint pipeline, GLuint program)
+{
+    UNIMPLEMENTED();
+}
+
 void Context::activeTexture(GLenum texture)
 {
     mGLState.setActiveSampler(texture - GL_TEXTURE0);
@@ -3776,7 +3807,7 @@ void Context::vertexAttribBinding(GLuint attribIndex, GLuint bindingIndex)
     mGLState.setVertexAttribBinding(this, attribIndex, bindingIndex);
 }
 
-void Context::setVertexBindingDivisor(GLuint bindingIndex, GLuint divisor)
+void Context::vertexBindingDivisor(GLuint bindingIndex, GLuint divisor)
 {
     mGLState.setVertexBindingDivisor(bindingIndex, divisor);
 }
@@ -4084,7 +4115,7 @@ void Context::getFramebufferParameteriv(GLenum target, GLenum pname, GLint *para
     QueryFramebufferParameteriv(framebuffer, pname, params);
 }
 
-void Context::setFramebufferParameteri(GLenum target, GLenum pname, GLint param)
+void Context::framebufferParameteri(GLenum target, GLenum pname, GLint param)
 {
     Framebuffer *framebuffer = mGLState.getTargetFramebuffer(target);
     SetFramebufferParameteri(framebuffer, pname, param);
@@ -4126,6 +4157,11 @@ void Context::dispatchCompute(GLuint numGroupsX, GLuint numGroupsY, GLuint numGr
     handleError(mImplementation->dispatchCompute(this, numGroupsX, numGroupsY, numGroupsZ));
 }
 
+void Context::dispatchComputeIndirect(GLintptr indirect)
+{
+    UNIMPLEMENTED();
+}
+
 void Context::texStorage2D(GLenum target,
                            GLsizei levels,
                            GLenum internalFormat,
@@ -4147,6 +4183,16 @@ void Context::texStorage3D(GLenum target,
     Extents size(width, height, depth);
     Texture *texture = getTargetTexture(target);
     handleError(texture->setStorage(this, target, levels, internalFormat, size));
+}
+
+void Context::memoryBarrier(GLbitfield barriers)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::memoryBarrierByRegion(GLbitfield barriers)
+{
+    UNIMPLEMENTED();
 }
 
 GLenum Context::checkFramebufferStatus(GLenum target)
@@ -4343,11 +4389,24 @@ void Context::getProgramiv(GLuint program, GLenum pname, GLint *params)
     QueryProgramiv(this, programObject, pname, params);
 }
 
+void Context::getProgramPipelineiv(GLuint pipeline, GLenum pname, GLint *params)
+{
+    UNIMPLEMENTED();
+}
+
 void Context::getProgramInfoLog(GLuint program, GLsizei bufsize, GLsizei *length, GLchar *infolog)
 {
     Program *programObject = getProgram(program);
     ASSERT(programObject);
     programObject->getInfoLog(bufsize, length, infolog);
+}
+
+void Context::getProgramPipelineInfoLog(GLuint pipeline,
+                                        GLsizei bufSize,
+                                        GLsizei *length,
+                                        GLchar *infoLog)
+{
+    UNIMPLEMENTED();
 }
 
 void Context::getShaderiv(GLuint shader, GLenum pname, GLint *params)
@@ -4718,6 +4777,11 @@ void Context::validateProgram(GLuint program)
     Program *programObject = getProgram(program);
     ASSERT(programObject);
     programObject->validate(mCaps);
+}
+
+void Context::validateProgramPipeline(GLuint pipeline)
+{
+    UNIMPLEMENTED();
 }
 
 void Context::getProgramBinary(GLuint program,
@@ -5182,6 +5246,90 @@ void Context::getInternalformativ(GLenum target,
     QueryInternalFormativ(formatCaps, pname, bufSize, params);
 }
 
+void Context::programUniform1i(GLuint program, GLint location, GLint v0)
+{
+    programUniform1iv(program, location, 1, &v0);
+}
+
+void Context::programUniform2i(GLuint program, GLint location, GLint v0, GLint v1)
+{
+    GLint xy[2] = {v0, v1};
+    programUniform2iv(program, location, 1, xy);
+}
+
+void Context::programUniform3i(GLuint program, GLint location, GLint v0, GLint v1, GLint v2)
+{
+    GLint xyz[3] = {v0, v1, v2};
+    programUniform3iv(program, location, 1, xyz);
+}
+
+void Context::programUniform4i(GLuint program,
+                               GLint location,
+                               GLint v0,
+                               GLint v1,
+                               GLint v2,
+                               GLint v3)
+{
+    GLint xyzw[4] = {v0, v1, v2, v3};
+    programUniform4iv(program, location, 1, xyzw);
+}
+
+void Context::programUniform1ui(GLuint program, GLint location, GLuint v0)
+{
+    programUniform1uiv(program, location, 1, &v0);
+}
+
+void Context::programUniform2ui(GLuint program, GLint location, GLuint v0, GLuint v1)
+{
+    GLuint xy[2] = {v0, v1};
+    programUniform2uiv(program, location, 1, xy);
+}
+
+void Context::programUniform3ui(GLuint program, GLint location, GLuint v0, GLuint v1, GLuint v2)
+{
+    GLuint xyz[3] = {v0, v1, v2};
+    programUniform3uiv(program, location, 1, xyz);
+}
+
+void Context::programUniform4ui(GLuint program,
+                                GLint location,
+                                GLuint v0,
+                                GLuint v1,
+                                GLuint v2,
+                                GLuint v3)
+{
+    GLuint xyzw[4] = {v0, v1, v2, v3};
+    programUniform4uiv(program, location, 1, xyzw);
+}
+
+void Context::programUniform1f(GLuint program, GLint location, GLfloat v0)
+{
+    programUniform1fv(program, location, 1, &v0);
+}
+
+void Context::programUniform2f(GLuint program, GLint location, GLfloat v0, GLfloat v1)
+{
+    GLfloat xy[2] = {v0, v1};
+    programUniform2fv(program, location, 1, xy);
+}
+
+void Context::programUniform3f(GLuint program, GLint location, GLfloat v0, GLfloat v1, GLfloat v2)
+{
+    GLfloat xyz[3] = {v0, v1, v2};
+    programUniform3fv(program, location, 1, xyz);
+}
+
+void Context::programUniform4f(GLuint program,
+                               GLint location,
+                               GLfloat v0,
+                               GLfloat v1,
+                               GLfloat v2,
+                               GLfloat v3)
+{
+    GLfloat xyzw[4] = {v0, v1, v2, v3};
+    programUniform4fv(program, location, 1, xyzw);
+}
+
 void Context::programUniform1iv(GLuint program, GLint location, GLsizei count, const GLint *value)
 {
     Program *programObject = getProgram(program);
@@ -5191,6 +5339,182 @@ void Context::programUniform1iv(GLuint program, GLint location, GLsizei count, c
     {
         mGLState.setObjectDirty(GL_PROGRAM);
     }
+}
+
+void Context::programUniform2iv(GLuint program, GLint location, GLsizei count, const GLint *value)
+{
+    Program *programObject = getProgram(program);
+    ASSERT(programObject);
+    programObject->setUniform2iv(location, count, value);
+}
+
+void Context::programUniform3iv(GLuint program, GLint location, GLsizei count, const GLint *value)
+{
+    Program *programObject = getProgram(program);
+    ASSERT(programObject);
+    programObject->setUniform3iv(location, count, value);
+}
+
+void Context::programUniform4iv(GLuint program, GLint location, GLsizei count, const GLint *value)
+{
+    Program *programObject = getProgram(program);
+    ASSERT(programObject);
+    programObject->setUniform4iv(location, count, value);
+}
+
+void Context::programUniform1uiv(GLuint program, GLint location, GLsizei count, const GLuint *value)
+{
+    Program *programObject = getProgram(program);
+    ASSERT(programObject);
+    programObject->setUniform1uiv(location, count, value);
+}
+
+void Context::programUniform2uiv(GLuint program, GLint location, GLsizei count, const GLuint *value)
+{
+    Program *programObject = getProgram(program);
+    ASSERT(programObject);
+    programObject->setUniform2uiv(location, count, value);
+}
+
+void Context::programUniform3uiv(GLuint program, GLint location, GLsizei count, const GLuint *value)
+{
+    Program *programObject = getProgram(program);
+    ASSERT(programObject);
+    programObject->setUniform3uiv(location, count, value);
+}
+
+void Context::programUniform4uiv(GLuint program, GLint location, GLsizei count, const GLuint *value)
+{
+    Program *programObject = getProgram(program);
+    ASSERT(programObject);
+    programObject->setUniform4uiv(location, count, value);
+}
+
+void Context::programUniform1fv(GLuint program, GLint location, GLsizei count, const GLfloat *value)
+{
+    Program *programObject = getProgram(program);
+    ASSERT(programObject);
+    programObject->setUniform1fv(location, count, value);
+}
+
+void Context::programUniform2fv(GLuint program, GLint location, GLsizei count, const GLfloat *value)
+{
+    Program *programObject = getProgram(program);
+    ASSERT(programObject);
+    programObject->setUniform2fv(location, count, value);
+}
+
+void Context::programUniform3fv(GLuint program, GLint location, GLsizei count, const GLfloat *value)
+{
+    Program *programObject = getProgram(program);
+    ASSERT(programObject);
+    programObject->setUniform3fv(location, count, value);
+}
+
+void Context::programUniform4fv(GLuint program, GLint location, GLsizei count, const GLfloat *value)
+{
+    Program *programObject = getProgram(program);
+    ASSERT(programObject);
+    programObject->setUniform4fv(location, count, value);
+}
+
+void Context::programUniformMatrix2fv(GLuint program,
+                                      GLint location,
+                                      GLsizei count,
+                                      GLboolean transpose,
+                                      const GLfloat *value)
+{
+    Program *programObject = getProgram(program);
+    ASSERT(programObject);
+    programObject->setUniformMatrix2fv(location, count, transpose, value);
+}
+
+void Context::programUniformMatrix3fv(GLuint program,
+                                      GLint location,
+                                      GLsizei count,
+                                      GLboolean transpose,
+                                      const GLfloat *value)
+{
+    Program *programObject = getProgram(program);
+    ASSERT(programObject);
+    programObject->setUniformMatrix3fv(location, count, transpose, value);
+}
+
+void Context::programUniformMatrix4fv(GLuint program,
+                                      GLint location,
+                                      GLsizei count,
+                                      GLboolean transpose,
+                                      const GLfloat *value)
+{
+    Program *programObject = getProgram(program);
+    ASSERT(programObject);
+    programObject->setUniformMatrix4fv(location, count, transpose, value);
+}
+
+void Context::programUniformMatrix2x3fv(GLuint program,
+                                        GLint location,
+                                        GLsizei count,
+                                        GLboolean transpose,
+                                        const GLfloat *value)
+{
+    Program *programObject = getProgram(program);
+    ASSERT(programObject);
+    programObject->setUniformMatrix2x3fv(location, count, transpose, value);
+}
+
+void Context::programUniformMatrix3x2fv(GLuint program,
+                                        GLint location,
+                                        GLsizei count,
+                                        GLboolean transpose,
+                                        const GLfloat *value)
+{
+    Program *programObject = getProgram(program);
+    ASSERT(programObject);
+    programObject->setUniformMatrix3x2fv(location, count, transpose, value);
+}
+
+void Context::programUniformMatrix2x4fv(GLuint program,
+                                        GLint location,
+                                        GLsizei count,
+                                        GLboolean transpose,
+                                        const GLfloat *value)
+{
+    Program *programObject = getProgram(program);
+    ASSERT(programObject);
+    programObject->setUniformMatrix2x4fv(location, count, transpose, value);
+}
+
+void Context::programUniformMatrix4x2fv(GLuint program,
+                                        GLint location,
+                                        GLsizei count,
+                                        GLboolean transpose,
+                                        const GLfloat *value)
+{
+    Program *programObject = getProgram(program);
+    ASSERT(programObject);
+    programObject->setUniformMatrix4x2fv(location, count, transpose, value);
+}
+
+void Context::programUniformMatrix3x4fv(GLuint program,
+                                        GLint location,
+                                        GLsizei count,
+                                        GLboolean transpose,
+                                        const GLfloat *value)
+{
+    Program *programObject = getProgram(program);
+    ASSERT(programObject);
+    programObject->setUniformMatrix3x4fv(location, count, transpose, value);
+}
+
+void Context::programUniformMatrix4x3fv(GLuint program,
+                                        GLint location,
+                                        GLsizei count,
+                                        GLboolean transpose,
+                                        const GLfloat *value)
+{
+    Program *programObject = getProgram(program);
+    ASSERT(programObject);
+    programObject->setUniformMatrix4x3fv(location, count, transpose, value);
 }
 
 void Context::onTextureChange(const Texture *texture)

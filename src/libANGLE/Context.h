@@ -87,6 +87,7 @@ class Context final : public ValidationContext
     GLuint createRenderbuffer();
     GLuint createPaths(GLsizei range);
     GLuint createProgramPipeline();
+    GLuint createShaderProgramv(GLenum type, GLsizei count, const GLchar *const *strings);
 
     void deleteBuffer(GLuint buffer);
     void deleteShader(GLuint shader);
@@ -134,6 +135,7 @@ class Context final : public ValidationContext
                           GLenum access,
                           GLenum format);
     void useProgram(GLuint program);
+    void useProgramStages(GLuint pipeline, GLbitfield stages, GLuint program);
     void bindTransformFeedback(GLenum target, GLuint transformFeedbackHandle);
     void bindProgramPipeline(GLuint pipelineHandle);
 
@@ -147,7 +149,7 @@ class Context final : public ValidationContext
     void getQueryObjectui64v(GLuint id, GLenum pname, GLuint64 *params);
 
     void vertexAttribDivisor(GLuint index, GLuint divisor);
-    void setVertexBindingDivisor(GLuint bindingIndex, GLuint divisor);
+    void vertexBindingDivisor(GLuint bindingIndex, GLuint divisor);
 
     void getBufferParameteriv(BufferBinding target, GLenum pname, GLint *params);
     void getFramebufferAttachmentParameteriv(GLenum target,
@@ -158,6 +160,8 @@ class Context final : public ValidationContext
 
     void getTexParameterfv(GLenum target, GLenum pname, GLfloat *params);
     void getTexParameteriv(GLenum target, GLenum pname, GLint *params);
+    void getTexLevelParameteriv(GLenum target, GLint level, GLenum pname, GLint *params);
+    void getTexLevelParameterfv(GLenum target, GLint level, GLenum pname, GLfloat *params);
     void texParameterf(GLenum target, GLenum pname, GLfloat param);
     void texParameterfv(GLenum target, GLenum pname, const GLfloat *params);
     void texParameteri(GLenum target, GLenum pname, GLint param);
@@ -239,6 +243,7 @@ class Context final : public ValidationContext
     void getIntegeri_v(GLenum target, GLuint index, GLint *data);
     void getInteger64i_v(GLenum target, GLuint index, GLint64 *data);
 
+    void activeShaderProgram(GLuint pipeline, GLuint program);
     void activeTexture(GLenum texture);
     void blendColor(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha);
     void blendEquation(GLenum mode);
@@ -701,7 +706,12 @@ class Context final : public ValidationContext
     void getAttachedShaders(GLuint program, GLsizei maxcount, GLsizei *count, GLuint *shaders);
     GLint getAttribLocation(GLuint program, const GLchar *name);
     void getProgramiv(GLuint program, GLenum pname, GLint *params);
+    void getProgramPipelineiv(GLuint pipeline, GLenum pname, GLint *params);
     void getProgramInfoLog(GLuint program, GLsizei bufsize, GLsizei *length, GLchar *infolog);
+    void getProgramPipelineInfoLog(GLuint pipeline,
+                                   GLsizei bufSize,
+                                   GLsizei *length,
+                                   GLchar *infoLog);
     void getShaderiv(GLuint shader, GLenum pname, GLint *params);
     void getShaderInfoLog(GLuint shader, GLsizei bufsize, GLsizei *length, GLchar *infolog);
     void getShaderPrecisionFormat(GLenum shadertype,
@@ -753,6 +763,7 @@ class Context final : public ValidationContext
     void uniformMatrix3fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value);
     void uniformMatrix4fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value);
     void validateProgram(GLuint program);
+    void validateProgramPipeline(GLuint pipeline);
 
     void genQueries(GLsizei n, GLuint *ids);
     void deleteQueries(GLsizei n, const GLuint *ids);
@@ -861,7 +872,94 @@ class Context final : public ValidationContext
                              GLsizei bufSize,
                              GLint *params);
 
+    void programUniform1i(GLuint program, GLint location, GLint v0);
+    void programUniform2i(GLuint program, GLint location, GLint v0, GLint v1);
+    void programUniform3i(GLuint program, GLint location, GLint v0, GLint v1, GLint v2);
+    void programUniform4i(GLuint program, GLint location, GLint v0, GLint v1, GLint v2, GLint v3);
+    void programUniform1ui(GLuint program, GLint location, GLuint v0);
+    void programUniform2ui(GLuint program, GLint location, GLuint v0, GLuint v1);
+    void programUniform3ui(GLuint program, GLint location, GLuint v0, GLuint v1, GLuint v2);
+    void programUniform4ui(GLuint program,
+                           GLint location,
+                           GLuint v0,
+                           GLuint v1,
+                           GLuint v2,
+                           GLuint v3);
+    void programUniform1f(GLuint program, GLint location, GLfloat v0);
+    void programUniform2f(GLuint program, GLint location, GLfloat v0, GLfloat v1);
+    void programUniform3f(GLuint program, GLint location, GLfloat v0, GLfloat v1, GLfloat v2);
+    void programUniform4f(GLuint program,
+                          GLint location,
+                          GLfloat v0,
+                          GLfloat v1,
+                          GLfloat v2,
+                          GLfloat v3);
     void programUniform1iv(GLuint program, GLint location, GLsizei count, const GLint *value);
+    void programUniform2iv(GLuint program, GLint location, GLsizei count, const GLint *value);
+    void programUniform3iv(GLuint program, GLint location, GLsizei count, const GLint *value);
+    void programUniform4iv(GLuint program, GLint location, GLsizei count, const GLint *value);
+    void programUniform1uiv(GLuint program, GLint location, GLsizei count, const GLuint *value);
+    void programUniform2uiv(GLuint program, GLint location, GLsizei count, const GLuint *value);
+    void programUniform3uiv(GLuint program, GLint location, GLsizei count, const GLuint *value);
+    void programUniform4uiv(GLuint program, GLint location, GLsizei count, const GLuint *value);
+    void programUniform1fv(GLuint program, GLint location, GLsizei count, const GLfloat *value);
+    void programUniform2fv(GLuint program, GLint location, GLsizei count, const GLfloat *value);
+    void programUniform3fv(GLuint program, GLint location, GLsizei count, const GLfloat *value);
+    void programUniform4fv(GLuint program, GLint location, GLsizei count, const GLfloat *value);
+
+    void programUniformMatrix2fv(GLuint program,
+                                 GLint location,
+                                 GLsizei count,
+                                 GLboolean transpose,
+                                 const GLfloat *value);
+
+    void programUniformMatrix3fv(GLuint program,
+                                 GLint location,
+                                 GLsizei count,
+                                 GLboolean transpose,
+                                 const GLfloat *value);
+
+    void programUniformMatrix4fv(GLuint program,
+                                 GLint location,
+                                 GLsizei count,
+                                 GLboolean transpose,
+                                 const GLfloat *value);
+
+    void programUniformMatrix2x3fv(GLuint program,
+                                   GLint location,
+                                   GLsizei count,
+                                   GLboolean transpose,
+                                   const GLfloat *value);
+
+    void programUniformMatrix3x2fv(GLuint program,
+                                   GLint location,
+                                   GLsizei count,
+                                   GLboolean transpose,
+                                   const GLfloat *value);
+
+    void programUniformMatrix2x4fv(GLuint program,
+                                   GLint location,
+                                   GLsizei count,
+                                   GLboolean transpose,
+                                   const GLfloat *value);
+
+    void programUniformMatrix4x2fv(GLuint program,
+                                   GLint location,
+                                   GLsizei count,
+                                   GLboolean transpose,
+                                   const GLfloat *value);
+
+    void programUniformMatrix3x4fv(GLuint program,
+                                   GLint location,
+                                   GLsizei count,
+                                   GLboolean transpose,
+                                   const GLfloat *value);
+
+    void programUniformMatrix4x3fv(GLuint program,
+                                   GLint location,
+                                   GLsizei count,
+                                   GLboolean transpose,
+                                   const GLfloat *value);
 
     void deleteProgramPipelines(GLsizei n, const GLuint *pipelines);
     void genProgramPipelines(GLsizei n, GLuint *pipelines);
@@ -893,12 +991,13 @@ class Context final : public ValidationContext
     const Workarounds &getWorkarounds() const;
 
     void getFramebufferParameteriv(GLenum target, GLenum pname, GLint *params);
-    void setFramebufferParameteri(GLenum target, GLenum pname, GLint param);
+    void framebufferParameteri(GLenum target, GLenum pname, GLint param);
 
     Error getScratchBuffer(size_t requestedSizeBytes, angle::MemoryBuffer **scratchBufferOut) const;
     Error getZeroFilledBuffer(size_t requstedSizeBytes, angle::MemoryBuffer **zeroBufferOut) const;
 
     void dispatchCompute(GLuint numGroupsX, GLuint numGroupsY, GLuint numGroupsZ);
+    void dispatchComputeIndirect(GLintptr indirect);
 
     MemoryProgramCache *getMemoryProgramCache() const { return mMemoryProgramCache; }
 
@@ -916,6 +1015,9 @@ class Context final : public ValidationContext
                       GLsizei width,
                       GLsizei height,
                       GLsizei depth);
+
+    void memoryBarrier(GLbitfield barriers);
+    void memoryBarrierByRegion(GLbitfield barriers);
 
     // Notification for a state change in a Texture.
     void onTextureChange(const Texture *texture);
