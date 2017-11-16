@@ -34,6 +34,24 @@
       "revId": "768cd3c6f0b05172509aa326ca6460bcee822497",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7aec626d_1f14178a",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 3929,
+      "author": {
+        "id": 1166724
+      },
+      "writtenOn": "2017-11-16T21:12:11Z",
+      "side": 1,
+      "message": "Ah, nevermind. My observation here was incorrect.",
+      "parentUuid": "b37e5102_b3828cb9",
+      "revId": "768cd3c6f0b05172509aa326ca6460bcee822497",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
