@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ff25e5db_232707d7",
+        "filename": "src/libANGLE/renderer/StreamProducerImpl.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-16T17:34:23Z",
+      "side": 1,
+      "message": "git cl format will clean this up",
+      "range": {
+        "startLine": 26,
+        "startChar": 23,
+        "endLine": 26,
+        "endChar": 41
+      },
+      "revId": "1fd1db6a5deae537b986194021236c2973c6a95b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

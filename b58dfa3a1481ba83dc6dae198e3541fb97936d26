@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "e6ef6e56_121adad5",
+        "filename": "include/EGL/eglext.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 1059,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-16T17:34:23Z",
+      "side": 1,
+      "message": "Thanks for working with Daniel to fix this.\n\nCan you point me to where you\u0027d need to const_cast? I couldn\u0027t find it in the code. We certainly shouldn\u0027t commit edits to the official eglext.h, as we have no record of how to maintain those.",
+      "parentUuid": "e7093fb9_caa9370b",
+      "range": {
+        "startLine": 1057,
+        "startChar": 0,
+        "endLine": 1059,
+        "endChar": 142
+      },
+      "revId": "b58dfa3a1481ba83dc6dae198e3541fb97936d26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "c5298391_a3302995",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StreamProducerNV12.cpp",
         "patchSetId": 3
