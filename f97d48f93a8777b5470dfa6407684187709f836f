@@ -22,6 +22,30 @@
       "revId": "f97d48f93a8777b5470dfa6407684187709f836f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ab46a1f4_19e219d0",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 222,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-16T19:11:13Z",
+      "side": 1,
+      "message": "It\u0027s not harmful to toggle the flag on with HLSL output, so I don\u0027t think an assert is needed.",
+      "parentUuid": "90f0e3c7_7b33d4cd",
+      "range": {
+        "startLine": 221,
+        "startChar": 73,
+        "endLine": 222,
+        "endChar": 15
+      },
+      "revId": "f97d48f93a8777b5470dfa6407684187709f836f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
