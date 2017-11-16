@@ -710,7 +710,7 @@ enum TQualifier
     EvqRestrict,
     EvqVolatile,
 
-    // GLSL ES 3.1 extension OES_geometry_shader qualifiers
+    // GLSL ES 3.1 extension EXT_geometry_shader qualifiers
     EvqGeometryIn,
     EvqGeometryOut,
     EvqPerVertexIn,    // gl_in
@@ -814,7 +814,7 @@ struct TLayoutQualifier
                1;
     }
 
-    bool isLocalSizeEqual(const sh::WorkGroupSize &localSizeIn) const
+    bool isLocalSizeEqual(const WorkGroupSize &localSizeIn) const
     {
         return localSize.isWorkGroupSizeMatching(localSizeIn);
     }
@@ -825,7 +825,7 @@ struct TLayoutQualifier
     TLayoutBlockStorage blockStorage;
 
     // Compute shader layout qualifiers.
-    sh::WorkGroupSize localSize;
+    WorkGroupSize localSize;
 
     int binding;
     int offset;

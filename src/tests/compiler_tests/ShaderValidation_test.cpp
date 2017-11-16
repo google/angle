@@ -101,21 +101,21 @@ class GeometryShaderValidationTest : public ShaderCompileTreeTest
   protected:
     void initResources(ShBuiltInResources *resources) override
     {
-        resources->OES_geometry_shader = 1;
+        resources->EXT_geometry_shader = 1;
     }
-    ::GLenum getShaderType() const override { return GL_GEOMETRY_SHADER_OES; }
+    ::GLenum getShaderType() const override { return GL_GEOMETRY_SHADER_EXT; }
     ShShaderSpec getShaderSpec() const override { return SH_GLES3_1_SPEC; }
 };
 
-class FragmentShaderOESGeometryShaderValidationTest : public FragmentShaderValidationTest
+class FragmentShaderEXTGeometryShaderValidationTest : public FragmentShaderValidationTest
 {
   public:
-    FragmentShaderOESGeometryShaderValidationTest() {}
+    FragmentShaderEXTGeometryShaderValidationTest() {}
 
   protected:
     void initResources(ShBuiltInResources *resources) override
     {
-        resources->OES_geometry_shader = 1;
+        resources->EXT_geometry_shader = 1;
     }
 };
 
@@ -2274,42 +2274,42 @@ TEST_F(FragmentShaderValidationTest, InvalidUseOfLocalSizeX)
 TEST_F(GeometryShaderValidationTest, InvalidUseOfLocalSizeX)
 {
     const std::string &shaderString1 =
-        "#version 310 es\n"
-        "#extension GL_OES_geometry_shader : require\n"
-        "layout (points, local_size_x = 15) in;\n"
-        "layout (points, max_vertices = 2) out;\n"
-        "void main()\n"
-        "{\n"
-        "}\n";
+        R"(#version 310 es
+        #extension GL_EXT_geometry_shader : require
+        layout (points, local_size_x = 15) in;
+        layout (points, max_vertices = 2) out;
+        void main()
+        {
+        })";
 
     const std::string &shaderString2 =
-        "#version 310 es\n"
-        "#extension GL_OES_geometry_shader : require\n"
-        "layout (points) in;\n"
-        "layout (invocations = 2, local_size_x = 15) in;\n"
-        "layout (points, max_vertices = 2) out;\n"
-        "void main()\n"
-        "{\n"
-        "}\n";
+        R"(#version 310 es
+        #extension GL_EXT_geometry_shader : require
+        layout (points) in;
+        layout (invocations = 2, local_size_x = 15) in;
+        layout (points, max_vertices = 2) out;
+        void main()
+        {
+        })";
 
     const std::string &shaderString3 =
-        "#version 310 es\n"
-        "#extension GL_OES_geometry_shader : require\n"
-        "layout (points) in;\n"
-        "layout (points, local_size_x = 15, max_vertices = 2) out;\n"
-        "void main()\n"
-        "{\n"
-        "}\n";
+        R"(#version 310 es
+        #extension GL_EXT_geometry_shader : require
+        layout (points) in;
+        layout (points, local_size_x = 15, max_vertices = 2) out;
+        void main()
+        {
+        })";
 
     const std::string &shaderString4 =
-        "#version 310 es\n"
-        "#extension GL_OES_geometry_shader : require\n"
-        "layout (points) in;\n"
-        "layout (points) out;\n"
-        "layout (max_vertices = 2, local_size_x = 15) out;\n"
-        "void main()\n"
-        "{\n"
-        "}\n";
+        R"(#version 310 es
+        #extension GL_EXT_geometry_shader : require
+        layout (points) in;
+        layout (points) out;
+        layout (max_vertices = 2, local_size_x = 15) out;
+        void main()
+        {
+        })";
     if (compile(shaderString1) || compile(shaderString2) || compile(shaderString3) ||
         compile(shaderString4))
     {
@@ -4438,20 +4438,20 @@ TEST_F(VertexShaderValidationTest, ViewportIndexInESSL310)
     }
 }
 
-// Test that gl_PrimitiveID is valid in fragment shader with 'GL_OES_geometry_shader' declared.
-TEST_F(FragmentShaderOESGeometryShaderValidationTest, PrimitiveIDWithExtension)
+// Test that gl_PrimitiveID is valid in fragment shader with 'GL_EXT_geometry_shader' declared.
+TEST_F(FragmentShaderEXTGeometryShaderValidationTest, PrimitiveIDWithExtension)
 {
     const std::string &shaderString =
-        "#version 310 es\n"
-        "#extension GL_OES_geometry_shader : require\n"
-        "precision mediump float;\n"
-        "layout(location = 0) out mediump vec4 fragColor;\n"
-        "void main(void)\n"
-        "{\n"
-        "    vec4 data = vec4(0.1, 0.2, 0.3, 0.4);\n"
-        "    float value = data[gl_PrimitiveID % 4];\n"
-        "    fragColor = vec4(value, 0, 0, 1);\n"
-        "}\n";
+        R"(#version 310 es
+        #extension GL_EXT_geometry_shader : require
+        precision mediump float;
+        layout(location = 0) out mediump vec4 fragColor;
+        void main(void)
+        {
+            vec4 data = vec4(0.1, 0.2, 0.3, 0.4);
+            float value = data[gl_PrimitiveID % 4];
+            fragColor = vec4(value, 0, 0, 1);
+        })";
 
     if (!compile(shaderString))
     {
@@ -4459,19 +4459,19 @@ TEST_F(FragmentShaderOESGeometryShaderValidationTest, PrimitiveIDWithExtension)
     }
 }
 
-// Test that gl_PrimitiveID is invalid in fragment shader without 'GL_OES_geometry_shader' declared.
-TEST_F(FragmentShaderOESGeometryShaderValidationTest, PrimitiveIDWithoutExtension)
+// Test that gl_PrimitiveID is invalid in fragment shader without 'GL_EXT_geometry_shader' declared.
+TEST_F(FragmentShaderEXTGeometryShaderValidationTest, PrimitiveIDWithoutExtension)
 {
     const std::string &shaderString =
-        "#version 310 es\n"
-        "precision mediump float;\n"
-        "layout(location = 0) out mediump vec4 fragColor;\n"
-        "void main(void)\n"
-        "{\n"
-        "    vec4 data = vec4(0.1, 0.2, 0.3, 0.4);\n"
-        "    float value = data[gl_PrimitiveID % 4];\n"
-        "    fragColor = vec4(value, 0, 0, 1);\n"
-        "}\n";
+        R"(#version 310 es
+        precision mediump float;
+        layout(location = 0) out mediump vec4 fragColor;
+        void main(void)
+        {
+            vec4 data = vec4(0.1, 0.2, 0.3, 0.4);
+            float value = data[gl_PrimitiveID % 4];
+            fragColor = vec4(value, 0, 0, 1);
+        })";
 
     if (compile(shaderString))
     {
@@ -4480,18 +4480,18 @@ TEST_F(FragmentShaderOESGeometryShaderValidationTest, PrimitiveIDWithoutExtensio
 }
 
 // Test that gl_PrimitiveID cannot be l-value in fragment shader.
-TEST_F(FragmentShaderOESGeometryShaderValidationTest, AssignValueToPrimitiveID)
+TEST_F(FragmentShaderEXTGeometryShaderValidationTest, AssignValueToPrimitiveID)
 {
     const std::string &shaderString =
-        "#version 310 es\n"
-        "#extension GL_OES_geometry_shader : require\n"
-        "precision mediump float;\n"
-        "layout(location = 0) out mediump vec4 fragColor;\n"
-        "void main(void)\n"
-        "{\n"
-        "    gl_PrimitiveID = 1;\n"
-        "    fragColor = vec4(1.0, 0.0, 0.0, 1.0);\n"
-        "}\n";
+        R"(#version 310 es
+        #extension GL_EXT_geometry_shader : require
+        precision mediump float;
+        layout(location = 0) out mediump vec4 fragColor;
+        void main(void)
+        {
+            gl_PrimitiveID = 1;
+            fragColor = vec4(1.0, 0.0, 0.0, 1.0);
+        })";
 
     if (compile(shaderString))
     {
@@ -4499,20 +4499,20 @@ TEST_F(FragmentShaderOESGeometryShaderValidationTest, AssignValueToPrimitiveID)
     }
 }
 
-// Test that gl_Layer is valid in fragment shader with 'GL_OES_geometry_shader' declared.
-TEST_F(FragmentShaderOESGeometryShaderValidationTest, LayerWithExtension)
+// Test that gl_Layer is valid in fragment shader with 'GL_EXT_geometry_shader' declared.
+TEST_F(FragmentShaderEXTGeometryShaderValidationTest, LayerWithExtension)
 {
     const std::string &shaderString =
-        "#version 310 es\n"
-        "#extension GL_OES_geometry_shader : require\n"
-        "precision mediump float;\n"
-        "layout(location = 0) out mediump vec4 fragColor;\n"
-        "void main(void)\n"
-        "{\n"
-        "    vec4 data = vec4(0.1, 0.2, 0.3, 0.4);\n"
-        "    float value = data[gl_Layer % 4];\n"
-        "    fragColor = vec4(value, 0, 0, 1);\n"
-        "}\n";
+        R"(#version 310 es
+        #extension GL_EXT_geometry_shader : require
+        precision mediump float;
+        layout(location = 0) out mediump vec4 fragColor;
+        void main(void)
+        {
+            vec4 data = vec4(0.1, 0.2, 0.3, 0.4);
+            float value = data[gl_Layer % 4];
+            fragColor = vec4(value, 0, 0, 1);
+        })";
 
     if (!compile(shaderString))
     {
@@ -4520,19 +4520,19 @@ TEST_F(FragmentShaderOESGeometryShaderValidationTest, LayerWithExtension)
     }
 }
 
-// Test that gl_Layer is invalid in fragment shader without 'GL_OES_geometry_shader' declared.
-TEST_F(FragmentShaderOESGeometryShaderValidationTest, LayerWithoutExtension)
+// Test that gl_Layer is invalid in fragment shader without 'GL_EXT_geometry_shader' declared.
+TEST_F(FragmentShaderEXTGeometryShaderValidationTest, LayerWithoutExtension)
 {
     const std::string &shaderString =
-        "#version 310 es\n"
-        "precision mediump float;\n"
-        "layout(location = 0) out mediump vec4 fragColor;\n"
-        "void main(void)\n"
-        "{\n"
-        "    vec4 data = vec4(0.1, 0.2, 0.3, 0.4);\n"
-        "    float value = data[gl_Layer % 4];\n"
-        "    fragColor = vec4(value, 0, 0, 1);\n"
-        "}\n";
+        R"(#version 310 es
+        precision mediump float;
+        layout(location = 0) out mediump vec4 fragColor;
+        void main(void)
+        {
+            vec4 data = vec4(0.1, 0.2, 0.3, 0.4);
+            float value = data[gl_Layer % 4];
+            fragColor = vec4(value, 0, 0, 1);
+        })";
 
     if (compile(shaderString))
     {
@@ -4541,18 +4541,18 @@ TEST_F(FragmentShaderOESGeometryShaderValidationTest, LayerWithoutExtension)
 }
 
 // Test that gl_Layer cannot be l-value in fragment shader.
-TEST_F(FragmentShaderOESGeometryShaderValidationTest, AssignValueToLayer)
+TEST_F(FragmentShaderEXTGeometryShaderValidationTest, AssignValueToLayer)
 {
     const std::string &shaderString =
-        "#version 310 es\n"
-        "#extension GL_OES_geometry_shader : require\n"
-        "precision mediump float;\n"
-        "layout(location = 0) out mediump vec4 fragColor;\n"
-        "void main(void)\n"
-        "{\n"
-        "    gl_Layer = 1;\n"
-        "    fragColor = vec4(1.0, 0.0, 0.0, 1.0);\n"
-        "}\n";
+        R"(#version 310 es
+        #extension GL_EXT_geometry_shader : require
+        precision mediump float;
+        layout(location = 0) out mediump vec4 fragColor;
+        void main(void)
+        {
+            gl_Layer = 1;
+            fragColor = vec4(1.0, 0.0, 0.0, 1.0);
+        })";
 
     if (compile(shaderString))
     {
@@ -4560,13 +4560,13 @@ TEST_F(FragmentShaderOESGeometryShaderValidationTest, AssignValueToLayer)
     }
 }
 
-// Test that all built-in constants defined in GL_OES_geometry_shader can be used in fragment shader
-// with 'GL_OES_geometry_shader' declared.
-TEST_F(FragmentShaderOESGeometryShaderValidationTest, GeometryShaderBuiltInConstants)
+// Test that all built-in constants defined in GL_EXT_geometry_shader can be used in fragment shader
+// with 'GL_EXT_geometry_shader' declared.
+TEST_F(FragmentShaderEXTGeometryShaderValidationTest, GeometryShaderBuiltInConstants)
 {
     const std::string &kShaderHeader =
         R"(#version 310 es
-        #extension GL_OES_geometry_shader : require
+        #extension GL_EXT_geometry_shader : require
         precision mediump float;
         layout(location = 0) out mediump vec4 fragColor;
         void main(void)
@@ -4597,9 +4597,9 @@ TEST_F(FragmentShaderOESGeometryShaderValidationTest, GeometryShaderBuiltInConst
     }
 }
 
-// Test that any built-in constants defined in GL_OES_geometry_shader cannot be used in fragment
-// shader without 'GL_OES_geometry_shader' declared.
-TEST_F(FragmentShaderOESGeometryShaderValidationTest,
+// Test that any built-in constants defined in GL_EXT_geometry_shader cannot be used in fragment
+// shader without 'GL_EXT_geometry_shader' declared.
+TEST_F(FragmentShaderEXTGeometryShaderValidationTest,
        GeometryShaderBuiltInConstantsWithoutExtension)
 {
     const std::string &kShaderHeader =
@@ -4655,20 +4655,20 @@ TEST_F(VertexShaderValidationTest, InterfaceBlockUsingConstQualifier)
     }
 }
 
-// Test that using shader io blocks without declaration of GL_OES_shader_io_block is not allowed.
+// Test that using shader io blocks without declaration of GL_EXT_shader_io_block is not allowed.
 TEST_F(VertexShaderValidationTest, IOBlockWithoutExtension)
 {
     const std::string &shaderString =
-        "#version 310 es\n"
-        "out block\n"
-        "{\n"
-        "    vec2 value;\n"
-        "} VSOutput[2];\n"
-        "void main()\n"
-        "{\n"
-        "    int i = 0;\n"
-        "    vec2 value1 = VSOutput[i].value;\n"
-        "}\n";
+        R"(#version 310 es
+        out block
+        {
+            vec2 value;
+        } VSOutput[2];
+        void main()
+        {
+            int i = 0;
+            vec2 value1 = VSOutput[i].value;
+        })";
 
     if (compile(shaderString))
     {
@@ -4676,22 +4676,22 @@ TEST_F(VertexShaderValidationTest, IOBlockWithoutExtension)
     }
 }
 
-// Test that using shader io blocks without declaration of GL_OES_shader_io_block is not allowed.
+// Test that using shader io blocks without declaration of GL_EXT_shader_io_block is not allowed.
 TEST_F(FragmentShaderValidationTest, IOBlockWithoutExtension)
 {
     const std::string &shaderString =
-        "#version 310 es\n"
-        "precision mediump float;\n"
-        "in block\n"
-        "{\n"
-        "    vec4 i_color;\n"
-        "} FSInput[2];\n"
-        "out vec4 o_color;\n"
-        "void main()\n"
-        "{\n"
-        "    int i = 0;\n"
-        "    o_color = FSInput[i].i_color;"
-        "}\n";
+        R"(#version 310 es
+        precision mediump float;
+        in block
+        {
+            vec4 i_color;
+        } FSInput[2];
+        out vec4 o_color;
+        void main()
+        {
+            int i = 0;
+            o_color = FSInput[i].i_color;
+        })";
 
     if (compile(shaderString))
     {

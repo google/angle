@@ -63,7 +63,7 @@ void GenerateResources(ShBuiltInResources *resources)
 
     resources->OES_standard_derivatives = 0;
     resources->OES_EGL_image_external = 0;
-    resources->OES_geometry_shader      = 1;
+    resources->EXT_geometry_shader      = 1;
 }
 
 int main(int argc, char *argv[])
@@ -270,11 +270,11 @@ int main(int argc, char *argv[])
                   }
                   compiler = computeCompiler;
                   break;
-              case GL_GEOMETRY_SHADER_OES:
+              case GL_GEOMETRY_SHADER_EXT:
                   if (geometryCompiler == 0)
                   {
                       geometryCompiler =
-                          sh::ConstructCompiler(GL_GEOMETRY_SHADER_OES, spec, output, &resources);
+                          sh::ConstructCompiler(GL_GEOMETRY_SHADER_EXT, spec, output, &resources);
                   }
                   compiler = geometryCompiler;
                   break;
@@ -402,7 +402,7 @@ sh::GLenum FindShaderType(const char *fileName)
         if (strncmp(ext, ".comp", 5) == 0)
             return GL_COMPUTE_SHADER;
         if (strncmp(ext, ".geom", 5) == 0)
-            return GL_GEOMETRY_SHADER_OES;
+            return GL_GEOMETRY_SHADER_EXT;
     }
 
     return GL_FRAGMENT_SHADER;

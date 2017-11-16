@@ -155,10 +155,10 @@ class CollectVariablesTestES31 : public CollectVariablesTest
     }
 };
 
-class CollectVariablesOESGeometryShaderTest : public CollectVariablesTestES31
+class CollectVariablesEXTGeometryShaderTest : public CollectVariablesTestES31
 {
   public:
-    CollectVariablesOESGeometryShaderTest(sh::GLenum shaderType)
+    CollectVariablesEXTGeometryShaderTest(sh::GLenum shaderType)
         : CollectVariablesTestES31(shaderType)
     {
     }
@@ -168,16 +168,16 @@ class CollectVariablesOESGeometryShaderTest : public CollectVariablesTestES31
     {
         ShBuiltInResources resources;
         InitBuiltInResources(&resources);
-        resources.OES_geometry_shader = 1;
+        resources.EXT_geometry_shader = 1;
 
         initTranslator(resources);
     }
 };
 
-class CollectGeometryVariablesTest : public CollectVariablesOESGeometryShaderTest
+class CollectGeometryVariablesTest : public CollectVariablesEXTGeometryShaderTest
 {
   public:
-    CollectGeometryVariablesTest() : CollectVariablesOESGeometryShaderTest(GL_GEOMETRY_SHADER_OES)
+    CollectGeometryVariablesTest() : CollectVariablesEXTGeometryShaderTest(GL_GEOMETRY_SHADER_EXT)
     {
     }
 
@@ -188,7 +188,7 @@ class CollectGeometryVariablesTest : public CollectVariablesOESGeometryShaderTes
     {
         std::ostringstream sstream;
         sstream << "#version 310 es\n"
-                << "#extension GL_OES_geometry_shader : require\n"
+                << "#extension GL_EXT_geometry_shader : require\n"
                 << "layout (" << inputPrimitive << ") in;\n"
                 << "layout (points, max_vertices = 2) out;\n"
                 << inputVarying << functionBody;
@@ -197,11 +197,11 @@ class CollectGeometryVariablesTest : public CollectVariablesOESGeometryShaderTes
     }
 };
 
-class CollectFragmentVariablesOESGeometryShaderTest : public CollectVariablesOESGeometryShaderTest
+class CollectFragmentVariablesEXTGeometryShaderTest : public CollectVariablesEXTGeometryShaderTest
 {
   public:
-    CollectFragmentVariablesOESGeometryShaderTest()
-        : CollectVariablesOESGeometryShaderTest(GL_FRAGMENT_SHADER)
+    CollectFragmentVariablesEXTGeometryShaderTest()
+        : CollectVariablesEXTGeometryShaderTest(GL_FRAGMENT_SHADER)
     {
     }
 
@@ -938,7 +938,7 @@ TEST_F(CollectGeometryVariablesTest, CollectGLInFields)
 {
     const std::string &shaderString =
         R"(#version 310 es
-        #extension GL_OES_geometry_shader : require
+        #extension GL_EXT_geometry_shader : require
 
         layout (points) in;
         layout (points, max_vertices = 2) out;
@@ -1009,7 +1009,7 @@ TEST_F(CollectGeometryVariablesTest, CollectPrimitiveIDIn)
 {
     const std::string &shaderString =
         R"(#version 310 es
-        #extension GL_OES_geometry_shader : require
+        #extension GL_EXT_geometry_shader : require
         layout (points) in;
         layout (points, max_vertices = 2) out;
         void main()
@@ -1041,7 +1041,7 @@ TEST_F(CollectGeometryVariablesTest, CollectInvocationID)
 {
     const std::string &shaderString =
         R"(#version 310 es
-        #extension GL_OES_geometry_shader : require
+        #extension GL_EXT_geometry_shader : require
         layout (points, invocations = 2) in;
         layout (points, max_vertices = 2) out;
         void main()
@@ -1073,7 +1073,7 @@ TEST_F(CollectGeometryVariablesTest, CollectGLInIndexedByExpression)
 {
     const std::string &shaderString =
         R"(#version 310 es
-        #extension GL_OES_geometry_shader : require
+        #extension GL_EXT_geometry_shader : require
         layout (triangles, invocations = 2) in;
         layout (points, max_vertices = 2) out;
         void main()
@@ -1102,14 +1102,14 @@ TEST_F(CollectGeometryVariablesTest, CollectGLInIndexedByExpression)
 TEST_F(CollectGeometryVariablesTest, CollectPosition)
 {
     const std::string &shaderString =
-        "#version 310 es\n"
-        "#extension GL_OES_geometry_shader : require\n"
-        "layout (points) in;\n"
-        "layout (points, max_vertices = 2) out;\n"
-        "void main()\n"
-        "{\n"
-        "    gl_Position = vec4(0.1, 0.2, 0.3, 1);\n"
-        "}\n";
+        R"(#version 310 es
+        #extension GL_EXT_geometry_shader : require
+        layout (points) in;
+        layout (points, max_vertices = 2) out;
+        void main()
+        {
+            gl_Position = vec4(0.1, 0.2, 0.3, 1);
+        })";
 
     compile(shaderString);
 
@@ -1133,14 +1133,14 @@ TEST_F(CollectGeometryVariablesTest, CollectPosition)
 TEST_F(CollectGeometryVariablesTest, CollectPrimitiveID)
 {
     const std::string &shaderString =
-        "#version 310 es\n"
-        "#extension GL_OES_geometry_shader : require\n"
-        "layout (points) in;\n"
-        "layout (points, max_vertices = 2) out;\n"
-        "void main()\n"
-        "{\n"
-        "    gl_PrimitiveID = 100;\n"
-        "}\n";
+        R"(#version 310 es
+        #extension GL_EXT_geometry_shader : require
+        layout (points) in;
+        layout (points, max_vertices = 2) out;
+        void main()
+        {
+            gl_PrimitiveID = 100;
+        })";
 
     compile(shaderString);
 
@@ -1164,14 +1164,14 @@ TEST_F(CollectGeometryVariablesTest, CollectPrimitiveID)
 TEST_F(CollectGeometryVariablesTest, CollectLayer)
 {
     const std::string &shaderString =
-        "#version 310 es\n"
-        "#extension GL_OES_geometry_shader : require\n"
-        "layout (points) in;\n"
-        "layout (points, max_vertices = 2) out;\n"
-        "void main()\n"
-        "{\n"
-        "    gl_Layer = 2;\n"
-        "}\n";
+        R"(#version 310 es
+        #extension GL_EXT_geometry_shader : require
+        layout (points) in;
+        layout (points, max_vertices = 2) out;
+        void main()
+        {
+            gl_Layer = 2;
+        })";
 
     compile(shaderString);
 
@@ -1192,11 +1192,11 @@ TEST_F(CollectGeometryVariablesTest, CollectLayer)
 }
 
 // Test collecting gl_PrimitiveID in a fragment shader.
-TEST_F(CollectFragmentVariablesOESGeometryShaderTest, CollectPrimitiveID)
+TEST_F(CollectFragmentVariablesEXTGeometryShaderTest, CollectPrimitiveID)
 {
     const std::string &shaderString =
         R"(#version 310 es
-        #extension GL_OES_geometry_shader : require
+        #extension GL_EXT_geometry_shader : require
 
         out int my_out;
 
@@ -1223,11 +1223,11 @@ TEST_F(CollectFragmentVariablesOESGeometryShaderTest, CollectPrimitiveID)
 }
 
 // Test collecting gl_Layer in a fragment shader.
-TEST_F(CollectFragmentVariablesOESGeometryShaderTest, CollectLayer)
+TEST_F(CollectFragmentVariablesEXTGeometryShaderTest, CollectLayer)
 {
     const std::string &shaderString =
         R"(#version 310 es
-        #extension GL_OES_geometry_shader : require
+        #extension GL_EXT_geometry_shader : require
 
         out int my_out;
 
@@ -1257,12 +1257,12 @@ TEST_F(CollectFragmentVariablesOESGeometryShaderTest, CollectLayer)
 TEST_F(CollectVertexVariablesES31Test, CollectOutputWithLocation)
 {
     const std::string &shaderString =
-        "#version 310 es\n"
-        "out vec4 v_output1;\n"
-        "layout (location = 1) out vec4 v_output2;\n"
-        "void main()\n"
-        "{\n"
-        "}\n";
+        R"(#version 310 es
+        out vec4 v_output1;
+        layout (location = 1) out vec4 v_output2;
+        void main()
+        {
+        })";
 
     compile(shaderString);
 
@@ -1282,15 +1282,15 @@ TEST_F(CollectVertexVariablesES31Test, CollectOutputWithLocation)
 TEST_F(CollectFragmentVariablesES31Test, CollectInputWithLocation)
 {
     const std::string &shaderString =
-        "#version 310 es\n"
-        "precision mediump float;\n"
-        "in vec4 f_input1;\n"
-        "layout (location = 1) in vec4 f_input2;\n"
-        "layout (location = 0) out vec4 o_color;\n"
-        "void main()\n"
-        "{\n"
-        "    o_color = f_input2;\n"
-        "}\n";
+        R"(#version 310 es
+        precision mediump float;
+        in vec4 f_input1;
+        layout (location = 1) in vec4 f_input2;
+        layout (location = 0) out vec4 o_color;
+        void main()
+        {
+            o_color = f_input2;
+        })";
 
     compile(shaderString);
 
@@ -1311,7 +1311,7 @@ TEST_F(CollectGeometryVariablesTest, CollectInputs)
 {
     const std::string &shaderString =
         R"(#version 310 es
-        #extension GL_OES_geometry_shader : require
+        #extension GL_EXT_geometry_shader : require
         layout (points) in;
         layout (points, max_vertices = 2) out;
         in vec4 texcoord1[];
@@ -1384,7 +1384,7 @@ TEST_F(CollectGeometryVariablesTest, CollectInputsWithInterpolationQualifiers)
 {
     const std::string &kHeader =
         "#version 310 es\n"
-        "#extension GL_OES_geometry_shader : require\n";
+        "#extension GL_EXT_geometry_shader : require\n";
     const std::string &kLayout =
         "layout (points) in;\n"
         "layout (points, max_vertices = 2) out;\n";
@@ -1422,7 +1422,7 @@ TEST_F(CollectGeometryVariablesTest, CollectOutputsWithInterpolationQualifiers)
 {
     const std::string &kHeader =
         "#version 310 es\n"
-        "#extension GL_OES_geometry_shader : require\n"
+        "#extension GL_EXT_geometry_shader : require\n"
         "layout (points) in;\n"
         "layout (points, max_vertices = 2) out;\n";
 
@@ -1459,15 +1459,15 @@ TEST_F(CollectGeometryVariablesTest, CollectOutputsWithInterpolationQualifiers)
 TEST_F(CollectGeometryVariablesTest, CollectOutputsWithInvariant)
 {
     const std::string &shaderString =
-        "#version 310 es\n"
-        "#extension GL_OES_geometry_shader : require\n"
-        "layout (points) in;\n"
-        "layout (points, max_vertices = 2) out;\n"
-        "invariant out vec4 texcoord;\n"
-        "void main()\n"
-        "{\n"
-        "    texcoord = vec4(1.0, 0.0, 0.0, 1.0);\n"
-        "}\n";
+        R"(#version 310 es
+        #extension GL_EXT_geometry_shader : require
+        layout (points) in;
+        layout (points, max_vertices = 2) out;
+        invariant out vec4 texcoord;
+        void main()
+        {
+            texcoord = vec4(1.0, 0.0, 0.0, 1.0);
+        })";
 
     compile(shaderString);
 

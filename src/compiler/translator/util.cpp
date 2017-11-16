@@ -527,7 +527,7 @@ bool IsVarying(TQualifier qualifier)
 bool IsGeometryShaderInput(GLenum shaderType, TQualifier qualifier)
 {
     return (qualifier == EvqGeometryIn) ||
-           ((shaderType == GL_GEOMETRY_SHADER_OES) && IsInterpolationIn(qualifier));
+           ((shaderType == GL_GEOMETRY_SHADER_EXT) && IsInterpolationIn(qualifier));
 }
 
 InterpolationType GetInterpolationType(TQualifier qualifier)

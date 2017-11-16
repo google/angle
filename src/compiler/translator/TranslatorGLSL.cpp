@@ -202,7 +202,7 @@ void TranslatorGLSL::translate(TIntermBlock *root,
              << ", local_size_z=" << localSize[2] << ") in;\n";
     }
 
-    if (getShaderType() == GL_GEOMETRY_SHADER_OES)
+    if (getShaderType() == GL_GEOMETRY_SHADER_EXT)
     {
         WriteGeometryShaderLayoutQualifiers(
             sink, getGeometryShaderInputPrimitiveType(), getGeometryShaderInvocations(),
@@ -271,7 +271,7 @@ void TranslatorGLSL::writeExtensionBehavior(TIntermNode *root, ShCompileOptions 
                      << "\n";
             }
 
-            if (iter.first == TExtension::OES_geometry_shader)
+            if (iter.first == TExtension::EXT_geometry_shader)
             {
                 sink << "#extension GL_ARB_geometry_shader4 : " << GetBehaviorString(iter.second)
                      << "\n";

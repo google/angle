@@ -92,7 +92,7 @@ void TranslatorESSL::translate(TIntermBlock *root,
              << ", local_size_z=" << localSize[2] << ") in;\n";
     }
 
-    if (getShaderType() == GL_GEOMETRY_SHADER_OES)
+    if (getShaderType() == GL_GEOMETRY_SHADER_EXT)
     {
         WriteGeometryShaderLayoutQualifiers(
             sink, getGeometryShaderInputPrimitiveType(), getGeometryShaderInvocations(),
@@ -148,13 +148,13 @@ void TranslatorESSL::writeExtensionBehavior(ShCompileOptions compileOptions)
                     sink << "#extension GL_NV_viewport_array2 : require\n";
                 }
             }
-            else if (iter->first == TExtension::OES_geometry_shader)
+            else if (iter->first == TExtension::EXT_geometry_shader)
             {
-                sink << "#ifdef GL_OES_geometry_shader\n"
-                     << "#extension GL_OES_geometry_shader : " << GetBehaviorString(iter->second)
-                     << "\n"
-                     << "#elif defined GL_EXT_geometry_shader\n"
+                sink << "#ifdef GL_EXT_geometry_shader\n"
                      << "#extension GL_EXT_geometry_shader : " << GetBehaviorString(iter->second)
+                     << "\n"
+                     << "#elif defined GL_OES_geometry_shader\n"
+                     << "#extension GL_OES_geometry_shader : " << GetBehaviorString(iter->second)
                      << "\n";
                 if (iter->second == EBhRequire)
                 {

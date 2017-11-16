@@ -733,9 +733,9 @@ void InsertBuiltInFunctions(sh::GLenum type,
                                                       voidType, "groupMemoryBarrier");
     }
 
-    if (type == GL_GEOMETRY_SHADER_OES)
+    if (type == GL_GEOMETRY_SHADER_EXT)
     {
-        TExtension extension = TExtension::OES_geometry_shader;
+        TExtension extension = TExtension::EXT_geometry_shader;
         symbolTable.insertBuiltInFunctionNoParametersExt(ESSL3_1_BUILTINS, extension, EOpEmitVertex,
                                                          voidType, "EmitVertex");
         symbolTable.insertBuiltInFunctionNoParametersExt(ESSL3_1_BUILTINS, extension,
@@ -844,9 +844,9 @@ void InsertBuiltInFunctions(sh::GLenum type,
     symbolTable.insertConstInt(ESSL3_1_BUILTINS, "gl_MaxAtomicCounterBufferSize",
                                resources.MaxAtomicCounterBufferSize, EbpMedium);
 
-    if (resources.OES_geometry_shader)
+    if (resources.EXT_geometry_shader)
     {
-        TExtension ext = TExtension::OES_geometry_shader;
+        TExtension ext = TExtension::EXT_geometry_shader;
         symbolTable.insertConstIntExt(ESSL3_1_BUILTINS, ext, "gl_MaxGeometryInputComponents",
                                       resources.MaxGeometryInputComponents, EbpMedium);
         symbolTable.insertConstIntExt(ESSL3_1_BUILTINS, ext, "gl_MaxGeometryOutputComponents",
@@ -963,9 +963,9 @@ void IdentifyBuiltIns(sh::GLenum type,
                     TType(EbtFloat, EbpMedium, EvqLastFragColor, 4));
             }
 
-            if (resources.OES_geometry_shader)
+            if (resources.EXT_geometry_shader)
             {
-                TExtension extension = TExtension::OES_geometry_shader;
+                TExtension extension = TExtension::EXT_geometry_shader;
                 symbolTable.insertVariableExt(ESSL3_1_BUILTINS, extension, "gl_PrimitiveID",
                                               TType(EbtInt, EbpHigh, EvqPrimitiveID, 1));
                 symbolTable.insertVariableExt(ESSL3_1_BUILTINS, extension, "gl_Layer",
@@ -1009,12 +1009,12 @@ void IdentifyBuiltIns(sh::GLenum type,
             break;
         }
 
-        case GL_GEOMETRY_SHADER_OES:
+        case GL_GEOMETRY_SHADER_EXT:
         {
-            TExtension extension = TExtension::OES_geometry_shader;
+            TExtension extension = TExtension::EXT_geometry_shader;
 
             // Add built-in interface block gl_PerVertex and the built-in array gl_in.
-            // TODO(jiawei.shao@intel.com): implement GL_OES_geometry_point_size.
+            // TODO(jiawei.shao@intel.com): implement GL_EXT_geometry_point_size.
             TFieldList *glPerVertexFieldList = new TFieldList();
             TSourceLoc zeroSourceLoc = {0, 0, 0, 0};
             TField *glPositionField  = new TField(new TType(EbtFloat, EbpHigh, EvqPosition, 4),
@@ -1117,9 +1117,8 @@ void InitExtensionBehavior(const ShBuiltInResources &resources, TExtensionBehavi
     {
         extBehavior[TExtension::EXT_YUV_target] = EBhUndefined;
     }
-    if (resources.OES_geometry_shader)
+    if (resources.EXT_geometry_shader)
     {
-        extBehavior[TExtension::OES_geometry_shader] = EBhUndefined;
         extBehavior[TExtension::EXT_geometry_shader] = EBhUndefined;
     }
 }

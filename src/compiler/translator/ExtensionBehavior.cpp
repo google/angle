@@ -26,7 +26,6 @@
     OP(NV_shader_framebuffer_fetch)     \
     OP(OES_EGL_image_external)          \
     OP(OES_EGL_image_external_essl3)    \
-    OP(OES_geometry_shader)             \
     OP(OES_standard_derivatives)        \
     OP(OVR_multiview)
 

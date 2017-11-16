@@ -41,7 +41,7 @@ int GetLocationCount(const TIntermSymbol *varying, bool ignoreVaryingArraySize)
         }
         return totalLocation;
     }
-    // [GL_OES_shader_io_blocks SPEC Chapter 4.4.1]
+    // [GL_EXT_shader_io_blocks SPEC Chapter 4.4.1]
     // Geometry shader inputs, tessellation control shader inputs and outputs, and tessellation
     // evaluation inputs all have an additional level of arrayness relative to other shader inputs
     // and outputs. This outer array level is removed from the type before considering how many
@@ -49,7 +49,7 @@ int GetLocationCount(const TIntermSymbol *varying, bool ignoreVaryingArraySize)
     else if (ignoreVaryingArraySize)
     {
         // Array-of-arrays cannot be inputs or outputs of a geometry shader.
-        // (GL_OES_geometry_shader SPEC issues(5))
+        // (GL_EXT_geometry_shader SPEC issues(5))
         ASSERT(!varyingType.isArrayOfArrays());
         return varyingType.getSecondarySize();
     }
@@ -157,7 +157,7 @@ void ValidateVaryingLocationsTraverser::validate(TDiagnostics *diagnostics)
     ASSERT(diagnostics);
 
     ValidateShaderInterface(diagnostics, mInputVaryingsWithLocation,
-                            mShaderType == GL_GEOMETRY_SHADER_OES);
+                            mShaderType == GL_GEOMETRY_SHADER_EXT);
     ValidateShaderInterface(diagnostics, mOutputVaryingsWithLocation, false);
 }
 

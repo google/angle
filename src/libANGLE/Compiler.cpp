@@ -132,8 +132,7 @@ Compiler::Compiler(rx::GLImplFactory *implFactory, const ContextState &state)
     }
 
     // Geometry Shader constants
-    // TODO(jiawei.shao@intel.com): use EXT_geometry_shader everywhere in compiler.
-    mResources.OES_geometry_shader = extensions.geometryShader;
+    mResources.EXT_geometry_shader              = extensions.geometryShader;
     mResources.MaxGeometryUniformComponents     = caps.maxGeometryUniformComponents;
     mResources.MaxGeometryUniformBlocks         = caps.maxGeometryUniformBlocks;
     mResources.MaxGeometryInputComponents       = caps.maxGeometryInputComponents;

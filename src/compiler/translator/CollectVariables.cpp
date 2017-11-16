@@ -38,7 +38,7 @@ BlockLayoutType GetBlockLayoutType(TLayoutBlockStorage blockStorage)
     }
 }
 
-// TODO(jiawei.shao@intel.com): implement GL_OES_shader_io_blocks.
+// TODO(jiawei.shao@intel.com): implement GL_EXT_shader_io_blocks.
 BlockType GetBlockType(TQualifier qualifier)
 {
     switch (qualifier)
@@ -517,7 +517,7 @@ void CollectVariablesTraverser::visitSymbol(TIntermSymbol *symbol)
                 recordBuiltInVaryingUsed("gl_PrimitiveIDIn", &mPrimitiveIDInAdded, mInputVaryings);
                 break;
             case EvqPrimitiveID:
-                if (mShaderType == GL_GEOMETRY_SHADER_OES)
+                if (mShaderType == GL_GEOMETRY_SHADER_EXT)
                 {
                     recordBuiltInVaryingUsed("gl_PrimitiveID", &mPrimitiveIDAdded, mOutputVaryings);
                 }
@@ -528,7 +528,7 @@ void CollectVariablesTraverser::visitSymbol(TIntermSymbol *symbol)
                 }
                 break;
             case EvqLayer:
-                if (mShaderType == GL_GEOMETRY_SHADER_OES)
+                if (mShaderType == GL_GEOMETRY_SHADER_EXT)
                 {
                     recordBuiltInVaryingUsed("gl_Layer", &mLayerAdded, mOutputVaryings);
                 }
@@ -646,7 +646,7 @@ Varying CollectVariablesTraverser::recordVarying(const TIntermSymbol &variable) 
     return varying;
 }
 
-// TODO(jiawei.shao@intel.com): implement GL_OES_shader_io_blocks.
+// TODO(jiawei.shao@intel.com): implement GL_EXT_shader_io_blocks.
 void CollectVariablesTraverser::recordInterfaceBlock(const TString &instanceName,
                                                      const TType &interfaceBlockType,
                                                      InterfaceBlock *interfaceBlock) const
@@ -726,7 +726,7 @@ bool CollectVariablesTraverser::visitDeclaration(Visit, TIntermDeclaration *node
             continue;
         }
 
-        // TODO(jiawei.shao@intel.com): implement GL_OES_shader_io_blocks.
+        // TODO(jiawei.shao@intel.com): implement GL_EXT_shader_io_blocks.
         if (typedNode.getBasicType() == EbtInterfaceBlock)
         {
             InterfaceBlock interfaceBlock;
@@ -779,7 +779,7 @@ bool CollectVariablesTraverser::visitDeclaration(Visit, TIntermDeclaration *node
 }
 
 // TODO(jiawei.shao@intel.com): add search on mInBlocks and mOutBlocks when implementing
-// GL_OES_shader_io_blocks.
+// GL_EXT_shader_io_blocks.
 InterfaceBlock *CollectVariablesTraverser::findNamedInterfaceBlock(const TString &blockName) const
 {
     InterfaceBlock *namedBlock = FindVariable(blockName, mUniformBlocks);
