@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0db0f0e9_00c37e5e",
+        "filename": "src/libANGLE/Framebuffer.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-16T23:43:41Z",
+      "side": 1,
+      "message": "there\u0027s no need to make any of these public methods.",
+      "range": {
+        "startLine": 198,
+        "startChar": 0,
+        "endLine": 200,
+        "endChar": 54
+      },
+      "revId": "448be6923d80f24a1b0728ce5751ccad4e3c5565",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "47e07676_78fa430d",
+        "filename": "src/libANGLE/Framebuffer.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 394,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-16T23:43:41Z",
+      "side": 1,
+      "message": "instead of doing this, change getDrawBufferTypeMask to return 0,1,2,3 as appropriate. Make getDrawBufferTypeMask a static helper method, defined in the same place as DrawBufferTypeMask.",
+      "range": {
+        "startLine": 390,
+        "startChar": 0,
+        "endLine": 394,
+        "endChar": 66
+      },
+      "revId": "448be6923d80f24a1b0728ce5751ccad4e3c5565",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "61676f6c_01c18f59",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 647,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-16T23:43:41Z",
+      "side": 1,
+      "message": "again this should be private.",
+      "range": {
+        "startLine": 647,
+        "startChar": 3,
+        "endLine": 647,
+        "endChar": 42
+      },
+      "revId": "448be6923d80f24a1b0728ce5751ccad4e3c5565",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7b3781e3_3d0fdaf0",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 725,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-16T23:43:41Z",
+      "side": 1,
+      "message": "use the shared helper method.",
+      "range": {
+        "startLine": 722,
+        "startChar": 0,
+        "endLine": 725,
+        "endChar": 66
+      },
+      "revId": "448be6923d80f24a1b0728ce5751ccad4e3c5565",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "45d31771_2cb47b3d",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 327,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-16T23:43:41Z",
+      "side": 1,
+      "message": "I suspect you aren\u0027t gaining much performance by packing your bits into a single bitset. Use separate bitsets for masks and the types.",
+      "range": {
+        "startLine": 327,
+        "startChar": 0,
+        "endLine": 327,
+        "endChar": 78
+      },
+      "revId": "448be6923d80f24a1b0728ce5751ccad4e3c5565",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
