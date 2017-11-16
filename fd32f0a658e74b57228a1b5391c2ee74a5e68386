@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0d421f72_e7e40c6f",
+        "filename": "src/tests/test_utils/ANGLETest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-16T02:53:48Z",
+      "side": 1,
+      "message": "I just noticed this.. we actually have EXPECT_PIXEL_COLOR_NEAR that does the same thing.. did you notice this?",
+      "range": {
+        "startLine": 130,
+        "startChar": 0,
+        "endLine": 130,
+        "endChar": 95
+      },
+      "revId": "fd32f0a658e74b57228a1b5391c2ee74a5e68386",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7b895f22_5bea89a9",
+        "filename": "src/tests/test_utils/ANGLETest.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 456,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-16T02:53:48Z",
+      "side": 1,
+      "message": "Sorry, I wasn\u0027t going to ask you to do this, but we have an ANGLE_EMPTY_STATEMENT macro just for this purpose. If you\u0027re going to use this pattern you should use that.",
+      "range": {
+        "startLine": 456,
+        "startChar": 2,
+        "endLine": 456,
+        "endChar": 21
+      },
+      "revId": "fd32f0a658e74b57228a1b5391c2ee74a5e68386",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
