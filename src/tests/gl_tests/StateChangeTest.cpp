@@ -819,9 +819,6 @@ TEST_P(SimpleStateChangeTest, DeleteBufferInUse)
 // Tests that resizing a Buffer during a draw works as expected.
 TEST_P(SimpleStateChangeTest, RedefineBufferInUse)
 {
-    // See http://anglebug.com/2221
-    ANGLE_SKIP_TEST_IF(IsVulkan() && IsIntel() && IsWindows());
-
     std::vector<GLColor> redColorData(6, GLColor::red);
 
     GLBuffer buffer;
