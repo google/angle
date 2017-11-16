@@ -1026,6 +1026,35 @@ TEST_P(CopyTextureTestDest, AlphaUnmultiply)
     EXPECT_PIXEL_COLOR_EQ(0, 0, expectedPixels);
 }
 
+// Test to ensure that CopyTexture uses the correct ALPHA passthrough shader to ensure RGB channels
+// are set to 0.
+TEST_P(CopyTextureTestDest, AlphaCopyWithRGB)
+{
+    ANGLE_SKIP_TEST_IF(!checkExtensions());
+
+    GLColor originalPixels(50u, 100u, 150u, 155u);
+    GLColor expectedPixels(0u, 0u, 0u, 155u);
+
+    // ReadPixels doesn't work with ALPHA (non-renderable), so we copy again back to an RGBA
+    // texture to verify contents.
+    glBindTexture(GL_TEXTURE_2D, mTextures[1]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, &originalPixels);
+    glBindTexture(GL_TEXTURE_2D, mTextures[0]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, 1, 1, 0, GL_ALPHA, GL_HALF_FLOAT_OES, nullptr);
+
+    glCopyTextureCHROMIUM(mTextures[1], 0, GL_TEXTURE_2D, mTextures[0], 0, GL_ALPHA,
+                          GL_HALF_FLOAT_OES, false, false, false);
+
+    EXPECT_GL_NO_ERROR();
+
+    glCopyTextureCHROMIUM(mTextures[0], 0, GL_TEXTURE_2D, mTextures[1], 0, GL_RGBA,
+                          GL_UNSIGNED_BYTE, false, false, false);
+
+    EXPECT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, expectedPixels);
+}
+
 // Test the newly added ES3 unorm formats
 TEST_P(CopyTextureTestES3, ES3UnormFormats)
 {
