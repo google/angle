@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "41c80d5c_469e23f9",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 882,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-11-17T02:20:30Z",
+      "side": 1,
+      "message": "I had the same idea as you firstly, but attempted unsuccessfully. \u0027packedVaryings\u0027 will be implicitly used by the below \"mProgram-\u003elink\", so it can\u0027t be local to the merged method. Another reason is that \"varyingPacking.packUserVaryings\" is heavily tested in VaryingPacking-unittest. If the method is not available, its test cases will be useless. That would be a significant loss.",
+      "parentUuid": "f2dc8cb1_8e502b98",
+      "range": {
+        "startLine": 879,
+        "startChar": 0,
+        "endLine": 882,
+        "endChar": 98
+      },
+      "revId": "b813da13928653c2bea945c83228e28fd1c7a587",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ffbe6108_cba7ecad",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 7
@@ -41,6 +65,53 @@
         "startChar": 24,
         "endLine": 2617,
         "endChar": 62
+      },
+      "revId": "b813da13928653c2bea945c83228e28fd1c7a587",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e1fa714b_d0e2ba5f",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2617,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-11-17T02:20:30Z",
+      "side": 1,
+      "message": "Not quite sure what exactly is \"the same error message as before\". The message is indeed not quite informative. How about using the sentence from spec?",
+      "parentUuid": "ffbe6108_cba7ecad",
+      "range": {
+        "startLine": 2617,
+        "startChar": 24,
+        "endLine": 2617,
+        "endChar": 62
+      },
+      "revId": "b813da13928653c2bea945c83228e28fd1c7a587",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3162ba5b_f17d0e65",
+        "filename": "src/libANGLE/VaryingPacking.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 281,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-11-17T02:20:30Z",
+      "side": 1,
+      "message": "the un-referenced varyings are filtered out here.",
+      "range": {
+        "startLine": 281,
+        "startChar": 67,
+        "endLine": 281,
+        "endChar": 87
       },
       "revId": "b813da13928653c2bea945c83228e28fd1c7a587",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",

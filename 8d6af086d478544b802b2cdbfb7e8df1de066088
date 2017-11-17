@@ -69,6 +69,30 @@
       "revId": "8d6af086d478544b802b2cdbfb7e8df1de066088",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d5afc05d_ae7feba7",
+        "filename": "src/libANGLE/VaryingPacking.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 247,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-11-17T02:20:30Z",
+      "side": 0,
+      "message": "getPackedVaryings has been changed to take this responsibility now. The input packedVaryings of this method only contain varyings that really needed to be packed.",
+      "parentUuid": "b828c332_58de05c8",
+      "range": {
+        "startLine": 242,
+        "startChar": 0,
+        "endLine": 247,
+        "endChar": 0
+      },
+      "revId": "8d6af086d478544b802b2cdbfb7e8df1de066088",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
