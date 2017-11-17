@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "269745bb_032fc758",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-11-17T16:30:17Z",
+      "side": 1,
+      "message": "Why not use the GL constant instead of defining your own?",
+      "revId": "92f420427f344e2be1e6a02790330b4a67803f41",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "95bf9746_f9d80df9",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1011,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-11-17T16:30:17Z",
+      "side": 1,
+      "message": "Why does this fix things?",
+      "revId": "92f420427f344e2be1e6a02790330b4a67803f41",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
