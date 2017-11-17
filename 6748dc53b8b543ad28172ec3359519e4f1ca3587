@@ -1,0 +1,343 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "656e927d_5fa45862",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 32
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-17T17:49:50Z",
+      "side": 1,
+      "message": "this is long enough to be in the cpp file. Really anything longer than one statement should be.",
+      "range": {
+        "startLine": 76,
+        "startChar": 0,
+        "endLine": 83,
+        "endChar": 5
+      },
+      "revId": "6748dc53b8b543ad28172ec3359519e4f1ca3587",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aee0d1f3_fbb2c602",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 32
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-17T17:49:50Z",
+      "side": 1,
+      "message": "to confirm, int a[2][3] would be stored in arraySizes as { 2, 3 }?",
+      "range": {
+        "startLine": 117,
+        "startChar": 30,
+        "endLine": 117,
+        "endChar": 40
+      },
+      "revId": "6748dc53b8b543ad28172ec3359519e4f1ca3587",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "43588bc3_8a1cbca1",
+        "filename": "src/compiler/translator/ShaderVars.cpp",
+        "patchSetId": 32
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-17T17:49:50Z",
+      "side": 1,
+      "message": "this reads oddly. I guess if you have int a[2][3] it returns 2, and int x it returns 1? Maybe getOutermostElementCount? In the same vein getArraySizeProduct could be getTotalElementCount.",
+      "range": {
+        "startLine": 116,
+        "startChar": 20,
+        "endLine": 116,
+        "endChar": 40
+      },
+      "revId": "6748dc53b8b543ad28172ec3359519e4f1ca3587",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5358fca8_34beacbb",
+        "filename": "src/compiler/translator/blocklayout.cpp",
+        "patchSetId": 32
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-17T17:49:50Z",
+      "side": 1,
+      "message": "not sure if I already commented, but let\u0027s make this a helper function somewhere.",
+      "range": {
+        "startLine": 134,
+        "startChar": 0,
+        "endLine": 138,
+        "endChar": 9
+      },
+      "revId": "6748dc53b8b543ad28172ec3359519e4f1ca3587",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f651c33c_afb6a934",
+        "filename": "src/compiler/translator/blocklayout.cpp",
+        "patchSetId": 32
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-17T17:49:50Z",
+      "side": 1,
+      "message": "since these two methods are private to this class, put them at the top of this file in a namespace {} block.",
+      "range": {
+        "startLine": 154,
+        "startChar": 5,
+        "endLine": 154,
+        "endChar": 41
+      },
+      "revId": "6748dc53b8b543ad28172ec3359519e4f1ca3587",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0ddc2322_8acd0f8e",
+        "filename": "src/compiler/translator/blocklayout.cpp",
+        "patchSetId": 32
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-17T17:49:50Z",
+      "side": 1,
+      "message": "cache this constant",
+      "range": {
+        "startLine": 164,
+        "startChar": 41,
+        "endLine": 164,
+        "endChar": 89
+      },
+      "revId": "6748dc53b8b543ad28172ec3359519e4f1ca3587",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "66c0c1e7_00332c43",
+        "filename": "src/libANGLE/ProgramLinkedResources.cpp",
+        "patchSetId": 32
+      },
+      "lineNbr": 482,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-17T17:49:50Z",
+      "side": 1,
+      "message": "maybe ArrayOfStructsUniform to disambiguate from StructOfArrays",
+      "range": {
+        "startLine": 482,
+        "startChar": 49,
+        "endLine": 482,
+        "endChar": 74
+      },
+      "revId": "6748dc53b8b543ad28172ec3359519e4f1ca3587",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cd6f2418_8b880e36",
+        "filename": "src/libANGLE/ProgramLinkedResources.cpp",
+        "patchSetId": 32
+      },
+      "lineNbr": 500,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-17T17:49:50Z",
+      "side": 1,
+      "message": "I\u0027ve seen this in a couple places, maybe it would make sense to be a helper method?",
+      "range": {
+        "startLine": 500,
+        "startChar": 43,
+        "endLine": 500,
+        "endChar": 93
+      },
+      "revId": "6748dc53b8b543ad28172ec3359519e4f1ca3587",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "afb85616_ac5fbf39",
+        "filename": "src/libANGLE/ProgramLinkedResources.cpp",
+        "patchSetId": 32
+      },
+      "lineNbr": 563,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-17T17:49:50Z",
+      "side": 1,
+      "message": "you can ASSERT uniform is an array.",
+      "range": {
+        "startLine": 563,
+        "startChar": 56,
+        "endLine": 563,
+        "endChar": 63
+      },
+      "revId": "6748dc53b8b543ad28172ec3359519e4f1ca3587",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "480ae8c1_a6b6c7f5",
+        "filename": "src/libANGLE/ProgramLinkedResources.cpp",
+        "patchSetId": 32
+      },
+      "lineNbr": 781,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-17T17:49:50Z",
+      "side": 1,
+      "message": "defineArrayOfStructsBlockMembers",
+      "range": {
+        "startLine": 781,
+        "startChar": 27,
+        "endLine": 781,
+        "endChar": 62
+      },
+      "revId": "6748dc53b8b543ad28172ec3359519e4f1ca3587",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "32b73f7f_d315395c",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 32
+      },
+      "lineNbr": 335,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-17T17:49:50Z",
+      "side": 1,
+      "message": "as always this should be a helper.",
+      "range": {
+        "startLine": 329,
+        "startChar": 0,
+        "endLine": 335,
+        "endChar": 1
+      },
+      "revId": "6748dc53b8b543ad28172ec3359519e4f1ca3587",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "470c1a62_e361cd19",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 32
+      },
+      "lineNbr": 2115,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-17T17:49:50Z",
+      "side": 1,
+      "message": "are the fields structs or is the uniform a struct?\n\ndefineStructUniformFields if the latter.",
+      "range": {
+        "startLine": 2115,
+        "startChar": 17,
+        "endLine": 2115,
+        "endChar": 42
+      },
+      "revId": "6748dc53b8b543ad28172ec3359519e4f1ca3587",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "78a776f9_b3617d16",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 32
+      },
+      "lineNbr": 2146,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-17T17:49:50Z",
+      "side": 1,
+      "message": "define ArrayOfStructsUniformFields",
+      "range": {
+        "startLine": 2146,
+        "startChar": 17,
+        "endLine": 2146,
+        "endChar": 47
+      },
+      "revId": "6748dc53b8b543ad28172ec3359519e4f1ca3587",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c5955d9c_0ffb8886",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 32
+      },
+      "lineNbr": 2173,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-17T17:49:50Z",
+      "side": 1,
+      "message": "same pattern",
+      "revId": "6748dc53b8b543ad28172ec3359519e4f1ca3587",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9b294a81_0f542423",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 32
+      },
+      "lineNbr": 2441,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-17T17:49:50Z",
+      "side": 1,
+      "message": "in retrospect you maybe could have done the arrays-of-arrays samplers stuff separately, just to make this big patch a bit smaller. something to consider for next time.",
+      "range": {
+        "startLine": 2439,
+        "startChar": 0,
+        "endLine": 2441,
+        "endChar": 23
+      },
+      "revId": "6748dc53b8b543ad28172ec3359519e4f1ca3587",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
