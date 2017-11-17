@@ -1,0 +1,349 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "83d708a1_4fddebeb",
+        "filename": "doc/BuildingAngleForChromiumDevelopment.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-17T05:16:35Z",
+      "side": 1,
+      "message": "if you have gclient in your path, gn should also be in your path, since it\u0027s in depot tools. on your system, you have to manually specify buildtools/linux64/bn?",
+      "range": {
+        "startLine": 33,
+        "startChar": 0,
+        "endLine": 33,
+        "endChar": 22
+      },
+      "revId": "1cf22cd8c736efb03eaff787db27d385e7c0485f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c1cea1da_ac646645",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-17T05:16:35Z",
+      "side": 1,
+      "message": "I would reword this as \"Link your application against the static ANGLE libraries (libGLESv2_static and libEGL_static)\".",
+      "range": {
+        "startLine": 11,
+        "startChar": 3,
+        "endLine": 11,
+        "endChar": 10
+      },
+      "revId": "1cf22cd8c736efb03eaff787db27d385e7c0485f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e4530947_8fd29aae",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-17T05:16:35Z",
+      "side": 1,
+      "message": "Legacy instructions for the GYP build are available here.",
+      "range": {
+        "startLine": 13,
+        "startChar": 0,
+        "endLine": 13,
+        "endChar": 38
+      },
+      "revId": "1cf22cd8c736efb03eaff787db27d385e7c0485f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b9590061_0d9f42b7",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-17T05:16:35Z",
+      "side": 1,
+      "message": "\"ANGLE supports compiling with Clang by default and the Microsoft compiler Windows. To use the Microsoft compiler, set is_clang \u003d false in your gn arguments. Note that currently the Clang build on Windows has a compile error with the dEQP tests. Until http://crbug.com/727437 is fixed it is recommended to specify is_clang\u003dfalse for Windows GN builds.\"\n\nNote, we\u0027ll also want to link to the Chromium build instructions somewhere:\n\nhttps://chromium.googlesource.com/chromium/src/+/master/docs/windows_build_instructions.md\n\nThis is important for setting up the Windows SDK for non-Googlers.",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 69
+      },
+      "revId": "1cf22cd8c736efb03eaff787db27d385e7c0485f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6815b1d9_16a4b3d1",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-17T05:16:35Z",
+      "side": 1,
+      "message": "again, you should not have to specify buildtools/linux64 on any platform. Especially Windows!",
+      "range": {
+        "startLine": 53,
+        "startChar": 0,
+        "endLine": 53,
+        "endChar": 21
+      },
+      "revId": "1cf22cd8c736efb03eaff787db27d385e7c0485f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "519a41a3_bc6f52bc",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-17T05:16:35Z",
+      "side": 1,
+      "message": "... For example, use:",
+      "range": {
+        "startLine": 56,
+        "startChar": 170,
+        "endLine": 56,
+        "endChar": 179
+      },
+      "revId": "1cf22cd8c736efb03eaff787db27d385e7c0485f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "673eabc6_50e40060",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-17T05:16:35Z",
+      "side": 1,
+      "message": "Ninja will automatically call GN to regenerate the build files on any configuration change.",
+      "range": {
+        "startLine": 56,
+        "startChar": 41,
+        "endLine": 56,
+        "endChar": 131
+      },
+      "revId": "1cf22cd8c736efb03eaff787db27d385e7c0485f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4388d958_3c744b8e",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-17T05:16:35Z",
+      "side": 1,
+      "message": "gn only generates ninja files, really. The Visual studio stuff is extra.",
+      "range": {
+        "startLine": 56,
+        "startChar": 0,
+        "endLine": 56,
+        "endChar": 40
+      },
+      "revId": "1cf22cd8c736efb03eaff787db27d385e7c0485f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d03eb354_354294c3",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-17T05:16:35Z",
+      "side": 1,
+      "message": "the or should probably not be code indented.",
+      "range": {
+        "startLine": 59,
+        "startChar": 2,
+        "endLine": 59,
+        "endChar": 4
+      },
+      "revId": "1cf22cd8c736efb03eaff787db27d385e7c0485f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e344ea42_34757daa",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-17T05:16:35Z",
+      "side": 1,
+      "message": ", so make sure `depot_tools` is in your path.",
+      "range": {
+        "startLine": 62,
+        "startChar": 34,
+        "endLine": 62,
+        "endChar": 67
+      },
+      "revId": "1cf22cd8c736efb03eaff787db27d385e7c0485f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d5f85375_0de2d728",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-17T05:16:35Z",
+      "side": 1,
+      "message": "Visual Studio project files. ANGLE has a helper script to generate a Visual Studio solution at `scripts/msvs_projects.py`. When run, this script will consolidate all GN targets in `out` into a single meta-solution, in `out/sln/ANGLE.sln`.",
+      "range": {
+        "startLine": 64,
+        "startChar": 20,
+        "endLine": 64,
+        "endChar": 73
+      },
+      "revId": "1cf22cd8c736efb03eaff787db27d385e7c0485f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "462bcecd_52039e3a",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-17T05:16:35Z",
+      "side": 1,
+      "message": "This is deprecated since it relies on GYP.",
+      "range": {
+        "startLine": 68,
+        "startChar": 0,
+        "endLine": 68,
+        "endChar": 123
+      },
+      "revId": "1cf22cd8c736efb03eaff787db27d385e7c0485f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a92c9659_7d6fa583",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-17T05:16:35Z",
+      "side": 1,
+      "message": "Add: Note that for GN compatibility reasons, each configuration is listed as `x64`, regardless of CPU architecture.",
+      "range": {
+        "startLine": 73,
+        "startChar": 4,
+        "endLine": 73,
+        "endChar": 139
+      },
+      "revId": "1cf22cd8c736efb03eaff787db27d385e7c0485f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aa070b09_18608622",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-17T05:16:35Z",
+      "side": 1,
+      "message": "I would keep the original wording, \"Presently, it is..\" and add this as a note by rewording the second paragraph. \n\n\"The reason for that\" -\u003e \"Note that now that ANGLE...\"",
+      "range": {
+        "startLine": 78,
+        "startChar": 0,
+        "endLine": 78,
+        "endChar": 158
+      },
+      "revId": "1cf22cd8c736efb03eaff787db27d385e7c0485f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0f87075b_5b5b6630",
+        "filename": "doc/gyp.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-17T05:16:35Z",
+      "side": 1,
+      "message": "we should probably move the Windows Store instructions into this file.",
+      "range": {
+        "startLine": 14,
+        "startChar": 3,
+        "endLine": 14,
+        "endChar": 9
+      },
+      "revId": "1cf22cd8c736efb03eaff787db27d385e7c0485f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
