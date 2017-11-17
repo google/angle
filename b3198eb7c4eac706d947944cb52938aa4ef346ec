@@ -22,6 +22,30 @@
       "revId": "b3198eb7c4eac706d947944cb52938aa4ef346ec",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b568996c_8743c1ef",
+        "filename": "src/libANGLE/renderer/d3d/IndexDataManager.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-17T03:43:14Z",
+      "side": 0,
+      "message": "It didn\u0027t seem to be the right check. I had it in at first, but the second check seems to be the only one we want.",
+      "parentUuid": "9c47a3e9_0650ddb3",
+      "range": {
+        "startLine": 205,
+        "startChar": 8,
+        "endLine": 205,
+        "endChar": 76
+      },
+      "revId": "b3198eb7c4eac706d947944cb52938aa4ef346ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
