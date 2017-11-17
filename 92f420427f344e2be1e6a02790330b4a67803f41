@@ -2,6 +2,75 @@
   "comments": [
     {
       "key": {
+        "uuid": "689b388d_04ce2f73",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 8
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-17T18:20:20Z",
+      "side": 1,
+      "message": "Fix detaching/deleting compute shader after LinkProgram.",
+      "range": {
+        "startLine": 7,
+        "startChar": 5,
+        "endLine": 7,
+        "endChar": 68
+      },
+      "revId": "92f420427f344e2be1e6a02790330b4a67803f41",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c03ff169_b86a2722",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 957,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-17T18:20:20Z",
+      "side": 1,
+      "message": "these will become .set(type).\n\nAside: if we have an array of attached shaders, we could figure out how to use something like Corentin\u0027s AllEnums helper class to iterate.",
+      "range": {
+        "startLine": 957,
+        "startChar": 8,
+        "endLine": 957,
+        "endChar": 27
+      },
+      "revId": "92f420427f344e2be1e6a02790330b4a67803f41",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e78e9fad_5f8975f9",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 972,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-17T18:20:20Z",
+      "side": 1,
+      "message": "reset the value here. not sure if you can make a test for this, but better to be safe.",
+      "range": {
+        "startLine": 972,
+        "startChar": 14,
+        "endLine": 972,
+        "endChar": 20
+      },
+      "revId": "92f420427f344e2be1e6a02790330b4a67803f41",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "269745bb_032fc758",
         "filename": "src/libANGLE/Program.h",
         "patchSetId": 8
@@ -19,6 +88,47 @@
     },
     {
       "key": {
+        "uuid": "904080fa_def46421",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-17T18:20:20Z",
+      "side": 1,
+      "message": "I\u0027d like you to do something different here. Can you move rx::ShaderTyper from RendererD3D.h into a shared place, maybe angletypes.h? You\u0027ll also need to rename SHADER_PIXEL to SHADER_FRAGMENT.\n\nI\u0027d like to eventually move to storing shaders in an array, indexed by type, and this is a nice flat enum for just this use that we can repurpose.",
+      "parentUuid": "269745bb_032fc758",
+      "revId": "92f420427f344e2be1e6a02790330b4a67803f41",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f850450f_4e5cbe34",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 719,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-17T18:20:20Z",
+      "side": 1,
+      "message": "now that you\u0027ve done that, you can make this an angle::BitSet\u003cSHADER_TYPE_MAX\u003e.\n\nAlso you need to save and restore this value in the program binary. Can you add a test for this?\n\nAlso can you add the validation that checks on a normal draw call if this is a compute-only program?",
+      "range": {
+        "startLine": 719,
+        "startChar": 4,
+        "endLine": 719,
+        "endChar": 14
+      },
+      "revId": "92f420427f344e2be1e6a02790330b4a67803f41",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "95bf9746_f9d80df9",
         "filename": "src/libANGLE/validationES31.cpp",
         "patchSetId": 8
@@ -30,6 +140,24 @@
       "writtenOn": "2017-11-17T16:30:17Z",
       "side": 1,
       "message": "Why does this fix things?",
+      "revId": "92f420427f344e2be1e6a02790330b4a67803f41",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3ec78102_a4344ae7",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1011,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-17T18:20:20Z",
+      "side": 1,
+      "message": "Because you\u0027re doing the equivalent of a draw call without a compiled program.. just that instead of having a compiled graphics program you have a compiled compute program check. The attached shaders are disposable once you link into an executable.",
+      "parentUuid": "95bf9746_f9d80df9",
       "revId": "92f420427f344e2be1e6a02790330b4a67803f41",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
