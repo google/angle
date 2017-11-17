@@ -2,6 +2,40 @@
   "comments": [
     {
       "key": {
+        "uuid": "593ad9fb_4cda9eba",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 504,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-17T14:49:28Z",
+      "side": 1,
+      "message": "There was a mistake here, moved this back to after CollectVariables.",
+      "revId": "db35f2e03bbeaadf3bf3562a362cd0e18261224f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aa568b15_859a87bd",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 511,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-17T14:49:28Z",
+      "side": 1,
+      "message": "This also made more sense to run after removing unreferenced variables just to avoid unnecessary AST mutations.",
+      "revId": "db35f2e03bbeaadf3bf3562a362cd0e18261224f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "67464941_c5ca9e28",
         "filename": "src/compiler/translator/Compiler.cpp",
         "patchSetId": 7
@@ -16,6 +50,24 @@
       "revId": "db35f2e03bbeaadf3bf3562a362cd0e18261224f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "841ff064_771e0cb2",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 526,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-17T14:49:28Z",
+      "side": 1,
+      "message": "Yes.",
+      "parentUuid": "67464941_c5ca9e28",
+      "revId": "db35f2e03bbeaadf3bf3562a362cd0e18261224f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -36,6 +88,24 @@
     },
     {
       "key": {
+        "uuid": "1b08ef0f_ab2b937b",
+        "filename": "src/compiler/translator/RemoveUnreferencedVariables.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-17T14:49:28Z",
+      "side": 1,
+      "message": "Done, that\u0027s nicer syntax, it\u0027s true.",
+      "parentUuid": "24187a20_b4cf3d9e",
+      "revId": "db35f2e03bbeaadf3bf3562a362cd0e18261224f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d15baaad_22ed13a7",
         "filename": "src/compiler/translator/RemoveUnreferencedVariables.cpp",
         "patchSetId": 7
@@ -50,6 +120,24 @@
       "revId": "db35f2e03bbeaadf3bf3562a362cd0e18261224f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0a5c3ace_df00c3db",
+        "filename": "src/compiler/translator/RemoveUnreferencedVariables.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-17T14:49:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d15baaad_22ed13a7",
+      "revId": "db35f2e03bbeaadf3bf3562a362cd0e18261224f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -70,6 +158,24 @@
     },
     {
       "key": {
+        "uuid": "ad97e75e_01fa344e",
+        "filename": "src/compiler/translator/RemoveUnreferencedVariables.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-17T14:49:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ea941f1e_60a26331",
+      "revId": "db35f2e03bbeaadf3bf3562a362cd0e18261224f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "61b2f67f_c2d8dd46",
         "filename": "src/compiler/translator/RemoveUnreferencedVariables.cpp",
         "patchSetId": 7
@@ -84,6 +190,24 @@
       "revId": "db35f2e03bbeaadf3bf3562a362cd0e18261224f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6273861c_afce35cc",
+        "filename": "src/compiler/translator/RemoveUnreferencedVariables.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-17T14:49:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "61b2f67f_c2d8dd46",
+      "revId": "db35f2e03bbeaadf3bf3562a362cd0e18261224f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -104,6 +228,24 @@
     },
     {
       "key": {
+        "uuid": "9017cb91_da1f1b2e",
+        "filename": "src/compiler/translator/RemoveUnreferencedVariables.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 194,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-17T14:49:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "48b913c2_aa2f1ec1",
+      "revId": "db35f2e03bbeaadf3bf3562a362cd0e18261224f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cd569d47_3e13e4db",
         "filename": "src/compiler/translator/RemoveUnreferencedVariables.cpp",
         "patchSetId": 7
@@ -121,6 +263,24 @@
     },
     {
       "key": {
+        "uuid": "f2e9238a_e0a02cd5",
+        "filename": "src/compiler/translator/RemoveUnreferencedVariables.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-17T14:49:28Z",
+      "side": 1,
+      "message": "I removed the calls to traverse expression and condition, as they are not needed.",
+      "parentUuid": "cd569d47_3e13e4db",
+      "revId": "db35f2e03bbeaadf3bf3562a362cd0e18261224f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c399acb4_4503430d",
         "filename": "src/tests/compiler_tests/RemoveUnreferencedVariables_test.cpp",
         "patchSetId": 7
@@ -135,6 +295,24 @@
       "revId": "db35f2e03bbeaadf3bf3562a362cd0e18261224f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4009cdea_0009a559",
+        "filename": "src/tests/compiler_tests/RemoveUnreferencedVariables_test.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 329,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-17T14:49:28Z",
+      "side": 1,
+      "message": "Added one test where the only reference to a variable is in a unused function. If we were tracking whether functions are guaranteed to have no side effects, there might be more interesting interactions, but I can\u0027t think of any other important cases to test for now.",
+      "parentUuid": "c399acb4_4503430d",
+      "revId": "db35f2e03bbeaadf3bf3562a362cd0e18261224f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
