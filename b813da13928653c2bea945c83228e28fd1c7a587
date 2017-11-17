@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "4b275ac6_7ac6e31c",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 882,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-17T03:03:43Z",
+      "side": 1,
+      "message": "Store them in the varyingPacking.",
+      "parentUuid": "41c80d5c_469e23f9",
+      "range": {
+        "startLine": 879,
+        "startChar": 0,
+        "endLine": 882,
+        "endChar": 98
+      },
+      "revId": "b813da13928653c2bea945c83228e28fd1c7a587",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ffbe6108_cba7ecad",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 7
@@ -96,6 +120,30 @@
     },
     {
       "key": {
+        "uuid": "fb60ca0f_1c641f3b",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2617,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-17T03:03:43Z",
+      "side": 1,
+      "message": "I\u0027ll reference the prior error messages.",
+      "parentUuid": "e1fa714b_d0e2ba5f",
+      "range": {
+        "startLine": 2617,
+        "startChar": 24,
+        "endLine": 2617,
+        "endChar": 62
+      },
+      "revId": "b813da13928653c2bea945c83228e28fd1c7a587",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3162ba5b_f17d0e65",
         "filename": "src/libANGLE/VaryingPacking.cpp",
         "patchSetId": 7
@@ -107,6 +155,30 @@
       "writtenOn": "2017-11-17T02:20:30Z",
       "side": 1,
       "message": "the un-referenced varyings are filtered out here.",
+      "range": {
+        "startLine": 281,
+        "startChar": 67,
+        "endLine": 281,
+        "endChar": 87
+      },
+      "revId": "b813da13928653c2bea945c83228e28fd1c7a587",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ddc64287_4ef3ec02",
+        "filename": "src/libANGLE/VaryingPacking.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 281,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-17T03:03:43Z",
+      "side": 1,
+      "message": "Don\u0027t you need to handle struct fields differently? The static use variable is not set correctly for them. At least it wasn\u0027t when I wrote the original code. It\u0027s possible this change introduces subtle bugs.",
+      "parentUuid": "3162ba5b_f17d0e65",
       "range": {
         "startLine": 281,
         "startChar": 67,
