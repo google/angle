@@ -116,6 +116,30 @@
       "revId": "8d6af086d478544b802b2cdbfb7e8df1de066088",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "590deb6d_e0a6b49a",
+        "filename": "src/libANGLE/VaryingPacking.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 297,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-11-17T13:45:38Z",
+      "side": 0,
+      "message": "Thanks!",
+      "parentUuid": "b9dba8de_86669df3",
+      "range": {
+        "startLine": 282,
+        "startChar": 0,
+        "endLine": 297,
+        "endChar": 25
+      },
+      "revId": "8d6af086d478544b802b2cdbfb7e8df1de066088",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
