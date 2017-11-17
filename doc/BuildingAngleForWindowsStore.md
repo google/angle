@@ -1,5 +1,7 @@
 # How to build ANGLE for Windows Store
 
+Building for Windows Store is deprecated because it requires [GYP](gyp.md).
+
 ANGLE provides OpenGL ES 2.0 and EGL 1.4 libraries and dlls.  You can use these to build and run OpenGL ES 2.0 applications on Windows.
 
 ## Development setup
@@ -46,11 +48,11 @@ Once the build completes, the output directory for your selected configuration (
      * Right-click your project in the _Solution Explorer_, and select _Properties_.
      * Under the _Configuration Properties_ branch, click _C/C++_.
      * Add the relative path to the Khronos EGL and GLES2 header files to _Additional Include Directories_.
- 3. Configure your build environment to have access to `libEGL.lib` and `libGLESv2.lib` found in the build output directory (see [Building ANGLE](DevSetup.md#building-angle-on-windows)).
+ 3. Configure your build environment to have access to `libEGL.lib` and `libGLESv2.lib` found in the build output directory (see [Building ANGLE](DevSetup.md#building-with-visual-studio)).
    * For Visual C++
      * Right-click your project in the _Solution Explorer_, and select _Properties_.
      * Under the _Configuration Properties_ branch, open the _Linker_ branch and click _Input_.
      * Add the relative paths to both the `libEGL.lib` file and `libGLESv2.lib` file to _Additional Dependencies_, separated by a semicolon.
- 4. Copy `libEGL.dll` and `libGLESv2.dll` from the build output directory (see [Building ANGLE](DevSetup.md#building-angle-on-windows)) into your application folder or packages location if a ANGLE Windows Store NuGet was used.
+ 4. Copy `libEGL.dll` and `libGLESv2.dll` from the build output directory (see [Building ANGLE](DevSetup.md#building-with-visual-studio)) into your application folder or packages location if a ANGLE Windows Store NuGet was used.
  5. Code your application to the Khronos [OpenGL ES 2.0](http://www.khronos.org/registry/gles/) and [EGL 1.4](http://www.khronos.org/registry/egl/) APIs.
 

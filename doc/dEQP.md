@@ -43,7 +43,7 @@ ANGLE + dEQP, use the arguments:
 ### Check your results
 
 If run from Visual Studio 2015, dEQP generates a test log to
-`src/tests/TestResults.qpa`. To view the test log information, you'll need to
+`out/sln/obj/src/tests/TestResults.qpa`. To view the test log information, you'll need to
 use the open-source GUI
 [Cherry](https://android.googlesource.com/platform/external/cherry). ANGLE
 checks out a copy of Cherry to `angle/third_party/cherry` when you sync with
