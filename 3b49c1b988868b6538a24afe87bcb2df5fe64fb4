@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "850f882d_8f67e80b",
+        "filename": "src/compiler/translator/ShaderVars.cpp",
+        "patchSetId": 30
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-17T16:25:19Z",
+      "side": 1,
+      "message": "why are arrays of structs size 1?",
+      "range": {
+        "startLine": 121,
+        "startChar": 4,
+        "endLine": 121,
+        "endChar": 33
+      },
+      "revId": "3b49c1b988868b6538a24afe87bcb2df5fe64fb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2392146e_e194dabb",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 30
+      },
+      "lineNbr": 327,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-17T16:25:19Z",
+      "side": 1,
+      "message": "can you make this into a helper function that takes a vector of array sizes, rather than two member functions.",
+      "range": {
+        "startLine": 327,
+        "startChar": 25,
+        "endLine": 327,
+        "endChar": 44
+      },
+      "revId": "3b49c1b988868b6538a24afe87bcb2df5fe64fb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8c9cd1c3_e4d34639",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 30
+      },
+      "lineNbr": 621,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-17T16:25:19Z",
+      "side": 1,
+      "message": "I think at this point calling it getArrayElementCount or something would be reasonable.",
+      "range": {
+        "startLine": 621,
+        "startChar": 51,
+        "endLine": 621,
+        "endChar": 70
+      },
+      "revId": "3b49c1b988868b6538a24afe87bcb2df5fe64fb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
