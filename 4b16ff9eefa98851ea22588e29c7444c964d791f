@@ -16,6 +16,24 @@
       "revId": "4b16ff9eefa98851ea22588e29c7444c964d791f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8251f997_049d007f",
+        "filename": "src/compiler/translator/VectorizeVectorScalarArithmetic.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-17T07:53:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a2b38c7b_1174461c",
+      "revId": "4b16ff9eefa98851ea22588e29c7444c964d791f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
