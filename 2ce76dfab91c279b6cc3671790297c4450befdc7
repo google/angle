@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d7e58cde_6806c255",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 257,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2017-11-17T23:15:22Z",
+      "side": 1,
+      "message": "Should this be (1) instead of {1}? Not sure if it changes anything but it seems like you want to call the constructor.",
+      "revId": "2ce76dfab91c279b6cc3671790297c4450befdc7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "113dcf61_af4a898c",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 221,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2017-11-17T23:15:22Z",
+      "side": 1,
+      "message": "Same here.",
+      "revId": "2ce76dfab91c279b6cc3671790297c4450befdc7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
