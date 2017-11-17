@@ -113,6 +113,52 @@ const char *getBasicString(TBasicType t)
     }
 }
 
+// TType implementation.
+TType::TType()
+    : type(EbtVoid),
+      precision(EbpUndefined),
+      qualifier(EvqGlobal),
+      invariant(false),
+      memoryQualifier(TMemoryQualifier::create()),
+      layoutQualifier(TLayoutQualifier::create()),
+      primarySize(0),
+      secondarySize(0),
+      mInterfaceBlock(nullptr),
+      mStructure(nullptr),
+      mIsStructSpecifier(false)
+{
+}
+
+TType::TType(TBasicType t, unsigned char ps, unsigned char ss)
+    : type(t),
+      precision(EbpUndefined),
+      qualifier(EvqGlobal),
+      invariant(false),
+      memoryQualifier(TMemoryQualifier::create()),
+      layoutQualifier(TLayoutQualifier::create()),
+      primarySize(ps),
+      secondarySize(ss),
+      mInterfaceBlock(0),
+      mStructure(0),
+      mIsStructSpecifier(false)
+{
+}
+
+TType::TType(TBasicType t, TPrecision p, TQualifier q, unsigned char ps, unsigned char ss)
+    : type(t),
+      precision(p),
+      qualifier(q),
+      invariant(false),
+      memoryQualifier(TMemoryQualifier::create()),
+      layoutQualifier(TLayoutQualifier::create()),
+      primarySize(ps),
+      secondarySize(ss),
+      mInterfaceBlock(0),
+      mStructure(0),
+      mIsStructSpecifier(false)
+{
+}
+
 TType::TType(const TPublicType &p)
     : type(p.getBasicType()),
       precision(p.precision),
@@ -122,8 +168,8 @@ TType::TType(const TPublicType &p)
       layoutQualifier(p.layoutQualifier),
       primarySize(p.getPrimarySize()),
       secondarySize(p.getSecondarySize()),
-      interfaceBlock(0),
-      structure(0),
+      mInterfaceBlock(nullptr),
+      mStructure(nullptr),
       mIsStructSpecifier(false)
 {
     ASSERT(primarySize <= 4);
@@ -134,14 +180,41 @@ TType::TType(const TPublicType &p)
     }
     if (p.getUserDef())
     {
-        structure = p.getUserDef();
+        mStructure         = p.getUserDef();
         mIsStructSpecifier = p.isStructSpecifier();
     }
 }
 
-bool TStructure::equals(const TStructure &other) const
+TType::TType(TStructure *userDef)
+    : type(EbtStruct),
+      precision(EbpUndefined),
+      qualifier(EvqTemporary),
+      invariant(false),
+      memoryQualifier(TMemoryQualifier::create()),
+      layoutQualifier(TLayoutQualifier::create()),
+      primarySize(1),
+      secondarySize(1),
+      mInterfaceBlock(nullptr),
+      mStructure(userDef),
+      mIsStructSpecifier(false)
 {
-    return (uniqueId() == other.uniqueId());
+}
+
+TType::TType(TInterfaceBlock *interfaceBlockIn,
+             TQualifier qualifierIn,
+             TLayoutQualifier layoutQualifierIn)
+    : type(EbtInterfaceBlock),
+      precision(EbpUndefined),
+      qualifier(qualifierIn),
+      invariant(false),
+      memoryQualifier(TMemoryQualifier::create()),
+      layoutQualifier(layoutQualifierIn),
+      primarySize(1),
+      secondarySize(1),
+      mInterfaceBlock(interfaceBlockIn),
+      mStructure(0),
+      mIsStructSpecifier(false)
+{
 }
 
 bool TType::canBeConstructed() const
@@ -430,10 +503,10 @@ TString TType::buildMangledName() const
             mangledName += "ac";
             break;
         case EbtStruct:
-            mangledName += structure->mangledName();
+            mangledName += mStructure->mangledName();
             break;
         case EbtInterfaceBlock:
-            mangledName += interfaceBlock->mangledName();
+            mangledName += mInterfaceBlock->mangledName();
             break;
         default:
             // EbtVoid, EbtAddress and non types
@@ -467,7 +540,7 @@ size_t TType::getObjectSize() const
     size_t totalSize;
 
     if (getBasicType() == EbtStruct)
-        totalSize = structure->objectSize();
+        totalSize = mStructure->objectSize();
     else
         totalSize = primarySize * secondarySize;
 
@@ -491,7 +564,7 @@ int TType::getLocationCount() const
 
     if (getBasicType() == EbtStruct)
     {
-        count = structure->getLocationCount();
+        count = mStructure->getLocationCount();
     }
 
     if (count == 0)
@@ -539,7 +612,7 @@ bool TType::isUnsizedArray() const
 bool TType::sameNonArrayType(const TType &right) const
 {
     return (type == right.type && primarySize == right.primarySize &&
-            secondarySize == right.secondarySize && structure == right.structure);
+            secondarySize == right.secondarySize && mStructure == right.mStructure);
 }
 
 bool TType::isElementTypeOf(const TType &arrayType) const
@@ -588,12 +661,111 @@ void TType::sizeOutermostUnsizedArray(unsigned int arraySize)
     mArraySizes.back() = arraySize;
 }
 
+void TType::setBasicType(TBasicType t)
+{
+    if (type != t)
+    {
+        type = t;
+        invalidateMangledName();
+    }
+}
+
+void TType::setPrimarySize(unsigned char ps)
+{
+    if (primarySize != ps)
+    {
+        ASSERT(ps <= 4);
+        primarySize = ps;
+        invalidateMangledName();
+    }
+}
+
+void TType::setSecondarySize(unsigned char ss)
+{
+    if (secondarySize != ss)
+    {
+        ASSERT(ss <= 4);
+        secondarySize = ss;
+        invalidateMangledName();
+    }
+}
+
+void TType::makeArray(unsigned int s)
+{
+    mArraySizes.push_back(s);
+    invalidateMangledName();
+}
+
+void TType::setArraySize(size_t arrayDimension, unsigned int s)
+{
+    ASSERT(arrayDimension < mArraySizes.size());
+    if (mArraySizes.at(arrayDimension) != s)
+    {
+        mArraySizes[arrayDimension] = s;
+        invalidateMangledName();
+    }
+}
+
+void TType::toArrayElementType()
+{
+    if (mArraySizes.size() > 0)
+    {
+        mArraySizes.pop_back();
+        invalidateMangledName();
+    }
+}
+
+void TType::setInterfaceBlock(TInterfaceBlock *interfaceBlockIn)
+{
+    if (mInterfaceBlock != interfaceBlockIn)
+    {
+        mInterfaceBlock = interfaceBlockIn;
+        invalidateMangledName();
+    }
+}
+
+void TType::setStruct(TStructure *s)
+{
+    if (mStructure != s)
+    {
+        mStructure = s;
+        invalidateMangledName();
+    }
+}
+
+const TString &TType::getMangledName() const
+{
+    if (mMangledName.empty())
+    {
+        mMangledName = buildMangledName();
+        mMangledName += ';';
+    }
+
+    return mMangledName;
+}
+
+void TType::realize()
+{
+    getMangledName();
+}
+
+void TType::invalidateMangledName()
+{
+    mMangledName = "";
+}
+
+// TStructure implementation.
 TStructure::TStructure(TSymbolTable *symbolTable, const TString *name, TFieldList *fields)
     : TFieldListCollection(name, fields),
       mDeepestNesting(0),
       mUniqueId(symbolTable->nextUniqueId()),
       mAtGlobalScope(false)
 {
+}
+
+bool TStructure::equals(const TStructure &other) const
+{
+    return (uniqueId() == other.uniqueId());
 }
 
 bool TStructure::containsArrays() const
@@ -654,8 +826,8 @@ void TType::createSamplerSymbols(const TString &namePrefix,
         }
         else
         {
-            structure->createSamplerSymbols(namePrefix, apiNamePrefix, outputSymbols,
-                                            outputSymbolsToAPINames, symbolTable);
+            mStructure->createSamplerSymbols(namePrefix, apiNamePrefix, outputSymbols,
+                                             outputSymbolsToAPINames, symbolTable);
         }
         return;
     }
@@ -739,6 +911,70 @@ int TStructure::calculateDeepestNesting() const
     for (size_t i = 0; i < mFields->size(); ++i)
         maxNesting = std::max(maxNesting, (*mFields)[i]->type()->getDeepestStructNesting());
     return 1 + maxNesting;
+}
+
+// TPublicType implementation.
+void TPublicType::initialize(const TTypeSpecifierNonArray &typeSpecifier, TQualifier q)
+{
+    typeSpecifierNonArray = typeSpecifier;
+    layoutQualifier       = TLayoutQualifier::create();
+    memoryQualifier       = TMemoryQualifier::create();
+    qualifier             = q;
+    invariant             = false;
+    precision             = EbpUndefined;
+    array                 = false;
+    arraySize             = 0;
+}
+
+void TPublicType::initializeBasicType(TBasicType basicType)
+{
+    typeSpecifierNonArray.type          = basicType;
+    typeSpecifierNonArray.primarySize   = 1;
+    typeSpecifierNonArray.secondarySize = 1;
+    layoutQualifier                     = TLayoutQualifier::create();
+    memoryQualifier                     = TMemoryQualifier::create();
+    qualifier                           = EvqTemporary;
+    invariant                           = false;
+    precision                           = EbpUndefined;
+    array                               = false;
+    arraySize                           = 0;
+}
+
+bool TPublicType::isStructureContainingArrays() const
+{
+    if (!typeSpecifierNonArray.userDef)
+    {
+        return false;
+    }
+
+    return typeSpecifierNonArray.userDef->containsArrays();
+}
+
+bool TPublicType::isStructureContainingType(TBasicType t) const
+{
+    if (!typeSpecifierNonArray.userDef)
+    {
+        return false;
+    }
+
+    return typeSpecifierNonArray.userDef->containsType(t);
+}
+
+void TPublicType::setArraySize(int s)
+{
+    array     = true;
+    arraySize = s;
+}
+
+void TPublicType::clearArrayness()
+{
+    array     = false;
+    arraySize = 0;
+}
+
+bool TPublicType::isAggregate() const
+{
+    return array || typeSpecifierNonArray.isMatrix() || typeSpecifierNonArray.isVector();
 }
 
 }  // namespace sh
