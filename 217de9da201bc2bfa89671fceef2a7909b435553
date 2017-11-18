@@ -46,6 +46,30 @@
       "revId": "217de9da201bc2bfa89671fceef2a7909b435553",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "59a41450_62c6f887",
+        "filename": "src/libANGLE/VaryingPacking.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-18T02:52:39Z",
+      "side": 1,
+      "message": "No, that\u0027s a good point, you can keep it separate for unit testing purposes.",
+      "parentUuid": "62c87752_4433d480",
+      "range": {
+        "startLine": 135,
+        "startChar": 9,
+        "endLine": 135,
+        "endChar": 25
+      },
+      "revId": "217de9da201bc2bfa89671fceef2a7909b435553",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
