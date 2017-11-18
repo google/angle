@@ -279,7 +279,7 @@ class TType
     const TStructure *getStruct() const { return mStructure; }
     void setStruct(TStructure *s);
 
-    const TString &getMangledName() const;
+    const char *getMangledName() const;
 
     bool sameNonArrayType(const TType &right) const;
 
@@ -368,7 +368,7 @@ class TType
 
   private:
     void invalidateMangledName();
-    TString buildMangledName() const;
+    const char *buildMangledName() const;
 
     TBasicType type;
     TPrecision precision;
@@ -393,7 +393,7 @@ class TType
     TStructure *mStructure;
     bool mIsStructSpecifier;
 
-    mutable TString mMangledName;
+    mutable const char *mMangledName;
 };
 
 // TTypeSpecifierNonArray stores all of the necessary fields for type_specifier_nonarray from the
