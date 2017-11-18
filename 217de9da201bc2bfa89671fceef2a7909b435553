@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "eba4f30f_d1f86fcc",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 2616,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-11-18T10:07:03Z",
+      "side": 1,
+      "message": "The prior error information already preserved here.",
+      "range": {
+        "startLine": 2614,
+        "startChar": 0,
+        "endLine": 2616,
+        "endChar": 25
+      },
+      "revId": "217de9da201bc2bfa89671fceef2a7909b435553",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "7138c6d0_89e814d3",
         "filename": "src/libANGLE/VaryingPacking.h",
         "patchSetId": 9
