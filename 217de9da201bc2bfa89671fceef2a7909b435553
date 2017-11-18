@@ -22,6 +22,30 @@
       "revId": "217de9da201bc2bfa89671fceef2a7909b435553",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "62c87752_4433d480",
+        "filename": "src/libANGLE/VaryingPacking.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-11-18T00:10:01Z",
+      "side": 1,
+      "message": "I would do that too, but many unit test cases use it to verify the packing logic. I am not willing to lose them. what do you think?",
+      "parentUuid": "7138c6d0_89e814d3",
+      "range": {
+        "startLine": 135,
+        "startChar": 9,
+        "endLine": 135,
+        "endChar": 25
+      },
+      "revId": "217de9da201bc2bfa89671fceef2a7909b435553",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
