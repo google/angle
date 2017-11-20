@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ecf36ca1_a6815c83",
+        "filename": "src/libANGLE/renderer/d3d/IndexDataManager.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-20T20:56:09Z",
+      "side": 1,
+      "message": "Doesn\u0027t look like this is called from any generic places anymore.  It can probably be moved to renderer11_utils now and the RendererClass parameter removed.",
+      "range": {
+        "startLine": 105,
+        "startChar": 0,
+        "endLine": 107,
+        "endChar": 64
+      },
+      "revId": "e0eca08f51c85475747cbef527645f6c774b9de6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
