@@ -380,7 +380,7 @@ egl::Error Renderer9::initializeDevice()
 
     ASSERT(!mVertexDataManager && !mIndexDataManager);
     mVertexDataManager = new VertexDataManager(this);
-    mIndexDataManager  = new IndexDataManager(this, getRendererClass());
+    mIndexDataManager  = new IndexDataManager(this);
 
     if (mVertexDataManager->initialize().isError())
     {
@@ -1342,8 +1342,11 @@ gl::Error Renderer9::applyIndexBuffer(const gl::Context *context,
 {
     gl::VertexArray *vao           = context->getGLState().getVertexArray();
     gl::Buffer *elementArrayBuffer = vao->getElementArrayBuffer().get();
-    ANGLE_TRY(mIndexDataManager->prepareIndexData(context, type, count, elementArrayBuffer, indices,
-                                                  indexInfo, false));
+
+    GLenum dstType = GetIndexTranslationDestType(type, indexInfo->indexRange, false);
+
+    ANGLE_TRY(mIndexDataManager->prepareIndexData(context, type, dstType, count, elementArrayBuffer,
+                                                  indices, indexInfo));
 
     // Directly binding the storage buffer is not supported for d3d9
     ASSERT(indexInfo->storage == nullptr);

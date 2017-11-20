@@ -12,15 +12,21 @@
 #include <algorithm>
 
 #include "common/debug.h"
-#include "libANGLE/formatutils.h"
+#include "libANGLE/Buffer.h"
+#include "libANGLE/Context.h"
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/Program.h"
+#include "libANGLE/State.h"
+#include "libANGLE/VertexArray.h"
+#include "libANGLE/formatutils.h"
+#include "libANGLE/renderer/d3d/BufferD3D.h"
+#include "libANGLE/renderer/d3d/FramebufferD3D.h"
+#include "libANGLE/renderer/d3d/IndexBuffer.h"
+#include "libANGLE/renderer/d3d/d3d11/RenderTarget11.h"
+#include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
 #include "libANGLE/renderer/d3d/d3d11/dxgi_support_table.h"
 #include "libANGLE/renderer/d3d/d3d11/formatutils11.h"
-#include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
-#include "libANGLE/renderer/d3d/d3d11/RenderTarget11.h"
 #include "libANGLE/renderer/d3d/d3d11/texture_format_table.h"
-#include "libANGLE/renderer/d3d/FramebufferD3D.h"
 #include "libANGLE/renderer/driver_utils.h"
 #include "platform/Platform.h"
 #include "platform/WorkaroundsD3D.h"
@@ -2313,6 +2319,53 @@ bool UsePresentPathFast(const Renderer11 *renderer,
 
     return (framebufferAttachment->type() == GL_FRAMEBUFFER_DEFAULT &&
             renderer->presentPathFastEnabled());
+}
+
+bool UsePrimitiveRestartWorkaround(bool primitiveRestartFixedIndexEnabled, GLenum type)
+{
+    // We should never have to deal with primitive restart workaround issue with GL_UNSIGNED_INT
+    // indices, since we restrict it via MAX_ELEMENT_INDEX.
+    return (!primitiveRestartFixedIndexEnabled && type == GL_UNSIGNED_SHORT);
+}
+
+bool IsStreamingIndexData(const gl::Context *context, GLenum srcType)
+{
+    const auto &glState = context->getGLState();
+    gl::Buffer *glBuffer = glState.getVertexArray()->getElementArrayBuffer().get();
+
+    // Case 1: the indices are passed by pointer, which forces the streaming of index data
+    if (glBuffer == nullptr)
+    {
+        return true;
+    }
+
+    bool primitiveRestartWorkaround =
+        UsePrimitiveRestartWorkaround(glState.isPrimitiveRestartEnabled(), srcType);
+
+    BufferD3D *buffer    = GetImplAs<BufferD3D>(glBuffer);
+    const GLenum dstType = (srcType == GL_UNSIGNED_INT || primitiveRestartWorkaround)
+                               ? GL_UNSIGNED_INT
+                               : GL_UNSIGNED_SHORT;
+
+    // Case 2a: the buffer can be used directly
+    if (buffer->supportsDirectBinding() && dstType == srcType)
+    {
+        return false;
+    }
+
+    // Case 2b: use a static translated copy or fall back to streaming
+    StaticIndexBufferInterface *staticBuffer = buffer->getStaticIndexBuffer();
+    if (staticBuffer == nullptr)
+    {
+        return true;
+    }
+
+    if ((staticBuffer->getBufferSize() == 0) || (staticBuffer->getIndexType() != dstType))
+    {
+        return true;
+    }
+
+    return false;
 }
 
 }  // namespace rx

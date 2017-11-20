@@ -388,6 +388,8 @@ enum class StagingAccess
 };
 
 bool UsePresentPathFast(const Renderer11 *renderer, const gl::FramebufferAttachment *colorbuffer);
+bool UsePrimitiveRestartWorkaround(bool primitiveRestartFixedIndexEnabled, GLenum type);
+bool IsStreamingIndexData(const gl::Context *context, GLenum srcType);
 
 // Used for state change notifications between buffers and vertex arrays.
 using OnBufferDataDirtyBinding  = angle::ChannelBinding<size_t, const gl::Context *>;

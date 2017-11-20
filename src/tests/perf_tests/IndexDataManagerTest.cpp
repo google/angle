@@ -155,7 +155,7 @@ class IndexDataManagerPerfTest : public ANGLEPerfTest
 
 IndexDataManagerPerfTest::IndexDataManagerPerfTest()
     : ANGLEPerfTest("IndexDataManger", "_run"),
-      mIndexDataManager(&mMockBufferFactory, rx::RENDERER_D3D11),
+      mIndexDataManager(&mMockBufferFactory),
       mIndexCount(4000),
       mBufferSize(mIndexCount * sizeof(GLushort)),
       mMockBufferFactory(mBufferSize, GL_UNSIGNED_SHORT),
@@ -176,13 +176,14 @@ IndexDataManagerPerfTest::IndexDataManagerPerfTest()
 void IndexDataManagerPerfTest::step()
 {
     rx::TranslatedIndexData translatedIndexData;
+    gl::IndexRange indexRange;
     for (unsigned int iteration = 0; iteration < 100; ++iteration)
     {
         (void)mIndexBuffer.getIndexRange(nullptr, GL_UNSIGNED_SHORT, 0, mIndexCount, false,
-                                         &translatedIndexData.indexRange);
-        (void)mIndexDataManager.prepareIndexData(nullptr, GL_UNSIGNED_SHORT, mIndexCount,
-                                                 &mIndexBuffer, nullptr, &translatedIndexData,
-                                                 false);
+                                         &indexRange);
+        (void)mIndexDataManager.prepareIndexData(nullptr, GL_UNSIGNED_SHORT, GL_UNSIGNED_SHORT,
+                                                 mIndexCount, &mIndexBuffer, nullptr,
+                                                 &translatedIndexData);
     }
 }
 

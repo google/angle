@@ -551,7 +551,7 @@ StateManager11::StateManager11(Renderer11 *renderer)
       mAppliedIBFormat(DXGI_FORMAT_UNKNOWN),
       mAppliedIBOffset(0),
       mVertexDataManager(renderer),
-      mIndexDataManager(renderer, RENDERER_D3D11),
+      mIndexDataManager(renderer),
       mIsMultiviewEnabled(false),
       mEmptySerial(mRenderer->generateSerial()),
       mIsTransformFeedbackCurrentlyActiveUnpaused(false)
@@ -2564,8 +2564,15 @@ gl::Error StateManager11::applyIndexBuffer(const gl::Context *context,
     const auto &glState            = context->getGLState();
     gl::VertexArray *vao           = glState.getVertexArray();
     gl::Buffer *elementArrayBuffer = vao->getElementArrayBuffer().get();
-    ANGLE_TRY(mIndexDataManager.prepareIndexData(context, type, count, elementArrayBuffer, indices,
-                                                 indexInfo, glState.isPrimitiveRestartEnabled()));
+
+    bool usePrimitiveRestartWorkaround =
+        UsePrimitiveRestartWorkaround(glState.isPrimitiveRestartEnabled(), type);
+
+    GLenum dstType =
+        GetIndexTranslationDestType(type, indexInfo->indexRange, usePrimitiveRestartWorkaround);
+
+    ANGLE_TRY(mIndexDataManager.prepareIndexData(context, type, dstType, count, elementArrayBuffer,
+                                                 indices, indexInfo));
 
     ID3D11Buffer *buffer = nullptr;
     DXGI_FORMAT bufferFormat =

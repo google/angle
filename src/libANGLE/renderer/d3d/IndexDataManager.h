@@ -65,24 +65,18 @@ struct TranslatedIndexData
 class IndexDataManager : angle::NonCopyable
 {
   public:
-    explicit IndexDataManager(BufferFactoryD3D *factory, RendererClass rendererClass);
+    explicit IndexDataManager(BufferFactoryD3D *factory);
     virtual ~IndexDataManager();
 
     void deinitialize();
 
-    static bool UsePrimitiveRestartWorkaround(bool primitiveRestartFixedIndexEnabled,
-                                              GLenum type,
-                                              RendererClass rendererClass);
-    static bool IsStreamingIndexData(const gl::Context *context,
-                                     GLenum srcType,
-                                     RendererClass rendererClass);
     gl::Error prepareIndexData(const gl::Context *context,
                                GLenum srcType,
+                               GLenum dstType,
                                GLsizei count,
                                gl::Buffer *glBuffer,
                                const void *indices,
-                               TranslatedIndexData *translated,
-                               bool primitiveRestartFixedIndexEnabled);
+                               TranslatedIndexData *translated);
 
   private:
     gl::Error streamIndexData(const void *data,
@@ -97,10 +91,14 @@ class IndexDataManager : angle::NonCopyable
     using StreamingBuffer = std::unique_ptr<StreamingIndexBufferInterface>;
 
     BufferFactoryD3D *const mFactory;
-    RendererClass mRendererClass;
     std::unique_ptr<StreamingIndexBufferInterface> mStreamingBufferShort;
     std::unique_ptr<StreamingIndexBufferInterface> mStreamingBufferInt;
 };
+
+GLenum GetIndexTranslationDestType(GLenum srcType,
+                                   const gl::IndexRange &indexRange,
+                                   bool usePrimitiveRestartWorkaround);
+
 }  // namespace rx
 
 #endif  // LIBANGLE_INDEXDATAMANAGER_H_

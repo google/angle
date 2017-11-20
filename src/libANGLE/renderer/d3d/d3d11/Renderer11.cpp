@@ -1648,8 +1648,7 @@ gl::Error Renderer11::drawElements(const gl::Context *context,
     GLsizei adjustedInstanceCount = GetAdjustedInstanceCount(program, instances);
 
     if (!DrawCallNeedsTranslation(context, mode) &&
-        !IndexDataManager::UsePrimitiveRestartWorkaround(glState.isPrimitiveRestartEnabled(), type,
-                                                         RENDERER_D3D11))
+        !UsePrimitiveRestartWorkaround(glState.isPrimitiveRestartEnabled(), type))
     {
         ANGLE_TRY(mStateManager.applyIndexBuffer(context, indices, count, type, &indexInfo));
 
@@ -1805,8 +1804,7 @@ gl::Error Renderer11::drawElementsIndirect(const gl::Context *context,
     uintptr_t offset  = reinterpret_cast<uintptr_t>(indirect);
 
     TranslatedIndexData indexInfo;
-    if (!DrawCallNeedsTranslation(context, mode) &&
-        !IndexDataManager::IsStreamingIndexData(context, type, RENDERER_D3D11))
+    if (!DrawCallNeedsTranslation(context, mode) && !IsStreamingIndexData(context, type))
     {
         ANGLE_TRY(mStateManager.applyIndexBuffer(context, nullptr, 0, type, &indexInfo));
         ANGLE_TRY(mStateManager.applyVertexBuffer(context, mode, 0, 0, 0, &indexInfo));
