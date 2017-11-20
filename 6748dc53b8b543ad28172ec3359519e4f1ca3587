@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "e9a7671a_0c256e45",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 32
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-20T12:05:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "656e927d_5fa45862",
+      "range": {
+        "startLine": 76,
+        "startChar": 0,
+        "endLine": 83,
+        "endChar": 5
+      },
+      "revId": "6748dc53b8b543ad28172ec3359519e4f1ca3587",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "aee0d1f3_fbb2c602",
         "filename": "include/GLSLANG/ShaderVars.h",
         "patchSetId": 32
@@ -36,6 +60,30 @@
       "writtenOn": "2017-11-17T17:49:50Z",
       "side": 1,
       "message": "to confirm, int a[2][3] would be stored in arraySizes as { 2, 3 }?",
+      "range": {
+        "startLine": 117,
+        "startChar": 30,
+        "endLine": 117,
+        "endChar": 40
+      },
+      "revId": "6748dc53b8b543ad28172ec3359519e4f1ca3587",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1d0c8116_27cc0f3c",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 32
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-20T12:05:51Z",
+      "side": 1,
+      "message": "No, it\u0027s the other way around. I can still change this if it\u0027s necessary, but some already merged pieces of code are already using this order. So I\u0027d like to do it in a separate patch, and it might be easiest to do after the initial implementation is fully merged. What do you think?",
+      "parentUuid": "aee0d1f3_fbb2c602",
       "range": {
         "startLine": 117,
         "startChar": 30,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "225ea228_ecd9ec08",
+        "filename": "src/compiler/translator/ShaderVars.cpp",
+        "patchSetId": 32
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-20T12:05:51Z",
+      "side": 1,
+      "message": "You\u0027re right about the return values. It\u0027s as in GLES 3.1 spec page 82 (added spec reference here).\n\nI think the method name needs to convey that this is meant to implement the ARRAY_SIZE query spec. The method doesn\u0027t have other uses since the spec is a bit odd, and I don\u0027t think a name that\u0027s unrelated to ARRAY_SIZE query sufficiently describes it. Do you think \"getArraySizeQueryResult()\" would be better?",
+      "parentUuid": "43588bc3_8a1cbca1",
+      "range": {
+        "startLine": 116,
+        "startChar": 20,
+        "endLine": 116,
+        "endChar": 40
+      },
+      "revId": "6748dc53b8b543ad28172ec3359519e4f1ca3587",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5358fca8_34beacbb",
         "filename": "src/compiler/translator/blocklayout.cpp",
         "patchSetId": 32
@@ -91,6 +163,30 @@
       "revId": "6748dc53b8b543ad28172ec3359519e4f1ca3587",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "375ac87f_d2424d99",
+        "filename": "src/compiler/translator/blocklayout.cpp",
+        "patchSetId": 32
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-20T12:05:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5358fca8_34beacbb",
+      "range": {
+        "startLine": 134,
+        "startChar": 0,
+        "endLine": 138,
+        "endChar": 9
+      },
+      "revId": "6748dc53b8b543ad28172ec3359519e4f1ca3587",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "9261ee72_8697f7cd",
+        "filename": "src/compiler/translator/blocklayout.cpp",
+        "patchSetId": 32
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-20T12:05:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f651c33c_afb6a934",
+      "range": {
+        "startLine": 154,
+        "startChar": 5,
+        "endLine": 154,
+        "endChar": 41
+      },
+      "revId": "6748dc53b8b543ad28172ec3359519e4f1ca3587",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0ddc2322_8acd0f8e",
         "filename": "src/compiler/translator/blocklayout.cpp",
         "patchSetId": 32
@@ -128,6 +248,30 @@
       "writtenOn": "2017-11-17T17:49:50Z",
       "side": 1,
       "message": "cache this constant",
+      "range": {
+        "startLine": 164,
+        "startChar": 41,
+        "endLine": 164,
+        "endChar": 89
+      },
+      "revId": "6748dc53b8b543ad28172ec3359519e4f1ca3587",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "784798d3_93b91233",
+        "filename": "src/compiler/translator/blocklayout.cpp",
+        "patchSetId": 32
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-20T12:05:51Z",
+      "side": 1,
+      "message": "Not sure what you mean?",
+      "parentUuid": "0ddc2322_8acd0f8e",
       "range": {
         "startLine": 164,
         "startChar": 41,
@@ -163,6 +307,30 @@
     },
     {
       "key": {
+        "uuid": "e52bc5bf_422310df",
+        "filename": "src/libANGLE/ProgramLinkedResources.cpp",
+        "patchSetId": 32
+      },
+      "lineNbr": 482,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-20T12:05:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "66c0c1e7_00332c43",
+      "range": {
+        "startLine": 482,
+        "startChar": 49,
+        "endLine": 482,
+        "endChar": 74
+      },
+      "revId": "6748dc53b8b543ad28172ec3359519e4f1ca3587",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cd6f2418_8b880e36",
         "filename": "src/libANGLE/ProgramLinkedResources.cpp",
         "patchSetId": 32
@@ -174,6 +342,30 @@
       "writtenOn": "2017-11-17T17:49:50Z",
       "side": 1,
       "message": "I\u0027ve seen this in a couple places, maybe it would make sense to be a helper method?",
+      "range": {
+        "startLine": 500,
+        "startChar": 43,
+        "endLine": 500,
+        "endChar": 93
+      },
+      "revId": "6748dc53b8b543ad28172ec3359519e4f1ca3587",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e601a64a_95f39aea",
+        "filename": "src/libANGLE/ProgramLinkedResources.cpp",
+        "patchSetId": 32
+      },
+      "lineNbr": 500,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-20T12:05:51Z",
+      "side": 1,
+      "message": "Let\u0027s resolve the array sizes ordering issue first. This is one place where the chosen array sizes ordering does make things uglier.",
+      "parentUuid": "cd6f2418_8b880e36",
       "range": {
         "startLine": 500,
         "startChar": 43,
@@ -209,6 +401,30 @@
     },
     {
       "key": {
+        "uuid": "4e9ee33f_907480f9",
+        "filename": "src/libANGLE/ProgramLinkedResources.cpp",
+        "patchSetId": 32
+      },
+      "lineNbr": 563,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-20T12:05:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "afb85616_ac5fbf39",
+      "range": {
+        "startLine": 563,
+        "startChar": 56,
+        "endLine": 563,
+        "endChar": 63
+      },
+      "revId": "6748dc53b8b543ad28172ec3359519e4f1ca3587",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "480ae8c1_a6b6c7f5",
         "filename": "src/libANGLE/ProgramLinkedResources.cpp",
         "patchSetId": 32
@@ -229,6 +445,30 @@
       "revId": "6748dc53b8b543ad28172ec3359519e4f1ca3587",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e373e840_d50995c3",
+        "filename": "src/libANGLE/ProgramLinkedResources.cpp",
+        "patchSetId": 32
+      },
+      "lineNbr": 781,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-20T12:05:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "480ae8c1_a6b6c7f5",
+      "range": {
+        "startLine": 781,
+        "startChar": 27,
+        "endLine": 781,
+        "endChar": 62
+      },
+      "revId": "6748dc53b8b543ad28172ec3359519e4f1ca3587",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -255,6 +495,30 @@
     },
     {
       "key": {
+        "uuid": "0328fe18_40193de8",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 32
+      },
+      "lineNbr": 335,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-20T12:05:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "32b73f7f_d315395c",
+      "range": {
+        "startLine": 329,
+        "startChar": 0,
+        "endLine": 335,
+        "endChar": 1
+      },
+      "revId": "6748dc53b8b543ad28172ec3359519e4f1ca3587",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "470c1a62_e361cd19",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 32
@@ -275,6 +539,30 @@
       "revId": "6748dc53b8b543ad28172ec3359519e4f1ca3587",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "17d4669c_7e3957ed",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 32
+      },
+      "lineNbr": 2115,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-20T12:05:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "470c1a62_e361cd19",
+      "range": {
+        "startLine": 2115,
+        "startChar": 17,
+        "endLine": 2115,
+        "endChar": 42
+      },
+      "revId": "6748dc53b8b543ad28172ec3359519e4f1ca3587",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -301,6 +589,30 @@
     },
     {
       "key": {
+        "uuid": "fdf80825_3765ca33",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 32
+      },
+      "lineNbr": 2146,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-20T12:05:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "78a776f9_b3617d16",
+      "range": {
+        "startLine": 2146,
+        "startChar": 17,
+        "endLine": 2146,
+        "endChar": 47
+      },
+      "revId": "6748dc53b8b543ad28172ec3359519e4f1ca3587",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c5955d9c_0ffb8886",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 32
@@ -315,6 +627,24 @@
       "revId": "6748dc53b8b543ad28172ec3359519e4f1ca3587",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "04ad52ff_22ed3479",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 32
+      },
+      "lineNbr": 2173,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-20T12:05:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c5955d9c_0ffb8886",
+      "revId": "6748dc53b8b543ad28172ec3359519e4f1ca3587",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -338,6 +668,30 @@
       "revId": "6748dc53b8b543ad28172ec3359519e4f1ca3587",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ee58a446_a88566d0",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 32
+      },
+      "lineNbr": 2441,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-20T12:05:51Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "9b294a81_0f542423",
+      "range": {
+        "startLine": 2439,
+        "startChar": 0,
+        "endLine": 2441,
+        "endChar": 23
+      },
+      "revId": "6748dc53b8b543ad28172ec3359519e4f1ca3587",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
