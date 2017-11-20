@@ -254,12 +254,12 @@ TCompiler::TCompiler(sh::GLenum type, ShShaderSpec spec, ShShaderOutput output)
       mDiagnostics(infoSink.info),
       mSourcePath(nullptr),
       mComputeShaderLocalSizeDeclared(false),
+      mComputeShaderLocalSize(1),
       mGeometryShaderMaxVertices(-1),
       mGeometryShaderInvocations(0),
       mGeometryShaderInputPrimitiveType(EptUndefined),
       mGeometryShaderOutputPrimitiveType(EptUndefined)
 {
-    mComputeShaderLocalSize.fill(1);
 }
 
 TCompiler::~TCompiler()

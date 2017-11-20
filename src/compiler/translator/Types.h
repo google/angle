@@ -455,6 +455,9 @@ struct TTypeSpecifierNonArray
 //
 struct TPublicType
 {
+    // Must have a trivial default constructor since it is used in YYSTYPE.
+    TPublicType() = default;
+
     void initialize(const TTypeSpecifierNonArray &typeSpecifier, TQualifier q);
     void initializeBasicType(TBasicType basicType);
 

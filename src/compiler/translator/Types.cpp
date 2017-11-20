@@ -119,8 +119,8 @@ TType::TType()
       precision(EbpUndefined),
       qualifier(EvqGlobal),
       invariant(false),
-      memoryQualifier(TMemoryQualifier::create()),
-      layoutQualifier(TLayoutQualifier::create()),
+      memoryQualifier(TMemoryQualifier::Create()),
+      layoutQualifier(TLayoutQualifier::Create()),
       primarySize(0),
       secondarySize(0),
       mInterfaceBlock(nullptr),
@@ -135,8 +135,8 @@ TType::TType(TBasicType t, unsigned char ps, unsigned char ss)
       precision(EbpUndefined),
       qualifier(EvqGlobal),
       invariant(false),
-      memoryQualifier(TMemoryQualifier::create()),
-      layoutQualifier(TLayoutQualifier::create()),
+      memoryQualifier(TMemoryQualifier::Create()),
+      layoutQualifier(TLayoutQualifier::Create()),
       primarySize(ps),
       secondarySize(ss),
       mInterfaceBlock(0),
@@ -151,8 +151,8 @@ TType::TType(TBasicType t, TPrecision p, TQualifier q, unsigned char ps, unsigne
       precision(p),
       qualifier(q),
       invariant(false),
-      memoryQualifier(TMemoryQualifier::create()),
-      layoutQualifier(TLayoutQualifier::create()),
+      memoryQualifier(TMemoryQualifier::Create()),
+      layoutQualifier(TLayoutQualifier::Create()),
       primarySize(ps),
       secondarySize(ss),
       mInterfaceBlock(0),
@@ -194,8 +194,8 @@ TType::TType(TStructure *userDef)
       precision(EbpUndefined),
       qualifier(EvqTemporary),
       invariant(false),
-      memoryQualifier(TMemoryQualifier::create()),
-      layoutQualifier(TLayoutQualifier::create()),
+      memoryQualifier(TMemoryQualifier::Create()),
+      layoutQualifier(TLayoutQualifier::Create()),
       primarySize(1),
       secondarySize(1),
       mInterfaceBlock(nullptr),
@@ -212,7 +212,7 @@ TType::TType(TInterfaceBlock *interfaceBlockIn,
       precision(EbpUndefined),
       qualifier(qualifierIn),
       invariant(false),
-      memoryQualifier(TMemoryQualifier::create()),
+      memoryQualifier(TMemoryQualifier::Create()),
       layoutQualifier(layoutQualifierIn),
       primarySize(1),
       secondarySize(1),
@@ -927,8 +927,8 @@ int TStructure::calculateDeepestNesting() const
 void TPublicType::initialize(const TTypeSpecifierNonArray &typeSpecifier, TQualifier q)
 {
     typeSpecifierNonArray = typeSpecifier;
-    layoutQualifier       = TLayoutQualifier::create();
-    memoryQualifier       = TMemoryQualifier::create();
+    layoutQualifier       = TLayoutQualifier::Create();
+    memoryQualifier       = TMemoryQualifier::Create();
     qualifier             = q;
     invariant             = false;
     precision             = EbpUndefined;
@@ -941,8 +941,8 @@ void TPublicType::initializeBasicType(TBasicType basicType)
     typeSpecifierNonArray.type          = basicType;
     typeSpecifierNonArray.primarySize   = 1;
     typeSpecifierNonArray.secondarySize = 1;
-    layoutQualifier                     = TLayoutQualifier::create();
-    memoryQualifier                     = TMemoryQualifier::create();
+    layoutQualifier                     = TLayoutQualifier::Create();
+    memoryQualifier                     = TMemoryQualifier::Create();
     qualifier                           = EvqTemporary;
     invariant                           = false;
     precision                           = EbpUndefined;

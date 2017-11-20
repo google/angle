@@ -691,8 +691,8 @@ unsigned int TPrecisionQualifierWrapper::getRank() const
 }
 
 TTypeQualifier::TTypeQualifier(TQualifier scope, const TSourceLoc &loc)
-    : layoutQualifier(TLayoutQualifier::create()),
-      memoryQualifier(TMemoryQualifier::create()),
+    : layoutQualifier(TLayoutQualifier::Create()),
+      memoryQualifier(TMemoryQualifier::Create()),
       precision(EbpUndefined),
       qualifier(scope),
       invariant(false),

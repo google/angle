@@ -218,6 +218,7 @@ TParseContext::TParseContext(TSymbolTable &symt,
       mMinProgramTextureGatherOffset(resources.MinProgramTextureGatherOffset),
       mMaxProgramTextureGatherOffset(resources.MaxProgramTextureGatherOffset),
       mComputeShaderLocalSizeDeclared(false),
+      mComputeShaderLocalSize(-1),
       mNumViews(-1),
       mMaxNumViews(resources.MaxViewsOVR),
       mMaxImageUnits(resources.MaxImageUnits),
@@ -235,7 +236,6 @@ TParseContext::TParseContext(TSymbolTable &symt,
       mMaxGeometryShaderMaxVertices(resources.MaxGeometryOutputVertices),
       mGeometryShaderInputArraySize(0u)
 {
-    mComputeShaderLocalSize.fill(-1);
 }
 
 TParseContext::~TParseContext()
@@ -1757,7 +1757,7 @@ void TParseContext::handlePragmaDirective(const TSourceLoc &loc,
 
 sh::WorkGroupSize TParseContext::getComputeShaderLocalSize() const
 {
-    sh::WorkGroupSize result;
+    sh::WorkGroupSize result(-1);
     for (size_t i = 0u; i < result.size(); ++i)
     {
         if (mComputeShaderLocalSizeDeclared && mComputeShaderLocalSize[i] == -1)
@@ -4208,7 +4208,7 @@ TIntermTyped *TParseContext::addFieldSelectionExpression(TIntermTyped *baseExpre
 TLayoutQualifier TParseContext::parseLayoutQualifier(const TString &qualifierType,
                                                      const TSourceLoc &qualifierTypeLine)
 {
-    TLayoutQualifier qualifier = TLayoutQualifier::create();
+    TLayoutQualifier qualifier = TLayoutQualifier::Create();
 
     if (qualifierType == "shared")
     {
@@ -4449,7 +4449,7 @@ TLayoutQualifier TParseContext::parseLayoutQualifier(const TString &qualifierTyp
                                                      int intValue,
                                                      const TSourceLoc &intValueLine)
 {
-    TLayoutQualifier qualifier = TLayoutQualifier::create();
+    TLayoutQualifier qualifier = TLayoutQualifier::Create();
 
     std::string intValueString = Str(intValue);
 

@@ -25,7 +25,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 188
+#define ANGLE_SH_VERSION 189
 
 enum ShShaderSpec
 {
