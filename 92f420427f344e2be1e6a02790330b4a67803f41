@@ -196,6 +196,24 @@
     },
     {
       "key": {
+        "uuid": "31144d0a_0da54965",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-20T18:14:31Z",
+      "side": 1,
+      "message": "Please see my other comments, I\u0027d like you to try the angle::BitSet thing.",
+      "parentUuid": "651aeb21_03fdf628",
+      "revId": "92f420427f344e2be1e6a02790330b4a67803f41",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f850450f_4e5cbe34",
         "filename": "src/libANGLE/Program.h",
         "patchSetId": 8
