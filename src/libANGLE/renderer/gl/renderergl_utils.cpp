@@ -16,6 +16,7 @@
 #include "libANGLE/Caps.h"
 #include "libANGLE/Workarounds.h"
 #include "libANGLE/formatutils.h"
+#include "libANGLE/queryconversions.h"
 #include "libANGLE/renderer/gl/FunctionsGL.h"
 #include "libANGLE/renderer/gl/QueryGL.h"
 #include "libANGLE/renderer/gl/WorkaroundsGL.h"
@@ -1159,7 +1160,7 @@ bool SupportsNativeRendering(const FunctionsGL *functions, GLenum target, GLenum
         GLint framebufferRenderable = GL_FALSE;
         functions->getInternalformativ(target, internalFormat, GL_FRAMEBUFFER_RENDERABLE, 1,
                                        &framebufferRenderable);
-        return framebufferRenderable != GL_FALSE;
+        return gl::ConvertToBool(framebufferRenderable);
     }
     else
     {

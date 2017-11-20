@@ -16,6 +16,7 @@
 #include "libANGLE/Context.h"
 #include "libANGLE/ProgramLinkedResources.h"
 #include "libANGLE/Uniform.h"
+#include "libANGLE/queryconversions.h"
 #include "libANGLE/renderer/gl/ContextGL.h"
 #include "libANGLE/renderer/gl/FunctionsGL.h"
 #include "libANGLE/renderer/gl/ShaderGL.h"
@@ -576,7 +577,7 @@ bool ProgramGL::getUniformBlockMemberInfo(const std::string & /* memberUniformNa
     GLint isRowMajorMatrix = 0;
     mFunctions->getActiveUniformsiv(mProgramID, 1, &uniformIndex, GL_UNIFORM_IS_ROW_MAJOR,
                                     &isRowMajorMatrix);
-    memberInfoOut->isRowMajorMatrix = isRowMajorMatrix != GL_FALSE;
+    memberInfoOut->isRowMajorMatrix = gl::ConvertToBool(isRowMajorMatrix);
     return true;
 }
 

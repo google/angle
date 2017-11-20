@@ -3317,9 +3317,10 @@ void Context::copyTextureCHROMIUM(GLuint sourceId,
 
     gl::Texture *sourceTexture = getTexture(sourceId);
     gl::Texture *destTexture   = getTexture(destId);
-    handleError(destTexture->copyTexture(
-        this, destTarget, destLevel, internalFormat, destType, sourceLevel, unpackFlipY == GL_TRUE,
-        unpackPremultiplyAlpha == GL_TRUE, unpackUnmultiplyAlpha == GL_TRUE, sourceTexture));
+    handleError(destTexture->copyTexture(this, destTarget, destLevel, internalFormat, destType,
+                                         sourceLevel, ConvertToBool(unpackFlipY),
+                                         ConvertToBool(unpackPremultiplyAlpha),
+                                         ConvertToBool(unpackUnmultiplyAlpha), sourceTexture));
 }
 
 void Context::copySubTextureCHROMIUM(GLuint sourceId,
@@ -3349,9 +3350,10 @@ void Context::copySubTextureCHROMIUM(GLuint sourceId,
     gl::Texture *destTexture   = getTexture(destId);
     Offset offset(xoffset, yoffset, 0);
     Rectangle area(x, y, width, height);
-    handleError(destTexture->copySubTexture(
-        this, destTarget, destLevel, offset, sourceLevel, area, unpackFlipY == GL_TRUE,
-        unpackPremultiplyAlpha == GL_TRUE, unpackUnmultiplyAlpha == GL_TRUE, sourceTexture));
+    handleError(destTexture->copySubTexture(this, destTarget, destLevel, offset, sourceLevel, area,
+                                            ConvertToBool(unpackFlipY),
+                                            ConvertToBool(unpackPremultiplyAlpha),
+                                            ConvertToBool(unpackUnmultiplyAlpha), sourceTexture));
 }
 
 void Context::compressedCopyTextureCHROMIUM(GLuint sourceId, GLuint destId)
@@ -3494,7 +3496,8 @@ void Context::clearStencil(GLint s)
 
 void Context::colorMask(GLboolean red, GLboolean green, GLboolean blue, GLboolean alpha)
 {
-    mGLState.setColorMask(red == GL_TRUE, green == GL_TRUE, blue == GL_TRUE, alpha == GL_TRUE);
+    mGLState.setColorMask(ConvertToBool(red), ConvertToBool(green), ConvertToBool(blue),
+                          ConvertToBool(alpha));
 }
 
 void Context::cullFace(CullFaceMode mode)
@@ -3509,7 +3512,7 @@ void Context::depthFunc(GLenum func)
 
 void Context::depthMask(GLboolean flag)
 {
-    mGLState.setDepthMask(flag != GL_FALSE);
+    mGLState.setDepthMask(ConvertToBool(flag));
 }
 
 void Context::depthRangef(GLfloat zNear, GLfloat zFar)
@@ -3634,7 +3637,7 @@ void Context::polygonOffset(GLfloat factor, GLfloat units)
 
 void Context::sampleCoverage(GLfloat value, GLboolean invert)
 {
-    mGLState.setSampleCoverageParams(clamp01(value), invert == GL_TRUE);
+    mGLState.setSampleCoverageParams(clamp01(value), ConvertToBool(invert));
 }
 
 void Context::sampleMaski(GLuint maskNumber, GLbitfield mask)
@@ -3741,7 +3744,7 @@ void Context::vertexAttribPointer(GLuint index,
                                   const void *ptr)
 {
     mGLState.setVertexAttribPointer(this, index, mGLState.getTargetBuffer(BufferBinding::Array),
-                                    size, type, normalized == GL_TRUE, false, stride, ptr);
+                                    size, type, ConvertToBool(normalized), false, stride, ptr);
 }
 
 void Context::vertexAttribFormat(GLuint attribIndex,
@@ -3750,7 +3753,7 @@ void Context::vertexAttribFormat(GLuint attribIndex,
                                  GLboolean normalized,
                                  GLuint relativeOffset)
 {
-    mGLState.setVertexAttribFormat(attribIndex, size, type, normalized == GL_TRUE, false,
+    mGLState.setVertexAttribFormat(attribIndex, size, type, ConvertToBool(normalized), false,
                                    relativeOffset);
 }
 
@@ -3860,7 +3863,7 @@ void Context::debugMessageControl(GLenum source,
 {
     std::vector<GLuint> idVector(ids, ids + count);
     mGLState.getDebug().setMessageControl(source, type, severity, std::move(idVector),
-                                          (enabled != GL_FALSE));
+                                          ConvertToBool(enabled));
 }
 
 void Context::debugMessageInsert(GLenum source,
@@ -4017,7 +4020,7 @@ void Context::texStorage2DMultisample(GLenum target,
     Extents size(width, height, 1);
     Texture *texture = getTargetTexture(target);
     handleError(texture->setStorageMultisample(this, target, samples, internalformat, size,
-                                               fixedsamplelocations));
+                                               ConvertToBool(fixedsamplelocations)));
 }
 
 void Context::getMultisamplefv(GLenum pname, GLuint index, GLfloat *val)

@@ -178,7 +178,7 @@ gl::Error TextureD3D::setStorageMultisample(const gl::Context *context,
                                             GLsizei samples,
                                             GLint internalFormat,
                                             const gl::Extents &size,
-                                            GLboolean fixedSampleLocations)
+                                            bool fixedSampleLocations)
 {
     UNREACHABLE();
     return gl::InternalError();
@@ -3839,7 +3839,7 @@ gl::Error TextureD3D_2DMultisample::setStorageMultisample(const gl::Context *con
                                                           GLsizei samples,
                                                           GLint internalFormat,
                                                           const gl::Extents &size,
-                                                          GLboolean fixedSampleLocations)
+                                                          bool fixedSampleLocations)
 {
     ASSERT(target == GL_TEXTURE_2D_MULTISAMPLE && size.depth == 1);
 

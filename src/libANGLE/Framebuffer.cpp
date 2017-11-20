@@ -137,7 +137,7 @@ bool CheckAttachmentSampleCompleteness(const Context *context,
                                        const FramebufferAttachment &attachment,
                                        bool colorAttachment,
                                        Optional<int> *samples,
-                                       Optional<GLboolean> *fixedSampleLocations)
+                                       Optional<bool> *fixedSampleLocations)
 {
     ASSERT(attachment.isAttached());
 
@@ -150,8 +150,8 @@ bool CheckAttachmentSampleCompleteness(const Context *context,
 
         // ES3.1 (section 9.4) requires that the value of TEXTURE_FIXED_SAMPLE_LOCATIONS should be
         // the same for all attached textures.
-        GLboolean fixedSampleloc = texture->getFixedSampleLocations(attachmentImageIndex.type,
-                                                                    attachmentImageIndex.mipIndex);
+        bool fixedSampleloc = texture->getFixedSampleLocations(attachmentImageIndex.type,
+                                                               attachmentImageIndex.mipIndex);
         if (fixedSampleLocations->valid() && fixedSampleloc != fixedSampleLocations->value())
         {
             return false;
@@ -950,7 +950,7 @@ GLenum Framebuffer::checkStatusImpl(const Context *context)
     bool hasAttachments = false;
     Optional<unsigned int> colorbufferSize;
     Optional<int> samples;
-    Optional<GLboolean> fixedSampleLocations;
+    Optional<bool> fixedSampleLocations;
     bool hasRenderbuffer = false;
 
     const FramebufferAttachment *firstAttachment = getFirstNonNullAttachment();
@@ -1852,7 +1852,7 @@ GLint Framebuffer::getDefaultSamples() const
     return mState.getDefaultSamples();
 }
 
-GLboolean Framebuffer::getDefaultFixedSampleLocations() const
+bool Framebuffer::getDefaultFixedSampleLocations() const
 {
     return mState.getDefaultFixedSampleLocations();
 }
@@ -1875,7 +1875,7 @@ void Framebuffer::setDefaultSamples(GLint defaultSamples)
     mDirtyBits.set(DIRTY_BIT_DEFAULT_SAMPLES);
 }
 
-void Framebuffer::setDefaultFixedSampleLocations(GLboolean defaultFixedSampleLocations)
+void Framebuffer::setDefaultFixedSampleLocations(bool defaultFixedSampleLocations)
 {
     mState.mDefaultFixedSampleLocations = defaultFixedSampleLocations;
     mDirtyBits.set(DIRTY_BIT_DEFAULT_FIXED_SAMPLE_LOCATIONS);

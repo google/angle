@@ -2993,7 +2993,7 @@ TextureStorage *Renderer9::createTextureStorage2DMultisample(GLenum internalform
                                                              GLsizei height,
                                                              int levels,
                                                              int samples,
-                                                             GLboolean fixedSampleLocations)
+                                                             bool fixedSampleLocations)
 {
     // 2D multisampled textures are not supported by the D3D9 backend.
     UNREACHABLE();

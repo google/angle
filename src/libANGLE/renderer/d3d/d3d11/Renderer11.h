@@ -291,7 +291,7 @@ class Renderer11 : public RendererD3D
                                                       GLsizei height,
                                                       int levels,
                                                       int samples,
-                                                      GLboolean fixedSampleLocations) override;
+                                                      bool fixedSampleLocations) override;
 
     VertexBuffer *createVertexBuffer() override;
     IndexBuffer *createIndexBuffer() override;

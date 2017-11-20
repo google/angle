@@ -1228,7 +1228,7 @@ void QueryFramebufferParameteriv(const Framebuffer *framebuffer, GLenum pname, G
             *params = framebuffer->getDefaultSamples();
             break;
         case GL_FRAMEBUFFER_DEFAULT_FIXED_SAMPLE_LOCATIONS:
-            *params = framebuffer->getDefaultFixedSampleLocations();
+            *params = ConvertToGLBoolean(framebuffer->getDefaultFixedSampleLocations());
             break;
         default:
             UNREACHABLE();
@@ -1349,10 +1349,10 @@ void SetProgramParameteri(Program *program, GLenum pname, GLint value)
     switch (pname)
     {
         case GL_PROGRAM_BINARY_RETRIEVABLE_HINT:
-            program->setBinaryRetrievableHint(value != GL_FALSE);
+            program->setBinaryRetrievableHint(ConvertToBool(value));
             break;
         case GL_PROGRAM_SEPARABLE:
-            program->setSeparable(value != GL_FALSE);
+            program->setSeparable(ConvertToBool(value));
             break;
         default:
             UNREACHABLE();

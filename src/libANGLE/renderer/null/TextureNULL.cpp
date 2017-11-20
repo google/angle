@@ -146,7 +146,7 @@ gl::Error TextureNULL::setStorageMultisample(const gl::Context *context,
                                              GLsizei samples,
                                              GLint internalformat,
                                              const gl::Extents &size,
-                                             GLboolean fixedSampleLocations)
+                                             bool fixedSampleLocations)
 {
     return gl::NoError();
 }

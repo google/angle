@@ -98,7 +98,7 @@ class TextureNULL : public TextureImpl
                                     GLsizei samples,
                                     GLint internalformat,
                                     const gl::Extents &size,
-                                    GLboolean fixedSampleLocations) override;
+                                    bool fixedSampleLocations) override;
 
     gl::Error initializeContents(const gl::Context *context,
                                  const gl::ImageIndex &imageIndex) override;

@@ -130,7 +130,7 @@ class TextureImpl : public FramebufferAttachmentObjectImpl
                                             GLsizei samples,
                                             GLint internalformat,
                                             const gl::Extents &size,
-                                            GLboolean fixedSampleLocations) = 0;
+                                            bool fixedSampleLocations) = 0;
 
     virtual gl::Error setEGLImageTarget(const gl::Context *context,
                                         GLenum target,

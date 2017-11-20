@@ -2940,7 +2940,7 @@ TextureStorage11_2DMultisample::TextureStorage11_2DMultisample(Renderer11 *rende
                                                                GLsizei height,
                                                                int levels,
                                                                int samples,
-                                                               GLboolean fixedSampleLocations)
+                                                               bool fixedSampleLocations)
     : TextureStorage11(
           renderer,
           GetTextureBindFlags(internalformat, renderer->getRenderer11DeviceCaps(), true),

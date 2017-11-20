@@ -2186,7 +2186,7 @@ bool ValidateUniformMatrix(ValidationContext *context,
                            GLsizei count,
                            GLboolean transpose)
 {
-    if (transpose != GL_FALSE && context->getClientMajorVersion() < 3)
+    if (ConvertToBool(transpose) && context->getClientMajorVersion() < 3)
     {
         context->handleError(InvalidValue());
         return false;

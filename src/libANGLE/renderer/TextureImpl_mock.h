@@ -113,9 +113,8 @@ class MockTextureImpl : public TextureImpl
                            const gl::ImageIndex &,
                            FramebufferAttachmentRenderTarget **));
 
-    MOCK_METHOD6(
-        setStorageMultisample,
-        gl::Error(const gl::Context *, GLenum, GLsizei, GLint, const gl::Extents &, GLboolean));
+    MOCK_METHOD6(setStorageMultisample,
+                 gl::Error(const gl::Context *, GLenum, GLsizei, GLint, const gl::Extents &, bool));
 
     MOCK_METHOD2(setBaseLevel, gl::Error(const gl::Context *, GLuint));
 

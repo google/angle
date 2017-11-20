@@ -15,6 +15,7 @@
 #include "libANGLE/State.h"
 #include "libANGLE/angletypes.h"
 #include "libANGLE/formatutils.h"
+#include "libANGLE/queryconversions.h"
 #include "libANGLE/renderer/gl/BlitGL.h"
 #include "libANGLE/renderer/gl/BufferGL.h"
 #include "libANGLE/renderer/gl/FramebufferGL.h"
@@ -977,7 +978,7 @@ gl::Error TextureGL::setStorageMultisample(const gl::Context *context,
                                            GLsizei samples,
                                            GLint internalFormat,
                                            const gl::Extents &size,
-                                           GLboolean fixedSampleLocations)
+                                           bool fixedSampleLocations)
 {
     nativegl::TexStorageFormat texStorageFormat =
         nativegl::GetTexStorageFormat(mFunctions, mWorkarounds, internalFormat);
@@ -987,7 +988,8 @@ gl::Error TextureGL::setStorageMultisample(const gl::Context *context,
     ASSERT(size.depth == 1);
 
     mFunctions->texStorage2DMultisample(target, samples, texStorageFormat.internalFormat,
-                                        size.width, size.height, fixedSampleLocations);
+                                        size.width, size.height,
+                                        gl::ConvertToGLBoolean(fixedSampleLocations));
 
     setLevelInfo(target, 0, 1, GetLevelInfo(internalFormat, texStorageFormat.internalFormat));
 

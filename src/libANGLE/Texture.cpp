@@ -443,7 +443,7 @@ ImageDesc::ImageDesc(const Extents &size, const Format &format, const InitState 
 ImageDesc::ImageDesc(const Extents &size,
                      const Format &format,
                      const GLsizei samples,
-                     const GLboolean fixedSampleLocations,
+                     const bool fixedSampleLocations,
                      const InitState initState)
     : size(size),
       format(format),
@@ -505,7 +505,7 @@ void TextureState::setImageDescChain(GLuint baseLevel,
 void TextureState::setImageDescChainMultisample(Extents baseSize,
                                                 const Format &format,
                                                 GLsizei samples,
-                                                GLboolean fixedSampleLocations,
+                                                bool fixedSampleLocations,
                                                 InitState initState)
 {
     ASSERT(mTarget == GL_TEXTURE_2D_MULTISAMPLE);
@@ -858,7 +858,7 @@ GLsizei Texture::getSamples(GLenum target, size_t level) const
     return mState.getImageDesc(target, level).samples;
 }
 
-GLboolean Texture::getFixedSampleLocations(GLenum target, size_t level) const
+bool Texture::getFixedSampleLocations(GLenum target, size_t level) const
 {
     ASSERT(target == mState.mTarget ||
            (mState.mTarget == GL_TEXTURE_CUBE_MAP && IsCubeMapTextureTarget(target)));
@@ -1148,7 +1148,7 @@ Error Texture::setStorageMultisample(const Context *context,
                                      GLsizei samples,
                                      GLint internalFormat,
                                      const Extents &size,
-                                     GLboolean fixedSampleLocations)
+                                     bool fixedSampleLocations)
 {
     ASSERT(target == mState.mTarget);
 

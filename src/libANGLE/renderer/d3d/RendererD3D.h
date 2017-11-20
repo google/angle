@@ -254,7 +254,7 @@ class RendererD3D : public BufferFactoryD3D, public MultisampleTextureInitialize
                                                               GLsizei height,
                                                               int levels,
                                                               int samples,
-                                                              GLboolean fixedSampleLocations) = 0;
+                                                              bool fixedSampleLocations) = 0;
 
     // Buffer-to-texture and Texture-to-buffer copies
     virtual bool supportsFastCopyBufferToTexture(GLenum internalFormat) const = 0;

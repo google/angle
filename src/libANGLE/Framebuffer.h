@@ -89,7 +89,7 @@ class FramebufferState final : angle::NonCopyable
     GLint getDefaultWidth() const { return mDefaultWidth; };
     GLint getDefaultHeight() const { return mDefaultHeight; };
     GLint getDefaultSamples() const { return mDefaultSamples; };
-    GLboolean getDefaultFixedSampleLocations() const { return mDefaultFixedSampleLocations; };
+    bool getDefaultFixedSampleLocations() const { return mDefaultFixedSampleLocations; };
 
     bool hasDepth() const;
     bool hasStencil() const;
@@ -115,7 +115,7 @@ class FramebufferState final : angle::NonCopyable
     GLint mDefaultWidth;
     GLint mDefaultHeight;
     GLint mDefaultSamples;
-    GLboolean mDefaultFixedSampleLocations;
+    bool mDefaultFixedSampleLocations;
 
     // It's necessary to store all this extra state so we can restore attachments
     // when DEPTH_STENCIL/DEPTH/STENCIL is unbound in WebGL 1.
@@ -215,11 +215,11 @@ class Framebuffer final : public LabeledObject, public OnAttachmentDirtyReceiver
     GLint getDefaultWidth() const;
     GLint getDefaultHeight() const;
     GLint getDefaultSamples() const;
-    GLboolean getDefaultFixedSampleLocations() const;
+    bool getDefaultFixedSampleLocations() const;
     void setDefaultWidth(GLint defaultWidth);
     void setDefaultHeight(GLint defaultHeight);
     void setDefaultSamples(GLint defaultSamples);
-    void setDefaultFixedSampleLocations(GLboolean defaultFixedSampleLocations);
+    void setDefaultFixedSampleLocations(bool defaultFixedSampleLocations);
 
     void invalidateCompletenessCache();
 

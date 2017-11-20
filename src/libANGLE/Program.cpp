@@ -71,19 +71,19 @@ GLuint UniformStateQueryCast(GLint value)
 template <>
 GLfloat UniformStateQueryCast(GLboolean value)
 {
-    return (value == GL_TRUE ? 1.0f : 0.0f);
+    return (ConvertToBool(value) ? 1.0f : 0.0f);
 }
 
 template <>
 GLint UniformStateQueryCast(GLboolean value)
 {
-    return (value == GL_TRUE ? 1 : 0);
+    return (ConvertToBool(value) ? 1 : 0);
 }
 
 template <>
 GLuint UniformStateQueryCast(GLboolean value)
 {
-    return (value == GL_TRUE ? 1u : 0u);
+    return (ConvertToBool(value) ? 1u : 0u);
 }
 
 // Default to static_cast
@@ -1666,7 +1666,7 @@ void Program::validate(const Caps &caps)
 
     if (mLinked)
     {
-        mValidated = (mProgram->validate(caps, &mInfoLog) == GL_TRUE);
+        mValidated = ConvertToBool(mProgram->validate(caps, &mInfoLog));
     }
     else
     {

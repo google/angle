@@ -3187,7 +3187,7 @@ TextureStorage *Renderer11::createTextureStorage2DMultisample(GLenum internalfor
                                                               GLsizei height,
                                                               int levels,
                                                               int samples,
-                                                              GLboolean fixedSampleLocations)
+                                                              bool fixedSampleLocations)
 {
     return new TextureStorage11_2DMultisample(this, internalformat, width, height, levels, samples,
                                               fixedSampleLocations);
