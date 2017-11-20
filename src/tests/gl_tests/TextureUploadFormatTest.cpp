@@ -156,7 +156,7 @@ struct SizedFloat
             }
             else
             {  // standard range
-                mFloat = v * powf(2, -eActual) - 1.0;
+                mFloat = v * powf(2, -static_cast<float>(eActual)) - 1.0f;
             }
             mVal = static_cast<uint32_t>(mFloat * (1 << mBits) + 0.5);
         }
@@ -195,7 +195,7 @@ uint32_t EncodeRGB9_E5_Rev(const float signedR, const float signedG, const float
     const int eVal = std::max(0, std::min(minViableActualExp + eBias + mBits, eMax));
 
     const auto fnM = [&](const float v) {
-        const auto m = static_cast<uint32_t>(v * powf(2, mBits + eBias - eVal));
+        const auto m = static_cast<uint32_t>(v * powf(2, static_cast<float>(mBits + eBias - eVal)));
         return std::min(m, mMax);
     };
 
@@ -315,12 +315,13 @@ TEST_P(TextureUploadFormatTest, All)
     glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
     const bool hasSubrectUploads = !glGetError();
 
-    constexpr int srcIntVals[4] = {1, 2, 5, 3};
-    constexpr float srcVals[4]  = {
-        srcIntVals[0] / 8.0, srcIntVals[1] / 8.0, srcIntVals[2] / 8.0, srcIntVals[3] / 8.0,
-    };
-    constexpr uint8_t refVals[4] = {EncodeNormUint<8>(srcVals[0]), EncodeNormUint<8>(srcVals[1]),
-                                    EncodeNormUint<8>(srcVals[2]), EncodeNormUint<8>(srcVals[3])};
+    constexpr uint8_t srcIntVals[4] = {1u, 2u, 5u, 3u};
+    constexpr float srcVals[4] = {srcIntVals[0] / 8.0f, srcIntVals[1] / 8.0f, srcIntVals[2] / 8.0f,
+                                  srcIntVals[3] / 8.0f};
+    constexpr uint8_t refVals[4] = {static_cast<uint8_t>(EncodeNormUint<8>(srcVals[0])),
+                                    static_cast<uint8_t>(EncodeNormUint<8>(srcVals[1])),
+                                    static_cast<uint8_t>(EncodeNormUint<8>(srcVals[2])),
+                                    static_cast<uint8_t>(EncodeNormUint<8>(srcVals[3]))};
 
     // Test a format with the specified data
 
@@ -425,8 +426,10 @@ TEST_P(TextureUploadFormatTest, All)
 
     // RGBA+UNSIGNED_BYTE
     {
-        constexpr uint8_t src[] = {EncodeNormUint<8>(srcVals[0]), EncodeNormUint<8>(srcVals[1]),
-                                   EncodeNormUint<8>(srcVals[2]), EncodeNormUint<8>(srcVals[3])};
+        constexpr uint8_t src[] = {static_cast<uint8_t>(EncodeNormUint<8>(srcVals[0])),
+                                   static_cast<uint8_t>(EncodeNormUint<8>(srcVals[1])),
+                                   static_cast<uint8_t>(EncodeNormUint<8>(srcVals[2])),
+                                   static_cast<uint8_t>(EncodeNormUint<8>(srcVals[3]))};
         ZeroAndCopy(srcBuffer, src);
 
         fnTest({GL_RGBA8, GL_RGBA, GL_UNSIGNED_BYTE}, {1, 1, 1, 1});
@@ -449,8 +452,10 @@ TEST_P(TextureUploadFormatTest, All)
 
     // RGBA+BYTE
     {
-        constexpr uint8_t src[] = {EncodeNormUint<7>(srcVals[0]), EncodeNormUint<7>(srcVals[1]),
-                                   EncodeNormUint<7>(srcVals[2]), EncodeNormUint<7>(srcVals[3])};
+        constexpr uint8_t src[] = {static_cast<uint8_t>(EncodeNormUint<7>(srcVals[0])),
+                                   static_cast<uint8_t>(EncodeNormUint<7>(srcVals[1])),
+                                   static_cast<uint8_t>(EncodeNormUint<7>(srcVals[2])),
+                                   static_cast<uint8_t>(EncodeNormUint<7>(srcVals[3]))};
         ZeroAndCopy(srcBuffer, src);
 
         fnTest({GL_RGBA8_SNORM, GL_RGBA, GL_BYTE}, {2, 2, 2, 2});
@@ -461,9 +466,9 @@ TEST_P(TextureUploadFormatTest, All)
 
     // RGB+UNSIGNED_SHORT_5_6_5
     {
-        constexpr uint16_t src[] = {(EncodeNormUint<5>(srcVals[0]) << 11) |
-                                    (EncodeNormUint<6>(srcVals[1]) << 5) |
-                                    (EncodeNormUint<5>(srcVals[2]) << 0)};
+        constexpr uint16_t src[] = {static_cast<uint16_t>((EncodeNormUint<5>(srcVals[0]) << 11) |
+                                                          (EncodeNormUint<6>(srcVals[1]) << 5) |
+                                                          (EncodeNormUint<5>(srcVals[2]) << 0))};
         ZeroAndCopy(srcBuffer, src);
 
         fnTest({GL_RGB565, GL_RGB, GL_UNSIGNED_SHORT_5_6_5}, {8, 4, 8, 0});
@@ -472,9 +477,9 @@ TEST_P(TextureUploadFormatTest, All)
 
     // RGBA+UNSIGNED_SHORT_4_4_4_4
     {
-        constexpr uint16_t src[] = {
+        constexpr uint16_t src[] = {static_cast<uint16_t>(
             (EncodeNormUint<4>(srcVals[0]) << 12) | (EncodeNormUint<4>(srcVals[1]) << 8) |
-            (EncodeNormUint<4>(srcVals[2]) << 4) | (EncodeNormUint<4>(srcVals[3]) << 0)};
+            (EncodeNormUint<4>(srcVals[2]) << 4) | (EncodeNormUint<4>(srcVals[3]) << 0))};
         ZeroAndCopy(srcBuffer, src);
 
         // fnTest({GL_RGBA4, GL_RGBA, GL_UNSIGNED_SHORT_4_4_4_4}, {16,16,16,16});
@@ -483,9 +488,9 @@ TEST_P(TextureUploadFormatTest, All)
 
     // RGBA+UNSIGNED_SHORT_5_5_5_1
     {
-        constexpr uint16_t src[] = {
+        constexpr uint16_t src[] = {static_cast<uint16_t>(
             (EncodeNormUint<5>(srcVals[0]) << 11) | (EncodeNormUint<5>(srcVals[1]) << 6) |
-            (EncodeNormUint<5>(srcVals[2]) << 1) | (EncodeNormUint<1>(srcVals[3]) << 0)};
+            (EncodeNormUint<5>(srcVals[2]) << 1) | (EncodeNormUint<1>(srcVals[3]) << 0))};
         ZeroAndCopy(srcBuffer, src);
 
         fnTest({GL_RGBA4, GL_RGBA, GL_UNSIGNED_SHORT_5_5_5_1}, {8, 8, 8, 255});
@@ -505,7 +510,7 @@ TEST_P(TextureUploadFormatTest, All)
 
     // DEPTH_COMPONENT+UNSIGNED_SHORT
     {
-        const uint16_t src[] = {EncodeNormUint<16>(srcVals[0])};
+        const uint16_t src[] = {static_cast<uint16_t>(EncodeNormUint<16>(srcVals[0]))};
         ZeroAndCopy(srcBuffer, src);
 
         fnTest({GL_DEPTH_COMPONENT16, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT}, {1, 0, 0, 0});
@@ -594,8 +599,10 @@ TEST_P(TextureUploadFormatTest, All)
 
     // RGBA+HALF_FLOAT
     {
-        const uint16_t src[] = {Float16::Encode(srcVals[0]), Float16::Encode(srcVals[1]),
-                                Float16::Encode(srcVals[2]), Float16::Encode(srcVals[3])};
+        const uint16_t src[] = {static_cast<uint16_t>(Float16::Encode(srcVals[0])),
+                                static_cast<uint16_t>(Float16::Encode(srcVals[1])),
+                                static_cast<uint16_t>(Float16::Encode(srcVals[2])),
+                                static_cast<uint16_t>(Float16::Encode(srcVals[3]))};
         ZeroAndCopy(srcBuffer, src);
 
         fnTest({GL_RGBA16F, GL_RGBA, GL_HALF_FLOAT}, {1, 1, 1, 1});

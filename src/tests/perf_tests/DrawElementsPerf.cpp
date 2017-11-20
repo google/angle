@@ -109,7 +109,8 @@ void DrawElementsPerfBenchmark::initializeBenchmark()
 
     for (int i = 0; i < mCount; i++)
     {
-        mShortIndexData.push_back(rand() % mCount);
+        ASSERT_GE(std::numeric_limits<GLushort>::max(), mCount);
+        mShortIndexData.push_back(static_cast<GLushort>(rand() % mCount));
         mIntIndexData.push_back(rand() % mCount);
     }
 
