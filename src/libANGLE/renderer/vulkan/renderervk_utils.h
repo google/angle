@@ -304,18 +304,17 @@ class CommandPool final : public WrappedObject<CommandPool, VkCommandPool>
 };
 
 // Helper class that wraps a Vulkan command buffer.
-class CommandBuffer final : public WrappedObject<CommandBuffer, VkCommandBuffer>
+class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
 {
   public:
     CommandBuffer();
 
-    bool started() const { return mStarted; }
-
-    void destroy(VkDevice device);
+    void destroy(VkDevice device, const vk::CommandPool &commandPool);
+    Error init(VkDevice device, const VkCommandBufferAllocateInfo &createInfo);
     using WrappedObject::operator=;
 
-    void setCommandPool(CommandPool *commandPool);
-    Error begin(VkDevice device);
+    Error begin(const VkCommandBufferBeginInfo &info);
+
     Error end();
     Error reset();
 
@@ -376,10 +375,6 @@ class CommandBuffer final : public WrappedObject<CommandBuffer, VkCommandBuffer>
                             const VkDescriptorSet *descriptorSets,
                             uint32_t dynamicOffsetCount,
                             const uint32_t *dynamicOffsets);
-
-  private:
-    bool mStarted;
-    CommandPool *mCommandPool;
 };
 
 class Image final : public WrappedObject<Image, VkImage>
@@ -627,19 +622,15 @@ class ObjectAndSerial final : angle::NonCopyable
         return *this;
     }
 
-    void destroy(VkDevice device) { mObject.destroy(device); }
-
     Serial queueSerial() const { return mQueueSerial; }
 
     const ObjT &get() const { return mObject; }
+    ObjT &get() { return mObject; }
 
   private:
     ObjT mObject;
     Serial mQueueSerial;
 };
-
-using CommandBufferAndSerial = ObjectAndSerial<CommandBuffer>;
-using FenceAndSerial         = ObjectAndSerial<Fence>;
 
 Optional<uint32_t> FindMemoryType(const VkPhysicalDeviceMemoryProperties &memoryProps,
                                   const VkMemoryRequirements &requirements,
@@ -656,6 +647,25 @@ struct BufferAndMemory final : private angle::NonCopyable
     vk::Buffer buffer;
     vk::DeviceMemory memory;
 };
+
+class CommandBufferAndState : public vk::CommandBuffer
+{
+  public:
+    CommandBufferAndState();
+
+    Error ensureStarted(VkDevice device,
+                        const vk::CommandPool &commandPool,
+                        VkCommandBufferLevel level);
+    Error ensureFinished();
+
+    bool started() const { return mStarted; }
+
+  private:
+    bool mStarted;
+};
+
+using CommandBufferAndSerial = ObjectAndSerial<CommandBufferAndState>;
+using FenceAndSerial         = ObjectAndSerial<Fence>;
 
 }  // namespace vk
 

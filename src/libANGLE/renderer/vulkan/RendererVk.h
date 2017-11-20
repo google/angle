@@ -52,10 +52,10 @@ class RendererVk : angle::NonCopyable
     vk::ErrorOrResult<uint32_t> selectPresentQueueForSurface(VkSurfaceKHR surface);
 
     // TODO(jmadill): Use ContextImpl for command buffers to enable threaded contexts.
-    vk::Error getStartedCommandBuffer(vk::CommandBuffer **commandBufferOut);
-    vk::Error submitCommandBuffer(vk::CommandBuffer *commandBuffer);
-    vk::Error submitAndFinishCommandBuffer(vk::CommandBuffer *commandBuffer);
-    vk::Error submitCommandsWithSync(vk::CommandBuffer *commandBuffer,
+    vk::Error getStartedCommandBuffer(vk::CommandBufferAndState **commandBufferOut);
+    vk::Error submitCommandBuffer(vk::CommandBufferAndState *commandBuffer);
+    vk::Error submitAndFinishCommandBuffer(vk::CommandBufferAndState *commandBuffer);
+    vk::Error submitCommandsWithSync(vk::CommandBufferAndState *commandBuffer,
                                      const vk::Semaphore &waitSemaphore,
                                      const vk::Semaphore &signalSemaphore);
     vk::Error finish();
@@ -144,7 +144,7 @@ class RendererVk : angle::NonCopyable
     uint32_t mCurrentQueueFamilyIndex;
     VkDevice mDevice;
     vk::CommandPool mCommandPool;
-    vk::CommandBuffer mCommandBuffer;
+    vk::CommandBufferAndState mCommandBuffer;
     GlslangWrapper *mGlslangWrapper;
     SerialFactory mQueueSerialFactory;
     Serial mLastCompletedQueueSerial;

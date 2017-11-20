@@ -356,7 +356,7 @@ vk::Error WindowSurfaceVk::initializeImpl(RendererVk *renderer)
     ANGLE_VK_TRY(vkGetSwapchainImagesKHR(device, mSwapchain, &imageCount, swapchainImages.data()));
 
     // CommandBuffer is a singleton in the Renderer.
-    vk::CommandBuffer *commandBuffer = nullptr;
+    vk::CommandBufferAndState *commandBuffer = nullptr;
     ANGLE_TRY(renderer->getStartedCommandBuffer(&commandBuffer));
 
     VkClearColorValue transparentBlack;
@@ -423,7 +423,7 @@ egl::Error WindowSurfaceVk::swap(const gl::Context *context)
     const DisplayVk *displayVk = vk::GetImpl(context->getCurrentDisplay());
     RendererVk *renderer       = displayVk->getRenderer();
 
-    vk::CommandBuffer *currentCB = nullptr;
+    vk::CommandBufferAndState *currentCB = nullptr;
     ANGLE_TRY(renderer->getStartedCommandBuffer(&currentCB));
 
     // End render pass

@@ -170,7 +170,7 @@ gl::Error FramebufferVk::clear(const gl::Context *context, GLbitfield mask)
     const auto &size = attachment->getSize();
     const gl::Rectangle renderArea(0, 0, size.width, size.height);
 
-    vk::CommandBuffer *commandBuffer = nullptr;
+    vk::CommandBufferAndState *commandBuffer = nullptr;
     ANGLE_TRY(contextVk->getStartedCommandBuffer(&commandBuffer));
 
     for (const auto &colorAttachment : mState.getColorAttachments())
@@ -276,7 +276,7 @@ gl::Error FramebufferVk::readPixels(const gl::Context *context,
                                            renderTarget->extents, vk::StagingUsage::Read,
                                            &stagingImage));
 
-    vk::CommandBuffer *commandBuffer = nullptr;
+    vk::CommandBufferAndState *commandBuffer = nullptr;
     ANGLE_TRY(contextVk->getStartedCommandBuffer(&commandBuffer));
 
     // End render pass if we're in one.

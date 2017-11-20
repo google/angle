@@ -323,7 +323,7 @@ gl::Error ContextVk::setupDraw(const gl::Context *context, GLenum mode)
     angle::MemoryBuffer *zeroBuf               = nullptr;
     ANGLE_TRY(context->getZeroFilledBuffer(maxAttrib * sizeof(VkDeviceSize), &zeroBuf));
 
-    vk::CommandBuffer *commandBuffer = nullptr;
+    vk::CommandBufferAndState *commandBuffer = nullptr;
     ANGLE_TRY(mRenderer->getStartedCommandBuffer(&commandBuffer));
     ANGLE_TRY(mRenderer->ensureInRenderPass(context, vkFBO));
 
@@ -360,7 +360,7 @@ gl::Error ContextVk::drawArrays(const gl::Context *context, GLenum mode, GLint f
 {
     ANGLE_TRY(setupDraw(context, mode));
 
-    vk::CommandBuffer *commandBuffer = nullptr;
+    vk::CommandBufferAndState *commandBuffer = nullptr;
     ANGLE_TRY(mRenderer->getStartedCommandBuffer(&commandBuffer));
 
     commandBuffer->draw(count, 1, first, 0);
@@ -399,7 +399,7 @@ gl::Error ContextVk::drawElements(const gl::Context *context,
         return gl::InternalError() << "Unsigned byte translation is not yet implemented.";
     }
 
-    vk::CommandBuffer *commandBuffer = nullptr;
+    vk::CommandBufferAndState *commandBuffer = nullptr;
     ANGLE_TRY(mRenderer->getStartedCommandBuffer(&commandBuffer));
 
     const gl::Buffer *elementArrayBuffer =
@@ -441,12 +441,12 @@ VkDevice ContextVk::getDevice() const
     return mRenderer->getDevice();
 }
 
-vk::Error ContextVk::getStartedCommandBuffer(vk::CommandBuffer **commandBufferOut)
+vk::Error ContextVk::getStartedCommandBuffer(vk::CommandBufferAndState **commandBufferOut)
 {
     return mRenderer->getStartedCommandBuffer(commandBufferOut);
 }
 
-vk::Error ContextVk::submitCommands(vk::CommandBuffer *commandBuffer)
+vk::Error ContextVk::submitCommands(vk::CommandBufferAndState *commandBuffer)
 {
     setQueueSerial(mRenderer->getCurrentQueueSerial());
     ANGLE_TRY(mRenderer->submitCommandBuffer(commandBuffer));

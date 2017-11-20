@@ -227,7 +227,7 @@ gl::Error TextureVk::setImage(const gl::Context *context,
 
         stagingImage.getDeviceMemory().unmap(device);
 
-        vk::CommandBuffer *commandBuffer = nullptr;
+        vk::CommandBufferAndState *commandBuffer = nullptr;
         ANGLE_TRY(contextVk->getStartedCommandBuffer(&commandBuffer));
         setQueueSerial(renderer->getCurrentQueueSerial());
 

@@ -272,57 +272,19 @@ Error CommandPool::init(VkDevice device, const VkCommandPoolCreateInfo &createIn
 }
 
 // CommandBuffer implementation.
-CommandBuffer::CommandBuffer() : mStarted(false), mCommandPool(nullptr)
+CommandBuffer::CommandBuffer()
 {
 }
 
-void CommandBuffer::setCommandPool(CommandPool *commandPool)
+Error CommandBuffer::begin(const VkCommandBufferBeginInfo &info)
 {
-    ASSERT(!mCommandPool && commandPool->valid());
-    mCommandPool = commandPool;
-}
-
-Error CommandBuffer::begin(VkDevice device)
-{
-    if (mStarted)
-    {
-        return NoError();
-    }
-
-    if (mHandle == VK_NULL_HANDLE)
-    {
-        VkCommandBufferAllocateInfo commandBufferInfo;
-        commandBufferInfo.sType              = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-        commandBufferInfo.pNext              = nullptr;
-        commandBufferInfo.commandPool        = mCommandPool->getHandle();
-        commandBufferInfo.level              = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-        commandBufferInfo.commandBufferCount = 1;
-
-        ANGLE_VK_TRY(vkAllocateCommandBuffers(device, &commandBufferInfo, &mHandle));
-    }
-    else
-    {
-        reset();
-    }
-
-    mStarted = true;
-
-    VkCommandBufferBeginInfo beginInfo;
-    beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-    beginInfo.pNext = nullptr;
-    // TODO(jmadill): Use other flags?
-    beginInfo.flags            = 0;
-    beginInfo.pInheritanceInfo = nullptr;
-
-    ANGLE_VK_TRY(vkBeginCommandBuffer(mHandle, &beginInfo));
-
+    ASSERT(valid());
+    ANGLE_VK_TRY(vkBeginCommandBuffer(mHandle, &info));
     return NoError();
 }
 
 Error CommandBuffer::end()
 {
-    mStarted = false;
-
     ASSERT(valid());
     ANGLE_VK_TRY(vkEndCommandBuffer(mHandle));
     return NoError();
@@ -330,8 +292,6 @@ Error CommandBuffer::end()
 
 Error CommandBuffer::reset()
 {
-    mStarted = false;
-
     ASSERT(valid());
     ANGLE_VK_TRY(vkResetCommandBuffer(mHandle, 0));
     return NoError();
@@ -357,14 +317,21 @@ void CommandBuffer::singleBufferBarrier(VkPipelineStageFlags srcStageMask,
                          &bufferBarrier, 0, nullptr);
 }
 
-void CommandBuffer::destroy(VkDevice device)
+void CommandBuffer::destroy(VkDevice device, const vk::CommandPool &commandPool)
 {
     if (valid())
     {
-        ASSERT(mCommandPool && mCommandPool->valid());
-        vkFreeCommandBuffers(device, mCommandPool->getHandle(), 1, &mHandle);
+        ASSERT(commandPool.valid());
+        vkFreeCommandBuffers(device, commandPool.getHandle(), 1, &mHandle);
         mHandle = VK_NULL_HANDLE;
     }
+}
+
+Error CommandBuffer::init(VkDevice device, const VkCommandBufferAllocateInfo &createInfo)
+{
+    ASSERT(!valid());
+    ANGLE_VK_TRY(vkAllocateCommandBuffers(device, &createInfo, &mHandle));
+    return NoError();
 }
 
 void CommandBuffer::copyBuffer(const vk::Buffer &srcBuffer,
@@ -1232,6 +1199,58 @@ void GarbageObject::destroy(VkDevice device)
             UNREACHABLE();
             break;
     }
+}
+
+// CommandBufferAndState implementation.
+CommandBufferAndState::CommandBufferAndState() : mStarted(false)
+{
+}
+
+Error CommandBufferAndState::ensureStarted(VkDevice device,
+                                           const vk::CommandPool &commandPool,
+                                           VkCommandBufferLevel level)
+{
+    ASSERT(commandPool.valid());
+
+    if (valid() && mStarted)
+    {
+        return NoError();
+    }
+
+    if (!valid())
+    {
+        VkCommandBufferAllocateInfo createInfo;
+        createInfo.sType              = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+        createInfo.pNext              = nullptr;
+        createInfo.commandPool        = commandPool.getHandle();
+        createInfo.level              = level;
+        createInfo.commandBufferCount = 1;
+
+        ANGLE_TRY(init(device, createInfo));
+    }
+    else
+    {
+        reset();
+    }
+
+    VkCommandBufferBeginInfo beginInfo;
+    beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+    beginInfo.pNext = nullptr;
+    // TODO(jmadill): Use other flags?
+    beginInfo.flags            = 0;
+    beginInfo.pInheritanceInfo = nullptr;
+
+    ANGLE_TRY(begin(beginInfo));
+    mStarted = true;
+
+    return NoError();
+}
+
+Error CommandBufferAndState::ensureFinished()
+{
+    ANGLE_TRY(end());
+    mStarted = false;
+    return NoError();
 }
 
 }  // namespace vk

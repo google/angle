@@ -120,7 +120,7 @@ RendererVk::~RendererVk()
 
     if (mCommandBuffer.valid())
     {
-        mCommandBuffer.destroy(mDevice);
+        mCommandBuffer.destroy(mDevice, mCommandPool);
     }
 
     if (mCommandPool.valid())
@@ -429,8 +429,6 @@ vk::Error RendererVk::initializeDevice(uint32_t queueFamilyIndex)
 
     ANGLE_TRY(mCommandPool.init(mDevice, commandPoolInfo));
 
-    mCommandBuffer.setCommandPool(&mCommandPool);
-
     return vk::NoError();
 }
 
@@ -569,16 +567,16 @@ const gl::Limitations &RendererVk::getNativeLimitations() const
     return mNativeLimitations;
 }
 
-vk::Error RendererVk::getStartedCommandBuffer(vk::CommandBuffer **commandBufferOut)
+vk::Error RendererVk::getStartedCommandBuffer(vk::CommandBufferAndState **commandBufferOut)
 {
-    ANGLE_TRY(mCommandBuffer.begin(mDevice));
+    ANGLE_TRY(mCommandBuffer.ensureStarted(mDevice, mCommandPool, VK_COMMAND_BUFFER_LEVEL_PRIMARY));
     *commandBufferOut = &mCommandBuffer;
     return vk::NoError();
 }
 
-vk::Error RendererVk::submitCommandBuffer(vk::CommandBuffer *commandBuffer)
+vk::Error RendererVk::submitCommandBuffer(vk::CommandBufferAndState *commandBuffer)
 {
-    ANGLE_TRY(commandBuffer->end());
+    ANGLE_TRY(commandBuffer->ensureFinished());
 
     VkFenceCreateInfo fenceInfo;
     fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
@@ -602,7 +600,7 @@ vk::Error RendererVk::submitCommandBuffer(vk::CommandBuffer *commandBuffer)
     return vk::NoError();
 }
 
-vk::Error RendererVk::submitAndFinishCommandBuffer(vk::CommandBuffer *commandBuffer)
+vk::Error RendererVk::submitAndFinishCommandBuffer(vk::CommandBufferAndState *commandBuffer)
 {
     ANGLE_TRY(submitCommandBuffer(commandBuffer));
     ANGLE_TRY(finish());
@@ -610,7 +608,7 @@ vk::Error RendererVk::submitAndFinishCommandBuffer(vk::CommandBuffer *commandBuf
     return vk::NoError();
 }
 
-vk::Error RendererVk::submitCommandsWithSync(vk::CommandBuffer *commandBuffer,
+vk::Error RendererVk::submitCommandsWithSync(vk::CommandBufferAndState *commandBuffer,
                                              const vk::Semaphore &waitSemaphore,
                                              const vk::Semaphore &signalSemaphore)
 {
@@ -647,13 +645,13 @@ void RendererVk::freeAllInFlightResources()
 {
     for (auto &fence : mInFlightFences)
     {
-        fence.destroy(mDevice);
+        fence.get().destroy(mDevice);
     }
     mInFlightFences.clear();
 
     for (auto &command : mInFlightCommands)
     {
-        command.destroy(mDevice);
+        command.get().destroy(mDevice, mCommandPool);
     }
     mInFlightCommands.clear();
 
@@ -681,7 +679,7 @@ vk::Error RendererVk::checkInFlightCommands()
 
         // Release the fence handle.
         // TODO(jmadill): Re-use fences.
-        inFlightFence->destroy(mDevice);
+        inFlightFence->get().destroy(mDevice);
     }
 
     if (finishedIndex == 0)
@@ -698,7 +696,7 @@ vk::Error RendererVk::checkInFlightCommands()
             break;
 
         completedCBIndex = cbIndex + 1;
-        inFlightCB->destroy(mDevice);
+        inFlightCB->get().destroy(mDevice, mCommandPool);
     }
 
     if (completedCBIndex == 0)

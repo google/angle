@@ -194,7 +194,7 @@ vk::Error BufferVk::setDataImpl(ContextVk *contextVk,
         // TODO(jmadill): Command re-ordering for render passes.
         renderer->endRenderPass();
 
-        vk::CommandBuffer *commandBuffer = nullptr;
+        vk::CommandBufferAndState *commandBuffer = nullptr;
         ANGLE_TRY(renderer->getStartedCommandBuffer(&commandBuffer));
 
         // Insert a barrier to ensure reads from the buffer are complete.
