@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3ed8b30f_90a13434",
+        "filename": "src/tests/BUILD.gn",
+        "patchSetId": 2
+      },
+      "lineNbr": 264,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-20T12:26:55Z",
+      "side": 1,
+      "message": "nit: I think you can sort these alphabetically (extra/internal/libANGLE). same for the above.",
+      "range": {
+        "startLine": 264,
+        "startChar": 21,
+        "endLine": 264,
+        "endChar": 35
+      },
+      "revId": "49f0cabd10f1a7db9582e920fd797cfcc24db4c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
