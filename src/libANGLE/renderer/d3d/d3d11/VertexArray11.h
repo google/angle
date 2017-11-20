@@ -30,10 +30,9 @@ class VertexArray11 : public VertexArrayImpl, public OnBufferDataDirtyReceiver
     bool hasActiveDynamicAttrib(const gl::Context *context);
     gl::Error updateDirtyAndDynamicAttribs(const gl::Context *context,
                                            VertexDataManager *vertexDataManager,
-                                           GLint start,
-                                           GLsizei count,
-                                           GLsizei instances);
-    void clearDirtyAndPromoteDynamicAttribs(const gl::Context *context, GLsizei count);
+                                           const DrawCallVertexParams &vertexParams);
+    void clearDirtyAndPromoteDynamicAttribs(const gl::Context *context,
+                                            const DrawCallVertexParams &vertexParams);
 
     const std::vector<TranslatedAttribute> &getTranslatedAttribs() const;
 

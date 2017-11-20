@@ -140,6 +140,30 @@ class ShaderConstants11 : angle::NonCopyable
     bool mSamplerMetadataCSDirty;
 };
 
+class DrawCallVertexParams final : angle::NonCopyable
+{
+  public:
+    // Use when in a drawArrays call.
+    DrawCallVertexParams(GLint firstVertex, GLsizei vertexCount, GLsizei instances);
+
+    // Use when in a drawElements call.
+    DrawCallVertexParams(const gl::HasIndexRange &hasIndexRange,
+                         GLint baseVertex,
+                         GLsizei instances);
+
+    GLint firstVertex() const;
+    GLsizei vertexCount() const;
+    GLsizei instances() const;
+
+  private:
+    void ensureResolved() const;
+
+    mutable const gl::HasIndexRange *mHasIndexRange;
+    mutable GLint mFirstVertex;
+    mutable GLsizei mVertexCount;
+    GLsizei mInstances;
+};
+
 class StateManager11 final : angle::NonCopyable
 {
   public:
@@ -236,9 +260,7 @@ class StateManager11 final : angle::NonCopyable
     // Not handled by an internal dirty bit because of the extra draw parameters.
     gl::Error applyVertexBuffer(const gl::Context *context,
                                 GLenum mode,
-                                GLint first,
-                                GLsizei count,
-                                GLsizei instances,
+                                const DrawCallVertexParams &vertexParams,
                                 TranslatedIndexData *indexInfo);
 
     gl::Error applyIndexBuffer(const gl::Context *context,

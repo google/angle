@@ -2473,9 +2473,7 @@ gl::Error StateManager11::syncProgram(const gl::Context *context, GLenum drawMod
 
 gl::Error StateManager11::applyVertexBuffer(const gl::Context *context,
                                             GLenum mode,
-                                            GLint first,
-                                            GLsizei count,
-                                            GLsizei instances,
+                                            const DrawCallVertexParams &vertexParams,
                                             TranslatedIndexData *indexInfo)
 {
     const auto &state       = context->getGLState();
@@ -2484,29 +2482,23 @@ gl::Error StateManager11::applyVertexBuffer(const gl::Context *context,
 
     if (mVertexAttribsNeedTranslation)
     {
-        ANGLE_TRY(vertexArray11->updateDirtyAndDynamicAttribs(context, &mVertexDataManager, first,
-                                                              count, instances));
+        ANGLE_TRY(vertexArray11->updateDirtyAndDynamicAttribs(context, &mVertexDataManager,
+                                                              vertexParams));
         mInputLayoutIsDirty = true;
 
         // Determine if we need to update attribs on the next draw.
         mVertexAttribsNeedTranslation = (vertexArray11->hasActiveDynamicAttrib(context));
     }
 
-    if (!mLastFirstVertex.valid() || mLastFirstVertex.value() != first)
+    if (!mLastFirstVertex.valid() || mLastFirstVertex.value() != vertexParams.firstVertex())
     {
-        mLastFirstVertex    = first;
+        mLastFirstVertex    = vertexParams.firstVertex();
         mInputLayoutIsDirty = true;
     }
 
     if (!mInputLayoutIsDirty)
     {
         return gl::NoError();
-    }
-
-    GLsizei numIndicesPerInstance = 0;
-    if (instances > 0)
-    {
-        numIndicesPerInstance = count;
     }
 
     const auto &vertexArrayAttribs = vertexArray11->getTranslatedAttribs();
@@ -2536,11 +2528,11 @@ gl::Error StateManager11::applyVertexBuffer(const gl::Context *context,
 
     // Update the applied input layout by querying the cache.
     ANGLE_TRY(mInputLayoutCache.updateInputLayout(mRenderer, state, mCurrentAttributes, mode,
-                                                  sortedSemanticIndices, numIndicesPerInstance));
+                                                  sortedSemanticIndices, vertexParams));
 
     // Update the applied vertex buffers.
-    ANGLE_TRY(
-        mInputLayoutCache.applyVertexBuffers(context, mCurrentAttributes, mode, first, indexInfo));
+    ANGLE_TRY(mInputLayoutCache.applyVertexBuffers(context, mCurrentAttributes, mode,
+                                                   vertexParams.firstVertex(), indexInfo));
 
     // InputLayoutCache::applyVertexBuffers calls through to the Bufer11 to get the native vertex
     // buffer (ID3D11Buffer *). Because we allocate these buffers lazily, this will trigger
@@ -2549,7 +2541,7 @@ gl::Error StateManager11::applyVertexBuffer(const gl::Context *context,
     // update on the second draw call.
     // Hence we clear the flags here, after we've applied vertex data, since we know everything
     // is clean. This is a bit of a hack.
-    vertexArray11->clearDirtyAndPromoteDynamicAttribs(context, count);
+    vertexArray11->clearDirtyAndPromoteDynamicAttribs(context, vertexParams);
 
     mInputLayoutIsDirty = false;
     return gl::NoError();
@@ -2979,6 +2971,57 @@ gl::Error StateManager11::syncTransformFeedbackBuffers(const gl::Context *contex
     tf11->onApply();
 
     return gl::NoError();
+}
+
+// DrawCallVertexParams implementation.
+DrawCallVertexParams::DrawCallVertexParams(GLint firstVertex,
+                                           GLsizei vertexCount,
+                                           GLsizei instances)
+    : mHasIndexRange(nullptr),
+      mFirstVertex(firstVertex),
+      mVertexCount(vertexCount),
+      mInstances(instances)
+{
+}
+
+// Use when in a drawElements call.
+DrawCallVertexParams::DrawCallVertexParams(const gl::HasIndexRange &hasIndexRange,
+                                           GLint baseVertex,
+                                           GLsizei instances)
+    : mHasIndexRange(&hasIndexRange),
+      mFirstVertex(baseVertex),
+      mVertexCount(0),
+      mInstances(instances)
+{
+}
+
+GLint DrawCallVertexParams::firstVertex() const
+{
+    ensureResolved();
+    return mFirstVertex;
+}
+
+GLsizei DrawCallVertexParams::vertexCount() const
+{
+    ensureResolved();
+    return mVertexCount;
+}
+
+GLsizei DrawCallVertexParams::instances() const
+{
+    return mInstances;
+}
+
+void DrawCallVertexParams::ensureResolved() const
+{
+    if (mHasIndexRange)
+    {
+        // Resolve the index range now if we need to.
+        const gl::IndexRange &indexRange = mHasIndexRange->getIndexRange().value();
+        mFirstVertex += static_cast<GLint>(indexRange.start);
+        mVertexCount   = static_cast<GLsizei>(indexRange.vertexCount());
+        mHasIndexRange = nullptr;
+    }
 }
 
 }  // namespace rx

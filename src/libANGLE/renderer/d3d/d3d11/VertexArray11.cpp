@@ -172,9 +172,7 @@ bool VertexArray11::hasActiveDynamicAttrib(const gl::Context *context)
 
 gl::Error VertexArray11::updateDirtyAndDynamicAttribs(const gl::Context *context,
                                                       VertexDataManager *vertexDataManager,
-                                                      GLint start,
-                                                      GLsizei count,
-                                                      GLsizei instances)
+                                                      const DrawCallVertexParams &vertexParams)
 {
     flushAttribUpdates(context);
 
@@ -247,7 +245,8 @@ gl::Error VertexArray11::updateDirtyAndDynamicAttribs(const gl::Context *context
         }
 
         ANGLE_TRY(vertexDataManager->storeDynamicAttribs(
-            context, &mTranslatedAttribs, activeDynamicAttribs, start, count, instances));
+            context, &mTranslatedAttribs, activeDynamicAttribs, vertexParams.firstVertex(),
+            vertexParams.vertexCount(), vertexParams.instances()));
     }
 
     return gl::NoError();
@@ -270,7 +269,8 @@ void VertexArray11::signal(size_t channelID, const gl::Context *context)
     renderer->getStateManager()->invalidateShaders();
 }
 
-void VertexArray11::clearDirtyAndPromoteDynamicAttribs(const gl::Context *context, GLsizei count)
+void VertexArray11::clearDirtyAndPromoteDynamicAttribs(const gl::Context *context,
+                                                       const DrawCallVertexParams &vertexParams)
 {
     const gl::State &state      = context->getGLState();
     const gl::Program *program  = state.getProgram();
@@ -279,8 +279,11 @@ void VertexArray11::clearDirtyAndPromoteDynamicAttribs(const gl::Context *contex
 
     // Promote to static after we clear the dirty attributes, otherwise we can lose dirtyness.
     auto activeDynamicAttribs = (mDynamicAttribsMask & activeLocations);
-    VertexDataManager::PromoteDynamicAttribs(context, mTranslatedAttribs, activeDynamicAttribs,
-                                             count);
+    if (activeDynamicAttribs.any())
+    {
+        VertexDataManager::PromoteDynamicAttribs(context, mTranslatedAttribs, activeDynamicAttribs,
+                                                 vertexParams.vertexCount());
+    }
 }
 
 void VertexArray11::markAllAttributeDivisorsForAdjustment(int numViews)

@@ -1511,8 +1511,8 @@ gl::Error Renderer11::drawArrays(const gl::Context *context,
         return gl::NoError();
     }
 
-    ANGLE_TRY(
-        mStateManager.applyVertexBuffer(context, mode, startVertex, count, instances, nullptr));
+    DrawCallVertexParams vertexParams(startVertex, count, instances);
+    ANGLE_TRY(mStateManager.applyVertexBuffer(context, mode, vertexParams, nullptr));
 
     if (glState.isTransformFeedbackActiveUnpaused())
     {
@@ -1655,7 +1655,8 @@ gl::Error Renderer11::drawElements(const gl::Context *context,
         ANGLE_TRY(mStateManager.applyIndexBuffer(context, indices, count, type, lazyIndexRange,
                                                  &indexInfo));
 
-        ANGLE_TRY(mStateManager.applyVertexBuffer(context, mode, 0, 0, 0, &indexInfo));
+        DrawCallVertexParams vertexParams(0, 0, instances);
+        ANGLE_TRY(mStateManager.applyVertexBuffer(context, mode, vertexParams, &indexInfo));
         if (adjustedInstanceCount > 0)
         {
             mDeviceContext->DrawIndexedInstanced(count, adjustedInstanceCount, 0, 0, 0);
@@ -1670,13 +1671,11 @@ gl::Error Renderer11::drawElements(const gl::Context *context,
     ANGLE_TRY(
         mStateManager.applyIndexBuffer(context, indices, count, type, lazyIndexRange, &indexInfo));
 
-    const gl::IndexRange &indexRange = lazyIndexRange.getIndexRange().value();
-    size_t vertexCount               = indexRange.vertexCount();
-    ANGLE_TRY(mStateManager.applyVertexBuffer(context, mode, static_cast<GLsizei>(indexRange.start),
-                                              static_cast<GLsizei>(vertexCount), instances,
-                                              &indexInfo));
+    DrawCallVertexParams vertexParams(lazyIndexRange, 0, instances);
 
-    int startVertex = static_cast<int>(indexRange.start);
+    ANGLE_TRY(mStateManager.applyVertexBuffer(context, mode, vertexParams, &indexInfo));
+
+    int startVertex = static_cast<int>(vertexParams.firstVertex());
     int baseVertex  = -startVertex;
 
     if (mode == GL_LINE_LOOP)
@@ -1727,7 +1726,7 @@ gl::Error Renderer11::drawElements(const gl::Context *context,
     // efficent code path. Instanced rendering of emulated pointsprites requires a loop to draw each
     // batch of points. An offset into the instanced data buffer is calculated and applied on each
     // iteration to ensure all instances are rendered correctly.
-    GLsizei elementsToRender = static_cast<GLsizei>(indexRange.vertexCount());
+    GLsizei elementsToRender = vertexParams.vertexCount();
 
     // Each instance being rendered requires the inputlayout cache to reapply buffers and offsets.
     for (GLsizei i = 0; i < instances; i++)
@@ -1758,7 +1757,8 @@ gl::Error Renderer11::drawArraysIndirect(const gl::Context *context,
 
     if (!DrawCallNeedsTranslation(context, mode))
     {
-        ANGLE_TRY(mStateManager.applyVertexBuffer(context, mode, 0, 0, 0, nullptr));
+        DrawCallVertexParams vertexParams(0, 0, 0);
+        ANGLE_TRY(mStateManager.applyVertexBuffer(context, mode, vertexParams, nullptr));
         ID3D11Buffer *buffer = nullptr;
         ANGLE_TRY_RESULT(storage->getBuffer(context, BUFFER_USAGE_INDIRECT), buffer);
         mDeviceContext->DrawInstancedIndirect(buffer, static_cast<unsigned int>(offset));
@@ -1774,7 +1774,8 @@ gl::Error Renderer11::drawArraysIndirect(const gl::Context *context,
     GLuint instances = args->instanceCount;
     GLuint first     = args->first;
 
-    ANGLE_TRY(mStateManager.applyVertexBuffer(context, mode, first, count, instances, nullptr));
+    DrawCallVertexParams vertexParams(first, count, instances);
+    ANGLE_TRY(mStateManager.applyVertexBuffer(context, mode, vertexParams, nullptr));
 
     if (mode == GL_LINE_LOOP)
     {
@@ -1812,7 +1813,8 @@ gl::Error Renderer11::drawElementsIndirect(const gl::Context *context,
     {
         ANGLE_TRY(mStateManager.applyIndexBuffer(context, nullptr, 0, type, gl::HasIndexRange(),
                                                  &indexInfo));
-        ANGLE_TRY(mStateManager.applyVertexBuffer(context, mode, 0, 0, 0, &indexInfo));
+        DrawCallVertexParams vertexParams(0, 0, 0);
+        ANGLE_TRY(mStateManager.applyVertexBuffer(context, mode, vertexParams, &indexInfo));
         ID3D11Buffer *buffer = nullptr;
         ANGLE_TRY_RESULT(storage->getBuffer(context, BUFFER_USAGE_INDIRECT), buffer);
         mDeviceContext->DrawIndexedInstancedIndirect(buffer, static_cast<unsigned int>(offset));
@@ -1838,13 +1840,12 @@ gl::Error Renderer11::drawElementsIndirect(const gl::Context *context,
     ANGLE_TRY(
         mStateManager.applyIndexBuffer(context, indices, count, type, lazyIndexRange, &indexInfo));
 
-    const gl::IndexRange &indexRange = lazyIndexRange.getIndexRange().value();
-    size_t vertexCount = indexRange.vertexCount();
-    ANGLE_TRY(mStateManager.applyVertexBuffer(
-        context, mode, static_cast<GLsizei>(indexRange.start) + baseVertex,
-        static_cast<GLsizei>(vertexCount), instances, &indexInfo));
+    DrawCallVertexParams vertexParams(lazyIndexRange, baseVertex, instances);
 
-    int baseVertexLocation = -static_cast<int>(indexRange.start);
+    ANGLE_TRY(mStateManager.applyVertexBuffer(context, mode, vertexParams, &indexInfo));
+
+    int baseVertexLocation = -static_cast<int>(lazyIndexRange.getIndexRange().value().start);
+
     if (mode == GL_LINE_LOOP)
     {
         return drawLineLoop(context, count, type, indices, baseVertexLocation, instances);

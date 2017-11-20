@@ -27,6 +27,7 @@
 
 namespace rx
 {
+class DrawCallVertexParams;
 struct PackedAttributeLayout;
 }  // namespace rx
 
@@ -105,7 +106,7 @@ class InputLayoutCache : angle::NonCopyable
                                 const std::vector<const TranslatedAttribute *> &currentAttributes,
                                 GLenum mode,
                                 const AttribIndexArray &sortedSemanticIndices,
-                                GLsizei numIndicesPerInstance);
+                                const DrawCallVertexParams &vertexParams);
 
   private:
     gl::Error createInputLayout(Renderer11 *renderer,
@@ -113,7 +114,7 @@ class InputLayoutCache : angle::NonCopyable
                                 const std::vector<const TranslatedAttribute *> &currentAttributes,
                                 GLenum mode,
                                 gl::Program *program,
-                                GLsizei numIndicesPerInstance,
+                                const DrawCallVertexParams &vertexParams,
                                 d3d11::InputLayout *inputLayoutOut);
 
     // Starting cache size.
