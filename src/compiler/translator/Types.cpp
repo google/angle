@@ -125,8 +125,7 @@ TType::TType()
       secondarySize(0),
       mInterfaceBlock(nullptr),
       mStructure(nullptr),
-      mIsStructSpecifier(false),
-      mMangledName(nullptr)
+      mIsStructSpecifier(false)
 {
 }
 
@@ -141,8 +140,7 @@ TType::TType(TBasicType t, unsigned char ps, unsigned char ss)
       secondarySize(ss),
       mInterfaceBlock(0),
       mStructure(0),
-      mIsStructSpecifier(false),
-      mMangledName(nullptr)
+      mIsStructSpecifier(false)
 {
 }
 
@@ -157,8 +155,7 @@ TType::TType(TBasicType t, TPrecision p, TQualifier q, unsigned char ps, unsigne
       secondarySize(ss),
       mInterfaceBlock(0),
       mStructure(0),
-      mIsStructSpecifier(false),
-      mMangledName(nullptr)
+      mIsStructSpecifier(false)
 {
 }
 
@@ -173,8 +170,7 @@ TType::TType(const TPublicType &p)
       secondarySize(p.getSecondarySize()),
       mInterfaceBlock(nullptr),
       mStructure(nullptr),
-      mIsStructSpecifier(false),
-      mMangledName(nullptr)
+      mIsStructSpecifier(false)
 {
     ASSERT(primarySize <= 4);
     ASSERT(secondarySize <= 4);
@@ -200,8 +196,7 @@ TType::TType(TStructure *userDef)
       secondarySize(1),
       mInterfaceBlock(nullptr),
       mStructure(userDef),
-      mIsStructSpecifier(false),
-      mMangledName(nullptr)
+      mIsStructSpecifier(false)
 {
 }
 
@@ -218,8 +213,7 @@ TType::TType(TInterfaceBlock *interfaceBlockIn,
       secondarySize(1),
       mInterfaceBlock(interfaceBlockIn),
       mStructure(0),
-      mIsStructSpecifier(false),
-      mMangledName(nullptr)
+      mIsStructSpecifier(false)
 {
 }
 
@@ -381,7 +375,7 @@ TString TType::getCompleteString() const
 //
 // Recursively generate mangled names.
 //
-const char *TType::buildMangledName() const
+TString TType::buildMangledName() const
 {
     TString mangledName;
     if (isMatrix())
@@ -538,12 +532,7 @@ const char *TType::buildMangledName() const
         mangledName += buf;
         mangledName += ']';
     }
-
-    mangledName += ';';
-
-    // We allocate with the pool allocator, so it's fine that the TString goes out of scope.
-    TString *temp = new TString(mangledName);
-    return temp->c_str();
+    return mangledName;
 }
 
 size_t TType::getObjectSize() const
@@ -744,11 +733,12 @@ void TType::setStruct(TStructure *s)
     }
 }
 
-const char *TType::getMangledName() const
+const TString &TType::getMangledName() const
 {
-    if (mMangledName == nullptr)
+    if (mMangledName.empty())
     {
         mMangledName = buildMangledName();
+        mMangledName += ';';
     }
 
     return mMangledName;
@@ -761,7 +751,7 @@ void TType::realize()
 
 void TType::invalidateMangledName()
 {
-    mMangledName = nullptr;
+    mMangledName = "";
 }
 
 // TStructure implementation.

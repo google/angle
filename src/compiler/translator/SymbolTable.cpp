@@ -66,7 +66,7 @@ const TString *TFunction::buildMangledName() const
 
     for (const auto &p : parameters)
     {
-        newName += p.type->getMangledName();
+        newName += p.type->getMangledName().c_str();
     }
     return NewPoolTString(newName.c_str());
 }
@@ -79,7 +79,7 @@ const TString &TFunction::GetMangledNameFromCall(const TString &functionName,
 
     for (TIntermNode *argument : arguments)
     {
-        newName += argument->getAsTyped()->getType().getMangledName();
+        newName += argument->getAsTyped()->getType().getMangledName().c_str();
     }
     return *NewPoolTString(newName.c_str());
 }
