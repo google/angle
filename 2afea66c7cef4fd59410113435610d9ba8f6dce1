@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "250173bf_13e8094f",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 390,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-11-20T14:40:04Z",
+      "side": 1,
+      "message": "After carefully checking, I had removed the member \"textureType\". I think it is not necessary to create a incomplete texture for image unit when there is not texture to be bound.\nSo keep Sampler struct and Image struct respectively. Is it OK?",
+      "parentUuid": "f59cbde9_50cd861b",
+      "range": {
+        "startLine": 375,
+        "startChar": 0,
+        "endLine": 390,
+        "endChar": 6
+      },
+      "revId": "2afea66c7cef4fd59410113435610d9ba8f6dce1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "4c817f48_d864f8de",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.h",
         "patchSetId": 13
@@ -36,6 +60,30 @@
       "writtenOn": "2017-11-15T09:56:25Z",
       "side": 1,
       "message": "Rename it to AssignTextures so that you can reuse it for Image. I think AssignImages can be removed if you use struct Texture like above comment.",
+      "range": {
+        "startLine": 407,
+        "startChar": 4,
+        "endLine": 412,
+        "endChar": 0
+      },
+      "revId": "2afea66c7cef4fd59410113435610d9ba8f6dce1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "45777e99_45c4738b",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 412,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-11-20T14:40:04Z",
+      "side": 1,
+      "message": "Same as above.",
+      "parentUuid": "4c817f48_d864f8de",
       "range": {
         "startLine": 407,
         "startChar": 4,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "59beb1f4_82e40241",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 421,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-11-20T14:40:04Z",
+      "side": 1,
+      "message": "Same as above",
+      "parentUuid": "c5e7b5df_27c98b84",
+      "range": {
+        "startLine": 415,
+        "startChar": 0,
+        "endLine": 421,
+        "endChar": 0
+      },
+      "revId": "2afea66c7cef4fd59410113435610d9ba8f6dce1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "c6097b2b_8a5bf3bb",
         "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
         "patchSetId": 13
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "ba9ff860_348b7363",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 418,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-11-20T14:40:04Z",
+      "side": 1,
+      "message": "Not always. mFormatInfo.srvFormat corresponds to texture format, and format here corresponeds to image format.",
+      "parentUuid": "c6097b2b_8a5bf3bb",
+      "range": {
+        "startLine": 418,
+        "startChar": 16,
+        "endLine": 418,
+        "endChar": 22
+      },
+      "revId": "2afea66c7cef4fd59410113435610d9ba8f6dce1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "318d90af_7ed9739c",
         "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
         "patchSetId": 13
@@ -105,6 +201,30 @@
       "writtenOn": "2017-11-15T09:56:25Z",
       "side": 1,
       "message": "I think createSRVForImage is not needed. You can use createSRV(context, key.level, 1, format, *texture, \u0026srv)?",
+      "range": {
+        "startLine": 421,
+        "startChar": 14,
+        "endLine": 421,
+        "endChar": 31
+      },
+      "revId": "2afea66c7cef4fd59410113435610d9ba8f6dce1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2671c603_6f5302ea",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 421,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-11-20T14:40:04Z",
+      "side": 1,
+      "message": "There are some workarounds when create SRV for samplers. And there are a little difference between image and sampler when creating SRV. If necessary and possible, I will merge the two functions after support all texture types.\nNow I had changed name from \"createSRV\" to \"createSRVForSampler\". Is it OK?",
+      "parentUuid": "318d90af_7ed9739c",
       "range": {
         "startLine": 421,
         "startChar": 14,
@@ -137,6 +257,30 @@
       "revId": "2afea66c7cef4fd59410113435610d9ba8f6dce1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3396f539_9c879a46",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-11-20T14:40:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c2529801_d3a1c209",
+      "range": {
+        "startLine": 98,
+        "startChar": 22,
+        "endLine": 98,
+        "endChar": 28
+      },
+      "revId": "2afea66c7cef4fd59410113435610d9ba8f6dce1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
