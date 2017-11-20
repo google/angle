@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9fabdfc7_cf70aa36",
+        "filename": "src/libANGLE/MemoryProgramCache.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 410,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-11-20T13:23:57Z",
+      "side": 1,
+      "message": "If we use angle::BitSet to store the mLinkedShaderStages, the code snippet could be like this in Program.h: \ntypedef angle::BitSet\u003cMAX_SHADER_TYPE\u003e ShaderStages;\nShaderStages mLinkedShaderStages;\n\nIn that way, It seems that we need to store the stages one by one in Deserialize, and retrieve those value one by one in Serialize. It is unnecessary. And those bitfield values are defined in gles, so I prefer to use the values directly, instead of using developer defined value via angle::BitSet. What do you think, Jamie?",
+      "range": {
+        "startLine": 410,
+        "startChar": 34,
+        "endLine": 410,
+        "endChar": 35
+      },
+      "revId": "5140efe8eff5152a10162d52cdfadbd89f10efbf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6eb87ed3_360618be",
+        "filename": "src/libANGLE/MemoryProgramCache.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-11-20T13:23:57Z",
+      "side": 1,
+      "message": "It is a litter strange for a getter like getProgram to use non-const parameter. This is caused by updating variable mLinkedShaderStages in program in Deserialize(). Another solution is to put mLinkedShaderStages into ProgramState object. But mLinked is in Program object, so, moving mLinkedShaderStages into ProgramState object seems a little strange too.\n\nWDYT?",
+      "range": {
+        "startLine": 94,
+        "startChar": 26,
+        "endLine": 94,
+        "endChar": 34
+      },
+      "revId": "5140efe8eff5152a10162d52cdfadbd89f10efbf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}

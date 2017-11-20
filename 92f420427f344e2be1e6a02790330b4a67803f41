@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "5b4636aa_121a03b2",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 8
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-11-20T13:23:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "689b388d_04ce2f73",
+      "range": {
+        "startLine": 7,
+        "startChar": 5,
+        "endLine": 7,
+        "endChar": 68
+      },
+      "revId": "92f420427f344e2be1e6a02790330b4a67803f41",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c03ff169_b86a2722",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 8
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "91eb7f34_f7485c3a",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 957,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-11-20T13:23:57Z",
+      "side": 1,
+      "message": "Ack if we choose this way.",
+      "parentUuid": "c03ff169_b86a2722",
+      "range": {
+        "startLine": 957,
+        "startChar": 8,
+        "endLine": 957,
+        "endChar": 27
+      },
+      "revId": "92f420427f344e2be1e6a02790330b4a67803f41",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e78e9fad_5f8975f9",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 8
@@ -68,6 +116,30 @@
       "revId": "92f420427f344e2be1e6a02790330b4a67803f41",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ac7183c4_d67c3231",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 972,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-11-20T13:23:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e78e9fad_5f8975f9",
+      "range": {
+        "startLine": 972,
+        "startChar": 14,
+        "endLine": 972,
+        "endChar": 20
+      },
+      "revId": "92f420427f344e2be1e6a02790330b4a67803f41",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -106,6 +178,24 @@
     },
     {
       "key": {
+        "uuid": "651aeb21_03fdf628",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-11-20T13:23:57Z",
+      "side": 1,
+      "message": "Your suggestions are both workable. But it might be a little complex in MemoryProgramCache (see the comments in that file) if we choose angle::BitSet. And exactly using the same value as what it is in gles31 could be direct and clear for the implementation for program pipeline (but I am not 100% sure about this). So I chose the way Corentin suggested. Jamie, if you still think that using angle::BitSet is better, I will follow.",
+      "parentUuid": "904080fa_def46421",
+      "revId": "92f420427f344e2be1e6a02790330b4a67803f41",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f850450f_4e5cbe34",
         "filename": "src/libANGLE/Program.h",
         "patchSetId": 8
@@ -126,6 +216,30 @@
       "revId": "92f420427f344e2be1e6a02790330b4a67803f41",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8ee47170_c6e35d57",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 719,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-11-20T13:23:57Z",
+      "side": 1,
+      "message": "Very good suggestions, Jamie. Per angle::BitSet, please see the comments in MemoryProgramCache. \n\nPer LinkedShaderStages for program binary, I added some code into MemoryProgramCache, and I also updated the end2end test for compute shader. The updated test would fail without the change in MemoryProgramCache, and it can pass with the change. \n\nPer validation checks on rendering against compute-only program, I have another patch at https://chromium-review.googlesource.com/c/angle/angle/+/764797. But that patch try to fix another issue.",
+      "parentUuid": "f850450f_4e5cbe34",
+      "range": {
+        "startLine": 719,
+        "startChar": 4,
+        "endLine": 719,
+        "endChar": 14
+      },
+      "revId": "92f420427f344e2be1e6a02790330b4a67803f41",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -161,6 +275,24 @@
       "revId": "92f420427f344e2be1e6a02790330b4a67803f41",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "79034d9f_73a34f14",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1011,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-11-20T13:23:57Z",
+      "side": 1,
+      "message": "The new added test would fail for the original code. Because if we detach and delete the shader (say compute shader) after linkProgram, then dispatchCompute, It should be OK. But the original validation code program-\u003egetAttachedComputeShader() would be nullptr, So it would report INVALID_OPERATION. It is incorrect. This change can fix that issue.",
+      "parentUuid": "3ec78102_a4344ae7",
+      "revId": "92f420427f344e2be1e6a02790330b4a67803f41",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
