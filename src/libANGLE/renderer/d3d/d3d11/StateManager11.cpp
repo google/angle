@@ -2559,6 +2559,7 @@ gl::Error StateManager11::applyIndexBuffer(const gl::Context *context,
                                            const void *indices,
                                            GLsizei count,
                                            GLenum type,
+                                           const gl::HasIndexRange &lazyIndexRange,
                                            TranslatedIndexData *indexInfo)
 {
     const auto &glState            = context->getGLState();
@@ -2569,7 +2570,7 @@ gl::Error StateManager11::applyIndexBuffer(const gl::Context *context,
         UsePrimitiveRestartWorkaround(glState.isPrimitiveRestartEnabled(), type);
 
     GLenum dstType =
-        GetIndexTranslationDestType(type, indexInfo->indexRange, usePrimitiveRestartWorkaround);
+        GetIndexTranslationDestType(type, lazyIndexRange, usePrimitiveRestartWorkaround);
 
     ANGLE_TRY(mIndexDataManager.prepareIndexData(context, type, dstType, count, elementArrayBuffer,
                                                  indices, indexInfo));

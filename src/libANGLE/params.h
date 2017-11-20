@@ -71,6 +71,8 @@ ANGLE_INLINE void ParamsBase::Factory(EntryPointParamType<EP> *objBuffer, ArgsT.
 class HasIndexRange : public ParamsBase
 {
   public:
+    // Dummy placeholder that can't generate an index range.
+    HasIndexRange();
     HasIndexRange(Context *context, GLsizei count, GLenum type, const void *indices)
         : ParamsBase(context), mContext(context), mCount(count), mType(type), mIndices(indices)
     {

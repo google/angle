@@ -1647,10 +1647,13 @@ gl::Error Renderer11::drawElements(const gl::Context *context,
     const gl::Program *program    = glState.getProgram();
     GLsizei adjustedInstanceCount = GetAdjustedInstanceCount(program, instances);
 
+    const auto &lazyIndexRange = context->getParams<gl::HasIndexRange>();
+
     if (!DrawCallNeedsTranslation(context, mode) &&
         !UsePrimitiveRestartWorkaround(glState.isPrimitiveRestartEnabled(), type))
     {
-        ANGLE_TRY(mStateManager.applyIndexBuffer(context, indices, count, type, &indexInfo));
+        ANGLE_TRY(mStateManager.applyIndexBuffer(context, indices, count, type, lazyIndexRange,
+                                                 &indexInfo));
 
         ANGLE_TRY(mStateManager.applyVertexBuffer(context, mode, 0, 0, 0, &indexInfo));
         if (adjustedInstanceCount > 0)
@@ -1664,15 +1667,16 @@ gl::Error Renderer11::drawElements(const gl::Context *context,
         return gl::NoError();
     }
 
-    indexInfo.indexRange = context->getParams<gl::HasIndexRange>().getIndexRange().value();
+    ANGLE_TRY(
+        mStateManager.applyIndexBuffer(context, indices, count, type, lazyIndexRange, &indexInfo));
 
-    ANGLE_TRY(mStateManager.applyIndexBuffer(context, indices, count, type, &indexInfo));
-    size_t vertexCount = indexInfo.indexRange.vertexCount();
-    ANGLE_TRY(mStateManager.applyVertexBuffer(
-        context, mode, static_cast<GLsizei>(indexInfo.indexRange.start),
-        static_cast<GLsizei>(vertexCount), instances, &indexInfo));
+    const gl::IndexRange &indexRange = lazyIndexRange.getIndexRange().value();
+    size_t vertexCount               = indexRange.vertexCount();
+    ANGLE_TRY(mStateManager.applyVertexBuffer(context, mode, static_cast<GLsizei>(indexRange.start),
+                                              static_cast<GLsizei>(vertexCount), instances,
+                                              &indexInfo));
 
-    int startVertex = static_cast<int>(indexInfo.indexRange.start);
+    int startVertex = static_cast<int>(indexRange.start);
     int baseVertex  = -startVertex;
 
     if (mode == GL_LINE_LOOP)
@@ -1723,7 +1727,7 @@ gl::Error Renderer11::drawElements(const gl::Context *context,
     // efficent code path. Instanced rendering of emulated pointsprites requires a loop to draw each
     // batch of points. An offset into the instanced data buffer is calculated and applied on each
     // iteration to ensure all instances are rendered correctly.
-    GLsizei elementsToRender = static_cast<GLsizei>(indexInfo.indexRange.vertexCount());
+    GLsizei elementsToRender = static_cast<GLsizei>(indexRange.vertexCount());
 
     // Each instance being rendered requires the inputlayout cache to reapply buffers and offsets.
     for (GLsizei i = 0; i < instances; i++)
@@ -1806,7 +1810,8 @@ gl::Error Renderer11::drawElementsIndirect(const gl::Context *context,
     TranslatedIndexData indexInfo;
     if (!DrawCallNeedsTranslation(context, mode) && !IsStreamingIndexData(context, type))
     {
-        ANGLE_TRY(mStateManager.applyIndexBuffer(context, nullptr, 0, type, &indexInfo));
+        ANGLE_TRY(mStateManager.applyIndexBuffer(context, nullptr, 0, type, gl::HasIndexRange(),
+                                                 &indexInfo));
         ANGLE_TRY(mStateManager.applyVertexBuffer(context, mode, 0, 0, 0, &indexInfo));
         ID3D11Buffer *buffer = nullptr;
         ANGLE_TRY_RESULT(storage->getBuffer(context, BUFFER_USAGE_INDIRECT), buffer);
@@ -1820,23 +1825,20 @@ gl::Error Renderer11::drawElementsIndirect(const gl::Context *context,
 
     const gl::DrawElementsIndirectCommand *cmd =
         reinterpret_cast<const gl::DrawElementsIndirectCommand *>(bufferData + offset);
-    GLuint count      = cmd->count;
+    GLsizei count     = cmd->count;
     GLuint instances  = cmd->primCount;
     GLuint firstIndex = cmd->firstIndex;
     GLint baseVertex  = cmd->baseVertex;
 
+    // TODO(jmadill): Fix const cast.
     const gl::Type &typeInfo = gl::GetTypeInfo(type);
-    uint8_t *indices         = static_cast<uint8_t *>(0) + firstIndex * typeInfo.bytes;
+    const void *indices      = reinterpret_cast<const void *>(firstIndex * typeInfo.bytes);
+    gl::HasIndexRange lazyIndexRange(const_cast<gl::Context *>(context), count, type, indices);
 
-    gl::Buffer *elementArrayBuffer = glState.getVertexArray()->getElementArrayBuffer().get();
-    ASSERT(elementArrayBuffer);
-    gl::IndexRange indexRange;
-    ANGLE_TRY(elementArrayBuffer->getIndexRange(context, type, reinterpret_cast<size_t>(indices),
-                                                count, glState.isPrimitiveRestartEnabled(),
-                                                &indexRange));
+    ANGLE_TRY(
+        mStateManager.applyIndexBuffer(context, indices, count, type, lazyIndexRange, &indexInfo));
 
-    indexInfo.indexRange = indexRange;
-    ANGLE_TRY(mStateManager.applyIndexBuffer(context, indices, count, type, &indexInfo));
+    const gl::IndexRange &indexRange = lazyIndexRange.getIndexRange().value();
     size_t vertexCount = indexRange.vertexCount();
     ANGLE_TRY(mStateManager.applyVertexBuffer(
         context, mode, static_cast<GLsizei>(indexRange.start) + baseVertex,

@@ -280,13 +280,14 @@ gl::Error IndexDataManager::getStreamingIndexBuffer(GLenum destinationIndexType,
 }
 
 GLenum GetIndexTranslationDestType(GLenum srcType,
-                                   const gl::IndexRange &indexRange,
+                                   const gl::HasIndexRange &lazyIndexRange,
                                    bool usePrimitiveRestartWorkaround)
 {
     // Avoid D3D11's primitive restart index value
     // see http://msdn.microsoft.com/en-us/library/windows/desktop/bb205124(v=vs.85).aspx
     if (usePrimitiveRestartWorkaround)
     {
+        const gl::IndexRange &indexRange = lazyIndexRange.getIndexRange().value();
         if (indexRange.end == gl::GetPrimitiveRestartIndex(srcType))
         {
             return GL_UNSIGNED_INT;

@@ -20,9 +20,14 @@ namespace gl
 constexpr ParamTypeInfo ParamsBase::TypeInfo;
 constexpr ParamTypeInfo HasIndexRange::TypeInfo;
 
+HasIndexRange::HasIndexRange()
+    : ParamsBase(nullptr), mContext(nullptr), mCount(0), mType(GL_NONE), mIndices(nullptr)
+{
+}
+
 const Optional<IndexRange> &HasIndexRange::getIndexRange() const
 {
-    if (mIndexRange.valid())
+    if (mIndexRange.valid() || !mContext)
     {
         return mIndexRange;
     }

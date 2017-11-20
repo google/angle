@@ -245,6 +245,7 @@ class StateManager11 final : angle::NonCopyable
                                const void *indices,
                                GLsizei count,
                                GLenum type,
+                               const gl::HasIndexRange &lazyIndexRange,
                                TranslatedIndexData *indexInfo);
 
     bool setIndexBuffer(ID3D11Buffer *buffer, DXGI_FORMAT indexFormat, unsigned int offset);
