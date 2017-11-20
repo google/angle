@@ -86,7 +86,7 @@ TOutputGLSLBase::TOutputGLSLBase(TInfoSinkBase &objSink,
                                  ShCompileOptions compileOptions)
     : TIntermTraverser(true, true, true, symbolTable),
       mObjSink(objSink),
-      mDeclaringVariables(false),
+      mDeclaringVariable(false),
       mClampingStrategy(clampingStrategy),
       mHashFunction(hashFunction),
       mNameMap(nameMap),
@@ -435,7 +435,7 @@ void TOutputGLSLBase::visitSymbol(TIntermSymbol *node)
     TInfoSinkBase &out = objSink();
     out << hashVariableName(node->getName());
 
-    if (mDeclaringVariables && node->getType().isArray())
+    if (mDeclaringVariable && node->getType().isArray())
         out << ArrayString(node->getType());
 }
 
@@ -469,7 +469,7 @@ bool TOutputGLSLBase::visitBinary(Visit visit, TIntermBinary *node)
             {
                 out << " = ";
                 // RHS of initialize is not being declared.
-                mDeclaringVariables = false;
+                mDeclaringVariable = false;
             }
             break;
         case EOpAssign:
@@ -995,17 +995,20 @@ bool TOutputGLSLBase::visitDeclaration(Visit visit, TIntermDeclaration *node)
         TIntermTyped *variable          = sequence.front()->getAsTyped();
         writeLayoutQualifier(variable);
         writeVariableType(variable->getType());
-        out << " ";
-        mDeclaringVariables = true;
+        if (variable->getAsSymbolNode() == nullptr ||
+            !variable->getAsSymbolNode()->getSymbol().empty())
+        {
+            out << " ";
+        }
+        mDeclaringVariable = true;
     }
     else if (visit == InVisit)
     {
-        out << ", ";
-        mDeclaringVariables = true;
+        UNREACHABLE();
     }
     else
     {
-        mDeclaringVariables = false;
+        mDeclaringVariable = false;
     }
     return true;
 }

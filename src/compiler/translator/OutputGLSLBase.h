@@ -88,7 +88,7 @@ class TOutputGLSLBase : public TIntermTraverser
     const char *mapQualifierToString(TQualifier qialifier);
 
     TInfoSinkBase &mObjSink;
-    bool mDeclaringVariables;
+    bool mDeclaringVariable;
 
     // This set contains all the ids of the structs from every scope.
     std::set<int> mDeclaredStructs;

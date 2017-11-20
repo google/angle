@@ -390,3 +390,299 @@ TEST_F(RemoveUnreferencedVariablesTest, VariableOnlyReferencedInLengthMethod)
 
     ASSERT_TRUE(notFoundInCode("onlyReferencedInLengthMethodCall"));
 }
+
+// Test that an unreferenced user-defined type is removed.
+TEST_F(RemoveUnreferencedVariablesTest, UserDefinedTypeUnreferenced)
+{
+    const std::string &shaderString =
+        R"(
+        struct myStructType
+        {
+            int i;
+        } myStructVariable;
+
+        void main()
+        {
+        })";
+    compile(shaderString);
+
+    ASSERT_TRUE(notFoundInCode("myStructType"));
+}
+
+// Test that a user-defined type that's only referenced in an unreferenced variable is removed.
+TEST_F(RemoveUnreferencedVariablesTest, UserDefinedTypeReferencedInUnreferencedVariable)
+{
+    const std::string &shaderString =
+        R"(
+        struct myStructType
+        {
+            int i;
+        };
+
+        void main()
+        {
+            myStructType myStructVariable;
+        })";
+    compile(shaderString);
+
+    ASSERT_TRUE(notFoundInCode("myStructType"));
+}
+
+// Test that a user-defined type that's declared in an empty declaration and that is only referenced
+// in an unreferenced variable is removed also when the shader contains another independent
+// user-defined type that's declared in an empty declaration. This tests special case handling of
+// reference counting of empty symbols.
+TEST_F(RemoveUnreferencedVariablesTest,
+       TwoUserDefinedTypesDeclaredInEmptyDeclarationsWithOneOfThemUnreferenced)
+{
+    const std::string &shaderString =
+        R"(
+        struct myStructTypeA
+        {
+            int i;
+        };
+
+        struct myStructTypeB
+        {
+            int j;
+        };
+
+        uniform myStructTypeB myStructVariableB;
+
+        void main()
+        {
+            myStructTypeA myStructVariableA;
+        })";
+    compile(shaderString);
+
+    ASSERT_TRUE(notFoundInCode("myStructTypeA"));
+    ASSERT_TRUE(foundInCode("myStructTypeB"));
+}
+
+// Test that a user-defined type that is only referenced in another unreferenced type is removed.
+TEST_F(RemoveUnreferencedVariablesTest, UserDefinedTypeChain)
+{
+    const std::string &shaderString =
+        R"(
+        struct myInnerStructType
+        {
+            int i;
+        };
+
+        struct myOuterStructType
+        {
+            myInnerStructType inner;
+        } myStructVariable;
+
+        void main()
+        {
+            myOuterStructType myStructVariable2;
+        })";
+    compile(shaderString);
+
+    ASSERT_TRUE(notFoundInCode("myInnerStructType"));
+}
+
+// Test that a user-defined type that is referenced in another user-defined type that is used is
+// kept.
+TEST_F(RemoveUnreferencedVariablesTest, UserDefinedTypeChainReferenced)
+{
+    const std::string &shaderString =
+        R"(
+        precision mediump float;
+
+        struct myInnerStructType
+        {
+            int i;
+        };
+
+        uniform struct
+        {
+            myInnerStructType inner;
+        } myStructVariable;
+
+        void main()
+        {
+            if (myStructVariable.inner.i > 0)
+            {
+                gl_FragColor = vec4(0, 1, 0, 1);
+            }
+        })";
+    compile(shaderString);
+
+    ASSERT_TRUE(foundInCode("struct _umyInnerStructType"));
+}
+
+// Test that a struct type that is only referenced in a constructor and function call is kept.
+TEST_F(RemoveUnreferencedVariablesTest, UserDefinedTypeReferencedInConstructorAndCall)
+{
+    const std::string &shaderString =
+        R"(
+        precision mediump float;
+
+        uniform int ui;
+
+        struct myStructType
+        {
+            int iMember;
+        };
+
+        void func(myStructType myStructParam)
+        {
+            if (myStructParam.iMember > 0)
+            {
+                gl_FragColor = vec4(0, 1, 0, 1);
+            }
+        }
+
+        void main()
+        {
+            func(myStructType(ui));
+        })";
+    compile(shaderString);
+
+    ASSERT_TRUE(foundInCode("struct _umyStructType"));
+}
+
+// Test that a struct type that is only referenced in a constructor is kept. This assumes that there
+// isn't more sophisticated folding of struct field access going on.
+TEST_F(RemoveUnreferencedVariablesTest, UserDefinedTypeReferencedInConstructor)
+{
+    const std::string &shaderString =
+        R"(
+        precision mediump float;
+
+        uniform int ui;
+
+        struct myStructType
+        {
+            int iMember;
+        };
+
+        void main()
+        {
+            if (myStructType(ui).iMember > 0)
+            {
+                gl_FragColor = vec4(0, 1, 0, 1);
+            }
+        })";
+    compile(shaderString);
+
+    ASSERT_TRUE(foundInCode("struct _umyStructType"));
+}
+
+// Test that a struct type that is only referenced in an unused function is removed.
+TEST_F(RemoveUnreferencedVariablesTest, UserDefinedTypeReferencedInUnusedFunction)
+{
+    const std::string &shaderString =
+        R"(
+        precision mediump float;
+
+        struct myStructType
+        {
+            int iMember;
+        };
+
+        void func(myStructType myStructParam)
+        {
+            if (myStructParam.iMember > 0)
+            {
+                gl_FragColor = vec4(0, 1, 0, 1);
+            }
+        }
+
+        void main()
+        {
+        })";
+    compile(shaderString);
+
+    ASSERT_TRUE(notFoundInCode("myStructType"));
+}
+
+// Test that a struct type that is only referenced in an unused function is kept in case
+// SH_DONT_PRUNE_UNUSED_FUNCTIONS is specified.
+TEST_F(RemoveUnreferencedVariablesTest, UserDefinedTypeReferencedInUnusedFunctionThatIsNotPruned)
+{
+    const std::string &shaderString =
+        R"(
+        struct myStructType
+        {
+            int iMember;
+        };
+
+        myStructType func()
+        {
+            return myStructType(0);
+        }
+
+        void main()
+        {
+        })";
+    compile(shaderString, SH_DONT_PRUNE_UNUSED_FUNCTIONS);
+
+    ASSERT_TRUE(foundInCode("struct _umyStructType"));
+
+    // Ensure that the struct isn't declared as a part of the function header.
+    ASSERT_TRUE(foundInCode("};"));
+}
+
+// Test that a struct type that is only referenced as a function return value is kept.
+TEST_F(RemoveUnreferencedVariablesTest, UserDefinedTypeReturnedFromFunction)
+{
+    const std::string &shaderString =
+        R"(
+        precision mediump float;
+
+        struct myStructType
+        {
+            int iMember;
+        };
+
+        myStructType func()
+        {
+            gl_FragColor = vec4(0, 1, 0, 1);
+            return myStructType(0);
+        }
+
+        void main()
+        {
+            func();
+        })";
+    compile(shaderString);
+
+    ASSERT_TRUE(foundInCode("struct _umyStructType"));
+
+    // Ensure that the struct isn't declared as a part of the function header.
+    ASSERT_TRUE(foundInCode("};"));
+}
+
+// Test that a struct type that is only referenced in a uniform block is kept.
+TEST_F(RemoveUnreferencedVariablesTest, UserDefinedTypeInUniformBlock)
+{
+    const std::string &shaderString =
+        R"(#version 300 es
+
+        precision highp float;
+        out vec4 my_FragColor;
+
+        struct myStructType
+        {
+            int iMember;
+        };
+
+        layout(std140) uniform myBlock {
+            myStructType uStruct;
+            int ui;
+        };
+
+        void main()
+        {
+            if (ui > 0)
+            {
+                my_FragColor = vec4(0, 1, 0, 1);
+            }
+        })";
+    compile(shaderString);
+
+    ASSERT_TRUE(foundInCode("struct _umyStructType"));
+}

@@ -5,7 +5,7 @@
 //
 // RemoveUnreferencedVariables.h:
 //  Drop variables that are declared but never referenced in the AST. This avoids adding unnecessary
-//  initialization code for them.
+//  initialization code for them. Also removes unreferenced struct types.
 //
 
 #ifndef COMPILER_TRANSLATOR_REMOVEUNREFERENCEDVARIABLES_H_
