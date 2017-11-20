@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "5cc4dd23_2fa12243",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 32
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-20T18:56:25Z",
+      "side": 1,
+      "message": "I\u0027m fine with that. It\u0027s not a big deal but looking at an array arr[2][3] it reads like [2] is the inner index and [3] the outer index, but [2] is the outer size and [3] the inner.",
+      "parentUuid": "1d0c8116_27cc0f3c",
+      "range": {
+        "startLine": 117,
+        "startChar": 30,
+        "endLine": 117,
+        "endChar": 40
+      },
+      "revId": "6748dc53b8b543ad28172ec3359519e4f1ca3587",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "43588bc3_8a1cbca1",
         "filename": "src/compiler/translator/ShaderVars.cpp",
         "patchSetId": 32
@@ -131,6 +155,30 @@
       "side": 1,
       "message": "You\u0027re right about the return values. It\u0027s as in GLES 3.1 spec page 82 (added spec reference here).\n\nI think the method name needs to convey that this is meant to implement the ARRAY_SIZE query spec. The method doesn\u0027t have other uses since the spec is a bit odd, and I don\u0027t think a name that\u0027s unrelated to ARRAY_SIZE query sufficiently describes it. Do you think \"getArraySizeQueryResult()\" would be better?",
       "parentUuid": "43588bc3_8a1cbca1",
+      "range": {
+        "startLine": 116,
+        "startChar": 20,
+        "endLine": 116,
+        "endChar": 40
+      },
+      "revId": "6748dc53b8b543ad28172ec3359519e4f1ca3587",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8f174106_9b0d9088",
+        "filename": "src/compiler/translator/ShaderVars.cpp",
+        "patchSetId": 32
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-20T18:56:25Z",
+      "side": 1,
+      "message": "I like getOutermostElementCount and getTotalElementCount. I\u0027m fine if it doesn\u0027t match the API function exactly. I think you use it in one other place, and I\u0027d like for you to use it instead of the isArray ? arraySize : 1 expressions",
+      "parentUuid": "225ea228_ecd9ec08",
       "range": {
         "startLine": 116,
         "startChar": 20,
@@ -272,6 +320,30 @@
       "side": 1,
       "message": "Not sure what you mean?",
       "parentUuid": "0ddc2322_8acd0f8e",
+      "range": {
+        "startLine": 164,
+        "startChar": 41,
+        "endLine": 164,
+        "endChar": 89
+      },
+      "revId": "6748dc53b8b543ad28172ec3359519e4f1ca3587",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c3909222_0a2f08e4",
+        "filename": "src/compiler/translator/blocklayout.cpp",
+        "patchSetId": 32
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-20T18:56:25Z",
+      "side": 1,
+      "message": "oh, just mean to save it in a named temporary.",
+      "parentUuid": "784798d3_93b91233",
       "range": {
         "startLine": 164,
         "startChar": 41,
