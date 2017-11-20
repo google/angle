@@ -83,14 +83,14 @@ void ProgramGL::save(const gl::Context *context, gl::BinaryOutputStream *stream)
     GLint binaryLength = 0;
     mFunctions->getProgramiv(mProgramID, GL_PROGRAM_BINARY_LENGTH, &binaryLength);
 
-    std::vector<uint8_t> binary(binaryLength);
+    std::vector<uint8_t> binary(std::max(binaryLength, 1));
     GLenum binaryFormat = GL_NONE;
     mFunctions->getProgramBinary(mProgramID, binaryLength, &binaryLength, &binaryFormat,
-                                 &binary[0]);
+                                 binary.data());
 
     stream->writeInt(binaryFormat);
     stream->writeInt(binaryLength);
-    stream->writeBytes(&binary[0], binaryLength);
+    stream->writeBytes(binary.data(), binaryLength);
 
     reapplyUBOBindingsIfNeeded(context);
 }
