@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "67beaf98_15b15880",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-21T14:53:41Z",
+      "side": 1,
+      "message": "just {major_version}{minor_version} instead.",
+      "range": {
+        "startLine": 27,
+        "startChar": 33,
+        "endLine": 27,
+        "endChar": 40
+      },
+      "revId": "1b0d6e6f1eeafd46c29e077af66cac4a75f45099",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e40d8a62_b0a78242",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-21T14:53:41Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 49,
+        "startChar": 32,
+        "endLine": 49,
+        "endChar": 39
+      },
+      "revId": "1b0d6e6f1eeafd46c29e077af66cac4a75f45099",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b67a5b47_cabc574a",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-21T14:53:41Z",
+      "side": 1,
+      "message": "use the oldstyle generation first, so the diff becomes smaller, and easier to review. then, in a second patch, move to the more compact style.",
+      "range": {
+        "startLine": 99,
+        "startChar": 0,
+        "endLine": 99,
+        "endChar": 34
+      },
+      "revId": "1b0d6e6f1eeafd46c29e077af66cac4a75f45099",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8ce41e03_1a7563dd",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 637,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-21T14:53:41Z",
+      "side": 1,
+      "message": "all of these should be part of a previous patch.",
+      "range": {
+        "startLine": 637,
+        "startChar": 16,
+        "endLine": 637,
+        "endChar": 36
+      },
+      "revId": "1b0d6e6f1eeafd46c29e077af66cac4a75f45099",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a00e44c9_dd240169",
+        "filename": "src/libANGLE/validationES31.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 289,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-21T14:53:41Z",
+      "side": 1,
+      "message": "all of this should be part of a previous patch.",
+      "range": {
+        "startLine": 289,
+        "startChar": 5,
+        "endLine": 289,
+        "endChar": 36
+      },
+      "revId": "1b0d6e6f1eeafd46c29e077af66cac4a75f45099",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
