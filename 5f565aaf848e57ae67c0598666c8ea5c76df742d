@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4804ab79_e5d5241b",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 36
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-21T15:02:37Z",
+      "side": 1,
+      "message": "I think you can just call this getNestedArraySize",
+      "range": {
+        "startLine": 85,
+        "startChar": 17,
+        "endLine": 85,
+        "endChar": 38
+      },
+      "revId": "5f565aaf848e57ae67c0598666c8ea5c76df742d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "679a51ff_d81f1967",
+        "filename": "src/libANGLE/ProgramLinkedResources.cpp",
+        "patchSetId": 36
+      },
+      "lineNbr": 287,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-21T15:02:37Z",
+      "side": 1,
+      "message": "nit: you probably don\u0027t want to call getArraySizeProduct in a loop condition, as this could re-compute the value every iteration.",
+      "range": {
+        "startLine": 287,
+        "startChar": 67,
+        "endLine": 287,
+        "endChar": 86
+      },
+      "revId": "5f565aaf848e57ae67c0598666c8ea5c76df742d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
