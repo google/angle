@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "87bf1b73_b01664fa",
+        "filename": "src/libANGLE/MemoryProgramCache.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 410,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-11-21T07:24:17Z",
+      "side": 1,
+      "message": "Done\n\nVery useful hint for the MemoryProgramCache, Jamie.",
+      "parentUuid": "02d458aa_6138b2c8",
+      "range": {
+        "startLine": 410,
+        "startChar": 34,
+        "endLine": 410,
+        "endChar": 35
+      },
+      "revId": "5140efe8eff5152a10162d52cdfadbd89f10efbf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6eb87ed3_360618be",
         "filename": "src/libANGLE/MemoryProgramCache.h",
         "patchSetId": 12
@@ -93,6 +117,30 @@
       "revId": "5140efe8eff5152a10162d52cdfadbd89f10efbf",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "58ecafc5_02f403ae",
+        "filename": "src/libANGLE/MemoryProgramCache.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-11-21T07:24:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bb889065_98470f13",
+      "range": {
+        "startLine": 94,
+        "startChar": 26,
+        "endLine": 94,
+        "endChar": 34
+      },
+      "revId": "5140efe8eff5152a10162d52cdfadbd89f10efbf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
