@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "73677279_8d512284",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1648,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-21T15:21:44Z",
+      "side": 1,
+      "message": "not overly worried*",
+      "parentUuid": "60a75e50_372d1957",
+      "range": {
+        "startLine": 1648,
+        "startChar": 12,
+        "endLine": 1648,
+        "endChar": 33
+      },
+      "revId": "34cc8d818f9699c0965df7c73dceeed117eaecb9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e2e2d605_da392eac",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 8
