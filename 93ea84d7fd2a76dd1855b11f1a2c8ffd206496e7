@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da2b7822_8524f120",
+        "filename": "src/gpu_info_util/SystemInfo.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-11-21T20:53:43Z",
+      "side": 1,
+      "message": "Which rule requires that implicit default constructor and destructors are listed?",
+      "revId": "93ea84d7fd2a76dd1855b11f1a2c8ffd206496e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
