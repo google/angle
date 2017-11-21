@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "922ce149_58b54bd8",
+        "filename": "src/compiler/translator/RemoveUnreferencedVariables.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 187,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-11-21T15:19:48Z",
+      "side": 1,
+      "message": "Why is this needed? The refcount is already \u003e 1 and won\u0027t be changed further since we are iterating in reverse order no?",
+      "revId": "513bcd01faa880c833ffabbb675e5041ff51a781",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a83a2e84_e524f024",
+        "filename": "src/tests/compiler_tests/RemoveUnreferencedVariables_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 448,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-11-21T15:19:48Z",
+      "side": 1,
+      "message": "This test doesn\u0027t seem to match with the comment and the name of the test. Did you mean to have myStructTypeA j; instead of int j;?",
+      "revId": "513bcd01faa880c833ffabbb675e5041ff51a781",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4ee982d6_0f2bd6a1",
+        "filename": "src/tests/compiler_tests/RemoveUnreferencedVariables_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 484,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-11-21T15:19:48Z",
+      "side": 1,
+      "message": "Comment doesn\u0027t match the test.",
+      "revId": "513bcd01faa880c833ffabbb675e5041ff51a781",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
