@@ -170,6 +170,7 @@ void State::initialize(const Context *context,
     }
     mCompleteTextureCache.resize(caps.maxCombinedTextureImageUnits, nullptr);
     mCompleteTextureBindings.reserve(caps.maxCombinedTextureImageUnits);
+    mCachedTexturesInitState = InitState::MayNeedInit;
     for (uint32_t textureIndex = 0; textureIndex < caps.maxCombinedTextureImageUnits;
          ++textureIndex)
     {
@@ -2234,6 +2235,10 @@ void State::syncProgramTextures(const Context *context)
 
     ActiveTextureMask newActiveTextures;
 
+    // Initialize to the 'Initialized' state and set to 'MayNeedInit' if any texture is not
+    // initialized.
+    mCachedTexturesInitState = InitState::Initialized;
+
     for (const SamplerBinding &samplerBinding : mProgram->getSamplerBindings())
     {
         if (samplerBinding.unreferenced)
@@ -2270,6 +2275,11 @@ void State::syncProgramTextures(const Context *context)
             if (sampler != nullptr)
             {
                 sampler->syncState(context);
+            }
+
+            if (texture->initState() == InitState::MayNeedInit)
+            {
+                mCachedTexturesInitState = InitState::MayNeedInit;
             }
         }
     }
@@ -2383,11 +2393,21 @@ void State::signal(size_t textureIndex, InitState initState)
     // Conservatively assume all textures are dirty.
     // TODO(jmadill): More fine-grained update.
     mDirtyObjects.set(DIRTY_OBJECT_PROGRAM_TEXTURES);
+
+    if (initState == InitState::MayNeedInit)
+    {
+        mCachedTexturesInitState = InitState::MayNeedInit;
+    }
 }
 
 Error State::clearUnclearedActiveTextures(const Context *context)
 {
     ASSERT(mRobustResourceInit);
+
+    if (mCachedTexturesInitState == InitState::Initialized)
+    {
+        return NoError();
+    }
 
     for (auto textureIndex : mActiveTexturesMask)
     {
@@ -2397,6 +2417,8 @@ Error State::clearUnclearedActiveTextures(const Context *context)
             ANGLE_TRY(texture->ensureInitialized(context));
         }
     }
+
+    mCachedTexturesInitState = InitState::Initialized;
 
     return NoError();
 }
