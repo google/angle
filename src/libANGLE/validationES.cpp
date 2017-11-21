@@ -2505,8 +2505,7 @@ bool ValidateDrawBase(ValidationContext *context, GLenum mode, GLsizei count)
     // vertex shader stage or fragment shader stage is a undefined behaviour.
     // But ANGLE should clearly generate an INVALID_OPERATION error instead of
     // produce undefined result.
-    if (program->isLinked() &&
-        (!program->hasLinkedVertexShader() || !program->hasLinkedFragmentShader()))
+    if (!program->hasLinkedVertexShader() || !program->hasLinkedFragmentShader())
     {
         context->handleError(InvalidOperation() << "It is a undefined behaviour to render without "
                                                    "vertex shader stage or fragment shader stage.");

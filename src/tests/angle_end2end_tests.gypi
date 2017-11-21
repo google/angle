@@ -53,6 +53,7 @@
             '<(angle_path)/src/tests/gl_tests/IndexedPointsTest.cpp',
             '<(angle_path)/src/tests/gl_tests/InstancingTest.cpp',
             '<(angle_path)/src/tests/gl_tests/LineLoopTest.cpp',
+            '<(angle_path)/src/tests/gl_tests/LinkAndRelinkTest.cpp',
             '<(angle_path)/src/tests/gl_tests/MaxTextureSizeTest.cpp',
             '<(angle_path)/src/tests/gl_tests/MipmapTest.cpp',
             '<(angle_path)/src/tests/gl_tests/MultisampleCompatibilityTest.cpp',

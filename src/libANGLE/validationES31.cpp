@@ -1391,11 +1391,9 @@ bool ValidateDispatchCompute(Context *context,
         return false;
     }
 
-    if (!program->isLinked() || !program->hasLinkedComputeShader())
+    if (!program->hasLinkedComputeShader())
     {
-        context->handleError(
-            InvalidOperation()
-            << "Program has not been successfully linked, or program contains no compute shaders.");
+        context->handleError(InvalidOperation() << "Program contains no compute shaders.");
         return false;
     }
 

@@ -977,6 +977,8 @@ Error Program::link(const gl::Context *context)
 
     setUniformValuesFromBindingQualifiers();
 
+    // According to GLES 3.0/3.1 spec for LinkProgram and UseProgram,
+    // Only successfully linked program can replace the executables.
     ASSERT(mLinked);
     updateLinkedShaderStages();
 
@@ -999,6 +1001,8 @@ Error Program::link(const gl::Context *context)
 
 void Program::updateLinkedShaderStages()
 {
+    mState.mLinkedShaderStages.reset();
+
     if (mState.mAttachedVertexShader)
     {
         mState.mLinkedShaderStages.set(SHADER_VERTEX);
@@ -1036,7 +1040,6 @@ void Program::unlink()
     mState.mSamplerBindings.clear();
     mState.mImageBindings.clear();
     mState.mNumViews = -1;
-    mState.mLinkedShaderStages.reset();
 
     mValidated = false;
 
