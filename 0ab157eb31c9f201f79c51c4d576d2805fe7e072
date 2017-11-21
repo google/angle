@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4358bea9_a74956a8",
+        "filename": "src/tests/perf_tests/TexturesPerf.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 308,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-21T20:06:07Z",
+      "side": 1,
+      "message": "I\u0027m fine with omitting this specialty config from D3D9 to save bot iteration time.",
+      "range": {
+        "startLine": 308,
+        "startChar": 23,
+        "endLine": 308,
+        "endChar": 33
+      },
+      "revId": "0ab157eb31c9f201f79c51c4d576d2805fe7e072",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
