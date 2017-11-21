@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "93c9c6ea_dce6e28d",
+        "filename": "src/tests/gl_tests/TransformFeedbackTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1212,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-11-21T08:18:21Z",
+      "side": 1,
+      "message": "Using this new style:\nconst std::string \u0026vertexShaderSource \u003d\n    R\"(...)\";",
+      "range": {
+        "startLine": 1198,
+        "startChar": 0,
+        "endLine": 1212,
+        "endChar": 12
+      },
+      "revId": "a81aaeb3ceaa0c563e17002a61e1df690d50c776",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
