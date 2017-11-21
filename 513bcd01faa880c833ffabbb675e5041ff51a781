@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "8cbe0614_2034eabd",
+        "filename": "src/compiler/translator/RemoveUnreferencedVariables.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 187,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-21T16:23:19Z",
+      "side": 1,
+      "message": "My intent was to make the code more robust and easier to reason about when debugging. But maybe just having a comment that explains the incorrect reference counts is better, changed it now.",
+      "parentUuid": "922ce149_58b54bd8",
+      "revId": "513bcd01faa880c833ffabbb675e5041ff51a781",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a83a2e84_e524f024",
         "filename": "src/tests/compiler_tests/RemoveUnreferencedVariables_test.cpp",
         "patchSetId": 2
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "19815e41_fbf60553",
+        "filename": "src/tests/compiler_tests/RemoveUnreferencedVariables_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 448,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-21T16:23:19Z",
+      "side": 1,
+      "message": "I now realize that the comment and test name are a bit unclear/ambiguous. I renamed them to make the meaning clearer.",
+      "parentUuid": "a83a2e84_e524f024",
+      "revId": "513bcd01faa880c833ffabbb675e5041ff51a781",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4ee982d6_0f2bd6a1",
         "filename": "src/tests/compiler_tests/RemoveUnreferencedVariables_test.cpp",
         "patchSetId": 2
@@ -50,6 +86,24 @@
       "revId": "513bcd01faa880c833ffabbb675e5041ff51a781",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e50babf6_a54c2cc0",
+        "filename": "src/tests/compiler_tests/RemoveUnreferencedVariables_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 484,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-21T16:23:19Z",
+      "side": 1,
+      "message": "Whoops, done.",
+      "parentUuid": "4ee982d6_0f2bd6a1",
+      "revId": "513bcd01faa880c833ffabbb675e5041ff51a781",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
