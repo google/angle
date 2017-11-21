@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "bc2fda2b_88bc5252",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 429,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-21T15:20:54Z",
+      "side": 1,
+      "message": "9_3 is a feature level of D3D11. It uses a similar driver logic to D3D9 but is run from the same ANGLE back-end.",
+      "parentUuid": "bbe05b5f_1d1b5f5f",
+      "range": {
+        "startLine": 429,
+        "startChar": 14,
+        "endLine": 429,
+        "endChar": 17
+      },
+      "revId": "34cc8d818f9699c0965df7c73dceeed117eaecb9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e55b1064_853d624d",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 8
@@ -45,6 +69,30 @@
       "revId": "34cc8d818f9699c0965df7c73dceeed117eaecb9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "60a75e50_372d1957",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1648,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-21T15:20:54Z",
+      "side": 1,
+      "message": "Not sure what state manager call you\u0027re referring to. The adjusted instance count stuff is only used for multi view rendering, so I\u0027m overly worried about a bug.",
+      "parentUuid": "e55b1064_853d624d",
+      "range": {
+        "startLine": 1648,
+        "startChar": 12,
+        "endLine": 1648,
+        "endChar": 33
+      },
+      "revId": "34cc8d818f9699c0965df7c73dceeed117eaecb9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "5fe25524_91466947",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1658,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-21T15:20:54Z",
+      "side": 1,
+      "message": "DrawElementsIndirect doesn\u0027t have access to any of the draw call parameters, since they\u0027re all in the draw indirect buffer on the GPU. I used it here because it seems more correct. This code is being changed in the next patch again.",
+      "parentUuid": "e2e2d605_da392eac",
+      "range": {
+        "startLine": 1658,
+        "startChar": 48,
+        "endLine": 1658,
+        "endChar": 57
+      },
+      "revId": "34cc8d818f9699c0965df7c73dceeed117eaecb9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "82ab1d4f_2269fc37",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 8
@@ -91,6 +163,30 @@
       "revId": "34cc8d818f9699c0965df7c73dceeed117eaecb9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d80e92c9_7f72a54b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1847,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-21T15:20:54Z",
+      "side": 1,
+      "message": "I agree this is super confusing, but the code is correct. The baseVertexLocation is needed for translated index ranges. It mirrors the name of the D3D parameter, which has a loose relationship with our ANGLE parameter names. Going to leave this as-is, it\u0027s just a complex and weird part of the code.",
+      "parentUuid": "82ab1d4f_2269fc37",
+      "range": {
+        "startLine": 1847,
+        "startChar": 0,
+        "endLine": 1847,
+        "endChar": 93
+      },
+      "revId": "34cc8d818f9699c0965df7c73dceeed117eaecb9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "bd816fee_ed969425",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 146,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-21T15:20:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "88746b90_9e0d3b50",
+      "range": {
+        "startLine": 146,
+        "startChar": 11,
+        "endLine": 146,
+        "endChar": 15
+      },
+      "revId": "34cc8d818f9699c0965df7c73dceeed117eaecb9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b7c6da76_8159959d",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
         "patchSetId": 8
@@ -137,6 +257,30 @@
       "revId": "34cc8d818f9699c0965df7c73dceeed117eaecb9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "574829ad_248a37e8",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-21T15:20:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b7c6da76_8159959d",
+      "range": {
+        "startLine": 164,
+        "startChar": 4,
+        "endLine": 164,
+        "endChar": 11
+      },
+      "revId": "34cc8d818f9699c0965df7c73dceeed117eaecb9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
