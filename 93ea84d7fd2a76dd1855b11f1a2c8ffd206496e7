@@ -16,6 +16,24 @@
       "revId": "93ea84d7fd2a76dd1855b11f1a2c8ffd206496e7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "db52a509_b6ad4d37",
+        "filename": "src/gpu_info_util/SystemInfo.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-21T20:56:44Z",
+      "side": 1,
+      "message": "It\u0027s actually Clang, using a plugin for Chromium style. Source code is here:\n\nhttps://cs.chromium.org/chromium/src/tools/clang/plugins/\n\nTo enable it in ANGLE for local testing, edit .gn to set clang_use_chrome_plugins to true. You can also enable/disable it on a specific target by adding/removing the find_bad_constructs GN config.",
+      "parentUuid": "da2b7822_8524f120",
+      "revId": "93ea84d7fd2a76dd1855b11f1a2c8ffd206496e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
