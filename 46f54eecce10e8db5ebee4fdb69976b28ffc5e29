@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d71c9b4f_9c2fe41b",
+        "filename": "src/libANGLE/validationES.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-21T02:56:43Z",
+      "side": 1,
+      "message": "why did you include this header? Can you forward declare the types instead?",
+      "range": {
+        "startLine": 19,
+        "startChar": 0,
+        "endLine": 19,
+        "endChar": 29
+      },
+      "revId": "46f54eecce10e8db5ebee4fdb69976b28ffc5e29",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bda9e9a4_d32a329e",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 529,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-21T02:56:43Z",
+      "side": 1,
+      "message": "can you put blank spaces between these functions?",
+      "range": {
+        "startLine": 529,
+        "startChar": 0,
+        "endLine": 529,
+        "endChar": 4
+      },
+      "revId": "46f54eecce10e8db5ebee4fdb69976b28ffc5e29",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
