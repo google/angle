@@ -1,0 +1,159 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4179358f_215365cb",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 15
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-21T07:35:08Z",
+      "side": 1,
+      "message": "can you add a note that this also moves the ShaderType enum, and uses a bit mask to track the linked shader stages? two or three sentences maximum.",
+      "revId": "aaf0498ad487dfb102e1351cae70ccae521fb233",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8ebd91fa_64293012",
+        "filename": "src/libANGLE/MemoryProgramCache.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 412,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-21T07:35:08Z",
+      "side": 1,
+      "message": "assign directly to mLinkedShaderStages here.",
+      "range": {
+        "startLine": 412,
+        "startChar": 11,
+        "endLine": 412,
+        "endChar": 32
+      },
+      "revId": "aaf0498ad487dfb102e1351cae70ccae521fb233",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "40d3b941_322abf0d",
+        "filename": "src/libANGLE/MemoryProgramCache.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 576,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-21T07:35:08Z",
+      "side": 1,
+      "message": "use getLinkedShaderStages here.",
+      "range": {
+        "startLine": 576,
+        "startChar": 26,
+        "endLine": 576,
+        "endChar": 45
+      },
+      "revId": "aaf0498ad487dfb102e1351cae70ccae521fb233",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "49ca106d_54079a01",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 473,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-21T07:35:08Z",
+      "side": 1,
+      "message": "I don\u0027t think you want to do this - the stages should start as zero, not all one. you can just omit this line.",
+      "range": {
+        "startLine": 473,
+        "startChar": 3,
+        "endLine": 473,
+        "endChar": 30
+      },
+      "revId": "aaf0498ad487dfb102e1351cae70ccae521fb233",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "18880da0_b10d6f3e",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 234,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-21T07:35:08Z",
+      "side": 1,
+      "message": "nit: prefer the \"using\" syntax.\n\nusing ShaderStageMask \u003d angle::BitSet\u003cSHADER_TYPE_MAX\u003e;",
+      "range": {
+        "startLine": 234,
+        "startChar": 0,
+        "endLine": 234,
+        "endChar": 8
+      },
+      "revId": "aaf0498ad487dfb102e1351cae70ccae521fb233",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1cf5c2ab_8593e4d2",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 316,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-21T07:35:08Z",
+      "side": 1,
+      "message": "you can remove setLinkedShaderStages.",
+      "range": {
+        "startLine": 311,
+        "startChar": 0,
+        "endLine": 316,
+        "endChar": 5
+      },
+      "revId": "aaf0498ad487dfb102e1351cae70ccae521fb233",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "700af47e_de1a5819",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 1011,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-21T07:35:08Z",
+      "side": 1,
+      "message": "it\u0027s redundant to compare a boolean with false, use \"!\"",
+      "range": {
+        "startLine": 1011,
+        "startChar": 39,
+        "endLine": 1011,
+        "endChar": 82
+      },
+      "revId": "aaf0498ad487dfb102e1351cae70ccae521fb233",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
