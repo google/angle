@@ -4,7 +4,6 @@
 
 import("../../gni/angle.gni")
 import("//build/config/chromecast_build.gni")
-import("//build/config/angle_temp.gni")
 import("//testing/test.gni")
 
 unittests_gypi = exec_script("//build/gypi_to_gn.py",
@@ -314,6 +313,7 @@ if (build_angle_deqp_tests) {
 
   deqp_undefine_configs = [
     "//build/config/compiler:chromium_code",
+    "//build/config/compiler:no_exceptions",
     "//build/config/compiler:no_rtti",
   ]
 
@@ -325,27 +325,14 @@ if (build_angle_deqp_tests) {
     ]
   }
 
-  # TODO(jmadill): Fix this once upstream change is landed.
-  if (is_temp_angle) {
-    deqp_undefine_configs += [ "//build/config/compiler:no_exceptions" ]
-  } else {
-    if (is_linux || is_android || is_mac) {
-      deqp_undefine_configs += [ "//build/config/gcc:no_exceptions" ]
-    }
-  }
-
   static_library("angle_deqp_decpp") {
     configs -= deqp_undefine_configs
     public_configs = [
       ":angle_deqp_support",
+      "//build/config/compiler:exceptions",
       "//build/config/compiler:no_chromium_code",
       angle_root + ":internal_config",
     ]
-
-    # TODO(jmadill): Fix this once upstream change is landed.
-    if (is_temp_angle) {
-      public_configs += [ "//build/config/compiler:exceptions" ]
-    }
 
     sources = rebase_path(deqp_gypi.deqp_libtester_decpp_sources, ".", "../..")
   }

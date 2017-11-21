@@ -6,13 +6,13 @@ vars = {
 deps = {
 
   'build':
-    Var('chromium_git') + '/chromium/src/build.git' + '@' + 'bd767a7bd2689943bca4b66009aad279b55487f8',
+    Var('chromium_git') + '/chromium/src/build.git' + '@' + '8a1537f019e55807420ae76c62e4ce8f56fedca1',
 
   'buildtools':
-    Var('chromium_git') + '/chromium/buildtools.git' + '@' + '93a751e41bd93e373548759c6c5453bd95b6f35e',
+    Var('chromium_git') + '/chromium/buildtools.git' + '@' + '461b345a815c1c745ac0534a6a4bd52d123abe68',
 
   'testing':
-    Var('chromium_git') + '/chromium/src/testing' + '@' + '8893f3930ce94c9e5350e0e87ddf159bf1d495b8',
+    Var('chromium_git') + '/chromium/src/testing' + '@' + '6dfa36ab2e5143fa2f7353e3af5d2935af2e61f7',
 
   # Cherry is a dEQP management GUI written in Go. We use it for viewing test results.
   'third_party/cherry':
@@ -54,6 +54,7 @@ hooks = [
   {
     'name': 'clang_format_win',
     'pattern': '.',
+    'condition': 'host_os == "win"',
     'action': [ 'download_from_google_storage',
                 '--no_resume',
                 '--platform=win32',
@@ -65,6 +66,7 @@ hooks = [
   {
     'name': 'clang_format_mac',
     'pattern': '.',
+    'condition': 'host_os == "mac"',
     'action': [ 'download_from_google_storage',
                 '--no_resume',
                 '--platform=darwin',
@@ -76,6 +78,7 @@ hooks = [
   {
     'name': 'clang_format_linux',
     'pattern': '.',
+    'condition': 'host_os == "linux"',
     'action': [ 'download_from_google_storage',
                 '--no_resume',
                 '--platform=linux*',
@@ -88,6 +91,7 @@ hooks = [
   {
     'name': 'gn_win',
     'pattern': '.',
+    'condition': 'host_os == "win"',
     'action': [ 'download_from_google_storage',
                 '--no_resume',
                 '--platform=win32',
@@ -99,6 +103,7 @@ hooks = [
   {
     'name': 'gn_mac',
     'pattern': '.',
+    'condition': 'host_os == "mac"',
     'action': [ 'download_from_google_storage',
                 '--no_resume',
                 '--platform=darwin',
@@ -110,6 +115,7 @@ hooks = [
   {
     'name': 'gn_linux64',
     'pattern': '.',
+    'condition': 'host_os == "linux"',
     'action': [ 'download_from_google_storage',
                 '--no_resume',
                 '--platform=linux*',
@@ -119,7 +125,6 @@ hooks = [
     ],
   },
   {
-    # Pull clang if needed or requested via GYP_DEFINES.
     # Note: On Win, this should run after win_toolchain, as it may use it.
     'name': 'clang',
     'pattern': '.',
