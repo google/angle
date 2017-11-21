@@ -22,6 +22,30 @@
       "revId": "2cb023fb527d8ddc3ce5c546bbd5afe3252b6978",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "80f507bf_371c44d1",
+        "filename": "infra/config/cq.cfg",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-21T17:51:25Z",
+      "side": 1,
+      "message": "Yes, they are. It bugs me too.. but the ship has sailed.",
+      "parentUuid": "5b55445a_bd66b372",
+      "range": {
+        "startLine": 33,
+        "startChar": 24,
+        "endLine": 33,
+        "endChar": 36
+      },
+      "revId": "2cb023fb527d8ddc3ce5c546bbd5afe3252b6978",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
