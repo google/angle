@@ -120,6 +120,30 @@
     },
     {
       "key": {
+        "uuid": "1c656789_34eaf5ca",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 32
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-21T11:56:57Z",
+      "side": 1,
+      "message": "OK, leaving untouched for now.",
+      "parentUuid": "5cc4dd23_2fa12243",
+      "range": {
+        "startLine": 117,
+        "startChar": 30,
+        "endLine": 117,
+        "endChar": 40
+      },
+      "revId": "6748dc53b8b543ad28172ec3359519e4f1ca3587",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "43588bc3_8a1cbca1",
         "filename": "src/compiler/translator/ShaderVars.cpp",
         "patchSetId": 32
@@ -179,6 +203,30 @@
       "side": 1,
       "message": "I like getOutermostElementCount and getTotalElementCount. I\u0027m fine if it doesn\u0027t match the API function exactly. I think you use it in one other place, and I\u0027d like for you to use it instead of the isArray ? arraySize : 1 expressions",
       "parentUuid": "225ea228_ecd9ec08",
+      "range": {
+        "startLine": 116,
+        "startChar": 20,
+        "endLine": 116,
+        "endChar": 40
+      },
+      "revId": "6748dc53b8b543ad28172ec3359519e4f1ca3587",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "32d14c51_6765dd8d",
+        "filename": "src/compiler/translator/ShaderVars.cpp",
+        "patchSetId": 32
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-21T11:56:57Z",
+      "side": 1,
+      "message": "In this version of the patch it is used exclusively in places where the API spec for ARRAY_SIZE query needs to be followed, that\u0027s the reason I added this function in the first place. If you\u0027re thinking about the GetActiveUniform implementation, that is also defined in terms of GetActiveResourceiv in the GLES 3.1 spec.\n\nBut we can assert here that we\u0027re not dealing with an array of structs, which makes the function logic more straightforward. Then the function could be described as \"get the array size of a one-dimensional array of basic types, or 1 if not an array\". But \"getOutermostElementCount\" doesn\u0027t communicate this clearly - on the contrary, it suggests that there might be multiple levels of nesting and that we\u0027re interested in the outermost. So I named this \"getBasicTypeElementCount\" now and used it in a few more places. Do you think that this is good?",
+      "parentUuid": "8f174106_9b0d9088",
       "range": {
         "startLine": 116,
         "startChar": 20,
@@ -356,6 +404,30 @@
     },
     {
       "key": {
+        "uuid": "09a2ac1d_bc31ca90",
+        "filename": "src/compiler/translator/blocklayout.cpp",
+        "patchSetId": 32
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-21T11:56:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c3909222_0a2f08e4",
+      "range": {
+        "startLine": 164,
+        "startChar": 41,
+        "endLine": 164,
+        "endChar": 89
+      },
+      "revId": "6748dc53b8b543ad28172ec3359519e4f1ca3587",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "66c0c1e7_00332c43",
         "filename": "src/libANGLE/ProgramLinkedResources.cpp",
         "patchSetId": 32
@@ -447,6 +519,30 @@
       "revId": "6748dc53b8b543ad28172ec3359519e4f1ca3587",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "df2c0a96_56e5bbfe",
+        "filename": "src/libANGLE/ProgramLinkedResources.cpp",
+        "patchSetId": 32
+      },
+      "lineNbr": 500,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-21T11:56:57Z",
+      "side": 1,
+      "message": "Added a helper ShaderVariable::getNthNestedArraySize() now.",
+      "parentUuid": "e601a64a_95f39aea",
+      "range": {
+        "startLine": 500,
+        "startChar": 43,
+        "endLine": 500,
+        "endChar": 93
+      },
+      "revId": "6748dc53b8b543ad28172ec3359519e4f1ca3587",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
