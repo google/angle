@@ -69,6 +69,30 @@
       "revId": "d5b304a4288d3963d220494cbab5cce7e041652f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "773b61f1_2d1aab88",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 3029,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-22T04:49:24Z",
+      "side": 1,
+      "message": "Sorry for the confusion, but I needed to remove the ASSERT. In some cases, we know the first vertex is zero, but still need vertexCount().",
+      "parentUuid": "e5da3b6b_f5550e0a",
+      "range": {
+        "startLine": 3029,
+        "startChar": 8,
+        "endLine": 3029,
+        "endChar": 20
+      },
+      "revId": "d5b304a4288d3963d220494cbab5cce7e041652f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
