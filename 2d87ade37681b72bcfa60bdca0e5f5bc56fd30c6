@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b569ef0e_930c6acd",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 3028,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-11-22T21:33:09Z",
+      "side": 1,
+      "message": "Can this be ASSERT(!mFirstVertex.valid() || mFirstVertex \u003d\u003d mBaseVertex + static_cast\u003cGLint\u003e(indexRange.start)), please? Seems like a really nasty bug to track if this invariant will be broken in the future by someone calling DrawCallVertexParams() constructor with wrong arguments.",
+      "range": {
+        "startLine": 3028,
+        "startChar": 8,
+        "endLine": 3028,
+        "endChar": 38
+      },
+      "revId": "2d87ade37681b72bcfa60bdca0e5f5bc56fd30c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
