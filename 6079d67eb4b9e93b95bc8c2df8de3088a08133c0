@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da27e00e_3012f8c1",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-22T19:26:45Z",
+      "side": 1,
+      "message": "note for Corentin: I suspect this will be an easy internal enum change.",
+      "range": {
+        "startLine": 50,
+        "startChar": 5,
+        "endLine": 50,
+        "endChar": 15
+      },
+      "revId": "6079d67eb4b9e93b95bc8c2df8de3088a08133c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
