@@ -132,10 +132,20 @@ Compiler::Compiler(rx::GLImplFactory *implFactory, const ContextState &state)
     }
 
     // Geometry Shader constants
+    // TODO(jiawei.shao@intel.com): use EXT_geometry_shader everywhere in compiler.
     mResources.OES_geometry_shader = extensions.geometryShader;
-    // TODO(jiawei.shao@intel.com): initialize all implementation dependent geometry shader limits.
-    mResources.MaxGeometryOutputVertices    = extensions.maxGeometryOutputVertices;
-    mResources.MaxGeometryShaderInvocations = extensions.maxGeometryShaderInvocations;
+    mResources.MaxGeometryUniformComponents     = caps.maxGeometryUniformComponents;
+    mResources.MaxGeometryUniformBlocks         = caps.maxGeometryUniformBlocks;
+    mResources.MaxGeometryInputComponents       = caps.maxGeometryInputComponents;
+    mResources.MaxGeometryOutputComponents      = caps.maxGeometryOutputComponents;
+    mResources.MaxGeometryOutputVertices        = caps.maxGeometryOutputVertices;
+    mResources.MaxGeometryTotalOutputComponents = caps.maxGeometryTotalOutputComponents;
+    mResources.MaxGeometryTextureImageUnits     = caps.maxGeometryTextureImageUnits;
+    mResources.MaxGeometryAtomicCounterBuffers  = caps.maxGeometryAtomicCounterBuffers;
+    mResources.MaxGeometryAtomicCounters        = caps.maxGeometryAtomicCounters;
+    mResources.MaxGeometryShaderStorageBlocks   = caps.maxGeometryShaderStorageBlocks;
+    mResources.MaxGeometryShaderInvocations     = caps.maxGeometryShaderInvocations;
+    mResources.MaxGeometryImageUniforms         = caps.maxGeometryImageUniforms;
 }
 
 Compiler::~Compiler()
@@ -162,6 +172,15 @@ Compiler::~Compiler()
     {
         sh::Destruct(mComputeCompiler);
         mComputeCompiler = nullptr;
+
+        ASSERT(activeCompilerHandles > 0);
+        activeCompilerHandles--;
+    }
+
+    if (mGeometryCompiler)
+    {
+        sh::Destruct(mGeometryCompiler);
+        mGeometryCompiler = nullptr;
 
         ASSERT(activeCompilerHandles > 0);
         activeCompilerHandles--;

@@ -87,6 +87,7 @@ ContextNULL::ContextNULL(const gl::ContextState &state, AllocationTrackerNULL *a
     mExtensions.textureCompressionASTCLDR  = true;
     mExtensions.compressedETC1RGB8Texture  = true;
     mExtensions.lossyETCDecode             = true;
+    mExtensions.geometryShader             = true;
 
     const gl::Version maxClientVersion(3, 1);
     mCaps = GenerateMinimumCaps(maxClientVersion, mExtensions);
