@@ -24,9 +24,9 @@ template_entry_point_header = """// GENERATED FILE - DO NOT EDIT.
 #ifndef LIBGLESV2_ENTRYPOINTSGLES{major_version}{minor_version}_AUTOGEN_H_
 #define LIBGLESV2_ENTRYPOINTSGLES{major_version}{minor_version}_AUTOGEN_H_
 
-#include <GLES{major_version}/gl{major_version}.h>
+#include <GLES{major_version}/gl{major_version}{minor_version_nonzero}.h>
 #include <export.h>
-
+{include_platform}
 namespace gl
 {{
 {entry_points}
@@ -46,7 +46,7 @@ template_entry_point_source = """// GENERATED FILE - DO NOT EDIT.
 //   Defines the GLES {major_version}.{minor_version} entry points.
 
 #include "libANGLE/Context.h"
-#include "libANGLE/validationES{major_version}.h"
+#include "libANGLE/validationES{major_version}{minor_version_nonzero}.h"
 #include "libGLESv2/global_state.h"
 
 namespace gl
@@ -118,18 +118,7 @@ def script_relative(path):
 
 tree = etree.parse(script_relative('gl.xml'))
 root = tree.getroot()
-
-gles2_xpath = ".//feature[@name='GL_ES_VERSION_2_0']//command"
-gles2_commands = [cmd.attrib['name'] for cmd in root.findall(gles2_xpath)]
-
-gles3_xpath = ".//feature[@name='GL_ES_VERSION_3_0']//command"
-gles3_commands = [cmd.attrib['name'] for cmd in root.findall(gles3_xpath)]
-
 commands = root.find(".//commands[@namespace='GL']")
-entry_point_decls_gles_2_0 = []
-entry_point_defs_gles_2_0 = []
-entry_point_decls_gles_3_0 = []
-entry_point_defs_gles_3_0 = []
 cmd_names = []
 
 with open(script_relative('entry_point_packed_gl_enums.json')) as f:
@@ -244,55 +233,58 @@ def format_entry_point_def_oldstyle(cmd_name, proto, params):
         default_value_if_needed = "" if default_return == "" else (" " + default_return),
         context_getter = get_context_getter_function(cmd_name))
 
-for cmd_name in gles2_commands:
-    command_xpath = "command/proto[name='" + cmd_name + "']/.."
-    command = commands.find(command_xpath)
-    params = ["".join(param.itertext()) for param in command.findall("./param")]
-    proto = "".join(command.find("./proto").itertext())
-    cmd_names += [cmd_name]
-    entry_point_decls_gles_2_0 += [format_entry_point_decl(cmd_name, proto, params)]
-    entry_point_defs_gles_2_0 += [format_entry_point_def(cmd_name, proto, params)]
+def path_to(folder, file):
+    return os.path.join(script_relative(".."), "src", folder, file)
 
-for cmd_name in gles3_commands:
-    command_xpath = "command/proto[name='" + cmd_name + "']/.."
-    command = commands.find(command_xpath)
-    params = ["".join(param.itertext()) for param in command.findall("./param")]
-    proto = "".join(command.find("./proto").itertext())
-    cmd_names += [cmd_name]
-    entry_point_decls_gles_3_0 += [format_entry_point_decl(cmd_name, proto, params)]
-    entry_point_defs_gles_3_0 += [format_entry_point_def(cmd_name, proto, params)]
+for major_version, minor_version in [[2, 0], [3, 0], [3, 1]]:
+    gles_xpath = ".//feature[@name='GL_ES_VERSION_{}_{}']//command".format(major_version, minor_version)
+    gles_commands = [cmd.attrib['name'] for cmd in root.findall(gles_xpath)]
 
-gles_2_0_header = template_entry_point_header.format(
-    script_name = os.path.basename(sys.argv[0]),
-    data_source_name = "gl.xml",
-    year = date.today().year,
-    major_version = 2,
-    minor_version = 0,
-    entry_points = "\n".join(entry_point_decls_gles_2_0))
+    entry_point_decls = []
+    entry_point_defs = []
+    for cmd_name in gles_commands:
+        command_xpath = "command/proto[name='" + cmd_name + "']/.."
+        command = commands.find(command_xpath)
+        params = ["".join(param.itertext()) for param in command.findall("./param")]
+        proto = "".join(command.find("./proto").itertext())
+        cmd_names += [cmd_name]
+        entry_point_decls += [format_entry_point_decl(cmd_name, proto, params)]
+        if major_version == 3 and minor_version == 1:
+            entry_point_defs += [format_entry_point_def_oldstyle(cmd_name, proto, params)]
+        else:
+            entry_point_defs += [format_entry_point_def(cmd_name, proto, params)]
 
-gles_2_0_source = template_entry_point_source.format(
-    script_name = os.path.basename(sys.argv[0]),
-    data_source_name = "gl.xml",
-    year = date.today().year,
-    major_version = 2,
-    minor_version = 0,
-    entry_points = "\n".join(entry_point_defs_gles_2_0))
+    for type in ["header", "source"]:
+        if type == "header":
+            template = template_entry_point_header
+            entry_points = "\n".join(entry_point_decls)
+            suffix = "h"
+        else:
+            template = template_entry_point_source
+            entry_points = "\n".join(entry_point_defs)
+            suffix = "cpp"
 
-gles_3_0_header = template_entry_point_header.format(
-    script_name = os.path.basename(sys.argv[0]),
-    data_source_name = "gl.xml",
-    year = date.today().year,
-    major_version = 3,
-    minor_version = 0,
-    entry_points = "\n".join(entry_point_decls_gles_3_0))
+        if type == "header" and major_version == 3 and minor_version == 1:
+            # We include the platform.h header since it undefines the conflicting MemoryBarrier macro.
+            include_platform = "\n#include \"common/platform.h\"\n"
+        else:
+            include_platform = ""
 
-gles_3_0_source = template_entry_point_source.format(
-    script_name = os.path.basename(sys.argv[0]),
-    data_source_name = "gl.xml",
-    year = date.today().year,
-    major_version = 3,
-    minor_version = 0,
-    entry_points = "\n".join(entry_point_defs_gles_3_0))
+        content = template.format(
+            script_name = os.path.basename(sys.argv[0]),
+            data_source_name = "gl.xml",
+            year = date.today().year,
+            major_version = major_version,
+            minor_version = minor_version,
+            minor_version_nonzero = minor_version if minor_version else "",
+            include_platform = include_platform,
+            entry_points = entry_points)
+
+        path = path_to("libGLESv2", "entry_points_gles_{}_{}_autogen.{}".format(major_version, minor_version, suffix))
+
+        with open(path, "w") as out:
+            out.write(content)
+            out.close()
 
 # TODO(jmadill): Remove manually added entry points once we auto-gen them.
 manual_cmd_names = ["Invalid"] + [cmd[2:] for cmd in cmd_names] + ["DrawElementsInstancedANGLE"]
@@ -302,31 +294,7 @@ entry_points_enum = template_entry_points_enum_header.format(
     year = date.today().year,
     entry_points_list = ",\n".join(["    " + cmd for cmd in manual_cmd_names]))
 
-def path_to(folder, file):
-    return os.path.join(script_relative(".."), "src", folder, file)
-
-gles_2_0_header_path = path_to("libGLESv2", "entry_points_gles_2_0_autogen.h")
-gles_2_0_source_path = path_to("libGLESv2", "entry_points_gles_2_0_autogen.cpp")
-gles_3_0_header_path = path_to("libGLESv2", "entry_points_gles_3_0_autogen.h")
-gles_3_0_source_path = path_to("libGLESv2", "entry_points_gles_3_0_autogen.cpp")
 entry_points_enum_header_path = path_to("libANGLE", "entry_points_enum_autogen.h")
-
-with open(gles_2_0_header_path, "w") as out:
-    out.write(gles_2_0_header)
-    out.close()
-
-with open(gles_2_0_source_path, "w") as out:
-    out.write(gles_2_0_source)
-    out.close()
-
-with open(gles_3_0_header_path, "w") as out:
-    out.write(gles_3_0_header)
-    out.close()
-
-with open(gles_3_0_source_path, "w") as out:
-    out.write(gles_3_0_source)
-    out.close()
-
 with open(entry_points_enum_header_path, "w") as out:
     out.write(entry_points_enum)
     out.close()
