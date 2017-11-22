@@ -70,6 +70,30 @@
       "revId": "ec9a9ae80484a3984e99a1e58b757a7165c72c97",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "54a381ae_c5a96a0d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1652,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-22T00:52:12Z",
+      "side": 0,
+      "message": "It should be entering the draw call down below. What are the values for programD3D-\u003eusesPointSize() / programD3D-\u003eusesInstancedPointSpriteEmulation() / mode that you think will lead to no draw call being issued? Can you trace it through this function once to try and prove there\u0027s no draw call?",
+      "parentUuid": "6a997861_1aac4142",
+      "range": {
+        "startLine": 1652,
+        "startChar": 9,
+        "endLine": 1652,
+        "endChar": 33
+      },
+      "revId": "ec9a9ae80484a3984e99a1e58b757a7165c72c97",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
