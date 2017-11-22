@@ -34,6 +34,24 @@
       "revId": "2a1d3c9e3ef6deaad74b37bc68c1e4ecacc0116f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "12c60887_7bd81d61",
+        "filename": "src/compiler/translator/Types.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2017-11-22T20:11:01Z",
+      "side": 1,
+      "message": "Okay, I\u0027m looking into this. I don\u0027t see why POOL_ALLOCATOR_NEW_DELETE wouldn\u0027t take effect here... actually, I played around with it a bit and it _seems_ like the custom allocator is getting called appropriately. Do you know specifically why it should be necessary to allocate manually?",
+      "parentUuid": "026eb8ad_c4469247",
+      "revId": "2a1d3c9e3ef6deaad74b37bc68c1e4ecacc0116f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
