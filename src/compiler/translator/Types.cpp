@@ -123,6 +123,7 @@ TType::TType()
       layoutQualifier(TLayoutQualifier::Create()),
       primarySize(0),
       secondarySize(0),
+      mArraySizes(nullptr),
       mInterfaceBlock(nullptr),
       mStructure(nullptr),
       mIsStructSpecifier(false),
@@ -139,8 +140,9 @@ TType::TType(TBasicType t, unsigned char ps, unsigned char ss)
       layoutQualifier(TLayoutQualifier::Create()),
       primarySize(ps),
       secondarySize(ss),
-      mInterfaceBlock(0),
-      mStructure(0),
+      mArraySizes(nullptr),
+      mInterfaceBlock(nullptr),
+      mStructure(nullptr),
       mIsStructSpecifier(false),
       mMangledName(nullptr)
 {
@@ -155,8 +157,9 @@ TType::TType(TBasicType t, TPrecision p, TQualifier q, unsigned char ps, unsigne
       layoutQualifier(TLayoutQualifier::Create()),
       primarySize(ps),
       secondarySize(ss),
-      mInterfaceBlock(0),
-      mStructure(0),
+      mArraySizes(nullptr),
+      mInterfaceBlock(nullptr),
+      mStructure(nullptr),
       mIsStructSpecifier(false),
       mMangledName(nullptr)
 {
@@ -171,6 +174,7 @@ TType::TType(const TPublicType &p)
       layoutQualifier(p.layoutQualifier),
       primarySize(p.getPrimarySize()),
       secondarySize(p.getSecondarySize()),
+      mArraySizes(nullptr),
       mInterfaceBlock(nullptr),
       mStructure(nullptr),
       mIsStructSpecifier(false),
@@ -180,7 +184,7 @@ TType::TType(const TPublicType &p)
     ASSERT(secondarySize <= 4);
     if (p.isArray())
     {
-        mArraySizes = *p.arraySizes;
+        mArraySizes = new TVector<unsigned int>(*p.arraySizes);
     }
     if (p.getUserDef())
     {
@@ -198,6 +202,7 @@ TType::TType(TStructure *userDef)
       layoutQualifier(TLayoutQualifier::Create()),
       primarySize(1),
       secondarySize(1),
+      mArraySizes(nullptr),
       mInterfaceBlock(nullptr),
       mStructure(userDef),
       mIsStructSpecifier(false),
@@ -216,6 +221,7 @@ TType::TType(TInterfaceBlock *interfaceBlockIn,
       layoutQualifier(layoutQualifierIn),
       primarySize(1),
       secondarySize(1),
+      mArraySizes(nullptr),
       mInterfaceBlock(interfaceBlockIn),
       mStructure(0),
       mIsStructSpecifier(false),
@@ -223,10 +229,39 @@ TType::TType(TInterfaceBlock *interfaceBlockIn,
 {
 }
 
-TType::TType(const TType &) = default;
-
-TType::~TType()
+TType::TType(const TType &t)
+    : type(t.type),
+      precision(t.precision),
+      qualifier(t.qualifier),
+      invariant(t.invariant),
+      memoryQualifier(t.memoryQualifier),
+      layoutQualifier(t.layoutQualifier),
+      primarySize(t.primarySize),
+      secondarySize(t.secondarySize),
+      mArraySizes(t.mArraySizes ? new TVector<unsigned int>(*t.mArraySizes) : nullptr),
+      mInterfaceBlock(t.mInterfaceBlock),
+      mStructure(t.mStructure),
+      mIsStructSpecifier(t.mIsStructSpecifier),
+      mMangledName(t.mMangledName)
 {
+}
+
+TType &TType::operator=(const TType &t)
+{
+    type               = t.type;
+    precision          = t.precision;
+    qualifier          = t.qualifier;
+    invariant          = t.invariant;
+    memoryQualifier    = t.memoryQualifier;
+    layoutQualifier    = t.layoutQualifier;
+    primarySize        = t.primarySize;
+    secondarySize      = t.secondarySize;
+    mArraySizes        = t.mArraySizes ? new TVector<unsigned int>(*t.mArraySizes) : nullptr;
+    mInterfaceBlock    = t.mInterfaceBlock;
+    mStructure         = t.mStructure;
+    mIsStructSpecifier = t.mIsStructSpecifier;
+    mMangledName       = t.mMangledName;
+    return *this;
 }
 
 bool TType::canBeConstructed() const
@@ -370,10 +405,13 @@ TString TType::getCompleteString() const
         stream << getQualifierString() << " ";
     if (precision != EbpUndefined)
         stream << getPrecisionString() << " ";
-    for (auto arraySizeIter = mArraySizes.rbegin(); arraySizeIter != mArraySizes.rend();
-         ++arraySizeIter)
+    if (mArraySizes)
     {
-        stream << "array[" << (*arraySizeIter) << "] of ";
+        for (auto arraySizeIter = mArraySizes->rbegin(); arraySizeIter != mArraySizes->rend();
+             ++arraySizeIter)
+        {
+            stream << "array[" << (*arraySizeIter) << "] of ";
+        }
     }
     if (isMatrix())
         stream << getCols() << "X" << getRows() << " matrix of ";
@@ -536,13 +574,16 @@ const char *TType::buildMangledName() const
         mangledName += static_cast<char>('0' + getNominalSize());
     }
 
-    for (unsigned int arraySize : mArraySizes)
+    if (mArraySizes)
     {
-        char buf[20];
-        snprintf(buf, sizeof(buf), "%d", arraySize);
-        mangledName += '[';
-        mangledName += buf;
-        mangledName += ']';
+        for (unsigned int arraySize : *mArraySizes)
+        {
+            char buf[20];
+            snprintf(buf, sizeof(buf), "%d", arraySize);
+            mangledName += '[';
+            mangledName += buf;
+            mangledName += ']';
+        }
     }
 
     mangledName += ';';
@@ -566,12 +607,15 @@ size_t TType::getObjectSize() const
     if (totalSize == 0)
         return 0;
 
-    for (size_t arraySize : mArraySizes)
+    if (mArraySizes)
     {
-        if (arraySize > INT_MAX / totalSize)
-            totalSize = INT_MAX;
-        else
-            totalSize *= arraySize;
+        for (size_t arraySize : *mArraySizes)
+        {
+            if (arraySize > INT_MAX / totalSize)
+                totalSize = INT_MAX;
+            else
+                totalSize *= arraySize;
+        }
     }
 
     return totalSize;
@@ -591,15 +635,18 @@ int TType::getLocationCount() const
         return 0;
     }
 
-    for (unsigned int arraySize : mArraySizes)
+    if (mArraySizes)
     {
-        if (arraySize > static_cast<unsigned int>(std::numeric_limits<int>::max() / count))
+        for (unsigned int arraySize : *mArraySizes)
         {
-            count = std::numeric_limits<int>::max();
-        }
-        else
-        {
-            count *= static_cast<int>(arraySize);
+            if (arraySize > static_cast<unsigned int>(std::numeric_limits<int>::max() / count))
+            {
+                count = std::numeric_limits<int>::max();
+            }
+            else
+            {
+                count *= static_cast<int>(arraySize);
+            }
         }
     }
 
@@ -608,8 +655,12 @@ int TType::getLocationCount() const
 
 unsigned int TType::getArraySizeProduct() const
 {
+    if (!mArraySizes)
+        return 1u;
+
     unsigned int product = 1u;
-    for (unsigned int arraySize : mArraySizes)
+
+    for (unsigned int arraySize : *mArraySizes)
     {
         product *= arraySize;
     }
@@ -618,7 +669,10 @@ unsigned int TType::getArraySizeProduct() const
 
 bool TType::isUnsizedArray() const
 {
-    for (unsigned int arraySize : mArraySizes)
+    if (!mArraySizes)
+        return false;
+
+    for (unsigned int arraySize : *mArraySizes)
     {
         if (arraySize == 0u)
         {
@@ -640,33 +694,38 @@ bool TType::isElementTypeOf(const TType &arrayType) const
     {
         return false;
     }
-    if (arrayType.mArraySizes.size() != mArraySizes.size() + 1u)
+    if (arrayType.getNumArraySizes() != getNumArraySizes() + 1u)
     {
         return false;
     }
-    for (size_t i = 0; i < mArraySizes.size(); ++i)
+    if (isArray())
     {
-        if (mArraySizes[i] != arrayType.mArraySizes[i])
+        for (size_t i = 0; i < mArraySizes->size(); ++i)
         {
-            return false;
+            if ((*mArraySizes)[i] != (*arrayType.mArraySizes)[i])
+            {
+                return false;
+            }
         }
     }
     return true;
 }
 
-void TType::sizeUnsizedArrays(const TVector<unsigned int> &arraySizes)
+void TType::sizeUnsizedArrays(const TVector<unsigned int> *newArraySizes)
 {
-    for (size_t i = 0u; i < mArraySizes.size(); ++i)
+    size_t newArraySizesSize = newArraySizes ? newArraySizes->size() : 0;
+    for (size_t i = 0u; i < getNumArraySizes(); ++i)
     {
-        if (mArraySizes[i] == 0)
+        if ((*mArraySizes)[i] == 0)
         {
-            if (i < arraySizes.size())
+            if (i < newArraySizesSize)
             {
-                mArraySizes[i] = arraySizes[i];
+                ASSERT(newArraySizes != nullptr);
+                (*mArraySizes)[i] = (*newArraySizes)[i];
             }
             else
             {
-                mArraySizes[i] = 1u;
+                (*mArraySizes)[i] = 1u;
             }
         }
     }
@@ -676,8 +735,8 @@ void TType::sizeUnsizedArrays(const TVector<unsigned int> &arraySizes)
 void TType::sizeOutermostUnsizedArray(unsigned int arraySize)
 {
     ASSERT(isArray());
-    ASSERT(mArraySizes.back() == 0u);
-    mArraySizes.back() = arraySize;
+    ASSERT(mArraySizes->back() == 0u);
+    mArraySizes->back() = arraySize;
 }
 
 void TType::setBasicType(TBasicType t)
@@ -711,31 +770,39 @@ void TType::setSecondarySize(unsigned char ss)
 
 void TType::makeArray(unsigned int s)
 {
-    mArraySizes.push_back(s);
+    if (!mArraySizes)
+        mArraySizes = new TVector<unsigned int>();
+
+    mArraySizes->push_back(s);
     invalidateMangledName();
 }
 
 void TType::makeArrays(const TVector<unsigned int> &sizes)
 {
-    mArraySizes.insert(mArraySizes.end(), sizes.begin(), sizes.end());
+    if (!mArraySizes)
+        mArraySizes = new TVector<unsigned int>();
+
+    mArraySizes->insert(mArraySizes->end(), sizes.begin(), sizes.end());
     invalidateMangledName();
 }
 
 void TType::setArraySize(size_t arrayDimension, unsigned int s)
 {
-    ASSERT(arrayDimension < mArraySizes.size());
-    if (mArraySizes.at(arrayDimension) != s)
+    ASSERT(mArraySizes != nullptr);
+    ASSERT(arrayDimension < mArraySizes->size());
+    if (mArraySizes->at(arrayDimension) != s)
     {
-        mArraySizes[arrayDimension] = s;
+        (*mArraySizes)[arrayDimension] = s;
         invalidateMangledName();
     }
 }
 
 void TType::toArrayElementType()
 {
-    if (mArraySizes.size() > 0)
+    ASSERT(mArraySizes != nullptr);
+    if (mArraySizes->size() > 0)
     {
-        mArraySizes.pop_back();
+        mArraySizes->pop_back();
         invalidateMangledName();
     }
 }

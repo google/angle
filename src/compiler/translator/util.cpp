@@ -456,7 +456,10 @@ GLenum GLVariablePrecision(const TType &type)
 TString ArrayString(const TType &type)
 {
     TStringStream arrayString;
-    const TVector<unsigned int> &arraySizes = type.getArraySizes();
+    if (!type.isArray())
+        return arrayString.str();
+
+    const TVector<unsigned int> &arraySizes = *type.getArraySizes();
     for (auto arraySizeIter = arraySizes.rbegin(); arraySizeIter != arraySizes.rend();
          ++arraySizeIter)
     {

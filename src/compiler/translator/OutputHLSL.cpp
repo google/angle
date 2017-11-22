@@ -38,9 +38,12 @@ TString ArrayHelperFunctionName(const char *prefix, const TType &type)
 {
     TStringStream fnName;
     fnName << prefix << "_";
-    for (unsigned int arraySize : type.getArraySizes())
+    if (type.isArray())
     {
-        fnName << arraySize << "_";
+        for (unsigned int arraySize : *type.getArraySizes())
+        {
+            fnName << arraySize << "_";
+        }
     }
     fnName << TypeString(type);
     return fnName.str();

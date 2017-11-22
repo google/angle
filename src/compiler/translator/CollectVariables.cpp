@@ -262,8 +262,11 @@ void CollectVariablesTraverser::setBuiltInInfoFromSymbolTable(const char *name,
     info->name       = name;
     info->mappedName = name;
     info->type       = GLVariableType(type);
-    info->arraySizes.assign(type.getArraySizes().begin(), type.getArraySizes().end());
     info->precision = GLVariablePrecision(type);
+    if (auto *arraySizes = type.getArraySizes())
+    {
+        info->arraySizes.assign(arraySizes->begin(), arraySizes->end());
+    }
 }
 
 void CollectVariablesTraverser::recordBuiltInVaryingUsed(const char *name,
@@ -581,7 +584,10 @@ void CollectVariablesTraverser::setCommonVariableProperties(const TType &type,
     variableOut->name       = name.getString().c_str();
     variableOut->mappedName = getMappedName(name);
 
-    variableOut->arraySizes.assign(type.getArraySizes().begin(), type.getArraySizes().end());
+    if (auto *arraySizes = type.getArraySizes())
+    {
+        variableOut->arraySizes.assign(arraySizes->begin(), arraySizes->end());
+    }
 }
 
 Attribute CollectVariablesTraverser::recordAttribute(const TIntermSymbol &variable) const
