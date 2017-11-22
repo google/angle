@@ -118,6 +118,30 @@
       "revId": "ec9a9ae80484a3984e99a1e58b757a7165c72c97",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fbd1422e_73b3f566",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1652,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-22T01:21:12Z",
+      "side": 0,
+      "message": "OK, so if mode \u003d\u003d GL_POINTS and usesPointSize() \u003d false and instanced point sprite emulation is active and transform feedback is active, then the draw calls might be different. you\u0027re right. I think that\u0027s okay.",
+      "parentUuid": "79f114f6_08f9348e",
+      "range": {
+        "startLine": 1652,
+        "startChar": 9,
+        "endLine": 1652,
+        "endChar": 33
+      },
+      "revId": "ec9a9ae80484a3984e99a1e58b757a7165c72c97",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }

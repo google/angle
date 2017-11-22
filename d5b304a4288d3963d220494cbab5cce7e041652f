@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "cfdb094c_57e90f77",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1446,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-22T01:21:12Z",
+      "side": 1,
+      "message": "see this check.",
+      "range": {
+        "startLine": 1446,
+        "startChar": 13,
+        "endLine": 1446,
+        "endChar": 79
+      },
+      "revId": "d5b304a4288d3963d220494cbab5cce7e041652f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6b8bdba5_d236a0e7",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
         "patchSetId": 8
