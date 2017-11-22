@@ -158,12 +158,16 @@ void TrimCache(size_t maxStates, size_t gcLimit, const char *name, T *cache)
     }
 }
 
+// Computes a hash of struct "key". Any structs passed to this function must be multiples of
+// 4 bytes, since the PMurhHas32 method can only operate increments of 4-byte words.
 template <typename T>
 std::size_t ComputeGenericHash(const T &key)
 {
     static const unsigned int seed = 0xABCDEF98;
 
-    return PMurHash32(seed, &key, sizeof(key));
+    // We can't support "odd" alignments.
+    static_assert(sizeof(key) % 4 == 0, "ComputeGenericHash requires aligned types");
+    return PMurHash32(seed, &key, sizeof(T));
 }
 
 }  // namespace angle

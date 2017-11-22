@@ -144,6 +144,7 @@ struct BlendState final
 {
     // This will zero-initialize the struct, including padding.
     BlendState();
+    BlendState(const BlendState &other);
 
     bool blend;
     GLenum sourceBlendRGB;
@@ -170,6 +171,7 @@ struct DepthStencilState final
 {
     // This will zero-initialize the struct, including padding.
     DepthStencilState();
+    DepthStencilState(const DepthStencilState &other);
 
     bool depthTest;
     GLenum depthFunc;

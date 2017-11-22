@@ -55,7 +55,6 @@ d3d11::BlendStateKey RenderStateCache::GetBlendStateKey(const gl::Context *conte
                                    blendState.colorMaskBlue, blendState.colorMaskAlpha);
 
     key.blendState = blendState;
-    key.mrt        = false;
 
     for (size_t i = 0; i < colorbuffers.size(); i++)
     {
@@ -63,23 +62,10 @@ d3d11::BlendStateKey RenderStateCache::GetBlendStateKey(const gl::Context *conte
 
         if (attachment)
         {
-            if (i > 0)
-            {
-                key.mrt = true;
-            }
-
+            key.rtvMax = static_cast<uint32_t>(i) + 1;
             key.rtvMasks[i] =
                 (gl_d3d11::GetColorMask(*attachment->getFormat().info)) & blendStateMask;
         }
-        else
-        {
-            key.rtvMasks[i] = 0;
-        }
-    }
-
-    for (size_t i = colorbuffers.size(); i < D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT; i++)
-    {
-        key.rtvMasks[i] = 0;
     }
 
     return key;
@@ -104,7 +90,7 @@ gl::Error RenderStateCache::getBlendState(Renderer11 *renderer,
     const gl::BlendState &blendState        = key.blendState;
 
     blendDesc.AlphaToCoverageEnable  = blendState.sampleAlphaToCoverage;
-    blendDesc.IndependentBlendEnable = key.mrt ? TRUE : FALSE;
+    blendDesc.IndependentBlendEnable = key.rtvMax > 1 ? TRUE : FALSE;
 
     rtDesc0 = {};
 
@@ -143,7 +129,7 @@ gl::Error RenderStateCache::getRasterizerState(Renderer11 *renderer,
 {
     d3d11::RasterizerStateKey key;
     key.rasterizerState = rasterState;
-    key.scissorEnabled = scissorEnabled;
+    key.scissorEnabled  = scissorEnabled ? 1 : 0;
 
     auto keyIter = mRasterizerStateCache.Get(key);
     if (keyIter != mRasterizerStateCache.end())

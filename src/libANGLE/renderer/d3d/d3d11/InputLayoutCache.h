@@ -28,7 +28,28 @@
 namespace rx
 {
 class DrawCallVertexParams;
-struct PackedAttributeLayout;
+struct PackedAttributeLayout
+{
+    PackedAttributeLayout();
+
+    void addAttributeData(GLenum glType,
+                          UINT semanticIndex,
+                          gl::VertexFormatType vertexFormatType,
+                          unsigned int divisor);
+
+    bool operator==(const PackedAttributeLayout &other) const;
+
+    enum Flags
+    {
+        FLAG_USES_INSTANCED_SPRITES     = 0x1,
+        FLAG_INSTANCED_SPRITES_ACTIVE   = 0x2,
+        FLAG_INSTANCED_RENDERING_ACTIVE = 0x4,
+    };
+
+    uint32_t numAttributes;
+    uint32_t flags;
+    std::array<uint32_t, gl::MAX_VERTEX_ATTRIBS> attributeData;
+};
 }  // namespace rx
 
 namespace std
@@ -55,28 +76,6 @@ struct TranslatedIndexData;
 struct SourceIndexData;
 class ProgramD3D;
 class Renderer11;
-
-struct PackedAttributeLayout
-{
-    PackedAttributeLayout();
-    void addAttributeData(GLenum glType,
-                          UINT semanticIndex,
-                          gl::VertexFormatType vertexFormatType,
-                          unsigned int divisor);
-
-    bool operator==(const PackedAttributeLayout &other) const;
-
-    enum Flags
-    {
-        FLAG_USES_INSTANCED_SPRITES     = 0x1,
-        FLAG_INSTANCED_SPRITES_ACTIVE   = 0x2,
-        FLAG_INSTANCED_RENDERING_ACTIVE = 0x4,
-    };
-
-    size_t numAttributes;
-    unsigned int flags;
-    std::array<uint32_t, gl::MAX_VERTEX_ATTRIBS> attributeData;
-};
 
 class InputLayoutCache : angle::NonCopyable
 {

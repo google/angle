@@ -79,6 +79,11 @@ BlendState::BlendState()
     dither                = true;
 }
 
+BlendState::BlendState(const BlendState &other)
+{
+    memcpy(this, &other, sizeof(BlendState));
+}
+
 bool operator==(const BlendState &a, const BlendState &b)
 {
     return memcmp(&a, &b, sizeof(BlendState)) == 0;
@@ -109,6 +114,11 @@ DepthStencilState::DepthStencilState()
     stencilBackFail          = GL_KEEP;
     stencilBackPassDepthFail = GL_KEEP;
     stencilBackPassDepthPass = GL_KEEP;
+}
+
+DepthStencilState::DepthStencilState(const DepthStencilState &other)
+{
+    memcpy(this, &other, sizeof(DepthStencilState));
 }
 
 bool operator==(const DepthStencilState &a, const DepthStencilState &b)

@@ -128,7 +128,10 @@ struct BlendStateKey final
     BlendStateKey();
 
     gl::BlendState blendState;
-    bool mrt;
+
+    // An int so struct size rounds nicely.
+    uint32_t rtvMax;
+
     uint8_t rtvMasks[D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT];
 };
 
@@ -141,7 +144,9 @@ struct RasterizerStateKey final
     RasterizerStateKey();
 
     gl::RasterizerState rasterizerState;
-    bool scissorEnabled;
+
+    // Use a 32-bit int to round the struct nicely.
+    uint32_t scissorEnabled;
 };
 
 bool operator==(const RasterizerStateKey &a, const RasterizerStateKey &b);

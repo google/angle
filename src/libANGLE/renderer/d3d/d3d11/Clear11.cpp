@@ -306,8 +306,6 @@ gl::Error Clear11::ensureResourcesInitialized()
     mBlendStateKey.blendState.blendEquationAlpha    = GL_FUNC_ADD;
     mBlendStateKey.blendState.sampleAlphaToCoverage = false;
     mBlendStateKey.blendState.dither                = true;
-    mBlendStateKey.mrt                              = false;
-    memset(mBlendStateKey.rtvMasks, 0, sizeof(mBlendStateKey.rtvMasks));
 
     mResourcesInitialized = true;
     return gl::NoError();
@@ -691,7 +689,7 @@ gl::Error Clear11::clearFramebuffer(const gl::Context *context,
     mBlendStateKey.blendState.colorMaskGreen = clearParams.colorMaskGreen;
     mBlendStateKey.blendState.colorMaskBlue  = clearParams.colorMaskBlue;
     mBlendStateKey.blendState.colorMaskAlpha = clearParams.colorMaskAlpha;
-    mBlendStateKey.mrt                       = numRtvs > 1;
+    mBlendStateKey.rtvMax                    = numRtvs;
     memcpy(mBlendStateKey.rtvMasks, &rtvMasks[0], sizeof(mBlendStateKey.rtvMasks));
 
     // Get BlendState
