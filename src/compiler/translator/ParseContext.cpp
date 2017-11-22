@@ -11,8 +11,8 @@
 
 #include "common/mathutil.h"
 #include "compiler/preprocessor/SourceLocation.h"
-#include "compiler/translator/Cache.h"
 #include "compiler/translator/IntermNode_util.h"
+#include "compiler/translator/StaticType.h"
 #include "compiler/translator/ValidateGlobalInitializer.h"
 #include "compiler/translator/ValidateSwitch.h"
 #include "compiler/translator/glslang.h"
@@ -3456,7 +3456,7 @@ TFunction *TParseContext::parseFunctionHeader(const TPublicType &type,
 
 TFunction *TParseContext::addNonConstructorFunc(const TString *name, const TSourceLoc &loc)
 {
-    const TType *returnType = TCache::getType(EbtVoid, EbpUndefined);
+    const TType *returnType = StaticType::GetQualified<EbtVoid, EvqTemporary>();
     return new TFunction(&symbolTable, name, returnType);
 }
 
