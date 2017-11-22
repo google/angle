@@ -98,6 +98,8 @@ GLenum GetIndexTranslationDestType(GLenum srcType,
                                    const gl::HasIndexRange &lazyIndexRange,
                                    bool usePrimitiveRestartWorkaround);
 
+bool IsOffsetAligned(GLenum elementType, unsigned int offset);
+
 }  // namespace rx
 
 #endif  // LIBANGLE_INDEXDATAMANAGER_H_

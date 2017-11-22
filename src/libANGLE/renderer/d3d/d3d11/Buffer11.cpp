@@ -473,6 +473,9 @@ gl::Error Buffer11::copySubData(const gl::Context *context,
     mSize = std::max<size_t>(mSize, destOffset + size);
     invalidateStaticData(context);
 
+    // Also notify that direct buffers are dirty.
+    mDirectBroadcastChannel.signal(context);
+
     return gl::NoError();
 }
 
@@ -755,6 +758,7 @@ Buffer11::BufferStorage *Buffer11::allocateStorage(BufferUsage usage)
             return new SystemMemoryStorage(mRenderer);
         case BUFFER_USAGE_EMULATED_INDEXED_VERTEX:
             return new EmulatedIndexedStorage(mRenderer);
+        case BUFFER_USAGE_INDEX:
         case BUFFER_USAGE_VERTEX_OR_TRANSFORM_FEEDBACK:
             return new NativeStorage(mRenderer, usage, &mDirectBroadcastChannel);
         default:

@@ -22,6 +22,7 @@
 #include "libANGLE/renderer/d3d/d3d11/Context11.h"
 #include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
 #include "libANGLE/renderer/d3d/d3d11/ShaderExecutable11.h"
+#include "libANGLE/renderer/d3d/d3d11/VertexArray11.h"
 #include "libANGLE/renderer/d3d/d3d11/VertexBuffer11.h"
 #include "libANGLE/renderer/d3d/d3d11/formatutils11.h"
 
@@ -126,7 +127,7 @@ gl::Error InputLayoutCache::applyVertexBuffers(
     const std::vector<const TranslatedAttribute *> &currentAttributes,
     GLenum mode,
     GLint start,
-    TranslatedIndexData *indexInfo)
+    bool isIndexedRendering)
 {
     Renderer11 *renderer   = GetImplAs<Context11>(context)->getRenderer();
     const gl::State &state = context->getGLState();
@@ -161,8 +162,11 @@ gl::Error InputLayoutCache::applyVertexBuffers(
                 ASSERT(attrib.vertexBuffer.get());
                 buffer = GetAs<VertexBuffer11>(attrib.vertexBuffer.get())->getBuffer().get();
             }
-            else if (instancedPointSpritesActive && (indexInfo != nullptr))
+            else if (instancedPointSpritesActive && isIndexedRendering)
             {
+                VertexArray11 *vao11 = GetImplAs<VertexArray11>(state.getVertexArray());
+                ASSERT(vao11->isCachedIndexInfoValid());
+                TranslatedIndexData *indexInfo = vao11->getCachedIndexInfo();
                 if (indexInfo->srcIndexData.srcBuffer != nullptr)
                 {
                     const uint8_t *bufferData = nullptr;

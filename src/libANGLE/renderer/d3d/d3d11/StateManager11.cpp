@@ -562,6 +562,7 @@ StateManager11::StateManager11(Renderer11 *renderer)
       mAppliedIB(nullptr),
       mAppliedIBFormat(DXGI_FORMAT_UNKNOWN),
       mAppliedIBOffset(0),
+      mIndexBufferIsDirty(false),
       mVertexDataManager(renderer),
       mIndexDataManager(renderer),
       mIsMultiviewEnabled(false),
@@ -952,6 +953,8 @@ void StateManager11::syncState(const gl::Context *context, const gl::State::Dirt
                 // internal cache of TranslatedAttributes, and they CurrentValue attributes are
                 // owned by the StateManager11/Context.
                 mDirtyCurrentValueAttribs.set();
+                // Invalidate the cached index buffer.
+                mIndexBufferIsDirty = true;
                 break;
             case gl::State::DIRTY_BIT_TEXTURE_BINDINGS:
                 invalidateTexturesAndSamplers();
@@ -2486,7 +2489,7 @@ gl::Error StateManager11::syncProgram(const gl::Context *context, GLenum drawMod
 gl::Error StateManager11::applyVertexBuffer(const gl::Context *context,
                                             GLenum mode,
                                             const DrawCallVertexParams &vertexParams,
-                                            TranslatedIndexData *indexInfo)
+                                            bool isIndexedRendering)
 {
     const auto &state       = context->getGLState();
     const gl::VertexArray *vertexArray = state.getVertexArray();
@@ -2544,7 +2547,7 @@ gl::Error StateManager11::applyVertexBuffer(const gl::Context *context,
 
     // Update the applied vertex buffers.
     ANGLE_TRY(mInputLayoutCache.applyVertexBuffers(context, mCurrentAttributes, mode,
-                                                   vertexParams.firstVertex(), indexInfo));
+                                                   vertexParams.firstVertex(), isIndexedRendering));
 
     // InputLayoutCache::applyVertexBuffers calls through to the Bufer11 to get the native vertex
     // buffer (ID3D11Buffer *). Because we allocate these buffers lazily, this will trigger
@@ -2564,18 +2567,27 @@ gl::Error StateManager11::applyIndexBuffer(const gl::Context *context,
                                            GLsizei count,
                                            GLenum type,
                                            const gl::HasIndexRange &lazyIndexRange,
-                                           bool usePrimitiveRestartWorkaround,
-                                           TranslatedIndexData *indexInfo)
+                                           bool usePrimitiveRestartWorkaround)
 {
-    const auto &glState            = context->getGLState();
-    gl::VertexArray *vao           = glState.getVertexArray();
-    gl::Buffer *elementArrayBuffer = vao->getElementArrayBuffer().get();
+    const auto &glState  = context->getGLState();
+    gl::VertexArray *vao = glState.getVertexArray();
+    VertexArray11 *vao11 = GetImplAs<VertexArray11>(vao);
 
-    GLenum dstType =
+    GLenum destElementType =
         GetIndexTranslationDestType(type, lazyIndexRange, usePrimitiveRestartWorkaround);
 
-    ANGLE_TRY(mIndexDataManager.prepareIndexData(context, type, dstType, count, elementArrayBuffer,
-                                                 indices, indexInfo));
+    if (!vao11->updateElementArrayStorage(context, type, destElementType, indices) &&
+        !mIndexBufferIsDirty)
+    {
+        // No streaming or index buffer application necessary.
+        return gl::NoError();
+    }
+
+    gl::Buffer *elementArrayBuffer = vao->getElementArrayBuffer().get();
+
+    TranslatedIndexData *indexInfo = vao11->getCachedIndexInfo();
+    ANGLE_TRY(mIndexDataManager.prepareIndexData(context, type, destElementType, count,
+                                                 elementArrayBuffer, indices, indexInfo));
 
     ID3D11Buffer *buffer = nullptr;
     DXGI_FORMAT bufferFormat =
@@ -2594,14 +2606,27 @@ gl::Error StateManager11::applyIndexBuffer(const gl::Context *context,
 
     // Track dirty indices in the index range cache.
     indexInfo->srcIndexData.srcIndicesChanged =
-        setIndexBuffer(buffer, bufferFormat, indexInfo->startOffset);
+        syncIndexBuffer(buffer, bufferFormat, indexInfo->startOffset);
 
+    mIndexBufferIsDirty = false;
+
+    vao11->setCachedIndexInfoValid();
     return gl::NoError();
 }
 
-bool StateManager11::setIndexBuffer(ID3D11Buffer *buffer,
+void StateManager11::setIndexBuffer(ID3D11Buffer *buffer,
                                     DXGI_FORMAT indexFormat,
                                     unsigned int offset)
+{
+    if (syncIndexBuffer(buffer, indexFormat, offset))
+    {
+        mIndexBufferIsDirty = true;
+    }
+}
+
+bool StateManager11::syncIndexBuffer(ID3D11Buffer *buffer,
+                                     DXGI_FORMAT indexFormat,
+                                     unsigned int offset)
 {
     if (buffer != mAppliedIB || indexFormat != mAppliedIBFormat || offset != mAppliedIBOffset)
     {

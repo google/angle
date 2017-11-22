@@ -2381,4 +2381,41 @@ bool IsStreamingIndexData(const gl::Context *context, GLenum srcType)
     return false;
 }
 
+IndexStorageType ClassifyIndexStorage(const gl::State &glState,
+                                      const gl::Buffer *elementArrayBuffer,
+                                      GLenum elementType,
+                                      GLenum destElementType,
+                                      unsigned int offset,
+                                      bool *needsTranslation)
+{
+    // No buffer bound means we are streaming from a client pointer.
+    if (!elementArrayBuffer || !IsOffsetAligned(elementType, offset))
+    {
+        *needsTranslation = true;
+        return IndexStorageType::Dynamic;
+    }
+
+    // The buffer can be used directly if the storage supports it and no translation needed.
+    BufferD3D *bufferD3D = GetImplAs<BufferD3D>(elementArrayBuffer);
+    if (bufferD3D->supportsDirectBinding() && destElementType == elementType)
+    {
+        *needsTranslation = false;
+        return IndexStorageType::Direct;
+    }
+
+    // Use a static copy when available.
+    StaticIndexBufferInterface *staticBuffer = bufferD3D->getStaticIndexBuffer();
+    if (staticBuffer != nullptr)
+    {
+        // Need to re-translate the static data if has never been used, or changed type.
+        *needsTranslation =
+            (staticBuffer->getBufferSize() == 0 || staticBuffer->getIndexType() != destElementType);
+        return IndexStorageType::Static;
+    }
+
+    // Static buffer not available, fall back to streaming.
+    *needsTranslation = true;
+    return IndexStorageType::Dynamic;
+}
+
 }  // namespace rx

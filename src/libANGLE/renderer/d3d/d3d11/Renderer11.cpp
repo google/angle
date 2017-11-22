@@ -1514,7 +1514,7 @@ gl::Error Renderer11::drawArrays(const gl::Context *context,
     }
 
     DrawCallVertexParams vertexParams(startVertex, count, instances);
-    ANGLE_TRY(mStateManager.applyVertexBuffer(context, mode, vertexParams, nullptr));
+    ANGLE_TRY(mStateManager.applyVertexBuffer(context, mode, vertexParams, false));
 
     if (glState.isTransformFeedbackActiveUnpaused())
     {
@@ -1651,10 +1651,9 @@ gl::Error Renderer11::drawElements(const gl::Context *context,
         UsePrimitiveRestartWorkaround(glState.isPrimitiveRestartEnabled(), type);
     DrawCallVertexParams vertexParams(!usePrimitiveRestartWorkaround, lazyIndexRange, 0, instances);
 
-    TranslatedIndexData indexInfo;
     ANGLE_TRY(mStateManager.applyIndexBuffer(context, indices, count, type, lazyIndexRange,
-                                             usePrimitiveRestartWorkaround, &indexInfo));
-    ANGLE_TRY(mStateManager.applyVertexBuffer(context, mode, vertexParams, &indexInfo));
+                                             usePrimitiveRestartWorkaround));
+    ANGLE_TRY(mStateManager.applyVertexBuffer(context, mode, vertexParams, true));
 
     int startVertex = static_cast<int>(vertexParams.firstVertex());
     int baseVertex  = -startVertex;
@@ -1742,7 +1741,7 @@ gl::Error Renderer11::drawArraysIndirect(const gl::Context *context,
     if (!DrawCallNeedsTranslation(context, mode))
     {
         DrawCallVertexParams vertexParams(0, 0, 0);
-        ANGLE_TRY(mStateManager.applyVertexBuffer(context, mode, vertexParams, nullptr));
+        ANGLE_TRY(mStateManager.applyVertexBuffer(context, mode, vertexParams, false));
         ID3D11Buffer *buffer = nullptr;
         ANGLE_TRY_RESULT(storage->getBuffer(context, BUFFER_USAGE_INDIRECT), buffer);
         mDeviceContext->DrawInstancedIndirect(buffer, static_cast<unsigned int>(offset));
@@ -1759,7 +1758,7 @@ gl::Error Renderer11::drawArraysIndirect(const gl::Context *context,
     GLuint first     = args->first;
 
     DrawCallVertexParams vertexParams(first, count, instances);
-    ANGLE_TRY(mStateManager.applyVertexBuffer(context, mode, vertexParams, nullptr));
+    ANGLE_TRY(mStateManager.applyVertexBuffer(context, mode, vertexParams, false));
 
     if (mode == GL_LINE_LOOP)
     {
@@ -1796,13 +1795,12 @@ gl::Error Renderer11::drawElementsIndirect(const gl::Context *context,
     bool usePrimitiveRestartWorkaround =
         UsePrimitiveRestartWorkaround(glState.isPrimitiveRestartEnabled(), type);
 
-    TranslatedIndexData indexInfo;
     if (!DrawCallNeedsTranslation(context, mode) && !IsStreamingIndexData(context, type))
     {
         ANGLE_TRY(mStateManager.applyIndexBuffer(context, nullptr, 0, type, gl::HasIndexRange(),
-                                                 usePrimitiveRestartWorkaround, &indexInfo));
+                                                 usePrimitiveRestartWorkaround));
         DrawCallVertexParams vertexParams(0, 0, 0);
-        ANGLE_TRY(mStateManager.applyVertexBuffer(context, mode, vertexParams, &indexInfo));
+        ANGLE_TRY(mStateManager.applyVertexBuffer(context, mode, vertexParams, true));
         ID3D11Buffer *buffer = nullptr;
         ANGLE_TRY_RESULT(storage->getBuffer(context, BUFFER_USAGE_INDIRECT), buffer);
         mDeviceContext->DrawIndexedInstancedIndirect(buffer, static_cast<unsigned int>(offset));
@@ -1827,11 +1825,11 @@ gl::Error Renderer11::drawElementsIndirect(const gl::Context *context,
     gl::HasIndexRange lazyIndexRange(const_cast<gl::Context *>(context), count, type, indices);
 
     ANGLE_TRY(mStateManager.applyIndexBuffer(context, indices, count, type, lazyIndexRange,
-                                             usePrimitiveRestartWorkaround, &indexInfo));
+                                             usePrimitiveRestartWorkaround));
 
     DrawCallVertexParams vertexParams(false, lazyIndexRange, baseVertex, instances);
 
-    ANGLE_TRY(mStateManager.applyVertexBuffer(context, mode, vertexParams, &indexInfo));
+    ANGLE_TRY(mStateManager.applyVertexBuffer(context, mode, vertexParams, true));
 
     int baseVertexLocation = -static_cast<int>(lazyIndexRange.getIndexRange().value().start);
 

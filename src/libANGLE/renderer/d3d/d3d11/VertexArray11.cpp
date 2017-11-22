@@ -19,16 +19,43 @@ using namespace angle;
 namespace rx
 {
 
+namespace
+{
+OnBufferDataDirtyChannel *GetBufferBroadcastChannel(Buffer11 *buffer11,
+                                                    IndexStorageType storageType)
+{
+    switch (storageType)
+    {
+        case IndexStorageType::Direct:
+            return buffer11->getDirectBroadcastChannel();
+        case IndexStorageType::Static:
+            return buffer11->getStaticBroadcastChannel();
+        case IndexStorageType::Dynamic:
+            return buffer11 ? buffer11->getStaticBroadcastChannel() : nullptr;
+        default:
+            UNREACHABLE();
+            return nullptr;
+    }
+}
+}  // anonymous namespace
+
 VertexArray11::VertexArray11(const gl::VertexArrayState &data)
     : VertexArrayImpl(data),
       mAttributeStorageTypes(data.getMaxAttribs(), VertexStorageType::CURRENT_VALUE),
       mTranslatedAttribs(data.getMaxAttribs()),
-      mCurrentBuffers(data.getMaxAttribs()),
-      mAppliedNumViewsToDivisor(1)
+      mCurrentArrayBuffers(data.getMaxAttribs()),
+      mCurrentElementArrayBuffer(),
+      mOnArrayBufferDataDirty(),
+      mOnElementArrayBufferDataDirty(this, mCurrentArrayBuffers.size()),
+      mAppliedNumViewsToDivisor(1),
+      mLastElementType(GL_NONE),
+      mLastDrawElementsOffset(0),
+      mCurrentElementArrayStorage(IndexStorageType::Invalid),
+      mCachedIndexInfoValid(false)
 {
-    for (size_t attribIndex = 0; attribIndex < mCurrentBuffers.size(); ++attribIndex)
+    for (size_t attribIndex = 0; attribIndex < mCurrentArrayBuffers.size(); ++attribIndex)
     {
-        mOnBufferDataDirty.emplace_back(this, attribIndex);
+        mOnArrayBufferDataDirty.emplace_back(this, attribIndex);
     }
 }
 
@@ -38,13 +65,15 @@ VertexArray11::~VertexArray11()
 
 void VertexArray11::destroy(const gl::Context *context)
 {
-    for (auto &buffer : mCurrentBuffers)
+    for (auto &buffer : mCurrentArrayBuffers)
     {
         if (buffer.get())
         {
             buffer.set(context, nullptr);
         }
     }
+
+    mCurrentElementArrayBuffer.set(context, nullptr);
 }
 
 void VertexArray11::syncState(const gl::Context *context,
@@ -63,12 +92,17 @@ void VertexArray11::syncState(const gl::Context *context,
     for (auto dirtyBit : dirtyBits)
     {
         if (dirtyBit == gl::VertexArray::DIRTY_BIT_ELEMENT_ARRAY_BUFFER)
-            continue;
-
-        size_t index = gl::VertexArray::GetVertexIndexFromDirtyBit(dirtyBit);
-        // TODO(jiawei.shao@intel.com): Vertex Attrib Bindings
-        ASSERT(index == mState.getBindingIndexFromAttribIndex(index));
-        mAttribsToUpdate.set(index);
+        {
+            mCachedIndexInfoValid = false;
+            mLastElementType      = GL_NONE;
+        }
+        else
+        {
+            size_t index = gl::VertexArray::GetVertexIndexFromDirtyBit(dirtyBit);
+            // TODO(jiawei.shao@intel.com): Vertex Attrib Bindings
+            ASSERT(index == mState.getBindingIndexFromAttribIndex(index));
+            mAttribsToUpdate.set(index);
+        }
     }
 }
 
@@ -92,6 +126,59 @@ bool VertexArray11::flushAttribUpdates(const gl::Context *context)
     }
 
     return false;
+}
+
+bool VertexArray11::updateElementArrayStorage(const gl::Context *context,
+                                              GLenum elementType,
+                                              GLenum destElementType,
+                                              const void *indices)
+{
+    unsigned int offset = static_cast<unsigned int>(reinterpret_cast<uintptr_t>(indices));
+
+    if (mCachedIndexInfoValid && mLastElementType == elementType &&
+        offset == mLastDrawElementsOffset)
+    {
+        // Dynamic index buffers must be re-streamed every draw.
+        return (mCurrentElementArrayStorage == IndexStorageType::Dynamic);
+    }
+
+    gl::Buffer *newBuffer           = mState.getElementArrayBuffer().get();
+    gl::Buffer *oldBuffer           = mCurrentElementArrayBuffer.get();
+    bool needsTranslation           = false;
+    IndexStorageType newStorageType = ClassifyIndexStorage(
+        context->getGLState(), newBuffer, elementType, destElementType, offset, &needsTranslation);
+
+    if (newBuffer != oldBuffer)
+    {
+        mCurrentElementArrayBuffer.set(context, newBuffer);
+    }
+
+    if (newStorageType != mCurrentElementArrayStorage || newBuffer != oldBuffer)
+    {
+        Buffer11 *newBuffer11 = SafeGetImplAs<Buffer11>(newBuffer);
+
+        auto *newChannel = GetBufferBroadcastChannel(newBuffer11, newStorageType);
+
+        mCurrentElementArrayStorage = newStorageType;
+        mOnElementArrayBufferDataDirty.bind(newChannel);
+        needsTranslation = true;
+    }
+
+    if (mLastDrawElementsOffset != offset)
+    {
+        needsTranslation        = true;
+        mLastDrawElementsOffset = offset;
+    }
+
+    if (mLastElementType != elementType)
+    {
+        needsTranslation = true;
+        mLastElementType = elementType;
+    }
+
+    // TODO(jmadill): We should probably promote static usage immediately, because this can change
+    // the storage type for dynamic buffers.
+    return needsTranslation || !mCachedIndexInfoValid;
 }
 
 void VertexArray11::updateVertexAttribStorage(const gl::Context *context, size_t attribIndex)
@@ -128,7 +215,7 @@ void VertexArray11::updateVertexAttribStorage(const gl::Context *context, size_t
         }
     }
 
-    gl::Buffer *oldBufferGL = mCurrentBuffers[attribIndex].get();
+    gl::Buffer *oldBufferGL = mCurrentArrayBuffers[attribIndex].get();
     gl::Buffer *newBufferGL = binding.getBuffer().get();
     Buffer11 *oldBuffer11   = oldBufferGL ? GetImplAs<Buffer11>(oldBufferGL) : nullptr;
     Buffer11 *newBuffer11   = newBufferGL ? GetImplAs<Buffer11>(newBufferGL) : nullptr;
@@ -160,8 +247,8 @@ void VertexArray11::updateVertexAttribStorage(const gl::Context *context, size_t
             }
         }
 
-        mOnBufferDataDirty[attribIndex].bind(newChannel);
-        mCurrentBuffers[attribIndex].set(context, binding.getBuffer().get());
+        mOnArrayBufferDataDirty[attribIndex].bind(newChannel);
+        mCurrentArrayBuffers[attribIndex].set(context, binding.getBuffer().get());
     }
 }
 
@@ -263,14 +350,23 @@ const std::vector<TranslatedAttribute> &VertexArray11::getTranslatedAttribs() co
 
 void VertexArray11::signal(size_t channelID, const gl::Context *context)
 {
-    ASSERT(mAttributeStorageTypes[channelID] != VertexStorageType::CURRENT_VALUE);
+    if (channelID == mAttributeStorageTypes.size())
+    {
+        mCachedIndexInfoValid   = false;
+        mLastElementType        = GL_NONE;
+        mLastDrawElementsOffset = 0;
+    }
+    else
+    {
+        ASSERT(mAttributeStorageTypes[channelID] != VertexStorageType::CURRENT_VALUE);
 
-    // This can change a buffer's storage, we'll need to re-check.
-    mAttribsToUpdate.set(channelID);
+        // This can change a buffer's storage, we'll need to re-check.
+        mAttribsToUpdate.set(channelID);
 
-    // Changing the vertex attribute state can affect the vertex shader.
-    Renderer11 *renderer = GetImplAs<Context11>(context)->getRenderer();
-    renderer->getStateManager()->invalidateShaders();
+        // Changing the vertex attribute state can affect the vertex shader.
+        Renderer11 *renderer = GetImplAs<Context11>(context)->getRenderer();
+        renderer->getStateManager()->invalidateShaders();
+    }
 }
 
 void VertexArray11::clearDirtyAndPromoteDynamicAttribs(const gl::Context *context,
@@ -297,6 +393,21 @@ void VertexArray11::markAllAttributeDivisorsForAdjustment(int numViews)
         mAppliedNumViewsToDivisor = numViews;
         mAttribsToUpdate.set();
     }
+}
+
+TranslatedIndexData *VertexArray11::getCachedIndexInfo()
+{
+    return &mCachedIndexInfo;
+}
+
+void VertexArray11::setCachedIndexInfoValid()
+{
+    mCachedIndexInfoValid = true;
+}
+
+bool VertexArray11::isCachedIndexInfoValid() const
+{
+    return mCachedIndexInfoValid;
 }
 
 }  // namespace rx

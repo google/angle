@@ -90,7 +90,7 @@ class InputLayoutCache : angle::NonCopyable
                                  const std::vector<const TranslatedAttribute *> &currentAttributes,
                                  GLenum mode,
                                  GLint start,
-                                 TranslatedIndexData *indexInfo);
+                                 bool isIndexedRendering);
 
     gl::Error updateVertexOffsetsForPointSpritesEmulation(
         Renderer11 *renderer,

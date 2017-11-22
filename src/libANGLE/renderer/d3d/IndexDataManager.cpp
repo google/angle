@@ -110,8 +110,30 @@ gl::Error StreamInIndexBuffer(IndexBufferInterface *buffer,
     return gl::NoError();
 }
 
+unsigned int ElementTypeSize(GLenum elementType)
+{
+    switch (elementType)
+    {
+        case GL_UNSIGNED_BYTE:
+            return sizeof(GLubyte);
+        case GL_UNSIGNED_SHORT:
+            return sizeof(GLushort);
+        case GL_UNSIGNED_INT:
+            return sizeof(GLuint);
+        default:
+            UNREACHABLE();
+            return 0;
+    }
+}
+
 }  // anonymous namespace
 
+bool IsOffsetAligned(GLenum elementType, unsigned int offset)
+{
+    return (offset % ElementTypeSize(elementType) == 0);
+}
+
+// IndexDataManager implementation.
 IndexDataManager::IndexDataManager(BufferFactoryD3D *factory)
     : mFactory(factory), mStreamingBufferShort(), mStreamingBufferInt()
 {
@@ -170,7 +192,7 @@ gl::Error IndexDataManager::prepareIndexData(const gl::Context *context,
     unsigned int offset = static_cast<unsigned int>(reinterpret_cast<uintptr_t>(indices));
     ASSERT(srcTypeInfo.bytes * static_cast<unsigned int>(count) + offset <= buffer->getSize());
 
-    bool offsetAligned = (offset % gl::ElementTypeSize(srcType) == 0);
+    bool offsetAligned = IsOffsetAligned(srcType, offset);
 
     // Case 2a: the buffer can be used directly
     if (offsetAligned && buffer->supportsDirectBinding() && dstType == srcType)
@@ -182,10 +204,8 @@ gl::Error IndexDataManager::prepareIndexData(const gl::Context *context,
         translated->startOffset = offset;
         return gl::NoError();
     }
-    else
-    {
-        translated->storage = nullptr;
-    }
+
+    translated->storage = nullptr;
 
     // Case 2b: use a static translated copy or fall back to streaming
     StaticIndexBufferInterface *staticBuffer = buffer->getStaticIndexBuffer();
