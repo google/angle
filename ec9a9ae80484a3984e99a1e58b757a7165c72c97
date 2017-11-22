@@ -94,6 +94,30 @@
       "revId": "ec9a9ae80484a3984e99a1e58b757a7165c72c97",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "79f114f6_08f9348e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1652,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-11-22T00:58:10Z",
+      "side": 0,
+      "message": "programD3D-\u003eusesPointSize() \u003d\u003d false\nprogramD3D-\u003eusesInstancedPointSpriteEmulation() \u003d\u003d true\nmode \u003d\u003d GL_POINTS\n\nline 1663: if (mode \u003d\u003d GL_LINE_LOOP) skipped\nline 1668: if (mode \u003d\u003d GL_TRIANGLE_FAN) skipped\nline 1675: if (mode !\u003d GL_POINTS || !programD3D-\u003eusesInstancedPointSpriteEmulation()) skipped\nIt can still get into line 1703 or line 1717, but the first parameter there is 6 and not \"count\" as in the old code.",
+      "parentUuid": "54a381ae_c5a96a0d",
+      "range": {
+        "startLine": 1652,
+        "startChar": 9,
+        "endLine": 1652,
+        "endChar": 33
+      },
+      "revId": "ec9a9ae80484a3984e99a1e58b757a7165c72c97",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
