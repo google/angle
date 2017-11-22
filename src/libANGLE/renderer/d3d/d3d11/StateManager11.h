@@ -148,9 +148,13 @@ class DrawCallVertexParams final : angle::NonCopyable
     DrawCallVertexParams(GLint firstVertex, GLsizei vertexCount, GLsizei instances);
 
     // Use when in a drawElements call.
-    DrawCallVertexParams(const gl::HasIndexRange &hasIndexRange,
+    DrawCallVertexParams(bool firstVertexDefinitelyZero,
+                         const gl::HasIndexRange &hasIndexRange,
                          GLint baseVertex,
                          GLsizei instances);
+
+    // It should be possible to also use an overload to handle the 'slow' indirect draw path.
+    // TODO(jmadill): Indirect draw slow path overload.
 
     GLint firstVertex() const;
     GLsizei vertexCount() const;
@@ -160,9 +164,10 @@ class DrawCallVertexParams final : angle::NonCopyable
     void ensureResolved() const;
 
     mutable const gl::HasIndexRange *mHasIndexRange;
-    mutable GLint mFirstVertex;
+    mutable Optional<GLint> mFirstVertex;
     mutable GLsizei mVertexCount;
     GLsizei mInstances;
+    GLint mBaseVertex;
 };
 
 class StateManager11 final : angle::NonCopyable
@@ -269,6 +274,7 @@ class StateManager11 final : angle::NonCopyable
                                GLsizei count,
                                GLenum type,
                                const gl::HasIndexRange &lazyIndexRange,
+                               bool usePrimitiveRestartWorkaround,
                                TranslatedIndexData *indexInfo);
 
     bool setIndexBuffer(ID3D11Buffer *buffer, DXGI_FORMAT indexFormat, unsigned int offset);
