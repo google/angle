@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0c1bf5a9_2a44179c",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2604,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-22T21:17:49Z",
+      "side": 1,
+      "message": "nit: I would also assert here that the fiend is not an array or struct.",
+      "revId": "bbc69b455bf1b61b283e4c9bc7bc9c13c074577c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ef718c2e_5b405500",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2708,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-22T21:17:49Z",
+      "side": 1,
+      "message": "This doesn\u0027t look right with the constructor taking the varying and then calling operator\u003d with the field.  Add another constructor to TransformFeedbackVarying assigns the correct members if needed.",
+      "range": {
+        "startLine": 2707,
+        "startChar": 0,
+        "endLine": 2708,
+        "endChar": 71
+      },
+      "revId": "bbc69b455bf1b61b283e4c9bc7bc9c13c074577c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6b6c8996_92834671",
+        "filename": "src/libANGLE/VaryingPacking.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 335,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-22T21:17:49Z",
+      "side": 1,
+      "message": "Create a PackedVarying on the stack and push it into the vector afterwards (with std::move).  We should avoid updating it with .back() if possible.",
+      "range": {
+        "startLine": 332,
+        "startChar": 20,
+        "endLine": 335,
+        "endChar": 73
+      },
+      "revId": "bbc69b455bf1b61b283e4c9bc7bc9c13c074577c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
