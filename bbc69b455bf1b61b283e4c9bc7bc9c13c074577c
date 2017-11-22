@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "600ebbfe_239b84c0",
+        "filename": "src/compiler/translator/ShaderVars.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-11-22T23:34:59Z",
+      "side": 1,
+      "message": "I\u0027m worried about the cost of creating strings here.\n\nHow about doing this?\n  if (isStruct()) return nullptr;\n  if (fullName.size() \u003c name.size() + 1) return nullptr;\n  const char* fieldName \u003d fullName.c_str() + (name.size() + 1);\n  for (field) {\n     if (field.name \u003d\u003d fieldName) {\n        return field\n     }\n  }",
+      "revId": "bbc69b455bf1b61b283e4c9bc7bc9c13c074577c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "0c1bf5a9_2a44179c",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 7
