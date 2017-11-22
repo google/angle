@@ -22,6 +22,30 @@
       "revId": "ec9a9ae80484a3984e99a1e58b757a7165c72c97",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "930d3bd0_a3a043ef",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1652,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-22T00:34:45Z",
+      "side": 0,
+      "message": "Sorry, I\u0027m not actually clear what the question is.. I think the code is correct. The Instanced Point Rendering feature was implemented by Microsoft as an optimization for Windows RT devices. It should still be hit in the cases below. The draw calls *should* behave identically to how they did before, just with less duplicate code.",
+      "parentUuid": "5596d945_8556491a",
+      "range": {
+        "startLine": 1652,
+        "startChar": 9,
+        "endLine": 1652,
+        "endChar": 33
+      },
+      "revId": "ec9a9ae80484a3984e99a1e58b757a7165c72c97",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
