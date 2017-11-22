@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "b98c2257_9e4738b7",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-22T14:05:21Z",
+      "side": 1,
+      "message": "That\u0027s true. How about {minor_version_if_non_zero}?",
+      "parentUuid": "0e9c6eba_faa15f9e",
+      "range": {
+        "startLine": 27,
+        "startChar": 33,
+        "endLine": 27,
+        "endChar": 40
+      },
+      "revId": "1b0d6e6f1eeafd46c29e077af66cac4a75f45099",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e40d8a62_b0a78242",
         "filename": "scripts/generate_entry_points.py",
         "patchSetId": 1
