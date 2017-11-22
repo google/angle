@@ -70,6 +70,24 @@
       "revId": "2a1d3c9e3ef6deaad74b37bc68c1e4ecacc0116f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cd135420_d2f6b894",
+        "filename": "src/compiler/translator/Types.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2017-11-22T20:15:24Z",
+      "side": 1,
+      "message": "POOL_ALLOCATOR_NEW_DELETE:\nhttps://cs.chromium.org/chromium/src/third_party/angle/src/compiler/translator/Common.h?l\u003d37\u0026rcl\u003d465835d61f394ba65b20b5951390c90ab55aec7b\ndoes override new and delete for TVector:\nhttps://cs.chromium.org/chromium/src/third_party/angle/src/compiler/translator/Common.h?l\u003d73\u0026rcl\u003d465835d61f394ba65b20b5951390c90ab55aec7b\n\nI see now that we don\u0027t do it for TString (which I think was the case you ran into recently). Maybe we should.",
+      "parentUuid": "56122977_4becaf18",
+      "revId": "2a1d3c9e3ef6deaad74b37bc68c1e4ecacc0116f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
