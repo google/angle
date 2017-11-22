@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5ea33b75_16439f78",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2614,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-22T21:45:51Z",
+      "side": 1,
+      "message": "This call could go right under the call to mIndexDataManager.prepareIndexData to make it a bit more clear that we\u0027re updating the cache based on the result of that call.",
+      "range": {
+        "startLine": 2614,
+        "startChar": 4,
+        "endLine": 2614,
+        "endChar": 55
+      },
+      "revId": "fcb3f939a1cf9cabb515b57016fa966f4968c2a5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8b64feee_b65e0b4e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/VertexArray11.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-22T21:45:51Z",
+      "side": 1,
+      "message": "nit: can you separate this into a getter and setter?",
+      "range": {
+        "startLine": 57,
+        "startChar": 4,
+        "endLine": 57,
+        "endChar": 66
+      },
+      "revId": "fcb3f939a1cf9cabb515b57016fa966f4968c2a5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
