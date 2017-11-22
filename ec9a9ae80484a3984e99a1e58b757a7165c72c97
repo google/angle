@@ -46,6 +46,30 @@
       "revId": "ec9a9ae80484a3984e99a1e58b757a7165c72c97",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a997861_1aac4142",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1652,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-11-22T00:48:09Z",
+      "side": 0,
+      "message": "If you look at the code flow for \"!programD3D-\u003eusesPointSize() \u0026\u0026 programD3D-\u003eusesInstancedPointSpriteEmulation() \u0026\u0026 mode \u003d\u003d GL_POINTS\" condition, originally, InstancedPointSpritesActive() would return false, and so will DrawCallNeedsTranslation(), and this if() will be entered and mDeviceContext-\u003eDraw...() will be called.\n\nIn the new code, there is no condition which will lead to mDeviceContext-\u003eDraw...() being called. So, this is not identical to the old code.",
+      "parentUuid": "930d3bd0_a3a043ef",
+      "range": {
+        "startLine": 1652,
+        "startChar": 9,
+        "endLine": 1652,
+        "endChar": 33
+      },
+      "revId": "ec9a9ae80484a3984e99a1e58b757a7165c72c97",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
