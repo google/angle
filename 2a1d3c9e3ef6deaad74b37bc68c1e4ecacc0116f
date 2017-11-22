@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4f877009_478f42f7",
+        "filename": "src/compiler/translator/Types.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2017-11-22T02:35:02Z",
+      "side": 1,
+      "message": "I don\u0027t know how custom allocators work. I\u0027m assuming this is not actually a problem?",
+      "revId": "2a1d3c9e3ef6deaad74b37bc68c1e4ecacc0116f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
