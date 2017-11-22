@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "dec6284b_64f1f405",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2239,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-22T15:54:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "44c0950a_bc5e90da",
+      "range": {
+        "startLine": 2239,
+        "startChar": 4,
+        "endLine": 2239,
+        "endChar": 35
+      },
+      "revId": "b23513f0450d52a90baeb164b0c2eb59672e5d25",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d5b9c2eb_02717dfb",
         "filename": "src/libANGLE/Texture.h",
         "patchSetId": 5
@@ -36,6 +60,30 @@
       "writtenOn": "2017-11-22T04:13:17Z",
       "side": 1,
       "message": "nit: the phrasing on these are \"mayNeedInit\" rather than \"uninitialized\", because it\u0027s not guaranteed they might be uninitialized. so mImagesMayNeedInit",
+      "range": {
+        "startLine": 163,
+        "startChar": 9,
+        "endLine": 163,
+        "endChar": 32
+      },
+      "revId": "b23513f0450d52a90baeb164b0c2eb59672e5d25",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ac4b2f12_c24f1fd2",
+        "filename": "src/libANGLE/Texture.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 163,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-22T15:54:45Z",
+      "side": 1,
+      "message": "Done, I ended up just using the InitState enum.",
+      "parentUuid": "d5b9c2eb_02717dfb",
       "range": {
         "startLine": 163,
         "startChar": 9,
