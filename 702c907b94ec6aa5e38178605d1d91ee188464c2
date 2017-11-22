@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d4dd9a4e_cc1cb383",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-11-22T06:54:19Z",
+      "side": 1,
+      "message": "Please also add some comments that you do some code refactoring for query maximum fragment uniform vectors and maximum uniform blocks in this change.",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 13,
+        "endChar": 36
+      },
+      "revId": "702c907b94ec6aa5e38178605d1d91ee188464c2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
