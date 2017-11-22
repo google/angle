@@ -16,6 +16,24 @@
       "revId": "2a1d3c9e3ef6deaad74b37bc68c1e4ecacc0116f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "026eb8ad_c4469247",
+        "filename": "src/compiler/translator/Types.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-22T04:05:06Z",
+      "side": 1,
+      "message": "It is a problem actually. You\u0027ll need to reserve space for a new TVector using the pool allocator\u0027s allocate manually. You can double check by running against the ASAN bot in the \"Choose Trybots\" UI in Gerrit. I\u0027ll make sure you have access.",
+      "parentUuid": "4f877009_478f42f7",
+      "revId": "2a1d3c9e3ef6deaad74b37bc68c1e4ecacc0116f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }

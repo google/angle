@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f5ae6764_0f9b6018",
+        "filename": "src/compiler/translator/Types.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 661,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-22T04:05:06Z",
+      "side": 1,
+      "message": "For a lot of these, you might have to check it\u0027s an array or ASSERT if you only expect arrays. You should be able to test a lot of this by running a full run of angle_unittests, and angle_end2end_tests with the --gtest_filter\u003d*OPENGL* (for speed).",
+      "range": {
+        "startLine": 661,
+        "startChar": 28,
+        "endLine": 661,
+        "endChar": 39
+      },
+      "revId": "b14b2c4a5a818a3ae52e224d9ece7f9d3211ff4b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
