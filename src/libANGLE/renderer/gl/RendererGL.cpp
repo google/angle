@@ -548,18 +548,69 @@ ContextImpl *RendererGL::createContext(const gl::ContextState &state)
 
 void RendererGL::insertEventMarker(GLsizei length, const char *marker)
 {
-    mFunctions->debugMessageInsert(GL_DEBUG_SOURCE_APPLICATION, GL_DEBUG_TYPE_MARKER, 0,
-                                   GL_DEBUG_SEVERITY_NOTIFICATION, length, marker);
+    if (mFunctions->insertEventMarkerEXT)
+    {
+        mFunctions->insertEventMarkerEXT(length, marker);
+    }
+    else if (mFunctions->debugMessageInsert)
+    {
+        mFunctions->debugMessageInsert(GL_DEBUG_SOURCE_APPLICATION, GL_DEBUG_TYPE_MARKER, 0,
+                                       GL_DEBUG_SEVERITY_NOTIFICATION, length, marker);
+    }
+    else
+    {
+        UNREACHABLE();
+    }
 }
 
 void RendererGL::pushGroupMarker(GLsizei length, const char *marker)
 {
-    mFunctions->pushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, length, marker);
+    if (mFunctions->pushGroupMarkerEXT)
+    {
+        mFunctions->pushGroupMarkerEXT(length, marker);
+    }
+    else if (mFunctions->pushDebugGroup)
+    {
+        // Fall back to KHR_debug to implement EXT_debug_marker
+        mFunctions->pushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, length, marker);
+    }
+    else
+    {
+        UNREACHABLE();
+    }
 }
 
 void RendererGL::popGroupMarker()
 {
-    mFunctions->popDebugGroup();
+    if (mFunctions->popGroupMarkerEXT)
+    {
+        mFunctions->popGroupMarkerEXT();
+    }
+    else if (mFunctions->popDebugGroup)
+    {
+        // Fall back to KHR_debug to implement EXT_debug_marker
+        mFunctions->popDebugGroup();
+    }
+    else
+    {
+        UNREACHABLE();
+    }
+}
+
+void RendererGL::pushDebugGroup(GLenum source, GLuint id, GLsizei length, const char *message)
+{
+    if (mFunctions->pushDebugGroup)
+    {
+        mFunctions->pushDebugGroup(source, id, length, message);
+    }
+}
+
+void RendererGL::popDebugGroup()
+{
+    if (mFunctions->popDebugGroup)
+    {
+        mFunctions->popDebugGroup();
+    }
 }
 
 std::string RendererGL::getVendorString() const

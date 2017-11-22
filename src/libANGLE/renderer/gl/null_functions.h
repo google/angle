@@ -972,6 +972,7 @@ void INTERNAL_GL_APIENTRY glGetnUniformuivNULL(GLuint program,
                                                GLsizei bufSize,
                                                GLuint *params);
 void INTERNAL_GL_APIENTRY glHintNULL(GLenum target, GLenum mode);
+void INTERNAL_GL_APIENTRY glInsertEventMarkerEXTNULL(GLsizei length, const GLchar *marker);
 void INTERNAL_GL_APIENTRY glInvalidateBufferDataNULL(GLuint buffer);
 void INTERNAL_GL_APIENTRY glInvalidateBufferSubDataNULL(GLuint buffer,
                                                         GLintptr offset,
@@ -1133,6 +1134,7 @@ void INTERNAL_GL_APIENTRY glPointSizeNULL(GLfloat size);
 void INTERNAL_GL_APIENTRY glPolygonModeNULL(GLenum face, GLenum mode);
 void INTERNAL_GL_APIENTRY glPolygonOffsetNULL(GLfloat factor, GLfloat units);
 void INTERNAL_GL_APIENTRY glPopDebugGroupNULL();
+void INTERNAL_GL_APIENTRY glPopGroupMarkerEXTNULL();
 void INTERNAL_GL_APIENTRY glPrimitiveBoundingBoxNULL(GLfloat minX,
                                                      GLfloat minY,
                                                      GLfloat minZ,
@@ -1355,6 +1357,7 @@ void INTERNAL_GL_APIENTRY glPushDebugGroupNULL(GLenum source,
                                                GLuint id,
                                                GLsizei length,
                                                const GLchar *message);
+void INTERNAL_GL_APIENTRY glPushGroupMarkerEXTNULL(GLsizei length, const GLchar *marker);
 void INTERNAL_GL_APIENTRY glQueryCounterNULL(GLuint id, GLenum target);
 void INTERNAL_GL_APIENTRY glReadBufferNULL(GLenum src);
 void INTERNAL_GL_APIENTRY glReadPixelsNULL(GLint x,

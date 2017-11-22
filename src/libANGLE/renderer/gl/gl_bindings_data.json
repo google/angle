@@ -783,5 +783,12 @@
     "GL_NV_internalformat_sample_query":
     [
         "GetInternalformatSampleivNV"
+    ],
+
+    "GL_EXT_debug_marker":
+    [
+        "InsertEventMarkerEXT",
+        "PushGroupMarkerEXT",
+        "PopGroupMarkerEXT"
     ]
 }

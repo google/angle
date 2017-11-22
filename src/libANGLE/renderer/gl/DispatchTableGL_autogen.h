@@ -731,6 +731,11 @@ class DispatchTableGL : angle::NonCopyable
     PFNGLBLENDBARRIERPROC blendBarrier                 = nullptr;
     PFNGLPRIMITIVEBOUNDINGBOXPROC primitiveBoundingBox = nullptr;
 
+    // EXT_debug_marker
+    PFNGLINSERTEVENTMARKEREXTPROC insertEventMarkerEXT = nullptr;
+    PFNGLPOPGROUPMARKEREXTPROC popGroupMarkerEXT       = nullptr;
+    PFNGLPUSHGROUPMARKEREXTPROC pushGroupMarkerEXT     = nullptr;
+
     // GL_EXT_discard_framebuffer
     PFNGLDISCARDFRAMEBUFFEREXTPROC discardFramebufferEXT = nullptr;
 

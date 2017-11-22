@@ -935,9 +935,12 @@ void GenerateCaps(const FunctionsGL *functions,
     extensions->packSubimage = functions->standard == STANDARD_GL_DESKTOP ||
                                functions->isAtLeastGLES(gl::Version(3, 0)) ||
                                functions->hasGLESExtension("GL_NV_pack_subimage");
-    extensions->debugMarker =
-        functions->isAtLeastGL(gl::Version(4, 3)) || functions->hasGLExtension("GL_KHR_debug") ||
-        functions->isAtLeastGLES(gl::Version(3, 2)) || functions->hasGLESExtension("GL_KHR_debug");
+    extensions->debugMarker = functions->isAtLeastGL(gl::Version(4, 3)) ||
+                              functions->hasGLExtension("GL_KHR_debug") ||
+                              functions->hasGLExtension("GL_EXT_debug_marker") ||
+                              functions->isAtLeastGLES(gl::Version(3, 2)) ||
+                              functions->hasGLESExtension("GL_KHR_debug") ||
+                              functions->hasGLESExtension("GL_EXT_debug_marker");
     if (functions->isAtLeastGL(gl::Version(3, 3)) ||
         functions->hasGLExtension("GL_ARB_timer_query") ||
         functions->hasGLESExtension("GL_EXT_disjoint_timer_query"))

@@ -503,6 +503,16 @@ void ContextVk::popGroupMarker()
     UNIMPLEMENTED();
 }
 
+void ContextVk::pushDebugGroup(GLenum source, GLuint id, GLsizei length, const char *message)
+{
+    UNIMPLEMENTED();
+}
+
+void ContextVk::popDebugGroup()
+{
+    UNIMPLEMENTED();
+}
+
 void ContextVk::syncState(const gl::Context *context, const gl::State::DirtyBits &dirtyBits)
 {
     if (dirtyBits.any())

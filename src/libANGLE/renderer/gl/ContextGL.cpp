@@ -341,6 +341,16 @@ void ContextGL::popGroupMarker()
     mRenderer->popGroupMarker();
 }
 
+void ContextGL::pushDebugGroup(GLenum source, GLuint id, GLsizei length, const char *message)
+{
+    mRenderer->pushDebugGroup(source, id, length, message);
+}
+
+void ContextGL::popDebugGroup()
+{
+    mRenderer->popDebugGroup();
+}
+
 void ContextGL::syncState(const gl::Context *context, const gl::State::DirtyBits &dirtyBits)
 {
     mRenderer->getStateManager()->syncState(context, dirtyBits);

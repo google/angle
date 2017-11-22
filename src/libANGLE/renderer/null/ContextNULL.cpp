@@ -280,6 +280,14 @@ void ContextNULL::popGroupMarker()
 {
 }
 
+void ContextNULL::pushDebugGroup(GLenum source, GLuint id, GLsizei length, const char *message)
+{
+}
+
+void ContextNULL::popDebugGroup()
+{
+}
+
 void ContextNULL::syncState(const gl::Context *context, const gl::State::DirtyBits &dirtyBits)
 {
 }

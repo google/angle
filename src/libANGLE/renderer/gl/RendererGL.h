@@ -149,6 +149,10 @@ class RendererGL : angle::NonCopyable
     void pushGroupMarker(GLsizei length, const char *marker);
     void popGroupMarker();
 
+    // KHR_debug
+    void pushDebugGroup(GLenum source, GLuint id, GLsizei length, const char *message);
+    void popDebugGroup();
+
     std::string getVendorString() const;
     std::string getRendererDescription() const;
 

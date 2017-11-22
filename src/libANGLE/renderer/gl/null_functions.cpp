@@ -1960,6 +1960,10 @@ void INTERNAL_GL_APIENTRY glHintNULL(GLenum target, GLenum mode)
 {
 }
 
+void INTERNAL_GL_APIENTRY glInsertEventMarkerEXTNULL(GLsizei length, const GLchar *marker)
+{
+}
+
 void INTERNAL_GL_APIENTRY glInvalidateBufferDataNULL(GLuint buffer)
 {
 }
@@ -2352,6 +2356,10 @@ void INTERNAL_GL_APIENTRY glPopDebugGroupNULL()
 {
 }
 
+void INTERNAL_GL_APIENTRY glPopGroupMarkerEXTNULL()
+{
+}
+
 void INTERNAL_GL_APIENTRY glPrimitiveBoundingBoxNULL(GLfloat minX,
                                                      GLfloat minY,
                                                      GLfloat minZ,
@@ -2739,6 +2747,10 @@ void INTERNAL_GL_APIENTRY glPushDebugGroupNULL(GLenum source,
                                                GLuint id,
                                                GLsizei length,
                                                const GLchar *message)
+{
+}
+
+void INTERNAL_GL_APIENTRY glPushGroupMarkerEXTNULL(GLsizei length, const GLchar *marker)
 {
 }
 

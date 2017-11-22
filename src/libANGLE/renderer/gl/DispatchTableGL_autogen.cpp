@@ -2624,6 +2624,13 @@ void DispatchTableGL::initProcsSharedExtensions(const std::set<std::string> &ext
         ASSIGN("glGetObjectLabelEXT", getObjectLabel);
     }
 
+    if (extensions.count("GL_EXT_debug_marker") != 0)
+    {
+        ASSIGN("glInsertEventMarkerEXT", insertEventMarkerEXT);
+        ASSIGN("glPopGroupMarkerEXT", popGroupMarkerEXT);
+        ASSIGN("glPushGroupMarkerEXT", pushGroupMarkerEXT);
+    }
+
     if (extensions.count("GL_EXT_draw_instanced") != 0)
     {
         ASSIGN("glDrawArraysInstancedEXT", drawArraysInstanced);
@@ -5329,6 +5336,13 @@ void DispatchTableGL::initProcsSharedExtensionsNULL(const std::set<std::string> 
     if (extensions.count("GL_EXT_debug_label") != 0)
     {
         getObjectLabel = &glGetObjectLabelNULL;
+    }
+
+    if (extensions.count("GL_EXT_debug_marker") != 0)
+    {
+        insertEventMarkerEXT = &glInsertEventMarkerEXTNULL;
+        popGroupMarkerEXT    = &glPopGroupMarkerEXTNULL;
+        pushGroupMarkerEXT   = &glPushGroupMarkerEXTNULL;
     }
 
     if (extensions.count("GL_EXT_draw_instanced") != 0)

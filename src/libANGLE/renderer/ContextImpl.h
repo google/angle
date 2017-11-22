@@ -130,10 +130,14 @@ class ContextImpl : public GLImplFactory
     virtual std::string getVendorString() const        = 0;
     virtual std::string getRendererDescription() const = 0;
 
-    // Debug markers.
+    // EXT_debug_marker
     virtual void insertEventMarker(GLsizei length, const char *marker) = 0;
     virtual void pushGroupMarker(GLsizei length, const char *marker)   = 0;
     virtual void popGroupMarker() = 0;
+
+    // KHR_debug
+    virtual void pushDebugGroup(GLenum source, GLuint id, GLsizei length, const char *message) = 0;
+    virtual void popDebugGroup()                                                               = 0;
 
     // State sync with dirty bits.
     virtual void syncState(const gl::Context *context, const gl::State::DirtyBits &dirtyBits) = 0;

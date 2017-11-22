@@ -904,6 +904,13 @@ typedef void(INTERNAL_GL_APIENTRY *PFNGLGETINTERNALFORMATSAMPLEIVNVPROC)(GLenum 
                                                                          GLenum pname,
                                                                          GLsizei bufSize,
                                                                          GLint *params);
+
+// EXT_debug_marker
+typedef void(INTERNAL_GL_APIENTRY *PFNGLINSERTEVENTMARKEREXTPROC)(GLsizei length,
+                                                                  const GLchar *marker);
+typedef void(INTERNAL_GL_APIENTRY *PFNGLPUSHGROUPMARKEREXTPROC)(GLsizei length,
+                                                                const GLchar *marker);
+typedef void(INTERNAL_GL_APIENTRY *PFNGLPOPGROUPMARKEREXTPROC)(void);
 }
 
 #endif // LIBANGLE_RENDERER_GL_FUNCTIONSGLTYPEDEFS_H_
