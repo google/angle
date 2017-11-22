@@ -52,6 +52,24 @@
       "revId": "2a1d3c9e3ef6deaad74b37bc68c1e4ecacc0116f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "56122977_4becaf18",
+        "filename": "src/compiler/translator/Types.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-22T20:13:12Z",
+      "side": 1,
+      "message": "I don\u0027t think we override new and delete, we just pass in a custom allocator to TVector. The vector internally will use the pool allocator for its storage, but the bytes reserved for the TVector data members and vtable itself will be in the normal heap.",
+      "parentUuid": "12c60887_7bd81d61",
+      "revId": "2a1d3c9e3ef6deaad74b37bc68c1e4ecacc0116f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
