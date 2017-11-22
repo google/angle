@@ -44,9 +44,9 @@ class TextureImpl : public FramebufferAttachmentObjectImpl
 {
   public:
     TextureImpl(const gl::TextureState &state);
-    virtual ~TextureImpl();
+    ~TextureImpl() override;
 
-    virtual gl::Error onDestroy(const gl::Context *context) { return gl::NoError(); }
+    virtual gl::Error onDestroy(const gl::Context *context);
 
     virtual gl::Error setImage(const gl::Context *context,
                                GLenum target,

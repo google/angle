@@ -57,6 +57,8 @@ struct ImageIndex
 class ImageIndexIterator
 {
   public:
+    ImageIndexIterator(const ImageIndexIterator &other);
+
     static ImageIndexIterator Make2D(GLint minMip, GLint maxMip);
     static ImageIndexIterator MakeRectangle(GLint minMip, GLint maxMip);
     static ImageIndexIterator MakeCube(GLint minMip, GLint maxMip);

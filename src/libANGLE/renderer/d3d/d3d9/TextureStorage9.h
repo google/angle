@@ -25,7 +25,7 @@ class RenderTarget9;
 class TextureStorage9 : public TextureStorage
 {
   public:
-    virtual ~TextureStorage9();
+    ~TextureStorage9() override;
 
     static DWORD GetTextureUsage(GLenum internalformat, bool renderTarget);
 
@@ -127,7 +127,7 @@ class TextureStorage9_Cube : public TextureStorage9
 {
   public:
     TextureStorage9_Cube(Renderer9 *renderer, GLenum internalformat, bool renderTarget, int size, int levels, bool hintLevelZeroOnly);
-    virtual ~TextureStorage9_Cube();
+    ~TextureStorage9_Cube() override;
 
     gl::Error getSurfaceLevel(const gl::Context *context,
                               GLenum target,

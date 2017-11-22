@@ -71,6 +71,9 @@ struct BuiltinVarying final : private angle::NonCopyable
 
 struct BuiltinInfo
 {
+    BuiltinInfo();
+    ~BuiltinInfo();
+
     BuiltinVarying dxPosition;
     BuiltinVarying glPosition;
     BuiltinVarying glFragCoord;
@@ -92,6 +95,7 @@ class BuiltinVaryingsD3D
 {
   public:
     BuiltinVaryingsD3D(const ProgramD3DMetadata &metadata, const gl::VaryingPacking &packing);
+    ~BuiltinVaryingsD3D();
 
     bool usesPointSize() const { return mBuiltinInfo[SHADER_VERTEX].glPointSize.enabled; }
 

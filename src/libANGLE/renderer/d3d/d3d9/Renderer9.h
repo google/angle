@@ -67,7 +67,7 @@ class Renderer9 : public RendererD3D
 {
   public:
     explicit Renderer9(egl::Display *display);
-    virtual ~Renderer9();
+    ~Renderer9() override;
 
     egl::Error initialize() override;
     bool resetDevice() override;
@@ -353,7 +353,7 @@ class Renderer9 : public RendererD3D
                                  IDirect3DSurface9 *source,
                                  bool fromManaged);
 
-    RendererClass getRendererClass() const override { return RENDERER_D3D9; }
+    RendererClass getRendererClass() const override;
 
     D3DDEVTYPE getD3D9DeviceType() const { return mDeviceType; }
 
@@ -386,7 +386,7 @@ class Renderer9 : public RendererD3D
                                 const float clearDepthValue,
                                 const unsigned int clearStencilValue) override;
 
-    bool canSelectViewInVertexShader() const override { return false; }
+    bool canSelectViewInVertexShader() const override;
 
   private:
     gl::Error drawArraysImpl(const gl::Context *context,

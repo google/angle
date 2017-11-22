@@ -14,6 +14,8 @@ namespace rx
 
 struct WorkaroundsGL
 {
+    WorkaroundsGL();
+
     // When writing a float to a normalized integer framebuffer, desktop OpenGL is allowed to write
     // one of the two closest normalized integer representations (although round to nearest is
     // preferred) (see section 2.3.5.2 of the GL 4.5 core specification). OpenGL ES requires that
@@ -142,6 +144,9 @@ struct WorkaroundsGL
     // On some Android devices for loops used to initialize variables hit native GLSL compiler bugs.
     bool dontUseLoopsToInitializeVariables = false;
 };
+
+inline WorkaroundsGL::WorkaroundsGL() = default;
+
 }  // namespace rx
 
 #endif  // LIBANGLE_RENDERER_GL_WORKAROUNDSGL_H_

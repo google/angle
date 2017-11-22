@@ -255,9 +255,9 @@ gl::Error ContextVk::initPipeline(const gl::Context *context)
 
     VkDevice device       = mRenderer->getDevice();
     const auto &state     = mState.getState();
-    const auto &programGL = state.getProgram();
-    const auto &vao       = state.getVertexArray();
-    const auto *drawFBO   = state.getDrawFramebuffer();
+    const gl::Program *programGL   = state.getProgram();
+    const gl::VertexArray *vao     = state.getVertexArray();
+    const gl::Framebuffer *drawFBO = state.getDrawFramebuffer();
     ProgramVk *programVk  = vk::GetImpl(programGL);
     FramebufferVk *vkFBO  = vk::GetImpl(drawFBO);
     VertexArrayVk *vkVAO  = vk::GetImpl(vao);
@@ -308,9 +308,9 @@ gl::Error ContextVk::setupDraw(const gl::Context *context, GLenum mode)
     }
 
     const auto &state     = mState.getState();
-    const auto &programGL = state.getProgram();
+    const gl::Program *programGL = state.getProgram();
     ProgramVk *programVk  = vk::GetImpl(programGL);
-    const auto &vao       = state.getVertexArray();
+    const gl::VertexArray *vao   = state.getVertexArray();
     VertexArrayVk *vkVAO  = vk::GetImpl(vao);
     const auto *drawFBO   = state.getDrawFramebuffer();
     FramebufferVk *vkFBO  = vk::GetImpl(drawFBO);

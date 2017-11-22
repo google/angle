@@ -22,6 +22,10 @@ VertexBinding::VertexBinding(VertexBinding &&binding)
     *this = std::move(binding);
 }
 
+VertexBinding::~VertexBinding()
+{
+}
+
 VertexBinding &VertexBinding::operator=(VertexBinding &&binding)
 {
     if (this != &binding)

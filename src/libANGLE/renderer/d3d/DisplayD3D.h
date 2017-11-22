@@ -22,7 +22,7 @@ class DisplayD3D : public DisplayImpl
     DisplayD3D(const egl::DisplayState &state);
 
     egl::Error initialize(egl::Display *display) override;
-    virtual void terminate() override;
+    void terminate() override;
 
     // Surface creation
     SurfaceImpl *createWindowSurface(const egl::SurfaceState &state,

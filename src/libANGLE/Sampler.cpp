@@ -25,6 +25,11 @@ Sampler::~Sampler()
     SafeDelete(mImpl);
 }
 
+Error Sampler::onDestroy(const Context *context)
+{
+    return NoError();
+}
+
 void Sampler::setLabel(const std::string &label)
 {
     mLabel = label;

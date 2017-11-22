@@ -75,7 +75,7 @@ void BufferD3D::initializeStaticData(const gl::Context *context)
 {
     if (mStaticVertexBuffers.empty())
     {
-        auto newStaticBuffer = new StaticVertexBufferInterface(mFactory);
+        StaticVertexBufferInterface *newStaticBuffer = new StaticVertexBufferInterface(mFactory);
         mStaticVertexBuffers.push_back(
             std::unique_ptr<StaticVertexBufferInterface>(newStaticBuffer));
     }
@@ -134,7 +134,7 @@ StaticVertexBufferInterface *BufferD3D::getStaticVertexBuffer(const gl::VertexAt
     }
 
     // At this point, we must create a new static buffer for the attribute data.
-    auto newStaticBuffer = new StaticVertexBufferInterface(mFactory);
+    StaticVertexBufferInterface *newStaticBuffer = new StaticVertexBufferInterface(mFactory);
     newStaticBuffer->setAttribute(attribute, binding);
     mStaticVertexBuffers.push_back(std::unique_ptr<StaticVertexBufferInterface>(newStaticBuffer));
     return newStaticBuffer;

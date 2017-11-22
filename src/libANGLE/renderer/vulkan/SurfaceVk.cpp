@@ -157,6 +157,10 @@ gl::Error OffscreenSurfaceVk::initializeContents(const gl::Context *context,
     return gl::NoError();
 }
 
+WindowSurfaceVk::SwapchainImage::SwapchainImage()                                        = default;
+WindowSurfaceVk::SwapchainImage::SwapchainImage(WindowSurfaceVk::SwapchainImage &&other) = default;
+WindowSurfaceVk::SwapchainImage::~SwapchainImage()                                       = default;
+
 WindowSurfaceVk::WindowSurfaceVk(const egl::SurfaceState &surfaceState,
                                  EGLNativeWindowType window,
                                  EGLint width,
@@ -230,7 +234,7 @@ vk::Error WindowSurfaceVk::initializeImpl(RendererVk *renderer)
     uint32_t presentQueue = 0;
     ANGLE_TRY_RESULT(renderer->selectPresentQueueForSurface(mSurface), presentQueue);
 
-    const auto &physicalDevice = renderer->getPhysicalDevice();
+    const VkPhysicalDevice &physicalDevice = renderer->getPhysicalDevice();
 
     VkSurfaceCapabilitiesKHR surfaceCaps;
     ANGLE_VK_TRY(vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice, mSurface, &surfaceCaps));

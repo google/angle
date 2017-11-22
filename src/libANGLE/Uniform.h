@@ -52,7 +52,7 @@ struct LinkedUniform : public sh::Uniform, public StaticallyUsed
     LinkedUniform(const sh::Uniform &uniform);
     LinkedUniform(const LinkedUniform &uniform);
     LinkedUniform &operator=(const LinkedUniform &uniform);
-    ~LinkedUniform();
+    ~LinkedUniform() override;
 
     bool isSampler() const;
     bool isImage() const;
@@ -78,7 +78,7 @@ struct BufferVariable : public sh::ShaderVariable, public StaticallyUsed
                    unsigned int arraySize,
                    const int bufferIndex,
                    const sh::BlockMemberInfo &blockInfo);
-    ~BufferVariable();
+    ~BufferVariable() override;
 
     int bufferIndex;
     sh::BlockMemberInfo blockInfo;
@@ -91,7 +91,8 @@ struct BufferVariable : public sh::ShaderVariable, public StaticallyUsed
 struct ShaderVariableBuffer : public StaticallyUsed
 {
     ShaderVariableBuffer();
-    virtual ~ShaderVariableBuffer();
+    ShaderVariableBuffer(const ShaderVariableBuffer &other);
+    ~ShaderVariableBuffer() override;
     int numActiveVariables() const;
 
     int binding;

@@ -64,30 +64,18 @@ class ImageD3D : angle::NonCopyable
 
     virtual gl::Error setManagedSurface2D(const gl::Context *context,
                                           TextureStorage *storage,
-                                          int level)
-    {
-        return gl::NoError();
-    }
+                                          int level);
     virtual gl::Error setManagedSurfaceCube(const gl::Context *context,
                                             TextureStorage *storage,
                                             int face,
-                                            int level)
-    {
-        return gl::NoError();
-    }
+                                            int level);
     virtual gl::Error setManagedSurface3D(const gl::Context *context,
                                           TextureStorage *storage,
-                                          int level)
-    {
-        return gl::NoError();
-    }
+                                          int level);
     virtual gl::Error setManagedSurface2DArray(const gl::Context *context,
                                                TextureStorage *storage,
                                                int layer,
-                                               int level)
-    {
-        return gl::NoError();
-    }
+                                               int level);
     virtual gl::Error copyToStorage(const gl::Context *context,
                                     TextureStorage *storage,
                                     const gl::ImageIndex &index,

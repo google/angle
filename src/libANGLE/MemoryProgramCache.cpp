@@ -581,9 +581,9 @@ void MemoryProgramCache::ComputeHash(const Context *context,
                                      const Program *program,
                                      ProgramHash *hashOut)
 {
-    auto vertexShader   = program->getAttachedVertexShader();
-    auto fragmentShader = program->getAttachedFragmentShader();
-    auto computeShader  = program->getAttachedComputeShader();
+    const Shader *vertexShader   = program->getAttachedVertexShader();
+    const Shader *fragmentShader = program->getAttachedFragmentShader();
+    const Shader *computeShader  = program->getAttachedComputeShader();
 
     // Compute the program hash. Start with the shader hashes and resource strings.
     HashStream hashStream;

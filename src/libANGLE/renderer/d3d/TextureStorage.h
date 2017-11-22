@@ -35,10 +35,7 @@ class TextureStorage : angle::NonCopyable
     TextureStorage() {}
     virtual ~TextureStorage() {}
 
-    virtual gl::Error onDestroy(const gl::Context *context)
-    {
-        return gl::NoError();
-    }
+    virtual gl::Error onDestroy(const gl::Context *context);
 
     virtual int getTopLevel() const = 0;
     virtual bool isRenderTarget() const = 0;
@@ -64,11 +61,19 @@ class TextureStorage : angle::NonCopyable
 
     // This is a no-op for most implementations of TextureStorage. Some (e.g. TextureStorage11_2D) might override it.
     virtual gl::Error useLevelZeroWorkaroundTexture(const gl::Context *context,
-                                                    bool useLevelZeroTexture)
-    {
-        return gl::NoError();
-    }
+                                                    bool useLevelZeroTexture);
 };
+
+inline gl::Error TextureStorage::onDestroy(const gl::Context *context)
+{
+    return gl::NoError();
+}
+
+inline gl::Error TextureStorage::useLevelZeroWorkaroundTexture(const gl::Context *context,
+                                                               bool useLevelZeroTexture)
+{
+    return gl::NoError();
+}
 
 using TexStoragePointer = angle::UniqueObjectPointer<TextureStorage, gl::Context>;
 

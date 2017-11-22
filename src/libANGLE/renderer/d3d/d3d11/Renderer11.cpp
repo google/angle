@@ -355,8 +355,8 @@ void GetTriFanIndices(const void *indices,
 bool DrawCallNeedsTranslation(const gl::Context *context, GLenum mode)
 {
     const auto &glState     = context->getGLState();
-    const auto &vertexArray = glState.getVertexArray();
-    auto *vertexArray11     = GetImplAs<VertexArray11>(vertexArray);
+    const gl::VertexArray *vertexArray = glState.getVertexArray();
+    VertexArray11 *vertexArray11       = GetImplAs<VertexArray11>(vertexArray);
     // Direct drawing doesn't support dynamic attribute storage since it needs the first and count
     // to translate when applyVertexBuffer. GL_LINE_LOOP and GL_TRIANGLE_FAN are not supported
     // either since we need to simulate them in D3D.
@@ -437,6 +437,8 @@ bool CullsEverything(const gl::State &glState)
 }
 
 }  // anonymous namespace
+
+Renderer11DeviceCaps::Renderer11DeviceCaps() = default;
 
 Renderer11::Renderer11(egl::Display *display)
     : RendererD3D(display),
@@ -3657,7 +3659,12 @@ gl::Error Renderer11::blitRenderbufferRect(const gl::Context *context,
 bool Renderer11::isES3Capable() const
 {
     return (d3d11_gl::GetMaximumClientVersion(mRenderer11DeviceCaps.featureLevel).major > 2);
-};
+}
+
+RendererClass Renderer11::getRendererClass() const
+{
+    return RENDERER_D3D11;
+}
 
 void Renderer11::onSwap()
 {
@@ -3680,7 +3687,7 @@ void Renderer11::updateHistograms()
     // Update the buffer CPU memory histogram
     {
         size_t sizeSum = 0;
-        for (auto &buffer : mAliveBuffers)
+        for (const Buffer11 *buffer : mAliveBuffers)
         {
             sizeSum += buffer->getTotalCPUBufferMemoryBytes();
         }

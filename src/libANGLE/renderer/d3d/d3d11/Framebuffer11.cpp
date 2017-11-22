@@ -71,7 +71,8 @@ void UpdateCachedRenderTarget(const gl::Context *context,
     }
     if (newRenderTarget != cachedRenderTarget)
     {
-        auto channel = (newRenderTarget ? newRenderTarget->getBroadcastChannel() : nullptr);
+        OnRenderTargetDirtyChannel *channel =
+            (newRenderTarget ? newRenderTarget->getBroadcastChannel() : nullptr);
         channelBinding->bind(channel);
         cachedRenderTarget = newRenderTarget;
     }
@@ -106,7 +107,7 @@ gl::Error Framebuffer11::markAttachmentsDirty(const gl::Context *context) const
         ANGLE_TRY(MarkAttachmentsDirty(context, &colorAttachment));
     }
 
-    auto dsAttachment = mState.getDepthOrStencilAttachment();
+    const gl::FramebufferAttachment *dsAttachment = mState.getDepthOrStencilAttachment();
     if (dsAttachment)
     {
         ANGLE_TRY(MarkAttachmentsDirty(context, dsAttachment));
@@ -198,7 +199,8 @@ gl::Error Framebuffer11::invalidateBase(const gl::Context *context,
 
                 size_t colorIndex =
                     (attachments[i] == GL_COLOR ? 0u : (attachments[i] - GL_COLOR_ATTACHMENT0));
-                auto colorAttachment = mState.getColorAttachment(colorIndex);
+                const gl::FramebufferAttachment *colorAttachment =
+                    mState.getColorAttachment(colorIndex);
                 if (colorAttachment)
                 {
                     ANGLE_TRY(invalidateAttachment(context, colorAttachment));

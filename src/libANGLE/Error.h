@@ -87,6 +87,7 @@ class ANGLE_NO_DISCARD Error final
     Error(GLenum errorCode, GLuint id, std::string &&message);
     inline Error(const Error &other);
     inline Error(Error &&other);
+    inline ~Error() = default;
 
     // automatic error type conversion
     inline Error(egl::Error &&eglErr);
@@ -157,6 +158,7 @@ class ANGLE_NO_DISCARD Error final
     Error(EGLint errorCode, EGLint id, std::string &&message);
     inline Error(const Error &other);
     inline Error(Error &&other);
+    inline ~Error() = default;
 
     // automatic error type conversion
     inline Error(gl::Error &&glErr);

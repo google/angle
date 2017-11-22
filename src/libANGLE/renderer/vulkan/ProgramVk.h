@@ -135,6 +135,7 @@ class ProgramVk : public ProgramImpl
     struct DefaultUniformBlock final : private angle::NonCopyable
     {
         DefaultUniformBlock();
+        ~DefaultUniformBlock();
 
         vk::BufferAndMemory storage;
 

@@ -245,7 +245,7 @@ class SyncProviderGLSync : public SyncProviderGL
         mSync = mFunctions->fenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
     }
 
-    virtual ~SyncProviderGLSync() { mFunctions->deleteSync(mSync); }
+    ~SyncProviderGLSync() override { mFunctions->deleteSync(mSync); }
 
     gl::Error flush(bool force, bool *finished) override
     {
@@ -284,7 +284,7 @@ class SyncProviderGLQuery : public SyncProviderGL
         ANGLE_SWALLOW_ERR(stateManager->resumeQuery(queryType));
     }
 
-    virtual ~SyncProviderGLQuery() { mFunctions->deleteQueries(1, &mQuery); }
+    ~SyncProviderGLQuery() override { mFunctions->deleteQueries(1, &mQuery); }
 
     gl::Error flush(bool force, bool *finished) override
     {

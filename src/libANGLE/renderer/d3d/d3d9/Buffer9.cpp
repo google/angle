@@ -22,6 +22,16 @@ Buffer9::~Buffer9()
     mSize = 0;
 }
 
+size_t Buffer9::getSize() const
+{
+    return mSize;
+}
+
+bool Buffer9::supportsDirectBinding() const
+{
+    return false;
+}
+
 gl::Error Buffer9::setData(const gl::Context *context,
                            gl::BufferBinding /*target*/,
                            const void *data,

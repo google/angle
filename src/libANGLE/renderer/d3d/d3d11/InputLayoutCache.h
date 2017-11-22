@@ -31,6 +31,7 @@ class DrawCallVertexParams;
 struct PackedAttributeLayout
 {
     PackedAttributeLayout();
+    PackedAttributeLayout(const PackedAttributeLayout &other);
 
     void addAttributeData(GLenum glType,
                           UINT semanticIndex,

@@ -35,7 +35,7 @@ class ImageSibling : public gl::RefCountObject, public gl::FramebufferAttachment
 {
   public:
     ImageSibling(GLuint id);
-    virtual ~ImageSibling();
+    ~ImageSibling() override;
 
     bool isEGLImageTarget() const;
     gl::InitState sourceEGLImageInitState() const;
@@ -64,6 +64,7 @@ class ImageSibling : public gl::RefCountObject, public gl::FramebufferAttachment
 struct ImageState : private angle::NonCopyable
 {
     ImageState(EGLenum target, ImageSibling *buffer, const AttributeMap &attribs);
+    ~ImageState();
 
     gl::ImageIndex imageIndex;
     gl::BindingPointer<ImageSibling> source;
@@ -79,7 +80,7 @@ class Image final : public gl::RefCountObject
           const AttributeMap &attribs);
 
     gl::Error onDestroy(const gl::Context *context) override;
-    ~Image();
+    ~Image() override;
 
     const gl::Format &getFormat() const;
     size_t getWidth() const;

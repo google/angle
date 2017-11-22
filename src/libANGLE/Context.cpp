@@ -3936,8 +3936,8 @@ void Context::bufferSubData(BufferBinding target,
 
 void Context::attachShader(GLuint program, GLuint shader)
 {
-    auto programObject = mState.mShaderPrograms->getProgram(program);
-    auto shaderObject  = mState.mShaderPrograms->getShader(shader);
+    Program *programObject = mState.mShaderPrograms->getProgram(program);
+    Shader *shaderObject   = mState.mShaderPrograms->getShader(shader);
     ASSERT(programObject && shaderObject);
     programObject->attachShader(shaderObject);
 }

@@ -301,6 +301,8 @@ InternalFormat::InternalFormat()
 {
 }
 
+InternalFormat::InternalFormat(const InternalFormat &other) = default;
+
 bool InternalFormat::isLUMA() const
 {
     return ((redBits + greenBits + blueBits + depthBits + stencilBits) == 0 &&

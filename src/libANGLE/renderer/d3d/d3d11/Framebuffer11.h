@@ -21,7 +21,7 @@ class Framebuffer11 : public FramebufferD3D, public OnRenderTargetDirtyReceiver
 {
   public:
     Framebuffer11(const gl::FramebufferState &data, Renderer11 *renderer);
-    virtual ~Framebuffer11();
+    ~Framebuffer11() override;
 
     gl::Error discard(const gl::Context *context, size_t count, const GLenum *attachments) override;
     gl::Error invalidate(const gl::Context *context,

@@ -24,6 +24,7 @@ class UniformLinker
 {
   public:
     UniformLinker(const ProgramState &state);
+    ~UniformLinker();
 
     bool link(const Context *context,
               InfoLog &infoLog,
@@ -170,7 +171,7 @@ class UniformBlockLinker final : public InterfaceBlockLinker
   public:
     UniformBlockLinker(std::vector<InterfaceBlock> *blocksOut,
                        std::vector<LinkedUniform> *uniformsOut);
-    virtual ~UniformBlockLinker();
+    ~UniformBlockLinker() override;
 
   private:
     void defineBlockMember(const sh::ShaderVariable &field,
@@ -188,7 +189,7 @@ class ShaderStorageBlockLinker final : public InterfaceBlockLinker
   public:
     ShaderStorageBlockLinker(std::vector<InterfaceBlock> *blocksOut,
                              std::vector<BufferVariable> *bufferVariablesOut);
-    virtual ~ShaderStorageBlockLinker();
+    ~ShaderStorageBlockLinker() override;
 
   private:
     void defineBlockMember(const sh::ShaderVariable &field,

@@ -29,7 +29,7 @@ class SwapChain11 final : public SwapChainD3D
                 GLenum depthBufferFormat,
                 EGLint orientation,
                 EGLint samples);
-    virtual ~SwapChain11();
+    ~SwapChain11() override;
 
     EGLint resize(const gl::Context *context,
                   EGLint backbufferWidth,
@@ -45,8 +45,8 @@ class SwapChain11 final : public SwapChainD3D
                     EGLint height) override;
     void recreate() override;
 
-    RenderTargetD3D *getColorRenderTarget() override { return &mColorRenderTarget; }
-    RenderTargetD3D *getDepthStencilRenderTarget() override { return &mDepthStencilRenderTarget; }
+    RenderTargetD3D *getColorRenderTarget() override;
+    RenderTargetD3D *getDepthStencilRenderTarget() override;
 
     const TextureHelper11 &getOffscreenTexture();
     const d3d11::RenderTargetView &getRenderTarget();
@@ -58,7 +58,7 @@ class SwapChain11 final : public SwapChainD3D
 
     EGLint getWidth() const { return mWidth; }
     EGLint getHeight() const { return mHeight; }
-    void *getKeyedMutex() override { return mKeyedMutex; }
+    void *getKeyedMutex() override;
     EGLint getSamples() const { return mEGLSamples; }
 
     egl::Error getSyncValues(EGLuint64KHR *ust, EGLuint64KHR *msc, EGLuint64KHR *sbc) override;

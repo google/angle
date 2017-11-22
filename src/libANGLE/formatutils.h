@@ -51,6 +51,7 @@ const Type &GetTypeInfo(GLenum type);
 struct InternalFormat
 {
     InternalFormat();
+    InternalFormat(const InternalFormat &other);
 
     GLuint computePixelBytes(GLenum formatType) const;
 

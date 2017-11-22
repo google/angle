@@ -73,10 +73,7 @@ class HasIndexRange : public ParamsBase
   public:
     // Dummy placeholder that can't generate an index range.
     HasIndexRange();
-    HasIndexRange(Context *context, GLsizei count, GLenum type, const void *indices)
-        : ParamsBase(context), mContext(context), mCount(count), mType(type), mIndices(indices)
-    {
-    }
+    HasIndexRange(Context *context, GLsizei count, GLenum type, const void *indices);
 
     template <EntryPoint EP, typename... ArgsT>
     static void Factory(HasIndexRange *objBuffer, ArgsT... args);

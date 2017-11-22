@@ -422,7 +422,7 @@ gl::Error Clear11::clearFramebuffer(const gl::Context *context,
     }
     else
     {
-        const auto colorAttachment = fboData.getFirstColorAttachment();
+        const gl::FramebufferAttachment *colorAttachment = fboData.getFirstColorAttachment();
 
         if (!colorAttachment)
         {

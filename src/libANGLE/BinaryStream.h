@@ -180,9 +180,8 @@ class BinaryInputStream : angle::NonCopyable
 class BinaryOutputStream : angle::NonCopyable
 {
   public:
-    BinaryOutputStream()
-    {
-    }
+    BinaryOutputStream();
+    ~BinaryOutputStream();
 
     // writeInt also handles bool types
     template <class IntT>
@@ -250,6 +249,13 @@ class BinaryOutputStream : angle::NonCopyable
     }
 
 };
+
+inline BinaryOutputStream::BinaryOutputStream()
+{
+}
+
+inline BinaryOutputStream::~BinaryOutputStream() = default;
+
 }  // namespace gl
 
 #endif  // LIBANGLE_BINARYSTREAM_H_

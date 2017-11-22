@@ -823,7 +823,7 @@ EGLint SwapChain11::copyOffscreenToBackbuffer(const gl::Context *context,
 
     deviceContext->Unmap(mQuadVB.get(), 0);
 
-    auto stateManager = mRenderer->getStateManager();
+    StateManager11 *stateManager = mRenderer->getStateManager();
 
     constexpr UINT stride = sizeof(d3d11::PositionTexCoordVertex);
     stateManager->setSingleVertexBuffer(&mQuadVB, stride, 0);
@@ -997,9 +997,24 @@ const TextureHelper11 &SwapChain11::getDepthStencilTexture()
     return mDepthStencilTexture;
 }
 
+void *SwapChain11::getKeyedMutex()
+{
+    return mKeyedMutex;
+}
+
 void SwapChain11::recreate()
 {
     // possibly should use this method instead of reset
+}
+
+RenderTargetD3D *SwapChain11::getColorRenderTarget()
+{
+    return &mColorRenderTarget;
+}
+
+RenderTargetD3D *SwapChain11::getDepthStencilRenderTarget()
+{
+    return &mDepthStencilRenderTarget;
 }
 
 egl::Error SwapChain11::getSyncValues(EGLuint64KHR *ust, EGLuint64KHR *msc, EGLuint64KHR *sbc)

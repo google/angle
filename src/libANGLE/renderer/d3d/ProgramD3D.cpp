@@ -2242,7 +2242,7 @@ void ProgramD3D::setUniformInternal(GLint location, GLsizei count, const T *v, G
     {
         ASSERT(uniformType == GL_INT);
         size_t size = count * sizeof(T);
-        auto dest   = &targetUniform->mSamplerData[locationInfo.arrayIndex];
+        GLint *dest = &targetUniform->mSamplerData[locationInfo.arrayIndex];
         if (memcmp(dest, v, size) != 0)
         {
             memcpy(dest, v, size);

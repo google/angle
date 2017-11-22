@@ -180,7 +180,7 @@ class Shader final : angle::NonCopyable, public LabeledObject
     const std::string &getCompilerResourcesString() const;
 
   private:
-    virtual ~Shader();
+    ~Shader() override;
     static void GetSourceImpl(const std::string &source,
                               GLsizei bufSize,
                               GLsizei *length,

@@ -61,6 +61,8 @@ VaryingPacking::VaryingPacking(GLuint maxVaryingVectors, PackMode packMode)
 {
 }
 
+VaryingPacking::~VaryingPacking() = default;
+
 // Packs varyings into generic varying registers, using the algorithm from
 // See [OpenGL ES Shading Language 1.00 rev. 17] appendix A section 7 page 111
 // Also [OpenGL ES Shading Language 3.00 rev. 4] Section 11 page 119

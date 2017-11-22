@@ -181,6 +181,14 @@ void UpdateUniformBuffer(ID3D11DeviceContext *deviceContext,
 
 // StateManager11::SRVCache Implementation.
 
+StateManager11::SRVCache::SRVCache() : mHighestUsedSRV(0)
+{
+}
+
+StateManager11::SRVCache::~SRVCache()
+{
+}
+
 void StateManager11::SRVCache::update(size_t resourceIndex, ID3D11ShaderResourceView *srv)
 {
     ASSERT(resourceIndex < mCurrentSRVs.size());
@@ -227,6 +235,10 @@ ShaderConstants11::ShaderConstants11()
       mSamplerMetadataVSDirty(true),
       mSamplerMetadataPSDirty(true),
       mSamplerMetadataCSDirty(true)
+{
+}
+
+ShaderConstants11::~ShaderConstants11()
 {
 }
 
@@ -623,7 +635,7 @@ void StateManager11::setShaderResourceInternal(gl::SamplerType shaderType,
 
     if (record.srv != reinterpret_cast<uintptr_t>(srv))
     {
-        auto deviceContext               = mRenderer->getDeviceContext();
+        ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
         ID3D11ShaderResourceView *srvPtr = srv ? srv->get() : nullptr;
         if (shaderType == gl::SAMPLER_VERTEX)
         {
@@ -1524,7 +1536,7 @@ gl::Error StateManager11::clearTextures(gl::SamplerType samplerType,
         return gl::NoError();
     }
 
-    auto deviceContext = mRenderer->getDeviceContext();
+    ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
     if (samplerType == gl::SAMPLER_VERTEX)
     {
         deviceContext->VSSetShaderResources(static_cast<unsigned int>(clearRange.low()),
@@ -1751,7 +1763,7 @@ gl::Error StateManager11::syncCurrentValueAttribs(const gl::State &glState)
 
         const auto *attrib                   = &vertexAttributes[attribIndex];
         const auto &currentValue             = glState.getVertexAttribCurrentValue(attribIndex);
-        auto currentValueAttrib              = &mCurrentValueAttribs[attribIndex];
+        TranslatedAttribute *currentValueAttrib = &mCurrentValueAttribs[attribIndex];
         currentValueAttrib->currentValueType = currentValue.Type;
         currentValueAttrib->attribute        = attrib;
         currentValueAttrib->binding          = &vertexBindings[attrib->bindingIndex];
@@ -2477,8 +2489,8 @@ gl::Error StateManager11::applyVertexBuffer(const gl::Context *context,
                                             TranslatedIndexData *indexInfo)
 {
     const auto &state       = context->getGLState();
-    const auto &vertexArray = state.getVertexArray();
-    auto *vertexArray11     = GetImplAs<VertexArray11>(vertexArray);
+    const gl::VertexArray *vertexArray = state.getVertexArray();
+    VertexArray11 *vertexArray11       = GetImplAs<VertexArray11>(vertexArray);
 
     if (mVertexAttribsNeedTranslation)
     {

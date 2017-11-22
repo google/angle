@@ -2361,7 +2361,7 @@ bool ValidateCopyTexImageParametersBase(ValidationContext *context,
     }
 
     const auto &state    = context->getGLState();
-    auto readFramebuffer = state.getReadFramebuffer();
+    Framebuffer *readFramebuffer = state.getReadFramebuffer();
     if (readFramebuffer->checkStatus(context) != GL_FRAMEBUFFER_COMPLETE)
     {
         context->handleError(InvalidFramebufferOperation());
@@ -5154,7 +5154,7 @@ bool ValidateReadPixelsBase(Context *context,
         return false;
     }
 
-    auto readFramebuffer = context->getGLState().getReadFramebuffer();
+    Framebuffer *readFramebuffer = context->getGLState().getReadFramebuffer();
 
     if (readFramebuffer->checkStatus(context) != GL_FRAMEBUFFER_COMPLETE)
     {

@@ -21,7 +21,7 @@ class RenderTargetD3D : public FramebufferAttachmentRenderTarget
 {
   public:
     RenderTargetD3D();
-    virtual ~RenderTargetD3D();
+    ~RenderTargetD3D() override;
 
     virtual GLsizei getWidth() const = 0;
     virtual GLsizei getHeight() const = 0;

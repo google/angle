@@ -2129,6 +2129,19 @@ template gl::Error LazyResource<ResourceType::VertexShader>::resolveImpl(Rendere
                                                                          void *initData,
                                                                          const char *name);
 
+LazyInputLayout::LazyInputLayout(const D3D11_INPUT_ELEMENT_DESC *inputDesc,
+                                 size_t inputDescLen,
+                                 const BYTE *byteCode,
+                                 size_t byteCodeLen,
+                                 const char *debugName)
+    : mInputDesc(inputDesc, inputDescLen), mByteCode(byteCode, byteCodeLen), mDebugName(debugName)
+{
+}
+
+LazyInputLayout::~LazyInputLayout()
+{
+}
+
 gl::Error LazyInputLayout::resolve(Renderer11 *renderer)
 {
     return resolveImpl(renderer, mInputDesc, &mByteCode, mDebugName);

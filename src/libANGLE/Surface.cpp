@@ -103,6 +103,11 @@ Surface::~Surface()
 {
 }
 
+rx::FramebufferAttachmentObjectImpl *Surface::getAttachmentImpl() const
+{
+    return mImplementation;
+}
+
 Error Surface::destroyImpl(const Display *display)
 {
     if (mState.defaultFramebuffer)

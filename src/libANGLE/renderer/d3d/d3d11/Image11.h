@@ -31,7 +31,7 @@ class Image11 : public ImageD3D
 {
   public:
     Image11(Renderer11 *renderer);
-    virtual ~Image11();
+    ~Image11() override;
 
     static gl::Error GenerateMipmap(const gl::Context *context,
                                     Image11 *dest,

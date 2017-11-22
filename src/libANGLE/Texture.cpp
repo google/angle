@@ -126,6 +126,10 @@ TextureState::TextureState(GLenum target)
 {
 }
 
+TextureState::~TextureState()
+{
+}
+
 bool TextureState::swizzleRequired() const
 {
     return mSwizzleState.swizzleRequired();

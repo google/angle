@@ -144,7 +144,7 @@ TextureStorage9_2D::TextureStorage9_2D(Renderer9 *renderer, GLenum internalforma
 TextureStorage9_2D::~TextureStorage9_2D()
 {
     SafeRelease(mTexture);
-    for (auto &renderTarget : mRenderTargets)
+    for (RenderTargetD3D *renderTarget : mRenderTargets)
     {
         SafeDelete(renderTarget);
     }

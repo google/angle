@@ -101,7 +101,7 @@ class ValidationContext : angle::NonCopyable
                       const Extensions &extensions,
                       const Limitations &limitations,
                       bool skipValidation);
-    virtual ~ValidationContext() {}
+    virtual ~ValidationContext();
 
     virtual void handleError(const Error &error) = 0;
 

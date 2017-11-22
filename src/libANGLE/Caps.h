@@ -28,6 +28,8 @@ typedef std::set<GLuint> SupportedSampleSet;
 struct TextureCaps
 {
     TextureCaps();
+    TextureCaps(const TextureCaps &other);
+    ~TextureCaps();
 
     // Supports for basic texturing: glTexImage, glTexSubImage, etc
     bool texturable;
@@ -418,6 +420,7 @@ struct Limitations
 struct TypePrecision
 {
     TypePrecision();
+    TypePrecision(const TypePrecision &other);
 
     void setIEEEFloat();
     void setTwosComplementInt(unsigned int bits);
@@ -433,6 +436,8 @@ struct TypePrecision
 struct Caps
 {
     Caps();
+    Caps(const Caps &other);
+    ~Caps();
 
     // ES 3.1 (April 29, 2015) 20.39: implementation dependent values
     GLuint64 maxElementIndex;
@@ -703,6 +708,7 @@ struct DeviceExtensions
 struct ClientExtensions
 {
     ClientExtensions();
+    ClientExtensions(const ClientExtensions &other);
 
     // Generate a vector of supported extension strings
     std::vector<std::string> getStrings() const;

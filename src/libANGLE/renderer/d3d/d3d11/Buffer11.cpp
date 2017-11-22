@@ -305,7 +305,7 @@ Buffer11::Buffer11(const gl::BufferState &state, Renderer11 *renderer)
 
 Buffer11::~Buffer11()
 {
-    for (auto &storage : mBufferStorages)
+    for (BufferStorage *&storage : mBufferStorages)
     {
         SafeDelete(storage);
     }
@@ -900,6 +900,11 @@ gl::ErrorOrResult<Buffer11::PackStorage *> Buffer11::getPackStorage(const gl::Co
     BufferStorage *packStorage = nullptr;
     ANGLE_TRY_RESULT(getBufferStorage(context, BUFFER_USAGE_PIXEL_PACK), packStorage);
     return GetAs<PackStorage>(packStorage);
+}
+
+size_t Buffer11::getSize() const
+{
+    return mSize;
 }
 
 bool Buffer11::supportsDirectBinding() const

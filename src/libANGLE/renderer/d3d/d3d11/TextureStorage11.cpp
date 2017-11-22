@@ -191,6 +191,12 @@ int TextureStorage11::getLevelDepth(int mipLevel) const
     return std::max(static_cast<int>(mTextureDepth) >> mipLevel, 1);
 }
 
+gl::Error TextureStorage11::getMippedResource(const gl::Context *context,
+                                              const TextureHelper11 **outResource)
+{
+    return getResource(context, outResource);
+}
+
 UINT TextureStorage11::getSubresourceIndex(const gl::ImageIndex &index) const
 {
     UINT mipSlice    = static_cast<UINT>(index.mipIndex + mTopLevel);
@@ -570,7 +576,7 @@ gl::Error TextureStorage11::generateMipmap(const gl::Context *context,
     RenderTargetD3D *dest = nullptr;
     ANGLE_TRY(getRenderTarget(context, destIndex, &dest));
 
-    auto rt11                              = GetAs<RenderTarget11>(source);
+    RenderTarget11 *rt11                   = GetAs<RenderTarget11>(source);
     const d3d11::SharedSRV &sourceSRV      = rt11->getBlitShaderResourceView();
     const d3d11::RenderTargetView &destRTV = rt11->getRenderTargetView();
 

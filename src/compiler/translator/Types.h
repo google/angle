@@ -194,8 +194,9 @@ class TType
     TType(TInterfaceBlock *interfaceBlockIn,
           TQualifier qualifierIn,
           TLayoutQualifier layoutQualifierIn);
+    ~TType();
 
-    TType(const TType &) = default;
+    TType(const TType &);
     TType &operator=(const TType &) = default;
 
     TBasicType getBasicType() const { return type; }

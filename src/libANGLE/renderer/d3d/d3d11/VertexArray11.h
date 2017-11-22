@@ -22,6 +22,7 @@ class VertexArray11 : public VertexArrayImpl, public OnBufferDataDirtyReceiver
 {
   public:
     VertexArray11(const gl::VertexArrayState &data);
+    ~VertexArray11() override;
     void destroy(const gl::Context *context) override;
 
     void syncState(const gl::Context *context,

@@ -42,6 +42,11 @@ ProgramPipeline::~ProgramPipeline()
     mProgramPipeline.release();
 }
 
+Error ProgramPipeline::onDestroy(const Context *context)
+{
+    return NoError();
+}
+
 void ProgramPipeline::setLabel(const std::string &label)
 {
     mState.mLabel = label;

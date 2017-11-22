@@ -29,6 +29,10 @@ VertexArrayVk::VertexArrayVk(const gl::VertexArrayState &state)
     mCurrentVertexAttribDescs.reserve(state.getMaxAttribs());
 }
 
+VertexArrayVk::~VertexArrayVk()
+{
+}
+
 void VertexArrayVk::destroy(const gl::Context *context)
 {
 }
@@ -40,7 +44,7 @@ void VertexArrayVk::syncState(const gl::Context *context,
 
     // Invalidate current pipeline.
     // TODO(jmadill): Use pipeline cache.
-    auto contextVk = vk::GetImpl(context);
+    ContextVk *contextVk = vk::GetImpl(context);
     contextVk->invalidateCurrentPipeline();
 
     // Invalidate the vertex descriptions.

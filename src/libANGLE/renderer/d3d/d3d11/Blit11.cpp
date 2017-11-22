@@ -558,6 +558,14 @@ DXGI_FORMAT GetStencilSRVFormat(const d3d11::Format &formatSet)
 
 }  // namespace
 
+Blit11::Shader::Shader() = default;
+
+Blit11::Shader::Shader(Shader &&other) = default;
+
+Blit11::Shader::~Shader() = default;
+
+Blit11::Shader &Blit11::Shader::operator=(Blit11::Shader &&other) = default;
+
 Blit11::Blit11(Renderer11 *renderer)
     : mRenderer(renderer),
       mResourcesInitialized(false),
@@ -1079,7 +1087,7 @@ gl::Error Blit11::swizzleTexture(const gl::Context *context,
 
     deviceContext->Unmap(mSwizzleCB.get(), 0);
 
-    auto stateManager = mRenderer->getStateManager();
+    StateManager11 *stateManager = mRenderer->getStateManager();
 
     // Apply vertex buffer
     stateManager->setSingleVertexBuffer(&mVertexBuffer, stride, 0);
@@ -1174,7 +1182,7 @@ gl::Error Blit11::copyTexture(const gl::Context *context,
 
     deviceContext->Unmap(mVertexBuffer.get(), 0);
 
-    auto stateManager = mRenderer->getStateManager();
+    StateManager11 *stateManager = mRenderer->getStateManager();
 
     // Apply vertex buffer
     stateManager->setSingleVertexBuffer(&mVertexBuffer, stride, 0);
@@ -1283,7 +1291,7 @@ gl::Error Blit11::copyDepth(const gl::Context *context,
 
     deviceContext->Unmap(mVertexBuffer.get(), 0);
 
-    auto stateManager = mRenderer->getStateManager();
+    StateManager11 *stateManager = mRenderer->getStateManager();
 
     // Apply vertex buffer
     stateManager->setSingleVertexBuffer(&mVertexBuffer, stride, 0);
@@ -1995,7 +2003,7 @@ gl::Error Blit11::initResolveDepthOnly(const d3d11::Format &format, const gl::Ex
 
     // Possibly D3D11 bug or undefined behaviour: Clear the DSV so that our first render
     // works as expected. Otherwise the results of the first use seem to be incorrect.
-    auto context = mRenderer->getDeviceContext();
+    ID3D11DeviceContext *context = mRenderer->getDeviceContext();
     context->ClearDepthStencilView(mResolvedDepthDSView.get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
 
     return gl::NoError();

@@ -1059,7 +1059,7 @@ gl::Error Renderer9::updateState(const gl::Context *context, GLenum drawMode)
     // the sample counts that we set in render target view, here we use renderTarget->getSamples to
     // get the actual samples.
     GLsizei samples           = 0;
-    auto firstColorAttachment = framebuffer->getFirstColorbuffer();
+    const gl::FramebufferAttachment *firstColorAttachment = framebuffer->getFirstColorbuffer();
     if (firstColorAttachment)
     {
         ASSERT(firstColorAttachment->isAttached());
@@ -1087,13 +1087,13 @@ void Renderer9::setScissorRectangle(const gl::Rectangle &scissor, bool enabled)
 gl::Error Renderer9::setBlendDepthRasterStates(const gl::Context *context, GLenum drawMode)
 {
     const auto &glState  = context->getGLState();
-    auto drawFramebuffer = glState.getDrawFramebuffer();
+    gl::Framebuffer *drawFramebuffer = glState.getDrawFramebuffer();
     ASSERT(!drawFramebuffer->hasAnyDirtyBit());
     // Since framebuffer->getSamples will return the original samples which may be different with
     // the sample counts that we set in render target view, here we use renderTarget->getSamples to
     // get the actual samples.
     GLsizei samples           = 0;
-    auto firstColorAttachment = drawFramebuffer->getFirstColorbuffer();
+    const gl::FramebufferAttachment *firstColorAttachment = drawFramebuffer->getFirstColorbuffer();
     if (firstColorAttachment)
     {
         ASSERT(firstColorAttachment->isAttached());
@@ -2892,6 +2892,11 @@ gl::Error Renderer9::copyToRenderTarget(IDirect3DSurface9 *dest,
     return gl::NoError();
 }
 
+RendererClass Renderer9::getRendererClass() const
+{
+    return RENDERER_D3D9;
+}
+
 ImageD3D *Renderer9::createImage()
 {
     return new Image9(this);
@@ -3228,6 +3233,11 @@ gl::Error Renderer9::clearRenderTarget(RenderTargetD3D *renderTarget,
     markAllStateDirty();
 
     return gl::NoError();
+}
+
+bool Renderer9::canSelectViewInVertexShader() const
+{
+    return false;
 }
 
 // For each Direct3D sampler of either the pixel or vertex stage,

@@ -135,6 +135,10 @@ Buffer *BufferManager::getBuffer(GLuint handle) const
 
 // ShaderProgramManager Implementation.
 
+ShaderProgramManager::ShaderProgramManager()
+{
+}
+
 ShaderProgramManager::~ShaderProgramManager()
 {
     ASSERT(mPrograms.empty());
@@ -337,6 +341,10 @@ Sync *SyncManager::getSync(GLuint handle) const
 
 // PathManager Implementation.
 
+PathManager::PathManager()
+{
+}
+
 ErrorOrResult<GLuint> PathManager::createPaths(rx::GLImplFactory *factory, GLsizei range)
 {
     // Allocate client side handles.
@@ -353,7 +361,7 @@ ErrorOrResult<GLuint> PathManager::createPaths(rx::GLImplFactory *factory, GLsiz
 
     for (GLsizei i = 0; i < range; ++i)
     {
-        const auto impl = paths[static_cast<unsigned>(i)];
+        rx::PathImpl *impl = paths[static_cast<unsigned>(i)];
         const auto id   = client + i;
         mPaths.assign(id, new Path(impl));
     }

@@ -134,6 +134,10 @@ ProgramVk::DefaultUniformBlock::DefaultUniformBlock()
 {
 }
 
+ProgramVk::DefaultUniformBlock::~DefaultUniformBlock()
+{
+}
+
 ProgramVk::ProgramVk(const gl::ProgramState &state)
     : ProgramImpl(state), mDefaultUniformBlocks(), mDescriptorSetOffset(0), mDirtyTextures(true)
 {

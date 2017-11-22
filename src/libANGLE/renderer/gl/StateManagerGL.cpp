@@ -210,6 +210,10 @@ StateManagerGL::StateManagerGL(const FunctionsGL *functions,
     angle::Matrix<GLfloat>::setToIdentity(mPathMatrixMV);
 }
 
+StateManagerGL::~StateManagerGL()
+{
+}
+
 void StateManagerGL::deleteProgram(GLuint program)
 {
     if (program != 0)

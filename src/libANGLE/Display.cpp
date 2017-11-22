@@ -268,6 +268,14 @@ void ANGLESetDefaultDisplayPlatform(angle::EGLDisplayType display)
 
 }  // anonymous namespace
 
+DisplayState::DisplayState()
+{
+}
+
+DisplayState::~DisplayState()
+{
+}
+
 // static
 Display *Display::GetDisplayFromNativeDisplay(EGLNativeDisplayType nativeDisplay,
                                               const AttributeMap &attribMap)

@@ -194,6 +194,11 @@ class Blit11 : angle::NonCopyable
 
     struct Shader
     {
+        Shader();
+        Shader(Shader &&other);
+        ~Shader();
+        Shader &operator=(Shader &&other);
+
         ShaderDimension dimension;
         d3d11::PixelShader pixelShader;
     };

@@ -45,6 +45,9 @@ using SurfaceSet = std::set<Surface *>;
 
 struct DisplayState final : private angle::NonCopyable
 {
+    DisplayState();
+    ~DisplayState();
+
     SurfaceSet surfaceSet;
 };
 

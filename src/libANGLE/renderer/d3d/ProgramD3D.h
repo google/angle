@@ -151,7 +151,7 @@ class ProgramD3D : public ProgramImpl
 {
   public:
     ProgramD3D(const gl::ProgramState &data, RendererD3D *renderer);
-    virtual ~ProgramD3D();
+    ~ProgramD3D() override;
 
     const std::vector<PixelShaderOutputVariable> &getPixelShaderKey() { return mPixelShaderKey; }
 

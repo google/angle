@@ -27,6 +27,10 @@ TransformFeedbackState::TransformFeedbackState(size_t maxIndexedBuffers)
 {
 }
 
+TransformFeedbackState::~TransformFeedbackState()
+{
+}
+
 const BindingPointer<Buffer> &TransformFeedbackState::getGenericBuffer() const
 {
     return mGenericBuffer;

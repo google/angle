@@ -38,7 +38,7 @@ class State : public OnAttachmentDirtyReceiver, angle::NonCopyable
 {
   public:
     State();
-    ~State();
+    ~State() override;
 
     void initialize(const Context *context,
                     bool debug,

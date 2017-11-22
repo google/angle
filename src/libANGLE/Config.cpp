@@ -63,6 +63,22 @@ Config::Config()
 {
 }
 
+Config::~Config()
+{
+}
+
+Config::Config(const Config &other) = default;
+
+Config &Config::operator=(const Config &other) = default;
+
+ConfigSet::ConfigSet() = default;
+
+ConfigSet::ConfigSet(const ConfigSet &other) = default;
+
+ConfigSet &ConfigSet::operator=(const ConfigSet &other) = default;
+
+ConfigSet::~ConfigSet() = default;
+
 EGLint ConfigSet::add(const Config &config)
 {
     // Set the config's ID to a small number that starts at 1 ([EGL 1.5] section 3.4)

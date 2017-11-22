@@ -32,6 +32,9 @@ class RenderTargetD3D;
 
 struct ClearParameters
 {
+    ClearParameters();
+    ClearParameters(const ClearParameters &other);
+
     bool clearColor[gl::IMPLEMENTATION_MAX_DRAW_BUFFERS];
     gl::ColorF colorF;
     gl::ColorI colorI;
@@ -57,7 +60,7 @@ class FramebufferD3D : public FramebufferImpl
 {
   public:
     FramebufferD3D(const gl::FramebufferState &data, RendererD3D *renderer);
-    virtual ~FramebufferD3D();
+    ~FramebufferD3D() override;
 
     gl::Error clear(const gl::Context *context, GLbitfield mask) override;
     gl::Error clearBufferfv(const gl::Context *context,

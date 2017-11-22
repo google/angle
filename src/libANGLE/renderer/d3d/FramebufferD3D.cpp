@@ -87,6 +87,10 @@ ClearParameters GetClearParameters(const gl::State &state, GLbitfield mask)
 }
 }
 
+ClearParameters::ClearParameters() = default;
+
+ClearParameters::ClearParameters(const ClearParameters &other) = default;
+
 FramebufferD3D::FramebufferD3D(const gl::FramebufferState &data, RendererD3D *renderer)
     : FramebufferImpl(data), mRenderer(renderer)
 {

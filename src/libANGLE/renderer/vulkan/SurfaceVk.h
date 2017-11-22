@@ -129,6 +129,10 @@ class WindowSurfaceVk : public SurfaceImpl, public ResourceVk
 
     struct SwapchainImage
     {
+        SwapchainImage();
+        SwapchainImage(SwapchainImage &&other);
+        ~SwapchainImage();
+
         vk::Image image;
         vk::ImageView imageView;
         vk::Framebuffer framebuffer;

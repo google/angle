@@ -40,6 +40,7 @@ class StateManagerGL final : angle::NonCopyable
     StateManagerGL(const FunctionsGL *functions,
                    const gl::Caps &rendererCaps,
                    const gl::Extensions &extensions);
+    ~StateManagerGL();
 
     void deleteProgram(GLuint program);
     void deleteVertexArray(GLuint vao);

@@ -120,6 +120,8 @@ ImageIndex::ImageIndex(GLenum typeIn, GLint mipIndexIn, GLint layerIndexIn, GLin
     : type(typeIn), mipIndex(mipIndexIn), layerIndex(layerIndexIn), numLayers(numLayersIn)
 {}
 
+ImageIndexIterator::ImageIndexIterator(const ImageIndexIterator &other) = default;
+
 ImageIndexIterator ImageIndexIterator::Make2D(GLint minMip, GLint maxMip)
 {
     return ImageIndexIterator(GL_TEXTURE_2D, Range<GLint>(minMip, maxMip),

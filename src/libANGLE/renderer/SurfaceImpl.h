@@ -38,7 +38,7 @@ class SurfaceImpl : public FramebufferAttachmentObjectImpl
 {
   public:
     SurfaceImpl(const egl::SurfaceState &surfaceState);
-    virtual ~SurfaceImpl();
+    ~SurfaceImpl() override;
     virtual void destroy(const egl::Display *display) {}
 
     virtual egl::Error initialize(const egl::Display *display)                           = 0;

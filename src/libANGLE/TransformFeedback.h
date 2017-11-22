@@ -31,6 +31,7 @@ class TransformFeedbackState final : angle::NonCopyable
 {
   public:
     TransformFeedbackState(size_t maxIndexedBuffers);
+    ~TransformFeedbackState();
 
     const BindingPointer<Buffer> &getGenericBuffer() const;
     const OffsetBindingPointer<Buffer> &getIndexedBuffer(size_t idx) const;
@@ -55,7 +56,7 @@ class TransformFeedback final : public RefCountObject, public LabeledObject
 {
   public:
     TransformFeedback(rx::GLImplFactory *implFactory, GLuint id, const Caps &caps);
-    virtual ~TransformFeedback();
+    ~TransformFeedback() override;
     Error onDestroy(const Context *context) override;
 
     void setLabel(const std::string &label) override;

@@ -195,6 +195,16 @@ Extents Renderbuffer::getAttachmentSize(const gl::ImageIndex & /*imageIndex*/) c
     return Extents(mWidth, mHeight, 1);
 }
 
+const Format &Renderbuffer::getAttachmentFormat(GLenum /*binding*/,
+                                                const ImageIndex & /*imageIndex*/) const
+{
+    return getFormat();
+}
+GLsizei Renderbuffer::getAttachmentSamples(const ImageIndex & /*imageIndex*/) const
+{
+    return getSamples();
+}
+
 InitState Renderbuffer::initState(const gl::ImageIndex & /*imageIndex*/) const
 {
     if (isEGLImageTarget())
@@ -215,6 +225,11 @@ void Renderbuffer::setInitState(const gl::ImageIndex & /*imageIndex*/, InitState
     {
         mInitState = initState;
     }
+}
+
+rx::FramebufferAttachmentObjectImpl *Renderbuffer::getAttachmentImpl() const
+{
+    return mRenderbuffer;
 }
 
 }  // namespace gl

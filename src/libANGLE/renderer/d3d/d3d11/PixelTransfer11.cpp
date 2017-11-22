@@ -188,7 +188,7 @@ gl::Error PixelTransfer11::copyBufferToTexture(const gl::Context *context,
 
     // Are we doing a 2D or 3D copy?
     const auto *geometryShader = ((destSize.depth > 1) ? &mBufferToTextureGS : nullptr);
-    auto stateManager          = mRenderer->getStateManager();
+    StateManager11 *stateManager = mRenderer->getStateManager();
 
     stateManager->setDrawShaders(&mBufferToTextureVS, geometryShader, pixelShader);
     stateManager->setShaderResource(gl::SAMPLER_PIXEL, 0, bufferSRV);

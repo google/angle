@@ -404,6 +404,23 @@ VariableLocation::VariableLocation(unsigned int arrayIndex, unsigned int index)
     ASSERT(arrayIndex != GL_INVALID_INDEX);
 }
 
+SamplerBinding::SamplerBinding(GLenum textureTypeIn, size_t elementCount, bool unreferenced)
+    : textureType(textureTypeIn), boundTextureUnits(elementCount, 0), unreferenced(unreferenced)
+{
+}
+
+SamplerBinding::SamplerBinding(const SamplerBinding &other) = default;
+
+SamplerBinding::~SamplerBinding() = default;
+
+Program::Bindings::Bindings()
+{
+}
+
+Program::Bindings::~Bindings()
+{
+}
+
 void Program::Bindings::bindLocation(GLuint index, const std::string &name)
 {
     mBindings[name] = index;
@@ -424,6 +441,21 @@ Program::Bindings::const_iterator Program::Bindings::end() const
 {
     return mBindings.end();
 }
+
+ImageBinding::ImageBinding(size_t count) : boundImageUnits(count, 0)
+{
+}
+ImageBinding::ImageBinding(GLuint imageUnit, size_t count)
+{
+    for (size_t index = 0; index < count; ++index)
+    {
+        boundImageUnits.push_back(imageUnit + static_cast<GLuint>(index));
+    }
+}
+
+ImageBinding::ImageBinding(const ImageBinding &other) = default;
+
+ImageBinding::~ImageBinding() = default;
 
 ProgramState::ProgramState()
     : mLabel(),
@@ -770,9 +802,9 @@ Error Program::link(const gl::Context *context)
 
     const Caps &caps = data.getCaps();
 
-    auto vertexShader   = mState.mAttachedVertexShader;
-    auto fragmentShader = mState.mAttachedFragmentShader;
-    auto computeShader  = mState.mAttachedComputeShader;
+    Shader *vertexShader   = mState.mAttachedVertexShader;
+    Shader *fragmentShader = mState.mAttachedFragmentShader;
+    Shader *computeShader  = mState.mAttachedComputeShader;
 
     bool isComputeShaderAttached   = (computeShader != nullptr);
     bool nonComputeShadersAttached = (vertexShader != nullptr || fragmentShader != nullptr);

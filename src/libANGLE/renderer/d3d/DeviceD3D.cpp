@@ -98,4 +98,8 @@ void DeviceD3D::generateExtensions(egl::DeviceExtensions *outExtensions) const
     outExtensions->deviceD3D = true;
 }
 
+bool DeviceD3D::deviceExternallySourced()
+{
+    return mDeviceExternallySourced;
+}
 }

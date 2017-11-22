@@ -20,6 +20,9 @@
 
 struct ANGLE_EXPORT SphereGeometry
 {
+    SphereGeometry();
+    ~SphereGeometry();
+
     std::vector<angle::Vector3> positions;
     std::vector<angle::Vector3> normals;
     std::vector<GLushort> indices;
@@ -29,6 +32,9 @@ ANGLE_EXPORT void CreateSphereGeometry(size_t sliceCount, float radius, SphereGe
 
 struct ANGLE_EXPORT CubeGeometry
 {
+    CubeGeometry();
+    ~CubeGeometry();
+
     std::vector<angle::Vector3> positions;
     std::vector<angle::Vector3> normals;
     std::vector<angle::Vector2> texcoords;

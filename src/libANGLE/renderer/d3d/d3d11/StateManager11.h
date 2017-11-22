@@ -31,6 +31,7 @@ class ShaderConstants11 : angle::NonCopyable
 {
   public:
     ShaderConstants11();
+    ~ShaderConstants11();
 
     void init(const gl::Caps &caps);
     size_t getRequiredBufferSize(gl::SamplerType samplerType) const;
@@ -436,7 +437,8 @@ class StateManager11 final : angle::NonCopyable
     class SRVCache : angle::NonCopyable
     {
       public:
-        SRVCache() : mHighestUsedSRV(0) {}
+        SRVCache();
+        ~SRVCache();
 
         void initialize(size_t size) { mCurrentSRVs.resize(size); }
 

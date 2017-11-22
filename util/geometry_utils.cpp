@@ -14,6 +14,22 @@
 
 using namespace angle;
 
+SphereGeometry::SphereGeometry()
+{
+}
+
+SphereGeometry::~SphereGeometry()
+{
+}
+
+CubeGeometry::CubeGeometry()
+{
+}
+
+CubeGeometry::~CubeGeometry()
+{
+}
+
 void CreateSphereGeometry(size_t sliceCount, float radius, SphereGeometry *result)
 {
     size_t parellelCount = sliceCount / 2;

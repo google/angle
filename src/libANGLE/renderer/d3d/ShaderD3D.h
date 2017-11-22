@@ -36,7 +36,7 @@ class ShaderD3D : public ShaderImpl
     ShaderD3D(const gl::ShaderState &data,
               const angle::WorkaroundsD3D &workarounds,
               const gl::Extensions &extensions);
-    virtual ~ShaderD3D();
+    ~ShaderD3D() override;
 
     // ShaderImpl implementation
     ShCompileOptions prepareSourceAndReturnOptions(std::stringstream *sourceStream,

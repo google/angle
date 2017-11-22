@@ -51,7 +51,7 @@ class Buffer11 : public BufferD3D
 {
   public:
     Buffer11(const gl::BufferState &state, Renderer11 *renderer);
-    virtual ~Buffer11();
+    ~Buffer11() override;
 
     gl::ErrorOrResult<ID3D11Buffer *> getBuffer(const gl::Context *context, BufferUsage usage);
     gl::ErrorOrResult<ID3D11Buffer *> getEmulatedIndexedBuffer(const gl::Context *context,
@@ -73,7 +73,7 @@ class Buffer11 : public BufferD3D
     size_t getTotalCPUBufferMemoryBytes() const;
 
     // BufferD3D implementation
-    size_t getSize() const override { return mSize; }
+    size_t getSize() const override;
     bool supportsDirectBinding() const override;
     gl::Error getData(const gl::Context *context, const uint8_t **outData) override;
     void initializeStaticData(const gl::Context *context) override;

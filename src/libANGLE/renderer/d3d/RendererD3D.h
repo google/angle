@@ -110,7 +110,7 @@ class RendererD3D : public BufferFactoryD3D, public MultisampleTextureInitialize
 {
   public:
     explicit RendererD3D(egl::Display *display);
-    virtual ~RendererD3D();
+    ~RendererD3D() override;
 
     virtual egl::Error initialize() = 0;
 

@@ -190,7 +190,7 @@ class VertexArray final : public LabeledObject
     bool hasAnyDirtyBit() const { return mDirtyBits.any(); }
 
   private:
-    ~VertexArray();
+    ~VertexArray() override;
 
     GLuint mId;
 

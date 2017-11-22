@@ -21,11 +21,11 @@ class Buffer9 : public BufferD3D
 {
   public:
     Buffer9(const gl::BufferState &state, Renderer9 *renderer);
-    virtual ~Buffer9();
+    ~Buffer9() override;
 
     // BufferD3D implementation
-    size_t getSize() const override { return mSize; }
-    bool supportsDirectBinding() const override { return false; }
+    size_t getSize() const override;
+    bool supportsDirectBinding() const override;
     gl::Error getData(const gl::Context *context, const uint8_t **outData) override;
 
     // BufferImpl implementation

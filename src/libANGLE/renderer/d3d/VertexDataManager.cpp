@@ -126,6 +126,8 @@ TranslatedAttribute::TranslatedAttribute()
 {
 }
 
+TranslatedAttribute::TranslatedAttribute(const TranslatedAttribute &other) = default;
+
 gl::ErrorOrResult<unsigned int> TranslatedAttribute::computeOffset(GLint startVertex) const
 {
     if (!usesFirstVertexOffset)

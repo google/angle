@@ -26,7 +26,7 @@ class RefCountObjectNoID : angle::NonCopyable
 {
   public:
     RefCountObjectNoID() : mRefCount(0) {}
-    virtual Error onDestroy(const Context *context) { return NoError(); }
+    virtual Error onDestroy(const Context *context);
 
     void addRef() const { ++mRefCount; }
 
@@ -43,7 +43,7 @@ class RefCountObjectNoID : angle::NonCopyable
     size_t getRefCount() const { return mRefCount; }
 
   protected:
-    virtual ~RefCountObjectNoID() { ASSERT(mRefCount == 0); }
+    virtual ~RefCountObjectNoID();
 
     // A specialized release method for objects which need a destroy context.
     void release(const gl::Context *context)
@@ -60,6 +60,16 @@ class RefCountObjectNoID : angle::NonCopyable
     friend class BindingPointer;
     mutable std::size_t mRefCount;
 };
+
+inline RefCountObjectNoID::~RefCountObjectNoID()
+{
+    ASSERT(mRefCount == 0);
+}
+
+inline Error RefCountObjectNoID::onDestroy(const Context *context)
+{
+    return NoError();
+}
 
 template <class ObjectType>
 class BindingPointer;

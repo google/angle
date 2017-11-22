@@ -200,6 +200,7 @@ struct SamplerState final
 {
     // This will zero-initialize the struct, including padding.
     SamplerState();
+    SamplerState(const SamplerState &other);
 
     static SamplerState CreateDefaultForTarget(GLenum target);
 
@@ -248,10 +249,9 @@ static_assert(sizeof(DrawElementsIndirectCommand) == 20,
 
 struct ImageUnit
 {
-    ImageUnit()
-        : texture(), level(0), layered(false), layer(0), access(GL_READ_ONLY), format(GL_R32UI)
-    {
-    }
+    ImageUnit();
+    ImageUnit(const ImageUnit &other);
+    ~ImageUnit();
 
     BindingPointer<Texture> texture;
     GLint level;

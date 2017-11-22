@@ -223,6 +223,12 @@ TType::TType(TInterfaceBlock *interfaceBlockIn,
 {
 }
 
+TType::TType(const TType &) = default;
+
+TType::~TType()
+{
+}
+
 bool TType::canBeConstructed() const
 {
     switch (type)

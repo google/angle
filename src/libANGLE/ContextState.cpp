@@ -136,6 +136,10 @@ ValidationContext::ValidationContext(const ValidationContext *shareContext,
 {
 }
 
+ValidationContext::~ValidationContext()
+{
+}
+
 bool ValidationContext::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *numParams)
 {
     // Please note: the query type returned for DEPTH_CLEAR_VALUE in this implementation

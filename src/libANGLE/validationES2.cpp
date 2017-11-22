@@ -2533,7 +2533,7 @@ bool ValidateBlitFramebufferANGLE(Context *context,
 
 bool ValidateClear(ValidationContext *context, GLbitfield mask)
 {
-    auto fbo = context->getGLState().getDrawFramebuffer();
+    Framebuffer *fbo = context->getGLState().getDrawFramebuffer();
     if (fbo->checkStatus(context) != GL_FRAMEBUFFER_COMPLETE)
     {
         context->handleError(InvalidFramebufferOperation());

@@ -149,6 +149,11 @@ constexpr const char *VERTEX_ATTRIBUTE_STUB_STRING = "@@ VERTEX ATTRIBUTES @@";
 constexpr const char *PIXEL_OUTPUT_STUB_STRING     = "@@ PIXEL OUTPUT @@";
 }  // anonymous namespace
 
+// BuiltinInfo implementation
+
+BuiltinInfo::BuiltinInfo()  = default;
+BuiltinInfo::~BuiltinInfo() = default;
+
 // DynamicHLSL implementation
 
 DynamicHLSL::DynamicHLSL(RendererD3D *const renderer) : mRenderer(renderer)
@@ -1331,6 +1336,8 @@ BuiltinVaryingsD3D::BuiltinVaryingsD3D(const ProgramD3DMetadata &metadata,
         updateBuiltins(SHADER_GEOMETRY, metadata, packing);
     }
 }
+
+BuiltinVaryingsD3D::~BuiltinVaryingsD3D() = default;
 
 void BuiltinVaryingsD3D::updateBuiltins(ShaderType shaderType,
                                         const ProgramD3DMetadata &metadata,

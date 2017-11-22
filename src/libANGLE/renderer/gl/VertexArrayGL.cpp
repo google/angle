@@ -83,6 +83,10 @@ VertexArrayGL::VertexArrayGL(const VertexArrayState &state,
     }
 }
 
+VertexArrayGL::~VertexArrayGL()
+{
+}
+
 void VertexArrayGL::destroy(const gl::Context *context)
 {
     mStateManager->deleteVertexArray(mVertexArrayID);

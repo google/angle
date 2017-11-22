@@ -41,7 +41,7 @@ VkResult VerifyExtensionsPresent(const std::vector<VkExtensionProperties> &exten
         extensionNames.insert(extensionProp.extensionName);
     }
 
-    for (const auto &extensionName : enabledExtensionNames)
+    for (const char *extensionName : enabledExtensionNames)
     {
         if (extensionNames.count(extensionName) == 0)
         {

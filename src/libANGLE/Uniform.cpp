@@ -171,6 +171,8 @@ ShaderVariableBuffer::ShaderVariableBuffer() : binding(0), dataSize(0)
 {
 }
 
+ShaderVariableBuffer::ShaderVariableBuffer(const ShaderVariableBuffer &other) = default;
+
 ShaderVariableBuffer::~ShaderVariableBuffer()
 {
 }

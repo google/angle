@@ -47,7 +47,7 @@ gl::Error BufferVk::setData(const gl::Context *context,
                             gl::BufferUsage usage)
 {
     ContextVk *contextVk = vk::GetImpl(context);
-    auto device          = contextVk->getDevice();
+    VkDevice device      = contextVk->getDevice();
 
     if (size > mCurrentRequiredSize)
     {

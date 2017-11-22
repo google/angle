@@ -29,7 +29,7 @@ class ContextImpl : public GLImplFactory
 {
   public:
     ContextImpl(const gl::ContextState &state);
-    virtual ~ContextImpl();
+    ~ContextImpl() override;
 
     virtual void onDestroy(const gl::Context *context) {}
 

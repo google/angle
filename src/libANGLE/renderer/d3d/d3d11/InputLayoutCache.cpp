@@ -74,6 +74,8 @@ PackedAttributeLayout::PackedAttributeLayout() : numAttributes(0), flags(0), att
 {
 }
 
+PackedAttributeLayout::PackedAttributeLayout(const PackedAttributeLayout &other) = default;
+
 void PackedAttributeLayout::addAttributeData(GLenum glType,
                                              UINT semanticIndex,
                                              gl::VertexFormatType vertexFormatType,

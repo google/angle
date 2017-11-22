@@ -27,11 +27,23 @@ SupportRequirement::SupportRequirement()
 {
 }
 
+SupportRequirement::SupportRequirement(const SupportRequirement &other) = default;
+
+SupportRequirement::~SupportRequirement()
+{
+}
+
 InternalFormat::InternalFormat()
     : texture(),
       filter(),
       renderbuffer(),
       framebufferAttachment()
+{
+}
+
+InternalFormat::InternalFormat(const InternalFormat &other) = default;
+
+InternalFormat::~InternalFormat()
 {
 }
 

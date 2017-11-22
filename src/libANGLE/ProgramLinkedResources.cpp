@@ -54,6 +54,8 @@ UniformLinker::UniformLinker(const ProgramState &state) : mState(state)
 {
 }
 
+UniformLinker::~UniformLinker() = default;
+
 void UniformLinker::getResults(std::vector<LinkedUniform> *uniforms,
                                std::vector<VariableLocation> *uniformLocations)
 {

@@ -138,7 +138,7 @@ class Framebuffer final : public LabeledObject, public OnAttachmentDirtyReceiver
     // Constructor to build a fake default framebuffer when surfaceless
     Framebuffer(rx::GLImplFactory *factory);
 
-    virtual ~Framebuffer();
+    ~Framebuffer() override;
     void onDestroy(const Context *context);
     void destroyDefault(const egl::Display *display);
 

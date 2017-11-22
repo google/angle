@@ -23,6 +23,8 @@ class VertexArrayGL : public VertexArrayImpl
     VertexArrayGL(const gl::VertexArrayState &data,
                   const FunctionsGL *functions,
                   StateManagerGL *stateManager);
+    ~VertexArrayGL() override;
+
     void destroy(const gl::Context *context) override;
 
     gl::Error syncDrawArraysState(const gl::Context *context,

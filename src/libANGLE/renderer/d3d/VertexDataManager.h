@@ -48,6 +48,7 @@ class VertexBufferBinding final
 struct TranslatedAttribute
 {
     TranslatedAttribute();
+    TranslatedAttribute(const TranslatedAttribute &other);
 
     // Computes the correct offset from baseOffset, usesFirstVertexOffset, stride and startVertex.
     // Can throw an error on integer overflow.

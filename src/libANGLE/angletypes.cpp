@@ -148,6 +148,8 @@ SamplerState::SamplerState()
     sRGBDecode    = GL_DECODE_EXT;
 }
 
+SamplerState::SamplerState(const SamplerState &other) = default;
+
 // static
 SamplerState SamplerState::CreateDefaultForTarget(GLenum target)
 {
@@ -164,6 +166,15 @@ SamplerState SamplerState::CreateDefaultForTarget(GLenum target)
 
     return state;
 }
+
+ImageUnit::ImageUnit()
+    : texture(), level(0), layered(false), layer(0), access(GL_READ_ONLY), format(GL_R32UI)
+{
+}
+
+ImageUnit::ImageUnit(const ImageUnit &other) = default;
+
+ImageUnit::~ImageUnit() = default;
 
 static void MinMax(int a, int b, int *minimum, int *maximum)
 {

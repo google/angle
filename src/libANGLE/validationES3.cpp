@@ -2152,7 +2152,7 @@ bool ValidateBeginTransformFeedback(Context *context, GLenum primitiveMode)
         }
     }
 
-    auto program = context->getGLState().getProgram();
+    Program *program = context->getGLState().getProgram();
 
     if (!program)
     {

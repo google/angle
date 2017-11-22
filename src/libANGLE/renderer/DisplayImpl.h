@@ -48,7 +48,7 @@ class DisplayImpl : public EGLImplFactory
 {
   public:
     DisplayImpl(const egl::DisplayState &state);
-    virtual ~DisplayImpl();
+    ~DisplayImpl() override;
 
     virtual egl::Error initialize(egl::Display *display) = 0;
     virtual void terminate() = 0;

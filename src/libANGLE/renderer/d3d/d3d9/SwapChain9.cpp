@@ -455,4 +455,13 @@ void SwapChain9::recreate()
     ASSERT(SUCCEEDED(result));
 }
 
+RenderTargetD3D *SwapChain9::getColorRenderTarget()
+{
+    return &mColorRenderTarget;
+}
+
+RenderTargetD3D *SwapChain9::getDepthStencilRenderTarget()
+{
+    return &mDepthStencilRenderTarget;
+}
 }

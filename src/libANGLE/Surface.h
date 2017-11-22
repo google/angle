@@ -127,8 +127,8 @@ class Surface : public gl::FramebufferAttachmentObject
 
   protected:
     Surface(EGLint surfaceType, const egl::Config *config, const AttributeMap &attributes);
-    virtual ~Surface();
-    rx::FramebufferAttachmentObjectImpl *getAttachmentImpl() const override { return mImplementation; }
+    ~Surface() override;
+    rx::FramebufferAttachmentObjectImpl *getAttachmentImpl() const override;
 
     gl::Framebuffer *createDefaultFramebuffer(const Display *display);
 

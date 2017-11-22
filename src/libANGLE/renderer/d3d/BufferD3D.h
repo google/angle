@@ -37,7 +37,7 @@ class BufferD3D : public BufferImpl
 {
   public:
     BufferD3D(const gl::BufferState &state, BufferFactoryD3D *factory);
-    virtual ~BufferD3D();
+    ~BufferD3D() override;
 
     unsigned int getSerial() const { return mSerial; }
 

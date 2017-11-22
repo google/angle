@@ -25,7 +25,7 @@ class RenderbufferD3D : public RenderbufferImpl
 {
   public:
     RenderbufferD3D(RendererD3D *renderer);
-    virtual ~RenderbufferD3D();
+    ~RenderbufferD3D() override;
 
     gl::Error onDestroy(const gl::Context *context) override;
 

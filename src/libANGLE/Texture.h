@@ -91,6 +91,7 @@ struct SwizzleState final
 struct TextureState final : private angle::NonCopyable
 {
     TextureState(GLenum target);
+    ~TextureState();
 
     bool swizzleRequired() const;
     GLuint getEffectiveBaseLevel() const;

@@ -32,6 +32,10 @@ VertexArray11::VertexArray11(const gl::VertexArrayState &data)
     }
 }
 
+VertexArray11::~VertexArray11()
+{
+}
+
 void VertexArray11::destroy(const gl::Context *context)
 {
     for (auto &buffer : mCurrentBuffers)
@@ -50,7 +54,7 @@ void VertexArray11::syncState(const gl::Context *context,
 
     // Generate a state serial. This serial is used in the program class to validate the cached
     // input layout, and skip recomputation in the fast path.
-    auto renderer       = GetImplAs<Context11>(context)->getRenderer();
+    Renderer11 *renderer = GetImplAs<Context11>(context)->getRenderer();
     mCurrentStateSerial = renderer->generateSerial();
 
     // TODO(jmadill): Individual attribute invalidation.

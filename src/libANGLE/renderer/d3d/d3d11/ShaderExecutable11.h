@@ -29,7 +29,7 @@ class ShaderExecutable11 : public ShaderExecutableD3D
     ShaderExecutable11(const void *function, size_t length, d3d11::GeometryShader &&executable);
     ShaderExecutable11(const void *function, size_t length, d3d11::ComputeShader &&executable);
 
-    virtual ~ShaderExecutable11();
+    ~ShaderExecutable11() override;
 
     const d3d11::PixelShader &getPixelShader() const;
     const d3d11::VertexShader &getVertexShader() const;
@@ -49,7 +49,7 @@ class UniformStorage11 : public UniformStorageD3D
 {
   public:
     UniformStorage11(size_t initialSize);
-    virtual ~UniformStorage11();
+    ~UniformStorage11() override;
 
     gl::Error getConstantBuffer(Renderer11 *renderer, const d3d11::Buffer **bufferOut);
 

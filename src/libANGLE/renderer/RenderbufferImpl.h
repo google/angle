@@ -26,8 +26,8 @@ class RenderbufferImpl : public FramebufferAttachmentObjectImpl
 {
   public:
     RenderbufferImpl() {}
-    virtual ~RenderbufferImpl() {}
-    virtual gl::Error onDestroy(const gl::Context *context) { return gl::NoError(); }
+    ~RenderbufferImpl() override {}
+    virtual gl::Error onDestroy(const gl::Context *context);
 
     virtual gl::Error setStorage(const gl::Context *context,
                                  GLenum internalformat,
@@ -41,6 +41,10 @@ class RenderbufferImpl : public FramebufferAttachmentObjectImpl
     virtual gl::Error setStorageEGLImageTarget(const gl::Context *context, egl::Image *image) = 0;
 };
 
+inline gl::Error RenderbufferImpl::onDestroy(const gl::Context *context)
+{
+    return gl::NoError();
+}
 }
 
 #endif   // LIBANGLE_RENDERER_RENDERBUFFERIMPL_H_

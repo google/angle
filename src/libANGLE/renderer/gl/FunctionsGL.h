@@ -33,7 +33,7 @@ class FunctionsGL : public DispatchTableGL
 {
   public:
     FunctionsGL();
-    virtual ~FunctionsGL();
+    ~FunctionsGL() override;
 
     void initialize(const egl::AttributeMap &displayAttributes);
 
@@ -53,7 +53,7 @@ class FunctionsGL : public DispatchTableGL
     bool hasGLESExtension(const std::string &ext) const;
 
   private:
-    virtual void *loadProcAddress(const std::string &function) const = 0;
+    void *loadProcAddress(const std::string &function) const override = 0;
     void initializeDummyFunctionsForNULLDriver(const std::set<std::string> &extensionSet);
 };
 

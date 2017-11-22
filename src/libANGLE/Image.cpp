@@ -78,7 +78,7 @@ gl::Error ImageSibling::orphanImages(const gl::Context *context)
     }
     else
     {
-        for (auto &sourceImage : mSourcesOf)
+        for (egl::Image *sourceImage : mSourcesOf)
         {
             ANGLE_TRY(sourceImage->orphanSibling(context, this));
         }
@@ -119,6 +119,10 @@ void ImageSibling::setSourceEGLImageInitState(gl::InitState initState) const
 
 ImageState::ImageState(EGLenum target, ImageSibling *buffer, const AttributeMap &attribs)
     : imageIndex(GetImageIndex(target, attribs)), source(buffer), targets()
+{
+}
+
+ImageState::~ImageState()
 {
 }
 
