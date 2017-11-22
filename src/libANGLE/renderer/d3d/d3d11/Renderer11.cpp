@@ -1836,7 +1836,8 @@ gl::Error Renderer11::drawElementsIndirect(const gl::Context *context,
 
     // TODO(jmadill): Fix const cast.
     const gl::Type &typeInfo = gl::GetTypeInfo(type);
-    const void *indices      = reinterpret_cast<const void *>(firstIndex * typeInfo.bytes);
+    const void *indices =
+        reinterpret_cast<const void *>(static_cast<uintptr_t>(firstIndex * typeInfo.bytes));
     gl::HasIndexRange lazyIndexRange(const_cast<gl::Context *>(context), count, type, indices);
 
     ANGLE_TRY(
