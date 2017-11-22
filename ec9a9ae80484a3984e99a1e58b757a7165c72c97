@@ -166,6 +166,30 @@
       "revId": "ec9a9ae80484a3984e99a1e58b757a7165c72c97",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "768ddb66_0e8e2f6b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1652,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-22T04:20:59Z",
+      "side": 0,
+      "message": "Upon further reflection, this can\u0027t happen, since we don\u0027t support ES3 on 9_3, or XFB extensions. But it is something to be aware of if we want to enable instanced point sprites for performance.",
+      "parentUuid": "a988c159_072863a8",
+      "range": {
+        "startLine": 1652,
+        "startChar": 9,
+        "endLine": 1652,
+        "endChar": 33
+      },
+      "revId": "ec9a9ae80484a3984e99a1e58b757a7165c72c97",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
