@@ -129,58 +129,95 @@ enum TBasicType
     EbtLast
 };
 
-inline TBasicType convertGImageToFloatImage(TBasicType type)
+constexpr const char *GetBasicMangledName(TBasicType t)
 {
-    switch (type)
+    switch (t)
     {
-        case EbtGImage2D:
-            return EbtImage2D;
-        case EbtGImage3D:
-            return EbtImage3D;
-        case EbtGImage2DArray:
-            return EbtImage2DArray;
-        case EbtGImageCube:
-            return EbtImageCube;
+        case EbtFloat:
+            return "f";
+        case EbtInt:
+            return "i";
+        case EbtUInt:
+            return "u";
+        case EbtBool:
+            return "b";
+        case EbtYuvCscStandardEXT:
+            return "ycs";
+        case EbtSampler2D:
+            return "s2";
+        case EbtSampler3D:
+            return "s3";
+        case EbtSamplerCube:
+            return "sC";
+        case EbtSampler2DArray:
+            return "s2a";
+        case EbtSamplerExternalOES:
+            return "sext";
+        case EbtSamplerExternal2DY2YEXT:
+            return "sext2y2y";
+        case EbtSampler2DRect:
+            return "s2r";
+        case EbtSampler2DMS:
+            return "s2ms";
+        case EbtISampler2D:
+            return "is2";
+        case EbtISampler3D:
+            return "is3";
+        case EbtISamplerCube:
+            return "isC";
+        case EbtISampler2DArray:
+            return "is2a";
+        case EbtISampler2DMS:
+            return "is2ms";
+        case EbtUSampler2D:
+            return "us2";
+        case EbtUSampler3D:
+            return "us3";
+        case EbtUSamplerCube:
+            return "usC";
+        case EbtUSampler2DArray:
+            return "us2a";
+        case EbtUSampler2DMS:
+            return "us2ms";
+        case EbtSampler2DShadow:
+            return "s2s";
+        case EbtSamplerCubeShadow:
+            return "sCs";
+        case EbtSampler2DArrayShadow:
+            return "s2as";
+        case EbtImage2D:
+            return "im2";
+        case EbtIImage2D:
+            return "iim2";
+        case EbtUImage2D:
+            return "uim2";
+        case EbtImage3D:
+            return "im3";
+        case EbtIImage3D:
+            return "iim3";
+        case EbtUImage3D:
+            return "uim3";
+        case EbtImage2DArray:
+            return "im2a";
+        case EbtIImage2DArray:
+            return "iim2a";
+        case EbtUImage2DArray:
+            return "uim2a";
+        case EbtImageCube:
+            return "imc";
+        case EbtIImageCube:
+            return "iimc";
+        case EbtUImageCube:
+            return "uimc";
+        case EbtAtomicCounter:
+            return "ac";
+        case EbtStruct:
+        case EbtInterfaceBlock:
+            return nullptr;
         default:
-            UNREACHABLE();
+            // EbtVoid, EbtAddress and non types
+            return "";
     }
-    return EbtLast;
-}
-
-inline TBasicType convertGImageToIntImage(TBasicType type)
-{
-    switch (type)
-    {
-        case EbtGImage2D:
-            return EbtIImage2D;
-        case EbtGImage3D:
-            return EbtIImage3D;
-        case EbtGImage2DArray:
-            return EbtIImage2DArray;
-        case EbtGImageCube:
-            return EbtIImageCube;
-        default:
-            UNREACHABLE();
-    }
-    return EbtLast;
-}
-
-inline TBasicType convertGImageToUnsignedImage(TBasicType type)
-{
-    switch (type)
-    {
-        case EbtGImage2D:
-            return EbtUImage2D;
-        case EbtGImage3D:
-            return EbtUImage3D;
-        case EbtGImage2DArray:
-            return EbtUImage2DArray;
-        case EbtGImageCube:
-            return EbtUImageCube;
-        default:
-            UNREACHABLE();
-    }
-    return EbtLast;
 }
 
 const char *getBasicString(TBasicType t);

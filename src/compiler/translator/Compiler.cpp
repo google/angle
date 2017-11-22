@@ -11,7 +11,6 @@
 #include "angle_gl.h"
 #include "common/utilities.h"
 #include "compiler/translator/AddAndTrueToLoopCondition.h"
-#include "compiler/translator/Cache.h"
 #include "compiler/translator/CallDAG.h"
 #include "compiler/translator/ClampPointSize.h"
 #include "compiler/translator/CollectVariables.h"

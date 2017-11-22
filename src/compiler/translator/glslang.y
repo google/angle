@@ -39,7 +39,6 @@ WHICH GENERATES THE GLSL ES PARSER (glslang_tab.cpp AND glslang_tab.h).
 #endif
 
 #include "angle_gl.h"
-#include "compiler/translator/Cache.h"
 #include "compiler/translator/Declarator.h"
 #include "compiler/translator/SymbolTable.h"
 #include "compiler/translator/ParseContext.h"

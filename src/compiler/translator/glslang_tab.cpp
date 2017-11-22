@@ -89,7 +89,6 @@
 #endif
 
 #include "angle_gl.h"
-#include "compiler/translator/Cache.h"
 #include "compiler/translator/Declarator.h"
 #include "compiler/translator/SymbolTable.h"
 #include "compiler/translator/ParseContext.h"

@@ -4,11 +4,11 @@
 // found in the LICENSE file.
 //
 
+#include "compiler/translator/BuiltInFunctionEmulatorGLSL.h"
 #include "angle_gl.h"
 #include "compiler/translator/BuiltInFunctionEmulator.h"
-#include "compiler/translator/BuiltInFunctionEmulatorGLSL.h"
-#include "compiler/translator/Cache.h"
 #include "compiler/translator/SymbolTable.h"
+#include "compiler/translator/StaticType.h"
 #include "compiler/translator/VersionGLSL.h"
 
 namespace sh
@@ -19,7 +19,7 @@ void InitBuiltInAbsFunctionEmulatorForGLSLWorkarounds(BuiltInFunctionEmulator *e
 {
     if (shaderType == GL_VERTEX_SHADER)
     {
-        const TType *int1 = TCache::getType(EbtInt);
+        const TType *int1 = StaticType::GetBasic<EbtInt>();
         emu->addEmulatedFunction(EOpAbs, int1, "int abs_emu(int x) { return x * sign(x); }");
     }
 }
@@ -31,10 +31,10 @@ void InitBuiltInIsnanFunctionEmulatorForGLSLWorkarounds(BuiltInFunctionEmulator 
     if (targetGLSLVersion < GLSL_VERSION_130)
         return;
 
-    const TType *float1 = TCache::getType(EbtFloat);
-    const TType *float2 = TCache::getType(EbtFloat, 2);
-    const TType *float3 = TCache::getType(EbtFloat, 3);
-    const TType *float4 = TCache::getType(EbtFloat, 4);
+    const TType *float1 = StaticType::GetBasic<EbtFloat>();
+    const TType *float2 = StaticType::GetBasic<EbtFloat, 2>();
+    const TType *float3 = StaticType::GetBasic<EbtFloat, 3>();
+    const TType *float4 = StaticType::GetBasic<EbtFloat, 4>();
 
     // !(x > 0.0 || x < 0.0 || x == 0.0) will be optimized and always equal to false.
     emu->addEmulatedFunction(
@@ -77,7 +77,7 @@ void InitBuiltInIsnanFunctionEmulatorForGLSLWorkarounds(BuiltInFunctionEmulator 
 
 void InitBuiltInAtanFunctionEmulatorForGLSLWorkarounds(BuiltInFunctionEmulator *emu)
 {
-    const TType *float1 = TCache::getType(EbtFloat);
+    const TType *float1 = StaticType::GetBasic<EbtFloat>();
     auto floatFuncId    = emu->addEmulatedFunction(
         EOpAtan, float1, float1,
         "emu_precision float atan_emu(emu_precision float y, emu_precision "
@@ -88,9 +88,16 @@ void InitBuiltInAtanFunctionEmulatorForGLSLWorkarounds(BuiltInFunctionEmulator *
         "    else if (x < 0.0 && y < 0.0) return atan(y / x) - 3.14159265;\n"
         "    else return 1.57079632 * sign(y);\n"
         "}\n");
+    static const std::array<const TType *, 5> floatVecs = {
+        nullptr,
+        nullptr,
+        StaticType::GetBasic<EbtFloat, 2>(),
+        StaticType::GetBasic<EbtFloat, 3>(),
+        StaticType::GetBasic<EbtFloat, 4>(),
+    };
     for (int dim = 2; dim <= 4; ++dim)
     {
-        const TType *floatVec = TCache::getType(EbtFloat, static_cast<unsigned char>(dim));
+        const TType *floatVec = floatVecs[dim];
         std::stringstream ss;
         ss << "emu_precision vec" << dim << " atan_emu(emu_precision vec" << dim
            << " y, emu_precision vec" << dim << " x)\n"
@@ -120,8 +127,8 @@ void InitBuiltInFunctionEmulatorForGLSLMissingFunctions(BuiltInFunctionEmulator 
     // Emulate packUnorm2x16 and unpackUnorm2x16 (GLSL 4.10)
     if (targetGLSLVersion < GLSL_VERSION_410)
     {
-        const TType *float2 = TCache::getType(EbtFloat, 2);
-        const TType *uint1  = TCache::getType(EbtUInt);
+        const TType *float2 = StaticType::GetBasic<EbtFloat, 2>();
+        const TType *uint1  = StaticType::GetBasic<EbtUInt>();
 
         // clang-format off
         emu->addEmulatedFunction(EOpPackUnorm2x16, float2,
@@ -146,8 +153,8 @@ void InitBuiltInFunctionEmulatorForGLSLMissingFunctions(BuiltInFunctionEmulator 
     // by using floatBitsToInt, floatBitsToUint, intBitsToFloat, and uintBitsToFloat (GLSL 3.30).
     if (targetGLSLVersion >= GLSL_VERSION_330 && targetGLSLVersion < GLSL_VERSION_420)
     {
-        const TType *float2 = TCache::getType(EbtFloat, 2);
-        const TType *uint1  = TCache::getType(EbtUInt);
+        const TType *float2 = StaticType::GetBasic<EbtFloat, 2>();
+        const TType *uint1  = StaticType::GetBasic<EbtUInt>();
 
         // clang-format off
         emu->addEmulatedFunction(EOpPackSnorm2x16, float2,
