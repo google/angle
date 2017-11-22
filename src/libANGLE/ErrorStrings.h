@@ -26,6 +26,8 @@ ERRMSG(CubemapIncomplete,
 ERRMSG(DefaultFramebufferInvalidAttachment,
        "Invalid attachment when the default framebuffer is bound.");
 ERRMSG(DefaultFramebufferTarget, "It is invalid to change default FBO's attachments");
+ERRMSG(DrawBufferTypeMismatch,
+       "Fragment shader output type does not match the bound framebuffer attachment type.");
 ERRMSG(EnumNotSupported, "Enum is not currently supported.");
 ERRMSG(EnumRequiresGLES31, "Enum requires GLES 3.1");
 ERRMSG(ES31Required, "OpenGL ES 3.1 Required");

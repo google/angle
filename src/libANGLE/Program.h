@@ -369,6 +369,7 @@ class ProgramState final : angle::NonCopyable
 
     // Fragment output variable base types: FLOAT, INT, or UINT.  Ordered by location.
     std::vector<GLenum> mOutputVariableTypes;
+    DrawBufferTypeMask mDrawBufferTypeMask;
 
     bool mBinaryRetrieveableHint;
     bool mSeparable;
@@ -626,6 +627,8 @@ class Program final : angle::NonCopyable, public LabeledObject
 
     int getNumViews() const { return mState.getNumViews(); }
     bool usesMultiview() const { return mState.usesMultiview(); }
+
+    DrawBufferTypeMask getDrawBufferTypeMask() const { return mState.mDrawBufferTypeMask; }
 
   private:
     ~Program() override;

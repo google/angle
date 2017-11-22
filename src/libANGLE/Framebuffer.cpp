@@ -19,6 +19,7 @@
 #include "libANGLE/Renderbuffer.h"
 #include "libANGLE/Surface.h"
 #include "libANGLE/Texture.h"
+#include "libANGLE/angletypes.h"
 #include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/ContextImpl.h"
 #include "libANGLE/renderer/FramebufferImpl.h"
@@ -260,6 +261,7 @@ FramebufferState::FramebufferState()
       mColorAttachments(1),
       mDrawBufferStates(1, GL_BACK),
       mReadBufferState(GL_BACK),
+      mDrawBufferTypeMask(),
       mDefaultWidth(0),
       mDefaultHeight(0),
       mDefaultSamples(0),
@@ -275,6 +277,7 @@ FramebufferState::FramebufferState(const Caps &caps)
       mColorAttachments(caps.maxColorAttachments),
       mDrawBufferStates(caps.maxDrawBuffers, GL_NONE),
       mReadBufferState(GL_COLOR_ATTACHMENT0_EXT),
+      mDrawBufferTypeMask(),
       mDefaultWidth(0),
       mDefaultHeight(0),
       mDefaultSamples(0),
@@ -621,6 +624,7 @@ Framebuffer::Framebuffer(const egl::Display *display, egl::Surface *surface)
                           FramebufferAttachment::kDefaultMultiviewLayout,
                           FramebufferAttachment::kDefaultViewportOffsets);
     }
+    mState.mDrawBufferTypeMask.setIndex(getDrawbufferWriteType(0), 0);
 }
 
 Framebuffer::Framebuffer(rx::GLImplFactory *factory)
@@ -632,6 +636,7 @@ Framebuffer::Framebuffer(rx::GLImplFactory *factory)
       mDirtyStencilAttachmentBinding(this, DIRTY_BIT_STENCIL_ATTACHMENT)
 {
     mDirtyColorAttachmentBindings.emplace_back(this, DIRTY_BIT_COLOR_ATTACHMENT_0);
+    mState.mDrawBufferTypeMask.setIndex(getDrawbufferWriteType(0), 0);
 }
 
 Framebuffer::~Framebuffer()
@@ -823,8 +828,12 @@ void Framebuffer::setDrawBuffers(size_t count, const GLenum *buffers)
     mDirtyBits.set(DIRTY_BIT_DRAW_BUFFERS);
 
     mState.mEnabledDrawBuffers.reset();
+    mState.mDrawBufferTypeMask.reset();
+
     for (size_t index = 0; index < count; ++index)
     {
+        mState.mDrawBufferTypeMask.setIndex(getDrawbufferWriteType(index), index);
+
         if (drawStates[index] != GL_NONE && mState.mColorAttachments[index].isAttached())
         {
             mState.mEnabledDrawBuffers.set(index);
@@ -855,6 +864,16 @@ GLenum Framebuffer::getDrawbufferWriteType(size_t drawBuffer) const
         default:
             return GL_FLOAT;
     }
+}
+
+DrawBufferTypeMask Framebuffer::getDrawBufferTypeMask() const
+{
+    return mState.mDrawBufferTypeMask;
+}
+
+DrawBufferMask Framebuffer::getDrawBufferMask() const
+{
+    return mState.mEnabledDrawBuffers;
 }
 
 bool Framebuffer::hasEnabledDrawBuffer() const
@@ -1689,6 +1708,7 @@ void Framebuffer::setAttachmentImpl(const Context *context,
             // formsRenderingFeedbackLoopWith
             bool enabled = (type != GL_NONE && getDrawBufferState(colorIndex) != GL_NONE);
             mState.mEnabledDrawBuffers.set(colorIndex, enabled);
+            mState.mDrawBufferTypeMask.setIndex(getDrawbufferWriteType(colorIndex), colorIndex);
         }
         break;
     }

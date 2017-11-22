@@ -371,6 +371,11 @@ LinkResult MemoryProgramCache::Deserialize(const Context *context,
     {
         state->mOutputVariableTypes.push_back(stream.readInt<GLenum>());
     }
+
+    static_assert(IMPLEMENTATION_MAX_DRAW_BUFFER_TYPE_MASK == 8 * sizeof(uint16_t),
+                  "All bits of DrawBufferTypeMask can be contained in an uint16_t");
+    state->mDrawBufferTypeMask.from_ulong(stream.readInt<uint16_t>());
+
     static_assert(IMPLEMENTATION_MAX_DRAW_BUFFERS < 8 * sizeof(uint32_t),
                   "All bits of DrawBufferMask can be contained in an uint32_t");
     state->mActiveOutputVariables = stream.readInt<uint32_t>();
@@ -540,6 +545,10 @@ void MemoryProgramCache::Serialize(const Context *context,
     {
         stream.writeInt(outputVariableType);
     }
+
+    static_assert(IMPLEMENTATION_MAX_DRAW_BUFFER_TYPE_MASK == 8 * sizeof(uint16_t),
+                  "All bits of DrawBufferTypeMask can be contained in an uint16_t");
+    stream.writeInt(static_cast<uint32_t>(state.mDrawBufferTypeMask.to_ulong()));
 
     static_assert(IMPLEMENTATION_MAX_DRAW_BUFFERS < 8 * sizeof(uint32_t),
                   "All bits of DrawBufferMask can be contained in an uint32_t");

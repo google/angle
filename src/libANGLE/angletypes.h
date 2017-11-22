@@ -288,8 +288,27 @@ using AttributesMask = angle::BitSet<MAX_VERTEX_ATTRIBS>;
 // Used in Program
 using UniformBlockBindingMask = angle::BitSet<IMPLEMENTATION_MAX_COMBINED_SHADER_UNIFORM_BUFFERS>;
 
-// Used in Framebuffer
+// Used in Framebuffer / Program
 using DrawBufferMask = angle::BitSet<IMPLEMENTATION_MAX_DRAW_BUFFERS>;
+constexpr int IMPLEMENTATION_MAX_DRAW_BUFFER_TYPE_MASK = 16;
+struct DrawBufferTypeMask final
+{
+    DrawBufferTypeMask();
+    DrawBufferTypeMask(const DrawBufferTypeMask &other);
+    ~DrawBufferTypeMask();
+    void reset();
+    bool none();
+    void setIndex(GLenum type, size_t index);
+    unsigned long to_ulong() const;
+    void from_ulong(unsigned long mask);
+    static bool ProgramOutputsMatchFramebuffer(DrawBufferTypeMask outputTypes,
+                                               DrawBufferTypeMask inputTypes,
+                                               DrawBufferMask outputMask,
+                                               DrawBufferMask inputMask);
+
+  private:
+    angle::BitSet<IMPLEMENTATION_MAX_DRAW_BUFFER_TYPE_MASK> mTypeMask;
+};
 
 using ContextID = uintptr_t;
 
