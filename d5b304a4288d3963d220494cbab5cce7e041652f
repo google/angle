@@ -93,6 +93,30 @@
       "revId": "d5b304a4288d3963d220494cbab5cce7e041652f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "889c11c2_ab023e4a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 3029,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-11-22T04:58:01Z",
+      "side": 1,
+      "message": "Oops, right. Maybe you can assert that mFirstVertex doesn\u0027t change?\nSomething like ASSERT(!mFirstVertex.valid() || mFirstVertex \u003d\u003d mBaseVertex + static_cast\u003cGLint\u003e(indexRange.start)).",
+      "parentUuid": "773b61f1_2d1aab88",
+      "range": {
+        "startLine": 3029,
+        "startChar": 8,
+        "endLine": 3029,
+        "endChar": 20
+      },
+      "revId": "d5b304a4288d3963d220494cbab5cce7e041652f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
