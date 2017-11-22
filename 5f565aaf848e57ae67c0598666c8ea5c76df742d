@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "d49e74c1_de7041a0",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 36
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-22T11:50:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4804ab79_e5d5241b",
+      "range": {
+        "startLine": 85,
+        "startChar": 17,
+        "endLine": 85,
+        "endChar": 38
+      },
+      "revId": "5f565aaf848e57ae67c0598666c8ea5c76df742d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "679a51ff_d81f1967",
         "filename": "src/libANGLE/ProgramLinkedResources.cpp",
         "patchSetId": 36
@@ -45,6 +69,30 @@
       "revId": "5f565aaf848e57ae67c0598666c8ea5c76df742d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9bb80bdd_936c5e2d",
+        "filename": "src/libANGLE/ProgramLinkedResources.cpp",
+        "patchSetId": 36
+      },
+      "lineNbr": 287,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-22T11:50:58Z",
+      "side": 1,
+      "message": "Actually we can use getBasicTypeElementCount() here and in several other more places as well. Moved it outside the loop header either way.",
+      "parentUuid": "679a51ff_d81f1967",
+      "range": {
+        "startLine": 287,
+        "startChar": 67,
+        "endLine": 287,
+        "endChar": 86
+      },
+      "revId": "5f565aaf848e57ae67c0598666c8ea5c76df742d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
