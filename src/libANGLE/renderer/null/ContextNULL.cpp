@@ -103,12 +103,12 @@ gl::Error ContextNULL::initialize()
     return gl::NoError();
 }
 
-gl::Error ContextNULL::flush()
+gl::Error ContextNULL::flush(const gl::Context *context)
 {
     return gl::NoError();
 }
 
-gl::Error ContextNULL::finish()
+gl::Error ContextNULL::finish(const gl::Context *context)
 {
     return gl::NoError();
 }

@@ -71,8 +71,8 @@ class ContextGL : public ContextImpl
     std::vector<PathImpl *> createPaths(GLsizei range) override;
 
     // Flush and finish.
-    gl::Error flush() override;
-    gl::Error finish() override;
+    gl::Error flush(const gl::Context *context) override;
+    gl::Error finish(const gl::Context *context) override;
 
     // Drawing methods.
     gl::Error drawArrays(const gl::Context *context,

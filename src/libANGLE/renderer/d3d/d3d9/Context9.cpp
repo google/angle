@@ -131,12 +131,12 @@ std::vector<PathImpl *> Context9::createPaths(GLsizei)
     return std::vector<PathImpl *>();
 }
 
-gl::Error Context9::flush()
+gl::Error Context9::flush(const gl::Context *context)
 {
     return mRenderer->flush();
 }
 
-gl::Error Context9::finish()
+gl::Error Context9::finish(const gl::Context *context)
 {
     return mRenderer->finish();
 }

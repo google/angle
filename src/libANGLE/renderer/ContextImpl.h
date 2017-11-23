@@ -36,8 +36,8 @@ class ContextImpl : public GLImplFactory
     virtual gl::Error initialize() = 0;
 
     // Flush and finish.
-    virtual gl::Error flush()  = 0;
-    virtual gl::Error finish() = 0;
+    virtual gl::Error flush(const gl::Context *context)  = 0;
+    virtual gl::Error finish(const gl::Context *context) = 0;
 
     // Drawing methods.
     virtual gl::Error drawArrays(const gl::Context *context,

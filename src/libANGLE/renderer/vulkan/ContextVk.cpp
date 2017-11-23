@@ -236,13 +236,13 @@ gl::Error ContextVk::initialize()
     return gl::NoError();
 }
 
-gl::Error ContextVk::flush()
+gl::Error ContextVk::flush(const gl::Context *context)
 {
     UNIMPLEMENTED();
     return gl::InternalError();
 }
 
-gl::Error ContextVk::finish()
+gl::Error ContextVk::finish(const gl::Context *context)
 {
     // TODO(jmadill): Implement finish.
     // UNIMPLEMENTED();

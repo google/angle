@@ -1760,12 +1760,12 @@ void Context::drawElementsIndirect(GLenum mode, GLenum type, const void *indirec
 
 void Context::flush()
 {
-    handleError(mImplementation->flush());
+    handleError(mImplementation->flush(this));
 }
 
 void Context::finish()
 {
-    handleError(mImplementation->finish());
+    handleError(mImplementation->finish(this));
 }
 
 void Context::insertEventMarker(GLsizei length, const char *marker)
