@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "a5c86129_9c204356",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2614,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-23T00:26:48Z",
+      "side": 1,
+      "message": "This wasn\u0027t super clean, I fixed it up and cleaned up some related code. I can\u0027t pass in the vao11 to the IndexDataManager because it\u0027s a shared 9/11 class but instead I just passed in a pointer to the cache directly, and removed the use of the Optional helper.",
+      "parentUuid": "5ea33b75_16439f78",
+      "range": {
+        "startLine": 2614,
+        "startChar": 4,
+        "endLine": 2614,
+        "endChar": 55
+      },
+      "revId": "fcb3f939a1cf9cabb515b57016fa966f4968c2a5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8b64feee_b65e0b4e",
         "filename": "src/libANGLE/renderer/d3d/d3d11/VertexArray11.h",
         "patchSetId": 10
@@ -45,6 +69,30 @@
       "revId": "fcb3f939a1cf9cabb515b57016fa966f4968c2a5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4f3f1b3c_0edf6e77",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/VertexArray11.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-23T00:26:48Z",
+      "side": 1,
+      "message": "I kept it a mutable pointer, but cleaned up the surrounding code, as explained above.",
+      "parentUuid": "8b64feee_b65e0b4e",
+      "range": {
+        "startLine": 57,
+        "startChar": 4,
+        "endLine": 57,
+        "endChar": 66
+      },
+      "revId": "fcb3f939a1cf9cabb515b57016fa966f4968c2a5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
