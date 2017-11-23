@@ -22,13 +22,14 @@ void GL_APIENTRY DispatchCompute(GLuint num_groups_x, GLuint num_groups_y, GLuin
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() &&
-            !ValidateDispatchCompute(context, num_groups_x, num_groups_y, num_groups_z))
-        {
-            return;
-        }
+        context->gatherParams<EntryPoint::DispatchCompute>(num_groups_x, num_groups_y,
+                                                           num_groups_z);
 
-        context->dispatchCompute(num_groups_x, num_groups_y, num_groups_z);
+        if (context->skipValidation() ||
+            ValidateDispatchCompute(context, num_groups_x, num_groups_y, num_groups_z))
+        {
+            context->dispatchCompute(num_groups_x, num_groups_y, num_groups_z);
+        }
     }
 }
 
@@ -39,12 +40,12 @@ void GL_APIENTRY DispatchComputeIndirect(GLintptr indirect)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() && !ValidateDispatchComputeIndirect(context, indirect))
-        {
-            return;
-        }
+        context->gatherParams<EntryPoint::DispatchComputeIndirect>(indirect);
 
-        context->dispatchComputeIndirect(indirect);
+        if (context->skipValidation() || ValidateDispatchComputeIndirect(context, indirect))
+        {
+            context->dispatchComputeIndirect(indirect);
+        }
     }
 }
 
@@ -55,12 +56,12 @@ void GL_APIENTRY DrawArraysIndirect(GLenum mode, const void *indirect)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() && !ValidateDrawArraysIndirect(context, mode, indirect))
-        {
-            return;
-        }
+        context->gatherParams<EntryPoint::DrawArraysIndirect>(mode, indirect);
 
-        context->drawArraysIndirect(mode, indirect);
+        if (context->skipValidation() || ValidateDrawArraysIndirect(context, mode, indirect))
+        {
+            context->drawArraysIndirect(mode, indirect);
+        }
     }
 }
 
@@ -72,13 +73,13 @@ void GL_APIENTRY DrawElementsIndirect(GLenum mode, GLenum type, const void *indi
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() &&
-            !ValidateDrawElementsIndirect(context, mode, type, indirect))
-        {
-            return;
-        }
+        context->gatherParams<EntryPoint::DrawElementsIndirect>(mode, type, indirect);
 
-        context->drawElementsIndirect(mode, type, indirect);
+        if (context->skipValidation() ||
+            ValidateDrawElementsIndirect(context, mode, type, indirect))
+        {
+            context->drawElementsIndirect(mode, type, indirect);
+        }
     }
 }
 
@@ -89,13 +90,13 @@ void GL_APIENTRY FramebufferParameteri(GLenum target, GLenum pname, GLint param)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() &&
-            !ValidateFramebufferParameteri(context, target, pname, param))
-        {
-            return;
-        }
+        context->gatherParams<EntryPoint::FramebufferParameteri>(target, pname, param);
 
-        context->framebufferParameteri(target, pname, param);
+        if (context->skipValidation() ||
+            ValidateFramebufferParameteri(context, target, pname, param))
+        {
+            context->framebufferParameteri(target, pname, param);
+        }
     }
 }
 
@@ -107,13 +108,13 @@ void GL_APIENTRY GetFramebufferParameteriv(GLenum target, GLenum pname, GLint *p
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() &&
-            !ValidateGetFramebufferParameteriv(context, target, pname, params))
-        {
-            return;
-        }
+        context->gatherParams<EntryPoint::GetFramebufferParameteriv>(target, pname, params);
 
-        context->getFramebufferParameteriv(target, pname, params);
+        if (context->skipValidation() ||
+            ValidateGetFramebufferParameteriv(context, target, pname, params))
+        {
+            context->getFramebufferParameteriv(target, pname, params);
+        }
     }
 }
 
@@ -130,13 +131,14 @@ void GL_APIENTRY GetProgramInterfaceiv(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() &&
-            !ValidateGetProgramInterfaceiv(context, program, programInterface, pname, params))
-        {
-            return;
-        }
+        context->gatherParams<EntryPoint::GetProgramInterfaceiv>(program, programInterface, pname,
+                                                                 params);
 
-        context->getProgramInterfaceiv(program, programInterface, pname, params);
+        if (context->skipValidation() ||
+            ValidateGetProgramInterfaceiv(context, program, programInterface, pname, params))
+        {
+            context->getProgramInterfaceiv(program, programInterface, pname, params);
+        }
     }
 }
 
@@ -150,13 +152,13 @@ GLuint GL_APIENTRY GetProgramResourceIndex(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() &&
-            !ValidateGetProgramResourceIndex(context, program, programInterface, name))
-        {
-            return GetDefaultReturnValue<EntryPoint::GetProgramResourceIndex, GLuint>();
-        }
+        context->gatherParams<EntryPoint::GetProgramResourceIndex>(program, programInterface, name);
 
-        return context->getProgramResourceIndex(program, programInterface, name);
+        if (context->skipValidation() ||
+            ValidateGetProgramResourceIndex(context, program, programInterface, name))
+        {
+            return context->getProgramResourceIndex(program, programInterface, name);
+        }
     }
 
     return GetDefaultReturnValue<EntryPoint::GetProgramResourceIndex, GLuint>();
@@ -177,14 +179,16 @@ void GL_APIENTRY GetProgramResourceName(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() &&
-            !ValidateGetProgramResourceName(context, program, programInterface, index, bufSize,
-                                            length, name))
-        {
-            return;
-        }
+        context->gatherParams<EntryPoint::GetProgramResourceName>(program, programInterface, index,
+                                                                  bufSize, length, name);
 
-        context->getProgramResourceName(program, programInterface, index, bufSize, length, name);
+        if (context->skipValidation() ||
+            ValidateGetProgramResourceName(context, program, programInterface, index, bufSize,
+                                           length, name))
+        {
+            context->getProgramResourceName(program, programInterface, index, bufSize, length,
+                                            name);
+        }
     }
 }
 
@@ -206,15 +210,16 @@ void GL_APIENTRY GetProgramResourceiv(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() &&
-            !ValidateGetProgramResourceiv(context, program, programInterface, index, propCount,
-                                          props, bufSize, length, params))
-        {
-            return;
-        }
+        context->gatherParams<EntryPoint::GetProgramResourceiv>(
+            program, programInterface, index, propCount, props, bufSize, length, params);
 
-        context->getProgramResourceiv(program, programInterface, index, propCount, props, bufSize,
-                                      length, params);
+        if (context->skipValidation() ||
+            ValidateGetProgramResourceiv(context, program, programInterface, index, propCount,
+                                         props, bufSize, length, params))
+        {
+            context->getProgramResourceiv(program, programInterface, index, propCount, props,
+                                          bufSize, length, params);
+        }
     }
 }
 
@@ -228,13 +233,14 @@ GLint GL_APIENTRY GetProgramResourceLocation(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() &&
-            !ValidateGetProgramResourceLocation(context, program, programInterface, name))
-        {
-            return GetDefaultReturnValue<EntryPoint::GetProgramResourceLocation, GLint>();
-        }
+        context->gatherParams<EntryPoint::GetProgramResourceLocation>(program, programInterface,
+                                                                      name);
 
-        return context->getProgramResourceLocation(program, programInterface, name);
+        if (context->skipValidation() ||
+            ValidateGetProgramResourceLocation(context, program, programInterface, name))
+        {
+            return context->getProgramResourceLocation(program, programInterface, name);
+        }
     }
 
     return GetDefaultReturnValue<EntryPoint::GetProgramResourceLocation, GLint>();
@@ -248,13 +254,13 @@ void GL_APIENTRY UseProgramStages(GLuint pipeline, GLbitfield stages, GLuint pro
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() &&
-            !ValidateUseProgramStages(context, pipeline, stages, program))
-        {
-            return;
-        }
+        context->gatherParams<EntryPoint::UseProgramStages>(pipeline, stages, program);
 
-        context->useProgramStages(pipeline, stages, program);
+        if (context->skipValidation() ||
+            ValidateUseProgramStages(context, pipeline, stages, program))
+        {
+            context->useProgramStages(pipeline, stages, program);
+        }
     }
 }
 
@@ -265,12 +271,12 @@ void GL_APIENTRY ActiveShaderProgram(GLuint pipeline, GLuint program)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() && !ValidateActiveShaderProgram(context, pipeline, program))
-        {
-            return;
-        }
+        context->gatherParams<EntryPoint::ActiveShaderProgram>(pipeline, program);
 
-        context->activeShaderProgram(pipeline, program);
+        if (context->skipValidation() || ValidateActiveShaderProgram(context, pipeline, program))
+        {
+            context->activeShaderProgram(pipeline, program);
+        }
     }
 }
 
@@ -282,13 +288,13 @@ GLuint GL_APIENTRY CreateShaderProgramv(GLenum type, GLsizei count, const GLchar
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() &&
-            !ValidateCreateShaderProgramv(context, type, count, strings))
-        {
-            return GetDefaultReturnValue<EntryPoint::CreateShaderProgramv, GLuint>();
-        }
+        context->gatherParams<EntryPoint::CreateShaderProgramv>(type, count, strings);
 
-        return context->createShaderProgramv(type, count, strings);
+        if (context->skipValidation() ||
+            ValidateCreateShaderProgramv(context, type, count, strings))
+        {
+            return context->createShaderProgramv(type, count, strings);
+        }
     }
 
     return GetDefaultReturnValue<EntryPoint::CreateShaderProgramv, GLuint>();
@@ -301,12 +307,12 @@ void GL_APIENTRY BindProgramPipeline(GLuint pipeline)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() && !ValidateBindProgramPipeline(context, pipeline))
-        {
-            return;
-        }
+        context->gatherParams<EntryPoint::BindProgramPipeline>(pipeline);
 
-        context->bindProgramPipeline(pipeline);
+        if (context->skipValidation() || ValidateBindProgramPipeline(context, pipeline))
+        {
+            context->bindProgramPipeline(pipeline);
+        }
     }
 }
 
@@ -317,12 +323,12 @@ void GL_APIENTRY DeleteProgramPipelines(GLsizei n, const GLuint *pipelines)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() && !ValidateDeleteProgramPipelines(context, n, pipelines))
-        {
-            return;
-        }
+        context->gatherParams<EntryPoint::DeleteProgramPipelines>(n, pipelines);
 
-        context->deleteProgramPipelines(n, pipelines);
+        if (context->skipValidation() || ValidateDeleteProgramPipelines(context, n, pipelines))
+        {
+            context->deleteProgramPipelines(n, pipelines);
+        }
     }
 }
 
@@ -333,12 +339,12 @@ void GL_APIENTRY GenProgramPipelines(GLsizei n, GLuint *pipelines)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() && !ValidateGenProgramPipelines(context, n, pipelines))
-        {
-            return;
-        }
+        context->gatherParams<EntryPoint::GenProgramPipelines>(n, pipelines);
 
-        context->genProgramPipelines(n, pipelines);
+        if (context->skipValidation() || ValidateGenProgramPipelines(context, n, pipelines))
+        {
+            context->genProgramPipelines(n, pipelines);
+        }
     }
 }
 
@@ -349,12 +355,12 @@ GLboolean GL_APIENTRY IsProgramPipeline(GLuint pipeline)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() && !ValidateIsProgramPipeline(context, pipeline))
-        {
-            return GetDefaultReturnValue<EntryPoint::IsProgramPipeline, GLboolean>();
-        }
+        context->gatherParams<EntryPoint::IsProgramPipeline>(pipeline);
 
-        return context->isProgramPipeline(pipeline);
+        if (context->skipValidation() || ValidateIsProgramPipeline(context, pipeline))
+        {
+            return context->isProgramPipeline(pipeline);
+        }
     }
 
     return GetDefaultReturnValue<EntryPoint::IsProgramPipeline, GLboolean>();
@@ -368,13 +374,13 @@ void GL_APIENTRY GetProgramPipelineiv(GLuint pipeline, GLenum pname, GLint *para
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() &&
-            !ValidateGetProgramPipelineiv(context, pipeline, pname, params))
-        {
-            return;
-        }
+        context->gatherParams<EntryPoint::GetProgramPipelineiv>(pipeline, pname, params);
 
-        context->getProgramPipelineiv(pipeline, pname, params);
+        if (context->skipValidation() ||
+            ValidateGetProgramPipelineiv(context, pipeline, pname, params))
+        {
+            context->getProgramPipelineiv(pipeline, pname, params);
+        }
     }
 }
 
@@ -385,12 +391,12 @@ void GL_APIENTRY ProgramUniform1i(GLuint program, GLint location, GLint v0)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() && !ValidateProgramUniform1i(context, program, location, v0))
-        {
-            return;
-        }
+        context->gatherParams<EntryPoint::ProgramUniform1i>(program, location, v0);
 
-        context->programUniform1i(program, location, v0);
+        if (context->skipValidation() || ValidateProgramUniform1i(context, program, location, v0))
+        {
+            context->programUniform1i(program, location, v0);
+        }
     }
 }
 
@@ -402,13 +408,13 @@ void GL_APIENTRY ProgramUniform2i(GLuint program, GLint location, GLint v0, GLin
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() &&
-            !ValidateProgramUniform2i(context, program, location, v0, v1))
-        {
-            return;
-        }
+        context->gatherParams<EntryPoint::ProgramUniform2i>(program, location, v0, v1);
 
-        context->programUniform2i(program, location, v0, v1);
+        if (context->skipValidation() ||
+            ValidateProgramUniform2i(context, program, location, v0, v1))
+        {
+            context->programUniform2i(program, location, v0, v1);
+        }
     }
 }
 
@@ -420,13 +426,13 @@ void GL_APIENTRY ProgramUniform3i(GLuint program, GLint location, GLint v0, GLin
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() &&
-            !ValidateProgramUniform3i(context, program, location, v0, v1, v2))
-        {
-            return;
-        }
+        context->gatherParams<EntryPoint::ProgramUniform3i>(program, location, v0, v1, v2);
 
-        context->programUniform3i(program, location, v0, v1, v2);
+        if (context->skipValidation() ||
+            ValidateProgramUniform3i(context, program, location, v0, v1, v2))
+        {
+            context->programUniform3i(program, location, v0, v1, v2);
+        }
     }
 }
 
@@ -441,13 +447,13 @@ ProgramUniform4i(GLuint program, GLint location, GLint v0, GLint v1, GLint v2, G
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() &&
-            !ValidateProgramUniform4i(context, program, location, v0, v1, v2, v3))
-        {
-            return;
-        }
+        context->gatherParams<EntryPoint::ProgramUniform4i>(program, location, v0, v1, v2, v3);
 
-        context->programUniform4i(program, location, v0, v1, v2, v3);
+        if (context->skipValidation() ||
+            ValidateProgramUniform4i(context, program, location, v0, v1, v2, v3))
+        {
+            context->programUniform4i(program, location, v0, v1, v2, v3);
+        }
     }
 }
 
@@ -458,13 +464,12 @@ void GL_APIENTRY ProgramUniform1ui(GLuint program, GLint location, GLuint v0)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() &&
-            !ValidateProgramUniform1ui(context, program, location, v0))
-        {
-            return;
-        }
+        context->gatherParams<EntryPoint::ProgramUniform1ui>(program, location, v0);
 
-        context->programUniform1ui(program, location, v0);
+        if (context->skipValidation() || ValidateProgramUniform1ui(context, program, location, v0))
+        {
+            context->programUniform1ui(program, location, v0);
+        }
     }
 }
 
@@ -476,13 +481,13 @@ void GL_APIENTRY ProgramUniform2ui(GLuint program, GLint location, GLuint v0, GL
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() &&
-            !ValidateProgramUniform2ui(context, program, location, v0, v1))
-        {
-            return;
-        }
+        context->gatherParams<EntryPoint::ProgramUniform2ui>(program, location, v0, v1);
 
-        context->programUniform2ui(program, location, v0, v1);
+        if (context->skipValidation() ||
+            ValidateProgramUniform2ui(context, program, location, v0, v1))
+        {
+            context->programUniform2ui(program, location, v0, v1);
+        }
     }
 }
 
@@ -496,13 +501,13 @@ void GL_APIENTRY ProgramUniform3ui(GLuint program, GLint location, GLuint v0, GL
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() &&
-            !ValidateProgramUniform3ui(context, program, location, v0, v1, v2))
-        {
-            return;
-        }
+        context->gatherParams<EntryPoint::ProgramUniform3ui>(program, location, v0, v1, v2);
 
-        context->programUniform3ui(program, location, v0, v1, v2);
+        if (context->skipValidation() ||
+            ValidateProgramUniform3ui(context, program, location, v0, v1, v2))
+        {
+            context->programUniform3ui(program, location, v0, v1, v2);
+        }
     }
 }
 
@@ -517,13 +522,13 @@ ProgramUniform4ui(GLuint program, GLint location, GLuint v0, GLuint v1, GLuint v
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() &&
-            !ValidateProgramUniform4ui(context, program, location, v0, v1, v2, v3))
-        {
-            return;
-        }
+        context->gatherParams<EntryPoint::ProgramUniform4ui>(program, location, v0, v1, v2, v3);
 
-        context->programUniform4ui(program, location, v0, v1, v2, v3);
+        if (context->skipValidation() ||
+            ValidateProgramUniform4ui(context, program, location, v0, v1, v2, v3))
+        {
+            context->programUniform4ui(program, location, v0, v1, v2, v3);
+        }
     }
 }
 
@@ -534,12 +539,12 @@ void GL_APIENTRY ProgramUniform1f(GLuint program, GLint location, GLfloat v0)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() && !ValidateProgramUniform1f(context, program, location, v0))
-        {
-            return;
-        }
+        context->gatherParams<EntryPoint::ProgramUniform1f>(program, location, v0);
 
-        context->programUniform1f(program, location, v0);
+        if (context->skipValidation() || ValidateProgramUniform1f(context, program, location, v0))
+        {
+            context->programUniform1f(program, location, v0);
+        }
     }
 }
 
@@ -551,13 +556,13 @@ void GL_APIENTRY ProgramUniform2f(GLuint program, GLint location, GLfloat v0, GL
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() &&
-            !ValidateProgramUniform2f(context, program, location, v0, v1))
-        {
-            return;
-        }
+        context->gatherParams<EntryPoint::ProgramUniform2f>(program, location, v0, v1);
 
-        context->programUniform2f(program, location, v0, v1);
+        if (context->skipValidation() ||
+            ValidateProgramUniform2f(context, program, location, v0, v1))
+        {
+            context->programUniform2f(program, location, v0, v1);
+        }
     }
 }
 
@@ -572,13 +577,13 @@ ProgramUniform3f(GLuint program, GLint location, GLfloat v0, GLfloat v1, GLfloat
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() &&
-            !ValidateProgramUniform3f(context, program, location, v0, v1, v2))
-        {
-            return;
-        }
+        context->gatherParams<EntryPoint::ProgramUniform3f>(program, location, v0, v1, v2);
 
-        context->programUniform3f(program, location, v0, v1, v2);
+        if (context->skipValidation() ||
+            ValidateProgramUniform3f(context, program, location, v0, v1, v2))
+        {
+            context->programUniform3f(program, location, v0, v1, v2);
+        }
     }
 }
 
@@ -593,13 +598,13 @@ ProgramUniform4f(GLuint program, GLint location, GLfloat v0, GLfloat v1, GLfloat
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() &&
-            !ValidateProgramUniform4f(context, program, location, v0, v1, v2, v3))
-        {
-            return;
-        }
+        context->gatherParams<EntryPoint::ProgramUniform4f>(program, location, v0, v1, v2, v3);
 
-        context->programUniform4f(program, location, v0, v1, v2, v3);
+        if (context->skipValidation() ||
+            ValidateProgramUniform4f(context, program, location, v0, v1, v2, v3))
+        {
+            context->programUniform4f(program, location, v0, v1, v2, v3);
+        }
     }
 }
 
@@ -616,13 +621,13 @@ void GL_APIENTRY ProgramUniform1iv(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() &&
-            !ValidateProgramUniform1iv(context, program, location, count, value))
-        {
-            return;
-        }
+        context->gatherParams<EntryPoint::ProgramUniform1iv>(program, location, count, value);
 
-        context->programUniform1iv(program, location, count, value);
+        if (context->skipValidation() ||
+            ValidateProgramUniform1iv(context, program, location, count, value))
+        {
+            context->programUniform1iv(program, location, count, value);
+        }
     }
 }
 
@@ -639,13 +644,13 @@ void GL_APIENTRY ProgramUniform2iv(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() &&
-            !ValidateProgramUniform2iv(context, program, location, count, value))
-        {
-            return;
-        }
+        context->gatherParams<EntryPoint::ProgramUniform2iv>(program, location, count, value);
 
-        context->programUniform2iv(program, location, count, value);
+        if (context->skipValidation() ||
+            ValidateProgramUniform2iv(context, program, location, count, value))
+        {
+            context->programUniform2iv(program, location, count, value);
+        }
     }
 }
 
@@ -662,13 +667,13 @@ void GL_APIENTRY ProgramUniform3iv(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() &&
-            !ValidateProgramUniform3iv(context, program, location, count, value))
-        {
-            return;
-        }
+        context->gatherParams<EntryPoint::ProgramUniform3iv>(program, location, count, value);
 
-        context->programUniform3iv(program, location, count, value);
+        if (context->skipValidation() ||
+            ValidateProgramUniform3iv(context, program, location, count, value))
+        {
+            context->programUniform3iv(program, location, count, value);
+        }
     }
 }
 
@@ -685,13 +690,13 @@ void GL_APIENTRY ProgramUniform4iv(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() &&
-            !ValidateProgramUniform4iv(context, program, location, count, value))
-        {
-            return;
-        }
+        context->gatherParams<EntryPoint::ProgramUniform4iv>(program, location, count, value);
 
-        context->programUniform4iv(program, location, count, value);
+        if (context->skipValidation() ||
+            ValidateProgramUniform4iv(context, program, location, count, value))
+        {
+            context->programUniform4iv(program, location, count, value);
+        }
     }
 }
 
@@ -708,13 +713,13 @@ void GL_APIENTRY ProgramUniform1uiv(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() &&
-            !ValidateProgramUniform1uiv(context, program, location, count, value))
-        {
-            return;
-        }
+        context->gatherParams<EntryPoint::ProgramUniform1uiv>(program, location, count, value);
 
-        context->programUniform1uiv(program, location, count, value);
+        if (context->skipValidation() ||
+            ValidateProgramUniform1uiv(context, program, location, count, value))
+        {
+            context->programUniform1uiv(program, location, count, value);
+        }
     }
 }
 
@@ -731,13 +736,13 @@ void GL_APIENTRY ProgramUniform2uiv(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() &&
-            !ValidateProgramUniform2uiv(context, program, location, count, value))
-        {
-            return;
-        }
+        context->gatherParams<EntryPoint::ProgramUniform2uiv>(program, location, count, value);
 
-        context->programUniform2uiv(program, location, count, value);
+        if (context->skipValidation() ||
+            ValidateProgramUniform2uiv(context, program, location, count, value))
+        {
+            context->programUniform2uiv(program, location, count, value);
+        }
     }
 }
 
@@ -754,13 +759,13 @@ void GL_APIENTRY ProgramUniform3uiv(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() &&
-            !ValidateProgramUniform3uiv(context, program, location, count, value))
-        {
-            return;
-        }
+        context->gatherParams<EntryPoint::ProgramUniform3uiv>(program, location, count, value);
 
-        context->programUniform3uiv(program, location, count, value);
+        if (context->skipValidation() ||
+            ValidateProgramUniform3uiv(context, program, location, count, value))
+        {
+            context->programUniform3uiv(program, location, count, value);
+        }
     }
 }
 
@@ -777,13 +782,13 @@ void GL_APIENTRY ProgramUniform4uiv(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() &&
-            !ValidateProgramUniform4uiv(context, program, location, count, value))
-        {
-            return;
-        }
+        context->gatherParams<EntryPoint::ProgramUniform4uiv>(program, location, count, value);
 
-        context->programUniform4uiv(program, location, count, value);
+        if (context->skipValidation() ||
+            ValidateProgramUniform4uiv(context, program, location, count, value))
+        {
+            context->programUniform4uiv(program, location, count, value);
+        }
     }
 }
 
@@ -800,13 +805,13 @@ void GL_APIENTRY ProgramUniform1fv(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() &&
-            !ValidateProgramUniform1fv(context, program, location, count, value))
-        {
-            return;
-        }
+        context->gatherParams<EntryPoint::ProgramUniform1fv>(program, location, count, value);
 
-        context->programUniform1fv(program, location, count, value);
+        if (context->skipValidation() ||
+            ValidateProgramUniform1fv(context, program, location, count, value))
+        {
+            context->programUniform1fv(program, location, count, value);
+        }
     }
 }
 
@@ -823,13 +828,13 @@ void GL_APIENTRY ProgramUniform2fv(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() &&
-            !ValidateProgramUniform2fv(context, program, location, count, value))
-        {
-            return;
-        }
+        context->gatherParams<EntryPoint::ProgramUniform2fv>(program, location, count, value);
 
-        context->programUniform2fv(program, location, count, value);
+        if (context->skipValidation() ||
+            ValidateProgramUniform2fv(context, program, location, count, value))
+        {
+            context->programUniform2fv(program, location, count, value);
+        }
     }
 }
 
@@ -846,13 +851,13 @@ void GL_APIENTRY ProgramUniform3fv(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() &&
-            !ValidateProgramUniform3fv(context, program, location, count, value))
-        {
-            return;
-        }
+        context->gatherParams<EntryPoint::ProgramUniform3fv>(program, location, count, value);
 
-        context->programUniform3fv(program, location, count, value);
+        if (context->skipValidation() ||
+            ValidateProgramUniform3fv(context, program, location, count, value))
+        {
+            context->programUniform3fv(program, location, count, value);
+        }
     }
 }
 
@@ -869,13 +874,13 @@ void GL_APIENTRY ProgramUniform4fv(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() &&
-            !ValidateProgramUniform4fv(context, program, location, count, value))
-        {
-            return;
-        }
+        context->gatherParams<EntryPoint::ProgramUniform4fv>(program, location, count, value);
 
-        context->programUniform4fv(program, location, count, value);
+        if (context->skipValidation() ||
+            ValidateProgramUniform4fv(context, program, location, count, value))
+        {
+            context->programUniform4fv(program, location, count, value);
+        }
     }
 }
 
@@ -893,13 +898,14 @@ void GL_APIENTRY ProgramUniformMatrix2fv(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() &&
-            !ValidateProgramUniformMatrix2fv(context, program, location, count, transpose, value))
-        {
-            return;
-        }
+        context->gatherParams<EntryPoint::ProgramUniformMatrix2fv>(program, location, count,
+                                                                   transpose, value);
 
-        context->programUniformMatrix2fv(program, location, count, transpose, value);
+        if (context->skipValidation() ||
+            ValidateProgramUniformMatrix2fv(context, program, location, count, transpose, value))
+        {
+            context->programUniformMatrix2fv(program, location, count, transpose, value);
+        }
     }
 }
 
@@ -917,13 +923,14 @@ void GL_APIENTRY ProgramUniformMatrix3fv(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() &&
-            !ValidateProgramUniformMatrix3fv(context, program, location, count, transpose, value))
-        {
-            return;
-        }
+        context->gatherParams<EntryPoint::ProgramUniformMatrix3fv>(program, location, count,
+                                                                   transpose, value);
 
-        context->programUniformMatrix3fv(program, location, count, transpose, value);
+        if (context->skipValidation() ||
+            ValidateProgramUniformMatrix3fv(context, program, location, count, transpose, value))
+        {
+            context->programUniformMatrix3fv(program, location, count, transpose, value);
+        }
     }
 }
 
@@ -941,13 +948,14 @@ void GL_APIENTRY ProgramUniformMatrix4fv(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() &&
-            !ValidateProgramUniformMatrix4fv(context, program, location, count, transpose, value))
-        {
-            return;
-        }
+        context->gatherParams<EntryPoint::ProgramUniformMatrix4fv>(program, location, count,
+                                                                   transpose, value);
 
-        context->programUniformMatrix4fv(program, location, count, transpose, value);
+        if (context->skipValidation() ||
+            ValidateProgramUniformMatrix4fv(context, program, location, count, transpose, value))
+        {
+            context->programUniformMatrix4fv(program, location, count, transpose, value);
+        }
     }
 }
 
@@ -965,13 +973,14 @@ void GL_APIENTRY ProgramUniformMatrix2x3fv(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() &&
-            !ValidateProgramUniformMatrix2x3fv(context, program, location, count, transpose, value))
-        {
-            return;
-        }
+        context->gatherParams<EntryPoint::ProgramUniformMatrix2x3fv>(program, location, count,
+                                                                     transpose, value);
 
-        context->programUniformMatrix2x3fv(program, location, count, transpose, value);
+        if (context->skipValidation() ||
+            ValidateProgramUniformMatrix2x3fv(context, program, location, count, transpose, value))
+        {
+            context->programUniformMatrix2x3fv(program, location, count, transpose, value);
+        }
     }
 }
 
@@ -989,13 +998,14 @@ void GL_APIENTRY ProgramUniformMatrix3x2fv(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() &&
-            !ValidateProgramUniformMatrix3x2fv(context, program, location, count, transpose, value))
-        {
-            return;
-        }
+        context->gatherParams<EntryPoint::ProgramUniformMatrix3x2fv>(program, location, count,
+                                                                     transpose, value);
 
-        context->programUniformMatrix3x2fv(program, location, count, transpose, value);
+        if (context->skipValidation() ||
+            ValidateProgramUniformMatrix3x2fv(context, program, location, count, transpose, value))
+        {
+            context->programUniformMatrix3x2fv(program, location, count, transpose, value);
+        }
     }
 }
 
@@ -1013,13 +1023,14 @@ void GL_APIENTRY ProgramUniformMatrix2x4fv(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() &&
-            !ValidateProgramUniformMatrix2x4fv(context, program, location, count, transpose, value))
-        {
-            return;
-        }
+        context->gatherParams<EntryPoint::ProgramUniformMatrix2x4fv>(program, location, count,
+                                                                     transpose, value);
 
-        context->programUniformMatrix2x4fv(program, location, count, transpose, value);
+        if (context->skipValidation() ||
+            ValidateProgramUniformMatrix2x4fv(context, program, location, count, transpose, value))
+        {
+            context->programUniformMatrix2x4fv(program, location, count, transpose, value);
+        }
     }
 }
 
@@ -1037,13 +1048,14 @@ void GL_APIENTRY ProgramUniformMatrix4x2fv(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() &&
-            !ValidateProgramUniformMatrix4x2fv(context, program, location, count, transpose, value))
-        {
-            return;
-        }
+        context->gatherParams<EntryPoint::ProgramUniformMatrix4x2fv>(program, location, count,
+                                                                     transpose, value);
 
-        context->programUniformMatrix4x2fv(program, location, count, transpose, value);
+        if (context->skipValidation() ||
+            ValidateProgramUniformMatrix4x2fv(context, program, location, count, transpose, value))
+        {
+            context->programUniformMatrix4x2fv(program, location, count, transpose, value);
+        }
     }
 }
 
@@ -1061,13 +1073,14 @@ void GL_APIENTRY ProgramUniformMatrix3x4fv(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() &&
-            !ValidateProgramUniformMatrix3x4fv(context, program, location, count, transpose, value))
-        {
-            return;
-        }
+        context->gatherParams<EntryPoint::ProgramUniformMatrix3x4fv>(program, location, count,
+                                                                     transpose, value);
 
-        context->programUniformMatrix3x4fv(program, location, count, transpose, value);
+        if (context->skipValidation() ||
+            ValidateProgramUniformMatrix3x4fv(context, program, location, count, transpose, value))
+        {
+            context->programUniformMatrix3x4fv(program, location, count, transpose, value);
+        }
     }
 }
 
@@ -1085,13 +1098,14 @@ void GL_APIENTRY ProgramUniformMatrix4x3fv(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() &&
-            !ValidateProgramUniformMatrix4x3fv(context, program, location, count, transpose, value))
-        {
-            return;
-        }
+        context->gatherParams<EntryPoint::ProgramUniformMatrix4x3fv>(program, location, count,
+                                                                     transpose, value);
 
-        context->programUniformMatrix4x3fv(program, location, count, transpose, value);
+        if (context->skipValidation() ||
+            ValidateProgramUniformMatrix4x3fv(context, program, location, count, transpose, value))
+        {
+            context->programUniformMatrix4x3fv(program, location, count, transpose, value);
+        }
     }
 }
 
@@ -1102,12 +1116,12 @@ void GL_APIENTRY ValidateProgramPipeline(GLuint pipeline)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() && !ValidateValidateProgramPipeline(context, pipeline))
-        {
-            return;
-        }
+        context->gatherParams<EntryPoint::ValidateProgramPipeline>(pipeline);
 
-        context->validateProgramPipeline(pipeline);
+        if (context->skipValidation() || ValidateValidateProgramPipeline(context, pipeline))
+        {
+            context->validateProgramPipeline(pipeline);
+        }
     }
 }
 
@@ -1124,13 +1138,14 @@ void GL_APIENTRY GetProgramPipelineInfoLog(GLuint pipeline,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() &&
-            !ValidateGetProgramPipelineInfoLog(context, pipeline, bufSize, length, infoLog))
-        {
-            return;
-        }
+        context->gatherParams<EntryPoint::GetProgramPipelineInfoLog>(pipeline, bufSize, length,
+                                                                     infoLog);
 
-        context->getProgramPipelineInfoLog(pipeline, bufSize, length, infoLog);
+        if (context->skipValidation() ||
+            ValidateGetProgramPipelineInfoLog(context, pipeline, bufSize, length, infoLog))
+        {
+            context->getProgramPipelineInfoLog(pipeline, bufSize, length, infoLog);
+        }
     }
 }
 
@@ -1150,13 +1165,14 @@ void GL_APIENTRY BindImageTexture(GLuint unit,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() && !ValidateBindImageTexture(context, unit, texture, level,
-                                                                    layered, layer, access, format))
-        {
-            return;
-        }
+        context->gatherParams<EntryPoint::BindImageTexture>(unit, texture, level, layered, layer,
+                                                            access, format);
 
-        context->bindImageTexture(unit, texture, level, layered, layer, access, format);
+        if (context->skipValidation() ||
+            ValidateBindImageTexture(context, unit, texture, level, layered, layer, access, format))
+        {
+            context->bindImageTexture(unit, texture, level, layered, layer, access, format);
+        }
     }
 }
 
@@ -1168,12 +1184,12 @@ void GL_APIENTRY GetBooleani_v(GLenum target, GLuint index, GLboolean *data)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() && !ValidateGetBooleani_v(context, target, index, data))
-        {
-            return;
-        }
+        context->gatherParams<EntryPoint::GetBooleani_v>(target, index, data);
 
-        context->getBooleani_v(target, index, data);
+        if (context->skipValidation() || ValidateGetBooleani_v(context, target, index, data))
+        {
+            context->getBooleani_v(target, index, data);
+        }
     }
 }
 
@@ -1184,12 +1200,12 @@ void GL_APIENTRY MemoryBarrier(GLbitfield barriers)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() && !ValidateMemoryBarrier(context, barriers))
-        {
-            return;
-        }
+        context->gatherParams<EntryPoint::MemoryBarrier>(barriers);
 
-        context->memoryBarrier(barriers);
+        if (context->skipValidation() || ValidateMemoryBarrier(context, barriers))
+        {
+            context->memoryBarrier(barriers);
+        }
     }
 }
 
@@ -1200,12 +1216,12 @@ void GL_APIENTRY MemoryBarrierByRegion(GLbitfield barriers)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() && !ValidateMemoryBarrierByRegion(context, barriers))
-        {
-            return;
-        }
+        context->gatherParams<EntryPoint::MemoryBarrierByRegion>(barriers);
 
-        context->memoryBarrierByRegion(barriers);
+        if (context->skipValidation() || ValidateMemoryBarrierByRegion(context, barriers))
+        {
+            context->memoryBarrierByRegion(barriers);
+        }
     }
 }
 
@@ -1224,15 +1240,16 @@ void GL_APIENTRY TexStorage2DMultisample(GLenum target,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() &&
-            !ValidateTexStorage2DMultisample(context, target, samples, internalformat, width,
-                                             height, fixedsamplelocations))
-        {
-            return;
-        }
+        context->gatherParams<EntryPoint::TexStorage2DMultisample>(
+            target, samples, internalformat, width, height, fixedsamplelocations);
 
-        context->texStorage2DMultisample(target, samples, internalformat, width, height,
-                                         fixedsamplelocations);
+        if (context->skipValidation() ||
+            ValidateTexStorage2DMultisample(context, target, samples, internalformat, width, height,
+                                            fixedsamplelocations))
+        {
+            context->texStorage2DMultisample(target, samples, internalformat, width, height,
+                                             fixedsamplelocations);
+        }
     }
 }
 
@@ -1243,12 +1260,12 @@ void GL_APIENTRY GetMultisamplefv(GLenum pname, GLuint index, GLfloat *val)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() && !ValidateGetMultisamplefv(context, pname, index, val))
-        {
-            return;
-        }
+        context->gatherParams<EntryPoint::GetMultisamplefv>(pname, index, val);
 
-        context->getMultisamplefv(pname, index, val);
+        if (context->skipValidation() || ValidateGetMultisamplefv(context, pname, index, val))
+        {
+            context->getMultisamplefv(pname, index, val);
+        }
     }
 }
 
@@ -1259,12 +1276,12 @@ void GL_APIENTRY SampleMaski(GLuint maskNumber, GLbitfield mask)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() && !ValidateSampleMaski(context, maskNumber, mask))
-        {
-            return;
-        }
+        context->gatherParams<EntryPoint::SampleMaski>(maskNumber, mask);
 
-        context->sampleMaski(maskNumber, mask);
+        if (context->skipValidation() || ValidateSampleMaski(context, maskNumber, mask))
+        {
+            context->sampleMaski(maskNumber, mask);
+        }
     }
 }
 
@@ -1276,13 +1293,13 @@ void GL_APIENTRY GetTexLevelParameteriv(GLenum target, GLint level, GLenum pname
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() &&
-            !ValidateGetTexLevelParameteriv(context, target, level, pname, params))
-        {
-            return;
-        }
+        context->gatherParams<EntryPoint::GetTexLevelParameteriv>(target, level, pname, params);
 
-        context->getTexLevelParameteriv(target, level, pname, params);
+        if (context->skipValidation() ||
+            ValidateGetTexLevelParameteriv(context, target, level, pname, params))
+        {
+            context->getTexLevelParameteriv(target, level, pname, params);
+        }
     }
 }
 
@@ -1295,13 +1312,13 @@ void GL_APIENTRY GetTexLevelParameterfv(GLenum target, GLint level, GLenum pname
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() &&
-            !ValidateGetTexLevelParameterfv(context, target, level, pname, params))
-        {
-            return;
-        }
+        context->gatherParams<EntryPoint::GetTexLevelParameterfv>(target, level, pname, params);
 
-        context->getTexLevelParameterfv(target, level, pname, params);
+        if (context->skipValidation() ||
+            ValidateGetTexLevelParameterfv(context, target, level, pname, params))
+        {
+            context->getTexLevelParameterfv(target, level, pname, params);
+        }
     }
 }
 
@@ -1317,13 +1334,13 @@ void GL_APIENTRY BindVertexBuffer(GLuint bindingindex,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() &&
-            !ValidateBindVertexBuffer(context, bindingindex, buffer, offset, stride))
-        {
-            return;
-        }
+        context->gatherParams<EntryPoint::BindVertexBuffer>(bindingindex, buffer, offset, stride);
 
-        context->bindVertexBuffer(bindingindex, buffer, offset, stride);
+        if (context->skipValidation() ||
+            ValidateBindVertexBuffer(context, bindingindex, buffer, offset, stride))
+        {
+            context->bindVertexBuffer(bindingindex, buffer, offset, stride);
+        }
     }
 }
 
@@ -1341,14 +1358,15 @@ void GL_APIENTRY VertexAttribFormat(GLuint attribindex,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() &&
-            !ValidateVertexAttribFormat(context, attribindex, size, type, normalized,
-                                        relativeoffset))
-        {
-            return;
-        }
+        context->gatherParams<EntryPoint::VertexAttribFormat>(attribindex, size, type, normalized,
+                                                              relativeoffset);
 
-        context->vertexAttribFormat(attribindex, size, type, normalized, relativeoffset);
+        if (context->skipValidation() ||
+            ValidateVertexAttribFormat(context, attribindex, size, type, normalized,
+                                       relativeoffset))
+        {
+            context->vertexAttribFormat(attribindex, size, type, normalized, relativeoffset);
+        }
     }
 }
 
@@ -1365,13 +1383,14 @@ void GL_APIENTRY VertexAttribIFormat(GLuint attribindex,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() &&
-            !ValidateVertexAttribIFormat(context, attribindex, size, type, relativeoffset))
-        {
-            return;
-        }
+        context->gatherParams<EntryPoint::VertexAttribIFormat>(attribindex, size, type,
+                                                               relativeoffset);
 
-        context->vertexAttribIFormat(attribindex, size, type, relativeoffset);
+        if (context->skipValidation() ||
+            ValidateVertexAttribIFormat(context, attribindex, size, type, relativeoffset))
+        {
+            context->vertexAttribIFormat(attribindex, size, type, relativeoffset);
+        }
     }
 }
 
@@ -1382,13 +1401,13 @@ void GL_APIENTRY VertexAttribBinding(GLuint attribindex, GLuint bindingindex)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() &&
-            !ValidateVertexAttribBinding(context, attribindex, bindingindex))
-        {
-            return;
-        }
+        context->gatherParams<EntryPoint::VertexAttribBinding>(attribindex, bindingindex);
 
-        context->vertexAttribBinding(attribindex, bindingindex);
+        if (context->skipValidation() ||
+            ValidateVertexAttribBinding(context, attribindex, bindingindex))
+        {
+            context->vertexAttribBinding(attribindex, bindingindex);
+        }
     }
 }
 
@@ -1399,13 +1418,13 @@ void GL_APIENTRY VertexBindingDivisor(GLuint bindingindex, GLuint divisor)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() &&
-            !ValidateVertexBindingDivisor(context, bindingindex, divisor))
-        {
-            return;
-        }
+        context->gatherParams<EntryPoint::VertexBindingDivisor>(bindingindex, divisor);
 
-        context->vertexBindingDivisor(bindingindex, divisor);
+        if (context->skipValidation() ||
+            ValidateVertexBindingDivisor(context, bindingindex, divisor))
+        {
+            context->vertexBindingDivisor(bindingindex, divisor);
+        }
     }
 }
 }  // namespace gl

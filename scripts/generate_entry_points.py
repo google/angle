@@ -249,10 +249,7 @@ for major_version, minor_version in [[2, 0], [3, 0], [3, 1]]:
         proto = "".join(command.find("./proto").itertext())
         cmd_names += [cmd_name]
         entry_point_decls += [format_entry_point_decl(cmd_name, proto, params)]
-        if major_version == 3 and minor_version == 1:
-            entry_point_defs += [format_entry_point_def_oldstyle(cmd_name, proto, params)]
-        else:
-            entry_point_defs += [format_entry_point_def(cmd_name, proto, params)]
+        entry_point_defs += [format_entry_point_def(cmd_name, proto, params)]
 
     for type in ["header", "source"]:
         if type == "header":
