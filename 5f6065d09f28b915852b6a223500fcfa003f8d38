@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a23b0888_1cc46c2c",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 733,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-23T18:09:22Z",
+      "side": 1,
+      "message": "ref",
+      "range": {
+        "startLine": 732,
+        "startChar": 9,
+        "endLine": 733,
+        "endChar": 58
+      },
+      "revId": "5f6065d09f28b915852b6a223500fcfa003f8d38",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9aa81a3e_dc3d31bf",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 761,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-23T18:09:22Z",
+      "side": 1,
+      "message": "You should move this into the if-statement above (see ref).  This value is required for ES 3.1 to function so we shouldn\u0027t be exposing any compute features if this doesn\u0027t exist.",
+      "range": {
+        "startLine": 761,
+        "startChar": 12,
+        "endLine": 761,
+        "endChar": 76
+      },
+      "revId": "5f6065d09f28b915852b6a223500fcfa003f8d38",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
