@@ -22,6 +22,30 @@
       "revId": "eb5cd9aa33a0f50a2710308ceb09225913117ac8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6f1aec1e_4bfef733",
+        "filename": "src/libGLESv2/entry_points_gles_3_1_ext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-11-23T00:23:20Z",
+      "side": 1,
+      "message": "I cannot implement it now because the link of geometry shader hasn\u0027t been completed yet.",
+      "parentUuid": "96c7f7aa_909c25fe",
+      "range": {
+        "startLine": 35,
+        "startChar": 8,
+        "endLine": 35,
+        "endChar": 21
+      },
+      "revId": "eb5cd9aa33a0f50a2710308ceb09225913117ac8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
