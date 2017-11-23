@@ -16,6 +16,8 @@
 //
 //   Must be run after SplitSequenceOperator, SimplifyLoopConditions and SeparateDeclarations steps
 //   have been done to expressions containing calls of the array length method.
+//
+//   Does nothing to length method calls done on runtime-sized arrays.
 
 #include "compiler/translator/RemoveArrayLengthMethod.h"
 
@@ -45,7 +47,8 @@ class RemoveArrayLengthTraverser : public TIntermTraverser
 
 bool RemoveArrayLengthTraverser::visitUnary(Visit visit, TIntermUnary *node)
 {
-    if (node->getOp() == EOpArrayLength)
+    // The only case where we leave array length() in place is for runtime-sized arrays.
+    if (node->getOp() == EOpArrayLength && !node->getOperand()->getType().isUnsizedArray())
     {
         mFoundArrayLength = true;
         if (!node->getOperand()->hasSideEffects())

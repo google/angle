@@ -462,11 +462,11 @@ class TParseContext : angle::NonCopyable
     constexpr static size_t kAtomicCounterArrayStride = 4;
 
     // Returns a clamped index. If it prints out an error message, the token is "[]".
-    int checkIndexOutOfRange(bool outOfRangeIndexIsError,
-                             const TSourceLoc &location,
-                             int index,
-                             int arraySize,
-                             const char *reason);
+    int checkIndexLessThan(bool outOfRangeIndexIsError,
+                           const TSourceLoc &location,
+                           int index,
+                           int arraySize,
+                           const char *reason);
 
     bool declareVariable(const TSourceLoc &line,
                          const TString &identifier,

@@ -3785,6 +3785,15 @@ TIntermDeclaration *TParseContext::addInterfaceBlock(
 
         fieldType->setLayoutQualifier(fieldLayoutQualifier);
 
+        if (mShaderVersion < 310 || memberIndex != fieldList->size() - 1u ||
+            typeQualifier.qualifier != EvqBuffer)
+        {
+            // ESSL 3.10 spec section 4.1.9 allows for runtime-sized arrays.
+            checkIsNotUnsizedArray(field->line(),
+                                   "array members of interface blocks must specify a size",
+                                   field->name().c_str(), field->type());
+        }
+
         if (typeQualifier.qualifier == EvqBuffer)
         {
             // set memory qualifiers
@@ -4007,85 +4016,88 @@ TIntermTyped *TParseContext::addIndexExpression(TIntermTyped *baseExpression,
 
         int safeIndex = -1;
 
-        if (baseExpression->isArray())
+        if (index < 0)
         {
-            if (baseExpression->getQualifier() == EvqFragData && index > 0)
+            outOfRangeError(outOfRangeIndexIsError, location, "index expression is negative", "[]");
+            safeIndex = 0;
+        }
+
+        if (!baseExpression->getType().isUnsizedArray())
+        {
+            if (baseExpression->isArray())
             {
-                if (!isExtensionEnabled(TExtension::EXT_draw_buffers))
+                if (baseExpression->getQualifier() == EvqFragData && index > 0)
                 {
-                    outOfRangeError(outOfRangeIndexIsError, location,
-                                    "array index for gl_FragData must be zero when "
-                                    "GL_EXT_draw_buffers is disabled",
-                                    "[");
-                    safeIndex = 0;
+                    if (!isExtensionEnabled(TExtension::EXT_draw_buffers))
+                    {
+                        outOfRangeError(outOfRangeIndexIsError, location,
+                                        "array index for gl_FragData must be zero when "
+                                        "GL_EXT_draw_buffers is disabled",
+                                        "[]");
+                        safeIndex = 0;
+                    }
+                }
+                // Only do generic out-of-range check if similar error hasn't already been reported.
+                if (safeIndex < 0)
+                {
+                    safeIndex = checkIndexLessThan(outOfRangeIndexIsError, location, index,
+                                                   baseExpression->getOutermostArraySize(),
+                                                   "array index out of range");
                 }
             }
-            // Only do generic out-of-range check if similar error hasn't already been reported.
-            if (safeIndex < 0)
+            else if (baseExpression->isMatrix())
             {
-                safeIndex = checkIndexOutOfRange(outOfRangeIndexIsError, location, index,
-                                                 baseExpression->getOutermostArraySize(),
-                                                 "array index out of range");
+                safeIndex = checkIndexLessThan(outOfRangeIndexIsError, location, index,
+                                               baseExpression->getType().getCols(),
+                                               "matrix field selection out of range");
             }
-        }
-        else if (baseExpression->isMatrix())
-        {
-            safeIndex = checkIndexOutOfRange(outOfRangeIndexIsError, location, index,
-                                             baseExpression->getType().getCols(),
-                                             "matrix field selection out of range");
-        }
-        else if (baseExpression->isVector())
-        {
-            safeIndex = checkIndexOutOfRange(outOfRangeIndexIsError, location, index,
-                                             baseExpression->getType().getNominalSize(),
-                                             "vector field selection out of range");
-        }
+            else if (baseExpression->isVector())
+            {
+                safeIndex = checkIndexLessThan(outOfRangeIndexIsError, location, index,
+                                               baseExpression->getType().getNominalSize(),
+                                               "vector field selection out of range");
+            }
 
-        ASSERT(safeIndex >= 0);
-        // Data of constant unions can't be changed, because it may be shared with other
-        // constant unions or even builtins, like gl_MaxDrawBuffers. Instead use a new
-        // sanitized object.
-        if (safeIndex != index || indexConstantUnion->getBasicType() != EbtInt)
-        {
-            TConstantUnion *safeConstantUnion = new TConstantUnion();
-            safeConstantUnion->setIConst(safeIndex);
-            indexConstantUnion->replaceConstantUnion(safeConstantUnion);
-            indexConstantUnion->getTypePointer()->setBasicType(EbtInt);
-        }
+            ASSERT(safeIndex >= 0);
+            // Data of constant unions can't be changed, because it may be shared with other
+            // constant unions or even builtins, like gl_MaxDrawBuffers. Instead use a new
+            // sanitized object.
+            if (safeIndex != index || indexConstantUnion->getBasicType() != EbtInt)
+            {
+                TConstantUnion *safeConstantUnion = new TConstantUnion();
+                safeConstantUnion->setIConst(safeIndex);
+                indexConstantUnion->replaceConstantUnion(safeConstantUnion);
+                indexConstantUnion->getTypePointer()->setBasicType(EbtInt);
+            }
 
-        TIntermBinary *node = new TIntermBinary(EOpIndexDirect, baseExpression, indexExpression);
-        node->setLine(location);
-        return node->fold(mDiagnostics);
+            TIntermBinary *node =
+                new TIntermBinary(EOpIndexDirect, baseExpression, indexExpression);
+            node->setLine(location);
+            return node->fold(mDiagnostics);
+        }
     }
-    else
-    {
-        TIntermBinary *node = new TIntermBinary(EOpIndexIndirect, baseExpression, indexExpression);
-        node->setLine(location);
-        // Indirect indexing can never be constant folded.
-        return node;
-    }
+
+    TIntermBinary *node = new TIntermBinary(EOpIndexIndirect, baseExpression, indexExpression);
+    node->setLine(location);
+    // Indirect indexing can never be constant folded.
+    return node;
 }
 
-int TParseContext::checkIndexOutOfRange(bool outOfRangeIndexIsError,
-                                        const TSourceLoc &location,
-                                        int index,
-                                        int arraySize,
-                                        const char *reason)
+int TParseContext::checkIndexLessThan(bool outOfRangeIndexIsError,
+                                      const TSourceLoc &location,
+                                      int index,
+                                      int arraySize,
+                                      const char *reason)
 {
-    if (index >= arraySize || index < 0)
+    // Should not reach here with an unsized / runtime-sized array.
+    ASSERT(arraySize > 0);
+    if (index >= arraySize)
     {
         std::stringstream reasonStream;
         reasonStream << reason << " '" << index << "'";
         std::string token = reasonStream.str();
         outOfRangeError(outOfRangeIndexIsError, location, reason, "[]");
-        if (index < 0)
-        {
-            return 0;
-        }
-        else
-        {
-            return arraySize - 1;
-        }
+        return arraySize - 1;
     }
     return index;
 }
@@ -4759,9 +4771,6 @@ TFieldList *TParseContext::addStructDeclaratorList(const TPublicType &typeSpecif
         {
             type->makeArray(arraySize);
         }
-        checkIsNotUnsizedArray(typeSpecifier.getLine(),
-                               "array members of structs must specify a size",
-                               declarator->name().c_str(), type);
 
         checkIsBelowStructNestingLimit(typeSpecifier.getLine(), *declarator);
     }
@@ -4792,7 +4801,7 @@ TTypeSpecifierNonArray TParseContext::addStructure(const TSourceLoc &structLine,
     // ensure we do not specify any storage qualifiers on the struct members
     for (unsigned int typeListIndex = 0; typeListIndex < fieldList->size(); typeListIndex++)
     {
-        const TField &field        = *(*fieldList)[typeListIndex];
+        TField &field              = *(*fieldList)[typeListIndex];
         const TQualifier qualifier = field.type()->getQualifier();
         switch (qualifier)
         {
@@ -4813,6 +4822,9 @@ TTypeSpecifierNonArray TParseContext::addStructure(const TSourceLoc &structLine,
         {
             error(field.line(), "disallowed type in struct", field.type()->getBasicString());
         }
+
+        checkIsNotUnsizedArray(field.line(), "array members of structs must specify a size",
+                               field.name().c_str(), field.type());
 
         checkMemoryQualifierIsNotSpecified(field.type()->getMemoryQualifier(), field.line());
 

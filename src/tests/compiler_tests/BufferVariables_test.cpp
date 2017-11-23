@@ -519,3 +519,66 @@ TEST_F(BufferVariablesTest, UniformBlockWithStd430)
         FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
     }
 }
+
+// Test that indexing a runtime-sized array with a positive index compiles.
+TEST_F(BufferVariablesTest, IndexRuntimeSizedArray)
+{
+    const std::string &source =
+        R"(#version 310 es
+
+        layout(std430) buffer buf
+        {
+            int arr[];
+        };
+
+        void main()
+        {
+            arr[100];
+        })";
+    if (!compile(source))
+    {
+        FAIL() << "Shader compilation failed, expecting success:\n" << mInfoLog;
+    }
+}
+
+// Test that indexing a runtime-sized array with a negative constant index does not compile.
+TEST_F(BufferVariablesTest, IndexRuntimeSizedArrayWithNegativeIndex)
+{
+    const std::string &source =
+        R"(#version 310 es
+
+        layout(std430) buffer buf
+        {
+            int arr[];
+        };
+
+        void main()
+        {
+            arr[-1];
+        })";
+    if (compile(source))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}
+
+// Test that only the last member of a buffer can be runtime-sized.
+TEST_F(BufferVariablesTest, RuntimeSizedVariableInNotLastInBuffer)
+{
+    const std::string &source =
+        R"(#version 310 es
+
+        layout(std430) buffer buf
+        {
+            int arr[];
+            int i;
+        };
+
+        void main()
+        {
+        })";
+    if (compile(source))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}

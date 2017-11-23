@@ -16,6 +16,8 @@
 //
 //   Must be run after SplitSequenceOperator, SimplifyLoopConditions and SeparateDeclarations steps
 //   have been done to expressions containing calls of the array length method.
+//
+//   Does nothing to length method calls done on runtime-sized arrays.
 
 namespace sh
 {

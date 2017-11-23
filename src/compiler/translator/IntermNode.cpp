@@ -1390,7 +1390,8 @@ TIntermTyped *TIntermUnary::fold(TDiagnostics *diagnostics)
 
     if (mOp == EOpArrayLength)
     {
-        if (mOperand->hasSideEffects())
+        // The size of runtime-sized arrays may only be determined at runtime.
+        if (mOperand->hasSideEffects() || mOperand->getType().isUnsizedArray())
         {
             return this;
         }

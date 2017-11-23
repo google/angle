@@ -272,6 +272,7 @@ void InitBuiltInResources(ShBuiltInResources *resources)
     resources->MaxAtomicCounterBufferSize      = 32;
 
     resources->MaxUniformBufferBindings = 32;
+    resources->MaxShaderStorageBufferBindings = 4;
 
     resources->MaxGeometryUniformComponents     = 1024;
     resources->MaxGeometryUniformBlocks         = 12;
