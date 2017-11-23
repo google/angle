@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "63c7610e_deca929e",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 723,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-11-23T07:38:43Z",
+      "side": 1,
+      "message": "In GL_ARB_shader_storage_buffer_object spec, there are following description:\n\u0027If OpenGL 4.3 and ARB_compute_shader are not supported, any references to\n uses of shader storage blocks in compute shaders, as well as the enumerant\n MAX_COMPUTE_SHADER_STORAGE_BLOCKS, should be removed.\u0027\n\nSo I think the original position is right. You should keep it there.",
+      "range": {
+        "startLine": 722,
+        "startChar": 8,
+        "endLine": 723,
+        "endChar": 78
+      },
+      "revId": "a7ff668506f3820b53c42c7a1ba2a01fd694d938",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
