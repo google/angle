@@ -70,6 +70,30 @@
       "revId": "eb5cd9aa33a0f50a2710308ceb09225913117ac8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "92cd43ef_6adad969",
+        "filename": "src/libGLESv2/entry_points_gles_3_1_ext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-11-23T05:27:09Z",
+      "side": 1,
+      "message": "My previous commit message is a bit misleading. I have updated it. PTAL, thanks!",
+      "parentUuid": "9c3ecc0c_86da6c8e",
+      "range": {
+        "startLine": 35,
+        "startChar": 8,
+        "endLine": 35,
+        "endChar": 21
+      },
+      "revId": "eb5cd9aa33a0f50a2710308ceb09225913117ac8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
