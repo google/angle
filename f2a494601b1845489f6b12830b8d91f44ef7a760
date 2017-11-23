@@ -1,0 +1,326 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c9890749_5428a6a2",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 958,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-23T18:49:19Z",
+      "side": 1,
+      "message": "This may not be needed.",
+      "range": {
+        "startLine": 958,
+        "startChar": 23,
+        "endLine": 958,
+        "endChar": 37
+      },
+      "revId": "f2a494601b1845489f6b12830b8d91f44ef7a760",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d8576d3c_acd86940",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 1210,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-23T18:49:19Z",
+      "side": 1,
+      "message": "This will probably not be needed (or should be updated to the new size) once using an enum class.",
+      "range": {
+        "startLine": 1210,
+        "startChar": 25,
+        "endLine": 1210,
+        "endChar": 50
+      },
+      "revId": "f2a494601b1845489f6b12830b8d91f44ef7a760",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a15b83c7_7f23d64f",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 2174,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-23T18:49:19Z",
+      "side": 1,
+      "message": "This if-statement is no longer needed if you add a return in each case and change the \u0027else\u0027 to \u0027else if (uniform.isBuiltIn())\u0027",
+      "range": {
+        "startLine": 2174,
+        "startChar": 4,
+        "endLine": 2174,
+        "endChar": 96
+      },
+      "revId": "f2a494601b1845489f6b12830b8d91f44ef7a760",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0b0acc3e_d6175563",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-23T18:49:19Z",
+      "side": 1,
+      "message": "Make this an enum class and remove the \u0027register\u0027 prefix on the values.  I would make sure it inherits from a sized type (probably uint8_t) so that it reads and writes to the stream with a consistent size.",
+      "range": {
+        "startLine": 35,
+        "startChar": 0,
+        "endLine": 35,
+        "endChar": 17
+      },
+      "revId": "f2a494601b1845489f6b12830b8d91f44ef7a760",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a6fd05ec_2c8591bf",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-23T18:49:19Z",
+      "side": 1,
+      "message": "nit: expand these if possible, I guess these should be \u0027Texture\u0027 and \u0027Uniform\u0027",
+      "range": {
+        "startLine": 38,
+        "startChar": 12,
+        "endLine": 38,
+        "endChar": 13
+      },
+      "revId": "f2a494601b1845489f6b12830b8d91f44ef7a760",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c374607e_604aa6fd",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 658,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-23T18:49:19Z",
+      "side": 1,
+      "message": "nit: turn this into a helper function or switch statement instead of nested ternary statements.  They are difficult to read this way.",
+      "range": {
+        "startLine": 656,
+        "startChar": 4,
+        "endLine": 658,
+        "endChar": 95
+      },
+      "revId": "f2a494601b1845489f6b12830b8d91f44ef7a760",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1920ff5c_a0068dc5",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 1583,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-23T18:49:19Z",
+      "side": 1,
+      "message": "A helper function could be re-used here.",
+      "range": {
+        "startLine": 1581,
+        "startChar": 4,
+        "endLine": 1583,
+        "endChar": 95
+      },
+      "revId": "f2a494601b1845489f6b12830b8d91f44ef7a760",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "823bb75f_e219f36d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 1659,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-23T18:49:19Z",
+      "side": 1,
+      "message": "Also re-used here.",
+      "range": {
+        "startLine": 1659,
+        "startChar": 4,
+        "endLine": 1659,
+        "endChar": 87
+      },
+      "revId": "f2a494601b1845489f6b12830b8d91f44ef7a760",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1e603212_a0985346",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 474,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-23T18:49:19Z",
+      "side": 1,
+      "message": "I think this could be templated and combined with SRVCache fairly easily:\n\n  template \u003ctypename DescType\u003e\n  struct ViewRecord { ... }\n\n  template \u003ctypename ViewType, typename DescType\u003e\n  class ViewCache { ... }; \n\n  using SRVCache \u003d ViewCache\u003cID3D11ShaderResourceView, D3D11_SHADER_RESOURCE_VIEW_DESC\u003e;\n  using UAVCache \u003d ViewCache\u003cID3D11UnorderedAccessView, D3D11_UNORDERED_ACCESS_VIEW_DESC\u003e;",
+      "range": {
+        "startLine": 445,
+        "startChar": 0,
+        "endLine": 474,
+        "endChar": 6
+      },
+      "revId": "f2a494601b1845489f6b12830b8d91f44ef7a760",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5bc04ce6_e1923f85",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-23T18:49:19Z",
+      "side": 1,
+      "message": "Was it decided that we could support ES 3.1 on feature level 11.0 or did we need 11.1?  Either way, I think this should be in a constant somewhere in renderer11_utils, maybe kMinimumFeatureLevelForES31 (and share or assert that it is consistent with GetMaximumClientVersion) so that if we update it then we don\u0027t have unnecessary bind flags.",
+      "range": {
+        "startLine": 127,
+        "startChar": 45,
+        "endLine": 127,
+        "endChar": 67
+      },
+      "revId": "f2a494601b1845489f6b12830b8d91f44ef7a760",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "62beffa3_ce290e8d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-23T18:49:19Z",
+      "side": 1,
+      "message": "A reminder for other reviewers:  If we find performance issues later on some specific GPUs, this may be the cause.",
+      "range": {
+        "startLine": 129,
+        "startChar": 8,
+        "endLine": 129,
+        "endChar": 49
+      },
+      "revId": "f2a494601b1845489f6b12830b8d91f44ef7a760",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2c520e3a_0aabd82f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 3348,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-23T18:49:19Z",
+      "side": 1,
+      "message": "Are all texture types valid as images or should some of these be UNREACHABLE?",
+      "range": {
+        "startLine": 3348,
+        "startChar": 4,
+        "endLine": 3348,
+        "endChar": 17
+      },
+      "revId": "f2a494601b1845489f6b12830b8d91f44ef7a760",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0d20323c_af33c05e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 216,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-23T18:49:19Z",
+      "side": 1,
+      "message": "nit: update to a \u0027using\u0027",
+      "range": {
+        "startLine": 216,
+        "startChar": 4,
+        "endLine": 216,
+        "endChar": 12
+      },
+      "revId": "f2a494601b1845489f6b12830b8d91f44ef7a760",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d68f0c7b_629c6cfe",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 222,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-23T18:49:19Z",
+      "side": 1,
+      "message": "same nit",
+      "range": {
+        "startLine": 222,
+        "startChar": 4,
+        "endLine": 222,
+        "endChar": 12
+      },
+      "revId": "f2a494601b1845489f6b12830b8d91f44ef7a760",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
