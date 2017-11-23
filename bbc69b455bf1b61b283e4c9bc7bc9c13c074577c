@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "51cda706_83e30d3d",
+        "filename": "src/compiler/translator/ShaderVars.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-11-23T13:06:19Z",
+      "side": 1,
+      "message": "That\u0027s okay. In addition we still need to compare the struct variable name.",
+      "parentUuid": "600ebbfe_239b84c0",
+      "revId": "bbc69b455bf1b61b283e4c9bc7bc9c13c074577c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0c1bf5a9_2a44179c",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 7
@@ -33,6 +51,24 @@
       "revId": "bbc69b455bf1b61b283e4c9bc7bc9c13c074577c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "246c7b6e_9d8e8d88",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2604,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-11-23T13:06:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0c1bf5a9_2a44179c",
+      "revId": "bbc69b455bf1b61b283e4c9bc7bc9c13c074577c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -59,6 +95,30 @@
     },
     {
       "key": {
+        "uuid": "3056d07c_12fcb5b9",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2708,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-11-23T13:06:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ef718c2e_5b405500",
+      "range": {
+        "startLine": 2707,
+        "startChar": 0,
+        "endLine": 2708,
+        "endChar": 71
+      },
+      "revId": "bbc69b455bf1b61b283e4c9bc7bc9c13c074577c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6b6c8996_92834671",
         "filename": "src/libANGLE/VaryingPacking.cpp",
         "patchSetId": 7
@@ -79,6 +139,30 @@
       "revId": "bbc69b455bf1b61b283e4c9bc7bc9c13c074577c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "471107ff_4f655f13",
+        "filename": "src/libANGLE/VaryingPacking.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 335,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-11-23T13:06:19Z",
+      "side": 1,
+      "message": "Good practice, Done!",
+      "parentUuid": "6b6c8996_92834671",
+      "range": {
+        "startLine": 332,
+        "startChar": 20,
+        "endLine": 335,
+        "endChar": 73
+      },
+      "revId": "bbc69b455bf1b61b283e4c9bc7bc9c13c074577c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
