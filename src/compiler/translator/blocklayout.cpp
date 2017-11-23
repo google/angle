@@ -42,7 +42,7 @@ void GetUniformBlockStructMemberInfo(const std::vector<VarT> &fields,
 template <typename VarT>
 void GetUniformBlockStructArrayMemberInfo(const VarT &field,
                                           unsigned int arrayNestingIndex,
-                                          const std::string &prefix,
+                                          const std::string &arrayName,
                                           sh::BlockLayoutEncoder *encoder,
                                           bool inRowMajorLayout,
                                           BlockLayoutMap *blockInfoOut)
@@ -52,7 +52,7 @@ void GetUniformBlockStructArrayMemberInfo(const VarT &field,
     const unsigned int currentArraySize = field.getNestedArraySize(arrayNestingIndex);
     for (unsigned int arrayElement = 0u; arrayElement < currentArraySize; ++arrayElement)
     {
-        const std::string elementName = prefix + ArrayString(arrayElement);
+        const std::string elementName = arrayName + ArrayString(arrayElement);
         if (arrayNestingIndex + 1u < field.arraySizes.size())
         {
             GetUniformBlockStructArrayMemberInfo(field, arrayNestingIndex + 1u, elementName,
@@ -62,6 +62,33 @@ void GetUniformBlockStructArrayMemberInfo(const VarT &field,
         {
             GetUniformBlockStructMemberInfo(field.fields, elementName, encoder, inRowMajorLayout,
                                             blockInfoOut);
+        }
+    }
+}
+
+template <typename VarT>
+void GetUniformBlockArrayOfArraysMemberInfo(const VarT &field,
+                                            unsigned int arrayNestingIndex,
+                                            const std::string &arrayName,
+                                            sh::BlockLayoutEncoder *encoder,
+                                            bool inRowMajorLayout,
+                                            BlockLayoutMap *blockInfoOut)
+{
+    const unsigned int currentArraySize = field.getNestedArraySize(arrayNestingIndex);
+    for (unsigned int arrayElement = 0u; arrayElement < currentArraySize; ++arrayElement)
+    {
+        const std::string elementName = arrayName + ArrayString(arrayElement);
+        if (arrayNestingIndex + 2u < field.arraySizes.size())
+        {
+            GetUniformBlockArrayOfArraysMemberInfo(field, arrayNestingIndex + 1u, elementName,
+                                                   encoder, inRowMajorLayout, blockInfoOut);
+        }
+        else
+        {
+            std::vector<unsigned int> innermostArraySize(
+                1u, field.getNestedArraySize(arrayNestingIndex + 1u));
+            (*blockInfoOut)[elementName] =
+                encoder->encodeType(field.type, innermostArraySize, inRowMajorLayout);
         }
     }
 }
@@ -217,6 +244,12 @@ void GetUniformBlockInfo(const std::vector<VarT> &fields,
                 GetUniformBlockStructMemberInfo(field.fields, fieldName, encoder, rowMajorLayout,
                                                 blockInfoOut);
             }
+        }
+        else if (field.isArrayOfArrays())
+        {
+            bool isRowMajorMatrix = (gl::IsMatrixType(field.type) && inRowMajorLayout);
+            GetUniformBlockArrayOfArraysMemberInfo(field, 0u, fieldName, encoder, isRowMajorMatrix,
+                                                   blockInfoOut);
         }
         else
         {
