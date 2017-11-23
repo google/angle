@@ -46,6 +46,30 @@
       "revId": "eb5cd9aa33a0f50a2710308ceb09225913117ac8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9c3ecc0c_86da6c8e",
+        "filename": "src/libGLESv2/entry_points_gles_3_1_ext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-11-23T01:45:21Z",
+      "side": 1,
+      "message": "This make sense. If I understand correctly, you don\u0027t implement it because of some interdependent reason between the implementation of geometry shader features and the implementation of this entry. If so, please either add this information into the commit description, or add a TODO into the code, or both.",
+      "parentUuid": "6f1aec1e_4bfef733",
+      "range": {
+        "startLine": 35,
+        "startChar": 8,
+        "endLine": 35,
+        "endChar": 21
+      },
+      "revId": "eb5cd9aa33a0f50a2710308ceb09225913117ac8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
