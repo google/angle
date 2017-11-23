@@ -304,6 +304,12 @@ constexpr size_t CUBE_FACE_COUNT = 6;
 
 using TextureMap = std::map<GLenum, BindingPointer<Texture>>;
 
+template <typename T>
+using AttachmentArray = std::array<T, IMPLEMENTATION_MAX_FRAMEBUFFER_ATTACHMENTS>;
+
+template <typename T>
+using DrawBuffersArray = std::array<T, IMPLEMENTATION_MAX_DRAW_BUFFERS>;
+
 }  // namespace gl
 
 namespace rx

@@ -667,6 +667,30 @@ class CommandBufferAndState : public vk::CommandBuffer
 using CommandBufferAndSerial = ObjectAndSerial<CommandBufferAndState>;
 using FenceAndSerial         = ObjectAndSerial<Fence>;
 
+struct RenderPassDesc final
+{
+    RenderPassDesc();
+    ~RenderPassDesc();
+    RenderPassDesc(const RenderPassDesc &other);
+    RenderPassDesc &operator=(const RenderPassDesc &other);
+
+    // These also increment the attachment counts. DS attachments are limited to a count of 1.
+    VkAttachmentDescription *nextColorAttachment();
+    VkAttachmentDescription *nextDepthStencilAttachment();
+    uint32_t attachmentCount() const;
+
+    // Fully padded out, with no bools, to avoid any undefined behaviour.
+    uint32_t colorAttachmentCount;
+    uint32_t depthStencilAttachmentCount;
+
+    // The last element in this array is the depth/stencil attachment, if present.
+    gl::AttachmentArray<VkAttachmentDescription> attachmentDescs;
+};
+
+Error InitializeRenderPassFromDesc(VkDevice device,
+                                   const RenderPassDesc &desc,
+                                   RenderPass *renderPass);
+
 }  // namespace vk
 
 namespace gl_vk

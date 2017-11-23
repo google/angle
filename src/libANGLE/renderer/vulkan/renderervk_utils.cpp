@@ -1253,6 +1253,98 @@ Error CommandBufferAndState::ensureFinished()
     return NoError();
 }
 
+// RenderPassDesc implementation.
+RenderPassDesc::RenderPassDesc()
+    : colorAttachmentCount(0), depthStencilAttachmentCount(0), attachmentDescs{}
+{
+    memset(attachmentDescs.data(), 0, sizeof(VkAttachmentDescription) * attachmentDescs.size());
+}
+
+RenderPassDesc::~RenderPassDesc()
+{
+}
+
+RenderPassDesc::RenderPassDesc(const RenderPassDesc &other)
+{
+    memcpy(this, &other, sizeof(RenderPassDesc));
+}
+
+RenderPassDesc &RenderPassDesc::operator=(const RenderPassDesc &other)
+{
+    memcpy(this, &other, sizeof(RenderPassDesc));
+    return *this;
+}
+
+VkAttachmentDescription *RenderPassDesc::nextColorAttachment()
+{
+    ASSERT(colorAttachmentCount < gl::IMPLEMENTATION_MAX_DRAW_BUFFERS);
+    return &attachmentDescs[colorAttachmentCount++];
+}
+
+VkAttachmentDescription *RenderPassDesc::nextDepthStencilAttachment()
+{
+    ASSERT(depthStencilAttachmentCount == 0);
+    return &attachmentDescs[depthStencilAttachmentCount++];
+}
+
+uint32_t RenderPassDesc::attachmentCount() const
+{
+    return (colorAttachmentCount + depthStencilAttachmentCount);
+}
+
+Error InitializeRenderPassFromDesc(VkDevice device,
+                                   const RenderPassDesc &desc,
+                                   RenderPass *renderPass)
+{
+    uint32_t attachmentCount = desc.attachmentCount();
+    ASSERT(attachmentCount > 0);
+
+    gl::DrawBuffersArray<VkAttachmentReference> colorAttachmentRefs;
+
+    for (uint32_t colorIndex = 0; colorIndex < desc.colorAttachmentCount; ++colorIndex)
+    {
+        VkAttachmentReference &colorRef = colorAttachmentRefs[colorIndex];
+        colorRef.attachment             = colorIndex;
+        colorRef.layout                 = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+    }
+
+    VkAttachmentReference depthStencilAttachmentRef;
+    if (desc.depthStencilAttachmentCount > 0)
+    {
+        ASSERT(desc.depthStencilAttachmentCount == 1);
+        depthStencilAttachmentRef.attachment = desc.colorAttachmentCount;
+        depthStencilAttachmentRef.layout     = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+    }
+
+    VkSubpassDescription subpassDesc;
+
+    subpassDesc.flags                = 0;
+    subpassDesc.pipelineBindPoint    = VK_PIPELINE_BIND_POINT_GRAPHICS;
+    subpassDesc.inputAttachmentCount = 0;
+    subpassDesc.pInputAttachments    = nullptr;
+    subpassDesc.colorAttachmentCount = desc.colorAttachmentCount;
+    subpassDesc.pColorAttachments    = colorAttachmentRefs.data();
+    subpassDesc.pResolveAttachments  = nullptr;
+    subpassDesc.pDepthStencilAttachment =
+        (desc.depthStencilAttachmentCount > 0 ? &depthStencilAttachmentRef : nullptr);
+    subpassDesc.preserveAttachmentCount = 0;
+    subpassDesc.pPreserveAttachments    = nullptr;
+
+    VkRenderPassCreateInfo createInfo;
+    createInfo.sType           = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
+    createInfo.pNext           = nullptr;
+    createInfo.flags           = 0;
+    createInfo.attachmentCount = attachmentCount;
+    createInfo.pAttachments    = desc.attachmentDescs.data();
+    createInfo.subpassCount    = 1;
+    createInfo.pSubpasses      = &subpassDesc;
+    createInfo.dependencyCount = 0;
+    createInfo.pDependencies   = nullptr;
+
+    ANGLE_TRY(renderPass->init(device, createInfo));
+    return vk::NoError();
+}
+
 }  // namespace vk
 
 namespace gl_vk

@@ -379,9 +379,7 @@ gl::ErrorOrResult<vk::RenderPass *> FramebufferVk::getRenderPass(const gl::Conte
         return &mRenderPass;
     }
 
-    // TODO(jmadill): Can we use stack-only memory?
-    std::vector<VkAttachmentDescription> attachmentDescs;
-    std::vector<VkAttachmentReference> colorAttachmentRefs;
+    vk::RenderPassDesc desc;
 
     const auto &colorAttachments = mState.getColorAttachments();
     for (size_t attachmentIndex = 0; attachmentIndex < colorAttachments.size(); ++attachmentIndex)
@@ -389,91 +387,50 @@ gl::ErrorOrResult<vk::RenderPass *> FramebufferVk::getRenderPass(const gl::Conte
         const auto &colorAttachment = colorAttachments[attachmentIndex];
         if (colorAttachment.isAttached())
         {
-            VkAttachmentDescription colorDesc;
-            VkAttachmentReference colorRef;
-
             RenderTargetVk *renderTarget = nullptr;
             ANGLE_TRY(colorAttachment.getRenderTarget(context, &renderTarget));
 
+            VkAttachmentDescription *colorDesc = desc.nextColorAttachment();
+
             // TODO(jmadill): We would only need this flag for duplicated attachments.
-            colorDesc.flags   = VK_ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT;
-            colorDesc.format  = renderTarget->format->vkTextureFormat;
-            colorDesc.samples = ConvertSamples(colorAttachment.getSamples());
+            colorDesc->flags   = VK_ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT;
+            colorDesc->format  = renderTarget->format->vkTextureFormat;
+            colorDesc->samples = ConvertSamples(colorAttachment.getSamples());
 
             // The load op controls the prior existing depth/color attachment data.
             // TODO(jmadill): Proper load ops. Should not be hard coded to clear.
-            colorDesc.loadOp         = VK_ATTACHMENT_LOAD_OP_CLEAR;
-            colorDesc.storeOp        = VK_ATTACHMENT_STORE_OP_STORE;
-            colorDesc.stencilLoadOp  = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-            colorDesc.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-            colorDesc.initialLayout  = VK_IMAGE_LAYOUT_UNDEFINED;
+            colorDesc->loadOp         = VK_ATTACHMENT_LOAD_OP_CLEAR;
+            colorDesc->storeOp        = VK_ATTACHMENT_STORE_OP_STORE;
+            colorDesc->stencilLoadOp  = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+            colorDesc->stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+            colorDesc->initialLayout  = VK_IMAGE_LAYOUT_UNDEFINED;
 
             // We might want to transition directly to PRESENT_SRC for Surface attachments.
-            colorDesc.finalLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-
-            colorRef.attachment = static_cast<uint32_t>(colorAttachments.size()) - 1u;
-            colorRef.layout     = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-
-            attachmentDescs.push_back(colorDesc);
-            colorAttachmentRefs.push_back(colorRef);
+            colorDesc->finalLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
         }
     }
 
     const auto *depthStencilAttachment = mState.getDepthStencilAttachment();
-    VkAttachmentReference depthStencilAttachmentRef;
-    bool useDepth = depthStencilAttachment && depthStencilAttachment->isAttached();
 
-    if (useDepth)
+    if (depthStencilAttachment && depthStencilAttachment->isAttached())
     {
-        VkAttachmentDescription depthStencilDesc;
-
         RenderTargetVk *renderTarget = nullptr;
         ANGLE_TRY(depthStencilAttachment->getRenderTarget(context, &renderTarget));
 
-        depthStencilDesc.flags          = 0;
-        depthStencilDesc.format         = renderTarget->format->vkTextureFormat;
-        depthStencilDesc.samples        = ConvertSamples(depthStencilAttachment->getSamples());
-        depthStencilDesc.loadOp         = VK_ATTACHMENT_LOAD_OP_CLEAR;
-        depthStencilDesc.storeOp        = VK_ATTACHMENT_STORE_OP_STORE;
-        depthStencilDesc.stencilLoadOp  = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-        depthStencilDesc.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-        depthStencilDesc.initialLayout  = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
-        depthStencilDesc.finalLayout    = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+        VkAttachmentDescription *depthStencilDesc = desc.nextDepthStencilAttachment();
 
-        depthStencilAttachmentRef.attachment = static_cast<uint32_t>(attachmentDescs.size());
-        depthStencilAttachmentRef.layout     = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
-
-        attachmentDescs.push_back(depthStencilDesc);
+        depthStencilDesc->flags          = 0;
+        depthStencilDesc->format         = renderTarget->format->vkTextureFormat;
+        depthStencilDesc->samples        = ConvertSamples(depthStencilAttachment->getSamples());
+        depthStencilDesc->loadOp         = VK_ATTACHMENT_LOAD_OP_CLEAR;
+        depthStencilDesc->storeOp        = VK_ATTACHMENT_STORE_OP_STORE;
+        depthStencilDesc->stencilLoadOp  = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+        depthStencilDesc->stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+        depthStencilDesc->initialLayout  = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+        depthStencilDesc->finalLayout    = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
     }
 
-    ASSERT(!attachmentDescs.empty());
-
-    VkSubpassDescription subpassDesc;
-
-    subpassDesc.flags                   = 0;
-    subpassDesc.pipelineBindPoint       = VK_PIPELINE_BIND_POINT_GRAPHICS;
-    subpassDesc.inputAttachmentCount    = 0;
-    subpassDesc.pInputAttachments       = nullptr;
-    subpassDesc.colorAttachmentCount    = static_cast<uint32_t>(colorAttachmentRefs.size());
-    subpassDesc.pColorAttachments       = colorAttachmentRefs.data();
-    subpassDesc.pResolveAttachments     = nullptr;
-    subpassDesc.pDepthStencilAttachment = (useDepth ? &depthStencilAttachmentRef : nullptr);
-    subpassDesc.preserveAttachmentCount = 0;
-    subpassDesc.pPreserveAttachments    = nullptr;
-
-    VkRenderPassCreateInfo renderPassInfo;
-
-    renderPassInfo.sType           = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
-    renderPassInfo.pNext           = nullptr;
-    renderPassInfo.flags           = 0;
-    renderPassInfo.attachmentCount = static_cast<uint32_t>(attachmentDescs.size());
-    renderPassInfo.pAttachments    = attachmentDescs.data();
-    renderPassInfo.subpassCount    = 1;
-    renderPassInfo.pSubpasses      = &subpassDesc;
-    renderPassInfo.dependencyCount = 0;
-    renderPassInfo.pDependencies   = nullptr;
-
-    ANGLE_TRY(mRenderPass.init(device, renderPassInfo));
+    ANGLE_TRY(vk::InitializeRenderPassFromDesc(device, desc, &mRenderPass));
 
     return &mRenderPass;
 }
