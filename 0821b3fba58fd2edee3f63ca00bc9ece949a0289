@@ -46,6 +46,29 @@
       "revId": "0821b3fba58fd2edee3f63ca00bc9ece949a0289",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "17e0c012_be99eeec",
+        "filename": "src/libGLESv2/entry_points_gles_3_1_autogen.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 992,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-23T14:56:52Z",
+      "side": 1,
+      "message": "this stuff should be in the previous patch, but not a big deal.",
+      "range": {
+        "startLine": 992,
+        "startChar": 12,
+        "endLine": 992,
+        "endChar": 41
+      },
+      "revId": "0821b3fba58fd2edee3f63ca00bc9ece949a0289",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }

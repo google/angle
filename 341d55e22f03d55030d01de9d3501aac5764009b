@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "957d5ad9_dc2def2b",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-23T14:56:52Z",
+      "side": 1,
+      "message": "thanks for cleaning this up.",
+      "range": {
+        "startLine": 239,
+        "startChar": 0,
+        "endLine": 239,
+        "endChar": 61
+      },
+      "revId": "341d55e22f03d55030d01de9d3501aac5764009b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b6dec153_90c35396",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 267,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-23T14:56:52Z",
+      "side": 1,
+      "message": "you can move the comment here.",
+      "range": {
+        "startLine": 267,
+        "startChar": 8,
+        "endLine": 267,
+        "endChar": 74
+      },
+      "revId": "341d55e22f03d55030d01de9d3501aac5764009b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
