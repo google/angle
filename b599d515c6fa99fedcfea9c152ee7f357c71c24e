@@ -22,6 +22,30 @@
       "revId": "b599d515c6fa99fedcfea9c152ee7f357c71c24e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f1c936d7_b336cc28",
+        "filename": "src/compiler/translator/ShaderLang.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 275,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-24T13:58:55Z",
+      "side": 1,
+      "message": "It could be split into a separate patch if desired, but it was useful for testing the functionality added in this patch with shader_translator for example.",
+      "parentUuid": "52f793be_05d40d59",
+      "range": {
+        "startLine": 275,
+        "startChar": 15,
+        "endLine": 275,
+        "endChar": 46
+      },
+      "revId": "b599d515c6fa99fedcfea9c152ee7f357c71c24e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
