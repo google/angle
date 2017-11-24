@@ -93,6 +93,30 @@
       "revId": "5f6065d09f28b915852b6a223500fcfa003f8d38",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "91492f6e_f5372db9",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 761,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-24T18:13:03Z",
+      "side": 1,
+      "message": "What I mean is that ES 3.1 requires both of these features or we must fall back to ES 3.0 so we might as well add all the compute shader related checks above.",
+      "parentUuid": "e3d231dd_b00813ae",
+      "range": {
+        "startLine": 761,
+        "startChar": 12,
+        "endLine": 761,
+        "endChar": 76
+      },
+      "revId": "5f6065d09f28b915852b6a223500fcfa003f8d38",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
