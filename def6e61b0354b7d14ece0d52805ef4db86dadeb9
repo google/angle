@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ab804667_a74b3247",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 235,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-11-24T02:57:31Z",
+      "side": 1,
+      "message": "R\"(...)\"",
+      "range": {
+        "startLine": 231,
+        "startChar": 0,
+        "endLine": 235,
+        "endChar": 14
+      },
+      "revId": "def6e61b0354b7d14ece0d52805ef4db86dadeb9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1a883de7_b73505ef",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 249,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-11-24T02:57:31Z",
+      "side": 1,
+      "message": "Use ANGLE_GL_COMPUTE_PROGRAM(program, csSource) so that we can clearly know what you want to do in this test?",
+      "range": {
+        "startLine": 237,
+        "startChar": 0,
+        "endLine": 249,
+        "endChar": 35
+      },
+      "revId": "def6e61b0354b7d14ece0d52805ef4db86dadeb9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
