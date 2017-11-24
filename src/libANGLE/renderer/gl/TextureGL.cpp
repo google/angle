@@ -1156,6 +1156,8 @@ void TextureGL::syncState(const gl::Texture::DirtyBits &dirtyBits)
                 break;
             case gl::Texture::DIRTY_BIT_USAGE:
                 break;
+            case gl::Texture::DIRTY_BIT_LABEL:
+                break;
 
             default:
                 UNREACHABLE();
