@@ -291,7 +291,8 @@ TInterfaceBlockName *TSymbolTable::insertInterfaceBlockNameExt(ESymbolLevel leve
                                                                const TString *name)
 {
     TInterfaceBlockName *blockNameSymbol = new TInterfaceBlockName(this, name);
-    if (insert(level, ext, blockNameSymbol))
+    blockNameSymbol->relateToExtension(ext);
+    if (insert(level, blockNameSymbol))
     {
         return blockNameSymbol;
     }
@@ -324,7 +325,8 @@ TVariable *TSymbolTable::insertVariableExt(ESymbolLevel level,
                                            const TType &type)
 {
     TVariable *var = new TVariable(this, NewPoolTString(name), type);
-    if (insert(level, ext, var))
+    var->relateToExtension(ext);
+    if (insert(level, var))
     {
         if (var->getType().getBasicType() == EbtStruct)
         {
@@ -583,6 +585,7 @@ TPrecision TSymbolTable::getDefaultPrecision(TBasicType type) const
 void TSymbolTable::insertUnmangledBuiltInName(const char *name, ESymbolLevel level)
 {
     ASSERT(level >= 0 && level < static_cast<ESymbolLevel>(table.size()));
+    ASSERT(mUserDefinedUniqueIdsStart == -1);
     table[level]->insertUnmangledBuiltInName(std::string(name));
 }
 
@@ -617,6 +620,25 @@ bool TSymbolTable::hasUnmangledBuiltInForShaderVersion(const char *name, int sha
         }
     }
     return false;
+}
+
+void TSymbolTable::markBuiltInInitializationFinished()
+{
+    mUserDefinedUniqueIdsStart = mUniqueIdCounter;
+}
+
+void TSymbolTable::clearCompilationResults()
+{
+    mUniqueIdCounter = mUserDefinedUniqueIdsStart;
+
+    // User-defined scopes should have already been cleared when the compilation finished.
+    ASSERT(table.size() == LAST_BUILTIN_LEVEL + 1u);
+}
+
+int TSymbolTable::nextUniqueIdValue()
+{
+    ASSERT(mUniqueIdCounter < std::numeric_limits<int>::max());
+    return ++mUniqueIdCounter;
 }
 
 }  // namespace sh

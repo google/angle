@@ -287,7 +287,7 @@ const int GLOBAL_LEVEL       = 5;
 class TSymbolTable : angle::NonCopyable
 {
   public:
-    TSymbolTable() : mUniqueIdCounter(0), mEmptySymbolId(this)
+    TSymbolTable() : mUniqueIdCounter(0), mUserDefinedUniqueIdsStart(-1), mEmptySymbolId(this)
     {
         // The symbol table cannot be used until push() is called, but
         // the lack of an initial call to push() can be used to detect
@@ -358,7 +358,8 @@ class TSymbolTable : angle::NonCopyable
         TConstantUnion *unionArray = new TConstantUnion[1];
         unionArray[0].setIConst(value);
         constant->shareConstPointer(unionArray);
-        return insert(level, ext, constant);
+        constant->relateToExtension(ext);
+        return insert(level, constant);
     }
 
     bool insertConstIvec3(ESymbolLevel level,
@@ -509,19 +510,20 @@ class TSymbolTable : angle::NonCopyable
     // Checks whether there is a built-in accessible by a shader with the specified version.
     bool hasUnmangledBuiltInForShaderVersion(const char *name, int shaderVersion);
 
+    void markBuiltInInitializationFinished();
+    void clearCompilationResults();
+
   private:
     friend class TSymbolUniqueId;
-    int nextUniqueIdValue() { return ++mUniqueIdCounter; }
+    int nextUniqueIdValue();
 
     ESymbolLevel currentLevel() const { return static_cast<ESymbolLevel>(table.size() - 1); }
 
     TVariable *insertVariable(ESymbolLevel level, const TString *name, const TType &type);
 
-    bool insert(ESymbolLevel level, TSymbol *symbol) { return table[level]->insert(symbol); }
-
-    bool insert(ESymbolLevel level, TExtension ext, TSymbol *symbol)
+    bool insert(ESymbolLevel level, TSymbol *symbol)
     {
-        symbol->relateToExtension(ext);
+        ASSERT(level > LAST_BUILTIN_LEVEL || mUserDefinedUniqueIdsStart == -1);
         return table[level]->insert(symbol);
     }
 
@@ -536,6 +538,11 @@ class TSymbolTable : angle::NonCopyable
     std::vector<PrecisionStackLevel *> precisionStack;
 
     int mUniqueIdCounter;
+
+    // -1 before built-in init has finished, one past the last built-in id afterwards.
+    // TODO(oetuaho): Make this a compile-time constant once the symbol table is initialized at
+    // compile time. http://anglebug.com/1432
+    int mUserDefinedUniqueIdsStart;
 
     const TSymbolUniqueId mEmptySymbolId;
 };

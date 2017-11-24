@@ -734,6 +734,8 @@ bool TCompiler::InitBuiltInSymbolTable(const ShBuiltInResources &resources)
 
     IdentifyBuiltIns(shaderType, shaderSpec, resources, symbolTable);
 
+    symbolTable.markBuiltInInitializationFinished();
+
     return true;
 }
 
@@ -868,6 +870,8 @@ void TCompiler::clearResults()
     nameMap.clear();
 
     mSourcePath     = nullptr;
+
+    symbolTable.clearCompilationResults();
 }
 
 bool TCompiler::initCallDag(TIntermNode *root)
