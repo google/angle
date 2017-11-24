@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "11277ef6_7268f7f9",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2544,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-11-24T04:17:12Z",
+      "side": 1,
+      "message": "If the program is used via UseProgram, but that program is changed later and failed to relink. And the failed program doesn\u0027t replace the old one which is reside in pipeline, it should be OK. It should not affect the validation.",
+      "range": {
+        "startLine": 2544,
+        "startChar": 17,
+        "endLine": 2544,
+        "endChar": 25
+      },
+      "revId": "5bea2c5526ce1eed0eb321ede22d49a54b451661",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
