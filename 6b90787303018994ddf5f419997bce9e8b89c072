@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0e5a08e1_2eb405ed",
+        "filename": "src/libGLESv2/entry_points_gles_3_1_ext.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-11-24T03:01:50Z",
+      "side": 1,
+      "message": "Why you need gl2.h not gl3.h?",
+      "range": {
+        "startLine": 12,
+        "startChar": 18,
+        "endLine": 12,
+        "endChar": 19
+      },
+      "revId": "6b90787303018994ddf5f419997bce9e8b89c072",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
