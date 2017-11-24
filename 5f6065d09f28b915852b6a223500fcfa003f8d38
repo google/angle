@@ -69,6 +69,30 @@
       "revId": "5f6065d09f28b915852b6a223500fcfa003f8d38",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e3d231dd_b00813ae",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 761,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-11-24T05:47:53Z",
+      "side": 1,
+      "message": "Hi Geoff, the other compute shader features such as GL_MAX_COMPUTE_WORK_GROUP_COUNT are only dependent on GL_ARB_compute_shader. Only GL_MAX_COMPUTE_SHADER_STORAGE_BLOCKS is dependent on \nboth GL_ARB_compute_shader and GL_ARB_shader_storage_buffer_object. Do we need to limit the exposure here?",
+      "parentUuid": "03f7340b_68303d9c",
+      "range": {
+        "startLine": 761,
+        "startChar": 12,
+        "endLine": 761,
+        "endChar": 76
+      },
+      "revId": "5f6065d09f28b915852b6a223500fcfa003f8d38",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
