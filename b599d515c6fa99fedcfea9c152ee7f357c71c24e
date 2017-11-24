@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "52f793be_05d40d59",
+        "filename": "src/compiler/translator/ShaderLang.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 275,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-24T13:28:56Z",
+      "side": 1,
+      "message": "is this an unrelated fix?",
+      "range": {
+        "startLine": 275,
+        "startChar": 15,
+        "endLine": 275,
+        "endChar": 46
+      },
+      "revId": "b599d515c6fa99fedcfea9c152ee7f357c71c24e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
