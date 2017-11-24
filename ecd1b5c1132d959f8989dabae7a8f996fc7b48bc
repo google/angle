@@ -22,6 +22,30 @@
       "revId": "ecd1b5c1132d959f8989dabae7a8f996fc7b48bc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fecd0db7_6e6a48b2",
+        "filename": "src/tests/gl_tests/BindUniformLocationTest.cpp",
+        "patchSetId": 46
+      },
+      "lineNbr": 658,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-24T09:11:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4662260f_26c56958",
+      "range": {
+        "startLine": 658,
+        "startChar": 4,
+        "endLine": 658,
+        "endChar": 7
+      },
+      "revId": "ecd1b5c1132d959f8989dabae7a8f996fc7b48bc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
