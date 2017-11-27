@@ -82,6 +82,7 @@
             '<(angle_path)/src/tests/compiler_tests/RemoveUnreferencedVariables_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/RewriteDoWhile_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/SamplerMultisample_test.cpp',
+            '<(angle_path)/src/tests/compiler_tests/ScalarizeVecAndMatConstructorArgs_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/ShaderExtension_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/ShaderImage_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/ShaderValidation_test.cpp',

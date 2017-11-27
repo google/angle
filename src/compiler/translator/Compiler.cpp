@@ -516,20 +516,24 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
                                     &symbolTable, shaderVersion);
     }
 
+    int simplifyScalarized = (compileOptions & SH_SCALARIZE_VEC_AND_MAT_CONSTRUCTOR_ARGS)
+                                 ? IntermNodePatternMatcher::kScalarizedVecOrMatConstructor
+                                 : 0;
+
     // Split multi declarations and remove calls to array length().
     // Note that SimplifyLoopConditions needs to be run before any other AST transformations
     // that may need to generate new statements from loop conditions or loop expressions.
-    SimplifyLoopConditions(
-        root,
-        IntermNodePatternMatcher::kMultiDeclaration | IntermNodePatternMatcher::kArrayLengthMethod,
-        &getSymbolTable(), getShaderVersion());
+    SimplifyLoopConditions(root,
+                           IntermNodePatternMatcher::kMultiDeclaration |
+                               IntermNodePatternMatcher::kArrayLengthMethod | simplifyScalarized,
+                           &getSymbolTable(), getShaderVersion());
 
     // Note that separate declarations need to be run before other AST transformations that
     // generate new statements from expressions.
     SeparateDeclarations(root);
 
-    SplitSequenceOperator(root, IntermNodePatternMatcher::kArrayLengthMethod, &getSymbolTable(),
-                          getShaderVersion());
+    SplitSequenceOperator(root, IntermNodePatternMatcher::kArrayLengthMethod | simplifyScalarized,
+                          &getSymbolTable(), getShaderVersion());
 
     RemoveArrayLengthMethod(root);
 
