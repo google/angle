@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "b55a4199_6ecf6a8b",
+        "filename": "src/libANGLE/Caps.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1076,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-27T19:13:17Z",
+      "side": 1,
+      "message": "Thinking about this more, maybe it makes sense to have these parameters in the Caps struct instead of Extensions so that they can be initialized here.",
+      "parentUuid": "09847276_e6d92977",
+      "revId": "de6bfefa050fdfbda2311032f1b3000ca94644dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "12f826e4_b27fc8b0",
         "filename": "src/libANGLE/Caps.h",
         "patchSetId": 8
@@ -53,6 +71,29 @@
     },
     {
       "key": {
+        "uuid": "0a2757cd_f6edea6b",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1063,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-27T19:13:17Z",
+      "side": 1,
+      "message": "This logic is a bit too indirect (provokingVertex is not an ES function but layerProvokingVertex  is only GL_PROVOKING_VERTEX on desktop GL).  Instead, I would make a call to functions-\u003eprovokingVertex(extensions.layerProvokingVertex) in the constructor of StateManagerGL, there is already some similar logic there.",
+      "range": {
+        "startLine": 1059,
+        "startChar": 8,
+        "endLine": 1063,
+        "endChar": 9
+      },
+      "revId": "de6bfefa050fdfbda2311032f1b3000ca94644dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f7253a45_b1de1cdb",
         "filename": "src/libANGLE/renderer/null/ContextNULL.cpp",
         "patchSetId": 8
@@ -64,6 +105,24 @@
       "writtenOn": "2017-11-27T18:01:48Z",
       "side": 1,
       "message": "Why this? Can it be removed?",
+      "revId": "de6bfefa050fdfbda2311032f1b3000ca94644dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "01a84975_4b1b14aa",
+        "filename": "src/libANGLE/renderer/null/ContextNULL.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-27T19:13:17Z",
+      "side": 1,
+      "message": "This is fine, we want to expose as many extensions in the null context as possible for fuzzing.",
+      "parentUuid": "f7253a45_b1de1cdb",
       "revId": "de6bfefa050fdfbda2311032f1b3000ca94644dc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
