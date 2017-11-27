@@ -310,6 +310,9 @@ using AttachmentArray = std::array<T, IMPLEMENTATION_MAX_FRAMEBUFFER_ATTACHMENTS
 template <typename T>
 using DrawBuffersArray = std::array<T, IMPLEMENTATION_MAX_DRAW_BUFFERS>;
 
+template <typename T>
+using AttribArray = std::array<T, MAX_VERTEX_ATTRIBS>;
+
 }  // namespace gl
 
 namespace rx

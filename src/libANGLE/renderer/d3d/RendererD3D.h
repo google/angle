@@ -96,7 +96,7 @@ class BufferFactoryD3D : angle::NonCopyable
         GLsizei instances) const = 0;
 };
 
-using AttribIndexArray = std::array<int, gl::MAX_VERTEX_ATTRIBS>;
+using AttribIndexArray = gl::AttribArray<int>;
 
 class RendererD3D : public BufferFactoryD3D, public MultisampleTextureInitializer
 {

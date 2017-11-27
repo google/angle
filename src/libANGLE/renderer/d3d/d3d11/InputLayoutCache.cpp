@@ -399,7 +399,7 @@ gl::Error InputLayoutCache::createInputLayout(
         programD3D->usesPointSize() && programD3D->usesInstancedPointSpriteEmulation();
 
     unsigned int inputElementCount = 0;
-    std::array<D3D11_INPUT_ELEMENT_DESC, gl::MAX_VERTEX_ATTRIBS> inputElements;
+    gl::AttribArray<D3D11_INPUT_ELEMENT_DESC> inputElements;
 
     for (size_t attribIndex = 0; attribIndex < currentAttributes.size(); ++attribIndex)
     {

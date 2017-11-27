@@ -49,7 +49,7 @@ struct PackedAttributeLayout
 
     uint32_t numAttributes;
     uint32_t flags;
-    std::array<uint32_t, gl::MAX_VERTEX_ATTRIBS> attributeData;
+    gl::AttribArray<uint32_t> attributeData;
 };
 }  // namespace rx
 

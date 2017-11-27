@@ -478,9 +478,9 @@ class StateManager11 final : angle::NonCopyable
 
     // Current applied vertex states.
     // TODO(jmadill): Figure out how to use ResourceSerial here.
-    std::array<ID3D11Buffer *, gl::MAX_VERTEX_ATTRIBS> mCurrentVertexBuffers;
-    std::array<UINT, gl::MAX_VERTEX_ATTRIBS> mCurrentVertexStrides;
-    std::array<UINT, gl::MAX_VERTEX_ATTRIBS> mCurrentVertexOffsets;
+    gl::AttribArray<ID3D11Buffer *> mCurrentVertexBuffers;
+    gl::AttribArray<UINT> mCurrentVertexStrides;
+    gl::AttribArray<UINT> mCurrentVertexOffsets;
     gl::RangeUI mDirtyVertexBufferRange;
 
     // Currently applied primitive topology
