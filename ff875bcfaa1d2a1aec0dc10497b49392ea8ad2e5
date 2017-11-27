@@ -116,6 +116,24 @@
       "revId": "ff875bcfaa1d2a1aec0dc10497b49392ea8ad2e5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c0e2726e_8a292412",
+        "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 682,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-11-27T19:08:24Z",
+      "side": 1,
+      "message": "Ack, hadn\u0027t realized it would be used as a hash key. Forget all I said.",
+      "parentUuid": "b087a8cf_08e4af4b",
+      "revId": "ff875bcfaa1d2a1aec0dc10497b49392ea8ad2e5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
