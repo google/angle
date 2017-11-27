@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "ebb57994_2cdb7977",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 3788,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-27T16:12:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4c05502b_83b31d33",
+      "range": {
+        "startLine": 3788,
+        "startChar": 36,
+        "endLine": 3788,
+        "endChar": 72
+      },
+      "revId": "b599d515c6fa99fedcfea9c152ee7f357c71c24e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "52f793be_05d40d59",
         "filename": "src/compiler/translator/ShaderLang.cpp",
         "patchSetId": 3
