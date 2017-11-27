@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a3998d9d_b2e43cfe",
+        "filename": "src/libANGLE/ProgramLinkedResources.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1053,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-11-27T17:33:20Z",
+      "side": 1,
+      "message": "No need to check for this, the for loop will do nothing is size() is 0.",
+      "revId": "f7cfc946989f97d2b9683b0f7ce7a9e630f90bd4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e6824cff_75de73cc",
+        "filename": "src/libANGLE/renderer/gl/ProgramGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 638,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-11-27T17:33:20Z",
+      "side": 1,
+      "message": "Would the association between binding and index be needed in other places, in which case would it make sense to cache it in ProgramGL?",
+      "revId": "f7cfc946989f97d2b9683b0f7ce7a9e630f90bd4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "145b7623_20162593",
+        "filename": "src/libANGLE/renderer/gl/ProgramGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 657,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-11-27T17:33:20Z",
+      "side": 1,
+      "message": "Since this functions always returns true, it could return the map directly instead.",
+      "revId": "f7cfc946989f97d2b9683b0f7ce7a9e630f90bd4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b98c72b5_6e46ded3",
+        "filename": "src/libANGLE/renderer/gl/ProgramGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 915,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-11-27T17:33:20Z",
+      "side": 1,
+      "message": "Why not pass the map directly to link instead of the std::function?",
+      "revId": "f7cfc946989f97d2b9683b0f7ce7a9e630f90bd4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
