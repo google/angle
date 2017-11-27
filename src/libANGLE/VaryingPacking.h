@@ -16,11 +16,15 @@
 
 #include "angle_gl.h"
 #include "common/angleutils.h"
-#include "libANGLE/Program.h"
+
+#include <map>
 
 namespace gl
 {
 class InfoLog;
+struct ProgramVaryingRef;
+
+using ProgramMergedVaryings = std::map<std::string, ProgramVaryingRef>;
 
 struct PackedVarying
 {
@@ -138,7 +142,7 @@ class VaryingPacking final : angle::NonCopyable
                           const std::vector<std::string> &tfVaryings);
 
     bool collectAndPackUserVaryings(gl::InfoLog &infoLog,
-                                    const Program::MergedVaryings &mergedVaryings,
+                                    const ProgramMergedVaryings &mergedVaryings,
                                     const std::vector<std::string> &tfVaryings);
 
     struct Register

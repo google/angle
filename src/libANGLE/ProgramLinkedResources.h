@@ -11,16 +11,34 @@
 #ifndef LIBANGLE_UNIFORMLINKER_H_
 #define LIBANGLE_UNIFORMLINKER_H_
 
-#include "libANGLE/Program.h"
-#include "libANGLE/Uniform.h"
+#include "angle_gl.h"
+#include "common/angleutils.h"
 #include "libANGLE/VaryingPacking.h"
 
 #include <functional>
 
+namespace sh
+{
+struct BlockMemberInfo;
+struct InterfaceBlock;
+struct ShaderVariable;
+struct Uniform;
+}
+
 namespace gl
 {
+struct BufferVariable;
+struct Caps;
+class Context;
+class InfoLog;
+struct InterfaceBlock;
+struct LinkedUniform;
+class ProgramState;
+class ProgramBindings;
+class Shader;
+struct VariableLocation;
 
-class UniformLinker
+class UniformLinker final : angle::NonCopyable
 {
   public:
     UniformLinker(const ProgramState &state);
@@ -28,7 +46,7 @@ class UniformLinker
 
     bool link(const Context *context,
               InfoLog &infoLog,
-              const Program::Bindings &uniformLocationBindings);
+              const ProgramBindings &uniformLocationBindings);
 
     void getResults(std::vector<LinkedUniform> *uniforms,
                     std::vector<VariableLocation> *uniformLocations);
@@ -140,9 +158,9 @@ class UniformLinker
                                           int offset,
                                           int *location);
 
-    bool indexUniforms(InfoLog &infoLog, const Program::Bindings &uniformLocationBindings);
+    bool indexUniforms(InfoLog &infoLog, const ProgramBindings &uniformLocationBindings);
     bool gatherUniformLocationsAndCheckConflicts(InfoLog &infoLog,
-                                                 const Program::Bindings &uniformLocationBindings,
+                                                 const ProgramBindings &uniformLocationBindings,
                                                  std::set<GLuint> *reservedLocations,
                                                  std::set<GLuint> *ignoredLocations,
                                                  int *maxUniformLocation);

@@ -169,7 +169,7 @@ HashStream &operator<<(HashStream &stream, const Shader *shader)
     return stream;
 }
 
-HashStream &operator<<(HashStream &stream, const Program::Bindings &bindings)
+HashStream &operator<<(HashStream &stream, const ProgramBindings &bindings)
 {
     for (const auto &binding : bindings)
     {

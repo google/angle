@@ -378,6 +378,33 @@ class ProgramState final : angle::NonCopyable
     int mNumViews;
 };
 
+class ProgramBindings final : angle::NonCopyable
+{
+  public:
+    ProgramBindings();
+    ~ProgramBindings();
+
+    void bindLocation(GLuint index, const std::string &name);
+    int getBinding(const std::string &name) const;
+
+    using const_iterator = std::unordered_map<std::string, GLuint>::const_iterator;
+    const_iterator begin() const;
+    const_iterator end() const;
+
+  private:
+    std::unordered_map<std::string, GLuint> mBindings;
+};
+
+struct ProgramVaryingRef
+{
+    const sh::Varying *get() const { return vertex ? vertex : fragment; }
+
+    const sh::Varying *vertex   = nullptr;
+    const sh::Varying *fragment = nullptr;
+};
+
+using ProgramMergedVaryings = std::map<std::string, ProgramVaryingRef>;
+
 class Program final : angle::NonCopyable, public LabeledObject
 {
   public:
@@ -593,37 +620,12 @@ class Program final : angle::NonCopyable, public LabeledObject
     const sh::Attribute &getInputResource(GLuint index) const;
     const sh::OutputVariable &getOutputResource(GLuint index) const;
 
-    class Bindings final : angle::NonCopyable
-    {
-      public:
-        Bindings();
-        ~Bindings();
-        void bindLocation(GLuint index, const std::string &name);
-        int getBinding(const std::string &name) const;
-
-        typedef std::unordered_map<std::string, GLuint>::const_iterator const_iterator;
-        const_iterator begin() const;
-        const_iterator end() const;
-
-      private:
-        std::unordered_map<std::string, GLuint> mBindings;
-    };
-
-    const Bindings &getAttributeBindings() const { return mAttributeBindings; }
-    const Bindings &getUniformLocationBindings() const { return mUniformLocationBindings; }
-    const Bindings &getFragmentInputBindings() const { return mFragmentInputBindings; }
+    const ProgramBindings &getAttributeBindings() const { return mAttributeBindings; }
+    const ProgramBindings &getUniformLocationBindings() const { return mUniformLocationBindings; }
+    const ProgramBindings &getFragmentInputBindings() const { return mFragmentInputBindings; }
 
     int getNumViews() const { return mState.getNumViews(); }
     bool usesMultiview() const { return mState.usesMultiview(); }
-
-    struct VaryingRef
-    {
-        const sh::Varying *get() const { return vertex ? vertex : fragment; }
-
-        const sh::Varying *vertex   = nullptr;
-        const sh::Varying *fragment = nullptr;
-    };
-    using MergedVaryings = std::map<std::string, VaryingRef>;
 
   private:
     ~Program() override;
@@ -641,7 +643,7 @@ class Program final : angle::NonCopyable, public LabeledObject
 
     bool linkUniforms(const Context *context,
                       InfoLog &infoLog,
-                      const Bindings &uniformLocationBindings);
+                      const ProgramBindings &uniformLocationBindings);
     void linkSamplerAndImageBindings();
     bool linkAtomicCounterBuffers();
 
@@ -660,13 +662,13 @@ class Program final : angle::NonCopyable, public LabeledObject
     bool linkValidateBuiltInVaryings(const Context *context, InfoLog &infoLog) const;
     bool linkValidateTransformFeedback(const gl::Context *context,
                                        InfoLog &infoLog,
-                                       const MergedVaryings &linkedVaryings,
+                                       const ProgramMergedVaryings &linkedVaryings,
                                        const Caps &caps) const;
     bool linkValidateGlobalNames(const Context *context, InfoLog &infoLog) const;
 
-    void gatherTransformFeedbackVaryings(const MergedVaryings &varyings);
+    void gatherTransformFeedbackVaryings(const ProgramMergedVaryings &varyings);
 
-    MergedVaryings getMergedVaryings(const Context *context) const;
+    ProgramMergedVaryings getMergedVaryings(const Context *context) const;
     void linkOutputVariables(const Context *context);
 
     void setUniformValuesFromBindingQualifiers();
@@ -707,14 +709,14 @@ class Program final : angle::NonCopyable, public LabeledObject
 
     bool mValidated;
 
-    Bindings mAttributeBindings;
+    ProgramBindings mAttributeBindings;
 
     // Note that this has nothing to do with binding layout qualifiers that can be set for some
     // uniforms in GLES3.1+. It is used to pre-set the location of uniforms.
-    Bindings mUniformLocationBindings;
+    ProgramBindings mUniformLocationBindings;
 
     // CHROMIUM_path_rendering
-    Bindings mFragmentInputBindings;
+    ProgramBindings mFragmentInputBindings;
 
     bool mLinked;
     bool mDeleteStatus;   // Flag to indicate that the program can be deleted when no longer in use

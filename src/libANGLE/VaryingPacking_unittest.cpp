@@ -13,6 +13,7 @@
 // But 'None' is also define as a numberic constant 0L in <X11/X.h>.
 // So we need to include gtest first to avoid such conflict.
 
+#include "libANGLE/Program.h"
 #include "libANGLE/VaryingPacking.h"
 
 using namespace gl;

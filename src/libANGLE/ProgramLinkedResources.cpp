@@ -34,7 +34,7 @@ LinkedUniform *FindUniform(std::vector<LinkedUniform> &list, const std::string &
     return nullptr;
 }
 
-int GetUniformLocationBinding(const Program::Bindings &uniformLocationBindings,
+int GetUniformLocationBinding(const ProgramBindings &uniformLocationBindings,
                               const sh::Uniform &uniform)
 {
     int binding = uniformLocationBindings.getBinding(uniform.name);
@@ -65,7 +65,7 @@ void UniformLinker::getResults(std::vector<LinkedUniform> *uniforms,
 
 bool UniformLinker::link(const Context *context,
                          InfoLog &infoLog,
-                         const Program::Bindings &uniformLocationBindings)
+                         const ProgramBindings &uniformLocationBindings)
 {
     if (mState.getAttachedVertexShader() && mState.getAttachedFragmentShader())
     {
@@ -172,8 +172,7 @@ bool UniformLinker::linkValidateUniforms(InfoLog &infoLog,
     return true;
 }
 
-bool UniformLinker::indexUniforms(InfoLog &infoLog,
-                                  const Program::Bindings &uniformLocationBindings)
+bool UniformLinker::indexUniforms(InfoLog &infoLog, const ProgramBindings &uniformLocationBindings)
 {
     // All the locations where another uniform can't be located.
     std::set<GLuint> reservedLocations;
@@ -270,7 +269,7 @@ bool UniformLinker::indexUniforms(InfoLog &infoLog,
 
 bool UniformLinker::gatherUniformLocationsAndCheckConflicts(
     InfoLog &infoLog,
-    const Program::Bindings &uniformLocationBindings,
+    const ProgramBindings &uniformLocationBindings,
     std::set<GLuint> *reservedLocations,
     std::set<GLuint> *ignoredLocations,
     int *maxUniformLocation)

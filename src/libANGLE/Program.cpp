@@ -324,6 +324,7 @@ void InitShaderStorageBlockLinker(const gl::Context *context,
 
 const char *const g_fakepath = "C:\\fakepath";
 
+// InfoLog implementation.
 InfoLog::InfoLog()
 {
 }
@@ -393,6 +394,7 @@ void InfoLog::reset()
 {
 }
 
+// VariableLocation implementation.
 VariableLocation::VariableLocation() : arrayIndex(0), index(kUnused), ignored(false)
 {
 }
@@ -403,6 +405,7 @@ VariableLocation::VariableLocation(unsigned int arrayIndex, unsigned int index)
     ASSERT(arrayIndex != GL_INVALID_INDEX);
 }
 
+// SamplerBindings implementation.
 SamplerBinding::SamplerBinding(GLenum textureTypeIn, size_t elementCount, bool unreferenced)
     : textureType(textureTypeIn), boundTextureUnits(elementCount, 0), unreferenced(unreferenced)
 {
@@ -412,35 +415,37 @@ SamplerBinding::SamplerBinding(const SamplerBinding &other) = default;
 
 SamplerBinding::~SamplerBinding() = default;
 
-Program::Bindings::Bindings()
+// ProgramBindings implementation.
+ProgramBindings::ProgramBindings()
 {
 }
 
-Program::Bindings::~Bindings()
+ProgramBindings::~ProgramBindings()
 {
 }
 
-void Program::Bindings::bindLocation(GLuint index, const std::string &name)
+void ProgramBindings::bindLocation(GLuint index, const std::string &name)
 {
     mBindings[name] = index;
 }
 
-int Program::Bindings::getBinding(const std::string &name) const
+int ProgramBindings::getBinding(const std::string &name) const
 {
     auto iter = mBindings.find(name);
     return (iter != mBindings.end()) ? iter->second : -1;
 }
 
-Program::Bindings::const_iterator Program::Bindings::begin() const
+ProgramBindings::const_iterator ProgramBindings::begin() const
 {
     return mBindings.begin();
 }
 
-Program::Bindings::const_iterator Program::Bindings::end() const
+ProgramBindings::const_iterator ProgramBindings::end() const
 {
     return mBindings.end();
 }
 
+// ImageBinding implementation.
 ImageBinding::ImageBinding(size_t count) : boundImageUnits(count, 0)
 {
 }
@@ -456,6 +461,7 @@ ImageBinding::ImageBinding(const ImageBinding &other) = default;
 
 ImageBinding::~ImageBinding() = default;
 
+// ProgramState implementation.
 ProgramState::ProgramState()
     : mLabel(),
       mAttachedFragmentShader(nullptr),
@@ -2046,7 +2052,7 @@ bool Program::linkVaryings(const Context *context, InfoLog &infoLog) const
 
 bool Program::linkUniforms(const Context *context,
                            InfoLog &infoLog,
-                           const Bindings &uniformLocationBindings)
+                           const ProgramBindings &uniformLocationBindings)
 {
     UniformLinker linker(mState);
     if (!linker.link(context, infoLog, uniformLocationBindings))
@@ -2627,7 +2633,7 @@ bool Program::linkValidateBuiltInVaryings(const Context *context, InfoLog &infoL
 
 bool Program::linkValidateTransformFeedback(const gl::Context *context,
                                             InfoLog &infoLog,
-                                            const Program::MergedVaryings &varyings,
+                                            const ProgramMergedVaryings &varyings,
                                             const Caps &caps) const
 {
     size_t totalComponents = 0;
@@ -2748,7 +2754,7 @@ bool Program::linkValidateGlobalNames(const Context *context, InfoLog &infoLog) 
     return true;
 }
 
-void Program::gatherTransformFeedbackVaryings(const Program::MergedVaryings &varyings)
+void Program::gatherTransformFeedbackVaryings(const ProgramMergedVaryings &varyings)
 {
     // Gather the linked varyings that are used for transform feedback, they should all exist.
     mState.mLinkedTransformFeedbackVaryings.clear();
@@ -2774,9 +2780,9 @@ void Program::gatherTransformFeedbackVaryings(const Program::MergedVaryings &var
     }
 }
 
-Program::MergedVaryings Program::getMergedVaryings(const Context *context) const
+ProgramMergedVaryings Program::getMergedVaryings(const Context *context) const
 {
-    MergedVaryings merged;
+    ProgramMergedVaryings merged;
 
     for (const sh::Varying &varying : mState.mAttachedVertexShader->getOutputVaryings(context))
     {

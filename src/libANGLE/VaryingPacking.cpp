@@ -273,7 +273,7 @@ void VaryingPacking::insert(unsigned int registerRow,
 }
 
 bool VaryingPacking::collectAndPackUserVaryings(gl::InfoLog &infoLog,
-                                                const Program::MergedVaryings &mergedVaryings,
+                                                const ProgramMergedVaryings &mergedVaryings,
                                                 const std::vector<std::string> &tfVaryings)
 {
     std::set<std::string> uniqueFullNames;
