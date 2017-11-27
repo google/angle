@@ -140,6 +140,30 @@
     },
     {
       "key": {
+        "uuid": "4e08b76c_b1cbae18",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 658,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-11-27T09:47:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c374607e_604aa6fd",
+      "range": {
+        "startLine": 656,
+        "startChar": 4,
+        "endLine": 658,
+        "endChar": 95
+      },
+      "revId": "f2a494601b1845489f6b12830b8d91f44ef7a760",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1920ff5c_a0068dc5",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
         "patchSetId": 14
@@ -160,6 +184,30 @@
       "revId": "f2a494601b1845489f6b12830b8d91f44ef7a760",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f7345f85_7ca9e64a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 1583,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-11-27T09:47:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1920ff5c_a0068dc5",
+      "range": {
+        "startLine": 1581,
+        "startChar": 4,
+        "endLine": 1583,
+        "endChar": 95
+      },
+      "revId": "f2a494601b1845489f6b12830b8d91f44ef7a760",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -186,6 +234,30 @@
     },
     {
       "key": {
+        "uuid": "a1ae541a_f09662ee",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 1659,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-11-27T09:47:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "823bb75f_e219f36d",
+      "range": {
+        "startLine": 1659,
+        "startChar": 4,
+        "endLine": 1659,
+        "endChar": 87
+      },
+      "revId": "f2a494601b1845489f6b12830b8d91f44ef7a760",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1e603212_a0985346",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
         "patchSetId": 14
@@ -209,6 +281,30 @@
     },
     {
       "key": {
+        "uuid": "ac332654_6a2809f6",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 474,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-11-27T09:47:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1e603212_a0985346",
+      "range": {
+        "startLine": 445,
+        "startChar": 0,
+        "endLine": 474,
+        "endChar": 6
+      },
+      "revId": "f2a494601b1845489f6b12830b8d91f44ef7a760",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5bc04ce6_e1923f85",
         "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
         "patchSetId": 14
@@ -220,6 +316,30 @@
       "writtenOn": "2017-11-23T18:49:19Z",
       "side": 1,
       "message": "Was it decided that we could support ES 3.1 on feature level 11.0 or did we need 11.1?  Either way, I think this should be in a constant somewhere in renderer11_utils, maybe kMinimumFeatureLevelForES31 (and share or assert that it is consistent with GetMaximumClientVersion) so that if we update it then we don\u0027t have unnecessary bind flags.",
+      "range": {
+        "startLine": 127,
+        "startChar": 45,
+        "endLine": 127,
+        "endChar": 67
+      },
+      "revId": "f2a494601b1845489f6b12830b8d91f44ef7a760",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5e5fa88a_da50f8d5",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-11-27T09:47:48Z",
+      "side": 1,
+      "message": "It was not decided that could support ES3.1 on feature level 11.0. We need to get a more accurate limit later.",
+      "parentUuid": "5bc04ce6_e1923f85",
       "range": {
         "startLine": 127,
         "startChar": 45,
@@ -255,6 +375,30 @@
     },
     {
       "key": {
+        "uuid": "b28042ae_dc872c93",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-11-27T09:47:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "62beffa3_ce290e8d",
+      "range": {
+        "startLine": 129,
+        "startChar": 8,
+        "endLine": 129,
+        "endChar": 49
+      },
+      "revId": "f2a494601b1845489f6b12830b8d91f44ef7a760",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2c520e3a_0aabd82f",
         "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
         "patchSetId": 14
@@ -275,6 +419,30 @@
       "revId": "f2a494601b1845489f6b12830b8d91f44ef7a760",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "627f209b_2d8ab729",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 3348,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-11-27T09:47:48Z",
+      "side": 1,
+      "message": "You are right. Only Texture2D, Texture3D, Texture2DArray and TextureCube are valid texture types for images.",
+      "parentUuid": "2c520e3a_0aabd82f",
+      "range": {
+        "startLine": 3348,
+        "startChar": 4,
+        "endLine": 3348,
+        "endChar": 17
+      },
+      "revId": "f2a494601b1845489f6b12830b8d91f44ef7a760",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -301,6 +469,30 @@
     },
     {
       "key": {
+        "uuid": "7c7d96b9_8b9308c1",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 216,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-11-27T09:47:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0d20323c_af33c05e",
+      "range": {
+        "startLine": 216,
+        "startChar": 4,
+        "endLine": 216,
+        "endChar": 12
+      },
+      "revId": "f2a494601b1845489f6b12830b8d91f44ef7a760",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d68f0c7b_629c6cfe",
         "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.h",
         "patchSetId": 14
@@ -321,6 +513,30 @@
       "revId": "f2a494601b1845489f6b12830b8d91f44ef7a760",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "93f04c83_f02ce5fd",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 222,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-11-27T09:47:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d68f0c7b_629c6cfe",
+      "range": {
+        "startLine": 222,
+        "startChar": 4,
+        "endLine": 222,
+        "endChar": 12
+      },
+      "revId": "f2a494601b1845489f6b12830b8d91f44ef7a760",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
