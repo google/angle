@@ -9,8 +9,7 @@ Specifications for EGL extensions can be found in the [Khronos EGL API Registry]
 (http://www.khronos.org/registry/egl/)
 
 Specifications for ANGLE-specific extensions can be found in the [ANGLE
-extension registry]
-(https://code.google.com/p/angleproject/source/browse/?name=master#git%2Fextensions)
+extension registry](../extensions)
 
 # Details
 

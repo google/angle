@@ -50,9 +50,8 @@ checks out a copy of Cherry to `angle/third_party/cherry` when you sync with
 gclient. Note, if you are using ninja or another build system, the qpa file
 will be located in your working directory.
 
-See the [official Cherry README](https://android.googlesource.com/platform/ext
-ernal/cherry/+/master/README) for instructions on how to run Cherry on Linux
-or Windows.
+See the [official Cherry README](https://android.googlesource.com/platform/external/cherry/+/master/README)
+for instructions on how to run Cherry on Linux or Windows.
 
 ### GoogleTest, ANGLE and dEQP
 

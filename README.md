@@ -55,13 +55,13 @@ View the [Dev setup instructions](doc/DevSetup.md). For generating a Windows Sto
 
 * Join our [Google group](https://groups.google.com/group/angleproject) to keep up to date.
 * Join us on IRC in the #ANGLEproject channel on FreeNode.
-* File bugs in the [issue tracker](http://code.google.com/p/angleproject/issues/list) (preferably with an isolated test-case).
+* File bugs in the [issue tracker](https://bugs.chromium.org/p/angleproject/issues/list) (preferably with an isolated test-case).
 * [Choose an ANGLE branch](doc/ChoosingANGLEBranch.md) to track in your own project.
 
 
 * Read ANGLE development [documentation](doc).
-* Look at [pending](https://chromium-review.googlesource.com/#/q/project:angle/angle+status:open)
-  and [merged](https://chromium-review.googlesource.com/#/q/project:angle/angle+status:merged) changes.
+* Look at [pending](https://chromium-review.googlesource.com/q/project:angle/angle+status:open)
+  and [merged](https://chromium-review.googlesource.com/q/project:angle/angle+status:merged) changes.
 * Become a [code contributor](doc/ContributingCode.md).
 * Use ANGLE's [coding standard](doc/CodingStandard.md).
 * Learn how to [build ANGLE for Chromium development](doc/BuildingAngleForChromiumDevelopment.md).
