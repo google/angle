@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "09847276_e6d92977",
+        "filename": "src/libANGLE/Caps.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1076,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-11-27T18:01:48Z",
+      "side": 1,
+      "message": "GenerateMinimumCaps should only be used for core functionality. Extensions are initialized in the respective backends like you did in renderergl_utils.cpp.",
+      "revId": "de6bfefa050fdfbda2311032f1b3000ca94644dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "12f826e4_b27fc8b0",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 582,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-11-27T18:01:48Z",
+      "side": 1,
+      "message": "Note: parameters that are references should always be const. Instead non-const pointers should be used.\n\nThis comment doesn\u0027t need to be addressed because of another comment in Caps.cpp",
+      "revId": "de6bfefa050fdfbda2311032f1b3000ca94644dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4531b2c6_1fd5e626",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1058,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-11-27T18:01:48Z",
+      "side": 1,
+      "message": "nit: explain that you chose GL_LAST_VERTEX_CONVENTION_EXT because it is the default for ProvokingVertex.",
+      "revId": "de6bfefa050fdfbda2311032f1b3000ca94644dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f7253a45_b1de1cdb",
+        "filename": "src/libANGLE/renderer/null/ContextNULL.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-11-27T18:01:48Z",
+      "side": 1,
+      "message": "Why this? Can it be removed?",
+      "revId": "de6bfefa050fdfbda2311032f1b3000ca94644dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
