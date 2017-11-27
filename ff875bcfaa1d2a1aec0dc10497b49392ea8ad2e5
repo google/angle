@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3e7e50e5_eefa64e8",
+        "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1259,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-11-27T15:56:57Z",
+      "side": 1,
+      "message": "I think this initializes attachmentDescs to zero already?",
+      "range": {
+        "startLine": 1258,
+        "startChar": 63,
+        "endLine": 1259,
+        "endChar": 1
+      },
+      "revId": "ff875bcfaa1d2a1aec0dc10497b49392ea8ad2e5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fe5f205c_0a5fb1c4",
+        "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1269,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-11-27T15:56:57Z",
+      "side": 1,
+      "message": "The default copy constructor already does that I think? Ditto for the copy assignment.",
+      "revId": "ff875bcfaa1d2a1aec0dc10497b49392ea8ad2e5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "09183407_4551b3cf",
+        "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 682,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-11-27T15:56:57Z",
+      "side": 1,
+      "message": "Is the worry here that Vulkan requires specific alignment for the structs? attachmentDescs will be correctly aligned inside RenderPassDesc and will influence alignas(RenderPassDesc).",
+      "revId": "ff875bcfaa1d2a1aec0dc10497b49392ea8ad2e5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
