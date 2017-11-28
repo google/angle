@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "328ec7a2_2790865e",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1394,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-11-28T08:24:26Z",
+      "side": 1,
+      "message": "Remove it. I think program-\u003ehasLinkedComputeShader() is true means that the corresponding program was linked successfully.",
+      "range": {
+        "startLine": 1394,
+        "startChar": 8,
+        "endLine": 1394,
+        "endChar": 31
+      },
+      "revId": "be65bd0316f846c6154df49f1fe6a7a1cfa199ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "c069c27e_3d48b14f",
         "filename": "src/libANGLE/validationES31.cpp",
         "patchSetId": 3
