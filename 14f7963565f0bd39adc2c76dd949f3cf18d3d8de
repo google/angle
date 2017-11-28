@@ -1,0 +1,257 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6fba0fcc_65238673",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 6
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-28T17:32:36Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 11,
+        "startChar": 82,
+        "endLine": 11,
+        "endChar": 95
+      },
+      "revId": "14f7963565f0bd39adc2c76dd949f3cf18d3d8de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d6a68e6d_7fedcf75",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 6
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-28T17:32:36Z",
+      "side": 1,
+      "message": "I think you need to unescape these string sequences. can you check?",
+      "range": {
+        "startLine": 11,
+        "startChar": 61,
+        "endLine": 11,
+        "endChar": 78
+      },
+      "revId": "14f7963565f0bd39adc2c76dd949f3cf18d3d8de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3d2d94f2_e57e1da4",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 6
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-28T17:32:36Z",
+      "side": 1,
+      "message": "this should be updated to VS 2017. Not sure which update. Maybe mention to look in the Chromium build instructions to find the right version.",
+      "range": {
+        "startLine": 20,
+        "startChar": 0,
+        "endLine": 20,
+        "endChar": 114
+      },
+      "revId": "14f7963565f0bd39adc2c76dd949f3cf18d3d8de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "20e18ea3_190befd2",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 6
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-28T17:32:36Z",
+      "side": 1,
+      "message": "this is fixed now. you can reword this as \u0027Use is_clang \u003d false\u0027 if you prefer to compile with the Microsoft Visual Studio C++ compiler.\u0027",
+      "range": {
+        "startLine": 21,
+        "startChar": 5,
+        "endLine": 21,
+        "endChar": 175
+      },
+      "revId": "14f7963565f0bd39adc2c76dd949f3cf18d3d8de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "09710039_1b075e5e",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 6
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-28T17:32:36Z",
+      "side": 1,
+      "message": "you can remove this.",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 23,
+        "endChar": 112
+      },
+      "revId": "14f7963565f0bd39adc2c76dd949f3cf18d3d8de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "763d6638_de5f0dd4",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 6
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-28T17:32:36Z",
+      "side": 1,
+      "message": "also we should mention to use the version mentioned in the Chromium docs. Some versions are incompatible even if they\u0027re the newest.",
+      "range": {
+        "startLine": 25,
+        "startChar": 0,
+        "endLine": 25,
+        "endChar": 102
+      },
+      "revId": "14f7963565f0bd39adc2c76dd949f3cf18d3d8de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0e0c96f9_7bff8801",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 6
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-28T17:32:36Z",
+      "side": 1,
+      "message": ":",
+      "range": {
+        "startLine": 53,
+        "startChar": 114,
+        "endLine": 53,
+        "endChar": 122
+      },
+      "revId": "14f7963565f0bd39adc2c76dd949f3cf18d3d8de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "16dc4f77_c82403a2",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 6
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-28T17:32:36Z",
+      "side": 1,
+      "message": "Ensure . is in",
+      "range": {
+        "startLine": 59,
+        "startChar": 0,
+        "endLine": 59,
+        "endChar": 4
+      },
+      "revId": "14f7963565f0bd39adc2c76dd949f3cf18d3d8de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "39b394b1_be5bf154",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 6
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-28T17:32:36Z",
+      "side": 1,
+      "message": "this isn\u0027t necessary, the script will do this. the prerequisite work is to set up build configurations with gn args out/Debug etc.\n\nI don\u0027t see anywhere where you explain how to run gn args out/xxx. Can you add a section for that? also please mention for extra help you can run gn help.",
+      "range": {
+        "startLine": 63,
+        "startChar": 0,
+        "endLine": 66,
+        "endChar": 3
+      },
+      "revId": "14f7963565f0bd39adc2c76dd949f3cf18d3d8de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9292d186_26a59882",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 6
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-28T17:32:36Z",
+      "side": 1,
+      "message": "these steps aren\u0027t quite correct.\n\n1. is correct\n2 and 3. should be merged to \"The configurations found in your out directory will be mapped to configurations in the configuration manager. Note that for compatibility reasons all configurations are listed as 64-bits.\"\n4. Should be replaced with \u0027Right click the \u0027all\u0027 solution and select build. Note that \"Build Solution\" is not functional with GN. Instead build one target at a time.\"",
+      "range": {
+        "startLine": 70,
+        "startChar": 0,
+        "endLine": 74,
+        "endChar": 35
+      },
+      "revId": "14f7963565f0bd39adc2c76dd949f3cf18d3d8de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2e29549a_6f97c24e",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 6
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-28T17:32:36Z",
+      "side": 1,
+      "message": "out/Release_x64, it\u0027s not actually in the solution directory. but, the binaries are run within the sln/ directory as the current directory IIRC. Can you also update the dEQP docs to point to the new location of TestResults.qpa? It will be in out/sln/obj/src/tests on Windows, same path on Linux.",
+      "range": {
+        "startLine": 75,
+        "startChar": 85,
+        "endLine": 75,
+        "endChar": 96
+      },
+      "revId": "14f7963565f0bd39adc2c76dd949f3cf18d3d8de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
