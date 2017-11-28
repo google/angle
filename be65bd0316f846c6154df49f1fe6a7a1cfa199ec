@@ -97,6 +97,30 @@
     },
     {
       "key": {
+        "uuid": "c1f8ec88_412fc56c",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1394,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-11-28T12:05:17Z",
+      "side": 1,
+      "message": "An explanation about why code snippet between line 1387 and line 1392 can catch the situation you said. Assuming this test: \nstep 1: UseProgram(0); // it is the default state, I call it to make it clear. \nstep 2: GLuint program \u003d glCreateProgram();\nstep 3: CreateShaderAndComipleAndAttachToProgram(); // you know what I want to do in this func\nstep 4: LinkProgram(program); // But FAILED to link. \n\nstep 5: UseProgram(program); // Here is the point. Would the failed program be installed into pipeline? NO. You can refer to the spec for UseProgram, you can also refer to the code in entry_point_es_2_0_autogen.cpp in ANGLE for UseProgram: validation failure (because program is failed to link, use this program will report INVALID_OP) will do nothing at all, it will return directly, without any call site to driver at all. The program id in use is still 0. It means that no valid program in use.  \n\nDispatchCompute(); // When we validate DispatchCompute in this function, \u0027program\u0027 variable at line 1387 will be nullptr, so it has already reported INVALID_OP for unsuccessfully linked program. So the situation you said is not a problem. But if we already have a valid program in use at step 1, and failed to re-link that program, the old code snippet will report INVALID_OP, it is incorrect. This change can fix that issue.",
+      "parentUuid": "298efff6_d8fbc000",
+      "range": {
+        "startLine": 1394,
+        "startChar": 8,
+        "endLine": 1394,
+        "endChar": 31
+      },
+      "revId": "be65bd0316f846c6154df49f1fe6a7a1cfa199ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c069c27e_3d48b14f",
         "filename": "src/libANGLE/validationES31.cpp",
         "patchSetId": 3
