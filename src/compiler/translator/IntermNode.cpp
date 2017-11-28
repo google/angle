@@ -567,7 +567,7 @@ TIntermConstantUnion::TIntermConstantUnion(const TIntermConstantUnion &node) : T
 
 void TFunctionSymbolInfo::setFromFunction(const TFunction &function)
 {
-    setName(function.getName());
+    setName(function.name());
     setId(TSymbolUniqueId(function));
 }
 

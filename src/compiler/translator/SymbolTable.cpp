@@ -29,8 +29,8 @@ static const char kFunctionMangledNameSeparator = '(';
 
 }  // anonymous namespace
 
-TSymbol::TSymbol(TSymbolTable *symbolTable, const TString *n)
-    : uniqueId(symbolTable->nextUniqueId()), name(n), extension(TExtension::UNDEFINED)
+TSymbol::TSymbol(TSymbolTable *symbolTable, const TString *name)
+    : mUniqueId(symbolTable->nextUniqueId()), mName(name), mExtension(TExtension::UNDEFINED)
 {
 }
 
@@ -61,7 +61,7 @@ void TFunction::swapParameters(const TFunction &parametersSource)
 
 const TString *TFunction::buildMangledName() const
 {
-    std::string newName = getName().c_str();
+    std::string newName = name().c_str();
     newName += kFunctionMangledNameSeparator;
 
     for (const auto &p : parameters)
@@ -104,7 +104,7 @@ bool TSymbolTableLevel::insert(TSymbol *symbol)
 bool TSymbolTableLevel::insertUnmangled(TFunction *function)
 {
     // returning true means symbol was added to the table
-    tInsertResult result = level.insert(tLevelPair(function->getName(), function));
+    tInsertResult result = level.insert(tLevelPair(function->name(), function));
 
     return result.second;
 }

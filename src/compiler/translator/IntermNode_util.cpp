@@ -219,7 +219,7 @@ TIntermSymbol *ReferenceGlobalVariable(const TString &name, const TSymbolTable &
 {
     TVariable *var = reinterpret_cast<TVariable *>(symbolTable.findGlobal(name));
     ASSERT(var);
-    return new TIntermSymbol(var->getUniqueId(), name, var->getType());
+    return new TIntermSymbol(var->uniqueId(), name, var->getType());
 }
 
 TIntermSymbol *ReferenceBuiltInVariable(const TString &name,
@@ -229,7 +229,7 @@ TIntermSymbol *ReferenceBuiltInVariable(const TString &name,
     const TVariable *var =
         reinterpret_cast<const TVariable *>(symbolTable.findBuiltIn(name, shaderVersion, true));
     ASSERT(var);
-    return new TIntermSymbol(var->getUniqueId(), name, var->getType());
+    return new TIntermSymbol(var->uniqueId(), name, var->getType());
 }
 
 TIntermTyped *CreateBuiltInFunctionCallNode(const TString &name,

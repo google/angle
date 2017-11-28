@@ -16,7 +16,7 @@ TSymbolUniqueId::TSymbolUniqueId(TSymbolTable *symbolTable) : mId(symbolTable->n
 {
 }
 
-TSymbolUniqueId::TSymbolUniqueId(const TSymbol &symbol) : mId(symbol.getUniqueId().get())
+TSymbolUniqueId::TSymbolUniqueId(const TSymbol &symbol) : mId(symbol.uniqueId().get())
 {
 }
 

@@ -1125,7 +1125,7 @@ bool TParseContext::declareVariable(const TSourceLoc &line,
         {
             if (TSymbol *builtInSymbol = symbolTable.findBuiltIn(identifier, mShaderVersion))
             {
-                needsReservedCheck = !checkCanUseExtension(line, builtInSymbol->getExtension());
+                needsReservedCheck = !checkCanUseExtension(line, builtInSymbol->extension());
             }
         }
         else
@@ -1805,9 +1805,9 @@ const TVariable *TParseContext::getNamedVariable(const TSourceLoc &location,
 
     const TVariable *variable = static_cast<const TVariable *>(symbol);
 
-    if (variable->getExtension() != TExtension::UNDEFINED)
+    if (variable->extension() != TExtension::UNDEFINED)
     {
-        checkCanUseExtension(location, variable->getExtension());
+        checkCanUseExtension(location, variable->extension());
     }
 
     // Reject shaders using both gl_FragData and gl_FragColor
@@ -1896,12 +1896,12 @@ TIntermTyped *TParseContext::parseVariableIdentifier(const TSourceLoc &location,
     {
         ASSERT(mGeometryShaderInputArraySize > 0u);
 
-        node = new TIntermSymbol(variable->getUniqueId(), variable->getName(), variableType);
+        node = new TIntermSymbol(variable->uniqueId(), variable->name(), variableType);
         node->getTypePointer()->sizeOutermostUnsizedArray(mGeometryShaderInputArraySize);
     }
     else
     {
-        node = new TIntermSymbol(variable->getUniqueId(), variable->getName(), variableType);
+        node = new TIntermSymbol(variable->uniqueId(), variable->name(), variableType);
     }
     ASSERT(node != nullptr);
     node->setLine(location);
@@ -2016,7 +2016,7 @@ bool TParseContext::executeInitializer(const TSourceLoc &line,
     }
 
     TIntermSymbol *intermSymbol =
-        new TIntermSymbol(variable->getUniqueId(), variable->getName(), variable->getType());
+        new TIntermSymbol(variable->uniqueId(), variable->name(), variable->getType());
     intermSymbol->setLine(line);
     *initNode = createAssign(EOpInitialize, intermSymbol, initializer, line);
     if (*initNode == nullptr)
@@ -2470,7 +2470,7 @@ TIntermDeclaration *TParseContext::parseSingleDeclaration(
 
         if (variable)
         {
-            symbol = new TIntermSymbol(variable->getUniqueId(), identifier, type);
+            symbol = new TIntermSymbol(variable->uniqueId(), identifier, type);
         }
     }
 
@@ -2517,7 +2517,7 @@ TIntermDeclaration *TParseContext::parseSingleArrayDeclaration(
 
     if (variable)
     {
-        TIntermSymbol *symbol = new TIntermSymbol(variable->getUniqueId(), identifier, arrayType);
+        TIntermSymbol *symbol = new TIntermSymbol(variable->uniqueId(), identifier, arrayType);
         symbol->setLine(identifierLocation);
         declaration->appendDeclarator(symbol);
     }
@@ -2640,7 +2640,7 @@ TIntermInvariantDeclaration *TParseContext::parseInvariantDeclaration(
 
     symbolTable.addInvariantVarying(std::string(identifier->c_str()));
 
-    TIntermSymbol *intermSymbol = new TIntermSymbol(variable->getUniqueId(), *identifier, type);
+    TIntermSymbol *intermSymbol = new TIntermSymbol(variable->uniqueId(), *identifier, type);
     intermSymbol->setLine(identifierLoc);
 
     return new TIntermInvariantDeclaration(intermSymbol, identifierLoc);
@@ -2674,7 +2674,7 @@ void TParseContext::parseDeclarator(TPublicType &publicType,
 
     if (variable)
     {
-        TIntermSymbol *symbol = new TIntermSymbol(variable->getUniqueId(), identifier, type);
+        TIntermSymbol *symbol = new TIntermSymbol(variable->uniqueId(), identifier, type);
         symbol->setLine(identifierLocation);
         declarationOut->appendDeclarator(symbol);
     }
@@ -2713,8 +2713,7 @@ void TParseContext::parseArrayDeclarator(TPublicType &elementType,
 
         if (variable)
         {
-            TIntermSymbol *symbol =
-                new TIntermSymbol(variable->getUniqueId(), identifier, arrayType);
+            TIntermSymbol *symbol = new TIntermSymbol(variable->uniqueId(), identifier, arrayType);
             symbol->setLine(identifierLocation);
             declarationOut->appendDeclarator(symbol);
         }
@@ -3166,7 +3165,7 @@ TIntermFunctionPrototype *TParseContext::createPrototypeNodeFromFunction(
     const TSourceLoc &location,
     bool insertParametersToSymbolTable)
 {
-    checkIsNotReserved(location, function.getName());
+    checkIsNotReserved(location, function.name());
 
     TIntermFunctionPrototype *prototype =
         new TIntermFunctionPrototype(function.getReturnType(), TSymbolUniqueId(function));
@@ -3191,7 +3190,7 @@ TIntermFunctionPrototype *TParseContext::createPrototypeNodeFromFunction(
                 TVariable *variable = symbolTable.declareVariable(param.name, *param.type);
                 if (variable)
                 {
-                    symbol = new TIntermSymbol(variable->getUniqueId(), variable->getName(),
+                    symbol = new TIntermSymbol(variable->uniqueId(), variable->name(),
                                                variable->getType());
                 }
                 else
@@ -3290,7 +3289,7 @@ void TParseContext::parseFunctionDefinitionHeader(const TSourceLoc &location,
 
     if (builtIn)
     {
-        error(location, "built-in functions cannot be redefined", (*function)->getName().c_str());
+        error(location, "built-in functions cannot be redefined", (*function)->name().c_str());
     }
     else
     {
@@ -3312,7 +3311,7 @@ void TParseContext::parseFunctionDefinitionHeader(const TSourceLoc &location,
 
         if ((*function)->isDefined())
         {
-            error(location, "function already has a body", (*function)->getName().c_str());
+            error(location, "function already has a body", (*function)->name().c_str());
         }
 
         (*function)->setDefined();
@@ -3346,18 +3345,17 @@ TFunction *TParseContext::parseFunctionDeclarator(const TSourceLoc &location, TF
         {
             // ESSL 3.00.6 section 12.10.
             error(location, "Function parameter type cannot be a structure definition",
-                  function->getName().c_str());
+                  function->name().c_str());
         }
     }
 
-    if (getShaderVersion() >= 300 &&
-        symbolTable.hasUnmangledBuiltInForShaderVersion(function->getName().c_str(),
-                                                        getShaderVersion()))
+    if (getShaderVersion() >= 300 && symbolTable.hasUnmangledBuiltInForShaderVersion(
+                                         function->name().c_str(), getShaderVersion()))
     {
         // With ESSL 3.00 and above, names of built-in functions cannot be redeclared as functions.
         // Therefore overloading or redefining builtin functions is an error.
         error(location, "Name of a built-in function cannot be redeclared as function",
-              function->getName().c_str());
+              function->name().c_str());
     }
     else if (prevDec)
     {
@@ -3381,12 +3379,12 @@ TFunction *TParseContext::parseFunctionDeclarator(const TSourceLoc &location, TF
     //
     // Check for previously declared variables using the same name.
     //
-    TSymbol *prevSym = symbolTable.find(function->getName(), getShaderVersion());
+    TSymbol *prevSym = symbolTable.find(function->name(), getShaderVersion());
     if (prevSym)
     {
         if (!prevSym->isFunction())
         {
-            error(location, "redefinition of a function", function->getName().c_str());
+            error(location, "redefinition of a function", function->name().c_str());
         }
     }
     else
@@ -3400,7 +3398,7 @@ TFunction *TParseContext::parseFunctionDeclarator(const TSourceLoc &location, TF
     symbolTable.getOuterLevel()->insert(function);
 
     // Raise error message if main function takes any parameters or return anything other than void
-    if (function->getName() == "main")
+    if (function->name() == "main")
     {
         if (function->getParamCount() > 0)
         {
@@ -3859,7 +3857,7 @@ TIntermDeclaration *TParseContext::addInterfaceBlock(
         if (instanceTypeDef)
         {
             instanceTypeDef->setQualifier(typeQualifier.qualifier);
-            symbolId = &instanceTypeDef->getUniqueId();
+            symbolId = &instanceTypeDef->uniqueId();
         }
         else
         {
@@ -5802,9 +5800,9 @@ TIntermTyped *TParseContext::addMethod(TFunction *fnCall,
     // a constructor. But such a TFunction can't reach here, since the lexer goes into FIELDS
     // mode after a dot, which makes type identifiers to be parsed as FIELD_SELECTION instead.
     // So accessing fnCall->getName() below is safe.
-    if (fnCall->getName() != "length")
+    if (fnCall->name() != "length")
     {
-        error(loc, "invalid method", fnCall->getName().c_str());
+        error(loc, "invalid method", fnCall->name().c_str());
     }
     else if (!arguments->empty())
     {
@@ -5837,18 +5835,18 @@ TIntermTyped *TParseContext::addNonConstructorFunctionCall(TFunction *fnCall,
     // hidden by a variable name or struct typename.
     // If a function is found, check for one with a matching argument list.
     bool builtIn;
-    const TSymbol *symbol = symbolTable.find(fnCall->getName(), mShaderVersion, &builtIn);
+    const TSymbol *symbol = symbolTable.find(fnCall->name(), mShaderVersion, &builtIn);
     if (symbol != nullptr && !symbol->isFunction())
     {
-        error(loc, "function name expected", fnCall->getName().c_str());
+        error(loc, "function name expected", fnCall->name().c_str());
     }
     else
     {
-        symbol = symbolTable.find(TFunction::GetMangledNameFromCall(fnCall->getName(), *arguments),
+        symbol = symbolTable.find(TFunction::GetMangledNameFromCall(fnCall->name(), *arguments),
                                   mShaderVersion, &builtIn);
         if (symbol == nullptr)
         {
-            error(loc, "no matching overloaded function found", fnCall->getName().c_str());
+            error(loc, "no matching overloaded function found", fnCall->name().c_str());
         }
         else
         {
@@ -5856,9 +5854,9 @@ TIntermTyped *TParseContext::addNonConstructorFunctionCall(TFunction *fnCall,
             //
             // A declared function.
             //
-            if (builtIn && fnCandidate->getExtension() != TExtension::UNDEFINED)
+            if (builtIn && fnCandidate->extension() != TExtension::UNDEFINED)
             {
-                checkCanUseExtension(loc, fnCandidate->getExtension());
+                checkCanUseExtension(loc, fnCandidate->extension());
             }
             TOperator op = fnCandidate->getBuiltInOp();
             if (builtIn && op != EOpNull)

@@ -48,25 +48,25 @@ class TSymbol : angle::NonCopyable
 {
   public:
     POOL_ALLOCATOR_NEW_DELETE();
-    TSymbol(TSymbolTable *symbolTable, const TString *n);
+    TSymbol(TSymbolTable *symbolTable, const TString *name);
 
     virtual ~TSymbol()
     {
         // don't delete name, it's from the pool
     }
 
-    const TString &getName() const { return *name; }
-    virtual const TString &getMangledName() const { return getName(); }
+    const TString &name() const { return *mName; }
+    virtual const TString &getMangledName() const { return name(); }
     virtual bool isFunction() const { return false; }
     virtual bool isVariable() const { return false; }
-    const TSymbolUniqueId &getUniqueId() const { return uniqueId; }
-    void relateToExtension(TExtension ext) { extension = ext; }
-    TExtension getExtension() const { return extension; }
+    const TSymbolUniqueId &uniqueId() const { return mUniqueId; }
+    void relateToExtension(TExtension ext) { mExtension = ext; }
+    TExtension extension() const { return mExtension; }
 
   private:
-    const TSymbolUniqueId uniqueId;
-    const TString *name;
-    TExtension extension;
+    const TSymbolUniqueId mUniqueId;
+    const TString *mName;
+    TExtension mExtension;
 };
 
 // Variable, meaning a symbol that's not a function.
