@@ -5554,3 +5554,21 @@ TEST_F(FragmentShaderValidationTest, AtomicAddWithNonStorageVariable)
         FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
     }
 }
+
+// Test that negative indexing of a matrix doesn't result in an assert.
+TEST_F(FragmentShaderValidationTest, MatrixNegativeIndex)
+{
+    const std::string &shaderString =
+        R"(
+        precision mediump float;
+
+        void main()
+        {
+            gl_FragColor = mat4(1.0)[-1];
+        })";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}

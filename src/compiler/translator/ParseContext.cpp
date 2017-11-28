@@ -4038,25 +4038,29 @@ TIntermTyped *TParseContext::addIndexExpression(TIntermTyped *baseExpression,
                         safeIndex = 0;
                     }
                 }
-                // Only do generic out-of-range check if similar error hasn't already been reported.
-                if (safeIndex < 0)
+            }
+            // Only do generic out-of-range check if similar error hasn't already been reported.
+            if (safeIndex < 0)
+            {
+                if (baseExpression->isArray())
                 {
                     safeIndex = checkIndexLessThan(outOfRangeIndexIsError, location, index,
                                                    baseExpression->getOutermostArraySize(),
                                                    "array index out of range");
                 }
-            }
-            else if (baseExpression->isMatrix())
-            {
-                safeIndex = checkIndexLessThan(outOfRangeIndexIsError, location, index,
-                                               baseExpression->getType().getCols(),
-                                               "matrix field selection out of range");
-            }
-            else if (baseExpression->isVector())
-            {
-                safeIndex = checkIndexLessThan(outOfRangeIndexIsError, location, index,
-                                               baseExpression->getType().getNominalSize(),
-                                               "vector field selection out of range");
+                else if (baseExpression->isMatrix())
+                {
+                    safeIndex = checkIndexLessThan(outOfRangeIndexIsError, location, index,
+                                                   baseExpression->getType().getCols(),
+                                                   "matrix field selection out of range");
+                }
+                else
+                {
+                    ASSERT(baseExpression->isVector());
+                    safeIndex = checkIndexLessThan(outOfRangeIndexIsError, location, index,
+                                                   baseExpression->getType().getNominalSize(),
+                                                   "vector field selection out of range");
+                }
             }
 
             ASSERT(safeIndex >= 0);
@@ -4092,6 +4096,8 @@ int TParseContext::checkIndexLessThan(bool outOfRangeIndexIsError,
 {
     // Should not reach here with an unsized / runtime-sized array.
     ASSERT(arraySize > 0);
+    // A negative index should already have been checked.
+    ASSERT(index >= 0);
     if (index >= arraySize)
     {
         std::stringstream reasonStream;
