@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "72b462fd_fa812807",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1931,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2017-11-28T00:20:48Z",
+      "side": 1,
+      "message": "I used to have that assert, it didn\u0027t pass:\nFragmentShaderValidationTest.IncorrectUnsizedArray\nFragmentShaderValidationTest.AtomicAddWithBufferVariableArrayElement\nand some others. I assume this is because of the \"Having a non-array initializer for an unsized array will result in an error later...\" part.\n\nI did some tiny refactors in this area, though.",
+      "parentUuid": "6f83d339_3bbd88b1",
+      "revId": "bf9e0df8aeddc867b8d2842288581774003030a7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "71c7cc4d_6b3b250b",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 4
@@ -39,6 +57,30 @@
       "revId": "bf9e0df8aeddc867b8d2842288581774003030a7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bd47e911_c3215485",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 4752,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2017-11-28T00:20:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "71c7cc4d_6b3b250b",
+      "range": {
+        "startLine": 4752,
+        "startChar": 12,
+        "endLine": 4752,
+        "endChar": 77
+      },
+      "revId": "bf9e0df8aeddc867b8d2842288581774003030a7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
