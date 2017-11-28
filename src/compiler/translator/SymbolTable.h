@@ -59,18 +59,20 @@ class TSymbol : angle::NonCopyable
     virtual const TString &getMangledName() const { return name(); }
     virtual bool isFunction() const { return false; }
     virtual bool isVariable() const { return false; }
+    virtual bool isStruct() const { return false; }
     const TSymbolUniqueId &uniqueId() const { return mUniqueId; }
     void relateToExtension(TExtension ext) { mExtension = ext; }
     TExtension extension() const { return mExtension; }
 
+  protected:
+    const TString *mName;
+
   private:
     const TSymbolUniqueId mUniqueId;
-    const TString *mName;
     TExtension mExtension;
 };
 
-// Variable, meaning a symbol that's not a function.
-//
+// Variable.
 // May store the value of a constant variable of any type (float, int, bool or struct).
 class TVariable : public TSymbol
 {
@@ -79,7 +81,6 @@ class TVariable : public TSymbol
     bool isVariable() const override { return true; }
     TType &getType() { return type; }
     const TType &getType() const { return type; }
-    bool isUserType() const { return userType; }
     void setQualifier(TQualifier qualifier) { type.setQualifier(qualifier); }
 
     const TConstantUnion *getConstPointer() const { return unionArray; }
@@ -88,23 +89,37 @@ class TVariable : public TSymbol
 
   private:
     friend class TSymbolTable;
-
-    TVariable(TSymbolTable *symbolTable,
-              const TString *name,
-              const TType &t,
-              bool isUserTypeDefinition = false)
-        : TSymbol(symbolTable, name), type(t), userType(isUserTypeDefinition), unionArray(0)
-    {
-    }
+    TVariable(TSymbolTable *symbolTable, const TString *name, const TType &t);
 
     TType type;
-
-    // Set to true if this represents a struct type, as opposed to a variable.
-    bool userType;
-
-    // we are assuming that Pool Allocator will free the memory
-    // allocated to unionArray when this object is destroyed.
     const TConstantUnion *unionArray;
+};
+
+// Struct type.
+class TStructure : public TSymbol, public TFieldListCollection
+{
+  public:
+    TStructure(TSymbolTable *symbolTable, const TString *name, const TFieldList *fields);
+
+    bool isStruct() const override { return true; }
+
+    void createSamplerSymbols(const TString &namePrefix,
+                              const TString &apiNamePrefix,
+                              TVector<TIntermSymbol *> *outputSymbols,
+                              TMap<TIntermSymbol *, TString> *outputSymbolsToAPINames,
+                              TSymbolTable *symbolTable) const;
+
+    void setAtGlobalScope(bool atGlobalScope) { mAtGlobalScope = atGlobalScope; }
+    bool atGlobalScope() const { return mAtGlobalScope; }
+
+  private:
+    // TODO(zmo): Find a way to get rid of the const_cast in function
+    // setName().  At the moment keep this function private so only
+    // friend class RegenerateStructNames may call it.
+    friend class RegenerateStructNames;
+    void setName(const TString &name);
+
+    bool mAtGlobalScope;
 };
 
 // Immutable version of TParameter.
@@ -211,7 +226,8 @@ class TFunction : public TSymbol
     bool mHasPrototypeDeclaration;
 };
 
-// Interface block name sub-symbol
+// Reserved interface block name. Note that this simply reserves the block name, not the instance
+// name. Interface block instances are stored as TVariable.
 class TInterfaceBlockName : public TSymbol
 {
   public:
@@ -318,21 +334,21 @@ class TSymbolTable : angle::NonCopyable
     }
 
     // The declare* entry points are used when parsing and declare symbols at the current scope.
-    // They return the created symbol in case the declaration was successful, and nullptr if the
-    // declaration failed due to redefinition.
+    // They return the created symbol / true in case the declaration was successful, and nullptr /
+    // false if the declaration failed due to redefinition.
     TVariable *declareVariable(const TString *name, const TType &type);
-    TVariable *declareStructType(TStructure *str);
+    bool declareStructType(TStructure *str);
     TInterfaceBlockName *declareInterfaceBlockName(const TString *name);
 
     // The insert* entry points are used when initializing the symbol table with built-ins.
-    // They return the created symbol in case the declaration was successful, and nullptr if the
-    // declaration failed due to redefinition.
+    // They return the created symbol / true in case the declaration was successful, and nullptr /
+    // false if the declaration failed due to redefinition.
     TVariable *insertVariable(ESymbolLevel level, const char *name, const TType &type);
     TVariable *insertVariableExt(ESymbolLevel level,
                                  TExtension ext,
                                  const char *name,
                                  const TType &type);
-    TVariable *insertStructType(ESymbolLevel level, TStructure *str);
+    bool insertStructType(ESymbolLevel level, TStructure *str);
     TInterfaceBlockName *insertInterfaceBlockNameExt(ESymbolLevel level,
                                                      TExtension ext,
                                                      const TString *name);

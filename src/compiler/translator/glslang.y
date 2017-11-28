@@ -1150,9 +1150,6 @@ type_specifier_nonarray
         }
         $$.initialize(EbtSampler2DRect, @1);
     }
-    | struct_specifier {
-        $$ = $1;
-    }
     | IMAGE2D {
         $$.initialize(EbtImage2D, @1);
     }
@@ -1192,10 +1189,13 @@ type_specifier_nonarray
     | ATOMICUINT {
         $$.initialize(EbtAtomicCounter, @1);
     }
+    | struct_specifier {
+        $$ = $1;
+    }
     | TYPE_NAME {
         // This is for user defined type names. The lexical phase looked up the type.
-        TType& structure = static_cast<TVariable*>($1.symbol)->getType();
-        $$.initializeStruct(structure.getStruct(), false, @1);
+        TStructure *structure = static_cast<TStructure*>($1.symbol);
+        $$.initializeStruct(structure, false, @1);
     }
     ;
 

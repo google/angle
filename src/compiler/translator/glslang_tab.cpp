@@ -939,10 +939,10 @@ static const yytype_uint16 yydefact[] =
      123,   122,   141,   142,   143,   144,   145,   146,     0,   164,
      191,   193,   209,   211,   194,   196,   197,   198,   199,   201,
      202,   203,   204,   195,   200,   205,   192,   206,   207,   208,
-     210,   213,   214,   215,   216,   217,   218,   219,   220,   221,
-     222,   223,   224,   225,     0,   190,   226,   295,   296,     0,
+     210,   212,   213,   214,   215,   216,   217,   218,   219,   220,
+     221,   222,   223,   224,     0,   190,   226,   295,   296,     0,
       99,    98,     0,   110,   115,   130,     0,   131,   124,   127,
-     120,   129,   128,   147,   158,   212,     0,   292,   294,     0,
+     120,   129,   128,   147,   158,   225,     0,   292,   294,     0,
        2,     3,   229,     0,     0,    89,     0,    97,     0,   106,
      100,   108,     0,   109,     0,    90,     2,   116,     0,    95,
        0,   125,   121,     0,   159,     1,   293,     0,     0,   227,
@@ -4269,7 +4269,7 @@ yyreduce:
   case 212:
 
     {
-        (yyval.interm.typeSpecifierNonArray) = (yyvsp[0].interm.typeSpecifierNonArray);
+        (yyval.interm.typeSpecifierNonArray).initialize(EbtImage2D, (yylsp[0]));
     }
 
     break;
@@ -4277,7 +4277,7 @@ yyreduce:
   case 213:
 
     {
-        (yyval.interm.typeSpecifierNonArray).initialize(EbtImage2D, (yylsp[0]));
+        (yyval.interm.typeSpecifierNonArray).initialize(EbtIImage2D, (yylsp[0]));
     }
 
     break;
@@ -4285,7 +4285,7 @@ yyreduce:
   case 214:
 
     {
-        (yyval.interm.typeSpecifierNonArray).initialize(EbtIImage2D, (yylsp[0]));
+        (yyval.interm.typeSpecifierNonArray).initialize(EbtUImage2D, (yylsp[0]));
     }
 
     break;
@@ -4293,7 +4293,7 @@ yyreduce:
   case 215:
 
     {
-        (yyval.interm.typeSpecifierNonArray).initialize(EbtUImage2D, (yylsp[0]));
+        (yyval.interm.typeSpecifierNonArray).initialize(EbtImage3D, (yylsp[0]));
     }
 
     break;
@@ -4301,7 +4301,7 @@ yyreduce:
   case 216:
 
     {
-        (yyval.interm.typeSpecifierNonArray).initialize(EbtImage3D, (yylsp[0]));
+        (yyval.interm.typeSpecifierNonArray).initialize(EbtIImage3D, (yylsp[0]));
     }
 
     break;
@@ -4309,7 +4309,7 @@ yyreduce:
   case 217:
 
     {
-        (yyval.interm.typeSpecifierNonArray).initialize(EbtIImage3D, (yylsp[0]));
+        (yyval.interm.typeSpecifierNonArray).initialize(EbtUImage3D, (yylsp[0]));
     }
 
     break;
@@ -4317,7 +4317,7 @@ yyreduce:
   case 218:
 
     {
-        (yyval.interm.typeSpecifierNonArray).initialize(EbtUImage3D, (yylsp[0]));
+        (yyval.interm.typeSpecifierNonArray).initialize(EbtImage2DArray, (yylsp[0]));
     }
 
     break;
@@ -4325,7 +4325,7 @@ yyreduce:
   case 219:
 
     {
-        (yyval.interm.typeSpecifierNonArray).initialize(EbtImage2DArray, (yylsp[0]));
+        (yyval.interm.typeSpecifierNonArray).initialize(EbtIImage2DArray, (yylsp[0]));
     }
 
     break;
@@ -4333,7 +4333,7 @@ yyreduce:
   case 220:
 
     {
-        (yyval.interm.typeSpecifierNonArray).initialize(EbtIImage2DArray, (yylsp[0]));
+        (yyval.interm.typeSpecifierNonArray).initialize(EbtUImage2DArray, (yylsp[0]));
     }
 
     break;
@@ -4341,7 +4341,7 @@ yyreduce:
   case 221:
 
     {
-        (yyval.interm.typeSpecifierNonArray).initialize(EbtUImage2DArray, (yylsp[0]));
+        (yyval.interm.typeSpecifierNonArray).initialize(EbtImageCube, (yylsp[0]));
     }
 
     break;
@@ -4349,7 +4349,7 @@ yyreduce:
   case 222:
 
     {
-        (yyval.interm.typeSpecifierNonArray).initialize(EbtImageCube, (yylsp[0]));
+        (yyval.interm.typeSpecifierNonArray).initialize(EbtIImageCube, (yylsp[0]));
     }
 
     break;
@@ -4357,7 +4357,7 @@ yyreduce:
   case 223:
 
     {
-        (yyval.interm.typeSpecifierNonArray).initialize(EbtIImageCube, (yylsp[0]));
+        (yyval.interm.typeSpecifierNonArray).initialize(EbtUImageCube, (yylsp[0]));
     }
 
     break;
@@ -4365,7 +4365,7 @@ yyreduce:
   case 224:
 
     {
-        (yyval.interm.typeSpecifierNonArray).initialize(EbtUImageCube, (yylsp[0]));
+        (yyval.interm.typeSpecifierNonArray).initialize(EbtAtomicCounter, (yylsp[0]));
     }
 
     break;
@@ -4373,7 +4373,7 @@ yyreduce:
   case 225:
 
     {
-        (yyval.interm.typeSpecifierNonArray).initialize(EbtAtomicCounter, (yylsp[0]));
+        (yyval.interm.typeSpecifierNonArray) = (yyvsp[0].interm.typeSpecifierNonArray);
     }
 
     break;
@@ -4382,8 +4382,8 @@ yyreduce:
 
     {
         // This is for user defined type names. The lexical phase looked up the type.
-        TType& structure = static_cast<TVariable*>((yyvsp[0].lex).symbol)->getType();
-        (yyval.interm.typeSpecifierNonArray).initializeStruct(structure.getStruct(), false, (yylsp[0]));
+        TStructure *structure = static_cast<TStructure*>((yyvsp[0].lex).symbol);
+        (yyval.interm.typeSpecifierNonArray).initializeStruct(structure, false, (yylsp[0]));
     }
 
     break;

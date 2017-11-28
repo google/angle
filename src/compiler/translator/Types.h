@@ -19,6 +19,7 @@ namespace sh
 
 struct TPublicType;
 class TType;
+class TStructure;
 class TSymbol;
 class TIntermSymbol;
 class TSymbolTable;
@@ -56,7 +57,6 @@ inline TFieldList *NewPoolTFieldList()
 class TFieldListCollection : angle::NonCopyable
 {
   public:
-    const TString &name() const { return *mName; }
     const TFieldList &fields() const { return *mFields; }
 
     bool containsArrays() const;
@@ -70,14 +70,9 @@ class TFieldListCollection : angle::NonCopyable
     const TString &mangledFieldList() const;
 
   protected:
-    TFieldListCollection(const TString *name, TFieldList *fields)
-        : mName(name), mFields(fields), mObjectSize(0), mDeepestNesting(0)
-    {
-    }
+    TFieldListCollection(const TFieldList *fields);
 
-    const TString *mName;
-
-    TFieldList *mFields;
+    const TFieldList *mFields;
 
   private:
     size_t calculateObjectSize() const;
@@ -89,55 +84,16 @@ class TFieldListCollection : angle::NonCopyable
     mutable TString mMangledFieldList;
 };
 
-// May also represent interface blocks
-class TStructure : public TFieldListCollection
-{
-  public:
-    POOL_ALLOCATOR_NEW_DELETE();
-    TStructure(TSymbolTable *symbolTable, const TString *name, TFieldList *fields);
-
-    void createSamplerSymbols(const TString &namePrefix,
-                              const TString &apiNamePrefix,
-                              TVector<TIntermSymbol *> *outputSymbols,
-                              TMap<TIntermSymbol *, TString> *outputSymbolsToAPINames,
-                              TSymbolTable *symbolTable) const;
-
-    const TSymbolUniqueId &uniqueId() const { return mUniqueId; }
-
-    void setAtGlobalScope(bool atGlobalScope) { mAtGlobalScope = atGlobalScope; }
-    bool atGlobalScope() const { return mAtGlobalScope; }
-
-  private:
-    // TODO(zmo): Find a way to get rid of the const_cast in function
-    // setName().  At the moment keep this function private so only
-    // friend class RegenerateStructNames may call it.
-    friend class RegenerateStructNames;
-    void setName(const TString &name)
-    {
-        TString *mutableName = const_cast<TString *>(mName);
-        *mutableName         = name;
-    }
-
-    const TSymbolUniqueId mUniqueId;
-    bool mAtGlobalScope;
-};
-
 class TInterfaceBlock : public TFieldListCollection
 {
   public:
     POOL_ALLOCATOR_NEW_DELETE();
     TInterfaceBlock(const TString *name,
-                    TFieldList *fields,
+                    const TFieldList *fields,
                     const TString *instanceName,
-                    const TLayoutQualifier &layoutQualifier)
-        : TFieldListCollection(name, fields),
-          mInstanceName(instanceName),
-          mBlockStorage(layoutQualifier.blockStorage),
-          mMatrixPacking(layoutQualifier.matrixPacking),
-          mBinding(layoutQualifier.binding)
-    {
-    }
+                    const TLayoutQualifier &layoutQualifier);
 
+    const TString &name() const { return *mName; }
     const TString &instanceName() const { return *mInstanceName; }
     bool hasInstanceName() const { return mInstanceName != nullptr; }
     TLayoutBlockStorage blockStorage() const { return mBlockStorage; }
@@ -145,6 +101,7 @@ class TInterfaceBlock : public TFieldListCollection
     int blockBinding() const { return mBinding; }
 
   private:
+    const TString *mName;
     const TString *mInstanceName;  // for interface block instance names
     TLayoutBlockStorage mBlockStorage;
     TLayoutMatrixPacking mMatrixPacking;

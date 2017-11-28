@@ -874,47 +874,6 @@ void TType::invalidateMangledName()
     mMangledName = nullptr;
 }
 
-// TStructure implementation.
-TStructure::TStructure(TSymbolTable *symbolTable, const TString *name, TFieldList *fields)
-    : TFieldListCollection(name, fields),
-      mUniqueId(symbolTable->nextUniqueId()),
-      mAtGlobalScope(false)
-{
-}
-
-bool TFieldListCollection::containsArrays() const
-{
-    for (const auto *field : *mFields)
-    {
-        const TType *fieldType = field->type();
-        if (fieldType->isArray() || fieldType->isStructureContainingArrays())
-            return true;
-    }
-    return false;
-}
-
-bool TFieldListCollection::containsType(TBasicType type) const
-{
-    for (const auto *field : *mFields)
-    {
-        const TType *fieldType = field->type();
-        if (fieldType->getBasicType() == type || fieldType->isStructureContainingType(type))
-            return true;
-    }
-    return false;
-}
-
-bool TFieldListCollection::containsSamplers() const
-{
-    for (const auto *field : *mFields)
-    {
-        const TType *fieldType = field->type();
-        if (IsSampler(fieldType->getBasicType()) || fieldType->isStructureContainingSamplers())
-            return true;
-    }
-    return false;
-}
-
 void TType::createSamplerSymbols(const TString &namePrefix,
                                  const TString &apiNamePrefix,
                                  TVector<TIntermSymbol *> *outputSymbols,
@@ -955,33 +914,51 @@ void TType::createSamplerSymbols(const TString &namePrefix,
     }
 }
 
-void TStructure::createSamplerSymbols(const TString &namePrefix,
-                                      const TString &apiNamePrefix,
-                                      TVector<TIntermSymbol *> *outputSymbols,
-                                      TMap<TIntermSymbol *, TString> *outputSymbolsToAPINames,
-                                      TSymbolTable *symbolTable) const
+TFieldListCollection::TFieldListCollection(const TFieldList *fields)
+    : mFields(fields), mObjectSize(0), mDeepestNesting(0)
 {
-    ASSERT(containsSamplers());
-    for (auto &field : *mFields)
+}
+
+bool TFieldListCollection::containsArrays() const
+{
+    for (const auto *field : *mFields)
+    {
+        const TType *fieldType = field->type();
+        if (fieldType->isArray() || fieldType->isStructureContainingArrays())
+            return true;
+    }
+    return false;
+}
+
+bool TFieldListCollection::containsType(TBasicType type) const
+{
+    for (const auto *field : *mFields)
+    {
+        const TType *fieldType = field->type();
+        if (fieldType->getBasicType() == type || fieldType->isStructureContainingType(type))
+            return true;
+    }
+    return false;
+}
+
+bool TFieldListCollection::containsSamplers() const
+{
+    for (const auto *field : *mFields)
     {
         const TType *fieldType = field->type();
         if (IsSampler(fieldType->getBasicType()) || fieldType->isStructureContainingSamplers())
-        {
-            TString fieldName    = namePrefix + "_" + field->name();
-            TString fieldApiName = apiNamePrefix + "." + field->name();
-            fieldType->createSamplerSymbols(fieldName, fieldApiName, outputSymbols,
-                                            outputSymbolsToAPINames, symbolTable);
-        }
+            return true;
     }
+    return false;
 }
 
 TString TFieldListCollection::buildMangledFieldList() const
 {
     TString mangledName;
-    for (size_t i = 0; i < mFields->size(); ++i)
+    for (const auto *field : *mFields)
     {
         mangledName += '-';
-        mangledName += (*mFields)[i]->type()->getMangledName();
+        mangledName += field->type()->getMangledName();
     }
     return mangledName;
 }
@@ -1045,6 +1022,19 @@ int TFieldListCollection::calculateDeepestNesting() const
     for (size_t i = 0; i < mFields->size(); ++i)
         maxNesting = std::max(maxNesting, (*mFields)[i]->type()->getDeepestStructNesting());
     return 1 + maxNesting;
+}
+
+TInterfaceBlock::TInterfaceBlock(const TString *name,
+                                 const TFieldList *fields,
+                                 const TString *instanceName,
+                                 const TLayoutQualifier &layoutQualifier)
+    : TFieldListCollection(fields),
+      mName(name),
+      mInstanceName(instanceName),
+      mBlockStorage(layoutQualifier.blockStorage),
+      mMatrixPacking(layoutQualifier.matrixPacking),
+      mBinding(layoutQualifier.binding)
+{
 }
 
 // TPublicType implementation.
