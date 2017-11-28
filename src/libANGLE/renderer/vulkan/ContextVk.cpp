@@ -712,6 +712,9 @@ void ContextVk::syncState(const gl::Context *context, const gl::State::DirtyBits
             case gl::State::DIRTY_BIT_TRANSFORM_FEEDBACK_BINDING:
                 WARN() << "DIRTY_BIT_TRANSFORM_FEEDBACK_BINDING unimplemented";
                 break;
+            case gl::State::DIRTY_BIT_SHADER_STORAGE_BUFFER_BINDING:
+                WARN() << "DIRTY_BIT_SHADER_STORAGE_BUFFER_BINDING unimplemented";
+                break;
             case gl::State::DIRTY_BIT_MULTISAMPLING:
                 WARN() << "DIRTY_BIT_MULTISAMPLING unimplemented";
                 break;

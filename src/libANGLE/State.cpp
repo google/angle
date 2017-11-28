@@ -1266,6 +1266,10 @@ void State::setBufferBinding(const Context *context, BufferBinding target, Buffe
             getVertexArray()->setElementArrayBuffer(context, buffer);
             mDirtyObjects.set(DIRTY_OBJECT_VERTEX_ARRAY);
             break;
+        case BufferBinding::ShaderStorage:
+            mBoundBuffers[target].set(context, buffer);
+            mDirtyBits.set(DIRTY_BIT_SHADER_STORAGE_BUFFER_BINDING);
+            break;
         default:
             mBoundBuffers[target].set(context, buffer);
             break;

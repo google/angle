@@ -411,6 +411,13 @@ Context::Context(rx::EGLImplFactory *implFactory,
     mBlitDirtyObjects.set(State::DIRTY_OBJECT_READ_FRAMEBUFFER);
     mBlitDirtyObjects.set(State::DIRTY_OBJECT_DRAW_FRAMEBUFFER);
 
+    // TODO(xinghua.cao@intel.com): add other dirty bits and dirty objects.
+    mComputeDirtyBits.set(State::DIRTY_BIT_SHADER_STORAGE_BUFFER_BINDING);
+    mComputeDirtyBits.set(State::DIRTY_BIT_PROGRAM_BINDING);
+    mComputeDirtyBits.set(State::DIRTY_BIT_PROGRAM_EXECUTABLE);
+    mComputeDirtyBits.set(State::DIRTY_BIT_TEXTURE_BINDINGS);
+    mComputeDirtyBits.set(State::DIRTY_BIT_SAMPLER_BINDINGS);
+
     handleError(mImplementation->initialize());
 }
 
@@ -4217,6 +4224,18 @@ Error Context::getZeroFilledBuffer(size_t requstedSizeBytes,
     return NoError();
 }
 
+Error Context::prepareForDispatch()
+{
+    syncRendererState(mComputeDirtyBits, mComputeDirtyObjects);
+
+    if (isRobustResourceInitEnabled())
+    {
+        ANGLE_TRY(mGLState.clearUnclearedActiveTextures(this));
+    }
+
+    return NoError();
+}
+
 void Context::dispatchCompute(GLuint numGroupsX, GLuint numGroupsY, GLuint numGroupsZ)
 {
     if (numGroupsX == 0u || numGroupsY == 0u || numGroupsZ == 0u)
@@ -4224,12 +4243,7 @@ void Context::dispatchCompute(GLuint numGroupsX, GLuint numGroupsY, GLuint numGr
         return;
     }
 
-    // TODO(jmadill): Dirty bits for compute.
-    if (isRobustResourceInitEnabled())
-    {
-        ANGLE_CONTEXT_TRY(mGLState.clearUnclearedActiveTextures(this));
-    }
-
+    ANGLE_CONTEXT_TRY(prepareForDispatch());
     handleError(mImplementation->dispatchCompute(this, numGroupsX, numGroupsY, numGroupsZ));
 }
 

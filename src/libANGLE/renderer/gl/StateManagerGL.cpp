@@ -167,7 +167,8 @@ StateManagerGL::StateManagerGL(const FunctionsGL *functions,
       mIsMultiviewEnabled(extensions.multiview),
       mLocalDirtyBits(),
       mMultiviewDirtyBits(),
-      mProgramTexturesAndSamplersDirty(true)
+      mProgramTexturesAndSamplersDirty(true),
+      mProgramStorageBuffersDirty(true)
 {
     ASSERT(mFunctions);
     ASSERT(extensions.maxViews >= 1u);
@@ -884,6 +885,12 @@ void StateManagerGL::setGenericShaderState(const gl::Context *context)
         mProgramTexturesAndSamplersDirty = false;
     }
 
+    if (mProgramStorageBuffersDirty)
+    {
+        updateProgramStorageBufferBindings(context);
+        mProgramStorageBuffersDirty = false;
+    }
+
     // TODO(xinghua.cao@intel.com): Track image units state with dirty bits to
     // avoid update every draw call.
     ASSERT(context->getClientVersion() >= gl::ES_3_1 || program->getImageBindings().size() == 0);
@@ -979,6 +986,12 @@ void StateManagerGL::updateProgramTextureAndSamplerBindings(const gl::Context *c
             }
         }
     }
+}
+
+void StateManagerGL::updateProgramStorageBufferBindings(const gl::Context *context)
+{
+    const gl::State &glState   = context->getGLState();
+    const gl::Program *program = glState.getProgram();
 
     for (size_t blockIndex = 0; blockIndex < program->getActiveShaderStorageBlockCount();
          blockIndex++)
@@ -1921,7 +1934,7 @@ void StateManagerGL::syncState(const gl::Context *context, const gl::State::Dirt
             case gl::State::DIRTY_BIT_PROGRAM_BINDING:
             {
                 mProgramTexturesAndSamplersDirty = true;
-
+                mProgramStorageBuffersDirty      = true;
                 gl::Program *program = state.getProgram();
                 if (program != nullptr)
                 {
@@ -1940,11 +1953,15 @@ void StateManagerGL::syncState(const gl::Context *context, const gl::State::Dirt
                 break;
             case gl::State::DIRTY_BIT_PROGRAM_EXECUTABLE:
                 mProgramTexturesAndSamplersDirty = true;
+                mProgramStorageBuffersDirty      = true;
                 propagateNumViewsToVAO(state.getProgram(),
                                        GetImplAs<VertexArrayGL>(state.getVertexArray()));
                 updateMultiviewBaseViewLayerIndexUniform(
                     state.getProgram(),
                     state.getDrawFramebuffer()->getImplementation()->getState());
+                break;
+            case gl::State::DIRTY_BIT_SHADER_STORAGE_BUFFER_BINDING:
+                mProgramStorageBuffersDirty = true;
                 break;
             case gl::State::DIRTY_BIT_MULTISAMPLING:
                 setMultisamplingStateEnabled(state.isMultisamplingEnabled());
