@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "0d1975dc_62453518",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1931,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-28T08:20:12Z",
+      "side": 1,
+      "message": "My mistake, I confused the initializer type with the variable type.",
+      "parentUuid": "72b462fd_fa812807",
+      "revId": "bf9e0df8aeddc867b8d2842288581774003030a7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "71c7cc4d_6b3b250b",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 4

@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cb150aa7_374281e9",
+        "filename": "src/compiler/translator/Types.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 248,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-28T08:20:12Z",
+      "side": 1,
+      "message": "I think I prefer calling this function to be an error if the type is not an array. Now it will return a zero for both not an array an unsized array, and an error could slip in where code calling this function will assume that return value 0 would equal not an array.",
+      "revId": "23a446192bd0571e5d7d15a281191941a53805f5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
