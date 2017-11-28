@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c069c27e_3d48b14f",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1396,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-11-28T08:22:34Z",
+      "side": 1,
+      "message": "If the compute program is unsuccessfully linked, the failed program would not be installed to the pipeline even you called UseProgram(). In this situation(nsuccessfully linked), if you dispatch compute, it depends on the previous state: \n1) We already have a valid program in use because of previous call to UseProgram, then It is OK. Just continue to dispatch compute and use the old binary resided in pipeline, we should not report error here. \n2) No valid program is in use. Then it has already reported INVALID_OPERATION at code snippet 1387 ~ 1392. Because no program is installed in the pipeline at all (Even you called UseProgram with the unsuccessfully linked program).",
+      "revId": "be65bd0316f846c6154df49f1fe6a7a1cfa199ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
