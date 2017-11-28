@@ -714,21 +714,11 @@ TEST_F(WEBGLMultiviewVertexShaderOutputCodeTest, GlViewportIndexIsSet)
         "}\n";
     compile(shaderString, SH_INITIALIZE_BUILTINS_FOR_INSTANCED_MULTIVIEW |
                               SH_SELECT_VIEW_IN_NV_GLSL_VERTEX_SHADER);
-    const char glViewportIndexAssignment[] = "gl_ViewportIndex = int(ViewID_OVR)";
 
-    // Check that the viewport index is selected.
-    EXPECT_TRUE(foundInAllGLSLCode(glViewportIndexAssignment));
-
-    // Setting gl_ViewportIndex must happen after ViewID_OVR's initialization.
-    const char viewIDOVRAssignment[] = "ViewID_OVR = (uint(gl_InstanceID) % 3u)";
-    size_t viewIDOVRAssignmentLoc = findInCode(SH_GLSL_COMPATIBILITY_OUTPUT, viewIDOVRAssignment);
-    size_t glViewportIndexAssignmentLoc =
-        findInCode(SH_GLSL_COMPATIBILITY_OUTPUT, glViewportIndexAssignment);
-    EXPECT_LT(viewIDOVRAssignmentLoc, glViewportIndexAssignmentLoc);
-
-    viewIDOVRAssignmentLoc       = findInCode(SH_ESSL_OUTPUT, viewIDOVRAssignment);
-    glViewportIndexAssignmentLoc = findInCode(SH_ESSL_OUTPUT, glViewportIndexAssignment);
-    EXPECT_LT(viewIDOVRAssignmentLoc, glViewportIndexAssignmentLoc);
+    std::vector<const char *> expectedStrings = {"ViewID_OVR = (uint(gl_InstanceID) % 3u)",
+                                                 "gl_ViewportIndex = int(ViewID_OVR)"};
+    EXPECT_TRUE(foundInCodeInOrder(SH_ESSL_OUTPUT, expectedStrings));
+    EXPECT_TRUE(foundInCodeInOrder(SH_GLSL_COMPATIBILITY_OUTPUT, expectedStrings));
 }
 
 // The test checks that the layer is selected after the initialization of ViewID_OVR for
@@ -744,20 +734,12 @@ TEST_F(WEBGLMultiviewVertexShaderOutputCodeTest, GlLayerIsSet)
         "}\n";
     compile(shaderString, SH_INITIALIZE_BUILTINS_FOR_INSTANCED_MULTIVIEW |
                               SH_SELECT_VIEW_IN_NV_GLSL_VERTEX_SHADER);
-    const char glLayerAssignment[] = "gl_Layer = (int(ViewID_OVR) + multiviewBaseViewLayerIndex)";
 
-    // Check that the layer is selected.
-    EXPECT_TRUE(foundInAllGLSLCode(glLayerAssignment));
-
-    // Setting gl_Layer must happen after ViewID_OVR's initialization.
-    const char viewIDOVRAssignment[] = "ViewID_OVR = (uint(gl_InstanceID) % 3u)";
-    size_t viewIDOVRAssignmentLoc = findInCode(SH_GLSL_COMPATIBILITY_OUTPUT, viewIDOVRAssignment);
-    size_t glLayerAssignmentLoc   = findInCode(SH_GLSL_COMPATIBILITY_OUTPUT, glLayerAssignment);
-    EXPECT_LT(viewIDOVRAssignmentLoc, glLayerAssignmentLoc);
-
-    viewIDOVRAssignmentLoc = findInCode(SH_ESSL_OUTPUT, viewIDOVRAssignment);
-    glLayerAssignmentLoc   = findInCode(SH_ESSL_OUTPUT, glLayerAssignment);
-    EXPECT_LT(viewIDOVRAssignmentLoc, glLayerAssignmentLoc);
+    std::vector<const char *> expectedStrings = {
+        "ViewID_OVR = (uint(gl_InstanceID) % 3u)",
+        "gl_Layer = (int(ViewID_OVR) + multiviewBaseViewLayerIndex)"};
+    EXPECT_TRUE(foundInCodeInOrder(SH_ESSL_OUTPUT, expectedStrings));
+    EXPECT_TRUE(foundInCodeInOrder(SH_GLSL_COMPATIBILITY_OUTPUT, expectedStrings));
 }
 
 }  // namespace

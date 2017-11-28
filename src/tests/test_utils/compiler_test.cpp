@@ -140,19 +140,13 @@ bool MatchOutputCodeTest::compileWithSettings(ShShaderOutput output,
 
 bool MatchOutputCodeTest::foundInCode(ShShaderOutput output, const char *stringToFind) const
 {
-    return findInCode(output, stringToFind) != std::string::npos;
-}
-
-size_t MatchOutputCodeTest::findInCode(ShShaderOutput output, const char *stringToFind) const
-{
     const auto code = mOutputCode.find(output);
     EXPECT_NE(mOutputCode.end(), code);
     if (code == mOutputCode.end())
     {
         return std::string::npos;
     }
-
-    return code->second.find(stringToFind);
+    return code->second.find(stringToFind) != std::string::npos;
 }
 
 bool MatchOutputCodeTest::foundInCodeInOrder(ShShaderOutput output,
@@ -191,6 +185,9 @@ bool MatchOutputCodeTest::foundInCode(ShShaderOutput output,
 
     size_t currentPos  = 0;
     int occurencesLeft = expectedOccurrences;
+
+    const size_t searchStringLength = strlen(stringToFind);
+
     while (occurencesLeft-- > 0)
     {
         auto position = code->second.find(stringToFind, currentPos);
@@ -198,8 +195,10 @@ bool MatchOutputCodeTest::foundInCode(ShShaderOutput output,
         {
             return false;
         }
-        currentPos = position + 1;
+        // Search strings should not overlap.
+        currentPos = position + searchStringLength;
     }
+    // Make sure that there aren't extra occurrences.
     return code->second.find(stringToFind, currentPos) == std::string::npos;
 }
 

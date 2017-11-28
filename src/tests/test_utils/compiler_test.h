@@ -65,9 +65,6 @@ class MatchOutputCodeTest : public testing::Test
     }
 
     bool foundInCode(ShShaderOutput output, const char *stringToFind) const;
-    // Returns the position of the first character of the first match in the translated output
-    // source. If no matches are found, then string::npos is returned.
-    size_t findInCode(ShShaderOutput output, const char *stringToFind) const;
 
     // Test that the strings are found in the specified output in the specified order.
     bool foundInCodeInOrder(ShShaderOutput output, std::vector<const char *> stringsToFind);
