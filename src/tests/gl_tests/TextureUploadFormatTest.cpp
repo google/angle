@@ -102,8 +102,7 @@ struct TexFormat final
 template <const uint8_t bits>
 constexpr uint32_t EncodeNormUint(const float val)
 {
-    constexpr auto max = UINT32_MAX >> (32 - bits);
-    return static_cast<uint32_t>(val * max + 0.5);  // round-half-up
+    return static_cast<uint32_t>(val * (UINT32_MAX >> (32 - bits)) + 0.5);  // round-half-up
 }
 
 template <const int signBit, const int eBits, const int mBits>
@@ -587,8 +586,10 @@ TEST_P(TextureUploadFormatTest, All)
 
     // RGBA_INTEGER+UNSIGNED_INT_2_10_10_10_REV
     {
-        constexpr uint32_t src[] = {(srcIntVals[0] << 0) | (srcIntVals[1] << 10) |
-                                    (srcIntVals[2] << 20) | (srcIntVals[3] << 30)};
+        constexpr uint32_t src[] = {static_cast<uint32_t>(srcIntVals[0] << 0) |
+                                    static_cast<uint32_t>(srcIntVals[1] << 10) |
+                                    static_cast<uint32_t>(srcIntVals[2] << 20) |
+                                    static_cast<uint32_t>(srcIntVals[3] << 30)};
         ZeroAndCopy(srcBuffer, src);
 
         fnTest({GL_RGB10_A2UI, GL_RGBA_INTEGER, GL_UNSIGNED_INT_2_10_10_10_REV}, {1, 1, 1, 1});

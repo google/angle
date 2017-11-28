@@ -1326,7 +1326,7 @@ void SetFramebufferParameteri(Framebuffer *framebuffer, GLenum pname, GLint para
             framebuffer->setDefaultSamples(param);
             break;
         case GL_FRAMEBUFFER_DEFAULT_FIXED_SAMPLE_LOCATIONS:
-            framebuffer->setDefaultFixedSampleLocations(CastQueryValueTo<GLboolean>(pname, param));
+            framebuffer->setDefaultFixedSampleLocations(ConvertToBool(param));
             break;
         default:
             UNREACHABLE();
