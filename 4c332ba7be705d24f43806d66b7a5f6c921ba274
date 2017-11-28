@@ -190,6 +190,30 @@
     },
     {
       "key": {
+        "uuid": "552c299e_ce813575",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 627,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-28T22:02:07Z",
+      "side": 1,
+      "message": "Ah, good point. Can you put it in the State constructor, next to where we initialize the mEnabledDrawBuffers and mDrawBufferStates?",
+      "parentUuid": "fb869ec6_7210401f",
+      "range": {
+        "startLine": 627,
+        "startChar": 4,
+        "endLine": 627,
+        "endChar": 25
+      },
+      "revId": "4c332ba7be705d24f43806d66b7a5f6c921ba274",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "35e3fc8c_22363955",
         "filename": "src/libANGLE/Framebuffer.cpp",
         "patchSetId": 10
@@ -225,6 +249,30 @@
       "side": 1,
       "message": "This can\u0027t be omitted. The mState() constructor enables the zero index draw buffer. L270.",
       "parentUuid": "35e3fc8c_22363955",
+      "range": {
+        "startLine": 639,
+        "startChar": 4,
+        "endLine": 639,
+        "endChar": 25
+      },
+      "revId": "4c332ba7be705d24f43806d66b7a5f6c921ba274",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3f73740c_f5bac5ac",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 639,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-28T22:02:07Z",
+      "side": 1,
+      "message": "Same comment.",
+      "parentUuid": "76186ecb_88ad253e",
       "range": {
         "startLine": 639,
         "startChar": 4,
