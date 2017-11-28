@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "3ffaae89_dfdf27c8",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1394,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-11-28T08:38:15Z",
+      "side": 1,
+      "message": "Not really. This ifs means that the program is a successfully linked RENDERING program. When you dispatch compute against a rendering program, it should generate INVALID_OPERATION. \n\nBut if you remove program-\u003eisLinked(). Then the program can be a unsuccessfully re-linked program (program is not null, so it is a unsuccessfully re-linked program).\n\nThese two are quite different.",
+      "parentUuid": "328ec7a2_2790865e",
+      "range": {
+        "startLine": 1394,
+        "startChar": 8,
+        "endLine": 1394,
+        "endChar": 31
+      },
+      "revId": "be65bd0316f846c6154df49f1fe6a7a1cfa199ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c069c27e_3d48b14f",
         "filename": "src/libANGLE/validationES31.cpp",
         "patchSetId": 3
