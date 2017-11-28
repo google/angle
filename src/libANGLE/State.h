@@ -399,6 +399,7 @@ class State : public OnAttachmentDirtyReceiver, angle::NonCopyable
         // TODO(jmadill): Fine-grained dirty bits for each texture/sampler.
         DIRTY_BIT_TEXTURE_BINDINGS,
         DIRTY_BIT_SAMPLER_BINDINGS,
+        DIRTY_BIT_TRANSFORM_FEEDBACK_BINDING,
         DIRTY_BIT_MULTISAMPLING,
         DIRTY_BIT_SAMPLE_ALPHA_TO_ONE,
         DIRTY_BIT_COVERAGE_MODULATION,         // CHROMIUM_framebuffer_mixed_samples

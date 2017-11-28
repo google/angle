@@ -1157,6 +1157,7 @@ void State::setTransformFeedbackBinding(const Context *context,
                                         TransformFeedback *transformFeedback)
 {
     mTransformFeedback.set(context, transformFeedback);
+    mDirtyBits.set(DIRTY_BIT_TRANSFORM_FEEDBACK_BINDING);
 }
 
 TransformFeedback *State::getCurrentTransformFeedback() const

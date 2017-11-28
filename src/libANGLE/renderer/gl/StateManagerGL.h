@@ -75,6 +75,7 @@ class StateManagerGL final : angle::NonCopyable
     void bindFramebuffer(GLenum type, GLuint framebuffer);
     void bindRenderbuffer(GLenum type, GLuint renderbuffer);
     void bindTransformFeedback(GLenum type, GLuint transformFeedback);
+    void onTransformFeedbackStateChange();
     void beginQuery(GLenum type, GLuint query);
     void endQuery(GLenum type, GLuint query);
     void onBeginQuery(QueryGL *query);
@@ -199,6 +200,8 @@ class StateManagerGL final : angle::NonCopyable
 
     void updateProgramTextureAndSamplerBindings(const gl::Context *context);
 
+    void syncTransformFeedbackState(const gl::Context *context);
+
     enum MultiviewDirtyBitType
     {
         MULTIVIEW_DIRTY_BIT_SIDE_BY_SIDE_LAYOUT,
@@ -246,10 +249,9 @@ class StateManagerGL final : angle::NonCopyable
     std::vector<ImageUnitBinding> mImages;
 
     GLuint mTransformFeedback;
+    TransformFeedbackGL *mCurrentTransformFeedback;
 
     std::map<GLenum, GLuint> mQueries;
-
-    TransformFeedbackGL *mPrevDrawTransformFeedback;
     std::set<QueryGL *> mCurrentQueries;
     gl::ContextID mPrevDrawContext;
 
