@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "5dd3e302_81bc88d9",
+        "filename": "doc/BuildingAngleForChromiumDevelopment.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-11-28T04:37:39Z",
+      "side": 1,
+      "message": "the one in my path was older and didn\u0027t work but I\u0027ll change this",
+      "parentUuid": "83d708a1_4fddebeb",
+      "range": {
+        "startLine": 33,
+        "startChar": 0,
+        "endLine": 33,
+        "endChar": 22
+      },
+      "revId": "1cf22cd8c736efb03eaff787db27d385e7c0485f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "c1cea1da_ac646645",
         "filename": "doc/DebuggingTips.md",
         "patchSetId": 2
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "6aaaeb83_84648b7e",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-11-28T04:37:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c1cea1da_ac646645",
+      "range": {
+        "startLine": 11,
+        "startChar": 3,
+        "endLine": 11,
+        "endChar": 10
+      },
+      "revId": "1cf22cd8c736efb03eaff787db27d385e7c0485f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e4530947_8fd29aae",
         "filename": "doc/DevSetup.md",
         "patchSetId": 2
@@ -59,6 +107,30 @@
       "writtenOn": "2017-11-17T05:16:35Z",
       "side": 1,
       "message": "Legacy instructions for the GYP build are available here.",
+      "range": {
+        "startLine": 13,
+        "startChar": 0,
+        "endLine": 13,
+        "endChar": 38
+      },
+      "revId": "1cf22cd8c736efb03eaff787db27d385e7c0485f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d0ecd596_c677b13b",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-11-28T04:37:39Z",
+      "side": 1,
+      "message": "reworded without offending phrase",
+      "parentUuid": "e4530947_8fd29aae",
       "range": {
         "startLine": 13,
         "startChar": 0,
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "045e49e6_01893f3c",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-11-28T04:37:39Z",
+      "side": 1,
+      "message": "I\u0027ll put this stuff in the windows section below.",
+      "parentUuid": "b9590061_0d9f42b7",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 69
+      },
+      "revId": "1cf22cd8c736efb03eaff787db27d385e7c0485f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6815b1d9_16a4b3d1",
         "filename": "doc/DevSetup.md",
         "patchSetId": 2
@@ -114,6 +210,30 @@
       "revId": "1cf22cd8c736efb03eaff787db27d385e7c0485f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2fa3b84f_7af53d6e",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-11-28T04:37:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6815b1d9_16a4b3d1",
+      "range": {
+        "startLine": 53,
+        "startChar": 0,
+        "endLine": 53,
+        "endChar": 21
+      },
+      "revId": "1cf22cd8c736efb03eaff787db27d385e7c0485f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -186,6 +306,78 @@
     },
     {
       "key": {
+        "uuid": "b6731e91_4346c7ee",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-11-28T04:37:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "673eabc6_50e40060",
+      "range": {
+        "startLine": 56,
+        "startChar": 41,
+        "endLine": 56,
+        "endChar": 131
+      },
+      "revId": "1cf22cd8c736efb03eaff787db27d385e7c0485f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "78acd26a_8d84d9e4",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-11-28T04:37:39Z",
+      "side": 1,
+      "message": "got it.  all will be explained in the VS section.",
+      "parentUuid": "4388d958_3c744b8e",
+      "range": {
+        "startLine": 56,
+        "startChar": 0,
+        "endLine": 56,
+        "endChar": 40
+      },
+      "revId": "1cf22cd8c736efb03eaff787db27d385e7c0485f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1213f3b3_d4fe0d5e",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-11-28T04:37:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "519a41a3_bc6f52bc",
+      "range": {
+        "startLine": 56,
+        "startChar": 170,
+        "endLine": 56,
+        "endChar": 179
+      },
+      "revId": "1cf22cd8c736efb03eaff787db27d385e7c0485f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d03eb354_354294c3",
         "filename": "doc/DevSetup.md",
         "patchSetId": 2
@@ -209,6 +401,30 @@
     },
     {
       "key": {
+        "uuid": "1cac25b3_fafd59a2",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-11-28T04:37:39Z",
+      "side": 1,
+      "message": "removed",
+      "parentUuid": "d03eb354_354294c3",
+      "range": {
+        "startLine": 59,
+        "startChar": 2,
+        "endLine": 59,
+        "endChar": 4
+      },
+      "revId": "1cf22cd8c736efb03eaff787db27d385e7c0485f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e344ea42_34757daa",
         "filename": "doc/DevSetup.md",
         "patchSetId": 2
@@ -220,6 +436,30 @@
       "writtenOn": "2017-11-17T05:16:35Z",
       "side": 1,
       "message": ", so make sure `depot_tools` is in your path.",
+      "range": {
+        "startLine": 62,
+        "startChar": 34,
+        "endLine": 62,
+        "endChar": 67
+      },
+      "revId": "1cf22cd8c736efb03eaff787db27d385e7c0485f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e67f2cfc_cd074600",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-11-28T04:37:39Z",
+      "side": 1,
+      "message": "that\u0027s a bit awkward, I\u0027ll reword",
+      "parentUuid": "e344ea42_34757daa",
       "range": {
         "startLine": 62,
         "startChar": 34,
@@ -255,6 +495,30 @@
     },
     {
       "key": {
+        "uuid": "7008ce8c_658568d3",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-11-28T04:37:39Z",
+      "side": 1,
+      "message": "I\u0027ll put this under the VS section below.",
+      "parentUuid": "d5f85375_0de2d728",
+      "range": {
+        "startLine": 64,
+        "startChar": 20,
+        "endLine": 64,
+        "endChar": 73
+      },
+      "revId": "1cf22cd8c736efb03eaff787db27d385e7c0485f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "462bcecd_52039e3a",
         "filename": "doc/DevSetup.md",
         "patchSetId": 2
@@ -266,6 +530,30 @@
       "writtenOn": "2017-11-17T05:16:35Z",
       "side": 1,
       "message": "This is deprecated since it relies on GYP.",
+      "range": {
+        "startLine": 68,
+        "startChar": 0,
+        "endLine": 68,
+        "endChar": 123
+      },
+      "revId": "1cf22cd8c736efb03eaff787db27d385e7c0485f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ce5e3dbc_a9a0884d",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-11-28T04:37:39Z",
+      "side": 1,
+      "message": "moved to \u0027deprecated gyp instructions\u0027",
+      "parentUuid": "462bcecd_52039e3a",
       "range": {
         "startLine": 68,
         "startChar": 0,
@@ -301,6 +589,30 @@
     },
     {
       "key": {
+        "uuid": "e202ef55_c41eabbc",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-11-28T04:37:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a92c9659_7d6fa583",
+      "range": {
+        "startLine": 73,
+        "startChar": 4,
+        "endLine": 73,
+        "endChar": 139
+      },
+      "revId": "1cf22cd8c736efb03eaff787db27d385e7c0485f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "aa070b09_18608622",
         "filename": "doc/DevSetup.md",
         "patchSetId": 2
@@ -324,6 +636,30 @@
     },
     {
       "key": {
+        "uuid": "6d88be61_9460ae7a",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-11-28T04:37:39Z",
+      "side": 1,
+      "message": "I\u0027ll keep it closer to the original wording, but it really wants improving.",
+      "parentUuid": "aa070b09_18608622",
+      "range": {
+        "startLine": 78,
+        "startChar": 0,
+        "endLine": 78,
+        "endChar": 158
+      },
+      "revId": "1cf22cd8c736efb03eaff787db27d385e7c0485f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "0f87075b_5b5b6630",
         "filename": "doc/gyp.md",
         "patchSetId": 2
@@ -335,6 +671,30 @@
       "writtenOn": "2017-11-17T05:16:35Z",
       "side": 1,
       "message": "we should probably move the Windows Store instructions into this file.",
+      "range": {
+        "startLine": 14,
+        "startChar": 3,
+        "endLine": 14,
+        "endChar": 9
+      },
+      "revId": "1cf22cd8c736efb03eaff787db27d385e7c0485f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "49df1716_a9b6c08d",
+        "filename": "doc/gyp.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-11-28T04:37:39Z",
+      "side": 1,
+      "message": "I\u0027ll link from here if that\u0027s ok.",
+      "parentUuid": "0f87075b_5b5b6630",
       "range": {
         "startLine": 14,
         "startChar": 3,
