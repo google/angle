@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "82758dbd_827b9b80",
+        "filename": "src/libANGLE/ProgramLinkedResources.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 262,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-28T23:35:51Z",
+      "side": 1,
+      "message": "nit: final.",
+      "range": {
+        "startLine": 262,
+        "startChar": 6,
+        "endLine": 262,
+        "endChar": 32
+      },
+      "revId": "30eb0eb0bf17a54d2685c17efe8be9c6878fbbcf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "afdbe595_fc4a0f97",
+        "filename": "src/libANGLE/ProgramLinkedResources.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 270,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-28T23:35:51Z",
+      "side": 1,
+      "message": "this is probably not the best way to organize this. You have two alternate options, either of which I think is better:\n\na) pass the size map directly to link.\nb) replace your GetBufferSize with a std::function that takes a binding index and returns the size at that index.",
+      "range": {
+        "startLine": 268,
+        "startChar": 0,
+        "endLine": 270,
+        "endChar": 58
+      },
+      "revId": "30eb0eb0bf17a54d2685c17efe8be9c6878fbbcf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
