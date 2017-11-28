@@ -312,7 +312,7 @@ void TOutputGLSLBase::writeVariableType(const TType &type)
 
         if (!structure->name().empty())
         {
-            mDeclaredStructs.insert(structure->uniqueId());
+            mDeclaredStructs.insert(structure->uniqueId().get());
         }
     }
     else if (type.getBasicType() == EbtInterfaceBlock)
@@ -1168,7 +1168,7 @@ bool TOutputGLSLBase::structDeclared(const TStructure *structure) const
         return false;
     }
 
-    return (mDeclaredStructs.count(structure->uniqueId()) > 0);
+    return (mDeclaredStructs.count(structure->uniqueId().get()) > 0);
 }
 
 void TOutputGLSLBase::declareStruct(const TStructure *structure)

@@ -59,29 +59,34 @@ class TFieldListCollection : angle::NonCopyable
     const TString &name() const { return *mName; }
     const TFieldList &fields() const { return *mFields; }
 
-    size_t objectSize() const
-    {
-        if (mObjectSize == 0)
-            mObjectSize = calculateObjectSize();
-        return mObjectSize;
-    }
+    bool containsArrays() const;
+    bool containsType(TBasicType t) const;
+    bool containsSamplers() const;
 
+    size_t objectSize() const;
     // How many locations the field list consumes as a uniform.
     int getLocationCount() const;
+    int deepestNesting() const;
+    const TString &mangledFieldList() const;
 
   protected:
     TFieldListCollection(const TString *name, TFieldList *fields)
-        : mName(name), mFields(fields), mObjectSize(0)
+        : mName(name), mFields(fields), mObjectSize(0), mDeepestNesting(0)
     {
     }
-    TString buildMangledName(const TString &mangledNamePrefix) const;
-    size_t calculateObjectSize() const;
 
     const TString *mName;
+
     TFieldList *mFields;
 
-    mutable TString mMangledName;
+  private:
+    size_t calculateObjectSize() const;
+    int calculateDeepestNesting() const;
+    TString buildMangledFieldList() const;
+
     mutable size_t mObjectSize;
+    mutable int mDeepestNesting;
+    mutable TString mMangledFieldList;
 };
 
 // May also represent interface blocks
@@ -91,36 +96,16 @@ class TStructure : public TFieldListCollection
     POOL_ALLOCATOR_NEW_DELETE();
     TStructure(TSymbolTable *symbolTable, const TString *name, TFieldList *fields);
 
-    int deepestNesting() const
-    {
-        if (mDeepestNesting == 0)
-            mDeepestNesting = calculateDeepestNesting();
-        return mDeepestNesting;
-    }
-    bool containsArrays() const;
-    bool containsType(TBasicType t) const;
-    bool containsSamplers() const;
-
     void createSamplerSymbols(const TString &namePrefix,
                               const TString &apiNamePrefix,
                               TVector<TIntermSymbol *> *outputSymbols,
                               TMap<TIntermSymbol *, TString> *outputSymbolsToAPINames,
                               TSymbolTable *symbolTable) const;
 
-    bool equals(const TStructure &other) const;
-
-    int uniqueId() const { return mUniqueId.get(); }
+    const TSymbolUniqueId &uniqueId() const { return mUniqueId; }
 
     void setAtGlobalScope(bool atGlobalScope) { mAtGlobalScope = atGlobalScope; }
-
     bool atGlobalScope() const { return mAtGlobalScope; }
-
-    const TString &mangledName() const
-    {
-        if (mMangledName.empty())
-            mMangledName = buildMangledName("struct-");
-        return mMangledName;
-    }
 
   private:
     // TODO(zmo): Find a way to get rid of the const_cast in function
@@ -133,9 +118,6 @@ class TStructure : public TFieldListCollection
         *mutableName         = name;
     }
 
-    int calculateDeepestNesting() const;
-
-    mutable int mDeepestNesting;
     const TSymbolUniqueId mUniqueId;
     bool mAtGlobalScope;
 };
@@ -161,12 +143,6 @@ class TInterfaceBlock : public TFieldListCollection
     TLayoutBlockStorage blockStorage() const { return mBlockStorage; }
     TLayoutMatrixPacking matrixPacking() const { return mMatrixPacking; }
     int blockBinding() const { return mBinding; }
-    const TString &mangledName() const
-    {
-        if (mMangledName.empty())
-            mMangledName = buildMangledName("iblock-");
-        return mMangledName;
-    }
 
   private:
     const TString *mInstanceName;  // for interface block instance names
@@ -348,24 +324,13 @@ class TType
     // For type "nesting2", this method would return 2 -- the number
     // of structures through which indirection must occur to reach the
     // deepest field (nesting2.field1.position).
-    int getDeepestStructNesting() const { return mStructure ? mStructure->deepestNesting() : 0; }
+    int getDeepestStructNesting() const;
 
-    bool isNamelessStruct() const { return mStructure && mStructure->name() == ""; }
+    bool isNamelessStruct() const;
 
-    bool isStructureContainingArrays() const
-    {
-        return mStructure ? mStructure->containsArrays() : false;
-    }
-
-    bool isStructureContainingType(TBasicType t) const
-    {
-        return mStructure ? mStructure->containsType(t) : false;
-    }
-
-    bool isStructureContainingSamplers() const
-    {
-        return mStructure ? mStructure->containsSamplers() : false;
-    }
+    bool isStructureContainingArrays() const;
+    bool isStructureContainingType(TBasicType t) const;
+    bool isStructureContainingSamplers() const;
 
     bool isStructSpecifier() const { return mIsStructSpecifier; }
 

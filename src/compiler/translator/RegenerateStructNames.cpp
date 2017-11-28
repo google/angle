@@ -25,7 +25,7 @@ void RegenerateStructNames::visitSymbol(TIntermSymbol *symbol)
         return;
     }
 
-    int uniqueId = userType->uniqueId();
+    int uniqueId = userType->uniqueId().get();
 
     ASSERT(mScopeDepth > 0);
     if (mScopeDepth == 1)

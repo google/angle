@@ -859,7 +859,7 @@ TString StructNameString(const TStructure &structure)
         return Decorate(structure.name());
     }
 
-    return "ss" + str(structure.uniqueId()) + "_" + structure.name();
+    return "ss" + str(structure.uniqueId().get()) + "_" + structure.name();
 }
 
 TString QualifiedStructNameString(const TStructure &structure,

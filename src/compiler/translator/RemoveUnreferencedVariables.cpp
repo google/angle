@@ -72,10 +72,10 @@ void CollectVariableRefCountsTraverser::incrementStructTypeRefCount(const TType 
     const auto *structure = type.getStruct();
     if (structure != nullptr)
     {
-        auto structIter = mStructIdRefCounts.find(structure->uniqueId());
+        auto structIter = mStructIdRefCounts.find(structure->uniqueId().get());
         if (structIter == mStructIdRefCounts.end())
         {
-            mStructIdRefCounts[structure->uniqueId()] = 1u;
+            mStructIdRefCounts[structure->uniqueId().get()] = 1u;
 
             for (const auto &field : structure->fields())
             {
@@ -158,8 +158,8 @@ void RemoveUnreferencedVariablesTraverser::decrementStructTypeRefCount(const TTy
     auto *structure = type.getStruct();
     if (structure != nullptr)
     {
-        ASSERT(mStructIdRefCounts->find(structure->uniqueId()) != mStructIdRefCounts->end());
-        unsigned int structRefCount = --(*mStructIdRefCounts)[structure->uniqueId()];
+        ASSERT(mStructIdRefCounts->find(structure->uniqueId().get()) != mStructIdRefCounts->end());
+        unsigned int structRefCount = --(*mStructIdRefCounts)[structure->uniqueId().get()];
 
         if (structRefCount == 0)
         {
@@ -176,7 +176,7 @@ void RemoveUnreferencedVariablesTraverser::removeVariableDeclaration(TIntermDecl
 {
     if (declarator->getType().isStructSpecifier() && !declarator->getType().isNamelessStruct())
     {
-        unsigned int structId = declarator->getType().getStruct()->uniqueId();
+        unsigned int structId = declarator->getType().getStruct()->uniqueId().get();
         if ((*mStructIdRefCounts)[structId] > 1u)
         {
             // If this declaration declares a named struct type that is used elsewhere, we need to
