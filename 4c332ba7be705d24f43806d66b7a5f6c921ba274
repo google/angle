@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "e7962901_f555fe19",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1221469
+      },
+      "writtenOn": "2017-11-28T21:53:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d9e30f07_90a1070d",
+      "range": {
+        "startLine": 108,
+        "startChar": 13,
+        "endLine": 108,
+        "endChar": 22
+      },
+      "revId": "4c332ba7be705d24f43806d66b7a5f6c921ba274",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0c2b0994_f2c27373",
         "filename": "src/libANGLE/Framebuffer.cpp",
         "patchSetId": 10
@@ -45,6 +69,30 @@
       "revId": "4c332ba7be705d24f43806d66b7a5f6c921ba274",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8b19c22d_f0bc54bb",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 264,
+      "author": {
+        "id": 1221469
+      },
+      "writtenOn": "2017-11-28T21:53:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0c2b0994_f2c27373",
+      "range": {
+        "startLine": 264,
+        "startChar": 6,
+        "endLine": 264,
+        "endChar": 25
+      },
+      "revId": "4c332ba7be705d24f43806d66b7a5f6c921ba274",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "258d0021_c9db4cf8",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 280,
+      "author": {
+        "id": 1221469
+      },
+      "writtenOn": "2017-11-28T21:53:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9515c88a_f70c6841",
+      "range": {
+        "startLine": 280,
+        "startChar": 6,
+        "endLine": 280,
+        "endChar": 25
+      },
+      "revId": "4c332ba7be705d24f43806d66b7a5f6c921ba274",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d3866126_314aa166",
         "filename": "src/libANGLE/Framebuffer.cpp",
         "patchSetId": 10
@@ -82,6 +154,30 @@
       "writtenOn": "2017-11-28T17:53:53Z",
       "side": 1,
       "message": "nit: you can omit this",
+      "range": {
+        "startLine": 627,
+        "startChar": 4,
+        "endLine": 627,
+        "endChar": 25
+      },
+      "revId": "4c332ba7be705d24f43806d66b7a5f6c921ba274",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fb869ec6_7210401f",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 627,
+      "author": {
+        "id": 1221469
+      },
+      "writtenOn": "2017-11-28T21:53:03Z",
+      "side": 1,
+      "message": "This can\u0027t be omitted. The mState() constructor enables the zero index draw buffer. L270.",
+      "parentUuid": "d3866126_314aa166",
       "range": {
         "startLine": 627,
         "startChar": 4,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "76186ecb_88ad253e",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 639,
+      "author": {
+        "id": 1221469
+      },
+      "writtenOn": "2017-11-28T21:53:03Z",
+      "side": 1,
+      "message": "This can\u0027t be omitted. The mState() constructor enables the zero index draw buffer. L270.",
+      "parentUuid": "35e3fc8c_22363955",
+      "range": {
+        "startLine": 639,
+        "startChar": 4,
+        "endLine": 639,
+        "endChar": 25
+      },
+      "revId": "4c332ba7be705d24f43806d66b7a5f6c921ba274",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8c249ac7_e765cbfe",
         "filename": "src/libANGLE/Framebuffer.cpp",
         "patchSetId": 10
@@ -137,6 +257,30 @@
       "revId": "4c332ba7be705d24f43806d66b7a5f6c921ba274",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7d45863c_56528c6b",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 844,
+      "author": {
+        "id": 1221469
+      },
+      "writtenOn": "2017-11-28T21:53:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8c249ac7_e765cbfe",
+      "range": {
+        "startLine": 844,
+        "startChar": 18,
+        "endLine": 844,
+        "endChar": 39
+      },
+      "revId": "4c332ba7be705d24f43806d66b7a5f6c921ba274",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -163,6 +307,30 @@
     },
     {
       "key": {
+        "uuid": "e856194c_c4c1326d",
+        "filename": "src/libANGLE/Framebuffer.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 389,
+      "author": {
+        "id": 1221469
+      },
+      "writtenOn": "2017-11-28T21:53:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1f324e5d_18018065",
+      "range": {
+        "startLine": 389,
+        "startChar": 9,
+        "endLine": 389,
+        "endChar": 30
+      },
+      "revId": "4c332ba7be705d24f43806d66b7a5f6c921ba274",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0b44d967_06a28b08",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 10
@@ -183,6 +351,30 @@
       "revId": "4c332ba7be705d24f43806d66b7a5f6c921ba274",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7cd836c7_d2a8496d",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2801,
+      "author": {
+        "id": 1221469
+      },
+      "writtenOn": "2017-11-28T21:53:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0b44d967_06a28b08",
+      "range": {
+        "startLine": 2795,
+        "startChar": 0,
+        "endLine": 2801,
+        "endChar": 0
+      },
+      "revId": "4c332ba7be705d24f43806d66b7a5f6c921ba274",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -209,6 +401,30 @@
     },
     {
       "key": {
+        "uuid": "c5122137_e7beb079",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 409,
+      "author": {
+        "id": 1221469
+      },
+      "writtenOn": "2017-11-28T21:53:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "045c1bb5_b35edf50",
+      "range": {
+        "startLine": 409,
+        "startChar": 30,
+        "endLine": 409,
+        "endChar": 51
+      },
+      "revId": "4c332ba7be705d24f43806d66b7a5f6c921ba274",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d3ad0214_fa570f9a",
         "filename": "src/libANGLE/angletypes.h",
         "patchSetId": 10
@@ -220,6 +436,30 @@
       "writtenOn": "2017-11-28T17:53:53Z",
       "side": 1,
       "message": "it makes me nervous to have INT and NONE have the same values. I\u0027m not sure if the algorithm is correct in that case. I would suggest using 0/1/2/3 for none/int/uint/float.",
+      "range": {
+        "startLine": 414,
+        "startChar": 19,
+        "endLine": 414,
+        "endChar": 24
+      },
+      "revId": "4c332ba7be705d24f43806d66b7a5f6c921ba274",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0f1ec9c3_d048dec2",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 414,
+      "author": {
+        "id": 1221469
+      },
+      "writtenOn": "2017-11-28T21:53:03Z",
+      "side": 1,
+      "message": "Thanks. This was a typo.",
+      "parentUuid": "d3ad0214_fa570f9a",
       "range": {
         "startLine": 414,
         "startChar": 19,
@@ -255,6 +495,30 @@
     },
     {
       "key": {
+        "uuid": "42a78df7_5fd81997",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 396,
+      "author": {
+        "id": 1221469
+      },
+      "writtenOn": "2017-11-28T21:53:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "64849429_0bbb4636",
+      "range": {
+        "startLine": 396,
+        "startChar": 5,
+        "endLine": 396,
+        "endChar": 41
+      },
+      "revId": "4c332ba7be705d24f43806d66b7a5f6c921ba274",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d1917be1_7543ca19",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 10
@@ -275,6 +539,30 @@
       "revId": "4c332ba7be705d24f43806d66b7a5f6c921ba274",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2856f7be_860fdcc5",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 402,
+      "author": {
+        "id": 1221469
+      },
+      "writtenOn": "2017-11-28T21:53:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d1917be1_7543ca19",
+      "range": {
+        "startLine": 402,
+        "startChar": 66,
+        "endLine": 402,
+        "endChar": 75
+      },
+      "revId": "4c332ba7be705d24f43806d66b7a5f6c921ba274",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
