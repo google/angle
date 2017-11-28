@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "8d0507ab_e20bd961",
+        "filename": "src/libANGLE/Caps.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1076,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-11-28T06:05:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b55a4199_6ecf6a8b",
+      "revId": "de6bfefa050fdfbda2311032f1b3000ca94644dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "12f826e4_b27fc8b0",
         "filename": "src/libANGLE/Caps.h",
         "patchSetId": 8
@@ -48,6 +66,24 @@
       "writtenOn": "2017-11-27T18:01:48Z",
       "side": 1,
       "message": "Note: parameters that are references should always be const. Instead non-const pointers should be used.\n\nThis comment doesn\u0027t need to be addressed because of another comment in Caps.cpp",
+      "revId": "de6bfefa050fdfbda2311032f1b3000ca94644dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6dd72f07_0a50d572",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 582,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-11-28T06:05:47Z",
+      "side": 1,
+      "message": "OK. I will keep it in mind.",
+      "parentUuid": "12f826e4_b27fc8b0",
       "revId": "de6bfefa050fdfbda2311032f1b3000ca94644dc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -71,6 +107,24 @@
     },
     {
       "key": {
+        "uuid": "c6b41102_3dc73b78",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1058,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-11-28T06:05:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4531b2c6_1fd5e626",
+      "revId": "de6bfefa050fdfbda2311032f1b3000ca94644dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0a2757cd_f6edea6b",
         "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
         "patchSetId": 8
@@ -82,6 +136,30 @@
       "writtenOn": "2017-11-27T19:13:17Z",
       "side": 1,
       "message": "This logic is a bit too indirect (provokingVertex is not an ES function but layerProvokingVertex  is only GL_PROVOKING_VERTEX on desktop GL).  Instead, I would make a call to functions-\u003eprovokingVertex(extensions.layerProvokingVertex) in the constructor of StateManagerGL, there is already some similar logic there.",
+      "range": {
+        "startLine": 1059,
+        "startChar": 8,
+        "endLine": 1063,
+        "endChar": 9
+      },
+      "revId": "de6bfefa050fdfbda2311032f1b3000ca94644dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7be0d288_8540a5d3",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1063,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-11-28T06:05:47Z",
+      "side": 1,
+      "message": "I think we don\u0027t need to call provokingVertex again because the default value of ProvokingVertex is GL_LAST_VERTEX_CONVENTION_EXT.\nI have removed the call here.",
+      "parentUuid": "0a2757cd_f6edea6b",
       "range": {
         "startLine": 1059,
         "startChar": 8,
