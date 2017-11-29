@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2dfd91c0_d76baea9",
+        "filename": "src/tests/gl_tests/TextureUploadFormatTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-11-29T11:09:44Z",
+      "side": 0,
+      "message": "Define a variable like this is not allowed in c++14.",
+      "revId": "0b684ce3c9f59fe9ba2e7adb19086e72f73e8605",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d7bc57db_0e427bf9",
+        "filename": "src/tests/gl_tests/TextureUploadFormatTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 591,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-11-29T11:09:44Z",
+      "side": 0,
+      "message": "The original value for srcIntVals[3] is an unsigned integer 3u. so srcIntVals[3] \u003c\u003c 30 would become a temporary signed integer and it is a negative value(you can calculate), so convert it to a unsigned integer is not allowed for constexpr without explicit type cast. So I change the value from 3u to 1u.",
+      "range": {
+        "startLine": 591,
+        "startChar": 52,
+        "endLine": 591,
+        "endChar": 53
+      },
+      "revId": "0b684ce3c9f59fe9ba2e7adb19086e72f73e8605",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
