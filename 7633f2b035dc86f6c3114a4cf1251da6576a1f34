@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "87cb4920_81ab7957",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 627,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-29T21:03:05Z",
+      "side": 1,
+      "message": "nit: all gl:: prefixes are unnecessary in this file.",
+      "range": {
+        "startLine": 627,
+        "startChar": 34,
+        "endLine": 627,
+        "endChar": 38
+      },
+      "revId": "7633f2b035dc86f6c3114a4cf1251da6576a1f34",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3dc64837_ac214ec9",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 1712,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-29T21:03:05Z",
+      "side": 1,
+      "message": "nit: put this value in a helper function beside GetDrawBufferTypeMask",
+      "range": {
+        "startLine": 1712,
+        "startChar": 42,
+        "endLine": 1712,
+        "endChar": 65
+      },
+      "revId": "7633f2b035dc86f6c3114a4cf1251da6576a1f34",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "92770b3e_decf3fb3",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 2837,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-29T21:03:05Z",
+      "side": 1,
+      "message": "nit: also unnecessary",
+      "range": {
+        "startLine": 2837,
+        "startChar": 16,
+        "endLine": 2837,
+        "endChar": 20
+      },
+      "revId": "7633f2b035dc86f6c3114a4cf1251da6576a1f34",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a11419db_6c3c400d",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 299,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-29T21:03:05Z",
+      "side": 1,
+      "message": "nit: the constant definition can live here, just above this declaration.",
+      "range": {
+        "startLine": 299,
+        "startChar": 41,
+        "endLine": 299,
+        "endChar": 81
+      },
+      "revId": "7633f2b035dc86f6c3114a4cf1251da6576a1f34",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
