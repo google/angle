@@ -734,4 +734,15 @@ gl::Error RendererGL::dispatchCompute(const gl::Context *context,
     return gl::NoError();
 }
 
+gl::Error RendererGL::memoryBarrier(GLbitfield barriers)
+{
+    mFunctions->memoryBarrier(barriers);
+    return gl::NoError();
+}
+gl::Error RendererGL::memoryBarrierByRegion(GLbitfield barriers)
+{
+    mFunctions->memoryBarrierByRegion(barriers);
+    return gl::NoError();
+}
+
 }  // namespace rx

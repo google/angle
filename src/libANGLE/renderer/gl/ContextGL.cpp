@@ -420,4 +420,13 @@ gl::Error ContextGL::dispatchCompute(const gl::Context *context,
     return mRenderer->dispatchCompute(context, numGroupsX, numGroupsY, numGroupsZ);
 }
 
+gl::Error ContextGL::memoryBarrier(const gl::Context *context, GLbitfield barriers)
+{
+    return mRenderer->memoryBarrier(barriers);
+}
+gl::Error ContextGL::memoryBarrierByRegion(const gl::Context *context, GLbitfield barriers)
+{
+    return mRenderer->memoryBarrierByRegion(barriers);
+}
+
 }  // namespace rx

@@ -402,4 +402,16 @@ gl::Error Context11::prepareForDrawCall(const gl::Context *context, GLenum drawM
     return gl::NoError();
 }
 
+gl::Error Context11::memoryBarrier(const gl::Context *context, GLbitfield barriers)
+{
+    UNIMPLEMENTED();
+    return gl::NoError();
+}
+
+gl::Error Context11::memoryBarrierByRegion(const gl::Context *context, GLbitfield barriers)
+{
+    UNIMPLEMENTED();
+    return gl::NoError();
+}
+
 }  // namespace rx

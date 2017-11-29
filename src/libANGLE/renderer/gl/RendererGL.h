@@ -177,6 +177,8 @@ class RendererGL : angle::NonCopyable
                               GLuint numGroupsX,
                               GLuint numGroupsY,
                               GLuint numGroupsZ);
+    gl::Error memoryBarrier(GLbitfield barriers);
+    gl::Error memoryBarrierByRegion(GLbitfield barriers);
 
   private:
     void ensureCapsInitialized() const;

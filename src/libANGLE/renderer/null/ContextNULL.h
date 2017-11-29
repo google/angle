@@ -198,6 +198,8 @@ class ContextNULL : public ContextImpl
                               GLuint numGroupsX,
                               GLuint numGroupsY,
                               GLuint numGroupsZ) override;
+    gl::Error memoryBarrier(const gl::Context *context, GLbitfield barriers) override;
+    gl::Error memoryBarrierByRegion(const gl::Context *context, GLbitfield barriers) override;
 
   private:
     gl::Caps mCaps;

@@ -161,6 +161,8 @@ class ContextImpl : public GLImplFactory
                                       GLuint numGroupsX,
                                       GLuint numGroupsY,
                                       GLuint numGroupsZ) = 0;
+    virtual gl::Error memoryBarrier(const gl::Context *context, GLbitfield barriers)         = 0;
+    virtual gl::Error memoryBarrierByRegion(const gl::Context *context, GLbitfield barriers) = 0;
 
     const gl::ContextState &getContextState() { return mState; }
     int getClientMajorVersion() const { return mState.getClientMajorVersion(); }

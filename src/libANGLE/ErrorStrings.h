@@ -76,6 +76,7 @@ ERRMSG(InvalidImageUnit,
        "Image unit cannot be greater than or equal to the value of MAX_IMAGE_UNITS.");
 ERRMSG(InvalidInternalFormat, "Invalid internal format.");
 ERRMSG(InvalidMatrixMode, "Invalid matrix mode.");
+ERRMSG(InvalidMemoryBarrierBit, "Invalid memory barrier bit.");
 ERRMSG(InvalidMipLevel, "Level of detail outside of range.");
 ERRMSG(InvalidName, "Invalid name.");
 ERRMSG(InvalidNameCharacters, "Name contains invalid characters.");

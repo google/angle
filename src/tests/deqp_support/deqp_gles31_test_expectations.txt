@@ -1100,6 +1100,7 @@
 1951 D3D11 : dEQP-GLES31.functional.shaders.linkage.shader_storage_block.mismatch_member_array_size = FAIL
 1951 D3D11 : dEQP-GLES31.functional.shaders.linkage.shader_storage_block.mismatch_with_and_without_instance_name = FAIL
 1951 D3D11 : dEQP-GLES31.functional.shaders.linkage.shader_storage_block.mismatch_block_array_size = FAIL
+1442 D3D11 : dEQP-GLES31.functional.synchronization.* = FAIL
 1951 D3D11 : dEQP-GLES31.functional.ssbo.* = FAIL
 1442 D3D11 : dEQP-GLES31.functional.shaders.builtin_var.compute.num_work_groups = FAIL
 1442 D3D11 : dEQP-GLES31.functional.shaders.builtin_var.compute.work_group_size = FAIL
@@ -1126,10 +1127,6 @@
 1442 OPENGL : dEQP-GLES31.functional.program_interface_query.uniform_block.referenced_by.* = FAIL
 1442 OPENGL : dEQP-GLES31.functional.compute.basic.copy_image_to_ssbo_large = FAIL
 1442 OPENGL : dEQP-GLES31.functional.compute.basic.copy_ssbo_to_image_large = FAIL
-2280 OPENGL : dEQP-GLES31.functional.compute.basic.ssbo_cmd_barrier_single = FAIL
-2280 OPENGL : dEQP-GLES31.functional.compute.basic.ssbo_cmd_barrier_multiple = FAIL
-2280 OPENGL : dEQP-GLES31.functional.compute.basic.image_barrier_single = FAIL
-2280 OPENGL : dEQP-GLES31.functional.compute.basic.image_barrier_multiple = FAIL
 2270 OPENGL : dEQP-GLES31.functional.compute.indirect_dispatch.* = FAIL
 2272 WIN NVIDIA OPENGL : dEQP-GLES31.functional.ssbo.layout.2_level_unsized* = FAIL
 2272 WIN NVIDIA OPENGL : dEQP-GLES31.functional.ssbo.layout.3_level_unsized* = FAIL
@@ -1210,7 +1207,7 @@
 1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.internal_format.renderbuffer.rgba32ui_samples = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.program.program_separable_get_programiv = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.program_pipeline.* = FAIL
-1442 OPENGL D3D11 : dEQP-GLES31.functional.synchronization.* = FAIL
+1442 OPENGL D3D11 : dEQP-GLES31.functional.synchronization.inter_call.without_memory_barrier.atomic_counter_dispatch_100_calls_1k_invocations = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.separate_shader.* = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.debug.error_filters.case_11 = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.debug.error_groups.case_11 = FAIL

@@ -142,6 +142,9 @@ class Context11 : public ContextImpl
                               GLuint numGroupsY,
                               GLuint numGroupsZ) override;
 
+    gl::Error memoryBarrier(const gl::Context *context, GLbitfield barriers) override;
+    gl::Error memoryBarrierByRegion(const gl::Context *context, GLbitfield barriers) override;
+
     gl::Error triggerDrawCallProgramRecompilation(const gl::Context *context, GLenum drawMode);
 
   private:

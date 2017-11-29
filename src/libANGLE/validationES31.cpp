@@ -1754,14 +1754,56 @@ bool ValidateGetProgramPipelineInfoLog(Context *context,
 
 bool ValidateMemoryBarrier(Context *context, GLbitfield barriers)
 {
-    UNIMPLEMENTED();
-    return false;
+    if (context->getClientVersion() < ES_3_1)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES31Required);
+        return false;
+    }
+
+    if (barriers == GL_ALL_BARRIER_BITS)
+    {
+        return true;
+    }
+
+    GLbitfield supported_barrier_bits =
+        GL_VERTEX_ATTRIB_ARRAY_BARRIER_BIT | GL_ELEMENT_ARRAY_BARRIER_BIT | GL_UNIFORM_BARRIER_BIT |
+        GL_TEXTURE_FETCH_BARRIER_BIT | GL_SHADER_IMAGE_ACCESS_BARRIER_BIT | GL_COMMAND_BARRIER_BIT |
+        GL_PIXEL_BUFFER_BARRIER_BIT | GL_TEXTURE_UPDATE_BARRIER_BIT | GL_BUFFER_UPDATE_BARRIER_BIT |
+        GL_FRAMEBUFFER_BARRIER_BIT | GL_TRANSFORM_FEEDBACK_BARRIER_BIT |
+        GL_ATOMIC_COUNTER_BARRIER_BIT | GL_SHADER_STORAGE_BARRIER_BIT;
+    if ((barriers & ~supported_barrier_bits) != 0)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidValue(), InvalidMemoryBarrierBit);
+        return false;
+    }
+
+    return true;
 }
 
 bool ValidateMemoryBarrierByRegion(Context *context, GLbitfield barriers)
 {
-    UNIMPLEMENTED();
-    return false;
+    if (context->getClientVersion() < ES_3_1)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES31Required);
+        return false;
+    }
+
+    if (barriers == GL_ALL_BARRIER_BITS)
+    {
+        return true;
+    }
+
+    GLbitfield supported_barrier_bits = GL_ATOMIC_COUNTER_BARRIER_BIT | GL_FRAMEBUFFER_BARRIER_BIT |
+                                        GL_SHADER_IMAGE_ACCESS_BARRIER_BIT |
+                                        GL_SHADER_STORAGE_BARRIER_BIT |
+                                        GL_TEXTURE_FETCH_BARRIER_BIT | GL_UNIFORM_BARRIER_BIT;
+    if ((barriers & ~supported_barrier_bits) != 0)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidValue(), InvalidMemoryBarrierBit);
+        return false;
+    }
+
+    return true;
 }
 
 bool ValidateSampleMaski(Context *context, GLuint maskNumber, GLbitfield mask)

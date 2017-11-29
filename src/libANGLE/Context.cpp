@@ -4277,12 +4277,12 @@ void Context::texStorage3D(GLenum target,
 
 void Context::memoryBarrier(GLbitfield barriers)
 {
-    UNIMPLEMENTED();
+    handleError(mImplementation->memoryBarrier(this, barriers));
 }
 
 void Context::memoryBarrierByRegion(GLbitfield barriers)
 {
-    UNIMPLEMENTED();
+    handleError(mImplementation->memoryBarrierByRegion(this, barriers));
 }
 
 GLenum Context::checkFramebufferStatus(GLenum target)

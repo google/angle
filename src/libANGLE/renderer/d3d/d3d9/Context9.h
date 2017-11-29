@@ -139,6 +139,8 @@ class Context9 : public ContextImpl
                               GLuint numGroupsX,
                               GLuint numGroupsY,
                               GLuint numGroupsZ) override;
+    gl::Error memoryBarrier(const gl::Context *context, GLbitfield barriers) override;
+    gl::Error memoryBarrierByRegion(const gl::Context *context, GLbitfield barriers) override;
 
     Renderer9 *getRenderer() const { return mRenderer; }
 

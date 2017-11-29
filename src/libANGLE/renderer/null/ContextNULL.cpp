@@ -415,4 +415,14 @@ gl::Error ContextNULL::dispatchCompute(const gl::Context *context,
     return gl::NoError();
 }
 
+gl::Error ContextNULL::memoryBarrier(const gl::Context *context, GLbitfield barriers)
+{
+    return gl::NoError();
+}
+
+gl::Error ContextNULL::memoryBarrierByRegion(const gl::Context *context, GLbitfield barriers)
+{
+    return gl::NoError();
+}
+
 }  // namespace rx

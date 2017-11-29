@@ -884,6 +884,18 @@ gl::Error ContextVk::dispatchCompute(const gl::Context *context,
     return gl::InternalError();
 }
 
+gl::Error ContextVk::memoryBarrier(const gl::Context *context, GLbitfield barriers)
+{
+    UNIMPLEMENTED();
+    return gl::InternalError();
+}
+
+gl::Error ContextVk::memoryBarrierByRegion(const gl::Context *context, GLbitfield barriers)
+{
+    UNIMPLEMENTED();
+    return gl::InternalError();
+}
+
 vk::DescriptorPool *ContextVk::getDescriptorPool()
 {
     return &mDescriptorPool;
