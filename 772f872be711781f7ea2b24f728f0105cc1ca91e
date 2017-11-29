@@ -111,6 +111,24 @@
     },
     {
       "key": {
+        "uuid": "87b324df_28c18f04",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 402,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-29T18:52:19Z",
+      "side": 1,
+      "message": "Your assert should be that the size of the mask is 8, rather than an inequality, since we use the hard-coded value 8 below. Agree the static assert should be here. You can always choose to serialize/deserialize unsigned long, since that is what the bitset expects.",
+      "parentUuid": "4163b8ab_a5733ba8",
+      "revId": "772f872be711781f7ea2b24f728f0105cc1ca91e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "2af842c1_a96306b0",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 12
