@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "0c15d8b1_2cfa86a4",
+        "filename": "src/libANGLE/ProgramLinkedResources.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1053,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-11-29T13:24:33Z",
+      "side": 1,
+      "message": "This checking is to avoid to call getBuffersSize for Mac which doesn\u0027t support ES31. Anyway, I have removed it and added the check in backend implementation.",
+      "parentUuid": "a3998d9d_b2e43cfe",
+      "revId": "f7cfc946989f97d2b9683b0f7ce7a9e630f90bd4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e6824cff_75de73cc",
         "filename": "src/libANGLE/renderer/gl/ProgramGL.cpp",
         "patchSetId": 5
@@ -30,6 +48,24 @@
       "writtenOn": "2017-11-27T17:33:20Z",
       "side": 1,
       "message": "Would the association between binding and index be needed in other places, in which case would it make sense to cache it in ProgramGL?",
+      "revId": "f7cfc946989f97d2b9683b0f7ce7a9e630f90bd4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2716bffd_cdc60d7c",
+        "filename": "src/libANGLE/renderer/gl/ProgramGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 638,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-11-29T13:24:33Z",
+      "side": 1,
+      "message": "Only atomic counter buffer needs this map between binding and buffer size since atomic counter buffer doesn\u0027t have an associated name string. So we can\u0027t get the real index through name. All we can do is to get the size if the binding point matches.",
+      "parentUuid": "e6824cff_75de73cc",
       "revId": "f7cfc946989f97d2b9683b0f7ce7a9e630f90bd4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "92452d44_5281132a",
+        "filename": "src/libANGLE/renderer/gl/ProgramGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 657,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-11-29T13:24:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "145b7623_20162593",
+      "revId": "f7cfc946989f97d2b9683b0f7ce7a9e630f90bd4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b98c72b5_6e46ded3",
         "filename": "src/libANGLE/renderer/gl/ProgramGL.cpp",
         "patchSetId": 5
@@ -70,6 +124,24 @@
     },
     {
       "key": {
+        "uuid": "e2dbf56d_aa2a6329",
+        "filename": "src/libANGLE/renderer/gl/ProgramGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 915,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-11-29T13:24:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b98c72b5_6e46ded3",
+      "revId": "f7cfc946989f97d2b9683b0f7ce7a9e630f90bd4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cd61ba46_b94d881e",
         "filename": "src/libANGLE/renderer/gl/ProgramGL.h",
         "patchSetId": 5
@@ -81,6 +153,30 @@
       "writtenOn": "2017-11-27T19:20:31Z",
       "side": 1,
       "message": "I think this function should follow the same convention as the others and be of the form:\n\n  bool getAtomicCounterBuffersSize(GLuint resourceIndex (or resourceName), size_t* sizeOut) const;\n\nAnd gl::Program can build the map internally before passing it to the linker.",
+      "range": {
+        "startLine": 105,
+        "startChar": 37,
+        "endLine": 105,
+        "endChar": 76
+      },
+      "revId": "f7cfc946989f97d2b9683b0f7ce7a9e630f90bd4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "20af9bd0_46c61b4a",
+        "filename": "src/libANGLE/renderer/gl/ProgramGL.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-11-29T13:24:33Z",
+      "side": 1,
+      "message": "Atomic counter buffers do not have an associated name string. So we can\u0027t use name to get the index as the others. Here I have to get all active resources of ATOMIC_COUNTER_BUFFER and then check the corresponding binding and buffer data size for each resource. In AtomicCounterBufferLinker::link, assign the right data size based on the atomicCounterBuffer\u0027s binding.",
+      "parentUuid": "cd61ba46_b94d881e",
       "range": {
         "startLine": 105,
         "startChar": 37,
