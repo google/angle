@@ -214,6 +214,30 @@
     },
     {
       "key": {
+        "uuid": "373c512a_b43f6b61",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 627,
+      "author": {
+        "id": 1221469
+      },
+      "writtenOn": "2017-11-29T00:49:25Z",
+      "side": 1,
+      "message": "I don\u0027t think we can, at least without changing the mState constructor. We need to know the draw buffer type, and that isn\u0027t stored into mState until L604 after mState has been initialized. \n\nAlternatively, I also couldn\u0027t find any specification that the default framebuffer must be a certain type. I may be wrong though.",
+      "parentUuid": "552c299e_ce813575",
+      "range": {
+        "startLine": 627,
+        "startChar": 4,
+        "endLine": 627,
+        "endChar": 25
+      },
+      "revId": "4c332ba7be705d24f43806d66b7a5f6c921ba274",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "35e3fc8c_22363955",
         "filename": "src/libANGLE/Framebuffer.cpp",
         "patchSetId": 10
