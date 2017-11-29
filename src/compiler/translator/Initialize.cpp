@@ -741,7 +741,7 @@ void InsertBuiltInFunctions(sh::GLenum type,
     //
     // Depth range in window coordinates
     //
-    TFieldList *fields       = NewPoolTFieldList();
+    TFieldList *fields       = new TFieldList();
     TSourceLoc zeroSourceLoc = {0, 0, 0, 0};
     auto highpFloat1         = new TType(EbtFloat, EbpHigh, EvqGlobal, 1);
     TField *near             = new TField(highpFloat1, NewPoolTString("near"), zeroSourceLoc);
@@ -1014,7 +1014,7 @@ void IdentifyBuiltIns(sh::GLenum type,
             const TString *glPerVertexString = NewPoolTString("gl_PerVertex");
             symbolTable.insertInterfaceBlockNameExt(ESSL3_1_BUILTINS, extension, glPerVertexString);
 
-            TFieldList *fieldList    = NewPoolTFieldList();
+            TFieldList *fieldList    = new TFieldList();
             TSourceLoc zeroSourceLoc = {0, 0, 0, 0};
             TField *glPositionField  = new TField(new TType(EbtFloat, EbpHigh, EvqPosition, 4),
                                                  NewPoolTString("gl_Position"), zeroSourceLoc);

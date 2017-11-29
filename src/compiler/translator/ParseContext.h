@@ -6,12 +6,13 @@
 #ifndef COMPILER_TRANSLATOR_PARSECONTEXT_H_
 #define COMPILER_TRANSLATOR_PARSECONTEXT_H_
 
+#include "compiler/preprocessor/Preprocessor.h"
 #include "compiler/translator/Compiler.h"
+#include "compiler/translator/Declarator.h"
 #include "compiler/translator/Diagnostics.h"
 #include "compiler/translator/DirectiveHandler.h"
-#include "compiler/translator/SymbolTable.h"
 #include "compiler/translator/QualifierTypes.h"
-#include "compiler/preprocessor/Preprocessor.h"
+#include "compiler/translator/SymbolTable.h"
 
 namespace sh
 {
@@ -311,11 +312,10 @@ class TParseContext : angle::NonCopyable
                                               const TSourceLoc &fieldLocation);
 
     // Parse declarator for a single field
-    TField *parseStructDeclarator(TString *identifier, const TSourceLoc &loc);
-    TField *parseStructArrayDeclarator(TString *identifier,
-                                       const TSourceLoc &loc,
-                                       const TVector<unsigned int> &arraySizes,
-                                       const TSourceLoc &arraySizeLoc);
+    TDeclarator *parseStructDeclarator(const TString *identifier, const TSourceLoc &loc);
+    TDeclarator *parseStructArrayDeclarator(const TString *identifier,
+                                            const TSourceLoc &loc,
+                                            const TVector<unsigned int> *arraySizes);
 
     void checkDoesNotHaveDuplicateFieldName(const TFieldList::const_iterator begin,
                                             const TFieldList::const_iterator end,
@@ -328,8 +328,9 @@ class TParseContext : angle::NonCopyable
     TFieldList *addStructDeclaratorListWithQualifiers(
         const TTypeQualifierBuilder &typeQualifierBuilder,
         TPublicType *typeSpecifier,
-        TFieldList *fieldList);
-    TFieldList *addStructDeclaratorList(const TPublicType &typeSpecifier, TFieldList *fieldList);
+        const TDeclaratorList *declaratorList);
+    TFieldList *addStructDeclaratorList(const TPublicType &typeSpecifier,
+                                        const TDeclaratorList *declaratorList);
     TTypeSpecifierNonArray addStructure(const TSourceLoc &structLine,
                                         const TSourceLoc &nameLine,
                                         const TString *structName,

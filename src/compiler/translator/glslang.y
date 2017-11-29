@@ -40,6 +40,7 @@ WHICH GENERATES THE GLSL ES PARSER (glslang_tab.cpp AND glslang_tab.h).
 
 #include "angle_gl.h"
 #include "compiler/translator/Cache.h"
+#include "compiler/translator/Declarator.h"
 #include "compiler/translator/SymbolTable.h"
 #include "compiler/translator/ParseContext.h"
 #include "GLSLANG/ShaderLang.h"
@@ -94,7 +95,8 @@ using namespace sh;
             TQualifier qualifier;
             TFunction *function;
             TParameter param;
-            TField *field;
+            TDeclarator *declarator;
+            TDeclaratorList *declaratorList;
             TFieldList *fieldList;
             TQualifierWrapperBase *qualifierWrapper;
             TTypeQualifierBuilder *typeQualifierBuilder;
@@ -232,8 +234,9 @@ extern void yyerror(YYLTYPE* yylloc, TParseContext* context, void *scanner, cons
 
 %type <interm.typeSpecifierNonArray> type_specifier_nonarray struct_specifier
 %type <interm.type> type_specifier_no_prec
-%type <interm.field> struct_declarator
-%type <interm.fieldList> struct_declarator_list struct_declaration struct_declaration_list
+%type <interm.declarator> struct_declarator
+%type <interm.declaratorList> struct_declarator_list
+%type <interm.fieldList> struct_declaration struct_declaration_list
 %type <interm.function> function_header function_declarator function_identifier
 %type <interm.function> function_header_with_parameters function_call_header
 %type <interm> function_call_header_with_parameters function_call_header_no_parameters function_call_generic function_prototype
@@ -1229,7 +1232,7 @@ struct_declaration
 
 struct_declarator_list
     : struct_declarator {
-        $$ = NewPoolTFieldList();
+        $$ = new TDeclaratorList();
         $$->push_back($1);
     }
     | struct_declarator_list COMMA struct_declarator {
@@ -1242,7 +1245,7 @@ struct_declarator
         $$ = context->parseStructDeclarator($1.string, @1);
     }
     | identifier array_specifier {
-        $$ = context->parseStructArrayDeclarator($1.string, @1, *($2), @2);
+        $$ = context->parseStructArrayDeclarator($1.string, @1, $2);
     }
     ;
 

@@ -12,6 +12,7 @@
 #include "common/mathutil.h"
 #include "compiler/preprocessor/SourceLocation.h"
 #include "compiler/translator/Cache.h"
+#include "compiler/translator/Declarator.h"
 #include "compiler/translator/IntermNode_util.h"
 #include "compiler/translator/ValidateGlobalInitializer.h"
 #include "compiler/translator/ValidateSwitch.h"
@@ -4674,24 +4675,18 @@ TLayoutQualifier TParseContext::joinLayoutQualifiers(TLayoutQualifier leftQualif
                                     mDiagnostics);
 }
 
-TField *TParseContext::parseStructDeclarator(TString *identifier, const TSourceLoc &loc)
+TDeclarator *TParseContext::parseStructDeclarator(const TString *identifier, const TSourceLoc &loc)
 {
     checkIsNotReserved(loc, *identifier);
-    TType *type = new TType(EbtVoid, EbpUndefined);
-    return new TField(type, identifier, loc);
+    return new TDeclarator(identifier, loc);
 }
 
-TField *TParseContext::parseStructArrayDeclarator(TString *identifier,
-                                                  const TSourceLoc &loc,
-                                                  const TVector<unsigned int> &arraySizes,
-                                                  const TSourceLoc &arraySizeLoc)
+TDeclarator *TParseContext::parseStructArrayDeclarator(const TString *identifier,
+                                                       const TSourceLoc &loc,
+                                                       const TVector<unsigned int> *arraySizes)
 {
     checkIsNotReserved(loc, *identifier);
-
-    TType *type       = new TType(EbtVoid, EbpUndefined);
-    type->makeArrays(arraySizes);
-
-    return new TField(type, identifier, loc);
+    return new TDeclarator(identifier, arraySizes, loc);
 }
 
 void TParseContext::checkDoesNotHaveDuplicateFieldName(const TFieldList::const_iterator begin,
@@ -4735,7 +4730,7 @@ TFieldList *TParseContext::combineStructFieldLists(TFieldList *processedFields,
 TFieldList *TParseContext::addStructDeclaratorListWithQualifiers(
     const TTypeQualifierBuilder &typeQualifierBuilder,
     TPublicType *typeSpecifier,
-    TFieldList *fieldList)
+    const TDeclaratorList *declaratorList)
 {
     TTypeQualifier typeQualifier = typeQualifierBuilder.getVariableTypeQualifier(mDiagnostics);
 
@@ -4747,44 +4742,38 @@ TFieldList *TParseContext::addStructDeclaratorListWithQualifiers(
     {
         typeSpecifier->precision = typeQualifier.precision;
     }
-    return addStructDeclaratorList(*typeSpecifier, fieldList);
+    return addStructDeclaratorList(*typeSpecifier, declaratorList);
 }
 
 TFieldList *TParseContext::addStructDeclaratorList(const TPublicType &typeSpecifier,
-                                                   TFieldList *declaratorList)
+                                                   const TDeclaratorList *declaratorList)
 {
     checkPrecisionSpecified(typeSpecifier.getLine(), typeSpecifier.precision,
                             typeSpecifier.getBasicType());
 
-    checkIsNonVoid(typeSpecifier.getLine(), (*declaratorList)[0]->name(),
+    checkIsNonVoid(typeSpecifier.getLine(), *(*declaratorList)[0]->name(),
                    typeSpecifier.getBasicType());
 
     checkWorkGroupSizeIsNotSpecified(typeSpecifier.getLine(), typeSpecifier.layoutQualifier);
 
-    for (TField *declarator : *declaratorList)
+    TFieldList *fieldList = new TFieldList();
+
+    for (const TDeclarator *declarator : *declaratorList)
     {
-        // Don't allow arrays of arrays in ESSL < 3.10.
-        if (declarator->type()->isArray())
+        TType *type = new TType(typeSpecifier);
+        if (declarator->isArray())
         {
+            // Don't allow arrays of arrays in ESSL < 3.10.
             checkArrayElementIsNotArray(typeSpecifier.getLine(), typeSpecifier);
+            type->makeArrays(*declarator->arraySizes());
         }
 
-        auto *declaratorArraySizes = declarator->type()->getArraySizes();
-
-        TType *type = declarator->type();
-        *type       = TType(typeSpecifier);
-        if (declaratorArraySizes != nullptr)
-        {
-            for (unsigned int arraySize : *declaratorArraySizes)
-            {
-                type->makeArray(arraySize);
-            }
-        }
-
-        checkIsBelowStructNestingLimit(typeSpecifier.getLine(), *declarator);
+        TField *field = new TField(type, declarator->name(), declarator->line());
+        checkIsBelowStructNestingLimit(typeSpecifier.getLine(), *field);
+        fieldList->push_back(field);
     }
 
-    return declaratorList;
+    return fieldList;
 }
 
 TTypeSpecifierNonArray TParseContext::addStructure(const TSourceLoc &structLine,
