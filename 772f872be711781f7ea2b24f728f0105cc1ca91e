@@ -1,0 +1,159 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3cade78d_5b54b494",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 1712,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-29T17:05:40Z",
+      "side": 1,
+      "message": "This first needs to clear the bits at this index, ORing will leave old bits set.",
+      "range": {
+        "startLine": 1712,
+        "startChar": 12,
+        "endLine": 1712,
+        "endChar": 41
+      },
+      "revId": "772f872be711781f7ea2b24f728f0105cc1ca91e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "26de0daa_25a19826",
+        "filename": "src/libANGLE/MemoryProgramCache.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 375,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-29T17:05:40Z",
+      "side": 1,
+      "message": "Use the new constant here.",
+      "range": {
+        "startLine": 375,
+        "startChar": 18,
+        "endLine": 375,
+        "endChar": 53
+      },
+      "revId": "772f872be711781f7ea2b24f728f0105cc1ca91e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "338a81eb_2c8c3afa",
+        "filename": "src/libANGLE/MemoryProgramCache.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 549,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-29T17:05:40Z",
+      "side": 1,
+      "message": "Here too.",
+      "range": {
+        "startLine": 549,
+        "startChar": 18,
+        "endLine": 549,
+        "endChar": 53
+      },
+      "revId": "772f872be711781f7ea2b24f728f0105cc1ca91e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "71480fd8_e96c030d",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 299,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-29T17:05:40Z",
+      "side": 1,
+      "message": "Put this into a constant too.",
+      "range": {
+        "startLine": 299,
+        "startChar": 41,
+        "endLine": 299,
+        "endChar": 76
+      },
+      "revId": "772f872be711781f7ea2b24f728f0105cc1ca91e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4163b8ab_a5733ba8",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 402,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-29T17:05:40Z",
+      "side": 1,
+      "message": "nit: put the same static_assert that uint32_t can hold the mask here.  Also you can typedef it, maybe \u0027using DrawBufferMaskBaseType \u003d uint16_t\u0027",
+      "revId": "772f872be711781f7ea2b24f728f0105cc1ca91e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2af842c1_a96306b0",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 418,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-29T17:05:40Z",
+      "side": 1,
+      "message": "a ^ b !\u003d 0 is equivalent to a !\u003d b.\n\nGiven the comment below, this should return a \u003d\u003d b though.",
+      "range": {
+        "startLine": 418,
+        "startChar": 11,
+        "endLine": 418,
+        "endChar": 85
+      },
+      "revId": "772f872be711781f7ea2b24f728f0105cc1ca91e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a0c685b7_49df4d9e",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 426,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-29T17:05:40Z",
+      "side": 1,
+      "message": "This should return false if they do not match.",
+      "range": {
+        "startLine": 426,
+        "startChar": 8,
+        "endLine": 426,
+        "endChar": 38
+      },
+      "revId": "772f872be711781f7ea2b24f728f0105cc1ca91e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
