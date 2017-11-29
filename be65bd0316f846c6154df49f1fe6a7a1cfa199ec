@@ -121,6 +121,30 @@
     },
     {
       "key": {
+        "uuid": "d4a656f6_c7dc3c9b",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1394,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-11-29T03:03:38Z",
+      "side": 1,
+      "message": "To summarize, the argument point is that you think if a program object is active, it must have been successfully linked. So you don\u0027t need to recheck \u0027if program is the name of a program that has not been successfully linked\u0027. \n\nI have filed a bug in https://github.com/KhronosGroup/OpenGL-API/issues/24. It looks good for me. Let\u0027s hear other reviewers\u0027 opinion. Thanks.",
+      "parentUuid": "c1f8ec88_412fc56c",
+      "range": {
+        "startLine": 1394,
+        "startChar": 8,
+        "endLine": 1394,
+        "endChar": 31
+      },
+      "revId": "be65bd0316f846c6154df49f1fe6a7a1cfa199ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c069c27e_3d48b14f",
         "filename": "src/libANGLE/validationES31.cpp",
         "patchSetId": 3
