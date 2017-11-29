@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "0469d0eb_032561bb",
+        "filename": "src/compiler/translator/IntermNodePatternMatcher.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-29T13:41:25Z",
+      "side": 1,
+      "message": "Added a test.",
+      "parentUuid": "849c0f48_0adb042e",
+      "range": {
+        "startLine": 139,
+        "startChar": 46,
+        "endLine": 139,
+        "endChar": 64
+      },
+      "revId": "7b42339e199d2df5935ae6b52c88b9c7bc5f9ef8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "22900128_f8f03701",
         "filename": "src/compiler/translator/IntermNodePatternMatcher.cpp",
         "patchSetId": 2
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "9db05fe7_376146e4",
+        "filename": "src/compiler/translator/IntermNodePatternMatcher.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-29T13:41:25Z",
+      "side": 1,
+      "message": "The previous code was not handling this. If this is needed, it\u0027s outside the scope of this specific patch.",
+      "parentUuid": "22900128_f8f03701",
+      "range": {
+        "startLine": 143,
+        "startChar": 51,
+        "endLine": 143,
+        "endChar": 69
+      },
+      "revId": "7b42339e199d2df5935ae6b52c88b9c7bc5f9ef8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5bf0d4d0_358c49ef",
         "filename": "src/tests/compiler_tests/ScalarizeVecAndMatConstructorArgs_test.cpp",
         "patchSetId": 2
@@ -62,6 +110,24 @@
       "revId": "7b42339e199d2df5935ae6b52c88b9c7bc5f9ef8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7766600e_5a5be3d2",
+        "filename": "src/tests/compiler_tests/ScalarizeVecAndMatConstructorArgs_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-29T13:41:25Z",
+      "side": 1,
+      "message": "No, there\u0027s some coverage for matrices in a vector constructor but not these cases specifically.\n\nI could improve the coverage.",
+      "parentUuid": "5bf0d4d0_358c49ef",
+      "revId": "7b42339e199d2df5935ae6b52c88b9c7bc5f9ef8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
