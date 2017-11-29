@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7b851c54_d67f023c",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1039,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-11-29T15:31:38Z",
+      "side": 1,
+      "message": "Is there not a combination of extensions that allows this to be supported on lesser version?",
+      "range": {
+        "startLine": 1038,
+        "startChar": 4,
+        "endLine": 1039,
+        "endChar": 30
+      },
+      "revId": "d6691d76cf1f47c5930d0a91b26166258e28dd63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
