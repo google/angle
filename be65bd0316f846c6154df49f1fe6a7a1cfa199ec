@@ -159,6 +159,29 @@
       "revId": "be65bd0316f846c6154df49f1fe6a7a1cfa199ec",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cbf538d3_92a37949",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-11-29T04:58:46Z",
+      "side": 1,
+      "message": "In ES3.1 spec(P70), \"If LinkProgram failed, any information about a previous link of that program object is lost. Thus, a failed link does not restore the old state of program\". Here, Although the program is still active, its states are destroyed, glDispatchCompute should report an error here. \nIn a word, any operation on this program is an undefined behavior now. I think if you add a uniform variable in the shader, and then call glGetUniformLocation, driver would also report a error.",
+      "range": {
+        "startLine": 65,
+        "startChar": 4,
+        "endLine": 71,
+        "endChar": 25
+      },
+      "revId": "be65bd0316f846c6154df49f1fe6a7a1cfa199ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
