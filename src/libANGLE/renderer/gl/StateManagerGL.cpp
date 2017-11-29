@@ -849,9 +849,6 @@ void StateManagerGL::setGenericShaderState(const gl::Context *context)
 
     // Sync the current program state
     const gl::Program *program = glState.getProgram();
-    const ProgramGL *programGL = GetImplAs<ProgramGL>(program);
-    useProgram(programGL->getProgramID());
-
     for (size_t uniformBlockIndex = 0; uniformBlockIndex < program->getActiveUniformBlockCount();
          uniformBlockIndex++)
     {
@@ -1933,8 +1930,16 @@ void StateManagerGL::syncState(const gl::Context *context, const gl::State::Dirt
                 // TODO: implement this
                 break;
             case gl::State::DIRTY_BIT_PROGRAM_BINDING:
+            {
                 mProgramTexturesAndSamplersDirty = true;
+
+                gl::Program *program = state.getProgram();
+                if (program != nullptr)
+                {
+                    useProgram(GetImplAs<ProgramGL>(program)->getProgramID());
+                }
                 break;
+            }
             case gl::State::DIRTY_BIT_TEXTURE_BINDINGS:
                 mProgramTexturesAndSamplersDirty = true;
                 break;
