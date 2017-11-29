@@ -262,7 +262,7 @@ TEST_P(CHROMIUMPathRenderingTest, TestPathParameter)
     GLfloat coords[] = {50.0f, 50.0f};
     glPathCommandsCHROMIUM(path, 2, commands, 2, GL_FLOAT, coords);
     ASSERT_GL_NO_ERROR();
-    EXPECT_TRUE(glIsPathCHROMIUM(path) == GL_TRUE);
+    EXPECT_GL_TRUE(glIsPathCHROMIUM(path));
 
     static const GLenum kEndCaps[] = {GL_FLAT_CHROMIUM, GL_SQUARE_CHROMIUM, GL_ROUND_CHROMIUM};
     for (std::size_t i = 0; i < 3; ++i)
@@ -360,7 +360,7 @@ TEST_P(CHROMIUMPathRenderingTest, TestPathObjectState)
     GLuint non_existing_paths[] = {0, 55, 74744};
     for (auto &p : non_existing_paths)
     {
-        EXPECT_TRUE(glIsPathCHROMIUM(p) == GL_FALSE);
+        EXPECT_GL_FALSE(glIsPathCHROMIUM(p));
         ASSERT_GL_NO_ERROR();
         tryAllDrawFunctions(p, GL_NO_ERROR);
     }
@@ -368,7 +368,7 @@ TEST_P(CHROMIUMPathRenderingTest, TestPathObjectState)
     // Path name marked as used but without path object state causes
     // a GL error upon any draw command.
     GLuint path = glGenPathsCHROMIUM(1);
-    EXPECT_TRUE(glIsPathCHROMIUM(path) == GL_FALSE);
+    EXPECT_GL_FALSE(glIsPathCHROMIUM(path));
     tryAllDrawFunctions(path, GL_INVALID_OPERATION);
     glDeletePathsCHROMIUM(path, 1);
 
@@ -377,15 +377,15 @@ TEST_P(CHROMIUMPathRenderingTest, TestPathObjectState)
     // Path name that had path object state, but then was "cleared", still has a
     // path object state, even though the state is empty.
     path = glGenPathsCHROMIUM(1);
-    EXPECT_TRUE(glIsPathCHROMIUM(path) == GL_FALSE);
+    EXPECT_GL_FALSE(glIsPathCHROMIUM(path));
 
     GLubyte commands[] = {GL_MOVE_TO_CHROMIUM, GL_CLOSE_PATH_CHROMIUM};
     GLfloat coords[] = {50.0f, 50.0f};
     glPathCommandsCHROMIUM(path, 2, commands, 2, GL_FLOAT, coords);
-    EXPECT_TRUE(glIsPathCHROMIUM(path) == GL_TRUE);
+    EXPECT_GL_TRUE(glIsPathCHROMIUM(path));
 
     glPathCommandsCHROMIUM(path, 0, nullptr, 0, GL_FLOAT, nullptr);
-    EXPECT_TRUE(glIsPathCHROMIUM(path) == GL_TRUE);  // The surprise.
+    EXPECT_GL_TRUE(glIsPathCHROMIUM(path));  // The surprise.
 
     tryAllDrawFunctions(path, GL_NO_ERROR);
     glDeletePathsCHROMIUM(path, 1);
@@ -1634,7 +1634,7 @@ TEST_P(CHROMIUMPathRenderingWithTexturingTest, TestProgramPathFragmentInputGenAr
     glDeleteProgram(mProgram);
 
     // Test that using invalid (deleted) program is an invalid operation.
-    EXPECT_FALSE(glIsProgram(mProgram) == GL_FALSE);
+    EXPECT_GL_TRUE(glIsProgram(mProgram));
 
     glProgramPathFragmentInputGenCHROMIUM(mProgram, -1, kValidGenMode, kValidComponents,
                                           kCoefficients16);

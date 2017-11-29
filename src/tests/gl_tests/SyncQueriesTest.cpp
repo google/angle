@@ -60,7 +60,7 @@ TEST_P(SyncQueriesTest, Basic)
     glFlush();
     GLuint result = 0;
     glGetQueryObjectuivEXT(mQuery, GL_QUERY_RESULT_EXT, &result);
-    EXPECT_EQ(static_cast<GLuint>(GL_TRUE), result);
+    EXPECT_GL_TRUE(result);
     EXPECT_GL_NO_ERROR();
 }
 

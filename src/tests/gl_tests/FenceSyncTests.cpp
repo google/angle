@@ -51,13 +51,13 @@ TEST_P(FenceNVTest, IsFence)
     glGenFencesNV(1, &fence);
     EXPECT_GL_NO_ERROR();
 
-    EXPECT_EQ(GL_FALSE, glIsFenceNV(fence));
+    EXPECT_GL_FALSE(glIsFenceNV(fence));
     EXPECT_GL_NO_ERROR();
 
     glSetFenceNV(fence, GL_ALL_COMPLETED_NV);
     EXPECT_GL_NO_ERROR();
 
-    EXPECT_EQ(GL_TRUE, glIsFenceNV(fence));
+    EXPECT_GL_TRUE(glIsFenceNV(fence));
     EXPECT_GL_NO_ERROR();
 }
 
@@ -71,7 +71,7 @@ TEST_P(FenceNVTest, Errors)
     }
 
     // glTestFenceNV should still return TRUE for an invalid fence and generate an INVALID_OPERATION
-    EXPECT_EQ(GL_TRUE, glTestFenceNV(10));
+    EXPECT_GL_TRUE(glTestFenceNV(10));
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 
     GLuint fence = 20;
@@ -86,7 +86,7 @@ TEST_P(FenceNVTest, Errors)
     EXPECT_GL_NO_ERROR();
 
     // glTestFenceNV should still return TRUE for a fence that is not started and generate an INVALID_OPERATION
-    EXPECT_EQ(GL_TRUE, glTestFenceNV(fence));
+    EXPECT_GL_TRUE(glTestFenceNV(fence));
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 
     // glGetFenceivNV should generate an INVALID_OPERATION for an invalid or unstarted fence and not modify the params
@@ -139,7 +139,7 @@ TEST_P(FenceNVTest, BasicOperations)
         EXPECT_GL_NO_ERROR();
 
         // Fence should be complete now that Finish has been called
-        EXPECT_EQ(GL_TRUE, status);
+        EXPECT_GL_TRUE(status);
     }
 
     EXPECT_PIXEL_EQ(0, 0, 255, 0, 255, 255);
@@ -151,8 +151,8 @@ TEST_P(FenceSyncTest, IsSync)
     GLsync sync = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
     EXPECT_GL_NO_ERROR();
 
-    EXPECT_EQ(GL_TRUE, glIsSync(sync));
-    EXPECT_EQ(GL_FALSE, glIsSync(reinterpret_cast<GLsync>(40)));
+    EXPECT_GL_TRUE(glIsSync(sync));
+    EXPECT_GL_FALSE(glIsSync(reinterpret_cast<GLsync>(40)));
 }
 
 // Test error cases for all Sync function

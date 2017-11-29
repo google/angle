@@ -101,7 +101,7 @@ TEST_P(OcclusionQueriesTest, IsOccluded)
 
     glDeleteQueriesEXT(1, &query);
 
-    EXPECT_GLENUM_EQ(GL_FALSE, result);
+    EXPECT_GL_FALSE(result);
 }
 
 TEST_P(OcclusionQueriesTest, IsNotOccluded)
@@ -135,7 +135,7 @@ TEST_P(OcclusionQueriesTest, IsNotOccluded)
 
     glDeleteQueriesEXT(1, &query);
 
-    EXPECT_GLENUM_EQ(GL_TRUE, result);
+    EXPECT_GL_TRUE(result);
 }
 
 TEST_P(OcclusionQueriesTest, Errors)
@@ -156,8 +156,8 @@ TEST_P(OcclusionQueriesTest, Errors)
     GLuint query2 = 0;
     glGenQueriesEXT(1, &query);
 
-    EXPECT_EQ(glIsQueryEXT(query), GL_FALSE);
-    EXPECT_EQ(glIsQueryEXT(query2), GL_FALSE);
+    EXPECT_GL_FALSE(glIsQueryEXT(query));
+    EXPECT_GL_FALSE(glIsQueryEXT(query2));
 
     glBeginQueryEXT(GL_ANY_SAMPLES_PASSED_EXT, 0); // can't pass 0 as query id
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
@@ -166,8 +166,8 @@ TEST_P(OcclusionQueriesTest, Errors)
     glBeginQueryEXT(GL_ANY_SAMPLES_PASSED_CONSERVATIVE_EXT, query2); // can't initiate a query while one's already active
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 
-    EXPECT_EQ(glIsQueryEXT(query), GL_TRUE);
-    EXPECT_EQ(glIsQueryEXT(query2), GL_FALSE); // have not called begin
+    EXPECT_GL_TRUE(glIsQueryEXT(query));
+    EXPECT_GL_FALSE(glIsQueryEXT(query2));  // have not called begin
 
     drawQuad(mProgram, "position", 0.8f); // this quad should not be occluded
     glEndQueryEXT(GL_ANY_SAMPLES_PASSED_CONSERVATIVE_EXT); // no active query for this target
@@ -182,7 +182,7 @@ TEST_P(OcclusionQueriesTest, Errors)
 
     glGenQueriesEXT(1, &query2);
     glBeginQueryEXT(GL_ANY_SAMPLES_PASSED_CONSERVATIVE_EXT, query2); // should be ok now
-    EXPECT_EQ(glIsQueryEXT(query2), GL_TRUE);
+    EXPECT_GL_TRUE(glIsQueryEXT(query2));
 
     drawQuad(mProgram, "position", 0.3f); // this should draw in front of other quad
     glDeleteQueriesEXT(1, &query2); // should delete when query becomes inactive

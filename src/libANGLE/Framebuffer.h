@@ -295,7 +295,7 @@ class Framebuffer final : public LabeledObject, public OnAttachmentDirtyReceiver
         DIRTY_BIT_MAX = DIRTY_BIT_UNKNOWN
     };
 
-    typedef angle::BitSet<DIRTY_BIT_MAX> DirtyBits;
+    using DirtyBits = angle::BitSet<DIRTY_BIT_MAX>;
     bool hasAnyDirtyBit() const { return mDirtyBits.any(); }
 
     void syncState(const Context *context);

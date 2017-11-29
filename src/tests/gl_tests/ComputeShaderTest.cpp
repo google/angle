@@ -64,7 +64,7 @@ TEST_P(ComputeShaderTest, DetachShaderAfterLinkSuccess)
     glLinkProgram(program);
     GLint linkStatus;
     glGetProgramiv(program, GL_LINK_STATUS, &linkStatus);
-    EXPECT_EQ(GL_TRUE, linkStatus);
+    EXPECT_GL_TRUE(linkStatus);
 
     glDetachShader(program, cs);
     EXPECT_GL_NO_ERROR();
@@ -167,7 +167,7 @@ TEST_P(ComputeShaderTest, AttachMultipleShaders)
     GLint linkStatus;
     glGetProgramiv(program, GL_LINK_STATUS, &linkStatus);
 
-    EXPECT_EQ(GL_FALSE, linkStatus);
+    EXPECT_GL_FALSE(linkStatus);
 
     EXPECT_GL_NO_ERROR();
 }
@@ -275,7 +275,7 @@ TEST_P(ComputeShaderTest, DispatchComputeWithRenderingProgram)
 
     GLint linkStatus;
     glGetProgramiv(program, GL_LINK_STATUS, &linkStatus);
-    EXPECT_EQ(GL_TRUE, linkStatus);
+    EXPECT_GL_TRUE(linkStatus);
 
     EXPECT_GL_NO_ERROR();
 

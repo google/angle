@@ -51,7 +51,7 @@ TEST_P(ClientArraysTest, QueryValidation)
     GLboolean boolValue = GL_TRUE;
     glGetBooleanv(GL_CLIENT_ARRAYS_ANGLE, &boolValue);
     EXPECT_GL_NO_ERROR();
-    EXPECT_GL_FALSE(GL_FALSE);
+    EXPECT_GL_FALSE(boolValue);
 
     EXPECT_GL_FALSE(glIsEnabled(GL_CLIENT_ARRAYS_ANGLE));
     EXPECT_GL_NO_ERROR();

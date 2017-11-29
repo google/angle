@@ -77,7 +77,7 @@ TEST_P(SRGBFramebufferTest, Validation)
     EXPECT_GL_ERROR(expectedError);
     if (expectedError == GL_NO_ERROR)
     {
-        EXPECT_EQ(GL_TRUE, value);
+        EXPECT_GL_TRUE(value);
     }
 
     glDisable(GL_FRAMEBUFFER_SRGB_EXT);
@@ -87,7 +87,7 @@ TEST_P(SRGBFramebufferTest, Validation)
     EXPECT_GL_ERROR(expectedError);
     if (expectedError == GL_NO_ERROR)
     {
-        EXPECT_EQ(GL_FALSE, value);
+        EXPECT_GL_FALSE(value);
     }
 }
 

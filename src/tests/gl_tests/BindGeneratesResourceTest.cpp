@@ -30,7 +30,7 @@ TEST_P(BindGeneratesResourceTest, QueryValidation)
     GLint intValue = 2;
     glGetIntegerv(GL_BIND_GENERATES_RESOURCE_CHROMIUM, &intValue);
     EXPECT_GL_NO_ERROR();
-    EXPECT_EQ(intValue, GL_FALSE);
+    EXPECT_GL_FALSE(intValue);
 
     float floatValue = 2.0f;
     glGetFloatv(GL_BIND_GENERATES_RESOURCE_CHROMIUM, &floatValue);
@@ -40,11 +40,11 @@ TEST_P(BindGeneratesResourceTest, QueryValidation)
     GLboolean boolValue = GL_TRUE;
     glGetBooleanv(GL_BIND_GENERATES_RESOURCE_CHROMIUM, &boolValue);
     EXPECT_GL_NO_ERROR();
-    EXPECT_EQ(boolValue, GL_FALSE);
+    EXPECT_GL_FALSE(boolValue);
 
     boolValue = glIsEnabled(GL_BIND_GENERATES_RESOURCE_CHROMIUM);
     EXPECT_GL_NO_ERROR();
-    EXPECT_EQ(boolValue, GL_FALSE);
+    EXPECT_GL_FALSE(boolValue);
 
     glEnable(GL_BIND_GENERATES_RESOURCE_CHROMIUM);
     EXPECT_GL_ERROR(GL_INVALID_ENUM);
