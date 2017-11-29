@@ -162,6 +162,29 @@
     },
     {
       "key": {
+        "uuid": "f10fd925_a8f6ed17",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-11-29T06:59:04Z",
+      "side": 1,
+      "message": "link?",
+      "range": {
+        "startLine": 64,
+        "startChar": 26,
+        "endLine": 64,
+        "endChar": 33
+      },
+      "revId": "be65bd0316f846c6154df49f1fe6a7a1cfa199ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "cbf538d3_92a37949",
         "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
         "patchSetId": 3
@@ -206,6 +229,30 @@
       "revId": "be65bd0316f846c6154df49f1fe6a7a1cfa199ec",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1532e498_35f4a0d5",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-11-29T06:59:04Z",
+      "side": 1,
+      "message": "Got it, and I had written a case as yours running on mesa driver, and disptchCompute did not report an error. Thank you.",
+      "parentUuid": "c97d00c3_10497eb5",
+      "range": {
+        "startLine": 65,
+        "startChar": 4,
+        "endLine": 71,
+        "endChar": 25
+      },
+      "revId": "be65bd0316f846c6154df49f1fe6a7a1cfa199ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
