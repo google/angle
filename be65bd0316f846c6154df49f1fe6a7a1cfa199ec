@@ -182,6 +182,30 @@
       "revId": "be65bd0316f846c6154df49f1fe6a7a1cfa199ec",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c97d00c3_10497eb5",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-11-29T05:17:38Z",
+      "side": 1,
+      "message": "Only the link information in program object is lost/refreshed, and all query depending on the link info will be changed. But the executable and other info are still there in the program object. And the re-link failure will not affect the executable installed in pipeline. Please read the issue 2266 carefully. I described the problem there. \n\nIt is like a re-compile/re-link failure of C/C++ program, it will not replace your (old) executable, but you can get some re-compile/re-link failure info. However, a successfully re-linked program will replace your old executable with the same name (program id here for GL).",
+      "parentUuid": "cbf538d3_92a37949",
+      "range": {
+        "startLine": 65,
+        "startChar": 4,
+        "endLine": 71,
+        "endChar": 25
+      },
+      "revId": "be65bd0316f846c6154df49f1fe6a7a1cfa199ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
