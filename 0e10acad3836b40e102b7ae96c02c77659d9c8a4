@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a7af10be_659eb8ec",
+        "filename": "src/tests/gl_tests/TextureUploadFormatTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 243,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-11-29T13:46:40Z",
+      "side": 1,
+      "message": "You need to update the comment correspondingly.",
+      "range": {
+        "startLine": 243,
+        "startChar": 17,
+        "endLine": 243,
+        "endChar": 18
+      },
+      "revId": "0e10acad3836b40e102b7ae96c02c77659d9c8a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
