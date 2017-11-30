@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "03d45bb9_3d3a4f14",
+        "filename": "src/compiler/translator/Types.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-30T15:25:07Z",
+      "side": 1,
+      "message": "I think I like the old implementation of this better - every place you use it calls .get().",
+      "range": {
+        "startLine": 105,
+        "startChar": 4,
+        "endLine": 105,
+        "endChar": 65
+      },
+      "revId": "536b168b1dd7790ea218e3b9cc8c97caab142f3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
