@@ -2,6 +2,52 @@
   "comments": [
     {
       "key": {
+        "uuid": "0044df31_e57e5048",
+        "filename": "src/compiler/translator/SymbolTable.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-30T19:28:56Z",
+      "side": 1,
+      "message": "can you define this in a cpp file? along with the other similar new code methods.",
+      "range": {
+        "startLine": 93,
+        "startChar": 0,
+        "endLine": 97,
+        "endChar": 0
+      },
+      "revId": "034f0f2ea506593dc47dd19d1760e2b961ef2141",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5de0e31a_6e76e013",
+        "filename": "src/compiler/translator/Types.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-30T19:28:56Z",
+      "side": 1,
+      "message": "similar comment for this file. anything longer than a simple getter.",
+      "range": {
+        "startLine": 73,
+        "startChar": 0,
+        "endLine": 75,
+        "endChar": 5
+      },
+      "revId": "034f0f2ea506593dc47dd19d1760e2b961ef2141",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "643dc4f8_06079662",
         "filename": "src/compiler/translator/glslang.l",
         "patchSetId": 7
