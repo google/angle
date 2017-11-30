@@ -50,6 +50,24 @@
       "revId": "454bd855f43113a04b147f54927378b69b77cbda",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0f7dbc83_fd4d1708",
+        "filename": "src/compiler/translator/Cache.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2017-11-30T01:19:42Z",
+      "side": 1,
+      "message": "Never mind, this can be constexpr. I had an error doing this in the past but it doesn\u0027t seem to apply anymore.",
+      "parentUuid": "b860f270_b489d672",
+      "revId": "454bd855f43113a04b147f54927378b69b77cbda",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
