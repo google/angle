@@ -348,7 +348,8 @@ class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
     void beginRenderPass(const RenderPass &renderPass,
                          const Framebuffer &framebuffer,
                          const gl::Rectangle &renderArea,
-                         const std::vector<VkClearValue> &clearValues);
+                         uint32_t clearValueCount,
+                         const VkClearValue *clearValues);
     void endRenderPass();
 
     void draw(uint32_t vertexCount,

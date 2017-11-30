@@ -404,9 +404,9 @@ void CommandBuffer::copyImage(const vk::Image &srcImage,
 void CommandBuffer::beginRenderPass(const RenderPass &renderPass,
                                     const Framebuffer &framebuffer,
                                     const gl::Rectangle &renderArea,
-                                    const std::vector<VkClearValue> &clearValues)
+                                    uint32_t clearValueCount,
+                                    const VkClearValue *clearValues)
 {
-    ASSERT(!clearValues.empty());
     ASSERT(mHandle != VK_NULL_HANDLE);
 
     VkRenderPassBeginInfo beginInfo;
@@ -418,8 +418,8 @@ void CommandBuffer::beginRenderPass(const RenderPass &renderPass,
     beginInfo.renderArea.offset.y      = static_cast<uint32_t>(renderArea.y);
     beginInfo.renderArea.extent.width  = static_cast<uint32_t>(renderArea.width);
     beginInfo.renderArea.extent.height = static_cast<uint32_t>(renderArea.height);
-    beginInfo.clearValueCount          = static_cast<uint32_t>(clearValues.size());
-    beginInfo.pClearValues             = clearValues.data();
+    beginInfo.clearValueCount          = clearValueCount;
+    beginInfo.pClearValues             = clearValues;
 
     vkCmdBeginRenderPass(mHandle, &beginInfo, VK_SUBPASS_CONTENTS_INLINE);
 }

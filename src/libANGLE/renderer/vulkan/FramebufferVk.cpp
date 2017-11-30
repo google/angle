@@ -559,8 +559,8 @@ gl::Error FramebufferVk::beginRenderPass(const gl::Context *context,
     ANGLE_TRY(mState.getFirstColorAttachment()->getRenderTarget(context, &renderTarget));
     renderTarget->image->updateLayout(VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL);
 
-    commandBuffer->beginRenderPass(*renderPass, *framebuffer, glState.getViewport(),
-                                   attachmentClearValues);
+    commandBuffer->beginRenderPass(*renderPass, *framebuffer, glState.getViewport(), 1,
+                                   attachmentClearValues.data());
 
     setQueueSerial(queueSerial);
     if (mBackbuffer)
