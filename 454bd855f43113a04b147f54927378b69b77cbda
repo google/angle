@@ -16,6 +16,40 @@
       "revId": "454bd855f43113a04b147f54927378b69b77cbda",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c464ff38_5b7af675",
+        "filename": "src/compiler/translator/Cache.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2017-11-30T01:17:14Z",
+      "side": 1,
+      "message": "For debugging; this was the easiest way to get the template parameters into the mangledName",
+      "revId": "454bd855f43113a04b147f54927378b69b77cbda",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b860f270_b489d672",
+        "filename": "src/compiler/translator/Cache.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2017-11-30T01:17:14Z",
+      "side": 1,
+      "message": "Important thing I just realized, the value here gets initialized on the first execution (it\u0027s not actually constexpr) so this is probably actually equivalent to having one lock per getType\u003c...\u003e instantiation. https://stackoverflow.com/a/8102145\n\nThat may be terrible, I\u0027m not sure.",
+      "revId": "454bd855f43113a04b147f54927378b69b77cbda",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
