@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2b6523f9_06cb41dc",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3459,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2017-11-30T03:47:57Z",
+      "side": 0,
+      "message": "There was a gross bug here that didn\u0027t get ported over, but fixing it doesn\u0027t fix the remaining test failures. Currently I still have no idea what is causing the failures.\n\nTCache::getType takes (TBasicType, TQualifier). EbpUndefined is being passed in for the TQualifier and reinterpreted into EvqTemporary. I\u0027m not sure what the correct qualifier and precision are here.",
+      "revId": "c677795f9f7d27fbaf6d36da8201f8f09025d92c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
