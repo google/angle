@@ -1,0 +1,78 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3e29ff9b_d2d75d28",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 281,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-11-30T17:39:40Z",
+      "side": 1,
+      "message": "Would it make sense to split this into the compatible and incompatible parts of the render pass desc? Right now we\u0027re hashing something bigger than we need to.",
+      "revId": "ed9d1a02116391087f795e9a8f2c1e7c965059c2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d76d7852_4da4c7dd",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 372,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-11-30T17:39:40Z",
+      "side": 1,
+      "message": "Since we aren\u0027t doing Vulkan calls here, there\u0027s no reason this function should return an error.",
+      "revId": "ed9d1a02116391087f795e9a8f2c1e7c965059c2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "79466cb3_9459dc81",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-11-30T17:39:40Z",
+      "side": 1,
+      "message": "nit: this name feels weird to me. mStorage or mCache?",
+      "range": {
+        "startLine": 55,
+        "startChar": 68,
+        "endLine": 55,
+        "endChar": 76
+      },
+      "revId": "ed9d1a02116391087f795e9a8f2c1e7c965059c2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "206d1d9c_26aabf4f",
+        "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 626,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-11-30T17:39:40Z",
+      "side": 1,
+      "message": "nit: Assert that the new serial is at least as big as the current one.",
+      "revId": "ed9d1a02116391087f795e9a8f2c1e7c965059c2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
