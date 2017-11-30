@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "1a6cc27c_82d43eef",
+        "filename": "src/tests/gl_tests/StateChangeTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 953,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-30T22:01:01Z",
+      "side": 1,
+      "message": "All of the above. A bound texture that in use by a draw call that is in-flight. IE in use on the GPU.",
+      "parentUuid": "23e715d7_8d13c339",
+      "range": {
+        "startLine": 953,
+        "startChar": 45,
+        "endLine": 953,
+        "endChar": 51
+      },
+      "revId": "4889afd08a7ddc943aa631a31d7175a71c5a093c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a98a2ebb_4f75af06",
         "filename": "src/tests/gl_tests/StateChangeTest.cpp",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2017-11-30T21:47:55Z",
       "side": 1,
       "message": "nit: I\u0027d prefer these expect lines right after the draw, unless that glTexSubImage2D() really needs to be in between.  Maybe it does if this test is more subtle than it appears...",
+      "range": {
+        "startLine": 976,
+        "startChar": 4,
+        "endLine": 976,
+        "endChar": 25
+      },
+      "revId": "4889afd08a7ddc943aa631a31d7175a71c5a093c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2ae85962_214c65b4",
+        "filename": "src/tests/gl_tests/StateChangeTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 976,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-30T22:01:01Z",
+      "side": 1,
+      "message": "It really does. That\u0027s the whole point of the test.",
+      "parentUuid": "a98a2ebb_4f75af06",
       "range": {
         "startLine": 976,
         "startChar": 4,
