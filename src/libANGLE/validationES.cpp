@@ -1189,7 +1189,7 @@ bool ValidateFramebufferRenderbufferParameters(gl::Context *context,
     return true;
 }
 
-bool ValidateBlitFramebufferParameters(ValidationContext *context,
+bool ValidateBlitFramebufferParameters(Context *context,
                                        GLint srcX0,
                                        GLint srcY0,
                                        GLint srcX1,
@@ -1383,9 +1383,9 @@ bool ValidateBlitFramebufferParameters(ValidationContext *context,
         if (mask & masks[i])
         {
             const gl::FramebufferAttachment *readBuffer =
-                readFramebuffer->getAttachment(attachments[i]);
+                readFramebuffer->getAttachment(context, attachments[i]);
             const gl::FramebufferAttachment *drawBuffer =
-                drawFramebuffer->getAttachment(attachments[i]);
+                drawFramebuffer->getAttachment(context, attachments[i]);
 
             if (readBuffer && drawBuffer)
             {
@@ -3739,7 +3739,7 @@ bool ValidateRobustBufferSize(ValidationContext *context, GLsizei bufSize, GLsiz
     return true;
 }
 
-bool ValidateGetFramebufferAttachmentParameterivBase(ValidationContext *context,
+bool ValidateGetFramebufferAttachmentParameterivBase(Context *context,
                                                      GLenum target,
                                                      GLenum attachment,
                                                      GLenum pname,
@@ -3889,7 +3889,7 @@ bool ValidateGetFramebufferAttachmentParameterivBase(ValidationContext *context,
         }
     }
 
-    const FramebufferAttachment *attachmentObject = framebuffer->getAttachment(attachment);
+    const FramebufferAttachment *attachmentObject = framebuffer->getAttachment(context, attachment);
     if (attachmentObject)
     {
         ASSERT(attachmentObject->type() == GL_RENDERBUFFER ||
@@ -4001,7 +4001,7 @@ bool ValidateGetFramebufferAttachmentParameterivBase(ValidationContext *context,
     return true;
 }
 
-bool ValidateGetFramebufferAttachmentParameterivRobustANGLE(ValidationContext *context,
+bool ValidateGetFramebufferAttachmentParameterivRobustANGLE(Context *context,
                                                             GLenum target,
                                                             GLenum attachment,
                                                             GLenum pname,

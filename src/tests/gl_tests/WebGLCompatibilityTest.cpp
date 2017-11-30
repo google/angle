@@ -2935,10 +2935,9 @@ TEST_P(WebGLCompatibilityTest, DepthStencilAttachment)
 
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, texture, 0);
 
-    GLint attachmentType;
+    GLint attachmentType = 0;
     glGetFramebufferAttachmentParameteriv(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT,
-                                          GL_FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE,
-                                          /*param*/ &attachmentType);
+                                          GL_FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE, &attachmentType);
     EXPECT_GL_NO_ERROR();
     EXPECT_GLENUM_EQ(GL_TEXTURE, attachmentType);
 
@@ -2947,9 +2946,40 @@ TEST_P(WebGLCompatibilityTest, DepthStencilAttachment)
     glBindFramebuffer(GL_FRAMEBUFFER, fbo2);
 
     glGetFramebufferAttachmentParameteriv(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT,
-                                          GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME,
-                                          /*param*/ &attachmentType);
+                                          GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME, &attachmentType);
     EXPECT_GL_ERROR(GL_INVALID_ENUM);
+}
+
+// Verify framebuffer attachments return expected types when in an inconsistant state.
+TEST_P(WebGLCompatibilityTest, FramebufferAttachmentConsistancy)
+{
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() > 2);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+    GLRenderbuffer rb1;
+    glBindRenderbuffer(GL_RENDERBUFFER, rb1);
+
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rb1);
+
+    GLint attachmentType = 0;
+    glGetFramebufferAttachmentParameteriv(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT,
+                                          GL_FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE, &attachmentType);
+
+    EXPECT_GL_NO_ERROR();
+    EXPECT_GLENUM_EQ(GL_RENDERBUFFER, attachmentType);
+
+    GLRenderbuffer rb2;
+    glBindRenderbuffer(GL_RENDERBUFFER, rb2);
+
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rb2);
+
+    glGetFramebufferAttachmentParameteriv(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT,
+                                          GL_FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE, &attachmentType);
+
+    EXPECT_GL_NO_ERROR();
+    EXPECT_GLENUM_EQ(GL_RENDERBUFFER, attachmentType);
 }
 
 // This tests that rendering feedback loops works as expected with WebGL 2.

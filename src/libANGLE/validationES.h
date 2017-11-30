@@ -104,7 +104,7 @@ bool ValidateFramebufferRenderbufferParameters(Context *context,
                                                GLenum renderbuffertarget,
                                                GLuint renderbuffer);
 
-bool ValidateBlitFramebufferParameters(ValidationContext *context,
+bool ValidateBlitFramebufferParameters(Context *context,
                                        GLint srcX0,
                                        GLint srcY0,
                                        GLint srcX1,
@@ -382,12 +382,12 @@ bool ValidateGenOrDelete(Context *context, GLint n);
 bool ValidateRobustEntryPoint(ValidationContext *context, GLsizei bufSize);
 bool ValidateRobustBufferSize(ValidationContext *context, GLsizei bufSize, GLsizei numParams);
 
-bool ValidateGetFramebufferAttachmentParameterivBase(ValidationContext *context,
+bool ValidateGetFramebufferAttachmentParameterivBase(Context *context,
                                                      GLenum target,
                                                      GLenum attachment,
                                                      GLenum pname,
                                                      GLsizei *numParams);
-bool ValidateGetFramebufferAttachmentParameterivRobustANGLE(ValidationContext *context,
+bool ValidateGetFramebufferAttachmentParameterivRobustANGLE(Context *context,
                                                             GLenum target,
                                                             GLenum attachment,
                                                             GLenum pname,

@@ -1686,7 +1686,7 @@ void Context::getFramebufferAttachmentParameteriv(GLenum target,
                                                   GLint *params)
 {
     const Framebuffer *framebuffer = mGLState.getTargetFramebuffer(target);
-    QueryFramebufferAttachmentParameteriv(framebuffer, attachment, pname, params);
+    QueryFramebufferAttachmentParameteriv(this, framebuffer, attachment, pname, params);
 }
 
 void Context::getRenderbufferParameteriv(GLenum target, GLenum pname, GLint *params)
@@ -2220,7 +2220,7 @@ EGLenum Context::getRenderBuffer() const
         return EGL_NONE;
     }
 
-    const FramebufferAttachment *backAttachment = framebuffer->getAttachment(GL_BACK);
+    const FramebufferAttachment *backAttachment = framebuffer->getAttachment(this, GL_BACK);
     ASSERT(backAttachment != nullptr);
     return backAttachment->getSurface()->getRenderBuffer();
 }

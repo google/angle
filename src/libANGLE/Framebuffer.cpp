@@ -297,7 +297,8 @@ const std::string &FramebufferState::getLabel()
     return mLabel;
 }
 
-const FramebufferAttachment *FramebufferState::getAttachment(GLenum attachment) const
+const FramebufferAttachment *FramebufferState::getAttachment(const Context *context,
+                                                             GLenum attachment) const
 {
     if (attachment >= GL_COLOR_ATTACHMENT0 && attachment <= GL_COLOR_ATTACHMENT15)
     {
@@ -317,7 +318,17 @@ const FramebufferAttachment *FramebufferState::getAttachment(GLenum attachment) 
             return getStencilAttachment();
         case GL_DEPTH_STENCIL:
         case GL_DEPTH_STENCIL_ATTACHMENT:
-            return getDepthStencilAttachment();
+            // In WebG1, DEPTH_STENCIL_ATTACHMENT is an alternative attachment point and even when
+            // inconsistant (i.e. multiple conflicting attachment points), it is still permitted to
+            // query the attachment parameters.
+            if (context->isWebGL1())
+            {
+                return getWebGLDepthStencilAttachment();
+            }
+            else
+            {
+                return getDepthStencilAttachment();
+            }
         default:
             UNREACHABLE();
             return nullptr;
@@ -402,6 +413,11 @@ const FramebufferAttachment *FramebufferState::getDepthAttachment() const
     return mDepthAttachment.isAttached() ? &mDepthAttachment : nullptr;
 }
 
+const FramebufferAttachment *FramebufferState::getWebGLDepthStencilAttachment() const
+{
+    return mWebGLDepthStencilAttachment.isAttached() ? &mWebGLDepthStencilAttachment : nullptr;
+}
+
 const FramebufferAttachment *FramebufferState::getStencilAttachment() const
 {
     return mStencilAttachment.isAttached() ? &mStencilAttachment : nullptr;
@@ -466,7 +482,15 @@ const gl::FramebufferAttachment *FramebufferState::getDrawBuffer(size_t drawBuff
         // must be COLOR_ATTACHMENTi or NONE"
         ASSERT(mDrawBufferStates[drawBufferIdx] == GL_COLOR_ATTACHMENT0 + drawBufferIdx ||
                (drawBufferIdx == 0 && mDrawBufferStates[drawBufferIdx] == GL_BACK));
-        return getAttachment(mDrawBufferStates[drawBufferIdx]);
+
+        if (mDrawBufferStates[drawBufferIdx] == GL_BACK)
+        {
+            return getColorAttachment(0);
+        }
+        else
+        {
+            return getColorAttachment(mDrawBufferStates[drawBufferIdx] - GL_COLOR_ATTACHMENT0);
+        }
     }
     else
     {
@@ -797,9 +821,10 @@ const FramebufferAttachment *Framebuffer::getFirstNonNullAttachment() const
     return mState.getFirstNonNullAttachment();
 }
 
-const FramebufferAttachment *Framebuffer::getAttachment(GLenum attachment) const
+const FramebufferAttachment *Framebuffer::getAttachment(const Context *context,
+                                                        GLenum attachment) const
 {
-    return mState.getAttachment(attachment);
+    return mState.getAttachment(context, attachment);
 }
 
 size_t Framebuffer::getDrawbufferStateCount() const

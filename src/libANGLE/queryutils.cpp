@@ -778,14 +778,16 @@ void GetAtomicCounterBufferResourceProperty(const Program *program,
 
 }  // anonymous namespace
 
-void QueryFramebufferAttachmentParameteriv(const Framebuffer *framebuffer,
+void QueryFramebufferAttachmentParameteriv(const Context *context,
+                                           const Framebuffer *framebuffer,
                                            GLenum attachment,
                                            GLenum pname,
                                            GLint *params)
 {
     ASSERT(framebuffer);
 
-    const FramebufferAttachment *attachmentObject = framebuffer->getAttachment(attachment);
+    const FramebufferAttachment *attachmentObject = framebuffer->getAttachment(context, attachment);
+
     if (attachmentObject == nullptr)
     {
         // ES 2.0.25 spec pg 127 states that if the value of FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE

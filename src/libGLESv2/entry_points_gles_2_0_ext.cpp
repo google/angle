@@ -2091,7 +2091,7 @@ ANGLE_EXPORT void GL_APIENTRY GetFramebufferAttachmentParameterivRobustANGLE(GLe
         }
 
         const Framebuffer *framebuffer = context->getGLState().getTargetFramebuffer(target);
-        QueryFramebufferAttachmentParameteriv(framebuffer, attachment, pname, params);
+        QueryFramebufferAttachmentParameteriv(context, framebuffer, attachment, pname, params);
         SetRobustLengthParam(length, numParams);
     }
 }

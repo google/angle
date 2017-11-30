@@ -32,7 +32,8 @@ struct VertexAttribute;
 class VertexBinding;
 struct VertexAttribCurrentValueData;
 
-void QueryFramebufferAttachmentParameteriv(const Framebuffer *framebuffer,
+void QueryFramebufferAttachmentParameteriv(const Context *context,
+                                           const Framebuffer *framebuffer,
                                            GLenum attachment,
                                            GLenum pname,
                                            GLint *params);

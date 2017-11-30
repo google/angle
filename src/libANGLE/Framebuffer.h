@@ -60,7 +60,7 @@ class FramebufferState final : angle::NonCopyable
     const std::string &getLabel();
     size_t getReadIndex() const;
 
-    const FramebufferAttachment *getAttachment(GLenum attachment) const;
+    const FramebufferAttachment *getAttachment(const Context *context, GLenum attachment) const;
     const FramebufferAttachment *getReadAttachment() const;
     const FramebufferAttachment *getFirstNonNullAttachment() const;
     const FramebufferAttachment *getFirstColorAttachment() const;
@@ -100,6 +100,8 @@ class FramebufferState final : angle::NonCopyable
     GLint getBaseViewIndex() const;
 
   private:
+    const FramebufferAttachment *getWebGLDepthStencilAttachment() const;
+
     friend class Framebuffer;
 
     std::string mLabel;
@@ -185,7 +187,7 @@ class Framebuffer final : public LabeledObject, public OnAttachmentDirtyReceiver
     const FramebufferAttachment *getFirstColorbuffer() const;
     const FramebufferAttachment *getFirstNonNullAttachment() const;
 
-    const FramebufferAttachment *getAttachment(GLenum attachment) const;
+    const FramebufferAttachment *getAttachment(const Context *context, GLenum attachment) const;
     GLenum getMultiviewLayout() const;
     GLsizei getNumViews() const;
     GLint getBaseViewIndex() const;

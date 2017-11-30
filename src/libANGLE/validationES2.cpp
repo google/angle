@@ -2502,9 +2502,9 @@ bool ValidateBlitFramebufferANGLE(Context *context,
         if (mask & masks[i])
         {
             const FramebufferAttachment *readBuffer =
-                readFramebuffer->getAttachment(attachments[i]);
+                readFramebuffer->getAttachment(context, attachments[i]);
             const FramebufferAttachment *drawBuffer =
-                drawFramebuffer->getAttachment(attachments[i]);
+                drawFramebuffer->getAttachment(context, attachments[i]);
 
             if (readBuffer && drawBuffer)
             {
@@ -5834,7 +5834,7 @@ bool ValidateDrawElements(ValidationContext *context,
     return ValidateDrawElementsCommon(context, mode, count, type, indices, 1);
 }
 
-bool ValidateGetFramebufferAttachmentParameteriv(ValidationContext *context,
+bool ValidateGetFramebufferAttachmentParameteriv(Context *context,
                                                  GLenum target,
                                                  GLenum attachment,
                                                  GLenum pname,

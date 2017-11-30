@@ -597,7 +597,7 @@ bool ValidateDrawElements(ValidationContext *context,
 
 bool ValidateDrawArrays(ValidationContext *context, GLenum mode, GLint first, GLsizei count);
 
-bool ValidateGetFramebufferAttachmentParameteriv(ValidationContext *context,
+bool ValidateGetFramebufferAttachmentParameteriv(Context *context,
                                                  GLenum target,
                                                  GLenum attachment,
                                                  GLenum pname,
