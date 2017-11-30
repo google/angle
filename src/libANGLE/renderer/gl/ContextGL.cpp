@@ -420,6 +420,11 @@ gl::Error ContextGL::dispatchCompute(const gl::Context *context,
     return mRenderer->dispatchCompute(context, numGroupsX, numGroupsY, numGroupsZ);
 }
 
+gl::Error ContextGL::dispatchComputeIndirect(const gl::Context *context, GLintptr indirect)
+{
+    return mRenderer->dispatchComputeIndirect(context, indirect);
+}
+
 gl::Error ContextGL::memoryBarrier(const gl::Context *context, GLbitfield barriers)
 {
     return mRenderer->memoryBarrier(barriers);

@@ -26,6 +26,7 @@ ERRMSG(CubemapIncomplete,
 ERRMSG(DefaultFramebufferInvalidAttachment,
        "Invalid attachment when the default framebuffer is bound.");
 ERRMSG(DefaultFramebufferTarget, "It is invalid to change default FBO's attachments");
+ERRMSG(DispatchIndirectBufferNotBound, "Dispatch indirect buffer must be bound.");
 ERRMSG(DrawBufferTypeMismatch,
        "Fragment shader output type does not match the bound framebuffer attachment type.");
 ERRMSG(EnumNotSupported, "Enum is not currently supported.");
@@ -129,12 +130,15 @@ ERRMSG(NegativePrimcount, "Primcount must be greater than or equal to zero.");
 ERRMSG(NegativeSize, "Cannot have negative height or width.");
 ERRMSG(NegativeStart, "Cannot have negative start.");
 ERRMSG(NegativeStride, "Cannot have negative stride.");
+ERRMSG(NoActiveProgramWithComputeShader, "No active program for the compute shader stage.");
 ERRMSG(NoSuchPath, "No such path object.");
 ERRMSG(NoTransformFeedbackOutputVariables,
     "The active program has specified no output variables to record.");
 ERRMSG(NoZeroDivisor, "At least one enabled attribute must have a divisor of zero.");
 ERRMSG(ObjectNotGenerated, "Object cannot be used because it has not been generated.");
 ERRMSG(OffsetMustBeMultipleOfType, "Offset must be a multiple of the passed in datatype.");
+ERRMSG(OffsetMustBeMultipleOfUint,
+       "Offset must be a multiple of the size, in basic machine units, of uint");
 ERRMSG(OutsideOfBounds, "Parameter outside of bounds.");
 ERRMSG(ParamOverflow, "The provided parameters overflow with the provided buffer.");
 ERRMSG(PixelDataNotNull, "Pixel data must be null.");

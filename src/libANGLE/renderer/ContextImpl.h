@@ -161,6 +161,8 @@ class ContextImpl : public GLImplFactory
                                       GLuint numGroupsX,
                                       GLuint numGroupsY,
                                       GLuint numGroupsZ) = 0;
+    virtual gl::Error dispatchComputeIndirect(const gl::Context *context, GLintptr indirect) = 0;
+
     virtual gl::Error memoryBarrier(const gl::Context *context, GLbitfield barriers)         = 0;
     virtual gl::Error memoryBarrierByRegion(const gl::Context *context, GLbitfield barriers) = 0;
 

@@ -141,6 +141,7 @@ class Context11 : public ContextImpl
                               GLuint numGroupsX,
                               GLuint numGroupsY,
                               GLuint numGroupsZ) override;
+    gl::Error dispatchComputeIndirect(const gl::Context *context, GLintptr indirect) override;
 
     gl::Error memoryBarrier(const gl::Context *context, GLbitfield barriers) override;
     gl::Error memoryBarrierByRegion(const gl::Context *context, GLbitfield barriers) override;

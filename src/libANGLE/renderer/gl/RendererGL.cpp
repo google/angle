@@ -729,8 +729,15 @@ gl::Error RendererGL::dispatchCompute(const gl::Context *context,
                                       GLuint numGroupsY,
                                       GLuint numGroupsZ)
 {
-    ANGLE_TRY(mStateManager->setDispatchComputeState(context));
+    ANGLE_TRY(mStateManager->setDispatchComputeState(context, false));
     mFunctions->dispatchCompute(numGroupsX, numGroupsY, numGroupsZ);
+    return gl::NoError();
+}
+
+gl::Error RendererGL::dispatchComputeIndirect(const gl::Context *context, GLintptr indirect)
+{
+    ANGLE_TRY(mStateManager->setDispatchComputeState(context, true));
+    mFunctions->dispatchComputeIndirect(indirect);
     return gl::NoError();
 }
 

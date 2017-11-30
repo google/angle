@@ -300,6 +300,12 @@ gl::Error Context9::dispatchCompute(const gl::Context *context,
     return gl::InternalError() << "D3D9 doesn't support ES 3.1 DispatchCompute API";
 }
 
+gl::Error Context9::dispatchComputeIndirect(const gl::Context *context, GLintptr indirect)
+{
+    UNREACHABLE();
+    return gl::InternalError() << "D3D9 doesn't support ES 3.1 dispatchComputeIndirect API";
+}
+
 gl::Error Context9::memoryBarrier(const gl::Context *context, GLbitfield barriers)
 {
     UNREACHABLE();

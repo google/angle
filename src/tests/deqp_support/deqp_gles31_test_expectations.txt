@@ -1127,7 +1127,6 @@
 1442 OPENGL : dEQP-GLES31.functional.program_interface_query.uniform_block.referenced_by.* = FAIL
 1442 OPENGL : dEQP-GLES31.functional.compute.basic.copy_image_to_ssbo_large = FAIL
 1442 OPENGL : dEQP-GLES31.functional.compute.basic.copy_ssbo_to_image_large = FAIL
-2270 OPENGL : dEQP-GLES31.functional.compute.indirect_dispatch.* = FAIL
 2272 WIN NVIDIA OPENGL : dEQP-GLES31.functional.ssbo.layout.2_level_unsized* = FAIL
 2272 WIN NVIDIA OPENGL : dEQP-GLES31.functional.ssbo.layout.3_level_unsized* = FAIL
 2272 WIN NVIDIA OPENGL : dEQP-GLES31.functional.ssbo.layout.random.arrays_of_arrays* = FAIL

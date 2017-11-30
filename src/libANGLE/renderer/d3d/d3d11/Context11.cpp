@@ -321,6 +321,12 @@ gl::Error Context11::dispatchCompute(const gl::Context *context,
     return mRenderer->dispatchCompute(context, numGroupsX, numGroupsY, numGroupsZ);
 }
 
+gl::Error Context11::dispatchComputeIndirect(const gl::Context *context, GLintptr indirect)
+{
+    UNIMPLEMENTED();
+    return gl::InternalError();
+}
+
 gl::Error Context11::triggerDrawCallProgramRecompilation(const gl::Context *context,
                                                          GLenum drawMode)
 {
