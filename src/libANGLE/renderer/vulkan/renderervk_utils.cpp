@@ -9,6 +9,7 @@
 
 #include "renderervk_utils.h"
 
+#include "libANGLE/SizedMRUCache.h"
 #include "libANGLE/renderer/vulkan/ContextVk.h"
 #include "libANGLE/renderer/vulkan/RendererVk.h"
 
@@ -1285,6 +1286,19 @@ VkAttachmentDescription *RenderPassDesc::nextDepthStencilAttachment()
 {
     ASSERT(depthStencilAttachmentCount == 0);
     return &attachmentDescs[depthStencilAttachmentCount++];
+}
+
+size_t RenderPassDesc::hash() const
+{
+    return angle::ComputeGenericHash(*this);
+}
+
+bool RenderPassDesc::operator==(const RenderPassDesc &other) const
+{
+    return colorAttachmentCount == other.colorAttachmentCount &&
+           depthStencilAttachmentCount == other.depthStencilAttachmentCount &&
+           (memcmp(attachmentDescs.data(), other.attachmentDescs.data(),
+                   sizeof(VkAttachmentDescription) * attachmentDescs.size()) == 0);
 }
 
 uint32_t RenderPassDesc::attachmentCount() const

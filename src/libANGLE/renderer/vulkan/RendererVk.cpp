@@ -84,6 +84,63 @@ VkBool32 VKAPI_CALL DebugReportCallback(VkDebugReportFlagsEXT flags,
 
 }  // anonymous namespace
 
+// RenderPassCache implementation.
+RenderPassCache::RenderPassCache()
+{
+}
+
+RenderPassCache::~RenderPassCache()
+{
+    ASSERT(mPayload.empty());
+}
+
+void RenderPassCache::destroy(VkDevice device)
+{
+    for (auto &renderPassIt : mPayload)
+    {
+        renderPassIt.second.get().destroy(device);
+    }
+    mPayload.clear();
+}
+
+vk::Error RenderPassCache::getCompatibleRenderPass(VkDevice device,
+                                                   Serial serial,
+                                                   const vk::RenderPassDesc &desc,
+                                                   vk::RenderPass **renderPassOut)
+{
+    // TODO(jmadill): Return compatible RenderPass when possible.
+    return getMatchingRenderPass(device, serial, desc, renderPassOut);
+}
+
+vk::Error RenderPassCache::getMatchingRenderPass(VkDevice device,
+                                                 Serial serial,
+                                                 const vk::RenderPassDesc &desc,
+                                                 vk::RenderPass **renderPassOut)
+{
+    auto it = mPayload.find(desc);
+    if (it != mPayload.end())
+    {
+        // Update the serial before we return.
+        // TODO(jmadill): Could possibly use an MRU cache here.
+        it->second.updateSerial(serial);
+
+        *renderPassOut = &it->second.get();
+        return vk::NoError();
+    }
+
+    vk::RenderPass newRenderPass;
+    ANGLE_TRY(vk::InitializeRenderPassFromDesc(device, desc, &newRenderPass));
+
+    vk::RenderPassAndSerial withSerial(std::move(newRenderPass), serial);
+
+    auto insertPos = mPayload.emplace(desc, std::move(withSerial));
+    *renderPassOut = &insertPos.first->second.get();
+
+    // TODO(jmadill): Trim cache, and pre-populate with the most common RPs on startup.
+    return vk::NoError();
+}
+
+// RendererVk implementation.
 RendererVk::RendererVk()
     : mCapsInitialized(false),
       mInstance(VK_NULL_HANDLE),
@@ -111,6 +168,8 @@ RendererVk::~RendererVk()
             ERR() << "Error during VK shutdown: " << error;
         }
     }
+
+    mRenderPassCache.destroy(mDevice);
 
     if (mGlslangWrapper)
     {
@@ -798,8 +857,7 @@ gl::Error RendererVk::ensureInRenderPass(const gl::Context *context, Framebuffer
     {
         endRenderPass();
     }
-    ANGLE_TRY(
-        framebufferVk->beginRenderPass(context, mDevice, &mCommandBuffer, mCurrentQueueSerial));
+    ANGLE_TRY(framebufferVk->beginRenderPass(context, this, &mCommandBuffer, mCurrentQueueSerial));
     mCurrentRenderPassFramebuffer = framebufferVk;
     return gl::NoError();
 }
@@ -830,6 +888,20 @@ bool RendererVk::isResourceInUse(const ResourceVk &resource)
 bool RendererVk::isSerialInUse(Serial serial)
 {
     return serial > mLastCompletedQueueSerial;
+}
+
+vk::Error RendererVk::getCompatibleRenderPass(const vk::RenderPassDesc &desc,
+                                              vk::RenderPass **renderPassOut)
+{
+    return mRenderPassCache.getCompatibleRenderPass(mDevice, mCurrentQueueSerial, desc,
+                                                    renderPassOut);
+}
+
+vk::Error RendererVk::getMatchingRenderPass(const vk::RenderPassDesc &desc,
+                                            vk::RenderPass **renderPassOut)
+{
+    return mRenderPassCache.getMatchingRenderPass(mDevice, mCurrentQueueSerial, desc,
+                                                  renderPassOut);
 }
 
 }  // namespace rx

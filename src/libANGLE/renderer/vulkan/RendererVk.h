@@ -33,6 +33,28 @@ namespace vk
 struct Format;
 }
 
+// TODO(jmadill): Add cache trimming.
+class RenderPassCache
+{
+  public:
+    RenderPassCache();
+    ~RenderPassCache();
+
+    void destroy(VkDevice device);
+
+    vk::Error getCompatibleRenderPass(VkDevice device,
+                                      Serial serial,
+                                      const vk::RenderPassDesc &desc,
+                                      vk::RenderPass **renderPassOut);
+    vk::Error getMatchingRenderPass(VkDevice device,
+                                    Serial serial,
+                                    const vk::RenderPassDesc &desc,
+                                    vk::RenderPass **renderPassOut);
+
+  private:
+    std::unordered_map<vk::RenderPassDesc, vk::RenderPassAndSerial> mPayload;
+};
+
 class RendererVk : angle::NonCopyable
 {
   public:
@@ -115,6 +137,10 @@ class RendererVk : angle::NonCopyable
         return mFormatTable[internalFormat];
     }
 
+    vk::Error getCompatibleRenderPass(const vk::RenderPassDesc &desc,
+                                      vk::RenderPass **renderPassOut);
+    vk::Error getMatchingRenderPass(const vk::RenderPassDesc &desc, vk::RenderPass **renderPassOut);
+
   private:
     void ensureCapsInitialized() const;
     void generateCaps(gl::Caps *outCaps,
@@ -157,6 +183,8 @@ class RendererVk : angle::NonCopyable
 
     // TODO(jmadill): Don't keep a single renderpass in the Renderer.
     FramebufferVk *mCurrentRenderPassFramebuffer;
+
+    RenderPassCache mRenderPassCache;
 };
 
 }  // namespace rx
