@@ -665,6 +665,7 @@ bool ValidationContext::getQueryParameterInfo(GLenum pname, GLenum *type, unsign
     {
         case GL_ATOMIC_COUNTER_BUFFER_BINDING:
         case GL_DRAW_INDIRECT_BUFFER_BINDING:
+        case GL_DISPATCH_INDIRECT_BUFFER_BINDING:
         case GL_MAX_FRAMEBUFFER_WIDTH:
         case GL_MAX_FRAMEBUFFER_HEIGHT:
         case GL_MAX_FRAMEBUFFER_SAMPLES:
