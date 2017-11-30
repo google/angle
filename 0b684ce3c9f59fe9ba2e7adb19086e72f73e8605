@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "316df32d_913b2856",
+        "filename": "src/tests/gl_tests/TextureUploadFormatTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1184734
+      },
+      "writtenOn": "2017-11-30T03:15:48Z",
+      "side": 0,
+      "message": "Ack",
+      "parentUuid": "2dfd91c0_d76baea9",
+      "revId": "0b684ce3c9f59fe9ba2e7adb19086e72f73e8605",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d7bc57db_0e427bf9",
         "filename": "src/tests/gl_tests/TextureUploadFormatTest.cpp",
         "patchSetId": 3
@@ -30,6 +48,30 @@
       "writtenOn": "2017-11-29T11:09:44Z",
       "side": 0,
       "message": "The original value for srcIntVals[3] is an unsigned integer 3u. so srcIntVals[3] \u003c\u003c 30 would become a temporary signed integer and it is a negative value(you can calculate), so convert it to a unsigned integer is not allowed for constexpr without explicit type cast. So I change the value from 3u to 1u.",
+      "range": {
+        "startLine": 591,
+        "startChar": 52,
+        "endLine": 591,
+        "endChar": 53
+      },
+      "revId": "0b684ce3c9f59fe9ba2e7adb19086e72f73e8605",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8a64eade_2ba14572",
+        "filename": "src/tests/gl_tests/TextureUploadFormatTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 591,
+      "author": {
+        "id": 1184734
+      },
+      "writtenOn": "2017-11-30T03:15:48Z",
+      "side": 0,
+      "message": "uint8_t(3) \u003c\u003c 30 promotes to int32_t. Either use `uint32_t(srcIntVals[3]) \u003c\u003c 30` or change srcIntVals to be uint32_ts. (probably safest)",
+      "parentUuid": "d7bc57db_0e427bf9",
       "range": {
         "startLine": 591,
         "startChar": 52,
