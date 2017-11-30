@@ -295,7 +295,7 @@ gl::Error ContextVk::initPipeline(const gl::Context *context)
     return gl::NoError();
 }
 
-gl::Error ContextVk::setupDraw(const gl::Context *context, GLenum mode)
+gl::Error ContextVk::setupDraw(const gl::Context *context, GLenum mode, DrawType drawType)
 {
     if (mode != mCurrentDrawMode)
     {
@@ -321,8 +321,8 @@ gl::Error ContextVk::setupDraw(const gl::Context *context, GLenum mode)
 
     // Process vertex attributes. Assume zero offsets for now.
     // TODO(jmadill): Offset handling.
-    const std::vector<VkBuffer> &vertexHandles = vkVAO->getCurrentVertexBufferHandlesCache();
-    angle::MemoryBuffer *zeroBuf               = nullptr;
+    const auto &vertexHandles    = vkVAO->getCurrentArrayBufferHandles();
+    angle::MemoryBuffer *zeroBuf = nullptr;
     ANGLE_TRY(context->getZeroFilledBuffer(maxAttrib * sizeof(VkDeviceSize), &zeroBuf));
 
     vk::CommandBufferAndState *commandBuffer = nullptr;
@@ -335,7 +335,8 @@ gl::Error ContextVk::setupDraw(const gl::Context *context, GLenum mode)
 
     // TODO(jmadill): the queue serial should be bound to the pipeline.
     setQueueSerial(queueSerial);
-    vkVAO->updateCurrentBufferSerials(programGL->getActiveAttribLocationsMask(), queueSerial);
+    vkVAO->updateCurrentBufferSerials(programGL->getActiveAttribLocationsMask(), queueSerial,
+                                      drawType);
 
     // TODO(jmadill): Can probably use more dirty bits here.
     ContextVk *contextVk = vk::GetImpl(context);
@@ -360,7 +361,7 @@ gl::Error ContextVk::setupDraw(const gl::Context *context, GLenum mode)
 
 gl::Error ContextVk::drawArrays(const gl::Context *context, GLenum mode, GLint first, GLsizei count)
 {
-    ANGLE_TRY(setupDraw(context, mode));
+    ANGLE_TRY(setupDraw(context, mode, DrawType::Arrays));
 
     vk::CommandBufferAndState *commandBuffer = nullptr;
     ANGLE_TRY(mRenderer->getStartedCommandBuffer(&commandBuffer));
@@ -385,7 +386,7 @@ gl::Error ContextVk::drawElements(const gl::Context *context,
                                   GLenum type,
                                   const void *indices)
 {
-    ANGLE_TRY(setupDraw(context, mode));
+    ANGLE_TRY(setupDraw(context, mode, DrawType::Elements));
 
     if (indices)
     {

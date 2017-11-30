@@ -28,9 +28,11 @@ class VertexArrayVk : public VertexArrayImpl
     void syncState(const gl::Context *context,
                    const gl::VertexArray::DirtyBits &dirtyBits) override;
 
-    const std::vector<VkBuffer> &getCurrentVertexBufferHandlesCache() const;
+    const gl::AttribArray<VkBuffer> &getCurrentArrayBufferHandles() const;
 
-    void updateCurrentBufferSerials(const gl::AttributesMask &activeAttribsMask, Serial serial);
+    void updateCurrentBufferSerials(const gl::AttributesMask &activeAttribsMask,
+                                    Serial serial,
+                                    DrawType drawType);
 
     void invalidateVertexDescriptions();
     void updateVertexDescriptions(const gl::Context *context);
@@ -39,8 +41,9 @@ class VertexArrayVk : public VertexArrayImpl
     const std::vector<VkVertexInputAttributeDescription> &getVertexAttribDescs() const;
 
   private:
-    std::vector<VkBuffer> mCurrentVertexBufferHandlesCache;
-    std::vector<BufferVk *> mCurrentVkBuffersCache;
+    gl::AttribArray<VkBuffer> mCurrentArrayBufferHandles;
+    gl::AttribArray<ResourceVk *> mCurrentArrayBufferResources;
+    ResourceVk *mCurrentElementArrayBufferResource;
 
     // Keep a cache of binding and attribute descriptions for easy pipeline updates.
     // TODO(jmadill): Update this when we support pipeline caching.
