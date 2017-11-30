@@ -22,6 +22,30 @@
       "revId": "536b168b1dd7790ea218e3b9cc8c97caab142f3b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7133b57e_c6ebf7ee",
+        "filename": "src/compiler/translator/Types.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-11-30T15:28:27Z",
+      "side": 1,
+      "message": "This is changed to make the interface the same as in TSymbol - in a follow-up patch TStructure is changed to inherit from TSymbol. If you want, I could put this change into the follow-up patch instead, but it doesn\u0027t affect the intended end result.",
+      "parentUuid": "03d45bb9_3d3a4f14",
+      "range": {
+        "startLine": 105,
+        "startChar": 4,
+        "endLine": 105,
+        "endChar": 65
+      },
+      "revId": "536b168b1dd7790ea218e3b9cc8c97caab142f3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
