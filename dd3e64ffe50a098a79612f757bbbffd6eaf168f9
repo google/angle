@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a4880442_bc3be5ad",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 299,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-30T18:20:54Z",
+      "side": 1,
+      "message": "nit: if you are making a const int in a header, use constexpr instead of const. I think in the other file, it was an enum value.",
+      "revId": "dd3e64ffe50a098a79612f757bbbffd6eaf168f9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
