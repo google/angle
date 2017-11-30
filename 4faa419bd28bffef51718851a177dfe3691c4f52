@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a79df9ca_ce0a6515",
+        "filename": "src/compiler/translator/ShaderVars.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 280,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-30T19:41:52Z",
+      "side": 1,
+      "message": "do you need to update this? presumably it is a link error to have a uniform with readonly in a vertex shader and not readonly in a fragment shader.",
+      "range": {
+        "startLine": 280,
+        "startChar": 14,
+        "endLine": 280,
+        "endChar": 37
+      },
+      "revId": "4faa419bd28bffef51718851a177dfe3691c4f52",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "29823c5a_ff67ba7b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/PixelTransfer11.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 194,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-30T19:41:52Z",
+      "side": 1,
+      "message": "could you please move the refactor that removes SamplerType to a prior split patch? I would like to review this CL carefully and doing the refactor separately would make detecting bugs easier.",
+      "range": {
+        "startLine": 194,
+        "startChar": 36,
+        "endLine": 194,
+        "endChar": 56
+      },
+      "revId": "4faa419bd28bffef51718851a177dfe3691c4f52",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "88b3ed4d_a3cbfe9f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 484,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-11-30T19:41:52Z",
+      "side": 1,
+      "message": "the style guide suggests to prefer returning pointers. we sometimes don\u0027t do this, but in this case I think you can return a pointer.",
+      "range": {
+        "startLine": 484,
+        "startChar": 5,
+        "endLine": 484,
+        "endChar": 14
+      },
+      "revId": "4faa419bd28bffef51718851a177dfe3691c4f52",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
