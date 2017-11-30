@@ -131,13 +131,16 @@ class Std140BlockEncoder : public BlockLayoutEncoder
 
 using BlockLayoutMap = std::map<std::string, BlockMemberInfo>;
 
-// Only valid to call with ShaderVariable, InterfaceBlockField and Uniform.
-template <typename VarT>
-void GetUniformBlockInfo(const std::vector<VarT> &fields,
+void GetUniformBlockInfo(const std::vector<InterfaceBlockField> &fields,
                          const std::string &prefix,
                          sh::BlockLayoutEncoder *encoder,
-                         bool inRowMajorLayout,
-                         BlockLayoutMap *blockLayoutMap);
+                         BlockLayoutMap *blockInfoOut);
+
+// Used for laying out the default uniform block on the Vulkan backend.
+void GetUniformBlockInfo(const std::vector<Uniform> &uniforms,
+                         const std::string &prefix,
+                         sh::BlockLayoutEncoder *encoder,
+                         BlockLayoutMap *blockInfoOut);
 
 }  // namespace sh
 

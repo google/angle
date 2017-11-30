@@ -319,7 +319,6 @@ TEST_F(CollectVertexVariablesTest, SimpleInterfaceBlock)
     const InterfaceBlock &interfaceBlock = interfaceBlocks[0];
 
     EXPECT_EQ(0u, interfaceBlock.arraySize);
-    EXPECT_FALSE(interfaceBlock.isRowMajorLayout);
     EXPECT_EQ(BLOCKLAYOUT_SHARED, interfaceBlock.layout);
     EXPECT_EQ("b", interfaceBlock.name);
     EXPECT_TRUE(interfaceBlock.staticUse);
@@ -355,7 +354,6 @@ TEST_F(CollectVertexVariablesTest, SimpleInstancedInterfaceBlock)
     const InterfaceBlock &interfaceBlock = interfaceBlocks[0];
 
     EXPECT_EQ(0u, interfaceBlock.arraySize);
-    EXPECT_FALSE(interfaceBlock.isRowMajorLayout);
     EXPECT_EQ(BLOCKLAYOUT_SHARED, interfaceBlock.layout);
     EXPECT_EQ("b", interfaceBlock.name);
     EXPECT_EQ("blockInstance", interfaceBlock.instanceName);
@@ -393,7 +391,6 @@ TEST_F(CollectVertexVariablesTest, StructInterfaceBlock)
     const InterfaceBlock &interfaceBlock = interfaceBlocks[0];
 
     EXPECT_EQ(0u, interfaceBlock.arraySize);
-    EXPECT_FALSE(interfaceBlock.isRowMajorLayout);
     EXPECT_EQ(BLOCKLAYOUT_SHARED, interfaceBlock.layout);
     EXPECT_EQ("b", interfaceBlock.name);
     EXPECT_EQ(DecorateName("b"), interfaceBlock.mappedName);
@@ -439,7 +436,6 @@ TEST_F(CollectVertexVariablesTest, StructInstancedInterfaceBlock)
     const InterfaceBlock &interfaceBlock = interfaceBlocks[0];
 
     EXPECT_EQ(0u, interfaceBlock.arraySize);
-    EXPECT_FALSE(interfaceBlock.isRowMajorLayout);
     EXPECT_EQ(BLOCKLAYOUT_SHARED, interfaceBlock.layout);
     EXPECT_EQ("b", interfaceBlock.name);
     EXPECT_EQ(DecorateName("b"), interfaceBlock.mappedName);
@@ -486,7 +482,6 @@ TEST_F(CollectVertexVariablesTest, NestedStructRowMajorInterfaceBlock)
     const InterfaceBlock &interfaceBlock = interfaceBlocks[0];
 
     EXPECT_EQ(0u, interfaceBlock.arraySize);
-    EXPECT_TRUE(interfaceBlock.isRowMajorLayout);
     EXPECT_EQ(BLOCKLAYOUT_SHARED, interfaceBlock.layout);
     EXPECT_EQ("b", interfaceBlock.name);
     EXPECT_EQ(DecorateName("b"), interfaceBlock.mappedName);
@@ -795,7 +790,6 @@ TEST_F(CollectHashedVertexVariablesTest, InstancedInterfaceBlock)
     const InterfaceBlock &interfaceBlock = interfaceBlocks[0];
 
     EXPECT_EQ(0u, interfaceBlock.arraySize);
-    EXPECT_FALSE(interfaceBlock.isRowMajorLayout);
     EXPECT_EQ(BLOCKLAYOUT_SHARED, interfaceBlock.layout);
     EXPECT_EQ("blockName", interfaceBlock.name);
     EXPECT_EQ("blockInstance", interfaceBlock.instanceName);

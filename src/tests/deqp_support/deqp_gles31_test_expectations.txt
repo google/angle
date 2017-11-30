@@ -538,8 +538,6 @@
 1442 OPENGL : dEQP-GLES31.functional.program_interface_query.program_output.* = FAIL
 1442 OPENGL : dEQP-GLES31.functional.program_interface_query.shader_storage_block.* = FAIL
 1442 OPENGL : dEQP-GLES31.functional.program_interface_query.transform_feedback_varying.* = FAIL
-1442 OPENGL : dEQP-GLES31.functional.program_interface_query.uniform.matrix_row_major.* = FAIL
-1442 OPENGL : dEQP-GLES31.functional.program_interface_query.uniform.matrix_stride.* = FAIL
 1442 OPENGL : dEQP-GLES31.functional.program_interface_query.uniform.referenced_by_shader.* = FAIL
 1442 OPENGL : dEQP-GLES31.functional.program_interface_query.uniform.random.* = FAIL
 1442 OPENGL : dEQP-GLES31.functional.program_interface_query.uniform_block.resource_list.block_array = FAIL

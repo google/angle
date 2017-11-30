@@ -437,6 +437,11 @@ bool TType::isStructureContainingArrays() const
     return mStructure ? mStructure->containsArrays() : false;
 }
 
+bool TType::isStructureContainingMatrices() const
+{
+    return mStructure ? mStructure->containsMatrices() : false;
+}
+
 bool TType::isStructureContainingType(TBasicType t) const
 {
     return mStructure ? mStructure->containsType(t) : false;
@@ -930,6 +935,17 @@ bool TFieldListCollection::containsArrays() const
     return false;
 }
 
+bool TFieldListCollection::containsMatrices() const
+{
+    for (const auto *field : *mFields)
+    {
+        const TType *fieldType = field->type();
+        if (fieldType->isMatrix() || fieldType->isStructureContainingMatrices())
+            return true;
+    }
+    return false;
+}
+
 bool TFieldListCollection::containsType(TBasicType type) const
 {
     for (const auto *field : *mFields)
@@ -1032,7 +1048,6 @@ TInterfaceBlock::TInterfaceBlock(const TString *name,
       mName(name),
       mInstanceName(instanceName),
       mBlockStorage(layoutQualifier.blockStorage),
-      mMatrixPacking(layoutQualifier.matrixPacking),
       mBinding(layoutQualifier.binding)
 {
 }

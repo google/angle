@@ -252,7 +252,7 @@ size_t UniformBlockInfo::getBlockInfo(const sh::InterfaceBlock &interfaceBlock)
     }
 
     sh::GetUniformBlockInfo(interfaceBlock.fields, interfaceBlock.fieldPrefix(), encoder,
-                            interfaceBlock.isRowMajorLayout, &mBlockLayout);
+                            &mBlockLayout);
 
     return encoder->getBlockSize();
 }

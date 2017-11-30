@@ -1196,6 +1196,200 @@ TEST_P(UniformBufferTest, DetachShaders)
     glDeleteProgram(program);
 }
 
+// Test a uniform block where the whole block is set as row-major.
+TEST_P(UniformBufferTest, Std140UniformBlockWithRowMajorQualifier)
+{
+    // AMD OpenGL driver doesn't seem to apply the row-major qualifier right.
+    // http://anglebug.com/2273
+    ANGLE_SKIP_TEST_IF(IsAMD() && IsOpenGL());
+
+    const std::string &fragmentShader =
+        R"(#version 300 es
+
+        precision highp float;
+        out vec4 my_FragColor;
+
+        layout(std140, row_major) uniform matrixBuffer
+        {
+            mat2 m;
+        } buffer;
+
+        void main()
+        {
+            // Vector constructor accesses elements in column-major order.
+            my_FragColor = vec4(buffer.m);
+        })";
+
+    ANGLE_GL_PROGRAM(program, mVertexShaderSource, fragmentShader);
+    GLint uniformBufferIndex = glGetUniformBlockIndex(program, "matrixBuffer");
+
+    glBindBuffer(GL_UNIFORM_BUFFER, mUniformBuffer);
+    const GLsizei kElementsPerMatrix = 8;  // Each mat2 row gets padded into a vec4.
+    const GLsizei kBytesPerElement   = 4;
+    const GLsizei kDataSize          = kElementsPerMatrix * kBytesPerElement;
+    std::vector<GLubyte> v(kDataSize, 0);
+    float *vAsFloat = reinterpret_cast<float *>(v.data());
+
+    vAsFloat[0u] = 1.0f;
+    vAsFloat[1u] = 128.0f / 255.0f;
+    vAsFloat[4u] = 64.0f / 255.0f;
+    vAsFloat[5u] = 32.0f / 255.0f;
+
+    glBufferData(GL_UNIFORM_BUFFER, kDataSize, v.data(), GL_STATIC_DRAW);
+    glBindBufferBase(GL_UNIFORM_BUFFER, 0, mUniformBuffer);
+    glUniformBlockBinding(program, uniformBufferIndex, 0);
+    drawQuad(program.get(), "position", 0.5f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(255, 64, 128, 32), 5);
+}
+
+// Test a uniform block where an individual matrix field is set as row-major whereas the whole block
+// is set as column-major.
+TEST_P(UniformBufferTest, Std140UniformBlockWithPerMemberRowMajorQualifier)
+{
+    // AMD OpenGL driver doesn't seem to apply the row-major qualifier right.
+    // http://anglebug.com/2273
+    ANGLE_SKIP_TEST_IF(IsAMD() && IsOpenGL());
+
+    const std::string &fragmentShader =
+        R"(#version 300 es
+
+        precision highp float;
+        out vec4 my_FragColor;
+
+        layout(std140, column_major) uniform matrixBuffer
+        {
+            layout(row_major) mat2 m;
+        } buffer;
+
+        void main()
+        {
+            // Vector constructor accesses elements in column-major order.
+            my_FragColor = vec4(buffer.m);
+        })";
+
+    ANGLE_GL_PROGRAM(program, mVertexShaderSource, fragmentShader);
+    GLint uniformBufferIndex = glGetUniformBlockIndex(program, "matrixBuffer");
+
+    glBindBuffer(GL_UNIFORM_BUFFER, mUniformBuffer);
+    const GLsizei kElementsPerMatrix = 8;  // Each mat2 row gets padded into a vec4.
+    const GLsizei kBytesPerElement   = 4;
+    const GLsizei kDataSize          = kElementsPerMatrix * kBytesPerElement;
+    std::vector<GLubyte> v(kDataSize, 0);
+    float *vAsFloat = reinterpret_cast<float *>(v.data());
+
+    vAsFloat[0u] = 1.0f;
+    vAsFloat[1u] = 128.0f / 255.0f;
+    vAsFloat[4u] = 64.0f / 255.0f;
+    vAsFloat[5u] = 32.0f / 255.0f;
+
+    glBufferData(GL_UNIFORM_BUFFER, kDataSize, v.data(), GL_STATIC_DRAW);
+    glBindBufferBase(GL_UNIFORM_BUFFER, 0, mUniformBuffer);
+    glUniformBlockBinding(program, uniformBufferIndex, 0);
+    drawQuad(program.get(), "position", 0.5f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(255, 64, 128, 32), 5);
+}
+
+// Test a uniform block where an individual matrix field is set as column-major whereas the whole
+// block is set as row-major.
+TEST_P(UniformBufferTest, Std140UniformBlockWithPerMemberColumnMajorQualifier)
+{
+    const std::string &fragmentShader =
+        R"(#version 300 es
+
+        precision highp float;
+        out vec4 my_FragColor;
+
+        layout(std140, row_major) uniform matrixBuffer
+        {
+            // 2 columns, 3 rows.
+            layout(column_major) mat2x3 m;
+        } buffer;
+
+        void main()
+        {
+            // Vector constructor accesses elements in column-major order.
+            my_FragColor = vec4(buffer.m);
+        })";
+
+    ANGLE_GL_PROGRAM(program, mVertexShaderSource, fragmentShader);
+    GLint uniformBufferIndex = glGetUniformBlockIndex(program, "matrixBuffer");
+
+    glBindBuffer(GL_UNIFORM_BUFFER, mUniformBuffer);
+    const GLsizei kElementsPerMatrix = 8;  // Each mat2x3 column gets padded into a vec4.
+    const GLsizei kBytesPerElement   = 4;
+    const GLsizei kDataSize          = kElementsPerMatrix * kBytesPerElement;
+    std::vector<GLubyte> v(kDataSize, 0);
+    float *vAsFloat = reinterpret_cast<float *>(v.data());
+
+    vAsFloat[0u] = 1.0f;
+    vAsFloat[1u] = 192.0f / 255.0f;
+    vAsFloat[2u] = 128.0f / 255.0f;
+    vAsFloat[4u] = 96.0f / 255.0f;
+    vAsFloat[5u] = 64.0f / 255.0f;
+    vAsFloat[6u] = 32.0f / 255.0f;
+
+    glBufferData(GL_UNIFORM_BUFFER, kDataSize, v.data(), GL_STATIC_DRAW);
+    glBindBufferBase(GL_UNIFORM_BUFFER, 0, mUniformBuffer);
+    glUniformBlockBinding(program, uniformBufferIndex, 0);
+    drawQuad(program.get(), "position", 0.5f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(255, 192, 128, 96), 5);
+}
+
+// Test a uniform block where a struct field is set as row-major.
+TEST_P(UniformBufferTest, Std140UniformBlockWithRowMajorQualifierOnStruct)
+{
+    // AMD OpenGL driver doesn't seem to apply the row-major qualifier right.
+    // http://anglebug.com/2273
+    ANGLE_SKIP_TEST_IF(IsAMD() && IsOpenGL());
+
+    const std::string &fragmentShader =
+        R"(#version 300 es
+
+        precision highp float;
+        out vec4 my_FragColor;
+
+        struct S
+        {
+            mat2 m;
+        };
+
+        layout(std140) uniform matrixBuffer
+        {
+            layout(row_major) S s;
+        } buffer;
+
+        void main()
+        {
+            // Vector constructor accesses elements in column-major order.
+            my_FragColor = vec4(buffer.s.m);
+        })";
+
+    ANGLE_GL_PROGRAM(program, mVertexShaderSource, fragmentShader);
+    GLint uniformBufferIndex = glGetUniformBlockIndex(program, "matrixBuffer");
+
+    glBindBuffer(GL_UNIFORM_BUFFER, mUniformBuffer);
+    const GLsizei kElementsPerMatrix = 8;  // Each mat2 row gets padded into a vec4.
+    const GLsizei kBytesPerElement   = 4;
+    const GLsizei kDataSize          = kElementsPerMatrix * kBytesPerElement;
+    std::vector<GLubyte> v(kDataSize, 0);
+    float *vAsFloat = reinterpret_cast<float *>(v.data());
+
+    vAsFloat[0u] = 1.0f;
+    vAsFloat[1u] = 128.0f / 255.0f;
+    vAsFloat[4u] = 64.0f / 255.0f;
+    vAsFloat[5u] = 32.0f / 255.0f;
+
+    glBufferData(GL_UNIFORM_BUFFER, kDataSize, v.data(), GL_STATIC_DRAW);
+    glBindBufferBase(GL_UNIFORM_BUFFER, 0, mUniformBuffer);
+    glUniformBlockBinding(program, uniformBufferIndex, 0);
+    drawQuad(program.get(), "position", 0.5f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(255, 64, 128, 32), 5);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
 ANGLE_INSTANTIATE_TEST(UniformBufferTest,
                        ES3_D3D11(),

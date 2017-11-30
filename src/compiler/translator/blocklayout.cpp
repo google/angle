@@ -28,6 +28,13 @@ bool IsRowMajorLayout(const ShaderVariable &var)
 }
 
 template <typename VarT>
+void GetUniformBlockInfo(const std::vector<VarT> &fields,
+                         const std::string &prefix,
+                         sh::BlockLayoutEncoder *encoder,
+                         bool inRowMajorLayout,
+                         BlockLayoutMap *blockInfoOut);
+
+template <typename VarT>
 void GetUniformBlockStructMemberInfo(const std::vector<VarT> &fields,
                                      const std::string &fieldName,
                                      sh::BlockLayoutEncoder *encoder,
@@ -71,7 +78,7 @@ void GetUniformBlockArrayOfArraysMemberInfo(const VarT &field,
                                             unsigned int arrayNestingIndex,
                                             const std::string &arrayName,
                                             sh::BlockLayoutEncoder *encoder,
-                                            bool inRowMajorLayout,
+                                            bool isRowMajorMatrix,
                                             BlockLayoutMap *blockInfoOut)
 {
     const unsigned int currentArraySize = field.getNestedArraySize(arrayNestingIndex);
@@ -81,14 +88,61 @@ void GetUniformBlockArrayOfArraysMemberInfo(const VarT &field,
         if (arrayNestingIndex + 2u < field.arraySizes.size())
         {
             GetUniformBlockArrayOfArraysMemberInfo(field, arrayNestingIndex + 1u, elementName,
-                                                   encoder, inRowMajorLayout, blockInfoOut);
+                                                   encoder, isRowMajorMatrix, blockInfoOut);
         }
         else
         {
             std::vector<unsigned int> innermostArraySize(
                 1u, field.getNestedArraySize(arrayNestingIndex + 1u));
             (*blockInfoOut)[elementName] =
-                encoder->encodeType(field.type, innermostArraySize, inRowMajorLayout);
+                encoder->encodeType(field.type, innermostArraySize, isRowMajorMatrix);
+        }
+    }
+}
+
+template <typename VarT>
+void GetUniformBlockInfo(const std::vector<VarT> &fields,
+                         const std::string &prefix,
+                         sh::BlockLayoutEncoder *encoder,
+                         bool inRowMajorLayout,
+                         BlockLayoutMap *blockInfoOut)
+{
+    for (const VarT &field : fields)
+    {
+        // Skip samplers. On Vulkan we use this for the default uniform block, so samplers may be
+        // included.
+        if (gl::IsSamplerType(field.type))
+        {
+            continue;
+        }
+
+        const std::string &fieldName = (prefix.empty() ? field.name : prefix + "." + field.name);
+
+        bool rowMajorLayout = (inRowMajorLayout || IsRowMajorLayout(field));
+
+        if (field.isStruct())
+        {
+            if (field.isArray())
+            {
+                GetUniformBlockStructArrayMemberInfo(field, 0u, fieldName, encoder, rowMajorLayout,
+                                                     blockInfoOut);
+            }
+            else
+            {
+                GetUniformBlockStructMemberInfo(field.fields, fieldName, encoder, rowMajorLayout,
+                                                blockInfoOut);
+            }
+        }
+        else if (field.isArrayOfArrays())
+        {
+            GetUniformBlockArrayOfArraysMemberInfo(field, 0u, fieldName, encoder,
+                                                   rowMajorLayout && gl::IsMatrixType(field.type),
+                                                   blockInfoOut);
+        }
+        else
+        {
+            (*blockInfoOut)[fieldName] = encoder->encodeType(
+                field.type, field.arraySizes, rowMajorLayout && gl::IsMatrixType(field.type));
         }
     }
 }
@@ -212,70 +266,25 @@ void Std140BlockEncoder::advanceOffset(GLenum type,
     }
 }
 
-template <typename VarT>
-void GetUniformBlockInfo(const std::vector<VarT> &fields,
+void GetUniformBlockInfo(const std::vector<InterfaceBlockField> &fields,
                          const std::string &prefix,
                          sh::BlockLayoutEncoder *encoder,
-                         bool inRowMajorLayout,
                          BlockLayoutMap *blockInfoOut)
 {
-    for (const VarT &field : fields)
-    {
-        // Skip samplers. On Vulkan we use this for the default uniform block, so samplers may be
-        // included.
-        if (gl::IsSamplerType(field.type))
-        {
-            continue;
-        }
-
-        const std::string &fieldName = (prefix.empty() ? field.name : prefix + "." + field.name);
-
-        if (field.isStruct())
-        {
-            bool rowMajorLayout = (inRowMajorLayout || IsRowMajorLayout(field));
-
-            if (field.isArray())
-            {
-                GetUniformBlockStructArrayMemberInfo(field, 0u, fieldName, encoder, rowMajorLayout,
-                                                     blockInfoOut);
-            }
-            else
-            {
-                GetUniformBlockStructMemberInfo(field.fields, fieldName, encoder, rowMajorLayout,
-                                                blockInfoOut);
-            }
-        }
-        else if (field.isArrayOfArrays())
-        {
-            bool isRowMajorMatrix = (gl::IsMatrixType(field.type) && inRowMajorLayout);
-            GetUniformBlockArrayOfArraysMemberInfo(field, 0u, fieldName, encoder, isRowMajorMatrix,
-                                                   blockInfoOut);
-        }
-        else
-        {
-            bool isRowMajorMatrix = (gl::IsMatrixType(field.type) && inRowMajorLayout);
-            (*blockInfoOut)[fieldName] =
-                encoder->encodeType(field.type, field.arraySizes, isRowMajorMatrix);
-        }
-    }
+    // Matrix packing is always recorded in individual fields, so they'll set the row major layout
+    // flag to true if needed.
+    GetUniformBlockInfo(fields, prefix, encoder, false, blockInfoOut);
 }
 
-template void GetUniformBlockInfo(const std::vector<InterfaceBlockField> &,
-                                  const std::string &,
-                                  sh::BlockLayoutEncoder *,
-                                  bool,
-                                  BlockLayoutMap *);
+void GetUniformBlockInfo(const std::vector<Uniform> &uniforms,
+                         const std::string &prefix,
+                         sh::BlockLayoutEncoder *encoder,
+                         BlockLayoutMap *blockInfoOut)
+{
+    // Matrix packing is always recorded in individual fields, so they'll set the row major layout
+    // flag to true if needed.
+    GetUniformBlockInfo(uniforms, prefix, encoder, false, blockInfoOut);
+}
 
-template void GetUniformBlockInfo(const std::vector<Uniform> &,
-                                  const std::string &,
-                                  sh::BlockLayoutEncoder *,
-                                  bool,
-                                  BlockLayoutMap *);
-
-template void GetUniformBlockInfo(const std::vector<ShaderVariable> &,
-                                  const std::string &,
-                                  sh::BlockLayoutEncoder *,
-                                  bool,
-                                  BlockLayoutMap *);
 
 }  // namespace sh

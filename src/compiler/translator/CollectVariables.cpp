@@ -666,7 +666,8 @@ void CollectVariablesTraverser::recordInterfaceBlock(const TType &interfaceBlock
     if (interfaceBlock->blockType == BlockType::BLOCK_UNIFORM ||
         interfaceBlock->blockType == BlockType::BLOCK_BUFFER)
     {
-        interfaceBlock->isRowMajorLayout = (blockType->matrixPacking() == EmpRowMajor);
+        // TODO(oetuaho): Remove setting isRowMajorLayout.
+        interfaceBlock->isRowMajorLayout = false;
         interfaceBlock->binding          = blockType->blockBinding();
         interfaceBlock->layout           = GetBlockLayoutType(blockType->blockStorage());
     }

@@ -39,7 +39,7 @@ gl::Error InitDefaultUniformBlock(const gl::Context *context,
     }
 
     sh::Std140BlockEncoder blockEncoder;
-    sh::GetUniformBlockInfo(uniforms, "", &blockEncoder, false, blockLayoutMapOut);
+    sh::GetUniformBlockInfo(uniforms, "", &blockEncoder, blockLayoutMapOut);
 
     size_t blockSize = blockEncoder.getBlockSize();
 
