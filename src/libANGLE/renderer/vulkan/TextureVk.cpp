@@ -180,74 +180,7 @@ gl::Error TextureVk::setImage(const gl::Context *context,
     // TODO(jmadill): Consider re-using staging texture.
     if (pixels)
     {
-        vk::StagingImage stagingImage;
-        ANGLE_TRY(renderer->createStagingImage(TextureDimension::TEX_2D, vkFormat, size,
-                                               vk::StagingUsage::Write, &stagingImage));
-
-        GLuint inputRowPitch = 0;
-        ANGLE_TRY_RESULT(
-            formatInfo.computeRowPitch(type, size.width, unpack.alignment, unpack.rowLength),
-            inputRowPitch);
-
-        GLuint inputDepthPitch = 0;
-        ANGLE_TRY_RESULT(
-            formatInfo.computeDepthPitch(size.height, unpack.imageHeight, inputRowPitch),
-            inputDepthPitch);
-
-        // TODO(jmadill): skip images for 3D Textures.
-        bool applySkipImages = false;
-
-        GLuint inputSkipBytes = 0;
-        ANGLE_TRY_RESULT(
-            formatInfo.computeSkipBytes(inputRowPitch, inputDepthPitch, unpack, applySkipImages),
-            inputSkipBytes);
-
-        auto loadFunction = vkFormat.loadFunctions(type);
-
-        uint8_t *mapPointer = nullptr;
-        ANGLE_TRY(stagingImage.getDeviceMemory().map(device, 0, VK_WHOLE_SIZE, 0, &mapPointer));
-
-        const uint8_t *source = pixels + inputSkipBytes;
-
-        // Get the subresource layout. This has important parameters like row pitch.
-        // TODO(jmadill): Fill out this structure based on input parameters.
-        VkImageSubresource subresource;
-        subresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-        subresource.mipLevel   = 0;
-        subresource.arrayLayer = 0;
-
-        VkSubresourceLayout subresourceLayout;
-        vkGetImageSubresourceLayout(device, stagingImage.getImage().getHandle(), &subresource,
-                                    &subresourceLayout);
-
-        loadFunction.loadFunction(size.width, size.height, size.depth, source, inputRowPitch,
-                                  inputDepthPitch, mapPointer,
-                                  static_cast<size_t>(subresourceLayout.rowPitch),
-                                  static_cast<size_t>(subresourceLayout.depthPitch));
-
-        stagingImage.getDeviceMemory().unmap(device);
-
-        vk::CommandBufferAndState *commandBuffer = nullptr;
-        ANGLE_TRY(contextVk->getStartedCommandBuffer(&commandBuffer));
-        setQueueSerial(renderer->getCurrentQueueSerial());
-
-        // Ensure we aren't in a render pass.
-        // TODO(jmadill): Command reordering.
-        renderer->endRenderPass();
-
-        stagingImage.getImage().changeLayoutWithStages(
-            VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
-            VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, commandBuffer);
-        mImage.changeLayoutWithStages(
-            VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-            VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, commandBuffer);
-
-        gl::Box wholeRegion(0, 0, 0, size.width, size.height, size.depth);
-        commandBuffer->copySingleImage(stagingImage.getImage(), mImage, wholeRegion,
-                                       VK_IMAGE_ASPECT_COLOR_BIT);
-
-        // TODO(jmadill): Re-use staging images.
-        renderer->releaseObject(renderer->getCurrentQueueSerial(), &stagingImage);
+        ANGLE_TRY(setSubImageImpl(contextVk, formatInfo, unpack, type, pixels));
     }
 
     return gl::NoError();
@@ -262,8 +195,91 @@ gl::Error TextureVk::setSubImage(const gl::Context *context,
                                  const gl::PixelUnpackState &unpack,
                                  const uint8_t *pixels)
 {
-    UNIMPLEMENTED();
-    return gl::InternalError();
+    ContextVk *contextVk                 = vk::GetImpl(context);
+    const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(format, type);
+    ANGLE_TRY(setSubImageImpl(contextVk, formatInfo, unpack, type, pixels));
+    return gl::NoError();
+}
+
+gl::Error TextureVk::setSubImageImpl(ContextVk *contextVk,
+                                     const gl::InternalFormat &formatInfo,
+                                     const gl::PixelUnpackState &unpack,
+                                     GLenum type,
+                                     const uint8_t *pixels)
+{
+    RendererVk *renderer       = contextVk->getRenderer();
+    VkDevice device            = renderer->getDevice();
+    const gl::Extents &size    = mRenderTarget.extents;
+    const vk::Format &vkFormat = *mRenderTarget.format;
+
+    vk::StagingImage stagingImage;
+    ANGLE_TRY(renderer->createStagingImage(TextureDimension::TEX_2D, vkFormat, size,
+                                           vk::StagingUsage::Write, &stagingImage));
+
+    GLuint inputRowPitch = 0;
+    ANGLE_TRY_RESULT(
+        formatInfo.computeRowPitch(type, size.width, unpack.alignment, unpack.rowLength),
+        inputRowPitch);
+
+    GLuint inputDepthPitch = 0;
+    ANGLE_TRY_RESULT(formatInfo.computeDepthPitch(size.height, unpack.imageHeight, inputRowPitch),
+                     inputDepthPitch);
+
+    // TODO(jmadill): skip images for 3D Textures.
+    bool applySkipImages = false;
+
+    GLuint inputSkipBytes = 0;
+    ANGLE_TRY_RESULT(
+        formatInfo.computeSkipBytes(inputRowPitch, inputDepthPitch, unpack, applySkipImages),
+        inputSkipBytes);
+
+    auto loadFunction = vkFormat.loadFunctions(type);
+
+    uint8_t *mapPointer = nullptr;
+    ANGLE_TRY(stagingImage.getDeviceMemory().map(device, 0, VK_WHOLE_SIZE, 0, &mapPointer));
+
+    const uint8_t *source = pixels + inputSkipBytes;
+
+    // Get the subresource layout. This has important parameters like row pitch.
+    // TODO(jmadill): Fill out this structure based on input parameters.
+    VkImageSubresource subresource;
+    subresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+    subresource.mipLevel   = 0;
+    subresource.arrayLayer = 0;
+
+    VkSubresourceLayout subresourceLayout;
+    vkGetImageSubresourceLayout(device, stagingImage.getImage().getHandle(), &subresource,
+                                &subresourceLayout);
+
+    loadFunction.loadFunction(size.width, size.height, size.depth, source, inputRowPitch,
+                              inputDepthPitch, mapPointer,
+                              static_cast<size_t>(subresourceLayout.rowPitch),
+                              static_cast<size_t>(subresourceLayout.depthPitch));
+
+    stagingImage.getDeviceMemory().unmap(device);
+
+    vk::CommandBufferAndState *commandBuffer = nullptr;
+    ANGLE_TRY(contextVk->getStartedCommandBuffer(&commandBuffer));
+    setQueueSerial(renderer->getCurrentQueueSerial());
+
+    // Ensure we aren't in a render pass.
+    // TODO(jmadill): Command reordering.
+    renderer->endRenderPass();
+
+    stagingImage.getImage().changeLayoutWithStages(
+        VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+        VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, commandBuffer);
+    mImage.changeLayoutWithStages(VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+                                  VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
+                                  VK_PIPELINE_STAGE_TRANSFER_BIT, commandBuffer);
+
+    gl::Box wholeRegion(0, 0, 0, size.width, size.height, size.depth);
+    commandBuffer->copySingleImage(stagingImage.getImage(), mImage, wholeRegion,
+                                   VK_IMAGE_ASPECT_COLOR_BIT);
+
+    // TODO(jmadill): Re-use staging images.
+    renderer->releaseObject(renderer->getCurrentQueueSerial(), &stagingImage);
+    return gl::NoError();
 }
 
 gl::Error TextureVk::setCompressedImage(const gl::Context *context,

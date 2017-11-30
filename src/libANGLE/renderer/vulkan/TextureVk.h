@@ -116,6 +116,12 @@ class TextureVk : public TextureImpl, public ResourceVk
     const vk::Sampler &getSampler() const;
 
   private:
+    gl::Error setSubImageImpl(ContextVk *contextVk,
+                              const gl::InternalFormat &formatInfo,
+                              const gl::PixelUnpackState &unpack,
+                              GLenum type,
+                              const uint8_t *pixels);
+
     // TODO(jmadill): support a more flexible storage back-end.
     vk::Image mImage;
     vk::DeviceMemory mDeviceMemory;
