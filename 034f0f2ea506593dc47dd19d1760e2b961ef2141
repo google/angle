@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "643dc4f8_06079662",
+        "filename": "src/compiler/translator/glslang.l",
+        "patchSetId": 7
+      },
+      "lineNbr": 442,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-11-30T17:44:48Z",
+      "side": 1,
+      "message": "nit: Can we trim this whitespace (not sure if it is important for .l files)",
+      "revId": "034f0f2ea506593dc47dd19d1760e2b961ef2141",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
