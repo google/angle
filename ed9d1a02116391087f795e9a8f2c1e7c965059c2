@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "fd2a5f1e_6d99b03d",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 281,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-11-30T18:06:53Z",
+      "side": 1,
+      "message": "Deferring this refactor sounds good because it won\u0027t require changing the structure of things and we\u0027ll have more data then. Keeping the two functions sounds ok too.",
+      "parentUuid": "dd12ec47_1ccca830",
+      "revId": "ed9d1a02116391087f795e9a8f2c1e7c965059c2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d76d7852_4da4c7dd",
         "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
         "patchSetId": 5
@@ -66,6 +84,24 @@
       "side": 1,
       "message": "The getRenderTarget calls can return an error if there was a situation where lazy initialization would trigger a resource to be initialized. But, we don\u0027t support this right now, so I replaced them with ANGLE_SWALLOW_ERR.",
       "parentUuid": "d76d7852_4da4c7dd",
+      "revId": "ed9d1a02116391087f795e9a8f2c1e7c965059c2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "060dce84_b581b09c",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 372,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-11-30T18:06:53Z",
+      "side": 1,
+      "message": "Thanks for the ref. Om nom nom nom",
+      "parentUuid": "6f061673_f5432ce4",
       "revId": "ed9d1a02116391087f795e9a8f2c1e7c965059c2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -139,6 +175,30 @@
       "revId": "ed9d1a02116391087f795e9a8f2c1e7c965059c2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "91208bc7_b03fe6a7",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-11-30T18:06:53Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "f09b0372_033290d1",
+      "range": {
+        "startLine": 55,
+        "startChar": 68,
+        "endLine": 55,
+        "endChar": 76
+      },
+      "revId": "ed9d1a02116391087f795e9a8f2c1e7c965059c2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
