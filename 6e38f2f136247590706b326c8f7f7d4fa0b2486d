@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "41caff92_ae0247b0",
+        "filename": "doc/ContributingCode.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-01T22:49:13Z",
+      "side": 1,
+      "message": "Because there\u0027s like 100 other links in the page and it\u0027s not as clear which are important. Minor thing though, I understand.",
+      "parentUuid": "10e6bcf6_0fc14136",
+      "range": {
+        "startLine": 85,
+        "startChar": 6,
+        "endLine": 85,
+        "endChar": 25
+      },
+      "revId": "6e38f2f136247590706b326c8f7f7d4fa0b2486d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "c961f288_96f8ec71",
         "filename": "doc/ContributingCode.md",
         "patchSetId": 2
