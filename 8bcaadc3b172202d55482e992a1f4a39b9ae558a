@@ -1,0 +1,84 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a7cb9b4b_23950ed5",
+        "filename": "src/compiler/translator/Declarator.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-01T22:39:32Z",
+      "side": 1,
+      "message": "file level comment.",
+      "revId": "8bcaadc3b172202d55482e992a1f4a39b9ae558a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7927bec3_a10b986b",
+        "filename": "src/compiler/translator/Declarator.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-01T22:39:32Z",
+      "side": 1,
+      "message": "nit: file-level comment.",
+      "revId": "8bcaadc3b172202d55482e992a1f4a39b9ae558a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c6b6aad1_606adbf8",
+        "filename": "src/compiler/translator/Declarator.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-01T22:39:32Z",
+      "side": 1,
+      "message": "nit: prefer using syntax for new code.",
+      "range": {
+        "startLine": 42,
+        "startChar": 0,
+        "endLine": 42,
+        "endChar": 7
+      },
+      "revId": "8bcaadc3b172202d55482e992a1f4a39b9ae558a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e3011f88_0cf90674",
+        "filename": "src/compiler/translator/Initialize.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1017,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-01T22:39:32Z",
+      "side": 1,
+      "message": "make sure these correctly use the pool allocator. you can run the ASAN bot on the CQ if you aren\u0027t sure.",
+      "range": {
+        "startLine": 1017,
+        "startChar": 40,
+        "endLine": 1017,
+        "endChar": 56
+      },
+      "revId": "8bcaadc3b172202d55482e992a1f4a39b9ae558a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
