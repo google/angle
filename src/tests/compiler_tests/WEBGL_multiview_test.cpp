@@ -742,4 +742,30 @@ TEST_F(WEBGLMultiviewVertexShaderOutputCodeTest, GlLayerIsSet)
     EXPECT_TRUE(foundInCodeInOrder(SH_GLSL_COMPATIBILITY_OUTPUT, expectedStrings));
 }
 
+// Test that a warning is generated in an ESSL 1.00 shader when using a layout qualifier to set
+// num_views and the extension is set to warn.
+TEST_F(WEBGLMultiviewVertexShaderTest, WarnOnGlobalLayoutQualifier)
+{
+    const std::string &shaderString =
+        R"(
+        #extension GL_OVR_multiview : warn
+        layout(num_views=2) in;
+
+        void main()
+        {
+        })";
+    if (compile(shaderString))
+    {
+        if (!hasWarning())
+        {
+            FAIL() << "Shader compilation succeeded without warnings, expecting warning:\n"
+                   << mInfoLog;
+        }
+    }
+    else
+    {
+        FAIL() << "Shader compilation failed, expecting success:\n" << mInfoLog;
+    }
+}
+
 }  // namespace
