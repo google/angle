@@ -48,6 +48,54 @@
     },
     {
       "key": {
+        "uuid": "d72646d5_c1c192a4",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 6
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-12-01T05:06:10Z",
+      "side": 1,
+      "message": "looks fine on googlesource, github and with https://chrome.google.com/webstore/detail/markdown-viewer/ckkdlimhmcjmikdlpkmbgfkaikojcbjk\n\njust gerrit is being weird",
+      "parentUuid": "d6a68e6d_7fedcf75",
+      "range": {
+        "startLine": 11,
+        "startChar": 61,
+        "endLine": 11,
+        "endChar": 78
+      },
+      "revId": "14f7963565f0bd39adc2c76dd949f3cf18d3d8de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "00966ce3_ad143efb",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 6
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-12-01T05:06:10Z",
+      "side": 1,
+      "message": "see above",
+      "parentUuid": "6fba0fcc_65238673",
+      "range": {
+        "startLine": 11,
+        "startChar": 82,
+        "endLine": 11,
+        "endChar": 95
+      },
+      "revId": "14f7963565f0bd39adc2c76dd949f3cf18d3d8de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3d2d94f2_e57e1da4",
         "filename": "doc/DevSetup.md",
         "patchSetId": 6
@@ -68,6 +116,30 @@
       "revId": "14f7963565f0bd39adc2c76dd949f3cf18d3d8de",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f6c1a71b_5537fc2a",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 6
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-12-01T05:06:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3d2d94f2_e57e1da4",
+      "range": {
+        "startLine": 20,
+        "startChar": 0,
+        "endLine": 20,
+        "endChar": 114
+      },
+      "revId": "14f7963565f0bd39adc2c76dd949f3cf18d3d8de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "71b87a6d_d6bed960",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 6
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-12-01T05:06:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "20e18ea3_190befd2",
+      "range": {
+        "startLine": 21,
+        "startChar": 5,
+        "endLine": 21,
+        "endChar": 175
+      },
+      "revId": "14f7963565f0bd39adc2c76dd949f3cf18d3d8de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "09710039_1b075e5e",
         "filename": "doc/DevSetup.md",
         "patchSetId": 6
@@ -114,6 +210,30 @@
       "revId": "14f7963565f0bd39adc2c76dd949f3cf18d3d8de",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6d373da1_a3defef8",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 6
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-12-01T05:06:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "09710039_1b075e5e",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 23,
+        "endChar": 112
+      },
+      "revId": "14f7963565f0bd39adc2c76dd949f3cf18d3d8de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -140,6 +260,30 @@
     },
     {
       "key": {
+        "uuid": "a4d54f6d_29806175",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 6
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-12-01T05:06:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "763d6638_de5f0dd4",
+      "range": {
+        "startLine": 25,
+        "startChar": 0,
+        "endLine": 25,
+        "endChar": 102
+      },
+      "revId": "14f7963565f0bd39adc2c76dd949f3cf18d3d8de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0e0c96f9_7bff8801",
         "filename": "doc/DevSetup.md",
         "patchSetId": 6
@@ -160,6 +304,30 @@
       "revId": "14f7963565f0bd39adc2c76dd949f3cf18d3d8de",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7d92b312_5d93f5f3",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 6
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-12-01T05:06:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0e0c96f9_7bff8801",
+      "range": {
+        "startLine": 53,
+        "startChar": 114,
+        "endLine": 53,
+        "endChar": 122
+      },
+      "revId": "14f7963565f0bd39adc2c76dd949f3cf18d3d8de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -186,6 +354,30 @@
     },
     {
       "key": {
+        "uuid": "bb465197_97dd29b5",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 6
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-12-01T05:06:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "16dc4f77_c82403a2",
+      "range": {
+        "startLine": 59,
+        "startChar": 0,
+        "endLine": 59,
+        "endChar": 4
+      },
+      "revId": "14f7963565f0bd39adc2c76dd949f3cf18d3d8de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "39b394b1_be5bf154",
         "filename": "doc/DevSetup.md",
         "patchSetId": 6
@@ -206,6 +398,30 @@
       "revId": "14f7963565f0bd39adc2c76dd949f3cf18d3d8de",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "82954e39_7d0c9e7e",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 6
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-12-01T05:06:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "39b394b1_be5bf154",
+      "range": {
+        "startLine": 63,
+        "startChar": 0,
+        "endLine": 66,
+        "endChar": 3
+      },
+      "revId": "14f7963565f0bd39adc2c76dd949f3cf18d3d8de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -232,6 +448,30 @@
     },
     {
       "key": {
+        "uuid": "54892e4d_69bc48e6",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 6
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-12-01T05:06:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9292d186_26a59882",
+      "range": {
+        "startLine": 70,
+        "startChar": 0,
+        "endLine": 74,
+        "endChar": 35
+      },
+      "revId": "14f7963565f0bd39adc2c76dd949f3cf18d3d8de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2e29549a_6f97c24e",
         "filename": "doc/DevSetup.md",
         "patchSetId": 6
@@ -243,6 +483,30 @@
       "writtenOn": "2017-11-28T17:32:36Z",
       "side": 1,
       "message": "out/Release_x64, it\u0027s not actually in the solution directory. but, the binaries are run within the sln/ directory as the current directory IIRC. Can you also update the dEQP docs to point to the new location of TestResults.qpa? It will be in out/sln/obj/src/tests on Windows, same path on Linux.",
+      "range": {
+        "startLine": 75,
+        "startChar": 85,
+        "endLine": 75,
+        "endChar": 96
+      },
+      "revId": "14f7963565f0bd39adc2c76dd949f3cf18d3d8de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8e252580_9e005123",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 6
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-12-01T05:06:10Z",
+      "side": 1,
+      "message": "So change \"eg. Release_x64\" to \"e.g. out/Release_x64\" and mention the executables (test and samples) are under out/sln?",
+      "parentUuid": "2e29549a_6f97c24e",
       "range": {
         "startLine": 75,
         "startChar": 85,
