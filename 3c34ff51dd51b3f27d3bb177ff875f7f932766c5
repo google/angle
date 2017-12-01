@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8bf3c03d_eb8a8e8b",
+        "filename": "src/libANGLE/angletypes.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 323,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-01T19:22:05Z",
+      "side": 1,
+      "message": "nit: honestly I think you can remove this and use unsigned long directly without any casts.",
+      "range": {
+        "startLine": 323,
+        "startChar": 4,
+        "endLine": 323,
+        "endChar": 44
+      },
+      "revId": "3c34ff51dd51b3f27d3bb177ff875f7f932766c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "25fa8c3b_ec2f2868",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 19
+      },
+      "lineNbr": 298,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-01T19:22:05Z",
+      "side": 1,
+      "message": "please put these into the cpp.",
+      "range": {
+        "startLine": 297,
+        "startChar": 0,
+        "endLine": 298,
+        "endChar": 66
+      },
+      "revId": "3c34ff51dd51b3f27d3bb177ff875f7f932766c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9b476d8b_8fa19da4",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 19
+      },
+      "lineNbr": 306,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-01T19:22:05Z",
+      "side": 1,
+      "message": "this should be mTypeMask.",
+      "range": {
+        "startLine": 306,
+        "startChar": 60,
+        "endLine": 306,
+        "endChar": 68
+      },
+      "revId": "3c34ff51dd51b3f27d3bb177ff875f7f932766c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d6ae6dfa_330d3ab3",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 19
+      },
+      "lineNbr": 321,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-01T19:22:05Z",
+      "side": 1,
+      "message": "make this a static member of DrawBufferTypeMask so it can access mTypeMask directly.",
+      "range": {
+        "startLine": 318,
+        "startChar": 0,
+        "endLine": 321,
+        "endChar": 62
+      },
+      "revId": "3c34ff51dd51b3f27d3bb177ff875f7f932766c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
