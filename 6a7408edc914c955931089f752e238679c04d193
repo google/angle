@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c3a0a6e7_5b249e4c",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1936,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-12-01T08:54:31Z",
+      "side": 1,
+      "message": "Why don\u0027t you implement this? Is there any dependency or is it very difficult, so you want to implement it later?",
+      "range": {
+        "startLine": 1936,
+        "startChar": 30,
+        "endLine": 1936,
+        "endChar": 31
+      },
+      "revId": "6a7408edc914c955931089f752e238679c04d193",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
