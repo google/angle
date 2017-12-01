@@ -82,8 +82,7 @@
       [ANGLE Gerrit](https://chromium-review.googlesource.com/q/project:angle/angle).
     * Follow the generated URL to the new issue.
     * Take a moment to perform a self-review of your code. Gerrit's viewer makes it easy to see whitespace errors, erroneous tabs, and other simple style problems.
-    * Designate reviewers-- if you don't do this, reviewers may not realize you're requesting a review!
-      * If you don't know who to use, select either `geofflang at chromium dot org` or `jmadill at chromium dot org`.
+    * [Select reviewers](#selecting-reviewers).  If you don't do this, reviewers may not realize you're requesting a review!
     * Make changes, upload and repeat as necessary.
     * Project members and others will review your code as described in the [CodeReviewProcess](CodeReviewProcess.md).
  5. If your change list needs revision:
@@ -95,6 +94,23 @@
  7. Pull and integrate reviewed CL:
     * `git pull --rebase`
 
+### Selecting reviewers
+ANGLE has a loose owners structure but the following mapping can be useful for choosing initial reviewers:
+ * Compiler/preprocessor `src/compiler`
+   * `cwallez at chromium dot org`
+ * OpenGL ES/EGL frontend `src/libANGLE`
+   * `geofflang at chromium dot org`
+   * `jmadill at chromium dot org`
+ * Direct3D backends `src/libANGLE/renderer/d3d`
+   * `jmadill at chromium dot org`
+ * OpenGL backend `src/libANGLE/renderer/gl`
+   * `geofflang at chromium dot org`
+ * Vulkan backend `src/libANGLE/renderer/vulkan`
+   * `jmadill at chromium dot org`
+ * Android integration `src/libANGLE/renderer/*/android`
+   * `ynovikov at chromium dot org`
+ * ChromeOS integration `src/libANGLE/renderer/*/ozone`
+   * `fjhenigman at chromium dot org`
 
 See also:
 
