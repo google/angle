@@ -140,10 +140,15 @@ class ValidationContext : angle::NonCopyable
     template <typename T>
     const T &getParams() const;
 
+    bool isValidBufferBinding(BufferBinding binding) const { return mValidBufferBindings[binding]; }
+
   protected:
     ContextState mState;
     bool mSkipValidation;
     bool mDisplayTextureShareGroup;
+
+    // Stores for each buffer binding type whether is it allowed to be used in this context.
+    angle::PackedEnumBitSet<BufferBinding> mValidBufferBindings;
 
     // Caches entry point parameters and values re-used between layers.
     mutable const ParamTypeInfo *mSavedArgsType;

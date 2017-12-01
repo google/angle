@@ -2838,7 +2838,7 @@ bool ValidateMapBufferOES(Context *context, BufferBinding target, GLenum access)
         return false;
     }
 
-    if (!ValidBufferType(context, target))
+    if (!context->isValidBufferBinding(target))
     {
         ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidBufferTypes);
         return false;
@@ -4206,7 +4206,7 @@ bool ValidateBufferData(ValidationContext *context,
             return false;
     }
 
-    if (!ValidBufferType(context, target))
+    if (!context->isValidBufferBinding(target))
     {
         ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidBufferTypes);
         return false;
@@ -4241,7 +4241,7 @@ bool ValidateBufferSubData(ValidationContext *context,
         return false;
     }
 
-    if (!ValidBufferType(context, target))
+    if (!context->isValidBufferBinding(target))
     {
         ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidBufferTypes);
         return false;
@@ -4408,7 +4408,7 @@ bool ValidateBindAttribLocation(ValidationContext *context,
 
 bool ValidateBindBuffer(ValidationContext *context, BufferBinding target, GLuint buffer)
 {
-    if (!ValidBufferType(context, target))
+    if (!context->isValidBufferBinding(target))
     {
         ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidBufferTypes);
         return false;

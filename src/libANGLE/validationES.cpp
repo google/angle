@@ -649,36 +649,6 @@ bool ValidFramebufferTarget(const ValidationContext *context, GLenum target)
     }
 }
 
-bool ValidBufferType(const ValidationContext *context, BufferBinding target)
-{
-    switch (target)
-    {
-        case BufferBinding::ElementArray:
-        case BufferBinding::Array:
-            return true;
-
-        case BufferBinding::PixelPack:
-        case BufferBinding::PixelUnpack:
-            return (context->getExtensions().pixelBufferObject ||
-                    context->getClientMajorVersion() >= 3);
-
-        case BufferBinding::CopyRead:
-        case BufferBinding::CopyWrite:
-        case BufferBinding::TransformFeedback:
-        case BufferBinding::Uniform:
-            return (context->getClientMajorVersion() >= 3);
-
-        case BufferBinding::AtomicCounter:
-        case BufferBinding::ShaderStorage:
-        case BufferBinding::DrawIndirect:
-        case BufferBinding::DispatchIndirect:
-            return context->getClientVersion() >= Version(3, 1);
-
-        default:
-            return false;
-    }
-}
-
 bool ValidMipLevel(const ValidationContext *context, GLenum target, GLint level)
 {
     const auto &caps    = context->getCaps();
@@ -3497,7 +3467,7 @@ bool ValidateGetBufferPointervBase(Context *context,
         return false;
     }
 
-    if (!ValidBufferType(context, target))
+    if (!context->isValidBufferBinding(target))
     {
         context->handleError(InvalidEnum() << "Buffer target not valid");
         return false;
@@ -3533,7 +3503,7 @@ bool ValidateGetBufferPointervBase(Context *context,
 
 bool ValidateUnmapBufferBase(Context *context, BufferBinding target)
 {
-    if (!ValidBufferType(context, target))
+    if (!context->isValidBufferBinding(target))
     {
         ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidBufferTypes);
         return false;
@@ -3556,7 +3526,7 @@ bool ValidateMapBufferRangeBase(Context *context,
                                 GLsizeiptr length,
                                 GLbitfield access)
 {
-    if (!ValidBufferType(context, target))
+    if (!context->isValidBufferBinding(target))
     {
         ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidBufferTypes);
         return false;
@@ -3663,7 +3633,7 @@ bool ValidateFlushMappedBufferRangeBase(Context *context,
         return false;
     }
 
-    if (!ValidBufferType(context, target))
+    if (!context->isValidBufferBinding(target))
     {
         ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidBufferTypes);
         return false;
@@ -4704,7 +4674,7 @@ bool ValidateGetBufferParameterBase(ValidationContext *context,
         *numParams = 0;
     }
 
-    if (!ValidBufferType(context, target))
+    if (!context->isValidBufferBinding(target))
     {
         ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidBufferTypes);
         return false;

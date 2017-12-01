@@ -2466,7 +2466,7 @@ bool ValidateCopyBufferSubData(ValidationContext *context,
         return false;
     }
 
-    if (!ValidBufferType(context, readTarget) || !ValidBufferType(context, writeTarget))
+    if (!context->isValidBufferBinding(readTarget) || !context->isValidBufferBinding(writeTarget))
     {
         context->handleError(InvalidEnum() << "Invalid buffer target");
         return false;

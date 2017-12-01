@@ -22,7 +22,7 @@
 namespace angle
 {
 
-template <size_t N, typename BitsT>
+template <size_t N, typename BitsT, typename ParamT = std::size_t>
 class BitSetT final
 {
   public:
@@ -73,10 +73,10 @@ class BitSetT final
     bool operator==(const BitSetT &other) const;
     bool operator!=(const BitSetT &other) const;
 
-    constexpr bool operator[](std::size_t pos) const;
-    Reference operator[](std::size_t pos) { return Reference(this, pos); }
+    constexpr bool operator[](ParamT pos) const;
+    Reference operator[](ParamT pos) { return Reference(this, pos); }
 
-    bool test(std::size_t pos) const;
+    bool test(ParamT pos) const;
 
     bool all() const;
     bool any() const;
@@ -96,13 +96,13 @@ class BitSetT final
     BitSetT &operator>>=(std::size_t pos);
 
     BitSetT &set();
-    BitSetT &set(std::size_t pos, bool value = true);
+    BitSetT &set(ParamT pos, bool value = true);
 
     BitSetT &reset();
-    BitSetT &reset(std::size_t pos);
+    BitSetT &reset(ParamT pos);
 
     BitSetT &flip();
-    BitSetT &flip(std::size_t pos);
+    BitSetT &flip(ParamT pos);
 
     unsigned long to_ulong() const { return static_cast<unsigned long>(mBits); }
     BitsT bits() const { return mBits; }
@@ -111,7 +111,10 @@ class BitSetT final
     Iterator end() const { return Iterator(BitSetT()); }
 
   private:
-    constexpr static BitsT Bit(std::size_t x) { return (static_cast<BitsT>(1) << x); }
+    constexpr static BitsT Bit(ParamT x)
+    {
+        return (static_cast<BitsT>(1) << static_cast<size_t>(x));
+    }
     constexpr static BitsT Mask(std::size_t x) { return ((Bit(x - 1) - 1) << 1) + 1; }
 
     BitsT mBits;
@@ -202,148 +205,148 @@ unsigned long IterableBitSet<N>::Iterator::getNextBit()
     return 0;
 }
 
-template <size_t N, typename BitsT>
-BitSetT<N, BitsT>::BitSetT() : mBits(0)
+template <size_t N, typename BitsT, typename ParamT>
+BitSetT<N, BitsT, ParamT>::BitSetT() : mBits(0)
 {
     static_assert(N > 0, "Bitset type cannot support zero bits.");
     static_assert(N <= sizeof(BitsT) * 8, "Bitset type cannot support a size this large.");
 }
 
-template <size_t N, typename BitsT>
-BitSetT<N, BitsT>::BitSetT(BitsT value) : mBits(value & Mask(N))
+template <size_t N, typename BitsT, typename ParamT>
+BitSetT<N, BitsT, ParamT>::BitSetT(BitsT value) : mBits(value & Mask(N))
 {
 }
 
-template <size_t N, typename BitsT>
-BitSetT<N, BitsT>::~BitSetT()
+template <size_t N, typename BitsT, typename ParamT>
+BitSetT<N, BitsT, ParamT>::~BitSetT()
 {
 }
 
-template <size_t N, typename BitsT>
-BitSetT<N, BitsT>::BitSetT(const BitSetT &other) : mBits(other.mBits)
+template <size_t N, typename BitsT, typename ParamT>
+BitSetT<N, BitsT, ParamT>::BitSetT(const BitSetT &other) : mBits(other.mBits)
 {
 }
 
-template <size_t N, typename BitsT>
-BitSetT<N, BitsT> &BitSetT<N, BitsT>::operator=(const BitSetT &other)
+template <size_t N, typename BitsT, typename ParamT>
+BitSetT<N, BitsT, ParamT> &BitSetT<N, BitsT, ParamT>::operator=(const BitSetT &other)
 {
     mBits = other.mBits;
     return *this;
 }
 
-template <size_t N, typename BitsT>
-bool BitSetT<N, BitsT>::operator==(const BitSetT &other) const
+template <size_t N, typename BitsT, typename ParamT>
+bool BitSetT<N, BitsT, ParamT>::operator==(const BitSetT &other) const
 {
     return mBits == other.mBits;
 }
 
-template <size_t N, typename BitsT>
-bool BitSetT<N, BitsT>::operator!=(const BitSetT &other) const
+template <size_t N, typename BitsT, typename ParamT>
+bool BitSetT<N, BitsT, ParamT>::operator!=(const BitSetT &other) const
 {
     return mBits != other.mBits;
 }
 
-template <size_t N, typename BitsT>
-constexpr bool BitSetT<N, BitsT>::operator[](std::size_t pos) const
+template <size_t N, typename BitsT, typename ParamT>
+constexpr bool BitSetT<N, BitsT, ParamT>::operator[](ParamT pos) const
 {
     return test(pos);
 }
 
-template <size_t N, typename BitsT>
-bool BitSetT<N, BitsT>::test(std::size_t pos) const
+template <size_t N, typename BitsT, typename ParamT>
+bool BitSetT<N, BitsT, ParamT>::test(ParamT pos) const
 {
     return (mBits & Bit(pos)) != 0;
 }
 
-template <size_t N, typename BitsT>
-bool BitSetT<N, BitsT>::all() const
+template <size_t N, typename BitsT, typename ParamT>
+bool BitSetT<N, BitsT, ParamT>::all() const
 {
     ASSERT(mBits == (mBits & Mask(N)));
     return mBits == Mask(N);
 }
 
-template <size_t N, typename BitsT>
-bool BitSetT<N, BitsT>::any() const
+template <size_t N, typename BitsT, typename ParamT>
+bool BitSetT<N, BitsT, ParamT>::any() const
 {
     ASSERT(mBits == (mBits & Mask(N)));
     return (mBits != 0);
 }
 
-template <size_t N, typename BitsT>
-bool BitSetT<N, BitsT>::none() const
+template <size_t N, typename BitsT, typename ParamT>
+bool BitSetT<N, BitsT, ParamT>::none() const
 {
     ASSERT(mBits == (mBits & Mask(N)));
     return (mBits == 0);
 }
 
-template <size_t N, typename BitsT>
-std::size_t BitSetT<N, BitsT>::count() const
+template <size_t N, typename BitsT, typename ParamT>
+std::size_t BitSetT<N, BitsT, ParamT>::count() const
 {
     return gl::BitCount(mBits);
 }
 
-template <size_t N, typename BitsT>
-BitSetT<N, BitsT> &BitSetT<N, BitsT>::operator&=(const BitSetT &other)
+template <size_t N, typename BitsT, typename ParamT>
+BitSetT<N, BitsT, ParamT> &BitSetT<N, BitsT, ParamT>::operator&=(const BitSetT &other)
 {
     mBits &= other.mBits;
     return *this;
 }
 
-template <size_t N, typename BitsT>
-BitSetT<N, BitsT> &BitSetT<N, BitsT>::operator|=(const BitSetT &other)
+template <size_t N, typename BitsT, typename ParamT>
+BitSetT<N, BitsT, ParamT> &BitSetT<N, BitsT, ParamT>::operator|=(const BitSetT &other)
 {
     mBits |= other.mBits;
     return *this;
 }
 
-template <size_t N, typename BitsT>
-BitSetT<N, BitsT> &BitSetT<N, BitsT>::operator^=(const BitSetT &other)
+template <size_t N, typename BitsT, typename ParamT>
+BitSetT<N, BitsT, ParamT> &BitSetT<N, BitsT, ParamT>::operator^=(const BitSetT &other)
 {
     mBits = (mBits ^ other.mBits) & Mask(N);
     return *this;
 }
 
-template <size_t N, typename BitsT>
-BitSetT<N, BitsT> BitSetT<N, BitsT>::operator~() const
+template <size_t N, typename BitsT, typename ParamT>
+BitSetT<N, BitsT, ParamT> BitSetT<N, BitsT, ParamT>::operator~() const
 {
-    return BitSetT<N, BitsT>(~mBits & Mask(N));
+    return BitSetT<N, BitsT, ParamT>(~mBits & Mask(N));
 }
 
-template <size_t N, typename BitsT>
-BitSetT<N, BitsT> BitSetT<N, BitsT>::operator<<(std::size_t pos) const
+template <size_t N, typename BitsT, typename ParamT>
+BitSetT<N, BitsT, ParamT> BitSetT<N, BitsT, ParamT>::operator<<(std::size_t pos) const
 {
-    return BitSetT<N, BitsT>((mBits << pos) & Mask(N));
+    return BitSetT<N, BitsT, ParamT>((mBits << pos) & Mask(N));
 }
 
-template <size_t N, typename BitsT>
-BitSetT<N, BitsT> &BitSetT<N, BitsT>::operator<<=(std::size_t pos)
+template <size_t N, typename BitsT, typename ParamT>
+BitSetT<N, BitsT, ParamT> &BitSetT<N, BitsT, ParamT>::operator<<=(std::size_t pos)
 {
     mBits = (mBits << pos & Mask(N));
     return *this;
 }
 
-template <size_t N, typename BitsT>
-BitSetT<N, BitsT> BitSetT<N, BitsT>::operator>>(std::size_t pos) const
+template <size_t N, typename BitsT, typename ParamT>
+BitSetT<N, BitsT, ParamT> BitSetT<N, BitsT, ParamT>::operator>>(std::size_t pos) const
 {
-    return BitSetT<N, BitsT>(mBits >> pos);
+    return BitSetT<N, BitsT, ParamT>(mBits >> pos);
 }
 
-template <size_t N, typename BitsT>
-BitSetT<N, BitsT> &BitSetT<N, BitsT>::operator>>=(std::size_t pos)
+template <size_t N, typename BitsT, typename ParamT>
+BitSetT<N, BitsT, ParamT> &BitSetT<N, BitsT, ParamT>::operator>>=(std::size_t pos)
 {
     mBits = ((mBits >> pos) & Mask(N));
     return *this;
 }
 
-template <size_t N, typename BitsT>
-BitSetT<N, BitsT> &BitSetT<N, BitsT>::set()
+template <size_t N, typename BitsT, typename ParamT>
+BitSetT<N, BitsT, ParamT> &BitSetT<N, BitsT, ParamT>::set()
 {
     mBits = Mask(N);
     return *this;
 }
 
-template <size_t N, typename BitsT>
-BitSetT<N, BitsT> &BitSetT<N, BitsT>::set(std::size_t pos, bool value)
+template <size_t N, typename BitsT, typename ParamT>
+BitSetT<N, BitsT, ParamT> &BitSetT<N, BitsT, ParamT>::set(ParamT pos, bool value)
 {
     if (value)
     {
@@ -356,36 +359,36 @@ BitSetT<N, BitsT> &BitSetT<N, BitsT>::set(std::size_t pos, bool value)
     return *this;
 }
 
-template <size_t N, typename BitsT>
-BitSetT<N, BitsT> &BitSetT<N, BitsT>::reset()
+template <size_t N, typename BitsT, typename ParamT>
+BitSetT<N, BitsT, ParamT> &BitSetT<N, BitsT, ParamT>::reset()
 {
     mBits = 0;
     return *this;
 }
 
-template <size_t N, typename BitsT>
-BitSetT<N, BitsT> &BitSetT<N, BitsT>::reset(std::size_t pos)
+template <size_t N, typename BitsT, typename ParamT>
+BitSetT<N, BitsT, ParamT> &BitSetT<N, BitsT, ParamT>::reset(ParamT pos)
 {
     mBits &= ~Bit(pos);
     return *this;
 }
 
-template <size_t N, typename BitsT>
-BitSetT<N, BitsT> &BitSetT<N, BitsT>::flip()
+template <size_t N, typename BitsT, typename ParamT>
+BitSetT<N, BitsT, ParamT> &BitSetT<N, BitsT, ParamT>::flip()
 {
     mBits ^= Mask(N);
     return *this;
 }
 
-template <size_t N, typename BitsT>
-BitSetT<N, BitsT> &BitSetT<N, BitsT>::flip(std::size_t pos)
+template <size_t N, typename BitsT, typename ParamT>
+BitSetT<N, BitsT, ParamT> &BitSetT<N, BitsT, ParamT>::flip(ParamT pos)
 {
     mBits ^= Bit(pos);
     return *this;
 }
 
-template <size_t N, typename BitsT>
-BitSetT<N, BitsT>::Iterator::Iterator(const BitSetT &bits) : mBitsCopy(bits), mCurrentBit(0)
+template <size_t N, typename BitsT, typename ParamT>
+BitSetT<N, BitsT, ParamT>::Iterator::Iterator(const BitSetT &bits) : mBitsCopy(bits), mCurrentBit(0)
 {
     if (bits.any())
     {
@@ -393,8 +396,8 @@ BitSetT<N, BitsT>::Iterator::Iterator(const BitSetT &bits) : mBitsCopy(bits), mC
     }
 }
 
-template <size_t N, typename BitsT>
-typename BitSetT<N, BitsT>::Iterator &BitSetT<N, BitsT>::Iterator::operator++()
+template <size_t N, typename BitsT, typename ParamT>
+typename BitSetT<N, BitsT, ParamT>::Iterator &BitSetT<N, BitsT, ParamT>::Iterator::operator++()
 {
     ASSERT(mBitsCopy.any());
     mBitsCopy.reset(mCurrentBit);
@@ -402,26 +405,26 @@ typename BitSetT<N, BitsT>::Iterator &BitSetT<N, BitsT>::Iterator::operator++()
     return *this;
 }
 
-template <size_t N, typename BitsT>
-bool BitSetT<N, BitsT>::Iterator::operator==(const Iterator &other) const
+template <size_t N, typename BitsT, typename ParamT>
+bool BitSetT<N, BitsT, ParamT>::Iterator::operator==(const Iterator &other) const
 {
     return mBitsCopy == other.mBitsCopy;
 }
 
-template <size_t N, typename BitsT>
-bool BitSetT<N, BitsT>::Iterator::operator!=(const Iterator &other) const
+template <size_t N, typename BitsT, typename ParamT>
+bool BitSetT<N, BitsT, ParamT>::Iterator::operator!=(const Iterator &other) const
 {
     return !(*this == other);
 }
 
-template <size_t N, typename BitsT>
-std::size_t BitSetT<N, BitsT>::Iterator::operator*() const
+template <size_t N, typename BitsT, typename ParamT>
+std::size_t BitSetT<N, BitsT, ParamT>::Iterator::operator*() const
 {
     return mCurrentBit;
 }
 
-template <size_t N, typename BitsT>
-std::size_t BitSetT<N, BitsT>::Iterator::getNextBit()
+template <size_t N, typename BitsT, typename ParamT>
+std::size_t BitSetT<N, BitsT, ParamT>::Iterator::getNextBit()
 {
     if (mBitsCopy.none())
     {
@@ -474,25 +477,25 @@ using BitSet = typename priv::GetBitSet<N>::Type;
 
 }  // angle
 
-template <size_t N, typename BitsT>
-inline angle::BitSetT<N, BitsT> operator&(const angle::BitSetT<N, BitsT> &lhs,
-                                          const angle::BitSetT<N, BitsT> &rhs)
+template <size_t N, typename BitsT, typename ParamT>
+inline angle::BitSetT<N, BitsT, ParamT> operator&(const angle::BitSetT<N, BitsT, ParamT> &lhs,
+                                                  const angle::BitSetT<N, BitsT, ParamT> &rhs)
 {
-    return angle::BitSetT<N, BitsT>(lhs.bits() & rhs.bits());
+    return angle::BitSetT<N, BitsT, ParamT>(lhs.bits() & rhs.bits());
 }
 
-template <size_t N, typename BitsT>
-inline angle::BitSetT<N, BitsT> operator|(const angle::BitSetT<N, BitsT> &lhs,
-                                          const angle::BitSetT<N, BitsT> &rhs)
+template <size_t N, typename BitsT, typename ParamT>
+inline angle::BitSetT<N, BitsT, ParamT> operator|(const angle::BitSetT<N, BitsT, ParamT> &lhs,
+                                                  const angle::BitSetT<N, BitsT, ParamT> &rhs)
 {
-    return angle::BitSetT<N, BitsT>(lhs.bits() | rhs.bits());
+    return angle::BitSetT<N, BitsT, ParamT>(lhs.bits() | rhs.bits());
 }
 
-template <size_t N, typename BitsT>
-inline angle::BitSetT<N, BitsT> operator^(const angle::BitSetT<N, BitsT> &lhs,
-                                          const angle::BitSetT<N, BitsT> &rhs)
+template <size_t N, typename BitsT, typename ParamT>
+inline angle::BitSetT<N, BitsT, ParamT> operator^(const angle::BitSetT<N, BitsT, ParamT> &lhs,
+                                                  const angle::BitSetT<N, BitsT, ParamT> &rhs)
 {
-    return angle::BitSetT<N, BitsT>(lhs.bits() ^ rhs.bits());
+    return angle::BitSetT<N, BitsT, ParamT>(lhs.bits() ^ rhs.bits());
 }
 
 #endif  // COMMON_BITSETITERATOR_H_

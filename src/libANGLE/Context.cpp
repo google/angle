@@ -2780,6 +2780,33 @@ void Context::updateCaps()
     {
         mMemoryProgramCache = nullptr;
     }
+
+    // Compute which buffer types are allowed
+    mValidBufferBindings.reset();
+    mValidBufferBindings.set(BufferBinding::ElementArray);
+    mValidBufferBindings.set(BufferBinding::Array);
+
+    if (mExtensions.pixelBufferObject || getClientVersion() >= ES_3_0)
+    {
+        mValidBufferBindings.set(BufferBinding::PixelPack);
+        mValidBufferBindings.set(BufferBinding::PixelUnpack);
+    }
+
+    if (getClientVersion() >= ES_3_0)
+    {
+        mValidBufferBindings.set(BufferBinding::CopyRead);
+        mValidBufferBindings.set(BufferBinding::CopyWrite);
+        mValidBufferBindings.set(BufferBinding::TransformFeedback);
+        mValidBufferBindings.set(BufferBinding::Uniform);
+    }
+
+    if (getClientVersion() >= ES_3_1)
+    {
+        mValidBufferBindings.set(BufferBinding::AtomicCounter);
+        mValidBufferBindings.set(BufferBinding::ShaderStorage);
+        mValidBufferBindings.set(BufferBinding::DrawIndirect);
+        mValidBufferBindings.set(BufferBinding::DispatchIndirect);
+    }
 }
 
 void Context::initWorkarounds()
