@@ -1,0 +1,211 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6a440774_019da330",
+        "filename": "src/compiler/translator/Cache.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-01T14:53:00Z",
+      "side": 1,
+      "message": "I think when we submit this, we probably want to do away with the TCache namespace and rename the methods to something like GetStaticType, etc.",
+      "range": {
+        "startLine": 21,
+        "startChar": 10,
+        "endLine": 21,
+        "endChar": 16
+      },
+      "revId": "29adf1f00244a4040ae496de86295181d84d40e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "82039f69_ef9b4477",
+        "filename": "src/compiler/translator/Cache.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-01T14:53:00Z",
+      "side": 1,
+      "message": "could we possibly re-use this method in the other mangled name generator?\n\nAlso, I think this might make sense to live in the type class, where it can initialize the mangled name pointer itself in the constexpr constructor.",
+      "range": {
+        "startLine": 30,
+        "startChar": 1,
+        "endLine": 35,
+        "endChar": 44
+      },
+      "revId": "29adf1f00244a4040ae496de86295181d84d40e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9bc25bb5_9b41975c",
+        "filename": "src/compiler/translator/Cache.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-01T14:53:00Z",
+      "side": 1,
+      "message": "all the static methods should start with a Capital letter.",
+      "range": {
+        "startLine": 35,
+        "startChar": 22,
+        "endLine": 35,
+        "endChar": 42
+      },
+      "revId": "29adf1f00244a4040ae496de86295181d84d40e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f1bb47ce_20385770",
+        "filename": "src/compiler/translator/Cache.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-01T14:53:00Z",
+      "side": 1,
+      "message": "is there a need for this? You can use ANGLE_EMPTY_STATEMENT if that\u0027s why.",
+      "range": {
+        "startLine": 48,
+        "startChar": 5,
+        "endLine": 48,
+        "endChar": 15
+      },
+      "revId": "29adf1f00244a4040ae496de86295181d84d40e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d74e8d28_703382b8",
+        "filename": "src/compiler/translator/Cache.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-01T14:53:00Z",
+      "side": 1,
+      "message": "is this an exhaustive list? why not keep this in a constexpr array of char arrays (null terminated) and use this in both code locations?",
+      "range": {
+        "startLine": 64,
+        "startChar": 13,
+        "endLine": 64,
+        "endChar": 21
+      },
+      "revId": "29adf1f00244a4040ae496de86295181d84d40e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "25e3dff8_cb541e04",
+        "filename": "src/compiler/translator/Cache.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-01T14:53:00Z",
+      "side": 1,
+      "message": "I think these should be kPrefixed.",
+      "range": {
+        "startLine": 204,
+        "startChar": 29,
+        "endLine": 204,
+        "endChar": 48
+      },
+      "revId": "29adf1f00244a4040ae496de86295181d84d40e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b07660dd_0b630cde",
+        "filename": "src/compiler/translator/Cache.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-01T14:53:00Z",
+      "side": 1,
+      "message": "same here",
+      "range": {
+        "startLine": 214,
+        "startChar": 23,
+        "endLine": 214,
+        "endChar": 35
+      },
+      "revId": "29adf1f00244a4040ae496de86295181d84d40e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6315be04_38120339",
+        "filename": "src/compiler/translator/Cache.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 369,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-01T14:53:00Z",
+      "side": 1,
+      "message": "I think maybe we should keep the cache cpp file for these guys.",
+      "range": {
+        "startLine": 335,
+        "startChar": 0,
+        "endLine": 369,
+        "endChar": 1
+      },
+      "revId": "29adf1f00244a4040ae496de86295181d84d40e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a4399b11_eae624b9",
+        "filename": "src/compiler/translator/Types.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-01T14:53:00Z",
+      "side": 1,
+      "message": "can we remove this?",
+      "range": {
+        "startLine": 198,
+        "startChar": 0,
+        "endLine": 214,
+        "endChar": 0
+      },
+      "revId": "29adf1f00244a4040ae496de86295181d84d40e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
