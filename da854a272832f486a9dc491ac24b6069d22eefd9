@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "611386e0_c5e9ec2a",
+        "filename": "src/tests/gl_tests/ClientArraysTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-12-01T07:44:26Z",
+      "side": 0,
+      "message": "This code refactoring also found an error/typo.",
+      "range": {
+        "startLine": 54,
+        "startChar": 20,
+        "endLine": 54,
+        "endChar": 28
+      },
+      "revId": "da854a272832f486a9dc491ac24b6069d22eefd9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
