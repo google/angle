@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "2f5d053b_cca9405f",
+        "filename": "src/tests/gl_tests/LinkAndRelinkFailureTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-12-01T07:49:55Z",
+      "side": 1,
+      "message": "You are correct, most test cases add comments before the test function. But the tests here are really very tricky, so I put comments right before the code snippet, in order to be easy to understand the tests. \n\nThis is not a big deal. Let\u0027s keep it.",
+      "parentUuid": "f0f11d93_5ff1a2fd",
+      "range": {
+        "startLine": 38,
+        "startChar": 0,
+        "endLine": 39,
+        "endChar": 73
+      },
+      "revId": "d0347c2e1c2dbbdd3a4875c8f3f8c1907863688a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d4cc0158_f38f138c",
         "filename": "src/tests/gl_tests/LinkAndRelinkFailureTest.cpp",
         "patchSetId": 5
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "40d38628_032b3ac5",
+        "filename": "src/tests/gl_tests/LinkAndRelinkFailureTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-12-01T07:49:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d4cc0158_f38f138c",
+      "range": {
+        "startLine": 60,
+        "startChar": 11,
+        "endLine": 60,
+        "endChar": 23
+      },
+      "revId": "d0347c2e1c2dbbdd3a4875c8f3f8c1907863688a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fa42eb3f_27a626e1",
         "filename": "src/tests/gl_tests/LinkAndRelinkFailureTest.cpp",
         "patchSetId": 5
@@ -62,6 +110,24 @@
       "revId": "d0347c2e1c2dbbdd3a4875c8f3f8c1907863688a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ffc759e8_4934b597",
+        "filename": "src/tests/gl_tests/LinkAndRelinkFailureTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 246,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-12-01T07:49:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fa42eb3f_27a626e1",
+      "revId": "d0347c2e1c2dbbdd3a4875c8f3f8c1907863688a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
