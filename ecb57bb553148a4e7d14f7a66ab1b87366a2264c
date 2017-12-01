@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "4ed7c9cc_04328730",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 7
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-12-01T14:54:04Z",
+      "side": 1,
+      "message": "nit: Maybe call it \u0027msvc\u0027 or  the \u0027microsoft visual c++ compiler\u0027 to avoid confusion that it will be built within Visual Studio.",
+      "range": {
+        "startLine": 21,
+        "startChar": 60,
+        "endLine": 21,
+        "endChar": 73
+      },
+      "revId": "ecb57bb553148a4e7d14f7a66ab1b87366a2264c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ceceb65c_60f34722",
         "filename": "doc/DevSetup.md",
         "patchSetId": 7
@@ -18,6 +41,29 @@
         "startChar": 144,
         "endLine": 52,
         "endChar": 145
+      },
+      "revId": "ecb57bb553148a4e7d14f7a66ab1b87366a2264c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3bbf30d6_356c1b6f",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 7
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-12-01T14:54:04Z",
+      "side": 1,
+      "message": "Until we have instructions for this, is it worth adding?",
+      "range": {
+        "startLine": 75,
+        "startChar": 0,
+        "endLine": 75,
+        "endChar": 70
       },
       "revId": "ecb57bb553148a4e7d14f7a66ab1b87366a2264c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
