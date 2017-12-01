@@ -25,6 +25,99 @@
     },
     {
       "key": {
+        "uuid": "1fb44192_c3ffa0bc",
+        "filename": "doc/ContributingCode.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-01T22:33:53Z",
+      "side": 1,
+      "message": "I would keep it clear that there\u0027s a link you need to visit, rather than making it implicit.",
+      "parentUuid": "8c977e85_3f91f15a",
+      "range": {
+        "startLine": 85,
+        "startChar": 6,
+        "endLine": 85,
+        "endChar": 25
+      },
+      "revId": "6e38f2f136247590706b326c8f7f7d4fa0b2486d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c961f288_96f8ec71",
+        "filename": "doc/ContributingCode.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-01T22:33:53Z",
+      "side": 1,
+      "message": "nit: caps are inconsistent with the other uses. Also prefer \"front-end\" or \"front end\" to \"frontend\".",
+      "range": {
+        "startLine": 101,
+        "startChar": 17,
+        "endLine": 101,
+        "endChar": 25
+      },
+      "revId": "6e38f2f136247590706b326c8f7f7d4fa0b2486d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "66a6ebaa_d9998d6c",
+        "filename": "doc/ContributingCode.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-01T22:33:53Z",
+      "side": 1,
+      "message": "nit: Direct3D",
+      "range": {
+        "startLine": 104,
+        "startChar": 3,
+        "endLine": 104,
+        "endChar": 10
+      },
+      "revId": "6e38f2f136247590706b326c8f7f7d4fa0b2486d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "99588d78_28b488a7",
+        "filename": "doc/ContributingCode.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-01T22:33:53Z",
+      "side": 1,
+      "message": "this is /vulkan",
+      "range": {
+        "startLine": 108,
+        "startChar": 41,
+        "endLine": 108,
+        "endChar": 43
+      },
+      "revId": "6e38f2f136247590706b326c8f7f7d4fa0b2486d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5f6be15b_2dc09f23",
         "filename": "doc/ContributingCode.md",
         "patchSetId": 2
@@ -36,6 +129,24 @@
       "writtenOn": "2017-12-01T19:59:42Z",
       "side": 1,
       "message": "want to add me for ozone and yuly for android?",
+      "revId": "6e38f2f136247590706b326c8f7f7d4fa0b2486d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "91f5be8f_ca5c4345",
+        "filename": "doc/ContributingCode.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-01T22:33:53Z",
+      "side": 1,
+      "message": "+1",
+      "parentUuid": "5f6be15b_2dc09f23",
       "revId": "6e38f2f136247590706b326c8f7f7d4fa0b2486d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
