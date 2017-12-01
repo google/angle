@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e59c1881_1616b478",
+        "filename": "src/compiler/translator/blocklayout.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-12-01T15:17:53Z",
+      "side": 1,
+      "message": "Is something like this allowed?\n\n layout(row_major) uniform Block {\n   layout(column_major) struct s {\n    layout(row_major) mat4 matrix;\n   };\n } matrix;\n\nIn this case the logic here would need to be updated to know whether the field has a preference for column major or doesn\u0027t have the qualifier",
+      "revId": "522a6d5b09f50ea1af90a70aec1289a610d2bd39",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
