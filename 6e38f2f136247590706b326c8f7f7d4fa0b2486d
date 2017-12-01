@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "10e6bcf6_0fc14136",
+        "filename": "doc/ContributingCode.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-12-01T22:48:27Z",
+      "side": 1,
+      "message": "How is it not clear there\u0027s a link?  They have a different appearance.\nThe sentence basically says \"foo, see foo.\"\nRedundant, yes redundant.",
+      "parentUuid": "1fb44192_c3ffa0bc",
+      "range": {
+        "startLine": 85,
+        "startChar": 6,
+        "endLine": 85,
+        "endChar": 25
+      },
+      "revId": "6e38f2f136247590706b326c8f7f7d4fa0b2486d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "c961f288_96f8ec71",
         "filename": "doc/ContributingCode.md",
         "patchSetId": 2
