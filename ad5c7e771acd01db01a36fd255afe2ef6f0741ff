@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1d8dda51_45627d2c",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1950,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-12-01T03:17:02Z",
+      "side": 1,
+      "message": "Storage buffers should be updated when changing the program object.",
+      "range": {
+        "startLine": 1950,
+        "startChar": 16,
+        "endLine": 1950,
+        "endChar": 56
+      },
+      "revId": "ad5c7e771acd01db01a36fd255afe2ef6f0741ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fc520750_536d940c",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1960,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-12-01T03:17:02Z",
+      "side": 1,
+      "message": "Same here.",
+      "range": {
+        "startLine": 1960,
+        "startChar": 16,
+        "endLine": 1960,
+        "endChar": 56
+      },
+      "revId": "ad5c7e771acd01db01a36fd255afe2ef6f0741ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
