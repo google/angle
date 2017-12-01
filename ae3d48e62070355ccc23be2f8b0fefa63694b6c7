@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6f402e70_dfe8c5b8",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2968,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-01T18:39:01Z",
+      "side": 1,
+      "message": "nit: for consistency, default-initialize to 0.",
+      "range": {
+        "startLine": 2968,
+        "startChar": 10,
+        "endLine": 2968,
+        "endChar": 24
+      },
+      "revId": "ae3d48e62070355ccc23be2f8b0fefa63694b6c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b9f6d1e8_6e9c5264",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2971,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-01T18:39:01Z",
+      "side": 1,
+      "message": "Are these some linter comments? I think you can remove these, we don\u0027t use this style anywhere currently.",
+      "range": {
+        "startLine": 2971,
+        "startChar": 42,
+        "endLine": 2971,
+        "endChar": 51
+      },
+      "revId": "ae3d48e62070355ccc23be2f8b0fefa63694b6c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
