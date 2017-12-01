@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f0f11d93_5ff1a2fd",
+        "filename": "src/tests/gl_tests/LinkAndRelinkFailureTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-12-01T05:58:54Z",
+      "side": 1,
+      "message": "You should add the comment before each test. So move this comment above the test (Line 35). And same with below tests.",
+      "range": {
+        "startLine": 38,
+        "startChar": 0,
+        "endLine": 39,
+        "endChar": 73
+      },
+      "revId": "d0347c2e1c2dbbdd3a4875c8f3f8c1907863688a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d4cc0158_f38f138c",
+        "filename": "src/tests/gl_tests/LinkAndRelinkFailureTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-12-01T05:58:54Z",
+      "side": 1,
+      "message": "Remove it so that you can test ES2 and ES3",
+      "range": {
+        "startLine": 60,
+        "startChar": 11,
+        "endLine": 60,
+        "endChar": 23
+      },
+      "revId": "d0347c2e1c2dbbdd3a4875c8f3f8c1907863688a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fa42eb3f_27a626e1",
+        "filename": "src/tests/gl_tests/LinkAndRelinkFailureTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 246,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-12-01T05:58:54Z",
+      "side": 1,
+      "message": "Add various ES3 backend.",
+      "revId": "d0347c2e1c2dbbdd3a4875c8f3f8c1907863688a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
