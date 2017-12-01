@@ -2,6 +2,75 @@
   "comments": [
     {
       "key": {
+        "uuid": "5f447c56_d78f44e1",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 275,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-01T22:47:59Z",
+      "side": 1,
+      "message": "+1",
+      "range": {
+        "startLine": 274,
+        "startChar": 0,
+        "endLine": 275,
+        "endChar": 72
+      },
+      "revId": "522a6d5b09f50ea1af90a70aec1289a610d2bd39",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "551ba997_477d6f0f",
+        "filename": "src/compiler/translator/CollectVariables.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 669,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-01T22:47:59Z",
+      "side": 1,
+      "message": "please add your TODO here, that this should be removed. Also in any other places I missed.",
+      "range": {
+        "startLine": 669,
+        "startChar": 24,
+        "endLine": 669,
+        "endChar": 40
+      },
+      "revId": "522a6d5b09f50ea1af90a70aec1289a610d2bd39",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "97c798fc_cfceb567",
+        "filename": "src/compiler/translator/Types.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-01T22:47:59Z",
+      "side": 1,
+      "message": "this comment doesn\u0027t seem necessary.. but very minor point.",
+      "range": {
+        "startLine": 108,
+        "startChar": 0,
+        "endLine": 109,
+        "endChar": 74
+      },
+      "revId": "522a6d5b09f50ea1af90a70aec1289a610d2bd39",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e59c1881_1616b478",
         "filename": "src/compiler/translator/blocklayout.cpp",
         "patchSetId": 6
@@ -13,6 +82,52 @@
       "writtenOn": "2017-12-01T15:17:53Z",
       "side": 1,
       "message": "Is something like this allowed?\n\n layout(row_major) uniform Block {\n   layout(column_major) struct s {\n    layout(row_major) mat4 matrix;\n   };\n } matrix;\n\nIn this case the logic here would need to be updated to know whether the field has a preference for column major or doesn\u0027t have the qualifier",
+      "revId": "522a6d5b09f50ea1af90a70aec1289a610d2bd39",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6c3422d4_e18a6611",
+        "filename": "src/compiler/translator/blocklayout.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-01T22:47:59Z",
+      "side": 1,
+      "message": "nit: can you split this into two non-templated functions to make it clear at compile time (rather than link) that it\u0027s an error to use any other types? I like what you did in the cpp file, this should make it clearer.",
+      "range": {
+        "startLine": 134,
+        "startChar": 0,
+        "endLine": 139,
+        "endChar": 55
+      },
+      "revId": "522a6d5b09f50ea1af90a70aec1289a610d2bd39",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "92f43ff9_146c171b",
+        "filename": "src/tests/gl_tests/UniformBufferTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1253,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-01T22:47:59Z",
+      "side": 1,
+      "message": "do we know if this works on intel? or another vendor besides NVIDIA? as long as the \"working\" count is strictly greater than the \"not working\" count it makes me more confident the tests are indeed correct. :)",
+      "range": {
+        "startLine": 1250,
+        "startChar": 1,
+        "endLine": 1253,
+        "endChar": 0
+      },
       "revId": "522a6d5b09f50ea1af90a70aec1289a610d2bd39",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
