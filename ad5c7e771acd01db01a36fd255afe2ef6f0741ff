@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "529fa782_1757a73d",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1950,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-12-01T04:29:11Z",
+      "side": 1,
+      "message": "Can you add an end2end test to cover this change and below? It seems that no deqp cases cover it since it passed the trybots in your previous patch sets.",
+      "parentUuid": "1d8dda51_45627d2c",
+      "range": {
+        "startLine": 1950,
+        "startChar": 16,
+        "endLine": 1950,
+        "endChar": 56
+      },
+      "revId": "ad5c7e771acd01db01a36fd255afe2ef6f0741ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "fc520750_536d940c",
         "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
         "patchSetId": 6
