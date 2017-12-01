@@ -120,12 +120,12 @@ class Renderer9 : public RendererD3D
                               D3DFORMAT Format,
                               IDirect3DIndexBuffer9 **ppIndexBuffer);
     gl::Error setSamplerState(const gl::Context *context,
-                              gl::SamplerType type,
+                              gl::ShaderType type,
                               int index,
                               gl::Texture *texture,
                               const gl::SamplerState &sampler);
     gl::Error setTexture(const gl::Context *context,
-                         gl::SamplerType type,
+                         gl::ShaderType type,
                          int index,
                          gl::Texture *texture);
 
@@ -404,7 +404,7 @@ class Renderer9 : public RendererD3D
     gl::Error applyShaders(const gl::Context *context, GLenum drawMode);
 
     gl::Error applyTextures(const gl::Context *context);
-    gl::Error applyTextures(const gl::Context *context, gl::SamplerType shaderType);
+    gl::Error applyTextures(const gl::Context *context, gl::ShaderType shaderType);
 
     void generateCaps(gl::Caps *outCaps,
                       gl::TextureCapsMap *outTextureCaps,

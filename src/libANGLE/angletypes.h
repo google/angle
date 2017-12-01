@@ -40,13 +40,6 @@ enum PrimitiveType
 
 PrimitiveType GetPrimitiveType(GLenum drawMode);
 
-enum SamplerType
-{
-    SAMPLER_PIXEL,
-    SAMPLER_VERTEX,
-    SAMPLER_COMPUTE
-};
-
 enum ShaderType
 {
     SHADER_VERTEX,

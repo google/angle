@@ -651,7 +651,7 @@ bool ProgramD3D::usesInstancedPointSpriteEmulation() const
     return mRenderer->getWorkarounds().useInstancedPointSpriteEmulation;
 }
 
-GLint ProgramD3D::getSamplerMapping(gl::SamplerType type,
+GLint ProgramD3D::getSamplerMapping(gl::ShaderType type,
                                     unsigned int samplerIndex,
                                     const gl::Caps &caps) const
 {
@@ -659,21 +659,21 @@ GLint ProgramD3D::getSamplerMapping(gl::SamplerType type,
 
     switch (type)
     {
-        case gl::SAMPLER_PIXEL:
+        case gl::SHADER_FRAGMENT:
             ASSERT(samplerIndex < caps.maxTextureImageUnits);
             if (samplerIndex < mSamplersPS.size() && mSamplersPS[samplerIndex].active)
             {
                 logicalTextureUnit = mSamplersPS[samplerIndex].logicalTextureUnit;
             }
             break;
-        case gl::SAMPLER_VERTEX:
+        case gl::SHADER_VERTEX:
             ASSERT(samplerIndex < caps.maxVertexTextureImageUnits);
             if (samplerIndex < mSamplersVS.size() && mSamplersVS[samplerIndex].active)
             {
                 logicalTextureUnit = mSamplersVS[samplerIndex].logicalTextureUnit;
             }
             break;
-        case gl::SAMPLER_COMPUTE:
+        case gl::SHADER_COMPUTE:
             ASSERT(samplerIndex < caps.maxComputeTextureImageUnits);
             if (samplerIndex < mSamplersCS.size() && mSamplersCS[samplerIndex].active)
             {
@@ -695,19 +695,19 @@ GLint ProgramD3D::getSamplerMapping(gl::SamplerType type,
 
 // Returns the texture type for a given Direct3D 9 sampler type and
 // index (0-15 for the pixel shader and 0-3 for the vertex shader).
-GLenum ProgramD3D::getSamplerTextureType(gl::SamplerType type, unsigned int samplerIndex) const
+GLenum ProgramD3D::getSamplerTextureType(gl::ShaderType type, unsigned int samplerIndex) const
 {
     switch (type)
     {
-        case gl::SAMPLER_PIXEL:
+        case gl::SHADER_FRAGMENT:
             ASSERT(samplerIndex < mSamplersPS.size());
             ASSERT(mSamplersPS[samplerIndex].active);
             return mSamplersPS[samplerIndex].textureType;
-        case gl::SAMPLER_VERTEX:
+        case gl::SHADER_VERTEX:
             ASSERT(samplerIndex < mSamplersVS.size());
             ASSERT(mSamplersVS[samplerIndex].active);
             return mSamplersVS[samplerIndex].textureType;
-        case gl::SAMPLER_COMPUTE:
+        case gl::SHADER_COMPUTE:
             ASSERT(samplerIndex < mSamplersCS.size());
             ASSERT(mSamplersCS[samplerIndex].active);
             return mSamplersCS[samplerIndex].textureType;
@@ -718,15 +718,15 @@ GLenum ProgramD3D::getSamplerTextureType(gl::SamplerType type, unsigned int samp
     return GL_TEXTURE_2D;
 }
 
-GLuint ProgramD3D::getUsedSamplerRange(gl::SamplerType type) const
+GLuint ProgramD3D::getUsedSamplerRange(gl::ShaderType type) const
 {
     switch (type)
     {
-        case gl::SAMPLER_PIXEL:
+        case gl::SHADER_FRAGMENT:
             return mUsedPixelSamplerRange;
-        case gl::SAMPLER_VERTEX:
+        case gl::SHADER_VERTEX:
             return mUsedVertexSamplerRange;
-        case gl::SAMPLER_COMPUTE:
+        case gl::SHADER_COMPUTE:
             return mUsedComputeSamplerRange;
         default:
             UNREACHABLE();

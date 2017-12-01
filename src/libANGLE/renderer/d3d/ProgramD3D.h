@@ -161,11 +161,11 @@ class ProgramD3D : public ProgramImpl
 
     const std::vector<PixelShaderOutputVariable> &getPixelShaderKey() { return mPixelShaderKey; }
 
-    GLint getSamplerMapping(gl::SamplerType type,
+    GLint getSamplerMapping(gl::ShaderType type,
                             unsigned int samplerIndex,
                             const gl::Caps &caps) const;
-    GLenum getSamplerTextureType(gl::SamplerType type, unsigned int samplerIndex) const;
-    GLuint getUsedSamplerRange(gl::SamplerType type) const;
+    GLenum getSamplerTextureType(gl::ShaderType type, unsigned int samplerIndex) const;
+    GLuint getUsedSamplerRange(gl::ShaderType type) const;
 
     enum SamplerMapping
     {

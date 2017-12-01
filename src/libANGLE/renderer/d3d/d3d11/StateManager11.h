@@ -34,7 +34,7 @@ class ShaderConstants11 : angle::NonCopyable
     ~ShaderConstants11();
 
     void init(const gl::Caps &caps);
-    size_t getRequiredBufferSize(gl::SamplerType samplerType) const;
+    size_t getRequiredBufferSize(gl::ShaderType shaderType) const;
     void markDirty();
 
     void setComputeWorkGroups(GLuint numGroupsX, GLuint numGroupsY, GLuint numGroupsZ);
@@ -43,12 +43,12 @@ class ShaderConstants11 : angle::NonCopyable
                           const D3D11_VIEWPORT &dxViewport,
                           bool is9_3,
                           bool presentPathFast);
-    void onSamplerChange(gl::SamplerType samplerType,
+    void onSamplerChange(gl::ShaderType shaderType,
                          unsigned int samplerIndex,
                          const gl::Texture &texture);
 
     gl::Error updateBuffer(ID3D11DeviceContext *deviceContext,
-                           gl::SamplerType samplerType,
+                           gl::ShaderType shaderType,
                            const ProgramD3D &programD3D,
                            const d3d11::Buffer &driverConstantBuffer);
 
@@ -236,10 +236,10 @@ class StateManager11 final : angle::NonCopyable
 
     gl::Error updateState(const gl::Context *context, GLenum drawMode);
 
-    void setShaderResourceShared(gl::SamplerType shaderType,
+    void setShaderResourceShared(gl::ShaderType shaderType,
                                  UINT resourceSlot,
                                  const d3d11::SharedSRV *srv);
-    void setShaderResource(gl::SamplerType shaderType,
+    void setShaderResource(gl::ShaderType shaderType,
                            UINT resourceSlot,
                            const d3d11::ShaderResourceView *srv);
     void setPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY primitiveTopology);
@@ -289,12 +289,12 @@ class StateManager11 final : angle::NonCopyable
 
   private:
     template <typename SRVType>
-    void setShaderResourceInternal(gl::SamplerType shaderType,
+    void setShaderResourceInternal(gl::ShaderType shaderType,
                                    UINT resourceSlot,
                                    const SRVType *srv);
 
     bool unsetConflictingView(ID3D11View *view);
-    bool unsetConflictingSRVs(gl::SamplerType shaderType,
+    bool unsetConflictingSRVs(gl::ShaderType shaderType,
                               uintptr_t resource,
                               const gl::ImageIndex *index);
     void unsetConflictingAttachmentResources(const gl::FramebufferAttachment *attachment,
@@ -320,26 +320,26 @@ class StateManager11 final : angle::NonCopyable
     gl::Error syncProgram(const gl::Context *context, GLenum drawMode);
 
     gl::Error syncTextures(const gl::Context *context);
-    gl::Error applyTextures(const gl::Context *context, gl::SamplerType shaderType);
+    gl::Error applyTextures(const gl::Context *context, gl::ShaderType shaderType);
 
     gl::Error setSamplerState(const gl::Context *context,
-                              gl::SamplerType type,
+                              gl::ShaderType type,
                               int index,
                               gl::Texture *texture,
                               const gl::SamplerState &sampler);
     gl::Error setTexture(const gl::Context *context,
-                         gl::SamplerType type,
+                         gl::ShaderType type,
                          int index,
                          gl::Texture *texture);
 
     // Faster than calling setTexture a jillion times
-    gl::Error clearTextures(gl::SamplerType samplerType, size_t rangeStart, size_t rangeEnd);
+    gl::Error clearTextures(gl::ShaderType shaderType, size_t rangeStart, size_t rangeEnd);
     void handleMultiviewDrawFramebufferChange(const gl::Context *context);
 
     gl::Error syncCurrentValueAttribs(const gl::State &glState);
 
     gl::Error generateSwizzle(const gl::Context *context, gl::Texture *texture);
-    gl::Error generateSwizzlesForShader(const gl::Context *context, gl::SamplerType type);
+    gl::Error generateSwizzlesForShader(const gl::Context *context, gl::ShaderType type);
     gl::Error generateSwizzles(const gl::Context *context);
 
     gl::Error applyDriverUniforms(const ProgramD3D &programD3D);
