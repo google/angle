@@ -39,8 +39,7 @@ class UniformHLSL : angle::NonCopyable
     TString uniformBlocksHeader(const ReferencedSymbols &referencedInterfaceBlocks);
 
     // Used for direct index references
-    static TString uniformBlockInstanceString(const TInterfaceBlock &interfaceBlock,
-                                              unsigned int arrayIndex);
+    static TString UniformBlockInstanceString(const TString &instanceName, unsigned int arrayIndex);
 
     const std::map<std::string, unsigned int> &getUniformBlockRegisterMap() const
     {
@@ -53,6 +52,7 @@ class UniformHLSL : angle::NonCopyable
 
   private:
     TString uniformBlockString(const TInterfaceBlock &interfaceBlock,
+                               const TString &instanceName,
                                unsigned int registerIndex,
                                unsigned int arrayIndex);
     TString uniformBlockMembersString(const TInterfaceBlock &interfaceBlock,

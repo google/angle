@@ -343,9 +343,7 @@ TString OutputHLSL::generateStructMapping(const std::vector<MappedStruct> &std14
             mappedStruct.blockDeclarator->getType().getInterfaceBlock();
         const TString &interfaceBlockName = interfaceBlock->name();
         const TName &instanceName         = mappedStruct.blockDeclarator->getName();
-        if (mReferencedUniformBlocks.count(interfaceBlockName) == 0 &&
-            (instanceName.getString() == "" ||
-             mReferencedUniformBlocks.count(instanceName.getString()) == 0))
+        if (mReferencedUniformBlocks.count(interfaceBlockName) == 0)
         {
             continue;
         }
@@ -368,8 +366,8 @@ TString OutputHLSL::generateStructMapping(const std::vector<MappedStruct> &std14
                 unsigned int instanceStringArrayIndex = GL_INVALID_INDEX;
                 if (isInstanceArray)
                     instanceStringArrayIndex = instanceArrayIndex;
-                TString instanceString = mUniformHLSL->uniformBlockInstanceString(
-                    *interfaceBlock, instanceStringArrayIndex);
+                TString instanceString = mUniformHLSL->UniformBlockInstanceString(
+                    instanceName.getString(), instanceStringArrayIndex);
                 originalName += instanceString;
                 mappedName += instanceString;
                 originalName += ".";
@@ -1239,10 +1237,11 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
                 if (visit == PreVisit)
                 {
                     TInterfaceBlock *interfaceBlock = leftType.getInterfaceBlock();
+                    TIntermSymbol *instanceArraySymbol = node->getLeft()->getAsSymbolNode();
+                    mReferencedUniformBlocks[interfaceBlock->name()] = instanceArraySymbol;
                     const int arrayIndex = node->getRight()->getAsConstantUnion()->getIConst(0);
-                    mReferencedUniformBlocks[interfaceBlock->instanceName()] =
-                        node->getLeft()->getAsSymbolNode();
-                    out << mUniformHLSL->uniformBlockInstanceString(*interfaceBlock, arrayIndex);
+                    out << mUniformHLSL->UniformBlockInstanceString(
+                        instanceArraySymbol->getSymbol(), arrayIndex);
                     return false;
                 }
             }

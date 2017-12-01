@@ -1024,8 +1024,8 @@ void IdentifyBuiltIns(sh::GLenum type,
                                                  NewPoolTString("gl_Position"), zeroSourceLoc);
             fieldList->push_back(glPositionField);
 
-            TInterfaceBlock *glInBlock = new TInterfaceBlock(
-                glPerVertexString, fieldList, NewPoolTString("gl_in"), TLayoutQualifier::Create());
+            TInterfaceBlock *glInBlock =
+                new TInterfaceBlock(glPerVertexString, fieldList, TLayoutQualifier::Create());
 
             // The array size of gl_in is undefined until we get a valid input primitive
             // declaration.
@@ -1034,8 +1034,8 @@ void IdentifyBuiltIns(sh::GLenum type,
             symbolTable.insertVariableExt(ESSL3_1_BUILTINS, extension, "gl_in", glInType);
 
             TType glPositionType(EbtFloat, EbpHigh, EvqPosition, 4);
-            glPositionType.setInterfaceBlock(new TInterfaceBlock(
-                glPerVertexString, fieldList, nullptr, TLayoutQualifier::Create()));
+            glPositionType.setInterfaceBlock(
+                new TInterfaceBlock(glPerVertexString, fieldList, TLayoutQualifier::Create()));
             symbolTable.insertVariableExt(ESSL3_1_BUILTINS, extension, "gl_Position",
                                           glPositionType);
             symbolTable.insertVariableExt(ESSL3_1_BUILTINS, extension, "gl_PrimitiveIDIn",

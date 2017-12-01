@@ -86,18 +86,15 @@ class TInterfaceBlock : public TFieldListCollection
     POOL_ALLOCATOR_NEW_DELETE();
     TInterfaceBlock(const TString *name,
                     const TFieldList *fields,
-                    const TString *instanceName,
                     const TLayoutQualifier &layoutQualifier);
 
     const TString &name() const { return *mName; }
-    const TString &instanceName() const { return *mInstanceName; }
-    bool hasInstanceName() const { return mInstanceName != nullptr; }
     TLayoutBlockStorage blockStorage() const { return mBlockStorage; }
     int blockBinding() const { return mBinding; }
 
   private:
-    const TString *mName;
-    const TString *mInstanceName;  // for interface block instance names
+    const TString *mName;  // Name of the block, not the instance name. Instance name is only stored
+                           // in the interface block symbols.
     TLayoutBlockStorage mBlockStorage;
     int mBinding;
 

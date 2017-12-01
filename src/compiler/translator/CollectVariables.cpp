@@ -132,7 +132,8 @@ class CollectVariablesTraverser : public TIntermTraverser
     Attribute recordAttribute(const TIntermSymbol &variable) const;
     OutputVariable recordOutputVariable(const TIntermSymbol &variable) const;
     Varying recordVarying(const TIntermSymbol &variable) const;
-    void recordInterfaceBlock(const TType &interfaceBlockType,
+    void recordInterfaceBlock(const TString &instanceName,
+                              const TType &interfaceBlockType,
                               InterfaceBlock *interfaceBlock) const;
     Uniform recordUniform(const TIntermSymbol &variable) const;
 
@@ -316,7 +317,7 @@ InterfaceBlock *CollectVariablesTraverser::recordGLInUsed(const TType &glInType)
     {
         ASSERT(glInType.getQualifier() == EvqPerVertexIn);
         InterfaceBlock info;
-        recordInterfaceBlock(glInType, &info);
+        recordInterfaceBlock("gl_in", glInType, &info);
         info.staticUse = true;
 
         mPerVertexInAdded = true;
@@ -646,7 +647,8 @@ Varying CollectVariablesTraverser::recordVarying(const TIntermSymbol &variable) 
 }
 
 // TODO(jiawei.shao@intel.com): implement GL_OES_shader_io_blocks.
-void CollectVariablesTraverser::recordInterfaceBlock(const TType &interfaceBlockType,
+void CollectVariablesTraverser::recordInterfaceBlock(const TString &instanceName,
+                                                     const TType &interfaceBlockType,
                                                      InterfaceBlock *interfaceBlock) const
 {
     ASSERT(interfaceBlockType.getBasicType() == EbtInterfaceBlock);
@@ -657,8 +659,7 @@ void CollectVariablesTraverser::recordInterfaceBlock(const TType &interfaceBlock
 
     interfaceBlock->name       = blockType->name().c_str();
     interfaceBlock->mappedName = getMappedName(TName(blockType->name()));
-    interfaceBlock->instanceName =
-        (blockType->hasInstanceName() ? blockType->instanceName().c_str() : "");
+    interfaceBlock->instanceName = instanceName.c_str();
     ASSERT(!interfaceBlockType.isArrayOfArrays());  // Disallowed by GLSL ES 3.10 section 4.3.9
     interfaceBlock->arraySize = interfaceBlockType.isArray() ? interfaceBlockType.getOutermostArraySize() : 0;
 
@@ -729,7 +730,7 @@ bool CollectVariablesTraverser::visitDeclaration(Visit, TIntermDeclaration *node
         if (typedNode.getBasicType() == EbtInterfaceBlock)
         {
             InterfaceBlock interfaceBlock;
-            recordInterfaceBlock(variable.getType(), &interfaceBlock);
+            recordInterfaceBlock(variable.getSymbol(), variable.getType(), &interfaceBlock);
 
             switch (qualifier)
             {

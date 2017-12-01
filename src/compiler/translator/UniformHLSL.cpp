@@ -466,42 +466,40 @@ TString UniformHLSL::uniformBlocksHeader(const ReferencedSymbols &referencedInte
 {
     TString interfaceBlocks;
 
-    for (ReferencedSymbols::const_iterator interfaceBlockIt = referencedInterfaceBlocks.begin();
-         interfaceBlockIt != referencedInterfaceBlocks.end(); interfaceBlockIt++)
+    for (const auto &interfaceBlockReference : referencedInterfaceBlocks)
     {
-        const TType &nodeType                 = interfaceBlockIt->second->getType();
+        const TType &nodeType                 = interfaceBlockReference.second->getType();
         const TInterfaceBlock &interfaceBlock = *nodeType.getInterfaceBlock();
 
         // nodeType.isInterfaceBlock() == false means the node is a field of a uniform block which
-        // doesn't have instance name, so this block cannot be an array.
-        unsigned int interfaceBlockArraySize = 0u;
-        if (nodeType.isInterfaceBlock() && nodeType.isArray())
-        {
-            interfaceBlockArraySize = nodeType.getOutermostArraySize();
-        }
-        unsigned int activeRegister = mUniformBlockRegister;
+        // doesn't have instance name.
+        const TString &instanceName =
+            nodeType.isInterfaceBlock() ? interfaceBlockReference.second->getSymbol() : "";
 
-        mUniformBlockRegisterMap[interfaceBlock.name().c_str()] = activeRegister;
-        mUniformBlockRegister += std::max(1u, interfaceBlockArraySize);
-
-        // FIXME: interface block field names
-
-        if (interfaceBlock.hasInstanceName())
+        if (instanceName != "")
         {
             interfaceBlocks += uniformBlockStructString(interfaceBlock);
         }
 
-        if (interfaceBlockArraySize > 0)
+        unsigned int activeRegister                             = mUniformBlockRegister;
+        mUniformBlockRegisterMap[interfaceBlock.name().c_str()] = activeRegister;
+
+        if (instanceName != "" && nodeType.isArray())
         {
-            for (unsigned int arrayIndex = 0; arrayIndex < interfaceBlockArraySize; arrayIndex++)
+            unsigned int interfaceBlockInstanceArraySize = nodeType.getOutermostArraySize();
+            for (unsigned int arrayIndex = 0; arrayIndex < interfaceBlockInstanceArraySize;
+                 arrayIndex++)
             {
-                interfaceBlocks +=
-                    uniformBlockString(interfaceBlock, activeRegister + arrayIndex, arrayIndex);
+                interfaceBlocks += uniformBlockString(interfaceBlock, instanceName,
+                                                      activeRegister + arrayIndex, arrayIndex);
             }
+            mUniformBlockRegister += interfaceBlockInstanceArraySize;
         }
         else
         {
-            interfaceBlocks += uniformBlockString(interfaceBlock, activeRegister, GL_INVALID_INDEX);
+            interfaceBlocks +=
+                uniformBlockString(interfaceBlock, instanceName, activeRegister, GL_INVALID_INDEX);
+            mUniformBlockRegister += 1u;
         }
     }
 
@@ -509,6 +507,7 @@ TString UniformHLSL::uniformBlocksHeader(const ReferencedSymbols &referencedInte
 }
 
 TString UniformHLSL::uniformBlockString(const TInterfaceBlock &interfaceBlock,
+                                        const TString &instanceName,
                                         unsigned int registerIndex,
                                         unsigned int arrayIndex)
 {
@@ -521,10 +520,10 @@ TString UniformHLSL::uniformBlockString(const TInterfaceBlock &interfaceBlock,
             ")\n"
             "{\n";
 
-    if (interfaceBlock.hasInstanceName())
+    if (instanceName != "")
     {
         hlsl += "    " + InterfaceBlockStructName(interfaceBlock) + " " +
-                uniformBlockInstanceString(interfaceBlock, arrayIndex) + ";\n";
+                UniformBlockInstanceString(instanceName, arrayIndex) + ";\n";
     }
     else
     {
@@ -537,20 +536,16 @@ TString UniformHLSL::uniformBlockString(const TInterfaceBlock &interfaceBlock,
     return hlsl;
 }
 
-TString UniformHLSL::uniformBlockInstanceString(const TInterfaceBlock &interfaceBlock,
+TString UniformHLSL::UniformBlockInstanceString(const TString &instanceName,
                                                 unsigned int arrayIndex)
 {
-    if (!interfaceBlock.hasInstanceName())
+    if (arrayIndex != GL_INVALID_INDEX)
     {
-        return "";
-    }
-    else if (arrayIndex != GL_INVALID_INDEX)
-    {
-        return DecoratePrivate(interfaceBlock.instanceName()) + "_" + str(arrayIndex);
+        return DecoratePrivate(instanceName) + "_" + str(arrayIndex);
     }
     else
     {
-        return Decorate(interfaceBlock.instanceName());
+        return Decorate(instanceName);
     }
 }
 
