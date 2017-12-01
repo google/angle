@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ceceb65c_60f34722",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 7
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-01T13:53:54Z",
+      "side": 1,
+      "message": "include a sentence like \"Common useful arguments are \u0027is_debug \u003d true/false, target_cpu \u003d \"x64\"/\"x86\", and is_clang \u003d true/false.\"",
+      "range": {
+        "startLine": 52,
+        "startChar": 144,
+        "endLine": 52,
+        "endChar": 145
+      },
+      "revId": "ecb57bb553148a4e7d14f7a66ab1b87366a2264c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

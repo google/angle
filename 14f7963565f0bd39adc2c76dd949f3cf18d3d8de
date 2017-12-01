@@ -516,6 +516,30 @@
       "revId": "14f7963565f0bd39adc2c76dd949f3cf18d3d8de",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "18b6dcef_4037c479",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 6
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-01T13:53:54Z",
+      "side": 1,
+      "message": "The executables and DLLs will be in the configuration directory (out/Release_x64, out/Debug_x64, etc) and the TestResults.qpa will be in the solution directory (out/sln/obj/src/tests), since that\u0027s the CWD when the tests are run. So yes to the first part of your question, but the second is not quite correct.",
+      "parentUuid": "8e252580_9e005123",
+      "range": {
+        "startLine": 75,
+        "startChar": 85,
+        "endLine": 75,
+        "endChar": 96
+      },
+      "revId": "14f7963565f0bd39adc2c76dd949f3cf18d3d8de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
