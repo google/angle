@@ -46,6 +46,30 @@
       "revId": "6e5e17475d1cf9414d4ff3ecce5742addefe1a18",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9d5f6336_630672c2",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-12-01T03:45:30Z",
+      "side": 1,
+      "message": "I was thinking the fix would be easier, like just clearing the pointer at some appropriate place, maybe the beginning of VertexArrayVk::syncState(), but I guess not?  I\u0027m not too clear on how the dirty bits and syncing works.",
+      "parentUuid": "3d47bc69_b983b242",
+      "range": {
+        "startLine": 121,
+        "startChar": 8,
+        "endLine": 121,
+        "endChar": 42
+      },
+      "revId": "6e5e17475d1cf9414d4ff3ecce5742addefe1a18",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
