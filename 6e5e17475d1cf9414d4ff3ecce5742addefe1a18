@@ -70,6 +70,30 @@
       "revId": "6e5e17475d1cf9414d4ff3ecce5742addefe1a18",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d69cab02_0c1a5f2e",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-01T13:47:51Z",
+      "side": 1,
+      "message": "The dirty bits track when the GL state changes. But, the draw call determines what actually gets read by the GPU. So the app can bind/unbind/rebind any element array buffer, but it will only get read if the draw call is an indexed draw.",
+      "parentUuid": "9d5f6336_630672c2",
+      "range": {
+        "startLine": 121,
+        "startChar": 8,
+        "endLine": 121,
+        "endChar": 42
+      },
+      "revId": "6e5e17475d1cf9414d4ff3ecce5742addefe1a18",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
