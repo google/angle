@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "9b3db31a_755e8ebc",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-02T17:23:11Z",
+      "side": 1,
+      "message": "nit: should be Capsified",
+      "range": {
+        "startLine": 132,
+        "startChar": 22,
+        "endLine": 132,
+        "endChar": 41
+      },
+      "revId": "fa178ec9f2f8e5f80902a6c7538d35f5c5b700dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "02938713_5912843a",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 13
@@ -13,6 +36,185 @@
       "writtenOn": "2017-12-02T02:55:43Z",
       "side": 1,
       "message": "I still don\u0027t know what the answer is here, do you? I don\u0027t know enough about what\u0027s going on here to tell.",
+      "revId": "fa178ec9f2f8e5f80902a6c7538d35f5c5b700dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "380b423a_f78b5de3",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 3459,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-02T17:23:11Z",
+      "side": 1,
+      "message": "I have no idea what the side effects of changing Temporary to Global might be. Let\u0027s ask Olli.",
+      "parentUuid": "02938713_5912843a",
+      "revId": "fa178ec9f2f8e5f80902a6c7538d35f5c5b700dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "90eb3efa_d4a0dc47",
+        "filename": "src/compiler/translator/TypeStaticInstance.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-02T17:23:11Z",
+      "side": 1,
+      "message": "nit: file-level comment with one or two sentences describing the class layout (same for the cpp)",
+      "range": {
+        "startLine": 5,
+        "startChar": 2,
+        "endLine": 5,
+        "endChar": 0
+      },
+      "revId": "fa178ec9f2f8e5f80902a6c7538d35f5c5b700dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cf9b582b_490eb2d6",
+        "filename": "src/compiler/translator/TypeStaticInstance.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-02T17:23:11Z",
+      "side": 1,
+      "message": "nit: add trailing _",
+      "range": {
+        "startLine": 7,
+        "startChar": 8,
+        "endLine": 7,
+        "endChar": 50
+      },
+      "revId": "fa178ec9f2f8e5f80902a6c7538d35f5c5b700dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "71e97799_6c6c95ab",
+        "filename": "src/compiler/translator/TypeStaticInstance.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-02T17:23:11Z",
+      "side": 1,
+      "message": "very minor complaint, but can we make this a bit shorter, like just \"StaticType\". I\u0027m fine with TTypeStaticInstance though.",
+      "range": {
+        "startLine": 15,
+        "startChar": 10,
+        "endLine": 15,
+        "endChar": 29
+      },
+      "revId": "fa178ec9f2f8e5f80902a6c7538d35f5c5b700dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b9f60ba2_d793014c",
+        "filename": "src/compiler/translator/TypeStaticInstance.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-02T17:23:11Z",
+      "side": 1,
+      "message": "this should be constexpr as well.",
+      "range": {
+        "startLine": 23,
+        "startChar": 7,
+        "endLine": 23,
+        "endChar": 13
+      },
+      "revId": "fa178ec9f2f8e5f80902a6c7538d35f5c5b700dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c33302dd_977a169c",
+        "filename": "src/compiler/translator/TypeStaticInstance.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-02T17:23:11Z",
+      "side": 1,
+      "message": "nit: stray",
+      "range": {
+        "startLine": 76,
+        "startChar": 0,
+        "endLine": 76,
+        "endChar": 13
+      },
+      "revId": "fa178ec9f2f8e5f80902a6c7538d35f5c5b700dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0fd5b3e1_8b777bad",
+        "filename": "src/compiler/translator/TypeStaticInstance.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-02T17:23:11Z",
+      "side": 1,
+      "message": "nit: GetBasic",
+      "range": {
+        "startLine": 119,
+        "startChar": 23,
+        "endLine": 119,
+        "endChar": 27
+      },
+      "revId": "fa178ec9f2f8e5f80902a6c7538d35f5c5b700dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "57d66b99_004c3de4",
+        "filename": "src/compiler/translator/TypeStaticInstance.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-02T17:23:11Z",
+      "side": 1,
+      "message": "nit GetQualified",
+      "range": {
+        "startLine": 128,
+        "startChar": 13,
+        "endLine": 128,
+        "endChar": 17
+      },
       "revId": "fa178ec9f2f8e5f80902a6c7538d35f5c5b700dc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
