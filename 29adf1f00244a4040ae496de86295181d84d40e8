@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "713212ef_580edc83",
+        "filename": "src/compiler/translator/Cache.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2017-12-02T02:43:12Z",
+      "side": 1,
+      "message": "Correction: that\u0027s not exactly what I did. WDYT of this?",
+      "parentUuid": "50bb8293_f0059c4d",
+      "range": {
+        "startLine": 21,
+        "startChar": 10,
+        "endLine": 21,
+        "endChar": 16
+      },
+      "revId": "29adf1f00244a4040ae496de86295181d84d40e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "82039f69_ef9b4477",
         "filename": "src/compiler/translator/Cache.h",
         "patchSetId": 8
@@ -131,6 +155,30 @@
       "side": 1,
       "message": "(TBA)",
       "parentUuid": "82039f69_ef9b4477",
+      "range": {
+        "startLine": 30,
+        "startChar": 1,
+        "endLine": 35,
+        "endChar": 44
+      },
+      "revId": "29adf1f00244a4040ae496de86295181d84d40e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3384237c_1833d395",
+        "filename": "src/compiler/translator/Cache.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2017-12-02T02:43:12Z",
+      "side": 1,
+      "message": "It cannot be initialized in the constexpr constructor: the result of BuildStaticMangledName needs to live somewhere, and the only place it can live is in a templated static variable.\n\n\u003e mMangledName(BuildStaticMangledName(t, p, q, ps, ss).name)\nerror: pointer is initialized by a temporary array, which will be destroyed at the end of the full-expression",
+      "parentUuid": "7d80a1f6_59ffe117",
       "range": {
         "startLine": 30,
         "startChar": 1,
@@ -234,6 +282,30 @@
       "revId": "29adf1f00244a4040ae496de86295181d84d40e8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aaef8158_5527d64e",
+        "filename": "src/compiler/translator/Cache.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2017-12-02T02:43:12Z",
+      "side": 1,
+      "message": "Fixed",
+      "parentUuid": "64d11b68_172fcece",
+      "range": {
+        "startLine": 64,
+        "startChar": 13,
+        "endLine": 64,
+        "endChar": 21
+      },
+      "revId": "29adf1f00244a4040ae496de86295181d84d40e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
