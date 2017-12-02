@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "50bb8293_f0059c4d",
+        "filename": "src/compiler/translator/Cache.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2017-12-02T01:03:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6a440774_019da330",
+      "range": {
+        "startLine": 21,
+        "startChar": 10,
+        "endLine": 21,
+        "endChar": 16
+      },
+      "revId": "29adf1f00244a4040ae496de86295181d84d40e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "82039f69_ef9b4477",
         "filename": "src/compiler/translator/Cache.h",
         "patchSetId": 8
@@ -71,6 +95,54 @@
     },
     {
       "key": {
+        "uuid": "17976956_d902590f",
+        "filename": "src/compiler/translator/Cache.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2017-12-02T01:03:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9bc25bb5_9b41975c",
+      "range": {
+        "startLine": 35,
+        "startChar": 22,
+        "endLine": 35,
+        "endChar": 42
+      },
+      "revId": "29adf1f00244a4040ae496de86295181d84d40e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7d80a1f6_59ffe117",
+        "filename": "src/compiler/translator/Cache.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2017-12-02T01:03:28Z",
+      "side": 1,
+      "message": "(TBA)",
+      "parentUuid": "82039f69_ef9b4477",
+      "range": {
+        "startLine": 30,
+        "startChar": 1,
+        "endLine": 35,
+        "endChar": 44
+      },
+      "revId": "29adf1f00244a4040ae496de86295181d84d40e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f1bb47ce_20385770",
         "filename": "src/compiler/translator/Cache.h",
         "patchSetId": 8
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "2ffd23ba_04aaa62a",
+        "filename": "src/compiler/translator/Cache.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2017-12-02T01:03:28Z",
+      "side": 1,
+      "message": "Habit when making macros like this because of:\nhttps://stackoverflow.com/a/257425\nBut I\u0027ll simplify it here since it\u0027s not used that way.",
+      "parentUuid": "f1bb47ce_20385770",
+      "range": {
+        "startLine": 48,
+        "startChar": 5,
+        "endLine": 48,
+        "endChar": 15
+      },
+      "revId": "29adf1f00244a4040ae496de86295181d84d40e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d74e8d28_703382b8",
         "filename": "src/compiler/translator/Cache.h",
         "patchSetId": 8
@@ -105,6 +201,30 @@
       "writtenOn": "2017-12-01T14:53:00Z",
       "side": 1,
       "message": "is this an exhaustive list? why not keep this in a constexpr array of char arrays (null terminated) and use this in both code locations?",
+      "range": {
+        "startLine": 64,
+        "startChar": 13,
+        "endLine": 64,
+        "endChar": 21
+      },
+      "revId": "29adf1f00244a4040ae496de86295181d84d40e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "64d11b68_172fcece",
+        "filename": "src/compiler/translator/Cache.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2017-12-02T01:03:28Z",
+      "side": 1,
+      "message": "It\u0027s not currently, it omits the last few cases. But I think deduping can be done somehow.",
+      "parentUuid": "d74e8d28_703382b8",
       "range": {
         "startLine": 64,
         "startChar": 13,
@@ -140,6 +260,30 @@
     },
     {
       "key": {
+        "uuid": "5d385d89_a076dc40",
+        "filename": "src/compiler/translator/Cache.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2017-12-02T01:03:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "25e3dff8_cb541e04",
+      "range": {
+        "startLine": 204,
+        "startChar": 29,
+        "endLine": 204,
+        "endChar": 48
+      },
+      "revId": "29adf1f00244a4040ae496de86295181d84d40e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b07660dd_0b630cde",
         "filename": "src/compiler/translator/Cache.h",
         "patchSetId": 8
@@ -160,6 +304,30 @@
       "revId": "29adf1f00244a4040ae496de86295181d84d40e8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7e8f853f_deee5552",
+        "filename": "src/compiler/translator/Cache.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2017-12-02T01:03:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b07660dd_0b630cde",
+      "range": {
+        "startLine": 214,
+        "startChar": 23,
+        "endLine": 214,
+        "endChar": 35
+      },
+      "revId": "29adf1f00244a4040ae496de86295181d84d40e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -186,6 +354,30 @@
     },
     {
       "key": {
+        "uuid": "2a5bd3d3_3bf5b9a7",
+        "filename": "src/compiler/translator/Cache.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 369,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2017-12-02T01:03:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6315be04_38120339",
+      "range": {
+        "startLine": 335,
+        "startChar": 0,
+        "endLine": 369,
+        "endChar": 1
+      },
+      "revId": "29adf1f00244a4040ae496de86295181d84d40e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a4399b11_eae624b9",
         "filename": "src/compiler/translator/Types.h",
         "patchSetId": 8
@@ -206,6 +398,30 @@
       "revId": "29adf1f00244a4040ae496de86295181d84d40e8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "71f9a881_71196a62",
+        "filename": "src/compiler/translator/Types.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2017-12-02T01:03:28Z",
+      "side": 1,
+      "message": "No, it doesn\u0027t compile without it.",
+      "parentUuid": "a4399b11_eae624b9",
+      "range": {
+        "startLine": 198,
+        "startChar": 0,
+        "endLine": 214,
+        "endChar": 0
+      },
+      "revId": "29adf1f00244a4040ae496de86295181d84d40e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
