@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "4ec04078_9c19b924",
+        "filename": "src/compiler/translator/Declarator.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-12-02T10:07:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a7cb9b4b_23950ed5",
+      "revId": "8bcaadc3b172202d55482e992a1f4a39b9ae558a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7927bec3_a10b986b",
         "filename": "src/compiler/translator/Declarator.h",
         "patchSetId": 9
@@ -33,6 +51,24 @@
       "revId": "8bcaadc3b172202d55482e992a1f4a39b9ae558a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9abc3e41_3047537c",
+        "filename": "src/compiler/translator/Declarator.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-12-02T10:07:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7927bec3_a10b986b",
+      "revId": "8bcaadc3b172202d55482e992a1f4a39b9ae558a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -59,6 +95,30 @@
     },
     {
       "key": {
+        "uuid": "40345d7c_391c48fa",
+        "filename": "src/compiler/translator/Declarator.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-12-02T10:07:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c6b6aad1_606adbf8",
+      "range": {
+        "startLine": 42,
+        "startChar": 0,
+        "endLine": 42,
+        "endChar": 7
+      },
+      "revId": "8bcaadc3b172202d55482e992a1f4a39b9ae558a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e3011f88_0cf90674",
         "filename": "src/compiler/translator/Initialize.cpp",
         "patchSetId": 9
@@ -79,6 +139,30 @@
       "revId": "8bcaadc3b172202d55482e992a1f4a39b9ae558a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3d4cda32_37d869a9",
+        "filename": "src/compiler/translator/Initialize.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1017,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-12-02T10:07:08Z",
+      "side": 1,
+      "message": "They do. TVector has POOL_ALLOCATOR_NEW_DELETE in its class definition. There\u0027s already a bunch of other code that uses \"new TVector\u003c\u003e()\".",
+      "parentUuid": "e3011f88_0cf90674",
+      "range": {
+        "startLine": 1017,
+        "startChar": 40,
+        "endLine": 1017,
+        "endChar": 56
+      },
+      "revId": "8bcaadc3b172202d55482e992a1f4a39b9ae558a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
