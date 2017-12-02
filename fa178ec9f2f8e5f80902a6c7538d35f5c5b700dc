@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "02938713_5912843a",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 3459,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2017-12-02T02:55:43Z",
+      "side": 1,
+      "message": "I still don\u0027t know what the answer is here, do you? I don\u0027t know enough about what\u0027s going on here to tell.",
+      "revId": "fa178ec9f2f8e5f80902a6c7538d35f5c5b700dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
