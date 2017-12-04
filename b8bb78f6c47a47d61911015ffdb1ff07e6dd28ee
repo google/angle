@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6796c914_384055de",
+        "filename": "src/tests/gl_tests/ShaderStorageBufferTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 218,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-12-04T04:44:14Z",
+      "side": 1,
+      "message": "Use \u00272u\u0027 to distinguish with result_1\u0027s value.",
+      "range": {
+        "startLine": 218,
+        "startChar": 83,
+        "endLine": 218,
+        "endChar": 85
+      },
+      "revId": "b8bb78f6c47a47d61911015ffdb1ff07e6dd28ee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "83db208e_bbd5b2af",
+        "filename": "src/tests/gl_tests/ShaderStorageBufferTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 222,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-12-04T04:44:14Z",
+      "side": 1,
+      "message": "Can you remove \u0027_\u0027 and keep the same naming style like other files? Same with other places in this test.",
+      "range": {
+        "startLine": 222,
+        "startChar": 19,
+        "endLine": 222,
+        "endChar": 20
+      },
+      "revId": "b8bb78f6c47a47d61911015ffdb1ff07e6dd28ee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
