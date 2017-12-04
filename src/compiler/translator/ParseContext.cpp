@@ -3713,11 +3713,6 @@ TIntermDeclaration *TParseContext::addInterfaceBlock(
 
     checkInternalFormatIsNotSpecified(nameLine, blockLayoutQualifier.imageInternalFormat);
 
-    if (!symbolTable.declareInterfaceBlockName(&blockName))
-    {
-        error(nameLine, "redefinition of an interface block name", blockName.c_str());
-    }
-
     // check for sampler types and apply layout qualifiers
     for (size_t memberIndex = 0; memberIndex < fieldList->size(); ++memberIndex)
     {
@@ -3814,7 +3809,12 @@ TIntermDeclaration *TParseContext::addInterfaceBlock(
     }
 
     TInterfaceBlock *interfaceBlock =
-        new TInterfaceBlock(&blockName, fieldList, blockLayoutQualifier);
+        new TInterfaceBlock(&symbolTable, &blockName, fieldList, blockLayoutQualifier);
+    if (!symbolTable.declareInterfaceBlock(interfaceBlock))
+    {
+        error(nameLine, "redefinition of an interface block name", blockName.c_str());
+    }
+
     TType interfaceBlockType(interfaceBlock, typeQualifier.qualifier, blockLayoutQualifier);
     if (arrayIndex != nullptr)
     {

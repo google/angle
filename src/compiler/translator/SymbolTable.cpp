@@ -70,6 +70,17 @@ void TStructure::setName(const TString &name)
     *mutableName         = name;
 }
 
+TInterfaceBlock::TInterfaceBlock(TSymbolTable *symbolTable,
+                                 const TString *name,
+                                 const TFieldList *fields,
+                                 const TLayoutQualifier &layoutQualifier)
+    : TSymbol(symbolTable, name),
+      TFieldListCollection(fields),
+      mBlockStorage(layoutQualifier.blockStorage),
+      mBinding(layoutQualifier.binding)
+{
+}
+
 //
 // Functions have buried pointers to delete.
 //
@@ -315,27 +326,9 @@ bool TSymbolTable::declareStructType(TStructure *str)
     return insertStructType(currentLevel(), str);
 }
 
-TInterfaceBlockName *TSymbolTable::declareInterfaceBlockName(const TString *name)
+bool TSymbolTable::declareInterfaceBlock(TInterfaceBlock *interfaceBlock)
 {
-    TInterfaceBlockName *blockNameSymbol = new TInterfaceBlockName(this, name);
-    if (insert(currentLevel(), blockNameSymbol))
-    {
-        return blockNameSymbol;
-    }
-    return nullptr;
-}
-
-TInterfaceBlockName *TSymbolTable::insertInterfaceBlockNameExt(ESymbolLevel level,
-                                                               TExtension ext,
-                                                               const TString *name)
-{
-    TInterfaceBlockName *blockNameSymbol = new TInterfaceBlockName(this, name);
-    blockNameSymbol->relateToExtension(ext);
-    if (insert(level, blockNameSymbol))
-    {
-        return blockNameSymbol;
-    }
-    return nullptr;
+    return insert(currentLevel(), interfaceBlock);
 }
 
 TVariable *TSymbolTable::insertVariable(ESymbolLevel level, const char *name, const TType &type)
@@ -379,11 +372,13 @@ TVariable *TSymbolTable::insertVariableExt(ESymbolLevel level,
 bool TSymbolTable::insertStructType(ESymbolLevel level, TStructure *str)
 {
     ASSERT(str);
-    if (insert(level, str))
-    {
-        return true;
-    }
-    return false;
+    return insert(level, str);
+}
+
+bool TSymbolTable::insertInterfaceBlock(ESymbolLevel level, TInterfaceBlock *interfaceBlock)
+{
+    ASSERT(interfaceBlock);
+    return insert(level, interfaceBlock);
 }
 
 void TSymbolTable::insertBuiltIn(ESymbolLevel level,

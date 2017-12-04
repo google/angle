@@ -573,7 +573,7 @@ void CollectVariablesTraverser::setCommonVariableProperties(const TType &type,
 
         const TFieldList &fields = structure->fields();
 
-        for (TField *field : fields)
+        for (const TField *field : fields)
         {
             // Regardless of the variable type (uniform, in/out etc.) its fields are always plain
             // ShaderVariable objects.

@@ -122,6 +122,26 @@ class TStructure : public TSymbol, public TFieldListCollection
     bool mAtGlobalScope;
 };
 
+// Interface block. Note that this contains the block name, not the instance name. Interface block
+// instances are stored as TVariable.
+class TInterfaceBlock : public TSymbol, public TFieldListCollection
+{
+  public:
+    TInterfaceBlock(TSymbolTable *symbolTable,
+                    const TString *name,
+                    const TFieldList *fields,
+                    const TLayoutQualifier &layoutQualifier);
+
+    TLayoutBlockStorage blockStorage() const { return mBlockStorage; }
+    int blockBinding() const { return mBinding; }
+
+  private:
+    TLayoutBlockStorage mBlockStorage;
+    int mBinding;
+
+    // Note that we only record matrix packing on a per-field granularity.
+};
+
 // Immutable version of TParameter.
 struct TConstParameter
 {
@@ -226,20 +246,6 @@ class TFunction : public TSymbol
     bool mHasPrototypeDeclaration;
 };
 
-// Reserved interface block name. Note that this simply reserves the block name, not the instance
-// name. Interface block instances are stored as TVariable.
-class TInterfaceBlockName : public TSymbol
-{
-  public:
-    virtual ~TInterfaceBlockName() {}
-
-  private:
-    friend class TSymbolTable;
-    TInterfaceBlockName(TSymbolTable *symbolTable, const TString *name) : TSymbol(symbolTable, name)
-    {
-    }
-};
-
 class TSymbolTableLevel
 {
   public:
@@ -338,7 +344,7 @@ class TSymbolTable : angle::NonCopyable
     // false if the declaration failed due to redefinition.
     TVariable *declareVariable(const TString *name, const TType &type);
     bool declareStructType(TStructure *str);
-    TInterfaceBlockName *declareInterfaceBlockName(const TString *name);
+    bool declareInterfaceBlock(TInterfaceBlock *interfaceBlock);
 
     // The insert* entry points are used when initializing the symbol table with built-ins.
     // They return the created symbol / true in case the declaration was successful, and nullptr /
@@ -349,9 +355,7 @@ class TSymbolTable : angle::NonCopyable
                                  const char *name,
                                  const TType &type);
     bool insertStructType(ESymbolLevel level, TStructure *str);
-    TInterfaceBlockName *insertInterfaceBlockNameExt(ESymbolLevel level,
-                                                     TExtension ext,
-                                                     const TString *name);
+    bool insertInterfaceBlock(ESymbolLevel level, TInterfaceBlock *interfaceBlock);
 
     bool insertConstInt(ESymbolLevel level, const char *name, int value, TPrecision precision)
     {

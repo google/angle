@@ -1015,29 +1015,31 @@ void IdentifyBuiltIns(sh::GLenum type,
 
             // Add built-in interface block gl_PerVertex and the built-in array gl_in.
             // TODO(jiawei.shao@intel.com): implement GL_OES_geometry_point_size.
-            const TString *glPerVertexString = NewPoolTString("gl_PerVertex");
-            symbolTable.insertInterfaceBlockNameExt(ESSL3_1_BUILTINS, extension, glPerVertexString);
-
-            TFieldList *fieldList    = new TFieldList();
+            TFieldList *glPerVertexFieldList = new TFieldList();
             TSourceLoc zeroSourceLoc = {0, 0, 0, 0};
             TField *glPositionField  = new TField(new TType(EbtFloat, EbpHigh, EvqPosition, 4),
                                                  NewPoolTString("gl_Position"), zeroSourceLoc);
-            fieldList->push_back(glPositionField);
+            glPerVertexFieldList->push_back(glPositionField);
 
-            TInterfaceBlock *glInBlock =
-                new TInterfaceBlock(glPerVertexString, fieldList, TLayoutQualifier::Create());
+            const TString *glPerVertexString    = NewPoolTString("gl_PerVertex");
+            TInterfaceBlock *glPerVertexInBlock = new TInterfaceBlock(
+                &symbolTable, glPerVertexString, glPerVertexFieldList, TLayoutQualifier::Create());
+            glPerVertexInBlock->relateToExtension(extension);
+            symbolTable.insertInterfaceBlock(ESSL3_1_BUILTINS, glPerVertexInBlock);
 
             // The array size of gl_in is undefined until we get a valid input primitive
             // declaration.
-            TType glInType(glInBlock, EvqPerVertexIn, TLayoutQualifier::Create());
+            TType glInType(glPerVertexInBlock, EvqPerVertexIn, TLayoutQualifier::Create());
             glInType.makeArray(0u);
             symbolTable.insertVariableExt(ESSL3_1_BUILTINS, extension, "gl_in", glInType);
 
+            TInterfaceBlock *glPerVertexOutBlock = new TInterfaceBlock(
+                &symbolTable, glPerVertexString, glPerVertexFieldList, TLayoutQualifier::Create());
             TType glPositionType(EbtFloat, EbpHigh, EvqPosition, 4);
-            glPositionType.setInterfaceBlock(
-                new TInterfaceBlock(glPerVertexString, fieldList, TLayoutQualifier::Create()));
+            glPositionType.setInterfaceBlock(glPerVertexOutBlock);
             symbolTable.insertVariableExt(ESSL3_1_BUILTINS, extension, "gl_Position",
                                           glPositionType);
+
             symbolTable.insertVariableExt(ESSL3_1_BUILTINS, extension, "gl_PrimitiveIDIn",
                                           TType(EbtInt, EbpHigh, EvqPrimitiveIDIn, 1));
             symbolTable.insertVariableExt(ESSL3_1_BUILTINS, extension, "gl_InvocationID",

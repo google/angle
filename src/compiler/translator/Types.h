@@ -19,6 +19,7 @@ namespace sh
 
 struct TPublicType;
 class TType;
+class TInterfaceBlock;
 class TStructure;
 class TSymbol;
 class TIntermSymbol;
@@ -78,27 +79,6 @@ class TFieldListCollection : angle::NonCopyable
     mutable size_t mObjectSize;
     mutable int mDeepestNesting;
     mutable TString mMangledFieldList;
-};
-
-class TInterfaceBlock : public TFieldListCollection
-{
-  public:
-    POOL_ALLOCATOR_NEW_DELETE();
-    TInterfaceBlock(const TString *name,
-                    const TFieldList *fields,
-                    const TLayoutQualifier &layoutQualifier);
-
-    const TString &name() const { return *mName; }
-    TLayoutBlockStorage blockStorage() const { return mBlockStorage; }
-    int blockBinding() const { return mBinding; }
-
-  private:
-    const TString *mName;  // Name of the block, not the instance name. Instance name is only stored
-                           // in the interface block symbols.
-    TLayoutBlockStorage mBlockStorage;
-    int mBinding;
-
-    // Note that we only record matrix packing on a per-field granularity.
 };
 
 //

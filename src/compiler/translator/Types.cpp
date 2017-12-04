@@ -932,16 +932,6 @@ int TFieldListCollection::calculateDeepestNesting() const
     return 1 + maxNesting;
 }
 
-TInterfaceBlock::TInterfaceBlock(const TString *name,
-                                 const TFieldList *fields,
-                                 const TLayoutQualifier &layoutQualifier)
-    : TFieldListCollection(fields),
-      mName(name),
-      mBlockStorage(layoutQualifier.blockStorage),
-      mBinding(layoutQualifier.binding)
-{
-}
-
 // TPublicType implementation.
 void TPublicType::initialize(const TTypeSpecifierNonArray &typeSpecifier, TQualifier q)
 {

@@ -9,6 +9,7 @@
 #include "compiler/translator/FlagStd140Structs.h"
 
 #include "compiler/translator/IntermTraverse.h"
+#include "compiler/translator/SymbolTable.h"
 
 namespace sh
 {
