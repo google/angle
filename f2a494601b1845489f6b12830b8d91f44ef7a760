@@ -94,6 +94,30 @@
     },
     {
       "key": {
+        "uuid": "d8d11cb4_e294a2d6",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-04T19:34:16Z",
+      "side": 1,
+      "message": "These comments were not resolved.",
+      "parentUuid": "0b0acc3e_d6175563",
+      "range": {
+        "startLine": 35,
+        "startChar": 0,
+        "endLine": 35,
+        "endChar": 17
+      },
+      "revId": "f2a494601b1845489f6b12830b8d91f44ef7a760",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a6fd05ec_2c8591bf",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.h",
         "patchSetId": 14
@@ -105,6 +129,30 @@
       "writtenOn": "2017-11-23T18:49:19Z",
       "side": 1,
       "message": "nit: expand these if possible, I guess these should be \u0027Texture\u0027 and \u0027Uniform\u0027",
+      "range": {
+        "startLine": 38,
+        "startChar": 12,
+        "endLine": 38,
+        "endChar": 13
+      },
+      "revId": "f2a494601b1845489f6b12830b8d91f44ef7a760",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "67f3c53a_8bf1db1e",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-04T19:34:16Z",
+      "side": 1,
+      "message": "These comments were not resolved.",
+      "parentUuid": "a6fd05ec_2c8591bf",
       "range": {
         "startLine": 38,
         "startChar": 12,
