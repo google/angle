@@ -285,6 +285,30 @@
     },
     {
       "key": {
+        "uuid": "097b269f_dbac7604",
+        "filename": "src/compiler/translator/TypeStaticInstance.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2017-12-04T21:12:41Z",
+      "side": 1,
+      "message": "Ok, I think StaticType is fine.\n\nWill do before submitting. Right now I\u0027m just checking the binary sizes on windows to make sure the extra data isn\u0027t blowing it up too much.",
+      "parentUuid": "46e6afab_4af5e5ac",
+      "range": {
+        "startLine": 15,
+        "startChar": 10,
+        "endLine": 15,
+        "endChar": 29
+      },
+      "revId": "fa178ec9f2f8e5f80902a6c7538d35f5c5b700dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b9f60ba2_d793014c",
         "filename": "src/compiler/translator/TypeStaticInstance.h",
         "patchSetId": 13
