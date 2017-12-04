@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "4d3920fd_ba9d7244",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 275,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-12-04T09:03:54Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "5f447c56_d78f44e1",
+      "range": {
+        "startLine": 274,
+        "startChar": 0,
+        "endLine": 275,
+        "endChar": 72
+      },
+      "revId": "522a6d5b09f50ea1af90a70aec1289a610d2bd39",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "551ba997_477d6f0f",
         "filename": "src/compiler/translator/CollectVariables.cpp",
         "patchSetId": 6
@@ -45,6 +69,30 @@
       "revId": "522a6d5b09f50ea1af90a70aec1289a610d2bd39",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c39ad6d8_fd56988f",
+        "filename": "src/compiler/translator/CollectVariables.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 669,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-12-04T09:03:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "551ba997_477d6f0f",
+      "range": {
+        "startLine": 669,
+        "startChar": 24,
+        "endLine": 669,
+        "endChar": 40
+      },
+      "revId": "522a6d5b09f50ea1af90a70aec1289a610d2bd39",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "cdf5d177_c02a0a00",
+        "filename": "src/compiler/translator/Types.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-12-04T09:03:54Z",
+      "side": 1,
+      "message": "Left it in place, I think it may be a bit surprising to a newcomer to the code.",
+      "parentUuid": "97c798fc_cfceb567",
+      "range": {
+        "startLine": 108,
+        "startChar": 0,
+        "endLine": 109,
+        "endChar": 74
+      },
+      "revId": "522a6d5b09f50ea1af90a70aec1289a610d2bd39",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e59c1881_1616b478",
         "filename": "src/compiler/translator/blocklayout.cpp",
         "patchSetId": 6
@@ -85,6 +157,24 @@
       "revId": "522a6d5b09f50ea1af90a70aec1289a610d2bd39",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2562a3f3_5061fba1",
+        "filename": "src/compiler/translator/blocklayout.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-12-04T09:03:54Z",
+      "side": 1,
+      "message": "No, this is not allowed.",
+      "parentUuid": "e59c1881_1616b478",
+      "revId": "522a6d5b09f50ea1af90a70aec1289a610d2bd39",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -111,6 +201,30 @@
     },
     {
       "key": {
+        "uuid": "c0ecf915_008d6092",
+        "filename": "src/compiler/translator/blocklayout.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-12-04T09:03:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6c3422d4_e18a6611",
+      "range": {
+        "startLine": 134,
+        "startChar": 0,
+        "endLine": 139,
+        "endChar": 55
+      },
+      "revId": "522a6d5b09f50ea1af90a70aec1289a610d2bd39",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "92f43ff9_146c171b",
         "filename": "src/tests/gl_tests/UniformBufferTest.cpp",
         "patchSetId": 6
@@ -131,6 +245,30 @@
       "revId": "522a6d5b09f50ea1af90a70aec1289a610d2bd39",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ede53038_e283d049",
+        "filename": "src/tests/gl_tests/UniformBufferTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1253,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-12-04T09:03:54Z",
+      "side": 1,
+      "message": "Tested on Intel HD Graphics 520, all the new tests pass. The spec is also clear on which layout qualifiers take precedence (both GLSL and ESSL).",
+      "parentUuid": "92f43ff9_146c171b",
+      "range": {
+        "startLine": 1250,
+        "startChar": 1,
+        "endLine": 1253,
+        "endChar": 0
+      },
+      "revId": "522a6d5b09f50ea1af90a70aec1289a610d2bd39",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
