@@ -97,6 +97,30 @@
     },
     {
       "key": {
+        "uuid": "f4bd27e1_5f728dd0",
+        "filename": "doc/ContributingCode.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-12-04T19:35:14Z",
+      "side": 1,
+      "message": "I tweaked it a little to remove the redundancy and changed the link name to \u0027select reviewers\u0027 to match the title of the later section.",
+      "parentUuid": "41caff92_ae0247b0",
+      "range": {
+        "startLine": 85,
+        "startChar": 6,
+        "endLine": 85,
+        "endChar": 25
+      },
+      "revId": "6e38f2f136247590706b326c8f7f7d4fa0b2486d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "c961f288_96f8ec71",
         "filename": "doc/ContributingCode.md",
         "patchSetId": 2
@@ -108,6 +132,30 @@
       "writtenOn": "2017-12-01T22:33:53Z",
       "side": 1,
       "message": "nit: caps are inconsistent with the other uses. Also prefer \"front-end\" or \"front end\" to \"frontend\".",
+      "range": {
+        "startLine": 101,
+        "startChar": 17,
+        "endLine": 101,
+        "endChar": 25
+      },
+      "revId": "6e38f2f136247590706b326c8f7f7d4fa0b2486d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9d84e5c1_50ce0590",
+        "filename": "doc/ContributingCode.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-12-04T19:35:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c961f288_96f8ec71",
       "range": {
         "startLine": 101,
         "startChar": 17,
@@ -143,6 +191,30 @@
     },
     {
       "key": {
+        "uuid": "0bc4af4b_fe1294e9",
+        "filename": "doc/ContributingCode.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-12-04T19:35:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "66a6ebaa_d9998d6c",
+      "range": {
+        "startLine": 104,
+        "startChar": 3,
+        "endLine": 104,
+        "endChar": 10
+      },
+      "revId": "6e38f2f136247590706b326c8f7f7d4fa0b2486d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "99588d78_28b488a7",
         "filename": "doc/ContributingCode.md",
         "patchSetId": 2
@@ -154,6 +226,30 @@
       "writtenOn": "2017-12-01T22:33:53Z",
       "side": 1,
       "message": "this is /vulkan",
+      "range": {
+        "startLine": 108,
+        "startChar": 41,
+        "endLine": 108,
+        "endChar": 43
+      },
+      "revId": "6e38f2f136247590706b326c8f7f7d4fa0b2486d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "64818fd8_1f9c2fed",
+        "filename": "doc/ContributingCode.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-12-04T19:35:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "99588d78_28b488a7",
       "range": {
         "startLine": 108,
         "startChar": 41,
@@ -198,6 +294,24 @@
       "revId": "6e38f2f136247590706b326c8f7f7d4fa0b2486d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c4a2451d_b647829b",
+        "filename": "doc/ContributingCode.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-12-04T19:35:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "91f5be8f_ca5c4345",
+      "revId": "6e38f2f136247590706b326c8f7f7d4fa0b2486d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
