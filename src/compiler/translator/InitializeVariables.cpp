@@ -102,13 +102,12 @@ void AddArrayZeroInitForLoop(const TIntermTyped *initializedNode,
                              TSymbolTable *symbolTable)
 {
     ASSERT(initializedNode->isArray());
-    TSymbolUniqueId indexSymbol(symbolTable);
+    TVariable *indexVariable = CreateTempVariable(
+        symbolTable, TType(EbtInt, highPrecisionSupported ? EbpHigh : EbpMedium, EvqTemporary));
 
-    TType indexType(EbtInt, highPrecisionSupported ? EbpHigh : EbpMedium);
-
-    TIntermSymbol *indexSymbolNode = CreateTempSymbolNode(indexSymbol, indexType, EvqTemporary);
+    TIntermSymbol *indexSymbolNode = CreateTempSymbolNode(indexVariable);
     TIntermDeclaration *indexInit =
-        CreateTempInitDeclarationNode(indexSymbol, CreateZeroNode(indexType), EvqTemporary);
+        CreateTempInitDeclarationNode(indexVariable, CreateZeroNode(indexVariable->getType()));
     TIntermConstantUnion *arraySizeNode = CreateIndexNode(initializedNode->getOutermostArraySize());
     TIntermBinary *indexSmallerThanSize =
         new TIntermBinary(EOpLessThan, indexSymbolNode->deepCopy(), arraySizeNode);

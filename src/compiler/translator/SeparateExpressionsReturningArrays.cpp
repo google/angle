@@ -12,6 +12,7 @@
 #include "compiler/translator/SeparateExpressionsReturningArrays.h"
 
 #include "compiler/translator/IntermNodePatternMatcher.h"
+#include "compiler/translator/IntermNode_util.h"
 #include "compiler/translator/IntermTraverse.h"
 
 namespace sh
@@ -73,11 +74,13 @@ bool SeparateExpressionsTraverser::visitBinary(Visit visit, TIntermBinary *node)
     // TODO(oetuaho): In some cases it would be more optimal to not add the temporary node, but just
     // use the original target of the assignment. Care must be taken so that this doesn't happen
     // when the same array symbol is a target of assignment more than once in one expression.
-    nextTemporaryId();
-    insertions.push_back(createTempInitDeclaration(node->getLeft()));
+    TIntermDeclaration *arrayVariableDeclaration;
+    TVariable *arrayVariable =
+        DeclareTempVariable(mSymbolTable, node->getLeft(), EvqTemporary, &arrayVariableDeclaration);
+    insertions.push_back(arrayVariableDeclaration);
     insertStatementsInParentBlock(insertions);
 
-    queueReplacement(createTempSymbol(node->getType()), OriginalNode::IS_DROPPED);
+    queueReplacement(CreateTempSymbolNode(arrayVariable), OriginalNode::IS_DROPPED);
 
     return false;
 }
@@ -94,13 +97,12 @@ bool SeparateExpressionsTraverser::visitAggregate(Visit visit, TIntermAggregate 
 
     mFoundArrayExpression = true;
 
-    nextTemporaryId();
+    TIntermDeclaration *arrayVariableDeclaration;
+    TVariable *arrayVariable = DeclareTempVariable(mSymbolTable, node->shallowCopy(), EvqTemporary,
+                                                   &arrayVariableDeclaration);
+    insertStatementInParentBlock(arrayVariableDeclaration);
 
-    TIntermSequence insertions;
-    insertions.push_back(createTempInitDeclaration(node->shallowCopy()));
-    insertStatementsInParentBlock(insertions);
-
-    queueReplacement(createTempSymbol(node->getType()), OriginalNode::IS_DROPPED);
+    queueReplacement(CreateTempSymbolNode(arrayVariable), OriginalNode::IS_DROPPED);
 
     return false;
 }

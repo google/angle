@@ -192,9 +192,9 @@ void RemoveUnreferencedVariablesTraverser::removeVariableDeclaration(TIntermDecl
                 // Already an empty declaration - nothing to do.
                 return;
             }
-            queueReplacementWithParent(node, declarator,
-                                       new TIntermSymbol(mSymbolTable->getEmptySymbolId(),
-                                                         TString(""), declarator->getType()),
+            TVariable *emptyVariable = new TVariable(mSymbolTable, NewPoolTString(""),
+                                                     declarator->getType(), SymbolType::Empty);
+            queueReplacementWithParent(node, declarator, new TIntermSymbol(emptyVariable),
                                        OriginalNode::IS_DROPPED);
             return;
         }

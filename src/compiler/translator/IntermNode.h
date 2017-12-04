@@ -58,6 +58,7 @@ class TIntermBranch;
 
 class TSymbolTable;
 class TFunction;
+class TVariable;
 
 // Encapsulate an identifier string and track whether it is coming from the original shader code
 // (not internal) or from ANGLE (internal). Usually internal names shouldn't be decorated or hashed.
@@ -255,13 +256,7 @@ class TIntermBranch : public TIntermNode
 class TIntermSymbol : public TIntermTyped
 {
   public:
-    // if symbol is initialized as symbol(sym), the memory comes from the poolallocator of sym.
-    // If sym comes from per process globalpoolallocator, then it causes increased memory usage
-    // per compile it is essential to use "symbol = sym" to assign to symbol
-    TIntermSymbol(const TSymbolUniqueId &id, const TString &symbol, const TType &type)
-        : TIntermTyped(type), mId(id), mSymbol(symbol)
-    {
-    }
+    TIntermSymbol(const TVariable *variable);
 
     TIntermTyped *deepCopy() const override { return new TIntermSymbol(*this); }
 
@@ -270,9 +265,6 @@ class TIntermSymbol : public TIntermTyped
     int getId() const { return mId.get(); }
     const TString &getSymbol() const { return mSymbol.getString(); }
     const TName &getName() const { return mSymbol; }
-    TName &getName() { return mSymbol; }
-
-    void setInternal(bool internal) { mSymbol.setInternal(internal); }
 
     void traverse(TIntermTraverser *it) override;
     TIntermSymbol *getAsSymbolNode() override { return this; }

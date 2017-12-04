@@ -113,8 +113,7 @@ TIntermTraverser::TIntermTraverser(bool preVisit,
       mDepth(-1),
       mMaxDepth(0),
       mInGlobalScope(true),
-      mSymbolTable(symbolTable),
-      mTemporaryId(nullptr)
+      mSymbolTable(symbolTable)
 {
 }
 
@@ -175,58 +174,6 @@ void TIntermTraverser::insertStatementInParentBlock(TIntermNode *statement)
     TIntermSequence insertions;
     insertions.push_back(statement);
     insertStatementsInParentBlock(insertions);
-}
-
-TIntermSymbol *TIntermTraverser::createTempSymbol(const TType &type, TQualifier qualifier)
-{
-    ASSERT(mTemporaryId != nullptr);
-    // nextTemporaryId() needs to be called when the code wants to start using another temporary
-    // symbol.
-    return CreateTempSymbolNode(*mTemporaryId, type, qualifier);
-}
-
-TIntermSymbol *TIntermTraverser::createTempSymbol(const TType &type)
-{
-    return createTempSymbol(type, EvqTemporary);
-}
-
-TIntermDeclaration *TIntermTraverser::createTempDeclaration(const TType &type)
-{
-    ASSERT(mTemporaryId != nullptr);
-    TIntermDeclaration *tempDeclaration = new TIntermDeclaration();
-    tempDeclaration->appendDeclarator(CreateTempSymbolNode(*mTemporaryId, type, EvqTemporary));
-    return tempDeclaration;
-}
-
-TIntermDeclaration *TIntermTraverser::createTempInitDeclaration(TIntermTyped *initializer,
-                                                                TQualifier qualifier)
-{
-    ASSERT(mTemporaryId != nullptr);
-    return CreateTempInitDeclarationNode(*mTemporaryId, initializer, qualifier);
-}
-
-TIntermDeclaration *TIntermTraverser::createTempInitDeclaration(TIntermTyped *initializer)
-{
-    return createTempInitDeclaration(initializer, EvqTemporary);
-}
-
-TIntermBinary *TIntermTraverser::createTempAssignment(TIntermTyped *rightNode)
-{
-    ASSERT(rightNode != nullptr);
-    TIntermSymbol *tempSymbol = createTempSymbol(rightNode->getType());
-    TIntermBinary *assignment = new TIntermBinary(EOpAssign, tempSymbol, rightNode);
-    return assignment;
-}
-
-void TIntermTraverser::nextTemporaryId()
-{
-    ASSERT(mSymbolTable);
-    if (!mTemporaryId)
-    {
-        mTemporaryId = new TSymbolUniqueId(mSymbolTable);
-        return;
-    }
-    *mTemporaryId = TSymbolUniqueId(mSymbolTable);
 }
 
 void TLValueTrackingTraverser::addToFunctionMap(const TSymbolUniqueId &id,

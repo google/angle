@@ -32,7 +32,7 @@ class ReplaceVariableTraverser : public TIntermTraverser
 
     void visitSymbol(TIntermSymbol *node) override
     {
-        TName &name = node->getName();
+        const TName &name = node->getName();
         if (name.getString() == mSymbolName)
         {
             queueReplacement(mNewSymbol->deepCopy(), OriginalNode::IS_DROPPED);
@@ -168,9 +168,11 @@ void DeclareAndInitBuiltinsForInstancedMultiview(TIntermBlock *root,
     ASSERT(shaderType == GL_VERTEX_SHADER || shaderType == GL_FRAGMENT_SHADER);
 
     TQualifier viewIDQualifier  = (shaderType == GL_VERTEX_SHADER) ? EvqFlatOut : EvqFlatIn;
-    TIntermSymbol *viewIDSymbol = new TIntermSymbol(symbolTable->nextUniqueId(), "ViewID_OVR",
-                                                    TType(EbtUInt, EbpHigh, viewIDQualifier));
-    viewIDSymbol->setInternal(true);
+    const TString *viewIDVariableName = NewPoolTString("ViewID_OVR");
+    const TVariable *viewIDVariable =
+        new TVariable(symbolTable, viewIDVariableName, TType(EbtUInt, EbpHigh, viewIDQualifier),
+                      SymbolType::AngleInternal);
+    TIntermSymbol *viewIDSymbol = new TIntermSymbol(viewIDVariable);
 
     DeclareGlobalVariable(root, viewIDSymbol);
     ReplaceSymbol(root, "gl_ViewID_OVR", viewIDSymbol);
@@ -178,9 +180,11 @@ void DeclareAndInitBuiltinsForInstancedMultiview(TIntermBlock *root,
     {
         // Replacing gl_InstanceID with InstanceID should happen before adding the initializers of
         // InstanceID and ViewID.
-        TIntermSymbol *instanceIDSymbol = new TIntermSymbol(
-            symbolTable->nextUniqueId(), "InstanceID", TType(EbtInt, EbpHigh, EvqGlobal));
-        instanceIDSymbol->setInternal(true);
+        const TString *instanceIDVariableName = NewPoolTString("InstanceID");
+        const TVariable *instanceIDVariable =
+            new TVariable(symbolTable, instanceIDVariableName, TType(EbtInt, EbpHigh, EvqGlobal),
+                          SymbolType::AngleInternal);
+        TIntermSymbol *instanceIDSymbol = new TIntermSymbol(instanceIDVariable);
         DeclareGlobalVariable(root, instanceIDSymbol);
         ReplaceSymbol(root, "gl_InstanceID", instanceIDSymbol);
 
@@ -197,10 +201,13 @@ void DeclareAndInitBuiltinsForInstancedMultiview(TIntermBlock *root,
         if (selectView)
         {
             // Add a uniform to switch between side-by-side and layered rendering.
+            const TString *multiviewBaseViewLayerIndexVariableName =
+                NewPoolTString("multiviewBaseViewLayerIndex");
+            const TVariable *multiviewBaseViewLayerIndexVariable =
+                new TVariable(symbolTable, multiviewBaseViewLayerIndexVariableName,
+                              TType(EbtInt, EbpHigh, EvqUniform), SymbolType::AngleInternal);
             TIntermSymbol *multiviewBaseViewLayerIndexSymbol =
-                new TIntermSymbol(symbolTable->nextUniqueId(), "multiviewBaseViewLayerIndex",
-                                  TType(EbtInt, EbpHigh, EvqUniform));
-            multiviewBaseViewLayerIndexSymbol->setInternal(true);
+                new TIntermSymbol(multiviewBaseViewLayerIndexVariable);
             DeclareGlobalVariable(root, multiviewBaseViewLayerIndexSymbol);
 
             // Setting a value to gl_ViewportIndex or gl_Layer should happen after ViewID_OVR's

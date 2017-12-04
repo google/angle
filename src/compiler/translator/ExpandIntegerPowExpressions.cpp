@@ -11,6 +11,7 @@
 #include <cmath>
 #include <cstdlib>
 
+#include "compiler/translator/IntermNode_util.h"
 #include "compiler/translator/IntermTraverse.h"
 
 namespace sh
@@ -103,20 +104,20 @@ bool Traverser::visitAggregate(Visit visit, TIntermAggregate *node)
     }
 
     // Potential problem case detected, apply workaround.
-    nextTemporaryId();
 
     TIntermTyped *lhs = sequence->at(0)->getAsTyped();
     ASSERT(lhs);
 
-    TIntermDeclaration *init = createTempInitDeclaration(lhs);
-    TIntermTyped *current    = createTempSymbol(lhs->getType());
-
-    insertStatementInParentBlock(init);
+    TIntermDeclaration *lhsVariableDeclaration = nullptr;
+    TVariable *lhsVariable =
+        DeclareTempVariable(mSymbolTable, lhs, EvqTemporary, &lhsVariableDeclaration);
+    insertStatementInParentBlock(lhsVariableDeclaration);
 
     // Create a chain of n-1 multiples.
+    TIntermTyped *current = CreateTempSymbolNode(lhsVariable);
     for (int i = 1; i < n; ++i)
     {
-        TIntermBinary *mul = new TIntermBinary(EOpMul, current, createTempSymbol(lhs->getType()));
+        TIntermBinary *mul = new TIntermBinary(EOpMul, current, CreateTempSymbolNode(lhsVariable));
         mul->setLine(node->getLine());
         current = mul;
     }

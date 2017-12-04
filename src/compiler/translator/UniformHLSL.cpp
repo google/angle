@@ -384,9 +384,6 @@ void UniformHLSL::uniformsHeader(TInfoSinkBase &out,
                 for (TIntermSymbol *sampler : samplerSymbols)
                 {
                     const TType &samplerType = sampler->getType();
-
-                    // Will use angle_ prefix instead of regular prefix.
-                    sampler->setInternal(true);
                     const TName &samplerName = sampler->getName();
 
                     if (outputType == SH_HLSL_4_1_OUTPUT)

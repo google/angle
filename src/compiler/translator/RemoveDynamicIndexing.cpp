@@ -58,29 +58,30 @@ std::string GetIndexFunctionName(const TType &type, bool write)
     return nameSink.str();
 }
 
-TIntermSymbol *CreateBaseSymbol(const TType &type, TQualifier qualifier, TSymbolTable *symbolTable)
+TIntermSymbol *CreateBaseSymbol(const TType &type, TSymbolTable *symbolTable)
 {
-    TIntermSymbol *symbol = new TIntermSymbol(symbolTable->nextUniqueId(), "base", type);
-    symbol->setInternal(true);
-    symbol->getTypePointer()->setQualifier(qualifier);
-    return symbol;
+    TString *baseString = NewPoolTString("base");
+    TVariable *baseVariable =
+        new TVariable(symbolTable, baseString, type, SymbolType::AngleInternal);
+    return new TIntermSymbol(baseVariable);
 }
 
 TIntermSymbol *CreateIndexSymbol(TSymbolTable *symbolTable)
 {
-    TIntermSymbol *symbol =
-        new TIntermSymbol(symbolTable->nextUniqueId(), "index", TType(EbtInt, EbpHigh));
-    symbol->setInternal(true);
-    symbol->getTypePointer()->setQualifier(EvqIn);
-    return symbol;
+    TString *indexString     = NewPoolTString("index");
+    TVariable *indexVariable = new TVariable(
+        symbolTable, indexString, TType(EbtInt, EbpHigh, EvqIn), SymbolType::AngleInternal);
+    return new TIntermSymbol(indexVariable);
 }
 
 TIntermSymbol *CreateValueSymbol(const TType &type, TSymbolTable *symbolTable)
 {
-    TIntermSymbol *symbol = new TIntermSymbol(symbolTable->nextUniqueId(), "value", type);
-    symbol->setInternal(true);
-    symbol->getTypePointer()->setQualifier(EvqIn);
-    return symbol;
+    TString *valueString = NewPoolTString("value");
+    TType valueType(type);
+    valueType.setQualifier(EvqIn);
+    TVariable *valueVariable =
+        new TVariable(symbolTable, valueString, valueType, SymbolType::AngleInternal);
+    return new TIntermSymbol(valueVariable);
 }
 
 TIntermConstantUnion *CreateIntConstantNode(int i)
@@ -157,17 +158,12 @@ TType GetFieldType(const TType &indexedType)
 //    base[1] = value;
 // }
 // Note that else is not used in above functions to avoid the RewriteElseBlocks transformation.
-TIntermFunctionDefinition *GetIndexFunctionDefinition(TType type,
+TIntermFunctionDefinition *GetIndexFunctionDefinition(const TType &type,
                                                       bool write,
                                                       const TSymbolUniqueId &functionId,
                                                       TSymbolTable *symbolTable)
 {
     ASSERT(!type.isArray());
-    // Conservatively use highp here, even if the indexed type is not highp. That way the code can't
-    // end up using mediump version of an indexing function for a highp value, if both mediump and
-    // highp values are being indexed in the shader. For HLSL precision doesn't matter, but in
-    // principle this code could be used with multiple backends.
-    type.setPrecision(EbpHigh);
 
     TType fieldType = GetFieldType(type);
     int numCases    = 0;
@@ -190,10 +186,17 @@ TIntermFunctionDefinition *GetIndexFunctionDefinition(TType type,
     TIntermFunctionPrototype *prototypeNode =
         CreateInternalFunctionPrototypeNode(returnType, functionName.c_str(), functionId);
 
-    TQualifier baseQualifier     = EvqInOut;
+    TType baseType(type);
+    // Conservatively use highp here, even if the indexed type is not highp. That way the code can't
+    // end up using mediump version of an indexing function for a highp value, if both mediump and
+    // highp values are being indexed in the shader. For HLSL precision doesn't matter, but in
+    // principle this code could be used with multiple backends.
+    baseType.setPrecision(EbpHigh);
+    baseType.setQualifier(EvqInOut);
     if (!write)
-        baseQualifier        = EvqIn;
-    TIntermSymbol *baseParam = CreateBaseSymbol(type, baseQualifier, symbolTable);
+        baseType.setQualifier(EvqIn);
+
+    TIntermSymbol *baseParam = CreateBaseSymbol(baseType, symbolTable);
     prototypeNode->getSequence()->push_back(baseParam);
     TIntermSymbol *indexParam = CreateIndexSymbol(symbolTable);
     prototypeNode->getSequence()->push_back(indexParam);
@@ -361,16 +364,16 @@ TIntermAggregate *CreateIndexFunctionCall(TIntermBinary *node,
 }
 
 TIntermAggregate *CreateIndexedWriteFunctionCall(TIntermBinary *node,
-                                                 TIntermTyped *index,
-                                                 TIntermTyped *writtenValue,
+                                                 TVariable *index,
+                                                 TVariable *writtenValue,
                                                  const TSymbolUniqueId &functionId)
 {
     ASSERT(node->getOp() == EOpIndexIndirect);
     TIntermSequence *arguments = new TIntermSequence();
     // Deep copy the child nodes so that two pointers to the same node don't end up in the tree.
     arguments->push_back(node->getLeft()->deepCopy());
-    arguments->push_back(index->deepCopy());
-    arguments->push_back(writtenValue);
+    arguments->push_back(CreateTempSymbolNode(index));
+    arguments->push_back(CreateTempSymbolNode(writtenValue));
 
     std::string functionName           = GetIndexFunctionName(node->getLeft()->getType(), true);
     TIntermAggregate *indexedWriteCall =
@@ -394,15 +397,14 @@ bool RemoveDynamicIndexingTraverser::visitBinary(Visit visit, TIntermBinary *nod
             // to this:
             //   int s0 = index_expr; v_expr[s0];
             // Now v_expr[s0] can be safely executed several times without unintended side effects.
-            nextTemporaryId();
-
-            // Init the temp variable holding the index
-            TIntermDeclaration *initIndex = createTempInitDeclaration(node->getRight());
-            insertStatementInParentBlock(initIndex);
+            TIntermDeclaration *indexVariableDeclaration = nullptr;
+            TVariable *indexVariable = DeclareTempVariable(mSymbolTable, node->getRight(),
+                                                           EvqTemporary, &indexVariableDeclaration);
+            insertStatementInParentBlock(indexVariableDeclaration);
             mUsedTreeInsertion = true;
 
             // Replace the index with the temp variable
-            TIntermSymbol *tempIndex = createTempSymbol(node->getRight()->getType());
+            TIntermSymbol *tempIndex = CreateTempSymbolNode(indexVariable);
             queueReplacementWithParent(node, node->getRight(), tempIndex, OriginalNode::IS_DROPPED);
         }
         else if (IntermNodePatternMatcher::IsDynamicIndexingOfVectorOrMatrix(node))
@@ -473,34 +475,34 @@ bool RemoveDynamicIndexingTraverser::visitBinary(Visit visit, TIntermBinary *nod
                 {
                     indexedWriteFunctionId = mWrittenVecAndMatrixTypes[type];
                 }
-                TType fieldType = GetFieldType(type);
 
                 TIntermSequence insertionsBefore;
                 TIntermSequence insertionsAfter;
 
                 // Store the index in a temporary signed int variable.
-                nextTemporaryId();
+                // s0 = index_expr;
                 TIntermTyped *indexInitializer = EnsureSignedInt(node->getRight());
-                TIntermDeclaration *initIndex  = createTempInitDeclaration(indexInitializer);
-                initIndex->setLine(node->getLine());
-                insertionsBefore.push_back(initIndex);
+                TIntermDeclaration *indexVariableDeclaration = nullptr;
+                TVariable *indexVariable                     = DeclareTempVariable(
+                    mSymbolTable, indexInitializer, EvqTemporary, &indexVariableDeclaration);
+                insertionsBefore.push_back(indexVariableDeclaration);
 
-                // Create a node for referring to the index after the nextTemporaryId() call
-                // below.
-                TIntermSymbol *tempIndex = createTempSymbol(indexInitializer->getType());
+                // s1 = dyn_index(v_expr, s0);
+                TIntermAggregate *indexingCall = CreateIndexFunctionCall(
+                    node, CreateTempSymbolNode(indexVariable), *indexingFunctionId);
+                TIntermDeclaration *fieldVariableDeclaration = nullptr;
+                TVariable *fieldVariable                     = DeclareTempVariable(
+                    mSymbolTable, indexingCall, EvqTemporary, &fieldVariableDeclaration);
+                insertionsBefore.push_back(fieldVariableDeclaration);
 
-                TIntermAggregate *indexingCall =
-                    CreateIndexFunctionCall(node, tempIndex, *indexingFunctionId);
-
-                nextTemporaryId();  // From now on, creating temporary symbols that refer to the
-                                    // field value.
-                insertionsBefore.push_back(createTempInitDeclaration(indexingCall));
-
+                // dyn_index_write(v_expr, s0, s1);
                 TIntermAggregate *indexedWriteCall = CreateIndexedWriteFunctionCall(
-                    node, tempIndex, createTempSymbol(fieldType), *indexedWriteFunctionId);
+                    node, indexVariable, fieldVariable, *indexedWriteFunctionId);
                 insertionsAfter.push_back(indexedWriteCall);
                 insertStatementsInParentBlock(insertionsBefore, insertionsAfter);
-                queueReplacement(createTempSymbol(fieldType), OriginalNode::IS_DROPPED);
+
+                // replace the node with s1
+                queueReplacement(CreateTempSymbolNode(fieldVariable), OriginalNode::IS_DROPPED);
                 mUsedTreeInsertion = true;
             }
             else

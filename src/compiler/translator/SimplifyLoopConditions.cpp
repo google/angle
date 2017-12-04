@@ -151,7 +151,8 @@ void SimplifyLoopConditionsTraverser::traverseLoop(TIntermLoop *node)
 
     if (mFoundLoopToChange)
     {
-        nextTemporaryId();
+        TType boolType(EbtBool, EbpUndefined, EvqTemporary);
+        TVariable *conditionVariable = CreateTempVariable(mSymbolTable, boolType);
 
         // Replace the loop condition with a boolean variable that's updated on each iteration.
         TLoopType loopType = node->getType();
@@ -162,9 +163,9 @@ void SimplifyLoopConditionsTraverser::traverseLoop(TIntermLoop *node)
             // into
             //   bool s0 = expr;
             //   while (s0) { { body; } s0 = expr; }
-            TIntermSequence tempInitSeq;
-            tempInitSeq.push_back(createTempInitDeclaration(node->getCondition()->deepCopy()));
-            insertStatementsInParentBlock(tempInitSeq);
+            TIntermDeclaration *tempInitDeclaration =
+                CreateTempInitDeclarationNode(conditionVariable, node->getCondition()->deepCopy());
+            insertStatementInParentBlock(tempInitDeclaration);
 
             TIntermBlock *newBody = new TIntermBlock();
             if (node->getBody())
@@ -172,13 +173,13 @@ void SimplifyLoopConditionsTraverser::traverseLoop(TIntermLoop *node)
                 newBody->getSequence()->push_back(node->getBody());
             }
             newBody->getSequence()->push_back(
-                createTempAssignment(node->getCondition()->deepCopy()));
+                CreateTempAssignmentNode(conditionVariable, node->getCondition()->deepCopy()));
 
             // Can't use queueReplacement to replace old body, since it may have been nullptr.
             // It's safe to do the replacements in place here - the new body will still be
             // traversed, but that won't create any problems.
             node->setBody(newBody);
-            node->setCondition(createTempSymbol(node->getCondition()->getType()));
+            node->setCondition(CreateTempSymbolNode(conditionVariable));
         }
         else if (loopType == ELoopDoWhile)
         {
@@ -192,9 +193,9 @@ void SimplifyLoopConditionsTraverser::traverseLoop(TIntermLoop *node)
             //     { body; }
             //     s0 = expr;
             //   } while (s0);
-            TIntermSequence tempInitSeq;
-            tempInitSeq.push_back(createTempInitDeclaration(CreateBoolNode(true)));
-            insertStatementsInParentBlock(tempInitSeq);
+            TIntermDeclaration *tempInitDeclaration =
+                CreateTempInitDeclarationNode(conditionVariable, CreateBoolNode(true));
+            insertStatementInParentBlock(tempInitDeclaration);
 
             TIntermBlock *newBody = new TIntermBlock();
             if (node->getBody())
@@ -202,13 +203,13 @@ void SimplifyLoopConditionsTraverser::traverseLoop(TIntermLoop *node)
                 newBody->getSequence()->push_back(node->getBody());
             }
             newBody->getSequence()->push_back(
-                createTempAssignment(node->getCondition()->deepCopy()));
+                CreateTempAssignmentNode(conditionVariable, node->getCondition()->deepCopy()));
 
             // Can't use queueReplacement to replace old body, since it may have been nullptr.
             // It's safe to do the replacements in place here - the new body will still be
             // traversed, but that won't create any problems.
             node->setBody(newBody);
-            node->setCondition(createTempSymbol(node->getCondition()->getType()));
+            node->setCondition(CreateTempSymbolNode(conditionVariable));
         }
         else if (loopType == ELoopFor)
         {
@@ -244,7 +245,8 @@ void SimplifyLoopConditionsTraverser::traverseLoop(TIntermLoop *node)
             {
                 conditionInitializer = CreateBoolNode(true);
             }
-            loopScopeSequence->push_back(createTempInitDeclaration(conditionInitializer));
+            loopScopeSequence->push_back(
+                CreateTempInitDeclarationNode(conditionVariable, conditionInitializer));
 
             // Insert "{ body; }" in the while loop
             TIntermBlock *whileLoopBody = new TIntermBlock();
@@ -261,13 +263,13 @@ void SimplifyLoopConditionsTraverser::traverseLoop(TIntermLoop *node)
             if (node->getCondition())
             {
                 whileLoopBody->getSequence()->push_back(
-                    createTempAssignment(node->getCondition()->deepCopy()));
+                    CreateTempAssignmentNode(conditionVariable, node->getCondition()->deepCopy()));
             }
 
             // Create "while(s0) { whileLoopBody }"
-            TIntermLoop *whileLoop = new TIntermLoop(
-                ELoopWhile, nullptr, createTempSymbol(conditionInitializer->getType()), nullptr,
-                whileLoopBody);
+            TIntermLoop *whileLoop =
+                new TIntermLoop(ELoopWhile, nullptr, CreateTempSymbolNode(conditionVariable),
+                                nullptr, whileLoopBody);
             loopScope->getSequence()->push_back(whileLoop);
             queueReplacement(loopScope, OriginalNode::IS_DROPPED);
 

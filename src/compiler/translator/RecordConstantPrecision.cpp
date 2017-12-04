@@ -17,6 +17,7 @@
 #include "compiler/translator/RecordConstantPrecision.h"
 
 #include "compiler/translator/InfoSink.h"
+#include "compiler/translator/IntermNode_util.h"
 #include "compiler/translator/IntermTraverse.h"
 
 namespace sh
@@ -136,12 +137,10 @@ void RecordConstantPrecisionTraverser::visitConstantUnion(TIntermConstantUnion *
 
     // Make the constant a precision-qualified named variable to make sure it affects the precision
     // of the consuming expression.
-    nextTemporaryId();
-
-    TIntermSequence insertions;
-    insertions.push_back(createTempInitDeclaration(node, EvqConst));
-    insertStatementsInParentBlock(insertions);
-    queueReplacement(createTempSymbol(node->getType()), OriginalNode::IS_DROPPED);
+    TIntermDeclaration *variableDeclaration = nullptr;
+    TVariable *variable = DeclareTempVariable(mSymbolTable, node, EvqConst, &variableDeclaration);
+    insertStatementInParentBlock(variableDeclaration);
+    queueReplacement(CreateTempSymbolNode(variable), OriginalNode::IS_DROPPED);
     mFoundHigherPrecisionConstant = true;
 }
 

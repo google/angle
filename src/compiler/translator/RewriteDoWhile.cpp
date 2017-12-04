@@ -9,6 +9,7 @@
 
 #include "compiler/translator/RewriteDoWhile.h"
 
+#include "compiler/translator/IntermNode_util.h"
 #include "compiler/translator/IntermTraverse.h"
 
 namespace sh
@@ -70,29 +71,16 @@ class DoWhileRewriter : public TIntermTraverser
             }
 
             // Found a loop to change.
-            nextTemporaryId();
-
-            TType boolType = TType(EbtBool);
+            TType boolType(EbtBool);
+            TVariable *conditionVariable = CreateTempVariable(mSymbolTable, boolType);
 
             // bool temp = false;
-            TIntermDeclaration *tempDeclaration = nullptr;
-            {
-                TConstantUnion *falseConstant = new TConstantUnion();
-                falseConstant->setBConst(false);
-                TIntermTyped *falseValue = new TIntermConstantUnion(falseConstant, boolType);
-
-                tempDeclaration = createTempInitDeclaration(falseValue);
-            }
+            TIntermDeclaration *tempDeclaration =
+                CreateTempInitDeclarationNode(conditionVariable, CreateBoolNode(false));
 
             // temp = true;
-            TIntermBinary *assignTrue = nullptr;
-            {
-                TConstantUnion *trueConstant = new TConstantUnion();
-                trueConstant->setBConst(true);
-                TIntermTyped *trueValue = new TIntermConstantUnion(trueConstant, boolType);
-
-                assignTrue = createTempAssignment(trueValue);
-            }
+            TIntermBinary *assignTrue =
+                CreateTempAssignmentNode(conditionVariable, CreateBoolNode(true));
 
             // if (temp) {
             //   if (!CONDITION) {
@@ -114,17 +102,14 @@ class DoWhileRewriter : public TIntermTraverser
                 TIntermBlock *innerIfBlock = new TIntermBlock();
                 innerIfBlock->getSequence()->push_back(innerIf);
 
-                breakIf = new TIntermIfElse(createTempSymbol(boolType), innerIfBlock, nullptr);
+                breakIf = new TIntermIfElse(CreateTempSymbolNode(conditionVariable), innerIfBlock,
+                                            nullptr);
             }
 
             // Assemble the replacement loops, reusing the do-while loop's body and inserting our
             // statements at the front.
             TIntermLoop *newLoop = nullptr;
             {
-                TConstantUnion *trueConstant = new TConstantUnion();
-                trueConstant->setBConst(true);
-                TIntermTyped *trueValue = new TIntermConstantUnion(trueConstant, boolType);
-
                 TIntermBlock *body = loop->getBody();
                 if (body == nullptr)
                 {
@@ -134,7 +119,7 @@ class DoWhileRewriter : public TIntermTraverser
                 sequence->insert(sequence->begin(), assignTrue);
                 sequence->insert(sequence->begin(), breakIf);
 
-                newLoop = new TIntermLoop(ELoopWhile, nullptr, trueValue, nullptr, body);
+                newLoop = new TIntermLoop(ELoopWhile, nullptr, CreateBoolNode(true), nullptr, body);
             }
 
             TIntermSequence replacement;

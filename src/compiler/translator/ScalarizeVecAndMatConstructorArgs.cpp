@@ -66,7 +66,7 @@ class ScalarizeArgsTraverser : public TIntermTraverser
     //   vec4 v(1, s0[0][0], s0[0][1], s0[0][2]);
     // This function is to create nodes for "mat4 s0 = m;" and insert it to the code sequence. This
     // way the possible side effects of the constructor argument will only be evaluated once.
-    void createTempVariable(TIntermTyped *original);
+    TVariable *createTempVariable(TIntermTyped *original);
 
     std::vector<TIntermSequence> mBlockStack;
 
@@ -129,10 +129,10 @@ void ScalarizeArgsTraverser::scalarizeArgs(TIntermAggregate *aggregate,
         ASSERT(size > 0);
         TIntermTyped *originalArg = originalArgNode->getAsTyped();
         ASSERT(originalArg);
-        createTempVariable(originalArg);
+        TVariable *argVariable = createTempVariable(originalArg);
         if (originalArg->isScalar())
         {
-            sequence->push_back(createTempSymbol(originalArg->getType()));
+            sequence->push_back(CreateTempSymbolNode(argVariable));
             size--;
         }
         else if (originalArg->isVector())
@@ -143,14 +143,14 @@ void ScalarizeArgsTraverser::scalarizeArgs(TIntermAggregate *aggregate,
                 size -= repeat;
                 for (int index = 0; index < repeat; ++index)
                 {
-                    TIntermSymbol *symbolNode = createTempSymbol(originalArg->getType());
+                    TIntermSymbol *symbolNode = CreateTempSymbolNode(argVariable);
                     TIntermBinary *newNode    = ConstructVectorIndexBinaryNode(symbolNode, index);
                     sequence->push_back(newNode);
                 }
             }
             else
             {
-                TIntermSymbol *symbolNode = createTempSymbol(originalArg->getType());
+                TIntermSymbol *symbolNode = CreateTempSymbolNode(argVariable);
                 sequence->push_back(symbolNode);
                 size -= originalArg->getNominalSize();
             }
@@ -165,7 +165,7 @@ void ScalarizeArgsTraverser::scalarizeArgs(TIntermAggregate *aggregate,
                 size -= repeat;
                 while (repeat > 0)
                 {
-                    TIntermSymbol *symbolNode = createTempSymbol(originalArg->getType());
+                    TIntermSymbol *symbolNode = CreateTempSymbolNode(argVariable);
                     TIntermBinary *newNode =
                         ConstructMatrixIndexBinaryNode(symbolNode, colIndex, rowIndex);
                     sequence->push_back(newNode);
@@ -180,7 +180,7 @@ void ScalarizeArgsTraverser::scalarizeArgs(TIntermAggregate *aggregate,
             }
             else
             {
-                TIntermSymbol *symbolNode = createTempSymbol(originalArg->getType());
+                TIntermSymbol *symbolNode = CreateTempSymbolNode(argVariable);
                 sequence->push_back(symbolNode);
                 size -= originalArg->getCols() * originalArg->getRows();
             }
@@ -188,28 +188,29 @@ void ScalarizeArgsTraverser::scalarizeArgs(TIntermAggregate *aggregate,
     }
 }
 
-void ScalarizeArgsTraverser::createTempVariable(TIntermTyped *original)
+TVariable *ScalarizeArgsTraverser::createTempVariable(TIntermTyped *original)
 {
     ASSERT(original);
-    nextTemporaryId();
-    TIntermDeclaration *decl = createTempInitDeclaration(original);
 
-    TType type = original->getType();
+    TType type(original->getType());
+    type.setQualifier(EvqTemporary);
     if (mShaderType == GL_FRAGMENT_SHADER && type.getBasicType() == EbtFloat &&
         type.getPrecision() == EbpUndefined)
     {
         // We use the highest available precision for the temporary variable
         // to avoid computing the actual precision using the rules defined
         // in GLSL ES 1.0 Section 4.5.2.
-        TIntermBinary *init = decl->getSequence()->at(0)->getAsBinaryNode();
-        init->getTypePointer()->setPrecision(mFragmentPrecisionHigh ? EbpHigh : EbpMedium);
-        init->getLeft()->getTypePointer()->setPrecision(mFragmentPrecisionHigh ? EbpHigh
-                                                                               : EbpMedium);
+        type.setPrecision(mFragmentPrecisionHigh ? EbpHigh : EbpMedium);
     }
+
+    TVariable *variable = CreateTempVariable(mSymbolTable, type);
 
     ASSERT(mBlockStack.size() > 0);
     TIntermSequence &sequence = mBlockStack.back();
-    sequence.push_back(decl);
+    TIntermDeclaration *declaration = CreateTempInitDeclarationNode(variable, original);
+    sequence.push_back(declaration);
+
+    return variable;
 }
 
 }  // namespace anonymous

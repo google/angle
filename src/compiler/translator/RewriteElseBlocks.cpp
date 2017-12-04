@@ -69,9 +69,9 @@ TIntermNode *ElseBlockRewriter::rewriteIfElse(TIntermIfElse *ifElse)
 {
     ASSERT(ifElse != nullptr);
 
-    nextTemporaryId();
-
-    TIntermDeclaration *storeCondition = createTempInitDeclaration(ifElse->getCondition());
+    TIntermDeclaration *storeCondition = nullptr;
+    TVariable *conditionVariable =
+        DeclareTempVariable(mSymbolTable, ifElse->getCondition(), EvqTemporary, &storeCondition);
 
     TIntermBlock *falseBlock = nullptr;
 
@@ -91,14 +91,14 @@ TIntermNode *ElseBlockRewriter::rewriteIfElse(TIntermIfElse *ifElse)
             negatedElse->appendStatement(returnNode);
         }
 
-        TIntermSymbol *conditionSymbolElse = createTempSymbol(boolType);
+        TIntermSymbol *conditionSymbolElse = CreateTempSymbolNode(conditionVariable);
         TIntermUnary *negatedCondition     = new TIntermUnary(EOpLogicalNot, conditionSymbolElse);
         TIntermIfElse *falseIfElse =
             new TIntermIfElse(negatedCondition, ifElse->getFalseBlock(), negatedElse);
         falseBlock = EnsureBlock(falseIfElse);
     }
 
-    TIntermSymbol *conditionSymbolSel = createTempSymbol(boolType);
+    TIntermSymbol *conditionSymbolSel = CreateTempSymbolNode(conditionVariable);
     TIntermIfElse *newIfElse =
         new TIntermIfElse(conditionSymbolSel, ifElse->getTrueBlock(), falseBlock);
 

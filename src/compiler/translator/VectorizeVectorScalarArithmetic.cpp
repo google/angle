@@ -14,6 +14,7 @@
 #include <set>
 
 #include "compiler/translator/IntermNode.h"
+#include "compiler/translator/IntermNode_util.h"
 #include "compiler/translator/IntermTraverse.h"
 
 namespace sh
@@ -173,12 +174,13 @@ void VectorizeVectorScalarArithmeticTraverser::replaceAssignInsideConstructor(
     TType vecType = node->getType();
     vecType.setQualifier(EvqTemporary);
 
-    nextTemporaryId();
     // gvec s0 = gvec(a);
     // s0 is called "tempAssignmentTarget" below.
     TIntermTyped *tempAssignmentTargetInitializer = Vectorize(left->deepCopy(), vecType, nullptr);
-    TIntermDeclaration *tempAssignmentTargetDeclaration =
-        createTempInitDeclaration(tempAssignmentTargetInitializer);
+    TIntermDeclaration *tempAssignmentTargetDeclaration = nullptr;
+    TVariable *tempAssignmentTarget =
+        DeclareTempVariable(mSymbolTable, tempAssignmentTargetInitializer, EvqTemporary,
+                            &tempAssignmentTargetDeclaration);
 
     // s0 *= b
     TOperator compoundAssignmentOp = argBinary->getOp();
@@ -186,14 +188,14 @@ void VectorizeVectorScalarArithmeticTraverser::replaceAssignInsideConstructor(
     {
         compoundAssignmentOp = EOpVectorTimesScalarAssign;
     }
-    TIntermBinary *replacementCompoundAssignment =
-        new TIntermBinary(compoundAssignmentOp, createTempSymbol(vecType), right->deepCopy());
+    TIntermBinary *replacementCompoundAssignment = new TIntermBinary(
+        compoundAssignmentOp, CreateTempSymbolNode(tempAssignmentTarget), right->deepCopy());
 
     // s0.x
     TVector<int> swizzleXOffset;
     swizzleXOffset.push_back(0);
     TIntermSwizzle *tempAssignmentTargetX =
-        new TIntermSwizzle(createTempSymbol(vecType), swizzleXOffset);
+        new TIntermSwizzle(CreateTempSymbolNode(tempAssignmentTarget), swizzleXOffset);
     // a = s0.x
     TIntermBinary *replacementAssignBackToTarget =
         new TIntermBinary(EOpAssign, left->deepCopy(), tempAssignmentTargetX);
@@ -202,8 +204,8 @@ void VectorizeVectorScalarArithmeticTraverser::replaceAssignInsideConstructor(
     TIntermBinary *replacementSequenceLeft =
         new TIntermBinary(EOpComma, replacementCompoundAssignment, replacementAssignBackToTarget);
     // (s0 *= b, a = s0.x), s0
-    TIntermBinary *replacementSequence =
-        new TIntermBinary(EOpComma, replacementSequenceLeft, createTempSymbol(vecType));
+    TIntermBinary *replacementSequence = new TIntermBinary(
+        EOpComma, replacementSequenceLeft, CreateTempSymbolNode(tempAssignmentTarget));
 
     insertStatementInParentBlock(tempAssignmentTargetDeclaration);
     queueReplacement(replacementSequence, OriginalNode::IS_DROPPED);

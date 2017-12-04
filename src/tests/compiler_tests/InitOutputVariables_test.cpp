@@ -66,7 +66,9 @@ TIntermTyped *CreateLValueNode(const TString &lValueName, const TType &type)
 {
     // We're using a dummy symbol table here, don't need to assign proper symbol ids to these nodes.
     TSymbolTable symbolTable;
-    return new TIntermSymbol(symbolTable.nextUniqueId(), lValueName, type);
+    TVariable *variable = new TVariable(&symbolTable, NewPoolTString(lValueName.c_str()), type,
+                                        SymbolType::UserDefined);
+    return new TIntermSymbol(variable);
 }
 
 ExpectedLValues CreateIndexedLValueNodeList(const TString &lValueName,
@@ -78,8 +80,9 @@ ExpectedLValues CreateIndexedLValueNodeList(const TString &lValueName,
 
     // We're using a dummy symbol table here, don't need to assign proper symbol ids to these nodes.
     TSymbolTable symbolTable;
-    TIntermSymbol *arraySymbol =
-        new TIntermSymbol(symbolTable.nextUniqueId(), lValueName, elementType);
+    TVariable *variable        = new TVariable(&symbolTable, NewPoolTString(lValueName.c_str()),
+                                        elementType, SymbolType::UserDefined);
+    TIntermSymbol *arraySymbol = new TIntermSymbol(variable);
 
     ExpectedLValues expected(arraySize);
     for (unsigned index = 0u; index < arraySize; ++index)
