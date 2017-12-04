@@ -60,6 +60,24 @@
     },
     {
       "key": {
+        "uuid": "784279c3_400eb59a",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 3459,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-12-04T08:52:13Z",
+      "side": 1,
+      "message": "Temporary makes more sense here. This function is used to parse function calls, and the result of a function call is a temporary. The type used here doesn\u0027t really even matter though - it\u0027s always replaced with a type from the function definition once the call is resolved. After that the qualifier is also still changed when the function call node is created.",
+      "parentUuid": "380b423a_f78b5de3",
+      "revId": "fa178ec9f2f8e5f80902a6c7538d35f5c5b700dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "90eb3efa_d4a0dc47",
         "filename": "src/compiler/translator/TypeStaticInstance.h",
         "patchSetId": 13
