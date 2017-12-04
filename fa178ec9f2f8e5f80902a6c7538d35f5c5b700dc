@@ -261,6 +261,30 @@
     },
     {
       "key": {
+        "uuid": "46e6afab_4af5e5ac",
+        "filename": "src/compiler/translator/TypeStaticInstance.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-04T19:20:04Z",
+      "side": 1,
+      "message": "It\u0027s possible. But I\u0027m pretty sure we refer to T{X} objects just as {X}. So there\u0027 precendent. Also TTypeStaticInstance is just too long. Can we do something shorter? Like TStaticType?",
+      "parentUuid": "6848c665_a673d9f8",
+      "range": {
+        "startLine": 15,
+        "startChar": 10,
+        "endLine": 15,
+        "endChar": 29
+      },
+      "revId": "fa178ec9f2f8e5f80902a6c7538d35f5c5b700dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b9f60ba2_d793014c",
         "filename": "src/compiler/translator/TypeStaticInstance.h",
         "patchSetId": 13
