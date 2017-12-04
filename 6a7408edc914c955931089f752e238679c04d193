@@ -22,6 +22,30 @@
       "revId": "6a7408edc914c955931089f752e238679c04d193",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "85107c5a_6496ee36",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1936,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-12-04T02:53:12Z",
+      "side": 1,
+      "message": "Only when you call DispatchComputeIndirect, you need to sync this dirty bit and bind dispatch indirect buffer. This part hasn\u0027t been implemented in this change. DispatchComputeIndirect will be implemented in follow-up CL https://chromium-review.googlesource.com/c/angle/angle/+/802763/. Here just expose an TODO to remind me/reviewer. And split this feature can make review more easier. Thanks.",
+      "parentUuid": "c3a0a6e7_5b249e4c",
+      "range": {
+        "startLine": 1936,
+        "startChar": 30,
+        "endLine": 1936,
+        "endChar": 31
+      },
+      "revId": "6a7408edc914c955931089f752e238679c04d193",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
