@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b27631ae_5540ad44",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 418,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-04T16:10:38Z",
+      "side": 1,
+      "message": "are you sure this is all the dirty bits we need? If there are more to add, leave a TODO",
+      "range": {
+        "startLine": 414,
+        "startChar": 0,
+        "endLine": 418,
+        "endChar": 61
+      },
+      "revId": "45466d2cfeaff538407a7fe280baf9cbcc90fe1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "31773f3e_1522f5bc",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 4199,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-04T16:10:38Z",
+      "side": 1,
+      "message": "The reason prepareForDraw exists is that there are multiple draw call entry points. since there is only one dispatch entry point, you can put this code inline in dispatchCompute.",
+      "range": {
+        "startLine": 4199,
+        "startChar": 15,
+        "endLine": 4199,
+        "endChar": 32
+      },
+      "revId": "45466d2cfeaff538407a7fe280baf9cbcc90fe1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9d70811a_39977b09",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 4201,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-04T16:10:38Z",
+      "side": 1,
+      "message": "change this back to syncRendererState please. I prefer the old name.",
+      "range": {
+        "startLine": 4201,
+        "startChar": 4,
+        "endLine": 4201,
+        "endChar": 39
+      },
+      "revId": "45466d2cfeaff538407a7fe280baf9cbcc90fe1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
