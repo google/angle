@@ -22,6 +22,30 @@
       "revId": "58ccf224845ae926c94bbce3f1d1c4d5c289365b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eda2bae9_0e11f91f",
+        "filename": "src/libANGLE/PackedGLEnums.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-12-04T14:40:15Z",
+      "side": 1,
+      "message": "No, but it should work. Inheriting from angle::BitSet wouldn\u0027t work though because either the inheritance would be private (in which case a member is better) or there will be member functions exposed that take an integer index instead of an enum index.",
+      "parentUuid": "13a79a59_ee4a4e2b",
+      "range": {
+        "startLine": 128,
+        "startChar": 41,
+        "endLine": 128,
+        "endChar": 47
+      },
+      "revId": "58ccf224845ae926c94bbce3f1d1c4d5c289365b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
