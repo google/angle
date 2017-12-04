@@ -46,6 +46,30 @@
       "revId": "58ccf224845ae926c94bbce3f1d1c4d5c289365b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c2d554c6_7cd42661",
+        "filename": "src/libANGLE/PackedGLEnums.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-12-04T16:47:13Z",
+      "side": 1,
+      "message": "Actually what would be the advantage of using angle::BitSet here?",
+      "parentUuid": "eda2bae9_0e11f91f",
+      "range": {
+        "startLine": 128,
+        "startChar": 41,
+        "endLine": 128,
+        "endChar": 47
+      },
+      "revId": "58ccf224845ae926c94bbce3f1d1c4d5c289365b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
