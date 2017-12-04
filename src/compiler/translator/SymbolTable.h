@@ -48,7 +48,9 @@ class TSymbol : angle::NonCopyable
 {
   public:
     POOL_ALLOCATOR_NEW_DELETE();
-    TSymbol(TSymbolTable *symbolTable, const TString *name);
+    TSymbol(TSymbolTable *symbolTable,
+            const TString *name,
+            TExtension extension = TExtension::UNDEFINED);
 
     virtual ~TSymbol()
     {
@@ -61,15 +63,14 @@ class TSymbol : angle::NonCopyable
     virtual bool isVariable() const { return false; }
     virtual bool isStruct() const { return false; }
     const TSymbolUniqueId &uniqueId() const { return mUniqueId; }
-    void relateToExtension(TExtension ext) { mExtension = ext; }
     TExtension extension() const { return mExtension; }
 
   protected:
-    const TString *mName;
+    const TString *const mName;
 
   private:
     const TSymbolUniqueId mUniqueId;
-    TExtension mExtension;
+    const TExtension mExtension;
 };
 
 // Variable.
@@ -89,7 +90,10 @@ class TVariable : public TSymbol
 
   private:
     friend class TSymbolTable;
-    TVariable(TSymbolTable *symbolTable, const TString *name, const TType &t);
+    TVariable(TSymbolTable *symbolTable,
+              const TString *name,
+              const TType &t,
+              TExtension ext = TExtension::UNDEFINED);
 
     TType type;
     const TConstantUnion *unionArray;
@@ -130,7 +134,8 @@ class TInterfaceBlock : public TSymbol, public TFieldListCollection
     TInterfaceBlock(TSymbolTable *symbolTable,
                     const TString *name,
                     const TFieldList *fields,
-                    const TLayoutQualifier &layoutQualifier);
+                    const TLayoutQualifier &layoutQualifier,
+                    TExtension extension = TExtension::UNDEFINED);
 
     TLayoutBlockStorage blockStorage() const { return mBlockStorage; }
     int blockBinding() const { return mBinding; }
@@ -186,16 +191,15 @@ class TFunction : public TSymbol
     TFunction(TSymbolTable *symbolTable,
               const TString *name,
               const TType *retType,
-              TOperator tOp  = EOpNull,
-              TExtension ext = TExtension::UNDEFINED)
-        : TSymbol(symbolTable, name),
+              TOperator tOp        = EOpNull,
+              TExtension extension = TExtension::UNDEFINED)
+        : TSymbol(symbolTable, name, extension),
           returnType(retType),
           mangledName(nullptr),
           op(tOp),
           defined(false),
           mHasPrototypeDeclaration(false)
     {
-        relateToExtension(ext);
     }
     ~TFunction() override;
     bool isFunction() const override { return true; }
@@ -374,11 +378,10 @@ class TSymbolTable : angle::NonCopyable
                            TPrecision precision)
     {
         TVariable *constant =
-            new TVariable(this, NewPoolTString(name), TType(EbtInt, precision, EvqConst, 1));
+            new TVariable(this, NewPoolTString(name), TType(EbtInt, precision, EvqConst, 1), ext);
         TConstantUnion *unionArray = new TConstantUnion[1];
         unionArray[0].setIConst(value);
         constant->shareConstPointer(unionArray);
-        constant->relateToExtension(ext);
         return insert(level, constant);
     }
 

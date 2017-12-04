@@ -1021,10 +1021,10 @@ void IdentifyBuiltIns(sh::GLenum type,
                                                  NewPoolTString("gl_Position"), zeroSourceLoc);
             glPerVertexFieldList->push_back(glPositionField);
 
-            const TString *glPerVertexString    = NewPoolTString("gl_PerVertex");
-            TInterfaceBlock *glPerVertexInBlock = new TInterfaceBlock(
-                &symbolTable, glPerVertexString, glPerVertexFieldList, TLayoutQualifier::Create());
-            glPerVertexInBlock->relateToExtension(extension);
+            const TString *glPerVertexString = NewPoolTString("gl_PerVertex");
+            TInterfaceBlock *glPerVertexInBlock =
+                new TInterfaceBlock(&symbolTable, glPerVertexString, glPerVertexFieldList,
+                                    TLayoutQualifier::Create(), extension);
             symbolTable.insertInterfaceBlock(ESSL3_1_BUILTINS, glPerVertexInBlock);
 
             // The array size of gl_in is undefined until we get a valid input primitive

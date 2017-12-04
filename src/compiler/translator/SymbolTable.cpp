@@ -29,13 +29,16 @@ static const char kFunctionMangledNameSeparator = '(';
 
 }  // anonymous namespace
 
-TSymbol::TSymbol(TSymbolTable *symbolTable, const TString *name)
-    : mName(name), mUniqueId(symbolTable->nextUniqueId()), mExtension(TExtension::UNDEFINED)
+TSymbol::TSymbol(TSymbolTable *symbolTable, const TString *name, TExtension extension)
+    : mName(name), mUniqueId(symbolTable->nextUniqueId()), mExtension(extension)
 {
 }
 
-TVariable::TVariable(TSymbolTable *symbolTable, const TString *name, const TType &t)
-    : TSymbol(symbolTable, name), type(t), unionArray(nullptr)
+TVariable::TVariable(TSymbolTable *symbolTable,
+                     const TString *name,
+                     const TType &t,
+                     TExtension extension)
+    : TSymbol(symbolTable, name, extension), type(t), unionArray(nullptr)
 {
 }
 
@@ -73,8 +76,9 @@ void TStructure::setName(const TString &name)
 TInterfaceBlock::TInterfaceBlock(TSymbolTable *symbolTable,
                                  const TString *name,
                                  const TFieldList *fields,
-                                 const TLayoutQualifier &layoutQualifier)
-    : TSymbol(symbolTable, name),
+                                 const TLayoutQualifier &layoutQualifier,
+                                 TExtension extension)
+    : TSymbol(symbolTable, name, extension),
       TFieldListCollection(fields),
       mBlockStorage(layoutQualifier.blockStorage),
       mBinding(layoutQualifier.binding)
@@ -356,8 +360,7 @@ TVariable *TSymbolTable::insertVariableExt(ESymbolLevel level,
                                            const char *name,
                                            const TType &type)
 {
-    TVariable *var = new TVariable(this, NewPoolTString(name), type);
-    var->relateToExtension(ext);
+    TVariable *var = new TVariable(this, NewPoolTString(name), type, ext);
     if (insert(level, var))
     {
         if (var->getType().getBasicType() == EbtStruct)
