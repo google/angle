@@ -1,0 +1,234 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "79626f07_e655d91a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-04T19:17:48Z",
+      "side": 1,
+      "message": "residing in the GL state",
+      "range": {
+        "startLine": 14,
+        "startChar": 39,
+        "endLine": 14,
+        "endChar": 49
+      },
+      "revId": "61d4a731d035b8a275a63aae7167a2f4b359c2f9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "541d07dc_9ae22120",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1394,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-04T19:17:48Z",
+      "side": 1,
+      "message": "this looks wrong -- the condition says that if the program is not linked, then we should be able to dispatch compute even if there is no linked compute shader. Maybe another test is needed?",
+      "range": {
+        "startLine": 1394,
+        "startChar": 8,
+        "endLine": 1394,
+        "endChar": 31
+      },
+      "revId": "61d4a731d035b8a275a63aae7167a2f4b359c2f9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5cc81f3e_bc2e2172",
+        "filename": "src/tests/gl_tests/LinkAndRelinkFailureTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-04T19:17:48Z",
+      "side": 1,
+      "message": "the GL spec uses the terminology \"current rendering state\" rather than the word \"pipeline\". Vulkan has a notion of pipelines but I don\u0027t think it\u0027s present in GL, at least 2.0/3.0.",
+      "range": {
+        "startLine": 34,
+        "startChar": 16,
+        "endLine": 34,
+        "endChar": 24
+      },
+      "revId": "61d4a731d035b8a275a63aae7167a2f4b359c2f9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "68639bd5_a61c0381",
+        "filename": "src/tests/gl_tests/LinkAndRelinkFailureTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-04T19:17:48Z",
+      "side": 1,
+      "message": "nit: comment before every test",
+      "range": {
+        "startLine": 55,
+        "startChar": 0,
+        "endLine": 55,
+        "endChar": 6
+      },
+      "revId": "61d4a731d035b8a275a63aae7167a2f4b359c2f9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1fd52095_dc602615",
+        "filename": "src/tests/gl_tests/LinkAndRelinkFailureTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-04T19:17:48Z",
+      "side": 1,
+      "message": "how about just calling this RelinkWithProgramInstalled",
+      "range": {
+        "startLine": 55,
+        "startChar": 33,
+        "endLine": 55,
+        "endChar": 87
+      },
+      "revId": "61d4a731d035b8a275a63aae7167a2f4b359c2f9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d45bdf34_cff36d06",
+        "filename": "src/tests/gl_tests/LinkAndRelinkFailureTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-04T19:17:48Z",
+      "side": 1,
+      "message": "succeed",
+      "range": {
+        "startLine": 58,
+        "startChar": 17,
+        "endLine": 58,
+        "endChar": 24
+      },
+      "revId": "61d4a731d035b8a275a63aae7167a2f4b359c2f9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "da683907_9dbda8f3",
+        "filename": "src/tests/gl_tests/LinkAndRelinkFailureTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-04T19:17:48Z",
+      "side": 1,
+      "message": "Starting",
+      "range": {
+        "startLine": 103,
+        "startChar": 7,
+        "endLine": 103,
+        "endChar": 15
+      },
+      "revId": "61d4a731d035b8a275a63aae7167a2f4b359c2f9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dc857bb6_ef5d19f2",
+        "filename": "src/tests/gl_tests/LinkAndRelinkFailureTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-04T19:17:48Z",
+      "side": 1,
+      "message": "succeed",
+      "range": {
+        "startLine": 103,
+        "startChar": 33,
+        "endLine": 103,
+        "endChar": 40
+      },
+      "revId": "61d4a731d035b8a275a63aae7167a2f4b359c2f9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "87778e5d_af9d8407",
+        "filename": "src/tests/gl_tests/LinkAndRelinkFailureTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-04T19:17:48Z",
+      "side": 1,
+      "message": "Using the ..... program should report an error.",
+      "range": {
+        "startLine": 107,
+        "startChar": 7,
+        "endLine": 107,
+        "endChar": 61
+      },
+      "revId": "61d4a731d035b8a275a63aae7167a2f4b359c2f9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "120e0468_d3946a37",
+        "filename": "src/tests/gl_tests/LinkAndRelinkFailureTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-04T19:17:48Z",
+      "side": 1,
+      "message": "I would suggest you phrase this as \"Using the unsuccessfully linked...\" instead of \"To use the...\". Same with \"Starting rendering should succeed\" instead of \"to start rendering should succeess.\" Can you fix the other places in this file?",
+      "range": {
+        "startLine": 111,
+        "startChar": 7,
+        "endLine": 112,
+        "endChar": 53
+      },
+      "revId": "61d4a731d035b8a275a63aae7167a2f4b359c2f9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
