@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "1c0ca331_3793d949",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2017-12-04T19:11:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9b3db31a_755e8ebc",
+      "range": {
+        "startLine": 132,
+        "startChar": 22,
+        "endLine": 132,
+        "endChar": 41
+      },
+      "revId": "fa178ec9f2f8e5f80902a6c7538d35f5c5b700dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "02938713_5912843a",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 13
@@ -78,6 +102,24 @@
     },
     {
       "key": {
+        "uuid": "bc0cde9d_c6b17c11",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 3459,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2017-12-04T19:11:21Z",
+      "side": 1,
+      "message": "Thanks!",
+      "parentUuid": "784279c3_400eb59a",
+      "revId": "fa178ec9f2f8e5f80902a6c7538d35f5c5b700dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "90eb3efa_d4a0dc47",
         "filename": "src/compiler/translator/TypeStaticInstance.h",
         "patchSetId": 13
@@ -98,6 +140,30 @@
       "revId": "fa178ec9f2f8e5f80902a6c7538d35f5c5b700dc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0474dd31_d0cf4d55",
+        "filename": "src/compiler/translator/TypeStaticInstance.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2017-12-04T19:11:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "90eb3efa_d4a0dc47",
+      "range": {
+        "startLine": 5,
+        "startChar": 2,
+        "endLine": 5,
+        "endChar": 0
+      },
+      "revId": "fa178ec9f2f8e5f80902a6c7538d35f5c5b700dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -124,6 +190,30 @@
     },
     {
       "key": {
+        "uuid": "3c2ca1e3_acb6909a",
+        "filename": "src/compiler/translator/TypeStaticInstance.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2017-12-04T19:11:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cf9b582b_490eb2d6",
+      "range": {
+        "startLine": 7,
+        "startChar": 8,
+        "endLine": 7,
+        "endChar": 50
+      },
+      "revId": "fa178ec9f2f8e5f80902a6c7538d35f5c5b700dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "71e97799_6c6c95ab",
         "filename": "src/compiler/translator/TypeStaticInstance.h",
         "patchSetId": 13
@@ -135,6 +225,30 @@
       "writtenOn": "2017-12-02T17:23:11Z",
       "side": 1,
       "message": "very minor complaint, but can we make this a bit shorter, like just \"StaticType\". I\u0027m fine with TTypeStaticInstance though.",
+      "range": {
+        "startLine": 15,
+        "startChar": 10,
+        "endLine": 15,
+        "endChar": 29
+      },
+      "revId": "fa178ec9f2f8e5f80902a6c7538d35f5c5b700dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6848c665_a673d9f8",
+        "filename": "src/compiler/translator/TypeStaticInstance.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2017-12-04T19:11:21Z",
+      "side": 1,
+      "message": "I think it would be a bit confusing because \"static types\" are a thing, even if that\u0027s not a phrase that is used in ANGLE.",
+      "parentUuid": "71e97799_6c6c95ab",
       "range": {
         "startLine": 15,
         "startChar": 10,
@@ -170,6 +284,30 @@
     },
     {
       "key": {
+        "uuid": "f3b066e0_01bfedfc",
+        "filename": "src/compiler/translator/TypeStaticInstance.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2017-12-04T19:11:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b9f60ba2_d793014c",
+      "range": {
+        "startLine": 23,
+        "startChar": 7,
+        "endLine": 23,
+        "endChar": 13
+      },
+      "revId": "fa178ec9f2f8e5f80902a6c7538d35f5c5b700dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c33302dd_977a169c",
         "filename": "src/compiler/translator/TypeStaticInstance.h",
         "patchSetId": 13
@@ -190,6 +328,30 @@
       "revId": "fa178ec9f2f8e5f80902a6c7538d35f5c5b700dc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d9f54bf2_96542d20",
+        "filename": "src/compiler/translator/TypeStaticInstance.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2017-12-04T19:11:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c33302dd_977a169c",
+      "range": {
+        "startLine": 76,
+        "startChar": 0,
+        "endLine": 76,
+        "endChar": 13
+      },
+      "revId": "fa178ec9f2f8e5f80902a6c7538d35f5c5b700dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -216,6 +378,30 @@
     },
     {
       "key": {
+        "uuid": "4d7a8c10_3bfb643f",
+        "filename": "src/compiler/translator/TypeStaticInstance.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2017-12-04T19:11:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0fd5b3e1_8b777bad",
+      "range": {
+        "startLine": 119,
+        "startChar": 23,
+        "endLine": 119,
+        "endChar": 27
+      },
+      "revId": "fa178ec9f2f8e5f80902a6c7538d35f5c5b700dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "57d66b99_004c3de4",
         "filename": "src/compiler/translator/TypeStaticInstance.h",
         "patchSetId": 13
@@ -236,6 +422,30 @@
       "revId": "fa178ec9f2f8e5f80902a6c7538d35f5c5b700dc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "472082fe_1982c718",
+        "filename": "src/compiler/translator/TypeStaticInstance.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2017-12-04T19:11:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57d66b99_004c3de4",
+      "range": {
+        "startLine": 128,
+        "startChar": 13,
+        "endLine": 128,
+        "endChar": 17
+      },
+      "revId": "fa178ec9f2f8e5f80902a6c7538d35f5c5b700dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
