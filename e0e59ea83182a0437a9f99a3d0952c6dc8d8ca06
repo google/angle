@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1e0c4563_7b5cea73",
+        "filename": "src/compiler/translator/OutputHLSL.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-05T15:27:48Z",
+      "side": 1,
+      "message": "nit: probably should make this a regular comment, not a right-aligned one. Also I\u0027m confused, why would mReferencedUniformBlocks store a reference to a member uniform instead of the block itself?",
+      "range": {
+        "startLine": 158,
+        "startChar": 49,
+        "endLine": 161,
+        "endChar": 89
+      },
+      "revId": "e0e59ea83182a0437a9f99a3d0952c6dc8d8ca06",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
