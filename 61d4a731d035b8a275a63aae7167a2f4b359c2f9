@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "9ae0c6c7_2d576ad6",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-12-05T08:35:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "79626f07_e655d91a",
+      "range": {
+        "startLine": 14,
+        "startChar": 39,
+        "endLine": 14,
+        "endChar": 49
+      },
+      "revId": "61d4a731d035b8a275a63aae7167a2f4b359c2f9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "541d07dc_9ae22120",
         "filename": "src/libANGLE/validationES31.cpp",
         "patchSetId": 7
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "de353203_fd48cd86",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1394,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-12-05T08:35:35Z",
+      "side": 1,
+      "message": "Hi Jamie, if a program is not successfully linked, then dispatch compute. The result depends on the original GL state:\n1) If there is no valid program installed before the failed link, just as you pointed out. Then code snippet between line 1387 to line 1392 will catch that error and report INVALID_OPERATION. Because there would be no active program at all. The new added tests (ComputeProgramWithoutProgramInstalled) can cover this situation. It can pass. \n\n2) For a re-link failure (There is a valid program residing in the GL state, then re-link that program on the fly), the unsuccessfully re-linked program should not affect the original GL state, we can dispatch compute as usual by using the original binary residing in the GL state. This change is used to fix the bug for this situation. The old code would report INVALID_OPERATION for this situation, it is wrong according to the gles spec for LinkProgram and UseProgram. The new code will not report error for this situation. The new added tests (ComputeProgramWithProgramInstalled) will fail on the old code snippet. But the tests can pass on the new code snippet.\n\nSo, situation 1) has been covered, situation 2) is OK, we don\u0027t need to report any error for 2). As a result, we don\u0027t need to handle link or re-link failure at all. \n\nActually, this new condition \"program-\u003eisLinked() \u0026\u0026 !program-\u003ehasLinkedComputeShader()\" means that we need to report an error when we dispatch compute against a rendering program (A program links successfully, but it has no compute program. This means that it is a rendering program). And it is a same story for rendering when we render against compute shader, see the similar code snippet at https://chromium-review.googlesource.com/c/angle/angle/+/764797/11/src/libANGLE/validationES.cpp. \n\nBecause the old code snippet is wrong, so it is really easy to mislead the new code snippet.",
+      "parentUuid": "541d07dc_9ae22120",
+      "range": {
+        "startLine": 1394,
+        "startChar": 8,
+        "endLine": 1394,
+        "endChar": 31
+      },
+      "revId": "61d4a731d035b8a275a63aae7167a2f4b359c2f9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5cc81f3e_bc2e2172",
         "filename": "src/tests/gl_tests/LinkAndRelinkFailureTest.cpp",
         "patchSetId": 7
@@ -68,6 +116,30 @@
       "revId": "61d4a731d035b8a275a63aae7167a2f4b359c2f9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "689f2978_fcc5c593",
+        "filename": "src/tests/gl_tests/LinkAndRelinkFailureTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-12-05T08:35:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5cc81f3e_bc2e2172",
+      "range": {
+        "startLine": 34,
+        "startChar": 16,
+        "endLine": 34,
+        "endChar": 24
+      },
+      "revId": "61d4a731d035b8a275a63aae7167a2f4b359c2f9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -117,6 +189,54 @@
     },
     {
       "key": {
+        "uuid": "4b18108a_08f5f2f4",
+        "filename": "src/tests/gl_tests/LinkAndRelinkFailureTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-12-05T08:35:35Z",
+      "side": 1,
+      "message": "Ah... the name is too long. Its length is more than 80. Considering that the tests cover rendering program or compute program, and with or without program installed before link, I would like to change the name to reflect the differences among tests. WDYT?",
+      "parentUuid": "1fd52095_dc602615",
+      "range": {
+        "startLine": 55,
+        "startChar": 33,
+        "endLine": 55,
+        "endChar": 87
+      },
+      "revId": "61d4a731d035b8a275a63aae7167a2f4b359c2f9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5080e2ed_b922126a",
+        "filename": "src/tests/gl_tests/LinkAndRelinkFailureTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-12-05T08:35:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "68639bd5_a61c0381",
+      "range": {
+        "startLine": 55,
+        "startChar": 0,
+        "endLine": 55,
+        "endChar": 6
+      },
+      "revId": "61d4a731d035b8a275a63aae7167a2f4b359c2f9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d45bdf34_cff36d06",
         "filename": "src/tests/gl_tests/LinkAndRelinkFailureTest.cpp",
         "patchSetId": 7
@@ -137,6 +257,30 @@
       "revId": "61d4a731d035b8a275a63aae7167a2f4b359c2f9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1318f629_38caba58",
+        "filename": "src/tests/gl_tests/LinkAndRelinkFailureTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-12-05T08:35:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d45bdf34_cff36d06",
+      "range": {
+        "startLine": 58,
+        "startChar": 17,
+        "endLine": 58,
+        "endChar": 24
+      },
+      "revId": "61d4a731d035b8a275a63aae7167a2f4b359c2f9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -186,6 +330,54 @@
     },
     {
       "key": {
+        "uuid": "25bf0d5c_d85df09a",
+        "filename": "src/tests/gl_tests/LinkAndRelinkFailureTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-12-05T08:35:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "da683907_9dbda8f3",
+      "range": {
+        "startLine": 103,
+        "startChar": 7,
+        "endLine": 103,
+        "endChar": 15
+      },
+      "revId": "61d4a731d035b8a275a63aae7167a2f4b359c2f9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b8828f6c_01c5aaab",
+        "filename": "src/tests/gl_tests/LinkAndRelinkFailureTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-12-05T08:35:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dc857bb6_ef5d19f2",
+      "range": {
+        "startLine": 103,
+        "startChar": 33,
+        "endLine": 103,
+        "endChar": 40
+      },
+      "revId": "61d4a731d035b8a275a63aae7167a2f4b359c2f9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "87778e5d_af9d8407",
         "filename": "src/tests/gl_tests/LinkAndRelinkFailureTest.cpp",
         "patchSetId": 7
@@ -209,6 +401,30 @@
     },
     {
       "key": {
+        "uuid": "58c10305_9cf2e6ff",
+        "filename": "src/tests/gl_tests/LinkAndRelinkFailureTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-12-05T08:35:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "87778e5d_af9d8407",
+      "range": {
+        "startLine": 107,
+        "startChar": 7,
+        "endLine": 107,
+        "endChar": 61
+      },
+      "revId": "61d4a731d035b8a275a63aae7167a2f4b359c2f9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "120e0468_d3946a37",
         "filename": "src/tests/gl_tests/LinkAndRelinkFailureTest.cpp",
         "patchSetId": 7
@@ -229,6 +445,30 @@
       "revId": "61d4a731d035b8a275a63aae7167a2f4b359c2f9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ad0f28e5_43df0bb5",
+        "filename": "src/tests/gl_tests/LinkAndRelinkFailureTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-12-05T08:35:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "120e0468_d3946a37",
+      "range": {
+        "startLine": 111,
+        "startChar": 7,
+        "endLine": 112,
+        "endChar": 53
+      },
+      "revId": "61d4a731d035b8a275a63aae7167a2f4b359c2f9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
