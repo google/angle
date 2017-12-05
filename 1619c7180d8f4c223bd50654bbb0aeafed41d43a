@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bb75ad88_57a19b64",
+        "filename": "src/libANGLE/State.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 397,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-12-05T16:10:05Z",
+      "side": 1,
+      "message": "nit: call it DIRTY_BIT_SHADER_STORAGE_BUFFER_BINDING to match the GL enum more closely.",
+      "range": {
+        "startLine": 397,
+        "startChar": 8,
+        "endLine": 397,
+        "endChar": 40
+      },
+      "revId": "1619c7180d8f4c223bd50654bbb0aeafed41d43a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
