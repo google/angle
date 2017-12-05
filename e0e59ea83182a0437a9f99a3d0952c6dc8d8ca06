@@ -22,6 +22,30 @@
       "revId": "e0e59ea83182a0437a9f99a3d0952c6dc8d8ca06",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0990524a_12ba4962",
+        "filename": "src/compiler/translator/OutputHLSL.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-12-05T16:03:03Z",
+      "side": 1,
+      "message": "OutputHLSL will add blocks here when it encounters a reference to a uniform block. If the block is instanced the reference will appear in the AST the form of an instance symbol node. But if the block is not instanced, the nodes that reference blocks are pointing to the block members, so it works to store one of those. This could be cleaned up further by doing a bigger refactoring, but the main goal of this patch was to just reduce data duplication, so I left that part alone in this patch. I made this into a regular comment and added a TODO to change this now.",
+      "parentUuid": "1e0c4563_7b5cea73",
+      "range": {
+        "startLine": 158,
+        "startChar": 49,
+        "endLine": 161,
+        "endChar": 89
+      },
+      "revId": "e0e59ea83182a0437a9f99a3d0952c6dc8d8ca06",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
