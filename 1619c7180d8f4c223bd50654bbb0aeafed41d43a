@@ -2,6 +2,52 @@
   "comments": [
     {
       "key": {
+        "uuid": "71cebaa5_f9b3540f",
+        "filename": "src/libANGLE/Context.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 999,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-05T16:15:46Z",
+      "side": 1,
+      "message": "if you want to keep this method, it should be called prepareForDispatch.",
+      "range": {
+        "startLine": 999,
+        "startChar": 10,
+        "endLine": 999,
+        "endChar": 27
+      },
+      "revId": "1619c7180d8f4c223bd50654bbb0aeafed41d43a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1c33325c_77251bf3",
+        "filename": "src/libANGLE/Context.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 1000,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-05T16:15:46Z",
+      "side": 1,
+      "message": "does this function exist somewhere? I think you can remove it and put it back in a later patch.",
+      "range": {
+        "startLine": 1000,
+        "startChar": 9,
+        "endLine": 1000,
+        "endChar": 25
+      },
+      "revId": "1619c7180d8f4c223bd50654bbb0aeafed41d43a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "bb75ad88_57a19b64",
         "filename": "src/libANGLE/State.h",
         "patchSetId": 10
