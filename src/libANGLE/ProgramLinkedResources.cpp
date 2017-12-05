@@ -48,6 +48,22 @@ int GetUniformLocationBinding(const ProgramBindings &uniformLocationBindings,
     return binding;
 }
 
+template <typename VarT>
+void SetStaticUse(std::vector<VarT> *list,
+                  const std::string &name,
+                  GLenum shaderType,
+                  bool staticUse)
+{
+    for (auto &variable : *list)
+    {
+        if (variable.name == name)
+        {
+            variable.setStaticUse(shaderType, staticUse);
+            return;
+        }
+    }
+}
+
 }  // anonymous namespace
 
 UniformLinker::UniformLinker(const ProgramState &state) : mState(state)
@@ -766,7 +782,11 @@ void InterfaceBlockLinker::linkBlocks(const GetBlockSize &getBlockSize,
                         if (block.name == priorBlock.name)
                         {
                             priorBlock.setStaticUse(shaderType, true);
-                            // TODO(jiajia.qin@intel.com): update the block members static use.
+                            // Update the block members static use.
+                            defineBlockMembers(nullptr, block.fields, block.fieldPrefix(),
+                                               block.fieldMappedPrefix(), -1,
+                                               block.blockType == sh::BlockType::BLOCK_BUFFER, 1,
+                                               shaderType);
                         }
                     }
                 }
@@ -788,7 +808,8 @@ void InterfaceBlockLinker::defineArrayOfStructsBlockMembers(const GetBlockMember
                                                             const std::string &mappedPrefix,
                                                             int blockIndex,
                                                             bool singleEntryForTopLevelArray,
-                                                            int topLevelArraySize) const
+                                                            int topLevelArraySize,
+                                                            GLenum shaderType) const
 {
     // Nested arrays are processed starting from outermost (arrayNestingIndex 0u) and ending at the
     // innermost.
@@ -805,12 +826,12 @@ void InterfaceBlockLinker::defineArrayOfStructsBlockMembers(const GetBlockMember
         {
             defineArrayOfStructsBlockMembers(getMemberInfo, field, arrayNestingIndex + 1u,
                                              elementName, elementMappedName, blockIndex, false,
-                                             topLevelArraySize);
+                                             topLevelArraySize, shaderType);
         }
         else
         {
             defineBlockMembers(getMemberInfo, field.fields, elementName, elementMappedName,
-                               blockIndex, false, topLevelArraySize);
+                               blockIndex, false, topLevelArraySize, shaderType);
         }
     }
 }
@@ -822,7 +843,8 @@ void InterfaceBlockLinker::defineBlockMembers(const GetBlockMemberInfo &getMembe
                                               const std::string &mappedPrefix,
                                               int blockIndex,
                                               bool singleEntryForTopLevelArray,
-                                              int topLevelArraySize) const
+                                              int topLevelArraySize,
+                                              GLenum shaderType) const
 {
     for (const VarT &field : fields)
     {
@@ -831,7 +853,7 @@ void InterfaceBlockLinker::defineBlockMembers(const GetBlockMemberInfo &getMembe
             (mappedPrefix.empty() ? field.mappedName : mappedPrefix + "." + field.mappedName);
 
         defineBlockMember(getMemberInfo, field, fullName, fullMappedName, blockIndex,
-                          singleEntryForTopLevelArray, topLevelArraySize);
+                          singleEntryForTopLevelArray, topLevelArraySize, shaderType);
     }
 }
 
@@ -842,7 +864,8 @@ void InterfaceBlockLinker::defineBlockMember(const GetBlockMemberInfo &getMember
                                              const std::string &fullMappedName,
                                              int blockIndex,
                                              bool singleEntryForTopLevelArray,
-                                             int topLevelArraySize) const
+                                             int topLevelArraySize,
+                                             GLenum shaderType) const
 {
     int nextArraySize = topLevelArraySize;
     if (((field.isArray() && field.isStruct()) || field.isArrayOfArrays()) &&
@@ -859,14 +882,14 @@ void InterfaceBlockLinker::defineBlockMember(const GetBlockMemberInfo &getMember
         if (field.isArray())
         {
             defineArrayOfStructsBlockMembers(getMemberInfo, field, 0u, fullName, fullMappedName,
-                                             blockIndex, singleEntryForTopLevelArray,
-                                             nextArraySize);
+                                             blockIndex, singleEntryForTopLevelArray, nextArraySize,
+                                             shaderType);
         }
         else
         {
             ASSERT(nextArraySize == topLevelArraySize);
             defineBlockMembers(getMemberInfo, field.fields, fullName, fullMappedName, blockIndex,
-                               false, nextArraySize);
+                               false, nextArraySize, shaderType);
         }
         return;
     }
@@ -886,15 +909,8 @@ void InterfaceBlockLinker::defineBlockMember(const GetBlockMemberInfo &getMember
             const std::string elementMappedName = fullMappedName + ArrayString(arrayElement);
 
             defineBlockMember(getMemberInfo, fieldElement, elementName, elementMappedName,
-                              blockIndex, false, nextArraySize);
+                              blockIndex, false, nextArraySize, shaderType);
         }
-        return;
-    }
-
-    // If getBlockMemberInfo returns false, the variable is optimized out.
-    sh::BlockMemberInfo memberInfo;
-    if (!getMemberInfo(fullName, fullMappedName, &memberInfo))
-    {
         return;
     }
 
@@ -907,9 +923,23 @@ void InterfaceBlockLinker::defineBlockMember(const GetBlockMemberInfo &getMember
         fullMappedNameWithArrayIndex += "[0]";
     }
 
-    ASSERT(nextArraySize == topLevelArraySize);
-    defineBlockMemberImpl(field, fullNameWithArrayIndex, fullMappedNameWithArrayIndex, blockIndex,
-                          memberInfo, nextArraySize);
+    if (blockIndex == -1)
+    {
+        updateBlockMemberStaticUsedImpl(fullNameWithArrayIndex, shaderType, field.staticUse);
+    }
+    else
+    {
+        // If getBlockMemberInfo returns false, the variable is optimized out.
+        sh::BlockMemberInfo memberInfo;
+        if (!getMemberInfo(fullName, fullMappedName, &memberInfo))
+        {
+            return;
+        }
+
+        ASSERT(nextArraySize == topLevelArraySize);
+        defineBlockMemberImpl(field, fullNameWithArrayIndex, fullMappedNameWithArrayIndex,
+                              blockIndex, memberInfo, nextArraySize, shaderType);
+    }
 }
 
 void InterfaceBlockLinker::defineInterfaceBlock(const GetBlockSize &getBlockSize,
@@ -926,7 +956,7 @@ void InterfaceBlockLinker::defineInterfaceBlock(const GetBlockSize &getBlockSize
     size_t firstBlockMemberIndex = getCurrentBlockMemberIndex();
     defineBlockMembers(getMemberInfo, interfaceBlock.fields, interfaceBlock.fieldPrefix(),
                        interfaceBlock.fieldMappedPrefix(), blockIndex,
-                       interfaceBlock.blockType == sh::BlockType::BLOCK_BUFFER, 1);
+                       interfaceBlock.blockType == sh::BlockType::BLOCK_BUFFER, 1, shaderType);
     size_t lastBlockMemberIndex = getCurrentBlockMemberIndex();
 
     for (size_t blockMemberIndex = firstBlockMemberIndex; blockMemberIndex < lastBlockMemberIndex;
@@ -986,12 +1016,13 @@ void UniformBlockLinker::defineBlockMemberImpl(const sh::ShaderVariable &field,
                                                const std::string &fullMappedName,
                                                int blockIndex,
                                                const sh::BlockMemberInfo &memberInfo,
-                                               int /*topLevelArraySize*/) const
+                                               int /*topLevelArraySize*/,
+                                               GLenum shaderType) const
 {
     LinkedUniform newUniform(field.type, field.precision, fullName, field.arraySizes, -1, -1, -1,
                              blockIndex, memberInfo);
     newUniform.mappedName = fullMappedName;
-    // TODO(jiajia.qin@intel.com): update the block memeber static use.
+    newUniform.setStaticUse(shaderType, field.staticUse);
 
     // Since block uniforms have no location, we don't need to store them in the uniform locations
     // list.
@@ -1001,6 +1032,13 @@ void UniformBlockLinker::defineBlockMemberImpl(const sh::ShaderVariable &field,
 size_t UniformBlockLinker::getCurrentBlockMemberIndex() const
 {
     return mUniformsOut->size();
+}
+
+void UniformBlockLinker::updateBlockMemberStaticUsedImpl(const std::string &fullName,
+                                                         GLenum shaderType,
+                                                         bool staticUse) const
+{
+    SetStaticUse(mUniformsOut, fullName, shaderType, staticUse);
 }
 
 // ShaderStorageBlockLinker implementation.
@@ -1019,12 +1057,13 @@ void ShaderStorageBlockLinker::defineBlockMemberImpl(const sh::ShaderVariable &f
                                                      const std::string &fullMappedName,
                                                      int blockIndex,
                                                      const sh::BlockMemberInfo &memberInfo,
-                                                     int topLevelArraySize) const
+                                                     int topLevelArraySize,
+                                                     GLenum shaderType) const
 {
     BufferVariable newBufferVariable(field.type, field.precision, fullName, field.arraySizes,
                                      blockIndex, memberInfo);
     newBufferVariable.mappedName = fullMappedName;
-    // TODO(jiajia.qin@intel.com): update the block memeber static use.
+    newBufferVariable.setStaticUse(shaderType, field.staticUse);
 
     newBufferVariable.topLevelArraySize = topLevelArraySize;
 
@@ -1034,6 +1073,13 @@ void ShaderStorageBlockLinker::defineBlockMemberImpl(const sh::ShaderVariable &f
 size_t ShaderStorageBlockLinker::getCurrentBlockMemberIndex() const
 {
     return mBufferVariablesOut->size();
+}
+
+void ShaderStorageBlockLinker::updateBlockMemberStaticUsedImpl(const std::string &fullName,
+                                                               GLenum shaderType,
+                                                               bool staticUse) const
+{
+    SetStaticUse(mBufferVariablesOut, fullName, shaderType, staticUse);
 }
 
 // AtomicCounterBufferLinker implementation.

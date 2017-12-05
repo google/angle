@@ -660,10 +660,9 @@ TEST_P(ProgramInterfaceTestES31, GetBufferVariableProperties)
     EXPECT_EQ(14, params[5]);  // name_length
     EXPECT_LE(0, params[6]);   // offset
 
-    // TODO(jiajia.qin@intel.com): Enable them once the block member staticUse are implemented.
-    // EXPECT_EQ(1, params[7]);  // referenced_by_vertex_shader
-    // EXPECT_EQ(1, params[8]);  // referenced_by_fragment_shader
-    // EXPECT_EQ(0, params[9]);  // referenced_by_compute_shader
+    EXPECT_EQ(1, params[7]);  // referenced_by_vertex_shader
+    EXPECT_EQ(1, params[8]);  // referenced_by_fragment_shader
+    EXPECT_EQ(0, params[9]);  // referenced_by_compute_shader
 
     EXPECT_EQ(1, params[10]);  // top_level_array_size
     EXPECT_LE(0, params[11]);  // top_level_array_stride
@@ -691,10 +690,9 @@ TEST_P(ProgramInterfaceTestES31, GetBufferVariableProperties)
     EXPECT_EQ(8, params[5]);  // name_length
     EXPECT_LE(0, params[6]);  // offset
 
-    // TODO(jiajia.qin@intel.com): Enable them once the block member staticUse are implemented.
-    // EXPECT_EQ(1, params[7]);  // referenced_by_vertex_shader
-    // EXPECT_EQ(0, params[8]);  // referenced_by_fragment_shader
-    // EXPECT_EQ(0, params[9]);  // referenced_by_compute_shader
+    EXPECT_EQ(1, params[7]);  // referenced_by_vertex_shader
+    EXPECT_EQ(0, params[8]);  // referenced_by_fragment_shader
+    EXPECT_EQ(0, params[9]);  // referenced_by_compute_shader
 
     EXPECT_EQ(2, params[10]);   // top_level_array_size
     EXPECT_EQ(80, params[11]);  // top_level_array_stride
