@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "2f79db03_f7f45ec2",
+        "filename": "src/compiler/translator/ShaderVars.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 280,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-12-05T12:50:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a79df9ca_ce0a6515",
+      "range": {
+        "startLine": 280,
+        "startChar": 14,
+        "endLine": 280,
+        "endChar": 37
+      },
+      "revId": "4faa419bd28bffef51718851a177dfe3691c4f52",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "29823c5a_ff67ba7b",
         "filename": "src/libANGLE/renderer/d3d/d3d11/PixelTransfer11.cpp",
         "patchSetId": 15
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "ddecacd0_7d978fb0",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/PixelTransfer11.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 194,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-12-05T12:50:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "29823c5a_ff67ba7b",
+      "range": {
+        "startLine": 194,
+        "startChar": 36,
+        "endLine": 194,
+        "endChar": 56
+      },
+      "revId": "4faa419bd28bffef51718851a177dfe3691c4f52",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "88b3ed4d_a3cbfe9f",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
         "patchSetId": 15
@@ -68,6 +116,30 @@
       "revId": "4faa419bd28bffef51718851a177dfe3691c4f52",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "48121684_e6e6e307",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 484,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-12-05T12:50:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "88b3ed4d_a3cbfe9f",
+      "range": {
+        "startLine": 484,
+        "startChar": 5,
+        "endLine": 484,
+        "endChar": 14
+      },
+      "revId": "4faa419bd28bffef51718851a177dfe3691c4f52",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }

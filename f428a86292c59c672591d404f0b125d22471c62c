@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "4cc5b5dc_ea2b274c",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-12-05T12:50:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "203ef42f_90134a7e",
+      "range": {
+        "startLine": 173,
+        "startChar": 9,
+        "endLine": 173,
+        "endChar": 17
+      },
+      "revId": "f428a86292c59c672591d404f0b125d22471c62c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1575ca91_c595c688",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
         "patchSetId": 17
@@ -36,6 +60,30 @@
       "writtenOn": "2017-12-04T19:34:16Z",
       "side": 1,
       "message": "clearUAVs?",
+      "range": {
+        "startLine": 1611,
+        "startChar": 26,
+        "endLine": 1611,
+        "endChar": 41
+      },
+      "revId": "f428a86292c59c672591d404f0b125d22471c62c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c9282d6c_550bbd06",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 1611,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-12-05T12:50:12Z",
+      "side": 1,
+      "message": "It seems that \"clearUAVs\" is better.",
+      "parentUuid": "1575ca91_c595c688",
       "range": {
         "startLine": 1611,
         "startChar": 26,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "fc2ec6d7_434e4b93",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 2516,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-12-05T12:50:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "12abed18_95f2f644",
+      "range": {
+        "startLine": 2509,
+        "startChar": 0,
+        "endLine": 2516,
+        "endChar": 1
+      },
+      "revId": "f428a86292c59c672591d404f0b125d22471c62c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4d1bc7ca_3d18d9d5",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
         "patchSetId": 17
@@ -91,6 +163,30 @@
       "revId": "f428a86292c59c672591d404f0b125d22471c62c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ee975cde_96303860",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 484,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-12-05T12:50:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4d1bc7ca_3d18d9d5",
+      "range": {
+        "startLine": 484,
+        "startChar": 14,
+        "endLine": 484,
+        "endChar": 32
+      },
+      "revId": "f428a86292c59c672591d404f0b125d22471c62c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }

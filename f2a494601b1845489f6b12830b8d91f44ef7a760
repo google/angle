@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "7ca4f2b2_367ec1a8",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 958,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-12-05T12:50:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c9890749_5428a6a2",
+      "range": {
+        "startLine": 958,
+        "startChar": 23,
+        "endLine": 958,
+        "endChar": 37
+      },
+      "revId": "f2a494601b1845489f6b12830b8d91f44ef7a760",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d8576d3c_acd86940",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 14
@@ -48,6 +72,54 @@
     },
     {
       "key": {
+        "uuid": "07ebf9ff_9911f544",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 1210,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-12-05T12:50:12Z",
+      "side": 1,
+      "message": "If I remove \"static_cast\u003cunsigned int\u003e\", report compile error. Geoff, how to be updated to the new size here?",
+      "parentUuid": "d8576d3c_acd86940",
+      "range": {
+        "startLine": 1210,
+        "startChar": 25,
+        "endLine": 1210,
+        "endChar": 50
+      },
+      "revId": "f2a494601b1845489f6b12830b8d91f44ef7a760",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5e7b50ba_5fa0f554",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 1210,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-12-05T12:50:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d8576d3c_acd86940",
+      "range": {
+        "startLine": 1210,
+        "startChar": 25,
+        "endLine": 1210,
+        "endChar": 50
+      },
+      "revId": "f2a494601b1845489f6b12830b8d91f44ef7a760",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a15b83c7_7f23d64f",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 14
@@ -68,6 +140,30 @@
       "revId": "f2a494601b1845489f6b12830b8d91f44ef7a760",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d8db199a_3a86aa83",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 2174,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-12-05T12:50:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a15b83c7_7f23d64f",
+      "range": {
+        "startLine": 2174,
+        "startChar": 4,
+        "endLine": 2174,
+        "endChar": 96
+      },
+      "revId": "f2a494601b1845489f6b12830b8d91f44ef7a760",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -118,6 +214,30 @@
     },
     {
       "key": {
+        "uuid": "3bfdbdc5_712633c9",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-12-05T12:50:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d8d11cb4_e294a2d6",
+      "range": {
+        "startLine": 35,
+        "startChar": 0,
+        "endLine": 35,
+        "endChar": 17
+      },
+      "revId": "f2a494601b1845489f6b12830b8d91f44ef7a760",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a6fd05ec_2c8591bf",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.h",
         "patchSetId": 14
@@ -153,6 +273,30 @@
       "side": 1,
       "message": "These comments were not resolved.",
       "parentUuid": "a6fd05ec_2c8591bf",
+      "range": {
+        "startLine": 38,
+        "startChar": 12,
+        "endLine": 38,
+        "endChar": 13
+      },
+      "revId": "f2a494601b1845489f6b12830b8d91f44ef7a760",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ad9c2953_96cdf6a7",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-12-05T12:50:12Z",
+      "side": 1,
+      "message": "According to https://msdn.microsoft.com/en-us/library/windows/desktop/dd607359(v\u003dvs.85).aspx, D3D register type includes \"b\", \"t\", \"c\", \"s\" and \"u\". And \"Texture\" and \"Uniform\" are not register type. \nI changed the values to \"none\", \"t\" and \"u\". Is it OK? If not, we may need to rename the enum class name?",
+      "parentUuid": "67f3c53a_8bf1db1e",
       "range": {
         "startLine": 38,
         "startChar": 12,
@@ -397,6 +541,30 @@
       "revId": "f2a494601b1845489f6b12830b8d91f44ef7a760",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "55c14163_20efda01",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-12-05T12:50:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5e5fa88a_da50f8d5",
+      "range": {
+        "startLine": 127,
+        "startChar": 45,
+        "endLine": 127,
+        "endChar": 67
+      },
+      "revId": "f2a494601b1845489f6b12830b8d91f44ef7a760",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
