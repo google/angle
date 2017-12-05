@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "be2094d3_58bb5dbf",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 4199,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-12-05T01:58:33Z",
+      "side": 1,
+      "message": "Maybe we should keep it since dispatchComputeIndirect also need it. I am implementing the entry point of dispatchComputeIndirect.",
+      "parentUuid": "31773f3e_1522f5bc",
+      "range": {
+        "startLine": 4199,
+        "startChar": 15,
+        "endLine": 4199,
+        "endChar": 32
+      },
+      "revId": "45466d2cfeaff538407a7fe280baf9cbcc90fe1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "9d70811a_39977b09",
         "filename": "src/libANGLE/Context.cpp",
         "patchSetId": 8
