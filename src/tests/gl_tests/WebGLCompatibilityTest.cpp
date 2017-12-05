@@ -1085,6 +1085,41 @@ TEST_P(WebGLCompatibilityTest, EnableProgramBinaryExtension)
     }
 }
 
+// Test enabling the GL_OES_vertex_array_object extension
+TEST_P(WebGLCompatibilityTest, EnableVertexArrayExtension)
+{
+    EXPECT_FALSE(extensionEnabled("GL_OES_vertex_array_object"));
+
+    // This extensions become core in in ES3/WebGL2.
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() >= 3);
+
+    GLint result = 0;
+    glGetIntegerv(GL_VERTEX_ARRAY_BINDING, &result);
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+    // Expect that GL_OES_vertex_array_object is always available.  It is implemented in the GL
+    // frontend.
+    EXPECT_TRUE(extensionRequestable("GL_OES_vertex_array_object"));
+
+    glRequestExtensionANGLE("GL_OES_vertex_array_object");
+    EXPECT_GL_NO_ERROR();
+
+    EXPECT_TRUE(extensionEnabled("GL_OES_vertex_array_object"));
+
+    glGetIntegerv(GL_VERTEX_ARRAY_BINDING, &result);
+    EXPECT_GL_NO_ERROR();
+
+    GLuint vao = 0;
+    glGenVertexArraysOES(0, &vao);
+    EXPECT_GL_NO_ERROR();
+
+    glBindVertexArrayOES(vao);
+    EXPECT_GL_NO_ERROR();
+
+    glDeleteVertexArraysOES(1, &vao);
+    EXPECT_GL_NO_ERROR();
+}
+
 // Verify that the context generates the correct error when the framebuffer attachments are
 // different sizes
 TEST_P(WebGLCompatibilityTest, FramebufferAttachmentSizeMismatch)
