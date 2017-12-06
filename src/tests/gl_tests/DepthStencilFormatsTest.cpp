@@ -183,6 +183,77 @@ TEST_P(DepthStencilFormatsTestES3, DrawWithDepthStencil)
     ASSERT_EQ(255, pixel[3]);
 }
 
+// This test reproduces a driver bug on Intel windows platforms on driver version
+// from 4815 to 4901.
+// When rendering with Stencil buffer enabled and depth buffer disabled, large
+// viewport will lead to memory leak and driver crash. And the pixel result
+// is a random value.
+TEST_P(DepthStencilFormatsTestES3, DrawWithLargeViewport)
+{
+    ANGLE_SKIP_TEST_IF(IsIntel() && (IsOSX() || IsWindows()));
+
+    constexpr char vertexShaderSource[] =
+        R"(attribute vec4 position;
+        void main()
+        {
+          gl_Position = position;
+        })";
+
+    constexpr char fragmentShaderSource[] =
+        R"(precision mediump float;
+        void main()
+        {
+          gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+        })";
+
+    ANGLE_GL_PROGRAM(program, vertexShaderSource, fragmentShaderSource);
+
+    glEnable(GL_STENCIL_TEST);
+    glDisable(GL_DEPTH_TEST);
+
+    // The iteration is to reproduce memory leak when rendering several times.
+    for (int i = 0; i < 10; ++i)
+    {
+        // Create offscreen fbo and its color attachment and depth stencil attachment.
+        GLTexture framebufferColorTexture;
+        glBindTexture(GL_TEXTURE_2D, framebufferColorTexture);
+        glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, getWindowWidth(), getWindowHeight());
+        ASSERT_GL_NO_ERROR();
+
+        GLTexture framebufferStencilTexture;
+        glBindTexture(GL_TEXTURE_2D, framebufferStencilTexture);
+        glTexStorage2D(GL_TEXTURE_2D, 1, GL_DEPTH24_STENCIL8, getWindowWidth(), getWindowHeight());
+        ASSERT_GL_NO_ERROR();
+
+        GLFramebuffer fb;
+        glBindFramebuffer(GL_FRAMEBUFFER, fb);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+                               framebufferColorTexture, 0);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D,
+                               framebufferStencilTexture, 0);
+
+        EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+        ASSERT_GL_NO_ERROR();
+
+        GLint kStencilRef = 4;
+        glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
+        glStencilFunc(GL_ALWAYS, kStencilRef, 0xFF);
+
+        float viewport[2];
+        glGetFloatv(GL_MAX_VIEWPORT_DIMS, viewport);
+
+        glViewport(0, 0, viewport[0], viewport[1]);
+        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fb);
+
+        drawQuad(program.get(), "position", 0.0f);
+        ASSERT_GL_NO_ERROR();
+
+        glBindFramebuffer(GL_READ_FRAMEBUFFER, fb);
+        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+        ASSERT_GL_NO_ERROR();
+    }
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
 ANGLE_INSTANTIATE_TEST(DepthStencilFormatsTest,
                        ES2_D3D9(),
