@@ -142,13 +142,13 @@ class TType
     {
     }
 
-    TBasicType getBasicType() const { return type; }
+    constexpr TBasicType getBasicType() const { return type; }
     void setBasicType(TBasicType t);
 
     TPrecision getPrecision() const { return precision; }
     void setPrecision(TPrecision p) { precision = p; }
 
-    TQualifier getQualifier() const { return qualifier; }
+    constexpr TQualifier getQualifier() const { return qualifier; }
     void setQualifier(TQualifier q) { qualifier = q; }
 
     bool isInvariant() const { return invariant; }

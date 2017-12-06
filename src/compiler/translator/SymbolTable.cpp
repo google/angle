@@ -236,7 +236,7 @@ TSymbolTable::~TSymbolTable()
         pop();
 }
 
-bool IsGenType(const TType *type)
+constexpr bool IsGenType(const TType *type)
 {
     if (type)
     {
@@ -248,7 +248,7 @@ bool IsGenType(const TType *type)
     return false;
 }
 
-bool IsVecType(const TType *type)
+constexpr bool IsVecType(const TType *type)
 {
     if (type)
     {

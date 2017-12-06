@@ -160,7 +160,7 @@ template <TBasicType basicType,
           TPrecision precision,
           TQualifier qualifier,
           unsigned char secondarySize>
-const TType *GetForVecMatHelper(unsigned char primarySize)
+constexpr const TType *GetForVecMatHelper(unsigned char primarySize)
 {
     static_assert(basicType == EbtFloat || basicType == EbtInt || basicType == EbtUInt ||
                       basicType == EbtBool,
@@ -186,7 +186,7 @@ const TType *GetForVecMatHelper(unsigned char primarySize)
 template <TBasicType basicType,
           TPrecision precision = EbpUndefined,
           TQualifier qualifier = EvqGlobal>
-const TType *GetForVecMat(unsigned char primarySize, unsigned char secondarySize = 1)
+constexpr const TType *GetForVecMat(unsigned char primarySize, unsigned char secondarySize = 1)
 {
     static_assert(basicType == EbtFloat || basicType == EbtInt || basicType == EbtUInt ||
                       basicType == EbtBool,
@@ -208,7 +208,7 @@ const TType *GetForVecMat(unsigned char primarySize, unsigned char secondarySize
 }
 
 template <TBasicType basicType, TPrecision precision = EbpUndefined>
-const TType *GetForVec(TQualifier qualifier, unsigned char size)
+constexpr const TType *GetForVec(TQualifier qualifier, unsigned char size)
 {
     switch (qualifier)
     {
