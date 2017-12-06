@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "d94efeb0_0aa6c1c7",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-12-06T10:38:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0b4768f2_007f52b2",
+      "range": {
+        "startLine": 11,
+        "startChar": 44,
+        "endLine": 11,
+        "endChar": 54
+      },
+      "revId": "dcee4120a9124e48c3cc1c84045c672c456d6856",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d931c601_335d1068",
         "filename": "include/platform/WorkaroundsD3D.h",
         "patchSetId": 1
@@ -45,6 +69,30 @@
       "revId": "dcee4120a9124e48c3cc1c84045c672c456d6856",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "99941c44_91a45b2e",
+        "filename": "include/platform/WorkaroundsD3D.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-12-06T10:38:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d931c601_335d1068",
+      "range": {
+        "startLine": 130,
+        "startChar": 9,
+        "endLine": 130,
+        "endChar": 26
+      },
+      "revId": "dcee4120a9124e48c3cc1c84045c672c456d6856",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "1d42233e_25b04270",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/RenderStateCache.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-12-06T10:38:05Z",
+      "side": 1,
+      "message": "The bug happens when stencil buffers are enabled and depth buffers are not enabled, then the memory access out of bounds in d3d driver. If we enable depth buffer here when stencil buffer enabled, it could workaround this bug no matter how large the view port is.",
+      "parentUuid": "6f7ab055_1b61acf4",
+      "range": {
+        "startLine": 211,
+        "startChar": 8,
+        "endLine": 211,
+        "endChar": 99
+      },
+      "revId": "dcee4120a9124e48c3cc1c84045c672c456d6856",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3399888b_b867b89a",
         "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
         "patchSetId": 1
@@ -82,6 +154,24 @@
       "writtenOn": "2017-12-06T05:28:33Z",
       "side": 1,
       "message": "I remember that not all Intel platforms on D3D11 have this issue. If that is true, can we narrow down this as possible as we can. For example, we can add a new workaround in the json file for some specific Intel platforms. Then the impact can be small enough. Then we will not impact the Intel platforms which are OK.",
+      "revId": "dcee4120a9124e48c3cc1c84045c672c456d6856",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8ba156ff_8e5e370c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2202,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-12-06T10:38:05Z",
+      "side": 1,
+      "message": "The test case crashed on both skylake and kabylake on d3d11. On broadwell, the test case result is incorrect though not crashed. However, the test case also failed on mac, I haven\u0027t investaged on mac, so the workaround only covers Intel windows platforms.",
+      "parentUuid": "3399888b_b867b89a",
       "revId": "dcee4120a9124e48c3cc1c84045c672c456d6856",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
