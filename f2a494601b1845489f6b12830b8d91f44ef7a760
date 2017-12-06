@@ -309,6 +309,30 @@
     },
     {
       "key": {
+        "uuid": "6c617857_2dc22f11",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-06T18:49:03Z",
+      "side": 1,
+      "message": "I understand the docs say the register names are T and U. The docs also have a register description:\n\nType\tRegister Description\nb\tConstant buffer\nt\tTexture and texture buffer\nc\tBuffer offset\ns\tSampler\nu\tUnordered Access View\n\nPlease use a more descriptive name, as the docs specify.",
+      "parentUuid": "ad9c2953_96cdf6a7",
+      "range": {
+        "startLine": 38,
+        "startChar": 12,
+        "endLine": 38,
+        "endChar": 13
+      },
+      "revId": "f2a494601b1845489f6b12830b8d91f44ef7a760",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "c374607e_604aa6fd",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
         "patchSetId": 14
