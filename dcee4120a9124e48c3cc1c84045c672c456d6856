@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3399888b_b867b89a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2202,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-12-06T05:28:33Z",
+      "side": 1,
+      "message": "I remember that not all Intel platforms on D3D11 have this issue. If that is true, can we narrow down this as possible as we can. For example, we can add a new workaround in the json file for some specific Intel platforms. Then the impact can be small enough. Then we will not impact the Intel platforms which are OK.",
+      "revId": "dcee4120a9124e48c3cc1c84045c672c456d6856",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
