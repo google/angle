@@ -232,6 +232,11 @@ LinkResult MemoryProgramCache::Deserialize(const Context *context,
 
     state->mNumViews = stream.readInt<int>();
 
+    static_assert(MAX_VERTEX_ATTRIBS * 2 <= sizeof(uint32_t) * 8,
+                  "All bits of mAttributesTypeMask types and mask fit into 32 bits each");
+    state->mAttributesTypeMask.from_ulong(stream.readInt<uint32_t>());
+    state->mAttributesMask = stream.readInt<uint32_t>();
+
     static_assert(MAX_VERTEX_ATTRIBS <= sizeof(unsigned long) * 8,
                   "Too many vertex attribs for mask");
     state->mActiveAttribLocationsMask = stream.readInt<unsigned long>();
@@ -372,12 +377,10 @@ LinkResult MemoryProgramCache::Deserialize(const Context *context,
         state->mOutputVariableTypes.push_back(stream.readInt<GLenum>());
     }
 
-    static_assert(IMPLEMENTATION_MAX_DRAW_BUFFER_TYPE_MASK == 8 * sizeof(uint16_t),
-                  "All bits of DrawBufferTypeMask can be contained in an uint16_t");
-    state->mDrawBufferTypeMask.from_ulong(stream.readInt<uint16_t>());
-
-    static_assert(IMPLEMENTATION_MAX_DRAW_BUFFERS < 8 * sizeof(uint32_t),
-                  "All bits of DrawBufferMask can be contained in an uint32_t");
+    static_assert(IMPLEMENTATION_MAX_DRAW_BUFFERS * 2 <= 8 * sizeof(uint32_t),
+                  "All bits of mDrawBufferTypeMask and mActiveOutputVariables types and mask fit "
+                  "into 32 bits each");
+    state->mDrawBufferTypeMask.from_ulong(stream.readInt<uint32_t>());
     state->mActiveOutputVariables = stream.readInt<uint32_t>();
 
     unsigned int samplerRangeLow  = stream.readInt<unsigned int>();
@@ -449,6 +452,11 @@ void MemoryProgramCache::Serialize(const Context *context,
     stream.writeInt(computeLocalSize[2]);
 
     stream.writeInt(state.mNumViews);
+
+    static_assert(MAX_VERTEX_ATTRIBS * 2 <= sizeof(uint32_t) * 8,
+                  "All bits of mAttributesTypeMask types and mask fit into 32 bits each");
+    stream.writeInt(static_cast<int>(state.mAttributesTypeMask.to_ulong()));
+    stream.writeInt(static_cast<int>(state.mAttributesMask.to_ulong()));
 
     stream.writeInt(state.getActiveAttribLocationsMask().to_ulong());
 
@@ -546,13 +554,11 @@ void MemoryProgramCache::Serialize(const Context *context,
         stream.writeInt(outputVariableType);
     }
 
-    static_assert(IMPLEMENTATION_MAX_DRAW_BUFFER_TYPE_MASK == 8 * sizeof(uint16_t),
-                  "All bits of DrawBufferTypeMask can be contained in an uint16_t");
-    stream.writeInt(static_cast<uint32_t>(state.mDrawBufferTypeMask.to_ulong()));
-
-    static_assert(IMPLEMENTATION_MAX_DRAW_BUFFERS < 8 * sizeof(uint32_t),
-                  "All bits of DrawBufferMask can be contained in an uint32_t");
-    stream.writeInt(static_cast<uint32_t>(state.mActiveOutputVariables.to_ulong()));
+    static_assert(
+        IMPLEMENTATION_MAX_DRAW_BUFFERS * 2 <= 8 * sizeof(uint32_t),
+        "All bits of mDrawBufferTypeMask and mActiveOutputVariables can be contained in 32 bits");
+    stream.writeInt(static_cast<int>(state.mDrawBufferTypeMask.to_ulong()));
+    stream.writeInt(static_cast<int>(state.mActiveOutputVariables.to_ulong()));
 
     stream.writeInt(state.getSamplerUniformRange().low());
     stream.writeInt(state.getSamplerUniformRange().high());

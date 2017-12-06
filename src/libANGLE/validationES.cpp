@@ -396,9 +396,10 @@ bool ValidateFragmentShaderColorBufferTypeMatch(ValidationContext *context)
     const Program *program         = context->getGLState().getProgram();
     const Framebuffer *framebuffer = context->getGLState().getDrawFramebuffer();
 
-    if (!DrawBufferTypeMask::ProgramOutputsMatchFramebuffer(
-            program->getDrawBufferTypeMask(), framebuffer->getDrawBufferTypeMask(),
-            program->getActiveOutputVariables(), framebuffer->getDrawBufferMask()))
+    if (!ComponentTypeMask::Validate(program->getDrawBufferTypeMask().to_ulong(),
+                                     framebuffer->getDrawBufferTypeMask().to_ulong(),
+                                     program->getActiveOutputVariables().to_ulong(),
+                                     framebuffer->getDrawBufferMask().to_ulong()))
     {
         ANGLE_VALIDATION_ERR(context, InvalidOperation(), DrawBufferTypeMismatch);
         return false;
@@ -412,32 +413,21 @@ bool ValidateVertexShaderAttributeTypeMatch(ValidationContext *context)
     const auto &glState       = context->getGLState();
     const Program *program = context->getGLState().getProgram();
     const VertexArray *vao = context->getGLState().getVertexArray();
-    const auto &vertexAttribs = vao->getVertexAttributes();
-    const auto &currentValues = glState.getVertexAttribCurrentValues();
 
-    for (const sh::Attribute &shaderAttribute : program->getAttributes())
+    unsigned long stateCurrentValuesTypeBits = glState.getCurrentValuesTypeMask().to_ulong();
+    unsigned long vaoAttribTypeBits          = vao->getAttributesTypeMask().to_ulong();
+    unsigned long vaoAttribEnabledMask       = vao->getAttributesMask().to_ulong();
+
+    vaoAttribEnabledMask |= vaoAttribEnabledMask << MAX_COMPONENT_TYPE_MASK_INDEX;
+    vaoAttribTypeBits = (vaoAttribEnabledMask & vaoAttribTypeBits);
+    vaoAttribTypeBits |= (~vaoAttribEnabledMask & stateCurrentValuesTypeBits);
+
+    if (!ComponentTypeMask::Validate(program->getAttributesTypeMask().to_ulong(), vaoAttribTypeBits,
+                                     program->getAttributesMask().to_ulong(), 0xFFFF))
     {
-        // gl_VertexID and gl_InstanceID are active attributes but don't have a bound attribute.
-        if (shaderAttribute.isBuiltIn())
-        {
-            continue;
-        }
-
-        GLenum shaderInputType = VariableComponentType(shaderAttribute.type);
-
-        const auto &attrib = vertexAttribs[shaderAttribute.location];
-        GLenum vertexType  = attrib.enabled ? GetVertexAttributeBaseType(attrib)
-                                           : currentValues[shaderAttribute.location].Type;
-
-        if (shaderInputType != GL_NONE && vertexType != GL_NONE && shaderInputType != vertexType)
-        {
-            context->handleError(InvalidOperation() << "Vertex shader input type does not "
-                                                       "match the type of the bound vertex "
-                                                       "attribute.");
-            return false;
-        }
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), VertexShaderTypeMismatch);
+        return false;
     }
-
     return true;
 }
 

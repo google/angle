@@ -175,6 +175,8 @@ void VertexArray::setVertexAttribFormatImpl(size_t attribIndex,
     attrib->normalized     = normalized;
     attrib->pureInteger    = pureInteger;
     attrib->relativeOffset = relativeOffset;
+    mState.mVertexAttributesTypeMask.setIndex(GetVertexAttributeBaseType(*attrib), attribIndex);
+    mState.mEnabledAttributesMask.set(attribIndex);
 }
 
 void VertexArray::setVertexAttribFormat(size_t attribIndex,
@@ -202,6 +204,8 @@ void VertexArray::enableAttribute(size_t attribIndex, bool enabledState)
     ASSERT(attribIndex < getMaxAttribs());
 
     mState.mVertexAttributes[attribIndex].enabled = enabledState;
+    mState.mVertexAttributesTypeMask.setIndex(
+        GetVertexAttributeBaseType(mState.mVertexAttributes[attribIndex]), attribIndex);
 
     mDirtyBits.set(DIRTY_BIT_ATTRIB_0_ENABLED + attribIndex);
 

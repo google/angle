@@ -915,7 +915,7 @@ GLenum Framebuffer::getDrawbufferWriteType(size_t drawBuffer) const
     }
 }
 
-DrawBufferTypeMask Framebuffer::getDrawBufferTypeMask() const
+ComponentTypeMask Framebuffer::getDrawBufferTypeMask() const
 {
     return mState.mDrawBufferTypeMask;
 }

@@ -257,50 +257,45 @@ bool operator!=(const Extents &lhs, const Extents &rhs)
     return !(lhs == rhs);
 }
 
-DrawBufferTypeMask::DrawBufferTypeMask()
+ComponentTypeMask::ComponentTypeMask()
 {
     mTypeMask.reset();
 }
 
-DrawBufferTypeMask::DrawBufferTypeMask(const DrawBufferTypeMask &other) = default;
+ComponentTypeMask::ComponentTypeMask(const ComponentTypeMask &other) = default;
 
-DrawBufferTypeMask::~DrawBufferTypeMask() = default;
+ComponentTypeMask::~ComponentTypeMask() = default;
 
-void DrawBufferTypeMask::reset()
+void ComponentTypeMask::reset()
 {
     mTypeMask.reset();
 }
 
-bool DrawBufferTypeMask::none()
+bool ComponentTypeMask::none()
 {
-    if (mTypeMask.none())
-    {
-        return true;
-    }
-
-    return false;
+    return mTypeMask.none();
 }
 
-void DrawBufferTypeMask::setIndex(GLenum type, size_t index)
+void ComponentTypeMask::setIndex(GLenum type, size_t index)
 {
-    ASSERT(index <= IMPLEMENTATION_MAX_DRAW_BUFFERS);
+    ASSERT(index <= MAX_COMPONENT_TYPE_MASK_INDEX);
 
-    mTypeMask &= ~(0x101 << index);
+    mTypeMask &= ~(0x10001 << index);
 
-    uint16_t m = 0;
+    uint32_t m = 0;
     switch (type)
     {
         case GL_INT:
-            m = 0x001;
+            m = 0x00001;
             break;
         case GL_UNSIGNED_INT:
-            m = 0x100;
+            m = 0x10000;
             break;
         case GL_FLOAT:
-            m = 0x101;
+            m = 0x10001;
             break;
         case GL_NONE:
-            m = 0x000;
+            m = 0x00000;
             break;
         default:
             UNREACHABLE();
@@ -309,45 +304,42 @@ void DrawBufferTypeMask::setIndex(GLenum type, size_t index)
     mTypeMask |= m << index;
 }
 
-unsigned long DrawBufferTypeMask::to_ulong() const
+unsigned long ComponentTypeMask::to_ulong() const
 {
     return mTypeMask.to_ulong();
 }
 
-void DrawBufferTypeMask::from_ulong(unsigned long mask)
+void ComponentTypeMask::from_ulong(unsigned long mask)
 {
     mTypeMask = mask;
 }
 
-bool DrawBufferTypeMask::ProgramOutputsMatchFramebuffer(DrawBufferTypeMask outputTypes,
-                                                        DrawBufferTypeMask inputTypes,
-                                                        DrawBufferMask outputMask,
-                                                        DrawBufferMask inputMask)
+bool ComponentTypeMask::Validate(unsigned long outputTypes,
+                                 unsigned long inputTypes,
+                                 unsigned long outputMask,
+                                 unsigned long inputMask)
 {
-    static_assert(IMPLEMENTATION_MAX_DRAW_BUFFER_TYPE_MASK == 16,
-                  "Draw buffer type masks should fit into 16 bits. 2 bits per draw buffer.");
-    static_assert(IMPLEMENTATION_MAX_DRAW_BUFFERS == 8,
-                  "Output/Input masks should fit into 8 bits. 1 bit per draw buffer");
+    static_assert(IMPLEMENTATION_MAX_DRAW_BUFFERS <= MAX_COMPONENT_TYPE_MASK_INDEX,
+                  "Output/input masks should fit into 16 bits - 1 bit per draw buffer. The "
+                  "corresponding type masks should fit into 32 bits - 2 bits per draw buffer.");
+    static_assert(MAX_VERTEX_ATTRIBS <= MAX_COMPONENT_TYPE_MASK_INDEX,
+                  "Output/input masks should fit into 16 bits - 1 bit per attrib. The "
+                  "corresponding type masks should fit into 32 bits - 2 bits per attrib.");
 
-    // For performance reasons, draw buffer type validation is done using bit masks. We store two
-    // bits representing the type split, with the low bit in the lower 8 bits of the variable,
-    // and the high bit in the upper 8 bits of the variable. This is done so we can AND with the
-    // elswewhere used DrawBufferMask.
-    const unsigned long outputTypeBits = outputTypes.to_ulong();
-    const unsigned long inputTypeBits  = inputTypes.to_ulong();
+    // For performance reasons, draw buffer and attribute type validation is done using bit masks.
+    // We store two bits representing the type split, with the low bit in the lower 16 bits of the
+    // variable, and the high bit in the upper 16 bits of the variable. This is done so we can AND
+    // with the elswewhere used DrawBufferMask or AttributeMask.
 
-    unsigned long outputMaskBits = outputMask.to_ulong();
-    unsigned long inputMaskBits  = inputMask.to_ulong();
-
-    // OR the masks with themselves, shifted 8 bits. This is to match our split type bits.
-    outputMaskBits |= (outputMaskBits << 8);
-    inputMaskBits |= (inputMaskBits << 8);
+    // OR the masks with themselves, shifted 16 bits. This is to match our split type bits.
+    outputMask |= (outputMask << MAX_COMPONENT_TYPE_MASK_INDEX);
+    inputMask |= (inputMask << MAX_COMPONENT_TYPE_MASK_INDEX);
 
     // To validate:
-    // 1. Remove any indexes that are not enabled in the framebuffer (& inputMask)
-    // 2. Remove any indexes that exist in program, but not in framebuffer (& outputMask)
-    // 3. Use XOR to check for a match
-    return (outputTypeBits & inputMaskBits) == ((inputTypeBits & outputMaskBits) & inputMaskBits);
+    // 1. Remove any indexes that are not enabled in the input (& inputMask)
+    // 2. Remove any indexes that exist in output, but not in input (& outputMask)
+    // 3. Use == to verify equality
+    return (outputTypes & inputMask) == ((inputTypes & outputMask) & inputMask);
 }
 
 }  // namespace gl

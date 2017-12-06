@@ -174,6 +174,8 @@ ERRMSG(UniformSizeMismatch, "Uniform size does not match uniform method.");
 ERRMSG(UnknownParameter, "Unknown parameter value.");
 ERRMSG(VertexArrayNoBuffer, "An enabled vertex array has no buffer.");
 ERRMSG(VertexArrayNoBufferPointer, "An enabled vertex array has no buffer and no pointer.");
+ERRMSG(VertexShaderTypeMismatch,
+       "Vertex shader input type does not match the type of the bound vertex attribute.")
 ERRMSG(ViewportNegativeSize, "Viewport size cannot be negative.");
 ERRMSG(Webgl2NameLengthLimitExceeded, "Location lengths must not be greater than 1024 characters.");
 ERRMSG(WebglBindAttribLocationReservedPrefix,
