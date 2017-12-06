@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "eccf4a91_2b356b09",
+        "filename": "extensions/EGL_ANGLE_iosurface_client_buffer.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-12-06T20:34:49Z",
+      "side": 1,
+      "message": "This is some of the formats used by Chrome, the table is meant to be extended over time.",
+      "revId": "bf42687e6450109a4ec62f199eca6b55a3f0e64d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
