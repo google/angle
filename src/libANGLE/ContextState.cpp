@@ -786,6 +786,12 @@ bool ValidationContext::getIndexedQueryParameterInfo(GLenum target,
 
     switch (target)
     {
+        case GL_IMAGE_BINDING_LAYERED:
+        {
+            *type      = GL_BOOL;
+            *numParams = 1;
+            return true;
+        }
         case GL_MAX_COMPUTE_WORK_GROUP_COUNT:
         case GL_MAX_COMPUTE_WORK_GROUP_SIZE:
         case GL_ATOMIC_COUNTER_BUFFER_BINDING:
@@ -795,6 +801,11 @@ bool ValidationContext::getIndexedQueryParameterInfo(GLenum target,
         case GL_VERTEX_BINDING_OFFSET:
         case GL_VERTEX_BINDING_STRIDE:
         case GL_SAMPLE_MASK_VALUE:
+        case GL_IMAGE_BINDING_NAME:
+        case GL_IMAGE_BINDING_LEVEL:
+        case GL_IMAGE_BINDING_LAYER:
+        case GL_IMAGE_BINDING_ACCESS:
+        case GL_IMAGE_BINDING_FORMAT:
         {
             *type      = GL_INT;
             *numParams = 1;

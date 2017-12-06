@@ -2116,6 +2116,26 @@ void State::getIntegeri_v(GLenum target, GLuint index, GLint *data)
           ASSERT(static_cast<size_t>(index) < mSampleMaskValues.size());
           *data = mSampleMaskValues[index];
           break;
+      case GL_IMAGE_BINDING_NAME:
+          ASSERT(static_cast<size_t>(index) < mImageUnits.size());
+          *data = mImageUnits[index].texture.id();
+          break;
+      case GL_IMAGE_BINDING_LEVEL:
+          ASSERT(static_cast<size_t>(index) < mImageUnits.size());
+          *data = mImageUnits[index].level;
+          break;
+      case GL_IMAGE_BINDING_LAYER:
+          ASSERT(static_cast<size_t>(index) < mImageUnits.size());
+          *data = mImageUnits[index].layer;
+          break;
+      case GL_IMAGE_BINDING_ACCESS:
+          ASSERT(static_cast<size_t>(index) < mImageUnits.size());
+          *data = mImageUnits[index].access;
+          break;
+      case GL_IMAGE_BINDING_FORMAT:
+          ASSERT(static_cast<size_t>(index) < mImageUnits.size());
+          *data = mImageUnits[index].format;
+          break;
       default:
           UNREACHABLE();
           break;
@@ -2166,7 +2186,16 @@ void State::getInteger64i_v(GLenum target, GLuint index, GLint64 *data)
 
 void State::getBooleani_v(GLenum target, GLuint index, GLboolean *data)
 {
-    UNREACHABLE();
+    switch (target)
+    {
+        case GL_IMAGE_BINDING_LAYERED:
+            ASSERT(static_cast<size_t>(index) < mImageUnits.size());
+            *data = mImageUnits[index].layered;
+            break;
+        default:
+            UNREACHABLE();
+            break;
+    }
 }
 
 bool State::hasMappedBuffer(BufferBinding target) const

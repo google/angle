@@ -1184,7 +1184,6 @@
 1442 OPENGL D3D11 : dEQP-GLES31.functional.stencil_texturing.misc.compare_mode_effect = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.stencil_texturing.misc.base_level = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.integer.program_pipeline_binding_* = FAIL
-1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.indexed.image_binding* = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.texture.texture_2d.depth_stencil_mode_* = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.texture.texture_cube_map.depth_stencil_mode_* = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.texture.texture_2d_array.depth_stencil_mode_* = FAIL

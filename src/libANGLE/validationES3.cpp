@@ -2358,6 +2358,23 @@ bool ValidateIndexedStateQuery(ValidationContext *context,
                 return false;
             }
             break;
+        case GL_IMAGE_BINDING_NAME:
+        case GL_IMAGE_BINDING_LEVEL:
+        case GL_IMAGE_BINDING_LAYERED:
+        case GL_IMAGE_BINDING_LAYER:
+        case GL_IMAGE_BINDING_ACCESS:
+        case GL_IMAGE_BINDING_FORMAT:
+            if (context->getClientVersion() < ES_3_1)
+            {
+                ANGLE_VALIDATION_ERR(context, InvalidEnum(), EnumRequiresGLES31);
+                return false;
+            }
+            if (index >= caps.maxImageUnits)
+            {
+                ANGLE_VALIDATION_ERR(context, InvalidValue(), InvalidImageUnit);
+                return false;
+            }
+            break;
         default:
             context->handleError(InvalidEnum());
             return false;
