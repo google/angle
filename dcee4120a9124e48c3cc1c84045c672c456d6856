@@ -2,6 +2,75 @@
   "comments": [
     {
       "key": {
+        "uuid": "0b4768f2_007f52b2",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-12-06T06:28:42Z",
+      "side": 1,
+      "message": "enabled to",
+      "range": {
+        "startLine": 11,
+        "startChar": 44,
+        "endLine": 11,
+        "endChar": 54
+      },
+      "revId": "dcee4120a9124e48c3cc1c84045c672c456d6856",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d931c601_335d1068",
+        "filename": "include/platform/WorkaroundsD3D.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-12-06T06:28:42Z",
+      "side": 1,
+      "message": "I prefer you rename it to enableDepthBufferWithLargeViewport.",
+      "range": {
+        "startLine": 130,
+        "startChar": 9,
+        "endLine": 130,
+        "endChar": 26
+      },
+      "revId": "dcee4120a9124e48c3cc1c84045c672c456d6856",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6f7ab055_1b61acf4",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/RenderStateCache.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-12-06T06:28:42Z",
+      "side": 1,
+      "message": "From your description, this bug only happens when the viewport is very large. Do you need to consider the viewport size to decide whether to enable the workaround?",
+      "range": {
+        "startLine": 211,
+        "startChar": 8,
+        "endLine": 211,
+        "endChar": 99
+      },
+      "revId": "dcee4120a9124e48c3cc1c84045c672c456d6856",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3399888b_b867b89a",
         "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
         "patchSetId": 1
