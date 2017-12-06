@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0445d622_314e79e5",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 232,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-06T18:46:56Z",
+      "side": 1,
+      "message": "I don\u0027t think we should use a constructor here - better to set the members of the varying manually, we do that for most of the types in this header.",
+      "range": {
+        "startLine": 232,
+        "startChar": 5,
+        "endLine": 232,
+        "endChar": 64
+      },
+      "revId": "6ed12a00dbcb28d1b141d5dab46f8192037391d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8f389eb1_4df12893",
+        "filename": "src/compiler/translator/ShaderVars.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-06T18:46:56Z",
+      "side": 1,
+      "message": "can you make this a helper function in the same place as ParseResourceName",
+      "range": {
+        "startLine": 141,
+        "startChar": 0,
+        "endLine": 172,
+        "endChar": 1
+      },
+      "revId": "6ed12a00dbcb28d1b141d5dab46f8192037391d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "79a05082_bb40fb44",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 2659,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-06T18:46:56Z",
+      "side": 1,
+      "message": "how about you re-structure this code.\n\ninstead of:\n\n  for (ref : varyings)\n  {\n      varying \u003d ref.get;\n      field \u003d findField;\n\n      // do work\n  }\n\ncan you do\n\n  for (ref : varyings)\n  {\n     varying \u003d ref.get;\n     DoWork(varying, varying.name);\n     for (field : varying.field)\n     {\n       DoWork(field, varying.name + \".\" + field.name);\n     }\n  }\n\nThis pattern has a bit less duplication, at the cost of having to treat names differently.\n\nNote that in the pseudocode I use stupid names, please use more appropriate names (if you agree it will work).",
+      "range": {
+        "startLine": 2655,
+        "startChar": 0,
+        "endLine": 2659,
+        "endChar": 0
+      },
+      "revId": "6ed12a00dbcb28d1b141d5dab46f8192037391d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "64f00544_6f536d10",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 209,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-06T18:46:56Z",
+      "side": 1,
+      "message": "maybe it\u0027s better to have a single constructor with a name, having multiple overloads is confusing.",
+      "range": {
+        "startLine": 205,
+        "startChar": 0,
+        "endLine": 209,
+        "endChar": 0
+      },
+      "revId": "6ed12a00dbcb28d1b141d5dab46f8192037391d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f68710b2_5440407f",
+        "filename": "src/libANGLE/VaryingPacking.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 344,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-06T18:46:56Z",
+      "side": 1,
+      "message": "same comment as below",
+      "range": {
+        "startLine": 341,
+        "startChar": 14,
+        "endLine": 344,
+        "endChar": 54
+      },
+      "revId": "6ed12a00dbcb28d1b141d5dab46f8192037391d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8ac80f01_f3c497d0",
+        "filename": "src/libANGLE/VaryingPacking.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 357,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-06T18:46:56Z",
+      "side": 1,
+      "message": "can you make this as it was before, but using emplace_back?\n\nmPackedVaryings.emplace_back(*input, input-\u003einterpolation);\npackedVaryings.back().vertexOnly \u003d ...",
+      "range": {
+        "startLine": 357,
+        "startChar": 36,
+        "endLine": 357,
+        "endChar": 45
+      },
+      "revId": "6ed12a00dbcb28d1b141d5dab46f8192037391d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
