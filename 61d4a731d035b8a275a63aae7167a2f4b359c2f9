@@ -120,6 +120,30 @@
     },
     {
       "key": {
+        "uuid": "201399e2_cd6eac72",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1394,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-12-06T23:47:08Z",
+      "side": 1,
+      "message": "Jamie, this situation should pass. It will continue to dispatch compute with the old executable residing in the GL state according to the GLES spec: \nThe GLES 3.1 spec (Section 7.3 for UseProgram) says that \"If a program object that is active for any shader stage is re-linked unsuccessfully, the link status will be set to FALSE, but any existing executables and associated state will remain part of the current rendering state until a subsequent call to UseProgram, UseProgramStages, or BindProgramPipeline removes them from use\".\nOne more statement at gles 3.1 spec at section 7.3 for UseProgram: \"An unsuccessfully linked program may not be made part of the current rendering state by UseProgram or added to program pipeline objects by UseProgramStages until it is successfully re-linked\".\n\n(I listed the spec at the issue 2266)\n\nThis patch is exactly to fix this issue you pointed out. But it should be OK according to the spec, although the spec seems to be a little tricky for this situation. And the new added tests has covered this situation (re-link the program which is in use, all bots can pass, so the driver conform to the spec for both rendering and compute). \n\nFor rendering, we don\u0027t detect whether the program is successfully linked. It is quite similar. \n\nIf you think this behavior in spec is really tricky and we want to change it in ANGLE (like report INVALID_OP for this situation in ANGLE). I\u0027m OK to change it too. But staring rendering and dispatching compute should be consistent to handle the re-link failure situation.",
+      "parentUuid": "4edf59db_61268b28",
+      "range": {
+        "startLine": 1394,
+        "startChar": 8,
+        "endLine": 1394,
+        "endChar": 31
+      },
+      "revId": "61d4a731d035b8a275a63aae7167a2f4b359c2f9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5cc81f3e_bc2e2172",
         "filename": "src/tests/gl_tests/LinkAndRelinkFailureTest.cpp",
         "patchSetId": 7
