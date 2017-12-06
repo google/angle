@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "4edf59db_61268b28",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1394,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-06T18:14:59Z",
+      "side": 1,
+      "message": "I\u0027m not convinced. What about this case:\n\n1. LinkProgram and UseProgram with valid graphics program\n2. re-link the program, fail to link\n3. attempt to dispatch compute with this program\n\nWon\u0027t your check on line 1394 pass, and then somewhere in ANGLE produce an internal error?",
+      "parentUuid": "de353203_fd48cd86",
+      "range": {
+        "startLine": 1394,
+        "startChar": 8,
+        "endLine": 1394,
+        "endChar": 31
+      },
+      "revId": "61d4a731d035b8a275a63aae7167a2f4b359c2f9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5cc81f3e_bc2e2172",
         "filename": "src/tests/gl_tests/LinkAndRelinkFailureTest.cpp",
         "patchSetId": 7
