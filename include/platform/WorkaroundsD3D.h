@@ -123,6 +123,11 @@ struct WorkaroundsD3D
     // then rendering samples also pass neglecting discard statements in pixel shader.
     // So we add a dummy texture as render target in such case. See http://anglebug.com/2152
     bool addDummyTextureNoRenderTarget = false;
+
+    // Rendering with depth buffer disabled and stencil buffer enabled leads to memory leak if we
+    // set viewport a large size on Intel windows platforms. So we enable depth buffer if stencil
+    // buffer is enabled to workaround this issue. See http://crbug.com/782317
+    bool enableDepthBufferWhenStencilBufferEnabled = false;
 };
 
 }  // namespace angle
