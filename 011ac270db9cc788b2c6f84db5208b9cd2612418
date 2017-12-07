@@ -22,6 +22,30 @@
       "revId": "011ac270db9cc788b2c6f84db5208b9cd2612418",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "25fd62a5_f1f0fd2e",
+        "filename": "src/libANGLE/packed_gl_enums.json",
+        "patchSetId": 4
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-12-07T23:31:50Z",
+      "side": 1,
+      "message": "Sorry it\u0027s not needed since line 8 has the same enum. I have removed it in the newest change.",
+      "parentUuid": "cc991e94_ecf3946b",
+      "range": {
+        "startLine": 10,
+        "startChar": 9,
+        "endLine": 10,
+        "endChar": 25
+      },
+      "revId": "011ac270db9cc788b2c6f84db5208b9cd2612418",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
