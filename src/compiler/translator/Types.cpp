@@ -429,7 +429,7 @@ int TType::getDeepestStructNesting() const
 
 bool TType::isNamelessStruct() const
 {
-    return mStructure && mStructure->name() == "";
+    return mStructure && mStructure->symbolType() == SymbolType::Empty;
 }
 
 bool TType::isStructureContainingArrays() const

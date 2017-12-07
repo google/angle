@@ -29,21 +29,32 @@ static const char kFunctionMangledNameSeparator = '(';
 
 }  // anonymous namespace
 
-TSymbol::TSymbol(TSymbolTable *symbolTable, const TString *name, TExtension extension)
-    : mName(name), mUniqueId(symbolTable->nextUniqueId()), mExtension(extension)
+TSymbol::TSymbol(TSymbolTable *symbolTable,
+                 const TString *name,
+                 SymbolType symbolType,
+                 TExtension extension)
+    : mName(name),
+      mUniqueId(symbolTable->nextUniqueId()),
+      mSymbolType(symbolType),
+      mExtension(extension)
 {
+    ASSERT(mSymbolType == SymbolType::BuiltIn || mExtension == TExtension::UNDEFINED);
 }
 
 TVariable::TVariable(TSymbolTable *symbolTable,
                      const TString *name,
                      const TType &t,
+                     SymbolType symbolType,
                      TExtension extension)
-    : TSymbol(symbolTable, name, extension), type(t), unionArray(nullptr)
+    : TSymbol(symbolTable, name, symbolType, extension), type(t), unionArray(nullptr)
 {
 }
 
-TStructure::TStructure(TSymbolTable *symbolTable, const TString *name, const TFieldList *fields)
-    : TSymbol(symbolTable, name), TFieldListCollection(fields)
+TStructure::TStructure(TSymbolTable *symbolTable,
+                       const TString *name,
+                       const TFieldList *fields,
+                       SymbolType symbolType)
+    : TSymbol(symbolTable, name, symbolType), TFieldListCollection(fields)
 {
 }
 
@@ -77,8 +88,9 @@ TInterfaceBlock::TInterfaceBlock(TSymbolTable *symbolTable,
                                  const TString *name,
                                  const TFieldList *fields,
                                  const TLayoutQualifier &layoutQualifier,
+                                 SymbolType symbolType,
                                  TExtension extension)
-    : TSymbol(symbolTable, name, extension),
+    : TSymbol(symbolTable, name, symbolType, extension),
       TFieldListCollection(fields),
       mBlockStorage(layoutQualifier.blockStorage),
       mBinding(layoutQualifier.binding)
@@ -322,7 +334,7 @@ constexpr const TType *VectorType(const TType *type, int size)
 
 TVariable *TSymbolTable::declareVariable(const TString *name, const TType &type)
 {
-    return insertVariable(currentLevel(), name, type);
+    return insertVariable(currentLevel(), name, type, SymbolType::UserDefined);
 }
 
 bool TSymbolTable::declareStructType(TStructure *str)
@@ -337,12 +349,16 @@ bool TSymbolTable::declareInterfaceBlock(TInterfaceBlock *interfaceBlock)
 
 TVariable *TSymbolTable::insertVariable(ESymbolLevel level, const char *name, const TType &type)
 {
-    return insertVariable(level, NewPoolTString(name), type);
+    ASSERT(level <= LAST_BUILTIN_LEVEL);
+    return insertVariable(level, NewPoolTString(name), type, SymbolType::BuiltIn);
 }
 
-TVariable *TSymbolTable::insertVariable(ESymbolLevel level, const TString *name, const TType &type)
+TVariable *TSymbolTable::insertVariable(ESymbolLevel level,
+                                        const TString *name,
+                                        const TType &type,
+                                        SymbolType symbolType)
 {
-    TVariable *var = new TVariable(this, name, type);
+    TVariable *var = new TVariable(this, name, type, symbolType);
     if (insert(level, var))
     {
         // Do lazy initialization for struct types, so we allocate to the current scope.
@@ -360,7 +376,7 @@ TVariable *TSymbolTable::insertVariableExt(ESymbolLevel level,
                                            const char *name,
                                            const TType &type)
 {
-    TVariable *var = new TVariable(this, NewPoolTString(name), type, ext);
+    TVariable *var = new TVariable(this, NewPoolTString(name), type, SymbolType::BuiltIn, ext);
     if (insert(level, var))
     {
         if (var->getType().getBasicType() == EbtStruct)
@@ -515,7 +531,8 @@ void TSymbolTable::insertBuiltIn(ESymbolLevel level,
     }
     else
     {
-        TFunction *function = new TFunction(this, NewPoolTString(name), rvalue, op, ext);
+        TFunction *function =
+            new TFunction(this, NewPoolTString(name), rvalue, SymbolType::BuiltIn, op, ext);
 
         function->addParameter(TConstParameter(ptype1));
 
@@ -581,7 +598,7 @@ void TSymbolTable::insertBuiltInFunctionNoParameters(ESymbolLevel level,
                                                      const char *name)
 {
     insertUnmangledBuiltInName(name, level);
-    insert(level, new TFunction(this, NewPoolTString(name), rvalue, op));
+    insert(level, new TFunction(this, NewPoolTString(name), rvalue, SymbolType::BuiltIn, op));
 }
 
 void TSymbolTable::insertBuiltInFunctionNoParametersExt(ESymbolLevel level,
@@ -591,7 +608,7 @@ void TSymbolTable::insertBuiltInFunctionNoParametersExt(ESymbolLevel level,
                                                         const char *name)
 {
     insertUnmangledBuiltInName(name, level);
-    insert(level, new TFunction(this, NewPoolTString(name), rvalue, op, ext));
+    insert(level, new TFunction(this, NewPoolTString(name), rvalue, SymbolType::BuiltIn, op, ext));
 }
 
 TPrecision TSymbolTable::getDefaultPrecision(TBasicType type) const

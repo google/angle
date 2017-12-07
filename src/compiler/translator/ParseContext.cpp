@@ -3452,13 +3452,19 @@ TFunction *TParseContext::parseFunctionHeader(const TPublicType &type,
     }
 
     // Add the function as a prototype after parsing it (we do not support recursion)
-    return new TFunction(&symbolTable, name, new TType(type));
+    return new TFunction(&symbolTable, name, new TType(type), SymbolType::UserDefined);
 }
 
 TFunction *TParseContext::addNonConstructorFunc(const TString *name, const TSourceLoc &loc)
 {
     const TType *returnType = StaticType::GetQualified<EbtVoid, EvqTemporary>();
-    return new TFunction(&symbolTable, name, returnType);
+    // TODO(oetuaho): Some more appropriate data structure than TFunction could be used here. We're
+    // really only interested in the mangled name of the function to look up the actual function
+    // from the symbol table. If we just had the name string and the types of the parameters that
+    // would be enough, but TFunction carries a lot of extra information in addition to that.
+    // Besides function calls we do have to store constructor calls in the same data structure, for
+    // them we need to store a TType.
+    return new TFunction(&symbolTable, name, returnType, SymbolType::NotResolved);
 }
 
 TFunction *TParseContext::addConstructorFunc(const TPublicType &publicType)
@@ -3482,7 +3488,7 @@ TFunction *TParseContext::addConstructorFunc(const TPublicType &publicType)
         type->setBasicType(EbtFloat);
     }
 
-    return new TFunction(&symbolTable, nullptr, type, EOpConstruct);
+    return new TFunction(&symbolTable, nullptr, type, SymbolType::BuiltIn, EOpConstruct);
 }
 
 void TParseContext::checkIsNotUnsizedArray(const TSourceLoc &line,
@@ -3808,8 +3814,8 @@ TIntermDeclaration *TParseContext::addInterfaceBlock(
         }
     }
 
-    TInterfaceBlock *interfaceBlock =
-        new TInterfaceBlock(&symbolTable, &blockName, fieldList, blockLayoutQualifier);
+    TInterfaceBlock *interfaceBlock = new TInterfaceBlock(
+        &symbolTable, &blockName, fieldList, blockLayoutQualifier, SymbolType::UserDefined);
     if (!symbolTable.declareInterfaceBlock(interfaceBlock))
     {
         error(nameLine, "redefinition of an interface block name", blockName.c_str());
@@ -4781,13 +4787,19 @@ TTypeSpecifierNonArray TParseContext::addStructure(const TSourceLoc &structLine,
                                                    const TString *structName,
                                                    TFieldList *fieldList)
 {
-    TStructure *structure = new TStructure(&symbolTable, structName, fieldList);
+    SymbolType structSymbolType = SymbolType::UserDefined;
+    if (structName == nullptr)
+    {
+        structName       = NewPoolTString("");
+        structSymbolType = SymbolType::Empty;
+    }
+    TStructure *structure = new TStructure(&symbolTable, structName, fieldList, structSymbolType);
 
     // Store a bool in the struct if we're at global scope, to allow us to
     // skip the local struct scoping workaround in HLSL.
     structure->setAtGlobalScope(symbolTable.atGlobalLevel());
 
-    if (!structName->empty())
+    if (structSymbolType != SymbolType::Empty)
     {
         checkIsNotReserved(nameLine, *structName);
         if (!symbolTable.declareStructType(structure))

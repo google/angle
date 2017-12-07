@@ -19,7 +19,7 @@ void RegenerateStructNames::visitSymbol(TIntermSymbol *symbol)
     if (!userType)
         return;
 
-    if (mSymbolTable->findBuiltIn(userType->name(), mShaderVersion))
+    if (userType->symbolType() == SymbolType::BuiltIn)
     {
         // Built-in struct, do not touch it.
         return;

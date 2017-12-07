@@ -503,7 +503,7 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
 
     if (compileOptions & SH_REGENERATE_STRUCT_NAMES)
     {
-        RegenerateStructNames gen(&symbolTable, shaderVersion);
+        RegenerateStructNames gen(&symbolTable);
         root->traverse(&gen);
     }
 

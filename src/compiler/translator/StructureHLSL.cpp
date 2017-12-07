@@ -26,7 +26,7 @@ TString Define(const TStructure &structure,
                Std140PaddingHelper *padHelper)
 {
     const TFieldList &fields = structure.fields();
-    const bool isNameless    = (structure.name() == "");
+    const bool isNameless    = (structure.symbolType() == SymbolType::Empty);
     const TString &structName =
         QualifiedStructNameString(structure, useHLSLRowMajorPacking, useStd140Packing);
     const TString declareString = (isNameless ? "struct" : "struct " + structName);

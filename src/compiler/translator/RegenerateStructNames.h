@@ -18,10 +18,8 @@ namespace sh
 class RegenerateStructNames : public TIntermTraverser
 {
   public:
-    RegenerateStructNames(TSymbolTable *symbolTable, int shaderVersion)
-        : TIntermTraverser(true, false, false, symbolTable),
-          mShaderVersion(shaderVersion),
-          mScopeDepth(0)
+    RegenerateStructNames(TSymbolTable *symbolTable)
+        : TIntermTraverser(true, false, false, symbolTable), mScopeDepth(0)
     {
     }
 
@@ -30,8 +28,6 @@ class RegenerateStructNames : public TIntermTraverser
     bool visitBlock(Visit, TIntermBlock *block) override;
 
   private:
-    int mShaderVersion;
-
     // Indicating the depth of the current scope.
     // The global scope is 1.
     int mScopeDepth;

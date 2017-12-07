@@ -692,7 +692,7 @@ TString RWTextureTypeSuffix(const TBasicType type, TLayoutImageInternalFormat im
 
 TString DecorateField(const TString &string, const TStructure &structure)
 {
-    if (structure.name().compare(0, 3, "gl_") != 0)
+    if (structure.symbolType() != SymbolType::BuiltIn)
     {
         return Decorate(string);
     }
@@ -751,8 +751,7 @@ TString TypeString(const TType &type)
     const TStructure *structure = type.getStruct();
     if (structure)
     {
-        const TString &typeName = structure->name();
-        if (typeName != "")
+        if (structure->symbolType() != SymbolType::Empty)
         {
             return StructNameString(*structure);
         }
@@ -847,7 +846,7 @@ TString TypeString(const TType &type)
 
 TString StructNameString(const TStructure &structure)
 {
-    if (structure.name().empty())
+    if (structure.symbolType() == SymbolType::Empty)
     {
         return "";
     }
@@ -866,7 +865,7 @@ TString QualifiedStructNameString(const TStructure &structure,
                                   bool useHLSLRowMajorPacking,
                                   bool useStd140Packing)
 {
-    if (structure.name() == "")
+    if (structure.symbolType() == SymbolType::Empty)
     {
         return "";
     }
@@ -960,7 +959,7 @@ TString DisambiguateFunctionName(const TIntermSequence *parameters)
         {
             // Disambiguation is needed for struct parameters, since HLSL thinks that structs with
             // the same fields but a different name are identical.
-            ASSERT(paramType.getStruct()->name() != "");
+            ASSERT(paramType.getStruct()->symbolType() != SymbolType::Empty);
             disambiguatingString += "_" + TypeString(paramType);
         }
     }

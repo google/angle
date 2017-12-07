@@ -4412,7 +4412,7 @@ yyreduce:
   case 230:
 
     {
-        (yyval.interm.typeSpecifierNonArray) = context->addStructure((yylsp[-4]), (yyloc), NewPoolTString(""), (yyvsp[-1].interm.fieldList));
+        (yyval.interm.typeSpecifierNonArray) = context->addStructure((yylsp[-4]), (yyloc), nullptr, (yyvsp[-1].interm.fieldList));
     }
 
     break;

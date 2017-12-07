@@ -754,8 +754,8 @@ void InsertBuiltInFunctions(sh::GLenum type,
     fields->push_back(near);
     fields->push_back(far);
     fields->push_back(diff);
-    TStructure *depthRangeStruct =
-        new TStructure(&symbolTable, NewPoolTString("gl_DepthRangeParameters"), fields);
+    TStructure *depthRangeStruct = new TStructure(
+        &symbolTable, NewPoolTString("gl_DepthRangeParameters"), fields, SymbolType::BuiltIn);
     symbolTable.insertStructType(COMMON_BUILTINS, depthRangeStruct);
     TType depthRangeType(depthRangeStruct);
     depthRangeType.setQualifier(EvqUniform);
@@ -1024,7 +1024,7 @@ void IdentifyBuiltIns(sh::GLenum type,
             const TString *glPerVertexString = NewPoolTString("gl_PerVertex");
             TInterfaceBlock *glPerVertexInBlock =
                 new TInterfaceBlock(&symbolTable, glPerVertexString, glPerVertexFieldList,
-                                    TLayoutQualifier::Create(), extension);
+                                    TLayoutQualifier::Create(), SymbolType::BuiltIn, extension);
             symbolTable.insertInterfaceBlock(ESSL3_1_BUILTINS, glPerVertexInBlock);
 
             // The array size of gl_in is undefined until we get a valid input primitive
@@ -1033,8 +1033,9 @@ void IdentifyBuiltIns(sh::GLenum type,
             glInType.makeArray(0u);
             symbolTable.insertVariableExt(ESSL3_1_BUILTINS, extension, "gl_in", glInType);
 
-            TInterfaceBlock *glPerVertexOutBlock = new TInterfaceBlock(
-                &symbolTable, glPerVertexString, glPerVertexFieldList, TLayoutQualifier::Create());
+            TInterfaceBlock *glPerVertexOutBlock =
+                new TInterfaceBlock(&symbolTable, glPerVertexString, glPerVertexFieldList,
+                                    TLayoutQualifier::Create(), SymbolType::BuiltIn);
             TType glPositionType(EbtFloat, EbpHigh, EvqPosition, 4);
             glPositionType.setInterfaceBlock(glPerVertexOutBlock);
             symbolTable.insertVariableExt(ESSL3_1_BUILTINS, extension, "gl_Position",

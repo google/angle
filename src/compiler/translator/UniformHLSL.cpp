@@ -323,7 +323,7 @@ void UniformHLSL::outputUniform(TInfoSinkBase &out,
     // TypeString() will invoke defineNameless in this case; qualifier prefixes are unnecessary for
     // nameless structs in ES, as nameless structs cannot be used anywhere that layout qualifiers
     // are permitted.
-    const TString &typeName = ((structure && !structure->name().empty())
+    const TString &typeName = ((structure && structure->symbolType() != SymbolType::Empty)
                                    ? QualifiedStructNameString(*structure, false, false)
                                    : TypeString(type));
 

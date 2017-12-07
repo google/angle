@@ -1206,7 +1206,7 @@ struct_specifier
         $$ = context->addStructure(@1, @2, $2.string, $5);
     }
     | STRUCT LEFT_BRACE { context->enterStructDeclaration(@2, *$2.string); } struct_declaration_list RIGHT_BRACE {
-        $$ = context->addStructure(@1, @$, NewPoolTString(""), $4);
+        $$ = context->addStructure(@1, @$, nullptr, $4);
     }
     ;
 
