@@ -333,6 +333,30 @@
     },
     {
       "key": {
+        "uuid": "c9258a55_b7468f71",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-12-07T10:45:28Z",
+      "side": 1,
+      "message": "Hi, Jamie, I use complete register description as the register types now. Do you think it is good? If you have some better names, please tell me, thank you.",
+      "parentUuid": "6c617857_2dc22f11",
+      "range": {
+        "startLine": 38,
+        "startChar": 12,
+        "endLine": 38,
+        "endChar": 13
+      },
+      "revId": "f2a494601b1845489f6b12830b8d91f44ef7a760",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "c374607e_604aa6fd",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
         "patchSetId": 14
