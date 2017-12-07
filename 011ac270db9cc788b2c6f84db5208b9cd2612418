@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cc991e94_ecf3946b",
+        "filename": "src/libANGLE/packed_gl_enums.json",
+        "patchSetId": 4
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-07T15:08:37Z",
+      "side": 1,
+      "message": "I think if you modify this, you should re-run scripts/run_code_generation.py.",
+      "range": {
+        "startLine": 10,
+        "startChar": 9,
+        "endLine": 10,
+        "endChar": 25
+      },
+      "revId": "011ac270db9cc788b2c6f84db5208b9cd2612418",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
