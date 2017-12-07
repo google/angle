@@ -144,6 +144,30 @@
     },
     {
       "key": {
+        "uuid": "74a7f8cb_066424f5",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1394,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-12-07T09:47:52Z",
+      "side": 1,
+      "message": "Without this code snippet, when I run the new added tests, rendering against unsuccessfully re-linked program can succeed by using the old executable residing in the GL state, but dispatching compute against unsuccessfully re-linked program would report error here and fail. \n\nBTW, WebGL conformance test at conformance/program/program-test.html also covered the unsuccessfully re-linked situation for rendering.",
+      "parentUuid": "201399e2_cd6eac72",
+      "range": {
+        "startLine": 1394,
+        "startChar": 8,
+        "endLine": 1394,
+        "endChar": 31
+      },
+      "revId": "61d4a731d035b8a275a63aae7167a2f4b359c2f9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5cc81f3e_bc2e2172",
         "filename": "src/tests/gl_tests/LinkAndRelinkFailureTest.cpp",
         "patchSetId": 7
