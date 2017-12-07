@@ -18,30 +18,8 @@ spirv_tools_dir = "$third_party_dir/spirv-tools-angle/src"
 vulkan_layers_dir = "$third_party_dir/vulkan-validation-layers/src"
 raw_vulkan_layers_dir = rebase_path(vulkan_layers_dir, root_build_dir)
 
-vulkan_gypi =
-    exec_script("//build/gypi_to_gn.py",
-                [
-                  rebase_path("vulkan.gypi"),
-                  "--replace=<(angle_gen_path)=$target_gen_dir/angle",
-                  "--replace=<(glslang_path)=../$glslang_dir",
-                  "--replace=<(spirv_headers_path)=../$spirv_headers_dir",
-                  "--replace=<(spirv_tools_path)=../$spirv_tools_dir",
-                  "--replace=<(vulkan_layers_path)=../$vulkan_layers_dir",
-                ],
-                "scope",
-                [ "vulkan.gypi" ])
-
 # Subdirectory to place data files (e.g. layer JSON files).
 data_dir = "angledata"
-
-vulkan_gen_json_files_outputs = [
-  "$root_out_dir/$data_dir/VkLayer_core_validation.json",
-  "$root_out_dir/$data_dir/VkLayer_object_tracker.json",
-  "$root_out_dir/$data_dir/VkLayer_parameter_validation.json",
-  "$root_out_dir/$data_dir/VkLayer_swapchain.json",
-  "$root_out_dir/$data_dir/VkLayer_threading.json",
-  "$root_out_dir/$data_dir/VkLayer_unique_objects.json",
-]
 
 vulkan_undefine_configs = []
 if (is_win) {
@@ -199,8 +177,11 @@ config("vulkan_internal_config") {
 # -------------
 
 config("vulkan_loader_config") {
-  include_dirs = rebase_path(vulkan_gypi.vulkan_loader_include_dirs, ".", "src")
-  include_dirs += [ vulkan_gen_dir ]
+  include_dirs = [
+    vulkan_gen_dir,
+    "$vulkan_layers_dir/include",
+    "$vulkan_layers_dir/loader",
+  ]
   defines = [
     "ANGLE_VK_LAYERS_DIR=\"$data_dir\"",
     "API_NAME=\"Vulkan\"",
@@ -216,11 +197,43 @@ config("vulkan_loader_config") {
 }
 
 static_library("vulkan_loader") {
-  sources = rebase_path(vulkan_gypi.vulkan_loader_sources, ".", "src")
+  sources = [
+    "$vulkan_layers_dir/loader/cJSON.c",
+    "$vulkan_layers_dir/loader/cJSON.h",
+    "$vulkan_layers_dir/loader/debug_report.c",
+    "$vulkan_layers_dir/loader/debug_report.h",
+    "$vulkan_layers_dir/loader/dev_ext_trampoline.c",
+    "$vulkan_layers_dir/loader/extension_manual.c",
+    "$vulkan_layers_dir/loader/extension_manual.h",
+    "$vulkan_layers_dir/loader/gpa_helper.h",
+    "$vulkan_layers_dir/loader/loader.c",
+    "$vulkan_layers_dir/loader/loader.h",
+    "$vulkan_layers_dir/loader/murmurhash.c",
+    "$vulkan_layers_dir/loader/murmurhash.h",
+    "$vulkan_layers_dir/loader/phys_dev_ext.c",
+    "$vulkan_layers_dir/loader/trampoline.c",
+    "$vulkan_layers_dir/loader/vk_loader_platform.h",
+    "$vulkan_layers_dir/loader/wsi.c",
+    "$vulkan_layers_dir/loader/wsi.h",
+  ]
   if (is_win) {
-    sources += rebase_path(vulkan_gypi.vulkan_loader_win_sources, ".", "src")
+    sources += [
+      "$vulkan_layers_dir/loader/dirent_on_windows.c",
+      "$vulkan_layers_dir/loader/dirent_on_windows.h",
+    ]
     if (!is_clang) {
-      cflags = vulkan_gypi.vulkan_loader_cflags_win
+      cflags = [
+        "/wd4054",  # Type cast from function pointer
+        "/wd4055",  # Type cast from data pointer
+        "/wd4100",  # Unreferenced formal parameter
+        "/wd4152",  # Nonstandard extension used (pointer conversion)
+        "/wd4201",  # Nonstandard extension used: nameless struct/union
+        "/wd4214",  # Nonstandard extension used: bit field types other than int
+        "/wd4232",  # Nonstandard extension used: address of dllimport is not static
+        "/wd4305",  # Type cast truncation
+        "/wd4706",  # Assignment within conditional expression
+        "/wd4996",  # Unsafe stdlib function
+      ]
     }
   }
   deps = [
@@ -322,7 +335,63 @@ static_library("spirv_tools") {
     "$spirv_headers_dir/include",
     "$spirv_tools_dir/source",
   ]
-  sources = rebase_path(vulkan_gypi.spirv_tools_sources, ".", "src")
+  sources = [
+    "$spirv_tools_dir/source/assembly_grammar.cpp",
+    "$spirv_tools_dir/source/assembly_grammar.h",
+    "$spirv_tools_dir/source/binary.cpp",
+    "$spirv_tools_dir/source/binary.h",
+    "$spirv_tools_dir/source/diagnostic.cpp",
+    "$spirv_tools_dir/source/diagnostic.h",
+    "$spirv_tools_dir/source/disassemble.cpp",
+    "$spirv_tools_dir/source/enum_set.h",
+    "$spirv_tools_dir/source/ext_inst.cpp",
+    "$spirv_tools_dir/source/ext_inst.h",
+    "$spirv_tools_dir/source/instruction.h",
+    "$spirv_tools_dir/source/libspirv.cpp",
+    "$spirv_tools_dir/source/macro.h",
+    "$spirv_tools_dir/source/message.cpp",
+    "$spirv_tools_dir/source/name_mapper.cpp",
+    "$spirv_tools_dir/source/name_mapper.h",
+    "$spirv_tools_dir/source/opcode.cpp",
+    "$spirv_tools_dir/source/opcode.h",
+    "$spirv_tools_dir/source/operand.cpp",
+    "$spirv_tools_dir/source/operand.h",
+    "$spirv_tools_dir/source/parsed_operand.cpp",
+    "$spirv_tools_dir/source/parsed_operand.h",
+    "$spirv_tools_dir/source/print.cpp",
+    "$spirv_tools_dir/source/print.h",
+
+    # TODO(jmadill): Determine if this is ever needed.
+    #"$spirv_tools_dir/source/software_version.cpp",
+    "$spirv_tools_dir/source/spirv_constant.h",
+    "$spirv_tools_dir/source/spirv_definition.h",
+    "$spirv_tools_dir/source/spirv_endian.cpp",
+    "$spirv_tools_dir/source/spirv_endian.h",
+    "$spirv_tools_dir/source/spirv_target_env.cpp",
+    "$spirv_tools_dir/source/spirv_target_env.h",
+    "$spirv_tools_dir/source/table.cpp",
+    "$spirv_tools_dir/source/table.h",
+    "$spirv_tools_dir/source/text.cpp",
+    "$spirv_tools_dir/source/text.h",
+    "$spirv_tools_dir/source/text_handler.cpp",
+    "$spirv_tools_dir/source/text_handler.h",
+    "$spirv_tools_dir/source/util/bitutils.h",
+    "$spirv_tools_dir/source/util/hex_float.h",
+    "$spirv_tools_dir/source/util/parse_number.cpp",
+    "$spirv_tools_dir/source/util/parse_number.h",
+    "$spirv_tools_dir/source/val/basic_block.cpp",
+    "$spirv_tools_dir/source/val/construct.cpp",
+    "$spirv_tools_dir/source/val/function.cpp",
+    "$spirv_tools_dir/source/val/instruction.cpp",
+    "$spirv_tools_dir/source/val/validation_state.cpp",
+    "$spirv_tools_dir/source/validate.cpp",
+    "$spirv_tools_dir/source/validate.h",
+    "$spirv_tools_dir/source/validate_cfg.cpp",
+    "$spirv_tools_dir/source/validate_datarules.cpp",
+    "$spirv_tools_dir/source/validate_id.cpp",
+    "$spirv_tools_dir/source/validate_instruction.cpp",
+    "$spirv_tools_dir/source/validate_layout.cpp",
+  ]
   public_configs = [ ":spirv_tools_config" ]
 }
 
@@ -346,7 +415,106 @@ config("glslang_internal_config") {
 }
 
 static_library("glslang") {
-  sources = rebase_path(vulkan_gypi.glslang_sources, ".", "src")
+  sources = [
+    "$glslang_dir/OGLCompilersDLL/InitializeDll.cpp",
+    "$glslang_dir/OGLCompilersDLL/InitializeDll.h",
+    "$glslang_dir/SPIRV/GLSL.ext.KHR.h",
+    "$glslang_dir/SPIRV/GLSL.std.450.h",
+    "$glslang_dir/SPIRV/GlslangToSpv.cpp",
+    "$glslang_dir/SPIRV/GlslangToSpv.h",
+    "$glslang_dir/SPIRV/InReadableOrder.cpp",
+    "$glslang_dir/SPIRV/Logger.cpp",
+    "$glslang_dir/SPIRV/Logger.h",
+    "$glslang_dir/SPIRV/SpvBuilder.cpp",
+    "$glslang_dir/SPIRV/SpvBuilder.h",
+    "$glslang_dir/SPIRV/bitutils.h",
+    "$glslang_dir/SPIRV/disassemble.cpp",
+    "$glslang_dir/SPIRV/disassemble.h",
+    "$glslang_dir/SPIRV/doc.cpp",
+    "$glslang_dir/SPIRV/doc.h",
+    "$glslang_dir/SPIRV/hex_float.h",
+    "$glslang_dir/SPIRV/spirv.hpp",
+    "$glslang_dir/SPIRV/spvIR.h",
+    "$glslang_dir/StandAlone/ResourceLimits.cpp",
+    "$glslang_dir/StandAlone/ResourceLimits.h",
+    "$glslang_dir/glslang/GenericCodeGen/CodeGen.cpp",
+    "$glslang_dir/glslang/GenericCodeGen/Link.cpp",
+    "$glslang_dir/glslang/Include/BaseTypes.h",
+    "$glslang_dir/glslang/Include/Common.h",
+    "$glslang_dir/glslang/Include/ConstantUnion.h",
+    "$glslang_dir/glslang/Include/InfoSink.h",
+    "$glslang_dir/glslang/Include/InitializeGlobals.h",
+    "$glslang_dir/glslang/Include/PoolAlloc.h",
+    "$glslang_dir/glslang/Include/ResourceLimits.h",
+    "$glslang_dir/glslang/Include/ShHandle.h",
+    "$glslang_dir/glslang/Include/Types.h",
+    "$glslang_dir/glslang/Include/arrays.h",
+    "$glslang_dir/glslang/Include/intermediate.h",
+    "$glslang_dir/glslang/Include/revision.h",
+    "$glslang_dir/glslang/MachineIndependent/Constant.cpp",
+    "$glslang_dir/glslang/MachineIndependent/InfoSink.cpp",
+    "$glslang_dir/glslang/MachineIndependent/Initialize.cpp",
+    "$glslang_dir/glslang/MachineIndependent/Initialize.h",
+    "$glslang_dir/glslang/MachineIndependent/IntermTraverse.cpp",
+    "$glslang_dir/glslang/MachineIndependent/Intermediate.cpp",
+    "$glslang_dir/glslang/MachineIndependent/LiveTraverser.h",
+    "$glslang_dir/glslang/MachineIndependent/ParseContextBase.cpp",
+    "$glslang_dir/glslang/MachineIndependent/ParseHelper.cpp",
+    "$glslang_dir/glslang/MachineIndependent/ParseHelper.h",
+    "$glslang_dir/glslang/MachineIndependent/PoolAlloc.cpp",
+    "$glslang_dir/glslang/MachineIndependent/RemoveTree.cpp",
+    "$glslang_dir/glslang/MachineIndependent/RemoveTree.h",
+    "$glslang_dir/glslang/MachineIndependent/Scan.cpp",
+    "$glslang_dir/glslang/MachineIndependent/Scan.h",
+    "$glslang_dir/glslang/MachineIndependent/ScanContext.h",
+    "$glslang_dir/glslang/MachineIndependent/ShaderLang.cpp",
+    "$glslang_dir/glslang/MachineIndependent/SymbolTable.cpp",
+    "$glslang_dir/glslang/MachineIndependent/SymbolTable.h",
+    "$glslang_dir/glslang/MachineIndependent/Versions.cpp",
+    "$glslang_dir/glslang/MachineIndependent/Versions.h",
+    "$glslang_dir/glslang/MachineIndependent/gl_types.h",
+    "$glslang_dir/glslang/MachineIndependent/glslang.y",
+    "$glslang_dir/glslang/MachineIndependent/glslang_tab.cpp",
+    "$glslang_dir/glslang/MachineIndependent/glslang_tab.cpp.h",
+    "$glslang_dir/glslang/MachineIndependent/intermOut.cpp",
+    "$glslang_dir/glslang/MachineIndependent/iomapper.cpp",
+    "$glslang_dir/glslang/MachineIndependent/iomapper.h",
+    "$glslang_dir/glslang/MachineIndependent/limits.cpp",
+    "$glslang_dir/glslang/MachineIndependent/linkValidate.cpp",
+    "$glslang_dir/glslang/MachineIndependent/localintermediate.h",
+    "$glslang_dir/glslang/MachineIndependent/parseConst.cpp",
+    "$glslang_dir/glslang/MachineIndependent/parseVersions.h",
+    "$glslang_dir/glslang/MachineIndependent/preprocessor/Pp.cpp",
+    "$glslang_dir/glslang/MachineIndependent/preprocessor/PpAtom.cpp",
+    "$glslang_dir/glslang/MachineIndependent/preprocessor/PpContext.cpp",
+    "$glslang_dir/glslang/MachineIndependent/preprocessor/PpContext.h",
+    "$glslang_dir/glslang/MachineIndependent/preprocessor/PpMemory.cpp",
+    "$glslang_dir/glslang/MachineIndependent/preprocessor/PpScanner.cpp",
+    "$glslang_dir/glslang/MachineIndependent/preprocessor/PpSymbols.cpp",
+    "$glslang_dir/glslang/MachineIndependent/preprocessor/PpTokens.cpp",
+    "$glslang_dir/glslang/MachineIndependent/preprocessor/PpTokens.h",
+    "$glslang_dir/glslang/MachineIndependent/propagateNoContraction.cpp",
+    "$glslang_dir/glslang/MachineIndependent/propagateNoContraction.h",
+    "$glslang_dir/glslang/MachineIndependent/reflection.cpp",
+    "$glslang_dir/glslang/MachineIndependent/reflection.h",
+    "$glslang_dir/glslang/OSDependent/osinclude.h",
+    "$glslang_dir/glslang/Public/ShaderLang.h",
+    "$glslang_dir/hlsl/hlslAttributes.cpp",
+    "$glslang_dir/hlsl/hlslAttributes.h",
+    "$glslang_dir/hlsl/hlslGrammar.cpp",
+    "$glslang_dir/hlsl/hlslGrammar.h",
+    "$glslang_dir/hlsl/hlslOpMap.cpp",
+    "$glslang_dir/hlsl/hlslOpMap.h",
+    "$glslang_dir/hlsl/hlslParseHelper.cpp",
+    "$glslang_dir/hlsl/hlslParseHelper.h",
+    "$glslang_dir/hlsl/hlslParseables.cpp",
+    "$glslang_dir/hlsl/hlslParseables.h",
+    "$glslang_dir/hlsl/hlslScanContext.cpp",
+    "$glslang_dir/hlsl/hlslScanContext.h",
+    "$glslang_dir/hlsl/hlslTokenStream.cpp",
+    "$glslang_dir/hlsl/hlslTokenStream.h",
+    "$glslang_dir/hlsl/hlslTokens.h",
+  ]
   public_configs = [ ":glslang_config" ]
   configs += [ ":glslang_internal_config" ]
 
@@ -360,10 +528,10 @@ static_library("glslang") {
       "/wd4718",  # Recursive call has no side effects (from PpContext.cpp)
     ]
 
-    sources += rebase_path(vulkan_gypi.glslang_win_sources, ".", "src")
+    sources += [ "$glslang_dir/glslang/OSDependent/Windows/ossource.cpp" ]
   }
   if (is_linux) {
-    sources += rebase_path(vulkan_gypi.glslang_unix_sources, ".", "src")
+    sources += [ "$glslang_dir/glslang/OSDependent/Unix/ossource.cpp" ]
   }
 }
 
@@ -392,49 +560,106 @@ source_set("vulkan_layer_table") {
   ]
 }
 
+core_validation_sources = [
+  "$vulkan_gen_dir/vk_safe_struct.h",
+  "$vulkan_layers_dir/layers/buffer_validation.cpp",
+  "$vulkan_layers_dir/layers/buffer_validation.h",
+  "$vulkan_layers_dir/layers/core_validation.cpp",
+  "$vulkan_layers_dir/layers/core_validation.h",
+  "$vulkan_layers_dir/layers/descriptor_sets.cpp",
+  "$vulkan_layers_dir/layers/descriptor_sets.h",
+]
+object_tracker_sources = [
+  "$vulkan_layers_dir/layers/object_tracker.cpp",
+  "$vulkan_layers_dir/layers/object_tracker.h",
+]
+parameter_validation_sources = [
+  "$vulkan_gen_dir/parameter_validation.h",
+  "$vulkan_layers_dir/layers/parameter_validation.cpp",
+]
+swapchain_sources = [
+  "$vulkan_layers_dir/layers/swapchain.cpp",
+  "$vulkan_layers_dir/layers/swapchain.h",
+]
+threading_sources = [
+  "$vulkan_gen_dir/thread_check.h",
+  "$vulkan_layers_dir/layers/threading.cpp",
+  "$vulkan_layers_dir/layers/threading.h",
+]
+unique_objects_sources = [
+  "$vulkan_gen_dir/unique_objects_wrappers.h",
+
+  # This file is manually included in the layer
+  # "$vulkan_gen_dir/vk_safe_struct.cpp",
+  "$vulkan_gen_dir/vk_safe_struct.h",
+  "$vulkan_layers_dir/layers/unique_objects.cpp",
+  "$vulkan_layers_dir/layers/unique_objects.h",
+]
+
 layers = [
   [
     "core_validation",
-    vulkan_gypi.VkLayer_core_validation_sources,
+    core_validation_sources,
     ":vulkan_core_validation_glslang",
   ],
   [
     "object_tracker",
-    vulkan_gypi.VkLayer_object_tracker_sources,
+    object_tracker_sources,
     "",
   ],
   [
-    "unique_objects",
-    vulkan_gypi.VkLayer_unique_objects_sources,
-    ":vulkan_gen_unique_objects_wrappers_helper",
-  ],
-  [
     "parameter_validation",
-    vulkan_gypi.VkLayer_parameter_validation_sources,
+    parameter_validation_sources,
     ":vulkan_gen_parameter_validation_helper",
   ],
   [
     "swapchain",
-    vulkan_gypi.VkLayer_swapchain_sources,
+    swapchain_sources,
     "",
   ],
   [
     "threading",
-    vulkan_gypi.VkLayer_threading_sources,
+    threading_sources,
     ":vulkan_gen_thread_check_helper",
   ],
+  [
+    "unique_objects",
+    unique_objects_sources,
+    ":vulkan_gen_unique_objects_wrappers_helper",
+  ],
+]
+
+vulkan_gen_json_files_outputs = [
+  "$root_out_dir/$data_dir/VkLayer_core_validation.json",
+  "$root_out_dir/$data_dir/VkLayer_object_tracker.json",
+  "$root_out_dir/$data_dir/VkLayer_parameter_validation.json",
+  "$root_out_dir/$data_dir/VkLayer_swapchain.json",
+  "$root_out_dir/$data_dir/VkLayer_threading.json",
+  "$root_out_dir/$data_dir/VkLayer_unique_objects.json",
 ]
 
 action("vulkan_gen_json_files") {
   script = "$angle_root/scripts/generate_vulkan_layers_json.py"
   if (is_win) {
-    sources =
-        rebase_path(vulkan_gypi.vulkan_gen_json_files_sources_win, ".", "src")
+    sources = [
+      "$vulkan_layers_dir/layers/windows/VkLayer_core_validation.json",
+      "$vulkan_layers_dir/layers/windows/VkLayer_object_tracker.json",
+      "$vulkan_layers_dir/layers/windows/VkLayer_parameter_validation.json",
+      "$vulkan_layers_dir/layers/windows/VkLayer_swapchain.json",
+      "$vulkan_layers_dir/layers/windows/VkLayer_threading.json",
+      "$vulkan_layers_dir/layers/windows/VkLayer_unique_objects.json",
+    ]
     args = [ "$raw_vulkan_layers_dir/layers/windows" ]
   }
   if (is_linux) {
-    sources =
-        rebase_path(vulkan_gypi.vulkan_gen_json_files_sources_linux, ".", "src")
+    sources = [
+      "$vulkan_layers_dir/layers/linux/VkLayer_core_validation.json",
+      "$vulkan_layers_dir/layers/linux/VkLayer_object_tracker.json",
+      "$vulkan_layers_dir/layers/linux/VkLayer_parameter_validation.json",
+      "$vulkan_layers_dir/layers/linux/VkLayer_swapchain.json",
+      "$vulkan_layers_dir/layers/linux/VkLayer_threading.json",
+      "$vulkan_layers_dir/layers/linux/VkLayer_unique_objects.json",
+    ]
     args = [ "$raw_vulkan_layers_dir/layers/linux" ]
   }
 
@@ -445,7 +670,14 @@ action("vulkan_gen_json_files") {
 }
 
 source_set("vulkan_layer_utils") {
-  sources = rebase_path(vulkan_gypi.vulkan_layer_utils_sources, ".", "src")
+  sources = [
+    "$vulkan_layers_dir/layers/vk_layer_config.cpp",
+    "$vulkan_layers_dir/layers/vk_layer_config.h",
+    "$vulkan_layers_dir/layers/vk_layer_extension_utils.cpp",
+    "$vulkan_layers_dir/layers/vk_layer_extension_utils.h",
+    "$vulkan_layers_dir/layers/vk_layer_utils.cpp",
+    "$vulkan_layers_dir/layers/vk_layer_utils.h",
+  ]
   public_configs = [
     ":vulkan_config",
     ":vulkan_loader_config",
@@ -480,7 +712,7 @@ foreach(layer_info, layers) {
     if (layer_info[2] != "") {
       deps += [ layer_info[2] ]
     }
-    sources = rebase_path(layer_info[1], ".", "src")
+    sources = layer_info[1]
     if (is_win) {
       sources += [ "$vulkan_layers_dir/layers/VkLayer_$name.def" ]
     }

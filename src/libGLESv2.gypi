@@ -926,13 +926,6 @@
                             'ANGLE_ENABLE_OPENGL_NULL',
                         ],
                     }],
-                    ['angle_enable_vulkan==1',
-                    {
-                        'defines':
-                        [
-                            'ANGLE_ENABLE_VULKAN',
-                        ],
-                    }],
                     ['angle_enable_null==1',
                     {
                         'defines':
@@ -1186,38 +1179,6 @@
                                 },
                             }
                         }],
-                    ],
-                }],
-                ['angle_enable_vulkan==1',
-                {
-                    'sources':
-                    [
-                        '<@(libangle_vulkan_sources)',
-                    ],
-                    'conditions':
-                    [
-                        ['OS=="win"',
-                        {
-                            'sources':
-                            [
-                                '<@(libangle_vulkan_win32_sources)',
-                            ],
-                        }],
-                        ['OS=="linux"',
-                        {
-                            'sources':
-                            [
-                                '<@(libangle_vulkan_xcb_sources)',
-                            ],
-                        }],
-                    ],
-                    'dependencies':
-                    [
-                        'angle_vulkan',
-                    ],
-                    'export_dependent_settings':
-                    [
-                        'angle_vulkan',
                     ],
                 }],
                 ['angle_enable_null==1',
