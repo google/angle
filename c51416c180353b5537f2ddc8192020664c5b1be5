@@ -1,0 +1,113 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "34295de4_b270f4eb",
+        "filename": "src/libANGLE/Surface.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-12-08T19:14:34Z",
+      "side": 1,
+      "message": "const ref?",
+      "range": {
+        "startLine": 128,
+        "startChar": 4,
+        "endLine": 128,
+        "endChar": 14
+      },
+      "revId": "c51416c180353b5537f2ddc8192020664c5b1be5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0183d349_d98f8f4d",
+        "filename": "src/libANGLE/Surface.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-12-08T19:14:34Z",
+      "side": 1,
+      "message": "nit: getTextureBindingFormat or getBindTexImageFormat",
+      "range": {
+        "startLine": 128,
+        "startChar": 15,
+        "endLine": 128,
+        "endChar": 36
+      },
+      "revId": "c51416c180353b5537f2ddc8192020664c5b1be5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0e05b589_0afccf33",
+        "filename": "src/libANGLE/validationEGL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1051,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-12-08T19:14:34Z",
+      "side": 1,
+      "message": "nit: error strings",
+      "revId": "c51416c180353b5537f2ddc8192020664c5b1be5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4b764dfe_a8766a46",
+        "filename": "src/libANGLE/validationEGL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1095,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-12-08T19:14:34Z",
+      "side": 1,
+      "message": "I\u0027m a bit nervous doing this in the default case of an already established attribute.  It means that these pbuffers will have GLenums in mTextureFormat which is expected to be an EGL enum.\n\nMaybe we should go ahead and make this a new attribute? EGL_IOSURFACE_TEXTURE_FORMAT? Should add IOSURFACE_ into the others too if we go this route.",
+      "range": {
+        "startLine": 1091,
+        "startChar": 0,
+        "endLine": 1095,
+        "endChar": 24
+      },
+      "revId": "c51416c180353b5537f2ddc8192020664c5b1be5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "17360c8c_d5dd1d53",
+        "filename": "src/libANGLE/validationEGL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1162,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-12-08T19:14:34Z",
+      "side": 1,
+      "message": "This validation should still exist if we make the above change.",
+      "range": {
+        "startLine": 1162,
+        "startChar": 4,
+        "endLine": 1162,
+        "endChar": 39
+      },
+      "revId": "c51416c180353b5537f2ddc8192020664c5b1be5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
