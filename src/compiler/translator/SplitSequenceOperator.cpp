@@ -58,7 +58,6 @@ void SplitSequenceOperatorTraverser::nextIteration()
 {
     mFoundExpressionToSplit = false;
     mInsideSequenceOperator = 0;
-    nextTemporaryId();
 }
 
 bool SplitSequenceOperatorTraverser::visitAggregate(Visit visit, TIntermAggregate *node)

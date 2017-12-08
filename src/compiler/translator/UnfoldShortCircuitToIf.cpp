@@ -75,6 +75,7 @@ bool UnfoldShortCircuitTraverser::visitBinary(Visit visit, TIntermBinary *node)
 
             TIntermSequence insertions;
             TType boolType(EbtBool, EbpUndefined, EvqTemporary);
+            nextTemporaryId();
 
             ASSERT(node->getLeft()->getType() == boolType);
             insertions.push_back(createTempInitDeclaration(node->getLeft()));
@@ -100,6 +101,7 @@ bool UnfoldShortCircuitTraverser::visitBinary(Visit visit, TIntermBinary *node)
             // and then further simplifies down to "bool s = x; if(s) s = y;".
             TIntermSequence insertions;
             TType boolType(EbtBool, EbpUndefined, EvqTemporary);
+            nextTemporaryId();
 
             ASSERT(node->getLeft()->getType() == boolType);
             insertions.push_back(createTempInitDeclaration(node->getLeft()));
@@ -138,6 +140,7 @@ bool UnfoldShortCircuitTraverser::visitTernary(Visit visit, TIntermTernary *node
 
     // Unfold "b ? x : y" into "type s; if(b) s = x; else s = y;"
     TIntermSequence insertions;
+    nextTemporaryId();
 
     TIntermDeclaration *tempDeclaration = createTempDeclaration(node->getType());
     insertions.push_back(tempDeclaration);
@@ -165,7 +168,6 @@ bool UnfoldShortCircuitTraverser::visitTernary(Visit visit, TIntermTernary *node
 void UnfoldShortCircuitTraverser::nextIteration()
 {
     mFoundShortCircuit = false;
-    nextTemporaryId();
 }
 
 }  // namespace

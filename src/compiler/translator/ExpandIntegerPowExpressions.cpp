@@ -54,7 +54,6 @@ Traverser::Traverser(TSymbolTable *symbolTable) : TIntermTraverser(true, false, 
 void Traverser::nextIteration()
 {
     mFound = false;
-    nextTemporaryId();
 }
 
 bool Traverser::visitAggregate(Visit visit, TIntermAggregate *node)

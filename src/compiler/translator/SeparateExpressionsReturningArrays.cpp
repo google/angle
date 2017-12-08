@@ -73,6 +73,7 @@ bool SeparateExpressionsTraverser::visitBinary(Visit visit, TIntermBinary *node)
     // TODO(oetuaho): In some cases it would be more optimal to not add the temporary node, but just
     // use the original target of the assignment. Care must be taken so that this doesn't happen
     // when the same array symbol is a target of assignment more than once in one expression.
+    nextTemporaryId();
     insertions.push_back(createTempInitDeclaration(node->getLeft()));
     insertStatementsInParentBlock(insertions);
 
@@ -93,6 +94,8 @@ bool SeparateExpressionsTraverser::visitAggregate(Visit visit, TIntermAggregate 
 
     mFoundArrayExpression = true;
 
+    nextTemporaryId();
+
     TIntermSequence insertions;
     insertions.push_back(createTempInitDeclaration(node->shallowCopy()));
     insertStatementsInParentBlock(insertions);
@@ -105,7 +108,6 @@ bool SeparateExpressionsTraverser::visitAggregate(Visit visit, TIntermAggregate 
 void SeparateExpressionsTraverser::nextIteration()
 {
     mFoundArrayExpression = false;
-    nextTemporaryId();
 }
 
 }  // namespace

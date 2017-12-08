@@ -136,6 +136,8 @@ void RecordConstantPrecisionTraverser::visitConstantUnion(TIntermConstantUnion *
 
     // Make the constant a precision-qualified named variable to make sure it affects the precision
     // of the consuming expression.
+    nextTemporaryId();
+
     TIntermSequence insertions;
     insertions.push_back(createTempInitDeclaration(node, EvqConst));
     insertStatementsInParentBlock(insertions);
@@ -145,7 +147,6 @@ void RecordConstantPrecisionTraverser::visitConstantUnion(TIntermConstantUnion *
 
 void RecordConstantPrecisionTraverser::nextIteration()
 {
-    nextTemporaryId();
     mFoundHigherPrecisionConstant = false;
 }
 
