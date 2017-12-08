@@ -48,6 +48,54 @@
     },
     {
       "key": {
+        "uuid": "b136de45_40612b95",
+        "filename": "src/libANGLE/Surface.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-12-08T19:49:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0183d349_d98f8f4d",
+      "range": {
+        "startLine": 128,
+        "startChar": 15,
+        "endLine": 128,
+        "endChar": 36
+      },
+      "revId": "c51416c180353b5537f2ddc8192020664c5b1be5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cbf87a8a_22a43787",
+        "filename": "src/libANGLE/Surface.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-12-08T19:49:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "34295de4_b270f4eb",
+      "range": {
+        "startLine": 128,
+        "startChar": 4,
+        "endLine": 128,
+        "endChar": 14
+      },
+      "revId": "c51416c180353b5537f2ddc8192020664c5b1be5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0e05b589_0afccf33",
         "filename": "src/libANGLE/validationEGL.cpp",
         "patchSetId": 10
@@ -88,6 +136,30 @@
     },
     {
       "key": {
+        "uuid": "bd37e641_58e3f90e",
+        "filename": "src/libANGLE/validationEGL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1095,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-12-08T19:49:48Z",
+      "side": 1,
+      "message": "As per offline discussion, required EGL_TEXTURE_FORMAT to be set to EGL_TEXTURE_RGBA because otherwise it is invalid to eglBindTexImage the PBuffer. This removes this argument from the validation of (internalFormat, format, type) combination which is ok because (internalFormat, type) is enough to describe all formats.",
+      "parentUuid": "4b764dfe_a8766a46",
+      "range": {
+        "startLine": 1091,
+        "startChar": 0,
+        "endLine": 1095,
+        "endChar": 24
+      },
+      "revId": "c51416c180353b5537f2ddc8192020664c5b1be5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "17360c8c_d5dd1d53",
         "filename": "src/libANGLE/validationEGL.cpp",
         "patchSetId": 10
@@ -108,6 +180,30 @@
       "revId": "c51416c180353b5537f2ddc8192020664c5b1be5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9ecf145d_12a637fb",
+        "filename": "src/libANGLE/validationEGL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1162,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-12-08T19:49:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "17360c8c_d5dd1d53",
+      "range": {
+        "startLine": 1162,
+        "startChar": 4,
+        "endLine": 1162,
+        "endChar": 39
+      },
+      "revId": "c51416c180353b5537f2ddc8192020664c5b1be5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
