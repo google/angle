@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "ffc57701_fc47a18b",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 232,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-12-08T11:47:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0445d622_314e79e5",
+      "range": {
+        "startLine": 232,
+        "startChar": 5,
+        "endLine": 232,
+        "endChar": 64
+      },
+      "revId": "6ed12a00dbcb28d1b141d5dab46f8192037391d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8f389eb1_4df12893",
         "filename": "src/compiler/translator/ShaderVars.cpp",
         "patchSetId": 9
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "7e3196b3_5fd1cfb2",
+        "filename": "src/compiler/translator/ShaderVars.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-12-08T11:47:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8f389eb1_4df12893",
+      "range": {
+        "startLine": 141,
+        "startChar": 0,
+        "endLine": 172,
+        "endChar": 1
+      },
+      "revId": "6ed12a00dbcb28d1b141d5dab46f8192037391d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "79a05082_bb40fb44",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 9
@@ -59,6 +107,30 @@
       "writtenOn": "2017-12-06T18:46:56Z",
       "side": 1,
       "message": "how about you re-structure this code.\n\ninstead of:\n\n  for (ref : varyings)\n  {\n      varying \u003d ref.get;\n      field \u003d findField;\n\n      // do work\n  }\n\ncan you do\n\n  for (ref : varyings)\n  {\n     varying \u003d ref.get;\n     DoWork(varying, varying.name);\n     for (field : varying.field)\n     {\n       DoWork(field, varying.name + \".\" + field.name);\n     }\n  }\n\nThis pattern has a bit less duplication, at the cost of having to treat names differently.\n\nNote that in the pseudocode I use stupid names, please use more appropriate names (if you agree it will work).",
+      "range": {
+        "startLine": 2655,
+        "startChar": 0,
+        "endLine": 2659,
+        "endChar": 0
+      },
+      "revId": "6ed12a00dbcb28d1b141d5dab46f8192037391d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4eb87af5_b7f594ef",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 2659,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-12-08T11:47:07Z",
+      "side": 1,
+      "message": "Good idea to re-structure. I tried accordingly. But error handling for DoWork() was a bit annoying. The code would be:\n\n  for (ref : varyings)\n  {\n     varying \u003d ref.get;\n     result \u003d DoWork(varying, varying.name);\n\n     if (result is \u0027varying matches tfName and is valid\u0027)\n         break;;\n     else if (result is \u0027varying doesn\u0027t match tfName\u0027)\n         continue;\n     else\n         return;\n\n     for (field : varying.field)\n     {\n       DoWork(field, varying.name + \".\" + field.name);\n       Similar error handling. \n     }\n  }\n\nIt looks not quite graceful. But it inspired me to further refactor this function to make it easier to read. Probably it could be:\n    // Validate tfVaryingNames regardless of the actual program varyings.\n    for (const std::string \u0026tfVaryingName : mState.mTransformFeedbackVaryingNames)\n    {\n         CheckUniqueName(...);\n         ...\n    }\n\n    // Validate tfVaryingNames against varyings\n    for (const std::string \u0026tfVaryingName : mState.mTransformFeedbackVaryingNames)\n    {\n         FindTheMacthingVaryingOrField(...);\n         If not found\n             return false;\n         ValidateTheFoundVaryingOrField(...);\n         If not valid\n             return false;\n    }\n\nDoes this make sense? Please take a look, thanks!",
+      "parentUuid": "79a05082_bb40fb44",
       "range": {
         "startLine": 2655,
         "startChar": 0,
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "b52467b1_1712c2e6",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 209,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-12-08T11:47:07Z",
+      "side": 1,
+      "message": "Yes, It\u0027s a bit confusing. I tried to fix it, but found I could no longer benefit vector.emplack_back without such constructor. May I keep it? Probably it doesn\u0027t hurt much, and such multiple overloaded constructors are all over ANGLE code such as the likes of Uniform.h, ShaderVar.h.",
+      "parentUuid": "64f00544_6f536d10",
+      "range": {
+        "startLine": 205,
+        "startChar": 0,
+        "endLine": 209,
+        "endChar": 0
+      },
+      "revId": "6ed12a00dbcb28d1b141d5dab46f8192037391d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f68710b2_5440407f",
         "filename": "src/libANGLE/VaryingPacking.cpp",
         "patchSetId": 9
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "fdcc35f4_d36d6851",
+        "filename": "src/libANGLE/VaryingPacking.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 344,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-12-08T11:47:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f68710b2_5440407f",
+      "range": {
+        "startLine": 341,
+        "startChar": 14,
+        "endLine": 344,
+        "endChar": 54
+      },
+      "revId": "6ed12a00dbcb28d1b141d5dab46f8192037391d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8ac80f01_f3c497d0",
         "filename": "src/libANGLE/VaryingPacking.cpp",
         "patchSetId": 9
@@ -137,6 +257,30 @@
       "revId": "6ed12a00dbcb28d1b141d5dab46f8192037391d5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d7c48531_86708009",
+        "filename": "src/libANGLE/VaryingPacking.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 357,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-12-08T11:47:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8ac80f01_f3c497d0",
+      "range": {
+        "startLine": 357,
+        "startChar": 36,
+        "endLine": 357,
+        "endChar": 45
+      },
+      "revId": "6ed12a00dbcb28d1b141d5dab46f8192037391d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
