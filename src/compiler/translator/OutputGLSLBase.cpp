@@ -1221,7 +1221,7 @@ void TOutputGLSLBase::declareInterfaceBlockLayout(const TInterfaceBlock *interfa
             break;
     }
 
-    if (interfaceBlock->blockBinding() > 0)
+    if (interfaceBlock->blockBinding() >= 0)
     {
         out << ", ";
         out << "binding = " << interfaceBlock->blockBinding();

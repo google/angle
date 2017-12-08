@@ -936,10 +936,6 @@ void InterfaceBlockLinker::defineInterfaceBlock(const GetBlockSize &getBlockSize
         blockIndexes.push_back(static_cast<unsigned int>(blockMemberIndex));
     }
 
-    // ESSL 3.10 section 4.4.4 page 58:
-    // Any uniform or shader storage block declared without a binding qualifier is initially
-    // assigned to block binding point zero.
-    int blockBinding = (interfaceBlock.binding == -1 ? 0 : interfaceBlock.binding);
     for (unsigned int arrayElement = 0; arrayElement < interfaceBlock.elementCount();
          ++arrayElement)
     {
@@ -957,8 +953,13 @@ void InterfaceBlockLinker::defineInterfaceBlock(const GetBlockSize &getBlockSize
             continue;
         }
 
+        // ESSL 3.10 section 4.4.4 page 58:
+        // Any uniform or shader storage block declared without a binding qualifier is initially
+        // assigned to block binding point zero.
+        int blockBinding =
+            (interfaceBlock.binding == -1 ? 0 : interfaceBlock.binding + arrayElement);
         InterfaceBlock block(interfaceBlock.name, interfaceBlock.mappedName,
-                             interfaceBlock.isArray(), arrayElement, blockBinding + arrayElement);
+                             interfaceBlock.isArray(), arrayElement, blockBinding);
         block.memberIndexes = blockIndexes;
         block.setStaticUse(shaderType, interfaceBlock.staticUse);
 
