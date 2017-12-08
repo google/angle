@@ -192,6 +192,30 @@
     },
     {
       "key": {
+        "uuid": "01c9cf2e_3599a28b",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1394,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-12-08T11:19:21Z",
+      "side": 1,
+      "message": "Jamie, you are correct. I am sorry I misunderstood you at the first time. I added the tests you suggested.\n\nRemoving program-\u003eisLinked() exposed some new bugs in the previous code. So I added more tests.",
+      "parentUuid": "4056bc8e_2617360f",
+      "range": {
+        "startLine": 1394,
+        "startChar": 8,
+        "endLine": 1394,
+        "endChar": 31
+      },
+      "revId": "61d4a731d035b8a275a63aae7167a2f4b359c2f9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5cc81f3e_bc2e2172",
         "filename": "src/tests/gl_tests/LinkAndRelinkFailureTest.cpp",
         "patchSetId": 7
