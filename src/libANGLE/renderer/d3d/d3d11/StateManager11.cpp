@@ -1937,6 +1937,9 @@ gl::Error StateManager11::updateState(const gl::Context *context, GLenum drawMod
     auto dirtyBitsCopy = mInternalDirtyBits;
     mInternalDirtyBits.reset();
 
+    // TODO(crbug.com/792966): Workaround for bug in this dirty bit
+    dirtyBitsCopy.set(DIRTY_BIT_PROGRAM_UNIFORM_BUFFERS);
+
     for (auto dirtyBit : dirtyBitsCopy)
     {
         switch (dirtyBit)
