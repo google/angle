@@ -144,6 +144,10 @@ void SetUnionArrayFromMatrix(const angle::Matrix<float> &m, TConstantUnion *resu
 
 }  // namespace anonymous
 
+TName::TName(const TString *name) : mName(name ? (*name) : ""), mIsInternal(false)
+{
+}
+
 ////////////////////////////////////////////////////////////////
 //
 // Member functions of the nodes used for building the tree.
@@ -576,7 +580,7 @@ TIntermConstantUnion::TIntermConstantUnion(const TIntermConstantUnion &node) : T
 
 void TFunctionSymbolInfo::setFromFunction(const TFunction &function)
 {
-    setName(function.name());
+    setName(*function.name());
     setId(TSymbolUniqueId(function));
 }
 

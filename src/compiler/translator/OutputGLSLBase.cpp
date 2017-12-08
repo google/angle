@@ -585,7 +585,7 @@ bool TOutputGLSLBase::visitBinary(Visit visit, TIntermBinary *node)
                 TString fieldName = field->name();
                 if (structure->symbolType() == SymbolType::UserDefined ||
                     structure->symbolType() == SymbolType::Empty)
-                    fieldName = hashName(TName(fieldName));
+                    fieldName = hashName(TName(&fieldName));
 
                 out << fieldName;
                 visitChildren = false;
@@ -604,11 +604,11 @@ bool TOutputGLSLBase::visitBinary(Visit visit, TIntermBinary *node)
                 ASSERT(interfaceBlock->symbolType() != SymbolType::Empty);
                 if (interfaceBlock->symbolType() == SymbolType::UserDefined)
                 {
-                    fieldName = hashName(TName(fieldName));
+                    fieldName = hashName(TName(&fieldName));
                 }
                 else
                 {
-                    ASSERT(interfaceBlock->name() == "gl_PerVertex");
+                    ASSERT(*interfaceBlock->name() == "gl_PerVertex");
                 }
 
                 out << fieldName;
@@ -1177,7 +1177,7 @@ void TOutputGLSLBase::declareStruct(const TStructure *structure)
         const TField *field = fields[i];
         if (writeVariablePrecision(field->type()->getPrecision()))
             out << " ";
-        out << getTypeName(*field->type()) << " " << hashName(TName(field->name()));
+        out << getTypeName(*field->type()) << " " << hashName(TName(&field->name()));
         if (field->type()->isArray())
             out << ArrayString(*field->type());
         out << ";\n";
@@ -1257,7 +1257,7 @@ void TOutputGLSLBase::declareInterfaceBlock(const TInterfaceBlock *interfaceBloc
 
         if (writeVariablePrecision(field->type()->getPrecision()))
             out << " ";
-        out << getTypeName(*field->type()) << " " << hashName(TName(field->name()));
+        out << getTypeName(*field->type()) << " " << hashName(TName(&field->name()));
         if (field->type()->isArray())
             out << ArrayString(*field->type());
         out << ";\n";

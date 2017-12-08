@@ -61,7 +61,8 @@ static TString InterfaceBlockFieldTypeString(const TField &field, TLayoutBlockSt
 
 static TString InterfaceBlockStructName(const TInterfaceBlock &interfaceBlock)
 {
-    return DecoratePrivate(interfaceBlock.name()) + "_type";
+    ASSERT(interfaceBlock.name() != nullptr);
+    return DecoratePrivate(*interfaceBlock.name()) + "_type";
 }
 
 void OutputSamplerIndexArrayInitializer(TInfoSinkBase &out,
@@ -479,7 +480,8 @@ TString UniformHLSL::uniformBlocksHeader(const ReferencedSymbols &referencedInte
         }
 
         unsigned int activeRegister                             = mUniformBlockRegister;
-        mUniformBlockRegisterMap[interfaceBlock.name().c_str()] = activeRegister;
+        ASSERT(interfaceBlock.name() != nullptr);
+        mUniformBlockRegisterMap[interfaceBlock.name()->c_str()] = activeRegister;
 
         if (instanceName != "" && nodeType.isArray())
         {
@@ -510,7 +512,8 @@ TString UniformHLSL::uniformBlockString(const TInterfaceBlock &interfaceBlock,
 {
     const TString &arrayIndexString =
         (arrayIndex != GL_INVALID_INDEX ? Decorate(str(arrayIndex)) : "");
-    const TString &blockName = interfaceBlock.name() + arrayIndexString;
+    ASSERT(interfaceBlock.name() != nullptr);
+    const TString &blockName = *interfaceBlock.name() + arrayIndexString;
     TString hlsl;
 
     hlsl += "cbuffer " + blockName + " : register(b" + str(registerIndex) +

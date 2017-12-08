@@ -475,12 +475,16 @@ const char *TType::buildMangledName() const
         {
             case EbtStruct:
                 mangledName += "struct-";
-                mangledName += mStructure->name();
+                if (mStructure->name() != nullptr)
+                {
+                    mangledName += *mStructure->name();
+                }
                 mangledName += mStructure->mangledFieldList();
                 break;
             case EbtInterfaceBlock:
                 mangledName += "iblock-";
-                mangledName += mInterfaceBlock->name();
+                ASSERT(mInterfaceBlock->name() != nullptr);
+                mangledName += *mInterfaceBlock->name();
                 mangledName += mInterfaceBlock->mangledFieldList();
                 break;
             default:

@@ -19,7 +19,7 @@ namespace
 TName GetInternalFunctionName(const char *name)
 {
     TString nameStr(name);
-    TName nameObj(nameStr);
+    TName nameObj(&nameStr);
     nameObj.setInternal(true);
     return nameObj;
 }

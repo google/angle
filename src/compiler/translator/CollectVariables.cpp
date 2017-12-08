@@ -91,7 +91,8 @@ ShaderVariable *FindVariableInInterfaceBlock(const TString &name,
                                              std::vector<InterfaceBlock> *infoList)
 {
     ASSERT(interfaceBlock);
-    InterfaceBlock *namedBlock = FindVariable(interfaceBlock->name(), infoList);
+    ASSERT(interfaceBlock->name());
+    InterfaceBlock *namedBlock = FindVariable(*interfaceBlock->name(), infoList);
     ASSERT(namedBlock);
 
     // Set static use on the parent interface block here
@@ -569,7 +570,10 @@ void CollectVariablesTraverser::setCommonVariableProperties(const TType &type,
     {
         // Structures use a NONE type that isn't exposed outside ANGLE.
         variableOut->type       = GL_NONE;
-        variableOut->structName = structure->name().c_str();
+        if (structure->symbolType() != SymbolType::Empty)
+        {
+            variableOut->structName = structure->name()->c_str();
+        }
 
         const TFieldList &fields = structure->fields();
 
@@ -578,7 +582,7 @@ void CollectVariablesTraverser::setCommonVariableProperties(const TType &type,
             // Regardless of the variable type (uniform, in/out etc.) its fields are always plain
             // ShaderVariable objects.
             ShaderVariable fieldVariable;
-            setCommonVariableProperties(*field->type(), TName(field->name()), &fieldVariable);
+            setCommonVariableProperties(*field->type(), TName(&field->name()), &fieldVariable);
             variableOut->fields.push_back(fieldVariable);
         }
     }
@@ -657,7 +661,7 @@ void CollectVariablesTraverser::recordInterfaceBlock(const TString &instanceName
     const TInterfaceBlock *blockType = interfaceBlockType.getInterfaceBlock();
     ASSERT(blockType);
 
-    interfaceBlock->name       = blockType->name().c_str();
+    interfaceBlock->name         = blockType->name()->c_str();
     interfaceBlock->mappedName = getMappedName(TName(blockType->name()));
     interfaceBlock->instanceName = instanceName.c_str();
     ASSERT(!interfaceBlockType.isArrayOfArrays());  // Disallowed by GLSL ES 3.10 section 4.3.9
@@ -679,7 +683,7 @@ void CollectVariablesTraverser::recordInterfaceBlock(const TString &instanceName
         const TType &fieldType = *field->type();
 
         InterfaceBlockField fieldVariable;
-        setCommonVariableProperties(fieldType, TName(field->name()), &fieldVariable);
+        setCommonVariableProperties(fieldType, TName(&field->name()), &fieldVariable);
         fieldVariable.isRowMajorLayout =
             (fieldType.getLayoutQualifier().matrixPacking == EmpRowMajor);
         interfaceBlock->fields.push_back(fieldVariable);
@@ -825,7 +829,7 @@ bool CollectVariablesTraverser::visitBinary(Visit, TIntermBinary *binaryNode)
         const TInterfaceBlock *interfaceBlock = blockNode->getType().getInterfaceBlock();
         if (!namedBlock)
         {
-            namedBlock = findNamedInterfaceBlock(interfaceBlock->name());
+            namedBlock = findNamedInterfaceBlock(*interfaceBlock->name());
         }
         ASSERT(namedBlock);
         namedBlock->staticUse   = true;

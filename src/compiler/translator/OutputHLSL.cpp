@@ -341,7 +341,7 @@ TString OutputHLSL::generateStructMapping(const std::vector<MappedStruct> &std14
     {
         TInterfaceBlock *interfaceBlock =
             mappedStruct.blockDeclarator->getType().getInterfaceBlock();
-        const TString &interfaceBlockName = interfaceBlock->name();
+        const TString &interfaceBlockName = *interfaceBlock->name();
         const TName &instanceName         = mappedStruct.blockDeclarator->getName();
         if (mReferencedUniformBlocks.count(interfaceBlockName) == 0)
         {
@@ -380,7 +380,7 @@ TString OutputHLSL::generateStructMapping(const std::vector<MappedStruct> &std14
 
             TType *structType = mappedStruct.field->type();
             mappedStructs +=
-                "static " + Decorate(structType->getStruct()->name()) + " " + mappedName;
+                "static " + Decorate(*structType->getStruct()->name()) + " " + mappedName;
 
             if (structType->isArray())
             {
@@ -890,7 +890,7 @@ void OutputHLSL::visitSymbol(TIntermSymbol *node)
 
             if (interfaceBlock)
             {
-                mReferencedUniformBlocks[interfaceBlock->name()] = node;
+                mReferencedUniformBlocks[*interfaceBlock->name()] = node;
             }
             else
             {
@@ -1238,7 +1238,7 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
                 {
                     TInterfaceBlock *interfaceBlock = leftType.getInterfaceBlock();
                     TIntermSymbol *instanceArraySymbol = node->getLeft()->getAsSymbolNode();
-                    mReferencedUniformBlocks[interfaceBlock->name()] = instanceArraySymbol;
+                    mReferencedUniformBlocks[*interfaceBlock->name()] = instanceArraySymbol;
                     const int arrayIndex = node->getRight()->getAsConstantUnion()->getIConst(0);
                     out << mUniformHLSL->UniformBlockInstanceString(
                         instanceArraySymbol->getSymbol(), arrayIndex);

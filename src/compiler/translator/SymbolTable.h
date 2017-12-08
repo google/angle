@@ -67,8 +67,8 @@ class TSymbol : angle::NonCopyable
         // don't delete name, it's from the pool
     }
 
-    const TString &name() const;
-    virtual const TString &getMangledName() const { return name(); }
+    const TString *name() const;
+    virtual const TString &getMangledName() const;
     virtual bool isFunction() const { return false; }
     virtual bool isVariable() const { return false; }
     virtual bool isStruct() const { return false; }

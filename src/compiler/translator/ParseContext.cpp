@@ -2445,7 +2445,7 @@ TIntermDeclaration *TParseContext::parseSingleDeclaration(
         if (type.getBasicType() == EbtStruct)
         {
             TVariable *emptyVariable =
-                new TVariable(&symbolTable, NewPoolTString(""), type, SymbolType::Empty);
+                new TVariable(&symbolTable, nullptr, type, SymbolType::Empty);
             symbol = new TIntermSymbol(emptyVariable);
         }
         else if (IsAtomicCounter(publicType.getBasicType()))
@@ -3153,7 +3153,8 @@ TIntermFunctionPrototype *TParseContext::createPrototypeNodeFromFunction(
     const TSourceLoc &location,
     bool insertParametersToSymbolTable)
 {
-    checkIsNotReserved(location, function.name());
+    ASSERT(function.name());
+    checkIsNotReserved(location, *function.name());
 
     TIntermFunctionPrototype *prototype =
         new TIntermFunctionPrototype(function.getReturnType(), TSymbolUniqueId(function));
@@ -3200,7 +3201,7 @@ TIntermFunctionPrototype *TParseContext::createPrototypeNodeFromFunction(
             // The parameter had no name or declaring the symbol failed - either way, add a nameless
             // symbol.
             TVariable *emptyVariable =
-                new TVariable(&symbolTable, NewPoolTString(""), *param.type, SymbolType::Empty);
+                new TVariable(&symbolTable, nullptr, *param.type, SymbolType::Empty);
             symbol = new TIntermSymbol(emptyVariable);
         }
         symbol->setLine(location);
@@ -3271,12 +3272,13 @@ void TParseContext::parseFunctionDefinitionHeader(const TSourceLoc &location,
 {
     ASSERT(function);
     ASSERT(*function);
+    ASSERT((*function)->name());
     const TSymbol *builtIn =
         symbolTable.findBuiltIn((*function)->getMangledName(), getShaderVersion());
 
     if (builtIn)
     {
-        error(location, "built-in functions cannot be redefined", (*function)->name().c_str());
+        error(location, "built-in functions cannot be redefined", (*function)->name()->c_str());
     }
     else
     {
@@ -3298,7 +3300,7 @@ void TParseContext::parseFunctionDefinitionHeader(const TSourceLoc &location,
 
         if ((*function)->isDefined())
         {
-            error(location, "function already has a body", (*function)->name().c_str());
+            error(location, "function already has a body", (*function)->name()->c_str());
         }
 
         (*function)->setDefined();
@@ -3325,6 +3327,8 @@ TFunction *TParseContext::parseFunctionDeclarator(const TSourceLoc &location, TF
     TFunction *prevDec =
         static_cast<TFunction *>(symbolTable.find(function->getMangledName(), getShaderVersion()));
 
+    ASSERT(function->name() != nullptr);
+
     for (size_t i = 0u; i < function->getParamCount(); ++i)
     {
         auto &param = function->getParam(i);
@@ -3332,17 +3336,17 @@ TFunction *TParseContext::parseFunctionDeclarator(const TSourceLoc &location, TF
         {
             // ESSL 3.00.6 section 12.10.
             error(location, "Function parameter type cannot be a structure definition",
-                  function->name().c_str());
+                  function->name()->c_str());
         }
     }
 
     if (getShaderVersion() >= 300 && symbolTable.hasUnmangledBuiltInForShaderVersion(
-                                         function->name().c_str(), getShaderVersion()))
+                                         function->name()->c_str(), getShaderVersion()))
     {
         // With ESSL 3.00 and above, names of built-in functions cannot be redeclared as functions.
         // Therefore overloading or redefining builtin functions is an error.
         error(location, "Name of a built-in function cannot be redeclared as function",
-              function->name().c_str());
+              function->name()->c_str());
     }
     else if (prevDec)
     {
@@ -3366,12 +3370,12 @@ TFunction *TParseContext::parseFunctionDeclarator(const TSourceLoc &location, TF
     //
     // Check for previously declared variables using the same name.
     //
-    TSymbol *prevSym = symbolTable.find(function->name(), getShaderVersion());
+    TSymbol *prevSym = symbolTable.find(*function->name(), getShaderVersion());
     if (prevSym)
     {
         if (!prevSym->isFunction())
         {
-            error(location, "redefinition of a function", function->name().c_str());
+            error(location, "redefinition of a function", function->name()->c_str());
         }
     }
     else
@@ -3385,7 +3389,7 @@ TFunction *TParseContext::parseFunctionDeclarator(const TSourceLoc &location, TF
     symbolTable.getOuterLevel()->insert(function);
 
     // Raise error message if main function takes any parameters or return anything other than void
-    if (function->name() == "main")
+    if (*function->name() == "main")
     {
         if (function->getParamCount() > 0)
         {
@@ -3814,16 +3818,13 @@ TIntermDeclaration *TParseContext::addInterfaceBlock(
     }
 
     // The instance variable gets created to refer to the interface block type from the AST
-    // regardless of if there's an instance name. It just has an empty name if there's no instance
-    // name.
-    if (!instanceName)
-    {
-        instanceName = NewPoolTString("");
-    }
+    // regardless of if there's an instance name. It's created as an empty symbol if there is no
+    // instance name.
     TVariable *instanceVariable =
-        new TVariable(&symbolTable, instanceName, interfaceBlockType, SymbolType::UserDefined);
+        new TVariable(&symbolTable, instanceName, interfaceBlockType,
+                      instanceName ? SymbolType::UserDefined : SymbolType::Empty);
 
-    if (instanceName->empty())
+    if (instanceVariable->symbolType() == SymbolType::Empty)
     {
         // define symbols for the members of the interface block
         for (size_t memberIndex = 0; memberIndex < fieldList->size(); ++memberIndex)
@@ -3902,8 +3903,9 @@ void TParseContext::checkIsBelowStructNestingLimit(const TSourceLoc &line, const
     // one to the field's struct nesting.
     if (1 + field.type()->getDeepestStructNesting() > kWebGLMaxStructNesting)
     {
+        ASSERT(field.type()->getStruct()->name() != nullptr);
         std::stringstream reasonStream;
-        reasonStream << "Reference of struct type " << field.type()->getStruct()->name().c_str()
+        reasonStream << "Reference of struct type " << field.type()->getStruct()->name()->c_str()
                      << " exceeds maximum allowed nesting level of " << kWebGLMaxStructNesting;
         std::string reason = reasonStream.str();
         error(line, reason.c_str(), field.name().c_str());
@@ -4770,7 +4772,6 @@ TTypeSpecifierNonArray TParseContext::addStructure(const TSourceLoc &structLine,
     SymbolType structSymbolType = SymbolType::UserDefined;
     if (structName == nullptr)
     {
-        structName       = NewPoolTString("");
         structSymbolType = SymbolType::Empty;
     }
     TStructure *structure = new TStructure(&symbolTable, structName, fieldList, structSymbolType);
@@ -5780,10 +5781,10 @@ TIntermTyped *TParseContext::addMethod(TFunction *fnCall,
     // It's possible for the name pointer in the TFunction to be null in case it gets parsed as
     // a constructor. But such a TFunction can't reach here, since the lexer goes into FIELDS
     // mode after a dot, which makes type identifiers to be parsed as FIELD_SELECTION instead.
-    // So accessing fnCall->getName() below is safe.
-    if (fnCall->name() != "length")
+    // So accessing fnCall->name() below is safe.
+    if (*fnCall->name() != "length")
     {
-        error(loc, "invalid method", fnCall->name().c_str());
+        error(loc, "invalid method", fnCall->name()->c_str());
     }
     else if (!arguments->empty())
     {
@@ -5816,18 +5817,18 @@ TIntermTyped *TParseContext::addNonConstructorFunctionCall(TFunction *fnCall,
     // hidden by a variable name or struct typename.
     // If a function is found, check for one with a matching argument list.
     bool builtIn;
-    const TSymbol *symbol = symbolTable.find(fnCall->name(), mShaderVersion, &builtIn);
+    const TSymbol *symbol = symbolTable.find(*fnCall->name(), mShaderVersion, &builtIn);
     if (symbol != nullptr && !symbol->isFunction())
     {
-        error(loc, "function name expected", fnCall->name().c_str());
+        error(loc, "function name expected", fnCall->name()->c_str());
     }
     else
     {
-        symbol = symbolTable.find(TFunction::GetMangledNameFromCall(fnCall->name(), *arguments),
+        symbol = symbolTable.find(TFunction::GetMangledNameFromCall(*fnCall->name(), *arguments),
                                   mShaderVersion, &builtIn);
         if (symbol == nullptr)
         {
-            error(loc, "no matching overloaded function found", fnCall->name().c_str());
+            error(loc, "no matching overloaded function found", fnCall->name()->c_str());
         }
         else
         {

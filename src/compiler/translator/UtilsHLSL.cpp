@@ -855,10 +855,10 @@ TString StructNameString(const TStructure &structure)
     // translation so that we can link between shader stages.
     if (structure.atGlobalScope())
     {
-        return Decorate(structure.name());
+        return Decorate(*structure.name());
     }
 
-    return "ss" + str(structure.uniqueId().get()) + "_" + structure.name();
+    return "ss" + str(structure.uniqueId().get()) + "_" + *structure.name();
 }
 
 TString QualifiedStructNameString(const TStructure &structure,

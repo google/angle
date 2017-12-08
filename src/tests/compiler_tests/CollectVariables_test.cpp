@@ -809,17 +809,21 @@ TEST_F(CollectHashedVertexVariablesTest, InstancedInterfaceBlock)
     EXPECT_TRUE(field.fields.empty());
 }
 
+// Test a struct uniform where the struct does have a name.
 TEST_F(CollectHashedVertexVariablesTest, StructUniform)
 {
     const std::string &shaderString =
-        "#version 300 es\n"
-        "struct sType {\n"
-        "  float field;\n"
-        "};"
-        "uniform sType u;"
-        "void main() {\n"
-        "   gl_Position = vec4(u.field, 0.0, 0.0, 1.0);\n"
-        "}\n";
+        R"(#version 300 es
+        struct sType
+        {
+            float field;
+        };
+        uniform sType u;
+
+        void main()
+        {
+            gl_Position = vec4(u.field, 0.0, 0.0, 1.0);
+        })";
 
     compile(shaderString);
 
@@ -831,6 +835,47 @@ TEST_F(CollectHashedVertexVariablesTest, StructUniform)
     EXPECT_FALSE(uniform.isArray());
     EXPECT_EQ("u", uniform.name);
     EXPECT_EQ("webgl_1", uniform.mappedName);
+    EXPECT_EQ("sType", uniform.structName);
+    EXPECT_TRUE(uniform.staticUse);
+
+    ASSERT_EQ(1u, uniform.fields.size());
+
+    const ShaderVariable &field = uniform.fields[0];
+
+    EXPECT_GLENUM_EQ(GL_HIGH_FLOAT, field.precision);
+    // EXPECT_TRUE(field.staticUse); // we don't yet support struct static use
+    EXPECT_GLENUM_EQ(GL_FLOAT, field.type);
+    EXPECT_EQ("field", field.name);
+    EXPECT_EQ("webgl_5", field.mappedName);
+    EXPECT_TRUE(field.fields.empty());
+}
+
+// Test a struct uniform where the struct doesn't have a name.
+TEST_F(CollectHashedVertexVariablesTest, NamelessStructUniform)
+{
+    const std::string &shaderString =
+        R"(#version 300 es
+        uniform struct
+        {
+            float field;
+        } u;
+
+        void main()
+        {
+            gl_Position = vec4(u.field, 0.0, 0.0, 1.0);
+        })";
+
+    compile(shaderString);
+
+    const auto &uniforms = mTranslator->getUniforms();
+    ASSERT_EQ(1u, uniforms.size());
+
+    const Uniform &uniform = uniforms[0];
+
+    EXPECT_FALSE(uniform.isArray());
+    EXPECT_EQ("u", uniform.name);
+    EXPECT_EQ("webgl_1", uniform.mappedName);
+    EXPECT_EQ("", uniform.structName);
     EXPECT_TRUE(uniform.staticUse);
 
     ASSERT_EQ(1u, uniform.fields.size());
