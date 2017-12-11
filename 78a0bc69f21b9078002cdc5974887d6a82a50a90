@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "30740c0c_03ab74f2",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1444,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-12-11T05:09:32Z",
+      "side": 1,
+      "message": "\"program !\u003d nullptr\" does not mean that program is linked with compute shader. Do you need to refer yunchao\u0027s patches for this part?",
+      "range": {
+        "startLine": 1439,
+        "startChar": 4,
+        "endLine": 1444,
+        "endChar": 5
+      },
+      "revId": "78a0bc69f21b9078002cdc5974887d6a82a50a90",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ab16eb63_55af6412",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1449,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-12-11T05:09:32Z",
+      "side": 1,
+      "message": "Capital?",
+      "range": {
+        "startLine": 1449,
+        "startChar": 52,
+        "endLine": 1449,
+        "endChar": 53
+      },
+      "revId": "78a0bc69f21b9078002cdc5974887d6a82a50a90",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "189ed08b_5b12f705",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1453,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-12-11T05:09:32Z",
+      "side": 1,
+      "message": "Is \"indirect \u0026 (sizeof(GLuint) - 1)\" better?",
+      "range": {
+        "startLine": 1453,
+        "startChar": 24,
+        "endLine": 1453,
+        "endChar": 77
+      },
+      "revId": "78a0bc69f21b9078002cdc5974887d6a82a50a90",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a5c8a3f4_5fd562b9",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1460,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-12-11T05:09:32Z",
+      "side": 1,
+      "message": "Why not GLuint64 here? indirect is positive.",
+      "range": {
+        "startLine": 1460,
+        "startChar": 54,
+        "endLine": 1460,
+        "endChar": 61
+      },
+      "revId": "78a0bc69f21b9078002cdc5974887d6a82a50a90",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cd88a81d_73e9fc51",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1466,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-12-11T05:09:32Z",
+      "side": 1,
+      "message": "Capital?",
+      "range": {
+        "startLine": 1466,
+        "startChar": 16,
+        "endLine": 1466,
+        "endChar": 17
+      },
+      "revId": "78a0bc69f21b9078002cdc5974887d6a82a50a90",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
