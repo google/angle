@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3c41e4b2_4131eb36",
+        "filename": "gyp/common.gypi",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-12-11T19:06:36Z",
+      "side": 1,
+      "message": "You shouldn\u0027t need to change this file. GYP builds aren\u0027t supported anymore on macOS and you should use GN. The doc update hasn\u0027t landed yet: see https://chromium-review.googlesource.com/c/angle/angle/+/775858",
+      "revId": "b53602d58eccda8e0d3c6aba8c18f6f7d3613228",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
