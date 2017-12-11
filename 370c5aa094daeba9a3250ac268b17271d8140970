@@ -1,0 +1,228 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4dad26fe_8bebe817",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-12-11T03:25:45Z",
+      "side": 1,
+      "message": "You should mention that these features aren\u0027t included in this patch:\nGL_SAMPLE_POSITION_ANGLE\nGL_TEXTURE_FIXED_SAMPLE_LOCATIONS_ANGLE \nGL_TEXTURE_BINDING_2D_MULTISAMPLE_ANGLE\nGL_TEXTURE_SAMPLES_ANGLE\nglGetMultisamplefvANGLE\n\nGL_SAMPLE_MASK_ANGLE \nGL_SAMPLE_MASK_VALUE_ANGLE\nGL_MAX_SAMPLE_MASK_WORDS_ANGLE \nglSampleMaskiANGLE",
+      "revId": "370c5aa094daeba9a3250ac268b17271d8140970",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a025052a_5669fef3",
+        "filename": "include/GLES3/gl3ext.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-12-11T03:25:45Z",
+      "side": 1,
+      "message": "Please use the copyright message in gl2ext.h.",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 13,
+        "endChar": 2
+      },
+      "revId": "370c5aa094daeba9a3250ac268b17271d8140970",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d3d7be8e_222d4de8",
+        "filename": "include/GLES3/gl3ext.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-12-11T03:25:45Z",
+      "side": 1,
+      "message": "Please use the same style as it is in gl2ext.h.\n/* GL_ANGLE_MULTISAMPLE_TEXTURE */",
+      "range": {
+        "startLine": 48,
+        "startChar": 8,
+        "endLine": 48,
+        "endChar": 40
+      },
+      "revId": "370c5aa094daeba9a3250ac268b17271d8140970",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "01b4a056_89854b07",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 670,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-12-11T03:25:45Z",
+      "side": 1,
+      "message": "Is it better to remove this pair of bracket?",
+      "range": {
+        "startLine": 670,
+        "startChar": 8,
+        "endLine": 670,
+        "endChar": 9
+      },
+      "revId": "370c5aa094daeba9a3250ac268b17271d8140970",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bea409de_1e1b7f34",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 5754,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-12-11T03:25:45Z",
+      "side": 1,
+      "message": "\"Texture target requires OpenGL ES 3.1 or GL_ANGLE_texture_multisample.\"",
+      "range": {
+        "startLine": 5752,
+        "startChar": 59,
+        "endLine": 5754,
+        "endChar": 74
+      },
+      "revId": "370c5aa094daeba9a3250ac268b17271d8140970",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ce5780b6_128d677d",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2976,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-12-11T03:25:45Z",
+      "side": 1,
+      "message": "!context-\u003egetExtensions().textureMultisample",
+      "range": {
+        "startLine": 2976,
+        "startChar": 0,
+        "endLine": 2976,
+        "endChar": 68
+      },
+      "revId": "370c5aa094daeba9a3250ac268b17271d8140970",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "627bda7d_9a39b4f9",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3702,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-12-11T03:25:45Z",
+      "side": 1,
+      "message": "Is it possible to share some code here with ValidateTexStorage2DMultisampleANGLE in validationES31.cpp?",
+      "range": {
+        "startLine": 3702,
+        "startChar": 5,
+        "endLine": 3702,
+        "endChar": 41
+      },
+      "revId": "370c5aa094daeba9a3250ac268b17271d8140970",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e61064c1_ee2a6a26",
+        "filename": "src/libGLESv2/entry_points_gles_3_0_ext.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-12-11T03:25:45Z",
+      "side": 1,
+      "message": "This should be put into ValidateTexStorage2DMultisampleANGLE.",
+      "range": {
+        "startLine": 33,
+        "startChar": 1,
+        "endLine": 37,
+        "endChar": 9
+      },
+      "revId": "370c5aa094daeba9a3250ac268b17271d8140970",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4e3350bb_eba4fb0a",
+        "filename": "src/libGLESv2/entry_points_gles_3_0_ext.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-12-11T03:25:45Z",
+      "side": 1,
+      "message": "Please folllow the style of other auto-generated entry points.",
+      "range": {
+        "startLine": 18,
+        "startChar": 0,
+        "endLine": 56,
+        "endChar": 1
+      },
+      "revId": "370c5aa094daeba9a3250ac268b17271d8140970",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b4ae94c1_72831f42",
+        "filename": "src/tests/gl_tests/TextureMultisampleTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-12-11T03:25:45Z",
+      "side": 1,
+      "message": "ANGLE_SKIP_TEST_IF(!extensionEnabled(\"GL_ANGLE_texture_multisample\"));",
+      "range": {
+        "startLine": 190,
+        "startChar": 4,
+        "endLine": 193,
+        "endChar": 5
+      },
+      "revId": "370c5aa094daeba9a3250ac268b17271d8140970",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
