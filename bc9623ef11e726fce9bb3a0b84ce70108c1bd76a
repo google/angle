@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ae0e97e5_9733ae8e",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 4279,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-12-11T07:06:13Z",
+      "side": 1,
+      "message": "syncRendererState() ? Or add a method to sync memory related state?",
+      "revId": "bc9623ef11e726fce9bb3a0b84ce70108c1bd76a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4118669d_3a313da0",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1764,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-12-11T07:06:13Z",
+      "side": 1,
+      "message": "I think it\u0027s a const value and put it out of this function. You don\u0027t need to calculate it every time.",
+      "range": {
+        "startLine": 1764,
+        "startChar": 15,
+        "endLine": 1764,
+        "endChar": 37
+      },
+      "revId": "bc9623ef11e726fce9bb3a0b84ce70108c1bd76a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e2abf41f_37f0a62f",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1786,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-12-11T07:06:13Z",
+      "side": 1,
+      "message": "Same here.",
+      "range": {
+        "startLine": 1786,
+        "startChar": 15,
+        "endLine": 1786,
+        "endChar": 37
+      },
+      "revId": "bc9623ef11e726fce9bb3a0b84ce70108c1bd76a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
