@@ -72,37 +72,31 @@ bool Traverser::visitAggregate(Visit visit, TIntermAggregate *node)
 
     const TIntermSequence *sequence = node->getSequence();
     ASSERT(sequence->size() == 2u);
-    const TIntermConstantUnion *constantNode = sequence->at(1)->getAsConstantUnion();
+    const TIntermConstantUnion *constantExponent = sequence->at(1)->getAsConstantUnion();
 
     // Test 1: check for a single constant.
-    if (!constantNode || constantNode->getNominalSize() != 1)
+    if (!constantExponent || constantExponent->getNominalSize() != 1)
     {
         return true;
     }
 
-    const TConstantUnion *constant = constantNode->getUnionArrayPointer();
+    ASSERT(constantExponent->getBasicType() == EbtFloat);
+    float exponentValue = constantExponent->getUnionArrayPointer()->getFConst();
 
-    TConstantUnion asFloat;
-    asFloat.cast(EbtFloat, *constant);
-
-    float value = asFloat.getFConst();
-
-    // Test 2: value is in the problematic range.
-    if (value < -5.0f || value > 9.0f)
+    // Test 2: exponentValue is in the problematic range.
+    if (exponentValue < -5.0f || exponentValue > 9.0f)
     {
         return true;
     }
 
-    // Test 3: value is integer or pretty close to an integer.
-    float absval = std::abs(value);
-    float frac   = absval - std::round(absval);
-    if (frac > 0.0001f)
+    // Test 3: exponentValue is integer or pretty close to an integer.
+    if (std::abs(exponentValue - std::round(exponentValue)) > 0.0001f)
     {
         return true;
     }
 
     // Test 4: skip -1, 0, and 1
-    int exponent = static_cast<int>(value);
+    int exponent = static_cast<int>(std::round(exponentValue));
     int n        = std::abs(exponent);
     if (n < 2)
     {

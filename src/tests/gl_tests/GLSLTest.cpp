@@ -1629,22 +1629,28 @@ std::string GenerateSmallPowShader(double base, double exponent)
 // See http://anglebug.com/851
 TEST_P(GLSLTest, PowOfSmallConstant)
 {
-    std::vector<double> bads;
-    for (int eps = -1; eps <= 1; ++eps)
+    // Test with problematic exponents that are close to an integer.
+    std::vector<double> testExponents;
+    std::array<double, 5> epsilonMultipliers = {-100.0, -1.0, 0.0, 1.0, 100.0};
+    for (double epsilonMultiplier : epsilonMultipliers)
     {
         for (int i = -4; i <= 5; ++i)
         {
             if (i >= -1 && i <= 1)
                 continue;
             const double epsilon = 1.0e-8;
-            double bad           = static_cast<double>(i) + static_cast<double>(eps) * epsilon;
-            bads.push_back(bad);
+            double bad           = static_cast<double>(i) + epsilonMultiplier * epsilon;
+            testExponents.push_back(bad);
         }
     }
 
-    for (double bad : bads)
+    // Also test with a few exponents that are not close to an integer.
+    testExponents.push_back(3.6);
+    testExponents.push_back(3.4);
+
+    for (double testExponent : testExponents)
     {
-        const std::string &fragmentShaderSource = GenerateSmallPowShader(1.0e-6, bad);
+        const std::string &fragmentShaderSource = GenerateSmallPowShader(1.0e-6, testExponent);
 
         ANGLE_GL_PROGRAM(program, mSimpleVSSource, fragmentShaderSource);
 
