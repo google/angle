@@ -575,10 +575,6 @@ TEST_F(WEBGLMultiviewVertexShaderOutputCodeTest, StrippedOVRMultiviewDirective)
     EXPECT_FALSE(foundInESSLCode("GL_OVR_multiview"));
     EXPECT_FALSE(foundInGLSLCode("GL_OVR_multiview"));
 
-    compile(shaderString, SH_TRANSLATE_VIEWID_OVR_TO_UNIFORM);
-    EXPECT_FALSE(foundInESSLCode("GL_OVR_multiview"));
-    EXPECT_FALSE(foundInGLSLCode("GL_OVR_multiview"));
-
     // The directive should be outputted from the ESSL translator with none of the options being
     // set.
     compile(shaderString);

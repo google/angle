@@ -104,13 +104,6 @@ void TranslatorESSL::translate(TIntermBlock *root,
                            &getSymbolTable(), getShaderType(), shaderVer, precisionEmulation,
                            compileOptions);
 
-    if (compileOptions & SH_TRANSLATE_VIEWID_OVR_TO_UNIFORM)
-    {
-        TName uniformName(TString("ViewID_OVR"));
-        uniformName.setInternal(true);
-        sink << "highp uniform int " << outputESSL.hashName(uniformName) << ";\n";
-    }
-
     root->traverse(&outputESSL);
 }
 
@@ -125,9 +118,8 @@ void TranslatorESSL::writeExtensionBehavior(ShCompileOptions compileOptions)
     TInfoSinkBase &sink                   = getInfoSink().obj;
     const TExtensionBehavior &extBehavior = getExtensionBehavior();
     const bool isMultiviewExtEmulated =
-        (compileOptions &
-         (SH_TRANSLATE_VIEWID_OVR_TO_UNIFORM | SH_INITIALIZE_BUILTINS_FOR_INSTANCED_MULTIVIEW |
-          SH_SELECT_VIEW_IN_NV_GLSL_VERTEX_SHADER)) != 0u;
+        (compileOptions & (SH_INITIALIZE_BUILTINS_FOR_INSTANCED_MULTIVIEW |
+                           SH_SELECT_VIEW_IN_NV_GLSL_VERTEX_SHADER)) != 0u;
     for (TExtensionBehavior::const_iterator iter = extBehavior.begin(); iter != extBehavior.end();
          ++iter)
     {

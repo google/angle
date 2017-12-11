@@ -25,7 +25,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 191
+#define ANGLE_SH_VERSION 192
 
 enum ShShaderSpec
 {
@@ -214,13 +214,9 @@ const ShCompileOptions SH_REWRITE_FLOAT_UNARY_MINUS_OPERATOR = UINT64_C(1) << 29
 // It works by using an expression to emulate this function.
 const ShCompileOptions SH_EMULATE_ATAN2_FLOAT_FUNCTION = UINT64_C(1) << 30;
 
-// Set to 1 to translate gl_ViewID_OVR to an uniform so that the extension can be emulated.
-// "uniform highp uint ViewID_OVR".
-const ShCompileOptions SH_TRANSLATE_VIEWID_OVR_TO_UNIFORM = UINT64_C(1) << 31;
-
 // Set to initialize uninitialized local and global temporary variables. Should only be used with
 // GLSL output. In HLSL output variables are initialized regardless of if this flag is set.
-const ShCompileOptions SH_INITIALIZE_UNINITIALIZED_LOCALS = UINT64_C(1) << 32;
+const ShCompileOptions SH_INITIALIZE_UNINITIALIZED_LOCALS = UINT64_C(1) << 31;
 
 // The flag modifies the shader in the following way:
 // Every occurrence of gl_InstanceID is replaced by the global temporary variable InstanceID.
@@ -229,7 +225,7 @@ const ShCompileOptions SH_INITIALIZE_UNINITIALIZED_LOCALS = UINT64_C(1) << 32;
 // ViewID_OVR = uint(gl_InstanceID) % num_views;
 // InstanceID = gl_InstanceID / num_views;
 // ViewID_OVR is added as a varying variable to both the vertex and fragment shaders.
-const ShCompileOptions SH_INITIALIZE_BUILTINS_FOR_INSTANCED_MULTIVIEW = UINT64_C(1) << 33;
+const ShCompileOptions SH_INITIALIZE_BUILTINS_FOR_INSTANCED_MULTIVIEW = UINT64_C(1) << 32;
 
 // With the flag enabled the GLSL/ESSL vertex shader is modified to include code for viewport
 // selection in the following way:
@@ -239,11 +235,11 @@ const ShCompileOptions SH_INITIALIZE_BUILTINS_FOR_INSTANCED_MULTIVIEW = UINT64_C
 // - A declaration of the uniform multiviewBaseViewLayerIndex.
 // Note: The SH_INITIALIZE_BUILTINS_FOR_INSTANCED_MULTIVIEW flag also has to be enabled to have the
 // temporary variable ViewID_OVR declared and initialized.
-const ShCompileOptions SH_SELECT_VIEW_IN_NV_GLSL_VERTEX_SHADER = UINT64_C(1) << 34;
+const ShCompileOptions SH_SELECT_VIEW_IN_NV_GLSL_VERTEX_SHADER = UINT64_C(1) << 33;
 
 // If the flag is enabled, gl_PointSize is clamped to the maximum point size specified in
 // ShBuiltInResources in vertex shaders.
-const ShCompileOptions SH_CLAMP_POINT_SIZE = UINT64_C(1) << 35;
+const ShCompileOptions SH_CLAMP_POINT_SIZE = UINT64_C(1) << 34;
 
 // Turn some arithmetic operations that operate on a float vector-scalar pair into vector-vector
 // operations. This is done recursively. Some scalar binary operations inside vector constructors
@@ -251,11 +247,11 @@ const ShCompileOptions SH_CLAMP_POINT_SIZE = UINT64_C(1) << 35;
 //
 // This is targeted to work around a bug in NVIDIA OpenGL drivers that was reproducible on NVIDIA
 // driver version 387.92. It works around the most common occurrences of the bug.
-const ShCompileOptions SH_REWRITE_VECTOR_SCALAR_ARITHMETIC = UINT64_C(1) << 36;
+const ShCompileOptions SH_REWRITE_VECTOR_SCALAR_ARITHMETIC = UINT64_C(1) << 35;
 
 // Don't use loops to initialize uninitialized variables. Only has an effect if some kind of
 // variable initialization is turned on.
-const ShCompileOptions SH_DONT_USE_LOOPS_TO_INITIALIZE_VARIABLES = UINT64_C(1) << 37;
+const ShCompileOptions SH_DONT_USE_LOOPS_TO_INITIALIZE_VARIABLES = UINT64_C(1) << 36;
 
 // Defines alternate strategies for implementing array index clamping.
 enum ShArrayIndexClampingStrategy
