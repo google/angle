@@ -13,6 +13,9 @@ declare_args() {
   # Use the PCI lib to collect GPU information on Linux.
   use_libpci = is_linux && (!is_chromecast || is_cast_desktop_build) &&
                (use_x11 || use_ozone)
+
+  # Link in system libGL, to work with apitrace.  See doc/DebuggingTips.md.
+  angle_link_glx = false
 }
 
 if (!build_with_chromium) {
@@ -409,6 +412,10 @@ static_library("libANGLE") {
   include_dirs = []
   libs = []
   defines = []
+  if (angle_link_glx) {
+    libs += [ "GL" ]
+    defines += [ "ANGLE_LINK_GLX" ]
+  }
   public_deps = [
     ":angle_common",
   ]
