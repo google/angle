@@ -101,6 +101,8 @@ class FramebufferState final : angle::NonCopyable
 
   private:
     const FramebufferAttachment *getWebGLDepthStencilAttachment() const;
+    const FramebufferAttachment *getWebGLDepthAttachment() const;
+    const FramebufferAttachment *getWebGLStencilAttachment() const;
 
     friend class Framebuffer;
 

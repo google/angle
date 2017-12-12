@@ -2980,6 +2980,22 @@ TEST_P(WebGLCompatibilityTest, FramebufferAttachmentConsistancy)
 
     EXPECT_GL_NO_ERROR();
     EXPECT_GLENUM_EQ(GL_RENDERBUFFER, attachmentType);
+
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rb2);
+
+    glGetFramebufferAttachmentParameteriv(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
+                                          GL_FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE, &attachmentType);
+
+    EXPECT_GL_NO_ERROR();
+    EXPECT_GLENUM_EQ(GL_RENDERBUFFER, attachmentType);
+
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rb2);
+
+    glGetFramebufferAttachmentParameteriv(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
+                                          GL_FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE, &attachmentType);
+
+    EXPECT_GL_NO_ERROR();
+    EXPECT_GLENUM_EQ(GL_RENDERBUFFER, attachmentType);
 }
 
 // This tests that rendering feedback loops works as expected with WebGL 2.

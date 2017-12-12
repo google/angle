@@ -305,6 +305,9 @@ const FramebufferAttachment *FramebufferState::getAttachment(const Context *cont
         return getColorAttachment(attachment - GL_COLOR_ATTACHMENT0);
     }
 
+    // WebGL1 allows a developer to query for attachment parameters even when "inconsistant" (i.e.
+    // multiple conflicting attachment points) and requires us to return the framebuffer attachment
+    // associated with WebGL.
     switch (attachment)
     {
         case GL_COLOR:
@@ -312,15 +315,26 @@ const FramebufferAttachment *FramebufferState::getAttachment(const Context *cont
             return getColorAttachment(0);
         case GL_DEPTH:
         case GL_DEPTH_ATTACHMENT:
-            return getDepthAttachment();
+            if (context->isWebGL1())
+            {
+                return getWebGLDepthAttachment();
+            }
+            else
+            {
+                return getDepthAttachment();
+            }
         case GL_STENCIL:
         case GL_STENCIL_ATTACHMENT:
-            return getStencilAttachment();
+            if (context->isWebGL1())
+            {
+                return getWebGLStencilAttachment();
+            }
+            else
+            {
+                return getStencilAttachment();
+            }
         case GL_DEPTH_STENCIL:
         case GL_DEPTH_STENCIL_ATTACHMENT:
-            // In WebG1, DEPTH_STENCIL_ATTACHMENT is an alternative attachment point and even when
-            // inconsistant (i.e. multiple conflicting attachment points), it is still permitted to
-            // query the attachment parameters.
             if (context->isWebGL1())
             {
                 return getWebGLDepthStencilAttachment();
@@ -413,6 +427,11 @@ const FramebufferAttachment *FramebufferState::getDepthAttachment() const
     return mDepthAttachment.isAttached() ? &mDepthAttachment : nullptr;
 }
 
+const FramebufferAttachment *FramebufferState::getWebGLDepthAttachment() const
+{
+    return mWebGLDepthAttachment.isAttached() ? &mWebGLDepthAttachment : nullptr;
+}
+
 const FramebufferAttachment *FramebufferState::getWebGLDepthStencilAttachment() const
 {
     return mWebGLDepthStencilAttachment.isAttached() ? &mWebGLDepthStencilAttachment : nullptr;
@@ -421,6 +440,11 @@ const FramebufferAttachment *FramebufferState::getWebGLDepthStencilAttachment() 
 const FramebufferAttachment *FramebufferState::getStencilAttachment() const
 {
     return mStencilAttachment.isAttached() ? &mStencilAttachment : nullptr;
+}
+
+const FramebufferAttachment *FramebufferState::getWebGLStencilAttachment() const
+{
+    return mWebGLStencilAttachment.isAttached() ? &mWebGLStencilAttachment : nullptr;
 }
 
 const FramebufferAttachment *FramebufferState::getDepthStencilAttachment() const
