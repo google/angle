@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "9a45c7f8_749e5255",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 465,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-12T22:56:38Z",
+      "side": 1,
+      "message": "AttachmentOpsArray doesn\u0027t have a constructor. I was trying to be a bit tricky, and keep the 8 and 4 byte types without constructors so they could be initialized quickly in the unordered_maps.",
+      "parentUuid": "48e257c2_b5e9a948",
+      "revId": "3e0668f072f618817b8e1170b2623287eb52d69f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8008a51b_ed3fd72d",
         "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
         "patchSetId": 6
@@ -30,6 +48,24 @@
       "writtenOn": "2017-12-12T22:53:11Z",
       "side": 1,
       "message": "ditto",
+      "revId": "3e0668f072f618817b8e1170b2623287eb52d69f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fa0b6f66_d0f20174",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-12T22:56:38Z",
+      "side": 1,
+      "message": "See other reply.",
+      "parentUuid": "8008a51b_ed3fd72d",
       "revId": "3e0668f072f618817b8e1170b2623287eb52d69f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "9b4c1f61_18bac258",
+        "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1345,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-12T22:56:38Z",
+      "side": 1,
+      "message": "It\u0027s based on the assumption that color attachments are packed first. I should probably put that in a comment, and add an ASSERT here.",
+      "parentUuid": "33a82f29_40368bfc",
+      "revId": "3e0668f072f618817b8e1170b2623287eb52d69f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3b938a4d_32d874b5",
         "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.cpp",
         "patchSetId": 6
@@ -64,6 +118,24 @@
       "writtenOn": "2017-12-12T22:53:11Z",
       "side": 1,
       "message": "Since the layout is only depth-stencil vs. color could it be made a bool?",
+      "revId": "3e0668f072f618817b8e1170b2623287eb52d69f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a1f6d1cb_3c9996f0",
+        "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1359,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-12T22:56:38Z",
+      "side": 1,
+      "message": "potentially yes.",
+      "parentUuid": "3b938a4d_32d874b5",
       "revId": "3e0668f072f618817b8e1170b2623287eb52d69f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
