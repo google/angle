@@ -291,6 +291,43 @@ TEST_P(D3DTextureTest, TestD3D11SupportedFormats)
     }
 }
 
+// Test creating a pbuffer with unnecessary EGL_WIDTH and EGL_HEIGHT attributes because that's what
+// Chromium does. This is a regression test for crbug.com/794086
+TEST_P(D3DTextureTest, UnnecessaryWidthHeightAttributes)
+{
+    ANGLE_SKIP_TEST_IF(!valid() || !IsD3D11());
+    ASSERT(mD3D11Device);
+    ID3D11Texture2D *texture = nullptr;
+    CD3D11_TEXTURE2D_DESC desc(DXGI_FORMAT_R8G8B8A8_UNORM, 1, 1, 1, 1, D3D11_BIND_RENDER_TARGET);
+    desc.SampleDesc.Count   = 1;
+    desc.SampleDesc.Quality = 0;
+    EXPECT_TRUE(SUCCEEDED(mD3D11Device->CreateTexture2D(&desc, nullptr, &texture)));
+
+    EGLint attribs[] = {
+        EGL_TEXTURE_FORMAT, EGL_TEXTURE_RGBA,
+        EGL_TEXTURE_TARGET, EGL_TEXTURE_2D,
+        EGL_WIDTH,          1,
+        EGL_HEIGHT,         1,
+        EGL_NONE,           EGL_NONE,
+    };
+
+    EGLWindow *window  = getEGLWindow();
+    EGLDisplay display = window->getDisplay();
+    EGLConfig config   = window->getConfig();
+
+    EGLSurface pbuffer =
+        eglCreatePbufferFromClientBuffer(display, EGL_D3D_TEXTURE_ANGLE, texture, config, attribs);
+
+    ASSERT_EGL_SUCCESS();
+    ASSERT_NE(pbuffer, EGL_NO_SURFACE);
+
+    texture->Release();
+
+    // Make current with fixture EGL to ensure the Surface can be released immediately.
+    getEGLWindow()->makeCurrent();
+    eglDestroySurface(display, pbuffer);
+}
+
 // Test creating a pbuffer from a d3d surface and clearing it
 TEST_P(D3DTextureTest, Clear)
 {
