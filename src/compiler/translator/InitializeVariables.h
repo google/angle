@@ -25,12 +25,14 @@ typedef std::vector<sh::ShaderVariable> InitVariableList;
 // may be an array, struct or any combination of these, as long as it contains only basic types.
 TIntermSequence *CreateInitCode(const TIntermTyped *initializedSymbol,
                                 bool canUseLoopsToInitialize,
+                                bool highPrecisionSupported,
                                 TSymbolTable *symbolTable);
 
 // Initialize all uninitialized local variables, so that undefined behavior is avoided.
 void InitializeUninitializedLocals(TIntermBlock *root,
                                    int shaderVersion,
                                    bool canUseLoopsToInitialize,
+                                   bool highPrecisionSupported,
                                    TSymbolTable *symbolTable);
 
 // This function can initialize all the types that CreateInitCode is able to initialize. All
@@ -46,7 +48,8 @@ void InitializeVariables(TIntermBlock *root,
                          TSymbolTable *symbolTable,
                          int shaderVersion,
                          const TExtensionBehavior &extensionBehavior,
-                         bool canUseLoopsToInitialize);
+                         bool canUseLoopsToInitialize,
+                         bool highPrecisionSupported);
 
 }  // namespace sh
 

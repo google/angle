@@ -602,7 +602,10 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     bool initializeLocalsAndGlobals =
         (compileOptions & SH_INITIALIZE_UNINITIALIZED_LOCALS) && !IsOutputHLSL(getOutputType());
     bool canUseLoopsToInitialize = !(compileOptions & SH_DONT_USE_LOOPS_TO_INITIALIZE_VARIABLES);
-    DeferGlobalInitializers(root, initializeLocalsAndGlobals, canUseLoopsToInitialize, &symbolTable);
+    bool highPrecisionSupported =
+        shaderType != GL_FRAGMENT_SHADER || compileResources.FragmentPrecisionHigh;
+    DeferGlobalInitializers(root, initializeLocalsAndGlobals, canUseLoopsToInitialize,
+                            highPrecisionSupported, &symbolTable);
 
     if (initializeLocalsAndGlobals)
     {
@@ -623,7 +626,7 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         }
 
         InitializeUninitializedLocals(root, getShaderVersion(), canUseLoopsToInitialize,
-                                      &getSymbolTable());
+                                      highPrecisionSupported, &getSymbolTable());
     }
 
     if (getShaderType() == GL_VERTEX_SHADER && (compileOptions & SH_CLAMP_POINT_SIZE))
@@ -1067,7 +1070,7 @@ void TCompiler::initializeGLPosition(TIntermBlock *root)
     sh::ShaderVariable var(GL_FLOAT_VEC4);
     var.name = "gl_Position";
     list.push_back(var);
-    InitializeVariables(root, list, &symbolTable, shaderVersion, extensionBehavior, false);
+    InitializeVariables(root, list, &symbolTable, shaderVersion, extensionBehavior, false, false);
 }
 
 void TCompiler::useAllMembersInUnusedStandardAndSharedBlocks(TIntermBlock *root)
@@ -1109,7 +1112,7 @@ void TCompiler::initializeOutputVariables(TIntermBlock *root)
             list.push_back(var);
         }
     }
-    InitializeVariables(root, list, &symbolTable, shaderVersion, extensionBehavior, false);
+    InitializeVariables(root, list, &symbolTable, shaderVersion, extensionBehavior, false, false);
 }
 
 const TExtensionBehavior &TCompiler::getExtensionBehavior() const
