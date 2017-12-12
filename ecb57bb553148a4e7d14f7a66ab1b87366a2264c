@@ -140,6 +140,30 @@
       "revId": "ecb57bb553148a4e7d14f7a66ab1b87366a2264c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b0072eb0_144b402c",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 7
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-12T17:49:29Z",
+      "side": 1,
+      "message": "I think it\u0027s better to remove it as it\u0027s not particularly relevant to anyone reading the documentation. But would just like to land this so not going to worry about this minor detail.",
+      "parentUuid": "056ffba2_2d459f60",
+      "range": {
+        "startLine": 75,
+        "startChar": 0,
+        "endLine": 75,
+        "endChar": 70
+      },
+      "revId": "ecb57bb553148a4e7d14f7a66ab1b87366a2264c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
