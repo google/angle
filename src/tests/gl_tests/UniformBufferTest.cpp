@@ -1390,6 +1390,159 @@ TEST_P(UniformBufferTest, Std140UniformBlockWithRowMajorQualifierOnStruct)
     EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(255, 64, 128, 32), 5);
 }
 
+constexpr char kVertexShader[] = R"(#version 300 es
+in vec4 a_vertex;
+void main()
+{
+  gl_Position = a_vertex;
+})";
+
+constexpr char kFragmentShader[] = R"(#version 300 es
+precision mediump float;
+
+layout (std140) uniform color_ubo
+{
+  vec4 color;
+};
+
+out vec4 fragColor;
+void main()
+{
+  fragColor = color;
+})";
+
+// Regression test for a dirty bit bug in ANGLE. See http://crbug.com/792966
+TEST_P(UniformBufferTest, SimpleBindingChange)
+{
+    ANGLE_GL_PROGRAM(program, kVertexShader, kFragmentShader);
+
+    glBindAttribLocation(program, 0, "a_vertex");
+    glUseProgram(program);
+    GLint uboIndex = glGetUniformBlockIndex(program, "color_ubo");
+
+    std::array<GLfloat, 12> vertices{{-1, -1, 0, 1, -1, 0, -1, 1, 0, 1, 1, 0}};
+    GLBuffer vertexBuf;
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuf);
+    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(GLfloat), vertices.data(),
+                 GL_STATIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0);
+
+    std::array<GLshort, 12> indexData = {{0, 1, 2, 2, 1, 3, 0, 1, 2, 2, 1, 3}};
+
+    GLBuffer indexBuf;
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuf);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexData.size() * sizeof(GLshort), indexData.data(),
+                 GL_STATIC_DRAW);
+
+    // Bind a first buffer with red.
+    GLBuffer uboBuf1;
+    glBindBufferBase(GL_UNIFORM_BUFFER, 0, uboBuf1);
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(GLColor32F), &kFloatRed, GL_STATIC_DRAW);
+    glUniformBlockBinding(program, uboIndex, 0);
+
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
+
+    // Bind a second buffer with green, updating the buffer binding.
+    GLBuffer uboBuf2;
+    glBindBufferBase(GL_UNIFORM_BUFFER, 1, uboBuf2);
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(GLColor32F), &kFloatGreen, GL_STATIC_DRAW);
+    glUniformBlockBinding(program, uboIndex, 1);
+
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, reinterpret_cast<const GLvoid *>(12));
+
+    // Verify we get the second buffer.
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
+// Regression test for a dirty bit bug in ANGLE. Same as above but for the indexed bindings.
+TEST_P(UniformBufferTest, SimpleBufferChange)
+{
+    ANGLE_GL_PROGRAM(program, kVertexShader, kFragmentShader);
+
+    glBindAttribLocation(program, 0, "a_vertex");
+    glUseProgram(program);
+    GLint uboIndex = glGetUniformBlockIndex(program, "color_ubo");
+
+    std::array<GLfloat, 12> vertices{{-1, -1, 0, 1, -1, 0, -1, 1, 0, 1, 1, 0}};
+    GLBuffer vertexBuf;
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuf);
+    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(GLfloat), vertices.data(),
+                 GL_STATIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0);
+
+    std::array<GLshort, 12> indexData = {{0, 1, 2, 2, 1, 3, 0, 1, 2, 2, 1, 3}};
+
+    GLBuffer indexBuf;
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuf);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexData.size() * sizeof(GLshort), indexData.data(),
+                 GL_STATIC_DRAW);
+
+    // Bind a first buffer with red.
+    GLBuffer uboBuf1;
+    glBindBufferBase(GL_UNIFORM_BUFFER, 0, uboBuf1);
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(GLColor32F), &kFloatRed, GL_STATIC_DRAW);
+    glUniformBlockBinding(program, uboIndex, 0);
+
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
+
+    // Bind a second buffer to the same binding point (0). This should set to draw green.
+    GLBuffer uboBuf2;
+    glBindBufferBase(GL_UNIFORM_BUFFER, 0, uboBuf2);
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(GLColor32F), &kFloatGreen, GL_STATIC_DRAW);
+
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, reinterpret_cast<const GLvoid *>(12));
+
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
+// Tests a bug in the D3D11 back-end where re-creating the buffer storage should trigger a state
+// update in the State Manager class.
+TEST_P(UniformBufferTest, DependentBufferChange)
+{
+    ANGLE_GL_PROGRAM(program, kVertexShader, kFragmentShader);
+
+    glBindAttribLocation(program, 0, "a_vertex");
+    glUseProgram(program);
+    GLint uboIndex = glGetUniformBlockIndex(program, "color_ubo");
+
+    std::array<GLfloat, 12> vertices{{-1, -1, 0, 1, -1, 0, -1, 1, 0, 1, 1, 0}};
+    GLBuffer vertexBuf;
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuf);
+    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(GLfloat), vertices.data(),
+                 GL_STATIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0);
+
+    std::array<GLshort, 6> indexData = {{0, 1, 2, 2, 1, 3}};
+
+    GLBuffer indexBuf;
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuf);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexData.size() * sizeof(GLshort), indexData.data(),
+                 GL_STATIC_DRAW);
+
+    GLBuffer ubo;
+    glBindBufferBase(GL_UNIFORM_BUFFER, 0, ubo);
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(GLColor32F), &kFloatRed, GL_STATIC_DRAW);
+    glUniformBlockBinding(program, uboIndex, 0);
+
+    glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_SHORT, 0);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    // Resize the buffer - triggers a re-allocation in the D3D11 back-end.
+    std::vector<GLColor32F> bigData(128, kFloatGreen);
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(GLColor32F) * bigData.size(), bigData.data(),
+                 GL_STATIC_DRAW);
+
+    glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_SHORT, 0);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
 ANGLE_INSTANTIATE_TEST(UniformBufferTest,
                        ES3_D3D11(),

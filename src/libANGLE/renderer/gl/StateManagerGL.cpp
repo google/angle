@@ -1966,6 +1966,9 @@ void StateManagerGL::syncState(const gl::Context *context, const gl::State::Dirt
             case gl::State::DIRTY_BIT_SHADER_STORAGE_BUFFER_BINDING:
                 mProgramStorageBuffersDirty = true;
                 break;
+            case gl::State::DIRTY_BIT_UNIFORM_BUFFER_BINDINGS:
+                // TODO(jmadll): State update.
+                break;
             case gl::State::DIRTY_BIT_MULTISAMPLING:
                 setMultisamplingStateEnabled(state.isMultisamplingEnabled());
                 break;

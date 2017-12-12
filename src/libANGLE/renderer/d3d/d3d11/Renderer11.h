@@ -459,6 +459,8 @@ class Renderer11 : public RendererD3D
 
     bool canSelectViewInVertexShader() const override;
 
+    void onDirtyUniformBlockBinding(GLuint uniformBlockIndex) override;
+
   private:
     void generateCaps(gl::Caps *outCaps,
                       gl::TextureCapsMap *outTextureCaps,

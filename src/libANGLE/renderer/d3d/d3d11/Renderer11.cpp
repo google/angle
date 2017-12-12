@@ -4050,4 +4050,9 @@ gl::Error Renderer11::markTransformFeedbackUsage(const gl::Context *context)
     return gl::NoError();
 }
 
+void Renderer11::onDirtyUniformBlockBinding(GLuint /*uniformBlockIndex*/)
+{
+    mStateManager.invalidateProgramUniformBuffers();
+}
+
 }  // namespace rx

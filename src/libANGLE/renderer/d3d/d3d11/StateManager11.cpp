@@ -956,6 +956,9 @@ void StateManager11::syncState(const gl::Context *context, const gl::State::Dirt
                 // Invalidate the cached index buffer.
                 mIndexBufferIsDirty = true;
                 break;
+            case gl::State::DIRTY_BIT_UNIFORM_BUFFER_BINDINGS:
+                invalidateProgramUniformBuffers();
+                break;
             case gl::State::DIRTY_BIT_TEXTURE_BINDINGS:
                 invalidateTexturesAndSamplers();
                 break;
@@ -1937,9 +1940,6 @@ gl::Error StateManager11::updateState(const gl::Context *context, GLenum drawMod
     auto dirtyBitsCopy = mInternalDirtyBits;
     mInternalDirtyBits.reset();
 
-    // TODO(crbug.com/792966): Workaround for bug in this dirty bit
-    dirtyBitsCopy.set(DIRTY_BIT_PROGRAM_UNIFORM_BUFFERS);
-
     for (auto dirtyBit : dirtyBitsCopy)
     {
         switch (dirtyBit)
@@ -2864,6 +2864,8 @@ gl::Error StateManager11::syncUniformBuffers(const gl::Context *context, Program
     ID3D11DeviceContext *deviceContext   = mRenderer->getDeviceContext();
     ID3D11DeviceContext1 *deviceContext1 = mRenderer->getDeviceContext1IfSupported();
 
+    mOnConstantBufferDirtyReceiver.reset();
+
     for (size_t bufferIndex = 0; bufferIndex < vertexUniformBuffers.size(); bufferIndex++)
     {
         GLint binding = vertexUniformBuffers[bufferIndex];
@@ -2916,6 +2918,8 @@ gl::Error StateManager11::syncUniformBuffers(const gl::Context *context, Program
         mCurrentConstantBufferVS[appliedIndex]       = constantBuffer->getSerial();
         mCurrentConstantBufferVSOffset[appliedIndex] = uniformBufferOffset;
         mCurrentConstantBufferVSSize[appliedIndex]   = uniformBufferSize;
+
+        mOnConstantBufferDirtyReceiver.bindVS(bufferIndex, bufferStorage);
     }
 
     for (size_t bufferIndex = 0; bufferIndex < fragmentUniformBuffers.size(); bufferIndex++)
@@ -2969,6 +2973,8 @@ gl::Error StateManager11::syncUniformBuffers(const gl::Context *context, Program
         mCurrentConstantBufferPS[appliedIndex]       = constantBuffer->getSerial();
         mCurrentConstantBufferPSOffset[appliedIndex] = uniformBufferOffset;
         mCurrentConstantBufferPSSize[appliedIndex]   = uniformBufferSize;
+
+        mOnConstantBufferDirtyReceiver.bindPS(bufferIndex, bufferStorage);
     }
 
     return gl::NoError();
@@ -3071,6 +3077,60 @@ void DrawCallVertexParams::ensureResolved() const
         mFirstVertex           = mBaseVertex + static_cast<GLint>(indexRange.start);
         mVertexCount           = static_cast<GLsizei>(indexRange.vertexCount());
         mHasIndexRange         = nullptr;
+    }
+}
+
+// OnConstantBufferDirtyReceiver implementation.
+StateManager11::OnConstantBufferDirtyReceiver::OnConstantBufferDirtyReceiver()
+{
+    for (size_t vsIndex = 0; vsIndex < gl::IMPLEMENTATION_MAX_VERTEX_SHADER_UNIFORM_BUFFERS;
+         ++vsIndex)
+    {
+        mBindingsVS.emplace_back(this, vsIndex);
+    }
+
+    for (size_t fsIndex = 0; fsIndex < gl::IMPLEMENTATION_MAX_FRAGMENT_SHADER_UNIFORM_BUFFERS;
+         ++fsIndex)
+    {
+        mBindingsPS.emplace_back(this, fsIndex);
+    }
+}
+
+StateManager11::OnConstantBufferDirtyReceiver::~OnConstantBufferDirtyReceiver()
+{
+}
+
+void StateManager11::OnConstantBufferDirtyReceiver::signal(size_t messageID,
+                                                           const gl::Context *context)
+{
+    StateManager11 *stateManager = GetImplAs<Context11>(context)->getRenderer()->getStateManager();
+    stateManager->invalidateProgramUniformBuffers();
+}
+
+void StateManager11::OnConstantBufferDirtyReceiver::bindVS(size_t index, Buffer11 *buffer)
+{
+    ASSERT(buffer);
+    ASSERT(index < mBindingsVS.size());
+    mBindingsVS[index].bind(buffer->getDirectBroadcastChannel());
+}
+
+void StateManager11::OnConstantBufferDirtyReceiver::bindPS(size_t index, Buffer11 *buffer)
+{
+    ASSERT(buffer);
+    ASSERT(index < mBindingsPS.size());
+    mBindingsPS[index].bind(buffer->getDirectBroadcastChannel());
+}
+
+void StateManager11::OnConstantBufferDirtyReceiver::reset()
+{
+    for (OnBufferDataDirtyBinding &vsBinding : mBindingsVS)
+    {
+        vsBinding.bind(nullptr);
+    }
+
+    for (OnBufferDataDirtyBinding &psBinding : mBindingsPS)
+    {
+        psBinding.bind(nullptr);
     }
 }
 

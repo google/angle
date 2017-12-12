@@ -1295,6 +1295,7 @@ void State::setIndexedBufferBinding(const Context *context,
             break;
         case BufferBinding::Uniform:
             mUniformBuffers[index].set(context, buffer, offset, size);
+            mDirtyBits.set(DIRTY_BIT_UNIFORM_BUFFER_BINDINGS);
             break;
         case BufferBinding::AtomicCounter:
             mAtomicCounterBuffers[index].set(context, buffer, offset, size);

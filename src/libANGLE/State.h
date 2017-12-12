@@ -396,6 +396,8 @@ class State : public OnAttachmentDirtyReceiver, angle::NonCopyable
         DIRTY_BIT_DRAW_INDIRECT_BUFFER_BINDING,
         DIRTY_BIT_DISPATCH_INDIRECT_BUFFER_BINDING,
         DIRTY_BIT_SHADER_STORAGE_BUFFER_BINDING,
+        // TODO(jmadill): Fine-grained dirty bits for each index.
+        DIRTY_BIT_UNIFORM_BUFFER_BINDINGS,
         DIRTY_BIT_PROGRAM_BINDING,
         DIRTY_BIT_PROGRAM_EXECUTABLE,
         // TODO(jmadill): Fine-grained dirty bits for each texture/sampler.

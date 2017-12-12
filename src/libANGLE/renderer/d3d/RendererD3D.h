@@ -312,6 +312,9 @@ class RendererD3D : public BufferFactoryD3D, public MultisampleTextureInitialize
     gl::Error initializeMultisampleTextureToBlack(const gl::Context *context,
                                                   gl::Texture *glTexture) override;
 
+    // Should really be handled by Program dirty bits, but that requires splitting Program9/11.
+    virtual void onDirtyUniformBlockBinding(GLuint uniformBlockIndex);
+
   protected:
     virtual bool getLUID(LUID *adapterLuid) const = 0;
     virtual void generateCaps(gl::Caps *outCaps,

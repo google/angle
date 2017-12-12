@@ -216,6 +216,11 @@ gl::Error RendererD3D::initializeMultisampleTextureToBlack(const gl::Context *co
     return clearRenderTarget(renderTarget, gl::ColorF(0.0f, 0.0f, 0.0f, 1.0f), 1.0f, 0);
 }
 
+void RendererD3D::onDirtyUniformBlockBinding(GLuint /*uniformBlockIndex*/)
+{
+    // No-op by default. Only implemented in D3D11.
+}
+
 unsigned int GetBlendSampleMask(const gl::State &glState, int samples)
 {
     unsigned int mask   = 0;
