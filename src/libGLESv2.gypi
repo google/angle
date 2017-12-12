@@ -696,8 +696,6 @@
         [
             'libANGLE/renderer/gl/cgl/DisplayCGL.mm',
             'libANGLE/renderer/gl/cgl/DisplayCGL.h',
-            'libANGLE/renderer/gl/cgl/IOSurfaceSurfaceCGL.mm',
-            'libANGLE/renderer/gl/cgl/IOSurfaceSurfaceCGL.h',
             'libANGLE/renderer/gl/cgl/PbufferSurfaceCGL.mm',
             'libANGLE/renderer/gl/cgl/PbufferSurfaceCGL.h',
             'libANGLE/renderer/gl/cgl/WindowSurfaceCGL.mm',

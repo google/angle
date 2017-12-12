@@ -45,10 +45,6 @@ class DisplayCGL : public DisplayGL
     egl::Error restoreLostDevice(const egl::Display *display) override;
 
     bool isValidNativeWindow(EGLNativeWindowType window) const override;
-    egl::Error validateClientBuffer(const egl::Config *configuration,
-                                    EGLenum buftype,
-                                    EGLClientBuffer clientBuffer,
-                                    const egl::AttributeMap &attribs) const override;
 
     egl::Error getDevice(DeviceImpl **device) override;
 
@@ -56,8 +52,6 @@ class DisplayCGL : public DisplayGL
 
     egl::Error waitClient(const gl::Context *context) const override;
     egl::Error waitNative(const gl::Context *context, EGLint engine) const override;
-
-    CGLContextObj getCGLContext() const;
 
   private:
     const FunctionsGL *getFunctionsGL() const override;

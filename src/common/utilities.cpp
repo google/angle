@@ -993,22 +993,6 @@ GLenum EGLImageTargetToGLTextureTarget(EGLenum eglTarget)
     }
 }
 
-GLenum EGLTextureTargetToGLTextureTarget(EGLenum eglTarget)
-{
-    switch (eglTarget)
-    {
-        case EGL_TEXTURE_2D:
-            return GL_TEXTURE_2D;
-
-        case EGL_TEXTURE_RECTANGLE_ANGLE:
-            return GL_TEXTURE_RECTANGLE_ANGLE;
-
-        default:
-            UNREACHABLE();
-            return GL_NONE;
-    }
-}
-
 GLuint EGLClientBufferToGLObjectHandle(EGLClientBuffer buffer)
 {
     return static_cast<GLuint>(reinterpret_cast<uintptr_t>(buffer));

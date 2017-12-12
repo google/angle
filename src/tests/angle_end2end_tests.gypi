@@ -114,10 +114,6 @@
             '<(angle_path)/src/tests/test_utils/angle_test_instantiate.h',
             '<(angle_path)/src/tests/test_utils/gl_raii.h',
         ],
-        'angle_end2end_tests_mac_sources':
-        [
-            '<(angle_path)/src/tests/egl_tests/EGLIOSurfaceClientBufferTest.cpp',
-        ],
         'angle_end2end_tests_win_sources':
         [
             '<(angle_path)/src/tests/gl_tests/D3DImageFormatConversionTest.cpp',
@@ -157,21 +153,6 @@
     ],
     'conditions':
     [
-        ['OS=="mac"',
-        {
-            'sources':
-            [
-                '<@(angle_end2end_tests_mac_sources)',
-            ],
-            'link_settings':
-            {
-                'libraries':
-                [
-                    '$(SDKROOT)/System/Library/Frameworks/CoreFoundation.framework',
-                    '$(SDKROOT)/System/Library/Frameworks/IOSurface.framework',
-                ],
-            },
-        }],
         ['OS=="win"',
         {
             'sources':

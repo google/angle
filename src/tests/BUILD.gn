@@ -129,17 +129,7 @@ if (is_win || is_linux || is_mac || is_android) {
 
     sources =
         rebase_path(end2end_gypi.angle_end2end_tests_sources, ".", "../..")
-    libs = []
 
-    if (is_mac) {
-      sources += rebase_path(end2end_gypi.angle_end2end_tests_mac_sources,
-                             ".",
-                             "../..")
-      libs += [
-        "CoreFoundation.framework",
-        "IOSurface.framework",
-      ]
-    }
     if (is_win) {
       sources += rebase_path(end2end_gypi.angle_end2end_tests_win_sources,
                              ".",

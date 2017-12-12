@@ -1235,7 +1235,7 @@ Error Texture::bindTexImageFromSurface(const Context *context, egl::Surface *sur
     // Set the image info to the size and format of the surface
     ASSERT(mState.mTarget == GL_TEXTURE_2D || mState.mTarget == GL_TEXTURE_RECTANGLE_ANGLE);
     Extents size(surface->getWidth(), surface->getHeight(), 1);
-    ImageDesc desc(size, surface->getBindTexImageFormat(), InitState::Initialized);
+    ImageDesc desc(size, Format(surface->getConfig()->renderTargetFormat), InitState::Initialized);
     mState.setImageDesc(mState.mTarget, 0, desc);
     signalDirty(InitState::Initialized);
     return NoError();

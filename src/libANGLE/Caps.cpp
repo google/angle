@@ -1151,8 +1151,7 @@ DisplayExtensions::DisplayExtensions()
       displayTextureShareGroup(false),
       createContextClientArrays(false),
       programCacheControl(false),
-      robustResourceInitialization(false),
-      iosurfaceClientBuffer(false)
+      robustResourceInitialization(false)
 {
 }
 
@@ -1197,7 +1196,6 @@ std::vector<std::string> DisplayExtensions::getStrings() const
     InsertExtensionString("EGL_ANGLE_create_context_client_arrays",              createContextClientArrays,          &extensionStrings);
     InsertExtensionString("EGL_ANGLE_program_cache_control",                     programCacheControl,                &extensionStrings);
     InsertExtensionString("EGL_ANGLE_robust_resource_initialization",            robustResourceInitialization,       &extensionStrings);
-    InsertExtensionString("EGL_ANGLE_iosurface_client_buffer",                   iosurfaceClientBuffer,              &extensionStrings);
     // TODO(jmadill): Enable this when complete.
     //InsertExtensionString("KHR_create_context_no_error",                       createContextNoError,               &extensionStrings);
     // clang-format on
