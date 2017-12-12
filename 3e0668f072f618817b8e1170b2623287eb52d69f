@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "48e257c2_b5e9a948",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 465,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-12-12T22:53:11Z",
+      "side": 1,
+      "message": "This memset shouldn\u0027t be needed because the default constructor of all the the elements will be called which already memset-zeroes them.",
+      "revId": "3e0668f072f618817b8e1170b2623287eb52d69f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8008a51b_ed3fd72d",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-12-12T22:53:11Z",
+      "side": 1,
+      "message": "ditto",
+      "revId": "3e0668f072f618817b8e1170b2623287eb52d69f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "33a82f29_40368bfc",
+        "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1345,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-12-12T22:53:11Z",
+      "side": 1,
+      "message": "Won\u0027t this risk having attachment 0 used for both depth-stencil and color?",
+      "revId": "3e0668f072f618817b8e1170b2623287eb52d69f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3b938a4d_32d874b5",
+        "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1359,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-12-12T22:53:11Z",
+      "side": 1,
+      "message": "Since the layout is only depth-stencil vs. color could it be made a bool?",
+      "revId": "3e0668f072f618817b8e1170b2623287eb52d69f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
