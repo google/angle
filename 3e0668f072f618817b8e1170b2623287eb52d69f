@@ -139,6 +139,23 @@
       "revId": "3e0668f072f618817b8e1170b2623287eb52d69f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3a4057f7_392a31a2",
+        "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 699,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-12-12T23:02:24Z",
+      "side": 1,
+      "message": "I don\u0027t understand this comment.  You already have alignas(8) so making these uint16 as opposed to uint8 will not affect alignment.  Is the intention to avoid any padding?  If so the comment should say that.",
+      "revId": "3e0668f072f618817b8e1170b2623287eb52d69f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
