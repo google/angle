@@ -142,6 +142,8 @@
             'compiler/translator/SplitSequenceOperator.h',
             'compiler/translator/StaticType.cpp',
             'compiler/translator/StaticType.h',
+            'compiler/translator/Symbol.cpp',
+            'compiler/translator/Symbol.h',
             'compiler/translator/SymbolTable.cpp',
             'compiler/translator/SymbolTable.h',
             'compiler/translator/SymbolUniqueId.cpp',
