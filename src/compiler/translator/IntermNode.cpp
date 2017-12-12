@@ -95,16 +95,12 @@ float VectorDotProduct(const TConstantUnion *paramArray1,
     return result;
 }
 
-TIntermTyped *CreateFoldedNode(const TConstantUnion *constArray,
-                               const TIntermTyped *originalNode,
-                               TQualifier qualifier)
+TIntermTyped *CreateFoldedNode(const TConstantUnion *constArray, const TIntermTyped *originalNode)
 {
-    if (constArray == nullptr)
-    {
-        return nullptr;
-    }
+    ASSERT(constArray != nullptr);
+    // Note that we inherit whatever qualifier the folded node had. Nodes may be constant folded
+    // without being qualified as constant.
     TIntermTyped *folded = new TIntermConstantUnion(constArray, originalNode->getType());
-    folded->getTypePointer()->setQualifier(qualifier);
     folded->setLine(originalNode->getLine());
     return folded;
 }
@@ -1302,7 +1298,7 @@ TIntermTyped *TIntermSwizzle::fold()
     {
         constArray[i] = *operandConstant->foldIndexing(mSwizzleOffsets.at(i));
     }
-    return CreateFoldedNode(constArray, this, mType.getQualifier());
+    return CreateFoldedNode(constArray, this);
 }
 
 TIntermTyped *TIntermBinary::fold(TDiagnostics *diagnostics)
@@ -1333,7 +1329,7 @@ TIntermTyped *TIntermBinary::fold(TDiagnostics *diagnostics)
             {
                 return this;
             }
-            return CreateFoldedNode(constArray, this, mType.getQualifier());
+            return CreateFoldedNode(constArray, this);
         }
         case EOpIndexDirectStruct:
         {
@@ -1351,7 +1347,7 @@ TIntermTyped *TIntermBinary::fold(TDiagnostics *diagnostics)
             }
 
             const TConstantUnion *constArray = leftConstant->getUnionArrayPointer();
-            return CreateFoldedNode(constArray + previousFieldsSize, this, mType.getQualifier());
+            return CreateFoldedNode(constArray + previousFieldsSize, this);
         }
         case EOpIndexIndirect:
         case EOpIndexDirectInterfaceBlock:
@@ -1369,9 +1365,7 @@ TIntermTyped *TIntermBinary::fold(TDiagnostics *diagnostics)
             {
                 return this;
             }
-
-            // Nodes may be constant folded without being qualified as constant.
-            return CreateFoldedNode(constArray, this, mType.getQualifier());
+            return CreateFoldedNode(constArray, this);
         }
     }
 }
@@ -1427,9 +1421,7 @@ TIntermTyped *TIntermUnary::fold(TDiagnostics *diagnostics)
     {
         return this;
     }
-
-    // Nodes may be constant folded without being qualified as constant.
-    return CreateFoldedNode(constArray, this, mType.getQualifier());
+    return CreateFoldedNode(constArray, this);
 }
 
 TIntermTyped *TIntermAggregate::fold(TDiagnostics *diagnostics)
@@ -1444,12 +1436,15 @@ TIntermTyped *TIntermAggregate::fold(TDiagnostics *diagnostics)
     }
     TConstantUnion *constArray = nullptr;
     if (isConstructor())
+    {
         constArray = TIntermConstantUnion::FoldAggregateConstructor(this);
+    }
     else
+    {
+        ASSERT(CanFoldAggregateBuiltInOp(mOp));
         constArray = TIntermConstantUnion::FoldAggregateBuiltIn(this, diagnostics);
-
-    // Nodes may be constant folded without being qualified as constant.
-    return CreateFoldedNode(constArray, this, getQualifier());
+    }
+    return CreateFoldedNode(constArray, this);
 }
 
 //
