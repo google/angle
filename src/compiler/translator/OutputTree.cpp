@@ -13,7 +13,7 @@ namespace sh
 namespace
 {
 
-void OutputFunction(TInfoSinkBase &out, const char *str, TFunctionSymbolInfo *info)
+void OutputFunction(TInfoSinkBase &out, const char *str, const TFunctionSymbolInfo *info)
 {
     const char *internal = info->getNameObj().isInternal() ? " (internal function)" : "";
     out << str << internal << ": " << info->getNameObj().getString() << " (symbol id "

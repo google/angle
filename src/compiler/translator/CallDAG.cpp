@@ -148,7 +148,7 @@ class CallDAG::CallDAGCreator : public TIntermTraverser
         if (visit == PreVisit && node->getOp() == EOpCallFunctionInAST)
         {
             // Function call, add the callees
-            auto it = mFunctions.find(node->getFunctionSymbolInfo()->getId().get());
+            auto it = mFunctions.find(node->getFunction()->uniqueId().get());
             ASSERT(it != mFunctions.end());
 
             // We might be traversing the initializer of a global variable. Even though function

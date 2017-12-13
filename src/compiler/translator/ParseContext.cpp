@@ -1682,7 +1682,7 @@ void TParseContext::functionCallRValueLValueErrorCheck(const TFunction *fnCandid
             {
                 error(argument->getLine(),
                       "Writeonly value cannot be passed for 'in' or 'inout' parameters.",
-                      fnCall->getFunctionSymbolInfo()->getName().c_str());
+                      fnCall->functionName());
                 return;
             }
         }
@@ -1692,7 +1692,7 @@ void TParseContext::functionCallRValueLValueErrorCheck(const TFunction *fnCandid
             {
                 error(argument->getLine(),
                       "Constant value cannot be passed for 'out' or 'inout' parameters.",
-                      fnCall->getFunctionSymbolInfo()->getName().c_str());
+                      fnCall->functionName());
                 return;
             }
         }
@@ -3442,7 +3442,7 @@ TFunction *TParseContext::parseFunctionHeader(const TPublicType &type,
     }
 
     // Add the function as a prototype after parsing it (we do not support recursion)
-    return new TFunction(&symbolTable, name, new TType(type), SymbolType::UserDefined);
+    return new TFunction(&symbolTable, name, new TType(type), SymbolType::UserDefined, false);
 }
 
 TFunction *TParseContext::addNonConstructorFunc(const TString *name, const TSourceLoc &loc)
@@ -3454,7 +3454,7 @@ TFunction *TParseContext::addNonConstructorFunc(const TString *name, const TSour
     // would be enough, but TFunction carries a lot of extra information in addition to that.
     // Besides function calls we do have to store constructor calls in the same data structure, for
     // them we need to store a TType.
-    return new TFunction(&symbolTable, name, returnType, SymbolType::NotResolved);
+    return new TFunction(&symbolTable, name, returnType, SymbolType::NotResolved, false);
 }
 
 TFunction *TParseContext::addConstructorFunc(const TPublicType &publicType)
@@ -3478,7 +3478,7 @@ TFunction *TParseContext::addConstructorFunc(const TPublicType &publicType)
         type->setBasicType(EbtFloat);
     }
 
-    return new TFunction(&symbolTable, nullptr, type, SymbolType::NotResolved, EOpConstruct);
+    return new TFunction(&symbolTable, nullptr, type, SymbolType::NotResolved, true, EOpConstruct);
 }
 
 void TParseContext::checkIsNotUnsizedArray(const TSourceLoc &line,
@@ -5757,7 +5757,7 @@ TIntermTyped *TParseContext::addFunctionCallOrMethod(TFunction *fnCall,
 {
     if (thisNode != nullptr)
     {
-        return addMethod(fnCall, arguments, thisNode, loc);
+        return addMethod(fnCall->name(), arguments, thisNode, loc);
     }
 
     TOperator op = fnCall->getBuiltInOp();
@@ -5768,11 +5768,11 @@ TIntermTyped *TParseContext::addFunctionCallOrMethod(TFunction *fnCall,
     else
     {
         ASSERT(op == EOpNull);
-        return addNonConstructorFunctionCall(fnCall, arguments, loc);
+        return addNonConstructorFunctionCall(fnCall->name(), arguments, loc);
     }
 }
 
-TIntermTyped *TParseContext::addMethod(TFunction *fnCall,
+TIntermTyped *TParseContext::addMethod(const TString *name,
                                        TIntermSequence *arguments,
                                        TIntermNode *thisNode,
                                        const TSourceLoc &loc)
@@ -5782,9 +5782,9 @@ TIntermTyped *TParseContext::addMethod(TFunction *fnCall,
     // a constructor. But such a TFunction can't reach here, since the lexer goes into FIELDS
     // mode after a dot, which makes type identifiers to be parsed as FIELD_SELECTION instead.
     // So accessing fnCall->name() below is safe.
-    if (*fnCall->name() != "length")
+    if (*name != "length")
     {
-        error(loc, "invalid method", fnCall->name()->c_str());
+        error(loc, "invalid method", name->c_str());
     }
     else if (!arguments->empty())
     {
@@ -5809,26 +5809,27 @@ TIntermTyped *TParseContext::addMethod(TFunction *fnCall,
     return CreateZeroNode(TType(EbtInt, EbpUndefined, EvqConst));
 }
 
-TIntermTyped *TParseContext::addNonConstructorFunctionCall(TFunction *fnCall,
+TIntermTyped *TParseContext::addNonConstructorFunctionCall(const TString *name,
                                                            TIntermSequence *arguments,
                                                            const TSourceLoc &loc)
 {
+    ASSERT(name);
     // First find by unmangled name to check whether the function name has been
     // hidden by a variable name or struct typename.
     // If a function is found, check for one with a matching argument list.
     bool builtIn;
-    const TSymbol *symbol = symbolTable.find(*fnCall->name(), mShaderVersion, &builtIn);
+    const TSymbol *symbol = symbolTable.find(*name, mShaderVersion, &builtIn);
     if (symbol != nullptr && !symbol->isFunction())
     {
-        error(loc, "function name expected", fnCall->name()->c_str());
+        error(loc, "function name expected", name->c_str());
     }
     else
     {
-        symbol = symbolTable.find(TFunction::GetMangledNameFromCall(*fnCall->name(), *arguments),
+        symbol = symbolTable.find(TFunction::GetMangledNameFromCall(*name, *arguments),
                                   mShaderVersion, &builtIn);
         if (symbol == nullptr)
         {
-            error(loc, "no matching overloaded function found", fnCall->name()->c_str());
+            error(loc, "no matching overloaded function found", name->c_str());
         }
         else
         {

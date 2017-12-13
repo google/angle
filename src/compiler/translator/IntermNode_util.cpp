@@ -16,14 +16,6 @@ namespace sh
 namespace
 {
 
-TName GetInternalFunctionName(const char *name)
-{
-    TString nameStr(name);
-    TName nameObj(&nameStr);
-    nameObj.setInternal(true);
-    return nameObj;
-}
-
 const TFunction *LookUpBuiltInFunction(const TString &name,
                                        const TIntermSequence *arguments,
                                        const TSymbolTable &symbolTable,
@@ -41,33 +33,18 @@ const TFunction *LookUpBuiltInFunction(const TString &name,
 
 }  // anonymous namespace
 
-TIntermFunctionPrototype *CreateInternalFunctionPrototypeNode(const TType &returnType,
-                                                              const char *name,
-                                                              const TSymbolUniqueId &functionId)
+TIntermFunctionPrototype *CreateInternalFunctionPrototypeNode(const TFunction &func)
 {
-    TIntermFunctionPrototype *functionNode = new TIntermFunctionPrototype(returnType, functionId);
-    functionNode->getFunctionSymbolInfo()->setNameObj(GetInternalFunctionName(name));
+    TIntermFunctionPrototype *functionNode =
+        new TIntermFunctionPrototype(func.getReturnType(), func.uniqueId());
+    functionNode->getFunctionSymbolInfo()->setFromFunction(func);
     return functionNode;
 }
 
-TIntermFunctionDefinition *CreateInternalFunctionDefinitionNode(const TType &returnType,
-                                                                const char *name,
-                                                                TIntermBlock *functionBody,
-                                                                const TSymbolUniqueId &functionId)
+TIntermFunctionDefinition *CreateInternalFunctionDefinitionNode(const TFunction &func,
+                                                                TIntermBlock *functionBody)
 {
-    TIntermFunctionPrototype *prototypeNode =
-        CreateInternalFunctionPrototypeNode(returnType, name, functionId);
-    return new TIntermFunctionDefinition(prototypeNode, functionBody);
-}
-
-TIntermAggregate *CreateInternalFunctionCallNode(const TType &returnType,
-                                                 const char *name,
-                                                 const TSymbolUniqueId &functionId,
-                                                 TIntermSequence *arguments)
-{
-    TIntermAggregate *functionNode = TIntermAggregate::CreateFunctionCall(
-        returnType, functionId, GetInternalFunctionName(name), arguments);
-    return functionNode;
+    return new TIntermFunctionDefinition(CreateInternalFunctionPrototypeNode(func), functionBody);
 }
 
 TIntermTyped *CreateZeroNode(const TType &type)

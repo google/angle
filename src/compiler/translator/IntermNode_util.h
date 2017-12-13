@@ -17,17 +17,9 @@ namespace sh
 class TSymbolTable;
 class TVariable;
 
-TIntermFunctionPrototype *CreateInternalFunctionPrototypeNode(const TType &returnType,
-                                                              const char *name,
-                                                              const TSymbolUniqueId &functionId);
-TIntermFunctionDefinition *CreateInternalFunctionDefinitionNode(const TType &returnType,
-                                                                const char *name,
-                                                                TIntermBlock *functionBody,
-                                                                const TSymbolUniqueId &functionId);
-TIntermAggregate *CreateInternalFunctionCallNode(const TType &returnType,
-                                                 const char *name,
-                                                 const TSymbolUniqueId &functionId,
-                                                 TIntermSequence *arguments);
+TIntermFunctionPrototype *CreateInternalFunctionPrototypeNode(const TFunction &func);
+TIntermFunctionDefinition *CreateInternalFunctionDefinitionNode(const TFunction &func,
+                                                                TIntermBlock *functionBody);
 
 TIntermTyped *CreateZeroNode(const TType &type);
 TIntermConstantUnion *CreateIndexNode(int index);

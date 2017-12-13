@@ -66,33 +66,35 @@ void WrapMainAndAppend(TIntermBlock *root,
                        TSymbolTable *symbolTable)
 {
     // Replace main() with main0() with the same body.
-    TSymbolUniqueId oldMainId(symbolTable);
-    std::stringstream oldMainName;
-    oldMainName << "main" << oldMainId.get();
-    TIntermFunctionDefinition *oldMain = CreateInternalFunctionDefinitionNode(
-        TType(EbtVoid), oldMainName.str().c_str(), main->getBody(), oldMainId);
+    TFunction *oldMain =
+        new TFunction(symbolTable, nullptr, new TType(EbtVoid), SymbolType::AngleInternal, false);
+    TIntermFunctionDefinition *oldMainDefinition =
+        CreateInternalFunctionDefinitionNode(*oldMain, main->getBody());
 
-    bool replaced = root->replaceChildNode(main, oldMain);
+    bool replaced = root->replaceChildNode(main, oldMainDefinition);
     ASSERT(replaced);
 
     // void main()
+    TFunction *newMain = new TFunction(symbolTable, NewPoolTString("main"), new TType(EbtVoid),
+                                       SymbolType::UserDefined, false);
     TIntermFunctionPrototype *newMainProto = new TIntermFunctionPrototype(
         TType(EbtVoid), main->getFunctionPrototype()->getFunctionSymbolInfo()->getId());
-    newMainProto->getFunctionSymbolInfo()->setName("main");
+    newMainProto->getFunctionSymbolInfo()->setFromFunction(*newMain);
 
     // {
     //     main0();
     //     codeToRun
     // }
     TIntermBlock *newMainBody     = new TIntermBlock();
-    TIntermAggregate *oldMainCall = CreateInternalFunctionCallNode(
-        TType(EbtVoid), oldMainName.str().c_str(), oldMainId, new TIntermSequence());
+    TIntermAggregate *oldMainCall =
+        TIntermAggregate::CreateFunctionCall(*oldMain, new TIntermSequence());
     newMainBody->appendStatement(oldMainCall);
     newMainBody->appendStatement(codeToRun);
 
     // Add the new main() to the root node.
-    TIntermFunctionDefinition *newMain = new TIntermFunctionDefinition(newMainProto, newMainBody);
-    root->appendStatement(newMain);
+    TIntermFunctionDefinition *newMainDefinition =
+        new TIntermFunctionDefinition(newMainProto, newMainBody);
+    root->appendStatement(newMainDefinition);
 }
 
 }  // anonymous namespace

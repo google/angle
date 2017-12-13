@@ -415,7 +415,7 @@ void TSymbolTable::insertBuiltIn(ESymbolLevel level,
     else
     {
         TFunction *function =
-            new TFunction(this, NewPoolTString(name), rvalue, SymbolType::BuiltIn, op, ext);
+            new TFunction(this, NewPoolTString(name), rvalue, SymbolType::BuiltIn, false, op, ext);
 
         function->addParameter(TConstParameter(ptype1));
 
@@ -481,7 +481,8 @@ void TSymbolTable::insertBuiltInFunctionNoParameters(ESymbolLevel level,
                                                      const char *name)
 {
     insertUnmangledBuiltInName(name, level);
-    insert(level, new TFunction(this, NewPoolTString(name), rvalue, SymbolType::BuiltIn, op));
+    insert(level,
+           new TFunction(this, NewPoolTString(name), rvalue, SymbolType::BuiltIn, false, op));
 }
 
 void TSymbolTable::insertBuiltInFunctionNoParametersExt(ESymbolLevel level,
@@ -491,7 +492,8 @@ void TSymbolTable::insertBuiltInFunctionNoParametersExt(ESymbolLevel level,
                                                         const char *name)
 {
     insertUnmangledBuiltInName(name, level);
-    insert(level, new TFunction(this, NewPoolTString(name), rvalue, SymbolType::BuiltIn, op, ext));
+    insert(level,
+           new TFunction(this, NewPoolTString(name), rvalue, SymbolType::BuiltIn, false, op, ext));
 }
 
 TPrecision TSymbolTable::getDefaultPrecision(TBasicType type) const

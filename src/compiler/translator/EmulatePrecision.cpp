@@ -427,49 +427,6 @@ bool canRoundFloat(const TType &type)
            (type.getPrecision() == EbpLow || type.getPrecision() == EbpMedium);
 }
 
-TIntermAggregate *createInternalFunctionCallNode(const TType &type,
-                                                 TString name,
-                                                 TIntermSequence *arguments)
-{
-    TName nameObj(&name);
-    nameObj.setInternal(true);
-    TIntermAggregate *callNode =
-        TIntermAggregate::Create(type, EOpCallInternalRawFunction, arguments);
-    callNode->getFunctionSymbolInfo()->setNameObj(nameObj);
-    return callNode;
-}
-
-TIntermAggregate *createRoundingFunctionCallNode(TIntermTyped *roundedChild)
-{
-    TString roundFunctionName;
-    if (roundedChild->getPrecision() == EbpMedium)
-        roundFunctionName = "angle_frm";
-    else
-        roundFunctionName      = "angle_frl";
-    TIntermSequence *arguments = new TIntermSequence();
-    arguments->push_back(roundedChild);
-    TIntermAggregate *callNode =
-        createInternalFunctionCallNode(roundedChild->getType(), roundFunctionName, arguments);
-    callNode->getFunctionSymbolInfo()->setKnownToNotHaveSideEffects(true);
-    return callNode;
-}
-
-TIntermAggregate *createCompoundAssignmentFunctionCallNode(TIntermTyped *left,
-                                                           TIntermTyped *right,
-                                                           const char *opNameStr)
-{
-    std::stringstream strstr;
-    if (left->getPrecision() == EbpMedium)
-        strstr << "angle_compound_" << opNameStr << "_frm";
-    else
-        strstr << "angle_compound_" << opNameStr << "_frl";
-    TString functionName       = strstr.str().c_str();
-    TIntermSequence *arguments = new TIntermSequence();
-    arguments->push_back(left);
-    arguments->push_back(right);
-    return createInternalFunctionCallNode(left->getType(), functionName, arguments);
-}
-
 bool ParentUsesResult(TIntermNode *parent, TIntermTyped *node)
 {
     if (!parent)
@@ -746,6 +703,52 @@ bool EmulatePrecision::SupportedInLanguage(const ShShaderOutput outputLanguage)
             return (outputLanguage == SH_GLSL_COMPATIBILITY_OUTPUT ||
                     sh::IsGLSL130OrNewer(outputLanguage));
     }
+}
+
+TFunction *EmulatePrecision::getInternalFunction(TString *functionName,
+                                                 const TType &returnType,
+                                                 TIntermSequence *arguments,
+                                                 bool knownToNotHaveSideEffects)
+{
+    TString mangledName = TFunction::GetMangledNameFromCall(*functionName, *arguments);
+    if (mInternalFunctions.find(mangledName) == mInternalFunctions.end())
+    {
+        mInternalFunctions[mangledName] =
+            new TFunction(mSymbolTable, functionName, new TType(returnType),
+                          SymbolType::AngleInternal, knownToNotHaveSideEffects);
+    }
+    return mInternalFunctions[mangledName];
+}
+
+TIntermAggregate *EmulatePrecision::createRoundingFunctionCallNode(TIntermTyped *roundedChild)
+{
+    const char *roundFunctionName;
+    if (roundedChild->getPrecision() == EbpMedium)
+        roundFunctionName = "angle_frm";
+    else
+        roundFunctionName = "angle_frl";
+    TString *functionName      = NewPoolTString(roundFunctionName);
+    TIntermSequence *arguments = new TIntermSequence();
+    arguments->push_back(roundedChild);
+    return TIntermAggregate::CreateRawFunctionCall(
+        *getInternalFunction(functionName, roundedChild->getType(), arguments, true), arguments);
+}
+
+TIntermAggregate *EmulatePrecision::createCompoundAssignmentFunctionCallNode(TIntermTyped *left,
+                                                                             TIntermTyped *right,
+                                                                             const char *opNameStr)
+{
+    std::stringstream strstr;
+    if (left->getPrecision() == EbpMedium)
+        strstr << "angle_compound_" << opNameStr << "_frm";
+    else
+        strstr << "angle_compound_" << opNameStr << "_frl";
+    TString *functionName      = NewPoolTString(strstr.str().c_str());
+    TIntermSequence *arguments = new TIntermSequence();
+    arguments->push_back(left);
+    arguments->push_back(right);
+    return TIntermAggregate::CreateRawFunctionCall(
+        *getInternalFunction(functionName, left->getType(), arguments, false), arguments);
 }
 
 }  // namespace sh

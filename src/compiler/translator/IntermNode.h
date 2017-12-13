@@ -526,7 +526,7 @@ class TFunctionSymbolInfo
   public:
     POOL_ALLOCATOR_NEW_DELETE();
     TFunctionSymbolInfo(const TSymbolUniqueId &id);
-    TFunctionSymbolInfo() : mId(nullptr), mKnownToNotHaveSideEffects(false) {}
+    TFunctionSymbolInfo() : mId(nullptr) {}
 
     TFunctionSymbolInfo(const TFunctionSymbolInfo &info);
     TFunctionSymbolInfo &operator=(const TFunctionSymbolInfo &info);
@@ -537,14 +537,7 @@ class TFunctionSymbolInfo
     const TName &getNameObj() const { return mName; }
 
     const TString &getName() const { return mName.getString(); }
-    void setName(const TString &name) { mName.setString(name); }
     bool isMain() const { return mName.getString() == "main"; }
-
-    void setKnownToNotHaveSideEffects(bool knownToNotHaveSideEffects)
-    {
-        mKnownToNotHaveSideEffects = knownToNotHaveSideEffects;
-    }
-    bool isKnownToNotHaveSideEffects() const { return mKnownToNotHaveSideEffects; }
 
     void setId(const TSymbolUniqueId &functionId);
     const TSymbolUniqueId &getId() const;
@@ -557,7 +550,6 @@ class TFunctionSymbolInfo
   private:
     TName mName;
     TSymbolUniqueId *mId;
-    bool mKnownToNotHaveSideEffects;
 };
 
 typedef TVector<TIntermNode *> TIntermSequence;
@@ -598,12 +590,8 @@ class TIntermAggregate : public TIntermOperator, public TIntermAggregateBase
   public:
     static TIntermAggregate *CreateFunctionCall(const TFunction &func, TIntermSequence *arguments);
 
-    // If using this, ensure that there's a consistent function definition with the same symbol id
-    // added to the AST.
-    static TIntermAggregate *CreateFunctionCall(const TType &type,
-                                                const TSymbolUniqueId &id,
-                                                const TName &name,
-                                                TIntermSequence *arguments);
+    static TIntermAggregate *CreateRawFunctionCall(const TFunction &func,
+                                                   TIntermSequence *arguments);
 
     static TIntermAggregate *CreateBuiltInFunctionCall(const TFunction &func,
                                                        TIntermSequence *arguments);
@@ -637,8 +625,12 @@ class TIntermAggregate : public TIntermOperator, public TIntermAggregateBase
     // Returns true if changing parameter precision may affect the return value.
     bool gotPrecisionFromChildren() const { return mGotPrecisionFromChildren; }
 
-    TFunctionSymbolInfo *getFunctionSymbolInfo() { return &mFunctionInfo; }
     const TFunctionSymbolInfo *getFunctionSymbolInfo() const { return &mFunctionInfo; }
+
+    const TFunction *getFunction() const { return mFunction; }
+
+    // Get the function name to display to the user in an error message.
+    const char *functionName() const;
 
   protected:
     TIntermSequence mArguments;
@@ -649,10 +641,16 @@ class TIntermAggregate : public TIntermOperator, public TIntermAggregateBase
 
     bool mGotPrecisionFromChildren;
 
+    // TODO(oetuaho): Get rid of mFunctionInfo and just keep mFunction.
     TFunctionSymbolInfo mFunctionInfo;
 
+    const TFunction *const mFunction;
+
   private:
-    TIntermAggregate(const TType &type, TOperator op, TIntermSequence *arguments);
+    TIntermAggregate(const TFunction *func,
+                     const TType &type,
+                     TOperator op,
+                     TIntermSequence *arguments);
 
     TIntermAggregate(const TIntermAggregate &node);  // note: not deleted, just private!
 

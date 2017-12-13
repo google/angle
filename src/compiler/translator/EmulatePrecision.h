@@ -59,11 +59,23 @@ class EmulatePrecision : public TLValueTrackingTraverser
         }
     };
 
+    TFunction *getInternalFunction(TString *functionName,
+                                   const TType &returnType,
+                                   TIntermSequence *arguments,
+                                   bool knownToNotHaveSideEffects);
+    TIntermAggregate *createRoundingFunctionCallNode(TIntermTyped *roundedChild);
+    TIntermAggregate *createCompoundAssignmentFunctionCallNode(TIntermTyped *left,
+                                                               TIntermTyped *right,
+                                                               const char *opNameStr);
+
     typedef std::set<TypePair, TypePairComparator> EmulationSet;
     EmulationSet mEmulateCompoundAdd;
     EmulationSet mEmulateCompoundSub;
     EmulationSet mEmulateCompoundMul;
     EmulationSet mEmulateCompoundDiv;
+
+    // Map from mangled name to function.
+    TMap<TString, TFunction *> mInternalFunctions;
 
     bool mDeclaringVariables;
 };

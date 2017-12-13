@@ -99,19 +99,19 @@ void InsertInitCallToMain(TIntermBlock *root,
     TIntermBlock *initGlobalsBlock = new TIntermBlock();
     initGlobalsBlock->getSequence()->swap(*deferredInitializers);
 
-    TSymbolUniqueId initGlobalsFunctionId(symbolTable);
-
-    const char *kInitGlobalsFunctionName = "initGlobals";
+    TFunction *initGlobalsFunction =
+        new TFunction(symbolTable, NewPoolTString("initGlobals"), new TType(EbtVoid),
+                      SymbolType::AngleInternal, false);
 
     TIntermFunctionPrototype *initGlobalsFunctionPrototype =
-        CreateInternalFunctionPrototypeNode(TType(), kInitGlobalsFunctionName, initGlobalsFunctionId);
+        CreateInternalFunctionPrototypeNode(*initGlobalsFunction);
     root->getSequence()->insert(root->getSequence()->begin(), initGlobalsFunctionPrototype);
-    TIntermFunctionDefinition *initGlobalsFunctionDefinition = CreateInternalFunctionDefinitionNode(
-        TType(), kInitGlobalsFunctionName, initGlobalsBlock, initGlobalsFunctionId);
+    TIntermFunctionDefinition *initGlobalsFunctionDefinition =
+        CreateInternalFunctionDefinitionNode(*initGlobalsFunction, initGlobalsBlock);
     root->appendStatement(initGlobalsFunctionDefinition);
 
-    TIntermAggregate *initGlobalsCall = CreateInternalFunctionCallNode(
-        TType(), kInitGlobalsFunctionName, initGlobalsFunctionId, new TIntermSequence());
+    TIntermAggregate *initGlobalsCall =
+        TIntermAggregate::CreateFunctionCall(*initGlobalsFunction, new TIntermSequence());
 
     TIntermBlock *mainBody = FindMainBody(root);
     mainBody->getSequence()->insert(mainBody->getSequence()->begin(), initGlobalsCall);

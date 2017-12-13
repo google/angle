@@ -39,9 +39,10 @@ TIntermAggregate *CreateReplacementCall(TIntermAggregate *originalCall,
         replacementArguments->push_back(arg);
     }
     replacementArguments->push_back(returnValueTarget);
-    TIntermAggregate *replacementCall = TIntermAggregate::CreateFunctionCall(
-        TType(EbtVoid), originalCall->getFunctionSymbolInfo()->getId(),
-        originalCall->getFunctionSymbolInfo()->getNameObj(), replacementArguments);
+    ASSERT(originalCall->getFunction());
+    TIntermAggregate *replacementCall =
+        TIntermAggregate::CreateFunctionCall(*originalCall->getFunction(), replacementArguments);
+    replacementCall->setType(TType(EbtVoid));
     replacementCall->setLine(originalCall->getLine());
     return replacementCall;
 }
