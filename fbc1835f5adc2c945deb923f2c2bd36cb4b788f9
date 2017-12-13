@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6cfd9321_a198fa8f",
+        "filename": "src/compiler/translator/SymbolTable.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-13T16:02:54Z",
+      "side": 1,
+      "message": "in libANGLE we would not use ALL_CAPS here, just CamelCase. I would suggest using that here if possible.",
+      "range": {
+        "startLine": 48,
+        "startChar": 0,
+        "endLine": 51,
+        "endChar": 16
+      },
+      "revId": "fbc1835f5adc2c945deb923f2c2bd36cb4b788f9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
