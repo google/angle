@@ -16,16 +16,16 @@ vars = {
   'deqp_revision': '455d82c60b096e7bd83b6a2f5ed70c61e4bfa759',
 
   # Current revision of glslang, the Khronos SPIRV compiler.
-  'glslang_revision': '1e275c8486325aaab34734ad9a650c0121c5efdb',
+  'glslang_revision': '2edde6665d9a56ead5ea0e55b4e64d9a803e6164',
 
   # Current revision fo the SPIRV-Headers Vulkan support library.
-  'spirv_headers_revision': 'c470b68225a04965bf87d35e143ae92f831e8110',
+  'spirv_headers_revision': '98b01515724c428d0f0a5d01deffcce0f5f5e61c',
 
   # Current revision of SPIRV-Tools for Vulkan.
-  'spirv_tools_revision': '68c5f0436f1d4f1f137e608780190865d0b193ca',
+  'spirv_tools_revision': '9996173f363729b3a97309685dbd4d78547a63a7',
 
   # Current revision of the Vulkan Validation Layers SDK.
-  'vulkan_revision': 'f47c534fee2f26f6b783209d56e0ade48e30eb8d',
+  'vulkan_revision': '3f948b98f9bca965fecca1fb5b60f8787e959464',
 }
 
 deps = {
