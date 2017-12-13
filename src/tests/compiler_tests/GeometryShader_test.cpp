@@ -1571,3 +1571,55 @@ TEST_F(GeometryShaderOutputCodeTest, ValidateGLInMembersInOutputShaderString)
     compile(shaderString2);
     EXPECT_TRUE(foundInESSLCode("].gl_Position"));
 }
+
+// Verify that geometry shader inputs can be declared as struct arrays.
+TEST_F(GeometryShaderTest, StructArrayInput)
+{
+    const std::string &shaderString =
+        R"(#version 310 es
+        #extension GL_EXT_geometry_shader : require
+        layout (points) in;
+        layout (points, max_vertices = 2) out;
+        struct S
+        {
+            float value1;
+            vec4 value2;
+        };
+        in S gs_input[];
+        out S gs_output;
+        void main()
+        {
+            gs_output = gs_input[0];
+        })";
+
+    if (!compile(shaderString))
+    {
+        FAIL() << "Shader compilation failed, expecting success:\n" << mInfoLog;
+    }
+}
+
+// Verify that geometry shader outputs cannot be declared as struct arrays.
+TEST_F(GeometryShaderTest, StructArrayOutput)
+{
+    const std::string &shaderString =
+        R"(#version 310 es
+        #extension GL_EXT_geometry_shader : require
+        layout (points) in;
+        layout (points, max_vertices = 2) out;
+        struct S
+        {
+            float value1;
+            vec4 value2;
+        };
+        out S gs_output[1];
+        void main()
+        {
+            gs_output[0].value1 = 1.0;
+            gs_output[0].value2 = vec4(1.0, 0.0, 0.0, 1.0);
+        })";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}
