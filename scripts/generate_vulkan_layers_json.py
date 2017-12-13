@@ -29,8 +29,13 @@ for json_fname in glob.glob(os.path.join(source_dir, "*.json")):
         data = json.load(infile)
 
         # update the path
-        prev_name = os.path.basename(data['layer']['library_path'])
-        data['layer']['library_path'] = prev_name
+        if not 'layer' in data:
+            raise Exception("Could not find a layer key in " + json_fname)
+
+        # The standard validation layer has no library path.
+        if 'library_path' in data['layer']:
+            prev_name = os.path.basename(data['layer']['library_path'])
+            data['layer']['library_path'] = prev_name
 
         target_fname = os.path.join(target_dir, os.path.basename(json_fname))
         with open(target_fname, "w") as outfile:
