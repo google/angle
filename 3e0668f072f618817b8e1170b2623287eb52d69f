@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "02ce436c_621f74fb",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 465,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-13T18:55:33Z",
+      "side": 1,
+      "message": "I changed AttachmentOpsArray to be a contained class with a constructor and copy operator, like RenderPassDesc.",
+      "parentUuid": "9a45c7f8_749e5255",
+      "revId": "3e0668f072f618817b8e1170b2623287eb52d69f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8008a51b_ed3fd72d",
         "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
         "patchSetId": 6
@@ -69,6 +87,24 @@
       "revId": "3e0668f072f618817b8e1170b2623287eb52d69f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f36e7422_913a3aaa",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-13T18:55:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fa0b6f66_d0f20174",
+      "revId": "3e0668f072f618817b8e1170b2623287eb52d69f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -107,6 +143,24 @@
     },
     {
       "key": {
+        "uuid": "fd0ce2a2_f6235eea",
+        "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1345,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-13T18:55:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9b4c1f61_18bac258",
+      "revId": "3e0668f072f618817b8e1170b2623287eb52d69f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3b938a4d_32d874b5",
         "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.cpp",
         "patchSetId": 6
@@ -142,6 +196,24 @@
     },
     {
       "key": {
+        "uuid": "931dceaa_9cae5a08",
+        "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1359,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-13T18:55:33Z",
+      "side": 1,
+      "message": "Left this as-is, seems pretty clear.",
+      "parentUuid": "a1f6d1cb_3c9996f0",
+      "revId": "3e0668f072f618817b8e1170b2623287eb52d69f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3a4057f7_392a31a2",
         "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.h",
         "patchSetId": 6
@@ -156,6 +228,24 @@
       "revId": "3e0668f072f618817b8e1170b2623287eb52d69f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "378dbf7b_f5a62f5e",
+        "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 699,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-13T18:55:33Z",
+      "side": 1,
+      "message": "Clarified the comment.",
+      "parentUuid": "3a4057f7_392a31a2",
+      "revId": "3e0668f072f618817b8e1170b2623287eb52d69f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
