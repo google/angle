@@ -105,6 +105,44 @@ VkImageUsageFlags GetStagingBufferUsageFlags(vk::StagingUsage usage)
     }
 }
 
+VkSampleCountFlagBits ConvertSamples(GLint sampleCount)
+{
+    switch (sampleCount)
+    {
+        case 0:
+        case 1:
+            return VK_SAMPLE_COUNT_1_BIT;
+        case 2:
+            return VK_SAMPLE_COUNT_2_BIT;
+        case 4:
+            return VK_SAMPLE_COUNT_4_BIT;
+        case 8:
+            return VK_SAMPLE_COUNT_8_BIT;
+        case 16:
+            return VK_SAMPLE_COUNT_16_BIT;
+        case 32:
+            return VK_SAMPLE_COUNT_32_BIT;
+        default:
+            UNREACHABLE();
+            return VK_SAMPLE_COUNT_FLAG_BITS_MAX_ENUM;
+    }
+}
+
+void UnpackAttachmentDesc(VkAttachmentDescription *desc,
+                          const vk::PackedAttachmentDesc &packedDesc,
+                          const vk::PackedAttachmentOpsDesc &ops)
+{
+    desc->flags          = static_cast<VkAttachmentDescriptionFlags>(packedDesc.flags);
+    desc->format         = static_cast<VkFormat>(packedDesc.format);
+    desc->samples        = ConvertSamples(packedDesc.samples);
+    desc->loadOp         = static_cast<VkAttachmentLoadOp>(ops.loadOp);
+    desc->storeOp        = static_cast<VkAttachmentStoreOp>(ops.storeOp);
+    desc->stencilLoadOp  = static_cast<VkAttachmentLoadOp>(ops.stencilLoadOp);
+    desc->stencilStoreOp = static_cast<VkAttachmentStoreOp>(ops.stencilStoreOp);
+    desc->initialLayout  = static_cast<VkImageLayout>(ops.initialLayout);
+    desc->finalLayout    = static_cast<VkImageLayout>(ops.finalLayout);
+}
+
 }  // anonymous namespace
 
 // Mirrors std_validation_str in loader.h
@@ -1256,9 +1294,8 @@ Error CommandBufferAndState::ensureFinished()
 
 // RenderPassDesc implementation.
 RenderPassDesc::RenderPassDesc()
-    : colorAttachmentCount(0), depthStencilAttachmentCount(0), attachmentDescs{}
 {
-    memset(attachmentDescs.data(), 0, sizeof(VkAttachmentDescription) * attachmentDescs.size());
+    memset(this, 0, sizeof(RenderPassDesc));
 }
 
 RenderPassDesc::~RenderPassDesc()
@@ -1270,22 +1307,35 @@ RenderPassDesc::RenderPassDesc(const RenderPassDesc &other)
     memcpy(this, &other, sizeof(RenderPassDesc));
 }
 
+void RenderPassDesc::packAttachment(uint32_t index, const vk::Format &format, GLsizei samples)
+{
+    PackedAttachmentDesc &desc = mAttachmentDescs[index];
+
+    // TODO(jmadill): We would only need this flag for duplicated attachments.
+    desc.flags = VK_ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT;
+    ASSERT(desc.samples < std::numeric_limits<uint8_t>::max());
+    desc.samples = static_cast<uint8_t>(samples);
+    ASSERT(format.vkTextureFormat < std::numeric_limits<uint16_t>::max());
+    desc.format = static_cast<uint16_t>(format.vkTextureFormat);
+}
+
+void RenderPassDesc::packColorAttachment(const vk::Format &format, GLsizei samples)
+{
+    ASSERT(mDepthStencilAttachmentCount == 0);
+    ASSERT(mColorAttachmentCount < gl::IMPLEMENTATION_MAX_DRAW_BUFFERS);
+    packAttachment(mColorAttachmentCount++, format, samples);
+}
+
+void RenderPassDesc::packDepthStencilAttachment(const vk::Format &format, GLsizei samples)
+{
+    ASSERT(mDepthStencilAttachmentCount == 0);
+    packAttachment(mDepthStencilAttachmentCount++, format, samples);
+}
+
 RenderPassDesc &RenderPassDesc::operator=(const RenderPassDesc &other)
 {
     memcpy(this, &other, sizeof(RenderPassDesc));
     return *this;
-}
-
-VkAttachmentDescription *RenderPassDesc::nextColorAttachment()
-{
-    ASSERT(colorAttachmentCount < gl::IMPLEMENTATION_MAX_DRAW_BUFFERS);
-    return &attachmentDescs[colorAttachmentCount++];
-}
-
-VkAttachmentDescription *RenderPassDesc::nextDepthStencilAttachment()
-{
-    ASSERT(depthStencilAttachmentCount == 0);
-    return &attachmentDescs[depthStencilAttachmentCount++];
 }
 
 size_t RenderPassDesc::hash() const
@@ -1293,21 +1343,88 @@ size_t RenderPassDesc::hash() const
     return angle::ComputeGenericHash(*this);
 }
 
-bool RenderPassDesc::operator==(const RenderPassDesc &other) const
-{
-    return colorAttachmentCount == other.colorAttachmentCount &&
-           depthStencilAttachmentCount == other.depthStencilAttachmentCount &&
-           (memcmp(attachmentDescs.data(), other.attachmentDescs.data(),
-                   sizeof(VkAttachmentDescription) * attachmentDescs.size()) == 0);
-}
-
 uint32_t RenderPassDesc::attachmentCount() const
 {
-    return (colorAttachmentCount + depthStencilAttachmentCount);
+    return (mColorAttachmentCount + mDepthStencilAttachmentCount);
+}
+
+uint32_t RenderPassDesc::colorAttachmentCount() const
+{
+    return mColorAttachmentCount;
+}
+
+uint32_t RenderPassDesc::depthStencilAttachmentCount() const
+{
+    return mDepthStencilAttachmentCount;
+}
+
+const PackedAttachmentDesc &RenderPassDesc::operator[](size_t index) const
+{
+    ASSERT(index < mAttachmentDescs.size());
+    return mAttachmentDescs[index];
+}
+
+bool operator==(const RenderPassDesc &lhs, const RenderPassDesc &rhs)
+{
+    return (memcmp(&lhs, &rhs, sizeof(RenderPassDesc)) == 0);
+}
+
+// AttachmentOpsArray implementation.
+AttachmentOpsArray::AttachmentOpsArray()
+{
+    memset(&mOps, 0, sizeof(PackedAttachmentOpsDesc) * mOps.size());
+}
+
+AttachmentOpsArray::~AttachmentOpsArray()
+{
+}
+
+AttachmentOpsArray::AttachmentOpsArray(const AttachmentOpsArray &other)
+{
+    memcpy(&mOps, &other.mOps, sizeof(PackedAttachmentOpsDesc) * mOps.size());
+}
+
+AttachmentOpsArray &AttachmentOpsArray::operator=(const AttachmentOpsArray &other)
+{
+    memcpy(&mOps, &other.mOps, sizeof(PackedAttachmentOpsDesc) * mOps.size());
+    return *this;
+}
+
+const PackedAttachmentOpsDesc &AttachmentOpsArray::operator[](size_t index) const
+{
+    return mOps[index];
+}
+
+PackedAttachmentOpsDesc &AttachmentOpsArray::operator[](size_t index)
+{
+    return mOps[index];
+}
+
+void AttachmentOpsArray::initDummyOp(size_t index, VkImageLayout finalLayout)
+{
+    PackedAttachmentOpsDesc &ops = mOps[index];
+
+    ops.loadOp         = VK_ATTACHMENT_LOAD_OP_CLEAR;
+    ops.storeOp        = VK_ATTACHMENT_STORE_OP_STORE;
+    ops.stencilLoadOp  = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+    ops.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+    ops.initialLayout  = static_cast<uint16_t>(VK_IMAGE_LAYOUT_UNDEFINED);
+    ops.finalLayout    = static_cast<uint16_t>(finalLayout);
+}
+
+size_t AttachmentOpsArray::hash() const
+{
+    return angle::ComputeGenericHash(mOps);
+}
+
+bool operator==(const AttachmentOpsArray &lhs, const AttachmentOpsArray &rhs)
+{
+    return (memcmp(&lhs, &rhs, sizeof(AttachmentOpsArray)) == 0);
 }
 
 Error InitializeRenderPassFromDesc(VkDevice device,
                                    const RenderPassDesc &desc,
+                                   const AttachmentOpsArray &ops,
                                    RenderPass *renderPass)
 {
     uint32_t attachmentCount = desc.attachmentCount();
@@ -1315,7 +1432,7 @@ Error InitializeRenderPassFromDesc(VkDevice device,
 
     gl::DrawBuffersArray<VkAttachmentReference> colorAttachmentRefs;
 
-    for (uint32_t colorIndex = 0; colorIndex < desc.colorAttachmentCount; ++colorIndex)
+    for (uint32_t colorIndex = 0; colorIndex < desc.colorAttachmentCount(); ++colorIndex)
     {
         VkAttachmentReference &colorRef = colorAttachmentRefs[colorIndex];
         colorRef.attachment             = colorIndex;
@@ -1323,10 +1440,10 @@ Error InitializeRenderPassFromDesc(VkDevice device,
     }
 
     VkAttachmentReference depthStencilAttachmentRef;
-    if (desc.depthStencilAttachmentCount > 0)
+    if (desc.depthStencilAttachmentCount() > 0)
     {
-        ASSERT(desc.depthStencilAttachmentCount == 1);
-        depthStencilAttachmentRef.attachment = desc.colorAttachmentCount;
+        ASSERT(desc.depthStencilAttachmentCount() == 1);
+        depthStencilAttachmentRef.attachment = desc.colorAttachmentCount();
         depthStencilAttachmentRef.layout     = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
     }
 
@@ -1336,20 +1453,34 @@ Error InitializeRenderPassFromDesc(VkDevice device,
     subpassDesc.pipelineBindPoint    = VK_PIPELINE_BIND_POINT_GRAPHICS;
     subpassDesc.inputAttachmentCount = 0;
     subpassDesc.pInputAttachments    = nullptr;
-    subpassDesc.colorAttachmentCount = desc.colorAttachmentCount;
+    subpassDesc.colorAttachmentCount = desc.colorAttachmentCount();
     subpassDesc.pColorAttachments    = colorAttachmentRefs.data();
     subpassDesc.pResolveAttachments  = nullptr;
     subpassDesc.pDepthStencilAttachment =
-        (desc.depthStencilAttachmentCount > 0 ? &depthStencilAttachmentRef : nullptr);
+        (desc.depthStencilAttachmentCount() > 0 ? &depthStencilAttachmentRef : nullptr);
     subpassDesc.preserveAttachmentCount = 0;
     subpassDesc.pPreserveAttachments    = nullptr;
+
+    // Unpack the packed and split representation into the format required by Vulkan.
+    gl::AttachmentArray<VkAttachmentDescription> attachmentDescs;
+    for (uint32_t colorIndex = 0; colorIndex < desc.colorAttachmentCount(); ++colorIndex)
+    {
+        UnpackAttachmentDesc(&attachmentDescs[colorIndex], desc[colorIndex], ops[colorIndex]);
+    }
+
+    if (desc.depthStencilAttachmentCount() > 0)
+    {
+        uint32_t depthStencilIndex = desc.colorAttachmentCount();
+        UnpackAttachmentDesc(&attachmentDescs[depthStencilIndex], desc[depthStencilIndex],
+                             ops[depthStencilIndex]);
+    }
 
     VkRenderPassCreateInfo createInfo;
     createInfo.sType           = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
     createInfo.pNext           = nullptr;
     createInfo.flags           = 0;
     createInfo.attachmentCount = attachmentCount;
-    createInfo.pAttachments    = desc.attachmentDescs.data();
+    createInfo.pAttachments    = attachmentDescs.data();
     createInfo.subpassCount    = 1;
     createInfo.pSubpasses      = &subpassDesc;
     createInfo.dependencyCount = 0;

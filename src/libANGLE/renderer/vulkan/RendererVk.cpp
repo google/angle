@@ -96,9 +96,12 @@ RenderPassCache::~RenderPassCache()
 
 void RenderPassCache::destroy(VkDevice device)
 {
-    for (auto &renderPassIt : mPayload)
+    for (auto &outerIt : mPayload)
     {
-        renderPassIt.second.get().destroy(device);
+        for (auto &innerIt : outerIt.second)
+        {
+            innerIt.second.get().destroy(device);
+        }
     }
     mPayload.clear();
 }
@@ -108,32 +111,68 @@ vk::Error RenderPassCache::getCompatibleRenderPass(VkDevice device,
                                                    const vk::RenderPassDesc &desc,
                                                    vk::RenderPass **renderPassOut)
 {
-    // TODO(jmadill): Return compatible RenderPass when possible.
-    return getMatchingRenderPass(device, serial, desc, renderPassOut);
-}
-
-vk::Error RenderPassCache::getMatchingRenderPass(VkDevice device,
-                                                 Serial serial,
-                                                 const vk::RenderPassDesc &desc,
-                                                 vk::RenderPass **renderPassOut)
-{
-    auto it = mPayload.find(desc);
-    if (it != mPayload.end())
+    auto outerIt = mPayload.find(desc);
+    if (outerIt != mPayload.end())
     {
-        // Update the serial before we return.
-        // TODO(jmadill): Could possibly use an MRU cache here.
-        it->second.updateSerial(serial);
+        InnerCache &innerCache = outerIt->second;
+        ASSERT(!innerCache.empty());
 
-        *renderPassOut = &it->second.get();
+        // Find the first element and return it.
+        *renderPassOut = &innerCache.begin()->second.get();
         return vk::NoError();
     }
 
+    // Insert some dummy attachment ops.
+    // TODO(jmadill): Pre-populate the cache in the Renderer so we rarely miss here.
+    vk::AttachmentOpsArray ops;
+    for (uint32_t colorIndex = 0; colorIndex < desc.colorAttachmentCount(); ++colorIndex)
+    {
+        ops.initDummyOp(colorIndex, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL);
+    }
+
+    if (desc.depthStencilAttachmentCount() > 0)
+    {
+        ops.initDummyOp(desc.colorAttachmentCount(),
+                        VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
+    }
+
+    return getRenderPassWithOps(device, serial, desc, ops, renderPassOut);
+}
+
+vk::Error RenderPassCache::getRenderPassWithOps(VkDevice device,
+                                                Serial serial,
+                                                const vk::RenderPassDesc &desc,
+                                                const vk::AttachmentOpsArray &attachmentOps,
+                                                vk::RenderPass **renderPassOut)
+{
+    auto outerIt = mPayload.find(desc);
+    if (outerIt != mPayload.end())
+    {
+        InnerCache &innerCache = outerIt->second;
+
+        auto innerIt = innerCache.find(attachmentOps);
+        if (innerIt != innerCache.end())
+        {
+            // Update the serial before we return.
+            // TODO(jmadill): Could possibly use an MRU cache here.
+            innerIt->second.updateSerial(serial);
+            *renderPassOut = &innerIt->second.get();
+            return vk::NoError();
+        }
+    }
+    else
+    {
+        auto emplaceResult = mPayload.emplace(desc, InnerCache());
+        outerIt            = emplaceResult.first;
+    }
+
     vk::RenderPass newRenderPass;
-    ANGLE_TRY(vk::InitializeRenderPassFromDesc(device, desc, &newRenderPass));
+    ANGLE_TRY(vk::InitializeRenderPassFromDesc(device, desc, attachmentOps, &newRenderPass));
 
     vk::RenderPassAndSerial withSerial(std::move(newRenderPass), serial);
 
-    auto insertPos = mPayload.emplace(desc, std::move(withSerial));
+    InnerCache &innerCache = outerIt->second;
+    auto insertPos         = innerCache.emplace(attachmentOps, std::move(withSerial));
     *renderPassOut = &insertPos.first->second.get();
 
     // TODO(jmadill): Trim cache, and pre-populate with the most common RPs on startup.
@@ -897,11 +936,12 @@ vk::Error RendererVk::getCompatibleRenderPass(const vk::RenderPassDesc &desc,
                                                     renderPassOut);
 }
 
-vk::Error RendererVk::getMatchingRenderPass(const vk::RenderPassDesc &desc,
-                                            vk::RenderPass **renderPassOut)
+vk::Error RendererVk::getRenderPassWithOps(const vk::RenderPassDesc &desc,
+                                           const vk::AttachmentOpsArray &ops,
+                                           vk::RenderPass **renderPassOut)
 {
-    return mRenderPassCache.getMatchingRenderPass(mDevice, mCurrentQueueSerial, desc,
-                                                  renderPassOut);
+    return mRenderPassCache.getRenderPassWithOps(mDevice, mCurrentQueueSerial, desc, ops,
+                                                 renderPassOut);
 }
 
 }  // namespace rx

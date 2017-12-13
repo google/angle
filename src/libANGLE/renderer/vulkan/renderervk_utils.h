@@ -93,6 +93,8 @@ class ResourceVk
 
 namespace vk
 {
+struct Format;
+
 template <typename T>
 struct ImplTypeHelper;
 
@@ -680,31 +682,84 @@ using CommandBufferAndSerial = ObjectAndSerial<CommandBufferAndState>;
 using FenceAndSerial         = ObjectAndSerial<Fence>;
 using RenderPassAndSerial    = ObjectAndSerial<RenderPass>;
 
-struct RenderPassDesc final
+struct alignas(4) PackedAttachmentDesc
 {
+    uint8_t flags;
+    uint8_t samples;
+    uint16_t format;
+};
+
+struct alignas(8) PackedAttachmentOpsDesc final
+{
+    uint8_t loadOp;
+    uint8_t storeOp;
+    uint8_t stencilLoadOp;
+    uint8_t stencilStoreOp;
+
+    // 16-bits to force pad the structure to exactly 8 bytes.
+    uint16_t initialLayout;
+    uint16_t finalLayout;
+};
+
+class RenderPassDesc final
+{
+  public:
     RenderPassDesc();
     ~RenderPassDesc();
     RenderPassDesc(const RenderPassDesc &other);
     RenderPassDesc &operator=(const RenderPassDesc &other);
 
-    // These also increment the attachment counts. DS attachments are limited to a count of 1.
-    VkAttachmentDescription *nextColorAttachment();
-    VkAttachmentDescription *nextDepthStencilAttachment();
-    uint32_t attachmentCount() const;
+    // Depth stencil attachments must be packed after color attachments.
+    void packColorAttachment(const Format &format, GLsizei samples);
+    void packDepthStencilAttachment(const Format &format, GLsizei samples);
 
     size_t hash() const;
-    bool operator==(const RenderPassDesc &other) const;
 
-    // Fully padded out, with no bools, to avoid any undefined behaviour.
-    uint32_t colorAttachmentCount;
-    uint32_t depthStencilAttachmentCount;
+    uint32_t attachmentCount() const;
+    uint32_t colorAttachmentCount() const;
+    uint32_t depthStencilAttachmentCount() const;
+    const PackedAttachmentDesc &operator[](size_t index) const;
 
-    // The last element in this array is the depth/stencil attachment, if present.
-    gl::AttachmentArray<VkAttachmentDescription> attachmentDescs;
+  private:
+    void packAttachment(uint32_t index, const vk::Format &format, GLsizei samples);
+
+    uint32_t mColorAttachmentCount;
+    uint32_t mDepthStencilAttachmentCount;
+    gl::AttachmentArray<PackedAttachmentDesc> mAttachmentDescs;
 };
+
+bool operator==(const RenderPassDesc &lhs, const RenderPassDesc &rhs);
+
+class AttachmentOpsArray final
+{
+  public:
+    AttachmentOpsArray();
+    ~AttachmentOpsArray();
+    AttachmentOpsArray(const AttachmentOpsArray &other);
+    AttachmentOpsArray &operator=(const AttachmentOpsArray &other);
+
+    const PackedAttachmentOpsDesc &operator[](size_t index) const;
+    PackedAttachmentOpsDesc &operator[](size_t index);
+
+    // Initializes an attachment op with whatever values. Used for compatible RenderPass checks.
+    void initDummyOp(size_t index, VkImageLayout finalLayout);
+
+    size_t hash() const;
+
+  private:
+    gl::AttachmentArray<PackedAttachmentOpsDesc> mOps;
+};
+
+bool operator==(const AttachmentOpsArray &lhs, const AttachmentOpsArray &rhs);
+
+static_assert(sizeof(PackedAttachmentDesc) == 4, "Size check failed");
+static_assert(sizeof(PackedAttachmentOpsDesc) == 8, "Size check failed");
+static_assert(sizeof(RenderPassDesc) == 48, "Size check failed");
+static_assert(sizeof(AttachmentOpsArray) == 80, "Size check failed");
 
 Error InitializeRenderPassFromDesc(VkDevice device,
                                    const RenderPassDesc &desc,
+                                   const AttachmentOpsArray &ops,
                                    RenderPass *renderPass);
 
 }  // namespace vk
@@ -739,6 +794,12 @@ template <>
 struct hash<rx::vk::RenderPassDesc>
 {
     size_t operator()(const rx::vk::RenderPassDesc &key) const { return key.hash(); }
+};
+
+template <>
+struct hash<rx::vk::AttachmentOpsArray>
+{
+    size_t operator()(const rx::vk::AttachmentOpsArray &key) const { return key.hash(); }
 };
 }  // namespace std
 
