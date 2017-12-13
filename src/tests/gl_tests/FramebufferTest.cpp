@@ -7,6 +7,7 @@
 //   Various tests related for Frambuffers.
 //
 
+#include "platform/WorkaroundsD3D.h"
 #include "test_utils/ANGLETest.h"
 #include "test_utils/gl_raii.h"
 
@@ -779,3 +780,39 @@ TEST_P(FramebufferTest_ES31, RenderingLimitToDefaultFBOSizeWithNoAttachments)
 }
 
 ANGLE_INSTANTIATE_TEST(FramebufferTest_ES31, ES31_D3D11(), ES31_OPENGL(), ES31_OPENGLES());
+
+class AddDummyTextureNoRenderTargetTest : public ANGLETest
+{
+  public:
+    AddDummyTextureNoRenderTargetTest()
+    {
+        setWindowWidth(512);
+        setWindowHeight(512);
+        setConfigRedBits(8);
+        setConfigGreenBits(8);
+        setConfigBlueBits(8);
+        setConfigAlphaBits(8);
+    }
+
+    void overrideWorkaroundsD3D(WorkaroundsD3D *workarounds) override
+    {
+        workarounds->addDummyTextureNoRenderTarget = true;
+    }
+};
+
+// Test to verify workaround succeeds when no program outputs exist http://anglebug.com/2283
+TEST_P(AddDummyTextureNoRenderTargetTest, NoProgramOutputWorkaround)
+{
+    const std::string &vShader = "void main() {}";
+    const std::string &fShader = "void main() {}";
+
+    ANGLE_GL_PROGRAM(drawProgram, vShader, fShader);
+
+    glUseProgram(drawProgram);
+
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+
+    ASSERT_GL_NO_ERROR();
+}
+
+ANGLE_INSTANTIATE_TEST(AddDummyTextureNoRenderTargetTest, ES2_D3D11());

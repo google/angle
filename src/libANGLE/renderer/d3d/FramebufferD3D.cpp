@@ -377,7 +377,7 @@ const gl::AttachmentList &FramebufferD3D::getColorAttachmentsForRender(const gl:
     // drivers < 4815. The rendering samples always pass neglecting discard statements in pixel
     // shader. We add a dummy texture as render target in such case.
     if (mRenderer->getWorkarounds().addDummyTextureNoRenderTarget &&
-        colorAttachmentsForRender.empty())
+        colorAttachmentsForRender.empty() && activeProgramOutputs.any())
     {
         static_assert(static_cast<size_t>(activeProgramOutputs.size()) <= 32,
                       "Size of active program outputs should less or equal than 32.");
