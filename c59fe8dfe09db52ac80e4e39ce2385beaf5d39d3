@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "ae55a46d_82ac7bb4",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 616,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-12-14T11:47:53Z",
+      "side": 1,
+      "message": "They are not exactly same. For TransformFeedbackVarying, we count \u0027nameWithArrayIndex()\u0027 instead of \u0027name\u0027.",
+      "parentUuid": "94d12d1c_7f95dbe1",
+      "range": {
+        "startLine": 616,
+        "startChar": 28,
+        "endLine": 616,
+        "endChar": 97
+      },
+      "revId": "c59fe8dfe09db52ac80e4e39ce2385beaf5d39d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "516a4484_c4139c17",
         "filename": "src/tests/gl_tests/ProgramInterfaceTest.cpp",
         "patchSetId": 2
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "b1978ae6_5d9dd92f",
+        "filename": "src/tests/gl_tests/ProgramInterfaceTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 801,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-12-14T11:47:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "516a4484_c4139c17",
+      "range": {
+        "startLine": 801,
+        "startChar": 4,
+        "endLine": 801,
+        "endChar": 43
+      },
+      "revId": "c59fe8dfe09db52ac80e4e39ce2385beaf5d39d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1f8e29cb_6c335665",
         "filename": "src/tests/gl_tests/ProgramInterfaceTest.cpp",
         "patchSetId": 2
@@ -68,6 +116,30 @@
       "revId": "c59fe8dfe09db52ac80e4e39ce2385beaf5d39d3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4b605ab0_f2b9247a",
+        "filename": "src/tests/gl_tests/ProgramInterfaceTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 805,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-12-14T11:47:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1f8e29cb_6c335665",
+      "range": {
+        "startLine": 805,
+        "startChar": 13,
+        "endLine": 805,
+        "endChar": 17
+      },
+      "revId": "c59fe8dfe09db52ac80e4e39ce2385beaf5d39d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
