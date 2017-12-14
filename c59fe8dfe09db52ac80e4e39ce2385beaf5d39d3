@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "94d12d1c_7f95dbe1",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 616,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-12-14T05:54:02Z",
+      "side": 1,
+      "message": "Can you use the same style like above maxNameLength \u003d FindMaxSize(program-\u003egetState().getTransformFeedbackVaryings, \u0026TransformFeedbackVarying::name)?",
+      "range": {
+        "startLine": 616,
+        "startChar": 28,
+        "endLine": 616,
+        "endChar": 97
+      },
+      "revId": "c59fe8dfe09db52ac80e4e39ce2385beaf5d39d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "516a4484_c4139c17",
+        "filename": "src/tests/gl_tests/ProgramInterfaceTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 801,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-12-14T05:54:02Z",
+      "side": 1,
+      "message": "Using this new style const std::string \u0026vertexShaderSource \u003d R\"(string here)\";",
+      "range": {
+        "startLine": 801,
+        "startChar": 4,
+        "endLine": 801,
+        "endChar": 43
+      },
+      "revId": "c59fe8dfe09db52ac80e4e39ce2385beaf5d39d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1f8e29cb_6c335665",
+        "filename": "src/tests/gl_tests/ProgramInterfaceTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 805,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-12-14T05:54:02Z",
+      "side": 1,
+      "message": "Please use a different type for these outputs so that the result are more clear in line 883 and line 892. For example, \nout float outSingleType;\nout vec2 outWhileArray[2];\nout vec3 outArrayElements[16];",
+      "range": {
+        "startLine": 805,
+        "startChar": 13,
+        "endLine": 805,
+        "endChar": 17
+      },
+      "revId": "c59fe8dfe09db52ac80e4e39ce2385beaf5d39d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
