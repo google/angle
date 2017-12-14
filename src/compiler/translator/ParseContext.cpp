@@ -3156,11 +3156,7 @@ TIntermFunctionPrototype *TParseContext::createPrototypeNodeFromFunction(
     ASSERT(function.name());
     checkIsNotReserved(location, *function.name());
 
-    TIntermFunctionPrototype *prototype =
-        new TIntermFunctionPrototype(function.getReturnType(), TSymbolUniqueId(function));
-    // TODO(oetuaho@nvidia.com): Instead of converting the function information here, the node could
-    // point to the data that already exists in the symbol table.
-    prototype->getFunctionSymbolInfo()->setFromFunction(function);
+    TIntermFunctionPrototype *prototype = new TIntermFunctionPrototype(&function);
     prototype->setLine(location);
 
     for (size_t i = 0; i < function.getParamCount(); i++)
@@ -3250,7 +3246,7 @@ TIntermFunctionDefinition *TParseContext::addFunctionDefinition(
     if (mCurrentFunctionType->getBasicType() != EbtVoid && !mFunctionReturnsValue)
     {
         error(location, "function does not return a value:",
-              functionPrototype->getFunctionSymbolInfo()->getName().c_str());
+              functionPrototype->getFunction()->name()->c_str());
     }
 
     if (functionBody == nullptr)

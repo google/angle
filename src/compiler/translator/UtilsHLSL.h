@@ -111,7 +111,7 @@ TString SamplerString(HLSLTextureGroup type);
 // Adds a prefix to user-defined names to avoid naming clashes.
 TString Decorate(const TString &string);
 TString DecorateVariableIfNeeded(const TName &name);
-TString DecorateFunctionIfNeeded(const TName &name);
+TString DecorateFunctionIfNeeded(const TFunction *func);
 TString DecorateField(const TString &string, const TStructure &structure);
 TString DecoratePrivate(const TString &privateText);
 TString TypeString(const TType &type);

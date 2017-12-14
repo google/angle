@@ -915,7 +915,7 @@ bool TOutputGLSLBase::visitFunctionPrototype(Visit visit, TIntermFunctionPrototy
     if (type.isArray())
         out << ArrayString(type);
 
-    out << " " << hashFunctionNameIfNeeded(*node->getFunctionSymbolInfo());
+    out << " " << hashFunctionNameIfNeeded(node->getFunction());
 
     out << "(";
     writeFunctionParameters(*(node->getSequence()));
@@ -1152,18 +1152,6 @@ TString TOutputGLSLBase::hashFunctionNameIfNeeded(const TFunction *func)
     else
     {
         return hashName(TName(func));
-    }
-}
-
-TString TOutputGLSLBase::hashFunctionNameIfNeeded(const TFunctionSymbolInfo &info)
-{
-    if (info.isMain())
-    {
-        return info.getName();
-    }
-    else
-    {
-        return hashName(info.getNameObj());
     }
 }
 

@@ -35,16 +35,13 @@ const TFunction *LookUpBuiltInFunction(const TString &name,
 
 TIntermFunctionPrototype *CreateInternalFunctionPrototypeNode(const TFunction &func)
 {
-    TIntermFunctionPrototype *functionNode =
-        new TIntermFunctionPrototype(func.getReturnType(), func.uniqueId());
-    functionNode->getFunctionSymbolInfo()->setFromFunction(func);
-    return functionNode;
+    return new TIntermFunctionPrototype(&func);
 }
 
 TIntermFunctionDefinition *CreateInternalFunctionDefinitionNode(const TFunction &func,
                                                                 TIntermBlock *functionBody)
 {
-    return new TIntermFunctionDefinition(CreateInternalFunctionPrototypeNode(func), functionBody);
+    return new TIntermFunctionDefinition(new TIntermFunctionPrototype(&func), functionBody);
 }
 
 TIntermTyped *CreateZeroNode(const TType &type)

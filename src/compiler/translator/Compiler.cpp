@@ -993,22 +993,22 @@ class TCompiler::UnusedPredicate
         const TIntermFunctionPrototype *asFunctionPrototype   = node->getAsFunctionPrototypeNode();
         const TIntermFunctionDefinition *asFunctionDefinition = node->getAsFunctionDefinition();
 
-        const TFunctionSymbolInfo *functionInfo = nullptr;
+        const TFunction *func = nullptr;
 
         if (asFunctionDefinition)
         {
-            functionInfo = asFunctionDefinition->getFunctionSymbolInfo();
+            func = asFunctionDefinition->getFunction();
         }
         else if (asFunctionPrototype)
         {
-            functionInfo = asFunctionPrototype->getFunctionSymbolInfo();
+            func = asFunctionPrototype->getFunction();
         }
-        if (functionInfo == nullptr)
+        if (func == nullptr)
         {
             return false;
         }
 
-        size_t callDagIndex = mCallDag->findIndex(functionInfo->getId());
+        size_t callDagIndex = mCallDag->findIndex(func->uniqueId());
         if (callDagIndex == CallDAG::InvalidIndex)
         {
             // This happens only for unimplemented prototypes which are thus unused

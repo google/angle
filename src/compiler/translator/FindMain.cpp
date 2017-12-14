@@ -9,6 +9,7 @@
 #include "compiler/translator/FindMain.h"
 
 #include "compiler/translator/IntermNode.h"
+#include "compiler/translator/Symbol.h"
 
 namespace sh
 {
@@ -18,7 +19,7 @@ TIntermFunctionDefinition *FindMain(TIntermBlock *root)
     for (TIntermNode *node : *root->getSequence())
     {
         TIntermFunctionDefinition *nodeFunction = node->getAsFunctionDefinition();
-        if (nodeFunction != nullptr && nodeFunction->getFunctionSymbolInfo()->isMain())
+        if (nodeFunction != nullptr && nodeFunction->getFunction()->isMain())
         {
             return nodeFunction;
         }

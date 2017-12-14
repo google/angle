@@ -522,32 +522,6 @@ class TIntermUnary : public TIntermOperator
     TIntermUnary(const TIntermUnary &node);  // note: not deleted, just private!
 };
 
-class TFunctionSymbolInfo
-{
-  public:
-    POOL_ALLOCATOR_NEW_DELETE();
-    TFunctionSymbolInfo(const TSymbolUniqueId &id);
-    TFunctionSymbolInfo() : mId(nullptr) {}
-
-    TFunctionSymbolInfo(const TFunctionSymbolInfo &info);
-    TFunctionSymbolInfo &operator=(const TFunctionSymbolInfo &info);
-
-    void setFromFunction(const TFunction &function);
-
-    void setNameObj(const TName &name) { mName = name; }
-    const TName &getNameObj() const { return mName; }
-
-    const TString &getName() const { return mName.getString(); }
-    bool isMain() const { return mName.getString() == "main"; }
-
-    void setId(const TSymbolUniqueId &functionId);
-    const TSymbolUniqueId &getId() const;
-
-  private:
-    TName mName;
-    TSymbolUniqueId *mId;
-};
-
 typedef TVector<TIntermNode *> TIntermSequence;
 typedef TVector<int> TQualifierList;
 
@@ -688,12 +662,7 @@ class TIntermBlock : public TIntermNode, public TIntermAggregateBase
 class TIntermFunctionPrototype : public TIntermTyped, public TIntermAggregateBase
 {
   public:
-    // TODO(oetuaho@nvidia.com): See if TFunctionSymbolInfo could be added to constructor
-    // parameters.
-    TIntermFunctionPrototype(const TType &type, const TSymbolUniqueId &id)
-        : TIntermTyped(type), mFunctionInfo(id)
-    {
-    }
+    TIntermFunctionPrototype(const TFunction *function);
     ~TIntermFunctionPrototype() {}
 
     TIntermFunctionPrototype *getAsFunctionPrototypeNode() override { return this; }
@@ -717,13 +686,12 @@ class TIntermFunctionPrototype : public TIntermTyped, public TIntermAggregateBas
     TIntermSequence *getSequence() override { return &mParameters; }
     const TIntermSequence *getSequence() const override { return &mParameters; }
 
-    TFunctionSymbolInfo *getFunctionSymbolInfo() { return &mFunctionInfo; }
-    const TFunctionSymbolInfo *getFunctionSymbolInfo() const { return &mFunctionInfo; }
+    const TFunction *getFunction() const { return mFunction; }
 
   protected:
     TIntermSequence mParameters;
 
-    TFunctionSymbolInfo mFunctionInfo;
+    const TFunction *const mFunction;
 };
 
 // Node for function definitions. The prototype child node stores the function header including
@@ -745,10 +713,7 @@ class TIntermFunctionDefinition : public TIntermNode
     TIntermFunctionPrototype *getFunctionPrototype() const { return mPrototype; }
     TIntermBlock *getBody() const { return mBody; }
 
-    const TFunctionSymbolInfo *getFunctionSymbolInfo() const
-    {
-        return mPrototype->getFunctionSymbolInfo();
-    }
+    const TFunction *getFunction() const { return mPrototype->getFunction(); }
 
   private:
     TIntermFunctionPrototype *mPrototype;

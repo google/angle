@@ -595,49 +595,10 @@ TIntermConstantUnion::TIntermConstantUnion(const TIntermConstantUnion &node) : T
     mUnionArrayPointer = node.mUnionArrayPointer;
 }
 
-void TFunctionSymbolInfo::setFromFunction(const TFunction &function)
+TIntermFunctionPrototype::TIntermFunctionPrototype(const TFunction *function)
+    : TIntermTyped(function->getReturnType()), mFunction(function)
 {
-    mName.setString(*function.name());
-    mName.setInternal(function.symbolType() == SymbolType::AngleInternal);
-    setId(TSymbolUniqueId(function));
-}
-
-TFunctionSymbolInfo::TFunctionSymbolInfo(const TSymbolUniqueId &id) : mId(new TSymbolUniqueId(id))
-{
-}
-
-TFunctionSymbolInfo::TFunctionSymbolInfo(const TFunctionSymbolInfo &info)
-    : mName(info.mName), mId(nullptr)
-{
-    if (info.mId)
-    {
-        mId = new TSymbolUniqueId(*info.mId);
-    }
-}
-
-TFunctionSymbolInfo &TFunctionSymbolInfo::operator=(const TFunctionSymbolInfo &info)
-{
-    mName = info.mName;
-    if (info.mId)
-    {
-        mId = new TSymbolUniqueId(*info.mId);
-    }
-    else
-    {
-        mId = nullptr;
-    }
-    return *this;
-}
-
-void TFunctionSymbolInfo::setId(const TSymbolUniqueId &id)
-{
-    mId = new TSymbolUniqueId(id);
-}
-
-const TSymbolUniqueId &TFunctionSymbolInfo::getId() const
-{
-    ASSERT(mId);
-    return *mId;
+    ASSERT(mFunction->symbolType() != SymbolType::Empty);
 }
 
 TIntermAggregate::TIntermAggregate(const TIntermAggregate &node)

@@ -13,13 +13,6 @@ namespace sh
 namespace
 {
 
-void OutputFunction(TInfoSinkBase &out, const char *str, const TFunctionSymbolInfo *info)
-{
-    const char *internal = info->getNameObj().isInternal() ? " (internal function)" : "";
-    out << str << internal << ": " << info->getNameObj().getString() << " (symbol id "
-        << info->getId().get() << ")";
-}
-
 void OutputFunction(TInfoSinkBase &out, const char *str, const TFunction *func)
 {
     const char *internal =
@@ -364,7 +357,7 @@ bool TOutputTraverser::visitInvariantDeclaration(Visit visit, TIntermInvariantDe
 bool TOutputTraverser::visitFunctionPrototype(Visit visit, TIntermFunctionPrototype *node)
 {
     OutputTreeText(mOut, node, mDepth);
-    OutputFunction(mOut, "Function Prototype", node->getFunctionSymbolInfo());
+    OutputFunction(mOut, "Function Prototype", node->getFunction());
     mOut << " (" << node->getCompleteString() << ")";
     mOut << "\n";
 

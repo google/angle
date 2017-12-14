@@ -77,9 +77,7 @@ void WrapMainAndAppend(TIntermBlock *root,
     // void main()
     TFunction *newMain = new TFunction(symbolTable, NewPoolTString("main"), new TType(EbtVoid),
                                        SymbolType::UserDefined, false);
-    TIntermFunctionPrototype *newMainProto = new TIntermFunctionPrototype(
-        TType(EbtVoid), main->getFunctionPrototype()->getFunctionSymbolInfo()->getId());
-    newMainProto->getFunctionSymbolInfo()->setFromFunction(*newMain);
+    TIntermFunctionPrototype *newMainProto = new TIntermFunctionPrototype(newMain);
 
     // {
     //     main0();

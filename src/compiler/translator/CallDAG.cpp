@@ -81,8 +81,7 @@ class CallDAG::CallDAGCreator : public TIntermTraverser
                 record.callees.push_back(static_cast<int>(callee->index));
             }
 
-            (*idToIndex)[data.node->getFunctionSymbolInfo()->getId().get()] =
-                static_cast<int>(data.index);
+            (*idToIndex)[data.node->getFunction()->uniqueId().get()] = static_cast<int>(data.index);
         }
     }
 
@@ -104,17 +103,17 @@ class CallDAG::CallDAGCreator : public TIntermTraverser
         // Create the record if need be and remember the node.
         if (visit == PreVisit)
         {
-            auto it = mFunctions.find(node->getFunctionSymbolInfo()->getId().get());
+            auto it = mFunctions.find(node->getFunction()->uniqueId().get());
 
             if (it == mFunctions.end())
             {
-                mCurrentFunction       = &mFunctions[node->getFunctionSymbolInfo()->getId().get()];
-                mCurrentFunction->name = node->getFunctionSymbolInfo()->getName();
+                mCurrentFunction       = &mFunctions[node->getFunction()->uniqueId().get()];
+                mCurrentFunction->name = *node->getFunction()->name();
             }
             else
             {
                 mCurrentFunction = &it->second;
-                ASSERT(mCurrentFunction->name == node->getFunctionSymbolInfo()->getName());
+                ASSERT(mCurrentFunction->name == *node->getFunction()->name());
             }
 
             mCurrentFunction->node = node;
@@ -135,8 +134,8 @@ class CallDAG::CallDAGCreator : public TIntermTraverser
         }
 
         // Function declaration, create an empty record.
-        auto &record = mFunctions[node->getFunctionSymbolInfo()->getId().get()];
-        record.name  = node->getFunctionSymbolInfo()->getName();
+        auto &record = mFunctions[node->getFunction()->uniqueId().get()];
+        record.name  = *node->getFunction()->name();
 
         // No need to traverse the parameters.
         return false;

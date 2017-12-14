@@ -730,20 +730,20 @@ TString DecorateVariableIfNeeded(const TName &name)
     }
 }
 
-TString DecorateFunctionIfNeeded(const TName &name)
+TString DecorateFunctionIfNeeded(const TFunction *func)
 {
-    if (name.isInternal())
+    if (func->symbolType() == SymbolType::AngleInternal)
     {
         // The name should not have a prefix reserved for user-defined variables or functions.
-        ASSERT(name.getString().compare(0, 2, "f_") != 0);
-        ASSERT(name.getString().compare(0, 1, "_") != 0);
-        return name.getString();
+        ASSERT(func->name()->compare(0, 2, "f_") != 0);
+        ASSERT(func->name()->compare(0, 1, "_") != 0);
+        return *func->name();
     }
-    ASSERT(name.getString().compare(0, 3, "gl_") != 0);
+    ASSERT(func->name()->compare(0, 3, "gl_") != 0);
     // Add an additional f prefix to functions so that they're always disambiguated from variables.
     // This is necessary in the corner case where a variable declaration hides a function that it
     // uses in its initializer.
-    return "f_" + name.getString();
+    return "f_" + (*func->name());
 }
 
 TString TypeString(const TType &type)

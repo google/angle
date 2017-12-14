@@ -675,7 +675,7 @@ TLValueTrackingTraverser::TLValueTrackingTraverser(bool preVisit,
 void TLValueTrackingTraverser::traverseFunctionPrototype(TIntermFunctionPrototype *node)
 {
     TIntermSequence *sequence = node->getSequence();
-    addToFunctionMap(node->getFunctionSymbolInfo()->getId(), sequence);
+    addToFunctionMap(node->getFunction()->uniqueId(), sequence);
 
     TIntermTraverser::traverseFunctionPrototype(node);
 }
