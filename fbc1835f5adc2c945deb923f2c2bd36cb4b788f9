@@ -22,6 +22,30 @@
       "revId": "fbc1835f5adc2c945deb923f2c2bd36cb4b788f9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c8a6c6c2_085fc934",
+        "filename": "src/compiler/translator/SymbolTable.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-12-14T11:44:29Z",
+      "side": 1,
+      "message": "Done. Should update the style guide to say this. Now it says:\n\n\"Enum Names - use class enums, and the values should be uppercase with underscores.\"",
+      "parentUuid": "6cfd9321_a198fa8f",
+      "range": {
+        "startLine": 48,
+        "startChar": 0,
+        "endLine": 51,
+        "endChar": 16
+      },
+      "revId": "fbc1835f5adc2c945deb923f2c2bd36cb4b788f9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
