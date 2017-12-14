@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "79798d55_a3160026",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/RenderStateCache.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 216,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2017-12-14T05:03:33Z",
+      "side": 1,
+      "message": "Will these changes be visible at the user level, for example if the user queries the number of depth bits, or the depth function?",
+      "range": {
+        "startLine": 216,
+        "startChar": 32,
+        "endLine": 216,
+        "endChar": 55
+      },
+      "revId": "adde77c20edaf43d1fc4016ed2717fb2b75ab545",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
