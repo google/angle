@@ -119,7 +119,7 @@ class PullGradient : public TIntermTraverser
         {
             if (node->getOp() == EOpCallFunctionInAST)
             {
-                size_t calleeIndex = mDag.findIndex(node->getFunctionSymbolInfo());
+                size_t calleeIndex = mDag.findIndex(node->getFunction()->uniqueId());
                 ASSERT(calleeIndex != CallDAG::InvalidIndex && calleeIndex < mIndex);
 
                 if ((*mMetadataList)[calleeIndex].mUsesGradient)
@@ -129,7 +129,7 @@ class PullGradient : public TIntermTraverser
             }
             else if (node->getOp() == EOpCallBuiltInFunction)
             {
-                if (mGradientBuiltinFunctions.find(node->getFunctionSymbolInfo()->getName()) !=
+                if (mGradientBuiltinFunctions.find(*node->getFunction()->name()) !=
                     mGradientBuiltinFunctions.end())
                 {
                     onGradient();
@@ -288,7 +288,7 @@ class PullComputeDiscontinuousAndGradientLoops : public TIntermTraverser
     {
         if (visit == PreVisit && node->getOp() == EOpCallFunctionInAST)
         {
-            size_t calleeIndex = mDag.findIndex(node->getFunctionSymbolInfo());
+            size_t calleeIndex = mDag.findIndex(node->getFunction()->uniqueId());
             ASSERT(calleeIndex != CallDAG::InvalidIndex && calleeIndex < mIndex);
 
             if ((*mMetadataList)[calleeIndex].mHasGradientLoopInCallGraph)
@@ -367,7 +367,7 @@ class PushDiscontinuousLoops : public TIntermTraverser
             case EOpCallFunctionInAST:
                 if (visit == PreVisit && mNestedDiscont > 0)
                 {
-                    size_t calleeIndex = mDag.findIndex(node->getFunctionSymbolInfo());
+                    size_t calleeIndex = mDag.findIndex(node->getFunction()->uniqueId());
                     ASSERT(calleeIndex != CallDAG::InvalidIndex && calleeIndex < mIndex);
 
                     (*mMetadataList)[calleeIndex].mCalledInDiscontinuousLoop = true;

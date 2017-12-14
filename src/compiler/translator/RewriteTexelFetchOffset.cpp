@@ -72,7 +72,7 @@ bool Traverser::visitAggregate(Visit visit, TIntermAggregate *node)
         return true;
     }
 
-    if (node->getFunctionSymbolInfo()->getName() != "texelFetchOffset")
+    if (*node->getFunction()->name() != "texelFetchOffset")
     {
         return true;
     }

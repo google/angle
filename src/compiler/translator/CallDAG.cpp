@@ -287,9 +287,9 @@ CallDAG::~CallDAG()
 
 const size_t CallDAG::InvalidIndex = std::numeric_limits<size_t>::max();
 
-size_t CallDAG::findIndex(const TFunctionSymbolInfo *functionInfo) const
+size_t CallDAG::findIndex(const TSymbolUniqueId &id) const
 {
-    auto it = mFunctionIdToIndex.find(functionInfo->getId().get());
+    auto it = mFunctionIdToIndex.find(id.get());
 
     if (it == mFunctionIdToIndex.end())
     {
@@ -303,13 +303,6 @@ size_t CallDAG::findIndex(const TFunctionSymbolInfo *functionInfo) const
 
 const CallDAG::Record &CallDAG::getRecordFromIndex(size_t index) const
 {
-    ASSERT(index != InvalidIndex && index < mRecords.size());
-    return mRecords[index];
-}
-
-const CallDAG::Record &CallDAG::getRecord(const TIntermAggregate *function) const
-{
-    size_t index = findIndex(function->getFunctionSymbolInfo());
     ASSERT(index != InvalidIndex && index < mRecords.size());
     return mRecords[index];
 }

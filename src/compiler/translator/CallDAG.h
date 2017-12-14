@@ -58,10 +58,9 @@ class CallDAG : angle::NonCopyable
     InitResult init(TIntermNode *root, TDiagnostics *diagnostics);
 
     // Returns InvalidIndex if the function wasn't found
-    size_t findIndex(const TFunctionSymbolInfo *functionInfo) const;
+    size_t findIndex(const TSymbolUniqueId &id) const;
 
     const Record &getRecordFromIndex(size_t index) const;
-    const Record &getRecord(const TIntermAggregate *function) const;
     size_t size() const;
     void clear();
 

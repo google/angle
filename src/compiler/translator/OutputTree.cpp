@@ -20,6 +20,14 @@ void OutputFunction(TInfoSinkBase &out, const char *str, const TFunctionSymbolIn
         << info->getId().get() << ")";
 }
 
+void OutputFunction(TInfoSinkBase &out, const char *str, const TFunction *func)
+{
+    const char *internal =
+        (func->symbolType() == SymbolType::AngleInternal) ? " (internal function)" : "";
+    out << str << internal << ": " << *func->name() << " (symbol id " << func->uniqueId().get()
+        << ")";
+}
+
 // Two purposes:
 // 1.  Show an example of how to iterate tree.  Functions can also directly call traverse() on
 //     children themselves to have finer grained control over the process than shown here, though
@@ -379,14 +387,14 @@ bool TOutputTraverser::visitAggregate(Visit visit, TIntermAggregate *node)
     switch (node->getOp())
     {
         case EOpCallFunctionInAST:
-            OutputFunction(mOut, "Call an user-defined function", node->getFunctionSymbolInfo());
+            OutputFunction(mOut, "Call an user-defined function", node->getFunction());
             break;
         case EOpCallInternalRawFunction:
             OutputFunction(mOut, "Call an internal function with raw implementation",
-                           node->getFunctionSymbolInfo());
+                           node->getFunction());
             break;
         case EOpCallBuiltInFunction:
-            OutputFunction(mOut, "Call a built-in function", node->getFunctionSymbolInfo());
+            OutputFunction(mOut, "Call a built-in function", node->getFunction());
             break;
 
         case EOpConstruct:

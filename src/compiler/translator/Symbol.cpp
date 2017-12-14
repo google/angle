@@ -183,4 +183,15 @@ const TString &TFunction::GetMangledNameFromCall(const TString &functionName,
     return *NewPoolTString(newName.c_str());
 }
 
+bool TFunction::isMain() const
+{
+    return symbolType() == SymbolType::UserDefined && *name() == "main";
+}
+
+bool TFunction::isImageFunction() const
+{
+    return symbolType() == SymbolType::BuiltIn &&
+           (*name() == "imageSize" || *name() == "imageLoad" || *name() == "imageStore");
+}
+
 }  // namespace sh

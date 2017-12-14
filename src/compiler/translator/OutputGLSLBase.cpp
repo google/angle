@@ -938,11 +938,11 @@ bool TOutputGLSLBase::visitAggregate(Visit visit, TIntermAggregate *node)
             {
                 if (node->getOp() == EOpCallBuiltInFunction)
                 {
-                    out << translateTextureFunction(node->getFunctionSymbolInfo()->getName());
+                    out << translateTextureFunction(*node->getFunction()->name());
                 }
                 else
                 {
-                    out << hashFunctionNameIfNeeded(*node->getFunctionSymbolInfo());
+                    out << hashFunctionNameIfNeeded(node->getFunction());
                 }
                 out << "(";
             }
@@ -1141,6 +1141,18 @@ TString TOutputGLSLBase::hashVariableName(const TName &name)
         return name.getString();
     }
     return hashName(name);
+}
+
+TString TOutputGLSLBase::hashFunctionNameIfNeeded(const TFunction *func)
+{
+    if (func->isMain())
+    {
+        return *func->name();
+    }
+    else
+    {
+        return hashName(TName(func));
+    }
 }
 
 TString TOutputGLSLBase::hashFunctionNameIfNeeded(const TFunctionSymbolInfo &info)

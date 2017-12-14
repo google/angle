@@ -185,14 +185,13 @@ void TLValueTrackingTraverser::addToFunctionMap(const TSymbolUniqueId &id,
 bool TLValueTrackingTraverser::isInFunctionMap(const TIntermAggregate *callNode) const
 {
     ASSERT(callNode->getOp() == EOpCallFunctionInAST);
-    return (mFunctionMap.find(callNode->getFunctionSymbolInfo()->getId().get()) !=
-            mFunctionMap.end());
+    return (mFunctionMap.find(callNode->getFunction()->uniqueId().get()) != mFunctionMap.end());
 }
 
 TIntermSequence *TLValueTrackingTraverser::getFunctionParameters(const TIntermAggregate *callNode)
 {
     ASSERT(isInFunctionMap(callNode));
-    return mFunctionMap[callNode->getFunctionSymbolInfo()->getId().get()];
+    return mFunctionMap[callNode->getFunction()->uniqueId().get()];
 }
 
 void TLValueTrackingTraverser::setInFunctionCallOutParameter(bool inOutParameter)

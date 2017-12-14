@@ -72,6 +72,7 @@ class TOutputGLSLBase : public TIntermTraverser
     // Same as hashName(), but without hashing built-in variables.
     TString hashVariableName(const TName &name);
     // Same as hashName(), but without hashing internal functions or "main".
+    TString hashFunctionNameIfNeeded(const TFunction *func);
     TString hashFunctionNameIfNeeded(const TFunctionSymbolInfo &info);
     // Used to translate function names for differences between ESSL and GLSL
     virtual TString translateTextureFunction(const TString &name) { return name; }

@@ -1008,7 +1008,7 @@ class TCompiler::UnusedPredicate
             return false;
         }
 
-        size_t callDagIndex = mCallDag->findIndex(functionInfo);
+        size_t callDagIndex = mCallDag->findIndex(functionInfo->getId());
         if (callDagIndex == CallDAG::InvalidIndex)
         {
             // This happens only for unimplemented prototypes which are thus unused
