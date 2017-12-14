@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8a4c9493_07f4f66b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 465,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-14T18:34:35Z",
+      "side": 1,
+      "message": "instead of passing the context here, pass only the renderer as the first argument, and retrieve the context from the renderer.",
+      "range": {
+        "startLine": 465,
+        "startChar": 42,
+        "endLine": 465,
+        "endChar": 77
+      },
+      "revId": "102463103d153d9aa6df283e74751ff74326eac8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
