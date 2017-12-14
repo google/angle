@@ -46,6 +46,23 @@
       "revId": "adde77c20edaf43d1fc4016ed2717fb2b75ab545",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3a054167_62c2dfd4",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2202,
+      "author": {
+        "id": 1166724
+      },
+      "writtenOn": "2017-12-14T20:53:50Z",
+      "side": 1,
+      "message": "I\u0027m nervous about enabling this for _all_ Intel adapters, esp. if it\u0027s known to _only_ trigger under certain tests and/or configs. Couldn\u0027t we narrow down the driver revs using this workaround?",
+      "revId": "adde77c20edaf43d1fc4016ed2717fb2b75ab545",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
