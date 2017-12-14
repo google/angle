@@ -22,6 +22,30 @@
       "revId": "adde77c20edaf43d1fc4016ed2717fb2b75ab545",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "39978451_13b0f111",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/RenderStateCache.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 216,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-12-14T07:39:54Z",
+      "side": 1,
+      "message": "These changes won\u0027t be visible because they won\u0027t be set to the cache in angle. If queries the number of depth bits or depth function, it will return values in cache in angle. And the changed value here will be refreshed the next sync state. For example, if user enable the depth buffer and set the depth function to other values, the workaround won\u0027t be enabled in the next sync state.",
+      "parentUuid": "79798d55_a3160026",
+      "range": {
+        "startLine": 216,
+        "startChar": 32,
+        "endLine": 216,
+        "endChar": 55
+      },
+      "revId": "adde77c20edaf43d1fc4016ed2717fb2b75ab545",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
