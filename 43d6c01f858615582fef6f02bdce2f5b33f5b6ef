@@ -1,0 +1,242 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "455387cc_d87f4ef8",
+        "filename": "src/libANGLE/renderer/vulkan/CommandBufferNode.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-12-14T21:12:42Z",
+      "side": 1,
+      "message": "Why is there a second level of indirection?",
+      "revId": "43d6c01f858615582fef6f02bdce2f5b33f5b6ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f2fac80d_30abbe66",
+        "filename": "src/libANGLE/renderer/vulkan/CommandBufferNode.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-12-14T21:12:42Z",
+      "side": 1,
+      "message": "ditto about second level of indirection.",
+      "revId": "43d6c01f858615582fef6f02bdce2f5b33f5b6ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f50b77f5_b44c6673",
+        "filename": "src/libANGLE/renderer/vulkan/CommandBufferNode.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-12-14T21:12:42Z",
+      "side": 1,
+      "message": "nit: this couldbe node-\u003emIsDependency \u003d true without violating the privateness of mIsDependency.",
+      "revId": "43d6c01f858615582fef6f02bdce2f5b33f5b6ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e96a1ace_55d841a4",
+        "filename": "src/libANGLE/renderer/vulkan/CommandBufferNode.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 202,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-12-14T21:12:42Z",
+      "side": 1,
+      "message": "Maybe this could be checked when walking the DAG in RendererVk.",
+      "revId": "43d6c01f858615582fef6f02bdce2f5b33f5b6ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c9a49d4c_238fe377",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 305,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-12-14T21:12:42Z",
+      "side": 1,
+      "message": "ditto about double indirection.",
+      "revId": "43d6c01f858615582fef6f02bdce2f5b33f5b6ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "70886ff4_487a1a2f",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 350,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-12-14T21:12:42Z",
+      "side": 1,
+      "message": "onRender is a bit confusing, tagDependencies?",
+      "revId": "43d6c01f858615582fef6f02bdce2f5b33f5b6ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6f87378f_25cac86d",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 354,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-12-14T21:12:42Z",
+      "side": 1,
+      "message": "+1, eventually all this should be dirty-bitified and merged.",
+      "revId": "43d6c01f858615582fef6f02bdce2f5b33f5b6ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cc684fa9_e305bf82",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 384,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-12-14T21:12:42Z",
+      "side": 1,
+      "message": "What\u0027s this serial used for?",
+      "revId": "43d6c01f858615582fef6f02bdce2f5b33f5b6ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2e0001bc_74898c08",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 408,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-12-14T21:12:42Z",
+      "side": 1,
+      "message": "ditto about second indirection: couldn\u0027t this be a stack allocated CommandBuffer (non-owned copy)? I imagine there\u0027s some RAII happening that makes this inconvenient?",
+      "revId": "43d6c01f858615582fef6f02bdce2f5b33f5b6ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "344f1594_7e74fe40",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 904,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-12-14T21:12:42Z",
+      "side": 1,
+      "message": "Don\u0027t we have dirty bits for the objects being modified?",
+      "revId": "43d6c01f858615582fef6f02bdce2f5b33f5b6ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "da70c93f_7534bf0b",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 487,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-12-14T21:12:42Z",
+      "side": 1,
+      "message": "The interface between CommandBufferNode and FramebufferVk is pretty chatty. Could we just build a \"RenderPassFramebufferInfo\" then call node-\u003estoreRenderPassFramebufferInfo(info) in one call?",
+      "revId": "43d6c01f858615582fef6f02bdce2f5b33f5b6ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d7ae5383_1c50c14b",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 192,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-12-14T21:12:42Z",
+      "side": 1,
+      "message": "Can these be made \u003d default?",
+      "revId": "43d6c01f858615582fef6f02bdce2f5b33f5b6ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4a7874c9_f0780a1b",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 893,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-12-14T21:12:42Z",
+      "side": 1,
+      "message": "Things could be a bit simpler of they were split like this:\n\n1) sort nodes in topological order\n2) iterate on them and execute them.",
+      "revId": "43d6c01f858615582fef6f02bdce2f5b33f5b6ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b9875219_f1bbec24",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 24
+      },
+      "lineNbr": 191,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-12-14T21:12:42Z",
+      "side": 1,
+      "message": "Is there a reasoning for merging fence counting and commands together? I think it would be clearer to have a \"fence counting thing\" and CommandBatch be treated like any other in-flight resource. Also you might want to re-use NXT\u0027s SerialQueue container: https://github.com/google/nxt-standalone/blob/master/src/common/SerialQueue.h",
+      "revId": "43d6c01f858615582fef6f02bdce2f5b33f5b6ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
