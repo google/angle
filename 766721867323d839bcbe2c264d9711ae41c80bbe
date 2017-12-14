@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7d69d93c_b4c25753",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-14T21:40:50Z",
+      "side": 1,
+      "message": "nit: \"Bug: angleproject:2283\"",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 13,
+        "endChar": 8
+      },
+      "revId": "766721867323d839bcbe2c264d9711ae41c80bbe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "18451bd6_d2ccecad",
+        "filename": "src/tests/gl_tests/FramebufferTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 784,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-14T21:40:50Z",
+      "side": 1,
+      "message": "nit: Capitalize (\"AddDummy...\")",
+      "range": {
+        "startLine": 784,
+        "startChar": 6,
+        "endLine": 784,
+        "endChar": 40
+      },
+      "revId": "766721867323d839bcbe2c264d9711ae41c80bbe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "82065255_3028f8f3",
+        "filename": "src/tests/gl_tests/FramebufferTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 786,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-14T21:40:50Z",
+      "side": 1,
+      "message": "nit: remove extra newline",
+      "revId": "766721867323d839bcbe2c264d9711ae41c80bbe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
