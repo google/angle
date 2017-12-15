@@ -31,20 +31,9 @@ if (is_win) {
 
 vulkan_gen_dir = "$target_gen_dir/angle/vulkan"
 raw_vulkan_gen_dir = rebase_path(vulkan_gen_dir, root_build_dir)
-raw_spirv_tools_dir = rebase_path(spirv_tools_dir, root_build_dir)
 
 # Vulkan helper scripts
 # ---------------------
-
-# Copy vk_validation_error_messages.h from source to build dir for the scripts.
-copy("vulkan_validation_error_messages") {
-  sources = [
-    "$vulkan_layers_dir/layers/vk_validation_error_messages.h",
-  ]
-  outputs = [
-    "$root_out_dir/vk_validation_error_messages.h",
-  ]
-}
 
 helper_script_and_deps = [
   [
@@ -55,11 +44,6 @@ helper_script_and_deps = [
   [
     "vulkan_gen_enum_string_helper",
     "vk_enum_string_helper.h",
-    "helper_file_generator.py",
-  ],
-  [
-    "vulkan_gen_extension_helper",
-    "vk_extension_helper.h",
     "helper_file_generator.py",
   ],
   [
@@ -76,11 +60,6 @@ helper_script_and_deps = [
     "vulkan_gen_loader_extensions_h",
     "vk_loader_extensions.h",
     "loader_extension_generator.py",
-  ],
-  [
-    "vulkan_gen_object_types_h",
-    "vk_object_types.h",
-    "helper_file_generator.py",
   ],
   [
     "vulkan_gen_safe_struct_cpp",
@@ -108,18 +87,8 @@ helper_script_and_deps = [
     "threading_generator.py",
   ],
   [
-    "vulkan_gen_typemap_helper",
-    "vk_typemap_helper.h",
-    "helper_file_generator.py",
-  ],
-  [
-    "vulkan_gen_object_tracker_cpp",
-    "object_tracker.cpp",
-    "object_tracker_generator.py",
-  ],
-  [
-    "vulkan_gen_parameter_validation_cpp",
-    "parameter_validation.cpp",
+    "vulkan_gen_parameter_validation_helper",
+    "parameter_validation.h",
     "parameter_validation_generator.py",
   ],
   [
@@ -135,9 +104,6 @@ foreach(script_and_dep, helper_script_and_deps) {
   dep = script_and_dep[2]
   target("action", target_name) {
     script = "$vulkan_layers_dir/scripts/lvl_genvk.py"
-    deps = [
-      ":vulkan_validation_error_messages",
-    ]
     inputs = [
       "$vulkan_layers_dir/scripts/$dep",
       "$vulkan_layers_dir/scripts/generator.py",
@@ -158,23 +124,6 @@ foreach(script_and_dep, helper_script_and_deps) {
   }
 }
 
-# This could be generalized to a foreach if other revisions are added.
-action("spirv_tools_external_revision_generate") {
-  script = "$vulkan_layers_dir/scripts/external_revision_generator.py"
-  inputs = [
-    "$spirv_tools_dir/.git/HEAD",
-    "$spirv_tools_dir/.git/index",
-  ]
-  outputs = [
-    "$vulkan_gen_dir/spirv_tools_commit_id.h",
-  ]
-  args = [
-    "$raw_spirv_tools_dir",
-    "SPIRV_TOOLS_COMMIT_ID",
-    "$raw_vulkan_gen_dir/spirv_tools_commit_id.h",
-  ]
-}
-
 config("vulkan_generate_helper_files_config") {
   include_dirs = [
     vulkan_gen_dir,
@@ -183,9 +132,7 @@ config("vulkan_generate_helper_files_config") {
 }
 
 group("vulkan_generate_helper_files") {
-  public_deps = [
-    ":spirv_tools_external_revision_generate",
-  ]
+  public_deps = []
   public_configs = [ ":vulkan_generate_helper_files_config" ]
   foreach(script_and_dep, helper_script_and_deps) {
     target_name = script_and_dep[0]
@@ -265,9 +212,6 @@ static_library("vulkan_loader") {
     "$vulkan_layers_dir/loader/murmurhash.h",
     "$vulkan_layers_dir/loader/phys_dev_ext.c",
     "$vulkan_layers_dir/loader/trampoline.c",
-
-    # TODO(jmadill): Use assembler where available.
-    "$vulkan_layers_dir/loader/unknown_ext_chain.c",
     "$vulkan_layers_dir/loader/vk_loader_platform.h",
     "$vulkan_layers_dir/loader/wsi.c",
     "$vulkan_layers_dir/loader/wsi.h",
@@ -312,77 +256,43 @@ raw_spirv_source_dir = rebase_path(spirv_source_dir, root_build_dir)
 raw_spirv_include_dir = rebase_path(spirv_include_dir, root_build_dir)
 raw_spirv_headers_dir = rebase_path(spirv_headers_dir, root_build_dir)
 
-grammar_processing_script = "$spirv_tools_dir/utils/generate_grammar_tables.py"
-
-action("spirv_tools_gen_enum_string_mapping") {
-  script = grammar_processing_script
-  sources = [
-    "$spirv_include_dir/1.2/spirv.core.grammar.json",
-  ]
-  outputs = [
-    "$vulkan_gen_dir/extension_enum.inc",
-    "$vulkan_gen_dir/enum_string_mapping.inc",
-  ]
-  args = [
-    "--spirv-core-grammar=$raw_spirv_include_dir/1.2/spirv.core.grammar.json",
-    "--extension-enum-output=$raw_vulkan_gen_dir/extension_enum.inc",
-    "--enum-string-mapping-output=$raw_vulkan_gen_dir/enum_string_mapping.inc",
-  ]
-}
-
-spvtools_core_tables = [
-  "1.0",
-  "1.1",
-  "1.2",
-]
-
-foreach(version, spvtools_core_tables) {
-  action("spirv_tools_gen_core_tables_" + version) {
-    script = grammar_processing_script
-    sources = [
-      "$spirv_include_dir/$version/spirv.core.grammar.json",
-    ]
-    outputs = [
-      "$vulkan_gen_dir/core.insts-$version.inc",
-      "$vulkan_gen_dir/operand.kinds-$version.inc",
-    ]
-    args = [
-      "--spirv-core-grammar=$raw_spirv_include_dir/$version/spirv.core.grammar.json",
-      "--core-insts-output=$raw_vulkan_gen_dir/core.insts-$version.inc",
-      "--operand-kinds-output=$raw_vulkan_gen_dir/operand.kinds-$version.inc",
-    ]
-  }
-}
-
-action("spirv_tools_gen_glsl_tables") {
-  script = grammar_processing_script
+action("spirv_tools_gen_tables_1_0") {
+  script = "$spirv_tools_dir/utils/generate_grammar_tables.py"
   sources = [
     "$spirv_include_dir/1.0/extinst.glsl.std.450.grammar.json",
     "$spirv_include_dir/1.0/spirv.core.grammar.json",
+    "$spirv_source_dir/extinst-1.0.opencl.std.grammar.json",
   ]
   outputs = [
+    "$vulkan_gen_dir/core.insts-1.0.inc",
     "$vulkan_gen_dir/glsl.std.450.insts-1.0.inc",
+    "$vulkan_gen_dir/opencl.std.insts-1.0.inc",
+    "$vulkan_gen_dir/operand.kinds-1.0.inc",
   ]
   args = [
     "--spirv-core-grammar=$raw_spirv_include_dir/1.0/spirv.core.grammar.json",
     "--extinst-glsl-grammar=$raw_spirv_include_dir/1.0/extinst.glsl.std.450.grammar.json",
+    "--extinst-opencl-grammar=$raw_spirv_source_dir/extinst-1.0.opencl.std.grammar.json",
+    "--core-insts-output=$raw_vulkan_gen_dir/core.insts-1.0.inc",
     "--glsl-insts-output=$raw_vulkan_gen_dir/glsl.std.450.insts-1.0.inc",
+    "--opencl-insts-output=$raw_vulkan_gen_dir/opencl.std.insts-1.0.inc",
+    "--operand-kinds-output=$raw_vulkan_gen_dir/operand.kinds-1.0.inc",
   ]
 }
 
-action("spirv_tools_gen_opencl_tables") {
-  script = grammar_processing_script
+action("spirv_tools_gen_tables_1_1") {
+  script = "$spirv_tools_dir/utils/generate_grammar_tables.py"
   sources = [
-    "$spirv_include_dir/1.0/extinst.opencl.std.100.grammar.json",
-    "$spirv_include_dir/1.0/spirv.core.grammar.json",
+    "$spirv_include_dir/1.1/spirv.core.grammar.json",
   ]
   outputs = [
-    "$vulkan_gen_dir/opencl.std.insts-1.0.inc",
+    "$vulkan_gen_dir/core.insts-1.1.inc",
+    "$vulkan_gen_dir/operand.kinds-1.1.inc",
   ]
   args = [
-    "--spirv-core-grammar=$raw_spirv_include_dir/1.0/spirv.core.grammar.json",
-    "--extinst-opencl-grammar=$raw_spirv_include_dir/1.0/extinst.opencl.std.100.grammar.json",
-    "--opencl-insts-output=$raw_vulkan_gen_dir/opencl.std.insts-1.0.inc",
+    "--spirv-core-grammar=$raw_spirv_include_dir/1.1/spirv.core.grammar.json",
+    "--core-insts-output=$raw_vulkan_gen_dir/core.insts-1.1.inc",
+    "--operand-kinds-output=$raw_vulkan_gen_dir/operand.kinds-1.1.inc",
   ]
 }
 
@@ -398,35 +308,6 @@ action("spirv_tools_gen_generators_inc") {
     "--xml=$raw_spirv_headers_dir/include/spirv/spir-v.xml",
     "--generator-output=$raw_vulkan_gen_dir/generators.inc",
   ]
-}
-
-spvtools_vendor_tables = [
-  "spv-amd-shader-explicit-vertex-parameter",
-  "spv-amd-shader-trinary-minmax",
-  "spv-amd-gcn-shader",
-  "spv-amd-shader-ballot",
-]
-
-foreach(target_name, spvtools_vendor_tables) {
-  insts_file = "$target_name.insts.inc"
-  grammar_file = "extinst.$target_name.grammar.json"
-
-  action(target_name) {
-    script = grammar_processing_script
-
-    sources = [
-      "$spirv_source_dir/$grammar_file",
-    ]
-
-    outputs = [
-      "$vulkan_gen_dir/$insts_file",
-    ]
-
-    args = [
-      "--extinst-vendor-grammar=$raw_spirv_source_dir/$grammar_file",
-      "--vendor-insts-output=$raw_vulkan_gen_dir/$insts_file",
-    ]
-  }
 }
 
 config("spirv_tools_config") {
@@ -445,13 +326,9 @@ config("spirv_tools_config") {
 
 static_library("spirv_tools") {
   deps = [
-    ":spirv_tools_gen_core_tables_1.0",
-    ":spirv_tools_gen_core_tables_1.1",
-    ":spirv_tools_gen_core_tables_1.2",
-    ":spirv_tools_gen_enum_string_mapping",
     ":spirv_tools_gen_generators_inc",
-    ":spirv_tools_gen_glsl_tables",
-    ":spirv_tools_gen_opencl_tables",
+    ":spirv_tools_gen_tables_1_0",
+    ":spirv_tools_gen_tables_1_1",
   ]
   include_dirs = [
     vulkan_gen_dir,
@@ -486,17 +363,12 @@ static_library("spirv_tools") {
 
     # TODO(jmadill): Determine if this is ever needed.
     #"$spirv_tools_dir/source/software_version.cpp",
-    "$spirv_tools_dir/source/enum_string_mapping.cpp",
-    "$spirv_tools_dir/source/extensions.cpp",
-    "$spirv_tools_dir/source/extensions.h",
     "$spirv_tools_dir/source/spirv_constant.h",
     "$spirv_tools_dir/source/spirv_definition.h",
     "$spirv_tools_dir/source/spirv_endian.cpp",
     "$spirv_tools_dir/source/spirv_endian.h",
     "$spirv_tools_dir/source/spirv_target_env.cpp",
     "$spirv_tools_dir/source/spirv_target_env.h",
-    "$spirv_tools_dir/source/spirv_validator_options.cpp",
-    "$spirv_tools_dir/source/spirv_validator_options.h",
     "$spirv_tools_dir/source/table.cpp",
     "$spirv_tools_dir/source/table.h",
     "$spirv_tools_dir/source/text.cpp",
@@ -507,8 +379,6 @@ static_library("spirv_tools") {
     "$spirv_tools_dir/source/util/hex_float.h",
     "$spirv_tools_dir/source/util/parse_number.cpp",
     "$spirv_tools_dir/source/util/parse_number.h",
-    "$spirv_tools_dir/source/util/string_utils.cpp",
-    "$spirv_tools_dir/source/util/string_utils.h",
     "$spirv_tools_dir/source/val/basic_block.cpp",
     "$spirv_tools_dir/source/val/construct.cpp",
     "$spirv_tools_dir/source/val/function.cpp",
@@ -516,26 +386,13 @@ static_library("spirv_tools") {
     "$spirv_tools_dir/source/val/validation_state.cpp",
     "$spirv_tools_dir/source/validate.cpp",
     "$spirv_tools_dir/source/validate.h",
-    "$spirv_tools_dir/source/validate_arithmetics.cpp",
-    "$spirv_tools_dir/source/validate_bitwise.cpp",
-    "$spirv_tools_dir/source/validate_capability.cpp",
     "$spirv_tools_dir/source/validate_cfg.cpp",
-    "$spirv_tools_dir/source/validate_conversion.cpp",
     "$spirv_tools_dir/source/validate_datarules.cpp",
-    "$spirv_tools_dir/source/validate_decorations.cpp",
-    "$spirv_tools_dir/source/validate_derivatives.cpp",
     "$spirv_tools_dir/source/validate_id.cpp",
-    "$spirv_tools_dir/source/validate_image.cpp",
     "$spirv_tools_dir/source/validate_instruction.cpp",
     "$spirv_tools_dir/source/validate_layout.cpp",
-    "$spirv_tools_dir/source/validate_logicals.cpp",
-    "$spirv_tools_dir/source/validate_type_unique.cpp",
   ]
   public_configs = [ ":spirv_tools_config" ]
-
-  foreach(target_name, spvtools_vendor_tables) {
-    deps += [ ":$target_name" ]
-  }
 }
 
 # glslang
@@ -631,7 +488,9 @@ static_library("glslang") {
     "$glslang_dir/glslang/MachineIndependent/preprocessor/PpAtom.cpp",
     "$glslang_dir/glslang/MachineIndependent/preprocessor/PpContext.cpp",
     "$glslang_dir/glslang/MachineIndependent/preprocessor/PpContext.h",
+    "$glslang_dir/glslang/MachineIndependent/preprocessor/PpMemory.cpp",
     "$glslang_dir/glslang/MachineIndependent/preprocessor/PpScanner.cpp",
+    "$glslang_dir/glslang/MachineIndependent/preprocessor/PpSymbols.cpp",
     "$glslang_dir/glslang/MachineIndependent/preprocessor/PpTokens.cpp",
     "$glslang_dir/glslang/MachineIndependent/preprocessor/PpTokens.h",
     "$glslang_dir/glslang/MachineIndependent/propagateNoContraction.cpp",
@@ -640,6 +499,21 @@ static_library("glslang") {
     "$glslang_dir/glslang/MachineIndependent/reflection.h",
     "$glslang_dir/glslang/OSDependent/osinclude.h",
     "$glslang_dir/glslang/Public/ShaderLang.h",
+    "$glslang_dir/hlsl/hlslAttributes.cpp",
+    "$glslang_dir/hlsl/hlslAttributes.h",
+    "$glslang_dir/hlsl/hlslGrammar.cpp",
+    "$glslang_dir/hlsl/hlslGrammar.h",
+    "$glslang_dir/hlsl/hlslOpMap.cpp",
+    "$glslang_dir/hlsl/hlslOpMap.h",
+    "$glslang_dir/hlsl/hlslParseHelper.cpp",
+    "$glslang_dir/hlsl/hlslParseHelper.h",
+    "$glslang_dir/hlsl/hlslParseables.cpp",
+    "$glslang_dir/hlsl/hlslParseables.h",
+    "$glslang_dir/hlsl/hlslScanContext.cpp",
+    "$glslang_dir/hlsl/hlslScanContext.h",
+    "$glslang_dir/hlsl/hlslTokenStream.cpp",
+    "$glslang_dir/hlsl/hlslTokenStream.h",
+    "$glslang_dir/hlsl/hlslTokens.h",
   ]
   public_configs = [ ":glslang_config" ]
   configs += [ ":glslang_internal_config" ]
@@ -687,8 +561,6 @@ source_set("vulkan_layer_table") {
 }
 
 core_validation_sources = [
-  # This file is manually included in the layer
-  # "$vulkan_gen_dir/vk_safe_struct.cpp",
   "$vulkan_gen_dir/vk_safe_struct.h",
   "$vulkan_layers_dir/layers/buffer_validation.cpp",
   "$vulkan_layers_dir/layers/buffer_validation.h",
@@ -696,30 +568,24 @@ core_validation_sources = [
   "$vulkan_layers_dir/layers/core_validation.h",
   "$vulkan_layers_dir/layers/descriptor_sets.cpp",
   "$vulkan_layers_dir/layers/descriptor_sets.h",
-  "$vulkan_layers_dir/layers/shader_validation.cpp",
-  "$vulkan_layers_dir/layers/shader_validation.h",
-  "$vulkan_layers_dir/layers/xxhash.c",
-  "$vulkan_layers_dir/layers/xxhash.h",
 ]
-
 object_tracker_sources = [
-  "$vulkan_gen_dir/object_tracker.cpp",
+  "$vulkan_layers_dir/layers/object_tracker.cpp",
   "$vulkan_layers_dir/layers/object_tracker.h",
-  "$vulkan_layers_dir/layers/object_tracker_utils.cpp",
 ]
-
 parameter_validation_sources = [
-  "$vulkan_gen_dir/parameter_validation.cpp",
-  "$vulkan_layers_dir/layers/parameter_validation.h",
-  "$vulkan_layers_dir/layers/parameter_validation_utils.cpp",
+  "$vulkan_gen_dir/parameter_validation.h",
+  "$vulkan_layers_dir/layers/parameter_validation.cpp",
 ]
-
+swapchain_sources = [
+  "$vulkan_layers_dir/layers/swapchain.cpp",
+  "$vulkan_layers_dir/layers/swapchain.h",
+]
 threading_sources = [
   "$vulkan_gen_dir/thread_check.h",
   "$vulkan_layers_dir/layers/threading.cpp",
   "$vulkan_layers_dir/layers/threading.h",
 ]
-
 unique_objects_sources = [
   "$vulkan_gen_dir/unique_objects_wrappers.h",
 
@@ -739,12 +605,17 @@ layers = [
   [
     "object_tracker",
     object_tracker_sources,
-    ":vulkan_gen_object_tracker_cpp",
+    "",
   ],
   [
     "parameter_validation",
     parameter_validation_sources,
-    ":vulkan_gen_parameter_validation",
+    ":vulkan_gen_parameter_validation_helper",
+  ],
+  [
+    "swapchain",
+    swapchain_sources,
+    "",
   ],
   [
     "threading",
@@ -762,6 +633,7 @@ vulkan_gen_json_files_outputs = [
   "$root_out_dir/$data_dir/VkLayer_core_validation.json",
   "$root_out_dir/$data_dir/VkLayer_object_tracker.json",
   "$root_out_dir/$data_dir/VkLayer_parameter_validation.json",
+  "$root_out_dir/$data_dir/VkLayer_swapchain.json",
   "$root_out_dir/$data_dir/VkLayer_threading.json",
   "$root_out_dir/$data_dir/VkLayer_unique_objects.json",
 ]
@@ -773,6 +645,7 @@ action("vulkan_gen_json_files") {
       "$vulkan_layers_dir/layers/windows/VkLayer_core_validation.json",
       "$vulkan_layers_dir/layers/windows/VkLayer_object_tracker.json",
       "$vulkan_layers_dir/layers/windows/VkLayer_parameter_validation.json",
+      "$vulkan_layers_dir/layers/windows/VkLayer_swapchain.json",
       "$vulkan_layers_dir/layers/windows/VkLayer_threading.json",
       "$vulkan_layers_dir/layers/windows/VkLayer_unique_objects.json",
     ]
@@ -783,6 +656,7 @@ action("vulkan_gen_json_files") {
       "$vulkan_layers_dir/layers/linux/VkLayer_core_validation.json",
       "$vulkan_layers_dir/layers/linux/VkLayer_object_tracker.json",
       "$vulkan_layers_dir/layers/linux/VkLayer_parameter_validation.json",
+      "$vulkan_layers_dir/layers/linux/VkLayer_swapchain.json",
       "$vulkan_layers_dir/layers/linux/VkLayer_threading.json",
       "$vulkan_layers_dir/layers/linux/VkLayer_unique_objects.json",
     ]
@@ -797,8 +671,6 @@ action("vulkan_gen_json_files") {
 
 source_set("vulkan_layer_utils") {
   sources = [
-    "$vulkan_layers_dir/layers/vk_format_utils.cpp",
-    "$vulkan_layers_dir/layers/vk_format_utils.h",
     "$vulkan_layers_dir/layers/vk_layer_config.cpp",
     "$vulkan_layers_dir/layers/vk_layer_config.h",
     "$vulkan_layers_dir/layers/vk_layer_extension_utils.cpp",
@@ -814,9 +686,6 @@ source_set("vulkan_layer_utils") {
   public_deps = [
     ":vulkan_generate_helper_files",
   ]
-  deps = [
-    ":vulkan_validation_error_messages",
-  ]
   configs -= vulkan_undefine_configs
 }
 
@@ -829,38 +698,6 @@ source_set("vulkan_core_validation_glslang") {
     ":spirv_tools",
   ]
   public_configs = [ ":vulkan_core_validation_config" ]
-}
-
-config("vulkan_parameter_validation_config") {
-  if (is_clang) {
-    cflags_cc = [ "-Wno-unused-const-variable" ]
-  }
-}
-
-# This special action is needed to remove the generated param header.
-# Otherwise the param gen cpp file will pick up the old file and the
-# build will fail. It's a bit unfortunate but necessary.
-action("vulkan_clean_parameter_gen_header") {
-  script = "$angle_root/scripts/remove_file_if_exists.py"
-  inputs = parameter_validation_sources
-  deps = [
-    ":vulkan_gen_parameter_validation_cpp",
-  ]
-  outputs = [
-    "$vulkan_gen_dir/parameter_validation_h_is_removed",
-  ]
-  args = [
-    "$raw_vulkan_gen_dir/parameter_validation.h",
-    "$raw_vulkan_gen_dir/parameter_validation_h_is_removed",
-  ]
-}
-
-source_set("vulkan_gen_parameter_validation") {
-  deps = [
-    ":vulkan_clean_parameter_gen_header",
-    ":vulkan_gen_parameter_validation_cpp",
-  ]
-  public_configs = [ ":vulkan_parameter_validation_config" ]
 }
 
 foreach(layer_info, layers) {
