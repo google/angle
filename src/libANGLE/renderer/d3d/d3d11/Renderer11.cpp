@@ -3298,12 +3298,7 @@ gl::Error Renderer11::packPixels(const TextureHelper11 &textureHelper,
     ID3D11Resource *readResource = textureHelper.get();
 
     D3D11_MAPPED_SUBRESOURCE mapping;
-    HRESULT hr = mDeviceContext->Map(readResource, 0, D3D11_MAP_READ, 0, &mapping);
-    if (FAILED(hr))
-    {
-        ASSERT(hr == E_OUTOFMEMORY);
-        return gl::OutOfMemory() << "Failed to map internal texture for reading, " << gl::FmtHR(hr);
-    }
+    ANGLE_TRY(mapResource(readResource, 0, D3D11_MAP_READ, 0, &mapping));
 
     uint8_t *source = static_cast<uint8_t *>(mapping.pData);
     int inputPitch  = static_cast<int>(mapping.RowPitch);
@@ -4030,6 +4025,35 @@ bool Renderer11::canSelectViewInVertexShader() const
 {
     return !getWorkarounds().selectViewInGeometryShader &&
            getRenderer11DeviceCaps().supportsVpRtIndexWriteFromVertexShader;
+}
+
+gl::Error Renderer11::mapResource(ID3D11Resource *resource,
+                                  UINT subResource,
+                                  D3D11_MAP mapType,
+                                  UINT mapFlags,
+                                  D3D11_MAPPED_SUBRESOURCE *mappedResource)
+{
+    HRESULT hr = mDeviceContext->Map(resource, subResource, mapType, mapFlags, mappedResource);
+    if (FAILED(hr))
+    {
+        if (d3d11::isDeviceLostError(hr))
+        {
+            this->notifyDeviceLost();
+        }
+
+        const std::string genericFailureMessage = "Failed to map D3D11 resource.";
+
+        gl::Error glError = gl::InternalError() << genericFailureMessage << gl::FmtHR(hr);
+
+        if (E_OUTOFMEMORY)
+        {
+            glError = gl::OutOfMemory() << genericFailureMessage << gl::FmtHR(hr);
+        }
+
+        return glError;
+    }
+
+    return gl::NoError();
 }
 
 gl::Error Renderer11::markTransformFeedbackUsage(const gl::Context *context)

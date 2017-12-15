@@ -1002,7 +1002,6 @@ gl::Error Blit11::swizzleTexture(const gl::Context *context,
 {
     ANGLE_TRY(initResources());
 
-    HRESULT result;
     ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
 
     D3D11_SHADER_RESOURCE_VIEW_DESC sourceSRVDesc;
@@ -1050,13 +1049,8 @@ gl::Error Blit11::swizzleTexture(const gl::Context *context,
 
     // Set vertices
     D3D11_MAPPED_SUBRESOURCE mappedResource;
-    result =
-        deviceContext->Map(mVertexBuffer.get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
-    if (FAILED(result))
-    {
-        return gl::OutOfMemory() << "Failed to map internal vertex buffer for swizzle, "
-                                 << gl::FmtHR(result);
-    }
+    ANGLE_TRY(mRenderer->mapResource(mVertexBuffer.get(), 0, D3D11_MAP_WRITE_DISCARD, 0,
+                                     &mappedResource));
 
     ShaderSupport support;
     ANGLE_TRY(getShaderSupport(*shader, &support));
@@ -1072,12 +1066,8 @@ gl::Error Blit11::swizzleTexture(const gl::Context *context,
     deviceContext->Unmap(mVertexBuffer.get(), 0);
 
     // Set constant buffer
-    result = deviceContext->Map(mSwizzleCB.get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
-    if (FAILED(result))
-    {
-        return gl::OutOfMemory() << "Failed to map internal constant buffer for swizzle, "
-                                 << gl::FmtHR(result);
-    }
+    ANGLE_TRY(
+        mRenderer->mapResource(mSwizzleCB.get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource));
 
     unsigned int *swizzleIndices = reinterpret_cast<unsigned int *>(mappedResource.pData);
     swizzleIndices[0]            = GetSwizzleIndex(swizzleTarget.swizzleRed);
@@ -1139,7 +1129,6 @@ gl::Error Blit11::copyTexture(const gl::Context *context,
 {
     ANGLE_TRY(initResources());
 
-    HRESULT result;
     ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
 
     // Determine if the source format is a signed integer format, the destFormat will already
@@ -1165,13 +1154,8 @@ gl::Error Blit11::copyTexture(const gl::Context *context,
 
     // Set vertices
     D3D11_MAPPED_SUBRESOURCE mappedResource;
-    result =
-        deviceContext->Map(mVertexBuffer.get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
-    if (FAILED(result))
-    {
-        return gl::OutOfMemory() << "Failed to map internal vertex buffer for texture copy, "
-                                 << gl::FmtHR(result);
-    }
+    ANGLE_TRY(mRenderer->mapResource(mVertexBuffer.get(), 0, D3D11_MAP_WRITE_DISCARD, 0,
+                                     &mappedResource));
 
     UINT stride    = 0;
     UINT drawCount = 0;
@@ -1269,18 +1253,12 @@ gl::Error Blit11::copyDepth(const gl::Context *context,
 {
     ANGLE_TRY(initResources());
 
-    HRESULT result;
     ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
 
     // Set vertices
     D3D11_MAPPED_SUBRESOURCE mappedResource;
-    result =
-        deviceContext->Map(mVertexBuffer.get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
-    if (FAILED(result))
-    {
-        return gl::OutOfMemory() << "Failed to map internal vertex buffer for texture copy, "
-                                 << gl::FmtHR(result);
-    }
+    ANGLE_TRY(mRenderer->mapResource(mVertexBuffer.get(), 0, D3D11_MAP_WRITE_DISCARD, 0,
+                                     &mappedResource));
 
     UINT stride    = 0;
     UINT drawCount = 0;
@@ -1437,22 +1415,15 @@ gl::Error Blit11::copyAndConvertImpl(const TextureHelper11 &source,
                                          sourceSubresource, nullptr);
 
     D3D11_MAPPED_SUBRESOURCE sourceMapping;
-    HRESULT result = deviceContext->Map(sourceStaging.get(), 0, D3D11_MAP_READ, 0, &sourceMapping);
-    if (FAILED(result))
-    {
-        return gl::OutOfMemory()
-               << "Failed to map internal source staging texture for depth stencil blit, "
-               << gl::FmtHR(result);
-    }
+    ANGLE_TRY(mRenderer->mapResource(sourceStaging.get(), 0, D3D11_MAP_READ, 0, &sourceMapping));
 
     D3D11_MAPPED_SUBRESOURCE destMapping;
-    result = deviceContext->Map(destStaging.get(), 0, D3D11_MAP_WRITE, 0, &destMapping);
-    if (FAILED(result))
+    gl::Error error =
+        mRenderer->mapResource(destStaging.get(), 0, D3D11_MAP_WRITE, 0, &destMapping);
+    if (error.isError())
     {
         deviceContext->Unmap(sourceStaging.get(), 0);
-        return gl::OutOfMemory()
-               << "Failed to map internal destination staging texture for depth stencil blit, "
-               << gl::FmtHR(result);
+        return error;
     }
 
     // Clip dest area to the destination size

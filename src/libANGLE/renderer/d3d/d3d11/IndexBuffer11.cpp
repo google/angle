@@ -71,15 +71,9 @@ gl::Error IndexBuffer11::mapBuffer(unsigned int offset, unsigned int size, void*
         return gl::OutOfMemory() << "Index buffer map range is not inside the buffer.";
     }
 
-    ID3D11DeviceContext *dxContext = mRenderer->getDeviceContext();
-
     D3D11_MAPPED_SUBRESOURCE mappedResource;
-    HRESULT result =
-        dxContext->Map(mBuffer.get(), 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &mappedResource);
-    if (FAILED(result))
-    {
-        return gl::OutOfMemory() << "Failed to map internal index buffer, " << gl::FmtHR(result);
-    }
+    ANGLE_TRY(
+        mRenderer->mapResource(mBuffer.get(), 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &mappedResource));
 
     *outMappedMemory = reinterpret_cast<char*>(mappedResource.pData) + offset;
     return gl::NoError();
@@ -129,11 +123,8 @@ gl::Error IndexBuffer11::discard()
     ID3D11DeviceContext *dxContext = mRenderer->getDeviceContext();
 
     D3D11_MAPPED_SUBRESOURCE mappedResource;
-    HRESULT result = dxContext->Map(mBuffer.get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
-    if (FAILED(result))
-    {
-        return gl::OutOfMemory() << "Failed to map internal index buffer, " << gl::FmtHR(result);
-    }
+    ANGLE_TRY(
+        mRenderer->mapResource(mBuffer.get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource));
 
     dxContext->Unmap(mBuffer.get(), 0);
 

@@ -461,6 +461,12 @@ class Renderer11 : public RendererD3D
 
     void onDirtyUniformBlockBinding(GLuint uniformBlockIndex) override;
 
+    gl::Error mapResource(ID3D11Resource *resource,
+                          UINT subResource,
+                          D3D11_MAP mapType,
+                          UINT mapFlags,
+                          D3D11_MAPPED_SUBRESOURCE *mappedResource);
+
   private:
     void generateCaps(gl::Caps *outCaps,
                       gl::TextureCapsMap *outTextureCaps,

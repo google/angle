@@ -1195,16 +1195,10 @@ gl::Error Buffer11::NativeStorage::map(size_t offset,
     ASSERT(isCPUAccessible(access));
 
     D3D11_MAPPED_SUBRESOURCE mappedResource;
-    ID3D11DeviceContext *context = mRenderer->getDeviceContext();
     D3D11_MAP d3dMapType         = gl_d3d11::GetD3DMapTypeFromBits(mUsage, access);
     UINT d3dMapFlag = ((access & GL_MAP_UNSYNCHRONIZED_BIT) != 0 ? D3D11_MAP_FLAG_DO_NOT_WAIT : 0);
 
-    HRESULT result = context->Map(mBuffer.get(), 0, d3dMapType, d3dMapFlag, &mappedResource);
-    ASSERT(SUCCEEDED(result));
-    if (FAILED(result))
-    {
-        return gl::OutOfMemory() << "Failed to map native storage in Buffer11::NativeStorage::map";
-    }
+    ANGLE_TRY(mRenderer->mapResource(mBuffer.get(), 0, d3dMapType, d3dMapFlag, &mappedResource));
     ASSERT(mappedResource.pData);
     *mapPointerOut = static_cast<uint8_t *>(mappedResource.pData) + offset;
     return gl::NoError();

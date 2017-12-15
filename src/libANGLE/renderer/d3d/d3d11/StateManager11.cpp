@@ -462,7 +462,7 @@ void ShaderConstants11::onSamplerChange(gl::ShaderType shaderType,
     }
 }
 
-gl::Error ShaderConstants11::updateBuffer(ID3D11DeviceContext *deviceContext,
+gl::Error ShaderConstants11::updateBuffer(Renderer11 *renderer,
                                           gl::ShaderType shaderType,
                                           const ProgramD3D &programD3D,
                                           const d3d11::Buffer &driverConstantBuffer)
@@ -512,20 +512,15 @@ gl::Error ShaderConstants11::updateBuffer(ID3D11DeviceContext *deviceContext,
 
     // Previous buffer contents are discarded, so we need to refresh the whole buffer.
     D3D11_MAPPED_SUBRESOURCE mapping = {0};
-    HRESULT result =
-        deviceContext->Map(driverConstantBuffer.get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mapping);
-
-    if (FAILED(result))
-    {
-        return gl::OutOfMemory() << "Internal error mapping constant buffer: " << gl::FmtHR(result);
-    }
+    ANGLE_TRY(
+        renderer->mapResource(driverConstantBuffer.get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mapping));
 
     size_t samplerDataBytes = sizeof(SamplerMetadata) * programD3D.getUsedSamplerRange(shaderType);
 
     memcpy(mapping.pData, data, dataSize);
     memcpy(reinterpret_cast<uint8_t *>(mapping.pData) + dataSize, samplerData, samplerDataBytes);
 
-    deviceContext->Unmap(driverConstantBuffer.get(), 0);
+    renderer->getDeviceContext()->Unmap(driverConstantBuffer.get(), 0);
 
     return gl::NoError();
 }
@@ -2788,9 +2783,9 @@ gl::Error StateManager11::applyDriverUniforms(const ProgramD3D &programD3D)
 
     // Sampler metadata and driver constants need to coexist in the same constant buffer to conserve
     // constant buffer slots. We update both in the constant buffer if needed.
-    ANGLE_TRY(mShaderConstants.updateBuffer(deviceContext, gl::SHADER_VERTEX, programD3D,
+    ANGLE_TRY(mShaderConstants.updateBuffer(mRenderer, gl::SHADER_VERTEX, programD3D,
                                             mDriverConstantBufferVS));
-    ANGLE_TRY(mShaderConstants.updateBuffer(deviceContext, gl::SHADER_FRAGMENT, programD3D,
+    ANGLE_TRY(mShaderConstants.updateBuffer(mRenderer, gl::SHADER_FRAGMENT, programD3D,
                                             mDriverConstantBufferPS));
 
     // needed for the point sprite geometry shader
@@ -2845,7 +2840,7 @@ gl::Error StateManager11::applyComputeUniforms(ProgramD3D *programD3D)
                                             &buffer);
     }
 
-    ANGLE_TRY(mShaderConstants.updateBuffer(deviceContext, gl::SHADER_COMPUTE, *programD3D,
+    ANGLE_TRY(mShaderConstants.updateBuffer(mRenderer, gl::SHADER_COMPUTE, *programD3D,
                                             mDriverConstantBufferCS));
 
     return gl::NoError();

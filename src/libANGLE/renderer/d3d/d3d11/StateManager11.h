@@ -47,7 +47,7 @@ class ShaderConstants11 : angle::NonCopyable
                          unsigned int samplerIndex,
                          const gl::Texture &texture);
 
-    gl::Error updateBuffer(ID3D11DeviceContext *deviceContext,
+    gl::Error updateBuffer(Renderer11 *renderer,
                            gl::ShaderType shaderType,
                            const ProgramD3D &programD3D,
                            const d3d11::Buffer &driverConstantBuffer);
