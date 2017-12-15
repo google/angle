@@ -92,10 +92,10 @@ void CollectVariableRefCountsTraverser::visitSymbol(TIntermSymbol *node)
 {
     incrementStructTypeRefCount(node->getType());
 
-    auto iter = mSymbolIdRefCounts.find(node->getId());
+    auto iter = mSymbolIdRefCounts.find(node->uniqueId().get());
     if (iter == mSymbolIdRefCounts.end())
     {
-        mSymbolIdRefCounts[node->getId()] = 1u;
+        mSymbolIdRefCounts[node->uniqueId().get()] = 1u;
         return;
     }
     ++(iter->second);
@@ -234,14 +234,14 @@ bool RemoveUnreferencedVariablesTraverser::visitDeclaration(Visit visit, TInterm
         TIntermSymbol *symbolNode = declarator->getAsSymbolNode();
         if (symbolNode != nullptr)
         {
-            canRemoveVariable =
-                (*mSymbolIdRefCounts)[symbolNode->getId()] == 1u || symbolNode->getSymbol().empty();
+            canRemoveVariable = (*mSymbolIdRefCounts)[symbolNode->uniqueId().get()] == 1u ||
+                                symbolNode->getSymbol().empty();
         }
         TIntermBinary *initNode = declarator->getAsBinaryNode();
         if (initNode != nullptr)
         {
             ASSERT(initNode->getLeft()->getAsSymbolNode());
-            int symbolId = initNode->getLeft()->getAsSymbolNode()->getId();
+            int symbolId = initNode->getLeft()->getAsSymbolNode()->uniqueId().get();
             canRemoveVariable =
                 (*mSymbolIdRefCounts)[symbolId] == 1u && !initNode->getRight()->hasSideEffects();
         }
@@ -262,8 +262,8 @@ void RemoveUnreferencedVariablesTraverser::visitSymbol(TIntermSymbol *node)
 {
     if (mRemoveReferences)
     {
-        ASSERT(mSymbolIdRefCounts->find(node->getId()) != mSymbolIdRefCounts->end());
-        --(*mSymbolIdRefCounts)[node->getId()];
+        ASSERT(mSymbolIdRefCounts->find(node->uniqueId().get()) != mSymbolIdRefCounts->end());
+        --(*mSymbolIdRefCounts)[node->uniqueId().get()];
 
         decrementStructTypeRefCount(node->getType());
     }

@@ -1996,11 +1996,8 @@ bool TParseContext::executeInitializer(const TSourceLoc &line,
         }
         else if (initializer->getAsSymbolNode())
         {
-            const TSymbol *symbol =
-                symbolTable.find(initializer->getAsSymbolNode()->getSymbol(), 0);
-            const TVariable *tVar = static_cast<const TVariable *>(symbol);
-
-            const TConstantUnion *constArray = tVar->getConstPointer();
+            const TVariable &var             = initializer->getAsSymbolNode()->variable();
+            const TConstantUnion *constArray = var.getConstPointer();
             if (constArray)
             {
                 variable->shareConstPointer(constArray);

@@ -2408,7 +2408,7 @@ bool OutputHLSL::handleExcessiveLoop(TInfoSinkBase &out, TIntermLoop *node)
     {
         TIntermBinary *test = node->getCondition()->getAsBinaryNode();
 
-        if (test && test->getLeft()->getAsSymbolNode()->getId() == index->getId())
+        if (test && test->getLeft()->getAsSymbolNode()->uniqueId() == index->uniqueId())
         {
             TIntermConstantUnion *constant = test->getRight()->getAsConstantUnion();
 

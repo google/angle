@@ -74,7 +74,8 @@ class IntermNodeTest : public testing::Test
         ASSERT_NE(nullptr, copy);
         ASSERT_NE(nullptr, original);
         ASSERT_NE(original, copy);
-        ASSERT_EQ(original->getId(), copy->getId());
+        ASSERT_EQ(&original->variable(), &copy->variable());
+        ASSERT_EQ(original->uniqueId(), copy->uniqueId());
         ASSERT_EQ(original->getName().getString(), copy->getName().getString());
         ASSERT_EQ(original->getName().isInternal(), copy->getName().isInternal());
         checkTypeEqualWithQualifiers(original->getType(), copy->getType());

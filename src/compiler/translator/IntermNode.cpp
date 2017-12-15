@@ -281,12 +281,17 @@ bool TIntermAggregateBase::insertChildNodes(TIntermSequence::size_type position,
 }
 
 TIntermSymbol::TIntermSymbol(const TVariable *variable)
-    : TIntermTyped(variable->getType()), mId(variable->uniqueId()), mSymbol(variable->name())
+    : TIntermTyped(variable->getType()), mVariable(variable), mSymbol(variable->name())
 {
     if (variable->symbolType() == SymbolType::AngleInternal)
     {
         mSymbol.setInternal(true);
     }
+}
+
+const TSymbolUniqueId &TIntermSymbol::uniqueId() const
+{
+    return mVariable->uniqueId();
 }
 
 TIntermAggregate *TIntermAggregate::CreateFunctionCall(const TFunction &func,

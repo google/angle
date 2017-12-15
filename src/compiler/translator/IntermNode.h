@@ -263,20 +263,20 @@ class TIntermSymbol : public TIntermTyped
 
     bool hasSideEffects() const override { return false; }
 
-    int getId() const { return mId.get(); }
+    const TSymbolUniqueId &uniqueId() const;
     const TString &getSymbol() const { return mSymbol.getString(); }
     const TName &getName() const { return mSymbol; }
+    const TVariable &variable() const { return *mVariable; }
 
     void traverse(TIntermTraverser *it) override;
     TIntermSymbol *getAsSymbolNode() override { return this; }
     bool replaceChildNode(TIntermNode *, TIntermNode *) override { return false; }
 
-  protected:
-    const TSymbolUniqueId mId;
-    TName mSymbol;
-
   private:
     TIntermSymbol(const TIntermSymbol &) = default;  // Note: not deleted, just private!
+
+    const TVariable *const mVariable;  // Guaranteed to be non-null
+    TName mSymbol;
 };
 
 // A Raw node stores raw code, that the translator will insert verbatim
