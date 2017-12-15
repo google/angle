@@ -70,6 +70,70 @@
     },
     {
       "key": {
+        "uuid": "d58a9219_54f41baa",
+        "filename": "src/libANGLE/renderer/vulkan/CommandBufferNode.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 202,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-12-15T03:55:44Z",
+      "side": 1,
+      "message": "a recursive search might be simpler too",
+      "parentUuid": "e96a1ace_55d841a4",
+      "revId": "43d6c01f858615582fef6f02bdce2f5b33f5b6ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ef0fda22_928c9b8f",
+        "filename": "src/libANGLE/renderer/vulkan/CommandBufferNode.h",
+        "patchSetId": 24
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-12-15T03:55:44Z",
+      "side": 1,
+      "message": "could there be some consts here?",
+      "range": {
+        "startLine": 34,
+        "startChar": 7,
+        "endLine": 34,
+        "endChar": 16
+      },
+      "revId": "43d6c01f858615582fef6f02bdce2f5b33f5b6ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8f4b4c74_6608636d",
+        "filename": "src/libANGLE/renderer/vulkan/CommandBufferNode.h",
+        "patchSetId": 24
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-12-15T03:55:44Z",
+      "side": 1,
+      "message": "a bit hard to parse.  move \u0027separate\u0027 between \u0027need\u0027 and \u0027inside\u0027",
+      "range": {
+        "startLine": 78,
+        "startChar": 79,
+        "endLine": 78,
+        "endChar": 87
+      },
+      "revId": "43d6c01f858615582fef6f02bdce2f5b33f5b6ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "c9a49d4c_238fe377",
         "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
         "patchSetId": 24
@@ -223,6 +287,24 @@
     },
     {
       "key": {
+        "uuid": "d22d136c_5bc52616",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 893,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-12-15T03:55:44Z",
+      "side": 1,
+      "message": "+1\nduring the sort you\u0027d discover any loops and you could do away with the other checks",
+      "parentUuid": "4a7874c9_f0780a1b",
+      "revId": "43d6c01f858615582fef6f02bdce2f5b33f5b6ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b9875219_f1bbec24",
         "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
         "patchSetId": 24
@@ -234,6 +316,52 @@
       "writtenOn": "2017-12-14T21:12:42Z",
       "side": 1,
       "message": "Is there a reasoning for merging fence counting and commands together? I think it would be clearer to have a \"fence counting thing\" and CommandBatch be treated like any other in-flight resource. Also you might want to re-use NXT\u0027s SerialQueue container: https://github.com/google/nxt-standalone/blob/master/src/common/SerialQueue.h",
+      "revId": "43d6c01f858615582fef6f02bdce2f5b33f5b6ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "67b848d0_c412177d",
+        "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.h",
+        "patchSetId": 24
+      },
+      "lineNbr": 745,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-12-15T03:55:44Z",
+      "side": 1,
+      "message": "There\u0027s much more going on in this class than before.  Could you update this comment - say something about \u0027current read/write nodes.\u0027",
+      "range": {
+        "startLine": 745,
+        "startChar": 3,
+        "endLine": 745,
+        "endChar": 31
+      },
+      "revId": "43d6c01f858615582fef6f02bdce2f5b33f5b6ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "23b0540e_e3cc6043",
+        "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.h",
+        "patchSetId": 24
+      },
+      "lineNbr": 758,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-12-15T03:55:44Z",
+      "side": 1,
+      "message": "When did we start doing this vertical bar thing?  I see only a couple instances of it in our code so far.  I\u0027m not a big fan.  Would like to nip it in the bud, unless this is the way we do things now.",
+      "range": {
+        "startLine": 758,
+        "startChar": 61,
+        "endLine": 758,
+        "endChar": 76
+      },
       "revId": "43d6c01f858615582fef6f02bdce2f5b33f5b6ef",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
