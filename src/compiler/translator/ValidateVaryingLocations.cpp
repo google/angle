@@ -22,7 +22,7 @@ namespace
 
 void error(const TIntermSymbol &symbol, const char *reason, TDiagnostics *diagnostics)
 {
-    diagnostics->error(symbol.getLine(), reason, symbol.getSymbol().c_str());
+    diagnostics->error(symbol.getLine(), reason, symbol.getName().c_str());
 }
 
 int GetLocationCount(const TIntermSymbol *varying, bool ignoreVaryingArraySize)
@@ -84,9 +84,9 @@ void ValidateShaderInterface(TDiagnostics *diagnostics,
             if (locationMap.find(offsetLocation) != locationMap.end())
             {
                 std::stringstream strstr;
-                strstr << "'" << varying->getSymbol()
+                strstr << "'" << varying->getName()
                        << "' conflicting location with previously defined '"
-                       << locationMap[offsetLocation]->getSymbol() << "'";
+                       << locationMap[offsetLocation]->getName() << "'";
                 error(*varying, strstr.str().c_str(), diagnostics);
             }
             else
@@ -124,6 +124,11 @@ bool ValidateVaryingLocationsTraverser::visitDeclaration(Visit visit, TIntermDec
 
     const TIntermSymbol *symbol = sequence.front()->getAsSymbolNode();
     if (symbol == nullptr)
+    {
+        return false;
+    }
+
+    if (symbol->variable().symbolType() == SymbolType::Empty)
     {
         return false;
     }

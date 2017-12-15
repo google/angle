@@ -65,7 +65,7 @@ void TOutputVulkanGLSL::writeLayoutQualifier(TIntermTyped *variable)
 
     if (needsCustomLayout)
     {
-        out << "@@ LAYOUT-" << symbol->getName().getString() << " @@";
+        out << "@@ LAYOUT-" << symbol->getName() << " @@";
     }
 
     if (IsImage(type.getBasicType()) && layoutQualifier.imageInternalFormat != EiifUnspecified)

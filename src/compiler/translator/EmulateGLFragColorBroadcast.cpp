@@ -16,6 +16,7 @@
 #include "compiler/translator/IntermNode_util.h"
 #include "compiler/translator/IntermTraverse.h"
 #include "compiler/translator/RunAtTheEndOfShader.h"
+#include "compiler/translator/Symbol.h"
 
 namespace sh
 {
@@ -70,7 +71,7 @@ TIntermBinary *GLFragColorBroadcastTraverser::constructGLFragDataAssignNode(int 
 
 void GLFragColorBroadcastTraverser::visitSymbol(TIntermSymbol *node)
 {
-    if (node->getSymbol() == "gl_FragColor")
+    if (node->variable().symbolType() == SymbolType::BuiltIn && node->getName() == "gl_FragColor")
     {
         queueReplacement(constructGLFragDataNode(0), OriginalNode::IS_DROPPED);
         mGLFragColorUsed = true;

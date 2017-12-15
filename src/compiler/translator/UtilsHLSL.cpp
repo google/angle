@@ -715,18 +715,19 @@ TString Decorate(const TString &string)
     return string;
 }
 
-TString DecorateVariableIfNeeded(const TName &name)
+TString DecorateVariableIfNeeded(const TVariable &variable)
 {
-    if (name.isInternal())
+    if (variable.symbolType() == SymbolType::AngleInternal)
     {
+        const TString &name = variable.name();
         // The name should not have a prefix reserved for user-defined variables or functions.
-        ASSERT(name.getString().compare(0, 2, "f_") != 0);
-        ASSERT(name.getString().compare(0, 1, "_") != 0);
-        return name.getString();
+        ASSERT(name.compare(0, 2, "f_") != 0);
+        ASSERT(name.compare(0, 1, "_") != 0);
+        return name;
     }
     else
     {
-        return Decorate(name.getString());
+        return Decorate(variable.name());
     }
 }
 

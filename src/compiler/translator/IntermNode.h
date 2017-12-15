@@ -60,28 +60,6 @@ class TSymbolTable;
 class TFunction;
 class TVariable;
 
-// Encapsulate an identifier string and track whether it is coming from the original shader code
-// (not internal) or from ANGLE (internal). Usually internal names shouldn't be decorated or hashed.
-class TName
-{
-  public:
-    POOL_ALLOCATOR_NEW_DELETE();
-    explicit TName(const TString &name);
-    explicit TName(const TSymbol *symbol);
-    TName() : mName(), mIsInternal(false) {}
-    TName(const TName &) = default;
-    TName &operator=(const TName &) = default;
-
-    const TString &getString() const { return mName; }
-    void setString(const TString &string) { mName = string; }
-    bool isInternal() const { return mIsInternal; }
-    void setInternal(bool isInternal) { mIsInternal = isInternal; }
-
-  private:
-    TString mName;
-    bool mIsInternal;
-};
-
 //
 // Base class for the tree nodes
 //
@@ -267,8 +245,7 @@ class TIntermSymbol : public TIntermTyped
     bool hasSideEffects() const override { return false; }
 
     const TSymbolUniqueId &uniqueId() const;
-    const TString &getSymbol() const { return mSymbol.getString(); }
-    const TName &getName() const { return mSymbol; }
+    const TString &getName() const;
     const TVariable &variable() const { return *mVariable; }
 
     void traverse(TIntermTraverser *it) override;
@@ -279,7 +256,6 @@ class TIntermSymbol : public TIntermTyped
     TIntermSymbol(const TIntermSymbol &) = default;  // Note: not deleted, just private!
 
     const TVariable *const mVariable;  // Guaranteed to be non-null
-    TName mSymbol;
 };
 
 // A Raw node stores raw code, that the translator will insert verbatim

@@ -476,7 +476,7 @@ TString ArrayString(const TType &type)
 TString GetTypeName(const TType &type, ShHashFunction64 hashFunction, NameMap *nameMap)
 {
     if (type.getBasicType() == EbtStruct)
-        return HashName(TName(type.getStruct()->name()), hashFunction, nameMap);
+        return HashName(type.getStruct(), hashFunction, nameMap);
     else
         return type.getBuiltInTypeNameString();
 }

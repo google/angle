@@ -81,7 +81,14 @@ void TOutputTraverser::visitSymbol(TIntermSymbol *node)
 {
     OutputTreeText(mOut, node, mDepth);
 
-    mOut << "'" << node->getSymbol() << "' ";
+    if (node->variable().symbolType() == SymbolType::Empty)
+    {
+        mOut << "''";
+    }
+    else
+    {
+        mOut << "'" << node->getName() << "' ";
+    }
     mOut << "(symbol id " << node->uniqueId().get() << ") ";
     mOut << "(" << node->getCompleteString() << ")";
     mOut << "\n";

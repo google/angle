@@ -88,7 +88,7 @@ const char *GetImageArgumentToken(TIntermTyped *imageNode)
     TIntermSymbol *imageSymbol = imageNode->getAsSymbolNode();
     if (imageSymbol)
     {
-        return imageSymbol->getSymbol().c_str();
+        return imageSymbol->getName().c_str();
     }
     return "image";
 }
@@ -606,7 +606,10 @@ bool TParseContext::checkCanBeLValue(const TSourceLoc &line, const char *op, TIn
     //
     if (symNode)
     {
-        const char *symbol = symNode->getSymbol().c_str();
+        // Symbol inside an expression can't be nameless.
+        ASSERT(symNode->variable().symbolType() != SymbolType::Empty);
+
+        const char *symbol = symNode->getName().c_str();
         std::stringstream reasonStream;
         reasonStream << "l-value required (" << message << " \"" << symbol << "\")";
         std::string reason = reasonStream.str();
@@ -3928,7 +3931,7 @@ TIntermTyped *TParseContext::addIndexExpression(TIntermTyped *baseExpression,
         if (baseExpression->getAsSymbolNode())
         {
             error(location, " left of '[' is not of type array, matrix, or vector ",
-                  baseExpression->getAsSymbolNode()->getSymbol().c_str());
+                  baseExpression->getAsSymbolNode()->getName().c_str());
         }
         else
         {

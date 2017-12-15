@@ -7,6 +7,7 @@
 #include "compiler/translator/VersionGLSL.h"
 
 #include "angle_gl.h"
+#include "compiler/translator/Symbol.h"
 
 namespace sh
 {
@@ -76,7 +77,7 @@ TVersionGLSL::TVersionGLSL(sh::GLenum type, const TPragma &pragma, ShShaderOutpu
 
 void TVersionGLSL::visitSymbol(TIntermSymbol *node)
 {
-    if (node->getSymbol() == "gl_PointCoord")
+    if (node->variable().symbolType() == SymbolType::BuiltIn && node->getName() == "gl_PointCoord")
     {
         ensureVersionIsAtLeast(GLSL_VERSION_120);
     }

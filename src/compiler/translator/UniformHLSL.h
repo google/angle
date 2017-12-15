@@ -63,19 +63,19 @@ class UniformHLSL : angle::NonCopyable
 
     void outputHLSL4_0_FL9_3Sampler(TInfoSinkBase &out,
                                     const TType &type,
-                                    const TName &name,
+                                    const TVariable &variable,
                                     const unsigned int registerIndex);
     void outputHLSL4_1_FL11Texture(TInfoSinkBase &out,
                                    const TType &type,
-                                   const TName &name,
+                                   const TVariable &variable,
                                    const unsigned int registerIndex);
     void outputHLSL4_1_FL11RWTexture(TInfoSinkBase &out,
                                      const TType &type,
-                                     const TName &name,
+                                     const TVariable &variable,
                                      const unsigned int registerIndex);
     void outputUniform(TInfoSinkBase &out,
                        const TType &type,
-                       const TName &name,
+                       const TVariable &variable,
                        const unsigned int registerIndex);
 
     // Returns the uniform's register index

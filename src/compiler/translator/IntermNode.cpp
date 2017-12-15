@@ -140,16 +140,6 @@ void SetUnionArrayFromMatrix(const angle::Matrix<float> &m, TConstantUnion *resu
 
 }  // namespace anonymous
 
-TName::TName(const TString &name) : mName(name), mIsInternal(false)
-{
-}
-
-TName::TName(const TSymbol *symbol)
-    : mName(symbol->symbolType() == SymbolType::Empty ? "" : symbol->name()),
-      mIsInternal(symbol->symbolType() == SymbolType::AngleInternal)
-{
-}
-
 ////////////////////////////////////////////////////////////////
 //
 // Member functions of the nodes used for building the tree.
@@ -278,13 +268,18 @@ bool TIntermAggregateBase::insertChildNodes(TIntermSequence::size_type position,
 }
 
 TIntermSymbol::TIntermSymbol(const TVariable *variable)
-    : TIntermTyped(variable->getType()), mVariable(variable), mSymbol(variable)
+    : TIntermTyped(variable->getType()), mVariable(variable)
 {
 }
 
 const TSymbolUniqueId &TIntermSymbol::uniqueId() const
 {
     return mVariable->uniqueId();
+}
+
+const TString &TIntermSymbol::getName() const
+{
+    return mVariable->name();
 }
 
 TIntermAggregate *TIntermAggregate::CreateFunctionCall(const TFunction &func,

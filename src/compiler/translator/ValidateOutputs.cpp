@@ -20,9 +20,10 @@ namespace sh
 
 namespace
 {
+
 void error(const TIntermSymbol &symbol, const char *reason, TDiagnostics *diagnostics)
 {
-    diagnostics->error(symbol.getLine(), reason, symbol.getSymbol().c_str());
+    diagnostics->error(symbol.getLine(), reason, symbol.getName().c_str());
 }
 
 class ValidateOutputsTraverser : public TIntermTraverser
@@ -112,7 +113,7 @@ void ValidateOutputsTraverser::validate(TDiagnostics *diagnostics) const
                 {
                     std::stringstream strstr;
                     strstr << "conflicting output locations with previously defined output '"
-                           << validOutputs[offsetLocation]->getSymbol() << "'";
+                           << validOutputs[offsetLocation]->getName() << "'";
                     error(*symbol, strstr.str().c_str(), diagnostics);
                 }
                 else

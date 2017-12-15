@@ -16,8 +16,6 @@
 
 #include "angle_gl.h"
 
-class TName;
-
 namespace sh
 {
 
@@ -110,7 +108,7 @@ TString SamplerString(HLSLTextureGroup type);
 
 // Adds a prefix to user-defined names to avoid naming clashes.
 TString Decorate(const TString &string);
-TString DecorateVariableIfNeeded(const TName &name);
+TString DecorateVariableIfNeeded(const TVariable &variable);
 TString DecorateFunctionIfNeeded(const TFunction *func);
 TString DecorateField(const TString &string, const TStructure &structure);
 TString DecoratePrivate(const TString &privateText);

@@ -25,23 +25,24 @@ namespace
 class ReplaceVariableTraverser : public TIntermTraverser
 {
   public:
-    ReplaceVariableTraverser(const TString &symbolName, TIntermSymbol *newSymbol)
-        : TIntermTraverser(true, false, false), mSymbolName(symbolName), mNewSymbol(newSymbol)
+    ReplaceVariableTraverser(const TVariable *toBeReplaced, const TVariable *replacement)
+        : TIntermTraverser(true, false, false),
+          mToBeReplaced(toBeReplaced),
+          mReplacement(replacement)
     {
     }
 
     void visitSymbol(TIntermSymbol *node) override
     {
-        const TName &name = node->getName();
-        if (name.getString() == mSymbolName)
+        if (&node->variable() == mToBeReplaced)
         {
-            queueReplacement(mNewSymbol->deepCopy(), OriginalNode::IS_DROPPED);
+            queueReplacement(new TIntermSymbol(mReplacement), OriginalNode::IS_DROPPED);
         }
     }
 
   private:
-    TString mSymbolName;
-    TIntermSymbol *mNewSymbol;
+    const TVariable *const mToBeReplaced;
+    const TVariable *const mReplacement;
 };
 
 TIntermSymbol *CreateGLInstanceIDSymbol(const TSymbolTable &symbolTable)
@@ -50,8 +51,8 @@ TIntermSymbol *CreateGLInstanceIDSymbol(const TSymbolTable &symbolTable)
 }
 
 // Adds the InstanceID and ViewID_OVR initializers to the end of the initializers' sequence.
-void InitializeViewIDAndInstanceID(TIntermTyped *viewIDSymbol,
-                                   TIntermTyped *instanceIDSymbol,
+void InitializeViewIDAndInstanceID(const TVariable *viewID,
+                                   const TVariable *instanceID,
                                    unsigned numberOfViews,
                                    const TSymbolTable &symbolTable,
                                    TIntermSequence *initializers)
@@ -80,7 +81,7 @@ void InitializeViewIDAndInstanceID(TIntermTyped *viewIDSymbol,
 
     // Create an InstanceID = int(uint(gl_InstanceID) / numberOfViews) node.
     TIntermBinary *instanceIDInitializer =
-        new TIntermBinary(EOpAssign, instanceIDSymbol->deepCopy(), normalizedInstanceIDAsInt);
+        new TIntermBinary(EOpAssign, new TIntermSymbol(instanceID), normalizedInstanceIDAsInt);
     initializers->push_back(instanceIDInitializer);
 
     // Create a uint(gl_InstanceID) % numberOfViews node.
@@ -89,36 +90,37 @@ void InitializeViewIDAndInstanceID(TIntermTyped *viewIDSymbol,
 
     // Create a ViewID_OVR = uint(gl_InstanceID) % numberOfViews node.
     TIntermBinary *viewIDInitializer =
-        new TIntermBinary(EOpAssign, viewIDSymbol->deepCopy(), normalizedViewID);
+        new TIntermBinary(EOpAssign, new TIntermSymbol(viewID), normalizedViewID);
     initializers->push_back(viewIDInitializer);
 }
 
-// Replaces every occurrence of a symbol with the name specified in symbolName with newSymbolNode.
-void ReplaceSymbol(TIntermBlock *root, const TString &symbolName, TIntermSymbol *newSymbolNode)
+// Replaces every occurrence of a variable with another variable.
+void ReplaceSymbol(TIntermBlock *root, const TVariable *toBeReplaced, const TVariable *replacement)
 {
-    ReplaceVariableTraverser traverser(symbolName, newSymbolNode);
+    ReplaceVariableTraverser traverser(toBeReplaced, replacement);
     root->traverse(&traverser);
     traverser.updateTree();
 }
 
-void DeclareGlobalVariable(TIntermBlock *root, TIntermTyped *typedNode)
+void DeclareGlobalVariable(TIntermBlock *root, const TVariable *variable)
 {
-    TIntermSequence *globalSequence = root->getSequence();
     TIntermDeclaration *declaration = new TIntermDeclaration();
-    declaration->appendDeclarator(typedNode->deepCopy());
+    declaration->appendDeclarator(new TIntermSymbol(variable));
+
+    TIntermSequence *globalSequence = root->getSequence();
     globalSequence->insert(globalSequence->begin(), declaration);
 }
 
 // Adds a branch to write int(ViewID_OVR) to either gl_ViewportIndex or gl_Layer. The branch is
 // added to the end of the initializers' sequence.
-void SelectViewIndexInVertexShader(TIntermTyped *viewIDSymbol,
-                                   TIntermTyped *multiviewBaseViewLayerIndexSymbol,
+void SelectViewIndexInVertexShader(const TVariable *viewID,
+                                   const TVariable *multiviewBaseViewLayerIndex,
                                    TIntermSequence *initializers,
                                    const TSymbolTable &symbolTable)
 {
     // Create an int(ViewID_OVR) node.
     TIntermSequence *viewIDSymbolCastArguments = new TIntermSequence();
-    viewIDSymbolCastArguments->push_back(viewIDSymbol);
+    viewIDSymbolCastArguments->push_back(new TIntermSymbol(viewID));
     TIntermAggregate *viewIDAsInt = TIntermAggregate::CreateConstructor(
         TType(EbtInt, EbpHigh, EvqTemporary), viewIDSymbolCastArguments);
 
@@ -135,8 +137,8 @@ void SelectViewIndexInVertexShader(TIntermTyped *viewIDSymbol,
     TIntermSymbol *layerSymbol = ReferenceBuiltInVariable("gl_Layer", symbolTable, 0);
 
     // Create an int(ViewID_OVR) + multiviewBaseViewLayerIndex node
-    TIntermBinary *sumOfViewIDAndBaseViewIndex =
-        new TIntermBinary(EOpAdd, viewIDAsInt->deepCopy(), multiviewBaseViewLayerIndexSymbol);
+    TIntermBinary *sumOfViewIDAndBaseViewIndex = new TIntermBinary(
+        EOpAdd, viewIDAsInt->deepCopy(), new TIntermSymbol(multiviewBaseViewLayerIndex));
 
     // Create a { gl_Layer = int(ViewID_OVR) + multiviewBaseViewLayerIndex } node.
     TIntermBlock *layerInitializerInBlock = new TIntermBlock();
@@ -145,7 +147,7 @@ void SelectViewIndexInVertexShader(TIntermTyped *viewIDSymbol,
 
     // Create a node to compare whether the base view index uniform is less than zero.
     TIntermBinary *multiviewBaseViewLayerIndexZeroComparison =
-        new TIntermBinary(EOpLessThan, multiviewBaseViewLayerIndexSymbol->deepCopy(),
+        new TIntermBinary(EOpLessThan, new TIntermSymbol(multiviewBaseViewLayerIndex),
                           CreateZeroNode(TType(EbtInt, EbpHigh, EvqConst)));
 
     // Create an if-else statement to select the code path.
@@ -169,27 +171,29 @@ void DeclareAndInitBuiltinsForInstancedMultiview(TIntermBlock *root,
 
     TQualifier viewIDQualifier  = (shaderType == GL_VERTEX_SHADER) ? EvqFlatOut : EvqFlatIn;
     const TString *viewIDVariableName = NewPoolTString("ViewID_OVR");
-    const TVariable *viewIDVariable =
+    const TVariable *viewID =
         new TVariable(symbolTable, viewIDVariableName, TType(EbtUInt, EbpHigh, viewIDQualifier),
                       SymbolType::AngleInternal);
-    TIntermSymbol *viewIDSymbol = new TIntermSymbol(viewIDVariable);
 
-    DeclareGlobalVariable(root, viewIDSymbol);
-    ReplaceSymbol(root, "gl_ViewID_OVR", viewIDSymbol);
+    DeclareGlobalVariable(root, viewID);
+    ReplaceSymbol(root,
+                  static_cast<TVariable *>(symbolTable->findBuiltIn("gl_ViewID_OVR", 300, true)),
+                  viewID);
     if (shaderType == GL_VERTEX_SHADER)
     {
         // Replacing gl_InstanceID with InstanceID should happen before adding the initializers of
         // InstanceID and ViewID.
         const TString *instanceIDVariableName = NewPoolTString("InstanceID");
-        const TVariable *instanceIDVariable =
+        const TVariable *instanceID =
             new TVariable(symbolTable, instanceIDVariableName, TType(EbtInt, EbpHigh, EvqGlobal),
                           SymbolType::AngleInternal);
-        TIntermSymbol *instanceIDSymbol = new TIntermSymbol(instanceIDVariable);
-        DeclareGlobalVariable(root, instanceIDSymbol);
-        ReplaceSymbol(root, "gl_InstanceID", instanceIDSymbol);
+        DeclareGlobalVariable(root, instanceID);
+        ReplaceSymbol(
+            root, static_cast<TVariable *>(symbolTable->findBuiltIn("gl_InstanceID", 300, true)),
+            instanceID);
 
         TIntermSequence *initializers = new TIntermSequence();
-        InitializeViewIDAndInstanceID(viewIDSymbol, instanceIDSymbol, numberOfViews, *symbolTable,
+        InitializeViewIDAndInstanceID(viewID, instanceID, numberOfViews, *symbolTable,
                                       initializers);
 
         // The AST transformation which adds the expression to select the viewport index should
@@ -203,18 +207,15 @@ void DeclareAndInitBuiltinsForInstancedMultiview(TIntermBlock *root,
             // Add a uniform to switch between side-by-side and layered rendering.
             const TString *multiviewBaseViewLayerIndexVariableName =
                 NewPoolTString("multiviewBaseViewLayerIndex");
-            const TVariable *multiviewBaseViewLayerIndexVariable =
+            const TVariable *multiviewBaseViewLayerIndex =
                 new TVariable(symbolTable, multiviewBaseViewLayerIndexVariableName,
                               TType(EbtInt, EbpHigh, EvqUniform), SymbolType::AngleInternal);
-            TIntermSymbol *multiviewBaseViewLayerIndexSymbol =
-                new TIntermSymbol(multiviewBaseViewLayerIndexVariable);
-            DeclareGlobalVariable(root, multiviewBaseViewLayerIndexSymbol);
+            DeclareGlobalVariable(root, multiviewBaseViewLayerIndex);
 
             // Setting a value to gl_ViewportIndex or gl_Layer should happen after ViewID_OVR's
             // initialization.
-            SelectViewIndexInVertexShader(viewIDSymbol->deepCopy(),
-                                          multiviewBaseViewLayerIndexSymbol->deepCopy(),
-                                          initializers, *symbolTable);
+            SelectViewIndexInVertexShader(viewID, multiviewBaseViewLayerIndex, initializers,
+                                          *symbolTable);
         }
 
         // Insert initializers at the beginning of main().

@@ -41,24 +41,32 @@ void TOutputGLSL::visitSymbol(TIntermSymbol *node)
 {
     TInfoSinkBase &out = objSink();
 
-    const TString &symbol = node->getSymbol();
-    if (symbol == "gl_FragDepthEXT")
+    // All the special cases are built-ins, so if it's not a built-in we can return early.
+    if (node->variable().symbolType() != SymbolType::BuiltIn)
+    {
+        TOutputGLSLBase::visitSymbol(node);
+        return;
+    }
+
+    // Some built-ins get a special translation.
+    const TString &name = node->getName();
+    if (name == "gl_FragDepthEXT")
     {
         out << "gl_FragDepth";
     }
-    else if (symbol == "gl_FragColor" && sh::IsGLSL130OrNewer(getShaderOutput()))
+    else if (name == "gl_FragColor" && sh::IsGLSL130OrNewer(getShaderOutput()))
     {
         out << "webgl_FragColor";
     }
-    else if (symbol == "gl_FragData" && sh::IsGLSL130OrNewer(getShaderOutput()))
+    else if (name == "gl_FragData" && sh::IsGLSL130OrNewer(getShaderOutput()))
     {
         out << "webgl_FragData";
     }
-    else if (symbol == "gl_SecondaryFragColorEXT")
+    else if (name == "gl_SecondaryFragColorEXT")
     {
         out << "angle_SecondaryFragColor";
     }
-    else if (symbol == "gl_SecondaryFragDataEXT")
+    else if (name == "gl_SecondaryFragDataEXT")
     {
         out << "angle_SecondaryFragData";
     }

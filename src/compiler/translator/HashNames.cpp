@@ -7,6 +7,7 @@
 #include "compiler/translator/HashNames.h"
 
 #include "compiler/translator/IntermNode.h"
+#include "compiler/translator/Symbol.h"
 
 namespace sh
 {
@@ -38,35 +39,45 @@ TString HashName(const TString &name, ShHashFunction64 hashFunction)
 
 }  // anonymous namespace
 
-TString HashName(const TName &name, ShHashFunction64 hashFunction, NameMap *nameMap)
+TString HashName(const TString &name, ShHashFunction64 hashFunction, NameMap *nameMap)
 {
-    if (name.getString().empty() || name.isInternal())
-    {
-        return name.getString();
-    }
     if (hashFunction == nullptr)
     {
-        if (name.getString().length() + kUnhashedNamePrefixLength > kESSLMaxIdentifierLength)
+        if (name.length() + kUnhashedNamePrefixLength > kESSLMaxIdentifierLength)
         {
             // If the identifier length is already close to the limit, we can't prefix it. This is
             // not a problem since there are no builtins or ANGLE's internal variables that would
             // have as long names and could conflict.
-            return name.getString();
+            return name;
         }
-        return kUnhashedNamePrefix + name.getString();
+        return kUnhashedNamePrefix + name;
     }
     if (nameMap)
     {
-        NameMap::const_iterator it = nameMap->find(name.getString().c_str());
+        NameMap::const_iterator it = nameMap->find(name.c_str());
         if (it != nameMap->end())
             return it->second.c_str();
     }
-    TString hashedName = HashName(name.getString(), hashFunction);
+    TString hashedName = HashName(name, hashFunction);
     if (nameMap)
     {
-        (*nameMap)[name.getString().c_str()] = hashedName.c_str();
+        (*nameMap)[name.c_str()] = hashedName.c_str();
     }
     return hashedName;
+}
+
+TString HashName(const TSymbol *symbol, ShHashFunction64 hashFunction, NameMap *nameMap)
+{
+    if (symbol->symbolType() == SymbolType::Empty)
+    {
+        return TString();
+    }
+    if (symbol->symbolType() == SymbolType::AngleInternal ||
+        symbol->symbolType() == SymbolType::BuiltIn)
+    {
+        return symbol->name();
+    }
+    return HashName(symbol->name(), hashFunction, nameMap);
 }
 
 }  // namespace sh

@@ -36,6 +36,7 @@ TSymbol::TSymbol(TSymbolTable *symbolTable,
     ASSERT(mSymbolType == SymbolType::BuiltIn || mExtension == TExtension::UNDEFINED);
     ASSERT(mName != nullptr || mSymbolType == SymbolType::AngleInternal ||
            mSymbolType == SymbolType::NotResolved || mSymbolType == SymbolType::Empty);
+    ASSERT(mName == nullptr || *mName != "");
 }
 
 const TString &TSymbol::name() const

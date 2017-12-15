@@ -187,7 +187,8 @@ void RemoveUnreferencedVariablesTraverser::removeVariableDeclaration(TIntermDecl
             // count will end up being one less than the correct refcount. But since the struct
             // declaration is kept, the incorrect refcount can't cause any other problems.
 
-            if (declarator->getAsSymbolNode() && declarator->getAsSymbolNode()->getSymbol().empty())
+            if (declarator->getAsSymbolNode() &&
+                declarator->getAsSymbolNode()->variable().symbolType() == SymbolType::Empty)
             {
                 // Already an empty declaration - nothing to do.
                 return;
@@ -235,7 +236,7 @@ bool RemoveUnreferencedVariablesTraverser::visitDeclaration(Visit visit, TInterm
         if (symbolNode != nullptr)
         {
             canRemoveVariable = (*mSymbolIdRefCounts)[symbolNode->uniqueId().get()] == 1u ||
-                                symbolNode->getSymbol().empty();
+                                symbolNode->variable().symbolType() == SymbolType::Empty;
         }
         TIntermBinary *initNode = declarator->getAsBinaryNode();
         if (initNode != nullptr)

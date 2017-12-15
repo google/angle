@@ -78,11 +78,12 @@ void GetDeferredInitializers(TIntermDeclaration *declaration,
         TIntermSymbol *symbolNode = declarator->getAsSymbolNode();
         ASSERT(symbolNode);
 
-        // Ignore ANGLE internal variables.
-        if (symbolNode->getName().isInternal())
+        // Ignore ANGLE internal variables and nameless declarations.
+        if (symbolNode->variable().symbolType() == SymbolType::AngleInternal ||
+            symbolNode->variable().symbolType() == SymbolType::Empty)
             return;
 
-        if (symbolNode->getQualifier() == EvqGlobal && symbolNode->getSymbol() != "")
+        if (symbolNode->getQualifier() == EvqGlobal)
         {
             TIntermSequence *initCode = CreateInitCode(symbolNode, canUseLoopsToInitialize,
                                                        highPrecisionSupported, symbolTable);

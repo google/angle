@@ -9,6 +9,7 @@
 #include "compiler/translator/FindSymbolNode.h"
 
 #include "compiler/translator/IntermTraverse.h"
+#include "compiler/translator/Symbol.h"
 
 namespace sh
 {
@@ -26,7 +27,7 @@ class SymbolFinder : public TIntermTraverser
 
     void visitSymbol(TIntermSymbol *node)
     {
-        if (node->getSymbol() == mSymbolName)
+        if (node->variable().symbolType() != SymbolType::Empty && node->getName() == mSymbolName)
         {
             mNodeFound = node;
         }

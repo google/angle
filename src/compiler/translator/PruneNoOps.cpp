@@ -14,6 +14,7 @@
 #include "compiler/translator/PruneNoOps.h"
 
 #include "compiler/translator/IntermTraverse.h"
+#include "compiler/translator/Symbol.h"
 
 namespace sh
 {
@@ -66,7 +67,8 @@ bool PruneNoOpsTraverser::visitDeclaration(Visit, TIntermDeclaration *node)
     {
         TIntermSymbol *sym = sequence->front()->getAsSymbolNode();
         // Prune declarations without a variable name, unless it's an interface block declaration.
-        if (sym != nullptr && sym->getSymbol() == "" && !sym->isInterfaceBlock())
+        if (sym != nullptr && sym->variable().symbolType() == SymbolType::Empty &&
+            !sym->isInterfaceBlock())
         {
             if (sequence->size() > 1)
             {

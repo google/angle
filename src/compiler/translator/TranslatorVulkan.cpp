@@ -77,8 +77,8 @@ class DeclareDefaultUniformsTraverser : public TIntermTraverser
     {
         if (mInDefaultUniform)
         {
-            const TName &name = symbol->getName();
-            ASSERT(name.getString().substr(0, 3) != "gl_");
+            const TString &name = symbol->variable().name();
+            ASSERT(name.substr(0, 3) != "gl_");
             (*mSink) << HashName(name, mHashFunction, mNameMap);
         }
     }

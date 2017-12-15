@@ -224,7 +224,7 @@ class InitializeLocalsTraverser : public TIntermTraverser
             {
                 TIntermSymbol *symbol = declarator->getAsSymbolNode();
                 ASSERT(symbol);
-                if (symbol->getSymbol() == "")
+                if (symbol->variable().symbolType() == SymbolType::Empty)
                 {
                     continue;
                 }
