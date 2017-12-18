@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "d42fbe8d_f6ac0901",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1770,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-12-18T07:22:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "89bb2a12_867282fc",
+      "range": {
+        "startLine": 1770,
+        "startChar": 47,
+        "endLine": 1770,
+        "endChar": 73
+      },
+      "revId": "642fc401a3a8e3300a8019c5074b946ebf3b5f04",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dc75f58b_baeee7c4",
         "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
         "patchSetId": 6
@@ -59,6 +83,54 @@
       "writtenOn": "2017-12-18T05:54:36Z",
       "side": 1,
       "message": "Please add a comment to explain why it failed.",
+      "range": {
+        "startLine": 1214,
+        "startChar": 59,
+        "endLine": 1214,
+        "endChar": 148
+      },
+      "revId": "642fc401a3a8e3300a8019c5074b946ebf3b5f04",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5d15799b_3941d190",
+        "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 1214,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-12-18T07:22:46Z",
+      "side": 1,
+      "message": "This case does not use memroy barrier function, it is not reasonable to change to 2280. I think it is OK to keep the bug id here.",
+      "parentUuid": "dc75f58b_baeee7c4",
+      "range": {
+        "startLine": 1214,
+        "startChar": 0,
+        "endLine": 1214,
+        "endChar": 4
+      },
+      "revId": "642fc401a3a8e3300a8019c5074b946ebf3b5f04",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5b524480_b4aaae1d",
+        "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 1214,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-12-18T07:22:46Z",
+      "side": 1,
+      "message": "Is it OK if I add a review comment to explain why this case fails?",
+      "parentUuid": "aa1d4997_3a4b2d0f",
       "range": {
         "startLine": 1214,
         "startChar": 59,

@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9e3cd847_25231160",
+        "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 1210,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-12-18T07:22:46Z",
+      "side": 1,
+      "message": "TParseContext::checkIsValidArraySize limits that the array must be smaller than 65536. This case had declared an array, whose size is greater than 65536. ANGLE reports a compile error for this case.",
+      "range": {
+        "startLine": 1210,
+        "startChar": 59,
+        "endLine": 1210,
+        "endChar": 141
+      },
+      "revId": "118c3503e748f8c6230fef6422d7ac633bff9084",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
