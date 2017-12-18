@@ -63,6 +63,24 @@
       "revId": "adde77c20edaf43d1fc4016ed2717fb2b75ab545",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b505dd1a_5a053bf7",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2202,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-12-18T06:55:20Z",
+      "side": 1,
+      "message": "Hi Bryan, I\u0027ve tested the test cases fail on driver version 4815 and lasted driver 4877 on windows Intel,  kabylake and skylake. So I will limit the IntelDriverVersion \u003e\u003d 4815.",
+      "parentUuid": "3a054167_62c2dfd4",
+      "revId": "adde77c20edaf43d1fc4016ed2717fb2b75ab545",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
