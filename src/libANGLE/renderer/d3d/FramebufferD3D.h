@@ -102,6 +102,8 @@ class FramebufferD3D : public FramebufferImpl
 
     const gl::AttachmentList &getColorAttachmentsForRender(const gl::Context *context);
 
+    void destroy(const gl::Context *context) override;
+
   private:
     virtual gl::Error clearImpl(const gl::Context *context, const ClearParameters &clearParams) = 0;
 
@@ -128,6 +130,8 @@ class FramebufferD3D : public FramebufferImpl
     RendererD3D *mRenderer;
     Optional<gl::AttachmentList> mColorAttachmentsForRender;
     gl::DrawBufferMask mCurrentActiveProgramOutputs;
+
+    gl::FramebufferAttachment mDummyAttachment;
 };
 }
 

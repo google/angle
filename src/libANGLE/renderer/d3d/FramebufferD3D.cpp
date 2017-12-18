@@ -92,7 +92,7 @@ ClearParameters::ClearParameters() = default;
 ClearParameters::ClearParameters(const ClearParameters &other) = default;
 
 FramebufferD3D::FramebufferD3D(const gl::FramebufferState &data, RendererD3D *renderer)
-    : FramebufferImpl(data), mRenderer(renderer)
+    : FramebufferImpl(data), mRenderer(renderer), mDummyAttachment()
 {
 }
 
@@ -381,18 +381,35 @@ const gl::AttachmentList &FramebufferD3D::getColorAttachmentsForRender(const gl:
     {
         static_assert(static_cast<size_t>(activeProgramOutputs.size()) <= 32,
                       "Size of active program outputs should less or equal than 32.");
-        GLenum i = static_cast<GLenum>(
+        const GLuint activeProgramLocation = static_cast<GLuint>(
             gl::ScanForward(static_cast<uint32_t>(activeProgramOutputs.bits())));
 
-        gl::Texture *dummyTex = nullptr;
-        // TODO(Jamie): Handle error if dummy texture can't be created.
-        ANGLE_SWALLOW_ERR(mRenderer->getIncompleteTexture(context, GL_TEXTURE_2D, &dummyTex));
-        if (dummyTex)
+        if (mDummyAttachment.isAttached() &&
+            (mDummyAttachment.getBinding() - GL_COLOR_ATTACHMENT0) == activeProgramLocation)
         {
-            gl::ImageIndex index                   = gl::ImageIndex::Make2D(0);
-            gl::FramebufferAttachment *dummyAttach = new gl::FramebufferAttachment(
-                context, GL_TEXTURE, GL_COLOR_ATTACHMENT0_EXT + i, index, dummyTex);
-            colorAttachmentsForRender.push_back(dummyAttach);
+            colorAttachmentsForRender.push_back(&mDummyAttachment);
+        }
+        else
+        {
+            // Remove dummy attachment to prevents us from leaking it, and the program may require
+            // it to be attached to a new binding point.
+            if (mDummyAttachment.isAttached())
+            {
+                mDummyAttachment.detach(context);
+            }
+
+            gl::Texture *dummyTex = nullptr;
+            // TODO(Jamie): Handle error if dummy texture can't be created.
+            ANGLE_SWALLOW_ERR(mRenderer->getIncompleteTexture(context, GL_TEXTURE_2D, &dummyTex));
+            if (dummyTex)
+            {
+
+                gl::ImageIndex index = gl::ImageIndex::Make2D(0);
+                mDummyAttachment     = gl::FramebufferAttachment(
+                    context, GL_TEXTURE, GL_COLOR_ATTACHMENT0_EXT + activeProgramLocation, index,
+                    dummyTex);
+                colorAttachmentsForRender.push_back(&mDummyAttachment);
+            }
         }
     }
 
@@ -400,6 +417,14 @@ const gl::AttachmentList &FramebufferD3D::getColorAttachmentsForRender(const gl:
     mCurrentActiveProgramOutputs = activeProgramOutputs;
 
     return mColorAttachmentsForRender.value();
+}
+
+void FramebufferD3D::destroy(const gl::Context *context)
+{
+    if (mDummyAttachment.isAttached())
+    {
+        mDummyAttachment.detach(context);
+    }
 }
 
 }  // namespace rx

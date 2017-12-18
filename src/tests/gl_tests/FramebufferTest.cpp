@@ -693,27 +693,49 @@ TEST_P(FramebufferTest_ES31, RenderingLimitToDefaultFBOSizeWithNoAttachments)
     // anglebug.com/2253
     ANGLE_SKIP_TEST_IF(IsLinux() && IsAMD() && IsDesktopOpenGL());
 
-    const std::string &vertexShader =
-        "#version 310 es\n"
-        "in layout(location = 0) highp vec2 a_position;\n\n"
-        "void main()\n"
-        "{\n"
-        "   gl_Position = vec4(a_position, 0.0, 1.0);\n"
-        "}\n";
-    const std::string &fragShader =
-        "#version 310 es\n"
-        "uniform layout(location = 0) highp ivec2 u_expectedSize;\n"
-        "out layout(location = 5) mediump vec4 f_color;\n\n"
-        "void main()\n"
-        "{\n"
-        "   if (ivec2(gl_FragCoord.xy) != u_expectedSize) discard;\n"
-        "   f_color = vec4(1.0, 0.5, 0.25, 1.0);\n"
-        "}\n";
+    const std::string &vertexShader1 =
+        R"(#version 310 es
+        in layout(location = 0) highp vec2 a_position;
+        void main()
+        {
+           gl_Position = vec4(a_position, 0.0, 1.0);
+        })";
 
-    GLuint program = CompileProgram(vertexShader, fragShader);
-    ASSERT_NE(program, 0u);
+    const std::string &fragShader1 =
+        R"(#version 310 es
+        uniform layout(location = 0) highp ivec2 u_expectedSize;
+        out layout(location = 5) mediump vec4 f_color;
+        void main()
+        {
+           if (ivec2(gl_FragCoord.xy) != u_expectedSize) discard;
+           f_color = vec4(1.0, 0.5, 0.25, 1.0);
+        })";
 
-    glUseProgram(program);
+    const std::string &vertexShader2 =
+        R"(#version 310 es
+        in layout(location = 0) highp vec2 a_position;
+        void main()
+        {
+           gl_Position = vec4(a_position, 0.0, 1.0);
+        })";
+
+    const std::string &fragShader2 =
+        R"(#version 310 es
+        uniform layout(location = 0) highp ivec2 u_expectedSize;
+        out layout(location = 2) mediump vec4 f_color;
+        void main()
+        {
+           if (ivec2(gl_FragCoord.xy) != u_expectedSize) discard;
+           f_color = vec4(1.0, 0.5, 0.25, 1.0);
+        })";
+
+    GLuint program1 = CompileProgram(vertexShader1, fragShader1);
+    ASSERT_NE(program1, 0u);
+
+    GLuint program2 = CompileProgram(vertexShader2, fragShader2);
+    ASSERT_NE(program2, 0u);
+
+    glUseProgram(program1);
 
     GLFramebuffer mFramebuffer;
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, mFramebuffer);
@@ -747,6 +769,10 @@ TEST_P(FramebufferTest_ES31, RenderingLimitToDefaultFBOSizeWithNoAttachments)
 
     validateSamplePass(query, passedCount, defaultWidth, defaultHeight);
 
+    glUseProgram(program2);
+    validateSamplePass(query, passedCount, defaultWidth, defaultHeight);
+
+    glUseProgram(program1);
     // If fbo has attachments, the rendering size should be the same as its attachment.
     GLTexture mTexture;
     GLuint width  = 2;
