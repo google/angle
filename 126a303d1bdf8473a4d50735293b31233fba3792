@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "0674533b_5b2d09dc",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1958,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-12-18T04:17:14Z",
+      "side": 1,
+      "message": "Sorry, the change here is not needed. The indirect buffer doesn\u0027t belong to the program resource. So it shouldn\u0027t be affected by the program. Thanks for pointing it out.",
+      "parentUuid": "4c7a2cf4_737c99d2",
+      "revId": "126a303d1bdf8473a4d50735293b31233fba3792",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "328f058b_e0ab48bc",
         "filename": "src/libANGLE/validationES31.cpp",
         "patchSetId": 7
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "7a7710a9_ebffd6b5",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1440,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-12-18T04:17:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "328f058b_e0ab48bc",
+      "revId": "126a303d1bdf8473a4d50735293b31233fba3792",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b01d9197_bfb9c005",
         "filename": "src/libANGLE/validationES31.cpp",
         "patchSetId": 7
@@ -50,6 +86,24 @@
       "revId": "126a303d1bdf8473a4d50735293b31233fba3792",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "85739067_6f1978af",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1447,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-12-18T04:17:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b01d9197_bfb9c005",
+      "revId": "126a303d1bdf8473a4d50735293b31233fba3792",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
