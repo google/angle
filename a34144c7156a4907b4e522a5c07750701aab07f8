@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "424ff674_183f9c19",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Blit11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1057,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-18T17:31:19Z",
+      "side": 1,
+      "message": "replace all of these blocks with ANGLE_TRY(mRenderer-\u003emapResource())...",
+      "range": {
+        "startLine": 1052,
+        "startChar": 0,
+        "endLine": 1057,
+        "endChar": 5
+      },
+      "revId": "a34144c7156a4907b4e522a5c07750701aab07f8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ac7ce476_7e55be3c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 4053,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-18T17:31:19Z",
+      "side": 1,
+      "message": "use the stream operator to append your extra error messages here.",
+      "range": {
+        "startLine": 4047,
+        "startChar": 0,
+        "endLine": 4053,
+        "endChar": 9
+      },
+      "revId": "a34144c7156a4907b4e522a5c07750701aab07f8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
