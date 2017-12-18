@@ -69,6 +69,30 @@
       "revId": "a34144c7156a4907b4e522a5c07750701aab07f8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "acfe8ad6_52629ec5",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 4053,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-18T18:33:39Z",
+      "side": 1,
+      "message": "Not quite sure I understand what you mean by function param, but I would suggest you hard-code in the error message like \"failed to map resource\" and remove the specific error messages about index buffer, etc. Also then you can remove the AppendMessageToError function.",
+      "parentUuid": "63ecd747_d030fce9",
+      "range": {
+        "startLine": 4047,
+        "startChar": 0,
+        "endLine": 4053,
+        "endChar": 9
+      },
+      "revId": "a34144c7156a4907b4e522a5c07750701aab07f8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
