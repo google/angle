@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0fad3d7b_91559c0f",
+        "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 1132,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-12-18T05:54:36Z",
+      "side": 0,
+      "message": "Remove these?",
+      "range": {
+        "startLine": 1129,
+        "startChar": 0,
+        "endLine": 1132,
+        "endChar": 80
+      },
+      "revId": "647dca7672f709d2cc3896c5ffb2fd9b904a15e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

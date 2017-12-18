@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "89bb2a12_867282fc",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1770,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-12-18T05:54:36Z",
+      "side": 1,
+      "message": "Define it in ErrorStrings.h?",
+      "range": {
+        "startLine": 1770,
+        "startChar": 47,
+        "endLine": 1770,
+        "endChar": 73
+      },
+      "revId": "642fc401a3a8e3300a8019c5074b946ebf3b5f04",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dc75f58b_baeee7c4",
+        "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 1214,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-12-18T05:54:36Z",
+      "side": 1,
+      "message": "2280? Or file a new bug for this?",
+      "range": {
+        "startLine": 1214,
+        "startChar": 0,
+        "endLine": 1214,
+        "endChar": 4
+      },
+      "revId": "642fc401a3a8e3300a8019c5074b946ebf3b5f04",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aa1d4997_3a4b2d0f",
+        "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 1214,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-12-18T05:54:36Z",
+      "side": 1,
+      "message": "Please add a comment to explain why it failed.",
+      "range": {
+        "startLine": 1214,
+        "startChar": 59,
+        "endLine": 1214,
+        "endChar": 148
+      },
+      "revId": "642fc401a3a8e3300a8019c5074b946ebf3b5f04",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
