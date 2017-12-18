@@ -82,7 +82,6 @@ class ValidateLimitationsTraverser : public TLValueTrackingTraverser
   private:
     void error(TSourceLoc loc, const char *reason, const char *token);
 
-    bool withinLoopBody() const;
     bool isLoopIndex(TIntermSymbol *symbol);
     bool validateLoopType(TIntermLoop *node);
 
@@ -162,11 +161,6 @@ bool ValidateLimitationsTraverser::visitLoop(Visit, TIntermLoop *node)
 void ValidateLimitationsTraverser::error(TSourceLoc loc, const char *reason, const char *token)
 {
     mDiagnostics->error(loc, reason, token);
-}
-
-bool ValidateLimitationsTraverser::withinLoopBody() const
-{
-    return !mLoopSymbolIds.empty();
 }
 
 bool ValidateLimitationsTraverser::isLoopIndex(TIntermSymbol *symbol)

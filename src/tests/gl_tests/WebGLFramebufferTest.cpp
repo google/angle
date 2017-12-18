@@ -353,9 +353,13 @@ void WebGLFramebufferTest::testDepthStencilRenderbuffer(GLint width,
     // OpenGL itself doesn't seem to guarantee that e.g. a 2 x 0
     // renderbuffer will report 2 for its width when queried.
     if (!(height == 0 && width > 0))
+    {
         EXPECT_EQ(width, getRenderbufferParameter(GL_RENDERBUFFER_WIDTH));
+    }
     if (!(width == 0 && height > 0))
+    {
         EXPECT_EQ(height, getRenderbufferParameter(GL_RENDERBUFFER_HEIGHT));
+    }
     EXPECT_EQ(GL_DEPTH_STENCIL, getRenderbufferParameter(GL_RENDERBUFFER_INTERNAL_FORMAT));
     EXPECT_EQ(0, getRenderbufferParameter(GL_RENDERBUFFER_RED_SIZE));
     EXPECT_EQ(0, getRenderbufferParameter(GL_RENDERBUFFER_GREEN_SIZE));

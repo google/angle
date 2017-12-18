@@ -310,14 +310,18 @@ TEST(ShaderVariableTest, InvariantLeakAcrossShaders)
     for (const sh::Varying &varying : *varyings)
     {
         if (varying.name == "v_varying")
+        {
             EXPECT_TRUE(varying.isInvariant);
+        }
     }
     EXPECT_TRUE(sh::Compile(compiler, program2, 1, SH_VARIABLES));
     varyings = sh::GetOutputVaryings(compiler);
     for (const sh::Varying &varying : *varyings)
     {
         if (varying.name == "v_varying")
+        {
             EXPECT_FALSE(varying.isInvariant);
+        }
     }
     sh::Destruct(compiler);
 }
@@ -352,14 +356,18 @@ TEST(ShaderVariableTest, GlobalInvariantLeakAcrossShaders)
     for (const sh::Varying &varying : *varyings)
     {
         if (varying.name == "v_varying")
+        {
             EXPECT_TRUE(varying.isInvariant);
+        }
     }
     EXPECT_TRUE(sh::Compile(compiler, program2, 1, SH_VARIABLES));
     varyings = sh::GetOutputVaryings(compiler);
     for (const sh::Varying &varying : *varyings)
     {
         if (varying.name == "v_varying")
+        {
             EXPECT_FALSE(varying.isInvariant);
+        }
     }
     sh::Destruct(compiler);
 }
@@ -400,14 +408,18 @@ TEST(ShaderVariableTest, BuiltinInvariantVarying)
     for (const sh::Varying &varying : *varyings)
     {
         if (varying.name == "gl_Position")
+        {
             EXPECT_TRUE(varying.isInvariant);
+        }
     }
     EXPECT_TRUE(sh::Compile(compiler, program2, 1, SH_VARIABLES));
     varyings = sh::GetOutputVaryings(compiler);
     for (const sh::Varying &varying : *varyings)
     {
         if (varying.name == "gl_Position")
+        {
             EXPECT_FALSE(varying.isInvariant);
+        }
     }
     EXPECT_FALSE(sh::Compile(compiler, program3, 1, SH_VARIABLES));
     sh::Destruct(compiler);
