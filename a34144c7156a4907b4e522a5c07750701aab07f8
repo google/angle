@@ -45,6 +45,30 @@
       "revId": "a34144c7156a4907b4e522a5c07750701aab07f8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "63ecd747_d030fce9",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 4053,
+      "author": {
+        "id": 1166724
+      },
+      "writtenOn": "2017-12-18T17:43:20Z",
+      "side": 1,
+      "message": "Do you mean pass the message as a function param such that \"\u003c\u003c message\" (like before)? I wasn\u0027t sure if you felt strongly about the signature.",
+      "parentUuid": "ac7ce476_7e55be3c",
+      "range": {
+        "startLine": 4047,
+        "startChar": 0,
+        "endLine": 4053,
+        "endChar": 9
+      },
+      "revId": "a34144c7156a4907b4e522a5c07750701aab07f8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
