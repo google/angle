@@ -22,6 +22,30 @@
       "revId": "c0108ddc8e268aeea9d1e76ac869062501bfc0b9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5dc9a07a_207b52bc",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-12-19T14:14:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a8b83e66_7d597f39",
+      "range": {
+        "startLine": 69,
+        "startChar": 4,
+        "endLine": 69,
+        "endChar": 91
+      },
+      "revId": "c0108ddc8e268aeea9d1e76ac869062501bfc0b9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
