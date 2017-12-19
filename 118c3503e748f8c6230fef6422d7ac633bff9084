@@ -2,6 +2,52 @@
   "comments": [
     {
       "key": {
+        "uuid": "3f77e9f8_1cb2e51a",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1755,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-19T22:49:57Z",
+      "side": 1,
+      "message": "you need to verify the context is 3.1.",
+      "range": {
+        "startLine": 1755,
+        "startChar": 36,
+        "endLine": 1755,
+        "endChar": 43
+      },
+      "revId": "118c3503e748f8c6230fef6422d7ac633bff9084",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "51f73692_a3f26b61",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1777,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-19T22:49:57Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 1777,
+        "startChar": 5,
+        "endLine": 1777,
+        "endChar": 34
+      },
+      "revId": "118c3503e748f8c6230fef6422d7ac633bff9084",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "9e3cd847_25231160",
         "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
         "patchSetId": 7
