@@ -25,7 +25,7 @@ vars = {
   'spirv_tools_revision': '9996173f363729b3a97309685dbd4d78547a63a7',
 
   # Current revision of the Vulkan Validation Layers SDK.
-  'vulkan_revision': '3f948b98f9bca965fecca1fb5b60f8787e959464',
+  'vulkan_revision': 'c8056dacb3c48ff439a80f3b4bcc881debcf6057',
 }
 
 deps = {
