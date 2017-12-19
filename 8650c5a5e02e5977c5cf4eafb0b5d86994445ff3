@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7532ed90_0968d552",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.h",
+        "patchSetId": 21
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-19T22:47:28Z",
+      "side": 1,
+      "message": "nit: probably call this HLSLRegisterType to be clear.",
+      "range": {
+        "startLine": 35,
+        "startChar": 11,
+        "endLine": 35,
+        "endChar": 24
+      },
+      "revId": "8650c5a5e02e5977c5cf4eafb0b5d86994445ff3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "46689031_826949ca",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.h",
+        "patchSetId": 21
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-19T22:47:28Z",
+      "side": 1,
+      "message": "nit: it\u0027s fine to call this just Texture",
+      "range": {
+        "startLine": 38,
+        "startChar": 4,
+        "endLine": 38,
+        "endChar": 28
+      },
+      "revId": "8650c5a5e02e5977c5cf4eafb0b5d86994445ff3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "448c5442_d1be7130",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 1603,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-19T22:47:28Z",
+      "side": 1,
+      "message": "can you make this a switch instead?",
+      "range": {
+        "startLine": 1585,
+        "startChar": 0,
+        "endLine": 1603,
+        "endChar": 0
+      },
+      "revId": "8650c5a5e02e5977c5cf4eafb0b5d86994445ff3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "608678f6_d287d569",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.h",
+        "patchSetId": 21
+      },
+      "lineNbr": 184,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-19T22:47:28Z",
+      "side": 1,
+      "message": "can you make default constructors for this and ImageKey in the cpp file?",
+      "range": {
+        "startLine": 184,
+        "startChar": 11,
+        "endLine": 184,
+        "endChar": 21
+      },
+      "revId": "8650c5a5e02e5977c5cf4eafb0b5d86994445ff3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "da3db96e_7df6dfc4",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.h",
+        "patchSetId": 21
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-19T22:47:28Z",
+      "side": 1,
+      "message": "can you fix the style here? functions should go before data.",
+      "range": {
+        "startLine": 196,
+        "startChar": 4,
+        "endLine": 197,
+        "endChar": 67
+      },
+      "revId": "8650c5a5e02e5977c5cf4eafb0b5d86994445ff3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ada0eb70_3a1bf9ce",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.h",
+        "patchSetId": 21
+      },
+      "lineNbr": 220,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-19T22:47:28Z",
+      "side": 1,
+      "message": "same as above.",
+      "range": {
+        "startLine": 212,
+        "startChar": 3,
+        "endLine": 220,
+        "endChar": 76
+      },
+      "revId": "8650c5a5e02e5977c5cf4eafb0b5d86994445ff3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
