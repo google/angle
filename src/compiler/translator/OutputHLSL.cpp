@@ -1472,8 +1472,6 @@ bool OutputHLSL::visitUnary(Visit visit, TIntermUnary *node)
             outputTriplet(out, visit, "cosh(", "", ")");
             break;
         case EOpTanh:
-            outputTriplet(out, visit, "tanh(", "", ")");
-            break;
         case EOpAsinh:
         case EOpAcosh:
         case EOpAtanh:

@@ -840,6 +840,27 @@ constexpr FunctionPair g_hlslFunctions[] = {
      "    borrow = uint4(x < y);\n"
      "    return x - y;\n"
      "}\n"},
+    // We emulate tanh just to avoid overflow on large arguments.
+    {{EOpTanh, ParamType::Float1},
+     "float tanh_emu(float x)\n"
+     "{\n"
+     "    return (abs(x) > 15.0) ? sign(x) : tanh(x);\n"
+     "}\n"},
+    {{EOpTanh, ParamType::Float2},
+     "float2 tanh_emu(float2 x)\n"
+     "{\n"
+     "    return (abs(x) > 15.0) ? sign(x) : tanh(x);\n"
+     "}\n"},
+    {{EOpTanh, ParamType::Float3},
+     "float3 tanh_emu(float3 x)\n"
+     "{\n"
+     "    return (abs(x) > 15.0) ? sign(x) : tanh(x);\n"
+     "}\n"},
+    {{EOpTanh, ParamType::Float4},
+     "float4 tanh_emu(float4 x)\n"
+     "{\n"
+     "    return (abs(x) > 15.0) ? sign(x) : tanh(x);\n"
+     "}\n"},
 };
 }  // anonymous namespace
 
