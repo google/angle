@@ -58,8 +58,9 @@ TEST_P(ShaderStorageBufferTest31, MatchedBlockNameWithDifferentMemberType)
 TEST_P(ShaderStorageBufferTest31, ExceedMaxVertexShaderStorageBlocks)
 {
     std::ostringstream instanceCount;
-    GLint maxVertexShaderStorageBlocks;
+    GLint maxVertexShaderStorageBlocks = 0;
     glGetIntegerv(GL_MAX_VERTEX_SHADER_STORAGE_BLOCKS, &maxVertexShaderStorageBlocks);
+    EXPECT_GL_NO_ERROR();
     instanceCount << maxVertexShaderStorageBlocks;
 
     const std::string &vertexShaderSource =
@@ -74,6 +75,50 @@ TEST_P(ShaderStorageBufferTest31, ExceedMaxVertexShaderStorageBlocks)
         "}\n";
     const std::string &fragmentShaderSource =
         "#version 310 es\n"
+        "void main()\n"
+        "{\n"
+        "}\n";
+
+    GLuint program = CompileProgram(vertexShaderSource, fragmentShaderSource);
+    EXPECT_EQ(0u, program);
+}
+
+// Linking should fail if the sum of the number of active shader storage blocks exceeds
+// MAX_COMBINED_SHADER_STORAGE_BLOCKS.
+// This case may generate linking error due to exceeding MAX_FRAGMENT_SHADER_STORAGE_BLOCKS.
+TEST_P(ShaderStorageBufferTest31, ExceedMaxCombinedShaderStorageBlocks)
+{
+    std::ostringstream vertexInstanceCount;
+    GLint maxVertexShaderStorageBlocks = 0;
+    glGetIntegerv(GL_MAX_VERTEX_SHADER_STORAGE_BLOCKS, &maxVertexShaderStorageBlocks);
+    vertexInstanceCount << maxVertexShaderStorageBlocks;
+
+    GLint maxCombinedShaderStorageBlocks = 0;
+    glGetIntegerv(GL_MAX_COMBINED_SHADER_STORAGE_BLOCKS, &maxCombinedShaderStorageBlocks);
+    EXPECT_GL_NO_ERROR();
+
+    std::ostringstream fragmentInstanceCount;
+    GLint fragmentShaderStorageBlocks =
+        maxCombinedShaderStorageBlocks - maxVertexShaderStorageBlocks + 1;
+    fragmentInstanceCount << fragmentShaderStorageBlocks;
+
+    const std::string &vertexShaderSource =
+        "#version 310 es\n"
+        "layout(shared) buffer blockName0 {\n"
+        "    uint data;\n"
+        "} instance0[" +
+        vertexInstanceCount.str() +
+        "];\n"
+        "void main()\n"
+        "{\n"
+        "}\n";
+    const std::string &fragmentShaderSource =
+        "#version 310 es\n"
+        "layout(shared) buffer blockName1 {\n"
+        "    uint data;\n"
+        "} instance1[" +
+        fragmentInstanceCount.str() +
+        "];\n"
         "void main()\n"
         "{\n"
         "}\n";
