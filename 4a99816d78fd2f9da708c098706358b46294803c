@@ -2,6 +2,40 @@
   "comments": [
     {
       "key": {
+        "uuid": "7d9599aa_6964b250",
+        "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 384,
+      "author": {
+        "id": 1166724
+      },
+      "writtenOn": "2017-12-19T18:21:19Z",
+      "side": 1,
+      "message": "nit: can be const.",
+      "revId": "4a99816d78fd2f9da708c098706358b46294803c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "97c1baed_b43f69d7",
+        "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 394,
+      "author": {
+        "id": 1166724
+      },
+      "writtenOn": "2017-12-19T18:21:19Z",
+      "side": 1,
+      "message": "nit: comment is misleading. The removal of the previous dummy attachment 1) prevents us from leaking it, 2) the program may require it to be attached to a new binding point.",
+      "revId": "4a99816d78fd2f9da708c098706358b46294803c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "2f0b0607_b3e36d14",
         "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
         "patchSetId": 4
@@ -19,6 +53,40 @@
         "endLine": 395,
         "endChar": 32
       },
+      "revId": "4a99816d78fd2f9da708c098706358b46294803c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "36d190d9_3e00212a",
+        "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 395,
+      "author": {
+        "id": 1166724
+      },
+      "writtenOn": "2017-12-19T18:21:19Z",
+      "side": 1,
+      "message": "nit: this block can be replaced with destory().",
+      "revId": "4a99816d78fd2f9da708c098706358b46294803c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "13473e26_29f316dd",
+        "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 422,
+      "author": {
+        "id": 1166724
+      },
+      "writtenOn": "2017-12-19T18:21:19Z",
+      "side": 1,
+      "message": "What happens if this FBO gets destroyed? I don\u0027t see a means for us to clean-up our heap allocated dummy attachment object.",
       "revId": "4a99816d78fd2f9da708c098706358b46294803c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
