@@ -539,6 +539,24 @@
     },
     {
       "key": {
+        "uuid": "44790a11_475d7478",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 893,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-12-20T03:40:04Z",
+      "side": 1,
+      "message": "No one said it would improve performance, though I think we can do that too.  (As it is nodes go on and off the stack once for each path to them.  They don\u0027t need to go back on if they\u0027ve been visited.)\nThe main benefit is clarity.  This code could look like:\n  s \u003d graph.topological_sort()\n  for(i in s): i.execute()\nThis should be clear to anyone, they won\u0027t need to study any code and figure out it is equivalent to the above two lines.\nIt reduces the tight coupling between this function and the node class.\nYou get loop detection for free, and it\u0027s always on.  You can get rid of the loop detection code labeled \"Do not call this in anything but testing code, since it\u0027s slow.\"\n\nhttps://en.wikipedia.org/wiki/Topological_sorting",
+      "parentUuid": "f3e430d2_a2d07e88",
+      "revId": "43d6c01f858615582fef6f02bdce2f5b33f5b6ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b9875219_f1bbec24",
         "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
         "patchSetId": 24
