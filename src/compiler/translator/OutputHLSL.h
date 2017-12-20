@@ -28,7 +28,8 @@ class ImageFunctionHLSL;
 class UnfoldShortCircuit;
 class UniformHLSL;
 
-typedef std::map<TString, TIntermSymbol *> ReferencedSymbols;
+// Map from uniqueId to a symbol node.
+typedef std::map<int, TIntermSymbol *> ReferencedSymbols;
 
 class OutputHLSL : public TIntermTraverser
 {
@@ -156,7 +157,7 @@ class OutputHLSL : public TIntermTraverser
 
     ReferencedSymbols mReferencedUniforms;
 
-    // Indexed by block name, not instance name. Stored nodes point to either the block instance in
+    // Indexed by block id, not instance id. Stored nodes point to either the block instance in
     // the case of an instanced block, or a member uniform in the case of a non-instanced block.
     // TODO(oetuaho): Consider a different type of data structure for storing referenced interface
     // blocks. It needs to know the instance name if any and link to the TInterfaceBlock object.

@@ -346,7 +346,7 @@ TString OutputHLSL::generateStructMapping(const std::vector<MappedStruct> &std14
         TInterfaceBlock *interfaceBlock =
             mappedStruct.blockDeclarator->getType().getInterfaceBlock();
         const TName &instanceName         = mappedStruct.blockDeclarator->getName();
-        if (mReferencedUniformBlocks.count(interfaceBlock->name()) == 0)
+        if (mReferencedUniformBlocks.count(interfaceBlock->uniqueId().get()) == 0)
         {
             continue;
         }
@@ -416,11 +416,10 @@ void OutputHLSL::header(TInfoSinkBase &out,
                     " " + Decorate(name) + ArrayString(type) + " = " + initializer(type) + ";\n";
     }
 
-    for (ReferencedSymbols::const_iterator attribute = mReferencedAttributes.begin();
-         attribute != mReferencedAttributes.end(); attribute++)
+    for (const auto &attribute : mReferencedAttributes)
     {
-        const TType &type   = attribute->second->getType();
-        const TString &name = attribute->second->getSymbol();
+        const TType &type   = attribute.second->getType();
+        const TString &name = attribute.second->getSymbol();
 
         attributes += "static " + TypeString(type) + " " + Decorate(name) + ArrayString(type) +
                       " = " + initializer(type) + ";\n";
@@ -490,12 +489,10 @@ void OutputHLSL::header(TInfoSinkBase &out,
 
         if (mShaderVersion >= 300)
         {
-            for (ReferencedSymbols::const_iterator outputVariableIt =
-                     mReferencedOutputVariables.begin();
-                 outputVariableIt != mReferencedOutputVariables.end(); outputVariableIt++)
+            for (const auto &outputVariable : mReferencedOutputVariables)
             {
-                const TString &variableName = outputVariableIt->first;
-                const TType &variableType   = outputVariableIt->second->getType();
+                const TString &variableName = outputVariable.second->getSymbol();
+                const TType &variableType   = outputVariable.second->getType();
 
                 out << "static " + TypeString(variableType) + " out_" + variableName +
                            ArrayString(variableType) + " = " + initializer(variableType) + ";\n";
@@ -874,6 +871,8 @@ void OutputHLSL::visitSymbol(TIntermSymbol *node)
 
     TString name = node->getSymbol();
 
+    const TSymbolUniqueId &uniqueId = node->uniqueId();
+
     if (name == "gl_DepthRange")
     {
         mUsesDepthRange = true;
@@ -892,23 +891,23 @@ void OutputHLSL::visitSymbol(TIntermSymbol *node)
 
             if (interfaceBlock)
             {
-                mReferencedUniformBlocks[interfaceBlock->name()] = node;
+                mReferencedUniformBlocks[interfaceBlock->uniqueId().get()] = node;
             }
             else
             {
-                mReferencedUniforms[name] = node;
+                mReferencedUniforms[uniqueId.get()] = node;
             }
 
             out << DecorateVariableIfNeeded(node->getName());
         }
         else if (qualifier == EvqAttribute || qualifier == EvqVertexIn)
         {
-            mReferencedAttributes[name] = node;
+            mReferencedAttributes[uniqueId.get()] = node;
             out << Decorate(name);
         }
         else if (IsVarying(qualifier))
         {
-            mReferencedVaryings[name] = node;
+            mReferencedVaryings[uniqueId.get()] = node;
             out << Decorate(name);
             if (name == "ViewID_OVR")
             {
@@ -917,7 +916,7 @@ void OutputHLSL::visitSymbol(TIntermSymbol *node)
         }
         else if (qualifier == EvqFragmentOut)
         {
-            mReferencedOutputVariables[name] = node;
+            mReferencedOutputVariables[uniqueId.get()] = node;
             out << "out_" << name;
         }
         else if (qualifier == EvqFragColor)
@@ -1240,7 +1239,8 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
                 {
                     TInterfaceBlock *interfaceBlock = leftType.getInterfaceBlock();
                     TIntermSymbol *instanceArraySymbol = node->getLeft()->getAsSymbolNode();
-                    mReferencedUniformBlocks[interfaceBlock->name()] = instanceArraySymbol;
+                    mReferencedUniformBlocks[interfaceBlock->uniqueId().get()] =
+                        instanceArraySymbol;
                     const int arrayIndex = node->getRight()->getAsConstantUnion()->getIConst(0);
                     out << mUniformHLSL->UniformBlockInstanceString(
                         instanceArraySymbol->getSymbol(), arrayIndex);
@@ -1834,9 +1834,12 @@ bool OutputHLSL::visitDeclaration(Visit visit, TIntermDeclaration *node)
             TIntermSymbol *symbol = variable->getAsSymbolNode();
             ASSERT(symbol);  // Varying declarations can't have initializers.
 
-            // Vertex outputs which are declared but not written to should still be declared to
-            // allow successful linking.
-            mReferencedVaryings[symbol->getSymbol()] = symbol;
+            if (symbol->variable().symbolType() != SymbolType::Empty)
+            {
+                // Vertex outputs which are declared but not written to should still be declared to
+                // allow successful linking.
+                mReferencedVaryings[symbol->uniqueId().get()] = symbol;
+            }
         }
     }
     return false;
