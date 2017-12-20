@@ -209,6 +209,30 @@
       "revId": "4a99816d78fd2f9da708c098706358b46294803c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8827aac7_3818889d",
+        "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-12-20T06:44:29Z",
+      "side": 1,
+      "message": "Sorry, I deleted the ondestory function, so detach isn\u0027t called, which lead to the above warning. I revised the point type to value type now.",
+      "parentUuid": "67a83c5d_88f57b4c",
+      "range": {
+        "startLine": 134,
+        "startChar": 4,
+        "endLine": 134,
+        "endChar": 48
+      },
+      "revId": "4a99816d78fd2f9da708c098706358b46294803c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
