@@ -19,7 +19,7 @@ namespace sh
 void ClampPointSize(TIntermBlock *root, float maxPointSize, TSymbolTable *symbolTable)
 {
     // Only clamp gl_PointSize if it's used in the shader.
-    if (!FindSymbolNode(root, TString("gl_PointSize"), EbtFloat))
+    if (!FindSymbolNode(root, TString("gl_PointSize")))
     {
         return;
     }

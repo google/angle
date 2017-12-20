@@ -129,8 +129,6 @@
             'compiler/translator/RunAtTheEndOfShader.h',
             'compiler/translator/ScalarizeVecAndMatConstructorArgs.cpp',
             'compiler/translator/ScalarizeVecAndMatConstructorArgs.h',
-            'compiler/translator/SearchSymbol.cpp',
-            'compiler/translator/SearchSymbol.h',
             'compiler/translator/SeparateDeclarations.cpp',
             'compiler/translator/SeparateDeclarations.h',
             'compiler/translator/Severity.h',

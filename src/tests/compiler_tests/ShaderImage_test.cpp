@@ -96,9 +96,10 @@ void CheckImageDeclaration(TIntermNode *astRoot,
                            bool volatileQualifier,
                            int binding)
 {
-    const TIntermSymbol *myImageNode = FindSymbolNode(astRoot, imageName, imageType);
+    const TIntermSymbol *myImageNode = FindSymbolNode(astRoot, imageName);
     ASSERT_NE(nullptr, myImageNode);
 
+    ASSERT_EQ(imageType, myImageNode->getBasicType());
     const TType &myImageType                = myImageNode->getType();
     TLayoutQualifier myImageLayoutQualifier = myImageType.getLayoutQualifier();
     ASSERT_EQ(internalFormat, myImageLayoutQualifier.imageInternalFormat);

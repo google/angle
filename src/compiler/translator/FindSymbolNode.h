@@ -18,9 +18,7 @@ namespace sh
 class TIntermNode;
 class TIntermSymbol;
 
-const TIntermSymbol *FindSymbolNode(TIntermNode *root,
-                                    const TString &symbolName,
-                                    TBasicType basicType);
+const TIntermSymbol *FindSymbolNode(TIntermNode *root, const TString &symbolName);
 
 }  // namespace sh
 
