@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "c86609c3_b9f49f2b",
+        "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 384,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-12-20T05:12:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7d9599aa_6964b250",
+      "revId": "4a99816d78fd2f9da708c098706358b46294803c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "97c1baed_b43f69d7",
         "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
         "patchSetId": 4
@@ -33,6 +51,24 @@
       "revId": "4a99816d78fd2f9da708c098706358b46294803c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "774c92e7_cfc60568",
+        "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 394,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-12-20T05:12:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "97c1baed_b43f69d7",
+      "revId": "4a99816d78fd2f9da708c098706358b46294803c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -76,6 +112,24 @@
     },
     {
       "key": {
+        "uuid": "9c54bfc2_b4e42ce6",
+        "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 395,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-12-20T05:12:58Z",
+      "side": 1,
+      "message": "I\u0027m afraid that if something else will be added to ondestroy() later, so I prefer release the memory here though it looks duplicated.",
+      "parentUuid": "36d190d9_3e00212a",
+      "revId": "4a99816d78fd2f9da708c098706358b46294803c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "13473e26_29f316dd",
         "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
         "patchSetId": 4
@@ -93,6 +147,24 @@
     },
     {
       "key": {
+        "uuid": "635e251c_8fcc89a5",
+        "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 422,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-12-20T05:12:58Z",
+      "side": 1,
+      "message": "It\u0027s released in SafeDelete(mDummyAttachment)",
+      "parentUuid": "13473e26_29f316dd",
+      "revId": "4a99816d78fd2f9da708c098706358b46294803c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "bdeddc25_8ab2a641",
         "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.h",
         "patchSetId": 4
@@ -104,6 +176,30 @@
       "writtenOn": "2017-12-19T18:18:30Z",
       "side": 1,
       "message": "is it possible to use a value type here? no pointer? If you need the pointer, can you make this a std::unique_ptr?",
+      "range": {
+        "startLine": 134,
+        "startChar": 4,
+        "endLine": 134,
+        "endChar": 48
+      },
+      "revId": "4a99816d78fd2f9da708c098706358b46294803c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "67a83c5d_88f57b4c",
+        "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-12-20T05:12:58Z",
+      "side": 1,
+      "message": "Hi Jamie, I tried to use a value type and  std::unique_ptr and removed ondestory, but the test case fails in  Assertion failed: !isAttached(), file ../../src/libANGLE/FramebufferAttachment.cpp, line 124.\nD3D11 WARNING: Process is terminating. Using simple reporting. Please call ReportLiveObjects() at runtime for standard reporting. [ STATE_CREATION WARNING #0: UNKNOWN]\nD3D11 WARNING: Live Producer at 0x0000000049238470, Refcount: 30. [ STATE_CREATION WARNING #0: UNKNOWN]\nD3D11 WARNING: \tLive Object at 0x00000000494DB050, Refcount: 3. [ STATE_CREATION WARNING #0: UNKNOWN]\nD3D11 WARNING: \tLive Object at 0x0000000043B62120, Refcount: 0. [ STATE_CREATION WARNING #0: UNKNOWN]\nD3D11 WARNING: \tLive Object at 0x0000000047DD68E0, Refcount: 1. [ STATE_CREATION WARNING #0: UNKNOWN]\nD3D11 WARNING: \tLive Object at 0x0000000047EE7280, Refcount: 0. [ STATE_CREATION WARNING #0: UNKNOWN]\nD3D11 WARNING: \tLive Object at 0x0000000047DD6630, Refcount: 0. [ STATE_CREATION WARNING #0: UNKNOWN]\nD3D11 WARNING: \tLive Object at 0x0000000043BA4AF0, Refcount: 0. [ STATE_CREATION WARNING #0: UNKNOWN]\nD3D11 WARNING: \tLive Object at 0x0000000043B7CF10, Refcount: 0. [ STATE_CREATION WARNING #0: UNKNOWN]\nD3D11 WARNING: \tLive Object at 0x0000000047DF7700, Refcount: 1. [ STATE_CREATION WARNING #0: UNKNOWN]\nD3D11 WARNING: \tLive Object at 0x00000000490832A0, Refcount: 3. [ STATE_CREATION WARNING #0: UNKNOWN]\nD3D11 WARNING: \tLive Object at 0x0000000043CD8550, Refcount: 1. [ STATE_CREATION WARNING #0: UNKNOWN]\nD3D11 WARNING: \tLive Object at 0x0000000048AAE4E0, Refcount: 1. [ STATE_CREATION WARNING #0: UNKNOWN]\nD3D11 WARNING: \tLive Object at 0x0000000047E090B0, Refcount: 1. [ STATE_CREATION WARNING #0: UNKNOWN]\nD3D11 WARNING: \tLive Object at 0x0000000048AB0060, Refcount: 1. [ STATE_CREATION WARNING #0: UNKNOWN]\nD3D11 WARNING: \tLive Object at 0x0000000048AAC0A0, Refcount: 1. [ STATE_CREATION WARNING #0: UNKNOWN]\nD3D11 WARNING: \tLive Object at 0x0000000047E09B60, Refcount: 1. [ STATE_CREATION WARNING #0: UNKNOWN]\nD3D11 WARNING: \tLive Object at 0x0000000043C0AC10, Refcount: 1. [ STATE_CREATION WARNING #0: UNKNOWN]\nD3D11 WARNING: \tLive Object at 0x0000000043BA3900, Refcount: 1. [ STATE_CREATION WARNING #0: UNKNOWN]\nD3D11 WARNING: \tLive Object at 0x0000000047FE78F0, Refcount: 1. [ STATE_CREATION WARNING #0: UNKNOWN]\nD3D11 WARNING: \tLive Object at 0x0000000047E29F60, Refcount: 1. [ STATE_CREATION WARNING #0: UNKNOWN]\nD3D11 WARNING: \tLive Object at 0x0000000043C0B3F0, Refcount: 1. [ STATE_CREATION WARNING #0: UNKNOWN]\nD3D11 WARNING: \tLive Object at 0x0000000047DD6380, Refcount: 2. [ STATE_CREATION WARNING #0: UNKNOWN]\nD3D11 WARNING: \tLive Object at 0x0000000047E6F0A0, Refcount: 0. [ STATE_CREATION WARNING #0: UNKNOWN]\nD3D11 WARNING: \tLive Object at 0x0000000048F47390, Refcount: 1. [ STATE_CREATION WARNING #0: UNKNOWN]\nD3D11 WARNING: \tLive Object at 0x00000000495C50E0, Refcount: 1. [ STATE_CREATION WARNING #0: UNKNOWN]\nD3D11 WARNING: \tLive Object at 0x000000004922E590, Refcount: 1. [ STATE_CREATION WARNING #0: UNKNOWN]\nD3D11 WARNING: \tLive Object at 0x0000000048F50C30, Refcount: 1. [ STATE_CREATION WARNING #0: UNKNOWN]\nD3D11 WARNING: \tLive Object at 0x00000000495A44C0, Refcount: 1. [ STATE_CREATION WARNING #0: UNKNOWN]\nD3D11 WARNING: \tLive Object at 0x0000000047EE74F0, Refcount: 1. [ STATE_CREATION WARNING #0: UNKNOWN]\nD3D11 WARNING: \tLive Object at 0x0000000043B93EE0, Refcount: 1. [ STATE_CREATION WARNING #0: UNKNOWN]\nD3D11 WARNING: \tLive Object at 0x000000004922DC60, Refcount: 1. [ STATE_CREATION WARNING #0: UNKNOWN]\nD3D11 WARNING: \tLive Object at 0x0000000048F558B0, Refcount: 1. [ STATE_CREATION WARNING #0: UNKNOWN]\nD3D11 WARNING: \tLive Object at 0x0000000047FE86B0, Refcount: 1. [ STATE_CREATION WARNING #0: UNKNOWN]\nD3D11 WARNING: \tLive Object at 0x00000000495D7F70, Refcount: 0. [ STATE_CREATION WARNING #0: UNKNOWN]\nD3D11 WARNING: \tLive Object at 0x0000000043B994D0, Refcount: 1. [ STATE_CREATION WARNING #0: UNKNOWN]\nD3D11 WARNING: \tLive Object at 0x00000000495DE060, Refcount: 0. [ STATE_CREATION WARNING #0: UNKNOWN]\nD3D11 WARNING: \tLive Object at 0x0000000049141F20, Refcount: 0. [ STATE_CREATION WARNING #0: UNKNOWN]\nD3D11 WARNING: Live                         Object :     36 [ STATE_CREATION WARNING #0: UNKNOWN]\nDXGI WARNING: Live Producer at 0x00000000492322A8, Refcount: 5. [ STATE_CREATION WARNING #0: ]\nDXGI WARNING: \tLive Object at 0x0000000003164D90, Refcount: 4. [ STATE_CREATION WARNING #0: ]\nDXGI WARNING: Live                         Object :      1 [ STATE_CREATION WARNING #0: ]",
+      "parentUuid": "bdeddc25_8ab2a641",
       "range": {
         "startLine": 134,
         "startChar": 4,
