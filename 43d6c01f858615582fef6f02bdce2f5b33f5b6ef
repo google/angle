@@ -557,6 +557,24 @@
     },
     {
       "key": {
+        "uuid": "40caf1f3_ffc29268",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 893,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-20T17:06:38Z",
+      "side": 1,
+      "message": "This sounds very expensive. I would have to see a benchmark that showed the topological sort is at least as fast to be persuaded I think.",
+      "parentUuid": "44790a11_475d7478",
+      "revId": "43d6c01f858615582fef6f02bdce2f5b33f5b6ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b9875219_f1bbec24",
         "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
         "patchSetId": 24
