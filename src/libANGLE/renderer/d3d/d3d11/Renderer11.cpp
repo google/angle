@@ -4041,16 +4041,10 @@ gl::Error Renderer11::mapResource(ID3D11Resource *resource,
             this->notifyDeviceLost();
         }
 
-        const std::string genericFailureMessage = "Failed to map D3D11 resource.";
-
-        gl::Error glError = gl::InternalError() << genericFailureMessage << gl::FmtHR(hr);
-
-        if (E_OUTOFMEMORY)
-        {
-            glError = gl::OutOfMemory() << genericFailureMessage << gl::FmtHR(hr);
-        }
-
-        return glError;
+        // Note: gl::OutOfMemory is used instead of gl::InternalError to avoid requiring
+        // additional context queries. This is needed as gl::InternalError corresponds to
+        // GL_INVALID_OPERATION, which does not uniquely identify a device reset error.
+        return gl::OutOfMemory() << "Failed to map D3D11 resource." << gl::FmtHR(hr);
     }
 
     return gl::NoError();
