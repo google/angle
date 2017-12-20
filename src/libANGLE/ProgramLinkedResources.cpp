@@ -70,7 +70,7 @@ bool UniformLinker::link(const Context *context,
     if (mState.getAttachedVertexShader() && mState.getAttachedFragmentShader())
     {
         ASSERT(mState.getAttachedComputeShader() == nullptr);
-        if (!validateVertexAndFragmentUniforms(context, infoLog))
+        if (!validateGraphicsUniforms(context, infoLog))
         {
             return false;
         }
@@ -96,11 +96,10 @@ bool UniformLinker::link(const Context *context,
     return true;
 }
 
-bool UniformLinker::validateVertexAndFragmentUniforms(const Context *context,
-                                                      InfoLog &infoLog) const
+bool UniformLinker::validateGraphicsUniforms(const Context *context, InfoLog &infoLog) const
 {
     // Check that uniforms defined in the vertex and fragment shaders are identical
-    std::map<std::string, sh::Uniform> linkedUniforms;
+    std::map<std::string, const sh::Uniform *> linkedUniforms;
     const std::vector<sh::Uniform> &vertexUniforms =
         mState.getAttachedVertexShader()->getUniforms(context);
     const std::vector<sh::Uniform> &fragmentUniforms =
@@ -108,7 +107,7 @@ bool UniformLinker::validateVertexAndFragmentUniforms(const Context *context,
 
     for (const sh::Uniform &vertexUniform : vertexUniforms)
     {
-        linkedUniforms[vertexUniform.name] = vertexUniform;
+        linkedUniforms[vertexUniform.name] = &vertexUniform;
     }
 
     for (const sh::Uniform &fragmentUniform : fragmentUniforms)
@@ -116,9 +115,9 @@ bool UniformLinker::validateVertexAndFragmentUniforms(const Context *context,
         auto entry = linkedUniforms.find(fragmentUniform.name);
         if (entry != linkedUniforms.end())
         {
-            const sh::Uniform &linkedUniform = entry->second;
+            const sh::Uniform &linkedUniform = *(entry->second);
             const std::string &uniformName   = "uniform '" + linkedUniform.name + "'";
-            if (!linkValidateUniforms(infoLog, uniformName, linkedUniform, fragmentUniform))
+            if (!LinkValidateUniforms(infoLog, uniformName, linkedUniform, fragmentUniform))
             {
                 return false;
             }
@@ -128,7 +127,7 @@ bool UniformLinker::validateVertexAndFragmentUniforms(const Context *context,
 }
 
 // GLSL ES Spec 3.00.3, section 4.3.5.
-bool UniformLinker::linkValidateUniforms(InfoLog &infoLog,
+bool UniformLinker::LinkValidateUniforms(InfoLog &infoLog,
                                          const std::string &uniformName,
                                          const sh::Uniform &vertexUniform,
                                          const sh::Uniform &fragmentUniform)
@@ -139,7 +138,7 @@ bool UniformLinker::linkValidateUniforms(InfoLog &infoLog,
     const bool validatePrecision = false;
 #endif
 
-    if (!Program::linkValidateVariablesBase(infoLog, uniformName, vertexUniform, fragmentUniform,
+    if (!Program::LinkValidateVariablesBase(infoLog, uniformName, vertexUniform, fragmentUniform,
                                             validatePrecision))
     {
         return false;

@@ -579,7 +579,7 @@ class Program final : angle::NonCopyable, public LabeledObject
     GLsizei getTransformFeedbackVaryingMaxLength() const;
     GLenum getTransformFeedbackBufferMode() const;
 
-    static bool linkValidateInterfaceBlockFields(InfoLog &infoLog,
+    static bool LinkValidateInterfaceBlockFields(InfoLog &infoLog,
                                                  const std::string &uniformName,
                                                  const sh::InterfaceBlockField &vertexUniform,
                                                  const sh::InterfaceBlockField &fragmentUniform,
@@ -614,7 +614,7 @@ class Program final : angle::NonCopyable, public LabeledObject
 
     const ProgramState &getState() const { return mState; }
 
-    static bool linkValidateVariablesBase(InfoLog &infoLog,
+    static bool LinkValidateVariablesBase(InfoLog &infoLog,
                                           const std::string &variableName,
                                           const sh::ShaderVariable &vertexVariable,
                                           const sh::ShaderVariable &fragmentVariable,
@@ -646,12 +646,13 @@ class Program final : angle::NonCopyable, public LabeledObject
 
     void unlink();
 
+    bool linkValidateShaders(const Context *context, InfoLog &infoLog);
     bool linkAttributes(const Context *context, InfoLog &infoLog);
-    bool validateVertexAndFragmentInterfaceBlocks(
+    static bool ValidateGraphicsInterfaceBlocks(
         const std::vector<sh::InterfaceBlock> &vertexInterfaceBlocks,
         const std::vector<sh::InterfaceBlock> &fragmentInterfaceBlocks,
         InfoLog &infoLog,
-        bool webglCompatibility) const;
+        bool webglCompatibility);
     bool linkInterfaceBlocks(const Context *context, InfoLog &infoLog);
     bool linkVaryings(const Context *context, InfoLog &infoLog) const;
 
@@ -663,12 +664,12 @@ class Program final : angle::NonCopyable, public LabeledObject
 
     void updateLinkedShaderStages();
 
-    bool areMatchingInterfaceBlocks(InfoLog &infoLog,
-                                    const sh::InterfaceBlock &vertexInterfaceBlock,
-                                    const sh::InterfaceBlock &fragmentInterfaceBlock,
-                                    bool webglCompatibility) const;
+    static bool AreMatchingInterfaceBlocks(InfoLog &infoLog,
+                                           const sh::InterfaceBlock &vertexInterfaceBlock,
+                                           const sh::InterfaceBlock &fragmentInterfaceBlock,
+                                           bool webglCompatibility);
 
-    static bool linkValidateVaryings(InfoLog &infoLog,
+    static bool LinkValidateVaryings(InfoLog &infoLog,
                                      const std::string &varyingName,
                                      const sh::Varying &vertexVarying,
                                      const sh::Varying &fragmentVarying,
