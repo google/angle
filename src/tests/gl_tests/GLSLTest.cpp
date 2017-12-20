@@ -3881,6 +3881,41 @@ TEST_P(GLSLTest, VectorScalarDivideAndAddInLoop)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Test that a varying with a flat qualifier that is used as an operand of a folded ternary operator
+// is handled correctly.
+TEST_P(GLSLTest_ES3, FlatVaryingUsedInFoldedTernary)
+{
+    const std::string &vertexShader =
+        R"(#version 300 es
+
+        in vec4 inputAttribute;
+
+        flat out int v;
+
+        void main()
+        {
+            v = 1;
+            gl_Position = inputAttribute;
+        })";
+
+    const std::string &fragmentShader =
+        R"(#version 300 es
+
+        precision highp float;
+        out vec4 my_FragColor;
+
+        flat in int v;
+
+        void main()
+        {
+            my_FragColor = vec4(0, (true ? v : 0), 0, 1);
+        })";
+
+    ANGLE_GL_PROGRAM(program, vertexShader, fragmentShader);
+    drawQuad(program.get(), "inputAttribute", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
 ANGLE_INSTANTIATE_TEST(GLSLTest,
                        ES2_D3D9(),

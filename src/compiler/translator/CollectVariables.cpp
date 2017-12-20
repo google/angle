@@ -349,11 +349,15 @@ void CollectVariablesTraverser::visitSymbol(TIntermSymbol *symbol)
     ShaderVariable *var       = nullptr;
     const TString &symbolName = symbol->getName().getString();
 
-    if (IsVaryingIn(symbol->getQualifier()))
+    // Check the qualifier from the variable, not from the symbol node. The node may have a
+    // different qualifier if it's the result of a folded ternary node.
+    TQualifier qualifier = symbol->variable().getType().getQualifier();
+
+    if (IsVaryingIn(qualifier))
     {
         var = FindVariable(symbolName, mInputVaryings);
     }
-    else if (IsVaryingOut(symbol->getQualifier()))
+    else if (IsVaryingOut(qualifier))
     {
         var = FindVariable(symbolName, mOutputVaryings);
     }
@@ -363,7 +367,7 @@ void CollectVariablesTraverser::visitSymbol(TIntermSymbol *symbol)
     }
     else if (symbolName == "gl_DepthRange")
     {
-        ASSERT(symbol->getQualifier() == EvqUniform);
+        ASSERT(qualifier == EvqUniform);
 
         if (!mDepthRangeAdded)
         {
@@ -406,7 +410,7 @@ void CollectVariablesTraverser::visitSymbol(TIntermSymbol *symbol)
     }
     else
     {
-        switch (symbol->getQualifier())
+        switch (qualifier)
         {
             case EvqAttribute:
             case EvqVertexIn:

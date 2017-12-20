@@ -403,11 +403,10 @@ void OutputHLSL::header(TInfoSinkBase &out,
     TString attributes;
     TString mappedStructs = generateStructMapping(std140Structs);
 
-    for (ReferencedSymbols::const_iterator varying = mReferencedVaryings.begin();
-         varying != mReferencedVaryings.end(); varying++)
+    for (const auto &varying : mReferencedVaryings)
     {
-        const TType &type   = varying->second->getType();
-        const TString &name = varying->second->getSymbol();
+        const TType &type   = varying.second->variable().getType();
+        const TString &name = varying.second->getSymbol();
 
         // Program linking depends on this exact format
         varyings += "static " + InterpolationString(type.getQualifier()) + " " + TypeString(type) +
@@ -880,7 +879,7 @@ void OutputHLSL::visitSymbol(TIntermSymbol *node)
     else
     {
         const TType &nodeType = node->getType();
-        TQualifier qualifier = node->getQualifier();
+        TQualifier qualifier  = node->variable().getType().getQualifier();
 
         ensureStructDefined(nodeType);
 

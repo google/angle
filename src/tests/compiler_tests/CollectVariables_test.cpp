@@ -1523,3 +1523,33 @@ TEST_F(CollectGeometryVariablesTest, CollectOutputsWithInvariant)
     EXPECT_EQ("texcoord", varying->name);
     EXPECT_TRUE(varying->isInvariant);
 }
+
+// Test collecting a varying variable that is used inside a folded ternary operator. The result of
+// the folded ternary operator has a different qualifier from the original variable, which makes
+// this case tricky.
+TEST_F(CollectFragmentVariablesTest, VaryingUsedInsideFoldedTernary)
+{
+    const std::string &shaderString =
+        R"(#version 300 es
+        precision highp float;
+        centroid in float vary;
+        out vec4 color;
+        void main() {
+           color = vec4(0.0, true ? vary : 0.0, 0.0, 1.0);
+        })";
+
+    compile(shaderString);
+
+    const std::vector<Varying> &varyings = mTranslator->getInputVaryings();
+    ASSERT_EQ(1u, varyings.size());
+
+    const Varying *varying = &varyings[0];
+
+    EXPECT_FALSE(varying->isArray());
+    EXPECT_GLENUM_EQ(GL_HIGH_FLOAT, varying->precision);
+    EXPECT_TRUE(varying->staticUse);
+    EXPECT_GLENUM_EQ(GL_FLOAT, varying->type);
+    EXPECT_EQ("vary", varying->name);
+    EXPECT_EQ(DecorateName("vary"), varying->mappedName);
+    EXPECT_EQ(INTERPOLATION_CENTROID, varying->interpolation);
+}

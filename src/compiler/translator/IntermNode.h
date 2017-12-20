@@ -251,9 +251,12 @@ class TIntermBranch : public TIntermNode
     TIntermTyped *mExpression;  // non-zero except for "return exp;" statements
 };
 
-//
-// Nodes that correspond to symbols or constants in the source code.
-//
+// Nodes that correspond to variable symbols in the source code. These may be regular variables or
+// interface block instances. In declarations that only declare a struct type but no variables, a
+// TIntermSymbol node with an empty variable is used to store the type. In case the node is the
+// result of folding a more complex expression such as a ternary operator, the node takes on the
+// type of the expression. In this case the qualifier of the node may be different from the variable
+// it refers to.
 class TIntermSymbol : public TIntermTyped
 {
   public:
