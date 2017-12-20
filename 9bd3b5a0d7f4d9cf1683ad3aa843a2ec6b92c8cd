@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "b374225e_5dc5ed0f",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 2330,
+      "author": {
+        "id": 1221469
+      },
+      "writtenOn": "2017-12-20T16:37:46Z",
+      "side": 1,
+      "message": "mActiveAttribLocationsMask doesn\u0027t have built in attributes filtered out, so it can\u0027t directly correspond to the masks in state and vao.",
+      "parentUuid": "b989ee11_d54c5ccc",
+      "range": {
+        "startLine": 2330,
+        "startChar": 19,
+        "endLine": 2330,
+        "endChar": 45
+      },
+      "revId": "9bd3b5a0d7f4d9cf1683ad3aa843a2ec6b92c8cd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "c92ef130_249464ac",
         "filename": "src/libANGLE/State.cpp",
         "patchSetId": 17
