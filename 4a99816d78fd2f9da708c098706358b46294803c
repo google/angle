@@ -165,6 +165,24 @@
     },
     {
       "key": {
+        "uuid": "233b04ac_e742d193",
+        "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 422,
+      "author": {
+        "id": 1166724
+      },
+      "writtenOn": "2017-12-20T17:12:24Z",
+      "side": 1,
+      "message": "If this FBO gets destroyed and destory is not called, wouldn\u0027t we leak the dummy attachment? I suspect we need to explicitly call destroy on dtor.",
+      "parentUuid": "635e251c_8fcc89a5",
+      "revId": "4a99816d78fd2f9da708c098706358b46294803c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "bdeddc25_8ab2a641",
         "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.h",
         "patchSetId": 4
