@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e2597cce_5efd83b6",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-20T20:40:34Z",
+      "side": 1,
+      "message": "is this called from other places than the HLSL code? Maybe could be made into a helper rather than a special constructor - and by expanding the above constructor to also take true/false for isInternal.",
+      "range": {
+        "startLine": 149,
+        "startChar": 1,
+        "endLine": 154,
+        "endChar": 1
+      },
+      "revId": "e6289d3818637cc4304f790b9642005487a83ddb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "826a55ad_3a2a0907",
+        "filename": "src/compiler/translator/OutputGLSLBase.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-20T20:40:34Z",
+      "side": 1,
+      "message": "prefer avoiding overloading here.",
+      "range": {
+        "startLine": 75,
+        "startChar": 12,
+        "endLine": 75,
+        "endChar": 36
+      },
+      "revId": "e6289d3818637cc4304f790b9642005487a83ddb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f7349494_60ec2b98",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1917,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-20T20:40:34Z",
+      "side": 1,
+      "message": "This seems odd to me to use a special constructor for TName just to pass through to DecorateFunctionIfNeeded, which takes a TName instead of a Function/Symbol. Can you clean this up somehow?",
+      "range": {
+        "startLine": 1917,
+        "startChar": 23,
+        "endLine": 1917,
+        "endChar": 47
+      },
+      "revId": "e6289d3818637cc4304f790b9642005487a83ddb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c62ff375_f0bf6550",
+        "filename": "src/compiler/translator/OutputTree.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-20T20:40:34Z",
+      "side": 1,
+      "message": "nit: can you avoid using overloading here? it\u0027s a mild preference throughout the code to not use overloading when possible, preferring one or two words of extra description in the function name.",
+      "range": {
+        "startLine": 23,
+        "startChar": 5,
+        "endLine": 23,
+        "endChar": 19
+      },
+      "revId": "e6289d3818637cc4304f790b9642005487a83ddb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
