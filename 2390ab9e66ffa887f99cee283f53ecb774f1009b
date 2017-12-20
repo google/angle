@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c904ad53_dd9800ac",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2087,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-12-20T07:13:20Z",
+      "side": 1,
+      "message": "Maybe just keep the old style. It\u0027s not necessary to abstract a new function here. You can do it when you really need it.",
+      "range": {
+        "startLine": 2087,
+        "startChar": 13,
+        "endLine": 2087,
+        "endChar": 46
+      },
+      "revId": "2390ab9e66ffa887f99cee283f53ecb774f1009b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
