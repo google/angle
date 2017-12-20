@@ -17,7 +17,7 @@ void OutputFunction(TInfoSinkBase &out, const char *str, const TFunction *func)
 {
     const char *internal =
         (func->symbolType() == SymbolType::AngleInternal) ? " (internal function)" : "";
-    out << str << internal << ": " << *func->name() << " (symbol id " << func->uniqueId().get()
+    out << str << internal << ": " << func->name() << " (symbol id " << func->uniqueId().get()
         << ")";
 }
 

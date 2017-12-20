@@ -735,15 +735,15 @@ TString DecorateFunctionIfNeeded(const TFunction *func)
     if (func->symbolType() == SymbolType::AngleInternal)
     {
         // The name should not have a prefix reserved for user-defined variables or functions.
-        ASSERT(func->name()->compare(0, 2, "f_") != 0);
-        ASSERT(func->name()->compare(0, 1, "_") != 0);
-        return *func->name();
+        ASSERT(func->name().compare(0, 2, "f_") != 0);
+        ASSERT(func->name().compare(0, 1, "_") != 0);
+        return func->name();
     }
-    ASSERT(func->name()->compare(0, 3, "gl_") != 0);
+    ASSERT(func->name().compare(0, 3, "gl_") != 0);
     // Add an additional f prefix to functions so that they're always disambiguated from variables.
     // This is necessary in the corner case where a variable declaration hides a function that it
     // uses in its initializer.
-    return "f_" + (*func->name());
+    return "f_" + func->name();
 }
 
 TString TypeString(const TType &type)
@@ -855,10 +855,10 @@ TString StructNameString(const TStructure &structure)
     // translation so that we can link between shader stages.
     if (structure.atGlobalScope())
     {
-        return Decorate(*structure.name());
+        return Decorate(structure.name());
     }
 
-    return "ss" + str(structure.uniqueId().get()) + "_" + *structure.name();
+    return "ss" + str(structure.uniqueId().get()) + "_" + structure.name();
 }
 
 TString QualifiedStructNameString(const TStructure &structure,

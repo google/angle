@@ -66,7 +66,7 @@ class TName
 {
   public:
     POOL_ALLOCATOR_NEW_DELETE();
-    explicit TName(const TString *name);
+    explicit TName(const TString &name);
     explicit TName(const TSymbol *symbol);
     TName() : mName(), mIsInternal(false) {}
     TName(const TName &) = default;

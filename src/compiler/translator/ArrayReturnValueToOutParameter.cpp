@@ -128,7 +128,7 @@ bool ArrayReturnValueToOutParameterTraverser::visitFunctionPrototype(Visit visit
             changedFunction.returnValueVariable =
                 new TVariable(mSymbolTable, mReturnValueVariableName, returnValueVariableType,
                               SymbolType::AngleInternal);
-            changedFunction.func = new TFunction(mSymbolTable, node->getFunction()->name(),
+            changedFunction.func = new TFunction(mSymbolTable, &node->getFunction()->name(),
                                                  StaticType::GetBasic<EbtVoid>(),
                                                  node->getFunction()->symbolType(), false);
             mChangedFunctions[functionId.get()] = changedFunction;

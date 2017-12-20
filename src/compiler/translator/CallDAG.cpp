@@ -108,12 +108,12 @@ class CallDAG::CallDAGCreator : public TIntermTraverser
             if (it == mFunctions.end())
             {
                 mCurrentFunction       = &mFunctions[node->getFunction()->uniqueId().get()];
-                mCurrentFunction->name = *node->getFunction()->name();
+                mCurrentFunction->name = node->getFunction()->name();
             }
             else
             {
                 mCurrentFunction = &it->second;
-                ASSERT(mCurrentFunction->name == *node->getFunction()->name());
+                ASSERT(mCurrentFunction->name == node->getFunction()->name());
             }
 
             mCurrentFunction->node = node;
@@ -135,7 +135,7 @@ class CallDAG::CallDAGCreator : public TIntermTraverser
 
         // Function declaration, create an empty record.
         auto &record = mFunctions[node->getFunction()->uniqueId().get()];
-        record.name  = *node->getFunction()->name();
+        record.name  = node->getFunction()->name();
 
         // No need to traverse the parameters.
         return false;

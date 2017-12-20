@@ -341,9 +341,8 @@ TString OutputHLSL::generateStructMapping(const std::vector<MappedStruct> &std14
     {
         TInterfaceBlock *interfaceBlock =
             mappedStruct.blockDeclarator->getType().getInterfaceBlock();
-        const TString &interfaceBlockName = *interfaceBlock->name();
         const TName &instanceName         = mappedStruct.blockDeclarator->getName();
-        if (mReferencedUniformBlocks.count(interfaceBlockName) == 0)
+        if (mReferencedUniformBlocks.count(interfaceBlock->name()) == 0)
         {
             continue;
         }
@@ -380,7 +379,7 @@ TString OutputHLSL::generateStructMapping(const std::vector<MappedStruct> &std14
 
             TType *structType = mappedStruct.field->type();
             mappedStructs +=
-                "static " + Decorate(*structType->getStruct()->name()) + " " + mappedName;
+                "static " + Decorate(structType->getStruct()->name()) + " " + mappedName;
 
             if (structType->isArray())
             {
@@ -889,7 +888,7 @@ void OutputHLSL::visitSymbol(TIntermSymbol *node)
 
             if (interfaceBlock)
             {
-                mReferencedUniformBlocks[*interfaceBlock->name()] = node;
+                mReferencedUniformBlocks[interfaceBlock->name()] = node;
             }
             else
             {
@@ -1237,7 +1236,7 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
                 {
                     TInterfaceBlock *interfaceBlock = leftType.getInterfaceBlock();
                     TIntermSymbol *instanceArraySymbol = node->getLeft()->getAsSymbolNode();
-                    mReferencedUniformBlocks[*interfaceBlock->name()] = instanceArraySymbol;
+                    mReferencedUniformBlocks[interfaceBlock->name()] = instanceArraySymbol;
                     const int arrayIndex = node->getRight()->getAsConstantUnion()->getIConst(0);
                     out << mUniformHLSL->UniformBlockInstanceString(
                         instanceArraySymbol->getSymbol(), arrayIndex);
@@ -1925,16 +1924,16 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
             }
             else if (node->getFunction()->isImageFunction())
             {
-                const TString *name       = node->getFunction()->name();
+                const TString &name       = node->getFunction()->name();
                 TType type                = (*arguments)[0]->getAsTyped()->getType();
                 TString imageFunctionName = mImageFunctionHLSL->useImageFunction(
-                    *name, type.getBasicType(), type.getLayoutQualifier().imageInternalFormat,
+                    name, type.getBasicType(), type.getLayoutQualifier().imageInternalFormat,
                     type.getMemoryQualifier().readonly);
                 out << imageFunctionName << "(";
             }
             else
             {
-                const TString *name    = node->getFunction()->name();
+                const TString &name    = node->getFunction()->name();
                 TBasicType samplerType = (*arguments)[0]->getAsTyped()->getType().getBasicType();
                 int coords = 0;  // textureSize(gsampler2DMS) doesn't have a second argument.
                 if (arguments->size() > 1)
@@ -1942,7 +1941,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
                     coords = (*arguments)[1]->getAsTyped()->getNominalSize();
                 }
                 TString textureFunctionName = mTextureFunctionHLSL->useTextureFunction(
-                    *name, samplerType, coords, arguments->size(), lod0, mShaderType);
+                    name, samplerType, coords, arguments->size(), lod0, mShaderType);
                 out << textureFunctionName << "(";
             }
 

@@ -167,8 +167,8 @@ class FindStructByName final : public TIntermTraverser
 
         TStructure *structure = symbol->getTypePointer()->getStruct();
 
-        if (structure != nullptr && structure->name() != nullptr &&
-            *structure->name() == mStructName)
+        if (structure != nullptr && structure->symbolType() != SymbolType::Empty &&
+            structure->name() == mStructName)
         {
             mStructure = structure;
         }

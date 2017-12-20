@@ -129,7 +129,7 @@ class PullGradient : public TIntermTraverser
             }
             else if (node->getOp() == EOpCallBuiltInFunction)
             {
-                if (mGradientBuiltinFunctions.find(*node->getFunction()->name()) !=
+                if (mGradientBuiltinFunctions.find(node->getFunction()->name()) !=
                     mGradientBuiltinFunctions.end())
                 {
                     onGradient();

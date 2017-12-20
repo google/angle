@@ -3150,8 +3150,7 @@ TIntermFunctionPrototype *TParseContext::createPrototypeNodeFromFunction(
     const TSourceLoc &location,
     bool insertParametersToSymbolTable)
 {
-    ASSERT(function.name());
-    checkIsNotReserved(location, *function.name());
+    checkIsNotReserved(location, function.name());
 
     TIntermFunctionPrototype *prototype = new TIntermFunctionPrototype(&function);
     prototype->setLine(location);
@@ -3243,7 +3242,7 @@ TIntermFunctionDefinition *TParseContext::addFunctionDefinition(
     if (mCurrentFunctionType->getBasicType() != EbtVoid && !mFunctionReturnsValue)
     {
         error(location, "function does not return a value:",
-              functionPrototype->getFunction()->name()->c_str());
+              functionPrototype->getFunction()->name().c_str());
     }
 
     if (functionBody == nullptr)
@@ -3265,13 +3264,12 @@ void TParseContext::parseFunctionDefinitionHeader(const TSourceLoc &location,
 {
     ASSERT(function);
     ASSERT(*function);
-    ASSERT((*function)->name());
     const TSymbol *builtIn =
         symbolTable.findBuiltIn((*function)->getMangledName(), getShaderVersion());
 
     if (builtIn)
     {
-        error(location, "built-in functions cannot be redefined", (*function)->name()->c_str());
+        error(location, "built-in functions cannot be redefined", (*function)->name().c_str());
     }
     else
     {
@@ -3293,7 +3291,7 @@ void TParseContext::parseFunctionDefinitionHeader(const TSourceLoc &location,
 
         if ((*function)->isDefined())
         {
-            error(location, "function already has a body", (*function)->name()->c_str());
+            error(location, "function already has a body", (*function)->name().c_str());
         }
 
         (*function)->setDefined();
@@ -3320,8 +3318,6 @@ TFunction *TParseContext::parseFunctionDeclarator(const TSourceLoc &location, TF
     TFunction *prevDec =
         static_cast<TFunction *>(symbolTable.find(function->getMangledName(), getShaderVersion()));
 
-    ASSERT(function->name() != nullptr);
-
     for (size_t i = 0u; i < function->getParamCount(); ++i)
     {
         auto &param = function->getParam(i);
@@ -3329,17 +3325,17 @@ TFunction *TParseContext::parseFunctionDeclarator(const TSourceLoc &location, TF
         {
             // ESSL 3.00.6 section 12.10.
             error(location, "Function parameter type cannot be a structure definition",
-                  function->name()->c_str());
+                  function->name().c_str());
         }
     }
 
     if (getShaderVersion() >= 300 && symbolTable.hasUnmangledBuiltInForShaderVersion(
-                                         function->name()->c_str(), getShaderVersion()))
+                                         function->name().c_str(), getShaderVersion()))
     {
         // With ESSL 3.00 and above, names of built-in functions cannot be redeclared as functions.
         // Therefore overloading or redefining builtin functions is an error.
         error(location, "Name of a built-in function cannot be redeclared as function",
-              function->name()->c_str());
+              function->name().c_str());
     }
     else if (prevDec)
     {
@@ -3363,12 +3359,12 @@ TFunction *TParseContext::parseFunctionDeclarator(const TSourceLoc &location, TF
     //
     // Check for previously declared variables using the same name.
     //
-    TSymbol *prevSym = symbolTable.find(*function->name(), getShaderVersion());
+    TSymbol *prevSym = symbolTable.find(function->name(), getShaderVersion());
     if (prevSym)
     {
         if (!prevSym->isFunction())
         {
-            error(location, "redefinition of a function", function->name()->c_str());
+            error(location, "redefinition of a function", function->name().c_str());
         }
     }
     else
@@ -3382,7 +3378,7 @@ TFunction *TParseContext::parseFunctionDeclarator(const TSourceLoc &location, TF
     symbolTable.getOuterLevel()->insert(function);
 
     // Raise error message if main function takes any parameters or return anything other than void
-    if (*function->name() == "main")
+    if (function->name() == "main")
     {
         if (function->getParamCount() > 0)
         {
@@ -3906,7 +3902,7 @@ void TParseContext::checkIsBelowStructNestingLimit(const TSourceLoc &line, const
         else
         {
             reasonStream << "Reference of struct type "
-                         << field.type()->getStruct()->name()->c_str();
+                         << field.type()->getStruct()->name().c_str();
         }
         reasonStream << " exceeds maximum allowed nesting level of " << kWebGLMaxStructNesting;
         std::string reason = reasonStream.str();
@@ -5485,7 +5481,7 @@ TIntermBranch *TParseContext::addBranch(TOperator op,
 void TParseContext::checkTextureGather(TIntermAggregate *functionCall)
 {
     ASSERT(functionCall->getOp() == EOpCallBuiltInFunction);
-    const TString &name        = *functionCall->getFunction()->name();
+    const TString &name        = functionCall->getFunction()->name();
     bool isTextureGather       = (name == "textureGather");
     bool isTextureGatherOffset = (name == "textureGatherOffset");
     if (isTextureGather || isTextureGatherOffset)
@@ -5551,7 +5547,7 @@ void TParseContext::checkTextureGather(TIntermAggregate *functionCall)
 void TParseContext::checkTextureOffsetConst(TIntermAggregate *functionCall)
 {
     ASSERT(functionCall->getOp() == EOpCallBuiltInFunction);
-    const TString &name                    = *functionCall->getFunction()->name();
+    const TString &name                    = functionCall->getFunction()->name();
     TIntermNode *offset        = nullptr;
     TIntermSequence *arguments = functionCall->getSequence();
     bool useTextureGatherOffsetConstraints = false;
@@ -5628,8 +5624,8 @@ void TParseContext::checkTextureOffsetConst(TIntermAggregate *functionCall)
 void TParseContext::checkAtomicMemoryBuiltinFunctions(TIntermAggregate *functionCall)
 {
     ASSERT(functionCall->getOp() == EOpCallBuiltInFunction);
-    const TString &name = *functionCall->getFunction()->name();
-    if (IsAtomicBuiltin(name))
+    const TString &functionName = functionCall->getFunction()->name();
+    if (IsAtomicBuiltin(functionName))
     {
         TIntermSequence *arguments = functionCall->getSequence();
         TIntermTyped *memNode      = (*arguments)[0]->getAsTyped();
@@ -5651,7 +5647,7 @@ void TParseContext::checkAtomicMemoryBuiltinFunctions(TIntermAggregate *function
         error(memNode->getLine(),
               "The value passed to the mem argument of an atomic memory function does not "
               "correspond to a buffer or shared variable.",
-              functionCall->getFunction()->name()->c_str());
+              functionName.c_str());
     }
 }
 
@@ -5659,7 +5655,7 @@ void TParseContext::checkAtomicMemoryBuiltinFunctions(TIntermAggregate *function
 void TParseContext::checkImageMemoryAccessForBuiltinFunctions(TIntermAggregate *functionCall)
 {
     ASSERT(functionCall->getOp() == EOpCallBuiltInFunction);
-    const TString &name = *functionCall->getFunction()->name();
+    const TString &name = functionCall->getFunction()->name();
 
     if (name.compare(0, 5, "image") == 0)
     {
@@ -5775,7 +5771,7 @@ TIntermTyped *TParseContext::addFunctionCallOrMethod(TFunction *fnCall,
     }
 }
 
-TIntermTyped *TParseContext::addMethod(const TString *name,
+TIntermTyped *TParseContext::addMethod(const TString &name,
                                        TIntermSequence *arguments,
                                        TIntermNode *thisNode,
                                        const TSourceLoc &loc)
@@ -5785,9 +5781,9 @@ TIntermTyped *TParseContext::addMethod(const TString *name,
     // a constructor. But such a TFunction can't reach here, since the lexer goes into FIELDS
     // mode after a dot, which makes type identifiers to be parsed as FIELD_SELECTION instead.
     // So accessing fnCall->name() below is safe.
-    if (*name != "length")
+    if (name != "length")
     {
-        error(loc, "invalid method", name->c_str());
+        error(loc, "invalid method", name.c_str());
     }
     else if (!arguments->empty())
     {
@@ -5812,27 +5808,26 @@ TIntermTyped *TParseContext::addMethod(const TString *name,
     return CreateZeroNode(TType(EbtInt, EbpUndefined, EvqConst));
 }
 
-TIntermTyped *TParseContext::addNonConstructorFunctionCall(const TString *name,
+TIntermTyped *TParseContext::addNonConstructorFunctionCall(const TString &name,
                                                            TIntermSequence *arguments,
                                                            const TSourceLoc &loc)
 {
-    ASSERT(name);
     // First find by unmangled name to check whether the function name has been
     // hidden by a variable name or struct typename.
     // If a function is found, check for one with a matching argument list.
     bool builtIn;
-    const TSymbol *symbol = symbolTable.find(*name, mShaderVersion, &builtIn);
+    const TSymbol *symbol = symbolTable.find(name, mShaderVersion, &builtIn);
     if (symbol != nullptr && !symbol->isFunction())
     {
-        error(loc, "function name expected", name->c_str());
+        error(loc, "function name expected", name.c_str());
     }
     else
     {
-        symbol = symbolTable.find(TFunction::GetMangledNameFromCall(*name, *arguments),
+        symbol = symbolTable.find(TFunction::GetMangledNameFromCall(name, *arguments),
                                   mShaderVersion, &builtIn);
         if (symbol == nullptr)
         {
-            error(loc, "no matching overloaded function found", name->c_str());
+            error(loc, "no matching overloaded function found", name.c_str());
         }
         else
         {

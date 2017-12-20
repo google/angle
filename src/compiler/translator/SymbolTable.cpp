@@ -42,8 +42,7 @@ bool TSymbolTableLevel::insert(TSymbol *symbol)
 bool TSymbolTableLevel::insertUnmangled(TFunction *function)
 {
     // returning true means symbol was added to the table
-    ASSERT(function->name() != nullptr);
-    tInsertResult result = level.insert(tLevelPair(*function->name(), function));
+    tInsertResult result = level.insert(tLevelPair(function->name(), function));
 
     return result.second;
 }

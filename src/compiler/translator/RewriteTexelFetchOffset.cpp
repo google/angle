@@ -72,7 +72,8 @@ bool Traverser::visitAggregate(Visit visit, TIntermAggregate *node)
         return true;
     }
 
-    if (*node->getFunction()->name() != "texelFetchOffset")
+    ASSERT(node->getFunction()->symbolType() == SymbolType::BuiltIn);
+    if (node->getFunction()->name() != "texelFetchOffset")
     {
         return true;
     }

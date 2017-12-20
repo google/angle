@@ -43,11 +43,14 @@ class TSymbol : angle::NonCopyable
         // don't delete name, it's from the pool
     }
 
-    const TString *name() const;
+    // Don't call name() or getMangledName() for empty symbols (symbolType == SymbolType::Empty).
+    const TString &name() const;
     virtual const TString &getMangledName() const;
+
     virtual bool isFunction() const { return false; }
     virtual bool isVariable() const { return false; }
     virtual bool isStruct() const { return false; }
+
     const TSymbolUniqueId &uniqueId() const { return mUniqueId; }
     SymbolType symbolType() const { return mSymbolType; }
     TExtension extension() const { return mExtension; }

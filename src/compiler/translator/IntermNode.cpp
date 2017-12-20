@@ -144,12 +144,13 @@ void SetUnionArrayFromMatrix(const angle::Matrix<float> &m, TConstantUnion *resu
 
 }  // namespace anonymous
 
-TName::TName(const TString *name) : mName(name ? (*name) : ""), mIsInternal(false)
+TName::TName(const TString &name) : mName(name), mIsInternal(false)
 {
 }
 
 TName::TName(const TSymbol *symbol)
-    : mName(*symbol->name()), mIsInternal(symbol->symbolType() == SymbolType::AngleInternal)
+    : mName(symbol->symbolType() == SymbolType::Empty ? "" : symbol->name()),
+      mIsInternal(symbol->symbolType() == SymbolType::AngleInternal)
 {
 }
 
@@ -281,12 +282,8 @@ bool TIntermAggregateBase::insertChildNodes(TIntermSequence::size_type position,
 }
 
 TIntermSymbol::TIntermSymbol(const TVariable *variable)
-    : TIntermTyped(variable->getType()), mVariable(variable), mSymbol(variable->name())
+    : TIntermTyped(variable->getType()), mVariable(variable), mSymbol(variable)
 {
-    if (variable->symbolType() == SymbolType::AngleInternal)
-    {
-        mSymbol.setInternal(true);
-    }
 }
 
 const TSymbolUniqueId &TIntermSymbol::uniqueId() const
@@ -461,7 +458,7 @@ void TIntermAggregate::setBuiltInFunctionPrecision()
     }
     // ESSL 3.0 spec section 8: textureSize always gets highp precision.
     // All other functions that take a sampler are assumed to be texture functions.
-    if (mFunction->name()->find("textureSize") == 0)
+    if (mFunction->name().find("textureSize") == 0)
         mType.setPrecision(EbpHigh);
     else
         mType.setPrecision(precision);
@@ -475,7 +472,7 @@ TString TIntermAggregate::getSymbolTableMangledName() const
         case EOpCallInternalRawFunction:
         case EOpCallBuiltInFunction:
         case EOpCallFunctionInAST:
-            return TFunction::GetMangledNameFromCall(*mFunction->name(), mArguments);
+            return TFunction::GetMangledNameFromCall(mFunction->name(), mArguments);
         default:
             TString opString = GetOperatorString(mOp);
             return TFunction::GetMangledNameFromCall(opString, mArguments);
@@ -490,7 +487,7 @@ const char *TIntermAggregate::functionName() const
         case EOpCallInternalRawFunction:
         case EOpCallBuiltInFunction:
         case EOpCallFunctionInAST:
-            return mFunction->name()->c_str();
+            return mFunction->name().c_str();
         default:
             return GetOperatorString(mOp);
     }

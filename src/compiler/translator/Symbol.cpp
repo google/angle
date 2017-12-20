@@ -38,22 +38,22 @@ TSymbol::TSymbol(TSymbolTable *symbolTable,
            mSymbolType == SymbolType::NotResolved || mSymbolType == SymbolType::Empty);
 }
 
-const TString *TSymbol::name() const
+const TString &TSymbol::name() const
 {
-    if (mName != nullptr || mSymbolType == SymbolType::Empty)
+    if (mName != nullptr)
     {
-        return mName;
+        return *mName;
     }
     ASSERT(mSymbolType == SymbolType::AngleInternal);
     TInfoSinkBase symbolNameOut;
     symbolNameOut << "s" << mUniqueId.get();
-    return NewPoolTString(symbolNameOut.c_str());
+    return *NewPoolTString(symbolNameOut.c_str());
 }
 
 const TString &TSymbol::getMangledName() const
 {
     ASSERT(mSymbolType != SymbolType::Empty);
-    return *name();
+    return name();
 }
 
 TVariable::TVariable(TSymbolTable *symbolTable,
@@ -160,7 +160,7 @@ void TFunction::swapParameters(const TFunction &parametersSource)
 
 const TString *TFunction::buildMangledName() const
 {
-    std::string newName = name()->c_str();
+    std::string newName = name().c_str();
     newName += kFunctionMangledNameSeparator;
 
     for (const auto &p : parameters)
@@ -185,13 +185,13 @@ const TString &TFunction::GetMangledNameFromCall(const TString &functionName,
 
 bool TFunction::isMain() const
 {
-    return symbolType() == SymbolType::UserDefined && *name() == "main";
+    return symbolType() == SymbolType::UserDefined && name() == "main";
 }
 
 bool TFunction::isImageFunction() const
 {
     return symbolType() == SymbolType::BuiltIn &&
-           (*name() == "imageSize" || *name() == "imageLoad" || *name() == "imageStore");
+           (name() == "imageSize" || name() == "imageLoad" || name() == "imageStore");
 }
 
 }  // namespace sh
