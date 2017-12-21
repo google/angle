@@ -231,6 +231,13 @@ RendererVk::~RendererVk()
         }
     }
 
+    for (auto &descriptorSetLayout : mGraphicsDescriptorSetLayouts)
+    {
+        descriptorSetLayout.destroy(mDevice);
+    }
+
+    mGraphicsPipelineLayout.destroy(mDevice);
+
     mRenderPassCache.destroy(mDevice);
 
     if (mGlslangWrapper)
@@ -461,6 +468,9 @@ vk::Error RendererVk::initialize(const egl::AttributeMap &attribs, const char *w
 
     // Initialize the format table.
     mFormatTable.initialize(mPhysicalDevice, &mNativeTextureCaps);
+
+    // Initialize the pipeline layout for GL programs.
+    ANGLE_TRY(initGraphicsPipelineLayout());
 
     return vk::NoError();
 }
@@ -961,4 +971,102 @@ vk::Error RendererVk::flush(const gl::Context *context,
     return vk::NoError();
 }
 
+const vk::PipelineLayout &RendererVk::getGraphicsPipelineLayout() const
+{
+    return mGraphicsPipelineLayout;
+}
+
+const std::vector<vk::DescriptorSetLayout> &RendererVk::getGraphicsDescriptorSetLayouts() const
+{
+    return mGraphicsDescriptorSetLayouts;
+}
+
+vk::Error RendererVk::initGraphicsPipelineLayout()
+{
+    ASSERT(!mGraphicsPipelineLayout.valid());
+
+    // Create two descriptor set layouts: one for default uniform info, and one for textures.
+    // Skip one or both if there are no uniforms.
+    VkDescriptorSetLayoutBinding uniformBindings[2];
+    uint32_t blockCount = 0;
+
+    {
+        auto &layoutBinding = uniformBindings[blockCount];
+
+        layoutBinding.binding            = blockCount;
+        layoutBinding.descriptorType     = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+        layoutBinding.descriptorCount    = 1;
+        layoutBinding.stageFlags         = VK_SHADER_STAGE_VERTEX_BIT;
+        layoutBinding.pImmutableSamplers = nullptr;
+
+        blockCount++;
+    }
+
+    {
+        auto &layoutBinding = uniformBindings[blockCount];
+
+        layoutBinding.binding            = blockCount;
+        layoutBinding.descriptorType     = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+        layoutBinding.descriptorCount    = 1;
+        layoutBinding.stageFlags         = VK_SHADER_STAGE_FRAGMENT_BIT;
+        layoutBinding.pImmutableSamplers = nullptr;
+
+        blockCount++;
+    }
+
+    {
+        VkDescriptorSetLayoutCreateInfo uniformInfo;
+        uniformInfo.sType        = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+        uniformInfo.pNext        = nullptr;
+        uniformInfo.flags        = 0;
+        uniformInfo.bindingCount = blockCount;
+        uniformInfo.pBindings    = uniformBindings;
+
+        vk::DescriptorSetLayout uniformLayout;
+        ANGLE_TRY(uniformLayout.init(mDevice, uniformInfo));
+        mGraphicsDescriptorSetLayouts.push_back(std::move(uniformLayout));
+    }
+
+    std::array<VkDescriptorSetLayoutBinding, gl::IMPLEMENTATION_MAX_ACTIVE_TEXTURES>
+        textureBindings;
+
+    // TODO(jmadill): This approach might not work well for texture arrays.
+    for (uint32_t textureIndex = 0; textureIndex < gl::IMPLEMENTATION_MAX_ACTIVE_TEXTURES;
+         ++textureIndex)
+    {
+        VkDescriptorSetLayoutBinding &layoutBinding = textureBindings[textureIndex];
+
+        layoutBinding.binding         = textureIndex;
+        layoutBinding.descriptorType  = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+        layoutBinding.descriptorCount = 1;
+        layoutBinding.stageFlags      = (VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT);
+        layoutBinding.pImmutableSamplers = nullptr;
+    }
+
+    {
+        VkDescriptorSetLayoutCreateInfo textureInfo;
+        textureInfo.sType        = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+        textureInfo.pNext        = nullptr;
+        textureInfo.flags        = 0;
+        textureInfo.bindingCount = static_cast<uint32_t>(textureBindings.size());
+        textureInfo.pBindings    = textureBindings.data();
+
+        vk::DescriptorSetLayout textureLayout;
+        ANGLE_TRY(textureLayout.init(mDevice, textureInfo));
+        mGraphicsDescriptorSetLayouts.push_back(std::move(textureLayout));
+    }
+
+    VkPipelineLayoutCreateInfo createInfo;
+    createInfo.sType                  = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
+    createInfo.pNext                  = nullptr;
+    createInfo.flags                  = 0;
+    createInfo.setLayoutCount         = static_cast<uint32_t>(mGraphicsDescriptorSetLayouts.size());
+    createInfo.pSetLayouts            = mGraphicsDescriptorSetLayouts[0].ptr();
+    createInfo.pushConstantRangeCount = 0;
+    createInfo.pPushConstantRanges    = nullptr;
+
+    ANGLE_TRY(mGraphicsPipelineLayout.init(mDevice, createInfo));
+
+    return vk::NoError();
+}
 }  // namespace rx

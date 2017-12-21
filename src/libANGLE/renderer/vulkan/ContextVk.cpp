@@ -259,10 +259,8 @@ gl::Error ContextVk::initPipeline(const gl::Context *context)
 
     VkDevice device       = mRenderer->getDevice();
     const auto &state     = mState.getState();
-    const gl::Program *programGL   = state.getProgram();
     const gl::VertexArray *vao     = state.getVertexArray();
     const gl::Framebuffer *drawFBO = state.getDrawFramebuffer();
-    ProgramVk *programVk  = vk::GetImpl(programGL);
     FramebufferVk *vkFBO  = vk::GetImpl(drawFBO);
     VertexArrayVk *vkVAO  = vk::GetImpl(vao);
 
@@ -288,7 +286,7 @@ gl::Error ContextVk::initPipeline(const gl::Context *context)
     ANGLE_TRY(mRenderer->getCompatibleRenderPass(desc, &renderPass));
     ASSERT(renderPass && renderPass->valid());
 
-    const vk::PipelineLayout &pipelineLayout = programVk->getPipelineLayout();
+    const vk::PipelineLayout &pipelineLayout = mRenderer->getGraphicsPipelineLayout();
     ASSERT(pipelineLayout.valid());
 
     mCurrentPipelineInfo.layout     = pipelineLayout.getHandle();
@@ -395,14 +393,14 @@ gl::Error ContextVk::setupDraw(const gl::Context *context,
     // Bind the graphics descriptor sets.
     // TODO(jmadill): Handle multiple command buffers.
     const auto &descriptorSets = programVk->getDescriptorSets();
-    uint32_t firstSet          = programVk->getDescriptorSetOffset();
-    uint32_t setCount          = static_cast<uint32_t>(descriptorSets.size());
-    if (!descriptorSets.empty() && ((setCount - firstSet) > 0))
+    const gl::RangeUI &usedRange = programVk->getUsedDescriptorSetRange();
+    if (!usedRange.empty())
     {
-        const vk::PipelineLayout &pipelineLayout = programVk->getPipelineLayout();
+        ASSERT(!descriptorSets.empty());
+        const vk::PipelineLayout &pipelineLayout = mRenderer->getGraphicsPipelineLayout();
         (*commandBuffer)
-            ->bindDescriptorSets(VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, firstSet,
-                                 setCount - firstSet, &descriptorSets[firstSet], 0, nullptr);
+            ->bindDescriptorSets(VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, usedRange.low(),
+                                 usedRange.length(), &descriptorSets[usedRange.low()], 0, nullptr);
     }
 
     return gl::NoError();

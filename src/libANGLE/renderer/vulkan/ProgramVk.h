@@ -101,7 +101,6 @@ class ProgramVk : public ProgramImpl
 
     const vk::ShaderModule &getLinkedVertexModule() const;
     const vk::ShaderModule &getLinkedFragmentModule() const;
-    const vk::PipelineLayout &getPipelineLayout() const;
 
     vk::Error updateUniforms(ContextVk *contextVk);
 
@@ -111,14 +110,15 @@ class ProgramVk : public ProgramImpl
     // However, it's valid to leave them in an undefined, unbound state, if they are never used.
     // This means when we want to ignore a descriptor set index, we need to pass in an offset
     // parameter to BindDescriptorSets, which is an offset into the getDescriptorSets array.
-    uint32_t getDescriptorSetOffset() const;
+    // This allows us to skip binding blank descriptor sets when the Program doesn't use Uniforms
+    // or Textures.
+    const gl::RangeUI &getUsedDescriptorSetRange() const;
 
     void updateTexturesDescriptorSet(ContextVk *contextVk);
     void invalidateTextures();
 
   private:
     void reset(VkDevice device);
-    vk::Error initPipelineLayout(ContextVk *context);
     vk::Error initDescriptorSets(ContextVk *contextVk);
     gl::Error initDefaultUniformBlocks(const gl::Context *glContext);
     vk::Error updateDefaultUniformsDescriptorSet(ContextVk *contextVk);
@@ -128,8 +128,6 @@ class ProgramVk : public ProgramImpl
 
     vk::ShaderModule mLinkedVertexModule;
     vk::ShaderModule mLinkedFragmentModule;
-    vk::PipelineLayout mPipelineLayout;
-    std::vector<vk::DescriptorSetLayout> mDescriptorSetLayouts;
 
     // State for the default uniform blocks.
     struct DefaultUniformBlock final : private angle::NonCopyable
@@ -157,7 +155,7 @@ class ProgramVk : public ProgramImpl
 
     // Descriptor sets for uniform blocks and textures for this program.
     std::vector<VkDescriptorSet> mDescriptorSets;
-    uint32_t mDescriptorSetOffset;
+    gl::RangeUI mUsedDescriptorSetRange;
     bool mDirtyTextures;
 
     template <typename T>

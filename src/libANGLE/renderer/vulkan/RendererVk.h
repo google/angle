@@ -144,6 +144,9 @@ class RendererVk : angle::NonCopyable
     // TODO(jmadill): Keep in ContextVk to enable threaded rendering.
     vk::CommandBufferNode *allocateCommandNode();
 
+    const vk::PipelineLayout &getGraphicsPipelineLayout() const;
+    const std::vector<vk::DescriptorSetLayout> &getGraphicsDescriptorSetLayouts() const;
+
   private:
     vk::Error initializeDevice(uint32_t queueFamilyIndex);
     void ensureCapsInitialized() const;
@@ -156,6 +159,7 @@ class RendererVk : angle::NonCopyable
     void freeAllInFlightResources();
     vk::Error flushCommandGraph(const gl::Context *context, vk::CommandBuffer *commandBatch);
     void resetCommandGraph();
+    vk::Error initGraphicsPipelineLayout();
 
     mutable bool mCapsInitialized;
     mutable gl::Caps mNativeCaps;
@@ -197,6 +201,11 @@ class RendererVk : angle::NonCopyable
 
     RenderPassCache mRenderPassCache;
     std::vector<vk::CommandBufferNode *> mOpenCommandGraph;
+
+    // ANGLE uses a single pipeline layout for all GL programs. It is owned here in the Renderer.
+    // See the design doc for an overview of the pipeline layout structure.
+    vk::PipelineLayout mGraphicsPipelineLayout;
+    std::vector<vk::DescriptorSetLayout> mGraphicsDescriptorSetLayouts;
 };
 
 }  // namespace rx

@@ -628,6 +628,12 @@ class Range
     T low() const { return mLow; }
     T high() const { return mHigh; }
 
+    void invalidate()
+    {
+        mLow  = std::numeric_limits<T>::max();
+        mHigh = std::numeric_limits<T>::min();
+    }
+
   private:
     T mLow;
     T mHigh;
