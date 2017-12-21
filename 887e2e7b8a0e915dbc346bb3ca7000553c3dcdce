@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9395f45a_cf01cf30",
+        "filename": "src/compiler/translator/SymbolUniqueId.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-21T19:56:20Z",
+      "side": 1,
+      "message": "nit: can you move these into the cpp while you\u0027re at it?",
+      "range": {
+        "startLine": 25,
+        "startChar": 0,
+        "endLine": 26,
+        "endChar": 66
+      },
+      "revId": "887e2e7b8a0e915dbc346bb3ca7000553c3dcdce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
