@@ -183,6 +183,24 @@
     },
     {
       "key": {
+        "uuid": "8563289b_349a33f4",
+        "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 422,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-12-21T05:36:59Z",
+      "side": 1,
+      "message": "It\u0027s called in FramebufferManager::DeleteObject\nframebuffer-\u003eonDestroy(context);",
+      "parentUuid": "233b04ac_e742d193",
+      "revId": "4a99816d78fd2f9da708c098706358b46294803c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "bdeddc25_8ab2a641",
         "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.h",
         "patchSetId": 4
