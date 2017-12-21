@@ -17,37 +17,21 @@ if (build_with_chromium) {
   }
 }
 
-angle_enable_d3d9 = false
-angle_enable_d3d11 = false
-angle_enable_gl = false
-angle_enable_gl_null = false
-angle_enable_vulkan = false
-angle_enable_null = true
-
-if (is_win) {
-  angle_enable_d3d9 = true
-  angle_enable_d3d11 = true
-  angle_enable_gl = true
-  angle_enable_gl_null = true
-  angle_enable_vulkan = true
-
-  import("//build/config/win/visual_studio_version.gni")
-} else if (is_linux && use_x11 && !is_chromeos) {
-  angle_enable_gl = true
-  angle_enable_gl_null = true
-  angle_enable_vulkan = true
-} else if (is_mac || ozone_platform_gbm) {
-  angle_enable_gl = true
-  angle_enable_gl_null = true
-} else if (is_android) {
-  angle_enable_gl = true
-  angle_enable_gl_null = true
+declare_args() {
+  angle_enable_d3d9 = is_win
+  angle_enable_d3d11 = is_win
+  angle_enable_gl = ozone_platform_gbm || !is_linux || (use_x11 && !is_chromeos)
+  angle_enable_vulkan = is_win || (is_linux && use_x11 && !is_chromeos)
+  angle_enable_null = true
+  angle_enable_essl = true
+  angle_enable_glsl = true
 }
 
-angle_enable_essl = true
-angle_enable_glsl = true
-angle_enable_hlsl = false
+declare_args() {
+  angle_enable_gl_null = angle_enable_gl
+  angle_enable_hlsl = angle_enable_d3d9 || angle_enable_d3d11
+}
 
-if (angle_enable_d3d9 || angle_enable_d3d11) {
-  angle_enable_hlsl = true
+if (is_win) {
+  import("//build/config/win/visual_studio_version.gni")
 }
