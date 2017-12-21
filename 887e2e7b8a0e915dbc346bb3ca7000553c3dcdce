@@ -22,6 +22,30 @@
       "revId": "887e2e7b8a0e915dbc346bb3ca7000553c3dcdce",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e865e117_51fabb83",
+        "filename": "src/compiler/translator/SymbolUniqueId.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-12-21T20:06:49Z",
+      "side": 1,
+      "message": "Can the explicit defaulting with \"\u003d default\" actually be put inside the cpp file? I\u0027m not finding a good reference for how this is specced. I\u0027d be inclined to maybe leave it in the header even if it can be.",
+      "parentUuid": "9395f45a_cf01cf30",
+      "range": {
+        "startLine": 25,
+        "startChar": 0,
+        "endLine": 26,
+        "endChar": 66
+      },
+      "revId": "887e2e7b8a0e915dbc346bb3ca7000553c3dcdce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
