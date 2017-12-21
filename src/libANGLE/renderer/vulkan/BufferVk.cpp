@@ -211,7 +211,7 @@ vk::Error BufferVk::setDataImpl(ContextVk *contextVk,
         bufferBarrier.size                = static_cast<VkDeviceSize>(size);
 
         commandBuffer->singleBufferBarrier(VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
-                                           VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, 0, bufferBarrier);
+                                           VK_PIPELINE_STAGE_TRANSFER_BIT, 0, bufferBarrier);
 
         VkBufferCopy copyRegion = {offset, 0, size};
         commandBuffer->copyBuffer(stagingBuffer.getBuffer(), mBuffer, 1, &copyRegion);
