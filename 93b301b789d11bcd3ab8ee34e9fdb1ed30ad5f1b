@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b4ee4aca_2a480cf9",
+        "filename": "src/tests/gl_tests/RenderStencilBufferTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-21T23:11:07Z",
+      "side": 1,
+      "message": "is this comment correct?",
+      "range": {
+        "startLine": 7,
+        "startChar": 5,
+        "endLine": 7,
+        "endChar": 74
+      },
+      "revId": "93b301b789d11bcd3ab8ee34e9fdb1ed30ad5f1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6126c720_e6385bf0",
+        "filename": "src/tests/gl_tests/RenderStencilBufferTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-21T23:11:07Z",
+      "side": 1,
+      "message": "nit: I think you should use a for loop here.",
+      "range": {
+        "startLine": 91,
+        "startChar": 0,
+        "endLine": 92,
+        "endChar": 18
+      },
+      "revId": "93b301b789d11bcd3ab8ee34e9fdb1ed30ad5f1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3d085ac2_22e5b76a",
+        "filename": "src/tests/gl_tests/RenderStencilBufferTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-21T23:11:07Z",
+      "side": 1,
+      "message": "use EXPECT_PIXEL_COLOR_EQ",
+      "range": {
+        "startLine": 129,
+        "startChar": 0,
+        "endLine": 135,
+        "endChar": 38
+      },
+      "revId": "93b301b789d11bcd3ab8ee34e9fdb1ed30ad5f1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
