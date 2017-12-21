@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0d3a290a_31eab713",
+        "filename": "gni/angle.gni",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-12-21T00:43:49Z",
+      "side": 1,
+      "message": "I\u0027d prefer is_linux_x11",
+      "range": {
+        "startLine": 20,
+        "startChar": 0,
+        "endLine": 20,
+        "endChar": 5
+      },
+      "revId": "f8572ba62b31f6b49fca9e980e2c0858efa874b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8ac6441d_5c736179",
+        "filename": "gni/angle.gni",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-12-21T00:43:49Z",
+      "side": 1,
+      "message": "Seems like angle_enable_gl_null \u003d angle_enable_gl.\nYou could do it in a separate declare_args, I think.",
+      "range": {
+        "startLine": 28,
+        "startChar": 6,
+        "endLine": 28,
+        "endChar": 67
+      },
+      "revId": "f8572ba62b31f6b49fca9e980e2c0858efa874b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5c4db324_42b53906",
+        "filename": "gni/angle.gni",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-12-21T00:43:49Z",
+      "side": 1,
+      "message": "Probably better to keep the original \"angle_enable_d3d9 || angle_enable_d3d11\"",
+      "range": {
+        "startLine": 36,
+        "startChar": 22,
+        "endLine": 36,
+        "endChar": 28
+      },
+      "revId": "f8572ba62b31f6b49fca9e980e2c0858efa874b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
