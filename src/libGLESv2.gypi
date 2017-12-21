@@ -707,6 +707,8 @@
         [
             'libANGLE/renderer/vulkan/BufferVk.cpp',
             'libANGLE/renderer/vulkan/BufferVk.h',
+            'libANGLE/renderer/vulkan/CommandBufferNode.cpp',
+            'libANGLE/renderer/vulkan/CommandBufferNode.h',
             'libANGLE/renderer/vulkan/CompilerVk.cpp',
             'libANGLE/renderer/vulkan/CompilerVk.h',
             'libANGLE/renderer/vulkan/ContextVk.cpp',

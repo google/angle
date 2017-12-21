@@ -191,11 +191,8 @@ vk::Error BufferVk::setDataImpl(ContextVk *contextVk,
         stagingBuffer.getDeviceMemory().unmap(device);
 
         // Enqueue a copy command on the GPU.
-        // TODO(jmadill): Command re-ordering for render passes.
-        renderer->endRenderPass();
-
-        vk::CommandBufferAndState *commandBuffer = nullptr;
-        ANGLE_TRY(renderer->getStartedCommandBuffer(&commandBuffer));
+        vk::CommandBuffer *commandBuffer = nullptr;
+        ANGLE_TRY(recordWriteCommands(renderer, &commandBuffer));
 
         // Insert a barrier to ensure reads from the buffer are complete.
         // TODO(jmadill): Insert minimal barriers.
@@ -216,7 +213,8 @@ vk::Error BufferVk::setDataImpl(ContextVk *contextVk,
         VkBufferCopy copyRegion = {offset, 0, size};
         commandBuffer->copyBuffer(stagingBuffer.getBuffer(), mBuffer, 1, &copyRegion);
 
-        setQueueSerial(renderer->getCurrentQueueSerial());
+        // Immediately release staging buffer.
+        // TODO(jmadill): Staging buffer re-use.
         renderer->releaseObject(getQueueSerial(), &stagingBuffer);
     }
     else

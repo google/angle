@@ -9,8 +9,11 @@
 
 #include "renderervk_utils.h"
 
+#include "libANGLE/Context.h"
 #include "libANGLE/SizedMRUCache.h"
+#include "libANGLE/renderer/vulkan/CommandBufferNode.h"
 #include "libANGLE/renderer/vulkan/ContextVk.h"
+#include "libANGLE/renderer/vulkan/RenderTargetVk.h"
 #include "libANGLE/renderer/vulkan/RendererVk.h"
 
 namespace rx
@@ -315,6 +318,20 @@ CommandBuffer::CommandBuffer()
 {
 }
 
+VkCommandBuffer CommandBuffer::releaseHandle()
+{
+    VkCommandBuffer handle = mHandle;
+    mHandle                = nullptr;
+    return handle;
+}
+
+Error CommandBuffer::init(VkDevice device, const VkCommandBufferAllocateInfo &createInfo)
+{
+    ASSERT(!valid());
+    ANGLE_VK_TRY(vkAllocateCommandBuffers(device, &createInfo, &mHandle));
+    return NoError();
+}
+
 Error CommandBuffer::begin(const VkCommandBufferBeginInfo &info)
 {
     ASSERT(valid());
@@ -364,13 +381,6 @@ void CommandBuffer::destroy(VkDevice device, const vk::CommandPool &commandPool)
         vkFreeCommandBuffers(device, commandPool.getHandle(), 1, &mHandle);
         mHandle = VK_NULL_HANDLE;
     }
-}
-
-Error CommandBuffer::init(VkDevice device, const VkCommandBufferAllocateInfo &createInfo)
-{
-    ASSERT(!valid());
-    ANGLE_VK_TRY(vkAllocateCommandBuffers(device, &createInfo, &mHandle));
-    return NoError();
 }
 
 void CommandBuffer::copyBuffer(const vk::Buffer &srcBuffer,
@@ -440,27 +450,11 @@ void CommandBuffer::copyImage(const vk::Image &srcImage,
                    dstImage.getCurrentLayout(), 1, regions);
 }
 
-void CommandBuffer::beginRenderPass(const RenderPass &renderPass,
-                                    const Framebuffer &framebuffer,
-                                    const gl::Rectangle &renderArea,
-                                    uint32_t clearValueCount,
-                                    const VkClearValue *clearValues)
+void CommandBuffer::beginRenderPass(const VkRenderPassBeginInfo &beginInfo,
+                                    VkSubpassContents subpassContents)
 {
-    ASSERT(mHandle != VK_NULL_HANDLE);
-
-    VkRenderPassBeginInfo beginInfo;
-    beginInfo.sType                    = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-    beginInfo.pNext                    = nullptr;
-    beginInfo.renderPass               = renderPass.getHandle();
-    beginInfo.framebuffer              = framebuffer.getHandle();
-    beginInfo.renderArea.offset.x      = static_cast<uint32_t>(renderArea.x);
-    beginInfo.renderArea.offset.y      = static_cast<uint32_t>(renderArea.y);
-    beginInfo.renderArea.extent.width  = static_cast<uint32_t>(renderArea.width);
-    beginInfo.renderArea.extent.height = static_cast<uint32_t>(renderArea.height);
-    beginInfo.clearValueCount          = clearValueCount;
-    beginInfo.pClearValues             = clearValues;
-
-    vkCmdBeginRenderPass(mHandle, &beginInfo, VK_SUBPASS_CONTENTS_INLINE);
+    ASSERT(valid());
+    vkCmdBeginRenderPass(mHandle, &beginInfo, subpassContents);
 }
 
 void CommandBuffer::endRenderPass()
@@ -523,6 +517,13 @@ void CommandBuffer::bindDescriptorSets(VkPipelineBindPoint bindPoint,
     ASSERT(valid());
     vkCmdBindDescriptorSets(mHandle, bindPoint, layout.getHandle(), firstSet, descriptorSetCount,
                             descriptorSets, dynamicOffsetCount, dynamicOffsets);
+}
+
+void CommandBuffer::executeCommands(uint32_t commandBufferCount,
+                                    const vk::CommandBuffer *commandBuffers)
+{
+    ASSERT(valid());
+    vkCmdExecuteCommands(mHandle, commandBufferCount, commandBuffers[0].ptr());
 }
 
 // Image implementation.
@@ -702,6 +703,11 @@ Error Framebuffer::init(VkDevice device, const VkFramebufferCreateInfo &createIn
     ASSERT(!valid());
     ANGLE_VK_TRY(vkCreateFramebuffer(device, &createInfo, nullptr, &mHandle));
     return NoError();
+}
+
+void Framebuffer::setHandle(VkFramebuffer handle)
+{
+    mHandle = handle;
 }
 
 // DeviceMemory implementation.
@@ -1240,58 +1246,6 @@ void GarbageObject::destroy(VkDevice device)
     }
 }
 
-// CommandBufferAndState implementation.
-CommandBufferAndState::CommandBufferAndState() : mStarted(false)
-{
-}
-
-Error CommandBufferAndState::ensureStarted(VkDevice device,
-                                           const vk::CommandPool &commandPool,
-                                           VkCommandBufferLevel level)
-{
-    ASSERT(commandPool.valid());
-
-    if (valid() && mStarted)
-    {
-        return NoError();
-    }
-
-    if (!valid())
-    {
-        VkCommandBufferAllocateInfo createInfo;
-        createInfo.sType              = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-        createInfo.pNext              = nullptr;
-        createInfo.commandPool        = commandPool.getHandle();
-        createInfo.level              = level;
-        createInfo.commandBufferCount = 1;
-
-        ANGLE_TRY(init(device, createInfo));
-    }
-    else
-    {
-        reset();
-    }
-
-    VkCommandBufferBeginInfo beginInfo;
-    beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-    beginInfo.pNext = nullptr;
-    // TODO(jmadill): Use other flags?
-    beginInfo.flags            = 0;
-    beginInfo.pInheritanceInfo = nullptr;
-
-    ANGLE_TRY(begin(beginInfo));
-    mStarted = true;
-
-    return NoError();
-}
-
-Error CommandBufferAndState::ensureFinished()
-{
-    ANGLE_TRY(end());
-    mStarted = false;
-    return NoError();
-}
-
 // RenderPassDesc implementation.
 RenderPassDesc::RenderPassDesc()
 {
@@ -1556,6 +1510,95 @@ VkFrontFace GetFrontFace(GLenum frontFace)
 }
 
 }  // namespace gl_vk
+
+ResourceVk::ResourceVk() : mCurrentWriteNode(nullptr)
+{
+}
+
+ResourceVk::~ResourceVk()
+{
+}
+
+void ResourceVk::updateQueueSerial(Serial queueSerial)
+{
+    ASSERT(queueSerial >= mStoredQueueSerial);
+
+    if (queueSerial > mStoredQueueSerial)
+    {
+        mCurrentWriteNode = nullptr;
+        mCurrentReadNodes.clear();
+        mStoredQueueSerial = queueSerial;
+    }
+}
+
+Serial ResourceVk::getQueueSerial() const
+{
+    return mStoredQueueSerial;
+}
+
+bool ResourceVk::isCurrentlyRecording(Serial currentSerial) const
+{
+    return (mStoredQueueSerial == currentSerial && mCurrentWriteNode != nullptr);
+}
+
+vk::CommandBufferNode *ResourceVk::getCurrentWriteNode(Serial currentSerial)
+{
+    ASSERT(currentSerial == mStoredQueueSerial);
+    return mCurrentWriteNode;
+}
+
+vk::CommandBufferNode *ResourceVk::getNewWriteNode(RendererVk *renderer)
+{
+    vk::CommandBufferNode *newCommands = renderer->allocateCommandNode();
+    setWriteNode(renderer->getCurrentQueueSerial(), newCommands);
+    return newCommands;
+}
+
+void ResourceVk::setWriteNode(Serial serial, vk::CommandBufferNode *newCommands)
+{
+    updateQueueSerial(serial);
+
+    // Make sure any open reads and writes finish before we execute |newCommands|.
+    if (!mCurrentReadNodes.empty())
+    {
+        newCommands->addDependencies(mCurrentReadNodes);
+        mCurrentReadNodes.clear();
+    }
+
+    if (mCurrentWriteNode)
+    {
+        newCommands->addDependency(mCurrentWriteNode);
+    }
+
+    mCurrentWriteNode = newCommands;
+}
+
+vk::Error ResourceVk::recordWriteCommands(RendererVk *renderer,
+                                          vk::CommandBuffer **commandBufferOut)
+{
+    vk::CommandBufferNode *commands = getNewWriteNode(renderer);
+
+    VkDevice device = renderer->getDevice();
+    ANGLE_TRY(commands->startRecording(device, renderer->getCommandPool(), commandBufferOut));
+    return vk::NoError();
+}
+
+void ResourceVk::updateDependencies(vk::CommandBufferNode *readNode, Serial serial)
+{
+    if (isCurrentlyRecording(serial))
+    {
+        // Link the current write node to "readNode".
+        readNode->addDependency(getCurrentWriteNode(serial));
+        ASSERT(mStoredQueueSerial == serial);
+    }
+    else
+    {
+        updateQueueSerial(serial);
+    }
+
+    // Track "readNode" in this resource.
+    mCurrentReadNodes.push_back(readNode);
+}
 
 }  // namespace rx
 

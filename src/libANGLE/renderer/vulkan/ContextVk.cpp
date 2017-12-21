@@ -14,6 +14,7 @@
 #include "libANGLE/Context.h"
 #include "libANGLE/Program.h"
 #include "libANGLE/renderer/vulkan/BufferVk.h"
+#include "libANGLE/renderer/vulkan/CommandBufferNode.h"
 #include "libANGLE/renderer/vulkan/CompilerVk.h"
 #include "libANGLE/renderer/vulkan/ContextVk.h"
 #include "libANGLE/renderer/vulkan/DeviceVk.h"
@@ -62,7 +63,11 @@ enum DescriptorPoolIndex : uint8_t
 }  // anonymous namespace
 
 ContextVk::ContextVk(const gl::ContextState &state, RendererVk *renderer)
-    : ContextImpl(state), mRenderer(renderer), mCurrentDrawMode(GL_NONE)
+    : ContextImpl(state),
+      mRenderer(renderer),
+      mCurrentDrawMode(GL_NONE),
+      mVertexArrayDirty(false),
+      mTexturesDirty(false)
 {
     // The module handle is filled out at draw time.
     mCurrentShaderStages[0].sType  = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
@@ -238,15 +243,14 @@ gl::Error ContextVk::initialize()
 
 gl::Error ContextVk::flush(const gl::Context *context)
 {
+    // TODO(jmadill): Flush will need to insert a semaphore for the next flush to wait on.
     UNIMPLEMENTED();
     return gl::InternalError();
 }
 
 gl::Error ContextVk::finish(const gl::Context *context)
 {
-    // TODO(jmadill): Implement finish.
-    // UNIMPLEMENTED();
-    return gl::NoError();
+    return mRenderer->finish(context);
 }
 
 gl::Error ContextVk::initPipeline(const gl::Context *context)
@@ -295,7 +299,10 @@ gl::Error ContextVk::initPipeline(const gl::Context *context)
     return gl::NoError();
 }
 
-gl::Error ContextVk::setupDraw(const gl::Context *context, GLenum mode, DrawType drawType)
+gl::Error ContextVk::setupDraw(const gl::Context *context,
+                               GLenum mode,
+                               DrawType drawType,
+                               vk::CommandBuffer **commandBuffer)
 {
     if (mode != mCurrentDrawMode)
     {
@@ -325,23 +332,65 @@ gl::Error ContextVk::setupDraw(const gl::Context *context, GLenum mode, DrawType
     angle::MemoryBuffer *zeroBuf = nullptr;
     ANGLE_TRY(context->getZeroFilledBuffer(maxAttrib * sizeof(VkDeviceSize), &zeroBuf));
 
-    vk::CommandBufferAndState *commandBuffer = nullptr;
-    ANGLE_TRY(mRenderer->getStartedCommandBuffer(&commandBuffer));
-    ANGLE_TRY(mRenderer->ensureInRenderPass(context, vkFBO));
+    // TODO(jmadill): Need to link up the TextureVk to the Secondary CB.
+    vk::CommandBufferNode *renderNode = nullptr;
+    ANGLE_TRY(vkFBO->getRenderNode(context, &renderNode));
 
-    commandBuffer->bindPipeline(VK_PIPELINE_BIND_POINT_GRAPHICS, mCurrentPipeline);
-    commandBuffer->bindVertexBuffers(0, maxAttrib, vertexHandles.data(),
-                                     reinterpret_cast<const VkDeviceSize *>(zeroBuf->data()));
+    if (!renderNode->getInsideRenderPassCommands()->valid())
+    {
+        mVertexArrayDirty = true;
+        mTexturesDirty    = true;
+        ANGLE_TRY(renderNode->startRenderPassRecording(mRenderer, commandBuffer));
+    }
+    else
+    {
+        *commandBuffer = renderNode->getInsideRenderPassCommands();
+    }
 
+    // Ensure any writes to the VAO buffers are flushed before we read from them.
+    if (mVertexArrayDirty)
+    {
+        mVertexArrayDirty = false;
+        vkVAO->updateDrawDependencies(renderNode, programGL->getActiveAttribLocationsMask(),
+                                      queueSerial, drawType);
+    }
+
+    // Ensure any writes to the textures are flushed before we read from them.
+    if (mTexturesDirty)
+    {
+        mTexturesDirty = false;
+        // TODO(jmadill): Should probably merge this for loop with programVk's descriptor update.
+        const auto &completeTextures = state.getCompleteTextureCache();
+        for (const gl::SamplerBinding &samplerBinding : programGL->getSamplerBindings())
+        {
+            ASSERT(!samplerBinding.unreferenced);
+
+            // TODO(jmadill): Sampler arrays
+            ASSERT(samplerBinding.boundTextureUnits.size() == 1);
+
+            GLuint textureUnit         = samplerBinding.boundTextureUnits[0];
+            const gl::Texture *texture = completeTextures[textureUnit];
+
+            // TODO(jmadill): Incomplete textures handling.
+            ASSERT(texture);
+
+            TextureVk *textureVk = vk::GetImpl(texture);
+            textureVk->updateDependencies(renderNode, mRenderer->getCurrentQueueSerial());
+        }
+    }
+
+    (*commandBuffer)->bindPipeline(VK_PIPELINE_BIND_POINT_GRAPHICS, mCurrentPipeline);
+    (*commandBuffer)
+        ->bindVertexBuffers(0, maxAttrib, vertexHandles.data(),
+                            reinterpret_cast<const VkDeviceSize *>(zeroBuf->data()));
+
+    // Update the queue serial for the pipeline object.
     // TODO(jmadill): the queue serial should be bound to the pipeline.
-    setQueueSerial(queueSerial);
-    vkVAO->updateCurrentBufferSerials(programGL->getActiveAttribLocationsMask(), queueSerial,
-                                      drawType);
+    updateQueueSerial(queueSerial);
 
     // TODO(jmadill): Can probably use more dirty bits here.
-    ContextVk *contextVk = vk::GetImpl(context);
-    ANGLE_TRY(programVk->updateUniforms(contextVk));
-    programVk->updateTexturesDescriptorSet(contextVk);
+    ANGLE_TRY(programVk->updateUniforms(this));
+    programVk->updateTexturesDescriptorSet(this);
 
     // Bind the graphics descriptor sets.
     // TODO(jmadill): Handle multiple command buffers.
@@ -351,9 +400,9 @@ gl::Error ContextVk::setupDraw(const gl::Context *context, GLenum mode, DrawType
     if (!descriptorSets.empty() && ((setCount - firstSet) > 0))
     {
         const vk::PipelineLayout &pipelineLayout = programVk->getPipelineLayout();
-        commandBuffer->bindDescriptorSets(VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, firstSet,
-                                          setCount - firstSet, &descriptorSets[firstSet], 0,
-                                          nullptr);
+        (*commandBuffer)
+            ->bindDescriptorSets(VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, firstSet,
+                                 setCount - firstSet, &descriptorSets[firstSet], 0, nullptr);
     }
 
     return gl::NoError();
@@ -361,11 +410,8 @@ gl::Error ContextVk::setupDraw(const gl::Context *context, GLenum mode, DrawType
 
 gl::Error ContextVk::drawArrays(const gl::Context *context, GLenum mode, GLint first, GLsizei count)
 {
-    ANGLE_TRY(setupDraw(context, mode, DrawType::Arrays));
-
-    vk::CommandBufferAndState *commandBuffer = nullptr;
-    ANGLE_TRY(mRenderer->getStartedCommandBuffer(&commandBuffer));
-
+    vk::CommandBuffer *commandBuffer = nullptr;
+    ANGLE_TRY(setupDraw(context, mode, DrawType::Arrays, &commandBuffer));
     commandBuffer->draw(count, 1, first, 0);
     return gl::NoError();
 }
@@ -386,7 +432,8 @@ gl::Error ContextVk::drawElements(const gl::Context *context,
                                   GLenum type,
                                   const void *indices)
 {
-    ANGLE_TRY(setupDraw(context, mode, DrawType::Elements));
+    vk::CommandBuffer *commandBuffer;
+    ANGLE_TRY(setupDraw(context, mode, DrawType::Elements, &commandBuffer));
 
     if (indices)
     {
@@ -401,9 +448,6 @@ gl::Error ContextVk::drawElements(const gl::Context *context,
         UNIMPLEMENTED();
         return gl::InternalError() << "Unsigned byte translation is not yet implemented.";
     }
-
-    vk::CommandBufferAndState *commandBuffer = nullptr;
-    ANGLE_TRY(mRenderer->getStartedCommandBuffer(&commandBuffer));
 
     const gl::Buffer *elementArrayBuffer =
         mState.getState().getVertexArray()->getElementArrayBuffer().get();
@@ -442,18 +486,6 @@ gl::Error ContextVk::drawRangeElements(const gl::Context *context,
 VkDevice ContextVk::getDevice() const
 {
     return mRenderer->getDevice();
-}
-
-vk::Error ContextVk::getStartedCommandBuffer(vk::CommandBufferAndState **commandBufferOut)
-{
-    return mRenderer->getStartedCommandBuffer(commandBufferOut);
-}
-
-vk::Error ContextVk::submitCommands(vk::CommandBufferAndState *commandBuffer)
-{
-    setQueueSerial(mRenderer->getCurrentQueueSerial());
-    ANGLE_TRY(mRenderer->submitCommandBuffer(commandBuffer));
-    return vk::NoError();
 }
 
 gl::Error ContextVk::drawArraysIndirect(const gl::Context *context,
@@ -681,7 +713,7 @@ void ContextVk::syncState(const gl::Context *context, const gl::State::DirtyBits
                 WARN() << "DIRTY_BIT_RENDERBUFFER_BINDING unimplemented";
                 break;
             case gl::State::DIRTY_BIT_VERTEX_ARRAY_BINDING:
-                WARN() << "DIRTY_BIT_VERTEX_ARRAY_BINDING unimplemented";
+                mVertexArrayDirty = true;
                 break;
             case gl::State::DIRTY_BIT_DRAW_INDIRECT_BUFFER_BINDING:
                 WARN() << "DIRTY_BIT_DRAW_INDIRECT_BUFFER_BINDING unimplemented";
@@ -755,6 +787,7 @@ void ContextVk::syncState(const gl::Context *context, const gl::State::DirtyBits
     {
         ProgramVk *programVk = vk::GetImpl(glState.getProgram());
         programVk->invalidateTextures();
+        mTexturesDirty = true;
     }
 }
 
@@ -873,6 +906,13 @@ std::vector<PathImpl *> ContextVk::createPaths(GLsizei)
 void ContextVk::invalidateCurrentPipeline()
 {
     mRenderer->releaseResource(*this, &mCurrentPipeline);
+}
+
+void ContextVk::onVertexArrayChange()
+{
+    // TODO(jmadill): Does not handle dependent state changes.
+    mVertexArrayDirty = true;
+    invalidateCurrentPipeline();
 }
 
 gl::Error ContextVk::dispatchCompute(const gl::Context *context,

@@ -17,6 +17,7 @@
 #include "common/debug.h"
 #include "common/system_utils.h"
 #include "libANGLE/renderer/driver_utils.h"
+#include "libANGLE/renderer/vulkan/CommandBufferNode.h"
 #include "libANGLE/renderer/vulkan/CompilerVk.h"
 #include "libANGLE/renderer/vulkan/FramebufferVk.h"
 #include "libANGLE/renderer/vulkan/GlslangWrapper.h"
@@ -179,6 +180,28 @@ vk::Error RenderPassCache::getRenderPassWithOps(VkDevice device,
     return vk::NoError();
 }
 
+// CommandBatch implementation.
+RendererVk::CommandBatch::CommandBatch()
+{
+}
+
+RendererVk::CommandBatch::~CommandBatch()
+{
+}
+
+RendererVk::CommandBatch::CommandBatch(CommandBatch &&other)
+    : commandPool(std::move(other.commandPool)), fence(std::move(other.fence)), serial(other.serial)
+{
+}
+
+RendererVk::CommandBatch &RendererVk::CommandBatch::operator=(CommandBatch &&other)
+{
+    std::swap(commandPool, other.commandPool);
+    std::swap(fence, other.fence);
+    std::swap(serial, other.serial);
+    return *this;
+}
+
 // RendererVk implementation.
 RendererVk::RendererVk()
     : mCapsInitialized(false),
@@ -192,16 +215,16 @@ RendererVk::RendererVk()
       mGlslangWrapper(nullptr),
       mLastCompletedQueueSerial(mQueueSerialFactory.generate()),
       mCurrentQueueSerial(mQueueSerialFactory.generate()),
-      mInFlightCommands(),
-      mCurrentRenderPassFramebuffer(nullptr)
+      mInFlightCommands()
 {
 }
 
 RendererVk::~RendererVk()
 {
-    if (!mInFlightCommands.empty() || !mInFlightFences.empty() || !mGarbage.empty())
+    if (!mInFlightCommands.empty() || !mGarbage.empty())
     {
-        vk::Error error = finish();
+        // TODO(jmadill): Not nice to pass nullptr here, but shouldn't be a problem.
+        vk::Error error = finish(nullptr);
         if (error.isError())
         {
             ERR() << "Error during VK shutdown: " << error;
@@ -214,11 +237,6 @@ RendererVk::~RendererVk()
     {
         GlslangWrapper::ReleaseReference();
         mGlslangWrapper = nullptr;
-    }
-
-    if (mCommandBuffer.valid())
-    {
-        mCommandBuffer.destroy(mDevice, mCommandPool);
     }
 
     if (mCommandPool.valid())
@@ -519,10 +537,9 @@ vk::Error RendererVk::initializeDevice(uint32_t queueFamilyIndex)
 
     // Initialize the command pool now that we know the queue family index.
     VkCommandPoolCreateInfo commandPoolInfo;
-    commandPoolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
-    commandPoolInfo.pNext = nullptr;
-    // TODO(jmadill): Investigate transient command buffers.
-    commandPoolInfo.flags            = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
+    commandPoolInfo.sType            = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+    commandPoolInfo.pNext            = nullptr;
+    commandPoolInfo.flags            = VK_COMMAND_POOL_CREATE_TRANSIENT_BIT;
     commandPoolInfo.queueFamilyIndex = mCurrentQueueFamilyIndex;
 
     ANGLE_TRY(mCommandPool.init(mDevice, commandPoolInfo));
@@ -665,74 +682,32 @@ const gl::Limitations &RendererVk::getNativeLimitations() const
     return mNativeLimitations;
 }
 
-vk::Error RendererVk::getStartedCommandBuffer(vk::CommandBufferAndState **commandBufferOut)
+const vk::CommandPool &RendererVk::getCommandPool() const
 {
-    ANGLE_TRY(mCommandBuffer.ensureStarted(mDevice, mCommandPool, VK_COMMAND_BUFFER_LEVEL_PRIMARY));
-    *commandBufferOut = &mCommandBuffer;
-    return vk::NoError();
+    return mCommandPool;
 }
 
-vk::Error RendererVk::submitCommandBuffer(vk::CommandBufferAndState *commandBuffer)
+vk::Error RendererVk::finish(const gl::Context *context)
 {
-    ANGLE_TRY(commandBuffer->ensureFinished());
+    if (!mOpenCommandGraph.empty())
+    {
+        vk::CommandBuffer commandBatch;
+        ANGLE_TRY(flushCommandGraph(context, &commandBatch));
 
-    VkFenceCreateInfo fenceInfo;
-    fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
-    fenceInfo.pNext = nullptr;
-    fenceInfo.flags = 0;
+        VkSubmitInfo submitInfo;
+        submitInfo.sType                = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+        submitInfo.pNext                = nullptr;
+        submitInfo.waitSemaphoreCount   = 0;
+        submitInfo.pWaitSemaphores      = nullptr;
+        submitInfo.pWaitDstStageMask    = nullptr;
+        submitInfo.commandBufferCount   = 1;
+        submitInfo.pCommandBuffers      = commandBatch.ptr();
+        submitInfo.signalSemaphoreCount = 0;
+        submitInfo.pSignalSemaphores    = nullptr;
 
-    VkSubmitInfo submitInfo;
-    submitInfo.sType                = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-    submitInfo.pNext                = nullptr;
-    submitInfo.waitSemaphoreCount   = 0;
-    submitInfo.pWaitSemaphores      = nullptr;
-    submitInfo.pWaitDstStageMask    = nullptr;
-    submitInfo.commandBufferCount   = 1;
-    submitInfo.pCommandBuffers      = commandBuffer->ptr();
-    submitInfo.signalSemaphoreCount = 0;
-    submitInfo.pSignalSemaphores    = nullptr;
+        ANGLE_TRY(submitFrame(submitInfo, std::move(commandBatch)));
+    }
 
-    // TODO(jmadill): Investigate how to properly submit command buffers.
-    ANGLE_TRY(submit(submitInfo));
-
-    return vk::NoError();
-}
-
-vk::Error RendererVk::submitAndFinishCommandBuffer(vk::CommandBufferAndState *commandBuffer)
-{
-    ANGLE_TRY(submitCommandBuffer(commandBuffer));
-    ANGLE_TRY(finish());
-
-    return vk::NoError();
-}
-
-vk::Error RendererVk::submitCommandsWithSync(vk::CommandBufferAndState *commandBuffer,
-                                             const vk::Semaphore &waitSemaphore,
-                                             const vk::Semaphore &signalSemaphore)
-{
-    ANGLE_TRY(commandBuffer->end());
-
-    VkPipelineStageFlags waitStageMask  = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
-
-    VkSubmitInfo submitInfo;
-    submitInfo.sType                = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-    submitInfo.pNext                = nullptr;
-    submitInfo.waitSemaphoreCount   = 1;
-    submitInfo.pWaitSemaphores      = waitSemaphore.ptr();
-    submitInfo.pWaitDstStageMask    = &waitStageMask;
-    submitInfo.commandBufferCount   = 1;
-    submitInfo.pCommandBuffers      = commandBuffer->ptr();
-    submitInfo.signalSemaphoreCount = 1;
-    submitInfo.pSignalSemaphores    = signalSemaphore.ptr();
-
-    // TODO(jmadill): Investigate how to properly queue command buffer work.
-    ANGLE_TRY(submitFrame(submitInfo));
-
-    return vk::NoError();
-}
-
-vk::Error RendererVk::finish()
-{
     ASSERT(mQueue != VK_NULL_HANDLE);
     ANGLE_VK_TRY(vkQueueWaitIdle(mQueue));
     freeAllInFlightResources();
@@ -741,15 +716,10 @@ vk::Error RendererVk::finish()
 
 void RendererVk::freeAllInFlightResources()
 {
-    for (auto &fence : mInFlightFences)
+    for (CommandBatch &batch : mInFlightCommands)
     {
-        fence.get().destroy(mDevice);
-    }
-    mInFlightFences.clear();
-
-    for (auto &command : mInFlightCommands)
-    {
-        command.get().destroy(mDevice, mCommandPool);
+        batch.fence.destroy(mDevice);
+        batch.commandPool.destroy(mDevice);
     }
     mInFlightCommands.clear();
 
@@ -762,51 +732,29 @@ void RendererVk::freeAllInFlightResources()
 
 vk::Error RendererVk::checkInFlightCommands()
 {
-    size_t finishedIndex = 0;
+    int finishedCount = 0;
 
-    // Check if any in-flight command buffers are finished.
-    for (size_t index = 0; index < mInFlightFences.size(); index++)
+    for (CommandBatch &batch : mInFlightCommands)
     {
-        auto *inFlightFence = &mInFlightFences[index];
-
-        VkResult result = inFlightFence->get().getStatus(mDevice);
+        VkResult result = batch.fence.getStatus(mDevice);
         if (result == VK_NOT_READY)
             break;
+
         ANGLE_VK_TRY(result);
-        finishedIndex = index + 1;
+        ASSERT(batch.serial > mLastCompletedQueueSerial);
+        mLastCompletedQueueSerial = batch.serial;
 
-        // Release the fence handle.
-        // TODO(jmadill): Re-use fences.
-        inFlightFence->get().destroy(mDevice);
+        batch.fence.destroy(mDevice);
+        batch.commandPool.destroy(mDevice);
+        ++finishedCount;
     }
 
-    if (finishedIndex == 0)
-        return vk::NoError();
-
-    Serial finishedSerial = mInFlightFences[finishedIndex - 1].queueSerial();
-    mInFlightFences.erase(mInFlightFences.begin(), mInFlightFences.begin() + finishedIndex);
-
-    size_t completedCBIndex = 0;
-    for (size_t cbIndex = 0; cbIndex < mInFlightCommands.size(); ++cbIndex)
-    {
-        auto *inFlightCB = &mInFlightCommands[cbIndex];
-        if (inFlightCB->queueSerial() > finishedSerial)
-            break;
-
-        completedCBIndex = cbIndex + 1;
-        inFlightCB->get().destroy(mDevice, mCommandPool);
-    }
-
-    if (completedCBIndex == 0)
-        return vk::NoError();
-
-    mInFlightCommands.erase(mInFlightCommands.begin(),
-                            mInFlightCommands.begin() + completedCBIndex);
+    mInFlightCommands.erase(mInFlightCommands.begin(), mInFlightCommands.begin() + finishedCount);
 
     size_t freeIndex = 0;
     for (; freeIndex < mGarbage.size(); ++freeIndex)
     {
-        if (!mGarbage[freeIndex].destroyIfComplete(mDevice, finishedSerial))
+        if (!mGarbage[freeIndex].destroyIfComplete(mDevice, mLastCompletedQueueSerial))
             break;
     }
 
@@ -819,38 +767,23 @@ vk::Error RendererVk::checkInFlightCommands()
     return vk::NoError();
 }
 
-vk::Error RendererVk::submit(const VkSubmitInfo &submitInfo)
+vk::Error RendererVk::submitFrame(const VkSubmitInfo &submitInfo, vk::CommandBuffer &&commandBuffer)
 {
-    ANGLE_VK_TRY(vkQueueSubmit(mQueue, 1, &submitInfo, VK_NULL_HANDLE));
+    VkFenceCreateInfo fenceInfo;
+    fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+    fenceInfo.pNext = nullptr;
+    fenceInfo.flags = 0;
+
+    CommandBatch batch;
+    ANGLE_TRY(batch.fence.init(mDevice, fenceInfo));
+
+    ANGLE_VK_TRY(vkQueueSubmit(mQueue, 1, &submitInfo, batch.fence.getHandle()));
 
     // Store this command buffer in the in-flight list.
-    mInFlightCommands.emplace_back(std::move(mCommandBuffer), mCurrentQueueSerial);
+    batch.commandPool = std::move(mCommandPool);
+    batch.serial      = mCurrentQueueSerial;
 
-    // Sanity check.
-    ASSERT(mInFlightCommands.size() < 1000u);
-
-    // Increment the queue serial. If this fails, we should restart ANGLE.
-    // TODO(jmadill): Overflow check.
-    mCurrentQueueSerial = mQueueSerialFactory.generate();
-
-    return vk::NoError();
-}
-
-vk::Error RendererVk::submitFrame(const VkSubmitInfo &submitInfo)
-{
-    VkFenceCreateInfo createInfo;
-    createInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
-    createInfo.pNext = nullptr;
-    createInfo.flags = 0;
-
-    vk::Fence fence;
-    ANGLE_TRY(fence.init(mDevice, createInfo));
-
-    ANGLE_VK_TRY(vkQueueSubmit(mQueue, 1, &submitInfo, fence.getHandle()));
-
-    // Store this command buffer in the in-flight list.
-    mInFlightFences.emplace_back(std::move(fence), mCurrentQueueSerial);
-    mInFlightCommands.emplace_back(std::move(mCommandBuffer), mCurrentQueueSerial);
+    mInFlightCommands.emplace_back(std::move(batch));
 
     // Sanity check.
     ASSERT(mInFlightCommands.size() < 1000u);
@@ -860,6 +793,19 @@ vk::Error RendererVk::submitFrame(const VkSubmitInfo &submitInfo)
     mCurrentQueueSerial = mQueueSerialFactory.generate();
 
     ANGLE_TRY(checkInFlightCommands());
+
+    // Simply null out the command buffer here - it was allocated using the command pool.
+    commandBuffer.releaseHandle();
+
+    // Reallocate the command pool for next frame.
+    // TODO(jmadill): Consider reusing command pools.
+    VkCommandPoolCreateInfo poolInfo;
+    poolInfo.sType            = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+    poolInfo.pNext            = nullptr;
+    poolInfo.flags            = 0;
+    poolInfo.queueFamilyIndex = mCurrentQueueFamilyIndex;
+
+    mCommandPool.init(mDevice, poolInfo);
 
     return vk::NoError();
 }
@@ -885,40 +831,6 @@ Serial RendererVk::getCurrentQueueSerial() const
     return mCurrentQueueSerial;
 }
 
-gl::Error RendererVk::ensureInRenderPass(const gl::Context *context, FramebufferVk *framebufferVk)
-{
-    if (mCurrentRenderPassFramebuffer == framebufferVk)
-    {
-        return gl::NoError();
-    }
-
-    if (mCurrentRenderPassFramebuffer)
-    {
-        endRenderPass();
-    }
-    ANGLE_TRY(framebufferVk->beginRenderPass(context, this, &mCommandBuffer, mCurrentQueueSerial));
-    mCurrentRenderPassFramebuffer = framebufferVk;
-    return gl::NoError();
-}
-
-void RendererVk::endRenderPass()
-{
-    if (mCurrentRenderPassFramebuffer)
-    {
-        ASSERT(mCommandBuffer.started());
-        mCommandBuffer.endRenderPass();
-        mCurrentRenderPassFramebuffer = nullptr;
-    }
-}
-
-void RendererVk::onReleaseRenderPass(const FramebufferVk *framebufferVk)
-{
-    if (mCurrentRenderPassFramebuffer == framebufferVk)
-    {
-        endRenderPass();
-    }
-}
-
 bool RendererVk::isResourceInUse(const ResourceVk &resource)
 {
     return isSerialInUse(resource.getQueueSerial());
@@ -942,6 +854,111 @@ vk::Error RendererVk::getRenderPassWithOps(const vk::RenderPassDesc &desc,
 {
     return mRenderPassCache.getRenderPassWithOps(mDevice, mCurrentQueueSerial, desc, ops,
                                                  renderPassOut);
+}
+
+vk::CommandBufferNode *RendererVk::allocateCommandNode()
+{
+    // TODO(jmadill): Use a pool allocator for the CPU node allocations.
+    vk::CommandBufferNode *newCommands = new vk::CommandBufferNode();
+    mOpenCommandGraph.emplace_back(newCommands);
+    return newCommands;
+}
+
+vk::Error RendererVk::flushCommandGraph(const gl::Context *context, vk::CommandBuffer *commandBatch)
+{
+    VkCommandBufferAllocateInfo primaryInfo;
+    primaryInfo.sType              = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+    primaryInfo.pNext              = nullptr;
+    primaryInfo.commandPool        = mCommandPool.getHandle();
+    primaryInfo.level              = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+    primaryInfo.commandBufferCount = 1;
+
+    ANGLE_TRY(commandBatch->init(mDevice, primaryInfo));
+
+    if (mOpenCommandGraph.empty())
+    {
+        return vk::NoError();
+    }
+
+    std::vector<vk::CommandBufferNode *> nodeStack;
+
+    VkCommandBufferBeginInfo beginInfo;
+    beginInfo.sType            = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+    beginInfo.pNext            = nullptr;
+    beginInfo.flags            = 0;
+    beginInfo.pInheritanceInfo = nullptr;
+
+    ANGLE_TRY(commandBatch->begin(beginInfo));
+
+    for (vk::CommandBufferNode *topLevelNode : mOpenCommandGraph)
+    {
+        // Only process commands that don't have child commands. The others will be pulled in
+        // automatically. Also skip commands that have already been visited.
+        if (topLevelNode->isDependency() ||
+            topLevelNode->visitedState() != vk::VisitedState::Unvisited)
+            continue;
+
+        nodeStack.push_back(topLevelNode);
+
+        while (!nodeStack.empty())
+        {
+            vk::CommandBufferNode *node = nodeStack.back();
+
+            switch (node->visitedState())
+            {
+                case vk::VisitedState::Unvisited:
+                    node->visitDependencies(&nodeStack);
+                    break;
+                case vk::VisitedState::Ready:
+                    ANGLE_TRY(node->visitAndExecute(this, commandBatch));
+                    nodeStack.pop_back();
+                    break;
+                case vk::VisitedState::Visited:
+                    nodeStack.pop_back();
+                    break;
+                default:
+                    UNREACHABLE();
+                    break;
+            }
+        }
+    }
+
+    ANGLE_TRY(commandBatch->end());
+    return vk::NoError();
+}
+
+void RendererVk::resetCommandGraph()
+{
+    // TODO(jmadill): Use pool allocation so we don't need to deallocate command graph.
+    for (vk::CommandBufferNode *node : mOpenCommandGraph)
+    {
+        delete node;
+    }
+    mOpenCommandGraph.clear();
+}
+
+vk::Error RendererVk::flush(const gl::Context *context,
+                            const vk::Semaphore &waitSemaphore,
+                            const vk::Semaphore &signalSemaphore)
+{
+    vk::CommandBuffer commandBatch;
+    ANGLE_TRY(flushCommandGraph(context, &commandBatch));
+
+    VkPipelineStageFlags waitStageMask = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
+
+    VkSubmitInfo submitInfo;
+    submitInfo.sType                = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+    submitInfo.pNext                = nullptr;
+    submitInfo.waitSemaphoreCount   = 1;
+    submitInfo.pWaitSemaphores      = waitSemaphore.ptr();
+    submitInfo.pWaitDstStageMask    = &waitStageMask;
+    submitInfo.commandBufferCount   = 1;
+    submitInfo.pCommandBuffers      = commandBatch.ptr();
+    submitInfo.signalSemaphoreCount = 1;
+    submitInfo.pSignalSemaphores    = signalSemaphore.ptr();
+
+    ANGLE_TRY(submitFrame(submitInfo, std::move(commandBatch)));
+    return vk::NoError();
 }
 
 }  // namespace rx

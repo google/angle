@@ -177,7 +177,6 @@ gl::Error TextureVk::setImage(const gl::Context *context,
     mRenderTarget.resource  = this;
 
     // Handle initial data.
-    // TODO(jmadill): Consider re-using staging texture.
     if (pixels)
     {
         ANGLE_TRY(setSubImageImpl(contextVk, formatInfo, unpack, type, pixels));
@@ -258,13 +257,8 @@ gl::Error TextureVk::setSubImageImpl(ContextVk *contextVk,
 
     stagingImage.getDeviceMemory().unmap(device);
 
-    vk::CommandBufferAndState *commandBuffer = nullptr;
-    ANGLE_TRY(contextVk->getStartedCommandBuffer(&commandBuffer));
-    setQueueSerial(renderer->getCurrentQueueSerial());
-
-    // Ensure we aren't in a render pass.
-    // TODO(jmadill): Command reordering.
-    renderer->endRenderPass();
+    vk::CommandBuffer *commandBuffer = nullptr;
+    ANGLE_TRY(recordWriteCommands(renderer, &commandBuffer));
 
     stagingImage.getImage().changeLayoutWithStages(
         VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
@@ -277,7 +271,8 @@ gl::Error TextureVk::setSubImageImpl(ContextVk *contextVk,
     commandBuffer->copySingleImage(stagingImage.getImage(), mImage, wholeRegion,
                                    VK_IMAGE_ASPECT_COLOR_BIT);
 
-    // TODO(jmadill): Re-use staging images.
+    // Immediately release staging image.
+    // TODO(jmadill): Staging image re-use.
     renderer->releaseObject(renderer->getCurrentQueueSerial(), &stagingImage);
     return gl::NoError();
 }

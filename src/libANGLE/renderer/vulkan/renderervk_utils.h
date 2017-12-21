@@ -49,6 +49,9 @@ ANGLE_GL_OBJECTS_X(ANGLE_PRE_DECLARE_OBJECT);
 namespace rx
 {
 class DisplayVk;
+class RenderTargetVk;
+class RendererVk;
+class ResourceVk;
 
 enum class DrawType
 {
@@ -72,27 +75,9 @@ enum class TextureDimension
     TEX_2D_ARRAY,
 };
 
-// This is a small helper mixin for any GL object used in Vk command buffers. It records a serial
-// at command recording times indicating an order in the queue. We use Fences to detect when
-// commands finish, and then release any unreferenced and deleted resources based on the stored
-// queue serial in a special 'garbage' queue.
-class ResourceVk
-{
-  public:
-    void setQueueSerial(Serial queueSerial)
-    {
-        ASSERT(queueSerial >= mStoredQueueSerial);
-        mStoredQueueSerial = queueSerial;
-    }
-
-    Serial getQueueSerial() const { return mStoredQueueSerial; }
-
-  private:
-    Serial mStoredQueueSerial;
-};
-
 namespace vk
 {
+class CommandBufferNode;
 struct Format;
 
 template <typename T>
@@ -317,6 +302,7 @@ class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
   public:
     CommandBuffer();
 
+    VkCommandBuffer releaseHandle();
     void destroy(VkDevice device, const vk::CommandPool &commandPool);
     Error init(VkDevice device, const VkCommandBufferAllocateInfo &createInfo);
     using WrappedObject::operator=;
@@ -353,11 +339,7 @@ class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
                    uint32_t regionCount,
                    const VkImageCopy *regions);
 
-    void beginRenderPass(const RenderPass &renderPass,
-                         const Framebuffer &framebuffer,
-                         const gl::Rectangle &renderArea,
-                         uint32_t clearValueCount,
-                         const VkClearValue *clearValues);
+    void beginRenderPass(const VkRenderPassBeginInfo &beginInfo, VkSubpassContents subpassContents);
     void endRenderPass();
 
     void draw(uint32_t vertexCount,
@@ -384,6 +366,8 @@ class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
                             const VkDescriptorSet *descriptorSets,
                             uint32_t dynamicOffsetCount,
                             const uint32_t *dynamicOffsets);
+
+    void executeCommands(uint32_t commandBufferCount, const vk::CommandBuffer *commandBuffers);
 };
 
 class Image final : public WrappedObject<Image, VkImage>
@@ -445,6 +429,9 @@ class Framebuffer final : public WrappedObject<Framebuffer, VkFramebuffer>
   public:
     Framebuffer();
     void destroy(VkDevice device);
+
+    // Use this method only in necessary cases. (RenderPass)
+    void setHandle(VkFramebuffer handle);
 
     Error init(VkDevice device, const VkFramebufferCreateInfo &createInfo);
 };
@@ -662,23 +649,7 @@ struct BufferAndMemory final : private angle::NonCopyable
     vk::DeviceMemory memory;
 };
 
-class CommandBufferAndState : public vk::CommandBuffer
-{
-  public:
-    CommandBufferAndState();
-
-    Error ensureStarted(VkDevice device,
-                        const vk::CommandPool &commandPool,
-                        VkCommandBufferLevel level);
-    Error ensureFinished();
-
-    bool started() const { return mStarted; }
-
-  private:
-    bool mStarted;
-};
-
-using CommandBufferAndSerial = ObjectAndSerial<CommandBufferAndState>;
+using CommandBufferAndSerial = ObjectAndSerial<CommandBuffer>;
 using FenceAndSerial         = ObjectAndSerial<Fence>;
 using RenderPassAndSerial    = ObjectAndSerial<RenderPass>;
 
@@ -770,6 +741,46 @@ VkPrimitiveTopology GetPrimitiveTopology(GLenum mode);
 VkCullModeFlags GetCullMode(const gl::RasterizerState &rasterState);
 VkFrontFace GetFrontFace(GLenum frontFace);
 }  // namespace gl_vk
+
+// This is a helper class for back-end objects used in Vk command buffers. It records a serial
+// at command recording times indicating an order in the queue. We use Fences to detect when
+// commands finish, and then release any unreferenced and deleted resources based on the stored
+// queue serial in a special 'garbage' queue. Resources also track current read and write
+// dependencies. Only one command buffer node can be writing to the Resource at a time, but many
+// can be reading from it. Together the dependencies will form a command graph at submission time.
+class ResourceVk
+{
+  public:
+    ResourceVk();
+    virtual ~ResourceVk();
+
+    void updateQueueSerial(Serial queueSerial);
+    Serial getQueueSerial() const;
+
+    // Returns true if any tracked read or write nodes match |currentSerial|.
+    bool isCurrentlyRecording(Serial currentSerial) const;
+
+    // Returns the active write node, and asserts |currentSerial| matches the stored serial.
+    vk::CommandBufferNode *getCurrentWriteNode(Serial currentSerial);
+
+    // Allocates a new write node and calls setWriteNode internally.
+    vk::CommandBufferNode *getNewWriteNode(RendererVk *renderer);
+
+    // Called on an operation that will modify this ResourceVk.
+    void setWriteNode(Serial serial, vk::CommandBufferNode *newCommands);
+
+    // Allocates a write node via getNewWriteNode and returns a started command buffer.
+    // The started command buffer will render outside of a RenderPass.
+    vk::Error recordWriteCommands(RendererVk *renderer, vk::CommandBuffer **commandBufferOut);
+
+    // Sets up the dependency relations. |readNode| has the commands that read from this object.
+    void updateDependencies(vk::CommandBufferNode *readNode, Serial serial);
+
+  private:
+    Serial mStoredQueueSerial;
+    std::vector<vk::CommandBufferNode *> mCurrentReadNodes;
+    vk::CommandBufferNode *mCurrentWriteNode;
+};
 
 }  // namespace rx
 

@@ -13,6 +13,7 @@
 
 #include "libANGLE/Context.h"
 #include "libANGLE/renderer/vulkan/BufferVk.h"
+#include "libANGLE/renderer/vulkan/CommandBufferNode.h"
 #include "libANGLE/renderer/vulkan/ContextVk.h"
 #include "libANGLE/renderer/vulkan/formatutilsvk.h"
 
@@ -48,7 +49,7 @@ void VertexArrayVk::syncState(const gl::Context *context,
     // Invalidate current pipeline.
     // TODO(jmadill): Use pipeline cache.
     ContextVk *contextVk = vk::GetImpl(context);
-    contextVk->invalidateCurrentPipeline();
+    contextVk->onVertexArrayChange();
 
     // Invalidate the vertex descriptions.
     invalidateVertexDescriptions();
@@ -107,22 +108,23 @@ const gl::AttribArray<VkBuffer> &VertexArrayVk::getCurrentArrayBufferHandles() c
     return mCurrentArrayBufferHandles;
 }
 
-void VertexArrayVk::updateCurrentBufferSerials(const gl::AttributesMask &activeAttribsMask,
-                                               Serial serial,
-                                               DrawType drawType)
+void VertexArrayVk::updateDrawDependencies(vk::CommandBufferNode *readNode,
+                                           const gl::AttributesMask &activeAttribsMask,
+                                           Serial serial,
+                                           DrawType drawType)
 {
     // Handle the bound array buffers.
     for (auto attribIndex : activeAttribsMask)
     {
         ASSERT(mCurrentArrayBufferResources[attribIndex]);
-        mCurrentArrayBufferResources[attribIndex]->setQueueSerial(serial);
+        mCurrentArrayBufferResources[attribIndex]->updateDependencies(readNode, serial);
     }
 
     // Handle the bound element array buffer.
     if (drawType == DrawType::Elements)
     {
         ASSERT(mCurrentElementArrayBufferResource);
-        mCurrentElementArrayBufferResource->setQueueSerial(serial);
+        mCurrentElementArrayBufferResource->updateDependencies(readNode, serial);
     }
 }
 

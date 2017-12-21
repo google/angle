@@ -84,12 +84,8 @@ class FramebufferVk : public FramebufferImpl, public ResourceVk
 
     gl::Error getSamplePosition(size_t index, GLfloat *xy) const override;
 
-    gl::Error beginRenderPass(const gl::Context *context,
-                              RendererVk *rendererVk,
-                              vk::CommandBuffer *commandBuffer,
-                              Serial queueSerial);
-
     const vk::RenderPassDesc &getRenderPassDesc(const gl::Context *context);
+    gl::Error getRenderNode(const gl::Context *context, vk::CommandBufferNode **nodeOut);
 
   private:
     FramebufferVk(const gl::FramebufferState &state);
@@ -102,6 +98,7 @@ class FramebufferVk : public FramebufferImpl, public ResourceVk
 
     Optional<vk::RenderPassDesc> mRenderPassDesc;
     vk::Framebuffer mFramebuffer;
+    bool mRenderNodeDirty;
 };
 
 }  // namespace rx

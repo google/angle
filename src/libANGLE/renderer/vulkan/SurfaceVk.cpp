@@ -192,7 +192,7 @@ void WindowSurfaceVk::destroy(const egl::Display *display)
     VkDevice device            = rendererVk->getDevice();
     VkInstance instance        = rendererVk->getInstance();
 
-    rendererVk->finish();
+    rendererVk->finish(display->getProxyContext());
 
     mAcquireNextImageSemaphore.destroy(device);
 
@@ -359,9 +359,9 @@ vk::Error WindowSurfaceVk::initializeImpl(RendererVk *renderer)
     std::vector<VkImage> swapchainImages(imageCount);
     ANGLE_VK_TRY(vkGetSwapchainImagesKHR(device, mSwapchain, &imageCount, swapchainImages.data()));
 
-    // CommandBuffer is a singleton in the Renderer.
-    vk::CommandBufferAndState *commandBuffer = nullptr;
-    ANGLE_TRY(renderer->getStartedCommandBuffer(&commandBuffer));
+    // Allocate a command buffer for clearing our images to black.
+    vk::CommandBuffer *commandBuffer = nullptr;
+    ANGLE_TRY(recordWriteCommands(renderer, &commandBuffer));
 
     VkClearColorValue transparentBlack;
     transparentBlack.float32[0] = 0.0f;
@@ -409,8 +409,6 @@ vk::Error WindowSurfaceVk::initializeImpl(RendererVk *renderer)
         ANGLE_TRY(member.commandsCompleteSemaphore.init(device));
     }
 
-    ANGLE_TRY(renderer->submitAndFinishCommandBuffer(commandBuffer));
-
     // Get the first available swapchain iamge.
     ANGLE_TRY(nextSwapchainImage(renderer));
 
@@ -427,20 +425,17 @@ egl::Error WindowSurfaceVk::swap(const gl::Context *context)
     const DisplayVk *displayVk = vk::GetImpl(context->getCurrentDisplay());
     RendererVk *renderer       = displayVk->getRenderer();
 
-    vk::CommandBufferAndState *currentCB = nullptr;
-    ANGLE_TRY(renderer->getStartedCommandBuffer(&currentCB));
-
-    // End render pass
-    renderer->endRenderPass();
+    vk::CommandBuffer *swapCommands = nullptr;
+    ANGLE_TRY(recordWriteCommands(renderer, &swapCommands));
 
     auto &image = mSwapchainImages[mCurrentSwapchainImageIndex];
 
     image.image.changeLayoutWithStages(VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_PRESENT_SRC_KHR,
                                        VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
-                                       VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, currentCB);
+                                       VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, swapCommands);
 
-    ANGLE_TRY(renderer->submitCommandsWithSync(currentCB, image.imageAcquiredSemaphore,
-                                               image.commandsCompleteSemaphore));
+    ANGLE_TRY(
+        renderer->flush(context, image.imageAcquiredSemaphore, image.commandsCompleteSemaphore));
 
     VkPresentInfoKHR presentInfo;
     presentInfo.sType              = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
