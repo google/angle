@@ -31,6 +31,8 @@
             'compiler/translator/BreakVariableAliasingInInnerLoops.h',
             'compiler/translator/CallDAG.cpp',
             'compiler/translator/CallDAG.h',
+            'compiler/translator/ClampFragDepth.cpp',
+            'compiler/translator/ClampFragDepth.h',
             'compiler/translator/ClampPointSize.cpp',
             'compiler/translator/ClampPointSize.h',
             'compiler/translator/CodeGen.cpp',

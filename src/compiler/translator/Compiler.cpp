@@ -12,6 +12,7 @@
 #include "common/utilities.h"
 #include "compiler/translator/AddAndTrueToLoopCondition.h"
 #include "compiler/translator/CallDAG.h"
+#include "compiler/translator/ClampFragDepth.h"
 #include "compiler/translator/ClampPointSize.h"
 #include "compiler/translator/CollectVariables.h"
 #include "compiler/translator/DeclareAndInitBuiltinsForInstancedMultiview.h"
@@ -639,6 +640,11 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     if (getShaderType() == GL_VERTEX_SHADER && (compileOptions & SH_CLAMP_POINT_SIZE))
     {
         ClampPointSize(root, compileResources.MaxPointSize, &getSymbolTable());
+    }
+
+    if (getShaderType() == GL_FRAGMENT_SHADER && (compileOptions & SH_CLAMP_FRAG_DEPTH))
+    {
+        ClampFragDepth(root, &getSymbolTable());
     }
 
     if (compileOptions & SH_REWRITE_VECTOR_SCALAR_ARITHMETIC)

@@ -127,6 +127,11 @@ ShCompileOptions ShaderGL::prepareSourceAndReturnOptions(std::stringstream *sour
         options |= SH_DONT_USE_LOOPS_TO_INITIALIZE_VARIABLES;
     }
 
+    if (mWorkarounds.clampFragDepth)
+    {
+        options |= SH_CLAMP_FRAG_DEPTH;
+    }
+
     if (mMultiviewImplementationType == MultiviewImplementationTypeGL::NV_VIEWPORT_ARRAY2)
     {
         options |= SH_INITIALIZE_BUILTINS_FOR_INSTANCED_MULTIVIEW;

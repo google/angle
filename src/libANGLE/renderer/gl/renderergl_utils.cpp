@@ -1157,6 +1157,10 @@ void GenerateWorkarounds(const FunctionsGL *functions, WorkaroundsGL *workaround
 
     workarounds->rewriteVectorScalarArithmetic = IsNvidia(vendor);
 
+    // TODO(oetuaho): Make this specific to the affected driver versions. Versions at least up to
+    // 390 are known to be affected. Versions after that are expected not to be affected.
+    workarounds->clampFragDepth = IsNvidia(vendor);
+
 #if defined(ANGLE_PLATFORM_ANDROID)
     // TODO(jmadill): Narrow workaround range for specific devices.
     workarounds->reapplyUBOBindingsAfterUsingBinaryProgram = true;

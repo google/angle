@@ -301,14 +301,12 @@ class BuiltinVariableFragDepthClampingFloatRBOTest : public ANGLETest
 // Test that gl_FragDepth is clamped above 0
 TEST_P(BuiltinVariableFragDepthClampingFloatRBOTest, Above0)
 {
-    ANGLE_SKIP_TEST_IF(IsNVIDIA());
     CheckDepthWritten(0.0f, -1.0f);
 }
 
 // Test that gl_FragDepth is clamped below 1
 TEST_P(BuiltinVariableFragDepthClampingFloatRBOTest, Below1)
 {
-    ANGLE_SKIP_TEST_IF(IsNVIDIA());
     CheckDepthWritten(1.0f, 42.0f);
 }
 

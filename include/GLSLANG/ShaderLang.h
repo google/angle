@@ -25,7 +25,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 194
+#define ANGLE_SH_VERSION 195
 
 enum ShShaderSpec
 {
@@ -257,6 +257,9 @@ const ShCompileOptions SH_DONT_USE_LOOPS_TO_INITIALIZE_VARIABLES = UINT64_C(1) <
 // around a bug in NVIDIA D3D driver version 388.59 where in very specific cases the driver would
 // not handle constant register zero correctly. Only has an effect on HLSL translation.
 const ShCompileOptions SH_SKIP_D3D_CONSTANT_REGISTER_ZERO = UINT64_C(1) << 37;
+
+// Clamp gl_FragDepth to the range [0.0, 1.0] in case it is statically used.
+const ShCompileOptions SH_CLAMP_FRAG_DEPTH = UINT64_C(1) << 38;
 
 // Defines alternate strategies for implementing array index clamping.
 enum ShArrayIndexClampingStrategy

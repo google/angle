@@ -143,6 +143,10 @@ struct WorkaroundsGL
 
     // On some Android devices for loops used to initialize variables hit native GLSL compiler bugs.
     bool dontUseLoopsToInitializeVariables = false;
+
+    // On some NVIDIA drivers gl_FragDepth is not clamped correctly when rendering to a floating
+    // point depth buffer. Clamp it in the translated shader to fix this.
+    bool clampFragDepth = false;
 };
 
 inline WorkaroundsGL::WorkaroundsGL() = default;
