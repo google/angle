@@ -201,6 +201,24 @@
     },
     {
       "key": {
+        "uuid": "1a5e26ba_54250fef",
+        "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 422,
+      "author": {
+        "id": 1166724
+      },
+      "writtenOn": "2017-12-21T17:17:04Z",
+      "side": 1,
+      "message": "Thanks Yizhou for clarifying. It might be a good idea to `assert(dummy \u003d\u003d nullptr)` in dtor. That way it\u0027s impossible for it to leak and not know about it. :)",
+      "parentUuid": "8563289b_349a33f4",
+      "revId": "4a99816d78fd2f9da708c098706358b46294803c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "bdeddc25_8ab2a641",
         "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.h",
         "patchSetId": 4
