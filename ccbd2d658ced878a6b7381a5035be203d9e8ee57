@@ -1,0 +1,188 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "53e0dd7a_6a655cec",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1962,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-21T16:32:11Z",
+      "side": 1,
+      "message": "nit: isGraphicsShaderAttached",
+      "range": {
+        "startLine": 1962,
+        "startChar": 9,
+        "endLine": 1962,
+        "endChar": 35
+      },
+      "revId": "ccbd2d658ced878a6b7381a5035be203d9e8ee57",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e77fda1b_5e36f507",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1968,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-21T16:32:11Z",
+      "side": 1,
+      "message": "nit: Both compute and graphics shaders are attached...",
+      "range": {
+        "startLine": 1968,
+        "startChar": 21,
+        "endLine": 1968,
+        "endChar": 63
+      },
+      "revId": "ccbd2d658ced878a6b7381a5035be203d9e8ee57",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6ad1c707_4dca9c40",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1995,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-21T16:32:11Z",
+      "side": 1,
+      "message": "can you add the info log message here",
+      "range": {
+        "startLine": 1995,
+        "startChar": 12,
+        "endLine": 1995,
+        "endChar": 19
+      },
+      "revId": "ccbd2d658ced878a6b7381a5035be203d9e8ee57",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1308ea9b_7bd42b6e",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2001,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-21T16:32:11Z",
+      "side": 1,
+      "message": "can you add the info log message here",
+      "range": {
+        "startLine": 2001,
+        "startChar": 12,
+        "endLine": 2001,
+        "endChar": 19
+      },
+      "revId": "ccbd2d658ced878a6b7381a5035be203d9e8ee57",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "584ced47_887a2f06",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2024,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-21T16:32:11Z",
+      "side": 1,
+      "message": "I don\u0027t think it is better to put the check here - better to put it back in linkValidateBuiltInVaryings.",
+      "range": {
+        "startLine": 2024,
+        "startChar": 8,
+        "endLine": 2024,
+        "endChar": 38
+      },
+      "revId": "ccbd2d658ced878a6b7381a5035be203d9e8ee57",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8c392903_68f95b0c",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2032,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-21T16:32:11Z",
+      "side": 1,
+      "message": "I don\u0027t like this new name. Please restore the code to how it was before.",
+      "range": {
+        "startLine": 2032,
+        "startChar": 14,
+        "endLine": 2032,
+        "endChar": 51
+      },
+      "revId": "ccbd2d658ced878a6b7381a5035be203d9e8ee57",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4590e265_5f1cee0d",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2473,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-21T16:32:11Z",
+      "side": 1,
+      "message": "ValidateGraphicsInterfaceBlocks - I think you can that method static.",
+      "range": {
+        "startLine": 2473,
+        "startChar": 13,
+        "endLine": 2473,
+        "endChar": 43
+      },
+      "revId": "ccbd2d658ced878a6b7381a5035be203d9e8ee57",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3023a139_6ddd2e68",
+        "filename": "src/libANGLE/ProgramLinkedResources.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-21T16:32:11Z",
+      "side": 1,
+      "message": "validateGraphicsUniforms",
+      "range": {
+        "startLine": 81,
+        "startChar": 9,
+        "endLine": 81,
+        "endChar": 32
+      },
+      "revId": "ccbd2d658ced878a6b7381a5035be203d9e8ee57",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
