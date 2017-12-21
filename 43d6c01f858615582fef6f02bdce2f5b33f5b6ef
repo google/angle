@@ -575,6 +575,24 @@
     },
     {
       "key": {
+        "uuid": "75b29d3e_1eeb0e59",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 893,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-12-21T20:28:36Z",
+      "side": 1,
+      "message": "The run time is the same as your code, which is roughly the same as https://en.wikipedia.org/wiki/Topological_sorting#Depth-first_search.\nAll we\u0027re saying is it should be in a separate function called topologicalSort() because that is a well understood tool.  The name says it all to anyone who is familiar with it.",
+      "parentUuid": "40caf1f3_ffc29268",
+      "revId": "43d6c01f858615582fef6f02bdce2f5b33f5b6ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b9875219_f1bbec24",
         "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
         "patchSetId": 24
