@@ -15,6 +15,7 @@
 #include "common/utilities.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/ErrorStrings.h"
+#include "libANGLE/Fence.h"
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/FramebufferAttachment.h"
 #include "libANGLE/Renderbuffer.h"
@@ -6342,6 +6343,152 @@ bool ValidateUseProgram(Context *context, GLuint program)
         context
             ->handleError(InvalidOperation()
                           << "Cannot change active program while transform feedback is unpaused.");
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateDeleteFencesNV(Context *context, GLsizei n, const GLuint *fences)
+{
+    if (!context->getExtensions().fence)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), NVFenceNotSupported);
+        return false;
+    }
+
+    if (n < 0)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidValue(), NegativeCount);
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateFinishFenceNV(Context *context, GLuint fence)
+{
+    if (!context->getExtensions().fence)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), NVFenceNotSupported);
+        return false;
+    }
+
+    FenceNV *fenceObject = context->getFenceNV(fence);
+
+    if (fenceObject == nullptr)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), InvalidFence);
+        return false;
+    }
+
+    if (!fenceObject->isSet())
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), InvalidFenceState);
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateGenFencesNV(Context *context, GLsizei n, GLuint *fences)
+{
+    if (!context->getExtensions().fence)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), NVFenceNotSupported);
+        return false;
+    }
+
+    if (n < 0)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidValue(), NegativeCount);
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateGetFenceivNV(Context *context, GLuint fence, GLenum pname, GLint *params)
+{
+    if (!context->getExtensions().fence)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), NVFenceNotSupported);
+        return false;
+    }
+
+    FenceNV *fenceObject = context->getFenceNV(fence);
+
+    if (fenceObject == nullptr)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), InvalidFence);
+        return false;
+    }
+
+    if (!fenceObject->isSet())
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), InvalidFenceState);
+        return false;
+    }
+
+    switch (pname)
+    {
+        case GL_FENCE_STATUS_NV:
+        case GL_FENCE_CONDITION_NV:
+            break;
+
+        default:
+            ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidPname);
+            return false;
+    }
+
+    return true;
+}
+
+bool ValidateGetGraphicsResetStatusEXT(Context *context)
+{
+    if (!context->getExtensions().robustness)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ExtensionNotEnabled);
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateGetTranslatedShaderSourceANGLE(Context *context,
+                                            GLuint shader,
+                                            GLsizei bufsize,
+                                            GLsizei *length,
+                                            GLchar *source)
+{
+    if (!context->getExtensions().translatedShaderSource)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ExtensionNotEnabled);
+        return false;
+    }
+
+    if (bufsize < 0)
+    {
+        context->handleError(InvalidValue());
+        return false;
+    }
+
+    Shader *shaderObject = context->getShader(shader);
+
+    if (!shaderObject)
+    {
+        context->handleError(InvalidOperation());
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateIsFenceNV(Context *context, GLuint fence)
+{
+    if (!context->getExtensions().fence)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), NVFenceNotSupported);
         return false;
     }
 

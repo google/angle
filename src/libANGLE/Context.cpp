@@ -630,11 +630,14 @@ GLuint Context::createFramebuffer()
     return mState.mFramebuffers->createFramebuffer();
 }
 
-GLuint Context::createFenceNV()
+void Context::genFencesNV(GLsizei n, GLuint *fences)
 {
-    GLuint handle = mFenceNVHandleAllocator.allocate();
-    mFenceNVMap.assign(handle, new FenceNV(mImplementation->createFenceNV()));
-    return handle;
+    for (int i = 0; i < n; i++)
+    {
+        GLuint handle = mFenceNVHandleAllocator.allocate();
+        mFenceNVMap.assign(handle, new FenceNV(mImplementation->createFenceNV()));
+        fences[i] = handle;
+    }
 }
 
 GLuint Context::createProgramPipeline()
@@ -807,13 +810,18 @@ void Context::deleteFramebuffer(GLuint framebuffer)
     mState.mFramebuffers->deleteObject(this, framebuffer);
 }
 
-void Context::deleteFenceNV(GLuint fence)
+void Context::deleteFencesNV(GLsizei n, const GLuint *fences)
 {
-    FenceNV *fenceObject = nullptr;
-    if (mFenceNVMap.erase(fence, &fenceObject))
+    for (int i = 0; i < n; i++)
     {
-        mFenceNVHandleAllocator.release(fence);
-        delete fenceObject;
+        GLuint fence = fences[i];
+
+        FenceNV *fenceObject = nullptr;
+        if (mFenceNVMap.erase(fence, &fenceObject))
+        {
+            mFenceNVHandleAllocator.release(fence);
+            delete fenceObject;
+        }
     }
 }
 
@@ -5643,6 +5651,101 @@ GLboolean Context::isProgramPipeline(GLuint pipeline)
     }
 
     return (getProgramPipeline(pipeline) ? GL_TRUE : GL_FALSE);
+}
+
+void Context::finishFenceNV(GLuint fence)
+{
+    FenceNV *fenceObject = getFenceNV(fence);
+
+    ASSERT(fenceObject && fenceObject->isSet());
+    handleError(fenceObject->finish());
+}
+
+void Context::getFenceivNV(GLuint fence, GLenum pname, GLint *params)
+{
+    FenceNV *fenceObject = getFenceNV(fence);
+
+    ASSERT(fenceObject && fenceObject->isSet());
+
+    switch (pname)
+    {
+        case GL_FENCE_STATUS_NV:
+        {
+            // GL_NV_fence spec:
+            // Once the status of a fence has been finished (via FinishFenceNV) or tested and
+            // the returned status is TRUE (via either TestFenceNV or GetFenceivNV querying the
+            // FENCE_STATUS_NV), the status remains TRUE until the next SetFenceNV of the fence.
+            GLboolean status = GL_TRUE;
+            if (fenceObject->getStatus() != GL_TRUE)
+            {
+                ANGLE_CONTEXT_TRY(fenceObject->test(&status));
+            }
+            *params = status;
+            break;
+        }
+
+        case GL_FENCE_CONDITION_NV:
+        {
+            *params = static_cast<GLint>(fenceObject->getCondition());
+            break;
+        }
+
+        default:
+            UNREACHABLE();
+    }
+}
+
+void Context::getTranslatedShaderSource(GLuint shader,
+                                        GLsizei bufsize,
+                                        GLsizei *length,
+                                        GLchar *source)
+{
+    Shader *shaderObject = getShader(shader);
+    ASSERT(shaderObject);
+    shaderObject->getTranslatedSourceWithDebugInfo(this, bufsize, length, source);
+}
+
+void Context::getnUniformfv(GLuint program, GLint location, GLsizei bufSize, GLfloat *params)
+{
+    Program *programObject = getProgram(program);
+    ASSERT(programObject);
+
+    programObject->getUniformfv(this, location, params);
+}
+
+void Context::getnUniformiv(GLuint program, GLint location, GLsizei bufSize, GLint *params)
+{
+    Program *programObject = getProgram(program);
+    ASSERT(programObject);
+
+    programObject->getUniformiv(this, location, params);
+}
+
+GLboolean Context::isFenceNV(GLuint fence)
+{
+    FenceNV *fenceObject = getFenceNV(fence);
+
+    if (fenceObject == nullptr)
+    {
+        return GL_FALSE;
+    }
+
+    // GL_NV_fence spec:
+    // A name returned by GenFencesNV, but not yet set via SetFenceNV, is not the name of an
+    // existing fence.
+    return fenceObject->isSet();
+}
+
+void Context::readnPixels(GLint x,
+                          GLint y,
+                          GLsizei width,
+                          GLsizei height,
+                          GLenum format,
+                          GLenum type,
+                          GLsizei bufSize,
+                          void *data)
+{
+    return readPixels(x, y, width, height, format, type, data);
 }
 
 }  // namespace gl

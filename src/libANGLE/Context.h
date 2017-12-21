@@ -115,8 +115,11 @@ class Context final : public ValidationContext
     void deleteFramebuffer(GLuint framebuffer);
 
     // NV Fences are owned by the Context.
-    GLuint createFenceNV();
-    void deleteFenceNV(GLuint fence);
+    void genFencesNV(GLsizei n, GLuint *fences);
+    void deleteFencesNV(GLsizei n, const GLuint *fences);
+    void finishFenceNV(GLuint fence);
+    void getFenceivNV(GLuint fence, GLenum pname, GLint *params);
+    GLboolean isFenceNV(GLuint fence);
 
     void bindTexture(GLenum target, GLuint handle);
     void bindReadFramebuffer(GLuint framebufferHandle);
@@ -964,6 +967,18 @@ class Context final : public ValidationContext
     void deleteProgramPipelines(GLsizei n, const GLuint *pipelines);
     void genProgramPipelines(GLsizei n, GLuint *pipelines);
     GLboolean isProgramPipeline(GLuint pipeline);
+
+    void getTranslatedShaderSource(GLuint shader, GLsizei bufsize, GLsizei *length, GLchar *source);
+    void getnUniformfv(GLuint program, GLint location, GLsizei bufSize, GLfloat *params);
+    void getnUniformiv(GLuint program, GLint location, GLsizei bufSize, GLint *params);
+    void readnPixels(GLint x,
+                     GLint y,
+                     GLsizei width,
+                     GLsizei height,
+                     GLenum format,
+                     GLenum type,
+                     GLsizei bufSize,
+                     void *data);
 
     // Consumes the error.
     void handleError(const Error &error) override;

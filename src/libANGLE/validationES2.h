@@ -682,6 +682,19 @@ bool ValidateUniform1iv(ValidationContext *context,
                         const GLint *value);
 bool ValidateUseProgram(Context *context, GLuint program);
 
+// Extension validation
+bool ValidateDeleteFencesNV(Context *context, GLsizei n, const GLuint *fences);
+bool ValidateFinishFenceNV(Context *context, GLuint fence);
+bool ValidateGenFencesNV(Context *context, GLsizei n, GLuint *fences);
+bool ValidateGetFenceivNV(Context *context, GLuint fence, GLenum pname, GLint *params);
+bool ValidateGetGraphicsResetStatusEXT(Context *context);
+bool ValidateGetTranslatedShaderSourceANGLE(Context *context,
+                                            GLuint shader,
+                                            GLsizei bufsize,
+                                            GLsizei *length,
+                                            GLchar *source);
+bool ValidateIsFenceNV(Context *context, GLuint fence);
+
 }  // namespace gl
 
 #endif  // LIBANGLE_VALIDATION_ES2_H_

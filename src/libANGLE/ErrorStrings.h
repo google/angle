@@ -67,6 +67,8 @@ ERRMSG(InvalidDepthRange, "Near value cannot be greater than far.");
 ERRMSG(InvalidDrawMode, "Invalid draw mode.");
 ERRMSG(InvalidDrawModeTransformFeedback,
        "Draw mode must match current transform feedback object's draw mode.");
+ERRMSG(InvalidFence, "Invalid fence object.");
+ERRMSG(InvalidFenceState, "Fence must be set.");
 ERRMSG(InvalidFillMode, "Invalid fill mode.");
 ERRMSG(InvalidFilterTexture, "Texture only supports NEAREST and LINEAR filtering.");
 ERRMSG(InvalidFormat, "Invalid format.");
@@ -135,6 +137,7 @@ ERRMSG(NoSuchPath, "No such path object.");
 ERRMSG(NoTransformFeedbackOutputVariables,
     "The active program has specified no output variables to record.");
 ERRMSG(NoZeroDivisor, "At least one enabled attribute must have a divisor of zero.");
+ERRMSG(NVFenceNotSupported, "GL_NV_fence is not supported");
 ERRMSG(ObjectNotGenerated, "Object cannot be used because it has not been generated.");
 ERRMSG(OffsetMustBeMultipleOfType, "Offset must be a multiple of the passed in datatype.");
 ERRMSG(OffsetMustBeMultipleOfUint,

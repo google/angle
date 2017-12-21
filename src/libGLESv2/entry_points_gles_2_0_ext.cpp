@@ -152,7 +152,7 @@ void GL_APIENTRY GetQueryivEXT(GLenum target, GLenum pname, GLint *params)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateGetQueryivEXT(context, target, pname, params))
+        if (!context->skipValidation() && !ValidateGetQueryivEXT(context, target, pname, params))
         {
             return;
         }
@@ -168,7 +168,7 @@ void GL_APIENTRY GetQueryObjectivEXT(GLuint id, GLenum pname, GLint *params)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateGetQueryObjectivEXT(context, id, pname, params))
+        if (!context->skipValidation() && !ValidateGetQueryObjectivEXT(context, id, pname, params))
         {
             return;
         }
@@ -184,7 +184,7 @@ void GL_APIENTRY GetQueryObjectuivEXT(GLuint id, GLenum pname, GLuint *params)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateGetQueryObjectuivEXT(context, id, pname, params))
+        if (!context->skipValidation() && !ValidateGetQueryObjectuivEXT(context, id, pname, params))
         {
             return;
         }
@@ -200,7 +200,8 @@ void GL_APIENTRY GetQueryObjecti64vEXT(GLuint id, GLenum pname, GLint64 *params)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateGetQueryObjecti64vEXT(context, id, pname, params))
+        if (!context->skipValidation() &&
+            !ValidateGetQueryObjecti64vEXT(context, id, pname, params))
         {
             return;
         }
@@ -216,7 +217,8 @@ void GL_APIENTRY GetQueryObjectui64vEXT(GLuint id, GLenum pname, GLuint64 *param
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateGetQueryObjectui64vEXT(context, id, pname, params))
+        if (!context->skipValidation() &&
+            !ValidateGetQueryObjectui64vEXT(context, id, pname, params))
         {
             return;
         }
@@ -232,16 +234,12 @@ void GL_APIENTRY DeleteFencesNV(GLsizei n, const GLuint *fences)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (n < 0)
+        if (!context->skipValidation() && !ValidateDeleteFencesNV(context, n, fences))
         {
-            context->handleError(InvalidValue());
             return;
         }
 
-        for (int i = 0; i < n; i++)
-        {
-            context->deleteFenceNV(fences[i]);
-        }
+        context->deleteFencesNV(n, fences);
     }
 }
 
@@ -256,7 +254,8 @@ void GL_APIENTRY DrawArraysInstancedANGLE(GLenum mode,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateDrawArraysInstancedANGLE(context, mode, first, count, primcount))
+        if (!context->skipValidation() &&
+            !ValidateDrawArraysInstancedANGLE(context, mode, first, count, primcount))
         {
             return;
         }
@@ -299,21 +298,12 @@ void GL_APIENTRY FinishFenceNV(GLuint fence)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        FenceNV *fenceObject = context->getFenceNV(fence);
-
-        if (fenceObject == nullptr)
+        if (!context->skipValidation() && !ValidateFinishFenceNV(context, fence))
         {
-            context->handleError(InvalidOperation());
             return;
         }
 
-        if (fenceObject->isSet() != GL_TRUE)
-        {
-            context->handleError(InvalidOperation());
-            return;
-        }
-
-        context->handleError(fenceObject->finish());
+        context->finishFenceNV(fence);
     }
 }
 
@@ -324,16 +314,12 @@ void GL_APIENTRY GenFencesNV(GLsizei n, GLuint *fences)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (n < 0)
+        if (!context->skipValidation() && !ValidateGenFencesNV(context, n, fences))
         {
-            context->handleError(InvalidValue());
             return;
         }
 
-        for (int i = 0; i < n; i++)
-        {
-            fences[i] = context->createFenceNV();
-        }
+        context->genFencesNV(n, fences);
     }
 }
 
@@ -345,58 +331,16 @@ void GL_APIENTRY GetFenceivNV(GLuint fence, GLenum pname, GLint *params)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        FenceNV *fenceObject = context->getFenceNV(fence);
-
-        if (fenceObject == nullptr)
+        if (!context->skipValidation() && !ValidateGetFenceivNV(context, fence, pname, params))
         {
-            context->handleError(InvalidOperation());
             return;
         }
 
-        if (fenceObject->isSet() != GL_TRUE)
-        {
-            context->handleError(InvalidOperation());
-            return;
-        }
-
-        switch (pname)
-        {
-            case GL_FENCE_STATUS_NV:
-            {
-                // GL_NV_fence spec:
-                // Once the status of a fence has been finished (via FinishFenceNV) or tested and
-                // the returned status is TRUE (via either TestFenceNV or GetFenceivNV querying the
-                // FENCE_STATUS_NV), the status remains TRUE until the next SetFenceNV of the fence.
-                GLboolean status = GL_TRUE;
-                if (fenceObject->getStatus() != GL_TRUE)
-                {
-                    Error error = fenceObject->test(&status);
-                    if (error.isError())
-                    {
-                        context->handleError(error);
-                        return;
-                    }
-                }
-                *params = status;
-                break;
-            }
-
-            case GL_FENCE_CONDITION_NV:
-            {
-                *params = static_cast<GLint>(fenceObject->getCondition());
-                break;
-            }
-
-            default:
-            {
-                context->handleError(InvalidEnum());
-                return;
-            }
-        }
+        context->getFenceivNV(fence, pname, params);
     }
 }
 
-GLenum GL_APIENTRY GetGraphicsResetStatusEXT(void)
+GLenum GL_APIENTRY GetGraphicsResetStatusEXT()
 {
     EVENT("()");
 
@@ -404,6 +348,11 @@ GLenum GL_APIENTRY GetGraphicsResetStatusEXT(void)
 
     if (context)
     {
+        if (!context->skipValidation() && !ValidateGetGraphicsResetStatusEXT(context))
+        {
+            return GL_NO_ERROR;
+        }
+
         return context->getResetStatus();
     }
 
@@ -423,21 +372,13 @@ void GL_APIENTRY GetTranslatedShaderSourceANGLE(GLuint shader,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (bufsize < 0)
+        if (!context->skipValidation() &&
+            !ValidateGetTranslatedShaderSourceANGLE(context, shader, bufsize, length, source))
         {
-            context->handleError(InvalidValue());
             return;
         }
 
-        Shader *shaderObject = context->getShader(shader);
-
-        if (!shaderObject)
-        {
-            context->handleError(InvalidOperation());
-            return;
-        }
-
-        shaderObject->getTranslatedSourceWithDebugInfo(context, bufsize, length, source);
+        context->getTranslatedShaderSource(shader, bufsize, length, source);
     }
 }
 
@@ -451,15 +392,13 @@ void GL_APIENTRY GetnUniformfvEXT(GLuint program, GLint location, GLsizei bufSiz
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateGetnUniformfvEXT(context, program, location, bufSize, params))
+        if (!context->skipValidation() &&
+            !ValidateGetnUniformfvEXT(context, program, location, bufSize, params))
         {
             return;
         }
 
-        Program *programObject = context->getProgram(program);
-        ASSERT(programObject);
-
-        programObject->getUniformfv(context, location, params);
+        context->getnUniformfv(program, location, bufSize, params);
     }
 }
 
@@ -472,15 +411,13 @@ void GL_APIENTRY GetnUniformivEXT(GLuint program, GLint location, GLsizei bufSiz
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateGetnUniformivEXT(context, program, location, bufSize, params))
+        if (!context->skipValidation() &&
+            !ValidateGetnUniformivEXT(context, program, location, bufSize, params))
         {
             return;
         }
 
-        Program *programObject = context->getProgram(program);
-        ASSERT(programObject);
-
-        programObject->getUniformiv(context, location, params);
+        context->getnUniformiv(program, location, bufSize, params);
     }
 }
 
@@ -491,17 +428,12 @@ GLboolean GL_APIENTRY IsFenceNV(GLuint fence)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        FenceNV *fenceObject = context->getFenceNV(fence);
-
-        if (fenceObject == nullptr)
+        if (!context->skipValidation() && !ValidateIsFenceNV(context, fence))
         {
             return GL_FALSE;
         }
 
-        // GL_NV_fence spec:
-        // A name returned by GenFencesNV, but not yet set via SetFenceNV, is not the name of an
-        // existing fence.
-        return fenceObject->isSet();
+        return context->isFenceNV(fence);
     }
 
     return GL_FALSE;
@@ -530,7 +462,7 @@ void GL_APIENTRY ReadnPixelsEXT(GLint x,
             return;
         }
 
-        context->readPixels(x, y, width, height, format, type, data);
+        context->readnPixels(x, y, width, height, format, type, bufSize, data);
     }
 }
 
