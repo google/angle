@@ -46,6 +46,30 @@
       "revId": "887e2e7b8a0e915dbc346bb3ca7000553c3dcdce",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7c388480_3eb512e8",
+        "filename": "src/compiler/translator/SymbolUniqueId.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-21T20:12:29Z",
+      "side": 1,
+      "message": "yes, it can and should be in the cpp. this is the only way to ensure it\u0027s not inlined and is required by chromium style (which I\u0027m slowly in the process of moving us towards).",
+      "parentUuid": "e865e117_51fabb83",
+      "range": {
+        "startLine": 25,
+        "startChar": 0,
+        "endLine": 26,
+        "endChar": 66
+      },
+      "revId": "887e2e7b8a0e915dbc346bb3ca7000553c3dcdce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
