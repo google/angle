@@ -1414,6 +1414,9 @@ void main()
 // Regression test for a dirty bit bug in ANGLE. See http://crbug.com/792966
 TEST_P(UniformBufferTest, SimpleBindingChange)
 {
+    // http://anglebug.com/2287
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsNVIDIA() && IsDesktopOpenGL());
+
     ANGLE_GL_PROGRAM(program, kVertexShader, kFragmentShader);
 
     glBindAttribLocation(program, 0, "a_vertex");
@@ -1459,9 +1462,6 @@ TEST_P(UniformBufferTest, SimpleBindingChange)
 // Regression test for a dirty bit bug in ANGLE. Same as above but for the indexed bindings.
 TEST_P(UniformBufferTest, SimpleBufferChange)
 {
-    // anglebug.com/2287
-    ANGLE_SKIP_TEST_IF(IsOSX() && IsNVIDIA() && IsDesktopOpenGL());
-
     ANGLE_GL_PROGRAM(program, kVertexShader, kFragmentShader);
 
     glBindAttribLocation(program, 0, "a_vertex");
