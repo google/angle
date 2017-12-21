@@ -22,6 +22,30 @@
       "revId": "3ecdf063c6b94a076d31428d5b750ba5e4483c2c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "392f548d_507d21fe",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 525,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-12-21T19:46:49Z",
+      "side": 0,
+      "message": "Yep :) Very happy to get of these duplicate data structures. More of this coming up.",
+      "parentUuid": "c79df200_7a21e793",
+      "range": {
+        "startLine": 525,
+        "startChar": 6,
+        "endLine": 525,
+        "endChar": 25
+      },
+      "revId": "3ecdf063c6b94a076d31428d5b750ba5e4483c2c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
