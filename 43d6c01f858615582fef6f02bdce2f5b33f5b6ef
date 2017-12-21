@@ -593,6 +593,24 @@
     },
     {
       "key": {
+        "uuid": "7df6c9d1_ac474231",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 893,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-21T20:31:06Z",
+      "side": 1,
+      "message": "How could different code that does a sort have the same run time? I think you mean the computational complexity is the same, but that\u0027s very different from the run time of my code. I think in order to be convinced I would need to see a perf test that shows an improvement for the increased complexity. Hopefully we can agree to take this up later and land the simpler code I have here immediately.",
+      "parentUuid": "75b29d3e_1eeb0e59",
+      "revId": "43d6c01f858615582fef6f02bdce2f5b33f5b6ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b9875219_f1bbec24",
         "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
         "patchSetId": 24
