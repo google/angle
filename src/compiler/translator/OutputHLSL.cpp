@@ -82,6 +82,12 @@ bool IsInStd140InterfaceBlock(TIntermTyped *node)
 
 }  // anonymous namespace
 
+TReferencedBlock::TReferencedBlock(const TInterfaceBlock *aBlock,
+                                   const TVariable *aInstanceVariable)
+    : block(aBlock), instanceVariable(aInstanceVariable)
+{
+}
+
 void OutputHLSL::writeFloat(TInfoSinkBase &out, float f)
 {
     // This is known not to work for NaN on all drivers but make the best effort to output NaNs
@@ -896,7 +902,16 @@ void OutputHLSL::visitSymbol(TIntermSymbol *node)
 
             if (interfaceBlock)
             {
-                mReferencedUniformBlocks[interfaceBlock->uniqueId().get()] = node;
+                if (mReferencedUniformBlocks.count(interfaceBlock->uniqueId().get()) == 0)
+                {
+                    const TVariable *instanceVariable = nullptr;
+                    if (variableType.isInterfaceBlock())
+                    {
+                        instanceVariable = &variable;
+                    }
+                    mReferencedUniformBlocks[interfaceBlock->uniqueId().get()] =
+                        new TReferencedBlock(interfaceBlock, instanceVariable);
+                }
             }
             else
             {
@@ -1242,10 +1257,13 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
             {
                 if (visit == PreVisit)
                 {
-                    TInterfaceBlock *interfaceBlock = leftType.getInterfaceBlock();
                     TIntermSymbol *instanceArraySymbol = node->getLeft()->getAsSymbolNode();
-                    mReferencedUniformBlocks[interfaceBlock->uniqueId().get()] =
-                        instanceArraySymbol;
+                    TInterfaceBlock *interfaceBlock    = leftType.getInterfaceBlock();
+                    if (mReferencedUniformBlocks.count(interfaceBlock->uniqueId().get()) == 0)
+                    {
+                        mReferencedUniformBlocks[interfaceBlock->uniqueId().get()] =
+                            new TReferencedBlock(interfaceBlock, &instanceArraySymbol->variable());
+                    }
                     const int arrayIndex = node->getRight()->getAsConstantUnion()->getIConst(0);
                     out << mUniformHLSL->UniformBlockInstanceString(instanceArraySymbol->getName(),
                                                                     arrayIndex);

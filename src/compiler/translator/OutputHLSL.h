@@ -24,13 +24,22 @@ namespace sh
 class StructureHLSL;
 class TextureFunctionHLSL;
 class TSymbolTable;
+class TVariable;
 class ImageFunctionHLSL;
 class UnfoldShortCircuit;
 class UniformHLSL;
 
-// Maps from uniqueId to a symbol node or a variable.
-typedef std::map<int, TIntermSymbol *> ReferencedSymbols;
-typedef std::map<int, const TVariable *> ReferencedVariables;
+struct TReferencedBlock : angle::NonCopyable
+{
+    POOL_ALLOCATOR_NEW_DELETE();
+    TReferencedBlock(const TInterfaceBlock *block, const TVariable *instanceVariable);
+    const TInterfaceBlock *block;
+    const TVariable *instanceVariable;  // May be nullptr if the block is not instanced.
+};
+
+// Maps from uniqueId to a variable.
+using ReferencedInterfaceBlocks = std::map<int, const TReferencedBlock *>;
+using ReferencedVariables       = std::map<int, const TVariable *>;
 
 class OutputHLSL : public TIntermTraverser
 {
@@ -158,11 +167,8 @@ class OutputHLSL : public TIntermTraverser
 
     ReferencedVariables mReferencedUniforms;
 
-    // Indexed by block id, not instance id. Stored nodes point to either the block instance in
-    // the case of an instanced block, or a member uniform in the case of a non-instanced block.
-    // TODO(oetuaho): Consider a different type of data structure for storing referenced interface
-    // blocks. It needs to know the instance name if any and link to the TInterfaceBlock object.
-    ReferencedSymbols mReferencedUniformBlocks;
+    // Indexed by block id, not instance id.
+    ReferencedInterfaceBlocks mReferencedUniformBlocks;
 
     ReferencedVariables mReferencedAttributes;
     ReferencedVariables mReferencedVaryings;

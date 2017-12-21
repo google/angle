@@ -457,21 +457,15 @@ void UniformHLSL::samplerMetadataUniforms(TInfoSinkBase &out, const char *reg)
     }
 }
 
-TString UniformHLSL::uniformBlocksHeader(const ReferencedSymbols &referencedInterfaceBlocks)
+TString UniformHLSL::uniformBlocksHeader(const ReferencedInterfaceBlocks &referencedInterfaceBlocks)
 {
     TString interfaceBlocks;
 
-    for (const auto &interfaceBlockReference : referencedInterfaceBlocks)
+    for (const auto &blockReference : referencedInterfaceBlocks)
     {
-        const TType &nodeType                 = interfaceBlockReference.second->getType();
-        const TInterfaceBlock &interfaceBlock = *nodeType.getInterfaceBlock();
-
-        // nodeType.isInterfaceBlock() == false means the node is a field of a uniform block which
-        // doesn't have instance name.
-        const TString &instanceName =
-            nodeType.isInterfaceBlock() ? interfaceBlockReference.second->getName() : "";
-
-        if (instanceName != "")
+        const TInterfaceBlock &interfaceBlock = *blockReference.second->block;
+        const TVariable *instanceVariable     = blockReference.second->instanceVariable;
+        if (instanceVariable != nullptr)
         {
             interfaceBlocks += uniformBlockStructString(interfaceBlock);
         }
@@ -479,21 +473,20 @@ TString UniformHLSL::uniformBlocksHeader(const ReferencedSymbols &referencedInte
         unsigned int activeRegister                             = mUniformBlockRegister;
         mUniformBlockRegisterMap[interfaceBlock.name().c_str()] = activeRegister;
 
-        if (instanceName != "" && nodeType.isArray())
+        if (instanceVariable != nullptr && instanceVariable->getType().isArray())
         {
-            unsigned int interfaceBlockInstanceArraySize = nodeType.getOutermostArraySize();
-            for (unsigned int arrayIndex = 0; arrayIndex < interfaceBlockInstanceArraySize;
-                 arrayIndex++)
+            unsigned int instanceArraySize = instanceVariable->getType().getOutermostArraySize();
+            for (unsigned int arrayIndex = 0; arrayIndex < instanceArraySize; arrayIndex++)
             {
-                interfaceBlocks += uniformBlockString(interfaceBlock, instanceName,
+                interfaceBlocks += uniformBlockString(interfaceBlock, instanceVariable,
                                                       activeRegister + arrayIndex, arrayIndex);
             }
-            mUniformBlockRegister += interfaceBlockInstanceArraySize;
+            mUniformBlockRegister += instanceArraySize;
         }
         else
         {
-            interfaceBlocks +=
-                uniformBlockString(interfaceBlock, instanceName, activeRegister, GL_INVALID_INDEX);
+            interfaceBlocks += uniformBlockString(interfaceBlock, instanceVariable, activeRegister,
+                                                  GL_INVALID_INDEX);
             mUniformBlockRegister += 1u;
         }
     }
@@ -502,7 +495,7 @@ TString UniformHLSL::uniformBlocksHeader(const ReferencedSymbols &referencedInte
 }
 
 TString UniformHLSL::uniformBlockString(const TInterfaceBlock &interfaceBlock,
-                                        const TString &instanceName,
+                                        const TVariable *instanceVariable,
                                         unsigned int registerIndex,
                                         unsigned int arrayIndex)
 {
@@ -515,10 +508,10 @@ TString UniformHLSL::uniformBlockString(const TInterfaceBlock &interfaceBlock,
             ")\n"
             "{\n";
 
-    if (instanceName != "")
+    if (instanceVariable != nullptr)
     {
         hlsl += "    " + InterfaceBlockStructName(interfaceBlock) + " " +
-                UniformBlockInstanceString(instanceName, arrayIndex) + ";\n";
+                UniformBlockInstanceString(instanceVariable->name(), arrayIndex) + ";\n";
     }
     else
     {
