@@ -28,8 +28,9 @@ class ImageFunctionHLSL;
 class UnfoldShortCircuit;
 class UniformHLSL;
 
-// Map from uniqueId to a symbol node.
+// Maps from uniqueId to a symbol node or a variable.
 typedef std::map<int, TIntermSymbol *> ReferencedSymbols;
+typedef std::map<int, const TVariable *> ReferencedVariables;
 
 class OutputHLSL : public TIntermTraverser
 {
@@ -155,7 +156,7 @@ class OutputHLSL : public TIntermTraverser
     // TODO (jmadill): Just passing an InfoSink in function parameters would be simpler.
     std::stack<TInfoSinkBase *> mInfoSinkStack;
 
-    ReferencedSymbols mReferencedUniforms;
+    ReferencedVariables mReferencedUniforms;
 
     // Indexed by block id, not instance id. Stored nodes point to either the block instance in
     // the case of an instanced block, or a member uniform in the case of a non-instanced block.
@@ -163,9 +164,9 @@ class OutputHLSL : public TIntermTraverser
     // blocks. It needs to know the instance name if any and link to the TInterfaceBlock object.
     ReferencedSymbols mReferencedUniformBlocks;
 
-    ReferencedSymbols mReferencedAttributes;
-    ReferencedSymbols mReferencedVaryings;
-    ReferencedSymbols mReferencedOutputVariables;
+    ReferencedVariables mReferencedAttributes;
+    ReferencedVariables mReferencedVaryings;
+    ReferencedVariables mReferencedOutputVariables;
 
     StructureHLSL *mStructureHLSL;
     UniformHLSL *mUniformHLSL;

@@ -31,7 +31,7 @@ class UniformHLSL : angle::NonCopyable
     void reserveUniformBlockRegisters(unsigned int registerCount);
     void uniformsHeader(TInfoSinkBase &out,
                         ShShaderOutput outputType,
-                        const ReferencedSymbols &referencedUniforms,
+                        const ReferencedVariables &referencedUniforms,
                         TSymbolTable *symbolTable);
 
     // Must be called after uniformsHeader
@@ -89,8 +89,8 @@ class UniformHLSL : angle::NonCopyable
     void outputHLSLSamplerUniformGroup(
         TInfoSinkBase &out,
         const HLSLTextureGroup textureGroup,
-        const TVector<const TIntermSymbol *> &group,
-        const TMap<const TIntermSymbol *, TString> &samplerInStructSymbolsToAPINames,
+        const TVector<const TVariable *> &group,
+        const TMap<const TVariable *, TString> &samplerInStructSymbolsToAPINames,
         unsigned int *groupTextureRegisterIndex);
 
     unsigned int mUniformRegister;

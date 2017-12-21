@@ -76,8 +76,8 @@ TStructure::TStructure(TSymbolTable *symbolTable,
 
 void TStructure::createSamplerSymbols(const TString &namePrefix,
                                       const TString &apiNamePrefix,
-                                      TVector<TIntermSymbol *> *outputSymbols,
-                                      TMap<TIntermSymbol *, TString> *outputSymbolsToAPINames,
+                                      TVector<const TVariable *> *outputSymbols,
+                                      TMap<const TVariable *, TString> *outputSymbolsToAPINames,
                                       TSymbolTable *symbolTable) const
 {
     ASSERT(containsSamplers());

@@ -408,8 +408,8 @@ void OutputHLSL::header(TInfoSinkBase &out,
 
     for (const auto &varying : mReferencedVaryings)
     {
-        const TType &type   = varying.second->variable().getType();
-        const TString &name = varying.second->getName();
+        const TType &type   = varying.second->getType();
+        const TString &name = varying.second->name();
 
         // Program linking depends on this exact format
         varyings += "static " + InterpolationString(type.getQualifier()) + " " + TypeString(type) +
@@ -419,7 +419,7 @@ void OutputHLSL::header(TInfoSinkBase &out,
     for (const auto &attribute : mReferencedAttributes)
     {
         const TType &type   = attribute.second->getType();
-        const TString &name = attribute.second->getName();
+        const TString &name = attribute.second->name();
 
         attributes += "static " + TypeString(type) + " " + Decorate(name) + ArrayString(type) +
                       " = " + initializer(type) + ";\n";
@@ -491,7 +491,7 @@ void OutputHLSL::header(TInfoSinkBase &out,
         {
             for (const auto &outputVariable : mReferencedOutputVariables)
             {
-                const TString &variableName = outputVariable.second->getName();
+                const TString &variableName = outputVariable.second->name();
                 const TType &variableType   = outputVariable.second->getType();
 
                 out << "static " + TypeString(variableType) + " out_" + variableName +
@@ -900,19 +900,19 @@ void OutputHLSL::visitSymbol(TIntermSymbol *node)
             }
             else
             {
-                mReferencedUniforms[uniqueId.get()] = node;
+                mReferencedUniforms[uniqueId.get()] = &variable;
             }
 
             out << DecorateVariableIfNeeded(variable);
         }
         else if (qualifier == EvqAttribute || qualifier == EvqVertexIn)
         {
-            mReferencedAttributes[uniqueId.get()] = node;
+            mReferencedAttributes[uniqueId.get()] = &variable;
             out << Decorate(name);
         }
         else if (IsVarying(qualifier))
         {
-            mReferencedVaryings[uniqueId.get()] = node;
+            mReferencedVaryings[uniqueId.get()] = &variable;
             out << Decorate(name);
             if (name == "ViewID_OVR")
             {
@@ -921,7 +921,7 @@ void OutputHLSL::visitSymbol(TIntermSymbol *node)
         }
         else if (qualifier == EvqFragmentOut)
         {
-            mReferencedOutputVariables[uniqueId.get()] = node;
+            mReferencedOutputVariables[uniqueId.get()] = &variable;
             out << "out_" << name;
         }
         else if (qualifier == EvqFragColor)
@@ -1833,11 +1833,13 @@ bool OutputHLSL::visitDeclaration(Visit visit, TIntermDeclaration *node)
             TIntermSymbol *symbol = declarator->getAsSymbolNode();
             ASSERT(symbol);  // Varying declarations can't have initializers.
 
-            if (symbol->variable().symbolType() != SymbolType::Empty)
+            const TVariable &variable = symbol->variable();
+
+            if (variable.symbolType() != SymbolType::Empty)
             {
                 // Vertex outputs which are declared but not written to should still be declared to
                 // allow successful linking.
-                mReferencedVaryings[symbol->uniqueId().get()] = symbol;
+                mReferencedVaryings[symbol->uniqueId().get()] = &variable;
             }
         }
     }
@@ -1966,22 +1968,22 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
                 if (typedArg->getType().isStructureContainingSamplers())
                 {
                     const TType &argType = typedArg->getType();
-                    TVector<TIntermSymbol *> samplerSymbols;
+                    TVector<const TVariable *> samplerSymbols;
                     TString structName = samplerNamePrefixFromStruct(typedArg);
                     argType.createSamplerSymbols("angle_" + structName, "", &samplerSymbols,
                                                  nullptr, mSymbolTable);
-                    for (const TIntermSymbol *sampler : samplerSymbols)
+                    for (const TVariable *sampler : samplerSymbols)
                     {
                         if (mOutputType == SH_HLSL_4_0_FL9_3_OUTPUT)
                         {
-                            out << ", texture_" << sampler->getName();
-                            out << ", sampler_" << sampler->getName();
+                            out << ", texture_" << sampler->name();
+                            out << ", sampler_" << sampler->name();
                         }
                         else
                         {
                             // In case of HLSL 4.1+, this symbol is the sampler index, and in case
                             // of D3D9, it's the sampler variable.
-                            out << ", " + sampler->getName();
+                            out << ", " + sampler->name();
                         }
                     }
                 }
@@ -2661,30 +2663,30 @@ TString OutputHLSL::argumentString(const TIntermSymbol *symbol)
     if (type.isStructureContainingSamplers())
     {
         ASSERT(qualifier != EvqOut && qualifier != EvqInOut);
-        TVector<TIntermSymbol *> samplerSymbols;
+        TVector<const TVariable *> samplerSymbols;
         type.createSamplerSymbols("angle" + nameStr, "", &samplerSymbols, nullptr, mSymbolTable);
-        for (const TIntermSymbol *sampler : samplerSymbols)
+        for (const TVariable *sampler : samplerSymbols)
         {
             const TType &samplerType = sampler->getType();
             if (mOutputType == SH_HLSL_4_1_OUTPUT)
             {
-                argString << ", const uint " << sampler->getName() << ArrayString(samplerType);
+                argString << ", const uint " << sampler->name() << ArrayString(samplerType);
             }
             else if (mOutputType == SH_HLSL_4_0_FL9_3_OUTPUT)
             {
                 ASSERT(IsSampler(samplerType.getBasicType()));
                 argString << ", " << QualifierString(qualifier) << " "
                           << TextureString(samplerType.getBasicType()) << " texture_"
-                          << sampler->getName() << ArrayString(samplerType) << ", "
+                          << sampler->name() << ArrayString(samplerType) << ", "
                           << QualifierString(qualifier) << " "
                           << SamplerString(samplerType.getBasicType()) << " sampler_"
-                          << sampler->getName() << ArrayString(samplerType);
+                          << sampler->name() << ArrayString(samplerType);
             }
             else
             {
                 ASSERT(IsSampler(samplerType.getBasicType()));
                 argString << ", " << QualifierString(qualifier) << " " << TypeString(samplerType)
-                          << " " << sampler->getName() << ArrayString(samplerType);
+                          << " " << sampler->name() << ArrayString(samplerType);
             }
         }
     }

@@ -22,6 +22,7 @@ class TType;
 class TInterfaceBlock;
 class TStructure;
 class TSymbol;
+class TVariable;
 class TIntermSymbol;
 class TSymbolTable;
 
@@ -306,8 +307,8 @@ class TType
 
     void createSamplerSymbols(const TString &namePrefix,
                               const TString &apiNamePrefix,
-                              TVector<TIntermSymbol *> *outputSymbols,
-                              TMap<TIntermSymbol *, TString> *outputSymbolsToAPINames,
+                              TVector<const TVariable *> *outputSymbols,
+                              TMap<const TVariable *, TString> *outputSymbolsToAPINames,
                               TSymbolTable *symbolTable) const;
 
     // Initializes all lazily-initialized members.

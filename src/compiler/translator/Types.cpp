@@ -776,8 +776,8 @@ void TType::invalidateMangledName()
 
 void TType::createSamplerSymbols(const TString &namePrefix,
                                  const TString &apiNamePrefix,
-                                 TVector<TIntermSymbol *> *outputSymbols,
-                                 TMap<TIntermSymbol *, TString> *outputSymbolsToAPINames,
+                                 TVector<const TVariable *> *outputSymbols,
+                                 TMap<const TVariable *, TString> *outputSymbolsToAPINames,
                                  TSymbolTable *symbolTable) const
 {
     if (isStructureContainingSamplers())
@@ -808,11 +808,10 @@ void TType::createSamplerSymbols(const TString &namePrefix,
     ASSERT(IsSampler(type));
     TVariable *variable   = new TVariable(symbolTable, NewPoolTString(namePrefix.c_str()), *this,
                                         SymbolType::AngleInternal);
-    TIntermSymbol *symbol = new TIntermSymbol(variable);
-    outputSymbols->push_back(symbol);
+    outputSymbols->push_back(variable);
     if (outputSymbolsToAPINames)
     {
-        (*outputSymbolsToAPINames)[symbol] = apiNamePrefix;
+        (*outputSymbolsToAPINames)[variable] = apiNamePrefix;
     }
 }
 

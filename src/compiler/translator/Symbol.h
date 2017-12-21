@@ -103,8 +103,8 @@ class TStructure : public TSymbol, public TFieldListCollection
 
     void createSamplerSymbols(const TString &namePrefix,
                               const TString &apiNamePrefix,
-                              TVector<TIntermSymbol *> *outputSymbols,
-                              TMap<TIntermSymbol *, TString> *outputSymbolsToAPINames,
+                              TVector<const TVariable *> *outputSymbols,
+                              TMap<const TVariable *, TString> *outputSymbolsToAPINames,
                               TSymbolTable *symbolTable) const;
 
     void setAtGlobalScope(bool atGlobalScope) { mAtGlobalScope = atGlobalScope; }
