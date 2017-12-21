@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "43e59cbb_ba34aeea",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-12-21T08:05:44Z",
+      "side": 1,
+      "message": "TName is going to be removed in a follow-up patch entirely, so I don\u0027t think it matters too much how it is used in the meantime, as long as there is no functional issue.",
+      "parentUuid": "e2597cce_5efd83b6",
+      "range": {
+        "startLine": 149,
+        "startChar": 1,
+        "endLine": 154,
+        "endChar": 1
+      },
+      "revId": "e6289d3818637cc4304f790b9642005487a83ddb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "826a55ad_3a2a0907",
         "filename": "src/compiler/translator/OutputGLSLBase.h",
         "patchSetId": 8
@@ -36,6 +60,30 @@
       "writtenOn": "2017-12-20T20:40:34Z",
       "side": 1,
       "message": "prefer avoiding overloading here.",
+      "range": {
+        "startLine": 75,
+        "startChar": 12,
+        "endLine": 75,
+        "endChar": 36
+      },
+      "revId": "e6289d3818637cc4304f790b9642005487a83ddb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "51f76918_28290841",
+        "filename": "src/compiler/translator/OutputGLSLBase.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-12-21T08:05:44Z",
+      "side": 1,
+      "message": "The other version of the function will be removed in the next patch. We can squash the two if you think it\u0027s cleaner.",
+      "parentUuid": "826a55ad_3a2a0907",
       "range": {
         "startLine": 75,
         "startChar": 12,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "cebf7b38_7a38512e",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1917,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-12-21T08:05:44Z",
+      "side": 1,
+      "message": "Again, a follow-up patch will take care of this. I wanted to split this work into fairly small chunks because it touches a lot of code.",
+      "parentUuid": "f7349494_60ec2b98",
+      "range": {
+        "startLine": 1917,
+        "startChar": 23,
+        "endLine": 1917,
+        "endChar": 47
+      },
+      "revId": "e6289d3818637cc4304f790b9642005487a83ddb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "c62ff375_f0bf6550",
         "filename": "src/compiler/translator/OutputTree.cpp",
         "patchSetId": 8
@@ -82,6 +154,30 @@
       "writtenOn": "2017-12-20T20:40:34Z",
       "side": 1,
       "message": "nit: can you avoid using overloading here? it\u0027s a mild preference throughout the code to not use overloading when possible, preferring one or two words of extra description in the function name.",
+      "range": {
+        "startLine": 23,
+        "startChar": 5,
+        "endLine": 23,
+        "endChar": 19
+      },
+      "revId": "e6289d3818637cc4304f790b9642005487a83ddb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "05a87149_aad74556",
+        "filename": "src/compiler/translator/OutputTree.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-12-21T08:05:44Z",
+      "side": 1,
+      "message": "Also cleaned up in the next patch.",
+      "parentUuid": "c62ff375_f0bf6550",
       "range": {
         "startLine": 23,
         "startChar": 5,
