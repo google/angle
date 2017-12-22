@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ff70a4b8_1f8bf294",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1529,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2017-12-22T00:34:28Z",
+      "side": 1,
+      "message": "This seems wrong. Shouldn\u0027t it be \\\\\\n?",
+      "range": {
+        "startLine": 1529,
+        "startChar": 26,
+        "endLine": 1529,
+        "endChar": 29
+      },
+      "revId": "335d8bf2f2220d6dc2f3f821f587c04ee5223fa1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
