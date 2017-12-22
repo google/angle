@@ -611,6 +611,24 @@
     },
     {
       "key": {
+        "uuid": "c51f28f6_c89a46a0",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 893,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-12-22T08:32:37Z",
+      "side": 1,
+      "message": "What we\u0027re proposing is no more complicated than your code, will run just as fast, will be easier to understand, and will always detect loops.  There is no down side, and it\u0027s not that much work because it\u0027s not very different from what you have now.\nIf you haven\u0027t understood the suggestion I\u0027m happy to sketch it out for you.",
+      "parentUuid": "7df6c9d1_ac474231",
+      "revId": "43d6c01f858615582fef6f02bdce2f5b33f5b6ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b9875219_f1bbec24",
         "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
         "patchSetId": 24
