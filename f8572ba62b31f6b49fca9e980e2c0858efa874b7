@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "2525728b_41948290",
+        "filename": "gni/angle.gni",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-12-22T07:15:12Z",
+      "side": 1,
+      "message": "not present in next patch set",
+      "parentUuid": "bbb816b2_3195e0bb",
+      "range": {
+        "startLine": 20,
+        "startChar": 0,
+        "endLine": 20,
+        "endChar": 5
+      },
+      "revId": "f8572ba62b31f6b49fca9e980e2c0858efa874b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "7c56698b_2e43a02f",
         "filename": "gni/angle.gni",
         "patchSetId": 1
@@ -60,6 +84,30 @@
       "writtenOn": "2017-12-21T20:14:17Z",
       "side": 1,
       "message": "\"true\" is fine",
+      "range": {
+        "startLine": 26,
+        "startChar": 6,
+        "endLine": 26,
+        "endChar": 67
+      },
+      "revId": "f8572ba62b31f6b49fca9e980e2c0858efa874b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5ed3410d_967fafce",
+        "filename": "gni/angle.gni",
+        "patchSetId": 1
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-12-22T07:15:12Z",
+      "side": 1,
+      "message": "Once upon a time we had to disable gl when is_chromeos\u003d\u003dtrue.\nAnd we need gl when ozone_platform_gbm\u003d\u003dtrue and use_x11\u003d\u003dfalse.\nBut if (is_win || is_linux || is_mac || is_android) is always true we can minimize this to\nozone_platform_gbm || !is_linux || (use_X11 \u0026\u0026 !is_chromeos)",
+      "parentUuid": "7c56698b_2e43a02f",
       "range": {
         "startLine": 26,
         "startChar": 6,
@@ -119,6 +167,30 @@
     },
     {
       "key": {
+        "uuid": "1890a834_e2a1363e",
+        "filename": "gni/angle.gni",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-12-22T07:15:12Z",
+      "side": 1,
+      "message": "I\u0027m guessing angle_enable_gl_null has the same restrictions as detailed above for angle_enable_gl, so I\u0027ll make it shadow angle_enable_gl.\nLet me know if that\u0027s not the case, and it really is safe to always default to true.",
+      "parentUuid": "8c125570_a8dc99c8",
+      "range": {
+        "startLine": 28,
+        "startChar": 6,
+        "endLine": 28,
+        "endChar": 67
+      },
+      "revId": "f8572ba62b31f6b49fca9e980e2c0858efa874b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5c4db324_42b53906",
         "filename": "gni/angle.gni",
         "patchSetId": 1
@@ -154,6 +226,30 @@
       "side": 1,
       "message": "+1. you\u0027ll need a second declare_args statement - maybe can put the shader ones in a second group",
       "parentUuid": "5c4db324_42b53906",
+      "range": {
+        "startLine": 36,
+        "startChar": 22,
+        "endLine": 36,
+        "endChar": 28
+      },
+      "revId": "f8572ba62b31f6b49fca9e980e2c0858efa874b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "52ea6a67_7c840633",
+        "filename": "gni/angle.gni",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-12-22T07:15:12Z",
+      "side": 1,
+      "message": "I\u0027ll put all those that derive from the first group into a second group.",
+      "parentUuid": "3d308f76_d8122399",
       "range": {
         "startLine": 36,
         "startChar": 22,
