@@ -95,6 +95,30 @@
     },
     {
       "key": {
+        "uuid": "3b2f399f_557ef7dc",
+        "filename": "src/libANGLE/State.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 517,
+      "author": {
+        "id": 1221469
+      },
+      "writtenOn": "2017-12-22T18:25:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "600bb4c1_9302b951",
+      "range": {
+        "startLine": 517,
+        "startChar": 28,
+        "endLine": 517,
+        "endChar": 29
+      },
+      "revId": "9bd3b5a0d7f4d9cf1683ad3aa843a2ec6b92c8cd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "13edfd99_dd74789d",
         "filename": "src/libANGLE/VertexArray.cpp",
         "patchSetId": 17
@@ -161,6 +185,30 @@
       "revId": "9bd3b5a0d7f4d9cf1683ad3aa843a2ec6b92c8cd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "36c8d9c1_ae05d422",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 297,
+      "author": {
+        "id": 1221469
+      },
+      "writtenOn": "2017-12-22T18:25:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d1fadd37_024e615f",
+      "range": {
+        "startLine": 297,
+        "startChar": 18,
+        "endLine": 297,
+        "endChar": 31
+      },
+      "revId": "9bd3b5a0d7f4d9cf1683ad3aa843a2ec6b92c8cd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
