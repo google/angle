@@ -3896,10 +3896,19 @@ void TParseContext::checkIsBelowStructNestingLimit(const TSourceLoc &line, const
     // one to the field's struct nesting.
     if (1 + field.type()->getDeepestStructNesting() > kWebGLMaxStructNesting)
     {
-        ASSERT(field.type()->getStruct()->name() != nullptr);
         std::stringstream reasonStream;
-        reasonStream << "Reference of struct type " << field.type()->getStruct()->name()->c_str()
-                     << " exceeds maximum allowed nesting level of " << kWebGLMaxStructNesting;
+        if (field.type()->getStruct()->symbolType() == SymbolType::Empty)
+        {
+            // This may happen in case there are nested struct definitions. While they are also
+            // invalid GLSL, they don't cause a syntax error.
+            reasonStream << "Struct nesting";
+        }
+        else
+        {
+            reasonStream << "Reference of struct type "
+                         << field.type()->getStruct()->name()->c_str();
+        }
+        reasonStream << " exceeds maximum allowed nesting level of " << kWebGLMaxStructNesting;
         std::string reason = reasonStream.str();
         error(line, reason.c_str(), field.name().c_str());
         return;

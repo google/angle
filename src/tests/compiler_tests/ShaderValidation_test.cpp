@@ -5620,3 +5620,42 @@ TEST_F(FragmentShaderValidationTest,
         FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
     }
 }
+
+// Test going past the struct nesting limit while simultaneously using invalid nested struct
+// definitions. This makes sure that the code generating an error message about going past the
+// struct nesting limit does not access the name of a nameless struct definition.
+TEST_F(WebGL1FragmentShaderValidationTest, StructNestingLimitWithNestedStructDefinitions)
+{
+    const std::string &shaderString =
+        R"(
+        precision mediump float;
+
+        struct
+        {
+            struct
+            {
+                struct
+                {
+                    struct
+                    {
+                        struct
+                        {
+                            struct
+                            {
+                                float f;
+                            } s5;
+                        } s4;
+                    } s3;
+                } s2;
+            } s1;
+        } s0;
+
+        void main(void)
+        {
+            gl_FragColor = vec4(s0.s1.s2.s3.s4.s5.f);
+        })";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}
