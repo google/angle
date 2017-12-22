@@ -29,13 +29,17 @@ if (is_win) {
   angle_enable_d3d11 = true
   angle_enable_gl = true
   angle_enable_gl_null = true
-  angle_enable_vulkan = true
+
+  # TODO(jmadill): Re-enable after roll.
+  # angle_enable_vulkan = true
 
   import("//build/config/win/visual_studio_version.gni")
 } else if (is_linux && use_x11 && !is_chromeos) {
   angle_enable_gl = true
   angle_enable_gl_null = true
-  angle_enable_vulkan = true
+
+  # TODO(jmadill): Re-enable after roll.
+  # angle_enable_vulkan = true
 } else if (is_mac || ozone_platform_gbm) {
   angle_enable_gl = true
   angle_enable_gl_null = true
