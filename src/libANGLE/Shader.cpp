@@ -74,6 +74,28 @@ bool CompareShaderVar(const sh::ShaderVariable &x, const sh::ShaderVariable &y)
     return gl::VariableSortOrder(x.type) < gl::VariableSortOrder(y.type);
 }
 
+const char *GetShaderTypeString(GLenum type)
+{
+    switch (type)
+    {
+        case GL_VERTEX_SHADER:
+            return "VERTEX";
+
+        case GL_FRAGMENT_SHADER:
+            return "FRAGMENT";
+
+        case GL_COMPUTE_SHADER:
+            return "COMPUTE";
+
+        case GL_GEOMETRY_SHADER_EXT:
+            return "GEOMETRY";
+
+        default:
+            UNREACHABLE();
+            return "";
+    }
+}
+
 ShaderState::ShaderState(GLenum shaderType)
     : mLabel(),
       mShaderType(shaderType),

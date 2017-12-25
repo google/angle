@@ -207,6 +207,8 @@ class Shader final : angle::NonCopyable, public LabeledObject
 };
 
 bool CompareShaderVar(const sh::ShaderVariable &x, const sh::ShaderVariable &y);
+
+const char *GetShaderTypeString(GLenum type);
 }  // namespace gl
 
 #endif   // LIBANGLE_SHADER_H_

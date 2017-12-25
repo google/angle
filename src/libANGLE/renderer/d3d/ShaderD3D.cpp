@@ -16,31 +16,6 @@
 #include "libANGLE/renderer/d3d/ProgramD3D.h"
 #include "libANGLE/renderer/d3d/RendererD3D.h"
 
-// Definitions local to the translation unit
-namespace
-{
-
-const char *GetShaderTypeString(GLenum type)
-{
-    switch (type)
-    {
-        case GL_VERTEX_SHADER:
-            return "VERTEX";
-
-        case GL_FRAGMENT_SHADER:
-            return "FRAGMENT";
-
-        case GL_COMPUTE_SHADER:
-            return "COMPUTE";
-
-        default:
-            UNREACHABLE();
-            return "";
-    }
-}
-
-}  // anonymous namespace
-
 namespace rx
 {
 
@@ -94,7 +69,7 @@ std::string ShaderD3D::getDebugInfo() const
         return "";
     }
 
-    return mDebugInfo + std::string("\n// ") + GetShaderTypeString(mData.getShaderType()) +
+    return mDebugInfo + std::string("\n// ") + gl::GetShaderTypeString(mData.getShaderType()) +
            " SHADER END\n";
 }
 
@@ -241,7 +216,7 @@ bool ShaderD3D::postTranslateCompile(gl::Compiler *compiler, std::string *infoLo
     }
 
     mDebugInfo +=
-        std::string("// ") + GetShaderTypeString(mData.getShaderType()) + " SHADER BEGIN\n";
+        std::string("// ") + gl::GetShaderTypeString(mData.getShaderType()) + " SHADER BEGIN\n";
     mDebugInfo += "\n// GLSL BEGIN\n\n" + mData.getSource() + "\n\n// GLSL END\n\n\n";
     mDebugInfo += "// INITIAL HLSL BEGIN\n\n" + translatedSource + "\n// INITIAL HLSL END\n\n\n";
     // Successive steps will append more info
