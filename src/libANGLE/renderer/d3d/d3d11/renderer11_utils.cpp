@@ -1543,7 +1543,7 @@ void GenerateCaps(ID3D11Device *device,
 
 void GetSamplePosition(GLsizei sampleCount, size_t index, GLfloat *xy)
 {
-    size_t indexKey = static_cast<size_t>(ceil(log(sampleCount)));
+    size_t indexKey = static_cast<size_t>(ceil(log2(sampleCount)));
     ASSERT(indexKey < kSamplePositions.size() &&
            (2 * index + 1) < kSamplePositions[indexKey].size());
 
