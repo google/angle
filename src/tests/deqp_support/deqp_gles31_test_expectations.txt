@@ -42,6 +42,8 @@
 1941 OPENGL D3D11 : dEQP-GLES31.functional.geometry_shading.layered.* = SKIP
 1941 OPENGL D3D11 : dEQP-GLES31.functional.geometry_shading.instanced.invocation_per_layer_* = SKIP
 1941 OPENGL D3D11 : dEQP-GLES31.functional.geometry_shading.instanced.multiple_layers_per_invocation_* = SKIP
+// TODO(jiawei.shao@intel.com): Implement validations on transform feedback required in OpenGL ES 3.1 extension GL_EXT_geometry_shader
+1941 OPENGL D3D11 : dEQP-GLES31.functional.geometry_shading.vertex_transform_feedback.* = SKIP
 
 // D3D11 Failing Tests
 1442 D3D11 : dEQP-GLES31.functional.state_query.integer.max_compute_shared_memory_size_* = FAIL
@@ -1677,5 +1679,4 @@
 1941 OPENGL D3D11 : dEQP-GLES31.functional.geometry_shading.instanced.geometry_* = FAIL
 1941 OPENGL D3D11 : dEQP-GLES31.functional.geometry_shading.instanced.invocation_output_* = FAIL
 1941 OPENGL D3D11 : dEQP-GLES31.functional.geometry_shading.instanced.draw_* = FAIL
-1941 OPENGL D3D11 : dEQP-GLES31.functional.geometry_shading.vertex_transform_feedback.* = FAIL
 1941 OPENGL D3D11 : dEQP-GLES31.functional.geometry_shading.negative.* = FAIL
