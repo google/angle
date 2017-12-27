@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f7911eee_919015ec",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2518,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-12-27T06:42:17Z",
+      "side": 1,
+      "message": "Sorry, I am not a fan of this. I think you make the error message not visualized for the developer. The idea in my head is like below:\n bool Program::AreMatchingInterfaceBlocks(std::stringstream *errorMessage,\n                                         const sh::InterfaceBlock \u0026block1,\n                                         const sh::InterfaceBlock \u0026block2,\n                                         bool webglCompatibility)\n{\n    ...\n    // validate blocks for the same member types\n    if (block1.fields.size() !\u003d block2.fields.size())\n    {\n        *errorMessage \u003c\u003c \"Types for interface block \u0027\" \u003c\u003c blockName \u003c\u003c \"\u0027 differ\";\n        return false;\n     }\n     ...\n}\n\nThen, in the caller, you can use it like below:\n    std::stringstream streamInfo\n    if (!AreMatchingInterfaceBlocks(\u0026streamInfo, vertexInterfaceBlock, fragmentInterfaceBlock,\n                                    webglCompatibility))\n    {\n        infoLog \u003c\u003c streamInfo.str() \u003c\u003c \" between vertex and fragment shaders.\";\n        return false;\n    }\n\nSince this issue is not about right or wrong, I want to hear other reviewers\u0027 opinion. Please don\u0027t be blocked by me.\nAdd Jie/Yunchao in the loop.",
+      "range": {
+        "startLine": 2518,
+        "startChar": 8,
+        "endLine": 2518,
+        "endChar": 44
+      },
+      "revId": "62b0bdc273da92a88952b747e02f2bbab182842e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
