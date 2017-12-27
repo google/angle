@@ -1600,9 +1600,18 @@ gl::LinkResult ProgramD3D::compileProgramExecutables(const gl::Context *context,
 
     WaitableEvent::WaitMany(&waitEvents);
 
-    infoLog << vertexTask.getInfoLog().str();
-    infoLog << pixelTask.getInfoLog().str();
-    infoLog << geometryTask.getInfoLog().str();
+    if (!vertexTask.getInfoLog().empty())
+    {
+        infoLog << vertexTask.getInfoLog().str();
+    }
+    if (!pixelTask.getInfoLog().empty())
+    {
+        infoLog << pixelTask.getInfoLog().str();
+    }
+    if (!geometryTask.getInfoLog().empty())
+    {
+        infoLog << geometryTask.getInfoLog().str();
+    }
 
     ANGLE_TRY(vertexTask.getError());
     ANGLE_TRY(pixelTask.getError());

@@ -414,6 +414,20 @@ void InfoLog::appendSanitized(const char *message)
 
 void InfoLog::reset()
 {
+    if (mLazyStream)
+    {
+        mLazyStream.reset(nullptr);
+    }
+}
+
+bool InfoLog::empty() const
+{
+    if (!mLazyStream)
+    {
+        return true;
+    }
+
+    return mLazyStream->rdbuf()->in_avail() == 0;
 }
 
 // VariableLocation implementation.
