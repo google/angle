@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "0c034d97_2647462e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2363,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-12-27T08:59:25Z",
+      "side": 1,
+      "message": "Line 2310 means that if format component is unnormalized integer, it will use Texture2DArray to emulate TextureCube. Here I use Texture2DArray to emulate TextureCube for all formats. I think it did not assert something here.",
+      "parentUuid": "cefae1c3_754cc3d1",
+      "range": {
+        "startLine": 2363,
+        "startChar": 0,
+        "endLine": 2363,
+        "endChar": 80
+      },
+      "revId": "b1e13f579bcfdd969493f8912526e0e4a7539fe7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5c2e7899_15952fb3",
         "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
         "patchSetId": 3
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "d4b5aee8_a028f4b2",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2367,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-12-27T08:59:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5c2e7899_15952fb3",
+      "range": {
+        "startLine": 2367,
+        "startChar": 45,
+        "endLine": 2367,
+        "endChar": 46
+      },
+      "revId": "b1e13f579bcfdd969493f8912526e0e4a7539fe7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "92307c8c_9244917b",
         "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
         "patchSetId": 3
@@ -68,6 +116,30 @@
       "revId": "b1e13f579bcfdd969493f8912526e0e4a7539fe7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fc57f2e0_ad908a81",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2386,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-12-27T08:59:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "92307c8c_9244917b",
+      "range": {
+        "startLine": 2386,
+        "startChar": 45,
+        "endLine": 2386,
+        "endChar": 46
+      },
+      "revId": "b1e13f579bcfdd969493f8912526e0e4a7539fe7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
