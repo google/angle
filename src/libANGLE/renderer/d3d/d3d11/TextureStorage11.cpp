@@ -1316,8 +1316,7 @@ gl::Error TextureStorage11_2D::createSRVForImage(const gl::Context *context,
     srvDesc.ViewDimension             = D3D11_SRV_DIMENSION_TEXTURE2D;
     srvDesc.Texture2D.MostDetailedMip = mTopLevel + level;
     srvDesc.Texture2D.MipLevels       = 1;
-    const TextureHelper11 *srvTexture = &texture;
-    ANGLE_TRY(mRenderer->allocateResource(srvDesc, srvTexture->get(), outSRV));
+    ANGLE_TRY(mRenderer->allocateResource(srvDesc, texture.get(), outSRV));
     outSRV->setDebugName("TexStorage2D.SRVForImage");
     return gl::NoError();
 }
@@ -1333,8 +1332,7 @@ gl::Error TextureStorage11_2D::createUAVForImage(const gl::Context *context,
     uavDesc.Format                    = format;
     uavDesc.ViewDimension             = D3D11_UAV_DIMENSION_TEXTURE2D;
     uavDesc.Texture2D.MipSlice        = mTopLevel + level;
-    const TextureHelper11 *uavTexture = &texture;
-    ANGLE_TRY(mRenderer->allocateResource(uavDesc, uavTexture->get(), outUAV));
+    ANGLE_TRY(mRenderer->allocateResource(uavDesc, texture.get(), outUAV));
     outUAV->setDebugName("TexStorage2D.UAVForImage");
     return gl::NoError();
 }
@@ -2357,8 +2355,17 @@ gl::Error TextureStorage11_Cube::createSRVForImage(const gl::Context *context,
                                                    const TextureHelper11 &texture,
                                                    d3d11::SharedSRV *outSRV)
 {
-    UNIMPLEMENTED();
-    return gl::InternalError();
+    ASSERT(outSRV);
+    D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+    srvDesc.Format                         = format;
+    srvDesc.ViewDimension                  = D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
+    srvDesc.Texture2DArray.MostDetailedMip = mTopLevel + level;
+    srvDesc.Texture2DArray.MipLevels       = 1;
+    srvDesc.Texture2DArray.FirstArraySlice = 0;
+    srvDesc.Texture2DArray.ArraySize       = gl::CUBE_FACE_COUNT;
+    ANGLE_TRY(mRenderer->allocateResource(srvDesc, texture.get(), outSRV));
+    outSRV->setDebugName("TexStorageCube.SRVForImage");
+    return gl::NoError();
 }
 
 gl::Error TextureStorage11_Cube::createUAVForImage(const gl::Context *context,
@@ -2367,8 +2374,16 @@ gl::Error TextureStorage11_Cube::createUAVForImage(const gl::Context *context,
                                                    const TextureHelper11 &texture,
                                                    d3d11::SharedUAV *outUAV)
 {
-    UNIMPLEMENTED();
-    return gl::InternalError();
+    ASSERT(outUAV);
+    D3D11_UNORDERED_ACCESS_VIEW_DESC uavDesc;
+    uavDesc.Format                         = format;
+    uavDesc.ViewDimension                  = D3D11_UAV_DIMENSION_TEXTURE2DARRAY;
+    uavDesc.Texture2DArray.MipSlice        = mTopLevel + level;
+    uavDesc.Texture2DArray.FirstArraySlice = 0;
+    uavDesc.Texture2DArray.ArraySize       = gl::CUBE_FACE_COUNT;
+    ANGLE_TRY(mRenderer->allocateResource(uavDesc, texture.get(), outUAV));
+    outUAV->setDebugName("TexStorageCube.UAVForImage");
+    return gl::NoError();
 }
 
 gl::Error TextureStorage11_Cube::getSwizzleTexture(const TextureHelper11 **outTexture)
@@ -2651,8 +2666,15 @@ gl::Error TextureStorage11_3D::createSRVForImage(const gl::Context *context,
                                                  const TextureHelper11 &texture,
                                                  d3d11::SharedSRV *outSRV)
 {
-    UNIMPLEMENTED();
-    return gl::InternalError();
+    ASSERT(outSRV);
+    D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+    srvDesc.Format                    = format;
+    srvDesc.ViewDimension             = D3D11_SRV_DIMENSION_TEXTURE3D;
+    srvDesc.Texture3D.MostDetailedMip = mTopLevel + level;
+    srvDesc.Texture3D.MipLevels       = 1;
+    ANGLE_TRY(mRenderer->allocateResource(srvDesc, texture.get(), outSRV));
+    outSRV->setDebugName("TexStorage3D.SRVForImage");
+    return gl::NoError();
 }
 
 gl::Error TextureStorage11_3D::createUAVForImage(const gl::Context *context,
@@ -2661,8 +2683,16 @@ gl::Error TextureStorage11_3D::createUAVForImage(const gl::Context *context,
                                                  const TextureHelper11 &texture,
                                                  d3d11::SharedUAV *outUAV)
 {
-    UNIMPLEMENTED();
-    return gl::InternalError();
+    ASSERT(outUAV);
+    D3D11_UNORDERED_ACCESS_VIEW_DESC uavDesc;
+    uavDesc.Format                = format;
+    uavDesc.ViewDimension         = D3D11_UAV_DIMENSION_TEXTURE3D;
+    uavDesc.Texture3D.MipSlice    = mTopLevel + level;
+    uavDesc.Texture3D.FirstWSlice = 0;
+    uavDesc.Texture3D.WSize       = mTextureDepth;
+    ANGLE_TRY(mRenderer->allocateResource(uavDesc, texture.get(), outUAV));
+    outUAV->setDebugName("TexStorage3D.UAVForImage");
+    return gl::NoError();
 }
 
 gl::Error TextureStorage11_3D::getRenderTarget(const gl::Context *context,
@@ -2978,8 +3008,17 @@ gl::Error TextureStorage11_2DArray::createSRVForImage(const gl::Context *context
                                                       const TextureHelper11 &texture,
                                                       d3d11::SharedSRV *outSRV)
 {
-    UNIMPLEMENTED();
-    return gl::InternalError();
+    ASSERT(outSRV);
+    D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+    srvDesc.Format                         = format;
+    srvDesc.ViewDimension                  = D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
+    srvDesc.Texture2DArray.MostDetailedMip = mTopLevel + level;
+    srvDesc.Texture2DArray.MipLevels       = 1;
+    srvDesc.Texture2DArray.FirstArraySlice = 0;
+    srvDesc.Texture2DArray.ArraySize       = mTextureDepth;
+    ANGLE_TRY(mRenderer->allocateResource(srvDesc, texture.get(), outSRV));
+    outSRV->setDebugName("TexStorage2DArray.SRVForImage");
+    return gl::NoError();
 }
 
 gl::Error TextureStorage11_2DArray::createUAVForImage(const gl::Context *context,
@@ -2988,8 +3027,16 @@ gl::Error TextureStorage11_2DArray::createUAVForImage(const gl::Context *context
                                                       const TextureHelper11 &texture,
                                                       d3d11::SharedUAV *outUAV)
 {
-    UNIMPLEMENTED();
-    return gl::InternalError();
+    ASSERT(outUAV);
+    D3D11_UNORDERED_ACCESS_VIEW_DESC uavDesc;
+    uavDesc.Format                         = format;
+    uavDesc.ViewDimension                  = D3D11_UAV_DIMENSION_TEXTURE2DARRAY;
+    uavDesc.Texture2DArray.MipSlice        = mTopLevel + level;
+    uavDesc.Texture2DArray.FirstArraySlice = 0;
+    uavDesc.Texture2DArray.ArraySize       = mTextureDepth;
+    ANGLE_TRY(mRenderer->allocateResource(uavDesc, texture.get(), outUAV));
+    outUAV->setDebugName("TexStorage2DArray.UAVForImage");
+    return gl::NoError();
 }
 
 gl::Error TextureStorage11_2DArray::createRenderTargetSRV(const TextureHelper11 &texture,
