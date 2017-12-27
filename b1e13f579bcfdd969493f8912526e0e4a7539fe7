@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cefae1c3_754cc3d1",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2363,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-12-27T08:32:51Z",
+      "side": 1,
+      "message": "Do you need to check d3d11::GetComponentType(format) \u003d\u003d GL_INT || d3d11::GetComponentType(format) \u003d\u003d GL_UNSIGNED_INT like line 2310 did? If not, please add ASSERT(... \u003d\u003d GL_INT || ... \u003d\u003d GL_UNSIGNED_INT)",
+      "range": {
+        "startLine": 2363,
+        "startChar": 0,
+        "endLine": 2363,
+        "endChar": 80
+      },
+      "revId": "b1e13f579bcfdd969493f8912526e0e4a7539fe7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5c2e7899_15952fb3",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2367,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-12-27T08:32:51Z",
+      "side": 1,
+      "message": "Use gl::CUBE_FACE_COUNT",
+      "range": {
+        "startLine": 2367,
+        "startChar": 45,
+        "endLine": 2367,
+        "endChar": 46
+      },
+      "revId": "b1e13f579bcfdd969493f8912526e0e4a7539fe7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "92307c8c_9244917b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2386,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-12-27T08:32:51Z",
+      "side": 1,
+      "message": "ditto",
+      "range": {
+        "startLine": 2386,
+        "startChar": 45,
+        "endLine": 2386,
+        "endChar": 46
+      },
+      "revId": "b1e13f579bcfdd969493f8912526e0e4a7539fe7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
