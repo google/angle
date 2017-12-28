@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "bb37365e_d982491d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-28T17:09:13Z",
+      "side": 1,
+      "message": "can you add \"Bug: angleproject:1944\" on a blank line above the change-id?",
+      "revId": "ae0f03a21a3de17f37efcedec2006b4f7f7dda7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "c528dd56_2741aee5",
         "filename": "doc/dEQP.md",
         "patchSetId": 1
