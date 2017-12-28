@@ -22,6 +22,30 @@
       "revId": "aa56825e7497be75f47fe8bfc9ad025d4d8e4fef",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3a7e8b5a_613885af",
+        "filename": "src/tests/compiler_tests/ShaderValidation_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 5647,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-12-28T17:08:25Z",
+      "side": 1,
+      "message": "Done, not sure how that got in there.",
+      "parentUuid": "36105204_c1a8d424",
+      "range": {
+        "startLine": 5642,
+        "startChar": 19,
+        "endLine": 5647,
+        "endChar": 29
+      },
+      "revId": "aa56825e7497be75f47fe8bfc9ad025d4d8e4fef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
