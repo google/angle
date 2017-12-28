@@ -922,22 +922,6 @@ void GL_APIENTRY GenBuffers(GLsizei n, GLuint *buffers)
     }
 }
 
-void GL_APIENTRY GenerateMipmap(GLenum target)
-{
-    EVENT("(GLenum target = 0x%X)", target);
-
-    Context *context = GetValidGlobalContext();
-    if (context)
-    {
-        context->gatherParams<EntryPoint::GenerateMipmap>(target);
-
-        if (context->skipValidation() || ValidateGenerateMipmap(context, target))
-        {
-            context->generateMipmap(target);
-        }
-    }
-}
-
 void GL_APIENTRY GenFramebuffers(GLsizei n, GLuint *framebuffers)
 {
     EVENT("(GLsizei n = %d, GLuint *framebuffers = 0x%0.8p)", n, framebuffers);
@@ -982,6 +966,22 @@ void GL_APIENTRY GenTextures(GLsizei n, GLuint *textures)
         if (context->skipValidation() || ValidateGenTextures(context, n, textures))
         {
             context->genTextures(n, textures);
+        }
+    }
+}
+
+void GL_APIENTRY GenerateMipmap(GLenum target)
+{
+    EVENT("(GLenum target = 0x%X)", target);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        context->gatherParams<EntryPoint::GenerateMipmap>(target);
+
+        if (context->skipValidation() || ValidateGenerateMipmap(context, target))
+        {
+            context->generateMipmap(target);
         }
     }
 }
@@ -1190,23 +1190,6 @@ void GL_APIENTRY GetIntegerv(GLenum pname, GLint *data)
     }
 }
 
-void GL_APIENTRY GetProgramiv(GLuint program, GLenum pname, GLint *params)
-{
-    EVENT("(GLuint program = %u, GLenum pname = 0x%X, GLint *params = 0x%0.8p)", program, pname,
-          params);
-
-    Context *context = GetValidGlobalContext();
-    if (context)
-    {
-        context->gatherParams<EntryPoint::GetProgramiv>(program, pname, params);
-
-        if (context->skipValidation() || ValidateGetProgramiv(context, program, pname, params))
-        {
-            context->getProgramiv(program, pname, params);
-        }
-    }
-}
-
 void GL_APIENTRY GetProgramInfoLog(GLuint program,
                                    GLsizei bufSize,
                                    GLsizei *length,
@@ -1230,6 +1213,23 @@ void GL_APIENTRY GetProgramInfoLog(GLuint program,
     }
 }
 
+void GL_APIENTRY GetProgramiv(GLuint program, GLenum pname, GLint *params)
+{
+    EVENT("(GLuint program = %u, GLenum pname = 0x%X, GLint *params = 0x%0.8p)", program, pname,
+          params);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        context->gatherParams<EntryPoint::GetProgramiv>(program, pname, params);
+
+        if (context->skipValidation() || ValidateGetProgramiv(context, program, pname, params))
+        {
+            context->getProgramiv(program, pname, params);
+        }
+    }
+}
+
 void GL_APIENTRY GetRenderbufferParameteriv(GLenum target, GLenum pname, GLint *params)
 {
     EVENT("(GLenum target = 0x%X, GLenum pname = 0x%X, GLint *params = 0x%0.8p)", target, pname,
@@ -1244,23 +1244,6 @@ void GL_APIENTRY GetRenderbufferParameteriv(GLenum target, GLenum pname, GLint *
             ValidateGetRenderbufferParameteriv(context, target, pname, params))
         {
             context->getRenderbufferParameteriv(target, pname, params);
-        }
-    }
-}
-
-void GL_APIENTRY GetShaderiv(GLuint shader, GLenum pname, GLint *params)
-{
-    EVENT("(GLuint shader = %u, GLenum pname = 0x%X, GLint *params = 0x%0.8p)", shader, pname,
-          params);
-
-    Context *context = GetValidGlobalContext();
-    if (context)
-    {
-        context->gatherParams<EntryPoint::GetShaderiv>(shader, pname, params);
-
-        if (context->skipValidation() || ValidateGetShaderiv(context, shader, pname, params))
-        {
-            context->getShaderiv(shader, pname, params);
         }
     }
 }
@@ -1329,6 +1312,23 @@ void GL_APIENTRY GetShaderSource(GLuint shader, GLsizei bufSize, GLsizei *length
     }
 }
 
+void GL_APIENTRY GetShaderiv(GLuint shader, GLenum pname, GLint *params)
+{
+    EVENT("(GLuint shader = %u, GLenum pname = 0x%X, GLint *params = 0x%0.8p)", shader, pname,
+          params);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        context->gatherParams<EntryPoint::GetShaderiv>(shader, pname, params);
+
+        if (context->skipValidation() || ValidateGetShaderiv(context, shader, pname, params))
+        {
+            context->getShaderiv(shader, pname, params);
+        }
+    }
+}
+
 const GLubyte *GL_APIENTRY GetString(GLenum name)
 {
     EVENT("(GLenum name = 0x%X)", name);
@@ -1381,6 +1381,24 @@ void GL_APIENTRY GetTexParameteriv(GLenum target, GLenum pname, GLint *params)
     }
 }
 
+GLint GL_APIENTRY GetUniformLocation(GLuint program, const GLchar *name)
+{
+    EVENT("(GLuint program = %u, const GLchar *name = 0x%0.8p)", program, name);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        context->gatherParams<EntryPoint::GetUniformLocation>(program, name);
+
+        if (context->skipValidation() || ValidateGetUniformLocation(context, program, name))
+        {
+            return context->getUniformLocation(program, name);
+        }
+    }
+
+    return GetDefaultReturnValue<EntryPoint::GetUniformLocation, GLint>();
+}
+
 void GL_APIENTRY GetUniformfv(GLuint program, GLint location, GLfloat *params)
 {
     EVENT("(GLuint program = %u, GLint location = %d, GLfloat *params = 0x%0.8p)", program,
@@ -1415,22 +1433,22 @@ void GL_APIENTRY GetUniformiv(GLuint program, GLint location, GLint *params)
     }
 }
 
-GLint GL_APIENTRY GetUniformLocation(GLuint program, const GLchar *name)
+void GL_APIENTRY GetVertexAttribPointerv(GLuint index, GLenum pname, void **pointer)
 {
-    EVENT("(GLuint program = %u, const GLchar *name = 0x%0.8p)", program, name);
+    EVENT("(GLuint index = %u, GLenum pname = 0x%X, void **pointer = 0x%0.8p)", index, pname,
+          pointer);
 
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::GetUniformLocation>(program, name);
+        context->gatherParams<EntryPoint::GetVertexAttribPointerv>(index, pname, pointer);
 
-        if (context->skipValidation() || ValidateGetUniformLocation(context, program, name))
+        if (context->skipValidation() ||
+            ValidateGetVertexAttribPointerv(context, index, pname, pointer))
         {
-            return context->getUniformLocation(program, name);
+            context->getVertexAttribPointerv(index, pname, pointer);
         }
     }
-
-    return GetDefaultReturnValue<EntryPoint::GetUniformLocation, GLint>();
 }
 
 void GL_APIENTRY GetVertexAttribfv(GLuint index, GLenum pname, GLfloat *params)
@@ -1463,24 +1481,6 @@ void GL_APIENTRY GetVertexAttribiv(GLuint index, GLenum pname, GLint *params)
         if (context->skipValidation() || ValidateGetVertexAttribiv(context, index, pname, params))
         {
             context->getVertexAttribiv(index, pname, params);
-        }
-    }
-}
-
-void GL_APIENTRY GetVertexAttribPointerv(GLuint index, GLenum pname, void **pointer)
-{
-    EVENT("(GLuint index = %u, GLenum pname = 0x%X, void **pointer = 0x%0.8p)", index, pname,
-          pointer);
-
-    Context *context = GetValidGlobalContext();
-    if (context)
-    {
-        context->gatherParams<EntryPoint::GetVertexAttribPointerv>(index, pname, pointer);
-
-        if (context->skipValidation() ||
-            ValidateGetVertexAttribPointerv(context, index, pname, pointer))
-        {
-            context->getVertexAttribPointerv(index, pname, pointer);
         }
     }
 }

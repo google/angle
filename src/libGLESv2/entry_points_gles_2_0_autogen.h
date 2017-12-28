@@ -117,10 +117,10 @@ ANGLE_EXPORT void GL_APIENTRY FramebufferTexture2D(GLenum target,
                                                    GLint level);
 ANGLE_EXPORT void GL_APIENTRY FrontFace(GLenum mode);
 ANGLE_EXPORT void GL_APIENTRY GenBuffers(GLsizei n, GLuint *buffers);
-ANGLE_EXPORT void GL_APIENTRY GenerateMipmap(GLenum target);
 ANGLE_EXPORT void GL_APIENTRY GenFramebuffers(GLsizei n, GLuint *framebuffers);
 ANGLE_EXPORT void GL_APIENTRY GenRenderbuffers(GLsizei n, GLuint *renderbuffers);
 ANGLE_EXPORT void GL_APIENTRY GenTextures(GLsizei n, GLuint *textures);
+ANGLE_EXPORT void GL_APIENTRY GenerateMipmap(GLenum target);
 ANGLE_EXPORT void GL_APIENTRY GetActiveAttrib(GLuint program,
                                               GLuint index,
                                               GLsizei bufSize,
@@ -149,15 +149,14 @@ ANGLE_EXPORT void GL_APIENTRY GetFramebufferAttachmentParameteriv(GLenum target,
                                                                   GLenum pname,
                                                                   GLint *params);
 ANGLE_EXPORT void GL_APIENTRY GetIntegerv(GLenum pname, GLint *data);
-ANGLE_EXPORT void GL_APIENTRY GetProgramiv(GLuint program, GLenum pname, GLint *params);
 ANGLE_EXPORT void GL_APIENTRY GetProgramInfoLog(GLuint program,
                                                 GLsizei bufSize,
                                                 GLsizei *length,
                                                 GLchar *infoLog);
+ANGLE_EXPORT void GL_APIENTRY GetProgramiv(GLuint program, GLenum pname, GLint *params);
 ANGLE_EXPORT void GL_APIENTRY GetRenderbufferParameteriv(GLenum target,
                                                          GLenum pname,
                                                          GLint *params);
-ANGLE_EXPORT void GL_APIENTRY GetShaderiv(GLuint shader, GLenum pname, GLint *params);
 ANGLE_EXPORT void GL_APIENTRY GetShaderInfoLog(GLuint shader,
                                                GLsizei bufSize,
                                                GLsizei *length,
@@ -170,15 +169,16 @@ ANGLE_EXPORT void GL_APIENTRY GetShaderSource(GLuint shader,
                                               GLsizei bufSize,
                                               GLsizei *length,
                                               GLchar *source);
+ANGLE_EXPORT void GL_APIENTRY GetShaderiv(GLuint shader, GLenum pname, GLint *params);
 ANGLE_EXPORT const GLubyte *GL_APIENTRY GetString(GLenum name);
 ANGLE_EXPORT void GL_APIENTRY GetTexParameterfv(GLenum target, GLenum pname, GLfloat *params);
 ANGLE_EXPORT void GL_APIENTRY GetTexParameteriv(GLenum target, GLenum pname, GLint *params);
+ANGLE_EXPORT GLint GL_APIENTRY GetUniformLocation(GLuint program, const GLchar *name);
 ANGLE_EXPORT void GL_APIENTRY GetUniformfv(GLuint program, GLint location, GLfloat *params);
 ANGLE_EXPORT void GL_APIENTRY GetUniformiv(GLuint program, GLint location, GLint *params);
-ANGLE_EXPORT GLint GL_APIENTRY GetUniformLocation(GLuint program, const GLchar *name);
+ANGLE_EXPORT void GL_APIENTRY GetVertexAttribPointerv(GLuint index, GLenum pname, void **pointer);
 ANGLE_EXPORT void GL_APIENTRY GetVertexAttribfv(GLuint index, GLenum pname, GLfloat *params);
 ANGLE_EXPORT void GL_APIENTRY GetVertexAttribiv(GLuint index, GLenum pname, GLint *params);
-ANGLE_EXPORT void GL_APIENTRY GetVertexAttribPointerv(GLuint index, GLenum pname, void **pointer);
 ANGLE_EXPORT void GL_APIENTRY Hint(GLenum target, GLenum mode);
 ANGLE_EXPORT GLboolean GL_APIENTRY IsBuffer(GLuint buffer);
 ANGLE_EXPORT GLboolean GL_APIENTRY IsEnabled(GLenum cap);

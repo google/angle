@@ -236,20 +236,27 @@ def format_entry_point_def_oldstyle(cmd_name, proto, params):
 def path_to(folder, file):
     return os.path.join(script_relative(".."), "src", folder, file)
 
+all_commands = root.findall('commands/command')
+
 for major_version, minor_version in [[2, 0], [3, 0], [3, 1]]:
     gles_xpath = ".//feature[@name='GL_ES_VERSION_{}_{}']//command".format(major_version, minor_version)
     gles_commands = [cmd.attrib['name'] for cmd in root.findall(gles_xpath)]
 
     entry_point_decls = []
     entry_point_defs = []
-    for cmd_name in gles_commands:
-        command_xpath = "command/proto[name='" + cmd_name + "']/.."
-        command = commands.find(command_xpath)
-        params = ["".join(param.itertext()) for param in command.findall("./param")]
-        proto = "".join(command.find("./proto").itertext())
+
+    for command in all_commands:
+        proto = command.find('proto')
+        cmd_name = proto.find('name').text
+
+        if cmd_name not in gles_commands:
+            continue
+
+        param_text = ["".join(param.itertext()) for param in command.findall('param')]
+        proto_text = "".join(proto.itertext())
         cmd_names += [cmd_name]
-        entry_point_decls += [format_entry_point_decl(cmd_name, proto, params)]
-        entry_point_defs += [format_entry_point_def(cmd_name, proto, params)]
+        entry_point_decls += [format_entry_point_decl(cmd_name, proto_text, param_text)]
+        entry_point_defs += [format_entry_point_def(cmd_name, proto_text, param_text)]
 
     for type in ["header", "source"]:
         if type == "header":
@@ -284,7 +291,7 @@ for major_version, minor_version in [[2, 0], [3, 0], [3, 1]]:
             out.close()
 
 # TODO(jmadill): Remove manually added entry points once we auto-gen them.
-manual_cmd_names = ["Invalid"] + [cmd[2:] for cmd in cmd_names] + ["DrawElementsInstancedANGLE"]
+manual_cmd_names = ["Invalid"] + [cmd[2:] for cmd in sorted(cmd_names)] + ["DrawElementsInstancedANGLE"]
 entry_points_enum = template_entry_points_enum_header.format(
     script_name = os.path.basename(sys.argv[0]),
     data_source_name = "gl.xml",
