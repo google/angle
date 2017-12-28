@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c528dd56_2741aee5",
+        "filename": "doc/dEQP.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-28T17:08:14Z",
+      "side": 1,
+      "message": "this isn\u0027t quite correct - they just have different syntax. the parameter is --gtest_filter and the test names are slightly different (they replace dots with underscore, and have different prefixes).",
+      "range": {
+        "startLine": 26,
+        "startChar": 0,
+        "endLine": 26,
+        "endChar": 46
+      },
+      "revId": "ae0f03a21a3de17f37efcedec2006b4f7f7dda7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5b91f8ca_0733f944",
+        "filename": "doc/dEQP.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-28T17:08:14Z",
+      "side": 1,
+      "message": "Replace this paragraph and the next with:\n\nTo run an individual test, use the `--deqp-case` flag on any of the `no_gtest` targets. It supports simple wildcard support. For example: ...  The `gtest` targets support wildcards via the `--gtest_filter` argument, but have different test names.",
+      "range": {
+        "startLine": 25,
+        "startChar": 0,
+        "endLine": 26,
+        "endChar": 46
+      },
+      "revId": "ae0f03a21a3de17f37efcedec2006b4f7f7dda7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
