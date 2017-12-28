@@ -741,9 +741,9 @@ void Context::setPathCommands(GLuint path,
     handleError(pathObject->setCommands(numCommands, commands, numCoords, coordType, coords));
 }
 
-void Context::setPathParameterf(GLuint path, GLenum pname, GLfloat value)
+void Context::pathParameterf(GLuint path, GLenum pname, GLfloat value)
 {
-    auto *pathObj = mState.mPaths->getPath(path);
+    Path *pathObj = mState.mPaths->getPath(path);
 
     switch (pname)
     {
@@ -768,9 +768,15 @@ void Context::setPathParameterf(GLuint path, GLenum pname, GLfloat value)
     }
 }
 
-void Context::getPathParameterfv(GLuint path, GLenum pname, GLfloat *value) const
+void Context::pathParameteri(GLuint path, GLenum pname, GLint value)
 {
-    const auto *pathObj = mState.mPaths->getPath(path);
+    // TODO(jmadill): Should use proper clamping/casting.
+    pathParameterf(path, pname, static_cast<GLfloat>(value));
+}
+
+void Context::getPathParameterfv(GLuint path, GLenum pname, GLfloat *value)
+{
+    const Path *pathObj = mState.mPaths->getPath(path);
 
     switch (pname)
     {
@@ -793,6 +799,14 @@ void Context::getPathParameterfv(GLuint path, GLenum pname, GLfloat *value) cons
             UNREACHABLE();
             break;
     }
+}
+
+void Context::getPathParameteriv(GLuint path, GLenum pname, GLint *value)
+{
+    GLfloat val = 0.0f;
+    getPathParameterfv(path, pname, value != nullptr ? &val : nullptr);
+    if (value)
+        *value = static_cast<GLint>(val);
 }
 
 void Context::setPathStencilFunc(GLenum func, GLint ref, GLuint mask)
@@ -1840,7 +1854,17 @@ void Context::insertEventMarker(GLsizei length, const char *marker)
 void Context::pushGroupMarker(GLsizei length, const char *marker)
 {
     ASSERT(mImplementation);
-    mImplementation->pushGroupMarker(length, marker);
+
+    if (marker == nullptr)
+    {
+        // From the EXT_debug_marker spec,
+        // "If <marker> is null then an empty string is pushed on the stack."
+        mImplementation->pushGroupMarker(length, "");
+    }
+    else
+    {
+        mImplementation->pushGroupMarker(length, marker);
+    }
 }
 
 void Context::popGroupMarker()
@@ -3424,16 +3448,16 @@ void Context::generateMipmap(GLenum target)
     handleError(texture->generateMipmap(this));
 }
 
-void Context::copyTextureCHROMIUM(GLuint sourceId,
-                                  GLint sourceLevel,
-                                  GLenum destTarget,
-                                  GLuint destId,
-                                  GLint destLevel,
-                                  GLint internalFormat,
-                                  GLenum destType,
-                                  GLboolean unpackFlipY,
-                                  GLboolean unpackPremultiplyAlpha,
-                                  GLboolean unpackUnmultiplyAlpha)
+void Context::copyTexture(GLuint sourceId,
+                          GLint sourceLevel,
+                          GLenum destTarget,
+                          GLuint destId,
+                          GLint destLevel,
+                          GLint internalFormat,
+                          GLenum destType,
+                          GLboolean unpackFlipY,
+                          GLboolean unpackPremultiplyAlpha,
+                          GLboolean unpackUnmultiplyAlpha)
 {
     syncStateForTexImage();
 
@@ -3445,20 +3469,20 @@ void Context::copyTextureCHROMIUM(GLuint sourceId,
                                          ConvertToBool(unpackUnmultiplyAlpha), sourceTexture));
 }
 
-void Context::copySubTextureCHROMIUM(GLuint sourceId,
-                                     GLint sourceLevel,
-                                     GLenum destTarget,
-                                     GLuint destId,
-                                     GLint destLevel,
-                                     GLint xoffset,
-                                     GLint yoffset,
-                                     GLint x,
-                                     GLint y,
-                                     GLsizei width,
-                                     GLsizei height,
-                                     GLboolean unpackFlipY,
-                                     GLboolean unpackPremultiplyAlpha,
-                                     GLboolean unpackUnmultiplyAlpha)
+void Context::copySubTexture(GLuint sourceId,
+                             GLint sourceLevel,
+                             GLenum destTarget,
+                             GLuint destId,
+                             GLint destLevel,
+                             GLint xoffset,
+                             GLint yoffset,
+                             GLint x,
+                             GLint y,
+                             GLsizei width,
+                             GLsizei height,
+                             GLboolean unpackFlipY,
+                             GLboolean unpackPremultiplyAlpha,
+                             GLboolean unpackUnmultiplyAlpha)
 {
     // Zero sized copies are valid but no-ops
     if (width == 0 || height == 0)
@@ -3478,7 +3502,7 @@ void Context::copySubTextureCHROMIUM(GLuint sourceId,
                                             ConvertToBool(unpackUnmultiplyAlpha), sourceTexture));
 }
 
-void Context::compressedCopyTextureCHROMIUM(GLuint sourceId, GLuint destId)
+void Context::compressedCopyTexture(GLuint sourceId, GLuint destId)
 {
     syncStateForTexImage();
 
@@ -5746,6 +5770,47 @@ void Context::readnPixels(GLint x,
                           void *data)
 {
     return readPixels(x, y, width, height, format, type, data);
+}
+
+void Context::setFenceNV(GLuint fence, GLenum condition)
+{
+    ASSERT(condition == GL_ALL_COMPLETED_NV);
+
+    FenceNV *fenceObject = getFenceNV(fence);
+    ASSERT(fenceObject != nullptr);
+    handleError(fenceObject->set(condition));
+}
+
+GLboolean Context::testFenceNV(GLuint fence)
+{
+    FenceNV *fenceObject = getFenceNV(fence);
+
+    ASSERT(fenceObject != nullptr);
+    ASSERT(fenceObject->isSet() == GL_TRUE);
+
+    GLboolean result = GL_TRUE;
+    Error error      = fenceObject->test(&result);
+    if (error.isError())
+    {
+        handleError(error);
+        return GL_TRUE;
+    }
+
+    return result;
+}
+
+void Context::eGLImageTargetTexture2DOES(GLenum target, GLeglImageOES image)
+{
+    Texture *texture        = getTargetTexture(target);
+    egl::Image *imageObject = reinterpret_cast<egl::Image *>(image);
+    handleError(texture->setEGLImageTarget(this, target, imageObject));
+}
+
+void Context::eGLImageTargetRenderbufferStorageOES(GLenum target, GLeglImageOES image)
+{
+    Renderbuffer *renderbuffer = mGLState.getCurrentRenderbuffer();
+    egl::Image *imageObject    = reinterpret_cast<egl::Image *>(image);
+    handleError(renderbuffer->setStorageEGLImageTarget(this, imageObject));
 }
 
 }  // namespace gl

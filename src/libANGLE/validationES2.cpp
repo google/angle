@@ -1002,6 +1002,21 @@ bool ValidateWebGLNameLength(ValidationContext *context, size_t length)
     return true;
 }
 
+bool ValidateMatrixMode(Context *context, GLenum matrixMode)
+{
+    if (!context->getExtensions().pathRendering)
+    {
+        context->handleError(InvalidOperation() << "GL_CHROMIUM_path_rendering is not available.");
+        return false;
+    }
+
+    if (matrixMode != GL_PATH_MODELVIEW_CHROMIUM && matrixMode != GL_PATH_PROJECTION_CHROMIUM)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidMatrixMode);
+        return false;
+    }
+    return true;
+}
 }  // anonymous namespace
 
 bool ValidateES2TexImageParameters(Context *context,
@@ -3074,42 +3089,28 @@ bool ValidateCoverageModulationCHROMIUM(Context *context, GLenum components)
 
 // CHROMIUM_path_rendering
 
-bool ValidateMatrix(Context *context, GLenum matrixMode, const GLfloat *matrix)
+bool ValidateMatrixLoadfCHROMIUM(Context *context, GLenum matrixMode, const GLfloat *matrix)
 {
-    if (!context->getExtensions().pathRendering)
+    if (!ValidateMatrixMode(context, matrixMode))
     {
-        context->handleError(InvalidOperation() << "GL_CHROMIUM_path_rendering is not available.");
         return false;
     }
-    if (matrixMode != GL_PATH_MODELVIEW_CHROMIUM && matrixMode != GL_PATH_PROJECTION_CHROMIUM)
-    {
-        ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidMatrixMode);
-        return false;
-    }
+
     if (matrix == nullptr)
     {
         context->handleError(InvalidOperation() << "Invalid matrix.");
         return false;
     }
+
     return true;
 }
 
-bool ValidateMatrixMode(Context *context, GLenum matrixMode)
+bool ValidateMatrixLoadIdentityCHROMIUM(Context *context, GLenum matrixMode)
 {
-    if (!context->getExtensions().pathRendering)
-    {
-        context->handleError(InvalidOperation() << "GL_CHROMIUM_path_rendering is not available.");
-        return false;
-    }
-    if (matrixMode != GL_PATH_MODELVIEW_CHROMIUM && matrixMode != GL_PATH_PROJECTION_CHROMIUM)
-    {
-        ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidMatrixMode);
-        return false;
-    }
-    return true;
+    return ValidateMatrixMode(context, matrixMode);
 }
 
-bool ValidateGenPaths(Context *context, GLsizei range)
+bool ValidateGenPathsCHROMIUM(Context *context, GLsizei range)
 {
     if (!context->getExtensions().pathRendering)
     {
@@ -3134,7 +3135,7 @@ bool ValidateGenPaths(Context *context, GLsizei range)
     return true;
 }
 
-bool ValidateDeletePaths(Context *context, GLuint path, GLsizei range)
+bool ValidateDeletePathsCHROMIUM(Context *context, GLuint path, GLsizei range)
 {
     if (!context->getExtensions().pathRendering)
     {
@@ -3161,13 +3162,13 @@ bool ValidateDeletePaths(Context *context, GLuint path, GLsizei range)
     return true;
 }
 
-bool ValidatePathCommands(Context *context,
-                          GLuint path,
-                          GLsizei numCommands,
-                          const GLubyte *commands,
-                          GLsizei numCoords,
-                          GLenum coordType,
-                          const void *coords)
+bool ValidatePathCommandsCHROMIUM(Context *context,
+                                  GLuint path,
+                                  GLsizei numCommands,
+                                  const GLubyte *commands,
+                                  GLsizei numCoords,
+                                  GLenum coordType,
+                                  const void *coords)
 {
     if (!context->getExtensions().pathRendering)
     {
@@ -3282,7 +3283,7 @@ bool ValidatePathCommands(Context *context,
     return true;
 }
 
-bool ValidateSetPathParameter(Context *context, GLuint path, GLenum pname, GLfloat value)
+bool ValidatePathParameterfCHROMIUM(Context *context, GLuint path, GLenum pname, GLfloat value)
 {
     if (!context->getExtensions().pathRendering)
     {
@@ -3346,7 +3347,13 @@ bool ValidateSetPathParameter(Context *context, GLuint path, GLenum pname, GLflo
     return true;
 }
 
-bool ValidateGetPathParameter(Context *context, GLuint path, GLenum pname, GLfloat *value)
+bool ValidatePathParameteriCHROMIUM(Context *context, GLuint path, GLenum pname, GLint value)
+{
+    // TODO(jmadill): Use proper clamping cast.
+    return ValidatePathParameterfCHROMIUM(context, path, pname, static_cast<GLfloat>(value));
+}
+
+bool ValidateGetPathParameterfvCHROMIUM(Context *context, GLuint path, GLenum pname, GLfloat *value)
 {
     if (!context->getExtensions().pathRendering)
     {
@@ -3382,7 +3389,13 @@ bool ValidateGetPathParameter(Context *context, GLuint path, GLenum pname, GLflo
     return true;
 }
 
-bool ValidatePathStencilFunc(Context *context, GLenum func, GLint ref, GLuint mask)
+bool ValidateGetPathParameterivCHROMIUM(Context *context, GLuint path, GLenum pname, GLint *value)
+{
+    return ValidateGetPathParameterfvCHROMIUM(context, path, pname,
+                                              reinterpret_cast<GLfloat *>(value));
+}
+
+bool ValidatePathStencilFuncCHROMIUM(Context *context, GLenum func, GLint ref, GLuint mask)
 {
     if (!context->getExtensions().pathRendering)
     {
@@ -3415,7 +3428,7 @@ bool ValidatePathStencilFunc(Context *context, GLenum func, GLint ref, GLuint ma
 // However if the path object exists but has not been specified any
 // commands then an error is generated.
 
-bool ValidateStencilFillPath(Context *context, GLuint path, GLenum fillMode, GLuint mask)
+bool ValidateStencilFillPathCHROMIUM(Context *context, GLuint path, GLenum fillMode, GLuint mask)
 {
     if (!context->getExtensions().pathRendering)
     {
@@ -3447,7 +3460,7 @@ bool ValidateStencilFillPath(Context *context, GLuint path, GLenum fillMode, GLu
     return true;
 }
 
-bool ValidateStencilStrokePath(Context *context, GLuint path, GLint reference, GLuint mask)
+bool ValidateStencilStrokePathCHROMIUM(Context *context, GLuint path, GLint reference, GLuint mask)
 {
     if (!context->getExtensions().pathRendering)
     {
@@ -3463,7 +3476,7 @@ bool ValidateStencilStrokePath(Context *context, GLuint path, GLint reference, G
     return true;
 }
 
-bool ValidateCoverPath(Context *context, GLuint path, GLenum coverMode)
+bool ValidateCoverPathCHROMIUM(Context *context, GLuint path, GLenum coverMode)
 {
     if (!context->getExtensions().pathRendering)
     {
@@ -3488,27 +3501,27 @@ bool ValidateCoverPath(Context *context, GLuint path, GLenum coverMode)
     return true;
 }
 
-bool ValidateStencilThenCoverFillPath(Context *context,
-                                      GLuint path,
-                                      GLenum fillMode,
-                                      GLuint mask,
-                                      GLenum coverMode)
+bool ValidateStencilThenCoverFillPathCHROMIUM(Context *context,
+                                              GLuint path,
+                                              GLenum fillMode,
+                                              GLuint mask,
+                                              GLenum coverMode)
 {
-    return ValidateStencilFillPath(context, path, fillMode, mask) &&
-           ValidateCoverPath(context, path, coverMode);
+    return ValidateStencilFillPathCHROMIUM(context, path, fillMode, mask) &&
+           ValidateCoverPathCHROMIUM(context, path, coverMode);
 }
 
-bool ValidateStencilThenCoverStrokePath(Context *context,
-                                        GLuint path,
-                                        GLint reference,
-                                        GLuint mask,
-                                        GLenum coverMode)
+bool ValidateStencilThenCoverStrokePathCHROMIUM(Context *context,
+                                                GLuint path,
+                                                GLint reference,
+                                                GLuint mask,
+                                                GLenum coverMode)
 {
-    return ValidateStencilStrokePath(context, path, reference, mask) &&
-           ValidateCoverPath(context, path, coverMode);
+    return ValidateStencilStrokePathCHROMIUM(context, path, reference, mask) &&
+           ValidateCoverPathCHROMIUM(context, path, coverMode);
 }
 
-bool ValidateIsPath(Context *context)
+bool ValidateIsPathCHROMIUM(Context *context)
 {
     if (!context->getExtensions().pathRendering)
     {
@@ -3518,14 +3531,14 @@ bool ValidateIsPath(Context *context)
     return true;
 }
 
-bool ValidateCoverFillPathInstanced(Context *context,
-                                    GLsizei numPaths,
-                                    GLenum pathNameType,
-                                    const void *paths,
-                                    GLuint pathBase,
-                                    GLenum coverMode,
-                                    GLenum transformType,
-                                    const GLfloat *transformValues)
+bool ValidateCoverFillPathInstancedCHROMIUM(Context *context,
+                                            GLsizei numPaths,
+                                            GLenum pathNameType,
+                                            const void *paths,
+                                            GLuint pathBase,
+                                            GLenum coverMode,
+                                            GLenum transformType,
+                                            const GLfloat *transformValues)
 {
     if (!ValidateInstancedPathParameters(context, numPaths, pathNameType, paths, pathBase,
                                          transformType, transformValues))
@@ -3545,14 +3558,14 @@ bool ValidateCoverFillPathInstanced(Context *context,
     return true;
 }
 
-bool ValidateCoverStrokePathInstanced(Context *context,
-                                      GLsizei numPaths,
-                                      GLenum pathNameType,
-                                      const void *paths,
-                                      GLuint pathBase,
-                                      GLenum coverMode,
-                                      GLenum transformType,
-                                      const GLfloat *transformValues)
+bool ValidateCoverStrokePathInstancedCHROMIUM(Context *context,
+                                              GLsizei numPaths,
+                                              GLenum pathNameType,
+                                              const void *paths,
+                                              GLuint pathBase,
+                                              GLenum coverMode,
+                                              GLenum transformType,
+                                              const GLfloat *transformValues)
 {
     if (!ValidateInstancedPathParameters(context, numPaths, pathNameType, paths, pathBase,
                                          transformType, transformValues))
@@ -3572,15 +3585,15 @@ bool ValidateCoverStrokePathInstanced(Context *context,
     return true;
 }
 
-bool ValidateStencilFillPathInstanced(Context *context,
-                                      GLsizei numPaths,
-                                      GLenum pathNameType,
-                                      const void *paths,
-                                      GLuint pathBase,
-                                      GLenum fillMode,
-                                      GLuint mask,
-                                      GLenum transformType,
-                                      const GLfloat *transformValues)
+bool ValidateStencilFillPathInstancedCHROMIUM(Context *context,
+                                              GLsizei numPaths,
+                                              GLenum pathNameType,
+                                              const void *paths,
+                                              GLuint pathBase,
+                                              GLenum fillMode,
+                                              GLuint mask,
+                                              GLenum transformType,
+                                              const GLfloat *transformValues)
 {
 
     if (!ValidateInstancedPathParameters(context, numPaths, pathNameType, paths, pathBase,
@@ -3604,15 +3617,15 @@ bool ValidateStencilFillPathInstanced(Context *context,
     return true;
 }
 
-bool ValidateStencilStrokePathInstanced(Context *context,
-                                        GLsizei numPaths,
-                                        GLenum pathNameType,
-                                        const void *paths,
-                                        GLuint pathBase,
-                                        GLint reference,
-                                        GLuint mask,
-                                        GLenum transformType,
-                                        const GLfloat *transformValues)
+bool ValidateStencilStrokePathInstancedCHROMIUM(Context *context,
+                                                GLsizei numPaths,
+                                                GLenum pathNameType,
+                                                const void *paths,
+                                                GLuint pathBase,
+                                                GLint reference,
+                                                GLuint mask,
+                                                GLenum transformType,
+                                                const GLfloat *transformValues)
 {
     if (!ValidateInstancedPathParameters(context, numPaths, pathNameType, paths, pathBase,
                                          transformType, transformValues))
@@ -3623,16 +3636,16 @@ bool ValidateStencilStrokePathInstanced(Context *context,
     return true;
 }
 
-bool ValidateStencilThenCoverFillPathInstanced(Context *context,
-                                               GLsizei numPaths,
-                                               GLenum pathNameType,
-                                               const void *paths,
-                                               GLuint pathBase,
-                                               GLenum fillMode,
-                                               GLuint mask,
-                                               GLenum coverMode,
-                                               GLenum transformType,
-                                               const GLfloat *transformValues)
+bool ValidateStencilThenCoverFillPathInstancedCHROMIUM(Context *context,
+                                                       GLsizei numPaths,
+                                                       GLenum pathNameType,
+                                                       const void *paths,
+                                                       GLuint pathBase,
+                                                       GLenum fillMode,
+                                                       GLuint mask,
+                                                       GLenum coverMode,
+                                                       GLenum transformType,
+                                                       const GLfloat *transformValues)
 {
     if (!ValidateInstancedPathParameters(context, numPaths, pathNameType, paths, pathBase,
                                          transformType, transformValues))
@@ -3667,16 +3680,16 @@ bool ValidateStencilThenCoverFillPathInstanced(Context *context,
     return true;
 }
 
-bool ValidateStencilThenCoverStrokePathInstanced(Context *context,
-                                                 GLsizei numPaths,
-                                                 GLenum pathNameType,
-                                                 const void *paths,
-                                                 GLuint pathBase,
-                                                 GLint reference,
-                                                 GLuint mask,
-                                                 GLenum coverMode,
-                                                 GLenum transformType,
-                                                 const GLfloat *transformValues)
+bool ValidateStencilThenCoverStrokePathInstancedCHROMIUM(Context *context,
+                                                         GLsizei numPaths,
+                                                         GLenum pathNameType,
+                                                         const void *paths,
+                                                         GLuint pathBase,
+                                                         GLint reference,
+                                                         GLuint mask,
+                                                         GLenum coverMode,
+                                                         GLenum transformType,
+                                                         const GLfloat *transformValues)
 {
     if (!ValidateInstancedPathParameters(context, numPaths, pathNameType, paths, pathBase,
                                          transformType, transformValues))
@@ -3696,10 +3709,10 @@ bool ValidateStencilThenCoverStrokePathInstanced(Context *context,
     return true;
 }
 
-bool ValidateBindFragmentInputLocation(Context *context,
-                                       GLuint program,
-                                       GLint location,
-                                       const GLchar *name)
+bool ValidateBindFragmentInputLocationCHROMIUM(Context *context,
+                                               GLuint program,
+                                               GLint location,
+                                               const GLchar *name)
 {
     if (!context->getExtensions().pathRendering)
     {
@@ -3736,12 +3749,12 @@ bool ValidateBindFragmentInputLocation(Context *context,
     return true;
 }
 
-bool ValidateProgramPathFragmentInputGen(Context *context,
-                                         GLuint program,
-                                         GLint location,
-                                         GLenum genMode,
-                                         GLint components,
-                                         const GLfloat *coeffs)
+bool ValidateProgramPathFragmentInputGenCHROMIUM(Context *context,
+                                                 GLuint program,
+                                                 GLint location,
+                                                 GLenum genMode,
+                                                 GLint components,
+                                                 const GLfloat *coeffs)
 {
     if (!context->getExtensions().pathRendering)
     {
@@ -6489,6 +6502,144 @@ bool ValidateIsFenceNV(Context *context, GLuint fence)
     if (!context->getExtensions().fence)
     {
         ANGLE_VALIDATION_ERR(context, InvalidOperation(), NVFenceNotSupported);
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateSetFenceNV(Context *context, GLuint fence, GLenum condition)
+{
+    if (!context->getExtensions().fence)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), NVFenceNotSupported);
+        return false;
+    }
+
+    if (condition != GL_ALL_COMPLETED_NV)
+    {
+        context->handleError(InvalidEnum());
+        return false;
+    }
+
+    FenceNV *fenceObject = context->getFenceNV(fence);
+
+    if (fenceObject == nullptr)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), InvalidFence);
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateTestFenceNV(Context *context, GLuint fence)
+{
+    if (!context->getExtensions().fence)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), NVFenceNotSupported);
+        return false;
+    }
+
+    FenceNV *fenceObject = context->getFenceNV(fence);
+
+    if (fenceObject == nullptr)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), InvalidFence);
+        return false;
+    }
+
+    if (fenceObject->isSet() != GL_TRUE)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), InvalidFenceState);
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateTexStorage2DEXT(Context *context,
+                             GLenum target,
+                             GLsizei levels,
+                             GLenum internalformat,
+                             GLsizei width,
+                             GLsizei height)
+{
+    if (!context->getExtensions().textureStorage)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ExtensionNotEnabled);
+        return false;
+    }
+
+    if (context->getClientMajorVersion() < 3)
+    {
+        return ValidateES2TexStorageParameters(context, target, levels, internalformat, width,
+                                               height);
+    }
+
+    ASSERT(context->getClientMajorVersion() >= 3);
+    return ValidateES3TexStorage2DParameters(context, target, levels, internalformat, width, height,
+                                             1);
+}
+
+bool ValidateVertexAttribDivisorANGLE(Context *context, GLuint index, GLuint divisor)
+{
+    if (!context->getExtensions().instancedArrays)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ExtensionNotEnabled);
+        return false;
+    }
+
+    if (index >= MAX_VERTEX_ATTRIBS)
+    {
+        context->handleError(InvalidValue());
+        return false;
+    }
+
+    if (context->getLimitations().attributeZeroRequiresZeroDivisorInEXT)
+    {
+        if (index == 0 && divisor != 0)
+        {
+            const char *errorMessage =
+                "The current context doesn't support setting a non-zero divisor on the "
+                "attribute with index zero. "
+                "Please reorder the attributes in your vertex shader so that attribute zero "
+                "can have a zero divisor.";
+            context->handleError(InvalidOperation() << errorMessage);
+
+            // We also output an error message to the debugger window if tracing is active, so
+            // that developers can see the error message.
+            ERR() << errorMessage;
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool ValidateTexImage3DOES(Context *context,
+                           GLenum target,
+                           GLint level,
+                           GLenum internalformat,
+                           GLsizei width,
+                           GLsizei height,
+                           GLsizei depth,
+                           GLint border,
+                           GLenum format,
+                           GLenum type,
+                           const void *pixels)
+{
+    UNIMPLEMENTED();  // FIXME
+    return false;
+}
+
+bool ValidatePopGroupMarkerEXT(Context *context)
+{
+    if (!context->getExtensions().debugMarker)
+    {
+        // The debug marker calls should not set error state
+        // However, it seems reasonable to set an error state if the extension is not enabled
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ExtensionNotEnabled);
         return false;
     }
 

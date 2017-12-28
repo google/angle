@@ -498,26 +498,12 @@ void GL_APIENTRY SetFenceNV(GLuint fence, GLenum condition)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (condition != GL_ALL_COMPLETED_NV)
+        if (!context->skipValidation() && !ValidateSetFenceNV(context, fence, condition))
         {
-            context->handleError(InvalidEnum());
             return;
         }
 
-        FenceNV *fenceObject = context->getFenceNV(fence);
-
-        if (fenceObject == nullptr)
-        {
-            context->handleError(InvalidOperation());
-            return;
-        }
-
-        Error error = fenceObject->set(condition);
-        if (error.isError())
-        {
-            context->handleError(error);
-            return;
-        }
+        context->setFenceNV(fence, condition);
     }
 }
 
@@ -528,29 +514,12 @@ GLboolean GL_APIENTRY TestFenceNV(GLuint fence)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        FenceNV *fenceObject = context->getFenceNV(fence);
-
-        if (fenceObject == nullptr)
+        if (!context->skipValidation() && !ValidateTestFenceNV(context, fence))
         {
-            context->handleError(InvalidOperation());
             return GL_TRUE;
         }
 
-        if (fenceObject->isSet() != GL_TRUE)
-        {
-            context->handleError(InvalidOperation());
-            return GL_TRUE;
-        }
-
-        GLboolean result;
-        Error error = fenceObject->test(&result);
-        if (error.isError())
-        {
-            context->handleError(error);
-            return GL_TRUE;
-        }
-
-        return result;
+        return context->testFenceNV(fence);
     }
 
     return GL_TRUE;
@@ -567,22 +536,8 @@ TexStorage2DEXT(GLenum target, GLsizei levels, GLenum internalformat, GLsizei wi
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->getExtensions().textureStorage)
-        {
-            context->handleError(InvalidOperation());
-            return;
-        }
-
-        if (context->getClientMajorVersion() < 3 &&
-            !ValidateES2TexStorageParameters(context, target, levels, internalformat, width,
-                                             height))
-        {
-            return;
-        }
-
-        if (context->getClientMajorVersion() >= 3 &&
-            !ValidateES3TexStorage2DParameters(context, target, levels, internalformat, width,
-                                               height, 1))
+        if (!context->skipValidation() &&
+            !ValidateTexStorage2DEXT(context, target, levels, internalformat, width, height))
         {
             return;
         }
@@ -598,35 +553,10 @@ void GL_APIENTRY VertexAttribDivisorANGLE(GLuint index, GLuint divisor)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->getExtensions().instancedArrays)
+        if (!context->skipValidation() &&
+            !ValidateVertexAttribDivisorANGLE(context, index, divisor))
         {
-            ANGLE_VALIDATION_ERR(context, InvalidOperation(), ExtensionNotEnabled);
             return;
-        }
-
-        if (index >= MAX_VERTEX_ATTRIBS)
-        {
-            context->handleError(InvalidValue());
-            return;
-        }
-
-        if (context->getLimitations().attributeZeroRequiresZeroDivisorInEXT)
-        {
-            if (index == 0 && divisor != 0)
-            {
-                const char *errorMessage =
-                    "The current context doesn't support setting a non-zero divisor on the "
-                    "attribute with index zero. "
-                    "Please reorder the attributes in your vertex shader so that attribute zero "
-                    "can have a zero divisor.";
-                context->handleError(InvalidOperation() << errorMessage);
-
-                // We also output an error message to the debugger window if tracing is active, so
-                // that developers can see the error message.
-                ERR() << errorMessage;
-
-                return;
-            }
         }
 
         context->vertexAttribDivisor(index, divisor);
@@ -702,7 +632,19 @@ void GL_APIENTRY TexImage3DOES(GLenum target,
         "GLenum format = 0x%X, GLenum type = 0x%x, const void* pixels = 0x%0.8p)",
         target, level, internalformat, width, height, depth, border, format, type, pixels);
 
-    UNIMPLEMENTED();  // FIXME
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        if (!context->skipValidation() &&
+            !ValidateTexImage3DOES(context, target, level, internalformat, width, height, depth,
+                                   border, format, type, pixels))
+        {
+            return;
+        }
+
+        context->texImage3D(target, level, internalformat, width, height, depth, border, format,
+                            type, pixels);
+    }
 }
 
 void GL_APIENTRY GetProgramBinaryOES(GLuint program,
@@ -881,15 +823,7 @@ void GL_APIENTRY InsertEventMarkerEXT(GLsizei length, const char *marker)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->getExtensions().debugMarker)
-        {
-            // The debug marker calls should not set error state
-            // However, it seems reasonable to set an error state if the extension is not enabled
-            context->handleError(InvalidOperation() << "Extension not enabled");
-            return;
-        }
-
-        if (!ValidateInsertEventMarkerEXT(context, length, marker))
+        if (!context->skipValidation() && !ValidateInsertEventMarkerEXT(context, length, marker))
         {
             return;
         }
@@ -906,29 +840,12 @@ void GL_APIENTRY PushGroupMarkerEXT(GLsizei length, const char *marker)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->getExtensions().debugMarker)
-        {
-            // The debug marker calls should not set error state
-            // However, it seems reasonable to set an error state if the extension is not enabled
-            context->handleError(InvalidOperation() << "Extension not enabled");
-            return;
-        }
-
-        if (!ValidatePushGroupMarkerEXT(context, length, marker))
+        if (!context->skipValidation() && !ValidatePushGroupMarkerEXT(context, length, marker))
         {
             return;
         }
 
-        if (marker == nullptr)
-        {
-            // From the EXT_debug_marker spec,
-            // "If <marker> is null then an empty string is pushed on the stack."
-            context->pushGroupMarker(length, "");
-        }
-        else
-        {
-            context->pushGroupMarker(length, marker);
-        }
+        context->pushGroupMarker(length, marker);
     }
 }
 
@@ -940,11 +857,8 @@ void GL_APIENTRY PopGroupMarkerEXT()
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->getExtensions().debugMarker)
+        if (!context->skipValidation() && !ValidatePopGroupMarkerEXT(context))
         {
-            // The debug marker calls should not set error state
-            // However, it seems reasonable to set an error state if the extension is not enabled
-            context->handleError(InvalidOperation() << "Extension not enabled");
             return;
         }
 
@@ -959,19 +873,13 @@ ANGLE_EXPORT void GL_APIENTRY EGLImageTargetTexture2DOES(GLenum target, GLeglIma
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        egl::Image *imageObject = reinterpret_cast<egl::Image *>(image);
-        if (!ValidateEGLImageTargetTexture2DOES(context, target, imageObject))
+        if (!context->skipValidation() &&
+            !ValidateEGLImageTargetTexture2DOES(context, target, image))
         {
             return;
         }
 
-        Texture *texture = context->getTargetTexture(target);
-        Error error      = texture->setEGLImageTarget(context, target, imageObject);
-        if (error.isError())
-        {
-            context->handleError(error);
-            return;
-        }
+        context->eGLImageTargetTexture2DOES(target, image);
     }
 }
 
@@ -983,19 +891,13 @@ ANGLE_EXPORT void GL_APIENTRY EGLImageTargetRenderbufferStorageOES(GLenum target
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        egl::Image *imageObject = reinterpret_cast<egl::Image *>(image);
-        if (!ValidateEGLImageTargetRenderbufferStorageOES(context, target, imageObject))
+        if (!context->skipValidation() &&
+            !ValidateEGLImageTargetRenderbufferStorageOES(context, target, image))
         {
             return;
         }
 
-        Renderbuffer *renderbuffer = context->getGLState().getCurrentRenderbuffer();
-        Error error                = renderbuffer->setStorageEGLImageTarget(context, imageObject);
-        if (error.isError())
-        {
-            context->handleError(error);
-            return;
-        }
+        context->eGLImageTargetRenderbufferStorageOES(target, image);
     }
 }
 
@@ -1080,7 +982,8 @@ void GL_APIENTRY DebugMessageControlKHR(GLenum source,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateDebugMessageControlKHR(context, source, type, severity, count, ids, enabled))
+        if (!context->skipValidation() &&
+            !ValidateDebugMessageControlKHR(context, source, type, severity, count, ids, enabled))
         {
             return;
         }
@@ -1104,7 +1007,8 @@ void GL_APIENTRY DebugMessageInsertKHR(GLenum source,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateDebugMessageInsertKHR(context, source, type, id, severity, length, buf))
+        if (!context->skipValidation() &&
+            !ValidateDebugMessageInsertKHR(context, source, type, id, severity, length, buf))
         {
             return;
         }
@@ -1121,7 +1025,8 @@ void GL_APIENTRY DebugMessageCallbackKHR(GLDEBUGPROCKHR callback, const void *us
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateDebugMessageCallbackKHR(context, callback, userParam))
+        if (!context->skipValidation() &&
+            !ValidateDebugMessageCallbackKHR(context, callback, userParam))
         {
             return;
         }
@@ -1148,7 +1053,8 @@ GLuint GL_APIENTRY GetDebugMessageLogKHR(GLuint count,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateGetDebugMessageLogKHR(context, count, bufSize, sources, types, ids, severities,
+        if (!context->skipValidation() &&
+            !ValidateGetDebugMessageLogKHR(context, count, bufSize, sources, types, ids, severities,
                                            lengths, messageLog))
         {
             return 0;
@@ -1171,7 +1077,8 @@ void GL_APIENTRY PushDebugGroupKHR(GLenum source, GLuint id, GLsizei length, con
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidatePushDebugGroupKHR(context, source, id, length, message))
+        if (!context->skipValidation() &&
+            !ValidatePushDebugGroupKHR(context, source, id, length, message))
         {
             return;
         }
@@ -1188,7 +1095,7 @@ void GL_APIENTRY PopDebugGroupKHR(void)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidatePopDebugGroupKHR(context))
+        if (!context->skipValidation() && !ValidatePopDebugGroupKHR(context))
         {
             return;
         }
@@ -1207,7 +1114,8 @@ void GL_APIENTRY ObjectLabelKHR(GLenum identifier, GLuint name, GLsizei length, 
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateObjectLabelKHR(context, identifier, name, length, label))
+        if (!context->skipValidation() &&
+            !ValidateObjectLabelKHR(context, identifier, name, length, label))
         {
             return;
         }
@@ -1227,7 +1135,8 @@ GetObjectLabelKHR(GLenum identifier, GLuint name, GLsizei bufSize, GLsizei *leng
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateGetObjectLabelKHR(context, identifier, name, bufSize, length, label))
+        if (!context->skipValidation() &&
+            !ValidateGetObjectLabelKHR(context, identifier, name, bufSize, length, label))
         {
             return;
         }
@@ -1244,7 +1153,7 @@ void GL_APIENTRY ObjectPtrLabelKHR(const void *ptr, GLsizei length, const GLchar
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateObjectPtrLabelKHR(context, ptr, length, label))
+        if (!context->skipValidation() && !ValidateObjectPtrLabelKHR(context, ptr, length, label))
         {
             return;
         }
@@ -1266,7 +1175,8 @@ void GL_APIENTRY GetObjectPtrLabelKHR(const void *ptr,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateGetObjectPtrLabelKHR(context, ptr, bufSize, length, label))
+        if (!context->skipValidation() &&
+            !ValidateGetObjectPtrLabelKHR(context, ptr, bufSize, length, label))
         {
             return;
         }
@@ -1282,7 +1192,7 @@ void GL_APIENTRY GetPointervKHR(GLenum pname, void **params)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateGetPointervKHR(context, pname, params))
+        if (!context->skipValidation() && !ValidateGetPointervKHR(context, pname, params))
         {
             return;
         }
@@ -1301,7 +1211,8 @@ ANGLE_EXPORT void GL_APIENTRY BindUniformLocationCHROMIUM(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateBindUniformLocationCHROMIUM(context, program, location, name))
+        if (!context->skipValidation() &&
+            !ValidateBindUniformLocationCHROMIUM(context, program, location, name))
         {
             return;
         }
@@ -1317,7 +1228,7 @@ ANGLE_EXPORT void GL_APIENTRY CoverageModulationCHROMIUM(GLenum components)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateCoverageModulationCHROMIUM(context, components))
+        if (!context->skipValidation() && !ValidateCoverageModulationCHROMIUM(context, components))
         {
             return;
         }
@@ -1333,7 +1244,7 @@ ANGLE_EXPORT void GL_APIENTRY MatrixLoadfCHROMIUM(GLenum matrixMode, const GLflo
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() && !ValidateMatrix(context, matrixMode, matrix))
+        if (!context->skipValidation() && !ValidateMatrixLoadfCHROMIUM(context, matrixMode, matrix))
         {
             return;
         }
@@ -1348,7 +1259,7 @@ ANGLE_EXPORT void GL_APIENTRY MatrixLoadIdentityCHROMIUM(GLenum matrixMode)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() && !ValidateMatrixMode(context, matrixMode))
+        if (!context->skipValidation() && !ValidateMatrixLoadIdentityCHROMIUM(context, matrixMode))
         {
             return;
         }
@@ -1363,7 +1274,7 @@ ANGLE_EXPORT GLuint GL_APIENTRY GenPathsCHROMIUM(GLsizei range)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() && !ValidateGenPaths(context, range))
+        if (!context->skipValidation() && !ValidateGenPathsCHROMIUM(context, range))
         {
             return 0;
         }
@@ -1379,7 +1290,7 @@ ANGLE_EXPORT void GL_APIENTRY DeletePathsCHROMIUM(GLuint first, GLsizei range)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() && !ValidateDeletePaths(context, first, range))
+        if (!context->skipValidation() && !ValidateDeletePathsCHROMIUM(context, first, range))
         {
             return;
         }
@@ -1394,7 +1305,7 @@ ANGLE_EXPORT GLboolean GL_APIENTRY IsPathCHROMIUM(GLuint path)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() && !ValidateIsPath(context))
+        if (!context->skipValidation() && !ValidateIsPathCHROMIUM(context))
         {
             return GL_FALSE;
         }
@@ -1418,13 +1329,11 @@ ANGLE_EXPORT void GL_APIENTRY PathCommandsCHROMIUM(GLuint path,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation())
+        if (!context->skipValidation() &&
+            !ValidatePathCommandsCHROMIUM(context, path, numCommands, commands, numCoords,
+                                          coordType, coords))
         {
-            if (!ValidatePathCommands(context, path, numCommands, commands, numCoords, coordType,
-                                      coords))
-            {
-                return;
-            }
+            return;
         }
         context->setPathCommands(path, numCommands, commands, numCoords, coordType, coords);
     }
@@ -1437,27 +1346,42 @@ ANGLE_EXPORT void GL_APIENTRY PathParameterfCHROMIUM(GLuint path, GLenum pname, 
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() && !ValidateSetPathParameter(context, path, pname, value))
+        if (!context->skipValidation() &&
+            !ValidatePathParameterfCHROMIUM(context, path, pname, value))
         {
             return;
         }
-        context->setPathParameterf(path, pname, value);
+
+        context->pathParameterf(path, pname, value);
     }
 }
 
 ANGLE_EXPORT void GL_APIENTRY PathParameteriCHROMIUM(GLuint path, GLenum pname, GLint value)
 {
-    PathParameterfCHROMIUM(path, pname, static_cast<GLfloat>(value));
-}
-
-ANGLE_EXPORT void GL_APIENTRY GetPathParameterfCHROMIUM(GLuint path, GLenum pname, GLfloat *value)
-{
-    EVENT("(GLuint path = %u, GLenum pname = %u)", path, pname);
+    EVENT("(GLuint path = %u, GLenum pname = %u, GLint value = %d)", path, pname, value);
 
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() && !ValidateGetPathParameter(context, path, pname, value))
+        if (!context->skipValidation() &&
+            !ValidatePathParameteriCHROMIUM(context, path, pname, value))
+        {
+            return;
+        }
+
+        context->pathParameteri(path, pname, value);
+    }
+}
+
+ANGLE_EXPORT void GL_APIENTRY GetPathParameterfvCHROMIUM(GLuint path, GLenum pname, GLfloat *value)
+{
+    EVENT("(GLuint path = %u, GLenum pname = %u, GLfloat *value = %p)", path, pname, value);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        if (!context->skipValidation() &&
+            !ValidateGetPathParameterfvCHROMIUM(context, path, pname, value))
         {
             return;
         }
@@ -1465,12 +1389,20 @@ ANGLE_EXPORT void GL_APIENTRY GetPathParameterfCHROMIUM(GLuint path, GLenum pnam
     }
 }
 
-ANGLE_EXPORT void GL_APIENTRY GetPathParameteriCHROMIUM(GLuint path, GLenum pname, GLint *value)
+ANGLE_EXPORT void GL_APIENTRY GetPathParameterivCHROMIUM(GLuint path, GLenum pname, GLint *value)
 {
-    GLfloat val = 0.0f;
-    GetPathParameterfCHROMIUM(path, pname, value != nullptr ? &val : nullptr);
-    if (value)
-        *value = static_cast<GLint>(val);
+    EVENT("(GLuint path = %u, GLenum pname = %u, GLint *value = %p)", path, pname, value);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        if (!context->skipValidation() &&
+            !ValidateGetPathParameterivCHROMIUM(context, path, pname, value))
+        {
+            return;
+        }
+        context->getPathParameteriv(path, pname, value);
+    }
 }
 
 ANGLE_EXPORT void GL_APIENTRY PathStencilFuncCHROMIUM(GLenum func, GLint ref, GLuint mask)
@@ -1480,7 +1412,8 @@ ANGLE_EXPORT void GL_APIENTRY PathStencilFuncCHROMIUM(GLenum func, GLint ref, GL
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() && !ValidatePathStencilFunc(context, func, ref, mask))
+        if (!context->skipValidation() &&
+            !ValidatePathStencilFuncCHROMIUM(context, func, ref, mask))
         {
             return;
         }
@@ -1495,7 +1428,8 @@ ANGLE_EXPORT void GL_APIENTRY StencilFillPathCHROMIUM(GLuint path, GLenum fillMo
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() && !ValidateStencilFillPath(context, path, fillMode, mask))
+        if (!context->skipValidation() &&
+            !ValidateStencilFillPathCHROMIUM(context, path, fillMode, mask))
         {
             return;
         }
@@ -1511,7 +1445,7 @@ ANGLE_EXPORT void GL_APIENTRY StencilStrokePathCHROMIUM(GLuint path, GLint refer
     if (context)
     {
         if (!context->skipValidation() &&
-            !ValidateStencilStrokePath(context, path, reference, mask))
+            !ValidateStencilStrokePathCHROMIUM(context, path, reference, mask))
         {
             return;
         }
@@ -1526,7 +1460,7 @@ ANGLE_EXPORT void GL_APIENTRY CoverFillPathCHROMIUM(GLuint path, GLenum coverMod
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() && !ValidateCoverPath(context, path, coverMode))
+        if (!context->skipValidation() && !ValidateCoverPathCHROMIUM(context, path, coverMode))
         {
             return;
         }
@@ -1541,7 +1475,7 @@ ANGLE_EXPORT void GL_APIENTRY CoverStrokePathCHROMIUM(GLuint path, GLenum coverM
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() && !ValidateCoverPath(context, path, coverMode))
+        if (!context->skipValidation() && !ValidateCoverPathCHROMIUM(context, path, coverMode))
         {
             return;
         }
@@ -1561,7 +1495,7 @@ ANGLE_EXPORT void GL_APIENTRY StencilThenCoverFillPathCHROMIUM(GLuint path,
     if (context)
     {
         if (!context->skipValidation() &&
-            !ValidateStencilThenCoverFillPath(context, path, fillMode, mask, coverMode))
+            !ValidateStencilThenCoverFillPathCHROMIUM(context, path, fillMode, mask, coverMode))
         {
             return;
         }
@@ -1581,7 +1515,7 @@ ANGLE_EXPORT void GL_APIENTRY StencilThenCoverStrokePathCHROMIUM(GLuint path,
     if (context)
     {
         if (!context->skipValidation() &&
-            !ValidateStencilThenCoverStrokePath(context, path, reference, mask, coverMode))
+            !ValidateStencilThenCoverStrokePathCHROMIUM(context, path, reference, mask, coverMode))
         {
             return;
         }
@@ -1606,9 +1540,9 @@ ANGLE_EXPORT void GL_APIENTRY CoverFillPathInstancedCHROMIUM(GLsizei numPaths,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() &&
-            !ValidateCoverFillPathInstanced(context, numPaths, pathNameType, paths, pathBase,
-                                            coverMode, transformType, transformValues))
+        if (!context->skipValidation() && !ValidateCoverFillPathInstancedCHROMIUM(
+                                              context, numPaths, pathNameType, paths, pathBase,
+                                              coverMode, transformType, transformValues))
         {
             return;
         }
@@ -1634,8 +1568,8 @@ ANGLE_EXPORT void GL_APIENTRY CoverStrokePathInstancedCHROMIUM(GLsizei numPaths,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() &&
-            !ValidateCoverStrokePathInstanced(context, numPaths, pathNameType, paths, pathBase,
+        if (!context->skipValidation() && !ValidateCoverStrokePathInstancedCHROMIUM(
+                                              context, numPaths, pathNameType, paths, pathBase,
                                               coverMode, transformType, transformValues))
         {
             return;
@@ -1663,9 +1597,9 @@ ANGLE_EXPORT void GL_APIENTRY StencilStrokePathInstancedCHROMIUM(GLsizei numPath
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() &&
-            !ValidateStencilStrokePathInstanced(context, numPaths, pathNameType, paths, pathBase,
-                                                reference, mask, transformType, transformValues))
+        if (!context->skipValidation() && !ValidateStencilStrokePathInstancedCHROMIUM(
+                                              context, numPaths, pathNameType, paths, pathBase,
+                                              reference, mask, transformType, transformValues))
         {
             return;
         }
@@ -1692,8 +1626,8 @@ ANGLE_EXPORT void GL_APIENTRY StencilFillPathInstancedCHROMIUM(GLsizei numPaths,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() &&
-            !ValidateStencilFillPathInstanced(context, numPaths, pathNameType, paths, pathBase,
+        if (!context->skipValidation() && !ValidateStencilFillPathInstancedCHROMIUM(
+                                              context, numPaths, pathNameType, paths, pathBase,
                                               fillMode, mask, transformType, transformValues))
         {
             return;
@@ -1724,9 +1658,9 @@ StencilThenCoverFillPathInstancedCHROMIUM(GLsizei numPaths,
     if (context)
     {
         if (!context->skipValidation() &&
-            !ValidateStencilThenCoverFillPathInstanced(context, numPaths, pathNameType, paths,
-                                                       pathBase, fillMode, mask, coverMode,
-                                                       transformType, transformValues))
+            !ValidateStencilThenCoverFillPathInstancedCHROMIUM(
+                context, numPaths, pathNameType, paths, pathBase, fillMode, mask, coverMode,
+                transformType, transformValues))
         {
             return;
         }
@@ -1759,9 +1693,9 @@ StencilThenCoverStrokePathInstancedCHROMIUM(GLsizei numPaths,
     if (context)
     {
         if (!context->skipValidation() &&
-            !ValidateStencilThenCoverStrokePathInstanced(context, numPaths, pathNameType, paths,
-                                                         pathBase, reference, mask, coverMode,
-                                                         transformType, transformValues))
+            !ValidateStencilThenCoverStrokePathInstancedCHROMIUM(
+                context, numPaths, pathNameType, paths, pathBase, reference, mask, coverMode,
+                transformType, transformValues))
         {
             return;
         }
@@ -1782,7 +1716,7 @@ ANGLE_EXPORT void GL_APIENTRY BindFragmentInputLocationCHROMIUM(GLuint program,
     if (context)
     {
         if (!context->skipValidation() &&
-            !ValidateBindFragmentInputLocation(context, program, location, name))
+            !ValidateBindFragmentInputLocationCHROMIUM(context, program, location, name))
         {
             return;
         }
@@ -1805,8 +1739,8 @@ ANGLE_EXPORT void GL_APIENTRY ProgramPathFragmentInputGenCHROMIUM(GLuint program
     if (context)
     {
         if (!context->skipValidation() &&
-            !ValidateProgramPathFragmentInputGen(context, program, location, genMode, components,
-                                                 coeffs))
+            !ValidateProgramPathFragmentInputGenCHROMIUM(context, program, location, genMode,
+                                                         components, coeffs))
         {
             return;
         }
@@ -1844,9 +1778,8 @@ ANGLE_EXPORT void GL_APIENTRY CopyTextureCHROMIUM(GLuint sourceId,
             return;
         }
 
-        context->copyTextureCHROMIUM(sourceId, sourceLevel, destTarget, destId, destLevel,
-                                     internalFormat, destType, unpackFlipY, unpackPremultiplyAlpha,
-                                     unpackUnmultiplyAlpha);
+        context->copyTexture(sourceId, sourceLevel, destTarget, destId, destLevel, internalFormat,
+                             destType, unpackFlipY, unpackPremultiplyAlpha, unpackUnmultiplyAlpha);
     }
 }
 
@@ -1884,9 +1817,9 @@ ANGLE_EXPORT void GL_APIENTRY CopySubTextureCHROMIUM(GLuint sourceId,
             return;
         }
 
-        context->copySubTextureCHROMIUM(sourceId, sourceLevel, destTarget, destId, destLevel,
-                                        xoffset, yoffset, x, y, width, height, unpackFlipY,
-                                        unpackPremultiplyAlpha, unpackUnmultiplyAlpha);
+        context->copySubTexture(sourceId, sourceLevel, destTarget, destId, destLevel, xoffset,
+                                yoffset, x, y, width, height, unpackFlipY, unpackPremultiplyAlpha,
+                                unpackUnmultiplyAlpha);
     }
 }
 
@@ -1903,7 +1836,7 @@ ANGLE_EXPORT void GL_APIENTRY CompressedCopyTextureCHROMIUM(GLuint sourceId, GLu
             return;
         }
 
-        context->compressedCopyTextureCHROMIUM(sourceId, destId);
+        context->compressedCopyTexture(sourceId, destId);
     }
 }
 

@@ -3167,8 +3167,15 @@ bool ValidateDiscardFramebufferBase(Context *context,
 
 bool ValidateInsertEventMarkerEXT(Context *context, GLsizei length, const char *marker)
 {
-    // Note that debug marker calls must not set error state
+    if (!context->getExtensions().debugMarker)
+    {
+        // The debug marker calls should not set error state
+        // However, it seems reasonable to set an error state if the extension is not enabled
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ExtensionNotEnabled);
+        return false;
+    }
 
+    // Note that debug marker calls must not set error state
     if (length < 0)
     {
         return false;
@@ -3184,8 +3191,15 @@ bool ValidateInsertEventMarkerEXT(Context *context, GLsizei length, const char *
 
 bool ValidatePushGroupMarkerEXT(Context *context, GLsizei length, const char *marker)
 {
-    // Note that debug marker calls must not set error state
+    if (!context->getExtensions().debugMarker)
+    {
+        // The debug marker calls should not set error state
+        // However, it seems reasonable to set an error state if the extension is not enabled
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ExtensionNotEnabled);
+        return false;
+    }
 
+    // Note that debug marker calls must not set error state
     if (length < 0)
     {
         return false;
@@ -3199,9 +3213,7 @@ bool ValidatePushGroupMarkerEXT(Context *context, GLsizei length, const char *ma
     return true;
 }
 
-bool ValidateEGLImageTargetTexture2DOES(Context *context,
-                                        GLenum target,
-                                        egl::Image *image)
+bool ValidateEGLImageTargetTexture2DOES(Context *context, GLenum target, GLeglImageOES image)
 {
     if (!context->getExtensions().eglImage && !context->getExtensions().eglImageExternal)
     {
@@ -3232,14 +3244,16 @@ bool ValidateEGLImageTargetTexture2DOES(Context *context,
             return false;
     }
 
+    egl::Image *imageObject = reinterpret_cast<egl::Image *>(image);
+
     ASSERT(context->getCurrentDisplay());
-    if (!context->getCurrentDisplay()->isValidImage(image))
+    if (!context->getCurrentDisplay()->isValidImage(imageObject))
     {
         context->handleError(InvalidValue() << "EGL image is not valid.");
         return false;
     }
 
-    if (image->getSamples() > 0)
+    if (imageObject->getSamples() > 0)
     {
         context->handleError(InvalidOperation()
                              << "cannot create a 2D texture from a multisampled EGL image.");
@@ -3247,7 +3261,7 @@ bool ValidateEGLImageTargetTexture2DOES(Context *context,
     }
 
     const TextureCaps &textureCaps =
-        context->getTextureCaps().get(image->getFormat().info->sizedInternalFormat);
+        context->getTextureCaps().get(imageObject->getFormat().info->sizedInternalFormat);
     if (!textureCaps.texturable)
     {
         context->handleError(InvalidOperation()
@@ -3260,7 +3274,7 @@ bool ValidateEGLImageTargetTexture2DOES(Context *context,
 
 bool ValidateEGLImageTargetRenderbufferStorageOES(Context *context,
                                                   GLenum target,
-                                                  egl::Image *image)
+                                                  GLeglImageOES image)
 {
     if (!context->getExtensions().eglImage)
     {
@@ -3278,15 +3292,17 @@ bool ValidateEGLImageTargetRenderbufferStorageOES(Context *context,
             return false;
     }
 
+    egl::Image *imageObject = reinterpret_cast<egl::Image *>(image);
+
     ASSERT(context->getCurrentDisplay());
-    if (!context->getCurrentDisplay()->isValidImage(image))
+    if (!context->getCurrentDisplay()->isValidImage(imageObject))
     {
         context->handleError(InvalidValue() << "EGL image is not valid.");
         return false;
     }
 
     const TextureCaps &textureCaps =
-        context->getTextureCaps().get(image->getFormat().info->sizedInternalFormat);
+        context->getTextureCaps().get(imageObject->getFormat().info->sizedInternalFormat);
     if (!textureCaps.renderable)
     {
         context->handleError(InvalidOperation()

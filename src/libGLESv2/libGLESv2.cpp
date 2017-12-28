@@ -1938,12 +1938,12 @@ void GL_APIENTRY glPathParameteriCHROMIUM(GLuint path, GLenum pname, GLint value
 
 void GL_APIENTRY glGetPathParameterfvCHROMIUM(GLuint path, GLenum pname, GLfloat *value)
 {
-    gl::GetPathParameterfCHROMIUM(path, pname, value);
+    gl::GetPathParameterfvCHROMIUM(path, pname, value);
 }
 
 void GL_APIENTRY glGetPathParameterivCHROMIUM(GLuint path, GLenum pname, GLint *value)
 {
-    gl::GetPathParameteriCHROMIUM(path, pname, value);
+    gl::GetPathParameterivCHROMIUM(path, pname, value);
 }
 
 void GL_APIENTRY glPathStencilFuncCHROMIUM(GLenum func, GLint ref, GLuint mask)

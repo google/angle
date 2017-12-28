@@ -106,8 +106,10 @@ class Context final : public ValidationContext
                          GLsizei numCoords,
                          GLenum coordType,
                          const void *coords);
-    void setPathParameterf(GLuint path, GLenum pname, GLfloat value);
-    void getPathParameterfv(GLuint path, GLenum pname, GLfloat *value) const;
+    void pathParameterf(GLuint path, GLenum pname, GLfloat value);
+    void pathParameteri(GLuint path, GLenum pname, GLint value);
+    void getPathParameterfv(GLuint path, GLenum pname, GLfloat *value);
+    void getPathParameteriv(GLuint path, GLenum pname, GLint *value);
     void setPathStencilFunc(GLenum func, GLint ref, GLuint mask);
 
     // Framebuffers are owned by the Context, so these methods do not pass through
@@ -120,6 +122,8 @@ class Context final : public ValidationContext
     void finishFenceNV(GLuint fence);
     void getFenceivNV(GLuint fence, GLenum pname, GLint *params);
     GLboolean isFenceNV(GLuint fence);
+    void setFenceNV(GLuint fence, GLenum condition);
+    GLboolean testFenceNV(GLuint fence);
 
     void bindTexture(GLenum target, GLuint handle);
     void bindReadFramebuffer(GLuint framebufferHandle);
@@ -527,31 +531,31 @@ class Context final : public ValidationContext
                                  GLenum format,
                                  GLsizei imageSize,
                                  const void *data);
-    void copyTextureCHROMIUM(GLuint sourceId,
-                             GLint sourceLevel,
-                             GLenum destTarget,
-                             GLuint destId,
-                             GLint destLevel,
-                             GLint internalFormat,
-                             GLenum destType,
-                             GLboolean unpackFlipY,
-                             GLboolean unpackPremultiplyAlpha,
-                             GLboolean unpackUnmultiplyAlpha);
-    void copySubTextureCHROMIUM(GLuint sourceId,
-                                GLint sourceLevel,
-                                GLenum destTarget,
-                                GLuint destId,
-                                GLint destLevel,
-                                GLint xoffset,
-                                GLint yoffset,
-                                GLint x,
-                                GLint y,
-                                GLsizei width,
-                                GLsizei height,
-                                GLboolean unpackFlipY,
-                                GLboolean unpackPremultiplyAlpha,
-                                GLboolean unpackUnmultiplyAlpha);
-    void compressedCopyTextureCHROMIUM(GLuint sourceId, GLuint destId);
+    void copyTexture(GLuint sourceId,
+                     GLint sourceLevel,
+                     GLenum destTarget,
+                     GLuint destId,
+                     GLint destLevel,
+                     GLint internalFormat,
+                     GLenum destType,
+                     GLboolean unpackFlipY,
+                     GLboolean unpackPremultiplyAlpha,
+                     GLboolean unpackUnmultiplyAlpha);
+    void copySubTexture(GLuint sourceId,
+                        GLint sourceLevel,
+                        GLenum destTarget,
+                        GLuint destId,
+                        GLint destLevel,
+                        GLint xoffset,
+                        GLint yoffset,
+                        GLint x,
+                        GLint y,
+                        GLsizei width,
+                        GLsizei height,
+                        GLboolean unpackFlipY,
+                        GLboolean unpackPremultiplyAlpha,
+                        GLboolean unpackUnmultiplyAlpha);
+    void compressedCopyTexture(GLuint sourceId, GLuint destId);
 
     void generateMipmap(GLenum target);
 
@@ -979,6 +983,8 @@ class Context final : public ValidationContext
                      GLenum type,
                      GLsizei bufSize,
                      void *data);
+    void eGLImageTargetTexture2DOES(GLenum target, GLeglImageOES image);
+    void eGLImageTargetRenderbufferStorageOES(GLenum target, GLeglImageOES image);
 
     // Consumes the error.
     void handleError(const Error &error) override;
