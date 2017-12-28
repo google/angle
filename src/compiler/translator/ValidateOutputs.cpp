@@ -43,7 +43,7 @@ class ValidateOutputsTraverser : public TIntermTraverser
     OutputVector mOutputs;
     OutputVector mUnspecifiedLocationOutputs;
     OutputVector mYuvOutputs;
-    std::set<std::string> mVisitedSymbols;
+    std::set<int> mVisitedSymbols;  // Visited symbol ids.
 };
 
 ValidateOutputsTraverser::ValidateOutputsTraverser(const TExtensionBehavior &extBehavior,
@@ -58,14 +58,15 @@ ValidateOutputsTraverser::ValidateOutputsTraverser(const TExtensionBehavior &ext
 
 void ValidateOutputsTraverser::visitSymbol(TIntermSymbol *symbol)
 {
-    TString name         = symbol->getSymbol();
-    TQualifier qualifier = symbol->getQualifier();
-
-    if (mVisitedSymbols.count(name.c_str()) == 1)
+    if (symbol->variable().symbolType() == SymbolType::Empty)
         return;
 
-    mVisitedSymbols.insert(name.c_str());
+    if (mVisitedSymbols.count(symbol->uniqueId().get()) == 1)
+        return;
 
+    mVisitedSymbols.insert(symbol->uniqueId().get());
+
+    TQualifier qualifier = symbol->getQualifier();
     if (qualifier == EvqFragmentOut)
     {
         if (symbol->getType().getLayoutQualifier().location != -1)
