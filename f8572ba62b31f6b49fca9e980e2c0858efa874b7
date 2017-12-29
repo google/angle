@@ -239,6 +239,30 @@
     },
     {
       "key": {
+        "uuid": "41d595b6_36e01423",
+        "filename": "gni/angle.gni",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-29T15:58:28Z",
+      "side": 1,
+      "message": "I read that as \"once upon a time\" .. if it\u0027s the case we need to disable it now I would agree, but seems more like he\u0027s talking about having something that\u0027s easier to update. In which case I\u0027d just update it when/if we need to.",
+      "parentUuid": "97b53026_67c42202",
+      "range": {
+        "startLine": 28,
+        "startChar": 6,
+        "endLine": 28,
+        "endChar": 67
+      },
+      "revId": "f8572ba62b31f6b49fca9e980e2c0858efa874b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5c4db324_42b53906",
         "filename": "gni/angle.gni",
         "patchSetId": 1
