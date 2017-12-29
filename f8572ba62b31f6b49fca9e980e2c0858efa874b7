@@ -191,6 +191,30 @@
     },
     {
       "key": {
+        "uuid": "2c0b3fd8_29df430f",
+        "filename": "gni/angle.gni",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-12-29T00:44:36Z",
+      "side": 1,
+      "message": "I see your comment above. I\u0027m fine with true for angle_enable_gl and for this.",
+      "parentUuid": "1890a834_e2a1363e",
+      "range": {
+        "startLine": 28,
+        "startChar": 6,
+        "endLine": 28,
+        "endChar": 67
+      },
+      "revId": "f8572ba62b31f6b49fca9e980e2c0858efa874b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5c4db324_42b53906",
         "filename": "gni/angle.gni",
         "patchSetId": 1
