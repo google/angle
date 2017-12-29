@@ -24,7 +24,8 @@ class UniformHLSL : angle::NonCopyable
     UniformHLSL(sh::GLenum shaderType,
                 StructureHLSL *structureHLSL,
                 ShShaderOutput outputType,
-                const std::vector<Uniform> &uniforms);
+                const std::vector<Uniform> &uniforms,
+                unsigned int firstUniformRegister);
 
     void reserveUniformRegisters(unsigned int registerCount);
     void reserveUniformBlockRegisters(unsigned int registerCount);

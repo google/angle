@@ -95,8 +95,9 @@ void OutputSamplerIndexArrayInitializer(TInfoSinkBase &out,
 UniformHLSL::UniformHLSL(sh::GLenum shaderType,
                          StructureHLSL *structureHLSL,
                          ShShaderOutput outputType,
-                         const std::vector<Uniform> &uniforms)
-    : mUniformRegister(0),
+                         const std::vector<Uniform> &uniforms,
+                         unsigned int firstUniformRegister)
+    : mUniformRegister(firstUniformRegister),
       mUniformBlockRegister(0),
       mTextureRegister(0),
       mRWTextureRegister(0),

@@ -73,6 +73,10 @@ ShaderD3D::ShaderD3D(const gl::ShaderState &data,
     {
         mAdditionalOptions |= SH_EMULATE_ISNAN_FLOAT_FUNCTION;
     }
+    if (workarounds.skipConstantRegisterZero)
+    {
+        mAdditionalOptions |= SH_SKIP_D3D_CONSTANT_REGISTER_ZERO;
+    }
     if (extensions.multiview)
     {
         mAdditionalOptions |= SH_INITIALIZE_BUILTINS_FOR_INSTANCED_MULTIVIEW;

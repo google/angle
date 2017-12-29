@@ -253,6 +253,11 @@ const ShCompileOptions SH_REWRITE_VECTOR_SCALAR_ARITHMETIC = UINT64_C(1) << 35;
 // variable initialization is turned on.
 const ShCompileOptions SH_DONT_USE_LOOPS_TO_INITIALIZE_VARIABLES = UINT64_C(1) << 36;
 
+// Don't use D3D constant register zero when allocating space for uniforms. This is targeted to work
+// around a bug in NVIDIA D3D driver version 388.59 where in very specific cases the driver would
+// not handle constant register zero correctly. Only has an effect on HLSL translation.
+const ShCompileOptions SH_SKIP_D3D_CONSTANT_REGISTER_ZERO = UINT64_C(1) << 37;
+
 // Defines alternate strategies for implementing array index clamping.
 enum ShArrayIndexClampingStrategy
 {

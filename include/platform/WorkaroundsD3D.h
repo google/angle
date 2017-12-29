@@ -128,6 +128,11 @@ struct WorkaroundsD3D
     // set viewport a large size on Intel windows platforms. So we enable depth buffer if stencil
     // buffer is enabled to workaround this issue. See http://crbug.com/782317
     bool enableDepthBufferWhenStencilBufferEnabled = false;
+
+    // Don't use D3D constant register zero when allocating space for uniforms. This is targeted to
+    // work around a bug in NVIDIA D3D driver version 388.59 where in very specific cases the driver
+    // would not handle constant register zero correctly.
+    bool skipConstantRegisterZero = false;
 };
 
 }  // namespace angle

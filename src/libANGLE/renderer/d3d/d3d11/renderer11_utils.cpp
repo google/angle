@@ -1268,8 +1268,14 @@ unsigned int GetMaxSampleMaskWords(D3D_FEATURE_LEVEL featureLevel)
     }
 }
 
-void GenerateCaps(ID3D11Device *device, ID3D11DeviceContext *deviceContext, const Renderer11DeviceCaps &renderer11DeviceCaps, gl::Caps *caps,
-                  gl::TextureCapsMap *textureCapsMap, gl::Extensions *extensions, gl::Limitations *limitations)
+void GenerateCaps(ID3D11Device *device,
+                  ID3D11DeviceContext *deviceContext,
+                  const Renderer11DeviceCaps &renderer11DeviceCaps,
+                  const angle::WorkaroundsD3D &workarounds,
+                  gl::Caps *caps,
+                  gl::TextureCapsMap *textureCapsMap,
+                  gl::Extensions *extensions,
+                  gl::Limitations *limitations)
 {
     D3D_FEATURE_LEVEL featureLevel = renderer11DeviceCaps.featureLevel;
     const gl::FormatSet &allFormats = gl::GetAllSizedInternalFormats();
@@ -1344,10 +1350,13 @@ void GenerateCaps(ID3D11Device *device, ID3D11DeviceContext *deviceContext, cons
 
     // Vertex shader limits
     caps->maxVertexAttributes = static_cast<GLuint>(GetMaximumVertexInputSlots(featureLevel));
-    caps->maxVertexUniformComponents =
-        static_cast<GLuint>(GetMaximumVertexUniformVectors(featureLevel)) * 4;
     caps->maxVertexUniformVectors =
         static_cast<GLuint>(GetMaximumVertexUniformVectors(featureLevel));
+    if (workarounds.skipConstantRegisterZero)
+    {
+        caps->maxVertexUniformVectors -= 1;
+    }
+    caps->maxVertexUniformComponents = caps->maxVertexUniformVectors * 4;
     caps->maxVertexUniformBlocks = static_cast<GLuint>(GetMaximumVertexUniformBlocks(featureLevel));
     caps->maxVertexOutputComponents =
         static_cast<GLuint>(GetMaximumVertexOutputVectors(featureLevel)) * 4;
@@ -1363,10 +1372,13 @@ void GenerateCaps(ID3D11Device *device, ID3D11DeviceContext *deviceContext, cons
     caps->maxVertexAttribStride = 2048;
 
     // Fragment shader limits
-    caps->maxFragmentUniformComponents =
-        static_cast<GLuint>(GetMaximumPixelUniformVectors(featureLevel)) * 4;
     caps->maxFragmentUniformVectors =
         static_cast<GLuint>(GetMaximumPixelUniformVectors(featureLevel));
+    if (workarounds.skipConstantRegisterZero)
+    {
+        caps->maxFragmentUniformVectors -= 1;
+    }
+    caps->maxFragmentUniformComponents = caps->maxFragmentUniformVectors * 4;
     caps->maxFragmentUniformBlocks =
         static_cast<GLuint>(GetMaximumPixelUniformBlocks(featureLevel));
     caps->maxFragmentInputComponents =
@@ -1382,6 +1394,10 @@ void GenerateCaps(ID3D11Device *device, ID3D11DeviceContext *deviceContext, cons
         static_cast<GLuint>(GetMaxComputeWorkGroupInvocations(featureLevel));
     caps->maxComputeUniformComponents =
         static_cast<GLuint>(GetMaximumComputeUniformVectors(featureLevel)) * 4;
+    if (workarounds.skipConstantRegisterZero)
+    {
+        caps->maxComputeUniformComponents -= 4;
+    }
     caps->maxComputeUniformBlocks =
         static_cast<GLuint>(GetMaximumComputeUniformBlocks(featureLevel));
     caps->maxComputeTextureImageUnits =
@@ -2198,6 +2214,7 @@ angle::WorkaroundsD3D GenerateWorkarounds(const Renderer11DeviceCaps &deviceCaps
 
     workarounds.flushAfterEndingTransformFeedback = IsNvidia(adapterDesc.VendorId);
     workarounds.getDimensionsIgnoresBaseLevel     = IsNvidia(adapterDesc.VendorId);
+    workarounds.skipConstantRegisterZero          = IsNvidia(adapterDesc.VendorId);
 
     if (IsIntel(adapterDesc.VendorId))
     {

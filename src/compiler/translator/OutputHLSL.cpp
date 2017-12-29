@@ -191,9 +191,13 @@ OutputHLSL::OutputHLSL(sh::GLenum shaderType,
     mExcessiveLoopIndex = nullptr;
 
     mStructureHLSL       = new StructureHLSL;
-    mUniformHLSL         = new UniformHLSL(shaderType, mStructureHLSL, outputType, uniforms);
     mTextureFunctionHLSL = new TextureFunctionHLSL;
     mImageFunctionHLSL   = new ImageFunctionHLSL;
+
+    unsigned int firstUniformRegister =
+        ((compileOptions & SH_SKIP_D3D_CONSTANT_REGISTER_ZERO) != 0) ? 1u : 0u;
+    mUniformHLSL =
+        new UniformHLSL(shaderType, mStructureHLSL, outputType, uniforms, firstUniformRegister);
 
     if (mOutputType == SH_HLSL_3_0_OUTPUT)
     {
