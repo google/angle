@@ -916,14 +916,17 @@ bool TCompiler::checkCallDepth()
             // Trace back the function chain to have a meaningful info log.
             std::stringstream errorStream;
             errorStream << "Call stack too deep (larger than " << maxCallStackDepth
-                        << ") with the following call chain: " << record.name;
+                        << ") with the following call chain: "
+                        << record.node->getFunction()->name();
 
             int currentFunction = static_cast<int>(i);
             int currentDepth    = depth;
 
             while (currentFunction != -1)
             {
-                errorStream << " -> " << mCallDag.getRecordFromIndex(currentFunction).name;
+                errorStream
+                    << " -> "
+                    << mCallDag.getRecordFromIndex(currentFunction).node->getFunction()->name();
 
                 int nextFunction = -1;
                 for (auto &calleeIndex : mCallDag.getRecordFromIndex(currentFunction).callees)
@@ -953,7 +956,7 @@ bool TCompiler::tagUsedFunctions()
     // Search from main, starting from the end of the DAG as it usually is the root.
     for (size_t i = mCallDag.size(); i-- > 0;)
     {
-        if (mCallDag.getRecordFromIndex(i).name == "main")
+        if (mCallDag.getRecordFromIndex(i).node->getFunction()->isMain())
         {
             internalTagUsedFunction(i);
             return true;

@@ -23,7 +23,7 @@ class CallDAG::CallDAGCreator : public TIntermTraverser
 {
   public:
     CallDAGCreator(TDiagnostics *diagnostics)
-        : TIntermTraverser(true, false, true),
+        : TIntermTraverser(true, false, false),
           mDiagnostics(diagnostics),
           mCurrentFunction(nullptr),
           mCurrentIndex(0)
@@ -36,7 +36,7 @@ class CallDAG::CallDAGCreator : public TIntermTraverser
         for (auto &it : mFunctions)
         {
             // Skip unimplemented functions
-            if (it.second.node)
+            if (it.second.definitionNode)
             {
                 InitResult result = assignIndicesInternal(&it.second);
                 if (result != INITDAG_SUCCESS)
@@ -65,15 +65,14 @@ class CallDAG::CallDAGCreator : public TIntermTraverser
         {
             CreatorFunctionData &data = it.second;
             // Skip unimplemented functions
-            if (!data.node)
+            if (!data.definitionNode)
             {
                 continue;
             }
             ASSERT(data.index < records->size());
             Record &record = (*records)[data.index];
 
-            record.name = data.name.data();
-            record.node = data.node;
+            record.node = data.definitionNode;
 
             record.callees.reserve(data.callees.size());
             for (auto &callee : data.callees)
@@ -81,18 +80,25 @@ class CallDAG::CallDAGCreator : public TIntermTraverser
                 record.callees.push_back(static_cast<int>(callee->index));
             }
 
-            (*idToIndex)[data.node->getFunction()->uniqueId().get()] = static_cast<int>(data.index);
+            (*idToIndex)[it.first] = static_cast<int>(data.index);
         }
     }
 
   private:
     struct CreatorFunctionData
     {
-        CreatorFunctionData() : node(nullptr), index(0), indexAssigned(false), visiting(false) {}
+        CreatorFunctionData()
+            : definitionNode(nullptr),
+              name(nullptr),
+              index(0),
+              indexAssigned(false),
+              visiting(false)
+        {
+        }
 
         std::set<CreatorFunctionData *> callees;
-        TIntermFunctionDefinition *node;
-        TString name;
+        TIntermFunctionDefinition *definitionNode;
+        const TString *name;
         size_t index;
         bool indexAssigned;
         bool visiting;
@@ -100,51 +106,36 @@ class CallDAG::CallDAGCreator : public TIntermTraverser
 
     bool visitFunctionDefinition(Visit visit, TIntermFunctionDefinition *node) override
     {
-        // Create the record if need be and remember the node.
-        if (visit == PreVisit)
-        {
-            auto it = mFunctions.find(node->getFunction()->uniqueId().get());
+        // Create the record if need be and remember the definition node.
+        mCurrentFunction = &mFunctions[node->getFunction()->uniqueId().get()];
+        // Name will be overwritten here. If we've already traversed the prototype of this function,
+        // it should have had the same name.
+        ASSERT(mCurrentFunction->name == nullptr ||
+               *mCurrentFunction->name == node->getFunction()->name());
+        mCurrentFunction->name           = &node->getFunction()->name();
+        mCurrentFunction->definitionNode = node;
 
-            if (it == mFunctions.end())
-            {
-                mCurrentFunction       = &mFunctions[node->getFunction()->uniqueId().get()];
-                mCurrentFunction->name = node->getFunction()->name();
-            }
-            else
-            {
-                mCurrentFunction = &it->second;
-                ASSERT(mCurrentFunction->name == node->getFunction()->name());
-            }
-
-            mCurrentFunction->node = node;
-        }
-        else if (visit == PostVisit)
-        {
-            mCurrentFunction = nullptr;
-        }
-        return true;
+        node->getBody()->traverse(this);
+        mCurrentFunction = nullptr;
+        return false;
     }
 
     bool visitFunctionPrototype(Visit visit, TIntermFunctionPrototype *node) override
     {
-        ASSERT(visit == PreVisit);
-        if (mCurrentFunction != nullptr)
-        {
-            return false;
-        }
+        ASSERT(mCurrentFunction == nullptr);
 
         // Function declaration, create an empty record.
         auto &record = mFunctions[node->getFunction()->uniqueId().get()];
-        record.name  = node->getFunction()->name();
+        record.name  = &node->getFunction()->name();
 
         // No need to traverse the parameters.
         return false;
     }
 
-    // Aggregates the AST node for each function as well as the name of the functions called by it
+    // Track functions called from another function.
     bool visitAggregate(Visit visit, TIntermAggregate *node) override
     {
-        if (visit == PreVisit && node->getOp() == EOpCallFunctionInAST)
+        if (node->getOp() == EOpCallFunctionInAST)
         {
             // Function call, add the callees
             auto it = mFunctions.find(node->getFunction()->uniqueId().get());
@@ -205,9 +196,9 @@ class CallDAG::CallDAGCreator : public TIntermTraverser
                 continue;
             }
 
-            if (!function->node)
+            if (!function->definitionNode)
             {
-                errorStream << "Undefined function '" << function->name
+                errorStream << "Undefined function '" << *function->name
                             << ")' used in the following call chain:";
                 result = INITDAG_UNDEFINED;
                 break;
@@ -253,7 +244,7 @@ class CallDAG::CallDAGCreator : public TIntermTraverser
                     {
                         errorStream << " -> ";
                     }
-                    errorStream << function->name << ")";
+                    errorStream << *function->name << ")";
                     first = false;
                 }
             }
