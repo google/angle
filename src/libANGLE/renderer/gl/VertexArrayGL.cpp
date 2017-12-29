@@ -131,18 +131,15 @@ gl::Error VertexArrayGL::syncDrawElementsState(const gl::Context *context,
                          primitiveRestartEnabled, outIndices);
 }
 
-gl::Error VertexArrayGL::syncElementArrayState(const gl::Context *context) const
+void VertexArrayGL::updateElementArrayBufferBinding(const gl::Context *context) const
 {
     gl::Buffer *elementArrayBuffer = mState.getElementArrayBuffer().get();
-    ASSERT(elementArrayBuffer);
-    if (elementArrayBuffer != mAppliedElementArrayBuffer.get())
+    if (elementArrayBuffer != nullptr && elementArrayBuffer != mAppliedElementArrayBuffer.get())
     {
         const BufferGL *bufferGL = GetImplAs<BufferGL>(elementArrayBuffer);
         mStateManager->bindBuffer(gl::BufferBinding::ElementArray, bufferGL->getBufferID());
         mAppliedElementArrayBuffer.set(context, elementArrayBuffer);
     }
-
-    return gl::NoError();
 }
 
 gl::Error VertexArrayGL::syncDrawState(const gl::Context *context,
@@ -200,13 +197,7 @@ gl::Error VertexArrayGL::syncIndexData(const gl::Context *context,
     // Need to check the range of indices if attributes need to be streamed
     if (elementArrayBuffer != nullptr)
     {
-        if (elementArrayBuffer != mAppliedElementArrayBuffer.get())
-        {
-            const BufferGL *bufferGL = GetImplAs<BufferGL>(elementArrayBuffer);
-            mStateManager->bindBuffer(gl::BufferBinding::ElementArray, bufferGL->getBufferID());
-            mAppliedElementArrayBuffer.set(context, elementArrayBuffer);
-        }
-
+        ASSERT(elementArrayBuffer == mAppliedElementArrayBuffer.get());
         // Only compute the index range if the attributes also need to be streamed
         if (attributesNeedStreaming)
         {
@@ -655,7 +646,7 @@ void VertexArrayGL::syncState(const gl::Context *context, const VertexArray::Dir
     {
         if (dirtyBit == VertexArray::DIRTY_BIT_ELEMENT_ARRAY_BUFFER)
         {
-            // TODO(jmadill): Element array buffer bindings
+            updateElementArrayBufferBinding(context);
             continue;
         }
 

@@ -166,7 +166,7 @@ class StateManagerGL final : angle::NonCopyable
                                    const void *indices,
                                    GLsizei instanceCount,
                                    const void **outIndices);
-    gl::Error setDrawIndirectState(const gl::Context *context, GLenum type);
+    gl::Error setDrawIndirectState(const gl::Context *context);
 
     gl::Error setDispatchComputeState(const gl::Context *context);
 

@@ -707,8 +707,6 @@ gl::Error StateManagerGL::setDrawArraysState(const gl::Context *context,
     ANGLE_TRY(vaoGL->syncDrawArraysState(context, program->getActiveAttribLocationsMask(), first,
                                          count, instanceCount));
 
-    bindVertexArray(vaoGL->getVertexArrayID(), vaoGL->getAppliedElementArrayBufferID());
-
     return setGenericDrawState(context);
 }
 
@@ -726,32 +724,15 @@ gl::Error StateManagerGL::setDrawElementsState(const gl::Context *context,
     const gl::VertexArray *vao = glState.getVertexArray();
     const VertexArrayGL *vaoGL = GetImplAs<VertexArrayGL>(vao);
 
-    gl::Error error = vaoGL->syncDrawElementsState(context, program->getActiveAttribLocationsMask(),
-                                                   count, type, indices, instanceCount,
-                                                   glState.isPrimitiveRestartEnabled(), outIndices);
-    if (error.isError())
-    {
-        return error;
-    }
-
-    bindVertexArray(vaoGL->getVertexArrayID(), vaoGL->getAppliedElementArrayBufferID());
+    ANGLE_TRY(vaoGL->syncDrawElementsState(context, program->getActiveAttribLocationsMask(), count,
+                                           type, indices, instanceCount,
+                                           glState.isPrimitiveRestartEnabled(), outIndices));
 
     return setGenericDrawState(context);
 }
 
-gl::Error StateManagerGL::setDrawIndirectState(const gl::Context *context, GLenum type)
+gl::Error StateManagerGL::setDrawIndirectState(const gl::Context *context)
 {
-    const gl::State &glState = context->getGLState();
-
-    const gl::VertexArray *vao = glState.getVertexArray();
-    const VertexArrayGL *vaoGL = GetImplAs<VertexArrayGL>(vao);
-
-    if (type != GL_NONE)
-    {
-        ANGLE_TRY(vaoGL->syncElementArrayState(context));
-    }
-    bindVertexArray(vaoGL->getVertexArrayID(), vaoGL->getAppliedElementArrayBufferID());
-
     return setGenericDrawState(context);
 }
 
@@ -1035,9 +1016,11 @@ void StateManagerGL::updateProgramStorageBufferBindings(const gl::Context *conte
 
 gl::Error StateManagerGL::setGenericDrawState(const gl::Context *context)
 {
-    setGenericShaderState(context);
-
     const gl::State &glState = context->getGLState();
+    const VertexArrayGL *vaoGL = GetImplAs<VertexArrayGL>(glState.getVertexArray());
+    bindVertexArray(vaoGL->getVertexArrayID(), vaoGL->getAppliedElementArrayBufferID());
+
+    setGenericShaderState(context);
 
     gl::Framebuffer *framebuffer = glState.getDrawFramebuffer();
     FramebufferGL *framebufferGL = GetImplAs<FramebufferGL>(framebuffer);
