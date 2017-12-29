@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "09d5a812_b54fbd57",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 422,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-12-29T04:59:03Z",
+      "side": 1,
+      "message": "Rename to mismatchedFieldName?",
+      "range": {
+        "startLine": 422,
+        "startChar": 49,
+        "endLine": 422,
+        "endChar": 65
+      },
+      "revId": "11a46d8e0aa16121d548eba7d3a24dcc57f5b826",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ec53beba_931a43e7",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2541,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-12-29T04:59:03Z",
+      "side": 1,
+      "message": "Move this to LinkValidateInterfaceBlockFields. And refactor the for loop like below:\n    for (unsigned int blockMemberIndex \u003d 0; blockMemberIndex \u003c numBlockMembers; blockMemberIndex++)\n    {\n        const sh::InterfaceBlockField \u0026member1 \u003d interfaceBlock1.fields[blockMemberIndex];\n        const sh::InterfaceBlockField \u0026member2 \u003d interfaceBlock2.fields[blockMemberIndex];\n        if (!LinkValidateInterfaceBlockFields(member1, member2, webglCompatibility, mismatchedItem, mismatchedFields))\n        {\n            UpdateMismatchedVariableFieldName(member1.name, mismatchedFields);\n            return false;\n        }\n    }",
+      "range": {
+        "startLine": 2534,
+        "startChar": 0,
+        "endLine": 2541,
+        "endChar": 9
+      },
+      "revId": "11a46d8e0aa16121d548eba7d3a24dcc57f5b826",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "928563a1_847b3586",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2605,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-12-29T04:59:03Z",
+      "side": 1,
+      "message": "Keep the same style like above:\nmismatchedItem.reset(new std::string(\"Variable name\"));\nmismatchedFields.reset(new std::string(member1.name));",
+      "range": {
+        "startLine": 2602,
+        "startChar": 0,
+        "endLine": 2605,
+        "endChar": 64
+      },
+      "revId": "11a46d8e0aa16121d548eba7d3a24dcc57f5b826",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b30c792e_d5682a68",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2621,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-12-29T04:59:03Z",
+      "side": 1,
+      "message": "Wrapper this to UpdateMismatchedVariableFieldName(member1.name, mismatchedFields);",
+      "range": {
+        "startLine": 2612,
+        "startChar": 0,
+        "endLine": 2621,
+        "endChar": 13
+      },
+      "revId": "11a46d8e0aa16121d548eba7d3a24dcc57f5b826",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
