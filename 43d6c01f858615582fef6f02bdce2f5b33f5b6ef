@@ -719,6 +719,24 @@
     },
     {
       "key": {
+        "uuid": "053a1d2c_4849c2c7",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 893,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-02T16:02:38Z",
+      "side": 1,
+      "message": "It seems reasonable. Let\u0027s chat about it when we\u0027re all back in the office together at some point.",
+      "parentUuid": "62dd9eac_ebdfa28c",
+      "revId": "43d6c01f858615582fef6f02bdce2f5b33f5b6ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b9875219_f1bbec24",
         "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
         "patchSetId": 24
