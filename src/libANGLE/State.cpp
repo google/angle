@@ -2205,8 +2205,7 @@ bool State::hasMappedBuffer(BufferBinding target) const
         const VertexArray *vao     = getVertexArray();
         const auto &vertexAttribs = vao->getVertexAttributes();
         const auto &vertexBindings = vao->getVertexBindings();
-        size_t maxEnabledAttrib = vao->getMaxEnabledAttribute();
-        for (size_t attribIndex = 0; attribIndex < maxEnabledAttrib; attribIndex++)
+        for (size_t attribIndex : vao->getEnabledAttributesMask())
         {
             const VertexAttribute &vertexAttrib = vertexAttribs[attribIndex];
             auto *boundBuffer = vertexBindings[vertexAttrib.bindingIndex].getBuffer().get();

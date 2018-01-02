@@ -42,7 +42,7 @@ class VertexArrayState final : angle::NonCopyable
     const BindingPointer<Buffer> &getElementArrayBuffer() const { return mElementArrayBuffer; }
     size_t getMaxAttribs() const { return mVertexAttributes.size(); }
     size_t getMaxBindings() const { return mVertexBindings.size(); }
-    size_t getMaxEnabledAttribute() const { return mMaxEnabledAttribute; }
+    const AttributesMask &getEnabledAttributesMask() const { return mEnabledAttributesMask; }
     const std::vector<VertexAttribute> &getVertexAttributes() const { return mVertexAttributes; }
     const VertexAttribute &getVertexAttribute(size_t attribIndex) const
     {
@@ -68,7 +68,7 @@ class VertexArrayState final : angle::NonCopyable
     std::vector<VertexAttribute> mVertexAttributes;
     BindingPointer<Buffer> mElementArrayBuffer;
     std::vector<VertexBinding> mVertexBindings;
-    size_t mMaxEnabledAttribute;
+    AttributesMask mEnabledAttributesMask;
 };
 
 class VertexArray final : public LabeledObject
@@ -147,7 +147,10 @@ class VertexArray final : public LabeledObject
 
     rx::VertexArrayImpl *getImplementation() const { return mVertexArray; }
 
-    size_t getMaxEnabledAttribute() const { return mState.getMaxEnabledAttribute(); }
+    const AttributesMask &getEnabledAttributesMask() const
+    {
+        return mState.getEnabledAttributesMask();
+    }
 
     enum DirtyBitType
     {

@@ -47,8 +47,7 @@ bool ValidateDrawAttribs(ValidationContext *context,
     const VertexArray *vao     = state.getVertexArray();
     const auto &vertexAttribs  = vao->getVertexAttributes();
     const auto &vertexBindings = vao->getVertexBindings();
-    size_t maxEnabledAttrib    = vao->getMaxEnabledAttribute();
-    for (size_t attributeIndex = 0; attributeIndex < maxEnabledAttrib; ++attributeIndex)
+    for (size_t attributeIndex : vao->getEnabledAttributesMask())
     {
         const VertexAttribute &attrib = vertexAttribs[attributeIndex];
 
