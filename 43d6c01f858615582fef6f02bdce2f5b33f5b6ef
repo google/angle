@@ -160,6 +160,24 @@
     },
     {
       "key": {
+        "uuid": "5a57328a_6e2ffa00",
+        "filename": "src/libANGLE/renderer/vulkan/CommandBufferNode.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 202,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-01-02T14:49:25Z",
+      "side": 1,
+      "message": "This function is used to check that no cycles are introduced in the graph. Checking for cycles (or asserting on them) can be done very easily in the topological sort in flushCommandGraph. So I was suggesting to do it there. WDYT?",
+      "parentUuid": "a0307158_11d9aabb",
+      "revId": "43d6c01f858615582fef6f02bdce2f5b33f5b6ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ef0fda22_928c9b8f",
         "filename": "src/libANGLE/renderer/vulkan/CommandBufferNode.h",
         "patchSetId": 24
@@ -416,6 +434,24 @@
     },
     {
       "key": {
+        "uuid": "e60c66c4_b02f4cba",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 904,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-01-02T14:49:25Z",
+      "side": 1,
+      "message": "Thanks for the explanation, I had there would be a Context update triggered directly. Your suggestion of local dirty bits sounds good too.",
+      "parentUuid": "65eb6b1a_e3c299b6",
+      "revId": "43d6c01f858615582fef6f02bdce2f5b33f5b6ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "da70c93f_7534bf0b",
         "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
         "patchSetId": 24
@@ -451,6 +487,24 @@
     },
     {
       "key": {
+        "uuid": "fe521ad0_5ac57e28",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 487,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-01-02T14:49:25Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "8184cbe7_3c437fff",
+      "revId": "43d6c01f858615582fef6f02bdce2f5b33f5b6ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d7ae5383_1c50c14b",
         "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
         "patchSetId": 24
@@ -480,6 +534,24 @@
       "side": 1,
       "message": "I\u0027m not sure, maybe? I left them as-is.",
       "parentUuid": "d7ae5383_1c50c14b",
+      "revId": "43d6c01f858615582fef6f02bdce2f5b33f5b6ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "220e71c0_65ec404d",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 192,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-01-02T14:49:25Z",
+      "side": 1,
+      "message": "They can be made \u003d default.",
+      "parentUuid": "4b051912_a6c91cf1",
       "revId": "43d6c01f858615582fef6f02bdce2f5b33f5b6ef",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -629,6 +701,24 @@
     },
     {
       "key": {
+        "uuid": "62dd9eac_ebdfa28c",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 893,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-01-02T14:49:25Z",
+      "side": 1,
+      "message": "I still think this is worthwhile. The current is already doing a topological sort except it isn\u0027t made explicit. Topological sort is not a regular container sort but a way to order nodes in a DAG such that dependencies are executed before the nodes depending on them. CallDAG is another example of a topo sort.\n\nBasically what we\u0027re asking is the splitting of the planning of the order in which nodes are executed from actually executing them.",
+      "parentUuid": "c51f28f6_c89a46a0",
+      "revId": "43d6c01f858615582fef6f02bdce2f5b33f5b6ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b9875219_f1bbec24",
         "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
         "patchSetId": 24
@@ -658,6 +748,24 @@
       "side": 1,
       "message": "Well, I needed the Serial as well, so it was somewhat of a natural next step to store the pool. You\u0027re right it could be generic garbage object.\n\nThanks for the pointer to the Serial Queue. I\u0027m still on the fence as to if I want to use that approach - it is pretty easy to work with, but it requires either heap allocation (for the little vectors) or a custom allocator class. I was considering using a ring buffer type approach to manage the garbage objects which wouldn\u0027t need a custom allocator or heap memory.\n\nI left it as-is for now, but I\u0027m open to changing this.",
       "parentUuid": "b9875219_f1bbec24",
+      "revId": "43d6c01f858615582fef6f02bdce2f5b33f5b6ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "67bb10f0_68cb9d1b",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 24
+      },
+      "lineNbr": 191,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-01-02T14:49:25Z",
+      "side": 1,
+      "message": "I still think splitting serial and pools is worthwile. You\u0027re right that I\u0027ve left SerialQueue optimizations TBD.",
+      "parentUuid": "2b8e5b6e_0e8fb7fb",
       "revId": "43d6c01f858615582fef6f02bdce2f5b33f5b6ef",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
