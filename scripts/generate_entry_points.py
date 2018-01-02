@@ -18,21 +18,20 @@ template_entry_point_header = """// GENERATED FILE - DO NOT EDIT.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// entry_points_gles_{major_version}_{minor_version}_autogen.h:
-//   Defines the GLES {major_version}.{minor_version} entry points.
+// entry_points_gles_{annotation_lower}_autogen.h:
+//   Defines the GLES {comment} entry points.
 
-#ifndef LIBGLESV2_ENTRYPOINTSGLES{major_version}{minor_version}_AUTOGEN_H_
-#define LIBGLESV2_ENTRYPOINTSGLES{major_version}{minor_version}_AUTOGEN_H_
+#ifndef LIBGLESV2_ENTRY_POINTS_GLES_{annotation_upper}_AUTOGEN_H_
+#define LIBGLESV2_ENTRY_POINTS_GLES_{annotation_upper}_AUTOGEN_H_
 
-#include <GLES{major_version}/gl{major_version}{minor_version_nonzero}.h>
-#include <export.h>
-{include_platform}
+{includes}
+
 namespace gl
 {{
 {entry_points}
 }}  // namespace gl
 
-#endif  // LIBGLESV2_ENTRYPOINTSGLES{major_version}{minor_version}_AUTOGEN_H_
+#endif  // LIBGLESV2_ENTRY_POINTS_GLES_{annotation_upper}_AUTOGEN_H_
 """
 
 template_entry_point_source = """// GENERATED FILE - DO NOT EDIT.
@@ -42,12 +41,10 @@ template_entry_point_source = """// GENERATED FILE - DO NOT EDIT.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// entry_points_gles_{major_version}_{minor_version}_autogen.cpp:
-//   Defines the GLES {major_version}.{minor_version} entry points.
+// entry_points_gles_{annotation_lower}_autogen.cpp:
+//   Defines the GLES {comment} entry points.
 
-#include "libANGLE/Context.h"
-#include "libANGLE/validationES{major_version}{minor_version_nonzero}.h"
-#include "libGLESv2/global_state.h"
+{includes}
 
 namespace gl
 {{
@@ -90,25 +87,8 @@ template_entry_point_def = """{return_type}GL_APIENTRY {name}({params})
 
         if (context->skipValidation() || Validate{name}({validate_params}))
         {{
-            {return_if_needed}context->{name_lower}({internal_params});
+            {return_if_needed}context->{name_lower_no_suffix}({internal_params});
         }}
-    }}
-{default_return_if_needed}}}
-"""
-
-template_entry_point_def_oldstyle = """{return_type}GL_APIENTRY {name}({params})
-{{
-    EVENT("({format_params})"{comma_if_needed}{pass_params});
-
-    Context *context = {context_getter}();
-    if (context)
-    {{
-        if (!context->skipValidation() && !Validate{name}({validate_params}))
-        {{
-            return{default_value_if_needed};
-        }}
-
-        {return_if_needed}context->{name_lower}({pass_params});
     }}
 {default_return_if_needed}}}
 """
@@ -119,7 +99,6 @@ def script_relative(path):
 tree = etree.parse(script_relative('gl.xml'))
 root = tree.getroot()
 commands = root.find(".//commands[@namespace='GL']")
-cmd_names = []
 
 with open(script_relative('entry_point_packed_gl_enums.json')) as f:
     cmd_packed_gl_enums = json.loads(f.read())
@@ -199,9 +178,11 @@ def format_entry_point_def(cmd_name, proto, params):
     format_params = [param_format_string(param) for param in params]
     return_type = proto[:-len(cmd_name)]
     default_return = default_return_value(cmd_name, return_type.strip())
+    name_lower_no_suffix = cmd_name[2:3].lower() + cmd_name[3:]
+
     return template_entry_point_def.format(
         name = cmd_name[2:],
-        name_lower = cmd_name[2:3].lower() + cmd_name[3:],
+        name_lower_no_suffix = name_lower_no_suffix,
         return_type = return_type,
         params = ", ".join(params),
         internal_params = ", ".join(internal_params),
@@ -214,36 +195,13 @@ def format_entry_point_def(cmd_name, proto, params):
         default_return_if_needed = "" if default_return == "" else "\n    return " + default_return + ";\n",
         context_getter = get_context_getter_function(cmd_name))
 
-def format_entry_point_def_oldstyle(cmd_name, proto, params):
-    pass_params = [just_the_name(param) for param in params]
-    format_params = [param_format_string(param) for param in params]
-    return_type = proto[:-len(cmd_name)]
-    default_return = default_return_value(cmd_name, return_type.strip())
-    return template_entry_point_def_oldstyle.format(
-        name = cmd_name[2:],
-        name_lower = cmd_name[2:3].lower() + cmd_name[3:],
-        return_type = return_type,
-        params = ", ".join(params),
-        pass_params = ", ".join(pass_params),
-        comma_if_needed = ", " if len(params) > 0 else "",
-        validate_params = ", ".join(["context"] + pass_params),
-        format_params = ", ".join(format_params),
-        return_if_needed = "" if default_return == "" else "return ",
-        default_return_if_needed = "" if default_return == "" else "\n    return " + default_return + ";\n",
-        default_value_if_needed = "" if default_return == "" else (" " + default_return),
-        context_getter = get_context_getter_function(cmd_name))
-
 def path_to(folder, file):
     return os.path.join(script_relative(".."), "src", folder, file)
 
-all_commands = root.findall('commands/command')
+def get_entry_points(all_commands, gles_commands):
 
-for major_version, minor_version in [[2, 0], [3, 0], [3, 1]]:
-    gles_xpath = ".//feature[@name='GL_ES_VERSION_{}_{}']//command".format(major_version, minor_version)
-    gles_commands = [cmd.attrib['name'] for cmd in root.findall(gles_xpath)]
-
-    entry_point_decls = []
-    entry_point_defs = []
+    decls = []
+    defs = []
 
     for command in all_commands:
         proto = command.find('proto')
@@ -254,49 +212,78 @@ for major_version, minor_version in [[2, 0], [3, 0], [3, 1]]:
 
         param_text = ["".join(param.itertext()) for param in command.findall('param')]
         proto_text = "".join(proto.itertext())
-        cmd_names += [cmd_name]
-        entry_point_decls += [format_entry_point_decl(cmd_name, proto_text, param_text)]
-        entry_point_defs += [format_entry_point_def(cmd_name, proto_text, param_text)]
 
-    for type in ["header", "source"]:
-        if type == "header":
-            template = template_entry_point_header
-            entry_points = "\n".join(entry_point_decls)
-            suffix = "h"
-        else:
-            template = template_entry_point_source
-            entry_points = "\n".join(entry_point_defs)
-            suffix = "cpp"
+        decls.append(format_entry_point_decl(cmd_name, proto_text, param_text))
+        defs.append(format_entry_point_def(cmd_name, proto_text, param_text))
 
-        if type == "header" and major_version == 3 and minor_version == 1:
-            # We include the platform.h header since it undefines the conflicting MemoryBarrier macro.
-            include_platform = "\n#include \"common/platform.h\"\n"
-        else:
-            include_platform = ""
+    return decls, defs
 
-        content = template.format(
-            script_name = os.path.basename(sys.argv[0]),
-            data_source_name = "gl.xml",
-            year = date.today().year,
-            major_version = major_version,
-            minor_version = minor_version,
-            minor_version_nonzero = minor_version if minor_version else "",
-            include_platform = include_platform,
-            entry_points = entry_points)
+def write_file(annotation, comment, template, entry_points, suffix, includes):
 
-        path = path_to("libGLESv2", "entry_points_gles_{}_{}_autogen.{}".format(major_version, minor_version, suffix))
+    content = template.format(
+        script_name = os.path.basename(sys.argv[0]),
+        data_source_name = "gl.xml",
+        year = date.today().year,
+        annotation_lower = annotation.lower(),
+        annotation_upper = annotation.upper(),
+        comment = comment,
+        includes = includes,
+        entry_points = entry_points)
 
-        with open(path, "w") as out:
-            out.write(content)
-            out.close()
+    path = path_to("libGLESv2", "entry_points_gles_{}_autogen.{}".format(
+        annotation.lower(), suffix))
+
+    with open(path, "w") as out:
+        out.write(content)
+        out.close()
+
+all_commands = root.findall('commands/command')
+all_cmd_names = []
+
+template_header_includes = """#include <GLES{}/gl{}{}.h>
+#include <export.h>"""
+
+template_sources_includes = """#include "libANGLE/Context.h"
+#include "libANGLE/validationES{}{}.h"
+#include "libGLESv2/global_state.h"
+"""
+
+# First run through the main GLES entry points.
+for major_version, minor_version in [[2, 0], [3, 0], [3, 1]]:
+    annotation = "{}_{}".format(major_version, minor_version)
+    comment = annotation.replace("_", ".")
+    gles_xpath = ".//feature[@name='GL_ES_VERSION_{}']//command".format(annotation)
+    gles_commands = [cmd.attrib['name'] for cmd in root.findall(gles_xpath)]
+    all_cmd_names += gles_commands
+
+    decls, defs = get_entry_points(all_commands, gles_commands)
+
+    minor_if_not_zero = minor_version if minor_version != 0 else ""
+
+    header_includes = template_header_includes.format(
+        major_version, major_version, minor_if_not_zero)
+
+    # We include the platform.h header since it undefines the conflicting MemoryBarrier macro.
+    if major_version == 3 and minor_version == 1:
+        header_includes += "\n#include \"common/platform.h\"\n"
+
+    source_includes = template_sources_includes.format(major_version, minor_if_not_zero)
+
+    write_file(annotation, comment, template_entry_point_header,
+               "\n".join(decls), "h", header_includes)
+    write_file(annotation, comment, template_entry_point_source,
+               "\n".join(defs), "cpp", source_includes)
 
 # TODO(jmadill): Remove manually added entry points once we auto-gen them.
-manual_cmd_names = ["Invalid"] + [cmd[2:] for cmd in sorted(cmd_names)] + ["DrawElementsInstancedANGLE"]
+all_cmd_names += ["glDrawElementsInstancedANGLE"]
+
+sorted_cmd_names = ["Invalid"] + [cmd[2:] for cmd in sorted(all_cmd_names)]
+
 entry_points_enum = template_entry_points_enum_header.format(
     script_name = os.path.basename(sys.argv[0]),
     data_source_name = "gl.xml",
     year = date.today().year,
-    entry_points_list = ",\n".join(["    " + cmd for cmd in manual_cmd_names]))
+    entry_points_list = ",\n".join(["    " + cmd for cmd in sorted_cmd_names]))
 
 entry_points_enum_header_path = path_to("libANGLE", "entry_points_enum_autogen.h")
 with open(entry_points_enum_header_path, "w") as out:
