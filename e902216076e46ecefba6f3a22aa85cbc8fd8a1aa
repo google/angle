@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4687f8ff_16e45035",
+        "filename": "src/libGLESv2/entry_points_gles_2_0_ext_autogen.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 617,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-01-03T22:22:20Z",
+      "side": 1,
+      "message": "nit: Why isn\u0027t this pretty formatted, like the rest?",
+      "range": {
+        "startLine": 617,
+        "startChar": 0,
+        "endLine": 617,
+        "endChar": 100
+      },
+      "revId": "e902216076e46ecefba6f3a22aa85cbc8fd8a1aa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eae922f4_d4587ed1",
+        "filename": "src/libGLESv2/entry_points_gles_2_0_ext_autogen.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 769,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-01-03T22:22:20Z",
+      "side": 1,
+      "message": "nit: here, too",
+      "range": {
+        "startLine": 769,
+        "startChar": 0,
+        "endLine": 769,
+        "endChar": 17
+      },
+      "revId": "e902216076e46ecefba6f3a22aa85cbc8fd8a1aa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "38030392_cd632a1a",
+        "filename": "src/libGLESv2/entry_points_gles_2_0_ext_autogen.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-01-03T22:22:20Z",
+      "side": 1,
+      "message": "nit: looks weird that this is empty. The functions seem to be defined by GL_EXT_disjoint_timer_query, though.",
+      "range": {
+        "startLine": 92,
+        "startChar": 3,
+        "endLine": 92,
+        "endChar": 33
+      },
+      "revId": "e902216076e46ecefba6f3a22aa85cbc8fd8a1aa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1a9739a7_600954ef",
+        "filename": "src/libGLESv2/entry_points_gles_2_0_ext_autogen.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-01-03T22:22:20Z",
+      "side": 1,
+      "message": "nit: Why is this not pretty formatted like the rest?",
+      "range": {
+        "startLine": 154,
+        "startChar": 0,
+        "endLine": 154,
+        "endChar": 99
+      },
+      "revId": "e902216076e46ecefba6f3a22aa85cbc8fd8a1aa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
