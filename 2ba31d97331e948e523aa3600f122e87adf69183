@@ -22,6 +22,30 @@
       "revId": "2ba31d97331e948e523aa3600f122e87adf69183",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0b20bbb4_797973c1",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-03T21:26:35Z",
+      "side": 1,
+      "message": "Definitely awkward. Rephrased.",
+      "parentUuid": "60cd3121_fe12cabb",
+      "range": {
+        "startLine": 11,
+        "startChar": 54,
+        "endLine": 11,
+        "endChar": 55
+      },
+      "revId": "2ba31d97331e948e523aa3600f122e87adf69183",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
