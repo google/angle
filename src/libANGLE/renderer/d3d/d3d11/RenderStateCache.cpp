@@ -208,14 +208,6 @@ gl::Error RenderStateCache::getDepthStencilState(Renderer11 *renderer,
     dsDesc.BackFace.StencilPassOp       = ConvertStencilOp(glState.stencilBackPassDepthPass);
     dsDesc.BackFace.StencilFunc         = ConvertComparison(glState.stencilBackFunc);
 
-    if (renderer->getWorkarounds().enableDepthBufferWhenStencilBufferEnabled &&
-        dsDesc.StencilEnable && !dsDesc.DepthEnable)
-    {
-        dsDesc.DepthEnable    = TRUE;
-        dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
-        dsDesc.DepthFunc      = D3D11_COMPARISON_ALWAYS;
-    }
-
     d3d11::DepthStencilState dx11DepthStencilState;
     ANGLE_TRY(renderer->allocateResource(dsDesc, &dx11DepthStencilState));
     const auto &iter = mDepthStencilStateCache.Put(glState, std::move(dx11DepthStencilState));
