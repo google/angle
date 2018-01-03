@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "1e1ecacc_a761ea72",
+        "filename": "src/compiler/translator/OutputGLSL.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-01-03T14:39:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "aa7cda1b_dd533137",
+      "revId": "d05f60c30d26afb42b7cc7d5b0cb3cb4e027954b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7fbc55b4_0380cbe8",
         "filename": "src/compiler/translator/OutputHLSL.cpp",
         "patchSetId": 17
@@ -33,6 +51,24 @@
       "revId": "d05f60c30d26afb42b7cc7d5b0cb3cb4e027954b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "331a5ef9_2604c045",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 868,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-01-03T14:39:26Z",
+      "side": 1,
+      "message": "Ah yes, that\u0027s probably better. Accessing an empty symbol string is not able to result in a null pointer dereference anymore so just an assert should be safe enough.",
+      "parentUuid": "7fbc55b4_0380cbe8",
+      "revId": "d05f60c30d26afb42b7cc7d5b0cb3cb4e027954b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
