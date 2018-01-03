@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "aa7cda1b_dd533137",
+        "filename": "src/compiler/translator/OutputGLSL.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-01-03T14:17:19Z",
+      "side": 1,
+      "message": "nit: comment about this being an early exist since the special cases are all builtins.",
+      "revId": "d05f60c30d26afb42b7cc7d5b0cb3cb4e027954b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7fbc55b4_0380cbe8",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 868,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-01-03T14:17:19Z",
+      "side": 1,
+      "message": "nit: ?\n // Same comment\n ASSERT(variable.symbolType() !\u003d SymbolType::Empty);",
+      "revId": "d05f60c30d26afb42b7cc7d5b0cb3cb4e027954b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
