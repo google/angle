@@ -98,7 +98,7 @@ class FramebufferVk : public FramebufferImpl, public ResourceVk
 
     Optional<vk::RenderPassDesc> mRenderPassDesc;
     vk::Framebuffer mFramebuffer;
-    bool mRenderNodeDirty;
+    Serial mLastRenderNodeSerial;
 };
 
 }  // namespace rx

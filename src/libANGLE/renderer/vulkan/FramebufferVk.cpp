@@ -61,7 +61,7 @@ FramebufferVk::FramebufferVk(const gl::FramebufferState &state)
       mBackbuffer(nullptr),
       mRenderPassDesc(),
       mFramebuffer(),
-      mRenderNodeDirty(false)
+      mLastRenderNodeSerial()
 {
 }
 
@@ -70,7 +70,7 @@ FramebufferVk::FramebufferVk(const gl::FramebufferState &state, WindowSurfaceVk 
       mBackbuffer(backbuffer),
       mRenderPassDesc(),
       mFramebuffer(),
-      mRenderNodeDirty(false)
+      mLastRenderNodeSerial()
 {
 }
 
@@ -161,8 +161,11 @@ gl::Error FramebufferVk::clear(const gl::Context *context, GLbitfield mask)
         {
             RenderTargetVk *renderTarget = nullptr;
             ANGLE_TRY(colorAttachment.getRenderTarget(context, &renderTarget));
-            renderTarget->image->changeLayoutTop(
-                VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, commandBuffer);
+
+            renderTarget->image->changeLayoutWithStages(
+                VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+                VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, commandBuffer);
+
             commandBuffer->clearSingleColorImage(*renderTarget->image, clearColorValue);
         }
     }
@@ -348,7 +351,7 @@ void FramebufferVk::syncState(const gl::Context *context,
     renderer->releaseResource(*this, &mFramebuffer);
 
     // Trigger a new set of secondary commands next time we render to this FBO,.
-    mRenderNodeDirty = true;
+    mLastRenderNodeSerial = Serial();
 
     // TODO(jmadill): Use pipeline cache.
     contextVk->invalidateCurrentPipeline();
@@ -471,7 +474,7 @@ gl::Error FramebufferVk::getRenderNode(const gl::Context *context, vk::CommandBu
     RendererVk *renderer = contextVk->getRenderer();
     Serial currentSerial = renderer->getCurrentQueueSerial();
 
-    if (isCurrentlyRecording(currentSerial) && !mRenderNodeDirty)
+    if (isCurrentlyRecording(currentSerial) && mLastRenderNodeSerial == currentSerial)
     {
         *nodeOut = getCurrentWriteNode(currentSerial);
         ASSERT((*nodeOut)->getInsideRenderPassCommands()->valid());
@@ -527,7 +530,7 @@ gl::Error FramebufferVk::getRenderNode(const gl::Context *context, vk::CommandBu
         node->appendDepthStencilRenderTarget(currentSerial, renderTarget);
     }
 
-    mRenderNodeDirty = false;
+    mLastRenderNodeSerial = currentSerial;
 
     *nodeOut = node;
     return gl::NoError();
