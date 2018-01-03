@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "b32d5505_b4e99ec0",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-03T22:36:40Z",
+      "side": 1,
+      "message": "a) can you place the implementation of this method in the cpp file\nb) can you use a more optimized implementation of checking if mLazyStream is null, and also if it is not null, check mLazyStream-\u003erdbuf()-\u003ein_avail()? See https://stackoverflow.com/questions/8046357/how-do-i-check-if-a-stringstream-variable-is-empty-null",
+      "range": {
+        "startLine": 122,
+        "startChar": 4,
+        "endLine": 122,
+        "endChar": 48
+      },
+      "revId": "07ba75cf3ca441f9e8fcec38857f224397e0e1a7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "c2a259e6_bffb854c",
         "filename": "src/tests/gl_tests/GLSLTest.cpp",
         "patchSetId": 1
