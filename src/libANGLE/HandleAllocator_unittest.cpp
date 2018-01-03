@@ -150,4 +150,24 @@ TEST(HandleAllocatorTest, Reset)
     }
 }
 
+// Covers a particular bug with reserving and allocating sub ranges.
+TEST(HandleAllocatorTest, ReserveAndAllocateIterated)
+{
+    gl::HandleAllocator allocator;
+
+    for (int iteration = 0; iteration < 3; ++iteration)
+    {
+        allocator.reserve(5);
+        allocator.reserve(6);
+        GLuint a = allocator.allocate();
+        GLuint b = allocator.allocate();
+        GLuint c = allocator.allocate();
+        allocator.release(c);
+        allocator.release(a);
+        allocator.release(b);
+        allocator.release(5);
+        allocator.release(6);
+    }
+}
+
 }  // anonymous namespace

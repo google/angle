@@ -260,6 +260,11 @@ void TextureManager::signalAllTexturesDirty() const
     }
 }
 
+void TextureManager::enableHandleAllocatorLogging()
+{
+    mHandleAllocator.enableLogging(true);
+}
+
 // RenderbufferManager Implementation.
 
 // static

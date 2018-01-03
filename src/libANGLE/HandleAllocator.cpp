@@ -10,6 +10,7 @@
 #include "libANGLE/HandleAllocator.h"
 
 #include <algorithm>
+#include <functional>
 
 #include "common/debug.h"
 
@@ -24,7 +25,7 @@ struct HandleAllocator::HandleRangeComparator
     }
 };
 
-HandleAllocator::HandleAllocator() : mBaseValue(1), mNextValue(1)
+HandleAllocator::HandleAllocator() : mBaseValue(1), mNextValue(1), mLoggingEnabled(false)
 {
     mUnallocatedList.push_back(HandleRange(1, std::numeric_limits<GLuint>::max()));
 }
@@ -52,9 +53,15 @@ GLuint HandleAllocator::allocate()
     // Allocate from released list, logarithmic time for pop_heap.
     if (!mReleasedList.empty())
     {
-        std::pop_heap(mReleasedList.begin(), mReleasedList.end());
+        std::pop_heap(mReleasedList.begin(), mReleasedList.end(), std::greater<GLuint>());
         GLuint reusedHandle = mReleasedList.back();
         mReleasedList.pop_back();
+
+        if (mLoggingEnabled)
+        {
+            WARN() << "HandleAllocator::allocate reusing " << reusedHandle << std::endl;
+        }
+
         return reusedHandle;
     }
 
@@ -73,18 +80,33 @@ GLuint HandleAllocator::allocate()
         listIt->begin++;
     }
 
+    if (mLoggingEnabled)
+    {
+        WARN() << "HandleAllocator::allocate allocating " << freeListHandle << std::endl;
+    }
+
     return freeListHandle;
 }
 
 void HandleAllocator::release(GLuint handle)
 {
+    if (mLoggingEnabled)
+    {
+        WARN() << "HandleAllocator::release releasing " << handle << std::endl;
+    }
+
     // Add to released list, logarithmic time for push_heap.
     mReleasedList.push_back(handle);
-    std::push_heap(mReleasedList.begin(), mReleasedList.end());
+    std::push_heap(mReleasedList.begin(), mReleasedList.end(), std::greater<GLuint>());
 }
 
 void HandleAllocator::reserve(GLuint handle)
 {
+    if (mLoggingEnabled)
+    {
+        WARN() << "HandleAllocator::reserve reserving " << handle << std::endl;
+    }
+
     // Clear from released list -- might be a slow operation.
     if (!mReleasedList.empty())
     {
@@ -137,6 +159,11 @@ void HandleAllocator::reset()
     mReleasedList.clear();
     mBaseValue = 1;
     mNextValue = 1;
+}
+
+void HandleAllocator::enableLogging(bool enabled)
+{
+    mLoggingEnabled = enabled;
 }
 
 }  // namespace gl

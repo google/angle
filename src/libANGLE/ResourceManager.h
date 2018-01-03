@@ -167,6 +167,8 @@ class TextureManager : public TypedResourceManager<Texture, HandleAllocator, Tex
     static Texture *AllocateNewObject(rx::GLImplFactory *factory, GLuint handle, GLenum target);
     static void DeleteObject(const Context *context, Texture *texture);
 
+    void enableHandleAllocatorLogging();
+
   protected:
     ~TextureManager() override {}
 };
