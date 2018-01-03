@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "61319881_07cbec18",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 18
+      },
+      "lineNbr": 248,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-03T15:46:05Z",
+      "side": 1,
+      "message": "since this is mVariable-\u003ename(), wouldn\u0027t this more accurately be called \"getName\" or \"getVariableName\"?",
+      "range": {
+        "startLine": 248,
+        "startChar": 19,
+        "endLine": 248,
+        "endChar": 28
+      },
+      "revId": "2f6572bb499b3081b27299f9fd3ad3b6e491911f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d3c8bbec_151ff423",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 610,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-03T15:46:05Z",
+      "side": 1,
+      "message": "nit: I would refactor this as\n\n// comment\ncode",
+      "range": {
+        "startLine": 610,
+        "startChar": 36,
+        "endLine": 610,
+        "endChar": 85
+      },
+      "revId": "2f6572bb499b3081b27299f9fd3ad3b6e491911f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
