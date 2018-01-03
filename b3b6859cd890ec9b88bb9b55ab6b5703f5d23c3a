@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e845b0bd_3a09ed04",
+        "filename": "src/compiler/translator/UniformHLSL.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 469,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-01-03T14:24:56Z",
+      "side": 0,
+      "message": "ew.",
+      "revId": "b3b6859cd890ec9b88bb9b55ab6b5703f5d23c3a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
