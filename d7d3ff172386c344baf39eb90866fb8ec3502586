@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "15b30775_cd7bcb50",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 24
+      },
+      "lineNbr": 349,
+      "author": {
+        "id": 1221469
+      },
+      "writtenOn": "2018-01-04T18:31:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5c6bba6d_5765ec72",
+      "range": {
+        "startLine": 349,
+        "startChar": 19,
+        "endLine": 349,
+        "endChar": 34
+      },
+      "revId": "d7d3ff172386c344baf39eb90866fb8ec3502586",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e28b6bbc_80e5f612",
         "filename": "src/libANGLE/angletypes.cpp",
         "patchSetId": 24
@@ -45,6 +69,30 @@
       "revId": "d7d3ff172386c344baf39eb90866fb8ec3502586",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8b4def08_9f5e6c08",
+        "filename": "src/libANGLE/angletypes.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 324,
+      "author": {
+        "id": 1221469
+      },
+      "writtenOn": "2018-01-04T18:31:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e28b6bbc_80e5f612",
+      "range": {
+        "startLine": 324,
+        "startChar": 4,
+        "endLine": 324,
+        "endChar": 17
+      },
+      "revId": "d7d3ff172386c344baf39eb90866fb8ec3502586",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
