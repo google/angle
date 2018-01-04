@@ -99,6 +99,16 @@ helper_script_and_deps = [
     "unique_objects_wrappers.h",
     "unique_objects_generator.py",
   ],
+  [
+    "vulkan_mock_icd_cpp",
+    "mock_icd.cpp",
+    "mock_icd_generator.py",
+  ],
+  [
+    "vulkan_mock_icd_h",
+    "mock_icd.h",
+    "mock_icd_generator.py",
+  ],
 ]
 
 foreach(script_and_dep, helper_script_and_deps) {
@@ -460,6 +470,57 @@ if (!is_android) {
     data = vulkan_gen_json_files_outputs
     args += [ rebase_path("$root_out_dir/$data_dir", root_build_dir) ]
   }
+
+  # Vulkan Mock ICD
+  # ---------------
+  group("vulkan_generate_mock_icd_files") {
+    public_deps = [
+      ":vulkan_generate_helper_files",
+      ":vulkan_mock_icd_cpp",
+      ":vulkan_mock_icd_h",
+    ]
+  }
+
+  mock_icd_sources = [
+    "$vulkan_gen_dir/mock_icd.cpp",
+    "$vulkan_gen_dir/mock_icd.h",
+  ]
+
+  shared_library("VkICD_mock_icd") {
+    configs -= vulkan_undefine_configs
+    public_configs = [
+      ":vulkan_config",
+    ]
+    deps = [
+      "//build/config:exe_and_shlib_deps",
+    ]
+    deps += [ ":vulkan_generate_mock_icd_files" ]
+    sources = mock_icd_sources
+    if (is_win) {
+      sources += [ "$vulkan_layers_dir/icd/VkICD_mock_icd.def" ]
+    }
+  }
+
+  action("vulkan_gen_icd_json_file") {
+    script = "$angle_root/scripts/generate_vulkan_layers_json.py"
+    if (is_win) {
+      sources = [
+        "$vulkan_layers_dir/icd/windows/VkICD_mock_icd.json",
+      ]
+      args = [ "$raw_vulkan_layers_dir/icd/windows" ]
+    }
+    if (is_linux) {
+      sources = [
+        "$vulkan_layers_dir/icd/linux/VkICD_mock_icd.json",
+      ]
+      args = [ "$raw_vulkan_layers_dir/icd/linux" ]
+    }
+
+    # The layer JSON files are part of the necessary data deps.
+    outputs = [ "$root_out_dir/$data_dir/VkICD_mock_icd.json", ]
+    data = [ "$root_out_dir/$data_dir/VkICD_mock_icd.json", ]
+    args += [ rebase_path("$root_out_dir/$data_dir", root_build_dir) ]
+  }
 }
 
 source_set("vulkan_layer_utils") {
@@ -552,3 +613,4 @@ foreach(layer_info, layers) {
     }
   }
 }
+
