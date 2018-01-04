@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8f9e1eda_7e0b6e95",
+        "filename": "src/libANGLE/ProgramLinkedResources.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-01-04T10:00:28Z",
+      "side": 1,
+      "message": "Why change the naming from \"define\" to \"update\"? Especially since inside these functions still call defineBlockMemberImpl.",
+      "revId": "079961bc3f2e6467fe39aef3862c107aeb08728c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
