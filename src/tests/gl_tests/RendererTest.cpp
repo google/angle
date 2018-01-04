@@ -53,7 +53,7 @@ TEST_P(RendererTest, RequestedRendererCreated)
     if (platform.renderer == EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
     {
         // Ensure that the renderer uses WARP, if we requested it.
-        if (platform.deviceType == EGL_PLATFORM_ANGLE_DEVICE_TYPE_WARP_ANGLE)
+        if (platform.deviceType == EGL_PLATFORM_ANGLE_DEVICE_TYPE_D3D_WARP_ANGLE)
         {
             auto basicRenderPos = rendererString.find(std::string("microsoft basic render"));
             auto softwareAdapterPos = rendererString.find(std::string("software adapter"));

@@ -106,13 +106,13 @@ std::ostream &operator<<(std::ostream& stream, const PlatformParameters &pp)
           stream << "_NULL";
           break;
 
-      case EGL_PLATFORM_ANGLE_DEVICE_TYPE_REFERENCE_ANGLE:
-        stream << "_REFERENCE";
-        break;
+      case EGL_PLATFORM_ANGLE_DEVICE_TYPE_D3D_REFERENCE_ANGLE:
+          stream << "_REFERENCE";
+          break;
 
-      case EGL_PLATFORM_ANGLE_DEVICE_TYPE_WARP_ANGLE:
-        stream << "_WARP";
-        break;
+      case EGL_PLATFORM_ANGLE_DEVICE_TYPE_D3D_WARP_ANGLE:
+          stream << "_WARP";
+          break;
 
       default:
         UNREACHABLE();
@@ -176,10 +176,8 @@ EGLPlatformParameters D3D9_NULL()
 
 EGLPlatformParameters D3D9_REFERENCE()
 {
-    return EGLPlatformParameters(
-        EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE,
-        EGL_DONT_CARE, EGL_DONT_CARE,
-        EGL_PLATFORM_ANGLE_DEVICE_TYPE_REFERENCE_ANGLE);
+    return EGLPlatformParameters(EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE, EGL_DONT_CARE, EGL_DONT_CARE,
+                                 EGL_PLATFORM_ANGLE_DEVICE_TYPE_D3D_REFERENCE_ANGLE);
 }
 
 EGLPlatformParameters D3D11()
@@ -246,98 +244,74 @@ EGLPlatformParameters D3D11_NULL()
 
 EGLPlatformParameters D3D11_WARP()
 {
-    return EGLPlatformParameters(
-        EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE,
-        EGL_DONT_CARE, EGL_DONT_CARE,
-        EGL_PLATFORM_ANGLE_DEVICE_TYPE_WARP_ANGLE);
+    return EGLPlatformParameters(EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE, EGL_DONT_CARE, EGL_DONT_CARE,
+                                 EGL_PLATFORM_ANGLE_DEVICE_TYPE_D3D_WARP_ANGLE);
 }
 
 EGLPlatformParameters D3D11_FL11_1_WARP()
 {
-    return EGLPlatformParameters(
-        EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE,
-        11, 1,
-        EGL_PLATFORM_ANGLE_DEVICE_TYPE_WARP_ANGLE);
+    return EGLPlatformParameters(EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE, 11, 1,
+                                 EGL_PLATFORM_ANGLE_DEVICE_TYPE_D3D_WARP_ANGLE);
 }
 
 EGLPlatformParameters D3D11_FL11_0_WARP()
 {
-    return EGLPlatformParameters(
-        EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE,
-        11, 0,
-        EGL_PLATFORM_ANGLE_DEVICE_TYPE_WARP_ANGLE);
+    return EGLPlatformParameters(EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE, 11, 0,
+                                 EGL_PLATFORM_ANGLE_DEVICE_TYPE_D3D_WARP_ANGLE);
 }
 
 EGLPlatformParameters D3D11_FL10_1_WARP()
 {
-    return EGLPlatformParameters(
-        EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE,
-        10, 1,
-        EGL_PLATFORM_ANGLE_DEVICE_TYPE_WARP_ANGLE);
+    return EGLPlatformParameters(EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE, 10, 1,
+                                 EGL_PLATFORM_ANGLE_DEVICE_TYPE_D3D_WARP_ANGLE);
 }
 
 EGLPlatformParameters D3D11_FL10_0_WARP()
 {
-    return EGLPlatformParameters(
-        EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE,
-        10, 0,
-        EGL_PLATFORM_ANGLE_DEVICE_TYPE_WARP_ANGLE);
+    return EGLPlatformParameters(EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE, 10, 0,
+                                 EGL_PLATFORM_ANGLE_DEVICE_TYPE_D3D_WARP_ANGLE);
 }
 
 EGLPlatformParameters D3D11_FL9_3_WARP()
 {
-    return EGLPlatformParameters(
-        EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE,
-        9, 3,
-        EGL_PLATFORM_ANGLE_DEVICE_TYPE_WARP_ANGLE);
+    return EGLPlatformParameters(EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE, 9, 3,
+                                 EGL_PLATFORM_ANGLE_DEVICE_TYPE_D3D_WARP_ANGLE);
 }
 
 EGLPlatformParameters D3D11_REFERENCE()
 {
-    return EGLPlatformParameters(
-        EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE,
-        EGL_DONT_CARE, EGL_DONT_CARE,
-        EGL_PLATFORM_ANGLE_DEVICE_TYPE_REFERENCE_ANGLE);
+    return EGLPlatformParameters(EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE, EGL_DONT_CARE, EGL_DONT_CARE,
+                                 EGL_PLATFORM_ANGLE_DEVICE_TYPE_D3D_REFERENCE_ANGLE);
 }
 
 EGLPlatformParameters D3D11_FL11_1_REFERENCE()
 {
-    return EGLPlatformParameters(
-        EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE,
-        11, 1,
-        EGL_PLATFORM_ANGLE_DEVICE_TYPE_REFERENCE_ANGLE);
+    return EGLPlatformParameters(EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE, 11, 1,
+                                 EGL_PLATFORM_ANGLE_DEVICE_TYPE_D3D_REFERENCE_ANGLE);
 }
 
 EGLPlatformParameters D3D11_FL11_0_REFERENCE()
 {
-    return EGLPlatformParameters(
-        EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE,
-        11, 0,
-        EGL_PLATFORM_ANGLE_DEVICE_TYPE_REFERENCE_ANGLE);
+    return EGLPlatformParameters(EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE, 11, 0,
+                                 EGL_PLATFORM_ANGLE_DEVICE_TYPE_D3D_REFERENCE_ANGLE);
 }
 
 EGLPlatformParameters D3D11_FL10_1_REFERENCE()
 {
-    return EGLPlatformParameters(
-        EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE,
-        10, 1,
-        EGL_PLATFORM_ANGLE_DEVICE_TYPE_REFERENCE_ANGLE);
+    return EGLPlatformParameters(EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE, 10, 1,
+                                 EGL_PLATFORM_ANGLE_DEVICE_TYPE_D3D_REFERENCE_ANGLE);
 }
 
 EGLPlatformParameters D3D11_FL10_0_REFERENCE()
 {
-    return EGLPlatformParameters(
-        EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE,
-        10, 0,
-        EGL_PLATFORM_ANGLE_DEVICE_TYPE_REFERENCE_ANGLE);
+    return EGLPlatformParameters(EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE, 10, 0,
+                                 EGL_PLATFORM_ANGLE_DEVICE_TYPE_D3D_REFERENCE_ANGLE);
 }
 
 EGLPlatformParameters D3D11_FL9_3_REFERENCE()
 {
-    return EGLPlatformParameters(
-        EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE,
-        9, 3,
-        EGL_PLATFORM_ANGLE_DEVICE_TYPE_REFERENCE_ANGLE);
+    return EGLPlatformParameters(EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE, 9, 3,
+                                 EGL_PLATFORM_ANGLE_DEVICE_TYPE_D3D_REFERENCE_ANGLE);
 }
 
 EGLPlatformParameters OPENGL()

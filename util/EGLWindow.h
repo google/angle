@@ -24,12 +24,6 @@
 
 class OSWindow;
 
-// A hidden define used in some renderers (currently D3D-only)
-// to init a no-op renderer. Useful for performance testing.
-#ifndef EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE
-#define EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE 0x6AC0
-#endif
-
 namespace angle
 {
 struct PlatformMethods;

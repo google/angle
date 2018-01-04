@@ -135,6 +135,12 @@ void FunctionsGL::initialize(const egl::AttributeMap &displayAttributes)
 #if defined(ANGLE_ENABLE_OPENGL_NULL)
     EGLint deviceType =
         static_cast<EGLint>(displayAttributes.get(EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE, EGL_NONE));
+
+    // Support the old hidden enum because it is used by Chrome.
+    // TODO(jmadill): Remove this once Chrome is updated.
+    if (deviceType == EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLEX)
+        deviceType = EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE;
+
 #endif  // defined(ANGLE_ENABLE_GL_NULL)
 
     switch (standard)

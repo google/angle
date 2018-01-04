@@ -62,9 +62,8 @@ New Tokens
 
     Accepted as values for the EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE attribute:
 
-        EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE      0x320A
-        EGL_PLATFORM_ANGLE_DEVICE_TYPE_WARP_ANGLE          0x320B
-        EGL_PLATFORM_ANGLE_DEVICE_TYPE_REFERENCE_ANGLE     0x320C
+        EGL_PLATFORM_ANGLE_DEVICE_TYPE_D3D_WARP_ANGLE      0x320B
+        EGL_PLATFORM_ANGLE_DEVICE_TYPE_D3D_REFERENCE_ANGLE 0x320C
 
 Additions to the EGL Specification
 
@@ -92,9 +91,11 @@ New Behavior
     EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE should be:
       - EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE to request a hardware
         accelerated device.
-      - EGL_PLATFORM_ANGLE_DEVICE_TYPE_WARP_ANGLE to request an
+      - EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE to request a no-op driver
+        for testing.
+      - EGL_PLATFORM_ANGLE_DEVICE_TYPE_D3D_WARP_ANGLE to request an
         optimized software rasterizer.
-      - EGL_PLATFORM_ANGLE_DEVICE_TYPE_REFERENCE_ANGLE to request a
+      - EGL_PLATFORM_ANGLE_DEVICE_TYPE_D3D_REFERENCE_ANGLE to request a
         reference rasterizer.
 
     If EGL_PLATFORM_ANGLE_TYPE_ANGLE is set to

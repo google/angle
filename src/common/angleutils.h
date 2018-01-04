@@ -200,7 +200,8 @@ std::string ToString(const T &value)
 #define GL_BGRA8_SRGB_ANGLEX 0x6AC0
 
 // Hidden enum for the NULL D3D device type.
-#define EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE 0x6AC0
+// TODO(jmadill): Remove this once Chrome is updated.
+#define EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLEX 0x6AC0
 
 // TODO(jmadill): Clean this up at some point.
 #define EGL_PLATFORM_ANGLE_PLATFORM_METHODS_ANGLEX 0x9999

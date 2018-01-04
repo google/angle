@@ -99,7 +99,7 @@ Renderer9::Renderer9(egl::Display *display) : RendererD3D(display), mStateManage
             mDeviceType = D3DDEVTYPE_HAL;
             break;
 
-        case EGL_PLATFORM_ANGLE_DEVICE_TYPE_REFERENCE_ANGLE:
+        case EGL_PLATFORM_ANGLE_DEVICE_TYPE_D3D_REFERENCE_ANGLE:
             mDeviceType = D3DDEVTYPE_REF;
             break;
 

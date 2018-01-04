@@ -22,7 +22,7 @@ Status
 
 Version
 
-    Version 4, 2017-07-19
+    Version 5, 2017-12-28
 
 Number
 
@@ -76,6 +76,11 @@ New Tokens
 
         EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE              0x3206
 
+    Accepted as values for the EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE attribute:
+
+        EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE      0x320A
+        EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE          0x345E
+
 Additions to the EGL Specification
 
     None.
@@ -107,6 +112,16 @@ New Behavior
     If no <attrib_list> is specified, the value of
     EGL_PLATFORM_ANGLE_DEBUG_LAYERS_ENABLED is implicitly set to
     EGL_DONT_CARE.
+
+    If no <attrib_list> is specified to eglGetPlatformDisplayEXT, the value of
+    EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE is implicitly set to
+    EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE. Otherwise, the value of
+    EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE should be:
+      - EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE to request a hardware
+        accelerated device.
+      - EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE to request a no-op driver
+        for testing. If unavailable, the implementation will fall back to
+        EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE.
 
     If EGL_PLATFORM_ANGLE_MAX_VERSION_MAJOR_ANGLE is set to EGL_DONT_CARE and
     EGL_PLATFORM_ANGLE_MAX_VERSION_MINOR_ANGLE is not set to EGL_DONT_CARE,
@@ -144,3 +159,5 @@ Revision History
       - Moved descriptions of platforms to child extension specs.
     Version 4, 2017-07-19 (Jamie Madill)
       - Add a debug layers enabled attribute to control runtime validation.
+    Version 5, 2017-12-28 (Jamie Madill)
+      - Expose device type selection.

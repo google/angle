@@ -298,13 +298,12 @@ Error ValidateGetPlatformDisplayCommon(EGLenum platform,
     if (platform == EGL_PLATFORM_ANGLE_ANGLE)
     {
         EGLAttrib platformType       = EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE;
-        EGLAttrib deviceType         = EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE;
         bool enableAutoTrimSpecified = false;
-        bool deviceTypeSpecified     = false;
         bool presentPathSpecified    = false;
 
         Optional<EGLAttrib> majorVersion;
         Optional<EGLAttrib> minorVersion;
+        Optional<EGLAttrib> deviceType;
 
         for (const auto &curAttrib : attribMap)
         {
@@ -368,13 +367,20 @@ Error ValidateGetPlatformDisplayCommon(EGLenum platform,
                     switch (value)
                     {
                         case EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE:
-                        case EGL_PLATFORM_ANGLE_DEVICE_TYPE_WARP_ANGLE:
-                        case EGL_PLATFORM_ANGLE_DEVICE_TYPE_REFERENCE_ANGLE:
-                            deviceTypeSpecified = true;
+                        case EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE:
                             break;
 
-                        case EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE:
-                            // This is a hidden option, accepted by the OpenGL back-end.
+                        // TODO(jmadill): Remove this once Chrome is updated.
+                        case EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLEX:
+                            break;
+
+                        case EGL_PLATFORM_ANGLE_DEVICE_TYPE_D3D_WARP_ANGLE:
+                        case EGL_PLATFORM_ANGLE_DEVICE_TYPE_D3D_REFERENCE_ANGLE:
+                            if (!clientExtensions.platformANGLED3D)
+                            {
+                                return EglBadAttribute()
+                                       << "EGL_ANGLE_platform_angle_d3d is not supported";
+                            }
                             break;
 
                         default:
@@ -409,7 +415,7 @@ Error ValidateGetPlatformDisplayCommon(EGLenum platform,
                    << "Must specify major version if you specify a minor version.";
         }
 
-        if (deviceType == EGL_PLATFORM_ANGLE_DEVICE_TYPE_WARP_ANGLE &&
+        if (deviceType == EGL_PLATFORM_ANGLE_DEVICE_TYPE_D3D_WARP_ANGLE &&
             platformType != EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
         {
             return EglBadAttribute() << "EGL_PLATFORM_ANGLE_DEVICE_TYPE_WARP_ANGLE requires a "
@@ -429,12 +435,23 @@ Error ValidateGetPlatformDisplayCommon(EGLenum platform,
                                         "device type of EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE.";
         }
 
-        if (deviceTypeSpecified && platformType != EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE &&
-            platformType != EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
+        if (deviceType.valid())
         {
-            return EglBadAttribute() << "EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE requires a "
-                                        "device type of EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE or "
-                                        "EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE.";
+            switch (deviceType.value())
+            {
+                case EGL_PLATFORM_ANGLE_DEVICE_TYPE_D3D_REFERENCE_ANGLE:
+                case EGL_PLATFORM_ANGLE_DEVICE_TYPE_D3D_WARP_ANGLE:
+                    if (platformType != EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE &&
+                        platformType != EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
+                    {
+                        return EglBadAttribute()
+                               << "This device type requires a "
+                                  "platform type of EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE or "
+                                  "EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE.";
+                    }
+                default:
+                    break;
+            }
         }
 
         if (platformType == EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE)
