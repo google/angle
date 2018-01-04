@@ -5659,3 +5659,24 @@ TEST_F(WebGL1FragmentShaderValidationTest, StructNestingLimitWithNestedStructDef
         FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
     }
 }
+
+// Test that the result of a sequence operator is not a constant-expression.
+// ESSL 3.00 section 12.43.
+TEST_F(FragmentShaderValidationTest, CommaReturnsNonConstant)
+{
+    const std::string &shaderString =
+        R"(#version 300 es
+
+        precision highp float;
+        out vec4 my_FragColor;
+
+        void main(void)
+        {
+            const int i = (0, 0);
+            my_FragColor = vec4(i);
+        })";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}

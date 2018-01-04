@@ -13,6 +13,8 @@
 #include <vector>
 
 #include "common/mathutil.h"
+#include "compiler/translator/FindMain.h"
+#include "compiler/translator/FindSymbolNode.h"
 #include "compiler/translator/IntermTraverse.h"
 #include "tests/test_utils/ShaderCompileTreeTest.h"
 
@@ -168,6 +170,11 @@ class ConstantFoldingTest : public ShaderCompileTreeTest
         ConstantFinder<T> finder(constantVector, faultTolerance);
         mASTRoot->traverse(&finder);
         return finder.found();
+    }
+
+    bool symbolFoundInMain(const char *symbolName)
+    {
+        return FindSymbolNode(FindMain(mASTRoot), TString(symbolName)) != nullptr;
     }
 };
 

@@ -1417,3 +1417,37 @@ TEST_F(ConstantFoldingExpressionTest, FoldLdexp)
     evaluateFloat(floatString);
     ASSERT_TRUE(constantFoundInAST(1.25f));
 }
+
+// Fold a ternary operator.
+TEST_F(ConstantFoldingTest, FoldTernary)
+{
+    const std::string &shaderString =
+        R"(#version 300 es
+        precision highp int;
+        uniform int u;
+        out int my_FragColor;
+        void main()
+        {
+            my_FragColor = (true ? 1 : u);
+        })";
+    compileAssumeSuccess(shaderString);
+    ASSERT_TRUE(constantFoundInAST(1));
+    ASSERT_FALSE(symbolFoundInMain("u"));
+}
+
+// Fold a ternary operator inside a consuming expression.
+TEST_F(ConstantFoldingTest, FoldTernaryInsideExpression)
+{
+    const std::string &shaderString =
+        R"(#version 300 es
+        precision highp int;
+        uniform int u;
+        out int my_FragColor;
+        void main()
+        {
+            my_FragColor = ivec2((true ? 1 : u) + 2, 4).x;
+        })";
+    compileAssumeSuccess(shaderString);
+    ASSERT_TRUE(constantFoundInAST(3));
+    ASSERT_FALSE(symbolFoundInMain("u"));
+}

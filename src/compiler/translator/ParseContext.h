@@ -560,6 +560,10 @@ class TParseContext : angle::NonCopyable
                                                 TIntermSequence *arguments,
                                                 const TSourceLoc &loc);
 
+    // Return either the original expression or the folded version of the expression in case the
+    // folded node will validate the same way during subsequent parsing.
+    TIntermTyped *expressionOrFoldedResult(TIntermTyped *expression);
+
     // Return true if the checks pass
     bool binaryOpCommonCheck(TOperator op,
                              TIntermTyped *left,

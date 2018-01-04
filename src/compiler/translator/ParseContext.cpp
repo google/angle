@@ -3605,12 +3605,7 @@ TIntermTyped *TParseContext::addConstructor(TIntermSequence *arguments,
     TIntermAggregate *constructorNode = TIntermAggregate::CreateConstructor(type, arguments);
     constructorNode->setLine(line);
 
-    // TODO(oetuaho@nvidia.com): Add support for folding array constructors.
-    if (!constructorNode->isArray())
-    {
-        return constructorNode->fold(mDiagnostics);
-    }
-    return constructorNode;
+    return constructorNode->fold(mDiagnostics);
 }
 
 //
@@ -4125,7 +4120,7 @@ TIntermTyped *TParseContext::addFieldSelectionExpression(TIntermTyped *baseExpre
         TIntermSwizzle *node = new TIntermSwizzle(baseExpression, fieldOffsets);
         node->setLine(dotLocation);
 
-        return node->fold();
+        return node->fold(mDiagnostics);
     }
     else if (baseExpression->getBasicType() == EbtStruct)
     {
@@ -4977,6 +4972,30 @@ TIntermTyped *TParseContext::addUnaryMathLValue(TOperator op,
     return addUnaryMath(op, child, loc);
 }
 
+TIntermTyped *TParseContext::expressionOrFoldedResult(TIntermTyped *expression)
+{
+    // If we can, we should return the folded version of the expression for subsequent parsing. This
+    // enables folding the containing expression during parsing as well, instead of the separate
+    // FoldExpressions() step where folding nested expressions requires multiple full AST
+    // traversals.
+
+    // Even if folding fails the fold() functions return some node representing the expression,
+    // typically the original node. So "folded" can be assumed to be non-null.
+    TIntermTyped *folded = expression->fold(mDiagnostics);
+    ASSERT(folded != nullptr);
+    if (folded->getQualifier() == expression->getQualifier())
+    {
+        // We need this expression to have the correct qualifier when validating the consuming
+        // expression. So we can only return the folded node from here in case it has the same
+        // qualifier as the original expression. In this kind of a cases the qualifier of the folded
+        // node is EvqConst, whereas the qualifier of the expression is EvqTemporary:
+        //  1. (true ? 1.0 : non_constant)
+        //  2. (non_constant, 1.0)
+        return folded;
+    }
+    return expression;
+}
+
 bool TParseContext::binaryOpCommonCheck(TOperator op,
                                         TIntermTyped *left,
                                         TIntermTyped *right,
@@ -5426,7 +5445,8 @@ TIntermTyped *TParseContext::addComma(TIntermTyped *left,
     TIntermBinary *commaNode   = new TIntermBinary(EOpComma, left, right);
     TQualifier resultQualifier = TIntermBinary::GetCommaQualifier(mShaderVersion, left, right);
     commaNode->getTypePointer()->setQualifier(resultQualifier);
-    return commaNode->fold(mDiagnostics);
+
+    return expressionOrFoldedResult(commaNode);
 }
 
 TIntermBranch *TParseContext::addBranch(TOperator op, const TSourceLoc &loc)
@@ -5868,16 +5888,9 @@ TIntermTyped *TParseContext::addNonConstructorFunctionCall(const TString &name,
                     // Some built-in functions have out parameters too.
                     functionCallRValueLValueErrorCheck(fnCandidate, callNode);
 
-                    if (TIntermAggregate::CanFoldAggregateBuiltInOp(callNode->getOp()))
-                    {
-                        // See if we can constant fold a built-in. Note that this may be possible
-                        // even if it is not const-qualified.
-                        return callNode->fold(mDiagnostics);
-                    }
-                    else
-                    {
-                        return callNode;
-                    }
+                    // See if we can constant fold a built-in. Note that this may be possible
+                    // even if it is not const-qualified.
+                    return callNode->fold(mDiagnostics);
                 }
             }
             else
@@ -5979,12 +5992,9 @@ TIntermTyped *TParseContext::addTernarySelection(TIntermTyped *cond,
         return falseExpression;
     }
 
-    // Note that the node resulting from here can be a constant union without being qualified as
-    // constant.
     TIntermTernary *node = new TIntermTernary(cond, trueExpression, falseExpression);
     node->setLine(loc);
-
-    return node->fold();
+    return expressionOrFoldedResult(node);
 }
 
 //

@@ -18,6 +18,7 @@
 #include "compiler/translator/DeferGlobalInitializers.h"
 #include "compiler/translator/EmulateGLFragColorBroadcast.h"
 #include "compiler/translator/EmulatePrecision.h"
+#include "compiler/translator/FoldExpressions.h"
 #include "compiler/translator/Initialize.h"
 #include "compiler/translator/InitializeVariables.h"
 #include "compiler/translator/IntermNodePatternMatcher.h"
@@ -399,6 +400,18 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         return false;
     }
 
+    if (shouldRunLoopAndIndexingValidation(compileOptions) &&
+        !ValidateLimitations(root, shaderType, &symbolTable, shaderVersion, &mDiagnostics))
+    {
+        return false;
+    }
+
+    // Fold expressions that could not be folded before validation that was done as a part of
+    // parsing.
+    FoldExpressions(root, &mDiagnostics);
+    // Folding should only be able to generate warnings.
+    ASSERT(mDiagnostics.numErrors() == 0);
+
     // We prune no-ops to work around driver bugs and to keep AST processing and output simple.
     // The following kinds of no-ops are pruned:
     //   1. Empty declarations "int;".
@@ -450,12 +463,6 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     if (shaderVersion >= 300 && shaderType == GL_FRAGMENT_SHADER &&
         !ValidateOutputs(root, getExtensionBehavior(), compileResources.MaxDrawBuffers,
                          &mDiagnostics))
-    {
-        return false;
-    }
-
-    if (shouldRunLoopAndIndexingValidation(compileOptions) &&
-        !ValidateLimitations(root, shaderType, &symbolTable, shaderVersion, &mDiagnostics))
     {
         return false;
     }

@@ -129,6 +129,8 @@ class TIntermTyped : public TIntermNode
 
     TIntermTyped *getAsTyped() override { return this; }
 
+    virtual TIntermTyped *fold(TDiagnostics *diagnostics) { return this; }
+
     // True if executing the expression represented by this node affects state, like values of
     // variables. False if the executing the expression only computes its return value without
     // affecting state. May return true conservatively.
@@ -231,10 +233,7 @@ class TIntermBranch : public TIntermNode
 
 // Nodes that correspond to variable symbols in the source code. These may be regular variables or
 // interface block instances. In declarations that only declare a struct type but no variables, a
-// TIntermSymbol node with an empty variable is used to store the type. In case the node is the
-// result of folding a more complex expression such as a ternary operator, the node takes on the
-// type of the expression. In this case the qualifier of the node may be different from the variable
-// it refers to.
+// TIntermSymbol node with an empty variable is used to store the type.
 class TIntermSymbol : public TIntermTyped
 {
   public:
@@ -408,7 +407,7 @@ class TIntermSwizzle : public TIntermTyped
     bool hasDuplicateOffsets() const;
     bool offsetsMatch(int offset) const;
 
-    TIntermTyped *fold();
+    TIntermTyped *fold(TDiagnostics *diagnostics) override;
 
   protected:
     TIntermTyped *mOperand;
@@ -448,7 +447,7 @@ class TIntermBinary : public TIntermOperator
 
     TIntermTyped *getLeft() const { return mLeft; }
     TIntermTyped *getRight() const { return mRight; }
-    TIntermTyped *fold(TDiagnostics *diagnostics);
+    TIntermTyped *fold(TDiagnostics *diagnostics) override;
 
     void setAddIndexClamp() { mAddIndexClamp = true; }
     bool getAddIndexClamp() { return mAddIndexClamp; }
@@ -483,7 +482,7 @@ class TIntermUnary : public TIntermOperator
     bool hasSideEffects() const override { return isAssignment() || mOperand->hasSideEffects(); }
 
     TIntermTyped *getOperand() { return mOperand; }
-    TIntermTyped *fold(TDiagnostics *diagnostics);
+    TIntermTyped *fold(TDiagnostics *diagnostics) override;
 
     void setUseEmulatedFunction() { mUseEmulatedFunction = true; }
     bool getUseEmulatedFunction() { return mUseEmulatedFunction; }
@@ -560,8 +559,7 @@ class TIntermAggregate : public TIntermOperator, public TIntermAggregateBase
 
     bool hasSideEffects() const override;
 
-    static bool CanFoldAggregateBuiltInOp(TOperator op);
-    TIntermTyped *fold(TDiagnostics *diagnostics);
+    TIntermTyped *fold(TDiagnostics *diagnostics) override;
 
     TIntermSequence *getSequence() override { return &mArguments; }
     const TIntermSequence *getSequence() const override { return &mArguments; }
@@ -760,7 +758,7 @@ class TIntermTernary : public TIntermTyped
                mFalseExpression->hasSideEffects();
     }
 
-    TIntermTyped *fold();
+    TIntermTyped *fold(TDiagnostics *diagnostics) override;
 
   private:
     TIntermTernary(const TIntermTernary &node);  // Note: not deleted, just private!

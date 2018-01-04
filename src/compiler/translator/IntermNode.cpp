@@ -138,6 +138,42 @@ void SetUnionArrayFromMatrix(const angle::Matrix<float> &m, TConstantUnion *resu
         resultArray[i].setFConst(resultElements[i]);
 }
 
+bool CanFoldAggregateBuiltInOp(TOperator op)
+{
+    switch (op)
+    {
+        case EOpAtan:
+        case EOpPow:
+        case EOpMod:
+        case EOpMin:
+        case EOpMax:
+        case EOpClamp:
+        case EOpMix:
+        case EOpStep:
+        case EOpSmoothStep:
+        case EOpLdexp:
+        case EOpMulMatrixComponentWise:
+        case EOpOuterProduct:
+        case EOpEqualComponentWise:
+        case EOpNotEqualComponentWise:
+        case EOpLessThanComponentWise:
+        case EOpLessThanEqualComponentWise:
+        case EOpGreaterThanComponentWise:
+        case EOpGreaterThanEqualComponentWise:
+        case EOpDistance:
+        case EOpDot:
+        case EOpCross:
+        case EOpFaceforward:
+        case EOpReflect:
+        case EOpRefract:
+        case EOpBitfieldExtract:
+        case EOpBitfieldInsert:
+            return true;
+        default:
+            return false;
+    }
+}
+
 }  // namespace anonymous
 
 ////////////////////////////////////////////////////////////////
@@ -958,18 +994,16 @@ TQualifier TIntermTernary::DetermineQualifier(TIntermTyped *cond,
     return EvqTemporary;
 }
 
-TIntermTyped *TIntermTernary::fold()
+TIntermTyped *TIntermTernary::fold(TDiagnostics * /* diagnostics */)
 {
     if (mCondition->getAsConstantUnion())
     {
         if (mCondition->getAsConstantUnion()->getBConst(0))
         {
-            mTrueExpression->getTypePointer()->setQualifier(mType.getQualifier());
             return mTrueExpression;
         }
         else
         {
-            mFalseExpression->getTypePointer()->setQualifier(mType.getQualifier());
             return mFalseExpression;
         }
     }
@@ -1280,7 +1314,7 @@ const TConstantUnion *TIntermConstantUnion::foldIndexing(int index)
     }
 }
 
-TIntermTyped *TIntermSwizzle::fold()
+TIntermTyped *TIntermSwizzle::fold(TDiagnostics * /* diagnostics */)
 {
     TIntermConstantUnion *operandConstant = mOperand->getAsConstantUnion();
     if (operandConstant == nullptr)
@@ -1308,7 +1342,6 @@ TIntermTyped *TIntermBinary::fold(TDiagnostics *diagnostics)
             {
                 return this;
             }
-            mRight->getTypePointer()->setQualifier(mType.getQualifier());
             return mRight;
         }
         case EOpIndexDirect:
@@ -1432,12 +1465,19 @@ TIntermTyped *TIntermAggregate::fold(TDiagnostics *diagnostics)
     TConstantUnion *constArray = nullptr;
     if (isConstructor())
     {
-        constArray = TIntermConstantUnion::FoldAggregateConstructor(this);
+        // TODO(oetuaho@nvidia.com): Add support for folding array constructors.
+        if (!isArray())
+        {
+            constArray = TIntermConstantUnion::FoldAggregateConstructor(this);
+        }
     }
-    else
+    else if (CanFoldAggregateBuiltInOp(mOp))
     {
-        ASSERT(CanFoldAggregateBuiltInOp(mOp));
         constArray = TIntermConstantUnion::FoldAggregateBuiltIn(this, diagnostics);
+    }
+    if (constArray == nullptr)
+    {
+        return this;
     }
     return CreateFoldedNode(constArray, this);
 }
@@ -2583,42 +2623,6 @@ TConstantUnion *TIntermConstantUnion::FoldAggregateConstructor(TIntermAggregate 
     }
     ASSERT(resultIndex == resultSize);
     return resultArray;
-}
-
-bool TIntermAggregate::CanFoldAggregateBuiltInOp(TOperator op)
-{
-    switch (op)
-    {
-        case EOpAtan:
-        case EOpPow:
-        case EOpMod:
-        case EOpMin:
-        case EOpMax:
-        case EOpClamp:
-        case EOpMix:
-        case EOpStep:
-        case EOpSmoothStep:
-        case EOpLdexp:
-        case EOpMulMatrixComponentWise:
-        case EOpOuterProduct:
-        case EOpEqualComponentWise:
-        case EOpNotEqualComponentWise:
-        case EOpLessThanComponentWise:
-        case EOpLessThanEqualComponentWise:
-        case EOpGreaterThanComponentWise:
-        case EOpGreaterThanEqualComponentWise:
-        case EOpDistance:
-        case EOpDot:
-        case EOpCross:
-        case EOpFaceforward:
-        case EOpReflect:
-        case EOpRefract:
-        case EOpBitfieldExtract:
-        case EOpBitfieldInsert:
-            return true;
-        default:
-            return false;
-    }
 }
 
 // static

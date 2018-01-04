@@ -65,6 +65,8 @@
             'compiler/translator/FindSymbolNode.h',
             'compiler/translator/FlagStd140Structs.cpp',
             'compiler/translator/FlagStd140Structs.h',
+            'compiler/translator/FoldExpressions.cpp',
+            'compiler/translator/FoldExpressions.h',
             'compiler/translator/HashNames.cpp',
             'compiler/translator/HashNames.h',
             'compiler/translator/InfoSink.cpp',
