@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "545a6660_d74df798",
+        "filename": "src/libANGLE/MemoryProgramCache.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 237,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-01-04T19:47:54Z",
+      "side": 1,
+      "message": "Below, the mask is read as a uint32_t, we should do the same here.",
+      "range": {
+        "startLine": 237,
+        "startChar": 57,
+        "endLine": 237,
+        "endChar": 70
+      },
+      "revId": "14ba89017214063e213fda4c8103cec842faeba2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
