@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "2e9b2877_02874061",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 345,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-01-04T10:08:04Z",
+      "side": 1,
+      "message": "nit: texture",
+      "range": {
+        "startLine": 345,
+        "startChar": 39,
+        "endLine": 345,
+        "endChar": 45
+      },
+      "revId": "e902216076e46ecefba6f3a22aa85cbc8fd8a1aa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "4687f8ff_16e45035",
         "filename": "src/libGLESv2/entry_points_gles_2_0_ext_autogen.cpp",
         "patchSetId": 8
