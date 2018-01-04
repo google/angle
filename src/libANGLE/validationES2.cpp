@@ -6646,4 +6646,39 @@ bool ValidatePopGroupMarkerEXT(Context *context)
     return true;
 }
 
+bool ValidateTexStorage1DEXT(Context *context,
+                             GLenum target,
+                             GLsizei levels,
+                             GLenum internalformat,
+                             GLsizei width)
+{
+    UNIMPLEMENTED();
+    ANGLE_VALIDATION_ERR(context, InvalidOperation(), ExtensionNotEnabled);
+    return false;
+}
+
+bool ValidateTexStorage3DEXT(Context *context,
+                             GLenum target,
+                             GLsizei levels,
+                             GLenum internalformat,
+                             GLsizei width,
+                             GLsizei height,
+                             GLsizei depth)
+{
+    if (!context->getExtensions().textureStorage)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ExtensionNotEnabled);
+        return false;
+    }
+
+    if (context->getClientMajorVersion() < 3)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ExtensionNotEnabled);
+        return false;
+    }
+
+    return ValidateES3TexStorage3DParameters(context, target, levels, internalformat, width, height,
+                                             depth);
+}
+
 }  // namespace gl

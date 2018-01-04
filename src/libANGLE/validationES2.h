@@ -720,6 +720,18 @@ bool ValidateTexImage3DOES(Context *context,
                            GLenum type,
                            const void *pixels);
 bool ValidatePopGroupMarkerEXT(Context *context);
+bool ValidateTexStorage1DEXT(Context *context,
+                             GLenum target,
+                             GLsizei levels,
+                             GLenum internalformat,
+                             GLsizei width);
+bool ValidateTexStorage3DEXT(Context *context,
+                             GLenum target,
+                             GLsizei levels,
+                             GLenum internalformat,
+                             GLsizei width,
+                             GLsizei height,
+                             GLsizei depth);
 
 }  // namespace gl
 

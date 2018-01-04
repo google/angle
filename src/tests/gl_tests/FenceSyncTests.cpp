@@ -70,8 +70,8 @@ TEST_P(FenceNVTest, Errors)
         return;
     }
 
-    // glTestFenceNV should still return TRUE for an invalid fence and generate an INVALID_OPERATION
-    EXPECT_GL_TRUE(glTestFenceNV(10));
+    EXPECT_GL_TRUE(glTestFenceNV(10)) << "glTestFenceNV should still return TRUE for an invalid "
+                                         "fence and generate an INVALID_OPERATION";
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 
     GLuint fence = 20;
@@ -85,8 +85,8 @@ TEST_P(FenceNVTest, Errors)
     glGenFencesNV(1, &fence);
     EXPECT_GL_NO_ERROR();
 
-    // glTestFenceNV should still return TRUE for a fence that is not started and generate an INVALID_OPERATION
-    EXPECT_GL_TRUE(glTestFenceNV(fence));
+    EXPECT_GL_TRUE(glTestFenceNV(fence)) << "glTestFenceNV should still return TRUE for a fence "
+                                            "that is not started and generate an INVALID_OPERATION";
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 
     // glGetFenceivNV should generate an INVALID_OPERATION for an invalid or unstarted fence and not modify the params

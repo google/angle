@@ -983,8 +983,30 @@ class Context final : public ValidationContext
                      GLenum type,
                      GLsizei bufSize,
                      void *data);
-    void eGLImageTargetTexture2DOES(GLenum target, GLeglImageOES image);
-    void eGLImageTargetRenderbufferStorageOES(GLenum target, GLeglImageOES image);
+    void eGLImageTargetTexture2D(GLenum target, GLeglImageOES image);
+    void eGLImageTargetRenderbufferStorage(GLenum target, GLeglImageOES image);
+
+    void getFramebufferParameteriv(GLenum target, GLenum pname, GLint *params);
+    void framebufferParameteri(GLenum target, GLenum pname, GLint param);
+
+    void dispatchCompute(GLuint numGroupsX, GLuint numGroupsY, GLuint numGroupsZ);
+    void dispatchComputeIndirect(GLintptr indirect);
+
+    void texStorage1D(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width);
+    void texStorage2D(GLenum target,
+                      GLsizei levels,
+                      GLenum internalFormat,
+                      GLsizei width,
+                      GLsizei height);
+    void texStorage3D(GLenum target,
+                      GLsizei levels,
+                      GLenum internalFormat,
+                      GLsizei width,
+                      GLsizei height,
+                      GLsizei depth);
+
+    void memoryBarrier(GLbitfield barriers);
+    void memoryBarrierByRegion(GLbitfield barriers);
 
     // Consumes the error.
     void handleError(const Error &error) override;
@@ -992,7 +1014,7 @@ class Context final : public ValidationContext
     GLenum getError();
     void markContextLost();
     bool isContextLost();
-    GLenum getResetStatus();
+    GLenum getGraphicsResetStatus();
     bool isResetNotificationEnabled();
 
     const egl::Config *getConfig() const;
@@ -1011,35 +1033,15 @@ class Context final : public ValidationContext
     rx::ContextImpl *getImplementation() const { return mImplementation.get(); }
     const Workarounds &getWorkarounds() const;
 
-    void getFramebufferParameteriv(GLenum target, GLenum pname, GLint *params);
-    void framebufferParameteri(GLenum target, GLenum pname, GLint param);
-
     Error getScratchBuffer(size_t requestedSizeBytes, angle::MemoryBuffer **scratchBufferOut) const;
     Error getZeroFilledBuffer(size_t requstedSizeBytes, angle::MemoryBuffer **zeroBufferOut) const;
 
     Error prepareForDispatch();
-    void dispatchCompute(GLuint numGroupsX, GLuint numGroupsY, GLuint numGroupsZ);
-    void dispatchComputeIndirect(GLintptr indirect);
 
     MemoryProgramCache *getMemoryProgramCache() const { return mMemoryProgramCache; }
 
     template <EntryPoint EP, typename... ParamsT>
     void gatherParams(ParamsT &&... params);
-
-    void texStorage2D(GLenum target,
-                      GLsizei levels,
-                      GLenum internalFormat,
-                      GLsizei width,
-                      GLsizei height);
-    void texStorage3D(GLenum target,
-                      GLsizei levels,
-                      GLenum internalFormat,
-                      GLsizei width,
-                      GLsizei height,
-                      GLsizei depth);
-
-    void memoryBarrier(GLbitfield barriers);
-    void memoryBarrierByRegion(GLbitfield barriers);
 
     // Notification for a state change in a Texture.
     void onTextureChange(const Texture *texture);

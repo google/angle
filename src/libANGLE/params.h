@@ -217,6 +217,13 @@ struct DefaultReturnValue<EntryPoint::ClientWaitSync, GLenum>
     static constexpr GLenum kValue = GL_WAIT_FAILED;
 };
 
+// glTestFenceNV should still return TRUE for an invalid fence.
+template <>
+struct DefaultReturnValue<EntryPoint::TestFenceNV, GLboolean>
+{
+    static constexpr GLboolean kValue = GL_TRUE;
+};
+
 template <EntryPoint EP, typename ReturnType>
 constexpr ANGLE_INLINE ReturnType GetDefaultReturnValue()
 {
