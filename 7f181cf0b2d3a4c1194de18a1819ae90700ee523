@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "a901a0a5_a8084dec",
+        "filename": "src/vulkan_support/BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 824,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-04T23:06:24Z",
+      "side": 1,
+      "message": "Could we re-use the logic of generate_vulkan_layers_json to re-write the ICD json? Will it use the default search paths if there is no relative path, like a layer?\n\nSee generate_vulkan_layers_json.py. I wrote this to work around some path issues.\n\nLanding the root_out_dir copy could work, but we would probably have to test on the fuchsia bots first - I was having a problem previously using a similar solution on this config. I\u0027ll see if I can add it to the optional ANGLE try bot set.",
+      "parentUuid": "6ca2b144_171cb8ba",
+      "range": {
+        "startLine": 822,
+        "startChar": 0,
+        "endLine": 824,
+        "endChar": 3
+      },
+      "revId": "7f181cf0b2d3a4c1194de18a1819ae90700ee523",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5ceb267e_24b0a529",
         "filename": "src/vulkan_support/BUILD.gn",
         "patchSetId": 1
