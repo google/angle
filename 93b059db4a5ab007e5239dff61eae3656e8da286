@@ -22,6 +22,30 @@
       "revId": "93b059db4a5ab007e5239dff61eae3656e8da286",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a52fc114_ef5a92b2",
+        "filename": "src/libGLESv2/entry_points_gles_2_0_ext.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 618,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-04T16:50:23Z",
+      "side": 0,
+      "message": "It wasn\u0027t exposed anywhere, or used in any way. I\u0027ll add a comment to the description.",
+      "parentUuid": "c8c13d6e_988399b7",
+      "range": {
+        "startLine": 618,
+        "startChar": 17,
+        "endLine": 618,
+        "endChar": 30
+      },
+      "revId": "93b059db4a5ab007e5239dff61eae3656e8da286",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
