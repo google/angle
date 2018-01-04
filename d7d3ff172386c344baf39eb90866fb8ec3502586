@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5c6bba6d_5765ec72",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 24
+      },
+      "lineNbr": 349,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-04T18:27:23Z",
+      "side": 1,
+      "message": "nit: mActiveUserAttribsLocationsMask - also add a comment this is identical to mActiveAttribLocationsMask with the exception of builtin attributes.",
+      "range": {
+        "startLine": 349,
+        "startChar": 19,
+        "endLine": 349,
+        "endChar": 34
+      },
+      "revId": "d7d3ff172386c344baf39eb90866fb8ec3502586",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e28b6bbc_80e5f612",
+        "filename": "src/libANGLE/angletypes.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 324,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-04T18:27:23Z",
+      "side": 1,
+      "message": "please fire off a \u0027git cl format\u0027 to clean up the line wrapping.",
+      "range": {
+        "startLine": 324,
+        "startChar": 4,
+        "endLine": 324,
+        "endChar": 17
+      },
+      "revId": "d7d3ff172386c344baf39eb90866fb8ec3502586",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
