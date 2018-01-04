@@ -17,8 +17,9 @@
 namespace sh
 {
 class TIntermBlock;
+class TSymbolTable;
 
-void PruneNoOps(TIntermBlock *root);
+void PruneNoOps(TIntermBlock *root, TSymbolTable *symbolTable);
 }
 
 #endif  // COMPILER_TRANSLATOR_PRUNENOOPS_H_

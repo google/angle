@@ -40,23 +40,24 @@ bool IsNoOp(TIntermNode *node)
 class PruneNoOpsTraverser : private TIntermTraverser
 {
   public:
-    static void apply(TIntermBlock *root);
+    static void apply(TIntermBlock *root, TSymbolTable *symbolTable);
 
   private:
-    PruneNoOpsTraverser();
+    PruneNoOpsTraverser(TSymbolTable *symbolTable);
     bool visitDeclaration(Visit, TIntermDeclaration *node) override;
     bool visitBlock(Visit visit, TIntermBlock *node) override;
     bool visitLoop(Visit visit, TIntermLoop *loop) override;
 };
 
-void PruneNoOpsTraverser::apply(TIntermBlock *root)
+void PruneNoOpsTraverser::apply(TIntermBlock *root, TSymbolTable *symbolTable)
 {
-    PruneNoOpsTraverser prune;
+    PruneNoOpsTraverser prune(symbolTable);
     root->traverse(&prune);
     prune.updateTree();
 }
 
-PruneNoOpsTraverser::PruneNoOpsTraverser() : TIntermTraverser(true, false, false)
+PruneNoOpsTraverser::PruneNoOpsTraverser(TSymbolTable *symbolTable)
+    : TIntermTraverser(true, false, false, symbolTable)
 {
 }
 
@@ -65,10 +66,11 @@ bool PruneNoOpsTraverser::visitDeclaration(Visit, TIntermDeclaration *node)
     TIntermSequence *sequence = node->getSequence();
     if (sequence->size() >= 1)
     {
-        TIntermSymbol *sym = sequence->front()->getAsSymbolNode();
+        TIntermSymbol *declaratorSymbol = sequence->front()->getAsSymbolNode();
         // Prune declarations without a variable name, unless it's an interface block declaration.
-        if (sym != nullptr && sym->variable().symbolType() == SymbolType::Empty &&
-            !sym->isInterfaceBlock())
+        if (declaratorSymbol != nullptr &&
+            declaratorSymbol->variable().symbolType() == SymbolType::Empty &&
+            !declaratorSymbol->isInterfaceBlock())
         {
             if (sequence->size() > 1)
             {
@@ -80,17 +82,17 @@ bool PruneNoOpsTraverser::visitDeclaration(Visit, TIntermDeclaration *node)
                 // This applies also to struct declarations.
                 TIntermSequence emptyReplacement;
                 mMultiReplacements.push_back(
-                    NodeReplaceWithMultipleEntry(node, sym, emptyReplacement));
+                    NodeReplaceWithMultipleEntry(node, declaratorSymbol, emptyReplacement));
             }
-            else if (sym->getBasicType() != EbtStruct)
+            else if (declaratorSymbol->getBasicType() != EbtStruct)
             {
                 // If there are entirely empty non-struct declarations, they result in
                 // TIntermDeclaration nodes without any children in the parsing stage. These are
                 // handled in visitBlock and visitLoop.
                 UNREACHABLE();
             }
-            else if (sym->getType().getQualifier() != EvqGlobal &&
-                     sym->getType().getQualifier() != EvqTemporary)
+            else if (declaratorSymbol->getQualifier() != EvqGlobal &&
+                     declaratorSymbol->getQualifier() != EvqTemporary)
             {
                 // Single struct declarations may just declare the struct type and no variables, so
                 // they should not be pruned. Here we handle an empty struct declaration with a
@@ -101,14 +103,20 @@ bool PruneNoOpsTraverser::visitDeclaration(Visit, TIntermDeclaration *node)
                 // 1.00 spec section 4.1.8 says about structs that "The optional qualifiers only
                 // apply to any declarators, and are not part of the type being defined for name."
 
+                // Create a new variable to use in the declarator so that the variable and node
+                // types are kept consistent.
+                TType type(declaratorSymbol->getType());
                 if (mInGlobalScope)
                 {
-                    sym->getTypePointer()->setQualifier(EvqGlobal);
+                    type.setQualifier(EvqGlobal);
                 }
                 else
                 {
-                    sym->getTypePointer()->setQualifier(EvqTemporary);
+                    type.setQualifier(EvqTemporary);
                 }
+                TVariable *variable = new TVariable(mSymbolTable, nullptr, type, SymbolType::Empty);
+                queueReplacementWithParent(node, declaratorSymbol, new TIntermSymbol(variable),
+                                           OriginalNode::IS_DROPPED);
             }
         }
     }
@@ -150,9 +158,9 @@ bool PruneNoOpsTraverser::visitLoop(Visit visit, TIntermLoop *loop)
 
 }  // namespace
 
-void PruneNoOps(TIntermBlock *root)
+void PruneNoOps(TIntermBlock *root, TSymbolTable *symbolTable)
 {
-    PruneNoOpsTraverser::apply(root);
+    PruneNoOpsTraverser::apply(root, symbolTable);
 }
 
 }  // namespace sh

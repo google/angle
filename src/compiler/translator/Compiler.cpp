@@ -419,7 +419,7 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     //      for float, so float literal statements would end up with no precision which is
     //      invalid ESSL.
     // After this empty declarations are not allowed in the AST.
-    PruneNoOps(root);
+    PruneNoOps(root, &symbolTable);
 
     // In case the last case inside a switch statement is a certain type of no-op, GLSL
     // compilers in drivers may not accept it. In this case we clean up the dead code from the
