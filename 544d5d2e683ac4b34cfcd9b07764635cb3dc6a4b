@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2d839b64_2d2c8914",
+        "filename": "src/compiler/translator/OutputHLSL.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-04T15:09:51Z",
+      "side": 1,
+      "message": "nit: these should technically be updated to the \"using\" syntax",
+      "range": {
+        "startLine": 42,
+        "startChar": 0,
+        "endLine": 42,
+        "endChar": 8
+      },
+      "revId": "544d5d2e683ac4b34cfcd9b07764635cb3dc6a4b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
