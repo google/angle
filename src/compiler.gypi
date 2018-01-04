@@ -121,6 +121,8 @@
             'compiler/translator/RemovePow.h',
             'compiler/translator/RemoveUnreferencedVariables.cpp',
             'compiler/translator/RemoveUnreferencedVariables.h',
+            'compiler/translator/ReplaceVariable.cpp',
+            'compiler/translator/ReplaceVariable.h',
             'compiler/translator/RewriteDoWhile.cpp',
             'compiler/translator/RewriteDoWhile.h',
             'compiler/translator/RewriteTexelFetchOffset.cpp',

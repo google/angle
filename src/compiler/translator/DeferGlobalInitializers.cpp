@@ -15,10 +15,13 @@
 
 #include "compiler/translator/DeferGlobalInitializers.h"
 
+#include <vector>
+
 #include "compiler/translator/FindMain.h"
 #include "compiler/translator/InitializeVariables.h"
 #include "compiler/translator/IntermNode.h"
 #include "compiler/translator/IntermNode_util.h"
+#include "compiler/translator/ReplaceVariable.h"
 #include "compiler/translator/SymbolTable.h"
 
 namespace sh
@@ -32,6 +35,7 @@ void GetDeferredInitializers(TIntermDeclaration *declaration,
                              bool canUseLoopsToInitialize,
                              bool highPrecisionSupported,
                              TIntermSequence *deferredInitializersOut,
+                             std::vector<const TVariable *> *variablesToReplaceOut,
                              TSymbolTable *symbolTable)
 {
     // SeparateDeclarations should have already been run.
@@ -60,7 +64,7 @@ void GetDeferredInitializers(TIntermDeclaration *declaration,
                    symbolNode->getQualifier() == EvqGlobal);
             if (symbolNode->getQualifier() == EvqConst)
             {
-                symbolNode->getTypePointer()->setQualifier(EvqGlobal);
+                variablesToReplaceOut->push_back(&symbolNode->variable());
             }
 
             TIntermBinary *deferredInit =
@@ -125,6 +129,7 @@ void DeferGlobalInitializers(TIntermBlock *root,
                              TSymbolTable *symbolTable)
 {
     TIntermSequence *deferredInitializers = new TIntermSequence();
+    std::vector<const TVariable *> variablesToReplace;
 
     // Loop over all global statements and process the declarations. This is simpler than using a
     // traverser.
@@ -135,7 +140,7 @@ void DeferGlobalInitializers(TIntermBlock *root,
         {
             GetDeferredInitializers(declaration, initializeUninitializedGlobals,
                                     canUseLoopsToInitialize, highPrecisionSupported,
-                                    deferredInitializers, symbolTable);
+                                    deferredInitializers, &variablesToReplace, symbolTable);
         }
     }
 
@@ -143,6 +148,16 @@ void DeferGlobalInitializers(TIntermBlock *root,
     if (!deferredInitializers->empty())
     {
         InsertInitCallToMain(root, deferredInitializers, symbolTable);
+    }
+
+    // Replace constant variables with non-constant global variables.
+    for (const TVariable *var : variablesToReplace)
+    {
+        TType replacementType(var->getType());
+        replacementType.setQualifier(EvqGlobal);
+        TVariable *replacement =
+            new TVariable(symbolTable, &var->name(), replacementType, var->symbolType());
+        ReplaceVariable(root, var, replacement);
     }
 }
 

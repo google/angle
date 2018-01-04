@@ -13,6 +13,7 @@
 #include "compiler/translator/InitializeVariables.h"
 #include "compiler/translator/IntermNode_util.h"
 #include "compiler/translator/IntermTraverse.h"
+#include "compiler/translator/ReplaceVariable.h"
 #include "compiler/translator/SymbolTable.h"
 #include "compiler/translator/util.h"
 
@@ -21,29 +22,6 @@ namespace sh
 
 namespace
 {
-
-class ReplaceVariableTraverser : public TIntermTraverser
-{
-  public:
-    ReplaceVariableTraverser(const TVariable *toBeReplaced, const TVariable *replacement)
-        : TIntermTraverser(true, false, false),
-          mToBeReplaced(toBeReplaced),
-          mReplacement(replacement)
-    {
-    }
-
-    void visitSymbol(TIntermSymbol *node) override
-    {
-        if (&node->variable() == mToBeReplaced)
-        {
-            queueReplacement(new TIntermSymbol(mReplacement), OriginalNode::IS_DROPPED);
-        }
-    }
-
-  private:
-    const TVariable *const mToBeReplaced;
-    const TVariable *const mReplacement;
-};
 
 TIntermSymbol *CreateGLInstanceIDSymbol(const TSymbolTable &symbolTable)
 {
@@ -92,14 +70,6 @@ void InitializeViewIDAndInstanceID(const TVariable *viewID,
     TIntermBinary *viewIDInitializer =
         new TIntermBinary(EOpAssign, new TIntermSymbol(viewID), normalizedViewID);
     initializers->push_back(viewIDInitializer);
-}
-
-// Replaces every occurrence of a variable with another variable.
-void ReplaceSymbol(TIntermBlock *root, const TVariable *toBeReplaced, const TVariable *replacement)
-{
-    ReplaceVariableTraverser traverser(toBeReplaced, replacement);
-    root->traverse(&traverser);
-    traverser.updateTree();
 }
 
 void DeclareGlobalVariable(TIntermBlock *root, const TVariable *variable)
@@ -176,9 +146,9 @@ void DeclareAndInitBuiltinsForInstancedMultiview(TIntermBlock *root,
                       SymbolType::AngleInternal);
 
     DeclareGlobalVariable(root, viewID);
-    ReplaceSymbol(root,
-                  static_cast<TVariable *>(symbolTable->findBuiltIn("gl_ViewID_OVR", 300, true)),
-                  viewID);
+    ReplaceVariable(root,
+                    static_cast<TVariable *>(symbolTable->findBuiltIn("gl_ViewID_OVR", 300, true)),
+                    viewID);
     if (shaderType == GL_VERTEX_SHADER)
     {
         // Replacing gl_InstanceID with InstanceID should happen before adding the initializers of
@@ -188,7 +158,7 @@ void DeclareAndInitBuiltinsForInstancedMultiview(TIntermBlock *root,
             new TVariable(symbolTable, instanceIDVariableName, TType(EbtInt, EbpHigh, EvqGlobal),
                           SymbolType::AngleInternal);
         DeclareGlobalVariable(root, instanceID);
-        ReplaceSymbol(
+        ReplaceVariable(
             root, static_cast<TVariable *>(symbolTable->findBuiltIn("gl_InstanceID", 300, true)),
             instanceID);
 
