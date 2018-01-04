@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "ce914896_43f34278",
+        "filename": "src/vulkan_support/BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 813,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2018-01-04T22:59:39Z",
+      "side": 1,
+      "message": "I don\u0027t think so. I\u0027ll kill that copy.",
+      "parentUuid": "5e9c0073_77c5c077",
+      "range": {
+        "startLine": 813,
+        "startChar": 6,
+        "endLine": 813,
+        "endChar": 50
+      },
+      "revId": "7f181cf0b2d3a4c1194de18a1819ae90700ee523",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f7237430_a042e4a7",
         "filename": "src/vulkan_support/BUILD.gn",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2018-01-04T18:21:19Z",
       "side": 1,
       "message": "this is a bit tricky... is it possible to access this json file without a copy? I\u0027ve seen some configurations (namely, fuchsia) that have a strange directory structure where the root_out_dir is different than expected.",
+      "range": {
+        "startLine": 822,
+        "startChar": 0,
+        "endLine": 824,
+        "endChar": 3
+      },
+      "revId": "7f181cf0b2d3a4c1194de18a1819ae90700ee523",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6ca2b144_171cb8ba",
+        "filename": "src/vulkan_support/BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 824,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2018-01-04T22:59:39Z",
+      "side": 1,
+      "message": "The issue is that the json file refers to the ICD location with a relative path so it needs to end up wherever the ICD gets built to.",
+      "parentUuid": "f7237430_a042e4a7",
       "range": {
         "startLine": 822,
         "startChar": 0,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "8d40fabb_cdd9b84e",
+        "filename": "src/vulkan_support/BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 840,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2018-01-04T22:59:39Z",
+      "side": 1,
+      "message": "Good catch. I had this in a loop where name was pulled from mock_icd list but killed the loop since there\u0027s only 1 ICD and I missed this update.",
+      "parentUuid": "5ceb267e_24b0a529",
+      "range": {
+        "startLine": 840,
+        "startChar": 47,
+        "endLine": 840,
+        "endChar": 52
+      },
+      "revId": "7f181cf0b2d3a4c1194de18a1819ae90700ee523",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "4cd4c0f6_3c982436",
         "filename": "src/vulkan_support/BUILD.gn",
         "patchSetId": 1
@@ -91,6 +163,30 @@
       "revId": "7f181cf0b2d3a4c1194de18a1819ae90700ee523",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3251aa43_81945b13",
+        "filename": "src/vulkan_support/BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 941,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2018-01-04T22:59:39Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "4cd4c0f6_3c982436",
+      "range": {
+        "startLine": 941,
+        "startChar": 2,
+        "endLine": 941,
+        "endChar": 36
+      },
+      "revId": "7f181cf0b2d3a4c1194de18a1819ae90700ee523",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
