@@ -236,7 +236,7 @@ bool RemoveUnreferencedVariablesTraverser::visitDeclaration(Visit visit, TInterm
 
         // We can only remove variables that are not a part of the shader interface.
         TQualifier qualifier = declarator->getQualifier();
-        if (qualifier != EvqTemporary && qualifier != EvqGlobal)
+        if (qualifier != EvqTemporary && qualifier != EvqGlobal && qualifier != EvqConst)
         {
             return true;
         }

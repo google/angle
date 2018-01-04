@@ -305,6 +305,12 @@ class TType
 
     bool isStructSpecifier() const { return mIsStructSpecifier; }
 
+    // Return true if variables of this type should be replaced with an inline constant value if
+    // such is available. False will be returned in cases where output doesn't support
+    // TIntermConstantUnion nodes of the type, or if the type contains a lot of fields and creating
+    // several copies of it in the output code is undesirable for performance.
+    bool canReplaceWithConstantUnion() const;
+
     void createSamplerSymbols(const TString &namePrefix,
                               const TString &apiNamePrefix,
                               TVector<const TVariable *> *outputSymbols,

@@ -441,7 +441,7 @@ void TOutputGLSLBase::visitSymbol(TIntermSymbol *node)
 
 void TOutputGLSLBase::visitConstantUnion(TIntermConstantUnion *node)
 {
-    writeConstantUnion(node->getType(), node->getUnionArrayPointer());
+    writeConstantUnion(node->getType(), node->getConstantValue());
 }
 
 bool TOutputGLSLBase::visitSwizzle(Visit visit, TIntermSwizzle *node)

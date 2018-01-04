@@ -5680,3 +5680,24 @@ TEST_F(FragmentShaderValidationTest, CommaReturnsNonConstant)
         FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
     }
 }
+
+// Test that the result of indexing into an array constructor with some non-constant arguments is
+// not a constant expression.
+TEST_F(FragmentShaderValidationTest,
+       IndexingIntoArrayConstructorWithNonConstantArgumentsIsNotConstantExpression)
+{
+    const std::string &shaderString =
+        R"(#version 310 es
+        precision highp float;
+        uniform float u;
+        out float my_FragColor;
+        void main()
+        {
+            const float f = float[2](u, 1.0)[1];
+            my_FragColor = f;
+        })";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}

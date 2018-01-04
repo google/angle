@@ -131,6 +131,12 @@ class TIntermTyped : public TIntermNode
 
     virtual TIntermTyped *fold(TDiagnostics *diagnostics) { return this; }
 
+    // getConstantValue() returns the constant value that this node represents, if any. It
+    // should only be used after nodes have been replaced with their folded versions returned
+    // from fold(). hasConstantValue() returns true if getConstantValue() will return a value.
+    virtual bool hasConstantValue() const;
+    virtual const TConstantUnion *getConstantValue() const;
+
     // True if executing the expression represented by this node affects state, like values of
     // variables. False if the executing the expression only computes its return value without
     // affecting state. May return true conservatively.
@@ -160,8 +166,6 @@ class TIntermTyped : public TIntermNode
     TString getCompleteString() const { return mType.getCompleteString(); }
 
     unsigned int getOutermostArraySize() const { return mType.getOutermostArraySize(); }
-
-    bool isConstructorWithOnlyConstantUnionParameters();
 
   protected:
     TType mType;
@@ -241,6 +245,9 @@ class TIntermSymbol : public TIntermTyped
 
     TIntermTyped *deepCopy() const override { return new TIntermSymbol(*this); }
 
+    bool hasConstantValue() const override;
+    const TConstantUnion *getConstantValue() const override;
+
     bool hasSideEffects() const override { return false; }
 
     const TSymbolUniqueId &uniqueId() const;
@@ -302,9 +309,10 @@ class TIntermConstantUnion : public TIntermTyped
 
     TIntermTyped *deepCopy() const override { return new TIntermConstantUnion(*this); }
 
-    bool hasSideEffects() const override { return false; }
+    bool hasConstantValue() const override;
+    const TConstantUnion *getConstantValue() const override;
 
-    const TConstantUnion *getUnionArrayPointer() const { return mUnionArrayPointer; }
+    bool hasSideEffects() const override { return false; }
 
     int getIConst(size_t index) const
     {
@@ -334,15 +342,20 @@ class TIntermConstantUnion : public TIntermTyped
     void traverse(TIntermTraverser *it) override;
     bool replaceChildNode(TIntermNode *, TIntermNode *) override { return false; }
 
-    TConstantUnion *foldBinary(TOperator op,
-                               TIntermConstantUnion *rightNode,
-                               TDiagnostics *diagnostics,
-                               const TSourceLoc &line);
-    const TConstantUnion *foldIndexing(int index);
     TConstantUnion *foldUnaryNonComponentWise(TOperator op);
     TConstantUnion *foldUnaryComponentWise(TOperator op, TDiagnostics *diagnostics);
 
-    static TConstantUnion *FoldAggregateConstructor(TIntermAggregate *aggregate);
+    static const TConstantUnion *FoldBinary(TOperator op,
+                                            const TConstantUnion *leftArray,
+                                            const TType &leftType,
+                                            const TConstantUnion *rightArray,
+                                            const TType &rightType,
+                                            TDiagnostics *diagnostics,
+                                            const TSourceLoc &line);
+
+    static const TConstantUnion *FoldIndexing(const TType &type,
+                                              const TConstantUnion *constArray,
+                                              int index);
     static TConstantUnion *FoldAggregateBuiltIn(TIntermAggregate *aggregate,
                                                 TDiagnostics *diagnostics);
 
@@ -429,6 +442,9 @@ class TIntermBinary : public TIntermOperator
     TIntermBinary(TOperator op, TIntermTyped *left, TIntermTyped *right);
 
     TIntermTyped *deepCopy() const override { return new TIntermBinary(*this); }
+
+    bool hasConstantValue() const override;
+    const TConstantUnion *getConstantValue() const override;
 
     static TOperator GetMulOpBasedOnOperands(const TType &left, const TType &right);
     static TOperator GetMulAssignOpBasedOnOperands(const TType &left, const TType &right);
@@ -552,6 +568,9 @@ class TIntermAggregate : public TIntermOperator, public TIntermAggregateBase
     TIntermTyped *deepCopy() const override { return new TIntermAggregate(*this); }
 
     TIntermAggregate *shallowCopy() const;
+
+    bool hasConstantValue() const override;
+    const TConstantUnion *getConstantValue() const override;
 
     TIntermAggregate *getAsAggregate() override { return this; }
     void traverse(TIntermTraverser *it) override;

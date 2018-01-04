@@ -273,7 +273,7 @@ bool TOutputTraverser::visitBinary(Visit visit, TIntermBinary *node)
         OutputTreeText(mOut, intermConstantUnion, mDepth + 1);
 
         // The following code finds the field name from the constant union
-        const TConstantUnion *constantUnion   = intermConstantUnion->getUnionArrayPointer();
+        const TConstantUnion *constantUnion   = intermConstantUnion->getConstantValue();
         const TStructure *structure           = node->getLeft()->getType().getStruct();
         const TInterfaceBlock *interfaceBlock = node->getLeft()->getType().getInterfaceBlock();
         ASSERT(structure || interfaceBlock);
@@ -557,10 +557,10 @@ void TOutputTraverser::visitConstantUnion(TIntermConstantUnion *node)
     for (size_t i = 0; i < size; i++)
     {
         OutputTreeText(mOut, node, mDepth);
-        switch (node->getUnionArrayPointer()[i].getType())
+        switch (node->getConstantValue()[i].getType())
         {
             case EbtBool:
-                if (node->getUnionArrayPointer()[i].getBConst())
+                if (node->getConstantValue()[i].getBConst())
                     mOut << "true";
                 else
                     mOut << "false";
@@ -571,20 +571,20 @@ void TOutputTraverser::visitConstantUnion(TIntermConstantUnion *node)
                 mOut << "\n";
                 break;
             case EbtFloat:
-                mOut << node->getUnionArrayPointer()[i].getFConst();
+                mOut << node->getConstantValue()[i].getFConst();
                 mOut << " (const float)\n";
                 break;
             case EbtInt:
-                mOut << node->getUnionArrayPointer()[i].getIConst();
+                mOut << node->getConstantValue()[i].getIConst();
                 mOut << " (const int)\n";
                 break;
             case EbtUInt:
-                mOut << node->getUnionArrayPointer()[i].getUConst();
+                mOut << node->getConstantValue()[i].getUConst();
                 mOut << " (const uint)\n";
                 break;
             case EbtYuvCscStandardEXT:
                 mOut << getYuvCscStandardEXTString(
-                    node->getUnionArrayPointer()[i].getYuvCscStandardEXTConst());
+                    node->getConstantValue()[i].getYuvCscStandardEXTConst());
                 mOut << " (const yuvCscStandardEXT)\n";
                 break;
             default:

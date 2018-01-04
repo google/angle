@@ -62,15 +62,13 @@ class OutputHLSL : public TIntermTraverser
     const std::map<std::string, unsigned int> &getUniformBlockRegisterMap() const;
     const std::map<std::string, unsigned int> &getUniformRegisterMap() const;
 
-    static TString initializer(const TType &type);
+    static TString zeroInitializer(const TType &type);
 
     TInfoSinkBase &getInfoSink()
     {
         ASSERT(!mInfoSinkStack.empty());
         return *mInfoSinkStack.top();
     }
-
-    static bool canWriteAsHLSLLiteral(TIntermTyped *expression);
 
   protected:
     void header(TInfoSinkBase &out,

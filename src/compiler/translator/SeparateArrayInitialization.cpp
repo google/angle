@@ -55,7 +55,7 @@ bool SeparateArrayInitTraverser::visitDeclaration(Visit, TIntermDeclaration *nod
     if (initNode != nullptr && initNode->getOp() == EOpInitialize)
     {
         TIntermTyped *initializer = initNode->getRight();
-        if (initializer->isArray() && !sh::OutputHLSL::canWriteAsHLSLLiteral(initializer))
+        if (initializer->isArray() && !initializer->hasConstantValue())
         {
             // We rely on that array declarations have been isolated to single declarations.
             ASSERT(sequence->size() == 1);

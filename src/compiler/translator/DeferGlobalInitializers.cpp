@@ -45,14 +45,12 @@ void GetDeferredInitializers(TIntermDeclaration *declaration,
         ASSERT(symbolNode);
         TIntermTyped *expression = init->getRight();
 
-        if ((expression->getQualifier() != EvqConst ||
-             (expression->getAsConstantUnion() == nullptr &&
-              !expression->isConstructorWithOnlyConstantUnionParameters())))
+        if (expression->getQualifier() != EvqConst || !expression->hasConstantValue())
         {
             // For variables which are not constant, defer their real initialization until
             // after we initialize uniforms.
-            // Deferral is done also in any cases where the variable has not been constant
-            // folded, since otherwise there's a chance that HLSL output will generate extra
+            // Deferral is done also in any cases where the variable can not be converted to a
+            // constant union, since otherwise there's a chance that HLSL output will generate extra
             // statements from the initializer expression.
 
             // Change const global to a regular global if its initialization is deferred.

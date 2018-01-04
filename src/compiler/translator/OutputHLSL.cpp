@@ -419,7 +419,8 @@ void OutputHLSL::header(TInfoSinkBase &out,
 
         // Program linking depends on this exact format
         varyings += "static " + InterpolationString(type.getQualifier()) + " " + TypeString(type) +
-                    " " + Decorate(name) + ArrayString(type) + " = " + initializer(type) + ";\n";
+                    " " + Decorate(name) + ArrayString(type) + " = " + zeroInitializer(type) +
+                    ";\n";
     }
 
     for (const auto &attribute : mReferencedAttributes)
@@ -428,7 +429,7 @@ void OutputHLSL::header(TInfoSinkBase &out,
         const TString &name = attribute.second->name();
 
         attributes += "static " + TypeString(type) + " " + Decorate(name) + ArrayString(type) +
-                      " = " + initializer(type) + ";\n";
+                      " = " + zeroInitializer(type) + ";\n";
     }
 
     out << mStructureHLSL->structsHeader();
@@ -501,7 +502,8 @@ void OutputHLSL::header(TInfoSinkBase &out,
                 const TType &variableType   = outputVariable.second->getType();
 
                 out << "static " + TypeString(variableType) + " out_" + variableName +
-                           ArrayString(variableType) + " = " + initializer(variableType) + ";\n";
+                           ArrayString(variableType) + " = " + zeroInitializer(variableType) +
+                           ";\n";
             }
         }
         else
@@ -1156,23 +1158,22 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
             {
                 TIntermSymbol *symbolNode = node->getLeft()->getAsSymbolNode();
                 ASSERT(symbolNode);
-                TIntermTyped *expression = node->getRight();
+                TIntermTyped *initializer = node->getRight();
 
                 // Global initializers must be constant at this point.
-                ASSERT(symbolNode->getQualifier() != EvqGlobal ||
-                       canWriteAsHLSLLiteral(expression));
+                ASSERT(symbolNode->getQualifier() != EvqGlobal || initializer->hasConstantValue());
 
                 // GLSL allows to write things like "float x = x;" where a new variable x is defined
                 // and the value of an existing variable x is assigned. HLSL uses C semantics (the
                 // new variable is created before the assignment is evaluated), so we need to
                 // convert
                 // this to "float t = x, x = t;".
-                if (writeSameSymbolInitializer(out, symbolNode, expression))
+                if (writeSameSymbolInitializer(out, symbolNode, initializer))
                 {
                     // Skip initializing the rest of the expression
                     return false;
                 }
-                else if (writeConstantInitialization(out, symbolNode, expression))
+                else if (writeConstantInitialization(out, symbolNode, initializer))
                 {
                     return false;
                 }
@@ -1838,7 +1839,7 @@ bool OutputHLSL::visitDeclaration(Visit visit, TIntermDeclaration *node)
                 {
                     symbol->traverse(this);
                     out << ArrayString(symbol->getType());
-                    out << " = " + initializer(symbol->getType());
+                    out << " = " + zeroInitializer(symbol->getType());
                 }
                 else
                 {
@@ -2240,7 +2241,7 @@ bool OutputHLSL::visitCase(Visit visit, TIntermCase *node)
 void OutputHLSL::visitConstantUnion(TIntermConstantUnion *node)
 {
     TInfoSinkBase &out = getInfoSink();
-    writeConstantUnion(out, node->getType(), node->getUnionArrayPointer());
+    writeConstantUnion(out, node->getType(), node->getConstantValue());
 }
 
 bool OutputHLSL::visitLoop(Visit visit, TIntermLoop *node)
@@ -2712,7 +2713,7 @@ TString OutputHLSL::argumentString(const TIntermSymbol *symbol)
     return argString.str();
 }
 
-TString OutputHLSL::initializer(const TType &type)
+TString OutputHLSL::zeroInitializer(const TType &type)
 {
     TString string;
 
@@ -2763,6 +2764,8 @@ const TConstantUnion *OutputHLSL::writeConstantUnion(TInfoSinkBase &out,
                                                      const TType &type,
                                                      const TConstantUnion *const constUnion)
 {
+    ASSERT(!type.isArray());
+
     const TConstantUnion *constUnionIterated = constUnion;
 
     const TStructure *structure = type.getStruct();
@@ -2841,50 +2844,17 @@ bool OutputHLSL::writeSameSymbolInitializer(TInfoSinkBase &out,
     return false;
 }
 
-bool OutputHLSL::canWriteAsHLSLLiteral(TIntermTyped *expression)
-{
-    // We support writing constant unions and constructors that only take constant unions as
-    // parameters as HLSL literals.
-    return !expression->getType().isArrayOfArrays() &&
-           (expression->getAsConstantUnion() ||
-            expression->isConstructorWithOnlyConstantUnionParameters());
-}
-
 bool OutputHLSL::writeConstantInitialization(TInfoSinkBase &out,
                                              TIntermSymbol *symbolNode,
                                              TIntermTyped *initializer)
 {
-    if (canWriteAsHLSLLiteral(initializer))
+    if (initializer->hasConstantValue())
     {
         symbolNode->traverse(this);
-        ASSERT(!symbolNode->getType().isArrayOfArrays());
-        if (symbolNode->getType().isArray())
-        {
-            out << "[" << symbolNode->getType().getOutermostArraySize() << "]";
-        }
+        out << ArrayString(symbolNode->getType());
         out << " = {";
-        if (initializer->getAsConstantUnion())
-        {
-            TIntermConstantUnion *nodeConst  = initializer->getAsConstantUnion();
-            const TConstantUnion *constUnion = nodeConst->getUnionArrayPointer();
-            writeConstantUnionArray(out, constUnion, nodeConst->getType().getObjectSize());
-        }
-        else
-        {
-            TIntermAggregate *constructor = initializer->getAsAggregate();
-            ASSERT(constructor != nullptr);
-            for (TIntermNode *&node : *constructor->getSequence())
-            {
-                TIntermConstantUnion *nodeConst = node->getAsConstantUnion();
-                ASSERT(nodeConst);
-                const TConstantUnion *constUnion = nodeConst->getUnionArrayPointer();
-                writeConstantUnionArray(out, constUnion, nodeConst->getType().getObjectSize());
-                if (node != constructor->getSequence()->back())
-                {
-                    out << ", ";
-                }
-            }
-        }
+        writeConstantUnionArray(out, initializer->getConstantValue(),
+                                initializer->getType().getObjectSize());
         out << "}";
         return true;
     }

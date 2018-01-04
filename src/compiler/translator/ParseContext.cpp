@@ -1870,7 +1870,7 @@ TIntermTyped *TParseContext::parseVariableIdentifier(const TSourceLoc &location,
     const TType &variableType = variable->getType();
     TIntermTyped *node = nullptr;
 
-    if (variable->getConstPointer())
+    if (variable->getConstPointer() && variableType.canReplaceWithConstantUnion())
     {
         const TConstantUnion *constArray = variable->getConstPointer();
         node                             = new TIntermConstantUnion(constArray, variableType);
@@ -1989,24 +1989,13 @@ bool TParseContext::executeInitializer(const TSourceLoc &line,
             return false;
         }
 
-        // Save the constant folded value to the variable if possible. For example array
-        // initializers are not folded, since that way copying the array literal to multiple places
-        // in the shader is avoided.
-        // TODO(oetuaho@nvidia.com): Consider constant folding array initialization in cases where
-        // it would be beneficial.
-        if (initializer->getAsConstantUnion())
+        // Save the constant folded value to the variable if possible.
+        const TConstantUnion *constArray = initializer->getConstantValue();
+        if (constArray)
         {
-            variable->shareConstPointer(initializer->getAsConstantUnion()->getUnionArrayPointer());
-            ASSERT(*initNode == nullptr);
-            return true;
-        }
-        else if (initializer->getAsSymbolNode())
-        {
-            const TVariable &var             = initializer->getAsSymbolNode()->variable();
-            const TConstantUnion *constArray = var.getConstPointer();
-            if (constArray)
+            variable->shareConstPointer(constArray);
+            if (initializer->getType().canReplaceWithConstantUnion())
             {
-                variable->shareConstPointer(constArray);
                 ASSERT(*initNode == nullptr);
                 return true;
             }
@@ -4071,7 +4060,7 @@ TIntermTyped *TParseContext::addIndexExpression(TIntermTyped *baseExpression,
             TIntermBinary *node =
                 new TIntermBinary(EOpIndexDirect, baseExpression, indexExpression);
             node->setLine(location);
-            return node->fold(mDiagnostics);
+            return expressionOrFoldedResult(node);
         }
     }
 
@@ -4154,7 +4143,7 @@ TIntermTyped *TParseContext::addFieldSelectionExpression(TIntermTyped *baseExpre
                 TIntermBinary *node =
                     new TIntermBinary(EOpIndexDirectStruct, baseExpression, index);
                 node->setLine(dotLocation);
-                return node->fold(mDiagnostics);
+                return expressionOrFoldedResult(node);
             }
             else
             {
@@ -5357,9 +5346,7 @@ TIntermTyped *TParseContext::addBinaryMathInternal(TOperator op,
 
     TIntermBinary *node = new TIntermBinary(op, left, right);
     node->setLine(loc);
-
-    // See if we can fold constants.
-    return node->fold(mDiagnostics);
+    return expressionOrFoldedResult(node);
 }
 
 TIntermTyped *TParseContext::addBinaryMath(TOperator op,
@@ -5633,7 +5620,7 @@ void TParseContext::checkTextureOffsetConst(TIntermAggregate *functionCall)
         {
             ASSERT(offsetConstantUnion->getBasicType() == EbtInt);
             size_t size                  = offsetConstantUnion->getType().getObjectSize();
-            const TConstantUnion *values = offsetConstantUnion->getUnionArrayPointer();
+            const TConstantUnion *values = offsetConstantUnion->getConstantValue();
             int minOffsetValue = useTextureGatherOffsetConstraints ? mMinProgramTextureGatherOffset
                                                                    : mMinProgramTexelOffset;
             int maxOffsetValue = useTextureGatherOffsetConstraints ? mMaxProgramTextureGatherOffset

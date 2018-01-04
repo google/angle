@@ -452,6 +452,27 @@ bool TType::isStructureContainingSamplers() const
     return mStructure ? mStructure->containsSamplers() : false;
 }
 
+bool TType::canReplaceWithConstantUnion() const
+{
+    if (isArray())
+    {
+        return false;
+    }
+    if (!mStructure)
+    {
+        return true;
+    }
+    if (isStructureContainingArrays())
+    {
+        return false;
+    }
+    if (getObjectSize() > 16)
+    {
+        return false;
+    }
+    return true;
+}
+
 //
 // Recursively generate mangled names.
 //

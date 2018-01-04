@@ -81,7 +81,7 @@ bool Traverser::visitAggregate(Visit visit, TIntermAggregate *node)
     }
 
     ASSERT(constantExponent->getBasicType() == EbtFloat);
-    float exponentValue = constantExponent->getUnionArrayPointer()->getFConst();
+    float exponentValue = constantExponent->getConstantValue()->getFConst();
 
     // Test 2: exponentValue is in the problematic range.
     if (exponentValue < -5.0f || exponentValue > 9.0f)
