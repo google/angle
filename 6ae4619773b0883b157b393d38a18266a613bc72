@@ -22,6 +22,30 @@
       "revId": "6ae4619773b0883b157b393d38a18266a613bc72",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c89706a3_4fc3a536",
+        "filename": "src/libANGLE/validationEGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 372,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-04T18:14:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ba7dbeb8_604ddfca",
+      "range": {
+        "startLine": 371,
+        "startChar": 24,
+        "endLine": 372,
+        "endChar": 80
+      },
+      "revId": "6ae4619773b0883b157b393d38a18266a613bc72",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
