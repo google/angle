@@ -16,6 +16,24 @@
       "revId": "079961bc3f2e6467fe39aef3862c107aeb08728c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "421cd7a3_0909a495",
+        "filename": "src/libANGLE/ProgramLinkedResources.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-04T19:19:24Z",
+      "side": 1,
+      "message": "agree we should leave these as define.",
+      "parentUuid": "8f9e1eda_7e0b6e95",
+      "revId": "079961bc3f2e6467fe39aef3862c107aeb08728c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
