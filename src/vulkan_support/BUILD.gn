@@ -863,6 +863,9 @@ foreach(layer_info, layers) {
     if (is_win) {
       sources += [ "$vulkan_layers_dir/layers/VkLayer_$name.def" ]
     }
+    if (is_linux) {
+      ldflags =  [ "-Wl,-Bsymbolic,--exclude-libs,ALL" ]
+    }
   }
 }
 
