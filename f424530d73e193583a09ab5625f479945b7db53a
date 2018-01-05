@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "22db6edc_24c07524",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-05T21:53:16Z",
+      "side": 1,
+      "message": "maybe rephrase this as \n\ntarget_cpu \u003d \"x86\"/\"x64\" (to choose the architecture)\nis_clang \u003d true/false (to use clang or the system default compiler)\nis_debug \u003d true/false (to enable or disable debugging info)",
+      "range": {
+        "startLine": 54,
+        "startChar": 0,
+        "endLine": 57,
+        "endChar": 73
+      },
+      "revId": "f424530d73e193583a09ab5625f479945b7db53a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
