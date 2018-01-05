@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "04ac7f95_6aca81aa",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 5426,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-01-05T10:32:02Z",
+      "side": 1,
+      "message": "It can avoid some extra AST traversals.\n\nDuring parsing, folding even complex nested expressions is very efficient since the consuming expression gets the folded node right away and can also do subsequent folding on it. But whenever folding is deferred until after the parsing is done, FoldExpressions might have to do multiple traversals of the full AST to fold nested expressions, since TIntermTraverser isn\u0027t structured in a way where changing multiple nested expressions correctly during the same traversal would be easy.\n\nI could add a comment about this. I also have some ideas how TIntermTraverser could be overhauled to do AST transformations more efficiently, but there are a lot of traversers, so it\u0027s a large refactoring operation.",
+      "parentUuid": "1de7d942_d2515505",
+      "revId": "ec6f799ecfb504856c594237f5288a18bd418fa0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "12e22c3b_c7d84eb1",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 2
