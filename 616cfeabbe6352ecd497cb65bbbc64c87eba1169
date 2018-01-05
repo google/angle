@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a84eb25_ad0fc66a",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1952,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-01-05T15:14:20Z",
+      "side": 1,
+      "message": "I think you can just update the buffer binding here instead of using the bool member.  It will also be faster.",
+      "range": {
+        "startLine": 1952,
+        "startChar": 16,
+        "endLine": 1952,
+        "endChar": 48
+      },
+      "revId": "616cfeabbe6352ecd497cb65bbbc64c87eba1169",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3e422123_a35fd49e",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1955,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-01-05T15:14:20Z",
+      "side": 1,
+      "message": "Same here.",
+      "range": {
+        "startLine": 1955,
+        "startChar": 16,
+        "endLine": 1955,
+        "endChar": 52
+      },
+      "revId": "616cfeabbe6352ecd497cb65bbbc64c87eba1169",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
