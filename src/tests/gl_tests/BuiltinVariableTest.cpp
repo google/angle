@@ -8,6 +8,7 @@
 //
 
 #include "test_utils/ANGLETest.h"
+#include "test_utils/gl_raii.h"
 
 using namespace angle;
 
@@ -204,6 +205,114 @@ TEST_P(BuiltinVariableVertexIdTest, Triangles)
     runTest(GL_TRIANGLES, indices, 6);
 }
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these
-// tests should be run against.
 ANGLE_INSTANTIATE_TEST(BuiltinVariableVertexIdTest, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
+
+class BuiltinVariableFragDepthClampingFloatRBOTest : public ANGLETest
+{
+  protected:
+    void SetUp() override
+    {
+        ANGLETest::SetUp();
+
+        const std::string vs =
+            R"(#version 300 es
+            in vec4 a_position;
+            void main(){
+                gl_Position = a_position;
+            })";
+
+        // Writes a fixed detph value and green.
+        // Section 15.2.3 of the GL 4.5 specification says that conversion is not
+        // done but clamping is so the output depth should be in [0.0, 1.0]
+        const std::string depthFs =
+            R"(#version 300 es
+            precision highp float;
+            layout(location = 0) out vec4 fragColor;
+            uniform float u_depth;
+            void main(){
+                gl_FragDepth = u_depth;
+                fragColor = vec4(0.0, 1.0, 0.0, 1.0);
+            })";
+
+        mProgram = CompileProgram(vs, depthFs);
+        ASSERT_NE(0u, mProgram);
+
+        mDepthLocation = glGetUniformLocation(mProgram, "u_depth");
+        ASSERT_NE(-1, mDepthLocation);
+
+        glBindTexture(GL_TEXTURE_2D, mColorTexture);
+        glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 1, 1);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+        glBindTexture(GL_TEXTURE_2D, mDepthTexture);
+        glTexStorage2D(GL_TEXTURE_2D, 1, GL_DEPTH_COMPONENT32F, 1, 1);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+        glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mColorTexture,
+                               0);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, mDepthTexture,
+                               0);
+
+        ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+        ASSERT_GL_NO_ERROR();
+    }
+
+    void TearDown() override
+    {
+        glDeleteProgram(mProgram);
+
+        ANGLETest::TearDown();
+    }
+
+    void CheckDepthWritten(float expectedDepth, float fsDepth)
+    {
+        glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
+        glUseProgram(mProgram);
+
+        // Clear to red, the FS will write green on success
+        glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
+        // Clear to the expected depth so it will be compared to the FS depth with
+        // DepthFunc(GL_EQUAL)
+        glClearDepthf(expectedDepth);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        glUniform1f(mDepthLocation, fsDepth);
+        glDepthFunc(GL_EQUAL);
+        glEnable(GL_DEPTH_TEST);
+
+        drawQuad(mProgram, "a_position", 0.0f);
+        EXPECT_GL_NO_ERROR();
+
+        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+    }
+
+  private:
+    GLuint mProgram;
+    GLint mDepthLocation;
+
+    GLTexture mColorTexture;
+    GLTexture mDepthTexture;
+    GLFramebuffer mFramebuffer;
+};
+
+// Test that gl_FragDepth is clamped above 0
+TEST_P(BuiltinVariableFragDepthClampingFloatRBOTest, Above0)
+{
+    ANGLE_SKIP_TEST_IF(IsNVIDIA());
+    CheckDepthWritten(0.0f, -1.0f);
+}
+
+// Test that gl_FragDepth is clamped below 1
+TEST_P(BuiltinVariableFragDepthClampingFloatRBOTest, Below1)
+{
+    ANGLE_SKIP_TEST_IF(IsNVIDIA());
+    CheckDepthWritten(1.0f, 42.0f);
+}
+
+ANGLE_INSTANTIATE_TEST(BuiltinVariableFragDepthClampingFloatRBOTest,
+                       ES3_D3D11(),
+                       ES3_OPENGL(),
+                       ES3_OPENGLES());
