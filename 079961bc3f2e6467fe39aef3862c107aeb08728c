@@ -34,6 +34,24 @@
       "revId": "079961bc3f2e6467fe39aef3862c107aeb08728c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7ef2a615_1512ad7f",
+        "filename": "src/libANGLE/ProgramLinkedResources.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-01-05T05:29:42Z",
+      "side": 1,
+      "message": "This function will also be used to update the block members static use. So I think it\u0027s better to call it updateBlockMembers which may call defineBlockMemberImpl or updateBlockMemberStaticUsedImpl eventually. defineBlockMembers is too limited in \u0027define\u0027. How do you think?",
+      "parentUuid": "421cd7a3_0909a495",
+      "revId": "079961bc3f2e6467fe39aef3862c107aeb08728c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
