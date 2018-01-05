@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "178c9389_51ce2a42",
+        "filename": "src/tests/gl_tests/TextureMultisampleTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-01-05T07:28:19Z",
+      "side": 1,
+      "message": "Can it be removed since d3d must mean windows?",
+      "range": {
+        "startLine": 189,
+        "startChar": 20,
+        "endLine": 189,
+        "endChar": 34
+      },
+      "revId": "7b6d56873169d9df7e93f7b217c2a36b27914856",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "43050325_c907ca96",
+        "filename": "src/tests/gl_tests/TextureMultisampleTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 203,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-01-05T07:28:19Z",
+      "side": 1,
+      "message": "Use \u0027GLTexture texture\u0027 since it\u0027s used as a local variable;",
+      "range": {
+        "startLine": 203,
+        "startChar": 8,
+        "endLine": 203,
+        "endChar": 36
+      },
+      "revId": "7b6d56873169d9df7e93f7b217c2a36b27914856",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2c797bbc_c4af3339",
+        "filename": "src/tests/gl_tests/TextureMultisampleTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-01-05T07:28:19Z",
+      "side": 1,
+      "message": "Use GL_TRUE is better?",
+      "range": {
+        "startLine": 206,
+        "startChar": 80,
+        "endLine": 206,
+        "endChar": 88
+      },
+      "revId": "7b6d56873169d9df7e93f7b217c2a36b27914856",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bf148a74_586e26fb",
+        "filename": "src/tests/gl_tests/TextureMultisampleTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 218,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-01-05T07:28:19Z",
+      "side": 1,
+      "message": "Remove this line if you use GLTexture.",
+      "range": {
+        "startLine": 218,
+        "startChar": 8,
+        "endLine": 218,
+        "endChar": 39
+      },
+      "revId": "7b6d56873169d9df7e93f7b217c2a36b27914856",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
