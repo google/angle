@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4c9900bd_d9a74398",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-05T20:17:52Z",
+      "side": 1,
+      "message": "frank, can you also fix this documentation bug : remove \"or later\"  - we require this version exactly.",
+      "range": {
+        "startLine": 24,
+        "startChar": 48,
+        "endLine": 24,
+        "endChar": 57
+      },
+      "revId": "66e2f8f25f95a720d57c48950d1472d4a786b148",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
