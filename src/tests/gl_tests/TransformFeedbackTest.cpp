@@ -291,7 +291,7 @@ TEST_P(TransformFeedbackTest, BufferBinding)
 {
     // Reset any state
     glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, 0);
-    glBindBuffer(GL_TRANSFORM_FEEDBACK_BUFFER, 0);
+    glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, 0);
 
     // Generate a new buffer
     GLuint scratchBuffer = 0;
@@ -301,7 +301,7 @@ TEST_P(TransformFeedbackTest, BufferBinding)
 
     // Bind TF 0 and a buffer
     glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, 0);
-    glBindBuffer(GL_TRANSFORM_FEEDBACK_BUFFER, mTransformFeedbackBuffer);
+    glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, mTransformFeedbackBuffer);
 
     EXPECT_GL_NO_ERROR();
 
@@ -310,13 +310,20 @@ TEST_P(TransformFeedbackTest, BufferBinding)
     glGetIntegerv(GL_TRANSFORM_FEEDBACK_BUFFER_BINDING, &currentBufferBinding);
     EXPECT_EQ(static_cast<GLuint>(currentBufferBinding), mTransformFeedbackBuffer);
 
+    glGetIntegeri_v(GL_TRANSFORM_FEEDBACK_BUFFER_BINDING, 0, &currentBufferBinding);
+    EXPECT_EQ(static_cast<GLuint>(currentBufferBinding), mTransformFeedbackBuffer);
+
     EXPECT_GL_NO_ERROR();
 
     // Check that the buffer ID for the newly bound transform feedback is zero
     glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, mTransformFeedback);
 
-    glGetIntegerv(GL_TRANSFORM_FEEDBACK_BUFFER_BINDING, &currentBufferBinding);
+    glGetIntegeri_v(GL_TRANSFORM_FEEDBACK_BUFFER_BINDING, 0, &currentBufferBinding);
     EXPECT_EQ(0, currentBufferBinding);
+
+    // But the generic bind point is unaffected by glBindTransformFeedback.
+    glGetIntegerv(GL_TRANSFORM_FEEDBACK_BUFFER_BINDING, &currentBufferBinding);
+    EXPECT_EQ(static_cast<GLuint>(currentBufferBinding), mTransformFeedbackBuffer);
 
     EXPECT_GL_NO_ERROR();
 
@@ -332,7 +339,7 @@ TEST_P(TransformFeedbackTest, BufferBinding)
     glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, 0);
 
     glGetIntegeri_v(GL_TRANSFORM_FEEDBACK_BUFFER_BINDING, 0, &currentBufferBinding);
-    EXPECT_EQ(0, currentBufferBinding);
+    EXPECT_EQ(static_cast<GLuint>(currentBufferBinding), mTransformFeedbackBuffer);
 
     EXPECT_GL_NO_ERROR();
 

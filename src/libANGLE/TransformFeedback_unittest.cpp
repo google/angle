@@ -115,10 +115,6 @@ TEST_F(TransformFeedbackTest, BufferBinding)
 
     EXPECT_EQ(mFeedback->getIndexedBufferCount(), mCaps.maxTransformFeedbackSeparateAttributes);
 
-    EXPECT_CALL(*mImpl, bindGenericBuffer(_));
-    mFeedback->bindGenericBuffer(nullptr, buffer);
-    EXPECT_EQ(mFeedback->getGenericBuffer().get(), buffer);
-
     EXPECT_CALL(*mImpl, bindIndexedBuffer(_, _));
     mFeedback->bindIndexedBuffer(nullptr, bindIndex, buffer, 0, 1);
     for (size_t i = 0; i < mFeedback->getIndexedBufferCount(); i++)

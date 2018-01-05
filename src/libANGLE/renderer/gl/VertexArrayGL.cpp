@@ -104,7 +104,7 @@ void VertexArrayGL::destroy(const gl::Context *context)
     mAppliedElementArrayBuffer.set(context, nullptr);
     for (auto &binding : mAppliedBindings)
     {
-        binding.setBuffer(context, nullptr);
+        binding.setBuffer(context, nullptr, false);
     }
 }
 
@@ -482,7 +482,7 @@ void VertexArrayGL::updateAttribPointer(const gl::Context *context, size_t attri
     {
         // Mark the applied binding isn't using a buffer by setting its buffer to nullptr so that if
         // it starts to use a buffer later, there is no chance that the caching will skip it.
-        mAppliedBindings[attribIndex].setBuffer(context, nullptr);
+        mAppliedBindings[attribIndex].setBuffer(context, nullptr, false);
         return;
     }
 
@@ -521,7 +521,7 @@ void VertexArrayGL::updateAttribPointer(const gl::Context *context, size_t attri
 
     mAppliedBindings[attribIndex].setStride(binding.getStride());
     mAppliedBindings[attribIndex].setOffset(binding.getOffset());
-    mAppliedBindings[attribIndex].setBuffer(context, binding.getBuffer().get());
+    mAppliedBindings[attribIndex].setBuffer(context, binding.getBuffer().get(), false);
 }
 
 void VertexArrayGL::callVertexAttribPointer(GLuint attribIndex,
@@ -614,7 +614,7 @@ void VertexArrayGL::updateBindingBuffer(const gl::Context *context, size_t bindi
 
     mAppliedBindings[bindingIndex].setStride(binding.getStride());
     mAppliedBindings[bindingIndex].setOffset(binding.getOffset());
-    mAppliedBindings[bindingIndex].setBuffer(context, binding.getBuffer().get());
+    mAppliedBindings[bindingIndex].setBuffer(context, binding.getBuffer().get(), false);
 }
 
 void VertexArrayGL::updateBindingDivisor(size_t bindingIndex)

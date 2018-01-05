@@ -5700,6 +5700,15 @@ void Context::onTextureChange(const Texture *texture)
     mGLState.setObjectDirty(GL_TEXTURE);
 }
 
+bool Context::isCurrentTransformFeedback(const TransformFeedback *tf) const
+{
+    return mGLState.isCurrentTransformFeedback(tf);
+}
+bool Context::isCurrentVertexArray(const VertexArray *va) const
+{
+    return mGLState.isCurrentVertexArray(va);
+}
+
 void Context::genProgramPipelines(GLsizei count, GLuint *pipelines)
 {
     for (int i = 0; i < count; i++)

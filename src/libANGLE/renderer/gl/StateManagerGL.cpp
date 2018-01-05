@@ -393,6 +393,10 @@ void StateManagerGL::bindVertexArray(GLuint vao, GLuint elementArrayBuffer)
 
 void StateManagerGL::bindBuffer(gl::BufferBinding target, GLuint buffer)
 {
+    // GL drivers differ in whether the transform feedback bind point is modified when
+    // glBindTransformFeedback is called. To avoid these behavior differences we shouldn't try to
+    // use it.
+    ASSERT(target != gl::BufferBinding::TransformFeedback);
     if (mBuffers[target] != buffer)
     {
         mBuffers[target] = buffer;

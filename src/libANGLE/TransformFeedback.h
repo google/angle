@@ -33,7 +33,6 @@ class TransformFeedbackState final : angle::NonCopyable
     TransformFeedbackState(size_t maxIndexedBuffers);
     ~TransformFeedbackState();
 
-    const BindingPointer<Buffer> &getGenericBuffer() const;
     const OffsetBindingPointer<Buffer> &getIndexedBuffer(size_t idx) const;
     const std::vector<OffsetBindingPointer<Buffer>> &getIndexedBuffers() const;
 
@@ -48,7 +47,6 @@ class TransformFeedbackState final : angle::NonCopyable
 
     Program *mProgram;
 
-    BindingPointer<Buffer> mGenericBuffer;
     std::vector<OffsetBindingPointer<Buffer>> mIndexedBuffers;
 };
 
@@ -73,9 +71,6 @@ class TransformFeedback final : public RefCountObject, public LabeledObject
 
     bool hasBoundProgram(GLuint program) const;
 
-    void bindGenericBuffer(const Context *context, Buffer *buffer);
-    const BindingPointer<Buffer> &getGenericBuffer() const;
-
     void bindIndexedBuffer(const Context *context,
                            size_t index,
                            Buffer *buffer,
@@ -84,10 +79,15 @@ class TransformFeedback final : public RefCountObject, public LabeledObject
     const OffsetBindingPointer<Buffer> &getIndexedBuffer(size_t index) const;
     size_t getIndexedBufferCount() const;
 
+    // Returns true if any buffer bound to this object is also bound to another target.
+    bool buffersBoundForOtherUse() const;
+
     void detachBuffer(const Context *context, GLuint bufferName);
 
     rx::TransformFeedbackImpl *getImplementation();
     const rx::TransformFeedbackImpl *getImplementation() const;
+
+    void onBindingChanged(bool bound);
 
   private:
     void bindProgram(const Context *context, Program *program);

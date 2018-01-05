@@ -16,6 +16,7 @@
 
 namespace gl
 {
+ERRMSG(BufferBoundForTransformFeedback, "Buffer is bound for transform feedback.");
 ERRMSG(BufferNotBound, "A buffer must be bound.");
 ERRMSG(CompressedTextureDimensionsMustMatchData,
        "Compressed texture dimensions must exactly match the dimensions of the data passed in.");
@@ -29,6 +30,9 @@ ERRMSG(DefaultFramebufferTarget, "It is invalid to change default FBO's attachme
 ERRMSG(DispatchIndirectBufferNotBound, "Dispatch indirect buffer must be bound.");
 ERRMSG(DrawBufferTypeMismatch,
        "Fragment shader output type does not match the bound framebuffer attachment type.");
+ERRMSG(ElementArrayBufferBoundForTransformFeedback,
+       "It is undefined behavior to use an element array buffer that is bound for transform "
+       "feedback.");
 ERRMSG(EnumNotSupported, "Enum is not currently supported.");
 ERRMSG(EnumRequiresGLES31, "Enum requires GLES 3.1");
 ERRMSG(ES31Required, "OpenGL ES 3.1 Required");
@@ -149,6 +153,11 @@ ERRMSG(OutsideOfBounds, "Parameter outside of bounds.");
 ERRMSG(ParamOverflow, "The provided parameters overflow with the provided buffer.");
 ERRMSG(PixelDataNotNull, "Pixel data must be null.");
 ERRMSG(PixelDataNull, "Pixel data cannot be null.");
+ERRMSG(PixelPackBufferBoundForTransformFeedback,
+       "It is undefined behavior to use a pixel pack buffer that is bound for transform feedback.");
+ERRMSG(
+    PixelUnpackBufferBoundForTransformFeedback,
+    "It is undefined behavior to use a pixel unpack buffer that is bound for transform feedback.");
 ERRMSG(ProgramDoesNotExist, "Program doesn't exist.");
 ERRMSG(ProgramNotBound, "A program must be bound.");
 ERRMSG(ProgramNotLinked, "Program not linked.");
@@ -168,15 +177,22 @@ ERRMSG(StencilReferenceMaskOrMismatch,
 ERRMSG(StrideMustBeMultipleOfType, "Stride must be a multiple of the passed in datatype.");
 ERRMSG(TextureNotBound, "A texture must be bound.");
 ERRMSG(TextureNotPow2, "The texture is a non-power-of-two texture.");
+ERRMSG(TransformFeedbackBufferDoubleBound,
+       "A transform feedback buffer that would be written to is also bound to a "
+       "non-transform-feedback target, which would cause undefined behavior.");
 ERRMSG(TransformFeedbackDoesNotExist, "Transform feedback object that does not exist.");
 ERRMSG(TypeMismatch,
        "Passed in texture target and format must match the one originally used to define the "
        "texture.");
 ERRMSG(TypeNotUnsignedShortByte, "Only UNSIGNED_SHORT and UNSIGNED_BYTE types are supported.");
+ERRMSG(UniformBufferBoundForTransformFeedback,
+       "It is undefined behavior to use an uniform buffer that is bound for transform feedback.");
 ERRMSG(UniformSizeMismatch, "Uniform size does not match uniform method.");
 ERRMSG(UnknownParameter, "Unknown parameter value.");
 ERRMSG(VertexArrayNoBuffer, "An enabled vertex array has no buffer.");
 ERRMSG(VertexArrayNoBufferPointer, "An enabled vertex array has no buffer and no pointer.");
+ERRMSG(VertexBufferBoundForTransformFeedback,
+       "It is undefined behavior to use a vertex buffer that is bound for transform feedback.");
 ERRMSG(VertexShaderTypeMismatch,
        "Vertex shader input type does not match the type of the bound vertex attribute.")
 ERRMSG(ViewportNegativeSize, "Viewport size cannot be negative.");

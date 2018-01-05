@@ -59,6 +59,8 @@ class BufferState final : angle::NonCopyable
     void *mMapPointer;
     GLint64 mMapOffset;
     GLint64 mMapLength;
+    int mBindingCount;
+    int mTransformFeedbackBindingCount;
 };
 
 class Buffer final : public RefCountObject, public LabeledObject
@@ -110,6 +112,9 @@ class Buffer final : public RefCountObject, public LabeledObject
     GLint64 getSize() const { return mState.mSize; }
 
     rx::BufferImpl *getImplementation() const { return mImpl; }
+
+    bool isBoundForTransformFeedbackAndOtherUse() const;
+    void onBindingChanged(bool bound, BufferBinding target);
 
   private:
     BufferState mState;

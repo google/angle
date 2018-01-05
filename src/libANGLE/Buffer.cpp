@@ -26,7 +26,9 @@ BufferState::BufferState()
       mMapped(GL_FALSE),
       mMapPointer(nullptr),
       mMapOffset(0),
-      mMapLength(0)
+      mMapLength(0),
+      mBindingCount(0),
+      mTransformFeedbackBindingCount(0)
 {
 }
 
@@ -210,6 +212,23 @@ Error Buffer::getIndexRange(const gl::Context *context,
     mIndexRangeCache.addRange(type, offset, count, primitiveRestartEnabled, *outRange);
 
     return NoError();
+}
+
+bool Buffer::isBoundForTransformFeedbackAndOtherUse() const
+{
+    return mState.mTransformFeedbackBindingCount > 0 &&
+           mState.mTransformFeedbackBindingCount != mState.mBindingCount;
+}
+
+void Buffer::onBindingChanged(bool bound, BufferBinding target)
+{
+    ASSERT(bound || mState.mBindingCount > 0);
+    mState.mBindingCount += bound ? 1 : -1;
+    if (target == BufferBinding::TransformFeedback)
+    {
+        ASSERT(bound || mState.mTransformFeedbackBindingCount > 0);
+        mState.mTransformFeedbackBindingCount += bound ? 1 : -1;
+    }
 }
 
 }  // namespace gl

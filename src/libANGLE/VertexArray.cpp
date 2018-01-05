@@ -42,10 +42,13 @@ VertexArray::VertexArray(rx::GLImplFactory *factory,
 
 void VertexArray::onDestroy(const Context *context)
 {
+    bool isBound = context->isCurrentVertexArray(this);
     for (auto &binding : mState.mVertexBindings)
     {
-        binding.setBuffer(context, nullptr);
+        binding.setBuffer(context, nullptr, isBound);
     }
+    if (isBound && mState.mElementArrayBuffer.get())
+        mState.mElementArrayBuffer->onBindingChanged(false, BufferBinding::ElementArray);
     mState.mElementArrayBuffer.set(context, nullptr);
     mVertexArray->destroy(context);
     SafeDelete(mVertexArray);
@@ -74,16 +77,19 @@ const std::string &VertexArray::getLabel() const
 
 void VertexArray::detachBuffer(const Context *context, GLuint bufferName)
 {
+    bool isBound = context->isCurrentVertexArray(this);
     for (auto &binding : mState.mVertexBindings)
     {
         if (binding.getBuffer().id() == bufferName)
         {
-            binding.setBuffer(context, nullptr);
+            binding.setBuffer(context, nullptr, isBound);
         }
     }
 
     if (mState.mElementArrayBuffer.id() == bufferName)
     {
+        if (isBound && mState.mElementArrayBuffer.get())
+            mState.mElementArrayBuffer->onBindingChanged(false, BufferBinding::Array);
         mState.mElementArrayBuffer.set(context, nullptr);
     }
 }
@@ -115,10 +121,11 @@ void VertexArray::bindVertexBufferImpl(const Context *context,
                                        GLsizei stride)
 {
     ASSERT(bindingIndex < getMaxBindings());
+    bool isBound = context->isCurrentVertexArray(this);
 
     VertexBinding *binding = &mState.mVertexBindings[bindingIndex];
 
-    binding->setBuffer(context, boundBuffer);
+    binding->setBuffer(context, boundBuffer, isBound);
     binding->setOffset(offset);
     binding->setStride(stride);
 }
@@ -244,7 +251,12 @@ void VertexArray::setVertexAttribPointer(const Context *context,
 
 void VertexArray::setElementArrayBuffer(const Context *context, Buffer *buffer)
 {
+    bool isBound = context->isCurrentVertexArray(this);
+    if (isBound && mState.mElementArrayBuffer.get())
+        mState.mElementArrayBuffer->onBindingChanged(false, BufferBinding::ElementArray);
     mState.mElementArrayBuffer.set(context, buffer);
+    if (isBound && mState.mElementArrayBuffer.get())
+        mState.mElementArrayBuffer->onBindingChanged(true, BufferBinding::ElementArray);
     mDirtyBits.set(DIRTY_BIT_ELEMENT_ARRAY_BUFFER);
 }
 
@@ -254,6 +266,16 @@ void VertexArray::syncState(const Context *context)
     {
         mVertexArray->syncState(context, mDirtyBits);
         mDirtyBits.reset();
+    }
+}
+
+void VertexArray::onBindingChanged(bool bound)
+{
+    if (mState.mElementArrayBuffer.get())
+        mState.mElementArrayBuffer->onBindingChanged(bound, BufferBinding::ElementArray);
+    for (auto &binding : mState.mVertexBindings)
+    {
+        binding.onContainerBindingChanged(bound);
     }
 }
 

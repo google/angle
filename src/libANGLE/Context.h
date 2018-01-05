@@ -1164,6 +1164,9 @@ class Context final : public ValidationContext
 
     bool isRobustResourceInitEnabled() const { return mGLState.isRobustResourceInitEnabled(); }
 
+    bool isCurrentTransformFeedback(const TransformFeedback *tf) const;
+    bool isCurrentVertexArray(const VertexArray *va) const;
+
   private:
     Error prepareForDraw();
     Error syncRendererState();

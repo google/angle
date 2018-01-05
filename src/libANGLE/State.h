@@ -470,6 +470,9 @@ class State : public angle::ObserverInterface, angle::NonCopyable
 
     Error clearUnclearedActiveTextures(const Context *context);
 
+    bool isCurrentTransformFeedback(const TransformFeedback *tf) const;
+    bool isCurrentVertexArray(const VertexArray *va) const;
+
   private:
     void syncProgramTextures(const Context *context);
 
@@ -557,10 +560,9 @@ class State : public angle::ObserverInterface, angle::NonCopyable
     typedef std::map<GLenum, BindingPointer<Query>> ActiveQueryMap;
     ActiveQueryMap mActiveQueries;
 
-    // Stores the currently bound buffer for each binding point. It has entries for the element
-    // array buffer and the transform feedback buffer but these should not be used. Instead these
-    // bind points are respectively owned by current the vertex array object and the current
-    // transform feedback object.
+    // Stores the currently bound buffer for each binding point. It has an entry for the element
+    // array buffer but it should not be used. Instead this bind point is owned by the current
+    // vertex array object.
     using BoundBufferMap = angle::PackedEnumMap<BufferBinding, BindingPointer<Buffer>>;
     BoundBufferMap mBoundBuffers;
 
@@ -571,9 +573,7 @@ class State : public angle::ObserverInterface, angle::NonCopyable
 
     BindingPointer<TransformFeedback> mTransformFeedback;
 
-    BindingPointer<Buffer> mPixelUnpackBuffer;
     PixelUnpackState mUnpack;
-    BindingPointer<Buffer> mPixelPackBuffer;
     PixelPackState mPack;
 
     bool mPrimitiveRestart;
