@@ -93,6 +93,30 @@
       "revId": "6278c411c0421b863c2909c6ec159caac54b9f31",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7dd5db48_8d1910f8",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-05T20:51:16Z",
+      "side": 1,
+      "message": "That sounds terrible. I\u0027d rather just fix the docs, get the necessary change upstreamed to ninja, and remove the python hook.",
+      "parentUuid": "d854f58f_bfb8745d",
+      "range": {
+        "startLine": 52,
+        "startChar": 95,
+        "endLine": 52,
+        "endChar": 100
+      },
+      "revId": "6278c411c0421b863c2909c6ec159caac54b9f31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
