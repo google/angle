@@ -370,10 +370,6 @@ Error ValidateGetPlatformDisplayCommon(EGLenum platform,
                         case EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE:
                             break;
 
-                        // TODO(jmadill): Remove this once Chrome is updated.
-                        case EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLEX:
-                            break;
-
                         case EGL_PLATFORM_ANGLE_DEVICE_TYPE_D3D_WARP_ANGLE:
                         case EGL_PLATFORM_ANGLE_DEVICE_TYPE_D3D_REFERENCE_ANGLE:
                             if (!clientExtensions.platformANGLED3D)
