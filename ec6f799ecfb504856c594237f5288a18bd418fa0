@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "1036be07_e720fa4b",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 5426,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-01-05T10:34:31Z",
+      "side": 1,
+      "message": "Thanks for the explanation, it makes sense. Overall I find we have a bunch of traverser with this restart mechanism that could be optimized. But we shouldn\u0027t spend time fixing them unless they become a hot spot.",
+      "parentUuid": "04ac7f95_6aca81aa",
+      "revId": "ec6f799ecfb504856c594237f5288a18bd418fa0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "12e22c3b_c7d84eb1",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 2
