@@ -52,7 +52,7 @@ gn gen out/Debug
 GN will generate ninja files by default.  To change the default build options run `gn args out/Debug`.  Some commonly used options are:
 ```
 is_debug = true
-target_cpu = x64  (or x86)
+target_cpu = "x64"  (or "x86")
 is_clang = false  (to use compiler other than clang)
 ```
 For more information on GN run `gn help`.
