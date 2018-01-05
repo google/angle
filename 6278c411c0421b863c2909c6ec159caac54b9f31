@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "7261c5ab_fd1eb6be",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-05T20:46:33Z",
+      "side": 1,
+      "message": "maybe just say \"(required)\"",
+      "range": {
+        "startLine": 24,
+        "startChar": 49,
+        "endLine": 24,
+        "endChar": 56
+      },
+      "revId": "6278c411c0421b863c2909c6ec159caac54b9f31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "75123ad5_33bef973",
         "filename": "doc/DevSetup.md",
         "patchSetId": 1
@@ -13,6 +36,30 @@
       "writtenOn": "2018-01-05T20:38:26Z",
       "side": 1,
       "message": "Feels a bit awkward to give \"is_debug\u003dfalse\" option for out/Debug.\nPerhaps add the paragraph about build dirs before this, and then say something like \"out/dir_of_your_choice\".",
+      "range": {
+        "startLine": 52,
+        "startChar": 95,
+        "endLine": 52,
+        "endChar": 100
+      },
+      "revId": "6278c411c0421b863c2909c6ec159caac54b9f31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "674d41b2_87ca1b46",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-05T20:46:33Z",
+      "side": 1,
+      "message": "agree that it\u0027s weird to give release options for the debug example. Maybe have two examples. I think we should condition people to use out/Debug and out/Release.",
+      "parentUuid": "75123ad5_33bef973",
       "range": {
         "startLine": 52,
         "startChar": 95,
