@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "eaa21d55_11c97fdc",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 5426,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-01-05T13:30:48Z",
+      "side": 1,
+      "message": "Yep. I\u0027d like to do it mostly because it could also make traversers easier to write and maintain, but the performance issues by themselves are probably not worth going after.\n\nI put the folding to a separate function and added the relevant explanations there now.",
+      "parentUuid": "1036be07_e720fa4b",
+      "revId": "ec6f799ecfb504856c594237f5288a18bd418fa0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "12e22c3b_c7d84eb1",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 2
@@ -69,6 +87,24 @@
       "revId": "ec6f799ecfb504856c594237f5288a18bd418fa0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "33851076_e9af6d74",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 5982,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-01-05T13:30:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "12e22c3b_c7d84eb1",
+      "revId": "ec6f799ecfb504856c594237f5288a18bd418fa0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
