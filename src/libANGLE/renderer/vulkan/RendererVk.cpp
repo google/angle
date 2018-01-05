@@ -934,6 +934,7 @@ vk::Error RendererVk::flushCommandGraph(const gl::Context *context, vk::CommandB
     }
 
     ANGLE_TRY(commandBatch->end());
+    resetCommandGraph();
     return vk::NoError();
 }
 
