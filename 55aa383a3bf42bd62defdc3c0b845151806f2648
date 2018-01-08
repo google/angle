@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "eeb88a8d_1b45ad92",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 436,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-01-08T08:52:46Z",
+      "side": 1,
+      "message": "I have applied another structure and used a new name to record mismatched fields, PTAL.",
+      "parentUuid": "5c0b052d_2acdb24f",
+      "range": {
+        "startLine": 435,
+        "startChar": 30,
+        "endLine": 436,
+        "endChar": 69
+      },
+      "revId": "55aa383a3bf42bd62defdc3c0b845151806f2648",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "51128390_c5b0fd0a",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 6
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "b5c702ff_4bdcb5db",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 468,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-01-08T08:52:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "51128390_c5b0fd0a",
+      "range": {
+        "startLine": 454,
+        "startChar": 0,
+        "endLine": 468,
+        "endChar": 1
+      },
+      "revId": "55aa383a3bf42bd62defdc3c0b845151806f2648",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "761d7155_f02d42da",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 6
@@ -59,6 +107,24 @@
       "writtenOn": "2018-01-08T00:47:00Z",
       "side": 1,
       "message": "Keep naming consistent.\n\u0027varying1, varying2\u0027 or \u0027varyingIn, varyingOut\u0027.",
+      "revId": "55aa383a3bf42bd62defdc3c0b845151806f2648",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4384f993_cf0cdd03",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2674,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-01-08T08:52:46Z",
+      "side": 1,
+      "message": "\u0027generator\u0027 and \u0027consumer\u0027 comes from ES 3.2 SPEC (Chapter 9.1 Page 175).\nI use these words instead because I think the original \u0027varyingIn\u0027 and \u0027varyingOut\u0027 are a bit strange: \u0027varyingIn\u0027 is vertex output, and \u0027varyingOut\u0027 is fragment input, and the order of them cannot be changed because consumer always needs a generator to match, however a generator doesn\u0027t need to have a matched consumer.",
+      "parentUuid": "761d7155_f02d42da",
       "revId": "55aa383a3bf42bd62defdc3c0b845151806f2648",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
