@@ -37,9 +37,4 @@ void DeviceNULL::generateExtensions(egl::DeviceExtensions *outExtensions) const
 {
 }
 
-bool DeviceNULL::deviceExternallySourced()
-{
-    return false;
-}
-
 }  // namespace rx

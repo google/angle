@@ -17,8 +17,7 @@
 namespace rx
 {
 
-DeviceD3D::DeviceD3D()
-    : mDevice(0), mDeviceType(0), mDeviceExternallySourced(false), mIsInitialized(false)
+DeviceD3D::DeviceD3D() : mDevice(0), mDeviceType(0), mIsInitialized(false)
 {
 }
 
@@ -46,9 +45,7 @@ egl::Error DeviceD3D::getDevice(void **outValue)
     return egl::NoError();
 }
 
-egl::Error DeviceD3D::initialize(void *device,
-                                 EGLint deviceType,
-                                 EGLBoolean deviceExternallySourced)
+egl::Error DeviceD3D::initialize(void *device, EGLint deviceType)
 {
     ASSERT(!mIsInitialized);
     if (mIsInitialized)
@@ -74,15 +71,10 @@ egl::Error DeviceD3D::initialize(void *device,
         // Deliberately don't release the ref here, so that the DeviceD3D holds a ref to the
         // D3D11 device.
     }
-    else
 #endif
-    {
-        ASSERT(deviceExternallySourced == EGL_FALSE);
-    }
 
     mDevice                  = device;
     mDeviceType              = deviceType;
-    mDeviceExternallySourced = !!deviceExternallySourced;
     mIsInitialized           = true;
 
     return egl::NoError();
@@ -98,8 +90,4 @@ void DeviceD3D::generateExtensions(egl::DeviceExtensions *outExtensions) const
     outExtensions->deviceD3D = true;
 }
 
-bool DeviceD3D::deviceExternallySourced()
-{
-    return mDeviceExternallySourced;
-}
 }

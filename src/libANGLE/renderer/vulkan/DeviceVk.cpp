@@ -39,10 +39,4 @@ void DeviceVk::generateExtensions(egl::DeviceExtensions *outExtensions) const
     UNIMPLEMENTED();
 }
 
-bool DeviceVk::deviceExternallySourced()
-{
-    UNIMPLEMENTED();
-    return bool();
-}
-
 }  // namespace rx

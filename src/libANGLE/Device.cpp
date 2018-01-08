@@ -51,7 +51,7 @@ egl::Error Device::CreateDevice(void *devicePointer, EGLint deviceType, Device *
     if (deviceType == EGL_D3D11_DEVICE_ANGLE)
     {
         std::unique_ptr<rx::DeviceD3D> deviceD3D(new rx::DeviceD3D());
-        ANGLE_TRY(deviceD3D->initialize(devicePointer, deviceType, EGL_TRUE));
+        ANGLE_TRY(deviceD3D->initialize(devicePointer, deviceType));
         *outDevice = new Device(nullptr, deviceD3D.release());
         GetDeviceSet()->insert(*outDevice);
         return NoError();
@@ -86,7 +86,7 @@ Device::~Device()
     ASSERT(GetDeviceSet()->find(this) != GetDeviceSet()->end());
     GetDeviceSet()->erase(this);
 
-    if (mImplementation->deviceExternallySourced())
+    if (!mOwningDisplay)
     {
         // If the device isn't externally sourced then it is up to the renderer to delete the impl
         SafeDelete(mImplementation);

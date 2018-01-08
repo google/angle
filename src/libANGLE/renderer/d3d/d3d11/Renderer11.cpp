@@ -3814,8 +3814,8 @@ egl::Error Renderer11::getEGLDevice(DeviceImpl **device)
     {
         ASSERT(mDevice != nullptr);
         mEGLDevice       = new DeviceD3D();
-        egl::Error error = mEGLDevice->initialize(reinterpret_cast<void *>(mDevice),
-                                                  EGL_D3D11_DEVICE_ANGLE, EGL_FALSE);
+        egl::Error error =
+            mEGLDevice->initialize(reinterpret_cast<void *>(mDevice), EGL_D3D11_DEVICE_ANGLE);
 
         if (error.isError())
         {
