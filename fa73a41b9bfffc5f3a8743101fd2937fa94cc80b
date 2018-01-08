@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c7725b36_c003ffd8",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-01-08T11:19:51Z",
+      "side": 1,
+      "message": "C++11 enum class would be favorable.",
+      "range": {
+        "startLine": 55,
+        "startChar": 0,
+        "endLine": 55,
+        "endChar": 22
+      },
+      "revId": "fa73a41b9bfffc5f3a8743101fd2937fa94cc80b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
