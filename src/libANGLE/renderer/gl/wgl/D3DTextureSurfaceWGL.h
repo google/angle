@@ -65,6 +65,8 @@ class D3DTextureSurfaceWGL : public SurfaceWGL
 
     HDC getDC() const override;
 
+    const angle::Format *getD3DTextureColorFormat() const override;
+
   private:
     EGLenum mBuftype;
     EGLClientBuffer mClientBuffer;
@@ -83,6 +85,8 @@ class D3DTextureSurfaceWGL : public SurfaceWGL
 
     size_t mWidth;
     size_t mHeight;
+
+    const angle::Format *mColorFormat;
 
     HANDLE mDeviceHandle;
     IUnknown *mObject;

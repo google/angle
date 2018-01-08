@@ -61,6 +61,8 @@ class SurfaceD3D : public SurfaceImpl
                                         const gl::ImageIndex &imageIndex,
                                         FramebufferAttachmentRenderTarget **rtOut) override;
 
+    const angle::Format *getD3DTextureColorFormat() const override;
+
   protected:
     SurfaceD3D(const egl::SurfaceState &state,
                RendererD3D *renderer,
@@ -90,6 +92,7 @@ class SurfaceD3D : public SurfaceImpl
 
     GLenum mRenderTargetFormat;
     GLenum mDepthStencilFormat;
+    const angle::Format *mColorFormat;
 
     SwapChainD3D *mSwapChain;
     bool mSwapIntervalDirty;

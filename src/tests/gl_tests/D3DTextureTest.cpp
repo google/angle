@@ -266,16 +266,27 @@ class D3DTextureTest : public ANGLETest
     IDirect3DDevice9 *mD3D9Device = nullptr;
 };
 
-// Test creating pbuffer from textures with several
-// different DXGI formats.
-TEST_P(D3DTextureTest, TestD3D11SupportedFormats)
+// Test creating pbuffer from textures with several different DXGI formats.
+TEST_P(D3DTextureTest, TestD3D11SupportedFormatsSurface)
 {
-    ANGLE_SKIP_TEST_IF(!valid() || !IsD3D11());
+    bool srgbSupported = extensionEnabled("GL_EXT_sRGB") || getClientMajorVersion() == 3;
+    ANGLE_SKIP_TEST_IF(!valid() || !mD3D11Device || !srgbSupported);
 
     const DXGI_FORMAT formats[] = {DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
                                    DXGI_FORMAT_B8G8R8A8_UNORM, DXGI_FORMAT_B8G8R8A8_UNORM_SRGB};
     for (size_t i = 0; i < 4; ++i)
     {
+        if (formats[i] == DXGI_FORMAT_B8G8R8A8_UNORM_SRGB)
+        {
+            if (IsOpenGL())
+            {
+                // This generates an invalid format error when calling wglDXRegisterObjectNV().
+                // Reproducible at least on NVIDIA driver 390.65 on Windows 10.
+                std::cout << "DXGI_FORMAT_B8G8R8A8_UNORM_SRGB subtest skipped: IsOpenGL().\n";
+                continue;
+            }
+        }
+
         EGLSurface pbuffer = createD3D11PBuffer(32, 32, EGL_TEXTURE_RGBA, EGL_TEXTURE_2D, 1, 0,
                                                 D3D11_BIND_RENDER_TARGET, formats[i]);
         ASSERT_EGL_SUCCESS();
@@ -283,10 +294,146 @@ TEST_P(D3DTextureTest, TestD3D11SupportedFormats)
 
         EGLWindow *window  = getEGLWindow();
         EGLDisplay display = window->getDisplay();
+
+        EGLint colorspace;
+        eglQuerySurface(display, pbuffer, EGL_GL_COLORSPACE, &colorspace);
+
+        if (formats[i] == DXGI_FORMAT_R8G8B8A8_UNORM_SRGB ||
+            formats[i] == DXGI_FORMAT_B8G8R8A8_UNORM_SRGB)
+        {
+            EXPECT_EQ(EGL_GL_COLORSPACE_SRGB, colorspace);
+        }
+        else
+        {
+            EXPECT_EQ(EGL_GL_COLORSPACE_LINEAR, colorspace);
+        }
+
         eglMakeCurrent(display, pbuffer, pbuffer, window->getContext());
         ASSERT_EGL_SUCCESS();
-
         window->makeCurrent();
+        eglDestroySurface(display, pbuffer);
+    }
+}
+
+// Test binding a pbuffer created from a D3D texture as a texture image with several different DXGI
+// formats. The test renders to and samples from the pbuffer.
+TEST_P(D3DTextureTest, TestD3D11SupportedFormatsTexture)
+{
+    bool srgbSupported = extensionEnabled("GL_EXT_sRGB") || getClientMajorVersion() == 3;
+    ANGLE_SKIP_TEST_IF(!valid() || !mD3D11Device || !srgbSupported);
+
+    bool srgbWriteControlSupported = extensionEnabled("GL_EXT_sRGB_write_control") && !IsOpenGL();
+
+    const DXGI_FORMAT formats[] = {DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_B8G8R8A8_UNORM,
+                                   DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
+                                   DXGI_FORMAT_B8G8R8A8_UNORM_SRGB};
+    for (size_t i = 0; i < 4; ++i)
+    {
+        if (formats[i] == DXGI_FORMAT_B8G8R8A8_UNORM_SRGB)
+        {
+            if (IsOpenGL())
+            {
+                // This generates an invalid format error when calling wglDXRegisterObjectNV().
+                // Reproducible at least on NVIDIA driver 390.65 on Windows 10.
+                std::cout << "DXGI_FORMAT_B8G8R8A8_UNORM_SRGB subtest skipped: IsOpenGL().\n";
+                continue;
+            }
+        }
+
+        SCOPED_TRACE(std::string("Test case:") + std::to_string(i));
+        EGLWindow *window  = getEGLWindow();
+        EGLDisplay display = window->getDisplay();
+
+        EGLSurface pbuffer =
+            createD3D11PBuffer(32, 32, EGL_TEXTURE_RGBA, EGL_TEXTURE_2D, 1, 0,
+                               D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE, formats[i]);
+        ASSERT_EGL_SUCCESS();
+        ASSERT_NE(pbuffer, EGL_NO_SURFACE);
+
+        EGLint colorspace;
+        eglQuerySurface(display, pbuffer, EGL_GL_COLORSPACE, &colorspace);
+
+        GLuint texture = 0u;
+        glGenTextures(1, &texture);
+        glBindTexture(GL_TEXTURE_2D, texture);
+        EGLBoolean result = eglBindTexImage(display, pbuffer, EGL_BACK_BUFFER);
+        ASSERT_EGL_SUCCESS();
+        ASSERT(result == EGL_TRUE);
+
+        GLuint fbo = 0u;
+        glGenFramebuffers(1, &fbo);
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+        glViewport(0, 0, 32, 32);
+
+        // Clear the texture with 50% green and check that the color value written is correct.
+
+        glClearColor(0.0f, 0.5f, 0.0f, 1.0f);
+
+        GLint colorEncoding = 0;
+        glGetFramebufferAttachmentParameteriv(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                                              GL_FRAMEBUFFER_ATTACHMENT_COLOR_ENCODING_EXT,
+                                              &colorEncoding);
+
+        if (formats[i] == DXGI_FORMAT_R8G8B8A8_UNORM_SRGB ||
+            formats[i] == DXGI_FORMAT_B8G8R8A8_UNORM_SRGB)
+        {
+            EXPECT_EQ(EGL_GL_COLORSPACE_SRGB, colorspace);
+            EXPECT_EQ(GL_SRGB_EXT, colorEncoding);
+        }
+        else
+        {
+            EXPECT_EQ(EGL_GL_COLORSPACE_LINEAR, colorspace);
+            EXPECT_EQ(GL_LINEAR, colorEncoding);
+        }
+
+        if (colorEncoding == GL_SRGB_EXT)
+        {
+            glClear(GL_COLOR_BUFFER_BIT);
+            EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(0u, 188u, 0u, 255u), 2);
+            // Disable SRGB and run the non-sRGB test case.
+            if (srgbWriteControlSupported)
+                glDisable(GL_FRAMEBUFFER_SRGB_EXT);
+        }
+
+        if (colorEncoding == GL_LINEAR || srgbWriteControlSupported)
+        {
+            glClearColor(0.0f, 0.5f, 0.0f, 1.0f);
+            glClear(GL_COLOR_BUFFER_BIT);
+            EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(0u, 127u, 0u, 255u), 2);
+        }
+
+        // Draw with the texture to a linear framebuffer and check that the color value written is
+        // correct.
+        GLFramebuffer scratchFbo;
+        glBindFramebuffer(GL_FRAMEBUFFER, scratchFbo);
+        GLTexture scratchTexture;
+        glBindTexture(GL_TEXTURE_2D, scratchTexture);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 32, 32, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, scratchTexture,
+                               0);
+
+        glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        glUseProgram(mTextureProgram);
+        glUniform1i(mTextureUniformLocation, 0);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, texture);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+        drawQuad(mTextureProgram, "position", 0.5f);
+        ASSERT_GL_NO_ERROR();
+
+        EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(0u, 127u, 0u, 255u), 2);
+
+        glBindFramebuffer(GL_FRAMEBUFFER, 0u);
+        glBindTexture(GL_TEXTURE_2D, 0u);
+        glDeleteTextures(1, &texture);
+        glDeleteFramebuffers(1, &fbo);
         eglDestroySurface(display, pbuffer);
     }
 }

@@ -11,6 +11,7 @@
 #include "libANGLE/Context.h"
 #include "libANGLE/Display.h"
 #include "libANGLE/Surface.h"
+#include "libANGLE/renderer/Format.h"
 #include "libANGLE/renderer/d3d/RenderTargetD3D.h"
 #include "libANGLE/renderer/d3d/RendererD3D.h"
 #include "libANGLE/renderer/d3d/SwapChainD3D.h"
@@ -36,6 +37,7 @@ SurfaceD3D::SurfaceD3D(const egl::SurfaceState &state,
       mOrientation(static_cast<EGLint>(attribs.get(EGL_SURFACE_ORIENTATION_ANGLE, 0))),
       mRenderTargetFormat(state.config->renderTargetFormat),
       mDepthStencilFormat(state.config->depthStencilFormat),
+      mColorFormat(nullptr),
       mSwapChain(nullptr),
       mSwapIntervalDirty(true),
       mNativeWindow(renderer->createNativeWindow(window, state.config, attribs)),
@@ -62,7 +64,8 @@ SurfaceD3D::SurfaceD3D(const egl::SurfaceState &state,
             ASSERT(mD3DTexture != nullptr);
             mD3DTexture->AddRef();
             ANGLE_SWALLOW_ERR(mRenderer->getD3DTextureInfo(state.config, mD3DTexture, &mWidth,
-                                                           &mHeight, &mRenderTargetFormat));
+                                                           &mHeight, &mColorFormat));
+            mRenderTargetFormat = mColorFormat->fboImplementationInternalFormat;
             break;
 
         default:
@@ -354,6 +357,11 @@ egl::Error SurfaceD3D::querySurfacePointerANGLE(EGLint attribute, void **value)
     else UNREACHABLE();
 
     return egl::NoError();
+}
+
+const angle::Format *SurfaceD3D::getD3DTextureColorFormat() const
+{
+    return mColorFormat;
 }
 
 gl::Error SurfaceD3D::getAttachmentRenderTarget(const gl::Context *context,

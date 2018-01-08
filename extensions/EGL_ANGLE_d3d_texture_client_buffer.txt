@@ -9,6 +9,7 @@ Name Strings
 Contributors
 
     Geoff Lang
+    Olli Etuaho
 
 Contacts
 
@@ -86,7 +87,7 @@ Additions to Chapter 3 of the EGL 1.4 Specification (EGL Functions and Errors)
                        DXGI_FORMAT_R8G8B8A8_UNORM,
                        DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
                        DXGI_FORMAT_B8G8R8A8_UNORM,
-                       DXGI_FORMAT_B8G8R8A8_UNORM_SRGB,
+                       DXGI_FORMAT_B8G8R8A8_UNORM_SRGB (support is optional),
                        DXGI_FORMAT_R16G16B16A16_FLOAT or
                        DXGI_FORMAT_R32G32B32A32_FLOAT.
     --------------------------------------------------------------------------
@@ -99,6 +100,13 @@ Additions to Chapter 3 of the EGL 1.4 Specification (EGL Functions and Errors)
     of the associcated D3D texture object are undefined while the pbuffer is
     the current read surface, draw surface or bound to a client texture."
 
+    Append to the end of Section 3.5.3.
+    "When a pbuffer is created with type EGL_D3D_TEXTURE_ANGLE, the
+    EGL_GL_COLORSPACE attribute of the surface is determined by the DXGI format
+    of the Direct3D texture. For *_SRGB DXGI formats, the value of
+    EGL_GL_COLORSPACE is EGL_GL_COLORSPACE_SRGB. For other formats, the value of
+    EGL_GL_COLORSPACE is EGL_GL_COLORSPACE_LINEAR."
+
 Issues
 
     1. What renderers allow the use of a multi-sampled texture?
@@ -106,6 +114,14 @@ Issues
     PROPOSED: Mutli-sampled texture support is currently limited to D3D11. Additionally,
     the client is responsible for resolving the texture.
 
+    2. How does this extension interact with EXT_sRGB_write_control?
+
+    If GL_FRAMEBUFFER_SRGB_EXT is disabled and a pbuffer created from a D3D
+    texture with an *_SRGB format is being rendered to, it is undefined whether
+    SRGB conversion will be performed.
+
 Revision History
+
+    Version 2, 2018/01/15 - clarified SRGB conversion handling.
 
     Version 1, 2016/10/05 - first draft.

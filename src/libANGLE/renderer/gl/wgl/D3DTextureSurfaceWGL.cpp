@@ -9,10 +9,12 @@
 #include "libANGLE/renderer/gl/wgl/D3DTextureSurfaceWGL.h"
 
 #include "libANGLE/Surface.h"
+#include "libANGLE/renderer/d3d/d3d11/formatutils11.h"
+#include "libANGLE/renderer/d3d/d3d9/formatutils9.h"
 #include "libANGLE/renderer/gl/FramebufferGL.h"
-#include "libANGLE/renderer/gl/TextureGL.h"
 #include "libANGLE/renderer/gl/RendererGL.h"
 #include "libANGLE/renderer/gl/StateManagerGL.h"
+#include "libANGLE/renderer/gl/TextureGL.h"
 #include "libANGLE/renderer/gl/wgl/DisplayWGL.h"
 #include "libANGLE/renderer/gl/wgl/FunctionsWGL.h"
 
@@ -26,6 +28,7 @@ egl::Error GetD3D11TextureInfo(EGLenum buftype,
                                ID3D11Texture2D *texture11,
                                size_t *width,
                                size_t *height,
+                               const angle::Format **angleFormat,
                                IUnknown **object,
                                IUnknown **device)
 {
@@ -58,6 +61,11 @@ egl::Error GetD3D11TextureInfo(EGLenum buftype,
     {
         SafeRelease(texture11);
         return egl::EglBadParameter() << "Could not query the D3D11 device from the client buffer.";
+    }
+
+    if (angleFormat)
+    {
+        *angleFormat = &d3d11_angle::GetFormat(textureDesc.Format);
     }
 
     if (width)
@@ -94,6 +102,7 @@ egl::Error GetD3D9TextureInfo(EGLenum buftype,
                               IDirect3DTexture9 *texture9,
                               size_t *width,
                               size_t *height,
+                              const angle::Format **angleFormat,
                               IUnknown **object,
                               IUnknown **device)
 {
@@ -120,6 +129,13 @@ egl::Error GetD3D9TextureInfo(EGLenum buftype,
                 return egl::EglBadParameter()
                        << "Unknown client buffer texture format: " << surfaceDesc.Format;
         }
+    }
+
+    if (angleFormat)
+    {
+        const auto &d3dFormatInfo = d3d9::GetD3DFormatInfo(surfaceDesc.Format);
+        ASSERT(d3dFormatInfo.info().id != angle::Format::ID::NONE);
+        *angleFormat = &d3dFormatInfo.info();
     }
 
     if (width)
@@ -165,6 +181,7 @@ egl::Error GetD3DTextureInfo(EGLenum buftype,
                              ID3D11Device *d3d11Device,
                              size_t *width,
                              size_t *height,
+                             const angle::Format **angleFormat,
                              IUnknown **object,
                              IUnknown **device)
 {
@@ -175,11 +192,13 @@ egl::Error GetD3DTextureInfo(EGLenum buftype,
         IDirect3DTexture9 *texture9 = nullptr;
         if (SUCCEEDED(buffer->QueryInterface<ID3D11Texture2D>(&texture11)))
         {
-            return GetD3D11TextureInfo(buftype, texture11, width, height, object, device);
+            return GetD3D11TextureInfo(buftype, texture11, width, height, angleFormat, object,
+                                       device);
         }
         else if (SUCCEEDED(buffer->QueryInterface<IDirect3DTexture9>(&texture9)))
         {
-            return GetD3D9TextureInfo(buftype, texture9, width, height, object, device);
+            return GetD3D9TextureInfo(buftype, texture9, width, height, angleFormat, object,
+                                      device);
         }
         else
         {
@@ -199,7 +218,7 @@ egl::Error GetD3DTextureInfo(EGLenum buftype,
             return egl::EglBadParameter() << "Failed to open share handle, " << gl::FmtHR(result);
         }
 
-        return GetD3D11TextureInfo(buftype, texture11, width, height, object, device);
+        return GetD3D11TextureInfo(buftype, texture11, width, height, angleFormat, object, device);
     }
     else
     {
@@ -232,6 +251,7 @@ D3DTextureSurfaceWGL::D3DTextureSurfaceWGL(const egl::SurfaceState &state,
       mDeviceContext(deviceContext),
       mWidth(0),
       mHeight(0),
+      mColorFormat(nullptr),
       mDeviceHandle(nullptr),
       mObject(nullptr),
       mKeyedMutex(nullptr),
@@ -278,7 +298,7 @@ egl::Error D3DTextureSurfaceWGL::ValidateD3DTextureClientBuffer(EGLenum buftype,
                                                                 EGLClientBuffer clientBuffer,
                                                                 ID3D11Device *d3d11Device)
 {
-    return GetD3DTextureInfo(buftype, clientBuffer, d3d11Device, nullptr, nullptr, nullptr,
+    return GetD3DTextureInfo(buftype, clientBuffer, d3d11Device, nullptr, nullptr, nullptr, nullptr,
                              nullptr);
 }
 
@@ -286,7 +306,7 @@ egl::Error D3DTextureSurfaceWGL::initialize(const egl::Display *display)
 {
     IUnknown *device = nullptr;
     ANGLE_TRY(GetD3DTextureInfo(mBuftype, mClientBuffer, mDisplayD3D11Device, &mWidth, &mHeight,
-                                &mObject, &device));
+                                &mColorFormat, &mObject, &device));
 
     // Grab the keyed mutex, if one exists
     mObject->QueryInterface(&mKeyedMutex);
@@ -473,6 +493,11 @@ FramebufferImpl *D3DTextureSurfaceWGL::createDefaultFramebuffer(const gl::Frameb
 HDC D3DTextureSurfaceWGL::getDC() const
 {
     return mDeviceContext;
+}
+
+const angle::Format *D3DTextureSurfaceWGL::getD3DTextureColorFormat() const
+{
+    return mColorFormat;
 }
 
 }  // namespace rx

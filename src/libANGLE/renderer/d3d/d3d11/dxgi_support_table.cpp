@@ -99,7 +99,7 @@ const DXGISupport &GetDXGISupport_9_3(DXGI_FORMAT dxgiFormat)
         }
         case DXGI_FORMAT_B8G8R8A8_UNORM_SRGB:
         {
-            static const DXGISupport info(0, F_DS | F_MIPGEN, F_2D | F_3D | F_CUBE | F_MS);
+            static const DXGISupport info(F_MIPGEN | F_RT | F_SAMPLE, F_DS, F_2D | F_3D | F_CUBE | F_MS);
             return info;
         }
         case DXGI_FORMAT_B8G8R8X8_TYPELESS:
@@ -692,7 +692,7 @@ const DXGISupport &GetDXGISupport_10_0(DXGI_FORMAT dxgiFormat)
         }
         case DXGI_FORMAT_B8G8R8A8_UNORM_SRGB:
         {
-            static const DXGISupport info(0, F_DS | F_MIPGEN, F_2D | F_3D | F_CUBE | F_MS | F_SAMPLE);
+            static const DXGISupport info(F_MIPGEN, F_DS, F_2D | F_3D | F_CUBE | F_MS | F_RT | F_SAMPLE);
             return info;
         }
         case DXGI_FORMAT_B8G8R8X8_TYPELESS:
@@ -1285,7 +1285,7 @@ const DXGISupport &GetDXGISupport_10_1(DXGI_FORMAT dxgiFormat)
         }
         case DXGI_FORMAT_B8G8R8A8_UNORM_SRGB:
         {
-            static const DXGISupport info(0, F_DS | F_MIPGEN, F_2D | F_3D | F_CUBE | F_MS | F_SAMPLE);
+            static const DXGISupport info(F_MIPGEN, F_DS, F_2D | F_3D | F_CUBE | F_MS | F_RT | F_SAMPLE);
             return info;
         }
         case DXGI_FORMAT_B8G8R8X8_TYPELESS:
@@ -1878,7 +1878,7 @@ const DXGISupport &GetDXGISupport_11_0(DXGI_FORMAT dxgiFormat)
         }
         case DXGI_FORMAT_B8G8R8A8_UNORM_SRGB:
         {
-            static const DXGISupport info(F_RT | F_SAMPLE, F_DS | F_MIPGEN, F_2D | F_3D | F_CUBE | F_MS);
+            static const DXGISupport info(F_MIPGEN | F_RT | F_SAMPLE, F_DS, F_2D | F_3D | F_CUBE | F_MS);
             return info;
         }
         case DXGI_FORMAT_B8G8R8X8_TYPELESS:
@@ -2471,7 +2471,7 @@ const DXGISupport &GetDXGISupport_11_1(DXGI_FORMAT dxgiFormat)
         }
         case DXGI_FORMAT_B8G8R8A8_UNORM_SRGB:
         {
-            static const DXGISupport info(F_RT | F_SAMPLE, F_DS | F_MIPGEN, F_2D | F_3D | F_CUBE | F_MS);
+            static const DXGISupport info(F_MIPGEN | F_RT | F_SAMPLE, F_DS, F_2D | F_3D | F_CUBE | F_MS);
             return info;
         }
         case DXGI_FORMAT_B8G8R8X8_TYPELESS:

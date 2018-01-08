@@ -29,13 +29,17 @@ SurfaceState::SurfaceState(const egl::Config *configIn, const AttributeMap &attr
 {
 }
 
-Surface::Surface(EGLint surfaceType, const egl::Config *config, const AttributeMap &attributes)
+Surface::Surface(EGLint surfaceType,
+                 const egl::Config *config,
+                 const AttributeMap &attributes,
+                 EGLenum buftype)
     : FramebufferAttachmentObject(),
       mState(config, attributes),
       mImplementation(nullptr),
       mCurrentCount(0),
       mDestroyed(false),
       mType(surfaceType),
+      mBuftype(buftype),
       mPostSubBufferRequested(false),
       mLargestPbuffer(false),
       mGLColorspace(EGL_GL_COLORSPACE_LINEAR),
@@ -153,6 +157,26 @@ Error Surface::initialize(const Display *display)
     // Must happen after implementation initialize for OSX.
     mState.defaultFramebuffer = createDefaultFramebuffer(display);
     ASSERT(mState.defaultFramebuffer != nullptr);
+
+    if (mBuftype == EGL_IOSURFACE_ANGLE)
+    {
+        GLenum internalFormat =
+            static_cast<GLenum>(mState.attributes.get(EGL_TEXTURE_INTERNAL_FORMAT_ANGLE));
+        GLenum type  = static_cast<GLenum>(mState.attributes.get(EGL_TEXTURE_TYPE_ANGLE));
+        mColorFormat = gl::Format(internalFormat, type);
+    }
+    if (mBuftype == EGL_D3D_TEXTURE_ANGLE)
+    {
+        const angle::Format *colorFormat = mImplementation->getD3DTextureColorFormat();
+        ASSERT(colorFormat != nullptr);
+        GLenum internalFormat = colorFormat->fboImplementationInternalFormat;
+        mColorFormat          = gl::Format(internalFormat, colorFormat->componentType);
+        mGLColorspace         = EGL_GL_COLORSPACE_LINEAR;
+        if (mColorFormat.info->colorEncoding == GL_SRGB)
+        {
+            mGLColorspace = EGL_GL_COLORSPACE_SRGB;
+        }
+    }
 
     return NoError();
 }
@@ -441,17 +465,10 @@ PbufferSurface::PbufferSurface(rx::EGLImplFactory *implFactory,
                                EGLenum buftype,
                                EGLClientBuffer clientBuffer,
                                const AttributeMap &attribs)
-    : Surface(EGL_PBUFFER_BIT, config, attribs)
+    : Surface(EGL_PBUFFER_BIT, config, attribs, buftype)
 {
     mImplementation =
         implFactory->createPbufferFromClientBuffer(mState, buftype, clientBuffer, attribs);
-
-    if (buftype == EGL_IOSURFACE_ANGLE)
-    {
-        GLenum internalFormat = static_cast<GLenum>(attribs.get(EGL_TEXTURE_INTERNAL_FORMAT_ANGLE));
-        GLenum type           = static_cast<GLenum>(attribs.get(EGL_TEXTURE_TYPE_ANGLE));
-        mColorFormat          = gl::Format(internalFormat, type);
-    }
 }
 
 PbufferSurface::~PbufferSurface()

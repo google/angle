@@ -712,6 +712,12 @@ static InternalFormatInfoMap BuildInternalFormatInfoMap()
     AddRGBAFormat(&map, GL_BGRA4_ANGLEX,     true,  4,  4,  4,  4, 0, GL_BGRA_EXT,     GL_UNSIGNED_SHORT_4_4_4_4_REV_EXT, GL_UNSIGNED_NORMALIZED, false, RequireExt<&Extensions::textureFormatBGRA8888>, RequireExt<&Extensions::textureFormatBGRA8888>, AlwaysSupported);
     AddRGBAFormat(&map, GL_BGR5_A1_ANGLEX,   true,  5,  5,  5,  1, 0, GL_BGRA_EXT,     GL_UNSIGNED_SHORT_1_5_5_5_REV_EXT, GL_UNSIGNED_NORMALIZED, false, RequireExt<&Extensions::textureFormatBGRA8888>, RequireExt<&Extensions::textureFormatBGRA8888>, AlwaysSupported);
 
+    // Special format that is used for D3D textures that are used within ANGLE via the
+    // EGL_ANGLE_d3d_texture_client_buffer extension. We don't allow uploading texture images with
+    // this format, but textures in this format can be created from D3D textures, and filtering them
+    // and rendering to them is allowed.
+    AddRGBAFormat(&map, GL_BGRA8_SRGB_ANGLEX, true, 8,  8,  8,  8, 0, GL_BGRA_EXT,     GL_UNSIGNED_BYTE,                  GL_UNSIGNED_NORMALIZED, true,  NeverSupported, AlwaysSupported, AlwaysSupported);
+
     // Special format which is not really supported, so always false for all supports.
     AddRGBAFormat(&map, GL_BGR565_ANGLEX,    true,  5,  6,  5,  1, 0, GL_BGRA_EXT,     GL_UNSIGNED_SHORT_5_6_5,           GL_UNSIGNED_NORMALIZED, false, NeverSupported, NeverSupported, NeverSupported);
 

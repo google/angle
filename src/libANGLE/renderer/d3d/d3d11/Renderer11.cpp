@@ -1299,7 +1299,7 @@ egl::Error Renderer11::getD3DTextureInfo(const egl::Config *configuration,
                                          IUnknown *d3dTexture,
                                          EGLint *width,
                                          EGLint *height,
-                                         GLenum *fboFormat) const
+                                         const angle::Format **angleFormat) const
 {
     ID3D11Texture2D *texture = d3d11::DynamicCastComObject<ID3D11Texture2D>(d3dTexture);
     if (texture == nullptr)
@@ -1355,10 +1355,9 @@ egl::Error Renderer11::getD3DTextureInfo(const egl::Config *configuration,
                    << "Unknown client buffer texture format: " << desc.Format;
     }
 
-    if (fboFormat)
+    if (angleFormat)
     {
-        const angle::Format &angleFormat = d3d11_angle::GetFormat(desc.Format);
-        *fboFormat                       = angleFormat.fboImplementationInternalFormat;
+        *angleFormat = &d3d11_angle::GetFormat(desc.Format);
     }
 
     return egl::NoError();

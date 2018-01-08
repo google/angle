@@ -17,6 +17,11 @@
 #include "libANGLE/FramebufferAttachment.h"
 #include "libANGLE/renderer/FramebufferAttachmentObjectImpl.h"
 
+namespace angle
+{
+struct Format;
+}
+
 namespace gl
 {
 class FramebufferState;
@@ -62,6 +67,13 @@ class SurfaceImpl : public FramebufferAttachmentObjectImpl
 
     virtual EGLint isPostSubBufferSupported() const = 0;
     virtual EGLint getSwapBehavior() const = 0;
+
+    // Used to query color format from pbuffers created from D3D textures.
+    virtual const angle::Format *getD3DTextureColorFormat() const
+    {
+        UNREACHABLE();
+        return nullptr;
+    }
 
   protected:
     const egl::SurfaceState &mState;
