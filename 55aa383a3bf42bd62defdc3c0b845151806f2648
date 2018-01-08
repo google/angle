@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5c0b052d_2acdb24f",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 436,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-01-08T00:47:00Z",
+      "side": 1,
+      "message": "May we have more informative names here? Or at least some comments for them.",
+      "range": {
+        "startLine": 435,
+        "startChar": 30,
+        "endLine": 436,
+        "endChar": 69
+      },
+      "revId": "55aa383a3bf42bd62defdc3c0b845151806f2648",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "51128390_c5b0fd0a",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 468,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-01-08T00:47:00Z",
+      "side": 1,
+      "message": "Move this function out of InfoLog to anonymous namespace, and name it to AddParentPrefix(...).",
+      "range": {
+        "startLine": 454,
+        "startChar": 0,
+        "endLine": 468,
+        "endChar": 1
+      },
+      "revId": "55aa383a3bf42bd62defdc3c0b845151806f2648",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "761d7155_f02d42da",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2674,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-01-08T00:47:00Z",
+      "side": 1,
+      "message": "Keep naming consistent.\n\u0027varying1, varying2\u0027 or \u0027varyingIn, varyingOut\u0027.",
+      "revId": "55aa383a3bf42bd62defdc3c0b845151806f2648",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
