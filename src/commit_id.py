@@ -23,6 +23,9 @@ if operation == 'check':
         print("0")
     sys.exit(0)
 
+if len(sys.argv) < 4 or operation != 'gen':
+    sys.exit(usage)
+
 output_file = sys.argv[3]
 commit_id_size = 12
 

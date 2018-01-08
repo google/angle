@@ -145,21 +145,40 @@ foreach(script_and_dep, helper_script_and_deps) {
   }
 }
 
-# This could be generalized to a foreach if other revisions are added.
-action("spirv_tools_external_revision_generate") {
-  script = "$vulkan_layers_dir/scripts/external_revision_generator.py"
-  inputs = [
-    "$spirv_tools_dir/.git/HEAD",
-    "$spirv_tools_dir/.git/index",
-  ]
-  outputs = [
-    "$vulkan_gen_dir/spirv_tools_commit_id.h",
-  ]
-  args = [
-    "$raw_spirv_tools_dir",
-    "SPIRV_TOOLS_COMMIT_ID",
-    "$raw_vulkan_gen_dir/spirv_tools_commit_id.h",
-  ]
+spirv_git_is_present = exec_script("$angle_root/src/commit_id.py",
+                                   [
+                                     "check",
+                                     raw_spirv_tools_dir,
+                                   ],
+                                   "value")
+
+spirv_use_commit_id = spirv_git_is_present == 1
+
+if (spirv_use_commit_id) {
+  # This could be generalized to a foreach if other revisions are added.
+  action("spirv_tools_external_revision_generate") {
+    script = "$vulkan_layers_dir/scripts/external_revision_generator.py"
+    inputs = [
+      "$angle_root/DEPS",
+    ]
+    outputs = [
+      "$vulkan_gen_dir/spirv_tools_commit_id.h",
+    ]
+    args = [
+      "$raw_spirv_tools_dir",
+      "SPIRV_TOOLS_COMMIT_ID",
+      "$raw_vulkan_gen_dir/spirv_tools_commit_id.h",
+    ]
+  }
+} else {
+  copy("spirv_tools_external_revision_generate") {
+    sources = [
+      "dummy_spirv_tools_commit_id.h",
+    ]
+    outputs = [
+      "$vulkan_gen_dir/spirv_tools_commit_id.h",
+    ]
+  }
 }
 
 config("vulkan_generate_helper_files_config") {
@@ -864,7 +883,7 @@ foreach(layer_info, layers) {
       sources += [ "$vulkan_layers_dir/layers/VkLayer_$name.def" ]
     }
     if (is_linux) {
-      ldflags =  [ "-Wl,-Bsymbolic,--exclude-libs,ALL" ]
+      ldflags = [ "-Wl,-Bsymbolic,--exclude-libs,ALL" ]
     }
   }
 }
