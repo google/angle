@@ -22,6 +22,11 @@ DeviceNULL::~DeviceNULL()
 {
 }
 
+egl::Error DeviceNULL::initialize()
+{
+    return egl::NoError();
+}
+
 egl::Error DeviceNULL::getDevice(void **outValue)
 {
     UNIMPLEMENTED();

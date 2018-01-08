@@ -22,6 +22,12 @@ DeviceVk::~DeviceVk()
 {
 }
 
+egl::Error DeviceVk::initialize()
+{
+    UNIMPLEMENTED();
+    return egl::NoError();
+}
+
 egl::Error DeviceVk::getDevice(void **outValue)
 {
     UNIMPLEMENTED();

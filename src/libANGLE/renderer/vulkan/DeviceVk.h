@@ -21,6 +21,7 @@ class DeviceVk : public DeviceImpl
     DeviceVk();
     ~DeviceVk() override;
 
+    egl::Error initialize() override;
     egl::Error getDevice(void **outValue) override;
     EGLint getType() override;
     void generateExtensions(egl::DeviceExtensions *outExtensions) const override;

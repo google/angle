@@ -17,14 +17,15 @@
 namespace rx
 {
 
-DeviceD3D::DeviceD3D() : mDevice(0), mDeviceType(0), mIsInitialized(false)
+DeviceD3D::DeviceD3D(GLint deviceType, void *nativeDevice)
+    : mDevice(nativeDevice), mDeviceType(deviceType), mIsInitialized(false)
 {
 }
 
 DeviceD3D::~DeviceD3D()
 {
 #if defined(ANGLE_ENABLE_D3D11)
-    if (mDeviceType == EGL_D3D11_DEVICE_ANGLE)
+    if (mIsInitialized && mDeviceType == EGL_D3D11_DEVICE_ANGLE)
     {
         // DeviceD3D holds a ref to an externally-sourced D3D11 device. We must release it.
         ID3D11Device *device = reinterpret_cast<ID3D11Device *>(mDevice);
@@ -35,29 +36,20 @@ DeviceD3D::~DeviceD3D()
 
 egl::Error DeviceD3D::getDevice(void **outValue)
 {
-    if (!mIsInitialized)
-    {
-        *outValue = nullptr;
-        return egl::EglBadDevice();
-    }
-
+    ASSERT(mIsInitialized);
     *outValue = mDevice;
     return egl::NoError();
 }
 
-egl::Error DeviceD3D::initialize(void *device, EGLint deviceType)
+egl::Error DeviceD3D::initialize()
 {
     ASSERT(!mIsInitialized);
-    if (mIsInitialized)
-    {
-        return egl::EglBadDevice();
-    }
 
 #if defined(ANGLE_ENABLE_D3D11)
-    if (deviceType == EGL_D3D11_DEVICE_ANGLE)
+    if (mDeviceType == EGL_D3D11_DEVICE_ANGLE)
     {
         // Validate the device
-        IUnknown *iunknown = reinterpret_cast<IUnknown *>(device);
+        IUnknown *iunknown = reinterpret_cast<IUnknown *>(mDevice);
 
         ID3D11Device *d3dDevice = nullptr;
         HRESULT hr =
@@ -73,9 +65,7 @@ egl::Error DeviceD3D::initialize(void *device, EGLint deviceType)
     }
 #endif
 
-    mDevice                  = device;
-    mDeviceType              = deviceType;
-    mIsInitialized           = true;
+    mIsInitialized = true;
 
     return egl::NoError();
 }
