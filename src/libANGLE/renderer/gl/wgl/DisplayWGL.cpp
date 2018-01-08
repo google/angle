@@ -432,10 +432,10 @@ SurfaceImpl *DisplayWGL::createPixmapSurface(const egl::SurfaceState &state,
     return nullptr;
 }
 
-egl::Error DisplayWGL::getDevice(DeviceImpl **device)
+DeviceImpl *DisplayWGL::createDevice()
 {
-    UNIMPLEMENTED();
-    return egl::EglBadDisplay();
+    UNREACHABLE();
+    return nullptr;
 }
 
 egl::ConfigSet DisplayWGL::generateConfigs()

@@ -195,9 +195,9 @@ ImageImpl *DisplayD3D::createImage(const egl::ImageState &state,
     return new EGLImageD3D(state, target, attribs, mRenderer);
 }
 
-egl::Error DisplayD3D::getDevice(DeviceImpl **device)
+DeviceImpl *DisplayD3D::createDevice()
 {
-    return mRenderer->getEGLDevice(device);
+    return mRenderer->createEGLDevice();
 }
 
 ContextImpl *DisplayD3D::createContext(const gl::ContextState &state)

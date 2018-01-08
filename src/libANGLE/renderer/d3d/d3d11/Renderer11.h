@@ -377,7 +377,7 @@ class Renderer11 : public RendererD3D
     void onBufferCreate(const Buffer11 *created);
     void onBufferDelete(const Buffer11 *deleted);
 
-    egl::Error getEGLDevice(DeviceImpl **device) override;
+    DeviceImpl *createEGLDevice() override;
 
     gl::Error drawArrays(const gl::Context *context,
                          GLenum mode,
@@ -525,7 +525,6 @@ class Renderer11 : public RendererD3D
     D3D_DRIVER_TYPE mRequestedDriverType;
     bool mCreateDebugDevice;
     bool mCreatedWithDeviceEXT;
-    DeviceD3D *mEGLDevice;
 
     HLSLCompiler mCompiler;
 

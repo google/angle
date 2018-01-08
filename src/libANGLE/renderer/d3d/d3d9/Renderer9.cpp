@@ -132,8 +132,6 @@ Renderer9::Renderer9(egl::Display *display) : RendererD3D(display), mStateManage
     mAppliedProgramSerial = 0;
 
     gl::InitializeDebugAnnotations(&mAnnotator);
-
-    mEGLDevice = nullptr;
 }
 
 Renderer9::~Renderer9()
@@ -160,7 +158,6 @@ void Renderer9::release()
 
     releaseDeviceResources();
 
-    SafeDelete(mEGLDevice);
     SafeRelease(mDevice);
     SafeRelease(mDeviceEx);
     SafeRelease(mD3d9);
@@ -3084,18 +3081,9 @@ angle::WorkaroundsD3D Renderer9::generateWorkarounds() const
     return d3d9::GenerateWorkarounds();
 }
 
-egl::Error Renderer9::getEGLDevice(DeviceImpl **device)
+DeviceImpl *Renderer9::createEGLDevice()
 {
-    if (mEGLDevice == nullptr)
-    {
-        ASSERT(mDevice != nullptr);
-        std::unique_ptr<DeviceD3D> newDevice(new DeviceD3D(EGL_D3D9_DEVICE_ANGLE, mDevice));
-        ANGLE_TRY(newDevice->initialize());
-        mEGLDevice = newDevice.release();
-    }
-
-    *device = static_cast<DeviceImpl *>(mEGLDevice);
-    return egl::NoError();
+    return new DeviceD3D(EGL_D3D9_DEVICE_ANGLE, mDevice);
 }
 
 Renderer9::CurSamplerState::CurSamplerState()

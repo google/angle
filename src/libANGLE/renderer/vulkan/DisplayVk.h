@@ -36,7 +36,7 @@ class DisplayVk : public DisplayImpl
 
     std::string getVendorString() const override;
 
-    egl::Error getDevice(DeviceImpl **device) override;
+    DeviceImpl *createDevice() override;
 
     egl::Error waitClient(const gl::Context *context) const override;
     egl::Error waitNative(const gl::Context *context, EGLint engine) const override;

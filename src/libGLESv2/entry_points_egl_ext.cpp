@@ -351,7 +351,7 @@ ANGLE_EXPORT EGLDeviceEXT EGLAPIENTRY CreateDeviceANGLE(EGLint device_type,
     }
 
     Device *device = nullptr;
-    error = Device::CreateDevice(native_device, device_type, &device);
+    error          = Device::CreateDevice(device_type, native_device, &device);
     if (error.isError())
     {
         ASSERT(device == nullptr);

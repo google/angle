@@ -895,10 +895,10 @@ SurfaceImpl *DisplayOzone::createPixmapSurface(const egl::SurfaceState &state,
     return nullptr;
 }
 
-egl::Error DisplayOzone::getDevice(DeviceImpl **device)
+DeviceImpl *DisplayOzone::createDevice()
 {
     UNIMPLEMENTED();
-    return egl::EglBadDisplay();
+    return nullptr;
 }
 
 egl::ConfigSet DisplayOzone::generateConfigs()

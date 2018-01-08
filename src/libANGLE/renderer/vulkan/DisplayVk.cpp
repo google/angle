@@ -115,9 +115,10 @@ std::string DisplayVk::getVendorString() const
     return vendorString;
 }
 
-egl::Error DisplayVk::getDevice(DeviceImpl **device)
+DeviceImpl *DisplayVk::createDevice()
 {
-    return egl::NoError();
+    UNIMPLEMENTED();
+    return nullptr;
 }
 
 egl::Error DisplayVk::waitClient(const gl::Context *context) const

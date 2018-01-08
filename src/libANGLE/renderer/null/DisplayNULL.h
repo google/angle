@@ -39,7 +39,7 @@ class DisplayNULL : public DisplayImpl
 
     std::string getVendorString() const override;
 
-    egl::Error getDevice(DeviceImpl **device) override;
+    DeviceImpl *createDevice() override;
 
     egl::Error waitClient(const gl::Context *context) const override;
     egl::Error waitNative(const gl::Context *context, EGLint engine) const override;
@@ -70,8 +70,6 @@ class DisplayNULL : public DisplayImpl
   private:
     void generateExtensions(egl::DisplayExtensions *outExtensions) const override;
     void generateCaps(egl::Caps *outCaps) const override;
-
-    DeviceImpl *mDevice;
 
     std::unique_ptr<AllocationTrackerNULL> mAllocationTracker;
 };

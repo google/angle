@@ -356,7 +356,7 @@ class Renderer9 : public RendererD3D
 
     D3DDEVTYPE getD3D9DeviceType() const { return mDeviceType; }
 
-    egl::Error getEGLDevice(DeviceImpl **device) override;
+    DeviceImpl *createEGLDevice() override;
 
     StateManager9 *getStateManager() { return &mStateManager; }
 
@@ -531,7 +531,6 @@ class Renderer9 : public RendererD3D
     } mNullColorbufferCache[NUM_NULL_COLORBUFFER_CACHE_ENTRIES];
     UINT mMaxNullColorbufferLRU;
 
-    DeviceD3D *mEGLDevice;
     std::vector<TranslatedAttribute> mTranslatedAttribCache;
 
     DebugAnnotator9 mAnnotator;

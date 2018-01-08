@@ -14,6 +14,8 @@
 #include "libANGLE/Error.h"
 #include "libANGLE/Display.h"
 
+#include <memory>
+
 namespace rx
 {
 class DeviceImpl;
@@ -24,6 +26,7 @@ namespace egl
 class Device final : angle::NonCopyable
 {
   public:
+    Device(Display *owningDisplay, rx::DeviceImpl *impl);
     virtual ~Device();
 
     Error getDevice(EGLAttrib *value);
@@ -33,21 +36,16 @@ class Device final : angle::NonCopyable
     const DeviceExtensions &getExtensions() const;
     const std::string &getExtensionString() const;
 
-    rx::DeviceImpl *getImplementation() { return mImplementation; }
+    rx::DeviceImpl *getImplementation() { return mImplementation.get(); }
 
-    static egl::Error CreateDevice(void *devicePointer, EGLint deviceType, Device **outDevice);
-    static egl::Error CreateDevice(Display *owningDisplay,
-                                   rx::DeviceImpl *impl,
-                                   Device **outDevice);
-
+    static egl::Error CreateDevice(EGLint deviceType, void *nativeDevice, Device **outDevice);
     static bool IsValidDevice(Device *device);
 
   private:
-    Device(Display *owningDisplay, rx::DeviceImpl *impl);
     void initDeviceExtensions();
 
     Display *mOwningDisplay;
-    rx::DeviceImpl *mImplementation;
+    std::unique_ptr<rx::DeviceImpl> mImplementation;
 
     DeviceExtensions mDeviceExtensions;
     std::string mDeviceExtensionString;

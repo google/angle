@@ -393,10 +393,10 @@ SurfaceImpl *DisplayGLX::createPixmapSurface(const egl::SurfaceState &state,
     return nullptr;
 }
 
-egl::Error DisplayGLX::getDevice(DeviceImpl **device)
+DeviceImpl *DisplayGLX::createDevice()
 {
     UNIMPLEMENTED();
-    return egl::EglBadDisplay();
+    return nullptr;
 }
 
 egl::Error DisplayGLX::initializeContext(glx::FBConfig config,

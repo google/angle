@@ -377,10 +377,10 @@ bool DisplayAndroid::isValidNativeWindow(EGLNativeWindowType window) const
     return ANativeWindow_getFormat(window) >= 0;
 }
 
-egl::Error DisplayAndroid::getDevice(DeviceImpl **device)
+DeviceImpl *DisplayAndroid::createDevice()
 {
     UNIMPLEMENTED();
-    return egl::NoError();
+    return nullptr;
 }
 
 egl::Error DisplayAndroid::waitClient(const gl::Context *context) const

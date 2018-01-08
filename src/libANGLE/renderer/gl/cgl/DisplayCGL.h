@@ -50,7 +50,7 @@ class DisplayCGL : public DisplayGL
                                     EGLClientBuffer clientBuffer,
                                     const egl::AttributeMap &attribs) const override;
 
-    egl::Error getDevice(DeviceImpl **device) override;
+    DeviceImpl *createDevice() override;
 
     std::string getVendorString() const override;
 

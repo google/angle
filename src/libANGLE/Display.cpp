@@ -25,11 +25,12 @@
 #include "common/utilities.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/Device.h"
-#include "libANGLE/histogram_macros.h"
 #include "libANGLE/Image.h"
-#include "libANGLE/Surface.h"
-#include "libANGLE/Stream.h"
 #include "libANGLE/ResourceManager.h"
+#include "libANGLE/Stream.h"
+#include "libANGLE/Surface.h"
+#include "libANGLE/histogram_macros.h"
+#include "libANGLE/renderer/DeviceImpl.h"
 #include "libANGLE/renderer/DisplayImpl.h"
 #include "libANGLE/renderer/ImageImpl.h"
 #include "third_party/trace_event/trace_event.h"
@@ -483,9 +484,10 @@ Error Display::initialize()
     {
         if (mDisplayExtensions.deviceQuery)
         {
-            rx::DeviceImpl *impl = nullptr;
-            ANGLE_TRY(mImplementation->getDevice(&impl));
-            ANGLE_TRY(Device::CreateDevice(this, impl, &mDevice));
+            std::unique_ptr<rx::DeviceImpl> impl(mImplementation->createDevice());
+            ASSERT(impl != nullptr);
+            ANGLE_TRY(impl->initialize());
+            mDevice = new Device(this, impl.release());
         }
         else
         {

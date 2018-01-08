@@ -473,7 +473,6 @@ Renderer11::Renderer11(egl::Display *display)
     mDxgiModule           = nullptr;
     mDCompModule          = nullptr;
     mCreatedWithDeviceEXT = false;
-    mEGLDevice            = nullptr;
 
     mDevice         = nullptr;
     mDeviceContext  = nullptr;
@@ -556,10 +555,9 @@ Renderer11::Renderer11(egl::Display *display)
 
         mCreateDebugDevice = ShouldUseDebugLayers(attributes);
     }
-    else if (display->getPlatform() == EGL_PLATFORM_DEVICE_EXT)
+    else if (mDisplay->getPlatform() == EGL_PLATFORM_DEVICE_EXT)
     {
-        mEGLDevice = GetImplAs<DeviceD3D>(display->getDevice());
-        ASSERT(mEGLDevice != nullptr);
+        ASSERT(mDisplay->getDevice() != nullptr);
         mCreatedWithDeviceEXT = true;
 
         // Also set EGL_PLATFORM_ANGLE_ANGLE variables, in case they're used elsewhere in ANGLE
@@ -832,9 +830,12 @@ egl::Error Renderer11::initializeD3DDevice()
     }
     else
     {
+        DeviceD3D *deviceD3D = GetImplAs<DeviceD3D>(mDisplay->getDevice());
+        ASSERT(deviceD3D != nullptr);
+
         // We should use the inputted D3D11 device instead
         void *device = nullptr;
-        ANGLE_TRY(mEGLDevice->getDevice(&device));
+        ANGLE_TRY(deviceD3D->getDevice(&device));
 
         ID3D11Device *d3dDevice = reinterpret_cast<ID3D11Device *>(device);
         if (FAILED(d3dDevice->GetDeviceRemovedReason()))
@@ -2095,13 +2096,6 @@ void Renderer11::release()
     }
 
     releaseDeviceResources();
-
-    if (!mCreatedWithDeviceEXT)
-    {
-        // Only delete the device if the Renderer11 owns it
-        // Otherwise we should keep it around in case we try to reinitialize the renderer later
-        SafeDelete(mEGLDevice);
-    }
 
     SafeRelease(mDxgiFactory);
     SafeRelease(mDxgiAdapter);
@@ -3808,18 +3802,9 @@ angle::WorkaroundsD3D Renderer11::generateWorkarounds() const
     return d3d11::GenerateWorkarounds(mRenderer11DeviceCaps, mAdapterDescription);
 }
 
-egl::Error Renderer11::getEGLDevice(DeviceImpl **device)
+DeviceImpl *Renderer11::createEGLDevice()
 {
-    if (mEGLDevice == nullptr)
-    {
-        ASSERT(mDevice != nullptr);
-        std::unique_ptr<DeviceD3D> newDevice(new DeviceD3D(EGL_D3D11_DEVICE_ANGLE, mDevice));
-        ANGLE_TRY(newDevice->initialize());
-        mEGLDevice = newDevice.release();
-    }
-
-    *device = static_cast<DeviceImpl *>(mEGLDevice);
-    return egl::NoError();
+    return new DeviceD3D(EGL_D3D11_DEVICE_ANGLE, mDevice);
 }
 
 ContextImpl *Renderer11::createContext(const gl::ContextState &state)

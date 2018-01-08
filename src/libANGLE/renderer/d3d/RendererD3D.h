@@ -278,7 +278,7 @@ class RendererD3D : public BufferFactoryD3D, public MultisampleTextureInitialize
                                         const float clearDepthValue,
                                         const unsigned int clearStencilValue) = 0;
 
-    virtual egl::Error getEGLDevice(DeviceImpl **device) = 0;
+    virtual DeviceImpl *createEGLDevice() = 0;
 
     bool presentPathFastEnabled() const { return mPresentPathFastEnabled; }
 
