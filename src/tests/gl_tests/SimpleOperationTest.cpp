@@ -231,6 +231,9 @@ TEST_P(SimpleOperationTest, DrawQuad)
 // Simple repeated draw and swap test.
 TEST_P(SimpleOperationTest, DrawQuadAndSwap)
 {
+    // anglebug.com/2301
+    ANGLE_SKIP_TEST_IF(IsLinux() && IsIntel() && IsVulkan());
+
     const std::string &vertexShader =
         "attribute vec3 position;\n"
         "void main()\n"
