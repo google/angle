@@ -237,8 +237,7 @@ TVariable *TSymbolTable::insertVariable(ESymbolLevel level,
     TVariable *var = new TVariable(this, name, type, symbolType);
     if (insert(level, var))
     {
-        // Do lazy initialization for struct types, so we allocate to the current scope.
-        if (var->getType().getBasicType() == EbtStruct)
+        if (level <= LAST_BUILTIN_LEVEL)
         {
             var->getType().realize();
         }
@@ -255,7 +254,7 @@ TVariable *TSymbolTable::insertVariableExt(ESymbolLevel level,
     TVariable *var = new TVariable(this, NewPoolTString(name), type, SymbolType::BuiltIn, ext);
     if (insert(level, var))
     {
-        if (var->getType().getBasicType() == EbtStruct)
+        if (level <= LAST_BUILTIN_LEVEL)
         {
             var->getType().realize();
         }

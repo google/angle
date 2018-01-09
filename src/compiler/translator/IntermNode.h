@@ -123,7 +123,7 @@ struct TIntermNodePair
 class TIntermTyped : public TIntermNode
 {
   public:
-    TIntermTyped(const TType &t) : mType(t) {}
+    TIntermTyped() {}
 
     virtual TIntermTyped *deepCopy() const = 0;
 
@@ -142,34 +142,29 @@ class TIntermTyped : public TIntermNode
     // affecting state. May return true conservatively.
     virtual bool hasSideEffects() const = 0;
 
-    void setType(const TType &t) { mType = t; }
-    void setTypePreservePrecision(const TType &t);
-    const TType &getType() const { return mType; }
-    TType *getTypePointer() { return &mType; }
+    virtual const TType &getType() const = 0;
 
-    TBasicType getBasicType() const { return mType.getBasicType(); }
-    TQualifier getQualifier() const { return mType.getQualifier(); }
-    TPrecision getPrecision() const { return mType.getPrecision(); }
-    TMemoryQualifier getMemoryQualifier() const { return mType.getMemoryQualifier(); }
-    int getCols() const { return mType.getCols(); }
-    int getRows() const { return mType.getRows(); }
-    int getNominalSize() const { return mType.getNominalSize(); }
-    int getSecondarySize() const { return mType.getSecondarySize(); }
+    TBasicType getBasicType() const { return getType().getBasicType(); }
+    TQualifier getQualifier() const { return getType().getQualifier(); }
+    TPrecision getPrecision() const { return getType().getPrecision(); }
+    TMemoryQualifier getMemoryQualifier() const { return getType().getMemoryQualifier(); }
+    int getCols() const { return getType().getCols(); }
+    int getRows() const { return getType().getRows(); }
+    int getNominalSize() const { return getType().getNominalSize(); }
+    int getSecondarySize() const { return getType().getSecondarySize(); }
 
-    bool isInterfaceBlock() const { return mType.isInterfaceBlock(); }
-    bool isMatrix() const { return mType.isMatrix(); }
-    bool isArray() const { return mType.isArray(); }
-    bool isVector() const { return mType.isVector(); }
-    bool isScalar() const { return mType.isScalar(); }
-    bool isScalarInt() const { return mType.isScalarInt(); }
-    const char *getBasicString() const { return mType.getBasicString(); }
-    TString getCompleteString() const { return mType.getCompleteString(); }
+    bool isInterfaceBlock() const { return getType().isInterfaceBlock(); }
+    bool isMatrix() const { return getType().isMatrix(); }
+    bool isArray() const { return getType().isArray(); }
+    bool isVector() const { return getType().isVector(); }
+    bool isScalar() const { return getType().isScalar(); }
+    bool isScalarInt() const { return getType().isScalarInt(); }
+    const char *getBasicString() const { return getType().getBasicString(); }
+    TString getCompleteString() const { return getType().getCompleteString(); }
 
-    unsigned int getOutermostArraySize() const { return mType.getOutermostArraySize(); }
+    unsigned int getOutermostArraySize() const { return getType().getOutermostArraySize(); }
 
   protected:
-    TType mType;
-
     TIntermTyped(const TIntermTyped &node);
 };
 
@@ -250,6 +245,8 @@ class TIntermSymbol : public TIntermTyped
 
     bool hasSideEffects() const override { return false; }
 
+    const TType &getType() const override;
+
     const TSymbolUniqueId &uniqueId() const;
     const TString &getName() const;
     const TVariable &variable() const { return *mVariable; }
@@ -264,13 +261,34 @@ class TIntermSymbol : public TIntermTyped
     const TVariable *const mVariable;  // Guaranteed to be non-null
 };
 
+// A typed expression that is not just representing a symbol table symbol.
+class TIntermExpression : public TIntermTyped
+{
+  public:
+    TIntermExpression(const TType &t);
+
+    const TType &getType() const override { return mType; }
+    TType *getTypePointer() { return &mType; }
+
+  protected:
+    void setType(const TType &t) { mType = t; }
+    void setTypePreservePrecision(const TType &t);
+
+    TIntermExpression(const TIntermExpression &node) = default;
+
+    TType mType;
+};
+
 // A Raw node stores raw code, that the translator will insert verbatim
 // into the output stream. Useful for transformation operations that make
 // complex code that might not fit naturally into the GLSL model.
-class TIntermRaw : public TIntermTyped
+class TIntermRaw : public TIntermExpression
 {
   public:
-    TIntermRaw(const TType &type, const TString &rawText) : TIntermTyped(type), mRawText(rawText) {}
+    TIntermRaw(const TType &type, const TString &rawText)
+        : TIntermExpression(type), mRawText(rawText)
+    {
+    }
     TIntermRaw(const TIntermRaw &) = delete;
 
     TIntermTyped *deepCopy() const override
@@ -298,11 +316,11 @@ class TIntermRaw : public TIntermTyped
 // "true ? 1.0 : non_constant"
 // Other nodes than TIntermConstantUnion may also be constant expressions.
 //
-class TIntermConstantUnion : public TIntermTyped
+class TIntermConstantUnion : public TIntermExpression
 {
   public:
     TIntermConstantUnion(const TConstantUnion *unionPointer, const TType &type)
-        : TIntermTyped(type), mUnionArrayPointer(unionPointer)
+        : TIntermExpression(type), mUnionArrayPointer(unionPointer)
     {
         ASSERT(unionPointer);
     }
@@ -375,7 +393,7 @@ class TIntermConstantUnion : public TIntermTyped
 //
 // Intermediate class for node types that hold operators.
 //
-class TIntermOperator : public TIntermTyped
+class TIntermOperator : public TIntermExpression
 {
   public:
     TOperator getOp() const { return mOp; }
@@ -391,8 +409,8 @@ class TIntermOperator : public TIntermTyped
     bool hasSideEffects() const override { return isAssignment(); }
 
   protected:
-    TIntermOperator(TOperator op) : TIntermTyped(TType(EbtFloat, EbpUndefined)), mOp(op) {}
-    TIntermOperator(TOperator op, const TType &type) : TIntermTyped(type), mOp(op) {}
+    TIntermOperator(TOperator op) : TIntermExpression(TType(EbtFloat, EbpUndefined)), mOp(op) {}
+    TIntermOperator(TOperator op, const TType &type) : TIntermExpression(type), mOp(op) {}
 
     TIntermOperator(const TIntermOperator &) = default;
 
@@ -400,7 +418,7 @@ class TIntermOperator : public TIntermTyped
 };
 
 // Node for vector swizzles.
-class TIntermSwizzle : public TIntermTyped
+class TIntermSwizzle : public TIntermExpression
 {
   public:
     // This constructor determines the type of the node based on the operand.
@@ -665,6 +683,8 @@ class TIntermFunctionPrototype : public TIntermTyped, public TIntermAggregateBas
     void traverse(TIntermTraverser *it) override;
     bool replaceChildNode(TIntermNode *original, TIntermNode *replacement) override;
 
+    const TType &getType() const override;
+
     TIntermTyped *deepCopy() const override
     {
         UNREACHABLE();
@@ -756,7 +776,7 @@ class TIntermInvariantDeclaration : public TIntermNode
 };
 
 // For ternary operators like a ? b : c.
-class TIntermTernary : public TIntermTyped
+class TIntermTernary : public TIntermExpression
 {
   public:
     TIntermTernary(TIntermTyped *cond, TIntermTyped *trueExpression, TIntermTyped *falseExpression);

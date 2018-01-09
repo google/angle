@@ -13,9 +13,8 @@ namespace sh
 void RegenerateStructNames::visitSymbol(TIntermSymbol *symbol)
 {
     ASSERT(symbol);
-    TType *type = symbol->getTypePointer();
-    ASSERT(type);
-    TStructure *userType = type->getStruct();
+    const TType &type          = symbol->getType();
+    const TStructure *userType = type.getStruct();
     if (!userType)
         return;
 
@@ -59,7 +58,10 @@ void RegenerateStructNames::visitSymbol(TIntermSymbol *symbol)
     std::string id = Str(uniqueId);
     TString tmp    = kPrefix + TString(id.c_str());
     tmp += "_" + userType->name();
-    userType->setName(tmp);
+
+    // TODO(oetuaho): Add another mechanism to change symbol names so that the const_cast is not
+    // needed.
+    const_cast<TStructure *>(userType)->setName(tmp);
 }
 
 bool RegenerateStructNames::visitBlock(Visit, TIntermBlock *block)

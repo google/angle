@@ -97,7 +97,7 @@ class TType
           unsigned char ps = 1,
           unsigned char ss = 1);
     explicit TType(const TPublicType &p);
-    explicit TType(TStructure *userDef);
+    explicit TType(const TStructure *userDef);
     TType(TInterfaceBlock *interfaceBlockIn,
           TQualifier qualifierIn,
           TLayoutQualifier layoutQualifierIn);
@@ -227,9 +227,7 @@ class TType
 
     bool canBeConstructed() const;
 
-    TStructure *getStruct() { return mStructure; }
     const TStructure *getStruct() const { return mStructure; }
-    void setStruct(TStructure *s);
 
     const char *getMangledName() const;
 
@@ -343,8 +341,8 @@ class TType
     // It's nullptr also for members of named interface blocks.
     TInterfaceBlock *mInterfaceBlock;
 
-    // 0 unless this is a struct
-    TStructure *mStructure;
+    // nullptr unless this is a struct
+    const TStructure *mStructure;
     bool mIsStructSpecifier;
 
     mutable const char *mMangledName;

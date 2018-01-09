@@ -167,7 +167,7 @@ class FindStructByName final : public TIntermTraverser
             return;
         }
 
-        TStructure *structure = symbol->getTypePointer()->getStruct();
+        const TStructure *structure = symbol->getType().getStruct();
 
         if (structure != nullptr && structure->symbolType() != SymbolType::Empty &&
             structure->name() == mStructName)
@@ -177,11 +177,11 @@ class FindStructByName final : public TIntermTraverser
     }
 
     bool isStructureFound() const { return mStructure != nullptr; };
-    TStructure *getStructure() const { return mStructure; }
+    const TStructure *getStructure() const { return mStructure; }
 
   private:
     TString mStructName;
-    TStructure *mStructure;
+    const TStructure *mStructure;
 };
 
 }  // namespace
@@ -301,8 +301,8 @@ TEST_F(InitOutputVariablesWebGL2VertexShaderTest, OutputStruct)
     mASTRoot->traverse(&findStruct);
     ASSERT(findStruct.isStructureFound());
 
-    TType type(EbtStruct, EbpUndefined, EvqVertexOut);
-    type.setStruct(findStruct.getStructure());
+    TType type(findStruct.getStructure());
+    type.setQualifier(EvqVertexOut);
 
     TIntermTyped *expectedLValue = CreateLValueNode("out1", type);
     EXPECT_TRUE(verifier.isExpectedLValueFound(expectedLValue));

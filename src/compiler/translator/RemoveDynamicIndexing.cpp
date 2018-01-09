@@ -236,7 +236,6 @@ TIntermFunctionDefinition *GetIndexFunctionDefinition(const TType &type,
 
     TIntermBinary *cond =
         new TIntermBinary(EOpLessThan, indexParam->deepCopy(), CreateIntConstantNode(0));
-    cond->setType(TType(EbtBool, EbpUndefined));
 
     // Two blocks: one accesses (either reads or writes) the first element and returns,
     // the other accesses the last element.

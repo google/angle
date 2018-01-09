@@ -159,6 +159,7 @@ class TSymbolTable : angle::NonCopyable
     {
         TVariable *constant = new TVariable(
             this, NewPoolTString(name), TType(EbtInt, precision, EvqConst, 1), SymbolType::BuiltIn);
+        constant->getType().realize();
         TConstantUnion *unionArray = new TConstantUnion[1];
         unionArray[0].setIConst(value);
         constant->shareConstPointer(unionArray);
@@ -174,6 +175,7 @@ class TSymbolTable : angle::NonCopyable
         TVariable *constant =
             new TVariable(this, NewPoolTString(name), TType(EbtInt, precision, EvqConst, 1),
                           SymbolType::BuiltIn, ext);
+        constant->getType().realize();
         TConstantUnion *unionArray = new TConstantUnion[1];
         unionArray[0].setIConst(value);
         constant->shareConstPointer(unionArray);
@@ -187,6 +189,7 @@ class TSymbolTable : angle::NonCopyable
     {
         TVariable *constantIvec3 = new TVariable(
             this, NewPoolTString(name), TType(EbtInt, precision, EvqConst, 3), SymbolType::BuiltIn);
+        constantIvec3->getType().realize();
 
         TConstantUnion *unionArray = new TConstantUnion[3];
         for (size_t index = 0u; index < 3u; ++index)

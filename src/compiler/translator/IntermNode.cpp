@@ -182,7 +182,11 @@ bool CanFoldAggregateBuiltInOp(TOperator op)
 //
 ////////////////////////////////////////////////////////////////
 
-void TIntermTyped::setTypePreservePrecision(const TType &t)
+TIntermExpression::TIntermExpression(const TType &t) : TIntermTyped(), mType(t)
+{
+}
+
+void TIntermExpression::setTypePreservePrecision(const TType &t)
 {
     TPrecision precision = getPrecision();
     mType                = t;
@@ -303,8 +307,7 @@ bool TIntermAggregateBase::insertChildNodes(TIntermSequence::size_type position,
     return true;
 }
 
-TIntermSymbol::TIntermSymbol(const TVariable *variable)
-    : TIntermTyped(variable->getType()), mVariable(variable)
+TIntermSymbol::TIntermSymbol(const TVariable *variable) : TIntermTyped(), mVariable(variable)
 {
 }
 
@@ -326,6 +329,11 @@ const TSymbolUniqueId &TIntermSymbol::uniqueId() const
 const TString &TIntermSymbol::getName() const
 {
     return mVariable->name();
+}
+
+const TType &TIntermSymbol::getType() const
+{
+    return mVariable->getType();
 }
 
 TIntermAggregate *TIntermAggregate::CreateFunctionCall(const TFunction &func,
@@ -752,11 +760,11 @@ bool TIntermCase::replaceChildNode(TIntermNode *original, TIntermNode *replaceme
     return false;
 }
 
-TIntermTyped::TIntermTyped(const TIntermTyped &node) : TIntermNode(), mType(node.mType)
+TIntermTyped::TIntermTyped(const TIntermTyped &node) : TIntermNode()
 {
     // Copy constructor is disallowed for TIntermNode in order to disallow it for subclasses that
     // don't explicitly allow it, so normal TIntermNode constructor is used to construct the copy.
-    // We need to manually copy any fields of TIntermNode besides handling fields in TIntermTyped.
+    // We need to manually copy any fields of TIntermNode.
     mLine = node.mLine;
 }
 
@@ -770,15 +778,21 @@ const TConstantUnion *TIntermTyped::getConstantValue() const
     return nullptr;
 }
 
-TIntermConstantUnion::TIntermConstantUnion(const TIntermConstantUnion &node) : TIntermTyped(node)
+TIntermConstantUnion::TIntermConstantUnion(const TIntermConstantUnion &node)
+    : TIntermExpression(node)
 {
     mUnionArrayPointer = node.mUnionArrayPointer;
 }
 
 TIntermFunctionPrototype::TIntermFunctionPrototype(const TFunction *function)
-    : TIntermTyped(function->getReturnType()), mFunction(function)
+    : TIntermTyped(), mFunction(function)
 {
     ASSERT(mFunction->symbolType() != SymbolType::Empty);
+}
+
+const TType &TIntermFunctionPrototype::getType() const
+{
+    return mFunction->getReturnType();
 }
 
 TIntermAggregate::TIntermAggregate(const TIntermAggregate &node)
@@ -805,7 +819,7 @@ TIntermAggregate *TIntermAggregate::shallowCopy() const
     return copyNode;
 }
 
-TIntermSwizzle::TIntermSwizzle(const TIntermSwizzle &node) : TIntermTyped(node)
+TIntermSwizzle::TIntermSwizzle(const TIntermSwizzle &node) : TIntermExpression(node)
 {
     TIntermTyped *operandCopy = node.mOperand->deepCopy();
     ASSERT(operandCopy != nullptr);
@@ -831,7 +845,7 @@ TIntermUnary::TIntermUnary(const TIntermUnary &node)
     mOperand = operandCopy;
 }
 
-TIntermTernary::TIntermTernary(const TIntermTernary &node) : TIntermTyped(node)
+TIntermTernary::TIntermTernary(const TIntermTernary &node) : TIntermExpression(node)
 {
     TIntermTyped *conditionCopy = node.mCondition->deepCopy();
     TIntermTyped *trueCopy      = node.mTrueExpression->deepCopy();
@@ -1055,7 +1069,7 @@ void TIntermUnary::promote()
 }
 
 TIntermSwizzle::TIntermSwizzle(TIntermTyped *operand, const TVector<int> &swizzleOffsets)
-    : TIntermTyped(TType(EbtFloat, EbpUndefined)),
+    : TIntermExpression(TType(EbtFloat, EbpUndefined)),
       mOperand(operand),
       mSwizzleOffsets(swizzleOffsets)
 {
@@ -1085,7 +1099,7 @@ TIntermInvariantDeclaration::TIntermInvariantDeclaration(TIntermSymbol *symbol, 
 TIntermTernary::TIntermTernary(TIntermTyped *cond,
                                TIntermTyped *trueExpression,
                                TIntermTyped *falseExpression)
-    : TIntermTyped(trueExpression->getType()),
+    : TIntermExpression(trueExpression->getType()),
       mCondition(cond),
       mTrueExpression(trueExpression),
       mFalseExpression(falseExpression)
