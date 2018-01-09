@@ -648,8 +648,9 @@ class TParseContext : angle::NonCopyable
     int mMaxGeometryShaderInvocations;
     int mMaxGeometryShaderMaxVertices;
 
-    // Track if all input array sizes are same and matches the latter input primitive declaration.
-    unsigned int mGeometryShaderInputArraySize;
+    // Store gl_in variable with its array size once the array size can be determined. The array
+    // size can also be checked against latter input primitive type declaration.
+    const TVariable *mGlInVariableWithArraySize;
 };
 
 int PaParseStrings(size_t count,

@@ -235,7 +235,7 @@ TParseContext::TParseContext(TSymbolTable &symt,
       mGeometryShaderMaxVertices(-1),
       mMaxGeometryShaderInvocations(resources.MaxGeometryShaderInvocations),
       mMaxGeometryShaderMaxVertices(resources.MaxGeometryOutputVertices),
-      mGeometryShaderInputArraySize(0u)
+      mGlInVariableWithArraySize(nullptr)
 {
 }
 
@@ -1896,10 +1896,8 @@ TIntermTyped *TParseContext::parseVariableIdentifier(const TSourceLoc &location,
     else if ((mGeometryShaderInputPrimitiveType != EptUndefined) &&
              (variableType.getQualifier() == EvqPerVertexIn))
     {
-        ASSERT(mGeometryShaderInputArraySize > 0u);
-
-        node = new TIntermSymbol(variable);
-        node->getTypePointer()->sizeOutermostUnsizedArray(mGeometryShaderInputArraySize);
+        ASSERT(mGlInVariableWithArraySize != nullptr);
+        node = new TIntermSymbol(mGlInVariableWithArraySize);
     }
     else
     {
@@ -2375,8 +2373,9 @@ void TParseContext::checkGeometryShaderInputAndSetArraySize(const TSourceLoc &lo
             // input primitive declaration.
             if (mGeometryShaderInputPrimitiveType != EptUndefined)
             {
-                ASSERT(mGeometryShaderInputArraySize > 0u);
-                type->sizeOutermostUnsizedArray(mGeometryShaderInputArraySize);
+                ASSERT(mGlInVariableWithArraySize != nullptr);
+                type->sizeOutermostUnsizedArray(
+                    mGlInVariableWithArraySize->getType().getOutermostArraySize());
             }
             else
             {
@@ -2846,11 +2845,17 @@ bool TParseContext::checkPrimitiveTypeMatchesTypeQualifier(const TTypeQualifier 
 void TParseContext::setGeometryShaderInputArraySize(unsigned int inputArraySize,
                                                     const TSourceLoc &line)
 {
-    if (mGeometryShaderInputArraySize == 0u)
+    if (mGlInVariableWithArraySize == nullptr)
     {
-        mGeometryShaderInputArraySize = inputArraySize;
+        TSymbol *glPerVertex              = symbolTable.findBuiltIn("gl_PerVertex", 310);
+        TInterfaceBlock *glPerVertexBlock = static_cast<TInterfaceBlock *>(glPerVertex);
+        TType glInType(glPerVertexBlock, EvqPerVertexIn, TLayoutQualifier::Create());
+        glInType.makeArray(inputArraySize);
+        mGlInVariableWithArraySize =
+            new TVariable(&symbolTable, NewPoolTString("gl_in"), glInType, SymbolType::BuiltIn,
+                          TExtension::EXT_geometry_shader);
     }
-    else if (mGeometryShaderInputArraySize != inputArraySize)
+    else if (mGlInVariableWithArraySize->getType().getOutermostArraySize() != inputArraySize)
     {
         error(line,
               "Array size or input primitive declaration doesn't match the size of earlier sized "
