@@ -14,6 +14,8 @@
             'common/MemoryBuffer.cpp',
             'common/MemoryBuffer.h',
             'common/Optional.h',
+            'common/aligned_memory.cpp',
+            'common/aligned_memory.h',
             'common/angleutils.cpp',
             'common/angleutils.h',
             'common/bitset_utils.h',
