@@ -177,7 +177,17 @@ void RemoveUnreferencedVariablesTraverser::removeVariableDeclaration(TIntermDecl
     if (declarator->getType().isStructSpecifier() && !declarator->getType().isNamelessStruct())
     {
         unsigned int structId = declarator->getType().getStruct()->uniqueId().get();
-        if ((*mStructIdRefCounts)[structId] > 1u)
+        unsigned int structRefCountInThisDeclarator = 1u;
+        if (declarator->getAsBinaryNode() &&
+            declarator->getAsBinaryNode()->getRight()->getAsAggregate())
+        {
+            ASSERT(declarator->getAsBinaryNode()->getLeft()->getType().getStruct() ==
+                   declarator->getType().getStruct());
+            ASSERT(declarator->getAsBinaryNode()->getRight()->getType().getStruct() ==
+                   declarator->getType().getStruct());
+            structRefCountInThisDeclarator = 2u;
+        }
+        if ((*mStructIdRefCounts)[structId] > structRefCountInThisDeclarator)
         {
             // If this declaration declares a named struct type that is used elsewhere, we need to
             // keep it. We can still change the declarator though so that it doesn't declare an
@@ -272,7 +282,7 @@ void RemoveUnreferencedVariablesTraverser::visitSymbol(TIntermSymbol *node)
 
 bool RemoveUnreferencedVariablesTraverser::visitAggregate(Visit visit, TIntermAggregate *node)
 {
-    if (mRemoveReferences)
+    if (visit == PreVisit && mRemoveReferences)
     {
         decrementStructTypeRefCount(node->getType());
     }

@@ -522,7 +522,13 @@ const char *TIntermAggregate::functionName() const
 
 bool TIntermAggregate::hasSideEffects() const
 {
-    if (isFunctionCall() && mFunction != nullptr && mFunction->isKnownToNotHaveSideEffects())
+    if (getQualifier() == EvqConst)
+    {
+        return false;
+    }
+    bool calledFunctionHasNoSideEffects =
+        isFunctionCall() && mFunction != nullptr && mFunction->isKnownToNotHaveSideEffects();
+    if (calledFunctionHasNoSideEffects || isConstructor())
     {
         for (TIntermNode *arg : mArguments)
         {

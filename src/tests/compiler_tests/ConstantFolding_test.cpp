@@ -175,7 +175,7 @@ TEST_F(ConstantFoldingTest, Fold3x3MatrixInverse)
         "                                23.0f, 29.0f, 31.0f,\n"
         "                                37.0f, 41.0f, 43.0f));\n"
         "   mat3 m = m3 * mat3(i);\n"
-        "   my_Vec = m3[0];\n"
+        "   my_Vec = m[0];\n"
         "}\n";
     compileAssumeSuccess(shaderString);
     float inputElements[] =
