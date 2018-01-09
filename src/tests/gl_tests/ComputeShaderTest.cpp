@@ -928,6 +928,230 @@ TEST_P(ComputeShaderTest, BindImageTextureWithTextureCube)
     }
 }
 
+// Use image uniform to read and write one layer of Texture2DArray in compute shader, and verify the
+// contents.
+TEST_P(ComputeShaderTest, BindImageTextureWithOneLayerTexture2DArray)
+{
+    ANGLE_SKIP_TEST_IF(IsD3D11());
+
+    GLTexture texture[2];
+    GLFramebuffer framebuffer;
+    const std::string csSource =
+        R"(#version 310 es
+        layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
+        layout(r32ui, binding = 0) readonly uniform highp uimage2D uImage_1;
+        layout(r32ui, binding = 1) writeonly uniform highp uimage2D uImage_2;
+        void main()
+        {
+            uvec4 value = imageLoad(uImage_1, ivec2(gl_LocalInvocationID.xy));
+            imageStore(uImage_2, ivec2(gl_LocalInvocationID.xy), value);
+        })";
+
+    constexpr int kWidth = 1, kHeight = 1, kDepth = 2;
+    constexpr int kResultSize           = kWidth * kHeight;
+    constexpr GLuint kInputValues[2][2] = {{200, 150}, {100, 50}};
+    constexpr GLuint expectedValue_1    = 200;
+    constexpr GLuint expectedValue_2    = 100;
+    GLuint outputValues[kResultSize];
+
+    glBindTexture(GL_TEXTURE_2D_ARRAY, texture[0]);
+    glTexStorage3D(GL_TEXTURE_2D_ARRAY, 1, GL_R32UI, kWidth, kHeight, kDepth);
+    glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, 0, kWidth, kHeight, kDepth, GL_RED_INTEGER,
+                    GL_UNSIGNED_INT, kInputValues[0]);
+    EXPECT_GL_NO_ERROR();
+
+    glBindTexture(GL_TEXTURE_2D_ARRAY, texture[1]);
+    glTexStorage3D(GL_TEXTURE_2D_ARRAY, 1, GL_R32UI, kWidth, kHeight, kDepth);
+    glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, 0, kWidth, kHeight, kDepth, GL_RED_INTEGER,
+                    GL_UNSIGNED_INT, kInputValues[1]);
+    EXPECT_GL_NO_ERROR();
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, csSource);
+    glUseProgram(program.get());
+
+    glBindImageTexture(0, texture[0], 0, GL_FALSE, 0, GL_READ_ONLY, GL_R32UI);
+    EXPECT_GL_NO_ERROR();
+    glBindImageTexture(1, texture[1], 0, GL_FALSE, 1, GL_WRITE_ONLY, GL_R32UI);
+    EXPECT_GL_NO_ERROR();
+    glDispatchCompute(1, 1, 1);
+    EXPECT_GL_NO_ERROR();
+
+    glMemoryBarrier(GL_TEXTURE_UPDATE_BARRIER_BIT);
+    glUseProgram(0);
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);
+    glFramebufferTextureLayer(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texture[1], 0, 0);
+    glFramebufferTextureLayer(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, texture[1], 0, 1);
+    EXPECT_GL_NO_ERROR();
+    glReadBuffer(GL_COLOR_ATTACHMENT0);
+    glReadPixels(0, 0, kWidth, kHeight, GL_RED_INTEGER, GL_UNSIGNED_INT, outputValues);
+    EXPECT_GL_NO_ERROR();
+    for (int i = 0; i < kResultSize; i++)
+    {
+        EXPECT_EQ(expectedValue_2, outputValues[i]);
+    }
+    glReadBuffer(GL_COLOR_ATTACHMENT1);
+    glReadPixels(0, 0, kWidth, kHeight, GL_RED_INTEGER, GL_UNSIGNED_INT, outputValues);
+    EXPECT_GL_NO_ERROR();
+    for (int i = 0; i < kResultSize; i++)
+    {
+        EXPECT_EQ(expectedValue_1, outputValues[i]);
+    }
+}
+
+// Use image uniform to read and write one layer of Texture3D in compute shader, and verify the
+// contents.
+TEST_P(ComputeShaderTest, BindImageTextureWithOneLayerTexture3D)
+{
+    ANGLE_SKIP_TEST_IF(IsD3D11());
+    GLTexture texture[2];
+    GLFramebuffer framebuffer;
+    const std::string csSource =
+        R"(#version 310 es
+        layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
+        layout(r32ui, binding = 0) readonly uniform highp uimage2D uImage_1;
+        layout(r32ui, binding = 1) writeonly uniform highp uimage2D uImage_2;
+        void main()
+        {
+            uvec4 value = imageLoad(uImage_1, ivec2(gl_LocalInvocationID.xy));
+            imageStore(uImage_2, ivec2(gl_LocalInvocationID.xy), value);
+        })";
+
+    constexpr int kWidth = 1, kHeight = 1, kDepth = 2;
+    constexpr int kResultSize           = kWidth * kHeight;
+    constexpr GLuint kInputValues[2][2] = {{200, 150}, {100, 50}};
+    constexpr GLuint expectedValue_1    = 150;
+    constexpr GLuint expectedValue_2    = 50;
+    GLuint outputValues[kResultSize];
+
+    glBindTexture(GL_TEXTURE_3D, texture[0]);
+    glTexStorage3D(GL_TEXTURE_3D, 1, GL_R32UI, kWidth, kHeight, kDepth);
+    glTexSubImage3D(GL_TEXTURE_3D, 0, 0, 0, 0, kWidth, kHeight, kDepth, GL_RED_INTEGER,
+                    GL_UNSIGNED_INT, kInputValues[0]);
+    EXPECT_GL_NO_ERROR();
+
+    glBindTexture(GL_TEXTURE_3D, texture[1]);
+    glTexStorage3D(GL_TEXTURE_3D, 1, GL_R32UI, kWidth, kHeight, kDepth);
+    glTexSubImage3D(GL_TEXTURE_3D, 0, 0, 0, 0, kWidth, kHeight, kDepth, GL_RED_INTEGER,
+                    GL_UNSIGNED_INT, kInputValues[1]);
+    EXPECT_GL_NO_ERROR();
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, csSource);
+    glUseProgram(program.get());
+
+    glBindImageTexture(0, texture[0], 0, GL_FALSE, 1, GL_READ_ONLY, GL_R32UI);
+    EXPECT_GL_NO_ERROR();
+    glBindImageTexture(1, texture[1], 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_R32UI);
+    EXPECT_GL_NO_ERROR();
+    glDispatchCompute(1, 1, 1);
+    EXPECT_GL_NO_ERROR();
+
+    glMemoryBarrier(GL_TEXTURE_UPDATE_BARRIER_BIT);
+    glUseProgram(0);
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);
+    glFramebufferTextureLayer(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texture[1], 0, 0);
+    glFramebufferTextureLayer(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, texture[1], 0, 1);
+    EXPECT_GL_NO_ERROR();
+    glReadBuffer(GL_COLOR_ATTACHMENT0);
+    glReadPixels(0, 0, kWidth, kHeight, GL_RED_INTEGER, GL_UNSIGNED_INT, outputValues);
+    EXPECT_GL_NO_ERROR();
+    for (int i = 0; i < kResultSize; i++)
+    {
+        EXPECT_EQ(expectedValue_1, outputValues[i]);
+    }
+    glReadBuffer(GL_COLOR_ATTACHMENT1);
+    glReadPixels(0, 0, kWidth, kHeight, GL_RED_INTEGER, GL_UNSIGNED_INT, outputValues);
+    EXPECT_GL_NO_ERROR();
+    for (int i = 0; i < kResultSize; i++)
+    {
+        EXPECT_EQ(expectedValue_2, outputValues[i]);
+    }
+}
+
+// Use image uniform to read and write one layer of TextureCube in compute shader, and verify the
+// contents.
+TEST_P(ComputeShaderTest, BindImageTextureWithOneLayerTextureCube)
+{
+    ANGLE_SKIP_TEST_IF(IsD3D11());
+
+    GLTexture texture[2];
+    GLFramebuffer framebuffer;
+    const std::string csSource =
+        R"(#version 310 es
+        layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
+        layout(r32ui, binding = 0) readonly uniform highp uimage2D uImage_1;
+        layout(r32ui, binding = 1) writeonly uniform highp uimage2D uImage_2;
+        void main()
+        {
+            uvec4 value = imageLoad(uImage_1, ivec2(gl_LocalInvocationID.xy));
+            imageStore(uImage_2, ivec2(gl_LocalInvocationID.xy), value);
+        })";
+
+    constexpr int kWidth = 1, kHeight = 1;
+    constexpr int kResultSize           = kWidth * kHeight;
+    constexpr GLuint kInputValues[2][1] = {{200}, {100}};
+    constexpr GLuint expectedValue_1    = 200;
+    constexpr GLuint expectedValue_2    = 100;
+    GLuint outputValues[kResultSize];
+
+    glBindTexture(GL_TEXTURE_CUBE_MAP, texture[0]);
+    glTexStorage2D(GL_TEXTURE_CUBE_MAP, 1, GL_R32UI, kWidth, kHeight);
+    for (GLenum face = GL_TEXTURE_CUBE_MAP_POSITIVE_X; face <= GL_TEXTURE_CUBE_MAP_NEGATIVE_Z;
+         face++)
+    {
+        glTexSubImage2D(face, 0, 0, 0, kWidth, kHeight, GL_RED_INTEGER, GL_UNSIGNED_INT,
+                        kInputValues[0]);
+    }
+    EXPECT_GL_NO_ERROR();
+
+    glBindTexture(GL_TEXTURE_CUBE_MAP, texture[1]);
+    glTexStorage2D(GL_TEXTURE_CUBE_MAP, 1, GL_R32UI, kWidth, kHeight);
+    for (GLenum face = GL_TEXTURE_CUBE_MAP_POSITIVE_X; face <= GL_TEXTURE_CUBE_MAP_NEGATIVE_Z;
+         face++)
+    {
+        glTexSubImage2D(face, 0, 0, 0, kWidth, kHeight, GL_RED_INTEGER, GL_UNSIGNED_INT,
+                        kInputValues[1]);
+    }
+    EXPECT_GL_NO_ERROR();
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, csSource);
+    glUseProgram(program.get());
+
+    glBindImageTexture(0, texture[0], 0, GL_FALSE, 3, GL_READ_ONLY, GL_R32UI);
+    EXPECT_GL_NO_ERROR();
+    glBindImageTexture(1, texture[1], 0, GL_FALSE, 4, GL_WRITE_ONLY, GL_R32UI);
+    EXPECT_GL_NO_ERROR();
+    glDispatchCompute(1, 1, 1);
+    EXPECT_GL_NO_ERROR();
+
+    glMemoryBarrier(GL_TEXTURE_UPDATE_BARRIER_BIT);
+    glUseProgram(0);
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);
+
+    for (GLenum face = 0; face < 6; face++)
+    {
+        glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                               GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, texture[1], 0);
+        EXPECT_GL_NO_ERROR();
+        glReadPixels(0, 0, kWidth, kHeight, GL_RED_INTEGER, GL_UNSIGNED_INT, outputValues);
+        EXPECT_GL_NO_ERROR();
+
+        if (face == 4)
+        {
+            for (int i = 0; i < kResultSize; i++)
+            {
+                EXPECT_EQ(expectedValue_1, outputValues[i]);
+            }
+        }
+        else
+        {
+            for (int i = 0; i < kResultSize; i++)
+            {
+                EXPECT_EQ(expectedValue_2, outputValues[i]);
+            }
+        }
+    }
+}
+
 // Check that it is not possible to create a compute shader when the context does not support ES
 // 3.10
 TEST_P(ComputeShaderTestES3, NotSupported)
