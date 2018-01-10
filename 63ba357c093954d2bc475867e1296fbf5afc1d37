@@ -16,6 +16,24 @@
       "revId": "63ba357c093954d2bc475867e1296fbf5afc1d37",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "253c29b1_08970be1",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/RenderStateCache.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 190,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-01-10T08:15:42Z",
+      "side": 1,
+      "message": "Sorry, I still don\u0027t understand why you move the workaround to StateManager11.cpp can solve the earlier bots failure. It seems that your workaround will affect other cases which should not need the workaround. So I think even you move the position of the workaroud, such kind of cases still exist. I am not sure. Let\u0027s investigate it deeper or just abandon this workaround and wait driver fixing.",
+      "parentUuid": "04572d44_3e3a8644",
+      "revId": "63ba357c093954d2bc475867e1296fbf5afc1d37",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
