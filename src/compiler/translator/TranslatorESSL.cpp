@@ -109,8 +109,16 @@ void TranslatorESSL::translate(TIntermBlock *root,
 
 bool TranslatorESSL::shouldFlattenPragmaStdglInvariantAll()
 {
-    // Not necessary when translating to ESSL.
-    return false;
+    // If following the spec to the letter, we should not flatten this pragma.
+    // However, the spec's wording means that the pragma applies only to outputs.
+    // This contradicts the spirit of using the pragma,
+    // because if the pragma is used in a vertex shader,
+    // the only way to be able to link it to a fragment shader
+    // is to manually qualify each of fragment shader's inputs as invariant.
+    // Which defeats the purpose of this pragma - temporarily make all varyings
+    // invariant for debugging.
+    // Thus, we should be non-conformant to spec's letter here and flatten.
+    return true;
 }
 
 void TranslatorESSL::writeExtensionBehavior(ShCompileOptions compileOptions)
