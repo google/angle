@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "04572d44_3e3a8644",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/RenderStateCache.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 190,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2018-01-10T02:25:53Z",
+      "side": 1,
+      "message": "@Jiajia, the out state is always returned here if glState remains the same. So I move the workaround to StateManager11.cpp, changes the state of modifiedGLState.",
+      "revId": "63ba357c093954d2bc475867e1296fbf5afc1d37",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
