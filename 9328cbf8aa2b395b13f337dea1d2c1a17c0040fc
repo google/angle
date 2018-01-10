@@ -53,6 +53,24 @@
     },
     {
       "key": {
+        "uuid": "1edc91f3_b172994c",
+        "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 740,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-10T21:29:59Z",
+      "side": 1,
+      "message": "C bitfields are not at all portable. I\u0027m using enough magic hackery to get things working here that I didn\u0027t want to push my luck.",
+      "parentUuid": "e290b913_f741602f",
+      "revId": "9328cbf8aa2b395b13f337dea1d2c1a17c0040fc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "edf97201_cc91a6ab",
         "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.h",
         "patchSetId": 7
