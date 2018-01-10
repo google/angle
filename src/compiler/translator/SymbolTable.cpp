@@ -55,6 +55,16 @@ TSymbol *TSymbolTableLevel::find(const TString &name) const
         return (*it).second;
 }
 
+void TSymbolTableLevel::insertUnmangledBuiltInName(const char *name)
+{
+    mUnmangledBuiltInNames.insert(name);
+}
+
+bool TSymbolTableLevel::hasUnmangledBuiltIn(const char *name) const
+{
+    return mUnmangledBuiltInNames.count(name) > 0;
+}
+
 TSymbol *TSymbolTable::find(const TString &name,
                             int shaderVersion,
                             bool *builtIn,
@@ -519,13 +529,13 @@ void TSymbolTable::insertUnmangledBuiltInName(const char *name, ESymbolLevel lev
 {
     ASSERT(level >= 0 && level < static_cast<ESymbolLevel>(table.size()));
     ASSERT(mUserDefinedUniqueIdsStart == -1);
-    table[level]->insertUnmangledBuiltInName(std::string(name));
+    table[level]->insertUnmangledBuiltInName(name);
 }
 
 bool TSymbolTable::hasUnmangledBuiltInAtLevel(const char *name, ESymbolLevel level)
 {
     ASSERT(level >= 0 && level < static_cast<ESymbolLevel>(table.size()));
-    return table[level]->hasUnmangledBuiltIn(std::string(name));
+    return table[level]->hasUnmangledBuiltIn(name);
 }
 
 bool TSymbolTable::hasUnmangledBuiltInForShaderVersion(const char *name, int shaderVersion)

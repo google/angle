@@ -71,15 +71,8 @@ class TSymbolTableLevel
 
     void setGlobalInvariant(bool invariant) { mGlobalInvariant = invariant; }
 
-    void insertUnmangledBuiltInName(const std::string &name)
-    {
-        mUnmangledBuiltInNames.insert(name);
-    }
-
-    bool hasUnmangledBuiltIn(const std::string &name)
-    {
-        return mUnmangledBuiltInNames.count(name) > 0;
-    }
+    void insertUnmangledBuiltInName(const char *name);
+    bool hasUnmangledBuiltIn(const char *name) const;
 
   protected:
     tLevel level;
@@ -87,7 +80,11 @@ class TSymbolTableLevel
     bool mGlobalInvariant;
 
   private:
-    std::set<std::string> mUnmangledBuiltInNames;
+    struct CharArrayComparator
+    {
+        bool operator()(const char *a, const char *b) const { return strcmp(a, b) < 0; }
+    };
+    std::set<const char *, CharArrayComparator> mUnmangledBuiltInNames;
 };
 
 // Define ESymbolLevel as int rather than an enum since level can go
@@ -165,6 +162,8 @@ class TSymbolTable : angle::NonCopyable
     template <TPrecision precision>
     bool insertConstIvec3(ESymbolLevel level, const char *name, const std::array<int, 3> &values);
 
+    // Note that for inserted built-in functions the const char *name needs to remain valid for the
+    // lifetime of the SymbolTable. SymbolTable does not allocate a copy of it.
     void insertBuiltIn(ESymbolLevel level,
                        TOperator op,
                        TExtension ext,
