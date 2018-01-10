@@ -441,7 +441,7 @@ int check_type(yyscan_t yyscanner) {
     struct yyguts_t* yyg = (struct yyguts_t*) yyscanner;
 
     int token = IDENTIFIER;
-    TSymbol* symbol = yyextra->symbolTable.find(yytext, yyextra->getShaderVersion());
+    const TSymbol* symbol = yyextra->symbolTable.find(yytext, yyextra->getShaderVersion());
     if (symbol && symbol->isStruct())
     {
         token = TYPE_NAME;

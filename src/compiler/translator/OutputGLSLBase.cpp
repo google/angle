@@ -260,7 +260,7 @@ void TOutputGLSLBase::writeVariableType(const TType &type)
     }
     if (type.getBasicType() == EbtInterfaceBlock)
     {
-        TInterfaceBlock *interfaceBlock = type.getInterfaceBlock();
+        const TInterfaceBlock *interfaceBlock = type.getInterfaceBlock();
         declareInterfaceBlockLayout(interfaceBlock);
     }
     if (qualifier != EvqTemporary && qualifier != EvqGlobal)
@@ -317,7 +317,7 @@ void TOutputGLSLBase::writeVariableType(const TType &type)
     }
     else if (type.getBasicType() == EbtInterfaceBlock)
     {
-        TInterfaceBlock *interfaceBlock = type.getInterfaceBlock();
+        const TInterfaceBlock *interfaceBlock = type.getInterfaceBlock();
         declareInterfaceBlock(interfaceBlock);
     }
     else

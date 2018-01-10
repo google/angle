@@ -21,16 +21,57 @@
 namespace sh
 {
 
+class TSymbolTable::TSymbolTableLevel
+{
+  public:
+    TSymbolTableLevel() : mGlobalInvariant(false) {}
+    ~TSymbolTableLevel();
+
+    bool insert(TSymbol *symbol);
+
+    // Insert a function using its unmangled name as the key.
+    bool insertUnmangled(TFunction *function);
+
+    TSymbol *find(const TString &name) const;
+
+    void addInvariantVarying(const std::string &name) { mInvariantVaryings.insert(name); }
+
+    bool isVaryingInvariant(const std::string &name)
+    {
+        return (mGlobalInvariant || mInvariantVaryings.count(name) > 0);
+    }
+
+    void setGlobalInvariant(bool invariant) { mGlobalInvariant = invariant; }
+
+    void insertUnmangledBuiltInName(const char *name);
+    bool hasUnmangledBuiltIn(const char *name) const;
+
+  private:
+    using tLevel        = TUnorderedMap<TString, TSymbol *>;
+    using tLevelPair    = const tLevel::value_type;
+    using tInsertResult = std::pair<tLevel::iterator, bool>;
+
+    tLevel level;
+    std::set<std::string> mInvariantVaryings;
+    bool mGlobalInvariant;
+
+    struct CharArrayComparator
+    {
+        bool operator()(const char *a, const char *b) const { return strcmp(a, b) < 0; }
+    };
+    std::set<const char *, CharArrayComparator> mUnmangledBuiltInNames;
+};
+
 //
 // Symbol table levels are a map of pointers to symbols that have to be deleted.
 //
-TSymbolTableLevel::~TSymbolTableLevel()
+TSymbolTable::TSymbolTableLevel::~TSymbolTableLevel()
 {
     for (tLevel::iterator it = level.begin(); it != level.end(); ++it)
         delete (*it).second;
 }
 
-bool TSymbolTableLevel::insert(TSymbol *symbol)
+bool TSymbolTable::TSymbolTableLevel::insert(TSymbol *symbol)
 {
     // returning true means symbol was added to the table
     tInsertResult result = level.insert(tLevelPair(symbol->getMangledName(), symbol));
@@ -38,7 +79,7 @@ bool TSymbolTableLevel::insert(TSymbol *symbol)
     return result.second;
 }
 
-bool TSymbolTableLevel::insertUnmangled(TFunction *function)
+bool TSymbolTable::TSymbolTableLevel::insertUnmangled(TFunction *function)
 {
     // returning true means symbol was added to the table
     tInsertResult result = level.insert(tLevelPair(function->name(), function));
@@ -46,7 +87,7 @@ bool TSymbolTableLevel::insertUnmangled(TFunction *function)
     return result.second;
 }
 
-TSymbol *TSymbolTableLevel::find(const TString &name) const
+TSymbol *TSymbolTable::TSymbolTableLevel::find(const TString &name) const
 {
     tLevel::const_iterator it = level.find(name);
     if (it == level.end())
@@ -55,24 +96,69 @@ TSymbol *TSymbolTableLevel::find(const TString &name) const
         return (*it).second;
 }
 
-void TSymbolTableLevel::insertUnmangledBuiltInName(const char *name)
+void TSymbolTable::TSymbolTableLevel::insertUnmangledBuiltInName(const char *name)
 {
     mUnmangledBuiltInNames.insert(name);
 }
 
-bool TSymbolTableLevel::hasUnmangledBuiltIn(const char *name) const
+bool TSymbolTable::TSymbolTableLevel::hasUnmangledBuiltIn(const char *name) const
 {
     return mUnmangledBuiltInNames.count(name) > 0;
 }
 
-TSymbol *TSymbolTable::find(const TString &name,
-                            int shaderVersion,
-                            bool *builtIn,
-                            bool *sameScope) const
+void TSymbolTable::push()
 {
-    int level = currentLevel();
-    TSymbol *symbol;
+    table.push_back(new TSymbolTableLevel);
+    precisionStack.push_back(new PrecisionStackLevel);
+}
 
+void TSymbolTable::pop()
+{
+    delete table.back();
+    table.pop_back();
+
+    delete precisionStack.back();
+    precisionStack.pop_back();
+}
+
+const TFunction *TSymbolTable::markUserDefinedFunctionHasPrototypeDeclaration(
+    const TString &mangledName,
+    bool *hadPrototypeDeclarationOut)
+{
+    TFunction *function         = findUserDefinedFunction(mangledName);
+    *hadPrototypeDeclarationOut = function->hasPrototypeDeclaration();
+    function->setHasPrototypeDeclaration();
+    return function;
+}
+
+const TFunction *TSymbolTable::setUserDefinedFunctionParameterNamesFromDefinition(
+    const TFunction *function,
+    bool *wasDefinedOut)
+{
+    TFunction *firstDeclaration = findUserDefinedFunction(function->getMangledName());
+    ASSERT(firstDeclaration);
+    // Note: 'firstDeclaration' could be 'function' if this is the first time we've seen function as
+    // it would have just been put in the symbol table. Otherwise, we're looking up an earlier
+    // occurance.
+    if (function != firstDeclaration)
+    {
+        // Swap the parameters of the previous declaration to the parameters of the function
+        // definition (parameter names may differ).
+        firstDeclaration->swapParameters(*function);
+    }
+
+    *wasDefinedOut = firstDeclaration->isDefined();
+    firstDeclaration->setDefined();
+    return firstDeclaration;
+}
+
+const TSymbol *TSymbolTable::find(const TString &name,
+                                  int shaderVersion,
+                                  bool *builtIn,
+                                  bool *sameScope) const
+{
+    int level       = currentLevel();
+    TSymbol *symbol = nullptr;
     do
     {
         if (level == GLSL_BUILTINS)
@@ -85,7 +171,7 @@ TSymbol *TSymbolTable::find(const TString &name,
             level--;
 
         symbol = table[level]->find(name);
-    } while (symbol == 0 && --level >= 0);
+    } while (symbol == nullptr && --level >= 0);
 
     if (builtIn)
         *builtIn = (level <= LAST_BUILTIN_LEVEL);
@@ -95,20 +181,27 @@ TSymbol *TSymbolTable::find(const TString &name,
     return symbol;
 }
 
-TSymbol *TSymbolTable::findGlobal(const TString &name) const
+TFunction *TSymbolTable::findUserDefinedFunction(const TString &name) const
+{
+    // User-defined functions are always declared at the global level.
+    ASSERT(currentLevel() >= GLOBAL_LEVEL);
+    return static_cast<TFunction *>(table[GLOBAL_LEVEL]->find(name));
+}
+
+const TSymbol *TSymbolTable::findGlobal(const TString &name) const
 {
     ASSERT(table.size() > GLOBAL_LEVEL);
     return table[GLOBAL_LEVEL]->find(name);
 }
 
-TSymbol *TSymbolTable::findBuiltIn(const TString &name, int shaderVersion) const
+const TSymbol *TSymbolTable::findBuiltIn(const TString &name, int shaderVersion) const
 {
     return findBuiltIn(name, shaderVersion, false);
 }
 
-TSymbol *TSymbolTable::findBuiltIn(const TString &name,
-                                   int shaderVersion,
-                                   bool includeGLSLBuiltins) const
+const TSymbol *TSymbolTable::findBuiltIn(const TString &name,
+                                         int shaderVersion,
+                                         bool includeGLSLBuiltins) const
 {
     for (int level = LAST_BUILTIN_LEVEL; level >= 0; level--)
     {
@@ -232,6 +325,17 @@ bool TSymbolTable::declareInterfaceBlock(TInterfaceBlock *interfaceBlock)
     return insert(currentLevel(), interfaceBlock);
 }
 
+void TSymbolTable::declareUserDefinedFunction(TFunction *function, bool insertUnmangledName)
+{
+    ASSERT(currentLevel() >= GLOBAL_LEVEL);
+    if (insertUnmangledName)
+    {
+        // Insert the unmangled name to detect potential future redefinition as a variable.
+        table[GLOBAL_LEVEL]->insertUnmangled(function);
+    }
+    table[GLOBAL_LEVEL]->insert(function);
+}
+
 TVariable *TSymbolTable::insertVariable(ESymbolLevel level, const char *name, const TType *type)
 {
     ASSERT(level <= LAST_BUILTIN_LEVEL);
@@ -273,6 +377,12 @@ bool TSymbolTable::insertVariable(ESymbolLevel level, TVariable *variable)
     ASSERT(variable);
     ASSERT(level > LAST_BUILTIN_LEVEL || variable->getType().isRealized());
     return insert(level, variable);
+}
+
+bool TSymbolTable::insert(ESymbolLevel level, TSymbol *symbol)
+{
+    ASSERT(level > LAST_BUILTIN_LEVEL || mUserDefinedUniqueIdsStart == -1);
+    return table[level]->insert(symbol);
 }
 
 bool TSymbolTable::insertStructType(ESymbolLevel level, TStructure *str)
@@ -523,6 +633,24 @@ TPrecision TSymbolTable::getDefaultPrecision(TBasicType type) const
         level--;
     }
     return prec;
+}
+
+void TSymbolTable::addInvariantVarying(const std::string &originalName)
+{
+    ASSERT(atGlobalLevel());
+    table[currentLevel()]->addInvariantVarying(originalName);
+}
+
+bool TSymbolTable::isVaryingInvariant(const std::string &originalName) const
+{
+    ASSERT(atGlobalLevel());
+    return table[currentLevel()]->isVaryingInvariant(originalName);
+}
+
+void TSymbolTable::setGlobalInvariant(bool invariant)
+{
+    ASSERT(atGlobalLevel());
+    table[currentLevel()]->setGlobalInvariant(invariant);
 }
 
 void TSymbolTable::insertUnmangledBuiltInName(const char *name, ESymbolLevel level)

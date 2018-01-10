@@ -738,10 +738,10 @@ void TLValueTrackingTraverser::traverseAggregate(TIntermAggregate *node)
         {
             // Find the built-in function corresponding to this op so that we can determine the
             // in/out qualifiers of its parameters.
-            TFunction *builtInFunc = nullptr;
+            const TFunction *builtInFunc = nullptr;
             if (!node->isFunctionCall() && !node->isConstructor())
             {
-                builtInFunc = static_cast<TFunction *>(
+                builtInFunc = static_cast<const TFunction *>(
                     mSymbolTable->findBuiltIn(node->getSymbolTableMangledName(), mShaderVersion));
             }
 

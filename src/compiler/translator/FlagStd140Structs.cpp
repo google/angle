@@ -28,13 +28,13 @@ class FlagStd140StructsTraverser : public TIntermTraverser
     bool visitDeclaration(Visit visit, TIntermDeclaration *node) override;
 
   private:
-    void mapBlockStructMembers(TIntermSymbol *blockDeclarator, TInterfaceBlock *block);
+    void mapBlockStructMembers(TIntermSymbol *blockDeclarator, const TInterfaceBlock *block);
 
     std::vector<MappedStruct> mMappedStructs;
 };
 
 void FlagStd140StructsTraverser::mapBlockStructMembers(TIntermSymbol *blockDeclarator,
-                                                       TInterfaceBlock *block)
+                                                       const TInterfaceBlock *block)
 {
     for (auto *field : block->fields())
     {
@@ -53,7 +53,7 @@ bool FlagStd140StructsTraverser::visitDeclaration(Visit visit, TIntermDeclaratio
     TIntermTyped *declarator = node->getSequence()->back()->getAsTyped();
     if (declarator->getBasicType() == EbtInterfaceBlock)
     {
-        TInterfaceBlock *block = declarator->getType().getInterfaceBlock();
+        const TInterfaceBlock *block = declarator->getType().getInterfaceBlock();
         if (block->blockStorage() == EbsStd140)
         {
             mapBlockStructMembers(declarator->getAsSymbolNode(), block);

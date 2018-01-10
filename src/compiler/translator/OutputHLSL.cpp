@@ -349,7 +349,7 @@ TString OutputHLSL::generateStructMapping(const std::vector<MappedStruct> &std14
 
     for (auto &mappedStruct : std140Structs)
     {
-        TInterfaceBlock *interfaceBlock =
+        const TInterfaceBlock *interfaceBlock =
             mappedStruct.blockDeclarator->getType().getInterfaceBlock();
         if (mReferencedUniformBlocks.count(interfaceBlock->uniqueId().get()) == 0)
         {
@@ -1259,7 +1259,7 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
                 if (visit == PreVisit)
                 {
                     TIntermSymbol *instanceArraySymbol = node->getLeft()->getAsSymbolNode();
-                    TInterfaceBlock *interfaceBlock    = leftType.getInterfaceBlock();
+                    const TInterfaceBlock *interfaceBlock = leftType.getInterfaceBlock();
                     if (mReferencedUniformBlocks.count(interfaceBlock->uniqueId().get()) == 0)
                     {
                         mReferencedUniformBlocks[interfaceBlock->uniqueId().get()] =

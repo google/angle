@@ -259,8 +259,8 @@ std::string CollectVariablesTraverser::getMappedName(const TSymbol *symbol) cons
 void CollectVariablesTraverser::setBuiltInInfoFromSymbolTable(const char *name,
                                                               ShaderVariable *info)
 {
-    TVariable *symbolTableVar =
-        reinterpret_cast<TVariable *>(mSymbolTable->findBuiltIn(name, mShaderVersion));
+    const TVariable *symbolTableVar =
+        reinterpret_cast<const TVariable *>(mSymbolTable->findBuiltIn(name, mShaderVersion));
     ASSERT(symbolTableVar);
     const TType &type = symbolTableVar->getType();
 

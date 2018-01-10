@@ -98,7 +98,7 @@ class TType
           unsigned char ss = 1);
     explicit TType(const TPublicType &p);
     explicit TType(const TStructure *userDef);
-    TType(TInterfaceBlock *interfaceBlockIn,
+    TType(const TInterfaceBlock *interfaceBlockIn,
           TQualifier qualifierIn,
           TLayoutQualifier layoutQualifierIn);
     TType(const TType &t);
@@ -213,8 +213,8 @@ class TType
     // Note that the array element type might still be an array type in GLSL ES version >= 3.10.
     void toArrayElementType();
 
-    TInterfaceBlock *getInterfaceBlock() const { return mInterfaceBlock; }
-    void setInterfaceBlock(TInterfaceBlock *interfaceBlockIn);
+    const TInterfaceBlock *getInterfaceBlock() const { return mInterfaceBlock; }
+    void setInterfaceBlock(const TInterfaceBlock *interfaceBlockIn);
     bool isInterfaceBlock() const { return type == EbtInterfaceBlock; }
 
     bool isVector() const { return primarySize > 1 && secondarySize == 1; }
@@ -341,7 +341,7 @@ class TType
     // 1) Represents an interface block.
     // 2) Represents the member variable of an unnamed interface block.
     // It's nullptr also for members of named interface blocks.
-    TInterfaceBlock *mInterfaceBlock;
+    const TInterfaceBlock *mInterfaceBlock;
 
     // nullptr unless this is a struct
     const TStructure *mStructure;
@@ -357,7 +357,7 @@ struct TTypeSpecifierNonArray
     TBasicType type;
     unsigned char primarySize;    // size of vector or cols of matrix
     unsigned char secondarySize;  // rows of matrix
-    TStructure *userDef;
+    const TStructure *userDef;
     TSourceLoc line;
 
     // true if the type was defined by a struct specifier rather than a reference to a type name.
@@ -374,7 +374,9 @@ struct TTypeSpecifierNonArray
         isStructSpecifier = false;
     }
 
-    void initializeStruct(TStructure *aUserDef, bool aIsStructSpecifier, const TSourceLoc &aLine)
+    void initializeStruct(const TStructure *aUserDef,
+                          bool aIsStructSpecifier,
+                          const TSourceLoc &aLine)
     {
         type              = EbtStruct;
         primarySize       = 1;
@@ -421,7 +423,7 @@ struct TPublicType
     unsigned char getPrimarySize() const { return typeSpecifierNonArray.primarySize; }
     unsigned char getSecondarySize() const { return typeSpecifierNonArray.secondarySize; }
 
-    TStructure *getUserDef() const { return typeSpecifierNonArray.userDef; }
+    const TStructure *getUserDef() const { return typeSpecifierNonArray.userDef; }
     const TSourceLoc &getLine() const { return typeSpecifierNonArray.line; }
 
     bool isStructSpecifier() const { return typeSpecifierNonArray.isStructSpecifier; }

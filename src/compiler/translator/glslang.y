@@ -69,7 +69,7 @@ using namespace sh;
             unsigned int u;
             bool b;
         };
-        TSymbol* symbol;
+        const TSymbol* symbol;
     } lex;
     struct {
         TOperator op;
@@ -1196,7 +1196,7 @@ type_specifier_nonarray
     }
     | TYPE_NAME {
         // This is for user defined type names. The lexical phase looked up the type.
-        TStructure *structure = static_cast<TStructure*>($1.symbol);
+        const TStructure *structure = static_cast<const TStructure*>($1.symbol);
         $$.initializeStruct(structure, false, @1);
     }
     ;
@@ -1456,7 +1456,7 @@ external_declaration
 
 function_definition
     : function_prototype {
-        context->parseFunctionDefinitionHeader(@1, &($1.function), &($1.intermFunctionPrototype));
+        context->parseFunctionDefinitionHeader(@1, $1.function, &($1.intermFunctionPrototype));
     }
     compound_statement_no_new_scope {
         $$ = context->addFunctionDefinition($1.intermFunctionPrototype, $3, @1);

@@ -221,7 +221,7 @@ union YYSTYPE
             unsigned int u;
             bool b;
         };
-        TSymbol* symbol;
+        const TSymbol *symbol;
     } lex;
     struct {
         TOperator op;

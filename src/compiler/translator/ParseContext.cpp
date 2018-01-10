@@ -1134,7 +1134,7 @@ bool TParseContext::declareVariable(const TSourceLoc &line,
         else if (static_cast<int>(type->getOutermostArraySize()) ==
                  maxDrawBuffers->getConstPointer()->getIConst())
         {
-            if (TSymbol *builtInSymbol = symbolTable.findBuiltIn(identifier, mShaderVersion))
+            if (const TSymbol *builtInSymbol = symbolTable.findBuiltIn(identifier, mShaderVersion))
             {
                 needsReservedCheck = !checkCanUseExtension(line, builtInSymbol->extension());
             }
@@ -2838,8 +2838,8 @@ void TParseContext::setGeometryShaderInputArraySize(unsigned int inputArraySize,
 {
     if (mGlInVariableWithArraySize == nullptr)
     {
-        TSymbol *glPerVertex              = symbolTable.findBuiltIn("gl_PerVertex", 310);
-        TInterfaceBlock *glPerVertexBlock = static_cast<TInterfaceBlock *>(glPerVertex);
+        const TSymbol *glPerVertex              = symbolTable.findBuiltIn("gl_PerVertex", 310);
+        const TInterfaceBlock *glPerVertexBlock = static_cast<const TInterfaceBlock *>(glPerVertex);
         TType *glInType = new TType(glPerVertexBlock, EvqPerVertexIn, TLayoutQualifier::Create());
         glInType->makeArray(inputArraySize);
         mGlInVariableWithArraySize =
@@ -3213,15 +3213,16 @@ TIntermFunctionPrototype *TParseContext::addFunctionPrototypeDeclaration(
     // Note: function found from the symbol table could be the same as parsedFunction if this is the
     // first declaration. Either way the instance in the symbol table is used to track whether the
     // function is declared multiple times.
-    TFunction *function = static_cast<TFunction *>(
-        symbolTable.find(parsedFunction.getMangledName(), getShaderVersion()));
-    if (function->hasPrototypeDeclaration() && mShaderVersion == 100)
+    bool hadPrototypeDeclaration = false;
+    const TFunction *function    = symbolTable.markUserDefinedFunctionHasPrototypeDeclaration(
+        parsedFunction.getMangledName(), &hadPrototypeDeclaration);
+
+    if (hadPrototypeDeclaration && mShaderVersion == 100)
     {
         // ESSL 1.00.17 section 4.2.7.
         // Doesn't apply to ESSL 3.00.4: see section 4.2.3.
         error(location, "duplicate function prototype declarations are not allowed", "function");
     }
-    function->setHasPrototypeDeclaration();
 
     TIntermFunctionPrototype *prototype =
         createPrototypeNodeFromFunction(*function, location, false);
@@ -3263,49 +3264,33 @@ TIntermFunctionDefinition *TParseContext::addFunctionDefinition(
 }
 
 void TParseContext::parseFunctionDefinitionHeader(const TSourceLoc &location,
-                                                  TFunction **function,
+                                                  const TFunction *function,
                                                   TIntermFunctionPrototype **prototypeOut)
 {
     ASSERT(function);
-    ASSERT(*function);
     const TSymbol *builtIn =
-        symbolTable.findBuiltIn((*function)->getMangledName(), getShaderVersion());
+        symbolTable.findBuiltIn(function->getMangledName(), getShaderVersion());
 
     if (builtIn)
     {
-        error(location, "built-in functions cannot be redefined", (*function)->name().c_str());
+        error(location, "built-in functions cannot be redefined", function->name().c_str());
     }
     else
     {
-        TFunction *prevDec = static_cast<TFunction *>(
-            symbolTable.find((*function)->getMangledName(), getShaderVersion()));
-
-        // Note: 'prevDec' could be 'function' if this is the first time we've seen function as it
-        // would have just been put in the symbol table. Otherwise, we're looking up an earlier
-        // occurance.
-        if (*function != prevDec)
+        bool wasDefined = false;
+        function =
+            symbolTable.setUserDefinedFunctionParameterNamesFromDefinition(function, &wasDefined);
+        if (wasDefined)
         {
-            // Swap the parameters of the previous declaration to the parameters of the function
-            // definition (parameter names may differ).
-            prevDec->swapParameters(**function);
-
-            // The function definition will share the same symbol as any previous declaration.
-            *function = prevDec;
+            error(location, "function already has a body", function->name().c_str());
         }
-
-        if ((*function)->isDefined())
-        {
-            error(location, "function already has a body", (*function)->name().c_str());
-        }
-
-        (*function)->setDefined();
     }
 
     // Remember the return type for later checking for return statements.
-    mCurrentFunctionType  = &((*function)->getReturnType());
+    mCurrentFunctionType  = &(function->getReturnType());
     mFunctionReturnsValue = false;
 
-    *prototypeOut = createPrototypeNodeFromFunction(**function, location, true);
+    *prototypeOut = createPrototypeNodeFromFunction(*function, location, true);
     setLoopNestingLevel(0);
 }
 
@@ -3319,8 +3304,8 @@ TFunction *TParseContext::parseFunctionDeclarator(const TSourceLoc &location, TF
     // Return types and parameter qualifiers must match in all redeclarations, so those are checked
     // here.
     //
-    TFunction *prevDec =
-        static_cast<TFunction *>(symbolTable.find(function->getMangledName(), getShaderVersion()));
+    const TFunction *prevDec = static_cast<const TFunction *>(
+        symbolTable.find(function->getMangledName(), getShaderVersion()));
 
     for (size_t i = 0u; i < function->getParamCount(); ++i)
     {
@@ -3360,26 +3345,21 @@ TFunction *TParseContext::parseFunctionDeclarator(const TSourceLoc &location, TF
         }
     }
 
-    //
     // Check for previously declared variables using the same name.
-    //
-    TSymbol *prevSym = symbolTable.find(function->name(), getShaderVersion());
+    const TSymbol *prevSym   = symbolTable.find(function->name(), getShaderVersion());
+    bool insertUnmangledName = true;
     if (prevSym)
     {
         if (!prevSym->isFunction())
         {
             error(location, "redefinition of a function", function->name().c_str());
         }
+        insertUnmangledName = false;
     }
-    else
-    {
-        // Insert the unmangled name to detect potential future redefinition as a variable.
-        symbolTable.getOuterLevel()->insertUnmangled(function);
-    }
-
-    // We're at the inner scope level of the function's arguments and body statement.
-    // Add the function prototype to the surrounding scope instead.
-    symbolTable.getOuterLevel()->insert(function);
+    // Parsing is at the inner scope level of the function's arguments and body statement at this
+    // point, but declareUserDefinedFunction takes care of declaring the function at the global
+    // scope.
+    symbolTable.declareUserDefinedFunction(function, insertUnmangledName);
 
     // Raise error message if main function takes any parameters or return anything other than void
     if (function->name() == "main")

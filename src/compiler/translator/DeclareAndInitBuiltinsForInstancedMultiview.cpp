@@ -147,9 +147,9 @@ void DeclareAndInitBuiltinsForInstancedMultiview(TIntermBlock *root,
                       SymbolType::AngleInternal);
 
     DeclareGlobalVariable(root, viewID);
-    ReplaceVariable(root,
-                    static_cast<TVariable *>(symbolTable->findBuiltIn("gl_ViewID_OVR", 300, true)),
-                    viewID);
+    ReplaceVariable(
+        root, static_cast<const TVariable *>(symbolTable->findBuiltIn("gl_ViewID_OVR", 300, true)),
+        viewID);
     if (shaderType == GL_VERTEX_SHADER)
     {
         // Replacing gl_InstanceID with InstanceID should happen before adding the initializers of
@@ -160,7 +160,8 @@ void DeclareAndInitBuiltinsForInstancedMultiview(TIntermBlock *root,
             symbolTable, instanceIDVariableName, instanceIDVariableType, SymbolType::AngleInternal);
         DeclareGlobalVariable(root, instanceID);
         ReplaceVariable(
-            root, static_cast<TVariable *>(symbolTable->findBuiltIn("gl_InstanceID", 300, true)),
+            root,
+            static_cast<const TVariable *>(symbolTable->findBuiltIn("gl_InstanceID", 300, true)),
             instanceID);
 
         TIntermSequence *initializers = new TIntermSequence();

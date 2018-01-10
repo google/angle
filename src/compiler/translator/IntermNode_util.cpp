@@ -22,7 +22,7 @@ const TFunction *LookUpBuiltInFunction(const TString &name,
                                        int shaderVersion)
 {
     TString mangledName = TFunction::GetMangledNameFromCall(name, *arguments);
-    TSymbol *symbol     = symbolTable.findBuiltIn(mangledName, shaderVersion);
+    const TSymbol *symbol = symbolTable.findBuiltIn(mangledName, shaderVersion);
     if (symbol)
     {
         ASSERT(symbol->isFunction());
@@ -235,7 +235,7 @@ TIntermBlock *EnsureBlock(TIntermNode *node)
 
 TIntermSymbol *ReferenceGlobalVariable(const TString &name, const TSymbolTable &symbolTable)
 {
-    TVariable *var = reinterpret_cast<TVariable *>(symbolTable.findGlobal(name));
+    const TVariable *var = reinterpret_cast<const TVariable *>(symbolTable.findGlobal(name));
     ASSERT(var);
     return new TIntermSymbol(var);
 }

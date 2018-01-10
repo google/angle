@@ -285,7 +285,7 @@ class TParseContext : angle::NonCopyable
                                                      TIntermBlock *functionBody,
                                                      const TSourceLoc &location);
     void parseFunctionDefinitionHeader(const TSourceLoc &location,
-                                       TFunction **function,
+                                       const TFunction *function,
                                        TIntermFunctionPrototype **prototypeOut);
     TFunction *parseFunctionDeclarator(const TSourceLoc &location, TFunction *function);
     TFunction *parseFunctionHeader(const TPublicType &type,
