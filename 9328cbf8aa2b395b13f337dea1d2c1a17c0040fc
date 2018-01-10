@@ -1,0 +1,123 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f9c29833_441bc01c",
+        "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1497,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-01-10T21:17:55Z",
+      "side": 1,
+      "message": "nit: \u003d default.",
+      "revId": "9328cbf8aa2b395b13f337dea1d2c1a17c0040fc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7bfe1a88_4cb8719d",
+        "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1502,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-01-10T21:17:55Z",
+      "side": 1,
+      "message": "ditto",
+      "revId": "9328cbf8aa2b395b13f337dea1d2c1a17c0040fc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e290b913_f741602f",
+        "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 740,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-01-10T21:17:55Z",
+      "side": 1,
+      "message": "I\u0027m not sure how important this is but it feels like there is a lot of wasted bits in RenderPassDesc and things could be made more efficient by packing enums in smaller types and using C bitfields.",
+      "revId": "9328cbf8aa2b395b13f337dea1d2c1a17c0040fc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "edf97201_cc91a6ab",
+        "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 758,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-01-10T21:17:55Z",
+      "side": 1,
+      "message": "inputRate is essentially a boolean in Vulkan, we could gain space by packing it as a bitfield.",
+      "revId": "9328cbf8aa2b395b13f337dea1d2c1a17c0040fc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "58b621d2_7db6930d",
+        "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 767,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-01-10T21:17:55Z",
+      "side": 1,
+      "message": "I think offset has to be less than stride which would allow to pack this structure to 4 bytes",
+      "revId": "9328cbf8aa2b395b13f337dea1d2c1a17c0040fc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ff3507e7_932b0d6e",
+        "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 774,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-01-10T21:17:55Z",
+      "side": 1,
+      "message": "Topology + primRestart can fit in a byte.",
+      "revId": "9328cbf8aa2b395b13f337dea1d2c1a17c0040fc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5c6218b3_c353e126",
+        "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 780,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-01-10T21:17:55Z",
+      "side": 1,
+      "message": "Why alignas 32? You could make sure everything is packed by packing to 4 bytes. This would allow for packing things inside this structure more efficiently. Ditto in other structures below.",
+      "revId": "9328cbf8aa2b395b13f337dea1d2c1a17c0040fc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
