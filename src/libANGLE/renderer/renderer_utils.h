@@ -71,6 +71,10 @@ class Serial final
     {
         return mValue != kInvalid && mValue == other.mValue;
     }
+    constexpr bool operator==(uint32_t value) const
+    {
+        return mValue != kInvalid && mValue == static_cast<uint64_t>(value);
+    }
     constexpr bool operator!=(const Serial &other) const
     {
         return mValue == kInvalid || mValue != other.mValue;
@@ -79,6 +83,11 @@ class Serial final
     constexpr bool operator>=(const Serial &other) const { return mValue >= other.mValue; }
     constexpr bool operator<(const Serial &other) const { return mValue < other.mValue; }
     constexpr bool operator<=(const Serial &other) const { return mValue <= other.mValue; }
+
+    constexpr bool operator<(uint32_t value) const { return mValue < static_cast<uint64_t>(value); }
+
+    // Useful for serialization.
+    constexpr uint64_t getValue() const { return mValue; }
 
   private:
     friend class SerialFactory;

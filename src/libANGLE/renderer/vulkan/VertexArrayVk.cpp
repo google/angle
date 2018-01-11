@@ -29,8 +29,6 @@ VertexArrayVk::VertexArrayVk(const gl::VertexArrayState &state)
 {
     mCurrentArrayBufferHandles.fill(VK_NULL_HANDLE);
     mCurrentArrayBufferResources.fill(nullptr);
-    mCurrentVertexBindingDescs.reserve(state.getMaxAttribs());
-    mCurrentVertexAttribDescs.reserve(state.getMaxAttribs());
 }
 
 VertexArrayVk::~VertexArrayVk()
@@ -131,11 +129,10 @@ void VertexArrayVk::updateDrawDependencies(vk::CommandBufferNode *readNode,
 void VertexArrayVk::invalidateVertexDescriptions()
 {
     mCurrentVertexDescsValid = false;
-    mCurrentVertexBindingDescs.clear();
-    mCurrentVertexAttribDescs.clear();
 }
 
-void VertexArrayVk::updateVertexDescriptions(const gl::Context *context)
+void VertexArrayVk::updateVertexDescriptions(const gl::Context *context,
+                                             vk::PipelineDesc *pipelineDesc)
 {
     if (mCurrentVertexDescsValid)
     {
@@ -147,29 +144,16 @@ void VertexArrayVk::updateVertexDescriptions(const gl::Context *context)
 
     const gl::Program *programGL = context->getGLState().getProgram();
 
+    pipelineDesc->resetVertexInputState();
+
     for (auto attribIndex : programGL->getActiveAttribLocationsMask())
     {
         const auto &attrib  = attribs[attribIndex];
         const auto &binding = bindings[attrib.bindingIndex];
         if (attrib.enabled)
         {
-            VkVertexInputBindingDescription bindingDesc;
-            bindingDesc.binding = static_cast<uint32_t>(mCurrentVertexBindingDescs.size());
-            bindingDesc.stride  = static_cast<uint32_t>(gl::ComputeVertexAttributeTypeSize(attrib));
-            bindingDesc.inputRate = (binding.getDivisor() > 0 ? VK_VERTEX_INPUT_RATE_INSTANCE
-                                                              : VK_VERTEX_INPUT_RATE_VERTEX);
-
-            gl::VertexFormatType vertexFormatType = gl::GetVertexFormatType(attrib);
-
-            VkVertexInputAttributeDescription attribDesc;
-            attribDesc.binding  = bindingDesc.binding;
-            attribDesc.format   = vk::GetNativeVertexFormat(vertexFormatType);
-            attribDesc.location = static_cast<uint32_t>(attribIndex);
-            attribDesc.offset =
-                static_cast<uint32_t>(ComputeVertexAttributeOffset(attrib, binding));
-
-            mCurrentVertexBindingDescs.push_back(bindingDesc);
-            mCurrentVertexAttribDescs.push_back(attribDesc);
+            pipelineDesc->updateVertexInputInfo(static_cast<uint32_t>(attribIndex), binding,
+                                                attrib);
         }
         else
         {
@@ -178,16 +162,6 @@ void VertexArrayVk::updateVertexDescriptions(const gl::Context *context)
     }
 
     mCurrentVertexDescsValid = true;
-}
-
-const std::vector<VkVertexInputBindingDescription> &VertexArrayVk::getVertexBindingDescs() const
-{
-    return mCurrentVertexBindingDescs;
-}
-
-const std::vector<VkVertexInputAttributeDescription> &VertexArrayVk::getVertexAttribDescs() const
-{
-    return mCurrentVertexAttribDescs;
 }
 
 }  // namespace rx

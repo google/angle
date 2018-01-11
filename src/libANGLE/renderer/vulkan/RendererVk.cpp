@@ -1070,4 +1070,10 @@ vk::Error RendererVk::initGraphicsPipelineLayout()
 
     return vk::NoError();
 }
+
+Serial RendererVk::issueProgramSerial()
+{
+    return mProgramSerialFactory.generate();
+}
+
 }  // namespace rx

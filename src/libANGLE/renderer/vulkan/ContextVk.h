@@ -170,21 +170,9 @@ class ContextVk : public ContextImpl, public ResourceVk
     vk::Pipeline mCurrentPipeline;
     GLenum mCurrentDrawMode;
 
-    // Keep CreateInfo structures cached so that we can quickly update them when creating
-    // updated pipelines. When we move to a pipeline cache, we will want to use a more compact
-    // structure that we can use to query the pipeline cache in the Renderer.
-    // TODO(jmadill): Update this when we move to a pipeline cache.
-    VkPipelineShaderStageCreateInfo mCurrentShaderStages[2];
-    VkPipelineVertexInputStateCreateInfo mCurrentVertexInputState;
-    VkPipelineInputAssemblyStateCreateInfo mCurrentInputAssemblyState;
-    VkViewport mCurrentViewportVk;
-    VkRect2D mCurrentScissorVk;
-    VkPipelineViewportStateCreateInfo mCurrentViewportState;
-    VkPipelineRasterizationStateCreateInfo mCurrentRasterState;
-    VkPipelineMultisampleStateCreateInfo mCurrentMultisampleState;
-    VkPipelineColorBlendAttachmentState mCurrentBlendAttachmentState;
-    VkPipelineColorBlendStateCreateInfo mCurrentBlendState;
-    VkGraphicsPipelineCreateInfo mCurrentPipelineInfo;
+    // Keep a cached pipeline description structure that can be used to query the pipeline cache.
+    // Kept in a pointer so allocations can be aligned, and structs can be portably packed.
+    std::unique_ptr<vk::PipelineDesc> mPipelineDesc;
 
     // The descriptor pool is externally sychronized, so cannot be accessed from different threads
     // simulataneously. Hence, we keep it in the ContextVk instead of the RendererVk.

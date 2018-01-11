@@ -147,6 +147,9 @@ class RendererVk : angle::NonCopyable
     const vk::PipelineLayout &getGraphicsPipelineLayout() const;
     const std::vector<vk::DescriptorSetLayout> &getGraphicsDescriptorSetLayouts() const;
 
+    // Issues a new serial for linked shader modules. Used in the pipeline cache.
+    Serial issueProgramSerial();
+
   private:
     vk::Error initializeDevice(uint32_t queueFamilyIndex);
     void ensureCapsInitialized() const;
@@ -179,6 +182,7 @@ class RendererVk : angle::NonCopyable
     vk::CommandPool mCommandPool;
     GlslangWrapper *mGlslangWrapper;
     SerialFactory mQueueSerialFactory;
+    SerialFactory mProgramSerialFactory;
     Serial mLastCompletedQueueSerial;
     Serial mCurrentQueueSerial;
 
