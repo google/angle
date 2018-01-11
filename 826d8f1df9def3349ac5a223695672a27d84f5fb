@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "317e672a_10ff1e09",
+        "filename": "src/libANGLE/Device.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-01-11T18:18:25Z",
+      "side": 0,
+      "message": "nit: seems like you could keep this?",
+      "range": {
+        "startLine": 61,
+        "startChar": 4,
+        "endLine": 61,
+        "endChar": 95
+      },
+      "revId": "826d8f1df9def3349ac5a223695672a27d84f5fb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
