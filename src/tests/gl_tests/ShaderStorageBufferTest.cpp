@@ -85,14 +85,10 @@ TEST_P(ShaderStorageBufferTest31, ExceedMaxVertexShaderStorageBlocks)
 // Test shader storage buffer read write.
 TEST_P(ShaderStorageBufferTest31, ShaderStorageBufferReadWrite)
 {
-    // TODO(jiajia.qin@intel.com): Figure out why it fails on AMD platform.
-    ANGLE_SKIP_TEST_IF(IsAMD() && IsDesktopOpenGL());
-    ANGLE_SKIP_TEST_IF(IsLinux() && IsIntel() && IsOpenGL());
-
     const std::string &csSource =
         "#version 310 es\n"
         "layout(local_size_x=1, local_size_y=1, local_size_z=1) in;\n"
-        "layout(binding = 1) buffer blockName {\n"
+        "layout(std140, binding = 1) buffer blockName {\n"
         "    uint data[2];\n"
         "} instanceName;\n"
         "void main()\n"
@@ -108,11 +104,13 @@ TEST_P(ShaderStorageBufferTest31, ShaderStorageBufferReadWrite)
 
     glUseProgram(program.get());
 
-    unsigned int bufferData[2] = {0u};
+    constexpr unsigned int kElementCount = 2;
+    // The array stride are rounded up to the base alignment of a vec4 for std140 layout.
+    constexpr unsigned int kArrayStride = 16;
     // Create shader storage buffer
     GLBuffer shaderStorageBuffer;
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, shaderStorageBuffer);
-    glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(bufferData), nullptr, GL_STATIC_DRAW);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, kElementCount * kArrayStride, nullptr, GL_STATIC_DRAW);
 
     // Bind shader storage buffer
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, shaderStorageBuffer);
@@ -123,13 +121,18 @@ TEST_P(ShaderStorageBufferTest31, ShaderStorageBufferReadWrite)
     glFinish();
 
     // Read back shader storage buffer
+    constexpr unsigned int kExpectedValues[2] = {3u, 4u};
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, shaderStorageBuffer);
-    void *ptr = glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, sizeof(bufferData), GL_MAP_READ_BIT);
-    memcpy(bufferData, ptr, sizeof(bufferData));
+    void *ptr = glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, kElementCount * kArrayStride,
+                                 GL_MAP_READ_BIT);
+    for (unsigned int idx = 0; idx < kElementCount; idx++)
+    {
+        EXPECT_EQ(kExpectedValues[idx],
+                  *(reinterpret_cast<const GLuint *>(reinterpret_cast<const GLbyte *>(ptr) +
+                                                     idx * kArrayStride)));
+    }
     glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
-    EXPECT_EQ(3u, bufferData[0]);
-    EXPECT_EQ(4u, bufferData[1]);
 
     EXPECT_GL_NO_ERROR();
 }
@@ -137,16 +140,11 @@ TEST_P(ShaderStorageBufferTest31, ShaderStorageBufferReadWrite)
 // Test atomic memory functions.
 TEST_P(ShaderStorageBufferTest31, AtomicMemoryFunctions)
 {
-    ANGLE_SKIP_TEST_IF(IsAMD() && IsDesktopOpenGL() && IsWindows());
-    ANGLE_SKIP_TEST_IF(IsLinux() && IsIntel() && IsOpenGL());
-    // anglebug.com/2255
-    ANGLE_SKIP_TEST_IF(IsLinux() && IsAMD() && IsDesktopOpenGL());
-
     const std::string &csSource =
         R"(#version 310 es
 
         layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
-        layout(binding = 1) buffer blockName {
+        layout(std140, binding = 1) buffer blockName {
             uint data[2];
         } instanceName;
 
@@ -163,11 +161,13 @@ TEST_P(ShaderStorageBufferTest31, AtomicMemoryFunctions)
 
     glUseProgram(program.get());
 
-    unsigned int bufferData[2] = {0u};
+    constexpr unsigned int kElementCount = 2;
+    // The array stride are rounded up to the base alignment of a vec4 for std140 layout.
+    constexpr unsigned int kArrayStride = 16;
     // Create shader storage buffer
     GLBuffer shaderStorageBuffer;
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, shaderStorageBuffer);
-    glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(bufferData), nullptr, GL_STATIC_DRAW);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, kElementCount * kArrayStride, nullptr, GL_STATIC_DRAW);
 
     // Bind shader storage buffer
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, shaderStorageBuffer);
@@ -178,13 +178,18 @@ TEST_P(ShaderStorageBufferTest31, AtomicMemoryFunctions)
     glFinish();
 
     // Read back shader storage buffer
+    constexpr unsigned int kExpectedValues[2] = {5u, 7u};
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, shaderStorageBuffer);
-    void *ptr = glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, sizeof(bufferData), GL_MAP_READ_BIT);
-    memcpy(bufferData, ptr, sizeof(bufferData));
+    void *ptr = glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, kElementCount * kArrayStride,
+                                 GL_MAP_READ_BIT);
+    for (unsigned int idx = 0; idx < kElementCount; idx++)
+    {
+        EXPECT_EQ(kExpectedValues[idx],
+                  *(reinterpret_cast<const GLuint *>(reinterpret_cast<const GLbyte *>(ptr) +
+                                                     idx * kArrayStride)));
+    }
     glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
-    EXPECT_EQ(5u, bufferData[0]);
-    EXPECT_EQ(7u, bufferData[1]);
 
     EXPECT_GL_NO_ERROR();
 }
