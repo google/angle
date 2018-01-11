@@ -71,6 +71,24 @@
     },
     {
       "key": {
+        "uuid": "51c80f0c_62244d28",
+        "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 740,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-01-11T12:26:42Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "1edc91f3_b172994c",
+      "revId": "9328cbf8aa2b395b13f337dea1d2c1a17c0040fc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "edf97201_cc91a6ab",
         "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.h",
         "patchSetId": 7
@@ -103,6 +121,24 @@
       "revId": "9328cbf8aa2b395b13f337dea1d2c1a17c0040fc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2c938d10_4c39c3f3",
+        "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 758,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-01-11T12:26:42Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "ce7097f0_04977caa",
+      "revId": "9328cbf8aa2b395b13f337dea1d2c1a17c0040fc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -169,6 +205,41 @@
       "side": 1,
       "message": "Not sure what you mean exactly by \u0027you could make sure everything is packed by packing to 4 bytes\u0027. You mean alignas(4)? The 32 gives a stronger condition. I tried to give the strongest limitations possible so as to reduce the chance of this stuff breaking - my thought was that at this point we should focus on 100% correctness, and optimize in follow-up work. I\u0027ll make sure to make a design doc entry so we can have a better recorded discussion.",
       "parentUuid": "5c6218b3_c353e126",
+      "revId": "9328cbf8aa2b395b13f337dea1d2c1a17c0040fc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ecda047c_e926ce1e",
+        "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 780,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-01-11T12:26:42Z",
+      "side": 1,
+      "message": "The constraints here are:\n 1 - access to the members are well-aligned\n 2 - the static_assert at [1] holds\n\nThe largest alignment of types used for the PipelineDesc is 4 for uint32_t and float. There is no need to add additional constraints since with alignas(4) all accesses will be correctly aligned.",
+      "parentUuid": "5ada9607_5d520135",
+      "revId": "9328cbf8aa2b395b13f337dea1d2c1a17c0040fc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f3de8a2e_b42ea145",
+        "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 938,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-01-11T12:26:42Z",
+      "side": 1,
+      "message": "[1]",
       "revId": "9328cbf8aa2b395b13f337dea1d2c1a17c0040fc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
