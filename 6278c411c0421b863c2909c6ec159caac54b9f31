@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "17037e45_b5563f8a",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-01-11T20:39:38Z",
+      "side": 1,
+      "message": "I think that would be too easy to miss.",
+      "parentUuid": "c2e1387a_a3b4dba4",
+      "range": {
+        "startLine": 24,
+        "startChar": 49,
+        "endLine": 24,
+        "endChar": 56
+      },
+      "revId": "6278c411c0421b863c2909c6ec159caac54b9f31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "75123ad5_33bef973",
         "filename": "doc/DevSetup.md",
         "patchSetId": 1

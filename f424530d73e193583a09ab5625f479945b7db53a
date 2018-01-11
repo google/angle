@@ -22,6 +22,30 @@
       "revId": "f424530d73e193583a09ab5625f479945b7db53a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ae9687db_68c0584e",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-01-11T20:39:38Z",
+      "side": 1,
+      "message": "Rephrased, but kept the format of legal syntax, following by explanation in parentheses.\n\nI also think it\u0027s worth being explicit about making a release build.",
+      "parentUuid": "22db6edc_24c07524",
+      "range": {
+        "startLine": 54,
+        "startChar": 0,
+        "endLine": 57,
+        "endChar": 73
+      },
+      "revId": "f424530d73e193583a09ab5625f479945b7db53a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
