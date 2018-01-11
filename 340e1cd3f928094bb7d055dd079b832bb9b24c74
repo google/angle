@@ -94,6 +94,30 @@
       "revId": "340e1cd3f928094bb7d055dd079b832bb9b24c74",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "61318af8_5475ba8e",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 489,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-01-11T21:54:41Z",
+      "side": 1,
+      "message": "It\u0027s a cost only paid at display creation so I\u0027m not worried right now.",
+      "parentUuid": "b2832d27_b0c4bdef",
+      "range": {
+        "startLine": 489,
+        "startChar": 22,
+        "endLine": 489,
+        "endChar": 38
+      },
+      "revId": "340e1cd3f928094bb7d055dd079b832bb9b24c74",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
