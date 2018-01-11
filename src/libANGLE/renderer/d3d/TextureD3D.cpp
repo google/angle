@@ -3429,6 +3429,8 @@ gl::Error TextureD3D_2DArray::redefineImage(const gl::Context *context,
     const int storageWidth  = std::max(1, getLevelZeroWidth() >> level);
     const int storageHeight = std::max(1, getLevelZeroHeight() >> level);
     const GLuint baseLevel  = getBaseLevel();
+    const GLenum storageFormat = getBaseLevelInternalFormat();
+
     int storageDepth = 0;
     if (baseLevel < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS)
     {
@@ -3468,7 +3470,6 @@ gl::Error TextureD3D_2DArray::redefineImage(const gl::Context *context,
 
     if (mTexStorage)
     {
-        const GLenum storageFormat = getBaseLevelInternalFormat();
         const int storageLevels = mTexStorage->getLevelCount();
 
         if ((level >= storageLevels && storageLevels != 0) || size.width != storageWidth ||
