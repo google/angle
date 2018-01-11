@@ -70,6 +70,30 @@
       "revId": "340e1cd3f928094bb7d055dd079b832bb9b24c74",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b2832d27_b0c4bdef",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 489,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-01-11T21:50:55Z",
+      "side": 1,
+      "message": "Yes. What I\u0027ve meant is not that the same object will be initialized multiple times, but that now we create more objects, because we don\u0027t cache them. So, initialize() and QueryInterface() will be called more times. But it looks correct to me now. Could have a negative performance impact, though.",
+      "parentUuid": "52677bd5_6c1220f9",
+      "range": {
+        "startLine": 489,
+        "startChar": 22,
+        "endLine": 489,
+        "endChar": 38
+      },
+      "revId": "340e1cd3f928094bb7d055dd079b832bb9b24c74",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
