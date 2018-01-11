@@ -88,6 +88,24 @@
     },
     {
       "key": {
+        "uuid": "ce7097f0_04977caa",
+        "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 758,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-11T02:55:32Z",
+      "side": 1,
+      "message": "A lot of this stuff I made this way to be convenient and pretty easy to deal with code-wise. As a first pass it should be way, way faster than re-creating the pipeline every state change. It leaves the door open for optimizations, but also sets a baseline that we can test against. So, I left a general comment as to the intent but didn\u0027t make any bitfield or packing changes.",
+      "parentUuid": "edf97201_cc91a6ab",
+      "revId": "9328cbf8aa2b395b13f337dea1d2c1a17c0040fc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "58b621d2_7db6930d",
         "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.h",
         "patchSetId": 7
@@ -133,6 +151,24 @@
       "writtenOn": "2018-01-10T21:17:55Z",
       "side": 1,
       "message": "Why alignas 32? You could make sure everything is packed by packing to 4 bytes. This would allow for packing things inside this structure more efficiently. Ditto in other structures below.",
+      "revId": "9328cbf8aa2b395b13f337dea1d2c1a17c0040fc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5ada9607_5d520135",
+        "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 780,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-11T02:55:32Z",
+      "side": 1,
+      "message": "Not sure what you mean exactly by \u0027you could make sure everything is packed by packing to 4 bytes\u0027. You mean alignas(4)? The 32 gives a stronger condition. I tried to give the strongest limitations possible so as to reduce the chance of this stuff breaking - my thought was that at this point we should focus on 100% correctness, and optimize in follow-up work. I\u0027ll make sure to make a design doc entry so we can have a better recorded discussion.",
+      "parentUuid": "5c6218b3_c353e126",
       "revId": "9328cbf8aa2b395b13f337dea1d2c1a17c0040fc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
