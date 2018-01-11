@@ -22,6 +22,30 @@
       "revId": "06a13e63885127954df54f205b3e2fa8e624c9c1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6ba8e6e3_dfd0afe5",
+        "filename": "src/compiler/translator/TranslatorESSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-01-11T00:24:24Z",
+      "side": 1,
+      "message": "I\u0027ve tried, and it makes it harder to read.\nNow each thought is on a separate line.\nIf I put 2 thoughts in one line, it gets over 100 chars.",
+      "parentUuid": "1bfe7791_9f7fad72",
+      "range": {
+        "startLine": 112,
+        "startChar": 4,
+        "endLine": 120,
+        "endChar": 75
+      },
+      "revId": "06a13e63885127954df54f205b3e2fa8e624c9c1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
