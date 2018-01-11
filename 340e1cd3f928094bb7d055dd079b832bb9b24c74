@@ -22,6 +22,30 @@
       "revId": "340e1cd3f928094bb7d055dd079b832bb9b24c74",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "58fe76c5_a8089153",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 489,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-01-11T21:16:09Z",
+      "side": 1,
+      "message": "My bad, seems like it is released in DeviceD3D::~DeviceD3D. I got confused by the comment in DeviceD3D::initialize.",
+      "parentUuid": "ea7495d1_0494bdbe",
+      "range": {
+        "startLine": 489,
+        "startChar": 22,
+        "endLine": 489,
+        "endChar": 38
+      },
+      "revId": "340e1cd3f928094bb7d055dd079b832bb9b24c74",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
