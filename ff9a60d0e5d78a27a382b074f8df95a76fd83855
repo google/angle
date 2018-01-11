@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "ee5d83cc_7380ed72",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 570,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-01-11T13:40:18Z",
+      "side": 1,
+      "message": "Yes, done.",
+      "parentUuid": "60e0f2b5_46aa13c7",
+      "revId": "ff9a60d0e5d78a27a382b074f8df95a76fd83855",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cb7e2d64_94346c95",
         "filename": "src/compiler/translator/IntermNode.cpp",
         "patchSetId": 6
@@ -33,6 +51,24 @@
       "revId": "ff9a60d0e5d78a27a382b074f8df95a76fd83855",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "42ec758e_2d55d6af",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 592,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-01-11T13:40:18Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "cb7e2d64_94346c95",
+      "revId": "ff9a60d0e5d78a27a382b074f8df95a76fd83855",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -59,6 +95,30 @@
     },
     {
       "key": {
+        "uuid": "9850e501_5fa8a01d",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 659,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-01-11T13:40:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2e586743_c3d770ab",
+      "range": {
+        "startLine": 659,
+        "startChar": 22,
+        "endLine": 659,
+        "endChar": 29
+      },
+      "revId": "ff9a60d0e5d78a27a382b074f8df95a76fd83855",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2d064ae5_d752246b",
         "filename": "src/compiler/translator/IntermNode.cpp",
         "patchSetId": 6
@@ -76,6 +136,24 @@
     },
     {
       "key": {
+        "uuid": "58d67cb8_9773aafc",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 669,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-01-11T13:40:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2d064ae5_d752246b",
+      "revId": "ff9a60d0e5d78a27a382b074f8df95a76fd83855",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9ffc1dec_cd6c7664",
         "filename": "src/compiler/translator/IntermNode.cpp",
         "patchSetId": 6
@@ -90,6 +168,24 @@
       "revId": "ff9a60d0e5d78a27a382b074f8df95a76fd83855",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "321836f0_9ac44e06",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1523,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-01-11T13:40:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9ffc1dec_cd6c7664",
+      "revId": "ff9a60d0e5d78a27a382b074f8df95a76fd83855",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -113,6 +209,30 @@
       "revId": "ff9a60d0e5d78a27a382b074f8df95a76fd83855",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9858e7d3_46a9eb56",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1526,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-01-11T13:40:18Z",
+      "side": 1,
+      "message": "No, the intent was:\n\n\"If it doesn\u0027t usually make sense to make this into a constant union node, and the indexed value isn\u0027t a constant union already, keep the node as is.\"\n\nI reversed the condition and added an explanatory comment which should make this clearer.",
+      "parentUuid": "a408879b_46ec80c5",
+      "range": {
+        "startLine": 1526,
+        "startChar": 57,
+        "endLine": 1526,
+        "endChar": 59
+      },
+      "revId": "ff9a60d0e5d78a27a382b074f8df95a76fd83855",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
