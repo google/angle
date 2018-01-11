@@ -1,0 +1,78 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c933beca_1a6bcc7a",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 950,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-01-11T13:38:32Z",
+      "side": 1,
+      "message": "nit: the test could have been simpler with 1x1x2 textures.",
+      "revId": "159eaa7b282ab9f35f19ad70588f1c56e03a3656",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "725371cd_cd08dbc9",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1009,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-01-11T13:38:32Z",
+      "side": 1,
+      "message": "The test if for imageLoad/Store, I don\u0027t think there\u0027s a need to check TexSubImage3D worked correctly. We can just assume it and remove this code. Same thing in the other tests.",
+      "range": {
+        "startLine": 968,
+        "startChar": 0,
+        "endLine": 1009,
+        "endChar": 5
+      },
+      "revId": "159eaa7b282ab9f35f19ad70588f1c56e03a3656",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9656d216_32839086",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1063,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-01-11T13:38:32Z",
+      "side": 1,
+      "message": "ditto",
+      "revId": "159eaa7b282ab9f35f19ad70588f1c56e03a3656",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7187ecb7_a2cbc84b",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1180,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-01-11T13:38:32Z",
+      "side": 1,
+      "message": "ditto, 1x1 cube texture.",
+      "revId": "159eaa7b282ab9f35f19ad70588f1c56e03a3656",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
