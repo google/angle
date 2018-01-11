@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1bfe7791_9f7fad72",
+        "filename": "src/compiler/translator/TranslatorESSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-11T00:17:31Z",
+      "side": 1,
+      "message": "nit: you can wrap to 100 characters",
+      "range": {
+        "startLine": 112,
+        "startChar": 4,
+        "endLine": 120,
+        "endChar": 75
+      },
+      "revId": "06a13e63885127954df54f205b3e2fa8e624c9c1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
