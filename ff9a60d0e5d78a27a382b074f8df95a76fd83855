@@ -1,0 +1,118 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "60e0f2b5_46aa13c7",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 570,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-01-11T13:09:19Z",
+      "side": 1,
+      "message": "nit: would a memcpy work?",
+      "revId": "ff9a60d0e5d78a27a382b074f8df95a76fd83855",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cb7e2d64_94346c95",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 592,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-01-11T13:09:19Z",
+      "side": 1,
+      "message": "Didn\u0027t know about the mat(float) and matAB(matCD) constructors TIL.",
+      "revId": "ff9a60d0e5d78a27a382b074f8df95a76fd83855",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2e586743_c3d770ab",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 659,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-01-11T13:09:19Z",
+      "side": 1,
+      "message": "typo: argument",
+      "range": {
+        "startLine": 659,
+        "startChar": 22,
+        "endLine": 659,
+        "endChar": 29
+      },
+      "revId": "ff9a60d0e5d78a27a382b074f8df95a76fd83855",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2d064ae5_d752246b",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 669,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-01-11T13:09:19Z",
+      "side": 1,
+      "message": "nit: ASSERT(resultIndex \u003d\u003d resultSize); here too",
+      "revId": "ff9a60d0e5d78a27a382b074f8df95a76fd83855",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9ffc1dec_cd6c7664",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1523,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-01-11T13:09:19Z",
+      "side": 1,
+      "message": "nit: comment about this not producing duplicate data because the constructor is completely replaced with something else.",
+      "revId": "ff9a60d0e5d78a27a382b074f8df95a76fd83855",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a408879b_46ec80c5",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1526,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-01-11T13:09:19Z",
+      "side": 1,
+      "message": "This looks like it should be a || instead.",
+      "range": {
+        "startLine": 1526,
+        "startChar": 57,
+        "endLine": 1526,
+        "endChar": 59
+      },
+      "revId": "ff9a60d0e5d78a27a382b074f8df95a76fd83855",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
