@@ -34,6 +34,29 @@
       "revId": "d69c746a89fe791f72e397cdf19c7774ff57f53f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "adce900a_548c76b1",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 558,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-01-11T19:58:52Z",
+      "side": 1,
+      "message": "nit: It\u0027s a bit confusing to me that \"display\" is used here and not \"mDisplay\", like everywhere else.",
+      "range": {
+        "startLine": 558,
+        "startChar": 13,
+        "endLine": 558,
+        "endChar": 20
+      },
+      "revId": "d69c746a89fe791f72e397cdf19c7774ff57f53f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }

@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ea7495d1_0494bdbe",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 489,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-01-11T19:58:52Z",
+      "side": 1,
+      "message": "Seems like this has the potential to be called multiple times now, since Renderer no longer caches mEGLDevice. In DeviceD3D::initialize there is QueryInterface which is never released. Is this really OK?",
+      "range": {
+        "startLine": 489,
+        "startChar": 22,
+        "endLine": 489,
+        "endChar": 38
+      },
+      "revId": "340e1cd3f928094bb7d055dd079b832bb9b24c74",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
