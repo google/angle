@@ -46,6 +46,30 @@
       "revId": "826d8f1df9def3349ac5a223695672a27d84f5fb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "924e1e97_dfc74b8c",
+        "filename": "src/libANGLE/Device.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-01-11T19:48:31Z",
+      "side": 0,
+      "message": "Not the logic, the comment about D3D9 support.",
+      "parentUuid": "a673a18e_0f06a2c7",
+      "range": {
+        "startLine": 61,
+        "startChar": 4,
+        "endLine": 61,
+        "endChar": 95
+      },
+      "revId": "826d8f1df9def3349ac5a223695672a27d84f5fb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
