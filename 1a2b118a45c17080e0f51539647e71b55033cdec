@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "7454a31b_f86f45dc",
+        "filename": "extensions/ANGLE_texture_multisample.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2018-01-12T08:52:56Z",
+      "side": 1,
+      "message": "I don\u0027t understand the name literally, no matter TexStorage2DMultisample or TexImage2DMultisample, they are used to allocate storage (Even TexImage2DMultisample don\u0027t use \"Storage\" in its name). So, if we only expose these 2 APIs and/or their variants, I\u0027d like to use texture_storage_multisample. It means that the extension is mainly used to allocate storage for multisample texture. \n\nHowever, the extension we proposed is used to expose many features about multisample texture, not only a couple of API to allocate storage for multisample texture. So I\u0027d like to use texture_multisample, indicating that we expose many (if not all) features of multisample texture, instead of only providing a way to allocate storage.\n\nAnyway, let\u0027s keep it. If Khronos WebGL WG and ANGLE guys have strong and solid suggestions to change the name, then we can follow.",
+      "parentUuid": "600d7e91_df57b3b2",
+      "range": {
+        "startLine": 3,
+        "startChar": 4,
+        "endLine": 3,
+        "endChar": 29
+      },
+      "revId": "1a2b118a45c17080e0f51539647e71b55033cdec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a03275d_51cbf127",
         "filename": "extensions/ANGLE_texture_multisample.txt",
         "patchSetId": 2
