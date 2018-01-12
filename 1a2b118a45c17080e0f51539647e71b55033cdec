@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "600d7e91_df57b3b2",
+        "filename": "extensions/ANGLE_texture_multisample.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-01-12T08:38:54Z",
+      "side": 1,
+      "message": "I still think you should use ANGLE_texture_storage_multisample since you will expose TexStorage2DMultisampleANGLE not TexImage2DMultisampleANGLE.",
+      "parentUuid": "111d9fad_97589e79",
+      "range": {
+        "startLine": 3,
+        "startChar": 4,
+        "endLine": 3,
+        "endChar": 29
+      },
+      "revId": "1a2b118a45c17080e0f51539647e71b55033cdec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a03275d_51cbf127",
         "filename": "extensions/ANGLE_texture_multisample.txt",
         "patchSetId": 2
@@ -213,6 +237,30 @@
       "side": 1,
       "message": "I may don\u0027t think so. Please refer to the \u003cOverview\u003e section in extension ARB_texture_multisample: https://www.khronos.org/registry/OpenGL/extensions/ARB/ARB_texture_multisample.txt. Moreover, take in mind that if we don\u0027t add NV_explicit_multisample extension, there might be some legal issue (although I am not 100% sure).",
       "parentUuid": "3c112886_6a112458",
+      "range": {
+        "startLine": 37,
+        "startChar": 3,
+        "endLine": 43,
+        "endChar": 0
+      },
+      "revId": "1a2b118a45c17080e0f51539647e71b55033cdec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d26abbb8_2bb97845",
+        "filename": "extensions/ANGLE_texture_multisample.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-01-12T08:38:54Z",
+      "side": 1,
+      "message": "Maybe we should refer to angle\u0027s other extensions \u0027s style for this part. Just a suggestion.",
+      "parentUuid": "adc6d89b_a98d1afa",
       "range": {
         "startLine": 37,
         "startChar": 3,
