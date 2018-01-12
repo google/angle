@@ -42,6 +42,29 @@
     },
     {
       "key": {
+        "uuid": "604084ec_7501b317",
+        "filename": "extensions/ANGLE_texture_multisample.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2018-01-12T03:28:27Z",
+      "side": 1,
+      "message": "augment",
+      "range": {
+        "startLine": 47,
+        "startChar": 62,
+        "endLine": 47,
+        "endChar": 71
+      },
+      "revId": "1a2b118a45c17080e0f51539647e71b55033cdec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "36e274e5_c2c1b467",
         "filename": "extensions/ANGLE_texture_multisample.txt",
         "patchSetId": 2
@@ -88,6 +111,29 @@
     },
     {
       "key": {
+        "uuid": "9b4ef56f_a5da1447",
+        "filename": "extensions/ANGLE_texture_multisample.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2018-01-12T03:28:27Z",
+      "side": 1,
+      "message": "sizedinternalformat is int in es 3.1 spec.",
+      "range": {
+        "startLine": 63,
+        "startChar": 38,
+        "endLine": 63,
+        "endChar": 43
+      },
+      "revId": "1a2b118a45c17080e0f51539647e71b55033cdec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "2ac9090e_a9c825ed",
         "filename": "extensions/ANGLE_texture_multisample.txt",
         "patchSetId": 2
@@ -111,6 +157,75 @@
     },
     {
       "key": {
+        "uuid": "179fb6e8_02ecbb48",
+        "filename": "extensions/ANGLE_texture_multisample.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2018-01-12T03:28:27Z",
+      "side": 1,
+      "message": "and by the \u003cpname\u003e parameter of GetBooleanv, GetIntegerv, GetFloatv, and GetDoublev.",
+      "range": {
+        "startLine": 90,
+        "startChar": 7,
+        "endLine": 90,
+        "endChar": 26
+      },
+      "revId": "1a2b118a45c17080e0f51539647e71b55033cdec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b8f68218_3eb3fe33",
+        "filename": "extensions/ANGLE_texture_multisample.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2018-01-12T03:28:27Z",
+      "side": 1,
+      "message": "How about GetBooleani_v?",
+      "range": {
+        "startLine": 92,
+        "startChar": 42,
+        "endLine": 92,
+        "endChar": 55
+      },
+      "revId": "1a2b118a45c17080e0f51539647e71b55033cdec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7e0a1e21_c1087ef8",
+        "filename": "extensions/ANGLE_texture_multisample.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2018-01-12T03:28:27Z",
+      "side": 1,
+      "message": "Same question as above.",
+      "range": {
+        "startLine": 96,
+        "startChar": 41,
+        "endLine": 96,
+        "endChar": 52
+      },
+      "revId": "1a2b118a45c17080e0f51539647e71b55033cdec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "65b45b56_482d678c",
         "filename": "extensions/ANGLE_texture_multisample.txt",
         "patchSetId": 2
@@ -127,6 +242,29 @@
         "startChar": 70,
         "endLine": 104,
         "endChar": 71
+      },
+      "revId": "1a2b118a45c17080e0f51539647e71b55033cdec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a677093f_2ec8e729",
+        "filename": "extensions/ANGLE_texture_multisample.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2018-01-12T03:28:27Z",
+      "side": 1,
+      "message": "Do we need ANGLE suffix here? see https://cs.chromium.org/chromium/src/third_party/swiftshader/src/OpenGL/compiler/glslang.l?type\u003dcs\u0026sq\u003dpackage:chromium\nno angle suffix was added in shading language angle project till now.",
+      "range": {
+        "startLine": 139,
+        "startChar": 3,
+        "endLine": 141,
+        "endChar": 75
       },
       "revId": "1a2b118a45c17080e0f51539647e71b55033cdec",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
