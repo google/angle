@@ -22,6 +22,30 @@
       "revId": "b0accd45a92dd70932baf4eb6954114359caf9da",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ee597a63_550aca05",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 203,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-01-12T04:40:44Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "8ed7872b_14173345",
+      "range": {
+        "startLine": 203,
+        "startChar": 12,
+        "endLine": 203,
+        "endChar": 66
+      },
+      "revId": "b0accd45a92dd70932baf4eb6954114359caf9da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
