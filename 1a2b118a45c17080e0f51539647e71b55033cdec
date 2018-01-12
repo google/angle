@@ -2,6 +2,52 @@
   "comments": [
     {
       "key": {
+        "uuid": "5b7519dd_389568b8",
+        "filename": "extensions/ANGLE_texture_multisample.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-01-12T05:09:19Z",
+      "side": 1,
+      "message": "Why not ANGLE_texture_storage_multisample?",
+      "range": {
+        "startLine": 3,
+        "startChar": 4,
+        "endLine": 3,
+        "endChar": 29
+      },
+      "revId": "1a2b118a45c17080e0f51539647e71b55033cdec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5a03275d_51cbf127",
+        "filename": "extensions/ANGLE_texture_multisample.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-01-12T05:09:19Z",
+      "side": 1,
+      "message": "GL_ANGLE_texture_storage_multisample",
+      "range": {
+        "startLine": 7,
+        "startChar": 4,
+        "endLine": 7,
+        "endChar": 32
+      },
+      "revId": "1a2b118a45c17080e0f51539647e71b55033cdec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e10e4ea4_c84d8db5",
         "filename": "extensions/ANGLE_texture_multisample.txt",
         "patchSetId": 2
@@ -35,6 +81,29 @@
         "startChar": 37,
         "endLine": 41,
         "endChar": 60
+      },
+      "revId": "1a2b118a45c17080e0f51539647e71b55033cdec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3c112886_6a112458",
+        "filename": "extensions/ANGLE_texture_multisample.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-01-12T05:09:19Z",
+      "side": 1,
+      "message": "I think this paragraph is enough for the overview part. You can remove the left parts in Overview. We should make it as simple as possible.",
+      "range": {
+        "startLine": 37,
+        "startChar": 3,
+        "endLine": 43,
+        "endChar": 0
       },
       "revId": "1a2b118a45c17080e0f51539647e71b55033cdec",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
