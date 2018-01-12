@@ -300,4 +300,13 @@ std::vector<const Config*> ConfigSet::filter(const AttributeMap &attributeMap) c
     return result;
 }
 
+ConfigSet::ConfigMap::iterator ConfigSet::begin()
+{
+    return mConfigs.begin();
+}
+
+ConfigSet::ConfigMap::iterator ConfigSet::end()
+{
+    return mConfigs.end();
+}
 }

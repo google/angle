@@ -279,6 +279,8 @@
             'libANGLE/validationEGL.h',
             'libANGLE/validationES.cpp',
             'libANGLE/validationES.h',
+            'libANGLE/validationES1.cpp',
+            'libANGLE/validationES1.h',
             'libANGLE/validationES2.cpp',
             'libANGLE/validationES2.h',
             'libANGLE/validationES3.cpp',
@@ -824,16 +826,18 @@
             'libGLESv2/entry_points_egl.h',
             'libGLESv2/entry_points_egl_ext.cpp',
             'libGLESv2/entry_points_egl_ext.h',
+            'libGLESv2/entry_points_gles_1_0_autogen.cpp',
+            'libGLESv2/entry_points_gles_1_0_autogen.h',
             'libGLESv2/entry_points_gles_2_0_autogen.cpp',
             'libGLESv2/entry_points_gles_2_0_autogen.h',
             'libGLESv2/entry_points_gles_2_0_ext.cpp',
             'libGLESv2/entry_points_gles_2_0_ext.h',
-            'libGLESv2/entry_points_gles_2_0_ext_autogen.cpp',
-            'libGLESv2/entry_points_gles_2_0_ext_autogen.h',
             'libGLESv2/entry_points_gles_3_0_autogen.cpp',
             'libGLESv2/entry_points_gles_3_0_autogen.h',
             'libGLESv2/entry_points_gles_3_1_autogen.cpp',
             'libGLESv2/entry_points_gles_3_1_autogen.h',
+            'libGLESv2/entry_points_gles_ext_autogen.cpp',
+            'libGLESv2/entry_points_gles_ext_autogen.h',
             'libGLESv2/global_state.cpp',
             'libGLESv2/global_state.h',
             'libGLESv2/libGLESv2.cpp',
@@ -842,6 +846,13 @@
             'libGLESv2/proc_table.h',
             'libGLESv2/proc_table_autogen.cpp',
             'libGLESv2/resource.h',
+        ],
+        'libglesv1_cm_sources':
+        [
+            'libGLESv1_CM/libGLESv1_CM.cpp',
+            'libGLESv1_CM/libGLESv1_CM.def',
+            'libGLESv1_CM/libGLESv1_CM.rc',
+            'libGLESv1_CM/resource.h',
         ],
         'libegl_sources':
         [
@@ -1001,11 +1012,13 @@
                         'defines':
                         [
                             'GL_APICALL=',
+                            'GL_API=',
                         ],
                     }, {
                         'defines':
                         [
                             'GL_APICALL=__attribute__((visibility("default")))',
+                            'GL_API=__attribute__((visibility("default")))',
                         ],
                     }],
                     ['OS == "mac"',
@@ -1241,6 +1254,67 @@
             'sources':
             [
                 '<@(libglesv2_sources)',
+            ],
+            'conditions':
+            [
+                ['angle_build_winrt==1',
+                {
+                    'msvs_requires_importlibrary' : 'true',
+                }],
+            ],
+        },
+
+        {
+            'target_name': 'libGLESv1_CM',
+            'type': '<(angle_gl_library_type)',
+            'dependencies': [ 'libGLESv2' ],
+            'includes': [ '../gyp/common_defines.gypi', ],
+            'include_dirs':
+            [
+                '.',
+                '../include',
+            ],
+            'sources':
+            [
+                '<@(libglesv1_cm_sources)',
+            ],
+            'conditions':
+            [
+                ['angle_build_winrt==1',
+                {
+                    'msvs_requires_importlibrary' : 'true',
+                }],
+                ['OS=="win"',
+                {
+                    'defines':
+                    [
+                        'GL_APICALL=',
+                        'GL_API=',
+                    ],
+                },
+                {
+                    'defines':
+                    [
+                        'GL_APICALL=__attribute__((visibility("default")))',
+                        'GL_API=__attribute__((visibility("default")))',
+                    ],
+                }],
+            ],
+        },
+
+        {
+            'target_name': 'libGLESv1_CM_static',
+            'type': 'static_library',
+            'dependencies': [ 'libGLESv2_static' ],
+            'includes': [ '../gyp/common_defines.gypi', ],
+            'include_dirs':
+            [
+                '.',
+                '../include',
+            ],
+            'sources':
+            [
+                '<@(libglesv1_cm_sources)',
             ],
             'conditions':
             [

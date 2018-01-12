@@ -8,6 +8,8 @@
 // entry_points_gles_3_0_autogen.cpp:
 //   Defines the GLES 3.0 entry points.
 
+#include "libGLESv2/entry_points_gles_3_0_autogen.h"
+
 #include "libANGLE/Context.h"
 #include "libANGLE/validationES3.h"
 #include "libGLESv2/global_state.h"

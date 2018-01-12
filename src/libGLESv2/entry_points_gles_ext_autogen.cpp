@@ -5,15 +5,19 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// entry_points_gles_2_0_ext_autogen.cpp:
+// entry_points_gles_ext_autogen.cpp:
 //   Defines the GLES extension entry points.
+
+#include "libGLESv2/entry_points_gles_ext_autogen.h"
 
 #include "libANGLE/Context.h"
 #include "libANGLE/validationES.h"
-#include "libANGLE/validationES2.h"
+#include "libGLESv2/global_state.h"
+
+#include "libANGLE/validationES.h"
+#include "libANGLE/validationES1.h"
 #include "libANGLE/validationES3.h"
 #include "libANGLE/validationES31.h"
-#include "libGLESv2/global_state.h"
 
 namespace gl
 {
@@ -1051,6 +1055,143 @@ void GL_APIENTRY EGLImageTargetTexture2DOES(GLenum target, GLeglImageOES image)
     }
 }
 
+// GL_OES_draw_texture
+void GL_APIENTRY DrawTexfOES(GLfloat x, GLfloat y, GLfloat z, GLfloat width, GLfloat height)
+{
+    EVENT(
+        "(GLfloat x = %f, GLfloat y = %f, GLfloat z = %f, GLfloat width = %f, GLfloat height = %f)",
+        x, y, z, width, height);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        context->gatherParams<EntryPoint::DrawTexfOES>(x, y, z, width, height);
+
+        if (context->skipValidation() || ValidateDrawTexfOES(context, x, y, z, width, height))
+        {
+            context->drawTexf(x, y, z, width, height);
+        }
+    }
+}
+
+void GL_APIENTRY DrawTexfvOES(const GLfloat *coords)
+{
+    EVENT("(const GLfloat *coords = 0x%0.8p)", coords);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        context->gatherParams<EntryPoint::DrawTexfvOES>(coords);
+
+        if (context->skipValidation() || ValidateDrawTexfvOES(context, coords))
+        {
+            context->drawTexfv(coords);
+        }
+    }
+}
+
+void GL_APIENTRY DrawTexiOES(GLint x, GLint y, GLint z, GLint width, GLint height)
+{
+    EVENT("(GLint x = %d, GLint y = %d, GLint z = %d, GLint width = %d, GLint height = %d)", x, y,
+          z, width, height);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        context->gatherParams<EntryPoint::DrawTexiOES>(x, y, z, width, height);
+
+        if (context->skipValidation() || ValidateDrawTexiOES(context, x, y, z, width, height))
+        {
+            context->drawTexi(x, y, z, width, height);
+        }
+    }
+}
+
+void GL_APIENTRY DrawTexivOES(const GLint *coords)
+{
+    EVENT("(const GLint *coords = 0x%0.8p)", coords);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        context->gatherParams<EntryPoint::DrawTexivOES>(coords);
+
+        if (context->skipValidation() || ValidateDrawTexivOES(context, coords))
+        {
+            context->drawTexiv(coords);
+        }
+    }
+}
+
+void GL_APIENTRY DrawTexsOES(GLshort x, GLshort y, GLshort z, GLshort width, GLshort height)
+{
+    EVENT(
+        "(GLshort x = %d, GLshort y = %d, GLshort z = %d, GLshort width = %d, GLshort height = %d)",
+        x, y, z, width, height);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        context->gatherParams<EntryPoint::DrawTexsOES>(x, y, z, width, height);
+
+        if (context->skipValidation() || ValidateDrawTexsOES(context, x, y, z, width, height))
+        {
+            context->drawTexs(x, y, z, width, height);
+        }
+    }
+}
+
+void GL_APIENTRY DrawTexsvOES(const GLshort *coords)
+{
+    EVENT("(const GLshort *coords = 0x%0.8p)", coords);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        context->gatherParams<EntryPoint::DrawTexsvOES>(coords);
+
+        if (context->skipValidation() || ValidateDrawTexsvOES(context, coords))
+        {
+            context->drawTexsv(coords);
+        }
+    }
+}
+
+void GL_APIENTRY DrawTexxOES(GLfixed x, GLfixed y, GLfixed z, GLfixed width, GLfixed height)
+{
+    EVENT(
+        "(GLfixed x = 0x%X, GLfixed y = 0x%X, GLfixed z = 0x%X, GLfixed width = 0x%X, GLfixed "
+        "height = 0x%X)",
+        x, y, z, width, height);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        context->gatherParams<EntryPoint::DrawTexxOES>(x, y, z, width, height);
+
+        if (context->skipValidation() || ValidateDrawTexxOES(context, x, y, z, width, height))
+        {
+            context->drawTexx(x, y, z, width, height);
+        }
+    }
+}
+
+void GL_APIENTRY DrawTexxvOES(const GLfixed *coords)
+{
+    EVENT("(const GLfixed *coords = 0x%0.8p)", coords);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        context->gatherParams<EntryPoint::DrawTexxvOES>(coords);
+
+        if (context->skipValidation() || ValidateDrawTexxvOES(context, coords))
+        {
+            context->drawTexxv(coords);
+        }
+    }
+}
+
 // GL_OES_get_program_binary
 void GL_APIENTRY GetProgramBinaryOES(GLuint program,
                                      GLsizei bufSize,
@@ -1156,6 +1297,116 @@ GLboolean GL_APIENTRY UnmapBufferOES(GLenum target)
     }
 
     return GetDefaultReturnValue<EntryPoint::UnmapBufferOES, GLboolean>();
+}
+
+// GL_OES_matrix_palette
+void GL_APIENTRY CurrentPaletteMatrixOES(GLuint matrixpaletteindex)
+{
+    EVENT("(GLuint matrixpaletteindex = %u)", matrixpaletteindex);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        context->gatherParams<EntryPoint::CurrentPaletteMatrixOES>(matrixpaletteindex);
+
+        if (context->skipValidation() ||
+            ValidateCurrentPaletteMatrixOES(context, matrixpaletteindex))
+        {
+            context->currentPaletteMatrix(matrixpaletteindex);
+        }
+    }
+}
+
+void GL_APIENTRY LoadPaletteFromModelViewMatrixOES()
+{
+    EVENT("()");
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        context->gatherParams<EntryPoint::LoadPaletteFromModelViewMatrixOES>();
+
+        if (context->skipValidation() || ValidateLoadPaletteFromModelViewMatrixOES(context))
+        {
+            context->loadPaletteFromModelViewMatrix();
+        }
+    }
+}
+
+void GL_APIENTRY MatrixIndexPointerOES(GLint size, GLenum type, GLsizei stride, const void *pointer)
+{
+    EVENT(
+        "(GLint size = %d, GLenum type = 0x%X, GLsizei stride = %d, const void *pointer = 0x%0.8p)",
+        size, type, stride, pointer);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        context->gatherParams<EntryPoint::MatrixIndexPointerOES>(size, type, stride, pointer);
+
+        if (context->skipValidation() ||
+            ValidateMatrixIndexPointerOES(context, size, type, stride, pointer))
+        {
+            context->matrixIndexPointer(size, type, stride, pointer);
+        }
+    }
+}
+
+void GL_APIENTRY WeightPointerOES(GLint size, GLenum type, GLsizei stride, const void *pointer)
+{
+    EVENT(
+        "(GLint size = %d, GLenum type = 0x%X, GLsizei stride = %d, const void *pointer = 0x%0.8p)",
+        size, type, stride, pointer);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        context->gatherParams<EntryPoint::WeightPointerOES>(size, type, stride, pointer);
+
+        if (context->skipValidation() ||
+            ValidateWeightPointerOES(context, size, type, stride, pointer))
+        {
+            context->weightPointer(size, type, stride, pointer);
+        }
+    }
+}
+
+// GL_OES_point_size_array
+void GL_APIENTRY PointSizePointerOES(GLenum type, GLsizei stride, const void *pointer)
+{
+    EVENT("(GLenum type = 0x%X, GLsizei stride = %d, const void *pointer = 0x%0.8p)", type, stride,
+          pointer);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        context->gatherParams<EntryPoint::PointSizePointerOES>(type, stride, pointer);
+
+        if (context->skipValidation() ||
+            ValidatePointSizePointerOES(context, type, stride, pointer))
+        {
+            context->pointSizePointer(type, stride, pointer);
+        }
+    }
+}
+
+// GL_OES_query_matrix
+GLbitfield GL_APIENTRY QueryMatrixxOES(GLfixed *mantissa, GLint *exponent)
+{
+    EVENT("(GLfixed *mantissa = 0x%0.8p, GLint *exponent = 0x%0.8p)", mantissa, exponent);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        context->gatherParams<EntryPoint::QueryMatrixxOES>(mantissa, exponent);
+
+        if (context->skipValidation() || ValidateQueryMatrixxOES(context, mantissa, exponent))
+        {
+            return context->queryMatrixx(mantissa, exponent);
+        }
+    }
+
+    return GetDefaultReturnValue<EntryPoint::QueryMatrixxOES, GLbitfield>();
 }
 
 // GL_OES_vertex_array_object

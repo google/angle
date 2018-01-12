@@ -744,6 +744,13 @@ Error ValidateCreateContext(Display *display, Config *configuration, gl::Context
 
     switch (clientMajorVersion)
     {
+        case 1:
+            if (clientMinorVersion != 0 && clientMinorVersion != 1)
+            {
+                return EglBadConfig();
+            }
+            break;
+
         case 2:
             if (clientMinorVersion != 0)
             {

@@ -548,6 +548,7 @@ config("angle_static") {
     "ANGLE_EXPORT=",
     "EGLAPI=",
     "GL_APICALL=",
+    "GL_API=",
   ]
 }
 
@@ -581,9 +582,15 @@ shared_library("libGLESv2") {
 
   defines = [ "LIBGLESV2_IMPLEMENTATION" ]
   if (is_win) {
-    defines += [ "GL_APICALL=" ]
+    defines += [
+      "GL_APICALL=",
+      "GL_API=",
+    ]
   } else {
-    defines += [ "GL_APICALL=__attribute__((visibility(\"default\")))" ]
+    defines += [
+      "GL_APICALL=__attribute__((visibility(\"default\")))",
+      "GL_API=__attribute__((visibility(\"default\")))",
+    ]
   }
 
   deps = [
@@ -609,6 +616,59 @@ static_library("libGLESv2_static") {
   deps = [
     ":includes",
     ":libANGLE",
+  ]
+}
+
+shared_library("libGLESv1_CM") {
+  sources = rebase_path(gles_gypi.libglesv1_cm_sources, ".", "src")
+
+  if (is_android) {
+    configs -= [ "//build/config/android:hide_all_but_jni_onload" ]
+  }
+  configs -= angle_undefine_configs
+  configs += [
+    ":commit_id_config",
+    ":debug_annotations_config",
+    ":extra_warnings",
+    ":internal_config",
+  ]
+
+  defines = []
+  if (is_win) {
+    defines += [
+      "GL_APICALL=",
+      "GL_API=",
+    ]
+  } else {
+    defines += [
+      "GL_APICALL=__attribute__((visibility(\"default\")))",
+      "GL_API=__attribute__((visibility(\"default\")))",
+    ]
+  }
+
+  deps = [
+    ":includes",
+    ":libGLESv2",
+    "//build/config:exe_and_shlib_deps",
+  ]
+}
+
+static_library("libGLESv1_CM_static") {
+  sources = rebase_path(gles_gypi.libglesv1_cm_sources, ".", "src")
+
+  configs -= angle_undefine_configs
+  configs += [
+    ":commit_id_config",
+    ":debug_annotations_config",
+    ":extra_warnings",
+    ":internal_config",
+  ]
+
+  public_configs = [ ":angle_static" ]
+
+  deps = [
+    ":includes",
+    ":libGLESv2_static",
   ]
 }
 

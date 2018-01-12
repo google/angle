@@ -5,13 +5,16 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// entry_points_gles_2_0_ext_autogen.h:
+// entry_points_gles_ext_autogen.h:
 //   Defines the GLES extension entry points.
 
-#ifndef LIBGLESV2_ENTRY_POINTS_GLES_2_0_EXT_AUTOGEN_H_
-#define LIBGLESV2_ENTRY_POINTS_GLES_2_0_EXT_AUTOGEN_H_
+#ifndef LIBGLESV2_ENTRY_POINTS_GLES_EXT_AUTOGEN_H_
+#define LIBGLESV2_ENTRY_POINTS_GLES_EXT_AUTOGEN_H_
 
+#include <GLES/gl.h>
+#include <GLES/glext.h>
 #include <GLES2/gl2.h>
+#include <GLES2/gl2ext.h>
 #include <export.h>
 
 namespace gl
@@ -184,6 +187,19 @@ ANGLE_EXPORT void GL_APIENTRY EGLImageTargetRenderbufferStorageOES(GLenum target
                                                                    GLeglImageOES image);
 ANGLE_EXPORT void GL_APIENTRY EGLImageTargetTexture2DOES(GLenum target, GLeglImageOES image);
 
+// GL_OES_draw_texture
+ANGLE_EXPORT void GL_APIENTRY
+DrawTexfOES(GLfloat x, GLfloat y, GLfloat z, GLfloat width, GLfloat height);
+ANGLE_EXPORT void GL_APIENTRY DrawTexfvOES(const GLfloat *coords);
+ANGLE_EXPORT void GL_APIENTRY DrawTexiOES(GLint x, GLint y, GLint z, GLint width, GLint height);
+ANGLE_EXPORT void GL_APIENTRY DrawTexivOES(const GLint *coords);
+ANGLE_EXPORT void GL_APIENTRY
+DrawTexsOES(GLshort x, GLshort y, GLshort z, GLshort width, GLshort height);
+ANGLE_EXPORT void GL_APIENTRY DrawTexsvOES(const GLshort *coords);
+ANGLE_EXPORT void GL_APIENTRY
+DrawTexxOES(GLfixed x, GLfixed y, GLfixed z, GLfixed width, GLfixed height);
+ANGLE_EXPORT void GL_APIENTRY DrawTexxvOES(const GLfixed *coords);
+
 // GL_OES_get_program_binary
 ANGLE_EXPORT void GL_APIENTRY GetProgramBinaryOES(GLuint program,
                                                   GLsizei bufSize,
@@ -200,6 +216,24 @@ ANGLE_EXPORT void GL_APIENTRY GetBufferPointervOES(GLenum target, GLenum pname, 
 ANGLE_EXPORT void *GL_APIENTRY MapBufferOES(GLenum target, GLenum access);
 ANGLE_EXPORT GLboolean GL_APIENTRY UnmapBufferOES(GLenum target);
 
+// GL_OES_matrix_palette
+ANGLE_EXPORT void GL_APIENTRY CurrentPaletteMatrixOES(GLuint matrixpaletteindex);
+ANGLE_EXPORT void GL_APIENTRY LoadPaletteFromModelViewMatrixOES();
+ANGLE_EXPORT void GL_APIENTRY MatrixIndexPointerOES(GLint size,
+                                                    GLenum type,
+                                                    GLsizei stride,
+                                                    const void *pointer);
+ANGLE_EXPORT void GL_APIENTRY WeightPointerOES(GLint size,
+                                               GLenum type,
+                                               GLsizei stride,
+                                               const void *pointer);
+
+// GL_OES_point_size_array
+ANGLE_EXPORT void GL_APIENTRY PointSizePointerOES(GLenum type, GLsizei stride, const void *pointer);
+
+// GL_OES_query_matrix
+ANGLE_EXPORT GLbitfield GL_APIENTRY QueryMatrixxOES(GLfixed *mantissa, GLint *exponent);
+
 // GL_OES_vertex_array_object
 ANGLE_EXPORT void GL_APIENTRY BindVertexArrayOES(GLuint array);
 ANGLE_EXPORT void GL_APIENTRY DeleteVertexArraysOES(GLsizei n, const GLuint *arrays);
@@ -207,4 +241,4 @@ ANGLE_EXPORT void GL_APIENTRY GenVertexArraysOES(GLsizei n, GLuint *arrays);
 ANGLE_EXPORT GLboolean GL_APIENTRY IsVertexArrayOES(GLuint array);
 }  // namespace gl
 
-#endif  // LIBGLESV2_ENTRY_POINTS_GLES_2_0_EXT_AUTOGEN_H_
+#endif  // LIBGLESV2_ENTRY_POINTS_GLES_EXT_AUTOGEN_H_

@@ -73,6 +73,9 @@ struct Config
 
 class ConfigSet
 {
+  private:
+    typedef std::map<EGLint, Config> ConfigMap;
+
   public:
     ConfigSet();
     ConfigSet(const ConfigSet &other);
@@ -91,8 +94,10 @@ class ConfigSet
     // Filter configurations based on the table in [EGL 1.5] section 3.4.1.2 page 29
     std::vector<const Config*> filter(const AttributeMap &attributeMap) const;
 
+    ConfigMap::iterator begin();
+    ConfigMap::iterator end();
+
   private:
-    typedef std::map<EGLint, Config> ConfigMap;
     ConfigMap mConfigs;
 };
 
