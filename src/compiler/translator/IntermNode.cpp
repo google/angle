@@ -1089,6 +1089,15 @@ TIntermBinary::TIntermBinary(TOperator op, TIntermTyped *left, TIntermTyped *rig
     promote();
 }
 
+TIntermBinary *TIntermBinary::CreateComma(TIntermTyped *left,
+                                          TIntermTyped *right,
+                                          int shaderVersion)
+{
+    TIntermBinary *node = new TIntermBinary(EOpComma, left, right);
+    node->getTypePointer()->setQualifier(GetCommaQualifier(shaderVersion, left, right));
+    return node;
+}
+
 TIntermInvariantDeclaration::TIntermInvariantDeclaration(TIntermSymbol *symbol, const TSourceLoc &line)
     : TIntermNode(), mSymbol(symbol)
 {

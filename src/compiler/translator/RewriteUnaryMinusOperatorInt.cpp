@@ -88,8 +88,8 @@ bool Traverser::visitUnary(Visit visit, TIntermUnary *node)
     {
         one->setUConst(1u);
     }
-    TIntermConstantUnion *oneNode = new TIntermConstantUnion(one, opr->getType());
-    oneNode->getTypePointer()->setQualifier(EvqConst);
+    TIntermConstantUnion *oneNode =
+        new TIntermConstantUnion(one, TType(opr->getBasicType(), opr->getPrecision(), EvqConst));
     oneNode->setLine(opr->getLine());
 
     // ~(int) + 1

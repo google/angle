@@ -204,8 +204,10 @@ void VectorizeVectorScalarArithmeticTraverser::replaceAssignInsideConstructor(
     TIntermBinary *replacementSequenceLeft =
         new TIntermBinary(EOpComma, replacementCompoundAssignment, replacementAssignBackToTarget);
     // (s0 *= b, a = s0.x), s0
-    TIntermBinary *replacementSequence = new TIntermBinary(
-        EOpComma, replacementSequenceLeft, CreateTempSymbolNode(tempAssignmentTarget));
+    // Note that the created comma node is not const qualified in any case, so we can always pass
+    // shader version 300 here.
+    TIntermBinary *replacementSequence = TIntermBinary::CreateComma(
+        replacementSequenceLeft, CreateTempSymbolNode(tempAssignmentTarget), 300);
 
     insertStatementInParentBlock(tempAssignmentTargetDeclaration);
     queueReplacement(replacementSequence, OriginalNode::IS_DROPPED);

@@ -268,9 +268,9 @@ class TIntermExpression : public TIntermTyped
     TIntermExpression(const TType &t);
 
     const TType &getType() const override { return mType; }
-    TType *getTypePointer() { return &mType; }
 
   protected:
+    TType *getTypePointer() { return &mType; }
     void setType(const TType &t) { mType = t; }
     void setTypePreservePrecision(const TType &t);
 
@@ -347,13 +347,6 @@ class TIntermConstantUnion : public TIntermExpression
     bool getBConst(size_t index) const
     {
         return mUnionArrayPointer ? mUnionArrayPointer[index].getBConst() : false;
-    }
-
-    void replaceConstantUnion(const TConstantUnion *safeConstantUnion)
-    {
-        ASSERT(safeConstantUnion);
-        // Previous union pointer freed on pool deallocation.
-        mUnionArrayPointer = safeConstantUnion;
     }
 
     TIntermConstantUnion *getAsConstantUnion() override { return this; }
@@ -458,6 +451,8 @@ class TIntermBinary : public TIntermOperator
   public:
     // This constructor determines the type of the binary node based on the operands and op.
     TIntermBinary(TOperator op, TIntermTyped *left, TIntermTyped *right);
+    // Comma qualifier depends on the shader version, so use this to create comma nodes:
+    static TIntermBinary *CreateComma(TIntermTyped *left, TIntermTyped *right, int shaderVersion);
 
     TIntermTyped *deepCopy() const override { return new TIntermBinary(*this); }
 
@@ -466,9 +461,6 @@ class TIntermBinary : public TIntermOperator
 
     static TOperator GetMulOpBasedOnOperands(const TType &left, const TType &right);
     static TOperator GetMulAssignOpBasedOnOperands(const TType &left, const TType &right);
-    static TQualifier GetCommaQualifier(int shaderVersion,
-                                        const TIntermTyped *left,
-                                        const TIntermTyped *right);
 
     TIntermBinary *getAsBinaryNode() override { return this; };
     void traverse(TIntermTraverser *it) override;
@@ -495,6 +487,10 @@ class TIntermBinary : public TIntermOperator
 
   private:
     void promote();
+
+    static TQualifier GetCommaQualifier(int shaderVersion,
+                                        const TIntermTyped *left,
+                                        const TIntermTyped *right);
 
     TIntermBinary(const TIntermBinary &node);  // Note: not deleted, just private!
 };
