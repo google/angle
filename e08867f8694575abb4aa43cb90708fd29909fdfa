@@ -16,6 +16,58 @@
       "revId": "e08867f8694575abb4aa43cb90708fd29909fdfa",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c94edf92_f0d929e8",
+        "filename": "src/libANGLE/renderer/SurfaceImpl.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-01-15T15:41:30Z",
+      "side": 1,
+      "message": "I don\u0027t know the D3D backend very well but isn\u0027t the base class you\u0027re talking about exactly SurfaceD3D?\n\nAh got it, that\u0027s useful in PbufferSurface. Ew. I think it might be useful on other surface at on point so the current approach sounds ok.",
+      "parentUuid": "7a65b768_6e3a385d",
+      "revId": "e08867f8694575abb4aa43cb90708fd29909fdfa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "33d9612d_068dc0dd",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/dxgi_support_table.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-01-15T15:41:30Z",
+      "side": 1,
+      "message": "Can you explain where the changes to this file come from? Is this table part of some reference somewhere?",
+      "revId": "e08867f8694575abb4aa43cb90708fd29909fdfa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3c7647e3_bf152e95",
+        "filename": "src/tests/gl_tests/D3DTextureTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 305,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-01-15T15:41:30Z",
+      "side": 1,
+      "message": "nit: else {EXPECT NOT SRGB?}",
+      "revId": "e08867f8694575abb4aa43cb90708fd29909fdfa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
