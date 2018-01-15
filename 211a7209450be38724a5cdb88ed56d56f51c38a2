@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d681b6ec_b7604d13",
+        "filename": "extensions/ANGLE_texture_multisample.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 700,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2018-01-15T02:16:57Z",
+      "side": 1,
+      "message": "samplers should match descriptions above, line 147.",
+      "range": {
+        "startLine": 700,
+        "startChar": 6,
+        "endLine": 700,
+        "endChar": 60
+      },
+      "revId": "211a7209450be38724a5cdb88ed56d56f51c38a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "35d0462a_4a20f28f",
+        "filename": "extensions/ANGLE_texture_multisample.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 726,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2018-01-15T02:16:57Z",
+      "side": 1,
+      "message": "same question as above.",
+      "range": {
+        "startLine": 726,
+        "startChar": 23,
+        "endLine": 726,
+        "endChar": 41
+      },
+      "revId": "211a7209450be38724a5cdb88ed56d56f51c38a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "91555d0c_6f332dca",
+        "filename": "extensions/ANGLE_texture_multisample.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 737,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2018-01-15T02:16:57Z",
+      "side": 1,
+      "message": "Multisample texture array isn\u0027t added in es 3.1, remove this line.",
+      "range": {
+        "startLine": 737,
+        "startChar": 6,
+        "endLine": 737,
+        "endChar": 55
+      },
+      "revId": "211a7209450be38724a5cdb88ed56d56f51c38a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
