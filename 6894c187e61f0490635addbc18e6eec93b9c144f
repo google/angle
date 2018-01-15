@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "96427901_c2e12d8d",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1048,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-01-15T15:26:39Z",
+      "side": 1,
+      "message": "The ES 3.1 spec is extremely unclear whether this is needed but having the Barrier LGTM. I think the correct barrier bit to use is: GL_PIXEL_BUFFER_BARRIER_BIT\n\n   PIXEL_BUFFER_BARRIER_BIT: Reads/writes of buffer objects via the\nPIXEL_PACK_BUFFER and PIXEL_UNPACK_BUFFER bindings (ReadPixels,\nTexSubImage, etc.) after the barrier will reflect data written by shaders\nprior to the barrier.\n\nSame thing in other tests.",
+      "range": {
+        "startLine": 1048,
+        "startChar": 20,
+        "endLine": 1048,
+        "endChar": 49
+      },
+      "revId": "6894c187e61f0490635addbc18e6eec93b9c144f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "1c84c8b2_838e4f26",
         "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
         "patchSetId": 10
