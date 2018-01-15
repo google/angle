@@ -1,0 +1,113 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "59bfce2a_cfbb320e",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 2139,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-01-15T21:45:41Z",
+      "side": 1,
+      "message": "Can this be moved down to the LinkValidateVaryings call?  It\u0027s only referenced there.",
+      "range": {
+        "startLine": 2139,
+        "startChar": 4,
+        "endLine": 2139,
+        "endChar": 42
+      },
+      "revId": "c8eac73e228599785d13ec3406e7821edb12d767",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e7a03167_e05aa0f9",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 2502,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-01-15T21:45:41Z",
+      "side": 1,
+      "message": "Same this this, can be moved closer to its usage.",
+      "range": {
+        "startLine": 2502,
+        "startChar": 4,
+        "endLine": 2502,
+        "endChar": 41
+      },
+      "revId": "c8eac73e228599785d13ec3406e7821edb12d767",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "463e9cea_e43f1b4b",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-01-15T21:45:41Z",
+      "side": 1,
+      "message": "nit: I would make this a non-member function in Program.cpp that takes a InfoLog as an argument.",
+      "range": {
+        "startLine": 149,
+        "startChar": 0,
+        "endLine": 154,
+        "endChar": 45
+      },
+      "revId": "c8eac73e228599785d13ec3406e7821edb12d767",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bd9f9a5b_f483b0c9",
+        "filename": "src/libANGLE/ProgramLinkedResources.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-01-15T21:45:41Z",
+      "side": 1,
+      "message": "Move lower.",
+      "range": {
+        "startLine": 129,
+        "startChar": 4,
+        "endLine": 129,
+        "endChar": 42
+      },
+      "revId": "c8eac73e228599785d13ec3406e7821edb12d767",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e3a2708b_3f262158",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 4020,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-01-15T21:45:41Z",
+      "side": 1,
+      "message": "I\u0027m worried these tests are going to be very fragile, depending on the exact errors we generate.  Is there a simpler test you can do on the error log?  Maybe just checking that the error string contains some key substrings.",
+      "revId": "c8eac73e228599785d13ec3406e7821edb12d767",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
