@@ -121,6 +121,30 @@
     },
     {
       "key": {
+        "uuid": "a989b8d4_45fe9407",
+        "filename": "extensions/ANGLE_texture_multisample.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2018-01-15T02:26:51Z",
+      "side": 1,
+      "message": "Yes, we look at the name from different perspectives. Let\u0027s don\u0027t spend too much time on this. It\u0027s not that important. If ANGLE folks (and Khronos WebGL community) have different opinion, I will follow. It is easy to change the name. \n\nBTW, according to your understanding (and my understanding), the extension proposed by Jeff at https://www.khronos.org/registry/webgl/extensions/proposals/WEBGL_texture_multisample/ should be named as WEBGL_texture_storage_multisample. But it is not. \n\nLet\u0027s stop here and focus on the extension content.",
+      "parentUuid": "f915b6f5_254f734b",
+      "range": {
+        "startLine": 3,
+        "startChar": 4,
+        "endLine": 3,
+        "endChar": 29
+      },
+      "revId": "1a2b118a45c17080e0f51539647e71b55033cdec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a03275d_51cbf127",
         "filename": "extensions/ANGLE_texture_multisample.txt",
         "patchSetId": 2
