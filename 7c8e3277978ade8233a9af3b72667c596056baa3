@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d0315601_1a7b6c39",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-01-15T22:06:18Z",
+      "side": 1,
+      "message": "nit: comment why these are here even if we don\u0027t support them.",
+      "revId": "7c8e3277978ade8233a9af3b72667c596056baa3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "41645377_4cd873e0",
+        "filename": "src/libGLESv1_CM/libGLESv1_CM.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-01-15T22:06:18Z",
+      "side": 1,
+      "message": "Couldn\u0027t we autogenerate this file as well?",
+      "revId": "7c8e3277978ade8233a9af3b72667c596056baa3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "706f48e2_7a3d9bce",
+        "filename": "src/libGLESv1_CM/libGLESv1_CM.rc",
+        "patchSetId": 5
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-01-15T22:06:18Z",
+      "side": 1,
+      "message": "nit: trailing spaces here and 2 other places in the file.",
+      "revId": "7c8e3277978ade8233a9af3b72667c596056baa3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
