@@ -97,6 +97,30 @@
     },
     {
       "key": {
+        "uuid": "f915b6f5_254f734b",
+        "filename": "extensions/ANGLE_texture_multisample.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-01-15T01:40:28Z",
+      "side": 1,
+      "message": "I am fine if you think ANGLE_texture_multisample is more suitable.\nJust clarify one thing that you may misunderstand my meaning.\nI know that no matter TexStorage2DMultisample or TexImage2DMultisample, they are used to allocate storage. But here\u0027s storage is not that storage. It just means that you will expose TexStorage* APIs not TexImage* APIs. For example, 1) ARB_texture_storage exposes TexStorage1D, TexStorage2D, TexStorage3D .... All of them are prefixed with TexStorage*. So the extension name is ARB_texture_storage. 2) ARB_texture_multisample exposes TexImage2DMultisample, TexImage3DMultisample. So the extension name is ARB_texture_multisample. Correspondingly, ARB_texture_storage_multisample exposes TexStorage*Multisample. I think it\u0027s also why the name of https://cvs.khronos.org/svn/repos/ogles/trunk/nextgen/3plus/proposals/XXX_texture_storage_multisample.txt  is  XXX_texture_storage_multisample. In that extension, it also has other APIs for querying. So I said that \u0027Why not ANGLE_texture_storage_multisample?\u0027",
+      "parentUuid": "7454a31b_f86f45dc",
+      "range": {
+        "startLine": 3,
+        "startChar": 4,
+        "endLine": 3,
+        "endChar": 29
+      },
+      "revId": "1a2b118a45c17080e0f51539647e71b55033cdec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a03275d_51cbf127",
         "filename": "extensions/ANGLE_texture_multisample.txt",
         "patchSetId": 2
