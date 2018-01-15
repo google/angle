@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cc3466e2_d4597964",
+        "filename": "src/libANGLE/Surface.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 454,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-01-15T21:31:47Z",
+      "side": 1,
+      "message": "Please move this logic beside the EGL_D3D_TEXTURE_ANGLE, they do similar things.",
+      "range": {
+        "startLine": 449,
+        "startChar": 4,
+        "endLine": 454,
+        "endChar": 5
+      },
+      "revId": "9a8d1733c4af61df0fde9b080036601f865888de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7346402a_33c241e3",
+        "filename": "src/libANGLE/Surface.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 457,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-01-15T21:31:47Z",
+      "side": 1,
+      "message": "Instead making initialize virtual, let\u0027s pass bufftype into the base surface class and do this in Surface::initialize.",
+      "range": {
+        "startLine": 457,
+        "startChar": 6,
+        "endLine": 457,
+        "endChar": 32
+      },
+      "revId": "9a8d1733c4af61df0fde9b080036601f865888de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "67e0c665_83cc4969",
+        "filename": "src/libANGLE/Surface.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 462,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-01-15T21:31:47Z",
+      "side": 1,
+      "message": "This is called 3 times, I would assign it to a local and assert that it is not null.",
+      "range": {
+        "startLine": 462,
+        "startChar": 12,
+        "endLine": 462,
+        "endChar": 45
+      },
+      "revId": "9a8d1733c4af61df0fde9b080036601f865888de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "13732853_f8b0e0a6",
+        "filename": "src/libANGLE/renderer/SurfaceImpl.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-01-15T21:31:47Z",
+      "side": 1,
+      "message": "Rename this to something like \u0027getD3DTextureColorFormat\u0027 to make it clear that this is only for the extension.  Implement it with an UNREACHABLE.",
+      "range": {
+        "startLine": 72,
+        "startChar": 33,
+        "endLine": 72,
+        "endChar": 47
+      },
+      "revId": "9a8d1733c4af61df0fde9b080036601f865888de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
