@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "390fa44e_4f8011b8",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 950,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2018-01-15T04:52:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c933beca_1a6bcc7a",
+      "revId": "159eaa7b282ab9f35f19ad70588f1c56e03a3656",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "725371cd_cd08dbc9",
         "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
         "patchSetId": 2
@@ -30,6 +48,30 @@
       "writtenOn": "2018-01-11T13:38:32Z",
       "side": 1,
       "message": "The test if for imageLoad/Store, I don\u0027t think there\u0027s a need to check TexSubImage3D worked correctly. We can just assume it and remove this code. Same thing in the other tests.",
+      "range": {
+        "startLine": 968,
+        "startChar": 0,
+        "endLine": 1009,
+        "endChar": 5
+      },
+      "revId": "159eaa7b282ab9f35f19ad70588f1c56e03a3656",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3d0f4d7b_6182ab23",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1009,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2018-01-15T04:52:16Z",
+      "side": 1,
+      "message": "Thank you. It indeed need not to check TexSubImage3D worked correctly here.",
+      "parentUuid": "725371cd_cd08dbc9",
       "range": {
         "startLine": 968,
         "startChar": 0,
@@ -59,6 +101,24 @@
     },
     {
       "key": {
+        "uuid": "f55c318e_3de02315",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1063,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2018-01-15T04:52:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9656d216_32839086",
+      "revId": "159eaa7b282ab9f35f19ad70588f1c56e03a3656",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7187ecb7_a2cbc84b",
         "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
         "patchSetId": 2
@@ -73,6 +133,24 @@
       "revId": "159eaa7b282ab9f35f19ad70588f1c56e03a3656",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e4dcdbe2_559ddb1d",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1180,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2018-01-15T04:52:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7187ecb7_a2cbc84b",
+      "revId": "159eaa7b282ab9f35f19ad70588f1c56e03a3656",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }

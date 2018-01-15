@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1c84c8b2_838e4f26",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1126,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2018-01-15T04:52:16Z",
+      "side": 1,
+      "message": "This case always could not pass on one bot. After investigating, I think it is an issue of incoherent memory access, so call glMemoryBarrier here. Please help to check it, thank you.\nAbove cases are the same.",
+      "range": {
+        "startLine": 1126,
+        "startChar": 4,
+        "endLine": 1126,
+        "endChar": 51
+      },
+      "revId": "6894c187e61f0490635addbc18e6eec93b9c144f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
