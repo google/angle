@@ -370,6 +370,11 @@ EGLPlatformParameters VULKAN()
 }  // namespace egl_platform
 
 // ANGLE tests platforms
+PlatformParameters ES1_D3D9()
+{
+    return PlatformParameters(1, 0, egl_platform::D3D9());
+}
+
 PlatformParameters ES2_D3D9()
 {
     return PlatformParameters(2, 0, egl_platform::D3D9());
@@ -378,6 +383,11 @@ PlatformParameters ES2_D3D9()
 PlatformParameters ES2_D3D9_REFERENCE()
 {
     return PlatformParameters(2, 0, egl_platform::D3D9_REFERENCE());
+}
+
+PlatformParameters ES1_D3D11()
+{
+    return PlatformParameters(1, 0, egl_platform::D3D11());
 }
 
 PlatformParameters ES2_D3D11()
@@ -535,6 +545,11 @@ PlatformParameters ES3_D3D11_FL10_1_REFERENCE()
     return PlatformParameters(3, 0, egl_platform::D3D11_FL10_1_REFERENCE());
 }
 
+PlatformParameters ES1_OPENGLES()
+{
+    return PlatformParameters(1, 0, egl_platform::OPENGLES());
+}
+
 PlatformParameters ES2_OPENGLES()
 {
     return PlatformParameters(2, 0, egl_platform::OPENGLES());
@@ -563,6 +578,11 @@ PlatformParameters ES31_OPENGLES()
 PlatformParameters ES31_OPENGLES(EGLint major, EGLint minor)
 {
     return PlatformParameters(3, 1, egl_platform::OPENGLES(major, minor));
+}
+
+PlatformParameters ES1_OPENGL()
+{
+    return PlatformParameters(1, 0, egl_platform::OPENGL());
 }
 
 PlatformParameters ES2_OPENGL()
@@ -595,6 +615,11 @@ PlatformParameters ES31_OPENGL(EGLint major, EGLint minor)
     return PlatformParameters(3, 1, egl_platform::OPENGL(major, minor));
 }
 
+PlatformParameters ES1_NULL()
+{
+    return PlatformParameters(1, 0, EGLPlatformParameters(EGL_PLATFORM_ANGLE_TYPE_NULL_ANGLE));
+}
+
 PlatformParameters ES2_NULL()
 {
     return PlatformParameters(2, 0, EGLPlatformParameters(EGL_PLATFORM_ANGLE_TYPE_NULL_ANGLE));
@@ -608,6 +633,11 @@ PlatformParameters ES3_NULL()
 PlatformParameters ES31_NULL()
 {
     return PlatformParameters(3, 1, EGLPlatformParameters(EGL_PLATFORM_ANGLE_TYPE_NULL_ANGLE));
+}
+
+PlatformParameters ES1_VULKAN()
+{
+    return PlatformParameters(1, 0, egl_platform::VULKAN());
 }
 
 PlatformParameters ES2_VULKAN()

@@ -25,6 +25,7 @@
 /testing
 /third_party/cherry
 /third_party/deqp/src
+/third_party/gles1_conform
 /third_party/glslang-angle/src
 /third_party/googletest/src
 /third_party/gyp
