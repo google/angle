@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "2b7e9961_8e43e59e",
+        "filename": "src/libANGLE/renderer/SurfaceImpl.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-01-15T16:01:36Z",
+      "side": 1,
+      "message": "D3DTextureSurfaceWGL doesn\u0027t inherit SurfaceD3D. PbufferSurface is the only place where this is used right now.",
+      "parentUuid": "c94edf92_f0d929e8",
+      "revId": "e08867f8694575abb4aa43cb90708fd29909fdfa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "33d9612d_068dc0dd",
         "filename": "src/libANGLE/renderer/d3d/d3d11/dxgi_support_table.cpp",
         "patchSetId": 3
@@ -48,6 +66,24 @@
       "writtenOn": "2018-01-15T15:41:30Z",
       "side": 1,
       "message": "Can you explain where the changes to this file come from? Is this table part of some reference somewhere?",
+      "revId": "e08867f8694575abb4aa43cb90708fd29909fdfa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4bec8a03_a57d20fa",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/dxgi_support_table.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-01-15T16:01:36Z",
+      "side": 1,
+      "message": "The changes were made to get D3D11FormatTablesTest passing, which is supposed to check the flags in relation to queried values from D3D.\n\nI looked at the tables on this page and the linked pages for other feature levels for reference: https://msdn.microsoft.com/en-us/library/windows/desktop/mt427455(v\u003dvs.85).aspx\n\nBut I\u0027m not 100% sure if I interpreted it correctly. This page https://msdn.microsoft.com/en-us/library/windows/desktop/ff471325(v\u003dvs.85).aspx has some similar documentation as well, and it suggests that D3D 11.1 / DXGI 1.2 software support may be required for rendering and mip generation for these formats. However, that would apply to the non-SRGB format as well, so if my changes are wrong then there are a lot of other issues in here to fix as well.",
+      "parentUuid": "33d9612d_068dc0dd",
       "revId": "e08867f8694575abb4aa43cb90708fd29909fdfa",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
