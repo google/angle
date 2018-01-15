@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a65b768_6e3a385d",
+        "filename": "src/libANGLE/renderer/SurfaceImpl.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-01-15T15:18:39Z",
+      "side": 1,
+      "message": "Not sure what would be the best design here - should this be pure virtual for example? Right now this function is used only for the D3D pbuffers, but I don\u0027t know if other cases might arise where it could be useful.\n\nOne option could also be to add a new base class specifically for D3D surfaces that would have this as a pure virtual function.",
+      "revId": "e08867f8694575abb4aa43cb90708fd29909fdfa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
