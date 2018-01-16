@@ -781,6 +781,11 @@ void TType::realize()
     getMangledName();
 }
 
+bool TType::isRealized() const
+{
+    return mMangledName != nullptr;
+}
+
 void TType::invalidateMangledName()
 {
     mMangledName = nullptr;
@@ -818,8 +823,8 @@ void TType::createSamplerSymbols(const TString &namePrefix,
     }
 
     ASSERT(IsSampler(type));
-    TVariable *variable   = new TVariable(symbolTable, NewPoolTString(namePrefix.c_str()), *this,
-                                        SymbolType::AngleInternal);
+    TVariable *variable = new TVariable(symbolTable, NewPoolTString(namePrefix.c_str()),
+                                        new TType(*this), SymbolType::AngleInternal);
     outputSymbols->push_back(variable);
     if (outputSymbolsToAPINames)
     {

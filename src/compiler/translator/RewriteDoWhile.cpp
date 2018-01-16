@@ -11,6 +11,7 @@
 
 #include "compiler/translator/IntermNode_util.h"
 #include "compiler/translator/IntermTraverse.h"
+#include "compiler/translator/StaticType.h"
 
 namespace sh
 {
@@ -71,7 +72,7 @@ class DoWhileRewriter : public TIntermTraverser
             }
 
             // Found a loop to change.
-            TType boolType(EbtBool);
+            const TType *boolType = StaticType::Get<EbtBool, EbpUndefined, EvqTemporary, 1, 1>();
             TVariable *conditionVariable = CreateTempVariable(mSymbolTable, boolType);
 
             // bool temp = false;

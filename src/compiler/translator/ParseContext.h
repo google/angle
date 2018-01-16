@@ -193,7 +193,7 @@ class TParseContext : angle::NonCopyable
     // is not needed in the AST.
     bool executeInitializer(const TSourceLoc &line,
                             const TString &identifier,
-                            TType type,
+                            TType *type,
                             TIntermTyped *initializer,
                             TIntermBinary **initNode);
     TIntermNode *addConditionInitializer(const TPublicType &pType,
@@ -471,7 +471,7 @@ class TParseContext : angle::NonCopyable
 
     bool declareVariable(const TSourceLoc &line,
                          const TString &identifier,
-                         const TType &type,
+                         const TType *type,
                          TVariable **variable);
 
     void checkCanBeDeclaredWithoutInitializer(const TSourceLoc &line,

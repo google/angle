@@ -13,6 +13,7 @@
 #include "compiler/translator/IntermNodePatternMatcher.h"
 #include "compiler/translator/IntermNode_util.h"
 #include "compiler/translator/IntermTraverse.h"
+#include "compiler/translator/StaticType.h"
 
 namespace sh
 {
@@ -151,7 +152,7 @@ void SimplifyLoopConditionsTraverser::traverseLoop(TIntermLoop *node)
 
     if (mFoundLoopToChange)
     {
-        TType boolType(EbtBool, EbpUndefined, EvqTemporary);
+        const TType *boolType        = StaticType::Get<EbtBool, EbpUndefined, EvqTemporary, 1, 1>();
         TVariable *conditionVariable = CreateTempVariable(mSymbolTable, boolType);
 
         // Replace the loop condition with a boolean variable that's updated on each iteration.

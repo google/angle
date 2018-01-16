@@ -122,8 +122,8 @@ bool ArrayReturnValueToOutParameterTraverser::visitFunctionPrototype(Visit visit
         const TSymbolUniqueId &functionId = node->getFunction()->uniqueId();
         if (mChangedFunctions.find(functionId.get()) == mChangedFunctions.end())
         {
-            TType returnValueVariableType(node->getType());
-            returnValueVariableType.setQualifier(EvqOut);
+            TType *returnValueVariableType = new TType(node->getType());
+            returnValueVariableType->setQualifier(EvqOut);
             ChangedFunction changedFunction;
             changedFunction.returnValueVariable =
                 new TVariable(mSymbolTable, mReturnValueVariableName, returnValueVariableType,
@@ -170,7 +170,7 @@ bool ArrayReturnValueToOutParameterTraverser::visitAggregate(Visit visit, TInter
 
             // type s0[size];
             TIntermDeclaration *returnValueDeclaration = nullptr;
-            TVariable *returnValue = DeclareTempVariable(mSymbolTable, node->getType(),
+            TVariable *returnValue = DeclareTempVariable(mSymbolTable, new TType(node->getType()),
                                                          EvqTemporary, &returnValueDeclaration);
             replacements.push_back(returnValueDeclaration);
 

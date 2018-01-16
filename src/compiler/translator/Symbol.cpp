@@ -59,11 +59,12 @@ const TString &TSymbol::getMangledName() const
 
 TVariable::TVariable(TSymbolTable *symbolTable,
                      const TString *name,
-                     const TType &t,
+                     const TType *type,
                      SymbolType symbolType,
                      TExtension extension)
-    : TSymbol(symbolTable, name, symbolType, extension), type(t), unionArray(nullptr)
+    : TSymbol(symbolTable, name, symbolType, extension), mType(type), unionArray(nullptr)
 {
+    ASSERT(mType);
 }
 
 TStructure::TStructure(TSymbolTable *symbolTable,

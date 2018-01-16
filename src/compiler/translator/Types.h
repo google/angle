@@ -318,6 +318,8 @@ class TType
     // Initializes all lazily-initialized members.
     void realize();
 
+    bool isRealized() const;
+
   private:
     void invalidateMangledName();
     const char *buildMangledName() const;

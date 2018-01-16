@@ -11,6 +11,7 @@
 #include "compiler/translator/FindMain.h"
 #include "compiler/translator/IntermNode_util.h"
 #include "compiler/translator/IntermTraverse.h"
+#include "compiler/translator/StaticType.h"
 #include "compiler/translator/SymbolTable.h"
 #include "compiler/translator/util.h"
 
@@ -102,8 +103,10 @@ void AddArrayZeroInitForLoop(const TIntermTyped *initializedNode,
                              TSymbolTable *symbolTable)
 {
     ASSERT(initializedNode->isArray());
-    TVariable *indexVariable = CreateTempVariable(
-        symbolTable, TType(EbtInt, highPrecisionSupported ? EbpHigh : EbpMedium, EvqTemporary));
+    const TType *mediumpIndexType = StaticType::Get<EbtInt, EbpMedium, EvqTemporary, 1, 1>();
+    const TType *highpIndexType   = StaticType::Get<EbtInt, EbpHigh, EvqTemporary, 1, 1>();
+    TVariable *indexVariable =
+        CreateTempVariable(symbolTable, highPrecisionSupported ? highpIndexType : mediumpIndexType);
 
     TIntermSymbol *indexSymbolNode = CreateTempSymbolNode(indexVariable);
     TIntermDeclaration *indexInit =

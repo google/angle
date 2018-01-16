@@ -11,6 +11,7 @@
 #include "angle_gl.h"
 #include "compiler/translator/InfoSink.h"
 #include "compiler/translator/PoolAlloc.h"
+#include "compiler/translator/StaticType.h"
 #include "compiler/translator/SymbolTable.h"
 #include "gtest/gtest.h"
 
@@ -44,8 +45,8 @@ class IntermNodeTest : public testing::Test
         // We're using a dummy symbol table here, don't need to assign proper symbol ids to these
         // nodes.
         TSymbolTable symbolTable;
-        TType variableType(type);
-        variableType.setQualifier(EvqTemporary);
+        TType *variableType = new TType(type);
+        variableType->setQualifier(EvqTemporary);
         TVariable *variable =
             new TVariable(&symbolTable, symbolName, variableType, SymbolType::AngleInternal);
         TIntermSymbol *node = new TIntermSymbol(variable);
@@ -122,7 +123,7 @@ class IntermNodeTest : public testing::Test
 // original.
 TEST_F(IntermNodeTest, DeepCopySymbolNode)
 {
-    TType type(EbtInt, EbpHigh);
+    const TType *type = StaticType::Get<EbtInt, EbpHigh, EvqTemporary, 1, 1>();
 
     // We're using a dummy symbol table here, don't need to assign proper symbol ids to these nodes.
     TSymbolTable symbolTable;

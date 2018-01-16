@@ -14,6 +14,7 @@
 #include "compiler/translator/IntermNodePatternMatcher.h"
 #include "compiler/translator/IntermNode_util.h"
 #include "compiler/translator/IntermTraverse.h"
+#include "compiler/translator/StaticType.h"
 #include "compiler/translator/SymbolTable.h"
 
 namespace sh
@@ -58,7 +59,7 @@ std::string GetIndexFunctionName(const TType &type, bool write)
     return nameSink.str();
 }
 
-TIntermSymbol *CreateBaseSymbol(const TType &type, TSymbolTable *symbolTable)
+TIntermSymbol *CreateBaseSymbol(const TType *type, TSymbolTable *symbolTable)
 {
     TString *baseString = NewPoolTString("base");
     TVariable *baseVariable =
@@ -69,16 +70,17 @@ TIntermSymbol *CreateBaseSymbol(const TType &type, TSymbolTable *symbolTable)
 TIntermSymbol *CreateIndexSymbol(TSymbolTable *symbolTable)
 {
     TString *indexString     = NewPoolTString("index");
-    TVariable *indexVariable = new TVariable(
-        symbolTable, indexString, TType(EbtInt, EbpHigh, EvqIn), SymbolType::AngleInternal);
+    TVariable *indexVariable =
+        new TVariable(symbolTable, indexString, StaticType::Get<EbtInt, EbpHigh, EvqIn, 1, 1>(),
+                      SymbolType::AngleInternal);
     return new TIntermSymbol(indexVariable);
 }
 
 TIntermSymbol *CreateValueSymbol(const TType &type, TSymbolTable *symbolTable)
 {
     TString *valueString = NewPoolTString("value");
-    TType valueType(type);
-    valueType.setQualifier(EvqIn);
+    TType *valueType     = new TType(type);
+    valueType->setQualifier(EvqIn);
     TVariable *valueVariable =
         new TVariable(symbolTable, valueString, valueType, SymbolType::AngleInternal);
     return new TIntermSymbol(valueVariable);
@@ -179,15 +181,15 @@ TIntermFunctionDefinition *GetIndexFunctionDefinition(const TType &type,
     std::string functionName                = GetIndexFunctionName(type, write);
     TIntermFunctionPrototype *prototypeNode = CreateInternalFunctionPrototypeNode(func);
 
-    TType baseType(type);
+    TType *baseType = new TType(type);
     // Conservatively use highp here, even if the indexed type is not highp. That way the code can't
     // end up using mediump version of an indexing function for a highp value, if both mediump and
     // highp values are being indexed in the shader. For HLSL precision doesn't matter, but in
     // principle this code could be used with multiple backends.
-    baseType.setPrecision(EbpHigh);
-    baseType.setQualifier(EvqInOut);
+    baseType->setPrecision(EbpHigh);
+    baseType->setQualifier(EvqInOut);
     if (!write)
-        baseType.setQualifier(EvqIn);
+        baseType->setQualifier(EvqIn);
 
     TIntermSymbol *baseParam = CreateBaseSymbol(baseType, symbolTable);
     prototypeNode->getSequence()->push_back(baseParam);

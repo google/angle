@@ -71,22 +71,20 @@ class TVariable : public TSymbol
   public:
     TVariable(TSymbolTable *symbolTable,
               const TString *name,
-              const TType &t,
+              const TType *type,
               SymbolType symbolType,
               TExtension ext = TExtension::UNDEFINED);
 
     ~TVariable() override {}
     bool isVariable() const override { return true; }
-    TType &getType() { return type; }
-    const TType &getType() const { return type; }
-    void setQualifier(TQualifier qualifier) { type.setQualifier(qualifier); }
+    const TType &getType() const { return *mType; }
 
     const TConstantUnion *getConstPointer() const { return unionArray; }
 
     void shareConstPointer(const TConstantUnion *constArray) { unionArray = constArray; }
 
   private:
-    TType type;
+    const TType *mType;
     const TConstantUnion *unionArray;
 };
 

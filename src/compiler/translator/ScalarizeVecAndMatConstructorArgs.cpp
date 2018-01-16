@@ -192,15 +192,15 @@ TVariable *ScalarizeArgsTraverser::createTempVariable(TIntermTyped *original)
 {
     ASSERT(original);
 
-    TType type(original->getType());
-    type.setQualifier(EvqTemporary);
-    if (mShaderType == GL_FRAGMENT_SHADER && type.getBasicType() == EbtFloat &&
-        type.getPrecision() == EbpUndefined)
+    TType *type = new TType(original->getType());
+    type->setQualifier(EvqTemporary);
+    if (mShaderType == GL_FRAGMENT_SHADER && type->getBasicType() == EbtFloat &&
+        type->getPrecision() == EbpUndefined)
     {
         // We use the highest available precision for the temporary variable
         // to avoid computing the actual precision using the rules defined
         // in GLSL ES 1.0 Section 4.5.2.
-        type.setPrecision(mFragmentPrecisionHigh ? EbpHigh : EbpMedium);
+        type->setPrecision(mFragmentPrecisionHigh ? EbpHigh : EbpMedium);
     }
 
     TVariable *variable = CreateTempVariable(mSymbolTable, type);

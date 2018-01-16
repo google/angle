@@ -153,8 +153,8 @@ void DeferGlobalInitializers(TIntermBlock *root,
     // Replace constant variables with non-constant global variables.
     for (const TVariable *var : variablesToReplace)
     {
-        TType replacementType(var->getType());
-        replacementType.setQualifier(EvqGlobal);
+        TType *replacementType = new TType(var->getType());
+        replacementType->setQualifier(EvqGlobal);
         TVariable *replacement =
             new TVariable(symbolTable, &var->name(), replacementType, var->symbolType());
         ReplaceVariable(root, var, replacement);

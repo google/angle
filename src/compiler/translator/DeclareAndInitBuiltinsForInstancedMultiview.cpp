@@ -14,6 +14,7 @@
 #include "compiler/translator/IntermNode_util.h"
 #include "compiler/translator/IntermTraverse.h"
 #include "compiler/translator/ReplaceVariable.h"
+#include "compiler/translator/StaticType.h"
 #include "compiler/translator/SymbolTable.h"
 #include "compiler/translator/util.h"
 
@@ -142,7 +143,7 @@ void DeclareAndInitBuiltinsForInstancedMultiview(TIntermBlock *root,
     TQualifier viewIDQualifier  = (shaderType == GL_VERTEX_SHADER) ? EvqFlatOut : EvqFlatIn;
     const TString *viewIDVariableName = NewPoolTString("ViewID_OVR");
     const TVariable *viewID =
-        new TVariable(symbolTable, viewIDVariableName, TType(EbtUInt, EbpHigh, viewIDQualifier),
+        new TVariable(symbolTable, viewIDVariableName, new TType(EbtUInt, EbpHigh, viewIDQualifier),
                       SymbolType::AngleInternal);
 
     DeclareGlobalVariable(root, viewID);
@@ -154,9 +155,9 @@ void DeclareAndInitBuiltinsForInstancedMultiview(TIntermBlock *root,
         // Replacing gl_InstanceID with InstanceID should happen before adding the initializers of
         // InstanceID and ViewID.
         const TString *instanceIDVariableName = NewPoolTString("InstanceID");
-        const TVariable *instanceID =
-            new TVariable(symbolTable, instanceIDVariableName, TType(EbtInt, EbpHigh, EvqGlobal),
-                          SymbolType::AngleInternal);
+        const TType *instanceIDVariableType   = StaticType::Get<EbtInt, EbpHigh, EvqGlobal, 1, 1>();
+        const TVariable *instanceID           = new TVariable(
+            symbolTable, instanceIDVariableName, instanceIDVariableType, SymbolType::AngleInternal);
         DeclareGlobalVariable(root, instanceID);
         ReplaceVariable(
             root, static_cast<TVariable *>(symbolTable->findBuiltIn("gl_InstanceID", 300, true)),
@@ -177,9 +178,11 @@ void DeclareAndInitBuiltinsForInstancedMultiview(TIntermBlock *root,
             // Add a uniform to switch between side-by-side and layered rendering.
             const TString *multiviewBaseViewLayerIndexVariableName =
                 NewPoolTString("multiviewBaseViewLayerIndex");
+            const TType *baseLayerIndexVariableType =
+                StaticType::Get<EbtInt, EbpHigh, EvqUniform, 1, 1>();
             const TVariable *multiviewBaseViewLayerIndex =
                 new TVariable(symbolTable, multiviewBaseViewLayerIndexVariableName,
-                              TType(EbtInt, EbpHigh, EvqUniform), SymbolType::AngleInternal);
+                              baseLayerIndexVariableType, SymbolType::AngleInternal);
             DeclareGlobalVariable(root, multiviewBaseViewLayerIndex);
 
             // Setting a value to gl_ViewportIndex or gl_Layer should happen after ViewID_OVR's

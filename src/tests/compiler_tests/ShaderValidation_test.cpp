@@ -5701,3 +5701,21 @@ TEST_F(FragmentShaderValidationTest,
         FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
     }
 }
+
+// Test that the type of an initializer of a constant variable needs to match.
+TEST_F(FragmentShaderValidationTest, ConstantInitializerTypeMismatch)
+{
+    const std::string &shaderString =
+        R"(
+        precision mediump float;
+        const float f = 0;
+
+        void main()
+        {
+            gl_FragColor = vec4(f);
+        })";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}

@@ -144,7 +144,7 @@ TIntermConstantUnion *CreateBoolNode(bool value)
     return node;
 }
 
-TVariable *CreateTempVariable(TSymbolTable *symbolTable, const TType &type)
+TVariable *CreateTempVariable(TSymbolTable *symbolTable, const TType *type)
 {
     ASSERT(symbolTable != nullptr);
     // TODO(oetuaho): Might be useful to sanitize layout qualifier etc. on the type of the created
@@ -152,15 +152,15 @@ TVariable *CreateTempVariable(TSymbolTable *symbolTable, const TType &type)
     return new TVariable(symbolTable, nullptr, type, SymbolType::AngleInternal);
 }
 
-TVariable *CreateTempVariable(TSymbolTable *symbolTable, const TType &type, TQualifier qualifier)
+TVariable *CreateTempVariable(TSymbolTable *symbolTable, const TType *type, TQualifier qualifier)
 {
     ASSERT(symbolTable != nullptr);
-    if (type.getQualifier() == qualifier)
+    if (type->getQualifier() == qualifier)
     {
         return CreateTempVariable(symbolTable, type);
     }
-    TType typeWithQualifier(type);
-    typeWithQualifier.setQualifier(qualifier);
+    TType *typeWithQualifier = new TType(*type);
+    typeWithQualifier->setQualifier(qualifier);
     return CreateTempVariable(symbolTable, typeWithQualifier);
 }
 
@@ -199,7 +199,7 @@ TIntermBinary *CreateTempAssignmentNode(const TVariable *tempVariable, TIntermTy
 }
 
 TVariable *DeclareTempVariable(TSymbolTable *symbolTable,
-                               const TType &type,
+                               const TType *type,
                                TQualifier qualifier,
                                TIntermDeclaration **declarationOut)
 {
@@ -213,7 +213,8 @@ TVariable *DeclareTempVariable(TSymbolTable *symbolTable,
                                TQualifier qualifier,
                                TIntermDeclaration **declarationOut)
 {
-    TVariable *variable = CreateTempVariable(symbolTable, initializer->getType(), qualifier);
+    TVariable *variable =
+        CreateTempVariable(symbolTable, new TType(initializer->getType()), qualifier);
     *declarationOut     = CreateTempInitDeclarationNode(variable, initializer);
     return variable;
 }
