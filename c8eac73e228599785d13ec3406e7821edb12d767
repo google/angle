@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "255ed82e_dbf53deb",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 2139,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-01-16T07:58:10Z",
+      "side": 1,
+      "message": "It is also used in LogLinkMismatch to log the full name of a struct field.\nIf we define it in LinkValidateVaryings, we have to pass infoLog instead, which means no parameters are saved.\n\nI print log here because here is the place we can get all components that are needed to print error logs:\n1. The shader types;\n2. The varying name or location (In ES 3.1 two varyings with different name and same location can link)\nIf we don\u0027t want to print log here (e.g. in LinkValidateVaryings), we have to pass down the above information, which is completely of no use if link succeeds.",
+      "parentUuid": "59bfce2a_cfbb320e",
+      "range": {
+        "startLine": 2139,
+        "startChar": 4,
+        "endLine": 2139,
+        "endChar": 42
+      },
+      "revId": "c8eac73e228599785d13ec3406e7821edb12d767",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e7a03167_e05aa0f9",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 12
@@ -36,6 +60,30 @@
       "writtenOn": "2018-01-15T21:45:41Z",
       "side": 1,
       "message": "Same this this, can be moved closer to its usage.",
+      "range": {
+        "startLine": 2502,
+        "startChar": 4,
+        "endLine": 2502,
+        "endChar": 41
+      },
+      "revId": "c8eac73e228599785d13ec3406e7821edb12d767",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1c95f77c_6f14c3b9",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 2502,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-01-16T07:58:10Z",
+      "side": 1,
+      "message": "It is also used for printing logs in LogLinkMismatch. \n\nFurthermore, the uniform and shader storage blocks should be checked in the range of the whole program, I think it is unnecessary to know in which shader the block is defined in if there is no link error.\n\nHere is my design to validate the uniform/shader storage blocks of program with geometry shader. In this structure, AreMatchingInterfaceBlocks just need to return the link error code and the mismatched field if exists. \n\n1. Record all vertex blocks into linkedInterfaceBlocks\n2. For each fragment block:\n     If there is a vertex block with same name:\n       Validate these two blocks;\n     Else if geometry shader exists:\n       Record the fragment block into linkedInterfaceBlocks;\n3. For each geometry block (if geometry shader exists):\n     If there is a block in linkedInterfaceBlocks whose name is same:\n       Validate these two blocks:\n       If link fails:\n          Find out where the linkedInterfaceBlock defines (vertex or fragment);\n          Call LogLinkMismatch;\n\n\nI have a draft of supporting geometry shader on the basis of this patch:\nhttps://chromium-review.googlesource.com/c/angle/angle/+/844217/7",
+      "parentUuid": "e7a03167_e05aa0f9",
       "range": {
         "startLine": 2502,
         "startChar": 4,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "98bcf731_28454c73",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-01-16T07:58:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "463e9cea_e43f1b4b",
+      "range": {
+        "startLine": 149,
+        "startChar": 0,
+        "endLine": 154,
+        "endChar": 45
+      },
+      "revId": "c8eac73e228599785d13ec3406e7821edb12d767",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bd9f9a5b_f483b0c9",
         "filename": "src/libANGLE/ProgramLinkedResources.cpp",
         "patchSetId": 12
@@ -82,6 +154,30 @@
       "writtenOn": "2018-01-15T21:45:41Z",
       "side": 1,
       "message": "Move lower.",
+      "range": {
+        "startLine": 129,
+        "startChar": 4,
+        "endLine": 129,
+        "endChar": 42
+      },
+      "revId": "c8eac73e228599785d13ec3406e7821edb12d767",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4b6e7c1b_b624f7d3",
+        "filename": "src/libANGLE/ProgramLinkedResources.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-01-16T07:58:10Z",
+      "side": 1,
+      "message": "Same comments as in ValidateGraphicsInterfaceBlocks.",
+      "parentUuid": "bd9f9a5b_f483b0c9",
       "range": {
         "startLine": 129,
         "startChar": 4,
@@ -108,6 +204,24 @@
       "revId": "c8eac73e228599785d13ec3406e7821edb12d767",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "294b755a_46af89e6",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 4020,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-01-16T07:58:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e3a2708b_3f262158",
+      "revId": "c8eac73e228599785d13ec3406e7821edb12d767",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
