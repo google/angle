@@ -96,6 +96,47 @@
     },
     {
       "key": {
+        "uuid": "a27689eb_d960c300",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 2502,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-01-16T15:13:23Z",
+      "side": 1,
+      "message": "I don\u0027t have a problem with the design. I just think this variable declaration should be moved down to where it\u0027s used. (see ref)",
+      "parentUuid": "1c95f77c_6f14c3b9",
+      "range": {
+        "startLine": 2502,
+        "startChar": 4,
+        "endLine": 2502,
+        "endChar": 41
+      },
+      "revId": "c8eac73e228599785d13ec3406e7821edb12d767",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "76f6093c_f9118400",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 2508,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-01-16T15:13:23Z",
+      "side": 1,
+      "message": "ref",
+      "revId": "c8eac73e228599785d13ec3406e7821edb12d767",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "463e9cea_e43f1b4b",
         "filename": "src/libANGLE/Program.h",
         "patchSetId": 12
