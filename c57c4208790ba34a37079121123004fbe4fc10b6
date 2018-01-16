@@ -1,0 +1,107 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "015a5d0a_704dfc30",
+        "filename": "extensions/ANGLE_texture_multisample.txt",
+        "patchSetId": 5
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2018-01-16T07:28:10Z",
+      "side": 1,
+      "message": "This extension is based on OpenGL ES 3.1, GLSL ES 3.1, XXX_texture_storage_multisample (https://cvs.khronos.org/svn/repos/ogles/trunk/nextgen/3plus/proposals/XXX_texture_storage_multisample.txt) and ARB_texture_multisample (https://www.khronos.org/registry/OpenGL/extensions/ARB/ARB_texture_multisample.txt). Shall I add the contributors of those specs and extensions? A few extensions add the contributors of native extensions in this part, like ANGLE_timer_query and EXT_draw_buffers. But most extensions in ANGLE project don\u0027t add the corresponding contributors.",
+      "revId": "c57c4208790ba34a37079121123004fbe4fc10b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3d80c851_8c2cf813",
+        "filename": "extensions/ANGLE_texture_multisample.txt",
+        "patchSetId": 5
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2018-01-16T07:28:10Z",
+      "side": 1,
+      "message": "2D array multisample texture is supported in ARB_texture_multisample and XXX_texture_storage_multisample, but it is not support by this extension, because it can not be supported in GLES 3.1.",
+      "range": {
+        "startLine": 41,
+        "startChar": 4,
+        "endLine": 41,
+        "endChar": 39
+      },
+      "revId": "c57c4208790ba34a37079121123004fbe4fc10b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "deb303dc_cbafc634",
+        "filename": "extensions/ANGLE_texture_multisample.txt",
+        "patchSetId": 5
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2018-01-16T07:28:10Z",
+      "side": 1,
+      "message": "GetTexLevelParameter introduces some new GLenums which are not related to multisample texture. But it is strange if we only expose the multisample related GLenums but make the others invalid in this extension. I prefer to expose all GLenums as \u003cpname\u003e. Moreover, these GLenums were all added into XXX_texture_storage_multisample (https://cvs.khronos.org/svn/repos/ogles/trunk/nextgen/3plus/proposals/XXX_texture_storage_multisample.txt). \n\nIf you have different opinion, please let me know.",
+      "revId": "c57c4208790ba34a37079121123004fbe4fc10b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d1d3c979_3474f952",
+        "filename": "extensions/ANGLE_texture_multisample.txt",
+        "patchSetId": 5
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2018-01-16T07:28:10Z",
+      "side": 1,
+      "message": "I don\u0027t add ANGLE suffix to {|i|u}sampler2DMS in shader. For new introduced API in an extension in ANGLE project, we always add ANGLE suffix. But I don\u0027t see examples about ANGLE suffix for new introduced keywords in shading language. So I don\u0027t add ANGLE suffix, although I am not 100% sure about this.",
+      "range": {
+        "startLine": 147,
+        "startChar": 4,
+        "endLine": 149,
+        "endChar": 70
+      },
+      "revId": "c57c4208790ba34a37079121123004fbe4fc10b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "52c911a9_c36717e9",
+        "filename": "extensions/ANGLE_texture_multisample.txt",
+        "patchSetId": 5
+      },
+      "lineNbr": 381,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2018-01-16T07:28:10Z",
+      "side": 1,
+      "message": "The new introduced MAX_INTEGER_SAMPLES_ANGLE impact multisample renderbuffer too. So I add this part, although it seems irrelevant to multisample texture. XXX_texture_storage_multisample and ARB_texture_multisample add this part too.",
+      "range": {
+        "startLine": 367,
+        "startChar": 3,
+        "endLine": 381,
+        "endChar": 14
+      },
+      "revId": "c57c4208790ba34a37079121123004fbe4fc10b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
