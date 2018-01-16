@@ -233,6 +233,7 @@ vk::Error WindowSurfaceVk::initializeImpl(RendererVk *renderer)
 
     uint32_t presentQueue = 0;
     ANGLE_TRY_RESULT(renderer->selectPresentQueueForSurface(mSurface), presentQueue);
+    (void) presentQueue;
 
     const VkPhysicalDevice &physicalDevice = renderer->getPhysicalDevice();
 

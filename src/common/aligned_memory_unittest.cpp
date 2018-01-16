@@ -11,7 +11,7 @@
 
 #include <memory>
 
-#include "testing/gtest/include/gtest/gtest.h"
+#include "gtest/gtest.h"
 
 #define EXPECT_ALIGNED(ptr, align) EXPECT_EQ(0u, reinterpret_cast<uintptr_t>(ptr) & (align - 1))
 
