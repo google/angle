@@ -16,6 +16,24 @@
       "revId": "b49c7d9b87b533402ecfa34adf7f4fd2896c21b2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "423ccee9_3e96ad0c",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 234,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-01-16T17:39:22Z",
+      "side": 1,
+      "message": "The code in the macro assigns to the variable.",
+      "parentUuid": "ddc6e2f9_254fc9b2",
+      "revId": "b49c7d9b87b533402ecfa34adf7f4fd2896c21b2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
