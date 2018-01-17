@@ -231,6 +231,9 @@ def do_format(format_data):
             elif support == '9_3check_10_0always':
                 fl_9_3_check.update(d3d_flag)
                 fl_10_0_supported.update(d3d_flag)
+            elif support == '9_3check11_0always':
+                fl_9_3_check.update(d3d_flag)
+                fl_10_0_check_11_0_supported.update(d3d_flag)
             else:
                 print("Data specification error: " + support)
                 sys.exit(1)
