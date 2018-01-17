@@ -308,6 +308,19 @@ egl::Error D3DTextureSurfaceWGL::initialize(const egl::Display *display)
     ANGLE_TRY(GetD3DTextureInfo(mBuftype, mClientBuffer, mDisplayD3D11Device, &mWidth, &mHeight,
                                 &mColorFormat, &mObject, &device));
 
+    if (mColorFormat)
+    {
+        if (mState.attributes.contains(EGL_GL_COLORSPACE))
+        {
+            if (mColorFormat->id != angle::Format::ID::R8G8B8A8_TYPELESS &&
+                mColorFormat->id != angle::Format::ID::B8G8R8A8_TYPELESS)
+            {
+                return egl::EglBadMatch()
+                       << "EGL_GL_COLORSPACE may only be specified for TYPELESS textures";
+            }
+        }
+    }
+
     // Grab the keyed mutex, if one exists
     mObject->QueryInterface(&mKeyedMutex);
 

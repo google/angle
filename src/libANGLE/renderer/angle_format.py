@@ -10,6 +10,9 @@ import json
 import os
 import re
 
+def get_angle_format_map_abs_path():
+    return os.path.join(os.path.dirname(os.path.realpath(__file__)), 'angle_format_map.json')
+
 def reject_duplicate_keys(pairs):
     found_keys = {}
     for key, value in pairs:
@@ -34,7 +37,7 @@ def load_inverse_table(path):
     return { angle: gl for gl, angle in pairs }
 
 def load_without_override():
-    map_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'angle_format_map.json')
+    map_path = get_angle_format_map_abs_path()
     return load_forward_table(map_path)
 
 def load_with_override(override_path):
@@ -45,6 +48,10 @@ def load_with_override(override_path):
         results[k] = v
 
     return results
+
+def get_all_angle_formats():
+    map_path = get_angle_format_map_abs_path()
+    return load_inverse_table(map_path).keys()
 
 def get_component_type(format_id):
     if "SNORM" in format_id:
@@ -60,6 +67,8 @@ def get_component_type(format_id):
     elif format_id == "NONE":
         return "none"
     elif "SRGB" in format_id:
+        return "unorm"
+    elif "TYPELESS" in format_id:
         return "unorm"
     elif format_id == "R9G9B9E5_SHAREDEXP":
         return "float"

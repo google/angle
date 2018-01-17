@@ -98,8 +98,7 @@ types = {
     'SHAREDEXP': 'GL_FLOAT'
 }
 
-angle_to_gl = angle_format.load_inverse_table('../../angle_format_map.json')
-all_angle = angle_to_gl.keys()
+all_angle = angle_format.get_all_angle_formats()
 
 for dxgi_format, angle_format in sorted(dxgi_map.iteritems()):
 

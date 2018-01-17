@@ -199,6 +199,13 @@ std::string ToString(const T &value)
 #define GL_UINT_64_ANGLEX 0x6ABF
 #define GL_BGRA8_SRGB_ANGLEX 0x6AC0
 
+// These are dummy formats used to fit typeless D3D textures that can be bound to EGL pbuffers into
+// the format system (for extension EGL_ANGLE_d3d_texture_client_buffer):
+#define GL_RGBA8_TYPELESS_ANGLEX 0x6AC1
+#define GL_RGBA8_TYPELESS_SRGB_ANGLEX 0x6AC2
+#define GL_BGRA8_TYPELESS_ANGLEX 0x6AC3
+#define GL_BGRA8_TYPELESS_SRGB_ANGLEX 0x6AC4
+
 // TODO(jmadill): Clean this up at some point.
 #define EGL_PLATFORM_ANGLE_PLATFORM_METHODS_ANGLEX 0x9999
 

@@ -243,6 +243,12 @@ def parse_json_into_switch_angle_format_string(json_map, json_data):
         if format_name not in json_data:
             continue
 
+        # Typeless internal formats are dummy formats just used to fit support
+        # for typeless D3D textures into the format system. Their properties
+        # should not be queried.
+        if 'TYPELESS' in internal_format:
+            continue
+
         angle_format = json_data[format_name]
 
         supported_case, unsupported_case, support_test = parse_json_angle_format_case(

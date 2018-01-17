@@ -15,6 +15,7 @@
 #include "libANGLE/renderer/d3d/RenderTargetD3D.h"
 #include "libANGLE/renderer/d3d/RendererD3D.h"
 #include "libANGLE/renderer/d3d/SwapChainD3D.h"
+#include "libANGLE/renderer/d3d/d3d11/formatutils11.h"
 
 #include <tchar.h>
 #include <EGL/eglext.h>
@@ -45,7 +46,8 @@ SurfaceD3D::SurfaceD3D(const egl::SurfaceState &state,
       mHeight(static_cast<EGLint>(attribs.get(EGL_HEIGHT, 0))),
       mSwapInterval(1),
       mShareHandle(0),
-      mD3DTexture(nullptr)
+      mD3DTexture(nullptr),
+      mBuftype(buftype)
 {
     if (window != nullptr && !mFixedSize)
     {
@@ -63,9 +65,6 @@ SurfaceD3D::SurfaceD3D(const egl::SurfaceState &state,
             mD3DTexture = static_cast<IUnknown *>(clientBuffer);
             ASSERT(mD3DTexture != nullptr);
             mD3DTexture->AddRef();
-            ANGLE_SWALLOW_ERR(mRenderer->getD3DTextureInfo(state.config, mD3DTexture, &mWidth,
-                                                           &mHeight, &mColorFormat));
-            mRenderTargetFormat = mColorFormat->fboImplementationInternalFormat;
             break;
 
         default:
@@ -93,6 +92,40 @@ egl::Error SurfaceD3D::initialize(const egl::Display *display)
         {
             return egl::EglBadSurface();
         }
+    }
+
+    if (mBuftype == EGL_D3D_TEXTURE_ANGLE)
+    {
+        ANGLE_TRY(mRenderer->getD3DTextureInfo(mState.config, mD3DTexture, &mWidth, &mHeight,
+                                               &mColorFormat));
+        if (mState.attributes.contains(EGL_GL_COLORSPACE))
+        {
+            if (mColorFormat->id != angle::Format::ID::R8G8B8A8_TYPELESS &&
+                mColorFormat->id != angle::Format::ID::B8G8R8A8_TYPELESS)
+            {
+                return egl::EglBadMatch()
+                       << "EGL_GL_COLORSPACE may only be specified for TYPELESS textures";
+            }
+        }
+        if (mColorFormat->id == angle::Format::ID::R8G8B8A8_TYPELESS)
+        {
+            EGLAttrib colorspace =
+                mState.attributes.get(EGL_GL_COLORSPACE, EGL_GL_COLORSPACE_LINEAR);
+            if (colorspace == EGL_GL_COLORSPACE_SRGB)
+            {
+                mColorFormat = &angle::Format::Get(angle::Format::ID::R8G8B8A8_TYPELESS_SRGB);
+            }
+        }
+        if (mColorFormat->id == angle::Format::ID::B8G8R8A8_TYPELESS)
+        {
+            EGLAttrib colorspace =
+                mState.attributes.get(EGL_GL_COLORSPACE, EGL_GL_COLORSPACE_LINEAR);
+            if (colorspace == EGL_GL_COLORSPACE_SRGB)
+            {
+                mColorFormat = &angle::Format::Get(angle::Format::ID::B8G8R8A8_TYPELESS_SRGB);
+            }
+        }
+        mRenderTargetFormat = mColorFormat->fboImplementationInternalFormat;
     }
 
     ANGLE_TRY(resetSwapChain(display));

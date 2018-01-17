@@ -1166,10 +1166,21 @@ Error ValidateCreatePbufferFromClientBuffer(Display *display, EGLenum buftype, E
                     return EglBadAttribute() << "<buftype> doesn't support texture internal format";
                 }
                 break;
-
+            case EGL_GL_COLORSPACE:
+                if (buftype != EGL_D3D_TEXTURE_ANGLE)
+                {
+                    return EglBadAttribute() << "<buftype> doesn't support setting GL colorspace";
+                }
+                break;
             default:
                 return EglBadAttribute();
         }
+    }
+
+    EGLAttrib colorspace = attributes.get(EGL_GL_COLORSPACE, EGL_GL_COLORSPACE_LINEAR);
+    if (colorspace != EGL_GL_COLORSPACE_LINEAR && colorspace != EGL_GL_COLORSPACE_SRGB)
+    {
+        return EglBadAttribute() << "invalid GL colorspace";
     }
 
     if (!(config->surfaceType & EGL_PBUFFER_BIT))

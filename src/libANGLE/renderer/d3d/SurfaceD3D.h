@@ -105,6 +105,8 @@ class SurfaceD3D : public SurfaceImpl
 
     HANDLE mShareHandle;
     IUnknown *mD3DTexture;
+
+    EGLenum mBuftype;
 };
 
 class WindowSurfaceD3D : public SurfaceD3D

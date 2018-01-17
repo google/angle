@@ -59,6 +59,8 @@ constexpr Format g_formatInfoTable[] = {
     { Format::ID::B4G4R4A4_UNORM, GL_BGRA4_ANGLEX, GL_RGBA4, GenerateMip<A4R4G4B4>, NoCopyFunctions, ReadColor<A4R4G4B4, GLfloat>, WriteColor<A4R4G4B4, GLfloat>, GL_UNSIGNED_NORMALIZED, 4, 4, 4, 4, 0, 0 },
     { Format::ID::B5G5R5A1_UNORM, GL_BGR5_A1_ANGLEX, GL_RGB5_A1, GenerateMip<A1R5G5B5>, NoCopyFunctions, ReadColor<A1R5G5B5, GLfloat>, WriteColor<A1R5G5B5, GLfloat>, GL_UNSIGNED_NORMALIZED, 5, 5, 5, 1, 0, 0 },
     { Format::ID::B5G6R5_UNORM, GL_BGR565_ANGLEX, GL_RGB565, GenerateMip<B5G6R5>, NoCopyFunctions, ReadColor<B5G6R5, GLfloat>, WriteColor<B5G6R5, GLfloat>, GL_UNSIGNED_NORMALIZED, 5, 6, 5, 0, 0, 0 },
+    { Format::ID::B8G8R8A8_TYPELESS, GL_BGRA8_EXT, GL_BGRA8_EXT, GenerateMip<B8G8R8A8>, NoCopyFunctions, ReadColor<B8G8R8A8, GLfloat>, WriteColor<B8G8R8A8, GLfloat>, GL_UNSIGNED_NORMALIZED, 8, 8, 8, 8, 0, 0 },
+    { Format::ID::B8G8R8A8_TYPELESS_SRGB, GL_BGRA8_SRGB_ANGLEX, GL_BGRA8_SRGB_ANGLEX, GenerateMip<B8G8R8A8>, NoCopyFunctions, ReadColor<B8G8R8A8, GLfloat>, WriteColor<B8G8R8A8, GLfloat>, GL_UNSIGNED_NORMALIZED, 8, 8, 8, 8, 0, 0 },
     { Format::ID::B8G8R8A8_UNORM, GL_BGRA8_EXT, GL_BGRA8_EXT, GenerateMip<B8G8R8A8>, BGRACopyFunctions, ReadColor<B8G8R8A8, GLfloat>, WriteColor<B8G8R8A8, GLfloat>, GL_UNSIGNED_NORMALIZED, 8, 8, 8, 8, 0, 0 },
     { Format::ID::B8G8R8A8_UNORM_SRGB, GL_BGRA8_SRGB_ANGLEX, GL_BGRA8_SRGB_ANGLEX, GenerateMip<B8G8R8A8>, NoCopyFunctions, ReadColor<B8G8R8A8, GLfloat>, WriteColor<B8G8R8A8, GLfloat>, GL_UNSIGNED_NORMALIZED, 8, 8, 8, 8, 0, 0 },
     { Format::ID::B8G8R8X8_UNORM, GL_BGRA8_EXT, GL_BGRA8_EXT, GenerateMip<B8G8R8X8>, NoCopyFunctions, ReadColor<B8G8R8X8, GLfloat>, WriteColor<B8G8R8X8, GLfloat>, GL_UNSIGNED_NORMALIZED, 8, 8, 8, 0, 0, 0 },
@@ -134,6 +136,8 @@ constexpr Format g_formatInfoTable[] = {
     { Format::ID::R5G6B5_UNORM, GL_RGB565, GL_RGB565, GenerateMip<R5G6B5>, NoCopyFunctions, ReadColor<R5G6B5, GLfloat>, WriteColor<R5G6B5, GLfloat>, GL_UNSIGNED_NORMALIZED, 5, 6, 5, 0, 0, 0 },
     { Format::ID::R8G8B8A8_SINT, GL_RGBA8I, GL_RGBA8I, GenerateMip<R8G8B8A8S>, NoCopyFunctions, ReadColor<R8G8B8A8S, GLint>, WriteColor<R8G8B8A8S, GLint>, GL_INT, 8, 8, 8, 8, 0, 0 },
     { Format::ID::R8G8B8A8_SNORM, GL_RGBA8_SNORM, GL_RGBA8_SNORM, GenerateMip<R8G8B8A8S>, NoCopyFunctions, ReadColor<R8G8B8A8S, GLfloat>, WriteColor<R8G8B8A8S, GLfloat>, GL_SIGNED_NORMALIZED, 8, 8, 8, 8, 0, 0 },
+    { Format::ID::R8G8B8A8_TYPELESS, GL_RGBA8, GL_RGBA8, GenerateMip<R8G8B8A8>, NoCopyFunctions, ReadColor<R8G8B8A8, GLfloat>, WriteColor<R8G8B8A8, GLfloat>, GL_UNSIGNED_NORMALIZED, 8, 8, 8, 8, 0, 0 },
+    { Format::ID::R8G8B8A8_TYPELESS_SRGB, GL_SRGB8_ALPHA8, GL_SRGB8_ALPHA8, GenerateMip<R8G8B8A8>, NoCopyFunctions, ReadColor<R8G8B8A8, GLfloat>, WriteColor<R8G8B8A8, GLfloat>, GL_UNSIGNED_NORMALIZED, 8, 8, 8, 8, 0, 0 },
     { Format::ID::R8G8B8A8_UINT, GL_RGBA8UI, GL_RGBA8UI, GenerateMip<R8G8B8A8>, NoCopyFunctions, ReadColor<R8G8B8A8, GLuint>, WriteColor<R8G8B8A8, GLuint>, GL_UNSIGNED_INT, 8, 8, 8, 8, 0, 0 },
     { Format::ID::R8G8B8A8_UNORM, GL_RGBA8, GL_RGBA8, GenerateMip<R8G8B8A8>, NoCopyFunctions, ReadColor<R8G8B8A8, GLfloat>, WriteColor<R8G8B8A8, GLfloat>, GL_UNSIGNED_NORMALIZED, 8, 8, 8, 8, 0, 0 },
     { Format::ID::R8G8B8A8_UNORM_SRGB, GL_SRGB8_ALPHA8, GL_SRGB8_ALPHA8, GenerateMip<R8G8B8A8SRGB>, NoCopyFunctions, ReadColor<R8G8B8A8SRGB, GLfloat>, WriteColor<R8G8B8A8SRGB, GLfloat>, GL_UNSIGNED_NORMALIZED, 8, 8, 8, 8, 0, 0 },
@@ -224,6 +228,8 @@ Format::ID Format::InternalFormatToID(GLenum internalFormat)
             return Format::ID::B8G8R8X8_UNORM;
         case GL_RGB16_SNORM_EXT:
             return Format::ID::R16G16B16_SNORM;
+        case GL_BGRA8_TYPELESS_SRGB_ANGLEX:
+            return Format::ID::B8G8R8A8_TYPELESS_SRGB;
         case GL_RGBA8UI:
             return Format::ID::R8G8B8A8_UINT;
         case GL_BGRA4_ANGLEX:
@@ -236,6 +242,8 @@ Format::ID Format::InternalFormatToID(GLenum internalFormat)
             return Format::ID::BC3_RGBA_UNORM_BLOCK;
         case GL_R16I:
             return Format::ID::R16_SINT;
+        case GL_BGRA8_TYPELESS_ANGLEX:
+            return Format::ID::B8G8R8A8_TYPELESS;
         case GL_RGB5_A1:
             return Format::ID::R5G5B5A1_UNORM;
         case GL_RGB16UI:
@@ -278,6 +286,8 @@ Format::ID Format::InternalFormatToID(GLenum internalFormat)
             return Format::ID::R8_UNORM;
         case GL_RGB32F:
             return Format::ID::R32G32B32_FLOAT;
+        case GL_RGBA8_TYPELESS_SRGB_ANGLEX:
+            return Format::ID::R8G8B8A8_TYPELESS_SRGB;
         case GL_R16_EXT:
             return Format::ID::R16_UNORM;
         case GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x8_KHR:
@@ -374,6 +384,8 @@ Format::ID Format::InternalFormatToID(GLenum internalFormat)
             return Format::ID::R8G8B8_UINT;
         case GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x8_KHR:
             return Format::ID::ASTC_10x8_SRGB_BLOCK;
+        case GL_RGBA8_TYPELESS_ANGLEX:
+            return Format::ID::R8G8B8A8_TYPELESS;
         case GL_COMPRESSED_RGBA_ASTC_12x10_KHR:
             return Format::ID::ASTC_12x10_UNORM_BLOCK;
         case GL_RGB9_E5:
