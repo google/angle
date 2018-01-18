@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "13bcda2b_ec9701da",
+        "filename": "src/compiler/translator/SymbolTable.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-18T19:18:25Z",
+      "side": 1,
+      "message": "if this compiles, it suggests to me that these template methods are only called from the implementation file where they are defined. presumably that\u0027s from SymbolTable.cpp and could be from the internal methods of the class. Is it possible to make these private?",
+      "range": {
+        "startLine": 158,
+        "startChar": 4,
+        "endLine": 158,
+        "endChar": 31
+      },
+      "revId": "605385540946523855705100a483d4e163088170",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
