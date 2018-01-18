@@ -22,6 +22,30 @@
       "revId": "605385540946523855705100a483d4e163088170",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "95c8a295_15c60c4c",
+        "filename": "src/compiler/translator/SymbolTable.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-01-18T19:22:42Z",
+      "side": 1,
+      "message": "They\u0027re explicitly instantiated in the cpp file, and called from symbol table init. In the future symbol table init could maybe be encapsulated inside the TSymbolTable class, but now they need to be public.",
+      "parentUuid": "13bcda2b_ec9701da",
+      "range": {
+        "startLine": 158,
+        "startChar": 4,
+        "endLine": 158,
+        "endChar": 31
+      },
+      "revId": "605385540946523855705100a483d4e163088170",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
