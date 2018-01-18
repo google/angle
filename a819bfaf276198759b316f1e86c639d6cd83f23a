@@ -1,0 +1,165 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "868a5e24_474395e7",
+        "filename": "src/libANGLE/renderer/angle_format.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-18T19:46:49Z",
+      "side": 1,
+      "message": "the way we would ordinarily handle this is to introduce internal \"ANGLEX\" formats. I see why you did this, since we don\u0027t really use the GL versions, but I\u0027d like you to stick with the current implementation style of introducing an ANGLEX format to angleutils.h for now. Then you can add these formats to the format map and remove this code (which definitely is a worse hack at the moment).",
+      "range": {
+        "startLine": 58,
+        "startChar": 0,
+        "endLine": 61,
+        "endChar": 46
+      },
+      "revId": "a819bfaf276198759b316f1e86c639d6cd83f23a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a2551e65_c557e3bd",
+        "filename": "src/libANGLE/renderer/angle_format_data.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-18T19:46:49Z",
+      "side": 1,
+      "message": "is it possible to map these just by stripping TYPELESS and then using the other lookups?",
+      "range": {
+        "startLine": 24,
+        "startChar": 3,
+        "endLine": 24,
+        "endChar": 20
+      },
+      "revId": "a819bfaf276198759b316f1e86c639d6cd83f23a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a4d53497_28d0411b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/gen_dxgi_format_table.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-18T19:46:49Z",
+      "side": 1,
+      "message": "I\u0027d like to find a way to remove this special case.",
+      "range": {
+        "startLine": 120,
+        "startChar": 0,
+        "endLine": 123,
+        "endChar": 35
+      },
+      "revId": "a819bfaf276198759b316f1e86c639d6cd83f23a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6440a7cb_c17d36c1",
+        "filename": "src/tests/gl_tests/D3DTextureTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 467,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-18T19:46:49Z",
+      "side": 1,
+      "message": "nit: can you break this up into a few different ANGLE_SKIP_TEST_IFs? And do it without the temporary possible?",
+      "range": {
+        "startLine": 463,
+        "startChar": 0,
+        "endLine": 467,
+        "endChar": 0
+      },
+      "revId": "a819bfaf276198759b316f1e86c639d6cd83f23a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "db218ccb_d2292dbf",
+        "filename": "src/tests/gl_tests/D3DTextureTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 476,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-18T19:46:49Z",
+      "side": 1,
+      "message": "very cool, didn\u0027t know about this.",
+      "range": {
+        "startLine": 476,
+        "startChar": 12,
+        "endLine": 476,
+        "endChar": 24
+      },
+      "revId": "a819bfaf276198759b316f1e86c639d6cd83f23a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4814cc74_9d85ab9a",
+        "filename": "src/tests/gl_tests/D3DTextureTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 491,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-18T19:46:49Z",
+      "side": 1,
+      "message": "nit: can you init your temporaries?",
+      "range": {
+        "startLine": 491,
+        "startChar": 12,
+        "endLine": 491,
+        "endChar": 18
+      },
+      "revId": "a819bfaf276198759b316f1e86c639d6cd83f23a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "14ac60ae_d7947c31",
+        "filename": "src/tests/gl_tests/D3DTextureTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 558,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-18T19:46:49Z",
+      "side": 1,
+      "message": "similar comments for this test case.",
+      "range": {
+        "startLine": 558,
+        "startChar": 7,
+        "endLine": 558,
+        "endChar": 24
+      },
+      "revId": "a819bfaf276198759b316f1e86c639d6cd83f23a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
