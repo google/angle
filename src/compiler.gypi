@@ -230,6 +230,8 @@
             'compiler/translator/RemoveSwitchFallThrough.h',
             'compiler/translator/RewriteElseBlocks.cpp',
             'compiler/translator/RewriteElseBlocks.h',
+            'compiler/translator/SeparateArrayConstructorStatements.cpp',
+            'compiler/translator/SeparateArrayConstructorStatements.h',
             'compiler/translator/SeparateArrayInitialization.cpp',
             'compiler/translator/SeparateArrayInitialization.h',
             'compiler/translator/SeparateExpressionsReturningArrays.cpp',

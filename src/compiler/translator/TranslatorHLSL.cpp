@@ -18,6 +18,7 @@
 #include "compiler/translator/RewriteElseBlocks.h"
 #include "compiler/translator/RewriteTexelFetchOffset.h"
 #include "compiler/translator/RewriteUnaryMinusOperatorInt.h"
+#include "compiler/translator/SeparateArrayConstructorStatements.h"
 #include "compiler/translator/SeparateArrayInitialization.h"
 #include "compiler/translator/SeparateDeclarations.h"
 #include "compiler/translator/SeparateExpressionsReturningArrays.h"
@@ -60,6 +61,8 @@ void TranslatorHLSL::translate(TIntermBlock *root,
 
     // Note that SeparateDeclarations needs to be run before UnfoldShortCircuitToIf.
     UnfoldShortCircuitToIf(root, &getSymbolTable());
+
+    SeparateArrayConstructorStatements(root);
 
     SeparateExpressionsReturningArrays(root, &getSymbolTable());
 
