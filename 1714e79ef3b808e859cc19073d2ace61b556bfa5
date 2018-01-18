@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3d6ea869_50b1403c",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 2141,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-18T19:30:00Z",
+      "side": 1,
+      "message": "sorry, but consumerVarying/generatorVarying feels more awkard to me than input/output. The spec refers to the variables as shader inputs and shader outputs, is there a different ambiguity you are trying to improve?",
+      "range": {
+        "startLine": 2141,
+        "startChar": 28,
+        "endLine": 2141,
+        "endChar": 43
+      },
+      "revId": "1714e79ef3b808e859cc19073d2ace61b556bfa5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "de92b0db_9eded077",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-18T19:30:00Z",
+      "side": 1,
+      "message": "nit: because these are in an enum class you can drop the LINK_ prefix.",
+      "range": {
+        "startLine": 58,
+        "startChar": 4,
+        "endLine": 58,
+        "endChar": 17
+      },
+      "revId": "1714e79ef3b808e859cc19073d2ace61b556bfa5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
