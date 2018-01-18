@@ -46,6 +46,30 @@
       "revId": "605385540946523855705100a483d4e163088170",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f4cdd8ea_ce6ac21c",
+        "filename": "src/compiler/translator/SymbolTable.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-18T20:57:16Z",
+      "side": 1,
+      "message": "I don\u0027t like how you move them to the cpp then - it makes it easy to call them from other compilation units. This might even compile in some implementations. Can you move them back to the header, but make them inlined outside of the class?",
+      "parentUuid": "95c8a295_15c60c4c",
+      "range": {
+        "startLine": 158,
+        "startChar": 4,
+        "endLine": 158,
+        "endChar": 31
+      },
+      "revId": "605385540946523855705100a483d4e163088170",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
