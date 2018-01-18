@@ -172,6 +172,7 @@ gl::Error BufferVk::getIndexRange(const gl::Context *context,
 
     *outRange = gl::ComputeIndexRange(type, mapPointer, count, primitiveRestartEnabled);
 
+    mBufferMemory.unmap(device);
     return gl::NoError();
 }
 

@@ -518,6 +518,22 @@ TEST_P(SimpleOperationTest, DrawIndexedQuad)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Simple repeated indexed draw and swap test.
+TEST_P(SimpleOperationTest, DrawIndexedQuadAndSwap)
+{
+    ANGLE_GL_PROGRAM(program, kBasicVertexShader, kGreenFragmentShader);
+
+    for (int i = 0; i < 8; ++i)
+    {
+        drawIndexedQuad(program.get(), "position", 0.5f, 1.0f, true);
+        ASSERT_GL_NO_ERROR();
+        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+        swapBuffers();
+    }
+
+    ASSERT_GL_NO_ERROR();
+}
+
 // Draw with a fragment uniform.
 TEST_P(SimpleOperationTest, DrawQuadWithFragmentUniform)
 {
