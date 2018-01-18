@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "14487df8_d1681992",
+        "filename": "src/tests/gl_tests/ShaderStorageBufferTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-01-18T15:07:10Z",
+      "side": 1,
+      "message": "Fix LGTM. There might be a simpler solution by asking the buffer to be in std140 layout which is the same between all drivers / GPUs. What do you think?",
+      "revId": "a05755cf65dbeb1d54216696e8d478c538425d16",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
