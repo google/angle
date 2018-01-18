@@ -19,6 +19,47 @@
     },
     {
       "key": {
+        "uuid": "6a87d1df_76815928",
+        "filename": "extensions/ANGLE_texture_multisample.txt",
+        "patchSetId": 5
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2018-01-18T01:35:51Z",
+      "side": 1,
+      "message": "Geoff should comment but I think it\u0027s OK to not include all of their names here. Perhaps you could say \"Contributors to the OpenGL ES 3.1, GLSL ES 3.1, and ARB_texture_multisample specifications, on which this extension is based\". I think that it should be stated somewhere in this extension specification that it\u0027s based on functionality from those specs -- maybe at the end of the Overview spec. Since XXX_texture_storage_multisample was never promoted, and the draft spec\u0027s not publicly visible, I recommend not referring to it.",
+      "parentUuid": "015a5d0a_704dfc30",
+      "revId": "c57c4208790ba34a37079121123004fbe4fc10b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c7b21e07_cef6ebe1",
+        "filename": "extensions/ANGLE_texture_multisample.txt",
+        "patchSetId": 5
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2018-01-18T01:35:51Z",
+      "side": 1,
+      "message": "Can we also say that KHR_robustness affects the behavior of this specification? Out-of-bounds multisample texel fetches must be well-defined on the web.",
+      "range": {
+        "startLine": 36,
+        "startChar": 26,
+        "endLine": 36,
+        "endChar": 34
+      },
+      "revId": "c57c4208790ba34a37079121123004fbe4fc10b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3d80c851_8c2cf813",
         "filename": "extensions/ANGLE_texture_multisample.txt",
         "patchSetId": 5
@@ -36,6 +77,127 @@
         "endLine": 41,
         "endChar": 39
       },
+      "revId": "c57c4208790ba34a37079121123004fbe4fc10b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "07b1f15a_34bbb633",
+        "filename": "extensions/ANGLE_texture_multisample.txt",
+        "patchSetId": 5
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2018-01-18T01:35:51Z",
+      "side": 1,
+      "message": "Sounds good – could you please mention that explicitly in the text? Perhaps:\n \"(This extension does not expose multisampled 2D array textures, because they are not supported in OpenGL ES 3.1.)\"",
+      "parentUuid": "3d80c851_8c2cf813",
+      "range": {
+        "startLine": 41,
+        "startChar": 4,
+        "endLine": 41,
+        "endChar": 39
+      },
+      "revId": "c57c4208790ba34a37079121123004fbe4fc10b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4f0acc9c_05989459",
+        "filename": "extensions/ANGLE_texture_multisample.txt",
+        "patchSetId": 5
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2018-01-18T01:35:51Z",
+      "side": 1,
+      "message": "\"a couple of functions were first described\" -\u003e \"some of which was first described\"",
+      "revId": "c57c4208790ba34a37079121123004fbe4fc10b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "11cf36b8_43a593f3",
+        "filename": "extensions/ANGLE_texture_multisample.txt",
+        "patchSetId": 5
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2018-01-18T01:35:51Z",
+      "side": 1,
+      "message": "An API to query...",
+      "range": {
+        "startLine": 50,
+        "startChar": 29,
+        "endLine": 50,
+        "endChar": 34
+      },
+      "revId": "c57c4208790ba34a37079121123004fbe4fc10b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5daf24a3_b09e8f77",
+        "filename": "extensions/ANGLE_texture_multisample.txt",
+        "patchSetId": 5
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2018-01-18T01:35:51Z",
+      "side": 1,
+      "message": "An API to query the texture\u0027s level-of-detail information for various parameters",
+      "revId": "c57c4208790ba34a37079121123004fbe4fc10b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "daef08e9_a6150c03",
+        "filename": "extensions/ANGLE_texture_multisample.txt",
+        "patchSetId": 5
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2018-01-18T01:35:51Z",
+      "side": 1,
+      "message": "the SAMPLE_MASK capability",
+      "range": {
+        "startLine": 58,
+        "startChar": 30,
+        "endLine": 58,
+        "endChar": 41
+      },
+      "revId": "c57c4208790ba34a37079121123004fbe4fc10b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "91660bc5_8248ae02",
+        "filename": "extensions/ANGLE_texture_multisample.txt",
+        "patchSetId": 5
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2018-01-18T01:35:51Z",
+      "side": 1,
+      "message": "multisample textures",
       "revId": "c57c4208790ba34a37079121123004fbe4fc10b6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -76,6 +238,64 @@
         "endLine": 149,
         "endChar": 70
       },
+      "revId": "c57c4208790ba34a37079121123004fbe4fc10b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "72c20463_cc64fede",
+        "filename": "extensions/ANGLE_texture_multisample.txt",
+        "patchSetId": 5
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2018-01-18T01:35:51Z",
+      "side": 1,
+      "message": "Sounds OK to not add the ANGLE suffix to these types in shaders. It would make it more complicated.",
+      "parentUuid": "d1d3c979_3474f952",
+      "range": {
+        "startLine": 147,
+        "startChar": 4,
+        "endLine": 149,
+        "endChar": 70
+      },
+      "revId": "c57c4208790ba34a37079121123004fbe4fc10b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "49cd1691_480e55dc",
+        "filename": "extensions/ANGLE_texture_multisample.txt",
+        "patchSetId": 5
+      },
+      "lineNbr": 163,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2018-01-18T01:35:51Z",
+      "side": 1,
+      "message": "See comment in the \"Dependencies\" section; it\u0027s important that these out-of-bounds fetches not be undefined on the web.",
+      "revId": "c57c4208790ba34a37079121123004fbe4fc10b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "22f4de53_ec3bbfc8",
+        "filename": "extensions/ANGLE_texture_multisample.txt",
+        "patchSetId": 5
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2018-01-18T01:35:51Z",
+      "side": 1,
+      "message": "I\u0027m sorry for not studying this better until now, but didn\u0027t realize that ES 3.1\u0027s multisampled textures behaved differently than the EXT_multisampled_render_to_texture extension. The auto-resolve functionality from EXT_multisampled_render_to_texture doesn\u0027t exist in the ES 3.1 core.\n\nThis calls into question whether the Unreal Engine will actually use ES 3.1 multisampled textures if they\u0027re available.\n\nAfter some study of Unreal Engine\u0027s code, I think that it probably will not use these multisampled textures if they\u0027re exposed as an ES 3.0 / WebGL 2.0 extension. The main reason to use ES 3.1 multisampled textures seems to be to write a custom resolve shader. There doesn\u0027t seem to be another advantage over using multisampled renderbuffers. They definitely do not have the property that on tiled rendering architectures, the multisampled storage can be left on-chip.\n\nI\u0027m sorry for not realizing this until now. This extension probably won\u0027t provide the benefit we assumed. Instead, emulating EXT_multisampled_render_to_texture on desktop platforms may be more profitable. We should confirm with Epic Games.",
       "revId": "c57c4208790ba34a37079121123004fbe4fc10b6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
