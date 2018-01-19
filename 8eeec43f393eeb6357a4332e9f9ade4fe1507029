@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6dc9bc67_21464a35",
+        "filename": "src/common/angleutils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 203,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-19T15:37:03Z",
+      "side": 1,
+      "message": "nit: can you mention the extension.",
+      "range": {
+        "startLine": 203,
+        "startChar": 14,
+        "endLine": 203,
+        "endChar": 20
+      },
+      "revId": "8eeec43f393eeb6357a4332e9f9ade4fe1507029",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

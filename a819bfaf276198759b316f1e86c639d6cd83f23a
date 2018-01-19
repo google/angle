@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "e193dc9d_35f4b33b",
+        "filename": "src/libANGLE/renderer/angle_format_data.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-19T15:37:03Z",
+      "side": 1,
+      "message": "True. Sounds good.",
+      "parentUuid": "435cf9aa_8f3393a2",
+      "range": {
+        "startLine": 24,
+        "startChar": 3,
+        "endLine": 24,
+        "endChar": 20
+      },
+      "revId": "a819bfaf276198759b316f1e86c639d6cd83f23a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a4d53497_28d0411b",
         "filename": "src/libANGLE/renderer/d3d/d3d11/gen_dxgi_format_table.py",
         "patchSetId": 2
