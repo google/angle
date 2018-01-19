@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a334f9ad_1dca0035",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 236,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-19T16:00:13Z",
+      "side": 1,
+      "message": "nit: we have an UNUSED_VARIABLE macro for this.",
+      "range": {
+        "startLine": 236,
+        "startChar": 4,
+        "endLine": 236,
+        "endChar": 24
+      },
+      "revId": "f661686c1ace66e22925d82d770fa00078f84ddd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
