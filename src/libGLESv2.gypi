@@ -755,11 +755,13 @@
             'libANGLE/renderer/vulkan/TransformFeedbackVk.h',
             'libANGLE/renderer/vulkan/VertexArrayVk.cpp',
             'libANGLE/renderer/vulkan/VertexArrayVk.h',
-            'libANGLE/renderer/vulkan/formatutilsvk.h',
-            'libANGLE/renderer/vulkan/formatutilsvk.cpp',
-            'libANGLE/renderer/vulkan/renderervk_utils.cpp',
-            'libANGLE/renderer/vulkan/renderervk_utils.h',
+            'libANGLE/renderer/vulkan/vk_cache_utils.cpp',
+            'libANGLE/renderer/vulkan/vk_cache_utils.h',
             'libANGLE/renderer/vulkan/vk_format_table_autogen.cpp',
+            'libANGLE/renderer/vulkan/vk_format_utils.h',
+            'libANGLE/renderer/vulkan/vk_format_utils.cpp',
+            'libANGLE/renderer/vulkan/vk_utils.cpp',
+            'libANGLE/renderer/vulkan/vk_utils.h',
         ],
         'libangle_vulkan_win32_sources':
         [

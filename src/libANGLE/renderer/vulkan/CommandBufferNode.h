@@ -10,7 +10,7 @@
 #ifndef LIBANGLE_RENDERER_VULKAN_COMMAND_BUFFER_NODE_H_
 #define LIBANGLE_RENDERER_VULKAN_COMMAND_BUFFER_NODE_H_
 
-#include "libANGLE/renderer/vulkan/renderervk_utils.h"
+#include "libANGLE/renderer/vulkan/vk_cache_utils.h"
 
 namespace rx
 {

@@ -13,7 +13,7 @@
 #include <vulkan/vulkan.h>
 
 #include "libANGLE/renderer/ContextImpl.h"
-#include "libANGLE/renderer/vulkan/renderervk_utils.h"
+#include "libANGLE/renderer/vulkan/vk_cache_utils.h"
 
 namespace rx
 {

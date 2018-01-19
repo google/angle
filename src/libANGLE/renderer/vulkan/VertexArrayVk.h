@@ -11,10 +11,15 @@
 #define LIBANGLE_RENDERER_VULKAN_VERTEXARRAYVK_H_
 
 #include "libANGLE/renderer/VertexArrayImpl.h"
-#include "libANGLE/renderer/vulkan/renderervk_utils.h"
+#include "libANGLE/renderer/vulkan/vk_utils.h"
 
 namespace rx
 {
+namespace vk
+{
+class PipelineDesc;
+}  // namespace vk
+
 class BufferVk;
 
 class VertexArrayVk : public VertexArrayImpl

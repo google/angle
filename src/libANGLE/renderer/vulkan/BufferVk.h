@@ -11,7 +11,7 @@
 #define LIBANGLE_RENDERER_VULKAN_BUFFERVK_H_
 
 #include "libANGLE/renderer/BufferImpl.h"
-#include "libANGLE/renderer/vulkan/renderervk_utils.h"
+#include "libANGLE/renderer/vulkan/vk_utils.h"
 
 namespace rx
 {

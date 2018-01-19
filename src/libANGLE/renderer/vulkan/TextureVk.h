@@ -12,7 +12,7 @@
 
 #include "libANGLE/renderer/TextureImpl.h"
 #include "libANGLE/renderer/vulkan/RenderTargetVk.h"
-#include "libANGLE/renderer/vulkan/renderervk_utils.h"
+#include "libANGLE/renderer/vulkan/vk_utils.h"
 
 namespace rx
 {

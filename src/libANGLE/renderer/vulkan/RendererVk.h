@@ -15,8 +15,8 @@
 
 #include "common/angleutils.h"
 #include "libANGLE/Caps.h"
-#include "libANGLE/renderer/vulkan/formatutilsvk.h"
-#include "libANGLE/renderer/vulkan/renderervk_utils.h"
+#include "libANGLE/renderer/vulkan/vk_cache_utils.h"
+#include "libANGLE/renderer/vulkan/vk_format_utils.h"
 
 namespace egl
 {
@@ -32,34 +32,6 @@ namespace vk
 {
 struct Format;
 }
-
-// TODO(jmadill): Add cache trimming.
-class RenderPassCache
-{
-  public:
-    RenderPassCache();
-    ~RenderPassCache();
-
-    void destroy(VkDevice device);
-
-    vk::Error getCompatibleRenderPass(VkDevice device,
-                                      Serial serial,
-                                      const vk::RenderPassDesc &desc,
-                                      vk::RenderPass **renderPassOut);
-    vk::Error getRenderPassWithOps(VkDevice device,
-                                   Serial serial,
-                                   const vk::RenderPassDesc &desc,
-                                   const vk::AttachmentOpsArray &attachmentOps,
-                                   vk::RenderPass **renderPassOut);
-
-  private:
-    // Use a two-layer caching scheme. The top level matches the "compatible" RenderPass elements.
-    // The second layer caches the attachment load/store ops and initial/final layout.
-    using InnerCache = std::unordered_map<vk::AttachmentOpsArray, vk::RenderPassAndSerial>;
-    using OuterCache = std::unordered_map<vk::RenderPassDesc, InnerCache>;
-
-    OuterCache mPayload;
-};
 
 class RendererVk : angle::NonCopyable
 {

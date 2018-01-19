@@ -3,11 +3,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// Vk::Format:
-//   Vulkan implementation of a storage format.
+// vk_format_utils:
+//   Helper for Vulkan format code.
 
-#ifndef LIBANGLE_RENDERER_VULKAN_FORMAT_H_
-#define LIBANGLE_RENDERER_VULKAN_FORMAT_H_
+#ifndef LIBANGLE_RENDERER_VULKAN_VK_FORMAT_UTILS_H_
+#define LIBANGLE_RENDERER_VULKAN_VK_FORMAT_UTILS_H_
 
 #include <vulkan/vulkan.h>
 
@@ -70,4 +70,4 @@ VkFormat GetNativeVertexFormat(gl::VertexFormatType vertexFormat);
 
 }  // namespace rx
 
-#endif  // LIBANGLE_RENDERER_VULKAN_FORMAT_H_
+#endif  // LIBANGLE_RENDERER_VULKAN_VK_FORMAT_UTILS_H_

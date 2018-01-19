@@ -3,10 +3,10 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// formatutilsvk:
+// vk_format_utils:
 //   Helper for Vulkan format code.
 
-#include "libANGLE/renderer/vulkan/formatutilsvk.h"
+#include "libANGLE/renderer/vulkan/vk_format_utils.h"
 
 #include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/load_functions_table.h"

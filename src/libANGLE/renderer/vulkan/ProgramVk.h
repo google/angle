@@ -12,7 +12,7 @@
 
 #include "libANGLE/Constants.h"
 #include "libANGLE/renderer/ProgramImpl.h"
-#include "libANGLE/renderer/vulkan/renderervk_utils.h"
+#include "libANGLE/renderer/vulkan/vk_utils.h"
 
 #include <array>
 

@@ -10,7 +10,7 @@
 #include "libANGLE/renderer/vulkan/RendererVk.h"
 
 // Placing this first seems to solve an intellisense bug.
-#include "libANGLE/renderer/vulkan/renderervk_utils.h"
+#include "libANGLE/renderer/vulkan/vk_utils.h"
 
 #include <EGL/eglext.h>
 
@@ -23,7 +23,7 @@
 #include "libANGLE/renderer/vulkan/GlslangWrapper.h"
 #include "libANGLE/renderer/vulkan/TextureVk.h"
 #include "libANGLE/renderer/vulkan/VertexArrayVk.h"
-#include "libANGLE/renderer/vulkan/formatutilsvk.h"
+#include "libANGLE/renderer/vulkan/vk_format_utils.h"
 #include "platform/Platform.h"
 
 namespace rx
@@ -84,101 +84,6 @@ VkBool32 VKAPI_CALL DebugReportCallback(VkDebugReportFlagsEXT flags,
 }
 
 }  // anonymous namespace
-
-// RenderPassCache implementation.
-RenderPassCache::RenderPassCache()
-{
-}
-
-RenderPassCache::~RenderPassCache()
-{
-    ASSERT(mPayload.empty());
-}
-
-void RenderPassCache::destroy(VkDevice device)
-{
-    for (auto &outerIt : mPayload)
-    {
-        for (auto &innerIt : outerIt.second)
-        {
-            innerIt.second.get().destroy(device);
-        }
-    }
-    mPayload.clear();
-}
-
-vk::Error RenderPassCache::getCompatibleRenderPass(VkDevice device,
-                                                   Serial serial,
-                                                   const vk::RenderPassDesc &desc,
-                                                   vk::RenderPass **renderPassOut)
-{
-    auto outerIt = mPayload.find(desc);
-    if (outerIt != mPayload.end())
-    {
-        InnerCache &innerCache = outerIt->second;
-        ASSERT(!innerCache.empty());
-
-        // Find the first element and return it.
-        *renderPassOut = &innerCache.begin()->second.get();
-        return vk::NoError();
-    }
-
-    // Insert some dummy attachment ops.
-    // TODO(jmadill): Pre-populate the cache in the Renderer so we rarely miss here.
-    vk::AttachmentOpsArray ops;
-    for (uint32_t colorIndex = 0; colorIndex < desc.colorAttachmentCount(); ++colorIndex)
-    {
-        ops.initDummyOp(colorIndex, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL);
-    }
-
-    if (desc.depthStencilAttachmentCount() > 0)
-    {
-        ops.initDummyOp(desc.colorAttachmentCount(),
-                        VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
-    }
-
-    return getRenderPassWithOps(device, serial, desc, ops, renderPassOut);
-}
-
-vk::Error RenderPassCache::getRenderPassWithOps(VkDevice device,
-                                                Serial serial,
-                                                const vk::RenderPassDesc &desc,
-                                                const vk::AttachmentOpsArray &attachmentOps,
-                                                vk::RenderPass **renderPassOut)
-{
-    auto outerIt = mPayload.find(desc);
-    if (outerIt != mPayload.end())
-    {
-        InnerCache &innerCache = outerIt->second;
-
-        auto innerIt = innerCache.find(attachmentOps);
-        if (innerIt != innerCache.end())
-        {
-            // Update the serial before we return.
-            // TODO(jmadill): Could possibly use an MRU cache here.
-            innerIt->second.updateSerial(serial);
-            *renderPassOut = &innerIt->second.get();
-            return vk::NoError();
-        }
-    }
-    else
-    {
-        auto emplaceResult = mPayload.emplace(desc, InnerCache());
-        outerIt            = emplaceResult.first;
-    }
-
-    vk::RenderPass newRenderPass;
-    ANGLE_TRY(vk::InitializeRenderPassFromDesc(device, desc, attachmentOps, &newRenderPass));
-
-    vk::RenderPassAndSerial withSerial(std::move(newRenderPass), serial);
-
-    InnerCache &innerCache = outerIt->second;
-    auto insertPos         = innerCache.emplace(attachmentOps, std::move(withSerial));
-    *renderPassOut = &insertPos.first->second.get();
-
-    // TODO(jmadill): Trim cache, and pre-populate with the most common RPs on startup.
-    return vk::NoError();
-}
 
 // CommandBatch implementation.
 RendererVk::CommandBatch::CommandBatch()

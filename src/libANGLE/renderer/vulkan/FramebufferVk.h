@@ -11,7 +11,7 @@
 #define LIBANGLE_RENDERER_VULKAN_FRAMEBUFFERVK_H_
 
 #include "libANGLE/renderer/FramebufferImpl.h"
-#include "libANGLE/renderer/vulkan/renderervk_utils.h"
+#include "libANGLE/renderer/vulkan/vk_cache_utils.h"
 
 namespace rx
 {
