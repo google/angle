@@ -33,6 +33,8 @@ namespace sh
 namespace
 {
 
+constexpr const ImmutableString kMainString("main");
+
 class ContainsReturnTraverser : public TIntermTraverser
 {
   public:
@@ -66,8 +68,8 @@ void WrapMainAndAppend(TIntermBlock *root,
                        TSymbolTable *symbolTable)
 {
     // Replace main() with main0() with the same body.
-    TFunction *oldMain =
-        new TFunction(symbolTable, nullptr, new TType(EbtVoid), SymbolType::AngleInternal, false);
+    TFunction *oldMain = new TFunction(symbolTable, ImmutableString(""), new TType(EbtVoid),
+                                       SymbolType::AngleInternal, false);
     TIntermFunctionDefinition *oldMainDefinition =
         CreateInternalFunctionDefinitionNode(*oldMain, main->getBody());
 
@@ -75,8 +77,8 @@ void WrapMainAndAppend(TIntermBlock *root,
     ASSERT(replaced);
 
     // void main()
-    TFunction *newMain = new TFunction(symbolTable, NewPoolTString("main"), new TType(EbtVoid),
-                                       SymbolType::UserDefined, false);
+    TFunction *newMain =
+        new TFunction(symbolTable, kMainString, new TType(EbtVoid), SymbolType::UserDefined, false);
     TIntermFunctionPrototype *newMainProto = new TIntermFunctionPrototype(newMain);
 
     // {

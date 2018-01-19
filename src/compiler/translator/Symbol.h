@@ -11,6 +11,7 @@
 
 #include "common/angleutils.h"
 #include "compiler/translator/ExtensionBehavior.h"
+#include "compiler/translator/ImmutableString.h"
 #include "compiler/translator/IntermNode.h"
 #include "compiler/translator/SymbolUniqueId.h"
 
@@ -33,7 +34,7 @@ class TSymbol : angle::NonCopyable
   public:
     POOL_ALLOCATOR_NEW_DELETE();
     TSymbol(TSymbolTable *symbolTable,
-            const TString *name,
+            const ImmutableString &name,
             SymbolType symbolType,
             TExtension extension = TExtension::UNDEFINED);
 
@@ -43,8 +44,8 @@ class TSymbol : angle::NonCopyable
     }
 
     // Don't call name() or getMangledName() for empty symbols (symbolType == SymbolType::Empty).
-    const TString &name() const;
-    virtual const TString &getMangledName() const;
+    ImmutableString name() const;
+    virtual ImmutableString getMangledName() const;
 
     virtual bool isFunction() const { return false; }
     virtual bool isVariable() const { return false; }
@@ -55,7 +56,7 @@ class TSymbol : angle::NonCopyable
     TExtension extension() const { return mExtension; }
 
   protected:
-    const TString *const mName;
+    const ImmutableString mName;
 
   private:
     const TSymbolUniqueId mUniqueId;
@@ -69,7 +70,7 @@ class TVariable : public TSymbol
 {
   public:
     TVariable(TSymbolTable *symbolTable,
-              const TString *name,
+              const ImmutableString &name,
               const TType *type,
               SymbolType symbolType,
               TExtension ext = TExtension::UNDEFINED);
@@ -92,13 +93,14 @@ class TStructure : public TSymbol, public TFieldListCollection
 {
   public:
     TStructure(TSymbolTable *symbolTable,
-               const TString *name,
+               const ImmutableString &name,
                const TFieldList *fields,
                SymbolType symbolType);
 
     bool isStruct() const override { return true; }
 
-    void createSamplerSymbols(const TString &namePrefix,
+    // The char arrays passed in must be pool allocated or static.
+    void createSamplerSymbols(const char *namePrefix,
                               const TString &apiNamePrefix,
                               TVector<const TVariable *> *outputSymbols,
                               TMap<const TVariable *, TString> *outputSymbolsToAPINames,
@@ -112,7 +114,7 @@ class TStructure : public TSymbol, public TFieldListCollection
     // setName().  At the moment keep this function private so only
     // friend class RegenerateStructNames may call it.
     friend class RegenerateStructNames;
-    void setName(const TString &name);
+    void setName(const ImmutableString &name);
 
     bool mAtGlobalScope;
 };
@@ -123,7 +125,7 @@ class TInterfaceBlock : public TSymbol, public TFieldListCollection
 {
   public:
     TInterfaceBlock(TSymbolTable *symbolTable,
-                    const TString *name,
+                    const ImmutableString &name,
                     const TFieldList *fields,
                     const TLayoutQualifier &layoutQualifier,
                     SymbolType symbolType,
@@ -142,17 +144,17 @@ class TInterfaceBlock : public TSymbol, public TFieldListCollection
 // Immutable version of TParameter.
 struct TConstParameter
 {
-    TConstParameter() : name(nullptr), type(nullptr) {}
-    explicit TConstParameter(const TString *n) : name(n), type(nullptr) {}
-    explicit TConstParameter(const TType *t) : name(nullptr), type(t) {}
-    TConstParameter(const TString *n, const TType *t) : name(n), type(t) {}
+    TConstParameter() : name(""), type(nullptr) {}
+    explicit TConstParameter(const ImmutableString &n) : name(n), type(nullptr) {}
+    explicit TConstParameter(const TType *t) : name(""), type(t) {}
+    TConstParameter(const ImmutableString &n, const TType *t) : name(n), type(t) {}
 
     // Both constructor arguments must be const.
-    TConstParameter(TString *n, TType *t)       = delete;
-    TConstParameter(const TString *n, TType *t) = delete;
-    TConstParameter(TString *n, const TType *t) = delete;
+    TConstParameter(ImmutableString *n, TType *t)       = delete;
+    TConstParameter(const ImmutableString *n, TType *t) = delete;
+    TConstParameter(ImmutableString *n, const TType *t) = delete;
 
-    const TString *const name;
+    const ImmutableString name;
     const TType *const type;
 };
 
@@ -165,14 +167,14 @@ struct TParameter
     // their content cannot be modified after the call.
     TConstParameter turnToConst()
     {
-        const TString *constName = name;
+        const ImmutableString constName(name);
         const TType *constType   = type;
         name                     = nullptr;
         type                     = nullptr;
         return TConstParameter(constName, constType);
     }
 
-    const TString *name;
+    const char *name;  // either pool allocated or static.
     TType *type;
 };
 
@@ -181,31 +183,32 @@ class TFunction : public TSymbol
 {
   public:
     TFunction(TSymbolTable *symbolTable,
-              const TString *name,
+              const ImmutableString &name,
               const TType *retType,
               SymbolType symbolType,
               bool knownToNotHaveSideEffects,
               TOperator tOp        = EOpNull,
               TExtension extension = TExtension::UNDEFINED);
 
-    ~TFunction() override;
+    virtual ~TFunction();
+
     bool isFunction() const override { return true; }
 
     void addParameter(const TConstParameter &p)
     {
         parameters.push_back(p);
-        mangledName = nullptr;
+        mangledName = ImmutableString("");
     }
 
     void swapParameters(const TFunction &parametersSource);
 
-    const TString &getMangledName() const override
+    ImmutableString getMangledName() const override
     {
-        if (mangledName == nullptr)
+        if (mangledName == "")
         {
             mangledName = buildMangledName();
         }
-        return *mangledName;
+        return mangledName;
     }
 
     const TType &getReturnType() const { return *returnType; }
@@ -228,12 +231,12 @@ class TFunction : public TSymbol
   private:
     void clearParameters();
 
-    const TString *buildMangledName() const;
+    ImmutableString buildMangledName() const;
 
     typedef TVector<TConstParameter> TParamList;
     TParamList parameters;
     const TType *const returnType;
-    mutable const TString *mangledName;
+    mutable ImmutableString mangledName;
     const TOperator op;  // Only set for built-ins
     bool defined;
     bool mHasPrototypeDeclaration;

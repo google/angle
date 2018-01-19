@@ -88,17 +88,13 @@ class CallDAG::CallDAGCreator : public TIntermTraverser
     struct CreatorFunctionData
     {
         CreatorFunctionData()
-            : definitionNode(nullptr),
-              name(nullptr),
-              index(0),
-              indexAssigned(false),
-              visiting(false)
+            : definitionNode(nullptr), name(""), index(0), indexAssigned(false), visiting(false)
         {
         }
 
         std::set<CreatorFunctionData *> callees;
         TIntermFunctionDefinition *definitionNode;
-        const TString *name;
+        ImmutableString name;
         size_t index;
         bool indexAssigned;
         bool visiting;
@@ -110,9 +106,9 @@ class CallDAG::CallDAGCreator : public TIntermTraverser
         mCurrentFunction = &mFunctions[node->getFunction()->uniqueId().get()];
         // Name will be overwritten here. If we've already traversed the prototype of this function,
         // it should have had the same name.
-        ASSERT(mCurrentFunction->name == nullptr ||
-               *mCurrentFunction->name == node->getFunction()->name());
-        mCurrentFunction->name           = &node->getFunction()->name();
+        ASSERT(mCurrentFunction->name == "" ||
+               mCurrentFunction->name == node->getFunction()->name());
+        mCurrentFunction->name           = node->getFunction()->name();
         mCurrentFunction->definitionNode = node;
 
         node->getBody()->traverse(this);
@@ -126,7 +122,7 @@ class CallDAG::CallDAGCreator : public TIntermTraverser
 
         // Function declaration, create an empty record.
         auto &record = mFunctions[node->getFunction()->uniqueId().get()];
-        record.name  = &node->getFunction()->name();
+        record.name  = node->getFunction()->name();
 
         // No need to traverse the parameters.
         return false;
@@ -198,7 +194,7 @@ class CallDAG::CallDAGCreator : public TIntermTraverser
 
             if (!function->definitionNode)
             {
-                errorStream << "Undefined function '" << *function->name
+                errorStream << "Undefined function '" << function->name
                             << ")' used in the following call chain:";
                 result = INITDAG_UNDEFINED;
                 break;
@@ -244,7 +240,7 @@ class CallDAG::CallDAGCreator : public TIntermTraverser
                     {
                         errorStream << " -> ";
                     }
-                    errorStream << *function->name << ")";
+                    errorStream << function->name << ")";
                     first = false;
                 }
             }

@@ -22,7 +22,7 @@ namespace
 
 void error(const TIntermSymbol &symbol, const char *reason, TDiagnostics *diagnostics)
 {
-    diagnostics->error(symbol.getLine(), reason, symbol.getName().c_str());
+    diagnostics->error(symbol.getLine(), reason, symbol.getName().data());
 }
 
 int GetLocationCount(const TIntermSymbol *varying, bool ignoreVaryingArraySize)

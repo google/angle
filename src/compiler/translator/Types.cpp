@@ -9,6 +9,7 @@
 #endif
 
 #include "compiler/translator/Types.h"
+#include "compiler/translator/ImmutableString.h"
 #include "compiler/translator/InfoSink.h"
 #include "compiler/translator/IntermNode.h"
 #include "compiler/translator/SymbolTable.h"
@@ -498,13 +499,13 @@ const char *TType::buildMangledName() const
                 mangledName += "struct-";
                 if (mStructure->symbolType() != SymbolType::Empty)
                 {
-                    mangledName += mStructure->name();
+                    mangledName += mStructure->name().data();
                 }
                 mangledName += mStructure->mangledFieldList();
                 break;
             case EbtInterfaceBlock:
                 mangledName += "iblock-";
-                mangledName += mInterfaceBlock->name();
+                mangledName += mInterfaceBlock->name().data();
                 mangledName += mInterfaceBlock->mangledFieldList();
                 break;
             default:
@@ -788,7 +789,7 @@ void TType::invalidateMangledName()
     mMangledName = nullptr;
 }
 
-void TType::createSamplerSymbols(const TString &namePrefix,
+void TType::createSamplerSymbols(const ImmutableString &namePrefix,
                                  const TString &apiNamePrefix,
                                  TVector<const TVariable *> *outputSymbols,
                                  TMap<const TVariable *, TString> *outputSymbolsToAPINames,
@@ -802,26 +803,26 @@ void TType::createSamplerSymbols(const TString &namePrefix,
             elementType.toArrayElementType();
             for (unsigned int arrayIndex = 0u; arrayIndex < getOutermostArraySize(); ++arrayIndex)
             {
-                TStringStream elementName;
+                std::stringstream elementName;
                 elementName << namePrefix << "_" << arrayIndex;
                 TStringStream elementApiName;
                 elementApiName << apiNamePrefix << "[" << arrayIndex << "]";
-                elementType.createSamplerSymbols(elementName.str(), elementApiName.str(),
-                                                 outputSymbols, outputSymbolsToAPINames,
-                                                 symbolTable);
+                elementType.createSamplerSymbols(ImmutableString(elementName.str()),
+                                                 elementApiName.str(), outputSymbols,
+                                                 outputSymbolsToAPINames, symbolTable);
             }
         }
         else
         {
-            mStructure->createSamplerSymbols(namePrefix, apiNamePrefix, outputSymbols,
+            mStructure->createSamplerSymbols(namePrefix.data(), apiNamePrefix, outputSymbols,
                                              outputSymbolsToAPINames, symbolTable);
         }
         return;
     }
 
     ASSERT(IsSampler(type));
-    TVariable *variable = new TVariable(symbolTable, NewPoolTString(namePrefix.c_str()),
-                                        new TType(*this), SymbolType::AngleInternal);
+    TVariable *variable =
+        new TVariable(symbolTable, namePrefix, new TType(*this), SymbolType::AngleInternal);
     outputSymbols->push_back(variable);
     if (outputSymbolsToAPINames)
     {

@@ -304,7 +304,7 @@ union YYSTYPE
 
     struct {
         union {
-            TString *string;
+            const char *string;  // pool allocated.
             float f;
             int i;
             unsigned int u;
@@ -743,36 +743,36 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   252,   252,   253,   256,   266,   269,   274,   279,   284,
-     289,   298,   304,   307,   310,   313,   316,   319,   325,   332,
-     338,   341,   349,   352,   358,   361,   367,   371,   378,   386,
-     389,   392,   398,   401,   404,   407,   414,   415,   416,   417,
-     425,   426,   429,   432,   439,   440,   443,   449,   450,   454,
-     461,   462,   465,   468,   471,   477,   478,   481,   487,   488,
-     495,   496,   503,   504,   511,   512,   518,   519,   525,   526,
-     532,   533,   539,   540,   546,   547,   548,   549,   553,   554,
-     555,   559,   563,   567,   571,   578,   581,   587,   594,   601,
-     604,   607,   611,   615,   619,   623,   627,   634,   641,   644,
-     651,   659,   676,   686,   689,   695,   699,   703,   707,   714,
-     721,   724,   728,   732,   737,   744,   748,   752,   756,   761,
-     768,   772,   778,   781,   787,   791,   798,   804,   808,   812,
-     815,   818,   827,   832,   836,   839,   842,   845,   848,   852,
-     855,   859,   862,   865,   868,   871,   874,   881,   888,   891,
-     894,   900,   907,   910,   916,   919,   922,   925,   931,   934,
-     941,   946,   953,   958,   969,   972,   975,   978,   981,   984,
-     988,   992,   996,  1000,  1004,  1008,  1012,  1016,  1020,  1024,
-    1028,  1032,  1036,  1040,  1044,  1048,  1052,  1056,  1060,  1064,
-    1068,  1075,  1078,  1081,  1084,  1087,  1090,  1093,  1096,  1099,
-    1102,  1105,  1108,  1111,  1114,  1117,  1120,  1123,  1126,  1129,
-    1139,  1146,  1153,  1156,  1159,  1162,  1165,  1168,  1171,  1174,
-    1177,  1180,  1183,  1186,  1189,  1192,  1195,  1203,  1203,  1206,
-    1206,  1212,  1215,  1221,  1224,  1231,  1235,  1241,  1244,  1250,
-    1254,  1258,  1259,  1265,  1266,  1267,  1268,  1269,  1270,  1271,
-    1275,  1279,  1279,  1279,  1286,  1287,  1291,  1291,  1292,  1292,
-    1297,  1301,  1308,  1312,  1319,  1320,  1324,  1330,  1334,  1343,
-    1343,  1350,  1353,  1359,  1363,  1369,  1369,  1374,  1374,  1378,
-    1378,  1386,  1389,  1395,  1398,  1404,  1408,  1415,  1418,  1421,
-    1424,  1427,  1435,  1441,  1447,  1450,  1456,  1456
+       0,   252,   252,   253,   256,   263,   266,   271,   276,   281,
+     286,   295,   301,   304,   307,   310,   313,   316,   322,   329,
+     335,   338,   346,   349,   355,   358,   364,   368,   375,   383,
+     386,   389,   395,   398,   401,   404,   411,   412,   413,   414,
+     422,   423,   426,   429,   436,   437,   440,   446,   447,   451,
+     458,   459,   462,   465,   468,   474,   475,   478,   484,   485,
+     492,   493,   500,   501,   508,   509,   515,   516,   522,   523,
+     529,   530,   536,   537,   543,   544,   545,   546,   550,   551,
+     552,   556,   560,   564,   568,   575,   578,   584,   591,   598,
+     601,   604,   608,   612,   616,   620,   624,   631,   638,   641,
+     648,   656,   673,   683,   686,   692,   696,   700,   704,   711,
+     718,   721,   725,   729,   734,   741,   745,   749,   753,   758,
+     765,   769,   775,   778,   784,   788,   795,   801,   805,   809,
+     812,   815,   824,   829,   833,   836,   839,   842,   845,   849,
+     852,   856,   859,   862,   865,   868,   871,   878,   885,   888,
+     891,   897,   904,   907,   913,   916,   919,   922,   928,   931,
+     938,   943,   950,   955,   966,   969,   972,   975,   978,   981,
+     985,   989,   993,   997,  1001,  1005,  1009,  1013,  1017,  1021,
+    1025,  1029,  1033,  1037,  1041,  1045,  1049,  1053,  1057,  1061,
+    1065,  1072,  1075,  1078,  1081,  1084,  1087,  1090,  1093,  1096,
+    1099,  1102,  1105,  1108,  1111,  1114,  1117,  1120,  1123,  1126,
+    1136,  1143,  1150,  1153,  1156,  1159,  1162,  1165,  1168,  1171,
+    1174,  1177,  1180,  1183,  1186,  1189,  1192,  1200,  1200,  1203,
+    1203,  1209,  1212,  1218,  1221,  1228,  1232,  1238,  1241,  1247,
+    1251,  1255,  1256,  1262,  1263,  1264,  1265,  1266,  1267,  1268,
+    1272,  1276,  1276,  1276,  1283,  1284,  1288,  1288,  1289,  1289,
+    1294,  1298,  1305,  1309,  1316,  1317,  1321,  1327,  1331,  1340,
+    1340,  1347,  1350,  1356,  1360,  1366,  1366,  1371,  1371,  1375,
+    1375,  1383,  1386,  1392,  1395,  1401,  1405,  1412,  1415,  1418,
+    1421,  1424,  1432,  1438,  1444,  1447,  1453,  1453
 };
 #endif
 
@@ -2498,10 +2498,7 @@ yyreduce:
 
     {
         // The symbol table search was done in the lexical phase
-        (yyval.interm.intermTypedNode) = context->parseVariableIdentifier((yylsp[0]), (yyvsp[0].lex).string, (yyvsp[0].lex).symbol);
-
-        // don't delete $1.string, it's used by error recovery, and the pool
-        // pop will reclaim the memory
+        (yyval.interm.intermTypedNode) = context->parseVariableIdentifier((yylsp[0]), ImmutableString((yyvsp[0].lex).string), (yyvsp[0].lex).symbol);
     }
 
     break;
@@ -2559,10 +2556,10 @@ yyreduce:
     {
         if (!context->checkCanUseExtension((yylsp[0]), TExtension::EXT_YUV_target))
         {
-           context->error((yylsp[0]), "unsupported value", (yyvsp[0].lex).string->c_str());
+           context->error((yylsp[0]), "unsupported value", ImmutableString((yyvsp[0].lex).string));
         }
         TConstantUnion *unionArray = new TConstantUnion[1];
-        unionArray->setYuvCscStandardEXTConst(getYuvCscStandardEXT((yyvsp[0].lex).string->c_str()));
+        unionArray->setYuvCscStandardEXTConst(getYuvCscStandardEXT(ImmutableString((yyvsp[0].lex).string)));
         (yyval.interm.intermTypedNode) = context->addScalarLiteral(unionArray, (yylsp[0]));
     }
 
@@ -2603,7 +2600,7 @@ yyreduce:
   case 15:
 
     {
-        (yyval.interm.intermTypedNode) = context->addFieldSelectionExpression((yyvsp[-2].interm.intermTypedNode), (yylsp[-1]), *(yyvsp[0].lex).string, (yylsp[0]));
+        (yyval.interm.intermTypedNode) = context->addFieldSelectionExpression((yyvsp[-2].interm.intermTypedNode), (yylsp[-1]), ImmutableString((yyvsp[0].lex).string), (yylsp[0]));
     }
 
     break;
@@ -2728,7 +2725,7 @@ yyreduce:
   case 30:
 
     {
-        (yyval.interm.functionLookup) = context->addNonConstructorFunc((yyvsp[0].lex).string);
+        (yyval.interm.functionLookup) = context->addNonConstructorFunc(ImmutableString((yyvsp[0].lex).string));
     }
 
     break;
@@ -2736,7 +2733,7 @@ yyreduce:
   case 31:
 
     {
-        (yyval.interm.functionLookup) = context->addNonConstructorFunc((yyvsp[0].lex).string);
+        (yyval.interm.functionLookup) = context->addNonConstructorFunc(ImmutableString((yyvsp[0].lex).string));
     }
 
     break;
@@ -3164,7 +3161,7 @@ yyreduce:
   case 88:
 
     {
-        context->enterStructDeclaration((yylsp[-1]), *(yyvsp[-1].lex).string);
+        context->enterStructDeclaration((yylsp[-1]), ImmutableString((yyvsp[-1].lex).string));
         (yyval.lex) = (yyvsp[-1].lex);
     }
 
@@ -3198,8 +3195,8 @@ yyreduce:
   case 92:
 
     {
-        ES3_OR_NEWER((yyvsp[-3].lex).string->c_str(), (yylsp[-4]), "interface blocks");
-        (yyval.interm.intermNode) = context->addInterfaceBlock(*(yyvsp[-4].interm.typeQualifierBuilder), (yylsp[-3]), *(yyvsp[-3].lex).string, (yyvsp[-2].interm.fieldList), NULL, (yyloc), NULL, (yyloc));
+        ES3_OR_NEWER(ImmutableString((yyvsp[-3].lex).string), (yylsp[-4]), "interface blocks");
+        (yyval.interm.intermNode) = context->addInterfaceBlock(*(yyvsp[-4].interm.typeQualifierBuilder), (yylsp[-3]), ImmutableString((yyvsp[-3].lex).string), (yyvsp[-2].interm.fieldList), ImmutableString(""), (yyloc), NULL, (yyloc));
     }
 
     break;
@@ -3207,8 +3204,8 @@ yyreduce:
   case 93:
 
     {
-        ES3_OR_NEWER((yyvsp[-4].lex).string->c_str(), (yylsp[-5]), "interface blocks");
-        (yyval.interm.intermNode) = context->addInterfaceBlock(*(yyvsp[-5].interm.typeQualifierBuilder), (yylsp[-4]), *(yyvsp[-4].lex).string, (yyvsp[-3].interm.fieldList), (yyvsp[-1].lex).string, (yylsp[-1]), NULL, (yyloc));
+        ES3_OR_NEWER(ImmutableString((yyvsp[-4].lex).string), (yylsp[-5]), "interface blocks");
+        (yyval.interm.intermNode) = context->addInterfaceBlock(*(yyvsp[-5].interm.typeQualifierBuilder), (yylsp[-4]), ImmutableString((yyvsp[-4].lex).string), (yyvsp[-3].interm.fieldList), ImmutableString((yyvsp[-1].lex).string), (yylsp[-1]), NULL, (yyloc));
     }
 
     break;
@@ -3216,8 +3213,8 @@ yyreduce:
   case 94:
 
     {
-        ES3_OR_NEWER((yyvsp[-7].lex).string->c_str(), (yylsp[-8]), "interface blocks");
-        (yyval.interm.intermNode) = context->addInterfaceBlock(*(yyvsp[-8].interm.typeQualifierBuilder), (yylsp[-7]), *(yyvsp[-7].lex).string, (yyvsp[-6].interm.fieldList), (yyvsp[-4].lex).string, (yylsp[-4]), (yyvsp[-2].interm.intermTypedNode), (yylsp[-3]));
+        ES3_OR_NEWER(ImmutableString((yyvsp[-7].lex).string), (yylsp[-8]), "interface blocks");
+        (yyval.interm.intermNode) = context->addInterfaceBlock(*(yyvsp[-8].interm.typeQualifierBuilder), (yylsp[-7]), ImmutableString((yyvsp[-7].lex).string), (yyvsp[-6].interm.fieldList), ImmutableString((yyvsp[-4].lex).string), (yylsp[-4]), (yyvsp[-2].interm.intermTypedNode), (yylsp[-3]));
     }
 
     break;
@@ -3234,7 +3231,7 @@ yyreduce:
   case 96:
 
     {
-        (yyval.interm.intermNode) = context->parseInvariantDeclaration(*(yyvsp[-2].interm.typeQualifierBuilder), (yylsp[-1]), (yyvsp[-1].lex).string, (yyvsp[-1].lex).symbol);
+        (yyval.interm.intermNode) = context->parseInvariantDeclaration(*(yyvsp[-2].interm.typeQualifierBuilder), (yylsp[-1]), ImmutableString((yyvsp[-1].lex).string), (yyvsp[-1].lex).symbol);
     }
 
     break;
@@ -3299,7 +3296,7 @@ yyreduce:
   case 102:
 
     {
-        (yyval.interm.function) = context->parseFunctionHeader((yyvsp[-2].interm.type), (yyvsp[-1].lex).string, (yylsp[-1]));
+        (yyval.interm.function) = context->parseFunctionHeader((yyvsp[-2].interm.type), ImmutableString((yyvsp[-1].lex).string), (yylsp[-1]));
 
         context->symbolTable.push();
         context->enterFunctionDeclaration();
@@ -3310,7 +3307,7 @@ yyreduce:
   case 103:
 
     {
-        (yyval.interm.param) = context->parseParameterDeclarator((yyvsp[-1].interm.type), (yyvsp[0].lex).string, (yylsp[0]));
+        (yyval.interm.param) = context->parseParameterDeclarator((yyvsp[-1].interm.type), ImmutableString((yyvsp[0].lex).string), (yylsp[0]));
     }
 
     break;
@@ -3318,7 +3315,7 @@ yyreduce:
   case 104:
 
     {
-        (yyval.interm.param) = context->parseParameterArrayDeclarator((yyvsp[-1].lex).string, (yylsp[-1]), *((yyvsp[0].interm.arraySizes)), (yylsp[0]), &(yyvsp[-2].interm.type));
+        (yyval.interm.param) = context->parseParameterArrayDeclarator(ImmutableString((yyvsp[-1].lex).string), (yylsp[-1]), *((yyvsp[0].interm.arraySizes)), (yylsp[0]), &(yyvsp[-2].interm.type));
     }
 
     break;
@@ -3380,7 +3377,7 @@ yyreduce:
 
     {
         (yyval.interm) = (yyvsp[-2].interm);
-        context->parseDeclarator((yyval.interm).type, (yylsp[0]), *(yyvsp[0].lex).string, (yyval.interm).intermDeclaration);
+        context->parseDeclarator((yyval.interm).type, (yylsp[0]), ImmutableString((yyvsp[0].lex).string), (yyval.interm).intermDeclaration);
     }
 
     break;
@@ -3389,7 +3386,7 @@ yyreduce:
 
     {
         (yyval.interm) = (yyvsp[-3].interm);
-        context->parseArrayDeclarator((yyval.interm).type, (yylsp[-1]), *(yyvsp[-1].lex).string, (yylsp[0]), *((yyvsp[0].interm.arraySizes)), (yyval.interm).intermDeclaration);
+        context->parseArrayDeclarator((yyval.interm).type, (yylsp[-1]), ImmutableString((yyvsp[-1].lex).string), (yylsp[0]), *((yyvsp[0].interm.arraySizes)), (yyval.interm).intermDeclaration);
     }
 
     break;
@@ -3399,7 +3396,7 @@ yyreduce:
     {
         ES3_OR_NEWER("=", (yylsp[-1]), "first-class arrays (array initializer)");
         (yyval.interm) = (yyvsp[-5].interm);
-        context->parseArrayInitDeclarator((yyval.interm).type, (yylsp[-3]), *(yyvsp[-3].lex).string, (yylsp[-2]), *((yyvsp[-2].interm.arraySizes)), (yylsp[-1]), (yyvsp[0].interm.intermTypedNode), (yyval.interm).intermDeclaration);
+        context->parseArrayInitDeclarator((yyval.interm).type, (yylsp[-3]), ImmutableString((yyvsp[-3].lex).string), (yylsp[-2]), *((yyvsp[-2].interm.arraySizes)), (yylsp[-1]), (yyvsp[0].interm.intermTypedNode), (yyval.interm).intermDeclaration);
     }
 
     break;
@@ -3408,7 +3405,7 @@ yyreduce:
 
     {
         (yyval.interm) = (yyvsp[-4].interm);
-        context->parseInitDeclarator((yyval.interm).type, (yylsp[-2]), *(yyvsp[-2].lex).string, (yylsp[-1]), (yyvsp[0].interm.intermTypedNode), (yyval.interm).intermDeclaration);
+        context->parseInitDeclarator((yyval.interm).type, (yylsp[-2]), ImmutableString((yyvsp[-2].lex).string), (yylsp[-1]), (yyvsp[0].interm.intermTypedNode), (yyval.interm).intermDeclaration);
     }
 
     break;
@@ -3417,7 +3414,7 @@ yyreduce:
 
     {
         (yyval.interm).type = (yyvsp[0].interm.type);
-        (yyval.interm).intermDeclaration = context->parseSingleDeclaration((yyval.interm).type, (yylsp[0]), "");
+        (yyval.interm).intermDeclaration = context->parseSingleDeclaration((yyval.interm).type, (yylsp[0]), ImmutableString(""));
     }
 
     break;
@@ -3426,7 +3423,7 @@ yyreduce:
 
     {
         (yyval.interm).type = (yyvsp[-1].interm.type);
-        (yyval.interm).intermDeclaration = context->parseSingleDeclaration((yyval.interm).type, (yylsp[0]), *(yyvsp[0].lex).string);
+        (yyval.interm).intermDeclaration = context->parseSingleDeclaration((yyval.interm).type, (yylsp[0]), ImmutableString((yyvsp[0].lex).string));
     }
 
     break;
@@ -3435,7 +3432,7 @@ yyreduce:
 
     {
         (yyval.interm).type = (yyvsp[-2].interm.type);
-        (yyval.interm).intermDeclaration = context->parseSingleArrayDeclaration((yyval.interm).type, (yylsp[-1]), *(yyvsp[-1].lex).string, (yylsp[0]), *((yyvsp[0].interm.arraySizes)));
+        (yyval.interm).intermDeclaration = context->parseSingleArrayDeclaration((yyval.interm).type, (yylsp[-1]), ImmutableString((yyvsp[-1].lex).string), (yylsp[0]), *((yyvsp[0].interm.arraySizes)));
     }
 
     break;
@@ -3445,7 +3442,7 @@ yyreduce:
     {
         ES3_OR_NEWER("[]", (yylsp[-2]), "first-class arrays (array initializer)");
         (yyval.interm).type = (yyvsp[-4].interm.type);
-        (yyval.interm).intermDeclaration = context->parseSingleArrayInitDeclaration((yyval.interm).type, (yylsp[-3]), *(yyvsp[-3].lex).string, (yylsp[-2]), *((yyvsp[-2].interm.arraySizes)), (yylsp[-1]), (yyvsp[0].interm.intermTypedNode));
+        (yyval.interm).intermDeclaration = context->parseSingleArrayInitDeclaration((yyval.interm).type, (yylsp[-3]), ImmutableString((yyvsp[-3].lex).string), (yylsp[-2]), *((yyvsp[-2].interm.arraySizes)), (yylsp[-1]), (yyvsp[0].interm.intermTypedNode));
     }
 
     break;
@@ -3454,7 +3451,7 @@ yyreduce:
 
     {
         (yyval.interm).type = (yyvsp[-3].interm.type);
-        (yyval.interm).intermDeclaration = context->parseSingleInitDeclaration((yyval.interm).type, (yylsp[-2]), *(yyvsp[-2].lex).string, (yylsp[-1]), (yyvsp[0].interm.intermTypedNode));
+        (yyval.interm).intermDeclaration = context->parseSingleInitDeclaration((yyval.interm).type, (yylsp[-2]), ImmutableString((yyvsp[-2].lex).string), (yylsp[-1]), (yyvsp[0].interm.intermTypedNode));
     }
 
     break;
@@ -3748,7 +3745,7 @@ yyreduce:
   case 154:
 
     {
-        (yyval.interm.layoutQualifier) = context->parseLayoutQualifier(*(yyvsp[0].lex).string, (yylsp[0]));
+        (yyval.interm.layoutQualifier) = context->parseLayoutQualifier(ImmutableString((yyvsp[0].lex).string), (yylsp[0]));
     }
 
     break;
@@ -3756,7 +3753,7 @@ yyreduce:
   case 155:
 
     {
-        (yyval.interm.layoutQualifier) = context->parseLayoutQualifier(*(yyvsp[-2].lex).string, (yylsp[-2]), (yyvsp[0].lex).i, (yylsp[0]));
+        (yyval.interm.layoutQualifier) = context->parseLayoutQualifier(ImmutableString((yyvsp[-2].lex).string), (yylsp[-2]), (yyvsp[0].lex).i, (yylsp[0]));
     }
 
     break;
@@ -3764,7 +3761,7 @@ yyreduce:
   case 156:
 
     {
-        (yyval.interm.layoutQualifier) = context->parseLayoutQualifier(*(yyvsp[-2].lex).string, (yylsp[-2]), (yyvsp[0].lex).i, (yylsp[0]));
+        (yyval.interm.layoutQualifier) = context->parseLayoutQualifier(ImmutableString((yyvsp[-2].lex).string), (yylsp[-2]), (yyvsp[0].lex).i, (yylsp[0]));
     }
 
     break;
@@ -3772,7 +3769,7 @@ yyreduce:
   case 157:
 
     {
-        (yyval.interm.layoutQualifier) = context->parseLayoutQualifier("shared", (yylsp[0]));
+        (yyval.interm.layoutQualifier) = context->parseLayoutQualifier(ImmutableString("shared"), (yylsp[0]));
     }
 
     break;
@@ -4387,28 +4384,28 @@ yyreduce:
 
   case 227:
 
-    { context->enterStructDeclaration((yylsp[-1]), *(yyvsp[-1].lex).string); }
+    { context->enterStructDeclaration((yylsp[-1]), ImmutableString((yyvsp[-1].lex).string)); }
 
     break;
 
   case 228:
 
     {
-        (yyval.interm.typeSpecifierNonArray) = context->addStructure((yylsp[-5]), (yylsp[-4]), (yyvsp[-4].lex).string, (yyvsp[-1].interm.fieldList));
+        (yyval.interm.typeSpecifierNonArray) = context->addStructure((yylsp[-5]), (yylsp[-4]), ImmutableString((yyvsp[-4].lex).string), (yyvsp[-1].interm.fieldList));
     }
 
     break;
 
   case 229:
 
-    { context->enterStructDeclaration((yylsp[0]), *(yyvsp[0].lex).string); }
+    { context->enterStructDeclaration((yylsp[0]), ImmutableString("")); }
 
     break;
 
   case 230:
 
     {
-        (yyval.interm.typeSpecifierNonArray) = context->addStructure((yylsp[-4]), (yyloc), nullptr, (yyvsp[-1].interm.fieldList));
+        (yyval.interm.typeSpecifierNonArray) = context->addStructure((yylsp[-4]), (yyloc), ImmutableString(""), (yyvsp[-1].interm.fieldList));
     }
 
     break;
@@ -4466,7 +4463,7 @@ yyreduce:
   case 237:
 
     {
-        (yyval.interm.declarator) = context->parseStructDeclarator((yyvsp[0].lex).string, (yylsp[0]));
+        (yyval.interm.declarator) = context->parseStructDeclarator(ImmutableString((yyvsp[0].lex).string), (yylsp[0]));
     }
 
     break;
@@ -4474,7 +4471,7 @@ yyreduce:
   case 238:
 
     {
-        (yyval.interm.declarator) = context->parseStructArrayDeclarator((yyvsp[-1].lex).string, (yylsp[-1]), (yyvsp[0].interm.arraySizes));
+        (yyval.interm.declarator) = context->parseStructArrayDeclarator(ImmutableString((yyvsp[-1].lex).string), (yylsp[-1]), (yyvsp[0].interm.arraySizes));
     }
 
     break;
@@ -4728,7 +4725,7 @@ yyreduce:
   case 274:
 
     {
-        (yyval.interm.intermNode) = context->addConditionInitializer((yyvsp[-3].interm.type), *(yyvsp[-2].lex).string, (yyvsp[0].interm.intermTypedNode), (yylsp[-2]));
+        (yyval.interm.intermNode) = context->addConditionInitializer((yyvsp[-3].interm.type), ImmutableString((yyvsp[-2].lex).string), (yyvsp[0].interm.intermTypedNode), (yylsp[-2]));
     }
 
     break;

@@ -25,6 +25,10 @@ namespace
 
 const TType *kIndexType = StaticType::Get<EbtInt, EbpHigh, EvqIn, 1, 1>();
 
+constexpr const ImmutableString kBaseName("base");
+constexpr const ImmutableString kIndexName("index");
+constexpr const ImmutableString kValueName("value");
+
 std::string GetIndexFunctionName(const TType &type, bool write)
 {
     TInfoSinkBase nameSink;
@@ -291,10 +295,6 @@ class RemoveDynamicIndexingTraverser : public TLValueTrackingTraverser
     bool mRemoveIndexSideEffectsInSubtree;
 
     PerformanceDiagnostics *mPerfDiagnostics;
-
-    const TString *mBaseName;
-    const TString *mIndexName;
-    const TString *mValueName;
 };
 
 RemoveDynamicIndexingTraverser::RemoveDynamicIndexingTraverser(
@@ -303,10 +303,7 @@ RemoveDynamicIndexingTraverser::RemoveDynamicIndexingTraverser(
     : TLValueTrackingTraverser(true, false, false, symbolTable),
       mUsedTreeInsertion(false),
       mRemoveIndexSideEffectsInSubtree(false),
-      mPerfDiagnostics(perfDiagnostics),
-      mBaseName(NewPoolTString("base")),
-      mIndexName(NewPoolTString("index")),
-      mValueName(NewPoolTString("value"))
+      mPerfDiagnostics(perfDiagnostics)
 {
 }
 
@@ -404,8 +401,7 @@ bool RemoveDynamicIndexingTraverser::visitBinary(Visit visit, TIntermBinary *nod
 #endif
 
             const TType &type = node->getLeft()->getType();
-            TString *indexingFunctionName =
-                NewPoolTString(GetIndexFunctionName(type, false).c_str());
+            ImmutableString indexingFunctionName(GetIndexFunctionName(type, false));
             TFunction *indexingFunction = nullptr;
             if (mIndexedVecAndMatrixTypes.find(type) == mIndexedVecAndMatrixTypes.end())
             {
@@ -413,8 +409,8 @@ bool RemoveDynamicIndexingTraverser::visitBinary(Visit visit, TIntermBinary *nod
                     new TFunction(mSymbolTable, indexingFunctionName, GetFieldType(type),
                                   SymbolType::AngleInternal, true);
                 indexingFunction->addParameter(
-                    TConstParameter(mBaseName, GetBaseType(type, false)));
-                indexingFunction->addParameter(TConstParameter(mIndexName, kIndexType));
+                    TConstParameter(kBaseName, GetBaseType(type, false)));
+                indexingFunction->addParameter(TConstParameter(kIndexName, kIndexType));
                 mIndexedVecAndMatrixTypes[type] = indexingFunction;
             }
             else
@@ -457,18 +453,18 @@ bool RemoveDynamicIndexingTraverser::visitBinary(Visit visit, TIntermBinary *nod
                 TFunction *indexedWriteFunction = nullptr;
                 if (mWrittenVecAndMatrixTypes.find(type) == mWrittenVecAndMatrixTypes.end())
                 {
-                    TString *functionName = NewPoolTString(
-                        GetIndexFunctionName(node->getLeft()->getType(), true).c_str());
+                    ImmutableString functionName(
+                        GetIndexFunctionName(node->getLeft()->getType(), true));
                     indexedWriteFunction =
                         new TFunction(mSymbolTable, functionName, StaticType::GetBasic<EbtVoid>(),
                                       SymbolType::AngleInternal, false);
                     indexedWriteFunction->addParameter(
-                        TConstParameter(mBaseName, GetBaseType(type, true)));
-                    indexedWriteFunction->addParameter(TConstParameter(mIndexName, kIndexType));
+                        TConstParameter(kBaseName, GetBaseType(type, true)));
+                    indexedWriteFunction->addParameter(TConstParameter(kIndexName, kIndexType));
                     TType *valueType = GetFieldType(type);
                     valueType->setQualifier(EvqIn);
                     indexedWriteFunction->addParameter(
-                        TConstParameter(mValueName, static_cast<const TType *>(valueType)));
+                        TConstParameter(kValueName, static_cast<const TType *>(valueType)));
                     mWrittenVecAndMatrixTypes[type] = indexedWriteFunction;
                 }
                 else

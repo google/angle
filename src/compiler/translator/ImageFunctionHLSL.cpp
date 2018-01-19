@@ -239,7 +239,7 @@ bool ImageFunctionHLSL::ImageFunction::operator<(const ImageFunction &rhs) const
            std::tie(rhs.image, rhs.imageInternalFormat, rhs.readonly, rhs.method);
 }
 
-TString ImageFunctionHLSL::useImageFunction(const TString &name,
+TString ImageFunctionHLSL::useImageFunction(const ImmutableString &name,
                                             const TBasicType &type,
                                             TLayoutImageInternalFormat imageInternalFormat,
                                             bool readonly)

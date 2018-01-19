@@ -4,11 +4,18 @@
 // found in the LICENSE file.
 //
 
-#include "common/debug.h"
 #include "compiler/translator/RegenerateStructNames.h"
+
+#include "common/debug.h"
+#include "compiler/translator/ImmutableStringBuilder.h"
 
 namespace sh
 {
+
+namespace
+{
+constexpr const ImmutableString kPrefix("_webgl_struct_");
+}  // anonymous namespace
 
 void RegenerateStructNames::visitSymbol(TIntermSymbol *symbol)
 {
@@ -49,15 +56,16 @@ void RegenerateStructNames::visitSymbol(TIntermSymbol *symbol)
     if (mDeclaredGlobalStructs.count(uniqueId) > 0)
         return;
     // Map {name} to _webgl_struct_{uniqueId}_{name}.
-    const char kPrefix[] = "_webgl_struct_";
-    if (userType->name().find(kPrefix) == 0)
+    if (userType->name().beginsWith(kPrefix))
     {
         // The name has already been regenerated.
         return;
     }
-    std::string id = Str(uniqueId);
-    TString tmp    = kPrefix + TString(id.c_str());
-    tmp += "_" + userType->name();
+    ImmutableStringBuilder tmp(kPrefix.length() + sizeof(uniqueId) * 2u + 1u +
+                               userType->name().length());
+    tmp << kPrefix;
+    tmp.appendHex(uniqueId);
+    tmp << '_' << userType->name();
 
     // TODO(oetuaho): Add another mechanism to change symbol names so that the const_cast is not
     // needed.

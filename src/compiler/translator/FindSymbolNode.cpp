@@ -8,6 +8,7 @@
 
 #include "compiler/translator/FindSymbolNode.h"
 
+#include "compiler/translator/ImmutableString.h"
 #include "compiler/translator/IntermTraverse.h"
 #include "compiler/translator/Symbol.h"
 
@@ -20,7 +21,7 @@ namespace
 class SymbolFinder : public TIntermTraverser
 {
   public:
-    SymbolFinder(const TString &symbolName)
+    SymbolFinder(const ImmutableString &symbolName)
         : TIntermTraverser(true, false, false), mSymbolName(symbolName), mNodeFound(nullptr)
     {
     }
@@ -37,13 +38,13 @@ class SymbolFinder : public TIntermTraverser
     const TIntermSymbol *getNode() const { return mNodeFound; }
 
   private:
-    TString mSymbolName;
+    ImmutableString mSymbolName;
     TIntermSymbol *mNodeFound;
 };
 
 }  // anonymous namespace
 
-const TIntermSymbol *FindSymbolNode(TIntermNode *root, const TString &symbolName)
+const TIntermSymbol *FindSymbolNode(TIntermNode *root, const ImmutableString &symbolName)
 {
     SymbolFinder finder(symbolName);
     root->traverse(&finder);

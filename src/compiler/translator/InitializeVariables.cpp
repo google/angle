@@ -178,7 +178,8 @@ void InsertInitCode(TIntermSequence *mainBody,
         TIntermTyped *initializedSymbol = nullptr;
         if (var.isBuiltIn())
         {
-            initializedSymbol = ReferenceBuiltInVariable(name, *symbolTable, shaderVersion);
+            initializedSymbol = ReferenceBuiltInVariable(ImmutableString(name.c_str()),
+                                                         *symbolTable, shaderVersion);
             if (initializedSymbol->getQualifier() == EvqFragData &&
                 !IsExtensionEnabled(extensionBehavior, TExtension::EXT_draw_buffers))
             {
@@ -194,7 +195,8 @@ void InsertInitCode(TIntermSequence *mainBody,
         }
         else
         {
-            initializedSymbol = ReferenceGlobalVariable(name, *symbolTable);
+            initializedSymbol =
+                ReferenceGlobalVariable(ImmutableString(name.c_str()), *symbolTable);
         }
         ASSERT(initializedSymbol != nullptr);
 

@@ -11,6 +11,7 @@
 #include "compiler/translator/ClampFragDepth.h"
 
 #include "compiler/translator/FindSymbolNode.h"
+#include "compiler/translator/ImmutableString.h"
 #include "compiler/translator/IntermNode_util.h"
 #include "compiler/translator/RunAtTheEndOfShader.h"
 #include "compiler/translator/SymbolTable.h"
@@ -21,12 +22,13 @@ namespace sh
 void ClampFragDepth(TIntermBlock *root, TSymbolTable *symbolTable)
 {
     // Only clamp gl_FragDepth if it's used in the shader.
-    if (!FindSymbolNode(root, TString("gl_FragDepth")))
+    if (!FindSymbolNode(root, ImmutableString("gl_FragDepth")))
     {
         return;
     }
 
-    TIntermSymbol *fragDepthNode = ReferenceBuiltInVariable("gl_FragDepth", *symbolTable, 300);
+    TIntermSymbol *fragDepthNode =
+        ReferenceBuiltInVariable(ImmutableString("gl_FragDepth"), *symbolTable, 300);
 
     TIntermTyped *minFragDepthNode = CreateZeroNode(TType(EbtFloat, EbpHigh, EvqConst));
 

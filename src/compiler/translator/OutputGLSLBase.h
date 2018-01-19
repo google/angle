@@ -34,7 +34,7 @@ class TOutputGLSLBase : public TIntermTraverser
     // Return the original name if hash function pointer is NULL;
     // otherwise return the hashed name. Has special handling for internal names and built-ins,
     // which are not hashed.
-    TString hashName(const TSymbol *symbol);
+    ImmutableString hashName(const TSymbol *symbol);
 
   protected:
     TInfoSinkBase &objSink() { return mObjSink; }
@@ -47,7 +47,7 @@ class TOutputGLSLBase : public TIntermTraverser
     void writeFunctionParameters(const TIntermSequence &args);
     const TConstantUnion *writeConstantUnion(const TType &type, const TConstantUnion *pConstUnion);
     void writeConstructorTriplet(Visit visit, const TType &type);
-    TString getTypeName(const TType &type);
+    ImmutableString getTypeName(const TType &type);
 
     void visitSymbol(TIntermSymbol *node) override;
     void visitConstantUnion(TIntermConstantUnion *node) override;
@@ -69,11 +69,12 @@ class TOutputGLSLBase : public TIntermTraverser
 
     void visitCodeBlock(TIntermBlock *node);
 
-    TString hashFieldName(const TSymbol *containingStruct, const TString &fieldName);
+    ImmutableString hashFieldName(const TSymbol *containingStruct,
+                                  const ImmutableString &fieldName);
     // Same as hashName(), but without hashing "main".
-    TString hashFunctionNameIfNeeded(const TFunction *func);
+    ImmutableString hashFunctionNameIfNeeded(const TFunction *func);
     // Used to translate function names for differences between ESSL and GLSL
-    virtual TString translateTextureFunction(const TString &name) { return name; }
+    virtual ImmutableString translateTextureFunction(const ImmutableString &name) { return name; }
 
   private:
     bool structDeclared(const TStructure *structure) const;

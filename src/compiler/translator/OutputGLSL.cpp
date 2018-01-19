@@ -49,7 +49,7 @@ void TOutputGLSL::visitSymbol(TIntermSymbol *node)
     }
 
     // Some built-ins get a special translation.
-    const TString &name = node->getName();
+    const ImmutableString &name = node->getName();
     if (name == "gl_FragDepthEXT")
     {
         out << "gl_FragDepth";
@@ -76,7 +76,7 @@ void TOutputGLSL::visitSymbol(TIntermSymbol *node)
     }
 }
 
-TString TOutputGLSL::translateTextureFunction(const TString &name)
+ImmutableString TOutputGLSL::translateTextureFunction(const ImmutableString &name)
 {
     static const char *simpleRename[] = {"texture2DLodEXT",
                                          "texture2DLod",
@@ -108,7 +108,7 @@ TString TOutputGLSL::translateTextureFunction(const TString &name)
     {
         if (name == mapping[i])
         {
-            return mapping[i + 1];
+            return ImmutableString(mapping[i + 1]);
         }
     }
 

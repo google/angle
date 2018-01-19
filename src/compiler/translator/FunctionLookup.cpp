@@ -17,9 +17,11 @@ namespace
 
 const char kFunctionMangledNameSeparator = '(';
 
+constexpr const ImmutableString kEmptyName("");
+
 }  // anonymous namespace
 
-TFunctionLookup::TFunctionLookup(const TString *name, const TType *constructorType)
+TFunctionLookup::TFunctionLookup(const ImmutableString &name, const TType *constructorType)
     : mName(name), mConstructorType(constructorType), mThisNode(nullptr)
 {
 }
@@ -28,37 +30,37 @@ TFunctionLookup::TFunctionLookup(const TString *name, const TType *constructorTy
 TFunctionLookup *TFunctionLookup::CreateConstructor(const TType *type)
 {
     ASSERT(type != nullptr);
-    return new TFunctionLookup(nullptr, type);
+    return new TFunctionLookup(kEmptyName, type);
 }
 
 // static
-TFunctionLookup *TFunctionLookup::CreateFunctionCall(const TString *name)
+TFunctionLookup *TFunctionLookup::CreateFunctionCall(const ImmutableString &name)
 {
-    ASSERT(name != nullptr);
+    ASSERT(name != "");
     return new TFunctionLookup(name, nullptr);
 }
 
-const TString &TFunctionLookup::name() const
+const ImmutableString &TFunctionLookup::name() const
 {
-    return *mName;
+    return mName;
 }
 
-const TString &TFunctionLookup::getMangledName() const
+ImmutableString TFunctionLookup::getMangledName() const
 {
-    return GetMangledName(*mName, mArguments);
+    return GetMangledName(mName.data(), mArguments);
 }
 
-const TString &TFunctionLookup::GetMangledName(const TString &functionName,
-                                               const TIntermSequence &arguments)
+ImmutableString TFunctionLookup::GetMangledName(const char *functionName,
+                                                const TIntermSequence &arguments)
 {
-    std::string newName = functionName.c_str();
+    std::string newName(functionName);
     newName += kFunctionMangledNameSeparator;
 
     for (TIntermNode *argument : arguments)
     {
         newName += argument->getAsTyped()->getType().getMangledName();
     }
-    return *NewPoolTString(newName.c_str());
+    return ImmutableString(newName);
 }
 
 bool TFunctionLookup::isConstructor() const

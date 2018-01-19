@@ -21,6 +21,8 @@ namespace sh
 namespace
 {
 
+constexpr const ImmutableString kReturnValueVariableName("angle_return");
+
 void CopyAggregateChildren(TIntermAggregateBase *from, TIntermAggregateBase *to)
 {
     const TIntermSequence *fromSequence = from->getSequence();
@@ -58,8 +60,6 @@ class ArrayReturnValueToOutParameterTraverser : private TIntermTraverser
 
     // Map from function symbol ids to the changed function.
     std::map<int, ChangedFunction> mChangedFunctions;
-
-    const TString *const mReturnValueVariableName;
 };
 
 TIntermAggregate *ArrayReturnValueToOutParameterTraverser::createReplacementCall(
@@ -90,9 +90,7 @@ void ArrayReturnValueToOutParameterTraverser::apply(TIntermNode *root, TSymbolTa
 
 ArrayReturnValueToOutParameterTraverser::ArrayReturnValueToOutParameterTraverser(
     TSymbolTable *symbolTable)
-    : TIntermTraverser(true, false, true, symbolTable),
-      mFunctionWithArrayReturnValue(nullptr),
-      mReturnValueVariableName(NewPoolTString("angle_return"))
+    : TIntermTraverser(true, false, true, symbolTable), mFunctionWithArrayReturnValue(nullptr)
 {
 }
 
@@ -126,9 +124,9 @@ bool ArrayReturnValueToOutParameterTraverser::visitFunctionPrototype(Visit visit
             returnValueVariableType->setQualifier(EvqOut);
             ChangedFunction changedFunction;
             changedFunction.returnValueVariable =
-                new TVariable(mSymbolTable, mReturnValueVariableName, returnValueVariableType,
+                new TVariable(mSymbolTable, kReturnValueVariableName, returnValueVariableType,
                               SymbolType::AngleInternal);
-            TFunction *func = new TFunction(mSymbolTable, &node->getFunction()->name(),
+            TFunction *func = new TFunction(mSymbolTable, node->getFunction()->name(),
                                             StaticType::GetBasic<EbtVoid>(),
                                             node->getFunction()->symbolType(), false);
             for (size_t i = 0; i < node->getFunction()->getParamCount(); ++i)
@@ -136,7 +134,7 @@ bool ArrayReturnValueToOutParameterTraverser::visitFunctionPrototype(Visit visit
                 func->addParameter(node->getFunction()->getParam(i));
             }
             func->addParameter(TConstParameter(
-                mReturnValueVariableName, static_cast<const TType *>(returnValueVariableType)));
+                kReturnValueVariableName, static_cast<const TType *>(returnValueVariableType)));
             changedFunction.func                = func;
             mChangedFunctions[functionId.get()] = changedFunction;
         }

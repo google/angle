@@ -10,8 +10,9 @@
 #include <algorithm>
 #include <array>
 
-#include "common/debug.h"
 #include "GLSLANG/ShaderLang.h"
+#include "common/debug.h"
+#include "compiler/translator/ImmutableString.h"
 
 namespace sh
 {
@@ -1054,7 +1055,7 @@ inline const char *getImageInternalFormatString(TLayoutImageInternalFormat iifq)
     }
 }
 
-inline TYuvCscStandardEXT getYuvCscStandardEXT(const std::string &str)
+inline TYuvCscStandardEXT getYuvCscStandardEXT(const ImmutableString &str)
 {
     if (str == "itu_601")
         return EycsItu601;

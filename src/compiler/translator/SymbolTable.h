@@ -36,6 +36,7 @@
 
 #include "common/angleutils.h"
 #include "compiler/translator/ExtensionBehavior.h"
+#include "compiler/translator/ImmutableString.h"
 #include "compiler/translator/InfoSink.h"
 #include "compiler/translator/IntermNode.h"
 #include "compiler/translator/StaticType.h"
@@ -92,23 +93,28 @@ class TSymbolTable : angle::NonCopyable
     // The insert* entry points are used when initializing the symbol table with built-ins.
     // They return the created symbol / true in case the declaration was successful, and nullptr /
     // false if the declaration failed due to redefinition.
-    TVariable *insertVariable(ESymbolLevel level, const char *name, const TType *type);
+    TVariable *insertVariable(ESymbolLevel level, const ImmutableString &name, const TType *type);
     TVariable *insertVariableExt(ESymbolLevel level,
                                  TExtension ext,
-                                 const char *name,
+                                 const ImmutableString &name,
                                  const TType *type);
     bool insertVariable(ESymbolLevel level, TVariable *variable);
     bool insertStructType(ESymbolLevel level, TStructure *str);
     bool insertInterfaceBlock(ESymbolLevel level, TInterfaceBlock *interfaceBlock);
 
     template <TPrecision precision>
-    bool insertConstInt(ESymbolLevel level, const char *name, int value);
+    bool insertConstInt(ESymbolLevel level, const ImmutableString &name, int value);
 
     template <TPrecision precision>
-    bool insertConstIntExt(ESymbolLevel level, TExtension ext, const char *name, int value);
+    bool insertConstIntExt(ESymbolLevel level,
+                           TExtension ext,
+                           const ImmutableString &name,
+                           int value);
 
     template <TPrecision precision>
-    bool insertConstIvec3(ESymbolLevel level, const char *name, const std::array<int, 3> &values);
+    bool insertConstIvec3(ESymbolLevel level,
+                          const ImmutableString &name,
+                          const std::array<int, 3> &values);
 
     // Note that for inserted built-in functions the const char *name needs to remain valid for the
     // lifetime of the SymbolTable. SymbolTable does not allocate a copy of it.
@@ -183,18 +189,20 @@ class TSymbolTable : angle::NonCopyable
 
     // These return the TFunction pointer to keep using to refer to this function.
     const TFunction *markUserDefinedFunctionHasPrototypeDeclaration(
-        const TString &mangledName,
+        const ImmutableString &mangledName,
         bool *hadPrototypeDeclarationOut);
     const TFunction *setUserDefinedFunctionParameterNamesFromDefinition(const TFunction *function,
                                                                         bool *wasDefinedOut);
 
-    const TSymbol *find(const TString &name, int shaderVersion) const;
+    // find() is guaranteed not to retain a reference to the ImmutableString, so an ImmutableString
+    // with a reference to a short-lived char * is fine to pass here.
+    const TSymbol *find(const ImmutableString &name, int shaderVersion) const;
 
-    const TSymbol *findGlobal(const TString &name) const;
+    const TSymbol *findGlobal(const ImmutableString &name) const;
 
-    const TSymbol *findBuiltIn(const TString &name, int shaderVersion) const;
+    const TSymbol *findBuiltIn(const ImmutableString &name, int shaderVersion) const;
 
-    const TSymbol *findBuiltIn(const TString &name,
+    const TSymbol *findBuiltIn(const ImmutableString &name,
                                int shaderVersion,
                                bool includeGLSLBuiltins) const;
 
@@ -238,13 +246,13 @@ class TSymbolTable : angle::NonCopyable
     ESymbolLevel currentLevel() const { return static_cast<ESymbolLevel>(table.size() - 1); }
 
     TVariable *insertVariable(ESymbolLevel level,
-                              const TString *name,
+                              const ImmutableString &name,
                               const TType *type,
                               SymbolType symbolType);
 
     bool insert(ESymbolLevel level, TSymbol *symbol);
 
-    TFunction *findUserDefinedFunction(const TString &name) const;
+    TFunction *findUserDefinedFunction(const ImmutableString &name) const;
 
     // Used to insert unmangled functions to check redeclaration of built-ins in ESSL 3.00 and
     // above.
@@ -265,11 +273,10 @@ class TSymbolTable : angle::NonCopyable
 };
 
 template <TPrecision precision>
-bool TSymbolTable::insertConstInt(ESymbolLevel level, const char *name, int value)
+bool TSymbolTable::insertConstInt(ESymbolLevel level, const ImmutableString &name, int value)
 {
-    TVariable *constant =
-        new TVariable(this, NewPoolTString(name),
-                      StaticType::Get<EbtInt, precision, EvqConst, 1, 1>(), SymbolType::BuiltIn);
+    TVariable *constant = new TVariable(
+        this, name, StaticType::Get<EbtInt, precision, EvqConst, 1, 1>(), SymbolType::BuiltIn);
     TConstantUnion *unionArray = new TConstantUnion[1];
     unionArray[0].setIConst(value);
     constant->shareConstPointer(unionArray);
@@ -279,12 +286,11 @@ bool TSymbolTable::insertConstInt(ESymbolLevel level, const char *name, int valu
 template <TPrecision precision>
 bool TSymbolTable::insertConstIntExt(ESymbolLevel level,
                                      TExtension ext,
-                                     const char *name,
+                                     const ImmutableString &name,
                                      int value)
 {
-    TVariable *constant        = new TVariable(this, NewPoolTString(name),
-                                        StaticType::Get<EbtInt, precision, EvqConst, 1, 1>(),
-                                        SymbolType::BuiltIn, ext);
+    TVariable *constant = new TVariable(
+        this, name, StaticType::Get<EbtInt, precision, EvqConst, 1, 1>(), SymbolType::BuiltIn, ext);
     TConstantUnion *unionArray = new TConstantUnion[1];
     unionArray[0].setIConst(value);
     constant->shareConstPointer(unionArray);
@@ -293,12 +299,11 @@ bool TSymbolTable::insertConstIntExt(ESymbolLevel level,
 
 template <TPrecision precision>
 bool TSymbolTable::insertConstIvec3(ESymbolLevel level,
-                                    const char *name,
+                                    const ImmutableString &name,
                                     const std::array<int, 3> &values)
 {
-    TVariable *constantIvec3 =
-        new TVariable(this, NewPoolTString(name),
-                      StaticType::Get<EbtInt, precision, EvqConst, 3, 1>(), SymbolType::BuiltIn);
+    TVariable *constantIvec3 = new TVariable(
+        this, name, StaticType::Get<EbtInt, precision, EvqConst, 3, 1>(), SymbolType::BuiltIn);
 
     TConstantUnion *unionArray = new TConstantUnion[3];
     for (size_t index = 0u; index < 3u; ++index)

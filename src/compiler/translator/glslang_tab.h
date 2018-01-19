@@ -215,7 +215,7 @@ union YYSTYPE
 
     struct {
         union {
-            TString *string;
+            const char *string;  // pool allocated.
             float f;
             int i;
             unsigned int u;

@@ -174,12 +174,12 @@ class ConstantFoldingTest : public ShaderCompileTreeTest
 
     bool symbolFoundInAST(const char *symbolName)
     {
-        return FindSymbolNode(mASTRoot, TString(symbolName)) != nullptr;
+        return FindSymbolNode(mASTRoot, ImmutableString(symbolName)) != nullptr;
     }
 
     bool symbolFoundInMain(const char *symbolName)
     {
-        return FindSymbolNode(FindMain(mASTRoot), TString(symbolName)) != nullptr;
+        return FindSymbolNode(FindMain(mASTRoot), ImmutableString(symbolName)) != nullptr;
     }
 };
 

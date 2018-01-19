@@ -347,7 +347,7 @@ const char *TextureGroupSuffix(const TBasicType type,
     return TextureGroupSuffix(TextureGroup(type, imageInternalFormat));
 }
 
-TString TextureTypeSuffix(const TBasicType type, TLayoutImageInternalFormat imageInternalFormat)
+const char *TextureTypeSuffix(const TBasicType type, TLayoutImageInternalFormat imageInternalFormat)
 {
     switch (type)
     {
@@ -593,7 +593,7 @@ TString RWTextureString(const TBasicType type, TLayoutImageInternalFormat imageI
     return RWTextureString(RWTextureGroup(type, imageInternalFormat));
 }
 
-TString RWTextureGroupSuffix(const HLSLRWTextureGroup type)
+const char *RWTextureGroupSuffix(const HLSLRWTextureGroup type)
 {
     switch (type)
     {
@@ -634,12 +634,14 @@ TString RWTextureGroupSuffix(const HLSLRWTextureGroup type)
     return "<unknown read and write resource>";
 }
 
-TString RWTextureGroupSuffix(const TBasicType type, TLayoutImageInternalFormat imageInternalFormat)
+const char *RWTextureGroupSuffix(const TBasicType type,
+                                 TLayoutImageInternalFormat imageInternalFormat)
 {
     return RWTextureGroupSuffix(RWTextureGroup(type, imageInternalFormat));
 }
 
-TString RWTextureTypeSuffix(const TBasicType type, TLayoutImageInternalFormat imageInternalFormat)
+const char *RWTextureTypeSuffix(const TBasicType type,
+                                TLayoutImageInternalFormat imageInternalFormat)
 {
     switch (type)
     {
@@ -691,40 +693,40 @@ TString RWTextureTypeSuffix(const TBasicType type, TLayoutImageInternalFormat im
     }
 }
 
-TString DecorateField(const TString &string, const TStructure &structure)
+TString DecorateField(const ImmutableString &string, const TStructure &structure)
 {
     if (structure.symbolType() != SymbolType::BuiltIn)
     {
         return Decorate(string);
     }
 
-    return string;
+    return TString(string.data());
 }
 
-TString DecoratePrivate(const TString &privateText)
+TString DecoratePrivate(const ImmutableString &privateText)
 {
-    return "dx_" + privateText;
+    return "dx_" + TString(privateText.data());
 }
 
-TString Decorate(const TString &string)
+TString Decorate(const ImmutableString &string)
 {
-    if (string.compare(0, 3, "gl_") != 0)
+    if (!string.beginsWith("gl_"))
     {
-        return "_" + string;
+        return "_" + TString(string.data());
     }
 
-    return string;
+    return TString(string.data());
 }
 
 TString DecorateVariableIfNeeded(const TVariable &variable)
 {
     if (variable.symbolType() == SymbolType::AngleInternal)
     {
-        const TString &name = variable.name();
+        const ImmutableString &name = variable.name();
         // The name should not have a prefix reserved for user-defined variables or functions.
-        ASSERT(name.compare(0, 2, "f_") != 0);
-        ASSERT(name.compare(0, 1, "_") != 0);
-        return name;
+        ASSERT(!name.beginsWith("f_"));
+        ASSERT(!name.beginsWith("_"));
+        return TString(name.data());
     }
     else
     {
@@ -737,15 +739,15 @@ TString DecorateFunctionIfNeeded(const TFunction *func)
     if (func->symbolType() == SymbolType::AngleInternal)
     {
         // The name should not have a prefix reserved for user-defined variables or functions.
-        ASSERT(func->name().compare(0, 2, "f_") != 0);
-        ASSERT(func->name().compare(0, 1, "_") != 0);
-        return func->name();
+        ASSERT(!func->name().beginsWith("f_"));
+        ASSERT(!func->name().beginsWith("_"));
+        return TString(func->name().data());
     }
-    ASSERT(func->name().compare(0, 3, "gl_") != 0);
+    ASSERT(!func->name().beginsWith("gl_"));
     // Add an additional f prefix to functions so that they're always disambiguated from variables.
     // This is necessary in the corner case where a variable declaration hides a function that it
     // uses in its initializer.
-    return "f_" + func->name();
+    return "f_" + TString(func->name().data());
 }
 
 TString TypeString(const TType &type)
@@ -860,7 +862,7 @@ TString StructNameString(const TStructure &structure)
         return Decorate(structure.name());
     }
 
-    return "ss" + str(structure.uniqueId().get()) + "_" + structure.name();
+    return "ss" + str(structure.uniqueId().get()) + "_" + TString(structure.name().data());
 }
 
 TString QualifiedStructNameString(const TStructure &structure,

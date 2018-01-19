@@ -37,9 +37,9 @@ class IntermNodeTest : public testing::Test
 
     TIntermSymbol *createTestSymbol(const TType &type)
     {
-        TInfoSinkBase symbolNameOut;
+        std::stringstream symbolNameOut;
         symbolNameOut << "test" << mUniqueIndex;
-        TString *symbolName = NewPoolTString(symbolNameOut.c_str());
+        ImmutableString symbolName(symbolNameOut.str());
         ++mUniqueIndex;
 
         // We're using a dummy symbol table here, don't need to assign proper symbol ids to these
@@ -63,7 +63,7 @@ class IntermNodeTest : public testing::Test
     TFunction *createTestBuiltInFunction(const TType &returnType, const TIntermSequence &args)
     {
         // We're using a dummy symbol table similarly as for creating symbol nodes.
-        TString *name = NewPoolTString("testFunc");
+        const ImmutableString name("testFunc");
         TSymbolTable symbolTable;
         TFunction *func =
             new TFunction(&symbolTable, name, new TType(returnType), SymbolType::BuiltIn, true);
@@ -139,7 +139,7 @@ TEST_F(IntermNodeTest, DeepCopySymbolNode)
     TSymbolTable symbolTable;
 
     TVariable *variable =
-        new TVariable(&symbolTable, NewPoolTString("name"), type, SymbolType::AngleInternal);
+        new TVariable(&symbolTable, ImmutableString("name"), type, SymbolType::AngleInternal);
     TIntermSymbol *original = new TIntermSymbol(variable);
     original->setLine(getTestSourceLoc());
     TIntermTyped *copy = original->deepCopy();

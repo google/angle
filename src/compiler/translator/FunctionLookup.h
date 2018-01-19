@@ -9,6 +9,7 @@
 #ifndef COMPILER_TRANSLATOR_FUNCTIONLOOKUP_H_
 #define COMPILER_TRANSLATOR_FUNCTIONLOOKUP_H_
 
+#include "compiler/translator/ImmutableString.h"
 #include "compiler/translator/IntermNode.h"
 
 namespace sh
@@ -21,12 +22,12 @@ class TFunctionLookup : angle::NonCopyable
     POOL_ALLOCATOR_NEW_DELETE();
 
     static TFunctionLookup *CreateConstructor(const TType *type);
-    static TFunctionLookup *CreateFunctionCall(const TString *name);
+    static TFunctionLookup *CreateFunctionCall(const ImmutableString &name);
 
-    const TString &name() const;
-    const TString &getMangledName() const;
-    static const TString &GetMangledName(const TString &functionName,
-                                         const TIntermSequence &arguments);
+    const ImmutableString &name() const;
+    ImmutableString getMangledName() const;
+    static ImmutableString GetMangledName(const char *functionName,
+                                          const TIntermSequence &arguments);
 
     bool isConstructor() const;
     const TType &constructorType() const;
@@ -38,9 +39,9 @@ class TFunctionLookup : angle::NonCopyable
     TIntermSequence &arguments();
 
   private:
-    TFunctionLookup(const TString *name, const TType *constructorType);
+    TFunctionLookup(const ImmutableString &name, const TType *constructorType);
 
-    const TString *mName;
+    const ImmutableString mName;
     const TType *const mConstructorType;
     TIntermTyped *mThisNode;
     TIntermSequence mArguments;

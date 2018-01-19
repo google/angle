@@ -55,7 +55,7 @@ class TextureFunctionHLSL final : angle::NonCopyable
 
     // Returns the name of the texture function implementation to call.
     // The name that's passed in is the name of the GLSL texture function that it should implement.
-    TString useTextureFunction(const TString &name,
+    TString useTextureFunction(const ImmutableString &name,
                                TBasicType samplerType,
                                int coords,
                                size_t argumentCount,

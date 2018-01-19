@@ -24,6 +24,8 @@ inline float fractionalPart(float f)
     return modff(f, &intPart);
 }
 
+class ImmutableString;
+
 //
 // Encapsulate info logs for all objects that have them.
 //

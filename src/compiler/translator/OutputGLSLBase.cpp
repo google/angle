@@ -1108,17 +1108,18 @@ void TOutputGLSLBase::visitCodeBlock(TIntermBlock *node)
     }
 }
 
-TString TOutputGLSLBase::getTypeName(const TType &type)
+ImmutableString TOutputGLSLBase::getTypeName(const TType &type)
 {
     return GetTypeName(type, mHashFunction, &mNameMap);
 }
 
-TString TOutputGLSLBase::hashName(const TSymbol *symbol)
+ImmutableString TOutputGLSLBase::hashName(const TSymbol *symbol)
 {
     return HashName(symbol, mHashFunction, &mNameMap);
 }
 
-TString TOutputGLSLBase::hashFieldName(const TSymbol *containingStruct, const TString &fieldName)
+ImmutableString TOutputGLSLBase::hashFieldName(const TSymbol *containingStruct,
+                                               const ImmutableString &fieldName)
 {
     if (containingStruct->symbolType() == SymbolType::UserDefined ||
         containingStruct->symbolType() == SymbolType::Empty)
@@ -1131,7 +1132,7 @@ TString TOutputGLSLBase::hashFieldName(const TSymbol *containingStruct, const TS
     }
 }
 
-TString TOutputGLSLBase::hashFunctionNameIfNeeded(const TFunction *func)
+ImmutableString TOutputGLSLBase::hashFunctionNameIfNeeded(const TFunction *func)
 {
     if (func->isMain())
     {

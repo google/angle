@@ -13,6 +13,7 @@
 #include <GLSLANG/ShaderLang.h>
 
 #include "compiler/translator/HashNames.h"
+#include "compiler/translator/ImmutableString.h"
 #include "compiler/translator/Operator.h"
 #include "compiler/translator/Types.h"
 
@@ -46,7 +47,7 @@ InterpolationType GetInterpolationType(TQualifier qualifier);
 // 3.10 section 4.1.9.
 TString ArrayString(const TType &type);
 
-TString GetTypeName(const TType &type, ShHashFunction64 hashFunction, NameMap *nameMap);
+ImmutableString GetTypeName(const TType &type, ShHashFunction64 hashFunction, NameMap *nameMap);
 
 TType GetShaderVariableBasicType(const sh::ShaderVariable &var);
 

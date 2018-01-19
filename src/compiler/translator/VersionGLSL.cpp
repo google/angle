@@ -12,6 +12,11 @@
 namespace sh
 {
 
+namespace
+{
+constexpr const ImmutableString kGlPointCoordString("gl_PointCoord");
+}  // anonymous namespace
+
 int ShaderOutputTypeToGLSLVersion(ShShaderOutput output)
 {
     switch (output)
@@ -77,7 +82,8 @@ TVersionGLSL::TVersionGLSL(sh::GLenum type, const TPragma &pragma, ShShaderOutpu
 
 void TVersionGLSL::visitSymbol(TIntermSymbol *node)
 {
-    if (node->variable().symbolType() == SymbolType::BuiltIn && node->getName() == "gl_PointCoord")
+    if (node->variable().symbolType() == SymbolType::BuiltIn &&
+        node->getName() == kGlPointCoordString)
     {
         ensureVersionIsAtLeast(GLSL_VERSION_120);
     }

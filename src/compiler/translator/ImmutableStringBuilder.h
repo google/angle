@@ -32,6 +32,28 @@ class ImmutableStringBuilder
     // This invalidates the ImmutableStringBuilder, so it should only be called once.
     operator ImmutableString();
 
+    template <typename T>
+    void appendHex(T number)
+    {
+        ASSERT(mData != nullptr);
+        ASSERT(mPos + sizeof(T) * 2u <= mMaxLength);
+        int index = static_cast<int>(sizeof(T)) * 2 - 1;
+        // Loop through leading zeroes.
+        while (((number >> (index * 4)) & 0xfu) == 0 && index > 0)
+        {
+            --index;
+        }
+        // Write the rest of the hex digits.
+        while (index >= 0)
+        {
+            char digit     = static_cast<char>((number >> (index * 4)) & 0xfu);
+            char digitChar = digit < 10 ? digit + '0' : digit + 'a';
+            mData[mPos++]  = digitChar;
+            --index;
+        }
+        return;
+    }
+
   private:
     inline static char *AllocateEmptyPoolCharArray(size_t strLength)
     {

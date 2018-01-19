@@ -15,6 +15,7 @@
 #include "compiler/translator/ASTMetadataHLSL.h"
 #include "compiler/translator/Compiler.h"
 #include "compiler/translator/FlagStd140Structs.h"
+#include "compiler/translator/ImmutableString.h"
 #include "compiler/translator/IntermTraverse.h"
 
 class BuiltInFunctionEmulator;
@@ -252,7 +253,7 @@ class OutputHLSL : public TIntermTraverser
 
   private:
     TString generateStructMapping(const std::vector<MappedStruct> &std140Structs) const;
-    TString samplerNamePrefixFromStruct(TIntermTyped *node);
+    ImmutableString samplerNamePrefixFromStruct(TIntermTyped *node);
     bool ancestorEvaluatesToSamplerInStruct();
 };
 }

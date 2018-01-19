@@ -10,6 +10,7 @@
 #define COMPILER_TRANSLATOR_DECLARATOR_H_
 
 #include "compiler/translator/Common.h"
+#include "compiler/translator/ImmutableString.h"
 
 namespace sh
 {
@@ -19,13 +20,13 @@ class TDeclarator : angle::NonCopyable
 {
   public:
     POOL_ALLOCATOR_NEW_DELETE();
-    TDeclarator(const TString *name, const TSourceLoc &line);
+    TDeclarator(const ImmutableString &name, const TSourceLoc &line);
 
-    TDeclarator(const TString *name,
+    TDeclarator(const ImmutableString &name,
                 const TVector<unsigned int> *arraySizes,
                 const TSourceLoc &line);
 
-    const TString *name() const { return mName; }
+    const ImmutableString &name() const { return mName; }
 
     bool isArray() const;
     const TVector<unsigned int> *arraySizes() const { return mArraySizes; }
@@ -33,7 +34,7 @@ class TDeclarator : angle::NonCopyable
     const TSourceLoc &line() const { return mLine; }
 
   private:
-    const TString *const mName;
+    const ImmutableString mName;
 
     // Outermost array size is stored at the end of the vector.
     const TVector<unsigned int> *const mArraySizes;

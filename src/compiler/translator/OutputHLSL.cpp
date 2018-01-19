@@ -371,7 +371,8 @@ TString OutputHLSL::generateStructMapping(const std::vector<MappedStruct> &std14
 
             if (mappedStruct.blockDeclarator->variable().symbolType() != SymbolType::Empty)
             {
-                const TString &instanceName = mappedStruct.blockDeclarator->variable().name();
+                const ImmutableString &instanceName =
+                    mappedStruct.blockDeclarator->variable().name();
                 unsigned int instanceStringArrayIndex = GL_INVALID_INDEX;
                 if (isInstanceArray)
                     instanceStringArrayIndex = instanceArrayIndex;
@@ -415,7 +416,7 @@ void OutputHLSL::header(TInfoSinkBase &out,
     for (const auto &varying : mReferencedVaryings)
     {
         const TType &type   = varying.second->getType();
-        const TString &name = varying.second->name();
+        const ImmutableString &name = varying.second->name();
 
         // Program linking depends on this exact format
         varyings += "static " + InterpolationString(type.getQualifier()) + " " + TypeString(type) +
@@ -426,7 +427,7 @@ void OutputHLSL::header(TInfoSinkBase &out,
     for (const auto &attribute : mReferencedAttributes)
     {
         const TType &type   = attribute.second->getType();
-        const TString &name = attribute.second->name();
+        const ImmutableString &name = attribute.second->name();
 
         attributes += "static " + TypeString(type) + " " + Decorate(name) + ArrayString(type) +
                       " = " + zeroInitializer(type) + ";\n";
@@ -498,12 +499,11 @@ void OutputHLSL::header(TInfoSinkBase &out,
         {
             for (const auto &outputVariable : mReferencedOutputVariables)
             {
-                const TString &variableName = outputVariable.second->name();
+                const ImmutableString &variableName = outputVariable.second->name();
                 const TType &variableType   = outputVariable.second->getType();
 
-                out << "static " + TypeString(variableType) + " out_" + variableName +
-                           ArrayString(variableType) + " = " + zeroInitializer(variableType) +
-                           ";\n";
+                out << "static " << TypeString(variableType) << " out_" << variableName
+                    << ArrayString(variableType) << " = " << zeroInitializer(variableType) << ";\n";
             }
         }
         else
@@ -883,7 +883,7 @@ void OutputHLSL::visitSymbol(TIntermSymbol *node)
         out << "map";
     }
 
-    const TString &name             = variable.name();
+    const ImmutableString &name     = variable.name();
     const TSymbolUniqueId &uniqueId = variable.uniqueId();
 
     if (name == "gl_DepthRange")
@@ -1314,11 +1314,11 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
             {
                 if (indexingReturnsSampler)
                 {
-                    out << "_" + field->name();
+                    out << "_" << field->name();
                 }
                 else
                 {
-                    out << "." + DecorateField(field->name(), *structure);
+                    out << "." << DecorateField(field->name(), *structure);
                 }
 
                 return false;
@@ -1661,7 +1661,7 @@ bool OutputHLSL::visitUnary(Visit visit, TIntermUnary *node)
     return true;
 }
 
-TString OutputHLSL::samplerNamePrefixFromStruct(TIntermTyped *node)
+ImmutableString OutputHLSL::samplerNamePrefixFromStruct(TIntermTyped *node)
 {
     if (node->getAsSymbolNode())
     {
@@ -1675,9 +1675,9 @@ TString OutputHLSL::samplerNamePrefixFromStruct(TIntermTyped *node)
         {
             int index = nodeBinary->getRight()->getAsConstantUnion()->getIConst(0);
 
-            TInfoSinkBase prefixSink;
+            std::stringstream prefixSink;
             prefixSink << samplerNamePrefixFromStruct(nodeBinary->getLeft()) << "_" << index;
-            return TString(prefixSink.c_str());
+            return ImmutableString(prefixSink.str());
         }
         case EOpIndexDirectStruct:
         {
@@ -1685,14 +1685,14 @@ TString OutputHLSL::samplerNamePrefixFromStruct(TIntermTyped *node)
             int index           = nodeBinary->getRight()->getAsConstantUnion()->getIConst(0);
             const TField *field = s->fields()[index];
 
-            TInfoSinkBase prefixSink;
+            std::stringstream prefixSink;
             prefixSink << samplerNamePrefixFromStruct(nodeBinary->getLeft()) << "_"
                        << field->name();
-            return TString(prefixSink.c_str());
+            return ImmutableString(prefixSink.str());
         }
         default:
             UNREACHABLE();
-            return TString("");
+            return ImmutableString("");
     }
 }
 
@@ -1951,16 +1951,16 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
             }
             else if (node->getFunction()->isImageFunction())
             {
-                const TString &name       = node->getFunction()->name();
+                const ImmutableString &name = node->getFunction()->name();
                 TType type                = (*arguments)[0]->getAsTyped()->getType();
-                TString imageFunctionName = mImageFunctionHLSL->useImageFunction(
+                TString imageFunctionName   = mImageFunctionHLSL->useImageFunction(
                     name, type.getBasicType(), type.getLayoutQualifier().imageInternalFormat,
                     type.getMemoryQualifier().readonly);
                 out << imageFunctionName << "(";
             }
             else
             {
-                const TString &name    = node->getFunction()->name();
+                const ImmutableString &name = node->getFunction()->name();
                 TBasicType samplerType = (*arguments)[0]->getAsTyped()->getType().getBasicType();
                 int coords = 0;  // textureSize(gsampler2DMS) doesn't have a second argument.
                 if (arguments->size() > 1)
@@ -1988,8 +1988,10 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
                 {
                     const TType &argType = typedArg->getType();
                     TVector<const TVariable *> samplerSymbols;
-                    TString structName = samplerNamePrefixFromStruct(typedArg);
-                    argType.createSamplerSymbols("angle_" + structName, "", &samplerSymbols,
+                    ImmutableString structName = samplerNamePrefixFromStruct(typedArg);
+                    std::string namePrefix     = "angle_";
+                    namePrefix += structName.data();
+                    argType.createSamplerSymbols(ImmutableString(namePrefix), "", &samplerSymbols,
                                                  nullptr, mSymbolTable);
                     for (const TVariable *sampler : samplerSymbols)
                     {
@@ -2002,7 +2004,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
                         {
                             // In case of HLSL 4.1+, this symbol is the sampler index, and in case
                             // of D3D9, it's the sampler variable.
-                            out << ", " + sampler->name();
+                            out << ", " << sampler->name();
                         }
                     }
                 }
@@ -2683,7 +2685,10 @@ TString OutputHLSL::argumentString(const TIntermSymbol *symbol)
     {
         ASSERT(qualifier != EvqOut && qualifier != EvqInOut);
         TVector<const TVariable *> samplerSymbols;
-        type.createSamplerSymbols("angle" + nameStr, "", &samplerSymbols, nullptr, mSymbolTable);
+        std::string namePrefix = "angle";
+        namePrefix += nameStr.c_str();
+        type.createSamplerSymbols(ImmutableString(namePrefix), "", &samplerSymbols, nullptr,
+                                  mSymbolTable);
         for (const TVariable *sampler : samplerSymbols)
         {
             const TType &samplerType = sampler->getType();

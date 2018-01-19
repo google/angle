@@ -748,133 +748,161 @@ void InsertBuiltInFunctions(sh::GLenum type,
     TFieldList *fields       = new TFieldList();
     TSourceLoc zeroSourceLoc = {0, 0, 0, 0};
     auto highpFloat1         = new TType(EbtFloat, EbpHigh, EvqGlobal, 1);
-    TField *near             = new TField(highpFloat1, NewPoolTString("near"), zeroSourceLoc);
-    TField *far              = new TField(highpFloat1, NewPoolTString("far"), zeroSourceLoc);
-    TField *diff             = new TField(highpFloat1, NewPoolTString("diff"), zeroSourceLoc);
+    TField *near             = new TField(highpFloat1, ImmutableString("near"), zeroSourceLoc);
+    TField *far              = new TField(highpFloat1, ImmutableString("far"), zeroSourceLoc);
+    TField *diff             = new TField(highpFloat1, ImmutableString("diff"), zeroSourceLoc);
     fields->push_back(near);
     fields->push_back(far);
     fields->push_back(diff);
     TStructure *depthRangeStruct = new TStructure(
-        &symbolTable, NewPoolTString("gl_DepthRangeParameters"), fields, SymbolType::BuiltIn);
+        &symbolTable, ImmutableString("gl_DepthRangeParameters"), fields, SymbolType::BuiltIn);
     symbolTable.insertStructType(COMMON_BUILTINS, depthRangeStruct);
     TType *depthRangeType = new TType(depthRangeStruct);
     depthRangeType->setQualifier(EvqUniform);
     depthRangeType->realize();
-    symbolTable.insertVariable(COMMON_BUILTINS, "gl_DepthRange", depthRangeType);
+    symbolTable.insertVariable(COMMON_BUILTINS, ImmutableString("gl_DepthRange"), depthRangeType);
 
     //
     // Implementation dependent built-in constants.
     //
-    symbolTable.insertConstInt<EbpMedium>(COMMON_BUILTINS, "gl_MaxVertexAttribs",
+    symbolTable.insertConstInt<EbpMedium>(COMMON_BUILTINS, ImmutableString("gl_MaxVertexAttribs"),
                                           resources.MaxVertexAttribs);
-    symbolTable.insertConstInt<EbpMedium>(COMMON_BUILTINS, "gl_MaxVertexUniformVectors",
+    symbolTable.insertConstInt<EbpMedium>(COMMON_BUILTINS,
+                                          ImmutableString("gl_MaxVertexUniformVectors"),
                                           resources.MaxVertexUniformVectors);
-    symbolTable.insertConstInt<EbpMedium>(COMMON_BUILTINS, "gl_MaxVertexTextureImageUnits",
+    symbolTable.insertConstInt<EbpMedium>(COMMON_BUILTINS,
+                                          ImmutableString("gl_MaxVertexTextureImageUnits"),
                                           resources.MaxVertexTextureImageUnits);
-    symbolTable.insertConstInt<EbpMedium>(COMMON_BUILTINS, "gl_MaxCombinedTextureImageUnits",
+    symbolTable.insertConstInt<EbpMedium>(COMMON_BUILTINS,
+                                          ImmutableString("gl_MaxCombinedTextureImageUnits"),
                                           resources.MaxCombinedTextureImageUnits);
-    symbolTable.insertConstInt<EbpMedium>(COMMON_BUILTINS, "gl_MaxTextureImageUnits",
+    symbolTable.insertConstInt<EbpMedium>(COMMON_BUILTINS,
+                                          ImmutableString("gl_MaxTextureImageUnits"),
                                           resources.MaxTextureImageUnits);
-    symbolTable.insertConstInt<EbpMedium>(COMMON_BUILTINS, "gl_MaxFragmentUniformVectors",
+    symbolTable.insertConstInt<EbpMedium>(COMMON_BUILTINS,
+                                          ImmutableString("gl_MaxFragmentUniformVectors"),
                                           resources.MaxFragmentUniformVectors);
 
-    symbolTable.insertConstInt<EbpMedium>(ESSL1_BUILTINS, "gl_MaxVaryingVectors",
+    symbolTable.insertConstInt<EbpMedium>(ESSL1_BUILTINS, ImmutableString("gl_MaxVaryingVectors"),
                                           resources.MaxVaryingVectors);
 
-    symbolTable.insertConstInt<EbpMedium>(COMMON_BUILTINS, "gl_MaxDrawBuffers",
+    symbolTable.insertConstInt<EbpMedium>(COMMON_BUILTINS, ImmutableString("gl_MaxDrawBuffers"),
                                           resources.MaxDrawBuffers);
     if (resources.EXT_blend_func_extended)
     {
         symbolTable.insertConstIntExt<EbpMedium>(
-            COMMON_BUILTINS, TExtension::EXT_blend_func_extended, "gl_MaxDualSourceDrawBuffersEXT",
-            resources.MaxDualSourceDrawBuffers);
+            COMMON_BUILTINS, TExtension::EXT_blend_func_extended,
+            ImmutableString("gl_MaxDualSourceDrawBuffersEXT"), resources.MaxDualSourceDrawBuffers);
     }
 
-    symbolTable.insertConstInt<EbpMedium>(ESSL3_BUILTINS, "gl_MaxVertexOutputVectors",
+    symbolTable.insertConstInt<EbpMedium>(ESSL3_BUILTINS,
+                                          ImmutableString("gl_MaxVertexOutputVectors"),
                                           resources.MaxVertexOutputVectors);
-    symbolTable.insertConstInt<EbpMedium>(ESSL3_BUILTINS, "gl_MaxFragmentInputVectors",
+    symbolTable.insertConstInt<EbpMedium>(ESSL3_BUILTINS,
+                                          ImmutableString("gl_MaxFragmentInputVectors"),
                                           resources.MaxFragmentInputVectors);
-    symbolTable.insertConstInt<EbpMedium>(ESSL3_BUILTINS, "gl_MinProgramTexelOffset",
+    symbolTable.insertConstInt<EbpMedium>(ESSL3_BUILTINS,
+                                          ImmutableString("gl_MinProgramTexelOffset"),
                                           resources.MinProgramTexelOffset);
-    symbolTable.insertConstInt<EbpMedium>(ESSL3_BUILTINS, "gl_MaxProgramTexelOffset",
+    symbolTable.insertConstInt<EbpMedium>(ESSL3_BUILTINS,
+                                          ImmutableString("gl_MaxProgramTexelOffset"),
                                           resources.MaxProgramTexelOffset);
 
-    symbolTable.insertConstInt<EbpMedium>(ESSL3_1_BUILTINS, "gl_MaxImageUnits",
+    symbolTable.insertConstInt<EbpMedium>(ESSL3_1_BUILTINS, ImmutableString("gl_MaxImageUnits"),
                                           resources.MaxImageUnits);
-    symbolTable.insertConstInt<EbpMedium>(ESSL3_1_BUILTINS, "gl_MaxVertexImageUniforms",
+    symbolTable.insertConstInt<EbpMedium>(ESSL3_1_BUILTINS,
+                                          ImmutableString("gl_MaxVertexImageUniforms"),
                                           resources.MaxVertexImageUniforms);
-    symbolTable.insertConstInt<EbpMedium>(ESSL3_1_BUILTINS, "gl_MaxFragmentImageUniforms",
+    symbolTable.insertConstInt<EbpMedium>(ESSL3_1_BUILTINS,
+                                          ImmutableString("gl_MaxFragmentImageUniforms"),
                                           resources.MaxFragmentImageUniforms);
-    symbolTable.insertConstInt<EbpMedium>(ESSL3_1_BUILTINS, "gl_MaxComputeImageUniforms",
+    symbolTable.insertConstInt<EbpMedium>(ESSL3_1_BUILTINS,
+                                          ImmutableString("gl_MaxComputeImageUniforms"),
                                           resources.MaxComputeImageUniforms);
-    symbolTable.insertConstInt<EbpMedium>(ESSL3_1_BUILTINS, "gl_MaxCombinedImageUniforms",
+    symbolTable.insertConstInt<EbpMedium>(ESSL3_1_BUILTINS,
+                                          ImmutableString("gl_MaxCombinedImageUniforms"),
                                           resources.MaxCombinedImageUniforms);
 
-    symbolTable.insertConstInt<EbpMedium>(ESSL3_1_BUILTINS, "gl_MaxCombinedShaderOutputResources",
+    symbolTable.insertConstInt<EbpMedium>(ESSL3_1_BUILTINS,
+                                          ImmutableString("gl_MaxCombinedShaderOutputResources"),
                                           resources.MaxCombinedShaderOutputResources);
 
-    symbolTable.insertConstIvec3<EbpHigh>(ESSL3_1_BUILTINS, "gl_MaxComputeWorkGroupCount",
+    symbolTable.insertConstIvec3<EbpHigh>(ESSL3_1_BUILTINS,
+                                          ImmutableString("gl_MaxComputeWorkGroupCount"),
                                           resources.MaxComputeWorkGroupCount);
-    symbolTable.insertConstIvec3<EbpHigh>(ESSL3_1_BUILTINS, "gl_MaxComputeWorkGroupSize",
+    symbolTable.insertConstIvec3<EbpHigh>(ESSL3_1_BUILTINS,
+                                          ImmutableString("gl_MaxComputeWorkGroupSize"),
                                           resources.MaxComputeWorkGroupSize);
-    symbolTable.insertConstInt<EbpMedium>(ESSL3_1_BUILTINS, "gl_MaxComputeUniformComponents",
+    symbolTable.insertConstInt<EbpMedium>(ESSL3_1_BUILTINS,
+                                          ImmutableString("gl_MaxComputeUniformComponents"),
                                           resources.MaxComputeUniformComponents);
-    symbolTable.insertConstInt<EbpMedium>(ESSL3_1_BUILTINS, "gl_MaxComputeTextureImageUnits",
+    symbolTable.insertConstInt<EbpMedium>(ESSL3_1_BUILTINS,
+                                          ImmutableString("gl_MaxComputeTextureImageUnits"),
                                           resources.MaxComputeTextureImageUnits);
 
-    symbolTable.insertConstInt<EbpMedium>(ESSL3_1_BUILTINS, "gl_MaxComputeAtomicCounters",
+    symbolTable.insertConstInt<EbpMedium>(ESSL3_1_BUILTINS,
+                                          ImmutableString("gl_MaxComputeAtomicCounters"),
                                           resources.MaxComputeAtomicCounters);
-    symbolTable.insertConstInt<EbpMedium>(ESSL3_1_BUILTINS, "gl_MaxComputeAtomicCounterBuffers",
+    symbolTable.insertConstInt<EbpMedium>(ESSL3_1_BUILTINS,
+                                          ImmutableString("gl_MaxComputeAtomicCounterBuffers"),
                                           resources.MaxComputeAtomicCounterBuffers);
 
-    symbolTable.insertConstInt<EbpMedium>(ESSL3_1_BUILTINS, "gl_MaxVertexAtomicCounters",
+    symbolTable.insertConstInt<EbpMedium>(ESSL3_1_BUILTINS,
+                                          ImmutableString("gl_MaxVertexAtomicCounters"),
                                           resources.MaxVertexAtomicCounters);
-    symbolTable.insertConstInt<EbpMedium>(ESSL3_1_BUILTINS, "gl_MaxFragmentAtomicCounters",
+    symbolTable.insertConstInt<EbpMedium>(ESSL3_1_BUILTINS,
+                                          ImmutableString("gl_MaxFragmentAtomicCounters"),
                                           resources.MaxFragmentAtomicCounters);
-    symbolTable.insertConstInt<EbpMedium>(ESSL3_1_BUILTINS, "gl_MaxCombinedAtomicCounters",
+    symbolTable.insertConstInt<EbpMedium>(ESSL3_1_BUILTINS,
+                                          ImmutableString("gl_MaxCombinedAtomicCounters"),
                                           resources.MaxCombinedAtomicCounters);
-    symbolTable.insertConstInt<EbpMedium>(ESSL3_1_BUILTINS, "gl_MaxAtomicCounterBindings",
+    symbolTable.insertConstInt<EbpMedium>(ESSL3_1_BUILTINS,
+                                          ImmutableString("gl_MaxAtomicCounterBindings"),
                                           resources.MaxAtomicCounterBindings);
 
-    symbolTable.insertConstInt<EbpMedium>(ESSL3_1_BUILTINS, "gl_MaxVertexAtomicCounterBuffers",
+    symbolTable.insertConstInt<EbpMedium>(ESSL3_1_BUILTINS,
+                                          ImmutableString("gl_MaxVertexAtomicCounterBuffers"),
                                           resources.MaxVertexAtomicCounterBuffers);
-    symbolTable.insertConstInt<EbpMedium>(ESSL3_1_BUILTINS, "gl_MaxFragmentAtomicCounterBuffers",
+    symbolTable.insertConstInt<EbpMedium>(ESSL3_1_BUILTINS,
+                                          ImmutableString("gl_MaxFragmentAtomicCounterBuffers"),
                                           resources.MaxFragmentAtomicCounterBuffers);
-    symbolTable.insertConstInt<EbpMedium>(ESSL3_1_BUILTINS, "gl_MaxCombinedAtomicCounterBuffers",
+    symbolTable.insertConstInt<EbpMedium>(ESSL3_1_BUILTINS,
+                                          ImmutableString("gl_MaxCombinedAtomicCounterBuffers"),
                                           resources.MaxCombinedAtomicCounterBuffers);
-    symbolTable.insertConstInt<EbpMedium>(ESSL3_1_BUILTINS, "gl_MaxAtomicCounterBufferSize",
+    symbolTable.insertConstInt<EbpMedium>(ESSL3_1_BUILTINS,
+                                          ImmutableString("gl_MaxAtomicCounterBufferSize"),
                                           resources.MaxAtomicCounterBufferSize);
 
     if (resources.EXT_geometry_shader)
     {
         TExtension ext = TExtension::EXT_geometry_shader;
         symbolTable.insertConstIntExt<EbpMedium>(ESSL3_1_BUILTINS, ext,
-                                                 "gl_MaxGeometryInputComponents",
+                                                 ImmutableString("gl_MaxGeometryInputComponents"),
                                                  resources.MaxGeometryInputComponents);
         symbolTable.insertConstIntExt<EbpMedium>(ESSL3_1_BUILTINS, ext,
-                                                 "gl_MaxGeometryOutputComponents",
+                                                 ImmutableString("gl_MaxGeometryOutputComponents"),
                                                  resources.MaxGeometryOutputComponents);
         symbolTable.insertConstIntExt<EbpMedium>(ESSL3_1_BUILTINS, ext,
-                                                 "gl_MaxGeometryImageUniforms",
+                                                 ImmutableString("gl_MaxGeometryImageUniforms"),
                                                  resources.MaxGeometryImageUniforms);
         symbolTable.insertConstIntExt<EbpMedium>(ESSL3_1_BUILTINS, ext,
-                                                 "gl_MaxGeometryTextureImageUnits",
+                                                 ImmutableString("gl_MaxGeometryTextureImageUnits"),
                                                  resources.MaxGeometryTextureImageUnits);
         symbolTable.insertConstIntExt<EbpMedium>(ESSL3_1_BUILTINS, ext,
-                                                 "gl_MaxGeometryOutputVertices",
+                                                 ImmutableString("gl_MaxGeometryOutputVertices"),
                                                  resources.MaxGeometryOutputVertices);
+        symbolTable.insertConstIntExt<EbpMedium>(
+            ESSL3_1_BUILTINS, ext, ImmutableString("gl_MaxGeometryTotalOutputComponents"),
+            resources.MaxGeometryTotalOutputComponents);
         symbolTable.insertConstIntExt<EbpMedium>(ESSL3_1_BUILTINS, ext,
-                                                 "gl_MaxGeometryTotalOutputComponents",
-                                                 resources.MaxGeometryTotalOutputComponents);
-        symbolTable.insertConstIntExt<EbpMedium>(ESSL3_1_BUILTINS, ext,
-                                                 "gl_MaxGeometryUniformComponents",
+                                                 ImmutableString("gl_MaxGeometryUniformComponents"),
                                                  resources.MaxGeometryUniformComponents);
         symbolTable.insertConstIntExt<EbpMedium>(ESSL3_1_BUILTINS, ext,
-                                                 "gl_MaxGeometryAtomicCounters",
+                                                 ImmutableString("gl_MaxGeometryAtomicCounters"),
                                                  resources.MaxGeometryAtomicCounters);
-        symbolTable.insertConstIntExt<EbpMedium>(ESSL3_1_BUILTINS, ext,
-                                                 "gl_MaxGeometryAtomicCounterBuffers",
-                                                 resources.MaxGeometryAtomicCounterBuffers);
+        symbolTable.insertConstIntExt<EbpMedium>(
+            ESSL3_1_BUILTINS, ext, ImmutableString("gl_MaxGeometryAtomicCounterBuffers"),
+            resources.MaxGeometryAtomicCounterBuffers);
     }
 }
 
@@ -891,14 +919,14 @@ void IdentifyBuiltIns(sh::GLenum type,
     if (resources.OVR_multiview && type != GL_COMPUTE_SHADER)
     {
         const TType *viewIDType = StaticType::Get<EbtUInt, EbpHigh, EvqViewIDOVR, 1, 1>();
-        symbolTable.insertVariableExt(ESSL3_BUILTINS, TExtension::OVR_multiview, "gl_ViewID_OVR",
-                                      viewIDType);
+        symbolTable.insertVariableExt(ESSL3_BUILTINS, TExtension::OVR_multiview,
+                                      ImmutableString("gl_ViewID_OVR"), viewIDType);
 
         // ESSL 1.00 doesn't have unsigned integers, so gl_ViewID_OVR is a signed integer in ESSL
         // 1.00. This is specified in the WEBGL_multiview spec.
         const TType *viewIDIntType = StaticType::Get<EbtInt, EbpHigh, EvqViewIDOVR, 1, 1>();
-        symbolTable.insertVariableExt(ESSL1_BUILTINS, TExtension::OVR_multiview, "gl_ViewID_OVR",
-                                      viewIDIntType);
+        symbolTable.insertVariableExt(ESSL1_BUILTINS, TExtension::OVR_multiview,
+                                      ImmutableString("gl_ViewID_OVR"), viewIDIntType);
     }
 
     const TType *positionType    = StaticType::Get<EbtFloat, EbpHigh, EvqPosition, 4, 1>();
@@ -910,15 +938,19 @@ void IdentifyBuiltIns(sh::GLenum type,
         case GL_FRAGMENT_SHADER:
         {
             const TType *fragCoordType = StaticType::Get<EbtFloat, EbpMedium, EvqFragCoord, 4, 1>();
-            symbolTable.insertVariable(COMMON_BUILTINS, "gl_FragCoord", fragCoordType);
+            symbolTable.insertVariable(COMMON_BUILTINS, ImmutableString("gl_FragCoord"),
+                                       fragCoordType);
             const TType *frontFacingType = StaticType::GetQualified<EbtBool, EvqFrontFacing>();
-            symbolTable.insertVariable(COMMON_BUILTINS, "gl_FrontFacing", frontFacingType);
+            symbolTable.insertVariable(COMMON_BUILTINS, ImmutableString("gl_FrontFacing"),
+                                       frontFacingType);
             const TType *pointCoordType =
                 StaticType::Get<EbtFloat, EbpMedium, EvqPointCoord, 2, 1>();
-            symbolTable.insertVariable(COMMON_BUILTINS, "gl_PointCoord", pointCoordType);
+            symbolTable.insertVariable(COMMON_BUILTINS, ImmutableString("gl_PointCoord"),
+                                       pointCoordType);
 
             const TType *fragColorType = StaticType::Get<EbtFloat, EbpMedium, EvqFragColor, 4, 1>();
-            symbolTable.insertVariable(ESSL1_BUILTINS, "gl_FragColor", fragColorType);
+            symbolTable.insertVariable(ESSL1_BUILTINS, ImmutableString("gl_FragColor"),
+                                       fragColorType);
 
             TType *fragDataType = new TType(EbtFloat, EbpMedium, EvqFragData, 4);
             if (spec != SH_WEBGL2_SPEC && spec != SH_WEBGL3_SPEC)
@@ -930,20 +962,23 @@ void IdentifyBuiltIns(sh::GLenum type,
                 fragDataType->makeArray(1u);
             }
             fragDataType->realize();
-            symbolTable.insertVariable(ESSL1_BUILTINS, "gl_FragData", fragDataType);
+            symbolTable.insertVariable(ESSL1_BUILTINS, ImmutableString("gl_FragData"),
+                                       fragDataType);
 
             if (resources.EXT_blend_func_extended)
             {
                 const TType *secondaryFragColorType =
                     StaticType::Get<EbtFloat, EbpMedium, EvqSecondaryFragColorEXT, 4, 1>();
                 symbolTable.insertVariableExt(ESSL1_BUILTINS, TExtension::EXT_blend_func_extended,
-                                              "gl_SecondaryFragColorEXT", secondaryFragColorType);
+                                              ImmutableString("gl_SecondaryFragColorEXT"),
+                                              secondaryFragColorType);
                 TType *secondaryFragDataType =
                     new TType(EbtFloat, EbpMedium, EvqSecondaryFragDataEXT, 4, 1);
                 secondaryFragDataType->makeArray(resources.MaxDualSourceDrawBuffers);
                 secondaryFragDataType->realize();
                 symbolTable.insertVariableExt(ESSL1_BUILTINS, TExtension::EXT_blend_func_extended,
-                                              "gl_SecondaryFragDataEXT", secondaryFragDataType);
+                                              ImmutableString("gl_SecondaryFragDataEXT"),
+                                              secondaryFragDataType);
             }
 
             if (resources.EXT_frag_depth)
@@ -953,11 +988,12 @@ void IdentifyBuiltIns(sh::GLenum type,
                               EvqFragDepthEXT, 1);
                 fragDepthEXTType->realize();
                 symbolTable.insertVariableExt(ESSL1_BUILTINS, TExtension::EXT_frag_depth,
-                                              "gl_FragDepthEXT", fragDepthEXTType);
+                                              ImmutableString("gl_FragDepthEXT"), fragDepthEXTType);
             }
 
             const TType *fragDepthType = StaticType::Get<EbtFloat, EbpHigh, EvqFragDepth, 1, 1>();
-            symbolTable.insertVariable(ESSL3_BUILTINS, "gl_FragDepth", fragDepthType);
+            symbolTable.insertVariable(ESSL3_BUILTINS, ImmutableString("gl_FragDepth"),
+                                       fragDepthType);
 
             const TType *lastFragColorType =
                 StaticType::Get<EbtFloat, EbpMedium, EvqLastFragColor, 4, 1>();
@@ -970,77 +1006,86 @@ void IdentifyBuiltIns(sh::GLenum type,
 
                 if (resources.EXT_shader_framebuffer_fetch)
                 {
-                    symbolTable.insertVariableExt(ESSL1_BUILTINS,
-                                                  TExtension::EXT_shader_framebuffer_fetch,
-                                                  "gl_LastFragData", lastFragDataType);
+                    symbolTable.insertVariableExt(
+                        ESSL1_BUILTINS, TExtension::EXT_shader_framebuffer_fetch,
+                        ImmutableString("gl_LastFragData"), lastFragDataType);
                 }
                 else if (resources.NV_shader_framebuffer_fetch)
                 {
-                    symbolTable.insertVariableExt(ESSL1_BUILTINS,
-                                                  TExtension::NV_shader_framebuffer_fetch,
-                                                  "gl_LastFragColor", lastFragColorType);
-                    symbolTable.insertVariableExt(ESSL1_BUILTINS,
-                                                  TExtension::NV_shader_framebuffer_fetch,
-                                                  "gl_LastFragData", lastFragDataType);
+                    symbolTable.insertVariableExt(
+                        ESSL1_BUILTINS, TExtension::NV_shader_framebuffer_fetch,
+                        ImmutableString("gl_LastFragColor"), lastFragColorType);
+                    symbolTable.insertVariableExt(
+                        ESSL1_BUILTINS, TExtension::NV_shader_framebuffer_fetch,
+                        ImmutableString("gl_LastFragData"), lastFragDataType);
                 }
             }
             else if (resources.ARM_shader_framebuffer_fetch)
             {
-                symbolTable.insertVariableExt(ESSL1_BUILTINS,
-                                              TExtension::ARM_shader_framebuffer_fetch,
-                                              "gl_LastFragColorARM", lastFragColorType);
+                symbolTable.insertVariableExt(
+                    ESSL1_BUILTINS, TExtension::ARM_shader_framebuffer_fetch,
+                    ImmutableString("gl_LastFragColorARM"), lastFragColorType);
             }
 
             if (resources.EXT_geometry_shader)
             {
                 TExtension extension = TExtension::EXT_geometry_shader;
-                symbolTable.insertVariableExt(ESSL3_1_BUILTINS, extension, "gl_PrimitiveID",
-                                              primitiveIDType);
-                symbolTable.insertVariableExt(ESSL3_1_BUILTINS, extension, "gl_Layer", layerType);
+                symbolTable.insertVariableExt(ESSL3_1_BUILTINS, extension,
+                                              ImmutableString("gl_PrimitiveID"), primitiveIDType);
+                symbolTable.insertVariableExt(ESSL3_1_BUILTINS, extension,
+                                              ImmutableString("gl_Layer"), layerType);
             }
 
             break;
         }
         case GL_VERTEX_SHADER:
         {
-            symbolTable.insertVariable(COMMON_BUILTINS, "gl_Position", positionType);
+            symbolTable.insertVariable(COMMON_BUILTINS, ImmutableString("gl_Position"),
+                                       positionType);
             const TType *pointSizeType = StaticType::Get<EbtFloat, EbpMedium, EvqPointSize, 1, 1>();
-            symbolTable.insertVariable(COMMON_BUILTINS, "gl_PointSize", pointSizeType);
+            symbolTable.insertVariable(COMMON_BUILTINS, ImmutableString("gl_PointSize"),
+                                       pointSizeType);
             const TType *instanceIDType = StaticType::Get<EbtInt, EbpHigh, EvqInstanceID, 1, 1>();
-            symbolTable.insertVariable(ESSL3_BUILTINS, "gl_InstanceID", instanceIDType);
+            symbolTable.insertVariable(ESSL3_BUILTINS, ImmutableString("gl_InstanceID"),
+                                       instanceIDType);
             const TType *vertexIDType = StaticType::Get<EbtInt, EbpHigh, EvqVertexID, 1, 1>();
-            symbolTable.insertVariable(ESSL3_BUILTINS, "gl_VertexID", vertexIDType);
+            symbolTable.insertVariable(ESSL3_BUILTINS, ImmutableString("gl_VertexID"),
+                                       vertexIDType);
 
             // For internal use by ANGLE - not exposed to the parser.
             const TType *viewportIndexType =
                 StaticType::Get<EbtInt, EbpHigh, EvqViewportIndex, 1, 1>();
-            symbolTable.insertVariable(GLSL_BUILTINS, "gl_ViewportIndex", viewportIndexType);
+            symbolTable.insertVariable(GLSL_BUILTINS, ImmutableString("gl_ViewportIndex"),
+                                       viewportIndexType);
             // gl_Layer exists in other shader stages in ESSL, but not in vertex shader so far.
-            symbolTable.insertVariable(GLSL_BUILTINS, "gl_Layer", layerType);
+            symbolTable.insertVariable(GLSL_BUILTINS, ImmutableString("gl_Layer"), layerType);
             break;
         }
         case GL_COMPUTE_SHADER:
         {
             const TType *numWorkGroupsType =
                 StaticType::Get<EbtUInt, EbpUndefined, EvqNumWorkGroups, 3, 1>();
-            symbolTable.insertVariable(ESSL3_1_BUILTINS, "gl_NumWorkGroups", numWorkGroupsType);
+            symbolTable.insertVariable(ESSL3_1_BUILTINS, ImmutableString("gl_NumWorkGroups"),
+                                       numWorkGroupsType);
             const TType *workGroupSizeType =
                 StaticType::Get<EbtUInt, EbpUndefined, EvqWorkGroupSize, 3, 1>();
-            symbolTable.insertVariable(ESSL3_1_BUILTINS, "gl_WorkGroupSize", workGroupSizeType);
+            symbolTable.insertVariable(ESSL3_1_BUILTINS, ImmutableString("gl_WorkGroupSize"),
+                                       workGroupSizeType);
             const TType *workGroupIDType =
                 StaticType::Get<EbtUInt, EbpUndefined, EvqWorkGroupID, 3, 1>();
-            symbolTable.insertVariable(ESSL3_1_BUILTINS, "gl_WorkGroupID", workGroupIDType);
+            symbolTable.insertVariable(ESSL3_1_BUILTINS, ImmutableString("gl_WorkGroupID"),
+                                       workGroupIDType);
             const TType *localInvocationIDType =
                 StaticType::Get<EbtUInt, EbpUndefined, EvqLocalInvocationID, 3, 1>();
-            symbolTable.insertVariable(ESSL3_1_BUILTINS, "gl_LocalInvocationID",
+            symbolTable.insertVariable(ESSL3_1_BUILTINS, ImmutableString("gl_LocalInvocationID"),
                                        localInvocationIDType);
             const TType *globalInvocationIDType =
                 StaticType::Get<EbtUInt, EbpUndefined, EvqGlobalInvocationID, 3, 1>();
-            symbolTable.insertVariable(ESSL3_1_BUILTINS, "gl_GlobalInvocationID",
+            symbolTable.insertVariable(ESSL3_1_BUILTINS, ImmutableString("gl_GlobalInvocationID"),
                                        globalInvocationIDType);
             const TType *localInvocationIndexType =
                 StaticType::Get<EbtUInt, EbpUndefined, EvqLocalInvocationIndex, 1, 1>();
-            symbolTable.insertVariable(ESSL3_1_BUILTINS, "gl_LocalInvocationIndex",
+            symbolTable.insertVariable(ESSL3_1_BUILTINS, ImmutableString("gl_LocalInvocationIndex"),
                                        localInvocationIndexType);
             break;
         }
@@ -1054,10 +1099,10 @@ void IdentifyBuiltIns(sh::GLenum type,
             TFieldList *glPerVertexFieldList = new TFieldList();
             TSourceLoc zeroSourceLoc = {0, 0, 0, 0};
             TField *glPositionField =
-                new TField(new TType(*positionType), NewPoolTString("gl_Position"), zeroSourceLoc);
+                new TField(new TType(*positionType), ImmutableString("gl_Position"), zeroSourceLoc);
             glPerVertexFieldList->push_back(glPositionField);
 
-            const TString *glPerVertexString = NewPoolTString("gl_PerVertex");
+            const ImmutableString glPerVertexString("gl_PerVertex");
             TInterfaceBlock *glPerVertexInBlock =
                 new TInterfaceBlock(&symbolTable, glPerVertexString, glPerVertexFieldList,
                                     TLayoutQualifier::Create(), SymbolType::BuiltIn, extension);
@@ -1069,7 +1114,8 @@ void IdentifyBuiltIns(sh::GLenum type,
                 new TType(glPerVertexInBlock, EvqPerVertexIn, TLayoutQualifier::Create());
             glInType->makeArray(0u);
             glInType->realize();
-            symbolTable.insertVariableExt(ESSL3_1_BUILTINS, extension, "gl_in", glInType);
+            symbolTable.insertVariableExt(ESSL3_1_BUILTINS, extension, ImmutableString("gl_in"),
+                                          glInType);
 
             TInterfaceBlock *glPerVertexOutBlock =
                 new TInterfaceBlock(&symbolTable, glPerVertexString, glPerVertexFieldList,
@@ -1077,20 +1123,21 @@ void IdentifyBuiltIns(sh::GLenum type,
             TType *glPositionInBlockType = new TType(EbtFloat, EbpHigh, EvqPosition, 4);
             glPositionInBlockType->setInterfaceBlock(glPerVertexOutBlock);
             glPositionInBlockType->realize();
-            symbolTable.insertVariableExt(ESSL3_1_BUILTINS, extension, "gl_Position",
-                                          glPositionInBlockType);
+            symbolTable.insertVariableExt(ESSL3_1_BUILTINS, extension,
+                                          ImmutableString("gl_Position"), glPositionInBlockType);
 
             const TType *primitiveIDInType =
                 StaticType::Get<EbtInt, EbpHigh, EvqPrimitiveIDIn, 1, 1>();
-            symbolTable.insertVariableExt(ESSL3_1_BUILTINS, extension, "gl_PrimitiveIDIn",
-                                          primitiveIDInType);
+            symbolTable.insertVariableExt(ESSL3_1_BUILTINS, extension,
+                                          ImmutableString("gl_PrimitiveIDIn"), primitiveIDInType);
             const TType *invocationIDType =
                 StaticType::Get<EbtInt, EbpHigh, EvqInvocationID, 1, 1>();
-            symbolTable.insertVariableExt(ESSL3_1_BUILTINS, extension, "gl_InvocationID",
-                                          invocationIDType);
-            symbolTable.insertVariableExt(ESSL3_1_BUILTINS, extension, "gl_PrimitiveID",
-                                          primitiveIDType);
-            symbolTable.insertVariableExt(ESSL3_1_BUILTINS, extension, "gl_Layer", layerType);
+            symbolTable.insertVariableExt(ESSL3_1_BUILTINS, extension,
+                                          ImmutableString("gl_InvocationID"), invocationIDType);
+            symbolTable.insertVariableExt(ESSL3_1_BUILTINS, extension,
+                                          ImmutableString("gl_PrimitiveID"), primitiveIDType);
+            symbolTable.insertVariableExt(ESSL3_1_BUILTINS, extension, ImmutableString("gl_Layer"),
+                                          layerType);
 
             break;
         }

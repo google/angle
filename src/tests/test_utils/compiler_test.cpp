@@ -19,7 +19,7 @@ namespace sh
 namespace
 {
 
-const TString &GetSymbolTableMangledName(TIntermAggregate *node)
+ImmutableString GetSymbolTableMangledName(TIntermAggregate *node)
 {
     ASSERT(!node->isConstructor());
     switch (node->getOp())
@@ -27,10 +27,10 @@ const TString &GetSymbolTableMangledName(TIntermAggregate *node)
         case EOpCallInternalRawFunction:
         case EOpCallBuiltInFunction:
         case EOpCallFunctionInAST:
-            return TFunctionLookup::GetMangledName(node->getFunction()->name(),
+            return TFunctionLookup::GetMangledName(node->getFunction()->name().data(),
                                                    *node->getSequence());
         default:
-            TString opString = GetOperatorString(node->getOp());
+            const char *opString = GetOperatorString(node->getOp());
             return TFunctionLookup::GetMangledName(opString, *node->getSequence());
     }
 }
@@ -38,7 +38,7 @@ const TString &GetSymbolTableMangledName(TIntermAggregate *node)
 class FunctionCallFinder : public TIntermTraverser
 {
   public:
-    FunctionCallFinder(const TString &functionMangledName)
+    FunctionCallFinder(const char *functionMangledName)
         : TIntermTraverser(true, false, false),
           mFunctionMangledName(functionMangledName),
           mNodeFound(nullptr)
@@ -59,7 +59,7 @@ class FunctionCallFinder : public TIntermTraverser
     const TIntermAggregate *getNode() const { return mNodeFound; }
 
   private:
-    TString mFunctionMangledName;
+    const char *mFunctionMangledName;
     TIntermAggregate *mNodeFound;
 };
 
@@ -269,7 +269,7 @@ bool MatchOutputCodeTest::notFoundInCode(const char *stringToFind) const
 
 const TIntermAggregate *FindFunctionCallNode(TIntermNode *root, const TString &functionMangledName)
 {
-    FunctionCallFinder finder(functionMangledName);
+    FunctionCallFinder finder(functionMangledName.c_str());
     root->traverse(&finder);
     return finder.getNode();
 }

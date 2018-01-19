@@ -24,9 +24,18 @@ namespace sh
 namespace
 {
 
+constexpr const ImmutableString kGlLayerString("gl_Layer");
+constexpr const ImmutableString kGlViewportIndexString("gl_ViewportIndex");
+constexpr const ImmutableString kGlViewIdOVRString("gl_ViewID_OVR");
+constexpr const ImmutableString kGlInstanceIdString("gl_InstanceID");
+constexpr const ImmutableString kViewIDVariableName("ViewID_OVR");
+constexpr const ImmutableString kInstanceIDVariableName("InstanceID");
+constexpr const ImmutableString kMultiviewBaseViewLayerIndexVariableName(
+    "multiviewBaseViewLayerIndex");
+
 TIntermSymbol *CreateGLInstanceIDSymbol(const TSymbolTable &symbolTable)
 {
-    return ReferenceBuiltInVariable("gl_InstanceID", symbolTable, 300);
+    return ReferenceBuiltInVariable(kGlInstanceIdString, symbolTable, 300);
 }
 
 // Adds the InstanceID and ViewID_OVR initializers to the end of the initializers' sequence.
@@ -97,7 +106,7 @@ void SelectViewIndexInVertexShader(const TVariable *viewID,
 
     // Create a gl_ViewportIndex node.
     TIntermSymbol *viewportIndexSymbol =
-        ReferenceBuiltInVariable("gl_ViewportIndex", symbolTable, 0);
+        ReferenceBuiltInVariable(kGlViewportIndexString, symbolTable, 0);
 
     // Create a { gl_ViewportIndex = int(ViewID_OVR) } node.
     TIntermBlock *viewportIndexInitializerInBlock = new TIntermBlock();
@@ -105,7 +114,7 @@ void SelectViewIndexInVertexShader(const TVariable *viewID,
         new TIntermBinary(EOpAssign, viewportIndexSymbol, viewIDAsInt));
 
     // Create a gl_Layer node.
-    TIntermSymbol *layerSymbol = ReferenceBuiltInVariable("gl_Layer", symbolTable, 0);
+    TIntermSymbol *layerSymbol = ReferenceBuiltInVariable(kGlLayerString, symbolTable, 0);
 
     // Create an int(ViewID_OVR) + multiviewBaseViewLayerIndex node
     TIntermBinary *sumOfViewIDAndBaseViewIndex = new TIntermBinary(
@@ -141,28 +150,28 @@ void DeclareAndInitBuiltinsForInstancedMultiview(TIntermBlock *root,
     ASSERT(shaderType == GL_VERTEX_SHADER || shaderType == GL_FRAGMENT_SHADER);
 
     TQualifier viewIDQualifier  = (shaderType == GL_VERTEX_SHADER) ? EvqFlatOut : EvqFlatIn;
-    const TString *viewIDVariableName = NewPoolTString("ViewID_OVR");
     const TVariable *viewID =
-        new TVariable(symbolTable, viewIDVariableName, new TType(EbtUInt, EbpHigh, viewIDQualifier),
-                      SymbolType::AngleInternal);
+        new TVariable(symbolTable, kViewIDVariableName,
+                      new TType(EbtUInt, EbpHigh, viewIDQualifier), SymbolType::AngleInternal);
 
     DeclareGlobalVariable(root, viewID);
     ReplaceVariable(
-        root, static_cast<const TVariable *>(symbolTable->findBuiltIn("gl_ViewID_OVR", 300, true)),
+        root,
+        static_cast<const TVariable *>(symbolTable->findBuiltIn(kGlViewIdOVRString, 300, true)),
         viewID);
     if (shaderType == GL_VERTEX_SHADER)
     {
         // Replacing gl_InstanceID with InstanceID should happen before adding the initializers of
         // InstanceID and ViewID.
-        const TString *instanceIDVariableName = NewPoolTString("InstanceID");
         const TType *instanceIDVariableType   = StaticType::Get<EbtInt, EbpHigh, EvqGlobal, 1, 1>();
-        const TVariable *instanceID           = new TVariable(
-            symbolTable, instanceIDVariableName, instanceIDVariableType, SymbolType::AngleInternal);
+        const TVariable *instanceID =
+            new TVariable(symbolTable, kInstanceIDVariableName, instanceIDVariableType,
+                          SymbolType::AngleInternal);
         DeclareGlobalVariable(root, instanceID);
-        ReplaceVariable(
-            root,
-            static_cast<const TVariable *>(symbolTable->findBuiltIn("gl_InstanceID", 300, true)),
-            instanceID);
+        ReplaceVariable(root,
+                        static_cast<const TVariable *>(
+                            symbolTable->findBuiltIn(kGlInstanceIdString, 300, true)),
+                        instanceID);
 
         TIntermSequence *initializers = new TIntermSequence();
         InitializeViewIDAndInstanceID(viewID, instanceID, numberOfViews, *symbolTable,
@@ -177,12 +186,10 @@ void DeclareAndInitBuiltinsForInstancedMultiview(TIntermBlock *root,
         if (selectView)
         {
             // Add a uniform to switch between side-by-side and layered rendering.
-            const TString *multiviewBaseViewLayerIndexVariableName =
-                NewPoolTString("multiviewBaseViewLayerIndex");
             const TType *baseLayerIndexVariableType =
                 StaticType::Get<EbtInt, EbpHigh, EvqUniform, 1, 1>();
             const TVariable *multiviewBaseViewLayerIndex =
-                new TVariable(symbolTable, multiviewBaseViewLayerIndexVariableName,
+                new TVariable(symbolTable, kMultiviewBaseViewLayerIndexVariableName,
                               baseLayerIndexVariableType, SymbolType::AngleInternal);
             DeclareGlobalVariable(root, multiviewBaseViewLayerIndex);
 

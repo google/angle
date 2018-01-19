@@ -30,6 +30,8 @@ namespace sh
 namespace
 {
 
+constexpr const ImmutableString kInitGlobalsString("initGlobals");
+
 void GetDeferredInitializers(TIntermDeclaration *declaration,
                              bool initializeUninitializedGlobals,
                              bool canUseLoopsToInitialize,
@@ -102,9 +104,8 @@ void InsertInitCallToMain(TIntermBlock *root,
     TIntermBlock *initGlobalsBlock = new TIntermBlock();
     initGlobalsBlock->getSequence()->swap(*deferredInitializers);
 
-    TFunction *initGlobalsFunction =
-        new TFunction(symbolTable, NewPoolTString("initGlobals"), new TType(EbtVoid),
-                      SymbolType::AngleInternal, false);
+    TFunction *initGlobalsFunction = new TFunction(
+        symbolTable, kInitGlobalsString, new TType(EbtVoid), SymbolType::AngleInternal, false);
 
     TIntermFunctionPrototype *initGlobalsFunctionPrototype =
         CreateInternalFunctionPrototypeNode(*initGlobalsFunction);
@@ -156,7 +157,7 @@ void DeferGlobalInitializers(TIntermBlock *root,
         TType *replacementType = new TType(var->getType());
         replacementType->setQualifier(EvqGlobal);
         TVariable *replacement =
-            new TVariable(symbolTable, &var->name(), replacementType, var->symbolType());
+            new TVariable(symbolTable, var->name(), replacementType, var->symbolType());
         ReplaceVariable(root, var, replacement);
     }
 }

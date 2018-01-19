@@ -86,7 +86,7 @@ void CheckExportedImageUniform(const std::vector<sh::Uniform> &uniforms,
 // Checks whether the image is saved in the AST as a node with the correct properties given the
 // shader.
 void CheckImageDeclaration(TIntermNode *astRoot,
-                           const TString &imageName,
+                           const ImmutableString &imageName,
                            TBasicType imageType,
                            TLayoutImageInternalFormat internalFormat,
                            bool readonly,
@@ -146,8 +146,8 @@ TEST_F(ShaderImageTest, Image2DDeclaration)
     }
 
     CheckExportedImageUniform(getUniforms(), 0, GL_IMAGE_2D, "myImage");
-    CheckImageDeclaration(mASTRoot, "myImage", EbtImage2D, EiifRGBA32F, true, false, false, false,
-                          false, 1);
+    CheckImageDeclaration(mASTRoot, ImmutableString("myImage"), EbtImage2D, EiifRGBA32F, true,
+                          false, false, false, false, 1);
 }
 
 // Test that an image3D is properly parsed and exported as a uniform.
@@ -166,8 +166,8 @@ TEST_F(ShaderImageTest, Image3DDeclaration)
     }
 
     CheckExportedImageUniform(getUniforms(), 0, GL_UNSIGNED_INT_IMAGE_3D, "myImage");
-    CheckImageDeclaration(mASTRoot, "myImage", EbtUImage3D, EiifRGBA32UI, true, true, false, false,
-                          false, 3);
+    CheckImageDeclaration(mASTRoot, ImmutableString("myImage"), EbtUImage3D, EiifRGBA32UI, true,
+                          true, false, false, false, 3);
 }
 
 // Check that imageLoad calls get correctly parsed.
@@ -234,10 +234,10 @@ TEST_F(ShaderImageTest, ImageMemoryQualifiers)
         FAIL() << "Shader compilation failed" << mInfoLog;
     }
 
-    CheckImageDeclaration(mASTRoot, "image1", EbtImage2D, EiifRGBA32F, true, false, true, false,
-                          false, -1);
-    CheckImageDeclaration(mASTRoot, "image2", EbtImage2D, EiifRGBA32F, false, true, true, false,
-                          true, -1);
-    CheckImageDeclaration(mASTRoot, "image3", EbtImage2D, EiifRGBA32F, true, true, true, true, true,
-                          -1);
+    CheckImageDeclaration(mASTRoot, ImmutableString("image1"), EbtImage2D, EiifRGBA32F, true, false,
+                          true, false, false, -1);
+    CheckImageDeclaration(mASTRoot, ImmutableString("image2"), EbtImage2D, EiifRGBA32F, false, true,
+                          true, false, true, -1);
+    CheckImageDeclaration(mASTRoot, ImmutableString("image3"), EbtImage2D, EiifRGBA32F, true, true,
+                          true, true, true, -1);
 }

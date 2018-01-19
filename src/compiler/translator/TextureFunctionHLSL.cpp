@@ -1166,7 +1166,7 @@ bool TextureFunctionHLSL::TextureFunction::operator<(const TextureFunction &rhs)
            std::tie(rhs.sampler, rhs.coords, rhs.proj, rhs.offset, rhs.method);
 }
 
-TString TextureFunctionHLSL::useTextureFunction(const TString &name,
+TString TextureFunctionHLSL::useTextureFunction(const ImmutableString &name,
                                                 TBasicType samplerType,
                                                 int coords,
                                                 size_t argumentCount,

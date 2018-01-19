@@ -35,15 +35,15 @@ class PullGradient : public TIntermTraverser
         ASSERT(index < metadataList->size());
 
         // ESSL 100 builtin gradient functions
-        mGradientBuiltinFunctions.insert("texture2D");
-        mGradientBuiltinFunctions.insert("texture2DProj");
-        mGradientBuiltinFunctions.insert("textureCube");
+        mGradientBuiltinFunctions.insert(ImmutableString("texture2D"));
+        mGradientBuiltinFunctions.insert(ImmutableString("texture2DProj"));
+        mGradientBuiltinFunctions.insert(ImmutableString("textureCube"));
 
         // ESSL 300 builtin gradient functions
-        mGradientBuiltinFunctions.insert("texture");
-        mGradientBuiltinFunctions.insert("textureProj");
-        mGradientBuiltinFunctions.insert("textureOffset");
-        mGradientBuiltinFunctions.insert("textureProjOffset");
+        mGradientBuiltinFunctions.insert(ImmutableString("texture"));
+        mGradientBuiltinFunctions.insert(ImmutableString("textureProj"));
+        mGradientBuiltinFunctions.insert(ImmutableString("textureOffset"));
+        mGradientBuiltinFunctions.insert(ImmutableString("textureProjOffset"));
 
         // ESSL 310 doesn't add builtin gradient functions
     }
@@ -151,7 +151,7 @@ class PullGradient : public TIntermTraverser
     std::vector<TIntermNode *> mParents;
 
     // A list of builtin functions that use gradients
-    std::set<TString> mGradientBuiltinFunctions;
+    std::set<ImmutableString> mGradientBuiltinFunctions;
 };
 
 // Traverses the AST of a function definition to compute the the discontinuous loops

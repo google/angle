@@ -12,6 +12,7 @@
 
 #include "compiler/translator/Symbol.h"
 
+#include "compiler/translator/ImmutableStringBuilder.h"
 #include "compiler/translator/SymbolTable.h"
 
 namespace sh
@@ -20,12 +21,17 @@ namespace sh
 namespace
 {
 
+constexpr const ImmutableString kMainName("main");
+constexpr const ImmutableString kImageLoadName("imageLoad");
+constexpr const ImmutableString kImageStoreName("imageStore");
+constexpr const ImmutableString kImageSizeName("imageSize");
+
 static const char kFunctionMangledNameSeparator = '(';
 
 }  // anonymous namespace
 
 TSymbol::TSymbol(TSymbolTable *symbolTable,
-                 const TString *name,
+                 const ImmutableString &name,
                  SymbolType symbolType,
                  TExtension extension)
     : mName(name),
@@ -34,31 +40,32 @@ TSymbol::TSymbol(TSymbolTable *symbolTable,
       mExtension(extension)
 {
     ASSERT(mSymbolType == SymbolType::BuiltIn || mExtension == TExtension::UNDEFINED);
-    ASSERT(mName != nullptr || mSymbolType == SymbolType::AngleInternal ||
+    ASSERT(mName != "" || mSymbolType == SymbolType::AngleInternal ||
            mSymbolType == SymbolType::Empty);
-    ASSERT(mName == nullptr || *mName != "");
 }
 
-const TString &TSymbol::name() const
+ImmutableString TSymbol::name() const
 {
-    if (mName != nullptr)
+    if (mName != "")
     {
-        return *mName;
+        return mName;
     }
     ASSERT(mSymbolType == SymbolType::AngleInternal);
-    TInfoSinkBase symbolNameOut;
-    symbolNameOut << "s" << mUniqueId.get();
-    return *NewPoolTString(symbolNameOut.c_str());
+    int uniqueId = mUniqueId.get();
+    ImmutableStringBuilder symbolNameOut(sizeof(uniqueId) * 2u + 1u);
+    symbolNameOut << 's';
+    symbolNameOut.appendHex(mUniqueId.get());
+    return symbolNameOut;
 }
 
-const TString &TSymbol::getMangledName() const
+ImmutableString TSymbol::getMangledName() const
 {
     ASSERT(mSymbolType != SymbolType::Empty);
     return name();
 }
 
 TVariable::TVariable(TSymbolTable *symbolTable,
-                     const TString *name,
+                     const ImmutableString &name,
                      const TType *type,
                      SymbolType symbolType,
                      TExtension extension)
@@ -68,14 +75,14 @@ TVariable::TVariable(TSymbolTable *symbolTable,
 }
 
 TStructure::TStructure(TSymbolTable *symbolTable,
-                       const TString *name,
+                       const ImmutableString &name,
                        const TFieldList *fields,
                        SymbolType symbolType)
     : TSymbol(symbolTable, name, symbolType), TFieldListCollection(fields)
 {
 }
 
-void TStructure::createSamplerSymbols(const TString &namePrefix,
+void TStructure::createSamplerSymbols(const char *namePrefix,
                                       const TString &apiNamePrefix,
                                       TVector<const TVariable *> *outputSymbols,
                                       TMap<const TVariable *, TString> *outputSymbolsToAPINames,
@@ -87,22 +94,24 @@ void TStructure::createSamplerSymbols(const TString &namePrefix,
         const TType *fieldType = field->type();
         if (IsSampler(fieldType->getBasicType()) || fieldType->isStructureContainingSamplers())
         {
-            TString fieldName    = namePrefix + "_" + field->name();
-            TString fieldApiName = apiNamePrefix + "." + field->name();
-            fieldType->createSamplerSymbols(fieldName, fieldApiName, outputSymbols,
-                                            outputSymbolsToAPINames, symbolTable);
+            std::stringstream fieldName;
+            fieldName << namePrefix << "_" << field->name();
+            TString fieldApiName = apiNamePrefix + ".";
+            fieldApiName += field->name().data();
+            fieldType->createSamplerSymbols(ImmutableString(fieldName.str()), fieldApiName,
+                                            outputSymbols, outputSymbolsToAPINames, symbolTable);
         }
     }
 }
 
-void TStructure::setName(const TString &name)
+void TStructure::setName(const ImmutableString &name)
 {
-    TString *mutableName = const_cast<TString *>(mName);
+    ImmutableString *mutableName = const_cast<ImmutableString *>(&mName);
     *mutableName         = name;
 }
 
 TInterfaceBlock::TInterfaceBlock(TSymbolTable *symbolTable,
-                                 const TString *name,
+                                 const ImmutableString &name,
                                  const TFieldList *fields,
                                  const TLayoutQualifier &layoutQualifier,
                                  SymbolType symbolType,
@@ -116,7 +125,7 @@ TInterfaceBlock::TInterfaceBlock(TSymbolTable *symbolTable,
 }
 
 TFunction::TFunction(TSymbolTable *symbolTable,
-                     const TString *name,
+                     const ImmutableString &name,
                      const TType *retType,
                      SymbolType symbolType,
                      bool knownToNotHaveSideEffects,
@@ -143,7 +152,7 @@ TFunction::~TFunction()
 void TFunction::clearParameters()
 {
     parameters.clear();
-    mangledName = nullptr;
+    mangledName = ImmutableString("");
 }
 
 void TFunction::swapParameters(const TFunction &parametersSource)
@@ -155,27 +164,27 @@ void TFunction::swapParameters(const TFunction &parametersSource)
     }
 }
 
-const TString *TFunction::buildMangledName() const
+ImmutableString TFunction::buildMangledName() const
 {
-    std::string newName = name().c_str();
+    std::string newName(name().data(), name().length());
     newName += kFunctionMangledNameSeparator;
 
     for (const auto &p : parameters)
     {
         newName += p.type->getMangledName();
     }
-    return NewPoolTString(newName.c_str());
+    return ImmutableString(newName);
 }
 
 bool TFunction::isMain() const
 {
-    return symbolType() == SymbolType::UserDefined && name() == "main";
+    return symbolType() == SymbolType::UserDefined && name() == kMainName;
 }
 
 bool TFunction::isImageFunction() const
 {
     return symbolType() == SymbolType::BuiltIn &&
-           (name() == "imageSize" || name() == "imageLoad" || name() == "imageStore");
+           (name() == kImageSizeName || name() == kImageLoadName || name() == kImageStoreName);
 }
 
 }  // namespace sh

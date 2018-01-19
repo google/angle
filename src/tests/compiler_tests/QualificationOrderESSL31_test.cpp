@@ -25,7 +25,7 @@ class QualificationVertexShaderTestESSL31 : public ShaderCompileTreeTest
     ::GLenum getShaderType() const override { return GL_VERTEX_SHADER; }
     ShShaderSpec getShaderSpec() const override { return SH_GLES3_1_SPEC; }
 
-    const TIntermSymbol *findSymbolInAST(const TString &symbolName)
+    const TIntermSymbol *findSymbolInAST(const ImmutableString &symbolName)
     {
         return FindSymbolNode(mASTRoot, symbolName);
     }
@@ -47,7 +47,7 @@ TEST_F(QualificationVertexShaderTestESSL31, CentroidOut)
     }
     else
     {
-        const TIntermSymbol *node = findSymbolInAST("something");
+        const TIntermSymbol *node = findSymbolInAST(ImmutableString("something"));
         ASSERT_NE(nullptr, node);
 
         const TType &type = node->getType();
@@ -70,7 +70,7 @@ TEST_F(QualificationVertexShaderTestESSL31, AllQualifiersMixed)
     }
     else
     {
-        const TIntermSymbol *node = findSymbolInAST("something");
+        const TIntermSymbol *node = findSymbolInAST(ImmutableString("something"));
         ASSERT_NE(nullptr, node);
 
         const TType &type = node->getType();
@@ -95,7 +95,7 @@ TEST_F(QualificationVertexShaderTestESSL31, MultipleLayouts)
     }
     else
     {
-        const TIntermSymbol *node = findSymbolInAST("something");
+        const TIntermSymbol *node = findSymbolInAST(ImmutableString("something"));
         ASSERT_NE(nullptr, node);
 
         const TType &type = node->getType();
@@ -122,7 +122,7 @@ TEST_F(QualificationVertexShaderTestESSL31, MultipleLayoutsInterfaceBlock)
     }
     else
     {
-        const TIntermSymbol *node = findSymbolInAST("MyInterfaceName");
+        const TIntermSymbol *node = findSymbolInAST(ImmutableString("MyInterfaceName"));
         ASSERT_NE(nullptr, node);
 
         const TType &type                = node->getType();
@@ -150,7 +150,7 @@ TEST_F(QualificationVertexShaderTestESSL31, MultipleLayoutsInterfaceBlock2)
     }
     else
     {
-        const TIntermSymbol *node = findSymbolInAST("MyInterfaceName");
+        const TIntermSymbol *node = findSymbolInAST(ImmutableString("MyInterfaceName"));
         ASSERT_NE(nullptr, node);
 
         const TType &type                = node->getType();

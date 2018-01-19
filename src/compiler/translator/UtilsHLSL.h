@@ -93,25 +93,27 @@ const char *TextureString(const TBasicType type,
 const char *TextureGroupSuffix(const HLSLTextureGroup type);
 const char *TextureGroupSuffix(const TBasicType type,
                                TLayoutImageInternalFormat imageInternalFormat = EiifUnspecified);
-TString TextureTypeSuffix(const TBasicType type,
-                          TLayoutImageInternalFormat imageInternalFormat = EiifUnspecified);
+const char *TextureTypeSuffix(const TBasicType type,
+                              TLayoutImageInternalFormat imageInternalFormat = EiifUnspecified);
 HLSLRWTextureGroup RWTextureGroup(const TBasicType type,
                                   TLayoutImageInternalFormat imageInternalFormat);
 TString RWTextureString(const HLSLRWTextureGroup textureGroup);
 TString RWTextureString(const TBasicType type, TLayoutImageInternalFormat imageInternalFormat);
-TString RWTextureGroupSuffix(const HLSLRWTextureGroup type);
-TString RWTextureGroupSuffix(const TBasicType type, TLayoutImageInternalFormat imageInternalFormat);
-TString RWTextureTypeSuffix(const TBasicType type, TLayoutImageInternalFormat imageInternalFormat);
+const char *RWTextureGroupSuffix(const HLSLRWTextureGroup type);
+const char *RWTextureGroupSuffix(const TBasicType type,
+                                 TLayoutImageInternalFormat imageInternalFormat);
+const char *RWTextureTypeSuffix(const TBasicType type,
+                                TLayoutImageInternalFormat imageInternalFormat);
 
 TString SamplerString(const TBasicType type);
 TString SamplerString(HLSLTextureGroup type);
 
 // Adds a prefix to user-defined names to avoid naming clashes.
-TString Decorate(const TString &string);
+TString Decorate(const ImmutableString &string);
 TString DecorateVariableIfNeeded(const TVariable &variable);
 TString DecorateFunctionIfNeeded(const TFunction *func);
-TString DecorateField(const TString &string, const TStructure &structure);
-TString DecoratePrivate(const TString &privateText);
+TString DecorateField(const ImmutableString &string, const TStructure &structure);
+TString DecoratePrivate(const ImmutableString &privateText);
 TString TypeString(const TType &type);
 TString StructNameString(const TStructure &structure);
 TString QualifiedStructNameString(const TStructure &structure,

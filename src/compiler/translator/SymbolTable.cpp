@@ -32,7 +32,7 @@ class TSymbolTable::TSymbolTableLevel
     // Insert a function using its unmangled name as the key.
     bool insertUnmangled(TFunction *function);
 
-    TSymbol *find(const TString &name) const;
+    TSymbol *find(const ImmutableString &name) const;
 
     void addInvariantVarying(const std::string &name) { mInvariantVaryings.insert(name); }
 
@@ -47,7 +47,9 @@ class TSymbolTable::TSymbolTableLevel
     bool hasUnmangledBuiltIn(const char *name) const;
 
   private:
-    using tLevel        = TUnorderedMap<TString, TSymbol *>;
+    using tLevel        = TUnorderedMap<ImmutableString,
+                                 TSymbol *,
+                                 ImmutableString::FowlerNollVoHash<sizeof(size_t)>>;
     using tLevelPair    = const tLevel::value_type;
     using tInsertResult = std::pair<tLevel::iterator, bool>;
 
@@ -74,7 +76,7 @@ bool TSymbolTable::TSymbolTableLevel::insertUnmangled(TFunction *function)
     return result.second;
 }
 
-TSymbol *TSymbolTable::TSymbolTableLevel::find(const TString &name) const
+TSymbol *TSymbolTable::TSymbolTableLevel::find(const ImmutableString &name) const
 {
     tLevel::const_iterator it = level.find(name);
     if (it == level.end())
@@ -109,7 +111,7 @@ void TSymbolTable::pop()
 }
 
 const TFunction *TSymbolTable::markUserDefinedFunctionHasPrototypeDeclaration(
-    const TString &mangledName,
+    const ImmutableString &mangledName,
     bool *hadPrototypeDeclarationOut)
 {
     TFunction *function         = findUserDefinedFunction(mangledName);
@@ -139,7 +141,7 @@ const TFunction *TSymbolTable::setUserDefinedFunctionParameterNamesFromDefinitio
     return firstDeclaration;
 }
 
-const TSymbol *TSymbolTable::find(const TString &name, int shaderVersion) const
+const TSymbol *TSymbolTable::find(const ImmutableString &name, int shaderVersion) const
 {
     int level       = currentLevel();
     TSymbol *symbol = nullptr;
@@ -161,25 +163,25 @@ const TSymbol *TSymbolTable::find(const TString &name, int shaderVersion) const
     return symbol;
 }
 
-TFunction *TSymbolTable::findUserDefinedFunction(const TString &name) const
+TFunction *TSymbolTable::findUserDefinedFunction(const ImmutableString &name) const
 {
     // User-defined functions are always declared at the global level.
     ASSERT(currentLevel() >= GLOBAL_LEVEL);
     return static_cast<TFunction *>(table[GLOBAL_LEVEL]->find(name));
 }
 
-const TSymbol *TSymbolTable::findGlobal(const TString &name) const
+const TSymbol *TSymbolTable::findGlobal(const ImmutableString &name) const
 {
     ASSERT(table.size() > GLOBAL_LEVEL);
     return table[GLOBAL_LEVEL]->find(name);
 }
 
-const TSymbol *TSymbolTable::findBuiltIn(const TString &name, int shaderVersion) const
+const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shaderVersion) const
 {
     return findBuiltIn(name, shaderVersion, false);
 }
 
-const TSymbol *TSymbolTable::findBuiltIn(const TString &name,
+const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name,
                                          int shaderVersion,
                                          bool includeGLSLBuiltins) const
 {
@@ -316,15 +318,17 @@ void TSymbolTable::declareUserDefinedFunction(TFunction *function, bool insertUn
     table[GLOBAL_LEVEL]->insert(function);
 }
 
-TVariable *TSymbolTable::insertVariable(ESymbolLevel level, const char *name, const TType *type)
+TVariable *TSymbolTable::insertVariable(ESymbolLevel level,
+                                        const ImmutableString &name,
+                                        const TType *type)
 {
     ASSERT(level <= LAST_BUILTIN_LEVEL);
     ASSERT(type->isRealized());
-    return insertVariable(level, NewPoolTString(name), type, SymbolType::BuiltIn);
+    return insertVariable(level, name, type, SymbolType::BuiltIn);
 }
 
 TVariable *TSymbolTable::insertVariable(ESymbolLevel level,
-                                        const TString *name,
+                                        const ImmutableString &name,
                                         const TType *type,
                                         SymbolType symbolType)
 {
@@ -339,12 +343,12 @@ TVariable *TSymbolTable::insertVariable(ESymbolLevel level,
 
 TVariable *TSymbolTable::insertVariableExt(ESymbolLevel level,
                                            TExtension ext,
-                                           const char *name,
+                                           const ImmutableString &name,
                                            const TType *type)
 {
     ASSERT(level <= LAST_BUILTIN_LEVEL);
     ASSERT(type->isRealized());
-    TVariable *var = new TVariable(this, NewPoolTString(name), type, SymbolType::BuiltIn, ext);
+    TVariable *var = new TVariable(this, name, type, SymbolType::BuiltIn, ext);
     if (insert(level, var))
     {
         return var;
@@ -509,7 +513,7 @@ void TSymbolTable::insertBuiltIn(ESymbolLevel level,
     else
     {
         TFunction *function =
-            new TFunction(this, NewPoolTString(name), rvalue, SymbolType::BuiltIn, false, op, ext);
+            new TFunction(this, ImmutableString(name), rvalue, SymbolType::BuiltIn, false, op, ext);
 
         function->addParameter(TConstParameter(ptype1));
 
@@ -576,7 +580,7 @@ void TSymbolTable::insertBuiltInFunctionNoParameters(ESymbolLevel level,
 {
     insertUnmangledBuiltInName(name, level);
     insert(level,
-           new TFunction(this, NewPoolTString(name), rvalue, SymbolType::BuiltIn, false, op));
+           new TFunction(this, ImmutableString(name), rvalue, SymbolType::BuiltIn, false, op));
 }
 
 void TSymbolTable::insertBuiltInFunctionNoParametersExt(ESymbolLevel level,
@@ -587,7 +591,7 @@ void TSymbolTable::insertBuiltInFunctionNoParametersExt(ESymbolLevel level,
 {
     insertUnmangledBuiltInName(name, level);
     insert(level,
-           new TFunction(this, NewPoolTString(name), rvalue, SymbolType::BuiltIn, false, op, ext));
+           new TFunction(this, ImmutableString(name), rvalue, SymbolType::BuiltIn, false, op, ext));
 }
 
 TPrecision TSymbolTable::getDefaultPrecision(TBasicType type) const

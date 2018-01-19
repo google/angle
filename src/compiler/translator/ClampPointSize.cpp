@@ -19,12 +19,13 @@ namespace sh
 void ClampPointSize(TIntermBlock *root, float maxPointSize, TSymbolTable *symbolTable)
 {
     // Only clamp gl_PointSize if it's used in the shader.
-    if (!FindSymbolNode(root, TString("gl_PointSize")))
+    if (!FindSymbolNode(root, ImmutableString("gl_PointSize")))
     {
         return;
     }
 
-    TIntermSymbol *pointSizeNode = ReferenceBuiltInVariable("gl_PointSize", *symbolTable, 100);
+    TIntermSymbol *pointSizeNode =
+        ReferenceBuiltInVariable(ImmutableString("gl_PointSize"), *symbolTable, 100);
 
     TConstantUnion *maxPointSizeConstant = new TConstantUnion();
     maxPointSizeConstant->setFConst(maxPointSize);

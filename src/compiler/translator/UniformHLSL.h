@@ -15,6 +15,7 @@
 
 namespace sh
 {
+class ImmutableString;
 class StructureHLSL;
 class TSymbolTable;
 
@@ -40,7 +41,8 @@ class UniformHLSL : angle::NonCopyable
     TString uniformBlocksHeader(const ReferencedInterfaceBlocks &referencedInterfaceBlocks);
 
     // Used for direct index references
-    static TString UniformBlockInstanceString(const TString &instanceName, unsigned int arrayIndex);
+    static TString UniformBlockInstanceString(const ImmutableString &instanceName,
+                                              unsigned int arrayIndex);
 
     const std::map<std::string, unsigned int> &getUniformBlockRegisterMap() const
     {
@@ -59,7 +61,7 @@ class UniformHLSL : angle::NonCopyable
     TString uniformBlockMembersString(const TInterfaceBlock &interfaceBlock,
                                       TLayoutBlockStorage blockStorage);
     TString uniformBlockStructString(const TInterfaceBlock &interfaceBlock);
-    const Uniform *findUniformByName(const TString &name) const;
+    const Uniform *findUniformByName(const ImmutableString &name) const;
 
     void outputHLSL4_0_FL9_3Sampler(TInfoSinkBase &out,
                                     const TType &type,
@@ -80,7 +82,7 @@ class UniformHLSL : angle::NonCopyable
 
     // Returns the uniform's register index
     unsigned int assignUniformRegister(const TType &type,
-                                       const TString &name,
+                                       const ImmutableString &name,
                                        unsigned int *outRegisterCount);
     unsigned int assignSamplerInStructUniformRegister(const TType &type,
                                                       const TString &name,

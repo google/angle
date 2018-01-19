@@ -11,18 +11,17 @@
 namespace sh
 {
 
-TDeclarator::TDeclarator(const TString *name, const TSourceLoc &line)
+TDeclarator::TDeclarator(const ImmutableString &name, const TSourceLoc &line)
     : mName(name), mArraySizes(nullptr), mLine(line)
 {
-    ASSERT(mName);
+    ASSERT(mName != "");
 }
 
-TDeclarator::TDeclarator(const TString *name,
+TDeclarator::TDeclarator(const ImmutableString &name,
                          const TVector<unsigned int> *arraySizes,
                          const TSourceLoc &line)
     : mName(name), mArraySizes(arraySizes), mLine(line)
 {
-    ASSERT(mName);
     ASSERT(mArraySizes);
 }
 

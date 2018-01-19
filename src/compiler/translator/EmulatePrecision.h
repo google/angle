@@ -59,7 +59,7 @@ class EmulatePrecision : public TLValueTrackingTraverser
         }
     };
 
-    const TFunction *getInternalFunction(TString *functionName,
+    const TFunction *getInternalFunction(const ImmutableString &functionName,
                                          const TType &returnType,
                                          TIntermSequence *arguments,
                                          const TVector<TConstParameter> &parameters,
@@ -76,12 +76,9 @@ class EmulatePrecision : public TLValueTrackingTraverser
     EmulationSet mEmulateCompoundDiv;
 
     // Map from mangled name to function.
-    TMap<TString, const TFunction *> mInternalFunctions;
+    TMap<ImmutableString, const TFunction *> mInternalFunctions;
 
     bool mDeclaringVariables;
-
-    const TString *mParamXName;
-    const TString *mParamYName;
 };
 
 }  // namespace sh

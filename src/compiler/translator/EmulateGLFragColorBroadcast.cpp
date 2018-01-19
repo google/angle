@@ -24,6 +24,8 @@ namespace sh
 namespace
 {
 
+constexpr const ImmutableString kGlFragDataString("gl_FragData");
+
 class GLFragColorBroadcastTraverser : public TIntermTraverser
 {
   public:
@@ -54,7 +56,7 @@ class GLFragColorBroadcastTraverser : public TIntermTraverser
 TIntermBinary *GLFragColorBroadcastTraverser::constructGLFragDataNode(int index) const
 {
     TIntermSymbol *symbol =
-        ReferenceBuiltInVariable(TString("gl_FragData"), *mSymbolTable, mShaderVersion);
+        ReferenceBuiltInVariable(kGlFragDataString, *mSymbolTable, mShaderVersion);
     TIntermTyped *indexNode = CreateIndexNode(index);
 
     TIntermBinary *binary = new TIntermBinary(EOpIndexDirect, symbol, indexNode);
