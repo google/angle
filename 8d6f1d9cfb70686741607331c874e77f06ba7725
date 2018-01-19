@@ -22,6 +22,30 @@
       "revId": "8d6f1d9cfb70686741607331c874e77f06ba7725",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c2b99159_078dab18",
+        "filename": "src/compiler/translator/SeparateArrayConstructorStatements.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-01-19T09:29:10Z",
+      "side": 1,
+      "message": "Yes, that\u0027s true. I realized myself that I had made a mistake here after I left work. Fixed now.",
+      "parentUuid": "8c9c7193_7ccb60e1",
+      "range": {
+        "startLine": 70,
+        "startChar": 0,
+        "endLine": 73,
+        "endChar": 77
+      },
+      "revId": "8d6f1d9cfb70686741607331c874e77f06ba7725",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
