@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "3cce1ea3_0a7b0749",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 2141,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-01-19T08:14:19Z",
+      "side": 1,
+      "message": "\"Consumer\" and \"generator\" are terms in both GL_EXT_shader_io_blocks (Section 4.3.4) and ES 3.2 (Chapter 9.1, Page 175) specs.\n\nAccording to these two tables, vertex shader outputs should be \"outputVaryings\" and fragment shader inputs should be \"inputVaryings\".\n\nI suggest we use \"consumerShader\" and \"generatorShader\" in this function when we support linking with geometry shader.",
+      "parentUuid": "3d6ea869_50b1403c",
+      "range": {
+        "startLine": 2141,
+        "startChar": 28,
+        "endLine": 2141,
+        "endChar": 43
+      },
+      "revId": "1714e79ef3b808e859cc19073d2ace61b556bfa5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "de92b0db_9eded077",
         "filename": "src/libANGLE/Program.h",
         "patchSetId": 16
@@ -45,6 +69,30 @@
       "revId": "1714e79ef3b808e859cc19073d2ace61b556bfa5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "477e9d9e_6ad9b191",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-01-19T08:14:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "de92b0db_9eded077",
+      "range": {
+        "startLine": 58,
+        "startChar": 4,
+        "endLine": 58,
+        "endChar": 17
+      },
+      "revId": "1714e79ef3b808e859cc19073d2ace61b556bfa5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
