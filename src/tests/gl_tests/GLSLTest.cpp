@@ -2688,6 +2688,9 @@ TEST_P(GLSLTest_ES31, FindMSBAndFindLSBCornerCases)
         return;
     }
 
+    // Failing on N5X Oreo http://anglebug.com/2304
+    ANGLE_SKIP_TEST_IF(IsAndroid() && IsAdreno() && IsOpenGLES());
+
     const std::string &fragmentShader =
         "#version 310 es\n"
         "precision mediump float;\n"
