@@ -70,6 +70,30 @@
       "revId": "605385540946523855705100a483d4e163088170",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f10550f3_c80e6538",
+        "filename": "src/compiler/translator/SymbolTable.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-01-19T09:36:48Z",
+      "side": 1,
+      "message": "That\u0027s reasonable, done.",
+      "parentUuid": "f4cdd8ea_ce6ac21c",
+      "range": {
+        "startLine": 158,
+        "startChar": 4,
+        "endLine": 158,
+        "endChar": 31
+      },
+      "revId": "605385540946523855705100a483d4e163088170",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
