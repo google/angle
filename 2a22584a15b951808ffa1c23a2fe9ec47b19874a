@@ -1,0 +1,395 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "632d676b_0ccb4c00",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 23
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-19T14:36:46Z",
+      "side": 1,
+      "message": "could you put in a more useful description, with the issue tag?",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 26
+      },
+      "revId": "2a22584a15b951808ffa1c23a2fe9ec47b19874a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "995fe261_a84c6929",
+        "filename": "samples/hello_triangle/HelloTriangle.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-19T14:36:46Z",
+      "side": 1,
+      "message": "need to clean up this file before landing.",
+      "range": {
+        "startLine": 33,
+        "startChar": 0,
+        "endLine": 40,
+        "endChar": 17
+      },
+      "revId": "2a22584a15b951808ffa1c23a2fe9ec47b19874a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bd2c41f5_e23d2789",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-19T14:36:46Z",
+      "side": 1,
+      "message": "put in parameters before out parameters",
+      "range": {
+        "startLine": 159,
+        "startChar": 30,
+        "endLine": 159,
+        "endChar": 47
+      },
+      "revId": "2a22584a15b951808ffa1c23a2fe9ec47b19874a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2b8e170f_989a1aaf",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 305,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-19T14:36:46Z",
+      "side": 1,
+      "message": "Good work on this, but can you split the streaming index stuff into a second patch for easier review?",
+      "range": {
+        "startLine": 295,
+        "startChar": 0,
+        "endLine": 305,
+        "endChar": 8
+      },
+      "revId": "2a22584a15b951808ffa1c23a2fe9ec47b19874a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1de095ba_66bbc008",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 23
+      },
+      "lineNbr": 187,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-19T14:36:46Z",
+      "side": 1,
+      "message": "nit: mStreamingIndexData/mStreamingVertexData.",
+      "range": {
+        "startLine": 187,
+        "startChar": 27,
+        "endLine": 187,
+        "endChar": 37
+      },
+      "revId": "2a22584a15b951808ffa1c23a2fe9ec47b19874a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ed67f050_2ac0be60",
+        "filename": "src/libANGLE/renderer/vulkan/StreamingBufferManager.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-19T14:36:46Z",
+      "side": 1,
+      "message": "are there any alignment constraints on the memory? might need to check with the spec.",
+      "range": {
+        "startLine": 27,
+        "startChar": 34,
+        "endLine": 27,
+        "endChar": 42
+      },
+      "revId": "2a22584a15b951808ffa1c23a2fe9ec47b19874a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d7b4c5df_a7667654",
+        "filename": "src/libANGLE/renderer/vulkan/StreamingBufferManager.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-19T14:36:46Z",
+      "side": 1,
+      "message": "prefer c++-style casts. but, in this case, the parameter should be VkMemoryPropertyFlags not VkMemoryPropertyFlagsBits.",
+      "range": {
+        "startLine": 58,
+        "startChar": 43,
+        "endLine": 58,
+        "endChar": 69
+      },
+      "revId": "2a22584a15b951808ffa1c23a2fe9ec47b19874a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "289fff3b_c5bf654e",
+        "filename": "src/libANGLE/renderer/vulkan/StreamingBufferManager.h",
+        "patchSetId": 23
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-19T14:36:46Z",
+      "side": 1,
+      "message": "This is a bit tricky. This code assumes that every streamed out buffer is released immediately after use, and does not persist multiple frames. If we wanted to use this code for static conversions (I.E. say we need to convert index types, or weird vertex types like GL_FIXED that don\u0027t exist in Vulkan), the translated data may persist for several frames.\n\nI can see a couple solutions for this problem: we either re-translate the data when we need to flip the buffer (out of space), so that we can release it immediately. We could reference count, so that when we store the ResourceVk pointer in the VertexArrayVk class, we can release when the translated data is no longer needed by the Vertex Array. Or we could somehow transfer ownership to the VertexArray on release, if we assume it is not possible to use the same translated data in two VertexArrays.\n\nFor now it might be OK to ignore this problem just to get streaming data done, but we\u0027ll have to address it when we implement additional vertex attribute types, since there are a bunch of weird ones that don\u0027t exist in Vulkan.",
+      "range": {
+        "startLine": 19,
+        "startChar": 38,
+        "endLine": 19,
+        "endChar": 48
+      },
+      "revId": "2a22584a15b951808ffa1c23a2fe9ec47b19874a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f546ad58_d14b4b79",
+        "filename": "src/libANGLE/renderer/vulkan/StreamingBufferManager.h",
+        "patchSetId": 23
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-19T14:36:46Z",
+      "side": 1,
+      "message": "mNextWriteOffset",
+      "range": {
+        "startLine": 35,
+        "startChar": 17,
+        "endLine": 35,
+        "endChar": 24
+      },
+      "revId": "2a22584a15b951808ffa1c23a2fe9ec47b19874a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fcb961c1_65560500",
+        "filename": "src/libANGLE/renderer/vulkan/StreamingBufferManager.h",
+        "patchSetId": 23
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-19T14:36:46Z",
+      "side": 1,
+      "message": "mLastFlushOffset",
+      "range": {
+        "startLine": 36,
+        "startChar": 17,
+        "endLine": 36,
+        "endChar": 27
+      },
+      "revId": "2a22584a15b951808ffa1c23a2fe9ec47b19874a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6ddc2166_f5b86bd6",
+        "filename": "src/libANGLE/renderer/vulkan/StreamingBufferManager.h",
+        "patchSetId": 23
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-19T14:36:46Z",
+      "side": 1,
+      "message": "use a more descriptive name than mPtr.",
+      "range": {
+        "startLine": 38,
+        "startChar": 13,
+        "endLine": 38,
+        "endChar": 17
+      },
+      "revId": "2a22584a15b951808ffa1c23a2fe9ec47b19874a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "81e3c69c_214d1a2d",
+        "filename": "src/libANGLE/renderer/vulkan/StreamingBufferManager.h",
+        "patchSetId": 23
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-19T14:36:46Z",
+      "side": 1,
+      "message": "maybe you could make this a parameter to the constructor.",
+      "range": {
+        "startLine": 40,
+        "startChar": 28,
+        "endLine": 40,
+        "endChar": 37
+      },
+      "revId": "2a22584a15b951808ffa1c23a2fe9ec47b19874a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8dadbd60_de36f746",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-19T14:36:46Z",
+      "side": 1,
+      "message": "nit: init locals",
+      "range": {
+        "startLine": 65,
+        "startChar": 12,
+        "endLine": 65,
+        "endChar": 20
+      },
+      "revId": "2a22584a15b951808ffa1c23a2fe9ec47b19874a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bb121cf7_1d53aa8e",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-19T14:36:46Z",
+      "side": 1,
+      "message": "micro-nit: extra space",
+      "range": {
+        "startLine": 131,
+        "startChar": 47,
+        "endLine": 131,
+        "endChar": 48
+      },
+      "revId": "2a22584a15b951808ffa1c23a2fe9ec47b19874a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f7f823bc_feb3c9ae",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-19T14:36:46Z",
+      "side": 1,
+      "message": "You could store the ResourceVk pointer to the Streaming buffer here instead of updating it in stream vertex data. See my other comments about static translated data.",
+      "range": {
+        "startLine": 160,
+        "startChar": 12,
+        "endLine": 160,
+        "endChar": 40
+      },
+      "revId": "2a22584a15b951808ffa1c23a2fe9ec47b19874a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b9339f94_f1d17e9e",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-19T14:36:46Z",
+      "side": 1,
+      "message": "You could store the ResourceVk pointer to the Streaming buffer here instead of updating it in stream vertex data. See my other comments about static translated data.",
+      "range": {
+        "startLine": 166,
+        "startChar": 12,
+        "endLine": 166,
+        "endChar": 46
+      },
+      "revId": "2a22584a15b951808ffa1c23a2fe9ec47b19874a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d956bfd3_33282f47",
+        "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.h",
+        "patchSetId": 23
+      },
+      "lineNbr": 648,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-19T14:36:46Z",
+      "side": 1,
+      "message": "put this before the out parameters. also, use VkMemoryPropertyFlags instead of VkMemoryPropertyFlagsBits (bits is the typed version, Flags is for a combination of bits and is an int)",
+      "range": {
+        "startLine": 648,
+        "startChar": 27,
+        "endLine": 648,
+        "endChar": 57
+      },
+      "revId": "2a22584a15b951808ffa1c23a2fe9ec47b19874a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
