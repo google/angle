@@ -55,14 +55,14 @@ VkResult VerifyExtensionsPresent(const std::vector<VkExtensionProperties> &exten
     return VK_SUCCESS;
 }
 
-VkBool32 VKAPI_CALL DebugReportCallback(VkDebugReportFlagsEXT flags,
-                                        VkDebugReportObjectTypeEXT objectType,
-                                        uint64_t object,
-                                        size_t location,
-                                        int32_t messageCode,
-                                        const char *layerPrefix,
-                                        const char *message,
-                                        void *userData)
+VKAPI_ATTR VkBool32 VKAPI_CALL DebugReportCallback(VkDebugReportFlagsEXT flags,
+                                                   VkDebugReportObjectTypeEXT objectType,
+                                                   uint64_t object,
+                                                   size_t location,
+                                                   int32_t messageCode,
+                                                   const char *layerPrefix,
+                                                   const char *message,
+                                                   void *userData)
 {
     if ((flags & VK_DEBUG_REPORT_ERROR_BIT_EXT) != 0)
     {
@@ -84,6 +84,71 @@ VkBool32 VKAPI_CALL DebugReportCallback(VkDebugReportFlagsEXT flags,
 
     return VK_FALSE;
 }
+
+// If we're loading the validation layers, we could be running from any random directory.
+// Change to the executable directory so we can find the layers, then change back to the
+// previous directory to be safe we don't disrupt the application.
+class ScopedVkLoaderEnvironment : angle::NonCopyable
+{
+  public:
+    ScopedVkLoaderEnvironment(bool enableValidationLayers)
+        : mEnableValidationLayers(enableValidationLayers), mChangedCWD(false)
+    {
+// Changing CWD and setting environment variables makes no sense on Android,
+// since this code is a part of Java application there.
+// Android Vulkan loader doesn't need this either.
+#if !defined(ANGLE_PLATFORM_ANDROID)
+        if (mEnableValidationLayers)
+        {
+            const auto &cwd = angle::GetCWD();
+            if (!cwd.valid())
+            {
+                ERR() << "Error getting CWD for Vulkan layers init.";
+                mEnableValidationLayers = false;
+            }
+            else
+            {
+                mPreviousCWD       = cwd.value();
+                const char *exeDir = angle::GetExecutableDirectory();
+                mChangedCWD        = angle::SetCWD(exeDir);
+                if (!mChangedCWD)
+                {
+                    ERR() << "Error setting CWD for Vulkan layers init.";
+                    mEnableValidationLayers = false;
+                }
+            }
+        }
+
+        // Override environment variable to use the ANGLE layers.
+        if (mEnableValidationLayers)
+        {
+            if (!angle::SetEnvironmentVar(g_VkLoaderLayersPathEnv, ANGLE_VK_LAYERS_DIR))
+            {
+                ERR() << "Error setting environment for Vulkan layers init.";
+                mEnableValidationLayers = false;
+            }
+        }
+#endif  // !defined(ANGLE_PLATFORM_ANDROID)
+    }
+
+    ~ScopedVkLoaderEnvironment()
+    {
+        if (mChangedCWD)
+        {
+#if !defined(ANGLE_PLATFORM_ANDROID)
+            ASSERT(mPreviousCWD.valid());
+            angle::SetCWD(mPreviousCWD.value().c_str());
+#endif  // !defined(ANGLE_PLATFORM_ANDROID)
+        }
+    }
+
+    bool canEnableValidationLayers() { return mEnableValidationLayers; }
+
+  private:
+    bool mEnableValidationLayers;
+    bool mChangedCWD;
+    Optional<std::string> mPreviousCWD;
+};
 
 }  // anonymous namespace
 
@@ -187,40 +252,8 @@ vk::Error RendererVk::initialize(const egl::AttributeMap &attribs, const char *w
 {
     mEnableValidationLayers = ShouldUseDebugLayers(attribs);
 
-    // If we're loading the validation layers, we could be running from any random directory.
-    // Change to the executable directory so we can find the layers, then change back to the
-    // previous directory to be safe we don't disrupt the application.
-    std::string previousCWD;
-
-    if (mEnableValidationLayers)
-    {
-        const auto &cwd = angle::GetCWD();
-        if (!cwd.valid())
-        {
-            ERR() << "Error getting CWD for Vulkan layers init.";
-            mEnableValidationLayers = false;
-        }
-        else
-        {
-            previousCWD = cwd.value();
-            const char *exeDir = angle::GetExecutableDirectory();
-            if (!angle::SetCWD(exeDir))
-            {
-                ERR() << "Error setting CWD for Vulkan layers init.";
-                mEnableValidationLayers = false;
-            }
-        }
-    }
-
-    // Override environment variable to use the ANGLE layers.
-    if (mEnableValidationLayers)
-    {
-        if (!angle::SetEnvironmentVar(g_VkLoaderLayersPathEnv, ANGLE_VK_LAYERS_DIR))
-        {
-            ERR() << "Error setting environment for Vulkan layers init.";
-            mEnableValidationLayers = false;
-        }
-    }
+    ScopedVkLoaderEnvironment scopedEnvironment(mEnableValidationLayers);
+    mEnableValidationLayers = scopedEnvironment.canEnableValidationLayers();
 
     // Gather global layer properties.
     uint32_t instanceLayerCount = 0;
@@ -243,23 +276,14 @@ vk::Error RendererVk::initialize(const egl::AttributeMap &attribs, const char *w
                                                             instanceExtensionProps.data()));
     }
 
+    const char *const *enabledLayerNames = nullptr;
+    uint32_t enabledLayerCount           = 0;
     if (mEnableValidationLayers)
     {
-        // Verify the standard validation layers are available.
-        if (!HasStandardValidationLayer(instanceLayerProps))
-        {
-            // Generate an error if the attribute was requested, warning otherwise.
-            if (attribs.get(EGL_PLATFORM_ANGLE_DEBUG_LAYERS_ENABLED_ANGLE, EGL_DONT_CARE) ==
-                EGL_TRUE)
-            {
-                ERR() << "Vulkan standard validation layers are missing.";
-            }
-            else
-            {
-                WARN() << "Vulkan standard validation layers are missing.";
-            }
-            mEnableValidationLayers = false;
-        }
+        bool layersRequested =
+            (attribs.get(EGL_PLATFORM_ANGLE_DEBUG_LAYERS_ENABLED_ANGLE, EGL_DONT_CARE) == EGL_TRUE);
+        mEnableValidationLayers = GetAvailableValidationLayers(
+            instanceLayerProps, layersRequested, &enabledLayerNames, &enabledLayerCount);
     }
 
     std::vector<const char *> enabledInstanceExtensions;
@@ -294,18 +318,13 @@ vk::Error RendererVk::initialize(const egl::AttributeMap &attribs, const char *w
     instanceInfo.enabledExtensionCount = static_cast<uint32_t>(enabledInstanceExtensions.size());
     instanceInfo.ppEnabledExtensionNames =
         enabledInstanceExtensions.empty() ? nullptr : enabledInstanceExtensions.data();
-    instanceInfo.enabledLayerCount = mEnableValidationLayers ? 1u : 0u;
-    instanceInfo.ppEnabledLayerNames =
-        mEnableValidationLayers ? &g_VkStdValidationLayerName : nullptr;
+    instanceInfo.enabledLayerCount   = enabledLayerCount;
+    instanceInfo.ppEnabledLayerNames = enabledLayerNames;
 
     ANGLE_VK_TRY(vkCreateInstance(&instanceInfo, nullptr, &mInstance));
 
     if (mEnableValidationLayers)
     {
-        // Change back to the previous working directory now that we've loaded the instance -
-        // the validation layers should be loaded at this point.
-        angle::SetCWD(previousCWD.c_str());
-
         VkDebugReportCallbackCreateInfoEXT debugReportInfo;
 
         debugReportInfo.sType = VK_STRUCTURE_TYPE_DEBUG_REPORT_CREATE_INFO_EXT;
@@ -406,13 +425,12 @@ vk::Error RendererVk::initializeDevice(uint32_t queueFamilyIndex)
             mPhysicalDevice, nullptr, &deviceExtensionCount, deviceExtensionProps.data()));
     }
 
+    const char *const *enabledLayerNames = nullptr;
+    uint32_t enabledLayerCount           = 0;
     if (mEnableValidationLayers)
     {
-        if (!HasStandardValidationLayer(deviceLayerProps))
-        {
-            WARN() << "Vulkan standard validation layer is missing.";
-            mEnableValidationLayers = false;
-        }
+        mEnableValidationLayers = GetAvailableValidationLayers(
+            deviceLayerProps, false, &enabledLayerNames, &enabledLayerCount);
     }
 
     std::vector<const char *> enabledDeviceExtensions;
@@ -439,9 +457,8 @@ vk::Error RendererVk::initializeDevice(uint32_t queueFamilyIndex)
     createInfo.flags                = 0;
     createInfo.queueCreateInfoCount = 1;
     createInfo.pQueueCreateInfos    = &queueCreateInfo;
-    createInfo.enabledLayerCount    = mEnableValidationLayers ? 1u : 0u;
-    createInfo.ppEnabledLayerNames =
-        mEnableValidationLayers ? &g_VkStdValidationLayerName : nullptr;
+    createInfo.enabledLayerCount     = enabledLayerCount;
+    createInfo.ppEnabledLayerNames   = enabledLayerNames;
     createInfo.enabledExtensionCount = static_cast<uint32_t>(enabledDeviceExtensions.size());
     createInfo.ppEnabledExtensionNames =
         enabledDeviceExtensions.empty() ? nullptr : enabledDeviceExtensions.data();

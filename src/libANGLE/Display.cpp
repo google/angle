@@ -64,6 +64,8 @@
 #include "libANGLE/renderer/vulkan/win32/DisplayVkWin32.h"
 #elif defined(ANGLE_PLATFORM_LINUX)
 #include "libANGLE/renderer/vulkan/xcb/DisplayVkXcb.h"
+#elif defined(ANGLE_PLATFORM_ANDROID)
+#include "libANGLE/renderer/vulkan/android/DisplayVkAndroid.h"
 #else
 #error Unsupported Vulkan platform.
 #endif
@@ -210,6 +212,8 @@ rx::DisplayImpl *CreateDisplayFromAttribs(const AttributeMap &attribMap, const D
             impl = new rx::DisplayVkWin32(state);
 #elif defined(ANGLE_PLATFORM_LINUX)
             impl = new rx::DisplayVkXcb(state);
+#elif defined(ANGLE_PLATFORM_ANDROID)
+            impl = new rx::DisplayVkAndroid(state);
 #else
 #error Unsupported Vulkan platform.
 #endif

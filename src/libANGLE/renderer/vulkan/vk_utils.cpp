@@ -107,11 +107,48 @@ VkImageUsageFlags GetStagingBufferUsageFlags(vk::StagingUsage usage)
     }
 }
 
+// Mirrors std_validation_str in loader.c
+const char *g_VkStdValidationLayerName = "VK_LAYER_LUNARG_standard_validation";
+const char *g_VkValidationLayerNames[] = {
+    "VK_LAYER_GOOGLE_threading", "VK_LAYER_LUNARG_parameter_validation",
+    "VK_LAYER_LUNARG_object_tracker", "VK_LAYER_LUNARG_core_validation",
+    "VK_LAYER_GOOGLE_unique_objects"};
+const uint32_t g_VkNumValidationLayerNames =
+    sizeof(g_VkValidationLayerNames) / sizeof(g_VkValidationLayerNames[0]);
+
+bool HasValidationLayer(const std::vector<VkLayerProperties> &layerProps, const char *layerName)
+{
+    for (const auto &layerProp : layerProps)
+    {
+        if (std::string(layerProp.layerName) == layerName)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool HasStandardValidationLayer(const std::vector<VkLayerProperties> &layerProps)
+{
+    return HasValidationLayer(layerProps, g_VkStdValidationLayerName);
+}
+
+bool HasValidationLayers(const std::vector<VkLayerProperties> &layerProps)
+{
+    for (const auto &layerName : g_VkValidationLayerNames)
+    {
+        if (!HasValidationLayer(layerProps, layerName))
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 }  // anonymous namespace
 
-// Mirrors std_validation_str in loader.h
-// TODO(jmadill): Possibly wrap the loader into a safe source file. Can't be included trivially.
-const char *g_VkStdValidationLayerName = "VK_LAYER_LUNARG_standard_validation";
 const char *g_VkLoaderLayersPathEnv    = "VK_LAYER_PATH";
 
 const char *VulkanResultString(VkResult result)
@@ -175,17 +212,39 @@ const char *VulkanResultString(VkResult result)
     }
 }
 
-bool HasStandardValidationLayer(const std::vector<VkLayerProperties> &layerProps)
+bool GetAvailableValidationLayers(const std::vector<VkLayerProperties> &layerProps,
+                                  bool mustHaveLayers,
+                                  const char *const **enabledLayerNames,
+                                  uint32_t *enabledLayerCount)
 {
-    for (const auto &layerProp : layerProps)
+    if (HasStandardValidationLayer(layerProps))
     {
-        if (std::string(layerProp.layerName) == g_VkStdValidationLayerName)
+        *enabledLayerNames = &g_VkStdValidationLayerName;
+        *enabledLayerCount = 1;
+    }
+    else if (HasValidationLayers(layerProps))
+    {
+        *enabledLayerNames = g_VkValidationLayerNames;
+        *enabledLayerCount = g_VkNumValidationLayerNames;
+    }
+    else
+    {
+        // Generate an error if the layers were explicitly requested, warning otherwise.
+        if (mustHaveLayers)
         {
-            return true;
+            ERR() << "Vulkan validation layers are missing.";
         }
+        else
+        {
+            WARN() << "Vulkan validation layers are missing.";
+        }
+
+        *enabledLayerNames = nullptr;
+        *enabledLayerCount = 0;
+        return false;
     }
 
-    return false;
+    return true;
 }
 
 namespace vk

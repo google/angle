@@ -765,6 +765,13 @@
             'libANGLE/renderer/vulkan/vk_utils.cpp',
             'libANGLE/renderer/vulkan/vk_utils.h',
         ],
+        'libangle_vulkan_android_sources':
+        [
+            'libANGLE/renderer/vulkan/android/DisplayVkAndroid.cpp',
+            'libANGLE/renderer/vulkan/android/DisplayVkAndroid.h',
+            'libANGLE/renderer/vulkan/android/WindowSurfaceVkAndroid.cpp',
+            'libANGLE/renderer/vulkan/android/WindowSurfaceVkAndroid.h',
+        ],
         'libangle_vulkan_win32_sources':
         [
             'libANGLE/renderer/vulkan/win32/DisplayVkWin32.cpp',

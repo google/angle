@@ -4,6 +4,9 @@
 
 import("//build_overrides/build.gni")
 import("//build/config/ui.gni")  # import the use_x11 variable
+if (is_android) {
+  import("//build/config/android/config.gni")
+}
 
 if (build_with_chromium) {
   angle_root = "//third_party/angle"
@@ -18,10 +21,21 @@ if (build_with_chromium) {
 }
 
 declare_args() {
+  if (!is_android) {
+    ndk_supports_vulkan = false
+  } else {
+    ndk_supports_vulkan =
+        (current_cpu == "arm" && android32_ndk_api_level >= 24) ||
+        (current_cpu == "arm64" && android64_ndk_api_level >= 24)
+  }
+}
+
+declare_args() {
   angle_enable_d3d9 = is_win
   angle_enable_d3d11 = is_win
   angle_enable_gl = ozone_platform_gbm || !is_linux || (use_x11 && !is_chromeos)
-  angle_enable_vulkan = is_win || (is_linux && use_x11 && !is_chromeos)
+  angle_enable_vulkan = is_win || (is_linux && use_x11 && !is_chromeos) ||
+                        (is_android && ndk_supports_vulkan)
   angle_enable_null = true
   angle_enable_essl = true
   angle_enable_glsl = true

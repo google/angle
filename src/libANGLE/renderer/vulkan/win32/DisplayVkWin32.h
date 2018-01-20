@@ -26,6 +26,8 @@ class DisplayVkWin32 : public DisplayVk
                                        EGLint width,
                                        EGLint height) override;
 
+    egl::ConfigSet generateConfigs() override;
+
     const char *getWSIName() const override;
 };
 

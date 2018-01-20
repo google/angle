@@ -1,71 +1,44 @@
 //
-// Copyright 2016 The ANGLE Project Authors. All rights reserved.
+// Copyright 2018 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// DisplayVkXcb.cpp:
-//    Implements the class methods for DisplayVkXcb.
+// DisplayVkAndroid.cpp:
+//    Implements the class methods for DisplayVkAndroid.
 //
 
-#include "libANGLE/renderer/vulkan/xcb/DisplayVkXcb.h"
+#include "libANGLE/renderer/vulkan/android/DisplayVkAndroid.h"
 
-#include <xcb/xcb.h>
+#include <android/native_window.h>
+#include <vulkan/vulkan.h>
 
-#include "libANGLE/renderer/vulkan/xcb/WindowSurfaceVkXcb.h"
+#include "libANGLE/renderer/vulkan/android/WindowSurfaceVkAndroid.h"
 
 namespace rx
 {
 
-DisplayVkXcb::DisplayVkXcb(const egl::DisplayState &state)
-    : DisplayVk(state), mXcbConnection(nullptr)
+DisplayVkAndroid::DisplayVkAndroid(const egl::DisplayState &state) : DisplayVk(state)
 {
 }
 
-egl::Error DisplayVkXcb::initialize(egl::Display *display)
+bool DisplayVkAndroid::isValidNativeWindow(EGLNativeWindowType window) const
 {
-    mXcbConnection = xcb_connect(nullptr, nullptr);
-    if (mXcbConnection == nullptr)
-    {
-        return egl::EglNotInitialized();
-    }
-    return DisplayVk::initialize(display);
+    return (ANativeWindow_getFormat(window) >= 0);
 }
 
-void DisplayVkXcb::terminate()
+SurfaceImpl *DisplayVkAndroid::createWindowSurfaceVk(const egl::SurfaceState &state,
+                                                     EGLNativeWindowType window,
+                                                     EGLint width,
+                                                     EGLint height)
 {
-    ASSERT(mXcbConnection != nullptr);
-    xcb_disconnect(mXcbConnection);
-    mXcbConnection = nullptr;
-    DisplayVk::terminate();
+    return new WindowSurfaceVkAndroid(state, window, width, height);
 }
 
-bool DisplayVkXcb::isValidNativeWindow(EGLNativeWindowType window) const
-{
-    // There doesn't appear to be an xcb function explicitly for checking the validity of a
-    // window ID, but xcb_query_tree_reply will return nullptr if the window doesn't exist.
-    xcb_query_tree_cookie_t cookie = xcb_query_tree(mXcbConnection, window);
-    xcb_query_tree_reply_t *reply  = xcb_query_tree_reply(mXcbConnection, cookie, nullptr);
-    if (reply)
-    {
-        free(reply);
-        return true;
-    }
-    return false;
-}
-
-SurfaceImpl *DisplayVkXcb::createWindowSurfaceVk(const egl::SurfaceState &state,
-                                                 EGLNativeWindowType window,
-                                                 EGLint width,
-                                                 EGLint height)
-{
-    return new WindowSurfaceVkXcb(state, window, width, height, mXcbConnection);
-}
-
-egl::ConfigSet DisplayVkXcb::generateConfigs()
+egl::ConfigSet DisplayVkAndroid::generateConfigs()
 {
     // TODO(jmadill): Multiple configs, pbuffers, and proper checking of config attribs.
     egl::Config singleton;
-    singleton.renderTargetFormat    = GL_BGRA8_EXT;
+    singleton.renderTargetFormat    = GL_RGBA8;
     singleton.depthStencilFormat    = GL_NONE;
     singleton.bufferSize            = 32;
     singleton.redSize               = 8;
@@ -106,9 +79,9 @@ egl::ConfigSet DisplayVkXcb::generateConfigs()
     return configSet;
 }
 
-const char *DisplayVkXcb::getWSIName() const
+const char *DisplayVkAndroid::getWSIName() const
 {
-    return VK_KHR_XCB_SURFACE_EXTENSION_NAME;
+    return VK_KHR_ANDROID_SURFACE_EXTENSION_NAME;
 }
 
 }  // namespace rx
