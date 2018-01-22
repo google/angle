@@ -2619,13 +2619,17 @@ bool ValidateRenderbufferStorageMultisample(ValidationContext *context,
     }
 
     // The ES3 spec(section 4.4.2) states that the internal format must be sized and not an integer
-    // format if samples is greater than zero.
+    // format if samples is greater than zero. In ES3.1(section 9.2.5), it can support integer
+    // multisample renderbuffer, but the samples should not be greater than MAX_INTEGER_SAMPLES.
     const gl::InternalFormat &formatInfo = gl::GetSizedInternalFormatInfo(internalformat);
-    if ((formatInfo.componentType == GL_UNSIGNED_INT || formatInfo.componentType == GL_INT) &&
-        samples > 0)
+    if ((formatInfo.componentType == GL_UNSIGNED_INT || formatInfo.componentType == GL_INT))
     {
-        context->handleError(InvalidOperation());
-        return false;
+        if ((samples > 0 && context->getClientVersion() == ES_3_0) ||
+            static_cast<GLuint>(samples) > context->getCaps().maxIntegerSamples)
+        {
+            context->handleError(InvalidOperation());
+            return false;
+        }
     }
 
     // The behavior is different than the ANGLE version, which would generate a GL_OUT_OF_MEMORY.
