@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8919e9d4_3ae4d3d2",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-22T20:21:24Z",
+      "side": 1,
+      "message": "can you please add a blank line\n\nBug: angleproject:1944\n\nTo associate this with the tracker issue for docs maintenance?",
+      "revId": "4d3fcf916aa9ad3a17e5a0cbe92eccdffb512ec8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "405daa8b_e2cdac59",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-22T20:21:24Z",
+      "side": 1,
+      "message": "two comments:\n\n- indicate this is only necessary on Linux\n- rephrase this to indicate it should be mandatory rather than suggested.",
+      "range": {
+        "startLine": 51,
+        "startChar": 0,
+        "endLine": 53,
+        "endChar": 29
+      },
+      "revId": "4d3fcf916aa9ad3a17e5a0cbe92eccdffb512ec8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
