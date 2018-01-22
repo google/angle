@@ -30,7 +30,7 @@ On Windows:
 
 On Linux:
 
- * Development packages for OpenGL, X11 and libpci
+ * Development packages for OpenGL, X11 and libpci (all of these dependencies should be installed automatically when running install-build-deps.sh later on).
  * Bison and flex are not needed as we only support generating the translator grammar on Windows.
 
 On MacOS:
@@ -46,6 +46,15 @@ cd angle
 python scripts/bootstrap.py
 gclient sync
 git checkout master
+```
+
+On Linux only, you need to install all the necessary dependencies before going further by running this command:
+```
+./build/install-build-deps.sh
+```
+
+After this completes successfully, you are ready to generate the ninja files:
+```
 gn gen out/Debug
 ```
 
