@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ab634b76_d8a760a2",
+        "filename": "src/compiler/translator/SymbolTable.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-22T16:03:22Z",
+      "side": 1,
+      "message": "nit: you could update these to \"using\" while you\u0027re at it.",
+      "range": {
+        "startLine": 30,
+        "startChar": 4,
+        "endLine": 30,
+        "endChar": 11
+      },
+      "revId": "b359d02359e41745020a77e70f75a0a500bf2969",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "10ca6d3f_312cbead",
+        "filename": "src/compiler/translator/SymbolTable.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-22T16:03:22Z",
+      "side": 1,
+      "message": "nice encapsulation.",
+      "range": {
+        "startLine": 239,
+        "startChar": 10,
+        "endLine": 239,
+        "endChar": 27
+      },
+      "revId": "b359d02359e41745020a77e70f75a0a500bf2969",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
