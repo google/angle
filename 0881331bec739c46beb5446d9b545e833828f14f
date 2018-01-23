@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f617435c_24669858",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-01-23T20:22:40Z",
+      "side": 1,
+      "message": "suggestion: sizeof(mPackedInputBindings)\nThen if the type changes it doesn\u0027t need to be changed here too.",
+      "revId": "0881331bec739c46beb5446d9b545e833828f14f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "32bb43cb_366457c2",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-01-23T20:22:40Z",
+      "side": 1,
+      "message": "ditto",
+      "revId": "0881331bec739c46beb5446d9b545e833828f14f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ea9b3f8c_253b7ec9",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 575,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-01-23T20:22:40Z",
+      "side": 1,
+      "message": "maybe ditto, I guess one would use the destination, i.e. sizeof(mVertexInputBindings)",
+      "revId": "0881331bec739c46beb5446d9b545e833828f14f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
