@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f9d3b87d_83eea210",
+        "filename": "DEPS",
+        "patchSetId": 10
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-23T19:09:06Z",
+      "side": 1,
+      "message": "yeah, we won\u0027t be able to land this like this.",
+      "range": {
+        "startLine": 4,
+        "startChar": 3,
+        "endLine": 4,
+        "endChar": 13
+      },
+      "revId": "312921053a941c1d5a64956bfa72363df334531d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1288e6ce_5e2332e6",
+        "filename": "src/tests/gles1_conformance_tests/ConformanceTests.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-23T19:09:06Z",
+      "side": 1,
+      "message": "can you comment on how you generated this file, in case someone besides you needs to regenerate it for whatever reason?",
+      "range": {
+        "startLine": 7,
+        "startChar": 5,
+        "endLine": 7,
+        "endChar": 28
+      },
+      "revId": "312921053a941c1d5a64956bfa72363df334531d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b2084357_ad9add53",
+        "filename": "src/tests/test_utils/angle_test_configs.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 373,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-23T19:09:06Z",
+      "side": 1,
+      "message": "same as below",
+      "range": {
+        "startLine": 373,
+        "startChar": 0,
+        "endLine": 373,
+        "endChar": 7
+      },
+      "revId": "312921053a941c1d5a64956bfa72363df334531d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6f801855_21a097b6",
+        "filename": "src/tests/test_utils/angle_test_configs.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 388,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-23T19:09:06Z",
+      "side": 1,
+      "message": "same as below",
+      "range": {
+        "startLine": 388,
+        "startChar": 0,
+        "endLine": 388,
+        "endChar": 7
+      },
+      "revId": "312921053a941c1d5a64956bfa72363df334531d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dd350fe2_5fdece65",
+        "filename": "src/tests/test_utils/angle_test_configs.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 548,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-23T19:09:06Z",
+      "side": 1,
+      "message": "nit: you can omit the angle::",
+      "range": {
+        "startLine": 548,
+        "startChar": 0,
+        "endLine": 548,
+        "endChar": 7
+      },
+      "revId": "312921053a941c1d5a64956bfa72363df334531d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "46adf36d_122c823f",
+        "filename": "src/tests/test_utils/angle_test_configs.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 583,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-23T19:09:06Z",
+      "side": 1,
+      "message": "nit: you can omit the angle::, and for the rest of the file",
+      "range": {
+        "startLine": 583,
+        "startChar": 0,
+        "endLine": 583,
+        "endChar": 7
+      },
+      "revId": "312921053a941c1d5a64956bfa72363df334531d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
