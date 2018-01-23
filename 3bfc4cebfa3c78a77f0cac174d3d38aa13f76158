@@ -22,6 +22,30 @@
       "revId": "3bfc4cebfa3c78a77f0cac174d3d38aa13f76158",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0ed28b7c_7dc57792",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-01-23T21:48:34Z",
+      "side": 1,
+      "message": "Do you mean renderer-\u003egetFormat(config.renderTargetFormat)?",
+      "parentUuid": "12727183_527f57ab",
+      "range": {
+        "startLine": 27,
+        "startChar": 0,
+        "endLine": 31,
+        "endChar": 0
+      },
+      "revId": "3bfc4cebfa3c78a77f0cac174d3d38aa13f76158",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
