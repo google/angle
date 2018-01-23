@@ -51,7 +51,7 @@ egl::ConfigSet DisplayVk::generateConfigs()
 {
     // TODO(jmadill): Multiple configs, pbuffers, and proper checking of config attribs.
     egl::Config singleton;
-    singleton.renderTargetFormat    = GL_RGBA8;
+    singleton.renderTargetFormat    = GL_BGRA8_EXT;
     singleton.depthStencilFormat    = GL_NONE;
     singleton.bufferSize            = 32;
     singleton.redSize               = 8;

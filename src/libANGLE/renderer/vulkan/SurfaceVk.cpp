@@ -24,12 +24,6 @@ namespace rx
 namespace
 {
 
-const vk::Format &GetVkFormatFromConfig(RendererVk *renderer, const egl::Config &config)
-{
-    // TODO(jmadill): Properly handle format interpretation.
-    return renderer->getFormat(GL_BGRA8_EXT);
-}
-
 VkPresentModeKHR GetDesiredPresentMode(const std::vector<VkPresentModeKHR> &presentModes,
                                        EGLint minSwapInterval,
                                        EGLint maxSwapInterval)
@@ -306,7 +300,7 @@ vk::Error WindowSurfaceVk::initializeImpl(RendererVk *renderer)
     ANGLE_VK_TRY(vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice, mSurface, &surfaceFormatCount,
                                                       surfaceFormats.data()));
 
-    mRenderTarget.format  = &GetVkFormatFromConfig(renderer, *mState.config);
+    mRenderTarget.format  = &renderer->getFormat(mState.config->renderTargetFormat);
     VkFormat nativeFormat = mRenderTarget.format->vkTextureFormat;
 
     if (surfaceFormatCount == 1u && surfaceFormats[0].format == VK_FORMAT_UNDEFINED)
