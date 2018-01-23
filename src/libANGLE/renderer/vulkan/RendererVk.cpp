@@ -933,12 +933,13 @@ vk::Error RendererVk::initGraphicsPipelineLayout()
         mGraphicsDescriptorSetLayouts.push_back(std::move(uniformLayout));
     }
 
-    std::array<VkDescriptorSetLayoutBinding, gl::IMPLEMENTATION_MAX_ACTIVE_TEXTURES>
-        textureBindings;
+    // TODO(lucferron): expose this limitation to GL in Context Caps
+    std::vector<VkDescriptorSetLayoutBinding> textureBindings(
+        std::min<size_t>(mPhysicalDeviceProperties.limits.maxPerStageDescriptorSamplers,
+                         gl::IMPLEMENTATION_MAX_ACTIVE_TEXTURES));
 
     // TODO(jmadill): This approach might not work well for texture arrays.
-    for (uint32_t textureIndex = 0; textureIndex < gl::IMPLEMENTATION_MAX_ACTIVE_TEXTURES;
-         ++textureIndex)
+    for (uint32_t textureIndex = 0; textureIndex < textureBindings.size(); ++textureIndex)
     {
         VkDescriptorSetLayoutBinding &layoutBinding = textureBindings[textureIndex];
 
