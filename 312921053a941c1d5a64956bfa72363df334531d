@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "9be47b4e_6efc3b51",
+        "filename": "DEPS",
+        "patchSetId": 10
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-01-23T22:05:01Z",
+      "side": 1,
+      "message": "Yep, I will remove this before landing.",
+      "parentUuid": "f9d3b87d_83eea210",
+      "range": {
+        "startLine": 4,
+        "startChar": 3,
+        "endLine": 4,
+        "endChar": 13
+      },
+      "revId": "312921053a941c1d5a64956bfa72363df334531d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "1288e6ce_5e2332e6",
         "filename": "src/tests/gles1_conformance_tests/ConformanceTests.cpp",
         "patchSetId": 10
@@ -36,6 +60,30 @@
       "writtenOn": "2018-01-23T19:09:06Z",
       "side": 1,
       "message": "can you comment on how you generated this file, in case someone besides you needs to regenerate it for whatever reason?",
+      "range": {
+        "startLine": 7,
+        "startChar": 5,
+        "endLine": 7,
+        "endChar": 28
+      },
+      "revId": "312921053a941c1d5a64956bfa72363df334531d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "88224b17_bf4633f9",
+        "filename": "src/tests/gles1_conformance_tests/ConformanceTests.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-01-23T22:05:01Z",
+      "side": 1,
+      "message": "Added a comment.  The function names are just copy-pasted from a header and I used a macro to make the test functions themselves.  I didn\u0027t want to make this a true autogen file because I doubt it will change and we\u0027ll want to add expectations inline.",
+      "parentUuid": "1288e6ce_5e2332e6",
       "range": {
         "startLine": 7,
         "startChar": 5,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "10ab716e_0d1b47a4",
+        "filename": "src/tests/test_utils/angle_test_configs.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 373,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-01-23T22:05:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b2084357_ad9add53",
+      "range": {
+        "startLine": 373,
+        "startChar": 0,
+        "endLine": 373,
+        "endChar": 7
+      },
+      "revId": "312921053a941c1d5a64956bfa72363df334531d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6f801855_21a097b6",
         "filename": "src/tests/test_utils/angle_test_configs.cpp",
         "patchSetId": 10
@@ -91,6 +163,30 @@
       "revId": "312921053a941c1d5a64956bfa72363df334531d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "82b81170_4793fe2d",
+        "filename": "src/tests/test_utils/angle_test_configs.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 388,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-01-23T22:05:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6f801855_21a097b6",
+      "range": {
+        "startLine": 388,
+        "startChar": 0,
+        "endLine": 388,
+        "endChar": 7
+      },
+      "revId": "312921053a941c1d5a64956bfa72363df334531d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "4980da76_4be000a8",
+        "filename": "src/tests/test_utils/angle_test_configs.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 548,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-01-23T22:05:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dd350fe2_5fdece65",
+      "range": {
+        "startLine": 548,
+        "startChar": 0,
+        "endLine": 548,
+        "endChar": 7
+      },
+      "revId": "312921053a941c1d5a64956bfa72363df334531d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "46adf36d_122c823f",
         "filename": "src/tests/test_utils/angle_test_configs.cpp",
         "patchSetId": 10
@@ -137,6 +257,30 @@
       "revId": "312921053a941c1d5a64956bfa72363df334531d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e59a407d_42d204ea",
+        "filename": "src/tests/test_utils/angle_test_configs.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 583,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-01-23T22:05:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "46adf36d_122c823f",
+      "range": {
+        "startLine": 583,
+        "startChar": 0,
+        "endLine": 583,
+        "endChar": 7
+      },
+      "revId": "312921053a941c1d5a64956bfa72363df334531d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
