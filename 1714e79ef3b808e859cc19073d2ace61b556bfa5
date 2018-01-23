@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "f43c2405_7e3588c2",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 2141,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-23T22:15:50Z",
+      "side": 1,
+      "message": "I\u0027m fine with the terms \"consuming shader\" and \"producing shader\" and with \"input variable\" and \"output variable\". I am not ok with \"consumer shader\" \"generator shader\" \"consumer variable\" \"producer variable\".",
+      "parentUuid": "3cce1ea3_0a7b0749",
+      "range": {
+        "startLine": 2141,
+        "startChar": 28,
+        "endLine": 2141,
+        "endChar": 43
+      },
+      "revId": "1714e79ef3b808e859cc19073d2ace61b556bfa5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "de92b0db_9eded077",
         "filename": "src/libANGLE/Program.h",
         "patchSetId": 16
