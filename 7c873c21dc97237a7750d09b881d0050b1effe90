@@ -46,6 +46,30 @@
       "revId": "7c873c21dc97237a7750d09b881d0050b1effe90",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "161d1971_2f0c9027",
+        "filename": "src/tests/gl_tests/D3DTextureTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 465,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-01-23T16:13:19Z",
+      "side": 1,
+      "message": "Perfect, thanks",
+      "parentUuid": "ca1fb82e_9b6a7711",
+      "range": {
+        "startLine": 463,
+        "startChar": 0,
+        "endLine": 465,
+        "endChar": 35
+      },
+      "revId": "7c873c21dc97237a7750d09b881d0050b1effe90",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
