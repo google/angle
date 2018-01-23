@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "afe0842d_f4167510",
+        "filename": "src/compiler/translator/SymbolTable.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-01-23T08:30:21Z",
+      "side": 1,
+      "message": "Done, made them private to TSymbolTableLevel as well.",
+      "parentUuid": "ab634b76_d8a760a2",
+      "range": {
+        "startLine": 30,
+        "startChar": 4,
+        "endLine": 30,
+        "endChar": 11
+      },
+      "revId": "b359d02359e41745020a77e70f75a0a500bf2969",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "10ca6d3f_312cbead",
         "filename": "src/compiler/translator/SymbolTable.h",
         "patchSetId": 9
@@ -45,6 +69,30 @@
       "revId": "b359d02359e41745020a77e70f75a0a500bf2969",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "83b2ead6_c8f37be3",
+        "filename": "src/compiler/translator/SymbolTable.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-01-23T08:30:21Z",
+      "side": 1,
+      "message": "Yep, it\u0027s nice that inner classes can be forward declared like this.",
+      "parentUuid": "10ca6d3f_312cbead",
+      "range": {
+        "startLine": 239,
+        "startChar": 10,
+        "endLine": 239,
+        "endChar": 27
+      },
+      "revId": "b359d02359e41745020a77e70f75a0a500bf2969",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
