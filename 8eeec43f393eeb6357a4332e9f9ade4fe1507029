@@ -22,6 +22,30 @@
       "revId": "8eeec43f393eeb6357a4332e9f9ade4fe1507029",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cddb7a71_a37446d1",
+        "filename": "src/common/angleutils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 203,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-01-23T08:39:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6dc9bc67_21464a35",
+      "range": {
+        "startLine": 203,
+        "startChar": 14,
+        "endLine": 203,
+        "endChar": 20
+      },
+      "revId": "8eeec43f393eeb6357a4332e9f9ade4fe1507029",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
