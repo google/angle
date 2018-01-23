@@ -264,10 +264,8 @@ class PipelineDesc final
     void updateShaders(ProgramVk *programVk);
 
     // Vertex input state
-    void resetVertexInputState();
-    void updateVertexInputInfo(uint32_t attribIndex,
-                               const gl::VertexBinding &binding,
-                               const gl::VertexAttribute &attrib);
+    void updateVertexInputInfo(const VertexInputBindings &bindings,
+                               const VertexInputAttributes &attribs);
 
     // Input assembly info
     void updateTopology(GLenum drawMode);

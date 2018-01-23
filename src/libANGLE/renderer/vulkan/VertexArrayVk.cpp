@@ -24,11 +24,13 @@ VertexArrayVk::VertexArrayVk(const gl::VertexArrayState &state)
     : VertexArrayImpl(state),
       mCurrentArrayBufferHandles{},
       mCurrentArrayBufferResources{},
-      mCurrentElementArrayBufferResource(nullptr),
-      mCurrentVertexDescsValid(false)
+      mCurrentElementArrayBufferResource(nullptr)
 {
     mCurrentArrayBufferHandles.fill(VK_NULL_HANDLE);
     mCurrentArrayBufferResources.fill(nullptr);
+
+    mPackedInputBindings.fill({0, 0});
+    mPackedInputAttributes.fill({0, 0, 0});
 }
 
 VertexArrayVk::~VertexArrayVk()
@@ -48,9 +50,6 @@ void VertexArrayVk::syncState(const gl::Context *context,
     // TODO(jmadill): Use pipeline cache.
     ContextVk *contextVk = vk::GetImpl(context);
     contextVk->onVertexArrayChange();
-
-    // Invalidate the vertex descriptions.
-    invalidateVertexDescriptions();
 
     // Rebuild current attribute buffers cache. This will fail horribly if the buffer changes.
     // TODO(jmadill): Handle buffer storage changes.
@@ -74,6 +73,9 @@ void VertexArrayVk::syncState(const gl::Context *context,
         }
 
         size_t attribIndex = gl::VertexArray::GetVertexIndexFromDirtyBit(dirtyBit);
+
+        // Invalidate the input description for pipelines.
+        mDirtyPackedInputs.set(attribIndex);
 
         const auto &attrib  = attribs[attribIndex];
         const auto &binding = bindings[attrib.bindingIndex];
@@ -126,15 +128,15 @@ void VertexArrayVk::updateDrawDependencies(vk::CommandBufferNode *readNode,
     }
 }
 
-void VertexArrayVk::invalidateVertexDescriptions()
+void VertexArrayVk::getPackedInputDescriptions(vk::PipelineDesc *pipelineDesc)
 {
-    mCurrentVertexDescsValid = false;
+    updatePackedInputDescriptions();
+    pipelineDesc->updateVertexInputInfo(mPackedInputBindings, mPackedInputAttributes);
 }
 
-void VertexArrayVk::updateVertexDescriptions(const gl::Context *context,
-                                             vk::PipelineDesc *pipelineDesc)
+void VertexArrayVk::updatePackedInputDescriptions()
 {
-    if (mCurrentVertexDescsValid)
+    if (!mDirtyPackedInputs.any())
     {
         return;
     }
@@ -142,18 +144,13 @@ void VertexArrayVk::updateVertexDescriptions(const gl::Context *context,
     const auto &attribs  = mState.getVertexAttributes();
     const auto &bindings = mState.getVertexBindings();
 
-    const gl::Program *programGL = context->getGLState().getProgram();
-
-    pipelineDesc->resetVertexInputState();
-
-    for (auto attribIndex : programGL->getActiveAttribLocationsMask())
+    for (auto attribIndex : mDirtyPackedInputs)
     {
         const auto &attrib  = attribs[attribIndex];
         const auto &binding = bindings[attrib.bindingIndex];
         if (attrib.enabled)
         {
-            pipelineDesc->updateVertexInputInfo(static_cast<uint32_t>(attribIndex), binding,
-                                                attrib);
+            updatePackedInputInfo(static_cast<uint32_t>(attribIndex), binding, attrib);
         }
         else
         {
@@ -161,7 +158,30 @@ void VertexArrayVk::updateVertexDescriptions(const gl::Context *context,
         }
     }
 
-    mCurrentVertexDescsValid = true;
+    mDirtyPackedInputs.reset();
+}
+
+void VertexArrayVk::updatePackedInputInfo(uint32_t attribIndex,
+                                          const gl::VertexBinding &binding,
+                                          const gl::VertexAttribute &attrib)
+{
+    vk::PackedVertexInputBindingDesc &bindingDesc = mPackedInputBindings[attribIndex];
+
+    size_t attribSize = gl::ComputeVertexAttributeTypeSize(attrib);
+    ASSERT(attribSize <= std::numeric_limits<uint16_t>::max());
+
+    bindingDesc.stride    = static_cast<uint16_t>(attribSize);
+    bindingDesc.inputRate = static_cast<uint16_t>(
+        binding.getDivisor() > 0 ? VK_VERTEX_INPUT_RATE_INSTANCE : VK_VERTEX_INPUT_RATE_VERTEX);
+
+    gl::VertexFormatType vertexFormatType = gl::GetVertexFormatType(attrib);
+    VkFormat vkFormat                     = vk::GetNativeVertexFormat(vertexFormatType);
+    ASSERT(vkFormat <= std::numeric_limits<uint16_t>::max());
+
+    vk::PackedVertexInputAttributeDesc &attribDesc = mPackedInputAttributes[attribIndex];
+    attribDesc.format                              = static_cast<uint16_t>(vkFormat);
+    attribDesc.location                            = static_cast<uint16_t>(attribIndex);
+    attribDesc.offset = static_cast<uint32_t>(ComputeVertexAttributeOffset(attrib, binding));
 }
 
 }  // namespace rx

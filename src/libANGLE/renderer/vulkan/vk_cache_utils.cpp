@@ -568,33 +568,11 @@ void PipelineDesc::updateViewport(const gl::Rectangle &viewport, float nearPlane
     mScissor.extent.height = viewport.height;
 }
 
-void PipelineDesc::resetVertexInputState()
+void PipelineDesc::updateVertexInputInfo(const VertexInputBindings &bindings,
+                                         const VertexInputAttributes &attribs)
 {
-    memset(&mVertexInputBindings, 0, sizeof(VertexInputBindings));
-    memset(&mVertexInputAttribs, 0, sizeof(VertexInputAttributes));
-}
-
-void PipelineDesc::updateVertexInputInfo(uint32_t attribIndex,
-                                         const gl::VertexBinding &binding,
-                                         const gl::VertexAttribute &attrib)
-{
-    PackedVertexInputBindingDesc &bindingDesc = mVertexInputBindings[attribIndex];
-
-    size_t attribSize = gl::ComputeVertexAttributeTypeSize(attrib);
-    ASSERT(attribSize <= std::numeric_limits<uint16_t>::max());
-
-    bindingDesc.stride    = static_cast<uint16_t>(attribSize);
-    bindingDesc.inputRate = static_cast<uint16_t>(
-        binding.getDivisor() > 0 ? VK_VERTEX_INPUT_RATE_INSTANCE : VK_VERTEX_INPUT_RATE_VERTEX);
-
-    gl::VertexFormatType vertexFormatType = gl::GetVertexFormatType(attrib);
-    VkFormat vkFormat                     = vk::GetNativeVertexFormat(vertexFormatType);
-    ASSERT(vkFormat <= std::numeric_limits<uint16_t>::max());
-
-    PackedVertexInputAttributeDesc &attribDesc = mVertexInputAttribs[attribIndex];
-    attribDesc.format                          = static_cast<uint16_t>(vkFormat);
-    attribDesc.location                        = static_cast<uint16_t>(attribIndex);
-    attribDesc.offset = static_cast<uint32_t>(ComputeVertexAttributeOffset(attrib, binding));
+    mVertexInputBindings = bindings;
+    mVertexInputAttribs  = attribs;
 }
 
 void PipelineDesc::updateTopology(GLenum drawMode)

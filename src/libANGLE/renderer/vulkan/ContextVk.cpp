@@ -137,8 +137,8 @@ gl::Error ContextVk::initPipeline(const gl::Context *context)
     // Ensure the topology of the pipeline description is updated.
     mPipelineDesc->updateTopology(mCurrentDrawMode);
 
-    // Ensure the attribs and bindings are updated.
-    vertexArrayVk->updateVertexDescriptions(context, mPipelineDesc.get());
+    // Copy over the latest attrib and binding descriptions.
+    vertexArrayVk->getPackedInputDescriptions(mPipelineDesc.get());
 
     // Ensure that the RenderPass description is updated.
     mPipelineDesc->updateRenderPassDesc(framebufferVk->getRenderPassDesc(context));
@@ -549,12 +549,8 @@ void ContextVk::syncState(const gl::Context *context, const gl::State::DirtyBits
                 WARN() << "DIRTY_BIT_RENDERBUFFER_BINDING unimplemented";
                 break;
             case gl::State::DIRTY_BIT_VERTEX_ARRAY_BINDING:
-            {
-                VertexArrayVk *vertexArrayVk = vk::GetImpl(glState.getVertexArray());
-                vertexArrayVk->invalidateVertexDescriptions();
                 mVertexArrayDirty = true;
                 break;
-            }
             case gl::State::DIRTY_BIT_DRAW_INDIRECT_BUFFER_BINDING:
                 WARN() << "DIRTY_BIT_DRAW_INDIRECT_BUFFER_BINDING unimplemented";
                 break;
@@ -568,11 +564,6 @@ void ContextVk::syncState(const gl::Context *context, const gl::State::DirtyBits
             {
                 ProgramVk *programVk = vk::GetImpl(glState.getProgram());
                 mPipelineDesc->updateShaders(programVk);
-
-                // Also invalidate the vertex descriptions cache in the Vertex Array.
-                VertexArrayVk *vertexArrayVk = vk::GetImpl(glState.getVertexArray());
-                vertexArrayVk->invalidateVertexDescriptions();
-
                 dirtyTextures = true;
                 break;
             }
