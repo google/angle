@@ -47,7 +47,6 @@ void VertexArrayVk::syncState(const gl::Context *context,
     ASSERT(dirtyBits.any());
 
     // Invalidate current pipeline.
-    // TODO(jmadill): Use pipeline cache.
     ContextVk *contextVk = vk::GetImpl(context);
     contextVk->onVertexArrayChange();
 

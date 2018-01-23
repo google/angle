@@ -73,7 +73,7 @@ void UnpackStencilState(const vk::PackedStencilOpState &packedState, VkStencilOp
     stateOut->reference   = packedState.reference;
 }
 
-void UnpackBlendAttachmentState(vk::PackedColorBlendAttachmentState &packedState,
+void UnpackBlendAttachmentState(const vk::PackedColorBlendAttachmentState &packedState,
                                 VkPipelineColorBlendAttachmentState *stateOut)
 {
     stateOut->blendEnable         = static_cast<VkBool32>(packedState.blendEnable);
@@ -350,9 +350,12 @@ void PipelineDesc::initDefaults()
               blendAttachmentState);
 }
 
-Error PipelineDesc::initializePipeline(RendererVk *renderer,
-                                       ProgramVk *programVk,
-                                       Pipeline *pipelineOut)
+Error PipelineDesc::initializePipeline(VkDevice device,
+                                       const RenderPass &compatibleRenderPass,
+                                       const PipelineLayout &pipelineLayout,
+                                       const ShaderModule &vertexModule,
+                                       const ShaderModule &fragmentModule,
+                                       Pipeline *pipelineOut) const
 {
     VkPipelineShaderStageCreateInfo shaderStages[2];
     VkPipelineVertexInputStateCreateInfo vertexInputState;
@@ -366,21 +369,19 @@ Error PipelineDesc::initializePipeline(RendererVk *renderer,
     VkPipelineColorBlendStateCreateInfo blendState;
     VkGraphicsPipelineCreateInfo createInfo;
 
-    ASSERT(programVk->getVertexModuleSerial() == mShaderStageInfo[0].moduleSerial);
     shaderStages[0].sType               = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
     shaderStages[0].pNext               = nullptr;
     shaderStages[0].flags               = 0;
     shaderStages[0].stage               = VK_SHADER_STAGE_VERTEX_BIT;
-    shaderStages[0].module              = programVk->getLinkedVertexModule().getHandle();
+    shaderStages[0].module              = vertexModule.getHandle();
     shaderStages[0].pName               = "main";
     shaderStages[0].pSpecializationInfo = nullptr;
 
-    ASSERT(programVk->getFragmentModuleSerial() == mShaderStageInfo[1].moduleSerial);
     shaderStages[1].sType               = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
     shaderStages[1].pNext               = nullptr;
     shaderStages[1].flags               = 0;
     shaderStages[1].stage               = VK_SHADER_STAGE_FRAGMENT_BIT;
-    shaderStages[1].module              = programVk->getLinkedFragmentModule().getHandle();
+    shaderStages[1].module              = fragmentModule.getHandle();
     shaderStages[1].pName               = "main";
     shaderStages[1].pSpecializationInfo = nullptr;
 
@@ -512,11 +513,6 @@ Error PipelineDesc::initializePipeline(RendererVk *renderer,
 
     // TODO(jmadill): Dynamic state.
 
-    // Pull in a compatible RenderPass.
-    RenderPass *compatibleRenderPass = nullptr;
-
-    ANGLE_TRY(renderer->getCompatibleRenderPass(mRenderPassDesc, &compatibleRenderPass));
-
     createInfo.sType               = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
     createInfo.pNext               = nullptr;
     createInfo.flags               = 0;
@@ -531,15 +527,20 @@ Error PipelineDesc::initializePipeline(RendererVk *renderer,
     createInfo.pDepthStencilState  = &depthStencilState;
     createInfo.pColorBlendState    = &blendState;
     createInfo.pDynamicState       = nullptr;
-    createInfo.layout              = renderer->getGraphicsPipelineLayout().getHandle();
-    createInfo.renderPass          = compatibleRenderPass->getHandle();
+    createInfo.layout              = pipelineLayout.getHandle();
+    createInfo.renderPass          = compatibleRenderPass.getHandle();
     createInfo.subpass             = 0;
     createInfo.basePipelineHandle  = VK_NULL_HANDLE;
     createInfo.basePipelineIndex   = 0;
 
-    ANGLE_TRY(pipelineOut->initGraphics(renderer->getDevice(), createInfo));
+    ANGLE_TRY(pipelineOut->initGraphics(device, createInfo));
 
     return NoError();
+}
+
+const ShaderStageInfo &PipelineDesc::getShaderStageInfo() const
+{
+    return mShaderStageInfo;
 }
 
 void PipelineDesc::updateShaders(ProgramVk *programVk)
@@ -594,6 +595,11 @@ void PipelineDesc::updateFrontFace(const gl::RasterizerState &rasterState)
 void PipelineDesc::updateLineWidth(float lineWidth)
 {
     mRasterizationStateInfo.lineWidth = lineWidth;
+}
+
+const RenderPassDesc &PipelineDesc::getRenderPassDesc() const
+{
+    return mRenderPassDesc;
 }
 
 void PipelineDesc::updateRenderPassDesc(const RenderPassDesc &renderPassDesc)
@@ -689,6 +695,7 @@ vk::Error RenderPassCache::getCompatibleRenderPass(VkDevice device,
         ASSERT(!innerCache.empty());
 
         // Find the first element and return it.
+        innerCache.begin()->second.updateSerial(serial);
         *renderPassOut = &innerCache.begin()->second.get();
         return vk::NoError();
     }
@@ -747,6 +754,53 @@ vk::Error RenderPassCache::getRenderPassWithOps(VkDevice device,
     *renderPassOut         = &insertPos.first->second.get();
 
     // TODO(jmadill): Trim cache, and pre-populate with the most common RPs on startup.
+    return vk::NoError();
+}
+
+// PipelineCache implementation.
+PipelineCache::PipelineCache()
+{
+}
+
+PipelineCache::~PipelineCache()
+{
+    ASSERT(mPayload.empty());
+}
+
+void PipelineCache::destroy(VkDevice device)
+{
+    for (auto &item : mPayload)
+    {
+        item.second.get().destroy(device);
+    }
+
+    mPayload.clear();
+}
+
+vk::Error PipelineCache::getPipeline(VkDevice device,
+                                     const vk::RenderPass &compatibleRenderPass,
+                                     const vk::PipelineLayout &pipelineLayout,
+                                     const vk::ShaderModule &vertexModule,
+                                     const vk::ShaderModule &fragmentModule,
+                                     const vk::PipelineDesc &desc,
+                                     vk::PipelineAndSerial **pipelineOut)
+{
+    auto item = mPayload.find(desc);
+    if (item != mPayload.end())
+    {
+        *pipelineOut = &item->second;
+        return vk::NoError();
+    }
+
+    vk::Pipeline newPipeline;
+    ANGLE_TRY(desc.initializePipeline(device, compatibleRenderPass, pipelineLayout, vertexModule,
+                                      fragmentModule, &newPipeline));
+
+    // The Serial will be updated outside of this query.
+    auto insertedItem =
+        mPayload.emplace(desc, vk::PipelineAndSerial(std::move(newPipeline), Serial()));
+    *pipelineOut = &insertedItem.first->second;
+
     return vk::NoError();
 }
 

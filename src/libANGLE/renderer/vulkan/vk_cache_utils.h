@@ -256,11 +256,18 @@ class PipelineDesc final
     bool operator==(const PipelineDesc &other) const;
 
     void initDefaults();
-    Error initializePipeline(RendererVk *renderer, ProgramVk *programVk, Pipeline *pipelineOut);
+
+    Error initializePipeline(VkDevice device,
+                             const RenderPass &compatibleRenderPass,
+                             const PipelineLayout &pipelineLayout,
+                             const ShaderModule &vertexModule,
+                             const ShaderModule &fragmentModule,
+                             Pipeline *pipelineOut) const;
 
     void updateViewport(const gl::Rectangle &viewport, float nearPlane, float farPlane);
 
     // Shader stage info
+    const ShaderStageInfo &getShaderStageInfo() const;
     void updateShaders(ProgramVk *programVk);
 
     // Vertex input state
@@ -276,6 +283,7 @@ class PipelineDesc final
     void updateLineWidth(float lineWidth);
 
     // RenderPass description.
+    const RenderPassDesc &getRenderPassDesc() const;
     void updateRenderPassDesc(const RenderPassDesc &renderPassDesc);
 
   private:
@@ -308,6 +316,9 @@ constexpr size_t PipelineDescSumOfSizes =
     sizeof(RenderPassDesc);
 
 static_assert(sizeof(PipelineDesc) == PipelineDescSumOfSizes, "Size mismatch");
+
+using RenderPassAndSerial = ObjectAndSerial<RenderPass>;
+using PipelineAndSerial   = ObjectAndSerial<Pipeline>;
 }  // namespace vk
 }  // namespace rx
 
@@ -325,12 +336,19 @@ struct hash<rx::vk::AttachmentOpsArray>
 {
     size_t operator()(const rx::vk::AttachmentOpsArray &key) const { return key.hash(); }
 };
+
+template <>
+struct hash<rx::vk::PipelineDesc>
+{
+    size_t operator()(const rx::vk::PipelineDesc &key) const { return key.hash(); }
+};
+
 }  // namespace std
 
 namespace rx
 {
-// TODO(jmadill): Add cache trimming.
-class RenderPassCache
+// TODO(jmadill): Add cache trimming/eviction.
+class RenderPassCache final : angle::NonCopyable
 {
   public:
     RenderPassCache();
@@ -355,6 +373,27 @@ class RenderPassCache
     using OuterCache = std::unordered_map<vk::RenderPassDesc, InnerCache>;
 
     OuterCache mPayload;
+};
+
+// TODO(jmadill): Add cache trimming/eviction.
+class PipelineCache final : angle::NonCopyable
+{
+  public:
+    PipelineCache();
+    ~PipelineCache();
+
+    void destroy(VkDevice device);
+
+    vk::Error getPipeline(VkDevice device,
+                          const vk::RenderPass &compatibleRenderPass,
+                          const vk::PipelineLayout &pipelineLayout,
+                          const vk::ShaderModule &vertexModule,
+                          const vk::ShaderModule &fragmentModule,
+                          const vk::PipelineDesc &desc,
+                          vk::PipelineAndSerial **pipelineOut);
+
+  private:
+    std::unordered_map<vk::PipelineDesc, vk::PipelineAndSerial> mPayload;
 };
 
 }  // namespace rx

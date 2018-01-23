@@ -19,7 +19,7 @@ namespace rx
 {
 class RendererVk;
 
-class ContextVk : public ContextImpl, public ResourceVk
+class ContextVk : public ContextImpl
 {
   public:
     ContextVk(const gl::ContextState &state, RendererVk *renderer);
@@ -152,9 +152,7 @@ class ContextVk : public ContextImpl, public ResourceVk
     VkDevice getDevice() const;
     RendererVk *getRenderer() { return mRenderer; }
 
-    // TODO(jmadill): Use pipeline cache.
     void invalidateCurrentPipeline();
-
     void onVertexArrayChange();
 
     vk::DescriptorPool *getDescriptorPool();
@@ -167,7 +165,7 @@ class ContextVk : public ContextImpl, public ResourceVk
                         vk::CommandBuffer **commandBuffer);
 
     RendererVk *mRenderer;
-    vk::Pipeline mCurrentPipeline;
+    vk::PipelineAndSerial *mCurrentPipeline;
     GLenum mCurrentDrawMode;
 
     // Keep a cached pipeline description structure that can be used to query the pipeline cache.

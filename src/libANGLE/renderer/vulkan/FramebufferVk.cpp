@@ -353,7 +353,6 @@ void FramebufferVk::syncState(const gl::Context *context,
     // Trigger a new set of secondary commands next time we render to this FBO,.
     mLastRenderNodeSerial = Serial();
 
-    // TODO(jmadill): Use pipeline cache.
     contextVk->invalidateCurrentPipeline();
 }
 

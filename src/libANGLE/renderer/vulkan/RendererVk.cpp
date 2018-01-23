@@ -21,6 +21,7 @@
 #include "libANGLE/renderer/vulkan/CompilerVk.h"
 #include "libANGLE/renderer/vulkan/FramebufferVk.h"
 #include "libANGLE/renderer/vulkan/GlslangWrapper.h"
+#include "libANGLE/renderer/vulkan/ProgramVk.h"
 #include "libANGLE/renderer/vulkan/TextureVk.h"
 #include "libANGLE/renderer/vulkan/VertexArrayVk.h"
 #include "libANGLE/renderer/vulkan/vk_format_utils.h"
@@ -144,6 +145,7 @@ RendererVk::~RendererVk()
     mGraphicsPipelineLayout.destroy(mDevice);
 
     mRenderPassCache.destroy(mDevice);
+    mPipelineCache.destroy(mDevice);
 
     if (mGlslangWrapper)
     {
@@ -980,6 +982,22 @@ vk::Error RendererVk::initGraphicsPipelineLayout()
 Serial RendererVk::issueProgramSerial()
 {
     return mProgramSerialFactory.generate();
+}
+
+vk::Error RendererVk::getPipeline(const ProgramVk *programVk,
+                                  const vk::PipelineDesc &desc,
+                                  vk::PipelineAndSerial **pipelineOut)
+{
+    ASSERT(programVk->getVertexModuleSerial() == desc.getShaderStageInfo()[0].moduleSerial);
+    ASSERT(programVk->getFragmentModuleSerial() == desc.getShaderStageInfo()[1].moduleSerial);
+
+    // Pull in a compatible RenderPass.
+    vk::RenderPass *compatibleRenderPass = nullptr;
+    ANGLE_TRY(getCompatibleRenderPass(desc.getRenderPassDesc(), &compatibleRenderPass));
+
+    return mPipelineCache.getPipeline(mDevice, *compatibleRenderPass, mGraphicsPipelineLayout,
+                                      programVk->getLinkedVertexModule(),
+                                      programVk->getLinkedFragmentModule(), desc, pipelineOut);
 }
 
 }  // namespace rx

@@ -112,6 +112,10 @@ class RendererVk : angle::NonCopyable
                                    const vk::AttachmentOpsArray &ops,
                                    vk::RenderPass **renderPassOut);
 
+    vk::Error getPipeline(const ProgramVk *programVk,
+                          const vk::PipelineDesc &desc,
+                          vk::PipelineAndSerial **pipelineOut);
+
     // This should only be called from ResourceVk.
     // TODO(jmadill): Keep in ContextVk to enable threaded rendering.
     vk::CommandBufferNode *allocateCommandNode();
@@ -176,6 +180,7 @@ class RendererVk : angle::NonCopyable
     vk::FormatTable mFormatTable;
 
     RenderPassCache mRenderPassCache;
+    PipelineCache mPipelineCache;
     std::vector<vk::CommandBufferNode *> mOpenCommandGraph;
 
     // ANGLE uses a single pipeline layout for all GL programs. It is owned here in the Renderer.

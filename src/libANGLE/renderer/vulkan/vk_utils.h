@@ -631,6 +631,8 @@ class ObjectAndSerial final : angle::NonCopyable
     const ObjT &get() const { return mObject; }
     ObjT &get() { return mObject; }
 
+    bool valid() const { return mObject.valid(); }
+
   private:
     ObjT mObject;
     Serial mQueueSerial;
@@ -651,8 +653,6 @@ struct BufferAndMemory final : private angle::NonCopyable
     vk::Buffer buffer;
     vk::DeviceMemory memory;
 };
-
-using RenderPassAndSerial = ObjectAndSerial<RenderPass>;
 
 }  // namespace vk
 
