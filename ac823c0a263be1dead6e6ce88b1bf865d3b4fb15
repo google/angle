@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "84aee22c_cb8b2d78",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-01-23T21:39:16Z",
+      "side": 1,
+      "message": "Essentially it is a string_view from C++14 http://en.cppreference.com/w/cpp/string/basic_string_view\n\nCan we make use of a copy of Chrome\u0027s string_piece? https://cs.chromium.org/chromium/src/base/strings/string_piece.h",
+      "revId": "ac823c0a263be1dead6e6ce88b1bf865d3b4fb15",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
