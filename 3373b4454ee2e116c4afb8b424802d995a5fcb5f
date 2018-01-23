@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "903b717a_ec032b1b",
+        "filename": "src/tests/BUILD.gn",
+        "patchSetId": 9
+      },
+      "lineNbr": 457,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-01-23T19:13:07Z",
+      "side": 1,
+      "message": "Can we put this back in? Otherwise mac version doesn\u0027t build.",
+      "range": {
+        "startLine": 454,
+        "startChar": 0,
+        "endLine": 457,
+        "endChar": 5
+      },
+      "revId": "3373b4454ee2e116c4afb8b424802d995a5fcb5f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
