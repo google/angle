@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b32287c1_01cdcf60",
+        "filename": "src/tests/gl_tests/D3DTextureTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 465,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-01-23T16:06:25Z",
+      "side": 1,
+      "message": "It would be good to check that the other backends fail gracefully.  Can you make the test handle pbuffer creation failure?  You can add the assert that it always succeeds when using D3D11, or even always fails with other backends.",
+      "range": {
+        "startLine": 463,
+        "startChar": 0,
+        "endLine": 465,
+        "endChar": 35
+      },
+      "revId": "7c873c21dc97237a7750d09b881d0050b1effe90",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
