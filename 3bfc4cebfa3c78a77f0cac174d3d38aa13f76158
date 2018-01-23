@@ -46,6 +46,30 @@
       "revId": "3bfc4cebfa3c78a77f0cac174d3d38aa13f76158",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6a0ca470_4302b6d3",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-23T21:54:19Z",
+      "side": 1,
+      "message": "Yep.",
+      "parentUuid": "0ed28b7c_7dc57792",
+      "range": {
+        "startLine": 27,
+        "startChar": 0,
+        "endLine": 31,
+        "endChar": 0
+      },
+      "revId": "3bfc4cebfa3c78a77f0cac174d3d38aa13f76158",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
