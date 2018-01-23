@@ -25,7 +25,6 @@ class TSymbolTable::TSymbolTableLevel
 {
   public:
     TSymbolTableLevel() : mGlobalInvariant(false) {}
-    ~TSymbolTableLevel();
 
     bool insert(TSymbol *symbol);
 
@@ -61,15 +60,6 @@ class TSymbolTable::TSymbolTableLevel
     };
     std::set<const char *, CharArrayComparator> mUnmangledBuiltInNames;
 };
-
-//
-// Symbol table levels are a map of pointers to symbols that have to be deleted.
-//
-TSymbolTable::TSymbolTableLevel::~TSymbolTableLevel()
-{
-    for (tLevel::iterator it = level.begin(); it != level.end(); ++it)
-        delete (*it).second;
-}
 
 bool TSymbolTable::TSymbolTableLevel::insert(TSymbol *symbol)
 {

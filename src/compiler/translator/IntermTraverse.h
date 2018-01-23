@@ -284,13 +284,11 @@ class TLValueTrackingTraverser : public TIntermTraverser
     TLValueTrackingTraverser(bool preVisit,
                              bool inVisit,
                              bool postVisit,
-                             TSymbolTable *symbolTable,
-                             int shaderVersion);
+                             TSymbolTable *symbolTable);
     virtual ~TLValueTrackingTraverser() {}
 
     void traverseBinary(TIntermBinary *node) final;
     void traverseUnary(TIntermUnary *node) final;
-    void traverseFunctionPrototype(TIntermFunctionPrototype *node) final;
     void traverseAggregate(TIntermAggregate *node) final;
 
   protected:
@@ -309,27 +307,12 @@ class TLValueTrackingTraverser : public TIntermTraverser
     }
     bool operatorRequiresLValue() const { return mOperatorRequiresLValue; }
 
-    // Add a function encountered during traversal to the function map.
-    void addToFunctionMap(const TSymbolUniqueId &id, TIntermSequence *paramSequence);
-
-    // Return true if the prototype or definition of the function being called has been encountered
-    // during traversal.
-    bool isInFunctionMap(const TIntermAggregate *callNode) const;
-
-    // Return the parameters sequence from the function definition or prototype.
-    TIntermSequence *getFunctionParameters(const TIntermAggregate *callNode);
-
     // Track whether an l-value is required inside a function call.
     void setInFunctionCallOutParameter(bool inOutParameter);
     bool isInFunctionCallOutParameter() const;
 
     bool mOperatorRequiresLValue;
     bool mInFunctionCallOutParameter;
-
-    // Map from function symbol id values to their parameter sequences
-    TMap<int, TIntermSequence *> mFunctionMap;
-
-    const int mShaderVersion;
 };
 
 }  // namespace sh

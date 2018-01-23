@@ -470,9 +470,11 @@ bool ParentConstructorTakesCareOfRounding(TIntermNode *parent, TIntermTyped *nod
 
 }  // namespace anonymous
 
-EmulatePrecision::EmulatePrecision(TSymbolTable *symbolTable, int shaderVersion)
-    : TLValueTrackingTraverser(true, true, true, symbolTable, shaderVersion),
-      mDeclaringVariables(false)
+EmulatePrecision::EmulatePrecision(TSymbolTable *symbolTable)
+    : TLValueTrackingTraverser(true, true, true, symbolTable),
+      mDeclaringVariables(false),
+      mParamXName(NewPoolTString("x")),
+      mParamYName(NewPoolTString("y"))
 {
 }
 
@@ -705,17 +707,23 @@ bool EmulatePrecision::SupportedInLanguage(const ShShaderOutput outputLanguage)
     }
 }
 
-TFunction *EmulatePrecision::getInternalFunction(TString *functionName,
-                                                 const TType &returnType,
-                                                 TIntermSequence *arguments,
-                                                 bool knownToNotHaveSideEffects)
+const TFunction *EmulatePrecision::getInternalFunction(TString *functionName,
+                                                       const TType &returnType,
+                                                       TIntermSequence *arguments,
+                                                       const TVector<TConstParameter> &parameters,
+                                                       bool knownToNotHaveSideEffects)
 {
     TString mangledName = TFunction::GetMangledNameFromCall(*functionName, *arguments);
     if (mInternalFunctions.find(mangledName) == mInternalFunctions.end())
     {
-        mInternalFunctions[mangledName] =
-            new TFunction(mSymbolTable, functionName, new TType(returnType),
-                          SymbolType::AngleInternal, knownToNotHaveSideEffects);
+        TFunction *func = new TFunction(mSymbolTable, functionName, new TType(returnType),
+                                        SymbolType::AngleInternal, knownToNotHaveSideEffects);
+        ASSERT(parameters.size() == arguments->size());
+        for (size_t i = 0; i < parameters.size(); ++i)
+        {
+            func->addParameter(parameters[i]);
+        }
+        mInternalFunctions[mangledName] = func;
     }
     return mInternalFunctions[mangledName];
 }
@@ -730,8 +738,16 @@ TIntermAggregate *EmulatePrecision::createRoundingFunctionCallNode(TIntermTyped 
     TString *functionName      = NewPoolTString(roundFunctionName);
     TIntermSequence *arguments = new TIntermSequence();
     arguments->push_back(roundedChild);
+
+    TVector<TConstParameter> parameters;
+    TType *paramType = new TType(roundedChild->getType());
+    paramType->setPrecision(EbpHigh);
+    paramType->setQualifier(EvqIn);
+    parameters.push_back(TConstParameter(mParamXName, static_cast<const TType *>(paramType)));
+
     return TIntermAggregate::CreateRawFunctionCall(
-        *getInternalFunction(functionName, roundedChild->getType(), arguments, true), arguments);
+        *getInternalFunction(functionName, roundedChild->getType(), arguments, parameters, true),
+        arguments);
 }
 
 TIntermAggregate *EmulatePrecision::createCompoundAssignmentFunctionCallNode(TIntermTyped *left,
@@ -747,8 +763,20 @@ TIntermAggregate *EmulatePrecision::createCompoundAssignmentFunctionCallNode(TIn
     TIntermSequence *arguments = new TIntermSequence();
     arguments->push_back(left);
     arguments->push_back(right);
+
+    TVector<TConstParameter> parameters;
+    TType *leftParamType = new TType(left->getType());
+    leftParamType->setPrecision(EbpHigh);
+    leftParamType->setQualifier(EvqOut);
+    parameters.push_back(TConstParameter(mParamXName, static_cast<const TType *>(leftParamType)));
+    TType *rightParamType = new TType(right->getType());
+    rightParamType->setPrecision(EbpHigh);
+    rightParamType->setQualifier(EvqIn);
+    parameters.push_back(TConstParameter(mParamYName, static_cast<const TType *>(rightParamType)));
+
     return TIntermAggregate::CreateRawFunctionCall(
-        *getInternalFunction(functionName, left->getType(), arguments, false), arguments);
+        *getInternalFunction(functionName, left->getType(), arguments, parameters, false),
+        arguments);
 }
 
 }  // namespace sh

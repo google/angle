@@ -72,7 +72,6 @@ class ValidateLimitationsTraverser : public TLValueTrackingTraverser
   public:
     ValidateLimitationsTraverser(sh::GLenum shaderType,
                                  TSymbolTable *symbolTable,
-                                 int shaderVersion,
                                  TDiagnostics *diagnostics);
 
     void visitSymbol(TIntermSymbol *node) override;
@@ -104,9 +103,8 @@ class ValidateLimitationsTraverser : public TLValueTrackingTraverser
 
 ValidateLimitationsTraverser::ValidateLimitationsTraverser(sh::GLenum shaderType,
                                                            TSymbolTable *symbolTable,
-                                                           int shaderVersion,
                                                            TDiagnostics *diagnostics)
-    : TLValueTrackingTraverser(true, false, false, symbolTable, shaderVersion),
+    : TLValueTrackingTraverser(true, false, false, symbolTable),
       mShaderType(shaderType),
       mDiagnostics(diagnostics)
 {
@@ -427,10 +425,9 @@ bool ValidateLimitationsTraverser::validateIndexing(TIntermBinary *node)
 bool ValidateLimitations(TIntermNode *root,
                          GLenum shaderType,
                          TSymbolTable *symbolTable,
-                         int shaderVersion,
                          TDiagnostics *diagnostics)
 {
-    ValidateLimitationsTraverser validate(shaderType, symbolTable, shaderVersion, diagnostics);
+    ValidateLimitationsTraverser validate(shaderType, symbolTable, diagnostics);
     root->traverse(&validate);
     return diagnostics->numErrors() == 0;
 }

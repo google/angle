@@ -60,6 +60,16 @@ class IntermNodeTest : public testing::Test
         return createTestSymbol(type);
     }
 
+    TFunction *createTestBuiltInFunction(const TType &returnType, const TIntermSequence &args)
+    {
+        // We're using a dummy symbol table similarly as for creating symbol nodes.
+        TString *name = NewPoolTString("testFunc");
+        TSymbolTable symbolTable;
+        TFunction *func =
+            new TFunction(&symbolTable, name, new TType(returnType), SymbolType::BuiltIn, true);
+        return func;
+    }
+
     void checkTypeEqualWithQualifiers(const TType &original, const TType &copy)
     {
         ASSERT_EQ(original, copy);
@@ -200,8 +210,11 @@ TEST_F(IntermNodeTest, DeepCopyAggregateNode)
     originalSeq->push_back(createTestSymbol());
     originalSeq->push_back(createTestSymbol());
     originalSeq->push_back(createTestSymbol());
-    TIntermAggregate *original =
-        TIntermAggregate::Create(originalSeq->at(0)->getAsTyped()->getType(), EOpMix, originalSeq);
+
+    TFunction *mix =
+        createTestBuiltInFunction(originalSeq->back()->getAsTyped()->getType(), *originalSeq);
+
+    TIntermAggregate *original = TIntermAggregate::Create(*mix, EOpMix, originalSeq);
     original->setLine(getTestSourceLoc());
 
     TIntermTyped *copyTyped = original->deepCopy();

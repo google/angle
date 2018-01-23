@@ -575,7 +575,9 @@ class TIntermAggregate : public TIntermOperator, public TIntermAggregateBase
                                                        TIntermSequence *arguments);
     static TIntermAggregate *CreateConstructor(const TType &type,
                                                TIntermSequence *arguments);
-    static TIntermAggregate *Create(const TType &type, TOperator op, TIntermSequence *arguments);
+    static TIntermAggregate *Create(const TFunction &func,
+                                    TOperator op,
+                                    TIntermSequence *arguments);
     ~TIntermAggregate() {}
 
     // Note: only supported for nodes that can be a part of an expression.

@@ -19,7 +19,6 @@ class PerformanceDiagnostics;
 
 void RemoveDynamicIndexing(TIntermNode *root,
                            TSymbolTable *symbolTable,
-                           int shaderVersion,
                            PerformanceDiagnostics *perfDiagnostics);
 
 }  // namespace sh

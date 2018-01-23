@@ -18,8 +18,7 @@ class TSymbolTable;
 
 void SimplifyLoopConditions(TIntermNode *root,
                             unsigned int conditionsToSimplify,
-                            TSymbolTable *symbolTable,
-                            int shaderVersion);
+                            TSymbolTable *symbolTable);
 }  // namespace sh
 
 #endif  // COMPILER_TRANSLATOR_SIMPLIFYLOOPCONDITIONS_H_

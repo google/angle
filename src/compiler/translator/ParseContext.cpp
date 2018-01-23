@@ -5854,7 +5854,7 @@ TIntermTyped *TParseContext::addNonConstructorFunctionCall(const TString &name,
                 else
                 {
                     TIntermAggregate *callNode =
-                        TIntermAggregate::Create(fnCandidate->getReturnType(), op, arguments);
+                        TIntermAggregate::Create(*fnCandidate, op, arguments);
                     callNode->setLine(loc);
 
                     // Some built-in functions have out parameters too.

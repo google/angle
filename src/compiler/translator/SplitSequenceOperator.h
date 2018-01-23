@@ -18,10 +18,7 @@ namespace sh
 class TIntermNode;
 class TSymbolTable;
 
-void SplitSequenceOperator(TIntermNode *root,
-                           int patternsToSplitMask,
-                           TSymbolTable *symbolTable,
-                           int shaderVersion);
+void SplitSequenceOperator(TIntermNode *root, int patternsToSplitMask, TSymbolTable *symbolTable);
 
 }  // namespace sh
 

@@ -109,7 +109,7 @@ void TranslatorGLSL::translate(TIntermBlock *root,
 
     if (precisionEmulation)
     {
-        EmulatePrecision emulatePrecision(&getSymbolTable(), getShaderVersion());
+        EmulatePrecision emulatePrecision(&getSymbolTable());
         root->traverse(&emulatePrecision);
         emulatePrecision.updateTree();
         emulatePrecision.writeEmulationHelpers(sink, getShaderVersion(), getOutputType());

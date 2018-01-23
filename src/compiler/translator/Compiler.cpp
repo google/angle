@@ -402,7 +402,7 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     }
 
     if (shouldRunLoopAndIndexingValidation(compileOptions) &&
-        !ValidateLimitations(root, shaderType, &symbolTable, shaderVersion, &mDiagnostics))
+        !ValidateLimitations(root, shaderType, &symbolTable, &mDiagnostics))
     {
         return false;
     }
@@ -533,14 +533,14 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     SimplifyLoopConditions(root,
                            IntermNodePatternMatcher::kMultiDeclaration |
                                IntermNodePatternMatcher::kArrayLengthMethod | simplifyScalarized,
-                           &getSymbolTable(), getShaderVersion());
+                           &getSymbolTable());
 
     // Note that separate declarations need to be run before other AST transformations that
     // generate new statements from expressions.
     SeparateDeclarations(root);
 
     SplitSequenceOperator(root, IntermNodePatternMatcher::kArrayLengthMethod | simplifyScalarized,
-                          &getSymbolTable(), getShaderVersion());
+                          &getSymbolTable());
 
     RemoveArrayLengthMethod(root);
 
@@ -630,7 +630,7 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
             SimplifyLoopConditions(root,
                                    IntermNodePatternMatcher::kArrayDeclaration |
                                        IntermNodePatternMatcher::kNamelessStructDeclaration,
-                                   &getSymbolTable(), getShaderVersion());
+                                   &getSymbolTable());
         }
 
         InitializeUninitializedLocals(root, getShaderVersion(), canUseLoopsToInitialize,

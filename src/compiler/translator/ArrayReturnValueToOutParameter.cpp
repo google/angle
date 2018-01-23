@@ -128,9 +128,16 @@ bool ArrayReturnValueToOutParameterTraverser::visitFunctionPrototype(Visit visit
             changedFunction.returnValueVariable =
                 new TVariable(mSymbolTable, mReturnValueVariableName, returnValueVariableType,
                               SymbolType::AngleInternal);
-            changedFunction.func = new TFunction(mSymbolTable, &node->getFunction()->name(),
-                                                 StaticType::GetBasic<EbtVoid>(),
-                                                 node->getFunction()->symbolType(), false);
+            TFunction *func = new TFunction(mSymbolTable, &node->getFunction()->name(),
+                                            StaticType::GetBasic<EbtVoid>(),
+                                            node->getFunction()->symbolType(), false);
+            for (size_t i = 0; i < node->getFunction()->getParamCount(); ++i)
+            {
+                func->addParameter(node->getFunction()->getParam(i));
+            }
+            func->addParameter(TConstParameter(
+                mReturnValueVariableName, static_cast<const TType *>(returnValueVariableType)));
+            changedFunction.func                = func;
             mChangedFunctions[functionId.get()] = changedFunction;
         }
         TIntermFunctionPrototype *replacement =

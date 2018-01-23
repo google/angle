@@ -53,7 +53,7 @@ void TranslatorESSL::translate(TIntermBlock *root,
 
     if (precisionEmulation)
     {
-        EmulatePrecision emulatePrecision(&getSymbolTable(), shaderVer);
+        EmulatePrecision emulatePrecision(&getSymbolTable());
         root->traverse(&emulatePrecision);
         emulatePrecision.updateTree();
         emulatePrecision.writeEmulationHelpers(sink, shaderVer, SH_ESSL_OUTPUT);

@@ -264,7 +264,7 @@ TIntermTyped *CreateBuiltInFunctionCallNode(const TString &name,
         {
             return new TIntermUnary(op, arguments->at(0)->getAsTyped());
         }
-        return TIntermAggregate::Create(fn->getReturnType(), op, arguments);
+        return TIntermAggregate::Create(*fn, op, arguments);
     }
     return TIntermAggregate::CreateBuiltInFunctionCall(*fn, arguments);
 }

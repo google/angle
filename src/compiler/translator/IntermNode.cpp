@@ -364,7 +364,7 @@ TIntermAggregate *TIntermAggregate::CreateConstructor(const TType &type,
     return new TIntermAggregate(nullptr, type, EOpConstruct, arguments);
 }
 
-TIntermAggregate *TIntermAggregate::Create(const TType &type,
+TIntermAggregate *TIntermAggregate::Create(const TFunction &func,
                                            TOperator op,
                                            TIntermSequence *arguments)
 {
@@ -372,7 +372,7 @@ TIntermAggregate *TIntermAggregate::Create(const TType &type,
     ASSERT(op != EOpCallInternalRawFunction);  // Should use CreateRawFunctionCall
     ASSERT(op != EOpCallBuiltInFunction);  // Should use CreateBuiltInFunctionCall
     ASSERT(op != EOpConstruct);            // Should use CreateConstructor
-    return new TIntermAggregate(nullptr, type, op, arguments);
+    return new TIntermAggregate(&func, func.getReturnType(), op, arguments);
 }
 
 TIntermAggregate::TIntermAggregate(const TFunction *func,
