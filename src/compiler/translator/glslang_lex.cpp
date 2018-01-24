@@ -63,14 +63,14 @@
 
 
 
-
+    
 #ifdef yyget_lval
 #define yyget_lval_ALREADY_DEFINED
 #else
 #define yyget_lval yyget_lval
 #endif
 
-
+    
 #ifdef yyset_lval
 #define yyset_lval_ALREADY_DEFINED
 #else
@@ -80,14 +80,14 @@
 
 
 
-
+    
 #ifdef yyget_lloc
 #define yyget_lloc_ALREADY_DEFINED
 #else
 #define yyget_lloc yyget_lloc
 #endif
 
-
+    
 #ifdef yyset_lloc
 #define yyset_lloc_ALREADY_DEFINED
 #else
@@ -124,7 +124,7 @@
 #if defined (__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
 
 /* C99 says to define __STDC_LIMIT_MACROS before including stdint.h,
- * if you want the limit (max/min) macros for int types.
+ * if you want the limit (max/min) macros for int types. 
  */
 #ifndef __STDC_LIMIT_MACROS
 #define __STDC_LIMIT_MACROS 1
@@ -141,7 +141,7 @@ typedef uint32_t flex_uint32_t;
 typedef signed char flex_int8_t;
 typedef short int flex_int16_t;
 typedef int flex_int32_t;
-typedef unsigned char flex_uint8_t;
+typedef unsigned char flex_uint8_t; 
 typedef unsigned short int flex_uint16_t;
 typedef unsigned int flex_uint32_t;
 
@@ -306,7 +306,7 @@ typedef size_t yy_size_t;
 #define EOB_ACT_CONTINUE_SCAN 0
 #define EOB_ACT_END_OF_FILE 1
 #define EOB_ACT_LAST_MATCH 2
-
+    
     /* Note: We specifically omit the test for yy_rule_can_match_eol because it requires
      *       access to the local variable yy_act. Since yyless() is a macro, it would break
      *       existing scanners that call yyless() from OUTSIDE yylex.
@@ -328,7 +328,7 @@ typedef size_t yy_size_t;
                     if ( *p == '\n' )\
                         --yylineno;\
             }while(0)
-
+    
 /* Return all but the first "n" matched characters back to the input stream. */
 #define yyless(n) \
 	do \
@@ -424,7 +424,7 @@ struct yy_buffer_state
  */
 #define YY_CURRENT_BUFFER ( yyg->yy_buffer_stack \
                           ? yyg->yy_buffer_stack[yyg->yy_buffer_stack_top] \
-                          : nullptr)
+                          : NULL)
 /* Same as previous macro, but useful when we know that the buffer stack is not
  * NULL or when we need an lvalue. For internal use only.
  */
@@ -1144,18 +1144,18 @@ static const flex_int16_t yy_chk[1173] =
 /* Table of booleans, true if rule could match eol. */
 static const flex_int32_t yy_rule_can_match_eol[248] =
     {   0,
-0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
     0, 0, 0, 0, 0, 1, 0, 0,     };
 
 /* The intent behind this definition is that it'll catch
@@ -1296,15 +1296,15 @@ static int yy_init_globals ( yyscan_t yyscanner );
 
 
 
-
+    
     /* This must go here because YYSTYPE and YYLTYPE are included
      * from bison output in section 1.*/
     #    define yylval yyg->yylval_r
+    
 
-
-
+    
     #    define yylloc yyg->yylloc_r
-
+    
 
 
 int yylex_init (yyscan_t* scanner);
@@ -1387,13 +1387,13 @@ YYSTYPE * yyget_lval ( yyscan_t yyscanner );
 void yyset_lval ( YYSTYPE * yylval_param , yyscan_t yyscanner );
 
 
-
+    
        YYLTYPE *yyget_lloc ( yyscan_t yyscanner );
+    
 
-
-
+    
         void yyset_lloc ( YYLTYPE * yylloc_param , yyscan_t yyscanner );
-
+    
 
 
 /* Macros after this point can all be overridden by user definitions in
@@ -1409,7 +1409,7 @@ extern int yywrap ( yyscan_t yyscanner );
 #endif
 
 #ifndef YY_NO_UNPUT
-
+    
 #endif
 
 
@@ -1533,15 +1533,15 @@ static int input ( yyscan_t yyscanner );
 
 
 
+        
+    
+    
 
 
 
-
-
-
-
-
-
+    
+    
+    
 
 
 extern int yylex \
@@ -1673,7 +1673,7 @@ yy_find_action:
 			int yyl;
 			for ( yyl = 0; yyl < yyleng; ++yyl )
 				if ( yytext[yyl] == '\n' )
-
+					
     do{ yylineno++;
         yycolumn=0;
     }while(0)
@@ -2155,10 +2155,10 @@ case 140:
 case 141:
 case 142:
 YY_RULE_SETUP
-{
+{ 
     if (context->getShaderVersion() < 300) {
-		yylval->lex.string = NewPoolTString(yytext);
-	    return check_type(yyscanner);
+		yylval->lex.string = NewPoolTString(yytext); 
+	    return check_type(yyscanner); 
 	}
 	return reserved_word(yyscanner);
 }
@@ -2223,7 +2223,7 @@ YY_RULE_SETUP
 case 184:
 YY_RULE_SETUP
 {
-   yylval->lex.string = NewPoolTString(yytext);
+   yylval->lex.string = NewPoolTString(yytext); 
    return check_type(yyscanner);
 }
 	YY_BREAK
@@ -2912,7 +2912,7 @@ static int yy_get_next_buffer (yyscan_t yyscanner)
 	yyg->yy_hold_char = *++yyg->yy_c_buf_p;
 
 	if ( c == '\n' )
-
+		
     do{ yylineno++;
         yycolumn=0;
     }while(0)
@@ -2997,7 +2997,7 @@ static void yy_load_buffer_state  (yyscan_t yyscanner)
     YY_BUFFER_STATE yy_create_buffer  (FILE * file, int  size , yyscan_t yyscanner)
 {
 	YY_BUFFER_STATE b;
-
+    
 	b = (YY_BUFFER_STATE) yyalloc( sizeof( struct yy_buffer_state ) , yyscanner );
 	if ( ! b )
 		YY_FATAL_ERROR( "out of dynamic memory in yy_create_buffer()" );
@@ -3065,9 +3065,9 @@ static void yy_load_buffer_state  (yyscan_t yyscanner)
     }
 
 
-
+    
         b->yy_is_interactive = 0;
-
+    
 
 	errno = oerrno;
 }
@@ -3217,7 +3217,7 @@ static void yyensure_buffer_stack (yyscan_t yyscanner)
 YY_BUFFER_STATE yy_scan_buffer  (char * base, yy_size_t  size , yyscan_t yyscanner)
 {
 	YY_BUFFER_STATE b;
-
+    
 	if ( size < 2 ||
 	     base[size-2] != YY_END_OF_BUFFER_CHAR ||
 	     base[size-1] != YY_END_OF_BUFFER_CHAR )
@@ -3256,7 +3256,7 @@ YY_BUFFER_STATE yy_scan_buffer  (char * base, yy_size_t  size , yyscan_t yyscann
  */
 YY_BUFFER_STATE yy_scan_string (const char * yystr , yyscan_t yyscanner)
 {
-
+    
 	return yy_scan_bytes( yystr, (int) strlen(yystr) , yyscanner);
 }
 
@@ -3276,7 +3276,7 @@ YY_BUFFER_STATE yy_scan_bytes  (const char * yybytes, int  _yybytes_len , yyscan
 	char *buf;
 	yy_size_t n;
 	int i;
-
+    
 	/* Get memory for full buffer, including space for trailing EOB's. */
 	n = (yy_size_t) (_yybytes_len + 2);
 	buf = (char *) yyalloc( n , yyscanner );
@@ -3362,10 +3362,10 @@ int yyget_lineno  (yyscan_t yyscanner)
 {
     struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
 
-
+    
         if (! YY_CURRENT_BUFFER)
             return 0;
-
+    
     return yylineno;
 }
 
@@ -3379,10 +3379,10 @@ int yyget_column  (yyscan_t yyscanner)
 {
     struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
 
-
+    
         if (! YY_CURRENT_BUFFER)
             return 0;
-
+    
     return yycolumn;
 }
 
@@ -3453,11 +3453,11 @@ void yyset_lineno (int  _line_number , yyscan_t yyscanner)
 {
     struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
 
-
+    
         /* lineno is only valid if an input buffer exists. */
         if (! YY_CURRENT_BUFFER )
            YY_FATAL_ERROR( "yyset_lineno called with no buffer" );
-
+    
     yylineno = _line_number;
 }
 
@@ -3472,11 +3472,11 @@ void yyset_column (int  _column_no , yyscan_t yyscanner)
 {
     struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
 
-
+    
         /* column is only valid if an input buffer exists. */
         if (! YY_CURRENT_BUFFER )
            YY_FATAL_ERROR( "yyset_column called with no buffer" );
-
+    
     yycolumn = _column_no;
 }
 
@@ -3541,21 +3541,21 @@ void yyset_lval (YYSTYPE *  yylval_param , yyscan_t yyscanner)
 
 
 
-
+    
 YYLTYPE *yyget_lloc  (yyscan_t yyscanner)
 {
     struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
     return yylloc;
 }
+    
 
-
-
+    
 void yyset_lloc (YYLTYPE *  yylloc_param , yyscan_t yyscanner)
 {
     struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
     yylloc = yylloc_param;
 }
-
+    
 
 
 
@@ -3568,14 +3568,14 @@ void yyset_lloc (YYLTYPE *  yylloc_param , yyscan_t yyscanner)
  */
 int yylex_init(yyscan_t* ptr_yy_globals)
 {
-    if (ptr_yy_globals == nullptr){
+    if (ptr_yy_globals == NULL){
         errno = EINVAL;
         return 1;
     }
 
-    *ptr_yy_globals = (yyscan_t) yyalloc ( sizeof( struct yyguts_t ), nullptr );
+    *ptr_yy_globals = (yyscan_t) yyalloc ( sizeof( struct yyguts_t ), NULL );
 
-    if (*ptr_yy_globals == nullptr){
+    if (*ptr_yy_globals == NULL){
         errno = ENOMEM;
         return 1;
     }
@@ -3600,14 +3600,14 @@ int yylex_init_extra( YY_EXTRA_TYPE yy_user_defined, yyscan_t* ptr_yy_globals )
 
     yyset_extra (yy_user_defined, &dummy_yyguts);
 
-    if (ptr_yy_globals == nullptr){
+    if (ptr_yy_globals == NULL){
         errno = EINVAL;
         return 1;
     }
 
     *ptr_yy_globals = (yyscan_t) yyalloc ( sizeof( struct yyguts_t ), &dummy_yyguts );
 
-    if (*ptr_yy_globals == nullptr){
+    if (*ptr_yy_globals == NULL){
         errno = ENOMEM;
         return 1;
     }
@@ -3630,19 +3630,19 @@ static int yy_init_globals (yyscan_t yyscanner)
      */
 
 
+    
 
-
-    yyg->yy_buffer_stack = nullptr;
+    yyg->yy_buffer_stack = NULL;
     yyg->yy_buffer_stack_top = 0;
     yyg->yy_buffer_stack_max = 0;
-    yyg->yy_c_buf_p = nullptr;
+    yyg->yy_c_buf_p = NULL;
     yyg->yy_init = 0;
     yyg->yy_start = 0;
 
 
     yyg->yy_start_stack_ptr = 0;
     yyg->yy_start_stack_depth = 0;
-    yyg->yy_start_stack =  nullptr;
+    yyg->yy_start_stack =  NULL;
 
 
 
@@ -3654,8 +3654,8 @@ static int yy_init_globals (yyscan_t yyscanner)
     yyin = stdin;
     yyout = stdout;
 #else
-    yyin = nullptr;
-    yyout = nullptr;
+    yyin = NULL;
+    yyout = NULL;
 #endif
 
     /* For future reference: Set errno on error, since we are called by
@@ -3673,18 +3673,18 @@ int yylex_destroy  (yyscan_t yyscanner)
     /* Pop the buffer stack, destroying each element. */
 	while(YY_CURRENT_BUFFER){
 		yy_delete_buffer( YY_CURRENT_BUFFER , yyscanner );
-		YY_CURRENT_BUFFER_LVALUE = nullptr;
+		YY_CURRENT_BUFFER_LVALUE = NULL;
 		yypop_buffer_state(yyscanner);
 	}
 
 	/* Destroy the stack itself. */
 	yyfree(yyg->yy_buffer_stack , yyscanner);
-	yyg->yy_buffer_stack = nullptr;
+	yyg->yy_buffer_stack = NULL;
 
 
     /* Destroy the start condition stack. */
         yyfree( yyg->yy_start_stack , yyscanner );
-        yyg->yy_start_stack = nullptr;
+        yyg->yy_start_stack = NULL;
 
 
 
@@ -3695,7 +3695,7 @@ int yylex_destroy  (yyscan_t yyscanner)
 
     /* Destroy the main struct (reentrant only). */
     yyfree ( yyscanner , yyscanner );
-    yyscanner = nullptr;
+    yyscanner = NULL;
     return 0;
 }
 
@@ -4006,7 +4006,7 @@ int yuvcscstandardext_constant(TParseContext *context)
 }
 
 int glslang_initialize(TParseContext* context) {
-    yyscan_t scanner = nullptr;
+    yyscan_t scanner = NULL;
     if (yylex_init_extra(context, &scanner))
         return 1;
 
@@ -4016,9 +4016,9 @@ int glslang_initialize(TParseContext* context) {
 
 int glslang_finalize(TParseContext* context) {
     yyscan_t scanner = context->getScanner();
-    if (scanner == nullptr) return 0;
-
-    context->setScanner(nullptr);
+    if (scanner == NULL) return 0;
+    
+    context->setScanner(NULL);
     yylex_destroy(scanner);
 
     return 0;
@@ -4026,7 +4026,7 @@ int glslang_finalize(TParseContext* context) {
 
 int glslang_scan(size_t count, const char* const string[], const int length[],
                  TParseContext* context) {
-    yyrestart(nullptr, context->getScanner());
+    yyrestart(NULL, context->getScanner());
     yyset_column(0, context->getScanner());
     yyset_lineno(1, context->getScanner());
 

@@ -3203,7 +3203,7 @@ yyreduce:
 
     {
         ES3_OR_NEWER((yyvsp[-3].lex).string->c_str(), (yylsp[-4]), "interface blocks");
-        (yyval.interm.intermNode) = context->addInterfaceBlock(*(yyvsp[-4].interm.typeQualifierBuilder), (yylsp[-3]), *(yyvsp[-3].lex).string, (yyvsp[-2].interm.fieldList), nullptr, (yyloc), nullptr, (yyloc));
+        (yyval.interm.intermNode) = context->addInterfaceBlock(*(yyvsp[-4].interm.typeQualifierBuilder), (yylsp[-3]), *(yyvsp[-3].lex).string, (yyvsp[-2].interm.fieldList), NULL, (yyloc), NULL, (yyloc));
     }
 
     break;
@@ -3212,7 +3212,7 @@ yyreduce:
 
     {
         ES3_OR_NEWER((yyvsp[-4].lex).string->c_str(), (yylsp[-5]), "interface blocks");
-        (yyval.interm.intermNode) = context->addInterfaceBlock(*(yyvsp[-5].interm.typeQualifierBuilder), (yylsp[-4]), *(yyvsp[-4].lex).string, (yyvsp[-3].interm.fieldList), (yyvsp[-1].lex).string, (yylsp[-1]), nullptr, (yyloc));
+        (yyval.interm.intermNode) = context->addInterfaceBlock(*(yyvsp[-5].interm.typeQualifierBuilder), (yylsp[-4]), *(yyvsp[-4].lex).string, (yyvsp[-3].interm.fieldList), (yyvsp[-1].lex).string, (yylsp[-1]), NULL, (yyloc));
     }
 
     break;
