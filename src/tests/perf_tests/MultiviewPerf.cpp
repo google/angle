@@ -182,11 +182,11 @@ void MultiviewBenchmark::initializeBenchmark()
 
     glBindTexture(GL_TEXTURE_2D, mColorTexture);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, params->windowWidth, params->windowHeight, 0, GL_RGBA,
-                 GL_UNSIGNED_BYTE, NULL);
+                 GL_UNSIGNED_BYTE, nullptr);
 
     glBindTexture(GL_TEXTURE_2D, mDepthTexture);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32F, params->windowWidth, params->windowHeight,
-                 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+                 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
 
     glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
 

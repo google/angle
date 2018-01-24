@@ -3006,7 +3006,7 @@ TextureStorage *Renderer9::createTextureStorage2DMultisample(GLenum internalform
     // 2D multisampled textures are not supported by the D3D9 backend.
     UNREACHABLE();
 
-    return NULL;
+    return nullptr;
 }
 
 bool Renderer9::getLUID(LUID *adapterLuid) const
