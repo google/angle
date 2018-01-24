@@ -16,6 +16,24 @@
       "revId": "ac823c0a263be1dead6e6ce88b1bf865d3b4fb15",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ef2ad143_5cad989a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-01-24T09:15:52Z",
+      "side": 1,
+      "message": "The next patch adds a bit of convenience functionality in ImmutableString that\u0027s particular to ANGLE. Like when an ImmutableString is constructed out of an std::string, it\u0027s pool allocated automatically. This reduces the possibility of mistakes considerably. The constructor of ImmutableString that takes a char array is also marked as explicit, so that temporary char arrays don\u0027t implicitly get converted to a class that marks them as pool allocated or static. Because of this it would be more difficult to use string_view, though maybe it would be possible to inherit from it. It seems to be C++17 though, so a bit too fresh to be used yet.\n\nIt would be troublesome to use StringPiece as-is for the same reasons, and it also lacks assignment and copy constructor operators, which are needed to store it in a standard container.",
+      "parentUuid": "84aee22c_cb8b2d78",
+      "revId": "ac823c0a263be1dead6e6ce88b1bf865d3b4fb15",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
