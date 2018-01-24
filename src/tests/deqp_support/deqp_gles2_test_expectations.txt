@@ -93,6 +93,9 @@
 1656 OPENGL : dEQP-GLES2.functional.fbo.completeness.renderable.texture.stencil.srgb8_alpha8 = FAIL
 1656 OPENGL : dEQP-GLES2.functional.fbo.completeness.renderable.texture.depth.srgb8_alpha8 = FAIL
 
+// OpenGL Intel specific
+2349 LINUX INTEL : dEQP-GLES2.functional.fbo.render.color_clear.rbo_rgb5_a1_depth_component16_stencil_index8 = FAIL
+
 // Mac specific failures
 1143 MAC : dEQP-GLES2.functional.shaders.scoping.valid.local_int_variable_hides_struct_type_* = FAIL
 1143 MAC : dEQP-GLES2.functional.shaders.scoping.valid.local_struct_variable_hides_struct_type_* = FAIL

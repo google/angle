@@ -206,40 +206,27 @@
 1633 WIN AMD : dEQP-GLES3.functional.texture.mipmap.3d.max_lod.nearest_nearest = FAIL
 1633 WIN AMD : dEQP-GLES3.functional.texture.mipmap.3d.max_lod.linear_nearest = FAIL
 
-// Windows Intel-specific failures
+// D3D11 Intel specific
 
-1349 WIN INTEL : dEQP-GLES3.functional.shaders.texture_functions.texturelod.isamplercube_* = FAIL
-1349 WIN INTEL : dEQP-GLES3.functional.shaders.texture_functions.texturelod.usamplercube_* = FAIL
-1349 WIN INTEL : dEQP-GLES3.functional.shaders.texture_functions.texturegrad.isamplercube_vertex = FAIL
-1349 WIN INTEL : dEQP-GLES3.functional.shaders.texture_functions.texturegrad.usamplercube_vertex = FAIL
-1349 WIN INTEL : dEQP-GLES3.functional.shaders.texture_functions.texturegrad.usamplercube_fragment = FAIL
-1349 WIN INTEL : dEQP-GLES3.functional.texture.units.2_units.only_cube.0 = FAIL
-1349 WIN INTEL : dEQP-GLES3.functional.texture.units.2_units.only_cube.2 = FAIL
-1349 WIN INTEL : dEQP-GLES3.functional.texture.units.2_units.only_cube.4 = FAIL
-1349 WIN INTEL : dEQP-GLES3.functional.texture.units.2_units.only_cube.8 = FAIL
-1349 WIN INTEL : dEQP-GLES3.functional.texture.units.2_units.mixed.4 = FAIL
-1349 WIN INTEL : dEQP-GLES3.functional.texture.units.4_units.only_cube.0 = FAIL
-1349 WIN INTEL : dEQP-GLES3.functional.texture.units.4_units.only_cube.1 = FAIL
-1349 WIN INTEL : dEQP-GLES3.functional.texture.units.4_units.only_cube.2 = FAIL
-1349 WIN INTEL : dEQP-GLES3.functional.texture.units.4_units.only_cube.6 = FAIL
-1349 WIN INTEL : dEQP-GLES3.functional.texture.units.4_units.only_cube.7 = FAIL
-1349 WIN INTEL : dEQP-GLES3.functional.texture.units.4_units.only_cube.8 = FAIL
-1349 WIN INTEL : dEQP-GLES3.functional.texture.units.4_units.only_cube.9 = FAIL
-1349 WIN INTEL : dEQP-GLES3.functional.texture.units.4_units.mixed.4 = FAIL
-1349 WIN INTEL : dEQP-GLES3.functional.texture.units.4_units.mixed.6 = FAIL
-1349 WIN INTEL : dEQP-GLES3.functional.texture.units.4_units.mixed.7 = FAIL
-1349 WIN INTEL : dEQP-GLES3.functional.texture.units.8_units.only_cube.* = FAIL
-1349 WIN INTEL : dEQP-GLES3.functional.texture.units.8_units.mixed.2 = FAIL
-1349 WIN INTEL : dEQP-GLES3.functional.texture.units.8_units.mixed.3 = FAIL
-1349 WIN INTEL : dEQP-GLES3.functional.texture.units.8_units.mixed.4 = FAIL
-1349 WIN INTEL : dEQP-GLES3.functional.texture.units.8_units.mixed.6 = FAIL
-1349 WIN INTEL : dEQP-GLES3.functional.texture.units.8_units.mixed.7 = FAIL
-1349 WIN INTEL : dEQP-GLES3.functional.texture.units.all_units.only_cube.* = FAIL
-1349 WIN INTEL : dEQP-GLES3.functional.texture.units.all_units.mixed.2 = FAIL
-1349 WIN INTEL : dEQP-GLES3.functional.texture.units.all_units.mixed.3 = FAIL
-1349 WIN INTEL : dEQP-GLES3.functional.texture.units.all_units.mixed.4 = FAIL
-1349 WIN INTEL : dEQP-GLES3.functional.texture.units.all_units.mixed.6 = FAIL
-1349 WIN INTEL : dEQP-GLES3.functional.texture.units.all_units.mixed.7 = FAIL
+1349 D3D11 INTEL : dEQP-GLES3.functional.texture.units.2_units.only_cube.6 = FAIL
+1349 D3D11 INTEL : dEQP-GLES3.functional.texture.units.2_units.only_2d_array.8 = FAIL
+1349 D3D11 INTEL : dEQP-GLES3.functional.texture.units.2_units.only_3d.8 = FAIL
+1349 D3D11 INTEL : dEQP-GLES3.functional.texture.units.2_units.mixed.0 = FAIL
+1349 D3D11 INTEL : dEQP-GLES3.functional.texture.units.2_units.mixed.8 = FAIL
+1349 D3D11 INTEL : dEQP-GLES3.functional.texture.units.2_units.mixed.9 = FAIL
+1349 D3D11 INTEL : dEQP-GLES3.functional.texture.units.4_units.only_3d.3 = FAIL
+2349 D3D11 INTEL : dEQP-GLES3.functional.texture.mipmap.2d.min_lod.nearest_nearest = FAIL
+2349 D3D11 INTEL : dEQP-GLES3.functional.texture.mipmap.2d.min_lod.linear_nearest = FAIL
+2349 D3D11 INTEL : dEQP-GLES3.functional.texture.mipmap.3d.min_lod.nearest_nearest = FAIL
+2349 D3D11 INTEL : dEQP-GLES3.functional.texture.mipmap.3d.min_lod.linear_nearest = FAIL
+2349 D3D11 INTEL : dEQP_GLES3.functional.negative_api.texture.bindtexture = FAIL
+2349 D3D11 INTEL : dEQP-GLES3.functional.rasterization.fbo.rbo_multisample_4.primitives.lines = FAIL
+2349 D3D11 INTEL : dEQP-GLES3.functional.rasterization.fbo.rbo_multisample_4.interpolation.lines = FAIL
+2349 D3D11 INTEL : dEQP-GLES3.functional.rasterization.fbo.rbo_multisample_max.primitives.lines = FAIL
+2349 D3D11 INTEL : dEQP-GLES3.functional.rasterization.fbo.rbo_multisample_max.interpolation.lines = FAIL
+
+// Failing Tests on Windows and Mac on Intel HD 630
+2137 WIN MAC INTEL : dEQP-GLES3.functional.fbo.color.repeated_clear.sample.tex2d.* = FAIL
 
 // Linux only failures
 
@@ -326,6 +313,11 @@
 1324 LINUX : dEQP-GLES3.functional.shaders.loops.do_while_dynamic_iterations.mixed_break_continue_vertex = FAIL
 1324 LINUX : dEQP-GLES3.functional.shaders.loops.do_while_dynamic_iterations.mixed_break_continue_fragment = FAIL
 
+// Linux Intel specific
+2349 LINUX INTEL : dEQP-GLES3.functional.fbo.blit.default_framebuffer* = FAIL
+2349 LINUX INTEL : dEQP-GLES3.functional.negative_api.texture.bindtexture = FAIL
+2349 LINUX INTEL : dEQP-GLES3.functional.negative_api.shader.program_binary = FAIL
+
 // Mac failures (overbroad suppresions)
 2137 MAC : dEQP-GLES3.functional.fbo.blit.default_framebuffer.* = FAIL
 2137 MAC : dEQP-GLES3.functional.fbo.blit.rect.out_of_bounds_reverse_* = FAIL
@@ -365,7 +357,6 @@
 2137 MAC INTEL : dEQP-GLES3.functional.fbo.blit.rect.nearest_consistency_mag_reverse_src_dst_y = FAIL
 2137 MAC INTEL : dEQP-GLES3.functional.fbo.blit.rect.nearest_consistency_min_reverse_src_dst_y = FAIL
 // Fails for all integer formats
-2137 MAC INTEL : dEQP-GLES3.functional.fbo.color.repeated_clear.sample.tex2d.* = FAIL
 2137 MAC INTEL : dEQP-GLES3.functional.fbo.completeness.attachment_combinations.none_rbo_none_none = FAIL
 2137 MAC INTEL : dEQP-GLES3.functional.fbo.completeness.attachment_combinations.none_tex_none_none = FAIL
 2137 MAC INTEL : dEQP-GLES3.functional.polygon_offset.default_render_with_units = FAIL

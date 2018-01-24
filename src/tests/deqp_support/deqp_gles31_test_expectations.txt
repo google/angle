@@ -26,6 +26,17 @@
 // Crashing Tests
 1920 NVIDIA D3D11 : dEQP-GLES31.functional.layout_binding.ubo.vertex_binding_max = SKIP
 1442 OPENGL D3D11 : dEQP-GLES31.functional.program_interface_query.transform_feedback_varying.resource_list.vertex_fragment.builtin_gl_position = SKIP
+
+// Crashing Tests on Linux on Intel HD 630.
+2349 LINUX INTEL : dEQP-GLES31.functional.synchronization.in_invocation.image_* = SKIP
+2349 LINUX INTEL : dEQP-GLES31.functional.synchronization.inter_invocation.image_* = SKIP
+2349 LINUX INTEL : dEQP-GLES31.functional.compute.basic.copy_image_to_ssbo_small = SKIP
+2349 LINUX INTEL : dEQP-GLES31.functional.compute.basic.copy_ssbo_to_image_small = SKIP
+2349 LINUX INTEL : dEQP-GLES31.functional.compute.basic.image_barrier_multiple = SKIP
+
+// Failing Tests on Linux on Intel HD 630.
+2349 LINUX INTEL : dEQP-GLES31.functional.debug.negative_coverage.get_error.shader.program_binary = FAIL
+
 1442 OPENGL D3D11 : dEQP-GLES31.functional.program_interface_query.transform_feedback_varying.resource_list.vertex_fragment.default_block_struct_member = SKIP
 1442 OPENGL D3D11 : dEQP-GLES31.functional.program_interface_query.transform_feedback_varying.array_size.vertex_fragment.default_block_struct_member = SKIP
 1442 OPENGL D3D11 : dEQP-GLES31.functional.program_interface_query.transform_feedback_varying.name_length.vertex_fragment.default_block_struct_member = SKIP
