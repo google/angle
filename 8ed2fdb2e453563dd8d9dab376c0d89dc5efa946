@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fb5157e1_ed8983cf",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 429,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-24T18:37:00Z",
+      "side": 1,
+      "message": "very small request - but I think you can merge the code for ValidateValueBounds into this function, since it seems you only call it in one place, and the net amount of code would be smaller.",
+      "range": {
+        "startLine": 425,
+        "startChar": 0,
+        "endLine": 429,
+        "endChar": 0
+      },
+      "revId": "8ed2fdb2e453563dd8d9dab376c0d89dc5efa946",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c8126f71_1fb3f20c",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 5424,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-24T18:37:00Z",
+      "side": 1,
+      "message": "nit: I think you can add an ASSERT after this if that says the cast doesn\u0027t lose any information:\n\nASSERT(static_cast\u003cParamType\u003e(paramValue) \u003d\u003d params[0]);",
+      "range": {
+        "startLine": 5424,
+        "startChar": 16,
+        "endLine": 5424,
+        "endChar": 1
+      },
+      "revId": "8ed2fdb2e453563dd8d9dab376c0d89dc5efa946",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3e225224_ffeda97e",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 5741,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-24T18:37:00Z",
+      "side": 1,
+      "message": "I think you need to preserve the break here - these other parameters are valid regardless of the extension availability.",
+      "range": {
+        "startLine": 5741,
+        "startChar": 7,
+        "endLine": 5741,
+        "endChar": 37
+      },
+      "revId": "8ed2fdb2e453563dd8d9dab376c0d89dc5efa946",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "552bb6f6_dee45115",
+        "filename": "src/tests/gl_tests/SamplersTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-24T18:37:00Z",
+      "side": 1,
+      "message": "nit: can you please default-init local values?",
+      "range": {
+        "startLine": 34,
+        "startChar": 16,
+        "endLine": 34,
+        "endChar": 29
+      },
+      "revId": "8ed2fdb2e453563dd8d9dab376c0d89dc5efa946",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ae532c4b_2101213b",
+        "filename": "src/tests/gl_tests/SamplersTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-24T18:37:00Z",
+      "side": 1,
+      "message": "nit: init",
+      "range": {
+        "startLine": 48,
+        "startChar": 12,
+        "endLine": 48,
+        "endChar": 20
+      },
+      "revId": "8ed2fdb2e453563dd8d9dab376c0d89dc5efa946",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0f61ff00_66bc1524",
+        "filename": "src/tests/gl_tests/SamplersTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-24T18:37:00Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 75,
+        "startChar": 12,
+        "endLine": 75,
+        "endChar": 20
+      },
+      "revId": "8ed2fdb2e453563dd8d9dab376c0d89dc5efa946",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
