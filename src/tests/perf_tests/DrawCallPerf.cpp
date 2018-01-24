@@ -14,8 +14,37 @@
 namespace
 {
 
+struct DrawArraysPerfParams : public DrawCallPerfParams
+{
+    DrawArraysPerfParams(const DrawCallPerfParams &base) : DrawCallPerfParams(base) {}
+
+    std::string suffix() const override;
+
+    bool changeVertexBuffer = false;
+};
+
+std::string DrawArraysPerfParams::suffix() const
+{
+    std::stringstream strstr;
+
+    strstr << DrawCallPerfParams::suffix();
+
+    if (changeVertexBuffer)
+    {
+        strstr << "_vbo_change";
+    }
+
+    return strstr.str();
+}
+
+std::ostream &operator<<(std::ostream &os, const DrawArraysPerfParams &params)
+{
+    os << params.suffix().substr(1);
+    return os;
+}
+
 class DrawCallPerfBenchmark : public ANGLERenderTest,
-                              public ::testing::WithParamInterface<DrawCallPerfParams>
+                              public ::testing::WithParamInterface<DrawArraysPerfParams>
 {
   public:
     DrawCallPerfBenchmark();
@@ -26,7 +55,8 @@ class DrawCallPerfBenchmark : public ANGLERenderTest,
 
   private:
     GLuint mProgram = 0;
-    GLuint mBuffer  = 0;
+    GLuint mBuffer1 = 0;
+    GLuint mBuffer2 = 0;
     GLuint mFBO     = 0;
     GLuint mTexture = 0;
     int mNumTris    = GetParam().numTris;
@@ -48,7 +78,8 @@ void DrawCallPerfBenchmark::initializeBenchmark()
 
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
-    mBuffer = Create2DTriangleBuffer(mNumTris, GL_STATIC_DRAW);
+    mBuffer1 = Create2DTriangleBuffer(mNumTris, GL_STATIC_DRAW);
+    mBuffer2 = Create2DTriangleBuffer(mNumTris, GL_STATIC_DRAW);
 
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
     glEnableVertexAttribArray(0);
@@ -67,9 +98,45 @@ void DrawCallPerfBenchmark::initializeBenchmark()
 void DrawCallPerfBenchmark::destroyBenchmark()
 {
     glDeleteProgram(mProgram);
-    glDeleteBuffers(1, &mBuffer);
+    glDeleteBuffers(1, &mBuffer1);
+    glDeleteBuffers(1, &mBuffer2);
     glDeleteTextures(1, &mTexture);
     glDeleteFramebuffers(1, &mFBO);
+}
+
+void ClearThenDraw(unsigned int iterations, GLsizei numElements)
+{
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    for (unsigned int it = 0; it < iterations; it++)
+    {
+        glDrawArrays(GL_TRIANGLES, 0, numElements);
+    }
+}
+
+void JustDraw(unsigned int iterations, GLsizei numElements)
+{
+    for (unsigned int it = 0; it < iterations; it++)
+    {
+        glDrawArrays(GL_TRIANGLES, 0, numElements);
+    }
+}
+
+void ChangeVerticesThenDraw(unsigned int iterations,
+                            GLsizei numElements,
+                            GLuint buffer1,
+                            GLuint buffer2)
+{
+    for (unsigned int it = 0; it < iterations; it++)
+    {
+        glBindBuffer(GL_ARRAY_BUFFER, buffer1);
+        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
+        glDrawArrays(GL_TRIANGLES, 0, numElements);
+
+        glBindBuffer(GL_ARRAY_BUFFER, buffer2);
+        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
+        glDrawArrays(GL_TRIANGLES, 0, numElements);
+    }
 }
 
 void DrawCallPerfBenchmark::drawBenchmark()
@@ -78,18 +145,22 @@ void DrawCallPerfBenchmark::drawBenchmark()
     // back-end. The GL back-end doesn't have a proper NULL device at the moment.
     // TODO(jmadill): Remove this when/if we ever get a proper OpenGL NULL device.
     const auto &eglParams = GetParam().eglParameters;
-    if (eglParams.deviceType != EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE ||
-        (eglParams.renderer != EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE &&
-         eglParams.renderer != EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE))
+    const auto &params    = GetParam();
+    GLsizei numElements   = static_cast<GLsizei>(3 * mNumTris);
+
+    if (params.changeVertexBuffer)
     {
-        glClear(GL_COLOR_BUFFER_BIT);
+        ChangeVerticesThenDraw(params.iterations, numElements, mBuffer1, mBuffer2);
     }
-
-    const auto &params = GetParam();
-
-    for (unsigned int it = 0; it < params.iterations; it++)
+    else if (eglParams.deviceType != EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE ||
+             (eglParams.renderer != EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE &&
+              eglParams.renderer != EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE))
     {
-        glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(3 * mNumTris));
+        ClearThenDraw(params.iterations, numElements);
+    }
+    else
+    {
+        JustDraw(params.iterations, numElements);
     }
 
     ASSERT_GL_NO_ERROR();
@@ -100,16 +171,24 @@ TEST_P(DrawCallPerfBenchmark, Run)
     run();
 }
 
+DrawArraysPerfParams DrawArrays(const DrawCallPerfParams &base, bool withBufferChange)
+{
+    DrawArraysPerfParams params(base);
+    params.changeVertexBuffer = withBufferChange;
+    return params;
+}
+
 ANGLE_INSTANTIATE_TEST(DrawCallPerfBenchmark,
-                       DrawCallPerfD3D9Params(false, false),
-                       DrawCallPerfD3D9Params(true, false),
-                       DrawCallPerfD3D11Params(false, false),
-                       DrawCallPerfD3D11Params(true, false),
-                       DrawCallPerfD3D11Params(true, true),
-                       DrawCallPerfOpenGLOrGLESParams(false, false),
-                       DrawCallPerfOpenGLOrGLESParams(true, false),
-                       DrawCallPerfOpenGLOrGLESParams(true, true),
-                       DrawCallPerfValidationOnly(),
-                       DrawCallPerfVulkanParams(false));
+                       DrawArrays(DrawCallPerfD3D9Params(false, false), false),
+                       DrawArrays(DrawCallPerfD3D9Params(true, false), false),
+                       DrawArrays(DrawCallPerfD3D11Params(false, false), false),
+                       DrawArrays(DrawCallPerfD3D11Params(true, false), false),
+                       DrawArrays(DrawCallPerfD3D11Params(true, true), false),
+                       DrawArrays(DrawCallPerfOpenGLOrGLESParams(false, false), false),
+                       DrawArrays(DrawCallPerfOpenGLOrGLESParams(true, false), false),
+                       DrawArrays(DrawCallPerfOpenGLOrGLESParams(true, true), false),
+                       DrawArrays(DrawCallPerfValidationOnly(), false),
+                       DrawArrays(DrawCallPerfVulkanParams(false), false),
+                       DrawArrays(DrawCallPerfVulkanParams(false), true));
 
 } // namespace

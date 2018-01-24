@@ -34,16 +34,10 @@ struct DrawCallPerfParams : public RenderTestParams
     bool useFBO             = false;
 };
 
-std::ostream &operator<<(std::ostream &os, const DrawCallPerfParams &params);
-
 DrawCallPerfParams DrawCallPerfD3D11Params(bool useNullDevice, bool renderToTexture);
-
 DrawCallPerfParams DrawCallPerfD3D9Params(bool useNullDevice, bool renderToTexture);
-
 DrawCallPerfParams DrawCallPerfOpenGLOrGLESParams(bool useNullDevice, bool renderToTexture);
-
 DrawCallPerfParams DrawCallPerfValidationOnly();
-
 DrawCallPerfParams DrawCallPerfVulkanParams(bool renderToTexture);
 
 #endif  // TESTS_PERF_TESTS_DRAW_CALL_PERF_PARAMS_H_

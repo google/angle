@@ -11,12 +11,6 @@
 
 #include <sstream>
 
-std::ostream &operator<<(std::ostream &os, const DrawCallPerfParams &params)
-{
-    os << params.suffix().substr(1);
-    return os;
-}
-
 std::string DrawCallPerfParams::suffix() const
 {
     std::stringstream strstr;
