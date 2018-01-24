@@ -486,13 +486,6 @@ class StateChangeRenderTest : public StateChangeTest
 // Test that re-creating a currently attached texture works as expected.
 TEST_P(StateChangeRenderTest, RecreateTexture)
 {
-    if (IsIntel() && IsLinux())
-    {
-        // TODO(cwallez): Fix on Linux Intel drivers (http://anglebug.com/1346)
-        std::cout << "Test disabled on Linux Intel OpenGL." << std::endl;
-        return;
-    }
-
     glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
 
     glBindTexture(GL_TEXTURE_2D, mTextures[0]);

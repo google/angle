@@ -1560,25 +1560,11 @@ TEST_P(Texture2DTest, CopySubImageFloat_RG_RG)
 
 TEST_P(Texture2DTest, CopySubImageFloat_RGB_R)
 {
-    if (IsIntel() && IsLinux())
-    {
-        // TODO(cwallez): Fix on Linux Intel drivers (http://anglebug.com/1346)
-        std::cout << "Test disabled on Linux Intel OpenGL." << std::endl;
-        return;
-    }
-
     testFloatCopySubImage(3, 1);
 }
 
 TEST_P(Texture2DTest, CopySubImageFloat_RGB_RG)
 {
-    if (IsIntel() && IsLinux())
-    {
-        // TODO(cwallez): Fix on Linux Intel drivers (http://anglebug.com/1346)
-        std::cout << "Test disabled on Linux Intel OpenGL." << std::endl;
-        return;
-    }
-
     testFloatCopySubImage(3, 2);
 }
 
@@ -2819,11 +2805,10 @@ TEST_P(Texture2DTestES3, TextureCOMPRESSEDRGB8ETC2ImplicitAlpha1)
 // ES 3.0.4 table 3.24
 TEST_P(Texture2DTestES3, TextureCOMPRESSEDSRGB8ETC2ImplicitAlpha1)
 {
-    if (IsIntel() && IsOpenGL() && (IsLinux() || IsOSX()))
+    if (IsOSX() && IsIntel() && IsOpenGL())
     {
-        // TODO(cwallez): Fix on Linux Intel drivers (http://anglebug.com/1346)
-        // Also seems to fail on OSX 10.12 Intel.
-        std::cout << "Test disabled on Linux and OSX Intel OpenGL." << std::endl;
+        // Seems to fail on OSX 10.12 Intel.
+        std::cout << "Test skipped on OSX Intel." << std::endl;
         return;
     }
 
