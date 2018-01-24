@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b29ea51a_4c20e8f5",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 332,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-24T18:39:01Z",
+      "side": 1,
+      "message": "nit: the result of \u0026 is not a bool - use an explicit conversion like !\u003d 0 or \u003e 0",
+      "range": {
+        "startLine": 332,
+        "startChar": 8,
+        "endLine": 332,
+        "endChar": 9
+      },
+      "revId": "6d1ef3f0fb8e6f8b162145be6a2442a0c8dd027f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "732d81d4_15afe081",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 336,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-24T18:39:01Z",
+      "side": 1,
+      "message": "same here",
+      "range": {
+        "startLine": 336,
+        "startChar": 19,
+        "endLine": 336,
+        "endChar": 73
+      },
+      "revId": "6d1ef3f0fb8e6f8b162145be6a2442a0c8dd027f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
