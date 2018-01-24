@@ -69,6 +69,29 @@
       "revId": "affd3df5e82ca22e33a1af8fe01cb958c497a1de",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cdc680bd_f2dbe66f",
+        "filename": "src/tests/perf_tests/CompilerPerf.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-24T19:33:13Z",
+      "side": 1,
+      "message": "I\u0027m not sure this is going to go over well with the bots - they identify tests based on the \"suffix\". Can you check and make sure all these tests have different suffixes?",
+      "range": {
+        "startLine": 150,
+        "startChar": 0,
+        "endLine": 167,
+        "endChar": 0
+      },
+      "revId": "affd3df5e82ca22e33a1af8fe01cb958c497a1de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
