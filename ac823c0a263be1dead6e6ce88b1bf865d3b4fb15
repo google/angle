@@ -34,6 +34,41 @@
       "revId": "ac823c0a263be1dead6e6ce88b1bf865d3b4fb15",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bb000276_f2fb18e0",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-01-24T17:43:14Z",
+      "side": 1,
+      "message": "Thanks for the explanation, like you said because we have a pool allocator it makes sense for us to have something custom.",
+      "parentUuid": "ef2ad143_5cad989a",
+      "revId": "ac823c0a263be1dead6e6ce88b1bf865d3b4fb15",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e3da9451_9fa24797",
+        "filename": "src/compiler/translator/ImmutableString.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-01-24T17:43:14Z",
+      "side": 1,
+      "message": "Because the length were already checked, I think this could be done as a memcmp.",
+      "revId": "ac823c0a263be1dead6e6ce88b1bf865d3b4fb15",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
