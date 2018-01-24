@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "0199f0da_8ecf7f36",
+        "filename": "src/tests/perf_tests/CompilerPerf.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-24T18:21:06Z",
+      "side": 1,
+      "message": "can you add a comment here explaining what this code is for?",
+      "range": {
+        "startLine": 137,
+        "startChar": 0,
+        "endLine": 142,
+        "endChar": 6
+      },
+      "revId": "affd3df5e82ca22e33a1af8fe01cb958c497a1de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "88520542_206040ae",
         "filename": "src/tests/perf_tests/CompilerPerf.cpp",
         "patchSetId": 4
@@ -13,6 +36,30 @@
       "writtenOn": "2018-01-24T18:05:16Z",
       "side": 1,
       "message": "Can you make this a constant declared somewhere above?",
+      "range": {
+        "startLine": 144,
+        "startChar": 49,
+        "endLine": 144,
+        "endChar": 51
+      },
+      "revId": "affd3df5e82ca22e33a1af8fe01cb958c497a1de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3dbdf5ce_abe2a6cc",
+        "filename": "src/tests/perf_tests/CompilerPerf.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-24T18:21:06Z",
+      "side": 1,
+      "message": "+1.",
+      "parentUuid": "88520542_206040ae",
       "range": {
         "startLine": 144,
         "startChar": 49,
