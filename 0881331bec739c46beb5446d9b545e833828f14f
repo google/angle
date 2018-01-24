@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "60122620_973a94f2",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-24T18:28:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f617435c_24669858",
+      "revId": "0881331bec739c46beb5446d9b545e833828f14f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "32bb43cb_366457c2",
         "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
         "patchSetId": 1
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "174f12a2_887d5150",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-24T18:28:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "32bb43cb_366457c2",
+      "revId": "0881331bec739c46beb5446d9b545e833828f14f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ea9b3f8c_253b7ec9",
         "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
         "patchSetId": 1
@@ -50,6 +86,24 @@
       "revId": "0881331bec739c46beb5446d9b545e833828f14f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "96301e04_173c4708",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 575,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-24T18:28:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ea9b3f8c_253b7ec9",
+      "revId": "0881331bec739c46beb5446d9b545e833828f14f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
