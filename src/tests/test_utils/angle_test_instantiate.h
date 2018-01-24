@@ -17,7 +17,10 @@
 namespace angle
 {
 
+struct CompilerParameters;
 struct PlatformParameters;
+
+bool IsPlatformAvailable(const CompilerParameters &param);
 
 bool IsPlatformAvailable(const PlatformParameters &param);
 

@@ -21,6 +21,7 @@
             '<(angle_path)/src/tests/perf_tests/BindingPerf.cpp',
             '<(angle_path)/src/tests/perf_tests/BitSetIteratorPerf.cpp',
             '<(angle_path)/src/tests/perf_tests/BufferSubData.cpp',
+            '<(angle_path)/src/tests/perf_tests/CompilerPerf.cpp',
             '<(angle_path)/src/tests/perf_tests/DrawCallPerf.cpp',
             '<(angle_path)/src/tests/perf_tests/DrawCallPerfParams.cpp',
             '<(angle_path)/src/tests/perf_tests/DrawCallPerfParams.h',

@@ -17,11 +17,24 @@
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
 
-#include "angle_test_instantiate.h"
 #include "EGLWindow.h"
+#include "GLSLANG/ShaderLang.h"
+#include "angle_test_instantiate.h"
 
 namespace angle
 {
+
+struct CompilerParameters
+{
+    CompilerParameters();
+    CompilerParameters(ShShaderOutput output);
+
+    const char *str() const;
+
+    ShShaderOutput output;
+};
+
+std::ostream &operator<<(std::ostream &stream, const CompilerParameters &pp);
 
 struct PlatformParameters
 {

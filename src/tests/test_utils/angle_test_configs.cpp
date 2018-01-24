@@ -9,6 +9,37 @@
 namespace angle
 {
 
+CompilerParameters::CompilerParameters()
+{
+    output = SH_HLSL_4_1_OUTPUT;
+}
+
+CompilerParameters::CompilerParameters(ShShaderOutput output) : output(output)
+{
+}
+
+const char *CompilerParameters::str() const
+{
+    switch (output)
+    {
+        case SH_HLSL_4_1_OUTPUT:
+            return "HLSL_4_1";
+        case SH_GLSL_450_CORE_OUTPUT:
+            return "GLSL_4_50";
+        case SH_ESSL_OUTPUT:
+            return "ESSL";
+        default:
+            UNREACHABLE();
+            return "unk";
+    }
+}
+
+std::ostream &operator<<(std::ostream &stream, const CompilerParameters &p)
+{
+    stream << p.str();
+    return stream;
+}
+
 PlatformParameters::PlatformParameters()
     : PlatformParameters(2, 0, EGLPlatformParameters())
 {
