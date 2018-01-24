@@ -22,6 +22,30 @@
       "revId": "379681336ba11f33b95b337b7fa324e6336a780e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d63fafde_d108e66a",
+        "filename": "src/compiler/translator/Symbol.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 192,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-01-24T20:10:53Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "b1a96a54_c823b621",
+      "range": {
+        "startLine": 192,
+        "startChar": 4,
+        "endLine": 192,
+        "endChar": 26
+      },
+      "revId": "379681336ba11f33b95b337b7fa324e6336a780e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
