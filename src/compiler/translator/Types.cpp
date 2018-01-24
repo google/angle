@@ -539,10 +539,7 @@ const char *TType::buildMangledName() const
     mangledName += ';';
 
     // Copy string contents into a pool-allocated buffer, so we never need to call delete.
-    size_t requiredSize = mangledName.size() + 1;
-    char *buffer = reinterpret_cast<char *>(GetGlobalPoolAllocator()->allocate(requiredSize));
-    memcpy(buffer, mangledName.c_str(), requiredSize);
-    return buffer;
+    return AllocatePoolCharArray(mangledName.c_str(), mangledName.size());
 }
 
 size_t TType::getObjectSize() const

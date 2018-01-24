@@ -121,6 +121,17 @@ inline TString str(T i)
     return buffer;
 }
 
+// Allocate a char array in the global memory pool. str must be a null terminated string. strLength
+// is the length without the null terminator.
+inline const char *AllocatePoolCharArray(const char *str, size_t strLength)
+{
+    size_t requiredSize = strLength + 1;
+    char *buffer = reinterpret_cast<char *>(GetGlobalPoolAllocator()->allocate(requiredSize));
+    memcpy(buffer, str, requiredSize);
+    ASSERT(buffer[strLength] == 0);
+    return buffer;
+}
+
 }  // namespace sh
 
 namespace std
