@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "56ea293b_99544328",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 408,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-01-24T15:08:35Z",
+      "side": 1,
+      "message": "Use context-\u003egetExtensions().maxTextureAnisotropy",
+      "range": {
+        "startLine": 407,
+        "startChar": 4,
+        "endLine": 408,
+        "endChar": 72
+      },
+      "revId": "8ba42f06658c9ca49d3fa390e2c2052b668ec1c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7f6b4bdf_5d13d81f",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 5743,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-01-24T15:08:35Z",
+      "side": 1,
+      "message": "This needs the extension check too.",
+      "range": {
+        "startLine": 5743,
+        "startChar": 8,
+        "endLine": 5743,
+        "endChar": 43
+      },
+      "revId": "8ba42f06658c9ca49d3fa390e2c2052b668ec1c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b906078b_08b07077",
+        "filename": "src/tests/gl_tests/SamplersTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-01-24T15:08:35Z",
+      "side": 1,
+      "message": "We should query what the max is with glGetInteger(TEXTURE_MAX_ANISOTROPY_EXT, ..).  The spec only guarentees that it\u0027s at least 2.",
+      "range": {
+        "startLine": 58,
+        "startChar": 39,
+        "endLine": 58,
+        "endChar": 49
+      },
+      "revId": "8ba42f06658c9ca49d3fa390e2c2052b668ec1c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
