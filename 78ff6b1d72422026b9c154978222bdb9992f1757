@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "969b6e8b_8b01de06",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 2138,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-24T18:45:57Z",
+      "side": 1,
+      "message": "I think you have these backwards - the input varyings are from the generating shader, and the output varyings are for the consuming shader. Right?",
+      "range": {
+        "startLine": 2137,
+        "startChar": 0,
+        "endLine": 2138,
+        "endChar": 96
+      },
+      "revId": "78ff6b1d72422026b9c154978222bdb9992f1757",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
