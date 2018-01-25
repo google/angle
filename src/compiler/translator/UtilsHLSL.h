@@ -87,12 +87,12 @@ enum HLSLRWTextureGroup
 
 HLSLTextureGroup TextureGroup(const TBasicType type,
                               TLayoutImageInternalFormat imageInternalFormat = EiifUnspecified);
-TString TextureString(const HLSLTextureGroup textureGroup);
-TString TextureString(const TBasicType type,
-                      TLayoutImageInternalFormat imageInternalFormat = EiifUnspecified);
-TString TextureGroupSuffix(const HLSLTextureGroup type);
-TString TextureGroupSuffix(const TBasicType type,
-                           TLayoutImageInternalFormat imageInternalFormat = EiifUnspecified);
+const char *TextureString(const HLSLTextureGroup textureGroup);
+const char *TextureString(const TBasicType type,
+                          TLayoutImageInternalFormat imageInternalFormat = EiifUnspecified);
+const char *TextureGroupSuffix(const HLSLTextureGroup type);
+const char *TextureGroupSuffix(const TBasicType type,
+                               TLayoutImageInternalFormat imageInternalFormat = EiifUnspecified);
 TString TextureTypeSuffix(const TBasicType type,
                           TLayoutImageInternalFormat imageInternalFormat = EiifUnspecified);
 HLSLRWTextureGroup RWTextureGroup(const TBasicType type,
