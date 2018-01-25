@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "84bc990d_ce62cc95",
+        "filename": "src/compiler/translator/ImmutableString.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-25T18:23:13Z",
+      "side": 1,
+      "message": "out of curiosity, how hard would it be to make this constexpr? also, if there\u0027s no need to make this constexpr, you could probably put it in the cpp file.",
+      "range": {
+        "startLine": 56,
+        "startChar": 9,
+        "endLine": 56,
+        "endChar": 17
+      },
+      "revId": "38554fd6b407049c9770632dba9148977548e814",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6c14cc80_a3f8bd39",
+        "filename": "src/compiler/translator/ImmutableStringBuilder.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-25T18:23:13Z",
+      "side": 1,
+      "message": "if you don\u0027t expect to need this to be constexpr I would prefer if you could put these methods in a cpp file.",
+      "range": {
+        "startLine": 26,
+        "startChar": 4,
+        "endLine": 26,
+        "endChar": 66
+      },
+      "revId": "38554fd6b407049c9770632dba9148977548e814",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
