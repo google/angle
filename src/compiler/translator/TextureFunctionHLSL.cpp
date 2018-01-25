@@ -23,8 +23,8 @@ namespace
 void OutputIntTexCoordWrap(TInfoSinkBase &out,
                            const char *wrapMode,
                            const char *size,
-                           const TString &texCoord,
-                           const TString &texCoordOffset,
+                           const ImmutableString &texCoord,
+                           const char *texCoordOffset,
                            const char *texCoordOutName)
 {
     // GLES 3.0.4 table 3.22 specifies how the wrap modes work. We don't use the formulas verbatim
@@ -58,9 +58,9 @@ void OutputIntTexCoordWrap(TInfoSinkBase &out,
 
 void OutputIntTexCoordWraps(TInfoSinkBase &out,
                             const TextureFunctionHLSL::TextureFunction &textureFunction,
-                            TString *texCoordX,
-                            TString *texCoordY,
-                            TString *texCoordZ)
+                            ImmutableString *texCoordX,
+                            ImmutableString *texCoordY,
+                            ImmutableString *texCoordZ)
 {
     // Convert from normalized floating-point to integer
     out << "int wrapS = samplerMetadata[samplerIndex].wrapModes & 0x3;\n";
@@ -72,7 +72,7 @@ void OutputIntTexCoordWraps(TInfoSinkBase &out,
     {
         OutputIntTexCoordWrap(out, "wrapS", "width", *texCoordX, "0", "tix");
     }
-    *texCoordX = "tix";
+    *texCoordX = ImmutableString("tix");
     out << "int wrapT = (samplerMetadata[samplerIndex].wrapModes >> 2) & 0x3;\n";
     if (textureFunction.offset)
     {
@@ -82,11 +82,11 @@ void OutputIntTexCoordWraps(TInfoSinkBase &out,
     {
         OutputIntTexCoordWrap(out, "wrapT", "height", *texCoordY, "0", "tiy");
     }
-    *texCoordY = "tiy";
+    *texCoordY = ImmutableString("tiy");
 
     if (IsSamplerArray(textureFunction.sampler))
     {
-        *texCoordZ = "int(max(0, min(layers - 1, floor(0.5 + t.z))))";
+        *texCoordZ = ImmutableString("int(max(0, min(layers - 1, floor(0.5 + t.z))))");
     }
     else if (!IsSamplerCube(textureFunction.sampler) && !IsSampler2D(textureFunction.sampler))
     {
@@ -99,7 +99,7 @@ void OutputIntTexCoordWraps(TInfoSinkBase &out,
         {
             OutputIntTexCoordWrap(out, "wrapR", "depth", *texCoordZ, "0", "tiz");
         }
-        *texCoordZ = "tiz";
+        *texCoordZ = ImmutableString("tiz");
     }
 }
 
@@ -557,27 +557,33 @@ void OutputTextureSizeFunctionBody(TInfoSinkBase &out,
 }
 
 void ProjectTextureCoordinates(const TextureFunctionHLSL::TextureFunction &textureFunction,
-                               TString *texCoordX,
-                               TString *texCoordY,
-                               TString *texCoordZ)
+                               ImmutableString *texCoordX,
+                               ImmutableString *texCoordY,
+                               ImmutableString *texCoordZ)
 {
     if (textureFunction.proj)
     {
-        TString proj("");
+        ImmutableString proj("");
         switch (textureFunction.coords)
         {
             case 3:
-                proj = " / t.z";
+                proj = ImmutableString(" / t.z");
                 break;
             case 4:
-                proj = " / t.w";
+                proj = ImmutableString(" / t.w");
                 break;
             default:
                 UNREACHABLE();
         }
-        *texCoordX = "(" + *texCoordX + proj + ")";
-        *texCoordY = "(" + *texCoordY + proj + ")";
-        *texCoordZ = "(" + *texCoordZ + proj + ")";
+        ImmutableStringBuilder texCoordXBuilder(texCoordX->length() + proj.length() + 2u);
+        texCoordXBuilder << '(' << *texCoordX << proj << ')';
+        *texCoordX = texCoordXBuilder;
+        ImmutableStringBuilder texCoordYBuilder(texCoordY->length() + proj.length() + 2u);
+        texCoordYBuilder << '(' << *texCoordY << proj << ')';
+        *texCoordY = texCoordYBuilder;
+        ImmutableStringBuilder texCoordZBuilder(texCoordZ->length() + proj.length() + 2u);
+        texCoordZBuilder << '(' << *texCoordZ << proj << ')';
+        *texCoordZ = texCoordZBuilder;
     }
 }
 
@@ -586,9 +592,9 @@ void OutputIntegerTextureSampleFunctionComputations(
     const TextureFunctionHLSL::TextureFunction &textureFunction,
     const ShShaderOutput outputType,
     const ImmutableString &textureReference,
-    TString *texCoordX,
-    TString *texCoordY,
-    TString *texCoordZ)
+    ImmutableString *texCoordX,
+    ImmutableString *texCoordY,
+    ImmutableString *texCoordZ)
 {
     if (!IsIntegerSampler(textureFunction.sampler))
     {
@@ -676,9 +682,18 @@ void OutputIntegerTextureSampleFunctionComputations(
         }
 
         // Convert from normalized floating-point to integer
-        *texCoordX = "int(floor(width * frac(" + *texCoordX + ")))";
-        *texCoordY = "int(floor(height * frac(" + *texCoordY + ")))";
-        *texCoordZ = "face";
+        static const ImmutableString kXPrefix("int(floor(width * frac(");
+        static const ImmutableString kYPrefix("int(floor(height * frac(");
+        static const ImmutableString kSuffix(")))");
+        ImmutableStringBuilder texCoordXBuilder(kXPrefix.length() + texCoordX->length() +
+                                                kSuffix.length());
+        texCoordXBuilder << kXPrefix << *texCoordX << kSuffix;
+        *texCoordX = texCoordXBuilder;
+        ImmutableStringBuilder texCoordYBuilder(kYPrefix.length() + texCoordX->length() +
+                                                kSuffix.length());
+        texCoordYBuilder << kYPrefix << *texCoordY << kSuffix;
+        *texCoordY = texCoordYBuilder;
+        *texCoordZ = ImmutableString("face");
     }
     else if (textureFunction.method != TextureFunctionHLSL::TextureFunction::FETCH)
     {
@@ -833,9 +848,9 @@ void OutputTextureSampleFunctionReturnStatement(
     const ShShaderOutput outputType,
     const ImmutableString &textureReference,
     const ImmutableString &samplerReference,
-    const TString &texCoordX,
-    const TString &texCoordY,
-    const TString &texCoordZ)
+    const ImmutableString &texCoordX,
+    const ImmutableString &texCoordY,
+    const ImmutableString &texCoordZ)
 {
     out << "    return ";
 
@@ -1046,22 +1061,28 @@ void OutputTextureSampleFunctionReturnStatement(
 
 }  // Anonymous namespace
 
-TString TextureFunctionHLSL::TextureFunction::name() const
+ImmutableString TextureFunctionHLSL::TextureFunction::name() const
 {
-    TString name = "gl_texture";
+    static const ImmutableString kGlTextureName("gl_texture");
+
+    ImmutableString suffix(TextureTypeSuffix(this->sampler));
+
+    ImmutableStringBuilder name(kGlTextureName.length() + suffix.length() + 4u + 6u + 5u);
+
+    name << kGlTextureName;
 
     // We need to include full the sampler type in the function name to make the signature unique
     // on D3D11, where samplers are passed to texture functions as indices.
-    name += TextureTypeSuffix(this->sampler);
+    name << suffix;
 
     if (proj)
     {
-        name += "Proj";
+        name << "Proj";
     }
 
     if (offset)
     {
-        name += "Offset";
+        name << "Offset";
     }
 
     switch (method)
@@ -1071,22 +1092,22 @@ TString TextureFunctionHLSL::TextureFunction::name() const
         case BIAS:
             break;  // Extra parameter makes the signature unique
         case LOD:
-            name += "Lod";
+            name << "Lod";
             break;
         case LOD0:
-            name += "Lod0";
+            name << "Lod0";
             break;
         case LOD0BIAS:
-            name += "Lod0";
+            name << "Lod0";
             break;  // Extra parameter makes the signature unique
         case SIZE:
-            name += "Size";
+            name << "Size";
             break;
         case FETCH:
-            name += "Fetch";
+            name << "Fetch";
             break;
         case GRAD:
-            name += "Grad";
+            name << "Grad";
             break;
         default:
             UNREACHABLE();
@@ -1166,12 +1187,12 @@ bool TextureFunctionHLSL::TextureFunction::operator<(const TextureFunction &rhs)
            std::tie(rhs.sampler, rhs.coords, rhs.proj, rhs.offset, rhs.method);
 }
 
-TString TextureFunctionHLSL::useTextureFunction(const ImmutableString &name,
-                                                TBasicType samplerType,
-                                                int coords,
-                                                size_t argumentCount,
-                                                bool lod0,
-                                                sh::GLenum shaderType)
+ImmutableString TextureFunctionHLSL::useTextureFunction(const ImmutableString &name,
+                                                        TBasicType samplerType,
+                                                        int coords,
+                                                        size_t argumentCount,
+                                                        bool lod0,
+                                                        sh::GLenum shaderType)
 {
     TextureFunction textureFunction;
     textureFunction.sampler = samplerType;
@@ -1322,9 +1343,9 @@ void TextureFunctionHLSL::textureFunctionHeader(TInfoSinkBase &out,
         }
         else
         {
-            TString texCoordX("t.x");
-            TString texCoordY("t.y");
-            TString texCoordZ("t.z");
+            ImmutableString texCoordX("t.x");
+            ImmutableString texCoordY("t.y");
+            ImmutableString texCoordZ("t.z");
             ProjectTextureCoordinates(textureFunction, &texCoordX, &texCoordY, &texCoordZ);
             OutputIntegerTextureSampleFunctionComputations(out, textureFunction, outputType,
                                                            textureReference, &texCoordX, &texCoordY,

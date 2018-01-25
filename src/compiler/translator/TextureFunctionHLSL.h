@@ -40,7 +40,7 @@ class TextureFunctionHLSL final : angle::NonCopyable
             GRAD
         };
 
-        TString name() const;
+        ImmutableString name() const;
 
         bool operator<(const TextureFunction &rhs) const;
 
@@ -55,12 +55,12 @@ class TextureFunctionHLSL final : angle::NonCopyable
 
     // Returns the name of the texture function implementation to call.
     // The name that's passed in is the name of the GLSL texture function that it should implement.
-    TString useTextureFunction(const ImmutableString &name,
-                               TBasicType samplerType,
-                               int coords,
-                               size_t argumentCount,
-                               bool lod0,
-                               sh::GLenum shaderType);
+    ImmutableString useTextureFunction(const ImmutableString &name,
+                                       TBasicType samplerType,
+                                       int coords,
+                                       size_t argumentCount,
+                                       bool lod0,
+                                       sh::GLenum shaderType);
 
     void textureFunctionHeader(TInfoSinkBase &out,
                                const ShShaderOutput outputType,
