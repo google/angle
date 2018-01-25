@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e85c2e31_3958454d",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 237,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-01-25T15:23:05Z",
+      "side": 1,
+      "message": "For the tracking of deleted objects (and when they can be deleted), it seems like it would be less work to just associate the object with the current serial when they are deleted instead of updating a \"last used\" serial inside the draw call hot code. The drawback is that it would introduce a latency on reclaiming memory.",
+      "revId": "64cd5c842b48e399773baa5918e5a7a62de6fea2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ea93d3d4_59a1323d",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 785,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-01-25T15:23:05Z",
+      "side": 1,
+      "message": "nit: the pipeline layout isn\u0027t part of the pipeline desc yet.",
+      "revId": "64cd5c842b48e399773baa5918e5a7a62de6fea2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4518171b_fc266629",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 311,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-01-25T15:23:05Z",
+      "side": 1,
+      "message": "[1]",
+      "revId": "64cd5c842b48e399773baa5918e5a7a62de6fea2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bad94035_723e2d54",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 320,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-01-25T15:23:05Z",
+      "side": 1,
+      "message": "These two type aliases aren\u0027t specific to pipeline caching, maybe they could be moved/stay in vk_utils.h",
+      "revId": "64cd5c842b48e399773baa5918e5a7a62de6fea2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
