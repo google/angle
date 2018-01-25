@@ -81,6 +81,24 @@
       "revId": "65c58304559d64ce5151d4010f7446dadda3e14a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6b7871b0_22b67253",
+        "filename": "src/compiler/translator/ImmutableString.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-01-25T17:45:35Z",
+      "side": 1,
+      "message": "I agree that it would be safe in most cases, just as a matter of personal taste I think implicit conversions should be avoided.",
+      "parentUuid": "a527ac58_67925abd",
+      "revId": "65c58304559d64ce5151d4010f7446dadda3e14a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
