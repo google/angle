@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "e0109543_ffd98b5c",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 237,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-25T18:31:27Z",
+      "side": 1,
+      "message": "I\u0027m not sure what you mean. If you say, draw for 10 frames, don\u0027t use it for 10 frames, then delete it, how would you know the appropriate serial to check when releasing the object?",
+      "parentUuid": "e85c2e31_3958454d",
+      "revId": "64cd5c842b48e399773baa5918e5a7a62de6fea2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ea93d3d4_59a1323d",
         "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
         "patchSetId": 3
@@ -33,6 +51,24 @@
       "revId": "64cd5c842b48e399773baa5918e5a7a62de6fea2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f537ece3_5172c99f",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 785,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-25T18:31:27Z",
+      "side": 1,
+      "message": "I plan on using a universally compatible pipeline layout. For now this seems like a workable solution, but can re-visit this if things come up.",
+      "parentUuid": "ea93d3d4_59a1323d",
+      "revId": "64cd5c842b48e399773baa5918e5a7a62de6fea2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "f3ce5290_eac77cfb",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 311,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-25T18:31:27Z",
+      "side": 1,
+      "message": "?",
+      "parentUuid": "4518171b_fc266629",
+      "revId": "64cd5c842b48e399773baa5918e5a7a62de6fea2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "bad94035_723e2d54",
         "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
         "patchSetId": 3
@@ -67,6 +121,24 @@
       "revId": "64cd5c842b48e399773baa5918e5a7a62de6fea2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3afdac46_662345c7",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 320,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-25T18:31:27Z",
+      "side": 1,
+      "message": "I was thinking they were more specific to caching (combination of an object with a serial).",
+      "parentUuid": "bad94035_723e2d54",
+      "revId": "64cd5c842b48e399773baa5918e5a7a62de6fea2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
