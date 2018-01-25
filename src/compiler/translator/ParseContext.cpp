@@ -2294,7 +2294,7 @@ void TParseContext::checkLocalVariableConstStorageQualifier(const TQualifierWrap
         {
             error(storageQualifier.getLine(),
                   "Local variables can only use the const storage qualifier.",
-                  storageQualifier.getQualifierString().c_str());
+                  storageQualifier.getQualifierString());
         }
     }
 }
