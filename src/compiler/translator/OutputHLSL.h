@@ -112,7 +112,7 @@ class OutputHLSL : public TIntermTraverser
                        const char *inString,
                        const char *postString);
     void outputLineDirective(TInfoSinkBase &out, int line);
-    TString argumentString(const TIntermSymbol *symbol);
+    void writeParameter(const TIntermSymbol *symbol, TInfoSinkBase &out);
 
     void outputConstructor(TInfoSinkBase &out, Visit visit, TIntermAggregate *node);
     const TConstantUnion *writeConstantUnion(TInfoSinkBase &out,

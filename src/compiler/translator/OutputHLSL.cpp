@@ -419,7 +419,7 @@ void OutputHLSL::header(TInfoSinkBase &out,
         const ImmutableString &name = varying.second->name();
 
         // Program linking depends on this exact format
-        varyings += "static " + InterpolationString(type.getQualifier()) + " " + TypeString(type) +
+        varyings += TString("static ") + InterpolationString(type.getQualifier()) + " " + TypeString(type) +
                     " " + Decorate(name) + ArrayString(type) + " = " + zeroInitializer(type) +
                     ";\n";
     }
@@ -1776,7 +1776,7 @@ bool OutputHLSL::visitFunctionDefinition(Visit visit, TIntermFunctionDefinition 
         {
             ensureStructDefined(symbol->getType());
 
-            out << argumentString(symbol);
+            writeParameter(symbol, out);
 
             if (i < parameters->size() - 1)
             {
@@ -1894,7 +1894,7 @@ bool OutputHLSL::visitFunctionPrototype(Visit visit, TIntermFunctionPrototype *n
         TIntermSymbol *symbol = (*arguments)[i]->getAsSymbolNode();
         ASSERT(symbol != nullptr);
 
-        out << argumentString(symbol);
+        writeParameter(symbol, out);
 
         if (i < arguments->size() - 1)
         {
@@ -2642,7 +2642,7 @@ void OutputHLSL::outputLineDirective(TInfoSinkBase &out, int line)
     }
 }
 
-TString OutputHLSL::argumentString(const TIntermSymbol *symbol)
+void OutputHLSL::writeParameter(const TIntermSymbol *symbol, TInfoSinkBase &out)
 {
     TQualifier qualifier = symbol->getQualifier();
     const TType &type    = symbol->getType();
@@ -2665,20 +2665,21 @@ TString OutputHLSL::argumentString(const TIntermSymbol *symbol)
         {
             // Samplers are passed as indices to the sampler array.
             ASSERT(qualifier != EvqOut && qualifier != EvqInOut);
-            return "const uint " + nameStr + ArrayString(type);
+            out << "const uint " << nameStr << ArrayString(type);
+            return;
         }
         if (mOutputType == SH_HLSL_4_0_FL9_3_OUTPUT)
         {
-            return QualifierString(qualifier) + " " + TextureString(type.getBasicType()) +
-                   " texture_" + nameStr + ArrayString(type) + ", " + QualifierString(qualifier) +
-                   " " + SamplerString(type.getBasicType()) + " sampler_" + nameStr +
-                   ArrayString(type);
+            out << QualifierString(qualifier) << " " << TextureString(type.getBasicType())
+                << " texture_" << nameStr << ArrayString(type) << ", " << QualifierString(qualifier)
+                << " " << SamplerString(type.getBasicType()) << " sampler_" << nameStr
+                << ArrayString(type);
+            return;
         }
     }
 
-    TStringStream argString;
-    argString << QualifierString(qualifier) << " " << TypeString(type) << " " << nameStr
-              << ArrayString(type);
+    out << QualifierString(qualifier) << " " << TypeString(type) << " " << nameStr
+        << ArrayString(type);
 
     // If the structure parameter contains samplers, they need to be passed into the function as
     // separate parameters. HLSL doesn't natively support samplers in structs.
@@ -2695,28 +2696,25 @@ TString OutputHLSL::argumentString(const TIntermSymbol *symbol)
             const TType &samplerType = sampler->getType();
             if (mOutputType == SH_HLSL_4_1_OUTPUT)
             {
-                argString << ", const uint " << sampler->name() << ArrayString(samplerType);
+                out << ", const uint " << sampler->name() << ArrayString(samplerType);
             }
             else if (mOutputType == SH_HLSL_4_0_FL9_3_OUTPUT)
             {
                 ASSERT(IsSampler(samplerType.getBasicType()));
-                argString << ", " << QualifierString(qualifier) << " "
-                          << TextureString(samplerType.getBasicType()) << " texture_"
-                          << sampler->name() << ArrayString(samplerType) << ", "
-                          << QualifierString(qualifier) << " "
-                          << SamplerString(samplerType.getBasicType()) << " sampler_"
-                          << sampler->name() << ArrayString(samplerType);
+                out << ", " << QualifierString(qualifier) << " "
+                    << TextureString(samplerType.getBasicType()) << " texture_" << sampler->name()
+                    << ArrayString(samplerType) << ", " << QualifierString(qualifier) << " "
+                    << SamplerString(samplerType.getBasicType()) << " sampler_" << sampler->name()
+                    << ArrayString(samplerType);
             }
             else
             {
                 ASSERT(IsSampler(samplerType.getBasicType()));
-                argString << ", " << QualifierString(qualifier) << " " << TypeString(samplerType)
-                          << " " << sampler->name() << ArrayString(samplerType);
+                out << ", " << QualifierString(qualifier) << " " << TypeString(samplerType) << " "
+                    << sampler->name() << ArrayString(samplerType);
             }
         }
     }
-
-    return argString.str();
 }
 
 TString OutputHLSL::zeroInitializer(const TType &type)

@@ -287,7 +287,7 @@ class TIntermExpression : public TIntermTyped
 class TIntermRaw : public TIntermExpression
 {
   public:
-    TIntermRaw(const TType &type, const TString &rawText)
+    TIntermRaw(const TType &type, const ImmutableString &rawText)
         : TIntermExpression(type), mRawText(rawText)
     {
     }
@@ -301,7 +301,7 @@ class TIntermRaw : public TIntermExpression
 
     bool hasSideEffects() const override { return false; }
 
-    TString getRawText() const { return mRawText; }
+    const ImmutableString &getRawText() const { return mRawText; }
 
     void traverse(TIntermTraverser *it) override;
 
@@ -309,7 +309,7 @@ class TIntermRaw : public TIntermExpression
     bool replaceChildNode(TIntermNode *, TIntermNode *) override { return false; }
 
   protected:
-    TString mRawText;
+    ImmutableString mRawText;
 };
 
 // Constant folded node.

@@ -678,8 +678,8 @@ bool TOutputGLSLBase::visitBinary(Visit visit, TIntermBinary *node)
 
 bool TOutputGLSLBase::visitUnary(Visit visit, TIntermUnary *node)
 {
-    TString preString;
-    TString postString = ")";
+    const char *preString  = "";
+    const char *postString = ")";
 
     switch (node->getOp())
     {
@@ -780,7 +780,7 @@ bool TOutputGLSLBase::visitUnary(Visit visit, TIntermUnary *node)
             UNREACHABLE();
     }
 
-    writeTriplet(visit, preString.c_str(), nullptr, postString.c_str());
+    writeTriplet(visit, preString, nullptr, postString);
 
     return true;
 }

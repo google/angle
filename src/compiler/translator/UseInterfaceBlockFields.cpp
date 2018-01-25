@@ -43,7 +43,7 @@ void AddFieldUseStatements(const ShaderVariable &var,
                            TIntermSequence *sequence,
                            const TSymbolTable &symbolTable)
 {
-    ASSERT(var.name.find_last_of('[') == TString::npos);
+    ASSERT(var.name.find_last_of('[') == std::string::npos);
     TIntermSymbol *symbol = ReferenceGlobalVariable(ImmutableString(var.name), symbolTable);
     AddNodeUseStatements(symbol, sequence);
 }

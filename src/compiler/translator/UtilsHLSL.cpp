@@ -15,7 +15,7 @@
 namespace sh
 {
 
-TString SamplerString(const TBasicType type)
+const char *SamplerString(const TBasicType type)
 {
     if (IsShadowSampler(type))
     {
@@ -27,7 +27,7 @@ TString SamplerString(const TBasicType type)
     }
 }
 
-TString SamplerString(HLSLTextureGroup type)
+const char *SamplerString(HLSLTextureGroup type)
 {
     if (type >= HLSL_COMPARISON_SAMPLER_GROUP_BEGIN && type <= HLSL_COMPARISON_SAMPLER_GROUP_END)
     {
@@ -616,7 +616,7 @@ HLSLRWTextureGroup RWTextureGroup(const TBasicType type,
     return HLSL_RWTEXTURE_UNKNOWN;
 }
 
-TString RWTextureString(const HLSLRWTextureGroup RWTextureGroup)
+const char *RWTextureString(const HLSLRWTextureGroup RWTextureGroup)
 {
     switch (RWTextureGroup)
     {
@@ -657,7 +657,7 @@ TString RWTextureString(const HLSLRWTextureGroup RWTextureGroup)
     return "<unknown read and write texture type>";
 }
 
-TString RWTextureString(const TBasicType type, TLayoutImageInternalFormat imageInternalFormat)
+const char *RWTextureString(const TBasicType type, TLayoutImageInternalFormat imageInternalFormat)
 {
     return RWTextureString(RWTextureGroup(type, imageInternalFormat));
 }
@@ -974,7 +974,7 @@ TString QualifiedStructNameString(const TStructure &structure,
     return prefix + StructNameString(structure);
 }
 
-TString InterpolationString(TQualifier qualifier)
+const char *InterpolationString(TQualifier qualifier)
 {
     switch (qualifier)
     {
@@ -1005,7 +1005,7 @@ TString InterpolationString(TQualifier qualifier)
     return "";
 }
 
-TString QualifierString(TQualifier qualifier)
+const char *QualifierString(TQualifier qualifier)
 {
     switch (qualifier)
     {

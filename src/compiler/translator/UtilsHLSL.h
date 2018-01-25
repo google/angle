@@ -97,16 +97,16 @@ const char *TextureTypeSuffix(const TBasicType type,
                               TLayoutImageInternalFormat imageInternalFormat = EiifUnspecified);
 HLSLRWTextureGroup RWTextureGroup(const TBasicType type,
                                   TLayoutImageInternalFormat imageInternalFormat);
-TString RWTextureString(const HLSLRWTextureGroup textureGroup);
-TString RWTextureString(const TBasicType type, TLayoutImageInternalFormat imageInternalFormat);
+const char *RWTextureString(const HLSLRWTextureGroup textureGroup);
+const char *RWTextureString(const TBasicType type, TLayoutImageInternalFormat imageInternalFormat);
 const char *RWTextureGroupSuffix(const HLSLRWTextureGroup type);
 const char *RWTextureGroupSuffix(const TBasicType type,
                                  TLayoutImageInternalFormat imageInternalFormat);
 const char *RWTextureTypeSuffix(const TBasicType type,
                                 TLayoutImageInternalFormat imageInternalFormat);
 
-TString SamplerString(const TBasicType type);
-TString SamplerString(HLSLTextureGroup type);
+const char *SamplerString(const TBasicType type);
+const char *SamplerString(HLSLTextureGroup type);
 
 // Adds a prefix to user-defined names to avoid naming clashes.
 TString Decorate(const ImmutableString &string);
@@ -119,8 +119,8 @@ TString StructNameString(const TStructure &structure);
 TString QualifiedStructNameString(const TStructure &structure,
                                   bool useHLSLRowMajorPacking,
                                   bool useStd140Packing);
-TString InterpolationString(TQualifier qualifier);
-TString QualifierString(TQualifier qualifier);
+const char *InterpolationString(TQualifier qualifier);
+const char *QualifierString(TQualifier qualifier);
 // Parameters may need to be included in function names to disambiguate between overloaded
 // functions.
 TString DisambiguateFunctionName(const TIntermSequence *parameters);
