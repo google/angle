@@ -69,6 +69,24 @@
       "revId": "ac823c0a263be1dead6e6ce88b1bf865d3b4fb15",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3710607e_314dda38",
+        "filename": "src/compiler/translator/ImmutableString.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-01-25T08:41:37Z",
+      "side": 1,
+      "message": "Good suggestion, thanks! Done.",
+      "parentUuid": "e3da9451_9fa24797",
+      "revId": "ac823c0a263be1dead6e6ce88b1bf865d3b4fb15",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
