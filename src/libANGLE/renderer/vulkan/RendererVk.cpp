@@ -53,14 +53,14 @@ VkResult VerifyExtensionsPresent(const std::vector<VkExtensionProperties> &exten
     return VK_SUCCESS;
 }
 
-VkBool32 VKAPI_CALL DebugReportCallback(VkDebugReportFlagsEXT flags,
-                                        VkDebugReportObjectTypeEXT objectType,
-                                        uint64_t object,
-                                        size_t location,
-                                        int32_t messageCode,
-                                        const char *layerPrefix,
-                                        const char *message,
-                                        void *userData)
+VKAPI_ATTR VkBool32 VKAPI_CALL DebugReportCallback(VkDebugReportFlagsEXT flags,
+                                                   VkDebugReportObjectTypeEXT objectType,
+                                                   uint64_t object,
+                                                   size_t location,
+                                                   int32_t messageCode,
+                                                   const char *layerPrefix,
+                                                   const char *message,
+                                                   void *userData)
 {
     if ((flags & VK_DEBUG_REPORT_ERROR_BIT_EXT) != 0)
     {
