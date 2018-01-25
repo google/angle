@@ -39,6 +39,48 @@
       "revId": "65c58304559d64ce5151d4010f7446dadda3e14a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c897f0eb_7de5dfb7",
+        "filename": "src/compiler/translator/ImmutableString.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-01-25T17:36:41Z",
+      "side": 1,
+      "message": "It was a mistake. Now the function is gone from this patch.",
+      "parentUuid": "5849a035_4540b3a1",
+      "range": {
+        "startLine": 56,
+        "startChar": 25,
+        "endLine": 56,
+        "endChar": 30
+      },
+      "revId": "65c58304559d64ce5151d4010f7446dadda3e14a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a527ac58_67925abd",
+        "filename": "src/compiler/translator/ImmutableString.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-01-25T17:36:41Z",
+      "side": 1,
+      "message": "It\u0027s used in TextureFunctionHLSL.cpp line 111, where an ImmutableString is written to a stream.\n\nFor now I replaced it with an extra operator\u003c\u003c for output streams, but having an implicit conversion to const char * does simplify code in lots of other places as well, so we might reconsider this later. What\u0027s the specific issue with implicit conversion? Using const char * converted from ImmutableString should be safe in most places, since it has a guaranteed lifetime at least up to the end of the compilation.",
+      "parentUuid": "f782fc93_805f657d",
+      "revId": "65c58304559d64ce5151d4010f7446dadda3e14a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
