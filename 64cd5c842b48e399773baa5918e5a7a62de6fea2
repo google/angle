@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "3d2a3830_96901c94",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 237,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-25T18:51:51Z",
+      "side": 1,
+      "message": "This doesn\u0027t really make sense for Pipelines. If every Pipeline is conservatively considered to always be in-use, the cache eviction LRU/MRU algorithm will fail to evict any Pipelines, since none are not in use. No Pipelines will ever be freed.\n\nIt may work for API objects, though, since they have user-managed lifetimes.",
+      "parentUuid": "4081ee10_e56d0499",
+      "revId": "64cd5c842b48e399773baa5918e5a7a62de6fea2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ea93d3d4_59a1323d",
         "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
         "patchSetId": 3
@@ -104,6 +122,24 @@
       "revId": "64cd5c842b48e399773baa5918e5a7a62de6fea2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "042e9af1_93e40761",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-25T18:51:51Z",
+      "side": 1,
+      "message": "You\u0027re probably right, but it\u0027s not doing any harm ATM. Let\u0027s re-visit this later.",
+      "parentUuid": "4db101fe_2419bc1c",
+      "revId": "64cd5c842b48e399773baa5918e5a7a62de6fea2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -157,6 +193,24 @@
       "revId": "64cd5c842b48e399773baa5918e5a7a62de6fea2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "606ee2ab_812e8333",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 311,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-25T18:51:51Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "2b53a183_6ebf201f",
+      "revId": "64cd5c842b48e399773baa5918e5a7a62de6fea2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
