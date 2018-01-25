@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "9b9f8ed3_31017975",
+        "filename": "src/compiler/translator/ImmutableString.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-01-25T19:09:53Z",
+      "side": 1,
+      "message": "Not very hard, we\u0027d just need a constexpr memcmp which would be fairly trivial to do, though of course it might be slower than library memcmp.\n\nI was also thinking that we could try to initialize the data structures containing the builtins in a way where we\u0027d skip the memcmp entirely, just by comparing the const char * pointers which would be fairly easy to make unique. We also currently have some builtins that are inserted to the symbol table dynamically based on shader type etc. That could be changed by restructuring the code, but there are tradeoffs involved in that as well.\n\nI\u0027ll defer any changes to this until later. The next patch will add a lot of functionality so it should be a good point to discuss the design a bit further.",
+      "parentUuid": "84bc990d_ce62cc95",
+      "range": {
+        "startLine": 56,
+        "startChar": 9,
+        "endLine": 56,
+        "endChar": 17
+      },
+      "revId": "38554fd6b407049c9770632dba9148977548e814",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6c14cc80_a3f8bd39",
         "filename": "src/compiler/translator/ImmutableStringBuilder.h",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2018-01-25T18:23:13Z",
       "side": 1,
       "message": "if you don\u0027t expect to need this to be constexpr I would prefer if you could put these methods in a cpp file.",
+      "range": {
+        "startLine": 26,
+        "startChar": 4,
+        "endLine": 26,
+        "endChar": 66
+      },
+      "revId": "38554fd6b407049c9770632dba9148977548e814",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ee7dde41_ec32df8c",
+        "filename": "src/compiler/translator/ImmutableStringBuilder.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-01-25T19:09:53Z",
+      "side": 1,
+      "message": "Is it okay to keep them inlined for perfomance? It seems like putting them in the cpp file might be causing a bit of slowdown.",
+      "parentUuid": "6c14cc80_a3f8bd39",
       "range": {
         "startLine": 26,
         "startChar": 4,

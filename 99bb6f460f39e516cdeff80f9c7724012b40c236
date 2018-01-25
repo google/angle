@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6f7d6346_ce34f944",
+        "filename": "src/compiler/translator/ImmutableStringBuilder.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-01-25T19:09:53Z",
+      "side": 1,
+      "message": "The null terminator is added in conversion operator to ImmutableString so no need to add it here.",
+      "revId": "99bb6f460f39e516cdeff80f9c7724012b40c236",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
