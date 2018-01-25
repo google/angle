@@ -24,6 +24,7 @@
 #include "libANGLE/renderer/vulkan/ProgramVk.h"
 #include "libANGLE/renderer/vulkan/TextureVk.h"
 #include "libANGLE/renderer/vulkan/VertexArrayVk.h"
+#include "libANGLE/renderer/vulkan/vk_caps_utils.h"
 #include "libANGLE/renderer/vulkan/vk_format_utils.h"
 #include "platform/Platform.h"
 
@@ -54,14 +55,14 @@ VkResult VerifyExtensionsPresent(const std::vector<VkExtensionProperties> &exten
     return VK_SUCCESS;
 }
 
-VKAPI_ATTR VkBool32 VKAPI_CALL DebugReportCallback(VkDebugReportFlagsEXT flags,
-                                                   VkDebugReportObjectTypeEXT objectType,
-                                                   uint64_t object,
-                                                   size_t location,
-                                                   int32_t messageCode,
-                                                   const char *layerPrefix,
-                                                   const char *message,
-                                                   void *userData)
+VkBool32 VKAPI_CALL DebugReportCallback(VkDebugReportFlagsEXT flags,
+                                        VkDebugReportObjectTypeEXT objectType,
+                                        uint64_t object,
+                                        size_t location,
+                                        int32_t messageCode,
+                                        const char *layerPrefix,
+                                        const char *message,
+                                        void *userData)
 {
     if ((flags & VK_DEBUG_REPORT_ERROR_BIT_EXT) != 0)
     {
@@ -546,33 +547,10 @@ void RendererVk::ensureCapsInitialized() const
 {
     if (!mCapsInitialized)
     {
-        generateCaps(&mNativeCaps, &mNativeTextureCaps, &mNativeExtensions, &mNativeLimitations);
+        vk::GenerateCaps(mPhysicalDeviceProperties, &mNativeCaps, &mNativeTextureCaps,
+                         &mNativeExtensions, &mNativeLimitations);
         mCapsInitialized = true;
     }
-}
-
-void RendererVk::generateCaps(gl::Caps *outCaps,
-                              gl::TextureCapsMap * /*outTextureCaps*/,
-                              gl::Extensions *outExtensions,
-                              gl::Limitations * /* outLimitations */) const
-{
-    // TODO(jmadill): Caps.
-    outCaps->maxDrawBuffers      = 1;
-    outCaps->maxVertexAttributes     = gl::MAX_VERTEX_ATTRIBS;
-    outCaps->maxVertexAttribBindings = gl::MAX_VERTEX_ATTRIB_BINDINGS;
-    outCaps->maxVaryingVectors            = 16;
-    outCaps->maxTextureImageUnits         = 1;
-    outCaps->maxCombinedTextureImageUnits = 1;
-    outCaps->max2DTextureSize             = 1024;
-    outCaps->maxElementIndex              = std::numeric_limits<GLuint>::max() - 1;
-    outCaps->maxFragmentUniformVectors    = 8;
-    outCaps->maxVertexUniformVectors      = 8;
-    outCaps->maxColorAttachments          = 1;
-
-    // Enable this for simple buffer readback testing, but some functionality is missing.
-    // TODO(jmadill): Support full mapBufferRange extension.
-    outExtensions->mapBuffer      = true;
-    outExtensions->mapBufferRange = true;
 }
 
 const gl::Caps &RendererVk::getNativeCaps() const
