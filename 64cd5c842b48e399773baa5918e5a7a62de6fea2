@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "4081ee10_e56d0499",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 237,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-01-25T18:41:23Z",
+      "side": 1,
+      "message": "The scenario is like this:\n - Serial 0 to 9 draw using the pipeline\n - Serial 10 to 19 draw without the pipeline\n - Destroy the pipeline.\n\nIn this case the pipeline deletion would be gated on serial 19 to finish (or even 20 if there are some commands already buffered for submit 20).\n\nIt removes work from the draw-call hotspot at the cost of adding latency to the deletion of some objects. But as noted in the pipeline doc, most applications should destroy objects just after they\u0027re finished using them.",
+      "parentUuid": "e0109543_ffd98b5c",
+      "revId": "64cd5c842b48e399773baa5918e5a7a62de6fea2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ea93d3d4_59a1323d",
         "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
         "patchSetId": 3
@@ -72,6 +90,23 @@
     },
     {
       "key": {
+        "uuid": "4db101fe_2419bc1c",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-01-25T18:41:23Z",
+      "side": 1,
+      "message": "Leftover comment from a previous CL:\n\nThe constraints here are:\n 1 - access to the members are well-aligned\n 2 - the static_assert at [1] holds\nThe largest alignment of types used for the PipelineDesc is 4 for uint32_t and float. There is no need to add additional constraints since with alignas(4) all accesses will be correctly aligned.",
+      "revId": "64cd5c842b48e399773baa5918e5a7a62de6fea2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "4518171b_fc266629",
         "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
         "patchSetId": 3
@@ -101,6 +136,24 @@
       "side": 1,
       "message": "?",
       "parentUuid": "4518171b_fc266629",
+      "revId": "64cd5c842b48e399773baa5918e5a7a62de6fea2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2b53a183_6ebf201f",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 311,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-01-25T18:41:23Z",
+      "side": 1,
+      "message": "Somehow a draft didn\u0027t get published. Added now.",
+      "parentUuid": "f3ce5290_eac77cfb",
       "revId": "64cd5c842b48e399773baa5918e5a7a62de6fea2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
