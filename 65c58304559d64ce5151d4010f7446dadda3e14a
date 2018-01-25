@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f782fc93_805f657d",
+        "filename": "src/compiler/translator/ImmutableString.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-01-25T15:06:09Z",
+      "side": 1,
+      "message": "Where in the patch is this implicit conversion used? Ideally we would avoid them.",
+      "revId": "65c58304559d64ce5151d4010f7446dadda3e14a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5849a035_4540b3a1",
+        "filename": "src/compiler/translator/ImmutableString.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-01-25T15:06:09Z",
+      "side": 1,
+      "message": "Why return a constant pointer?",
+      "range": {
+        "startLine": 56,
+        "startChar": 25,
+        "endLine": 56,
+        "endChar": 30
+      },
+      "revId": "65c58304559d64ce5151d4010f7446dadda3e14a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
