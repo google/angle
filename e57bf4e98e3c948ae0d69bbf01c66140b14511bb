@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2108c02c_08734562",
+        "filename": "src/vulkan_support/BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 265,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-01-26T03:35:51Z",
+      "side": 1,
+      "message": "dumb question: how can you skip all this on android?",
+      "range": {
+        "startLine": 265,
+        "startChar": 5,
+        "endLine": 265,
+        "endChar": 15
+      },
+      "revId": "e57bf4e98e3c948ae0d69bbf01c66140b14511bb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "65a14448_811c2f03",
+        "filename": "src/vulkan_support/BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 776,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-01-26T03:35:51Z",
+      "side": 1,
+      "message": "same dumb question",
+      "range": {
+        "startLine": 776,
+        "startChar": 5,
+        "endLine": 776,
+        "endChar": 15
+      },
+      "revId": "e57bf4e98e3c948ae0d69bbf01c66140b14511bb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
