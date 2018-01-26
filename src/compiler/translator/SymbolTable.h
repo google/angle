@@ -90,6 +90,66 @@ class TSymbolTable : angle::NonCopyable
     // Functions are always declared at global scope.
     void declareUserDefinedFunction(TFunction *function, bool insertUnmangledName);
 
+    // These return the TFunction pointer to keep using to refer to this function.
+    const TFunction *markUserDefinedFunctionHasPrototypeDeclaration(
+        const ImmutableString &mangledName,
+        bool *hadPrototypeDeclarationOut);
+    const TFunction *setUserDefinedFunctionParameterNamesFromDefinition(const TFunction *function,
+                                                                        bool *wasDefinedOut);
+
+    // find() is guaranteed not to retain a reference to the ImmutableString, so an ImmutableString
+    // with a reference to a short-lived char * is fine to pass here.
+    const TSymbol *find(const ImmutableString &name, int shaderVersion) const;
+
+    const TSymbol *findGlobal(const ImmutableString &name) const;
+
+    const TSymbol *findBuiltIn(const ImmutableString &name, int shaderVersion) const;
+
+    const TSymbol *findBuiltIn(const ImmutableString &name,
+                               int shaderVersion,
+                               bool includeGLSLBuiltins) const;
+
+    void setDefaultPrecision(TBasicType type, TPrecision prec)
+    {
+        int indexOfLastElement = static_cast<int>(precisionStack.size()) - 1;
+        // Uses map operator [], overwrites the current value
+        (*precisionStack[indexOfLastElement])[type] = prec;
+    }
+
+    // Searches down the precisionStack for a precision qualifier
+    // for the specified TBasicType
+    TPrecision getDefaultPrecision(TBasicType type) const;
+
+    // This records invariant varyings declared through
+    // "invariant varying_name;".
+    void addInvariantVarying(const std::string &originalName);
+
+    // If this returns false, the varying could still be invariant
+    // if it is set as invariant during the varying variable
+    // declaration - this piece of information is stored in the
+    // variable's type, not here.
+    bool isVaryingInvariant(const std::string &originalName) const;
+
+    void setGlobalInvariant(bool invariant);
+
+    const TSymbolUniqueId nextUniqueId() { return TSymbolUniqueId(this); }
+
+    // Checks whether there is a built-in accessible by a shader with the specified version.
+    bool hasUnmangledBuiltInForShaderVersion(const char *name, int shaderVersion);
+
+    void initializeBuiltIns(sh::GLenum type,
+                            ShShaderSpec spec,
+                            const ShBuiltInResources &resources);
+    void clearCompilationResults();
+
+  private:
+    friend class TSymbolUniqueId;
+    int nextUniqueIdValue();
+
+    class TSymbolTableLevel;
+
+    ESymbolLevel currentLevel() const { return static_cast<ESymbolLevel>(table.size() - 1); }
+
     // The insert* entry points are used when initializing the symbol table with built-ins.
     // They return the created symbol / true in case the declaration was successful, and nullptr /
     // false if the declaration failed due to redefinition.
@@ -187,64 +247,6 @@ class TSymbolTable : angle::NonCopyable
                                               const TType *rvalue,
                                               const char *name);
 
-    // These return the TFunction pointer to keep using to refer to this function.
-    const TFunction *markUserDefinedFunctionHasPrototypeDeclaration(
-        const ImmutableString &mangledName,
-        bool *hadPrototypeDeclarationOut);
-    const TFunction *setUserDefinedFunctionParameterNamesFromDefinition(const TFunction *function,
-                                                                        bool *wasDefinedOut);
-
-    // find() is guaranteed not to retain a reference to the ImmutableString, so an ImmutableString
-    // with a reference to a short-lived char * is fine to pass here.
-    const TSymbol *find(const ImmutableString &name, int shaderVersion) const;
-
-    const TSymbol *findGlobal(const ImmutableString &name) const;
-
-    const TSymbol *findBuiltIn(const ImmutableString &name, int shaderVersion) const;
-
-    const TSymbol *findBuiltIn(const ImmutableString &name,
-                               int shaderVersion,
-                               bool includeGLSLBuiltins) const;
-
-    void setDefaultPrecision(TBasicType type, TPrecision prec)
-    {
-        int indexOfLastElement = static_cast<int>(precisionStack.size()) - 1;
-        // Uses map operator [], overwrites the current value
-        (*precisionStack[indexOfLastElement])[type] = prec;
-    }
-
-    // Searches down the precisionStack for a precision qualifier
-    // for the specified TBasicType
-    TPrecision getDefaultPrecision(TBasicType type) const;
-
-    // This records invariant varyings declared through
-    // "invariant varying_name;".
-    void addInvariantVarying(const std::string &originalName);
-
-    // If this returns false, the varying could still be invariant
-    // if it is set as invariant during the varying variable
-    // declaration - this piece of information is stored in the
-    // variable's type, not here.
-    bool isVaryingInvariant(const std::string &originalName) const;
-
-    void setGlobalInvariant(bool invariant);
-
-    const TSymbolUniqueId nextUniqueId() { return TSymbolUniqueId(this); }
-
-    // Checks whether there is a built-in accessible by a shader with the specified version.
-    bool hasUnmangledBuiltInForShaderVersion(const char *name, int shaderVersion);
-
-    void markBuiltInInitializationFinished();
-    void clearCompilationResults();
-
-  private:
-    friend class TSymbolUniqueId;
-    int nextUniqueIdValue();
-
-    class TSymbolTableLevel;
-
-    ESymbolLevel currentLevel() const { return static_cast<ESymbolLevel>(table.size() - 1); }
-
     TVariable *insertVariable(ESymbolLevel level,
                               const ImmutableString &name,
                               const TType *type,
@@ -260,6 +262,16 @@ class TSymbolTable : angle::NonCopyable
 
     bool hasUnmangledBuiltInAtLevel(const char *name, ESymbolLevel level);
 
+    void initSamplerDefaultPrecision(TBasicType samplerType);
+
+    void initializeBuiltInFunctions(sh::GLenum type,
+                                    ShShaderSpec spec,
+                                    const ShBuiltInResources &resources);
+    void initializeBuiltInVariables(sh::GLenum type,
+                                    ShShaderSpec spec,
+                                    const ShBuiltInResources &resources);
+    void markBuiltInInitializationFinished();
+
     std::vector<TSymbolTableLevel *> table;
     typedef TMap<TBasicType, TPrecision> PrecisionStackLevel;
     std::vector<PrecisionStackLevel *> precisionStack;
@@ -271,49 +283,6 @@ class TSymbolTable : angle::NonCopyable
     // compile time. http://anglebug.com/1432
     int mUserDefinedUniqueIdsStart;
 };
-
-template <TPrecision precision>
-bool TSymbolTable::insertConstInt(ESymbolLevel level, const ImmutableString &name, int value)
-{
-    TVariable *constant = new TVariable(
-        this, name, StaticType::Get<EbtInt, precision, EvqConst, 1, 1>(), SymbolType::BuiltIn);
-    TConstantUnion *unionArray = new TConstantUnion[1];
-    unionArray[0].setIConst(value);
-    constant->shareConstPointer(unionArray);
-    return insert(level, constant);
-}
-
-template <TPrecision precision>
-bool TSymbolTable::insertConstIntExt(ESymbolLevel level,
-                                     TExtension ext,
-                                     const ImmutableString &name,
-                                     int value)
-{
-    TVariable *constant = new TVariable(
-        this, name, StaticType::Get<EbtInt, precision, EvqConst, 1, 1>(), SymbolType::BuiltIn, ext);
-    TConstantUnion *unionArray = new TConstantUnion[1];
-    unionArray[0].setIConst(value);
-    constant->shareConstPointer(unionArray);
-    return insert(level, constant);
-}
-
-template <TPrecision precision>
-bool TSymbolTable::insertConstIvec3(ESymbolLevel level,
-                                    const ImmutableString &name,
-                                    const std::array<int, 3> &values)
-{
-    TVariable *constantIvec3 = new TVariable(
-        this, name, StaticType::Get<EbtInt, precision, EvqConst, 3, 1>(), SymbolType::BuiltIn);
-
-    TConstantUnion *unionArray = new TConstantUnion[3];
-    for (size_t index = 0u; index < 3u; ++index)
-    {
-        unionArray[index].setIConst(values[index]);
-    }
-    constantIvec3->shareConstPointer(unionArray);
-
-    return insert(level, constantIvec3);
-}
 
 }  // namespace sh
 

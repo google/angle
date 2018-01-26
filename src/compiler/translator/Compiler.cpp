@@ -708,54 +708,9 @@ bool TCompiler::InitBuiltInSymbolTable(const ShBuiltInResources &resources)
     compileResources = resources;
     setResourceString();
 
-    ASSERT(symbolTable.isEmpty());
-    symbolTable.push();  // COMMON_BUILTINS
-    symbolTable.push();  // ESSL1_BUILTINS
-    symbolTable.push();  // ESSL3_BUILTINS
-    symbolTable.push();  // ESSL3_1_BUILTINS
-    symbolTable.push();  // GLSL_BUILTINS
-
-    switch (shaderType)
-    {
-        case GL_FRAGMENT_SHADER:
-            symbolTable.setDefaultPrecision(EbtInt, EbpMedium);
-            break;
-        case GL_VERTEX_SHADER:
-        case GL_COMPUTE_SHADER:
-        case GL_GEOMETRY_SHADER_EXT:
-            symbolTable.setDefaultPrecision(EbtInt, EbpHigh);
-            symbolTable.setDefaultPrecision(EbtFloat, EbpHigh);
-            break;
-        default:
-            UNREACHABLE();
-    }
-    // Set defaults for sampler types that have default precision, even those that are
-    // only available if an extension exists.
-    // New sampler types in ESSL3 don't have default precision. ESSL1 types do.
-    initSamplerDefaultPrecision(EbtSampler2D);
-    initSamplerDefaultPrecision(EbtSamplerCube);
-    // SamplerExternalOES is specified in the extension to have default precision.
-    initSamplerDefaultPrecision(EbtSamplerExternalOES);
-    // SamplerExternal2DY2YEXT is specified in the extension to have default precision.
-    initSamplerDefaultPrecision(EbtSamplerExternal2DY2YEXT);
-    // It isn't specified whether Sampler2DRect has default precision.
-    initSamplerDefaultPrecision(EbtSampler2DRect);
-
-    symbolTable.setDefaultPrecision(EbtAtomicCounter, EbpHigh);
-
-    InsertBuiltInFunctions(shaderType, shaderSpec, resources, symbolTable);
-
-    IdentifyBuiltIns(shaderType, shaderSpec, resources, symbolTable);
-
-    symbolTable.markBuiltInInitializationFinished();
+    symbolTable.initializeBuiltIns(shaderType, shaderSpec, resources);
 
     return true;
-}
-
-void TCompiler::initSamplerDefaultPrecision(TBasicType samplerType)
-{
-    ASSERT(samplerType > EbtGuardSamplerBegin && samplerType < EbtGuardSamplerEnd);
-    symbolTable.setDefaultPrecision(samplerType, EbpLow);
 }
 
 void TCompiler::setResourceString()
