@@ -143,6 +143,30 @@
     },
     {
       "key": {
+        "uuid": "08852f5d_3b7dcb98",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-26T21:12:05Z",
+      "side": 1,
+      "message": "Maybe make it part of DisplayVk, so it can be executed conditionally. You could do it entirely outside of RendererVk, the only tricky part is that it is conditional on i the layers are to be enabled or not.",
+      "parentUuid": "03ba2aed_2fdc8572",
+      "range": {
+        "startLine": 189,
+        "startChar": 13,
+        "endLine": 189,
+        "endChar": 35
+      },
+      "revId": "e57bf4e98e3c948ae0d69bbf01c66140b14511bb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "c4e09b90_750ade44",
         "filename": "src/libANGLE/renderer/vulkan/android/DisplayVkAndroid.cpp",
         "patchSetId": 1
