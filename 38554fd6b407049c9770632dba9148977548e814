@@ -93,6 +93,30 @@
       "revId": "38554fd6b407049c9770632dba9148977548e814",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "46dbb41e_1c430e48",
+        "filename": "src/compiler/translator/ImmutableStringBuilder.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-01-26T10:01:38Z",
+      "side": 1,
+      "message": "Decided that it\u0027s not worth it to micro-optimize this at least for now and moved to the cpp file.",
+      "parentUuid": "ee7dde41_ec32df8c",
+      "range": {
+        "startLine": 26,
+        "startChar": 4,
+        "endLine": 26,
+        "endChar": 66
+      },
+      "revId": "38554fd6b407049c9770632dba9148977548e814",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
