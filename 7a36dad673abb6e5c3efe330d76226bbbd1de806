@@ -1,0 +1,257 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "37edc7f6_fe5c4a72",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-26T19:32:52Z",
+      "side": 1,
+      "message": "nit: can probably put this down below, ignoring this first workaround for intellisense",
+      "range": {
+        "startLine": 13,
+        "startChar": 0,
+        "endLine": 13,
+        "endChar": 51
+      },
+      "revId": "7a36dad673abb6e5c3efe330d76226bbbd1de806",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1f683a59_f96d250d",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 551,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-26T19:32:52Z",
+      "side": 1,
+      "message": "nit: I would put the const arguments before the out arguments.",
+      "range": {
+        "startLine": 551,
+        "startChar": 25,
+        "endLine": 551,
+        "endChar": 50
+      },
+      "revId": "7a36dad673abb6e5c3efe330d76226bbbd1de806",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6461ec79_565d944e",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-26T19:32:52Z",
+      "side": 1,
+      "message": "2018",
+      "range": {
+        "startLine": 2,
+        "startChar": 13,
+        "endLine": 2,
+        "endChar": 18
+      },
+      "revId": "7a36dad673abb6e5c3efe330d76226bbbd1de806",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5a54a1a5_dd1b639a",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-26T19:32:52Z",
+      "side": 1,
+      "message": "nit: missing a space",
+      "range": {
+        "startLine": 11,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 10
+      },
+      "revId": "7a36dad673abb6e5c3efe330d76226bbbd1de806",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4169b7cb_b9479fa8",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-26T19:32:52Z",
+      "side": 1,
+      "message": "can you comment and/or link to the Vulkan docs on limits?",
+      "range": {
+        "startLine": 37,
+        "startChar": 0,
+        "endLine": 38,
+        "endChar": 23
+      },
+      "revId": "7a36dad673abb6e5c3efe330d76226bbbd1de806",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0c414f14_13d38056",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-26T19:32:52Z",
+      "side": 1,
+      "message": "nit: small one sentence comment explaining why this is a TODO (also you can annotate this with your name, though you don\u0027t have to be the one to fix it)",
+      "range": {
+        "startLine": 62,
+        "startChar": 4,
+        "endLine": 62,
+        "endChar": 42
+      },
+      "revId": "7a36dad673abb6e5c3efe330d76226bbbd1de806",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ce849df4_47697ef2",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-26T19:32:52Z",
+      "side": 1,
+      "message": "nit: same comment about namespaces.",
+      "range": {
+        "startLine": 63,
+        "startChar": 1,
+        "endLine": 65,
+        "endChar": 1
+      },
+      "revId": "7a36dad673abb6e5c3efe330d76226bbbd1de806",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "92e174b6_07e8574b",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-26T19:32:52Z",
+      "side": 1,
+      "message": "2018",
+      "range": {
+        "startLine": 2,
+        "startChar": 13,
+        "endLine": 2,
+        "endChar": 18
+      },
+      "revId": "7a36dad673abb6e5c3efe330d76226bbbd1de806",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6cc1b66b_fcbb2729",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-26T19:32:52Z",
+      "side": 1,
+      "message": "nit: shouldn\u0027t need this",
+      "range": {
+        "startLine": 13,
+        "startChar": 0,
+        "endLine": 13,
+        "endChar": 17
+      },
+      "revId": "7a36dad673abb6e5c3efe330d76226bbbd1de806",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "27a157ee_4a58648f",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-26T19:32:52Z",
+      "side": 1,
+      "message": "nit: I don\u0027t think you need this, you can forward declare the gl:: types and include Caps.h in the cpp file.",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 26
+      },
+      "revId": "7a36dad673abb6e5c3efe330d76226bbbd1de806",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6d1a2f82_a70f5efd",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-26T19:32:52Z",
+      "side": 1,
+      "message": "nit: when making a namespace, close the namespace with a comment\n\n}  // namespace vk\n}  // namespace rx",
+      "range": {
+        "startLine": 30,
+        "startChar": 0,
+        "endLine": 30,
+        "endChar": 1
+      },
+      "revId": "7a36dad673abb6e5c3efe330d76226bbbd1de806",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
