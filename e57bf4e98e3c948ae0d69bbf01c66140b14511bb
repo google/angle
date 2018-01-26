@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "6996a99e_03446b75",
+        "filename": "BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 511,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-01-26T21:01:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "15c6d727_772868ec",
+      "range": {
+        "startLine": 509,
+        "startChar": 0,
+        "endLine": 511,
+        "endChar": 5
+      },
+      "revId": "e57bf4e98e3c948ae0d69bbf01c66140b14511bb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e7a05434_055c9fb2",
         "filename": "gni/angle.gni",
         "patchSetId": 1
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "939fc118_4b0d3d76",
+        "filename": "gni/angle.gni",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-01-26T21:01:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e7a05434_055c9fb2",
+      "range": {
+        "startLine": 28,
+        "startChar": 0,
+        "endLine": 31,
+        "endChar": 73
+      },
+      "revId": "e57bf4e98e3c948ae0d69bbf01c66140b14511bb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "09394c23_ac011386",
         "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
         "patchSetId": 1
@@ -59,6 +107,30 @@
       "writtenOn": "2018-01-26T15:22:48Z",
       "side": 1,
       "message": "how about, you use ANGLE_PLATFORM_ANDROID to initialize a bool, like in the tests? You could introduce an IsAndroid function. Then this code will always be compiled on every platform, and reduces the ifdef count to one? I think we should avoid using ifdef blocks as much as possible.",
+      "range": {
+        "startLine": 189,
+        "startChar": 13,
+        "endLine": 189,
+        "endChar": 35
+      },
+      "revId": "e57bf4e98e3c948ae0d69bbf01c66140b14511bb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "03ba2aed_2fdc8572",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-01-26T21:01:10Z",
+      "side": 1,
+      "message": "Changing working directory and setting environment variables doesn\u0027t make sense on Android.\nExecuted code should be either in APK or in system libraries.\nI am against compiling this code on Android.\n\nWould you like it better if I move this code into a helper function and have the #if there?",
+      "parentUuid": "09394c23_ac011386",
       "range": {
         "startLine": 189,
         "startChar": 13,
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "630813ad_8687dd48",
+        "filename": "src/libANGLE/renderer/vulkan/android/DisplayVkAndroid.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-01-26T21:01:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c4e09b90_750ade44",
+      "range": {
+        "startLine": 26,
+        "startChar": 11,
+        "endLine": 26,
+        "endChar": 47
+      },
+      "revId": "e57bf4e98e3c948ae0d69bbf01c66140b14511bb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bc2be30f_bfc38437",
         "filename": "src/libANGLE/renderer/vulkan/android/DisplayVkAndroid.cpp",
         "patchSetId": 1
@@ -114,6 +210,30 @@
       "revId": "e57bf4e98e3c948ae0d69bbf01c66140b14511bb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "195ab047_27e2e418",
+        "filename": "src/libANGLE/renderer/vulkan/android/DisplayVkAndroid.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-01-26T21:01:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bc2be30f_bfc38437",
+      "range": {
+        "startLine": 37,
+        "startChar": 0,
+        "endLine": 42,
+        "endChar": 46
+      },
+      "revId": "e57bf4e98e3c948ae0d69bbf01c66140b14511bb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -140,6 +260,30 @@
     },
     {
       "key": {
+        "uuid": "2b68c729_1041bcdb",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 192,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-01-26T21:01:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2da2f03e_3785047c",
+      "range": {
+        "startLine": 186,
+        "startChar": 0,
+        "endLine": 192,
+        "endChar": 5
+      },
+      "revId": "e57bf4e98e3c948ae0d69bbf01c66140b14511bb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2108c02c_08734562",
         "filename": "src/vulkan_support/BUILD.gn",
         "patchSetId": 1
@@ -163,6 +307,30 @@
     },
     {
       "key": {
+        "uuid": "69efcb61_66a55c70",
+        "filename": "src/vulkan_support/BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 265,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-01-26T21:01:10Z",
+      "side": 1,
+      "message": "On Android, loader is part of the OS.\nIt can\u0027t be in APK because of security permissions.",
+      "parentUuid": "2108c02c_08734562",
+      "range": {
+        "startLine": 265,
+        "startChar": 5,
+        "endLine": 265,
+        "endChar": 15
+      },
+      "revId": "e57bf4e98e3c948ae0d69bbf01c66140b14511bb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "65a14448_811c2f03",
         "filename": "src/vulkan_support/BUILD.gn",
         "patchSetId": 1
@@ -183,6 +351,30 @@
       "revId": "e57bf4e98e3c948ae0d69bbf01c66140b14511bb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3c381852_17c8c0fe",
+        "filename": "src/vulkan_support/BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 776,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-01-26T21:01:10Z",
+      "side": 1,
+      "message": "Also because of security permissions, Android uses a different mechanism for loading layers, without relying on JSON files.",
+      "parentUuid": "65a14448_811c2f03",
+      "range": {
+        "startLine": 776,
+        "startChar": 5,
+        "endLine": 776,
+        "endChar": 15
+      },
+      "revId": "e57bf4e98e3c948ae0d69bbf01c66140b14511bb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
