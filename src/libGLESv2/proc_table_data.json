@@ -344,7 +344,8 @@
     ],
 
     "GL_EXT_texture_storage": [
-        "glTexStorage2DEXT"
+        "glTexStorage2DEXT",
+        "glTexStorage3DEXT"
     ],
 
     "GL_EXT_robustness": [

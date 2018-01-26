@@ -574,6 +574,7 @@ ProcEntry g_procTable[] = {
     {"glTexStorage2DEXT", P(gl::TexStorage2DEXT)},
     {"glTexStorage2DMultisample", P(gl::TexStorage2DMultisample)},
     {"glTexStorage3D", P(gl::TexStorage3D)},
+    {"glTexStorage3DEXT", P(gl::TexStorage3DEXT)},
     {"glTexSubImage2D", P(gl::TexSubImage2D)},
     {"glTexSubImage2DRobustANGLE", P(gl::TexSubImage2DRobustANGLE)},
     {"glTexSubImage3D", P(gl::TexSubImage3D)},
@@ -646,5 +647,5 @@ ProcEntry g_procTable[] = {
     {"glWaitSync", P(gl::WaitSync)},
     {"glWeightPointerOES", P(gl::WeightPointerOES)}};
 
-size_t g_numProcs = 616;
+size_t g_numProcs = 617;
 }  // namespace egl
