@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "22428d97_9f87a166",
+        "filename": "util/random_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-01-26T03:27:53Z",
+      "side": 1,
+      "message": "typo",
+      "range": {
+        "startLine": 43,
+        "startChar": 15,
+        "endLine": 43,
+        "endChar": 19
+      },
+      "revId": "2d9ae71255807bf91ca29ff212802d11ca4735d9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
