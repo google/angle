@@ -16,6 +16,10 @@
 #include <ostream>
 #include <vector>
 
+#if defined(ANGLE_PLATFORM_ANDROID)
+#include <android/log.h>
+#endif
+
 #include "common/angleutils.h"
 #include "common/Optional.h"
 
@@ -160,10 +164,16 @@ void Trace(LogSeverity severity, const char *message)
         }
     }
 
-    if (severity == LOG_ERR)
+    if (severity == LOG_ERR || severity == LOG_WARN)
     {
+#if defined(ANGLE_PLATFORM_ANDROID)
+        __android_log_print((severity == LOG_ERR) ? ANDROID_LOG_ERROR : ANDROID_LOG_WARN, "ANGLE",
+                            "%s: %s\n", LogSeverityName(severity), str.c_str());
+#else
         // Note: we use fprintf because <iostream> includes static initializers.
-        fprintf(stderr, "%s: %s\n", LogSeverityName(severity), str.c_str());
+        fprintf((severity == LOG_ERR) ? stderr : stdout, "%s: %s\n", LogSeverityName(severity),
+                str.c_str());
+#endif
     }
 
 #if defined(ANGLE_PLATFORM_WINDOWS) && \
