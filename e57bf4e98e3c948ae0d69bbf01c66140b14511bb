@@ -167,6 +167,30 @@
     },
     {
       "key": {
+        "uuid": "9bac158e_f1ec74c2",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-01-26T22:08:17Z",
+      "side": 1,
+      "message": "Extracted into a scoped class per offline discussion.",
+      "parentUuid": "08852f5d_3b7dcb98",
+      "range": {
+        "startLine": 189,
+        "startChar": 13,
+        "endLine": 189,
+        "endChar": 35
+      },
+      "revId": "e57bf4e98e3c948ae0d69bbf01c66140b14511bb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c4e09b90_750ade44",
         "filename": "src/libANGLE/renderer/vulkan/android/DisplayVkAndroid.cpp",
         "patchSetId": 1
