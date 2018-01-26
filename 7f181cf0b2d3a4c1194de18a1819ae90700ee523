@@ -120,6 +120,30 @@
     },
     {
       "key": {
+        "uuid": "0c6bc405_f706cf80",
+        "filename": "src/vulkan_support/BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 824,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2018-01-26T15:34:29Z",
+      "side": 1,
+      "message": "According to Loader Layer Interface file if the \"library_path\" in the ICD json file contains just a filename (no full or relative path info) then library must live in the system\u0027s shared object search path. (https://github.com/KhronosGroup/Vulkan-LoaderAndValidationLayers/blob/master/loader/LoaderAndLayerInterface.md#icd-manifest-file-format)\n\nI did see generate_vulkan_layers_json.py but wasn\u0027t sure exactly what it was for.\n\nI\u0027m leaving shorting so I\u0027ll circle back to this after I return from vacation.",
+      "parentUuid": "a901a0a5_a8084dec",
+      "range": {
+        "startLine": 822,
+        "startChar": 0,
+        "endLine": 824,
+        "endChar": 3
+      },
+      "revId": "7f181cf0b2d3a4c1194de18a1819ae90700ee523",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5ceb267e_24b0a529",
         "filename": "src/vulkan_support/BUILD.gn",
         "patchSetId": 1
