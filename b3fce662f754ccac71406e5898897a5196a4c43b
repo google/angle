@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "daaf1d53_9b704efb",
+        "filename": "src/compiler/translator/ArrayReturnValueToOutParameter.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-26T18:50:16Z",
+      "side": 1,
+      "message": "you\u0027re sure this doesn\u0027t add an exit-time destructor or anything like that? Can you make this constexpr?",
+      "range": {
+        "startLine": 24,
+        "startChar": 0,
+        "endLine": 24,
+        "endChar": 63
+      },
+      "revId": "b3fce662f754ccac71406e5898897a5196a4c43b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a48d252b_64b04057",
+        "filename": "src/compiler/translator/EmulatePrecision.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-26T18:50:16Z",
+      "side": 1,
+      "message": "again same concern about non-constexpr static initializers",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 18,
+        "endChar": 39
+      },
+      "revId": "b3fce662f754ccac71406e5898897a5196a4c43b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ee74362b_4604cfe1",
+        "filename": "src/compiler/translator/ImmutableString.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-26T18:50:16Z",
+      "side": 1,
+      "message": "how many of these methods can be made constexpr?",
+      "range": {
+        "startLine": 52,
+        "startChar": 4,
+        "endLine": 52,
+        "endChar": 19
+      },
+      "revId": "b3fce662f754ccac71406e5898897a5196a4c43b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e380ca07_e79e28ff",
+        "filename": "src/compiler/translator/Initialize.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 771,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-26T18:50:16Z",
+      "side": 1,
+      "message": "I\u0027m almost tempted to allow an implicit conversion constructor to avoid this boilerplate.",
+      "range": {
+        "startLine": 771,
+        "startChar": 42,
+        "endLine": 771,
+        "endChar": 57
+      },
+      "revId": "b3fce662f754ccac71406e5898897a5196a4c43b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
