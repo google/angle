@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "afdd5e42_cd6cbb6d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 8
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-26T20:15:37Z",
+      "side": 1,
+      "message": "also, could you phrase this as Vulkan: Begin implementing caps mappings? You shouldn\u0027t need to redo the bots for this description change.",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 39
+      },
+      "revId": "3dd41de08eb5449af28d8c0c46be960146a7d0d6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
