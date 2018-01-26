@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3ac11e2e_d077c5b0",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/renderer9_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 297,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-01-26T22:14:03Z",
+      "side": 1,
+      "message": "nit: registers",
+      "range": {
+        "startLine": 297,
+        "startChar": 22,
+        "endLine": 297,
+        "endChar": 30
+      },
+      "revId": "fd5e30afbde132b9a74f0dc085a76791037a64ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
