@@ -151,6 +151,9 @@ config("angle_release_asserts_config") {
 
 config("angle_common_config") {
   include_dirs = [ "src/common/third_party/base" ]
+  if (is_android) {
+    libs = [ "log" ]
+  }
 }
 
 static_library("angle_common") {
