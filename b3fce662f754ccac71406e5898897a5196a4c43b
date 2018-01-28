@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "0ee59e88_84572535",
+        "filename": "src/compiler/translator/ArrayReturnValueToOutParameter.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-01-28T14:30:17Z",
+      "side": 1,
+      "message": "Made this constexpr. ImmutableString is trivially destructible so I wouldn\u0027t expect this to generate any code at exit time. Also fixed the same issue in a bunch of other places.",
+      "parentUuid": "daaf1d53_9b704efb",
+      "range": {
+        "startLine": 24,
+        "startChar": 0,
+        "endLine": 24,
+        "endChar": 63
+      },
+      "revId": "b3fce662f754ccac71406e5898897a5196a4c43b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a48d252b_64b04057",
         "filename": "src/compiler/translator/EmulatePrecision.cpp",
         "patchSetId": 13
@@ -45,6 +69,30 @@
       "revId": "b3fce662f754ccac71406e5898897a5196a4c43b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "118e4e70_493953d8",
+        "filename": "src/compiler/translator/EmulatePrecision.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-01-28T14:30:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a48d252b_64b04057",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 18,
+        "endChar": 39
+      },
+      "revId": "b3fce662f754ccac71406e5898897a5196a4c43b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "a1d1c057_3f6565ad",
+        "filename": "src/compiler/translator/EmulatePrecision.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 748,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-01-28T14:30:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "04cd6f5d_133f8c6a",
+      "range": {
+        "startLine": 748,
+        "startChar": 29,
+        "endLine": 748,
+        "endChar": 67
+      },
+      "revId": "b3fce662f754ccac71406e5898897a5196a4c43b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ee74362b_4604cfe1",
         "filename": "src/compiler/translator/ImmutableString.h",
         "patchSetId": 13
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "8266a1d6_afb68473",
+        "filename": "src/compiler/translator/ImmutableString.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-01-28T14:30:17Z",
+      "side": 1,
+      "message": "reinterpret_cast in AllocatePoolCharArray can\u0027t be constexpr. Making the hash function and most of the comparison functions constexpr works at least on Windows clang. I made them constexpr now and will run the bots to test if this is portable.",
+      "parentUuid": "ee74362b_4604cfe1",
+      "range": {
+        "startLine": 52,
+        "startChar": 4,
+        "endLine": 52,
+        "endChar": 19
+      },
+      "revId": "b3fce662f754ccac71406e5898897a5196a4c43b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e380ca07_e79e28ff",
         "filename": "src/compiler/translator/Initialize.cpp",
         "patchSetId": 13
@@ -105,6 +201,30 @@
       "writtenOn": "2018-01-26T18:50:16Z",
       "side": 1,
       "message": "I\u0027m almost tempted to allow an implicit conversion constructor to avoid this boilerplate.",
+      "range": {
+        "startLine": 771,
+        "startChar": 42,
+        "endLine": 771,
+        "endChar": 57
+      },
+      "revId": "b3fce662f754ccac71406e5898897a5196a4c43b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bc22bba7_63b06685",
+        "filename": "src/compiler/translator/Initialize.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 771,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-01-28T14:30:17Z",
+      "side": 1,
+      "message": "It\u0027s kind of tempting, but this code will be refactored further either way to allocate the symbols at compile time. There are other ways to make this nicer as well, let\u0027s see what\u0027s the best.",
+      "parentUuid": "e380ca07_e79e28ff",
       "range": {
         "startLine": 771,
         "startChar": 42,
@@ -134,6 +254,24 @@
     },
     {
       "key": {
+        "uuid": "d241fff2_8b494b6f",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 507,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-01-28T14:30:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4414b546_3fe7d3b0",
+      "revId": "b3fce662f754ccac71406e5898897a5196a4c43b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4ec2d1f4_450fa881",
         "filename": "src/compiler/translator/RegenerateStructNames.cpp",
         "patchSetId": 13
@@ -157,6 +295,30 @@
     },
     {
       "key": {
+        "uuid": "03fc3e13_c4f38f05",
+        "filename": "src/compiler/translator/RegenerateStructNames.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-01-28T14:30:17Z",
+      "side": 1,
+      "message": "Done, it\u0027s sizeof(uniqueId) * 2 though.",
+      "parentUuid": "4ec2d1f4_450fa881",
+      "range": {
+        "startLine": 60,
+        "startChar": 50,
+        "endLine": 60,
+        "endChar": 52
+      },
+      "revId": "b3fce662f754ccac71406e5898897a5196a4c43b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "26a62e80_0b8675a9",
         "filename": "src/compiler/translator/Symbol.cpp",
         "patchSetId": 13
@@ -177,6 +339,30 @@
       "revId": "b3fce662f754ccac71406e5898897a5196a4c43b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e82f97fb_6b597829",
+        "filename": "src/compiler/translator/Symbol.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-01-28T14:30:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "26a62e80_0b8675a9",
+      "range": {
+        "startLine": 54,
+        "startChar": 41,
+        "endLine": 54,
+        "endChar": 43
+      },
+      "revId": "b3fce662f754ccac71406e5898897a5196a4c43b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
