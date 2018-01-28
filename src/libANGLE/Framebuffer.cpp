@@ -1838,18 +1838,24 @@ bool Framebuffer::formsRenderingFeedbackLoopWith(const State &state) const
         }
     }
 
-    // Note: we assume the front and back masks are the same for WebGL.
     const FramebufferAttachment *stencil = getStencilbuffer();
-    ASSERT(dsState.stencilBackWritemask == dsState.stencilWritemask);
-    if (stencil && stencil->type() == GL_TEXTURE && dsState.stencilTest &&
-        dsState.stencilWritemask != 0)
+    if (dsState.stencilTest && stencil)
     {
-        // Skip the feedback loop check if depth/stencil point to the same resource.
-        if (!depth || *stencil != *depth)
+        GLuint stencilSize = stencil->getStencilSize();
+        ASSERT(stencilSize <= 8);
+        GLuint maxStencilValue = (1 << stencilSize) - 1;
+        // We assume the front and back masks are the same for WebGL.
+        ASSERT((dsState.stencilBackWritemask & maxStencilValue) ==
+               (dsState.stencilWritemask & maxStencilValue));
+        if (stencil->type() == GL_TEXTURE && dsState.stencilWritemask != 0)
         {
-            if (program->samplesFromTexture(state, stencil->id()))
+            // Skip the feedback loop check if depth/stencil point to the same resource.
+            if (!depth || *stencil != *depth)
             {
-                return true;
+                if (program->samplesFromTexture(state, stencil->id()))
+                {
+                    return true;
+                }
             }
         }
     }

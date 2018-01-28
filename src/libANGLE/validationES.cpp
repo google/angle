@@ -2515,28 +2515,35 @@ bool ValidateDrawBase(Context *context, GLenum mode, GLsizei count)
     Framebuffer *framebuffer = state.getDrawFramebuffer();
     if (context->getLimitations().noSeparateStencilRefsAndMasks || extensions.webglCompatibility)
     {
+        ASSERT(framebuffer);
         const FramebufferAttachment *dsAttachment =
             framebuffer->getStencilOrDepthStencilAttachment();
-        GLuint stencilBits                = dsAttachment ? dsAttachment->getStencilSize() : 0;
-        GLuint minimumRequiredStencilMask = (1 << stencilBits) - 1;
+        const GLuint stencilBits = dsAttachment ? dsAttachment->getStencilSize() : 0;
+        ASSERT(stencilBits <= 8);
+
         const DepthStencilState &depthStencilState = state.getDepthStencilState();
-
-        bool differentRefs = state.getStencilRef() != state.getStencilBackRef();
-        bool differentWritemasks =
-            (depthStencilState.stencilWritemask & minimumRequiredStencilMask) !=
-            (depthStencilState.stencilBackWritemask & minimumRequiredStencilMask);
-        bool differentMasks = (depthStencilState.stencilMask & minimumRequiredStencilMask) !=
-                              (depthStencilState.stencilBackMask & minimumRequiredStencilMask);
-
-        if (differentRefs || differentWritemasks || differentMasks)
+        if (depthStencilState.stencilTest && stencilBits > 0)
         {
-            if (!extensions.webglCompatibility)
+            GLuint maxStencilValue = (1 << stencilBits) - 1;
+
+            bool differentRefs =
+                clamp(state.getStencilRef(), 0, static_cast<GLint>(maxStencilValue)) !=
+                clamp(state.getStencilBackRef(), 0, static_cast<GLint>(maxStencilValue));
+            bool differentWritemasks = (depthStencilState.stencilWritemask & maxStencilValue) !=
+                                       (depthStencilState.stencilBackWritemask & maxStencilValue);
+            bool differentMasks = (depthStencilState.stencilMask & maxStencilValue) !=
+                                  (depthStencilState.stencilBackMask & maxStencilValue);
+
+            if (differentRefs || differentWritemasks || differentMasks)
             {
-                ERR() << "This ANGLE implementation does not support separate front/back stencil "
-                         "writemasks, reference values, or stencil mask values.";
+                if (!extensions.webglCompatibility)
+                {
+                    ERR() << "This ANGLE implementation does not support separate front/back "
+                             "stencil writemasks, reference values, or stencil mask values.";
+                }
+                ANGLE_VALIDATION_ERR(context, InvalidOperation(), StencilReferenceMaskOrMismatch);
+                return false;
             }
-            ANGLE_VALIDATION_ERR(context, InvalidOperation(), StencilReferenceMaskOrMismatch);
-            return false;
         }
     }
 
