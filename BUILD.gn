@@ -506,6 +506,7 @@ static_library("libANGLE") {
       sources += rebase_path(gles_gypi.libangle_vulkan_xcb_sources, ".", "src")
     }
     deps += [ "src/vulkan_support:angle_vulkan" ]
+    public_deps += [ "src/vulkan_support:vulkan_headers" ]
   }
 
   if (angle_enable_null) {

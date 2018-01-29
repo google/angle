@@ -384,6 +384,7 @@ class PipelineCache final : angle::NonCopyable
 
     void destroy(VkDevice device);
 
+    void populate(const vk::PipelineDesc &desc, vk::Pipeline &&pipeline);
     vk::Error getPipeline(VkDevice device,
                           const vk::RenderPass &compatibleRenderPass,
                           const vk::PipelineLayout &pipelineLayout,

@@ -259,6 +259,12 @@ if (is_win || is_linux || is_android || is_mac) {
           rebase_path(perftests_gypi.angle_perf_tests_win_sources, ".", "../..")
     }
 
+    if (angle_enable_vulkan) {
+      sources += rebase_path(perftests_gypi.angle_perf_tests_vulkan_sources,
+                             ".",
+                             "../..")
+    }
+
     if (build_with_chromium) {
       sources += [ "//gpu/angle_perftests_main.cc" ]
     } else {

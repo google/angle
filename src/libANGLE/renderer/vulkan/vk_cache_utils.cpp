@@ -793,8 +793,13 @@ vk::Error PipelineCache::getPipeline(VkDevice device,
     }
 
     vk::Pipeline newPipeline;
-    ANGLE_TRY(desc.initializePipeline(device, compatibleRenderPass, pipelineLayout, vertexModule,
-                                      fragmentModule, &newPipeline));
+
+    // This "if" is left here for the benefit of VulkanPipelineCachePerfTest.
+    if (device != VK_NULL_HANDLE)
+    {
+        ANGLE_TRY(desc.initializePipeline(device, compatibleRenderPass, pipelineLayout,
+                                          vertexModule, fragmentModule, &newPipeline));
+    }
 
     // The Serial will be updated outside of this query.
     auto insertedItem =
@@ -802,6 +807,17 @@ vk::Error PipelineCache::getPipeline(VkDevice device,
     *pipelineOut = &insertedItem.first->second;
 
     return vk::NoError();
+}
+
+void PipelineCache::populate(const vk::PipelineDesc &desc, vk::Pipeline &&pipeline)
+{
+    auto item = mPayload.find(desc);
+    if (item != mPayload.end())
+    {
+        return;
+    }
+
+    mPayload.emplace(desc, vk::PipelineAndSerial(std::move(pipeline), Serial()));
 }
 
 }  // namespace rx

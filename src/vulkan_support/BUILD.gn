@@ -181,18 +181,33 @@ if (spirv_use_commit_id) {
   }
 }
 
-config("vulkan_generate_helper_files_config") {
-  include_dirs = [
-    vulkan_gen_dir,
-    "$vulkan_layers_dir/include",
+config("vulkan_headers_config") {
+  include_dirs = [ "$vulkan_layers_dir/include" ]
+}
+
+# Vulkan headers only, no compiled sources.
+source_set("vulkan_headers") {
+  sources = [
+    "$vulkan_layers_dir/include/vulkan/vk_icd.h",
+    "$vulkan_layers_dir/include/vulkan/vk_layer.h",
+    "$vulkan_layers_dir/include/vulkan/vk_platform.h",
+    "$vulkan_layers_dir/include/vulkan/vk_sdk_platform.h",
+    "$vulkan_layers_dir/include/vulkan/vulkan.h",
+    "$vulkan_layers_dir/include/vulkan/vulkan.hpp",
   ]
+  public_configs = [ ":vulkan_headers_config" ]
+}
+
+config("vulkan_generated_files_config") {
+  include_dirs = [ vulkan_gen_dir ]
 }
 
 group("vulkan_generate_helper_files") {
   public_deps = [
     ":spirv_tools_external_revision_generate",
+    ":vulkan_headers",
   ]
-  public_configs = [ ":vulkan_generate_helper_files_config" ]
+  public_configs = [ ":vulkan_generated_files_config" ]
   foreach(script_and_dep, helper_script_and_deps) {
     target_name = script_and_dep[0]
     public_deps += [ ":$target_name" ]
@@ -300,6 +315,9 @@ static_library("vulkan_loader") {
   }
   deps = [
     ":vulkan_generate_helper_files",
+  ]
+  public_deps = [
+    ":vulkan_headers",
   ]
   configs += [ ":vulkan_internal_config" ]
   public_configs = [
@@ -893,6 +911,9 @@ group("angle_vulkan") {
   deps = [
     ":glslang",
     ":vulkan_loader",
+  ]
+  public_deps = [
+    ":vulkan_headers",
   ]
   data_deps = [
     ":vulkan_gen_json_files",
