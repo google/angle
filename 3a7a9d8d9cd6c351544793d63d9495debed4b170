@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "530c4095_c5479f7b",
+        "filename": "src/tests/deqp_support/deqp_gles3_test_expectations.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-29T15:36:22Z",
+      "side": 1,
+      "message": "I think I should be able to remove these.",
+      "range": {
+        "startLine": 79,
+        "startChar": 0,
+        "endLine": 82,
+        "endChar": 123
+      },
+      "revId": "3a7a9d8d9cd6c351544793d63d9495debed4b170",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
