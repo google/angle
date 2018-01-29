@@ -104,6 +104,19 @@ ANGLEPlatform::ANGLEPlatform()
         m_nativeDisplayFactoryRegistry.registerFactory(glFactory);
     }
 
+#if (DE_OS == DE_OS_ANDROID) || (DE_OS == DE_OS_WIN32) || (DE_OS == DE_OS_UNIX)
+    {
+        std::vector<eglw::EGLAttrib> vkAttribs;
+        vkAttribs.push_back(EGL_PLATFORM_ANGLE_TYPE_ANGLE);
+        vkAttribs.push_back(EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE);
+        vkAttribs.push_back(EGL_NONE);
+
+        auto *vkFactory =
+            new ANGLENativeDisplayFactory("angle-vk", "ANGLE Vulkan Display", vkAttribs, &mEvents);
+        m_nativeDisplayFactoryRegistry.registerFactory(vkFactory);
+    }
+#endif
+
     {
         std::vector<eglw::EGLAttrib> nullAttribs;
         nullAttribs.push_back(EGL_PLATFORM_ANGLE_TYPE_ANGLE);
