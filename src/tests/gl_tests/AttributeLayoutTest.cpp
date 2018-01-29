@@ -353,20 +353,20 @@ void AttributeLayoutTest::GetTestCases(void)
     // 2. one memory, sequential
     mTestCases.push_back({Attrib(M0, 0, 8, mCoord), Attrib(M0, 96, 12, mColor)});
 
-    // 3. buffer and memory
+    // 3. one memory, interleaved
+    mTestCases.push_back({Attrib(M0, 0, 20, mCoord), Attrib(M0, 8, 20, mColor)});
+
+    // 4. buffer and memory
     mTestCases.push_back({Attrib(B0, 0, 8, mCoord), Attrib(M0, 0, 12, mColor)});
+
+    // 5. stride != size
+    mTestCases.push_back({Attrib(B0, 0, 16, mCoord), Attrib(B1, 0, 12, mColor)});
 
     if (IsVulkan())
     {
         std::cout << "cases skipped on Vulkan: integer data, non-zero buffer offsets" << std::endl;
         return;
     }
-
-    // 4. stride != size - ANGLE bug 2310
-    mTestCases.push_back({Attrib(B0, 0, 16, mCoord), Attrib(B1, 0, 12, mColor)});
-
-    // 5. one memory, interleaved
-    mTestCases.push_back({Attrib(M0, 0, 20, mCoord), Attrib(M0, 8, 20, mColor)});
 
     // 6. one buffer, sequential
     mTestCases.push_back({Attrib(B0, 0, 8, mCoord), Attrib(B0, 96, 12, mColor)});

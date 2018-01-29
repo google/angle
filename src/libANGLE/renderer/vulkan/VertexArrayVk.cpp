@@ -225,7 +225,7 @@ void VertexArrayVk::updatePackedInputInfo(uint32_t attribIndex,
     size_t attribSize = gl::ComputeVertexAttributeTypeSize(attrib);
     ASSERT(attribSize <= std::numeric_limits<uint16_t>::max());
 
-    bindingDesc.stride    = static_cast<uint16_t>(attribSize);
+    bindingDesc.stride    = static_cast<uint16_t>(binding.getStride());
     bindingDesc.inputRate = static_cast<uint16_t>(
         binding.getDivisor() > 0 ? VK_VERTEX_INPUT_RATE_INSTANCE : VK_VERTEX_INPUT_RATE_VERTEX);
 
