@@ -5815,16 +5815,15 @@ TIntermTyped *TParseContext::addNonConstructorFunctionCall(const TString &name,
     // First find by unmangled name to check whether the function name has been
     // hidden by a variable name or struct typename.
     // If a function is found, check for one with a matching argument list.
-    bool builtIn;
-    const TSymbol *symbol = symbolTable.find(name, mShaderVersion, &builtIn);
+    const TSymbol *symbol = symbolTable.find(name, mShaderVersion);
     if (symbol != nullptr && !symbol->isFunction())
     {
         error(loc, "function name expected", name.c_str());
     }
     else
     {
-        symbol = symbolTable.find(TFunction::GetMangledNameFromCall(name, *arguments),
-                                  mShaderVersion, &builtIn);
+        symbol =
+            symbolTable.find(TFunction::GetMangledNameFromCall(name, *arguments), mShaderVersion);
         if (symbol == nullptr)
         {
             error(loc, "no matching overloaded function found", name.c_str());
@@ -5835,12 +5834,12 @@ TIntermTyped *TParseContext::addNonConstructorFunctionCall(const TString &name,
             //
             // A declared function.
             //
-            if (builtIn && fnCandidate->extension() != TExtension::UNDEFINED)
+            if (fnCandidate->extension() != TExtension::UNDEFINED)
             {
                 checkCanUseExtension(loc, fnCandidate->extension());
             }
             TOperator op = fnCandidate->getBuiltInOp();
-            if (builtIn && op != EOpNull)
+            if (fnCandidate->symbolType() == SymbolType::BuiltIn && op != EOpNull)
             {
                 // A function call mapped to a built-in operation.
                 if (fnCandidate->getParamCount() == 1)
@@ -5867,14 +5866,13 @@ TIntermTyped *TParseContext::addNonConstructorFunctionCall(const TString &name,
             }
             else
             {
-                // This is a real function call
+                // This is a real function call.
                 TIntermAggregate *callNode = nullptr;
 
-                // If builtIn == false, the function is user defined - could be an overloaded
-                // built-in as well.
-                // if builtIn == true, it's a builtIn function with no op associated with it.
-                // This needs to happen after the function info including name is set.
-                if (builtIn)
+                // If the symbol type is not BuiltIn, the function is user defined - could be an
+                // overloaded built-in as well. if the symbol type is BuiltIn, it's a built-in
+                // function with no op associated with it.
+                if (fnCandidate->symbolType() == SymbolType::BuiltIn)
                 {
                     callNode = TIntermAggregate::CreateBuiltInFunctionCall(*fnCandidate, arguments);
                     checkTextureOffsetConst(callNode);

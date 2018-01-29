@@ -139,10 +139,7 @@ const TFunction *TSymbolTable::setUserDefinedFunctionParameterNamesFromDefinitio
     return firstDeclaration;
 }
 
-const TSymbol *TSymbolTable::find(const TString &name,
-                                  int shaderVersion,
-                                  bool *builtIn,
-                                  bool *sameScope) const
+const TSymbol *TSymbolTable::find(const TString &name, int shaderVersion) const
 {
     int level       = currentLevel();
     TSymbol *symbol = nullptr;
@@ -158,12 +155,8 @@ const TSymbol *TSymbolTable::find(const TString &name,
             level--;
 
         symbol = table[level]->find(name);
-    } while (symbol == nullptr && --level >= 0);
-
-    if (builtIn)
-        *builtIn = (level <= LAST_BUILTIN_LEVEL);
-    if (sameScope)
-        *sameScope = (level == currentLevel());
+        level--;
+    } while (symbol == nullptr && level >= 0);
 
     return symbol;
 }

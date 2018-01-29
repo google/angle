@@ -188,10 +188,7 @@ class TSymbolTable : angle::NonCopyable
     const TFunction *setUserDefinedFunctionParameterNamesFromDefinition(const TFunction *function,
                                                                         bool *wasDefinedOut);
 
-    const TSymbol *find(const TString &name,
-                        int shaderVersion,
-                        bool *builtIn   = nullptr,
-                        bool *sameScope = nullptr) const;
+    const TSymbol *find(const TString &name, int shaderVersion) const;
 
     const TSymbol *findGlobal(const TString &name) const;
 
