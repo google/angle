@@ -31,15 +31,13 @@
 //
 
 #include <array>
-#include <assert.h>
-#include <set>
+#include <memory>
 
 #include "common/angleutils.h"
 #include "compiler/translator/ExtensionBehavior.h"
 #include "compiler/translator/ImmutableString.h"
 #include "compiler/translator/InfoSink.h"
 #include "compiler/translator/IntermNode.h"
-#include "compiler/translator/StaticType.h"
 #include "compiler/translator/Symbol.h"
 
 namespace sh
@@ -62,19 +60,17 @@ const int GLOBAL_LEVEL       = 5;
 class TSymbolTable : angle::NonCopyable
 {
   public:
-    TSymbolTable() : mUniqueIdCounter(0), mUserDefinedUniqueIdsStart(-1)
-    {
-        // The symbol table cannot be used until push() is called, but
-        // the lack of an initial call to push() can be used to detect
-        // that the symbol table has not been preloaded with built-ins.
-    }
+    TSymbolTable();
+    // To start using the symbol table after construction:
+    // * initializeBuiltIns() needs to be called.
+    // * push() needs to be called to push the global level.
 
     ~TSymbolTable();
 
     // When the symbol table is initialized with the built-ins, there should
     // 'push' calls, so that built-ins are at level 0 and the shader
     // globals are at level 1.
-    bool isEmpty() const { return table.empty(); }
+    bool isEmpty() const { return mTable.empty(); }
     bool atBuiltInLevel() const { return currentLevel() <= LAST_BUILTIN_LEVEL; }
     bool atGlobalLevel() const { return currentLevel() == GLOBAL_LEVEL; }
 
@@ -109,12 +105,7 @@ class TSymbolTable : angle::NonCopyable
                                int shaderVersion,
                                bool includeGLSLBuiltins) const;
 
-    void setDefaultPrecision(TBasicType type, TPrecision prec)
-    {
-        int indexOfLastElement = static_cast<int>(precisionStack.size()) - 1;
-        // Uses map operator [], overwrites the current value
-        (*precisionStack[indexOfLastElement])[type] = prec;
-    }
+    void setDefaultPrecision(TBasicType type, TPrecision prec);
 
     // Searches down the precisionStack for a precision qualifier
     // for the specified TBasicType
@@ -146,18 +137,24 @@ class TSymbolTable : angle::NonCopyable
     friend class TSymbolUniqueId;
     int nextUniqueIdValue();
 
+    class TSymbolTableBuiltInLevel;
     class TSymbolTableLevel;
 
-    ESymbolLevel currentLevel() const { return static_cast<ESymbolLevel>(table.size() - 1); }
+    void pushBuiltInLevel();
+
+    ESymbolLevel currentLevel() const
+    {
+        return static_cast<ESymbolLevel>(mTable.size() + LAST_BUILTIN_LEVEL);
+    }
 
     // The insert* entry points are used when initializing the symbol table with built-ins.
     // They return the created symbol / true in case the declaration was successful, and nullptr /
     // false if the declaration failed due to redefinition.
     TVariable *insertVariable(ESymbolLevel level, const ImmutableString &name, const TType *type);
-    TVariable *insertVariableExt(ESymbolLevel level,
-                                 TExtension ext,
-                                 const ImmutableString &name,
-                                 const TType *type);
+    void insertVariableExt(ESymbolLevel level,
+                           TExtension ext,
+                           const ImmutableString &name,
+                           const TType *type);
     bool insertVariable(ESymbolLevel level, TVariable *variable);
     bool insertStructType(ESymbolLevel level, TStructure *str);
     bool insertInterfaceBlock(ESymbolLevel level, TInterfaceBlock *interfaceBlock);
@@ -272,9 +269,13 @@ class TSymbolTable : angle::NonCopyable
                                     const ShBuiltInResources &resources);
     void markBuiltInInitializationFinished();
 
-    std::vector<TSymbolTableLevel *> table;
+    std::vector<std::unique_ptr<TSymbolTableBuiltInLevel>> mBuiltInTable;
+    std::vector<std::unique_ptr<TSymbolTableLevel>> mTable;
+
+    // There's one precision stack level for predefined precisions and then one level for each scope
+    // in table.
     typedef TMap<TBasicType, TPrecision> PrecisionStackLevel;
-    std::vector<PrecisionStackLevel *> precisionStack;
+    std::vector<std::unique_ptr<PrecisionStackLevel>> mPrecisionStack;
 
     int mUniqueIdCounter;
 

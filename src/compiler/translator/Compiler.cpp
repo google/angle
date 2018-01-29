@@ -336,7 +336,8 @@ TIntermBlock *TCompiler::compileTreeImpl(const char *const shaderStrings[],
 
     // We preserve symbols at the built-in level from compile-to-compile.
     // Start pushing the user-defined symbols at global level.
-    TScopedSymbolTableLevel scopedSymbolLevel(&symbolTable);
+    TScopedSymbolTableLevel globalLevel(&symbolTable);
+    ASSERT(symbolTable.atGlobalLevel());
 
     // Parse shader.
     if (PaParseStrings(numStrings - firstSource, &shaderStrings[firstSource], nullptr,
