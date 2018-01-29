@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "aa4c05d7_197e1976",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-29T14:30:03Z",
+      "side": 1,
+      "message": "nit: you can restate this as angle::Optional\u003cstd::string\u003e",
+      "range": {
+        "startLine": 150,
+        "startChar": 0,
+        "endLine": 151,
+        "endChar": 29
+      },
+      "revId": "b3faeef4952362960474dbee0d75decb48b6d6c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4d782059_ed8831df",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 310,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-29T14:30:03Z",
+      "side": 1,
+      "message": "see below comment. Not too worries about the err/warning then, you can make both a warning, or you can pass a parameter that is like \"bool errorOnMissingLayers\" or something",
+      "range": {
+        "startLine": 283,
+        "startChar": 0,
+        "endLine": 310,
+        "endChar": 5
+      },
+      "revId": "b3faeef4952362960474dbee0d75decb48b6d6c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b08e093c_467ac67d",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 471,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-29T14:30:03Z",
+      "side": 1,
+      "message": "maybe you can wrap this into a helper function with the similar block above?",
+      "range": {
+        "startLine": 454,
+        "startChar": 0,
+        "endLine": 471,
+        "endChar": 5
+      },
+      "revId": "b3faeef4952362960474dbee0d75decb48b6d6c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
