@@ -20,7 +20,6 @@ TSymbolUniqueId::TSymbolUniqueId(const TSymbol &symbol) : mId(symbol.uniqueId().
 {
 }
 
-TSymbolUniqueId::TSymbolUniqueId(const TSymbolUniqueId &) = default;
 TSymbolUniqueId &TSymbolUniqueId::operator=(const TSymbolUniqueId &) = default;
 
 int TSymbolUniqueId::get() const

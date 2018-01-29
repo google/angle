@@ -144,11 +144,6 @@ TFunction::TFunction(TSymbolTable *symbolTable,
     ASSERT(name != nullptr || symbolType == SymbolType::AngleInternal || tOp != EOpNull);
 }
 
-TFunction::~TFunction()
-{
-    // Just here to discourage the compiler from inlining it.
-}
-
 void TFunction::clearParameters()
 {
     parameters.clear();

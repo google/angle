@@ -30,7 +30,7 @@ using Microsoft::WRL::ComPtr;
 class NonCopyable
 {
   protected:
-    NonCopyable() = default;
+    constexpr NonCopyable() = default;
     ~NonCopyable() = default;
 
   private:

@@ -22,13 +22,15 @@ class TSymbolUniqueId
     POOL_ALLOCATOR_NEW_DELETE();
     explicit TSymbolUniqueId(TSymbolTable *symbolTable);
     explicit TSymbolUniqueId(const TSymbol &symbol);
-    TSymbolUniqueId(const TSymbolUniqueId &);
+    constexpr TSymbolUniqueId(const TSymbolUniqueId &) = default;
     TSymbolUniqueId &operator=(const TSymbolUniqueId &);
     bool operator==(const TSymbolUniqueId &) const;
 
     int get() const;
 
   private:
+    constexpr TSymbolUniqueId(int staticId) : mId(staticId) {}
+
     int mId;
 };
 

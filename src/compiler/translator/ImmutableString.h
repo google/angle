@@ -54,7 +54,8 @@ class ImmutableString
     {
     }
 
-    ImmutableString(const ImmutableString &) = default;
+    constexpr ImmutableString(const ImmutableString &) = default;
+
     ImmutableString &operator=(const ImmutableString &) = default;
 
     constexpr const char *data() const { return mData ? mData : ""; }

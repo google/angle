@@ -38,10 +38,9 @@ class TSymbol : angle::NonCopyable
             SymbolType symbolType,
             TExtension extension = TExtension::UNDEFINED);
 
-    virtual ~TSymbol()
-    {
-        // don't delete name, it's from the pool
-    }
+    // Note that we don't have a virtual destructor in order to support constexpr symbols. Data is
+    // either statically allocated or pool allocated.
+    ~TSymbol() = default;
 
     // Don't call name() or getMangledName() for empty symbols (symbolType == SymbolType::Empty).
     ImmutableString name() const;
@@ -56,6 +55,14 @@ class TSymbol : angle::NonCopyable
     TExtension extension() const { return mExtension; }
 
   protected:
+    constexpr TSymbol(const TSymbolUniqueId &id,
+                      const ImmutableString &name,
+                      SymbolType symbolType,
+                      TExtension extension)
+        : mName(name), mUniqueId(id), mSymbolType(symbolType), mExtension(extension)
+    {
+    }
+
     const ImmutableString mName;
 
   private:
@@ -75,7 +82,6 @@ class TVariable : public TSymbol
               SymbolType symbolType,
               TExtension ext = TExtension::UNDEFINED);
 
-    ~TVariable() override {}
     bool isVariable() const override { return true; }
     const TType &getType() const { return *mType; }
 
@@ -84,6 +90,15 @@ class TVariable : public TSymbol
     void shareConstPointer(const TConstantUnion *constArray) { unionArray = constArray; }
 
   private:
+    constexpr TVariable(const TSymbolUniqueId &id,
+                        const ImmutableString &name,
+                        SymbolType symbolType,
+                        TExtension extension,
+                        const TType *type)
+        : TSymbol(id, name, symbolType, extension), mType(type), unionArray(nullptr)
+    {
+    }
+
     const TType *mType;
     const TConstantUnion *unionArray;
 };
@@ -189,8 +204,6 @@ class TFunction : public TSymbol
               bool knownToNotHaveSideEffects,
               TOperator tOp        = EOpNull,
               TExtension extension = TExtension::UNDEFINED);
-
-    virtual ~TFunction();
 
     bool isFunction() const override { return true; }
 
