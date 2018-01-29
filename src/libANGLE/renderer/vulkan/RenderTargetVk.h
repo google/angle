@@ -33,6 +33,8 @@ class RenderTargetVk final : public FramebufferAttachmentRenderTarget
   public:
     RenderTargetVk();
 
+    void reset();
+
     const vk::Format *format;
     vk::Image *image;
     vk::ImageView *imageView;

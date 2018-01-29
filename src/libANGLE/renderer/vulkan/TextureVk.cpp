@@ -70,6 +70,14 @@ gl::Error TextureVk::setImage(const gl::Context *context,
         }
     }
 
+    mRenderTarget.reset();
+
+    // Early-out on empty textures, don't create a zero-sized storage.
+    if (size.width == 0 || size.height == 0 || size.depth == 0)
+    {
+        return gl::NoError();
+    }
+
     // TODO(jmadill): support other types of textures.
     ASSERT(target == GL_TEXTURE_2D);
 
