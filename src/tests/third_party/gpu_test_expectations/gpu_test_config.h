@@ -55,6 +55,7 @@ class GPU_EXPORT GPUTestConfig {
     kAPID3D11 = 1 << 1,
     kAPIGLDesktop = 1 << 2,
     kAPIGLES = 1 << 3,
+    kAPIVulkan = 1 << 4,
   };
 
   GPUTestConfig();

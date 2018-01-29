@@ -1,6 +1,6 @@
-diff -u -rupN gpu_test_expectations_reverted/HowToMakeChanges.md gpu_test_expectations/HowToMakeChanges.md
+diff -rupN --strip-trailing-cr gpu_test_expectations_reverted/HowToMakeChanges.md gpu_test_expectations/HowToMakeChanges.md
 --- gpu_test_expectations_reverted/HowToMakeChanges.md	1969-12-31 19:00:00.000000000 -0500
-+++ gpu_test_expectations/HowToMakeChanges.md	2016-09-13 10:06:02.000000000 -0400
++++ gpu_test_expectations/HowToMakeChanges.md	2018-01-29 15:28:13.820679300 -0500
 @@ -0,0 +1,22 @@
 +Because the ```gpu_test_expectations``` directory is based on parts of Chromium's ```gpu/config```
 +directory, we want to keep a patch of the changes added to make it compile with ANGLE. This
@@ -24,9 +24,9 @@ diff -u -rupN gpu_test_expectations_reverted/HowToMakeChanges.md gpu_test_expect
 + * ```git diff HEAD~ (`)ls(`) > angle-mods.patch```,```git add angle-mods.patch```, ```git commit --amend```
 + * ```git rebase -i``` to squash the three patches into one.
 +
-diff -u -rupN gpu_test_expectations_reverted/angle_config.h gpu_test_expectations/angle_config.h
+diff -rupN --strip-trailing-cr gpu_test_expectations_reverted/angle_config.h gpu_test_expectations/angle_config.h
 --- gpu_test_expectations_reverted/angle_config.h	1969-12-31 19:00:00.000000000 -0500
-+++ gpu_test_expectations/angle_config.h	2017-09-11 17:18:07.000000000 -0400
++++ gpu_test_expectations/angle_config.h	2017-09-11 17:09:26.892352900 -0400
 @@ -0,0 +1,73 @@
 +//
 +// Copyright 2015 The ANGLE Project Authors. All rights reserved.
@@ -101,9 +101,9 @@ diff -u -rupN gpu_test_expectations_reverted/angle_config.h gpu_test_expectation
 +// clang-format on
 +
 +#endif
-diff -u -rupN gpu_test_expectations_reverted/gpu_info.cc gpu_test_expectations/gpu_info.cc
---- gpu_test_expectations_reverted/gpu_info.cc	2017-10-30 14:30:27.000000000 -0400
-+++ gpu_test_expectations/gpu_info.cc	2017-10-27 13:46:39.000000000 -0400
+diff -rupN --strip-trailing-cr gpu_test_expectations_reverted/gpu_info.cc gpu_test_expectations/gpu_info.cc
+--- gpu_test_expectations_reverted/gpu_info.cc	2018-01-29 15:22:50.931147900 -0500
++++ gpu_test_expectations/gpu_info.cc	2017-10-23 13:31:30.199473500 -0400
 @@ -4,7 +4,7 @@
  
  #include <stdint.h>
@@ -122,9 +122,9 @@ diff -u -rupN gpu_test_expectations_reverted/gpu_info.cc gpu_test_expectations/g
    return gpu;
  }
  
-diff -u -rupN gpu_test_expectations_reverted/gpu_info.h gpu_test_expectations/gpu_info.h
---- gpu_test_expectations_reverted/gpu_info.h	2017-10-30 14:30:27.000000000 -0400
-+++ gpu_test_expectations/gpu_info.h	2017-10-27 13:46:39.000000000 -0400
+diff -rupN --strip-trailing-cr gpu_test_expectations_reverted/gpu_info.h gpu_test_expectations/gpu_info.h
+--- gpu_test_expectations_reverted/gpu_info.h	2018-01-29 15:22:50.934249500 -0500
++++ gpu_test_expectations/gpu_info.h	2017-10-23 13:31:30.199473500 -0400
 @@ -2,8 +2,8 @@
  // Use of this source code is governed by a BSD-style license that can be
  // found in the LICENSE file.
@@ -156,9 +156,9 @@ diff -u -rupN gpu_test_expectations_reverted/gpu_info.h gpu_test_expectations/gp
  
 -#endif  // GPU_CONFIG_GPU_INFO_H_
 +#endif  // ANGLE_GPU_CONFIG_GPU_INFO_H_
-diff -u -rupN gpu_test_expectations_reverted/gpu_test_config.cc gpu_test_expectations/gpu_test_config.cc
---- gpu_test_expectations_reverted/gpu_test_config.cc	2017-10-30 14:30:27.000000000 -0400
-+++ gpu_test_expectations/gpu_test_config.cc	2017-10-30 14:44:19.000000000 -0400
+diff -rupN --strip-trailing-cr gpu_test_expectations_reverted/gpu_test_config.cc gpu_test_expectations/gpu_test_config.cc
+--- gpu_test_expectations_reverted/gpu_test_config.cc	2018-01-29 15:22:50.938244500 -0500
++++ gpu_test_expectations/gpu_test_config.cc	2018-01-29 15:41:35.330454900 -0500
 @@ -2,21 +2,53 @@
  // Use of this source code is governed by a BSD-style license that can be
  // found in the LICENSE file.
@@ -258,6 +258,15 @@ diff -u -rupN gpu_test_expectations_reverted/gpu_test_config.cc gpu_test_expecta
  }  // namespace anonymous
  
  GPUTestConfig::GPUTestConfig()
+@@ -112,7 +163,7 @@ void GPUTestConfig::set_build_type(int32
+ }
+ 
+ void GPUTestConfig::set_api(int32_t api) {
+-  DCHECK_EQ(0, api & ~(kAPID3D9 | kAPID3D11 | kAPIGLDesktop | kAPIGLES));
++  DCHECK_EQ(0, api & ~(kAPID3D9 | kAPID3D11 | kAPIGLDesktop | kAPIGLES | kAPIVulkan));
+   api_ = api;
+ }
+ 
 @@ -260,7 +311,7 @@ bool GPUTestBotConfig::LoadCurrentConfig
      GPUInfo my_gpu_info;
      CollectInfoResult result = CollectBasicGraphicsInfo(&my_gpu_info);
@@ -276,9 +285,9 @@ diff -u -rupN gpu_test_expectations_reverted/gpu_test_config.cc gpu_test_expecta
      rt = false;
    }
  #if defined(NDEBUG)
-diff -u -rupN gpu_test_expectations_reverted/gpu_test_config.h gpu_test_expectations/gpu_test_config.h
---- gpu_test_expectations_reverted/gpu_test_config.h	2017-10-30 14:30:27.000000000 -0400
-+++ gpu_test_expectations/gpu_test_config.h	2017-10-27 13:46:39.000000000 -0400
+diff -rupN --strip-trailing-cr gpu_test_expectations_reverted/gpu_test_config.h gpu_test_expectations/gpu_test_config.h
+--- gpu_test_expectations_reverted/gpu_test_config.h	2018-01-29 15:22:50.941246600 -0500
++++ gpu_test_expectations/gpu_test_config.h	2018-01-29 15:41:01.117639000 -0500
 @@ -2,16 +2,15 @@
  // Use of this source code is governed by a BSD-style license that can be
  // found in the LICENSE file.
@@ -299,16 +308,24 @@ diff -u -rupN gpu_test_expectations_reverted/gpu_test_config.h gpu_test_expectat
  
  namespace gpu {
  
-@@ -145,5 +144,5 @@ class GPU_EXPORT GPUTestBotConfig : publ
+@@ -56,6 +55,7 @@ class GPU_EXPORT GPUTestConfig {
+     kAPID3D11 = 1 << 1,
+     kAPIGLDesktop = 1 << 2,
+     kAPIGLES = 1 << 3,
++    kAPIVulkan = 1 << 4,
+   };
+ 
+   GPUTestConfig();
+@@ -145,5 +145,5 @@ class GPU_EXPORT GPUTestBotConfig : publ
  
  }  // namespace gpu
  
 -#endif  // GPU_CONFIG_GPU_TEST_CONFIG_H_
 +#endif  // ANGLE_GPU_CONFIG_GPU_TEST_CONFIG_H_
  
-diff -u -rupN gpu_test_expectations_reverted/gpu_test_config_mac.h gpu_test_expectations/gpu_test_config_mac.h
+diff -rupN --strip-trailing-cr gpu_test_expectations_reverted/gpu_test_config_mac.h gpu_test_expectations/gpu_test_config_mac.h
 --- gpu_test_expectations_reverted/gpu_test_config_mac.h	1969-12-31 19:00:00.000000000 -0500
-+++ gpu_test_expectations/gpu_test_config_mac.h	2017-10-30 14:44:19.000000000 -0400
++++ gpu_test_expectations/gpu_test_config_mac.h	2017-10-31 10:53:42.173222700 -0400
 @@ -0,0 +1,24 @@
 +//
 +// Copyright 2015 The ANGLE Project Authors. All rights reserved.
@@ -334,9 +351,9 @@ diff -u -rupN gpu_test_expectations_reverted/gpu_test_config_mac.h gpu_test_expe
 +} // namespace angle
 +
 +#endif // ANGLE_GPU_TEST_EXPECTATIONS_GPU_TEST_CONFIG_MAC_H_
-diff -u -rupN gpu_test_expectations_reverted/gpu_test_config_mac.mm gpu_test_expectations/gpu_test_config_mac.mm
+diff -rupN --strip-trailing-cr gpu_test_expectations_reverted/gpu_test_config_mac.mm gpu_test_expectations/gpu_test_config_mac.mm
 --- gpu_test_expectations_reverted/gpu_test_config_mac.mm	1969-12-31 19:00:00.000000000 -0500
-+++ gpu_test_expectations/gpu_test_config_mac.mm	2017-10-30 14:31:32.000000000 -0400
++++ gpu_test_expectations/gpu_test_config_mac.mm	2017-10-31 10:53:42.174247100 -0400
 @@ -0,0 +1,49 @@
 +// Copyright (c) 2012 The Chromium Authors. All rights reserved.
 +// Use of this source code is governed by a BSD-style license that can be
@@ -387,9 +404,9 @@ diff -u -rupN gpu_test_expectations_reverted/gpu_test_config_mac.mm gpu_test_exp
 +}
 +
 +} // namespace angle
-diff -u -rupN gpu_test_expectations_reverted/gpu_test_expectations_parser.cc gpu_test_expectations/gpu_test_expectations_parser.cc
---- gpu_test_expectations_reverted/gpu_test_expectations_parser.cc	2017-10-30 14:30:35.000000000 -0400
-+++ gpu_test_expectations/gpu_test_expectations_parser.cc	2017-10-27 13:46:39.000000000 -0400
+diff -rupN --strip-trailing-cr gpu_test_expectations_reverted/gpu_test_expectations_parser.cc gpu_test_expectations/gpu_test_expectations_parser.cc
+--- gpu_test_expectations_reverted/gpu_test_expectations_parser.cc	2018-01-29 15:22:50.947689800 -0500
++++ gpu_test_expectations/gpu_test_expectations_parser.cc	2018-01-29 15:42:52.940626000 -0500
 @@ -2,17 +2,47 @@
  // Use of this source code is governed by a BSD-style license that can be
  // found in the LICENSE file.
@@ -445,7 +462,23 @@ diff -u -rupN gpu_test_expectations_reverted/gpu_test_expectations_parser.cc gpu
  
  namespace gpu {
  
-@@ -153,9 +183,9 @@ const char* kErrorMessage[] = {
+@@ -62,6 +92,7 @@ enum Token {
+   kConfigD3D11,
+   kConfigGLDesktop,
+   kConfigGLES,
++  kConfigVulkan,
+   // expectation
+   kExpectationPass,
+   kExpectationFail,
+@@ -115,6 +146,7 @@ const TokenInfo kTokenData[] = {
+     {"d3d11", GPUTestConfig::kAPID3D11},
+     {"opengl", GPUTestConfig::kAPIGLDesktop},
+     {"gles", GPUTestConfig::kAPIGLES},
++    {"vulkan", GPUTestConfig::kAPIVulkan},
+     {"pass", GPUTestExpectationsParser::kGpuTestPass},
+     {"fail", GPUTestExpectationsParser::kGpuTestFail},
+     {"flaky", GPUTestExpectationsParser::kGpuTestFlaky},
+@@ -153,9 +185,9 @@ const char* kErrorMessage[] = {
  };
  
  Token ParseToken(const std::string& word) {
@@ -457,7 +490,7 @@ diff -u -rupN gpu_test_expectations_reverted/gpu_test_expectations_parser.cc gpu
      return kConfigGPUDeviceID;
  
    for (int32_t i = 0; i < kNumberOfExactMatchTokens; ++i) {
-@@ -211,8 +241,8 @@ bool GPUTestExpectationsParser::LoadTest
+@@ -211,8 +243,8 @@ bool GPUTestExpectationsParser::LoadTest
    return rt;
  }
  
@@ -468,7 +501,31 @@ diff -u -rupN gpu_test_expectations_reverted/gpu_test_expectations_parser.cc gpu
    entries_.clear();
    error_messages_.clear();
  
-@@ -542,20 +572,17 @@ bool GPUTestExpectationsParser::DetectCo
+@@ -279,6 +311,7 @@ bool GPUTestExpectationsParser::ParseCon
+       case kConfigD3D11:
+       case kConfigGLDesktop:
+       case kConfigGLES:
++      case kConfigVulkan:
+       case kConfigGPUDeviceID:
+         if (token == kConfigGPUDeviceID) {
+           if (!UpdateTestConfig(config, tokens[i], 0))
+@@ -340,6 +373,7 @@ bool GPUTestExpectationsParser::ParseLin
+       case kConfigD3D11:
+       case kConfigGLDesktop:
+       case kConfigGLES:
++      case kConfigVulkan:
+       case kConfigGPUDeviceID:
+         // MODIFIERS, could be in any order, need at least one.
+         if (stage != kLineParserConfigs && stage != kLineParserBugID) {
+@@ -493,6 +527,7 @@ bool GPUTestExpectationsParser::UpdateTe
+     case kConfigD3D11:
+     case kConfigGLDesktop:
+     case kConfigGLES:
++    case kConfigVulkan:
+       if ((config->api() & kTokenData[token].flag) != 0) {
+         PushErrorMessage(kErrorMessage[kErrorEntryWithAPIConflicts],
+                          line_number);
+@@ -542,20 +577,17 @@ bool GPUTestExpectationsParser::DetectCo
  
  void GPUTestExpectationsParser::PushErrorMessage(
      const std::string& message, size_t line_number) {
@@ -494,9 +551,9 @@ diff -u -rupN gpu_test_expectations_reverted/gpu_test_expectations_parser.cc gpu
  }
  
  GPUTestExpectationsParser:: GPUTestExpectationEntry::GPUTestExpectationEntry()
-diff -u -rupN gpu_test_expectations_reverted/gpu_test_expectations_parser.h gpu_test_expectations/gpu_test_expectations_parser.h
---- gpu_test_expectations_reverted/gpu_test_expectations_parser.h	2017-10-30 14:30:35.000000000 -0400
-+++ gpu_test_expectations/gpu_test_expectations_parser.h	2017-09-11 17:18:07.000000000 -0400
+diff -rupN --strip-trailing-cr gpu_test_expectations_reverted/gpu_test_expectations_parser.h gpu_test_expectations/gpu_test_expectations_parser.h
+--- gpu_test_expectations_reverted/gpu_test_expectations_parser.h	2018-01-29 15:22:50.951678900 -0500
++++ gpu_test_expectations/gpu_test_expectations_parser.h	2017-09-11 17:09:26.897372200 -0400
 @@ -2,8 +2,8 @@
  // Use of this source code is governed by a BSD-style license that can be
  // found in the LICENSE file.

@@ -163,7 +163,7 @@ void GPUTestConfig::set_build_type(int32_t build_type) {
 }
 
 void GPUTestConfig::set_api(int32_t api) {
-  DCHECK_EQ(0, api & ~(kAPID3D9 | kAPID3D11 | kAPIGLDesktop | kAPIGLES));
+  DCHECK_EQ(0, api & ~(kAPID3D9 | kAPID3D11 | kAPIGLDesktop | kAPIGLES | kAPIVulkan));
   api_ = api;
 }
 
