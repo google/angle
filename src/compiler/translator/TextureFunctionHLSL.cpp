@@ -11,7 +11,6 @@
 
 #include "compiler/translator/TextureFunctionHLSL.h"
 
-#include "compiler/translator/ImmutableStringBuilder.h"
 #include "compiler/translator/UtilsHLSL.h"
 
 namespace sh
@@ -105,8 +104,8 @@ void OutputIntTexCoordWraps(TInfoSinkBase &out,
 
 void OutputHLSL4SampleFunctionPrefix(TInfoSinkBase &out,
                                      const TextureFunctionHLSL::TextureFunction &textureFunction,
-                                     const ImmutableString &textureReference,
-                                     const ImmutableString &samplerReference)
+                                     const TString &textureReference,
+                                     const TString &samplerReference)
 {
     out << textureReference;
     if (IsIntegerSampler(textureFunction.sampler) ||
@@ -451,56 +450,37 @@ void OutputTextureFunctionArgumentList(TInfoSinkBase &out,
 void GetTextureReference(TInfoSinkBase &out,
                          const TextureFunctionHLSL::TextureFunction &textureFunction,
                          const ShShaderOutput outputType,
-                         ImmutableString *textureReference,
-                         ImmutableString *samplerReference)
+                         TString *textureReference,
+                         TString *samplerReference)
 {
     if (outputType == SH_HLSL_4_1_OUTPUT)
     {
-        static const ImmutableString kTexturesStr("textures");
-        static const ImmutableString kSamplersStr("samplers");
-        static const ImmutableString kSamplerIndexStr("[samplerIndex]");
-        static const ImmutableString kTextureIndexStr("[textureIndex]");
-        static const ImmutableString kSamplerArrayIndexStr("[samplerArrayIndex]");
-        ImmutableString suffix(TextureGroupSuffix(textureFunction.sampler));
-
+        TString suffix = TextureGroupSuffix(textureFunction.sampler);
         if (TextureGroup(textureFunction.sampler) == HLSL_TEXTURE_2D)
         {
-            ImmutableStringBuilder textureRefBuilder(kTexturesStr.length() + suffix.length() +
-                                                     kSamplerIndexStr.length());
-            textureRefBuilder << kTexturesStr << suffix << kSamplerIndexStr;
-            *textureReference = textureRefBuilder;
-            ImmutableStringBuilder samplerRefBuilder(kSamplersStr.length() + suffix.length() +
-                                                     kSamplerIndexStr.length());
-            samplerRefBuilder << kSamplersStr << suffix << kSamplerIndexStr;
-            *samplerReference = samplerRefBuilder;
+            *textureReference = TString("textures") + suffix + "[samplerIndex]";
+            *samplerReference = TString("samplers") + suffix + "[samplerIndex]";
         }
         else
         {
-            out << "    const uint textureIndex = samplerIndex - textureIndexOffset"
-                << suffix.data() << ";\n";
-            ImmutableStringBuilder textureRefBuilder(kTexturesStr.length() + suffix.length() +
-                                                     kTextureIndexStr.length());
-            textureRefBuilder << kTexturesStr << suffix << kTextureIndexStr;
-            *textureReference = textureRefBuilder;
-
-            out << "    const uint samplerArrayIndex = samplerIndex - samplerIndexOffset"
-                << suffix.data() << ";\n";
-            ImmutableStringBuilder samplerRefBuilder(kSamplersStr.length() + suffix.length() +
-                                                     kSamplerArrayIndexStr.length());
-            samplerRefBuilder << kSamplersStr << suffix << kSamplerArrayIndexStr;
-            *samplerReference = samplerRefBuilder;
+            out << "    const uint textureIndex = samplerIndex - textureIndexOffset" << suffix
+                << ";\n";
+            *textureReference = TString("textures") + suffix + "[textureIndex]";
+            out << "    const uint samplerArrayIndex = samplerIndex - samplerIndexOffset" << suffix
+                << ";\n";
+            *samplerReference = TString("samplers") + suffix + "[samplerArrayIndex]";
         }
     }
     else
     {
-        *textureReference = ImmutableString("x");
-        *samplerReference = ImmutableString("s");
+        *textureReference = "x";
+        *samplerReference = "s";
     }
 }
 
 void OutputTextureSizeFunctionBody(TInfoSinkBase &out,
                                    const TextureFunctionHLSL::TextureFunction &textureFunction,
-                                   const ImmutableString &textureReference,
+                                   const TString &textureReference,
                                    bool getDimensionsIgnoresBaseLevel)
 {
     if (IsSampler2DMS(textureFunction.sampler))
@@ -585,7 +565,7 @@ void OutputIntegerTextureSampleFunctionComputations(
     TInfoSinkBase &out,
     const TextureFunctionHLSL::TextureFunction &textureFunction,
     const ShShaderOutput outputType,
-    const ImmutableString &textureReference,
+    const TString &textureReference,
     TString *texCoordX,
     TString *texCoordY,
     TString *texCoordZ)
@@ -831,8 +811,8 @@ void OutputTextureSampleFunctionReturnStatement(
     TInfoSinkBase &out,
     const TextureFunctionHLSL::TextureFunction &textureFunction,
     const ShShaderOutput outputType,
-    const ImmutableString &textureReference,
-    const ImmutableString &samplerReference,
+    const TString &textureReference,
+    const TString &samplerReference,
     const TString &texCoordX,
     const TString &texCoordY,
     const TString &texCoordZ)
@@ -1311,8 +1291,8 @@ void TextureFunctionHLSL::textureFunctionHeader(TInfoSinkBase &out,
         // sampling we need to call the function directly on references to the texture and sampler
         // arrays. The bug was found using dEQP-GLES3.functional.shaders.discard*loop_texture*
         // tests.
-        ImmutableString textureReference("");
-        ImmutableString samplerReference("");
+        TString textureReference;
+        TString samplerReference;
         GetTextureReference(out, textureFunction, outputType, &textureReference, &samplerReference);
 
         if (textureFunction.method == TextureFunction::SIZE)

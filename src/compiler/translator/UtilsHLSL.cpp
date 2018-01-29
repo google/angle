@@ -218,7 +218,7 @@ HLSLTextureGroup TextureGroup(const TBasicType type, TLayoutImageInternalFormat 
     return HLSL_TEXTURE_UNKNOWN;
 }
 
-const char *TextureString(const HLSLTextureGroup textureGroup)
+TString TextureString(const HLSLTextureGroup textureGroup)
 {
     switch (textureGroup)
     {
@@ -277,12 +277,12 @@ const char *TextureString(const HLSLTextureGroup textureGroup)
     return "<unknown read texture type>";
 }
 
-const char *TextureString(const TBasicType type, TLayoutImageInternalFormat imageInternalFormat)
+TString TextureString(const TBasicType type, TLayoutImageInternalFormat imageInternalFormat)
 {
     return TextureString(TextureGroup(type, imageInternalFormat));
 }
 
-const char *TextureGroupSuffix(const HLSLTextureGroup type)
+TString TextureGroupSuffix(const HLSLTextureGroup type)
 {
     switch (type)
     {
@@ -341,8 +341,7 @@ const char *TextureGroupSuffix(const HLSLTextureGroup type)
     return "<unknown texture type>";
 }
 
-const char *TextureGroupSuffix(const TBasicType type,
-                               TLayoutImageInternalFormat imageInternalFormat)
+TString TextureGroupSuffix(const TBasicType type, TLayoutImageInternalFormat imageInternalFormat)
 {
     return TextureGroupSuffix(TextureGroup(type, imageInternalFormat));
 }

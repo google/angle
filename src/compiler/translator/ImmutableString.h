@@ -45,13 +45,10 @@ class ImmutableString
     {
     }
 
-    constexpr ImmutableString(const char *data, size_t length) : mData(data), mLength(length) {}
-
     ImmutableString(const ImmutableString &) = default;
     ImmutableString &operator=(const ImmutableString &) = default;
 
     const char *data() const { return mData ? mData : ""; }
-    size_t length() const { return mLength; }
 
     bool operator<(const ImmutableString &b) const
     {
@@ -67,12 +64,10 @@ class ImmutableString
     }
 
   private:
-    const char *mData;
-    size_t mLength;
+    const char *const mData;
+    const size_t mLength;
 };
 
 }  // namespace sh
-
-std::ostream &operator<<(std::ostream &os, const sh::ImmutableString &str);
 
 #endif  // COMPILER_TRANSLATOR_IMMUTABLESTRING_H_
