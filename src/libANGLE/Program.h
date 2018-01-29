@@ -599,7 +599,8 @@ class Program final : angle::NonCopyable, public LabeledObject
     GLuint getActiveUniformBlockCount() const;
     GLuint getActiveAtomicCounterBufferCount() const;
     GLuint getActiveShaderStorageBlockCount() const;
-    GLint getActiveUniformBlockMaxLength() const;
+    GLint getActiveUniformBlockMaxNameLength() const;
+    GLint getActiveShaderStorageBlockMaxNameLength() const;
 
     GLuint getUniformBlockIndex(const std::string &name) const;
     GLuint getShaderStorageBlockIndex(const std::string &name) const;
@@ -758,6 +759,9 @@ class Program final : angle::NonCopyable, public LabeledObject
                          GLsizei bufSize,
                          GLsizei *length,
                          GLchar *name) const;
+
+    template <typename T>
+    GLint getActiveInterfaceBlockMaxNameLength(const std::vector<T> &resources) const;
 
     ProgramState mState;
     rx::ProgramImpl *mProgram;

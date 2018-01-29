@@ -1910,25 +1910,34 @@ void Program::getActiveShaderStorageBlockName(const GLuint blockIndex,
     GetInterfaceBlockName(blockIndex, mState.mShaderStorageBlocks, bufSize, length, blockName);
 }
 
-GLint Program::getActiveUniformBlockMaxLength() const
+template <typename T>
+GLint Program::getActiveInterfaceBlockMaxNameLength(const std::vector<T> &resources) const
 {
     int maxLength = 0;
 
     if (mLinked)
     {
-        unsigned int numUniformBlocks = static_cast<unsigned int>(mState.mUniformBlocks.size());
-        for (unsigned int uniformBlockIndex = 0; uniformBlockIndex < numUniformBlocks; uniformBlockIndex++)
+        for (const T &resource : resources)
         {
-            const InterfaceBlock &uniformBlock = mState.mUniformBlocks[uniformBlockIndex];
-            if (!uniformBlock.name.empty())
+            if (!resource.name.empty())
             {
-                int length = static_cast<int>(uniformBlock.nameWithArrayIndex().length());
+                int length = static_cast<int>(resource.nameWithArrayIndex().length());
                 maxLength  = std::max(length + 1, maxLength);
             }
         }
     }
 
     return maxLength;
+}
+
+GLint Program::getActiveUniformBlockMaxNameLength() const
+{
+    return getActiveInterfaceBlockMaxNameLength(mState.mUniformBlocks);
+}
+
+GLint Program::getActiveShaderStorageBlockMaxNameLength() const
+{
+    return getActiveInterfaceBlockMaxNameLength(mState.mShaderStorageBlocks);
 }
 
 GLuint Program::getUniformBlockIndex(const std::string &name) const

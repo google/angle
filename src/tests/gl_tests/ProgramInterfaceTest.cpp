@@ -286,9 +286,17 @@ TEST_P(ProgramInterfaceTestES31, GetProgramInterface)
         "    vec4 mem0;\n"
         "    vec4 mem1;\n"
         "} instance;\n"
+        "layout(std430) buffer shaderStorageBlock1 {\n"
+        "    vec3 target;\n"
+        "};\n"
+        "layout(std430) buffer shaderStorageBlock2 {\n"
+        "    vec3 target;\n"
+        "} blockInstance2[1];\n"
         "void main()\n"
         "{\n"
         "    oColor = color;\n"
+        "    target = vec3(0, 0, 0);\n"
+        "    blockInstance2[0].target = vec3(1, 1, 1);\n"
         "}";
 
     ANGLE_GL_PROGRAM(program, vertexShaderSource, fragmentShaderSource);
@@ -338,6 +346,18 @@ TEST_P(ProgramInterfaceTestES31, GetProgramInterface)
 
     glGetProgramInterfaceiv(program, GL_UNIFORM, GL_MAX_NUM_ACTIVE_VARIABLES, &num);
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    glGetProgramInterfaceiv(program, GL_SHADER_STORAGE_BLOCK, GL_ACTIVE_RESOURCES, &num);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(2, num);
+
+    glGetProgramInterfaceiv(program, GL_SHADER_STORAGE_BLOCK, GL_MAX_NAME_LENGTH, &num);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(23, num);  // "shaderStorageBlock2[0]"
+
+    glGetProgramInterfaceiv(program, GL_SHADER_STORAGE_BLOCK, GL_MAX_NUM_ACTIVE_VARIABLES, &num);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(1, num);
 }
 
 // Tests the resource property query for uniform can be done correctly.

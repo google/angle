@@ -1113,18 +1113,15 @@
 // OPENGL Failing Tests
 1665 WIN NVIDIA OPENGL : dEQP-GLES31.functional.draw_indirect.negative.command_offset_not_in_buffer_unsigned32_wrap = FAIL
 1442 NVIDIA OPENGL : dEQP-GLES31.functional.fbo.no_attachments.maximums.all = FAIL
-1442 OPENGL : dEQP-GLES31.functional.program_interface_query.atomic_counter_buffer.buffer_data_size = FAIL
 1442 OPENGL : dEQP-GLES31.functional.program_interface_query.atomic_counter_buffer.referenced_by* = FAIL
 1442 OPENGL : dEQP-GLES31.functional.program_interface_query.buffer_limited_query.* = FAIL
 1442 OPENGL : dEQP-GLES31.functional.program_interface_query.buffer_variable.* = FAIL
 1442 OPENGL : dEQP-GLES31.functional.program_interface_query.program_input.* = FAIL
 1442 OPENGL : dEQP-GLES31.functional.program_interface_query.program_output.* = FAIL
-1442 OPENGL : dEQP-GLES31.functional.program_interface_query.shader_storage_block.* = FAIL
+1442 OPENGL : dEQP-GLES31.functional.program_interface_query.shader_storage_block.referenced_by.* = FAIL
 1442 OPENGL : dEQP-GLES31.functional.program_interface_query.transform_feedback_varying.* = FAIL
 1442 OPENGL : dEQP-GLES31.functional.program_interface_query.uniform.referenced_by_shader.* = FAIL
 1442 OPENGL : dEQP-GLES31.functional.program_interface_query.uniform.random.* = FAIL
-1442 OPENGL : dEQP-GLES31.functional.program_interface_query.uniform_block.resource_list.block_array = FAIL
-1442 OPENGL : dEQP-GLES31.functional.program_interface_query.uniform_block.resource_list.block_array_single_element = FAIL
 1442 OPENGL : dEQP-GLES31.functional.program_interface_query.uniform_block.referenced_by.* = FAIL
 1442 OPENGL : dEQP-GLES31.functional.compute.basic.copy_image_to_ssbo_large = FAIL
 1442 OPENGL : dEQP-GLES31.functional.compute.basic.copy_ssbo_to_image_large = FAIL
