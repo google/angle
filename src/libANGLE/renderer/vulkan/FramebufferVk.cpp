@@ -155,12 +155,16 @@ gl::Error FramebufferVk::clear(const gl::Context *context, GLbitfield mask)
     vk::CommandBuffer *commandBuffer = nullptr;
     ANGLE_TRY(recordWriteCommands(renderer, &commandBuffer));
 
+    Serial currentSerial = renderer->getCurrentQueueSerial();
+
     for (const auto &colorAttachment : mState.getColorAttachments())
     {
         if (colorAttachment.isAttached())
         {
             RenderTargetVk *renderTarget = nullptr;
             ANGLE_TRY(colorAttachment.getRenderTarget(context, &renderTarget));
+
+            renderTarget->resource->setWriteNode(getCurrentWriteNode(currentSerial), currentSerial);
 
             renderTarget->image->changeLayoutWithStages(
                 VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
@@ -169,6 +173,8 @@ gl::Error FramebufferVk::clear(const gl::Context *context, GLbitfield mask)
             commandBuffer->clearSingleColorImage(*renderTarget->image, clearColorValue);
         }
     }
+
+    // TODO(jmadill): Depth/stencil clear.
 
     return gl::NoError();
 }

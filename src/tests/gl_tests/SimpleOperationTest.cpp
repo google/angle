@@ -85,6 +85,20 @@ TEST_P(SimpleOperationTest, CompileFragmentShader)
     EXPECT_GL_NO_ERROR();
 }
 
+// Covers a simple bug in Vulkan to do with dependencies between the Surface and the default
+// Framebuffer.
+TEST_P(SimpleOperationTest, ClearAndSwap)
+{
+    glClearColor(1.0, 0.0, 0.0, 1.0);
+    glClear(GL_COLOR_BUFFER_BIT);
+    swapBuffers();
+
+    // Can't check the pixel result after the swap, and checking the pixel result affects the
+    // behaviour of the test on the Vulkan back-end, so don't bother checking correctness.
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EGL_SUCCESS();
+}
+
 TEST_P(SimpleOperationTest, LinkProgram)
 {
     const std::string vsSource =

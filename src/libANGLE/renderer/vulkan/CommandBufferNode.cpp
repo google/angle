@@ -136,7 +136,7 @@ void CommandBufferNode::appendColorRenderTarget(Serial serial, RenderTargetVk *c
 {
     // TODO(jmadill): Layout transition?
     mRenderPassDesc.packColorAttachment(*colorRenderTarget->format, colorRenderTarget->samples);
-    colorRenderTarget->resource->setWriteNode(serial, this);
+    colorRenderTarget->resource->setWriteNode(this, serial);
 }
 
 void CommandBufferNode::appendDepthStencilRenderTarget(Serial serial,
@@ -145,7 +145,7 @@ void CommandBufferNode::appendDepthStencilRenderTarget(Serial serial,
     // TODO(jmadill): Layout transition?
     mRenderPassDesc.packDepthStencilAttachment(*depthStencilRenderTarget->format,
                                                depthStencilRenderTarget->samples);
-    depthStencilRenderTarget->resource->setWriteNode(serial, this);
+    depthStencilRenderTarget->resource->setWriteNode(this, serial);
 }
 
 void CommandBufferNode::initAttachmentDesc(VkAttachmentDescription *desc)

@@ -1313,27 +1313,8 @@ vk::CommandBufferNode *ResourceVk::getCurrentWriteNode(Serial currentSerial)
 vk::CommandBufferNode *ResourceVk::getNewWriteNode(RendererVk *renderer)
 {
     vk::CommandBufferNode *newCommands = renderer->allocateCommandNode();
-    setWriteNode(renderer->getCurrentQueueSerial(), newCommands);
+    setWriteNode(newCommands, renderer->getCurrentQueueSerial());
     return newCommands;
-}
-
-void ResourceVk::setWriteNode(Serial serial, vk::CommandBufferNode *newCommands)
-{
-    updateQueueSerial(serial);
-
-    // Make sure any open reads and writes finish before we execute |newCommands|.
-    if (!mCurrentReadNodes.empty())
-    {
-        newCommands->addDependencies(mCurrentReadNodes);
-        mCurrentReadNodes.clear();
-    }
-
-    if (mCurrentWriteNode)
-    {
-        newCommands->addDependency(mCurrentWriteNode);
-    }
-
-    mCurrentWriteNode = newCommands;
 }
 
 vk::Error ResourceVk::recordWriteCommands(RendererVk *renderer,
@@ -1346,7 +1327,26 @@ vk::Error ResourceVk::recordWriteCommands(RendererVk *renderer,
     return vk::NoError();
 }
 
-void ResourceVk::updateDependencies(vk::CommandBufferNode *readNode, Serial serial)
+void ResourceVk::setWriteNode(vk::CommandBufferNode *writeNode, Serial serial)
+{
+    updateQueueSerial(serial);
+
+    // Make sure any open reads and writes finish before we execute |newCommands|.
+    if (!mCurrentReadNodes.empty())
+    {
+        writeNode->addDependencies(mCurrentReadNodes);
+        mCurrentReadNodes.clear();
+    }
+
+    if (mCurrentWriteNode)
+    {
+        writeNode->addDependency(mCurrentWriteNode);
+    }
+
+    mCurrentWriteNode = writeNode;
+}
+
+void ResourceVk::setReadNode(vk::CommandBufferNode *readNode, Serial serial)
 {
     if (isCurrentlyRecording(serial))
     {

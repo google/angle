@@ -687,15 +687,15 @@ class ResourceVk
     // Allocates a new write node and calls setWriteNode internally.
     vk::CommandBufferNode *getNewWriteNode(RendererVk *renderer);
 
-    // Called on an operation that will modify this ResourceVk.
-    void setWriteNode(Serial serial, vk::CommandBufferNode *newCommands);
-
     // Allocates a write node via getNewWriteNode and returns a started command buffer.
     // The started command buffer will render outside of a RenderPass.
     vk::Error recordWriteCommands(RendererVk *renderer, vk::CommandBuffer **commandBufferOut);
 
+    // Called on an operation that will modify this ResourceVk.
+    void setWriteNode(vk::CommandBufferNode *newCommands, Serial serial);
+
     // Sets up the dependency relations. |readNode| has the commands that read from this object.
-    void updateDependencies(vk::CommandBufferNode *readNode, Serial serial);
+    void setReadNode(vk::CommandBufferNode *readNode, Serial serial);
 
   private:
     Serial mStoredQueueSerial;
