@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "1bec74d8_f3914dd6",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-01-30T17:58:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7bea014a_9438eb2c",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 2
+      },
+      "revId": "d1caf629bff5193c14fda99a4617f487c9a9eb1c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b0313862_29a59199",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2018-01-30T15:16:45Z",
       "side": 1,
       "message": "nit: comment? Also, what about the sampler? Might be OK to leave it, not sure.",
+      "range": {
+        "startLine": 73,
+        "startChar": 4,
+        "endLine": 73,
+        "endChar": 63
+      },
+      "revId": "d1caf629bff5193c14fda99a4617f487c9a9eb1c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4f9b7275_fd2a6d64",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-01-30T17:58:51Z",
+      "side": 1,
+      "message": "I decided to leave it because it\u0027s currently just a placeholder not dependent on any texture parameters.  Once we create real samplers, it won\u0027t be done in this function.\n\nI did update it to reset the mRenderTarget object though, it was still referencing released images.",
+      "parentUuid": "b0313862_29a59199",
       "range": {
         "startLine": 73,
         "startChar": 4,
