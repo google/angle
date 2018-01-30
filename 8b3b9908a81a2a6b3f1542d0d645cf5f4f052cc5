@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0073fc80_80d6fc90",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2549,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-01-30T01:22:26Z",
+      "side": 1,
+      "message": "Is it better to put these into a function in the anonymous namespace?\nYou can use switch-case in that function.\n\nThe value of the limit is also needed in the log according to other log formats in this file:\ninfoLog \u003c\u003c \"The sum of the number of active uniform blocks exceeds \"\n           \"MAX_COMBINED_UNIFORM_BLOCKS (\" \u003c\u003c maxCombinedInterfaceBlocks \u003c\u003c \").\";",
+      "range": {
+        "startLine": 2539,
+        "startChar": 0,
+        "endLine": 2549,
+        "endChar": 33
+      },
+      "revId": "8b3b9908a81a2a6b3f1542d0d645cf5f4f052cc5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
