@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "a03408ee_bb6926be",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-30T20:43:11Z",
+      "side": 1,
+      "message": "Maybe the boulder folks could update us on the latest, but when I heard about it a year or so ago the standard validation layer scheme is the new way, and likely Android will converge to it at some point. Hence, we\u0027ll likely only use the separated list on Android. That was my thought process.",
+      "parentUuid": "689ae58a_f9af8123",
+      "range": {
+        "startLine": 112,
+        "startChar": 12,
+        "endLine": 112,
+        "endChar": 36
+      },
+      "revId": "2f608f95edd6636eb26b53085a68b99f267a7e7c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "da7fecb8_bb301713",
         "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
         "patchSetId": 6
