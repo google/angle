@@ -22,6 +22,30 @@
       "revId": "12c03761061ebe10ef001557b960deb8f18b8c04",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b1592ed6_481c3f15",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-30T14:36:51Z",
+      "side": 0,
+      "message": "Not sure, we could have patched loader.h to expose the string. you can remove this, it\u0027s not that important.",
+      "parentUuid": "11f4294c_39ad2fc2",
+      "range": {
+        "startLine": 113,
+        "startChar": 0,
+        "endLine": 113,
+        "endChar": 96
+      },
+      "revId": "12c03761061ebe10ef001557b960deb8f18b8c04",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
