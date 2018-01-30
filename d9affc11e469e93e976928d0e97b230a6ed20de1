@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "379c2f06_59fbbe07",
+        "filename": "src/tests/egl_tests/EGLSanityCheckTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-30T22:29:14Z",
+      "side": 1,
+      "message": "nit: can you make two if defined blocks (one for the header at the top, one for the test body)?",
+      "range": {
+        "startLine": 39,
+        "startChar": 0,
+        "endLine": 42,
+        "endChar": 37
+      },
+      "revId": "d9affc11e469e93e976928d0e97b230a6ed20de1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "21180172_03fae9a1",
+        "filename": "src/tests/egl_tests/EGLSanityCheckTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-30T22:29:14Z",
+      "side": 1,
+      "message": "it\u0027s a bit debatable if we want to assume Vulkan is available. I don\u0027t think for a user machine in general we can assume this, but for our bots we do want to assume this. Do we have access to driver versions as well as device IDs?",
+      "range": {
+        "startLine": 76,
+        "startChar": 40,
+        "endLine": 76,
+        "endChar": 50
+      },
+      "revId": "d9affc11e469e93e976928d0e97b230a6ed20de1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d953d5bf_c788d861",
+        "filename": "src/tests/egl_tests/EGLSanityCheckTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-30T22:29:14Z",
+      "side": 1,
+      "message": "I guess we cannot assume Vulkan is available on Android.",
+      "range": {
+        "startLine": 84,
+        "startChar": 8,
+        "endLine": 84,
+        "endChar": 17
+      },
+      "revId": "d9affc11e469e93e976928d0e97b230a6ed20de1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
