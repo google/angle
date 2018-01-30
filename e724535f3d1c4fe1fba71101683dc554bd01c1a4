@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7d665de0_b33cda4f",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2509,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-01-30T15:55:41Z",
+      "side": 1,
+      "message": "nit: std::min(1, vertexInterfaceBlock.arraySize)",
+      "range": {
+        "startLine": 2509,
+        "startChar": 26,
+        "endLine": 2509,
+        "endChar": 95
+      },
+      "revId": "e724535f3d1c4fe1fba71101683dc554bd01c1a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b6b7f0b9_07ead965",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2536,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-01-30T15:55:41Z",
+      "side": 1,
+      "message": "nit: ditto.",
+      "revId": "e724535f3d1c4fe1fba71101683dc554bd01c1a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9e4155cf_1171cbcc",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2537,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-01-30T15:55:41Z",
+      "side": 1,
+      "message": "This condition could be put outside of the loop. You might want to pass the blockType as an argument to the function.",
+      "revId": "e724535f3d1c4fe1fba71101683dc554bd01c1a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
