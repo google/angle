@@ -120,6 +120,30 @@
     },
     {
       "key": {
+        "uuid": "0324d1bf_5b00a8ca",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-01-30T20:53:35Z",
+      "side": 1,
+      "message": "Maybe I misunderstood the meaning of \"legacy\" here:\nhttps://github.com/KhronosGroup/Vulkan-LoaderAndValidationLayers/blob/master/loader/loader.c#L2140\n\nCould mean that old drivers don\u0027t have VK_LAYER_LUNARG_standard_validation",
+      "parentUuid": "a03408ee_bb6926be",
+      "range": {
+        "startLine": 112,
+        "startChar": 12,
+        "endLine": 112,
+        "endChar": 36
+      },
+      "revId": "2f608f95edd6636eb26b53085a68b99f267a7e7c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "da7fecb8_bb301713",
         "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
         "patchSetId": 6
