@@ -1657,3 +1657,9 @@
 1941 OPENGL D3D11 : dEQP-GLES31.functional.geometry_shading.instanced.invocation_output_* = FAIL
 1941 OPENGL D3D11 : dEQP-GLES31.functional.geometry_shading.instanced.draw_* = FAIL
 1941 OPENGL D3D11 : dEQP-GLES31.functional.geometry_shading.negative.* = FAIL
+
+2324 DEBUG RELEASE : dEQP-GLES31.functional.debug.negative_coverage.callbacks.compute.program_not_active = FAIL
+2324 DEBUG RELEASE : dEQP-GLES31.functional.debug.negative_coverage.log.compute.program_not_active = FAIL
+2324 DEBUG RELEASE : dEQP-GLES31.functional.debug.negative_coverage.get_error.compute.program_not_active = FAIL
+2324 DEBUG RELEASE : dEQP-GLES31.functional.debug.negative_coverage.get_error.compute.invalid_program_query = FAIL
+2324 DEBUG RELEASE : dEQP-GLES31.functional.debug.negative_coverage.get_error.compute.invalid_dispatch_compute_indirect = FAIL

@@ -36,10 +36,6 @@
 // We can't support distinct texture sizes in D3D11.
 1097 WIN : dEQP-GLES3.functional.fbo.completeness.size.distinct = FAIL
 
-// Fail because we support these formats through the ANGLE_depth_texture extension instead of OES_depth_texture
-605754 MAC WIN LINUX ANDROID : dEQP-GLES3.functional.fbo.completeness.renderable.texture.depth.depth_component_unsigned_short = FAIL
-605754 MAC WIN LINUX ANDROID : dEQP-GLES3.functional.fbo.completeness.renderable.texture.depth.depth_component_unsigned_int = FAIL
-
 // Tests that we fail because they're not in line with the WebGL spec
 1335 MAC WIN LINUX : dEQP-GLES3.functional.shaders.preprocessor.conditional_inclusion.basic_2* = FAIL
 1335 MAC WIN LINUX : dEQP-GLES3.functional.shaders.preprocessor.conditional_inclusion.defined_macro_defined_test* = FAIL
@@ -92,8 +88,10 @@
 2222 D3D11 NVIDIA : dEQP-GLES3.functional.texture.mipmap.3d.min_lod.nearest_nearest = FAIL
 2222 LINUX NVIDIA : dEQP-GLES3.functional.fbo.completeness.samples.rbo2_rbo2_rbo0 = FAIL
 
-// Windows and Linux failures
+// Failing everywhere
+2322 DEBUG RELEASE : dEQP-GLES3.functional.shaders.metamorphic.* = FAIL
 
+// Windows and Linux failures
 1095 WIN LINUX : dEQP-GLES3.functional.texture.mipmap.2d.projected.nearest_nearest_clamp = FAIL
 1095 WIN LINUX : dEQP-GLES3.functional.texture.mipmap.2d.projected.nearest_nearest_repeat = FAIL
 1095 WIN LINUX : dEQP-GLES3.functional.texture.mipmap.2d.projected.nearest_nearest_mirror = FAIL
@@ -102,7 +100,6 @@
 1095 WIN LINUX : dEQP-GLES3.functional.texture.mipmap.2d.projected.linear_nearest_mirror = FAIL
 
 // Windows only failure
-
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.textureoffset.sampler3d_fixed_fragment = FAIL
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.textureoffset.sampler3d_float_fragment = FAIL
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.textureprojoffset.sampler3d_fixed_fragment = FAIL
@@ -167,6 +164,9 @@
 1101 WIN : dEQP-GLES3.functional.polygon_offset.fixed24_render_with_units = FAIL
 1101 WIN : dEQP-GLES3.functional.lifetime.attach.deleted_input.buffer_vertex_array = FAIL
 
+// Very small threshold issue. Could upstream a higher tolerance to dEQP.
+2323 WIN : dEQP-GLES3.functional.texture.units.2_units.only_cube.7 = FAIL
+
 // Windows AMD specific failures
 1633 WIN AMD : dEQP-GLES3.functional.fbo.blit.depth_stencil.depth24_stencil8_scale = FAIL
 1633 WIN AMD : dEQP-GLES3.functional.fbo.blit.depth_stencil.depth24_stencil8_stencil_only = FAIL
@@ -216,7 +216,6 @@
 1349 WIN INTEL : dEQP-GLES3.functional.texture.units.2_units.only_cube.0 = FAIL
 1349 WIN INTEL : dEQP-GLES3.functional.texture.units.2_units.only_cube.2 = FAIL
 1349 WIN INTEL : dEQP-GLES3.functional.texture.units.2_units.only_cube.4 = FAIL
-1349 WIN INTEL : dEQP-GLES3.functional.texture.units.2_units.only_cube.7 = FAIL
 1349 WIN INTEL : dEQP-GLES3.functional.texture.units.2_units.only_cube.8 = FAIL
 1349 WIN INTEL : dEQP-GLES3.functional.texture.units.2_units.mixed.4 = FAIL
 1349 WIN INTEL : dEQP-GLES3.functional.texture.units.4_units.only_cube.0 = FAIL

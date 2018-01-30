@@ -51,6 +51,9 @@
 1662 WIN : dEQP-EGL.functional.native_color_mapping.native_window.other_clear = SKIP
 1662 WIN : dEQP-EGL.functional.native_color_mapping.native_window.other_render = SKIP
 
+// Intentionally causes TDRs that eventually blacklist the application
+2319 DEBUG RELEASE : dEQP-EGL.functional.robustness.reset_context.shaders.infinite_loop.* = SKIP
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 //  Temprory entries: they should be removed once the bugs are fixed.
@@ -153,3 +156,11 @@
 2306 WIN MAC LINUX : dEQP-EGL.functional.color_clears.single_context.gles1* = FAIL
 2306 WIN MAC LINUX : dEQP-EGL.functional.color_clears.multi_context.gles1* = FAIL
 2306 WIN MAC LINUX : dEQP-EGL.functional.color_clears.multi_thread.gles1* = FAIL
+
+// Tests failing since the Jan 2018 roll of dEQP
+2329 DEBUG RELEASE : dEQP-EGL.functional.choose_config.simple.selection_only.renderable_type = FAIL
+2329 DEBUG RELEASE : dEQP-EGL.functional.choose_config.simple.selection_and_sort.renderable_type = FAIL
+2330 DEBUG RELEASE : dEQP-EGL.functional.robustness.create_context.no_reset_notification = SKIP
+2330 DEBUG RELEASE : dEQP-EGL.functional.robustness.create_context.lose_context_on_reset = SKIP
+2330 DEBUG RELEASE : dEQP-EGL.functional.robustness.reset_context.fixed_function_pipeline.reset_status.index_buffer_out_of_bounds = SKIP
+2330 DEBUG RELEASE : dEQP-EGL.functional.robustness.reset_context.fixed_function_pipeline.reset_status.vertex_buffer_out_of_bounds = SKIP

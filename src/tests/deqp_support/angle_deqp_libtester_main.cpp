@@ -129,7 +129,7 @@ ANGLE_LIBTESTER_EXPORT bool deqp_libtester_init_platform(int argc, const char *a
 #endif
         g_platform = createPlatform();
 
-        if (!deSetRoundingMode(DE_ROUNDINGMODE_TO_NEAREST))
+        if (!deSetRoundingMode(DE_ROUNDINGMODE_TO_NEAREST_EVEN))
         {
             std::cout << "Failed to set floating point rounding mode." << std::endl;
             return false;

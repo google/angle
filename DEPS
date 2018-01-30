@@ -19,7 +19,7 @@ deps = {
     Var('android_git') + '/platform/external/cherry' + '@' + '4f8fb08d33ca5ff05a1c638f04c85bbb8d8b52cc',
 
   'third_party/deqp/src':
-    Var('android_git') + '/platform/external/deqp' + '@' + '455d82c60b096e7bd83b6a2f5ed70c61e4bfa759',
+    Var('android_git') + '/platform/external/deqp' + '@' + '5bc346ba2d5465a2e6094e254f12b1586fd0097f',
 
   'third_party/glslang-angle/src':
     Var('android_git') + '/platform/external/shaderc/glslang' + '@' + '2edde6665d9a56ead5ea0e55b4e64d9a803e6164',
