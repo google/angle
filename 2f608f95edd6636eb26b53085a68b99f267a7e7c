@@ -144,6 +144,30 @@
     },
     {
       "key": {
+        "uuid": "8913ddb9_6272e536",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-01-30T20:57:39Z",
+      "side": 1,
+      "message": "Though, \"Failed to allocate space for legacy VK_LAYER_LUNARG_standard_validation meta-layer component_layers information\" below does seems to call VK_LAYER_LUNARG_standard_validation a legacy.",
+      "parentUuid": "0324d1bf_5b00a8ca",
+      "range": {
+        "startLine": 112,
+        "startChar": 12,
+        "endLine": 112,
+        "endChar": 36
+      },
+      "revId": "2f608f95edd6636eb26b53085a68b99f267a7e7c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "da7fecb8_bb301713",
         "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
         "patchSetId": 6
