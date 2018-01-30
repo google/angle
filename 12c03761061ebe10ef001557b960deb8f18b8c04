@@ -46,6 +46,30 @@
       "revId": "12c03761061ebe10ef001557b960deb8f18b8c04",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3345d19e_315ad9fa",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-01-30T20:39:44Z",
+      "side": 0,
+      "message": "But it\u0027s not in the header (maybe it used to be?) it\u0027s in the C source now.\nWe could extract it from here, but it doesn\u0027t seem to be worth the effort.\nRemoving.",
+      "parentUuid": "b1592ed6_481c3f15",
+      "range": {
+        "startLine": 113,
+        "startChar": 0,
+        "endLine": 113,
+        "endChar": 96
+      },
+      "revId": "12c03761061ebe10ef001557b960deb8f18b8c04",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }

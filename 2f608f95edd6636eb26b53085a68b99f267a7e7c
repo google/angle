@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "200e4ca9_783a0692",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 286,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-01-30T20:39:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "43bcaae7_ffeff286",
+      "range": {
+        "startLine": 286,
+        "startChar": 55,
+        "endLine": 286,
+        "endChar": 74
+      },
+      "revId": "2f608f95edd6636eb26b53085a68b99f267a7e7c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "39600897_d1addc6c",
         "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
         "patchSetId": 6
@@ -45,6 +69,30 @@
       "revId": "2f608f95edd6636eb26b53085a68b99f267a7e7c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "689ae58a_f9af8123",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-01-30T20:39:44Z",
+      "side": 1,
+      "message": "There is nothing Android specific to it, from reading validation layers code, I think \"VK_LAYER_LUNARG_standard_validation\" is a legacy way of enabling layers, so drivers might stop supporting it in the future, but the explicit layer names will still work.\nKeeping this as is.",
+      "parentUuid": "39600897_d1addc6c",
+      "range": {
+        "startLine": 112,
+        "startChar": 12,
+        "endLine": 112,
+        "endChar": 36
+      },
+      "revId": "2f608f95edd6636eb26b53085a68b99f267a7e7c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "8abbee6f_a40a38a4",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-01-30T20:39:44Z",
+      "side": 1,
+      "message": "ditto",
+      "parentUuid": "da7fecb8_bb301713",
+      "range": {
+        "startLine": 137,
+        "startChar": 5,
+        "endLine": 137,
+        "endChar": 24
+      },
+      "revId": "2f608f95edd6636eb26b53085a68b99f267a7e7c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2df1dbf3_f4bff173",
         "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
         "patchSetId": 6
@@ -91,6 +163,30 @@
       "revId": "2f608f95edd6636eb26b53085a68b99f267a7e7c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8abffb42_8c7f30bf",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 215,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-01-30T20:39:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2df1dbf3_f4bff173",
+      "range": {
+        "startLine": 215,
+        "startChar": 5,
+        "endLine": 215,
+        "endChar": 24
+      },
+      "revId": "2f608f95edd6636eb26b53085a68b99f267a7e7c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
