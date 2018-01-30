@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5ae85d6b_b7863289",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-30T14:26:47Z",
+      "side": 1,
+      "message": "nit: can you reword the commit message so it uses a \u003c65 character first line, followed by a wider paragraph below with the full test name? (also \"dEQP\")",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 87
+      },
+      "revId": "5b0ba9376a111a4f9bd69adcb76d3aa60bedb2a7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
