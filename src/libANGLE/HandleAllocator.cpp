@@ -114,6 +114,7 @@ void HandleAllocator::reserve(GLuint handle)
         if (releasedIt != mReleasedList.end())
         {
             mReleasedList.erase(releasedIt);
+            std::make_heap(mReleasedList.begin(), mReleasedList.end(), std::greater<GLuint>());
             return;
         }
     }

@@ -170,4 +170,27 @@ TEST(HandleAllocatorTest, ReserveAndAllocateIterated)
     }
 }
 
+// This test reproduces invalid heap bug when reserve resources after release.
+TEST(HandleAllocatorTest, ReserveAfterReleaseBug)
+{
+    gl::HandleAllocator allocator;
+
+    for (int iteration = 1; iteration <= 16; ++iteration)
+    {
+        allocator.allocate();
+    }
+
+    allocator.release(15);
+    allocator.release(16);
+
+    for (int iteration = 1; iteration <= 14; ++iteration)
+    {
+        allocator.release(iteration);
+    }
+
+    allocator.reserve(1);
+
+    allocator.allocate();
+}
+
 }  // anonymous namespace
