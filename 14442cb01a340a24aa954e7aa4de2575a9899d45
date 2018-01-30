@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "066536c7_691db4b4",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-30T15:10:44Z",
+      "side": 1,
+      "message": "nit: maybe mention something about the test (the bug is not with the roll)\n\ne.g. Fix dEQP renderbuffer unspecified attachment test.",
+      "range": {
+        "startLine": 7,
+        "startChar": 1,
+        "endLine": 7,
+        "endChar": 21
+      },
+      "revId": "14442cb01a340a24aa954e7aa4de2575a9899d45",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
