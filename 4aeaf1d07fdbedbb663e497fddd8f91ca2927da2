@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3323ce29_a24926c5",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-01-30T05:03:35Z",
+      "side": 1,
+      "message": "It\u0027s better to explicitly point out that these deqp cases were fixed by https://chromium-review.googlesource.com/c/angle/angle/+/878021",
+      "revId": "4aeaf1d07fdbedbb663e497fddd8f91ca2927da2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
