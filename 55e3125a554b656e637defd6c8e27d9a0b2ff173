@@ -1,0 +1,159 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "70e3dcc9_bd0e5d33",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 2237,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-01-30T06:22:57Z",
+      "side": 1,
+      "message": "Please move them next to the usage [1]",
+      "range": {
+        "startLine": 2233,
+        "startChar": 0,
+        "endLine": 2237,
+        "endChar": 5
+      },
+      "revId": "55e3125a554b656e637defd6c8e27d9a0b2ff173",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "37186aaa_41d69b26",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 2289,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-01-30T06:22:57Z",
+      "side": 1,
+      "message": "[1]",
+      "revId": "55e3125a554b656e637defd6c8e27d9a0b2ff173",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b22c7c74_c76563dd",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 2300,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-01-30T06:22:57Z",
+      "side": 1,
+      "message": "Do you need to remove this since you have called it at the beginning of Program::linkVaryings?",
+      "range": {
+        "startLine": 2297,
+        "startChar": 0,
+        "endLine": 2300,
+        "endChar": 5
+      },
+      "revId": "55e3125a554b656e637defd6c8e27d9a0b2ff173",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ae0920f4_c79988a0",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 2893,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-01-30T06:22:57Z",
+      "side": 1,
+      "message": "isArrayOfArrays()?",
+      "range": {
+        "startLine": 2893,
+        "startChar": 46,
+        "endLine": 2893,
+        "endChar": 56
+      },
+      "revId": "55e3125a554b656e637defd6c8e27d9a0b2ff173",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bfc62e41_8cd2a3a3",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 2895,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-01-30T06:22:57Z",
+      "side": 1,
+      "message": "Maybe you need to add a new MismatchError for this?",
+      "range": {
+        "startLine": 2895,
+        "startChar": 34,
+        "endLine": 2895,
+        "endChar": 53
+      },
+      "revId": "55e3125a554b656e637defd6c8e27d9a0b2ff173",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "188c8f7c_0a88ced3",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 2899,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-01-30T06:22:57Z",
+      "side": 1,
+      "message": "Why we need this parameter?",
+      "range": {
+        "startLine": 2899,
+        "startChar": 44,
+        "endLine": 2899,
+        "endChar": 66
+      },
+      "revId": "55e3125a554b656e637defd6c8e27d9a0b2ff173",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9f5a65db_45b91ee9",
+        "filename": "src/libANGLE/Shader.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-01-30T06:22:57Z",
+      "side": 1,
+      "message": "Can we make them as const functions?",
+      "range": {
+        "startLine": 180,
+        "startChar": 0,
+        "endLine": 183,
+        "endChar": 61
+      },
+      "revId": "55e3125a554b656e637defd6c8e27d9a0b2ff173",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
