@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1de1d9d6_2fbb3970",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 283,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-01-30T01:06:21Z",
+      "side": 1,
+      "message": "I could probably store this in a member, and use in initializeDevice(), if desireable?",
+      "range": {
+        "startLine": 283,
+        "startChar": 13,
+        "endLine": 283,
+        "endChar": 28
+      },
+      "revId": "b461335c0b926f27283defacc244af3404933d7c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
