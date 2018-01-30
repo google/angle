@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "1315db51_2bddc643",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-01-30T17:58:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b9574e28_b9d58e96",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 37
+      },
+      "revId": "9178c3b2e97faeb7cd854a8ebdb90e32997fe1f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "91feb323_03cd4735",
         "filename": "src/tests/deqp_support/tcuANGLEPlatform.cpp",
         "patchSetId": 6
@@ -45,6 +69,30 @@
       "revId": "9178c3b2e97faeb7cd854a8ebdb90e32997fe1f1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9b372816_bce00401",
+        "filename": "src/tests/deqp_support/tcuANGLEPlatform.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-01-30T17:58:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "91feb323_03cd4735",
+      "range": {
+        "startLine": 107,
+        "startChar": 4,
+        "endLine": 107,
+        "endChar": 5
+      },
+      "revId": "9178c3b2e97faeb7cd854a8ebdb90e32997fe1f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
