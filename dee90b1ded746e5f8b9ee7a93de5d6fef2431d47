@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9d7f1ab7_c28ed41f",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 602,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-01-30T01:28:43Z",
+      "side": 1,
+      "message": "Return the value directly to avoid the assignment.",
+      "range": {
+        "startLine": 601,
+        "startChar": 12,
+        "endLine": 602,
+        "endChar": 33
+      },
+      "revId": "dee90b1ded746e5f8b9ee7a93de5d6fef2431d47",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3cf6f344_7677e6fa",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 611,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-01-30T01:28:43Z",
+      "side": 1,
+      "message": "ditto.",
+      "range": {
+        "startLine": 610,
+        "startChar": 1,
+        "endLine": 611,
+        "endChar": 33
+      },
+      "revId": "dee90b1ded746e5f8b9ee7a93de5d6fef2431d47",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5d80f7b1_fc900eb5",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 616,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-01-30T01:28:43Z",
+      "side": 1,
+      "message": "ditto.",
+      "range": {
+        "startLine": 614,
+        "startChar": 0,
+        "endLine": 616,
+        "endChar": 0
+      },
+      "revId": "dee90b1ded746e5f8b9ee7a93de5d6fef2431d47",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
