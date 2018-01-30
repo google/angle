@@ -168,6 +168,30 @@
     },
     {
       "key": {
+        "uuid": "a1c3c64d_14320bed",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-30T20:59:50Z",
+      "side": 1,
+      "message": "Ah, yes, you misunderstood that comment. There\u0027s two ways of adding the standard validation layer. The \"legacy\" way is that function hard-coded into the loader. The new way is via a special JSON layer that has no shared objects.",
+      "parentUuid": "8913ddb9_6272e536",
+      "range": {
+        "startLine": 112,
+        "startChar": 12,
+        "endLine": 112,
+        "endChar": 36
+      },
+      "revId": "2f608f95edd6636eb26b53085a68b99f267a7e7c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "da7fecb8_bb301713",
         "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
         "patchSetId": 6
