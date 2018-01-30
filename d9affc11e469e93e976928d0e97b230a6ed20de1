@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "0d970fa6_c087a9a9",
+        "filename": "src/tests/BUILD.gn",
+        "patchSetId": 5
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-01-30T22:56:39Z",
+      "side": 1,
+      "message": "I don\u0027t think this is needed, as PrintSystemInfoTest seems to work without it.\nAlso, libGLESv2 depends on libANGLE which depends on angle_gpu_info_util, so you already have it.",
+      "range": {
+        "startLine": 181,
+        "startChar": 28,
+        "endLine": 181,
+        "endChar": 47
+      },
+      "revId": "d9affc11e469e93e976928d0e97b230a6ed20de1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "379c2f06_59fbbe07",
         "filename": "src/tests/egl_tests/EGLSanityCheckTest.cpp",
         "patchSetId": 5
@@ -13,6 +36,30 @@
       "writtenOn": "2018-01-30T22:29:14Z",
       "side": 1,
       "message": "nit: can you make two if defined blocks (one for the header at the top, one for the test body)?",
+      "range": {
+        "startLine": 39,
+        "startChar": 0,
+        "endLine": 42,
+        "endChar": 37
+      },
+      "revId": "d9affc11e469e93e976928d0e97b230a6ed20de1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8d277cf8_9927f082",
+        "filename": "src/tests/egl_tests/EGLSanityCheckTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-01-30T22:56:39Z",
+      "side": 1,
+      "message": "You could also \"#define SYSTEM_INFO_IMPLEMENTED\" like in src/tests/util_tests/PrintSystemInfoTest.cpp, to make it shorter.",
+      "parentUuid": "379c2f06_59fbbe07",
       "range": {
         "startLine": 39,
         "startChar": 0,
@@ -48,6 +95,30 @@
     },
     {
       "key": {
+        "uuid": "46064a7a_8e3c8e4d",
+        "filename": "src/tests/egl_tests/EGLSanityCheckTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-01-30T22:56:39Z",
+      "side": 1,
+      "message": "We should, PrintSystemInfoTest checks if (!gpu.driverVersion.empty()).\nBut this will be a headache if bots get driver updates.\n\nHere is an ugly solution:\nhave bots define special build flag, which will enable \"feature flag\" (that\u0027s a new GN mechanism to replace defines) and check it here.",
+      "parentUuid": "21180172_03fae9a1",
+      "range": {
+        "startLine": 76,
+        "startChar": 40,
+        "endLine": 76,
+        "endChar": 50
+      },
+      "revId": "d9affc11e469e93e976928d0e97b230a6ed20de1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d953d5bf_c788d861",
         "filename": "src/tests/egl_tests/EGLSanityCheckTest.cpp",
         "patchSetId": 5
@@ -59,6 +130,30 @@
       "writtenOn": "2018-01-30T22:29:14Z",
       "side": 1,
       "message": "I guess we cannot assume Vulkan is available on Android.",
+      "range": {
+        "startLine": 84,
+        "startChar": 8,
+        "endLine": 84,
+        "endChar": 17
+      },
+      "revId": "d9affc11e469e93e976928d0e97b230a6ed20de1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0beee720_833ff54a",
+        "filename": "src/tests/egl_tests/EGLSanityCheckTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-01-30T22:56:39Z",
+      "side": 1,
+      "message": "We should just omit this section until SystemInfo is implemented on Android.",
+      "parentUuid": "d953d5bf_c788d861",
       "range": {
         "startLine": 84,
         "startChar": 8,
