@@ -119,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "638de652_b1bf2be9",
+        "filename": "src/tests/egl_tests/EGLSanityCheckTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-30T22:59:22Z",
+      "side": 1,
+      "message": "Well, we don\u0027t need to check every driver version, only that some kind of comparison indicates a driver is newer than a certain version or date. The mapping from device ID -\u003e supports Vulkan is a bit tricky though.",
+      "parentUuid": "46064a7a_8e3c8e4d",
+      "range": {
+        "startLine": 76,
+        "startChar": 40,
+        "endLine": 76,
+        "endChar": 50
+      },
+      "revId": "d9affc11e469e93e976928d0e97b230a6ed20de1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d953d5bf_c788d861",
         "filename": "src/tests/egl_tests/EGLSanityCheckTest.cpp",
         "patchSetId": 5
