@@ -88,6 +88,30 @@
     },
     {
       "key": {
+        "uuid": "77fecde4_d5db961a",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 2893,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-01-30T06:34:02Z",
+      "side": 1,
+      "message": "Sorry, it should be \"if (isGeometryShaderInput \u0026\u0026 inputVarying.isArrayOfArrays()) according to your above comment.",
+      "parentUuid": "ae0920f4_c79988a0",
+      "range": {
+        "startLine": 2893,
+        "startChar": 46,
+        "endLine": 2893,
+        "endChar": 56
+      },
+      "revId": "55e3125a554b656e637defd6c8e27d9a0b2ff173",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "bfc62e41_8cd2a3a3",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 9
