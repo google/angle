@@ -183,6 +183,10 @@ void QueryTexParameterBase(const Texture *texture, GLenum pname, ParamType *para
         case GL_TEXTURE_SRGB_DECODE_EXT:
             *params = CastFromGLintStateValue<ParamType>(pname, texture->getSRGBDecode());
             break;
+        case GL_DEPTH_STENCIL_TEXTURE_MODE:
+            *params =
+                CastFromGLintStateValue<ParamType>(pname, texture->getDepthStencilTextureMode());
+            break;
         default:
             UNREACHABLE();
             break;

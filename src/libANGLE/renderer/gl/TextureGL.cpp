@@ -1154,6 +1154,13 @@ void TextureGL::syncState(const gl::Texture::DirtyBits &dirtyBits)
                 mAppliedMaxLevel = mState.getEffectiveMaxLevel();
                 mFunctions->texParameteri(getTarget(), GL_TEXTURE_MAX_LEVEL, mAppliedMaxLevel);
                 break;
+            case gl::Texture::DIRTY_BIT_DEPTH_STENCIL_TEXTURE_MODE:
+            {
+                GLenum mDepthStencilTextureMode = mState.getDepthStencilTextureMode();
+                mFunctions->texParameteri(getTarget(), GL_DEPTH_STENCIL_TEXTURE_MODE,
+                                          mDepthStencilTextureMode);
+                break;
+            }
             case gl::Texture::DIRTY_BIT_USAGE:
                 break;
             case gl::Texture::DIRTY_BIT_LABEL:

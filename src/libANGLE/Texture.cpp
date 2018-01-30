@@ -342,6 +342,26 @@ bool TextureState::computeSamplerCompleteness(const SamplerState &samplerState,
         }
     }
 
+    // OpenGLES 3.1 spec section 8.16 states that a texture is not mipmap complete if:
+    // The internalformat specified for the texture is DEPTH_STENCIL format, the value of
+    // DEPTH_STENCIL_TEXTURE_MODE is STENCIL_INDEX, and either the magnification filter is
+    // not NEAREST or the minification filter is neither NEAREST nor NEAREST_MIPMAP_NEAREST.
+    // However, the ES 3.1 spec differs from the statement above, because it is incorrect.
+    // See the issue at https://github.com/KhronosGroup/OpenGL-API/issues/33.
+    // For multismaple texture, filter state of multisample texture is ignored(11.1.3.3).
+    // So it shouldn't be judged as incomplete texture. So, we ignore filtering for multisample
+    // texture completeness here.
+    if (mTarget != GL_TEXTURE_2D_MULTISAMPLE && baseImageDesc.format.info->depthBits > 0 &&
+        mDepthStencilTextureMode == GL_STENCIL_INDEX)
+    {
+        if ((samplerState.minFilter != GL_NEAREST &&
+             samplerState.minFilter != GL_NEAREST_MIPMAP_NEAREST) ||
+            samplerState.magFilter != GL_NEAREST)
+        {
+            return false;
+        }
+    }
+
     return true;
 }
 
@@ -792,14 +812,12 @@ GLuint Texture::getMaxLevel() const
 
 void Texture::setDepthStencilTextureMode(GLenum mode)
 {
-    if (mode != mState.mDepthStencilTextureMode)
+    if (mState.mDepthStencilTextureMode != mode)
     {
-        // Changing the mode from the default state (GL_DEPTH_COMPONENT) is not implemented yet
-        UNIMPLEMENTED();
+        mState.mDepthStencilTextureMode = mode;
+        mDirtyBits.set(DIRTY_BIT_DEPTH_STENCIL_TEXTURE_MODE);
+        invalidateCompletenessCache();
     }
-
-    // TODO(geofflang): add dirty bits
-    mState.mDepthStencilTextureMode = mode;
 }
 
 GLenum Texture::getDepthStencilTextureMode() const

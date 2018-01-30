@@ -4994,6 +4994,14 @@ bool ValidateGetTexParameterBase(Context *context, GLenum target, GLenum pname, 
             }
             break;
 
+        case GL_DEPTH_STENCIL_TEXTURE_MODE:
+            if (context->getClientVersion() < Version(3, 1))
+            {
+                ANGLE_VALIDATION_ERR(context, InvalidEnum(), EnumRequiresGLES31);
+                return false;
+            }
+            break;
+
         default:
             ANGLE_VALIDATION_ERR(context, InvalidEnum(), EnumNotSupported);
             return false;
