@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "935f9cf8_2fa93a17",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-30T16:48:50Z",
+      "side": 1,
+      "message": "nit: can you put these in an anonymous namespace block (see other files for an example) and rename them as \n\nconstexpr unsigned int kStagesSupported \u003d 2;\nconstexpr unsigned int kComponentsPerVector \u003d 4;\n\nWe might not need the reserved uniform blocks variable, see below.",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 20,
+        "endChar": 41
+      },
+      "revId": "5b56d11b48b72e8125eb445665f3dcd23a626cc8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7a79456e_8af7184e",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-30T16:48:50Z",
+      "side": 1,
+      "message": "I don\u0027t think we need to reserve MAX_UINT for these.",
+      "range": {
+        "startLine": 67,
+        "startChar": 69,
+        "endLine": 67,
+        "endChar": 73
+      },
+      "revId": "5b56d11b48b72e8125eb445665f3dcd23a626cc8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "326a79ca_344c5a94",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-30T16:48:50Z",
+      "side": 1,
+      "message": "this is an ES 3.0 property and we can skip implementing it for now. Maybe leave a TODO and a comment about maxDescriptorSetUniformBuffers",
+      "range": {
+        "startLine": 102,
+        "startChar": 13,
+        "endLine": 102,
+        "endChar": 36
+      },
+      "revId": "5b56d11b48b72e8125eb445665f3dcd23a626cc8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cb0a46f9_d918f133",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-30T16:48:50Z",
+      "side": 1,
+      "message": "I think there\u0027s also one for vertex textures.",
+      "range": {
+        "startLine": 111,
+        "startChar": 13,
+        "endLine": 111,
+        "endChar": 34
+      },
+      "revId": "5b56d11b48b72e8125eb445665f3dcd23a626cc8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2c61f120_59241a51",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-30T16:48:50Z",
+      "side": 1,
+      "message": "can you leave a TODO(jmadill) here for counting reserved varyings?",
+      "range": {
+        "startLine": 113,
+        "startChar": 13,
+        "endLine": 113,
+        "endChar": 30
+      },
+      "revId": "5b56d11b48b72e8125eb445665f3dcd23a626cc8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "181a34dd_76458cf3",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-30T16:48:50Z",
+      "side": 1,
+      "message": "maybe you could move these two up near the vertexUniformComponents section and store this value in a temporary so we don\u0027t need to calculate it twice.",
+      "range": {
+        "startLine": 117,
+        "startChar": 42,
+        "endLine": 118,
+        "endChar": 87
+      },
+      "revId": "5b56d11b48b72e8125eb445665f3dcd23a626cc8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
