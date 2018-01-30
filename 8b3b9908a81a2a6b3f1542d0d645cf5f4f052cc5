@@ -22,6 +22,30 @@
       "revId": "8b3b9908a81a2a6b3f1542d0d645cf5f4f052cc5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "37df9aa4_2f3ea2fe",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2549,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-01-30T04:17:53Z",
+      "side": 1,
+      "message": "Thanks for your suggestion. Use switch-case to rewrite this part of codes. Currently, let\u0027s keep it here. We can move it to anonymous namespace when other places also need it.",
+      "parentUuid": "0073fc80_80d6fc90",
+      "range": {
+        "startLine": 2539,
+        "startChar": 0,
+        "endLine": 2549,
+        "endChar": 33
+      },
+      "revId": "8b3b9908a81a2a6b3f1542d0d645cf5f4f052cc5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
