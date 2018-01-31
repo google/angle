@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d5f1d869_689aade7",
+        "filename": "src/tests/compiler_tests/UnfoldShortCircuitAST_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-31T15:21:35Z",
+      "side": 1,
+      "message": "nit: comment before tests.",
+      "range": {
+        "startLine": 25,
+        "startChar": 0,
+        "endLine": 25,
+        "endChar": 6
+      },
+      "revId": "d0b7575712dddd7e77ed6bf0fa39aefe1a1ec864",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
