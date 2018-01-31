@@ -462,9 +462,7 @@ vk::Error WindowSurfaceVk::nextSwapchainImage(RendererVk *renderer)
 {
     VkDevice device = renderer->getDevice();
 
-    // Use a timeout of zero for AcquireNextImage so we don't actually block.
-    // TODO(jmadill): We should handle VK_NOT_READY and block until we can acquire the image.
-    ANGLE_VK_TRY(vkAcquireNextImageKHR(device, mSwapchain, 0,
+    ANGLE_VK_TRY(vkAcquireNextImageKHR(device, mSwapchain, UINT64_MAX,
                                        mAcquireNextImageSemaphore.getHandle(), VK_NULL_HANDLE,
                                        &mCurrentSwapchainImageIndex));
 
