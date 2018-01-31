@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f96422e3_7bfac9a3",
+        "filename": "src/vulkan_support/BUILD.gn",
+        "patchSetId": 6
+      },
+      "lineNbr": 866,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-31T18:51:04Z",
+      "side": 1,
+      "message": "seeing as this is only building right now, and not loading, can we take this out for now so we can try to find a way to load it without the copy to root_out_dir?",
+      "range": {
+        "startLine": 852,
+        "startChar": 0,
+        "endLine": 866,
+        "endChar": 3
+      },
+      "revId": "b8d290258b9bd3803962e5df9fcf8d0063b82af8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
