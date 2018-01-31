@@ -410,6 +410,9 @@ struct Limitations
     // Renderer doesn't support Simultaneous use of GL_CONSTANT_ALPHA/GL_ONE_MINUS_CONSTANT_ALPHA
     // and GL_CONSTANT_COLOR/GL_ONE_MINUS_CONSTANT_COLOR blend functions.
     bool noSimultaneousConstantColorAndAlphaBlendFunc;
+
+    // D3D9 does not support flexible varying register packing.
+    bool noFlexibleVaryingPacking;
 };
 
 struct TypePrecision

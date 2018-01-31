@@ -253,7 +253,8 @@ Limitations::Limitations()
       attributeZeroRequiresZeroDivisorInEXT(false),
       noSeparateStencilRefsAndMasks(false),
       shadersRequireIndexedLoopValidation(false),
-      noSimultaneousConstantColorAndAlphaBlendFunc(false)
+      noSimultaneousConstantColorAndAlphaBlendFunc(false),
+      noFlexibleVaryingPacking(false)
 {
 }
 

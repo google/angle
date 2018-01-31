@@ -141,6 +141,9 @@ enum class PackMode
 
     // We allow mat2 to take a 2x2 chunk.
     ANGLE_RELAXED,
+
+    // Each varying takes a separate register. No register sharing.
+    ANGLE_NON_CONFORMANT_D3D9,
 };
 
 class VaryingPacking final : angle::NonCopyable
@@ -175,8 +178,6 @@ class VaryingPacking final : angle::NonCopyable
     {
         return static_cast<unsigned int>(mRegisterList.size());
     }
-    unsigned int getRegisterCount() const;
-    size_t getRegisterMapSize() const { return mRegisterMap.size(); }
 
   private:
     bool packVarying(const PackedVarying &packedVarying);

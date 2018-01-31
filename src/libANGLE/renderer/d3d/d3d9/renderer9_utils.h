@@ -48,6 +48,8 @@ D3DMULTISAMPLE_TYPE GetMultisampleType(GLuint samples);
 namespace d3d9_gl
 {
 
+unsigned int GetReservedVaryingVectors();
+
 unsigned int GetReservedVertexUniformVectors();
 
 unsigned int GetReservedFragmentUniformVectors();

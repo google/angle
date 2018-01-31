@@ -69,7 +69,7 @@ VaryingPacking::~VaryingPacking() = default;
 // Returns false if unsuccessful.
 bool VaryingPacking::packVarying(const PackedVarying &packedVarying)
 {
-    const auto &varying = *packedVarying.varying;
+    const sh::ShaderVariable &varying = *packedVarying.varying;
 
     // "Non - square matrices of type matCxR consume the same space as a square matrix of type matN
     // where N is the greater of C and R."
@@ -80,9 +80,16 @@ bool VaryingPacking::packVarying(const PackedVarying &packedVarying)
     unsigned int varyingRows    = gl::VariableRowCount(transposedType);
     unsigned int varyingColumns = gl::VariableColumnCount(transposedType);
 
+    // Special pack mode for D3D9. Each varying takes a full register, no sharing.
+    // TODO(jmadill): Implement more sophisticated component packing in D3D9.
+    if (mPackMode == PackMode::ANGLE_NON_CONFORMANT_D3D9)
+    {
+        varyingColumns = 4;
+    }
+
     // "Variables of type mat2 occupies 2 complete rows."
     // For non-WebGL contexts, we allow mat2 to occupy only two columns per row.
-    if (mPackMode == PackMode::WEBGL_STRICT && varying.type == GL_FLOAT_MAT2)
+    else if (mPackMode == PackMode::WEBGL_STRICT && varying.type == GL_FLOAT_MAT2)
     {
         varyingColumns = 4;
     }
@@ -286,29 +293,40 @@ bool VaryingPacking::collectAndPackUserVaryings(gl::InfoLog &infoLog,
 
         // Only pack statically used varyings that have a matched input or output, plus special
         // builtins.
-        if (((input && output) || (output && output->isBuiltIn())) && output->staticUse)
+        if ((input && output && output->staticUse) ||
+            (input && input->isBuiltIn() && input->staticUse) ||
+            (output && output->isBuiltIn() && output->staticUse))
         {
-            // Will get the vertex shader interpolation by default.
-            auto interpolation = ref.second.get()->interpolation;
+            const sh::Varying *varying = output ? output : input;
 
-            // Note that we lose the vertex shader static use information here. The data for the
-            // variable is taken from the fragment shader.
-            if (output->isStruct())
+            // Don't count gl_Position. Also don't count gl_PointSize for D3D9.
+            if (varying->name != "gl_Position" &&
+                !(varying->name == "gl_PointSize" &&
+                  mPackMode == PackMode::ANGLE_NON_CONFORMANT_D3D9))
             {
-                ASSERT(!output->isArray());
-                for (const auto &field : output->fields)
+                // Will get the vertex shader interpolation by default.
+                auto interpolation = ref.second.get()->interpolation;
+
+                // Note that we lose the vertex shader static use information here. The data for the
+                // variable is taken from the fragment shader.
+                if (varying->isStruct())
                 {
-                    ASSERT(!field.isStruct() && !field.isArray());
-                    mPackedVaryings.push_back(PackedVarying(field, interpolation, output->name));
+                    ASSERT(!varying->isArray());
+                    for (const auto &field : varying->fields)
+                    {
+                        ASSERT(!field.isStruct() && !field.isArray());
+                        mPackedVaryings.push_back(
+                            PackedVarying(field, interpolation, varying->name));
+                        uniqueFullNames.insert(mPackedVaryings.back().fullName());
+                    }
+                }
+                else
+                {
+                    mPackedVaryings.push_back(PackedVarying(*varying, interpolation));
                     uniqueFullNames.insert(mPackedVaryings.back().fullName());
                 }
+                continue;
             }
-            else
-            {
-                mPackedVaryings.push_back(PackedVarying(*output, interpolation));
-                uniqueFullNames.insert(mPackedVaryings.back().fullName());
-            }
-            continue;
         }
 
         // Keep Transform FB varyings in the merged list always.
@@ -383,6 +401,14 @@ bool VaryingPacking::packUserVaryings(gl::InfoLog &infoLog,
         if (!packVarying(packedVarying))
         {
             infoLog << "Could not pack varying " << packedVarying.fullName();
+
+            // TODO(jmadill): Implement more sophisticated component packing in D3D9.
+            if (mPackMode == PackMode::ANGLE_NON_CONFORMANT_D3D9)
+            {
+                infoLog << "Note: Additional non-conformant packing restrictions are enforced on "
+                           "D3D9.";
+            }
+
             return false;
         }
     }
@@ -398,21 +424,6 @@ bool VaryingPacking::packUserVaryings(gl::InfoLog &infoLog,
     }
 
     return true;
-}
-
-unsigned int VaryingPacking::getRegisterCount() const
-{
-    unsigned int count = 0;
-
-    for (const Register &reg : mRegisterMap)
-    {
-        if (reg.data[0] || reg.data[1] || reg.data[2] || reg.data[3])
-        {
-            ++count;
-        }
-    }
-
-    return count;
 }
 
 }  // namespace rx

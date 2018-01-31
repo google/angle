@@ -1297,29 +1297,62 @@ TEST_P(GLSLTest, MaxVaryingVec4)
     VaryingTestBase(0, 0, 0, 0, 0, 0, maxVaryings, 0, false, false, false, true);
 }
 
-TEST_P(GLSLTest, MaxMinusTwoVaryingVec4PlusTwoSpecialVariables)
+// Verify we can pack registers with one builtin varying.
+TEST_P(GLSLTest, MaxVaryingVec4_OneBuiltin)
 {
     GLint maxVaryings = 0;
     glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
 
-    // Generate shader code that uses gl_FragCoord and gl_PointCoord, two special fragment shader variables.
+    // Generate shader code that uses gl_FragCoord.
+    VaryingTestBase(0, 0, 0, 0, 0, 0, maxVaryings - 1, 0, true, false, false, true);
+}
+
+// Verify we can pack registers with two builtin varyings.
+TEST_P(GLSLTest, MaxVaryingVec4_TwoBuiltins)
+{
+    GLint maxVaryings = 0;
+    glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
+
+    // Generate shader code that uses gl_FragCoord and gl_PointCoord.
     VaryingTestBase(0, 0, 0, 0, 0, 0, maxVaryings - 2, 0, true, true, false, true);
 }
 
-TEST_P(GLSLTest, MaxMinusTwoVaryingVec4PlusThreeSpecialVariables)
+// Verify we can pack registers with three builtin varyings.
+TEST_P(GLSLTest, MaxVaryingVec4_ThreeBuiltins)
 {
-    // TODO(geofflang): Figure out why this fails on OpenGL AMD (http://anglebug.com/1291)
-    if (IsAMD() && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
-    {
-        std::cout << "Test disabled on OpenGL." << std::endl;
-        return;
-    }
-
     GLint maxVaryings = 0;
     glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
 
     // Generate shader code that uses gl_FragCoord, gl_PointCoord and gl_PointSize.
-    VaryingTestBase(0, 0, 0, 0, 0, 0, maxVaryings - 2, 0, true, true, true, true);
+    VaryingTestBase(0, 0, 0, 0, 0, 0, maxVaryings - 3, 0, true, true, true, true);
+}
+
+// This covers a problematic case in D3D9 - we are limited by the number of available semantics,
+// rather than total register use.
+TEST_P(GLSLTest, MaxVaryingsSpecialCases)
+{
+    ANGLE_SKIP_TEST_IF(!IsD3D9());
+
+    GLint maxVaryings = 0;
+    glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
+
+    VaryingTestBase(maxVaryings, 0, 0, 0, 0, 0, 0, 0, true, false, false, false);
+    VaryingTestBase(maxVaryings - 1, 0, 0, 0, 0, 0, 0, 0, true, true, false, false);
+    VaryingTestBase(maxVaryings - 2, 0, 0, 0, 0, 0, 0, 0, true, true, false, true);
+
+    // Special case for gl_PointSize: we get it for free on D3D9.
+    VaryingTestBase(maxVaryings - 2, 0, 0, 0, 0, 0, 0, 0, true, true, true, true);
+}
+
+// This covers a problematic case in D3D9 - we are limited by the number of available semantics,
+// rather than total register use.
+TEST_P(GLSLTest, MaxMinusTwoVaryingVec2PlusOneSpecialVariable)
+{
+    GLint maxVaryings = 0;
+    glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
+
+    // Generate shader code that uses gl_FragCoord.
+    VaryingTestBase(0, 0, maxVaryings, 0, 0, 0, 0, 0, true, false, false, !IsD3D9());
 }
 
 TEST_P(GLSLTest, MaxVaryingVec3)
@@ -1338,45 +1371,27 @@ TEST_P(GLSLTest, MaxVaryingVec3Array)
     VaryingTestBase(0, 0, 0, 0, 0, maxVaryings / 2, 0, 0, false, false, false, true);
 }
 
-// Disabled because of a failure in D3D9
+// Only fails on D3D9 because of packing limitations.
 TEST_P(GLSLTest, MaxVaryingVec3AndOneFloat)
 {
-    if (IsD3D9())
-    {
-        std::cout << "Test disabled on D3D9." << std::endl;
-        return;
-    }
-
     GLint maxVaryings = 0;
     glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
 
-    VaryingTestBase(1, 0, 0, 0, maxVaryings, 0, 0, 0, false, false, false, true);
+    VaryingTestBase(1, 0, 0, 0, maxVaryings, 0, 0, 0, false, false, false, !IsD3D9());
 }
 
-// Disabled because of a failure in D3D9
+// Only fails on D3D9 because of packing limitations.
 TEST_P(GLSLTest, MaxVaryingVec3ArrayAndOneFloatArray)
 {
-    if (IsD3D9())
-    {
-        std::cout << "Test disabled on D3D9." << std::endl;
-        return;
-    }
-
     GLint maxVaryings = 0;
     glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
 
-    VaryingTestBase(0, 1, 0, 0, 0, maxVaryings / 2, 0, 0, false, false, false, true);
+    VaryingTestBase(0, 1, 0, 0, 0, maxVaryings / 2, 0, 0, false, false, false, !IsD3D9());
 }
 
-// Disabled because of a failure in D3D9
+// Only fails on D3D9 because of packing limitations.
 TEST_P(GLSLTest, TwiceMaxVaryingVec2)
 {
-    if (IsD3D9())
-    {
-        std::cout << "Test disabled on D3D9." << std::endl;
-        return;
-    }
-
     if (getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE)
     {
         // TODO(geofflang): Figure out why this fails on NVIDIA's GLES driver
@@ -1397,7 +1412,7 @@ TEST_P(GLSLTest, TwiceMaxVaryingVec2)
     GLint maxVaryings = 0;
     glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
 
-    VaryingTestBase(0, 0, 2 * maxVaryings, 0, 0, 0, 0, 0, false, false, false, true);
+    VaryingTestBase(0, 0, 2 * maxVaryings, 0, 0, 0, 0, 0, false, false, false, !IsD3D9());
 }
 
 // Disabled because of a failure in D3D9
