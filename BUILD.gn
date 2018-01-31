@@ -96,8 +96,13 @@ config("extra_warnings") {
     ]
   }
   if (is_clang) {
-    # Remove when crbug.com/428099 is resolved.
-    cflags += [ "-Winconsistent-missing-override" ]
+    cflags += [
+      # Remove when crbug.com/428099 is resolved.
+      "-Winconsistent-missing-override",
+
+      # TODO(thakis): Consider enabling this, https://crbug.com/807632
+      "-Wno-implicit-fallthrough",
+    ]
   }
 }
 
