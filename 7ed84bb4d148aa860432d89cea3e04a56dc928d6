@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "a0950954_79d42f76",
+        "filename": "scripts/generate_vulkan_layers_json.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2018-01-31T21:10:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "036e9669_4eabf45d",
+      "range": {
+        "startLine": 37,
+        "startChar": 43,
+        "endLine": 37,
+        "endChar": 67
+      },
+      "revId": "7ed84bb4d148aa860432d89cea3e04a56dc928d6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a04568d9_bd936d3d",
         "filename": "src/vulkan_support/BUILD.gn",
         "patchSetId": 3
