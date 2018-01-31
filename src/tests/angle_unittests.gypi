@@ -91,6 +91,7 @@
             '<(angle_path)/src/tests/compiler_tests/ShaderVariable_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/ShCompile_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/TypeTracking_test.cpp',
+            '<(angle_path)/src/tests/compiler_tests/UnfoldShortCircuitAST_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/VariablePacker_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/VectorizeVectorScalarArithmetic_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/WEBGL_multiview_test.cpp',

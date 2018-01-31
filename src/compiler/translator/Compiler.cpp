@@ -495,13 +495,11 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         RewriteDoWhile(root, &symbolTable);
 
     if (compileOptions & SH_ADD_AND_TRUE_TO_LOOP_CONDITION)
-        sh::AddAndTrueToLoopCondition(root);
+        AddAndTrueToLoopCondition(root);
 
     if (compileOptions & SH_UNFOLD_SHORT_CIRCUIT)
     {
-        UnfoldShortCircuitAST unfoldShortCircuit;
-        root->traverse(&unfoldShortCircuit);
-        unfoldShortCircuit.updateTree();
+        UnfoldShortCircuitAST(root);
     }
 
     if (compileOptions & SH_REMOVE_POW_WITH_CONSTANT_EXPONENT)

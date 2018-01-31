@@ -6,6 +6,7 @@
 
 #include "compiler/translator/AddAndTrueToLoopCondition.h"
 
+#include "compiler/translator/IntermNode_util.h"
 #include "compiler/translator/IntermTraverse.h"
 
 namespace sh
@@ -36,9 +37,7 @@ class AddAndTrueToLoopConditionTraverser : public TIntermTraverser
         }
 
         // Constant true.
-        TConstantUnion *trueConstant = new TConstantUnion();
-        trueConstant->setBConst(true);
-        TIntermTyped *trueValue = new TIntermConstantUnion(trueConstant, TType(EbtBool));
+        TIntermTyped *trueValue = CreateBoolNode(true);
 
         // CONDITION && true.
         TIntermBinary *andOp = new TIntermBinary(EOpLogicalAnd, loop->getCondition(), trueValue);
