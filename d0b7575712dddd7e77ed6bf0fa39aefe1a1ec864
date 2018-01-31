@@ -22,6 +22,30 @@
       "revId": "d0b7575712dddd7e77ed6bf0fa39aefe1a1ec864",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d8f575fc_63306bcc",
+        "filename": "src/tests/compiler_tests/UnfoldShortCircuitAST_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-01-31T15:28:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d5f1d869_689aade7",
+      "range": {
+        "startLine": 25,
+        "startChar": 0,
+        "endLine": 25,
+        "endChar": 6
+      },
+      "revId": "d0b7575712dddd7e77ed6bf0fa39aefe1a1ec864",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
