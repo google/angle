@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6d9194c2_912d8a9e",
+        "filename": "src/tests/deqp_support/deqp_egl_test_expectations.txt",
+        "patchSetId": 5
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-31T20:09:04Z",
+      "side": 1,
+      "message": "did you mean to also add the failures for issue 2330 and 2329? (If so you can also tag this issue with Bug: tags.) Or were you going to fix them first?",
+      "range": {
+        "startLine": 55,
+        "startChar": 5,
+        "endLine": 55,
+        "endChar": 10
+      },
+      "revId": "beda1fdecfa66819fd78d407405bc04d78ff8acb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aa0f443f_2d4467fa",
+        "filename": "src/tests/deqp_support/deqp_gles2_test_expectations.txt",
+        "patchSetId": 5
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-31T20:09:04Z",
+      "side": 1,
+      "message": "oh, here they are. I think this is the wrong file. Also you can use DEBUG RELEASE.",
+      "range": {
+        "startLine": 166,
+        "startChar": 0,
+        "endLine": 171,
+        "endChar": 137
+      },
+      "revId": "beda1fdecfa66819fd78d407405bc04d78ff8acb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
