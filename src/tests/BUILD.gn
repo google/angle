@@ -307,6 +307,7 @@ if (build_angle_gles1_conform_tests) {
       "COMMON",
       "CONFORM_ALTERNATE_MAIN",
       "NULLWS",
+      "GL_GLEXT_PROTOTYPES",
     ]
 
     cflags = []
@@ -460,6 +461,8 @@ if (build_angle_gles1_conform_tests) {
              angle_root + ":libEGL",
              angle_root + ":libGLESv1_CM",
              angle_root + ":libGLESv2",
+             angle_root + ":preprocessor",
+             angle_root + ":translator",
            ]
 
     include_dirs = [
