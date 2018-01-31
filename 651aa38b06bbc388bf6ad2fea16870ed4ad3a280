@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f1215ee2_d759463c",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2547,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-31T20:12:24Z",
+      "side": 1,
+      "message": "nit: space between MAX_COMBINED_UNIFORM_BLOCKS and (",
+      "range": {
+        "startLine": 2547,
+        "startChar": 28,
+        "endLine": 2547,
+        "endChar": 55
+      },
+      "revId": "651aa38b06bbc388bf6ad2fea16870ed4ad3a280",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "34480e09_b812f910",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2552,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-31T20:12:24Z",
+      "side": 1,
+      "message": "nit: same",
+      "range": {
+        "startLine": 2552,
+        "startChar": 28,
+        "endLine": 2552,
+        "endChar": 62
+      },
+      "revId": "651aa38b06bbc388bf6ad2fea16870ed4ad3a280",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7f5df134_5b6c69f6",
+        "filename": "src/tests/gl_tests/ShaderStorageBufferTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-01-31T20:12:24Z",
+      "side": 1,
+      "message": "nit: defuault init this. Also check for GL errors somewhere in this test.",
+      "range": {
+        "startLine": 91,
+        "startChar": 10,
+        "endLine": 91,
+        "endChar": 38
+      },
+      "revId": "651aa38b06bbc388bf6ad2fea16870ed4ad3a280",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
