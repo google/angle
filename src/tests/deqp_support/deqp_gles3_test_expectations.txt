@@ -92,11 +92,6 @@
 2222 D3D11 NVIDIA : dEQP-GLES3.functional.texture.mipmap.3d.min_lod.nearest_nearest = FAIL
 2222 LINUX NVIDIA : dEQP-GLES3.functional.fbo.completeness.samples.rbo2_rbo2_rbo0 = FAIL
 
-// Failing everywhere
-1101 DEBUG RELEASE : dEQP-GLES3.functional.negative_api.texture.compressedtexsubimage2d = FAIL
-1101 DEBUG RELEASE : dEQP-GLES3.functional.negative_api.texture.compressedtexsubimage3d = FAIL
-1101 DEBUG RELEASE : dEQP-GLES3.functional.negative_api.texture.compressedtexsubimage3d_invalid_buffer_target = FAIL
-
 // Windows and Linux failures
 
 1095 WIN LINUX : dEQP-GLES3.functional.texture.mipmap.2d.projected.nearest_nearest_clamp = FAIL
