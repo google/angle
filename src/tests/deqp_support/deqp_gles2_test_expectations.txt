@@ -165,3 +165,33 @@
 1028 WIN LINUX MAC : dEQP-GLES2.functional.fbo.completeness.renderable.texture.depth.depth_component_unsigned_short = FAIL
 1028 WIN LINUX MAC : dEQP-GLES2.functional.fbo.completeness.renderable.texture.depth.depth_component_unsigned_int = FAIL
 1028 WIN LINUX MAC : dEQP-GLES2.functional.fbo.completeness.renderable.texture.depth.srgb8 = FAIL
+
+// Vulkan failures
+2161 VULKAN : dEQP-GLES2.functional.prerequisite.* = SKIP
+2161 VULKAN : dEQP-GLES2.functional.implementation_limits.* = SKIP
+2161 VULKAN : dEQP-GLES2.functional.color_clear.* = SKIP
+2161 VULKAN : dEQP-GLES2.functional.depth_stencil_clear.* = SKIP
+2161 VULKAN : dEQP-GLES2.functional.buffer.* = SKIP
+2161 VULKAN : dEQP-GLES2.functional.light_amount.* = SKIP
+2161 VULKAN : dEQP-GLES2.functional.shaders.* = SKIP
+2161 VULKAN : dEQP-GLES2.functional.texture.* = SKIP
+2161 VULKAN : dEQP-GLES2.functional.fragment_ops.* = SKIP
+2161 VULKAN : dEQP-GLES2.functional.fbo.* = SKIP
+// Conflicts with Android expectation, specify the OSs
+2161 VULKAN WIN LINUX MAC : dEQP-GLES2.functional.vertex_arrays.* = SKIP
+2161 VULKAN : dEQP-GLES2.functional.shader_api.* = SKIP
+2161 VULKAN : dEQP-GLES2.functional.negative_api.* = SKIP
+2161 VULKAN : dEQP-GLES2.functional.rasterization.* = SKIP
+2161 VULKAN : dEQP-GLES2.functional.attribute_location.* = SKIP
+2161 VULKAN : dEQP-GLES2.functional.multisample.* = SKIP
+2161 VULKAN : dEQP-GLES2.functional.uniform_api.* = SKIP
+2161 VULKAN : dEQP-GLES2.functional.read_pixels.* = SKIP
+2161 VULKAN : dEQP-GLES2.functional.depth_range.* = SKIP
+2161 VULKAN : dEQP-GLES2.functional.dither.* = SKIP
+2161 VULKAN : dEQP-GLES2.functional.state_query.* = SKIP
+2161 VULKAN : dEQP-GLES2.functional.clipping.* = SKIP
+2161 VULKAN : dEQP-GLES2.functional.polygon_offset.* = SKIP
+2161 VULKAN : dEQP-GLES2.functional.draw.* = SKIP
+2161 VULKAN : dEQP-GLES2.functional.default_vertex_attrib.* = SKIP
+2161 VULKAN : dEQP-GLES2.functional.lifetime.* = SKIP
+2161 VULKAN : dEQP-GLES2.functional.debug_marker.* = SKIP

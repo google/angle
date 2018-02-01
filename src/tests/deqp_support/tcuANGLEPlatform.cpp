@@ -111,8 +111,8 @@ ANGLEPlatform::ANGLEPlatform()
         vkAttribs.push_back(EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE);
         vkAttribs.push_back(EGL_NONE);
 
-        auto *vkFactory =
-            new ANGLENativeDisplayFactory("angle-vk", "ANGLE Vulkan Display", vkAttribs, &mEvents);
+        auto *vkFactory = new ANGLENativeDisplayFactory("angle-vulkan", "ANGLE Vulkan Display",
+                                                        vkAttribs, &mEvents);
         m_nativeDisplayFactoryRegistry.registerFactory(vkFactory);
     }
 #endif

@@ -48,9 +48,12 @@ const char *g_TestExpectationsFiles[] = {
 using APIInfo = std::pair<const char *, gpu::GPUTestConfig::API>;
 
 const APIInfo g_eglDisplayAPIs[] = {
-    { "angle-d3d9", gpu::GPUTestConfig::kAPID3D9 },{ "angle-d3d11", gpu::GPUTestConfig::kAPID3D11 },
-    { "angle-gl", gpu::GPUTestConfig::kAPIGLDesktop },{ "angle-gles", gpu::GPUTestConfig::kAPIGLES },
-    { "angle-null", gpu::GPUTestConfig::kAPIUnknown },{ "angle-vk", gpu::GPUTestConfig::kAPIVulkan },
+    {"angle-d3d9", gpu::GPUTestConfig::kAPID3D9},
+    {"angle-d3d11", gpu::GPUTestConfig::kAPID3D11},
+    {"angle-gl", gpu::GPUTestConfig::kAPIGLDesktop},
+    {"angle-gles", gpu::GPUTestConfig::kAPIGLES},
+    {"angle-null", gpu::GPUTestConfig::kAPIUnknown},
+    {"angle-vulkan", gpu::GPUTestConfig::kAPIVulkan},
 };
 
 const char *g_deqpEGLString = "--deqp-egl-display-type=";
