@@ -71,6 +71,29 @@
     },
     {
       "key": {
+        "uuid": "000f2caa_c66cd7bc",
+        "filename": "src/tests/gl_tests/AngleFunctionalTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-02-01T00:54:19Z",
+      "side": 1,
+      "message": "Since heap is not only used in the allocation of textures, is it better to add a test for this bug to HandleAllocator_unittest.cpp instead of this one?",
+      "range": {
+        "startLine": 34,
+        "startChar": 0,
+        "endLine": 34,
+        "endChar": 43
+      },
+      "revId": "9a716b037ade39fc49332aef8f45fdc5248c6efc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6f7560ea_37a29025",
         "filename": "src/tests/gl_tests/AngleFunctionalTest.cpp",
         "patchSetId": 2
