@@ -8,6 +8,7 @@
 
 #include "compiler/translator/IntermNode_util.h"
 
+#include "compiler/translator/FunctionLookup.h"
 #include "compiler/translator/SymbolTable.h"
 
 namespace sh
@@ -21,7 +22,7 @@ const TFunction *LookUpBuiltInFunction(const TString &name,
                                        const TSymbolTable &symbolTable,
                                        int shaderVersion)
 {
-    TString mangledName = TFunction::GetMangledNameFromCall(name, *arguments);
+    const TString &mangledName = TFunctionLookup::GetMangledName(name, *arguments);
     const TSymbol *symbol = symbolTable.findBuiltIn(mangledName, shaderVersion);
     if (symbol)
     {

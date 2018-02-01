@@ -11,6 +11,7 @@
 #include "compiler/translator/Declarator.h"
 #include "compiler/translator/Diagnostics.h"
 #include "compiler/translator/DirectiveHandler.h"
+#include "compiler/translator/FunctionLookup.h"
 #include "compiler/translator/QualifierTypes.h"
 #include "compiler/translator/SymbolTable.h"
 
@@ -120,7 +121,7 @@ class TParseContext : angle::NonCopyable
     void checkIsScalarInteger(TIntermTyped *node, const char *token);
     bool checkIsAtGlobalLevel(const TSourceLoc &line, const char *token);
     bool checkConstructorArguments(const TSourceLoc &line,
-                                   const TIntermSequence *arguments,
+                                   const TIntermSequence &arguments,
                                    const TType &type);
 
     // Returns a sanitized array size to use (the size is at least 1).
@@ -291,8 +292,8 @@ class TParseContext : angle::NonCopyable
     TFunction *parseFunctionHeader(const TPublicType &type,
                                    const TString *name,
                                    const TSourceLoc &location);
-    TFunction *addNonConstructorFunc(const TString *name, const TSourceLoc &loc);
-    TFunction *addConstructorFunc(const TPublicType &publicType);
+    TFunctionLookup *addNonConstructorFunc(const TString *name);
+    TFunctionLookup *addConstructorFunc(const TPublicType &publicType);
     TParameter parseParameterDeclarator(const TPublicType &publicType,
                                         const TString *name,
                                         const TSourceLoc &nameLoc);
@@ -419,14 +420,10 @@ class TParseContext : angle::NonCopyable
     void checkImageMemoryAccessForUserDefinedFunctions(const TFunction *functionDefinition,
                                                        const TIntermAggregate *functionCall);
     void checkAtomicMemoryBuiltinFunctions(TIntermAggregate *functionCall);
-    TIntermSequence *createEmptyArgumentsList();
 
     // fnCall is only storing the built-in op, and function name or constructor type. arguments
     // has the arguments.
-    TIntermTyped *addFunctionCallOrMethod(TFunction *fnCall,
-                                          TIntermSequence *arguments,
-                                          TIntermNode *thisNode,
-                                          const TSourceLoc &loc);
+    TIntermTyped *addFunctionCallOrMethod(TFunctionLookup *fnCall, const TSourceLoc &loc);
 
     TIntermTyped *addTernarySelection(TIntermTyped *cond,
                                       TIntermTyped *trueExpression,
@@ -523,7 +520,7 @@ class TParseContext : angle::NonCopyable
 
     void checkYuvIsNotSpecified(const TSourceLoc &location, bool yuv);
 
-    bool checkUnsizedArrayConstructorArgumentDimensionality(TIntermSequence *arguments,
+    bool checkUnsizedArrayConstructorArgumentDimensionality(const TIntermSequence &arguments,
                                                             TType type,
                                                             const TSourceLoc &line);
 
@@ -549,16 +546,9 @@ class TParseContext : angle::NonCopyable
                                 const TSourceLoc &loc);
     TIntermTyped *createUnaryMath(TOperator op, TIntermTyped *child, const TSourceLoc &loc);
 
-    TIntermTyped *addMethod(const TString &name,
-                            TIntermSequence *arguments,
-                            TIntermNode *thisNode,
-                            const TSourceLoc &loc);
-    TIntermTyped *addConstructor(TIntermSequence *arguments,
-                                 TType type,
-                                 const TSourceLoc &line);
-    TIntermTyped *addNonConstructorFunctionCall(const TString &name,
-                                                TIntermSequence *arguments,
-                                                const TSourceLoc &loc);
+    TIntermTyped *addMethod(TFunctionLookup *fnCall, const TSourceLoc &loc);
+    TIntermTyped *addConstructor(TFunctionLookup *fnCall, const TSourceLoc &line);
+    TIntermTyped *addNonConstructorFunctionCall(TFunctionLookup *fnCall, const TSourceLoc &loc);
 
     // Return either the original expression or the folded version of the expression in case the
     // folded node will validate the same way during subsequent parsing.

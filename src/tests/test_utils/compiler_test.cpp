@@ -10,6 +10,7 @@
 
 #include "angle_gl.h"
 #include "compiler/translator/Compiler.h"
+#include "compiler/translator/FunctionLookup.h"
 #include "compiler/translator/IntermTraverse.h"
 
 namespace sh
@@ -17,6 +18,22 @@ namespace sh
 
 namespace
 {
+
+const TString &GetSymbolTableMangledName(TIntermAggregate *node)
+{
+    ASSERT(!node->isConstructor());
+    switch (node->getOp())
+    {
+        case EOpCallInternalRawFunction:
+        case EOpCallBuiltInFunction:
+        case EOpCallFunctionInAST:
+            return TFunctionLookup::GetMangledName(node->getFunction()->name(),
+                                                   *node->getSequence());
+        default:
+            TString opString = GetOperatorString(node->getOp());
+            return TFunctionLookup::GetMangledName(opString, *node->getSequence());
+    }
+}
 
 class FunctionCallFinder : public TIntermTraverser
 {
@@ -30,7 +47,7 @@ class FunctionCallFinder : public TIntermTraverser
 
     bool visitAggregate(Visit visit, TIntermAggregate *node) override
     {
-        if (node->isFunctionCall() && node->getSymbolTableMangledName() == mFunctionMangledName)
+        if (node->isFunctionCall() && GetSymbolTableMangledName(node) == mFunctionMangledName)
         {
             mNodeFound = node;
             return false;

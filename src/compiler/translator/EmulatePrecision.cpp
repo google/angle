@@ -6,6 +6,8 @@
 
 #include "compiler/translator/EmulatePrecision.h"
 
+#include "compiler/translator/FunctionLookup.h"
+
 #include <memory>
 
 namespace sh
@@ -713,7 +715,7 @@ const TFunction *EmulatePrecision::getInternalFunction(TString *functionName,
                                                        const TVector<TConstParameter> &parameters,
                                                        bool knownToNotHaveSideEffects)
 {
-    TString mangledName = TFunction::GetMangledNameFromCall(*functionName, *arguments);
+    TString mangledName = TFunctionLookup::GetMangledName(*functionName, *arguments);
     if (mInternalFunctions.find(mangledName) == mInternalFunctions.end())
     {
         TFunction *func = new TFunction(mSymbolTable, functionName, new TType(returnType),

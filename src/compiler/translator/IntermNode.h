@@ -533,15 +533,6 @@ class TIntermUnary : public TIntermOperator
 typedef TVector<TIntermNode *> TIntermSequence;
 typedef TVector<int> TQualifierList;
 
-//
-// This is just to help yacc.
-//
-struct TIntermFunctionCallOrMethod
-{
-    TIntermSequence *arguments;
-    TIntermNode *thisNode;
-};
-
 // Interface for node classes that have an arbitrarily sized set of children.
 class TIntermAggregateBase
 {
@@ -598,8 +589,6 @@ class TIntermAggregate : public TIntermOperator, public TIntermAggregateBase
 
     TIntermSequence *getSequence() override { return &mArguments; }
     const TIntermSequence *getSequence() const override { return &mArguments; }
-
-    TString getSymbolTableMangledName() const;
 
     void setUseEmulatedFunction() { mUseEmulatedFunction = true; }
     bool getUseEmulatedFunction() { return mUseEmulatedFunction; }

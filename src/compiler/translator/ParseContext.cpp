@@ -695,16 +695,16 @@ bool TParseContext::checkIsNotReserved(const TSourceLoc &line, const TString &id
 
 // Make sure the argument types are correct for constructing a specific type.
 bool TParseContext::checkConstructorArguments(const TSourceLoc &line,
-                                              const TIntermSequence *arguments,
+                                              const TIntermSequence &arguments,
                                               const TType &type)
 {
-    if (arguments->empty())
+    if (arguments.empty())
     {
         error(line, "constructor does not have any arguments", "constructor");
         return false;
     }
 
-    for (TIntermNode *arg : *arguments)
+    for (TIntermNode *arg : arguments)
     {
         const TIntermTyped *argTyped = arg->getAsTyped();
         ASSERT(argTyped != nullptr);
@@ -731,14 +731,14 @@ bool TParseContext::checkConstructorArguments(const TSourceLoc &line,
     {
         // The size of an unsized constructor should already have been determined.
         ASSERT(!type.isUnsizedArray());
-        if (static_cast<size_t>(type.getOutermostArraySize()) != arguments->size())
+        if (static_cast<size_t>(type.getOutermostArraySize()) != arguments.size())
         {
             error(line, "array constructor needs one argument per array element", "constructor");
             return false;
         }
         // GLSL ES 3.00 section 5.4.4: Each argument must be the same type as the element type of
         // the array.
-        for (TIntermNode *const &argNode : *arguments)
+        for (TIntermNode *const &argNode : arguments)
         {
             const TType &argType = argNode->getAsTyped()->getType();
             if (mShaderVersion < 310 && argType.isArray())
@@ -756,7 +756,7 @@ bool TParseContext::checkConstructorArguments(const TSourceLoc &line,
     else if (type.getBasicType() == EbtStruct)
     {
         const TFieldList &fields = type.getStruct()->fields();
-        if (fields.size() != arguments->size())
+        if (fields.size() != arguments.size())
         {
             error(line,
                   "Number of constructor parameters does not match the number of structure fields",
@@ -766,8 +766,8 @@ bool TParseContext::checkConstructorArguments(const TSourceLoc &line,
 
         for (size_t i = 0; i < fields.size(); i++)
         {
-            if (i >= arguments->size() ||
-                (*arguments)[i]->getAsTyped()->getType() != *fields[i]->type())
+            if (i >= arguments.size() ||
+                arguments[i]->getAsTyped()->getType() != *fields[i]->type())
             {
                 error(line, "Structure constructor arguments do not match structure fields",
                       "constructor");
@@ -787,7 +787,7 @@ bool TParseContext::checkConstructorArguments(const TSourceLoc &line,
         bool full      = false;
         bool overFull  = false;
         bool matrixArg = false;
-        for (TIntermNode *arg : *arguments)
+        for (TIntermNode *arg : arguments)
         {
             const TIntermTyped *argTyped = arg->getAsTyped();
             ASSERT(argTyped != nullptr);
@@ -821,7 +821,7 @@ bool TParseContext::checkConstructorArguments(const TSourceLoc &line,
 
         if (type.isMatrix() && matrixArg)
         {
-            if (arguments->size() != 1)
+            if (arguments.size() != 1)
             {
                 error(line, "constructing matrix from matrix can only take one argument",
                       "constructor");
@@ -3418,19 +3418,12 @@ TFunction *TParseContext::parseFunctionHeader(const TPublicType &type,
     return new TFunction(&symbolTable, name, new TType(type), SymbolType::UserDefined, false);
 }
 
-TFunction *TParseContext::addNonConstructorFunc(const TString *name, const TSourceLoc &loc)
+TFunctionLookup *TParseContext::addNonConstructorFunc(const TString *name)
 {
-    const TType *returnType = StaticType::GetQualified<EbtVoid, EvqTemporary>();
-    // TODO(oetuaho): Some more appropriate data structure than TFunction could be used here. We're
-    // really only interested in the mangled name of the function to look up the actual function
-    // from the symbol table. If we just had the name string and the types of the parameters that
-    // would be enough, but TFunction carries a lot of extra information in addition to that.
-    // Besides function calls we do have to store constructor calls in the same data structure, for
-    // them we need to store a TType.
-    return new TFunction(&symbolTable, name, returnType, SymbolType::NotResolved, false);
+    return TFunctionLookup::CreateFunctionCall(name);
 }
 
-TFunction *TParseContext::addConstructorFunc(const TPublicType &publicType)
+TFunctionLookup *TParseContext::addConstructorFunc(const TPublicType &publicType)
 {
     if (mShaderVersion < 300 && publicType.isArray())
     {
@@ -3450,8 +3443,7 @@ TFunction *TParseContext::addConstructorFunc(const TPublicType &publicType)
               getBasicString(publicType.getBasicType()));
         type->setBasicType(EbtFloat);
     }
-
-    return new TFunction(&symbolTable, nullptr, type, SymbolType::NotResolved, true, EOpConstruct);
+    return TFunctionLookup::CreateConstructor(type);
 }
 
 void TParseContext::checkIsNotUnsizedArray(const TSourceLoc &line,
@@ -3502,18 +3494,19 @@ TParameter TParseContext::parseParameterArrayDeclarator(const TString *name,
     return parseParameterDeclarator(arrayType, name, nameLoc);
 }
 
-bool TParseContext::checkUnsizedArrayConstructorArgumentDimensionality(TIntermSequence *arguments,
-                                                                       TType type,
-                                                                       const TSourceLoc &line)
+bool TParseContext::checkUnsizedArrayConstructorArgumentDimensionality(
+    const TIntermSequence &arguments,
+    TType type,
+    const TSourceLoc &line)
 {
-    if (arguments->empty())
+    if (arguments.empty())
     {
         error(line, "implicitly sized array constructor must have at least one argument", "[]");
         return false;
     }
-    for (TIntermNode *arg : *arguments)
+    for (TIntermNode *arg : arguments)
     {
-        TIntermTyped *element = arg->getAsTyped();
+        const TIntermTyped *element = arg->getAsTyped();
         ASSERT(element);
         size_t dimensionalityFromElement = element->getType().getNumArraySizes() + 1u;
         if (dimensionalityFromElement > type.getNumArraySizes())
@@ -3546,10 +3539,10 @@ bool TParseContext::checkUnsizedArrayConstructorArgumentDimensionality(TIntermSe
 //
 // Returns a node to add to the tree regardless of if an error was generated or not.
 //
-TIntermTyped *TParseContext::addConstructor(TIntermSequence *arguments,
-                                            TType type,
-                                            const TSourceLoc &line)
+TIntermTyped *TParseContext::addConstructor(TFunctionLookup *fnCall, const TSourceLoc &line)
 {
+    TType type                 = fnCall->constructorType();
+    TIntermSequence &arguments = fnCall->arguments();
     if (type.isUnsizedArray())
     {
         if (!checkUnsizedArrayConstructorArgumentDimensionality(arguments, type, line))
@@ -3557,11 +3550,11 @@ TIntermTyped *TParseContext::addConstructor(TIntermSequence *arguments,
             type.sizeUnsizedArrays(nullptr);
             return CreateZeroNode(type);
         }
-        TIntermTyped *firstElement = arguments->at(0)->getAsTyped();
+        TIntermTyped *firstElement = arguments.at(0)->getAsTyped();
         ASSERT(firstElement);
         if (type.getOutermostArraySize() == 0u)
         {
-            type.sizeOutermostUnsizedArray(static_cast<unsigned int>(arguments->size()));
+            type.sizeOutermostUnsizedArray(static_cast<unsigned int>(arguments.size()));
         }
         for (size_t i = 0; i < firstElement->getType().getNumArraySizes(); ++i)
         {
@@ -3578,7 +3571,7 @@ TIntermTyped *TParseContext::addConstructor(TIntermSequence *arguments,
         return CreateZeroNode(type);
     }
 
-    TIntermAggregate *constructorNode = TIntermAggregate::CreateConstructor(type, arguments);
+    TIntermAggregate *constructorNode = TIntermAggregate::CreateConstructor(type, &arguments);
     constructorNode->setLine(line);
 
     return constructorNode->fold(mDiagnostics);
@@ -5744,56 +5737,39 @@ void TParseContext::checkImageMemoryAccessForUserDefinedFunctions(
     }
 }
 
-TIntermSequence *TParseContext::createEmptyArgumentsList()
+TIntermTyped *TParseContext::addFunctionCallOrMethod(TFunctionLookup *fnCall, const TSourceLoc &loc)
 {
-    return new TIntermSequence();
+    if (fnCall->thisNode() != nullptr)
+    {
+        return addMethod(fnCall, loc);
+    }
+    if (fnCall->isConstructor())
+    {
+        return addConstructor(fnCall, loc);
+    }
+    return addNonConstructorFunctionCall(fnCall, loc);
 }
 
-TIntermTyped *TParseContext::addFunctionCallOrMethod(TFunction *fnCall,
-                                                     TIntermSequence *arguments,
-                                                     TIntermNode *thisNode,
-                                                     const TSourceLoc &loc)
+TIntermTyped *TParseContext::addMethod(TFunctionLookup *fnCall, const TSourceLoc &loc)
 {
-    if (thisNode != nullptr)
-    {
-        return addMethod(fnCall->name(), arguments, thisNode, loc);
-    }
-
-    TOperator op = fnCall->getBuiltInOp();
-    if (op == EOpConstruct)
-    {
-        return addConstructor(arguments, fnCall->getReturnType(), loc);
-    }
-    else
-    {
-        ASSERT(op == EOpNull);
-        return addNonConstructorFunctionCall(fnCall->name(), arguments, loc);
-    }
-}
-
-TIntermTyped *TParseContext::addMethod(const TString &name,
-                                       TIntermSequence *arguments,
-                                       TIntermNode *thisNode,
-                                       const TSourceLoc &loc)
-{
-    TIntermTyped *typedThis    = thisNode->getAsTyped();
+    TIntermTyped *thisNode = fnCall->thisNode();
     // It's possible for the name pointer in the TFunction to be null in case it gets parsed as
     // a constructor. But such a TFunction can't reach here, since the lexer goes into FIELDS
     // mode after a dot, which makes type identifiers to be parsed as FIELD_SELECTION instead.
     // So accessing fnCall->name() below is safe.
-    if (name != "length")
+    if (fnCall->name() != "length")
     {
-        error(loc, "invalid method", name.c_str());
+        error(loc, "invalid method", fnCall->name().c_str());
     }
-    else if (!arguments->empty())
+    else if (!fnCall->arguments().empty())
     {
         error(loc, "method takes no parameters", "length");
     }
-    else if (typedThis == nullptr || !typedThis->isArray())
+    else if (!thisNode->isArray())
     {
         error(loc, "length can only be called on arrays", "length");
     }
-    else if (typedThis->getQualifier() == EvqPerVertexIn &&
+    else if (thisNode->getQualifier() == EvqPerVertexIn &&
              mGeometryShaderInputPrimitiveType == EptUndefined)
     {
         ASSERT(mShaderType == GL_GEOMETRY_SHADER_EXT);
@@ -5801,32 +5777,30 @@ TIntermTyped *TParseContext::addMethod(const TString &name,
     }
     else
     {
-        TIntermUnary *node = new TIntermUnary(EOpArrayLength, typedThis);
+        TIntermUnary *node = new TIntermUnary(EOpArrayLength, thisNode);
         node->setLine(loc);
         return node->fold(mDiagnostics);
     }
     return CreateZeroNode(TType(EbtInt, EbpUndefined, EvqConst));
 }
 
-TIntermTyped *TParseContext::addNonConstructorFunctionCall(const TString &name,
-                                                           TIntermSequence *arguments,
+TIntermTyped *TParseContext::addNonConstructorFunctionCall(TFunctionLookup *fnCall,
                                                            const TSourceLoc &loc)
 {
     // First find by unmangled name to check whether the function name has been
     // hidden by a variable name or struct typename.
     // If a function is found, check for one with a matching argument list.
-    const TSymbol *symbol = symbolTable.find(name, mShaderVersion);
+    const TSymbol *symbol = symbolTable.find(fnCall->name(), mShaderVersion);
     if (symbol != nullptr && !symbol->isFunction())
     {
-        error(loc, "function name expected", name.c_str());
+        error(loc, "function name expected", fnCall->name().c_str());
     }
     else
     {
-        symbol =
-            symbolTable.find(TFunction::GetMangledNameFromCall(name, *arguments), mShaderVersion);
+        symbol = symbolTable.find(fnCall->getMangledName(), mShaderVersion);
         if (symbol == nullptr)
         {
-            error(loc, "no matching overloaded function found", name.c_str());
+            error(loc, "no matching overloaded function found", fnCall->name().c_str());
         }
         else
         {
@@ -5839,13 +5813,13 @@ TIntermTyped *TParseContext::addNonConstructorFunctionCall(const TString &name,
                 checkCanUseExtension(loc, fnCandidate->extension());
             }
             TOperator op = fnCandidate->getBuiltInOp();
-            if (fnCandidate->symbolType() == SymbolType::BuiltIn && op != EOpNull)
+            if (op != EOpNull)
             {
                 // A function call mapped to a built-in operation.
                 if (fnCandidate->getParamCount() == 1)
                 {
                     // Treat it like a built-in unary operator.
-                    TIntermNode *unaryParamNode = arguments->front();
+                    TIntermNode *unaryParamNode = fnCall->arguments().front();
                     TIntermTyped *callNode = createUnaryMath(op, unaryParamNode->getAsTyped(), loc);
                     ASSERT(callNode != nullptr);
                     return callNode;
@@ -5853,7 +5827,7 @@ TIntermTyped *TParseContext::addNonConstructorFunctionCall(const TString &name,
                 else
                 {
                     TIntermAggregate *callNode =
-                        TIntermAggregate::Create(*fnCandidate, op, arguments);
+                        TIntermAggregate::Create(*fnCandidate, op, &fnCall->arguments());
                     callNode->setLine(loc);
 
                     // Some built-in functions have out parameters too.
@@ -5874,7 +5848,8 @@ TIntermTyped *TParseContext::addNonConstructorFunctionCall(const TString &name,
                 // function with no op associated with it.
                 if (fnCandidate->symbolType() == SymbolType::BuiltIn)
                 {
-                    callNode = TIntermAggregate::CreateBuiltInFunctionCall(*fnCandidate, arguments);
+                    callNode = TIntermAggregate::CreateBuiltInFunctionCall(*fnCandidate,
+                                                                           &fnCall->arguments());
                     checkTextureOffsetConst(callNode);
                     checkTextureGather(callNode);
                     checkImageMemoryAccessForBuiltinFunctions(callNode);
@@ -5882,7 +5857,8 @@ TIntermTyped *TParseContext::addNonConstructorFunctionCall(const TString &name,
                 }
                 else
                 {
-                    callNode = TIntermAggregate::CreateFunctionCall(*fnCandidate, arguments);
+                    callNode =
+                        TIntermAggregate::CreateFunctionCall(*fnCandidate, &fnCall->arguments());
                     checkImageMemoryAccessForUserDefinedFunctions(fnCandidate, callNode);
                 }
 

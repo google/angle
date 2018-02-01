@@ -76,7 +76,6 @@ using namespace sh;
         union {
             TIntermNode *intermNode;
             TIntermNodePair nodePair;
-            TIntermFunctionCallOrMethod callOrMethodPair;
             TIntermTyped *intermTypedNode;
             TIntermAggregate *intermAggregate;
             TIntermBlock *intermBlock;
@@ -93,6 +92,7 @@ using namespace sh;
             TLayoutQualifier layoutQualifier;
             TQualifier qualifier;
             TFunction *function;
+            TFunctionLookup *functionLookup;
             TParameter param;
             TDeclarator *declarator;
             TDeclaratorList *declaratorList;
@@ -236,10 +236,12 @@ extern void yyerror(YYLTYPE* yylloc, TParseContext* context, void *scanner, cons
 %type <interm.declarator> struct_declarator
 %type <interm.declaratorList> struct_declarator_list
 %type <interm.fieldList> struct_declaration struct_declaration_list
-%type <interm.function> function_header function_declarator function_identifier
-%type <interm.function> function_header_with_parameters function_call_header
-%type <interm> function_call_header_with_parameters function_call_header_no_parameters function_call_generic function_prototype
-%type <interm> function_call_or_method
+%type <interm.function> function_header function_declarator
+%type <interm.function> function_header_with_parameters
+%type <interm.functionLookup> function_identifier function_call_header
+%type <interm.functionLookup> function_call_header_with_parameters function_call_header_no_parameters
+%type <interm.functionLookup> function_call_generic function_call_or_method
+%type <interm> function_prototype
 
 %type <lex> enter_struct
 
@@ -328,19 +330,18 @@ integer_expression
 
 function_call
     : function_call_or_method {
-        $$ = context->addFunctionCallOrMethod($1.function, $1.callOrMethodPair.arguments, $1.callOrMethodPair.thisNode, @1);
+        $$ = context->addFunctionCallOrMethod($1, @1);
     }
     ;
 
 function_call_or_method
     : function_call_generic {
         $$ = $1;
-        $$.callOrMethodPair.thisNode = nullptr;
     }
     | postfix_expression DOT function_call_generic {
         ES3_OR_NEWER("", @3, "methods");
         $$ = $3;
-        $$.callOrMethodPair.thisNode = $1;
+        $$->setThisNode($1);
     }
     ;
 
@@ -355,24 +356,21 @@ function_call_generic
 
 function_call_header_no_parameters
     : function_call_header VOID_TYPE {
-        $$.function = $1;
-        $$.callOrMethodPair.arguments = context->createEmptyArgumentsList();
+        $$ = $1;
     }
     | function_call_header {
-        $$.function = $1;
-        $$.callOrMethodPair.arguments = context->createEmptyArgumentsList();
+        $$ = $1;
     }
     ;
 
 function_call_header_with_parameters
     : function_call_header assignment_expression {
-        $$.callOrMethodPair.arguments = context->createEmptyArgumentsList();
-        $$.function = $1;
-        $$.callOrMethodPair.arguments->push_back($2);
+        $$ = $1;
+        $$->addArgument($2);
     }
     | function_call_header_with_parameters COMMA assignment_expression {
-        $$.function = $1.function;
-        $$.callOrMethodPair.arguments->push_back($3);
+        $$ = $1;
+        $$->addArgument($3);
     }
     ;
 
@@ -389,10 +387,10 @@ function_identifier
         $$ = context->addConstructorFunc($1);
     }
     | IDENTIFIER {
-        $$ = context->addNonConstructorFunc($1.string, @1);
+        $$ = context->addNonConstructorFunc($1.string);
     }
     | FIELD_SELECTION {
-        $$ = context->addNonConstructorFunc($1.string, @1);
+        $$ = context->addNonConstructorFunc($1.string);
     }
     ;
 

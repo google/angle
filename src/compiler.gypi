@@ -69,6 +69,8 @@
             'compiler/translator/FlagStd140Structs.h',
             'compiler/translator/FoldExpressions.cpp',
             'compiler/translator/FoldExpressions.h',
+            'compiler/translator/FunctionLookup.cpp',
+            'compiler/translator/FunctionLookup.h',
             'compiler/translator/HashNames.cpp',
             'compiler/translator/HashNames.h',
             'compiler/translator/ImmutableString.cpp',

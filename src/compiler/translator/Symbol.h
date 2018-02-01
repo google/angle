@@ -24,8 +24,7 @@ enum class SymbolType
     BuiltIn,
     UserDefined,
     AngleInternal,
-    Empty,  // Meaning symbol without a name.
-    NotResolved
+    Empty  // Meaning symbol without a name.
 };
 
 // Symbol base class. (Can build functions or variables out of these...)
@@ -209,9 +208,6 @@ class TFunction : public TSymbol
         return *mangledName;
     }
 
-    static const TString &GetMangledNameFromCall(const TString &functionName,
-                                                 const TIntermSequence &arguments);
-
     const TType &getReturnType() const { return *returnType; }
 
     TOperator getBuiltInOp() const { return op; }
@@ -236,11 +232,9 @@ class TFunction : public TSymbol
 
     typedef TVector<TConstParameter> TParamList;
     TParamList parameters;
-    const TType *returnType;
+    const TType *const returnType;
     mutable const TString *mangledName;
-    // TODO(oetuaho): Remove op from TFunction once TFunction is not used for looking up builtins or
-    // constructors.
-    TOperator op;
+    const TOperator op;  // Only set for built-ins
     bool defined;
     bool mHasPrototypeDeclaration;
     bool mKnownToNotHaveSideEffects;

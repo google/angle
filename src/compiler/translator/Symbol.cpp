@@ -35,7 +35,7 @@ TSymbol::TSymbol(TSymbolTable *symbolTable,
 {
     ASSERT(mSymbolType == SymbolType::BuiltIn || mExtension == TExtension::UNDEFINED);
     ASSERT(mName != nullptr || mSymbolType == SymbolType::AngleInternal ||
-           mSymbolType == SymbolType::NotResolved || mSymbolType == SymbolType::Empty);
+           mSymbolType == SymbolType::Empty);
     ASSERT(mName == nullptr || *mName != "");
 }
 
@@ -165,19 +165,6 @@ const TString *TFunction::buildMangledName() const
         newName += p.type->getMangledName();
     }
     return NewPoolTString(newName.c_str());
-}
-
-const TString &TFunction::GetMangledNameFromCall(const TString &functionName,
-                                                 const TIntermSequence &arguments)
-{
-    std::string newName = functionName.c_str();
-    newName += kFunctionMangledNameSeparator;
-
-    for (TIntermNode *argument : arguments)
-    {
-        newName += argument->getAsTyped()->getType().getMangledName();
-    }
-    return *NewPoolTString(newName.c_str());
 }
 
 bool TFunction::isMain() const

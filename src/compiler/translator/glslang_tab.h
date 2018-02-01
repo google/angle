@@ -228,7 +228,6 @@ union YYSTYPE
         union {
             TIntermNode *intermNode;
             TIntermNodePair nodePair;
-            TIntermFunctionCallOrMethod callOrMethodPair;
             TIntermTyped *intermTypedNode;
             TIntermAggregate *intermAggregate;
             TIntermBlock *intermBlock;
@@ -245,6 +244,7 @@ union YYSTYPE
             TLayoutQualifier layoutQualifier;
             TQualifier qualifier;
             TFunction *function;
+            TFunctionLookup *functionLookup;
             TParameter param;
             TDeclarator *declarator;
             TDeclaratorList *declaratorList;

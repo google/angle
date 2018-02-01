@@ -317,7 +317,6 @@ union YYSTYPE
         union {
             TIntermNode *intermNode;
             TIntermNodePair nodePair;
-            TIntermFunctionCallOrMethod callOrMethodPair;
             TIntermTyped *intermTypedNode;
             TIntermAggregate *intermAggregate;
             TIntermBlock *intermBlock;
@@ -334,6 +333,7 @@ union YYSTYPE
             TLayoutQualifier layoutQualifier;
             TQualifier qualifier;
             TFunction *function;
+            TFunctionLookup *functionLookup;
             TParameter param;
             TDeclarator *declarator;
             TDeclaratorList *declaratorList;
@@ -743,36 +743,36 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   250,   250,   251,   254,   264,   267,   272,   277,   282,
-     287,   296,   302,   305,   308,   311,   314,   317,   323,   330,
-     336,   340,   348,   351,   357,   361,   368,   373,   380,   388,
-     391,   394,   400,   403,   406,   409,   416,   417,   418,   419,
-     427,   428,   431,   434,   441,   442,   445,   451,   452,   456,
-     463,   464,   467,   470,   473,   479,   480,   483,   489,   490,
-     497,   498,   505,   506,   513,   514,   520,   521,   527,   528,
-     534,   535,   541,   542,   548,   549,   550,   551,   555,   556,
-     557,   561,   565,   569,   573,   580,   583,   589,   596,   603,
-     606,   609,   613,   617,   621,   625,   629,   636,   643,   646,
-     653,   661,   678,   688,   691,   697,   701,   705,   709,   716,
-     723,   726,   730,   734,   739,   746,   750,   754,   758,   763,
-     770,   774,   780,   783,   789,   793,   800,   806,   810,   814,
-     817,   820,   829,   834,   838,   841,   844,   847,   850,   854,
-     857,   861,   864,   867,   870,   873,   876,   883,   890,   893,
-     896,   902,   909,   912,   918,   921,   924,   927,   933,   936,
-     943,   948,   955,   960,   971,   974,   977,   980,   983,   986,
-     990,   994,   998,  1002,  1006,  1010,  1014,  1018,  1022,  1026,
-    1030,  1034,  1038,  1042,  1046,  1050,  1054,  1058,  1062,  1066,
-    1070,  1077,  1080,  1083,  1086,  1089,  1092,  1095,  1098,  1101,
-    1104,  1107,  1110,  1113,  1116,  1119,  1122,  1125,  1128,  1131,
-    1141,  1148,  1155,  1158,  1161,  1164,  1167,  1170,  1173,  1176,
-    1179,  1182,  1185,  1188,  1191,  1194,  1197,  1205,  1205,  1208,
-    1208,  1214,  1217,  1223,  1226,  1233,  1237,  1243,  1246,  1252,
-    1256,  1260,  1261,  1267,  1268,  1269,  1270,  1271,  1272,  1273,
-    1277,  1281,  1281,  1281,  1288,  1289,  1293,  1293,  1294,  1294,
-    1299,  1303,  1310,  1314,  1321,  1322,  1326,  1332,  1336,  1345,
-    1345,  1352,  1355,  1361,  1365,  1371,  1371,  1376,  1376,  1380,
-    1380,  1388,  1391,  1397,  1400,  1406,  1410,  1417,  1420,  1423,
-    1426,  1429,  1437,  1443,  1449,  1452,  1458,  1458
+       0,   252,   252,   253,   256,   266,   269,   274,   279,   284,
+     289,   298,   304,   307,   310,   313,   316,   319,   325,   332,
+     338,   341,   349,   352,   358,   361,   367,   371,   378,   386,
+     389,   392,   398,   401,   404,   407,   414,   415,   416,   417,
+     425,   426,   429,   432,   439,   440,   443,   449,   450,   454,
+     461,   462,   465,   468,   471,   477,   478,   481,   487,   488,
+     495,   496,   503,   504,   511,   512,   518,   519,   525,   526,
+     532,   533,   539,   540,   546,   547,   548,   549,   553,   554,
+     555,   559,   563,   567,   571,   578,   581,   587,   594,   601,
+     604,   607,   611,   615,   619,   623,   627,   634,   641,   644,
+     651,   659,   676,   686,   689,   695,   699,   703,   707,   714,
+     721,   724,   728,   732,   737,   744,   748,   752,   756,   761,
+     768,   772,   778,   781,   787,   791,   798,   804,   808,   812,
+     815,   818,   827,   832,   836,   839,   842,   845,   848,   852,
+     855,   859,   862,   865,   868,   871,   874,   881,   888,   891,
+     894,   900,   907,   910,   916,   919,   922,   925,   931,   934,
+     941,   946,   953,   958,   969,   972,   975,   978,   981,   984,
+     988,   992,   996,  1000,  1004,  1008,  1012,  1016,  1020,  1024,
+    1028,  1032,  1036,  1040,  1044,  1048,  1052,  1056,  1060,  1064,
+    1068,  1075,  1078,  1081,  1084,  1087,  1090,  1093,  1096,  1099,
+    1102,  1105,  1108,  1111,  1114,  1117,  1120,  1123,  1126,  1129,
+    1139,  1146,  1153,  1156,  1159,  1162,  1165,  1168,  1171,  1174,
+    1177,  1180,  1183,  1186,  1189,  1192,  1195,  1203,  1203,  1206,
+    1206,  1212,  1215,  1221,  1224,  1231,  1235,  1241,  1244,  1250,
+    1254,  1258,  1259,  1265,  1266,  1267,  1268,  1269,  1270,  1271,
+    1275,  1279,  1279,  1279,  1286,  1287,  1291,  1291,  1292,  1292,
+    1297,  1301,  1308,  1312,  1319,  1320,  1324,  1330,  1334,  1343,
+    1343,  1350,  1353,  1359,  1363,  1369,  1369,  1374,  1374,  1378,
+    1378,  1386,  1389,  1395,  1398,  1404,  1408,  1415,  1418,  1421,
+    1424,  1427,  1435,  1441,  1447,  1450,  1456,  1456
 };
 #endif
 
@@ -2636,7 +2636,7 @@ yyreduce:
   case 19:
 
     {
-        (yyval.interm.intermTypedNode) = context->addFunctionCallOrMethod((yyvsp[0].interm).function, (yyvsp[0].interm).callOrMethodPair.arguments, (yyvsp[0].interm).callOrMethodPair.thisNode, (yylsp[0]));
+        (yyval.interm.intermTypedNode) = context->addFunctionCallOrMethod((yyvsp[0].interm.functionLookup), (yylsp[0]));
     }
 
     break;
@@ -2644,8 +2644,7 @@ yyreduce:
   case 20:
 
     {
-        (yyval.interm) = (yyvsp[0].interm);
-        (yyval.interm).callOrMethodPair.thisNode = nullptr;
+        (yyval.interm.functionLookup) = (yyvsp[0].interm.functionLookup);
     }
 
     break;
@@ -2654,8 +2653,8 @@ yyreduce:
 
     {
         ES3_OR_NEWER("", (yylsp[0]), "methods");
-        (yyval.interm) = (yyvsp[0].interm);
-        (yyval.interm).callOrMethodPair.thisNode = (yyvsp[-2].interm.intermTypedNode);
+        (yyval.interm.functionLookup) = (yyvsp[0].interm.functionLookup);
+        (yyval.interm.functionLookup)->setThisNode((yyvsp[-2].interm.intermTypedNode));
     }
 
     break;
@@ -2663,7 +2662,7 @@ yyreduce:
   case 22:
 
     {
-        (yyval.interm) = (yyvsp[-1].interm);
+        (yyval.interm.functionLookup) = (yyvsp[-1].interm.functionLookup);
     }
 
     break;
@@ -2671,7 +2670,7 @@ yyreduce:
   case 23:
 
     {
-        (yyval.interm) = (yyvsp[-1].interm);
+        (yyval.interm.functionLookup) = (yyvsp[-1].interm.functionLookup);
     }
 
     break;
@@ -2679,8 +2678,7 @@ yyreduce:
   case 24:
 
     {
-        (yyval.interm).function = (yyvsp[-1].interm.function);
-        (yyval.interm).callOrMethodPair.arguments = context->createEmptyArgumentsList();
+        (yyval.interm.functionLookup) = (yyvsp[-1].interm.functionLookup);
     }
 
     break;
@@ -2688,8 +2686,7 @@ yyreduce:
   case 25:
 
     {
-        (yyval.interm).function = (yyvsp[0].interm.function);
-        (yyval.interm).callOrMethodPair.arguments = context->createEmptyArgumentsList();
+        (yyval.interm.functionLookup) = (yyvsp[0].interm.functionLookup);
     }
 
     break;
@@ -2697,9 +2694,8 @@ yyreduce:
   case 26:
 
     {
-        (yyval.interm).callOrMethodPair.arguments = context->createEmptyArgumentsList();
-        (yyval.interm).function = (yyvsp[-1].interm.function);
-        (yyval.interm).callOrMethodPair.arguments->push_back((yyvsp[0].interm.intermTypedNode));
+        (yyval.interm.functionLookup) = (yyvsp[-1].interm.functionLookup);
+        (yyval.interm.functionLookup)->addArgument((yyvsp[0].interm.intermTypedNode));
     }
 
     break;
@@ -2707,8 +2703,8 @@ yyreduce:
   case 27:
 
     {
-        (yyval.interm).function = (yyvsp[-2].interm).function;
-        (yyval.interm).callOrMethodPair.arguments->push_back((yyvsp[0].interm.intermTypedNode));
+        (yyval.interm.functionLookup) = (yyvsp[-2].interm.functionLookup);
+        (yyval.interm.functionLookup)->addArgument((yyvsp[0].interm.intermTypedNode));
     }
 
     break;
@@ -2716,7 +2712,7 @@ yyreduce:
   case 28:
 
     {
-        (yyval.interm.function) = (yyvsp[-1].interm.function);
+        (yyval.interm.functionLookup) = (yyvsp[-1].interm.functionLookup);
     }
 
     break;
@@ -2724,7 +2720,7 @@ yyreduce:
   case 29:
 
     {
-        (yyval.interm.function) = context->addConstructorFunc((yyvsp[0].interm.type));
+        (yyval.interm.functionLookup) = context->addConstructorFunc((yyvsp[0].interm.type));
     }
 
     break;
@@ -2732,7 +2728,7 @@ yyreduce:
   case 30:
 
     {
-        (yyval.interm.function) = context->addNonConstructorFunc((yyvsp[0].lex).string, (yylsp[0]));
+        (yyval.interm.functionLookup) = context->addNonConstructorFunc((yyvsp[0].lex).string);
     }
 
     break;
@@ -2740,7 +2736,7 @@ yyreduce:
   case 31:
 
     {
-        (yyval.interm.function) = context->addNonConstructorFunc((yyvsp[0].lex).string, (yylsp[0]));
+        (yyval.interm.functionLookup) = context->addNonConstructorFunc((yyvsp[0].lex).string);
     }
 
     break;

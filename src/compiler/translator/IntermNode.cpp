@@ -509,21 +509,6 @@ void TIntermAggregate::setBuiltInFunctionPrecision()
         mType.setPrecision(precision);
 }
 
-TString TIntermAggregate::getSymbolTableMangledName() const
-{
-    ASSERT(!isConstructor());
-    switch (mOp)
-    {
-        case EOpCallInternalRawFunction:
-        case EOpCallBuiltInFunction:
-        case EOpCallFunctionInAST:
-            return TFunction::GetMangledNameFromCall(mFunction->name(), mArguments);
-        default:
-            TString opString = GetOperatorString(mOp);
-            return TFunction::GetMangledNameFromCall(opString, mArguments);
-    }
-}
-
 const char *TIntermAggregate::functionName() const
 {
     ASSERT(!isConstructor());
