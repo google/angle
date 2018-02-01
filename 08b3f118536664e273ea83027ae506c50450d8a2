@@ -2,6 +2,46 @@
   "comments": [
     {
       "key": {
+        "uuid": "c0c85f81_0b42db05",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-01T17:41:49Z",
+      "side": 1,
+      "message": "optionally wrap these paragraphs to 71 characters (you will see a Gerrit warning for this, but it\u0027s not very visible)",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 108
+      },
+      "revId": "08b3f118536664e273ea83027ae506c50450d8a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b1748875_b2eb48be",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-01T17:41:49Z",
+      "side": 1,
+      "message": "please tag this with the Bug: angleproject:####",
+      "revId": "08b3f118536664e273ea83027ae506c50450d8a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "2756a494_ad44b585",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 3
@@ -25,6 +65,76 @@
     },
     {
       "key": {
+        "uuid": "23897bae_16d2820f",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 773,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-01T17:41:49Z",
+      "side": 1,
+      "message": "+1",
+      "parentUuid": "2756a494_ad44b585",
+      "range": {
+        "startLine": 767,
+        "startChar": 0,
+        "endLine": 773,
+        "endChar": 1
+      },
+      "revId": "08b3f118536664e273ea83027ae506c50450d8a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b3777e09_7cca6f2e",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 775,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-01T17:41:49Z",
+      "side": 1,
+      "message": "nit: IsETC2EACFormat",
+      "range": {
+        "startLine": 775,
+        "startChar": 5,
+        "endLine": 775,
+        "endChar": 20
+      },
+      "revId": "08b3f118536664e273ea83027ae506c50450d8a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0d23f098_55f9d610",
+        "filename": "src/libANGLE/validationES.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-01T17:41:49Z",
+      "side": 1,
+      "message": "you won\u0027t need to expose this with the other change.",
+      "range": {
+        "startLine": 34,
+        "startChar": 5,
+        "endLine": 34,
+        "endChar": 20
+      },
+      "revId": "08b3f118536664e273ea83027ae506c50450d8a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "abe31444_ab9a9aa7",
         "filename": "src/libANGLE/validationES3.cpp",
         "patchSetId": 3
@@ -36,6 +146,29 @@
       "writtenOn": "2018-02-01T16:20:43Z",
       "side": 1,
       "message": "nit: remove new line",
+      "revId": "08b3f118536664e273ea83027ae506c50450d8a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "73a8699f_ed7e349a",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 535,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-01T17:41:49Z",
+      "side": 1,
+      "message": "nit: Probably don\u0027t need to link to the spec, just mention the full version (with date) and the section/page number.",
+      "range": {
+        "startLine": 535,
+        "startChar": 16,
+        "endLine": 535,
+        "endChar": 84
+      },
       "revId": "08b3f118536664e273ea83027ae506c50450d8a2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
