@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2756a494_ad44b585",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 773,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-02-01T16:20:43Z",
+      "side": 1,
+      "message": "If this isn\u0027t used outside this file, put it in the anonymous namespace at the top.",
+      "range": {
+        "startLine": 767,
+        "startChar": 0,
+        "endLine": 773,
+        "endChar": 1
+      },
+      "revId": "08b3f118536664e273ea83027ae506c50450d8a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "abe31444_ab9a9aa7",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 340,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-02-01T16:20:43Z",
+      "side": 1,
+      "message": "nit: remove new line",
+      "revId": "08b3f118536664e273ea83027ae506c50450d8a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dd683157_8256e02b",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 539,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-02-01T16:20:43Z",
+      "side": 1,
+      "message": "Put this in ErrorStrings.h",
+      "range": {
+        "startLine": 539,
+        "startChar": 15,
+        "endLine": 539,
+        "endChar": 92
+      },
+      "revId": "08b3f118536664e273ea83027ae506c50450d8a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
