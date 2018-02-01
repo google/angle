@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0fc7609b_20f57746",
+        "filename": "src/compiler/translator/FunctionLookup.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-01T16:54:39Z",
+      "side": 1,
+      "message": "nit: google convention is to add a comment \n\n// static\n\nbefore the method in the cpp.",
+      "range": {
+        "startLine": 27,
+        "startChar": 0,
+        "endLine": 27,
+        "endChar": 16
+      },
+      "revId": "ba0ecaea6d4c12b63c9cf6a8445ec6b8813b8fdd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "265e2ce5_17a7f078",
+        "filename": "src/compiler/translator/FunctionLookup.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-01T16:54:39Z",
+      "side": 1,
+      "message": "nit: missing newline",
+      "range": {
+        "startLine": 31,
+        "startChar": 1,
+        "endLine": 32,
+        "endChar": 15
+      },
+      "revId": "ba0ecaea6d4c12b63c9cf6a8445ec6b8813b8fdd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "013e21c2_dd9a4640",
+        "filename": "src/compiler/translator/FunctionLookup.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-01T16:54:39Z",
+      "side": 1,
+      "message": "nit: missing newline (and a few other places)",
+      "range": {
+        "startLine": 65,
+        "startChar": 0,
+        "endLine": 65,
+        "endChar": 6
+      },
+      "revId": "ba0ecaea6d4c12b63c9cf6a8445ec6b8813b8fdd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
