@@ -31,6 +31,7 @@ class Program;
 class Shader;
 class ValidationContext;
 
+bool IsETC2EACFormat(const GLenum format);
 bool ValidTextureTarget(const ValidationContext *context, GLenum target);
 bool ValidTexture2DTarget(const ValidationContext *context, GLenum target);
 bool ValidTexture3DTarget(const ValidationContext *context, GLenum target);

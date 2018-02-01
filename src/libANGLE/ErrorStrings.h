@@ -47,6 +47,8 @@ ERRMSG(IndexExceedsMaxVertexAttribute, "Index exceeds MAX_VERTEX_ATTRIBS.");
 ERRMSG(InsufficientBufferSize, "Insufficient buffer size.");
 ERRMSG(InsufficientVertexBufferSize, "Vertex buffer is not big enough for the draw call");
 ERRMSG(IntegerOverflow, "Integer overflow.");
+ERRMSG(InternalFormatRequiresTexture2DArray,
+       "internalformat is an ETC2/EAC format and target is not GL_TEXTURE_2D_ARRAY.");
 ERRMSG(InvalidAttachment, "Invalid Attachment Type.");
 ERRMSG(InvalidBlendEquation, "Invalid blend equation.");
 ERRMSG(InvalidBlendFunction, "Invalid blend function.");
