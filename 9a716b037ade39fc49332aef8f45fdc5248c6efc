@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "ec274218_9674f206",
+        "filename": "src/tests/angle_end2end_tests.gypi",
+        "patchSetId": 2
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2018-02-01T08:45:37Z",
+      "side": 1,
+      "message": "Removed this file.",
+      "parentUuid": "ff4f4e03_1c63ec5d",
+      "range": {
+        "startLine": 18,
+        "startChar": 46,
+        "endLine": 18,
+        "endChar": 65
+      },
+      "revId": "9a716b037ade39fc49332aef8f45fdc5248c6efc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bb7532bb_b14e63ca",
         "filename": "src/tests/gl_tests/AngleFunctionalTest.cpp",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2018-01-31T09:45:05Z",
       "side": 1,
       "message": "Forget to modify this line?",
+      "range": {
+        "startLine": 7,
+        "startChar": 3,
+        "endLine": 7,
+        "endChar": 56
+      },
+      "revId": "9a716b037ade39fc49332aef8f45fdc5248c6efc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9b91c089_51110fec",
+        "filename": "src/tests/gl_tests/AngleFunctionalTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2018-02-01T08:45:37Z",
+      "side": 1,
+      "message": "Removed",
+      "parentUuid": "bb7532bb_b14e63ca",
       "range": {
         "startLine": 7,
         "startChar": 3,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "5273ac05_f373756c",
+        "filename": "src/tests/gl_tests/AngleFunctionalTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2018-02-01T08:45:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9e6560d0_c71b8f68",
+      "range": {
+        "startLine": 33,
+        "startChar": 13,
+        "endLine": 33,
+        "endChar": 22
+      },
+      "revId": "9a716b037ade39fc49332aef8f45fdc5248c6efc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "000f2caa_c66cd7bc",
         "filename": "src/tests/gl_tests/AngleFunctionalTest.cpp",
         "patchSetId": 2
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "ac608dad_f694f8b2",
+        "filename": "src/tests/gl_tests/AngleFunctionalTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2018-02-01T08:45:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "000f2caa_c66cd7bc",
+      "range": {
+        "startLine": 34,
+        "startChar": 0,
+        "endLine": 34,
+        "endChar": 43
+      },
+      "revId": "9a716b037ade39fc49332aef8f45fdc5248c6efc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6f7560ea_37a29025",
         "filename": "src/tests/gl_tests/AngleFunctionalTest.cpp",
         "patchSetId": 2
@@ -105,6 +201,30 @@
       "writtenOn": "2018-01-31T09:45:05Z",
       "side": 1,
       "message": "If remove this part of code, does the bug still exist?",
+      "range": {
+        "startLine": 41,
+        "startChar": 0,
+        "endLine": 44,
+        "endChar": 48
+      },
+      "revId": "9a716b037ade39fc49332aef8f45fdc5248c6efc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1e7d1873_7f8ebfcd",
+        "filename": "src/tests/gl_tests/AngleFunctionalTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2018-02-01T08:45:37Z",
+      "side": 1,
+      "message": "If remove this code, the bug can\u0027t be reproduced. The purpose of the code is to build a vector out of order which is also a valid heap instead of a sequential vector.",
+      "parentUuid": "6f7560ea_37a29025",
       "range": {
         "startLine": 41,
         "startChar": 0,
