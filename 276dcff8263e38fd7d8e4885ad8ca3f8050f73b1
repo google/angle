@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8bbed1bf_5f83dcad",
+        "filename": "src/tests/gles1_conformance_tests/ConformanceTests.cpp",
+        "patchSetId": 35
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-02-01T16:10:58Z",
+      "side": 1,
+      "message": "You can override the SetUp function here and add the driver setup:\n\n    void SetUp() override\n    {\n        ANGLETest::SetUp();\n        ExtTestDriverSetup();\n    }\n\nIt will run before each test.",
+      "revId": "276dcff8263e38fd7d8e4885ad8ca3f8050f73b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
