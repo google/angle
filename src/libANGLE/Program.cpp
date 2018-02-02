@@ -587,7 +587,12 @@ ProgramState::ProgramState()
       mImageUniformRange(0, 0),
       mAtomicCounterUniformRange(0, 0),
       mBinaryRetrieveableHint(false),
-      mNumViews(-1)
+      mNumViews(-1),
+      // [GL_EXT_geometry_shader] Table 20.22
+      mGeometryShaderInputPrimitiveType(GL_TRIANGLES),
+      mGeometryShaderOutputPrimitiveType(GL_TRIANGLE_STRIP),
+      mGeometryShaderInvocations(1),
+      mGeometryShaderMaxVertices(0)
 {
     mComputeShaderLocalSize.fill(1);
 }
@@ -1070,6 +1075,11 @@ void Program::updateLinkedShaderStages()
     {
         mState.mLinkedShaderStages.set(SHADER_COMPUTE);
     }
+
+    if (mState.mAttachedGeometryShader)
+    {
+        mState.mLinkedShaderStages.set(SHADER_GEOMETRY);
+    }
 }
 
 // Returns the program object to an unlinked state, before re-linking, or at destruction
@@ -1095,6 +1105,10 @@ void Program::unlink()
     mState.mSamplerBindings.clear();
     mState.mImageBindings.clear();
     mState.mNumViews = -1;
+    mState.mGeometryShaderInputPrimitiveType  = GL_TRIANGLES;
+    mState.mGeometryShaderOutputPrimitiveType = GL_TRIANGLE_STRIP;
+    mState.mGeometryShaderInvocations         = 1;
+    mState.mGeometryShaderMaxVertices         = 0;
 
     mValidated = false;
 
@@ -2067,9 +2081,11 @@ bool Program::linkValidateShaders(const Context *context, InfoLog &infoLog)
     Shader *vertexShader   = mState.mAttachedVertexShader;
     Shader *fragmentShader = mState.mAttachedFragmentShader;
     Shader *computeShader  = mState.mAttachedComputeShader;
+    Shader *geometryShader = mState.mAttachedGeometryShader;
 
     bool isComputeShaderAttached  = (computeShader != nullptr);
-    bool isGraphicsShaderAttached = (vertexShader != nullptr || fragmentShader != nullptr);
+    bool isGraphicsShaderAttached =
+        (vertexShader != nullptr || fragmentShader != nullptr || geometryShader != nullptr);
     // Check whether we both have a compute and non-compute shaders attached.
     // If there are of both types attached, then linking should fail.
     // OpenGL ES 3.10, 7.3 Program Objects, under LinkProgram
@@ -2114,10 +2130,66 @@ bool Program::linkValidateShaders(const Context *context, InfoLog &infoLog)
         }
         ASSERT(vertexShader->getType() == GL_VERTEX_SHADER);
 
-        if (fragmentShader->getShaderVersion(context) != vertexShader->getShaderVersion(context))
+        int vertexShaderVersion = vertexShader->getShaderVersion(context);
+        if (fragmentShader->getShaderVersion(context) != vertexShaderVersion)
         {
             infoLog << "Fragment shader version does not match vertex shader version.";
             return false;
+        }
+
+        if (geometryShader)
+        {
+            // [GL_EXT_geometry_shader] Chapter 7
+            // Linking can fail for a variety of reasons as specified in the OpenGL ES Shading
+            // Language Specification, as well as any of the following reasons:
+            // * One or more of the shader objects attached to <program> are not compiled
+            //   successfully.
+            // * The shaders do not use the same shader language version.
+            // * <program> contains objects to form a geometry shader, and
+            //   - <program> is not separable and contains no objects to form a vertex shader; or
+            //   - the input primitive type, output primitive type, or maximum output vertex count
+            //     is not specified in the compiled geometry shader object.
+            if (!geometryShader->isCompiled(context))
+            {
+                infoLog << "The attached geometry shader isn't compiled.";
+                return false;
+            }
+
+            if (geometryShader->getShaderVersion(context) != vertexShaderVersion)
+            {
+                mInfoLog << "Geometry shader version does not match vertex shader version.";
+                return false;
+            }
+            ASSERT(geometryShader->getType() == GL_GEOMETRY_SHADER_EXT);
+
+            Optional<GLenum> inputPrimitive =
+                geometryShader->getGeometryShaderInputPrimitiveType(context);
+            if (!inputPrimitive.valid())
+            {
+                mInfoLog << "Input primitive type is not specified in the geometry shader.";
+                return false;
+            }
+
+            Optional<GLenum> outputPrimitive =
+                geometryShader->getGeometryShaderOutputPrimitiveType(context);
+            if (!outputPrimitive.valid())
+            {
+                mInfoLog << "Output primitive type is not specified in the geometry shader.";
+                return false;
+            }
+
+            Optional<GLint> maxVertices = geometryShader->getGeometryShaderMaxVertices(context);
+            if (!maxVertices.valid())
+            {
+                mInfoLog << "'max_vertices' is not specified in the geometry shader.";
+                return false;
+            }
+
+            mState.mGeometryShaderInputPrimitiveType  = inputPrimitive.value();
+            mState.mGeometryShaderOutputPrimitiveType = outputPrimitive.value();
+            mState.mGeometryShaderMaxVertices         = maxVertices.value();
+            mState.mGeometryShaderInvocations =
+                geometryShader->getGeometryShaderInvocations(context);
         }
     }
 

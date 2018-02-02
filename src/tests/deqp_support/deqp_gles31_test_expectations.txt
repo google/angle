@@ -1120,6 +1120,7 @@
 1442 D3D11 : dEQP-GLES31.functional.shaders.builtin_var.compute.local_invocation_id = FAIL
 1442 D3D11 : dEQP-GLES31.functional.shaders.builtin_var.compute.global_invocation_id = FAIL
 1442 D3D11 : dEQP-GLES31.functional.shaders.builtin_var.compute.local_invocation_index = FAIL
+1941 D3D11 : dEQP-GLES31.functional.shaders.linkage.es31.geometry.* = FAIL
 
 // OPENGL Failing Tests
 1665 WIN NVIDIA OPENGL : dEQP-GLES31.functional.draw_indirect.negative.command_offset_not_in_buffer_unsigned32_wrap = FAIL
@@ -1654,7 +1655,6 @@
 1941 OPENGL D3D11 : dEQP-GLES31.functional.shaders.builtin_functions.integer.findmsb.uvec4_mediump_geometry = FAIL
 1941 OPENGL D3D11 : dEQP-GLES31.functional.shaders.builtin_functions.integer.findmsb.uvec4_highp_geometry = FAIL
 1941 OPENGL D3D11 : dEQP-GLES31.functional.shaders.builtin_constants.geometry_shader.* = FAIL
-1941 OPENGL D3D11 : dEQP-GLES31.functional.shaders.linkage.geometry.* = FAIL
 1941 OPENGL D3D11 : dEQP-GLES31.functional.state_query.program.geometry_shader_state_get_programiv = FAIL
 1941 OPENGL D3D11 : dEQP-GLES31.functional.debug.negative_coverage.callbacks.shader_directive.geometry_shader = FAIL
 1941 OPENGL D3D11 : dEQP-GLES31.functional.debug.negative_coverage.log.shader_directive.geometry_shader = FAIL
@@ -1669,7 +1669,11 @@
 1941 OPENGL D3D11 : dEQP-GLES31.functional.geometry_shading.instanced.invocation_output_* = FAIL
 1941 OPENGL D3D11 : dEQP-GLES31.functional.geometry_shading.instanced.draw_* = FAIL
 1941 OPENGL D3D11 : dEQP-GLES31.functional.geometry_shading.negative.* = FAIL
-1941 OPENGL D3D11 : dEQP-GLES31.functional.shaders.linkage.es31.geometry.* = FAIL
+1941 OPENGL D3D11 : dEQP-GLES31.functional.shaders.linkage.es31.geometry.varying.rules.input_* = FAIL
+1941 OPENGL D3D11 : dEQP-GLES31.functional.shaders.linkage.es31.geometry.varying.rules.output_* = FAIL
+1941 OPENGL D3D11 : dEQP-GLES31.functional.shaders.linkage.es31.geometry.varying.types.* = FAIL
+1941 OPENGL D3D11 : dEQP-GLES31.functional.shaders.linkage.es31.geometry.varying.qualifiers.* = FAIL
+1941 OPENGL D3D11 : dEQP-GLES31.functional.shaders.linkage.es31.geometry.uniform.* = FAIL
 
 2324 DEBUG RELEASE : dEQP-GLES31.functional.debug.negative_coverage.callbacks.compute.program_not_active = FAIL
 2324 DEBUG RELEASE : dEQP-GLES31.functional.debug.negative_coverage.log.compute.program_not_active = FAIL

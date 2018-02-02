@@ -178,10 +178,16 @@ gl::LinkResult ProgramGL::link(const gl::Context *context,
 
         const ShaderGL *vertexShaderGL   = GetImplAs<ShaderGL>(mState.getAttachedVertexShader());
         const ShaderGL *fragmentShaderGL = GetImplAs<ShaderGL>(mState.getAttachedFragmentShader());
+        const ShaderGL *geometryShaderGL =
+            rx::SafeGetImplAs<ShaderGL, gl::Shader>(mState.getAttachedGeometryShader());
 
         // Attach the shaders
         mFunctions->attachShader(mProgramID, vertexShaderGL->getShaderID());
         mFunctions->attachShader(mProgramID, fragmentShaderGL->getShaderID());
+        if (geometryShaderGL)
+        {
+            mFunctions->attachShader(mProgramID, geometryShaderGL->getShaderID());
+        }
 
         // Bind attribute locations to match the GL layer.
         for (const sh::Attribute &attribute : mState.getAttributes())
@@ -201,6 +207,10 @@ gl::LinkResult ProgramGL::link(const gl::Context *context,
         // Detach the shaders
         mFunctions->detachShader(mProgramID, vertexShaderGL->getShaderID());
         mFunctions->detachShader(mProgramID, fragmentShaderGL->getShaderID());
+        if (geometryShaderGL)
+        {
+            mFunctions->detachShader(mProgramID, geometryShaderGL->getShaderID());
+        }
     }
 
     // Verify the link

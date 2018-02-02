@@ -26,7 +26,16 @@ CompileProgramWithTransformFeedback(const std::string &vsSource,
                                     const std::string &fsSource,
                                     const std::vector<std::string> &transformFeedbackVaryings,
                                     GLenum bufferMode);
+ANGLE_EXPORT GLuint
+CompileProgramWithGSAndTransformFeedback(const std::string &vsSource,
+                                         const std::string &gsSource,
+                                         const std::string &fsSource,
+                                         const std::vector<std::string> &transformFeedbackVaryings,
+                                         GLenum bufferMode);
 ANGLE_EXPORT GLuint CompileProgram(const std::string &vsSource, const std::string &fsSource);
+ANGLE_EXPORT GLuint CompileProgramWithGS(const std::string &vsSource,
+                                         const std::string &gsSource,
+                                         const std::string &fsSource);
 ANGLE_EXPORT GLuint CompileProgramFromFiles(const std::string &vsPath, const std::string &fsPath);
 ANGLE_EXPORT GLuint CompileComputeProgram(const std::string &csSource,
                                           bool outputErrorMessages = true);

@@ -230,6 +230,11 @@ LinkResult MemoryProgramCache::Deserialize(const Context *context,
     state->mComputeShaderLocalSize[1] = stream.readInt<int>();
     state->mComputeShaderLocalSize[2] = stream.readInt<int>();
 
+    state->mGeometryShaderInputPrimitiveType  = stream.readInt<GLenum>();
+    state->mGeometryShaderOutputPrimitiveType = stream.readInt<GLenum>();
+    state->mGeometryShaderInvocations         = stream.readInt<int>();
+    state->mGeometryShaderMaxVertices         = stream.readInt<int>();
+
     state->mNumViews = stream.readInt<int>();
 
     static_assert(MAX_VERTEX_ATTRIBS * 2 <= sizeof(uint32_t) * 8,
@@ -451,6 +456,12 @@ void MemoryProgramCache::Serialize(const Context *context,
     stream.writeInt(computeLocalSize[1]);
     stream.writeInt(computeLocalSize[2]);
 
+    ASSERT(state.mGeometryShaderInvocations >= 1 && state.mGeometryShaderMaxVertices >= 0);
+    stream.writeInt(state.mGeometryShaderInputPrimitiveType);
+    stream.writeInt(state.mGeometryShaderOutputPrimitiveType);
+    stream.writeInt(state.mGeometryShaderInvocations);
+    stream.writeInt(state.mGeometryShaderMaxVertices);
+
     stream.writeInt(state.mNumViews);
 
     static_assert(MAX_VERTEX_ATTRIBS * 2 <= sizeof(uint32_t) * 8,
@@ -604,10 +615,11 @@ void MemoryProgramCache::ComputeHash(const Context *context,
     const Shader *vertexShader   = program->getAttachedVertexShader();
     const Shader *fragmentShader = program->getAttachedFragmentShader();
     const Shader *computeShader  = program->getAttachedComputeShader();
+    const Shader *geometryShader = program->getAttachedGeometryShader();
 
     // Compute the program hash. Start with the shader hashes and resource strings.
     HashStream hashStream;
-    hashStream << vertexShader << fragmentShader << computeShader;
+    hashStream << vertexShader << fragmentShader << computeShader << geometryShader;
 
     // Add some ANGLE metadata and Context properties, such as version and back-end.
     hashStream << ANGLE_COMMIT_HASH << context->getClientMajorVersion()

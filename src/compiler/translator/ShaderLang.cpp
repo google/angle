@@ -133,8 +133,6 @@ GLenum GetGeometryShaderPrimitiveTypeEnum(sh::TLayoutPrimitiveType primitiveType
             return GL_TRIANGLE_STRIP;
 
         case EptUndefined:
-            return GL_INVALID_VALUE;
-
         default:
             UNREACHABLE();
             return GL_INVALID_VALUE;
@@ -531,6 +529,39 @@ const std::map<std::string, unsigned int> *GetUniformRegisterMap(const ShHandle 
 #endif  // ANGLE_ENABLE_HLSL
 }
 
+bool HasValidGeometryShaderInputPrimitiveType(const ShHandle handle)
+{
+    ASSERT(handle);
+
+    TShHandleBase *base = static_cast<TShHandleBase *>(handle);
+    TCompiler *compiler = base->getAsCompiler();
+    ASSERT(compiler);
+
+    return compiler->getGeometryShaderInputPrimitiveType() != EptUndefined;
+}
+
+bool HasValidGeometryShaderOutputPrimitiveType(const ShHandle handle)
+{
+    ASSERT(handle);
+
+    TShHandleBase *base = static_cast<TShHandleBase *>(handle);
+    TCompiler *compiler = base->getAsCompiler();
+    ASSERT(compiler);
+
+    return compiler->getGeometryShaderOutputPrimitiveType() != EptUndefined;
+}
+
+bool HasValidGeometryShaderMaxVertices(const ShHandle handle)
+{
+    ASSERT(handle);
+
+    TShHandleBase *base = static_cast<TShHandleBase *>(handle);
+    TCompiler *compiler = base->getAsCompiler();
+    ASSERT(compiler);
+
+    return compiler->getGeometryShaderMaxVertices() >= 0;
+}
+
 GLenum GetGeometryShaderInputPrimitiveType(const ShHandle handle)
 {
     ASSERT(handle);
@@ -572,7 +603,9 @@ int GetGeometryShaderMaxVertices(const ShHandle handle)
     TCompiler *compiler = base->getAsCompiler();
     ASSERT(compiler);
 
-    return compiler->getGeometryShaderMaxVertices();
+    int maxVertices = compiler->getGeometryShaderMaxVertices();
+    ASSERT(maxVertices >= 0);
+    return maxVertices;
 }
 
 }  // namespace sh

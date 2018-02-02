@@ -15,6 +15,52 @@ namespace
 
 class GeometryShaderTest : public ANGLETest
 {
+  protected:
+    static std::string CreateEmptyGeometryShader(const std::string &inputPrimitive,
+                                                 const std::string &outputPrimitive,
+                                                 int invocations,
+                                                 int maxVertices)
+    {
+        std::ostringstream ostream;
+        ostream << "#version 310 es\n"
+                   "#extension GL_EXT_geometry_shader : require\n";
+        if (!inputPrimitive.empty())
+        {
+            ostream << "layout (" << inputPrimitive << ") in;\n";
+        }
+        if (!outputPrimitive.empty())
+        {
+            ostream << "layout (" << outputPrimitive << ") out;\n";
+        }
+        if (invocations > 0)
+        {
+            ostream << "layout (invocations = " << invocations << ") in;\n";
+        }
+        if (maxVertices >= 0)
+        {
+            ostream << "layout (max_vertices = " << maxVertices << ") out;\n";
+        }
+        ostream << "void main()\n"
+                   "{\n"
+                   "}";
+        return ostream.str();
+    }
+
+    const std::string kDefaultVertexShader =
+        R"(#version 310 es
+        void main()
+        {
+            gl_Position = vec4(1.0, 0.0, 0.0, 1.0);
+        })";
+
+    const std::string kDefaultFragmentShader =
+        R"(#version 310 es
+        precision mediump float;
+        layout (location = 0) out vec4 frag_out;
+        void main()
+        {
+            frag_out = vec4(1.0, 0.0, 0.0, 1.0);
+        })";
 };
 
 class GeometryShaderTestES3 : public ANGLETest
@@ -125,6 +171,101 @@ TEST_P(GeometryShaderTest, CombinedResourceLimits)
         EXPECT_GL_NO_ERROR();
         EXPECT_GE(value, limit.second);
     }
+}
+
+// Verify that linking a program with an uncompiled geometry shader causes a link failure.
+TEST_P(GeometryShaderTest, LinkWithUncompiledGeoemtryShader)
+{
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_geometry_shader"));
+
+    GLuint vertexShader   = CompileShader(GL_VERTEX_SHADER, kDefaultVertexShader);
+    GLuint fragmentShader = CompileShader(GL_FRAGMENT_SHADER, kDefaultFragmentShader);
+    ASSERT_NE(0u, vertexShader);
+    ASSERT_NE(0u, fragmentShader);
+
+    GLuint geometryShader = glCreateShader(GL_GEOMETRY_SHADER_EXT);
+
+    GLuint program = glCreateProgram();
+    glAttachShader(program, vertexShader);
+    glAttachShader(program, fragmentShader);
+    glAttachShader(program, geometryShader);
+    glDeleteShader(vertexShader);
+    glDeleteShader(fragmentShader);
+    glDeleteShader(geometryShader);
+
+    glLinkProgram(program);
+
+    GLint linkStatus;
+    glGetProgramiv(program, GL_LINK_STATUS, &linkStatus);
+    EXPECT_EQ(0, linkStatus);
+
+    glDeleteProgram(program);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Verify that linking a program with geometry shader whose version is different from other shaders
+// in this program causes a link error.
+TEST_P(GeometryShaderTest, LinkWhenShaderVersionMismatch)
+{
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_geometry_shader"));
+
+    const std::string &kDefaultVertexShaderVersion300 =
+        R"(#version 300 es
+        void main()
+        {
+            gl_Position = vec4(1.0, 0.0, 0.0, 1.0);
+        })";
+
+    const std::string kDefaultFragmentShaderVersion300 =
+        R"(#version 300 es
+        precision mediump float;
+        layout (location = 0) out vec4 frag_out;
+        void main()
+        {
+            frag_out = vec4(1.0, 0.0, 0.0, 1.0);
+        })";
+
+    const std::string &emptyGeometryShader = CreateEmptyGeometryShader("points", "points", 2, 1);
+
+    GLuint program = CompileProgramWithGS(kDefaultVertexShaderVersion300, emptyGeometryShader,
+                                          kDefaultFragmentShaderVersion300);
+    EXPECT_EQ(0u, program);
+}
+
+// Verify that linking a program with geometry shader that lacks input primitive,
+// output primitive, or declaration on 'max_vertices' causes a link failure.
+TEST_P(GeometryShaderTest, LinkValidationOnGeometryShaderLayouts)
+{
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_geometry_shader"));
+
+    const std::string &gsWithoutInputPrimitive  = CreateEmptyGeometryShader("", "points", 2, 1);
+    const std::string &gsWithoutOutputPrimitive = CreateEmptyGeometryShader("points", "", 2, 1);
+    const std::string &gsWithoutInvocations = CreateEmptyGeometryShader("points", "points", -1, 1);
+    const std::string &gsWithoutMaxVertices = CreateEmptyGeometryShader("points", "points", 2, -1);
+
+    // Linking a program with a geometry shader that only lacks 'invocations' should not cause a
+    // link failure.
+    GLuint program =
+        CompileProgramWithGS(kDefaultVertexShader, gsWithoutInvocations, kDefaultFragmentShader);
+    EXPECT_NE(0u, program);
+
+    glDeleteProgram(program);
+
+    // Linking a program with a geometry shader that lacks input primitive, output primitive or
+    // 'max_vertices' causes a link failure.
+    program =
+        CompileProgramWithGS(kDefaultVertexShader, gsWithoutInputPrimitive, kDefaultFragmentShader);
+    EXPECT_EQ(0u, program);
+
+    program = CompileProgramWithGS(kDefaultVertexShader, gsWithoutOutputPrimitive,
+                                   kDefaultFragmentShader);
+    EXPECT_EQ(0u, program);
+
+    program =
+        CompileProgramWithGS(kDefaultVertexShader, gsWithoutMaxVertices, kDefaultFragmentShader);
+    EXPECT_EQ(0u, program);
+
+    ASSERT_GL_NO_ERROR();
 }
 
 ANGLE_INSTANTIATE_TEST(GeometryShaderTestES3, ES3_OPENGL(), ES3_OPENGLES(), ES3_D3D11());
