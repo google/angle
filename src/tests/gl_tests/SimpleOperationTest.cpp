@@ -17,6 +17,18 @@ using namespace angle;
 
 namespace
 {
+constexpr char kBasicVertexShader[] =
+    R"(attribute vec3 position;
+void main()
+{
+    gl_Position = vec4(position, 1);
+})";
+
+constexpr char kGreenFragmentShader[] =
+    R"(void main()
+{
+    gl_FragColor = vec4(0, 1, 0, 1);
+})";
 
 class SimpleOperationTest : public ANGLETest
 {
@@ -54,21 +66,14 @@ void SimpleOperationTest::verifyBuffer(const std::vector<uint8_t> &data, GLenum 
 
 TEST_P(SimpleOperationTest, CompileVertexShader)
 {
-    const std::string source =
-        R"(attribute vec4 a_input;
-        void main()
-        {
-            gl_Position = a_input;
-        })";
-
-    GLuint shader = CompileShader(GL_VERTEX_SHADER, source);
+    GLuint shader = CompileShader(GL_VERTEX_SHADER, kBasicVertexShader);
     EXPECT_NE(shader, 0u);
     glDeleteShader(shader);
 
-    EXPECT_GL_NO_ERROR();
+    ASSERT_GL_NO_ERROR();
 }
 
-TEST_P(SimpleOperationTest, CompileFragmentShader)
+TEST_P(SimpleOperationTest, CompileFragmentShaderSingleVaryingInput)
 {
     const std::string source =
         R"(precision mediump float;
@@ -82,7 +87,7 @@ TEST_P(SimpleOperationTest, CompileFragmentShader)
     EXPECT_NE(shader, 0u);
     glDeleteShader(shader);
 
-    EXPECT_GL_NO_ERROR();
+    ASSERT_GL_NO_ERROR();
 }
 
 // Covers a simple bug in Vulkan to do with dependencies between the Surface and the default
@@ -95,11 +100,11 @@ TEST_P(SimpleOperationTest, ClearAndSwap)
 
     // Can't check the pixel result after the swap, and checking the pixel result affects the
     // behaviour of the test on the Vulkan back-end, so don't bother checking correctness.
-    EXPECT_GL_NO_ERROR();
+    ASSERT_GL_NO_ERROR();
     EXPECT_EGL_SUCCESS();
 }
 
-TEST_P(SimpleOperationTest, LinkProgram)
+TEST_P(SimpleOperationTest, LinkProgramShadersNoInputs)
 {
     const std::string vsSource =
         R"(void main()
@@ -113,11 +118,11 @@ TEST_P(SimpleOperationTest, LinkProgram)
             gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
         })";
 
-    GLuint program = CompileProgram(vsSource, fsSource);
+    const GLuint program = CompileProgram(vsSource, fsSource);
     EXPECT_NE(program, 0u);
     glDeleteProgram(program);
 
-    EXPECT_GL_NO_ERROR();
+    ASSERT_GL_NO_ERROR();
 }
 
 TEST_P(SimpleOperationTest, LinkProgramWithUniforms)
@@ -127,7 +132,6 @@ TEST_P(SimpleOperationTest, LinkProgramWithUniforms)
         {
             gl_Position = vec4(1.0, 1.0, 1.0, 1.0);
         })";
-
     const std::string fsSource =
         R"(precision mediump float;
         uniform vec4 u_input;
@@ -136,15 +140,15 @@ TEST_P(SimpleOperationTest, LinkProgramWithUniforms)
             gl_FragColor = u_input;
         })";
 
-    GLuint program = CompileProgram(vsSource, fsSource);
+    const GLuint program = CompileProgram(vsSource, fsSource);
     EXPECT_NE(program, 0u);
 
-    GLint uniformLoc = glGetUniformLocation(program, "u_input");
+    const GLint uniformLoc = glGetUniformLocation(program, "u_input");
     EXPECT_NE(-1, uniformLoc);
 
     glDeleteProgram(program);
 
-    EXPECT_GL_NO_ERROR();
+    ASSERT_GL_NO_ERROR();
 }
 
 TEST_P(SimpleOperationTest, LinkProgramWithAttributes)
@@ -156,21 +160,15 @@ TEST_P(SimpleOperationTest, LinkProgramWithAttributes)
             gl_Position = a_input;
         })";
 
-    const std::string fsSource =
-        R"(void main()
-        {
-            gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
-        })";
-
-    GLuint program = CompileProgram(vsSource, fsSource);
+    const GLuint program = CompileProgram(vsSource, kGreenFragmentShader);
     EXPECT_NE(program, 0u);
 
-    GLint attribLoc = glGetAttribLocation(program, "a_input");
+    const GLint attribLoc = glGetAttribLocation(program, "a_input");
     EXPECT_NE(-1, attribLoc);
 
     glDeleteProgram(program);
 
-    EXPECT_GL_NO_ERROR();
+    ASSERT_GL_NO_ERROR();
 }
 
 TEST_P(SimpleOperationTest, BufferDataWithData)
@@ -184,7 +182,7 @@ TEST_P(SimpleOperationTest, BufferDataWithData)
 
     verifyBuffer(data, GL_ARRAY_BUFFER);
 
-    EXPECT_GL_NO_ERROR();
+    ASSERT_GL_NO_ERROR();
 }
 
 TEST_P(SimpleOperationTest, BufferDataWithNoData)
@@ -193,7 +191,7 @@ TEST_P(SimpleOperationTest, BufferDataWithNoData)
     glBindBuffer(GL_ARRAY_BUFFER, buffer.get());
     glBufferData(GL_ARRAY_BUFFER, 1024, nullptr, GL_STATIC_DRAW);
 
-    EXPECT_GL_NO_ERROR();
+    ASSERT_GL_NO_ERROR();
 }
 
 TEST_P(SimpleOperationTest, BufferSubData)
@@ -217,96 +215,138 @@ TEST_P(SimpleOperationTest, BufferSubData)
 
     verifyBuffer(data, GL_ARRAY_BUFFER);
 
-    EXPECT_GL_NO_ERROR();
+    ASSERT_GL_NO_ERROR();
 }
 
 // Simple quad test.
 TEST_P(SimpleOperationTest, DrawQuad)
 {
-    const std::string &vertexShader =
-        "attribute vec3 position;\n"
-        "void main()\n"
-        "{\n"
-        "    gl_Position = vec4(position, 1);\n"
-        "}";
-    const std::string &fragmentShader =
-        "void main()\n"
-        "{\n"
-        "    gl_FragColor = vec4(0, 1, 0, 1);\n"
-        "}";
-    ANGLE_GL_PROGRAM(program, vertexShader, fragmentShader);
+    ANGLE_GL_PROGRAM(program, kBasicVertexShader, kGreenFragmentShader);
 
     drawQuad(program.get(), "position", 0.5f, 1.0f, true);
 
-    EXPECT_GL_NO_ERROR();
+    ASSERT_GL_NO_ERROR();
+
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
+// Simple line test.
+TEST_P(SimpleOperationTest, DrawLine)
+{
+    ANGLE_GL_PROGRAM(program, kBasicVertexShader, kGreenFragmentShader);
+    glUseProgram(program);
+
+    std::vector<Vector3> vertices = {{-1.0f, -1.0f, 0.0f}, {1.0f, 1.0f, 0.0f}};
+
+    const GLint positionLocation = glGetAttribLocation(program, "position");
+    ASSERT_NE(-1, positionLocation);
+
+    GLBuffer vertexBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices[0]) * vertices.size(), vertices.data(),
+                 GL_STATIC_DRAW);
+    glVertexAttribPointer(positionLocation, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glEnableVertexAttribArray(positionLocation);
+
+    glClear(GL_COLOR_BUFFER_BIT);
+    glDrawArrays(GL_LINES, 0, static_cast<GLsizei>(vertices.size()));
+
+    glDisableVertexAttribArray(positionLocation);
+
+    ASSERT_GL_NO_ERROR();
+
+    // We assume in the test the width and height are equal and we are tracing
+    // the line from bottom left to top right. Verify that all pixels along that line
+    // have been traced with green.
+    ASSERT_EQ(getWindowWidth(), getWindowHeight());
+
+    for (auto x = 0; x < getWindowWidth(); x++)
+    {
+        EXPECT_PIXEL_COLOR_EQ(x, x, GLColor::green);
+    }
+}
+
+// Simple line strip test.
+TEST_P(SimpleOperationTest, DrawLineStrip)
+{
+    ANGLE_GL_PROGRAM(program, kBasicVertexShader, kGreenFragmentShader);
+    glUseProgram(program);
+
+    auto vertices =
+        std::vector<Vector3>{{-1.0f, -1.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {1.0f, -1.0f, 0.0f}};
+
+    const GLint positionLocation = glGetAttribLocation(program, "position");
+    ASSERT_NE(-1, positionLocation);
+
+    GLBuffer vertexBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer.get());
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices[0]) * vertices.size(), vertices.data(),
+                 GL_STATIC_DRAW);
+    glVertexAttribPointer(positionLocation, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+    glEnableVertexAttribArray(positionLocation);
+
+    glClear(GL_COLOR_BUFFER_BIT);
+    glDrawArrays(GL_LINE_STRIP, 0, static_cast<GLsizei>(vertices.size()));
+
+    ASSERT_GL_NO_ERROR();
+
+    // We assume in the test the width and height are equal and we are tracing
+    // the line from bottom left to center, then from center to bottom right.
+    // Verify that all pixels along these lines have been traced with green.
+    ASSERT_EQ(getWindowWidth(), getWindowHeight());
+
+    const auto centerX = getWindowWidth() / 2;
+    const auto centerY = getWindowHeight() / 2;
+
+    for (auto x = 0; x < centerX; x++)
+    {
+        EXPECT_PIXEL_COLOR_EQ(x, x, GLColor::green);
+    }
+
+    for (auto x = centerX, y = centerY - 1; x < getWindowWidth() && y >= 0; x++, y--)
+    {
+        EXPECT_PIXEL_COLOR_EQ(x, y, GLColor::green);
+    }
 }
 
 // Simple repeated draw and swap test.
 TEST_P(SimpleOperationTest, DrawQuadAndSwap)
 {
-    const std::string &vertexShader =
-        "attribute vec3 position;\n"
-        "void main()\n"
-        "{\n"
-        "    gl_Position = vec4(position, 1);\n"
-        "}";
-    const std::string &fragmentShader =
-        "void main()\n"
-        "{\n"
-        "    gl_FragColor = vec4(0, 1, 0, 1);\n"
-        "}";
-    ANGLE_GL_PROGRAM(program, vertexShader, fragmentShader);
+    ANGLE_GL_PROGRAM(program, kBasicVertexShader, kGreenFragmentShader);
 
     for (int i = 0; i < 8; ++i)
     {
         drawQuad(program.get(), "position", 0.5f, 1.0f, true);
-        EXPECT_GL_NO_ERROR();
+        ASSERT_GL_NO_ERROR();
         EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
         swapBuffers();
     }
 
-    EXPECT_GL_NO_ERROR();
+    ASSERT_GL_NO_ERROR();
 }
 
 // Simple indexed quad test.
 TEST_P(SimpleOperationTest, DrawIndexedQuad)
 {
-    const std::string vertexShader =
-        "attribute vec3 position;\n"
-        "void main()\n"
-        "{\n"
-        "    gl_Position = vec4(position, 1);\n"
-        "}";
-    const std::string fragmentShader =
-        "void main()\n"
-        "{\n"
-        "    gl_FragColor = vec4(0, 1, 0, 1);\n"
-        "}";
-    ANGLE_GL_PROGRAM(program, vertexShader, fragmentShader);
+    ANGLE_GL_PROGRAM(program, kBasicVertexShader, kGreenFragmentShader);
 
     drawIndexedQuad(program.get(), "position", 0.5f, 1.0f, true);
 
-    EXPECT_GL_NO_ERROR();
+    ASSERT_GL_NO_ERROR();
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
 // Draw with a fragment uniform.
 TEST_P(SimpleOperationTest, DrawQuadWithFragmentUniform)
 {
-    const std::string &vertexShader =
-        "attribute vec3 position;\n"
-        "void main()\n"
-        "{\n"
-        "    gl_Position = vec4(position, 1);\n"
-        "}";
     const std::string &fragmentShader =
         "uniform mediump vec4 color;\n"
         "void main()\n"
         "{\n"
         "    gl_FragColor = color;\n"
         "}";
-    ANGLE_GL_PROGRAM(program, vertexShader, fragmentShader);
+    ANGLE_GL_PROGRAM(program, kBasicVertexShader, fragmentShader);
 
     GLint location = glGetUniformLocation(program, "color");
     ASSERT_NE(-1, location);
@@ -316,7 +356,7 @@ TEST_P(SimpleOperationTest, DrawQuadWithFragmentUniform)
 
     drawQuad(program.get(), "position", 0.5f, 1.0f, true);
 
-    EXPECT_GL_NO_ERROR();
+    ASSERT_GL_NO_ERROR();
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
@@ -340,7 +380,7 @@ TEST_P(SimpleOperationTest, DrawQuadWithVertexUniform)
         "}";
     ANGLE_GL_PROGRAM(program, vertexShader, fragmentShader);
 
-    GLint location = glGetUniformLocation(program, "color");
+    const GLint location = glGetUniformLocation(program, "color");
     ASSERT_NE(-1, location);
 
     glUseProgram(program);
@@ -348,7 +388,7 @@ TEST_P(SimpleOperationTest, DrawQuadWithVertexUniform)
 
     drawQuad(program.get(), "position", 0.5f, 1.0f, true);
 
-    EXPECT_GL_NO_ERROR();
+    ASSERT_GL_NO_ERROR();
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
@@ -373,10 +413,10 @@ TEST_P(SimpleOperationTest, DrawQuadWithTwoUniforms)
         "}";
     ANGLE_GL_PROGRAM(program, vertexShader, fragmentShader);
 
-    GLint location1 = glGetUniformLocation(program, "color1");
+    const GLint location1 = glGetUniformLocation(program, "color1");
     ASSERT_NE(-1, location1);
 
-    GLint location2 = glGetUniformLocation(program, "color2");
+    const GLint location2 = glGetUniformLocation(program, "color2");
     ASSERT_NE(-1, location2);
 
     glUseProgram(program);
@@ -385,7 +425,7 @@ TEST_P(SimpleOperationTest, DrawQuadWithTwoUniforms)
 
     drawQuad(program.get(), "position", 0.5f, 1.0f, true);
 
-    EXPECT_GL_NO_ERROR();
+    ASSERT_GL_NO_ERROR();
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::yellow);
 }
 
@@ -416,8 +456,8 @@ void main()
 
     glUseProgram(program);
 
-    GLint color1Loc = glGetAttribLocation(program, "color1");
-    GLint color2Loc = glGetAttribLocation(program, "color2");
+    const GLint color1Loc = glGetAttribLocation(program, "color1");
+    const GLint color2Loc = glGetAttribLocation(program, "color2");
     ASSERT_NE(-1, color1Loc);
     ASSERT_NE(-1, color2Loc);
 
@@ -481,7 +521,7 @@ TEST_P(SimpleOperationTest, CreateTexture2DWithData)
 TEST_P(SimpleOperationTest, LinkProgramWithTexture)
 {
     ASSERT_NE(0u, get2DTexturedQuadProgram());
-    EXPECT_GL_NO_ERROR();
+    ASSERT_GL_NO_ERROR();
 }
 
 // Creates a program with a texture and renders with it.
@@ -497,7 +537,7 @@ TEST_P(SimpleOperationTest, DrawWithTexture)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
     draw2DTexturedQuad(0.5f, 1.0f, true);
-    EXPECT_GL_NO_ERROR();
+    ASSERT_GL_NO_ERROR();
 
     int w = getWindowWidth() - 2;
     int h = getWindowHeight() - 2;
@@ -526,18 +566,7 @@ TEST_P(SimpleOperationTest, RenderToTexture)
 
     glViewport(0, 0, kSize, kSize);
 
-    const std::string &vertexShader =
-        "attribute vec3 position;\n"
-        "void main()\n"
-        "{\n"
-        "    gl_Position = vec4(position, 1);\n"
-        "}";
-    const std::string &fragmentShader =
-        "void main()\n"
-        "{\n"
-        "    gl_FragColor = vec4(0, 1, 0, 1);\n"
-        "}";
-    ANGLE_GL_PROGRAM(program, vertexShader, fragmentShader);
+    ANGLE_GL_PROGRAM(program, kBasicVertexShader, kGreenFragmentShader);
     drawQuad(program, "position", 0.5f, 1.0f, true);
     ASSERT_GL_NO_ERROR();
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
