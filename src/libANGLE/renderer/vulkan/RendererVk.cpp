@@ -250,9 +250,7 @@ RendererVk::~RendererVk()
 
 vk::Error RendererVk::initialize(const egl::AttributeMap &attribs, const char *wsiName)
 {
-    mEnableValidationLayers = ShouldUseDebugLayers(attribs);
-
-    ScopedVkLoaderEnvironment scopedEnvironment(mEnableValidationLayers);
+    ScopedVkLoaderEnvironment scopedEnvironment(ShouldUseDebugLayers(attribs));
     mEnableValidationLayers = scopedEnvironment.canEnableValidationLayers();
 
     // Gather global layer properties.
