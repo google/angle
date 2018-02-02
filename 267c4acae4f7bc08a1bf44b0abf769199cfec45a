@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b301ff25_fc47904d",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 245,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-02T19:18:44Z",
+      "side": 1,
+      "message": "nit: please omit this",
+      "range": {
+        "startLine": 240,
+        "startChar": 0,
+        "endLine": 245,
+        "endChar": 5
+      },
+      "revId": "267c4acae4f7bc08a1bf44b0abf769199cfec45a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dd0c31da_9e11b824",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 249,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-02T19:18:44Z",
+      "side": 1,
+      "message": "nit: use GLBuffer",
+      "range": {
+        "startLine": 249,
+        "startChar": 4,
+        "endLine": 249,
+        "endChar": 24
+      },
+      "revId": "267c4acae4f7bc08a1bf44b0abf769199cfec45a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1a356347_0f8757b9",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-02T19:18:44Z",
+      "side": 1,
+      "message": "nit: you can use the vector.size",
+      "range": {
+        "startLine": 253,
+        "startChar": 59,
+        "endLine": 253,
+        "endChar": 60
+      },
+      "revId": "267c4acae4f7bc08a1bf44b0abf769199cfec45a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2ac6de76_3ddcd908",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 268,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-02T19:18:44Z",
+      "side": 1,
+      "message": "nit: you can omit this",
+      "range": {
+        "startLine": 261,
+        "startChar": 0,
+        "endLine": 268,
+        "endChar": 38
+      },
+      "revId": "267c4acae4f7bc08a1bf44b0abf769199cfec45a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "25aa6545_b46fde19",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 296,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-02T19:18:44Z",
+      "side": 1,
+      "message": "similar comments to this test.",
+      "range": {
+        "startLine": 291,
+        "startChar": 0,
+        "endLine": 296,
+        "endChar": 5
+      },
+      "revId": "267c4acae4f7bc08a1bf44b0abf769199cfec45a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "151bff82_7af25cab",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 389,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-02T19:18:44Z",
+      "side": 1,
+      "message": "very small criticism but it\u0027s not technically wrong for the last error test in a GL test to be EXPECT. but, I would say it\u0027s better to leave this as ASSERTs.",
+      "range": {
+        "startLine": 389,
+        "startChar": 4,
+        "endLine": 389,
+        "endChar": 22
+      },
+      "revId": "267c4acae4f7bc08a1bf44b0abf769199cfec45a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
