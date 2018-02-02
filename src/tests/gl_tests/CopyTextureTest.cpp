@@ -74,6 +74,51 @@ class CopyTextureTest : public ANGLETest
         return true;
     }
 
+    void testGradientDownsampleUniqueValues(GLenum destFormat,
+                                            GLenum destType,
+                                            const std::array<size_t, 4> &expectedUniqueValues)
+    {
+        std::array<GLColor, 256> sourceGradient;
+        for (size_t i = 0; i < sourceGradient.size(); i++)
+        {
+            GLubyte value     = static_cast<GLubyte>(i);
+            sourceGradient[i] = GLColor(value, value, value, value);
+        }
+        GLTexture sourceTexture;
+        glBindTexture(GL_TEXTURE_2D, sourceTexture);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 256, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                     sourceGradient.data());
+
+        GLTexture destTexture;
+        glBindTexture(GL_TEXTURE_2D, destTexture);
+        glCopyTextureCHROMIUM(sourceTexture, 0, GL_TEXTURE_2D, destTexture, 0, destFormat, destType,
+                              GL_FALSE, GL_FALSE, GL_FALSE);
+        EXPECT_GL_NO_ERROR();
+
+        GLFramebuffer fbo;
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, destTexture, 0);
+
+        std::array<GLColor, 256> destData;
+        glReadPixels(0, 0, 256, 1, GL_RGBA, GL_UNSIGNED_BYTE, destData.data());
+        EXPECT_GL_NO_ERROR();
+
+        std::set<GLubyte> uniqueValues[4];
+        for (size_t i = 0; i < destData.size(); i++)
+        {
+            GLColor color = destData[i];
+            uniqueValues[0].insert(color.R);
+            uniqueValues[1].insert(color.G);
+            uniqueValues[2].insert(color.B);
+            uniqueValues[3].insert(color.A);
+        }
+
+        EXPECT_EQ(expectedUniqueValues[0], uniqueValues[0].size());
+        EXPECT_EQ(expectedUniqueValues[1], uniqueValues[1].size());
+        EXPECT_EQ(expectedUniqueValues[2], uniqueValues[2].size());
+        EXPECT_EQ(expectedUniqueValues[3], uniqueValues[3].size());
+    }
+
     GLuint mTextures[2] = {
         0, 0,
     };
@@ -727,6 +772,98 @@ TEST_P(CopyTextureTest, CopyToMipmap)
 
         EXPECT_GL_NO_ERROR();
     }
+}
+
+// Test that copying from an RGBA8 texture to RGBA4 results in exactly 4-bit precision in the result
+TEST_P(CopyTextureTest, DownsampleRGBA4444)
+{
+    // Downsampling on copy is only guarenteed on D3D11
+    ANGLE_SKIP_TEST_IF(!IsD3D11());
+
+    GLTexture textures[2];
+
+    GLColor pixels[] = {GLColor(0, 5, 6, 7), GLColor(17, 22, 25, 24), GLColor(34, 35, 36, 36),
+                        GLColor(51, 53, 55, 55)};
+
+    glBindTexture(GL_TEXTURE_2D, textures[0]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+
+    glBindTexture(GL_TEXTURE_2D, textures[1]);
+    glCopyTextureCHROMIUM(textures[0], 0, GL_TEXTURE_2D, textures[1], 0, GL_RGBA,
+                          GL_UNSIGNED_SHORT_4_4_4_4, GL_FALSE, GL_FALSE, GL_FALSE);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textures[1], 0);
+
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(0, 0, 0, 0), 1.0);
+    EXPECT_PIXEL_COLOR_NEAR(1, 0, GLColor(17, 17, 17, 17), 1.0);
+    EXPECT_PIXEL_COLOR_NEAR(0, 1, GLColor(34, 34, 34, 34), 1.0);
+    EXPECT_PIXEL_COLOR_NEAR(1, 1, GLColor(51, 51, 51, 51), 1.0);
+
+    testGradientDownsampleUniqueValues(GL_RGBA, GL_UNSIGNED_SHORT_4_4_4_4, {16, 16, 16, 16});
+}
+
+// Test that copying from an RGBA8 texture to RGB565 results in exactly 4-bit precision in the
+// result
+TEST_P(CopyTextureTest, DownsampleRGB565)
+{
+    // Downsampling on copy is only guarenteed on D3D11
+    ANGLE_SKIP_TEST_IF(!IsD3D11());
+
+    GLTexture textures[2];
+
+    GLColor pixels[] = {GLColor(0, 5, 2, 14), GLColor(17, 22, 25, 30), GLColor(34, 33, 36, 46),
+                        GLColor(50, 54, 49, 60)};
+
+    glBindTexture(GL_TEXTURE_2D, textures[0]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+
+    glBindTexture(GL_TEXTURE_2D, textures[1]);
+    glCopyTextureCHROMIUM(textures[0], 0, GL_TEXTURE_2D, textures[1], 0, GL_RGB,
+                          GL_UNSIGNED_SHORT_5_6_5, GL_FALSE, GL_FALSE, GL_FALSE);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textures[1], 0);
+
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(0, 4, 0, 255), 1.0);
+    EXPECT_PIXEL_COLOR_NEAR(1, 0, GLColor(16, 20, 25, 255), 1.0);
+    EXPECT_PIXEL_COLOR_NEAR(0, 1, GLColor(33, 32, 33, 255), 1.0);
+    EXPECT_PIXEL_COLOR_NEAR(1, 1, GLColor(49, 53, 49, 255), 1.0);
+
+    testGradientDownsampleUniqueValues(GL_RGB, GL_UNSIGNED_SHORT_5_6_5, {32, 64, 32, 1});
+}
+
+// Test that copying from an RGBA8 texture to RGBA5551 results in exactly 4-bit precision in the
+// result
+TEST_P(CopyTextureTest, DownsampleRGBA5551)
+{
+    // Downsampling on copy is only guarenteed on D3D11
+    ANGLE_SKIP_TEST_IF(!IsD3D11());
+
+    GLTexture textures[2];
+
+    GLColor pixels[] = {GLColor(0, 1, 2, 3), GLColor(14, 16, 17, 18), GLColor(33, 34, 36, 46),
+                        GLColor(50, 51, 52, 255)};
+
+    glBindTexture(GL_TEXTURE_2D, textures[0]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+
+    glBindTexture(GL_TEXTURE_2D, textures[1]);
+    glCopyTextureCHROMIUM(textures[0], 0, GL_TEXTURE_2D, textures[1], 0, GL_RGBA,
+                          GL_UNSIGNED_SHORT_5_5_5_1, GL_FALSE, GL_FALSE, GL_FALSE);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textures[1], 0);
+
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(0, 0, 0, 0), 1.0);
+    EXPECT_PIXEL_COLOR_NEAR(1, 0, GLColor(16, 16, 16, 0), 1.0);
+    EXPECT_PIXEL_COLOR_NEAR(0, 1, GLColor(33, 33, 33, 0), 1.0);
+    EXPECT_PIXEL_COLOR_NEAR(1, 1, GLColor(49, 49, 49, 255), 1.0);
+
+    testGradientDownsampleUniqueValues(GL_RGBA, GL_UNSIGNED_SHORT_5_5_5_1, {32, 32, 32, 2});
 }
 
 // Test to ensure that CopyTexture works with LUMINANCE texture as a destination

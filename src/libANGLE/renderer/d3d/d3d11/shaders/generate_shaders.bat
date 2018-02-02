@@ -31,6 +31,10 @@ call:BuildShader Passthrough2D11.hlsl PS_PassthroughR2D        ps_4_0_level_9_3 
 call:BuildShader Passthrough2D11.hlsl PS_PassthroughLum2D      ps_4_0_level_9_3  compiled\passthroughlum2d11ps.h      %debug%
 call:BuildShader Passthrough2D11.hlsl PS_PassthroughLumAlpha2D ps_4_0_level_9_3  compiled\passthroughlumalpha2d11ps.h %debug%
 
+call:BuildShader Passthrough2D11.hlsl PS_PassthroughRGBA2D_4444 ps_4_0_level_9_3 compiled\passthroughrgba2d_4444_11ps.h %debug%
+call:BuildShader Passthrough2D11.hlsl PS_PassthroughRGB2D_565   ps_4_0_level_9_3 compiled\passthroughrgb2d_565_11ps.h   %debug%
+call:BuildShader Passthrough2D11.hlsl PS_PassthroughRGBA2D_5551 ps_4_0_level_9_3 compiled\passthroughrgba2d_5551_11ps.h %debug%
+
 call:BuildShader MultiplyAlpha.hlsl PS_FtoF_PM_RGBA ps_4_0 compiled\multiplyalpha_ftof_pm_rgba_ps.h %debug%
 call:BuildShader MultiplyAlpha.hlsl PS_FtoF_UM_RGBA ps_4_0 compiled\multiplyalpha_ftof_um_rgba_ps.h %debug%
 call:BuildShader MultiplyAlpha.hlsl PS_FtoF_PM_RGB  ps_4_0 compiled\multiplyalpha_ftof_pm_rgb_ps.h  %debug%
@@ -45,6 +49,13 @@ call:BuildShader MultiplyAlpha.hlsl PS_FtoF_PM_LUMA ps_4_0 compiled\multiplyalph
 call:BuildShader MultiplyAlpha.hlsl PS_FtoF_UM_LUMA ps_4_0 compiled\multiplyalpha_ftof_um_luma_ps.h  %debug%
 call:BuildShader MultiplyAlpha.hlsl PS_FtoF_PM_LUMAALPHA   ps_4_0 compiled\multiplyalpha_ftof_pm_lumaalpha_ps.h  %debug%
 call:BuildShader MultiplyAlpha.hlsl PS_FtoF_UM_LUMAALPHA   ps_4_0 compiled\multiplyalpha_ftof_um_lumaalpha_ps.h  %debug%
+
+call:BuildShader MultiplyAlpha.hlsl PS_FtoF_PM_RGBA_4444 ps_4_0 compiled\multiplyalpha_ftof_pm_rgba_4444_ps.h %debug%
+call:BuildShader MultiplyAlpha.hlsl PS_FtoF_UM_RGBA_4444 ps_4_0 compiled\multiplyalpha_ftof_um_rgba_4444_ps.h %debug%
+call:BuildShader MultiplyAlpha.hlsl PS_FtoF_PM_RGB_565   ps_4_0 compiled\multiplyalpha_ftof_pm_rgb_565_ps.h   %debug%
+call:BuildShader MultiplyAlpha.hlsl PS_FtoF_UM_RGB_565   ps_4_0 compiled\multiplyalpha_ftof_um_rgb_565_ps.h   %debug%
+call:BuildShader MultiplyAlpha.hlsl PS_FtoF_PM_RGBA_5551 ps_4_0 compiled\multiplyalpha_ftof_pm_rgba_5551_ps.h %debug%
+call:BuildShader MultiplyAlpha.hlsl PS_FtoF_UM_RGBA_5551 ps_4_0 compiled\multiplyalpha_ftof_um_rgba_5551_ps.h %debug%
 
 call:BuildShader Clear11.hlsl           VS_Clear_FL9             vs_4_0_level_9_3  compiled\clear11_fl9vs.h             %debug%
 call:BuildShader Clear11.hlsl           PS_ClearFloat_FL9        ps_4_0_level_9_3  compiled\clearfloat11_fl9ps.h        %debug%

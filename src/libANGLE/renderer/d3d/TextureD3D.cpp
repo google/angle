@@ -1092,10 +1092,10 @@ gl::Error TextureD3D_2D::copyTexture(const gl::Context *context,
         ASSERT(isValidLevel(destLevel));
         ANGLE_TRY(updateStorageLevel(context, destLevel));
 
-        ANGLE_TRY(mRenderer->copyTexture(context, source, static_cast<GLint>(sourceLevel),
-                                         sourceRect, internalFormatInfo.format, destOffset,
-                                         mTexStorage, target, destLevel, unpackFlipY,
-                                         unpackPremultiplyAlpha, unpackUnmultiplyAlpha));
+        ANGLE_TRY(mRenderer->copyTexture(
+            context, source, static_cast<GLint>(sourceLevel), sourceRect, internalFormatInfo.format,
+            internalFormatInfo.type, destOffset, mTexStorage, target, destLevel, unpackFlipY,
+            unpackPremultiplyAlpha, unpackUnmultiplyAlpha));
     }
     else
     {
@@ -1141,10 +1141,12 @@ gl::Error TextureD3D_2D::copySubTexture(const gl::Context *context,
         ASSERT(isValidLevel(destLevel));
         ANGLE_TRY(updateStorageLevel(context, destLevel));
 
+        const gl::InternalFormat &internalFormatInfo =
+            gl::GetSizedInternalFormatInfo(getInternalFormat(destLevel));
         ANGLE_TRY(mRenderer->copyTexture(
-            context, source, static_cast<GLint>(sourceLevel), sourceArea,
-            gl::GetUnsizedFormat(getInternalFormat(destLevel)), destOffset, mTexStorage, target,
-            destLevel, unpackFlipY, unpackPremultiplyAlpha, unpackUnmultiplyAlpha));
+            context, source, static_cast<GLint>(sourceLevel), sourceArea, internalFormatInfo.format,
+            internalFormatInfo.type, destOffset, mTexStorage, target, destLevel, unpackFlipY,
+            unpackPremultiplyAlpha, unpackUnmultiplyAlpha));
     }
     else
     {
@@ -1872,10 +1874,10 @@ gl::Error TextureD3D_Cube::copyTexture(const gl::Context *context,
         ASSERT(isValidFaceLevel(faceIndex, destLevel));
         ANGLE_TRY(updateStorageFaceLevel(context, faceIndex, destLevel));
 
-        ANGLE_TRY(mRenderer->copyTexture(context, source, static_cast<GLint>(sourceLevel),
-                                         sourceRect, internalFormatInfo.format, destOffset,
-                                         mTexStorage, target, destLevel, unpackFlipY,
-                                         unpackPremultiplyAlpha, unpackUnmultiplyAlpha));
+        ANGLE_TRY(mRenderer->copyTexture(
+            context, source, static_cast<GLint>(sourceLevel), sourceRect, internalFormatInfo.format,
+            internalFormatInfo.type, destOffset, mTexStorage, target, destLevel, unpackFlipY,
+            unpackPremultiplyAlpha, unpackUnmultiplyAlpha));
     }
     else
     {
@@ -1924,10 +1926,12 @@ gl::Error TextureD3D_Cube::copySubTexture(const gl::Context *context,
         ASSERT(isValidFaceLevel(faceIndex, destLevel));
         ANGLE_TRY(updateStorageFaceLevel(context, faceIndex, destLevel));
 
+        const gl::InternalFormat &internalFormatInfo =
+            gl::GetSizedInternalFormatInfo(getInternalFormat(destLevel, faceIndex));
         ANGLE_TRY(mRenderer->copyTexture(
-            context, source, static_cast<GLint>(sourceLevel), sourceArea,
-            gl::GetUnsizedFormat(getInternalFormat(destLevel, faceIndex)), destOffset, mTexStorage,
-            target, destLevel, unpackFlipY, unpackPremultiplyAlpha, unpackUnmultiplyAlpha));
+            context, source, static_cast<GLint>(sourceLevel), sourceArea, internalFormatInfo.format,
+            internalFormatInfo.type, destOffset, mTexStorage, target, destLevel, unpackFlipY,
+            unpackPremultiplyAlpha, unpackUnmultiplyAlpha));
     }
     else
     {

@@ -685,9 +685,12 @@ gl::Error TextureStorage11::generateMipmap(const gl::Context *context,
     gl::Extents destSize(dest->getWidth(), dest->getHeight(), dest->getDepth());
 
     Blit11 *blitter = mRenderer->getBlitter();
-    GLenum format   = gl::GetUnsizedFormat(source->getInternalFormat());
+    const gl::InternalFormat &sourceInternalFormat =
+        gl::GetSizedInternalFormatInfo(source->getInternalFormat());
+    GLenum format = sourceInternalFormat.format;
+    GLenum type   = sourceInternalFormat.type;
     return blitter->copyTexture(context, sourceSRV, sourceArea, sourceSize, format, destRTV,
-                                destArea, destSize, nullptr, format, GL_LINEAR, false, false,
+                                destArea, destSize, nullptr, format, type, GL_LINEAR, false, false,
                                 false);
 }
 

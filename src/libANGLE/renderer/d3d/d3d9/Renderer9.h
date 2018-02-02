@@ -223,6 +223,7 @@ class Renderer9 : public RendererD3D
                           GLint sourceLevel,
                           const gl::Rectangle &sourceRect,
                           GLenum destFormat,
+                          GLenum destType,
                           const gl::Offset &destOffset,
                           TextureStorage *storage,
                           GLenum destTarget,
