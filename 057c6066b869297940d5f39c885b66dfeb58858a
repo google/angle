@@ -22,6 +22,30 @@
       "revId": "057c6066b869297940d5f39c885b66dfeb58858a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "541c7719_75179203",
+        "filename": "src/tests/deqp_support/deqp_gles2_test_expectations.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-02-02T15:39:05Z",
+      "side": 1,
+      "message": "It conflicts with an android expectation and the expectations parser does not check API when looking for conflicts so I can\u0027t just mark the Android expectation as GLES only.",
+      "parentUuid": "5d4627fb_616ff484",
+      "range": {
+        "startLine": 180,
+        "startChar": 0,
+        "endLine": 180,
+        "endChar": 72
+      },
+      "revId": "057c6066b869297940d5f39c885b66dfeb58858a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
