@@ -76,4 +76,24 @@ bool SetEnvironmentVar(const char *variableName, const char *value)
     return (SetEnvironmentVariableA(variableName, value) == TRUE);
 }
 
+std::string GetEnvironmentVar(const char *variableName)
+{
+    std::array<char, MAX_PATH> oldValue;
+    DWORD result =
+        GetEnvironmentVariableA(variableName, oldValue.data(), static_cast<DWORD>(oldValue.size()));
+    if (result == 0)
+    {
+        return std::string();
+    }
+    else
+    {
+        return std::string(oldValue.data());
+    }
+}
+
+const char *GetPathSeparator()
+{
+    return ";";
+}
+
 }  // namespace angle

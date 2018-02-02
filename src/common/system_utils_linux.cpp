@@ -86,4 +86,15 @@ bool SetEnvironmentVar(const char *variableName, const char *value)
     return (setenv(variableName, value, 1) == 0);
 }
 
+std::string GetEnvironmentVar(const char *variableName)
+{
+    const char *value = getenv(variableName);
+    return (value == nullptr ? std::string() : std::string(value));
+}
+
+const char *GetPathSeparator()
+{
+    return ":";
+}
+
 }  // namespace angle

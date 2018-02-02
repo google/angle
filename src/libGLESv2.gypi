@@ -27,6 +27,8 @@
             'common/platform.h',
             'common/string_utils.cpp',
             'common/string_utils.h',
+            'common/system_utils.cpp',
+            'common/system_utils.h',
             'common/third_party/base/anglebase/base_export.h',
             'common/third_party/base/anglebase/containers/mru_cache.h',
             'common/third_party/base/anglebase/logging.h',

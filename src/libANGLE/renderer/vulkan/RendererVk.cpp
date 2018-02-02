@@ -122,7 +122,7 @@ class ScopedVkLoaderEnvironment : angle::NonCopyable
         // Override environment variable to use the ANGLE layers.
         if (mEnableValidationLayers)
         {
-            if (!angle::SetEnvironmentVar(g_VkLoaderLayersPathEnv, ANGLE_VK_LAYERS_DIR))
+            if (!angle::PrependPathToEnvironmentVar(g_VkLoaderLayersPathEnv, ANGLE_VK_LAYERS_DIR))
             {
                 ERR() << "Error setting environment for Vulkan layers init.";
                 mEnableValidationLayers = false;
