@@ -182,28 +182,28 @@ const Format &Format::Get(GLenum internalFormat, const Renderer11DeviceCaps &dev
         case GL_COMPRESSED_R11_EAC:
         {
             static constexpr Format info(GL_COMPRESSED_R11_EAC,
-                                         angle::Format::ID::R8_UNORM,
-                                         DXGI_FORMAT_R8_UNORM,
-                                         DXGI_FORMAT_R8_UNORM,
+                                         angle::Format::ID::R16_UNORM,
+                                         DXGI_FORMAT_R16_UNORM,
+                                         DXGI_FORMAT_R16_UNORM,
                                          DXGI_FORMAT_UNKNOWN,
-                                         DXGI_FORMAT_R8_UNORM,
+                                         DXGI_FORMAT_R16_UNORM,
                                          DXGI_FORMAT_UNKNOWN,
-                                         DXGI_FORMAT_R8_UNORM,
-                                         GL_RGBA8,
+                                         DXGI_FORMAT_R16_UNORM,
+                                         GL_RGBA16_EXT,
                                          nullptr);
             return info;
         }
         case GL_COMPRESSED_RG11_EAC:
         {
             static constexpr Format info(GL_COMPRESSED_RG11_EAC,
-                                         angle::Format::ID::R8G8_UNORM,
-                                         DXGI_FORMAT_R8G8_UNORM,
-                                         DXGI_FORMAT_R8G8_UNORM,
+                                         angle::Format::ID::R16G16_UNORM,
+                                         DXGI_FORMAT_R16G16_UNORM,
+                                         DXGI_FORMAT_R16G16_UNORM,
                                          DXGI_FORMAT_UNKNOWN,
-                                         DXGI_FORMAT_R8G8_UNORM,
+                                         DXGI_FORMAT_R16G16_UNORM,
                                          DXGI_FORMAT_UNKNOWN,
-                                         DXGI_FORMAT_R8G8_UNORM,
-                                         GL_RGBA8,
+                                         DXGI_FORMAT_R16G16_UNORM,
+                                         GL_RGBA16_EXT,
                                          nullptr);
             return info;
         }
@@ -532,28 +532,28 @@ const Format &Format::Get(GLenum internalFormat, const Renderer11DeviceCaps &dev
         case GL_COMPRESSED_SIGNED_R11_EAC:
         {
             static constexpr Format info(GL_COMPRESSED_SIGNED_R11_EAC,
-                                         angle::Format::ID::R8_SNORM,
-                                         DXGI_FORMAT_R8_SNORM,
-                                         DXGI_FORMAT_R8_SNORM,
+                                         angle::Format::ID::R16_SNORM,
+                                         DXGI_FORMAT_R16_SNORM,
+                                         DXGI_FORMAT_R16_SNORM,
                                          DXGI_FORMAT_UNKNOWN,
                                          DXGI_FORMAT_UNKNOWN,
                                          DXGI_FORMAT_UNKNOWN,
-                                         DXGI_FORMAT_R8_SNORM,
-                                         GL_RGBA8_SNORM,
+                                         DXGI_FORMAT_R16_SNORM,
+                                         GL_RGBA16_SNORM_EXT,
                                          nullptr);
             return info;
         }
         case GL_COMPRESSED_SIGNED_RG11_EAC:
         {
             static constexpr Format info(GL_COMPRESSED_SIGNED_RG11_EAC,
-                                         angle::Format::ID::R8G8_SNORM,
-                                         DXGI_FORMAT_R8G8_SNORM,
-                                         DXGI_FORMAT_R8G8_SNORM,
+                                         angle::Format::ID::R16G16_SNORM,
+                                         DXGI_FORMAT_R16G16_SNORM,
+                                         DXGI_FORMAT_R16G16_SNORM,
                                          DXGI_FORMAT_UNKNOWN,
                                          DXGI_FORMAT_UNKNOWN,
                                          DXGI_FORMAT_UNKNOWN,
-                                         DXGI_FORMAT_R8G8_SNORM,
-                                         GL_RGBA8_SNORM,
+                                         DXGI_FORMAT_R16G16_SNORM,
+                                         GL_RGBA16_SNORM_EXT,
                                          nullptr);
             return info;
         }
