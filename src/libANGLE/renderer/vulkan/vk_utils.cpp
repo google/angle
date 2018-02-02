@@ -847,8 +847,13 @@ Error StagingImage::init(VkDevice device,
     mImage.getMemoryRequirements(device, &memoryRequirements);
 
     // Find the right kind of memory index.
+    // TODO(ynovikov): better approach would be to request just visible memory,
+    // and call vkInvalidateMappedMemoryRanges if the allocated memory is not coherent.
+    // This would solve potential issues of:
+    // 1) not having (enough) coherent memory and 2) coherent memory being slower
     uint32_t memoryIndex = memoryProperties.findCompatibleMemoryIndex(
-        memoryRequirements.memoryTypeBits, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT);
+        memoryRequirements.memoryTypeBits,
+        VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
 
     VkMemoryAllocateInfo allocateInfo;
     allocateInfo.sType           = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
