@@ -594,11 +594,15 @@ config("glslang_config") {
 }
 
 config("glslang_internal_config") {
+  cflags = []
   if (is_clang || !is_win) {
-    cflags = [
+    cflags += [
       "-Wno-ignored-qualifiers",
       "-Wno-reorder",
     ]
+  }
+  if (!is_clang && !is_win) {
+    cflags += [ "-Wno-unused-function" ]
   }
   if (is_clang) {
     # TODO(thakis): Consider enabling this, https://crbug.com/807632
