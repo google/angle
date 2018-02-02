@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2026f906_d4ea5d57",
+        "filename": "src/libANGLE/MemoryProgramCache.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 237,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-02-02T19:31:03Z",
+      "side": 1,
+      "message": "Think this should be GLenum, same for mGeometryShaderOutputPrimitiveType",
+      "range": {
+        "startLine": 237,
+        "startChar": 63,
+        "endLine": 237,
+        "endChar": 66
+      },
+      "revId": "ab7d9e40d51a3f56189e4a9db726ef63df61c50e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
