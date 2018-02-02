@@ -1,0 +1,165 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f60cb59_6e9de806",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-02T16:37:39Z",
+      "side": 1,
+      "message": "make these constexpr char [], and use the new c++14 string literals syntax:\n\nconstexpr char kBasicVertexShader[] \u003d R(\"attribute vec3 position;\nvoid main()...\n\");",
+      "range": {
+        "startLine": 21,
+        "startChar": 0,
+        "endLine": 21,
+        "endChar": 18
+      },
+      "revId": "e7a4fbee0f8f40409bd5b96bf2ce8063a8960034",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c1e16116_1a1910f5",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-02T16:37:39Z",
+      "side": 1,
+      "message": "this changes the behaviour here - the original shader has a varying.",
+      "range": {
+        "startLine": 77,
+        "startChar": 28,
+        "endLine": 77,
+        "endChar": 49
+      },
+      "revId": "e7a4fbee0f8f40409bd5b96bf2ce8063a8960034",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8c8741e1_1a30293c",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-02T16:37:39Z",
+      "side": 1,
+      "message": "this changes the behaviour here - the original program has no attributes.",
+      "range": {
+        "startLine": 100,
+        "startChar": 28,
+        "endLine": 100,
+        "endChar": 39
+      },
+      "revId": "e7a4fbee0f8f40409bd5b96bf2ce8063a8960034",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "959d1dca_ea839dcf",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-02T16:37:39Z",
+      "side": 1,
+      "message": "this changes the behaviour here - the original vertex shader has no attributes.",
+      "range": {
+        "startLine": 109,
+        "startChar": 28,
+        "endLine": 109,
+        "endChar": 51
+      },
+      "revId": "e7a4fbee0f8f40409bd5b96bf2ce8063a8960034",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "41aa28df_0ac71e85",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 215,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-02T16:37:39Z",
+      "side": 1,
+      "message": "nit: you can make this an ASSERT (same with the below)",
+      "range": {
+        "startLine": 215,
+        "startChar": 4,
+        "endLine": 215,
+        "endChar": 22
+      },
+      "revId": "e7a4fbee0f8f40409bd5b96bf2ce8063a8960034",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0bc79b5b_20a25ece",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 390,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-02T16:37:39Z",
+      "side": 1,
+      "message": "please restore the correct unindent to these two shaders.",
+      "range": {
+        "startLine": 382,
+        "startChar": 0,
+        "endLine": 390,
+        "endChar": 12
+      },
+      "revId": "e7a4fbee0f8f40409bd5b96bf2ce8063a8960034",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "97b57bdc_17ea9309",
+        "filename": "src/tests/test_utils/ANGLETest.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 266,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-02T16:37:39Z",
+      "side": 1,
+      "message": "I would rather you inline these methods in your tests.",
+      "range": {
+        "startLine": 259,
+        "startChar": 0,
+        "endLine": 266,
+        "endChar": 67
+      },
+      "revId": "e7a4fbee0f8f40409bd5b96bf2ce8063a8960034",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
