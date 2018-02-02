@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "be0ddc07_d70f54c3",
+        "filename": "src/vulkan_support/BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 601,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-02T13:33:06Z",
+      "side": 1,
+      "message": "this doesn\u0027t show up with clang, according to your comment. shouldn\u0027t this be in a !is_clang \u0026\u0026 !is_win section?",
+      "range": {
+        "startLine": 601,
+        "startChar": 3,
+        "endLine": 601,
+        "endChar": 29
+      },
+      "revId": "58d94f6147647fdf843d0a07c4d25c30ee85c389",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
