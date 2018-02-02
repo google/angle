@@ -46,6 +46,30 @@
       "revId": "057c6066b869297940d5f39c885b66dfeb58858a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "89cbf959_ca97fada",
+        "filename": "src/tests/deqp_support/deqp_gles2_test_expectations.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-02T15:40:27Z",
+      "side": 1,
+      "message": "OK, can you leave a comment there and we can look into lifting the Android expects?",
+      "parentUuid": "541c7719_75179203",
+      "range": {
+        "startLine": 180,
+        "startChar": 0,
+        "endLine": 180,
+        "endChar": 72
+      },
+      "revId": "057c6066b869297940d5f39c885b66dfeb58858a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
