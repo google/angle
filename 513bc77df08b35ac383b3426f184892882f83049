@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "767d4d54_17070426",
+        "filename": "src/tests/deqp_support/angle_deqp_gtest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-02T15:13:19Z",
+      "side": 1,
+      "message": "can we actually make this vulkan?",
+      "range": {
+        "startLine": 53,
+        "startChar": 63,
+        "endLine": 53,
+        "endChar": 65
+      },
+      "revId": "513bc77df08b35ac383b3426f184892882f83049",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
