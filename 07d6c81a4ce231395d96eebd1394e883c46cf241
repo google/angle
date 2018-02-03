@@ -16,6 +16,24 @@
       "revId": "07d6c81a4ce231395d96eebd1394e883c46cf241",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1f15158e_997c596d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-02-03T15:01:01Z",
+      "side": 1,
+      "message": "They are there.",
+      "parentUuid": "c09cd696_d3239d79",
+      "revId": "07d6c81a4ce231395d96eebd1394e883c46cf241",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
