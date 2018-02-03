@@ -65,7 +65,6 @@
 1729 D3D11 : dEQP-GLES31.functional.state_query.indexed.atomic_counter_buffer_* = FAIL
 1951 D3D11 : dEQP-GLES31.functional.state_query.indexed.shader_storage_buffer_* = FAIL
 1442 D3D11 : dEQP-GLES31.functional.state_query.program.compute_work_group_size_get_programiv = FAIL
-1442 D3D11 : dEQP-GLES31.functional.state_query.indexed.atomic_counter_buffer_binding_getbooleani_v = FAIL
 1442 D3D11 : dEQP-GLES31.functional.layout_binding.ssbo.* = FAIL
 1442 D3D11 : dEQP-GLES31.functional.compute* = FAIL
 1442 D3D11 : dEQP-GLES31.functional.atomic_counter.* = FAIL
@@ -1225,6 +1224,7 @@
 1442 OPENGL D3D11 : dEQP-GLES31.functional.debug.negative_coverage.get_error.shader_directive.primitive_bounding_box = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.debug.negative_coverage.get_error.shader_directive.tessellation_shader = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.debug.object_labels.program_pipeline = FAIL
+1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.indexed.atomic_counter_buffer_binding_getbooleani_v = FAIL
 
 1941 OPENGL D3D11 : dEQP-GLES31.functional.shaders.builtin_functions.common.abs.float_lowp_geometry = FAIL
 1941 OPENGL D3D11 : dEQP-GLES31.functional.shaders.builtin_functions.common.abs.float_mediump_geometry = FAIL
