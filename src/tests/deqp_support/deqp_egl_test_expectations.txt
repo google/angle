@@ -160,6 +160,12 @@
 // Tests failing since the Jan 2018 roll of dEQP
 2329 DEBUG RELEASE : dEQP-EGL.functional.choose_config.simple.selection_only.renderable_type = FAIL
 2329 DEBUG RELEASE : dEQP-EGL.functional.choose_config.simple.selection_and_sort.renderable_type = FAIL
+2341 DEBUG RELEASE : dEQP-EGL.functional.swap_buffers.rgb565_depth_stencil = FAIL
+2341 DEBUG RELEASE : dEQP-EGL.functional.swap_buffers.rgb888_depth_no_stencil = FAIL
+2341 DEBUG RELEASE : dEQP-EGL.functional.swap_buffers.rgba4444_depth_stencil = FAIL
+2341 DEBUG RELEASE : dEQP-EGL.functional.swap_buffers.rgba4444_no_depth_no_stencil = FAIL
+2341 DEBUG RELEASE : dEQP-EGL.functional.swap_buffers.rgba8888_no_depth_no_stencil = FAIL
+2341 DEBUG RELEASE : dEQP-EGL.functional.swap_buffers.rgba8888_no_depth_stencil = FAIL
 2330 DEBUG RELEASE : dEQP-EGL.functional.robustness.create_context.no_reset_notification = SKIP
 2330 DEBUG RELEASE : dEQP-EGL.functional.robustness.create_context.lose_context_on_reset = SKIP
 2330 DEBUG RELEASE : dEQP-EGL.functional.robustness.reset_context.fixed_function_pipeline.reset_status.index_buffer_out_of_bounds = SKIP

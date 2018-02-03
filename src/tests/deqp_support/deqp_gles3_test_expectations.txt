@@ -400,6 +400,7 @@
 2137 MAC INTEL : dEQP-GLES3.functional.texture.specification.teximage3d_* = FAIL
 2137 MAC INTEL : dEQP-GLES3.functional.texture.specification.texsubimage3d_* = FAIL
 2137 MAC INTEL : dEQP-GLES3.functional.ubo.* = FAIL
+2137 MAC INTEL : dEQP-GLES3.functional.shaders.texture_functions.texelfetchoffset.* = FAIL
 
 // Android only failures
 1487 ANDROID : dEQP-GLES3.functional.fbo.completeness.renderable.texture.color0.red_half_float_oes = FAIL
