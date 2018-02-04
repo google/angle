@@ -22,6 +22,30 @@
       "revId": "58d94f6147647fdf843d0a07c4d25c30ee85c389",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "996e433c_23aa05ae",
+        "filename": "src/vulkan_support/BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 601,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-02-04T08:46:18Z",
+      "side": 1,
+      "message": "Yes, this should have been in a new \"!is_clang \u0026\u0026 !is_win\u0027 section. Sorry to have missed this point. Thank Yuly for the clarification.",
+      "parentUuid": "be0ddc07_d70f54c3",
+      "range": {
+        "startLine": 601,
+        "startChar": 3,
+        "endLine": 601,
+        "endChar": 29
+      },
+      "revId": "58d94f6147647fdf843d0a07c4d25c30ee85c389",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
