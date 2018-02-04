@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "1086fc6b_800b1a31",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 23
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-02-04T04:20:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "632d676b_0ccb4c00",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 26
+      },
+      "revId": "2a22584a15b951808ffa1c23a2fe9ec47b19874a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "995fe261_a84c6929",
         "filename": "samples/hello_triangle/HelloTriangle.cpp",
         "patchSetId": 23
@@ -45,6 +69,30 @@
       "revId": "2a22584a15b951808ffa1c23a2fe9ec47b19874a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "36e377a9_f156d8df",
+        "filename": "samples/hello_triangle/HelloTriangle.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-02-04T04:20:55Z",
+      "side": 1,
+      "message": "This is just for my testing, I probably won\u0027t change this file at all.\nI have written a new test which can do all the combinations: memory vs buffer, interleaved or not, indexed or not.",
+      "parentUuid": "995fe261_a84c6929",
+      "range": {
+        "startLine": 33,
+        "startChar": 0,
+        "endLine": 40,
+        "endChar": 17
+      },
+      "revId": "2a22584a15b951808ffa1c23a2fe9ec47b19874a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "83a4664b_4ba74766",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-02-04T04:20:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bd2c41f5_e23d2789",
+      "range": {
+        "startLine": 159,
+        "startChar": 30,
+        "endLine": 159,
+        "endChar": 47
+      },
+      "revId": "2a22584a15b951808ffa1c23a2fe9ec47b19874a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2b8e170f_989a1aaf",
         "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
         "patchSetId": 23
@@ -91,6 +163,30 @@
       "revId": "2a22584a15b951808ffa1c23a2fe9ec47b19874a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "051416fb_4c33ade5",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 305,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-02-04T04:20:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2b8e170f_989a1aaf",
+      "range": {
+        "startLine": 295,
+        "startChar": 0,
+        "endLine": 305,
+        "endChar": 8
+      },
+      "revId": "2a22584a15b951808ffa1c23a2fe9ec47b19874a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "af0dd4bc_de7eb38f",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 23
+      },
+      "lineNbr": 187,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-02-04T04:20:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1de095ba_66bbc008",
+      "range": {
+        "startLine": 187,
+        "startChar": 27,
+        "endLine": 187,
+        "endChar": 37
+      },
+      "revId": "2a22584a15b951808ffa1c23a2fe9ec47b19874a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ed67f050_2ac0be60",
         "filename": "src/libANGLE/renderer/vulkan/StreamingBufferManager.cpp",
         "patchSetId": 23
@@ -137,6 +257,30 @@
       "revId": "2a22584a15b951808ffa1c23a2fe9ec47b19874a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "78380a80_5f8f3f98",
+        "filename": "src/libANGLE/renderer/vulkan/StreamingBufferManager.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-02-04T04:20:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ed67f050_2ac0be60",
+      "range": {
+        "startLine": 27,
+        "startChar": 34,
+        "endLine": 27,
+        "endChar": 42
+      },
+      "revId": "2a22584a15b951808ffa1c23a2fe9ec47b19874a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -163,6 +307,30 @@
     },
     {
       "key": {
+        "uuid": "fd8cc39d_067ddd88",
+        "filename": "src/libANGLE/renderer/vulkan/StreamingBufferManager.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-02-04T04:20:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d7b4c5df_a7667654",
+      "range": {
+        "startLine": 58,
+        "startChar": 43,
+        "endLine": 58,
+        "endChar": 69
+      },
+      "revId": "2a22584a15b951808ffa1c23a2fe9ec47b19874a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "289fff3b_c5bf654e",
         "filename": "src/libANGLE/renderer/vulkan/StreamingBufferManager.h",
         "patchSetId": 23
@@ -183,6 +351,30 @@
       "revId": "2a22584a15b951808ffa1c23a2fe9ec47b19874a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d6ce3a46_7ee57510",
+        "filename": "src/libANGLE/renderer/vulkan/StreamingBufferManager.h",
+        "patchSetId": 23
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-02-04T04:20:55Z",
+      "side": 1,
+      "message": "punting for now",
+      "parentUuid": "289fff3b_c5bf654e",
+      "range": {
+        "startLine": 19,
+        "startChar": 38,
+        "endLine": 19,
+        "endChar": 48
+      },
+      "revId": "2a22584a15b951808ffa1c23a2fe9ec47b19874a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -209,6 +401,30 @@
     },
     {
       "key": {
+        "uuid": "bd6438d2_f2b9362b",
+        "filename": "src/libANGLE/renderer/vulkan/StreamingBufferManager.h",
+        "patchSetId": 23
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-02-04T04:20:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f546ad58_d14b4b79",
+      "range": {
+        "startLine": 35,
+        "startChar": 17,
+        "endLine": 35,
+        "endChar": 24
+      },
+      "revId": "2a22584a15b951808ffa1c23a2fe9ec47b19874a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fcb961c1_65560500",
         "filename": "src/libANGLE/renderer/vulkan/StreamingBufferManager.h",
         "patchSetId": 23
@@ -229,6 +445,30 @@
       "revId": "2a22584a15b951808ffa1c23a2fe9ec47b19874a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b9accf3b_6bd78943",
+        "filename": "src/libANGLE/renderer/vulkan/StreamingBufferManager.h",
+        "patchSetId": 23
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-02-04T04:20:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fcb961c1_65560500",
+      "range": {
+        "startLine": 36,
+        "startChar": 17,
+        "endLine": 36,
+        "endChar": 27
+      },
+      "revId": "2a22584a15b951808ffa1c23a2fe9ec47b19874a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -255,6 +495,30 @@
     },
     {
       "key": {
+        "uuid": "2abcfb63_f611c0c7",
+        "filename": "src/libANGLE/renderer/vulkan/StreamingBufferManager.h",
+        "patchSetId": 23
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-02-04T04:20:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6ddc2166_f5b86bd6",
+      "range": {
+        "startLine": 38,
+        "startChar": 13,
+        "endLine": 38,
+        "endChar": 17
+      },
+      "revId": "2a22584a15b951808ffa1c23a2fe9ec47b19874a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "81e3c69c_214d1a2d",
         "filename": "src/libANGLE/renderer/vulkan/StreamingBufferManager.h",
         "patchSetId": 23
@@ -275,6 +539,30 @@
       "revId": "2a22584a15b951808ffa1c23a2fe9ec47b19874a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ff093a0d_37ef9e2b",
+        "filename": "src/libANGLE/renderer/vulkan/StreamingBufferManager.h",
+        "patchSetId": 23
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-02-04T04:20:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "81e3c69c_214d1a2d",
+      "range": {
+        "startLine": 40,
+        "startChar": 28,
+        "endLine": 40,
+        "endChar": 37
+      },
+      "revId": "2a22584a15b951808ffa1c23a2fe9ec47b19874a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -301,6 +589,30 @@
     },
     {
       "key": {
+        "uuid": "7aff1bbc_f387f37e",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-02-04T04:20:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8dadbd60_de36f746",
+      "range": {
+        "startLine": 65,
+        "startChar": 12,
+        "endLine": 65,
+        "endChar": 20
+      },
+      "revId": "2a22584a15b951808ffa1c23a2fe9ec47b19874a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bb121cf7_1d53aa8e",
         "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
         "patchSetId": 23
@@ -324,6 +636,30 @@
     },
     {
       "key": {
+        "uuid": "99034919_b3f3215f",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-02-04T04:20:55Z",
+      "side": 1,
+      "message": "Show me where it says this in the style guide I\u0027ll try, but this is the way I learned in high school typing class (from a nun no less) and after 35 years my fingers automatically space twice after a period.",
+      "parentUuid": "bb121cf7_1d53aa8e",
+      "range": {
+        "startLine": 131,
+        "startChar": 47,
+        "endLine": 131,
+        "endChar": 48
+      },
+      "revId": "2a22584a15b951808ffa1c23a2fe9ec47b19874a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f7f823bc_feb3c9ae",
         "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
         "patchSetId": 23
@@ -335,6 +671,30 @@
       "writtenOn": "2018-01-19T14:36:46Z",
       "side": 1,
       "message": "You could store the ResourceVk pointer to the Streaming buffer here instead of updating it in stream vertex data. See my other comments about static translated data.",
+      "range": {
+        "startLine": 160,
+        "startChar": 12,
+        "endLine": 160,
+        "endChar": 40
+      },
+      "revId": "2a22584a15b951808ffa1c23a2fe9ec47b19874a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c4e198d9_46d6c729",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-02-04T04:20:55Z",
+      "side": 1,
+      "message": "I don\u0027t see how that would work, as the streaming buffers are not tied to particular attribs.\nI probably don\u0027t understand what you\u0027re asking.  Do you want to keep another list for the streaming buffers, then iterate through that list here calling updateDependencies?  And once we\u0027ve called updateDependencies we take it off the list (so it\u0027s actually a queue)?",
+      "parentUuid": "f7f823bc_feb3c9ae",
       "range": {
         "startLine": 160,
         "startChar": 12,
@@ -390,6 +750,30 @@
       "revId": "2a22584a15b951808ffa1c23a2fe9ec47b19874a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "99b6351e_1f9142c1",
+        "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.h",
+        "patchSetId": 23
+      },
+      "lineNbr": 648,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-02-04T04:20:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d956bfd3_33282f47",
+      "range": {
+        "startLine": 648,
+        "startChar": 27,
+        "endLine": 648,
+        "endChar": 57
+      },
+      "revId": "2a22584a15b951808ffa1c23a2fe9ec47b19874a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
