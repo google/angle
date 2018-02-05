@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "aefd177d_d8a1191f",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 653,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-02-05T21:31:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "61bd8a6a_447125f4",
+      "revId": "a9736446f0d40440ec6a3b9058a1c2484474ebe2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "60975691_40babe37",
         "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2018-02-05T21:22:51Z",
       "side": 1,
       "message": "What do you think of adding a boolean mHasPausedQueries that does the state machine checks? Or even better a state that can make the difference between NOT_PAUSED, ALL_PAUSED, and SINGLE_PAUSED so that we know function are called correctly?",
+      "revId": "a9736446f0d40440ec6a3b9058a1c2484474ebe2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "82fdc6f1_9e2808c8",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 752,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-02-05T21:31:18Z",
+      "side": 1,
+      "message": "I will try that.  I\u0027m going to land this first and see if it fixes the flaky failures though.",
+      "parentUuid": "60975691_40babe37",
       "revId": "a9736446f0d40440ec6a3b9058a1c2484474ebe2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
