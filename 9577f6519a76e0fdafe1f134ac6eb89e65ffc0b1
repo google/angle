@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "55a31490_647d8256",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-02-05T04:25:17Z",
+      "side": 1,
+      "message": "It seems dEQP doesn\u0027t accurately follow SPEC, as these tests allow either compile or link error when treating a geometry shader that lacks input/output primitive or \u0027max_vertices\u0027 declaration:\nhttps://android.googlesource.com/platform/external/deqp/+/master/data/gles31/shaders/linkage_geometry.test#771",
+      "range": {
+        "startLine": 19,
+        "startChar": 5,
+        "endLine": 21,
+        "endChar": 113
+      },
+      "revId": "9577f6519a76e0fdafe1f134ac6eb89e65ffc0b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "13e17df0_73e92e45",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2111,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-02-05T04:25:17Z",
+      "side": 1,
+      "message": "It is a link error for linking a program with compute shader that lacks the \u0027local_size\u0027 input layout.\n\nI think we should also treat geometry shader input/output layouts in the same way as required by SPEC.",
+      "revId": "9577f6519a76e0fdafe1f134ac6eb89e65ffc0b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

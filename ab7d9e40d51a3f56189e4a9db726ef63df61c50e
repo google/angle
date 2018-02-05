@@ -22,6 +22,64 @@
       "revId": "ab7d9e40d51a3f56189e4a9db726ef63df61c50e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3946d800_7a169f1f",
+        "filename": "src/libANGLE/MemoryProgramCache.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 237,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-02-05T04:25:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2026f906_d4ea5d57",
+      "range": {
+        "startLine": 237,
+        "startChar": 63,
+        "endLine": 237,
+        "endChar": 66
+      },
+      "revId": "ab7d9e40d51a3f56189e4a9db726ef63df61c50e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f669fff0_0811d408",
+        "filename": "src/libANGLE/Uniform.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-02-05T04:25:17Z",
+      "side": 1,
+      "message": "I removed this because I found it not used in this patch.",
+      "revId": "ab7d9e40d51a3f56189e4a9db726ef63df61c50e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6a507a54_13e7b5d0",
+        "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 1645,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-02-05T04:25:17Z",
+      "side": 1,
+      "message": "These cases have been renamed to \u0027dEQP-GLES31.functional.shaders.linkage.es31.geometry.*\u0027 in the latest dEQP tests.",
+      "revId": "ab7d9e40d51a3f56189e4a9db726ef63df61c50e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
