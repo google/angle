@@ -793,7 +793,7 @@ gl::Error TextureGL::copySubTextureHelper(const gl::Context *context,
     // Check if the destination is renderable and copy on the GPU
     const LevelInfoGL &destLevelInfo = getLevelInfo(target, level);
     if (!destSRGB &&
-        nativegl::SupportsNativeRendering(mFunctions, target, destLevelInfo.nativeInternalFormat))
+        nativegl::SupportsNativeRendering(mFunctions, getTarget(), destLevelInfo.nativeInternalFormat))
     {
         return mBlitter->copySubTexture(context, sourceGL, sourceLevel, sourceComponentType, this,
                                         target, level, destComponentType, sourceImageDesc.size,

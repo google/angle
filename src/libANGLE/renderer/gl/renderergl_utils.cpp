@@ -1208,10 +1208,10 @@ bool SupportsNativeRendering(const FunctionsGL *functions, GLenum target, GLenum
     if (functions->isAtLeastGL(gl::Version(4, 3)) ||
         functions->hasGLExtension("GL_ARB_internalformat_query2"))
     {
-        GLint framebufferRenderable = GL_FALSE;
+        GLint framebufferRenderable = GL_NONE;
         functions->getInternalformativ(target, internalFormat, GL_FRAMEBUFFER_RENDERABLE, 1,
                                        &framebufferRenderable);
-        return gl::ConvertToBool(framebufferRenderable);
+        return framebufferRenderable != GL_NONE;
     }
     else
     {
