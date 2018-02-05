@@ -1794,12 +1794,6 @@ TEST_P(GLSLTest, LoopIndexingValidation)
 // can actually be used.
 TEST_P(GLSLTest, VerifyMaxVertexUniformVectors)
 {
-    if (IsLinux() && IsIntel())
-    {
-        std::cout << "Test timed out on Linux Intel. See crbug.com/680631." << std::endl;
-        return;
-    }
-
     int maxUniforms = 10000;
     glGetIntegerv(GL_MAX_VERTEX_UNIFORM_VECTORS, &maxUniforms);
     EXPECT_GL_NO_ERROR();
@@ -1846,12 +1840,6 @@ TEST_P(GLSLTest, VerifyMaxVertexUniformVectorsExceeded)
 // can actually be used.
 TEST_P(GLSLTest, VerifyMaxFragmentUniformVectors)
 {
-    if (IsLinux() && IsIntel())
-    {
-        std::cout << "Test timed out on Linux Intel. See crbug.com/680631." << std::endl;
-        return;
-    }
-
     int maxUniforms = 10000;
     glGetIntegerv(GL_MAX_FRAGMENT_UNIFORM_VECTORS, &maxUniforms);
     EXPECT_GL_NO_ERROR();

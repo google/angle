@@ -45,13 +45,6 @@ class BlendMinMaxTest : public ANGLETest
             return;
         }
 
-        // TODO(geofflang): figure out why this fails
-        if (IsIntel() && GetParam() == ES2_OPENGL())
-        {
-            std::cout << "Test skipped on OpenGL Intel due to flakyness." << std::endl;
-            return;
-        }
-
         SetUpFramebuffer(colorFormat);
 
         int minValue = 0;
