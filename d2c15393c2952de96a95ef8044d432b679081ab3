@@ -22,6 +22,29 @@
       "revId": "d2c15393c2952de96a95ef8044d432b679081ab3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "05b83e92_b5f8677a",
+        "filename": "src/common/system_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-05T20:08:23Z",
+      "side": 1,
+      "message": "can you add a system_utils.cpp file which implements this function. to make it cross-platform, add OS-specific system functions \"GetEnvironmentVar\" (getenv, etc) and \"GetPathSeparator\" (\";\" or \":\"). Use these two functions and SetEnvironmentVar to implement PrependPath.",
+      "range": {
+        "startLine": 23,
+        "startChar": 5,
+        "endLine": 23,
+        "endChar": 32
+      },
+      "revId": "d2c15393c2952de96a95ef8044d432b679081ab3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
