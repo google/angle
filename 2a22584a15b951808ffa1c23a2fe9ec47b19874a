@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "a5b70fca_a6cc4230",
+        "filename": "samples/hello_triangle/HelloTriangle.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-05T20:26:03Z",
+      "side": 1,
+      "message": "OK, then please revert your changes to this file and rely on the test for testing.",
+      "parentUuid": "36e377a9_f156d8df",
+      "range": {
+        "startLine": 33,
+        "startChar": 0,
+        "endLine": 40,
+        "endChar": 17
+      },
+      "revId": "2a22584a15b951808ffa1c23a2fe9ec47b19874a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bd2c41f5_e23d2789",
         "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
         "patchSetId": 23
@@ -272,6 +296,30 @@
       "side": 1,
       "message": "Done",
       "parentUuid": "ed67f050_2ac0be60",
+      "range": {
+        "startLine": 27,
+        "startChar": 34,
+        "endLine": 27,
+        "endChar": 42
+      },
+      "revId": "2a22584a15b951808ffa1c23a2fe9ec47b19874a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f98203c_e1af8d89",
+        "filename": "src/libANGLE/renderer/vulkan/StreamingBufferManager.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-05T20:26:03Z",
+      "side": 1,
+      "message": "Are we safe? Comment if there was anything relevant in the spec maybe.",
+      "parentUuid": "78380a80_5f8f3f98",
       "range": {
         "startLine": 27,
         "startChar": 34,
@@ -660,6 +708,30 @@
     },
     {
       "key": {
+        "uuid": "bb9a8c2d_91ce24ff",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-05T20:26:03Z",
+      "side": 1,
+      "message": "It\u0027s English, we don\u0027t put two spaces after a sentence. Very minor, but please fix. This really isn\u0027t worth arguing over.",
+      "parentUuid": "99034919_b3f3215f",
+      "range": {
+        "startLine": 131,
+        "startChar": 47,
+        "endLine": 131,
+        "endChar": 48
+      },
+      "revId": "2a22584a15b951808ffa1c23a2fe9ec47b19874a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f7f823bc_feb3c9ae",
         "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
         "patchSetId": 23
@@ -695,6 +767,30 @@
       "side": 1,
       "message": "I don\u0027t see how that would work, as the streaming buffers are not tied to particular attribs.\nI probably don\u0027t understand what you\u0027re asking.  Do you want to keep another list for the streaming buffers, then iterate through that list here calling updateDependencies?  And once we\u0027ve called updateDependencies we take it off the list (so it\u0027s actually a queue)?",
       "parentUuid": "f7f823bc_feb3c9ae",
+      "range": {
+        "startLine": 160,
+        "startChar": 12,
+        "endLine": 160,
+        "endChar": 40
+      },
+      "revId": "2a22584a15b951808ffa1c23a2fe9ec47b19874a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "896ccf1d_89925025",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-05T20:26:03Z",
+      "side": 1,
+      "message": "You\u0027re right, it can\u0027t be this simple. I think we can punt this for now as well. We might need to use reference counting in the final solution for streaming buffers.",
+      "parentUuid": "c4e198d9_46d6c729",
       "range": {
         "startLine": 160,
         "startChar": 12,

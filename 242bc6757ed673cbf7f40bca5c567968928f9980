@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9f9df921_e7557ee5",
+        "filename": "src/libANGLE/renderer/vulkan/StreamingBufferManager.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-05T20:26:03Z",
+      "side": 1,
+      "message": "allocationSize",
+      "range": {
+        "startLine": 29,
+        "startChar": 50,
+        "endLine": 29,
+        "endChar": 56
+      },
+      "revId": "242bc6757ed673cbf7f40bca5c567968928f9980",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6f472666_c1bb95b6",
+        "filename": "src/libANGLE/renderer/vulkan/StreamingBufferManager.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-05T20:26:03Z",
+      "side": 1,
+      "message": "probably a TODO here that this should be updated when we support the re-used streaming stuff.",
+      "range": {
+        "startLine": 35,
+        "startChar": 4,
+        "endLine": 35,
+        "endChar": 57
+      },
+      "revId": "242bc6757ed673cbf7f40bca5c567968928f9980",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b63982d7_5c7e8154",
+        "filename": "src/libANGLE/renderer/vulkan/StreamingBufferManager.h",
+        "patchSetId": 24
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-05T20:26:03Z",
+      "side": 1,
+      "message": "nit: How about just StreamingBuffer",
+      "range": {
+        "startLine": 19,
+        "startChar": 6,
+        "endLine": 19,
+        "endChar": 28
+      },
+      "revId": "242bc6757ed673cbf7f40bca5c567968928f9980",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "07e50a6f_c05f2339",
+        "filename": "src/libANGLE/renderer/vulkan/StreamingBufferManager.h",
+        "patchSetId": 24
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-05T20:26:03Z",
+      "side": 1,
+      "message": "nit: mMappedMemory",
+      "range": {
+        "startLine": 40,
+        "startChar": 13,
+        "endLine": 40,
+        "endChar": 21
+      },
+      "revId": "242bc6757ed673cbf7f40bca5c567968928f9980",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fb2b5207_51a19a2c",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 1180,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-05T20:26:03Z",
+      "side": 1,
+      "message": "nit: ()",
+      "range": {
+        "startLine": 1180,
+        "startChar": 42,
+        "endLine": 1180,
+        "endChar": 85
+      },
+      "revId": "242bc6757ed673cbf7f40bca5c567968928f9980",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
