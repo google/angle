@@ -114,6 +114,7 @@ class RendererVk : angle::NonCopyable
 
     vk::Error getPipeline(const ProgramVk *programVk,
                           const vk::PipelineDesc &desc,
+                          const gl::AttributesMask &activeAttribLocationsMask,
                           vk::PipelineAndSerial **pipelineOut);
 
     // This should only be called from ResourceVk.

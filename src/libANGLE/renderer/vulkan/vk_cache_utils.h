@@ -260,6 +260,7 @@ class PipelineDesc final
     Error initializePipeline(VkDevice device,
                              const RenderPass &compatibleRenderPass,
                              const PipelineLayout &pipelineLayout,
+                             const gl::AttributesMask &activeAttribLocationsMask,
                              const ShaderModule &vertexModule,
                              const ShaderModule &fragmentModule,
                              Pipeline *pipelineOut) const;
@@ -388,6 +389,7 @@ class PipelineCache final : angle::NonCopyable
     vk::Error getPipeline(VkDevice device,
                           const vk::RenderPass &compatibleRenderPass,
                           const vk::PipelineLayout &pipelineLayout,
+                          const gl::AttributesMask &activeAttribLocationsMask,
                           const vk::ShaderModule &vertexModule,
                           const vk::ShaderModule &fragmentModule,
                           const vk::PipelineDesc &desc,

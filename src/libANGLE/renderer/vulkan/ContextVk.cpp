@@ -132,6 +132,8 @@ gl::Error ContextVk::initPipeline(const gl::Context *context)
     VertexArrayVk *vertexArrayVk = vk::GetImpl(state.getVertexArray());
     FramebufferVk *framebufferVk = vk::GetImpl(state.getDrawFramebuffer());
     ProgramVk *programVk         = vk::GetImpl(state.getProgram());
+    const gl::AttributesMask activeAttribLocationsMask =
+        state.getProgram()->getActiveAttribLocationsMask();
 
     // Ensure the topology of the pipeline description is updated.
     mPipelineDesc->updateTopology(mCurrentDrawMode);
@@ -143,7 +145,8 @@ gl::Error ContextVk::initPipeline(const gl::Context *context)
     mPipelineDesc->updateRenderPassDesc(framebufferVk->getRenderPassDesc(context));
 
     // TODO(jmadill): Validate with ASSERT against physical device limits/caps?
-    ANGLE_TRY(mRenderer->getPipeline(programVk, *mPipelineDesc, &mCurrentPipeline));
+    ANGLE_TRY(mRenderer->getPipeline(programVk, *mPipelineDesc, activeAttribLocationsMask,
+                                     &mCurrentPipeline));
 
     return gl::NoError();
 }

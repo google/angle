@@ -353,6 +353,7 @@ void PipelineDesc::initDefaults()
 Error PipelineDesc::initializePipeline(VkDevice device,
                                        const RenderPass &compatibleRenderPass,
                                        const PipelineLayout &pipelineLayout,
+                                       const gl::AttributesMask &activeAttribLocationsMask,
                                        const ShaderModule &vertexModule,
                                        const ShaderModule &fragmentModule,
                                        Pipeline *pipelineOut) const
@@ -391,17 +392,16 @@ Error PipelineDesc::initializePipeline(VkDevice device,
 
     uint32_t vertexAttribCount = 0;
 
-    for (uint32_t attribIndex = 0; attribIndex < gl::MAX_VERTEX_ATTRIBS; ++attribIndex)
+    for (size_t attribIndexSizeT : activeAttribLocationsMask)
     {
+        const auto attribIndex = static_cast<uint32_t>(attribIndexSizeT);
+
         VkVertexInputBindingDescription &bindingDesc       = bindingDescs[attribIndex];
         VkVertexInputAttributeDescription &attribDesc      = attributeDescs[attribIndex];
         const PackedVertexInputBindingDesc &packedBinding  = mVertexInputBindings[attribIndex];
         const PackedVertexInputAttributeDesc &packedAttrib = mVertexInputAttribs[attribIndex];
 
         // TODO(jmadill): Support for gaps in vertex attribute specification.
-        if (packedAttrib.format == 0)
-            continue;
-
         vertexAttribCount = attribIndex + 1;
 
         bindingDesc.binding   = attribIndex;
@@ -780,6 +780,7 @@ void PipelineCache::destroy(VkDevice device)
 vk::Error PipelineCache::getPipeline(VkDevice device,
                                      const vk::RenderPass &compatibleRenderPass,
                                      const vk::PipelineLayout &pipelineLayout,
+                                     const gl::AttributesMask &activeAttribLocationsMask,
                                      const vk::ShaderModule &vertexModule,
                                      const vk::ShaderModule &fragmentModule,
                                      const vk::PipelineDesc &desc,
@@ -798,7 +799,8 @@ vk::Error PipelineCache::getPipeline(VkDevice device,
     if (device != VK_NULL_HANDLE)
     {
         ANGLE_TRY(desc.initializePipeline(device, compatibleRenderPass, pipelineLayout,
-                                          vertexModule, fragmentModule, &newPipeline));
+                                          activeAttribLocationsMask, vertexModule, fragmentModule,
+                                          &newPipeline));
     }
 
     // The Serial will be updated outside of this query.
