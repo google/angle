@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "ad13ff50_c925c13f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-02-05T16:50:11Z",
+      "side": 1,
+      "message": "Have to figure that out still",
+      "parentUuid": "94aa06a7_faad5c5a",
+      "revId": "21dd89c061be9b4c63383bf55a16f3bdf52276b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b8a32667_7c007afb",
         "filename": "src/image_util/loadimage_etc.cpp",
         "patchSetId": 3
@@ -39,6 +57,30 @@
       "revId": "21dd89c061be9b4c63383bf55a16f3bdf52276b1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e761a3f7_284cf6f1",
+        "filename": "src/image_util/loadimage_etc.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 369,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-02-05T16:50:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b8a32667_7c007afb",
+      "range": {
+        "startLine": 368,
+        "startChar": 0,
+        "endLine": 369,
+        "endChar": 72
+      },
+      "revId": "21dd89c061be9b4c63383bf55a16f3bdf52276b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
