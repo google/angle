@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9e210e14_29c38f72",
+        "filename": "src/vulkan_support/BUILD.gn",
+        "patchSetId": 2
+      },
+      "lineNbr": 605,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-05T20:10:23Z",
+      "side": 1,
+      "message": "I don\u0027t think this works - cflags does not exist so you will need to append using +\u003d. Define an empty cflags \u003d [] at the top of this config, and change the above cflags \u003d [ to cflags +\u003d",
+      "range": {
+        "startLine": 603,
+        "startChar": 0,
+        "endLine": 605,
+        "endChar": 3
+      },
+      "revId": "ef6f040157dd03bcf074f1c7eb3a1e9b8b7abef3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
