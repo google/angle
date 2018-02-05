@@ -50,7 +50,6 @@ class StateManagerGL final : angle::NonCopyable
     void deleteFramebuffer(GLuint fbo);
     void deleteRenderbuffer(GLuint rbo);
     void deleteTransformFeedback(GLuint transformFeedback);
-    void deleteQuery(GLuint query);
 
     void useProgram(GLuint program);
     void forceUseProgram(GLuint program);
@@ -76,8 +75,8 @@ class StateManagerGL final : angle::NonCopyable
     void bindRenderbuffer(GLenum type, GLuint renderbuffer);
     void bindTransformFeedback(GLenum type, GLuint transformFeedback);
     void onTransformFeedbackStateChange();
-    void beginQuery(GLenum type, GLuint query);
-    void endQuery(GLenum type, GLuint query);
+    void beginQuery(GLenum type, QueryGL *queryObject, GLuint queryId);
+    void endQuery(GLenum type, QueryGL *queryObject, GLuint queryId);
     void onBeginQuery(QueryGL *query);
 
     void setAttributeCurrentData(size_t index, const gl::VertexAttribCurrentValueData &data);
@@ -153,8 +152,6 @@ class StateManagerGL final : angle::NonCopyable
     void setPathRenderingModelViewMatrix(const GLfloat *m);
     void setPathRenderingProjectionMatrix(const GLfloat *m);
     void setPathRenderingStencilState(GLenum func, GLint ref, GLuint mask);
-
-    void onDeleteQueryObject(QueryGL *query);
 
     gl::Error setDrawArraysState(const gl::Context *context,
                                  GLint first,
@@ -255,8 +252,13 @@ class StateManagerGL final : angle::NonCopyable
     GLuint mTransformFeedback;
     TransformFeedbackGL *mCurrentTransformFeedback;
 
-    std::map<GLenum, GLuint> mQueries;
-    std::set<QueryGL *> mCurrentQueries;
+    // Queries that are currently running on the driver
+    std::map<GLenum, QueryGL *> mQueries;
+
+    // Queries that are temporarily in the paused state so that their results will not be affected
+    // by other operations
+    std::map<GLenum, QueryGL *> mTemporaryPausedQueries;
+
     gl::ContextID mPrevDrawContext;
 
     GLint mUnpackAlignment;

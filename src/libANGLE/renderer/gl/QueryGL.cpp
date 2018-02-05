@@ -67,11 +67,17 @@ StandardQueryGL::StandardQueryGL(GLenum type,
 
 StandardQueryGL::~StandardQueryGL()
 {
-    mStateManager->deleteQuery(mActiveQuery);
-    mStateManager->onDeleteQueryObject(this);
+    if (mActiveQuery != 0)
+    {
+        mStateManager->endQuery(mType, this, mActiveQuery);
+        mFunctions->deleteQueries(1, &mActiveQuery);
+        mActiveQuery = 0;
+    }
+
     while (!mPendingQueries.empty())
     {
-        mStateManager->deleteQuery(mPendingQueries.front());
+        GLuint id = mPendingQueries.front();
+        mFunctions->deleteQueries(1, &id);
         mPendingQueries.pop_front();
     }
 }
@@ -79,7 +85,6 @@ StandardQueryGL::~StandardQueryGL()
 gl::Error StandardQueryGL::begin()
 {
     mResultSum = 0;
-    mStateManager->onBeginQuery(this);
     return resume();
 }
 
@@ -157,7 +162,7 @@ gl::Error StandardQueryGL::pause()
 {
     if (mActiveQuery != 0)
     {
-        mStateManager->endQuery(mType, mActiveQuery);
+        mStateManager->endQuery(mType, this, mActiveQuery);
 
         mPendingQueries.push_back(mActiveQuery);
         mActiveQuery = 0;
@@ -185,7 +190,7 @@ gl::Error StandardQueryGL::resume()
         }
 
         mFunctions->genQueries(1, &mActiveQuery);
-        mStateManager->beginQuery(mType, mActiveQuery);
+        mStateManager->beginQuery(mType, this, mActiveQuery);
     }
 
     return gl::NoError();
@@ -222,7 +227,7 @@ gl::Error StandardQueryGL::flush(bool force)
             mResultSum = MergeQueryResults(mType, mResultSum, static_cast<GLuint64>(result));
         }
 
-        mStateManager->deleteQuery(id);
+        mFunctions->deleteQueries(1, &id);
 
         mPendingQueries.pop_front();
     }
