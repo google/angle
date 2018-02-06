@@ -720,17 +720,6 @@ vk::Error RendererVk::submitFrame(const VkSubmitInfo &submitInfo, vk::CommandBuf
     return vk::NoError();
 }
 
-vk::Error RendererVk::createStagingImage(TextureDimension dimension,
-                                         const vk::Format &format,
-                                         const gl::Extents &extent,
-                                         vk::StagingUsage usage,
-                                         vk::StagingImage *imageOut)
-{
-    ANGLE_TRY(imageOut->init(mDevice, mCurrentQueueFamilyIndex, mMemoryProperties, dimension,
-                             format.vkTextureFormat, extent, usage));
-    return vk::NoError();
-}
-
 GlslangWrapper *RendererVk::getGlslangWrapper()
 {
     return mGlslangWrapper;

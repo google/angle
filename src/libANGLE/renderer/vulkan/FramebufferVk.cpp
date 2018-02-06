@@ -263,9 +263,8 @@ gl::Error FramebufferVk::readPixels(const gl::Context *context,
 
     vk::Image *readImage = renderTarget->image;
     vk::StagingImage stagingImage;
-    ANGLE_TRY(renderer->createStagingImage(TextureDimension::TEX_2D, *renderTarget->format,
-                                           renderTarget->extents, vk::StagingUsage::Read,
-                                           &stagingImage));
+    ANGLE_TRY(stagingImage.init(contextVk, TextureDimension::TEX_2D, *renderTarget->format,
+                                renderTarget->extents, vk::StagingUsage::Read));
 
     vk::CommandBuffer *commandBuffer = nullptr;
     ANGLE_TRY(recordWriteCommands(renderer, &commandBuffer));

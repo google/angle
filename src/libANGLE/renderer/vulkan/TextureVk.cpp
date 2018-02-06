@@ -113,22 +113,10 @@ gl::Error TextureVk::setImage(const gl::Context *context,
 
         ANGLE_TRY(mImage.init(device, imageInfo));
 
-        // Allocate the device memory for the image.
-        // TODO(jmadill): Use more intelligent device memory allocation.
-        VkMemoryRequirements memoryRequirements;
-        mImage.getMemoryRequirements(device, &memoryRequirements);
-
-        uint32_t memoryIndex = renderer->getMemoryProperties().findCompatibleMemoryIndex(
-            memoryRequirements.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
-
-        VkMemoryAllocateInfo allocateInfo;
-        allocateInfo.sType           = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-        allocateInfo.pNext           = nullptr;
-        allocateInfo.allocationSize  = memoryRequirements.size;
-        allocateInfo.memoryTypeIndex = memoryIndex;
-
-        ANGLE_TRY(mDeviceMemory.allocate(device, allocateInfo));
-        ANGLE_TRY(mImage.bindMemory(device, mDeviceMemory));
+        VkMemoryPropertyFlags flags = (VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+        size_t requiredSize         = 0;
+        ANGLE_TRY(
+            vk::AllocateImageMemory(contextVk, flags, &mImage, &mDeviceMemory, &requiredSize));
 
         VkImageViewCreateInfo viewInfo;
         viewInfo.sType                           = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
@@ -220,8 +208,8 @@ gl::Error TextureVk::setSubImageImpl(ContextVk *contextVk,
     const vk::Format &vkFormat = *mRenderTarget.format;
 
     vk::StagingImage stagingImage;
-    ANGLE_TRY(renderer->createStagingImage(TextureDimension::TEX_2D, vkFormat, size,
-                                           vk::StagingUsage::Write, &stagingImage));
+    ANGLE_TRY(stagingImage.init(contextVk, TextureDimension::TEX_2D, vkFormat, size,
+                                vk::StagingUsage::Write));
 
     GLuint inputRowPitch = 0;
     ANGLE_TRY_RESULT(

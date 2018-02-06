@@ -63,12 +63,6 @@ class RendererVk : angle::NonCopyable
     const gl::Extensions &getNativeExtensions() const;
     const gl::Limitations &getNativeLimitations() const;
 
-    vk::Error createStagingImage(TextureDimension dimension,
-                                 const vk::Format &format,
-                                 const gl::Extents &extent,
-                                 vk::StagingUsage usage,
-                                 vk::StagingImage *imageOut);
-
     GlslangWrapper *getGlslangWrapper();
 
     Serial getCurrentQueueSerial() const;

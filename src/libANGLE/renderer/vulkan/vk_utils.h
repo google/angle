@@ -115,18 +115,6 @@ GetImplType<T> *GetImpl(const T *glObject)
     return GetImplAs<GetImplType<T>>(glObject);
 }
 
-class MemoryProperties final : angle::NonCopyable
-{
-  public:
-    MemoryProperties();
-
-    void init(VkPhysicalDevice physicalDevice);
-    uint32_t findCompatibleMemoryIndex(uint32_t bitMask, uint32_t propertyFlags) const;
-
-  private:
-    VkPhysicalDeviceMemoryProperties mMemoryProperties;
-};
-
 class Error final
 {
   public:
@@ -290,6 +278,20 @@ class WrappedObject : angle::NonCopyable
     }
 
     HandleT mHandle;
+};
+
+class MemoryProperties final : angle::NonCopyable
+{
+  public:
+    MemoryProperties();
+
+    void init(VkPhysicalDevice physicalDevice);
+    Error findCompatibleMemoryIndex(const VkMemoryRequirements &memoryRequirements,
+                                    VkMemoryPropertyFlags memoryPropertyFlags,
+                                    uint32_t *indexOut) const;
+
+  private:
+    VkPhysicalDeviceMemoryProperties mMemoryProperties;
 };
 
 class CommandPool final : public WrappedObject<CommandPool, VkCommandPool>
@@ -481,6 +483,7 @@ class Buffer final : public WrappedObject<Buffer, VkBuffer>
 
     Error init(VkDevice device, const VkBufferCreateInfo &createInfo);
     Error bindMemory(VkDevice device, const DeviceMemory &deviceMemory);
+    void getMemoryRequirements(VkDevice device, VkMemoryRequirements *memoryRequirementsOut);
 };
 
 class ShaderModule final : public WrappedObject<ShaderModule, VkShaderModule>
@@ -559,11 +562,9 @@ class StagingImage final : angle::NonCopyable
     StagingImage(StagingImage &&other);
     void destroy(VkDevice device);
 
-    vk::Error init(VkDevice device,
-                   uint32_t queueFamilyIndex,
-                   const MemoryProperties &memoryProperties,
+    vk::Error init(ContextVk *contextVk,
                    TextureDimension dimension,
-                   VkFormat format,
+                   const Format &format,
                    const gl::Extents &extent,
                    StagingUsage usage);
 
@@ -578,7 +579,7 @@ class StagingImage final : angle::NonCopyable
   private:
     Image mImage;
     DeviceMemory mDeviceMemory;
-    VkDeviceSize mSize;
+    size_t mSize;
 };
 
 // Similar to StagingImage, for Buffers.
@@ -641,12 +642,8 @@ class ObjectAndSerial final : angle::NonCopyable
     Serial mQueueSerial;
 };
 
-Optional<uint32_t> FindMemoryType(const VkPhysicalDeviceMemoryProperties &memoryProps,
-                                  const VkMemoryRequirements &requirements,
-                                  uint32_t propertyFlagMask);
-
 Error AllocateBufferMemory(ContextVk *contextVk,
-                           size_t size,
+                           VkMemoryPropertyFlags memoryPropertyFlags,
                            Buffer *buffer,
                            DeviceMemory *deviceMemoryOut,
                            size_t *requiredSizeOut);
@@ -656,6 +653,12 @@ struct BufferAndMemory final : private angle::NonCopyable
     vk::Buffer buffer;
     vk::DeviceMemory memory;
 };
+
+Error AllocateImageMemory(ContextVk *contextVk,
+                          VkMemoryPropertyFlags memoryPropertyFlags,
+                          Image *image,
+                          DeviceMemory *deviceMemoryOut,
+                          size_t *requiredSizeOut);
 
 }  // namespace vk
 
