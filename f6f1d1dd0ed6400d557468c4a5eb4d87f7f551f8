@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "9e25d8d5_82301b74",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-06T22:12:17Z",
+      "side": 1,
+      "message": "This is just a refactoring change. The total amount of planning remains the same. :)",
+      "parentUuid": "b6b8e950_4ba76005",
+      "revId": "f6f1d1dd0ed6400d557468c4a5eb4d87f7f551f8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "23387a4c_c3e7212f",
         "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
         "patchSetId": 4
@@ -30,6 +48,24 @@
       "writtenOn": "2018-02-06T20:03:26Z",
       "side": 1,
       "message": "mCurrentRequiredSize is used to check if we can skip reallocating the buffer, but a GL-size and Vulkan size are not directly comparable: a Vulkan implementation could choose to always ask for createInfo.size + sizeof(BufferHeader) for example.",
+      "revId": "f6f1d1dd0ed6400d557468c4a5eb4d87f7f551f8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "19d665ce_ce937730",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-06T22:12:17Z",
+      "side": 1,
+      "message": "This is interesting. I couldn\u0027t find any language in the spec that suggests that you cannot map the full range of \"size\" passed into vkAllocateMemory. Is that what you\u0027re suggesting?",
+      "parentUuid": "23387a4c_c3e7212f",
       "revId": "f6f1d1dd0ed6400d557468c4a5eb4d87f7f551f8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "0ca64854_d597de39",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-06T22:12:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "261172e7_20b2371e",
+      "revId": "f6f1d1dd0ed6400d557468c4a5eb4d87f7f551f8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7a0acc7c_71d85692",
         "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
         "patchSetId": 4
@@ -70,6 +124,24 @@
     },
     {
       "key": {
+        "uuid": "c6945346_d2bec6b2",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1124,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-06T22:12:17Z",
+      "side": 1,
+      "message": "Re-worded TODO.",
+      "parentUuid": "7a0acc7c_71d85692",
+      "revId": "f6f1d1dd0ed6400d557468c4a5eb4d87f7f551f8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "04fefc8b_e53c8584",
         "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
         "patchSetId": 4
@@ -84,6 +156,24 @@
       "revId": "f6f1d1dd0ed6400d557468c4a5eb4d87f7f551f8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0081dc0b_c38bad2b",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1190,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-06T22:12:17Z",
+      "side": 1,
+      "message": "Yeah, I still liked Allocate better than Init or AllocateAndBind.",
+      "parentUuid": "04fefc8b_e53c8584",
+      "revId": "f6f1d1dd0ed6400d557468c4a5eb4d87f7f551f8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }

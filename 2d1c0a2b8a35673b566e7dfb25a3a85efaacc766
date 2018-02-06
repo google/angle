@@ -22,6 +22,30 @@
       "revId": "2d1c0a2b8a35673b566e7dfb25a3a85efaacc766",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "089e2237_0afc9eec",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1169,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-06T22:12:17Z",
+      "side": 0,
+      "message": "Yeah, my thought process as well.",
+      "parentUuid": "4692b8de_5658d524",
+      "range": {
+        "startLine": 1169,
+        "startChar": 4,
+        "endLine": 1169,
+        "endChar": 44
+      },
+      "revId": "2d1c0a2b8a35673b566e7dfb25a3a85efaacc766",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
