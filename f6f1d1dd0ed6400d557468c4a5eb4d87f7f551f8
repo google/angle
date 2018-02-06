@@ -72,6 +72,24 @@
     },
     {
       "key": {
+        "uuid": "2ff3027c_60eb3571",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-06T22:16:03Z",
+      "side": 1,
+      "message": "That\u0027s not what I\u0027m suggesting. The driver is allowed to return any value (bigger than size) in mCurrentRequiredSize which means that comparing it to size line 52 is incorrect. It isn\u0027t because the driver says it requires more memory to be bound that all the extra memory can be used by the application.",
+      "parentUuid": "19d665ce_ce937730",
+      "revId": "f6f1d1dd0ed6400d557468c4a5eb4d87f7f551f8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "261172e7_20b2371e",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.h",
         "patchSetId": 4
