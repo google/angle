@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6e3c8d08_d4b5a86e",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 431,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-06T21:30:43Z",
+      "side": 1,
+      "message": "nit: you can use operator[]\n\ndirtyBits[gl::State::DIRTY_BIT_SCISSOR_TEST_ENABLED]",
+      "range": {
+        "startLine": 431,
+        "startChar": 29,
+        "endLine": 431,
+        "endChar": 77
+      },
+      "revId": "491a893ce9234e5e54a8012759b21e86118a580a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f9500aab_69e97b2e",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 443,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-06T21:30:43Z",
+      "side": 1,
+      "message": "same here",
+      "range": {
+        "startLine": 443,
+        "startChar": 30,
+        "endLine": 443,
+        "endChar": 78
+      },
+      "revId": "491a893ce9234e5e54a8012759b21e86118a580a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
