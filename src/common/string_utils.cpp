@@ -142,7 +142,8 @@ Optional<std::vector<wchar_t>> WidenString(size_t length, const char *cString)
 {
     std::vector<wchar_t> wcstring(length + 1);
 #if !defined(ANGLE_PLATFORM_WINDOWS)
-    size_t written = mbstowcs(wcstring.data(), cString, length + 1);
+    mbstate_t mbstate = {};
+    size_t written = mbsrtowcs(wcstring.data(), &cString, length + 1, &mbstate);
     if (written == 0)
     {
         return Optional<std::vector<wchar_t>>::Invalid();
