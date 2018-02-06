@@ -22,6 +22,30 @@
       "revId": "ef6f040157dd03bcf074f1c7eb3a1e9b8b7abef3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "80bbaa21_8a7d7069",
+        "filename": "src/vulkan_support/BUILD.gn",
+        "patchSetId": 2
+      },
+      "lineNbr": 605,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-02-06T06:20:21Z",
+      "side": 1,
+      "message": "That would be better. Thanks!",
+      "parentUuid": "9e210e14_29c38f72",
+      "range": {
+        "startLine": 603,
+        "startChar": 0,
+        "endLine": 605,
+        "endChar": 3
+      },
+      "revId": "ef6f040157dd03bcf074f1c7eb3a1e9b8b7abef3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
