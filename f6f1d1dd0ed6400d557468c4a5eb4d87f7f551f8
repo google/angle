@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b6b8e950_4ba76005",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-06T20:03:26Z",
+      "side": 1,
+      "message": "nit: comment about such a memory being guaranteed by the spec (same in other places in this patch). Do we have a plan to use less expensive memory for static resources?",
+      "revId": "f6f1d1dd0ed6400d557468c4a5eb4d87f7f551f8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "23387a4c_c3e7212f",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-06T20:03:26Z",
+      "side": 1,
+      "message": "mCurrentRequiredSize is used to check if we can skip reallocating the buffer, but a GL-size and Vulkan size are not directly comparable: a Vulkan implementation could choose to always ask for createInfo.size + sizeof(BufferHeader) for example.",
+      "revId": "f6f1d1dd0ed6400d557468c4a5eb4d87f7f551f8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "261172e7_20b2371e",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-06T20:03:26Z",
+      "side": 1,
+      "message": "This is written to but never read. Is it possible to remove it?",
+      "revId": "f6f1d1dd0ed6400d557468c4a5eb4d87f7f551f8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7a0acc7c_71d85692",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1124,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-06T20:03:26Z",
+      "side": 1,
+      "message": "The memory requirements are allowed to change depending on the buffer size for example. So I\u0027m not sure how this could be done.",
+      "revId": "f6f1d1dd0ed6400d557468c4a5eb4d87f7f551f8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "04fefc8b_e53c8584",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1190,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-06T20:03:26Z",
+      "side": 1,
+      "message": "nit: all AllocateFoo function are doing Allocate+Bind.",
+      "revId": "f6f1d1dd0ed6400d557468c4a5eb4d87f7f551f8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
