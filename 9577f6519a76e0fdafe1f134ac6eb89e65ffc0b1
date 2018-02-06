@@ -39,6 +39,93 @@
       "revId": "9577f6519a76e0fdafe1f134ac6eb89e65ffc0b1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f893e420_f065038c",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2111,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-06T21:28:01Z",
+      "side": 1,
+      "message": "I checked with glslang - on Geometry Shader compile, they throw an error when there\u0027s a missing \"in\" layout, and do not throw an error with a missing \"out\" layout. Presumably they treat a missing out as a link error. I think we should do the same. If you disagree, let\u0027s consult with Shannon Woods.",
+      "parentUuid": "13e17df0_73e92e45",
+      "revId": "9577f6519a76e0fdafe1f134ac6eb89e65ffc0b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "86e5dd98_705ebb87",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2166,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-06T21:28:01Z",
+      "side": 1,
+      "message": "I didn\u0027t notice we were using this special value here. Did anyone suggest we use Optional?",
+      "range": {
+        "startLine": 2166,
+        "startChar": 12,
+        "endLine": 2166,
+        "endChar": 51
+      },
+      "revId": "9577f6519a76e0fdafe1f134ac6eb89e65ffc0b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2699a8b5_807cfcc6",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2180,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-06T21:28:01Z",
+      "side": 1,
+      "message": "again this would probably be better with Optional, than using special values.",
+      "range": {
+        "startLine": 2180,
+        "startChar": 12,
+        "endLine": 2180,
+        "endChar": 32
+      },
+      "revId": "9577f6519a76e0fdafe1f134ac6eb89e65ffc0b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ea95200b_e6642b96",
+        "filename": "src/libANGLE/renderer/gl/ProgramGL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-06T21:28:01Z",
+      "side": 1,
+      "message": "call rx::SafeGetImplAs",
+      "range": {
+        "startLine": 183,
+        "startChar": 18,
+        "endLine": 183,
+        "endChar": 27
+      },
+      "revId": "9577f6519a76e0fdafe1f134ac6eb89e65ffc0b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
