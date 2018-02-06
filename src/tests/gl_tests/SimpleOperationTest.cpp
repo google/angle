@@ -104,6 +104,28 @@ TEST_P(SimpleOperationTest, ClearAndSwap)
     EXPECT_EGL_SUCCESS();
 }
 
+// Simple case of setting a scissor, enabled or disabled.
+TEST_P(SimpleOperationTest, ScissorTest)
+{
+    ANGLE_GL_PROGRAM(program, kBasicVertexShader, kGreenFragmentShader);
+
+    glClear(GL_COLOR_BUFFER_BIT);
+    glEnable(GL_SCISSOR_TEST);
+    glScissor(getWindowWidth() / 4, getWindowHeight() / 4, getWindowWidth() / 2,
+              getWindowHeight() / 2);
+
+    // Fill the whole screen with a quad.
+    drawQuad(program.get(), "position", 0.0f, 1.0f, true);
+
+    ASSERT_GL_NO_ERROR();
+
+    // Test outside the scissor test, pitch black.
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::transparentBlack);
+
+    // Test inside, green of the fragment shader.
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 2, getWindowHeight() / 2, GLColor::green);
+}
+
 TEST_P(SimpleOperationTest, LinkProgramShadersNoInputs)
 {
     const std::string vsSource =

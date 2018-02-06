@@ -607,6 +607,12 @@ void PipelineDesc::updateRenderPassDesc(const RenderPassDesc &renderPassDesc)
     mRenderPassDesc = renderPassDesc;
 }
 
+void PipelineDesc::updateScissor(const gl::Rectangle &rect)
+{
+    mScissor = {{rect.x, rect.y},
+                {static_cast<uint32_t>(rect.width), static_cast<uint32_t>(rect.height)}};
+}
+
 // AttachmentOpsArray implementation.
 AttachmentOpsArray::AttachmentOpsArray()
 {

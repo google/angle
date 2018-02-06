@@ -1067,6 +1067,64 @@ TEST_P(SimpleStateChangeTest, RedefineFramebufferInUse)
     ASSERT_GL_NO_ERROR();
 }
 
+TEST_P(SimpleStateChangeTest, ScissorTest)
+{
+    // This test validates this order of state changes:
+    // 1- Set scissor but don't enable it, validate its not used.
+    // 2- Enable it and validate its working.
+    // 3- Disable the scissor validate its not used anymore.
+
+    ANGLE_GL_PROGRAM(program, kSolidColorVertexShader, kSolidColorFragmentShader);
+
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Set the scissor region, but don't enable it yet.
+    glScissor(getWindowWidth() / 4, getWindowHeight() / 4, getWindowWidth() / 2,
+              getWindowHeight() / 2);
+
+    // Fill the whole screen with a quad.
+    drawQuad(program.get(), "position", 0.0f, 1.0f, true);
+
+    ASSERT_GL_NO_ERROR();
+
+    // Test outside, scissor isnt enabled so its red.
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    // Test inside, red of the fragment shader.
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 2, getWindowHeight() / 2, GLColor::red);
+
+    // Clear everything and start over with the test enabled.
+    glClear(GL_COLOR_BUFFER_BIT);
+    glEnable(GL_SCISSOR_TEST);
+
+    drawQuad(program.get(), "position", 0.0f, 1.0f, true);
+
+    ASSERT_GL_NO_ERROR();
+
+    // Test outside the scissor test, pitch black.
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::transparentBlack);
+
+    // Test inside, red of the fragment shader.
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 2, getWindowHeight() / 2, GLColor::red);
+
+    // Now disable the scissor test, do it again, and verify the region isn't used
+    // for the scissor test.
+    glDisable(GL_SCISSOR_TEST);
+
+    // Clear everything and start over with the test enabled.
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    drawQuad(program.get(), "position", 0.0f, 1.0f, true);
+
+    ASSERT_GL_NO_ERROR();
+
+    // Test outside, scissor isnt enabled so its red.
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    // Test inside, red of the fragment shader.
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 2, getWindowHeight() / 2, GLColor::red);
+}
+
 }  // anonymous namespace
 
 ANGLE_INSTANTIATE_TEST(StateChangeTest, ES2_D3D9(), ES2_D3D11(), ES2_OPENGL());

@@ -287,6 +287,9 @@ class PipelineDesc final
     const RenderPassDesc &getRenderPassDesc() const;
     void updateRenderPassDesc(const RenderPassDesc &renderPassDesc);
 
+    // Scissor support
+    void updateScissor(const gl::Rectangle &rect);
+
   private:
     // TODO(jmadill): Handle Geometry/Compute shaders when necessary.
     ShaderStageInfo mShaderStageInfo;
