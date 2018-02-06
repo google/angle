@@ -108,6 +108,24 @@
     },
     {
       "key": {
+        "uuid": "b1b4bfb5_e812301b",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-06T22:40:40Z",
+      "side": 1,
+      "message": "The usage here should be fine in practice up to the validation layers shouting or weird Vulkan implementation.\n\nBasically the memory requirements returned define an opaque region when used on non-host accessible memory so you can\u0027t really rely on the extra (size - mCurrentRequiredSize) being usable. It could just be used to store data like the buffer size.\n\nOn host accessible memory the layout of things is known, and in most Vulkan implementation it would work to use the extra bytes, except for the following validation rules:\n - VkDescriptorBufferInfo:\n  - offset must be less than the size of buffer\n  - If range is not equal to VK_WHOLE_SIZE, range must be less than or equal to the size of buffer minus offset\n - Same thing for VkBufferViewCreateInfo, VkBufferMemoryBarrier, and commends using buffers. A search for \"size of buffer\" in the spec returns a bunch of relevant results.\n\nSo even if it would work in practice for host-accessible memory, using the extra bytes would cause validation errors.\n\nThis would be fixed by replacing mCurrentRequiredSize by mCurrentSize and setting it to size after the allocation.",
+      "parentUuid": "acdefee5_c1507b6b",
+      "revId": "f6f1d1dd0ed6400d557468c4a5eb4d87f7f551f8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "261172e7_20b2371e",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.h",
         "patchSetId": 4
