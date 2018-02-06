@@ -90,6 +90,24 @@
     },
     {
       "key": {
+        "uuid": "acdefee5_c1507b6b",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-06T22:20:50Z",
+      "side": 1,
+      "message": "The spec just says:\n\nmemoryOffset is the start offset of the region of memory which is to be bound to the buffer. The number of bytes returned in the VkMemoryRequirements::size member in memory, starting from memoryOffset bytes, will be bound to the specified buffer.\n\nIt doesn\u0027t say anything suggesting the full region of the require size isn\u0027t available. Where di you hear otherwise (or what exactly did you hear)?",
+      "parentUuid": "2ff3027c_60eb3571",
+      "revId": "f6f1d1dd0ed6400d557468c4a5eb4d87f7f551f8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "261172e7_20b2371e",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.h",
         "patchSetId": 4
