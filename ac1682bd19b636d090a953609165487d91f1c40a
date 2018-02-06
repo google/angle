@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "74631a32_b46b06ae",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 418,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-06T19:31:31Z",
+      "side": 1,
+      "message": "haven\u0027t seen this style before; could split this into an if instead of the ternary op?",
+      "range": {
+        "startLine": 416,
+        "startChar": 0,
+        "endLine": 418,
+        "endChar": 74
+      },
+      "revId": "ac1682bd19b636d090a953609165487d91f1c40a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "60bd0b14_32b436a9",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 430,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-06T19:31:31Z",
+      "side": 1,
+      "message": "I think you\u0027ll need to update the scissor here only if the scissor is disabled. otherwise changing the viewport and scissor at the same time would override the scissor. you can probably call updateScissor here directly instead of in updateViewport.",
+      "range": {
+        "startLine": 429,
+        "startChar": 15,
+        "endLine": 430,
+        "endChar": 69
+      },
+      "revId": "ac1682bd19b636d090a953609165487d91f1c40a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "606c22f6_f12cb722",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-06T19:31:31Z",
+      "side": 1,
+      "message": "this is mostly a preference thing, but this test isn\u0027t quite simple enough to be a \"SimpleOperationTest\". Can you divide this test into two: \n\na) a SimpleOperationTest that does a single draw with Scissor enabled and verifies the behaviour works.\nb) a SimpleStateChangeTest that does the more advanced dirty bits testing. These are already enabled for Vulkan.",
+      "range": {
+        "startLine": 107,
+        "startChar": 0,
+        "endLine": 108,
+        "endChar": 40
+      },
+      "revId": "ac1682bd19b636d090a953609165487d91f1c40a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e10aec20_dba0c2e4",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-06T19:31:31Z",
+      "side": 1,
+      "message": "nit: GLColor::transparentBlack.",
+      "range": {
+        "startLine": 138,
+        "startChar": 32,
+        "endLine": 138,
+        "endChar": 55
+      },
+      "revId": "ac1682bd19b636d090a953609165487d91f1c40a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
