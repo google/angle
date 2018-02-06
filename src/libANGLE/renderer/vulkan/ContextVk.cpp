@@ -174,8 +174,8 @@ gl::Error ContextVk::setupDraw(const gl::Context *context,
     VertexArrayVk *vkVAO  = vk::GetImpl(vao);
     const auto *drawFBO   = state.getDrawFramebuffer();
     FramebufferVk *vkFBO  = vk::GetImpl(drawFBO);
-    Serial queueSerial    = mRenderer->getCurrentQueueSerial();
-    uint32_t maxAttrib    = programGL->getState().getMaxActiveAttribLocation();
+    Serial queueSerial           = mRenderer->getCurrentQueueSerial();
+    uint32_t maxAttrib           = programGL->getState().getMaxActiveAttribLocation();
 
     // Process vertex attributes. Assume zero offsets for now.
     // TODO(jmadill): Offset handling.
@@ -449,16 +449,16 @@ void ContextVk::syncState(const gl::Context *context, const gl::State::DirtyBits
                 WARN() << "DIRTY_BIT_DEPTH_RANGE unimplemented";
                 break;
             case gl::State::DIRTY_BIT_BLEND_ENABLED:
-                WARN() << "DIRTY_BIT_BLEND_ENABLED unimplemented";
+                mPipelineDesc->updateBlendEnabled(glState.isBlendEnabled());
                 break;
             case gl::State::DIRTY_BIT_BLEND_COLOR:
-                WARN() << "DIRTY_BIT_BLEND_COLOR unimplemented";
+                mPipelineDesc->updateBlendColor(glState.getBlendColor());
                 break;
             case gl::State::DIRTY_BIT_BLEND_FUNCS:
-                WARN() << "DIRTY_BIT_BLEND_FUNCS unimplemented";
+                mPipelineDesc->updateBlendFuncs(glState.getBlendState());
                 break;
             case gl::State::DIRTY_BIT_BLEND_EQUATIONS:
-                WARN() << "DIRTY_BIT_BLEND_EQUATIONS unimplemented";
+                mPipelineDesc->updateBlendEquations(glState.getBlendState());
                 break;
             case gl::State::DIRTY_BIT_COLOR_MASK:
                 WARN() << "DIRTY_BIT_COLOR_MASK unimplemented";

@@ -64,6 +64,50 @@ void SimpleOperationTest::verifyBuffer(const std::vector<uint8_t> &data, GLenum 
     EXPECT_EQ(data, readbackData);
 }
 
+// Validates if blending render states work. Simply draws twice and verify the color have been
+// added in the final output.
+TEST_P(SimpleOperationTest, BlendingRenderState)
+{
+    // The precision when blending isn't perfect and some tests fail with a color of 254 instead
+    // of 255 on the green component. This is why we need 0.51 green instead of .5
+    constexpr char halfGreenFragmentShader[] =
+        R"(void main()
+{
+    gl_FragColor = vec4(0, 0.51, 0, 1);
+})";
+
+    ANGLE_GL_PROGRAM(program, kBasicVertexShader, halfGreenFragmentShader);
+    glUseProgram(program);
+
+    glClear(GL_COLOR_BUFFER_BIT);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE);
+    glBlendEquation(GL_FUNC_ADD);
+
+    auto vertices = GetQuadVertices();
+
+    const GLint positionLocation = glGetAttribLocation(program, "position");
+    ASSERT_NE(-1, positionLocation);
+
+    GLBuffer vertexBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer.get());
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices[0]) * vertices.size(), vertices.data(),
+                 GL_STATIC_DRAW);
+    glVertexAttribPointer(positionLocation, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+    glEnableVertexAttribArray(positionLocation);
+
+    // Drawing a quad once will give 0.51 green, but if we enable blending
+    // with additive function we should end up with full green of 1.0 with
+    // a clamping func of 1.0.
+    glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(vertices.size()));
+    glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(vertices.size()));
+
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 TEST_P(SimpleOperationTest, CompileVertexShader)
 {
     GLuint shader = CompileShader(GL_VERTEX_SHADER, kBasicVertexShader);
