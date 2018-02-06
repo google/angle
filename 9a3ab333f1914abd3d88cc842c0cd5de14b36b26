@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "02d284df_faa62f9a",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 52
+      },
+      "lineNbr": 7363,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-02-06T08:31:40Z",
+      "side": 1,
+      "message": "Possible issue: This change in patch set 52 seems to make the gles1 triangle sample not render anything in the ANGLE D3D11 backend on Windows, but it works on the desktop GL backend on Windows / Linux / Mac.\n\nThese new privately bound buffers here are to deal with the case where the user has bound a vertex buffer in GLES1, but has not enabled particular arrays, but also needs to use the \"global\" value in the GL state (the glColor4f/glNormal3f calls). They are emulated here with their own set of vbos and hooking up a per-draw-divisor attribute to them. It seems fine on desktop OpenGL (and a similar technique is used in the android emulator\u0027s gles translator and also works fine on our variant of ANGLE D3D11), but doesn\u0027t seem to work on current ANGLE D3D11.",
+      "range": {
+        "startLine": 7325,
+        "startChar": 0,
+        "endLine": 7363,
+        "endChar": 5
+      },
+      "revId": "9a3ab333f1914abd3d88cc842c0cd5de14b36b26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
