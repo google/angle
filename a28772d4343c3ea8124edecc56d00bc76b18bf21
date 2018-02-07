@@ -71,6 +71,30 @@
     },
     {
       "key": {
+        "uuid": "8ec9af95_b86d73be",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-07T18:18:23Z",
+      "side": 1,
+      "message": "Done, and added a cleanup task in that case to go add comments on all missing test cases. A lot of them don\u0027t have comments as of right now.\n\nanglebug.com/2351",
+      "parentUuid": "3268d005_aa6ae32d",
+      "range": {
+        "startLine": 67,
+        "startChar": 0,
+        "endLine": 67,
+        "endChar": 6
+      },
+      "revId": "a28772d4343c3ea8124edecc56d00bc76b18bf21",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e37dc733_e5fb8aff",
         "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
         "patchSetId": 2
@@ -91,6 +115,30 @@
       "revId": "a28772d4343c3ea8124edecc56d00bc76b18bf21",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fb0dc26d_c099b0eb",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-07T18:18:23Z",
+      "side": 1,
+      "message": "The precision when blending isn\u0027t perfect and some tests fail with a color of 254 instead of 255 on the green component.",
+      "parentUuid": "e37dc733_e5fb8aff",
+      "range": {
+        "startLine": 72,
+        "startChar": 27,
+        "endLine": 72,
+        "endChar": 31
+      },
+      "revId": "a28772d4343c3ea8124edecc56d00bc76b18bf21",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -117,6 +165,30 @@
     },
     {
       "key": {
+        "uuid": "68723193_a63e4408",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-07T18:18:23Z",
+      "side": 1,
+      "message": "Done, and the bug has been opened: anglebug.com/2350",
+      "parentUuid": "09223457_41b00234",
+      "range": {
+        "startLine": 85,
+        "startChar": 0,
+        "endLine": 89,
+        "endChar": 98
+      },
+      "revId": "a28772d4343c3ea8124edecc56d00bc76b18bf21",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "35ea5fe5_5de338d9",
         "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
         "patchSetId": 2
@@ -137,6 +209,30 @@
       "revId": "a28772d4343c3ea8124edecc56d00bc76b18bf21",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e813daf3_72b6bd96",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-07T18:18:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "35ea5fe5_5de338d9",
+      "range": {
+        "startLine": 103,
+        "startChar": 4,
+        "endLine": 103,
+        "endChar": 16
+      },
+      "revId": "a28772d4343c3ea8124edecc56d00bc76b18bf21",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
