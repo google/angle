@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e1a295ac_898b58c0",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-02-07T18:54:16Z",
+      "side": 1,
+      "message": "This looks like an unrelated change, is it needed in this CL?",
+      "range": {
+        "startLine": 177,
+        "startChar": 4,
+        "endLine": 178,
+        "endChar": 86
+      },
+      "revId": "2f749d82a73fbcea080bb78bfc2c7d98cda142f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8308a51b_3c9c410f",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-02-07T18:54:16Z",
+      "side": 1,
+      "message": "This should return a VkBlendOp because not all of them fit in 8 bits.  You can add an assert at the assignment to blendAttachmentState.colorBlendOp that the result fit in 8 bits.",
+      "range": {
+        "startLine": 28,
+        "startChar": 0,
+        "endLine": 28,
+        "endChar": 8
+      },
+      "revId": "2f749d82a73fbcea080bb78bfc2c7d98cda142f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3b3c0593_ae1d5b16",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 634,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-02-07T18:54:16Z",
+      "side": 1,
+      "message": "Instead of making copies of the PackedColorBlendAttachmentState, I would just update the specific members of the current state.  Same for the ones below.\n\n    for (auto\u0026 blendAttachmentState : mColorBlendStateInfo.attachments)\n    {\n        blendAttachmentState.blendEnable \u003d isBlendEnabled;\n    }",
+      "range": {
+        "startLine": 632,
+        "startChar": 4,
+        "endLine": 634,
+        "endChar": 50
+      },
+      "revId": "2f749d82a73fbcea080bb78bfc2c7d98cda142f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
