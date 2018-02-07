@@ -10,15 +10,14 @@ raw_vulkan_gen_dir = rebase_path(vulkan_gen_dir, root_build_dir)
 # SPIRV-tools
 # -----------
 
-spirv_tools_dir = "$third_party_dir/spirv-tools-angle/src"
-spirv_source_dir = "$spirv_tools_dir/source"
-spirv_headers_dir = "$third_party_dir/spirv-headers/src"
+spirv_source_dir = "src/source"
+spirv_headers_dir = "../spirv-headers/src"
 spirv_include_dir = "$spirv_headers_dir/include/spirv"
 raw_spirv_source_dir = rebase_path(spirv_source_dir, root_build_dir)
 raw_spirv_headers_dir = rebase_path(spirv_headers_dir, root_build_dir)
 raw_spirv_include_dir = rebase_path(spirv_include_dir, root_build_dir)
 
-grammar_processing_script = "$spirv_tools_dir/utils/generate_grammar_tables.py"
+grammar_processing_script = "src/utils/generate_grammar_tables.py"
 
 action("spirv_tools_gen_enum_string_mapping") {
   script = grammar_processing_script
@@ -93,7 +92,7 @@ action("spirv_tools_gen_opencl_tables") {
 }
 
 action("spirv_tools_gen_generators_inc") {
-  script = "$spirv_tools_dir/utils/generate_registry_tables.py"
+  script = "src/utils/generate_registry_tables.py"
   sources = [
     "$spirv_headers_dir/include/spirv/spir-v.xml",
   ]
@@ -136,7 +135,7 @@ foreach(target_name, spvtools_vendor_tables) {
 }
 
 config("spirv_tools_config") {
-  include_dirs = [ "$spirv_tools_dir/include" ]
+  include_dirs = [ "src/include" ]
   if (is_win) {
     cflags = [
       "/wd4706",
@@ -168,80 +167,80 @@ static_library("spirv_tools") {
   include_dirs = [
     vulkan_gen_dir,
     "$spirv_headers_dir/include",
-    "$spirv_tools_dir/source",
+    "src/source",
   ]
   sources = [
-    "$spirv_tools_dir/source/assembly_grammar.cpp",
-    "$spirv_tools_dir/source/assembly_grammar.h",
-    "$spirv_tools_dir/source/binary.cpp",
-    "$spirv_tools_dir/source/binary.h",
-    "$spirv_tools_dir/source/diagnostic.cpp",
-    "$spirv_tools_dir/source/diagnostic.h",
-    "$spirv_tools_dir/source/disassemble.cpp",
-    "$spirv_tools_dir/source/enum_set.h",
-    "$spirv_tools_dir/source/ext_inst.cpp",
-    "$spirv_tools_dir/source/ext_inst.h",
-    "$spirv_tools_dir/source/instruction.h",
-    "$spirv_tools_dir/source/libspirv.cpp",
-    "$spirv_tools_dir/source/macro.h",
-    "$spirv_tools_dir/source/message.cpp",
-    "$spirv_tools_dir/source/name_mapper.cpp",
-    "$spirv_tools_dir/source/name_mapper.h",
-    "$spirv_tools_dir/source/opcode.cpp",
-    "$spirv_tools_dir/source/opcode.h",
-    "$spirv_tools_dir/source/operand.cpp",
-    "$spirv_tools_dir/source/operand.h",
-    "$spirv_tools_dir/source/parsed_operand.cpp",
-    "$spirv_tools_dir/source/parsed_operand.h",
-    "$spirv_tools_dir/source/print.cpp",
-    "$spirv_tools_dir/source/print.h",
+    "src/source/assembly_grammar.cpp",
+    "src/source/assembly_grammar.h",
+    "src/source/binary.cpp",
+    "src/source/binary.h",
+    "src/source/diagnostic.cpp",
+    "src/source/diagnostic.h",
+    "src/source/disassemble.cpp",
+    "src/source/enum_set.h",
+    "src/source/ext_inst.cpp",
+    "src/source/ext_inst.h",
+    "src/source/instruction.h",
+    "src/source/libspirv.cpp",
+    "src/source/macro.h",
+    "src/source/message.cpp",
+    "src/source/name_mapper.cpp",
+    "src/source/name_mapper.h",
+    "src/source/opcode.cpp",
+    "src/source/opcode.h",
+    "src/source/operand.cpp",
+    "src/source/operand.h",
+    "src/source/parsed_operand.cpp",
+    "src/source/parsed_operand.h",
+    "src/source/print.cpp",
+    "src/source/print.h",
 
     # TODO(jmadill): Determine if this is ever needed.
-    #"$spirv_tools_dir/source/software_version.cpp",
-    "$spirv_tools_dir/source/enum_string_mapping.cpp",
-    "$spirv_tools_dir/source/extensions.cpp",
-    "$spirv_tools_dir/source/extensions.h",
-    "$spirv_tools_dir/source/spirv_constant.h",
-    "$spirv_tools_dir/source/spirv_definition.h",
-    "$spirv_tools_dir/source/spirv_endian.cpp",
-    "$spirv_tools_dir/source/spirv_endian.h",
-    "$spirv_tools_dir/source/spirv_target_env.cpp",
-    "$spirv_tools_dir/source/spirv_target_env.h",
-    "$spirv_tools_dir/source/spirv_validator_options.cpp",
-    "$spirv_tools_dir/source/spirv_validator_options.h",
-    "$spirv_tools_dir/source/table.cpp",
-    "$spirv_tools_dir/source/table.h",
-    "$spirv_tools_dir/source/text.cpp",
-    "$spirv_tools_dir/source/text.h",
-    "$spirv_tools_dir/source/text_handler.cpp",
-    "$spirv_tools_dir/source/text_handler.h",
-    "$spirv_tools_dir/source/util/bitutils.h",
-    "$spirv_tools_dir/source/util/hex_float.h",
-    "$spirv_tools_dir/source/util/parse_number.cpp",
-    "$spirv_tools_dir/source/util/parse_number.h",
-    "$spirv_tools_dir/source/util/string_utils.cpp",
-    "$spirv_tools_dir/source/util/string_utils.h",
-    "$spirv_tools_dir/source/val/basic_block.cpp",
-    "$spirv_tools_dir/source/val/construct.cpp",
-    "$spirv_tools_dir/source/val/function.cpp",
-    "$spirv_tools_dir/source/val/instruction.cpp",
-    "$spirv_tools_dir/source/val/validation_state.cpp",
-    "$spirv_tools_dir/source/validate.cpp",
-    "$spirv_tools_dir/source/validate.h",
-    "$spirv_tools_dir/source/validate_arithmetics.cpp",
-    "$spirv_tools_dir/source/validate_bitwise.cpp",
-    "$spirv_tools_dir/source/validate_capability.cpp",
-    "$spirv_tools_dir/source/validate_cfg.cpp",
-    "$spirv_tools_dir/source/validate_conversion.cpp",
-    "$spirv_tools_dir/source/validate_datarules.cpp",
-    "$spirv_tools_dir/source/validate_decorations.cpp",
-    "$spirv_tools_dir/source/validate_derivatives.cpp",
-    "$spirv_tools_dir/source/validate_id.cpp",
-    "$spirv_tools_dir/source/validate_image.cpp",
-    "$spirv_tools_dir/source/validate_instruction.cpp",
-    "$spirv_tools_dir/source/validate_layout.cpp",
-    "$spirv_tools_dir/source/validate_logicals.cpp",
-    "$spirv_tools_dir/source/validate_type_unique.cpp",
+    #"src/source/software_version.cpp",
+    "src/source/enum_string_mapping.cpp",
+    "src/source/extensions.cpp",
+    "src/source/extensions.h",
+    "src/source/spirv_constant.h",
+    "src/source/spirv_definition.h",
+    "src/source/spirv_endian.cpp",
+    "src/source/spirv_endian.h",
+    "src/source/spirv_target_env.cpp",
+    "src/source/spirv_target_env.h",
+    "src/source/spirv_validator_options.cpp",
+    "src/source/spirv_validator_options.h",
+    "src/source/table.cpp",
+    "src/source/table.h",
+    "src/source/text.cpp",
+    "src/source/text.h",
+    "src/source/text_handler.cpp",
+    "src/source/text_handler.h",
+    "src/source/util/bitutils.h",
+    "src/source/util/hex_float.h",
+    "src/source/util/parse_number.cpp",
+    "src/source/util/parse_number.h",
+    "src/source/util/string_utils.cpp",
+    "src/source/util/string_utils.h",
+    "src/source/val/basic_block.cpp",
+    "src/source/val/construct.cpp",
+    "src/source/val/function.cpp",
+    "src/source/val/instruction.cpp",
+    "src/source/val/validation_state.cpp",
+    "src/source/validate.cpp",
+    "src/source/validate.h",
+    "src/source/validate_arithmetics.cpp",
+    "src/source/validate_bitwise.cpp",
+    "src/source/validate_capability.cpp",
+    "src/source/validate_cfg.cpp",
+    "src/source/validate_conversion.cpp",
+    "src/source/validate_datarules.cpp",
+    "src/source/validate_decorations.cpp",
+    "src/source/validate_derivatives.cpp",
+    "src/source/validate_id.cpp",
+    "src/source/validate_image.cpp",
+    "src/source/validate_instruction.cpp",
+    "src/source/validate_layout.cpp",
+    "src/source/validate_logicals.cpp",
+    "src/source/validate_type_unique.cpp",
   ]
   public_configs = [ ":spirv_tools_config" ]
   configs += [ ":spirv_tools_internal_config" ]

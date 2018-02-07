@@ -20,12 +20,6 @@ if (build_with_chromium) {
   }
 }
 
-# Shared config vars for Vulkan libraries.
-third_party_dir = "//third_party"
-glslang_dir = "$third_party_dir/glslang-angle/src"
-vulkan_layers_dir = "$third_party_dir/vulkan-validation-layers/src"
-raw_vulkan_layers_dir = rebase_path(vulkan_layers_dir, root_build_dir)
-
 # Subdirectory to place data files (e.g. layer JSON files).
 data_dir = "angledata"
 

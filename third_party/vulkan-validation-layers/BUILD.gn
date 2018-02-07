@@ -12,6 +12,8 @@ if (is_win) {
   ]
 }
 
+raw_vulkan_layers_dir = rebase_path("src", root_build_dir)
+
 vulkan_gen_dir = "$target_gen_dir/angle/vulkan"
 raw_vulkan_gen_dir = rebase_path(vulkan_gen_dir, root_build_dir)
 
@@ -116,12 +118,12 @@ foreach(script_and_dep, helper_script_and_deps) {
   file = script_and_dep[1]
   dep = script_and_dep[2]
   target("action", target_name) {
-    script = "$vulkan_layers_dir/scripts/lvl_genvk.py"
+    script = "src/scripts/lvl_genvk.py"
     inputs = [
-      "$vulkan_layers_dir/scripts/$dep",
-      "$vulkan_layers_dir/scripts/generator.py",
-      "$vulkan_layers_dir/scripts/reg.py",
-      "$vulkan_layers_dir/scripts/vk.xml",
+      "src/scripts/$dep",
+      "src/scripts/generator.py",
+      "src/scripts/reg.py",
+      "src/scripts/vk.xml",
     ]
     outputs = [
       "$vulkan_gen_dir/$file",
@@ -138,24 +140,23 @@ foreach(script_and_dep, helper_script_and_deps) {
 }
 
 config("vulkan_headers_config") {
-  include_dirs = [ "$vulkan_layers_dir/include" ]
+  include_dirs = [ "src/include" ]
 }
 
 # Vulkan headers only, no compiled sources.
 source_set("vulkan_headers") {
   sources = [
-    "$vulkan_layers_dir/include/vulkan/vk_icd.h",
-    "$vulkan_layers_dir/include/vulkan/vk_layer.h",
-    "$vulkan_layers_dir/include/vulkan/vk_platform.h",
-    "$vulkan_layers_dir/include/vulkan/vk_sdk_platform.h",
-    "$vulkan_layers_dir/include/vulkan/vulkan.h",
-    "$vulkan_layers_dir/include/vulkan/vulkan.hpp",
+    "src/include/vulkan/vk_icd.h",
+    "src/include/vulkan/vk_layer.h",
+    "src/include/vulkan/vk_platform.h",
+    "src/include/vulkan/vk_sdk_platform.h",
+    "src/include/vulkan/vulkan.h",
+    "src/include/vulkan/vulkan.hpp",
   ]
   public_configs = [ ":vulkan_headers_config" ]
 }
 
-spirv_tools_dir = "$third_party_dir/spirv-tools-angle/src"
-raw_spirv_tools_dir = rebase_path(spirv_tools_dir, root_build_dir)
+raw_spirv_tools_dir = rebase_path("../spirv-tools/src", root_build_dir)
 
 spirv_git_is_present = exec_script("$angle_root/src/commit_id.py",
                                    [
@@ -169,7 +170,7 @@ spirv_use_commit_id = spirv_git_is_present == 1
 if (spirv_use_commit_id) {
   # This could be generalized to a foreach if other revisions are added.
   action("spirv_tools_external_revision_generate") {
-    script = "$vulkan_layers_dir/scripts/external_revision_generator.py"
+    script = "src/scripts/external_revision_generator.py"
     inputs = [
       "$angle_root/DEPS",
     ]
@@ -260,8 +261,8 @@ config("vulkan_internal_config") {
 config("vulkan_loader_config") {
   include_dirs = [
     vulkan_gen_dir,
-    "$vulkan_layers_dir/include",
-    "$vulkan_layers_dir/loader",
+    "src/include",
+    "src/loader",
   ]
   defines = [
     "ANGLE_VK_LAYERS_DIR=\"$data_dir\"",
@@ -280,31 +281,31 @@ config("vulkan_loader_config") {
 if (!is_android) {
   static_library("vulkan_loader") {
     sources = [
-      "$vulkan_layers_dir/loader/cJSON.c",
-      "$vulkan_layers_dir/loader/cJSON.h",
-      "$vulkan_layers_dir/loader/debug_report.c",
-      "$vulkan_layers_dir/loader/debug_report.h",
-      "$vulkan_layers_dir/loader/dev_ext_trampoline.c",
-      "$vulkan_layers_dir/loader/extension_manual.c",
-      "$vulkan_layers_dir/loader/extension_manual.h",
-      "$vulkan_layers_dir/loader/gpa_helper.h",
-      "$vulkan_layers_dir/loader/loader.c",
-      "$vulkan_layers_dir/loader/loader.h",
-      "$vulkan_layers_dir/loader/murmurhash.c",
-      "$vulkan_layers_dir/loader/murmurhash.h",
-      "$vulkan_layers_dir/loader/phys_dev_ext.c",
-      "$vulkan_layers_dir/loader/trampoline.c",
+      "src/loader/cJSON.c",
+      "src/loader/cJSON.h",
+      "src/loader/debug_report.c",
+      "src/loader/debug_report.h",
+      "src/loader/dev_ext_trampoline.c",
+      "src/loader/extension_manual.c",
+      "src/loader/extension_manual.h",
+      "src/loader/gpa_helper.h",
+      "src/loader/loader.c",
+      "src/loader/loader.h",
+      "src/loader/murmurhash.c",
+      "src/loader/murmurhash.h",
+      "src/loader/phys_dev_ext.c",
+      "src/loader/trampoline.c",
 
       # TODO(jmadill): Use assembler where available.
-      "$vulkan_layers_dir/loader/unknown_ext_chain.c",
-      "$vulkan_layers_dir/loader/vk_loader_platform.h",
-      "$vulkan_layers_dir/loader/wsi.c",
-      "$vulkan_layers_dir/loader/wsi.h",
+      "src/loader/unknown_ext_chain.c",
+      "src/loader/vk_loader_platform.h",
+      "src/loader/wsi.c",
+      "src/loader/wsi.h",
     ]
     if (is_win) {
       sources += [
-        "$vulkan_layers_dir/loader/dirent_on_windows.c",
-        "$vulkan_layers_dir/loader/dirent_on_windows.h",
+        "src/loader/dirent_on_windows.c",
+        "src/loader/dirent_on_windows.h",
       ]
       if (!is_clang) {
         cflags = [
@@ -340,7 +341,7 @@ if (!is_android) {
 # ---------------------
 
 config("vulkan_layer_config") {
-  include_dirs = [ "$vulkan_layers_dir/layers" ]
+  include_dirs = [ "src/layers" ]
 }
 
 source_set("vulkan_layer_table") {
@@ -356,8 +357,8 @@ source_set("vulkan_layer_table") {
   sources = [
     "$target_gen_dir/angle/vulkan/vk_dispatch_table_helper.h",
     "$target_gen_dir/angle/vulkan/vk_enum_string_helper.h",
-    "$vulkan_layers_dir/layers/vk_layer_table.cpp",
-    "$vulkan_layers_dir/layers/vk_layer_table.h",
+    "src/layers/vk_layer_table.cpp",
+    "src/layers/vk_layer_table.h",
   ]
 }
 
@@ -365,34 +366,34 @@ core_validation_sources = [
   # This file is manually included in the layer
   # "$vulkan_gen_dir/vk_safe_struct.cpp",
   "$vulkan_gen_dir/vk_safe_struct.h",
-  "$vulkan_layers_dir/layers/buffer_validation.cpp",
-  "$vulkan_layers_dir/layers/buffer_validation.h",
-  "$vulkan_layers_dir/layers/core_validation.cpp",
-  "$vulkan_layers_dir/layers/core_validation.h",
-  "$vulkan_layers_dir/layers/descriptor_sets.cpp",
-  "$vulkan_layers_dir/layers/descriptor_sets.h",
-  "$vulkan_layers_dir/layers/shader_validation.cpp",
-  "$vulkan_layers_dir/layers/shader_validation.h",
-  "$vulkan_layers_dir/layers/xxhash.c",
-  "$vulkan_layers_dir/layers/xxhash.h",
+  "src/layers/buffer_validation.cpp",
+  "src/layers/buffer_validation.h",
+  "src/layers/core_validation.cpp",
+  "src/layers/core_validation.h",
+  "src/layers/descriptor_sets.cpp",
+  "src/layers/descriptor_sets.h",
+  "src/layers/shader_validation.cpp",
+  "src/layers/shader_validation.h",
+  "src/layers/xxhash.c",
+  "src/layers/xxhash.h",
 ]
 
 object_tracker_sources = [
   "$vulkan_gen_dir/object_tracker.cpp",
-  "$vulkan_layers_dir/layers/object_tracker.h",
-  "$vulkan_layers_dir/layers/object_tracker_utils.cpp",
+  "src/layers/object_tracker.h",
+  "src/layers/object_tracker_utils.cpp",
 ]
 
 parameter_validation_sources = [
   "$vulkan_gen_dir/parameter_validation.cpp",
-  "$vulkan_layers_dir/layers/parameter_validation.h",
-  "$vulkan_layers_dir/layers/parameter_validation_utils.cpp",
+  "src/layers/parameter_validation.h",
+  "src/layers/parameter_validation_utils.cpp",
 ]
 
 threading_sources = [
   "$vulkan_gen_dir/thread_check.h",
-  "$vulkan_layers_dir/layers/threading.cpp",
-  "$vulkan_layers_dir/layers/threading.h",
+  "src/layers/threading.cpp",
+  "src/layers/threading.h",
 ]
 
 unique_objects_sources = [
@@ -401,8 +402,8 @@ unique_objects_sources = [
   # This file is manually included in the layer
   # "$vulkan_gen_dir/vk_safe_struct.cpp",
   "$vulkan_gen_dir/vk_safe_struct.h",
-  "$vulkan_layers_dir/layers/unique_objects.cpp",
-  "$vulkan_layers_dir/layers/unique_objects.h",
+  "src/layers/unique_objects.cpp",
+  "src/layers/unique_objects.h",
 ]
 
 layers = [
@@ -446,21 +447,21 @@ if (!is_android) {
     script = "$angle_root/scripts/generate_vulkan_layers_json.py"
     if (is_win) {
       sources = [
-        "$vulkan_layers_dir/layers/windows/VkLayer_core_validation.json",
-        "$vulkan_layers_dir/layers/windows/VkLayer_object_tracker.json",
-        "$vulkan_layers_dir/layers/windows/VkLayer_parameter_validation.json",
-        "$vulkan_layers_dir/layers/windows/VkLayer_threading.json",
-        "$vulkan_layers_dir/layers/windows/VkLayer_unique_objects.json",
+        "src/layers/windows/VkLayer_core_validation.json",
+        "src/layers/windows/VkLayer_object_tracker.json",
+        "src/layers/windows/VkLayer_parameter_validation.json",
+        "src/layers/windows/VkLayer_threading.json",
+        "src/layers/windows/VkLayer_unique_objects.json",
       ]
       args = [ "$raw_vulkan_layers_dir/layers/windows" ]
     }
     if (is_linux) {
       sources = [
-        "$vulkan_layers_dir/layers/linux/VkLayer_core_validation.json",
-        "$vulkan_layers_dir/layers/linux/VkLayer_object_tracker.json",
-        "$vulkan_layers_dir/layers/linux/VkLayer_parameter_validation.json",
-        "$vulkan_layers_dir/layers/linux/VkLayer_threading.json",
-        "$vulkan_layers_dir/layers/linux/VkLayer_unique_objects.json",
+        "src/layers/linux/VkLayer_core_validation.json",
+        "src/layers/linux/VkLayer_object_tracker.json",
+        "src/layers/linux/VkLayer_parameter_validation.json",
+        "src/layers/linux/VkLayer_threading.json",
+        "src/layers/linux/VkLayer_unique_objects.json",
       ]
       args = [ "$raw_vulkan_layers_dir/layers/linux" ]
     }
@@ -497,7 +498,7 @@ if (!is_android) {
     deps += [ ":vulkan_generate_mock_icd_files" ]
     sources = mock_icd_sources
     if (is_win) {
-      sources += [ "$vulkan_layers_dir/icd/VkICD_mock_icd.def" ]
+      sources += [ "src/icd/VkICD_mock_icd.def" ]
     }
   }
 
@@ -505,13 +506,13 @@ if (!is_android) {
     script = "$angle_root/scripts/generate_vulkan_layers_json.py"
     if (is_win) {
       sources = [
-        "$vulkan_layers_dir/icd/windows/VkICD_mock_icd.json",
+        "src/icd/windows/VkICD_mock_icd.json",
       ]
       args = [ "$raw_vulkan_layers_dir/icd/windows" ]
     }
     if (is_linux) {
       sources = [
-        "$vulkan_layers_dir/icd/linux/VkICD_mock_icd.json",
+        "src/icd/linux/VkICD_mock_icd.json",
       ]
       args = [ "$raw_vulkan_layers_dir/icd/linux" ]
     }
@@ -525,14 +526,14 @@ if (!is_android) {
 
 source_set("vulkan_layer_utils") {
   sources = [
-    "$vulkan_layers_dir/layers/vk_format_utils.cpp",
-    "$vulkan_layers_dir/layers/vk_format_utils.h",
-    "$vulkan_layers_dir/layers/vk_layer_config.cpp",
-    "$vulkan_layers_dir/layers/vk_layer_config.h",
-    "$vulkan_layers_dir/layers/vk_layer_extension_utils.cpp",
-    "$vulkan_layers_dir/layers/vk_layer_extension_utils.h",
-    "$vulkan_layers_dir/layers/vk_layer_utils.cpp",
-    "$vulkan_layers_dir/layers/vk_layer_utils.h",
+    "src/layers/vk_format_utils.cpp",
+    "src/layers/vk_format_utils.h",
+    "src/layers/vk_layer_config.cpp",
+    "src/layers/vk_layer_config.h",
+    "src/layers/vk_layer_extension_utils.cpp",
+    "src/layers/vk_layer_extension_utils.h",
+    "src/layers/vk_layer_utils.cpp",
+    "src/layers/vk_layer_utils.h",
   ]
   public_configs = [
     ":vulkan_config",
@@ -546,12 +547,12 @@ source_set("vulkan_layer_utils") {
 }
 
 config("vulkan_core_validation_config") {
-  include_dirs = [ glslang_dir ]
+  include_dirs = [ "../glslang/src" ]
 }
 
 source_set("vulkan_core_validation_glslang") {
   public_deps = [
-    "$angle_root/third_party/spirv-tools-angle:spirv_tools",
+    "../spirv-tools:spirv_tools",
   ]
   public_configs = [ ":vulkan_core_validation_config" ]
 }
@@ -602,7 +603,7 @@ foreach(layer_info, layers) {
     }
     sources = layer_info[1]
     if (is_win) {
-      sources += [ "$vulkan_layers_dir/layers/VkLayer_$name.def" ]
+      sources += [ "src/layers/VkLayer_$name.def" ]
     }
     if (is_linux || is_android) {
       ldflags = [ "-Wl,-Bsymbolic,--exclude-libs,ALL" ]

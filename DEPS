@@ -21,7 +21,7 @@ deps = {
   'third_party/deqp/src':
     Var('android_git') + '/platform/external/deqp' + '@' + '5bc346ba2d5465a2e6094e254f12b1586fd0097f',
 
-  'third_party/glslang-angle/src':
+  'third_party/glslang/src':
     Var('android_git') + '/platform/external/shaderc/glslang' + '@' + '2edde6665d9a56ead5ea0e55b4e64d9a803e6164',
 
   'third_party/googletest/src':
@@ -33,7 +33,7 @@ deps = {
   'third_party/spirv-headers/src':
     Var('android_git') + '/platform/external/shaderc/spirv-headers' + '@' + '98b01515724c428d0f0a5d01deffcce0f5f5e61c',
 
-  'third_party/spirv-tools-angle/src':
+  'third_party/spirv-tools/src':
     Var('android_git') + '/platform/external/shaderc/spirv-tools' + '@' + '9996173f363729b3a97309685dbd4d78547a63a7',
 
   'third_party/vulkan-validation-layers/src':

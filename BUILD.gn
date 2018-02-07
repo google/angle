@@ -418,7 +418,7 @@ if (angle_enable_vulkan) {
   # Use this target to include everything ANGLE needs for Vulkan.
   group("angle_vulkan") {
     deps = [
-      "$angle_root/third_party/glslang-angle:glslang",
+      "$angle_root/third_party/glslang:glslang",
     ]
     public_deps = [
       "$angle_root/third_party/vulkan-validation-layers:vulkan_headers",
@@ -430,7 +430,7 @@ if (angle_enable_vulkan) {
           [ "$angle_root/third_party/vulkan-validation-layers:VkLayer_$name" ]
     }
     public_configs = [
-      "$angle_root/third_party/glslang-angle:glslang_config",
+      "$angle_root/third_party/glslang:glslang_config",
       "$angle_root/third_party/vulkan-validation-layers:vulkan_config",
     ]
     if (!is_android) {
