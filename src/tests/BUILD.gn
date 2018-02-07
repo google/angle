@@ -216,6 +216,10 @@ if (is_win || is_linux || is_mac || is_android) {
       sources += [ "angle_end2end_tests_main.cpp" ]
     }
 
+    if (angle_enable_vulkan) {
+      sources += [ "gl_tests/VulkanFormatTablesTest.cpp" ]
+    }
+
     configs += [
       angle_root + ":internal_config",
       angle_root + ":libANGLE_config",

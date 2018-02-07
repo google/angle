@@ -9,10 +9,16 @@
 
 #include "libANGLE/renderer/vulkan/vk_caps_utils.h"
 #include "libANGLE/Caps.h"
+#include "vk_format_utils.h"
 
 namespace
 {
 constexpr unsigned int kComponentsPerVector = 4;
+bool HasFormatFeatureBits(const VkFormatFeatureFlags featureBits,
+                          const VkFormatProperties &formatProperties)
+{
+    return (formatProperties.optimalTilingFeatures & featureBits) == featureBits;
+}
 }
 
 namespace rx
@@ -21,11 +27,13 @@ namespace vk
 {
 
 void GenerateCaps(const VkPhysicalDeviceProperties &physicalDeviceProperties,
+                  const gl::TextureCapsMap &textureCaps,
                   gl::Caps *outCaps,
-                  gl::TextureCapsMap * /*outTextureCaps*/,
                   gl::Extensions *outExtensions,
                   gl::Limitations * /* outLimitations */)
 {
+    outExtensions->setTextureExtensionSupport(textureCaps);
+
     // Enable this for simple buffer readback testing, but some functionality is missing.
     // TODO(jmadill): Support full mapBufferRange extension.
     outExtensions->mapBuffer      = true;
@@ -118,6 +126,20 @@ void GenerateCaps(const VkPhysicalDeviceProperties &physicalDeviceProperties,
 
     // TODO(jmadill): count reserved varyings
     outCaps->maxVaryingVectors = physicalDeviceProperties.limits.maxVertexOutputComponents / 4;
+}
+
+gl::TextureCaps GenerateTextureFormatCaps(const VkFormatProperties &formatProperties)
+{
+    gl::TextureCaps textureCaps;
+
+    textureCaps.texturable =
+        HasFormatFeatureBits(VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT, formatProperties);
+    textureCaps.filterable =
+        HasFormatFeatureBits(VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT, formatProperties);
+    textureCaps.renderable =
+        HasFormatFeatureBits(VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT, formatProperties) ||
+        HasFormatFeatureBits(VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT, formatProperties);
+    return textureCaps;
 }
 }  // namespace vk
 }  // namespace rx

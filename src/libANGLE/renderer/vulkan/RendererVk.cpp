@@ -392,7 +392,8 @@ vk::Error RendererVk::initialize(const egl::AttributeMap &attribs, const char *w
     mGlslangWrapper = GlslangWrapper::GetReference();
 
     // Initialize the format table.
-    mFormatTable.initialize(mPhysicalDevice, &mNativeTextureCaps);
+    mFormatTable.initialize(mPhysicalDevice, &mNativeTextureCaps,
+                            &mNativeCaps.compressedTextureFormats);
 
     // Initialize the pipeline layout for GL programs.
     ANGLE_TRY(initGraphicsPipelineLayout());
@@ -562,7 +563,7 @@ void RendererVk::ensureCapsInitialized() const
 {
     if (!mCapsInitialized)
     {
-        vk::GenerateCaps(mPhysicalDeviceProperties, &mNativeCaps, &mNativeTextureCaps,
+        vk::GenerateCaps(mPhysicalDeviceProperties, mNativeTextureCaps, &mNativeCaps,
                          &mNativeExtensions, &mNativeLimitations);
         mCapsInitialized = true;
     }

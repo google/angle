@@ -10,6 +10,7 @@
 
 #include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/load_functions_table.h"
+#include "vk_caps_utils.h"
 
 namespace rx
 {
@@ -46,16 +47,38 @@ FormatTable::~FormatTable()
 {
 }
 
-void FormatTable::initialize(VkPhysicalDevice physicalDevice, gl::TextureCapsMap *textureCapsMap)
+void FormatTable::initialize(VkPhysicalDevice physicalDevice,
+                             gl::TextureCapsMap *outTextureCapsMap,
+                             std::vector<GLenum> *outCompressedTextureFormats)
 {
     for (size_t formatIndex = 0; formatIndex < angle::kNumANGLEFormats; ++formatIndex)
     {
-        angle::Format::ID formatID       = static_cast<angle::Format::ID>(formatIndex);
+        const angle::Format::ID formatID = static_cast<angle::Format::ID>(formatIndex);
         const angle::Format &angleFormat = angle::Format::Get(formatID);
         mFormatData[formatIndex].initialize(physicalDevice, angleFormat);
+        const GLenum internalFormat = mFormatData[formatIndex].internalFormat;
+        mFormatData[formatIndex].loadFunctions =
+            GetLoadFunctionsMap(internalFormat, mFormatData[formatIndex].textureFormatID);
 
-        mFormatData[formatIndex].loadFunctions = GetLoadFunctionsMap(
-            mFormatData[formatIndex].internalFormat, mFormatData[formatIndex].textureFormatID);
+        if (!mFormatData[formatIndex].valid())
+        {
+            // TODO(lucferron): Implement support for more OpenGL Texture formats
+            // http://anglebug.com/2358
+            continue;
+        }
+        VkFormatProperties formatProperties;
+        vkGetPhysicalDeviceFormatProperties(
+            physicalDevice, mFormatData[formatIndex].vkTextureFormat, &formatProperties);
+
+        const gl::TextureCaps textureCaps = GenerateTextureFormatCaps(formatProperties);
+        outTextureCapsMap->set(formatID, textureCaps);
+
+        // TODO(lucferron): Optimize this by including compressed bool in the FormatID
+        // http://anglebug.com/2358
+        if (gl::GetSizedInternalFormatInfo(internalFormat).compressed)
+        {
+            outCompressedTextureFormats->push_back(internalFormat);
+        }
     }
 }
 

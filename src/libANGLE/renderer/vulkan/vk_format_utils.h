@@ -32,6 +32,8 @@ struct Format final : private angle::NonCopyable
 {
     Format();
 
+    bool valid() const { return internalFormat != 0; }
+
     // This is an auto-generated method in vk_format_table_autogen.cpp.
     void initialize(VkPhysicalDevice physicalDevice, const angle::Format &angleFormat);
 
@@ -53,8 +55,10 @@ class FormatTable final : angle::NonCopyable
     FormatTable();
     ~FormatTable();
 
-    // Also initializes the TextureCapsMap.
-    void initialize(VkPhysicalDevice physicalDevice, gl::TextureCapsMap *textureCapsMap);
+    // Also initializes the TextureCapsMap and the compressedTextureCaps in the Caps instance.
+    void initialize(VkPhysicalDevice physicalDevice,
+                    gl::TextureCapsMap *outTextureCapsMap,
+                    std::vector<GLenum> *outCompressedTextureFormats);
 
     const Format &operator[](GLenum internalFormat) const;
 

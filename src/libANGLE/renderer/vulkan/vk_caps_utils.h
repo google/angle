@@ -18,6 +18,7 @@ struct Limitations;
 struct Extensions;
 class TextureCapsMap;
 struct Caps;
+struct TextureCaps;
 }
 
 namespace rx
@@ -25,12 +26,15 @@ namespace rx
 
 namespace vk
 {
+class FormatTable;
 
 void GenerateCaps(const VkPhysicalDeviceProperties &physicalDeviceProperties,
+                  const gl::TextureCapsMap &textureCaps,
                   gl::Caps *outCaps,
-                  gl::TextureCapsMap * /*outTextureCaps*/,
                   gl::Extensions *outExtensions,
                   gl::Limitations * /* outLimitations */);
+
+gl::TextureCaps GenerateTextureFormatCaps(const VkFormatProperties &formatProperties);
 }  // namespace vk
 }  // namespace rx
 
