@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "58ce00e6_b9ff74e4",
+        "filename": "DEPS.chromium",
+        "patchSetId": 6
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-02-07T21:28:49Z",
+      "side": 1,
+      "message": "Is it feasible to use the same version as Chrome, i.e. the one in third_party/glslang?",
+      "range": {
+        "startLine": 38,
+        "startChar": 3,
+        "endLine": 38,
+        "endChar": 48
+      },
+      "revId": "fd66b81e2e90666670d7f1c7c45e988b1c8662bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
