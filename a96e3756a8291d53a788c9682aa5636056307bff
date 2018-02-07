@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "31afc5ef_4e7f8768",
+        "filename": "third_party/glslang/BUILD.gn",
+        "patchSetId": 4
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-02-07T21:47:37Z",
+      "side": 1,
+      "message": "StandAlone.cpp also includes ResourceLimits.h and Worklist.h",
+      "range": {
+        "startLine": 140,
+        "startChar": 20,
+        "endLine": 140,
+        "endChar": 42
+      },
+      "revId": "a96e3756a8291d53a788c9682aa5636056307bff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a8495565_58d136cd",
+        "filename": "third_party/glslang/BUILD.gn",
+        "patchSetId": 4
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-02-07T21:47:37Z",
+      "side": 1,
+      "message": "glslangValidator links with glslang, SPIRV, SPVRemapper, glslang-default-resource-limits (which is built from ResourceLimits.cpp).\nAlso depends on psapi on Win and pthread on Linux, according to CMakeLists.\nAre you sure just glslang is enough?",
+      "range": {
+        "startLine": 144,
+        "startChar": 6,
+        "endLine": 144,
+        "endChar": 13
+      },
+      "revId": "a96e3756a8291d53a788c9682aa5636056307bff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
