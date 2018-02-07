@@ -60,6 +60,24 @@
     },
     {
       "key": {
+        "uuid": "fa0c8092_f1a5200c",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2111,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-02-07T06:55:27Z",
+      "side": 1,
+      "message": "Could you tell me where you find missing \u0027in\u0027 layout should generate a compile error in GLSL ES SPEC (GLSL ES 3.2)?\n\nI only find the following sentences in GLSL ES SPECs:\n[GLSL ES 3.2 Chapter 4.4.1.2 Page 71]\nThe geometry shader must declare this input primitive layout.\n[GLSL ES 3.2 Chapter 4.4.2.2 Page 76]\nThe geometry shader object in a program must declare a maximum output vertex count.\n\nCompared to the rule on compute shader inputs, the GLSL ES SPEC doesn\u0027t clearly specify if it is a compile error or not:\n[GLSL ES 3.2 Chapter 4.4.1.4 Page 73]\nFurthermore, if a program object contains a compute shader, that shader must contain an input layout qualifier specifying a fixed local group size for the program, or a link-time error will occur.\n\nHowever there are clear statements in OpenGL ES 3.2 SPEC:\n[OpenGL ES 3.2 Chapter 7.3 Page 74]\nLinking can fail for a variety of reasons as specified in the OpenGL ES Shading Language Specification, as well as any of the following reasons:\n* program contains objects to form a geometry shader and:\n  - the input primitive type, output primitive type, or maximum output vertex count is not specified in the compiled geometry shader object.\nI believe the above statement is clear enough to show that missing required input or output geometry shader layout is a link error not a compile error.",
+      "parentUuid": "f893e420_f065038c",
+      "revId": "9577f6519a76e0fdafe1f134ac6eb89e65ffc0b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "86e5dd98_705ebb87",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 6
@@ -80,6 +98,30 @@
       "revId": "9577f6519a76e0fdafe1f134ac6eb89e65ffc0b1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7724119b_6e021fee",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2166,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-02-07T06:55:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "86e5dd98_705ebb87",
+      "range": {
+        "startLine": 2166,
+        "startChar": 12,
+        "endLine": 2166,
+        "endChar": 51
+      },
+      "revId": "9577f6519a76e0fdafe1f134ac6eb89e65ffc0b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -106,6 +148,30 @@
     },
     {
       "key": {
+        "uuid": "f3487062_9c9efe3f",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2180,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-02-07T06:55:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2699a8b5_807cfcc6",
+      "range": {
+        "startLine": 2180,
+        "startChar": 12,
+        "endLine": 2180,
+        "endChar": 32
+      },
+      "revId": "9577f6519a76e0fdafe1f134ac6eb89e65ffc0b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ea95200b_e6642b96",
         "filename": "src/libANGLE/renderer/gl/ProgramGL.cpp",
         "patchSetId": 6
@@ -126,6 +192,30 @@
       "revId": "9577f6519a76e0fdafe1f134ac6eb89e65ffc0b1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2201e85c_03f429cc",
+        "filename": "src/libANGLE/renderer/gl/ProgramGL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-02-07T06:55:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ea95200b_e6642b96",
+      "range": {
+        "startLine": 183,
+        "startChar": 18,
+        "endLine": 183,
+        "endChar": 27
+      },
+      "revId": "9577f6519a76e0fdafe1f134ac6eb89e65ffc0b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
