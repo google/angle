@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a5039409_2199ecc6",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2687,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-07T14:17:06Z",
+      "side": 1,
+      "message": "you can use the new style of ANGLE_SKIP_TEST_IF(IsIntel() \u0026\u0026 IsOSX()); Same for the others.",
+      "range": {
+        "startLine": 2687,
+        "startChar": 4,
+        "endLine": 2687,
+        "endChar": 29
+      },
+      "revId": "1b583ee013513ce3bef570425b73812e028720f7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
