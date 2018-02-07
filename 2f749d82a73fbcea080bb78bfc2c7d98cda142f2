@@ -72,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "1d5bd93d_56206e49",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-02-07T19:22:39Z",
+      "side": 1,
+      "message": "The VkBlendOp enum has a bunch of values outside the 8-bit range but we probably won\u0027t need them until much later (3.2)",
+      "parentUuid": "fa056e4d_d8daa1b2",
+      "range": {
+        "startLine": 28,
+        "startChar": 0,
+        "endLine": 28,
+        "endChar": 8
+      },
+      "revId": "2f749d82a73fbcea080bb78bfc2c7d98cda142f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3b3c0593_ae1d5b16",
         "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
         "patchSetId": 4
