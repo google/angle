@@ -226,7 +226,7 @@ gl::Error ContextVk::setupDraw(const gl::Context *context,
             ASSERT(texture);
 
             TextureVk *textureVk = vk::GetImpl(texture);
-            textureVk->setReadNode(renderNode, mRenderer->getCurrentQueueSerial());
+            textureVk->onReadResource(renderNode, mRenderer->getCurrentQueueSerial());
         }
     }
 

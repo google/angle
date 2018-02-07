@@ -1346,7 +1346,7 @@ VkFrontFace GetFrontFace(GLenum frontFace)
 
 }  // namespace gl_vk
 
-ResourceVk::ResourceVk() : mCurrentWriteNode(nullptr)
+ResourceVk::ResourceVk() : mCurrentWriteOperation(nullptr)
 {
 }
 
@@ -1360,8 +1360,8 @@ void ResourceVk::updateQueueSerial(Serial queueSerial)
 
     if (queueSerial > mStoredQueueSerial)
     {
-        mCurrentWriteNode = nullptr;
-        mCurrentReadNodes.clear();
+        mCurrentWriteOperation = nullptr;
+        mCurrentReadOperations.clear();
         mStoredQueueSerial = queueSerial;
     }
 }
@@ -1371,25 +1371,26 @@ Serial ResourceVk::getQueueSerial() const
     return mStoredQueueSerial;
 }
 
-bool ResourceVk::isCurrentlyRecording(Serial currentSerial) const
+bool ResourceVk::hasCurrentWriteOperation(Serial currentSerial) const
 {
-    return (mStoredQueueSerial == currentSerial && mCurrentWriteNode != nullptr);
+    return (mStoredQueueSerial == currentSerial && mCurrentWriteOperation != nullptr &&
+            !mCurrentWriteOperation->isFinishedRecording());
 }
 
-vk::CommandBufferNode *ResourceVk::getCurrentWriteNode(Serial currentSerial)
+vk::CommandBufferNode *ResourceVk::getCurrentWriteOperation(Serial currentSerial)
 {
     ASSERT(currentSerial == mStoredQueueSerial);
-    return mCurrentWriteNode;
+    return mCurrentWriteOperation;
 }
 
 vk::CommandBufferNode *ResourceVk::getNewWriteNode(RendererVk *renderer)
 {
     vk::CommandBufferNode *newCommands = renderer->allocateCommandNode();
-    setWriteNode(newCommands, renderer->getCurrentQueueSerial());
+    onWriteResource(newCommands, renderer->getCurrentQueueSerial());
     return newCommands;
 }
 
-vk::Error ResourceVk::recordWriteCommands(RendererVk *renderer,
+vk::Error ResourceVk::beginWriteOperation(RendererVk *renderer,
                                           vk::CommandBuffer **commandBufferOut)
 {
     vk::CommandBufferNode *commands = getNewWriteNode(renderer);
@@ -1399,31 +1400,32 @@ vk::Error ResourceVk::recordWriteCommands(RendererVk *renderer,
     return vk::NoError();
 }
 
-void ResourceVk::setWriteNode(vk::CommandBufferNode *writeNode, Serial serial)
+void ResourceVk::onWriteResource(vk::CommandBufferNode *writeOperation, Serial serial)
 {
     updateQueueSerial(serial);
 
-    // Make sure any open reads and writes finish before we execute |newCommands|.
-    if (!mCurrentReadNodes.empty())
+    // Make sure any open reads and writes finish before we execute 'newCommands'.
+    if (!mCurrentReadOperations.empty())
     {
-        writeNode->addDependencies(mCurrentReadNodes);
-        mCurrentReadNodes.clear();
+        vk::CommandBufferNode::SetHappensBeforeDependencies(mCurrentReadOperations, writeOperation);
+        mCurrentReadOperations.clear();
     }
 
-    if (mCurrentWriteNode)
+    if (mCurrentWriteOperation)
     {
-        writeNode->addDependency(mCurrentWriteNode);
+        vk::CommandBufferNode::SetHappensBeforeDependency(mCurrentWriteOperation, writeOperation);
     }
 
-    mCurrentWriteNode = writeNode;
+    mCurrentWriteOperation = writeOperation;
 }
 
-void ResourceVk::setReadNode(vk::CommandBufferNode *readNode, Serial serial)
+void ResourceVk::onReadResource(vk::CommandBufferNode *readOperation, Serial serial)
 {
-    if (isCurrentlyRecording(serial))
+    if (hasCurrentWriteOperation(serial))
     {
-        // Link the current write node to "readNode".
-        readNode->addDependency(getCurrentWriteNode(serial));
+        // Ensure 'readOperation' happens after the current write commands.
+        vk::CommandBufferNode::SetHappensBeforeDependency(getCurrentWriteOperation(serial),
+                                                          readOperation);
         ASSERT(mStoredQueueSerial == serial);
     }
     else
@@ -1431,8 +1433,8 @@ void ResourceVk::setReadNode(vk::CommandBufferNode *readNode, Serial serial)
         updateQueueSerial(serial);
     }
 
-    // Track "readNode" in this resource.
-    mCurrentReadNodes.push_back(readNode);
+    // Add the read operation to the list of nodes currently reading this resource.
+    mCurrentReadOperations.push_back(readOperation);
 }
 
 }  // namespace rx

@@ -54,7 +54,9 @@ Error InitAndBeginCommandBuffer(VkDevice device,
 // CommandBufferNode implementation.
 
 CommandBufferNode::CommandBufferNode()
-    : mIsDependency(false), mVisitedState(VisitedState::Unvisited)
+    : mHasHappensAfterDependencies(false),
+      mVisitedState(VisitedState::Unvisited),
+      mIsFinishedRecording(false)
 {
 }
 
@@ -69,11 +71,13 @@ CommandBufferNode::~CommandBufferNode()
 
 CommandBuffer *CommandBufferNode::getOutsideRenderPassCommands()
 {
+    ASSERT(!mIsFinishedRecording);
     return &mOutsideRenderPassCommands;
 }
 
 CommandBuffer *CommandBufferNode::getInsideRenderPassCommands()
 {
+    ASSERT(!mIsFinishedRecording);
     return &mInsideRenderPassCommands;
 }
 
@@ -81,6 +85,8 @@ Error CommandBufferNode::startRecording(VkDevice device,
                                         const CommandPool &commandPool,
                                         CommandBuffer **commandsOut)
 {
+    ASSERT(!mIsFinishedRecording);
+
     VkCommandBufferInheritanceInfo inheritanceInfo;
     inheritanceInfo.sType                = VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO;
     inheritanceInfo.pNext                = nullptr;
@@ -100,6 +106,8 @@ Error CommandBufferNode::startRecording(VkDevice device,
 
 Error CommandBufferNode::startRenderPassRecording(RendererVk *renderer, CommandBuffer **commandsOut)
 {
+    ASSERT(!mIsFinishedRecording);
+
     // Get a compatible RenderPass from the cache so we can initialize the inheritance info.
     // TODO(jmadill): Use different query method for compatible vs conformant render pass.
     vk::RenderPass *compatibleRenderPass;
@@ -123,6 +131,16 @@ Error CommandBufferNode::startRenderPassRecording(RendererVk *renderer, CommandB
     return NoError();
 }
 
+bool CommandBufferNode::isFinishedRecording() const
+{
+    return mIsFinishedRecording;
+}
+
+void CommandBufferNode::finishRecording()
+{
+    mIsFinishedRecording = true;
+}
+
 void CommandBufferNode::storeRenderPassInfo(const Framebuffer &framebuffer,
                                             const gl::Rectangle renderArea,
                                             const std::vector<VkClearValue> &clearValues)
@@ -136,7 +154,7 @@ void CommandBufferNode::appendColorRenderTarget(Serial serial, RenderTargetVk *c
 {
     // TODO(jmadill): Layout transition?
     mRenderPassDesc.packColorAttachment(*colorRenderTarget->format, colorRenderTarget->samples);
-    colorRenderTarget->resource->setWriteNode(this, serial);
+    colorRenderTarget->resource->onWriteResource(this, serial);
 }
 
 void CommandBufferNode::appendDepthStencilRenderTarget(Serial serial,
@@ -145,7 +163,7 @@ void CommandBufferNode::appendDepthStencilRenderTarget(Serial serial,
     // TODO(jmadill): Layout transition?
     mRenderPassDesc.packDepthStencilAttachment(*depthStencilRenderTarget->format,
                                                depthStencilRenderTarget->samples);
-    depthStencilRenderTarget->resource->setWriteNode(this, serial);
+    depthStencilRenderTarget->resource->onWriteResource(this, serial);
 }
 
 void CommandBufferNode::initAttachmentDesc(VkAttachmentDescription *desc)
@@ -161,58 +179,69 @@ void CommandBufferNode::initAttachmentDesc(VkAttachmentDescription *desc)
     desc->finalLayout    = VK_IMAGE_LAYOUT_UNDEFINED;
 }
 
-void CommandBufferNode::addDependency(CommandBufferNode *node)
+// static
+void CommandBufferNode::SetHappensBeforeDependency(CommandBufferNode *beforeNode,
+                                                   CommandBufferNode *afterNode)
 {
-    mDependencies.emplace_back(node);
-    node->markAsDependency();
-    ASSERT(node != this && !node->hasDependency(this));
+    afterNode->mHappensBeforeDependencies.emplace_back(beforeNode);
+    beforeNode->setHasHappensAfterDependencies();
+    beforeNode->finishRecording();
+    ASSERT(beforeNode != afterNode && !beforeNode->happensAfter(afterNode));
 }
 
-void CommandBufferNode::addDependencies(const std::vector<CommandBufferNode *> &nodes)
+// static
+void CommandBufferNode::SetHappensBeforeDependencies(
+    const std::vector<CommandBufferNode *> &beforeNodes,
+    CommandBufferNode *afterNode)
 {
-    mDependencies.insert(mDependencies.end(), nodes.begin(), nodes.end());
+    afterNode->mHappensBeforeDependencies.insert(afterNode->mHappensBeforeDependencies.end(),
+                                                 beforeNodes.begin(), beforeNodes.end());
 
     // TODO(jmadill): is there a faster way to do this?
-    for (CommandBufferNode *node : nodes)
+    for (CommandBufferNode *beforeNode : beforeNodes)
     {
-        node->markAsDependency();
-        ASSERT(node != this && !node->hasDependency(this));
+        beforeNode->setHasHappensAfterDependencies();
+        beforeNode->finishRecording();
+
+        ASSERT(beforeNode != afterNode && !beforeNode->happensAfter(afterNode));
     }
 }
 
-bool CommandBufferNode::hasDependencies() const
+bool CommandBufferNode::hasHappensBeforeDependencies() const
 {
-    return !mDependencies.empty();
+    return !mHappensBeforeDependencies.empty();
 }
 
-void CommandBufferNode::markAsDependency()
+void CommandBufferNode::setHasHappensAfterDependencies()
 {
-    mIsDependency = true;
+    mHasHappensAfterDependencies = true;
 }
 
-bool CommandBufferNode::isDependency() const
+bool CommandBufferNode::hasHappensAfterDependencies() const
 {
-    return mIsDependency;
+    return mHasHappensAfterDependencies;
 }
 
 // Do not call this in anything but testing code, since it's slow.
-bool CommandBufferNode::hasDependency(CommandBufferNode *searchNode)
+bool CommandBufferNode::happensAfter(CommandBufferNode *beforeNode)
 {
     std::set<CommandBufferNode *> visitedList;
     std::vector<CommandBufferNode *> openList;
-    openList.insert(openList.begin(), mDependencies.begin(), mDependencies.end());
+    openList.insert(openList.begin(), mHappensBeforeDependencies.begin(),
+                    mHappensBeforeDependencies.end());
     while (!openList.empty())
     {
-        CommandBufferNode *node = openList.back();
+        CommandBufferNode *checkNode = openList.back();
         openList.pop_back();
-        if (visitedList.count(node) == 0)
+        if (visitedList.count(checkNode) == 0)
         {
-            if (node == searchNode)
+            if (checkNode == beforeNode)
             {
                 return true;
             }
-            visitedList.insert(node);
-            openList.insert(openList.end(), node->mDependencies.begin(), node->mDependencies.end());
+            visitedList.insert(checkNode);
+            openList.insert(openList.end(), checkNode->mHappensBeforeDependencies.begin(),
+                            checkNode->mHappensBeforeDependencies.end());
         }
     }
 
@@ -227,7 +256,8 @@ VisitedState CommandBufferNode::visitedState() const
 void CommandBufferNode::visitDependencies(std::vector<CommandBufferNode *> *stack)
 {
     ASSERT(mVisitedState == VisitedState::Unvisited);
-    stack->insert(stack->end(), mDependencies.begin(), mDependencies.end());
+    stack->insert(stack->end(), mHappensBeforeDependencies.begin(),
+                  mHappensBeforeDependencies.end());
     mVisitedState = VisitedState::Ready;
 }
 

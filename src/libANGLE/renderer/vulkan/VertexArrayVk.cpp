@@ -116,14 +116,14 @@ void VertexArrayVk::updateDrawDependencies(vk::CommandBufferNode *readNode,
     for (auto attribIndex : activeAttribsMask)
     {
         ASSERT(mCurrentArrayBufferResources[attribIndex]);
-        mCurrentArrayBufferResources[attribIndex]->setReadNode(readNode, serial);
+        mCurrentArrayBufferResources[attribIndex]->onReadResource(readNode, serial);
     }
 
     // Handle the bound element array buffer.
     if (drawType == DrawType::Elements)
     {
         ASSERT(mCurrentElementArrayBufferResource);
-        mCurrentElementArrayBufferResource->setReadNode(readNode, serial);
+        mCurrentElementArrayBufferResource->onReadResource(readNode, serial);
     }
 }
 

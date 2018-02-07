@@ -684,29 +684,29 @@ class ResourceVk
     void updateQueueSerial(Serial queueSerial);
     Serial getQueueSerial() const;
 
-    // Returns true if any tracked read or write nodes match |currentSerial|.
-    bool isCurrentlyRecording(Serial currentSerial) const;
+    // Returns true if any tracked read or write nodes match 'currentSerial'.
+    bool hasCurrentWriteOperation(Serial currentSerial) const;
 
-    // Returns the active write node, and asserts |currentSerial| matches the stored serial.
-    vk::CommandBufferNode *getCurrentWriteNode(Serial currentSerial);
+    // Returns the active write node, and asserts 'currentSerial' matches the stored serial.
+    vk::CommandBufferNode *getCurrentWriteOperation(Serial currentSerial);
 
-    // Allocates a new write node and calls setWriteNode internally.
+    // Allocates a new write node and calls onWriteResource internally.
     vk::CommandBufferNode *getNewWriteNode(RendererVk *renderer);
 
     // Allocates a write node via getNewWriteNode and returns a started command buffer.
     // The started command buffer will render outside of a RenderPass.
-    vk::Error recordWriteCommands(RendererVk *renderer, vk::CommandBuffer **commandBufferOut);
+    vk::Error beginWriteOperation(RendererVk *renderer, vk::CommandBuffer **commandBufferOut);
 
     // Called on an operation that will modify this ResourceVk.
-    void setWriteNode(vk::CommandBufferNode *newCommands, Serial serial);
+    void onWriteResource(vk::CommandBufferNode *writeOperation, Serial serial);
 
-    // Sets up the dependency relations. |readNode| has the commands that read from this object.
-    void setReadNode(vk::CommandBufferNode *readNode, Serial serial);
+    // Sets up dependency relations. 'readOperation' has the commands that read from this object.
+    void onReadResource(vk::CommandBufferNode *readOperation, Serial serial);
 
   private:
     Serial mStoredQueueSerial;
-    std::vector<vk::CommandBufferNode *> mCurrentReadNodes;
-    vk::CommandBufferNode *mCurrentWriteNode;
+    std::vector<vk::CommandBufferNode *> mCurrentReadOperations;
+    vk::CommandBufferNode *mCurrentWriteOperation;
 };
 
 }  // namespace rx

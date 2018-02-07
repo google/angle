@@ -252,6 +252,19 @@ TEST_P(SimpleOperationTest, DrawQuad)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Simple double quad test.
+TEST_P(SimpleOperationTest, DrawQuadTwice)
+{
+    ANGLE_GL_PROGRAM(program, kBasicVertexShader, kGreenFragmentShader);
+
+    drawQuad(program.get(), "position", 0.5f, 1.0f, true);
+    drawQuad(program.get(), "position", 0.5f, 1.0f, true);
+
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 // Simple line test.
 TEST_P(SimpleOperationTest, DrawLine)
 {

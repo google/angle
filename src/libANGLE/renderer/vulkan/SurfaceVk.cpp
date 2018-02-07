@@ -364,7 +364,7 @@ vk::Error WindowSurfaceVk::initializeImpl(RendererVk *renderer)
 
     // Allocate a command buffer for clearing our images to black.
     vk::CommandBuffer *commandBuffer = nullptr;
-    ANGLE_TRY(recordWriteCommands(renderer, &commandBuffer));
+    ANGLE_TRY(beginWriteOperation(renderer, &commandBuffer));
 
     VkClearColorValue transparentBlack;
     transparentBlack.float32[0] = 0.0f;
@@ -429,7 +429,7 @@ egl::Error WindowSurfaceVk::swap(const gl::Context *context)
     RendererVk *renderer       = displayVk->getRenderer();
 
     vk::CommandBuffer *swapCommands = nullptr;
-    ANGLE_TRY(recordWriteCommands(renderer, &swapCommands));
+    ANGLE_TRY(beginWriteOperation(renderer, &swapCommands));
 
     auto &image = mSwapchainImages[mCurrentSwapchainImageIndex];
 

@@ -43,6 +43,9 @@ class CommandBufferNode final : angle::NonCopyable
     // For rendering commands (draws).
     Error startRenderPassRecording(RendererVk *renderer, CommandBuffer **commandsOut);
 
+    bool isFinishedRecording() const;
+    void finishRecording();
+
     // Commands for storing info relevant to the RenderPass.
     // RenderTargets must be added in order, with the depth/stencil being added last.
     void storeRenderPassInfo(const Framebuffer &framebuffer,
@@ -52,13 +55,15 @@ class CommandBufferNode final : angle::NonCopyable
     void appendDepthStencilRenderTarget(Serial serial, RenderTargetVk *depthStencilRenderTarget);
 
     // Commands for linking nodes in the dependency graph.
-    void addDependency(CommandBufferNode *node);
-    void addDependencies(const std::vector<CommandBufferNode *> &nodes);
-    bool hasDependencies() const;
-    bool isDependency() const;
+    static void SetHappensBeforeDependency(CommandBufferNode *beforeNode,
+                                           CommandBufferNode *afterNode);
+    static void SetHappensBeforeDependencies(const std::vector<CommandBufferNode *> &beforeNodes,
+                                             CommandBufferNode *afterNode);
+    bool hasHappensBeforeDependencies() const;
+    bool hasHappensAfterDependencies() const;
 
     // Used for testing only.
-    bool hasDependency(CommandBufferNode *searchNode);
+    bool happensAfter(CommandBufferNode *beforeNode);
 
     // Commands for traversing the node on a flush operation.
     VisitedState visitedState() const;
@@ -67,7 +72,7 @@ class CommandBufferNode final : angle::NonCopyable
 
   private:
     void initAttachmentDesc(VkAttachmentDescription *desc);
-    void markAsDependency();
+    void setHasHappensAfterDependencies();
 
     // Only used if we need a RenderPass for these commands.
     RenderPassDesc mRenderPassDesc;
@@ -80,12 +85,17 @@ class CommandBufferNode final : angle::NonCopyable
     CommandBuffer mOutsideRenderPassCommands;
     CommandBuffer mInsideRenderPassCommands;
 
-    // Dependency commands must finish before these command can execute.
-    std::vector<CommandBufferNode *> mDependencies;
-    bool mIsDependency;
+    // These commands must be submitted before 'this' command can be submitted correctly.
+    std::vector<CommandBufferNode *> mHappensBeforeDependencies;
+
+    // If this is true, other commands exist that must be submitted after 'this' command.
+    bool mHasHappensAfterDependencies;
 
     // Used when traversing the dependency graph.
     VisitedState mVisitedState;
+
+    // Is recording currently enabled?
+    bool mIsFinishedRecording;
 };
 }  // namespace vk
 }  // namespace rx

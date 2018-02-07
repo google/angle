@@ -793,7 +793,7 @@ vk::Error RendererVk::flushCommandGraph(const gl::Context *context, vk::CommandB
     {
         // Only process commands that don't have child commands. The others will be pulled in
         // automatically. Also skip commands that have already been visited.
-        if (topLevelNode->isDependency() ||
+        if (topLevelNode->hasHappensAfterDependencies() ||
             topLevelNode->visitedState() != vk::VisitedState::Unvisited)
             continue;
 

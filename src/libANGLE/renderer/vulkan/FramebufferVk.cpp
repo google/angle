@@ -153,7 +153,7 @@ gl::Error FramebufferVk::clear(const gl::Context *context, GLbitfield mask)
     RendererVk *renderer = vk::GetImpl(context)->getRenderer();
 
     vk::CommandBuffer *commandBuffer = nullptr;
-    ANGLE_TRY(recordWriteCommands(renderer, &commandBuffer));
+    ANGLE_TRY(beginWriteOperation(renderer, &commandBuffer));
 
     Serial currentSerial = renderer->getCurrentQueueSerial();
 
@@ -164,7 +164,8 @@ gl::Error FramebufferVk::clear(const gl::Context *context, GLbitfield mask)
             RenderTargetVk *renderTarget = nullptr;
             ANGLE_TRY(colorAttachment.getRenderTarget(context, &renderTarget));
 
-            renderTarget->resource->setWriteNode(getCurrentWriteNode(currentSerial), currentSerial);
+            renderTarget->resource->onWriteResource(getCurrentWriteOperation(currentSerial),
+                                                    currentSerial);
 
             renderTarget->image->changeLayoutWithStages(
                 VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
@@ -267,7 +268,7 @@ gl::Error FramebufferVk::readPixels(const gl::Context *context,
                                 renderTarget->extents, vk::StagingUsage::Read));
 
     vk::CommandBuffer *commandBuffer = nullptr;
-    ANGLE_TRY(recordWriteCommands(renderer, &commandBuffer));
+    ANGLE_TRY(beginWriteOperation(renderer, &commandBuffer));
 
     stagingImage.getImage().changeLayoutTop(VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_GENERAL,
                                             commandBuffer);
@@ -478,9 +479,9 @@ gl::Error FramebufferVk::getRenderNode(const gl::Context *context, vk::CommandBu
     RendererVk *renderer = contextVk->getRenderer();
     Serial currentSerial = renderer->getCurrentQueueSerial();
 
-    if (isCurrentlyRecording(currentSerial) && mLastRenderNodeSerial == currentSerial)
+    if (hasCurrentWriteOperation(currentSerial) && mLastRenderNodeSerial == currentSerial)
     {
-        *nodeOut = getCurrentWriteNode(currentSerial);
+        *nodeOut = getCurrentWriteOperation(currentSerial);
         ASSERT((*nodeOut)->getInsideRenderPassCommands()->valid());
         return gl::NoError();
     }
