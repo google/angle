@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7c6d1db5_26cf7333",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 431,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-02-07T15:51:23Z",
+      "side": 1,
+      "message": "Should be glState.isScissorTestEnabled()",
+      "range": {
+        "startLine": 431,
+        "startChar": 20,
+        "endLine": 431,
+        "endChar": 72
+      },
+      "revId": "b3d5faa02164617010b5104f7f4bfb0cb0272930",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fa0aefc5_7bb95694",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 443,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-02-07T15:51:23Z",
+      "side": 1,
+      "message": "same as above.",
+      "range": {
+        "startLine": 443,
+        "startChar": 21,
+        "endLine": 443,
+        "endChar": 74
+      },
+      "revId": "b3d5faa02164617010b5104f7f4bfb0cb0272930",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
