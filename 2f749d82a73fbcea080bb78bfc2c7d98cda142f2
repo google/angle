@@ -144,6 +144,30 @@
     },
     {
       "key": {
+        "uuid": "236164c0_7dbeb3e3",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-07T19:25:41Z",
+      "side": 1,
+      "message": "Ok then, please keep the cast in this function, and rename this function \"PackGLBlendOp\" to make it clear it\u0027s returning a packed blend op (converted to fit in a smaller bit range than the Vulkan extensions enums)",
+      "parentUuid": "1d5bd93d_56206e49",
+      "range": {
+        "startLine": 28,
+        "startChar": 0,
+        "endLine": 28,
+        "endChar": 8
+      },
+      "revId": "2f749d82a73fbcea080bb78bfc2c7d98cda142f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3b3c0593_ae1d5b16",
         "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
         "patchSetId": 4
