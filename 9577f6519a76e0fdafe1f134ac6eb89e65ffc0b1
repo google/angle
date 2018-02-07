@@ -78,6 +78,24 @@
     },
     {
       "key": {
+        "uuid": "03e801fa_785c8b27",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2111,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-07T22:33:26Z",
+      "side": 1,
+      "message": "Those are the lines I saw. glslang is the official GLSL validator and it produced an error message on a missing \u0027in\u0027 in GLSL 3.10. I suspect that saying \"The geometry shader must declare this input primitive layout.\" is pretty clear evidence it should be a shader-level error.",
+      "parentUuid": "fa0c8092_f1a5200c",
+      "revId": "9577f6519a76e0fdafe1f134ac6eb89e65ffc0b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "86e5dd98_705ebb87",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 6
