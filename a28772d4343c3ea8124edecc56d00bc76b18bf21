@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4affa5ab_a3e1f7d1",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-07T17:58:40Z",
+      "side": 1,
+      "message": "we aren\u0027t allowed to use nontrivial static initializers and exit time destructors - I suggest instead making a simple helper function with a switch()",
+      "range": {
+        "startLine": 28,
+        "startChar": 0,
+        "endLine": 31,
+        "endChar": 84
+      },
+      "revId": "a28772d4343c3ea8124edecc56d00bc76b18bf21",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "12b40aef_3c850729",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 627,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-07T17:58:40Z",
+      "side": 1,
+      "message": "nit: you can make this a private helper member function and re-use it.",
+      "range": {
+        "startLine": 624,
+        "startChar": 0,
+        "endLine": 627,
+        "endChar": 36
+      },
+      "revId": "a28772d4343c3ea8124edecc56d00bc76b18bf21",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3268d005_aa6ae32d",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-07T17:58:40Z",
+      "side": 1,
+      "message": "nit: comment before every new test.",
+      "range": {
+        "startLine": 67,
+        "startChar": 0,
+        "endLine": 67,
+        "endChar": 6
+      },
+      "revId": "a28772d4343c3ea8124edecc56d00bc76b18bf21",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e37dc733_e5fb8aff",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-07T17:58:40Z",
+      "side": 1,
+      "message": "why 0.51 and not 0.5?",
+      "range": {
+        "startLine": 72,
+        "startChar": 27,
+        "endLine": 72,
+        "endChar": 31
+      },
+      "revId": "a28772d4343c3ea8124edecc56d00bc76b18bf21",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "09223457_41b00234",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-07T17:58:40Z",
+      "side": 1,
+      "message": "I believe you can use GetQuadVertices. Also can you add a TODO to replace this with drawQuad when I fix the bug? (Working on it now). Not sure if you opened an issue.",
+      "range": {
+        "startLine": 85,
+        "startChar": 0,
+        "endLine": 89,
+        "endChar": 98
+      },
+      "revId": "a28772d4343c3ea8124edecc56d00bc76b18bf21",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "35ea5fe5_5de338d9",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-07T17:58:40Z",
+      "side": 1,
+      "message": "can comment here as to why you draw twice.",
+      "range": {
+        "startLine": 103,
+        "startChar": 4,
+        "endLine": 103,
+        "endChar": 16
+      },
+      "revId": "a28772d4343c3ea8124edecc56d00bc76b18bf21",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
