@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "fa056e4d_d8daa1b2",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-07T19:12:47Z",
+      "side": 1,
+      "message": "They should fit in 8 bits, but I agree it might be better to do the cast outside this function.",
+      "parentUuid": "8308a51b_3c9c410f",
+      "range": {
+        "startLine": 28,
+        "startChar": 0,
+        "endLine": 28,
+        "endChar": 8
+      },
+      "revId": "2f749d82a73fbcea080bb78bfc2c7d98cda142f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3b3c0593_ae1d5b16",
         "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
         "patchSetId": 4
@@ -64,6 +88,76 @@
         "startChar": 4,
         "endLine": 634,
         "endChar": 50
+      },
+      "revId": "2f749d82a73fbcea080bb78bfc2c7d98cda142f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2c9074c7_8f664ebd",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 634,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-07T19:12:47Z",
+      "side": 1,
+      "message": "I\u0027m fine with this too.",
+      "parentUuid": "3b3c0593_ae1d5b16",
+      "range": {
+        "startLine": 632,
+        "startChar": 4,
+        "endLine": 634,
+        "endChar": 50
+      },
+      "revId": "2f749d82a73fbcea080bb78bfc2c7d98cda142f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7b376b1e_43e67e33",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 638,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-07T19:12:47Z",
+      "side": 1,
+      "message": "this can probably take the parameter as const \u0026",
+      "range": {
+        "startLine": 638,
+        "startChar": 4,
+        "endLine": 638,
+        "endChar": 36
+      },
+      "revId": "2f749d82a73fbcea080bb78bfc2c7d98cda142f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fb095859_356770ce",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-07T19:12:47Z",
+      "side": 1,
+      "message": "nit: wrap to 100 characters.",
+      "range": {
+        "startLine": 67,
+        "startChar": 0,
+        "endLine": 68,
+        "endChar": 56
       },
       "revId": "2f749d82a73fbcea080bb78bfc2c7d98cda142f2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
