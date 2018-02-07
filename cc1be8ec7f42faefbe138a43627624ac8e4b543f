@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "3f7d5170_4bfb3fab",
+        "filename": "src/tests/gl_tests/MipmapTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 608,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2018-02-07T09:14:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9f7499de_63ff2272",
+      "range": {
+        "startLine": 608,
+        "startChar": 38,
+        "endLine": 608,
+        "endChar": 44
+      },
+      "revId": "cc1be8ec7f42faefbe138a43627624ac8e4b543f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9d2df1b2_97a23c11",
         "filename": "src/tests/gl_tests/TextureTest.cpp",
         "patchSetId": 2
@@ -45,6 +69,30 @@
       "revId": "cc1be8ec7f42faefbe138a43627624ac8e4b543f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3ee9390d_9d7cce1e",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2276,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2018-02-07T09:14:09Z",
+      "side": 1,
+      "message": "Yes. Some tests still fail on Windows and/or MacOS.",
+      "parentUuid": "9d2df1b2_97a23c11",
+      "range": {
+        "startLine": 2276,
+        "startChar": 22,
+        "endLine": 2276,
+        "endChar": 50
+      },
+      "revId": "cc1be8ec7f42faefbe138a43627624ac8e4b543f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
