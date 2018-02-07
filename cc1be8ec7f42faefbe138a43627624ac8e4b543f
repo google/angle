@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9f7499de_63ff2272",
+        "filename": "src/tests/gl_tests/MipmapTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 608,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2018-02-07T08:54:12Z",
+      "side": 1,
+      "message": "Need to delete?",
+      "range": {
+        "startLine": 608,
+        "startChar": 38,
+        "endLine": 608,
+        "endChar": 44
+      },
+      "revId": "cc1be8ec7f42faefbe138a43627624ac8e4b543f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9d2df1b2_97a23c11",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2276,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2018-02-07T08:54:12Z",
+      "side": 1,
+      "message": "Does need to add key word \"windows\"?\nThe same as below.",
+      "range": {
+        "startLine": 2276,
+        "startChar": 22,
+        "endLine": 2276,
+        "endChar": 50
+      },
+      "revId": "cc1be8ec7f42faefbe138a43627624ac8e4b543f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
