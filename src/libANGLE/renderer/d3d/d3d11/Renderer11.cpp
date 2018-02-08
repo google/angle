@@ -2378,9 +2378,6 @@ gl::Error Renderer11::copyImageInternal(const gl::Context *context,
     ANGLE_TRY(colorAttachment->getRenderTarget(context, &sourceRenderTarget));
     ASSERT(sourceRenderTarget);
 
-    const d3d11::SharedSRV &source = sourceRenderTarget->getBlitShaderResourceView();
-    ASSERT(source.valid());
-
     const d3d11::RenderTargetView &dest =
         GetAs<RenderTarget11>(destRenderTarget)->getRenderTargetView();
     ASSERT(dest.valid());
@@ -2401,6 +2398,36 @@ gl::Error Renderer11::copyImageInternal(const gl::Context *context,
     // Use nearest filtering because source and destination are the same size for the direct copy.
     // Convert to the unsized format before calling copyTexture.
     GLenum sourceFormat = colorAttachment->getFormat().info->format;
+    if (sourceRenderTarget->getTexture().is2D() && sourceRenderTarget->isMultisampled())
+    {
+        TextureHelper11 tex;
+        ANGLE_TRY_RESULT(
+            resolveMultisampledTexture(context, sourceRenderTarget, colorAttachment->getDepthSize(),
+                                       colorAttachment->getStencilSize()),
+            tex);
+
+        D3D11_SHADER_RESOURCE_VIEW_DESC viewDesc;
+        viewDesc.Format                    = sourceRenderTarget->getFormatSet().srvFormat;
+        viewDesc.ViewDimension             = D3D11_SRV_DIMENSION_TEXTURE2D;
+        viewDesc.Texture2D.MipLevels       = 1;
+        viewDesc.Texture2D.MostDetailedMip = 0;
+
+        d3d11::SharedSRV readSRV;
+        ANGLE_TRY(allocateResource(viewDesc, tex.get(), &readSRV));
+        ASSERT(readSRV.valid());
+
+        ANGLE_TRY(mBlit->copyTexture(context, readSRV, sourceArea, sourceSize, sourceFormat, dest,
+                                     destArea, destSize, nullptr, gl::GetUnsizedFormat(destFormat),
+                                     GL_NEAREST, false, false, false));
+
+        return gl::NoError();
+    }
+
+    ASSERT(!sourceRenderTarget->isMultisampled());
+
+    const d3d11::SharedSRV &source = sourceRenderTarget->getBlitShaderResourceView();
+    ASSERT(source.valid());
+
     ANGLE_TRY(mBlit->copyTexture(context, source, sourceArea, sourceSize, sourceFormat, dest,
                                  destArea, destSize, nullptr, gl::GetUnsizedFormat(destFormat),
                                  GL_NEAREST, false, false, false));

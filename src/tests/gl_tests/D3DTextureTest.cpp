@@ -1117,6 +1117,90 @@ TEST_P(D3DTextureTestMS, DepthStencil)
     eglDestroySurface(display, pbuffer);
 }
 
+// Test copyTexImage2D with a multisampled resource
+TEST_P(D3DTextureTestMS, CopyTexImage2DTest)
+{
+    EGLWindow *window  = getEGLWindow();
+    EGLDisplay display = window->getDisplay();
+
+    constexpr size_t bufferSize = 32;
+
+    EGLSurface pbuffer = createPBuffer(bufferSize, bufferSize, EGL_NO_TEXTURE, EGL_NO_TEXTURE, 4,
+                                       static_cast<UINT>(D3D11_STANDARD_MULTISAMPLE_PATTERN));
+    ASSERT_EGL_SUCCESS();
+    ASSERT_NE(EGL_NO_SURFACE, pbuffer);
+
+    // Apply the Pbuffer and clear it to magenta and verify
+    eglMakeCurrent(display, pbuffer, pbuffer, window->getContext());
+    ASSERT_EGL_SUCCESS();
+
+    glViewport(0, 0, static_cast<GLsizei>(bufferSize), static_cast<GLsizei>(bufferSize));
+    glClearColor(1.0f, 0.0f, 1.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    ASSERT_GL_NO_ERROR();
+
+    glUseProgram(mTextureProgram);
+    glUniform1i(mTextureUniformLocation, 0);
+
+    // Specify a 2D texture and set it to green
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, &GLColor::green);
+
+    // Copy from the multisampled framebuffer to the 2D texture
+    glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 0, 0, 1, 1, 0);
+
+    // Draw a quad and verify the color is magenta, not green
+    drawQuad(mTextureProgram, "position", 1.0f);
+    EXPECT_PIXEL_COLOR_EQ(static_cast<GLint>(bufferSize) / 2, static_cast<GLint>(bufferSize) / 2,
+                          GLColor::magenta);
+    ASSERT_GL_NO_ERROR();
+
+    // Make current with fixture EGL to ensure the Surface can be released immediately.
+    getEGLWindow()->makeCurrent();
+    eglDestroySurface(display, pbuffer);
+}
+
+// Test copyTexSubImage2D with a multisampled resource
+TEST_P(D3DTextureTestMS, CopyTexSubImage2DTest)
+{
+    EGLWindow *window  = getEGLWindow();
+    EGLDisplay display = window->getDisplay();
+
+    constexpr size_t bufferSize = 32;
+
+    EGLSurface pbuffer = createPBuffer(bufferSize, bufferSize, EGL_NO_TEXTURE, EGL_NO_TEXTURE, 4,
+                                       static_cast<UINT>(D3D11_STANDARD_MULTISAMPLE_PATTERN));
+    ASSERT_EGL_SUCCESS();
+    ASSERT_NE(EGL_NO_SURFACE, pbuffer);
+
+    // Apply the Pbuffer and clear it to magenta and verify
+    eglMakeCurrent(display, pbuffer, pbuffer, window->getContext());
+    ASSERT_EGL_SUCCESS();
+
+    glViewport(0, 0, static_cast<GLsizei>(bufferSize), static_cast<GLsizei>(bufferSize));
+    glClearColor(1.0f, 0.0f, 1.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    ASSERT_GL_NO_ERROR();
+
+    glUseProgram(mTextureProgram);
+    glUniform1i(mTextureUniformLocation, 0);
+
+    // Specify a 2D texture and set it to green
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, &GLColor::green);
+
+    // Copy from the multisampled framebuffer to the 2D texture
+    glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, 1, 1);
+
+    // Draw a quad and verify the color is magenta, not green
+    drawQuad(mTextureProgram, "position", 1.0f);
+    EXPECT_PIXEL_COLOR_EQ(static_cast<GLint>(bufferSize) / 2, static_cast<GLint>(bufferSize) / 2,
+                          GLColor::magenta);
+    ASSERT_GL_NO_ERROR();
+
+    // Make current with fixture EGL to ensure the Surface can be released immediately.
+    getEGLWindow()->makeCurrent();
+    eglDestroySurface(display, pbuffer);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 ANGLE_INSTANTIATE_TEST(D3DTextureTest, ES2_D3D9(), ES2_D3D11(), ES2_OPENGL());
