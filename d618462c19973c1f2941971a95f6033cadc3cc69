@@ -1,0 +1,113 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1c9992b9_9a620682",
+        "filename": "extensions/CHROMIUM_texture_type_2_10_10_10.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1106289
+      },
+      "writtenOn": "2018-02-08T17:59:06Z",
+      "side": 1,
+      "message": "This type is already part of the core OpenGL ES 3.0 spec. This extension is more about the BGRA format layout, so I\u0027d suggest something like CHROMIUM_texture_format_BGRA1010102",
+      "range": {
+        "startLine": 3,
+        "startChar": 21,
+        "endLine": 3,
+        "endChar": 36
+      },
+      "revId": "d618462c19973c1f2941971a95f6033cadc3cc69",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5e96978a_08c4337f",
+        "filename": "extensions/CHROMIUM_texture_type_2_10_10_10.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1106289
+      },
+      "writtenOn": "2018-02-08T17:59:06Z",
+      "side": 1,
+      "message": "The nomenclature for these packed pixel types is that the numbers indicate the size of the bitsfields, from the highest bits to the lowest, and by default the highest bitfield is the first component (red in case of RGBA), unless REV is added to the name in which case the first field is the one at the lowest bits.\n\nHence I believe this should be UNSIGNED_INT_2_10_10_10_REV_EXT. The thing that makes sure the first component is blue instead of red is the BGRA base format instead of RGBA.",
+      "range": {
+        "startLine": 34,
+        "startChar": 8,
+        "endLine": 34,
+        "endChar": 35
+      },
+      "revId": "d618462c19973c1f2941971a95f6033cadc3cc69",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f0f96684_fce84890",
+        "filename": "extensions/CHROMIUM_texture_type_2_10_10_10.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1106289
+      },
+      "writtenOn": "2018-02-08T17:59:06Z",
+      "side": 1,
+      "message": "This enum is already used by another extension.",
+      "range": {
+        "startLine": 34,
+        "startChar": 48,
+        "endLine": 34,
+        "endChar": 54
+      },
+      "revId": "d618462c19973c1f2941971a95f6033cadc3cc69",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "06a94679_73a581e5",
+        "filename": "extensions/CHROMIUM_texture_type_2_10_10_10.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1106289
+      },
+      "writtenOn": "2018-02-08T17:59:06Z",
+      "side": 1,
+      "message": "Should have _EXT suffixes",
+      "range": {
+        "startLine": 39,
+        "startChar": 8,
+        "endLine": 40,
+        "endChar": 13
+      },
+      "revId": "d618462c19973c1f2941971a95f6033cadc3cc69",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b7594591_f2fa21e3",
+        "filename": "extensions/CHROMIUM_texture_type_2_10_10_10.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1106289
+      },
+      "writtenOn": "2018-02-08T17:59:06Z",
+      "side": 1,
+      "message": "This also needs to define GL_BGRA_EXT, or have the GL_EXT_texture_format_BGRA8888 extension as a dependency (which defines GL_BGRA_EXT). I think keeping them independent is preferable.",
+      "revId": "d618462c19973c1f2941971a95f6033cadc3cc69",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
