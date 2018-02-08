@@ -12,6 +12,16 @@
 #include "libANGLE/renderer/load_functions_table.h"
 #include "vk_caps_utils.h"
 
+namespace
+{
+constexpr VkFormatFeatureFlags kNecessaryBitsFullSupportDepthStencil =
+    VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT | VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT |
+    VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT;
+constexpr VkFormatFeatureFlags kNecessaryBitsFullSupportColor =
+    VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT | VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT |
+    VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT;
+}  // anonymous namespace
+
 namespace rx
 {
 
@@ -53,7 +63,7 @@ void FormatTable::initialize(VkPhysicalDevice physicalDevice,
 {
     for (size_t formatIndex = 0; formatIndex < angle::kNumANGLEFormats; ++formatIndex)
     {
-        const angle::Format::ID formatID = static_cast<angle::Format::ID>(formatIndex);
+        const auto formatID              = static_cast<angle::Format::ID>(formatIndex);
         const angle::Format &angleFormat = angle::Format::Get(formatID);
         mFormatData[formatIndex].initialize(physicalDevice, angleFormat);
         const GLenum internalFormat = mFormatData[formatIndex].internalFormat;
@@ -66,11 +76,31 @@ void FormatTable::initialize(VkPhysicalDevice physicalDevice,
             // http://anglebug.com/2358
             continue;
         }
-        VkFormatProperties formatProperties;
-        vkGetPhysicalDeviceFormatProperties(
-            physicalDevice, mFormatData[formatIndex].vkTextureFormat, &formatProperties);
 
-        const gl::TextureCaps textureCaps = GenerateTextureFormatCaps(formatProperties);
+        const VkFormat vkFormat = mFormatData[formatIndex].vkTextureFormat;
+
+        // Try filling out the info from our hard coded format data, if we can't find the
+        // information we need, we'll make the call to Vulkan.
+        const VkFormatProperties &formatProperties = GetMandatoryFormatSupport(vkFormat);
+        gl::TextureCaps textureCaps;
+
+        // Once we filled what we could with the mandatory texture caps, we verify if
+        // all the bits we need to satify all our checks are present, and if so we can
+        // skip the device call.
+        if (!IsMaskFlagSet(formatProperties.optimalTilingFeatures,
+                           kNecessaryBitsFullSupportColor) &&
+            !IsMaskFlagSet(formatProperties.optimalTilingFeatures,
+                           kNecessaryBitsFullSupportDepthStencil))
+        {
+            VkFormatProperties queriedFormatProperties;
+            vkGetPhysicalDeviceFormatProperties(physicalDevice, vkFormat, &queriedFormatProperties);
+            FillTextureFormatCaps(queriedFormatProperties, &textureCaps);
+        }
+        else
+        {
+            FillTextureFormatCaps(formatProperties, &textureCaps);
+        }
+
         outTextureCapsMap->set(formatID, textureCaps);
 
         // TODO(lucferron): Optimize this by including compressed bool in the FormatID

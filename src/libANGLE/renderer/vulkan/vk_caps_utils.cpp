@@ -128,18 +128,16 @@ void GenerateCaps(const VkPhysicalDeviceProperties &physicalDeviceProperties,
     outCaps->maxVaryingVectors = physicalDeviceProperties.limits.maxVertexOutputComponents / 4;
 }
 
-gl::TextureCaps GenerateTextureFormatCaps(const VkFormatProperties &formatProperties)
+void FillTextureFormatCaps(const VkFormatProperties &formatProperties,
+                           gl::TextureCaps *outTextureCaps)
 {
-    gl::TextureCaps textureCaps;
-
-    textureCaps.texturable =
+    outTextureCaps->texturable =
         HasFormatFeatureBits(VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT, formatProperties);
-    textureCaps.filterable =
+    outTextureCaps->filterable =
         HasFormatFeatureBits(VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT, formatProperties);
-    textureCaps.renderable =
+    outTextureCaps->renderable =
         HasFormatFeatureBits(VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT, formatProperties) ||
         HasFormatFeatureBits(VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT, formatProperties);
-    return textureCaps;
 }
 }  // namespace vk
 }  // namespace rx

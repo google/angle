@@ -70,6 +70,12 @@ class FormatTable final : angle::NonCopyable
 // TODO(jmadill): This is temporary. Figure out how to handle format conversions.
 VkFormat GetNativeVertexFormat(gl::VertexFormatType vertexFormat);
 
+// This will return a reference to a VkFormatProperties with the feature flags supported
+// if the format is a mandatory format described in section 31.3.3. Required Format Support
+// of the Vulkan spec. If the vkFormat isn't mandatory, it will return a VkFormatProperties
+// initialized to 0.
+const VkFormatProperties &GetMandatoryFormatSupport(VkFormat vkFormat);
+
 }  // namespace vk
 
 }  // namespace rx

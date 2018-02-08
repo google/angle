@@ -136,6 +136,17 @@ generators = {
         ],
         'script': 'src/libANGLE/renderer/vulkan/gen_vk_format_table.py',
     },
+    'Vulkan mandatory format support table': {
+        'inputs': [
+            'src/libANGLE/renderer/angle_format.py',
+            'third_party/vulkan-validation-layers/src/scripts/vk.xml',
+            'src/libANGLE/renderer/vulkan/vk_mandatory_format_support_data.json',
+        ],
+        'outputs': [
+            'src/libANGLE/renderer/vulkan/vk_mandatory_format_support_table_autogen.cpp',
+        ],
+        'script': 'src/libANGLE/renderer/vulkan/gen_vk_mandatory_format_support_table.py',
+    },
 }
 
 root_dir = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))

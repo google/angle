@@ -764,6 +764,7 @@
             'libANGLE/renderer/vulkan/vk_format_table_autogen.cpp',
             'libANGLE/renderer/vulkan/vk_format_utils.h',
             'libANGLE/renderer/vulkan/vk_format_utils.cpp',
+            'libANGLE/renderer/vulkan/vk_mandatory_format_support_table_autogen.cpp',
             'libANGLE/renderer/vulkan/vk_utils.cpp',
             'libANGLE/renderer/vulkan/vk_utils.h',
         ],
