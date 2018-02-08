@@ -205,16 +205,6 @@ class TFunction : public TSymbol
               const TType *retType,
               bool knownToNotHaveSideEffects);
 
-    // Built-in function
-    TFunction(TSymbolTable *symbolTable,
-              const ImmutableString &name,
-              TExtension extension,
-              TConstParameter *parameters,
-              size_t paramCount,
-              const TType *retType,
-              TOperator op,
-              bool knownToNotHaveSideEffects);
-
     bool isFunction() const override { return true; }
 
     void addParameter(const TConstParameter &p);
@@ -246,7 +236,7 @@ class TFunction : public TSymbol
     bool isMain() const;
     bool isImageFunction() const;
 
-  private:
+    // Note: Only to be used for static built-in functions!
     constexpr TFunction(const TSymbolUniqueId &id,
                         const ImmutableString &name,
                         TExtension extension,
@@ -269,6 +259,7 @@ class TFunction : public TSymbol
     {
     }
 
+  private:
     ImmutableString buildMangledName() const;
 
     typedef TVector<TConstParameter> TParamVector;

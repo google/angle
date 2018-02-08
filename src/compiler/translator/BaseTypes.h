@@ -57,16 +57,8 @@ enum TBasicType
     EbtInt,
     EbtUInt,
     EbtBool,
-    EbtGVec4,              // non type: represents vec4, ivec4, and uvec4
-    EbtGenType,            // non type: represents float, vec2, vec3, and vec4
-    EbtGenIType,           // non type: represents int, ivec2, ivec3, and ivec4
-    EbtGenUType,           // non type: represents uint, uvec2, uvec3, and uvec4
-    EbtGenBType,           // non type: represents bool, bvec2, bvec3, and bvec4
-    EbtVec,                // non type: represents vec2, vec3, and vec4
-    EbtIVec,               // non type: represents ivec2, ivec3, and ivec4
-    EbtUVec,               // non type: represents uvec2, uvec3, and uvec4
-    EbtBVec,               // non type: represents bvec2, bvec3, and bvec4
     EbtYuvCscStandardEXT,  // Only valid if EXT_YUV_target exists.
+
     EbtGuardSamplerBegin,  // non type: see implementation of IsSampler()
     EbtSampler2D,
     EbtSampler3D,
@@ -90,12 +82,6 @@ enum TBasicType
     EbtSamplerCubeShadow,
     EbtSampler2DArrayShadow,
     EbtGuardSamplerEnd,  // non type: see implementation of IsSampler()
-    EbtGSampler2D,       // non type: represents sampler2D, isampler2D, and usampler2D
-    EbtGSampler3D,       // non type: represents sampler3D, isampler3D, and usampler3D
-    EbtGSamplerCube,     // non type: represents samplerCube, isamplerCube, and usamplerCube
-    EbtGSampler2DArray,  // non type: represents sampler2DArray, isampler2DArray, and
-                         // usampler2DArray
-    EbtGSampler2DMS,     // non type: represents sampler2DMS, isampler2DMS, and usampler2DMS
 
     // images
     EbtGuardImageBegin,
@@ -112,13 +98,6 @@ enum TBasicType
     EbtIImageCube,
     EbtUImageCube,
     EbtGuardImageEnd,
-
-    EbtGuardGImageBegin,
-    EbtGImage2D,       // non type: represents image2D, uimage2D, iimage2D
-    EbtGImage3D,       // non type: represents image3D, uimage3D, iimage3D
-    EbtGImage2DArray,  // non type: represents image2DArray, uimage2DArray, iimage2DArray
-    EbtGImageCube,     // non type: represents imageCube, uimageCube, iimageCube
-    EbtGuardGImageEnd,
 
     EbtStruct,
     EbtInterfaceBlock,
@@ -231,11 +210,6 @@ inline bool IsSampler(TBasicType type)
 inline bool IsImage(TBasicType type)
 {
     return type > EbtGuardImageBegin && type < EbtGuardImageEnd;
-}
-
-inline bool IsGImage(TBasicType type)
-{
-    return type > EbtGuardGImageBegin && type < EbtGuardGImageEnd;
 }
 
 inline bool IsAtomicCounter(TBasicType type)

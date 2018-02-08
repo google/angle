@@ -163,78 +163,6 @@ class TSymbolTable : angle::NonCopyable
                           const ImmutableString &name,
                           const std::array<int, 3> &values);
 
-    // Note that for inserted built-in functions the const char *name needs to remain valid for the
-    // lifetime of the SymbolTable. SymbolTable does not allocate a copy of it.
-    void insertBuiltIn(ESymbolLevel level,
-                       TOperator op,
-                       TExtension ext,
-                       const TType *rvalue,
-                       const char *name,
-                       const TType *ptype1,
-                       const TType *ptype2 = 0,
-                       const TType *ptype3 = 0,
-                       const TType *ptype4 = 0,
-                       const TType *ptype5 = 0);
-
-    void insertBuiltIn(ESymbolLevel level,
-                       const TType *rvalue,
-                       const char *name,
-                       const TType *ptype1,
-                       const TType *ptype2 = 0,
-                       const TType *ptype3 = 0,
-                       const TType *ptype4 = 0,
-                       const TType *ptype5 = 0)
-    {
-        insertUnmangledBuiltIn(name, TExtension::UNDEFINED, level);
-        insertBuiltIn(level, EOpCallBuiltInFunction, TExtension::UNDEFINED, rvalue, name, ptype1,
-                      ptype2, ptype3, ptype4, ptype5);
-    }
-
-    void insertBuiltIn(ESymbolLevel level,
-                       TExtension ext,
-                       const TType *rvalue,
-                       const char *name,
-                       const TType *ptype1,
-                       const TType *ptype2 = 0,
-                       const TType *ptype3 = 0,
-                       const TType *ptype4 = 0,
-                       const TType *ptype5 = 0)
-    {
-        insertUnmangledBuiltIn(name, ext, level);
-        insertBuiltIn(level, EOpCallBuiltInFunction, ext, rvalue, name, ptype1, ptype2, ptype3,
-                      ptype4, ptype5);
-    }
-
-    void insertBuiltInOp(ESymbolLevel level,
-                         TOperator op,
-                         const TType *rvalue,
-                         const TType *ptype1,
-                         const TType *ptype2 = 0,
-                         const TType *ptype3 = 0,
-                         const TType *ptype4 = 0,
-                         const TType *ptype5 = 0);
-
-    void insertBuiltInOp(ESymbolLevel level,
-                         TOperator op,
-                         TExtension ext,
-                         const TType *rvalue,
-                         const TType *ptype1,
-                         const TType *ptype2 = 0,
-                         const TType *ptype3 = 0,
-                         const TType *ptype4 = 0,
-                         const TType *ptype5 = 0);
-
-    void insertBuiltInFunctionNoParameters(ESymbolLevel level,
-                                           TOperator op,
-                                           const TType *rvalue,
-                                           const char *name);
-
-    void insertBuiltInFunctionNoParametersExt(ESymbolLevel level,
-                                              TExtension ext,
-                                              TOperator op,
-                                              const TType *rvalue,
-                                              const char *name);
-
     TVariable *insertVariable(ESymbolLevel level,
                               const ImmutableString &name,
                               const TType *type,
@@ -246,17 +174,19 @@ class TSymbolTable : angle::NonCopyable
 
     // Used to insert unmangled functions to check redeclaration of built-ins in ESSL 3.00 and
     // above.
-    void insertUnmangledBuiltIn(const char *name, TExtension ext, ESymbolLevel level);
+    void insertUnmangledBuiltIn(const ImmutableString &name, TExtension ext, ESymbolLevel level);
 
     bool hasUnmangledBuiltInAtLevel(const char *name, ESymbolLevel level);
 
     void initSamplerDefaultPrecision(TBasicType samplerType);
 
-    void initializeBuiltInFunctions(sh::GLenum type);
     void initializeBuiltInVariables(sh::GLenum type,
                                     ShShaderSpec spec,
                                     const ShBuiltInResources &resources);
     void markBuiltInInitializationFinished();
+
+    void insertBuiltInFunctions(sh::GLenum shaderType);
+    void insertBuiltInFunctionUnmangledNames(sh::GLenum shaderType);
 
     std::vector<std::unique_ptr<TSymbolTableBuiltInLevel>> mBuiltInTable;
     std::vector<std::unique_ptr<TSymbolTableLevel>> mTable;
@@ -267,6 +197,8 @@ class TSymbolTable : angle::NonCopyable
     std::vector<std::unique_ptr<PrecisionStackLevel>> mPrecisionStack;
 
     int mUniqueIdCounter;
+
+    static const int kLastStaticBuiltInId;
 
     // -1 before built-in init has finished, one past the last built-in id afterwards.
     // TODO(oetuaho): Make this a compile-time constant once the symbol table is initialized at

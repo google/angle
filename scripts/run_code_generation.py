@@ -147,6 +147,15 @@ generators = {
         ],
         'script': 'src/libANGLE/renderer/vulkan/gen_vk_mandatory_format_support_table.py',
     },
+    'ESSL static builtins': {
+        'inputs': [
+            'src/compiler/translator/builtin_function_declarations.txt',
+        ],
+        'outputs': [
+            'src/compiler/translator/SymbolTable_autogen.cpp',
+        ],
+        'script': 'src/compiler/translator/gen_builtin_symbols.py',
+    },
 }
 
 root_dir = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))

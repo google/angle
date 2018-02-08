@@ -145,31 +145,6 @@ TFunction::TFunction(TSymbolTable *symbolTable,
     ASSERT(name != nullptr || symbolType == SymbolType::AngleInternal);
 }
 
-TFunction::TFunction(TSymbolTable *symbolTable,
-                     const ImmutableString &name,
-                     TExtension extension,
-                     TConstParameter *parameters,
-                     size_t paramCount,
-                     const TType *retType,
-                     TOperator op,
-                     bool knownToNotHaveSideEffects)
-    : TSymbol(symbolTable, name, SymbolType::BuiltIn, extension),
-      mParametersVector(nullptr),
-      mParameters(parameters),
-      mParamCount(paramCount),
-      returnType(retType),
-      mMangledName(""),
-      mOp(op),
-      defined(false),
-      mHasPrototypeDeclaration(false),
-      mKnownToNotHaveSideEffects(knownToNotHaveSideEffects)
-{
-    ASSERT(name != nullptr);
-    ASSERT(op != EOpNull);
-    ASSERT(paramCount == 0 || parameters != nullptr);
-    mMangledName = buildMangledName();
-}
-
 void TFunction::addParameter(const TConstParameter &p)
 {
     ASSERT(mParametersVector);
