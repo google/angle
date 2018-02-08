@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0bf30628_f4e7b653",
+        "filename": "src/common/system_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-08T17:19:59Z",
+      "side": 1,
+      "message": "nit: Just Copyright 2018 (no (c))",
+      "range": {
+        "startLine": 2,
+        "startChar": 2,
+        "endLine": 2,
+        "endChar": 26
+      },
+      "revId": "7a2769d4aec661ab71b75403f9e9317b81d0710b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ac1c8d1d_b1350833",
+        "filename": "src/libGLESv2.gypi",
+        "patchSetId": 7
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-08T17:19:59Z",
+      "side": 1,
+      "message": "looks like this was missing, good fix.",
+      "range": {
+        "startLine": 31,
+        "startChar": 11,
+        "endLine": 31,
+        "endChar": 36
+      },
+      "revId": "7a2769d4aec661ab71b75403f9e9317b81d0710b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
