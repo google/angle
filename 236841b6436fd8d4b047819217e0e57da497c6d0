@@ -22,6 +22,30 @@
       "revId": "236841b6436fd8d4b047819217e0e57da497c6d0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d5b08d83_4addac56",
+        "filename": "third_party/vulkan-validation-layers/BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 524,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-02-08T17:04:07Z",
+      "side": 1,
+      "message": "No, standalone. I think maybe Tobin didn\u0027t run gn format?",
+      "parentUuid": "810ae9f8_3e39036e",
+      "range": {
+        "startLine": 519,
+        "startChar": 0,
+        "endLine": 524,
+        "endChar": 5
+      },
+      "revId": "236841b6436fd8d4b047819217e0e57da497c6d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
