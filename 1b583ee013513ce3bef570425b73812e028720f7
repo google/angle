@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "2f77c473_f9e55e6e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2018-02-08T09:53:38Z",
+      "side": 1,
+      "message": "Done.\n\nI will take a look at that Chromium bug, and close it later.",
+      "parentUuid": "b288127f_e20abbe8",
+      "revId": "1b583ee013513ce3bef570425b73812e028720f7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a5039409_2199ecc6",
         "filename": "src/tests/gl_tests/TextureTest.cpp",
         "patchSetId": 3
@@ -39,6 +57,30 @@
       "revId": "1b583ee013513ce3bef570425b73812e028720f7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ff08f774_d2cef73e",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2687,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2018-02-08T09:53:38Z",
+      "side": 1,
+      "message": "Done.\n\nYeah, I also noticed the style issue. I will submit a patch to refactor this issue throughout ANGLE project later.",
+      "parentUuid": "a5039409_2199ecc6",
+      "range": {
+        "startLine": 2687,
+        "startChar": 4,
+        "endLine": 2687,
+        "endChar": 29
+      },
+      "revId": "1b583ee013513ce3bef570425b73812e028720f7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
