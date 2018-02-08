@@ -1794,7 +1794,7 @@ TEST_P(GLSLTest, LoopIndexingValidation)
 // can actually be used.
 TEST_P(GLSLTest, VerifyMaxVertexUniformVectors)
 {
-    // crbug.com/68063
+    // crbug.com/680631
     ANGLE_SKIP_TEST_IF(IsOzone() && IsIntel());
 
     int maxUniforms = 10000;
@@ -1843,7 +1843,7 @@ TEST_P(GLSLTest, VerifyMaxVertexUniformVectorsExceeded)
 // can actually be used.
 TEST_P(GLSLTest, VerifyMaxFragmentUniformVectors)
 {
-    // crbug.com/68063
+    // crbug.com/680631
     ANGLE_SKIP_TEST_IF(IsOzone() && IsIntel());
 
     int maxUniforms = 10000;
