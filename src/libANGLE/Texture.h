@@ -9,8 +9,8 @@
 #ifndef LIBANGLE_TEXTURE_H_
 #define LIBANGLE_TEXTURE_H_
 
-#include <vector>
 #include <map>
+#include <vector>
 
 #include "angle_gl.h"
 #include "common/Optional.h"
@@ -116,6 +116,14 @@ struct TextureState final : private angle::NonCopyable
     GLenum getUsage() const { return mUsage; }
     GLenum getDepthStencilTextureMode() const { return mDepthStencilTextureMode; }
 
+    // GLES1 emulation: For GL_OES_draw_texture
+    void setCrop(const gl::Rectangle& rect);
+    const gl::Rectangle& getCrop() const;
+
+    // GLES1 emulation: Auto-mipmap generation is a texparameter
+    void setGenerateMipmapHint(GLenum hint);
+    GLenum getGenerateMipmapHint() const;
+
   private:
     // Texture needs access to the ImageDesc functions.
     friend class Texture;
@@ -163,14 +171,21 @@ struct TextureState final : private angle::NonCopyable
     GLenum mUsage;
 
     std::vector<ImageDesc> mImageDescs;
+
+    // GLES1 emulation: Texture crop rectangle
+    // For GL_OES_draw_texture
+    gl::Rectangle mCropRect;
+
+    // GLES1 emulation: Generate-mipmap hint per texture
+    GLenum mGenerateMipmapHint;
+
     InitState mInitState;
 };
 
 bool operator==(const TextureState &a, const TextureState &b);
 bool operator!=(const TextureState &a, const TextureState &b);
 
-class Texture final : public egl::ImageSibling,
-                      public LabeledObject
+class Texture final : public egl::ImageSibling, public LabeledObject
 {
   public:
     Texture(rx::GLImplFactory *factory, GLuint id, GLenum target);
@@ -365,6 +380,12 @@ class Texture final : public egl::ImageSibling,
     Extents getAttachmentSize(const ImageIndex &imageIndex) const override;
     const Format &getAttachmentFormat(GLenum binding, const ImageIndex &imageIndex) const override;
     GLsizei getAttachmentSamples(const ImageIndex &imageIndex) const override;
+
+    // GLES1 emulation
+    void setCrop(const gl::Rectangle& rect);
+    const gl::Rectangle& getCrop() const;
+    void setGenerateMipmapHint(GLenum generate);
+    GLenum getGenerateMipmapHint() const;
 
     void onAttach(const Context *context) override;
     void onDetach(const Context *context) override;

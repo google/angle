@@ -124,6 +124,8 @@ TextureState::TextureState(GLenum target)
       mUsage(GL_NONE),
       mImageDescs((IMPLEMENTATION_MAX_TEXTURE_LEVELS + 1) *
                   (target == GL_TEXTURE_CUBE_MAP ? 6 : 1)),
+      mCropRect(0, 0, 0, 0),
+      mGenerateMipmapHint(GL_FALSE),
       mInitState(InitState::MayNeedInit)
 {
 }
@@ -169,7 +171,7 @@ GLuint TextureState::getMipmapMaxLevel() const
     GLuint expectedMipLevels       = 0;
     if (mTarget == GL_TEXTURE_3D)
     {
-        const int maxDim = std::max(std::max(baseImageDesc.size.width, baseImageDesc.size.height),
+        const int maxDim  = std::max(std::max(baseImageDesc.size.width, baseImageDesc.size.height),
                                     baseImageDesc.size.depth);
         expectedMipLevels = static_cast<GLuint>(log2(maxDim));
     }
@@ -230,6 +232,26 @@ bool TextureState::isCubeComplete() const
     }
 
     return true;
+}
+
+void TextureState::setCrop(const gl::Rectangle& rect)
+{
+    mCropRect = rect;
+}
+
+const gl::Rectangle& TextureState::getCrop() const
+{
+    return mCropRect;
+}
+
+void TextureState::setGenerateMipmapHint(GLenum hint)
+{
+    mGenerateMipmapHint = hint;
+}
+
+GLenum TextureState::getGenerateMipmapHint() const
+{
+    return mGenerateMipmapHint;
 }
 
 bool TextureState::computeSamplerCompleteness(const SamplerState &samplerState,
@@ -1114,7 +1136,7 @@ Error Texture::copyTexture(const Context *context,
                                     unpackFlipY, unpackPremultiplyAlpha, unpackUnmultiplyAlpha,
                                     source));
 
-    const auto &sourceDesc   = source->mState.getImageDesc(source->getTarget(), 0);
+    const auto &sourceDesc                   = source->mState.getImageDesc(source->getTarget(), 0);
     const InternalFormat &internalFormatInfo = GetInternalFormatInfo(internalFormat, type);
     mState.setImageDesc(
         target, level,
@@ -1392,6 +1414,26 @@ const Format &Texture::getAttachmentFormat(GLenum /*binding*/, const ImageIndex 
 GLsizei Texture::getAttachmentSamples(const ImageIndex &imageIndex) const
 {
     return getSamples(imageIndex.target, 0);
+}
+
+void Texture::setCrop(const gl::Rectangle& rect)
+{
+    mState.setCrop(rect);
+}
+
+const gl::Rectangle& Texture::getCrop() const
+{
+    return mState.getCrop();
+}
+
+void Texture::setGenerateMipmapHint(GLenum hint)
+{
+    mState.setGenerateMipmapHint(hint);
+}
+
+GLenum Texture::getGenerateMipmapHint() const
+{
+    return mState.getGenerateMipmapHint();
 }
 
 void Texture::onAttach(const Context *context)
