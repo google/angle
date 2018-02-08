@@ -126,6 +126,10 @@ if (is_win || is_linux || is_mac || is_android) {
       "../../src/tests",
       "../../util",
     ]
+    defines = [
+      "ANGLE_EGL_LIBRARY_NAME=\"libEGL${angle_libs_suffix}\"",
+      "ANGLE_GLESV2_LIBRARY_NAME=\"libGLESv2${angle_libs_suffix}\"",
+    ]
 
     if (is_android) {
       use_native_activity = true
@@ -174,8 +178,8 @@ if (is_win || is_linux || is_mac || is_android) {
     deps = googletest_deps + [
              angle_root + ":angle_image_util",
              angle_root + ":angle_util",
-             angle_root + ":libEGL",
-             angle_root + ":libGLESv2",
+             angle_root + ":libEGL${angle_libs_suffix}",
+             angle_root + ":libGLESv2${angle_libs_suffix}",
              angle_root + ":preprocessor",
              angle_root + ":translator",
            ]
@@ -467,9 +471,9 @@ if (build_angle_gles1_conform_tests) {
              ":angle_gles1_conformance_no_gtest",
              angle_root + ":angle_common",
              angle_root + ":angle_util",
-             angle_root + ":libEGL",
-             angle_root + ":libGLESv1_CM",
-             angle_root + ":libGLESv2",
+             angle_root + ":libEGL${angle_libs_suffix}",
+             angle_root + ":libGLESv1_CM${angle_libs_suffix}",
+             angle_root + ":libGLESv2${angle_libs_suffix}",
              angle_root + ":preprocessor",
              angle_root + ":translator",
            ]
@@ -592,9 +596,10 @@ if (build_angle_deqp_tests) {
       ":angle_deqp_decpp",
       angle_root + ":angle_common",
       angle_root + ":angle_util",
-      angle_root + ":libEGL",
+      angle_root + ":libEGL${angle_libs_suffix}",
       "//third_party/libpng:libpng",
     ]
+    defines = [ "ANGLE_EGL_LIBRARY_NAME=\"libEGL${angle_libs_suffix}\"" ]
 
     configs -= deqp_undefine_configs
     public_configs = [ ":angle_deqp_libtester_config" ]

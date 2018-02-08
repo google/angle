@@ -32,6 +32,7 @@ declare_args() {
         (current_cpu == "arm64" && android64_ndk_api_level >= 24)
   }
   angle_shared_libvulkan = false
+  angle_libs_suffix = ""
 }
 
 declare_args() {

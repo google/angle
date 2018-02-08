@@ -588,7 +588,7 @@ config("angle_static") {
   ]
 }
 
-shared_library("libGLESv2") {
+shared_library("libGLESv2${angle_libs_suffix}") {
   sources = rebase_path(gles_gypi.libglesv2_sources, ".", "src")
 
   if (is_android) {
@@ -655,7 +655,7 @@ static_library("libGLESv2_static") {
   ]
 }
 
-shared_library("libGLESv1_CM") {
+shared_library("libGLESv1_CM${angle_libs_suffix}") {
   sources = rebase_path(gles_gypi.libglesv1_cm_sources, ".", "src")
 
   if (is_android) {
@@ -693,7 +693,7 @@ shared_library("libGLESv1_CM") {
 
   deps = [
     ":includes",
-    ":libGLESv2",
+    ":libGLESv2${angle_libs_suffix}",
     "//build/config:exe_and_shlib_deps",
   ]
 }
@@ -717,7 +717,7 @@ static_library("libGLESv1_CM_static") {
   ]
 }
 
-shared_library("libEGL") {
+shared_library("libEGL${angle_libs_suffix}") {
   sources = rebase_path(gles_gypi.libegl_sources, ".", "src")
 
   if (is_android) {
@@ -752,7 +752,7 @@ shared_library("libEGL") {
 
   deps = [
     ":includes",
-    ":libGLESv2",
+    ":libGLESv2${angle_libs_suffix}",
     "//build/config:exe_and_shlib_deps",
   ]
 }
@@ -796,7 +796,7 @@ foreach(is_shared_library,
   if (is_shared_library) {
     library_type = "shared_library"
     library_name = "angle_util"
-    dep_suffix = ""
+    dep_suffix = "${angle_libs_suffix}"
   } else {
     library_type = "static_library"
     library_name = "angle_util_static"

@@ -35,3 +35,29 @@ angle_shared_libvulkan = true
 ```
 
 When capturing traces of gtest based tests built inside Chromium checkout, make sure to run the tests with `--single-process-tests` argument.
+
+## Running ANGLE under GAPID on Android
+
+[GAPID](https://github.com/google/gapid) can be used to capture a trace of the Vulkan or OpenGL ES command stream on Android.
+For it to work, ANGLE's libraries must have different names from the system OpenGL libraries.
+This is done with the gn arg:
+```
+angle_libs_suffix = "_ANGLE"
+```
+
+All [NativeTest](https://chromium.googlesource.com/chromium/src/+/master/testing/android/native_test/java/src/org/chromium/native_test/NativeTest.java) based tests share the same activity name, `org.chromium.native_test.NativeUnitTestNativeActivity`. Thus, prior to capturing your test trace, the specific test APK must be installed on the device. When you build the test, a test launcher is generated, for example, `./out/Release/bin/run_angle_end2end_tests`. The best way to install the APK is to run this test launcher once.
+
+In GAPID's "Capture Trace" dialog, "Package / Action:" should be
+```
+android.intent.action.MAIN:org.chromium.native_test/org.chromium.native_test.NativeUnitTestNativeActivity
+```
+
+The mandatory [extra intent argument](https://developer.android.com/studio/command-line/adb.html#IntentSpec) for starting the activity is `org.chromium.native_test.NativeTest.StdoutFile`. Without it the test APK crashes. Test filters can be specified via either the `org.chromium.native_test.NativeTest.CommandLineFlags` or the `org.chromium.native_test.NativeTest.Shard` argument.
+Example "Intent Arguments:" values in GAPID's "Capture Trace" dialog:
+```
+-e org.chromium.native_test.NativeTest.StdoutFile /sdcard/chromium_tests_root/out.txt -e org.chromium.native_test.NativeTest.CommandLineFlags "--gtest_filter=*ES2_VULKAN"
+```
+or
+```
+-e org.chromium.native_test.NativeTest.StdoutFile /sdcard/chromium_tests_root/out.txt --esal org.chromium.native_test.NativeTest.Shard RendererTest.SimpleOperation/ES2_VULKAN,SimpleOperationTest.DrawWithTexture/ES2_VULKAN
+```

@@ -2,16 +2,21 @@
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
+import("../gni/angle.gni")
+
 executable("shader_translator") {
-  sources = [ "shader_translator/shader_translator.cpp", ]
-  include_dirs = [ "../include", ]
-  deps = [ "../:translator", ]
+  sources = [
+    "shader_translator/shader_translator.cpp",
+  ]
+  include_dirs = [ "../include" ]
+  deps = [
+    "../:translator",
+  ]
 }
 
 config("sample_util_config") {
   include_dirs = [ "sample_util" ]
 }
-
 
 static_library("sample_util") {
   sources = [
@@ -25,8 +30,8 @@ static_library("sample_util") {
   deps = [
     "../:angle_common",
     "../:angle_util",
-    "../:libEGL",
-    "../:libGLESv2",
+    "../:libEGL${angle_libs_suffix}",
+    "../:libGLESv2${angle_libs_suffix}",
   ]
   public_configs = [ ":sample_util_config" ]
 }
