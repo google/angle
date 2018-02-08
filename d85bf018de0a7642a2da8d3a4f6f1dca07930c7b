@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "21cdaff0_bdd13115",
+        "filename": "src/compiler/translator/SymbolTable.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 260,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-08T17:14:42Z",
+      "side": 1,
+      "message": "what about using std::unique_ptr here?",
+      "range": {
+        "startLine": 260,
+        "startChar": 8,
+        "endLine": 260,
+        "endChar": 15
+      },
+      "revId": "d85bf018de0a7642a2da8d3a4f6f1dca07930c7b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
