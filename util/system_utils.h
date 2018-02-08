@@ -27,15 +27,6 @@ ANGLE_EXPORT void SetLowPriorityProcess();
 // Write a debug message, either to a standard output or Debug window.
 ANGLE_EXPORT void WriteDebugMessage(const char *format, ...);
 
-class ANGLE_EXPORT Library : angle::NonCopyable
-{
-  public:
-    virtual ~Library() {}
-    virtual void *getSymbol(const std::string &symbolName) = 0;
-};
-
-ANGLE_EXPORT Library *loadLibrary(const std::string &libraryName);
-
 } // namespace angle
 
 #endif  // UTIL_SYSTEM_UTILS_H_

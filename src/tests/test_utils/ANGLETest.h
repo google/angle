@@ -391,9 +391,6 @@ class ANGLETestBase
 
     // Workaround for NVIDIA not being able to share a window with OpenGL and Vulkan.
     static Optional<EGLint> mLastRendererType;
-
-    // For loading and freeing platform
-    static std::unique_ptr<angle::Library> mGLESLibrary;
 };
 
 class ANGLETest : public ANGLETestBase, public ::testing::TestWithParam<angle::PlatformParameters>

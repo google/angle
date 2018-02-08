@@ -929,8 +929,6 @@ bool ANGLETestBase::InitTestWindow()
 
     mOSWindow->setVisible(true);
 
-    mGLESLibrary.reset(angle::loadLibrary("libGLESv2"));
-
     return true;
 }
 
@@ -943,8 +941,6 @@ bool ANGLETestBase::DestroyTestWindow()
         delete mOSWindow;
         mOSWindow = nullptr;
     }
-
-    mGLESLibrary.reset(nullptr);
 
     return true;
 }
@@ -1129,7 +1125,6 @@ ANGLETestBase::ScopedIgnorePlatformMessages::~ScopedIgnorePlatformMessages()
 
 OSWindow *ANGLETestBase::mOSWindow = nullptr;
 Optional<EGLint> ANGLETestBase::mLastRendererType;
-std::unique_ptr<angle::Library> ANGLETestBase::mGLESLibrary;
 
 void ANGLETestEnvironment::SetUp()
 {
