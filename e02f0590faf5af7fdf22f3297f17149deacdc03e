@@ -22,6 +22,30 @@
       "revId": "e02f0590faf5af7fdf22f3297f17149deacdc03e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0655e1a9_8fbaf50d",
+        "filename": "src/tests/deqp_support/deqp_gles2_test_expectations.txt",
+        "patchSetId": 10
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-02-08T20:11:44Z",
+      "side": 1,
+      "message": "It ended up being 15 tests but they are ones that draw a lot of gradients.  AMD already fails a bunch of similar tests in ES3.",
+      "parentUuid": "4df57483_426b6799",
+      "range": {
+        "startLine": 86,
+        "startChar": 0,
+        "endLine": 90,
+        "endChar": 0
+      },
+      "revId": "e02f0590faf5af7fdf22f3297f17149deacdc03e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
