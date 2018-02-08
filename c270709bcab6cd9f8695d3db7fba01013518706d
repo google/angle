@@ -1,0 +1,280 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "196299b5_b210b575",
+        "filename": "samples/gles1/Model.cpp",
+        "patchSetId": 66
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-08T17:44:28Z",
+      "side": 1,
+      "message": "nit: use \u0027override\u0027 instead of \u0027virtual\u0027 when possible.",
+      "range": {
+        "startLine": 26,
+        "startChar": 4,
+        "endLine": 26,
+        "endChar": 12
+      },
+      "revId": "c270709bcab6cd9f8695d3db7fba01013518706d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "001c47bb_633d0852",
+        "filename": "samples/gles1/Model.cpp",
+        "patchSetId": 66
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-08T17:44:28Z",
+      "side": 1,
+      "message": "please run git cl format before submitting the review.",
+      "range": {
+        "startLine": 56,
+        "startChar": 8,
+        "endLine": 56,
+        "endChar": 20
+      },
+      "revId": "c270709bcab6cd9f8695d3db7fba01013518706d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "caef4314_b98c5820",
+        "filename": "samples/gles1/SimpleTexture2D.cpp",
+        "patchSetId": 66
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-08T17:44:28Z",
+      "side": 1,
+      "message": "use \"Copyright 2018\" in the new files.",
+      "range": {
+        "startLine": 2,
+        "startChar": 3,
+        "endLine": 2,
+        "endChar": 21
+      },
+      "revId": "c270709bcab6cd9f8695d3db7fba01013518706d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2ea3d86b_16214308",
+        "filename": "samples/sample_util/obj_utils.h",
+        "patchSetId": 66
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-08T17:44:28Z",
+      "side": 1,
+      "message": "nit: you can drop the \u0027(c)\u0027",
+      "range": {
+        "startLine": 2,
+        "startChar": 13,
+        "endLine": 2,
+        "endChar": 16
+      },
+      "revId": "c270709bcab6cd9f8695d3db7fba01013518706d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "58b8cb56_d099af0f",
+        "filename": "scripts/update_canary_angle.py",
+        "patchSetId": 66
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-08T17:44:28Z",
+      "side": 1,
+      "message": "Can probably just remove this comment.",
+      "range": {
+        "startLine": 34,
+        "startChar": 0,
+        "endLine": 34,
+        "endChar": 51
+      },
+      "revId": "c270709bcab6cd9f8695d3db7fba01013518706d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c681bb60_e7bd2d9c",
+        "filename": "src/common/matrix_utils.h",
+        "patchSetId": 66
+      },
+      "lineNbr": 416,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-08T17:44:28Z",
+      "side": 1,
+      "message": "in general, don\u0027t define methods in headers unless they\u0027re exactly one very simple statement.",
+      "range": {
+        "startLine": 416,
+        "startChar": 4,
+        "endLine": 416,
+        "endChar": 8
+      },
+      "revId": "c270709bcab6cd9f8695d3db7fba01013518706d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3d8d4411_7120326c",
+        "filename": "src/common/matrix_utils_unittest.cpp",
+        "patchSetId": 66
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-08T17:44:28Z",
+      "side": 1,
+      "message": "instead of using static, use an anonymous namespace block at the top of the file.\n\nAlso Capitalize static methods.",
+      "range": {
+        "startLine": 183,
+        "startChar": 0,
+        "endLine": 183,
+        "endChar": 7
+      },
+      "revId": "c270709bcab6cd9f8695d3db7fba01013518706d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5a19034e_263402c3",
+        "filename": "src/common/matrix_utils_unittest.cpp",
+        "patchSetId": 66
+      },
+      "lineNbr": 191,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-08T17:44:28Z",
+      "side": 1,
+      "message": "comment before each new test.",
+      "range": {
+        "startLine": 191,
+        "startChar": 0,
+        "endLine": 191,
+        "endChar": 4
+      },
+      "revId": "c270709bcab6cd9f8695d3db7fba01013518706d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f67f0464_048b737d",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 66
+      },
+      "lineNbr": 306,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-08T17:44:28Z",
+      "side": 1,
+      "message": "when you initialize variables, do it in the init list for the class.",
+      "range": {
+        "startLine": 306,
+        "startChar": 4,
+        "endLine": 306,
+        "endChar": 13
+      },
+      "revId": "c270709bcab6cd9f8695d3db7fba01013518706d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "699518c6_027cf221",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 66
+      },
+      "lineNbr": 313,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-08T17:44:28Z",
+      "side": 1,
+      "message": "this is a bit odd. if version is 1, version \u003d\u003d 3? what exactly are you solving here?",
+      "range": {
+        "startLine": 308,
+        "startChar": 0,
+        "endLine": 313,
+        "endChar": 5
+      },
+      "revId": "c270709bcab6cd9f8695d3db7fba01013518706d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "71bac4e5_dc7e502f",
+        "filename": "src/libANGLE/Context.h",
+        "patchSetId": 66
+      },
+      "lineNbr": 246,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-08T17:44:28Z",
+      "side": 1,
+      "message": "I think I\u0027d prefer a design where we isolate the GLES1 functions and state from Context and State, somehow.",
+      "range": {
+        "startLine": 240,
+        "startChar": 0,
+        "endLine": 246,
+        "endChar": 66
+      },
+      "revId": "c270709bcab6cd9f8695d3db7fba01013518706d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5657142e_99817873",
+        "filename": "src/libANGLE/Context.h",
+        "patchSetId": 66
+      },
+      "lineNbr": 1286,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-08T17:44:28Z",
+      "side": 1,
+      "message": "all this stuff should be part of gl::State not gl::Context, preferably isolated.",
+      "range": {
+        "startLine": 1286,
+        "startChar": 11,
+        "endLine": 1286,
+        "endChar": 28
+      },
+      "revId": "c270709bcab6cd9f8695d3db7fba01013518706d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
