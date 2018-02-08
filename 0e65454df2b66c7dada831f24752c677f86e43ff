@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "7a71d0be_d847a44e",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 796,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-08T15:57:55Z",
+      "side": 1,
+      "message": "That\u0027s certainly an option.",
+      "parentUuid": "8b8a0fe4_6c0bd03e",
+      "range": {
+        "startLine": 796,
+        "startChar": 26,
+        "endLine": 796,
+        "endChar": 53
+      },
+      "revId": "0e65454df2b66c7dada831f24752c677f86e43ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ff262991_2214a3d2",
         "filename": "src/libANGLE/renderer/vulkan/vk_utils.h",
         "patchSetId": 3
@@ -36,6 +60,30 @@
       "writtenOn": "2018-02-08T11:44:44Z",
       "side": 1,
       "message": "Why rename nodes to operations here but the class representing these operations are nodes? Same questoin for the mCurrentWriteOperation rename below.",
+      "range": {
+        "startLine": 708,
+        "startChar": 41,
+        "endLine": 708,
+        "endChar": 63
+      },
+      "revId": "0e65454df2b66c7dada831f24752c677f86e43ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "57264cef_55090be0",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 708,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-08T15:57:55Z",
+      "side": 1,
+      "message": "I am considering renaming the CommandBufferNode class as well, I found Operation somehow clearer.",
+      "parentUuid": "ff262991_2214a3d2",
       "range": {
         "startLine": 708,
         "startChar": 41,
