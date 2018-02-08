@@ -489,9 +489,7 @@ if (!is_android) {
 
   shared_library("VkICD_mock_icd") {
     configs -= vulkan_undefine_configs
-    public_configs = [
-      ":vulkan_config",
-    ]
+    public_configs = [ ":vulkan_config" ]
     deps = [
       "//build/config:exe_and_shlib_deps",
     ]
@@ -518,8 +516,12 @@ if (!is_android) {
     }
 
     # The layer JSON files are part of the necessary data deps.
-    outputs = [ "$root_out_dir/$data_dir/VkICD_mock_icd.json", ]
-    data = [ "$root_out_dir/$data_dir/VkICD_mock_icd.json", ]
+    outputs = [
+      "$root_out_dir/$data_dir/VkICD_mock_icd.json",
+    ]
+    data = [
+      "$root_out_dir/$data_dir/VkICD_mock_icd.json",
+    ]
     args += [ rebase_path("$root_out_dir/$data_dir", root_build_dir) ]
   }
 }
@@ -615,3 +617,10 @@ foreach(layer_info, layers) {
   }
 }
 
+group("vulkan_validation_layers") {
+  data_deps = []
+  foreach(layer_info, layers) {
+    name = layer_info[0]
+    data_deps += [ ":VkLayer_$name" ]
+  }
+}

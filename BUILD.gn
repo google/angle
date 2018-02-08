@@ -423,12 +423,9 @@ if (angle_enable_vulkan) {
     public_deps = [
       "$angle_root/third_party/vulkan-validation-layers:vulkan_headers",
     ]
-    data_deps = []
-    foreach(layer_info, layers) {
-      name = layer_info[0]
-      data_deps +=
-          [ "$angle_root/third_party/vulkan-validation-layers:VkLayer_$name" ]
-    }
+    data_deps = [
+      "$angle_root/third_party/vulkan-validation-layers:vulkan_validation_layers",
+    ]
     public_configs = [
       "$angle_root/third_party/glslang:glslang_config",
       "$angle_root/third_party/vulkan-validation-layers:vulkan_config",
