@@ -168,18 +168,15 @@ void InsertInitCode(TIntermSequence *mainBody,
 {
     for (const auto &var : variables)
     {
-        TString name = TString(var.name.c_str());
-        size_t pos   = name.find_last_of('[');
-        if (pos != TString::npos)
-        {
-            name = name.substr(0, pos);
-        }
+        // Note that tempVariableName will reference a short-lived char array here - that's fine
+        // since we're only using it to find symbols.
+        ImmutableString tempVariableName(var.name.c_str(), var.name.length());
 
         TIntermTyped *initializedSymbol = nullptr;
         if (var.isBuiltIn())
         {
-            initializedSymbol = ReferenceBuiltInVariable(ImmutableString(name.c_str()),
-                                                         *symbolTable, shaderVersion);
+            initializedSymbol =
+                ReferenceBuiltInVariable(tempVariableName, *symbolTable, shaderVersion);
             if (initializedSymbol->getQualifier() == EvqFragData &&
                 !IsExtensionEnabled(extensionBehavior, TExtension::EXT_draw_buffers))
             {
@@ -195,8 +192,7 @@ void InsertInitCode(TIntermSequence *mainBody,
         }
         else
         {
-            initializedSymbol =
-                ReferenceGlobalVariable(ImmutableString(name.c_str()), *symbolTable);
+            initializedSymbol = ReferenceGlobalVariable(tempVariableName, *symbolTable);
         }
         ASSERT(initializedSymbol != nullptr);
 
