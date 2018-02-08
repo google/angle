@@ -96,6 +96,24 @@
     },
     {
       "key": {
+        "uuid": "1767f66e_afee6c98",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2111,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-02-08T07:48:51Z",
+      "side": 1,
+      "message": "I checked the code in the project glslang and I only find these:\nhttps://cs.chromium.org/chromium/src/third_party/glslang/src/glslang/MachineIndependent/linkValidate.cpp?l\u003d452\n\nFrom the code above I think glslang is treating missing required input/output layouts is a link-time error.\n\nMaybe I have missed something: I fail to find any clue that shows the lack of input/output layouts is a compile time error in glslang...... Could you tell me where to see it?",
+      "parentUuid": "03e801fa_785c8b27",
+      "revId": "9577f6519a76e0fdafe1f134ac6eb89e65ffc0b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "86e5dd98_705ebb87",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 6
