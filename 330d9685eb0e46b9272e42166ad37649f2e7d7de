@@ -1,0 +1,228 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ad0e9d47_f9bb82fe",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-08T18:41:50Z",
+      "side": 1,
+      "message": "nit: can you put a little bit of some of the discussion we had about the various queries and caps map stuff in the issue description?",
+      "revId": "330d9685eb0e46b9272e42166ad37649f2e7d7de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f7501cac_1215efe5",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-08T18:41:50Z",
+      "side": 1,
+      "message": "I\u0027m not sure this is quite correct - it might we can assume every format is texturable. We only check this bit when making EGLImages out of Textures. It just means that we can make a GL Texture of this format (in Vulkan, Images).",
+      "range": {
+        "startLine": 35,
+        "startChar": 8,
+        "endLine": 35,
+        "endChar": 95
+      },
+      "revId": "330d9685eb0e46b9272e42166ad37649f2e7d7de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "130ebb4e_dc7e1d3e",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-08T18:41:50Z",
+      "side": 1,
+      "message": "renderable will need to be DS attachment bit for DS Images.",
+      "range": {
+        "startLine": 39,
+        "startChar": 29,
+        "endLine": 39,
+        "endChar": 67
+      },
+      "revId": "330d9685eb0e46b9272e42166ad37649f2e7d7de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "50c0b436_e3022798",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-08T18:41:50Z",
+      "side": 1,
+      "message": "for a lot of these methods that don\u0027t get exposed in the header, you can put them in an anonymous namespace {} block. See other files for an example.",
+      "range": {
+        "startLine": 24,
+        "startChar": 1,
+        "endLine": 42,
+        "endChar": 1
+      },
+      "revId": "330d9685eb0e46b9272e42166ad37649f2e7d7de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3e1082d6_d55cff01",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-08T18:41:50Z",
+      "side": 1,
+      "message": "can you rename this valid()? Also we should put a TODO in here - this is something we should fix. Assign it to you or me.",
+      "range": {
+        "startLine": 53,
+        "startChar": 22,
+        "endLine": 53,
+        "endChar": 31
+      },
+      "revId": "330d9685eb0e46b9272e42166ad37649f2e7d7de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b666f101_0f6b8994",
+        "filename": "src/tests/angle_white_box_tests.gypi",
+        "patchSetId": 4
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-08T18:41:50Z",
+      "side": 1,
+      "message": "couple points\n\n* this test requires the vulkan back-end\n* Vulkan is only enabled if angle_enable_vulkan is true\n* we probably want to expose this only if angle_enable_vulkan is true\n* we\u0027re moving away from GYP\n\nSo, might as well just put this directly in the GN, and do it behind and if (angle_enable_vulkan) sources +\u003d []...",
+      "range": {
+        "startLine": 26,
+        "startChar": 12,
+        "endLine": 26,
+        "endChar": 74
+      },
+      "revId": "330d9685eb0e46b9272e42166ad37649f2e7d7de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a60e1eac_4961c947",
+        "filename": "src/tests/gl_tests/VulkanFormatTablesTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-08T18:41:50Z",
+      "side": 1,
+      "message": "I think you can do ASSERT_TRUE(IsVulkan());",
+      "range": {
+        "startLine": 32,
+        "startChar": 4,
+        "endLine": 32,
+        "endChar": 78
+      },
+      "revId": "330d9685eb0e46b9272e42166ad37649f2e7d7de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b162f34d_c87afc3a",
+        "filename": "src/tests/gl_tests/VulkanFormatTablesTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-08T18:41:50Z",
+      "side": 1,
+      "message": "TODO here as well.",
+      "range": {
+        "startLine": 47,
+        "startChar": 13,
+        "endLine": 47,
+        "endChar": 21
+      },
+      "revId": "330d9685eb0e46b9272e42166ad37649f2e7d7de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "913432f2_26e73915",
+        "filename": "src/tests/gl_tests/VulkanFormatTablesTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-08T18:41:50Z",
+      "side": 1,
+      "message": "you need a second query for cube map, probably best done as a loop over 2D, Cube. Also I would leave a TODO here for ES3 texture types.\n\nI would update the DS logic as mentioned in the other comment.",
+      "range": {
+        "startLine": 58,
+        "startChar": 0,
+        "endLine": 62,
+        "endChar": 30
+      },
+      "revId": "330d9685eb0e46b9272e42166ad37649f2e7d7de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7d9ed4a1_20560a04",
+        "filename": "src/tests/gl_tests/VulkanFormatTablesTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-08T18:41:50Z",
+      "side": 1,
+      "message": "for depth/stencil textures, renderable will be DEPTH_STENCIL_ATTACHMENT",
+      "range": {
+        "startLine": 78,
+        "startChar": 37,
+        "endLine": 78,
+        "endChar": 72
+      },
+      "revId": "330d9685eb0e46b9272e42166ad37649f2e7d7de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
