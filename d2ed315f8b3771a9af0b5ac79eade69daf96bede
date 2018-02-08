@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0cb7e258_18246004",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-08T17:17:07Z",
+      "side": 1,
+      "message": "micro-nit: I would probably make this return 0.",
+      "range": {
+        "startLine": 40,
+        "startChar": 40,
+        "endLine": 40,
+        "endChar": 55
+      },
+      "revId": "d2ed315f8b3771a9af0b5ac79eade69daf96bede",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eb48a7a7_00285bb1",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-08T17:17:07Z",
+      "side": 1,
+      "message": "nit: you clear twice.",
+      "range": {
+        "startLine": 100,
+        "startChar": 0,
+        "endLine": 100,
+        "endChar": 33
+      },
+      "revId": "d2ed315f8b3771a9af0b5ac79eade69daf96bede",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
