@@ -26,13 +26,13 @@
 /third_party/cherry
 /third_party/deqp/src
 /third_party/gles1_conform
-/third_party/glslang-angle/src
+/third_party/glslang/src
 /third_party/googletest/src
 /third_party/gyp
 /third_party/libpng/src
 /third_party/llvm-build
 /third_party/spirv-headers/src
-/third_party/spirv-tools-angle/src
+/third_party/spirv-tools/src
 /third_party/vulkan-validation-layers/src
 /third_party/zlib
 angle_internal
