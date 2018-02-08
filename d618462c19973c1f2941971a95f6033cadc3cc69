@@ -71,6 +71,54 @@
     },
     {
       "key": {
+        "uuid": "955b0b81_68a57732",
+        "filename": "extensions/CHROMIUM_texture_type_2_10_10_10.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1113991
+      },
+      "writtenOn": "2018-02-08T19:30:02Z",
+      "side": 1,
+      "message": "Ah, hmm, I couldn\u0027t find it in \nhttps://github.com/mesa3d/mesa/blob/master/include/GLES3/gl32.h\nis there any process to conjure new numbers?",
+      "parentUuid": "f0f96684_fce84890",
+      "range": {
+        "startLine": 34,
+        "startChar": 48,
+        "endLine": 34,
+        "endChar": 54
+      },
+      "revId": "d618462c19973c1f2941971a95f6033cadc3cc69",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "33b91264_faf1cd1d",
+        "filename": "extensions/CHROMIUM_texture_type_2_10_10_10.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1113991
+      },
+      "writtenOn": "2018-02-08T19:30:02Z",
+      "side": 1,
+      "message": "UNSIGNED_INT_2_10_10_10_EXT is not defined, instead only\nUNSIGNED_INT_2_10_10_10_REV_EXT is [1], following the original\nextension [2].\n\nRegardless of that, would it be OK to just define  below that\nUNSIGNED_INT_2_10_10_10_REV_EXT (existing beyond this document)\ncan be used with Format \u003d BGRA and/or BGR? That\u0027d simplify this \ntxt considerably :-)\n\n[1] https://github.com/mesa3d/mesa/blob/e66a2b879b73bf48800fec7353dafe8fc693ecdb/include/GLES3/gl32.h#L690\n[2] https://www.khronos.org/registry/OpenGL/extensions/EXT/EXT_texture_type_2_10_10_10_REV.txt",
+      "parentUuid": "5e96978a_08c4337f",
+      "range": {
+        "startLine": 34,
+        "startChar": 8,
+        "endLine": 34,
+        "endChar": 35
+      },
+      "revId": "d618462c19973c1f2941971a95f6033cadc3cc69",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "06a94679_73a581e5",
         "filename": "extensions/CHROMIUM_texture_type_2_10_10_10.txt",
         "patchSetId": 3
