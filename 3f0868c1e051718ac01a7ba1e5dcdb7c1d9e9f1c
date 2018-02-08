@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "10adbcaf_0e419d3d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-02-08T06:12:03Z",
+      "side": 1,
+      "message": "Remove these two lines?",
+      "range": {
+        "startLine": 14,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 64
+      },
+      "revId": "3f0868c1e051718ac01a7ba1e5dcdb7c1d9e9f1c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fa75ff08_e707a62e",
+        "filename": "src/tests/gl_tests/RenderStencilBufferTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-02-08T06:12:03Z",
+      "side": 1,
+      "message": "2018",
+      "range": {
+        "startLine": 2,
+        "startChar": 13,
+        "endLine": 2,
+        "endChar": 17
+      },
+      "revId": "3f0868c1e051718ac01a7ba1e5dcdb7c1d9e9f1c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6147f6fa_6b89c3db",
+        "filename": "src/tests/gl_tests/RenderStencilBufferTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-02-08T06:12:03Z",
+      "side": 1,
+      "message": "reproduces a",
+      "range": {
+        "startLine": 81,
+        "startChar": 13,
+        "endLine": 81,
+        "endChar": 22
+      },
+      "revId": "3f0868c1e051718ac01a7ba1e5dcdb7c1d9e9f1c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "47d8cad2_3d9cb753",
+        "filename": "src/tests/gl_tests/RenderStencilBufferTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-02-08T06:12:03Z",
+      "side": 1,
+      "message": "remove \u0027and\u0027",
+      "range": {
+        "startLine": 83,
+        "startChar": 73,
+        "endLine": 83,
+        "endChar": 76
+      },
+      "revId": "3f0868c1e051718ac01a7ba1e5dcdb7c1d9e9f1c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "32cd34ba_c337e761",
+        "filename": "src/tests/gl_tests/RenderStencilBufferTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-02-08T06:12:03Z",
+      "side": 1,
+      "message": "IsIntel() \u0026\u0026 (IsOSX() || IsD3D11())",
+      "range": {
+        "startLine": 88,
+        "startChar": 23,
+        "endLine": 88,
+        "endChar": 71
+      },
+      "revId": "3f0868c1e051718ac01a7ba1e5dcdb7c1d9e9f1c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
