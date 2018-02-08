@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e37b8804_3e303b72",
+        "filename": "util/shader_utils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-08T17:33:02Z",
+      "side": 1,
+      "message": "nit: call this CompileProgramWithGSAndTransformFeedback",
+      "range": {
+        "startLine": 129,
+        "startChar": 7,
+        "endLine": 129,
+        "endChar": 42
+      },
+      "revId": "3d48fa1f71fca27b8d53cd087006936a21d3e0cd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
