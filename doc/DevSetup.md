@@ -88,13 +88,12 @@ In Visual Studio:
 Once the build completes the output directory for your selected configuration (e.g. `out/Release_x64`) will contain the required libraries and dlls to build and run an OpenGL ES 2.0 application.  ANGLE executables (tests and samples) are under out/sln.
 
 ### Building ANGLE for Android
-At present it is not possible to build standalone ANGLE for Android but it can be built within a Chromium checkout.
-Since ANGLE has converted to GN a standalone build should be possible.
-For now follow the steps in
+Building ANGLE for Android is heavily dependent on the Chromium toolchain. It is not currently possible to build ANGLE for Android without a Chromium checkout. See http://anglebug.com/2344 for more details on why.
+Please follow the steps in
 [Checking out and building Chromium for Android](https://chromium.googlesource.com/chromium/src/+/master/docs/android_build_instructions.md).
 This must be done on Linux, the only platform that Chromium for Android supports.
 Name your output directories `out/Debug` and `out/Release`, because Chromium GPU tests look for browser binaries in these folders. Replacing `out` with other names seems to be OK when working with multiple build configurations.
-It's best to use a build configuration of some Android bot on [GPU.FYI waterfall](https://build.chromium.org/p/chromium.gpu.fyi/waterfall). Look for `generate_build_files` step output of that bot. Remove `goma_dir` flag.
+It's best to use a build configuration of some Android bot on [GPU.FYI waterfall](https://ci.chromium.org/p/chromium/g/chromium.gpu.fyi/console). Look for `generate_build_files` step output of that bot. Remove `goma_dir` flag.
 For example, these are the build flags from Nexus 5X bot:
 ```
 build_angle_deqp_tests = true
@@ -108,9 +107,14 @@ target_cpu = "arm64"          # Nexus 5X is 64 bit, remove this on 32 bit device
 target_os = "android"
 use_goma = true               # Remove this if you don't have goma
 ```
+Additional flags to build the Vulkan backend, enable only if running on Android N or higher:
+```
+android32_ndk_api_level = 24
+android64_ndk_api_level = 24
+```
 
 These ANGLE targets are supported:
-`ninja -C out/Release translator libEGL libGLESv2 angle_unittests angle_end2end_tests angle_white_box_tests angle_deqp_gles2_tests angle_deqp_gles3_tests angle_deqp_egl_tests`
+`ninja -C out/Release translator libEGL libGLESv2 angle_unittests angle_end2end_tests angle_white_box_tests angle_deqp_gles2_tests angle_deqp_gles3_tests angle_deqp_egl_tests angle_perftests`
 In order to run ANGLE tests, prepend `bin/run_` to the test name, for example: `./out/Release/bin/run_angle_unittests`.
 Additional details are in [Android Test Instructions](https://chromium.googlesource.com/chromium/src/+/master/docs/android_test_instructions.md).
 
