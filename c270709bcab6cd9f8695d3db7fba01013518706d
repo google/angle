@@ -232,6 +232,53 @@
     },
     {
       "key": {
+        "uuid": "cc4ad600_fd42da14",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 66
+      },
+      "lineNbr": 313,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-02-08T18:41:46Z",
+      "side": 1,
+      "message": "Would prefer if we can find a way to keep the client version set to 1 and handle any validation issues that block it.",
+      "parentUuid": "699518c6_027cf221",
+      "range": {
+        "startLine": 308,
+        "startChar": 0,
+        "endLine": 313,
+        "endChar": 5
+      },
+      "revId": "c270709bcab6cd9f8695d3db7fba01013518706d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "01cdef7a_676a18c2",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 66
+      },
+      "lineNbr": 7252,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-02-08T18:41:46Z",
+      "side": 1,
+      "message": "Constants for these would be great (in these functions and the switch below)",
+      "range": {
+        "startLine": 7252,
+        "startChar": 24,
+        "endLine": 7252,
+        "endChar": 25
+      },
+      "revId": "c270709bcab6cd9f8695d3db7fba01013518706d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "71bac4e5_dc7e502f",
         "filename": "src/libANGLE/Context.h",
         "patchSetId": 66
@@ -271,6 +318,53 @@
         "startChar": 11,
         "endLine": 1286,
         "endChar": 28
+      },
+      "revId": "c270709bcab6cd9f8695d3db7fba01013518706d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "553a318e_cc76018e",
+        "filename": "src/libANGLE/Context.h",
+        "patchSetId": 66
+      },
+      "lineNbr": 1286,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-02-08T18:41:46Z",
+      "side": 1,
+      "message": "Agreed, If we could have as GLES1 emulator class that manages the shaders and their state it will encapsulate things nicely.",
+      "parentUuid": "5657142e_99817873",
+      "range": {
+        "startLine": 1286,
+        "startChar": 11,
+        "endLine": 1286,
+        "endChar": 28
+      },
+      "revId": "c270709bcab6cd9f8695d3db7fba01013518706d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5dfc46ca_a933681b",
+        "filename": "src/libANGLE/State.h",
+        "patchSetId": 66
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-02-08T18:41:46Z",
+      "side": 1,
+      "message": "These structs can go in angletypes.h.  It would also be nice to name the structs after the table in the spec that they come from and keep the member names as close to the GL names as possible (ie TexEnv becomes TextureEnvironmentState)",
+      "range": {
+        "startLine": 45,
+        "startChar": 7,
+        "endLine": 45,
+        "endChar": 16
       },
       "revId": "c270709bcab6cd9f8695d3db7fba01013518706d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
