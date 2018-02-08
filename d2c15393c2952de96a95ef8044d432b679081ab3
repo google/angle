@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "d67a4981_b2c868d0",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-02-08T09:01:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5cd9c946_df0a826e",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 12,
+        "endChar": 0
+      },
+      "revId": "d2c15393c2952de96a95ef8044d432b679081ab3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "05b83e92_b5f8677a",
         "filename": "src/common/system_utils.h",
         "patchSetId": 2
