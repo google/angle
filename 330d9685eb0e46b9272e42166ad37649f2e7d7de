@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "3ced513d_4f23096d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-08T20:26:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ad0e9d47_f9bb82fe",
+      "revId": "330d9685eb0e46b9272e42166ad37649f2e7d7de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f7501cac_1215efe5",
         "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
         "patchSetId": 4
@@ -39,6 +57,30 @@
       "revId": "330d9685eb0e46b9272e42166ad37649f2e7d7de",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "29335a60_d25f4015",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-08T20:26:00Z",
+      "side": 1,
+      "message": "Talked about it offline, resolved. Using VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT",
+      "parentUuid": "f7501cac_1215efe5",
+      "range": {
+        "startLine": 35,
+        "startChar": 8,
+        "endLine": 35,
+        "endChar": 95
+      },
+      "revId": "330d9685eb0e46b9272e42166ad37649f2e7d7de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -65,6 +107,30 @@
     },
     {
       "key": {
+        "uuid": "f41b2782_b17579cc",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-08T20:26:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "130ebb4e_dc7e1d3e",
+      "range": {
+        "startLine": 39,
+        "startChar": 29,
+        "endLine": 39,
+        "endChar": 67
+      },
+      "revId": "330d9685eb0e46b9272e42166ad37649f2e7d7de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "50c0b436_e3022798",
         "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
         "patchSetId": 4
@@ -85,6 +151,30 @@
       "revId": "330d9685eb0e46b9272e42166ad37649f2e7d7de",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "01d54971_806bc13e",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-08T20:26:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "50c0b436_e3022798",
+      "range": {
+        "startLine": 24,
+        "startChar": 1,
+        "endLine": 42,
+        "endChar": 1
+      },
+      "revId": "330d9685eb0e46b9272e42166ad37649f2e7d7de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -111,6 +201,30 @@
     },
     {
       "key": {
+        "uuid": "f442c242_663a8c4b",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-08T20:26:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3e1082d6_d55cff01",
+      "range": {
+        "startLine": 53,
+        "startChar": 22,
+        "endLine": 53,
+        "endChar": 31
+      },
+      "revId": "330d9685eb0e46b9272e42166ad37649f2e7d7de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b666f101_0f6b8994",
         "filename": "src/tests/angle_white_box_tests.gypi",
         "patchSetId": 4
@@ -131,6 +245,30 @@
       "revId": "330d9685eb0e46b9272e42166ad37649f2e7d7de",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2073f32b_ff341710",
+        "filename": "src/tests/angle_white_box_tests.gypi",
+        "patchSetId": 4
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-08T20:26:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b666f101_0f6b8994",
+      "range": {
+        "startLine": 26,
+        "startChar": 12,
+        "endLine": 26,
+        "endChar": 74
+      },
+      "revId": "330d9685eb0e46b9272e42166ad37649f2e7d7de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -157,6 +295,30 @@
     },
     {
       "key": {
+        "uuid": "76eeb677_1efa8bbb",
+        "filename": "src/tests/gl_tests/VulkanFormatTablesTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-08T20:26:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a60e1eac_4961c947",
+      "range": {
+        "startLine": 32,
+        "startChar": 4,
+        "endLine": 32,
+        "endChar": 78
+      },
+      "revId": "330d9685eb0e46b9272e42166ad37649f2e7d7de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b162f34d_c87afc3a",
         "filename": "src/tests/gl_tests/VulkanFormatTablesTest.cpp",
         "patchSetId": 4
@@ -180,6 +342,30 @@
     },
     {
       "key": {
+        "uuid": "5f40a4b5_a7ee0881",
+        "filename": "src/tests/gl_tests/VulkanFormatTablesTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-08T20:26:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b162f34d_c87afc3a",
+      "range": {
+        "startLine": 47,
+        "startChar": 13,
+        "endLine": 47,
+        "endChar": 21
+      },
+      "revId": "330d9685eb0e46b9272e42166ad37649f2e7d7de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "913432f2_26e73915",
         "filename": "src/tests/gl_tests/VulkanFormatTablesTest.cpp",
         "patchSetId": 4
@@ -191,6 +377,30 @@
       "writtenOn": "2018-02-08T18:41:50Z",
       "side": 1,
       "message": "you need a second query for cube map, probably best done as a loop over 2D, Cube. Also I would leave a TODO here for ES3 texture types.\n\nI would update the DS logic as mentioned in the other comment.",
+      "range": {
+        "startLine": 58,
+        "startChar": 0,
+        "endLine": 62,
+        "endChar": 30
+      },
+      "revId": "330d9685eb0e46b9272e42166ad37649f2e7d7de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "598ce94b_8b0c592e",
+        "filename": "src/tests/gl_tests/VulkanFormatTablesTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-08T20:26:00Z",
+      "side": 1,
+      "message": "I do not understand the comment about verifying the cube, there is no such thing in VkImageFormat as a cube to verify, there is only 1D 2D and 3D, and from what I understood, 3D isn\u0027t the same as a Cube image.\n\nCan you please clarify?\n\n(Added the TODO)",
+      "parentUuid": "913432f2_26e73915",
       "range": {
         "startLine": 58,
         "startChar": 0,
@@ -223,6 +433,30 @@
       "revId": "330d9685eb0e46b9272e42166ad37649f2e7d7de",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7228dcf5_b07a7966",
+        "filename": "src/tests/gl_tests/VulkanFormatTablesTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-08T20:26:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7d9ed4a1_20560a04",
+      "range": {
+        "startLine": 78,
+        "startChar": 37,
+        "endLine": 78,
+        "endChar": 72
+      },
+      "revId": "330d9685eb0e46b9272e42166ad37649f2e7d7de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
