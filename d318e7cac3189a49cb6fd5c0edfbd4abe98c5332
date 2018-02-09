@@ -22,6 +22,30 @@
       "revId": "d318e7cac3189a49cb6fd5c0edfbd4abe98c5332",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "da4c6a69_3a670712",
+        "filename": "src/tests/gl_tests/RenderStencilBufferTest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2018-02-09T03:21:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "654ef9c0_de873a6e",
+      "range": {
+        "startLine": 123,
+        "startChar": 25,
+        "endLine": 123,
+        "endChar": 37
+      },
+      "revId": "d318e7cac3189a49cb6fd5c0edfbd4abe98c5332",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
