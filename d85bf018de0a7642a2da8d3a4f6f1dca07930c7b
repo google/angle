@@ -22,6 +22,30 @@
       "revId": "d85bf018de0a7642a2da8d3a4f6f1dca07930c7b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ba6e0ed1_7382e5ed",
+        "filename": "src/compiler/translator/SymbolTable.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 260,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-02-09T08:31:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "21cdaff0_bdd13115",
+      "range": {
+        "startLine": 260,
+        "startChar": 8,
+        "endLine": 260,
+        "endChar": 15
+      },
+      "revId": "d85bf018de0a7642a2da8d3a4f6f1dca07930c7b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
