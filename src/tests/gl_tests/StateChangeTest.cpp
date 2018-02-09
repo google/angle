@@ -1067,6 +1067,33 @@ TEST_P(SimpleStateChangeTest, RedefineFramebufferInUse)
     ASSERT_GL_NO_ERROR();
 }
 
+// Validates disabling cull face really disables it.
+TEST_P(SimpleStateChangeTest, EnableAndDisableCullFace)
+{
+    ANGLE_GL_PROGRAM(program, kSolidColorVertexShader, kSolidColorFragmentShader);
+    glUseProgram(program);
+
+    glClear(GL_COLOR_BUFFER_BIT);
+    glEnable(GL_CULL_FACE);
+
+    glCullFace(GL_FRONT);
+
+    drawQuad(program.get(), "position", 0.0f, 1.0f, true);
+
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::transparentBlack);
+
+    // Disable cull face and redraw, then make sure we have the quad drawn.
+    glDisable(GL_CULL_FACE);
+
+    drawQuad(program.get(), "position", 0.0f, 1.0f, true);
+
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+}
+
 TEST_P(SimpleStateChangeTest, ScissorTest)
 {
     // This test validates this order of state changes:

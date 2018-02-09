@@ -64,6 +64,43 @@ void SimpleOperationTest::verifyBuffer(const std::vector<uint8_t> &data, GLenum 
     EXPECT_EQ(data, readbackData);
 }
 
+// Validates if culling rasterization states work. Simply draws a quad with
+// cull face enabled and make sure we still render correctly.
+TEST_P(SimpleOperationTest, CullFaceEnabledState)
+{
+    ANGLE_GL_PROGRAM(program, kBasicVertexShader, kGreenFragmentShader);
+    glUseProgram(program);
+
+    glClear(GL_COLOR_BUFFER_BIT);
+    glEnable(GL_CULL_FACE);
+
+    drawQuad(program.get(), "position", 0.0f, 1.0f, true);
+
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
+// Validates if culling rasterization states work. Simply draws a quad with
+// cull face enabled with cullface front and make sure the face have not been rendered.
+TEST_P(SimpleOperationTest, CullFaceFrontEnabledState)
+{
+    ANGLE_GL_PROGRAM(program, kBasicVertexShader, kGreenFragmentShader);
+    glUseProgram(program);
+
+    glClear(GL_COLOR_BUFFER_BIT);
+    glEnable(GL_CULL_FACE);
+
+    // Should make the quad disappear since we draw it front facing.
+    glCullFace(GL_FRONT);
+
+    drawQuad(program.get(), "position", 0.0f, 1.0f, true);
+
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::transparentBlack);
+}
+
 // Validates if blending render states work. Simply draws twice and verify the color have been
 // added in the final output.
 TEST_P(SimpleOperationTest, BlendingRenderState)
