@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "aa45c543_38bed96b",
+        "filename": "src/common/angle_fallthrough.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-09T22:51:56Z",
+      "side": 1,
+      "message": "nit: this comment is incorrect.",
+      "range": {
+        "startLine": 6,
+        "startChar": 3,
+        "endLine": 6,
+        "endChar": 17
+      },
+      "revId": "41b072b646f1178d4b16db72a55e5e5510c8dd66",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1741792f_3348b401",
+        "filename": "src/common/angle_fallthrough.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-09T22:51:56Z",
+      "side": 1,
+      "message": "question: do all versions of clang have this, or is there a _has type macro that can filter?",
+      "range": {
+        "startLine": 18,
+        "startChar": 4,
+        "endLine": 18,
+        "endChar": 22
+      },
+      "revId": "41b072b646f1178d4b16db72a55e5e5510c8dd66",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b71e4d5d_dde30bf0",
+        "filename": "src/compiler/translator/EmulatePrecision.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 644,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-09T22:51:56Z",
+      "side": 1,
+      "message": "I think we should actually clean this up as part of the default case.",
+      "range": {
+        "startLine": 638,
+        "startChar": 0,
+        "endLine": 644,
+        "endChar": 16
+      },
+      "revId": "41b072b646f1178d4b16db72a55e5e5510c8dd66",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6727aac6_b9092d3b",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 2053,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-09T22:51:56Z",
+      "side": 1,
+      "message": "very nice fix. I feel like we\u0027re missing a test here.",
+      "range": {
+        "startLine": 2053,
+        "startChar": 11,
+        "endLine": 2053,
+        "endChar": 37
+      },
+      "revId": "41b072b646f1178d4b16db72a55e5e5510c8dd66",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f088952c_3ca12b64",
+        "filename": "src/libANGLE/renderer/gen_load_functions_table.py",
+        "patchSetId": 14
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-09T22:51:56Z",
+      "side": 1,
+      "message": "this is OK, but maybe done better by moving the empty load functions map to the top of the function and returning it on the break case instead.",
+      "range": {
+        "startLine": 175,
+        "startChar": 0,
+        "endLine": 180,
+        "endChar": 21
+      },
+      "revId": "41b072b646f1178d4b16db72a55e5e5510c8dd66",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "231f654d_d58e8270",
+        "filename": "src/libANGLE/validationEGL.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 2477,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-09T22:51:56Z",
+      "side": 1,
+      "message": "I wonder if these fix any dEQP EGL tests?",
+      "range": {
+        "startLine": 2477,
+        "startChar": 12,
+        "endLine": 2477,
+        "endChar": 17
+      },
+      "revId": "41b072b646f1178d4b16db72a55e5e5510c8dd66",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
