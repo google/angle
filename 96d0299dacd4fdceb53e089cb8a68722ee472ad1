@@ -16,6 +16,24 @@
       "revId": "96d0299dacd4fdceb53e089cb8a68722ee472ad1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d6d6933b_a0829525",
+        "filename": "src/libANGLE/renderer/load_functions_table_autogen.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1553,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-02-09T15:55:11Z",
+      "side": 1,
+      "message": "Yea, I don\u0027t see an issue with removing it if you want but I didn\u0027t write this generator.",
+      "parentUuid": "301b4f1d_71cb7476",
+      "revId": "96d0299dacd4fdceb53e089cb8a68722ee472ad1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
