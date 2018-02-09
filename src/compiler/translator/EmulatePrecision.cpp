@@ -6,6 +6,7 @@
 
 #include "compiler/translator/EmulatePrecision.h"
 
+#include "common/angle_fallthrough.h"
 #include "compiler/translator/FunctionLookup.h"
 
 #include <memory>
@@ -639,6 +640,7 @@ bool EmulatePrecision::visitAggregate(Visit visit, TIntermAggregate *node)
             {
                 break;
             }
+            ANGLE_FALLTHROUGH;
         default:
             TIntermNode *parent = getParentNode();
             if (canRoundFloat(node->getType()) && ParentUsesResult(parent, node) &&

@@ -1588,6 +1588,7 @@ bool TIntermBinary::hasConstantValue() const
             {
                 return true;
             }
+            break;
         }
         default:
             break;

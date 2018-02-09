@@ -4918,6 +4918,7 @@ TIntermTyped *TParseContext::createUnaryMath(TOperator op,
                 unaryOpError(loc, GetOperatorString(op), child->getCompleteString());
                 return nullptr;
             }
+            break;
         // Operators for built-ins are already type checked against their prototype.
         default:
             break;

@@ -3328,6 +3328,7 @@ bool ValidatePathParameterfCHROMIUM(Context *context, GLuint path, GLenum pname,
                     context->handleError(InvalidEnum() << "Invalid join style.");
                     return false;
             }
+            break;
         case GL_PATH_MITER_LIMIT_CHROMIUM:
             if (value < 0.0f)
             {

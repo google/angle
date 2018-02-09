@@ -250,6 +250,7 @@ void StateManager9::syncState(const gl::State &state, const gl::State::DirtyBits
                 {
                     mDirtyBits.set(DIRTY_BIT_DEPTH_BIAS);
                 }
+                break;
             }
             case gl::State::DIRTY_BIT_DEPTH_MASK:
                 if (state.getDepthStencilState().depthMask != mCurDepthStencilState.depthMask)

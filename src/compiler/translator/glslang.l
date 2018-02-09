@@ -26,9 +26,9 @@ WHICH GENERATES THE GLSL ES LEXER (glslang_lex.cpp).
 
 // Ignore errors in auto-generated code.
 #if defined(__GNUC__)
+#pragma GCC diagnostic ignored "-Wswitch-enum"
 #pragma GCC diagnostic ignored "-Wunused-function"
 #pragma GCC diagnostic ignored "-Wunused-variable"
-#pragma GCC diagnostic ignored "-Wswitch-enum"
 #elif defined(_MSC_VER)
 #pragma warning(disable: 4005)
 #pragma warning(disable: 4065)
@@ -37,6 +37,9 @@ WHICH GENERATES THE GLSL ES LEXER (glslang_lex.cpp).
 #pragma warning(disable: 4505)
 #pragma warning(disable: 4701)
 #pragma warning(disable: 4702)
+#endif
+#if defined(__clang__)
+#pragma GCC diagnostic ignored "-Wimplicit-fallthrough"
 #endif
 }
 

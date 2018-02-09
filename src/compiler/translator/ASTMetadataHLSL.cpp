@@ -105,6 +105,7 @@ class PullGradient : public TIntermTraverser
                 case EOpDFdy:
                 case EOpFwidth:
                     onGradient();
+                    break;
                 default:
                     break;
             }

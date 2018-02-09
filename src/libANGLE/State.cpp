@@ -1766,9 +1766,10 @@ void State::getFloatv(GLenum pname, GLfloat *params)
         break;
       case GL_SAMPLE_ALPHA_TO_ONE_EXT:
         *params = static_cast<GLfloat>(mSampleAlphaToOne);
+        break;
       case GL_COVERAGE_MODULATION_CHROMIUM:
-          params[0] = static_cast<GLfloat>(mCoverageModulation);
-          break;
+        params[0] = static_cast<GLfloat>(mCoverageModulation);
+        break;
       default:
         UNREACHABLE();
         break;
@@ -2051,6 +2052,7 @@ void State::getIntegerv(const Context *context, GLenum pname, GLint *params)
           break;
       case GL_SAMPLE_ALPHA_TO_ONE_EXT:
           *params = static_cast<GLint>(mSampleAlphaToOne);
+          break;
       case GL_COVERAGE_MODULATION_CHROMIUM:
           *params = static_cast<GLint>(mCoverageModulation);
           break;

@@ -445,6 +445,7 @@ Error ValidateGetPlatformDisplayCommon(EGLenum platform,
                                   "platform type of EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE or "
                                   "EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE.";
                     }
+                    break;
                 default:
                     break;
             }
@@ -2473,6 +2474,7 @@ Error ValidateSurfaceAttrib(const Display *display,
                 default:
                     return EglBadAttribute() << "Invalid multisample resolve type.";
             }
+            break;
 
         case EGL_SWAP_BEHAVIOR:
             switch (value)
@@ -2491,6 +2493,7 @@ Error ValidateSurfaceAttrib(const Display *display,
                 default:
                     return EglBadAttribute() << "Invalid swap behaviour.";
             }
+            break;
 
         default:
             return EglBadAttribute() << "Invalid surface attribute.";

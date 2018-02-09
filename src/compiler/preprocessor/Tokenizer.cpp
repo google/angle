@@ -911,6 +911,10 @@ IF YOU MODIFY THIS FILE YOU ALSO NEED TO RUN generate_parser.sh.
 #elif defined(_MSC_VER)
 #pragma warning(disable: 4244)
 #endif
+#if defined(__clang__)
+// Flex uses `/*FALLTHROUGH*/` instead of dedicated statements.
+#pragma GCC diagnostic ignored "-Wimplicit-fallthrough"
+#endif
 
 // Workaround for flex using the register keyword, deprecated in C++11.
 #ifdef __cplusplus

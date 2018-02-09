@@ -1032,6 +1032,7 @@ void StateManager11::syncState(const gl::Context *context, const gl::State::Dirt
                 {
                     invalidateCurrentValueAttrib(attribIndex);
                 }
+                break;
             }
             default:
                 break;
