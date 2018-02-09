@@ -688,11 +688,11 @@ TEST_F(WEBGLMultiviewFragmentShaderOutputCodeTest, ViewportArray2IsNotEmitted)
 TEST_F(WEBGLMultiviewComputeShaderOutputCodeTest, ViewportArray2IsNotEmitted)
 {
     const std::string &shaderString =
-        "#version 300 es\n"
-        "#extension GL_OVR_multiview : require\n"
-        "void main()\n"
-        "{\n"
-        "}\n";
+        R"(#version 310 es
+        #extension GL_OVR_multiview : require
+        void main()
+        {
+        })";
     compile(shaderString, SH_INITIALIZE_BUILTINS_FOR_INSTANCED_MULTIVIEW |
                               SH_SELECT_VIEW_IN_NV_GLSL_VERTEX_SHADER);
     EXPECT_FALSE(foundInGLSLCode("#extension GL_NV_viewport_array2"));

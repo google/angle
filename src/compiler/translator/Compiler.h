@@ -228,6 +228,9 @@ class TCompiler : public TShHandleBase
     // version.
     void setASTMetadata(const TParseContext &parseContext);
 
+    // Check if shader version meets the requirement.
+    bool checkShaderVersion(TParseContext *parseContext);
+
     // Does checks that need to be run after parsing is complete and returns true if they pass.
     bool checkAndSimplifyAST(TIntermBlock *root,
                              const TParseContext &parseContext,

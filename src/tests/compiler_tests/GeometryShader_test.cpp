@@ -127,8 +127,6 @@ TEST_F(GeometryShaderTest, Version300)
 {
     const std::string &shaderString =
         R"(#version 300 es
-        layout(points) in;
-        layout(points, max_vertices = 1) out;
         void main()
         {
         })";
@@ -145,8 +143,23 @@ TEST_F(GeometryShaderTest, Version310WithoutExtension)
 {
     const std::string &shaderString =
         R"(#version 310 es
-        layout(points) in;
-        layout(points, max_vertices = 1) out;
+        void main()
+        {
+        })";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}
+
+// Geometry Shaders are not supported in GLSL ES shaders version 310 with extension
+// EXT_geometry_shader disabled.
+TEST_F(GeometryShaderTest, Version310ExtensionDisabled)
+{
+    const std::string &shaderString =
+        R"(#version 310 es
+        #extension GL_EXT_geometry_shader : disable
         void main()
         {
         })";
@@ -158,7 +171,7 @@ TEST_F(GeometryShaderTest, Version310WithoutExtension)
 }
 
 // Geometry Shaders are supported in GLSL ES shaders version 310 with EXT_geometry_shader enabled.
-TEST_F(GeometryShaderTest, Version310WithOESExtension)
+TEST_F(GeometryShaderTest, Version310WithEXTExtension)
 {
     const std::string &shaderString =
         R"(#version 310 es

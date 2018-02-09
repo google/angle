@@ -1748,10 +1748,9 @@ TEST_F(FragmentShaderValidationTest, StructEqDifferentStruct)
 TEST_F(ComputeShaderValidationTest, Version100)
 {
     const std::string &shaderString =
-        "void main()\n"
-        "layout(local_size_x=1) in;\n"
-        "{\n"
-        "}\n";
+        R"(void main()
+        {
+        })";
     if (compile(shaderString))
     {
         FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
@@ -1762,11 +1761,10 @@ TEST_F(ComputeShaderValidationTest, Version100)
 TEST_F(ComputeShaderValidationTest, Version300)
 {
     const std::string &shaderString =
-        "#version 300 es\n"
-        "void main()\n"
-        "layout(local_size_x=1) in;\n"
-        "{\n"
-        "}\n";
+        R"(#version 300 es
+        void main()
+        {
+        })";
     if (compile(shaderString))
     {
         FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;

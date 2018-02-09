@@ -353,9 +353,8 @@ TIntermBlock *TCompiler::compileTreeImpl(const char *const shaderStrings[],
 
     setASTMetadata(parseContext);
 
-    if (MapSpecToShaderVersion(shaderSpec) < shaderVersion)
+    if (!checkShaderVersion(&parseContext))
     {
-        mDiagnostics.globalError("unsupported shader version");
         return nullptr;
     }
 
@@ -366,6 +365,50 @@ TIntermBlock *TCompiler::compileTreeImpl(const char *const shaderStrings[],
     }
 
     return root;
+}
+
+bool TCompiler::checkShaderVersion(TParseContext *parseContext)
+{
+    if (MapSpecToShaderVersion(shaderSpec) < shaderVersion)
+    {
+        mDiagnostics.globalError("unsupported shader version");
+        return false;
+    }
+
+    ASSERT(parseContext);
+    switch (shaderType)
+    {
+        case GL_COMPUTE_SHADER:
+            if (shaderVersion < 310)
+            {
+                mDiagnostics.globalError("Compute shader is not supported in this shader version.");
+                return false;
+            }
+            break;
+
+        case GL_GEOMETRY_SHADER_EXT:
+            if (shaderVersion < 310)
+            {
+                mDiagnostics.globalError(
+                    "Geometry shader is not supported in this shader version.");
+                return false;
+            }
+            else
+            {
+                ASSERT(shaderVersion == 310);
+                if (!parseContext->checkCanUseExtension(sh::TSourceLoc(),
+                                                        TExtension::EXT_geometry_shader))
+                {
+                    return false;
+                }
+            }
+            break;
+
+        default:
+            break;
+    }
+
+    return true;
 }
 
 void TCompiler::setASTMetadata(const TParseContext &parseContext)
