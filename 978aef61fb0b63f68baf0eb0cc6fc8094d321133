@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "526897a0_0b9e3eb9",
+        "filename": "src/libANGLE/renderer/vulkan/gen_vk_texture_caps_table.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-09T16:31:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "52573625_64bbeb19",
+      "range": {
+        "startLine": 42,
+        "startChar": 4,
+        "endLine": 42,
+        "endChar": 23
+      },
+      "revId": "978aef61fb0b63f68baf0eb0cc6fc8094d321133",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "48aa43d7_44b1e0d8",
         "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
         "patchSetId": 3
@@ -45,6 +69,30 @@
       "revId": "978aef61fb0b63f68baf0eb0cc6fc8094d321133",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "25d4ea8c_6456c273",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-09T16:31:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "48aa43d7_44b1e0d8",
+      "range": {
+        "startLine": 60,
+        "startChar": 44,
+        "endLine": 60,
+        "endChar": 51
+      },
+      "revId": "978aef61fb0b63f68baf0eb0cc6fc8094d321133",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
