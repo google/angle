@@ -144,6 +144,7 @@ egl::Error DXGISwapChainWindowSurfaceWGL::postSubBuffer(const gl::Context *conte
                                                         EGLint width,
                                                         EGLint height)
 {
+    ASSERT(width > 0 && height > 0);
     ASSERT(mSwapChain1 != nullptr);
 
     mFunctionsGL->flush();

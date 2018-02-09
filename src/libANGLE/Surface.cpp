@@ -230,6 +230,11 @@ Error Surface::postSubBuffer(const gl::Context *context,
                              EGLint width,
                              EGLint height)
 {
+    if (width == 0 || height == 0)
+    {
+        return egl::NoError();
+    }
+
     return mImplementation->postSubBuffer(context, x, y, width, height);
 }
 
