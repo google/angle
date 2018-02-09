@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8f1ddea4_5a5ff9f2",
+        "filename": "src/common/angle_fallthrough.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-02-09T15:53:31Z",
+      "side": 1,
+      "message": "This should be\n\n#define ANGLE_FALLTHROUGH",
+      "range": {
+        "startLine": 21,
+        "startChar": 0,
+        "endLine": 21,
+        "endChar": 7
+      },
+      "revId": "48d8ef195e3a119d344dd1b0ebc24cab8b5585c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "57ff701c_101a616f",
+        "filename": "src/libANGLE/validationEGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2465,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-02-09T15:53:31Z",
+      "side": 1,
+      "message": "Would prefer that these ones are left as break in case we add more validation below this switch statement.",
+      "range": {
+        "startLine": 2464,
+        "startChar": 20,
+        "endLine": 2465,
+        "endChar": 0
+      },
+      "revId": "48d8ef195e3a119d344dd1b0ebc24cab8b5585c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
