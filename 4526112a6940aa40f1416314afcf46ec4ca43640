@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "87dae639_d056a6ba",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-09T22:45:50Z",
+      "side": 1,
+      "message": "slight rephrase:\n\n\"Building ANGLE for Android is heavily dependent on the Chromium toolchain. It is not currently possible to build ANGLE for Android without a Chromium checkout. See http://anglebug.com/2344 for more details on why.\"",
+      "range": {
+        "startLine": 91,
+        "startChar": 0,
+        "endLine": 91,
+        "endChar": 210
+      },
+      "revId": "4526112a6940aa40f1416314afcf46ec4ca43640",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "73648a0e_fcb3aa13",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-09T22:45:50Z",
+      "side": 1,
+      "message": "\"the\" Vulkan backend",
+      "range": {
+        "startLine": 110,
+        "startChar": 19,
+        "endLine": 110,
+        "endChar": 33
+      },
+      "revId": "4526112a6940aa40f1416314afcf46ec4ca43640",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
