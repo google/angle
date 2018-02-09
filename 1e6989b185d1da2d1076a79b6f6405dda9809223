@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cc9a4398_643ffc4a",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1591,
+      "author": {
+        "id": 1001629
+      },
+      "writtenOn": "2018-02-09T15:44:07Z",
+      "side": 1,
+      "message": "(this is a no-op, but needed to make the warning happy)",
+      "revId": "1e6989b185d1da2d1076a79b6f6405dda9809223",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7675df78_99cf581f",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 4921,
+      "author": {
+        "id": 1001629
+      },
+      "writtenOn": "2018-02-09T15:44:07Z",
+      "side": 1,
+      "message": "(likewise)",
+      "revId": "1e6989b185d1da2d1076a79b6f6405dda9809223",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "38c648e6_9121dd0e",
+        "filename": "src/libANGLE/renderer/load_functions_table_autogen.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 277,
+      "author": {
+        "id": 1001629
+      },
+      "writtenOn": "2018-02-09T15:44:07Z",
+      "side": 1,
+      "message": "(not sure why this changed, but it changed when i re-ran the gen script)",
+      "revId": "1e6989b185d1da2d1076a79b6f6405dda9809223",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7fe83732_016ee88d",
+        "filename": "src/libANGLE/renderer/load_functions_table_autogen.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1579,
+      "author": {
+        "id": 1001629
+      },
+      "writtenOn": "2018-02-09T15:44:07Z",
+      "side": 1,
+      "message": "previously the default in the inner switch would fall through to the next case, and then eventually end up in one of the unconditional returns in a different case further down",
+      "revId": "1e6989b185d1da2d1076a79b6f6405dda9809223",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

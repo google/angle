@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "66f7d53e_2de92180",
+        "filename": "src/compiler/translator/EmulatePrecision.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 643,
+      "author": {
+        "id": 1001629
+      },
+      "writtenOn": "2018-02-09T15:44:07Z",
+      "side": 1,
+      "message": "This fallthrough looks like it might be intentional. If it is in fact intentional, it is the only intentional fallthrough in angle as far as I can tell.",
+      "revId": "6cee9bd6707ca8c893fd5cfe317f89c5a37514a6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "739441cb_335ba1bd",
+        "filename": "src/libANGLE/validationEGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2464,
+      "author": {
+        "id": 1001629
+      },
+      "writtenOn": "2018-02-09T15:44:07Z",
+      "side": 1,
+      "message": "This previously fell through to the EGL_SWAP_BEHAVIOR case. Since the cases in the value switch don\u0027t overlap with the values in this switch, this change is behavior-preserving, but the old code looks like it mostly worked by accident.",
+      "revId": "6cee9bd6707ca8c893fd5cfe317f89c5a37514a6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
