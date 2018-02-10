@@ -22,6 +22,53 @@
       "revId": "d4dc97ed3f19eb6147007b0af23bf7940e623968",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2b756fa2_db0b378a",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-10T20:59:22Z",
+      "side": 1,
+      "message": "Agree that having inverted Y should not affect the culling. I\u0027m not clear on if we really draw upside down. We could check it out with RenderDoc and see what we\u0027re really drawing and where things are different.",
+      "parentUuid": "0cd06352_05d4c4a1",
+      "range": {
+        "startLine": 77,
+        "startChar": 4,
+        "endLine": 82,
+        "endChar": 5
+      },
+      "revId": "d4dc97ed3f19eb6147007b0af23bf7940e623968",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b126c354_9ba154af",
+        "filename": "src/tests/gl_tests/StateChangeTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1081,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-10T20:59:22Z",
+      "side": 1,
+      "message": "same comment here.",
+      "range": {
+        "startLine": 1080,
+        "startChar": 0,
+        "endLine": 1081,
+        "endChar": 60
+      },
+      "revId": "d4dc97ed3f19eb6147007b0af23bf7940e623968",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
