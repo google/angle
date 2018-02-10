@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d932ff1e_94ddba84",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-10T21:22:27Z",
+      "side": 1,
+      "message": "nit: you might as well pre-sort these. (F9 in sublime text)",
+      "range": {
+        "startLine": 19,
+        "startChar": 0,
+        "endLine": 25,
+        "endChar": 23
+      },
+      "revId": "ec3ba0096bef0b4804ea79f243b999d074ca8860",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0ce29073_d02212b7",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-10T21:22:27Z",
+      "side": 1,
+      "message": "this extension is already exposed here. Does it need to be in both lists?",
+      "range": {
+        "startLine": 44,
+        "startChar": 5,
+        "endLine": 44,
+        "endChar": 21
+      },
+      "revId": "ec3ba0096bef0b4804ea79f243b999d074ca8860",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5fb53156_a9948581",
+        "filename": "src/libANGLE/validationES1.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 699,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-10T21:22:27Z",
+      "side": 1,
+      "message": "nit: for stuff like this, where they are unimplemented, it would be better to go\n\n UNIMPLEMENTED();\n return false;",
+      "range": {
+        "startLine": 699,
+        "startChar": 11,
+        "endLine": 699,
+        "endChar": 15
+      },
+      "revId": "ec3ba0096bef0b4804ea79f243b999d074ca8860",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
