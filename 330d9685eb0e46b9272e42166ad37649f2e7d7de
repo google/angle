@@ -413,6 +413,30 @@
     },
     {
       "key": {
+        "uuid": "f8139b13_7a328130",
+        "filename": "src/tests/gl_tests/VulkanFormatTablesTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-10T20:57:18Z",
+      "side": 1,
+      "message": "Remember what we chatted about how GL has different texture types for 2D and Cube (you would call glTexImage2D with different targets) but Vulkan implements cube maps as an array of 2D textures, with the cube compatible filtering bit set? Your test would need to use different parameters to vkGetPhysicalDeviceImageFormatProperties - see https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkImageCreateFlagBits.html . You want to confirm that when we say something is filterable or renderable in GL, it\u0027s for both cube and 2D usage.",
+      "parentUuid": "598ce94b_8b0c592e",
+      "range": {
+        "startLine": 58,
+        "startChar": 0,
+        "endLine": 62,
+        "endChar": 30
+      },
+      "revId": "330d9685eb0e46b9272e42166ad37649f2e7d7de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "7d9ed4a1_20560a04",
         "filename": "src/tests/gl_tests/VulkanFormatTablesTest.cpp",
         "patchSetId": 4
