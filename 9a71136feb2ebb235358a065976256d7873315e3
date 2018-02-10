@@ -1,0 +1,153 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "47897420_260801bd",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-10T21:15:00Z",
+      "side": 1,
+      "message": "I feel like we should have a helper function for doing this kind of bit comparison. \u003clooks\u003e. Ok try IsMaskFlagSet in angleutil.h (though should probably be Flags instead of flag)",
+      "range": {
+        "startLine": 69,
+        "startChar": 13,
+        "endLine": 70,
+        "endChar": 46
+      },
+      "revId": "9a71136feb2ebb235358a065976256d7873315e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4ae4b259_d365c829",
+        "filename": "src/libANGLE/renderer/vulkan/vk_texture_caps.json",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-10T21:15:00Z",
+      "side": 1,
+      "message": "I would probably rename this file to make it clear it\u0027s format data, not texture caps data.\n\nvulkan_mandatory_format_support_data.json.\n\nThere\u0027s even buffer data in the json already.\n\nI would also probably represent it like this:\n\n{\n  \"VK_FORMAT_B4G4R4A4_UNORM_PACK16\": [\n    \"VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT\",\n    \"VK_FORMAT_FEATURE_BLIT_SRC_BIT\",\n    \"VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT\"\n  ]\n}\n\nThen let the script identify buffer features by the presence of the _BUFFER_ string in the feature.",
+      "revId": "9a71136feb2ebb235358a065976256d7873315e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "12954cc5_3c33f0bb",
+        "filename": "src/libANGLE/renderer/vulkan/vk_texture_caps_autogen.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-10T21:15:00Z",
+      "side": 1,
+      "message": "see comments below- we should rename this file to vk_mandatory_format_support_table_autogen.cpp",
+      "revId": "9a71136feb2ebb235358a065976256d7873315e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e81e2c3a_3c776095",
+        "filename": "src/libANGLE/renderer/vulkan/vk_texture_caps_autogen.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-10T21:15:00Z",
+      "side": 1,
+      "message": "can you add this file to scripts/run_code_generation.py and use that to generate the file?",
+      "range": {
+        "startLine": 2,
+        "startChar": 16,
+        "endLine": 2,
+        "endChar": 86
+      },
+      "revId": "9a71136feb2ebb235358a065976256d7873315e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "57b67e2a_d9733633",
+        "filename": "src/libANGLE/renderer/vulkan/vk_texture_caps_autogen.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-10T21:15:00Z",
+      "side": 1,
+      "message": "similar update to the terminology - this is for mandatory format support, not texture caps.",
+      "range": {
+        "startLine": 10,
+        "startChar": 29,
+        "endLine": 10,
+        "endChar": 36
+      },
+      "revId": "9a71136feb2ebb235358a065976256d7873315e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c933451a_3004c3cc",
+        "filename": "src/libANGLE/renderer/vulkan/vk_texture_caps_autogen.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-10T21:15:00Z",
+      "side": 1,
+      "message": "I\u0027d prefer if we could bake this into a flat array of VkFormatProperties and return a const \u0026 to the format entry based on the VkFormat.\n\nAlso this should be called GetMandatoryFormatSupport.\n\nAlternately you could return a gl::TextureCaps object from this function - and then keep the Texture-specific terminology. But I like keeping it like you have it here because we could potentially use the same function for Buffer property queries.",
+      "range": {
+        "startLine": 22,
+        "startChar": 5,
+        "endLine": 22,
+        "endChar": 29
+      },
+      "revId": "9a71136feb2ebb235358a065976256d7873315e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bf59b6d1_e2a7b028",
+        "filename": "src/libGLESv2.gypi",
+        "patchSetId": 6
+      },
+      "lineNbr": 763,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-10T21:15:00Z",
+      "side": 1,
+      "message": "nit: sorting.",
+      "range": {
+        "startLine": 763,
+        "startChar": 38,
+        "endLine": 763,
+        "endChar": 61
+      },
+      "revId": "9a71136feb2ebb235358a065976256d7873315e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
