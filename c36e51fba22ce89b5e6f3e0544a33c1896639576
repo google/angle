@@ -45,6 +45,29 @@
       "revId": "c36e51fba22ce89b5e6f3e0544a33c1896639576",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5955a718_e9753835",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/shaders/Passthrough2D11.hlsl",
+        "patchSetId": 8
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1130144
+      },
+      "writtenOn": "2018-02-11T02:19:28Z",
+      "side": 1,
+      "message": "What is the rationale for putting a floor() on the Sample operation before the division?  On some internal tests, I am finding this is overly clamping alpha values to zero.",
+      "range": {
+        "startLine": 136,
+        "startChar": 0,
+        "endLine": 136,
+        "endChar": 16
+      },
+      "revId": "c36e51fba22ce89b5e6f3e0544a33c1896639576",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
