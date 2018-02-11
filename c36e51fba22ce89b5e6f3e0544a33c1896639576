@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3b672c8a_6b191f51",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/shaders/Passthrough2D11.hlsl",
+        "patchSetId": 8
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1130144
+      },
+      "writtenOn": "2018-02-11T00:34:55Z",
+      "side": 1,
+      "message": "Even going back as far as FL 9_3 565 textures are required to support \"blendable render target\" and \"render target\" for all hardware. Hence, this shader should not be necessary.",
+      "range": {
+        "startLine": 129,
+        "startChar": 0,
+        "endLine": 132,
+        "endChar": 1
+      },
+      "revId": "c36e51fba22ce89b5e6f3e0544a33c1896639576",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
