@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "8752fce7_1a6a685b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2596,
+      "author": {
+        "id": 1130144
+      },
+      "writtenOn": "2018-02-11T01:06:52Z",
+      "side": 1,
+      "message": "In cases where the destination texture format is 16bit, a downsampling shader is unnecessary.",
+      "range": {
+        "startLine": 2593,
+        "startChar": 0,
+        "endLine": 2596,
+        "endChar": 2
+      },
+      "revId": "c36e51fba22ce89b5e6f3e0544a33c1896639576",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3b672c8a_6b191f51",
         "filename": "src/libANGLE/renderer/d3d/d3d11/shaders/Passthrough2D11.hlsl",
         "patchSetId": 8
