@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "5099abb5_ac14b13c",
+        "filename": "src/common/matrix_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-02-11T18:56:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "08233494_66f46d30",
+      "range": {
+        "startLine": 2,
+        "startChar": 13,
+        "endLine": 2,
+        "endChar": 18
+      },
+      "revId": "db5c5617194c5f3d3cd1dcb3c6ad5068ad7f86cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d6df864b_54c62507",
         "filename": "src/common/matrix_utils.cpp",
         "patchSetId": 4
@@ -39,6 +63,24 @@
       "revId": "db5c5617194c5f3d3cd1dcb3c6ad5068ad7f86cc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "26376d39_b659f85a",
+        "filename": "src/common/matrix_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-02-11T18:56:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d6df864b_54c62507",
+      "revId": "db5c5617194c5f3d3cd1dcb3c6ad5068ad7f86cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -65,6 +107,30 @@
     },
     {
       "key": {
+        "uuid": "a3a2a66a_79bbcc09",
+        "filename": "src/common/matrix_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-02-11T18:56:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0c3f850b_eb1c9980",
+      "range": {
+        "startLine": 71,
+        "startChar": 0,
+        "endLine": 71,
+        "endChar": 5
+      },
+      "revId": "db5c5617194c5f3d3cd1dcb3c6ad5068ad7f86cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c08494c4_1993bb3d",
         "filename": "src/common/matrix_utils.cpp",
         "patchSetId": 4
@@ -76,6 +142,30 @@
       "writtenOn": "2018-02-10T20:54:05Z",
       "side": 1,
       "message": "why stderr instead of stdout?",
+      "range": {
+        "startLine": 274,
+        "startChar": 4,
+        "endLine": 274,
+        "endChar": 11
+      },
+      "revId": "db5c5617194c5f3d3cd1dcb3c6ad5068ad7f86cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "79d7cecc_cdd7914d",
+        "filename": "src/common/matrix_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 274,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-02-11T18:56:43Z",
+      "side": 1,
+      "message": "Oops, force of habit. Changed to stdout.",
+      "parentUuid": "c08494c4_1993bb3d",
       "range": {
         "startLine": 274,
         "startChar": 4,
@@ -111,6 +201,30 @@
     },
     {
       "key": {
+        "uuid": "319eda48_29c3f66e",
+        "filename": "src/common/matrix_utils.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 350,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-02-11T18:56:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2d7f8227_ac2944b1",
+      "range": {
+        "startLine": 350,
+        "startChar": 16,
+        "endLine": 350,
+        "endChar": 22
+      },
+      "revId": "db5c5617194c5f3d3cd1dcb3c6ad5068ad7f86cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b1f9f30e_056e1844",
         "filename": "src/common/matrix_utils_unittest.cpp",
         "patchSetId": 4
@@ -131,6 +245,30 @@
       "revId": "db5c5617194c5f3d3cd1dcb3c6ad5068ad7f86cc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9b645c12_3a34583a",
+        "filename": "src/common/matrix_utils_unittest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-02-11T18:56:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b1f9f30e_056e1844",
+      "range": {
+        "startLine": 49,
+        "startChar": 5,
+        "endLine": 49,
+        "endChar": 23
+      },
+      "revId": "db5c5617194c5f3d3cd1dcb3c6ad5068ad7f86cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -157,6 +295,30 @@
     },
     {
       "key": {
+        "uuid": "7263bc0c_afd37a5a",
+        "filename": "src/common/matrix_utils_unittest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-02-11T18:56:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d67813a0_90bf7d2d",
+      "range": {
+        "startLine": 60,
+        "startChar": 3,
+        "endLine": 60,
+        "endChar": 7
+      },
+      "revId": "db5c5617194c5f3d3cd1dcb3c6ad5068ad7f86cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c661873c_9c8f91ee",
         "filename": "src/common/matrix_utils_unittest.cpp",
         "patchSetId": 4
@@ -180,6 +342,30 @@
     },
     {
       "key": {
+        "uuid": "689928b3_16dd2d1f",
+        "filename": "src/common/matrix_utils_unittest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-02-11T18:56:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c661873c_9c8f91ee",
+      "range": {
+        "startLine": 80,
+        "startChar": 1,
+        "endLine": 80,
+        "endChar": 0
+      },
+      "revId": "db5c5617194c5f3d3cd1dcb3c6ad5068ad7f86cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d8770b43_74ef5008",
         "filename": "src/common/matrix_utils_unittest.cpp",
         "patchSetId": 4
@@ -200,6 +386,30 @@
       "revId": "db5c5617194c5f3d3cd1dcb3c6ad5068ad7f86cc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c1b37f2f_3ca2704b",
+        "filename": "src/common/matrix_utils_unittest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1488,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-02-11T18:56:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d8770b43_74ef5008",
+      "range": {
+        "startLine": 1488,
+        "startChar": 0,
+        "endLine": 1488,
+        "endChar": 4
+      },
+      "revId": "db5c5617194c5f3d3cd1dcb3c6ad5068ad7f86cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
