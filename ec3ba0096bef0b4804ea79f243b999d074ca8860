@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "85cff789_8e9b861e",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-02-11T19:29:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d932ff1e_94ddba84",
+      "range": {
+        "startLine": 19,
+        "startChar": 0,
+        "endLine": 25,
+        "endChar": 23
+      },
+      "revId": "ec3ba0096bef0b4804ea79f243b999d074ca8860",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0ce29073_d02212b7",
         "filename": "scripts/generate_entry_points.py",
         "patchSetId": 5
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "b7332d8f_dba1ae75",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-02-11T19:29:57Z",
+      "side": 1,
+      "message": "Oops, that\u0027s right. Done",
+      "parentUuid": "0ce29073_d02212b7",
+      "range": {
+        "startLine": 44,
+        "startChar": 5,
+        "endLine": 44,
+        "endChar": 21
+      },
+      "revId": "ec3ba0096bef0b4804ea79f243b999d074ca8860",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5fb53156_a9948581",
         "filename": "src/libANGLE/validationES1.cpp",
         "patchSetId": 5
@@ -59,6 +107,30 @@
       "writtenOn": "2018-02-10T21:22:27Z",
       "side": 1,
       "message": "nit: for stuff like this, where they are unimplemented, it would be better to go\n\n UNIMPLEMENTED();\n return false;",
+      "range": {
+        "startLine": 699,
+        "startChar": 11,
+        "endLine": 699,
+        "endChar": 15
+      },
+      "revId": "ec3ba0096bef0b4804ea79f243b999d074ca8860",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1172fcf7_f1c23a1f",
+        "filename": "src/libANGLE/validationES1.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 699,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-02-11T19:29:57Z",
+      "side": 1,
+      "message": "hrm, here, I would like to keep the return true for now (while making it a priority to add the actual validation, and adding any critical validation in this CL as the next patch set(s)) since it\u0027s nice to be able to test GLES1 with validation activated (i.e., without a blanket skipValidation()), reusing the GLES2+ validation and adding new cases as we go.\n\nIt seems like a good time to discuss more and sync up. Would you (and Geoff and Corentin) be up for a meeting sometime next week?",
+      "parentUuid": "5fb53156_a9948581",
       "range": {
         "startLine": 699,
         "startChar": 11,
