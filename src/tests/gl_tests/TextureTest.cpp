@@ -1765,12 +1765,6 @@ TEST_P(Texture2DTestES3, DrawWithLevelsOutsideRangeUndefined)
         std::cout << "Test skipped on AMD OpenGL." << std::endl;
         return;
     }
-    if (IsOSX())
-    {
-        // Observed incorrect rendering on OSX.
-        std::cout << "Test skipped on OSX." << std::endl;
-        return;
-    }
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, mTexture2D);
     std::vector<GLColor> texDataGreen(2u * 2u, GLColor::green);
@@ -1795,12 +1789,6 @@ TEST_P(Texture2DTestES3, DrawWithLevelZeroUndefined)
     {
         // Observed crashing on AMD. Oddly the crash only happens with 2D textures, not 3D or array.
         std::cout << "Test skipped on AMD OpenGL." << std::endl;
-        return;
-    }
-    if (IsOSX())
-    {
-        // Observed incorrect rendering on OSX.
-        std::cout << "Test skipped on OSX." << std::endl;
         return;
     }
     glActiveTexture(GL_TEXTURE0);
@@ -1832,12 +1820,6 @@ TEST_P(Texture2DTestES3, DrawWithLevelZeroUndefined)
 // GLES 3.0.4 section 3.8.13 Texture completeness
 TEST_P(Texture2DTestES3, DrawWithLevelsOutsideRangeWithInconsistentDimensions)
 {
-    if (IsOSX())
-    {
-        // Observed incorrect rendering on OSX.
-        std::cout << "Test skipped on OSX." << std::endl;
-        return;
-    }
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, mTexture2D);
     std::vector<GLColor> texDataRed(8u * 8u, GLColor::red);
@@ -1865,13 +1847,7 @@ TEST_P(Texture2DTestES3, DrawWithLevelsOutsideRangeWithInconsistentDimensions)
 
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 
-    if (IsIntel() && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
-    {
-        // Intel was observed drawing color 0,0,0,0 instead of the texture color after the base
-        // level was changed.
-        std::cout << "Test partially skipped on Intel OpenGL." << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(IsIntel() && IsWindows() && IsOpenGL());
 
     // Switch the level that is being used to the cyan level 2.
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 2);
@@ -1888,12 +1864,6 @@ TEST_P(Texture2DTestES3, DrawWithLevelsOutsideRangeWithInconsistentDimensions)
 // have images defined.
 TEST_P(Texture3DTestES3, DrawWithLevelsOutsideRangeUndefined)
 {
-    if (IsOSX())
-    {
-        // Observed incorrect rendering on OSX.
-        std::cout << "Test skipped on OSX." << std::endl;
-        return;
-    }
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_3D, mTexture3D);
     std::vector<GLColor> texDataGreen(2u * 2u * 2u, GLColor::green);
@@ -1916,12 +1886,6 @@ TEST_P(Texture3DTestES3, DrawWithLevelsOutsideRangeUndefined)
 // GLES 3.0.4 section 3.8.13 Texture completeness
 TEST_P(Texture3DTestES3, DrawWithLevelsOutsideRangeWithInconsistentDimensions)
 {
-    if (IsOSX())
-    {
-        // Observed incorrect rendering on OSX.
-        std::cout << "Test skipped on OSX." << std::endl;
-        return;
-    }
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_3D, mTexture3D);
     std::vector<GLColor> texDataRed(8u * 8u * 8u, GLColor::red);
@@ -1950,13 +1914,7 @@ TEST_P(Texture3DTestES3, DrawWithLevelsOutsideRangeWithInconsistentDimensions)
 
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 
-    if (IsIntel() && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
-    {
-        // Intel was observed drawing color 0,0,0,0 instead of the texture color after the base
-        // level was changed.
-        std::cout << "Test partially skipped on Intel OpenGL." << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(IsIntel() && IsWindows() && IsOpenGL());
 
     // Switch the level that is being used to the cyan level 2.
     glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_BASE_LEVEL, 2);
@@ -1973,12 +1931,6 @@ TEST_P(Texture3DTestES3, DrawWithLevelsOutsideRangeWithInconsistentDimensions)
 // have images defined.
 TEST_P(Texture2DArrayTestES3, DrawWithLevelsOutsideRangeUndefined)
 {
-    if (IsOSX())
-    {
-        // Observed incorrect rendering on OSX.
-        std::cout << "Test skipped on OSX." << std::endl;
-        return;
-    }
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D_ARRAY, m2DArrayTexture);
     std::vector<GLColor> texDataGreen(2u * 2u * 2u, GLColor::green);
@@ -2001,12 +1953,6 @@ TEST_P(Texture2DArrayTestES3, DrawWithLevelsOutsideRangeUndefined)
 // GLES 3.0.4 section 3.8.13 Texture completeness
 TEST_P(Texture2DArrayTestES3, DrawWithLevelsOutsideRangeWithInconsistentDimensions)
 {
-    if (IsOSX())
-    {
-        // Observed incorrect rendering on OSX.
-        std::cout << "Test skipped on OSX." << std::endl;
-        return;
-    }
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_3D, m2DArrayTexture);
     std::vector<GLColor> texDataRed(8u * 8u * 8u, GLColor::red);
@@ -2035,13 +1981,8 @@ TEST_P(Texture2DArrayTestES3, DrawWithLevelsOutsideRangeWithInconsistentDimensio
 
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 
-    if (IsIntel() && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
-    {
-        // Intel was observed drawing color 0,0,0,0 instead of the texture color after the base
-        // level was changed.
-        std::cout << "Test partially skipped on Intel OpenGL." << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(IsIntel() && IsWindows() && IsOpenGL());
+
     if (IsNVIDIA() && (getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE ||
                        getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE))
     {
@@ -2066,13 +2007,6 @@ TEST_P(Texture2DArrayTestES3, DrawWithLevelsOutsideRangeWithInconsistentDimensio
 // GLES 3.0.4 section 3.8.13 Texture completeness
 TEST_P(Texture2DTestES3, TextureCompletenessChangesWithMaxLevel)
 {
-    if (IsOSX())
-    {
-        // Observed incorrect rendering on OSX.
-        std::cout << "Test skipped on OSX." << std::endl;
-        return;
-    }
-
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, mTexture2D);
     std::vector<GLColor> texDataGreen(8u * 8u, GLColor::green);
@@ -2112,13 +2046,6 @@ TEST_P(Texture2DTestES3, TextureCompletenessChangesWithMaxLevel)
 // GLES 3.0.4 section 3.8.13 Texture completeness
 TEST_P(Texture3DTestES3, Texture3DCompletenessChangesWithMaxLevel)
 {
-    if (IsOSX())
-    {
-        // Observed incorrect rendering on OSX.
-        std::cout << "Test skipped on OSX." << std::endl;
-        return;
-    }
-
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_3D, mTexture3D);
     std::vector<GLColor> texDataGreen(2u * 2u * 2u, GLColor::green);
@@ -3489,9 +3416,6 @@ TEST_P(Texture2DTestES3, DepthTexturesWithMipmaps)
 // Tests unpacking into the unsized GL_ALPHA format.
 TEST_P(Texture2DTestES3, UnsizedAlphaUnpackBuffer)
 {
-    // TODO(jmadill): Figure out why this fails on OSX.
-    ANGLE_SKIP_TEST_IF(IsOSX());
-
     // Initialize the texure.
     glBindTexture(GL_TEXTURE_2D, mTexture2D);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, getWindowWidth(), getWindowHeight(), 0, GL_ALPHA,
@@ -3794,12 +3718,9 @@ TEST_P(Texture2DTestES3, SingleTextureMultipleSamplers)
 // samples the cubemap using a direction vector (1,1,1).
 TEST_P(TextureCubeTestES3, SpecifyAndSampleFromBaseLevel1)
 {
-    if (IsOSX())
-    {
-        // Check http://anglebug.com/2155.
-        std::cout << "Test skipped on OSX." << std::endl;
-        return;
-    }
+    // Check http://anglebug.com/2155.
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsNVIDIA());
+
     const std::string vs =
         R"(#version 300 es
         precision mediump float;

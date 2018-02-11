@@ -282,15 +282,6 @@ TEST_P(ClearTestES3, SRGBClear)
 // attachment
 TEST_P(ClearTestES3, MixedSRGBClear)
 {
-    // TODO(cwallez) figure out why it is broken on Intel on Mac
-#if defined(ANGLE_PLATFORM_APPLE)
-    if (IsIntel() && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
-    {
-        std::cout << "Test skipped on Intel on Mac." << std::endl;
-        return;
-    }
-#endif
-
     glBindFramebuffer(GL_FRAMEBUFFER, mFBOs[0]);
 
     GLuint textures[2];

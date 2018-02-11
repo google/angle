@@ -286,11 +286,7 @@ TEST_P(SRGBTextureTest, GenerateMipmaps)
         return;
     }
 
-    if (IsOpenGL() && (IsIntel() || IsAMD()))
-    {
-        std::cout << "Test skipped on Intel and AMD OpenGL drivers." << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(IsOpenGL() && ((IsIntel() && IsOSX()) || IsAMD()));
 
     auto createAndReadBackTexture = [this](GLenum internalFormat, const GLColor &color) {
         constexpr GLsizei width  = 128;

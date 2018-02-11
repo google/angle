@@ -97,13 +97,6 @@ class FramebufferFormatsTest : public ANGLETest
                                            GLenum attachmentType,
                                            GLenum internalFormat)
     {
-        // TODO(geofflang): Figure out why this is broken on Intel OpenGL
-        if (IsIntel() && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
-        {
-            std::cout << "Test skipped on Intel OpenGL." << std::endl;
-            return;
-        }
-
         int clientVersion = getClientMajorVersion();
         if (clientVersion < minESVersion)
         {
