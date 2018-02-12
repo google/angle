@@ -216,6 +216,9 @@ GLenum GLVariableType(const TType &type)
                     return GL_FLOAT_VEC4;
                 default:
                     UNREACHABLE();
+#if !UNREACHABLE_IS_NORETURN
+                    return GL_NONE;
+#endif
             }
         }
         else if (type.isMatrix())
@@ -233,6 +236,9 @@ GLenum GLVariableType(const TType &type)
                             return GL_FLOAT_MAT2x4;
                         default:
                             UNREACHABLE();
+#if !UNREACHABLE_IS_NORETURN
+                            return GL_NONE;
+#endif
                     }
 
                 case 3:
@@ -246,6 +252,9 @@ GLenum GLVariableType(const TType &type)
                             return GL_FLOAT_MAT3x4;
                         default:
                             UNREACHABLE();
+#if !UNREACHABLE_IS_NORETURN
+                            return GL_NONE;
+#endif
                     }
 
                 case 4:
@@ -259,10 +268,16 @@ GLenum GLVariableType(const TType &type)
                             return GL_FLOAT_MAT4;
                         default:
                             UNREACHABLE();
+#if !UNREACHABLE_IS_NORETURN
+                            return GL_NONE;
+#endif
                     }
 
                 default:
                     UNREACHABLE();
+#if !UNREACHABLE_IS_NORETURN
+                    return GL_NONE;
+#endif
             }
         }
         else
@@ -284,6 +299,9 @@ GLenum GLVariableType(const TType &type)
                     return GL_INT_VEC4;
                 default:
                     UNREACHABLE();
+#if !UNREACHABLE_IS_NORETURN
+                    return GL_NONE;
+#endif
             }
         }
         else
@@ -306,6 +324,9 @@ GLenum GLVariableType(const TType &type)
                     return GL_UNSIGNED_INT_VEC4;
                 default:
                     UNREACHABLE();
+#if !UNREACHABLE_IS_NORETURN
+                    return GL_NONE;
+#endif
             }
         }
         else
@@ -328,6 +349,9 @@ GLenum GLVariableType(const TType &type)
                     return GL_BOOL_VEC4;
                 default:
                     UNREACHABLE();
+#if !UNREACHABLE_IS_NORETURN
+                    return GL_NONE;
+#endif
             }
         }
         else
@@ -554,7 +578,9 @@ InterpolationType GetInterpolationType(TQualifier qualifier)
 
         default:
             UNREACHABLE();
+#if !UNREACHABLE_IS_NORETURN
             return INTERPOLATION_SMOOTH;
+#endif
     }
 }
 
@@ -614,7 +640,9 @@ TType GetShaderVariableBasicType(const sh::ShaderVariable &var)
             return TType(EbtUInt, 4);
         default:
             UNREACHABLE();
+#if !UNREACHABLE_IS_NORETURN
             return TType();
+#endif
     }
 }
 

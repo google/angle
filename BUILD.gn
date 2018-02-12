@@ -99,9 +99,6 @@ config("extra_warnings") {
     cflags += [
       # Remove when crbug.com/428099 is resolved.
       "-Winconsistent-missing-override",
-
-      # TODO(thakis): Consider enabling this, https://crbug.com/807632
-      "-Wno-implicit-fallthrough",
     ]
   }
 }

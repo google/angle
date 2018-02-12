@@ -547,7 +547,6 @@ gl::Error Blit9::setFormatConvertShaders(GLenum destFormat,
 
     switch (destFormat)
     {
-      default: UNREACHABLE();
       case GL_RGBA:
       case GL_BGRA_EXT:
         multConst[X] = 1;
@@ -625,6 +624,8 @@ gl::Error Blit9::setFormatConvertShaders(GLenum destFormat,
         addConst[Z] = 0;
         addConst[W] = 0;
         break;
+
+      default: UNREACHABLE();
     }
 
     mRenderer->getDevice()->SetPixelShaderConstantF(0, psConst, 2);

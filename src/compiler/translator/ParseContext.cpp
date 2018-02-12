@@ -4993,10 +4993,9 @@ bool TParseContext::binaryOpCommonCheck(TOperator op,
             case EOpIndexDirect:
             case EOpIndexIndirect:
                 break;
-            case EOpIndexDirectStruct:
-                UNREACHABLE();
 
             default:
+                ASSERT(op != EOpIndexDirectStruct);
                 error(loc, "Invalid operation for variables with an opaque type",
                       GetOperatorString(op));
                 return false;

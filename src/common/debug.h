@@ -220,14 +220,16 @@ std::ostream &FmtHexInt(std::ostream &os, T value)
 #if defined(COMPILER_GCC) || defined(__clang__)
 #define ANGLE_CRASH() __builtin_trap()
 #else
-#define ANGLE_CRASH() ((void)(*(volatile char *)0 = 0))
+#define ANGLE_CRASH() ((void)(*(volatile char *)0 = 0)), __assume(0)
 #endif
 
 #if !defined(NDEBUG)
 #define ANGLE_ASSERT_IMPL(expression) assert(expression)
+#define ANGLE_ASSERT_IMPL_IS_NORETURN 0
 #else
 // TODO(jmadill): Detect if debugger is attached and break.
 #define ANGLE_ASSERT_IMPL(expression) ANGLE_CRASH()
+#define ANGLE_ASSERT_IMPL_IS_NORETURN 1
 #endif  // !defined(NDEBUG)
 
 // A macro asserting a condition and outputting failures to the debug log
@@ -236,6 +238,7 @@ std::ostream &FmtHexInt(std::ostream &os, T value)
     (expression ? static_cast<void>(0) : ((ERR() << "\t! Assert failed in " << __FUNCTION__ << "(" \
                                                  << __LINE__ << "): " << #expression),             \
                                           ANGLE_ASSERT_IMPL(expression)))
+#define UNREACHABLE_IS_NORETURN ANGLE_ASSERT_IMPL_IS_NORETURN
 #else
 // These are just dummy values.
 #define COMPACT_ANGLE_LOG_EX_ASSERT(ClassName, ...) \
@@ -249,6 +252,7 @@ constexpr LogSeverity LOG_ASSERT = LOG_EVENT;
 #define ASSERT(condition)                                                     \
     ANGLE_LAZY_STREAM(ANGLE_LOG_STREAM(ASSERT), false ? !(condition) : false) \
         << "Check failed: " #condition ". "
+#define UNREACHABLE_IS_NORETURN 0
 #endif  // defined(ANGLE_ENABLE_ASSERTS)
 
 #define UNUSED_VARIABLE(variable) ((void)variable)

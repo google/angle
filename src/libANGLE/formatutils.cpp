@@ -438,7 +438,9 @@ bool InternalFormat::isRequiredRenderbufferFormat(const Version &version) const
             return true;
         default:
             UNREACHABLE();
+#if !UNREACHABLE_IS_NORETURN
             return false;
+#endif
     }
 }
 
@@ -1269,7 +1271,9 @@ AttributeType GetAttributeType(GLenum enumValue)
             return ATTRIBUTE_MAT4x3;
         default:
             UNREACHABLE();
+#if !UNREACHABLE_IS_NORETURN
             return ATTRIBUTE_FLOAT;
+#endif
     }
 }
 
@@ -1306,7 +1310,9 @@ VertexFormatType GetVertexFormatType(GLenum type, GLboolean normalized, GLuint c
                     return VERTEX_FORMAT_SBYTE4;
                 default:
                     UNREACHABLE();
-                    break;
+#if !UNREACHABLE_IS_NORETURN
+                    return VERTEX_FORMAT_INVALID;
+#endif
             }
         case GL_UNSIGNED_BYTE:
             switch (components)
@@ -1337,7 +1343,9 @@ VertexFormatType GetVertexFormatType(GLenum type, GLboolean normalized, GLuint c
                     return VERTEX_FORMAT_UBYTE4;
                 default:
                     UNREACHABLE();
-                    break;
+#if !UNREACHABLE_IS_NORETURN
+                    return VERTEX_FORMAT_INVALID;
+#endif
             }
         case GL_SHORT:
             switch (components)
@@ -1368,7 +1376,9 @@ VertexFormatType GetVertexFormatType(GLenum type, GLboolean normalized, GLuint c
                     return VERTEX_FORMAT_SSHORT4;
                 default:
                     UNREACHABLE();
-                    break;
+#if !UNREACHABLE_IS_NORETURN
+                    return VERTEX_FORMAT_INVALID;
+#endif
             }
         case GL_UNSIGNED_SHORT:
             switch (components)
@@ -1399,7 +1409,9 @@ VertexFormatType GetVertexFormatType(GLenum type, GLboolean normalized, GLuint c
                     return VERTEX_FORMAT_USHORT4;
                 default:
                     UNREACHABLE();
-                    break;
+#if !UNREACHABLE_IS_NORETURN
+                    return VERTEX_FORMAT_INVALID;
+#endif
             }
         case GL_INT:
             switch (components)
@@ -1430,7 +1442,9 @@ VertexFormatType GetVertexFormatType(GLenum type, GLboolean normalized, GLuint c
                     return VERTEX_FORMAT_SINT4;
                 default:
                     UNREACHABLE();
-                    break;
+#if !UNREACHABLE_IS_NORETURN
+                    return VERTEX_FORMAT_INVALID;
+#endif
             }
         case GL_UNSIGNED_INT:
             switch (components)
@@ -1461,7 +1475,9 @@ VertexFormatType GetVertexFormatType(GLenum type, GLboolean normalized, GLuint c
                     return VERTEX_FORMAT_UINT4;
                 default:
                     UNREACHABLE();
-                    break;
+#if !UNREACHABLE_IS_NORETURN
+                    return VERTEX_FORMAT_INVALID;
+#endif
             }
         case GL_FLOAT:
             switch (components)
@@ -1476,7 +1492,9 @@ VertexFormatType GetVertexFormatType(GLenum type, GLboolean normalized, GLuint c
                     return VERTEX_FORMAT_FLOAT4;
                 default:
                     UNREACHABLE();
-                    break;
+#if !UNREACHABLE_IS_NORETURN
+                    return VERTEX_FORMAT_INVALID;
+#endif
             }
         case GL_HALF_FLOAT:
             switch (components)
@@ -1491,7 +1509,9 @@ VertexFormatType GetVertexFormatType(GLenum type, GLboolean normalized, GLuint c
                     return VERTEX_FORMAT_HALF4;
                 default:
                     UNREACHABLE();
-                    break;
+#if !UNREACHABLE_IS_NORETURN
+                    return VERTEX_FORMAT_INVALID;
+#endif
             }
         case GL_FIXED:
             switch (components)
@@ -1506,7 +1526,9 @@ VertexFormatType GetVertexFormatType(GLenum type, GLboolean normalized, GLuint c
                     return VERTEX_FORMAT_FIXED4;
                 default:
                     UNREACHABLE();
-                    break;
+#if !UNREACHABLE_IS_NORETURN
+                    return VERTEX_FORMAT_INVALID;
+#endif
             }
         case GL_INT_2_10_10_10_REV:
             if (pureInteger)
@@ -1522,9 +1544,10 @@ VertexFormatType GetVertexFormatType(GLenum type, GLboolean normalized, GLuint c
             return VERTEX_FORMAT_UINT210;
         default:
             UNREACHABLE();
-            break;
+#if !UNREACHABLE_IS_NORETURN
+            return VERTEX_FORMAT_INVALID;
+#endif
     }
-    return VERTEX_FORMAT_UBYTE1;
 }
 
 VertexFormatType GetVertexFormatType(const VertexAttribute &attrib)
@@ -2116,7 +2139,9 @@ size_t GetVertexFormatTypeSize(VertexFormatType vertexFormatType)
         case VERTEX_FORMAT_INVALID:
         default:
             UNREACHABLE();
+#if !UNREACHABLE_IS_NORETURN
             return 0;
+#endif
     }
 }
 
