@@ -134,3 +134,15 @@ static_library("glslang") {
     sources += [ "src/glslang/OSDependent/Unix/ossource.cpp" ]
   }
 }
+
+executable("glslang_validator") {
+  sources = [
+    "src/StandAlone/DirStackFileIncluder.h",
+    "src/StandAlone/ResourceLimits.h",
+    "src/StandAlone/StandAlone.cpp",
+    "src/StandAlone/Worklist.h",
+  ]
+  public_deps = [
+    ":glslang",
+  ]
+}
