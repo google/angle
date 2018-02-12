@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "aa71097c_4bf48460",
+        "filename": "src/common/matrix_utils_unittest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1498,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-12T15:00:39Z",
+      "side": 1,
+      "message": "nit: wrap comments to 100 characters.",
+      "range": {
+        "startLine": 1497,
+        "startChar": 1,
+        "endLine": 1498,
+        "endChar": 40
+      },
+      "revId": "243ccae0dc8b2029f577c4fc82f3ce99905bbd43",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
