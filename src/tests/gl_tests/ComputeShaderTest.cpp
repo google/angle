@@ -1138,6 +1138,77 @@ TEST_P(ComputeShaderTest, QueryComputeWorkGroupSize)
     ASSERT_GL_NO_ERROR();
 }
 
+// Use groupMemoryBarrier and barrier to sync reads/writes order and the execution
+// order of multiple shader invocations in compute shader.
+TEST_P(ComputeShaderTest, groupMemoryBarrierAndBarrierTest)
+{
+    // TODO(xinghua.cao@intel.com): Figure out why we get this error message
+    // that shader uses features not recognized by this D3D version.
+    ANGLE_SKIP_TEST_IF(IsAMD() && IsD3D11());
+
+    GLTexture texture;
+    GLFramebuffer framebuffer;
+
+    // Each invocation first stores a single value in an image, then each invocation sums up
+    // all the values in the image and stores the sum in the image. groupMemoryBarrier is
+    // used to order reads/writes to variables stored in memory accessible to other shader
+    // invocations, and barrier is used to control the relative execution order of multiple
+    // shader invocations used to process a local work group.
+    const std::string csSource =
+        R"(#version 310 es
+        layout(local_size_x=2, local_size_y=2, local_size_z=1) in;
+        layout(r32i, binding = 0) uniform highp iimage2D image;
+        void main()
+        {
+            uint x = gl_LocalInvocationID.x;
+            uint y = gl_LocalInvocationID.y;
+            imageStore(image, ivec2(gl_LocalInvocationID.xy), ivec4(x + y));
+            groupMemoryBarrier();
+            barrier();
+            int sum = 0;
+            for (int i = 0; i < 2; i++)
+            {
+                for(int j = 0; j < 2; j++)
+                {
+                    sum += imageLoad(image, ivec2(i, j)).x;
+                }
+            }
+            groupMemoryBarrier();
+            barrier();
+            imageStore(image, ivec2(gl_LocalInvocationID.xy), ivec4(sum));
+        })";
+
+    constexpr int kWidth = 2, kHeight = 2;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_R32I, kWidth, kHeight);
+    EXPECT_GL_NO_ERROR();
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, csSource);
+    glUseProgram(program.get());
+
+    glBindImageTexture(0, texture, 0, GL_FALSE, 0, GL_READ_WRITE, GL_R32I);
+    EXPECT_GL_NO_ERROR();
+
+    glDispatchCompute(1, 1, 1);
+    EXPECT_GL_NO_ERROR();
+
+    glMemoryBarrier(GL_TEXTURE_UPDATE_BARRIER_BIT);
+    GLuint outputValues[kWidth * kHeight];
+    constexpr GLuint kExpectedValue = 4;
+    glUseProgram(0);
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);
+
+    glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+    EXPECT_GL_NO_ERROR();
+    glReadPixels(0, 0, kWidth, kHeight, GL_RED_INTEGER, GL_INT, outputValues);
+    EXPECT_GL_NO_ERROR();
+
+    for (int i = 0; i < kWidth * kHeight; i++)
+    {
+        EXPECT_EQ(kExpectedValue, outputValues[i]);
+    }
+}
+
 // Check that it is not possible to create a compute shader when the context does not support ES
 // 3.10
 TEST_P(ComputeShaderTestES3, NotSupported)
