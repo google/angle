@@ -16,6 +16,75 @@
       "revId": "9569bda4296ad6a154f502d9718a3648b2899606",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eb8b3d17_bf7901a2",
+        "filename": "src/libANGLE/Texture.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 190,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-02-12T16:52:32Z",
+      "side": 1,
+      "message": "Use the Rectangle struct here and in the setters/getters.",
+      "range": {
+        "startLine": 187,
+        "startChar": 4,
+        "endLine": 190,
+        "endChar": 15
+      },
+      "revId": "9569bda4296ad6a154f502d9718a3648b2899606",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "01576f47_ddf35e44",
+        "filename": "src/libANGLE/Texture.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 191,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-02-12T16:52:32Z",
+      "side": 1,
+      "message": "GLenum",
+      "range": {
+        "startLine": 191,
+        "startChar": 4,
+        "endLine": 191,
+        "endChar": 8
+      },
+      "revId": "9569bda4296ad6a154f502d9718a3648b2899606",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6917d68d_88cb0760",
+        "filename": "src/libANGLE/Texture.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 394,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-02-12T16:52:32Z",
+      "side": 1,
+      "message": "Return the bool instead of return by pointer.",
+      "range": {
+        "startLine": 394,
+        "startChar": 9,
+        "endLine": 394,
+        "endChar": 30
+      },
+      "revId": "9569bda4296ad6a154f502d9718a3648b2899606",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
