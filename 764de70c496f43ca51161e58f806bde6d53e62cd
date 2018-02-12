@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3ccb1cb9_3ed688db",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_utils.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-12T18:23:32Z",
+      "side": 1,
+      "message": "nit: the Vulkan back-end has been using the method \u0027valid\u0027 rather than \u0027isValid\u0027 (see other uses throughout the Vulkan back-end). Could we converge to \u0027valid\u0027?",
+      "range": {
+        "startLine": 35,
+        "startChar": 9,
+        "endLine": 35,
+        "endChar": 16
+      },
+      "revId": "764de70c496f43ca51161e58f806bde6d53e62cd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
