@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dfd4b429_aa8a2855",
+        "filename": "src/libANGLE/Texture.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-12T15:52:56Z",
+      "side": 1,
+      "message": "nit: put the implementation of setCrop and getCrop in the .cpp. Chromium tries to only have trivial methods in .h",
+      "revId": "9569bda4296ad6a154f502d9718a3648b2899606",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
