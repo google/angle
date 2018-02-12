@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "d02b2fae_b1a10c20",
+        "filename": "third_party/glslang/BUILD.gn",
+        "patchSetId": 4
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-12T15:56:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "31afc5ef_4e7f8768",
+      "range": {
+        "startLine": 140,
+        "startChar": 20,
+        "endLine": 140,
+        "endChar": 42
+      },
+      "revId": "a96e3756a8291d53a788c9682aa5636056307bff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a8495565_58d136cd",
         "filename": "third_party/glslang/BUILD.gn",
         "patchSetId": 4
@@ -36,6 +60,30 @@
       "writtenOn": "2018-02-07T21:47:37Z",
       "side": 1,
       "message": "glslangValidator links with glslang, SPIRV, SPVRemapper, glslang-default-resource-limits (which is built from ResourceLimits.cpp).\nAlso depends on psapi on Win and pthread on Linux, according to CMakeLists.\nAre you sure just glslang is enough?",
+      "range": {
+        "startLine": 144,
+        "startChar": 6,
+        "endLine": 144,
+        "endChar": 13
+      },
+      "revId": "a96e3756a8291d53a788c9682aa5636056307bff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "77d6b77e_eaba9e69",
+        "filename": "third_party/glslang/BUILD.gn",
+        "patchSetId": 4
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-12T15:56:02Z",
+      "side": 1,
+      "message": "I think a lot of this comes with glslang. Not sure about psapi/pthread/SPVRemapper- maybe those are only needed for the spirv-remapper tool.",
+      "parentUuid": "a8495565_58d136cd",
       "range": {
         "startLine": 144,
         "startChar": 6,
