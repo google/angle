@@ -457,7 +457,7 @@ if (build_angle_gles1_conform_tests) {
     deps = googletest_deps + [
              ":angle_gles1_conformance_no_gtest",
              angle_root + ":angle_common",
-             angle_root + ":angle_util_static",
+             angle_root + ":angle_util",
              angle_root + ":libEGL",
              angle_root + ":libGLESv1_CM",
              angle_root + ":libGLESv2",
