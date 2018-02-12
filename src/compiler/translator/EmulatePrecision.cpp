@@ -6,7 +6,6 @@
 
 #include "compiler/translator/EmulatePrecision.h"
 
-#include "common/angle_fallthrough.h"
 #include "compiler/translator/FunctionLookup.h"
 
 #include <memory>
@@ -628,28 +627,22 @@ bool EmulatePrecision::visitAggregate(Visit visit, TIntermAggregate *node)
 {
     if (visit != PreVisit)
         return true;
-    switch (node->getOp())
+
+    // User-defined function return values are not rounded. The calculations that produced
+    // the value inside the function definition should have been rounded.
+    TOperator op = node->getOp();
+    if (op == EOpCallInternalRawFunction || op == EOpCallFunctionInAST ||
+        (op == EOpConstruct && node->getBasicType() == EbtStruct))
     {
-        case EOpCallInternalRawFunction:
-        case EOpCallFunctionInAST:
-            // User-defined function return values are not rounded. The calculations that produced
-            // the value inside the function definition should have been rounded.
-            break;
-        case EOpConstruct:
-            if (node->getBasicType() == EbtStruct)
-            {
-                break;
-            }
-            ANGLE_FALLTHROUGH;
-        default:
-            TIntermNode *parent = getParentNode();
-            if (canRoundFloat(node->getType()) && ParentUsesResult(parent, node) &&
-                !ParentConstructorTakesCareOfRounding(parent, node))
-            {
-                TIntermNode *replacement = createRoundingFunctionCallNode(node);
-                queueReplacement(replacement, OriginalNode::BECOMES_CHILD);
-            }
-            break;
+        return true;
+    }
+
+    TIntermNode *parent = getParentNode();
+    if (canRoundFloat(node->getType()) && ParentUsesResult(parent, node) &&
+        !ParentConstructorTakesCareOfRounding(parent, node))
+    {
+        TIntermNode *replacement = createRoundingFunctionCallNode(node);
+        queueReplacement(replacement, OriginalNode::BECOMES_CHILD);
     }
     return true;
 }
