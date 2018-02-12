@@ -2,6 +2,57 @@
   "comments": [
     {
       "key": {
+        "uuid": "4935f29e_021fab7f",
+        "filename": "src/common/matrix_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-12T15:48:00Z",
+      "side": 1,
+      "message": "We need to make sure rml, tmb and fmn are not 0. Is this done in the validation?",
+      "revId": "243ccae0dc8b2029f577c4fc82f3ce99905bbd43",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bbfbc8c5_c81cd697",
+        "filename": "src/common/matrix_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-12T15:48:00Z",
+      "side": 1,
+      "message": "ditto",
+      "revId": "243ccae0dc8b2029f577c4fc82f3ce99905bbd43",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "54a54f90_803c9ea0",
+        "filename": "src/common/matrix_utils_unittest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 476,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-12T15:48:00Z",
+      "side": 1,
+      "message": "This types of test is a bit overkill for translation and scale imho. Though they are good for all the rest.",
+      "revId": "243ccae0dc8b2029f577c4fc82f3ce99905bbd43",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "aa71097c_4bf48460",
         "filename": "src/common/matrix_utils_unittest.cpp",
         "patchSetId": 7
