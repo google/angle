@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "98ed2668_184dfb15",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-12T21:58:34Z",
+      "side": 1,
+      "message": "isn\u0027t this something we could do by manipulating environment variables when the application layer requests the null device through the ANGLE EGL initialization?",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 19
+      },
+      "revId": "785d2b2b9a8b21f0d843f7aef21a6227a852e217",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a20b1b2c_fd306f55",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-12T21:58:34Z",
+      "side": 1,
+      "message": "please tag this with the ANGLE bug id:\n\nBug: angleproject:####",
+      "revId": "785d2b2b9a8b21f0d843f7aef21a6227a852e217",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
