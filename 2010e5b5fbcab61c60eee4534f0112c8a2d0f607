@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "adc5de85_ef4b3103",
+        "filename": "src/tests/gl_tests/RenderStencilBufferTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-12T16:47:38Z",
+      "side": 1,
+      "message": "can you move this into DepthStencilFormatsTest.cpp?",
+      "range": {
+        "startLine": 15,
+        "startChar": 6,
+        "endLine": 15,
+        "endChar": 30
+      },
+      "revId": "2010e5b5fbcab61c60eee4534f0112c8a2d0f607",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e6ded59b_c92096f5",
+        "filename": "src/tests/gl_tests/RenderStencilBufferTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-12T16:47:38Z",
+      "side": 1,
+      "message": "is this necessary?",
+      "range": {
+        "startLine": 27,
+        "startChar": 8,
+        "endLine": 27,
+        "endChar": 36
+      },
+      "revId": "2010e5b5fbcab61c60eee4534f0112c8a2d0f607",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3acf14f8_b83714ec",
+        "filename": "src/tests/gl_tests/RenderStencilBufferTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-12T16:47:38Z",
+      "side": 1,
+      "message": "these can be constexpr char []",
+      "range": {
+        "startLine": 34,
+        "startChar": 8,
+        "endLine": 47,
+        "endChar": 16
+      },
+      "revId": "2010e5b5fbcab61c60eee4534f0112c8a2d0f607",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "929b9add_4cd6478d",
+        "filename": "src/tests/gl_tests/RenderStencilBufferTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-12T16:47:38Z",
+      "side": 1,
+      "message": "I would prefer if you move this into the test case, and use RAII types.",
+      "range": {
+        "startLine": 31,
+        "startChar": 0,
+        "endLine": 66,
+        "endChar": 34
+      },
+      "revId": "2010e5b5fbcab61c60eee4534f0112c8a2d0f607",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
