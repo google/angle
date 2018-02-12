@@ -140,6 +140,30 @@
       "revId": "ec3ba0096bef0b4804ea79f243b999d074ca8860",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9bca245b_48773e95",
+        "filename": "src/libANGLE/validationES1.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 699,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-12T15:03:04Z",
+      "side": 1,
+      "message": "Yeah we\u0027ll be around. I suspect we are going to advise you to use a different tactic to do the validation (it looks like you were using a trick with a GLES 3 context).",
+      "parentUuid": "1172fcf7_f1c23a1f",
+      "range": {
+        "startLine": 699,
+        "startChar": 11,
+        "endLine": 699,
+        "endChar": 15
+      },
+      "revId": "ec3ba0096bef0b4804ea79f243b999d074ca8860",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
