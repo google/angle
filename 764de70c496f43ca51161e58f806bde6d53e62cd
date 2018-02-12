@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "f8779e95_167e8d24",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-12T18:47:52Z",
+      "side": 1,
+      "message": "just looking through this code again and rediscovering it -- can you move this initialization logic to vk::FormatTable::initialize? I wanted to only iterate over the format list once, and there\u0027s already a loop where you can call the format table initialization.",
+      "range": {
+        "startLine": 37,
+        "startChar": 5,
+        "endLine": 37,
+        "endChar": 23
+      },
+      "revId": "764de70c496f43ca51161e58f806bde6d53e62cd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3ccb1cb9_3ed688db",
         "filename": "src/libANGLE/renderer/vulkan/vk_format_utils.h",
         "patchSetId": 6
