@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "8b9b76d9_58cf419a",
+        "filename": "src/common/angle_fallthrough.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1001629
+      },
+      "writtenOn": "2018-02-12T20:45:45Z",
+      "side": 1,
+      "message": "Fixing in https://chromium-review.googlesource.com/c/angle/angle/+/914842",
+      "parentUuid": "aa45c543_38bed96b",
+      "range": {
+        "startLine": 6,
+        "startChar": 3,
+        "endLine": 6,
+        "endChar": 17
+      },
+      "revId": "41b072b646f1178d4b16db72a55e5e5510c8dd66",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "1741792f_3348b401",
         "filename": "src/common/angle_fallthrough.h",
         "patchSetId": 14
@@ -36,6 +60,30 @@
       "writtenOn": "2018-02-09T22:51:56Z",
       "side": 1,
       "message": "question: do all versions of clang have this, or is there a _has type macro that can filter?",
+      "range": {
+        "startLine": 18,
+        "startChar": 4,
+        "endLine": 18,
+        "endChar": 22
+      },
+      "revId": "41b072b646f1178d4b16db72a55e5e5510c8dd66",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3cbc3219_3614573c",
+        "filename": "src/common/angle_fallthrough.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1001629
+      },
+      "writtenOn": "2018-02-12T20:45:45Z",
+      "side": 1,
+      "message": "It\u0027s fairly old, it was added in the first half of 2012, so it\u0027s been around since clang 3.2 or thereabouts. This precedes C++14 support in clang, but not C++11 support. We could add a __has_cpp_attribute() if you want to support clangs that old. If you want to make this work in other compilers, you could also do something like https://cs.chromium.org/chromium/src/third_party/boringssl/src/crypto/internal.h?type\u003dcs\u0026q\u003dopenssl_fallthrough\u0026sq\u003dpackage:chromium\u0026l\u003d175",
+      "parentUuid": "1741792f_3348b401",
       "range": {
         "startLine": 18,
         "startChar": 4,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "9abc8f37_8edece5f",
+        "filename": "src/compiler/translator/EmulatePrecision.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 644,
+      "author": {
+        "id": 1001629
+      },
+      "writtenOn": "2018-02-12T20:45:45Z",
+      "side": 1,
+      "message": "(I\u0027m not sure what exactly this means, so I haven\u0027t done anything here.)",
+      "parentUuid": "b71e4d5d_dde30bf0",
+      "range": {
+        "startLine": 638,
+        "startChar": 0,
+        "endLine": 644,
+        "endChar": 16
+      },
+      "revId": "41b072b646f1178d4b16db72a55e5e5510c8dd66",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6727aac6_b9092d3b",
         "filename": "src/libANGLE/State.cpp",
         "patchSetId": 14
@@ -91,6 +163,30 @@
       "revId": "41b072b646f1178d4b16db72a55e5e5510c8dd66",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "28e3fb53_d04454d6",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 2053,
+      "author": {
+        "id": 1001629
+      },
+      "writtenOn": "2018-02-12T20:45:45Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "6727aac6_b9092d3b",
+      "range": {
+        "startLine": 2053,
+        "startChar": 11,
+        "endLine": 2053,
+        "endChar": 37
+      },
+      "revId": "41b072b646f1178d4b16db72a55e5e5510c8dd66",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "db7b90fc_f06dab7b",
+        "filename": "src/libANGLE/renderer/gen_load_functions_table.py",
+        "patchSetId": 14
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 1001629
+      },
+      "writtenOn": "2018-02-12T20:45:45Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "f088952c_3ca12b64",
+      "range": {
+        "startLine": 175,
+        "startChar": 0,
+        "endLine": 180,
+        "endChar": 21
+      },
+      "revId": "41b072b646f1178d4b16db72a55e5e5510c8dd66",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "231f654d_d58e8270",
         "filename": "src/libANGLE/validationEGL.cpp",
         "patchSetId": 14
@@ -128,6 +248,30 @@
       "writtenOn": "2018-02-09T22:51:56Z",
       "side": 1,
       "message": "I wonder if these fix any dEQP EGL tests?",
+      "range": {
+        "startLine": 2477,
+        "startChar": 12,
+        "endLine": 2477,
+        "endChar": 17
+      },
+      "revId": "41b072b646f1178d4b16db72a55e5e5510c8dd66",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ea56eade_6a9e1c28",
+        "filename": "src/libANGLE/validationEGL.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 2477,
+      "author": {
+        "id": 1001629
+      },
+      "writtenOn": "2018-02-12T20:45:45Z",
+      "side": 1,
+      "message": "I don\u0027t know :-) EGL_MULTISAMPLE_RESOLVE / EGL_MULTISAMPLE_RESOLVE_DEFAULT would\u0027ve (incorrectly) reutnr an EglBadAttribute() before, and now it doens\u0027t. If deqp checks for this, I suppose this fixed something.",
+      "parentUuid": "231f654d_d58e8270",
       "range": {
         "startLine": 2477,
         "startChar": 12,
