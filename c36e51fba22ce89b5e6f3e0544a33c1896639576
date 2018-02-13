@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "3c2cdfb9_c1153120",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2596,
+      "author": {
+        "id": 1130144
+      },
+      "writtenOn": "2018-02-13T02:39:24Z",
+      "side": 1,
+      "message": "Very well.",
+      "parentUuid": "fd10962f_ad6d036d",
+      "range": {
+        "startLine": 2593,
+        "startChar": 0,
+        "endLine": 2596,
+        "endChar": 2
+      },
+      "revId": "c36e51fba22ce89b5e6f3e0544a33c1896639576",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3b672c8a_6b191f51",
         "filename": "src/libANGLE/renderer/d3d/d3d11/shaders/Passthrough2D11.hlsl",
         "patchSetId": 8
@@ -84,6 +108,30 @@
       "side": 1,
       "message": "There are some workarounds we have that disable the rgb565 format and use rgba8 instead.",
       "parentUuid": "3b672c8a_6b191f51",
+      "range": {
+        "startLine": 129,
+        "startChar": 0,
+        "endLine": 132,
+        "endChar": 1
+      },
+      "revId": "c36e51fba22ce89b5e6f3e0544a33c1896639576",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "60ac46bf_67a7e6e3",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/shaders/Passthrough2D11.hlsl",
+        "patchSetId": 8
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1130144
+      },
+      "writtenOn": "2018-02-13T02:39:24Z",
+      "side": 1,
+      "message": "OK, but I see that you removed the 565 shaders from your latest patch. Were the workarounds not necessary or am I missing something?",
+      "parentUuid": "9993885d_406e114b",
       "range": {
         "startLine": 129,
         "startChar": 0,
@@ -140,6 +188,30 @@
       "revId": "c36e51fba22ce89b5e6f3e0544a33c1896639576",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "71a1515a_2d38c5a3",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/shaders/Passthrough2D11.hlsl",
+        "patchSetId": 8
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1130144
+      },
+      "writtenOn": "2018-02-13T02:39:24Z",
+      "side": 1,
+      "message": "With your latest revision, our internal tests now appear to pass correctly. \n\nWith floor(), any pixel with an alpha channel \u003c 1.0 was ending up with an alpha value of 0 in the 5551 case. In baseline, the transition to 0 should happen when the alpha channel passes the 0.5 mark.",
+      "parentUuid": "475b7a0b_e3c6a9b5",
+      "range": {
+        "startLine": 136,
+        "startChar": 0,
+        "endLine": 136,
+        "endChar": 16
+      },
+      "revId": "c36e51fba22ce89b5e6f3e0544a33c1896639576",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
