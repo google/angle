@@ -93,6 +93,30 @@
       "revId": "d4dc97ed3f19eb6147007b0af23bf7940e623968",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fe087c10_b8842693",
+        "filename": "src/tests/gl_tests/StateChangeTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1081,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-13T14:51:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b126c354_9ba154af",
+      "range": {
+        "startLine": 1080,
+        "startChar": 0,
+        "endLine": 1081,
+        "endChar": 60
+      },
+      "revId": "d4dc97ed3f19eb6147007b0af23bf7940e623968",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
