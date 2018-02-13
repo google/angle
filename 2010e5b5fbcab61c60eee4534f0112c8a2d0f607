@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "ba819605_cc916763",
+        "filename": "src/tests/gl_tests/RenderStencilBufferTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2018-02-13T07:27:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "adc5de85_ef4b3103",
+      "range": {
+        "startLine": 15,
+        "startChar": 6,
+        "endLine": 15,
+        "endChar": 30
+      },
+      "revId": "2010e5b5fbcab61c60eee4534f0112c8a2d0f607",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e6ded59b_c92096f5",
         "filename": "src/tests/gl_tests/RenderStencilBufferTest.cpp",
         "patchSetId": 9
@@ -45,6 +69,30 @@
       "revId": "2010e5b5fbcab61c60eee4534f0112c8a2d0f607",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7c7e1953_c3447dc5",
+        "filename": "src/tests/gl_tests/RenderStencilBufferTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2018-02-13T07:27:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e6ded59b_c92096f5",
+      "range": {
+        "startLine": 27,
+        "startChar": 8,
+        "endLine": 27,
+        "endChar": 36
+      },
+      "revId": "2010e5b5fbcab61c60eee4534f0112c8a2d0f607",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "45ec899c_8f4f8c40",
+        "filename": "src/tests/gl_tests/RenderStencilBufferTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2018-02-13T07:27:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3acf14f8_b83714ec",
+      "range": {
+        "startLine": 34,
+        "startChar": 8,
+        "endLine": 47,
+        "endChar": 16
+      },
+      "revId": "2010e5b5fbcab61c60eee4534f0112c8a2d0f607",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "929b9add_4cd6478d",
         "filename": "src/tests/gl_tests/RenderStencilBufferTest.cpp",
         "patchSetId": 9
@@ -82,6 +154,30 @@
       "writtenOn": "2018-02-12T16:47:38Z",
       "side": 1,
       "message": "I would prefer if you move this into the test case, and use RAII types.",
+      "range": {
+        "startLine": 31,
+        "startChar": 0,
+        "endLine": 66,
+        "endChar": 34
+      },
+      "revId": "2010e5b5fbcab61c60eee4534f0112c8a2d0f607",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1037ebe2_8afcf474",
+        "filename": "src/tests/gl_tests/RenderStencilBufferTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2018-02-13T07:27:44Z",
+      "side": 1,
+      "message": "I\u0027ve moved this into test case, but I\u0027m not sure which variable above should use RAII type?",
+      "parentUuid": "929b9add_4cd6478d",
       "range": {
         "startLine": 31,
         "startChar": 0,
