@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bb407e13_76d4bf86",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2018-02-13T16:47:39Z",
+      "side": 1,
+      "message": "swiftshader:95",
+      "range": {
+        "startLine": 18,
+        "startChar": 4,
+        "endLine": 18,
+        "endChar": 6
+      },
+      "revId": "025c68232e33085b5ff573d05e5e9224cd299ccf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2146793e_9983a8df",
+        "filename": "extensions/CHROMIUM_texture_format_BGRA1010102.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2018-02-13T16:47:39Z",
+      "side": 1,
+      "message": "GL_CHROMIUM_texture_format_BGRA1010102",
+      "range": {
+        "startLine": 7,
+        "startChar": 4,
+        "endLine": 7,
+        "endChar": 8
+      },
+      "revId": "025c68232e33085b5ff573d05e5e9224cd299ccf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "55c24960_df3b2128",
+        "filename": "extensions/CHROMIUM_texture_format_BGRA1010102.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2018-02-13T16:47:39Z",
+      "side": 1,
+      "message": "nit: Doesn\u0027t match revision history date below.",
+      "range": {
+        "startLine": 11,
+        "startChar": 33,
+        "endLine": 11,
+        "endChar": 34
+      },
+      "revId": "025c68232e33085b5ff573d05e5e9224cd299ccf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fc21f98c_3ee94d9c",
+        "filename": "extensions/CHROMIUM_texture_format_BGRA1010102.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1106294
+      },
+      "writtenOn": "2018-02-13T16:47:39Z",
+      "side": 1,
+      "message": "Needs to define BGRA_EXT and its value here, just like in EXT_texture_format_BGRA8888. You may also want to clarify whether or not it is accepted by glTexStorage* (similar to APPLE_texture_format_BGRA8888) and whether it\u0027s supposed to be a renderable format or not (similar to EXT_texture_format_BGRA8888).",
+      "revId": "025c68232e33085b5ff573d05e5e9224cd299ccf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
