@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b1274e7b_151a4983",
+        "filename": "src/tests/gl_tests/BlendMinMaxTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-13T14:29:22Z",
+      "side": 1,
+      "message": "Can you remove this TODO and replace it with a comment  \"Ignore SDK layers messages on D3D11 FL 9.3\"",
+      "range": {
+        "startLine": 197,
+        "startChar": 13,
+        "endLine": 197,
+        "endChar": 21
+      },
+      "revId": "78ee33885d5193ef2f210458b335b24eaa2943a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a915844a_b686db58",
+        "filename": "src/tests/gl_tests/BlitFramebufferANGLETest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 795,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-13T14:29:22Z",
+      "side": 1,
+      "message": "can you update this to be http://anglebug.com/2205",
+      "range": {
+        "startLine": 795,
+        "startChar": 4,
+        "endLine": 795,
+        "endChar": 66
+      },
+      "revId": "78ee33885d5193ef2f210458b335b24eaa2943a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f99ac2a4_a6253bca",
+        "filename": "src/tests/gl_tests/CopyTextureTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 692,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-13T14:29:22Z",
+      "side": 1,
+      "message": "you can make these expressions ANGLE_SKIP_TEST_IF as well",
+      "range": {
+        "startLine": 686,
+        "startChar": 0,
+        "endLine": 692,
+        "endChar": 0
+      },
+      "revId": "78ee33885d5193ef2f210458b335b24eaa2943a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "beadb4a9_d761e770",
+        "filename": "src/tests/gl_tests/DrawBuffersTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 286,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-13T14:29:22Z",
+      "side": 1,
+      "message": "same with these",
+      "range": {
+        "startLine": 280,
+        "startChar": 0,
+        "endLine": 286,
+        "endChar": 0
+      },
+      "revId": "78ee33885d5193ef2f210458b335b24eaa2943a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e38944f2_e6bafc2a",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1373,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-13T14:29:22Z",
+      "side": 1,
+      "message": "same with these.",
+      "range": {
+        "startLine": 1368,
+        "startChar": 0,
+        "endLine": 1373,
+        "endChar": 5
+      },
+      "revId": "78ee33885d5193ef2f210458b335b24eaa2943a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
