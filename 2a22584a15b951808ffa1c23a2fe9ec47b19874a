@@ -332,6 +332,30 @@
     },
     {
       "key": {
+        "uuid": "8b6e0056_369c00b5",
+        "filename": "src/libANGLE/renderer/vulkan/StreamingBufferManager.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-02-13T03:51:34Z",
+      "side": 1,
+      "message": "On second look, I think I was mistaken with the alignment stuff I added.  I\u0027m not finding any alignment requirements on the offsets into the buffer.  I\u0027ll double check with my local vulkan guru.",
+      "parentUuid": "5f98203c_e1af8d89",
+      "range": {
+        "startLine": 27,
+        "startChar": 34,
+        "endLine": 27,
+        "endChar": 42
+      },
+      "revId": "2a22584a15b951808ffa1c23a2fe9ec47b19874a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d7b4c5df_a7667654",
         "filename": "src/libANGLE/renderer/vulkan/StreamingBufferManager.cpp",
         "patchSetId": 23
@@ -729,6 +753,30 @@
       "revId": "2a22584a15b951808ffa1c23a2fe9ec47b19874a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2126ffdc_e37af406",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-02-13T03:51:34Z",
+      "side": 1,
+      "message": "It\u0027s not black and white, it\u0027s a matter of taste.  (And there\u0027s no consistency in ANGLE.)\nSince you seem resistant to other points of view, have it your way.",
+      "parentUuid": "bb9a8c2d_91ce24ff",
+      "range": {
+        "startLine": 131,
+        "startChar": 47,
+        "endLine": 131,
+        "endChar": 48
+      },
+      "revId": "2a22584a15b951808ffa1c23a2fe9ec47b19874a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
