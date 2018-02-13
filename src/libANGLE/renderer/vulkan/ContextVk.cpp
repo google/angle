@@ -11,6 +11,7 @@
 
 #include "common/bitset_utils.h"
 #include "common/debug.h"
+#include "common/utilities.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/Program.h"
 #include "libANGLE/renderer/vulkan/BufferVk.h"
@@ -60,6 +61,9 @@ enum DescriptorPoolIndex : uint8_t
     TexturePool       = 1,
 };
 
+constexpr size_t kStreamingVertexDataSize = 1024 * 1024;
+constexpr size_t kStreamingIndexDataSize  = 1024 * 8;
+
 }  // anonymous namespace
 
 ContextVk::ContextVk(const gl::ContextState &state, RendererVk *renderer)
@@ -68,7 +72,8 @@ ContextVk::ContextVk(const gl::ContextState &state, RendererVk *renderer)
       mCurrentDrawMode(GL_NONE),
       mVertexArrayDirty(false),
       mTexturesDirty(false),
-      mStreamingVertexData(VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, 1024 * 1024)
+      mStreamingVertexData(VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, kStreamingVertexDataSize),
+      mStreamingIndexData(VK_BUFFER_USAGE_INDEX_BUFFER_BIT, kStreamingIndexDataSize)
 {
     memset(&mClearColorValue, 0, sizeof(mClearColorValue));
     memset(&mClearDepthStencilValue, 0, sizeof(mClearDepthStencilValue));
@@ -84,6 +89,7 @@ void ContextVk::onDestroy(const gl::Context *context)
 
     mDescriptorPool.destroy(device);
     mStreamingVertexData.destroy(device);
+    mStreamingIndexData.destroy(device);
     mLineLoopHandler.destroy(device);
 }
 
@@ -159,8 +165,8 @@ gl::Error ContextVk::initPipeline(const gl::Context *context)
 gl::Error ContextVk::setupDraw(const gl::Context *context,
                                GLenum mode,
                                DrawType drawType,
-                               int firstVertex,
-                               int lastVertex,
+                               size_t firstVertex,
+                               size_t lastVertex,
                                ResourceVk *elementArrayBufferOverride,
                                vk::CommandBuffer **commandBuffer)
 {
@@ -299,15 +305,20 @@ gl::Error ContextVk::drawElements(const gl::Context *context,
                                   GLenum type,
                                   const void *indices)
 {
-    const gl::Buffer *elementArrayBuffer =
-        mState.getState().getVertexArray()->getElementArrayBuffer().get();
-    ASSERT(elementArrayBuffer);
-
-    BufferVk *elementArrayBufferVk   = vk::GetImpl(elementArrayBuffer);
+    gl::VertexArray *vao                 = mState.getState().getVertexArray();
+    const gl::Buffer *elementArrayBuffer = vao->getElementArrayBuffer().get();
     vk::CommandBuffer *commandBuffer = nullptr;
 
     if (mode == GL_LINE_LOOP)
     {
+        if (!elementArrayBuffer)
+        {
+            UNIMPLEMENTED();
+            return gl::InternalError() << "Line loop indices in client memory not supported";
+        }
+
+        BufferVk *elementArrayBufferVk = vk::GetImpl(elementArrayBuffer);
+
         ANGLE_TRY(mLineLoopHandler.createIndexBufferFromElementArrayBuffer(
             this, elementArrayBufferVk, GetVkIndexType(type), count));
 
@@ -320,26 +331,50 @@ gl::Error ContextVk::drawElements(const gl::Context *context,
     }
     else
     {
-        // TODO(fjhenigman): calculate the index range and pass to setupDraw()
-        ANGLE_TRY(setupDraw(context, mode, DrawType::Elements, 0, 0, nullptr, &commandBuffer));
-
-        if (indices)
-        {
-            // TODO(jmadill): Buffer offsets and immediate data.
-            UNIMPLEMENTED();
-            return gl::InternalError()
-                   << "Only zero-offset index buffers are currently implemented.";
-        }
-
         if (type == GL_UNSIGNED_BYTE)
         {
-            // TODO(jmadill): Index translation.
+            // TODO(fjhenigman): Index format translation.
             UNIMPLEMENTED();
             return gl::InternalError() << "Unsigned byte translation is not yet implemented.";
         }
 
-        commandBuffer->bindIndexBuffer(elementArrayBufferVk->getVkBuffer(), 0,
-                                       GetVkIndexType(type));
+        ContextVk *contextVk         = vk::GetImpl(context);
+        const bool computeIndexRange = vk::GetImpl(vao)->attribsToStream(contextVk).any();
+        gl::IndexRange range;
+        VkBuffer buffer     = VK_NULL_HANDLE;
+        VkDeviceSize offset = 0;
+
+        if (elementArrayBuffer)
+        {
+            BufferVk *elementArrayBufferVk = vk::GetImpl(elementArrayBuffer);
+            buffer                         = elementArrayBufferVk->getVkBuffer().getHandle();
+            offset                         = 0;
+
+            if (computeIndexRange)
+            {
+                ANGLE_TRY(elementArrayBufferVk->getIndexRange(
+                    context, type, 0, count, false /*primitiveRestartEnabled*/, &range));
+            }
+        }
+        else
+        {
+            const GLsizei amount = sizeof(GLushort) * count;
+            uint8_t *dst         = nullptr;
+
+            ANGLE_TRY(mStreamingIndexData.allocate(contextVk, amount, &dst, &buffer, &offset));
+            memcpy(dst, indices, amount);
+            ANGLE_TRY(mStreamingIndexData.flush(contextVk));
+
+            if (computeIndexRange)
+            {
+                range =
+                    gl::ComputeIndexRange(type, indices, count, false /*primitiveRestartEnabled*/);
+            }
+        }
+
+        ANGLE_TRY(setupDraw(context, mode, DrawType::Elements, range.start, range.end, nullptr,
+                            &commandBuffer));
+        commandBuffer->bindIndexBuffer(buffer, offset, GetVkIndexType(type));
         commandBuffer->drawIndexed(count, 1, 0, 0, 0);
     }
 

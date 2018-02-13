@@ -601,14 +601,6 @@ void CommandBuffer::bindVertexBuffers(uint32_t firstBinding,
     vkCmdBindVertexBuffers(mHandle, firstBinding, bindingCount, buffers, offsets);
 }
 
-void CommandBuffer::bindIndexBuffer(const vk::Buffer &buffer,
-                                    VkDeviceSize offset,
-                                    VkIndexType indexType)
-{
-    ASSERT(valid());
-    vkCmdBindIndexBuffer(mHandle, buffer.getHandle(), offset, indexType);
-}
-
 void CommandBuffer::bindIndexBuffer(const VkBuffer &buffer,
                                     VkDeviceSize offset,
                                     VkIndexType indexType)

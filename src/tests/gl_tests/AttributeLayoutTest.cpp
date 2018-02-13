@@ -157,16 +157,6 @@ class Attrib
 
 typedef std::vector<Attrib> TestCase;
 
-bool UsesClientMemory(const TestCase &tc)
-{
-    for (const Attrib &a : tc)
-    {
-        if (a.inClientMemory())
-            return true;
-    }
-    return false;
-}
-
 void PrepareTestCase(const TestCase &tc)
 {
     for (const Attrib &a : tc)
@@ -400,18 +390,6 @@ class AttributeLayoutMemoryIndexed : public AttributeLayoutTest
 
 class AttributeLayoutBufferIndexed : public AttributeLayoutTest
 {
-    bool Skip(const TestCase &tc) override
-    {
-        if (IsVulkan() && UsesClientMemory(tc))
-        {
-            std::cout
-                << "test case skipped on Vulkan: indexed draw with vertex data in client memory"
-                << std::endl;
-            return true;
-        }
-        return false;
-    }
-
     void Draw(int firstVertex, unsigned vertexCount, const GLushort *indices) override
     {
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBuffer);
@@ -437,12 +415,6 @@ TEST_P(AttributeLayoutNonIndexed, Test)
 
 TEST_P(AttributeLayoutMemoryIndexed, Test)
 {
-    if (IsVulkan())
-    {
-        std::cout << "test skipped on Vulkan: indices in memory not supported" << std::endl;
-        return;
-    }
-
     Run(true);
 
     if (IsWindows() && IsAMD() && (IsOpenGL() || GetParam() == ES2_D3D11_FL9_3()))
@@ -457,7 +429,6 @@ TEST_P(AttributeLayoutMemoryIndexed, Test)
 
 TEST_P(AttributeLayoutBufferIndexed, Test)
 {
-
     Run(true);
 
     if (IsWindows() && IsAMD() && (IsOpenGL() || GetParam() == ES2_D3D11_FL9_3()))

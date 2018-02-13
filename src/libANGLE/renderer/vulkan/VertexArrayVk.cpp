@@ -43,6 +43,12 @@ void VertexArrayVk::destroy(const gl::Context *context)
 {
 }
 
+gl::AttributesMask VertexArrayVk::attribsToStream(ContextVk *context) const
+{
+    const gl::Program *programGL = context->getGLState().getProgram();
+    return mClientMemoryAttribs & programGL->getActiveAttribLocationsMask();
+}
+
 gl::Error VertexArrayVk::streamVertexData(ContextVk *context,
                                           StreamingBuffer *stream,
                                           size_t firstVertex,
@@ -50,13 +56,10 @@ gl::Error VertexArrayVk::streamVertexData(ContextVk *context,
 {
     const auto &attribs          = mState.getVertexAttributes();
     const auto &bindings         = mState.getVertexBindings();
-    const gl::Program *programGL = context->getGLState().getProgram();
-    const gl::AttributesMask attribsToStream =
-        mClientMemoryAttribs & programGL->getActiveAttribLocationsMask();
 
     // TODO(fjhenigman): When we have a bunch of interleaved attributes, they end up
     // un-interleaved, wasting space and copying time.  Consider improving on that.
-    for (auto attribIndex : attribsToStream)
+    for (auto attribIndex : attribsToStream(context))
     {
         const gl::VertexAttribute &attrib = attribs[attribIndex];
         const gl::VertexBinding &binding  = bindings[attrib.bindingIndex];
@@ -179,7 +182,7 @@ void VertexArrayVk::updateDrawDependencies(vk::CommandGraphNode *readNode,
     }
 
     // Handle the bound element array buffer.
-    if (drawType == DrawType::Elements)
+    if (drawType == DrawType::Elements && mCurrentElementArrayBufferResource)
     {
         if (elementArrayBufferOverride != nullptr)
         {

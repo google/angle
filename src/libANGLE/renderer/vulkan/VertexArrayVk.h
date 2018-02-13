@@ -26,6 +26,7 @@ class VertexArrayVk : public VertexArrayImpl
 
     void destroy(const gl::Context *context) override;
 
+    gl::AttributesMask attribsToStream(ContextVk *context) const;
     gl::Error streamVertexData(ContextVk *context,
                                StreamingBuffer *stream,
                                size_t firstVertex,

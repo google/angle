@@ -381,7 +381,6 @@ class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
                            uint32_t bindingCount,
                            const VkBuffer *buffers,
                            const VkDeviceSize *offsets);
-    void bindIndexBuffer(const vk::Buffer &buffer, VkDeviceSize offset, VkIndexType indexType);
     void bindIndexBuffer(const VkBuffer &buffer, VkDeviceSize offset, VkIndexType indexType);
     void bindDescriptorSets(VkPipelineBindPoint bindPoint,
                             const vk::PipelineLayout &layout,
