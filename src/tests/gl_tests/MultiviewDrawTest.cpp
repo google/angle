@@ -762,17 +762,9 @@ TEST_P(MultiviewDrawValidationTest, ActiveTransformFeedback)
 // 2) does not generate any error if the number of views in the draw framebuffer is 1.
 TEST_P(MultiviewDrawValidationTest, ActiveTimeElapsedQuery)
 {
-    if (!requestMultiviewExtension())
-    {
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(!requestMultiviewExtension());
 
-    if (!extensionEnabled("GL_EXT_disjoint_timer_query"))
-    {
-        std::cout << "Test skipped because GL_EXT_disjoint_timer_query is not available."
-                  << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_disjoint_timer_query"));
 
     const GLint viewportOffsets[4] = {0, 0, 2, 0};
     const std::string &vsSource =

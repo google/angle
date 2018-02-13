@@ -193,64 +193,41 @@ class FramebufferFormatsTest : public ANGLETest
 
 TEST_P(FramebufferFormatsTest, RGBA4)
 {
-    if (getClientMajorVersion() < 3 && !extensionEnabled("GL_EXT_texture_storage"))
-    {
-        std::cout << "Test skipped due to missing ES3 or GL_EXT_texture_storage." << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 && !extensionEnabled("GL_EXT_texture_storage"));
 
     testTextureFormat(GL_RGBA4, 4, 4, 4, 4);
 }
 
 TEST_P(FramebufferFormatsTest, RGB565)
 {
-    if (getClientMajorVersion() < 3 && !extensionEnabled("GL_EXT_texture_storage"))
-    {
-        std::cout << "Test skipped due to missing ES3 or GL_EXT_texture_storage." << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 && !extensionEnabled("GL_EXT_texture_storage"));
 
     testTextureFormat(GL_RGB565, 5, 6, 5, 0);
 }
 
 TEST_P(FramebufferFormatsTest, RGB8)
 {
-    if (getClientMajorVersion() < 3 &&
-        (!extensionEnabled("GL_OES_rgb8_rgba8") || !extensionEnabled("GL_EXT_texture_storage")))
-    {
-        std::cout
-            << "Test skipped due to missing ES3 or GL_OES_rgb8_rgba8 and GL_EXT_texture_storage."
-            << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(
+        getClientMajorVersion() < 3 &&
+        (!extensionEnabled("GL_OES_rgb8_rgba8") || !extensionEnabled("GL_EXT_texture_storage")));
 
     testTextureFormat(GL_RGB8_OES, 8, 8, 8, 0);
 }
 
 TEST_P(FramebufferFormatsTest, BGRA8)
 {
-    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888") ||
-        (getClientMajorVersion() < 3 && !extensionEnabled("GL_EXT_texture_storage")))
-    {
-        std::cout << "Test skipped due to missing GL_EXT_texture_format_BGRA8888 or "
-                     "GL_EXT_texture_storage."
-                  << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(
+        !extensionEnabled("GL_EXT_texture_format_BGRA8888") ||
+        (getClientMajorVersion() < 3 && !extensionEnabled("GL_EXT_texture_storage")));
 
     testTextureFormat(GL_BGRA8_EXT, 8, 8, 8, 8);
 }
 
 TEST_P(FramebufferFormatsTest, RGBA8)
 {
-    if (getClientMajorVersion() < 3 &&
-        (!extensionEnabled("GL_OES_rgb8_rgba8") || !extensionEnabled("GL_EXT_texture_storage")))
-    {
-        std::cout
-            << "Test skipped due to missing ES3 or GL_OES_rgb8_rgba8 and GL_EXT_texture_storage."
-            << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(
+        getClientMajorVersion() < 3 &&
+        (!extensionEnabled("GL_OES_rgb8_rgba8") || !extensionEnabled("GL_EXT_texture_storage")));
 
     testTextureFormat(GL_RGBA8_OES, 8, 8, 8, 8);
 }
@@ -267,11 +244,7 @@ TEST_P(FramebufferFormatsTest, RenderbufferMultisample_DEPTH24)
 
 TEST_P(FramebufferFormatsTest, RenderbufferMultisample_DEPTH32F)
 {
-    if (getClientMajorVersion() < 3)
-    {
-        std::cout << "Test skipped due to missing ES3." << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3);
 
     testRenderbufferMultisampleFormat(3, GL_DEPTH_ATTACHMENT, GL_DEPTH_COMPONENT32F);
 }
@@ -283,11 +256,7 @@ TEST_P(FramebufferFormatsTest, RenderbufferMultisample_DEPTH24_STENCIL8)
 
 TEST_P(FramebufferFormatsTest, RenderbufferMultisample_DEPTH32F_STENCIL8)
 {
-    if (getClientMajorVersion() < 3)
-    {
-        std::cout << "Test skipped due to missing ES3." << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3);
 
     testRenderbufferMultisampleFormat(3, GL_DEPTH_STENCIL_ATTACHMENT, GL_DEPTH32F_STENCIL8);
 }
@@ -295,11 +264,7 @@ TEST_P(FramebufferFormatsTest, RenderbufferMultisample_DEPTH32F_STENCIL8)
 TEST_P(FramebufferFormatsTest, RenderbufferMultisample_STENCIL_INDEX8)
 {
     // TODO(geofflang): Figure out how to support GLSTENCIL_INDEX8 on desktop GL
-    if (GetParam().getRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
-    {
-        std::cout << "Test skipped on Desktop OpenGL." << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(IsDesktopOpenGL());
 
     testRenderbufferMultisampleFormat(2, GL_STENCIL_ATTACHMENT, GL_STENCIL_INDEX8);
 }
@@ -351,11 +316,7 @@ TEST_P(FramebufferFormatsTest, IncompleteCubeMap)
 // Test that a renderbuffer with zero height but nonzero width is handled without crashes/asserts.
 TEST_P(FramebufferFormatsTest, ZeroHeightRenderbuffer)
 {
-    if (getClientMajorVersion() < 3)
-    {
-        std::cout << "Test skipped due to missing ES3" << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3);
 
     testZeroHeightRenderbuffer();
 }

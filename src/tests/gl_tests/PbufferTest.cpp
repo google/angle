@@ -112,11 +112,7 @@ class PbufferTest : public ANGLETest
 // Test clearing a Pbuffer and checking the color is correct
 TEST_P(PbufferTest, Clearing)
 {
-    if (!mSupportsPbuffers)
-    {
-        std::cout << "Test skipped because Pbuffers are not supported." << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(!mSupportsPbuffers);
 
     EGLWindow *window = getEGLWindow();
 
@@ -149,17 +145,9 @@ TEST_P(PbufferTest, Clearing)
 // Bind the Pbuffer to a texture and verify it renders correctly
 TEST_P(PbufferTest, BindTexImage)
 {
-    if (!mSupportsPbuffers)
-    {
-        std::cout << "Test skipped because Pbuffers are not supported." << std::endl;
-        return;
-    }
-
-    if (!mSupportsBindTexImage)
-    {
-        std::cout << "Test skipped because Pbuffer does not support binding to RGBA textures." << std::endl;
-        return;
-    }
+    // Test skipped because Pbuffers are not supported or Pbuffer does not support binding to RGBA
+    // textures.
+    ANGLE_SKIP_TEST_IF(!mSupportsPbuffers || !mSupportsBindTexImage);
 
     EGLWindow *window = getEGLWindow();
 
@@ -260,17 +248,9 @@ TEST_P(PbufferTest, TextureSizeReset)
 // Bind a Pbuffer, redefine the texture, and verify it renders correctly
 TEST_P(PbufferTest, BindTexImageAndRedefineTexture)
 {
-    if (!mSupportsPbuffers)
-    {
-        std::cout << "Test skipped because Pbuffers are not supported." << std::endl;
-        return;
-    }
-
-    if (!mSupportsBindTexImage)
-    {
-        std::cout << "Test skipped because Pbuffer does not support binding to RGBA textures." << std::endl;
-        return;
-    }
+    // Test skipped because Pbuffers are not supported or Pbuffer does not support binding to RGBA
+    // textures.
+    ANGLE_SKIP_TEST_IF(!mSupportsPbuffers || !mSupportsBindTexImage);
 
     EGLWindow *window = getEGLWindow();
 

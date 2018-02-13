@@ -41,11 +41,7 @@ class FenceSyncTest : public ANGLETest
 // FenceNV objects should respond false to glIsFenceNV until they've been set
 TEST_P(FenceNVTest, IsFence)
 {
-    if (!extensionEnabled("GL_NV_fence"))
-    {
-        std::cout << "Test skipped due to missing GL_NV_fence extension." << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_NV_fence"));
 
     GLuint fence = 0;
     glGenFencesNV(1, &fence);
@@ -64,11 +60,7 @@ TEST_P(FenceNVTest, IsFence)
 // Test error cases for all FenceNV functions
 TEST_P(FenceNVTest, Errors)
 {
-    if (!extensionEnabled("GL_NV_fence"))
-    {
-        std::cout << "Test skipped due to missing GL_NV_fence extension." << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_NV_fence"));
 
     EXPECT_GL_TRUE(glTestFenceNV(10)) << "glTestFenceNV should still return TRUE for an invalid "
                                          "fence and generate an INVALID_OPERATION";
@@ -111,11 +103,7 @@ TEST_P(FenceNVTest, Errors)
 // Test that basic usage works and doesn't generate errors or crash
 TEST_P(FenceNVTest, BasicOperations)
 {
-    if (!extensionEnabled("GL_NV_fence"))
-    {
-        std::cout << "Test skipped due to missing GL_NV_fence extension." << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_NV_fence"));
 
     glClearColor(1.0f, 0.0f, 1.0f, 1.0f);
 

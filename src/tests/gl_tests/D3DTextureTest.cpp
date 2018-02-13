@@ -895,10 +895,7 @@ TEST_P(D3DTextureTest, CheckSampleMismatch)
     }
 
     // Multisampling is not supported on D3D9 or OpenGL.
-    if (IsD3D9() || IsOpenGL())
-    {
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(IsD3D9() || IsOpenGL());
 
     constexpr size_t bufferSize = 32;
 

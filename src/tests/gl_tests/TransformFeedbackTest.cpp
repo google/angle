@@ -500,11 +500,7 @@ TEST_P(TransformFeedbackTest, MultiContext)
 {
     ANGLE_SKIP_TEST_IF(IsOSX() && (IsNVIDIA() || IsAMD()) && IsOpenGL());
 
-    if (IsLinux() && IsAMD() && IsOpenGL())
-    {
-        std::cout << "Test skipped on AMD OpenGL on Linux." << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(IsLinux() && IsAMD() && IsOpenGL());
 
     EGLint contextAttributes[] = {
         EGL_CONTEXT_MAJOR_VERSION_KHR,
@@ -873,17 +869,9 @@ TEST_P(TransformFeedbackTest, TwoUnreferencedInFragShader)
 // glBeginTransformFeedback is called
 TEST_P(TransformFeedbackTest, OffsetResetOnBeginTransformFeedback)
 {
-    if (IsOSX() && IsAMD())
-    {
-        std::cout << "Test skipped on Mac AMD." << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsAMD());
 
-    if (IsAndroid())
-    {
-        std::cout << "Test skipped on Android." << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(IsAndroid());
 
     const std::string &vertexShaderSource =
         "#version 300 es\n"

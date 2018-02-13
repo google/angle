@@ -663,12 +663,9 @@ TEST_P(MipmapTest, RenderOntoLevelZeroAfterGenerateMipmap)
 // Regression test for a bug that cause mipmaps to only generate using the top left corner as input.
 TEST_P(MipmapTest, MipMapGenerationD3D9Bug)
 {
-    if (!extensionEnabled("GL_EXT_texture_storage") || !extensionEnabled("GL_OES_rgb8_rgba8") ||
-        !extensionEnabled("GL_ANGLE_texture_usage"))
-    {
-        std::cout << "Test skipped due to missing extensions." << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_texture_storage") ||
+                       !extensionEnabled("GL_OES_rgb8_rgba8") ||
+                       !extensionEnabled("GL_ANGLE_texture_usage"));
 
     const GLColor mip0Color[4] = {
         GLColor::red, GLColor::green, GLColor::red, GLColor::green,
@@ -915,12 +912,8 @@ TEST_P(MipmapTestES3, MipmapsForTexture3D)
 // the levelbase array, are left unchanged by this computation."
 TEST_P(MipmapTestES3, GenerateMipmapBaseLevel)
 {
-    if (IsAMD() && IsDesktopOpenGL())
-    {
-        // Observed incorrect rendering on AMD, sampling level 2 returns black.
-        std::cout << "Test skipped on AMD OpenGL." << std::endl;
-        return;
-    }
+    // Observed incorrect rendering on AMD, sampling level 2 returns black.
+    ANGLE_SKIP_TEST_IF(IsAMD() && IsDesktopOpenGL());
 
     glBindTexture(GL_TEXTURE_2D, mTexture);
 
@@ -970,12 +963,8 @@ TEST_P(MipmapTestES3, GenerateMipmapBaseLevel)
 // the levelbase array, are left unchanged by this computation."
 TEST_P(MipmapTestES3, GenerateMipmapCubeBaseLevel)
 {
-    if (IsAMD() && IsDesktopOpenGL())
-    {
-        // Observed incorrect rendering on AMD, sampling level 2 returns black.
-        std::cout << "Test skipped on AMD OpenGL." << std::endl;
-        return;
-    }
+    // Observed incorrect rendering on AMD, sampling level 2 returns black.
+    ANGLE_SKIP_TEST_IF(IsAMD() && IsDesktopOpenGL());
 
     ASSERT_EQ(getWindowWidth(), getWindowHeight());
 
@@ -1009,13 +998,9 @@ TEST_P(MipmapTestES3, GenerateMipmapCubeBaseLevel)
     clearAndDrawQuad(mCubeProgram, getWindowWidth() / 4, getWindowHeight() / 4);
     EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 8, getWindowHeight() / 8, GLColor::red);
 
-    if (IsNVIDIA() && IsOpenGL())
-    {
-        // Observed incorrect rendering on NVIDIA, level zero seems to be incorrectly affected by
-        // GenerateMipmap.
-        std::cout << "Test partially skipped on NVIDIA OpenGL." << std::endl;
-        return;
-    }
+    // Observed incorrect rendering on NVIDIA, level zero seems to be incorrectly affected by
+    // GenerateMipmap.
+    ANGLE_SKIP_TEST_IF(IsNVIDIA() && IsOpenGL());
 
     // Draw using level 0. It should still be blue.
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_BASE_LEVEL, 0);
@@ -1129,22 +1114,12 @@ TEST_P(MipmapTestES3, GenerateMipmapBaseLevelOutOfRangeImmutableTexture)
 // A native version of the WebGL2 test tex-base-level-bug.html
 TEST_P(MipmapTestES3, BaseLevelTextureBug)
 {
-    if (IsOpenGL() && IsAMD())
-    {
-        std::cout << "Test skipped on Windows AMD OpenGL." << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsAMD());
 
-#if defined(ANGLE_PLATFORM_APPLE)
     // Regression in 10.12.4 needing workaround -- crbug.com/705865.
     // Seems to be passing on AMD GPUs. Definitely not NVIDIA.
     // Probably not Intel.
-    if (IsNVIDIA() || IsIntel())
-    {
-        std::cout << "Test skipped on macOS with NVIDIA and Intel GPUs." << std::endl;
-        return;
-    }
-#endif
+    ANGLE_SKIP_TEST_IF(IsOSX() && (IsNVIDIA() || IsIntel()));
 
     glBindTexture(GL_TEXTURE_2D, mTexture);
     glTexImage2D(GL_TEXTURE_2D, 2, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, &GLColor::red);

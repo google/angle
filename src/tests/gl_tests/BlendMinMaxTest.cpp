@@ -39,11 +39,7 @@ class BlendMinMaxTest : public ANGLETest
 
     void runTest(GLenum colorFormat, GLenum type)
     {
-        if (getClientMajorVersion() < 3 && !extensionEnabled("GL_EXT_blend_minmax"))
-        {
-            std::cout << "Test skipped because ES3 or GL_EXT_blend_minmax is not available." << std::endl;
-            return;
-        }
+        ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 && !extensionEnabled("GL_EXT_blend_minmax"));
 
         SetUpFramebuffer(colorFormat);
 
@@ -187,31 +183,19 @@ TEST_P(BlendMinMaxTest, RGBA8)
 
 TEST_P(BlendMinMaxTest, RGBA32F)
 {
-    if (getClientMajorVersion() < 3 || !extensionEnabled("GL_EXT_color_buffer_float"))
-    {
-        std::cout << "Test skipped because ES3 and GL_EXT_color_buffer_float are not available."
-                  << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 ||
+                       !extensionEnabled("GL_EXT_color_buffer_float"));
 
-    // TODO (bug 1284): Investigate RGBA32f D3D SDK Layers messages on D3D11_FL9_3
-    if (IsD3D11_FL93())
-    {
-        std::cout << "Test skipped on Feature Level 9_3." << std::endl;
-        return;
-    }
+    // Ignore SDK layers messages on D3D11 FL 9.3 (http://anglebug.com/1284)
+    ANGLE_SKIP_TEST_IF(IsD3D11_FL93());
 
     runTest(GL_RGBA32F, GL_FLOAT);
 }
 
 TEST_P(BlendMinMaxTest, RGBA16F)
 {
-    if (getClientMajorVersion() < 3 && !extensionEnabled("GL_EXT_color_buffer_half_float"))
-    {
-        std::cout << "Test skipped because ES3 or GL_EXT_color_buffer_half_float is not available."
-                  << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 &&
+                       !extensionEnabled("GL_EXT_color_buffer_half_float"));
 
     runTest(GL_RGBA16F, GL_FLOAT);
 }

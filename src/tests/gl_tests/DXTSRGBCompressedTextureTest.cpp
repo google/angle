@@ -93,13 +93,7 @@ class DXTSRGBCompressedTextureTest : public ANGLETest
 
     void runTest(GLenum format)
     {
-        if (!extensionEnabled("GL_EXT_texture_compression_s3tc_srgb"))
-        {
-            std::cout
-                << "Test skipped because GL_EXT_texture_compression_s3tc_srgb is not available."
-                << std::endl;
-            return;
-        }
+        ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_texture_compression_s3tc_srgb"));
 
         const TestCase &test = kTests.at(format);
 

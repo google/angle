@@ -76,12 +76,8 @@ class StateChangeTestES3 : public StateChangeTest
 // Ensure that CopyTexImage2D syncs framebuffer changes.
 TEST_P(StateChangeTest, CopyTexImage2DSync)
 {
-    if (IsAMD() && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
-    {
-        // TODO(geofflang): Fix on Linux AMD drivers (http://anglebug.com/1291)
-        std::cout << "Test disabled on AMD OpenGL." << std::endl;
-        return;
-    }
+    // TODO(geofflang): Fix on Linux AMD drivers (http://anglebug.com/1291)
+    ANGLE_SKIP_TEST_IF(IsAMD() && IsOpenGL());
 
     glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
 
@@ -162,11 +158,7 @@ TEST_P(StateChangeTest, FramebufferIncompleteColorAttachment)
 // Test that caching works when color attachments change with TexStorage.
 TEST_P(StateChangeTest, FramebufferIncompleteWithTexStorage)
 {
-    if (!extensionEnabled("GL_EXT_texture_storage"))
-    {
-        std::cout << "Test skipped because TexStorage2DEXT not available." << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_texture_storage"));
 
     glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
     glBindTexture(GL_TEXTURE_2D, mTextures[0]);
@@ -261,18 +253,11 @@ TEST_P(StateChangeTest, FramebufferIncompleteStencilAttachment)
 // Test that Framebuffer completeness caching works when depth-stencil attachments change.
 TEST_P(StateChangeTest, FramebufferIncompleteDepthStencilAttachment)
 {
-    if (getClientMajorVersion() < 3 && !extensionEnabled("GL_OES_packed_depth_stencil"))
-    {
-        std::cout << "Test skipped because packed depth+stencil not availble." << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 &&
+                       !extensionEnabled("GL_OES_packed_depth_stencil"));
 
-    if (IsWindows() && IsIntel() && IsOpenGL())
-    {
-        // TODO(jmadill): Investigate the failure (https://anglebug.com/1388)
-        std::cout << "Test disabled on Windows Intel OpenGL." << std::endl;
-        return;
-    }
+    // TODO(jmadill): Investigate the failure (https://anglebug.com/1388)
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsIntel() && IsOpenGL());
 
     glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
     glBindTexture(GL_TEXTURE_2D, mTextures[0]);

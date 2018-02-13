@@ -2161,11 +2161,8 @@ TEST_P(WebGLCompatibilityTest, RenderingFeedbackLoopWithDrawBuffersEXT)
     GLint maxDrawBuffers = 0;
     glGetIntegerv(GL_MAX_DRAW_BUFFERS, &maxDrawBuffers);
 
-    if (maxDrawBuffers < 2)
-    {
-        std::cout << "Test skipped because MAX_DRAW_BUFFERS is too small." << std::endl;
-        return;
-    }
+    // Test skipped because MAX_DRAW_BUFFERS is too small.
+    ANGLE_SKIP_TEST_IF(maxDrawBuffers < 2);
 
     ANGLE_GL_PROGRAM(program, vertexShader, fragmentShader);
     glUseProgram(program.get());
@@ -2334,12 +2331,7 @@ TEST_P(WebGLCompatibilityTest, CompressedTextureS3TC)
         glRequestExtensionANGLE("GL_EXT_texture_compression_dxt1");
     }
 
-    if (!extensionEnabled("GL_EXT_texture_compression_dxt1"))
-    {
-        std::cout << "Test skipped because GL_EXT_texture_compression_dxt1 is not available."
-                  << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_texture_compression_dxt1"));
 
     constexpr uint8_t CompressedImageDXT1[] = {0x00, 0xf8, 0x00, 0xf8, 0xaa, 0xaa, 0xaa, 0xaa};
 
@@ -2594,11 +2586,7 @@ TEST_P(WebGLCompatibilityTest, RG32FTextures)
 
 TEST_P(WebGLCompatibilityTest, RGB32FTextures)
 {
-    if (IsLinux() && IsIntel())
-    {
-        std::cout << "Test skipped on Linux Intel." << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(IsLinux() && IsIntel());
 
     constexpr float data[] = {1000.0f, -500.0f, 10.0f, 1.0f};
 
@@ -2769,11 +2757,7 @@ TEST_P(WebGLCompatibilityTest, RG16FTextures)
 
 TEST_P(WebGLCompatibilityTest, RGB16FTextures)
 {
-    if (IsOzone() && IsIntel())
-    {
-        std::cout << "Test skipped on Intel Ozone." << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(IsOzone() && IsIntel());
 
     constexpr float readPixelsData[] = {7000.0f, 100.0f, 33.0f, 1.0f};
     const GLushort textureData[]     = {
@@ -2822,11 +2806,7 @@ TEST_P(WebGLCompatibilityTest, RGB16FTextures)
 
 TEST_P(WebGLCompatibilityTest, RGBA16FTextures)
 {
-    if (IsOzone() && IsIntel())
-    {
-        std::cout << "Test skipped on Intel Ozone." << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(IsOzone() && IsIntel());
 
     constexpr float readPixelsData[] = {7000.0f, 100.0f, 33.0f, -1.0f};
     const GLushort textureData[]     = {
@@ -2879,17 +2859,11 @@ TEST_P(WebGLCompatibilityTest, RGBA16FTextures)
 // accepted by glTexImage2D
 TEST_P(WebGLCompatibilityTest, SizedRGBA32FFormats)
 {
-    if (getClientMajorVersion() != 2)
-    {
-        std::cout << "Test skipped because it is only valid for WebGL1 contexts." << std::endl;
-        return;
-    }
+    // Test skipped because it is only valid for WebGL1 contexts.
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() != 2);
 
-    if (!extensionRequestable("GL_OES_texture_float"))
-    {
-        std::cout << "Test skipped because GL_OES_texture_float is not requestable." << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(!extensionRequestable("GL_OES_texture_float"));
+
     glRequestExtensionANGLE("GL_OES_texture_float");
     ASSERT_GL_NO_ERROR();
 
@@ -3213,11 +3187,8 @@ TEST_P(WebGL2CompatibilityTest, TextureCopyingFeedbackLoop3D)
 // the buffer type.
 TEST_P(WebGL2CompatibilityTest, ClearBufferTypeCompatibity)
 {
-    if (IsD3D11())
-    {
-        std::cout << "Test skipped because it generates D3D11 runtime warnings." << std::endl;
-        return;
-    }
+    // Test skipped for D3D11 because it generates D3D11 runtime warnings.
+    ANGLE_SKIP_TEST_IF(IsD3D11());
 
     constexpr float clearFloat[]       = {0.0f, 0.0f, 0.0f, 0.0f};
     constexpr int clearInt[]           = {0, 0, 0, 0};
@@ -3581,11 +3552,7 @@ TEST_P(WebGLCompatibilityTest, DrawBuffers)
     bool useEXT = false;
     if (getClientMajorVersion() < 3)
     {
-        if (!extensionRequestable("GL_EXT_draw_buffers"))
-        {
-            std::cout << "Test skipped because draw buffers are not available" << std::endl;
-            return;
-        }
+        ANGLE_SKIP_TEST_IF(!extensionRequestable("GL_EXT_draw_buffers"));
 
         glRequestExtensionANGLE("GL_EXT_draw_buffers");
         useEXT = true;
@@ -3594,11 +3561,8 @@ TEST_P(WebGLCompatibilityTest, DrawBuffers)
 
     GLint maxDrawBuffers = 0;
     glGetIntegerv(GL_MAX_DRAW_BUFFERS, &maxDrawBuffers);
-    if (maxDrawBuffers < 4)
-    {
-        std::cout << "Test skipped because MAX_DRAW_BUFFERS is too small." << std::endl;
-        return;
-    }
+    // Test skipped because MAX_DRAW_BUFFERS is too small.
+    ANGLE_SKIP_TEST_IF(maxDrawBuffers < 4);
 
     // Clears all the renderbuffers to red.
     auto ClearEverythingToRed = [](GLRenderbuffer *renderbuffers) {

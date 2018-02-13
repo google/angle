@@ -55,12 +55,7 @@ class BindUniformLocationTest : public ANGLETest
 // Test basic functionality of GL_CHROMIUM_bind_uniform_location
 TEST_P(BindUniformLocationTest, Basic)
 {
-    if (!extensionEnabled("GL_CHROMIUM_bind_uniform_location"))
-    {
-        std::cout << "Test skipped because GL_CHROMIUM_bind_uniform_location is not available."
-                  << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_CHROMIUM_bind_uniform_location"));
 
     ASSERT_NE(mBindUniformLocation, nullptr);
 
@@ -126,12 +121,7 @@ TEST_P(BindUniformLocationTest, Basic)
 // Test that conflicts are detected when two uniforms are bound to the same location
 TEST_P(BindUniformLocationTest, ConflictsDetection)
 {
-    if (!extensionEnabled("GL_CHROMIUM_bind_uniform_location"))
-    {
-        std::cout << "Test skipped because GL_CHROMIUM_bind_uniform_location is not available."
-                  << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_CHROMIUM_bind_uniform_location"));
 
     ASSERT_NE(nullptr, mBindUniformLocation);
 
@@ -182,12 +172,7 @@ TEST_P(BindUniformLocationTest, ConflictsDetection)
 // Test a use case of the chromium compositor
 TEST_P(BindUniformLocationTest, Compositor)
 {
-    if (!extensionEnabled("GL_CHROMIUM_bind_uniform_location"))
-    {
-        std::cout << "Test skipped because GL_CHROMIUM_bind_uniform_location is not available."
-                  << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_CHROMIUM_bind_uniform_location"));
 
     ASSERT_NE(nullptr, mBindUniformLocation);
 
@@ -292,12 +277,7 @@ TEST_P(BindUniformLocationTest, Compositor)
 // Test that unused uniforms don't conflict when bound to the same location
 TEST_P(BindUniformLocationTest, UnusedUniformUpdate)
 {
-    if (!extensionEnabled("GL_CHROMIUM_bind_uniform_location"))
-    {
-        std::cout << "Test skipped because GL_CHROMIUM_bind_uniform_location is not available."
-                  << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_CHROMIUM_bind_uniform_location"));
 
     ASSERT_NE(nullptr, mBindUniformLocation);
 
@@ -397,12 +377,7 @@ TEST_P(BindUniformLocationTest, UnusedUniformUpdate)
 // binding the sampler to a location higher than the amount of active uniforms.
 TEST_P(BindUniformLocationTest, UseSamplerWhenUnusedUniforms)
 {
-    if (!extensionEnabled("GL_CHROMIUM_bind_uniform_location"))
-    {
-        std::cout << "Test skipped because GL_CHROMIUM_bind_uniform_location is not available."
-                  << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_CHROMIUM_bind_uniform_location"));
 
     ASSERT_NE(nullptr, mBindUniformLocation);
 
@@ -446,12 +421,7 @@ TEST_P(BindUniformLocationTest, UseSamplerWhenUnusedUniforms)
 // This is valid according to the extension spec.
 TEST_P(BindUniformLocationTest, SameLocationForUsedAndUnusedUniform)
 {
-    if (!extensionEnabled("GL_CHROMIUM_bind_uniform_location"))
-    {
-        std::cout << "Test skipped because GL_CHROMIUM_bind_uniform_location is not available."
-                  << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_CHROMIUM_bind_uniform_location"));
 
     ASSERT_NE(nullptr, mBindUniformLocation);
 
@@ -520,12 +490,7 @@ class BindUniformLocationES31Test : public BindUniformLocationTest
 // bindUniformLocation API sets a consistent location.
 TEST_P(BindUniformLocationES31Test, ConsistentWithLocationLayoutQualifier)
 {
-    if (!extensionEnabled("GL_CHROMIUM_bind_uniform_location"))
-    {
-        std::cout << "Test skipped because GL_CHROMIUM_bind_uniform_location is not available."
-                  << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_CHROMIUM_bind_uniform_location"));
 
     const std::string vsSource =
         "#version 310 es\n"
@@ -566,12 +531,7 @@ TEST_P(BindUniformLocationES31Test, ConsistentWithLocationLayoutQualifier)
 // location should prevail.
 TEST_P(BindUniformLocationES31Test, LocationLayoutQualifierOverridesAPIBinding)
 {
-    if (!extensionEnabled("GL_CHROMIUM_bind_uniform_location"))
-    {
-        std::cout << "Test skipped because GL_CHROMIUM_bind_uniform_location is not available."
-                  << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_CHROMIUM_bind_uniform_location"));
 
     const std::string vsSource =
         "#version 310 es\n"
@@ -615,12 +575,7 @@ TEST_P(BindUniformLocationES31Test, LocationLayoutQualifierOverridesAPIBinding)
 // fail.
 TEST_P(BindUniformLocationES31Test, LocationLayoutQualifierConflictsWithAPIBinding)
 {
-    if (!extensionEnabled("GL_CHROMIUM_bind_uniform_location"))
-    {
-        std::cout << "Test skipped because GL_CHROMIUM_bind_uniform_location is not available."
-                  << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_CHROMIUM_bind_uniform_location"));
 
     const std::string vsSource =
         "#version 310 es\n"

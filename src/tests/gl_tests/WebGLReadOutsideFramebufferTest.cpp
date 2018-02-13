@@ -363,11 +363,8 @@ TEST_P(WebGLReadOutsideFramebufferTest, CopyTexSubImage2D)
 
 #ifdef _WIN64
     // TODO(fjhenigman): Figure out this failure.
-    if (GetParam() == ES2_D3D11_FL9_3())
-    {
-        std::cout << "Cube map skipped on 64-bit " << GetParam() << "." << std::endl;
-        return;
-    }
+    // Cube map skipped on 64-bit Windows with D3D FL 9.3
+    ANGLE_SKIP_TEST_IF(GetParam() == ES2_D3D11_FL9_3());
 #endif
 
     Main2D(&WebGLReadOutsideFramebufferTest::TestCopyTexSubImageCube, false);
@@ -380,11 +377,8 @@ TEST_P(WebGLReadOutsideFramebufferTest, CopyTexImage2D)
 
 #ifdef _WIN64
     // TODO(fjhenigman): Figure out this failure.
-    if (GetParam() == ES2_D3D11_FL9_3())
-    {
-        std::cout << "Cube map skipped on 64-bit " << GetParam() << "." << std::endl;
-        return;
-    }
+    // Cube map skipped on 64-bit Windows with D3D FL 9.3
+    ANGLE_SKIP_TEST_IF(GetParam() == ES2_D3D11_FL9_3());
 #endif
 
     Main2D(&WebGLReadOutsideFramebufferTest::TestCopyTexImageCube, true);
@@ -394,12 +388,8 @@ TEST_P(WebGLReadOutsideFramebufferTest, CopyTexImage2D)
 // the corresponding source pixel is outside the framebuffer.
 TEST_P(WebGL2ReadOutsideFramebufferTest, CopyTexSubImage3D)
 {
-    if (IsDesktopOpenGL() || IsOpenGLES())
-    {
-        std::cout << "Robust CopyTexSubImage3D behaviour is not implemented on OpenGL."
-                  << std::endl;
-        return;
-    }
+    // Robust CopyTexSubImage3D behaviour is not implemented on OpenGL.
+    ANGLE_SKIP_TEST_IF(IsDesktopOpenGL() || IsOpenGLES());
 
     Main3D(&WebGLReadOutsideFramebufferTest::TestCopyTexSubImage3D, false);
 }

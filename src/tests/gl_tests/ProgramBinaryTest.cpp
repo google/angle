@@ -267,11 +267,7 @@ void ProgramBinaryES3Test::testBinaryAndUBOBlockIndexes(bool drawWithProgramFirs
     // We can't run the test if no program binary formats are supported.
     GLint binaryFormatCount = 0;
     glGetIntegerv(GL_NUM_PROGRAM_BINARY_FORMATS, &binaryFormatCount);
-    if (binaryFormatCount == 0)
-    {
-        std::cout << "Test skipped because no program binary formats available." << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(!binaryFormatCount);
 
     const std::string &vertexShader =
         "#version 300 es\n"
@@ -357,11 +353,7 @@ TEST_P(ProgramBinaryES3Test, UniformBlockBindingNoDraw)
 {
     // TODO(jmadill): Investigate Intel failure.
     // http://anglebug.com/1637
-    if (IsWindows() && IsOpenGL() && IsIntel())
-    {
-        std::cout << "Test skipped on Windows Intel OpenGL." << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsOpenGL() && IsIntel());
 
     testBinaryAndUBOBlockIndexes(false);
 }
@@ -388,11 +380,7 @@ TEST_P(ProgramBinaryES31Test, ProgramBinaryWithComputeShader)
     // We can't run the test if no program binary formats are supported.
     GLint binaryFormatCount = 0;
     glGetIntegerv(GL_NUM_PROGRAM_BINARY_FORMATS, &binaryFormatCount);
-    if (binaryFormatCount == 0)
-    {
-        std::cout << "Test skipped because no program binary formats available." << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(!binaryFormatCount);
 
     const std::string &computeShader =
         "#version 310 es\n"
@@ -503,18 +491,9 @@ class ProgramBinaryTransformFeedbackTest : public ANGLETest
 // should not internally cause a vertex shader recompile (for conversion).
 TEST_P(ProgramBinaryTransformFeedbackTest, GetTransformFeedbackVarying)
 {
-    if (!extensionEnabled("GL_OES_get_program_binary"))
-    {
-        std::cout << "Test skipped because GL_OES_get_program_binary is not available."
-                  << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_OES_get_program_binary"));
 
-    if (getAvailableProgramBinaryFormatCount() == 0)
-    {
-        std::cout << "Test skipped because no program binary formats are available." << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(!getAvailableProgramBinaryFormatCount());
 
     std::vector<uint8_t> binary(0);
     GLint programLength = 0;
@@ -718,17 +697,11 @@ TEST_P(ProgramBinariesAcrossPlatforms, CreateAndReloadBinary)
     angle::PlatformParameters secondRenderer = GetParam().loadParams;
     bool expectedLinkResult                  = GetParam().expectedLinkResult;
 
-    if (!(IsPlatformAvailable(firstRenderer)))
-    {
-        std::cout << "First renderer not supported, skipping test";
-        return;
-    }
+    // First renderer not supported, skipping test.
+    ANGLE_SKIP_TEST_IF(!(IsPlatformAvailable(firstRenderer)));
 
-    if (!(IsPlatformAvailable(secondRenderer)))
-    {
-        std::cout << "Second renderer not supported, skipping test";
-        return;
-    }
+    // Second renderer not supported, skipping test.
+    ANGLE_SKIP_TEST_IF(!(IsPlatformAvailable(secondRenderer)));
 
     EGLWindow *eglWindow = nullptr;
     std::vector<uint8_t> binary(0);
@@ -757,13 +730,10 @@ TEST_P(ProgramBinariesAcrossPlatforms, CreateAndReloadBinary)
         auto basicRenderPos = rendererString.find(std::string("microsoft basic render"));
         auto softwareAdapterPos = rendererString.find(std::string("software adapter"));
 
-        if (basicRenderPos != std::string::npos || softwareAdapterPos != std::string::npos)
-        {
-            // The first renderer is using WARP, even though we didn't explictly request it
-            // We should skip this test
-            std::cout << "Test skipped on when default GPU is WARP." << std::endl;
-            return;
-        }
+        // The first renderer is using WARP, even though we didn't explictly request it
+        // We should skip this test
+        ANGLE_SKIP_TEST_IF(basicRenderPos != std::string::npos ||
+                           softwareAdapterPos != std::string::npos);
     }
 
     // Create a program

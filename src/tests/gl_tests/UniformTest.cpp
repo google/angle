@@ -605,11 +605,8 @@ TEST_P(UniformTest, SamplerUniformsAppearOnce)
     int maxVertexTextureImageUnits = 0;
     glGetIntegerv(GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS, &maxVertexTextureImageUnits);
 
-    if (maxVertexTextureImageUnits == 0)
-    {
-        std::cout << "Renderer doesn't support vertex texture fetch, skipping test" << std::endl;
-        return;
-    }
+    // Renderer doesn't support vertex texture fetch, skipping test.
+    ANGLE_SKIP_TEST_IF(!maxVertexTextureImageUnits);
 
     const std::string &vertShader =
         "attribute vec2 position;\n"

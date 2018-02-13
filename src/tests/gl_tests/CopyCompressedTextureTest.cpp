@@ -120,17 +120,9 @@ const uint8_t CompressedImageETC1[8] = {0x0, 0x0, 0xf8, 0x2, 0xff, 0xff, 0x0, 0x
 // Test to ensure that the basic functionality of the extension works.
 TEST_P(CopyCompressedTextureTest, Basic)
 {
-    if (!checkExtensions())
-    {
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(!checkExtensions());
 
-    if (!extensionEnabled("GL_EXT_texture_compression_dxt1"))
-    {
-        std::cout << "Test skipped because GL_EXT_texture_compression_dxt1 is not available."
-                  << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_texture_compression_dxt1"));
 
     glBindTexture(GL_TEXTURE_2D, mTextures[0]);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);

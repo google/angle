@@ -358,11 +358,7 @@ TEST_P(SixteenBppTextureTestES3, RGB5A1UploadRGB10A2)
 TEST_P(SixteenBppTextureTestES3, RGBA4FramebufferReadback)
 {
     // TODO(jmadill): Fix bug with GLES
-    if (IsOpenGLES())
-    {
-        std::cout << "Test skipped on GLES." << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(IsOpenGLES());
 
     Vector4 rawColor(0.5f, 0.7f, 1.0f, 0.0f);
     GLColor expectedColor(rawColor);
@@ -416,11 +412,7 @@ TEST_P(SixteenBppTextureTestES3, RGBA4FramebufferReadback)
 TEST_P(SixteenBppTextureTestES3, RGB565FramebufferReadback)
 {
     // TODO(jmadill): Fix bug with GLES
-    if (IsOpenGLES())
-    {
-        std::cout << "Test skipped on GLES." << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(IsOpenGLES());
 
     GLFramebuffer fbo;
     glBindFramebuffer(GL_FRAMEBUFFER, fbo.get());

@@ -119,11 +119,7 @@ TEST_P(FramebufferRenderMipmapTest, RenderToMipmap)
 {
     bool renderToMipmapSupported =
         extensionEnabled("GL_OES_fbo_render_mipmap") || getClientMajorVersion() > 2;
-    if (!renderToMipmapSupported)
-    {
-        std::cout << "Test skipped because GL_OES_fbo_render_mipmap or ES3 is not available." << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(!renderToMipmapSupported);
 
     const GLfloat levelColors[] =
     {

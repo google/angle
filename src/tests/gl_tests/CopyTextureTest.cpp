@@ -150,14 +150,9 @@ TEST_P(CopyTextureTest, ImmutableTexture)
         return;
     }
 
-    if (getClientMajorVersion() < 3 &&
-        (!extensionEnabled("GL_EXT_texture_storage") || !extensionEnabled("GL_OES_rgb8_rgba8")))
-    {
-        std::cout
-            << "Test skipped due to missing ES3 or GL_EXT_texture_storage or GL_OES_rgb8_rgba8"
-            << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(
+        getClientMajorVersion() < 3 &&
+        (!extensionEnabled("GL_EXT_texture_storage") || !extensionEnabled("GL_OES_rgb8_rgba8")));
 
     GLColor pixels = GLColor::red;
 
@@ -683,18 +678,10 @@ TEST_P(CopyTextureTest, CopyToMipmap)
         return;
     }
 
-    if (getClientMajorVersion() < 3 && !extensionEnabled("GL_OES_fbo_render_mipmap"))
-    {
-        std::cout << "Test skipped because ES3 or GL_OES_fbo_render_mipmap is missing."
-                  << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 &&
+                       !extensionEnabled("GL_OES_fbo_render_mipmap"));
 
-    if (IsOSX() && IsIntel())
-    {
-        std::cout << "Test skipped on Mac Intel." << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsIntel());
 
     GLColor pixels[] = {GLColor::red, GLColor::red, GLColor::red, GLColor::red};
 
@@ -1168,11 +1155,7 @@ TEST_P(CopyTextureTestES3, ES3FloatFormats)
         return;
     }
 
-    if (!extensionEnabled("GL_EXT_color_buffer_float"))
-    {
-        std::cout << "Test skipped due to missing GL_EXT_color_buffer_float." << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_color_buffer_float"));
 
     auto testOutput = [this](GLuint texture, const GLColor32F &expectedColor) {
         const std::string vs =

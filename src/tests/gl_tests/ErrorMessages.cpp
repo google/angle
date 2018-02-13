@@ -75,15 +75,9 @@ class ErrorMessagesTest : public ANGLETest
 // Verify functionality of WebGL specific errors using KHR_debug
 TEST_P(ErrorMessagesTest, ErrorMessages)
 {
-    if (extensionEnabled("GL_KHR_debug"))
-    {
-        glEnable(GL_DEBUG_OUTPUT);
-    }
-    else
-    {
-        std::cout << "Test skipped because GL_KHR_debug is not available." << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_KHR_debug"));
+
+    glEnable(GL_DEBUG_OUTPUT);
 
     std::vector<Message> messages;
     glDebugMessageCallbackKHR(Callback, &messages);

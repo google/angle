@@ -69,11 +69,7 @@ class SRGBTextureTest : public ANGLETest
 TEST_P(SRGBTextureTest, SRGBValidation)
 {
     // TODO(fjhenigman): Figure out why this fails on Ozone Intel.
-    if (IsOzone() && IsIntel() && IsOpenGLES())
-    {
-        std::cout << "Test skipped on Ozone Intel." << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(IsOzone() && IsIntel() && IsOpenGLES());
 
     bool supported = extensionEnabled("GL_EXT_sRGB") || getClientMajorVersion() == 3;
 
@@ -104,11 +100,7 @@ TEST_P(SRGBTextureTest, SRGBValidation)
 TEST_P(SRGBTextureTest, SRGBAValidation)
 {
     // TODO(fjhenigman): Figure out why this fails on Ozone Intel.
-    if (IsOzone() && IsIntel() && IsOpenGLES())
-    {
-        std::cout << "Test skipped on Ozone Intel." << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(IsOzone() && IsIntel() && IsOpenGLES());
 
     bool supported = extensionEnabled("GL_EXT_sRGB") || getClientMajorVersion() == 3;
 
@@ -203,18 +195,9 @@ TEST_P(SRGBTextureTest, SRGBDecodeExtensionAvailability)
 TEST_P(SRGBTextureTest, SRGBDecodeTextureParameter)
 {
     // TODO(fjhenigman): Figure out why this fails on Ozone Intel.
-    if (IsOzone() && IsIntel() && IsOpenGLES())
-    {
-        std::cout << "Test skipped on Ozone Intel." << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(IsOzone() && IsIntel() && IsOpenGLES());
 
-    if (!extensionEnabled("GL_EXT_texture_sRGB_decode"))
-    {
-        std::cout << "Test skipped because GL_EXT_texture_sRGB_decode is not available."
-                  << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_texture_sRGB_decode"));
 
     GLColor linearColor(64, 127, 191, 255);
     GLColor srgbColor(13, 54, 133, 255);
@@ -243,12 +226,8 @@ TEST_P(SRGBTextureTest, SRGBDecodeTextureParameter)
 // Test basic functionality of SRGB decode using the sampler parameter
 TEST_P(SRGBTextureTest, SRGBDecodeSamplerParameter)
 {
-    if (!extensionEnabled("GL_EXT_texture_sRGB_decode") || getClientMajorVersion() < 3)
-    {
-        std::cout << "Test skipped because GL_EXT_texture_sRGB_decode or ES3 is not available."
-                  << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_texture_sRGB_decode") ||
+                       getClientMajorVersion() < 3);
 
     GLColor linearColor(64, 127, 191, 255);
     GLColor srgbColor(13, 54, 133, 255);
@@ -280,11 +259,7 @@ TEST_P(SRGBTextureTest, SRGBDecodeSamplerParameter)
 // Test that mipmaps are generated correctly for sRGB textures
 TEST_P(SRGBTextureTest, GenerateMipmaps)
 {
-    if (getClientMajorVersion() < 3)
-    {
-        std::cout << "Test skipped because ES3 is not available." << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3);
 
     ANGLE_SKIP_TEST_IF(IsOpenGL() && ((IsIntel() && IsOSX()) || IsAMD()));
 

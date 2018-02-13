@@ -39,11 +39,7 @@ TEST_P(PointSpritesTest, PointCoordAndPointSizeCompliance)
 {
     // TODO(jmadill): Investigate potential AMD driver bug.
     // http://anglebug.com/1643
-    if (IsAMD() && IsDesktopOpenGL() && IsWindows())
-    {
-        std::cout << "Test skipped on desktop GL AMD Windows." << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(IsAMD() && IsDesktopOpenGL() && IsWindows());
 
     const std::string fs =
         R"(precision mediump float;
@@ -141,11 +137,7 @@ TEST_P(PointSpritesTest, PointWithoutAttributesCompliance)
 {
     // TODO(jmadill): Investigate potential AMD driver bug.
     // http://anglebug.com/1643
-    if (IsAMD() && IsDesktopOpenGL() && IsWindows())
-    {
-        std::cout << "Test skipped on desktop GL AMD Windows." << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(IsAMD() && IsDesktopOpenGL() && IsWindows());
 
     const std::string fs =
         R"(precision mediump float;
@@ -179,11 +171,7 @@ TEST_P(PointSpritesTest, PointCoordRegressionTest)
 {
     // TODO(jmadill): Investigate potential AMD driver bug.
     // http://anglebug.com/1643
-    if (IsAMD() && IsDesktopOpenGL() && IsWindows())
-    {
-        std::cout << "Test skipped on desktop GL AMD Windows." << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(IsAMD() && IsDesktopOpenGL() && IsWindows());
 
     const std::string fs =
         R"(precision mediump float;
@@ -263,11 +251,7 @@ TEST_P(PointSpritesTest, PointSizeEnabledCompliance)
 {
     // TODO(jmadill): Investigate potential AMD driver bug.
     // http://anglebug.com/1643
-    if (IsAMD() && IsDesktopOpenGL() && IsWindows())
-    {
-        std::cout << "Test skipped on desktop GL AMD Windows." << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(IsAMD() && IsDesktopOpenGL() && IsWindows());
 
     const std::string fs =
         R"(precision mediump float;
@@ -480,21 +464,13 @@ TEST_P(PointSpritesTest, PointSpriteAlternatingDrawTypes)
 // 3.4.
 TEST_P(PointSpritesTest, PointSizeAboveMaxIsClamped)
 {
-    if (IsD3D9())
-    {
-        // Failed on NVIDIA GeForce GTX 1080 - no pixels from the point were detected in the
-        // framebuffer. http://anglebug.com/2111
-        std::cout << "Test skipped on D3D9." << std::endl;
-        return;
-    }
+    // Failed on NVIDIA GeForce GTX 1080 - no pixels from the point were detected in the
+    // framebuffer. http://anglebug.com/2111
+    ANGLE_SKIP_TEST_IF(IsD3D9());
 
-    if (IsAMD() && IsOpenGL())
-    {
-        // Failed on AMD OSX and Windows trybots - no pixels from the point were detected in the
-        // framebuffer. http://anglebug.com/2113
-        std::cout << "Test skipped on AMD OpenGL." << std::endl;
-        return;
-    }
+    // Failed on AMD OSX and Windows trybots - no pixels from the point were detected in the
+    // framebuffer. http://anglebug.com/2113
+    ANGLE_SKIP_TEST_IF(IsAMD() && IsOpenGL());
 
     GLfloat pointSizeRange[2] = {};
     glGetFloatv(GL_ALIASED_POINT_SIZE_RANGE, pointSizeRange);

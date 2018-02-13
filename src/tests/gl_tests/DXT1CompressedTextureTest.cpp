@@ -74,11 +74,7 @@ class DXT1CompressedTextureTest : public ANGLETest
 
 TEST_P(DXT1CompressedTextureTest, CompressedTexImage)
 {
-    if (!extensionEnabled("GL_EXT_texture_compression_dxt1"))
-    {
-        std::cout << "Test skipped because GL_EXT_texture_compression_dxt1 is not available." << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_texture_compression_dxt1"));
 
     GLuint texture;
     glGenTextures(1, &texture);
@@ -115,18 +111,11 @@ TEST_P(DXT1CompressedTextureTest, CompressedTexImage)
 
 TEST_P(DXT1CompressedTextureTest, CompressedTexStorage)
 {
-    if (!extensionEnabled("GL_EXT_texture_compression_dxt1"))
-    {
-        std::cout << "Test skipped due to missing GL_EXT_texture_compression_dxt1" << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_texture_compression_dxt1"));
 
-    if (getClientMajorVersion() < 3 &&
-        (!extensionEnabled("GL_EXT_texture_storage") || !extensionEnabled("GL_OES_rgb8_rgba8")))
-    {
-        std::cout << "Test skipped due to missing ES3 or GL_EXT_texture_storage or GL_OES_rgb8_rgba8" << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(
+        getClientMajorVersion() < 3 &&
+        (!extensionEnabled("GL_EXT_texture_storage") || !extensionEnabled("GL_OES_rgb8_rgba8")));
 
     GLuint texture;
     glGenTextures(1, &texture);
@@ -174,11 +163,7 @@ TEST_P(DXT1CompressedTextureTest, CompressedTexStorage)
 // Test validation of glCompressedTexSubImage2D with DXT formats
 TEST_P(DXT1CompressedTextureTest, CompressedTexSubImageValidation)
 {
-    if (!extensionEnabled("GL_EXT_texture_compression_dxt1"))
-    {
-        std::cout << "Test skipped due to missing GL_EXT_texture_compression_dxt1" << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_texture_compression_dxt1"));
 
     GLTexture texture;
     glBindTexture(GL_TEXTURE_2D, texture.get());
@@ -225,12 +210,7 @@ class DXT1CompressedTextureTestD3D11 : public DXT1CompressedTextureTest { };
 
 TEST_P(DXT1CompressedTextureTestES3, PBOCompressedTexImage)
 {
-    if (!extensionEnabled("GL_EXT_texture_compression_dxt1"))
-    {
-        std::cout << "Test skipped because GL_EXT_texture_compression_dxt1 is not available."
-                  << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_texture_compression_dxt1"));
 
     GLuint texture;
     glGenTextures(1, &texture);

@@ -792,12 +792,8 @@ TEST_P(BlitFramebufferANGLETest, BlitWithMissingAttachments)
 TEST_P(BlitFramebufferANGLETest, BlitStencil)
 {
     // TODO(jmadill): Figure out if we can fix this on D3D9.
-    // https://code.google.com/p/angleproject/issues/detail?id=809
-    if (IsIntel() && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE)
-    {
-        std::cout << "Test skipped on Intel D3D9." << std::endl;
-        return;
-    }
+    // https://code.google.com/p/angleproject/issues/detail?id=2205
+    ANGLE_SKIP_TEST_IF(IsIntel() && IsD3D9());
 
     glBindFramebuffer(GL_FRAMEBUFFER, mUserFBO);
 
@@ -805,7 +801,7 @@ TEST_P(BlitFramebufferANGLETest, BlitStencil)
     // fill the stencil buffer with 0x1
     glStencilFunc(GL_ALWAYS, 0x1, 0xFF);
     glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
-    glEnable(GL_STENCIL_TEST); 
+    glEnable(GL_STENCIL_TEST);
     drawQuad(mCheckerProgram, "position", 0.3f);
 
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER_ANGLE, mOriginalFBO);

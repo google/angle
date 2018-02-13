@@ -851,11 +851,7 @@ TEST_P(WebGLFramebufferTest, TextureAttachmentCommitBug)
         glRequestExtensionANGLE("GL_ANGLE_depth_texture");
     }
 
-    if (!extensionEnabled("GL_ANGLE_depth_texture"))
-    {
-        std::cout << "Test skipped because depth textures are not available.\n";
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_ANGLE_depth_texture"));
 
     GLTexture depthTexture;
     glBindTexture(GL_TEXTURE_2D, depthTexture.get());

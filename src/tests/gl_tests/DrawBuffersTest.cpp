@@ -222,41 +222,26 @@ class DrawBuffersTest : public ANGLETest
 TEST_P(DrawBuffersTest, VerifyD3DLimits)
 {
     EGLPlatformParameters platform = GetParam().eglParameters;
-    if (platform.renderer == EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
+
+    ANGLE_SKIP_TEST_IF(platform.renderer != EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE);
+    if (platform.majorVersion == 9 && platform.minorVersion == 3)
     {
-        if (platform.majorVersion == 9 && platform.minorVersion == 3)
-        {
-            // D3D11 Feature Level 9_3 supports 4 draw buffers
-            ASSERT_EQ(mMaxDrawBuffers, 4);
-        }
-        else
-        {
-            // D3D11 Feature Level 10_0+ supports 8 draw buffers
-            ASSERT_EQ(mMaxDrawBuffers, 8);
-        }
+        // D3D11 Feature Level 9_3 supports 4 draw buffers
+        ASSERT_EQ(mMaxDrawBuffers, 4);
     }
     else
     {
-        std::cout << "Test skipped for non-D3D11 renderers." << std::endl;
-        return;
+        // D3D11 Feature Level 10_0+ supports 8 draw buffers
+        ASSERT_EQ(mMaxDrawBuffers, 8);
     }
 }
 
 TEST_P(DrawBuffersTest, Gaps)
 {
-    if (!checkSupport())
-    {
-        std::cout << "Test skipped because ES3 or GL_EXT_draw_buffers is not available."
-                  << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(!checkSupport());
 
-    if (IsWindows() && IsAMD() && IsDesktopOpenGL())
-    {
-        // TODO(ynovikov): Investigate the failure (http://anglebug.com/1535)
-        std::cout << "Test disabled on Windows AMD OpenGL." << std::endl;
-        return;
-    }
+    // TODO(ynovikov): Investigate the failure (http://anglebug.com/1535)
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsAMD() && IsDesktopOpenGL());
 
     glBindTexture(GL_TEXTURE_2D, mTextures[0]);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, mTextures[0], 0);
@@ -281,19 +266,10 @@ TEST_P(DrawBuffersTest, Gaps)
 
 TEST_P(DrawBuffersTest, FirstAndLast)
 {
-    if (!checkSupport())
-    {
-        std::cout << "Test skipped because ES3 or GL_EXT_draw_buffers is not available."
-                  << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(!checkSupport());
 
-    if (IsWindows() && IsAMD() && IsDesktopOpenGL())
-    {
-        // TODO(ynovikov): Investigate the failure (https://anglebug.com/1533)
-        std::cout << "Test disabled on Windows AMD OpenGL." << std::endl;
-        return;
-    }
+    // TODO(ynovikov): Investigate the failure (https://anglebug.com/1533)
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsAMD() && IsDesktopOpenGL());
 
     glBindTexture(GL_TEXTURE_2D, mTextures[0]);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mTextures[0], 0);
@@ -327,19 +303,10 @@ TEST_P(DrawBuffersTest, FirstAndLast)
 
 TEST_P(DrawBuffersTest, FirstHalfNULL)
 {
-    if (!checkSupport())
-    {
-        std::cout << "Test skipped because ES3 or GL_EXT_draw_buffers is not available."
-                  << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(!checkSupport());
 
-    if (IsWindows() && IsAMD() && IsDesktopOpenGL())
-    {
-        // TODO(ynovikov): Investigate the failure (https://anglebug.com/1533)
-        std::cout << "Test disabled on Windows AMD OpenGL." << std::endl;
-        return;
-    }
+    // TODO(ynovikov): Investigate the failure (https://anglebug.com/1533)
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsAMD() && IsDesktopOpenGL());
 
     bool flags[8] = { false };
     GLenum bufs[8] = { GL_NONE };
@@ -372,12 +339,7 @@ TEST_P(DrawBuffersTest, FirstHalfNULL)
 
 TEST_P(DrawBuffersTest, UnwrittenOutputVariablesShouldNotCrash)
 {
-    if (!checkSupport())
-    {
-        std::cout << "Test skipped because ES3 or GL_EXT_draw_buffers is not available."
-                  << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(!checkSupport());
 
     // Bind two render targets but use a shader which writes only to the first one.
     glBindTexture(GL_TEXTURE_2D, mTextures[0]);
@@ -413,11 +375,7 @@ TEST_P(DrawBuffersTest, UnwrittenOutputVariablesShouldNotCrash)
 
 TEST_P(DrawBuffersTest, BroadcastGLFragColor)
 {
-    if (!extensionEnabled("GL_EXT_draw_buffers"))
-    {
-        std::cout << "Test skipped because EGL_EXT_draw_buffers is not enabled." << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_draw_buffers"));
 
     // Bind two render targets. gl_FragColor should be broadcast to both.
     glBindTexture(GL_TEXTURE_2D, mTextures[0]);

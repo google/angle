@@ -26,11 +26,7 @@ protected:
 
 TEST_P(DiscardFramebufferEXTTest, DefaultFramebuffer)
 {
-    if (!extensionEnabled("EXT_discard_framebuffer"))
-    {
-        std::cout << "Test skipped because EXT_discard_framebuffer is not available." << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("EXT_discard_framebuffer"));
 
     // These should succeed on the default framebuffer
     const GLenum discards1[] = { GL_COLOR_EXT };
@@ -65,11 +61,7 @@ TEST_P(DiscardFramebufferEXTTest, DefaultFramebuffer)
 
 TEST_P(DiscardFramebufferEXTTest, NonDefaultFramebuffer)
 {
-    if (!extensionEnabled("EXT_discard_framebuffer"))
-    {
-        std::cout << "Test skipped because EXT_discard_framebuffer is not available." << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("EXT_discard_framebuffer"));
 
     GLuint tex2D;
     GLuint framebuffer;

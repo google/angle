@@ -623,12 +623,8 @@ TEST_P(RobustResourceInitTestES3, BindTexImage)
 
     EGLint surfaceType = 0;
     eglGetConfigAttrib(display, config, EGL_SURFACE_TYPE, &surfaceType);
-    if ((surfaceType & EGL_PBUFFER_BIT) == 0)
-    {
-        std::cout << "Test skipped because EGL config cannot be used to create pbuffers."
-                  << std::endl;
-        return;
-    }
+    // Test skipped because EGL config cannot be used to create pbuffers.
+    ANGLE_SKIP_TEST_IF((surfaceType & EGL_PBUFFER_BIT) == 0);
 
     EGLint attribs[] = {
         EGL_WIDTH,          32,

@@ -409,15 +409,10 @@ class ImageTestES3 : public ImageTest
 TEST_P(ImageTest, ValidationImageBase)
 {
     EGLWindow *window = getEGLWindow();
-    if (!extensionEnabled("OES_EGL_image") ||
+    ANGLE_SKIP_TEST_IF(
+        !extensionEnabled("OES_EGL_image") ||
         !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_image_base") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_texture_2D_image"))
-    {
-        std::cout << "Test skipped because OES_EGL_image, EGL_KHR_image_base or "
-                     "EGL_KHR_gl_texture_2D_image is not available."
-                  << std::endl;
-        return;
-    }
+        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_texture_2D_image"));
 
     GLuint glTexture2D;
     glGenTextures(1, &glTexture2D);
@@ -548,13 +543,8 @@ TEST_P(ImageTest, ValidationImagePixmap)
 TEST_P(ImageTest, ValidationGLImage)
 {
     EGLWindow *window = getEGLWindow();
-    if (!extensionEnabled("OES_EGL_image") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_image_base"))
-    {
-        std::cout << "Test skipped because OES_EGL_image or EGL_KHR_image_base is not available."
-                  << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("OES_EGL_image") ||
+                       !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_image_base"));
 
     EGLDisplay display = window->getDisplay();
     EGLContext context = window->getContext();
@@ -803,15 +793,10 @@ TEST_P(ImageTest, ValidationGLImage)
 TEST_P(ImageTest, ValidationGLEGLImage)
 {
     EGLWindow *window = getEGLWindow();
-    if (!extensionEnabled("OES_EGL_image") ||
+    ANGLE_SKIP_TEST_IF(
+        !extensionEnabled("OES_EGL_image") ||
         !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_image_base") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_texture_2D_image"))
-    {
-        std::cout << "Test skipped because OES_EGL_image, EGL_KHR_image_base or "
-                     "EGL_KHR_gl_texture_2D_image is not available."
-                  << std::endl;
-        return;
-    }
+        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_texture_2D_image"));
 
     GLubyte data[4] = {255, 0, 255, 255};
 
@@ -858,12 +843,7 @@ TEST_P(ImageTest, ValidationGLEGLImage)
 // Check validation from the GL_OES_EGL_image_external extension
 TEST_P(ImageTest, ValidationGLEGLImageExternal)
 {
-    if (!extensionEnabled("GL_OES_EGL_image_external"))
-    {
-        std::cout << "Test skipped because GL_OES_EGL_image_external is not available."
-                  << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_OES_EGL_image_external"));
 
     GLuint texture;
     glGenTextures(1, &texture);
@@ -941,12 +921,7 @@ TEST_P(ImageTest, ValidationGLEGLImageExternal)
 // Check validation from the GL_OES_EGL_image_external_essl3 extension
 TEST_P(ImageTest, ValidationGLEGLImageExternalESSL3)
 {
-    if (!extensionEnabled("GL_OES_EGL_image_external_essl3"))
-    {
-        std::cout << "Test skipped because GL_OES_EGL_image_external is not available."
-                  << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_OES_EGL_image_external_essl3"));
 
     // Make sure this extension is not exposed without ES3.
     ASSERT_GE(getClientMajorVersion(), 3);
@@ -971,15 +946,10 @@ TEST_P(ImageTest, ValidationGLEGLImageExternalESSL3)
 TEST_P(ImageTest, Source2DTarget2D)
 {
     EGLWindow *window = getEGLWindow();
-    if (!extensionEnabled("OES_EGL_image") ||
+    ANGLE_SKIP_TEST_IF(
+        !extensionEnabled("OES_EGL_image") ||
         !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_image_base") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_texture_2D_image"))
-    {
-        std::cout << "Test skipped because OES_EGL_image, EGL_KHR_image_base or "
-                     "EGL_KHR_gl_texture_2D_image is not available."
-                  << std::endl;
-        return;
-    }
+        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_texture_2D_image"));
 
     GLubyte data[4] = {255, 0, 255, 255};
 
@@ -1004,15 +974,10 @@ TEST_P(ImageTest, Source2DTarget2D)
 TEST_P(ImageTest, Source2DTargetRenderbuffer)
 {
     EGLWindow *window = getEGLWindow();
-    if (!extensionEnabled("OES_EGL_image") ||
+    ANGLE_SKIP_TEST_IF(
+        !extensionEnabled("OES_EGL_image") ||
         !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_image_base") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_texture_2D_image"))
-    {
-        std::cout << "Test skipped because OES_EGL_image, EGL_KHR_image_base or "
-                     "EGL_KHR_gl_texture_2D_image is not available."
-                  << std::endl;
-        return;
-    }
+        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_texture_2D_image"));
 
     GLubyte data[4] = {255, 0, 255, 255};
 
@@ -1037,16 +1002,10 @@ TEST_P(ImageTest, Source2DTargetRenderbuffer)
 TEST_P(ImageTest, Source2DTargetExternal)
 {
     EGLWindow *window = getEGLWindow();
-    if (!extensionEnabled("OES_EGL_image") || !extensionEnabled("OES_EGL_image_external") ||
+    ANGLE_SKIP_TEST_IF(
+        !extensionEnabled("OES_EGL_image") || !extensionEnabled("OES_EGL_image_external") ||
         !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_image_base") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_texture_2D_image"))
-    {
-        std::cout
-            << "Test skipped because OES_EGL_image, OES_EGL_image_external, EGL_KHR_image_base or "
-               "EGL_KHR_gl_texture_2D_image is not available."
-            << std::endl;
-        return;
-    }
+        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_texture_2D_image"));
 
     GLubyte data[4] = {255, 0, 255, 255};
 
@@ -1071,16 +1030,10 @@ TEST_P(ImageTest, Source2DTargetExternal)
 TEST_P(ImageTestES3, Source2DTargetExternalESSL3)
 {
     EGLWindow *window = getEGLWindow();
-    if (!extensionEnabled("OES_EGL_image") || !extensionEnabled("OES_EGL_image_external_essl3") ||
+    ANGLE_SKIP_TEST_IF(
+        !extensionEnabled("OES_EGL_image") || !extensionEnabled("OES_EGL_image_external_essl3") ||
         !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_image_base") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_texture_2D_image"))
-    {
-        std::cout << "Test skipped because OES_EGL_image, OES_EGL_image_external_essl3, "
-                     "EGL_KHR_image_base or "
-                     "EGL_KHR_gl_texture_2D_image is not available."
-                  << std::endl;
-        return;
-    }
+        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_texture_2D_image"));
 
     GLubyte data[4] = {255, 0, 255, 255};
 
@@ -1105,15 +1058,10 @@ TEST_P(ImageTestES3, Source2DTargetExternalESSL3)
 TEST_P(ImageTest, SourceCubeTarget2D)
 {
     EGLWindow *window = getEGLWindow();
-    if (!extensionEnabled("OES_EGL_image") ||
+    ANGLE_SKIP_TEST_IF(
+        !extensionEnabled("OES_EGL_image") ||
         !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_image_base") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_texture_cubemap_image"))
-    {
-        std::cout << "Test skipped because OES_EGL_image, EGL_KHR_image_base or "
-                     "EGL_KHR_gl_texture_cubemap_image is not available."
-                  << std::endl;
-        return;
-    }
+        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_texture_cubemap_image"));
 
     GLubyte data[24] = {
         255, 0, 255, 255, 255, 255, 255, 255, 255, 0, 0, 255,
@@ -1146,15 +1094,10 @@ TEST_P(ImageTest, SourceCubeTarget2D)
 TEST_P(ImageTest, SourceCubeTargetRenderbuffer)
 {
     EGLWindow *window = getEGLWindow();
-    if (!extensionEnabled("OES_EGL_image") ||
+    ANGLE_SKIP_TEST_IF(
+        !extensionEnabled("OES_EGL_image") ||
         !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_image_base") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_texture_cubemap_image"))
-    {
-        std::cout << "Test skipped because OES_EGL_image, EGL_KHR_image_base or "
-                     "EGL_KHR_gl_texture_cubemap_image is not available."
-                  << std::endl;
-        return;
-    }
+        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_texture_cubemap_image"));
 
     GLubyte data[24] = {
         255, 0, 255, 255, 255, 255, 255, 255, 255, 0, 0, 255,
@@ -1188,16 +1131,10 @@ TEST_P(ImageTest, SourceCubeTargetRenderbuffer)
 TEST_P(ImageTest, SourceCubeTargetExternal)
 {
     EGLWindow *window = getEGLWindow();
-    if (!extensionEnabled("OES_EGL_image") || !extensionEnabled("OES_EGL_image_external") ||
+    ANGLE_SKIP_TEST_IF(
+        !extensionEnabled("OES_EGL_image") || !extensionEnabled("OES_EGL_image_external") ||
         !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_image_base") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_texture_cubemap_image"))
-    {
-        std::cout
-            << "Test skipped because OES_EGL_image, OES_EGL_image_external, EGL_KHR_image_base or "
-               "EGL_KHR_gl_texture_cubemap_image is not available."
-            << std::endl;
-        return;
-    }
+        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_texture_cubemap_image"));
 
     GLubyte data[24] = {
         255, 0, 255, 255, 255, 255, 255, 255, 255, 0, 0, 255,
@@ -1231,16 +1168,10 @@ TEST_P(ImageTest, SourceCubeTargetExternal)
 TEST_P(ImageTestES3, SourceCubeTargetExternalESSL3)
 {
     EGLWindow *window = getEGLWindow();
-    if (!extensionEnabled("OES_EGL_image") || !extensionEnabled("OES_EGL_image_external_essl3") ||
+    ANGLE_SKIP_TEST_IF(
+        !extensionEnabled("OES_EGL_image") || !extensionEnabled("OES_EGL_image_external_essl3") ||
         !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_image_base") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_texture_cubemap_image"))
-    {
-        std::cout << "Test skipped because OES_EGL_image, OES_EGL_image_external_essl3, "
-                     "EGL_KHR_image_base or "
-                     "EGL_KHR_gl_texture_cubemap_image is not available."
-                  << std::endl;
-        return;
-    }
+        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_texture_cubemap_image"));
 
     GLubyte data[24] = {
         255, 0, 255, 255, 255, 255, 255, 255, 255, 0, 0, 255,
@@ -1273,21 +1204,12 @@ TEST_P(ImageTestES3, SourceCubeTargetExternalESSL3)
 TEST_P(ImageTest, Source3DTargetTexture)
 {
     EGLWindow *window = getEGLWindow();
-    if (!extensionEnabled("OES_EGL_image") ||
+    ANGLE_SKIP_TEST_IF(
+        !extensionEnabled("OES_EGL_image") ||
         !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_image_base") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_texture_3D_image"))
-    {
-        std::cout << "Test skipped because OES_EGL_image, EGL_KHR_image_base or "
-                     "EGL_KHR_gl_texture_3D_image is not available."
-                  << std::endl;
-        return;
-    }
+        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_texture_3D_image"));
 
-    if (getClientMajorVersion() < 3 && !extensionEnabled("GL_OES_texture_3D"))
-    {
-        std::cout << "Test skipped because 3D textures are not available." << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 && !extensionEnabled("GL_OES_texture_3D"));
 
     const size_t depth      = 2;
     GLubyte data[4 * depth] = {
@@ -1319,21 +1241,12 @@ TEST_P(ImageTest, Source3DTargetTexture)
 TEST_P(ImageTest, Source3DTargetRenderbuffer)
 {
     EGLWindow *window = getEGLWindow();
-    if (!extensionEnabled("OES_EGL_image") ||
+    ANGLE_SKIP_TEST_IF(
+        !extensionEnabled("OES_EGL_image") ||
         !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_image_base") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_texture_3D_image"))
-    {
-        std::cout << "Test skipped because OES_EGL_image, EGL_KHR_image_base or "
-                     "EGL_KHR_gl_texture_3D_image is not available."
-                  << std::endl;
-        return;
-    }
+        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_texture_3D_image"));
 
-    if (getClientMajorVersion() < 3 && !extensionEnabled("GL_OES_texture_3D"))
-    {
-        std::cout << "Test skipped because 3D textures are not available." << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 && !extensionEnabled("GL_OES_texture_3D"));
 
     const size_t depth      = 2;
     GLubyte data[4 * depth] = {
@@ -1366,22 +1279,12 @@ TEST_P(ImageTest, Source3DTargetRenderbuffer)
 TEST_P(ImageTest, Source3DTargetExternal)
 {
     EGLWindow *window = getEGLWindow();
-    if (!extensionEnabled("OES_EGL_image") || !extensionEnabled("OES_EGL_image_external") ||
+    ANGLE_SKIP_TEST_IF(
+        !extensionEnabled("OES_EGL_image") || !extensionEnabled("OES_EGL_image_external") ||
         !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_image_base") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_texture_3D_image"))
-    {
-        std::cout
-            << "Test skipped because OES_EGL_image, OES_EGL_image_external, EGL_KHR_image_base or "
-               "EGL_KHR_gl_texture_3D_image is not available."
-            << std::endl;
-        return;
-    }
+        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_texture_3D_image"));
 
-    if (getClientMajorVersion() < 3 && !extensionEnabled("GL_OES_texture_3D"))
-    {
-        std::cout << "Test skipped because 3D textures are not available." << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 && !extensionEnabled("GL_OES_texture_3D"));
 
     const size_t depth      = 2;
     GLubyte data[4 * depth] = {
@@ -1414,22 +1317,12 @@ TEST_P(ImageTest, Source3DTargetExternal)
 TEST_P(ImageTestES3, Source3DTargetExternalESSL3)
 {
     EGLWindow *window = getEGLWindow();
-    if (!extensionEnabled("OES_EGL_image") || !extensionEnabled("OES_EGL_image_external_essl3") ||
+    ANGLE_SKIP_TEST_IF(
+        !extensionEnabled("OES_EGL_image") || !extensionEnabled("OES_EGL_image_external_essl3") ||
         !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_image_base") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_texture_3D_image"))
-    {
-        std::cout << "Test skipped because OES_EGL_image, OES_EGL_image_external_essl3, "
-                     "EGL_KHR_image_base or "
-                     "EGL_KHR_gl_texture_3D_image is not available."
-                  << std::endl;
-        return;
-    }
+        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_texture_3D_image"));
 
-    if (getClientMajorVersion() < 3 && !extensionEnabled("GL_OES_texture_3D"))
-    {
-        std::cout << "Test skipped because 3D textures are not available." << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 && !extensionEnabled("GL_OES_texture_3D"));
 
     const size_t depth      = 2;
     GLubyte data[4 * depth] = {
@@ -1461,15 +1354,10 @@ TEST_P(ImageTestES3, Source3DTargetExternalESSL3)
 TEST_P(ImageTest, SourceRenderbufferTargetTexture)
 {
     EGLWindow *window = getEGLWindow();
-    if (!extensionEnabled("OES_EGL_image") ||
+    ANGLE_SKIP_TEST_IF(
+        !extensionEnabled("OES_EGL_image") ||
         !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_image_base") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_renderbuffer_image"))
-    {
-        std::cout << "Test skipped because OES_EGL_image, EGL_KHR_image_base or "
-                     "EGL_KHR_gl_renderbuffer_image is not available."
-                  << std::endl;
-        return;
-    }
+        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_renderbuffer_image"));
 
     GLubyte data[4] = {255, 0, 255, 255};
 
@@ -1495,16 +1383,10 @@ TEST_P(ImageTest, SourceRenderbufferTargetTexture)
 TEST_P(ImageTest, SourceRenderbufferTargetTextureExternal)
 {
     EGLWindow *window = getEGLWindow();
-    if (!extensionEnabled("OES_EGL_image") || !extensionEnabled("OES_EGL_image_external") ||
+    ANGLE_SKIP_TEST_IF(
+        !extensionEnabled("OES_EGL_image") || !extensionEnabled("OES_EGL_image_external") ||
         !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_image_base") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_renderbuffer_image"))
-    {
-        std::cout
-            << "Test skipped because OES_EGL_image, OES_EGL_image_external, EGL_KHR_image_base or "
-               "EGL_KHR_gl_renderbuffer_image is not available."
-            << std::endl;
-        return;
-    }
+        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_renderbuffer_image"));
 
     GLubyte data[4] = {255, 0, 255, 255};
 
@@ -1530,16 +1412,10 @@ TEST_P(ImageTest, SourceRenderbufferTargetTextureExternal)
 TEST_P(ImageTestES3, SourceRenderbufferTargetTextureExternalESSL3)
 {
     EGLWindow *window = getEGLWindow();
-    if (!extensionEnabled("OES_EGL_image") || !extensionEnabled("OES_EGL_image_external_essl3") ||
+    ANGLE_SKIP_TEST_IF(
+        !extensionEnabled("OES_EGL_image") || !extensionEnabled("OES_EGL_image_external_essl3") ||
         !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_image_base") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_renderbuffer_image"))
-    {
-        std::cout
-            << "Test skipped because OES_EGL_image, OES_EGL_image_external, EGL_KHR_image_base or "
-               "EGL_KHR_gl_renderbuffer_image is not available."
-            << std::endl;
-        return;
-    }
+        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_renderbuffer_image"));
 
     GLubyte data[4] = {255, 0, 255, 255};
 
@@ -1564,15 +1440,10 @@ TEST_P(ImageTestES3, SourceRenderbufferTargetTextureExternalESSL3)
 TEST_P(ImageTest, SourceRenderbufferTargetRenderbuffer)
 {
     EGLWindow *window = getEGLWindow();
-    if (!extensionEnabled("OES_EGL_image") ||
+    ANGLE_SKIP_TEST_IF(
+        !extensionEnabled("OES_EGL_image") ||
         !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_image_base") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_renderbuffer_image"))
-    {
-        std::cout << "Test skipped because OES_EGL_image, EGL_KHR_image_base or "
-                     "EGL_KHR_gl_renderbuffer_image is not available."
-                  << std::endl;
-        return;
-    }
+        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_renderbuffer_image"));
 
     GLubyte data[4] = {255, 0, 255, 255};
 
@@ -1600,15 +1471,10 @@ TEST_P(ImageTest, SourceRenderbufferTargetRenderbuffer)
 TEST_P(ImageTest, Deletion)
 {
     EGLWindow *window = getEGLWindow();
-    if (!extensionEnabled("OES_EGL_image") ||
+    ANGLE_SKIP_TEST_IF(
+        !extensionEnabled("OES_EGL_image") ||
         !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_image_base") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_texture_2D_image"))
-    {
-        std::cout << "Test skipped because OES_EGL_image, EGL_KHR_image_base or "
-                     "EGL_KHR_gl_texture_2D_image is not available."
-                  << std::endl;
-        return;
-    }
+        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_texture_2D_image"));
 
     GLubyte originalData[4] = {255, 0, 255, 255};
     GLubyte updateData[4]   = {0, 255, 0, 255};
@@ -1661,15 +1527,10 @@ TEST_P(ImageTest, Deletion)
 TEST_P(ImageTest, MipLevels)
 {
     EGLWindow *window = getEGLWindow();
-    if (!extensionEnabled("OES_EGL_image") ||
+    ANGLE_SKIP_TEST_IF(
+        !extensionEnabled("OES_EGL_image") ||
         !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_image_base") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_texture_2D_image"))
-    {
-        std::cout << "Test skipped because OES_EGL_image, EGL_KHR_image_base or "
-                     "EGL_KHR_gl_texture_2D_image is not available."
-                  << std::endl;
-        return;
-    }
+        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_texture_2D_image"));
 
     const size_t mipLevels   = 3;
     const size_t textureSize = 4;
@@ -1734,15 +1595,10 @@ TEST_P(ImageTest, MipLevels)
 TEST_P(ImageTest, Respecification)
 {
     EGLWindow *window = getEGLWindow();
-    if (!extensionEnabled("OES_EGL_image") ||
+    ANGLE_SKIP_TEST_IF(
+        !extensionEnabled("OES_EGL_image") ||
         !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_image_base") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_texture_2D_image"))
-    {
-        std::cout << "Test skipped because OES_EGL_image, EGL_KHR_image_base or "
-                     "EGL_KHR_gl_texture_2D_image is not available."
-                  << std::endl;
-        return;
-    }
+        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_texture_2D_image"));
 
     GLubyte originalData[4] = {255, 0, 255, 255};
     GLubyte updateData[4]   = {0, 255, 0, 255};
@@ -1777,15 +1633,10 @@ TEST_P(ImageTest, Respecification)
 TEST_P(ImageTest, RespecificationWithFBO)
 {
     EGLWindow *window = getEGLWindow();
-    if (!extensionEnabled("OES_EGL_image") ||
+    ANGLE_SKIP_TEST_IF(
+        !extensionEnabled("OES_EGL_image") ||
         !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_image_base") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_texture_2D_image"))
-    {
-        std::cout << "Test skipped because OES_EGL_image, EGL_KHR_image_base or "
-                     "EGL_KHR_gl_texture_2D_image is not available."
-                  << std::endl;
-        return;
-    }
+        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_texture_2D_image"));
 
     // Simple shader
     const std::string &vertexSource =
@@ -1846,15 +1697,10 @@ TEST_P(ImageTest, RespecificationWithFBO)
 TEST_P(ImageTest, RespecificationOfOtherLevel)
 {
     EGLWindow *window = getEGLWindow();
-    if (!extensionEnabled("OES_EGL_image") ||
+    ANGLE_SKIP_TEST_IF(
+        !extensionEnabled("OES_EGL_image") ||
         !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_image_base") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_texture_2D_image"))
-    {
-        std::cout << "Test skipped because OES_EGL_image, EGL_KHR_image_base or "
-                     "EGL_KHR_gl_texture_2D_image is not available."
-                  << std::endl;
-        return;
-    }
+        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_texture_2D_image"));
 
     GLubyte originalData[2 * 2 * 4] = {
         255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255,
@@ -1904,15 +1750,10 @@ TEST_P(ImageTest, RespecificationOfOtherLevel)
 TEST_P(ImageTest, UpdatedData)
 {
     EGLWindow *window = getEGLWindow();
-    if (!extensionEnabled("OES_EGL_image") ||
+    ANGLE_SKIP_TEST_IF(
+        !extensionEnabled("OES_EGL_image") ||
         !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_image_base") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_texture_2D_image"))
-    {
-        std::cout << "Test skipped because OES_EGL_image, EGL_KHR_image_base or "
-                     "EGL_KHR_gl_texture_2D_image is not available."
-                  << std::endl;
-        return;
-    }
+        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_texture_2D_image"));
 
     GLubyte originalData[4] = {255, 0, 255, 255};
     GLubyte updateData[4]   = {0, 255, 0, 255};

@@ -216,11 +216,8 @@ TEST_P(MaxTextureSizeTest, SpecificationTexStorage)
 
 TEST_P(MaxTextureSizeTest, RenderToTexture)
 {
-    if (getClientMajorVersion() < 3 && (!extensionEnabled("GL_ANGLE_framebuffer_blit")))
-    {
-        std::cout << "Test skipped due to missing glBlitFramebuffer[ANGLE] support." << std::endl;
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 &&
+                       (!extensionEnabled("GL_ANGLE_framebuffer_blit")));
 
     GLuint fbo = 0;
     GLuint textureId = 0;
