@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "96d8a1dd_06038264",
+        "filename": "src/tests/gl_tests/DepthStencilFormatsTest.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 208,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-13T14:22:10Z",
+      "side": 1,
+      "message": "nit: can you unindent these strings?",
+      "range": {
+        "startLine": 204,
+        "startChar": 0,
+        "endLine": 208,
+        "endChar": 16
+      },
+      "revId": "7ec57b56c54ead645e8d0bb21b44832d2a3ac914",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b362bc11_6c49c0f2",
+        "filename": "src/tests/gl_tests/DepthStencilFormatsTest.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-13T14:22:10Z",
+      "side": 1,
+      "message": "use ANGLE_GL_PROGRAM",
+      "range": {
+        "startLine": 210,
+        "startChar": 0,
+        "endLine": 211,
+        "endChar": 28
+      },
+      "revId": "7ec57b56c54ead645e8d0bb21b44832d2a3ac914",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
