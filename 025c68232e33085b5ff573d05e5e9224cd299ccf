@@ -71,6 +71,52 @@
     },
     {
       "key": {
+        "uuid": "594dc1ee_87db0dda",
+        "filename": "extensions/CHROMIUM_texture_format_BGRA1010102.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-02-13T16:56:35Z",
+      "side": 1,
+      "message": "This could definitely be done in ES2.",
+      "range": {
+        "startLine": 15,
+        "startChar": 14,
+        "endLine": 15,
+        "endChar": 15
+      },
+      "revId": "025c68232e33085b5ff573d05e5e9224cd299ccf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3121d054_688faad1",
+        "filename": "extensions/CHROMIUM_texture_format_BGRA1010102.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-02-13T16:56:35Z",
+      "side": 1,
+      "message": "Should be be reworded as: \n\n   EXT_texture_format_BGRA8888 is required.\n   EXT_texture_type_2_10_10_10_REV or equivalent functionality is required.",
+      "range": {
+        "startLine": 17,
+        "startChar": 4,
+        "endLine": 17,
+        "endChar": 73
+      },
+      "revId": "025c68232e33085b5ff573d05e5e9224cd299ccf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "fc21f98c_3ee94d9c",
         "filename": "extensions/CHROMIUM_texture_format_BGRA1010102.txt",
         "patchSetId": 7
