@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4a0d9c3b_4e0b7af2",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_utils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-13T16:30:11Z",
+      "side": 1,
+      "message": "nit: maybe it would be better to just pass a pointer to the compressed formats vector instead.",
+      "range": {
+        "startLine": 52,
+        "startChar": 29,
+        "endLine": 52,
+        "endChar": 46
+      },
+      "revId": "9895af4bf74b2452ad1109ecaec6041c24a003f3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1e73b93e_fc2ab978",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_utils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-13T16:30:11Z",
+      "side": 1,
+      "message": "Could we please use the Chrome style? e.g.: TODO(lucferron): Every ANGLE format should be mapped to a VkFormat. http://anglebug.com/2358 (with LDAP and full bug link). Sorry I guess I didn\u0027t fully parse your suggestion in email; I think we should keep LDAPs as Chromium does.\n\nAlso I\u0027m not sure the comment is correct - there may be some ANGLE formats that don\u0027t exist in Vulkan (or in OpenGL even, for some D3D specific stuff).",
+      "range": {
+        "startLine": 65,
+        "startChar": 20,
+        "endLine": 65,
+        "endChar": 24
+      },
+      "revId": "9895af4bf74b2452ad1109ecaec6041c24a003f3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "85a43a21_4662f3b9",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_utils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-13T16:30:11Z",
+      "side": 1,
+      "message": "don\u0027t use the GLenum format here, this will cause an unnecessary GLenum -\u003e format ID lookup. Instead call TextureCapsMap::set using the ANGLE format ID directly.",
+      "range": {
+        "startLine": 73,
+        "startChar": 34,
+        "endLine": 73,
+        "endChar": 48
+      },
+      "revId": "9895af4bf74b2452ad1109ecaec6041c24a003f3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a797f38c_f6ff25e7",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_utils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-13T16:30:11Z",
+      "side": 1,
+      "message": "this is not ideal because it needs a few redundant lookups - first to convert the internal format into a sized format, then looking up in a std::map. We should bake a \"bool compressed\" into the angle::Format structure, which we already have in this loop. Can you leave a TODO/open an issue for this? The work would be to add the bool to angle::Format and fill it out automatically using gen_angle_format_table.py.",
+      "range": {
+        "startLine": 75,
+        "startChar": 11,
+        "endLine": 75,
+        "endChar": 70
+      },
+      "revId": "9895af4bf74b2452ad1109ecaec6041c24a003f3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9e468abd_0a97d53b",
+        "filename": "src/tests/gl_tests/VulkanFormatTablesTest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-13T16:30:11Z",
+      "side": 1,
+      "message": "I suggest you structure the test like this:\n\n1. make a small struct that contains { imageType, createFlags }\n2. make a vector of these structs in the test body (currently {2D, 0}, {2D, CUBE_COMPAT})\n3. iterate over the list like you do with the flags right now\n\nThen we can more easily expand the test to cover Cube/2D Array/etc later.",
+      "range": {
+        "startLine": 27,
+        "startChar": 0,
+        "endLine": 29,
+        "endChar": 44
+      },
+      "revId": "9895af4bf74b2452ad1109ecaec6041c24a003f3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
