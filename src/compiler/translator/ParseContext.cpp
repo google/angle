@@ -2639,7 +2639,7 @@ TIntermInvariantDeclaration *TParseContext::parseInvariantDeclaration(
                                     typeQualifier.line);
     checkMemoryQualifierIsNotSpecified(typeQualifier.memoryQualifier, typeQualifier.line);
 
-    symbolTable.addInvariantVarying(std::string(identifier.data()));
+    symbolTable.addInvariantVarying(identifier);
 
     TIntermSymbol *intermSymbol = new TIntermSymbol(variable);
     intermSymbol->setLine(identifierLoc);

@@ -113,13 +113,13 @@ class TSymbolTable : angle::NonCopyable
 
     // This records invariant varyings declared through
     // "invariant varying_name;".
-    void addInvariantVarying(const std::string &originalName);
+    void addInvariantVarying(const ImmutableString &originalName);
 
     // If this returns false, the varying could still be invariant
     // if it is set as invariant during the varying variable
     // declaration - this piece of information is stored in the
     // variable's type, not here.
-    bool isVaryingInvariant(const std::string &originalName) const;
+    bool isVaryingInvariant(const ImmutableString &originalName) const;
 
     void setGlobalInvariant(bool invariant);
 

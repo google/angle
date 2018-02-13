@@ -36,9 +36,9 @@ class TSymbolTable::TSymbolTableLevel
 
     TSymbol *find(const ImmutableString &name) const;
 
-    void addInvariantVarying(const std::string &name) { mInvariantVaryings.insert(name); }
+    void addInvariantVarying(const ImmutableString &name) { mInvariantVaryings.insert(name); }
 
-    bool isVaryingInvariant(const std::string &name)
+    bool isVaryingInvariant(const ImmutableString &name)
     {
         return (mGlobalInvariant || mInvariantVaryings.count(name) > 0);
     }
@@ -54,7 +54,7 @@ class TSymbolTable::TSymbolTableLevel
 
     tLevel level;
 
-    std::set<std::string> mInvariantVaryings;
+    std::set<ImmutableString> mInvariantVaryings;
     bool mGlobalInvariant;
 };
 
@@ -717,13 +717,13 @@ TPrecision TSymbolTable::getDefaultPrecision(TBasicType type) const
     return prec;
 }
 
-void TSymbolTable::addInvariantVarying(const std::string &originalName)
+void TSymbolTable::addInvariantVarying(const ImmutableString &originalName)
 {
     ASSERT(atGlobalLevel());
     mTable.back()->addInvariantVarying(originalName);
 }
 
-bool TSymbolTable::isVaryingInvariant(const std::string &originalName) const
+bool TSymbolTable::isVaryingInvariant(const ImmutableString &originalName) const
 {
     ASSERT(atGlobalLevel());
     return mTable.back()->isVaryingInvariant(originalName);

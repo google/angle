@@ -284,7 +284,7 @@ void CollectVariablesTraverser::recordBuiltInVaryingUsed(const ImmutableString &
         Varying info;
         setBuiltInInfoFromSymbolTable(name, &info);
         info.staticUse   = true;
-        info.isInvariant = mSymbolTable->isVaryingInvariant(name.data());
+        info.isInvariant = mSymbolTable->isVaryingInvariant(name);
         varyings->push_back(info);
         (*addedFlag) = true;
     }
@@ -677,7 +677,7 @@ Varying CollectVariablesTraverser::recordVarying(const TIntermSymbol &variable) 
         case EvqFlatOut:
         case EvqCentroidOut:
         case EvqGeometryOut:
-            if (mSymbolTable->isVaryingInvariant(varying.name) || type.isInvariant())
+            if (mSymbolTable->isVaryingInvariant(variable.getName()) || type.isInvariant())
             {
                 varying.isInvariant = true;
             }
