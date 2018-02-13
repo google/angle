@@ -437,6 +437,30 @@
     },
     {
       "key": {
+        "uuid": "54ce69da_e67177f3",
+        "filename": "src/tests/gl_tests/VulkanFormatTablesTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-13T16:15:55Z",
+      "side": 1,
+      "message": "Thanks I get it now. Done.",
+      "parentUuid": "f8139b13_7a328130",
+      "range": {
+        "startLine": 58,
+        "startChar": 0,
+        "endLine": 62,
+        "endChar": 30
+      },
+      "revId": "330d9685eb0e46b9272e42166ad37649f2e7d7de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7d9ed4a1_20560a04",
         "filename": "src/tests/gl_tests/VulkanFormatTablesTest.cpp",
         "patchSetId": 4

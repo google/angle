@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "f74ac755_72cbc312",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-13T16:15:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f8779e95_167e8d24",
+      "range": {
+        "startLine": 37,
+        "startChar": 5,
+        "endLine": 37,
+        "endChar": 23
+      },
+      "revId": "764de70c496f43ca51161e58f806bde6d53e62cd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6db272cb_ff8c3322",
         "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
         "patchSetId": 6
@@ -39,6 +63,24 @@
       "revId": "764de70c496f43ca51161e58f806bde6d53e62cd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9f3a50cd_8f5166c7",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-13T16:15:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6db272cb_ff8c3322",
+      "revId": "764de70c496f43ca51161e58f806bde6d53e62cd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -62,6 +104,30 @@
       "revId": "764de70c496f43ca51161e58f806bde6d53e62cd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "428dca01_ca96b7aa",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_utils.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-13T16:15:55Z",
+      "side": 1,
+      "message": "Sure! Done.",
+      "parentUuid": "3ccb1cb9_3ed688db",
+      "range": {
+        "startLine": 35,
+        "startChar": 9,
+        "endLine": 35,
+        "endChar": 16
+      },
+      "revId": "764de70c496f43ca51161e58f806bde6d53e62cd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
