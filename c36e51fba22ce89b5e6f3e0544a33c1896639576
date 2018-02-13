@@ -144,6 +144,30 @@
     },
     {
       "key": {
+        "uuid": "e126c3b6_7372375e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/shaders/Passthrough2D11.hlsl",
+        "patchSetId": 8
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-02-13T15:42:30Z",
+      "side": 1,
+      "message": "I made a bad merge.  It should be back now.",
+      "parentUuid": "60ac46bf_67a7e6e3",
+      "range": {
+        "startLine": 129,
+        "startChar": 0,
+        "endLine": 132,
+        "endChar": 1
+      },
+      "revId": "c36e51fba22ce89b5e6f3e0544a33c1896639576",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5955a718_e9753835",
         "filename": "src/libANGLE/renderer/d3d/d3d11/shaders/Passthrough2D11.hlsl",
         "patchSetId": 8
@@ -203,6 +227,30 @@
       "side": 1,
       "message": "With your latest revision, our internal tests now appear to pass correctly. \n\nWith floor(), any pixel with an alpha channel \u003c 1.0 was ending up with an alpha value of 0 in the 5551 case. In baseline, the transition to 0 should happen when the alpha channel passes the 0.5 mark.",
       "parentUuid": "475b7a0b_e3c6a9b5",
+      "range": {
+        "startLine": 136,
+        "startChar": 0,
+        "endLine": 136,
+        "endChar": 16
+      },
+      "revId": "c36e51fba22ce89b5e6f3e0544a33c1896639576",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "631b2c99_e32992ab",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/shaders/Passthrough2D11.hlsl",
+        "patchSetId": 8
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-02-13T15:42:30Z",
+      "side": 1,
+      "message": "Ok, that\u0027s good.  As far as I remember, the spec doesn\u0027t require a specific type of rounding.",
+      "parentUuid": "71a1515a_2d38c5a3",
       "range": {
         "startLine": 136,
         "startChar": 0,
