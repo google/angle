@@ -1,0 +1,84 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9be802e4_7e673931",
+        "filename": "src/libANGLE/renderer/vulkan/StreamingBuffer.cpp",
+        "patchSetId": 26
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-13T15:51:46Z",
+      "side": 1,
+      "message": "I think we should check for overflow here because we aren\u0027t shielded by frontend validation.",
+      "range": {
+        "startLine": 40,
+        "startChar": 8,
+        "endLine": 40,
+        "endChar": 41
+      },
+      "revId": "d0d857d874560be71f3726c4d73eeaf2e921e2d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a565efe6_c02aa0a1",
+        "filename": "src/libANGLE/renderer/vulkan/StreamingBuffer.cpp",
+        "patchSetId": 26
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-13T15:51:46Z",
+      "side": 1,
+      "message": "A bunch of variables can be used prior to initialization here. This is one but please double check the others.",
+      "range": {
+        "startLine": 40,
+        "startChar": 8,
+        "endLine": 40,
+        "endChar": 24
+      },
+      "revId": "d0d857d874560be71f3726c4d73eeaf2e921e2d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fe45dc75_d9bc1045",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 26
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-13T15:51:46Z",
+      "side": 1,
+      "message": "Shouldn\u0027t this take a [first, last] range?",
+      "revId": "d0d857d874560be71f3726c4d73eeaf2e921e2d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c7c82cde_b6c1e270",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 26
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-13T15:51:46Z",
+      "side": 1,
+      "message": "nit: this seems like it will upload things twice for interleaved attributes. It could be fixed later but a TODO would be nice.",
+      "revId": "d0d857d874560be71f3726c4d73eeaf2e921e2d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
