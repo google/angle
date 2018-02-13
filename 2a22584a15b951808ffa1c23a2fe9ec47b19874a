@@ -780,6 +780,30 @@
     },
     {
       "key": {
+        "uuid": "f1a85ecc_7f61f28b",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-13T14:17:37Z",
+      "side": 1,
+      "message": "I think we don\u0027t use double space anywhere else. https://www.cultofpedagogy.com/two-spaces-after-period/",
+      "parentUuid": "2126ffdc_e37af406",
+      "range": {
+        "startLine": 131,
+        "startChar": 47,
+        "endLine": 131,
+        "endChar": 48
+      },
+      "revId": "2a22584a15b951808ffa1c23a2fe9ec47b19874a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f7f823bc_feb3c9ae",
         "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
         "patchSetId": 23
