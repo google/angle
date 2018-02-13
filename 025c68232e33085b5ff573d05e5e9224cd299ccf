@@ -85,6 +85,29 @@
       "revId": "025c68232e33085b5ff573d05e5e9224cd299ccf",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5de463fe_9b805cf0",
+        "filename": "extensions/CHROMIUM_texture_format_BGRA1010102.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-02-13T16:51:54Z",
+      "side": 1,
+      "message": "We may have to add a new enum, BGR10_A2_CHROMIUM.  Otherwise, I think it would be the first format to not have a matching ordering of the internal format and format components.",
+      "range": {
+        "startLine": 43,
+        "startChar": 68,
+        "endLine": 43,
+        "endChar": 76
+      },
+      "revId": "025c68232e33085b5ff573d05e5e9224cd299ccf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
