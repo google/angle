@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "25ece913_92cf09ca",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-13T14:49:52Z",
+      "side": 1,
+      "message": "I just used render doc to look at the difference between d3d11 and Vulkan and it looks like the only difference is the default value applied for glFrontFace. It is CCW on Vulkan and CW on D3D11.\n\nHere in the RenderStateCache of D3D11 we seem to be inverting CW and CCW:\nhttps://cs.chromium.org/chromium/src/third_party/angle/src/libANGLE/renderer/d3d/d3d11/RenderStateCache.cpp?l\u003d155\u0026rcl\u003d2f23f35afb94cd94f0f73192893982eb6ff83f02\n\nI believe we should just invert the state in Vulkan the same way like Geoff is proposing.",
+      "parentUuid": "2b756fa2_db0b378a",
+      "range": {
+        "startLine": 77,
+        "startChar": 4,
+        "endLine": 82,
+        "endChar": 5
+      },
+      "revId": "d4dc97ed3f19eb6147007b0af23bf7940e623968",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b126c354_9ba154af",
         "filename": "src/tests/gl_tests/StateChangeTest.cpp",
         "patchSetId": 3
