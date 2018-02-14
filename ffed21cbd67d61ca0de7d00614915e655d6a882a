@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "41a76599_53da0b04",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 506,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-02-14T21:41:00Z",
+      "side": 0,
+      "message": "I\u0027ve meant like here.",
+      "revId": "ffed21cbd67d61ca0de7d00614915e655d6a882a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
