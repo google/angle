@@ -22,6 +22,30 @@
       "revId": "8b11f052e74b7adf3d98bd2179294af09d0b8916",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "401070f7_bebacdb5",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_utils.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-14T18:00:18Z",
+      "side": 1,
+      "message": "I did not notice, I instead modified GenerateTextureFormatCaps to take the TextureCaps as a pointer to modify it instead of generating a new one.",
+      "parentUuid": "2a3e5c82_12df7665",
+      "range": {
+        "startLine": 96,
+        "startChar": 0,
+        "endLine": 111,
+        "endChar": 9
+      },
+      "revId": "8b11f052e74b7adf3d98bd2179294af09d0b8916",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
