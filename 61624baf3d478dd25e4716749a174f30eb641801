@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ac40c833_f82ffdbb",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 603,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-14T21:13:23Z",
+      "side": 1,
+      "message": "extra super nit: Can you inverse them so they are in the same order as the condition check above?",
+      "range": {
+        "startLine": 602,
+        "startChar": 12,
+        "endLine": 603,
+        "endChar": 79
+      },
+      "revId": "61624baf3d478dd25e4716749a174f30eb641801",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ddef9482_37ecb330",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 626,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-14T21:13:23Z",
+      "side": 1,
+      "message": "Would it be better to refactor that to a switch now that its not just a single if/else?",
+      "range": {
+        "startLine": 593,
+        "startChar": 4,
+        "endLine": 626,
+        "endChar": 5
+      },
+      "revId": "61624baf3d478dd25e4716749a174f30eb641801",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
