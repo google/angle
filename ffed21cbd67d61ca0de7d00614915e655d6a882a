@@ -34,6 +34,24 @@
       "revId": "ffed21cbd67d61ca0de7d00614915e655d6a882a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bfaa6509_6eed4433",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 506,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-02-14T21:55:41Z",
+      "side": 0,
+      "message": "Wouldn\u0027t attachmentClearValues.emplace_back({.depthStencil \u003d contextVk-\u003egetClearDepthStencilValue()}) work if getClearDepthStencilValue() returns VkClearDepthStencilValue?\nOr do you need C++20 for that?",
+      "parentUuid": "41a76599_53da0b04",
+      "revId": "ffed21cbd67d61ca0de7d00614915e655d6a882a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
