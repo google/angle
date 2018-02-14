@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "f90136d4_9127c519",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 187,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-14T21:37:36Z",
+      "side": 1,
+      "message": "unions.. can\u0027t have nice things like {} constructors in c++. that\u0027s why I chose to use VkClearValue.\n\nalso.. please don\u0027t use unions.",
+      "parentUuid": "a32cca1d_f86e1af3",
+      "range": {
+        "startLine": 187,
+        "startChar": 4,
+        "endLine": 187,
+        "endChar": 16
+      },
+      "revId": "58424a3071e671d2992abbf270bd68aab115bc16",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8a32852e_bb06fb15",
         "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
         "patchSetId": 4
