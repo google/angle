@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a528343a_d5e1ef1e",
+        "filename": "src/tests/gl_tests/AttributeLayoutTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-02-14T22:07:11Z",
+      "side": 1,
+      "message": "nit: We have an ArraySize function for this.",
+      "range": {
+        "startLine": 44,
+        "startChar": 30,
+        "endLine": 44,
+        "endChar": 76
+      },
+      "revId": "b43a248eef43e3ad4ad0fa679b1a0645558dde39",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6721e026_493f45b1",
+        "filename": "src/tests/gl_tests/AttributeLayoutTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-02-14T22:07:11Z",
+      "side": 1,
+      "message": "nit: can skip the virtual given the override, below too.",
+      "range": {
+        "startLine": 70,
+        "startChar": 4,
+        "endLine": 70,
+        "endChar": 12
+      },
+      "revId": "b43a248eef43e3ad4ad0fa679b1a0645558dde39",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a02cf961_26ffd8f4",
+        "filename": "src/tests/gl_tests/AttributeLayoutTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-02-14T22:07:11Z",
+      "side": 1,
+      "message": "Could use a GLBuffer here for RAII creation/destruction.",
+      "range": {
+        "startLine": 109,
+        "startChar": 4,
+        "endLine": 109,
+        "endChar": 19
+      },
+      "revId": "b43a248eef43e3ad4ad0fa679b1a0645558dde39",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bf926b20_1cad3530",
+        "filename": "src/tests/gl_tests/AttributeLayoutTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 295,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-02-14T22:07:11Z",
+      "side": 1,
+      "message": "We have an UNUSED_VARIABLE macro but it may not be visible here.  Either way, can these be moved up near the template structs themselves?",
+      "range": {
+        "startLine": 290,
+        "startChar": 1,
+        "endLine": 295,
+        "endChar": 35
+      },
+      "revId": "b43a248eef43e3ad4ad0fa679b1a0645558dde39",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bdbb1a42_a083a378",
+        "filename": "src/tests/gl_tests/AttributeLayoutTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 324,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-02-14T22:07:11Z",
+      "side": 1,
+      "message": "These would be better as members of the AttributeLayoutTest class.",
+      "range": {
+        "startLine": 324,
+        "startChar": 4,
+        "endLine": 324,
+        "endChar": 11
+      },
+      "revId": "b43a248eef43e3ad4ad0fa679b1a0645558dde39",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
