@@ -498,7 +498,8 @@ TEST_P(TransformFeedbackTest, MultiplePaused)
 // contexts returns the correct results.  Helps expose bugs in ANGLE's virtual contexts.
 TEST_P(TransformFeedbackTest, MultiContext)
 {
-    ANGLE_SKIP_TEST_IF(IsOSX() && (IsNVIDIA() || IsAMD()) && IsOpenGL());
+    // These tests are flaky, do not lift these unless you find the root cause and the fix.
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsOpenGL());
 
     ANGLE_SKIP_TEST_IF(IsLinux() && IsAMD() && IsOpenGL());
 
