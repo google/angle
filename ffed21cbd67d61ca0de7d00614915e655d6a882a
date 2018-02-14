@@ -16,6 +16,24 @@
       "revId": "ffed21cbd67d61ca0de7d00614915e655d6a882a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0d1737e2_c3e437df",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 506,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-14T21:51:42Z",
+      "side": 0,
+      "message": "* When a union is initialized by aggregate initialization, only its first non-static data member is initialized.\n\nhttp://en.cppreference.com/w/cpp/language/aggregate_initialization\n\nunions are like people...",
+      "parentUuid": "41a76599_53da0b04",
+      "revId": "ffed21cbd67d61ca0de7d00614915e655d6a882a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
