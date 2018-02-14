@@ -157,6 +157,9 @@ class ContextVk : public ContextImpl
 
     vk::DescriptorPool *getDescriptorPool();
 
+    const VkClearValue &getClearColorValue() const;
+    const VkClearValue &getClearDepthStencilValue() const;
+
   private:
     gl::Error initPipeline(const gl::Context *context);
     gl::Error setupDraw(const gl::Context *context,
@@ -179,6 +182,10 @@ class ContextVk : public ContextImpl
     // Triggers adding dependencies to the command graph.
     bool mVertexArrayDirty;
     bool mTexturesDirty;
+
+    // Cached clear value for color and depth/stencil.
+    VkClearValue mClearColorValue;
+    VkClearValue mClearDepthStencilValue;
 };
 
 }  // namespace rx

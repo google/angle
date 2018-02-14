@@ -69,6 +69,8 @@ ContextVk::ContextVk(const gl::ContextState &state, RendererVk *renderer)
       mVertexArrayDirty(false),
       mTexturesDirty(false)
 {
+    memset(&mClearColorValue, 0, sizeof(mClearColorValue));
+    memset(&mClearDepthStencilValue, 0, sizeof(mClearDepthStencilValue));
 }
 
 ContextVk::~ContextVk()
@@ -531,13 +533,17 @@ void ContextVk::syncState(const gl::Context *context, const gl::State::DirtyBits
                 WARN() << "DIRTY_BIT_PRIMITIVE_RESTART_ENABLED unimplemented";
                 break;
             case gl::State::DIRTY_BIT_CLEAR_COLOR:
-                WARN() << "DIRTY_BIT_CLEAR_COLOR unimplemented";
+                mClearColorValue.color.float32[0] = glState.getColorClearValue().red;
+                mClearColorValue.color.float32[1] = glState.getColorClearValue().green;
+                mClearColorValue.color.float32[2] = glState.getColorClearValue().blue;
+                mClearColorValue.color.float32[3] = glState.getColorClearValue().alpha;
                 break;
             case gl::State::DIRTY_BIT_CLEAR_DEPTH:
-                WARN() << "DIRTY_BIT_CLEAR_DEPTH unimplemented";
+                mClearDepthStencilValue.depthStencil.depth = glState.getDepthClearValue();
                 break;
             case gl::State::DIRTY_BIT_CLEAR_STENCIL:
-                WARN() << "DIRTY_BIT_CLEAR_STENCIL unimplemented";
+                mClearDepthStencilValue.depthStencil.stencil =
+                    static_cast<uint32_t>(glState.getStencilClearValue());
                 break;
             case gl::State::DIRTY_BIT_UNPACK_STATE:
                 WARN() << "DIRTY_BIT_UNPACK_STATE unimplemented";
@@ -794,6 +800,16 @@ gl::Error ContextVk::memoryBarrierByRegion(const gl::Context *context, GLbitfiel
 vk::DescriptorPool *ContextVk::getDescriptorPool()
 {
     return &mDescriptorPool;
+}
+
+const VkClearValue &ContextVk::getClearColorValue() const
+{
+    return mClearColorValue;
+}
+
+const VkClearValue &ContextVk::getClearDepthStencilValue() const
+{
+    return mClearDepthStencilValue;
 }
 
 }  // namespace rx

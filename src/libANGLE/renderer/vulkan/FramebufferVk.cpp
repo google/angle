@@ -136,21 +136,14 @@ gl::Error FramebufferVk::clear(const gl::Context *context, GLbitfield mask)
         return gl::NoError();
     }
 
-    const auto &glState    = context->getGLState();
-    const auto &clearColor = glState.getColorClearValue();
-    VkClearColorValue clearColorValue;
-    clearColorValue.float32[0] = clearColor.red;
-    clearColorValue.float32[1] = clearColor.green;
-    clearColorValue.float32[2] = clearColor.blue;
-    clearColorValue.float32[3] = clearColor.alpha;
-
     // TODO(jmadill): Scissored clears.
     const auto *attachment = mState.getFirstNonNullAttachment();
     ASSERT(attachment && attachment->isAttached());
     const auto &size = attachment->getSize();
     const gl::Rectangle renderArea(0, 0, size.width, size.height);
 
-    RendererVk *renderer = vk::GetImpl(context)->getRenderer();
+    ContextVk *contextVk = vk::GetImpl(context);
+    RendererVk *renderer = contextVk->getRenderer();
 
     vk::CommandBuffer *commandBuffer = nullptr;
     ANGLE_TRY(beginWriteOperation(renderer, &commandBuffer));
@@ -171,7 +164,8 @@ gl::Error FramebufferVk::clear(const gl::Context *context, GLbitfield mask)
                 VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
                 VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, commandBuffer);
 
-            commandBuffer->clearSingleColorImage(*renderTarget->image, clearColorValue);
+            commandBuffer->clearSingleColorImage(*renderTarget->image,
+                                                 contextVk->getClearColorValue().color);
         }
     }
 
@@ -491,21 +485,7 @@ gl::Error FramebufferVk::getRenderNode(const gl::Context *context, vk::CommandBu
     vk::Framebuffer *framebuffer = nullptr;
     ANGLE_TRY_RESULT(getFramebuffer(context, renderer), framebuffer);
 
-    const gl::State &glState = context->getGLState();
-
-    // Hard-code RenderPass to clear the first render target to the current clear value.
-    // TODO(jmadill): Proper clear value implementation.
-    VkClearColorValue colorClear;
-    memset(&colorClear, 0, sizeof(VkClearColorValue));
-    colorClear.float32[0] = glState.getColorClearValue().red;
-    colorClear.float32[1] = glState.getColorClearValue().green;
-    colorClear.float32[2] = glState.getColorClearValue().blue;
-    colorClear.float32[3] = glState.getColorClearValue().alpha;
-
     std::vector<VkClearValue> attachmentClearValues;
-    attachmentClearValues.push_back({colorClear});
-
-    node->storeRenderPassInfo(*framebuffer, glState.getViewport(), attachmentClearValues);
 
     // Initialize RenderPass info.
     // TODO(jmadill): Could cache this info, would require dependent state change messaging.
@@ -521,6 +501,7 @@ gl::Error FramebufferVk::getRenderNode(const gl::Context *context, vk::CommandBu
             // TODO(jmadill): May need layout transition.
             renderTarget->image->updateLayout(VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL);
             node->appendColorRenderTarget(currentSerial, renderTarget);
+            attachmentClearValues.emplace_back(contextVk->getClearColorValue());
         }
     }
 
@@ -533,8 +514,13 @@ gl::Error FramebufferVk::getRenderNode(const gl::Context *context, vk::CommandBu
         // TODO(jmadill): May need layout transition.
         renderTarget->image->updateLayout(VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
         node->appendDepthStencilRenderTarget(currentSerial, renderTarget);
+        attachmentClearValues.emplace_back(contextVk->getClearDepthStencilValue());
     }
 
+    // Hard-code RenderPass to clear the first render target to the current clear value.
+    // TODO(jmadill): Proper clear value implementation. http://anglebug.com/2361
+    const gl::State &glState = context->getGLState();
+    node->storeRenderPassInfo(*framebuffer, glState.getViewport(), attachmentClearValues);
     mLastRenderNodeSerial = currentSerial;
 
     *nodeOut = node;
