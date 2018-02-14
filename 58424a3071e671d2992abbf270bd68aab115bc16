@@ -2,6 +2,52 @@
   "comments": [
     {
       "key": {
+        "uuid": "a4b66bda_e6d4eb92",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-02-14T21:33:52Z",
+      "side": 1,
+      "message": "Actually, would mClearColorValue({0}) work? I think compiler has more chance of optimizing it this way.",
+      "range": {
+        "startLine": 72,
+        "startChar": 0,
+        "endLine": 72,
+        "endChar": 59
+      },
+      "revId": "58424a3071e671d2992abbf270bd68aab115bc16",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a32cca1d_f86e1af3",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 187,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-02-14T21:33:52Z",
+      "side": 1,
+      "message": "Can\u0027t decide whether it\u0027s better to have VkClearValue and then access via .color, or have VkClearColorValue and then construct VkClearValue from it with {} when you store it in attachments. :(",
+      "range": {
+        "startLine": 187,
+        "startChar": 4,
+        "endLine": 187,
+        "endChar": 16
+      },
+      "revId": "58424a3071e671d2992abbf270bd68aab115bc16",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8a32852e_bb06fb15",
         "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
         "patchSetId": 4
