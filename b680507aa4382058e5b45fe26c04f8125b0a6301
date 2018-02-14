@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "44eff215_cb087bc2",
+        "filename": "src/tests/gl_tests/TransformFeedbackTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 501,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-14T18:56:16Z",
+      "side": 1,
+      "message": "nit: should probably comment the test is flaky so people don\u0027t assume an unexpectedly passing test means it can be lifted.",
+      "range": {
+        "startLine": 501,
+        "startChar": 4,
+        "endLine": 501,
+        "endChar": 22
+      },
+      "revId": "b680507aa4382058e5b45fe26c04f8125b0a6301",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
