@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2a3e5c82_12df7665",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_utils.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-14T16:55:24Z",
+      "side": 1,
+      "message": "you could wrap this in a helper function if you wanted to avoid the copy of gl::TextureCaps",
+      "range": {
+        "startLine": 96,
+        "startChar": 0,
+        "endLine": 111,
+        "endChar": 9
+      },
+      "revId": "8b11f052e74b7adf3d98bd2179294af09d0b8916",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
