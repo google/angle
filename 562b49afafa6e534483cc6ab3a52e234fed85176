@@ -363,6 +363,30 @@
       "revId": "562b49afafa6e534483cc6ab3a52e234fed85176",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5cc0b6f2_0a7ff0c5",
+        "filename": "src/libANGLE/renderer/vulkan/vk_mandatory_format_support_table_autogen.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 599,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-14T14:30:49Z",
+      "side": 1,
+      "message": "Right, didn\u0027t notice this. I think we want to keep the mandatory data separated from the full driver-returned data. When we\u0027re missing bits, make a local variable and query the driver with that out variable. Then you can make the table constexpr and return a const \u0026 here.\n\nThe idea of using a static table and modifying it is cool, but would still be happier with the constexpr table (since it can live in the data segment of the binary).",
+      "parentUuid": "19654163_8b944bb8",
+      "range": {
+        "startLine": 599,
+        "startChar": 0,
+        "endLine": 599,
+        "endChar": 18
+      },
+      "revId": "562b49afafa6e534483cc6ab3a52e234fed85176",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }

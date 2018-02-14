@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0cf6e032_e15cacf7",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-14T14:30:49Z",
+      "side": 1,
+      "message": "nit: I think this maybe should be define in vk_format_utils.h",
+      "range": {
+        "startLine": 35,
+        "startChar": 20,
+        "endLine": 35,
+        "endChar": 45
+      },
+      "revId": "2ca01a0aef668a6f04c0c84b6c6631ba9612bbdd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "86a65caf_a42db87b",
+        "filename": "src/libANGLE/renderer/vulkan/vk_mandatory_format_support_table_autogen.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 592,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-14T14:30:49Z",
+      "side": 1,
+      "message": "nit: missing closing anonymous namespace comment.",
+      "range": {
+        "startLine": 592,
+        "startChar": 1,
+        "endLine": 592,
+        "endChar": 0
+      },
+      "revId": "2ca01a0aef668a6f04c0c84b6c6631ba9612bbdd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
