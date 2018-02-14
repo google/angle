@@ -22,6 +22,30 @@
       "revId": "b5f108176a1edbb7c5f5ce6bb7b55b6e41d4c48e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "21b81ea8_1960f84b",
+        "filename": "src/libANGLE/renderer/vulkan/RenderbufferVk.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-14T20:10:00Z",
+      "side": 1,
+      "message": "Doesn\u0027t have to, but I\u0027d like to leave it in for the future - the same memory could be used without re-allocation if the storage changes.",
+      "parentUuid": "f4f54420_336368e2",
+      "range": {
+        "startLine": 49,
+        "startChar": 11,
+        "endLine": 49,
+        "endChar": 24
+      },
+      "revId": "b5f108176a1edbb7c5f5ce6bb7b55b6e41d4c48e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
