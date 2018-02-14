@@ -48,6 +48,54 @@
     },
     {
       "key": {
+        "uuid": "732d2296_c26023d6",
+        "filename": "src/libANGLE/renderer/vulkan/StreamingBuffer.cpp",
+        "patchSetId": 26
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-02-14T23:02:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9be802e4_7e673931",
+      "range": {
+        "startLine": 40,
+        "startChar": 8,
+        "endLine": 40,
+        "endChar": 41
+      },
+      "revId": "d0d857d874560be71f3726c4d73eeaf2e921e2d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f06f21d1_86c1d050",
+        "filename": "src/libANGLE/renderer/vulkan/StreamingBuffer.cpp",
+        "patchSetId": 26
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-02-14T23:02:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a565efe6_c02aa0a1",
+      "range": {
+        "startLine": 40,
+        "startChar": 8,
+        "endLine": 40,
+        "endChar": 24
+      },
+      "revId": "d0d857d874560be71f3726c4d73eeaf2e921e2d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fe45dc75_d9bc1045",
         "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
         "patchSetId": 26
@@ -59,6 +107,24 @@
       "writtenOn": "2018-02-13T15:51:46Z",
       "side": 1,
       "message": "Shouldn\u0027t this take a [first, last] range?",
+      "revId": "d0d857d874560be71f3726c4d73eeaf2e921e2d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ad2a8a3b_60ed9f05",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 26
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-02-14T23:02:12Z",
+      "side": 1,
+      "message": "So we can skip vertices [0,first) because they\u0027re not used?\nI though of that, then abandoned the idea, but I see now I can at least cut down on copying.\nWe can\u0027t skip vertices because then indices would be off.\nWe can\u0027t just fix the indices, because of the case where one attribute is in a vbo and another in memory.  The same indices apply to both so data from memory has to start at vertex zero, as it does in the vbo.\nAll this applies to a non-indexed draw too, which can be thought of as an indexed draw with indices first...last.\nWe could probably play with the buffer offsets and make it work, i.e. adjust the buffer offset to account for the amount the indices are off, though we probably can\u0027t make them negative.\nI\u0027m not sure the complication is warranted, but I\u0027ll leave TODO and other comments.\n\nI will change it to only copy [first,last] since that\u0027s all we need.",
+      "parentUuid": "fe45dc75_d9bc1045",
       "revId": "d0d857d874560be71f3726c4d73eeaf2e921e2d8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -79,6 +145,24 @@
       "revId": "d0d857d874560be71f3726c4d73eeaf2e921e2d8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "38203dab_c3007d69",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 26
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-02-14T23:02:12Z",
+      "side": 1,
+      "message": "Yep, interleaved is suboptimal.\nDefinitely worth a TODO, but not sure if it\u0027s worth doing.  :)\nAnyone who cares about performance would be using VBOs.",
+      "parentUuid": "c7c82cde_b6c1e270",
+      "revId": "d0d857d874560be71f3726c4d73eeaf2e921e2d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
