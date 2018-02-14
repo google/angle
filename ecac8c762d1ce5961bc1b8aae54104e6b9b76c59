@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5d0d5a76_8e28678f",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-14T20:10:24Z",
+      "side": 1,
+      "message": "nit: this can be const",
+      "range": {
+        "startLine": 57,
+        "startChar": 8,
+        "endLine": 59,
+        "endChar": 47
+      },
+      "revId": "ecac8c762d1ce5961bc1b8aae54104e6b9b76c59",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b3cbae45_c81b5fb0",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-14T20:10:24Z",
+      "side": 1,
+      "message": "nit: this also can be const",
+      "range": {
+        "startLine": 76,
+        "startChar": 8,
+        "endLine": 77,
+        "endChar": 89
+      },
+      "revId": "ecac8c762d1ce5961bc1b8aae54104e6b9b76c59",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ef95ee10_828d463a",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-14T20:10:24Z",
+      "side": 1,
+      "message": "since we are not modifying this, shouldn\u0027t we be passing the RendererVk as a const \u0026 instead?",
+      "range": {
+        "startLine": 171,
+        "startChar": 38,
+        "endLine": 171,
+        "endChar": 59
+      },
+      "revId": "ecac8c762d1ce5961bc1b8aae54104e6b9b76c59",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2bf1abb8_2d45863f",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1183,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-14T20:10:24Z",
+      "side": 1,
+      "message": "Same comment as above, const \u0026 instead?",
+      "range": {
+        "startLine": 1183,
+        "startChar": 26,
+        "endLine": 1183,
+        "endChar": 48
+      },
+      "revId": "ecac8c762d1ce5961bc1b8aae54104e6b9b76c59",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "41d54c09_c20eba4d",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1193,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-14T20:10:24Z",
+      "side": 1,
+      "message": "Same comment as above, const \u0026 instead?",
+      "range": {
+        "startLine": 1193,
+        "startChar": 26,
+        "endLine": 1193,
+        "endChar": 47
+      },
+      "revId": "ecac8c762d1ce5961bc1b8aae54104e6b9b76c59",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
