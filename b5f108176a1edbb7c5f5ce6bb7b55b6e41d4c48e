@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f4f54420_336368e2",
+        "filename": "src/libANGLE/renderer/vulkan/RenderbufferVk.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-02-14T20:06:26Z",
+      "side": 1,
+      "message": "Doesn\u0027t seem to be used. Does it have to be a member?",
+      "range": {
+        "startLine": 49,
+        "startChar": 11,
+        "endLine": 49,
+        "endChar": 24
+      },
+      "revId": "b5f108176a1edbb7c5f5ce6bb7b55b6e41d4c48e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
