@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "56c24d8b_da3c9aeb",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/RenderTarget11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 338,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-02-14T16:38:06Z",
+      "side": 1,
+      "message": "Reworked it a bit to only try to clear the color or ds attachment of surfaces when they exist.",
+      "parentUuid": "5579fc2b_1da21e05",
+      "range": {
+        "startLine": 337,
+        "startChar": 0,
+        "endLine": 338,
+        "endChar": 17
+      },
+      "revId": "5f39bf9500bd481a8e0e7458a51bb1ac03938457",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f581fa17_053cadd8",
         "filename": "src/tests/gl_tests/RobustResourceInitTest.cpp",
         "patchSetId": 3
@@ -39,6 +63,24 @@
       "revId": "5f39bf9500bd481a8e0e7458a51bb1ac03938457",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1bf30dee_f4ca1b8c",
+        "filename": "src/tests/gl_tests/RobustResourceInitTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1534,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-02-14T16:38:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f581fa17_053cadd8",
+      "revId": "5f39bf9500bd481a8e0e7458a51bb1ac03938457",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -59,6 +101,24 @@
     },
     {
       "key": {
+        "uuid": "cb5cc85f_97e95b8a",
+        "filename": "src/tests/gl_tests/RobustResourceInitTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1542,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-02-14T16:38:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1599b827_0ceccda8",
+      "revId": "5f39bf9500bd481a8e0e7458a51bb1ac03938457",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fd7d20a1_d4ab393f",
         "filename": "src/tests/gl_tests/RobustResourceInitTest.cpp",
         "patchSetId": 3
@@ -70,6 +130,24 @@
       "writtenOn": "2017-10-05T17:57:38Z",
       "side": 1,
       "message": "Why not use EXPECT_PIXEL_COLOR_EQ here too?",
+      "revId": "5f39bf9500bd481a8e0e7458a51bb1ac03938457",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9647ba2a_037a5911",
+        "filename": "src/tests/gl_tests/RobustResourceInitTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1559,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-02-14T16:38:06Z",
+      "side": 1,
+      "message": "I could, this just checks more pixels for free.",
+      "parentUuid": "fd7d20a1_d4ab393f",
       "revId": "5f39bf9500bd481a8e0e7458a51bb1ac03938457",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
