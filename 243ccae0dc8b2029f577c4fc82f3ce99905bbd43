@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "c5f6f321_5ba80d30",
+        "filename": "src/common/matrix_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-02-14T23:53:04Z",
+      "side": 1,
+      "message": "Yes, this is to be done in the validation layer, generating a GL_INVALID_VALUE.",
+      "parentUuid": "4935f29e_021fab7f",
+      "revId": "243ccae0dc8b2029f577c4fc82f3ce99905bbd43",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bbfbc8c5_c81cd697",
         "filename": "src/common/matrix_utils.cpp",
         "patchSetId": 7
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "045f0ce9_e6bb323d",
+        "filename": "src/common/matrix_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-02-14T23:53:04Z",
+      "side": 1,
+      "message": "Also to be done in the validation layer.",
+      "parentUuid": "bbfbc8c5_c81cd697",
+      "revId": "243ccae0dc8b2029f577c4fc82f3ce99905bbd43",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "54a54f90_803c9ea0",
         "filename": "src/common/matrix_utils_unittest.cpp",
         "patchSetId": 7
@@ -50,6 +86,24 @@
       "revId": "243ccae0dc8b2029f577c4fc82f3ce99905bbd43",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eecafdcc_4bb7f609",
+        "filename": "src/common/matrix_utils_unittest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 476,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-02-14T23:53:04Z",
+      "side": 1,
+      "message": "Ok, limited the scope of the translation/scale tests.",
+      "parentUuid": "54a54f90_803c9ea0",
+      "revId": "243ccae0dc8b2029f577c4fc82f3ce99905bbd43",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -73,6 +127,30 @@
       "revId": "243ccae0dc8b2029f577c4fc82f3ce99905bbd43",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b357b40a_dd2a4e57",
+        "filename": "src/common/matrix_utils_unittest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1498,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-02-14T23:53:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "aa71097c_4bf48460",
+      "range": {
+        "startLine": 1497,
+        "startChar": 1,
+        "endLine": 1498,
+        "endChar": 40
+      },
+      "revId": "243ccae0dc8b2029f577c4fc82f3ce99905bbd43",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
