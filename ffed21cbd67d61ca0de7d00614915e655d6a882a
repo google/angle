@@ -70,6 +70,24 @@
       "revId": "ffed21cbd67d61ca0de7d00614915e655d6a882a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6e21e9c0_44625fe0",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 506,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-02-14T22:14:54Z",
+      "side": 0,
+      "message": "C++20 is what it says on http://en.cppreference.com/w/cpp/language/aggregate_initialization.\n\nI\u0027m curious, if Vulkan didn\u0027t use unions, what would you make the type of attachmentClearValues?",
+      "parentUuid": "820e4261_b795776f",
+      "revId": "ffed21cbd67d61ca0de7d00614915e655d6a882a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
