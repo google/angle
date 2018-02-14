@@ -106,6 +106,24 @@
       "revId": "ffed21cbd67d61ca0de7d00614915e655d6a882a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1dff93a3_438f1a21",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 506,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-02-14T22:47:55Z",
+      "side": 0,
+      "message": "If you dislike unions so much, looks like you still can use a struct in ANGLE code, just need to convert to VkClearValue in CommandBufferNode::visitAndExecute.\nWould waste some memory, but we shouldn\u0027t have too many attachments, I think.",
+      "parentUuid": "a79b6738_750a74c6",
+      "revId": "ffed21cbd67d61ca0de7d00614915e655d6a882a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
