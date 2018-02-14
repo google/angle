@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0718916d_5a359461",
+        "filename": "src/tests/gl_tests/TransformFeedbackTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 501,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-14T18:53:04Z",
+      "side": 1,
+      "message": "This looks like its causing flakiness in : \nhttps://ci.chromium.org/buildbot/tryserver.chromium.angle/mac_angle_rel_ng/\nhttps://ci.chromium.org/buildbot/chromium.gpu.fyi/Mac%20FYI%20Release%20%28Intel%29/\n\nSuppressing in a new CL:\nhttps://chromium-review.googlesource.com/c/angle/angle/+/919547",
+      "range": {
+        "startLine": 501,
+        "startChar": 31,
+        "endLine": 501,
+        "endChar": 58
+      },
+      "revId": "2f23f35afb94cd94f0f73192893982eb6ff83f02",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
