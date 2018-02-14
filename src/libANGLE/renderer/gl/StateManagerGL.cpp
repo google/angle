@@ -1037,14 +1037,11 @@ void StateManagerGL::updateProgramStorageBufferBindings(const gl::Context *conte
 
 gl::Error StateManagerGL::setGenericDrawState(const gl::Context *context)
 {
-    const gl::State &glState = context->getGLState();
-    const VertexArrayGL *vaoGL = GetImplAs<VertexArrayGL>(glState.getVertexArray());
-    bindVertexArray(vaoGL->getVertexArrayID(), vaoGL->getAppliedElementArrayBufferID());
-
     setGenericShaderState(context);
 
     if (context->getExtensions().webglCompatibility)
     {
+        const gl::State &glState     = context->getGLState();
         FramebufferGL *framebufferGL = GetImplAs<FramebufferGL>(glState.getDrawFramebuffer());
         auto activeOutputs = glState.getProgram()->getState().getActiveOutputVariables();
         framebufferGL->maskOutInactiveOutputDrawBuffers(GL_DRAW_FRAMEBUFFER, activeOutputs);
@@ -1053,6 +1050,8 @@ gl::Error StateManagerGL::setGenericDrawState(const gl::Context *context)
     ASSERT(
         mFramebuffers[angle::FramebufferBindingDraw] ==
         GetImplAs<FramebufferGL>(context->getGLState().getDrawFramebuffer())->getFramebufferID());
+    ASSERT(mVAO ==
+           GetImplAs<VertexArrayGL>(context->getGLState().getVertexArray())->getVertexArrayID());
 
     return gl::NoError();
 }
@@ -1952,10 +1951,14 @@ void StateManagerGL::syncState(const gl::Context *context, const gl::State::Dirt
                 // TODO(jmadill): implement this
                 break;
             case gl::State::DIRTY_BIT_VERTEX_ARRAY_BINDING:
-                // TODO(jmadill): implement this
+            {
+                const VertexArrayGL *vaoGL = GetImplAs<VertexArrayGL>(state.getVertexArray());
+                bindVertexArray(vaoGL->getVertexArrayID(), vaoGL->getAppliedElementArrayBufferID());
+
                 propagateNumViewsToVAO(state.getProgram(),
                                        GetImplAs<VertexArrayGL>(state.getVertexArray()));
                 break;
+            }
             case gl::State::DIRTY_BIT_DRAW_INDIRECT_BUFFER_BINDING:
                 updateDrawIndirectBufferBinding(context);
                 break;
