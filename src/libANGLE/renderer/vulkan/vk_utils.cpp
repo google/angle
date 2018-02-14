@@ -168,14 +168,14 @@ vk::Error FindAndAllocateCompatibleMemory(VkDevice device,
 }
 
 template <typename T>
-vk::Error AllocateBufferOrImageMemory(ContextVk *contextVk,
+vk::Error AllocateBufferOrImageMemory(RendererVk *renderer,
                                       VkMemoryPropertyFlags memoryPropertyFlags,
                                       T *bufferOrImage,
                                       vk::DeviceMemory *deviceMemoryOut,
                                       size_t *requiredSizeOut)
 {
-    VkDevice device                              = contextVk->getDevice();
-    const vk::MemoryProperties &memoryProperties = contextVk->getRenderer()->getMemoryProperties();
+    VkDevice device                              = renderer->getDevice();
+    const vk::MemoryProperties &memoryProperties = renderer->getMemoryProperties();
 
     // Call driver to determine memory requirements.
     VkMemoryRequirements memoryRequirements;
@@ -859,7 +859,8 @@ Error StagingImage::init(ContextVk *contextVk,
                          StagingUsage usage)
 {
     VkDevice device           = contextVk->getDevice();
-    uint32_t queueFamilyIndex = contextVk->getRenderer()->getQueueFamilyIndex();
+    RendererVk *renderer      = contextVk->getRenderer();
+    uint32_t queueFamilyIndex = renderer->getQueueFamilyIndex();
 
     VkImageCreateInfo createInfo;
 
@@ -894,7 +895,7 @@ Error StagingImage::init(ContextVk *contextVk,
     // 1) not having (enough) coherent memory and 2) coherent memory being slower
     VkMemoryPropertyFlags memoryPropertyFlags =
         (VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
-    ANGLE_TRY(AllocateImageMemory(contextVk, memoryPropertyFlags, &mImage, &mDeviceMemory, &mSize));
+    ANGLE_TRY(AllocateImageMemory(renderer, memoryPropertyFlags, &mImage, &mDeviceMemory, &mSize));
 
     return NoError();
 }
@@ -1167,7 +1168,8 @@ vk::Error StagingBuffer::init(ContextVk *contextVk, VkDeviceSize size, StagingUs
         (VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
 
     ANGLE_TRY(mBuffer.init(contextVk->getDevice(), createInfo));
-    ANGLE_TRY(AllocateBufferMemory(contextVk, flags, &mBuffer, &mDeviceMemory, &mSize));
+    ANGLE_TRY(
+        AllocateBufferMemory(contextVk->getRenderer(), flags, &mBuffer, &mDeviceMemory, &mSize));
 
     return vk::NoError();
 }
@@ -1178,23 +1180,23 @@ void StagingBuffer::dumpResources(Serial serial, std::vector<vk::GarbageObject> 
     mDeviceMemory.dumpResources(serial, garbageQueue);
 }
 
-Error AllocateBufferMemory(ContextVk *contextVk,
+Error AllocateBufferMemory(RendererVk *renderer,
                            VkMemoryPropertyFlags memoryPropertyFlags,
                            Buffer *buffer,
                            DeviceMemory *deviceMemoryOut,
                            size_t *requiredSizeOut)
 {
-    return AllocateBufferOrImageMemory(contextVk, memoryPropertyFlags, buffer, deviceMemoryOut,
+    return AllocateBufferOrImageMemory(renderer, memoryPropertyFlags, buffer, deviceMemoryOut,
                                        requiredSizeOut);
 }
 
-Error AllocateImageMemory(ContextVk *contextVk,
+Error AllocateImageMemory(RendererVk *renderer,
                           VkMemoryPropertyFlags memoryPropertyFlags,
                           Image *image,
                           DeviceMemory *deviceMemoryOut,
                           size_t *requiredSizeOut)
 {
-    return AllocateBufferOrImageMemory(contextVk, memoryPropertyFlags, image, deviceMemoryOut,
+    return AllocateBufferOrImageMemory(renderer, memoryPropertyFlags, image, deviceMemoryOut,
                                        requiredSizeOut);
 }
 

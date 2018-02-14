@@ -642,7 +642,7 @@ class ObjectAndSerial final : angle::NonCopyable
     Serial mQueueSerial;
 };
 
-Error AllocateBufferMemory(ContextVk *contextVk,
+Error AllocateBufferMemory(RendererVk *renderer,
                            VkMemoryPropertyFlags memoryPropertyFlags,
                            Buffer *buffer,
                            DeviceMemory *deviceMemoryOut,
@@ -654,7 +654,7 @@ struct BufferAndMemory final : private angle::NonCopyable
     vk::DeviceMemory memory;
 };
 
-Error AllocateImageMemory(ContextVk *contextVk,
+Error AllocateImageMemory(RendererVk *renderer,
                           VkMemoryPropertyFlags memoryPropertyFlags,
                           Image *image,
                           DeviceMemory *deviceMemoryOut,

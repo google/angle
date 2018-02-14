@@ -115,8 +115,7 @@ gl::Error TextureVk::setImage(const gl::Context *context,
 
         VkMemoryPropertyFlags flags = (VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
         size_t requiredSize         = 0;
-        ANGLE_TRY(
-            vk::AllocateImageMemory(contextVk, flags, &mImage, &mDeviceMemory, &requiredSize));
+        ANGLE_TRY(vk::AllocateImageMemory(renderer, flags, &mImage, &mDeviceMemory, &requiredSize));
 
         VkImageViewCreateInfo viewInfo;
         viewInfo.sType                           = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;

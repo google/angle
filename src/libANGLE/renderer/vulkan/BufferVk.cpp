@@ -54,6 +54,10 @@ gl::Error BufferVk::setData(const gl::Context *context,
         // Release and re-create the memory and buffer.
         release(contextVk->getRenderer());
 
+        const VkImageUsageFlags usageFlags =
+            (VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT |
+             VK_BUFFER_USAGE_INDEX_BUFFER_BIT);
+
         // TODO(jmadill): Proper usage bit implementation. Likely will involve multiple backing
         // buffers like in D3D11.
         VkBufferCreateInfo createInfo;
@@ -61,8 +65,7 @@ gl::Error BufferVk::setData(const gl::Context *context,
         createInfo.pNext                 = nullptr;
         createInfo.flags                 = 0;
         createInfo.size                  = size;
-        createInfo.usage = (VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT |
-                            VK_BUFFER_USAGE_INDEX_BUFFER_BIT);
+        createInfo.usage                 = usageFlags;
         createInfo.sharingMode           = VK_SHARING_MODE_EXCLUSIVE;
         createInfo.queueFamilyIndexCount = 0;
         createInfo.pQueueFamilyIndices   = nullptr;
@@ -70,10 +73,10 @@ gl::Error BufferVk::setData(const gl::Context *context,
         ANGLE_TRY(mBuffer.init(device, createInfo));
 
         // Assume host vislble/coherent memory available.
-        VkMemoryPropertyFlags flags =
+        const VkMemoryPropertyFlags memoryPropertyFlags =
             (VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
-        ANGLE_TRY(vk::AllocateBufferMemory(contextVk, flags, &mBuffer, &mBufferMemory,
-                                           &mCurrentRequiredSize));
+        ANGLE_TRY(vk::AllocateBufferMemory(contextVk->getRenderer(), memoryPropertyFlags, &mBuffer,
+                                           &mBufferMemory, &mCurrentRequiredSize));
     }
 
     if (data)
