@@ -164,13 +164,14 @@ WindowSurfaceVk::WindowSurfaceVk(const egl::SurfaceState &surfaceState,
       mSurface(VK_NULL_HANDLE),
       mInstance(VK_NULL_HANDLE),
       mSwapchain(VK_NULL_HANDLE),
-      mRenderTarget(),
+      mColorRenderTarget(),
+      mDepthStencilRenderTarget(),
       mCurrentSwapchainImageIndex(0)
 {
-    mRenderTarget.extents.width  = static_cast<GLint>(width);
-    mRenderTarget.extents.height = static_cast<GLint>(height);
-    mRenderTarget.extents.depth  = 1;
-    mRenderTarget.resource       = this;
+    mColorRenderTarget.extents.width  = static_cast<GLint>(width);
+    mColorRenderTarget.extents.height = static_cast<GLint>(height);
+    mColorRenderTarget.extents.depth  = 1;
+    mColorRenderTarget.resource       = this;
 }
 
 WindowSurfaceVk::~WindowSurfaceVk()
@@ -182,13 +183,18 @@ WindowSurfaceVk::~WindowSurfaceVk()
 void WindowSurfaceVk::destroy(const egl::Display *display)
 {
     const DisplayVk *displayVk = vk::GetImpl(display);
-    RendererVk *rendererVk     = displayVk->getRenderer();
-    VkDevice device            = rendererVk->getDevice();
-    VkInstance instance        = rendererVk->getInstance();
+    RendererVk *renderer       = displayVk->getRenderer();
+    VkDevice device            = renderer->getDevice();
+    VkInstance instance        = renderer->getInstance();
 
-    rendererVk->finish(display->getProxyContext());
+    // We might not need to flush the pipe here.
+    renderer->finish(display->getProxyContext());
 
     mAcquireNextImageSemaphore.destroy(device);
+
+    renderer->releaseResource(*this, &mDepthStencilImage);
+    renderer->releaseResource(*this, &mDepthStencilDeviceMemory);
+    renderer->releaseResource(*this, &mDepthStencilImageView);
 
     for (auto &swapchainImage : mSwapchainImages)
     {
@@ -227,7 +233,7 @@ vk::Error WindowSurfaceVk::initializeImpl(RendererVk *renderer)
 
     uint32_t presentQueue = 0;
     ANGLE_TRY_RESULT(renderer->selectPresentQueueForSurface(mSurface), presentQueue);
-    (void) presentQueue;
+    UNUSED_VARIABLE(presentQueue);
 
     const VkPhysicalDevice &physicalDevice = renderer->getPhysicalDevice();
 
@@ -246,18 +252,18 @@ vk::Error WindowSurfaceVk::initializeImpl(RendererVk *renderer)
     {
         ASSERT(surfaceCaps.currentExtent.height == 0xFFFFFFFFu);
 
-        if (mRenderTarget.extents.width == 0)
+        if (mColorRenderTarget.extents.width == 0)
         {
             width = windowSize.width;
         }
-        if (mRenderTarget.extents.height == 0)
+        if (mColorRenderTarget.extents.height == 0)
         {
             height = windowSize.height;
         }
     }
 
-    mRenderTarget.extents.width  = static_cast<int>(width);
-    mRenderTarget.extents.height = static_cast<int>(height);
+    mColorRenderTarget.extents.width  = static_cast<int>(width);
+    mColorRenderTarget.extents.height = static_cast<int>(height);
 
     uint32_t presentModeCount = 0;
     ANGLE_VK_TRY(vkGetPhysicalDeviceSurfacePresentModesKHR(physicalDevice, mSurface,
@@ -300,8 +306,8 @@ vk::Error WindowSurfaceVk::initializeImpl(RendererVk *renderer)
     ANGLE_VK_TRY(vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice, mSurface, &surfaceFormatCount,
                                                       surfaceFormats.data()));
 
-    mRenderTarget.format  = &renderer->getFormat(mState.config->renderTargetFormat);
-    VkFormat nativeFormat = mRenderTarget.format->vkTextureFormat;
+    mColorRenderTarget.format = &renderer->getFormat(mState.config->renderTargetFormat);
+    VkFormat nativeFormat     = mColorRenderTarget.format->vkTextureFormat;
 
     if (surfaceFormatCount == 1u && surfaceFormats[0].format == VK_FORMAT_UNDEFINED)
     {
@@ -330,19 +336,23 @@ vk::Error WindowSurfaceVk::initializeImpl(RendererVk *renderer)
     ANGLE_VK_CHECK((surfaceCaps.supportedCompositeAlpha & compositeAlpha) != 0,
                    VK_ERROR_INITIALIZATION_FAILED);
 
+    // We need transfer src for reading back from the backbuffer.
+    VkImageUsageFlags imageUsageFlags =
+        (VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT |
+         VK_IMAGE_USAGE_TRANSFER_DST_BIT);
+
     VkSwapchainCreateInfoKHR swapchainInfo;
-    swapchainInfo.sType              = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
-    swapchainInfo.pNext              = nullptr;
-    swapchainInfo.flags              = 0;
-    swapchainInfo.surface            = mSurface;
-    swapchainInfo.minImageCount      = minImageCount;
-    swapchainInfo.imageFormat        = nativeFormat;
-    swapchainInfo.imageColorSpace    = VK_COLORSPACE_SRGB_NONLINEAR_KHR;
-    swapchainInfo.imageExtent.width  = width;
-    swapchainInfo.imageExtent.height = height;
-    swapchainInfo.imageArrayLayers   = 1;
-    swapchainInfo.imageUsage         = (VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT |
-                                VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT);
+    swapchainInfo.sType                 = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
+    swapchainInfo.pNext                 = nullptr;
+    swapchainInfo.flags                 = 0;
+    swapchainInfo.surface               = mSurface;
+    swapchainInfo.minImageCount         = minImageCount;
+    swapchainInfo.imageFormat           = nativeFormat;
+    swapchainInfo.imageColorSpace       = VK_COLORSPACE_SRGB_NONLINEAR_KHR;
+    swapchainInfo.imageExtent.width     = width;
+    swapchainInfo.imageExtent.height    = height;
+    swapchainInfo.imageArrayLayers      = 1;
+    swapchainInfo.imageUsage            = imageUsageFlags;
     swapchainInfo.imageSharingMode      = VK_SHARING_MODE_EXCLUSIVE;
     swapchainInfo.queueFamilyIndexCount = 0;
     swapchainInfo.pQueueFamilyIndices   = nullptr;
@@ -415,6 +425,85 @@ vk::Error WindowSurfaceVk::initializeImpl(RendererVk *renderer)
     // Get the first available swapchain iamge.
     ANGLE_TRY(nextSwapchainImage(renderer));
 
+    // Initialize depth/stencil if requested.
+    if (mState.config->depthStencilFormat != GL_NONE)
+    {
+        const vk::Format &dsFormat = renderer->getFormat(mState.config->depthStencilFormat);
+
+        const VkImageUsageFlags usage =
+            (VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT |
+             VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_SAMPLED_BIT);
+
+        VkImageCreateInfo imageInfo;
+        imageInfo.sType                 = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
+        imageInfo.pNext                 = nullptr;
+        imageInfo.flags                 = 0;
+        imageInfo.imageType             = VK_IMAGE_TYPE_2D;
+        imageInfo.format                = dsFormat.vkTextureFormat;
+        imageInfo.extent.width          = static_cast<uint32_t>(width);
+        imageInfo.extent.height         = static_cast<uint32_t>(height);
+        imageInfo.extent.depth          = 1;
+        imageInfo.mipLevels             = 1;
+        imageInfo.arrayLayers           = 1;
+        imageInfo.samples               = VK_SAMPLE_COUNT_1_BIT;
+        imageInfo.tiling                = VK_IMAGE_TILING_OPTIMAL;
+        imageInfo.usage                 = usage;
+        imageInfo.sharingMode           = VK_SHARING_MODE_EXCLUSIVE;
+        imageInfo.queueFamilyIndexCount = 0;
+        imageInfo.pQueueFamilyIndices   = nullptr;
+        imageInfo.initialLayout         = VK_IMAGE_LAYOUT_UNDEFINED;
+
+        ANGLE_TRY(mDepthStencilImage.init(device, imageInfo));
+
+        // TODO(jmadill): Memory sub-allocation. http://anglebug.com/2162
+        size_t requiredSize;
+        ANGLE_TRY(vk::AllocateImageMemory(renderer, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
+                                          &mDepthStencilImage, &mDepthStencilDeviceMemory,
+                                          &requiredSize));
+
+        const VkImageAspectFlags aspect =
+            (dsFormat.textureFormat().depthBits > 0 ? VK_IMAGE_ASPECT_DEPTH_BIT : 0) |
+            (dsFormat.textureFormat().stencilBits > 0 ? VK_IMAGE_ASPECT_STENCIL_BIT : 0);
+
+        VkClearDepthStencilValue depthStencilClearValue = {1.0f, 0};
+
+        // Set transfer dest layout, and clear the image.
+        mDepthStencilImage.changeLayoutWithStages(aspect, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+                                                  VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT,
+                                                  VK_PIPELINE_STAGE_TRANSFER_BIT, commandBuffer);
+        commandBuffer->clearSingleDepthStencilImage(mDepthStencilImage, aspect,
+                                                    depthStencilClearValue);
+
+        // Depth/Stencil image views.
+        VkImageViewCreateInfo imageViewInfo;
+        imageViewInfo.sType                           = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+        imageViewInfo.pNext                           = nullptr;
+        imageViewInfo.flags                           = 0;
+        imageViewInfo.image                           = mDepthStencilImage.getHandle();
+        imageViewInfo.viewType                        = VK_IMAGE_VIEW_TYPE_2D;
+        imageViewInfo.format                          = dsFormat.vkTextureFormat;
+        imageViewInfo.components.r                    = VK_COMPONENT_SWIZZLE_R;
+        imageViewInfo.components.g                    = VK_COMPONENT_SWIZZLE_G;
+        imageViewInfo.components.b                    = VK_COMPONENT_SWIZZLE_B;
+        imageViewInfo.components.a                    = VK_COMPONENT_SWIZZLE_A;
+        imageViewInfo.subresourceRange.aspectMask     = aspect;
+        imageViewInfo.subresourceRange.baseMipLevel   = 0;
+        imageViewInfo.subresourceRange.levelCount     = 1;
+        imageViewInfo.subresourceRange.baseArrayLayer = 0;
+        imageViewInfo.subresourceRange.layerCount     = 1;
+
+        ANGLE_TRY(mDepthStencilImageView.init(device, imageViewInfo));
+
+        mDepthStencilRenderTarget.extents.width  = static_cast<GLint>(width);
+        mDepthStencilRenderTarget.extents.height = static_cast<GLint>(height);
+        mDepthStencilRenderTarget.extents.depth  = 1;
+        mDepthStencilRenderTarget.resource       = this;
+        mDepthStencilRenderTarget.image          = &mDepthStencilImage;
+        mDepthStencilRenderTarget.format         = &dsFormat;
+
+        // TODO(jmadill): Figure out how to pass depth/stencil image views to the RenderTargetVk.
+    }
+
     return vk::NoError();
 }
 
@@ -472,8 +561,8 @@ vk::Error WindowSurfaceVk::nextSwapchainImage(RendererVk *renderer)
     std::swap(image.imageAcquiredSemaphore, mAcquireNextImageSemaphore);
 
     // Update RenderTarget pointers.
-    mRenderTarget.image     = &image.image;
-    mRenderTarget.imageView = &image.imageView;
+    mColorRenderTarget.image     = &image.image;
+    mColorRenderTarget.imageView = &image.imageView;
 
     return vk::NoError();
 }
@@ -518,12 +607,12 @@ void WindowSurfaceVk::setSwapInterval(EGLint interval)
 
 EGLint WindowSurfaceVk::getWidth() const
 {
-    return static_cast<EGLint>(mRenderTarget.extents.width);
+    return static_cast<EGLint>(mColorRenderTarget.extents.width);
 }
 
 EGLint WindowSurfaceVk::getHeight() const
 {
-    return static_cast<EGLint>(mRenderTarget.extents.height);
+    return static_cast<EGLint>(mColorRenderTarget.extents.height);
 }
 
 EGLint WindowSurfaceVk::isPostSubBufferSupported() const
@@ -539,11 +628,20 @@ EGLint WindowSurfaceVk::getSwapBehavior() const
 }
 
 gl::Error WindowSurfaceVk::getAttachmentRenderTarget(const gl::Context * /*context*/,
-                                                     GLenum /*binding*/,
+                                                     GLenum binding,
                                                      const gl::ImageIndex & /*target*/,
                                                      FramebufferAttachmentRenderTarget **rtOut)
 {
-    *rtOut = &mRenderTarget;
+    if (binding == GL_BACK)
+    {
+        *rtOut = &mColorRenderTarget;
+    }
+    else
+    {
+        ASSERT(binding == GL_DEPTH || binding == GL_STENCIL || binding == GL_DEPTH_STENCIL);
+        *rtOut = &mDepthStencilRenderTarget;
+    }
+
     return gl::NoError();
 }
 
@@ -561,20 +659,21 @@ gl::ErrorOrResult<vk::Framebuffer *> WindowSurfaceVk::getCurrentFramebuffer(
 
     VkFramebufferCreateInfo framebufferInfo;
 
-    // TODO(jmadill): Depth/Stencil attachments.
+    std::array<VkImageView, 2> imageViews = {{VK_NULL_HANDLE, mDepthStencilImageView.getHandle()}};
+
     framebufferInfo.sType           = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
     framebufferInfo.pNext           = nullptr;
     framebufferInfo.flags           = 0;
     framebufferInfo.renderPass      = compatibleRenderPass.getHandle();
-    framebufferInfo.attachmentCount = 1u;
-    framebufferInfo.pAttachments    = nullptr;
-    framebufferInfo.width           = static_cast<uint32_t>(mRenderTarget.extents.width);
-    framebufferInfo.height          = static_cast<uint32_t>(mRenderTarget.extents.height);
+    framebufferInfo.attachmentCount = (mDepthStencilImageView.valid() ? 2u : 1u);
+    framebufferInfo.pAttachments    = imageViews.data();
+    framebufferInfo.width           = static_cast<uint32_t>(mColorRenderTarget.extents.width);
+    framebufferInfo.height          = static_cast<uint32_t>(mColorRenderTarget.extents.height);
     framebufferInfo.layers          = 1;
 
     for (auto &swapchainImage : mSwapchainImages)
     {
-        framebufferInfo.pAttachments = swapchainImage.imageView.ptr();
+        imageViews[0] = swapchainImage.imageView.getHandle();
         ANGLE_TRY(swapchainImage.framebuffer.init(device, framebufferInfo));
     }
 

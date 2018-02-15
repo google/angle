@@ -211,7 +211,7 @@ void RenderPassDesc::packColorAttachment(const vk::Format &format, GLsizei sampl
 void RenderPassDesc::packDepthStencilAttachment(const vk::Format &format, GLsizei samples)
 {
     ASSERT(mDepthStencilAttachmentCount == 0);
-    packAttachment(mDepthStencilAttachmentCount++, format, samples);
+    packAttachment(mColorAttachmentCount + mDepthStencilAttachmentCount++, format, samples);
 }
 
 RenderPassDesc &RenderPassDesc::operator=(const RenderPassDesc &other)

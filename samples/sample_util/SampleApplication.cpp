@@ -40,19 +40,8 @@ SampleApplication::SampleApplication(const std::string &name,
     mEGLWindow->setConfigGreenBits(8);
     mEGLWindow->setConfigBlueBits(8);
     mEGLWindow->setConfigAlphaBits(8);
-
-    // The Vulkan back-end currently does not support depth/stencil.
-    // TODO(jmadill): Remove this hack once Vulkan supports more configs.
-    if (requestedRenderer == EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE)
-    {
-        mEGLWindow->setConfigDepthBits(0);
-        mEGLWindow->setConfigStencilBits(0);
-    }
-    else
-    {
-        mEGLWindow->setConfigDepthBits(24);
-        mEGLWindow->setConfigStencilBits(8);
-    }
+    mEGLWindow->setConfigDepthBits(24);
+    mEGLWindow->setConfigStencilBits(8);
 
     // Disable vsync
     mEGLWindow->setSwapInterval(0);

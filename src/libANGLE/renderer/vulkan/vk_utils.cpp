@@ -472,6 +472,34 @@ void CommandBuffer::clearSingleColorImage(const vk::Image &image, const VkClearC
     vkCmdClearColorImage(mHandle, image.getHandle(), image.getCurrentLayout(), &color, 1, &range);
 }
 
+void CommandBuffer::clearSingleDepthStencilImage(const vk::Image &image,
+                                                 VkImageAspectFlags aspectFlags,
+                                                 const VkClearDepthStencilValue &depthStencil)
+{
+    VkImageSubresourceRange clearRange = {
+        /*aspectMask*/ aspectFlags,
+        /*baseMipLevel*/ 0,
+        /*levelCount*/ 1,
+        /*baseArrayLayer*/ 0,
+        /*layerCount*/ 1,
+    };
+
+    clearDepthStencilImage(image, depthStencil, 1, &clearRange);
+}
+
+void CommandBuffer::clearDepthStencilImage(const vk::Image &image,
+                                           const VkClearDepthStencilValue &depthStencil,
+                                           uint32_t rangeCount,
+                                           const VkImageSubresourceRange *ranges)
+{
+    ASSERT(valid());
+    ASSERT(image.getCurrentLayout() == VK_IMAGE_LAYOUT_GENERAL ||
+           image.getCurrentLayout() == VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
+
+    vkCmdClearDepthStencilImage(mHandle, image.getHandle(), image.getCurrentLayout(), &depthStencil,
+                                rangeCount, ranges);
+}
+
 void CommandBuffer::copySingleImage(const vk::Image &srcImage,
                                     const vk::Image &destImage,
                                     const gl::Box &copyRegion,
@@ -1414,7 +1442,7 @@ void ResourceVk::onWriteResource(vk::CommandBufferNode *writeOperation, Serial s
         mCurrentReadOperations.clear();
     }
 
-    if (mCurrentWriteOperation)
+    if (mCurrentWriteOperation && mCurrentWriteOperation != writeOperation)
     {
         vk::CommandBufferNode::SetHappensBeforeDependency(mCurrentWriteOperation, writeOperation);
     }

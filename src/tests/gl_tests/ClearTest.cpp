@@ -7,6 +7,7 @@
 #include "test_utils/ANGLETest.h"
 
 #include "random_utils.h"
+#include "test_utils/gl_raii.h"
 
 using namespace angle;
 
@@ -117,8 +118,7 @@ TEST_P(ClearTest, RGBA8Framebuffer)
 {
     glBindFramebuffer(GL_FRAMEBUFFER, mFBOs[0]);
 
-    GLuint texture;
-    glGenTextures(1, &texture);
+    GLTexture texture;
 
     glBindTexture(GL_TEXTURE_2D, texture);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, getWindowWidth(), getWindowHeight(), 0, GL_RGBA,
@@ -133,6 +133,9 @@ TEST_P(ClearTest, RGBA8Framebuffer)
 
 TEST_P(ClearTest, ClearIssue)
 {
+    // TODO(jmadill): Depth/Stencil clears on Vulkan. http://anglebug.com/2357
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
 
@@ -144,8 +147,7 @@ TEST_P(ClearTest, ClearIssue)
 
     glBindFramebuffer(GL_FRAMEBUFFER, mFBOs[0]);
 
-    GLuint rbo;
-    glGenRenderbuffers(1, &rbo);
+    GLRenderbuffer rbo;
     glBindRenderbuffer(GL_RENDERBUFFER, rbo);
     glRenderbufferStorage(GL_RENDERBUFFER, GL_RGB565, 16, 16);
 
@@ -179,8 +181,7 @@ TEST_P(ClearTestES3, MaskedClearBufferBug)
 
     glBindFramebuffer(GL_FRAMEBUFFER, mFBOs[0]);
 
-    GLuint textures[2];
-    glGenTextures(2, &textures[0]);
+    GLTexture textures[2];
 
     glBindTexture(GL_TEXTURE_2D, textures[0]);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixelData);
@@ -206,8 +207,6 @@ TEST_P(ClearTestES3, MaskedClearBufferBug)
     ASSERT_GL_NO_ERROR();
 
     EXPECT_PIXEL_NEAR(0, 0, 0, 127, 255, 255, 1);
-
-    glDeleteTextures(2, textures);
 }
 
 TEST_P(ClearTestES3, BadFBOSerialBug)
@@ -215,8 +214,7 @@ TEST_P(ClearTestES3, BadFBOSerialBug)
     // First make a simple framebuffer, and clear it to green
     glBindFramebuffer(GL_FRAMEBUFFER, mFBOs[0]);
 
-    GLuint textures[2];
-    glGenTextures(2, &textures[0]);
+    GLTexture textures[2];
 
     glBindTexture(GL_TEXTURE_2D, textures[0]);
     glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, getWindowWidth(), getWindowHeight());
@@ -233,11 +231,9 @@ TEST_P(ClearTestES3, BadFBOSerialBug)
 
     // Next make a second framebuffer, and draw it to red
     // (Triggers bad applied render target serial)
-    GLuint fbo2;
-    glGenFramebuffers(1, &fbo2);
-    ASSERT_GL_NO_ERROR();
-
+    GLFramebuffer fbo2;
     glBindFramebuffer(GL_FRAMEBUFFER, fbo2);
+    ASSERT_GL_NO_ERROR();
 
     glBindTexture(GL_TEXTURE_2D, textures[1]);
     glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, getWindowWidth(), getWindowHeight());
@@ -254,9 +250,6 @@ TEST_P(ClearTestES3, BadFBOSerialBug)
     // Check that the first framebuffer is still green.
     glBindFramebuffer(GL_FRAMEBUFFER, mFBOs[0]);
     EXPECT_PIXEL_EQ(0, 0, 0, 255, 0, 255);
-
-    glDeleteTextures(2, textures);
-    glDeleteFramebuffers(1, &fbo2);
 }
 
 // Test that SRGB framebuffers clear to the linearized clear color
@@ -265,8 +258,7 @@ TEST_P(ClearTestES3, SRGBClear)
     // First make a simple framebuffer, and clear it
     glBindFramebuffer(GL_FRAMEBUFFER, mFBOs[0]);
 
-    GLuint texture;
-    glGenTextures(1, &texture);
+    GLTexture texture;
 
     glBindTexture(GL_TEXTURE_2D, texture);
     glTexStorage2D(GL_TEXTURE_2D, 1, GL_SRGB8_ALPHA8, getWindowWidth(), getWindowHeight());
@@ -284,8 +276,7 @@ TEST_P(ClearTestES3, MixedSRGBClear)
 {
     glBindFramebuffer(GL_FRAMEBUFFER, mFBOs[0]);
 
-    GLuint textures[2];
-    glGenTextures(2, &textures[0]);
+    GLTexture textures[2];
 
     glBindTexture(GL_TEXTURE_2D, textures[0]);
     glTexStorage2D(GL_TEXTURE_2D, 1, GL_SRGB8_ALPHA8, getWindowWidth(), getWindowHeight());
@@ -481,7 +472,8 @@ ANGLE_INSTANTIATE_TEST(ClearTest,
                        ES2_OPENGL(),
                        ES3_OPENGL(),
                        ES2_OPENGLES(),
-                       ES3_OPENGLES());
+                       ES3_OPENGLES(),
+                       ES2_VULKAN());
 ANGLE_INSTANTIATE_TEST(ClearTestES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
 ANGLE_INSTANTIATE_TEST(ScissoredClearTest, ES2_D3D11(), ES2_OPENGL(), ES2_VULKAN());
 

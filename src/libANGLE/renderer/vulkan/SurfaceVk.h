@@ -116,7 +116,8 @@ class WindowSurfaceVk : public SurfaceImpl, public ResourceVk
 
     VkSwapchainKHR mSwapchain;
 
-    RenderTargetVk mRenderTarget;
+    RenderTargetVk mColorRenderTarget;
+    RenderTargetVk mDepthStencilRenderTarget;
 
     uint32_t mCurrentSwapchainImageIndex;
 
@@ -141,6 +142,10 @@ class WindowSurfaceVk : public SurfaceImpl, public ResourceVk
     };
 
     std::vector<SwapchainImage> mSwapchainImages;
+
+    vk::Image mDepthStencilImage;
+    vk::DeviceMemory mDepthStencilDeviceMemory;
+    vk::ImageView mDepthStencilImageView;
 };
 
 }  // namespace rx
