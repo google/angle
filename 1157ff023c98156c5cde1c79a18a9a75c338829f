@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4583b998_2a3d2809",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 340,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-15T18:10:16Z",
+      "side": 1,
+      "message": "This looks like it was moved to be re-used but it isn\u0027t.",
+      "revId": "1157ff023c98156c5cde1c79a18a9a75c338829f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8ae54f39_94bf0753",
+        "filename": "src/libANGLE/renderer/vulkan/android/DisplayVkAndroid.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-15T18:10:16Z",
+      "side": 1,
+      "message": "rgba",
+      "range": {
+        "startLine": 78,
+        "startChar": 35,
+        "endLine": 78,
+        "endChar": 44
+      },
+      "revId": "1157ff023c98156c5cde1c79a18a9a75c338829f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
