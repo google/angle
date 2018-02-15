@@ -22,6 +22,30 @@
       "revId": "e3b7b9e0ba6a474d976686da29eda7121d885bc8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2aa9e628_8bae2c2b",
+        "filename": "src/compiler/translator/util.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 219,
+      "author": {
+        "id": 1001629
+      },
+      "writtenOn": "2018-02-15T16:19:27Z",
+      "side": 1,
+      "message": "I omitted the ANGLE_ prefix to match the prefixless UNREACHABLE macro. Do you still want me to add the prefix?",
+      "parentUuid": "610aba21_0c63ee48",
+      "range": {
+        "startLine": 219,
+        "startChar": 5,
+        "endLine": 219,
+        "endChar": 28
+      },
+      "revId": "e3b7b9e0ba6a474d976686da29eda7121d885bc8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
