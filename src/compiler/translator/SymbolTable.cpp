@@ -32,7 +32,7 @@ class TSymbolTable::TSymbolTableLevel
     bool insert(TSymbol *symbol);
 
     // Insert a function using its unmangled name as the key.
-    bool insertUnmangled(TFunction *function);
+    void insertUnmangled(TFunction *function);
 
     TSymbol *find(const ImmutableString &name) const;
 
@@ -65,9 +65,6 @@ class TSymbolTable::TSymbolTableBuiltInLevel
 
     bool insert(const TSymbol *symbol);
 
-    // Insert a function using its unmangled name as the key.
-    bool insertUnmangled(const TFunction *function);
-
     const TSymbol *find(const ImmutableString &name) const;
 
     void insertUnmangledBuiltInName(const char *name);
@@ -92,11 +89,9 @@ bool TSymbolTable::TSymbolTableLevel::insert(TSymbol *symbol)
     return result.second;
 }
 
-bool TSymbolTable::TSymbolTableLevel::insertUnmangled(TFunction *function)
+void TSymbolTable::TSymbolTableLevel::insertUnmangled(TFunction *function)
 {
-    // returning true means symbol was added to the table
-    tInsertResult result = level.insert(tLevelPair(function->name(), function));
-    return result.second;
+    level.insert(tLevelPair(function->name(), function));
 }
 
 TSymbol *TSymbolTable::TSymbolTableLevel::find(const ImmutableString &name) const
@@ -112,13 +107,6 @@ bool TSymbolTable::TSymbolTableBuiltInLevel::insert(const TSymbol *symbol)
 {
     // returning true means symbol was added to the table
     tInsertResult result = mLevel.insert(tLevelPair(symbol->getMangledName(), symbol));
-    return result.second;
-}
-
-bool TSymbolTable::TSymbolTableBuiltInLevel::insertUnmangled(const TFunction *function)
-{
-    // returning true means symbol was added to the table
-    tInsertResult result = mLevel.insert(tLevelPair(function->name(), function));
     return result.second;
 }
 
