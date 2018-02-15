@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "8900a016_a64ede7e",
+        "filename": "src/tests/gl_tests/AttributeLayoutTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-02-15T01:44:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a528343a_d5e1ef1e",
+      "range": {
+        "startLine": 44,
+        "startChar": 30,
+        "endLine": 44,
+        "endChar": 76
+      },
+      "revId": "b43a248eef43e3ad4ad0fa679b1a0645558dde39",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6721e026_493f45b1",
         "filename": "src/tests/gl_tests/AttributeLayoutTest.cpp",
         "patchSetId": 4
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "796a7d90_22d4f0ee",
+        "filename": "src/tests/gl_tests/AttributeLayoutTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-02-15T01:44:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6721e026_493f45b1",
+      "range": {
+        "startLine": 70,
+        "startChar": 4,
+        "endLine": 70,
+        "endChar": 12
+      },
+      "revId": "b43a248eef43e3ad4ad0fa679b1a0645558dde39",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a02cf961_26ffd8f4",
         "filename": "src/tests/gl_tests/AttributeLayoutTest.cpp",
         "patchSetId": 4
@@ -59,6 +107,30 @@
       "writtenOn": "2018-02-14T22:07:11Z",
       "side": 1,
       "message": "Could use a GLBuffer here for RAII creation/destruction.",
+      "range": {
+        "startLine": 109,
+        "startChar": 4,
+        "endLine": 109,
+        "endChar": 19
+      },
+      "revId": "b43a248eef43e3ad4ad0fa679b1a0645558dde39",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4c515a56_120abdfb",
+        "filename": "src/tests/gl_tests/AttributeLayoutTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-02-15T01:44:00Z",
+      "side": 1,
+      "message": "If I did that, and put the declarations of this into the test class as you suggest below, then it would attempt to create the buffer before GL was initialized.\nMy preference is to do the RAII, and not move the declarations.  See other comment below.",
+      "parentUuid": "a02cf961_26ffd8f4",
       "range": {
         "startLine": 109,
         "startChar": 4,
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "39a5d818_98ac166d",
+        "filename": "src/tests/gl_tests/AttributeLayoutTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 295,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-02-15T01:44:00Z",
+      "side": 1,
+      "message": "I was hoping you\u0027d know some way to avoid these altogether.  :)  I don\u0027t see why the compiler needs to complain about it.\nI guess they make as much sense in the Attrib constructor as anywhere, and that is pretty close to where the class is defined.\n\nThe UNUSED_VARIABLE macro seems like a bad idea to me.   (void)foo is readily understood, but MYSTERIOUS_MACRO(foo) will waste the reader\u0027s time looking up what the macro does.  Even if the intent is fairly obvious, I\u0027d still be curious why it was a macro and want to look it up.",
+      "parentUuid": "bf926b20_1cad3530",
+      "range": {
+        "startLine": 290,
+        "startChar": 1,
+        "endLine": 295,
+        "endChar": 35
+      },
+      "revId": "b43a248eef43e3ad4ad0fa679b1a0645558dde39",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "bdbb1a42_a083a378",
         "filename": "src/tests/gl_tests/AttributeLayoutTest.cpp",
         "patchSetId": 4
@@ -105,6 +201,30 @@
       "writtenOn": "2018-02-14T22:07:11Z",
       "side": 1,
       "message": "These would be better as members of the AttributeLayoutTest class.",
+      "range": {
+        "startLine": 324,
+        "startChar": 4,
+        "endLine": 324,
+        "endChar": 11
+      },
+      "revId": "b43a248eef43e3ad4ad0fa679b1a0645558dde39",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7c4bd486_e7d5e46a",
+        "filename": "src/tests/gl_tests/AttributeLayoutTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 324,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-02-15T01:44:00Z",
+      "side": 1,
+      "message": "My reasoning was I wanted to keep the names short, since they are used so many times.  I was even begrudging a leading \u0027m.\u0027\nAnd I kind of prefer to have them scoped to here since this is the only place they are used.\nAlso if I move them into the class I can\u0027t do the RAII thing.\n\nBut I\u0027m not fussy about it.  Let me know if you still want me to move them.",
+      "parentUuid": "bdbb1a42_a083a378",
       "range": {
         "startLine": 324,
         "startChar": 4,
