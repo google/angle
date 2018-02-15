@@ -25,10 +25,6 @@ config("glslang_internal_config") {
   if (!is_clang && !is_win) {
     cflags += [ "-Wno-unused-function" ]
   }
-  if (is_clang) {
-    # TODO(thakis): Consider enabling this, https://crbug.com/807632
-    cflags += [ "-Wno-implicit-fallthrough" ]
-  }
 }
 
 static_library("glslang") {
@@ -116,6 +112,8 @@ static_library("glslang") {
     "src/glslang/Public/ShaderLang.h",
   ]
   public_configs = [ ":glslang_config" ]
+  configs -= [ "//build/config/compiler:chromium_code" ]
+  configs += [ "//build/config/compiler:no_chromium_code" ]
   configs += [ ":glslang_internal_config" ]
 
   if (is_win) {

@@ -236,15 +236,6 @@ config("vulkan_internal_config") {
   defines = [ "VULKAN_NON_CMAKE_BUILD" ]
   if (is_clang || !is_win) {
     cflags = [ "-Wno-unused-function" ]
-
-    cflags += [
-      # See https://github.com/KhronosGroup/Vulkan-LoaderAndValidationLayers/issues/1649
-      # TODO(jmadill): Lift this once github issue is fixed.
-      "-Wno-ignored-attributes",
-
-      # TODO(thakis): Consider enabling this, https://crbug.com/807632
-      "-Wno-implicit-fallthrough",
-    ]
   }
   if (is_linux) {
     defines += [
@@ -328,6 +319,8 @@ if (!is_android) {
     public_deps = [
       ":vulkan_headers",
     ]
+    configs -= [ "//build/config/compiler:chromium_code" ]
+    configs += [ "//build/config/compiler:no_chromium_code" ]
     configs += [ ":vulkan_internal_config" ]
     public_configs = [
       ":vulkan_config",
@@ -354,6 +347,8 @@ source_set("vulkan_layer_table") {
     ":vulkan_layer_config",
     ":vulkan_internal_config",
   ]
+  configs -= [ "//build/config/compiler:chromium_code" ]
+  configs += [ "//build/config/compiler:no_chromium_code" ]
   sources = [
     "$target_gen_dir/angle/vulkan/vk_dispatch_table_helper.h",
     "$target_gen_dir/angle/vulkan/vk_enum_string_helper.h",
@@ -542,6 +537,8 @@ source_set("vulkan_layer_utils") {
     ":vulkan_loader_config",
     ":vulkan_internal_config",
   ]
+  configs -= [ "//build/config/compiler:chromium_code" ]
+  configs += [ "//build/config/compiler:no_chromium_code" ]
   public_deps = [
     ":vulkan_generate_helper_files",
   ]
@@ -594,6 +591,8 @@ source_set("vulkan_gen_parameter_validation") {
 foreach(layer_info, layers) {
   name = layer_info[0]
   shared_library("VkLayer_$name") {
+    configs -= [ "//build/config/compiler:chromium_code" ]
+    configs += [ "//build/config/compiler:no_chromium_code" ]
     configs -= vulkan_undefine_configs
     deps = [
       ":vulkan_layer_table",

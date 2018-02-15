@@ -147,13 +147,6 @@ config("spirv_tools_config") {
     ]
   }
 }
-config("spirv_tools_internal_config") {
-  if (is_clang) {
-    # TODO(thakis): Consider enabling this, https://crbug.com/807632
-    cflags = [ "-Wno-implicit-fallthrough" ]
-  }
-}
-
 static_library("spirv_tools") {
   deps = [
     ":spirv_tools_gen_core_tables_1.0",
@@ -243,7 +236,8 @@ static_library("spirv_tools") {
     "src/source/validate_type_unique.cpp",
   ]
   public_configs = [ ":spirv_tools_config" ]
-  configs += [ ":spirv_tools_internal_config" ]
+  configs -= [ "//build/config/compiler:chromium_code" ]
+  configs += [ "//build/config/compiler:no_chromium_code" ]
 
   foreach(target_name, spvtools_vendor_tables) {
     deps += [ ":$target_name" ]
