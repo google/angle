@@ -762,6 +762,29 @@ TEST_P(SimpleOperationTest, CreateRenderbuffer)
     ASSERT_GL_NO_ERROR();
 }
 
+// Render to a simple color Renderbuffer.
+TEST_P(SimpleOperationTest, RenderbufferAttachment)
+{
+    constexpr int kSize = 16;
+
+    GLRenderbuffer renderbuffer;
+    glBindRenderbuffer(GL_RENDERBUFFER, renderbuffer);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, kSize, kSize);
+
+    GLFramebuffer framebuffer;
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, renderbuffer);
+    ASSERT_GL_NO_ERROR();
+    ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
+    glViewport(0, 0, kSize, kSize);
+
+    ANGLE_GL_PROGRAM(program, kBasicVertexShader, kGreenFragmentShader);
+    drawQuad(program, "position", 0.5f, 1.0f, true);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
 ANGLE_INSTANTIATE_TEST(SimpleOperationTest,
                        ES2_D3D9(),

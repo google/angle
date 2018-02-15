@@ -31,6 +31,7 @@ gl::Error RenderbufferVk::onDestroy(const gl::Context *context)
 
     renderer->releaseResource(*this, &mImage);
     renderer->releaseResource(*this, &mDeviceMemory);
+    renderer->releaseResource(*this, &mImageView);
     return gl::NoError();
 }
 
@@ -42,6 +43,7 @@ gl::Error RenderbufferVk::setStorage(const gl::Context *context,
     ContextVk *contextVk       = vk::GetImpl(context);
     RendererVk *renderer       = contextVk->getRenderer();
     const vk::Format &vkFormat = renderer->getFormat(internalformat);
+    VkDevice device            = renderer->getDevice();
 
     VkImageUsageFlags usage =
         (VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT |
@@ -66,10 +68,43 @@ gl::Error RenderbufferVk::setStorage(const gl::Context *context,
     imageInfo.pQueueFamilyIndices   = nullptr;
     imageInfo.initialLayout         = VK_IMAGE_LAYOUT_UNDEFINED;
 
-    ANGLE_TRY(mImage.init(contextVk->getDevice(), imageInfo));
+    ANGLE_TRY(mImage.init(device, imageInfo));
 
     VkMemoryPropertyFlags flags = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
     ANGLE_TRY(vk::AllocateImageMemory(renderer, flags, &mImage, &mDeviceMemory, &mRequiredSize));
+
+    VkImageAspectFlags aspect = VK_IMAGE_ASPECT_COLOR_BIT;
+
+    // Allocate ImageView.
+    VkImageViewCreateInfo viewInfo;
+    viewInfo.sType                           = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+    viewInfo.pNext                           = nullptr;
+    viewInfo.flags                           = 0;
+    viewInfo.image                           = mImage.getHandle();
+    viewInfo.viewType                        = VK_IMAGE_VIEW_TYPE_2D;
+    viewInfo.format                          = vkFormat.vkTextureFormat;
+    viewInfo.components.r                    = VK_COMPONENT_SWIZZLE_R;
+    viewInfo.components.g                    = VK_COMPONENT_SWIZZLE_G;
+    viewInfo.components.b                    = VK_COMPONENT_SWIZZLE_B;
+    viewInfo.components.a                    = VK_COMPONENT_SWIZZLE_A;
+    viewInfo.subresourceRange.aspectMask     = aspect;
+    viewInfo.subresourceRange.baseMipLevel   = 0;
+    viewInfo.subresourceRange.levelCount     = 1;
+    viewInfo.subresourceRange.baseArrayLayer = 0;
+    viewInfo.subresourceRange.layerCount     = 1;
+
+    ANGLE_TRY(mImageView.init(device, viewInfo));
+
+    // Init RenderTarget.
+    mRenderTarget.extents.width  = static_cast<int>(width);
+    mRenderTarget.extents.height = static_cast<int>(height);
+    mRenderTarget.extents.depth  = 1;
+    mRenderTarget.format         = &vkFormat;
+    mRenderTarget.image          = &mImage;
+    mRenderTarget.imageView      = &mImageView;
+    mRenderTarget.resource       = this;
+    mRenderTarget.samples        = VK_SAMPLE_COUNT_1_BIT;  // TODO(jmadill): Multisample bits.
+
     return gl::NoError();
 }
 
@@ -89,13 +124,14 @@ gl::Error RenderbufferVk::setStorageEGLImageTarget(const gl::Context *context, e
     return gl::InternalError();
 }
 
-gl::Error RenderbufferVk::getAttachmentRenderTarget(const gl::Context *context,
-                                                    GLenum binding,
-                                                    const gl::ImageIndex &imageIndex,
+gl::Error RenderbufferVk::getAttachmentRenderTarget(const gl::Context * /*context*/,
+                                                    GLenum /*binding*/,
+                                                    const gl::ImageIndex & /*imageIndex*/,
                                                     FramebufferAttachmentRenderTarget **rtOut)
 {
-    UNIMPLEMENTED();
-    return gl::InternalError();
+    ASSERT(mImage.valid());
+    *rtOut = &mRenderTarget;
+    return gl::NoError();
 }
 
 gl::Error RenderbufferVk::initializeContents(const gl::Context *context,
