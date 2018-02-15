@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "610aba21_0c63ee48",
+        "filename": "src/compiler/translator/util.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 219,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-15T16:16:58Z",
+      "side": 1,
+      "message": "nit: ANGLE_UNREACHABLE_IS_NORETURN\n\nAlso cleaning this up in a future patch would be appreciated - this is a bit unwieldy for new code.",
+      "range": {
+        "startLine": 219,
+        "startChar": 5,
+        "endLine": 219,
+        "endChar": 28
+      },
+      "revId": "e3b7b9e0ba6a474d976686da29eda7121d885bc8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
