@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "74f5228b_439e8e45",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 29
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-15T14:59:27Z",
+      "side": 1,
+      "message": "I\u0027m not sure we can really do better here. Can probably leave this out. (We don\u0027t keep them interleaved on D3D).",
+      "range": {
+        "startLine": 55,
+        "startChar": 0,
+        "endLine": 56,
+        "endChar": 82
+      },
+      "revId": "541c72ec8e42cf9ca0f77dbce2182a1dadedd5de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0907cb8a_8ab8375b",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 29
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-15T14:59:27Z",
+      "side": 1,
+      "message": "you could also make this UNIMPLEMENTED() and return an internal error here.",
+      "range": {
+        "startLine": 66,
+        "startChar": 12,
+        "endLine": 66,
+        "endChar": 44
+      },
+      "revId": "541c72ec8e42cf9ca0f77dbce2182a1dadedd5de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5665f81a_dac9b2fe",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 29
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-15T14:59:27Z",
+      "side": 1,
+      "message": "I don\u0027t think this is correct for drawElements - you\u0027re passing in the range of indices, not vertices. We\u0027ll need to compute the index range to get the real vertex range. I think for now you can leave this \"broken\" with a TODO and fix this as follow-up work. Also wouldn\u0027t hurt to make a test for it - something like using a draw with a 12 vertex buffer with 6 indices [6,7,8,9,10,11] - this code will theoretically copy [0-5].\n\nAlso I think our convention is usually to pass first vertex/count instead of last vertex - it has the minor advantage of not ever having to validate last \u003e\u003d first.",
+      "range": {
+        "startLine": 75,
+        "startChar": 16,
+        "endLine": 75,
+        "endChar": 27
+      },
+      "revId": "541c72ec8e42cf9ca0f77dbce2182a1dadedd5de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b7e1dcbf_707dbd89",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 29
+      },
+      "lineNbr": 337,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-15T14:59:27Z",
+      "side": 1,
+      "message": "nit: DrawQuadFromClientPointer (or ClientMemory) - \"memory\" is ambiguous since it\u0027s either drawing from client memory or GPU memory.",
+      "range": {
+        "startLine": 337,
+        "startChar": 28,
+        "endLine": 337,
+        "endChar": 46
+      },
+      "revId": "541c72ec8e42cf9ca0f77dbce2182a1dadedd5de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
