@@ -190,6 +190,30 @@
     },
     {
       "key": {
+        "uuid": "99805174_4db8a2c6",
+        "filename": "src/tests/gl_tests/AttributeLayoutTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 295,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-02-15T15:13:06Z",
+      "side": 1,
+      "message": "UNUSED_VARIABLE macros are pretty common for referencing assertion variables or unused function parameters.  That said I don\u0027t have a strong opinion.",
+      "parentUuid": "39a5d818_98ac166d",
+      "range": {
+        "startLine": 290,
+        "startChar": 1,
+        "endLine": 295,
+        "endChar": 35
+      },
+      "revId": "b43a248eef43e3ad4ad0fa679b1a0645558dde39",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "bdbb1a42_a083a378",
         "filename": "src/tests/gl_tests/AttributeLayoutTest.cpp",
         "patchSetId": 4
@@ -225,6 +249,30 @@
       "side": 1,
       "message": "My reasoning was I wanted to keep the names short, since they are used so many times.  I was even begrudging a leading \u0027m.\u0027\nAnd I kind of prefer to have them scoped to here since this is the only place they are used.\nAlso if I move them into the class I can\u0027t do the RAII thing.\n\nBut I\u0027m not fussy about it.  Let me know if you still want me to move them.",
       "parentUuid": "bdbb1a42_a083a378",
+      "range": {
+        "startLine": 324,
+        "startChar": 4,
+        "endLine": 324,
+        "endChar": 11
+      },
+      "revId": "b43a248eef43e3ad4ad0fa679b1a0645558dde39",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "628520ac_9ffe8987",
+        "filename": "src/tests/gl_tests/AttributeLayoutTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 324,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-02-15T15:13:06Z",
+      "side": 1,
+      "message": "I\u0027d rather we didn\u0027t use non-const statics in tests because as the tests iterate with different backends the same buffers will be used and never deleted.\n\nYou could use std::shared_ptr instead so that the Attribs hold a reference and everything gets cleaned up later if you call mTestCases.clear() in the TearDown code.",
+      "parentUuid": "7c4bd486_e7d5e46a",
       "range": {
         "startLine": 324,
         "startChar": 4,
