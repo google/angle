@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d0092879_494d5815",
+        "filename": "BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 595,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-15T15:06:28Z",
+      "side": 1,
+      "message": "nit: should probably keep this ALL_CAPS",
+      "range": {
+        "startLine": 595,
+        "startChar": 15,
+        "endLine": 595,
+        "endChar": 40
+      },
+      "revId": "979bd68de4afe91ad7d6d4fbe90266910f22f3a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f9c33902_d917119f",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-15T15:06:28Z",
+      "side": 1,
+      "message": "by \"the\" test runner",
+      "range": {
+        "startLine": 35,
+        "startChar": 53,
+        "endLine": 35,
+        "endChar": 60
+      },
+      "revId": "979bd68de4afe91ad7d6d4fbe90266910f22f3a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a819d0d3_467ff03a",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-15T15:06:28Z",
+      "side": 1,
+      "message": "what is NativeTest?",
+      "range": {
+        "startLine": 35,
+        "startChar": 3,
+        "endLine": 35,
+        "endChar": 14
+      },
+      "revId": "979bd68de4afe91ad7d6d4fbe90266910f22f3a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "65b5e7a3_1f8ca6f6",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-15T15:06:28Z",
+      "side": 1,
+      "message": "\"pass intent extra\" ?",
+      "range": {
+        "startLine": 36,
+        "startChar": 46,
+        "endLine": 36,
+        "endChar": 64
+      },
+      "revId": "979bd68de4afe91ad7d6d4fbe90266910f22f3a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3157a46b_4934d08d",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-15T15:06:28Z",
+      "side": 1,
+      "message": "would it be possible at all to extend NativeTest somehow? Who owns NativeTest?",
+      "range": {
+        "startLine": 38,
+        "startChar": 3,
+        "endLine": 38,
+        "endChar": 43
+      },
+      "revId": "979bd68de4afe91ad7d6d4fbe90266910f22f3a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
