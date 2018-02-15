@@ -514,6 +514,16 @@ void CommandBuffer::clearDepthStencilImage(const vk::Image &image,
                                 rangeCount, ranges);
 }
 
+void CommandBuffer::clearAttachments(uint32_t attachmentCount,
+                                     const VkClearAttachment *attachments,
+                                     uint32_t rectCount,
+                                     const VkClearRect *rects)
+{
+    ASSERT(valid());
+
+    vkCmdClearAttachments(mHandle, attachmentCount, attachments, rectCount, rects);
+}
+
 void CommandBuffer::copySingleImage(const vk::Image &srcImage,
                                     const vk::Image &destImage,
                                     const gl::Box &copyRegion,

@@ -160,6 +160,7 @@ class ContextVk : public ContextImpl
 
     const VkClearValue &getClearColorValue() const;
     const VkClearValue &getClearDepthStencilValue() const;
+    const VkRect2D &getScissor() const { return mPipelineDesc->getScissor(); }
 
   private:
     gl::Error initPipeline(const gl::Context *context);

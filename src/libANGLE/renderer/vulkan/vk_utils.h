@@ -333,6 +333,7 @@ class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
                              const VkBufferMemoryBarrier &bufferBarrier);
 
     void clearSingleColorImage(const vk::Image &image, const VkClearColorValue &color);
+
     void clearSingleDepthStencilImage(const vk::Image &image,
                                       VkImageAspectFlags aspectFlags,
                                       const VkClearDepthStencilValue &depthStencil);
@@ -341,6 +342,11 @@ class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
                                 const VkClearDepthStencilValue &depthStencil,
                                 uint32_t rangeCount,
                                 const VkImageSubresourceRange *ranges);
+
+    void clearAttachments(uint32_t attachmentCount,
+                          const VkClearAttachment *attachments,
+                          uint32_t rectCount,
+                          const VkClearRect *rects);
 
     void copyBuffer(const vk::Buffer &srcBuffer,
                     const vk::Buffer &destBuffer,

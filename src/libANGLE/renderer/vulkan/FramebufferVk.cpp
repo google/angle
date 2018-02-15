@@ -136,7 +136,15 @@ gl::Error FramebufferVk::clear(const gl::Context *context, GLbitfield mask)
         return gl::NoError();
     }
 
-    // TODO(jmadill): Scissored clears.
+    if (context->getGLState().isScissorTestEnabled())
+    {
+        // With scissor test enabled, we clear very differently and we don't need to access
+        // the image inside each attachment we can just use clearCmdAttachments with our
+        // scissor region instead.
+        ANGLE_TRY(clearColorAttachmentsWithScissorRegion(context));
+        return gl::NoError();
+    }
+
     const auto *attachment = mState.getFirstNonNullAttachment();
     ASSERT(attachment && attachment->isAttached());
     const auto &size = attachment->getSize();
@@ -459,6 +467,50 @@ gl::ErrorOrResult<vk::Framebuffer *> FramebufferVk::getFramebuffer(const gl::Con
     ANGLE_TRY(mFramebuffer.init(device, framebufferInfo));
 
     return &mFramebuffer;
+}
+
+gl::Error FramebufferVk::clearColorAttachmentsWithScissorRegion(const gl::Context *context)
+{
+    ContextVk *contextVk = vk::GetImpl(context);
+    RendererVk *renderer = contextVk->getRenderer();
+
+    // This command can only happen inside a render pass, so obtain one if its already happening
+    // or create a new one if not.
+    vk::CommandGraphNode *node       = nullptr;
+    vk::CommandBuffer *commandBuffer = nullptr;
+    ANGLE_TRY(getCommandGraphNodeForDraw(context, &node));
+    if (node->getInsideRenderPassCommands()->valid())
+    {
+        commandBuffer = node->getInsideRenderPassCommands();
+    }
+    else
+    {
+        ANGLE_TRY(node->beginInsideRenderPassRecording(renderer, &commandBuffer));
+    }
+
+    const std::vector<gl::FramebufferAttachment> &colorAttachments = mState.getColorAttachments();
+    gl::AttachmentArray<VkClearAttachment> clearAttachments;
+    int clearAttachmentIndex = 0;
+    for (auto colorIndex : mState.getEnabledDrawBuffers())
+    {
+        VkClearAttachment &clearAttachment = clearAttachments[clearAttachmentIndex];
+        clearAttachment.aspectMask         = VK_IMAGE_ASPECT_COLOR_BIT;
+        clearAttachment.colorAttachment    = static_cast<uint32_t>(colorIndex);
+        clearAttachment.clearValue         = contextVk->getClearColorValue();
+        ++clearAttachmentIndex;
+    }
+
+    // We assume for now that we always need to clear only 1 layer starting at the
+    // baseArrayLayer 0, this might need to change depending how we'll implement
+    // cube maps, 3d textures and array textures.
+    VkClearRect clearRect;
+    clearRect.baseArrayLayer = 0;
+    clearRect.layerCount     = 1;
+    clearRect.rect           = contextVk->getScissor();
+
+    commandBuffer->clearAttachments(static_cast<uint32_t>(colorAttachments.size()),
+                                    clearAttachments.data(), 1, &clearRect);
+    return gl::NoError();
 }
 
 gl::Error FramebufferVk::getSamplePosition(size_t index, GLfloat *xy) const

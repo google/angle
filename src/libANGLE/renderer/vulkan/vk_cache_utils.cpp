@@ -579,7 +579,6 @@ void PipelineDesc::updateViewport(const gl::Rectangle &viewport, float nearPlane
     mViewport.minDepth = nearPlane;
     mViewport.maxDepth = farPlane;
 
-    // TODO(jmadill): Scissor.
     mScissor.offset.x      = viewport.x;
     mScissor.offset.y      = viewport.y;
     mScissor.extent.width  = viewport.width;

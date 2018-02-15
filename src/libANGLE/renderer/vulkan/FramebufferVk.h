@@ -95,6 +95,8 @@ class FramebufferVk : public FramebufferImpl, public ResourceVk
     gl::ErrorOrResult<vk::Framebuffer *> getFramebuffer(const gl::Context *context,
                                                         RendererVk *rendererVk);
 
+    gl::Error clearColorAttachmentsWithScissorRegion(const gl::Context *context);
+
     WindowSurfaceVk *mBackbuffer;
 
     Optional<vk::RenderPassDesc> mRenderPassDesc;

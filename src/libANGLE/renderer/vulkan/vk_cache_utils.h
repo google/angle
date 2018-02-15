@@ -289,6 +289,7 @@ class PipelineDesc final
     void updateRenderPassDesc(const RenderPassDesc &renderPassDesc);
 
     // Scissor support
+    const VkRect2D &getScissor() const { return mScissor; }
     void updateScissor(const gl::Rectangle &rect);
 
     // Blend states
