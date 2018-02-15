@@ -22,6 +22,30 @@
       "revId": "099a4c7ebcf834e1bfae5856bd26b8aec9f224bf",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7ee7a73c_2c802800",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-15T21:39:42Z",
+      "side": 1,
+      "message": "I\u0027d like to. Let me take it as an action item to follow up this work with a helper class for Images, like TextureHelper11.",
+      "parentUuid": "649503c6_5da0b5a3",
+      "range": {
+        "startLine": 146,
+        "startChar": 0,
+        "endLine": 149,
+        "endChar": 0
+      },
+      "revId": "099a4c7ebcf834e1bfae5856bd26b8aec9f224bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
