@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "cf71acb6_9776fdc1",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 340,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-15T19:46:39Z",
+      "side": 1,
+      "message": "Just moved it to clean up the formatting.. though the auto-formatter didn\u0027t quite fix everything. Manually fixed alignment.",
+      "parentUuid": "4583b998_2a3d2809",
+      "revId": "1157ff023c98156c5cde1c79a18a9a75c338829f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8ae54f39_94bf0753",
         "filename": "src/libANGLE/renderer/vulkan/android/DisplayVkAndroid.cpp",
         "patchSetId": 3
@@ -39,6 +57,30 @@
       "revId": "1157ff023c98156c5cde1c79a18a9a75c338829f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8f19dbc3_a84ea4ea",
+        "filename": "src/libANGLE/renderer/vulkan/android/DisplayVkAndroid.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-15T19:46:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8ae54f39_94bf0753",
+      "range": {
+        "startLine": 78,
+        "startChar": 35,
+        "endLine": 78,
+        "endChar": 44
+      },
+      "revId": "1157ff023c98156c5cde1c79a18a9a75c338829f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
