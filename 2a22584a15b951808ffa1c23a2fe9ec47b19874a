@@ -804,6 +804,30 @@
     },
     {
       "key": {
+        "uuid": "a17d94f1_c9111055",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-02-15T00:36:03Z",
+      "side": 1,
+      "message": "The gist of that article, and every one I\u0027ve seen pushing single spaces, is that proportional fonts and typesetting software make the extra space unnecessary.  But I think code is mainly seen in a monospace font, so the reasoning behind two spaces applies.  To quote from your article: \"Unless you are typing on an actual typewriter, you no longer have to put two spaces after a period.\"  If the font is monospace, it\u0027s the same as being on a typewriter.\nAnyone from my generation or before who was taught to type properly on a typewriter learned to use two spaces.  One space looks as wrong to us as two spaces might look to someone who didn\u0027t get the same education.\nOn the bright side, we\u0027ll all be retired (or dead) in 5-10 years and you single spacers can live happily ever after, doing it wrong.  :)   Now if you\u0027ll excuse me I need to go yell at the kids on my lawn.\n\nhttps://en.wikipedia.org/wiki/Sentence_spacing",
+      "parentUuid": "f1a85ecc_7f61f28b",
+      "range": {
+        "startLine": 131,
+        "startChar": 47,
+        "endLine": 131,
+        "endChar": 48
+      },
+      "revId": "2a22584a15b951808ffa1c23a2fe9ec47b19874a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f7f823bc_feb3c9ae",
         "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
         "patchSetId": 23
