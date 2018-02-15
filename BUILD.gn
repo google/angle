@@ -664,6 +664,15 @@ shared_library("libGLESv1_CM") {
   if (is_android) {
     configs -= [ "//build/config/android:hide_all_but_jni_onload" ]
   }
+
+  if (is_mac && !is_component_build) {
+    ldflags = [
+      "-install_name",
+      "@rpath/${target_name}.dylib",
+    ]
+    public_configs = [ ":shared_library_public_config" ]
+  }
+
   configs -= angle_undefine_configs
   configs += [
     ":commit_id_config",
