@@ -262,6 +262,30 @@
     },
     {
       "key": {
+        "uuid": "bcb73438_f8e729bd",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-02-15T21:34:26Z",
+      "side": 1,
+      "message": "That\u0027s how you pass arguments to Android Activities. Intent is the action you want Activity to do. Extras are additional arguments for that action.",
+      "parentUuid": "53f5e96a_44057c82",
+      "range": {
+        "startLine": 36,
+        "startChar": 46,
+        "endLine": 36,
+        "endChar": 64
+      },
+      "revId": "979bd68de4afe91ad7d6d4fbe90266910f22f3a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3157a46b_4934d08d",
         "filename": "doc/DebuggingTips.md",
         "patchSetId": 1
@@ -321,6 +345,30 @@
       "side": 1,
       "message": "Why can\u0027t we pass in command line arguments?",
       "parentUuid": "94c05a89_107e0b7e",
+      "range": {
+        "startLine": 38,
+        "startChar": 3,
+        "endLine": 38,
+        "endChar": 43
+      },
+      "revId": "979bd68de4afe91ad7d6d4fbe90266910f22f3a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "35d92047_c161eefc",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-02-15T21:34:26Z",
+      "side": 1,
+      "message": "GAPID wants to start the activity, but it doesn\u0027t provide an option to pass intent extras to it.\nThis could be possibly added to GAPID, if we wanted to.\nThat\u0027s what GAPID needs to do to start the activity properly:\nadb shell am start -a android.intent.action.MAIN -n org.chromium.native_test/.NativeUnitTestNativeActivity -e org.chromium.native_test.NativeTest.StdoutFile /sdcard/chromium_tests_root/out.txt\n(Taken from https://chromium.googlesource.com/angle/angle/+/master/doc/DevSetup.md)",
+      "parentUuid": "519ff8ef_74603ced",
       "range": {
         "startLine": 38,
         "startChar": 3,
