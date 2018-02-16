@@ -5808,23 +5808,39 @@ TIntermTyped *TParseContext::addNonConstructorFunctionCall(TFunctionLookup *fnCa
     }
     else
     {
-        symbol = symbolTable.find(fnCall->getMangledName(), mShaderVersion);
+        // There are no inner functions, so it's enough to look for user-defined functions in the
+        // global scope.
+        symbol = symbolTable.findGlobal(fnCall->getMangledName());
+        if (symbol != nullptr)
+        {
+            // A user-defined function - could be an overloaded built-in as well.
+            ASSERT(symbol->symbolType() == SymbolType::UserDefined);
+            const TFunction *fnCandidate = static_cast<const TFunction *>(symbol);
+            TIntermAggregate *callNode =
+                TIntermAggregate::CreateFunctionCall(*fnCandidate, &fnCall->arguments());
+            callNode->setLine(loc);
+            checkImageMemoryAccessForUserDefinedFunctions(fnCandidate, callNode);
+            functionCallRValueLValueErrorCheck(fnCandidate, callNode);
+            return callNode;
+        }
+
+        symbol = symbolTable.findBuiltIn(fnCall->getMangledName(), mShaderVersion);
         if (symbol == nullptr)
         {
             error(loc, "no matching overloaded function found", fnCall->name());
         }
         else
         {
+            // A built-in function.
+            ASSERT(symbol->symbolType() == SymbolType::BuiltIn);
             const TFunction *fnCandidate = static_cast<const TFunction *>(symbol);
-            //
-            // A declared function.
-            //
+
             if (fnCandidate->extension() != TExtension::UNDEFINED)
             {
                 checkCanUseExtension(loc, fnCandidate->extension());
             }
             TOperator op = fnCandidate->getBuiltInOp();
-            if (op != EOpNull)
+            if (op != EOpCallBuiltInFunction)
             {
                 // A function call mapped to a built-in operation.
                 if (fnCandidate->getParamCount() == 1)
@@ -5835,50 +5851,28 @@ TIntermTyped *TParseContext::addNonConstructorFunctionCall(TFunctionLookup *fnCa
                     ASSERT(callNode != nullptr);
                     return callNode;
                 }
-                else
-                {
-                    TIntermAggregate *callNode =
-                        TIntermAggregate::Create(*fnCandidate, op, &fnCall->arguments());
-                    callNode->setLine(loc);
-
-                    // Some built-in functions have out parameters too.
-                    functionCallRValueLValueErrorCheck(fnCandidate, callNode);
-
-                    // See if we can constant fold a built-in. Note that this may be possible
-                    // even if it is not const-qualified.
-                    return callNode->fold(mDiagnostics);
-                }
-            }
-            else
-            {
-                // This is a real function call.
-                TIntermAggregate *callNode = nullptr;
-
-                // If the symbol type is not BuiltIn, the function is user defined - could be an
-                // overloaded built-in as well. if the symbol type is BuiltIn, it's a built-in
-                // function with no op associated with it.
-                if (fnCandidate->symbolType() == SymbolType::BuiltIn)
-                {
-                    callNode = TIntermAggregate::CreateBuiltInFunctionCall(*fnCandidate,
-                                                                           &fnCall->arguments());
-                    checkTextureOffsetConst(callNode);
-                    checkTextureGather(callNode);
-                    checkImageMemoryAccessForBuiltinFunctions(callNode);
-                    checkAtomicMemoryBuiltinFunctions(callNode);
-                }
-                else
-                {
-                    callNode =
-                        TIntermAggregate::CreateFunctionCall(*fnCandidate, &fnCall->arguments());
-                    checkImageMemoryAccessForUserDefinedFunctions(fnCandidate, callNode);
-                }
-
-                functionCallRValueLValueErrorCheck(fnCandidate, callNode);
-
+                TIntermAggregate *callNode =
+                    TIntermAggregate::CreateBuiltInFunctionCall(*fnCandidate, &fnCall->arguments());
                 callNode->setLine(loc);
 
-                return callNode;
+                // Some built-in functions have out parameters too.
+                functionCallRValueLValueErrorCheck(fnCandidate, callNode);
+
+                // See if we can constant fold a built-in. Note that this may be possible
+                // even if it is not const-qualified.
+                return callNode->fold(mDiagnostics);
             }
+
+            // This is a built-in function with no op associated with it.
+            TIntermAggregate *callNode =
+                TIntermAggregate::CreateBuiltInFunctionCall(*fnCandidate, &fnCall->arguments());
+            callNode->setLine(loc);
+            checkTextureOffsetConst(callNode);
+            checkTextureGather(callNode);
+            checkImageMemoryAccessForBuiltinFunctions(callNode);
+            checkAtomicMemoryBuiltinFunctions(callNode);
+            functionCallRValueLValueErrorCheck(fnCandidate, callNode);
+            return callNode;
         }
     }
 

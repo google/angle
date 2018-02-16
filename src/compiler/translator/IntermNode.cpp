@@ -352,11 +352,9 @@ TIntermAggregate *TIntermAggregate::CreateRawFunctionCall(const TFunction &func,
 TIntermAggregate *TIntermAggregate::CreateBuiltInFunctionCall(const TFunction &func,
                                                               TIntermSequence *arguments)
 {
-    TIntermAggregate *callNode =
-        new TIntermAggregate(&func, func.getReturnType(), EOpCallBuiltInFunction, arguments);
-    // Note that name needs to be set before texture function type is determined.
-    callNode->setBuiltInFunctionPrecision();
-    return callNode;
+    // op should be either EOpCallBuiltInFunction or a specific math op.
+    ASSERT(func.getBuiltInOp() != EOpNull);
+    return new TIntermAggregate(&func, func.getReturnType(), func.getBuiltInOp(), arguments);
 }
 
 TIntermAggregate *TIntermAggregate::CreateConstructor(const TType &type,
@@ -365,22 +363,11 @@ TIntermAggregate *TIntermAggregate::CreateConstructor(const TType &type,
     return new TIntermAggregate(nullptr, type, EOpConstruct, arguments);
 }
 
-TIntermAggregate *TIntermAggregate::Create(const TFunction &func,
-                                           TOperator op,
-                                           TIntermSequence *arguments)
-{
-    ASSERT(op != EOpCallFunctionInAST);    // Should use CreateFunctionCall
-    ASSERT(op != EOpCallInternalRawFunction);  // Should use CreateRawFunctionCall
-    ASSERT(op != EOpCallBuiltInFunction);  // Should use CreateBuiltInFunctionCall
-    ASSERT(op != EOpConstruct);            // Should use CreateConstructor
-    return new TIntermAggregate(&func, func.getReturnType(), op, arguments);
-}
-
 TIntermAggregate::TIntermAggregate(const TFunction *func,
                                    const TType &type,
                                    TOperator op,
                                    TIntermSequence *arguments)
-    : TIntermOperator(op),
+    : TIntermOperator(op, type),
       mUseEmulatedFunction(false),
       mGotPrecisionFromChildren(false),
       mFunction(func)
@@ -390,14 +377,17 @@ TIntermAggregate::TIntermAggregate(const TFunction *func,
         mArguments.swap(*arguments);
     }
     ASSERT(mFunction == nullptr || mFunction->symbolType() != SymbolType::Empty);
-    setTypePrecisionAndQualifier(type);
+    setPrecisionAndQualifier();
 }
 
-void TIntermAggregate::setTypePrecisionAndQualifier(const TType &type)
+void TIntermAggregate::setPrecisionAndQualifier()
 {
-    setType(type);
     mType.setQualifier(EvqTemporary);
-    if (!isFunctionCall())
+    if (mOp == EOpCallBuiltInFunction)
+    {
+        setBuiltInFunctionPrecision();
+    }
+    else if (!isFunctionCall())
     {
         if (isConstructor())
         {

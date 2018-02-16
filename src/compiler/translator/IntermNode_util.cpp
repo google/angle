@@ -259,13 +259,9 @@ TIntermTyped *CreateBuiltInFunctionCallNode(const char *name,
     const TFunction *fn = LookUpBuiltInFunction(name, arguments, symbolTable, shaderVersion);
     ASSERT(fn);
     TOperator op = fn->getBuiltInOp();
-    if (op != EOpNull)
+    if (op != EOpCallBuiltInFunction && arguments->size() == 1)
     {
-        if (arguments->size() == 1)
-        {
-            return new TIntermUnary(op, arguments->at(0)->getAsTyped());
-        }
-        return TIntermAggregate::Create(*fn, op, arguments);
+        return new TIntermUnary(op, arguments->at(0)->getAsTyped());
     }
     return TIntermAggregate::CreateBuiltInFunctionCall(*fn, arguments);
 }

@@ -60,13 +60,18 @@ class IntermNodeTest : public testing::Test
         return createTestSymbol(type);
     }
 
-    TFunction *createTestBuiltInFunction(const TType &returnType, const TIntermSequence &args)
+    TFunction *createTestFunction(const TType &returnType, const TIntermSequence &args)
     {
         // We're using a dummy symbol table similarly as for creating symbol nodes.
         const ImmutableString name("testFunc");
         TSymbolTable symbolTable;
-        TFunction *func =
-            new TFunction(&symbolTable, name, new TType(returnType), SymbolType::BuiltIn, true);
+        TFunction *func = new TFunction(&symbolTable, name, new TType(returnType),
+                                        SymbolType::UserDefined, false);
+        for (TIntermNode *arg : args)
+        {
+            const TType *type = new TType(arg->getAsTyped()->getType());
+            func->addParameter(TConstParameter(type));
+        }
         return func;
     }
 
@@ -211,10 +216,10 @@ TEST_F(IntermNodeTest, DeepCopyAggregateNode)
     originalSeq->push_back(createTestSymbol());
     originalSeq->push_back(createTestSymbol());
 
-    TFunction *mix =
-        createTestBuiltInFunction(originalSeq->back()->getAsTyped()->getType(), *originalSeq);
+    TFunction *testFunc =
+        createTestFunction(originalSeq->back()->getAsTyped()->getType(), *originalSeq);
 
-    TIntermAggregate *original = TIntermAggregate::Create(*mix, EOpMix, originalSeq);
+    TIntermAggregate *original = TIntermAggregate::CreateFunctionCall(*testFunc, originalSeq);
     original->setLine(getTestSourceLoc());
 
     TIntermTyped *copyTyped = original->deepCopy();

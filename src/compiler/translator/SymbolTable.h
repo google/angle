@@ -196,8 +196,8 @@ class TSymbolTable : angle::NonCopyable
                        const TType *ptype5 = 0)
     {
         insertUnmangledBuiltInName(name, level);
-        insertBuiltIn(level, EOpNull, TExtension::UNDEFINED, rvalue, name, ptype1, ptype2, ptype3,
-                      ptype4, ptype5);
+        insertBuiltIn(level, EOpCallBuiltInFunction, TExtension::UNDEFINED, rvalue, name, ptype1,
+                      ptype2, ptype3, ptype4, ptype5);
     }
 
     void insertBuiltIn(ESymbolLevel level,
@@ -211,7 +211,8 @@ class TSymbolTable : angle::NonCopyable
                        const TType *ptype5 = 0)
     {
         insertUnmangledBuiltInName(name, level);
-        insertBuiltIn(level, EOpNull, ext, rvalue, name, ptype1, ptype2, ptype3, ptype4, ptype5);
+        insertBuiltIn(level, EOpCallBuiltInFunction, ext, rvalue, name, ptype1, ptype2, ptype3,
+                      ptype4, ptype5);
     }
 
     void insertBuiltInOp(ESymbolLevel level,

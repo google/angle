@@ -564,13 +564,11 @@ class TIntermAggregate : public TIntermOperator, public TIntermAggregateBase
     static TIntermAggregate *CreateRawFunctionCall(const TFunction &func,
                                                    TIntermSequence *arguments);
 
+    // This covers all built-in function calls - whether they are associated with an op or not.
     static TIntermAggregate *CreateBuiltInFunctionCall(const TFunction &func,
                                                        TIntermSequence *arguments);
     static TIntermAggregate *CreateConstructor(const TType &type,
                                                TIntermSequence *arguments);
-    static TIntermAggregate *Create(const TFunction &func,
-                                    TOperator op,
-                                    TIntermSequence *arguments);
     ~TIntermAggregate() {}
 
     // Note: only supported for nodes that can be a part of an expression.
@@ -622,7 +620,7 @@ class TIntermAggregate : public TIntermOperator, public TIntermAggregateBase
 
     TIntermAggregate(const TIntermAggregate &node);  // note: not deleted, just private!
 
-    void setTypePrecisionAndQualifier(const TType &type);
+    void setPrecisionAndQualifier();
 
     bool areChildrenConstQualified();
 
