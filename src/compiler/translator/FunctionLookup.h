@@ -22,7 +22,7 @@ class TFunctionLookup : angle::NonCopyable
     POOL_ALLOCATOR_NEW_DELETE();
 
     static TFunctionLookup *CreateConstructor(const TType *type);
-    static TFunctionLookup *CreateFunctionCall(const ImmutableString &name);
+    static TFunctionLookup *CreateFunctionCall(const ImmutableString &name, const TSymbol *symbol);
 
     const ImmutableString &name() const;
     ImmutableString getMangledName() const;
@@ -38,13 +38,20 @@ class TFunctionLookup : angle::NonCopyable
     void addArgument(TIntermTyped *argument);
     TIntermSequence &arguments();
 
+    // Symbol looked up in the lexical phase using only the name of the function.
+    // This does not necessarily correspond to the correct overloaded function.
+    const TSymbol *symbol() const;
+
   private:
-    TFunctionLookup(const ImmutableString &name, const TType *constructorType);
+    TFunctionLookup(const ImmutableString &name,
+                    const TType *constructorType,
+                    const TSymbol *symbol);
 
     const ImmutableString mName;
     const TType *const mConstructorType;
     TIntermTyped *mThisNode;
     TIntermSequence mArguments;
+    const TSymbol *mSymbol;
 };
 
 }  // namespace sh

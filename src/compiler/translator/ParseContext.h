@@ -296,7 +296,7 @@ class TParseContext : angle::NonCopyable
                                    const ImmutableString &name,
                                    const TSourceLoc &location);
 
-    TFunctionLookup *addNonConstructorFunc(const ImmutableString &name);
+    TFunctionLookup *addNonConstructorFunc(const ImmutableString &name, const TSymbol *symbol);
     TFunctionLookup *addConstructorFunc(const TPublicType &publicType);
 
     TParameter parseParameterDeclarator(const TPublicType &publicType,

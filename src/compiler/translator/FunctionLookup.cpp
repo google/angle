@@ -21,8 +21,10 @@ constexpr const ImmutableString kEmptyName("");
 
 }  // anonymous namespace
 
-TFunctionLookup::TFunctionLookup(const ImmutableString &name, const TType *constructorType)
-    : mName(name), mConstructorType(constructorType), mThisNode(nullptr)
+TFunctionLookup::TFunctionLookup(const ImmutableString &name,
+                                 const TType *constructorType,
+                                 const TSymbol *symbol)
+    : mName(name), mConstructorType(constructorType), mThisNode(nullptr), mSymbol(symbol)
 {
 }
 
@@ -30,14 +32,15 @@ TFunctionLookup::TFunctionLookup(const ImmutableString &name, const TType *const
 TFunctionLookup *TFunctionLookup::CreateConstructor(const TType *type)
 {
     ASSERT(type != nullptr);
-    return new TFunctionLookup(kEmptyName, type);
+    return new TFunctionLookup(kEmptyName, type, nullptr);
 }
 
 // static
-TFunctionLookup *TFunctionLookup::CreateFunctionCall(const ImmutableString &name)
+TFunctionLookup *TFunctionLookup::CreateFunctionCall(const ImmutableString &name,
+                                                     const TSymbol *symbol)
 {
     ASSERT(name != "");
-    return new TFunctionLookup(name, nullptr);
+    return new TFunctionLookup(name, nullptr, symbol);
 }
 
 const ImmutableString &TFunctionLookup::name() const
@@ -91,6 +94,11 @@ void TFunctionLookup::addArgument(TIntermTyped *argument)
 TIntermSequence &TFunctionLookup::arguments()
 {
     return mArguments;
+}
+
+const TSymbol *TFunctionLookup::symbol() const
+{
+    return mSymbol;
 }
 
 }  // namespace sh

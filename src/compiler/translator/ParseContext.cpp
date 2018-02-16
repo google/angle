@@ -3432,9 +3432,10 @@ TFunction *TParseContext::parseFunctionHeader(const TPublicType &type,
     return new TFunction(&symbolTable, name, new TType(type), SymbolType::UserDefined, false);
 }
 
-TFunctionLookup *TParseContext::addNonConstructorFunc(const ImmutableString &name)
+TFunctionLookup *TParseContext::addNonConstructorFunc(const ImmutableString &name,
+                                                      const TSymbol *symbol)
 {
-    return TFunctionLookup::CreateFunctionCall(name);
+    return TFunctionLookup::CreateFunctionCall(name, symbol);
 }
 
 TFunctionLookup *TParseContext::addConstructorFunc(const TPublicType &publicType)
@@ -5798,11 +5799,10 @@ TIntermTyped *TParseContext::addMethod(TFunctionLookup *fnCall, const TSourceLoc
 TIntermTyped *TParseContext::addNonConstructorFunctionCall(TFunctionLookup *fnCall,
                                                            const TSourceLoc &loc)
 {
-    // First find by unmangled name to check whether the function name has been
-    // hidden by a variable name or struct typename.
-    // If a function is found, check for one with a matching argument list.
-    const TSymbol *symbol = symbolTable.find(fnCall->name(), mShaderVersion);
-    if (symbol != nullptr && !symbol->isFunction())
+    // First check whether the function has been hidden by a variable name or struct typename by
+    // using the symbol looked up in the lexical phase. If the function is not hidden, look for one
+    // with a matching argument list.
+    if (fnCall->symbol() != nullptr && !fnCall->symbol()->isFunction())
     {
         error(loc, "function name expected", fnCall->name());
     }
@@ -5810,7 +5810,7 @@ TIntermTyped *TParseContext::addNonConstructorFunctionCall(TFunctionLookup *fnCa
     {
         // There are no inner functions, so it's enough to look for user-defined functions in the
         // global scope.
-        symbol = symbolTable.findGlobal(fnCall->getMangledName());
+        const TSymbol *symbol = symbolTable.findGlobal(fnCall->getMangledName());
         if (symbol != nullptr)
         {
             // A user-defined function - could be an overloaded built-in as well.

@@ -2725,7 +2725,7 @@ yyreduce:
   case 30:
 
     {
-        (yyval.interm.functionLookup) = context->addNonConstructorFunc(ImmutableString((yyvsp[0].lex).string));
+        (yyval.interm.functionLookup) = context->addNonConstructorFunc(ImmutableString((yyvsp[0].lex).string), (yyvsp[0].lex).symbol);
     }
 
     break;
@@ -2733,7 +2733,7 @@ yyreduce:
   case 31:
 
     {
-        (yyval.interm.functionLookup) = context->addNonConstructorFunc(ImmutableString((yyvsp[0].lex).string));
+        (yyval.interm.functionLookup) = context->addNonConstructorFunc(ImmutableString((yyvsp[0].lex).string), (yyvsp[0].lex).symbol);
     }
 
     break;

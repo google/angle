@@ -384,10 +384,10 @@ function_identifier
         $$ = context->addConstructorFunc($1);
     }
     | IDENTIFIER {
-        $$ = context->addNonConstructorFunc(ImmutableString($1.string));
+        $$ = context->addNonConstructorFunc(ImmutableString($1.string), $1.symbol);
     }
     | FIELD_SELECTION {
-        $$ = context->addNonConstructorFunc(ImmutableString($1.string));
+        $$ = context->addNonConstructorFunc(ImmutableString($1.string), $1.symbol);
     }
     ;
 
