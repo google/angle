@@ -1276,6 +1276,12 @@ bool ValidateDrawRangeElements(Context *context,
         return false;
     }
 
+    // Skip range checks for no-op calls.
+    if (count <= 0)
+    {
+        return true;
+    }
+
     // Use the parameter buffer to retrieve and cache the index range.
     const auto &params        = context->getParams<HasIndexRange>();
     const auto &indexRangeOpt = params.getIndexRange();
