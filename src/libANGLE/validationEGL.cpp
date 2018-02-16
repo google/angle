@@ -1200,8 +1200,8 @@ Error ValidateCreatePbufferFromClientBuffer(Display *display, EGLenum buftype, E
         (textureFormat == EGL_TEXTURE_RGBA && config->bindToTextureRGBA != EGL_TRUE))
     {
         // TODO(cwallez@chromium.org): For IOSurface pbuffers we require that EGL_TEXTURE_RGBA is
-        // set so that eglBinTexImage works. Normally this is only allowed if the config exposes the
-        // bindToTextureRGB/RGBA flag. This issue is that enabling this flags means that
+        // set so that eglBindTexImage works. Normally this is only allowed if the config exposes
+        // the bindToTextureRGB/RGBA flag. This issue is that enabling this flags means that
         // eglBindTexImage should also work for regular pbuffers which isn't implemented on macOS.
         // Instead of adding the flag we special case the check here to be ignored for IOSurfaces.
         // The TODO is to find a proper solution for this, maybe by implementing eglBindTexImage on

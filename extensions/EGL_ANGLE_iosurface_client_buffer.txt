@@ -71,14 +71,15 @@ Additions to Chapter 3 of the EGL 1.4 Specification (EGL Functions and Errors)
 
     Append to the end of Section 3.5.3.
     "When <buftype> is EGL_IOSURFACE_ANGLE, <attrib_list> must contain all the
-    following attributes under the following constraints otherwise
-    EGL_BAD_PARAMETER is generated:
+    following attributes otherwise EGL_BAD_PARAMETER is generated. The
+    attributes must satisfy the following constraints otherwise
+    EGL_BAD_ATTRIBUTE is generated:
       - EGL_TEXTURE_TYPE_ANGLE, and EGL_TEXTURE_INTERNAL_FORMAT_ANGLE followed
     by OpenGL enums for texture types, and texture internal format
     respectively.
       - EGL_TEXTURE_FORMAT with a value of EGL_TEXTURE_RGBA
       - EGL_WIDTH with a value between 1 and the width of <buffer>.
-      - EGL_HEIGHT with a value between 1 and the width of <buffer>.
+      - EGL_HEIGHT with a value between 1 and the height of <buffer>.
       - EGL_TEXTURE_TARGET with a value of EGL_TEXTURE_RECTANGLE_ANGLE
       - EGL_IOSURFACE_PLANE_ANGLE with a value between 0 and the number of
     planes of <buffer> (exclusive).
@@ -93,7 +94,7 @@ Additions to Chapter 3 of the EGL 1.4 Specification (EGL Functions and Errors)
     Texture Type               Texture Internal Format
     ---------------------------------------------------------------------------
     GL_UNSIGNED_BYTE           GL_RED
-    GL_UNSIGNED_SHORT          GL_RED_INTEGER
+    GL_UNSIGNED_SHORT          GL_R16UI
     GL_UNSIGNED_BYTE           GL_RG
     GL_UNSIGNED_BYTE           GL_BGRA_EXT
     GL_HALF_FLOAT              GL_RGBA

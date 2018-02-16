@@ -308,6 +308,11 @@ TEST_P(TextureRectangleTest, SamplingFromRectangle)
         "}\n";
 
     ANGLE_GL_PROGRAM(program, vs, fs);
+    glUseProgram(program);
+
+    GLint location = glGetUniformLocation(program, "tex");
+    ASSERT_NE(-1, location);
+    glUniform1i(location, 0);
 
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glClear(GL_COLOR_BUFFER_BIT);

@@ -42,7 +42,7 @@ struct IOSurfaceFormatInfo
 // clang-format off
 static const IOSurfaceFormatInfo kIOSurfaceFormats[] = {
     {GL_RED,      GL_UNSIGNED_BYTE,  1, GL_RED,  GL_RED,  GL_UNSIGNED_BYTE           },
-    {GL_R8UI,     GL_UNSIGNED_SHORT, 2, GL_RED,  GL_RED,  GL_UNSIGNED_SHORT          },
+    {GL_R16UI,    GL_UNSIGNED_SHORT, 2, GL_RED,  GL_RED,  GL_UNSIGNED_SHORT          },
     {GL_RG,       GL_UNSIGNED_BYTE,  2, GL_RG,   GL_RG,   GL_UNSIGNED_BYTE           },
     {GL_BGRA_EXT, GL_UNSIGNED_BYTE,  4, GL_BGRA, GL_RGBA, GL_UNSIGNED_INT_8_8_8_8_REV},
     {GL_RGBA,     GL_HALF_FLOAT,     8, GL_RGBA, GL_RGBA, GL_HALF_FLOAT              },
@@ -211,7 +211,7 @@ bool IOSurfaceSurfaceCGL::validateAttributes(EGLClientBuffer buffer,
     EGLAttrib width  = attribs.get(EGL_WIDTH);
     EGLAttrib height = attribs.get(EGL_HEIGHT);
     if (width <= 0 || static_cast<size_t>(width) > IOSurfaceGetWidthOfPlane(ioSurface, plane) ||
-        height < 0 || static_cast<size_t>(height) > IOSurfaceGetHeightOfPlane(ioSurface, plane))
+        height <= 0 || static_cast<size_t>(height) > IOSurfaceGetHeightOfPlane(ioSurface, plane))
     {
         return false;
     }
