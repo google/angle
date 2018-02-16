@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b0c8cfe0_ade2c116",
+        "filename": "src/compiler/translator/FunctionLookup.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-16T20:16:05Z",
+      "side": 1,
+      "message": "don\u0027t know if it\u0027s necessary to call this LexSymbol, as opposed to just Symbol. We use TSymbol and \"symbol\" and don\u0027t really refer to this type as TLexSymbol anywhere.",
+      "range": {
+        "startLine": 54,
+        "startChar": 19,
+        "endLine": 54,
+        "endChar": 29
+      },
+      "revId": "0929c121f4c2deb18956f533de46f1b49142dec8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
