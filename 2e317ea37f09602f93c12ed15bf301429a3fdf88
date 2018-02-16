@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "40fa9a90_d9e37fc6",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-16T20:18:28Z",
+      "side": 1,
+      "message": "can you please open a crbug or anglebug to associate this issue with and tag it here?",
+      "revId": "2e317ea37f09602f93c12ed15bf301429a3fdf88",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
