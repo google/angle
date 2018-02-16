@@ -143,6 +143,30 @@
     },
     {
       "key": {
+        "uuid": "84e08854_92189c64",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 29
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-16T14:25:12Z",
+      "side": 1,
+      "message": "Yeah, you\u0027ll need the index range, but you only want to compute the index range when absolutely necessary since it\u0027s quite slow. I did this by introducing a struct helper in D3D11, we can look at other solutions, but I don\u0027t think we\u0027ll be able to past first/last vertex around and expect them to be valid. Let\u0027s take a look when we review your next CL.",
+      "parentUuid": "a7baac13_d465d64f",
+      "range": {
+        "startLine": 75,
+        "startChar": 16,
+        "endLine": 75,
+        "endChar": 27
+      },
+      "revId": "541c72ec8e42cf9ca0f77dbce2182a1dadedd5de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b7e1dcbf_707dbd89",
         "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
         "patchSetId": 29
