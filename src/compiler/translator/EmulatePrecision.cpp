@@ -715,8 +715,8 @@ const TFunction *EmulatePrecision::getInternalFunction(const ImmutableString &fu
     ImmutableString mangledName = TFunctionLookup::GetMangledName(functionName.data(), *arguments);
     if (mInternalFunctions.find(mangledName) == mInternalFunctions.end())
     {
-        TFunction *func = new TFunction(mSymbolTable, functionName, new TType(returnType),
-                                        SymbolType::AngleInternal, knownToNotHaveSideEffects);
+        TFunction *func = new TFunction(mSymbolTable, functionName, SymbolType::AngleInternal,
+                                        new TType(returnType), knownToNotHaveSideEffects);
         ASSERT(parameters.size() == arguments->size());
         for (size_t i = 0; i < parameters.size(); ++i)
         {

@@ -22,6 +22,7 @@
 #include "compiler/translator/IntermNode.h"
 #include "compiler/translator/IntermNode_util.h"
 #include "compiler/translator/ReplaceVariable.h"
+#include "compiler/translator/StaticType.h"
 #include "compiler/translator/SymbolTable.h"
 
 namespace sh
@@ -104,8 +105,9 @@ void InsertInitCallToMain(TIntermBlock *root,
     TIntermBlock *initGlobalsBlock = new TIntermBlock();
     initGlobalsBlock->getSequence()->swap(*deferredInitializers);
 
-    TFunction *initGlobalsFunction = new TFunction(
-        symbolTable, kInitGlobalsString, new TType(EbtVoid), SymbolType::AngleInternal, false);
+    TFunction *initGlobalsFunction =
+        new TFunction(symbolTable, kInitGlobalsString, SymbolType::AngleInternal,
+                      StaticType::GetBasic<EbtVoid>(), false);
 
     TIntermFunctionPrototype *initGlobalsFunctionPrototype =
         CreateInternalFunctionPrototypeNode(*initGlobalsFunction);

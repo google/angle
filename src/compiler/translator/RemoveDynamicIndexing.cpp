@@ -406,8 +406,8 @@ bool RemoveDynamicIndexingTraverser::visitBinary(Visit visit, TIntermBinary *nod
             if (mIndexedVecAndMatrixTypes.find(type) == mIndexedVecAndMatrixTypes.end())
             {
                 indexingFunction =
-                    new TFunction(mSymbolTable, indexingFunctionName, GetFieldType(type),
-                                  SymbolType::AngleInternal, true);
+                    new TFunction(mSymbolTable, indexingFunctionName, SymbolType::AngleInternal,
+                                  GetFieldType(type), true);
                 indexingFunction->addParameter(
                     TConstParameter(kBaseName, GetBaseType(type, false)));
                 indexingFunction->addParameter(TConstParameter(kIndexName, kIndexType));
@@ -456,8 +456,8 @@ bool RemoveDynamicIndexingTraverser::visitBinary(Visit visit, TIntermBinary *nod
                     ImmutableString functionName(
                         GetIndexFunctionName(node->getLeft()->getType(), true));
                     indexedWriteFunction =
-                        new TFunction(mSymbolTable, functionName, StaticType::GetBasic<EbtVoid>(),
-                                      SymbolType::AngleInternal, false);
+                        new TFunction(mSymbolTable, functionName, SymbolType::AngleInternal,
+                                      StaticType::GetBasic<EbtVoid>(), false);
                     indexedWriteFunction->addParameter(
                         TConstParameter(kBaseName, GetBaseType(type, true)));
                     indexedWriteFunction->addParameter(TConstParameter(kIndexName, kIndexType));

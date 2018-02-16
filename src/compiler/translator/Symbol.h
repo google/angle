@@ -159,9 +159,10 @@ class TInterfaceBlock : public TSymbol, public TFieldListCollection
 // Immutable version of TParameter.
 struct TConstParameter
 {
+    POOL_ALLOCATOR_NEW_DELETE();
     TConstParameter() : name(""), type(nullptr) {}
     explicit TConstParameter(const ImmutableString &n) : name(n), type(nullptr) {}
-    explicit TConstParameter(const TType *t) : name(""), type(t) {}
+    constexpr explicit TConstParameter(const TType *t) : name(""), type(t) {}
     TConstParameter(const ImmutableString &n, const TType *t) : name(n), type(t) {}
 
     // Both constructor arguments must be const.
@@ -197,44 +198,48 @@ struct TParameter
 class TFunction : public TSymbol
 {
   public:
+    // User-defined function
     TFunction(TSymbolTable *symbolTable,
               const ImmutableString &name,
-              const TType *retType,
               SymbolType symbolType,
-              bool knownToNotHaveSideEffects,
-              TOperator tOp        = EOpNull,
-              TExtension extension = TExtension::UNDEFINED);
+              const TType *retType,
+              bool knownToNotHaveSideEffects);
+
+    // Built-in function
+    TFunction(TSymbolTable *symbolTable,
+              const ImmutableString &name,
+              TExtension extension,
+              TConstParameter *parameters,
+              size_t paramCount,
+              const TType *retType,
+              TOperator op,
+              bool knownToNotHaveSideEffects);
 
     bool isFunction() const override { return true; }
 
-    void addParameter(const TConstParameter &p)
-    {
-        parameters.push_back(p);
-        mangledName = ImmutableString("");
-    }
-
-    void swapParameters(const TFunction &parametersSource);
+    void addParameter(const TConstParameter &p);
+    void shareParameters(const TFunction &parametersSource);
 
     ImmutableString getMangledName() const override
     {
-        if (mangledName == "")
+        if (mMangledName == "")
         {
-            mangledName = buildMangledName();
+            mMangledName = buildMangledName();
         }
-        return mangledName;
+        return mMangledName;
     }
 
     const TType &getReturnType() const { return *returnType; }
 
-    TOperator getBuiltInOp() const { return op; }
+    TOperator getBuiltInOp() const { return mOp; }
 
     void setDefined() { defined = true; }
     bool isDefined() { return defined; }
     void setHasPrototypeDeclaration() { mHasPrototypeDeclaration = true; }
     bool hasPrototypeDeclaration() const { return mHasPrototypeDeclaration; }
 
-    size_t getParamCount() const { return parameters.size(); }
-    const TConstParameter &getParam(size_t i) const { return parameters[i]; }
+    size_t getParamCount() const { return mParamCount; }
+    const TConstParameter &getParam(size_t i) const { return mParameters[i]; }
 
     bool isKnownToNotHaveSideEffects() const { return mKnownToNotHaveSideEffects; }
 
@@ -242,15 +247,37 @@ class TFunction : public TSymbol
     bool isImageFunction() const;
 
   private:
-    void clearParameters();
+    constexpr TFunction(const TSymbolUniqueId &id,
+                        const ImmutableString &name,
+                        TExtension extension,
+                        const TConstParameter *parameters,
+                        size_t paramCount,
+                        const TType *retType,
+                        const ImmutableString &mangledName,
+                        TOperator op,
+                        bool knownToNotHaveSideEffects)
+        : TSymbol(id, name, SymbolType::BuiltIn, extension),
+          mParametersVector(nullptr),
+          mParameters(parameters),
+          mParamCount(paramCount),
+          returnType(retType),
+          mMangledName(mangledName),
+          mOp(op),
+          defined(false),
+          mHasPrototypeDeclaration(false),
+          mKnownToNotHaveSideEffects(knownToNotHaveSideEffects)
+    {
+    }
 
     ImmutableString buildMangledName() const;
 
-    typedef TVector<TConstParameter> TParamList;
-    TParamList parameters;
+    typedef TVector<TConstParameter> TParamVector;
+    TParamVector *mParametersVector;
+    const TConstParameter *mParameters;
+    size_t mParamCount;
     const TType *const returnType;
-    mutable ImmutableString mangledName;
-    const TOperator op;  // Only set for built-ins
+    mutable ImmutableString mMangledName;
+    const TOperator mOp;  // Only set for built-ins
     bool defined;
     bool mHasPrototypeDeclaration;
     bool mKnownToNotHaveSideEffects;

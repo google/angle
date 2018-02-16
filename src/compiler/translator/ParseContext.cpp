@@ -3429,7 +3429,7 @@ TFunction *TParseContext::parseFunctionHeader(const TPublicType &type,
     }
 
     // Add the function as a prototype after parsing it (we do not support recursion)
-    return new TFunction(&symbolTable, name, new TType(type), SymbolType::UserDefined, false);
+    return new TFunction(&symbolTable, name, SymbolType::UserDefined, new TType(type), false);
 }
 
 TFunctionLookup *TParseContext::addNonConstructorFunc(const ImmutableString &name,

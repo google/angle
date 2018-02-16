@@ -126,37 +126,66 @@ TInterfaceBlock::TInterfaceBlock(TSymbolTable *symbolTable,
 
 TFunction::TFunction(TSymbolTable *symbolTable,
                      const ImmutableString &name,
-                     const TType *retType,
                      SymbolType symbolType,
-                     bool knownToNotHaveSideEffects,
-                     TOperator tOp,
-                     TExtension extension)
-    : TSymbol(symbolTable, name, symbolType, extension),
+                     const TType *retType,
+                     bool knownToNotHaveSideEffects)
+    : TSymbol(symbolTable, name, symbolType, TExtension::UNDEFINED),
+      mParametersVector(new TParamVector()),
+      mParameters(nullptr),
+      mParamCount(0u),
       returnType(retType),
-      mangledName(nullptr),
-      op(tOp),
+      mMangledName(""),
+      mOp(EOpNull),
       defined(false),
       mHasPrototypeDeclaration(false),
       mKnownToNotHaveSideEffects(knownToNotHaveSideEffects)
 {
     // Functions with an empty name are not allowed.
     ASSERT(symbolType != SymbolType::Empty);
-    ASSERT(name != nullptr || symbolType == SymbolType::AngleInternal || tOp != EOpNull);
+    ASSERT(name != nullptr || symbolType == SymbolType::AngleInternal);
 }
 
-void TFunction::clearParameters()
+TFunction::TFunction(TSymbolTable *symbolTable,
+                     const ImmutableString &name,
+                     TExtension extension,
+                     TConstParameter *parameters,
+                     size_t paramCount,
+                     const TType *retType,
+                     TOperator op,
+                     bool knownToNotHaveSideEffects)
+    : TSymbol(symbolTable, name, SymbolType::BuiltIn, extension),
+      mParametersVector(nullptr),
+      mParameters(parameters),
+      mParamCount(paramCount),
+      returnType(retType),
+      mMangledName(""),
+      mOp(op),
+      defined(false),
+      mHasPrototypeDeclaration(false),
+      mKnownToNotHaveSideEffects(knownToNotHaveSideEffects)
 {
-    parameters.clear();
-    mangledName = ImmutableString("");
+    ASSERT(name != nullptr);
+    ASSERT(op != EOpNull);
+    ASSERT(paramCount == 0 || parameters != nullptr);
+    mMangledName = buildMangledName();
 }
 
-void TFunction::swapParameters(const TFunction &parametersSource)
+void TFunction::addParameter(const TConstParameter &p)
 {
-    clearParameters();
-    for (auto parameter : parametersSource.parameters)
-    {
-        addParameter(parameter);
-    }
+    ASSERT(mParametersVector);
+    mParametersVector->push_back(p);
+    mParameters  = mParametersVector->data();
+    mParamCount  = mParametersVector->size();
+    mMangledName = ImmutableString("");
+}
+
+void TFunction::shareParameters(const TFunction &parametersSource)
+{
+    mParametersVector = nullptr;
+    mParameters       = parametersSource.mParameters;
+    mParamCount       = parametersSource.mParamCount;
+    ASSERT(parametersSource.name() == name());
+    mMangledName = parametersSource.mMangledName;
 }
 
 ImmutableString TFunction::buildMangledName() const
@@ -164,9 +193,9 @@ ImmutableString TFunction::buildMangledName() const
     std::string newName(name().data(), name().length());
     newName += kFunctionMangledNameSeparator;
 
-    for (const auto &p : parameters)
+    for (size_t i = 0u; i < mParamCount; ++i)
     {
-        newName += p.type->getMangledName();
+        newName += mParameters[i].type->getMangledName();
     }
     return ImmutableString(newName);
 }

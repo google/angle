@@ -25,6 +25,7 @@
 #include "compiler/translator/IntermNode.h"
 #include "compiler/translator/IntermNode_util.h"
 #include "compiler/translator/IntermTraverse.h"
+#include "compiler/translator/StaticType.h"
 #include "compiler/translator/SymbolTable.h"
 
 namespace sh
@@ -68,8 +69,8 @@ void WrapMainAndAppend(TIntermBlock *root,
                        TSymbolTable *symbolTable)
 {
     // Replace main() with main0() with the same body.
-    TFunction *oldMain = new TFunction(symbolTable, ImmutableString(""), new TType(EbtVoid),
-                                       SymbolType::AngleInternal, false);
+    TFunction *oldMain = new TFunction(symbolTable, ImmutableString(""), SymbolType::AngleInternal,
+                                       StaticType::GetBasic<EbtVoid>(), false);
     TIntermFunctionDefinition *oldMainDefinition =
         CreateInternalFunctionDefinitionNode(*oldMain, main->getBody());
 
@@ -77,8 +78,8 @@ void WrapMainAndAppend(TIntermBlock *root,
     ASSERT(replaced);
 
     // void main()
-    TFunction *newMain =
-        new TFunction(symbolTable, kMainString, new TType(EbtVoid), SymbolType::UserDefined, false);
+    TFunction *newMain = new TFunction(symbolTable, kMainString, SymbolType::UserDefined,
+                                       StaticType::GetBasic<EbtVoid>(), false);
     TIntermFunctionPrototype *newMainProto = new TIntermFunctionPrototype(newMain);
 
     // {

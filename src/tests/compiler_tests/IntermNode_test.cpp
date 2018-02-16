@@ -65,8 +65,8 @@ class IntermNodeTest : public testing::Test
         // We're using a dummy symbol table similarly as for creating symbol nodes.
         const ImmutableString name("testFunc");
         TSymbolTable symbolTable;
-        TFunction *func = new TFunction(&symbolTable, name, new TType(returnType),
-                                        SymbolType::UserDefined, false);
+        TFunction *func = new TFunction(&symbolTable, name, SymbolType::UserDefined,
+                                        new TType(returnType), false);
         for (TIntermNode *arg : args)
         {
             const TType *type = new TType(arg->getAsTyped()->getType());

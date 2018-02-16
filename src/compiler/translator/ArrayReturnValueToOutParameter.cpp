@@ -127,8 +127,8 @@ bool ArrayReturnValueToOutParameterTraverser::visitFunctionPrototype(Visit visit
                 new TVariable(mSymbolTable, kReturnValueVariableName, returnValueVariableType,
                               SymbolType::AngleInternal);
             TFunction *func = new TFunction(mSymbolTable, node->getFunction()->name(),
-                                            StaticType::GetBasic<EbtVoid>(),
-                                            node->getFunction()->symbolType(), false);
+                                            node->getFunction()->symbolType(),
+                                            StaticType::GetBasic<EbtVoid>(), false);
             for (size_t i = 0; i < node->getFunction()->getParamCount(); ++i)
             {
                 func->addParameter(node->getFunction()->getParam(i));
