@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "996e9522_3730a8b3",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 29
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-02-16T06:16:54Z",
+      "side": 1,
+      "message": "Seems to me we could combine intersecting address ranges.  Not saying we should, just that we could.  Anyone see a problem with this:\n\nranges\u003d[ \u003cfirst attrib addr range\u003e ]\nfor i in remaining attrib addr ranges:\n    merge \u003d items in ranges that intersect or abut i\n    ranges.remove(merge)\n    ranges.add(union of merge)",
+      "parentUuid": "74f5228b_439e8e45",
+      "range": {
+        "startLine": 55,
+        "startChar": 0,
+        "endLine": 56,
+        "endChar": 82
+      },
+      "revId": "541c72ec8e42cf9ca0f77dbce2182a1dadedd5de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "0907cb8a_8ab8375b",
         "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
         "patchSetId": 29
@@ -45,6 +69,30 @@
       "revId": "541c72ec8e42cf9ca0f77dbce2182a1dadedd5de",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "452831c2_d10e77eb",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 29
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-02-16T06:16:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0907cb8a_8ab8375b",
+      "range": {
+        "startLine": 66,
+        "startChar": 12,
+        "endLine": 66,
+        "endChar": 44
+      },
+      "revId": "541c72ec8e42cf9ca0f77dbce2182a1dadedd5de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "a7baac13_d465d64f",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 29
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-02-16T06:16:54Z",
+      "side": 1,
+      "message": "It believe it works for indexed when we calculate the index range and pass it here.\nI\u0027ve tried it with the upcoming indexed patch and new test, including the case you suggest.\n\nI restored the comment in drawElements() saying we need to calculate the range.  I think it got lost when I split the patch.\n\nfirst/last seem more natural in this case than first/count.  It aligns better with index range stuff in the next patch, and with the calculations I need to do here.",
+      "parentUuid": "5665f81a_dac9b2fe",
+      "range": {
+        "startLine": 75,
+        "startChar": 16,
+        "endLine": 75,
+        "endChar": 27
+      },
+      "revId": "541c72ec8e42cf9ca0f77dbce2182a1dadedd5de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b7e1dcbf_707dbd89",
         "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
         "patchSetId": 29
@@ -91,6 +163,30 @@
       "revId": "541c72ec8e42cf9ca0f77dbce2182a1dadedd5de",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d01f3c22_1b8fd4ee",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 29
+      },
+      "lineNbr": 337,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-02-16T06:16:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b7e1dcbf_707dbd89",
+      "range": {
+        "startLine": 337,
+        "startChar": 28,
+        "endLine": 337,
+        "endChar": 46
+      },
+      "revId": "541c72ec8e42cf9ca0f77dbce2182a1dadedd5de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
