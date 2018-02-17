@@ -1,0 +1,665 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e691b8e0_99d02ca6",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-17T14:56:26Z",
+      "side": 1,
+      "message": "Update comment",
+      "range": {
+        "startLine": 201,
+        "startChar": 12,
+        "endLine": 201,
+        "endChar": 31
+      },
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b3ba7a88_fd4abdb9",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-17T14:56:26Z",
+      "side": 1,
+      "message": "Should we start mentioning what is thread safe and not when we create new classes?\n\nThis one isn\u0027t because of the \u0027mIsFinishedRecording\u0027 state management.",
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "67dc1683_fc9c0988",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-17T14:56:26Z",
+      "side": 1,
+      "message": "Wouldn\u0027t it be better to have its own files for the graph nodes? This way you would also keep the history of the changes in CommandBufferNode instead of deleting the file.\n\nIn general, if we could start having files per class as much as possible instead of creating multiple classes in the same h / cpp files like this. It makes the code much easier to go through and understand imho.",
+      "range": {
+        "startLine": 56,
+        "startChar": 0,
+        "endLine": 59,
+        "endChar": 1
+      },
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "96b11abc_d6ee24a5",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-17T14:56:26Z",
+      "side": 1,
+      "message": "Please create a bug to follow up on this",
+      "range": {
+        "startLine": 110,
+        "startChar": 3,
+        "endLine": 110,
+        "endChar": 89
+      },
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f5c4397d_d14ee96e",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-17T14:56:26Z",
+      "side": 1,
+      "message": "nit: Only 2 of the 8 attributes differs from the creation in \"startRecording\", can you create a small private static method to do the same with 2 arguments?",
+      "range": {
+        "startLine": 114,
+        "startChar": 4,
+        "endLine": 122,
+        "endChar": 45
+      },
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "60368d7b_629cecb8",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-17T14:56:26Z",
+      "side": 1,
+      "message": "Same comment about the TODO",
+      "range": {
+        "startLine": 153,
+        "startChar": 3,
+        "endLine": 153,
+        "endChar": 40
+      },
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fbd30fa4_271a8d55",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-17T14:56:26Z",
+      "side": 1,
+      "message": "Same comment about the TODO",
+      "range": {
+        "startLine": 161,
+        "startChar": 4,
+        "endLine": 161,
+        "endChar": 40
+      },
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "044924fd_e7d75b69",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-17T14:56:26Z",
+      "side": 1,
+      "message": "Can we hide the resource management as an implementation detail inside the RenderTargetVk class instead? I just saw that RenderTargetVk is a class with public members only, maybe we want to encapsulate it a bit more an make it a bit more opaque?\n\nIf you would have a function like this \"depthStencilRenderTarget-\u003eonWrite\", you could delegate the knowledge of what should happen to this object and hide the resource-\u003eonWriteResource inside of that, perhaps then you can make that resource private inside the render target.\n\nI understand this is a bigger change than this code review is meant to do so maybe we can just create a bug to follow up on this and add the TODO inside the RenderTargetVk if you agree?",
+      "range": {
+        "startLine": 164,
+        "startChar": 3,
+        "endLine": 164,
+        "endChar": 70
+      },
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "abe0896d_3c9e8f02",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-17T14:56:26Z",
+      "side": 1,
+      "message": "If this is like before, this is unused and can be removed entirely. (My current CL for clear scissor is removing that)",
+      "range": {
+        "startLine": 167,
+        "startChar": 1,
+        "endLine": 178,
+        "endChar": 1
+      },
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6389453e_3a976581",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-17T14:56:26Z",
+      "side": 1,
+      "message": "This side effect seems not-obvious to me. \n\nWhy does changing the relation between nodes finishes their recording? Also, why not hide this detail inside \"setHasChildren\" if \"having children means you cant record anymore\" it should be hidden and finishRecording could be private or be removed.",
+      "range": {
+        "startLine": 186,
+        "startChar": 4,
+        "endLine": 186,
+        "endChar": 34
+      },
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a07858bf_794eb871",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-17T14:56:26Z",
+      "side": 1,
+      "message": "Add bug for investigation if needed",
+      "range": {
+        "startLine": 197,
+        "startChar": 3,
+        "endLine": 197,
+        "endChar": 55
+      },
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b239cbf9_51f04c95",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-17T14:56:26Z",
+      "side": 1,
+      "message": "Indeed it looks like every time something is marked as having children, it stops recording, so you can remove finishRecording and make that an implementation detail hidden inside the node.",
+      "range": {
+        "startLine": 200,
+        "startChar": 7,
+        "endLine": 201,
+        "endChar": 38
+      },
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cb2385be_095bdce3",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-17T14:56:26Z",
+      "side": 1,
+      "message": "This could be moved as a helper method in a test namespace, there would be no risk of anyone calling it by accident since its not meant to be called.",
+      "range": {
+        "startLine": 222,
+        "startChar": 0,
+        "endLine": 244,
+        "endChar": 1
+      },
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "66f407d9_538565f7",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 272,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-17T14:56:26Z",
+      "side": 1,
+      "message": "Same comment about TODO",
+      "range": {
+        "startLine": 272,
+        "startChar": 8,
+        "endLine": 272,
+        "endChar": 65
+      },
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6ee03b9f_fab5f145",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 313,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-17T14:56:26Z",
+      "side": 1,
+      "message": "Same comment about TODO",
+      "range": {
+        "startLine": 313,
+        "startChar": 4,
+        "endLine": 313,
+        "endChar": 72
+      },
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6319a4f7_e06d6f8c",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 384,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-17T14:56:26Z",
+      "side": 1,
+      "message": "Same comment about TODO",
+      "range": {
+        "startLine": 384,
+        "startChar": 4,
+        "endLine": 384,
+        "endChar": 87
+      },
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "36d08ab3_1820b2ce",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 389,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-17T14:56:26Z",
+      "side": 1,
+      "message": "What happens if we end up never visiting this graph? The nodes will never be deleted when the graph goes out of scope?\n\nMaybe the destructor should cleanup mNodes if there is anything left in it ?",
+      "range": {
+        "startLine": 385,
+        "startChar": 4,
+        "endLine": 389,
+        "endChar": 19
+      },
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "769276a2_e5e37c05",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-17T14:56:26Z",
+      "side": 1,
+      "message": "Can we call this \"startOutsideRenderPassRecording\" ?",
+      "range": {
+        "startLine": 43,
+        "startChar": 4,
+        "endLine": 45,
+        "endChar": 54
+      },
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "60f96c14_56e0cc26",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-17T14:56:26Z",
+      "side": 1,
+      "message": "Can we call this \"startInsideRenderPassRecording\"? \n\nThese 2 renames makes it so that you don\u0027t even need the comments.",
+      "range": {
+        "startLine": 47,
+        "startChar": 3,
+        "endLine": 48,
+        "endChar": 86
+      },
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ff286fc5_ab3f75f2",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-17T14:56:26Z",
+      "side": 1,
+      "message": "Does this mean the inside AND the outside passes are finished recording? Can you add a comment with its meaning please?",
+      "range": {
+        "startLine": 50,
+        "startChar": 9,
+        "endLine": 50,
+        "endChar": 28
+      },
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d98b1d51_3037944e",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-17T14:56:26Z",
+      "side": 1,
+      "message": "finishRecording all passes at once?",
+      "range": {
+        "startLine": 51,
+        "startChar": 9,
+        "endLine": 51,
+        "endChar": 24
+      },
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e7f4eee7_b6945420",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-17T14:56:26Z",
+      "side": 1,
+      "message": "Is it possible that the comment \"RenderTargets muse be added in order [...]\" was meant to be above the next 2 methods \"appendColorRenderTarget\" and \"appendDepthStencilRenderTarget\" ?",
+      "range": {
+        "startLine": 53,
+        "startChar": 4,
+        "endLine": 57,
+        "endChar": 75
+      },
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ba70b272_4ba99c41",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-17T14:56:26Z",
+      "side": 1,
+      "message": "Are those simply setParent and setChildren?",
+      "range": {
+        "startLine": 61,
+        "startChar": 4,
+        "endLine": 65,
+        "endChar": 74
+      },
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c756584c_c2cbb634",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-17T14:56:26Z",
+      "side": 1,
+      "message": "Can you comment on these 2 with more details about what they do an their parameters please?",
+      "range": {
+        "startLine": 71,
+        "startChar": 4,
+        "endLine": 75,
+        "endChar": 63
+      },
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "113f6eec_06a53db1",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-17T14:56:26Z",
+      "side": 1,
+      "message": "nit: Either create a bug for this to follow up or remove the TODO if its just a question.",
+      "range": {
+        "startLine": 91,
+        "startChar": 4,
+        "endLine": 91,
+        "endChar": 87
+      },
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "321621b2_aaf94a94",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-17T14:56:26Z",
+      "side": 1,
+      "message": "nit: Wouldn\u0027t this comment be better suited where we execute the commands?",
+      "range": {
+        "startLine": 95,
+        "startChar": 4,
+        "endLine": 95,
+        "endChar": 86
+      },
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dff2660c_49bee596",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-17T14:56:26Z",
+      "side": 1,
+      "message": "A small comment here saying if the allocation gives a \"free\" node or a node part of the graph added at some specific place in the graph would be good.\n\nIs it the responsibility of the caller of this function to establish the relation manually? If so, please mention how briefly.",
+      "range": {
+        "startLine": 117,
+        "startChar": 3,
+        "endLine": 117,
+        "endChar": 37
+      },
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "93e51742_6582b3ec",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-17T14:56:26Z",
+      "side": 1,
+      "message": "I noticed above we named 2 boolean methods with \"hasXXXXXXX\". It would be more consistent if we named this \"isEmpty\" or remove the \"has\" from the other ones.\n\nPersonally I much prefer using \"is / has\" where appropriate.",
+      "range": {
+        "startLine": 123,
+        "startChar": 9,
+        "endLine": 123,
+        "endChar": 14
+      },
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f3150bed_f9feae88",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-17T14:56:26Z",
+      "side": 1,
+      "message": "Same comment about TODO",
+      "range": {
+        "startLine": 186,
+        "startChar": 4,
+        "endLine": 186,
+        "endChar": 72
+      },
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
