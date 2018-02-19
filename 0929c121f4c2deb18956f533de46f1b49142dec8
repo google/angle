@@ -22,6 +22,30 @@
       "revId": "0929c121f4c2deb18956f533de46f1b49142dec8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f990a9db_43f2c97f",
+        "filename": "src/compiler/translator/FunctionLookup.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-02-19T09:55:33Z",
+      "side": 1,
+      "message": "I named it LexSymbol so it would be disambiguated from the symbol of the actual function that is looked up, but it\u0027s probably better to just call it symbol like you suggest and have the comment explaining which symbol it is. LexSymbol isn\u0027t a particularly descriptive name.\n\nChanged to just symbol.",
+      "parentUuid": "b0c8cfe0_ade2c116",
+      "range": {
+        "startLine": 54,
+        "startChar": 19,
+        "endLine": 54,
+        "endChar": 29
+      },
+      "revId": "0929c121f4c2deb18956f533de46f1b49142dec8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
