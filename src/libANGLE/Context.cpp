@@ -164,8 +164,8 @@ gl::Version GetClientVersion(const egl::AttributeMap &attribs)
 
 GLenum GetResetStrategy(const egl::AttributeMap &attribs)
 {
-    EGLAttrib attrib = attribs.get(EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_EXT,
-                                   EGL_NO_RESET_NOTIFICATION);
+    EGLAttrib attrib =
+        attribs.get(EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_EXT, EGL_NO_RESET_NOTIFICATION);
     switch (attrib)
     {
         case EGL_NO_RESET_NOTIFICATION:
@@ -2663,6 +2663,17 @@ bool Context::hasActiveTransformFeedback(GLuint program) const
 void Context::initCaps(const egl::DisplayExtensions &displayExtensions, bool robustResourceInit)
 {
     mCaps = mImplementation->getNativeCaps();
+
+    // GLES1 emulation: Initialize caps (Table 6.20 / 6.22 in the ES 1.1 spec)
+    if (getClientVersion() < Version(2, 0))
+    {
+        mCaps.maxMultitextureUnits          = 4;
+        mCaps.maxClipPlanes                 = 6;
+        mCaps.maxLights                     = 8;
+        mCaps.maxModelviewMatrixStackDepth  = 16;
+        mCaps.maxProjectionMatrixStackDepth = 16;
+        mCaps.maxTextureMatrixStackDepth    = 16;
+    }
 
     mExtensions = mImplementation->getNativeExtensions();
 
