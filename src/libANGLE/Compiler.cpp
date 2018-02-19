@@ -36,6 +36,13 @@ ShShaderSpec SelectShaderSpec(GLint majorVersion, GLint minorVersion, bool isWeb
             return isWebGL ? SH_WEBGL2_SPEC : SH_GLES3_SPEC;
         }
     }
+
+    // GLES1 emulation: Use GLES3 shader spec.
+    if (!isWebGL && majorVersion == 1)
+    {
+        return SH_GLES3_SPEC;
+    }
+
     return isWebGL ? SH_WEBGL_SPEC : SH_GLES2_SPEC;
 }
 
