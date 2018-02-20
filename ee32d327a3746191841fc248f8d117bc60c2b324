@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "89460ca9_eddd0dd7",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 14
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-20T17:36:55Z",
+      "side": 1,
+      "message": "bug tag is incorrect.",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 8
+      },
+      "revId": "ee32d327a3746191841fc248f8d117bc60c2b324",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "024b17b6_1d572ca0",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Blit11.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 859,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-20T17:36:55Z",
+      "side": 1,
+      "message": "can you handle the default case explicitly? not clear to me what that means.",
+      "range": {
+        "startLine": 859,
+        "startChar": 12,
+        "endLine": 859,
+        "endChar": 17
+      },
+      "revId": "ee32d327a3746191841fc248f8d117bc60c2b324",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3bd40ced_cabdad49",
+        "filename": "src/tests/gl_tests/CopyTextureTest.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-20T17:36:55Z",
+      "side": 1,
+      "message": "nit: can add the missing space.",
+      "range": {
+        "startLine": 76,
+        "startChar": 4,
+        "endLine": 76,
+        "endChar": 9
+      },
+      "revId": "ee32d327a3746191841fc248f8d117bc60c2b324",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
