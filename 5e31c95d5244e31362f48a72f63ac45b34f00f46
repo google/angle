@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7e88b5d7_d2383d35",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 646,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-02-20T21:57:34Z",
+      "side": 1,
+      "message": "This won\u0027t be necessary, we never bind buffers to the generic transform feedback binding point internally.  You can add an assert in StateManagerGL::bindBuffer that the binding point is not transform feedback.",
+      "range": {
+        "startLine": 642,
+        "startChar": 0,
+        "endLine": 646,
+        "endChar": 79
+      },
+      "revId": "5e31c95d5244e31362f48a72f63ac45b34f00f46",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
