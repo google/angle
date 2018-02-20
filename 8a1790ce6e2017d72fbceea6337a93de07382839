@@ -42,6 +42,24 @@
     },
     {
       "key": {
+        "uuid": "a2974f5d_0b9c3133",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-20T15:15:35Z",
+      "side": 1,
+      "message": "AFAIK most of ANGLE doesn\u0027t need to be thread-safe because it can only be used when a context is current on a thread. What will need to be thread-safe are parts of the EGL implementation.",
+      "parentUuid": "b3ba7a88_fd4abdb9",
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "67dc1683_fc9c0988",
         "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
         "patchSetId": 4
@@ -226,6 +244,30 @@
     },
     {
       "key": {
+        "uuid": "1d106242_31971bec",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-20T15:15:35Z",
+      "side": 1,
+      "message": "This is because once a CommandGraphNode reads from a resource, no more write operations can be done to the resource \"in the past\" (i.e. recorded to its writeNode). Subsequent writes to that resource will have to create a new CommandGraphNode.\n\nAgreed with the encapsulation.",
+      "parentUuid": "6389453e_3a976581",
+      "range": {
+        "startLine": 186,
+        "startChar": 4,
+        "endLine": 186,
+        "endChar": 34
+      },
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a07858bf_794eb871",
         "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
         "patchSetId": 4
@@ -295,6 +337,47 @@
     },
     {
       "key": {
+        "uuid": "22641507_1349dffa",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-20T15:15:35Z",
+      "side": 1,
+      "message": "Also this could be done during the topological sort. But it would defer the detection of cycles to submit time so you might choose to keep something that checks for cycles \"now\".",
+      "parentUuid": "cb2385be_095bdce3",
+      "range": {
+        "startLine": 222,
+        "startChar": 0,
+        "endLine": 244,
+        "endChar": 1
+      },
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "670681a5_8fdeb6a7",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 255,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-20T15:15:35Z",
+      "side": 1,
+      "message": "It feels a bit weird that details about the topo sort leak into CommandGraphNode. Could we split this in the following methods and add the logic to CommandGraph?\n\n```\n  public:\n    const ParentList \u0026getParents() const {return mParents;}\n\n  for-CommandGraph-Only (could just be a comment):\n    VisitedState getVisitedState() {return mVisitedState;}\n    void setVisiteState(VisitedState state) {mVisitedState \u003d state;}\n```",
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "66f407d9_538565f7",
         "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
         "patchSetId": 4
@@ -318,6 +401,23 @@
     },
     {
       "key": {
+        "uuid": "17045d63_b9535e6c",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 297,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-20T15:15:35Z",
+      "side": 1,
+      "message": "ditto",
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6ee03b9f_fab5f145",
         "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
         "patchSetId": 4
@@ -335,6 +435,23 @@
         "endLine": 313,
         "endChar": 72
       },
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "037dd1a3_77bd87e9",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 348,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-20T15:15:35Z",
+      "side": 1,
+      "message": "Let\u0027s more explicitly say this is a topological sort and do things in two steps:\n\n 1 - Do the topological sort to order the nodes such that dependencies are before their dependents\n 2 - Go through the sorted list and executed the nodes.",
       "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -381,6 +498,47 @@
         "endLine": 389,
         "endChar": 19
       },
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c467dea1_a5e0d78f",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 389,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-20T15:15:35Z",
+      "side": 1,
+      "message": "The graph is a member of RendererVk so it only gets deleted when the GL context is deleted. But it\u0027s true it\u0027s not clear we want to submit pending commands when the GL backend is destroyed.",
+      "parentUuid": "36d08ab3_1820b2ce",
+      "range": {
+        "startLine": 385,
+        "startChar": 4,
+        "endLine": 389,
+        "endChar": 19
+      },
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a21db803_1fab6852",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-20T15:15:35Z",
+      "side": 1,
+      "message": "Given how important this is for the Vulkan backend it would be nice to have a simple and precise definition of what\u0027s happening here. Something like\n\n    Encoding OpenGL commands into a Vulkan command buffer in the same order would lead to redundant synchronization and render passes. Instead the Vulkan backend buffers operations into the \"command graph\" until the GL requires us to flush pending commands. This gives a global view of the commands executed during a frame for a more global optimization.\n    The \"command graph\" is a DAG in which nodes represent operations that write to a set of resources and an edge from A-\u003eB represents that A must happen before B when the commands are submitted to the GPU. A-\u003eB is called a \"happens before dependency\" from A to B.",
       "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -513,6 +671,30 @@
       "writtenOn": "2018-02-17T14:56:26Z",
       "side": 1,
       "message": "Are those simply setParent and setChildren?",
+      "range": {
+        "startLine": 61,
+        "startChar": 4,
+        "endLine": 65,
+        "endChar": 74
+      },
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8bd9eb2f_2c871744",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-20T15:15:35Z",
+      "side": 1,
+      "message": "This terminology is suited for a tree but not for a DAG imho. The names used to be SetDependency and SetDependencies but it was deemed too confusing so what the dependency means was put in the function name.",
+      "parentUuid": "ba70b272_4ba99c41",
       "range": {
         "startLine": 61,
         "startChar": 4,
