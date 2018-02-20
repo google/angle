@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ef155814_bd974c15",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 490,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-20T21:36:34Z",
+      "side": 1,
+      "message": "no need to change anything here, but in the future this is a good place to use \u0027auto\u0027",
+      "range": {
+        "startLine": 490,
+        "startChar": 9,
+        "endLine": 490,
+        "endChar": 48
+      },
+      "revId": "56d2d0545fa4a65cfea2cd58a072339d8089133a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7e569a1b_7a9655cd",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 492,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-20T21:36:34Z",
+      "side": 1,
+      "message": "also using a more descriptive name than index would get brownie points. :) but seems fine as is.",
+      "range": {
+        "startLine": 492,
+        "startChar": 8,
+        "endLine": 492,
+        "endChar": 14
+      },
+      "revId": "56d2d0545fa4a65cfea2cd58a072339d8089133a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
