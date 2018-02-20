@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "db6bb896_ac66fa1c",
+        "filename": "src/libANGLE/Renderbuffer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-20T13:08:54Z",
+      "side": 1,
+      "message": "why do we not inline in the .h file simple accessors like these?",
+      "range": {
+        "startLine": 34,
+        "startChar": 0,
+        "endLine": 52,
+        "endChar": 1
+      },
+      "revId": "d1d82b33ffb22969e48c5c24116931878555a7f0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b118e999_a5fec3e0",
+        "filename": "src/libANGLE/Renderbuffer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-20T13:08:54Z",
+      "side": 1,
+      "message": "Is it wanted that mState.mWidth is not assigned like it was before?",
+      "range": {
+        "startLine": 135,
+        "startChar": 0,
+        "endLine": 139,
+        "endChar": 49
+      },
+      "revId": "d1d82b33ffb22969e48c5c24116931878555a7f0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
