@@ -7,19 +7,10 @@
 //   Test for EXT_blend_func_extended_test
 //
 
-#include "angle_gl.h"
-#include "gtest/gtest.h"
-#include "GLSLANG/ShaderLang.h"
-
-using testing::Combine;
-using testing::Values;
-using testing::make_tuple;
+#include "tests/test_utils/ShaderExtensionTest.h"
 
 namespace
 {
-const char ESSLVersion100[] = "#version 100\n";
-const char ESSLVersion300[] = "#version 300 es\n";
-const char ESSLVersion310[] = "#version 310 es\n";
 const char EXTBFEPragma[]   = "#extension GL_EXT_blend_func_extended : require\n";
 
 const char ESSL100_SimpleShader1[] =
@@ -118,62 +109,16 @@ const char ESSL310_LocationIndexFailureShader[] =
     "   secondaryFragColor = vec4(1.0);\n"
     "}\n";
 
-class EXTBlendFuncExtendedTest
-    : public testing::TestWithParam<testing::tuple<ShShaderSpec, const char *, const char *>>
+class EXTBlendFuncExtendedTest : public sh::ShaderExtensionTest
 {
   protected:
-    virtual void SetUp()
+    void SetUp() override
     {
-        sh::InitBuiltInResources(&mResources);
+        sh::ShaderExtensionTest::SetUp();
         // EXT_draw_buffers is used in some of the shaders for test purposes.
         mResources.EXT_draw_buffers = 1;
         mResources.NV_draw_buffers  = 2;
-
-        mCompiler = nullptr;
     }
-
-    virtual void TearDown() { DestroyCompiler(); }
-    void DestroyCompiler()
-    {
-        if (mCompiler)
-        {
-            sh::Destruct(mCompiler);
-            mCompiler = nullptr;
-        }
-    }
-
-    void InitializeCompiler()
-    {
-        DestroyCompiler();
-        mCompiler = sh::ConstructCompiler(GL_FRAGMENT_SHADER, testing::get<0>(GetParam()),
-                                          SH_GLSL_COMPATIBILITY_OUTPUT, &mResources);
-        ASSERT_TRUE(mCompiler != nullptr) << "Compiler could not be constructed.";
-    }
-
-    testing::AssertionResult TestShaderCompile(const char *pragma)
-    {
-        return TestShaderCompile(testing::get<1>(GetParam()),  // Version.
-                                 pragma,
-                                 testing::get<2>(GetParam())  // Shader.
-                                 );
-    }
-
-    testing::AssertionResult TestShaderCompile(const char *version,
-                                               const char *pragma,
-                                               const char *shader)
-    {
-        const char *shaderStrings[] = {version, pragma, shader};
-        bool success                = sh::Compile(mCompiler, shaderStrings, 3, 0);
-        if (success)
-        {
-            return ::testing::AssertionSuccess() << "Compilation success";
-        }
-        return ::testing::AssertionFailure() << sh::GetInfoLog(mCompiler);
-    }
-
-  protected:
-    ShBuiltInResources mResources;
-    ShHandle mCompiler;
 };
 
 // Extension flag is required to compile properly. Expect failure when it is
@@ -213,7 +158,7 @@ TEST_P(EXTBlendFuncExtendedTest, CompileSucceedsWithExtensionAndPragma)
 INSTANTIATE_TEST_CASE_P(CorrectESSL100Shaders,
                         EXTBlendFuncExtendedTest,
                         Combine(Values(SH_GLES2_SPEC, SH_GLES3_SPEC),
-                                Values("", ESSLVersion100),
+                                Values("", sh::ESSLVersion100),
                                 Values(ESSL100_SimpleShader1,
                                        ESSL100_MaxDualSourceAccessShader,
                                        ESSL100_FragDataShader)));
@@ -221,7 +166,7 @@ INSTANTIATE_TEST_CASE_P(CorrectESSL100Shaders,
 INSTANTIATE_TEST_CASE_P(CorrectESSL300Shaders,
                         EXTBlendFuncExtendedTest,
                         Combine(Values(SH_GLES3_SPEC),
-                                Values(ESSLVersion300),
+                                Values(sh::ESSLVersion300),
                                 Values(ESSL300_MaxDualSourceAccessShader,
                                        ESSL300_LocationAndUnspecifiedOutputShader,
                                        ESSL300_TwoUnspecifiedLocationOutputsShader)));
@@ -243,7 +188,7 @@ TEST_P(EXTBlendFuncExtendedCompileFailureTest, CompileFails)
 INSTANTIATE_TEST_CASE_P(IncorrectESSL100Shaders,
                         EXTBlendFuncExtendedCompileFailureTest,
                         Combine(Values(SH_GLES2_SPEC),
-                                Values(ESSLVersion100),
+                                Values(sh::ESSLVersion100),
                                 Values(ESSL100_ColorAndDataWriteFailureShader1,
                                        ESSL100_ColorAndDataWriteFailureShader2,
                                        ESSL100_ColorAndDataWriteFailureShader3)));
@@ -252,7 +197,7 @@ INSTANTIATE_TEST_CASE_P(IncorrectESSL100Shaders,
 INSTANTIATE_TEST_CASE_P(CorrectESSL300Shaders,
                         EXTBlendFuncExtendedCompileFailureTest,
                         Combine(Values(SH_GLES2_SPEC),
-                                Values("", ESSLVersion100, ESSLVersion300),
+                                Values("", sh::ESSLVersion100, sh::ESSLVersion300),
                                 Values(ESSL300_LocationAndUnspecifiedOutputShader,
                                        ESSL300_TwoUnspecifiedLocationOutputsShader)));
 
@@ -260,26 +205,26 @@ INSTANTIATE_TEST_CASE_P(CorrectESSL300Shaders,
 INSTANTIATE_TEST_CASE_P(CorrectESSL100Shaders,
                         EXTBlendFuncExtendedCompileFailureTest,
                         Combine(Values(SH_GLES3_SPEC),
-                                Values(ESSLVersion300),
+                                Values(sh::ESSLVersion300),
                                 Values(ESSL100_SimpleShader1, ESSL100_FragDataShader)));
 
 // Incorrect #version 310 es always fails.
 INSTANTIATE_TEST_CASE_P(IncorrectESSL310Shaders,
                         EXTBlendFuncExtendedCompileFailureTest,
                         Combine(Values(SH_GLES3_SPEC),
-                                Values(ESSLVersion300, ESSLVersion310),
+                                Values(sh::ESSLVersion300, sh::ESSLVersion310),
                                 Values(ESSL310_LocationIndexFailureShader)));
 
 // Correct #version 310 es fails in #version 300 es.
 INSTANTIATE_TEST_CASE_P(
     CorrectESSL310ShadersInESSL300,
     EXTBlendFuncExtendedCompileFailureTest,
-    Values(make_tuple(SH_GLES3_SPEC, &ESSLVersion300[0], &ESSL310_LocationIndexShader[0])));
+    Values(make_tuple(SH_GLES3_SPEC, &sh::ESSLVersion300[0], &ESSL310_LocationIndexShader[0])));
 
 // Correct #version 310 es fails in #version 310 es, due to 3.1 not being supported.
 INSTANTIATE_TEST_CASE_P(
     CorrectESSL310Shaders,
     EXTBlendFuncExtendedCompileFailureTest,
-    Values(make_tuple(SH_GLES3_SPEC, &ESSLVersion310[0], &ESSL310_LocationIndexShader[0])));
+    Values(make_tuple(SH_GLES3_SPEC, &sh::ESSLVersion310[0], &ESSL310_LocationIndexShader[0])));
 
 }  // namespace

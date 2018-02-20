@@ -5719,3 +5719,24 @@ TEST_F(FragmentShaderValidationTest, ConstantInitializerTypeMismatch)
         FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
     }
 }
+
+// Test that redeclaring a built-in is an error in ESSL 1.00. ESSL 1.00.17 section 4.2.6 disallows
+// "redefinition" of built-ins - it's not very explicit about redeclaring them, but we treat this as
+// an error. The redeclaration cannot serve any purpose since it can't be accompanied by a
+// definition.
+TEST_F(FragmentShaderValidationTest, RedeclaringBuiltIn)
+{
+    const std::string &shaderString =
+        R"(
+        precision mediump float;
+        float sin(float x);
+
+        void main()
+        {
+            gl_FragColor = vec4(0.0);
+        })";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}

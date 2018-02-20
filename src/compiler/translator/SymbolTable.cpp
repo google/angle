@@ -67,8 +67,8 @@ class TSymbolTable::TSymbolTableBuiltInLevel
 
     const TSymbol *find(const ImmutableString &name) const;
 
-    void insertUnmangledBuiltInName(const char *name);
-    bool hasUnmangledBuiltIn(const char *name) const;
+    void insertUnmangledBuiltIn(const char *name, TExtension ext);
+    const UnmangledBuiltIn *getUnmangledBuiltIn(const ImmutableString &name) const;
 
   private:
     using tLevel        = TUnorderedMap<ImmutableString,
@@ -79,7 +79,7 @@ class TSymbolTable::TSymbolTableBuiltInLevel
 
     tLevel mLevel;
 
-    std::set<ImmutableString> mUnmangledBuiltInNames;
+    std::map<ImmutableString, UnmangledBuiltIn> mUnmangledBuiltIns;
 };
 
 bool TSymbolTable::TSymbolTableLevel::insert(TSymbol *symbol)
@@ -119,14 +119,26 @@ const TSymbol *TSymbolTable::TSymbolTableBuiltInLevel::find(const ImmutableStrin
         return (*it).second;
 }
 
-void TSymbolTable::TSymbolTableBuiltInLevel::insertUnmangledBuiltInName(const char *name)
+void TSymbolTable::TSymbolTableBuiltInLevel::insertUnmangledBuiltIn(const char *name,
+                                                                    TExtension ext)
 {
-    mUnmangledBuiltInNames.insert(ImmutableString(name));
+    ImmutableString immName(name);
+    if (ext == TExtension::UNDEFINED ||
+        mUnmangledBuiltIns.find(immName) == mUnmangledBuiltIns.end())
+    {
+        mUnmangledBuiltIns[immName] = UnmangledBuiltIn(ext);
+    }
 }
 
-bool TSymbolTable::TSymbolTableBuiltInLevel::hasUnmangledBuiltIn(const char *name) const
+const UnmangledBuiltIn *TSymbolTable::TSymbolTableBuiltInLevel::getUnmangledBuiltIn(
+    const ImmutableString &name) const
 {
-    return mUnmangledBuiltInNames.count(ImmutableString(name)) > 0;
+    auto it = mUnmangledBuiltIns.find(ImmutableString(name));
+    if (it == mUnmangledBuiltIns.end())
+    {
+        return nullptr;
+    }
+    return &(it->second);
 }
 
 TSymbolTable::TSymbolTable() : mUniqueIdCounter(0), mUserDefinedUniqueIdsStart(-1)
@@ -153,7 +165,7 @@ void TSymbolTable::pop()
     mPrecisionStack.pop_back();
 }
 
-const TFunction *TSymbolTable::markUserDefinedFunctionHasPrototypeDeclaration(
+const TFunction *TSymbolTable::markFunctionHasPrototypeDeclaration(
     const ImmutableString &mangledName,
     bool *hadPrototypeDeclarationOut)
 {
@@ -163,9 +175,8 @@ const TFunction *TSymbolTable::markUserDefinedFunctionHasPrototypeDeclaration(
     return function;
 }
 
-const TFunction *TSymbolTable::setUserDefinedFunctionParameterNamesFromDefinition(
-    const TFunction *function,
-    bool *wasDefinedOut)
+const TFunction *TSymbolTable::setFunctionParameterNamesFromDefinition(const TFunction *function,
+                                                                       bool *wasDefinedOut)
 {
     TFunction *firstDeclaration = findUserDefinedFunction(function->getMangledName());
     ASSERT(firstDeclaration);
@@ -473,7 +484,7 @@ void TSymbolTable::insertBuiltIn(ESymbolLevel level,
 {
     if (ptype1->getBasicType() == EbtGSampler2D)
     {
-        insertUnmangledBuiltInName(name, level);
+        insertUnmangledBuiltIn(name, ext, level);
         bool gvec4 = (rvalue->getBasicType() == EbtGVec4);
         insertBuiltIn(level, gvec4 ? StaticType::GetBasic<EbtFloat, 4>() : rvalue, name,
                       StaticType::GetBasic<EbtSampler2D>(), ptype2, ptype3, ptype4, ptype5);
@@ -484,7 +495,7 @@ void TSymbolTable::insertBuiltIn(ESymbolLevel level,
     }
     else if (ptype1->getBasicType() == EbtGSampler3D)
     {
-        insertUnmangledBuiltInName(name, level);
+        insertUnmangledBuiltIn(name, ext, level);
         bool gvec4 = (rvalue->getBasicType() == EbtGVec4);
         insertBuiltIn(level, gvec4 ? StaticType::GetBasic<EbtFloat, 4>() : rvalue, name,
                       StaticType::GetBasic<EbtSampler3D>(), ptype2, ptype3, ptype4, ptype5);
@@ -495,7 +506,7 @@ void TSymbolTable::insertBuiltIn(ESymbolLevel level,
     }
     else if (ptype1->getBasicType() == EbtGSamplerCube)
     {
-        insertUnmangledBuiltInName(name, level);
+        insertUnmangledBuiltIn(name, ext, level);
         bool gvec4 = (rvalue->getBasicType() == EbtGVec4);
         insertBuiltIn(level, gvec4 ? StaticType::GetBasic<EbtFloat, 4>() : rvalue, name,
                       StaticType::GetBasic<EbtSamplerCube>(), ptype2, ptype3, ptype4, ptype5);
@@ -506,7 +517,7 @@ void TSymbolTable::insertBuiltIn(ESymbolLevel level,
     }
     else if (ptype1->getBasicType() == EbtGSampler2DArray)
     {
-        insertUnmangledBuiltInName(name, level);
+        insertUnmangledBuiltIn(name, ext, level);
         bool gvec4 = (rvalue->getBasicType() == EbtGVec4);
         insertBuiltIn(level, gvec4 ? StaticType::GetBasic<EbtFloat, 4>() : rvalue, name,
                       StaticType::GetBasic<EbtSampler2DArray>(), ptype2, ptype3, ptype4,
@@ -520,7 +531,7 @@ void TSymbolTable::insertBuiltIn(ESymbolLevel level,
     }
     else if (ptype1->getBasicType() == EbtGSampler2DMS)
     {
-        insertUnmangledBuiltInName(name, level);
+        insertUnmangledBuiltIn(name, ext, level);
         bool gvec4 = (rvalue->getBasicType() == EbtGVec4);
         insertBuiltIn(level, gvec4 ? StaticType::GetBasic<EbtFloat, 4>() : rvalue, name,
                       StaticType::GetBasic<EbtSampler2DMS>(), ptype2, ptype3, ptype4, ptype5);
@@ -531,7 +542,7 @@ void TSymbolTable::insertBuiltIn(ESymbolLevel level,
     }
     else if (IsGImage(ptype1->getBasicType()))
     {
-        insertUnmangledBuiltInName(name, level);
+        insertUnmangledBuiltIn(name, ext, level);
 
         const TType *floatType    = StaticType::GetBasic<EbtFloat, 4>();
         const TType *intType      = StaticType::GetBasic<EbtInt, 4>();
@@ -568,7 +579,7 @@ void TSymbolTable::insertBuiltIn(ESymbolLevel level,
              IsGenType(ptype4))
     {
         ASSERT(!ptype5);
-        insertUnmangledBuiltInName(name, level);
+        insertUnmangledBuiltIn(name, ext, level);
         insertBuiltIn(level, op, ext, SpecificType(rvalue, 1), name, SpecificType(ptype1, 1),
                       SpecificType(ptype2, 1), SpecificType(ptype3, 1), SpecificType(ptype4, 1));
         insertBuiltIn(level, op, ext, SpecificType(rvalue, 2), name, SpecificType(ptype1, 2),
@@ -581,7 +592,7 @@ void TSymbolTable::insertBuiltIn(ESymbolLevel level,
     else if (IsVecType(rvalue) || IsVecType(ptype1) || IsVecType(ptype2) || IsVecType(ptype3))
     {
         ASSERT(!ptype4 && !ptype5);
-        insertUnmangledBuiltInName(name, level);
+        insertUnmangledBuiltIn(name, ext, level);
         insertBuiltIn(level, op, ext, VectorType(rvalue, 2), name, VectorType(ptype1, 2),
                       VectorType(ptype2, 2), VectorType(ptype3, 2));
         insertBuiltIn(level, op, ext, VectorType(rvalue, 3), name, VectorType(ptype1, 3),
@@ -634,7 +645,7 @@ void TSymbolTable::insertBuiltInOp(ESymbolLevel level,
 {
     const char *name = GetOperatorString(op);
     ASSERT(strlen(name) > 0);
-    insertUnmangledBuiltInName(name, level);
+    insertUnmangledBuiltIn(name, TExtension::UNDEFINED, level);
     insertBuiltIn(level, op, TExtension::UNDEFINED, rvalue, name, ptype1, ptype2, ptype3, ptype4,
                   ptype5);
 }
@@ -650,7 +661,7 @@ void TSymbolTable::insertBuiltInOp(ESymbolLevel level,
                                    const TType *ptype5)
 {
     const char *name = GetOperatorString(op);
-    insertUnmangledBuiltInName(name, level);
+    insertUnmangledBuiltIn(name, ext, level);
     insertBuiltIn(level, op, ext, rvalue, name, ptype1, ptype2, ptype3, ptype4, ptype5);
 }
 
@@ -659,7 +670,7 @@ void TSymbolTable::insertBuiltInFunctionNoParameters(ESymbolLevel level,
                                                      const TType *rvalue,
                                                      const char *name)
 {
-    insertUnmangledBuiltInName(name, level);
+    insertUnmangledBuiltIn(name, TExtension::UNDEFINED, level);
     insert(level, new TFunction(this, ImmutableString(name), TExtension::UNDEFINED, nullptr, 0,
                                 rvalue, op, false));
 }
@@ -670,7 +681,7 @@ void TSymbolTable::insertBuiltInFunctionNoParametersExt(ESymbolLevel level,
                                                         const TType *rvalue,
                                                         const char *name)
 {
-    insertUnmangledBuiltInName(name, level);
+    insertUnmangledBuiltIn(name, ext, level);
     insert(level, new TFunction(this, ImmutableString(name), ext, nullptr, 0, rvalue, op, false));
 }
 
@@ -724,20 +735,22 @@ void TSymbolTable::setGlobalInvariant(bool invariant)
     mTable.back()->setGlobalInvariant(invariant);
 }
 
-void TSymbolTable::insertUnmangledBuiltInName(const char *name, ESymbolLevel level)
+void TSymbolTable::insertUnmangledBuiltIn(const char *name, TExtension ext, ESymbolLevel level)
 {
     ASSERT(level >= 0 && level <= LAST_BUILTIN_LEVEL);
     ASSERT(mUserDefinedUniqueIdsStart == -1);
-    mBuiltInTable[level]->insertUnmangledBuiltInName(name);
+    mBuiltInTable[level]->insertUnmangledBuiltIn(name, ext);
 }
 
 bool TSymbolTable::hasUnmangledBuiltInAtLevel(const char *name, ESymbolLevel level)
 {
     ASSERT(level >= 0 && level <= LAST_BUILTIN_LEVEL);
-    return mBuiltInTable[level]->hasUnmangledBuiltIn(name);
+    return mBuiltInTable[level]->getUnmangledBuiltIn(ImmutableString(name)) != nullptr;
 }
 
-bool TSymbolTable::hasUnmangledBuiltInForShaderVersion(const char *name, int shaderVersion)
+const UnmangledBuiltIn *TSymbolTable::getUnmangledBuiltInForShaderVersion(
+    const ImmutableString &name,
+    int shaderVersion)
 {
     for (int level = LAST_BUILTIN_LEVEL; level >= 0; --level)
     {
@@ -754,12 +767,13 @@ bool TSymbolTable::hasUnmangledBuiltInForShaderVersion(const char *name, int sha
             --level;
         }
 
-        if (mBuiltInTable[level]->hasUnmangledBuiltIn(name))
+        const UnmangledBuiltIn *builtIn = mBuiltInTable[level]->getUnmangledBuiltIn(name);
+        if (builtIn != nullptr)
         {
-            return true;
+            return builtIn;
         }
     }
-    return false;
+    return nullptr;
 }
 
 void TSymbolTable::markBuiltInInitializationFinished()
@@ -823,7 +837,7 @@ void TSymbolTable::initializeBuiltIns(sh::GLenum type,
 
     setDefaultPrecision(EbtAtomicCounter, EbpHigh);
 
-    initializeBuiltInFunctions(type, spec, resources);
+    initializeBuiltInFunctions(type);
     initializeBuiltInVariables(type, spec, resources);
     markBuiltInInitializationFinished();
 }
@@ -834,9 +848,7 @@ void TSymbolTable::initSamplerDefaultPrecision(TBasicType samplerType)
     setDefaultPrecision(samplerType, EbpLow);
 }
 
-void TSymbolTable::initializeBuiltInFunctions(sh::GLenum type,
-                                              ShShaderSpec spec,
-                                              const ShBuiltInResources &resources)
+void TSymbolTable::initializeBuiltInFunctions(sh::GLenum type)
 {
     const TType *voidType = StaticType::GetBasic<EbtVoid>();
     const TType *float1   = StaticType::GetBasic<EbtFloat>();
@@ -1072,6 +1084,7 @@ void TSymbolTable::initializeBuiltInFunctions(sh::GLenum type,
 
     const TType *sampler2D   = StaticType::GetBasic<EbtSampler2D>();
     const TType *samplerCube = StaticType::GetBasic<EbtSamplerCube>();
+    const TType *samplerExternalOES = StaticType::GetBasic<EbtSamplerExternalOES>();
 
     //
     // Texture Functions for GLSL ES 1.0
@@ -1081,38 +1094,37 @@ void TSymbolTable::initializeBuiltInFunctions(sh::GLenum type,
     insertBuiltIn(ESSL1_BUILTINS, float4, "texture2DProj", sampler2D, float4);
     insertBuiltIn(ESSL1_BUILTINS, float4, "textureCube", samplerCube, float3);
 
-    if (resources.OES_EGL_image_external || resources.NV_EGL_stream_consumer_external)
-    {
-        const TType *samplerExternalOES = StaticType::GetBasic<EbtSamplerExternalOES>();
+    // These are extension functions from OES_EGL_image_external and
+    // NV_EGL_stream_consumer_external. We don't have a way to mark a built-in with two alternative
+    // extensions, so these are marked with none. This is fine, since these functions overload core
+    // function names and the functions require a samplerExternalOES parameter, which can only be
+    // created if one of the extensions is enabled.
+    // TODO(oetuaho): Consider implementing a cleaner solution.
+    insertBuiltIn(ESSL1_BUILTINS, float4, "texture2D", samplerExternalOES, float2);
+    insertBuiltIn(ESSL1_BUILTINS, float4, "texture2DProj", samplerExternalOES, float3);
+    insertBuiltIn(ESSL1_BUILTINS, float4, "texture2DProj", samplerExternalOES, float4);
 
-        insertBuiltIn(ESSL1_BUILTINS, float4, "texture2D", samplerExternalOES, float2);
-        insertBuiltIn(ESSL1_BUILTINS, float4, "texture2DProj", samplerExternalOES, float3);
-        insertBuiltIn(ESSL1_BUILTINS, float4, "texture2DProj", samplerExternalOES, float4);
-    }
+    // Note that ARB_texture_rectangle extension directive defaults to enabled in case the extension
+    // is supported. The symbols are still conditional on the extension.
+    const TType *sampler2DRect = StaticType::GetBasic<EbtSampler2DRect>();
+    insertBuiltIn(ESSL1_BUILTINS, TExtension::ARB_texture_rectangle, float4, "texture2DRect",
+                  sampler2DRect, float2);
+    insertBuiltIn(ESSL1_BUILTINS, TExtension::ARB_texture_rectangle, float4, "texture2DRectProj",
+                  sampler2DRect, float3);
+    insertBuiltIn(ESSL1_BUILTINS, TExtension::ARB_texture_rectangle, float4, "texture2DRectProj",
+                  sampler2DRect, float4);
 
-    if (resources.ARB_texture_rectangle)
-    {
-        const TType *sampler2DRect = StaticType::GetBasic<EbtSampler2DRect>();
-
-        insertBuiltIn(ESSL1_BUILTINS, float4, "texture2DRect", sampler2DRect, float2);
-        insertBuiltIn(ESSL1_BUILTINS, float4, "texture2DRectProj", sampler2DRect, float3);
-        insertBuiltIn(ESSL1_BUILTINS, float4, "texture2DRectProj", sampler2DRect, float4);
-    }
-
-    if (resources.EXT_shader_texture_lod)
-    {
-        /* The *Grad* variants are new to both vertex and fragment shaders; the fragment
-         * shader specific pieces are added separately below.
-         */
-        insertBuiltIn(ESSL1_BUILTINS, TExtension::EXT_shader_texture_lod, float4,
-                      "texture2DGradEXT", sampler2D, float2, float2, float2);
-        insertBuiltIn(ESSL1_BUILTINS, TExtension::EXT_shader_texture_lod, float4,
-                      "texture2DProjGradEXT", sampler2D, float3, float2, float2);
-        insertBuiltIn(ESSL1_BUILTINS, TExtension::EXT_shader_texture_lod, float4,
-                      "texture2DProjGradEXT", sampler2D, float4, float2, float2);
-        insertBuiltIn(ESSL1_BUILTINS, TExtension::EXT_shader_texture_lod, float4,
-                      "textureCubeGradEXT", samplerCube, float3, float3, float3);
-    }
+    /* The *Grad* variants are new to both vertex and fragment shaders; the fragment
+     * shader specific pieces are added separately below.
+     */
+    insertBuiltIn(ESSL1_BUILTINS, TExtension::EXT_shader_texture_lod, float4, "texture2DGradEXT",
+                  sampler2D, float2, float2, float2);
+    insertBuiltIn(ESSL1_BUILTINS, TExtension::EXT_shader_texture_lod, float4,
+                  "texture2DProjGradEXT", sampler2D, float3, float2, float2);
+    insertBuiltIn(ESSL1_BUILTINS, TExtension::EXT_shader_texture_lod, float4,
+                  "texture2DProjGradEXT", sampler2D, float4, float2, float2);
+    insertBuiltIn(ESSL1_BUILTINS, TExtension::EXT_shader_texture_lod, float4, "textureCubeGradEXT",
+                  samplerCube, float3, float3, float3);
 
     if (type == GL_FRAGMENT_SHADER)
     {
@@ -1121,27 +1133,21 @@ void TSymbolTable::initializeBuiltInFunctions(sh::GLenum type,
         insertBuiltIn(ESSL1_BUILTINS, float4, "texture2DProj", sampler2D, float4, float1);
         insertBuiltIn(ESSL1_BUILTINS, float4, "textureCube", samplerCube, float3, float1);
 
-        if (resources.OES_standard_derivatives)
-        {
-            insertBuiltInOp(ESSL1_BUILTINS, EOpDFdx, TExtension::OES_standard_derivatives, genType,
-                            genType);
-            insertBuiltInOp(ESSL1_BUILTINS, EOpDFdy, TExtension::OES_standard_derivatives, genType,
-                            genType);
-            insertBuiltInOp(ESSL1_BUILTINS, EOpFwidth, TExtension::OES_standard_derivatives,
-                            genType, genType);
-        }
+        insertBuiltInOp(ESSL1_BUILTINS, EOpDFdx, TExtension::OES_standard_derivatives, genType,
+                        genType);
+        insertBuiltInOp(ESSL1_BUILTINS, EOpDFdy, TExtension::OES_standard_derivatives, genType,
+                        genType);
+        insertBuiltInOp(ESSL1_BUILTINS, EOpFwidth, TExtension::OES_standard_derivatives, genType,
+                        genType);
 
-        if (resources.EXT_shader_texture_lod)
-        {
-            insertBuiltIn(ESSL1_BUILTINS, TExtension::EXT_shader_texture_lod, float4,
-                          "texture2DLodEXT", sampler2D, float2, float1);
-            insertBuiltIn(ESSL1_BUILTINS, TExtension::EXT_shader_texture_lod, float4,
-                          "texture2DProjLodEXT", sampler2D, float3, float1);
-            insertBuiltIn(ESSL1_BUILTINS, TExtension::EXT_shader_texture_lod, float4,
-                          "texture2DProjLodEXT", sampler2D, float4, float1);
-            insertBuiltIn(ESSL1_BUILTINS, TExtension::EXT_shader_texture_lod, float4,
-                          "textureCubeLodEXT", samplerCube, float3, float1);
-        }
+        insertBuiltIn(ESSL1_BUILTINS, TExtension::EXT_shader_texture_lod, float4, "texture2DLodEXT",
+                      sampler2D, float2, float1);
+        insertBuiltIn(ESSL1_BUILTINS, TExtension::EXT_shader_texture_lod, float4,
+                      "texture2DProjLodEXT", sampler2D, float3, float1);
+        insertBuiltIn(ESSL1_BUILTINS, TExtension::EXT_shader_texture_lod, float4,
+                      "texture2DProjLodEXT", sampler2D, float4, float1);
+        insertBuiltIn(ESSL1_BUILTINS, TExtension::EXT_shader_texture_lod, float4,
+                      "textureCubeLodEXT", samplerCube, float3, float1);
     }
 
     if (type == GL_VERTEX_SHADER)
@@ -1175,33 +1181,28 @@ void TSymbolTable::initializeBuiltInFunctions(sh::GLenum type,
     insertBuiltIn(ESSL3_BUILTINS, gvec4, "textureLod", gsamplerCube, float3, float1);
     insertBuiltIn(ESSL3_BUILTINS, gvec4, "textureLod", gsampler2DArray, float3, float1);
 
-    if (resources.OES_EGL_image_external_essl3)
-    {
-        const TType *samplerExternalOES = StaticType::GetBasic<EbtSamplerExternalOES>();
+    insertBuiltIn(ESSL3_BUILTINS, TExtension::OES_EGL_image_external_essl3, float4, "texture",
+                  samplerExternalOES, float2);
+    insertBuiltIn(ESSL3_BUILTINS, TExtension::OES_EGL_image_external_essl3, float4, "textureProj",
+                  samplerExternalOES, float3);
+    insertBuiltIn(ESSL3_BUILTINS, TExtension::OES_EGL_image_external_essl3, float4, "textureProj",
+                  samplerExternalOES, float4);
 
-        insertBuiltIn(ESSL3_BUILTINS, float4, "texture", samplerExternalOES, float2);
-        insertBuiltIn(ESSL3_BUILTINS, float4, "textureProj", samplerExternalOES, float3);
-        insertBuiltIn(ESSL3_BUILTINS, float4, "textureProj", samplerExternalOES, float4);
-    }
+    const TType *samplerExternal2DY2YEXT = StaticType::GetBasic<EbtSamplerExternal2DY2YEXT>();
 
-    if (resources.EXT_YUV_target)
-    {
-        const TType *samplerExternal2DY2YEXT = StaticType::GetBasic<EbtSamplerExternal2DY2YEXT>();
+    insertBuiltIn(ESSL3_BUILTINS, TExtension::EXT_YUV_target, float4, "texture",
+                  samplerExternal2DY2YEXT, float2);
+    insertBuiltIn(ESSL3_BUILTINS, TExtension::EXT_YUV_target, float4, "textureProj",
+                  samplerExternal2DY2YEXT, float3);
+    insertBuiltIn(ESSL3_BUILTINS, TExtension::EXT_YUV_target, float4, "textureProj",
+                  samplerExternal2DY2YEXT, float4);
 
-        insertBuiltIn(ESSL3_BUILTINS, TExtension::EXT_YUV_target, float4, "texture",
-                      samplerExternal2DY2YEXT, float2);
-        insertBuiltIn(ESSL3_BUILTINS, TExtension::EXT_YUV_target, float4, "textureProj",
-                      samplerExternal2DY2YEXT, float3);
-        insertBuiltIn(ESSL3_BUILTINS, TExtension::EXT_YUV_target, float4, "textureProj",
-                      samplerExternal2DY2YEXT, float4);
+    const TType *yuvCscStandardEXT = StaticType::GetBasic<EbtYuvCscStandardEXT>();
 
-        const TType *yuvCscStandardEXT = StaticType::GetBasic<EbtYuvCscStandardEXT>();
-
-        insertBuiltIn(ESSL3_BUILTINS, TExtension::EXT_YUV_target, float3, "rgb_2_yuv", float3,
-                      yuvCscStandardEXT);
-        insertBuiltIn(ESSL3_BUILTINS, TExtension::EXT_YUV_target, float3, "yuv_2_rgb", float3,
-                      yuvCscStandardEXT);
-    }
+    insertBuiltIn(ESSL3_BUILTINS, TExtension::EXT_YUV_target, float3, "rgb_2_yuv", float3,
+                  yuvCscStandardEXT);
+    insertBuiltIn(ESSL3_BUILTINS, TExtension::EXT_YUV_target, float3, "yuv_2_rgb", float3,
+                  yuvCscStandardEXT);
 
     if (type == GL_FRAGMENT_SHADER)
     {
@@ -1213,29 +1214,19 @@ void TSymbolTable::initializeBuiltInFunctions(sh::GLenum type,
         insertBuiltIn(ESSL3_BUILTINS, gvec4, "textureProj", gsampler2D, float4, float1);
         insertBuiltIn(ESSL3_BUILTINS, gvec4, "textureProj", gsampler3D, float4, float1);
 
-        if (resources.OES_EGL_image_external_essl3)
-        {
-            const TType *samplerExternalOES = StaticType::GetBasic<EbtSamplerExternalOES>();
+        insertBuiltIn(ESSL3_BUILTINS, TExtension::OES_EGL_image_external_essl3, float4, "texture",
+                      samplerExternalOES, float2, float1);
+        insertBuiltIn(ESSL3_BUILTINS, TExtension::OES_EGL_image_external_essl3, float4,
+                      "textureProj", samplerExternalOES, float3, float1);
+        insertBuiltIn(ESSL3_BUILTINS, TExtension::OES_EGL_image_external_essl3, float4,
+                      "textureProj", samplerExternalOES, float4, float1);
 
-            insertBuiltIn(ESSL3_BUILTINS, float4, "texture", samplerExternalOES, float2, float1);
-            insertBuiltIn(ESSL3_BUILTINS, float4, "textureProj", samplerExternalOES, float3,
-                          float1);
-            insertBuiltIn(ESSL3_BUILTINS, float4, "textureProj", samplerExternalOES, float4,
-                          float1);
-        }
-
-        if (resources.EXT_YUV_target)
-        {
-            const TType *samplerExternal2DY2YEXT =
-                StaticType::GetBasic<EbtSamplerExternal2DY2YEXT>();
-
-            insertBuiltIn(ESSL3_BUILTINS, TExtension::EXT_YUV_target, float4, "texture",
-                          samplerExternal2DY2YEXT, float2, float1);
-            insertBuiltIn(ESSL3_BUILTINS, TExtension::EXT_YUV_target, float4, "textureProj",
-                          samplerExternal2DY2YEXT, float3, float1);
-            insertBuiltIn(ESSL3_BUILTINS, TExtension::EXT_YUV_target, float4, "textureProj",
-                          samplerExternal2DY2YEXT, float4, float1);
-        }
+        insertBuiltIn(ESSL3_BUILTINS, TExtension::EXT_YUV_target, float4, "texture",
+                      samplerExternal2DY2YEXT, float2, float1);
+        insertBuiltIn(ESSL3_BUILTINS, TExtension::EXT_YUV_target, float4, "textureProj",
+                      samplerExternal2DY2YEXT, float3, float1);
+        insertBuiltIn(ESSL3_BUILTINS, TExtension::EXT_YUV_target, float4, "textureProj",
+                      samplerExternal2DY2YEXT, float4, float1);
     }
 
     const TType *sampler2DShadow      = StaticType::GetBasic<EbtSampler2DShadow>();
@@ -1264,20 +1255,11 @@ void TSymbolTable::initializeBuiltInFunctions(sh::GLenum type,
     insertBuiltIn(ESSL3_BUILTINS, int3, "textureSize", sampler2DArrayShadow, int1);
     insertBuiltIn(ESSL3_BUILTINS, int2, "textureSize", gsampler2DMS);
 
-    if (resources.OES_EGL_image_external_essl3)
-    {
-        const TType *samplerExternalOES = StaticType::GetBasic<EbtSamplerExternalOES>();
+    insertBuiltIn(ESSL3_BUILTINS, TExtension::OES_EGL_image_external_essl3, int2, "textureSize",
+                  samplerExternalOES, int1);
 
-        insertBuiltIn(ESSL3_BUILTINS, int2, "textureSize", samplerExternalOES, int1);
-    }
-
-    if (resources.EXT_YUV_target)
-    {
-        const TType *samplerExternal2DY2YEXT = StaticType::GetBasic<EbtSamplerExternal2DY2YEXT>();
-
-        insertBuiltIn(ESSL3_BUILTINS, TExtension::EXT_YUV_target, int2, "textureSize",
-                      samplerExternal2DY2YEXT, int1);
-    }
+    insertBuiltIn(ESSL3_BUILTINS, TExtension::EXT_YUV_target, int2, "textureSize",
+                  samplerExternal2DY2YEXT, int1);
 
     if (type == GL_FRAGMENT_SHADER)
     {
@@ -1336,20 +1318,11 @@ void TSymbolTable::initializeBuiltInFunctions(sh::GLenum type,
     insertBuiltIn(ESSL3_BUILTINS, gvec4, "texelFetch", gsampler3D, int3, int1);
     insertBuiltIn(ESSL3_BUILTINS, gvec4, "texelFetch", gsampler2DArray, int3, int1);
 
-    if (resources.OES_EGL_image_external_essl3)
-    {
-        const TType *samplerExternalOES = StaticType::GetBasic<EbtSamplerExternalOES>();
+    insertBuiltIn(ESSL3_BUILTINS, TExtension::OES_EGL_image_external_essl3, float4, "texelFetch",
+                  samplerExternalOES, int2, int1);
 
-        insertBuiltIn(ESSL3_BUILTINS, float4, "texelFetch", samplerExternalOES, int2, int1);
-    }
-
-    if (resources.EXT_YUV_target)
-    {
-        const TType *samplerExternal2DY2YEXT = StaticType::GetBasic<EbtSamplerExternal2DY2YEXT>();
-
-        insertBuiltIn(ESSL3_BUILTINS, TExtension::EXT_YUV_target, float4, "texelFetch",
-                      samplerExternal2DY2YEXT, int2, int1);
-    }
+    insertBuiltIn(ESSL3_BUILTINS, TExtension::EXT_YUV_target, float4, "texelFetch",
+                  samplerExternal2DY2YEXT, int2, int1);
 
     insertBuiltIn(ESSL3_BUILTINS, gvec4, "texelFetchOffset", gsampler2D, int2, int1, int2);
     insertBuiltIn(ESSL3_BUILTINS, gvec4, "texelFetchOffset", gsampler3D, int3, int1, int3);
@@ -1536,12 +1509,9 @@ void TSymbolTable::initializeBuiltInVariables(sh::GLenum type,
 
     insertConstInt<EbpMedium>(COMMON_BUILTINS, ImmutableString("gl_MaxDrawBuffers"),
                               resources.MaxDrawBuffers);
-    if (resources.EXT_blend_func_extended)
-    {
-        insertConstIntExt<EbpMedium>(COMMON_BUILTINS, TExtension::EXT_blend_func_extended,
-                                     ImmutableString("gl_MaxDualSourceDrawBuffersEXT"),
-                                     resources.MaxDualSourceDrawBuffers);
-    }
+    insertConstIntExt<EbpMedium>(COMMON_BUILTINS, TExtension::EXT_blend_func_extended,
+                                 ImmutableString("gl_MaxDualSourceDrawBuffersEXT"),
+                                 resources.MaxDualSourceDrawBuffers);
 
     insertConstInt<EbpMedium>(ESSL3_BUILTINS, ImmutableString("gl_MaxVertexOutputVectors"),
                               resources.MaxVertexOutputVectors);
@@ -1602,7 +1572,6 @@ void TSymbolTable::initializeBuiltInVariables(sh::GLenum type,
     insertConstInt<EbpMedium>(ESSL3_1_BUILTINS, ImmutableString("gl_MaxAtomicCounterBufferSize"),
                               resources.MaxAtomicCounterBufferSize);
 
-    if (resources.EXT_geometry_shader)
     {
         TExtension ext = TExtension::EXT_geometry_shader;
         insertConstIntExt<EbpMedium>(ESSL3_1_BUILTINS, ext,

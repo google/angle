@@ -3228,7 +3228,7 @@ TIntermFunctionPrototype *TParseContext::addFunctionPrototypeDeclaration(
     // first declaration. Either way the instance in the symbol table is used to track whether the
     // function is declared multiple times.
     bool hadPrototypeDeclaration = false;
-    const TFunction *function    = symbolTable.markUserDefinedFunctionHasPrototypeDeclaration(
+    const TFunction *function    = symbolTable.markFunctionHasPrototypeDeclaration(
         parsedFunction.getMangledName(), &hadPrototypeDeclaration);
 
     if (hadPrototypeDeclaration && mShaderVersion == 100)
@@ -3282,22 +3282,12 @@ void TParseContext::parseFunctionDefinitionHeader(const TSourceLoc &location,
                                                   TIntermFunctionPrototype **prototypeOut)
 {
     ASSERT(function);
-    const TSymbol *builtIn =
-        symbolTable.findBuiltIn(ImmutableString(function->getMangledName()), getShaderVersion());
 
-    if (builtIn)
+    bool wasDefined = false;
+    function        = symbolTable.setFunctionParameterNamesFromDefinition(function, &wasDefined);
+    if (wasDefined)
     {
-        error(location, "built-in functions cannot be redefined", function->name());
-    }
-    else
-    {
-        bool wasDefined = false;
-        function =
-            symbolTable.setUserDefinedFunctionParameterNamesFromDefinition(function, &wasDefined);
-        if (wasDefined)
-        {
-            error(location, "function already has a body", function->name());
-        }
+        error(location, "function already has a body", function->name());
     }
 
     // Remember the return type for later checking for return statements.
@@ -3315,11 +3305,6 @@ TFunction *TParseContext::parseFunctionDeclarator(const TSourceLoc &location, TF
     // The definition production code will check for redefinitions.
     // In the case of ESSL 1.00 the prototype production code will also check for redeclarations.
     //
-    // Return types and parameter qualifiers must match in all redeclarations, so those are checked
-    // here.
-    //
-    const TFunction *prevDec = static_cast<const TFunction *>(
-        symbolTable.find(ImmutableString(function->getMangledName()), getShaderVersion()));
 
     for (size_t i = 0u; i < function->getParamCount(); ++i)
     {
@@ -3332,15 +3317,36 @@ TFunction *TParseContext::parseFunctionDeclarator(const TSourceLoc &location, TF
         }
     }
 
-    if (getShaderVersion() >= 300 && symbolTable.hasUnmangledBuiltInForShaderVersion(
-                                         function->name().data(), getShaderVersion()))
+    if (getShaderVersion() >= 300)
     {
-        // With ESSL 3.00 and above, names of built-in functions cannot be redeclared as functions.
-        // Therefore overloading or redefining builtin functions is an error.
-        error(location, "Name of a built-in function cannot be redeclared as function",
-              function->name());
+        const UnmangledBuiltIn *builtIn =
+            symbolTable.getUnmangledBuiltInForShaderVersion(function->name(), getShaderVersion());
+        if (builtIn &&
+            (builtIn->extension == TExtension::UNDEFINED || isExtensionEnabled(builtIn->extension)))
+        {
+            // With ESSL 3.00 and above, names of built-in functions cannot be redeclared as
+            // functions. Therefore overloading or redefining builtin functions is an error.
+            error(location, "Name of a built-in function cannot be redeclared as function",
+                  function->name());
+        }
     }
-    else if (prevDec)
+    else
+    {
+        // ESSL 1.00.17 section 4.2.6: built-ins can be overloaded but not redefined. We assume that
+        // this applies to redeclarations as well.
+        const TSymbol *builtIn =
+            symbolTable.findBuiltIn(function->getMangledName(), getShaderVersion());
+        if (builtIn)
+        {
+            error(location, "built-in functions cannot be redefined", function->name());
+        }
+    }
+
+    // Return types and parameter qualifiers must match in all redeclarations, so those are checked
+    // here.
+    const TFunction *prevDec =
+        static_cast<const TFunction *>(symbolTable.findGlobal(function->getMangledName()));
+    if (prevDec)
     {
         if (prevDec->getReturnType() != function->getReturnType())
         {

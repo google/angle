@@ -57,6 +57,15 @@ const int GLSL_BUILTINS      = 4;
 const int LAST_BUILTIN_LEVEL = GLSL_BUILTINS;
 const int GLOBAL_LEVEL       = 5;
 
+struct UnmangledBuiltIn
+{
+    constexpr UnmangledBuiltIn() : extension(TExtension::UNDEFINED) {}
+
+    constexpr UnmangledBuiltIn(TExtension extension) : extension(extension) {}
+
+    TExtension extension;
+};
+
 class TSymbolTable : angle::NonCopyable
 {
   public:
@@ -87,11 +96,10 @@ class TSymbolTable : angle::NonCopyable
     void declareUserDefinedFunction(TFunction *function, bool insertUnmangledName);
 
     // These return the TFunction pointer to keep using to refer to this function.
-    const TFunction *markUserDefinedFunctionHasPrototypeDeclaration(
-        const ImmutableString &mangledName,
-        bool *hadPrototypeDeclarationOut);
-    const TFunction *setUserDefinedFunctionParameterNamesFromDefinition(const TFunction *function,
-                                                                        bool *wasDefinedOut);
+    const TFunction *markFunctionHasPrototypeDeclaration(const ImmutableString &mangledName,
+                                                         bool *hadPrototypeDeclarationOut);
+    const TFunction *setFunctionParameterNamesFromDefinition(const TFunction *function,
+                                                             bool *wasDefinedOut);
 
     // find() is guaranteed not to retain a reference to the ImmutableString, so an ImmutableString
     // with a reference to a short-lived char * is fine to pass here.
@@ -125,8 +133,9 @@ class TSymbolTable : angle::NonCopyable
 
     const TSymbolUniqueId nextUniqueId() { return TSymbolUniqueId(this); }
 
-    // Checks whether there is a built-in accessible by a shader with the specified version.
-    bool hasUnmangledBuiltInForShaderVersion(const char *name, int shaderVersion);
+    // Gets the built-in accessible by a shader with the specified version, if any.
+    const UnmangledBuiltIn *getUnmangledBuiltInForShaderVersion(const ImmutableString &name,
+                                                                int shaderVersion);
 
     void initializeBuiltIns(sh::GLenum type,
                             ShShaderSpec spec,
@@ -195,7 +204,7 @@ class TSymbolTable : angle::NonCopyable
                        const TType *ptype4 = 0,
                        const TType *ptype5 = 0)
     {
-        insertUnmangledBuiltInName(name, level);
+        insertUnmangledBuiltIn(name, TExtension::UNDEFINED, level);
         insertBuiltIn(level, EOpCallBuiltInFunction, TExtension::UNDEFINED, rvalue, name, ptype1,
                       ptype2, ptype3, ptype4, ptype5);
     }
@@ -210,7 +219,7 @@ class TSymbolTable : angle::NonCopyable
                        const TType *ptype4 = 0,
                        const TType *ptype5 = 0)
     {
-        insertUnmangledBuiltInName(name, level);
+        insertUnmangledBuiltIn(name, ext, level);
         insertBuiltIn(level, EOpCallBuiltInFunction, ext, rvalue, name, ptype1, ptype2, ptype3,
                       ptype4, ptype5);
     }
@@ -256,15 +265,13 @@ class TSymbolTable : angle::NonCopyable
 
     // Used to insert unmangled functions to check redeclaration of built-ins in ESSL 3.00 and
     // above.
-    void insertUnmangledBuiltInName(const char *name, ESymbolLevel level);
+    void insertUnmangledBuiltIn(const char *name, TExtension ext, ESymbolLevel level);
 
     bool hasUnmangledBuiltInAtLevel(const char *name, ESymbolLevel level);
 
     void initSamplerDefaultPrecision(TBasicType samplerType);
 
-    void initializeBuiltInFunctions(sh::GLenum type,
-                                    ShShaderSpec spec,
-                                    const ShBuiltInResources &resources);
+    void initializeBuiltInFunctions(sh::GLenum type);
     void initializeBuiltInVariables(sh::GLenum type,
                                     ShShaderSpec spec,
                                     const ShBuiltInResources &resources);
