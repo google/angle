@@ -243,6 +243,30 @@
     },
     {
       "key": {
+        "uuid": "4add0928_3dcdb23b",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-20T21:42:10Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "2c6c119a_28ed753f",
+      "range": {
+        "startLine": 114,
+        "startChar": 4,
+        "endLine": 122,
+        "endChar": 45
+      },
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "60368d7b_629cecb8",
         "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
         "patchSetId": 4
@@ -381,6 +405,30 @@
       "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6f3527b4_bd8615f1",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-20T21:42:10Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "61c5a76c_843491ea",
+      "range": {
+        "startLine": 164,
+        "startChar": 3,
+        "endLine": 164,
+        "endChar": 70
+      },
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -664,6 +712,30 @@
       "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "196dd79a_53d0f27a",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-20T21:42:10Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "acd607a9_bb979629",
+      "range": {
+        "startLine": 222,
+        "startChar": 0,
+        "endLine": 244,
+        "endChar": 1
+      },
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -972,6 +1044,30 @@
       "side": 1,
       "message": "The graph is flushed in the Context destructor. I don\u0027t quite understand, but does that answer the concern?",
       "parentUuid": "c467dea1_a5e0d78f",
+      "range": {
+        "startLine": 385,
+        "startChar": 4,
+        "endLine": 389,
+        "endChar": 19
+      },
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4e2eb1da_da9ca32f",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 389,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-20T21:42:10Z",
+      "side": 1,
+      "message": "So that means you are relying on the cleanup from a class that depends on CommandGraph instead of relying on the class itself, making an assumption that CommandGraph could never ever be used anywhere else than in the Context, or that if some other class starts depending on it, they would have the responsibility of flushing it before destroying it. \n\nThis is not-obvious and you be more protected if you made the verification in the destructor of CommandGraph that the mNodes collection have been cleared.",
+      "parentUuid": "bc7a71a5_9f979712",
       "range": {
         "startLine": 385,
         "startChar": 4,
@@ -1439,6 +1535,30 @@
       "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "50de53b6_e0607edc",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-20T21:42:10Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "0deec4d1_f4e60fa1",
+      "range": {
+        "startLine": 95,
+        "startChar": 4,
+        "endLine": 95,
+        "endChar": 86
+      },
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
