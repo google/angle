@@ -22,6 +22,30 @@
       "revId": "7fbdd341709da1563e5b1dc07d7dc551c8f07c1b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d113c1a2_f9d9a57c",
+        "filename": "src/compiler/translator/SymbolTable.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1088,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-02-20T19:10:37Z",
+      "side": 1,
+      "message": "We could maybe add a second alternative extension field to TSymbol, make it an std::array with length 2 for example since there\u0027s already a function for checking an std::array of extensions. I could also look into a different way to handle ARB_texture_rectangle by defaulting the extension directive state to enabled in case the extension is supported. I\u0027d prefer to do those changes as a separate patch, what do you think?",
+      "parentUuid": "fd803f4b_ada4bffa",
+      "range": {
+        "startLine": 1087,
+        "startChar": 2,
+        "endLine": 1088,
+        "endChar": 28
+      },
+      "revId": "7fbdd341709da1563e5b1dc07d7dc551c8f07c1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
