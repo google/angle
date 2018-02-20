@@ -1181,7 +1181,7 @@ gl::Error Renderer9::getNullColorbuffer(const gl::Context *context,
 
     auto *implFactory = context->getImplementation();
 
-    gl::Renderbuffer *nullRenderbuffer = new gl::Renderbuffer(implFactory->createRenderbuffer(), 0);
+    gl::Renderbuffer *nullRenderbuffer = new gl::Renderbuffer(implFactory, 0);
     gl::Error error = nullRenderbuffer->setStorage(context, GL_NONE, size.width, size.height);
     if (error.isError())
     {

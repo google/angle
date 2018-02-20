@@ -18,11 +18,12 @@
 
 namespace rx
 {
-RenderbufferGL::RenderbufferGL(const FunctionsGL *functions,
+RenderbufferGL::RenderbufferGL(const gl::RenderbufferState &state,
+                               const FunctionsGL *functions,
                                const WorkaroundsGL &workarounds,
                                StateManagerGL *stateManager,
                                const gl::TextureCapsMap &textureCaps)
-    : RenderbufferImpl(),
+    : RenderbufferImpl(state),
       mFunctions(functions),
       mWorkarounds(workarounds),
       mStateManager(stateManager),

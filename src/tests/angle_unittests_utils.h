@@ -38,7 +38,10 @@ class NullFactory : public GLImplFactory
     TextureImpl *createTexture(const gl::TextureState &data) override { return nullptr; }
 
     // Renderbuffer creation
-    RenderbufferImpl *createRenderbuffer() override { return nullptr; }
+    RenderbufferImpl *createRenderbuffer(const gl::RenderbufferState &state) override
+    {
+        return nullptr;
+    }
 
     // Buffer creation
     BufferImpl *createBuffer(const gl::BufferState &state) override { return nullptr; }
@@ -86,7 +89,7 @@ class MockGLFactory : public GLImplFactory
     MOCK_METHOD1(createProgramPipeline, ProgramPipelineImpl *(const gl::ProgramPipelineState &));
     MOCK_METHOD1(createFramebuffer, FramebufferImpl *(const gl::FramebufferState &));
     MOCK_METHOD1(createTexture, TextureImpl *(const gl::TextureState &));
-    MOCK_METHOD0(createRenderbuffer, RenderbufferImpl *());
+    MOCK_METHOD1(createRenderbuffer, RenderbufferImpl *(const gl::RenderbufferState &));
     MOCK_METHOD1(createBuffer, BufferImpl *(const gl::BufferState &));
     MOCK_METHOD1(createVertexArray, VertexArrayImpl *(const gl::VertexArrayState &));
     MOCK_METHOD1(createQuery, QueryImpl *(GLenum type));

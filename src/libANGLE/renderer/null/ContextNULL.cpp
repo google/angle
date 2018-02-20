@@ -352,9 +352,9 @@ TextureImpl *ContextNULL::createTexture(const gl::TextureState &state)
     return new TextureNULL(state);
 }
 
-RenderbufferImpl *ContextNULL::createRenderbuffer()
+RenderbufferImpl *ContextNULL::createRenderbuffer(const gl::RenderbufferState &state)
 {
-    return new RenderbufferNULL();
+    return new RenderbufferNULL(state);
 }
 
 BufferImpl *ContextNULL::createBuffer(const gl::BufferState &state)

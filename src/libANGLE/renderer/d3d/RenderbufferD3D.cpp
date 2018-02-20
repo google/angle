@@ -16,8 +16,8 @@
 
 namespace rx
 {
-RenderbufferD3D::RenderbufferD3D(RendererD3D *renderer)
-    : mRenderer(renderer), mRenderTarget(nullptr), mImage(nullptr)
+RenderbufferD3D::RenderbufferD3D(const gl::RenderbufferState &state, RendererD3D *renderer)
+    : RenderbufferImpl(state), mRenderer(renderer), mRenderTarget(nullptr), mImage(nullptr)
 {
 }
 

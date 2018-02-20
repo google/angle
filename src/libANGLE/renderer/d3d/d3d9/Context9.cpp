@@ -77,9 +77,9 @@ TextureImpl *Context9::createTexture(const gl::TextureState &state)
     return nullptr;
 }
 
-RenderbufferImpl *Context9::createRenderbuffer()
+RenderbufferImpl *Context9::createRenderbuffer(const gl::RenderbufferState &state)
 {
-    return new RenderbufferD3D(mRenderer);
+    return new RenderbufferD3D(state, mRenderer);
 }
 
 BufferImpl *Context9::createBuffer(const gl::BufferState &state)

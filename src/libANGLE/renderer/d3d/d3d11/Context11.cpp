@@ -95,9 +95,9 @@ TextureImpl *Context11::createTexture(const gl::TextureState &state)
     return nullptr;
 }
 
-RenderbufferImpl *Context11::createRenderbuffer()
+RenderbufferImpl *Context11::createRenderbuffer(const gl::RenderbufferState &state)
 {
-    return new RenderbufferD3D(mRenderer);
+    return new RenderbufferD3D(state, mRenderer);
 }
 
 BufferImpl *Context11::createBuffer(const gl::BufferState &state)

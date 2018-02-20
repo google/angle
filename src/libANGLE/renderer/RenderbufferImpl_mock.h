@@ -12,6 +12,7 @@
 #include "gmock/gmock.h"
 
 #include "libANGLE/Image.h"
+#include "libANGLE/Renderbuffer.h"
 #include "libANGLE/renderer/RenderbufferImpl.h"
 
 namespace rx
@@ -20,6 +21,7 @@ namespace rx
 class MockRenderbufferImpl : public RenderbufferImpl
 {
   public:
+    MockRenderbufferImpl() : RenderbufferImpl(mMockState) {}
     virtual ~MockRenderbufferImpl() { destructor(); }
     MOCK_METHOD4(setStorage, gl::Error(const gl::Context *, GLenum, size_t, size_t));
     MOCK_METHOD5(setStorageMultisample,
@@ -33,8 +35,11 @@ class MockRenderbufferImpl : public RenderbufferImpl
                            FramebufferAttachmentRenderTarget **));
 
     MOCK_METHOD0(destructor, void());
+
+  protected:
+    gl::RenderbufferState mMockState;
 };
 
-}
+}  // namespace rx
 
 #endif // LIBANGLE_RENDERER_RENDERBUFFERIMPLMOCK_H_

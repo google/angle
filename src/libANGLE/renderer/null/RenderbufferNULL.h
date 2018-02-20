@@ -18,7 +18,7 @@ namespace rx
 class RenderbufferNULL : public RenderbufferImpl
 {
   public:
-    RenderbufferNULL();
+    RenderbufferNULL(const gl::RenderbufferState &state);
     ~RenderbufferNULL() override;
 
     gl::Error setStorage(const gl::Context *context,

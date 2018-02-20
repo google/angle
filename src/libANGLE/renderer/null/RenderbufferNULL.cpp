@@ -14,7 +14,7 @@
 namespace rx
 {
 
-RenderbufferNULL::RenderbufferNULL() : RenderbufferImpl()
+RenderbufferNULL::RenderbufferNULL(const gl::RenderbufferState &state) : RenderbufferImpl(state)
 {
 }
 

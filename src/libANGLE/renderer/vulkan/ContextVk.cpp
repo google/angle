@@ -709,9 +709,9 @@ TextureImpl *ContextVk::createTexture(const gl::TextureState &state)
     return new TextureVk(state);
 }
 
-RenderbufferImpl *ContextVk::createRenderbuffer()
+RenderbufferImpl *ContextVk::createRenderbuffer(const gl::RenderbufferState &state)
 {
-    return new RenderbufferVk();
+    return new RenderbufferVk(state);
 }
 
 BufferImpl *ContextVk::createBuffer(const gl::BufferState &state)

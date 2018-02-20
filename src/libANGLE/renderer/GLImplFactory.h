@@ -62,7 +62,7 @@ class GLImplFactory : angle::NonCopyable
     virtual TextureImpl *createTexture(const gl::TextureState &state) = 0;
 
     // Renderbuffer creation
-    virtual RenderbufferImpl *createRenderbuffer() = 0;
+    virtual RenderbufferImpl *createRenderbuffer(const gl::RenderbufferState &state) = 0;
 
     // Buffer creation
     virtual BufferImpl *createBuffer(const gl::BufferState &state) = 0;

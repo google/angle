@@ -26,7 +26,8 @@ struct WorkaroundsGL;
 class RenderbufferGL : public RenderbufferImpl
 {
   public:
-    RenderbufferGL(const FunctionsGL *functions,
+    RenderbufferGL(const gl::RenderbufferState &state,
+                   const FunctionsGL *functions,
                    const WorkaroundsGL &workarounds,
                    StateManagerGL *stateManager,
                    const gl::TextureCapsMap &textureCaps);

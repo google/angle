@@ -270,7 +270,7 @@ void TextureManager::enableHandleAllocatorLogging()
 // static
 Renderbuffer *RenderbufferManager::AllocateNewObject(rx::GLImplFactory *factory, GLuint handle)
 {
-    Renderbuffer *renderbuffer = new Renderbuffer(factory->createRenderbuffer(), handle);
+    Renderbuffer *renderbuffer = new Renderbuffer(factory, handle);
     renderbuffer->addRef();
     return renderbuffer;
 }

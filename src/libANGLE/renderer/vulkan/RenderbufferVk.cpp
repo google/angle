@@ -16,7 +16,8 @@
 namespace rx
 {
 
-RenderbufferVk::RenderbufferVk() : RenderbufferImpl(), mRequiredSize(0)
+RenderbufferVk::RenderbufferVk(const gl::RenderbufferState &state)
+    : RenderbufferImpl(state), mRequiredSize(0)
 {
 }
 

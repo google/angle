@@ -24,7 +24,7 @@ class SwapChainD3D;
 class RenderbufferD3D : public RenderbufferImpl
 {
   public:
-    RenderbufferD3D(RendererD3D *renderer);
+    RenderbufferD3D(const gl::RenderbufferState &state, RendererD3D *renderer);
     ~RenderbufferD3D() override;
 
     gl::Error onDestroy(const gl::Context *context) override;

@@ -14,10 +14,15 @@
 #include "libANGLE/Error.h"
 #include "libANGLE/renderer/FramebufferAttachmentObjectImpl.h"
 
+namespace gl
+{
+class RenderbufferState;
+}  // namespace gl
+
 namespace egl
 {
 class Image;
-}
+}  // namespace egl
 
 namespace rx
 {
@@ -25,7 +30,7 @@ namespace rx
 class RenderbufferImpl : public FramebufferAttachmentObjectImpl
 {
   public:
-    RenderbufferImpl() {}
+    RenderbufferImpl(const gl::RenderbufferState &state) : mState(state) {}
     ~RenderbufferImpl() override {}
     virtual gl::Error onDestroy(const gl::Context *context);
 
@@ -39,12 +44,15 @@ class RenderbufferImpl : public FramebufferAttachmentObjectImpl
                                             size_t width,
                                             size_t height) = 0;
     virtual gl::Error setStorageEGLImageTarget(const gl::Context *context, egl::Image *image) = 0;
+
+  protected:
+    const gl::RenderbufferState &mState;
 };
 
 inline gl::Error RenderbufferImpl::onDestroy(const gl::Context *context)
 {
     return gl::NoError();
 }
-}
+}  // namespace rx
 
 #endif   // LIBANGLE_RENDERER_RENDERBUFFERIMPL_H_

@@ -169,7 +169,7 @@ class ContextNULL : public ContextImpl
     TextureImpl *createTexture(const gl::TextureState &state) override;
 
     // Renderbuffer creation
-    RenderbufferImpl *createRenderbuffer() override;
+    RenderbufferImpl *createRenderbuffer(const gl::RenderbufferState &state) override;
 
     // Buffer creation
     BufferImpl *createBuffer(const gl::BufferState &state) override;
