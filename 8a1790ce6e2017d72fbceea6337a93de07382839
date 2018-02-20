@@ -1080,6 +1080,30 @@
     },
     {
       "key": {
+        "uuid": "59a6a8ec_03657edb",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 389,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-20T21:47:55Z",
+      "side": 1,
+      "message": "I don\u0027t understand - the destructor already verifies that the graph is empty. Did you want additional verification?",
+      "parentUuid": "4e2eb1da_da9ca32f",
+      "range": {
+        "startLine": 385,
+        "startChar": 4,
+        "endLine": 389,
+        "endChar": 19
+      },
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a21db803_1fab6852",
         "filename": "src/libANGLE/renderer/vulkan/CommandGraph.h",
         "patchSetId": 4
