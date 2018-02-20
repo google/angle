@@ -1104,6 +1104,30 @@
     },
     {
       "key": {
+        "uuid": "1cacc903_78880e03",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 389,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-20T21:51:59Z",
+      "side": 1,
+      "message": "Assuming we can rely on assertion for development time of someone doing something else with that new class, I\u0027m ok with this.",
+      "parentUuid": "59a6a8ec_03657edb",
+      "range": {
+        "startLine": 385,
+        "startChar": 4,
+        "endLine": 389,
+        "endChar": 19
+      },
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a21db803_1fab6852",
         "filename": "src/libANGLE/renderer/vulkan/CommandGraph.h",
         "patchSetId": 4
