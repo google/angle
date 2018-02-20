@@ -22,6 +22,30 @@
       "revId": "0cbfa5866f43b6098a8d963ca9ac6f4a096bf42c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ea07a95c_ee395f2e",
+        "filename": "src/libANGLE/renderer/vulkan/CommandBufferNode.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-20T21:21:14Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "659055bc_4fe7cbb7",
+      "range": {
+        "startLine": 169,
+        "startChar": 0,
+        "endLine": 180,
+        "endChar": 1
+      },
+      "revId": "0cbfa5866f43b6098a8d963ca9ac6f4a096bf42c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
