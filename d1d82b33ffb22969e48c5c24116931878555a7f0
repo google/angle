@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "55117c1a_a3f339b4",
+        "filename": "src/libANGLE/Renderbuffer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-20T15:22:10Z",
+      "side": 1,
+      "message": "Putting methods in cpp files is the safest way to guarantee that you don\u0027t waste developer time recompiling dependent files when you modify a method\u0027s implementation. In this case these methods are not on the hot path, and even if they were, the compiler is pretty good about inlining methods from cpp files.",
+      "parentUuid": "db6bb896_ac66fa1c",
+      "range": {
+        "startLine": 34,
+        "startChar": 0,
+        "endLine": 52,
+        "endChar": 1
+      },
+      "revId": "d1d82b33ffb22969e48c5c24116931878555a7f0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b118e999_a5fec3e0",
         "filename": "src/libANGLE/Renderbuffer.cpp",
         "patchSetId": 4
@@ -45,6 +69,30 @@
       "revId": "d1d82b33ffb22969e48c5c24116931878555a7f0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4ce5578e_80e31570",
+        "filename": "src/libANGLE/Renderbuffer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-20T15:22:10Z",
+      "side": 1,
+      "message": "No, good catch, fixed.",
+      "parentUuid": "b118e999_a5fec3e0",
+      "range": {
+        "startLine": 135,
+        "startChar": 0,
+        "endLine": 139,
+        "endChar": 49
+      },
+      "revId": "d1d82b33ffb22969e48c5c24116931878555a7f0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
