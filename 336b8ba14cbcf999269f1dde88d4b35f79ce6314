@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "37f8caeb_39ba6775",
+        "filename": "src/libANGLE/Renderbuffer.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1262022
+      },
+      "writtenOn": "2018-02-20T15:35:25Z",
+      "side": 1,
+      "message": "nit: If this would be extracted to a private method it would be impossible to make the same mistake again of forgetting one property when copy pasting to another place later on.",
+      "range": {
+        "startLine": 136,
+        "startChar": 4,
+        "endLine": 142,
+        "endChar": 44
+      },
+      "revId": "336b8ba14cbcf999269f1dde88d4b35f79ce6314",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
