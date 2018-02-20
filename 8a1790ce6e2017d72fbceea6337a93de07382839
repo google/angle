@@ -1187,6 +1187,24 @@
     },
     {
       "key": {
+        "uuid": "08d6f5d1_bb7d2c49",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-20T22:17:42Z",
+      "side": 1,
+      "message": "Thanks.. I made this comment a lot more descriptive.",
+      "parentUuid": "20622dbb_020bb1a6",
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "769276a2_e5e37c05",
         "filename": "src/libANGLE/renderer/vulkan/CommandGraph.h",
         "patchSetId": 4
