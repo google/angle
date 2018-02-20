@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "cab11446_5f039927",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-20T21:17:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e691b8e0_99d02ca6",
+      "range": {
+        "startLine": 201,
+        "startChar": 12,
+        "endLine": 201,
+        "endChar": 31
+      },
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b3ba7a88_fd4abdb9",
         "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
         "patchSetId": 4
@@ -60,6 +84,24 @@
     },
     {
       "key": {
+        "uuid": "26ca3ba5_9622bc87",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-20T21:17:50Z",
+      "side": 1,
+      "message": "I\u0027m not sure that\u0027s the only problem with trying to build the command graph multithreaded. In practice for multi-threading, we can support building one CommandGraph per context/per thread. We can\u0027t support building the graph multi-threaded easily. This might be the threading model we choose to support. Going to mark this as resolved. It is good to think about threading implementation.",
+      "parentUuid": "a2974f5d_0b9c3133",
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "67dc1683_fc9c0988",
         "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
         "patchSetId": 4
@@ -80,6 +122,30 @@
       "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "808c1359_6a195e6b",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-20T21:17:50Z",
+      "side": 1,
+      "message": "This I don\u0027t agree with for c++. We should try to minimize the number of different class files to keep our compile time down. See chromium-dev discussion on the \"jumbo builds\" feature.\n\nNote this significantly differs from Java and other bytecode languages.",
+      "parentUuid": "67dc1683_fc9c0988",
+      "range": {
+        "startLine": 56,
+        "startChar": 0,
+        "endLine": 59,
+        "endChar": 1
+      },
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -106,6 +172,30 @@
     },
     {
       "key": {
+        "uuid": "b68e6f0a_4a4eb3ef",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-20T21:17:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "96b11abc_d6ee24a5",
+      "range": {
+        "startLine": 110,
+        "startChar": 3,
+        "endLine": 110,
+        "endChar": 89
+      },
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f5c4397d_d14ee96e",
         "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
         "patchSetId": 4
@@ -117,6 +207,30 @@
       "writtenOn": "2018-02-17T14:56:26Z",
       "side": 1,
       "message": "nit: Only 2 of the 8 attributes differs from the creation in \"startRecording\", can you create a small private static method to do the same with 2 arguments?",
+      "range": {
+        "startLine": 114,
+        "startChar": 4,
+        "endLine": 122,
+        "endChar": 45
+      },
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2c6c119a_28ed753f",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-20T21:17:50Z",
+      "side": 1,
+      "message": "I\u0027m fine with this little bit of code duplication right now. Is that OK with you?",
+      "parentUuid": "f5c4397d_d14ee96e",
       "range": {
         "startLine": 114,
         "startChar": 4,
@@ -152,6 +266,30 @@
     },
     {
       "key": {
+        "uuid": "1fb19353_07446832",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-20T21:17:50Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "60368d7b_629cecb8",
+      "range": {
+        "startLine": 153,
+        "startChar": 3,
+        "endLine": 153,
+        "endChar": 40
+      },
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fbd30fa4_271a8d55",
         "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
         "patchSetId": 4
@@ -175,6 +313,30 @@
     },
     {
       "key": {
+        "uuid": "4a898cff_37ba76e8",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-20T21:17:50Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "fbd30fa4_271a8d55",
+      "range": {
+        "startLine": 161,
+        "startChar": 4,
+        "endLine": 161,
+        "endChar": 40
+      },
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "044924fd_e7d75b69",
         "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
         "patchSetId": 4
@@ -186,6 +348,30 @@
       "writtenOn": "2018-02-17T14:56:26Z",
       "side": 1,
       "message": "Can we hide the resource management as an implementation detail inside the RenderTargetVk class instead? I just saw that RenderTargetVk is a class with public members only, maybe we want to encapsulate it a bit more an make it a bit more opaque?\n\nIf you would have a function like this \"depthStencilRenderTarget-\u003eonWrite\", you could delegate the knowledge of what should happen to this object and hide the resource-\u003eonWriteResource inside of that, perhaps then you can make that resource private inside the render target.\n\nI understand this is a bigger change than this code review is meant to do so maybe we can just create a bug to follow up on this and add the TODO inside the RenderTargetVk if you agree?",
+      "range": {
+        "startLine": 164,
+        "startChar": 3,
+        "endLine": 164,
+        "endChar": 70
+      },
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "61c5a76c_843491ea",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-20T21:17:50Z",
+      "side": 1,
+      "message": "I like keeping RenderTargetVk POD to make sure we never try to make it into a more complex class with virtuals and constructor/destructors. But maybe your suggestion is an improvement. I did not implement this yet.",
+      "parentUuid": "044924fd_e7d75b69",
       "range": {
         "startLine": 164,
         "startChar": 3,
@@ -218,6 +404,30 @@
       "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0330d958_cd9f4199",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-20T21:17:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "abe0896d_3c9e8f02",
+      "range": {
+        "startLine": 167,
+        "startChar": 1,
+        "endLine": 178,
+        "endChar": 1
+      },
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -268,6 +478,30 @@
     },
     {
       "key": {
+        "uuid": "945c8f8c_3c90fde7",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-20T21:17:50Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "1d106242_31971bec",
+      "range": {
+        "startLine": 186,
+        "startChar": 4,
+        "endLine": 186,
+        "endChar": 34
+      },
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a07858bf_794eb871",
         "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
         "patchSetId": 4
@@ -291,6 +525,30 @@
     },
     {
       "key": {
+        "uuid": "bd18a40a_8bc4c0ca",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-20T21:17:50Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "a07858bf_794eb871",
+      "range": {
+        "startLine": 197,
+        "startChar": 3,
+        "endLine": 197,
+        "endChar": 55
+      },
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b239cbf9_51f04c95",
         "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
         "patchSetId": 4
@@ -311,6 +569,30 @@
       "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6f09ff02_85a8a44a",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-20T21:17:50Z",
+      "side": 1,
+      "message": "Good suggestion, done.",
+      "parentUuid": "b239cbf9_51f04c95",
+      "range": {
+        "startLine": 200,
+        "startChar": 7,
+        "endLine": 201,
+        "endChar": 38
+      },
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -361,6 +643,30 @@
     },
     {
       "key": {
+        "uuid": "acd607a9_bb979629",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-20T21:17:50Z",
+      "side": 1,
+      "message": "I\u0027ll read up on topological sort, I\u0027d like to leave out any sorting changes from this CL.",
+      "parentUuid": "22641507_1349dffa",
+      "range": {
+        "startLine": 222,
+        "startChar": 0,
+        "endLine": 244,
+        "endChar": 1
+      },
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "670681a5_8fdeb6a7",
         "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
         "patchSetId": 4
@@ -372,6 +678,24 @@
       "writtenOn": "2018-02-20T15:15:35Z",
       "side": 1,
       "message": "It feels a bit weird that details about the topo sort leak into CommandGraphNode. Could we split this in the following methods and add the logic to CommandGraph?\n\n```\n  public:\n    const ParentList \u0026getParents() const {return mParents;}\n\n  for-CommandGraph-Only (could just be a comment):\n    VisitedState getVisitedState() {return mVisitedState;}\n    void setVisiteState(VisitedState state) {mVisitedState \u003d state;}\n```",
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "531c304b_5f78e5e5",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 255,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-20T21:17:50Z",
+      "side": 1,
+      "message": "For the topological sort, I left the comments unresolved.",
+      "parentUuid": "670681a5_8fdeb6a7",
       "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -401,6 +725,30 @@
     },
     {
       "key": {
+        "uuid": "470dbf5e_04d37076",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 272,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-20T21:17:50Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "66f407d9_538565f7",
+      "range": {
+        "startLine": 272,
+        "startChar": 8,
+        "endLine": 272,
+        "endChar": 65
+      },
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "17045d63_b9535e6c",
         "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
         "patchSetId": 4
@@ -415,6 +763,24 @@
       "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c32f9b7f_c05cb505",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 297,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-20T21:17:50Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "17045d63_b9535e6c",
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -441,6 +807,30 @@
     },
     {
       "key": {
+        "uuid": "c3dc7eab_23516476",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 313,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-20T21:17:50Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "6ee03b9f_fab5f145",
+      "range": {
+        "startLine": 313,
+        "startChar": 4,
+        "endLine": 313,
+        "endChar": 72
+      },
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "037dd1a3_77bd87e9",
         "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
         "patchSetId": 4
@@ -455,6 +845,24 @@
       "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3601f167_81cfb699",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 348,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-20T21:17:50Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "037dd1a3_77bd87e9",
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -478,6 +886,30 @@
       "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "75706327_b253a700",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 384,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-20T21:17:50Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "6319a4f7_e06d6f8c",
+      "range": {
+        "startLine": 384,
+        "startChar": 4,
+        "endLine": 384,
+        "endChar": 87
+      },
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -516,6 +948,30 @@
       "side": 1,
       "message": "The graph is a member of RendererVk so it only gets deleted when the GL context is deleted. But it\u0027s true it\u0027s not clear we want to submit pending commands when the GL backend is destroyed.",
       "parentUuid": "36d08ab3_1820b2ce",
+      "range": {
+        "startLine": 385,
+        "startChar": 4,
+        "endLine": 389,
+        "endChar": 19
+      },
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bc7a71a5_9f979712",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 389,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-20T21:17:50Z",
+      "side": 1,
+      "message": "The graph is flushed in the Context destructor. I don\u0027t quite understand, but does that answer the concern?",
+      "parentUuid": "c467dea1_a5e0d78f",
       "range": {
         "startLine": 385,
         "startChar": 4,
@@ -568,6 +1024,30 @@
     },
     {
       "key": {
+        "uuid": "ea45e23c_f374f0c0",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-20T21:17:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "769276a2_e5e37c05",
+      "range": {
+        "startLine": 43,
+        "startChar": 4,
+        "endLine": 45,
+        "endChar": 54
+      },
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "60f96c14_56e0cc26",
         "filename": "src/libANGLE/renderer/vulkan/CommandGraph.h",
         "patchSetId": 4
@@ -588,6 +1068,30 @@
       "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d85af906_83310e29",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-20T21:17:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "60f96c14_56e0cc26",
+      "range": {
+        "startLine": 47,
+        "startChar": 3,
+        "endLine": 48,
+        "endChar": 86
+      },
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -614,6 +1118,30 @@
     },
     {
       "key": {
+        "uuid": "e96c83c5_18d76079",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-20T21:17:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ff286fc5_ab3f75f2",
+      "range": {
+        "startLine": 50,
+        "startChar": 9,
+        "endLine": 50,
+        "endChar": 28
+      },
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d98b1d51_3037944e",
         "filename": "src/libANGLE/renderer/vulkan/CommandGraph.h",
         "patchSetId": 4
@@ -637,6 +1165,30 @@
     },
     {
       "key": {
+        "uuid": "d54b18db_33165bea",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-20T21:17:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d98b1d51_3037944e",
+      "range": {
+        "startLine": 51,
+        "startChar": 9,
+        "endLine": 51,
+        "endChar": 24
+      },
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e7f4eee7_b6945420",
         "filename": "src/libANGLE/renderer/vulkan/CommandGraph.h",
         "patchSetId": 4
@@ -657,6 +1209,30 @@
       "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a7b657c8_2c8edbdc",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-20T21:17:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e7f4eee7_b6945420",
+      "range": {
+        "startLine": 53,
+        "startChar": 4,
+        "endLine": 57,
+        "endChar": 75
+      },
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -707,6 +1283,30 @@
     },
     {
       "key": {
+        "uuid": "5202c291_e47fb473",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-20T21:17:50Z",
+      "side": 1,
+      "message": "I like having SetHappensBeforeDependency, it makes it very easy to understand when looking at the command that adds the relationship which argument should be where.",
+      "parentUuid": "8bd9eb2f_2c871744",
+      "range": {
+        "startLine": 61,
+        "startChar": 4,
+        "endLine": 65,
+        "endChar": 74
+      },
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c756584c_c2cbb634",
         "filename": "src/libANGLE/renderer/vulkan/CommandGraph.h",
         "patchSetId": 4
@@ -753,6 +1353,30 @@
     },
     {
       "key": {
+        "uuid": "5c5d88f8_fef4081b",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-20T21:17:50Z",
+      "side": 1,
+      "message": "Discussed this, these are just moved TODOs, not new code, so will leave them.",
+      "parentUuid": "113f6eec_06a53db1",
+      "range": {
+        "startLine": 91,
+        "startChar": 4,
+        "endLine": 91,
+        "endChar": 87
+      },
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "321621b2_aaf94a94",
         "filename": "src/libANGLE/renderer/vulkan/CommandGraph.h",
         "patchSetId": 4
@@ -764,6 +1388,30 @@
       "writtenOn": "2018-02-17T14:56:26Z",
       "side": 1,
       "message": "nit: Wouldn\u0027t this comment be better suited where we execute the commands?",
+      "range": {
+        "startLine": 95,
+        "startChar": 4,
+        "endLine": 95,
+        "endChar": 86
+      },
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0deec4d1_f4e60fa1",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-20T21:17:50Z",
+      "side": 1,
+      "message": "It seems helpful to have some explanation of what parents are where they are defined. I\u0027d like to leave this.",
+      "parentUuid": "321621b2_aaf94a94",
       "range": {
         "startLine": 95,
         "startChar": 4,
@@ -799,6 +1447,30 @@
     },
     {
       "key": {
+        "uuid": "a770f036_7fa4f436",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-20T21:17:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dff2660c_49bee596",
+      "range": {
+        "startLine": 117,
+        "startChar": 3,
+        "endLine": 117,
+        "endChar": 37
+      },
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "93e51742_6582b3ec",
         "filename": "src/libANGLE/renderer/vulkan/CommandGraph.h",
         "patchSetId": 4
@@ -822,6 +1494,30 @@
     },
     {
       "key": {
+        "uuid": "fb4f8077_c3ea2a40",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-20T21:17:50Z",
+      "side": 1,
+      "message": "I don\u0027t really care much, but we use \"empty\" everywhere in ANGLE because that mirrors the c++ STL. I wouldn\u0027t be mad if you want to refactor ANGLE to be consistent and use \"isEmpty\" but for now let\u0027s stay consistent, and not fix everything.",
+      "parentUuid": "93e51742_6582b3ec",
+      "range": {
+        "startLine": 123,
+        "startChar": 9,
+        "endLine": 123,
+        "endChar": 14
+      },
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f3150bed_f9feae88",
         "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
         "patchSetId": 4
@@ -842,6 +1538,30 @@
       "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "26ffef93_955c85e3",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-20T21:17:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f3150bed_f9feae88",
+      "range": {
+        "startLine": 186,
+        "startChar": 4,
+        "endLine": 186,
+        "endChar": 72
+      },
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
