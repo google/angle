@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "3dc5dcc3_37cc4d0d",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 490,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-20T21:39:02Z",
+      "side": 1,
+      "message": "I do not agree since mState.getColorAttachment() doesn\u0027t show clearly what type are we talking about here. \n\nThe use of auto according to the style guide should only be done when you see on the right hand side what type you are getting like this for example: \n\nauto something \u003d new Something();",
+      "parentUuid": "ef155814_bd974c15",
+      "range": {
+        "startLine": 490,
+        "startChar": 9,
+        "endLine": 490,
+        "endChar": 48
+      },
+      "revId": "56d2d0545fa4a65cfea2cd58a072339d8089133a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7e569a1b_7a9655cd",
         "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
         "patchSetId": 16
