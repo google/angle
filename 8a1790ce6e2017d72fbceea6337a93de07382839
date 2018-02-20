@@ -1128,6 +1128,30 @@
     },
     {
       "key": {
+        "uuid": "85eb2987_040663ac",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 389,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-20T21:53:59Z",
+      "side": 1,
+      "message": "Thanks. Were there other blocking comments from you or can we mark this CL as approved?",
+      "parentUuid": "1cacc903_78880e03",
+      "range": {
+        "startLine": 385,
+        "startChar": 4,
+        "endLine": 389,
+        "endChar": 19
+      },
+      "revId": "8a1790ce6e2017d72fbceea6337a93de07382839",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a21db803_1fab6852",
         "filename": "src/libANGLE/renderer/vulkan/CommandGraph.h",
         "patchSetId": 4
