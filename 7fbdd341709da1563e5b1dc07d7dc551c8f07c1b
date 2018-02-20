@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fd803f4b_ada4bffa",
+        "filename": "src/compiler/translator/SymbolTable.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1088,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-20T18:45:07Z",
+      "side": 1,
+      "message": "I think we should decide what to do here before proceeding to the table implementation.",
+      "range": {
+        "startLine": 1087,
+        "startChar": 2,
+        "endLine": 1088,
+        "endChar": 28
+      },
+      "revId": "7fbdd341709da1563e5b1dc07d7dc551c8f07c1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
