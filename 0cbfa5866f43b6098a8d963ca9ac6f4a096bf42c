@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "659055bc_4fe7cbb7",
+        "filename": "src/libANGLE/renderer/vulkan/CommandBufferNode.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-20T18:02:35Z",
+      "side": 0,
+      "message": "this should get removed from the header as well. actually, you can leave it out, and i\u0027ll fix it in my other CL to prevent the conflict.",
+      "range": {
+        "startLine": 169,
+        "startChar": 0,
+        "endLine": 180,
+        "endChar": 1
+      },
+      "revId": "0cbfa5866f43b6098a8d963ca9ac6f4a096bf42c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
