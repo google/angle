@@ -46,6 +46,30 @@
       "revId": "7fbdd341709da1563e5b1dc07d7dc551c8f07c1b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e8917622_f811bbc9",
+        "filename": "src/compiler/translator/SymbolTable.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1088,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-20T21:56:41Z",
+      "side": 1,
+      "message": "You could make it a {pointer,count} type array that references other constexpr char arrays of extension names. I looked at your subsequent patches though, and they weren\u0027t quite what I had in mind. Sorry I\u0027ve been busy today, let me take another look and see if I can figure out exactly what I would like to suggest.",
+      "parentUuid": "d113c1a2_f9d9a57c",
+      "range": {
+        "startLine": 1087,
+        "startChar": 2,
+        "endLine": 1088,
+        "endChar": 28
+      },
+      "revId": "7fbdd341709da1563e5b1dc07d7dc551c8f07c1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
