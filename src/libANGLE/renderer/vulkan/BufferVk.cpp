@@ -198,10 +198,10 @@ vk::Error BufferVk::setDataImpl(ContextVk *contextVk,
         stagingBuffer.getDeviceMemory().unmap(device);
 
         // Enqueue a copy command on the GPU.
-        // 'beginWriteOperation' will stop any subsequent rendering from using the old buffer data,
+        // 'beginWriteResource' will stop any subsequent rendering from using the old buffer data,
         // by marking any current read operations / command buffers as 'finished'.
         vk::CommandBuffer *commandBuffer = nullptr;
-        ANGLE_TRY(beginWriteOperation(renderer, &commandBuffer));
+        ANGLE_TRY(beginWriteResource(renderer, &commandBuffer));
 
         // Insert a barrier to ensure reads from the buffer are complete.
         // TODO(jmadill): Insert minimal barriers.

@@ -10,7 +10,7 @@
 #include "libANGLE/renderer/vulkan/vk_utils.h"
 
 #include "libANGLE/Context.h"
-#include "libANGLE/renderer/vulkan/CommandBufferNode.h"
+#include "libANGLE/renderer/vulkan/CommandGraph.h"
 #include "libANGLE/renderer/vulkan/ContextVk.h"
 #include "libANGLE/renderer/vulkan/RenderTargetVk.h"
 #include "libANGLE/renderer/vulkan/RendererVk.h"
@@ -1377,7 +1377,7 @@ VkFrontFace GetFrontFace(GLenum frontFace)
 
 }  // namespace gl_vk
 
-ResourceVk::ResourceVk() : mCurrentWriteOperation(nullptr)
+ResourceVk::ResourceVk() : mCurrentWritingNode(nullptr)
 {
 }
 
@@ -1391,8 +1391,8 @@ void ResourceVk::updateQueueSerial(Serial queueSerial)
 
     if (queueSerial > mStoredQueueSerial)
     {
-        mCurrentWriteOperation = nullptr;
-        mCurrentReadOperations.clear();
+        mCurrentWritingNode = nullptr;
+        mCurrentReadingNodes.clear();
         mStoredQueueSerial = queueSerial;
     }
 }
@@ -1402,61 +1402,61 @@ Serial ResourceVk::getQueueSerial() const
     return mStoredQueueSerial;
 }
 
-bool ResourceVk::hasCurrentWriteOperation(Serial currentSerial) const
+bool ResourceVk::hasCurrentWritingNode(Serial currentSerial) const
 {
-    return (mStoredQueueSerial == currentSerial && mCurrentWriteOperation != nullptr &&
-            !mCurrentWriteOperation->isFinishedRecording());
+    return (mStoredQueueSerial == currentSerial && mCurrentWritingNode != nullptr &&
+            !mCurrentWritingNode->hasChildren());
 }
 
-vk::CommandBufferNode *ResourceVk::getCurrentWriteOperation(Serial currentSerial)
+vk::CommandGraphNode *ResourceVk::getCurrentWritingNode(Serial currentSerial)
 {
     ASSERT(currentSerial == mStoredQueueSerial);
-    return mCurrentWriteOperation;
+    return mCurrentWritingNode;
 }
 
-vk::CommandBufferNode *ResourceVk::getNewWriteNode(RendererVk *renderer)
+vk::CommandGraphNode *ResourceVk::getNewWritingNode(RendererVk *renderer)
 {
-    vk::CommandBufferNode *newCommands = renderer->allocateCommandNode();
+    vk::CommandGraphNode *newCommands = renderer->allocateCommandNode();
     onWriteResource(newCommands, renderer->getCurrentQueueSerial());
     return newCommands;
 }
 
-vk::Error ResourceVk::beginWriteOperation(RendererVk *renderer,
-                                          vk::CommandBuffer **commandBufferOut)
+vk::Error ResourceVk::beginWriteResource(RendererVk *renderer, vk::CommandBuffer **commandBufferOut)
 {
-    vk::CommandBufferNode *commands = getNewWriteNode(renderer);
+    vk::CommandGraphNode *commands = getNewWritingNode(renderer);
 
     VkDevice device = renderer->getDevice();
-    ANGLE_TRY(commands->startRecording(device, renderer->getCommandPool(), commandBufferOut));
+    ANGLE_TRY(commands->beginOutsideRenderPassRecording(device, renderer->getCommandPool(),
+                                                        commandBufferOut));
     return vk::NoError();
 }
 
-void ResourceVk::onWriteResource(vk::CommandBufferNode *writeOperation, Serial serial)
+void ResourceVk::onWriteResource(vk::CommandGraphNode *writingNode, Serial serial)
 {
     updateQueueSerial(serial);
 
     // Make sure any open reads and writes finish before we execute 'newCommands'.
-    if (!mCurrentReadOperations.empty())
+    if (!mCurrentReadingNodes.empty())
     {
-        vk::CommandBufferNode::SetHappensBeforeDependencies(mCurrentReadOperations, writeOperation);
-        mCurrentReadOperations.clear();
+        vk::CommandGraphNode::SetHappensBeforeDependencies(mCurrentReadingNodes, writingNode);
+        mCurrentReadingNodes.clear();
     }
 
-    if (mCurrentWriteOperation && mCurrentWriteOperation != writeOperation)
+    if (mCurrentWritingNode && mCurrentWritingNode != writingNode)
     {
-        vk::CommandBufferNode::SetHappensBeforeDependency(mCurrentWriteOperation, writeOperation);
+        vk::CommandGraphNode::SetHappensBeforeDependency(mCurrentWritingNode, writingNode);
     }
 
-    mCurrentWriteOperation = writeOperation;
+    mCurrentWritingNode = writingNode;
 }
 
-void ResourceVk::onReadResource(vk::CommandBufferNode *readOperation, Serial serial)
+void ResourceVk::onReadResource(vk::CommandGraphNode *readingNode, Serial serial)
 {
-    if (hasCurrentWriteOperation(serial))
+    if (hasCurrentWritingNode(serial))
     {
         // Ensure 'readOperation' happens after the current write commands.
-        vk::CommandBufferNode::SetHappensBeforeDependency(getCurrentWriteOperation(serial),
-                                                          readOperation);
+        vk::CommandGraphNode::SetHappensBeforeDependency(getCurrentWritingNode(serial),
+                                                         readingNode);
         ASSERT(mStoredQueueSerial == serial);
     }
     else
@@ -1465,7 +1465,7 @@ void ResourceVk::onReadResource(vk::CommandBufferNode *readOperation, Serial ser
     }
 
     // Add the read operation to the list of nodes currently reading this resource.
-    mCurrentReadOperations.push_back(readOperation);
+    mCurrentReadingNodes.push_back(readingNode);
 }
 
 }  // namespace rx

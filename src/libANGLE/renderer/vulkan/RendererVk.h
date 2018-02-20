@@ -15,7 +15,7 @@
 
 #include "common/angleutils.h"
 #include "libANGLE/Caps.h"
-#include "libANGLE/renderer/vulkan/vk_cache_utils.h"
+#include "libANGLE/renderer/vulkan/CommandGraph.h"
 #include "libANGLE/renderer/vulkan/vk_format_utils.h"
 
 namespace egl
@@ -113,7 +113,7 @@ class RendererVk : angle::NonCopyable
 
     // This should only be called from ResourceVk.
     // TODO(jmadill): Keep in ContextVk to enable threaded rendering.
-    vk::CommandBufferNode *allocateCommandNode();
+    vk::CommandGraphNode *allocateCommandNode();
 
     const vk::PipelineLayout &getGraphicsPipelineLayout() const;
     const std::vector<vk::DescriptorSetLayout> &getGraphicsDescriptorSetLayouts() const;
@@ -124,15 +124,10 @@ class RendererVk : angle::NonCopyable
   private:
     vk::Error initializeDevice(uint32_t queueFamilyIndex);
     void ensureCapsInitialized() const;
-    void generateCaps(gl::Caps *outCaps,
-                      gl::TextureCapsMap *outTextureCaps,
-                      gl::Extensions *outExtensions,
-                      gl::Limitations *outLimitations) const;
     vk::Error submitFrame(const VkSubmitInfo &submitInfo, vk::CommandBuffer &&commandBatch);
     vk::Error checkInFlightCommands();
     void freeAllInFlightResources();
     vk::Error flushCommandGraph(const gl::Context *context, vk::CommandBuffer *commandBatch);
-    void resetCommandGraph();
     vk::Error initGraphicsPipelineLayout();
 
     mutable bool mCapsInitialized;
@@ -176,7 +171,9 @@ class RendererVk : angle::NonCopyable
 
     RenderPassCache mRenderPassCache;
     PipelineCache mPipelineCache;
-    std::vector<vk::CommandBufferNode *> mOpenCommandGraph;
+
+    // See CommandGraph.h for a desription of the Command Graph.
+    vk::CommandGraph mCommandGraph;
 
     // ANGLE uses a single pipeline layout for all GL programs. It is owned here in the Renderer.
     // See the design doc for an overview of the pipeline layout structure.

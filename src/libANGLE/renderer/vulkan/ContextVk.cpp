@@ -14,7 +14,7 @@
 #include "libANGLE/Context.h"
 #include "libANGLE/Program.h"
 #include "libANGLE/renderer/vulkan/BufferVk.h"
-#include "libANGLE/renderer/vulkan/CommandBufferNode.h"
+#include "libANGLE/renderer/vulkan/CommandGraph.h"
 #include "libANGLE/renderer/vulkan/CompilerVk.h"
 #include "libANGLE/renderer/vulkan/ContextVk.h"
 #include "libANGLE/renderer/vulkan/DeviceVk.h"
@@ -183,15 +183,14 @@ gl::Error ContextVk::setupDraw(const gl::Context *context,
     Serial queueSerial           = mRenderer->getCurrentQueueSerial();
     uint32_t maxAttrib           = programGL->getState().getMaxActiveAttribLocation();
 
-    // TODO(jmadill): Need to link up the TextureVk to the Secondary CB.
-    vk::CommandBufferNode *renderNode = nullptr;
+    vk::CommandGraphNode *renderNode = nullptr;
     ANGLE_TRY(vkFBO->getRenderNode(context, &renderNode));
 
     if (!renderNode->getInsideRenderPassCommands()->valid())
     {
         mVertexArrayDirty = true;
         mTexturesDirty    = true;
-        ANGLE_TRY(renderNode->startRenderPassRecording(mRenderer, commandBuffer));
+        ANGLE_TRY(renderNode->beginInsideRenderPassRecording(mRenderer, commandBuffer));
     }
     else
     {

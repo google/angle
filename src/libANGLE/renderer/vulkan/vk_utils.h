@@ -83,7 +83,7 @@ enum class TextureDimension
 
 namespace vk
 {
-class CommandBufferNode;
+class CommandGraphNode;
 struct Format;
 
 template <typename T>
@@ -693,28 +693,28 @@ class ResourceVk
     Serial getQueueSerial() const;
 
     // Returns true if any tracked read or write nodes match 'currentSerial'.
-    bool hasCurrentWriteOperation(Serial currentSerial) const;
+    bool hasCurrentWritingNode(Serial currentSerial) const;
 
     // Returns the active write node, and asserts 'currentSerial' matches the stored serial.
-    vk::CommandBufferNode *getCurrentWriteOperation(Serial currentSerial);
+    vk::CommandGraphNode *getCurrentWritingNode(Serial currentSerial);
 
     // Allocates a new write node and calls onWriteResource internally.
-    vk::CommandBufferNode *getNewWriteNode(RendererVk *renderer);
+    vk::CommandGraphNode *getNewWritingNode(RendererVk *renderer);
 
     // Allocates a write node via getNewWriteNode and returns a started command buffer.
     // The started command buffer will render outside of a RenderPass.
-    vk::Error beginWriteOperation(RendererVk *renderer, vk::CommandBuffer **commandBufferOut);
+    vk::Error beginWriteResource(RendererVk *renderer, vk::CommandBuffer **commandBufferOut);
 
-    // Called on an operation that will modify this ResourceVk.
-    void onWriteResource(vk::CommandBufferNode *writeOperation, Serial serial);
+    // Sets up dependency relations. 'writingNode' will modify 'this' ResourceVk.
+    void onWriteResource(vk::CommandGraphNode *writingNode, Serial serial);
 
-    // Sets up dependency relations. 'readOperation' has the commands that read from this object.
-    void onReadResource(vk::CommandBufferNode *readOperation, Serial serial);
+    // Sets up dependency relations. 'readingNode' will read from 'this' ResourceVk.
+    void onReadResource(vk::CommandGraphNode *readingNode, Serial serial);
 
   private:
     Serial mStoredQueueSerial;
-    std::vector<vk::CommandBufferNode *> mCurrentReadOperations;
-    vk::CommandBufferNode *mCurrentWriteOperation;
+    std::vector<vk::CommandGraphNode *> mCurrentReadingNodes;
+    vk::CommandGraphNode *mCurrentWritingNode;
 };
 
 }  // namespace rx

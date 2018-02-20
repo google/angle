@@ -18,7 +18,7 @@
 #include "libANGLE/Display.h"
 #include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/renderer_utils.h"
-#include "libANGLE/renderer/vulkan/CommandBufferNode.h"
+#include "libANGLE/renderer/vulkan/CommandGraph.h"
 #include "libANGLE/renderer/vulkan/ContextVk.h"
 #include "libANGLE/renderer/vulkan/DisplayVk.h"
 #include "libANGLE/renderer/vulkan/RenderTargetVk.h"
@@ -146,7 +146,7 @@ gl::Error FramebufferVk::clear(const gl::Context *context, GLbitfield mask)
     RendererVk *renderer = contextVk->getRenderer();
 
     vk::CommandBuffer *commandBuffer = nullptr;
-    ANGLE_TRY(beginWriteOperation(renderer, &commandBuffer));
+    ANGLE_TRY(beginWriteResource(renderer, &commandBuffer));
 
     Serial currentSerial = renderer->getCurrentQueueSerial();
 
@@ -157,7 +157,7 @@ gl::Error FramebufferVk::clear(const gl::Context *context, GLbitfield mask)
             RenderTargetVk *renderTarget = nullptr;
             ANGLE_TRY(colorAttachment.getRenderTarget(context, &renderTarget));
 
-            renderTarget->resource->onWriteResource(getCurrentWriteOperation(currentSerial),
+            renderTarget->resource->onWriteResource(getCurrentWritingNode(currentSerial),
                                                     currentSerial);
 
             renderTarget->image->changeLayoutWithStages(
@@ -262,7 +262,7 @@ gl::Error FramebufferVk::readPixels(const gl::Context *context,
                                 renderTarget->extents, vk::StagingUsage::Read));
 
     vk::CommandBuffer *commandBuffer = nullptr;
-    ANGLE_TRY(beginWriteOperation(renderer, &commandBuffer));
+    ANGLE_TRY(beginWriteResource(renderer, &commandBuffer));
 
     stagingImage.getImage().changeLayoutTop(VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_GENERAL,
                                             commandBuffer);
@@ -467,20 +467,20 @@ gl::Error FramebufferVk::getSamplePosition(size_t index, GLfloat *xy) const
     return gl::InternalError() << "getSamplePosition is unimplemented.";
 }
 
-gl::Error FramebufferVk::getRenderNode(const gl::Context *context, vk::CommandBufferNode **nodeOut)
+gl::Error FramebufferVk::getRenderNode(const gl::Context *context, vk::CommandGraphNode **nodeOut)
 {
     ContextVk *contextVk = vk::GetImpl(context);
     RendererVk *renderer = contextVk->getRenderer();
     Serial currentSerial = renderer->getCurrentQueueSerial();
 
-    if (hasCurrentWriteOperation(currentSerial) && mLastRenderNodeSerial == currentSerial)
+    if (hasCurrentWritingNode(currentSerial) && mLastRenderNodeSerial == currentSerial)
     {
-        *nodeOut = getCurrentWriteOperation(currentSerial);
+        *nodeOut = getCurrentWritingNode(currentSerial);
         ASSERT((*nodeOut)->getInsideRenderPassCommands()->valid());
         return gl::NoError();
     }
 
-    vk::CommandBufferNode *node = getNewWriteNode(renderer);
+    vk::CommandGraphNode *node = getNewWritingNode(renderer);
 
     vk::Framebuffer *framebuffer = nullptr;
     ANGLE_TRY_RESULT(getFramebuffer(context, renderer), framebuffer);

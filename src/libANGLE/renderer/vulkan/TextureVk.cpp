@@ -253,7 +253,7 @@ gl::Error TextureVk::setSubImageImpl(ContextVk *contextVk,
     stagingImage.getDeviceMemory().unmap(device);
 
     vk::CommandBuffer *commandBuffer = nullptr;
-    ANGLE_TRY(beginWriteOperation(renderer, &commandBuffer));
+    ANGLE_TRY(beginWriteResource(renderer, &commandBuffer));
 
     stagingImage.getImage().changeLayoutWithStages(
         VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,

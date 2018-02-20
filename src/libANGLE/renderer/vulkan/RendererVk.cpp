@@ -17,7 +17,7 @@
 #include "common/debug.h"
 #include "common/system_utils.h"
 #include "libANGLE/renderer/driver_utils.h"
-#include "libANGLE/renderer/vulkan/CommandBufferNode.h"
+#include "libANGLE/renderer/vulkan/CommandGraph.h"
 #include "libANGLE/renderer/vulkan/CompilerVk.h"
 #include "libANGLE/renderer/vulkan/FramebufferVk.h"
 #include "libANGLE/renderer/vulkan/GlslangWrapper.h"
@@ -600,7 +600,7 @@ const vk::CommandPool &RendererVk::getCommandPool() const
 
 vk::Error RendererVk::finish(const gl::Context *context)
 {
-    if (!mOpenCommandGraph.empty())
+    if (!mCommandGraph.empty())
     {
         vk::CommandBuffer commandBatch;
         ANGLE_TRY(flushCommandGraph(context, &commandBatch));
@@ -756,86 +756,15 @@ vk::Error RendererVk::getRenderPassWithOps(const vk::RenderPassDesc &desc,
                                                  renderPassOut);
 }
 
-vk::CommandBufferNode *RendererVk::allocateCommandNode()
+vk::CommandGraphNode *RendererVk::allocateCommandNode()
 {
-    // TODO(jmadill): Use a pool allocator for the CPU node allocations.
-    vk::CommandBufferNode *newCommands = new vk::CommandBufferNode();
-    mOpenCommandGraph.emplace_back(newCommands);
-    return newCommands;
+    return mCommandGraph.allocateNode();
 }
 
 vk::Error RendererVk::flushCommandGraph(const gl::Context *context, vk::CommandBuffer *commandBatch)
 {
-    VkCommandBufferAllocateInfo primaryInfo;
-    primaryInfo.sType              = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-    primaryInfo.pNext              = nullptr;
-    primaryInfo.commandPool        = mCommandPool.getHandle();
-    primaryInfo.level              = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-    primaryInfo.commandBufferCount = 1;
-
-    ANGLE_TRY(commandBatch->init(mDevice, primaryInfo));
-
-    if (mOpenCommandGraph.empty())
-    {
-        return vk::NoError();
-    }
-
-    std::vector<vk::CommandBufferNode *> nodeStack;
-
-    VkCommandBufferBeginInfo beginInfo;
-    beginInfo.sType            = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-    beginInfo.pNext            = nullptr;
-    beginInfo.flags            = 0;
-    beginInfo.pInheritanceInfo = nullptr;
-
-    ANGLE_TRY(commandBatch->begin(beginInfo));
-
-    for (vk::CommandBufferNode *topLevelNode : mOpenCommandGraph)
-    {
-        // Only process commands that don't have child commands. The others will be pulled in
-        // automatically. Also skip commands that have already been visited.
-        if (topLevelNode->hasHappensAfterDependencies() ||
-            topLevelNode->visitedState() != vk::VisitedState::Unvisited)
-            continue;
-
-        nodeStack.push_back(topLevelNode);
-
-        while (!nodeStack.empty())
-        {
-            vk::CommandBufferNode *node = nodeStack.back();
-
-            switch (node->visitedState())
-            {
-                case vk::VisitedState::Unvisited:
-                    node->visitDependencies(&nodeStack);
-                    break;
-                case vk::VisitedState::Ready:
-                    ANGLE_TRY(node->visitAndExecute(this, commandBatch));
-                    nodeStack.pop_back();
-                    break;
-                case vk::VisitedState::Visited:
-                    nodeStack.pop_back();
-                    break;
-                default:
-                    UNREACHABLE();
-                    break;
-            }
-        }
-    }
-
-    ANGLE_TRY(commandBatch->end());
-    resetCommandGraph();
-    return vk::NoError();
-}
-
-void RendererVk::resetCommandGraph()
-{
-    // TODO(jmadill): Use pool allocation so we don't need to deallocate command graph.
-    for (vk::CommandBufferNode *node : mOpenCommandGraph)
-    {
-        delete node;
-    }
-    mOpenCommandGraph.clear();
+    return mCommandGraph.submitCommands(mDevice, mCurrentQueueSerial, &mRenderPassCache,
+                                        &mCommandPool, commandBatch);
 }
 
 vk::Error RendererVk::flush(const gl::Context *context,
