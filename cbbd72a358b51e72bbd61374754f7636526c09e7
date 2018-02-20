@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5af24c44_8a2c44a8",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-02-20T22:02:42Z",
+      "side": 1,
+      "message": "nit: make the method const",
+      "revId": "cbbd72a358b51e72bbd61374754f7636526c09e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "92ee45a0_40703eb1",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 499,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-02-20T22:02:42Z",
+      "side": 1,
+      "message": "All you really want to do here is clearAttachmentIndex++.",
+      "range": {
+        "startLine": 499,
+        "startChar": 8,
+        "endLine": 499,
+        "endChar": 67
+      },
+      "revId": "cbbd72a358b51e72bbd61374754f7636526c09e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c902031a_a61b33ad",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 292,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-02-20T22:02:42Z",
+      "side": 1,
+      "message": "Mark method as const.",
+      "range": {
+        "startLine": 292,
+        "startChar": 32,
+        "endLine": 292,
+        "endChar": 33
+      },
+      "revId": "cbbd72a358b51e72bbd61374754f7636526c09e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
