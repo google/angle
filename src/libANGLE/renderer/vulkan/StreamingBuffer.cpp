@@ -17,7 +17,6 @@
 
 namespace rx
 {
-
 StreamingBuffer::StreamingBuffer(VkBufferUsageFlags usage, size_t minSize)
     : mUsage(usage),
       mMinSize(minSize),
@@ -33,7 +32,7 @@ StreamingBuffer::~StreamingBuffer()
 }
 
 gl::Error StreamingBuffer::allocate(ContextVk *context,
-                                    size_t allocationSize,
+                                    size_t sizeInBytes,
                                     uint8_t **ptrOut,
                                     VkBuffer *handleOut,
                                     VkDeviceSize *offsetOut)
@@ -45,7 +44,7 @@ gl::Error StreamingBuffer::allocate(ContextVk *context,
     updateQueueSerial(renderer->getCurrentQueueSerial());
 
     angle::base::CheckedNumeric<size_t> checkedNextWriteOffset = mNextWriteOffset;
-    checkedNextWriteOffset += allocationSize;
+    checkedNextWriteOffset += sizeInBytes;
 
     if (!checkedNextWriteOffset.IsValid() || checkedNextWriteOffset.ValueOrDie() > mSize)
     {
@@ -63,7 +62,7 @@ gl::Error StreamingBuffer::allocate(ContextVk *context,
         createInfo.sType                 = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
         createInfo.pNext                 = nullptr;
         createInfo.flags                 = 0;
-        createInfo.size                  = std::max(allocationSize, mMinSize);
+        createInfo.size                  = std::max(sizeInBytes, mMinSize);
         createInfo.usage                 = mUsage;
         createInfo.sharingMode           = VK_SHARING_MODE_EXCLUSIVE;
         createInfo.queueFamilyIndexCount = 0;
@@ -82,7 +81,7 @@ gl::Error StreamingBuffer::allocate(ContextVk *context,
     ASSERT(mMappedMemory);
     *ptrOut    = mMappedMemory + mNextWriteOffset;
     *offsetOut = mNextWriteOffset;
-    mNextWriteOffset += allocationSize;
+    mNextWriteOffset += sizeInBytes;
 
     return gl::NoError();
 }

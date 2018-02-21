@@ -20,6 +20,9 @@ namespace rx
 
 namespace
 {
+
+constexpr int kLineLoopStreamingBufferMinSize = 1024 * 1024;
+
 GLenum DefaultGLErrorCode(VkResult result)
 {
     switch (result)
@@ -595,6 +598,14 @@ void CommandBuffer::bindIndexBuffer(const vk::Buffer &buffer,
 {
     ASSERT(valid());
     vkCmdBindIndexBuffer(mHandle, buffer.getHandle(), offset, indexType);
+}
+
+void CommandBuffer::bindIndexBuffer(const VkBuffer &buffer,
+                                    VkDeviceSize offset,
+                                    VkIndexType indexType)
+{
+    ASSERT(valid());
+    vkCmdBindIndexBuffer(mHandle, buffer, offset, indexType);
 }
 
 void CommandBuffer::bindDescriptorSets(VkPipelineBindPoint bindPoint,
@@ -1309,6 +1320,73 @@ void GarbageObject::destroy(VkDevice device)
     }
 }
 
+LineLoopHandler::LineLoopHandler()
+    : mStreamingLineLoopIndicesData(
+          new StreamingBuffer(VK_BUFFER_USAGE_INDEX_BUFFER_BIT, kLineLoopStreamingBufferMinSize)),
+      mLineLoopIndexBuffer(VK_NULL_HANDLE),
+      mLineLoopIndexBufferOffset(VK_NULL_HANDLE)
+{
+}
+
+LineLoopHandler::~LineLoopHandler() = default;
+
+gl::Error LineLoopHandler::bindLineLoopIndexBuffer(ContextVk *contextVk,
+                                                   int firstVertex,
+                                                   int count,
+                                                   vk::CommandBuffer **commandBuffer)
+{
+    int lastVertex = firstVertex + count;
+    if (mLineLoopIndexBuffer == VK_NULL_HANDLE || !mLineLoopBufferFirstIndex.valid() ||
+        !mLineLoopBufferLastIndex.valid() || mLineLoopBufferFirstIndex != firstVertex ||
+        mLineLoopBufferLastIndex != lastVertex)
+    {
+        uint32_t *indices = nullptr;
+
+        ANGLE_TRY(mStreamingLineLoopIndicesData->allocate(
+            contextVk, sizeof(uint32_t) * (count + 1), reinterpret_cast<uint8_t **>(&indices),
+            &mLineLoopIndexBuffer, &mLineLoopIndexBufferOffset));
+
+        auto unsignedFirstVertex = static_cast<uint32_t>(firstVertex);
+        for (auto vertexIndex = unsignedFirstVertex; vertexIndex < (count + unsignedFirstVertex);
+             vertexIndex++)
+        {
+            *indices++ = vertexIndex;
+        }
+        *indices = unsignedFirstVertex;
+
+        // Since we are not using the VK_MEMORY_PROPERTY_HOST_COHERENT_BIT flag when creating the
+        // device memory in the StreamingBuffer, we always need to make sure we flush it after
+        // writing.
+        ANGLE_TRY(mStreamingLineLoopIndicesData->flush(contextVk));
+
+        mLineLoopBufferFirstIndex = firstVertex;
+        mLineLoopBufferLastIndex  = lastVertex;
+    }
+
+    (*commandBuffer)
+        ->bindIndexBuffer(mLineLoopIndexBuffer, mLineLoopIndexBufferOffset, VK_INDEX_TYPE_UINT32);
+    return gl::NoError();
+}
+
+void LineLoopHandler::destroy(VkDevice device)
+{
+    mStreamingLineLoopIndicesData->destroy(device);
+}
+
+gl::Error LineLoopHandler::draw(ContextVk *contextVk,
+                                int firstVertex,
+                                int count,
+                                CommandBuffer *commandBuffer)
+{
+    ANGLE_TRY(bindLineLoopIndexBuffer(contextVk, firstVertex, count, &commandBuffer));
+
+    // Our first index is always 0 because that's how we set it up in the
+    // bindLineLoopIndexBuffer.
+    commandBuffer->drawIndexed(count + 1, 1, 0, 0, 0);
+
+    return gl::NoError();
+}
+
 }  // namespace vk
 
 namespace gl_vk
@@ -1330,8 +1408,6 @@ VkPrimitiveTopology GetPrimitiveTopology(GLenum mode)
         case GL_TRIANGLE_STRIP:
             return VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP;
         case GL_LINE_LOOP:
-            // TODO(jmadill): Implement line loop support.
-            UNIMPLEMENTED();
             return VK_PRIMITIVE_TOPOLOGY_LINE_STRIP;
         default:
             UNREACHABLE();

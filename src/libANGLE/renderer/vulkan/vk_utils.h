@@ -55,6 +55,7 @@ class RenderTargetVk;
 class RendererVk;
 class ResourceVk;
 class RenderPassCache;
+class StreamingBuffer;
 
 enum class DrawType
 {
@@ -375,6 +376,7 @@ class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
                            const VkBuffer *buffers,
                            const VkDeviceSize *offsets);
     void bindIndexBuffer(const vk::Buffer &buffer, VkDeviceSize offset, VkIndexType indexType);
+    void bindIndexBuffer(const VkBuffer &buffer, VkDeviceSize offset, VkIndexType indexType);
     void bindDescriptorSets(VkPipelineBindPoint bindPoint,
                             const vk::PipelineLayout &layout,
                             uint32_t firstSet,
@@ -667,6 +669,33 @@ Error AllocateImageMemory(RendererVk *renderer,
                           Image *image,
                           DeviceMemory *deviceMemoryOut,
                           size_t *requiredSizeOut);
+
+// This class responsibility is to bind an indexed buffer needed to support line loops in Vulkan.
+// In the setup phase of drawing, the bindLineLoopIndexBuffer method should be called with the
+// first/last vertex and the current commandBuffer. If the user wants to draw a loop between [v1,
+// v2, v3], we will create an indexed buffer with these indexes: [0, 1, 2, 3, 0] to emulate the
+// loop.
+class LineLoopHandler final : angle::NonCopyable
+{
+  public:
+    LineLoopHandler();
+    ~LineLoopHandler();
+
+    void destroy(VkDevice device);
+
+    gl::Error draw(ContextVk *contextVk, int firstVertex, int count, CommandBuffer *commandBuffer);
+
+  private:
+    gl::Error bindLineLoopIndexBuffer(ContextVk *contextVk,
+                                      int firstVertex,
+                                      int count,
+                                      vk::CommandBuffer **commandBuffer);
+    std::unique_ptr<StreamingBuffer> mStreamingLineLoopIndicesData;
+    VkBuffer mLineLoopIndexBuffer;
+    VkDeviceSize mLineLoopIndexBufferOffset;
+    Optional<int> mLineLoopBufferFirstIndex;
+    Optional<int> mLineLoopBufferLastIndex;
+};
 
 }  // namespace vk
 
