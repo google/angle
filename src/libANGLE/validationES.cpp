@@ -5273,7 +5273,7 @@ bool ValidateReadPixelsBase(Context *context,
         *length = static_cast<GLsizei>(endByte);
     }
 
-    auto getClippedExtent = [](GLint start, GLsizei length, int bufferSize) {
+    auto getClippedExtent = [](GLint start, GLsizei length, int bufferSize, GLsizei *outExtent) {
         angle::CheckedNumeric<int> clippedExtent(length);
         if (start < 0)
         {
@@ -5281,8 +5281,14 @@ bool ValidateReadPixelsBase(Context *context,
             clippedExtent += start;
         }
 
-        const int readExtent = start + length;
-        if (readExtent > bufferSize)
+        angle::CheckedNumeric<int> readExtent = start;
+        readExtent += length;
+        if (!readExtent.IsValid())
+        {
+            return false;
+        }
+
+        if (readExtent.ValueOrDie() > bufferSize)
         {
             // Subtract the region to the right of the read buffer
             clippedExtent -= (readExtent - bufferSize);
@@ -5290,20 +5296,35 @@ bool ValidateReadPixelsBase(Context *context,
 
         if (!clippedExtent.IsValid())
         {
-            return 0;
+            return false;
         }
 
-        return std::max(clippedExtent.ValueOrDie(), 0);
+        *outExtent = std::max(clippedExtent.ValueOrDie(), 0);
+        return true;
     };
+
+    GLsizei writtenColumns = 0;
+    if (!getClippedExtent(x, width, readBuffer->getSize().width, &writtenColumns))
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), IntegerOverflow);
+        return false;
+    }
+
+    GLsizei writtenRows = 0;
+    if (!getClippedExtent(y, height, readBuffer->getSize().height, &writtenRows))
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), IntegerOverflow);
+        return false;
+    }
 
     if (columns != nullptr)
     {
-        *columns = getClippedExtent(x, width, readBuffer->getSize().width);
+        *columns = writtenColumns;
     }
 
     if (rows != nullptr)
     {
-        *rows = getClippedExtent(y, height, readBuffer->getSize().height);
+        *rows = writtenRows;
     }
 
     return true;
