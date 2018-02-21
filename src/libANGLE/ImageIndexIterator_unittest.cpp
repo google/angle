@@ -33,6 +33,7 @@ TEST(ImageIndexTest, Iterator2D)
         ImageIndex nextIndex = iter.next();
 
         EXPECT_EQ(static_cast<GLenum>(GL_TEXTURE_2D), nextIndex.type);
+        EXPECT_EQ(static_cast<GLenum>(GL_TEXTURE_2D), nextIndex.target);
         EXPECT_EQ(mip, nextIndex.mipIndex);
         EXPECT_FALSE(nextIndex.hasLayer());
 
@@ -47,23 +48,22 @@ TEST(ImageIndexTest, Iterator2D)
 
 TEST(ImageIndexTest, IteratorCube)
 {
-    ImageIndexIterator iter = ImageIndexIterator::MakeCube(0, 4);
+    ImageIndexIterator iter = ImageIndexIterator::MakeCube(minMip, maxMip);
 
     ASSERT_GE(0, minMip);
 
     for (GLint mip = minMip; mip < maxMip; mip++)
     {
-        for (GLint layer = 0; layer < 6; layer++)
+        for (GLenum target = FirstCubeMapTextureTarget; target <= LastCubeMapTextureTarget;
+             target++)
         {
             EXPECT_TRUE(iter.hasNext());
             ImageIndex nextIndex = iter.next();
 
-            GLenum cubeTarget = LayerIndexToCubeMapTextureTarget(layer);
-
-            EXPECT_EQ(cubeTarget, nextIndex.type);
+            EXPECT_EQ(static_cast<GLenum>(GL_TEXTURE_CUBE_MAP), nextIndex.type);
+            EXPECT_EQ(target, nextIndex.target);
             EXPECT_EQ(mip, nextIndex.mipIndex);
-            EXPECT_EQ(layer, nextIndex.layerIndex);
-            EXPECT_TRUE(nextIndex.hasLayer());
+            EXPECT_FALSE(nextIndex.hasLayer());
         }
     }
 
@@ -84,6 +84,7 @@ TEST(ImageIndexTest, Iterator3D)
             ImageIndex nextIndex = iter.next();
 
             EXPECT_EQ(static_cast<GLenum>(GL_TEXTURE_3D), nextIndex.type);
+            EXPECT_EQ(static_cast<GLenum>(GL_TEXTURE_3D), nextIndex.target);
             EXPECT_EQ(mip, nextIndex.mipIndex);
             EXPECT_EQ(layer, nextIndex.layerIndex);
             EXPECT_TRUE(nextIndex.hasLayer());
@@ -110,6 +111,7 @@ TEST(ImageIndexTest, Iterator2DArray)
             ImageIndex nextIndex = iter.next();
 
             EXPECT_EQ(static_cast<GLenum>(GL_TEXTURE_2D_ARRAY), nextIndex.type);
+            EXPECT_EQ(static_cast<GLenum>(GL_TEXTURE_2D_ARRAY), nextIndex.target);
             EXPECT_EQ(mip, nextIndex.mipIndex);
             EXPECT_EQ(layer, nextIndex.layerIndex);
             EXPECT_TRUE(nextIndex.hasLayer());

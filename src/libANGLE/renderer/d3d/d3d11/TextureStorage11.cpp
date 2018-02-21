@@ -559,7 +559,7 @@ gl::Error TextureStorage11::updateSubresourceLevel(const gl::Context *context,
 
     // If the zero-LOD workaround is active and we want to update a level greater than zero, then we
     // should update the mipmapped texture, even if mapmaps are currently disabled.
-    if (index.mipIndex > 0 && mRenderer->getWorkarounds().zeroMaxLodWorkaround)
+    if (level > 0 && mRenderer->getWorkarounds().zeroMaxLodWorkaround)
     {
         ANGLE_TRY(getMippedResource(context, &dstTexture));
     }
@@ -1046,7 +1046,6 @@ void TextureStorage11_2D::associateImage(Image11 *image, const gl::ImageIndex &i
     const GLint level = index.mipIndex;
 
     ASSERT(0 <= level && level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS);
-
     if (0 <= level && level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS)
     {
         mAssociatedImages[level] = image;
@@ -1191,7 +1190,7 @@ gl::Error TextureStorage11_2D::getRenderTarget(const gl::Context *context,
 
     if (mRenderer->getWorkarounds().zeroMaxLodWorkaround)
     {
-        ASSERT(index.mipIndex == 0);
+        ASSERT(level == 0);
         ANGLE_TRY(useLevelZeroWorkaroundTexture(context, true));
     }
 
@@ -1908,10 +1907,10 @@ TextureStorage11_Cube::~TextureStorage11_Cube()
 
 UINT TextureStorage11_Cube::getSubresourceIndex(const gl::ImageIndex &index) const
 {
+    UINT arraySlice = index.cubeMapFaceIndex();
     if (mRenderer->getWorkarounds().zeroMaxLodWorkaround && mUseLevelZeroTexture &&
         index.mipIndex == 0)
     {
-        UINT arraySlice  = static_cast<UINT>(index.hasLayer() ? index.layerIndex : 0);
         UINT subresource = D3D11CalcSubresource(0, arraySlice, 1);
         ASSERT(subresource != std::numeric_limits<UINT>::max());
         return subresource;
@@ -1919,7 +1918,6 @@ UINT TextureStorage11_Cube::getSubresourceIndex(const gl::ImageIndex &index) con
     else
     {
         UINT mipSlice    = static_cast<UINT>(index.mipIndex + mTopLevel);
-        UINT arraySlice  = static_cast<UINT>(index.hasLayer() ? index.layerIndex : 0);
         UINT subresource = D3D11CalcSubresource(mipSlice, arraySlice, mMipLevels);
         ASSERT(subresource != std::numeric_limits<UINT>::max());
         return subresource;
@@ -2026,7 +2024,7 @@ gl::Error TextureStorage11_Cube::useLevelZeroWorkaroundTexture(const gl::Context
 void TextureStorage11_Cube::associateImage(Image11 *image, const gl::ImageIndex &index)
 {
     const GLint level       = index.mipIndex;
-    const GLint layerTarget = index.layerIndex;
+    const GLint layerTarget = index.cubeMapFaceIndex();
 
     ASSERT(0 <= level && level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS);
     ASSERT(0 <= layerTarget && layerTarget < static_cast<GLint>(gl::CUBE_FACE_COUNT));
@@ -2044,7 +2042,7 @@ void TextureStorage11_Cube::verifyAssociatedImageValid(const gl::ImageIndex &ind
                                                        Image11 *expectedImage)
 {
     const GLint level       = index.mipIndex;
-    const GLint layerTarget = index.layerIndex;
+    const GLint layerTarget = index.cubeMapFaceIndex();
 
     ASSERT(0 <= level && level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS);
     ASSERT(0 <= layerTarget && layerTarget < static_cast<GLint>(gl::CUBE_FACE_COUNT));
@@ -2057,7 +2055,7 @@ void TextureStorage11_Cube::verifyAssociatedImageValid(const gl::ImageIndex &ind
 void TextureStorage11_Cube::disassociateImage(const gl::ImageIndex &index, Image11 *expectedImage)
 {
     const GLint level       = index.mipIndex;
-    const GLint layerTarget = index.layerIndex;
+    const GLint layerTarget = index.cubeMapFaceIndex();
 
     ASSERT(0 <= level && level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS);
     ASSERT(0 <= layerTarget && layerTarget < static_cast<GLint>(gl::CUBE_FACE_COUNT));
@@ -2072,7 +2070,7 @@ gl::Error TextureStorage11_Cube::releaseAssociatedImage(const gl::Context *conte
                                                         Image11 *incomingImage)
 {
     const GLint level       = index.mipIndex;
-    const GLint layerTarget = index.layerIndex;
+    const GLint layerTarget = index.cubeMapFaceIndex();
 
     ASSERT(0 <= level && level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS);
     ASSERT(0 <= layerTarget && layerTarget < static_cast<GLint>(gl::CUBE_FACE_COUNT));
@@ -2170,7 +2168,7 @@ gl::Error TextureStorage11_Cube::createRenderTargetSRV(const TextureHelper11 &te
     srvDesc.Format                         = resourceFormat;
     srvDesc.Texture2DArray.MostDetailedMip = mTopLevel + index.mipIndex;
     srvDesc.Texture2DArray.MipLevels       = 1;
-    srvDesc.Texture2DArray.FirstArraySlice = index.layerIndex;
+    srvDesc.Texture2DArray.FirstArraySlice = index.cubeMapFaceIndex();
     srvDesc.Texture2DArray.ArraySize       = 1;
 
     if (mRenderer->getRenderer11DeviceCaps().featureLevel <= D3D_FEATURE_LEVEL_10_0)
@@ -2191,7 +2189,7 @@ gl::Error TextureStorage11_Cube::getRenderTarget(const gl::Context *context,
                                                  const gl::ImageIndex &index,
                                                  RenderTargetD3D **outRT)
 {
-    const int faceIndex = index.layerIndex;
+    const int faceIndex = index.cubeMapFaceIndex();
     const int level     = index.mipIndex;
 
     ASSERT(level >= 0 && level < getLevelCount());

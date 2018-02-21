@@ -1553,8 +1553,8 @@ gl::ImageIndex TextureD3D_2D::getImageIndex(GLint mip, GLint /*layer*/) const
 
 bool TextureD3D_2D::isValidIndex(const gl::ImageIndex &index) const
 {
-    return (mTexStorage && index.type == GL_TEXTURE_2D &&
-            index.mipIndex >= 0 && index.mipIndex < mTexStorage->getLevelCount());
+    return (mTexStorage && index.type == GL_TEXTURE_2D && index.mipIndex >= 0 &&
+            index.mipIndex < mTexStorage->getLevelCount());
 }
 
 void TextureD3D_2D::markAllImagesDirty()
@@ -1607,8 +1607,8 @@ ImageD3D *TextureD3D_Cube::getImage(int level, int layer) const
 ImageD3D *TextureD3D_Cube::getImage(const gl::ImageIndex &index) const
 {
     ASSERT(index.mipIndex < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS);
-    ASSERT(index.layerIndex >= 0 && index.layerIndex < 6);
-    return mImageArray[index.layerIndex][index.mipIndex].get();
+    ASSERT(gl::IsCubeMapTextureTarget(index.target));
+    return mImageArray[index.cubeMapFaceIndex()][index.mipIndex].get();
 }
 
 GLsizei TextureD3D_Cube::getLayerCount(int level) const
@@ -1658,7 +1658,7 @@ gl::Error TextureD3D_Cube::setImage(const gl::Context *context,
     const gl::InternalFormat &internalFormatInfo = gl::GetInternalFormatInfo(internalFormat, type);
     gl::ImageIndex index       = gl::ImageIndex::MakeCube(target, static_cast<GLint>(level));
 
-    ANGLE_TRY(redefineImage(context, index.layerIndex, static_cast<GLint>(level),
+    ANGLE_TRY(redefineImage(context, index.cubeMapFaceIndex(), static_cast<GLint>(level),
                             internalFormatInfo.sizedInternalFormat, size, false));
 
     return setImageImpl(context, index, type, unpack, pixels, 0);
@@ -2063,11 +2063,11 @@ gl::Error TextureD3D_Cube::getRenderTarget(const gl::Context *context,
                                            const gl::ImageIndex &index,
                                            RenderTargetD3D **outRT)
 {
-    ASSERT(gl::IsCubeMapTextureTarget(index.type));
+    ASSERT(gl::IsCubeMapTextureTarget(index.target));
 
     // ensure the underlying texture is created
     ANGLE_TRY(ensureRenderTarget(context));
-    ANGLE_TRY(updateStorageFaceLevel(context, index.layerIndex, index.mipIndex));
+    ANGLE_TRY(updateStorageFaceLevel(context, index.cubeMapFaceIndex(), index.mipIndex));
 
     return mTexStorage->getRenderTarget(context, index, outRT);
 }
@@ -2232,7 +2232,7 @@ bool TextureD3D_Cube::isFaceLevelComplete(int faceIndex, int level) const
 
 bool TextureD3D_Cube::isImageComplete(const gl::ImageIndex &index) const
 {
-    return isFaceLevelComplete(index.layerIndex, index.mipIndex);
+    return isFaceLevelComplete(index.cubeMapFaceIndex(), index.mipIndex);
 }
 
 gl::Error TextureD3D_Cube::updateStorageFaceLevel(const gl::Context *context,
@@ -2299,8 +2299,9 @@ gl::ImageIndex TextureD3D_Cube::getImageIndex(GLint mip, GLint layer) const
 
 bool TextureD3D_Cube::isValidIndex(const gl::ImageIndex &index) const
 {
-    return (mTexStorage && gl::IsCubeMapTextureTarget(index.type) &&
-            index.mipIndex >= 0 && index.mipIndex < mTexStorage->getLevelCount());
+    return (mTexStorage && index.type == GL_TEXTURE_CUBE_MAP &&
+            gl::IsCubeMapTextureTarget(index.target) && index.mipIndex >= 0 &&
+            index.mipIndex < mTexStorage->getLevelCount());
 }
 
 void TextureD3D_Cube::markAllImagesDirty()
@@ -2868,8 +2869,8 @@ gl::ImageIndex TextureD3D_3D::getImageIndex(GLint mip, GLint /*layer*/) const
 
 bool TextureD3D_3D::isValidIndex(const gl::ImageIndex &index) const
 {
-    return (mTexStorage && index.type == GL_TEXTURE_3D &&
-            index.mipIndex >= 0 && index.mipIndex < mTexStorage->getLevelCount());
+    return (mTexStorage && index.type == GL_TEXTURE_3D && index.mipIndex >= 0 &&
+            index.mipIndex < mTexStorage->getLevelCount());
 }
 
 void TextureD3D_3D::markAllImagesDirty()

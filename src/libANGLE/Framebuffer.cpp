@@ -151,7 +151,7 @@ bool CheckAttachmentSampleCompleteness(const Context *context,
 
         // ES3.1 (section 9.4) requires that the value of TEXTURE_FIXED_SAMPLE_LOCATIONS should be
         // the same for all attached textures.
-        bool fixedSampleloc = texture->getFixedSampleLocations(attachmentImageIndex.type,
+        bool fixedSampleloc = texture->getFixedSampleLocations(attachmentImageIndex.target,
                                                                attachmentImageIndex.mipIndex);
         if (fixedSampleLocations->valid() && fixedSampleloc != fixedSampleLocations->value())
         {

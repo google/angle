@@ -461,36 +461,13 @@ gl::Error Image9::copyToStorage(const gl::Context *context,
                                 const gl::ImageIndex &index,
                                 const gl::Box &region)
 {
-    gl::Error error = createSurface();
-    if (error.isError())
-    {
-        return error;
-    }
+    ANGLE_TRY(createSurface());
 
     TextureStorage9 *storage9 = GetAs<TextureStorage9>(storage);
-
     IDirect3DSurface9 *destSurface = nullptr;
+    ANGLE_TRY(storage9->getSurfaceLevel(context, index.target, index.mipIndex, true, &destSurface));
 
-    if (index.type == GL_TEXTURE_2D)
-    {
-        error =
-            storage9->getSurfaceLevel(context, GL_TEXTURE_2D, index.mipIndex, true, &destSurface);
-        if (error.isError())
-        {
-            return error;
-        }
-    }
-    else
-    {
-        ASSERT(gl::IsCubeMapTextureTarget(index.type));
-        error = storage9->getSurfaceLevel(context, index.type, index.mipIndex, true, &destSurface);
-        if (error.isError())
-        {
-            return error;
-        }
-    }
-
-    error = copyToSurface(destSurface, region);
+    gl::Error error = copyToSurface(destSurface, region);
     SafeRelease(destSurface);
     return error;
 }
