@@ -183,6 +183,7 @@ static_library("angle_common") {
 
   public_deps = [
     ":commit_id",
+    ":includes",
   ]
   public_configs = [ ":angle_common_config" ]
   all_dependent_configs = [ ":angle_release_asserts_config" ]
