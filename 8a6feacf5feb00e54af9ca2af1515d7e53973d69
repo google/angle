@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b3a54a47_9f660820",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-21T21:17:12Z",
+      "side": 1,
+      "message": "It is weird that mipMin \u003d\u003d mipMax. It looks like the previous code was wrong, but we should replace the range intersection with gl::RangeUI(mostdetailedMip, maxSRVMip).contains(index.mipIndex)",
+      "revId": "8a6feacf5feb00e54af9ca2af1515d7e53973d69",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
