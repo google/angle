@@ -70,6 +70,30 @@
       "revId": "7fbdd341709da1563e5b1dc07d7dc551c8f07c1b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e4deb9fa_e53e0bfb",
+        "filename": "src/compiler/translator/SymbolTable.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1088,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-02-21T08:57:02Z",
+      "side": 1,
+      "message": "The subsequent patches are still work in progress. It should be possible to construct more of the symbol table structures like mapping from mangled names to built-in symbols beforehand.\n\nThe structure I\u0027ve been thinking about now is that there would be a collection of more fine-grained built-in symbol table levels that are built beforehand. They would then be attached to the symbol table here at symbol table init depending on shader type. We could also look into attaching shader version specific symbol table levels dynamically, so that every symbol table lookup would not need to check for shader version.\n\nEach built-in symbol table level could take the form of a script-generated switch statement that has the hash values as its case labels. Lookup would compute the hash value of the symbol once and then go through the symbol table levels looking for a matching symbol.\n\nThis could also accommodate those symbols which have data that needs to be set at runtime. Symbols that are not constexpr could be accessed in the same switch statements as the constexpr symbols. I don\u0027t think that constexpr unordered_map is supported anyway, so either way we have to roll our own solution for constructing the lookup tables before runtime.\n\nDoes this sound good?\n\nEither way it\u0027s good to remove as many conditions as possible from symbol table init before doing any of these changes.",
+      "parentUuid": "e8917622_f811bbc9",
+      "range": {
+        "startLine": 1087,
+        "startChar": 2,
+        "endLine": 1088,
+        "endChar": 28
+      },
+      "revId": "7fbdd341709da1563e5b1dc07d7dc551c8f07c1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
