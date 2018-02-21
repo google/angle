@@ -119,7 +119,7 @@ enum TOperator
     EOpExp2,
     EOpLog2,
     EOpSqrt,
-    EOpInverseSqrt,
+    EOpInversesqrt,
 
     EOpAbs,
     EOpSign,
@@ -136,9 +136,9 @@ enum TOperator
     EOpClamp,
     EOpMix,
     EOpStep,
-    EOpSmoothStep,
-    EOpIsNan,
-    EOpIsInf,
+    EOpSmoothstep,
+    EOpIsnan,
+    EOpIsinf,
 
     EOpFloatBitsToInt,
     EOpFloatBitsToUint,

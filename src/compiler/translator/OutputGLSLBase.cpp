@@ -734,7 +734,7 @@ bool TOutputGLSLBase::visitUnary(Visit visit, TIntermUnary *node)
         case EOpExp2:
         case EOpLog2:
         case EOpSqrt:
-        case EOpInverseSqrt:
+        case EOpInversesqrt:
         case EOpAbs:
         case EOpSign:
         case EOpFloor:
@@ -743,8 +743,8 @@ bool TOutputGLSLBase::visitUnary(Visit visit, TIntermUnary *node)
         case EOpRoundEven:
         case EOpCeil:
         case EOpFract:
-        case EOpIsNan:
-        case EOpIsInf:
+        case EOpIsnan:
+        case EOpIsinf:
         case EOpFloatBitsToInt:
         case EOpFloatBitsToUint:
         case EOpIntBitsToFloat:
@@ -955,7 +955,7 @@ bool TOutputGLSLBase::visitAggregate(Visit visit, TIntermAggregate *node)
         case EOpClamp:
         case EOpMix:
         case EOpStep:
-        case EOpSmoothStep:
+        case EOpSmoothstep:
         case EOpFrexp:
         case EOpLdexp:
         case EOpDistance:

@@ -27,7 +27,7 @@ void InitBuiltInIsnanFunctionEmulatorForHLSLWorkarounds(BuiltInFunctionEmulator 
     TType *float3 = new TType(EbtFloat, 3);
     TType *float4 = new TType(EbtFloat, 4);
 
-    emu->addEmulatedFunction(EOpIsNan, float1,
+    emu->addEmulatedFunction(EOpIsnan, float1,
                              "bool isnan_emu(float x)\n"
                              "{\n"
                              "    return (x > 0.0 || x < 0.0) ? false : x != 0.0;\n"
@@ -35,7 +35,7 @@ void InitBuiltInIsnanFunctionEmulatorForHLSLWorkarounds(BuiltInFunctionEmulator 
                              "\n");
 
     emu->addEmulatedFunction(
-        EOpIsNan, float2,
+        EOpIsnan, float2,
         "bool2 isnan_emu(float2 x)\n"
         "{\n"
         "    bool2 isnan;\n"
@@ -47,7 +47,7 @@ void InitBuiltInIsnanFunctionEmulatorForHLSLWorkarounds(BuiltInFunctionEmulator 
         "}\n");
 
     emu->addEmulatedFunction(
-        EOpIsNan, float3,
+        EOpIsnan, float3,
         "bool3 isnan_emu(float3 x)\n"
         "{\n"
         "    bool3 isnan;\n"
@@ -59,7 +59,7 @@ void InitBuiltInIsnanFunctionEmulatorForHLSLWorkarounds(BuiltInFunctionEmulator 
         "}\n");
 
     emu->addEmulatedFunction(
-        EOpIsNan, float4,
+        EOpIsnan, float4,
         "bool4 isnan_emu(float4 x)\n"
         "{\n"
         "    bool4 isnan;\n"

@@ -38,10 +38,10 @@ void InitBuiltInIsnanFunctionEmulatorForGLSLWorkarounds(BuiltInFunctionEmulator 
 
     // !(x > 0.0 || x < 0.0 || x == 0.0) will be optimized and always equal to false.
     emu->addEmulatedFunction(
-        EOpIsNan, float1,
+        EOpIsnan, float1,
         "bool isnan_emu(float x) { return (x > 0.0 || x < 0.0) ? false : x != 0.0; }");
     emu->addEmulatedFunction(
-        EOpIsNan, float2,
+        EOpIsnan, float2,
         "bvec2 isnan_emu(vec2 x)\n"
         "{\n"
         "    bvec2 isnan;\n"
@@ -52,7 +52,7 @@ void InitBuiltInIsnanFunctionEmulatorForGLSLWorkarounds(BuiltInFunctionEmulator 
         "    return isnan;\n"
         "}\n");
     emu->addEmulatedFunction(
-        EOpIsNan, float3,
+        EOpIsnan, float3,
         "bvec3 isnan_emu(vec3 x)\n"
         "{\n"
         "    bvec3 isnan;\n"
@@ -63,7 +63,7 @@ void InitBuiltInIsnanFunctionEmulatorForGLSLWorkarounds(BuiltInFunctionEmulator 
         "    return isnan;\n"
         "}\n");
     emu->addEmulatedFunction(
-        EOpIsNan, float4,
+        EOpIsnan, float4,
         "bvec4 isnan_emu(vec4 x)\n"
         "{\n"
         "    bvec4 isnan;\n"

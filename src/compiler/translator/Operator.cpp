@@ -151,7 +151,7 @@ const char *GetOperatorString(TOperator op)
             return "log2";
         case EOpSqrt:
             return "sqrt";
-        case EOpInverseSqrt:
+        case EOpInversesqrt:
             return "inversesqrt";
 
         case EOpAbs:
@@ -184,11 +184,11 @@ const char *GetOperatorString(TOperator op)
             return "mix";
         case EOpStep:
             return "step";
-        case EOpSmoothStep:
+        case EOpSmoothstep:
             return "smoothstep";
-        case EOpIsNan:
+        case EOpIsnan:
             return "isnan";
-        case EOpIsInf:
+        case EOpIsinf:
             return "isinf";
 
         case EOpFloatBitsToInt:

@@ -893,7 +893,7 @@ void TSymbolTable::initializeBuiltInFunctions(sh::GLenum type)
     insertBuiltInOp(COMMON_BUILTINS, EOpExp2, genType, genType);
     insertBuiltInOp(COMMON_BUILTINS, EOpLog2, genType, genType);
     insertBuiltInOp(COMMON_BUILTINS, EOpSqrt, genType, genType);
-    insertBuiltInOp(COMMON_BUILTINS, EOpInverseSqrt, genType, genType);
+    insertBuiltInOp(COMMON_BUILTINS, EOpInversesqrt, genType, genType);
 
     //
     // Common Functions.
@@ -933,16 +933,16 @@ void TSymbolTable::initializeBuiltInFunctions(sh::GLenum type)
     insertBuiltInOp(ESSL3_BUILTINS, EOpMix, genType, genType, genType, genBType);
     insertBuiltInOp(COMMON_BUILTINS, EOpStep, genType, genType, genType);
     insertBuiltInOp(COMMON_BUILTINS, EOpStep, genType, float1, genType);
-    insertBuiltInOp(COMMON_BUILTINS, EOpSmoothStep, genType, genType, genType, genType);
-    insertBuiltInOp(COMMON_BUILTINS, EOpSmoothStep, genType, float1, float1, genType);
+    insertBuiltInOp(COMMON_BUILTINS, EOpSmoothstep, genType, genType, genType, genType);
+    insertBuiltInOp(COMMON_BUILTINS, EOpSmoothstep, genType, float1, float1, genType);
 
     const TType *outGenType  = StaticType::GetQualified<EbtGenType, EvqOut>();
     const TType *outGenIType = StaticType::GetQualified<EbtGenIType, EvqOut>();
 
     insertBuiltInOp(ESSL3_BUILTINS, EOpModf, genType, genType, outGenType);
 
-    insertBuiltInOp(ESSL3_BUILTINS, EOpIsNan, genBType, genType);
-    insertBuiltInOp(ESSL3_BUILTINS, EOpIsInf, genBType, genType);
+    insertBuiltInOp(ESSL3_BUILTINS, EOpIsnan, genBType, genType);
+    insertBuiltInOp(ESSL3_BUILTINS, EOpIsinf, genBType, genType);
     insertBuiltInOp(ESSL3_BUILTINS, EOpFloatBitsToInt, genIType, genType);
     insertBuiltInOp(ESSL3_BUILTINS, EOpFloatBitsToUint, genUType, genType);
     insertBuiltInOp(ESSL3_BUILTINS, EOpIntBitsToFloat, genType, genIType);

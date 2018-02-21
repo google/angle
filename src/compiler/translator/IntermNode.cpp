@@ -151,7 +151,7 @@ bool CanFoldAggregateBuiltInOp(TOperator op)
         case EOpClamp:
         case EOpMix:
         case EOpStep:
-        case EOpSmoothStep:
+        case EOpSmoothstep:
         case EOpLdexp:
         case EOpMulMatrixComponentWise:
         case EOpOuterProduct:
@@ -1021,8 +1021,8 @@ void TIntermUnary::promote()
                           static_cast<unsigned char>(mOperand->getType().getRows()),
                           static_cast<unsigned char>(mOperand->getType().getCols())));
             break;
-        case EOpIsInf:
-        case EOpIsNan:
+        case EOpIsinf:
+        case EOpIsnan:
             setType(TType(EbtBool, EbpUndefined, resultQualifier, operandPrimarySize));
             break;
         case EOpBitfieldReverse:
@@ -2537,12 +2537,12 @@ TConstantUnion *TIntermConstantUnion::foldUnaryComponentWise(TOperator op,
                 break;
             }
 
-            case EOpIsNan:
+            case EOpIsnan:
                 ASSERT(getType().getBasicType() == EbtFloat);
                 resultArray[i].setBConst(gl::isNaN(operandArray[0].getFConst()));
                 break;
 
-            case EOpIsInf:
+            case EOpIsinf:
                 ASSERT(getType().getBasicType() == EbtFloat);
                 resultArray[i].setBConst(gl::isInf(operandArray[0].getFConst()));
                 break;
@@ -2607,7 +2607,7 @@ TConstantUnion *TIntermConstantUnion::foldUnaryComponentWise(TOperator op,
                     foldFloatTypeUnary(operandArray[i], &sqrtf, &resultArray[i]);
                 break;
 
-            case EOpInverseSqrt:
+            case EOpInversesqrt:
                 // There is no stdlib built-in function equavalent for GLES built-in inversesqrt(),
                 // so getting the square root first using builtin function sqrt() and then taking
                 // its inverse.
@@ -3230,7 +3230,7 @@ TConstantUnion *TIntermConstantUnion::FoldAggregateBuiltIn(TIntermAggregate *agg
             break;
         }
 
-        case EOpSmoothStep:
+        case EOpSmoothstep:
         {
             ASSERT(basicType == EbtFloat);
             resultArray = new TConstantUnion[maxObjectSize];

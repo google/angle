@@ -1519,7 +1519,7 @@ bool OutputHLSL::visitUnary(Visit visit, TIntermUnary *node)
         case EOpSqrt:
             outputTriplet(out, visit, "sqrt(", "", ")");
             break;
-        case EOpInverseSqrt:
+        case EOpInversesqrt:
             outputTriplet(out, visit, "rsqrt(", "", ")");
             break;
         case EOpAbs:
@@ -1547,14 +1547,14 @@ bool OutputHLSL::visitUnary(Visit visit, TIntermUnary *node)
         case EOpFract:
             outputTriplet(out, visit, "frac(", "", ")");
             break;
-        case EOpIsNan:
+        case EOpIsnan:
             if (node->getUseEmulatedFunction())
                 writeEmulatedFunctionTriplet(out, visit, node->getOp());
             else
                 outputTriplet(out, visit, "isnan(", "", ")");
             mRequiresIEEEStrictCompiling = true;
             break;
-        case EOpIsInf:
+        case EOpIsinf:
             outputTriplet(out, visit, "isinf(", "", ")");
             break;
         case EOpFloatBitsToInt:
@@ -2085,7 +2085,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
         case EOpStep:
             outputTriplet(out, visit, "step(", ", ", ")");
             break;
-        case EOpSmoothStep:
+        case EOpSmoothstep:
             outputTriplet(out, visit, "smoothstep(", ", ", ")");
             break;
         case EOpFrexp:
