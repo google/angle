@@ -39,6 +39,30 @@
       "revId": "5ddd23e850e8ce38a2c63b6a3357ee5546e55e63",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7fc02afe_5b7f8056",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 406,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-22T16:57:15Z",
+      "side": 1,
+      "message": "i think the second case you mean GL_GEOMETRY_SHADER. I like this suggestion.",
+      "parentUuid": "2ad82d65_f2c107cb",
+      "range": {
+        "startLine": 380,
+        "startChar": 4,
+        "endLine": 406,
+        "endChar": 5
+      },
+      "revId": "5ddd23e850e8ce38a2c63b6a3357ee5546e55e63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
