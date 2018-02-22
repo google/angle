@@ -1431,13 +1431,6 @@ bool ValidateDispatchComputeIndirect(Context *context, GLintptr indirect)
         return false;
     }
 
-    gl::Buffer *dispatchIndirectBuffer = state.getTargetBuffer(BufferBinding::DispatchIndirect);
-    if (!dispatchIndirectBuffer)
-    {
-        ANGLE_VALIDATION_ERR(context, InvalidOperation(), DispatchIndirectBufferNotBound);
-        return false;
-    }
-
     if (indirect < 0)
     {
         ANGLE_VALIDATION_ERR(context, InvalidValue(), NegativeOffset);
@@ -1446,7 +1439,14 @@ bool ValidateDispatchComputeIndirect(Context *context, GLintptr indirect)
 
     if ((indirect & (sizeof(GLuint) - 1)) != 0)
     {
-        ANGLE_VALIDATION_ERR(context, InvalidOperation(), OffsetMustBeMultipleOfUint);
+        ANGLE_VALIDATION_ERR(context, InvalidValue(), OffsetMustBeMultipleOfUint);
+        return false;
+    }
+
+    gl::Buffer *dispatchIndirectBuffer = state.getTargetBuffer(BufferBinding::DispatchIndirect);
+    if (!dispatchIndirectBuffer)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), DispatchIndirectBufferNotBound);
         return false;
     }
 
