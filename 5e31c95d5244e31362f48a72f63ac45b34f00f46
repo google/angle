@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "2b1dae88_1bb4bbb5",
+        "filename": "src/libANGLE/RefCountObject.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2018-02-22T06:11:18Z",
+      "side": 1,
+      "message": "Jamie\u0027s comments might obviate these -- but I wonder whether changing this core method of RefCountObject to be virtual may impact performance, especially of some customer use cases doing lots of draw calls with state changes in between, like binding other buffers or VAOs. If we were going to go this route then it would be good to do before-and-after tests with some of this customer\u0027s traces and other ANGLE performance tests.",
+      "revId": "5e31c95d5244e31362f48a72f63ac45b34f00f46",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "7e88b5d7_d2383d35",
         "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
         "patchSetId": 8
