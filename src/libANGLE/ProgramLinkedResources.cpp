@@ -158,7 +158,7 @@ LinkMismatchError UniformLinker::LinkValidateUniforms(const sh::Uniform &uniform
 #endif
 
     LinkMismatchError linkError = Program::LinkValidateVariablesBase(
-        uniform1, uniform2, validatePrecision, mismatchedStructFieldName);
+        uniform1, uniform2, validatePrecision, true, mismatchedStructFieldName);
     if (linkError != LinkMismatchError::NO_MISMATCH)
     {
         return linkError;

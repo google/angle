@@ -1645,10 +1645,6 @@
 1941 OPENGL D3D11 : dEQP-GLES31.functional.geometry_shading.instanced.invocation_output_* = FAIL
 1941 OPENGL D3D11 : dEQP-GLES31.functional.geometry_shading.instanced.draw_* = FAIL
 1941 OPENGL D3D11 : dEQP-GLES31.functional.geometry_shading.negative.* = FAIL
-1941 OPENGL D3D11 : dEQP-GLES31.functional.shaders.linkage.es31.geometry.varying.rules.input_* = FAIL
-1941 OPENGL D3D11 : dEQP-GLES31.functional.shaders.linkage.es31.geometry.varying.rules.output_* = FAIL
-1941 OPENGL D3D11 : dEQP-GLES31.functional.shaders.linkage.es31.geometry.varying.types.* = FAIL
-1941 OPENGL D3D11 : dEQP-GLES31.functional.shaders.linkage.es31.geometry.varying.qualifiers.* = FAIL
 1941 OPENGL D3D11 : dEQP-GLES31.functional.shaders.linkage.es31.geometry.uniform.* = FAIL
 
 2324 DEBUG RELEASE : dEQP-GLES31.functional.debug.negative_coverage.callbacks.compute.program_not_active = FAIL

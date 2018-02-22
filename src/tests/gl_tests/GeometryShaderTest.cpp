@@ -268,6 +268,54 @@ TEST_P(GeometryShaderTest, LinkValidationOnGeometryShaderLayouts)
     ASSERT_GL_NO_ERROR();
 }
 
+// Verify that an link error occurs when the vertex shader has an array output and there is a
+// geometry shader in the program.
+TEST_P(GeometryShaderTest, VertexShaderArrayOutput)
+{
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_geometry_shader"));
+
+    const std::string &vertexShader =
+        R"(#version 310 es
+        in vec4 vertex_in;
+        out vec4 vertex_out[3];
+        void main()
+        {
+            gl_Position = vertex_in;
+            vertex_out[0] = vec4(1.0, 0.0, 0.0, 1.0);
+            vertex_out[1] = vec4(0.0, 1.0, 0.0, 1.0);
+            vertex_out[2] = vec4(0.0, 0.0, 1.0, 1.0);
+        })";
+
+    const std::string &geometryShader =
+        R"(#version 310 es
+        #extension GL_EXT_geometry_shader : require
+        layout (invocations = 3, triangles) in;
+        layout (points, max_vertices = 3) out;
+        in vec4 vertex_out[];
+        out vec4 geometry_color;
+        void main()
+        {
+            gl_Position = gl_in[0].gl_Position;
+            geometry_color = vertex_out[0];
+            EmitVertex();
+        })";
+
+    const std::string &fragmentShader =
+        R"(#version 310 es
+        precision mediump float;
+        in vec4 geometry_color;
+        layout (location = 0) out vec4 output_color;
+        void main()
+        {
+            output_color = geometry_color;
+        })";
+
+    GLuint program = CompileProgramWithGS(vertexShader, geometryShader, fragmentShader);
+    EXPECT_EQ(0u, program);
+
+    EXPECT_GL_NO_ERROR();
+}
+
 ANGLE_INSTANTIATE_TEST(GeometryShaderTestES3, ES3_OPENGL(), ES3_OPENGLES(), ES3_D3D11());
 ANGLE_INSTANTIATE_TEST(GeometryShaderTest, ES31_OPENGL(), ES31_OPENGLES(), ES31_D3D11());
 }

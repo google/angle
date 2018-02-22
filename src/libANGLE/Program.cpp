@@ -2217,16 +2217,51 @@ const TransformFeedbackVarying &Program::getTransformFeedbackVaryingResource(GLu
 
 bool Program::linkVaryings(const Context *context, InfoLog &infoLog) const
 {
-    Shader *generatingShader = mState.mAttachedVertexShader;
-    Shader *consumingShader  = mState.mAttachedFragmentShader;
+    std::vector<Shader *> activeShaders;
+    activeShaders.push_back(mState.mAttachedVertexShader);
+    if (mState.mAttachedGeometryShader)
+    {
+        activeShaders.push_back(mState.mAttachedGeometryShader);
+    }
+    activeShaders.push_back(mState.mAttachedFragmentShader);
 
+    const size_t activeShaderCount = activeShaders.size();
+    for (size_t shaderIndex = 0; shaderIndex < activeShaderCount - 1; ++shaderIndex)
+    {
+        if (!linkValidateShaderInterfaceMatching(context, activeShaders[shaderIndex],
+                                                 activeShaders[shaderIndex + 1], infoLog))
+        {
+            return false;
+        }
+    }
+
+    if (!linkValidateBuiltInVaryings(context, infoLog))
+    {
+        return false;
+    }
+
+    if (!linkValidateFragmentInputBindings(context, infoLog))
+    {
+        return false;
+    }
+
+    return true;
+}
+
+// [OpenGL ES 3.1] Chapter 7.4.1 "Shader Interface Matchining" Page 91
+// TODO(jiawei.shao@intel.com): add validation on input/output blocks matching
+bool Program::linkValidateShaderInterfaceMatching(const Context *context,
+                                                  gl::Shader *generatingShader,
+                                                  gl::Shader *consumingShader,
+                                                  gl::InfoLog &infoLog) const
+{
     ASSERT(generatingShader->getShaderVersion(context) ==
            consumingShader->getShaderVersion(context));
 
     const std::vector<sh::Varying> &outputVaryings = generatingShader->getOutputVaryings(context);
     const std::vector<sh::Varying> &inputVaryings  = consumingShader->getInputVaryings(context);
 
-    std::map<GLuint, std::string> staticFragmentInputLocations;
+    bool validateGeometryShaderInputs = consumingShader->getType() == GL_GEOMETRY_SHADER_EXT;
 
     for (const sh::Varying &input : inputVaryings)
     {
@@ -2247,7 +2282,7 @@ bool Program::linkVaryings(const Context *context, InfoLog &infoLog) const
                 std::string mismatchedStructFieldName;
                 LinkMismatchError linkError =
                     LinkValidateVaryings(output, input, generatingShader->getShaderVersion(context),
-                                         &mismatchedStructFieldName);
+                                         validateGeometryShaderInputs, &mismatchedStructFieldName);
                 if (linkError != LinkMismatchError::NO_MISMATCH)
                 {
                     LogLinkMismatch(infoLog, input.name, "varying", linkError,
@@ -2269,13 +2304,27 @@ bool Program::linkVaryings(const Context *context, InfoLog &infoLog) const
                     << " varying";
             return false;
         }
+    }
 
-        // Check for aliased path rendering input bindings (if any).
-        // If more than one binding refer statically to the same
-        // location the link must fail.
+    // TODO(jmadill): verify no unmatched output varyings?
 
-        if (!input.staticUse)
+    return true;
+}
+
+bool Program::linkValidateFragmentInputBindings(const Context *context, gl::InfoLog &infoLog) const
+{
+    ASSERT(mState.mAttachedFragmentShader);
+
+    std::map<GLuint, std::string> staticFragmentInputLocations;
+
+    const std::vector<sh::Varying> &fragmentInputVaryings =
+        mState.mAttachedFragmentShader->getInputVaryings(context);
+    for (const sh::Varying &input : fragmentInputVaryings)
+    {
+        if (input.isBuiltIn() || !input.staticUse)
+        {
             continue;
+        }
 
         const auto inputBinding = mFragmentInputBindings.getBinding(input.name);
         if (inputBinding == -1)
@@ -2293,13 +2342,6 @@ bool Program::linkVaryings(const Context *context, InfoLog &infoLog) const
             return false;
         }
     }
-
-    if (!linkValidateBuiltInVaryings(context, infoLog))
-    {
-        return false;
-    }
-
-    // TODO(jmadill): verify no unmatched output varyings?
 
     return true;
 }
@@ -2442,7 +2484,7 @@ LinkMismatchError Program::LinkValidateInterfaceBlockFields(
 
     // If webgl, validate precision of UBO fields, otherwise don't.  See Khronos bug 10287.
     LinkMismatchError linkError = LinkValidateVariablesBase(
-        blockField1, blockField2, webglCompatibility, mismatchedBlockFieldName);
+        blockField1, blockField2, webglCompatibility, true, mismatchedBlockFieldName);
     if (linkError != LinkMismatchError::NO_MISMATCH)
     {
         AddParentPrefix(blockField1.name, mismatchedBlockFieldName);
@@ -2778,13 +2820,14 @@ LinkMismatchError Program::AreMatchingInterfaceBlocks(const sh::InterfaceBlock &
 LinkMismatchError Program::LinkValidateVariablesBase(const sh::ShaderVariable &variable1,
                                                      const sh::ShaderVariable &variable2,
                                                      bool validatePrecision,
+                                                     bool validateArraySize,
                                                      std::string *mismatchedStructOrBlockMemberName)
 {
     if (variable1.type != variable2.type)
     {
         return LinkMismatchError::TYPE_MISMATCH;
     }
-    if (variable1.arraySizes != variable2.arraySizes)
+    if (validateArraySize && variable1.arraySizes != variable2.arraySizes)
     {
         return LinkMismatchError::ARRAY_SIZE_MISMATCH;
     }
@@ -2813,7 +2856,7 @@ LinkMismatchError Program::LinkValidateVariablesBase(const sh::ShaderVariable &v
         }
 
         LinkMismatchError linkErrorOnField = LinkValidateVariablesBase(
-            member1, member2, validatePrecision, mismatchedStructOrBlockMemberName);
+            member1, member2, validatePrecision, true, mismatchedStructOrBlockMemberName);
         if (linkErrorOnField != LinkMismatchError::NO_MISMATCH)
         {
             AddParentPrefix(member1.name, mismatchedStructOrBlockMemberName);
@@ -2827,10 +2870,34 @@ LinkMismatchError Program::LinkValidateVariablesBase(const sh::ShaderVariable &v
 LinkMismatchError Program::LinkValidateVaryings(const sh::Varying &outputVarying,
                                                 const sh::Varying &inputVarying,
                                                 int shaderVersion,
+                                                bool validateGeometryShaderInputVarying,
                                                 std::string *mismatchedStructFieldName)
 {
+    if (validateGeometryShaderInputVarying)
+    {
+        // [GL_EXT_geometry_shader] Section 11.1gs.4.3:
+        // The OpenGL ES Shading Language doesn't support multi-dimensional arrays as shader inputs
+        // or outputs.
+        ASSERT(inputVarying.arraySizes.size() == 1u);
+
+        // Geometry shader input varyings are not treated as arrays, so a vertex array output
+        // varying cannot match a geometry shader input varying.
+        // [GL_EXT_geometry_shader] Section 7.4.1:
+        // Geometry shader per-vertex input variables and blocks are required to be declared as
+        // arrays, with each element representing input or output values for a single vertex of a
+        // multi-vertex primitive. For the purposes of interface matching, such variables and blocks
+        // are treated as though they were not declared as arrays.
+        if (outputVarying.isArray())
+        {
+            return LinkMismatchError::ARRAY_SIZE_MISMATCH;
+        }
+    }
+
+    // Skip the validation on the array sizes between a vertex output varying and a geometry input
+    // varying as it has been done before.
     LinkMismatchError linkError =
-        LinkValidateVariablesBase(outputVarying, inputVarying, false, mismatchedStructFieldName);
+        LinkValidateVariablesBase(outputVarying, inputVarying, false,
+                                  !validateGeometryShaderInputVarying, mismatchedStructFieldName);
     if (linkError != LinkMismatchError::NO_MISMATCH)
     {
         return linkError;

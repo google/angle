@@ -666,6 +666,7 @@ class Program final : angle::NonCopyable, public LabeledObject
         const sh::ShaderVariable &variable1,
         const sh::ShaderVariable &variable2,
         bool validatePrecision,
+        bool validateArraySize,
         std::string *mismatchedStructOrBlockMemberName);
 
     GLuint getInputResourceIndex(const GLchar *name) const;
@@ -724,7 +725,18 @@ class Program final : angle::NonCopyable, public LabeledObject
     static LinkMismatchError LinkValidateVaryings(const sh::Varying &outputVarying,
                                                   const sh::Varying &inputVarying,
                                                   int shaderVersion,
+                                                  bool validateGeometryShaderInputVarying,
                                                   std::string *mismatchedStructFieldName);
+
+    bool linkValidateShaderInterfaceMatching(const Context *context,
+                                             Shader *generatingShader,
+                                             Shader *consumingShader,
+                                             InfoLog &infoLog) const;
+
+    // Check for aliased path rendering input bindings (if any).
+    // If more than one binding refer statically to the same location the link must fail.
+    bool linkValidateFragmentInputBindings(const Context *context, InfoLog &infoLog) const;
+
     bool linkValidateBuiltInVaryings(const Context *context, InfoLog &infoLog) const;
     bool linkValidateTransformFeedback(const gl::Context *context,
                                        InfoLog &infoLog,
