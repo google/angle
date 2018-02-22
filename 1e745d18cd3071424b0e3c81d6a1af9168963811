@@ -378,6 +378,30 @@
     },
     {
       "key": {
+        "uuid": "9f5e9e01_a6a3e2d4",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 379,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-22T18:10:55Z",
+      "side": 1,
+      "message": "After working on this together, we realized this is not as trivial as it sounds. We will keep using VkBuffer here for now.",
+      "parentUuid": "e24cf647_fb4dd378",
+      "range": {
+        "startLine": 379,
+        "startChar": 31,
+        "endLine": 379,
+        "endChar": 40
+      },
+      "revId": "1e745d18cd3071424b0e3c81d6a1af9168963811",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "46b882c7_48a8a245",
         "filename": "src/libANGLE/renderer/vulkan/vk_utils.h",
         "patchSetId": 3
