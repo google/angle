@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "a290bc2a_9978d3b5",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 3288,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-02-22T17:21:00Z",
+      "side": 1,
+      "message": "Maybe \"setFunctionParameterNamesFromDefinition()\" which is slightly shorter - user-defined is implied? The function name predates this patch though.",
+      "parentUuid": "a4502c35_7684403b",
+      "range": {
+        "startLine": 3288,
+        "startChar": 20,
+        "endLine": 3288,
+        "endChar": 70
+      },
+      "revId": "fb6ee0e335568d469c56673cab3c52674a78ad2b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "43d114c8_76f55daf",
         "filename": "src/compiler/translator/SymbolTable.cpp",
         "patchSetId": 3
@@ -36,6 +60,30 @@
       "writtenOn": "2018-02-22T16:37:52Z",
       "side": 1,
       "message": "how about you pick one of the two, and then ASSERT here that either both are enabled or neither are? (here you picked samplerExternalOES)",
+      "range": {
+        "startLine": 1103,
+        "startChar": 4,
+        "endLine": 1103,
+        "endChar": 63
+      },
+      "revId": "fb6ee0e335568d469c56673cab3c52674a78ad2b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "44c6f5dc_4127ac96",
+        "filename": "src/compiler/translator/SymbolTable.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1103,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-02-22T17:21:00Z",
+      "side": 1,
+      "message": "That would make it possible to have the symbols as constexpr, but still requires a condition for adding these to the symbol table. I\u0027d prefer going with the current solution. \"samplerExternalOES\" is the parameter type, don\u0027t know if that\u0027s creating confusion here.",
+      "parentUuid": "43d114c8_76f55daf",
       "range": {
         "startLine": 1103,
         "startChar": 4,
