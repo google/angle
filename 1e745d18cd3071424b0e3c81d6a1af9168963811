@@ -1,0 +1,257 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f3ee9a40_a98b03b3",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-22T15:10:30Z",
+      "side": 1,
+      "message": "I think you should make this method \"ensureLineLoopHandlerInitialized\", call mLineLoopHandler.init(), and return vk::Error, instead of the pointer.",
+      "range": {
+        "startLine": 138,
+        "startChar": 0,
+        "endLine": 147,
+        "endChar": 0
+      },
+      "revId": "1e745d18cd3071424b0e3c81d6a1af9168963811",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dbeb054c_ae184334",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 262,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-22T15:10:30Z",
+      "side": 1,
+      "message": "can we do this inside the line loop helper class?",
+      "range": {
+        "startLine": 256,
+        "startChar": 0,
+        "endLine": 262,
+        "endChar": 5
+      },
+      "revId": "1e745d18cd3071424b0e3c81d6a1af9168963811",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b2f402bc_2fd94a9b",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 294,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-22T15:10:30Z",
+      "side": 1,
+      "message": "can we merge the above into the helper method here?",
+      "range": {
+        "startLine": 294,
+        "startChar": 8,
+        "endLine": 294,
+        "endChar": 57
+      },
+      "revId": "1e745d18cd3071424b0e3c81d6a1af9168963811",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "45fb8a61_c94d31aa",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-22T15:10:30Z",
+      "side": 1,
+      "message": "could we use the pattern the other vk:: objects have? Store this object by-value, and use init(), destroy() and valid() methods?",
+      "range": {
+        "startLine": 197,
+        "startChar": 4,
+        "endLine": 197,
+        "endChar": 42
+      },
+      "revId": "1e745d18cd3071424b0e3c81d6a1af9168963811",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9f334359_1d4e4f1b",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1338,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-22T15:10:30Z",
+      "side": 1,
+      "message": "maybe a good case for using angle::Optional",
+      "range": {
+        "startLine": 1338,
+        "startChar": 22,
+        "endLine": 1338,
+        "endChar": 46
+      },
+      "revId": "1e745d18cd3071424b0e3c81d6a1af9168963811",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f74625cd_82510d50",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1344,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-22T15:10:30Z",
+      "side": 1,
+      "message": "you should add an assert about the range of firstVertex/lastVertex fitting into uint16_t. In general I don\u0027t think we can make an assumption like that, so you might want to leave a TODO. You could probably repro this by using a very large vertex buffer and drawing using a high start vertex near the end of it.",
+      "range": {
+        "startLine": 1344,
+        "startChar": 30,
+        "endLine": 1344,
+        "endChar": 38
+      },
+      "revId": "1e745d18cd3071424b0e3c81d6a1af9168963811",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5024e37c_216edb68",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-22T15:10:30Z",
+      "side": 1,
+      "message": "nit: sorting. but probably just include the header.",
+      "range": {
+        "startLine": 53,
+        "startChar": 6,
+        "endLine": 53,
+        "endChar": 21
+      },
+      "revId": "1e745d18cd3071424b0e3c81d6a1af9168963811",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d88f5416_3bdafe0a",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 379,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-22T15:10:30Z",
+      "side": 1,
+      "message": "I think we should fix this in the VertexArrayVk class if possible. in a prior CL. I can help with that.",
+      "range": {
+        "startLine": 379,
+        "startChar": 31,
+        "endLine": 379,
+        "endChar": 40
+      },
+      "revId": "1e745d18cd3071424b0e3c81d6a1af9168963811",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "46b882c7_48a8a245",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 673,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-22T15:10:30Z",
+      "side": 1,
+      "message": "nit: wrap too 100",
+      "range": {
+        "startLine": 673,
+        "startChar": 68,
+        "endLine": 673,
+        "endChar": 75
+      },
+      "revId": "1e745d18cd3071424b0e3c81d6a1af9168963811",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0edf0fff_f1bf52c2",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 678,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-22T15:10:30Z",
+      "side": 1,
+      "message": "nit: can also be final.",
+      "range": {
+        "startLine": 678,
+        "startChar": 6,
+        "endLine": 678,
+        "endChar": 22
+      },
+      "revId": "1e745d18cd3071424b0e3c81d6a1af9168963811",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "30a347fb_02830e47",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 693,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-22T15:10:30Z",
+      "side": 1,
+      "message": "I think you should be able to store this by value.",
+      "range": {
+        "startLine": 693,
+        "startChar": 4,
+        "endLine": 693,
+        "endChar": 20
+      },
+      "revId": "1e745d18cd3071424b0e3c81d6a1af9168963811",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
