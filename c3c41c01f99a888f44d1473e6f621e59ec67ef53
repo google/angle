@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c614590b_0f9df6f4",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2232,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-02-22T16:57:36Z",
+      "side": 1,
+      "message": "nit: can these be const? (and parameters of linkValidateShaderInterfaceMatching)",
+      "range": {
+        "startLine": 2229,
+        "startChar": 0,
+        "endLine": 2232,
+        "endChar": 60
+      },
+      "revId": "c3c41c01f99a888f44d1473e6f621e59ec67ef53",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "58481ceb_e06f8ad3",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2233,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-02-22T16:57:36Z",
+      "side": 1,
+      "message": "Can you refactor this slightly to be more future proof?  You can make a std::vector of the shaders that will be used and loop over them to validate.",
+      "revId": "c3c41c01f99a888f44d1473e6f621e59ec67ef53",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
