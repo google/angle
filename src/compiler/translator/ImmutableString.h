@@ -128,6 +128,8 @@ class ImmutableString
         }
     };
 
+    uint32_t hash32() const;
+
   private:
     const char *mData;
     size_t mLength;

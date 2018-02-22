@@ -35,4 +35,17 @@ template <>
 const size_t ImmutableString::FowlerNollVoHash<8>::kFnvOffsetBasis =
     static_cast<size_t>(0xcbf29ce484222325ull);
 
+uint32_t ImmutableString::hash32() const
+{
+    const char *data_ptr = data();
+    uint32_t hash        = static_cast<uint32_t>(FowlerNollVoHash<4>::kFnvOffsetBasis);
+    while ((*data_ptr) != '\0')
+    {
+        hash = hash ^ (*data_ptr);
+        hash = hash * static_cast<uint32_t>(FowlerNollVoHash<4>::kFnvPrime);
+        ++data_ptr;
+    }
+    return hash;
+}
+
 }  // namespace sh
