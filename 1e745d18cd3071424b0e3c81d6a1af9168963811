@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "bec50c1e_71c1e4ff",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-22T16:19:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f3ee9a40_a98b03b3",
+      "range": {
+        "startLine": 138,
+        "startChar": 0,
+        "endLine": 147,
+        "endChar": 0
+      },
+      "revId": "1e745d18cd3071424b0e3c81d6a1af9168963811",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dbeb054c_ae184334",
         "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
         "patchSetId": 3
@@ -45,6 +69,30 @@
       "revId": "1e745d18cd3071424b0e3c81d6a1af9168963811",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f1acee04_8e001836",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 262,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-22T16:19:41Z",
+      "side": 1,
+      "message": "Yes now that it will be a value reference I can do that",
+      "parentUuid": "dbeb054c_ae184334",
+      "range": {
+        "startLine": 256,
+        "startChar": 0,
+        "endLine": 262,
+        "endChar": 5
+      },
+      "revId": "1e745d18cd3071424b0e3c81d6a1af9168963811",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "bef0b789_63265cb6",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 294,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-22T16:19:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b2f402bc_2fd94a9b",
+      "range": {
+        "startLine": 294,
+        "startChar": 8,
+        "endLine": 294,
+        "endChar": 57
+      },
+      "revId": "1e745d18cd3071424b0e3c81d6a1af9168963811",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "45fb8a61_c94d31aa",
         "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
         "patchSetId": 3
@@ -91,6 +163,30 @@
       "revId": "1e745d18cd3071424b0e3c81d6a1af9168963811",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8cd905fe_991ed503",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-22T16:19:41Z",
+      "side": 1,
+      "message": "Done, I don\u0027t really need valid or init though.",
+      "parentUuid": "45fb8a61_c94d31aa",
+      "range": {
+        "startLine": 197,
+        "startChar": 4,
+        "endLine": 197,
+        "endChar": 42
+      },
+      "revId": "1e745d18cd3071424b0e3c81d6a1af9168963811",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "2409d999_6e53c19f",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1338,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-22T16:19:41Z",
+      "side": 1,
+      "message": "This isn\u0027t really to know if its been set or not, its really because I want to validate that it has changed since last time or not so even if I use optional, I will need to compare their value and reallocate if the index change.",
+      "parentUuid": "9f334359_1d4e4f1b",
+      "range": {
+        "startLine": 1338,
+        "startChar": 22,
+        "endLine": 1338,
+        "endChar": 46
+      },
+      "revId": "1e745d18cd3071424b0e3c81d6a1af9168963811",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f74625cd_82510d50",
         "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
         "patchSetId": 3
@@ -137,6 +257,30 @@
       "revId": "1e745d18cd3071424b0e3c81d6a1af9168963811",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bbeef3c7_42bd2837",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1344,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-22T16:19:41Z",
+      "side": 1,
+      "message": "I will just use a 32bits buffer instead to make sure it always fit.",
+      "parentUuid": "f74625cd_82510d50",
+      "range": {
+        "startLine": 1344,
+        "startChar": 30,
+        "endLine": 1344,
+        "endChar": 38
+      },
+      "revId": "1e745d18cd3071424b0e3c81d6a1af9168963811",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -163,6 +307,30 @@
     },
     {
       "key": {
+        "uuid": "4b760c10_c5f2e96c",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-22T16:19:41Z",
+      "side": 1,
+      "message": "I can\u0027t since StreamingBuffer includes vk_utils.h",
+      "parentUuid": "5024e37c_216edb68",
+      "range": {
+        "startLine": 53,
+        "startChar": 6,
+        "endLine": 53,
+        "endChar": 21
+      },
+      "revId": "1e745d18cd3071424b0e3c81d6a1af9168963811",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d88f5416_3bdafe0a",
         "filename": "src/libANGLE/renderer/vulkan/vk_utils.h",
         "patchSetId": 3
@@ -174,6 +342,30 @@
       "writtenOn": "2018-02-22T15:10:30Z",
       "side": 1,
       "message": "I think we should fix this in the VertexArrayVk class if possible. in a prior CL. I can help with that.",
+      "range": {
+        "startLine": 379,
+        "startChar": 31,
+        "endLine": 379,
+        "endChar": 40
+      },
+      "revId": "1e745d18cd3071424b0e3c81d6a1af9168963811",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e24cf647_fb4dd378",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 379,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-22T16:19:41Z",
+      "side": 1,
+      "message": "I\u0027ll try to do it myself and then rebase this change on it when I\u0027m done",
+      "parentUuid": "d88f5416_3bdafe0a",
       "range": {
         "startLine": 379,
         "startChar": 31,
@@ -209,6 +401,30 @@
     },
     {
       "key": {
+        "uuid": "1dd4210f_8d29ff62",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 673,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-22T16:19:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "46b882c7_48a8a245",
+      "range": {
+        "startLine": 673,
+        "startChar": 68,
+        "endLine": 673,
+        "endChar": 75
+      },
+      "revId": "1e745d18cd3071424b0e3c81d6a1af9168963811",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0edf0fff_f1bf52c2",
         "filename": "src/libANGLE/renderer/vulkan/vk_utils.h",
         "patchSetId": 3
@@ -232,6 +448,30 @@
     },
     {
       "key": {
+        "uuid": "18db2c99_062447ad",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 678,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-22T16:19:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0edf0fff_f1bf52c2",
+      "range": {
+        "startLine": 678,
+        "startChar": 6,
+        "endLine": 678,
+        "endChar": 22
+      },
+      "revId": "1e745d18cd3071424b0e3c81d6a1af9168963811",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "30a347fb_02830e47",
         "filename": "src/libANGLE/renderer/vulkan/vk_utils.h",
         "patchSetId": 3
@@ -252,6 +492,30 @@
       "revId": "1e745d18cd3071424b0e3c81d6a1af9168963811",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "91ef197b_0d58f4ca",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 693,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-22T16:19:41Z",
+      "side": 1,
+      "message": "I can\u0027t since vk_utils.h can\u0027t include StreamingBuffer since StreamingBuffer already includes vk_utils.h.\n\nMaybe eventually we can move this + StreamingBuffer to something like vk_helpers if this keeps happening.",
+      "parentUuid": "30a347fb_02830e47",
+      "range": {
+        "startLine": 693,
+        "startChar": 4,
+        "endLine": 693,
+        "endChar": 20
+      },
+      "revId": "1e745d18cd3071424b0e3c81d6a1af9168963811",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
