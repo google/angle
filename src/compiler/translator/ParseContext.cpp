@@ -496,6 +496,11 @@ bool TParseContext::checkCanBeLValue(const TSourceLoc &line, const char *op, TIn
             case EOpIndexIndirect:
             case EOpIndexDirectStruct:
             case EOpIndexDirectInterfaceBlock:
+                if (node->getMemoryQualifier().readonly)
+                {
+                    error(line, "can't modify a readonly variable", op);
+                    return false;
+                }
                 return checkCanBeLValue(line, op, binaryNode->getLeft());
             default:
                 break;
