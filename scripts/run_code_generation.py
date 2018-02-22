@@ -153,6 +153,7 @@ generators = {
         ],
         'outputs': [
             'src/compiler/translator/SymbolTable_autogen.cpp',
+            'tests/compiler_tests/ImmutableString_test_autogen.cpp',
         ],
         'script': 'src/compiler/translator/gen_builtin_symbols.py',
     },

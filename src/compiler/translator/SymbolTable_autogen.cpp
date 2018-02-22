@@ -3531,6 +3531,18 @@ constexpr const TConstParameter p_usM_[1] = {
 
 }  // namespace BuiltInParameters
 
+namespace UnmangledBuiltIns
+{
+
+constexpr const UnmangledBuiltIn ARB_texture_rectangle(TExtension::ARB_texture_rectangle);
+constexpr const UnmangledBuiltIn EXT_YUV_target(TExtension::EXT_YUV_target);
+constexpr const UnmangledBuiltIn EXT_geometry_shader(TExtension::EXT_geometry_shader);
+constexpr const UnmangledBuiltIn EXT_shader_texture_lod(TExtension::EXT_shader_texture_lod);
+constexpr const UnmangledBuiltIn OES_standard_derivatives(TExtension::OES_standard_derivatives);
+constexpr const UnmangledBuiltIn UNDEFINED(TExtension::UNDEFINED);
+
+}  // namespace UnmangledBuiltIns
+
 // TODO(oetuaho): Would be nice to make this a class instead of a namespace so that we could friend
 // this from TFunction. Now symbol constructors taking an id have to be public even though they're
 // not supposed to be accessible from outside of here. http://anglebug.com/2390
@@ -12926,215 +12938,1367 @@ void TSymbolTable::insertBuiltInFunctions(sh::GLenum shaderType)
     }
 }
 
-void TSymbolTable::insertBuiltInFunctionUnmangledNames(sh::GLenum shaderType)
+const UnmangledBuiltIn *TSymbolTable::getUnmangledBuiltInForShaderVersion(
+    const ImmutableString &name,
+    int shaderVersion)
 {
-    insertUnmangledBuiltIn(BuiltInName::radians, TExtension::UNDEFINED, COMMON_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::degrees, TExtension::UNDEFINED, COMMON_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::sin, TExtension::UNDEFINED, COMMON_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::cos, TExtension::UNDEFINED, COMMON_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::tan, TExtension::UNDEFINED, COMMON_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::asin, TExtension::UNDEFINED, COMMON_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::acos, TExtension::UNDEFINED, COMMON_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::atan, TExtension::UNDEFINED, COMMON_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::sinh, TExtension::UNDEFINED, ESSL3_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::cosh, TExtension::UNDEFINED, ESSL3_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::tanh, TExtension::UNDEFINED, ESSL3_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::asinh, TExtension::UNDEFINED, ESSL3_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::acosh, TExtension::UNDEFINED, ESSL3_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::atanh, TExtension::UNDEFINED, ESSL3_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::pow, TExtension::UNDEFINED, COMMON_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::exp, TExtension::UNDEFINED, COMMON_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::log, TExtension::UNDEFINED, COMMON_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::exp2, TExtension::UNDEFINED, COMMON_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::log2, TExtension::UNDEFINED, COMMON_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::sqrt, TExtension::UNDEFINED, COMMON_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::inversesqrt, TExtension::UNDEFINED, COMMON_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::abs, TExtension::UNDEFINED, COMMON_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::abs, TExtension::UNDEFINED, ESSL3_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::sign, TExtension::UNDEFINED, COMMON_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::sign, TExtension::UNDEFINED, ESSL3_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::floor, TExtension::UNDEFINED, COMMON_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::trunc, TExtension::UNDEFINED, ESSL3_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::round, TExtension::UNDEFINED, ESSL3_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::roundEven, TExtension::UNDEFINED, ESSL3_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::ceil, TExtension::UNDEFINED, COMMON_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::fract, TExtension::UNDEFINED, COMMON_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::mod, TExtension::UNDEFINED, COMMON_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::min, TExtension::UNDEFINED, COMMON_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::min, TExtension::UNDEFINED, ESSL3_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::max, TExtension::UNDEFINED, COMMON_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::max, TExtension::UNDEFINED, ESSL3_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::clamp, TExtension::UNDEFINED, COMMON_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::clamp, TExtension::UNDEFINED, ESSL3_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::mix, TExtension::UNDEFINED, COMMON_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::mix, TExtension::UNDEFINED, ESSL3_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::step, TExtension::UNDEFINED, COMMON_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::smoothstep, TExtension::UNDEFINED, COMMON_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::modf, TExtension::UNDEFINED, ESSL3_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::isnan, TExtension::UNDEFINED, ESSL3_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::isinf, TExtension::UNDEFINED, ESSL3_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::floatBitsToInt, TExtension::UNDEFINED, ESSL3_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::floatBitsToUint, TExtension::UNDEFINED, ESSL3_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::intBitsToFloat, TExtension::UNDEFINED, ESSL3_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::uintBitsToFloat, TExtension::UNDEFINED, ESSL3_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::frexp, TExtension::UNDEFINED, ESSL3_1_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::ldexp, TExtension::UNDEFINED, ESSL3_1_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::packSnorm2x16, TExtension::UNDEFINED, ESSL3_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::packUnorm2x16, TExtension::UNDEFINED, ESSL3_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::packHalf2x16, TExtension::UNDEFINED, ESSL3_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::unpackSnorm2x16, TExtension::UNDEFINED, ESSL3_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::unpackUnorm2x16, TExtension::UNDEFINED, ESSL3_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::unpackHalf2x16, TExtension::UNDEFINED, ESSL3_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::packUnorm4x8, TExtension::UNDEFINED, ESSL3_1_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::packSnorm4x8, TExtension::UNDEFINED, ESSL3_1_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::unpackUnorm4x8, TExtension::UNDEFINED, ESSL3_1_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::unpackSnorm4x8, TExtension::UNDEFINED, ESSL3_1_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::length, TExtension::UNDEFINED, COMMON_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::distance, TExtension::UNDEFINED, COMMON_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::dot, TExtension::UNDEFINED, COMMON_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::cross, TExtension::UNDEFINED, COMMON_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::normalize, TExtension::UNDEFINED, COMMON_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::faceforward, TExtension::UNDEFINED, COMMON_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::reflect, TExtension::UNDEFINED, COMMON_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::refract, TExtension::UNDEFINED, COMMON_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::matrixCompMult, TExtension::UNDEFINED, COMMON_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::matrixCompMult, TExtension::UNDEFINED, ESSL3_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::outerProduct, TExtension::UNDEFINED, ESSL3_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::transpose, TExtension::UNDEFINED, ESSL3_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::determinant, TExtension::UNDEFINED, ESSL3_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::inverse, TExtension::UNDEFINED, ESSL3_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::lessThan, TExtension::UNDEFINED, COMMON_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::lessThan, TExtension::UNDEFINED, ESSL3_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::lessThanEqual, TExtension::UNDEFINED, COMMON_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::lessThanEqual, TExtension::UNDEFINED, ESSL3_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::greaterThan, TExtension::UNDEFINED, COMMON_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::greaterThan, TExtension::UNDEFINED, ESSL3_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::greaterThanEqual, TExtension::UNDEFINED, COMMON_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::greaterThanEqual, TExtension::UNDEFINED, ESSL3_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::equal, TExtension::UNDEFINED, COMMON_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::equal, TExtension::UNDEFINED, ESSL3_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::notEqual, TExtension::UNDEFINED, COMMON_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::notEqual, TExtension::UNDEFINED, ESSL3_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::any, TExtension::UNDEFINED, COMMON_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::all, TExtension::UNDEFINED, COMMON_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::notFunc, TExtension::UNDEFINED, COMMON_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::bitfieldExtract, TExtension::UNDEFINED, ESSL3_1_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::bitfieldInsert, TExtension::UNDEFINED, ESSL3_1_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::bitfieldReverse, TExtension::UNDEFINED, ESSL3_1_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::bitCount, TExtension::UNDEFINED, ESSL3_1_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::findLSB, TExtension::UNDEFINED, ESSL3_1_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::findMSB, TExtension::UNDEFINED, ESSL3_1_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::uaddCarry, TExtension::UNDEFINED, ESSL3_1_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::usubBorrow, TExtension::UNDEFINED, ESSL3_1_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::umulExtended, TExtension::UNDEFINED, ESSL3_1_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::imulExtended, TExtension::UNDEFINED, ESSL3_1_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::texture2D, TExtension::UNDEFINED, ESSL1_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::texture2DProj, TExtension::UNDEFINED, ESSL1_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::textureCube, TExtension::UNDEFINED, ESSL1_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::texture2DRect, TExtension::ARB_texture_rectangle,
-                           ESSL1_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::texture2DRectProj, TExtension::ARB_texture_rectangle,
-                           ESSL1_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::texture2DGradEXT, TExtension::EXT_shader_texture_lod,
-                           ESSL1_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::texture2DProjGradEXT, TExtension::EXT_shader_texture_lod,
-                           ESSL1_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::textureCubeGradEXT, TExtension::EXT_shader_texture_lod,
-                           ESSL1_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::texture, TExtension::UNDEFINED, ESSL3_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::textureProj, TExtension::UNDEFINED, ESSL3_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::textureLod, TExtension::UNDEFINED, ESSL3_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::textureSize, TExtension::UNDEFINED, ESSL3_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::textureProjLod, TExtension::UNDEFINED, ESSL3_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::texelFetch, TExtension::UNDEFINED, ESSL3_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::textureGrad, TExtension::UNDEFINED, ESSL3_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::textureProjGrad, TExtension::UNDEFINED, ESSL3_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::textureOffset, TExtension::UNDEFINED, ESSL3_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::textureProjOffset, TExtension::UNDEFINED, ESSL3_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::textureLodOffset, TExtension::UNDEFINED, ESSL3_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::textureProjLodOffset, TExtension::UNDEFINED,
-                           ESSL3_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::texelFetchOffset, TExtension::UNDEFINED, ESSL3_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::textureGradOffset, TExtension::UNDEFINED, ESSL3_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::textureProjGradOffset, TExtension::UNDEFINED,
-                           ESSL3_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::rgb_2_yuv, TExtension::EXT_YUV_target, ESSL3_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::yuv_2_rgb, TExtension::EXT_YUV_target, ESSL3_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::texelFetch, TExtension::UNDEFINED, ESSL3_1_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::textureGather, TExtension::UNDEFINED, ESSL3_1_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::textureGatherOffset, TExtension::UNDEFINED,
-                           ESSL3_1_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::atomicCounter, TExtension::UNDEFINED, ESSL3_1_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::atomicCounterIncrement, TExtension::UNDEFINED,
-                           ESSL3_1_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::atomicCounterDecrement, TExtension::UNDEFINED,
-                           ESSL3_1_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::atomicAdd, TExtension::UNDEFINED, ESSL3_1_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::atomicMin, TExtension::UNDEFINED, ESSL3_1_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::atomicMax, TExtension::UNDEFINED, ESSL3_1_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::atomicAnd, TExtension::UNDEFINED, ESSL3_1_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::atomicOr, TExtension::UNDEFINED, ESSL3_1_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::atomicXor, TExtension::UNDEFINED, ESSL3_1_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::atomicExchange, TExtension::UNDEFINED, ESSL3_1_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::atomicCompSwap, TExtension::UNDEFINED, ESSL3_1_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::imageSize, TExtension::UNDEFINED, ESSL3_1_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::imageLoad, TExtension::UNDEFINED, ESSL3_1_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::imageStore, TExtension::UNDEFINED, ESSL3_1_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::memoryBarrier, TExtension::UNDEFINED, ESSL3_1_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::memoryBarrierAtomicCounter, TExtension::UNDEFINED,
-                           ESSL3_1_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::memoryBarrierBuffer, TExtension::UNDEFINED,
-                           ESSL3_1_BUILTINS);
-    insertUnmangledBuiltIn(BuiltInName::memoryBarrierImage, TExtension::UNDEFINED,
-                           ESSL3_1_BUILTINS);
-    if (shaderType == GL_FRAGMENT_SHADER)
+    uint32_t nameHash = name.hash32();
+    if (shaderVersion >= 310)
     {
-        insertUnmangledBuiltIn(BuiltInName::texture2D, TExtension::UNDEFINED, ESSL1_BUILTINS);
-        insertUnmangledBuiltIn(BuiltInName::texture2DProj, TExtension::UNDEFINED, ESSL1_BUILTINS);
-        insertUnmangledBuiltIn(BuiltInName::textureCube, TExtension::UNDEFINED, ESSL1_BUILTINS);
-        insertUnmangledBuiltIn(BuiltInName::dFdxExt, TExtension::OES_standard_derivatives,
-                               ESSL1_BUILTINS);
-        insertUnmangledBuiltIn(BuiltInName::dFdyExt, TExtension::OES_standard_derivatives,
-                               ESSL1_BUILTINS);
-        insertUnmangledBuiltIn(BuiltInName::fwidthExt, TExtension::OES_standard_derivatives,
-                               ESSL1_BUILTINS);
-        insertUnmangledBuiltIn(BuiltInName::texture2DLodEXT, TExtension::EXT_shader_texture_lod,
-                               ESSL1_BUILTINS);
-        insertUnmangledBuiltIn(BuiltInName::texture2DProjLodEXT, TExtension::EXT_shader_texture_lod,
-                               ESSL1_BUILTINS);
-        insertUnmangledBuiltIn(BuiltInName::textureCubeLodEXT, TExtension::EXT_shader_texture_lod,
-                               ESSL1_BUILTINS);
-        insertUnmangledBuiltIn(BuiltInName::textureOffset, TExtension::UNDEFINED, ESSL3_BUILTINS);
-        insertUnmangledBuiltIn(BuiltInName::textureProjOffset, TExtension::UNDEFINED,
-                               ESSL3_BUILTINS);
-        insertUnmangledBuiltIn(BuiltInName::texture, TExtension::UNDEFINED, ESSL3_BUILTINS);
-        insertUnmangledBuiltIn(BuiltInName::textureProj, TExtension::UNDEFINED, ESSL3_BUILTINS);
-        insertUnmangledBuiltIn(BuiltInName::dFdx, TExtension::UNDEFINED, ESSL3_BUILTINS);
-        insertUnmangledBuiltIn(BuiltInName::dFdy, TExtension::UNDEFINED, ESSL3_BUILTINS);
-        insertUnmangledBuiltIn(BuiltInName::fwidth, TExtension::UNDEFINED, ESSL3_BUILTINS);
+        switch (nameHash)
+        {
+            case 0x26813a3u:
+            {
+                if (name == BuiltInName::atomicAdd)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0x1150d92eu:
+            {
+                if (name == BuiltInName::atomicMax)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0x23647d3cu:
+            {
+                if (name == BuiltInName::atomicMin)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0x2568837fu:
+            {
+                if (name == BuiltInName::bitCount)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0x310cbdf3u:
+            {
+                if (name == BuiltInName::findLSB)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0x33b8cbf8u:
+            {
+                if (name == BuiltInName::unpackUnorm4x8)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0x3815d075u:
+            {
+                if (name == BuiltInName::memoryBarrier)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0x44a612d1u:
+            {
+                if (name == BuiltInName::texelFetch)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0x493c8c52u:
+            {
+                if (name == BuiltInName::imageLoad)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0x4d4a19b5u:
+            {
+                if (name == BuiltInName::packSnorm4x8)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0x4dafa4aau:
+            {
+                if (name == BuiltInName::memoryBarrierImage)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0x4f0e8e9bu:
+            {
+                if (name == BuiltInName::imageStore)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0x55fde64fu:
+            {
+                if (name == BuiltInName::imulExtended)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0x666490f9u:
+            {
+                if (name == BuiltInName::atomicCounterIncrement)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0x6ef2b1c3u:
+            {
+                if (name == BuiltInName::imageSize)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0x6fdf21cbu:
+            {
+                if (name == BuiltInName::memoryBarrierBuffer)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0x7ba9e270u:
+            {
+                if (name == BuiltInName::findMSB)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0x7c07f1eeu:
+            {
+                if (name == BuiltInName::unpackSnorm4x8)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0x8c63f160u:
+            {
+                if (name == BuiltInName::ldexp)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xa30cdef4u:
+            {
+                if (name == BuiltInName::frexp)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xa3a03233u:
+            {
+                if (name == BuiltInName::textureGather)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xae0f4e53u:
+            {
+                if (name == BuiltInName::packUnorm4x8)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xb24338c0u:
+            {
+                if (name == BuiltInName::textureGatherOffset)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xb5e7ff54u:
+            {
+                if (name == BuiltInName::memoryBarrierAtomicCounter)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xb82cbfe3u:
+            {
+                if (name == BuiltInName::usubBorrow)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xb94d85ddu:
+            {
+                if (name == BuiltInName::atomicExchange)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xbfd854b5u:
+            {
+                if (name == BuiltInName::atomicXor)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xc1e02fa4u:
+            {
+                if (name == BuiltInName::atomicCounter)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xca0f40eeu:
+            {
+                if (name == BuiltInName::uaddCarry)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xd2b1c53du:
+            {
+                if (name == BuiltInName::atomicOr)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xd651bc5du:
+            {
+                if (name == BuiltInName::atomicCounterDecrement)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xe5c5029au:
+            {
+                if (name == BuiltInName::bitfieldReverse)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xe676f219u:
+            {
+                if (name == BuiltInName::atomicAnd)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xebfef903u:
+            {
+                if (name == BuiltInName::umulExtended)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xf3bd9210u:
+            {
+                if (name == BuiltInName::atomicCompSwap)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xf50788fdu:
+            {
+                if (name == BuiltInName::bitfieldExtract)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xf81301b9u:
+            {
+                if (name == BuiltInName::bitfieldInsert)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+        }
+        if (mShaderType == GL_COMPUTE_SHADER)
+        {
+            switch (nameHash)
+            {
+                case 0x3d693fa0u:
+                {
+                    if (name == BuiltInName::barrier)
+                    {
+                        return &UnmangledBuiltIns::UNDEFINED;
+                    }
+                    break;
+                }
+                case 0x7afaf16eu:
+                {
+                    if (name == BuiltInName::groupMemoryBarrier)
+                    {
+                        return &UnmangledBuiltIns::UNDEFINED;
+                    }
+                    break;
+                }
+                case 0xe85fa9e4u:
+                {
+                    if (name == BuiltInName::memoryBarrierShared)
+                    {
+                        return &UnmangledBuiltIns::UNDEFINED;
+                    }
+                    break;
+                }
+            }
+        }
+        if (mShaderType == GL_GEOMETRY_SHADER_EXT)
+        {
+            switch (nameHash)
+            {
+                case 0xb413b257u:
+                {
+                    if (name == BuiltInName::EndPrimitive)
+                    {
+                        return &UnmangledBuiltIns::EXT_geometry_shader;
+                    }
+                    break;
+                }
+                case 0xb5d34358u:
+                {
+                    if (name == BuiltInName::EmitVertex)
+                    {
+                        return &UnmangledBuiltIns::EXT_geometry_shader;
+                    }
+                    break;
+                }
+            }
+        }
     }
-    if (shaderType == GL_VERTEX_SHADER)
+    if (shaderVersion >= 300)
     {
-        insertUnmangledBuiltIn(BuiltInName::texture2DLod, TExtension::UNDEFINED, ESSL1_BUILTINS);
-        insertUnmangledBuiltIn(BuiltInName::texture2DProjLod, TExtension::UNDEFINED,
-                               ESSL1_BUILTINS);
-        insertUnmangledBuiltIn(BuiltInName::textureCubeLod, TExtension::UNDEFINED, ESSL1_BUILTINS);
+        switch (nameHash)
+        {
+            case 0x23feff3u:
+            {
+                if (name == BuiltInName::textureLod)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0x4644cdeu:
+            {
+                if (name == BuiltInName::greaterThan)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0x491f109u:
+            {
+                if (name == BuiltInName::lessThanEqual)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0x5fc75c3u:
+            {
+                if (name == BuiltInName::lessThan)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0x7275075u:
+            {
+                if (name == BuiltInName::atanh)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0x92855d0u:
+            {
+                if (name == BuiltInName::tanh)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xcbc8ba4u:
+            {
+                if (name == BuiltInName::sign)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0x10d2583fu:
+            {
+                if (name == BuiltInName::sinh)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0x12b2640eu:
+            {
+                if (name == BuiltInName::texelFetchOffset)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0x1535b7a5u:
+            {
+                if (name == BuiltInName::textureProjLodOffset)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0x2485bbbeu:
+            {
+                if (name == BuiltInName::notEqual)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0x25680679u:
+            {
+                if (name == BuiltInName::unpackUnorm2x16)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0x26ac11d8u:
+            {
+                if (name == BuiltInName::isinf)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0x28cedbc3u:
+            {
+                if (name == BuiltInName::unpackHalf2x16)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0x2a48023bu:
+            {
+                if (name == BuiltInName::abs)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0x2f7508efu:
+            {
+                if (name == BuiltInName::equal)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0x33a56e6cu:
+            {
+                if (name == BuiltInName::textureGrad)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0x39d34980u:
+            {
+                if (name == BuiltInName::textureLodOffset)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0x3c6468f4u:
+            {
+                if (name == BuiltInName::texture)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0x4326f80au:
+            {
+                if (name == BuiltInName::packSnorm2x16)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0x44a612d1u:
+            {
+                if (name == BuiltInName::texelFetch)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0x4f0be23bu:
+            {
+                if (name == BuiltInName::round)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0x5bd36438u:
+            {
+                if (name == BuiltInName::packHalf2x16)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0x6b0ca057u:
+            {
+                if (name == BuiltInName::textureGradOffset)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0x6e02ba1bu:
+            {
+                if (name == BuiltInName::unpackSnorm2x16)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0x6ff78d04u:
+            {
+                if (name == BuiltInName::packUnorm2x16)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0x767e36c0u:
+            {
+                if (name == BuiltInName::determinant)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0x7bf8de3bu:
+            {
+                if (name == BuiltInName::textureProjGrad)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0x88c917cfu:
+            {
+                if (name == BuiltInName::textureOffset)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0x8b45ed38u:
+            {
+                if (name == BuiltInName::textureProjGradOffset)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0x8f8617abu:
+            {
+                if (name == BuiltInName::outerProduct)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0x94b08f7fu:
+            {
+                if (name == BuiltInName::textureProj)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xa4639127u:
+            {
+                if (name == BuiltInName::roundEven)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xa5212424u:
+            {
+                if (name == BuiltInName::textureProjOffset)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xa6789406u:
+            {
+                if (name == BuiltInName::rgb_2_yuv)
+                {
+                    return &UnmangledBuiltIns::EXT_YUV_target;
+                }
+                break;
+            }
+            case 0xa82efcbcu:
+            {
+                if (name == BuiltInName::clamp)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xb15a3cc9u:
+            {
+                if (name == BuiltInName::floatBitsToInt)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xb1b3c06au:
+            {
+                if (name == BuiltInName::isnan)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xb201f283u:
+            {
+                if (name == BuiltInName::inverse)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xb755b482u:
+            {
+                if (name == BuiltInName::textureProjLod)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xbab19e4au:
+            {
+                if (name == BuiltInName::asinh)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xc03183c0u:
+            {
+                if (name == BuiltInName::transpose)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xc29ffa7eu:
+            {
+                if (name == BuiltInName::uintBitsToFloat)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xc73e788du:
+            {
+                if (name == BuiltInName::textureSize)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xc7818fa2u:
+            {
+                if (name == BuiltInName::yuv_2_rgb)
+                {
+                    return &UnmangledBuiltIns::EXT_YUV_target;
+                }
+                break;
+            }
+            case 0xc8575388u:
+            {
+                if (name == BuiltInName::floatBitsToUint)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xc98f4557u:
+            {
+                if (name == BuiltInName::min)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xd55e61e5u:
+            {
+                if (name == BuiltInName::trunc)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xd5f05125u:
+            {
+                if (name == BuiltInName::matrixCompMult)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xd78f5b61u:
+            {
+                if (name == BuiltInName::mix)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xd7a2e319u:
+            {
+                if (name == BuiltInName::max)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xeb6ede7fu:
+            {
+                if (name == BuiltInName::modf)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xed7dc722u:
+            {
+                if (name == BuiltInName::greaterThanEqual)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xedf2c855u:
+            {
+                if (name == BuiltInName::acosh)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xf45c461cu:
+            {
+                if (name == BuiltInName::cosh)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xfc501e17u:
+            {
+                if (name == BuiltInName::intBitsToFloat)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+        }
+        if (mShaderType == GL_FRAGMENT_SHADER)
+        {
+            switch (nameHash)
+            {
+                case 0x4b6e55d3u:
+                {
+                    if (name == BuiltInName::fwidth)
+                    {
+                        return &UnmangledBuiltIns::UNDEFINED;
+                    }
+                    break;
+                }
+                case 0xc78598f8u:
+                {
+                    if (name == BuiltInName::dFdy)
+                    {
+                        return &UnmangledBuiltIns::UNDEFINED;
+                    }
+                    break;
+                }
+                case 0xc8859a8bu:
+                {
+                    if (name == BuiltInName::dFdx)
+                    {
+                        return &UnmangledBuiltIns::UNDEFINED;
+                    }
+                    break;
+                }
+            }
+        }
     }
-    if (shaderType == GL_COMPUTE_SHADER)
+    if (shaderVersion == 100)
     {
-        insertUnmangledBuiltIn(BuiltInName::barrier, TExtension::UNDEFINED, ESSL3_1_BUILTINS);
-        insertUnmangledBuiltIn(BuiltInName::memoryBarrierShared, TExtension::UNDEFINED,
-                               ESSL3_1_BUILTINS);
-        insertUnmangledBuiltIn(BuiltInName::groupMemoryBarrier, TExtension::UNDEFINED,
-                               ESSL3_1_BUILTINS);
+        switch (nameHash)
+        {
+            case 0x18a9c042u:
+            {
+                if (name == BuiltInName::texture2D)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0x1d18f29cu:
+            {
+                if (name == BuiltInName::textureCubeGradEXT)
+                {
+                    return &UnmangledBuiltIns::EXT_shader_texture_lod;
+                }
+                break;
+            }
+            case 0x3d4abf10u:
+            {
+                if (name == BuiltInName::texture2DRect)
+                {
+                    return &UnmangledBuiltIns::ARB_texture_rectangle;
+                }
+                break;
+            }
+            case 0x4040698cu:
+            {
+                if (name == BuiltInName::texture2DProjGradEXT)
+                {
+                    return &UnmangledBuiltIns::EXT_shader_texture_lod;
+                }
+                break;
+            }
+            case 0x6dc0e8e3u:
+            {
+                if (name == BuiltInName::texture2DRectProj)
+                {
+                    return &UnmangledBuiltIns::ARB_texture_rectangle;
+                }
+                break;
+            }
+            case 0xc7cb8969u:
+            {
+                if (name == BuiltInName::texture2DProj)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xd1836639u:
+            {
+                if (name == BuiltInName::texture2DGradEXT)
+                {
+                    return &UnmangledBuiltIns::EXT_shader_texture_lod;
+                }
+                break;
+            }
+            case 0xfece2a39u:
+            {
+                if (name == BuiltInName::textureCube)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+        }
+        if (mShaderType == GL_FRAGMENT_SHADER)
+        {
+            switch (nameHash)
+            {
+                case 0x4b6e55d3u:
+                {
+                    if (name == BuiltInName::fwidthExt)
+                    {
+                        return &UnmangledBuiltIns::OES_standard_derivatives;
+                    }
+                    break;
+                }
+                case 0x7150ceb8u:
+                {
+                    if (name == BuiltInName::texture2DLodEXT)
+                    {
+                        return &UnmangledBuiltIns::EXT_shader_texture_lod;
+                    }
+                    break;
+                }
+                case 0x7309b987u:
+                {
+                    if (name == BuiltInName::textureCubeLodEXT)
+                    {
+                        return &UnmangledBuiltIns::EXT_shader_texture_lod;
+                    }
+                    break;
+                }
+                case 0xbacaedf7u:
+                {
+                    if (name == BuiltInName::texture2DProjLodEXT)
+                    {
+                        return &UnmangledBuiltIns::EXT_shader_texture_lod;
+                    }
+                    break;
+                }
+                case 0xc78598f8u:
+                {
+                    if (name == BuiltInName::dFdyExt)
+                    {
+                        return &UnmangledBuiltIns::OES_standard_derivatives;
+                    }
+                    break;
+                }
+                case 0xc8859a8bu:
+                {
+                    if (name == BuiltInName::dFdxExt)
+                    {
+                        return &UnmangledBuiltIns::OES_standard_derivatives;
+                    }
+                    break;
+                }
+            }
+        }
+        if (mShaderType == GL_VERTEX_SHADER)
+        {
+            switch (nameHash)
+            {
+                case 0x30ed9cfcu:
+                {
+                    if (name == BuiltInName::texture2DProjLod)
+                    {
+                        return &UnmangledBuiltIns::UNDEFINED;
+                    }
+                    break;
+                }
+                case 0xb35e342cu:
+                {
+                    if (name == BuiltInName::textureCubeLod)
+                    {
+                        return &UnmangledBuiltIns::UNDEFINED;
+                    }
+                    break;
+                }
+                case 0xfa79f401u:
+                {
+                    if (name == BuiltInName::texture2DLod)
+                    {
+                        return &UnmangledBuiltIns::UNDEFINED;
+                    }
+                    break;
+                }
+            }
+        }
     }
-    if (shaderType == GL_GEOMETRY_SHADER_EXT)
+    switch (nameHash)
     {
-        insertUnmangledBuiltIn(BuiltInName::EmitVertex, TExtension::EXT_geometry_shader,
-                               ESSL3_1_BUILTINS);
-        insertUnmangledBuiltIn(BuiltInName::EndPrimitive, TExtension::EXT_geometry_shader,
-                               ESSL3_1_BUILTINS);
+        case 0x4644cdeu:
+        {
+            if (name == BuiltInName::greaterThan)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0x491f109u:
+        {
+            if (name == BuiltInName::lessThanEqual)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0x5fc75c3u:
+        {
+            if (name == BuiltInName::lessThan)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0x66c705cu:
+        {
+            if (name == BuiltInName::refract)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0x678cabfu:
+        {
+            if (name == BuiltInName::atan)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0xcbc8ba4u:
+        {
+            if (name == BuiltInName::sign)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0x10031ed9u:
+        {
+            if (name == BuiltInName::log2)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0x13254bc4u:
+        {
+            if (name == BuiltInName::all)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0x2485bbbeu:
+        {
+            if (name == BuiltInName::notEqual)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0x29b19c8au:
+        {
+            if (name == BuiltInName::notFunc)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0x29f5189bu:
+        {
+            if (name == BuiltInName::cross)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0x2a48023bu:
+        {
+            if (name == BuiltInName::abs)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0x2c29f04du:
+        {
+            if (name == BuiltInName::any)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0x2eb31462u:
+        {
+            if (name == BuiltInName::distance)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0x2f7508efu:
+        {
+            if (name == BuiltInName::equal)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0x3c01df1fu:
+        {
+            if (name == BuiltInName::acos)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0x3f515151u:
+        {
+            if (name == BuiltInName::log)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0x58336ad5u:
+        {
+            if (name == BuiltInName::pow)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0x5fd55fe1u:
+        {
+            if (name == BuiltInName::faceforward)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0x62e4e208u:
+        {
+            if (name == BuiltInName::ceil)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0x72a68728u:
+        {
+            if (name == BuiltInName::exp)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0x7dee3bcfu:
+        {
+            if (name == BuiltInName::sqrt)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0x83d03615u:
+        {
+            if (name == BuiltInName::length)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0x856a57e1u:
+        {
+            if (name == BuiltInName::radians)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0x92c778aau:
+        {
+            if (name == BuiltInName::reflect)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0x95964e7du:
+        {
+            if (name == BuiltInName::smoothstep)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0x9626adeeu:
+        {
+            if (name == BuiltInName::exp2)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0x9cf73498u:
+        {
+            if (name == BuiltInName::tan)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0xa82efcbcu:
+        {
+            if (name == BuiltInName::clamp)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0xaf5442eeu:
+        {
+            if (name == BuiltInName::degrees)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0xb8e70c1du:
+        {
+            if (name == BuiltInName::floor)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0xc7441a0fu:
+        {
+            if (name == BuiltInName::step)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0xc98f4557u:
+        {
+            if (name == BuiltInName::min)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0xce79296cu:
+        {
+            if (name == BuiltInName::normalize)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0xd3689f20u:
+        {
+            if (name == BuiltInName::dot)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0xd5f05125u:
+        {
+            if (name == BuiltInName::matrixCompMult)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0xd78f5b61u:
+        {
+            if (name == BuiltInName::mix)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0xd7a2e319u:
+        {
+            if (name == BuiltInName::max)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0xdf9e7283u:
+        {
+            if (name == BuiltInName::mod)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0xe0302a4du:
+        {
+            if (name == BuiltInName::sin)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0xe8b548a5u:
+        {
+            if (name == BuiltInName::inversesqrt)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0xed7dc722u:
+        {
+            if (name == BuiltInName::greaterThanEqual)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0xeef29a67u:
+        {
+            if (name == BuiltInName::fract)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0xfb8de29cu:
+        {
+            if (name == BuiltInName::cos)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0xfeae7ea6u:
+        {
+            if (name == BuiltInName::asin)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
     }
+    return nullptr;
 }
 
 }  // namespace sh
