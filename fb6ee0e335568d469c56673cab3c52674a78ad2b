@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "316c0941_6c7ecb90",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 3288,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-02-22T17:38:58Z",
+      "side": 1,
+      "message": "Changed this to setFunctionParameterNamesFromDefinition().",
+      "parentUuid": "a290bc2a_9978d3b5",
+      "range": {
+        "startLine": 3288,
+        "startChar": 20,
+        "endLine": 3288,
+        "endChar": 70
+      },
+      "revId": "fb6ee0e335568d469c56673cab3c52674a78ad2b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "43d114c8_76f55daf",
         "filename": "src/compiler/translator/SymbolTable.cpp",
         "patchSetId": 3
