@@ -5738,3 +5738,24 @@ TEST_F(FragmentShaderValidationTest, RedeclaringBuiltIn)
         FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
     }
 }
+
+// Redefining a built-in that is not available in the current shader stage is assumed to be not an
+// error. Test with redefining groupMemoryBarrier() in fragment shader. The built-in
+// groupMemoryBarrier() is only available in compute shaders.
+TEST_F(FragmentShaderValidationTest, RedeclaringBuiltInFromAnotherShaderStage)
+{
+    const std::string &shaderString =
+        R"(#version 310 es
+        precision mediump float;
+        out vec4 my_FragColor;
+        float groupMemoryBarrier() { return 1.0; }
+
+        void main()
+        {
+            my_FragColor = vec4(groupMemoryBarrier());
+        })";
+    if (!compile(shaderString))
+    {
+        FAIL() << "Shader compilation failed, expecting success:\n" << mInfoLog;
+    }
+}
