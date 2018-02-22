@@ -50,61 +50,52 @@ class Container
   public:
     static constexpr size_t kSize = 1024;
 
-    virtual void init(void)                                              = 0;
-    virtual void putData(unsigned offset, const void *data, size_t size) = 0;
-    virtual const char *getAddress()                                     = 0;
-    virtual GLuint getBuffer()                                           = 0;
+    void open(void) { memset(mMemory, 0xff, kSize); }
+
+    void fill(size_t numItem, size_t itemSize, const char *src, unsigned offset, unsigned stride)
+    {
+        while (numItem--)
+        {
+            ASSERT(offset + itemSize <= kSize);
+            memcpy(mMemory + offset, src, itemSize);
+            src += itemSize;
+            offset += stride;
+        }
+    }
+
+    virtual void close(void) {}
     virtual ~Container() {}
+    virtual const char *getAddress() = 0;
+    virtual GLuint getBuffer()       = 0;
+
+  protected:
+    char mMemory[kSize];
 };
 
 // Vertex attribute data in client memory.
 class Memory : public Container
 {
   public:
-    void init(void) override { memset(mMemory, 0, kSize); }
-
-    void putData(unsigned offset, const void *data, size_t size) override
-    {
-        ASSERT(offset + size <= kSize);
-        memcpy(mMemory + offset, data, size);
-    }
-
     const char *getAddress() override { return mMemory; }
-
     GLuint getBuffer() override { return 0; }
-
-  protected:
-    char mMemory[kSize];
 };
 
 // Vertex attribute data in buffer object.
 class Buffer : public Container
 {
   public:
-    Buffer() { mZeroes.fill(0); }
-
-    void init(void) override
+    void close(void) override
     {
         glBindBuffer(GL_ARRAY_BUFFER, mBuffer);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(mZeroes), mZeroes.data(), GL_STATIC_DRAW);
-    }
-
-    void putData(unsigned offset, const void *data, size_t size) override
-    {
-        ASSERT(offset + size <= kSize);
-        glBindBuffer(GL_ARRAY_BUFFER, mBuffer);
-        glBufferSubData(GL_ARRAY_BUFFER, offset, size, data);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(mMemory), mMemory, GL_STATIC_DRAW);
     }
 
     const char *getAddress() override { return nullptr; }
-
     GLuint getBuffer() override { return mBuffer; }
 
   protected:
     GLBuffer mBuffer;
-    static std::array<char, kSize> mZeroes;
 };
-std::array<char, Buffer::kSize> Buffer::mZeroes;
 
 // clang-format off
 template<class Type> struct GLType {};
@@ -137,17 +128,12 @@ class Attrib
         (void)GLType<GLfloat>::kGLType;
     }
 
-    void initContainer(void) const { mContainer->init(); }
-
+    void openContainer(void) const { mContainer->open(); }
     void fillContainer(void) const
     {
-        unsigned offset = mOffset;
-        for (unsigned i = 0; i < kNumVertices; ++i)
-        {
-            mContainer->putData(offset, mData + i * mAttribSize, mAttribSize);
-            offset += mStride;
-        }
+        mContainer->fill(kNumVertices, mAttribSize, mData, mOffset, mStride);
     }
+    void closeContainer(void) const { mContainer->close(); }
 
     void enable(unsigned index) const
     {
@@ -156,6 +142,8 @@ class Attrib
                               mContainer->getAddress() + mOffset);
         glEnableVertexAttribArray(index);
     }
+
+    bool inClientMemory(void) const { return mContainer->getAddress() != nullptr; }
 
   protected:
     std::shared_ptr<Container> mContainer;
@@ -169,15 +157,29 @@ class Attrib
 
 typedef std::vector<Attrib> TestCase;
 
+bool UsesClientMemory(const TestCase &tc)
+{
+    for (const Attrib &a : tc)
+    {
+        if (a.inClientMemory())
+            return true;
+    }
+    return false;
+}
+
 void PrepareTestCase(const TestCase &tc)
 {
     for (const Attrib &a : tc)
     {
-        a.initContainer();
+        a.openContainer();
     }
     for (const Attrib &a : tc)
     {
         a.fillContainer();
+    }
+    for (const Attrib &a : tc)
+    {
+        a.closeContainer();
     }
     unsigned i = 0;
     for (const Attrib &a : tc)
@@ -249,6 +251,7 @@ class AttributeLayoutTest : public ANGLETest
         ANGLETest::TearDown();
     }
 
+    virtual bool Skip(const TestCase &) { return false; }
     virtual void Draw(int firstVertex, unsigned vertexCount, const GLushort *indices) = 0;
 
     void Run(bool drawFirstTriangle)
@@ -258,6 +261,9 @@ class AttributeLayoutTest : public ANGLETest
 
         for (unsigned i = 0; i < mTestCases.size(); ++i)
         {
+            if (Skip(mTestCases[i]))
+                continue;
+
             PrepareTestCase(mTestCases[i]);
 
             glClear(GL_COLOR_BUFFER_BIT);
@@ -338,42 +344,41 @@ void AttributeLayoutTest::GetTestCases(void)
     std::shared_ptr<Container> B0 = std::make_shared<Buffer>();
     std::shared_ptr<Container> B1 = std::make_shared<Buffer>();
 
-    // two buffers
+    // 0. two buffers
     mTestCases.push_back({Attrib(B0, 0, 8, mCoord), Attrib(B1, 0, 12, mColor)});
+
+    // 1. two memory
+    mTestCases.push_back({Attrib(M0, 0, 8, mCoord), Attrib(M1, 0, 12, mColor)});
+
+    // 2. one memory, sequential
+    mTestCases.push_back({Attrib(M0, 0, 8, mCoord), Attrib(M0, 96, 12, mColor)});
+
+    // 3. buffer and memory
+    mTestCases.push_back({Attrib(B0, 0, 8, mCoord), Attrib(M0, 0, 12, mColor)});
 
     if (IsVulkan())
     {
-        std::cout << "cases skipped on Vulkan: data in memory, integer data, non-zero offsets"
-                  << std::endl;
+        std::cout << "cases skipped on Vulkan: integer data, non-zero buffer offsets" << std::endl;
         return;
     }
 
-    // stride != size - ANGLE bug 2310
+    // 4. stride != size - ANGLE bug 2310
     mTestCases.push_back({Attrib(B0, 0, 16, mCoord), Attrib(B1, 0, 12, mColor)});
 
-    // one buffer, sequential
-    mTestCases.push_back({Attrib(B0, 0, 8, mCoord), Attrib(B0, 96, 12, mColor)});
-
-    // one buffer, interleaved
-    mTestCases.push_back({Attrib(B0, 0, 20, mCoord), Attrib(B0, 8, 20, mColor)});
-
-    // two memory
-    mTestCases.push_back({Attrib(M0, 0, 8, mCoord), Attrib(M1, 0, 12, mColor)});
-
-    // one memory, sequential
-    mTestCases.push_back({Attrib(M0, 0, 8, mCoord), Attrib(M0, 96, 12, mColor)});
-
-    // one memory, interleaved
+    // 5. one memory, interleaved
     mTestCases.push_back({Attrib(M0, 0, 20, mCoord), Attrib(M0, 8, 20, mColor)});
 
-    // buffer and memory
-    mTestCases.push_back({Attrib(B0, 0, 8, mCoord), Attrib(M0, 0, 12, mColor)});
+    // 6. one buffer, sequential
+    mTestCases.push_back({Attrib(B0, 0, 8, mCoord), Attrib(B0, 96, 12, mColor)});
 
-    // memory and buffer, float and integer
+    // 7. one buffer, interleaved
+    mTestCases.push_back({Attrib(B0, 0, 20, mCoord), Attrib(B0, 8, 20, mColor)});
+
+    // 8. memory and buffer, float and integer
     mTestCases.push_back({Attrib(M0, 0, 8, mCoord), Attrib(B0, 0, 12, mBColor)});
 
-    // unusual offset and stride
-    mTestCases.push_back({Attrib(B0, 11, 13, mCoord), Attrib(B1, 23, 17, mColor)});
+    // 9. buffer and memory, unusual offset and stride
+    mTestCases.push_back({Attrib(B0, 11, 13, mCoord), Attrib(M0, 23, 17, mColor)});
 }
 
 class AttributeLayoutNonIndexed : public AttributeLayoutTest
@@ -395,6 +400,18 @@ class AttributeLayoutMemoryIndexed : public AttributeLayoutTest
 
 class AttributeLayoutBufferIndexed : public AttributeLayoutTest
 {
+    bool Skip(const TestCase &tc) override
+    {
+        if (IsVulkan() && UsesClientMemory(tc))
+        {
+            std::cout
+                << "test case skipped on Vulkan: indexed draw with vertex data in client memory"
+                << std::endl;
+            return true;
+        }
+        return false;
+    }
+
     void Draw(int firstVertex, unsigned vertexCount, const GLushort *indices) override
     {
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBuffer);
@@ -411,14 +428,6 @@ TEST_P(AttributeLayoutNonIndexed, Test)
     if (IsWindows() && IsAMD() && IsOpenGL())
     {
         std::cout << "test skipped on Windows ATI OpenGL: non-indexed non-zero vertex start"
-                  << std::endl;
-        return;
-    }
-
-    // TODO(fjhenigman): This should work but doesn't.  Figure out why.
-    if (IsVulkan())
-    {
-        std::cout << "test skipped on Vulkan: non-indexed non-zero vertex start"
                   << std::endl;
         return;
     }
@@ -448,15 +457,8 @@ TEST_P(AttributeLayoutMemoryIndexed, Test)
 
 TEST_P(AttributeLayoutBufferIndexed, Test)
 {
-    Run(true);
 
-    // TODO(fjhenigman): This should work but doesn't.  Figure out why.
-    if (IsVulkan())
-    {
-        std::cout << "test skipped on Vulkan: buffer indexed non-zero vertex start"
-                  << std::endl;
-        return;
-    }
+    Run(true);
 
     if (IsWindows() && IsAMD() && (IsOpenGL() || GetParam() == ES2_D3D11_FL9_3()))
     {
