@@ -774,11 +774,6 @@ void TType::realize()
     getMangledName();
 }
 
-bool TType::isRealized() const
-{
-    return mMangledName != nullptr;
-}
-
 void TType::invalidateMangledName()
 {
     mMangledName = nullptr;

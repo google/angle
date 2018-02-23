@@ -10,6 +10,7 @@
 
 #include "compiler/translator/ClampFragDepth.h"
 
+#include "compiler/translator/BuiltIn_autogen.h"
 #include "compiler/translator/FindSymbolNode.h"
 #include "compiler/translator/ImmutableString.h"
 #include "compiler/translator/IntermNode_util.h"
@@ -27,8 +28,7 @@ void ClampFragDepth(TIntermBlock *root, TSymbolTable *symbolTable)
         return;
     }
 
-    TIntermSymbol *fragDepthNode =
-        ReferenceBuiltInVariable(ImmutableString("gl_FragDepth"), *symbolTable, 300);
+    TIntermSymbol *fragDepthNode = new TIntermSymbol(BuiltInVariable::gl_FragDepth());
 
     TIntermTyped *minFragDepthNode = CreateZeroNode(TType(EbtFloat, EbpHigh, EvqConst));
 

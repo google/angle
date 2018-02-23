@@ -30,7 +30,6 @@
 //   are tracked in the intermediate representation, not the symbol table.
 //
 
-#include <array>
 #include <memory>
 
 #include "common/angleutils.h"
@@ -140,44 +139,16 @@ class TSymbolTable : angle::NonCopyable
 
     void pushBuiltInLevel();
 
-    // The insert* entry points are used when initializing the symbol table with built-ins.
-    void insertVariable(ESymbolLevel level, const ImmutableString &name, const TType *type);
-    void insertVariableExt(ESymbolLevel level,
-                           TExtension ext,
-                           const ImmutableString &name,
-                           const TType *type);
-
-    template <TPrecision precision>
-    void insertConstInt(ESymbolLevel level, const ImmutableString &name, int value);
-
-    template <TPrecision precision>
-    void insertConstIntExt(ESymbolLevel level,
-                           TExtension ext,
-                           const ImmutableString &name,
-                           int value);
-
-    template <TPrecision precision>
-    void insertConstIvec3(ESymbolLevel level,
-                          const ImmutableString &name,
-                          const std::array<int, 3> &values);
-
-    TVariable *insertVariable(ESymbolLevel level,
-                              const ImmutableString &name,
-                              const TType *type,
-                              SymbolType symbolType);
-
     void insertBuiltIn(ESymbolLevel level, const TSymbol *symbol);
 
     TFunction *findUserDefinedFunction(const ImmutableString &name) const;
 
     void initSamplerDefaultPrecision(TBasicType samplerType);
 
-    void initializeBuiltInVariables(sh::GLenum type,
-                                    ShShaderSpec spec,
-                                    const ShBuiltInResources &resources);
-    void markBuiltInInitializationFinished();
-
     void insertBuiltInFunctions(sh::GLenum shaderType);
+    void insertBuiltInVariables(sh::GLenum shaderType,
+                                ShShaderSpec spec,
+                                const ShBuiltInResources &resources);
 
     std::vector<std::unique_ptr<TSymbolTableBuiltInLevel>> mBuiltInTable;
     std::vector<std::unique_ptr<TSymbolTableLevel>> mTable;
@@ -189,12 +160,7 @@ class TSymbolTable : angle::NonCopyable
 
     int mUniqueIdCounter;
 
-    static const int kLastStaticBuiltInId;
-
-    // -1 before built-in init has finished, one past the last built-in id afterwards.
-    // TODO(oetuaho): Make this a compile-time constant once the symbol table is initialized at
-    // compile time. http://anglebug.com/1432
-    int mUserDefinedUniqueIdsStart;
+    static const int kLastBuiltInId;
 
     sh::GLenum mShaderType;
 };

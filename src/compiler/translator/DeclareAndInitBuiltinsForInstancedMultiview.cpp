@@ -9,6 +9,7 @@
 
 #include "compiler/translator/DeclareAndInitBuiltinsForInstancedMultiview.h"
 
+#include "compiler/translator/BuiltIn_autogen.h"
 #include "compiler/translator/FindMain.h"
 #include "compiler/translator/InitializeVariables.h"
 #include "compiler/translator/IntermNode_util.h"
@@ -24,19 +25,10 @@ namespace sh
 namespace
 {
 
-constexpr const ImmutableString kGlLayerString("gl_Layer");
-constexpr const ImmutableString kGlViewportIndexString("gl_ViewportIndex");
-constexpr const ImmutableString kGlViewIdOVRString("gl_ViewID_OVR");
-constexpr const ImmutableString kGlInstanceIdString("gl_InstanceID");
 constexpr const ImmutableString kViewIDVariableName("ViewID_OVR");
 constexpr const ImmutableString kInstanceIDVariableName("InstanceID");
 constexpr const ImmutableString kMultiviewBaseViewLayerIndexVariableName(
     "multiviewBaseViewLayerIndex");
-
-TIntermSymbol *CreateGLInstanceIDSymbol(const TSymbolTable &symbolTable)
-{
-    return ReferenceBuiltInVariable(kGlInstanceIdString, symbolTable, 300);
-}
 
 // Adds the InstanceID and ViewID_OVR initializers to the end of the initializers' sequence.
 void InitializeViewIDAndInstanceID(const TVariable *viewID,
@@ -53,7 +45,7 @@ void InitializeViewIDAndInstanceID(const TVariable *viewID,
 
     // Create a uint(gl_InstanceID) node.
     TIntermSequence *glInstanceIDSymbolCastArguments = new TIntermSequence();
-    glInstanceIDSymbolCastArguments->push_back(CreateGLInstanceIDSymbol(symbolTable));
+    glInstanceIDSymbolCastArguments->push_back(new TIntermSymbol(BuiltInVariable::gl_InstanceID()));
     TIntermAggregate *glInstanceIDAsUint = TIntermAggregate::CreateConstructor(
         TType(EbtUInt, EbpHigh, EvqTemporary), glInstanceIDSymbolCastArguments);
 
@@ -105,8 +97,7 @@ void SelectViewIndexInVertexShader(const TVariable *viewID,
         TType(EbtInt, EbpHigh, EvqTemporary), viewIDSymbolCastArguments);
 
     // Create a gl_ViewportIndex node.
-    TIntermSymbol *viewportIndexSymbol =
-        ReferenceBuiltInVariable(kGlViewportIndexString, symbolTable, 0);
+    TIntermSymbol *viewportIndexSymbol = new TIntermSymbol(BuiltInVariable::gl_ViewportIndex());
 
     // Create a { gl_ViewportIndex = int(ViewID_OVR) } node.
     TIntermBlock *viewportIndexInitializerInBlock = new TIntermBlock();
@@ -114,7 +105,7 @@ void SelectViewIndexInVertexShader(const TVariable *viewID,
         new TIntermBinary(EOpAssign, viewportIndexSymbol, viewIDAsInt));
 
     // Create a gl_Layer node.
-    TIntermSymbol *layerSymbol = ReferenceBuiltInVariable(kGlLayerString, symbolTable, 0);
+    TIntermSymbol *layerSymbol = new TIntermSymbol(BuiltInVariable::gl_LayerVS());
 
     // Create an int(ViewID_OVR) + multiviewBaseViewLayerIndex node
     TIntermBinary *sumOfViewIDAndBaseViewIndex = new TIntermBinary(
@@ -155,10 +146,7 @@ void DeclareAndInitBuiltinsForInstancedMultiview(TIntermBlock *root,
                       new TType(EbtUInt, EbpHigh, viewIDQualifier), SymbolType::AngleInternal);
 
     DeclareGlobalVariable(root, viewID);
-    ReplaceVariable(
-        root,
-        static_cast<const TVariable *>(symbolTable->findBuiltIn(kGlViewIdOVRString, 300, true)),
-        viewID);
+    ReplaceVariable(root, BuiltInVariable::gl_ViewID_OVR(), viewID);
     if (shaderType == GL_VERTEX_SHADER)
     {
         // Replacing gl_InstanceID with InstanceID should happen before adding the initializers of
@@ -168,10 +156,7 @@ void DeclareAndInitBuiltinsForInstancedMultiview(TIntermBlock *root,
             new TVariable(symbolTable, kInstanceIDVariableName, instanceIDVariableType,
                           SymbolType::AngleInternal);
         DeclareGlobalVariable(root, instanceID);
-        ReplaceVariable(root,
-                        static_cast<const TVariable *>(
-                            symbolTable->findBuiltIn(kGlInstanceIdString, 300, true)),
-                        instanceID);
+        ReplaceVariable(root, BuiltInVariable::gl_InstanceID(), instanceID);
 
         TIntermSequence *initializers = new TIntermSequence();
         InitializeViewIDAndInstanceID(viewID, instanceID, numberOfViews, *symbolTable,

@@ -82,6 +82,14 @@ TStructure::TStructure(TSymbolTable *symbolTable,
 {
 }
 
+TStructure::TStructure(const TSymbolUniqueId &id,
+                       const ImmutableString &name,
+                       TExtension extension,
+                       const TFieldList *fields)
+    : TSymbol(id, name, SymbolType::BuiltIn, extension), TFieldListCollection(fields)
+{
+}
+
 void TStructure::createSamplerSymbols(const char *namePrefix,
                                       const TString &apiNamePrefix,
                                       TVector<const TVariable *> *outputSymbols,
@@ -122,6 +130,17 @@ TInterfaceBlock::TInterfaceBlock(TSymbolTable *symbolTable,
       mBinding(layoutQualifier.binding)
 {
     ASSERT(name != nullptr);
+}
+
+TInterfaceBlock::TInterfaceBlock(const TSymbolUniqueId &id,
+                                 const ImmutableString &name,
+                                 TExtension extension,
+                                 const TFieldList *fields)
+    : TSymbol(id, name, SymbolType::BuiltIn, extension),
+      TFieldListCollection(fields),
+      mBlockStorage(EbsUnspecified),
+      mBinding(0)
+{
 }
 
 TFunction::TFunction(TSymbolTable *symbolTable,

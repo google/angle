@@ -27,6 +27,7 @@
             'compiler/translator/BaseTypes.h',
             'compiler/translator/BuiltInFunctionEmulator.cpp',
             'compiler/translator/BuiltInFunctionEmulator.h',
+            'compiler/translator/BuiltIn_autogen.h',
             'compiler/translator/BreakVariableAliasingInInnerLoops.cpp',
             'compiler/translator/BreakVariableAliasingInInnerLoops.h',
             'compiler/translator/CallDAG.cpp',

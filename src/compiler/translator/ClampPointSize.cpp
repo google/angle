@@ -8,6 +8,7 @@
 
 #include "compiler/translator/ClampPointSize.h"
 
+#include "compiler/translator/BuiltIn_autogen.h"
 #include "compiler/translator/FindSymbolNode.h"
 #include "compiler/translator/IntermNode_util.h"
 #include "compiler/translator/RunAtTheEndOfShader.h"
@@ -24,8 +25,7 @@ void ClampPointSize(TIntermBlock *root, float maxPointSize, TSymbolTable *symbol
         return;
     }
 
-    TIntermSymbol *pointSizeNode =
-        ReferenceBuiltInVariable(ImmutableString("gl_PointSize"), *symbolTable, 100);
+    TIntermSymbol *pointSizeNode = new TIntermSymbol(BuiltInVariable::gl_PointSize());
 
     TConstantUnion *maxPointSizeConstant = new TConstantUnion();
     maxPointSizeConstant->setFConst(maxPointSize);
