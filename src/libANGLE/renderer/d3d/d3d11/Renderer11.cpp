@@ -483,10 +483,10 @@ Renderer11::Renderer11(egl::Display *display)
 
     ZeroMemory(&mAdapterDescription, sizeof(mAdapterDescription));
 
+    const auto &attributes = mDisplay->getAttributeMap();
+
     if (mDisplay->getPlatform() == EGL_PLATFORM_ANGLE_ANGLE)
     {
-        const auto &attributes = mDisplay->getAttributeMap();
-
         EGLint requestedMajorVersion = static_cast<EGLint>(
             attributes.get(EGL_PLATFORM_ANGLE_MAX_VERSION_MAJOR_ANGLE, EGL_DONT_CARE));
         EGLint requestedMinorVersion = static_cast<EGLint>(
@@ -549,10 +549,6 @@ Renderer11::Renderer11(egl::Display *display)
                 UNREACHABLE();
         }
 
-        const EGLenum presentPath = static_cast<EGLenum>(attributes.get(
-            EGL_EXPERIMENTAL_PRESENT_PATH_ANGLE, EGL_EXPERIMENTAL_PRESENT_PATH_COPY_ANGLE));
-        mPresentPathFastEnabled = (presentPath == EGL_EXPERIMENTAL_PRESENT_PATH_FAST_ANGLE);
-
         mCreateDebugDevice = ShouldUseDebugLayers(attributes);
     }
     else if (mDisplay->getPlatform() == EGL_PLATFORM_DEVICE_EXT)
@@ -563,8 +559,11 @@ Renderer11::Renderer11(egl::Display *display)
         // Also set EGL_PLATFORM_ANGLE_ANGLE variables, in case they're used elsewhere in ANGLE
         // mAvailableFeatureLevels defaults to empty
         mRequestedDriverType    = D3D_DRIVER_TYPE_UNKNOWN;
-        mPresentPathFastEnabled = false;
     }
+
+    const EGLenum presentPath = static_cast<EGLenum>(attributes.get(
+        EGL_EXPERIMENTAL_PRESENT_PATH_ANGLE, EGL_EXPERIMENTAL_PRESENT_PATH_COPY_ANGLE));
+    mPresentPathFastEnabled = (presentPath == EGL_EXPERIMENTAL_PRESENT_PATH_FAST_ANGLE);
 
 // The D3D11 renderer must choose the D3D9 debug annotator because the D3D11 interface
 // method ID3DUserDefinedAnnotation::GetStatus on desktop builds doesn't work with the Graphics
