@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f0847813_75e2e44a",
+        "filename": "src/tests/gl_tests/AttributeLayoutTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-02-23T23:57:29Z",
+      "side": 1,
+      "message": "I\u0027d expect enable() to return success / failure and not this.\nMy suggestion is to be more explicit about client memory throughout the code.\nChecking getAddress(), setting mClientMemory in PrepareTestCase(), so it can be used in Skip(), blows my mind.\nCan you just add \"bool isClientMemory()\" to Container, Memory, Buffer and Attrib, then pass TestCase to Skip() and check isClientMemory() there?",
+      "range": {
+        "startLine": 142,
+        "startChar": 7,
+        "endLine": 142,
+        "endChar": 62
+      },
+      "revId": "aa054c93da4075bebc72049bbccc3469f8e8e147",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "62adfd62_e6ad0834",
+        "filename": "src/tests/gl_tests/AttributeLayoutTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 238,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-02-23T23:57:29Z",
+      "side": 1,
+      "message": "As I said above, it is counterintuitive that result of Skip() depends on PrepareTestCase.\nI\u0027d prefer if Skip would be the first thing in the loop body.",
+      "range": {
+        "startLine": 238,
+        "startChar": 16,
+        "endLine": 238,
+        "endChar": 20
+      },
+      "revId": "aa054c93da4075bebc72049bbccc3469f8e8e147",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
