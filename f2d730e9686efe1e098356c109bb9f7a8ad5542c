@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9412713d_cc119671",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 398,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-02-23T07:49:54Z",
+      "side": 1,
+      "message": "Actually, could we use ParseContext::checkCanUseExtension() here? That way we\u0027d also get the correct behavior in case there\u0027s a \"warn\" extension directive.",
+      "revId": "f2d730e9686efe1e098356c109bb9f7a8ad5542c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
