@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0fd76385_5038d906",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 427,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2018-02-23T03:46:31Z",
+      "side": 1,
+      "message": "This movement is subtle -- is it because mGLState has to be reset before the transform feedback map is? Could you add a comment?",
+      "range": {
+        "startLine": 427,
+        "startChar": 13,
+        "endLine": 427,
+        "endChar": 18
+      },
+      "revId": "0c51e69ab2dc8747f3b9f1f7ba3f6cd4270445c4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a14b966e_d841049f",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2018-02-23T03:46:31Z",
+      "side": 1,
+      "message": "Strictly speaking, for this check, do we need to iterate through all of the enabled vertex attributes of the current VAO, or could we iterate down the indexed binding points of the current transform feedback?\n\nTrying to think of ways to minimize the validation cost. I thought there were generally fewer maximum supported transform feedback varyings than maximum supported vertex attributes, and that iterating down those instead was how Firefox minimized the validation cost. I\u0027m probably thinking about this incorrectly.",
+      "revId": "0c51e69ab2dc8747f3b9f1f7ba3f6cd4270445c4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5cc7fd1f_8acbb368",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2659,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2018-02-23T03:46:31Z",
+      "side": 1,
+      "message": "Strictly speaking, should we be putting this and the other new checks under the webglCompatibility test? Or do we all think it\u0027s OK to apply these to pure ES 3.0 too? Fine with me either way, just wondering if we\u0027ll break the dEQP.",
+      "range": {
+        "startLine": 2659,
+        "startChar": 8,
+        "endLine": 2659,
+        "endChar": 31
+      },
+      "revId": "0c51e69ab2dc8747f3b9f1f7ba3f6cd4270445c4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
