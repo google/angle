@@ -75,6 +75,22 @@ using GLTransformFeedback = GLWrapper<glGenTransformFeedbacks, glDeleteTransform
 using GLProgramPipeline   = GLWrapper<glGenProgramPipelines, glDeleteProgramPipelines>;
 using GLQueryEXT          = GLWrapper<glGenQueriesEXT, glDeleteQueriesEXT>;
 
+class GLShader : angle::NonCopyable
+{
+  public:
+    GLShader() = delete;
+    explicit GLShader(GLenum shaderType) { mHandle = glCreateShader(shaderType); }
+
+    ~GLShader() { glDeleteShader(mHandle); }
+
+    GLuint get() { return mHandle; }
+
+    operator GLuint() { return get(); }
+
+  private:
+    GLuint mHandle;
+};
+
 // Don't use GLProgram directly, use ANGLE_GL_PROGRAM.
 namespace priv
 {

@@ -134,6 +134,7 @@ ERRMSG(NegativePrimcount, "Primcount must be greater than or equal to zero.");
 ERRMSG(NegativeSize, "Cannot have negative height or width.");
 ERRMSG(NegativeStart, "Cannot have negative start.");
 ERRMSG(NegativeStride, "Cannot have negative stride.");
+ERRMSG(NoActiveComputeShaderStage, "No active compute shader stage in this program.");
 ERRMSG(NoActiveProgramWithComputeShader, "No active program for the compute shader stage.");
 ERRMSG(NoSuchPath, "No such path object.");
 ERRMSG(NoTransformFeedbackOutputVariables,

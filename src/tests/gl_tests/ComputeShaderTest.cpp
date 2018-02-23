@@ -1152,6 +1152,47 @@ TEST_P(ComputeShaderTest, BindImageTextureWithOneLayerTextureCube)
     }
 }
 
+// Verify an INVALID_OPERATION error is reported when querying GL_COMPUTE_WORK_GROUP_SIZE for a
+// program which has not been linked successfully or which does not contain objects to form a
+// compute shader.
+TEST_P(ComputeShaderTest, QueryComputeWorkGroupSize)
+{
+    const std::string vsSource =
+        R"(#version 310 es
+        void main()
+        {
+        })";
+
+    const std::string fsSource =
+        R"(#version 310 es
+        void main()
+        {
+        })";
+
+    GLint workGroupSize[3];
+
+    ANGLE_GL_PROGRAM(graphicsProgram, vsSource, fsSource);
+    glGetProgramiv(graphicsProgram, GL_COMPUTE_WORK_GROUP_SIZE, workGroupSize);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    GLuint computeProgram = glCreateProgram();
+    GLShader computeShader(GL_COMPUTE_SHADER);
+    glAttachShader(computeProgram, computeShader);
+    glLinkProgram(computeProgram);
+    glDetachShader(computeProgram, computeShader);
+
+    GLint linkStatus;
+    glGetProgramiv(computeProgram, GL_LINK_STATUS, &linkStatus);
+    ASSERT_GL_FALSE(linkStatus);
+
+    glGetProgramiv(computeProgram, GL_COMPUTE_WORK_GROUP_SIZE, workGroupSize);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    glDeleteProgram(computeProgram);
+
+    ASSERT_GL_NO_ERROR();
+}
+
 // Check that it is not possible to create a compute shader when the context does not support ES
 // 3.10
 TEST_P(ComputeShaderTestES3, NotSupported)

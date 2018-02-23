@@ -4168,11 +4168,33 @@ bool ValidateGetProgramivBase(ValidationContext *context,
             break;
 
         case GL_PROGRAM_SEPARABLE:
-        case GL_COMPUTE_WORK_GROUP_SIZE:
         case GL_ACTIVE_ATOMIC_COUNTER_BUFFERS:
             if (context->getClientVersion() < Version(3, 1))
             {
                 ANGLE_VALIDATION_ERR(context, InvalidEnum(), ES31Required);
+                return false;
+            }
+            break;
+
+        case GL_COMPUTE_WORK_GROUP_SIZE:
+            if (context->getClientVersion() < Version(3, 1))
+            {
+                ANGLE_VALIDATION_ERR(context, InvalidEnum(), ES31Required);
+                return false;
+            }
+
+            // [OpenGL ES 3.1] Chapter 7.12 Page 122
+            // An INVALID_OPERATION error is generated if COMPUTE_WORK_GROUP_SIZE is queried for a
+            // program which has not been linked successfully, or which does not contain objects to
+            // form a compute shader.
+            if (!programObject->isLinked())
+            {
+                ANGLE_VALIDATION_ERR(context, InvalidOperation(), ProgramNotLinked);
+                return false;
+            }
+            if (!programObject->hasLinkedComputeShader())
+            {
+                ANGLE_VALIDATION_ERR(context, InvalidOperation(), NoActiveComputeShaderStage);
                 return false;
             }
             break;
