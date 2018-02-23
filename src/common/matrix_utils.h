@@ -20,8 +20,6 @@
 #include "common/mathutil.h"
 #include "common/vector_utils.h"
 
-#include "math.h"
-
 namespace angle
 {
 
