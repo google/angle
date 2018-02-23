@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "094974fa_3db25d07",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2232,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-02-23T04:39:33Z",
+      "side": 1,
+      "message": "As resolveCompile is called in all shader-\u003eget* functions, we cannot make them const.",
+      "parentUuid": "c614590b_0f9df6f4",
+      "range": {
+        "startLine": 2229,
+        "startChar": 0,
+        "endLine": 2232,
+        "endChar": 60
+      },
+      "revId": "c3c41c01f99a888f44d1473e6f621e59ec67ef53",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "58481ceb_e06f8ad3",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 2
@@ -39,6 +63,24 @@
       "revId": "c3c41c01f99a888f44d1473e6f621e59ec67ef53",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0410bb81_c6b54863",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2233,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-02-23T04:39:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "58481ceb_e06f8ad3",
+      "revId": "c3c41c01f99a888f44d1473e6f621e59ec67ef53",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
