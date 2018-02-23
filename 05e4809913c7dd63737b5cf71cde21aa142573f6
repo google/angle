@@ -1,0 +1,84 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "19d39b50_492047bf",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-02-23T07:38:49Z",
+      "side": 1,
+      "message": "I don\u0027t think that a swizzleNode can lose the qualifier information.",
+      "range": {
+        "startLine": 10,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 11
+      },
+      "revId": "05e4809913c7dd63737b5cf71cde21aa142573f6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "979fb296_8333a630",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-02-23T07:38:49Z",
+      "side": 1,
+      "message": "Should be angle_unittests",
+      "range": {
+        "startLine": 14,
+        "startChar": 5,
+        "endLine": 14,
+        "endChar": 24
+      },
+      "revId": "05e4809913c7dd63737b5cf71cde21aa142573f6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ee2e8e59_99e91d69",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 505,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-02-23T07:38:49Z",
+      "side": 1,
+      "message": "I think it would be better to rather add the check here if the op is indexing the block and also keep the original check. I\u0027m not entirely sure how the readonly qualifier gets propagated to op nodes so the qualifier check at the top of the function might result in odd error messages sometimes.",
+      "revId": "05e4809913c7dd63737b5cf71cde21aa142573f6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "594292d3_9713c751",
+        "filename": "src/tests/compiler_tests/BufferVariables_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 208,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-02-23T07:38:49Z",
+      "side": 1,
+      "message": "Can you also add a test where there\u0027s a readonly struct inside the buffer, and one of the members of the struct gets used as an l-value?",
+      "revId": "05e4809913c7dd63737b5cf71cde21aa142573f6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
