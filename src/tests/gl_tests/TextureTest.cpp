@@ -3655,6 +3655,21 @@ TEST_P(TextureCubeTestES3, SpecifyAndSampleFromBaseLevel1)
     EXPECT_PIXEL_COLOR_EQ(0, 0, angle::GLColor::white);
 }
 
+// Verify that using negative texture base level and max level generates GL_INVALID_VALUE.
+TEST_P(Texture2DTestES3, NegativeTextureBaseLevelAndMaxLevel)
+{
+    GLuint texture = create2DTexture();
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, -1);
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, -1);
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+    glDeleteTextures(1, &texture);
+    EXPECT_GL_NO_ERROR();
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
 // TODO(oetuaho): Enable all below tests on OpenGL. Requires a fix for ANGLE bug 1278.
 ANGLE_INSTANTIATE_TEST(Texture2DTest,

@@ -82,7 +82,7 @@ GLenum ConvertToGLenum(ParamType param)
 }
 
 template <typename ParamType>
-GLenum ConvertToGLint(ParamType param)
+GLint ConvertToGLint(ParamType param)
 {
     return CastQueryValueTo<GLint>(GL_NONE, param);
 }
