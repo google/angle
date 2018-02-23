@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3c6e831d_2b34c262",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-02-23T02:01:00Z",
+      "side": 1,
+      "message": "Is it better to change this title to \"ES31: Fix incorrect error code in DispatchComputeIndirect\" ?",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 30
+      },
+      "revId": "a6718b72d29ba47ab4e9960b18a641fdceb3f636",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
