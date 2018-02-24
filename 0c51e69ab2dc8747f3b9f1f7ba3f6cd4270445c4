@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "21bbcaf1_3cbff30c",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 427,
+      "author": {
+        "id": 1256148
+      },
+      "writtenOn": "2018-02-24T01:03:37Z",
+      "side": 1,
+      "message": "I made this change while debugging a use after free, but it really shouldn\u0027t be necessary, and I\u0027ve verified that it\u0027s no longer needed.",
+      "parentUuid": "0fd76385_5038d906",
+      "range": {
+        "startLine": 427,
+        "startChar": 13,
+        "endLine": 427,
+        "endChar": 18
+      },
+      "revId": "0c51e69ab2dc8747f3b9f1f7ba3f6cd4270445c4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a14b966e_d841049f",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 10
@@ -39,6 +63,24 @@
       "revId": "0c51e69ab2dc8747f3b9f1f7ba3f6cd4270445c4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ea9c17e1_7138362b",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1256148
+      },
+      "writtenOn": "2018-02-24T01:03:37Z",
+      "side": 1,
+      "message": "If we iterate over the bound transform feedback buffers we could tell whether they\u0027re double bound, but that doesn\u0027t tell us whether they are used as vertex attributes or not. It\u0027s not an error to have a double bound buffer if it\u0027s not used by the current draw call.",
+      "parentUuid": "a14b966e_d841049f",
+      "revId": "0c51e69ab2dc8747f3b9f1f7ba3f6cd4270445c4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -62,6 +104,30 @@
       "revId": "0c51e69ab2dc8747f3b9f1f7ba3f6cd4270445c4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7cdc6e43_1e0e743e",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2659,
+      "author": {
+        "id": 1256148
+      },
+      "writtenOn": "2018-02-24T01:03:37Z",
+      "side": 1,
+      "message": "Yes, this breaks dEQP. I\u0027ll put the new checks behind webglCompatibility.",
+      "parentUuid": "5cc7fd1f_8acbb368",
+      "range": {
+        "startLine": 2659,
+        "startChar": 8,
+        "endLine": 2659,
+        "endChar": 31
+      },
+      "revId": "0c51e69ab2dc8747f3b9f1f7ba3f6cd4270445c4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }

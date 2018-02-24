@@ -16,6 +16,24 @@
       "revId": "defe39374104ce6745017828a32c97d23ce49bb1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9c62aecb_7ea2f6ce",
+        "filename": "src/libANGLE/State.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 572,
+      "author": {
+        "id": 1256148
+      },
+      "writtenOn": "2018-02-24T01:03:37Z",
+      "side": 0,
+      "message": "I was surprised we don\u0027t have a warning for that.",
+      "parentUuid": "3e540625_ec6f33aa",
+      "revId": "defe39374104ce6745017828a32c97d23ce49bb1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
