@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fdfe1f40_29d00763",
+        "filename": "src/libANGLE/ImageIndex.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-25T23:17:50Z",
+      "side": 1,
+      "message": "I\u0027m a little suspicious about the performance of this snippet of code - it seems like it could be in a hot spot. Please, if this CL causes a regression in one of the tests, put the inlined code back.",
+      "range": {
+        "startLine": 86,
+        "startChar": 0,
+        "endLine": 87,
+        "endChar": 77
+      },
+      "revId": "6cc5ccfd150a4d6224380146af64615d11d47f42",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "833d4222_dc9dd368",
+        "filename": "src/libANGLE/ImageIndex.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-25T23:17:50Z",
+      "side": 1,
+      "message": "nit: can you put the \u003d default stuff into the cpp?",
+      "range": {
+        "startLine": 31,
+        "startChar": 0,
+        "endLine": 33,
+        "endChar": 0
+      },
+      "revId": "6cc5ccfd150a4d6224380146af64615d11d47f42",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
