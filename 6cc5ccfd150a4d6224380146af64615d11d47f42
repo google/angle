@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "b4b02730_d15cf563",
+        "filename": "src/libANGLE/ImageIndex.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-02-26T16:33:09Z",
+      "side": 1,
+      "message": "I\u0027ll watch it.  Theoretically through Template Magic™ it should result in very similar code.",
+      "parentUuid": "fdfe1f40_29d00763",
+      "range": {
+        "startLine": 86,
+        "startChar": 0,
+        "endLine": 87,
+        "endChar": 77
+      },
+      "revId": "6cc5ccfd150a4d6224380146af64615d11d47f42",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "833d4222_dc9dd368",
         "filename": "src/libANGLE/ImageIndex.h",
         "patchSetId": 4
@@ -45,6 +69,30 @@
       "revId": "6cc5ccfd150a4d6224380146af64615d11d47f42",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f31dac36_0221c9eb",
+        "filename": "src/libANGLE/ImageIndex.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-02-26T16:33:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "833d4222_dc9dd368",
+      "range": {
+        "startLine": 31,
+        "startChar": 0,
+        "endLine": 33,
+        "endChar": 0
+      },
+      "revId": "6cc5ccfd150a4d6224380146af64615d11d47f42",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
