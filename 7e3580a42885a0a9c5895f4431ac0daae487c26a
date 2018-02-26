@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "66f1b543_52c93920",
+        "filename": "src/libANGLE/ErrorStrings.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-02-26T02:32:37Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "a1099b13_97a1b204",
+      "revId": "7e3580a42885a0a9c5895f4431ac0daae487c26a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e43436b8_f44c54ad",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 3
@@ -72,6 +90,30 @@
       "side": 1,
       "message": "I think according to SPEC it is better to treat \"Program not linked\" and \"No active compute shader stage\" as two different errors here. Do you think so?",
       "parentUuid": "e43436b8_f44c54ad",
+      "range": {
+        "startLine": 4190,
+        "startChar": 0,
+        "endLine": 4199,
+        "endChar": 13
+      },
+      "revId": "7e3580a42885a0a9c5895f4431ac0daae487c26a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2bb4041e_4433e3e7",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 4199,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-02-26T02:32:37Z",
+      "side": 1,
+      "message": "I think you are right. LGTM.",
+      "parentUuid": "2cb917c1_ecc47a09",
       "range": {
         "startLine": 4190,
         "startChar": 0,
