@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "b5c0e030_848063d4",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-26T14:53:00Z",
+      "side": 1,
+      "message": "nit: can you amend this comment as well?",
+      "range": {
+        "startLine": 11,
+        "startChar": 42,
+        "endLine": 12,
+        "endChar": 24
+      },
+      "revId": "6791dfc9d35f9b31d4a24f302d35b32b72f0d01b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "386b9105_689d8d1d",
         "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
         "patchSetId": 6
