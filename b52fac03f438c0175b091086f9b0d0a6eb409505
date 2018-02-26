@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "562a3a0c_7176d3f8",
+        "filename": "src/common/utilities.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-26T23:52:12Z",
+      "side": 0,
+      "message": "Moved these to PackedEnums.h do avoid a libANGLE -\u003e common dependency.",
+      "revId": "b52fac03f438c0175b091086f9b0d0a6eb409505",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

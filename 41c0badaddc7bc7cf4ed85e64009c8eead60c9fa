@@ -1,0 +1,174 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a16ea66_c93a4a2e",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 982,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-26T23:52:12Z",
+      "side": 1,
+      "message": "The conversion stops at a bunch of places in this file, mostly on the Impl interfaces.",
+      "revId": "41c0badaddc7bc7cf4ed85e64009c8eead60c9fa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5ade51bf_f480418a",
+        "filename": "src/libANGLE/Image.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-26T23:52:12Z",
+      "side": 1,
+      "message": "Another stop point. (ASP)",
+      "revId": "41c0badaddc7bc7cf4ed85e64009c8eead60c9fa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "be9992bc_cfe920b1",
+        "filename": "src/libANGLE/State.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 525,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-26T23:52:12Z",
+      "side": 1,
+      "message": "This is one of the wins we were looking for.",
+      "revId": "41c0badaddc7bc7cf4ed85e64009c8eead60c9fa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ad8593c2_d4d89b96",
+        "filename": "src/libANGLE/Texture.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 185,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-26T23:52:12Z",
+      "side": 1,
+      "message": "ASP",
+      "revId": "41c0badaddc7bc7cf4ed85e64009c8eead60c9fa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2d022d36_dfc87ba7",
+        "filename": "src/libANGLE/Texture.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-26T23:52:12Z",
+      "side": 1,
+      "message": "ASP in the duplicates here.",
+      "revId": "41c0badaddc7bc7cf4ed85e64009c8eead60c9fa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "72de0383_92d67f9b",
+        "filename": "src/libANGLE/packed_gl_enums.json",
+        "patchSetId": 7
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-26T23:52:12Z",
+      "side": 1,
+      "message": "As a TODO I should make sure these enums line up on common values so that conversions are super cheap.",
+      "revId": "41c0badaddc7bc7cf4ed85e64009c8eead60c9fa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3da3a31d_53d32e26",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2619,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-26T23:52:12Z",
+      "side": 1,
+      "message": "ASP. Not sure what to do about gl::UniformTypeInfo given it is in common/ Can it use PackedGLEnums?",
+      "revId": "41c0badaddc7bc7cf4ed85e64009c8eead60c9fa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "71523078_1e83de87",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2359,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-26T23:52:12Z",
+      "side": 1,
+      "message": "ASP",
+      "revId": "41c0badaddc7bc7cf4ed85e64009c8eead60c9fa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aa1c498d_f9458f4c",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 3262,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-26T23:52:12Z",
+      "side": 1,
+      "message": "ASP",
+      "revId": "41c0badaddc7bc7cf4ed85e64009c8eead60c9fa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7c39b7e2_d94c379c",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 969,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-26T23:52:12Z",
+      "side": 1,
+      "message": "ASP",
+      "revId": "41c0badaddc7bc7cf4ed85e64009c8eead60c9fa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
