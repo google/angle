@@ -38,6 +38,7 @@ class VertexArrayVk : public VertexArrayImpl
 
     void updateDrawDependencies(vk::CommandGraphNode *readNode,
                                 const gl::AttributesMask &activeAttribsMask,
+                                ResourceVk *elementArrayBufferOverride,
                                 Serial serial,
                                 DrawType drawType);
 

@@ -165,6 +165,7 @@ const gl::AttribArray<VkDeviceSize> &VertexArrayVk::getCurrentArrayBufferOffsets
 
 void VertexArrayVk::updateDrawDependencies(vk::CommandGraphNode *readNode,
                                            const gl::AttributesMask &activeAttribsMask,
+                                           ResourceVk *elementArrayBufferOverride,
                                            Serial serial,
                                            DrawType drawType)
 {
@@ -178,8 +179,15 @@ void VertexArrayVk::updateDrawDependencies(vk::CommandGraphNode *readNode,
     // Handle the bound element array buffer.
     if (drawType == DrawType::Elements)
     {
-        ASSERT(mCurrentElementArrayBufferResource);
-        mCurrentElementArrayBufferResource->onReadResource(readNode, serial);
+        if (elementArrayBufferOverride != nullptr)
+        {
+            elementArrayBufferOverride->onReadResource(readNode, serial);
+        }
+        else
+        {
+            ASSERT(mCurrentElementArrayBufferResource);
+            mCurrentElementArrayBufferResource->onReadResource(readNode, serial);
+        }
     }
 }
 

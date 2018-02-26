@@ -161,6 +161,7 @@ gl::Error ContextVk::setupDraw(const gl::Context *context,
                                DrawType drawType,
                                int firstVertex,
                                int lastVertex,
+                               ResourceVk *elementArrayBufferOverride,
                                vk::CommandBuffer **commandBuffer)
 {
     if (mode != mCurrentDrawMode)
@@ -199,11 +200,12 @@ gl::Error ContextVk::setupDraw(const gl::Context *context,
     }
 
     // Ensure any writes to the VAO buffers are flushed before we read from them.
-    if (mVertexArrayDirty)
+    if (mVertexArrayDirty || elementArrayBufferOverride != nullptr)
     {
+
         mVertexArrayDirty = false;
         vkVAO->updateDrawDependencies(renderNode, programGL->getActiveAttribLocationsMask(),
-                                      queueSerial, drawType);
+                                      elementArrayBufferOverride, queueSerial, drawType);
     }
 
     // Ensure any writes to the textures are flushed before we read from them.
@@ -264,11 +266,14 @@ gl::Error ContextVk::setupDraw(const gl::Context *context,
 gl::Error ContextVk::drawArrays(const gl::Context *context, GLenum mode, GLint first, GLsizei count)
 {
     vk::CommandBuffer *commandBuffer = nullptr;
-    ANGLE_TRY(setupDraw(context, mode, DrawType::Arrays, first, first + count - 1, &commandBuffer));
+    ANGLE_TRY(setupDraw(context, mode, DrawType::Arrays, first, first + count - 1, nullptr,
+                        &commandBuffer));
 
     if (mode == GL_LINE_LOOP)
     {
-        ANGLE_TRY(mLineLoopHandler.draw(this, first, count, commandBuffer));
+        ANGLE_TRY(mLineLoopHandler.createIndexBuffer(this, first, count));
+        mLineLoopHandler.bindIndexBuffer(VK_INDEX_TYPE_UINT32, &commandBuffer);
+        ANGLE_TRY(mLineLoopHandler.draw(count, commandBuffer));
     }
     else
     {
@@ -294,32 +299,49 @@ gl::Error ContextVk::drawElements(const gl::Context *context,
                                   GLenum type,
                                   const void *indices)
 {
-    vk::CommandBuffer *commandBuffer;
-    // TODO(fjhenigman): calculate the index range and pass to setupDraw()
-    ANGLE_TRY(setupDraw(context, mode, DrawType::Elements, 0, 0, &commandBuffer));
-
-    if (indices)
-    {
-        // TODO(jmadill): Buffer offsets and immediate data.
-        UNIMPLEMENTED();
-        return gl::InternalError() << "Only zero-offset index buffers are currently implemented.";
-    }
-
-    if (type == GL_UNSIGNED_BYTE)
-    {
-        // TODO(jmadill): Index translation.
-        UNIMPLEMENTED();
-        return gl::InternalError() << "Unsigned byte translation is not yet implemented.";
-    }
-
     const gl::Buffer *elementArrayBuffer =
         mState.getState().getVertexArray()->getElementArrayBuffer().get();
     ASSERT(elementArrayBuffer);
 
-    BufferVk *elementArrayBufferVk = vk::GetImpl(elementArrayBuffer);
+    BufferVk *elementArrayBufferVk   = vk::GetImpl(elementArrayBuffer);
+    vk::CommandBuffer *commandBuffer = nullptr;
 
-    commandBuffer->bindIndexBuffer(elementArrayBufferVk->getVkBuffer(), 0, GetVkIndexType(type));
-    commandBuffer->drawIndexed(count, 1, 0, 0, 0);
+    if (mode == GL_LINE_LOOP)
+    {
+        ANGLE_TRY(mLineLoopHandler.createIndexBufferFromElementArrayBuffer(
+            this, elementArrayBufferVk, GetVkIndexType(type), count));
+
+        // TODO(fjhenigman): calculate the index range and pass to setupDraw()
+        ANGLE_TRY(setupDraw(context, mode, DrawType::Elements, 0, 0,
+                            mLineLoopHandler.getLineLoopBufferResource(), &commandBuffer));
+
+        mLineLoopHandler.bindIndexBuffer(GetVkIndexType(type), &commandBuffer);
+        commandBuffer->drawIndexed(count + 1, 1, 0, 0, 0);
+    }
+    else
+    {
+        // TODO(fjhenigman): calculate the index range and pass to setupDraw()
+        ANGLE_TRY(setupDraw(context, mode, DrawType::Elements, 0, 0, nullptr, &commandBuffer));
+
+        if (indices)
+        {
+            // TODO(jmadill): Buffer offsets and immediate data.
+            UNIMPLEMENTED();
+            return gl::InternalError()
+                   << "Only zero-offset index buffers are currently implemented.";
+        }
+
+        if (type == GL_UNSIGNED_BYTE)
+        {
+            // TODO(jmadill): Index translation.
+            UNIMPLEMENTED();
+            return gl::InternalError() << "Unsigned byte translation is not yet implemented.";
+        }
+
+        commandBuffer->bindIndexBuffer(elementArrayBufferVk->getVkBuffer(), 0,
+                                       GetVkIndexType(type));
+        commandBuffer->drawIndexed(count, 1, 0, 0, 0);
+    }
 
     return gl::NoError();
 }

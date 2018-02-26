@@ -56,7 +56,7 @@ gl::Error BufferVk::setData(const gl::Context *context,
 
         const VkImageUsageFlags usageFlags =
             (VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT |
-             VK_BUFFER_USAGE_INDEX_BUFFER_BIT);
+             VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_SRC_BIT);
 
         // TODO(jmadill): Proper usage bit implementation. Likely will involve multiple backing
         // buffers like in D3D11.

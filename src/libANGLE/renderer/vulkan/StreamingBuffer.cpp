@@ -68,6 +68,7 @@ gl::Error StreamingBuffer::allocate(ContextVk *context,
         createInfo.queueFamilyIndexCount = 0;
         createInfo.pQueueFamilyIndices   = nullptr;
         ANGLE_TRY(mBuffer.init(device, createInfo));
+
         ANGLE_TRY(vk::AllocateBufferMemory(renderer, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, &mBuffer,
                                            &mMemory, &mSize));
         ANGLE_TRY(mMemory.map(device, 0, mSize, 0, &mMappedMemory));

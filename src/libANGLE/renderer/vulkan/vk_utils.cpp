@@ -10,9 +10,9 @@
 #include "libANGLE/renderer/vulkan/vk_utils.h"
 
 #include "libANGLE/Context.h"
+#include "libANGLE/renderer/vulkan/BufferVk.h"
 #include "libANGLE/renderer/vulkan/CommandGraph.h"
 #include "libANGLE/renderer/vulkan/ContextVk.h"
-#include "libANGLE/renderer/vulkan/RenderTargetVk.h"
 #include "libANGLE/renderer/vulkan/RendererVk.h"
 
 namespace rx
@@ -457,6 +457,15 @@ void CommandBuffer::copyBuffer(const vk::Buffer &srcBuffer,
     ASSERT(valid());
     ASSERT(srcBuffer.valid() && destBuffer.valid());
     vkCmdCopyBuffer(mHandle, srcBuffer.getHandle(), destBuffer.getHandle(), regionCount, regions);
+}
+
+void CommandBuffer::copyBuffer(const VkBuffer &srcBuffer,
+                               const VkBuffer &destBuffer,
+                               uint32_t regionCount,
+                               const VkBufferCopy *regions)
+{
+    ASSERT(valid());
+    vkCmdCopyBuffer(mHandle, srcBuffer, destBuffer, regionCount, regions);
 }
 
 void CommandBuffer::clearSingleColorImage(const vk::Image &image, const VkClearColorValue &color)
@@ -1322,7 +1331,8 @@ void GarbageObject::destroy(VkDevice device)
 
 LineLoopHandler::LineLoopHandler()
     : mStreamingLineLoopIndicesData(
-          new StreamingBuffer(VK_BUFFER_USAGE_INDEX_BUFFER_BIT, kLineLoopStreamingBufferMinSize)),
+          new StreamingBuffer(VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
+                              kLineLoopStreamingBufferMinSize)),
       mLineLoopIndexBuffer(VK_NULL_HANDLE),
       mLineLoopIndexBufferOffset(VK_NULL_HANDLE)
 {
@@ -1330,10 +1340,12 @@ LineLoopHandler::LineLoopHandler()
 
 LineLoopHandler::~LineLoopHandler() = default;
 
-gl::Error LineLoopHandler::bindLineLoopIndexBuffer(ContextVk *contextVk,
-                                                   int firstVertex,
-                                                   int count,
-                                                   vk::CommandBuffer **commandBuffer)
+void LineLoopHandler::bindIndexBuffer(VkIndexType indexType, vk::CommandBuffer **commandBuffer)
+{
+    (*commandBuffer)->bindIndexBuffer(mLineLoopIndexBuffer, mLineLoopIndexBufferOffset, indexType);
+}
+
+gl::Error LineLoopHandler::createIndexBuffer(ContextVk *contextVk, int firstVertex, int count)
 {
     int lastVertex = firstVertex + count;
     if (mLineLoopIndexBuffer == VK_NULL_HANDLE || !mLineLoopBufferFirstIndex.valid() ||
@@ -1363,8 +1375,48 @@ gl::Error LineLoopHandler::bindLineLoopIndexBuffer(ContextVk *contextVk,
         mLineLoopBufferLastIndex  = lastVertex;
     }
 
-    (*commandBuffer)
-        ->bindIndexBuffer(mLineLoopIndexBuffer, mLineLoopIndexBufferOffset, VK_INDEX_TYPE_UINT32);
+    return gl::NoError();
+}
+
+gl::Error LineLoopHandler::createIndexBufferFromElementArrayBuffer(ContextVk *contextVk,
+                                                                   BufferVk *bufferVk,
+                                                                   VkIndexType indexType,
+                                                                   int count)
+{
+    ASSERT(indexType == VK_INDEX_TYPE_UINT16 || indexType == VK_INDEX_TYPE_UINT32);
+
+    if (mLineLoopIndexBuffer != VK_NULL_HANDLE)
+    {
+        return gl::NoError();
+    }
+
+    uint32_t *indices = nullptr;
+
+    // TODO: Use the signal_utils to know when the user's bufferVk has changed and if it did we copy
+    // again. Otherwise if we already created that fake index buffer we keep it and avoid recopying
+    // every time.
+    auto unitSize = (indexType == VK_INDEX_TYPE_UINT16 ? sizeof(uint16_t) : sizeof(uint32_t));
+    ANGLE_TRY(mStreamingLineLoopIndicesData->allocate(
+        contextVk, unitSize * (count + 1), reinterpret_cast<uint8_t **>(&indices),
+        &mLineLoopIndexBuffer, &mLineLoopIndexBufferOffset));
+
+    VkBufferCopy copy1 = {0, mLineLoopIndexBufferOffset,
+                          static_cast<VkDeviceSize>(count) * unitSize};
+    VkBufferCopy copy2 = {
+        0, mLineLoopIndexBufferOffset + static_cast<VkDeviceSize>(count) * unitSize, unitSize};
+    std::array<VkBufferCopy, 2> copies = {{copy1, copy2}};
+
+    vk::CommandBuffer *commandBuffer;
+    mStreamingLineLoopIndicesData->beginWriteResource(contextVk->getRenderer(), &commandBuffer);
+
+    Serial currentSerial = contextVk->getRenderer()->getCurrentQueueSerial();
+    bufferVk->onReadResource(mStreamingLineLoopIndicesData->getCurrentWritingNode(currentSerial),
+                             currentSerial);
+    commandBuffer->copyBuffer(bufferVk->getVkBuffer().getHandle(), mLineLoopIndexBuffer, 2,
+                              copies.data());
+
+    ANGLE_TRY(mStreamingLineLoopIndicesData->flush(contextVk));
+
     return gl::NoError();
 }
 
@@ -1373,13 +1425,8 @@ void LineLoopHandler::destroy(VkDevice device)
     mStreamingLineLoopIndicesData->destroy(device);
 }
 
-gl::Error LineLoopHandler::draw(ContextVk *contextVk,
-                                int firstVertex,
-                                int count,
-                                CommandBuffer *commandBuffer)
+gl::Error LineLoopHandler::draw(int count, CommandBuffer *commandBuffer)
 {
-    ANGLE_TRY(bindLineLoopIndexBuffer(contextVk, firstVertex, count, &commandBuffer));
-
     // Our first index is always 0 because that's how we set it up in the
     // bindLineLoopIndexBuffer.
     commandBuffer->drawIndexed(count + 1, 1, 0, 0, 0);
@@ -1387,6 +1434,10 @@ gl::Error LineLoopHandler::draw(ContextVk *contextVk,
     return gl::NoError();
 }
 
+ResourceVk *LineLoopHandler::getLineLoopBufferResource()
+{
+    return mStreamingLineLoopIndicesData.get();
+}
 }  // namespace vk
 
 namespace gl_vk
