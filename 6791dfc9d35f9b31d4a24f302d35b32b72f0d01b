@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "386b9105_689d8d1d",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 273,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-26T14:52:28Z",
+      "side": 1,
+      "message": "would probably just merge these two methods at this point, passing first and count instead of first/first + count - 1.",
+      "range": {
+        "startLine": 271,
+        "startChar": 0,
+        "endLine": 273,
+        "endChar": 52
+      },
+      "revId": "6791dfc9d35f9b31d4a24f302d35b32b72f0d01b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
