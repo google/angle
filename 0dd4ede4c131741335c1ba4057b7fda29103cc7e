@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2ffd1a15_76fa4fc9",
+        "filename": "src/libANGLE/Caps.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 891,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-26T15:09:37Z",
+      "side": 1,
+      "message": "these should be default-initted in the constructor.",
+      "range": {
+        "startLine": 891,
+        "startChar": 13,
+        "endLine": 891,
+        "endChar": 34
+      },
+      "revId": "0dd4ede4c131741335c1ba4057b7fda29103cc7e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3c29c11b_c00f7186",
+        "filename": "src/libANGLE/Caps.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1229,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-26T15:09:37Z",
+      "side": 1,
+      "message": "nit: this needs a clang-format scoped off/on comment, see above.",
+      "range": {
+        "startLine": 1228,
+        "startChar": 4,
+        "endLine": 1229,
+        "endChar": 44
+      },
+      "revId": "0dd4ede4c131741335c1ba4057b7fda29103cc7e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0774f44e_8cea6f04",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 587,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-26T15:09:37Z",
+      "side": 1,
+      "message": "nit: is there a table/page you can link to?",
+      "range": {
+        "startLine": 587,
+        "startChar": 7,
+        "endLine": 587,
+        "endChar": 16
+      },
+      "revId": "0dd4ede4c131741335c1ba4057b7fda29103cc7e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c234116c_7de85d3c",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2667,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-26T15:09:37Z",
+      "side": 1,
+      "message": "can you make a standard identifier comment to easily identify GLES1 additions, something like\n\n// GLES1 Emulation: 1.1 Caps.\n// GLES1 Emulation: Texture State.\n\netc. Then just doing a find all references should take us to the right code.",
+      "range": {
+        "startLine": 2667,
+        "startChar": 4,
+        "endLine": 2667,
+        "endChar": 27
+      },
+      "revId": "0dd4ede4c131741335c1ba4057b7fda29103cc7e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
