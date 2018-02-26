@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3968a028_c904d211",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 351,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-26T15:01:33Z",
+      "side": 1,
+      "message": "why do you check here for 2D multisample? your comment above doesn\u0027t mention this.",
+      "range": {
+        "startLine": 351,
+        "startChar": 8,
+        "endLine": 351,
+        "endChar": 44
+      },
+      "revId": "315be38dfa7c1de0ad0287438e17a552137c4e7e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "716c5b08_1f6d8394",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 816,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-26T15:01:33Z",
+      "side": 1,
+      "message": "if this can change completeness, you should call signalDirty(). might be tricky to verify.",
+      "range": {
+        "startLine": 816,
+        "startChar": 8,
+        "endLine": 816,
+        "endChar": 35
+      },
+      "revId": "315be38dfa7c1de0ad0287438e17a552137c4e7e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
