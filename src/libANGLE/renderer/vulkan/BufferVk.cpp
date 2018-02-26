@@ -220,7 +220,7 @@ vk::Error BufferVk::setDataImpl(ContextVk *contextVk,
         commandBuffer->singleBufferBarrier(VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
                                            VK_PIPELINE_STAGE_TRANSFER_BIT, 0, bufferBarrier);
 
-        VkBufferCopy copyRegion = {offset, 0, size};
+        VkBufferCopy copyRegion = {0, offset, size};
         commandBuffer->copyBuffer(stagingBuffer.getBuffer(), mBuffer, 1, &copyRegion);
 
         // Immediately release staging buffer.
