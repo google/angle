@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "46f267f1_d487329c",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 273,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-02-26T22:06:55Z",
+      "side": 1,
+      "message": "Did you intend to remove the non-line-loop draw?",
+      "revId": "5dd7dfbcdbf8d22a68809fe7168da38d4a538b73",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7bf38a17_40557c90",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1322,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-02-26T22:06:55Z",
+      "side": 1,
+      "message": "Maybe put this in a named constant instead.",
+      "range": {
+        "startLine": 1322,
+        "startChar": 64,
+        "endLine": 1322,
+        "endChar": 75
+      },
+      "revId": "5dd7dfbcdbf8d22a68809fe7168da38d4a538b73",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
