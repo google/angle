@@ -1,4 +1,15 @@
 {
+    "AlphaTestFunc":
+    {
+        "Never": "GL_NEVER",
+        "AlwaysPass": "GL_ALWAYS",
+        "Less": "GL_LESS",
+        "Lequal": "GL_LEQUAL",
+        "Equal": "GL_EQUAL",
+        "Gequal": "GL_GEQUAL",
+        "Greater": "GL_GREATER",
+        "NotEqual": "GL_NOTEQUAL"
+    },
     "BufferBinding":
     {
         "Array": "GL_ARRAY_BUFFER",
@@ -32,6 +43,82 @@
         "Front": "GL_FRONT",
         "FrontAndBack": "GL_FRONT_AND_BACK"
     },
+    "FogMode":
+    {
+        "Exp": "GL_EXP",
+        "Exp2": "GL_EXP2",
+        "Linear": "GL_LINEAR"
+    },
+    "HintSetting":
+    {
+        "DontCare" : "GL_DONT_CARE",
+        "Nicest" : "GL_NICEST",
+        "Fastest" : "GL_FASTEST"
+    },
+    "LogicalOperation":
+    {
+        "Clear" : "GL_CLEAR",
+        "And" : "GL_AND",
+        "AndReverse" : "GL_AND_REVERSE",
+        "Copy" : "GL_COPY",
+        "AndInverted" : "GL_AND_INVERTED",
+        "Noop" : "GL_NOOP",
+        "Xor" : "GL_XOR",
+        "Or" : "GL_OR",
+        "Nor" : "GL_NOR",
+        "Equiv" : "GL_EQUIV",
+        "Invert" : "GL_INVERT",
+        "OrReverse" : "GL_OR_REVERSE",
+        "CopyInverted" : "GL_COPY_INVERTED",
+        "OrInverted" : "GL_OR_INVERTED",
+        "Nand" : "GL_NAND",
+        "Set" : "GL_SET"
+    },
+    "MatrixType":
+    {
+        "Modelview" : "GL_MODELVIEW",
+        "Projection" : "GL_PROJECTION",
+        "Texture" : "GL_TEXTURE"
+    },
+    "ShadingModel":
+    {
+        "Flat" : "GL_FLAT",
+        "Smooth" : "GL_SMOOTH"
+    },
+    "TextureCombine":
+    {
+        "Replace" : "GL_REPLACE",
+        "Modulate" : "GL_MODULATE",
+        "Add" : "GL_ADD",
+        "AddSigned" : "GL_ADD_SIGNED",
+        "Interpolate" : "GL_INTERPOLATE",
+        "Subtract" : "GL_SUBTRACT",
+        "Dot3Rgb" : "GL_DOT3_RGB",
+        "Dot3Rgba" : "GL_DOT3_RGBA"
+    },
+    "TextureEnvMode":
+    {
+        "Replace" : "GL_REPLACE",
+        "Modulate" : "GL_MODULATE",
+        "Decal" : "GL_DECAL",
+        "Blend" : "GL_BLEND",
+        "Add" : "GL_ADD",
+        "Combine" : "GL_COMBINE"
+    },
+    "TextureOp":
+    {
+        "SrcColor" : "GL_SRC_COLOR",
+        "OneMinusSrcColor" : "GL_ONE_MINUS_SRC_COLOR",
+        "SrcAlpha" : "GL_SRC_ALPHA",
+        "OneMinusSrcAlpha" : "GL_ONE_MINUS_SRC_ALPHA"
+    },
+    "TextureSrc":
+    {
+        "Texture" : "GL_TEXTURE",
+        "Constant" : "GL_CONSTANT",
+        "PrimaryColor" : "GL_PRIMARY_COLOR",
+        "Previous" : "GL_PREVIOUS"
+    },
     "TextureType":
     [
         {"name": "_2D", "gl_name": "GL_TEXTURE_2D", "value": 0},
@@ -56,5 +143,13 @@
         {"name": "CubeMapNegativeY", "gl_name": "GL_TEXTURE_CUBE_MAP_NEGATIVE_Y", "value": 9},
         {"name": "CubeMapPositiveZ", "gl_name": "GL_TEXTURE_CUBE_MAP_POSITIVE_Z", "value": 10},
         {"name": "CubeMapNegativeZ", "gl_name": "GL_TEXTURE_CUBE_MAP_NEGATIVE_Z", "value": 11}
-    ]
+    ],
+    "VertexArrayType":
+    {
+        "Vertex" : "GL_VERTEX_ARRAY",
+        "Normal" : "GL_NORMAL_ARRAY",
+        "Color" : "GL_COLOR_ARRAY",
+        "PointSize" : "GL_POINT_SIZE_ARRAY_OES",
+        "TextureCoord" : "GL_TEXTURE_COORD_ARRAY"
+    }
 }

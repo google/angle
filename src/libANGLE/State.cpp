@@ -238,6 +238,13 @@ void State::initialize(const Context *context,
 
     mRobustResourceInit        = robustResourceInit;
     mProgramBinaryCacheEnabled = programBinaryCacheEnabled;
+
+    // GLES1 emulation: Initialize state for GLES1 if version
+    // applies
+    if (clientVersion < Version(2, 0))
+    {
+        mGLES1State.initialize(context);
+    }
 }
 
 void State::reset(const Context *context)

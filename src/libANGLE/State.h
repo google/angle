@@ -16,6 +16,7 @@
 #include "common/angleutils.h"
 #include "common/bitset_utils.h"
 #include "libANGLE/Debug.h"
+#include "libANGLE/GLES1State.h"
 #include "libANGLE/Program.h"
 #include "libANGLE/ProgramPipeline.h"
 #include "libANGLE/RefCountObject.h"
@@ -600,6 +601,10 @@ class State : public angle::ObserverInterface, angle::NonCopyable
 
     // GL_ANGLE_program_cache_control
     bool mProgramBinaryCacheEnabled;
+
+    // GLES1 emulation: state specific to GLES1
+    friend class GLES1State;
+    GLES1State mGLES1State;
 
     DirtyBits mDirtyBits;
     mutable DirtyObjects mDirtyObjects;
