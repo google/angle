@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "a1099b13_97a1b204",
+        "filename": "src/libANGLE/ErrorStrings.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-02-26T01:41:49Z",
+      "side": 1,
+      "message": "As glGetProgramiv doesn\u0027t require a program must be active (specified by glUseProgram), I don\u0027t think it suitable to call the program \"active\" in the error message.",
+      "parentUuid": "7fe5a88c_e5983396",
+      "revId": "7e3580a42885a0a9c5895f4431ac0daae487c26a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e43436b8_f44c54ad",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 3
@@ -30,6 +48,30 @@
       "writtenOn": "2018-02-24T09:07:32Z",
       "side": 1,
       "message": "Maybe only the second if (!programObject-\u003ehasLinkedComputeShader()) is needed. I think hasLinkedComputeShader return false means that the program has not been linked successfully, or which does not contain a compute shader.",
+      "range": {
+        "startLine": 4190,
+        "startChar": 0,
+        "endLine": 4199,
+        "endChar": 13
+      },
+      "revId": "7e3580a42885a0a9c5895f4431ac0daae487c26a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2cb917c1_ecc47a09",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 4199,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-02-26T01:41:49Z",
+      "side": 1,
+      "message": "I think according to SPEC it is better to treat \"Program not linked\" and \"No active compute shader stage\" as two different errors here. Do you think so?",
+      "parentUuid": "e43436b8_f44c54ad",
       "range": {
         "startLine": 4190,
         "startChar": 0,
