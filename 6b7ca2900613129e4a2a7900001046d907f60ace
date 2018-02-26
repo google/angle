@@ -1,0 +1,515 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "16fd9eb1_fabb870a",
+        "filename": "src/compiler/translator/Symbol.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-26T15:42:17Z",
+      "side": 1,
+      "message": "This change doesn\u0027t seem used in this patch.",
+      "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b90c9f91_792d9f55",
+        "filename": "src/compiler/translator/builtin_function_declarations.txt",
+        "patchSetId": 12
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-26T15:42:17Z",
+      "side": 1,
+      "message": "nit: I didn\u0027t see this being used, can it be removed?",
+      "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "402b9386_73ab73ac",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-26T15:42:17Z",
+      "side": 1,
+      "message": "Please add this script to scripts/run_code_generation.py",
+      "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "365574de_fc1715ff",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-26T15:42:17Z",
+      "side": 1,
+      "message": "Could this be simplified by setting the default values and assuming the code handling genTypes will override the sizes?",
+      "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2536c25d_6912c440",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-26T15:42:17Z",
+      "side": 1,
+      "message": "Inaccurate comment?",
+      "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6e93da79_fd7e8108",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-26T15:42:17Z",
+      "side": 1,
+      "message": "There\u0027s a lot of OrderedDict used in the script that could be replaced by regular dicts.",
+      "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "097653ea_bedcff84",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-26T15:42:17Z",
+      "side": 1,
+      "message": "Maybe the combinatorial explosion of basic type isn\u0027t that huge so we don\u0027t need to have a custom parse and instead can use a lookup dictionnary?",
+      "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0fed59cd_929f2bf2",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 248,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-26T15:42:17Z",
+      "side": 1,
+      "message": "This code could be simplified assuming basic_type_map isn\u0027t used below. Then a different basic_type_prefix_map could be greated just for \u0027\u0027, \u0027i\u0027, \u0027u\u0027 and \u0027b\u0027",
+      "range": {
+        "startLine": 237,
+        "startChar": 0,
+        "endLine": 248,
+        "endChar": 0
+      },
+      "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "94ba6a10_56b03869",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 251,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-26T15:42:17Z",
+      "side": 1,
+      "message": "Capture this and index the basic_type_prefix_map with it.",
+      "range": {
+        "startLine": 251,
+        "startChar": 31,
+        "endLine": 251,
+        "endChar": 36
+      },
+      "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b14fd39c_f6ba5b39",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 257,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-26T15:42:17Z",
+      "side": 1,
+      "message": "glsl_header_type will be possible to replace with a regex match.",
+      "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fb25ca0c_70ffe633",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 259,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-26T15:42:17Z",
+      "side": 1,
+      "message": "The size was captured in the regex, you can used it instead of indexing in glsl_header_type.",
+      "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f345fe53_e34258b0",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 267,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-26T15:42:17Z",
+      "side": 1,
+      "message": "Same thing for this block, take advantage of regex matches to eliminate constant offset.",
+      "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e80d5225_479da2ae",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 273,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-26T15:42:17Z",
+      "side": 1,
+      "message": "Can columns and rows be assigned to primarySize and secondarySize directly to make the normalization code simpler? Same thing for vecSize.",
+      "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4b1517d1_39580dfb",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 280,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-26T15:42:17Z",
+      "side": 1,
+      "message": "ditto.",
+      "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "150bb40f_75f73fb8",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 322,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-26T15:42:17Z",
+      "side": 1,
+      "message": "nit: Can we make this strict and be ^(\\w+) (\\w+)\\((.*)\\);$ ?",
+      "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8c54a8b0_02b283b2",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 326,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-26T15:42:17Z",
+      "side": 1,
+      "message": "Can we have parsed_functions no part of the group_stack? It would make the subgroup part of GROUP END easier to understand.",
+      "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "df63702f_85adfd52",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 331,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-26T15:42:17Z",
+      "side": 1,
+      "message": "nit: can it be\n\n if startswith(\u0027GROUP BEGIN\u0027):\n elif startswith(\u0027GROUP END\u0027):\n elif startswith(\u0027DEFAULT\u0027):\n elif fun_match:\n else:\n   error\n\n?",
+      "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "abe08dfb_096bf497",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 334,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-26T15:42:17Z",
+      "side": 1,
+      "message": "Can this load current_group as group_stack[-1]? It\u0027s currently weird that it relies on a local declaration in the following elif.",
+      "range": {
+        "startLine": 334,
+        "startChar": 19,
+        "endLine": 334,
+        "endChar": 32
+      },
+      "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bcd4bd56_f5dd9806",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 336,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-26T15:42:17Z",
+      "side": 1,
+      "message": "Check that the defaults are cleared (or clear them implicitly) if toplevel.",
+      "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cca6de98_f0359318",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 367,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-26T15:42:17Z",
+      "side": 1,
+      "message": "This feature doesn\u0027t seem used.",
+      "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "35e12138_a3b6e35d",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 369,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-26T15:42:17Z",
+      "side": 1,
+      "message": "This doesn\u0027t need to be an OrderedDict",
+      "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "89db5cfb_395dec8e",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 442,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-26T15:42:17Z",
+      "side": 1,
+      "message": "What about InOut?",
+      "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7268adcf_d7d05242",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 474,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-26T15:42:17Z",
+      "side": 1,
+      "message": "This function looks like it should return a list of parameter names but returns a string instead.",
+      "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f27be1e3_c9014749",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 477,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-26T15:42:17Z",
+      "side": 1,
+      "message": "The inherent complexity here is a bit unfortunate bit I didn\u0027t find a way to fix it. Some functional-ish programming could help but is still complex.",
+      "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "60f77c4a_02c14724",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 496,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-26T15:42:17Z",
+      "side": 1,
+      "message": "nit: comment that gsampler_or_image takes precedence and why.",
+      "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ab360ef6_7c218579",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 505,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-26T15:42:17Z",
+      "side": 1,
+      "message": "nit: return and no else.",
+      "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9916bf30_dd764b96",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 523,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-26T15:42:17Z",
+      "side": 1,
+      "message": "nit: split into process_function_group and process_single_function_group so that the traversing of the tree is separate from actually doing stuff in a group. This allows for an early out in process_single_function_group `if \u0027functions\u0027 not in group`",
+      "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "03b0bccf_7779ad42",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 533,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-26T15:42:17Z",
+      "side": 1,
+      "message": "You can put all these arguments in a dictionnary and call the template format methods with **argDict.",
+      "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ec0cf60b_4799c3b1",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 614,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-26T15:42:17Z",
+      "side": 1,
+      "message": "nit: can use dict declaration:\n\n output_strings \u003d {\n  \u0027script_name\u0027: ...,\n  \u0027copyright_year\u0027: ...\n }",
+      "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
