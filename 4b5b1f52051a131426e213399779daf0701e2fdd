@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bcc52b2d_d05472ba",
+        "filename": "src/libANGLE/Framebuffer.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 381,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-02-26T20:04:08Z",
+      "side": 1,
+      "message": "Can you use \u0027DirtyBitType\u0027 here?",
+      "range": {
+        "startLine": 381,
+        "startChar": 53,
+        "endLine": 381,
+        "endChar": 59
+      },
+      "revId": "4b5b1f52051a131426e213399779daf0701e2fdd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "604725f6_6a640b84",
+        "filename": "src/libANGLE/signal_utils.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-02-26T20:04:08Z",
+      "side": 1,
+      "message": "Would it be worth being able to bind this to a specific member function instead of the generic signal?  I think it could be done without additional cost and would let us skip the switch on message ID.",
+      "range": {
+        "startLine": 73,
+        "startChar": 9,
+        "endLine": 73,
+        "endChar": 13
+      },
+      "revId": "4b5b1f52051a131426e213399779daf0701e2fdd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
