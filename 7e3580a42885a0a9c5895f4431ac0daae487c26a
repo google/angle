@@ -123,6 +123,29 @@
       "revId": "7e3580a42885a0a9c5895f4431ac0daae487c26a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "168c5c9e_2060e9b6",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1195,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-26T15:49:20Z",
+      "side": 1,
+      "message": "You can use the ANGLE_GL_PROGRAM and add a GLShader type in gl_raii.h to not need this.",
+      "range": {
+        "startLine": 1191,
+        "startChar": 0,
+        "endLine": 1195,
+        "endChar": 0
+      },
+      "revId": "7e3580a42885a0a9c5895f4431ac0daae487c26a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
