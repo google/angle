@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7dbf72e6_6f08313e",
+        "filename": "src/libANGLE/Compiler.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-26T16:00:29Z",
+      "side": 1,
+      "message": "nit: majorVersion \u003d\u003d 1 matches the comment better.",
+      "revId": "3e678851417934d956c7d3abec78c4186cc81c07",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "68096c0d_3a62c63c",
+        "filename": "src/libANGLE/Compiler.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-26T16:00:29Z",
+      "side": 1,
+      "message": "We have no plan to expose ES1 to the Web, maybe ASSERT(!isWebGL) and return SH_GLES3_SPEC?",
+      "revId": "3e678851417934d956c7d3abec78c4186cc81c07",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
