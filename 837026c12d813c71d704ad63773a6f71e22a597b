@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "387bc247_38f24287",
+        "filename": "src/libANGLE/Texture.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-02-26T16:12:05Z",
+      "side": 1,
+      "message": "nit: return by const ref (below too)",
+      "range": {
+        "startLine": 118,
+        "startChar": 4,
+        "endLine": 118,
+        "endChar": 17
+      },
+      "revId": "837026c12d813c71d704ad63773a6f71e22a597b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "49efe976_253c3cac",
+        "filename": "src/libANGLE/Texture.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-02-26T16:12:05Z",
+      "side": 1,
+      "message": "nit: add a comment to say that this is for the OES_draw_texture extension.",
+      "range": {
+        "startLine": 171,
+        "startChar": 7,
+        "endLine": 171,
+        "endChar": 37
+      },
+      "revId": "837026c12d813c71d704ad63773a6f71e22a597b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
