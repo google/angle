@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "eae8aaa1_d938498c",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 351,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2018-02-26T15:48:08Z",
+      "side": 1,
+      "message": "That\u0027s true. Add the corresponding comment.",
+      "parentUuid": "3968a028_c904d211",
+      "range": {
+        "startLine": 351,
+        "startChar": 8,
+        "endLine": 351,
+        "endChar": 44
+      },
+      "revId": "315be38dfa7c1de0ad0287438e17a552137c4e7e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "716c5b08_1f6d8394",
         "filename": "src/libANGLE/Texture.cpp",
         "patchSetId": 5
@@ -36,6 +60,30 @@
       "writtenOn": "2018-02-26T15:01:33Z",
       "side": 1,
       "message": "if this can change completeness, you should call signalDirty(). might be tricky to verify.",
+      "range": {
+        "startLine": 816,
+        "startChar": 8,
+        "endLine": 816,
+        "endChar": 35
+      },
+      "revId": "315be38dfa7c1de0ad0287438e17a552137c4e7e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d9366362_0a59001a",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 816,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2018-02-26T15:48:08Z",
+      "side": 1,
+      "message": "Yeah, I also noticed that some functions call signalDirty(). However, I found that the callers which call signalDirty() to trigger texture completeness re-check all change the image itself (they callers are setImage, setCompressedImage, copyImage, etc). While some other functions like setBaseLevel/setMaxLevel only call invalidateCompletenessCache(). I suppose that setDepthStencilTextureMode is similar to the latter, so I only call invalidateCompletenessCache(). \n\nAnyway, if you really think that we need to call signalDirty() here, I will follow you, Jamie.",
+      "parentUuid": "716c5b08_1f6d8394",
       "range": {
         "startLine": 816,
         "startChar": 8,
