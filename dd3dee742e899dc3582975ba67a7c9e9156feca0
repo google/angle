@@ -1,0 +1,234 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "85f57fa9_f2f14ac6",
+        "filename": "src/libANGLE/Buffer.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-26T03:31:05Z",
+      "side": 1,
+      "message": "nit: can these be unsigned int?",
+      "range": {
+        "startLine": 62,
+        "startChar": 4,
+        "endLine": 62,
+        "endChar": 8
+      },
+      "revId": "dd3dee742e899dc3582975ba67a7c9e9156feca0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7554e4a1_d8f49655",
+        "filename": "src/libANGLE/Buffer.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-26T03:31:05Z",
+      "side": 1,
+      "message": "this is pretty minor but I think it\u0027s a bit clearer passing -1 and 1 instead of true and false here (and also saves the ?: statement, though that might be optimized out anyway)",
+      "range": {
+        "startLine": 122,
+        "startChar": 26,
+        "endLine": 122,
+        "endChar": 36
+      },
+      "revId": "dd3dee742e899dc3582975ba67a7c9e9156feca0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "153c1bad_38ed22a3",
+        "filename": "src/libANGLE/Buffer.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-26T03:31:05Z",
+      "side": 1,
+      "message": "I think what you can do with this method is make it a template method on BufferBinding. Then have an inline partial specialization for BufferBinding::TransformFeedback, defined outside the class in this header, and then the inline template method which increments mBindingCount. This way you avoid the \"if\".\n\nI was imagining that you store two distinct counts for transform feedback count and non-transform feedback, but this is pretty similar.",
+      "range": {
+        "startLine": 121,
+        "startChar": 0,
+        "endLine": 130,
+        "endChar": 9
+      },
+      "revId": "dd3dee742e899dc3582975ba67a7c9e9156feca0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d1145abe_c52103d5",
+        "filename": "src/libANGLE/Buffer.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-26T03:31:05Z",
+      "side": 1,
+      "message": "in general try to put as much code in cpp files as possbile instead of header files (Though see below comment about onBindingChanged).",
+      "range": {
+        "startLine": 115,
+        "startChar": 0,
+        "endLine": 130,
+        "endChar": 9
+      },
+      "revId": "dd3dee742e899dc3582975ba67a7c9e9156feca0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "86bf4dc3_741e62ca",
+        "filename": "src/libANGLE/ErrorStrings.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-26T03:31:05Z",
+      "side": 1,
+      "message": "nit: can you add your other errors to this list?",
+      "range": {
+        "startLine": 20,
+        "startChar": 7,
+        "endLine": 20,
+        "endChar": 38
+      },
+      "revId": "dd3dee742e899dc3582975ba67a7c9e9156feca0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4b066ac6_73af5296",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1283,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-26T03:31:05Z",
+      "side": 1,
+      "message": "you can probably wrap this little buffer snippet into an anonymous helper method - something like\n\n void UpdateBufferBinding(target, binding, newBuffer).\n\nI\u0027d also like you to keep this code inside the switch - to avoid having an extra if. Use helper methods if possible to reduce code duplication.",
+      "range": {
+        "startLine": 1282,
+        "startChar": 1,
+        "endLine": 1283,
+        "endChar": 67
+      },
+      "revId": "dd3dee742e899dc3582975ba67a7c9e9156feca0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3bdf54cb_a7f42819",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1411,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-26T03:31:05Z",
+      "side": 1,
+      "message": "again probably this pattern can be an anonymous helper method local this file.",
+      "range": {
+        "startLine": 1409,
+        "startChar": 13,
+        "endLine": 1411,
+        "endChar": 38
+      },
+      "revId": "dd3dee742e899dc3582975ba67a7c9e9156feca0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2fb93f53_1be161b0",
+        "filename": "src/libANGLE/TransformFeedback.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-26T03:31:05Z",
+      "side": 1,
+      "message": "thinking about it a bit - I\u0027m not sure it\u0027s necessary to store this as state in TransformFeedback. You should be able to make a helper method in Context to check if a certain XFB object pointer is the currently bound object (by comparing it with the state). Can you make this refactor? It would be nice to store as little extra state as possible - and this shouldn\u0027t slow down things too much.",
+      "range": {
+        "startLine": 164,
+        "startChar": 16,
+        "endLine": 164,
+        "endChar": 24
+      },
+      "revId": "dd3dee742e899dc3582975ba67a7c9e9156feca0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "18a77513_75ae4661",
+        "filename": "src/libANGLE/VertexArray.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 269,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-26T03:31:05Z",
+      "side": 1,
+      "message": "similar comments to XFB. There\u0027s only a single object that can be bound, so it should be checkable with a single if.",
+      "range": {
+        "startLine": 269,
+        "startChar": 18,
+        "endLine": 269,
+        "endChar": 28
+      },
+      "revId": "dd3dee742e899dc3582975ba67a7c9e9156feca0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "248e6974_fc0cd49f",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 4245,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-26T03:31:05Z",
+      "side": 1,
+      "message": "curious to know what dEQP tests fail because of the extra validation.",
+      "range": {
+        "startLine": 4245,
+        "startChar": 33,
+        "endLine": 4245,
+        "endChar": 51
+      },
+      "revId": "dd3dee742e899dc3582975ba67a7c9e9156feca0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
