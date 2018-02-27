@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "f2a6db46_ba1466be",
+        "filename": "src/libANGLE/Buffer.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1256148
+      },
+      "writtenOn": "2018-02-27T04:44:41Z",
+      "side": 1,
+      "message": "The Google style guide discourages the use of unsigned integers for this kind of application: https://google.github.io/styleguide/cppguide.html#Integer_Types\n\nIs there a reason to prefer unsigned here?",
+      "parentUuid": "85f57fa9_f2f14ac6",
+      "range": {
+        "startLine": 62,
+        "startChar": 4,
+        "endLine": 62,
+        "endChar": 8
+      },
+      "revId": "dd3dee742e899dc3582975ba67a7c9e9156feca0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "7554e4a1_d8f49655",
         "filename": "src/libANGLE/Buffer.h",
         "patchSetId": 11
@@ -84,6 +108,30 @@
       "message": "in general try to put as much code in cpp files as possbile instead of header files (Though see below comment about onBindingChanged).",
       "range": {
         "startLine": 115,
+        "startChar": 0,
+        "endLine": 130,
+        "endChar": 9
+      },
+      "revId": "dd3dee742e899dc3582975ba67a7c9e9156feca0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4c4c2cdc_7b8f5ab4",
+        "filename": "src/libANGLE/Buffer.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1256148
+      },
+      "writtenOn": "2018-02-27T04:44:41Z",
+      "side": 1,
+      "message": "The BufferBinding is not always statically known at the call site. There are some places where we call onBindingChanged in a loop over angle::AllEnums\u003cBufferBinding\u003e(). We would still need a non-template version of the function for this case. Given that do you still want me to add the template version?",
+      "parentUuid": "153c1bad_38ed22a3",
+      "range": {
+        "startLine": 121,
         "startChar": 0,
         "endLine": 130,
         "endChar": 9
