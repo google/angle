@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2da34f5a_a47cccb1",
+        "filename": "src/compiler/translator/builtin_function_declarations.txt",
+        "patchSetId": 14
+      },
+      "lineNbr": 308,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-27T15:52:11Z",
+      "side": 1,
+      "message": "I think this causes the failures in the dry run.",
+      "range": {
+        "startLine": 308,
+        "startChar": 102,
+        "endLine": 308,
+        "endChar": 126
+      },
+      "revId": "5af7dcd1cba3fc7ec302d1df2adeee1e844a01f8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c2237e98_d2882cf1",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 14
+      },
+      "lineNbr": 232,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-27T15:52:11Z",
+      "side": 1,
+      "message": "YUV and atomic counter can now be in the basic type map too.",
+      "revId": "5af7dcd1cba3fc7ec302d1df2adeee1e844a01f8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

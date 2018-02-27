@@ -212,6 +212,24 @@
     },
     {
       "key": {
+        "uuid": "0b43ed66_8503fb92",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-27T15:52:11Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "4f87c289_b3a038e4",
+      "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "097653ea_bedcff84",
         "filename": "src/compiler/translator/gen_builtin_symbols.py",
         "patchSetId": 12
@@ -241,6 +259,24 @@
       "side": 1,
       "message": "I had a lookup dictionary here before but it had a bunch of repetition - I think this version is less prone to mistakes. I\u0027d prefer to keep this structured as is.",
       "parentUuid": "097653ea_bedcff84",
+      "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2552d73d_ad22bf54",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-27T15:52:11Z",
+      "side": 1,
+      "message": "Ok, sounds good.",
+      "parentUuid": "7403ab62_ab46921e",
       "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -843,6 +879,24 @@
     },
     {
       "key": {
+        "uuid": "76f61014_f91b38ae",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 474,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-27T15:52:11Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "573fae89_0eafb02e",
+      "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f27be1e3_c9014749",
         "filename": "src/compiler/translator/gen_builtin_symbols.py",
         "patchSetId": 12
@@ -907,6 +961,24 @@
       "side": 1,
       "message": "The same function can\u0027t have multiple different genType values. Added an exception if this happens and added comments explaining the variant generation.",
       "parentUuid": "60f77c4a_02c14724",
+      "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "482816a4_a44957ad",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 496,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-27T15:52:11Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "9229cca1_a67d1e97",
       "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
