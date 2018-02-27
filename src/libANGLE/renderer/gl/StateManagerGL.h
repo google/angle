@@ -62,7 +62,7 @@ class StateManagerGL final : angle::NonCopyable
                          size_t offset,
                          size_t size);
     void activeTexture(size_t unit);
-    void bindTexture(GLenum type, GLuint texture);
+    void bindTexture(gl::TextureType type, GLuint texture);
     void bindSampler(size_t unit, GLuint sampler);
     void bindImageTexture(GLuint unit,
                           GLuint texture,
@@ -230,7 +230,7 @@ class StateManagerGL final : angle::NonCopyable
     angle::PackedEnumMap<gl::BufferBinding, std::vector<IndexedBufferBinding>> mIndexedBuffers;
 
     size_t mTextureUnitIndex;
-    std::map<GLenum, std::vector<GLuint>> mTextures;
+    angle::PackedEnumMap<gl::TextureType, std::vector<GLuint>> mTextures;
     std::vector<GLuint> mSamplers;
 
     struct ImageUnitBinding

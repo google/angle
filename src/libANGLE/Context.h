@@ -645,7 +645,7 @@ class Context final : public ValidationContext
                                  const void *data);
     void copyTexture(GLuint sourceId,
                      GLint sourceLevel,
-                     GLenum destTarget,
+                     TextureTarget destTarget,
                      GLuint destId,
                      GLint destLevel,
                      GLint internalFormat,
@@ -655,7 +655,7 @@ class Context final : public ValidationContext
                      GLboolean unpackUnmultiplyAlpha);
     void copySubTexture(GLuint sourceId,
                         GLint sourceLevel,
-                        GLenum destTarget,
+                        TextureTarget destTarget,
                         GLuint destId,
                         GLint destLevel,
                         GLint xoffset,

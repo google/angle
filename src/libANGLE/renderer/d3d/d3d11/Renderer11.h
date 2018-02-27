@@ -182,7 +182,7 @@ class Renderer11 : public RendererD3D
                             GLenum destFormat,
                             const gl::Offset &destOffset,
                             TextureStorage *storage,
-                            GLenum target,
+                            gl::TextureTarget target,
                             GLint level) override;
     gl::Error copyImage3D(const gl::Context *context,
                           const gl::Framebuffer *framebuffer,
@@ -207,7 +207,7 @@ class Renderer11 : public RendererD3D
                           GLenum destType,
                           const gl::Offset &destOffset,
                           TextureStorage *storage,
-                          GLenum destTarget,
+                          gl::TextureTarget destTarget,
                           GLint destLevel,
                           bool unpackFlipY,
                           bool unpackPremultiplyAlpha,

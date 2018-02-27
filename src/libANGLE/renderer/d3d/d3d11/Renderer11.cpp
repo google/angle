@@ -2464,7 +2464,7 @@ gl::Error Renderer11::copyImageCube(const gl::Context *context,
                                     GLenum destFormat,
                                     const gl::Offset &destOffset,
                                     TextureStorage *storage,
-                                    GLenum target,
+                                    gl::TextureTarget target,
                                     GLint level)
 {
     TextureStorage11_Cube *storage11 = GetAs<TextureStorage11_Cube>(storage);
@@ -2538,7 +2538,7 @@ gl::Error Renderer11::copyTexture(const gl::Context *context,
                                   GLenum destType,
                                   const gl::Offset &destOffset,
                                   TextureStorage *storage,
-                                  GLenum destTarget,
+                                  gl::TextureTarget destTarget,
                                   GLint destLevel,
                                   bool unpackFlipY,
                                   bool unpackPremultiplyAlpha,
@@ -2557,7 +2557,7 @@ gl::Error Renderer11::copyTexture(const gl::Context *context,
 
     // Check for fast path where a CopySubresourceRegion can be used.
     if (unpackPremultiplyAlpha == unpackUnmultiplyAlpha && !unpackFlipY &&
-        source->getFormat(GL_TEXTURE_2D, sourceLevel).info->format == destFormat &&
+        source->getFormat(gl::TextureTarget::_2D, sourceLevel).info->format == destFormat &&
         sourceStorage11->getFormatSet().internalFormat ==
             destStorage11->getFormatSet().internalFormat)
     {
@@ -2601,9 +2601,11 @@ gl::Error Renderer11::copyTexture(const gl::Context *context,
         ASSERT(destRTV.valid());
 
         gl::Box sourceArea(sourceRect.x, sourceRect.y, 0, sourceRect.width, sourceRect.height, 1);
-        gl::Extents sourceSize(
-            static_cast<int>(source->getWidth(source->getTarget(), sourceLevel)),
-            static_cast<int>(source->getHeight(source->getTarget(), sourceLevel)), 1);
+        gl::Extents sourceSize(static_cast<int>(source->getWidth(
+                                   NonCubeTextureTypeToTarget(source->getType()), sourceLevel)),
+                               static_cast<int>(source->getHeight(
+                                   NonCubeTextureTypeToTarget(source->getType()), sourceLevel)),
+                               1);
         if (unpackFlipY)
         {
             sourceArea.y += sourceArea.height;
@@ -2615,7 +2617,7 @@ gl::Error Renderer11::copyTexture(const gl::Context *context,
 
         // Use nearest filtering because source and destination are the same size for the direct
         // copy
-        GLenum sourceFormat = source->getFormat(GL_TEXTURE_2D, sourceLevel).info->format;
+        GLenum sourceFormat = source->getFormat(gl::TextureTarget::_2D, sourceLevel).info->format;
         ANGLE_TRY(mBlit->copyTexture(context, *sourceSRV, sourceArea, sourceSize, sourceFormat,
                                      destRTV, destArea, destSize, nullptr, destFormat, destType,
                                      GL_NEAREST, false, unpackPremultiplyAlpha,

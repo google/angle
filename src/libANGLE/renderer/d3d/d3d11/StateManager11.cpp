@@ -33,7 +33,7 @@ namespace
 bool ImageIndexConflictsWithSRV(const gl::ImageIndex &index, D3D11_SHADER_RESOURCE_VIEW_DESC desc)
 {
     unsigned mipLevel  = index.mipIndex;
-    GLenum textureType = index.type;
+    gl::TextureType textureType = index.type;
 
     switch (desc.ViewDimension)
     {
@@ -46,7 +46,7 @@ bool ImageIndexConflictsWithSRV(const gl::ImageIndex &index, D3D11_SHADER_RESOUR
             unsigned mipMin = index.mipIndex;
             unsigned mipMax = INT_MAX;
 
-            return textureType == GL_TEXTURE_2D &&
+            return textureType == gl::TextureType::_2D &&
                    gl::RangeUI(mipMin, mipMax)
                        .intersects(gl::RangeUI(desc.Texture2D.MostDetailedMip, maxSrvMip));
         }
@@ -63,7 +63,8 @@ bool ImageIndexConflictsWithSRV(const gl::ImageIndex &index, D3D11_SHADER_RESOUR
             unsigned maxSlice = desc.Texture2DArray.FirstArraySlice + desc.Texture2DArray.ArraySize;
 
             // Cube maps can be mapped to Texture2DArray SRVs
-            return (textureType == GL_TEXTURE_2D_ARRAY || textureType == GL_TEXTURE_CUBE_MAP) &&
+            return (textureType == gl::TextureType::_2DArray ||
+                    textureType == gl::TextureType::CubeMap) &&
                    desc.Texture2DArray.MostDetailedMip <= mipLevel && mipLevel < maxSrvMip &&
                    desc.Texture2DArray.FirstArraySlice <= static_cast<UINT>(layerIndex) &&
                    static_cast<UINT>(layerIndex) < maxSlice;
@@ -75,7 +76,7 @@ bool ImageIndexConflictsWithSRV(const gl::ImageIndex &index, D3D11_SHADER_RESOUR
             unsigned int maxSrvMip = desc.TextureCube.MipLevels + desc.TextureCube.MostDetailedMip;
             maxSrvMip              = allLevels ? INT_MAX : maxSrvMip;
 
-            return textureType == GL_TEXTURE_CUBE_MAP &&
+            return textureType == gl::TextureType::CubeMap &&
                    desc.TextureCube.MostDetailedMip <= mipLevel && mipLevel < maxSrvMip;
         }
 
@@ -85,8 +86,8 @@ bool ImageIndexConflictsWithSRV(const gl::ImageIndex &index, D3D11_SHADER_RESOUR
             unsigned int maxSrvMip = desc.Texture3D.MipLevels + desc.Texture3D.MostDetailedMip;
             maxSrvMip              = allLevels ? INT_MAX : maxSrvMip;
 
-            return textureType == GL_TEXTURE_3D && desc.Texture3D.MostDetailedMip <= mipLevel &&
-                   mipLevel < maxSrvMip;
+            return textureType == gl::TextureType::_3D &&
+                   desc.Texture3D.MostDetailedMip <= mipLevel && mipLevel < maxSrvMip;
         }
         default:
             // We only handle the cases corresponding to valid image indexes
@@ -298,8 +299,10 @@ bool ShaderConstants11::updateSamplerMetadata(SamplerMetadata *data, const gl::T
 {
     bool dirty             = false;
     unsigned int baseLevel = texture.getTextureState().getEffectiveBaseLevel();
-    GLenum sizedFormat =
-        texture.getFormat(texture.getTarget(), baseLevel).info->sizedInternalFormat;
+    gl::TextureTarget target = (texture.getType() == gl::TextureType::CubeMap)
+                                   ? gl::kFirstCubeMapTextureTarget
+                                   : gl::NonCubeTextureTypeToTarget(texture.getType());
+    GLenum sizedFormat = texture.getFormat(target, baseLevel).info->sizedInternalFormat;
     if (data->baseLevel != static_cast<int>(baseLevel))
     {
         data->baseLevel = static_cast<int>(baseLevel);
@@ -2349,8 +2352,8 @@ gl::Error StateManager11::applyTextures(const gl::Context *context, gl::ShaderTy
         }
         else
         {
-            GLenum textureType =
-                ToGLenum(programD3D->getSamplerTextureType(shaderType, samplerIndex));
+            gl::TextureType textureType =
+                programD3D->getSamplerTextureType(shaderType, samplerIndex);
 
             // Texture is not sampler complete or it is in use by the framebuffer.  Bind the
             // incomplete texture.

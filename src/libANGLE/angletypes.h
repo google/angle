@@ -204,7 +204,7 @@ struct SamplerState final
     SamplerState();
     SamplerState(const SamplerState &other);
 
-    static SamplerState CreateDefaultForTarget(GLenum target);
+    static SamplerState CreateDefaultForTarget(TextureType type);
 
     GLenum minFilter;
     GLenum magFilter;

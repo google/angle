@@ -176,22 +176,6 @@ TextureTarget FromGLenum<TextureTarget>(GLenum from)
 {
     switch (from)
     {
-        case GL_TEXTURE_CUBE_MAP_NEGATIVE_X:
-            return TextureTarget::CubeMapNegativeX;
-        case GL_TEXTURE_CUBE_MAP_NEGATIVE_Y:
-            return TextureTarget::CubeMapNegativeY;
-        case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z:
-            return TextureTarget::CubeMapNegativeZ;
-        case GL_TEXTURE_CUBE_MAP_POSITIVE_X:
-            return TextureTarget::CubeMapPositiveX;
-        case GL_TEXTURE_CUBE_MAP_POSITIVE_Y:
-            return TextureTarget::CubeMapPositiveY;
-        case GL_TEXTURE_CUBE_MAP_POSITIVE_Z:
-            return TextureTarget::CubeMapPositiveZ;
-        case GL_TEXTURE_EXTERNAL_OES:
-            return TextureTarget::External;
-        case GL_TEXTURE_RECTANGLE_ANGLE:
-            return TextureTarget::Rectangle;
         case GL_TEXTURE_2D:
             return TextureTarget::_2D;
         case GL_TEXTURE_2D_ARRAY:
@@ -200,6 +184,22 @@ TextureTarget FromGLenum<TextureTarget>(GLenum from)
             return TextureTarget::_2DMultisample;
         case GL_TEXTURE_3D:
             return TextureTarget::_3D;
+        case GL_TEXTURE_EXTERNAL_OES:
+            return TextureTarget::External;
+        case GL_TEXTURE_RECTANGLE_ANGLE:
+            return TextureTarget::Rectangle;
+        case GL_TEXTURE_CUBE_MAP_POSITIVE_X:
+            return TextureTarget::CubeMapPositiveX;
+        case GL_TEXTURE_CUBE_MAP_NEGATIVE_X:
+            return TextureTarget::CubeMapNegativeX;
+        case GL_TEXTURE_CUBE_MAP_POSITIVE_Y:
+            return TextureTarget::CubeMapPositiveY;
+        case GL_TEXTURE_CUBE_MAP_NEGATIVE_Y:
+            return TextureTarget::CubeMapNegativeY;
+        case GL_TEXTURE_CUBE_MAP_POSITIVE_Z:
+            return TextureTarget::CubeMapPositiveZ;
+        case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z:
+            return TextureTarget::CubeMapNegativeZ;
         default:
             return TextureTarget::InvalidEnum;
     }
@@ -209,22 +209,6 @@ GLenum ToGLenum(TextureTarget from)
 {
     switch (from)
     {
-        case TextureTarget::CubeMapNegativeX:
-            return GL_TEXTURE_CUBE_MAP_NEGATIVE_X;
-        case TextureTarget::CubeMapNegativeY:
-            return GL_TEXTURE_CUBE_MAP_NEGATIVE_Y;
-        case TextureTarget::CubeMapNegativeZ:
-            return GL_TEXTURE_CUBE_MAP_NEGATIVE_Z;
-        case TextureTarget::CubeMapPositiveX:
-            return GL_TEXTURE_CUBE_MAP_POSITIVE_X;
-        case TextureTarget::CubeMapPositiveY:
-            return GL_TEXTURE_CUBE_MAP_POSITIVE_Y;
-        case TextureTarget::CubeMapPositiveZ:
-            return GL_TEXTURE_CUBE_MAP_POSITIVE_Z;
-        case TextureTarget::External:
-            return GL_TEXTURE_EXTERNAL_OES;
-        case TextureTarget::Rectangle:
-            return GL_TEXTURE_RECTANGLE_ANGLE;
         case TextureTarget::_2D:
             return GL_TEXTURE_2D;
         case TextureTarget::_2DArray:
@@ -233,6 +217,22 @@ GLenum ToGLenum(TextureTarget from)
             return GL_TEXTURE_2D_MULTISAMPLE;
         case TextureTarget::_3D:
             return GL_TEXTURE_3D;
+        case TextureTarget::External:
+            return GL_TEXTURE_EXTERNAL_OES;
+        case TextureTarget::Rectangle:
+            return GL_TEXTURE_RECTANGLE_ANGLE;
+        case TextureTarget::CubeMapPositiveX:
+            return GL_TEXTURE_CUBE_MAP_POSITIVE_X;
+        case TextureTarget::CubeMapNegativeX:
+            return GL_TEXTURE_CUBE_MAP_NEGATIVE_X;
+        case TextureTarget::CubeMapPositiveY:
+            return GL_TEXTURE_CUBE_MAP_POSITIVE_Y;
+        case TextureTarget::CubeMapNegativeY:
+            return GL_TEXTURE_CUBE_MAP_NEGATIVE_Y;
+        case TextureTarget::CubeMapPositiveZ:
+            return GL_TEXTURE_CUBE_MAP_POSITIVE_Z;
+        case TextureTarget::CubeMapNegativeZ:
+            return GL_TEXTURE_CUBE_MAP_NEGATIVE_Z;
         default:
             UNREACHABLE();
             return GL_NONE;
@@ -244,12 +244,6 @@ TextureType FromGLenum<TextureType>(GLenum from)
 {
     switch (from)
     {
-        case GL_TEXTURE_CUBE_MAP:
-            return TextureType::CubeMap;
-        case GL_TEXTURE_EXTERNAL_OES:
-            return TextureType::External;
-        case GL_TEXTURE_RECTANGLE_ANGLE:
-            return TextureType::Rectangle;
         case GL_TEXTURE_2D:
             return TextureType::_2D;
         case GL_TEXTURE_2D_ARRAY:
@@ -258,6 +252,12 @@ TextureType FromGLenum<TextureType>(GLenum from)
             return TextureType::_2DMultisample;
         case GL_TEXTURE_3D:
             return TextureType::_3D;
+        case GL_TEXTURE_EXTERNAL_OES:
+            return TextureType::External;
+        case GL_TEXTURE_RECTANGLE_ANGLE:
+            return TextureType::Rectangle;
+        case GL_TEXTURE_CUBE_MAP:
+            return TextureType::CubeMap;
         default:
             return TextureType::InvalidEnum;
     }
@@ -267,12 +267,6 @@ GLenum ToGLenum(TextureType from)
 {
     switch (from)
     {
-        case TextureType::CubeMap:
-            return GL_TEXTURE_CUBE_MAP;
-        case TextureType::External:
-            return GL_TEXTURE_EXTERNAL_OES;
-        case TextureType::Rectangle:
-            return GL_TEXTURE_RECTANGLE_ANGLE;
         case TextureType::_2D:
             return GL_TEXTURE_2D;
         case TextureType::_2DArray:
@@ -281,6 +275,12 @@ GLenum ToGLenum(TextureType from)
             return GL_TEXTURE_2D_MULTISAMPLE;
         case TextureType::_3D:
             return GL_TEXTURE_3D;
+        case TextureType::External:
+            return GL_TEXTURE_EXTERNAL_OES;
+        case TextureType::Rectangle:
+            return GL_TEXTURE_RECTANGLE_ANGLE;
+        case TextureType::CubeMap:
+            return GL_TEXTURE_CUBE_MAP;
         default:
             UNREACHABLE();
             return GL_NONE;

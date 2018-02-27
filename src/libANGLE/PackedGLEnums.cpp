@@ -64,26 +64,38 @@ TextureTarget NonCubeTextureTypeToTarget(TextureType type)
     }
 }
 
+// Check that we can do arithmetic on TextureTarget to convert from / to cube map faces
+static_assert(static_cast<uint8_t>(TextureTarget::CubeMapNegativeX) -
+                      static_cast<uint8_t>(TextureTarget::CubeMapPositiveX) ==
+                  1u,
+              "");
+static_assert(static_cast<uint8_t>(TextureTarget::CubeMapPositiveY) -
+                      static_cast<uint8_t>(TextureTarget::CubeMapPositiveX) ==
+                  2u,
+              "");
+static_assert(static_cast<uint8_t>(TextureTarget::CubeMapNegativeY) -
+                      static_cast<uint8_t>(TextureTarget::CubeMapPositiveX) ==
+                  3u,
+              "");
+static_assert(static_cast<uint8_t>(TextureTarget::CubeMapPositiveZ) -
+                      static_cast<uint8_t>(TextureTarget::CubeMapPositiveX) ==
+                  4u,
+              "");
+static_assert(static_cast<uint8_t>(TextureTarget::CubeMapNegativeZ) -
+                      static_cast<uint8_t>(TextureTarget::CubeMapPositiveX) ==
+                  5u,
+              "");
+
 TextureTarget CubeFaceIndexToTextureTarget(size_t face)
 {
     ASSERT(face < 6u);
-    switch (face)
-    {
-        case 0u:
-            return TextureTarget::CubeMapPositiveX;
-        case 1u:
-            return TextureTarget::CubeMapNegativeX;
-        case 2u:
-            return TextureTarget::CubeMapPositiveY;
-        case 3u:
-            return TextureTarget::CubeMapNegativeY;
-        case 4u:
-            return TextureTarget::CubeMapPositiveZ;
-        case 5u:
-            return TextureTarget::CubeMapNegativeZ;
-        default:
-            return TextureTarget::InvalidEnum;
-    }
+    return static_cast<TextureTarget>(static_cast<uint8_t>(TextureTarget::CubeMapPositiveX) + face);
+}
+
+size_t CubeMapTextureTargetToFaceIndex(TextureTarget target)
+{
+    ASSERT(TextureTargetToType(target) == TextureType::CubeMap);
+    return static_cast<uint8_t>(target) - static_cast<uint8_t>(TextureTarget::CubeMapPositiveX);
 }
 
 TextureType SamplerTypeToTextureType(GLenum samplerType)

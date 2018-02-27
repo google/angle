@@ -73,21 +73,20 @@ FramebufferImpl *Context11::createFramebuffer(const gl::FramebufferState &data)
 
 TextureImpl *Context11::createTexture(const gl::TextureState &state)
 {
-    switch (state.getTarget())
+    switch (state.getType())
     {
-        case GL_TEXTURE_2D:
+        case gl::TextureType::_2D:
             return new TextureD3D_2D(state, mRenderer);
-        case GL_TEXTURE_CUBE_MAP:
+        case gl::TextureType::CubeMap:
             return new TextureD3D_Cube(state, mRenderer);
-        case GL_TEXTURE_3D:
+        case gl::TextureType::_3D:
             return new TextureD3D_3D(state, mRenderer);
-        case GL_TEXTURE_2D_ARRAY:
+        case gl::TextureType::_2DArray:
             return new TextureD3D_2DArray(state, mRenderer);
-        case GL_TEXTURE_EXTERNAL_OES:
+        case gl::TextureType::External:
             return new TextureD3D_External(state, mRenderer);
-        case GL_TEXTURE_2D_MULTISAMPLE:
+        case gl::TextureType::_2DMultisample:
             return new TextureD3D_2DMultisample(state, mRenderer);
-            break;
         default:
             UNREACHABLE();
     }

@@ -47,7 +47,7 @@ TEST_F(ResourceManagerTest, ReallocateBoundTexture)
 {
     EXPECT_CALL(mMockFactory, createTexture(_)).Times(1).RetiresOnSaturation();
 
-    mTextureManager->checkTextureAllocation(&mMockFactory, 1, GL_TEXTURE_2D);
+    mTextureManager->checkTextureAllocation(&mMockFactory, 1, TextureType::_2D);
     GLuint newTexture = mTextureManager->createTexture();
     EXPECT_NE(1u, newTexture);
 }

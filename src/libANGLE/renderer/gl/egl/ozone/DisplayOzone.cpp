@@ -274,7 +274,7 @@ GLuint DisplayOzone::Buffer::getTexture()
     StateManagerGL *sm = mDisplay->getRenderer()->getStateManager();
 
     gl->genTextures(1, &mTexture);
-    sm->bindTexture(GL_TEXTURE_2D, mTexture);
+    sm->bindTexture(gl::TextureType::_2D, mTexture);
     gl->texParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     gl->texParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     gl->texParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -727,7 +727,7 @@ void DisplayOzone::drawWithTexture(Buffer *buffer)
     sm->setViewport(gl::Rectangle(0, 0, mWidth, mHeight));
     sm->activeTexture(0);
     GLuint tex = buffer->getTexture();
-    sm->bindTexture(GL_TEXTURE_2D, tex);
+    sm->bindTexture(gl::TextureType::_2D, tex);
     gl->vertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
     gl->enableVertexAttribArray(0);
     sm->bindFramebuffer(GL_DRAW_FRAMEBUFFER, mDrawing->getGLFB());

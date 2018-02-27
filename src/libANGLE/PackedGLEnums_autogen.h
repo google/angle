@@ -81,18 +81,18 @@ GLenum ToGLenum(CullFaceMode from);
 
 enum class TextureTarget : uint8_t
 {
-    CubeMapNegativeX = 0,
-    CubeMapNegativeY = 1,
-    CubeMapNegativeZ = 2,
-    CubeMapPositiveX = 3,
-    CubeMapPositiveY = 4,
-    CubeMapPositiveZ = 5,
-    External         = 6,
-    Rectangle        = 7,
-    _2D              = 8,
-    _2DArray         = 9,
-    _2DMultisample   = 10,
-    _3D              = 11,
+    _2D              = 0,
+    _2DArray         = 1,
+    _2DMultisample   = 2,
+    _3D              = 3,
+    External         = 4,
+    Rectangle        = 5,
+    CubeMapPositiveX = 6,
+    CubeMapNegativeX = 7,
+    CubeMapPositiveY = 8,
+    CubeMapNegativeY = 9,
+    CubeMapPositiveZ = 10,
+    CubeMapNegativeZ = 11,
 
     InvalidEnum = 12,
     EnumCount   = 12,
@@ -104,13 +104,13 @@ GLenum ToGLenum(TextureTarget from);
 
 enum class TextureType : uint8_t
 {
-    CubeMap        = 0,
-    External       = 1,
-    Rectangle      = 2,
-    _2D            = 3,
-    _2DArray       = 4,
-    _2DMultisample = 5,
-    _3D            = 6,
+    _2D            = 0,
+    _2DArray       = 1,
+    _2DMultisample = 2,
+    _3D            = 3,
+    External       = 4,
+    Rectangle      = 5,
+    CubeMap        = 6,
 
     InvalidEnum = 7,
     EnumCount   = 7,

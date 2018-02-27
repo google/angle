@@ -172,12 +172,12 @@ StateManagerGL::StateManagerGL(const FunctionsGL *functions,
     ASSERT(mFunctions);
     ASSERT(extensions.maxViews >= 1u);
 
-    mTextures[GL_TEXTURE_2D].resize(rendererCaps.maxCombinedTextureImageUnits);
-    mTextures[GL_TEXTURE_RECTANGLE_ANGLE].resize(rendererCaps.maxCombinedTextureImageUnits);
-    mTextures[GL_TEXTURE_CUBE_MAP].resize(rendererCaps.maxCombinedTextureImageUnits);
-    mTextures[GL_TEXTURE_2D_ARRAY].resize(rendererCaps.maxCombinedTextureImageUnits);
-    mTextures[GL_TEXTURE_3D].resize(rendererCaps.maxCombinedTextureImageUnits);
-    mTextures[GL_TEXTURE_2D_MULTISAMPLE].resize(rendererCaps.maxCombinedTextureImageUnits);
+    mTextures[gl::TextureType::_2D].resize(rendererCaps.maxCombinedTextureImageUnits);
+    mTextures[gl::TextureType::Rectangle].resize(rendererCaps.maxCombinedTextureImageUnits);
+    mTextures[gl::TextureType::CubeMap].resize(rendererCaps.maxCombinedTextureImageUnits);
+    mTextures[gl::TextureType::_2DArray].resize(rendererCaps.maxCombinedTextureImageUnits);
+    mTextures[gl::TextureType::_3D].resize(rendererCaps.maxCombinedTextureImageUnits);
+    mTextures[gl::TextureType::_2DMultisample].resize(rendererCaps.maxCombinedTextureImageUnits);
 
     mIndexedBuffers[gl::BufferBinding::Uniform].resize(rendererCaps.maxUniformBufferBindings);
     mIndexedBuffers[gl::BufferBinding::AtomicCounter].resize(
@@ -245,16 +245,16 @@ void StateManagerGL::deleteTexture(GLuint texture)
 {
     if (texture != 0)
     {
-        for (const auto &textureTypeIter : mTextures)
+        for (gl::TextureType type : angle::AllEnums<gl::TextureType>())
         {
-            const std::vector<GLuint> &textureVector = textureTypeIter.second;
+            const std::vector<GLuint> &textureVector = mTextures[type];
             for (size_t textureUnitIndex = 0; textureUnitIndex < textureVector.size();
                  textureUnitIndex++)
             {
                 if (textureVector[textureUnitIndex] == texture)
                 {
                     activeTexture(textureUnitIndex);
-                    bindTexture(textureTypeIter.first, 0);
+                    bindTexture(type, 0);
                 }
             }
         }
@@ -440,12 +440,12 @@ void StateManagerGL::activeTexture(size_t unit)
     }
 }
 
-void StateManagerGL::bindTexture(GLenum type, GLuint texture)
+void StateManagerGL::bindTexture(gl::TextureType type, GLuint texture)
 {
     if (mTextures[type][mTextureUnitIndex] != texture)
     {
         mTextures[type][mTextureUnitIndex] = texture;
-        mFunctions->bindTexture(type, texture);
+        mFunctions->bindTexture(ToGLenum(type), texture);
         mLocalDirtyBits.set(gl::State::DIRTY_BIT_TEXTURE_BINDINGS);
     }
 }
@@ -966,7 +966,7 @@ void StateManagerGL::updateProgramTextureAndSamplerBindings(const gl::Context *c
         if (samplerBinding.unreferenced)
             continue;
 
-        GLenum textureType = ToGLenum(samplerBinding.textureType);
+        gl::TextureType textureType = samplerBinding.textureType;
         for (GLuint textureUnitIndex : samplerBinding.boundTextureUnits)
         {
             gl::Texture *texture = completeTextures[textureUnitIndex];
@@ -978,7 +978,7 @@ void StateManagerGL::updateProgramTextureAndSamplerBindings(const gl::Context *c
                 ASSERT(!texture->hasAnyDirtyBit());
                 ASSERT(!textureGL->hasAnyDirtyBit());
 
-                if (mTextures.at(textureType)[textureUnitIndex] != textureGL->getTextureID())
+                if (mTextures[textureType][textureUnitIndex] != textureGL->getTextureID())
                 {
                     activeTexture(textureUnitIndex);
                     bindTexture(textureType, textureGL->getTextureID());
@@ -986,7 +986,7 @@ void StateManagerGL::updateProgramTextureAndSamplerBindings(const gl::Context *c
             }
             else
             {
-                if (mTextures.at(textureType)[textureUnitIndex] != 0)
+                if (mTextures[textureType][textureUnitIndex] != 0)
                 {
                     activeTexture(textureUnitIndex);
                     bindTexture(textureType, 0);

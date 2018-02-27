@@ -42,7 +42,7 @@ gl::Error TextureVk::onDestroy(const gl::Context *context)
 }
 
 gl::Error TextureVk::setImage(const gl::Context *context,
-                              GLenum target,
+                              gl::TextureTarget target,
                               size_t level,
                               GLenum internalFormat,
                               const gl::Extents &size,
@@ -83,7 +83,7 @@ gl::Error TextureVk::setImage(const gl::Context *context,
     }
 
     // TODO(jmadill): support other types of textures.
-    ASSERT(target == GL_TEXTURE_2D);
+    ASSERT(target == gl::TextureTarget::_2D);
 
     // Convert internalFormat to sized internal format.
     const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(internalFormat, type);
@@ -185,7 +185,7 @@ gl::Error TextureVk::setImage(const gl::Context *context,
 }
 
 gl::Error TextureVk::setSubImage(const gl::Context *context,
-                                 GLenum target,
+                                 gl::TextureTarget target,
                                  size_t level,
                                  const gl::Box &area,
                                  GLenum format,
@@ -277,7 +277,7 @@ gl::Error TextureVk::setSubImageImpl(ContextVk *contextVk,
 }
 
 gl::Error TextureVk::setCompressedImage(const gl::Context *context,
-                                        GLenum target,
+                                        gl::TextureTarget target,
                                         size_t level,
                                         GLenum internalFormat,
                                         const gl::Extents &size,
@@ -290,7 +290,7 @@ gl::Error TextureVk::setCompressedImage(const gl::Context *context,
 }
 
 gl::Error TextureVk::setCompressedSubImage(const gl::Context *context,
-                                           GLenum target,
+                                           gl::TextureTarget target,
                                            size_t level,
                                            const gl::Box &area,
                                            GLenum format,
@@ -303,7 +303,7 @@ gl::Error TextureVk::setCompressedSubImage(const gl::Context *context,
 }
 
 gl::Error TextureVk::copyImage(const gl::Context *context,
-                               GLenum target,
+                               gl::TextureTarget target,
                                size_t level,
                                const gl::Rectangle &sourceArea,
                                GLenum internalFormat,
@@ -314,7 +314,7 @@ gl::Error TextureVk::copyImage(const gl::Context *context,
 }
 
 gl::Error TextureVk::copySubImage(const gl::Context *context,
-                                  GLenum target,
+                                  gl::TextureTarget target,
                                   size_t level,
                                   const gl::Offset &destOffset,
                                   const gl::Rectangle &sourceArea,
@@ -325,7 +325,7 @@ gl::Error TextureVk::copySubImage(const gl::Context *context,
 }
 
 gl::Error TextureVk::setStorage(const gl::Context *context,
-                                GLenum target,
+                                gl::TextureType type,
                                 size_t levels,
                                 GLenum internalFormat,
                                 const gl::Extents &size)
@@ -334,14 +334,16 @@ gl::Error TextureVk::setStorage(const gl::Context *context,
     return gl::InternalError();
 }
 
-gl::Error TextureVk::setEGLImageTarget(const gl::Context *context, GLenum target, egl::Image *image)
+gl::Error TextureVk::setEGLImageTarget(const gl::Context *context,
+                                       gl::TextureType type,
+                                       egl::Image *image)
 {
     UNIMPLEMENTED();
     return gl::InternalError();
 }
 
 gl::Error TextureVk::setImageExternal(const gl::Context *context,
-                                      GLenum target,
+                                      gl::TextureType type,
                                       egl::Stream *stream,
                                       const egl::Stream::GLTextureDescription &desc)
 {
@@ -378,7 +380,7 @@ gl::Error TextureVk::getAttachmentRenderTarget(const gl::Context *context,
                                                const gl::ImageIndex &imageIndex,
                                                FramebufferAttachmentRenderTarget **rtOut)
 {
-    ASSERT(imageIndex.type == GL_TEXTURE_2D);
+    ASSERT(imageIndex.type == gl::TextureType::_2D);
     ASSERT(imageIndex.mipIndex == 0 && imageIndex.layerIndex == gl::ImageIndex::ENTIRE_LEVEL);
     *rtOut = &mRenderTarget;
     return gl::NoError();
@@ -390,7 +392,7 @@ void TextureVk::syncState(const gl::Texture::DirtyBits &dirtyBits)
 }
 
 gl::Error TextureVk::setStorageMultisample(const gl::Context *context,
-                                           GLenum target,
+                                           gl::TextureType type,
                                            GLsizei samples,
                                            GLint internalformat,
                                            const gl::Extents &size,

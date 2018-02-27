@@ -88,10 +88,10 @@ TEST(ValidationESTest, DISABLED_DrawElementsWithMaxIndexGivesError)
     EXPECT_CALL(*textureImpl, setStorage(_, _, _, _, _)).WillOnce(Return(gl::NoError()));
     EXPECT_CALL(*textureImpl, destructor()).Times(1).RetiresOnSaturation();
 
-    Texture *texture = new Texture(&mockFactory, 0, GL_TEXTURE_2D);
+    Texture *texture = new Texture(&mockFactory, 0, TextureType::_2D);
     texture->addRef();
     EXPECT_FALSE(
-        texture->setStorage(nullptr, GL_TEXTURE_2D, 1, GL_RGBA8, Extents(1, 1, 0)).isError());
+        texture->setStorage(nullptr, TextureType::_2D, 1, GL_RGBA8, Extents(1, 1, 0)).isError());
 
     VertexArray *vertexArray = new VertexArray(&mockFactory, 0, 1, 1);
     Framebuffer *framebuffer = new Framebuffer(caps, &mockFactory, 1);

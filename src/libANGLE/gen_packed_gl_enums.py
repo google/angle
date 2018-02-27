@@ -18,16 +18,25 @@ def load_enums(path):
         enums_dict = json.loads(map_file.read())
 
     enums = []
-    for (enum_name, values_dict) in enums_dict.iteritems():
+    for (enum_name, value_list) in enums_dict.iteritems():
 
-        values = []
-        i = 0
-        for (value_name, value_gl_name) in sorted(values_dict.iteritems()):
-            values.append(EnumValue(value_name, value_gl_name, i))
-            i += 1
+        if isinstance(value_list, dict):
+            values = []
+            i = 0
+            for (value_name, value_gl_name) in sorted(value_list.iteritems()):
+                values.append(EnumValue(value_name, value_gl_name, i))
+                i += 1
 
-        assert(i < 255) # This makes sure enums fit in the uint8_t
-        enums.append(Enum(enum_name, values, i))
+            assert(i < 255) # This makes sure enums fit in the uint8_t
+            enums.append(Enum(enum_name, values, i))
+
+        else:
+            assert(isinstance(value_list, list))
+
+            values = [EnumValue(v['name'], v['gl_name'], v['value']) for v in value_list]
+            max_value = max([value.value for value in values]) + 1
+
+            enums.append(Enum(enum_name, values, max_value))
 
     enums.sort(key=lambda enum: enum.name)
     return enums

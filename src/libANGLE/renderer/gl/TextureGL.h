@@ -64,7 +64,7 @@ class TextureGL : public TextureImpl
     ~TextureGL() override;
 
     gl::Error setImage(const gl::Context *context,
-                       GLenum target,
+                       gl::TextureTarget target,
                        size_t level,
                        GLenum internalFormat,
                        const gl::Extents &size,
@@ -73,7 +73,7 @@ class TextureGL : public TextureImpl
                        const gl::PixelUnpackState &unpack,
                        const uint8_t *pixels) override;
     gl::Error setSubImage(const gl::Context *context,
-                          GLenum target,
+                          gl::TextureTarget target,
                           size_t level,
                           const gl::Box &area,
                           GLenum format,
@@ -82,7 +82,7 @@ class TextureGL : public TextureImpl
                           const uint8_t *pixels) override;
 
     gl::Error setCompressedImage(const gl::Context *context,
-                                 GLenum target,
+                                 gl::TextureTarget target,
                                  size_t level,
                                  GLenum internalFormat,
                                  const gl::Extents &size,
@@ -90,7 +90,7 @@ class TextureGL : public TextureImpl
                                  size_t imageSize,
                                  const uint8_t *pixels) override;
     gl::Error setCompressedSubImage(const gl::Context *context,
-                                    GLenum target,
+                                    gl::TextureTarget target,
                                     size_t level,
                                     const gl::Box &area,
                                     GLenum format,
@@ -99,20 +99,20 @@ class TextureGL : public TextureImpl
                                     const uint8_t *pixels) override;
 
     gl::Error copyImage(const gl::Context *context,
-                        GLenum target,
+                        gl::TextureTarget target,
                         size_t level,
                         const gl::Rectangle &sourceArea,
                         GLenum internalFormat,
                         const gl::Framebuffer *source) override;
     gl::Error copySubImage(const gl::Context *context,
-                           GLenum target,
+                           gl::TextureTarget target,
                            size_t level,
                            const gl::Offset &destOffset,
                            const gl::Rectangle &sourceArea,
                            const gl::Framebuffer *source) override;
 
     gl::Error copyTexture(const gl::Context *context,
-                          GLenum target,
+                          gl::TextureTarget target,
                           size_t level,
                           GLenum internalFormat,
                           GLenum type,
@@ -122,7 +122,7 @@ class TextureGL : public TextureImpl
                           bool unpackUnmultiplyAlpha,
                           const gl::Texture *source) override;
     gl::Error copySubTexture(const gl::Context *context,
-                             GLenum target,
+                             gl::TextureTarget target,
                              size_t level,
                              const gl::Offset &destOffset,
                              size_t sourceLevel,
@@ -132,7 +132,7 @@ class TextureGL : public TextureImpl
                              bool unpackUnmultiplyAlpha,
                              const gl::Texture *source) override;
     gl::Error copySubTextureHelper(const gl::Context *context,
-                                   GLenum target,
+                                   gl::TextureTarget target,
                                    size_t level,
                                    const gl::Offset &destOffset,
                                    size_t sourceLevel,
@@ -145,20 +145,20 @@ class TextureGL : public TextureImpl
                                    const gl::Texture *source);
 
     gl::Error setStorage(const gl::Context *context,
-                         GLenum target,
+                         gl::TextureType type,
                          size_t levels,
                          GLenum internalFormat,
                          const gl::Extents &size) override;
 
     gl::Error setStorageMultisample(const gl::Context *context,
-                                    GLenum target,
+                                    gl::TextureType type,
                                     GLsizei samples,
                                     GLint internalFormat,
                                     const gl::Extents &size,
                                     bool fixedSampleLocations) override;
 
     gl::Error setImageExternal(const gl::Context *context,
-                               GLenum target,
+                               gl::TextureType type,
                                egl::Stream *stream,
                                const egl::Stream::GLTextureDescription &desc) override;
 
@@ -168,11 +168,11 @@ class TextureGL : public TextureImpl
     gl::Error releaseTexImage(const gl::Context *context) override;
 
     gl::Error setEGLImageTarget(const gl::Context *context,
-                                GLenum target,
+                                gl::TextureType type,
                                 egl::Image *image) override;
 
     GLuint getTextureID() const;
-    GLenum getTarget() const;
+    gl::TextureType getType() const;
 
     void syncState(const gl::Texture::DirtyBits &dirtyBits) override;
     bool hasAnyDirtyBit() const;
@@ -188,7 +188,7 @@ class TextureGL : public TextureImpl
     void setSwizzle(GLint swizzle[4]);
 
   private:
-    void setImageHelper(GLenum target,
+    void setImageHelper(gl::TextureTarget target,
                         size_t level,
                         GLenum internalFormat,
                         const gl::Extents &size,
@@ -196,14 +196,14 @@ class TextureGL : public TextureImpl
                         GLenum type,
                         const uint8_t *pixels);
     // This changes the current pixel unpack state that will have to be reapplied.
-    void reserveTexImageToBeFilled(GLenum target,
+    void reserveTexImageToBeFilled(gl::TextureTarget target,
                                    size_t level,
                                    GLenum internalFormat,
                                    const gl::Extents &size,
                                    GLenum format,
                                    GLenum type);
     gl::Error setSubImageRowByRowWorkaround(const gl::Context *context,
-                                            GLenum target,
+                                            gl::TextureTarget target,
                                             size_t level,
                                             const gl::Box &area,
                                             GLenum format,
@@ -213,7 +213,7 @@ class TextureGL : public TextureImpl
                                             const uint8_t *pixels);
 
     gl::Error setSubImagePaddingWorkaround(const gl::Context *context,
-                                           GLenum target,
+                                           gl::TextureTarget target,
                                            size_t level,
                                            const gl::Box &area,
                                            GLenum format,
@@ -227,8 +227,15 @@ class TextureGL : public TextureImpl
                                  GLenum value,
                                  GLenum *outValue);
 
-    void setLevelInfo(GLenum target, size_t level, size_t levelCount, const LevelInfoGL &levelInfo);
-    const LevelInfoGL &getLevelInfo(GLenum target, size_t level) const;
+    void setLevelInfo(gl::TextureTarget target,
+                      size_t level,
+                      size_t levelCount,
+                      const LevelInfoGL &levelInfo);
+    void setLevelInfo(gl::TextureType type,
+                      size_t level,
+                      size_t levelCount,
+                      const LevelInfoGL &levelInfo);
+    const LevelInfoGL &getLevelInfo(gl::TextureTarget target, size_t level) const;
     const LevelInfoGL &getBaseLevelInfo() const;
 
     const FunctionsGL *mFunctions;

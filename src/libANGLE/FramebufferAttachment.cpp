@@ -231,12 +231,12 @@ const ImageIndex &FramebufferAttachment::getTextureImageIndex() const
     return mTarget.textureIndex();
 }
 
-GLenum FramebufferAttachment::cubeMapFace() const
+TextureTarget FramebufferAttachment::cubeMapFace() const
 {
     ASSERT(mType == GL_TEXTURE);
 
     const auto &index = mTarget.textureIndex();
-    return index.type == GL_TEXTURE_CUBE_MAP ? index.target : GL_NONE;
+    return index.type == TextureType::CubeMap ? index.target : TextureTarget::InvalidEnum;
 }
 
 GLint FramebufferAttachment::mipLevel() const
@@ -370,7 +370,7 @@ Error FramebufferAttachmentObject::initializeContents(const Context *context,
 
     // Because gl::Texture cannot support tracking individual layer dirtiness, we only handle
     // initializing entire mip levels for 2D array textures.
-    if (imageIndex.type == GL_TEXTURE_2D_ARRAY && imageIndex.hasLayer())
+    if (imageIndex.type == TextureType::_2DArray && imageIndex.hasLayer())
     {
         ImageIndex fullMipIndex = imageIndex;
         fullMipIndex.layerIndex = ImageIndex::ENTIRE_LEVEL;

@@ -90,7 +90,7 @@ bool CheckAttachmentCompleteness(const Context *context, const FramebufferAttach
         // TODO(jmadill): Check if OpenGL ES2 drivers enforce cube completeness.
         const Texture *texture = attachment.getTexture();
         ASSERT(texture);
-        if (texture->getTarget() == GL_TEXTURE_CUBE_MAP &&
+        if (texture->getType() == TextureType::CubeMap &&
             !texture->getTextureState().isCubeComplete())
         {
             return false;

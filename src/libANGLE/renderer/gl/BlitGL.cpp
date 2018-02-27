@@ -163,8 +163,8 @@ BlitGL::~BlitGL()
 
 gl::Error BlitGL::copyImageToLUMAWorkaroundTexture(const gl::Context *context,
                                                    GLuint texture,
-                                                   GLenum textureType,
-                                                   GLenum target,
+                                                   gl::TextureType textureType,
+                                                   gl::TextureTarget target,
                                                    GLenum lumaFormat,
                                                    size_t level,
                                                    const gl::Rectangle &sourceArea,
@@ -180,8 +180,8 @@ gl::Error BlitGL::copyImageToLUMAWorkaroundTexture(const gl::Context *context,
     mStateManager->setPixelUnpackState(unpack);
     mStateManager->setPixelUnpackBuffer(
         context->getGLState().getTargetBuffer(gl::BufferBinding::PixelUnpack));
-    mFunctions->texImage2D(target, static_cast<GLint>(level), internalFormat, sourceArea.width,
-                           sourceArea.height, 0, format,
+    mFunctions->texImage2D(ToGLenum(target), static_cast<GLint>(level), internalFormat,
+                           sourceArea.width, sourceArea.height, 0, format,
                            source->getImplementationColorReadType(context), nullptr);
 
     return copySubImageToLUMAWorkaroundTexture(context, texture, textureType, target, lumaFormat,
@@ -190,8 +190,8 @@ gl::Error BlitGL::copyImageToLUMAWorkaroundTexture(const gl::Context *context,
 
 gl::Error BlitGL::copySubImageToLUMAWorkaroundTexture(const gl::Context *context,
                                                       GLuint texture,
-                                                      GLenum textureType,
-                                                      GLenum target,
+                                                      gl::TextureType textureType,
+                                                      gl::TextureTarget target,
                                                       GLenum lumaFormat,
                                                       size_t level,
                                                       const gl::Offset &destOffset,
@@ -211,7 +211,7 @@ gl::Error BlitGL::copySubImageToLUMAWorkaroundTexture(const gl::Context *context
         mFunctions, mWorkarounds, source->getImplementationColorReadFormat(context),
         source->getImplementationColorReadType(context));
 
-    mStateManager->bindTexture(GL_TEXTURE_2D, mScratchTextures[0]);
+    mStateManager->bindTexture(gl::TextureType::_2D, mScratchTextures[0]);
     mFunctions->copyTexImage2D(GL_TEXTURE_2D, 0, copyTexImageFormat.internalFormat, sourceArea.x,
                                sourceArea.y, sourceArea.width, sourceArea.height, 0);
 
@@ -225,7 +225,7 @@ gl::Error BlitGL::copySubImageToLUMAWorkaroundTexture(const gl::Context *context
 
     // Make a temporary framebuffer using the second scratch texture to render the swizzled result
     // to.
-    mStateManager->bindTexture(GL_TEXTURE_2D, mScratchTextures[1]);
+    mStateManager->bindTexture(gl::TextureType::_2D, mScratchTextures[1]);
     mFunctions->texImage2D(GL_TEXTURE_2D, 0, copyTexImageFormat.internalFormat, sourceArea.width,
                            sourceArea.height, 0,
                            gl::GetUnsizedFormat(copyTexImageFormat.internalFormat),
@@ -244,7 +244,7 @@ gl::Error BlitGL::copySubImageToLUMAWorkaroundTexture(const gl::Context *context
     setScratchTextureParameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
     mStateManager->activeTexture(0);
-    mStateManager->bindTexture(GL_TEXTURE_2D, mScratchTextures[0]);
+    mStateManager->bindTexture(gl::TextureType::_2D, mScratchTextures[0]);
 
     mStateManager->useProgram(blitProgram->program);
     mFunctions->uniform1i(blitProgram->sourceTextureLocation, 0);
@@ -259,15 +259,16 @@ gl::Error BlitGL::copySubImageToLUMAWorkaroundTexture(const gl::Context *context
     // Copy the swizzled texture to the destination texture
     mStateManager->bindTexture(textureType, texture);
 
-    if (target == GL_TEXTURE_3D || target == GL_TEXTURE_2D_ARRAY)
+    if (target == gl::TextureTarget::_3D || target == gl::TextureTarget::_2DArray)
     {
-        mFunctions->copyTexSubImage3D(target, static_cast<GLint>(level), destOffset.x, destOffset.y,
-                                      destOffset.z, 0, 0, sourceArea.width, sourceArea.height);
+        mFunctions->copyTexSubImage3D(ToGLenum(target), static_cast<GLint>(level), destOffset.x,
+                                      destOffset.y, destOffset.z, 0, 0, sourceArea.width,
+                                      sourceArea.height);
     }
     else
     {
-        mFunctions->copyTexSubImage2D(target, static_cast<GLint>(level), destOffset.x, destOffset.y,
-                                      0, 0, sourceArea.width, sourceArea.height);
+        mFunctions->copyTexSubImage2D(ToGLenum(target), static_cast<GLint>(level), destOffset.x,
+                                      destOffset.y, 0, 0, sourceArea.width, sourceArea.height);
     }
 
     // Finally orphan the scratch textures so they can be GCed by the driver.
@@ -369,7 +370,7 @@ gl::Error BlitGL::blitColorBufferWithShader(const gl::Framebuffer *source,
         GLenum format                 = readAttachment->getFormat().info->internalFormat;
         const FramebufferGL *sourceGL = GetImplAs<FramebufferGL>(source);
         mStateManager->bindFramebuffer(GL_READ_FRAMEBUFFER, sourceGL->getFramebufferID());
-        mStateManager->bindTexture(GL_TEXTURE_2D, textureId);
+        mStateManager->bindTexture(gl::TextureType::_2D, textureId);
 
         mFunctions->copyTexImage2D(GL_TEXTURE_2D, 0, format, inBoundsSource.x, inBoundsSource.y,
                                    inBoundsSource.width, inBoundsSource.height, 0);
@@ -416,7 +417,7 @@ gl::Error BlitGL::blitColorBufferWithShader(const gl::Framebuffer *source,
 
     // Set uniforms
     mStateManager->activeTexture(0);
-    mStateManager->bindTexture(GL_TEXTURE_2D, textureId);
+    mStateManager->bindTexture(gl::TextureType::_2D, textureId);
 
     mStateManager->useProgram(blitProgram->program);
     mFunctions->uniform1i(blitProgram->sourceTextureLocation, 0);
@@ -439,7 +440,7 @@ gl::Error BlitGL::copySubTexture(const gl::Context *context,
                                  size_t sourceLevel,
                                  GLenum sourceComponentType,
                                  TextureGL *dest,
-                                 GLenum destTarget,
+                                 gl::TextureTarget destTarget,
                                  size_t destLevel,
                                  GLenum destComponentType,
                                  const gl::Extents &sourceSize,
@@ -451,6 +452,7 @@ gl::Error BlitGL::copySubTexture(const gl::Context *context,
                                  bool unpackPremultiplyAlpha,
                                  bool unpackUnmultiplyAlpha)
 {
+    ASSERT(source->getType() == gl::TextureType::_2D);
     ANGLE_TRY(initializeResources());
 
     BlitProgramType blitProgramType = getBlitProgramType(sourceComponentType, destComponentType);
@@ -490,7 +492,7 @@ gl::Error BlitGL::copySubTexture(const gl::Context *context,
     scopedState.willUseTextureUnit(0);
 
     mStateManager->activeTexture(0);
-    mStateManager->bindTexture(GL_TEXTURE_2D, source->getTextureID());
+    mStateManager->bindTexture(gl::TextureType::_2D, source->getTextureID());
 
     Vector2 scale(sourceArea.width / static_cast<float>(sourceSize.width),
                   sourceArea.height / static_cast<float>(sourceSize.height));
@@ -518,7 +520,7 @@ gl::Error BlitGL::copySubTexture(const gl::Context *context,
     }
 
     mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mScratchFBO);
-    mFunctions->framebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, destTarget,
+    mFunctions->framebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, ToGLenum(destTarget),
                                      dest->getTextureID(), static_cast<GLint>(destLevel));
 
     mStateManager->bindVertexArray(mVAO, 0);
@@ -532,7 +534,7 @@ gl::Error BlitGL::copySubTextureCPUReadback(const gl::Context *context,
                                             size_t sourceLevel,
                                             GLenum sourceComponentType,
                                             TextureGL *dest,
-                                            GLenum destTarget,
+                                            gl::TextureTarget destTarget,
                                             size_t destLevel,
                                             GLenum destFormat,
                                             GLenum destType,
@@ -542,7 +544,7 @@ gl::Error BlitGL::copySubTextureCPUReadback(const gl::Context *context,
                                             bool unpackPremultiplyAlpha,
                                             bool unpackUnmultiplyAlpha)
 {
-    ASSERT(source->getTarget() == GL_TEXTURE_2D);
+    ASSERT(source->getType() == gl::TextureType::_2D);
     const auto &destInternalFormatInfo = gl::GetInternalFormatInfo(destFormat, destType);
 
     // Create a buffer for holding the source and destination memory
@@ -556,7 +558,7 @@ gl::Error BlitGL::copySubTextureCPUReadback(const gl::Context *context,
     uint8_t *destMemory   = buffer->data() + sourceBufferSize;
 
     mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mScratchFBO);
-    mFunctions->framebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, source->getTarget(),
+    mFunctions->framebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
                                      source->getTextureID(), static_cast<GLint>(sourceLevel));
 
     GLenum readPixelsFormat        = GL_NONE;
@@ -598,9 +600,9 @@ gl::Error BlitGL::copySubTextureCPUReadback(const gl::Context *context,
     nativegl::TexSubImageFormat texSubImageFormat =
         nativegl::GetTexSubImageFormat(mFunctions, mWorkarounds, destFormat, destType);
 
-    mFunctions->texSubImage2D(destTarget, static_cast<GLint>(destLevel), destOffset.x, destOffset.y,
-                              sourceArea.width, sourceArea.height, texSubImageFormat.format,
-                              texSubImageFormat.type, destMemory);
+    mFunctions->texSubImage2D(ToGLenum(destTarget), static_cast<GLint>(destLevel), destOffset.x,
+                              destOffset.y, sourceArea.width, sourceArea.height,
+                              texSubImageFormat.format, texSubImageFormat.type, destMemory);
 
     return gl::NoError();
 }
@@ -608,7 +610,7 @@ gl::Error BlitGL::copySubTextureCPUReadback(const gl::Context *context,
 gl::Error BlitGL::copyTexSubImage(TextureGL *source,
                                   size_t sourceLevel,
                                   TextureGL *dest,
-                                  GLenum destTarget,
+                                  gl::TextureTarget destTarget,
                                   size_t destLevel,
                                   const gl::Rectangle &sourceArea,
                                   const gl::Offset &destOffset)
@@ -619,9 +621,9 @@ gl::Error BlitGL::copyTexSubImage(TextureGL *source,
     mFunctions->framebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
                                      source->getTextureID(), static_cast<GLint>(sourceLevel));
 
-    mStateManager->bindTexture(dest->getTarget(), dest->getTextureID());
+    mStateManager->bindTexture(dest->getType(), dest->getTextureID());
 
-    mFunctions->copyTexSubImage2D(destTarget, static_cast<GLint>(destLevel), destOffset.x,
+    mFunctions->copyTexSubImage2D(ToGLenum(destTarget), static_cast<GLint>(destLevel), destOffset.x,
                                   destOffset.y, sourceArea.x, sourceArea.y, sourceArea.width,
                                   sourceArea.height);
 
@@ -683,7 +685,7 @@ void BlitGL::orphanScratchTextures()
 {
     for (auto texture : mScratchTextures)
     {
-        mStateManager->bindTexture(GL_TEXTURE_2D, texture);
+        mStateManager->bindTexture(gl::TextureType::_2D, texture);
         gl::PixelUnpackState unpack;
         mStateManager->setPixelUnpackState(unpack);
         mStateManager->setPixelUnpackBuffer(nullptr);
@@ -696,7 +698,7 @@ void BlitGL::setScratchTextureParameter(GLenum param, GLenum value)
 {
     for (auto texture : mScratchTextures)
     {
-        mStateManager->bindTexture(GL_TEXTURE_2D, texture);
+        mStateManager->bindTexture(gl::TextureType::_2D, texture);
         mFunctions->texParameteri(GL_TEXTURE_2D, param, value);
         mFunctions->texParameteri(GL_TEXTURE_2D, param, value);
     }

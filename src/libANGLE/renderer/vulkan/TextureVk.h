@@ -25,7 +25,7 @@ class TextureVk : public TextureImpl, public ResourceVk
     gl::Error onDestroy(const gl::Context *context) override;
 
     gl::Error setImage(const gl::Context *context,
-                       GLenum target,
+                       gl::TextureTarget target,
                        size_t level,
                        GLenum internalFormat,
                        const gl::Extents &size,
@@ -34,7 +34,7 @@ class TextureVk : public TextureImpl, public ResourceVk
                        const gl::PixelUnpackState &unpack,
                        const uint8_t *pixels) override;
     gl::Error setSubImage(const gl::Context *context,
-                          GLenum target,
+                          gl::TextureTarget target,
                           size_t level,
                           const gl::Box &area,
                           GLenum format,
@@ -43,7 +43,7 @@ class TextureVk : public TextureImpl, public ResourceVk
                           const uint8_t *pixels) override;
 
     gl::Error setCompressedImage(const gl::Context *context,
-                                 GLenum target,
+                                 gl::TextureTarget target,
                                  size_t level,
                                  GLenum internalFormat,
                                  const gl::Extents &size,
@@ -51,7 +51,7 @@ class TextureVk : public TextureImpl, public ResourceVk
                                  size_t imageSize,
                                  const uint8_t *pixels) override;
     gl::Error setCompressedSubImage(const gl::Context *context,
-                                    GLenum target,
+                                    gl::TextureTarget target,
                                     size_t level,
                                     const gl::Box &area,
                                     GLenum format,
@@ -60,30 +60,30 @@ class TextureVk : public TextureImpl, public ResourceVk
                                     const uint8_t *pixels) override;
 
     gl::Error copyImage(const gl::Context *context,
-                        GLenum target,
+                        gl::TextureTarget target,
                         size_t level,
                         const gl::Rectangle &sourceArea,
                         GLenum internalFormat,
                         const gl::Framebuffer *source) override;
     gl::Error copySubImage(const gl::Context *context,
-                           GLenum target,
+                           gl::TextureTarget target,
                            size_t level,
                            const gl::Offset &destOffset,
                            const gl::Rectangle &sourceArea,
                            const gl::Framebuffer *source) override;
 
     gl::Error setStorage(const gl::Context *context,
-                         GLenum target,
+                         gl::TextureType type,
                          size_t levels,
                          GLenum internalFormat,
                          const gl::Extents &size) override;
 
     gl::Error setEGLImageTarget(const gl::Context *context,
-                                GLenum target,
+                                gl::TextureType type,
                                 egl::Image *image) override;
 
     gl::Error setImageExternal(const gl::Context *context,
-                               GLenum target,
+                               gl::TextureType type,
                                egl::Stream *stream,
                                const egl::Stream::GLTextureDescription &desc) override;
 
@@ -102,7 +102,7 @@ class TextureVk : public TextureImpl, public ResourceVk
     void syncState(const gl::Texture::DirtyBits &dirtyBits) override;
 
     gl::Error setStorageMultisample(const gl::Context *context,
-                                    GLenum target,
+                                    gl::TextureType type,
                                     GLsizei samples,
                                     GLint internalformat,
                                     const gl::Extents &size,

@@ -624,8 +624,9 @@ ANGLE_EXPORT void GL_APIENTRY CopyTextureCHROMIUM(GLuint sourceId,
             return;
         }
 
-        context->copyTexture(sourceId, sourceLevel, destTarget, destId, destLevel, internalFormat,
-                             destType, unpackFlipY, unpackPremultiplyAlpha, unpackUnmultiplyAlpha);
+        context->copyTexture(sourceId, sourceLevel, destTargetPacked, destId, destLevel,
+                             internalFormat, destType, unpackFlipY, unpackPremultiplyAlpha,
+                             unpackUnmultiplyAlpha);
     }
 }
 
@@ -665,7 +666,7 @@ ANGLE_EXPORT void GL_APIENTRY CopySubTextureCHROMIUM(GLuint sourceId,
             return;
         }
 
-        context->copySubTexture(sourceId, sourceLevel, destTarget, destId, destLevel, xoffset,
+        context->copySubTexture(sourceId, sourceLevel, destTargetPacked, destId, destLevel, xoffset,
                                 yoffset, x, y, width, height, unpackFlipY, unpackPremultiplyAlpha,
                                 unpackUnmultiplyAlpha);
     }

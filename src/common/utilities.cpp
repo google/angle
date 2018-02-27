@@ -501,29 +501,6 @@ int AllocateFirstFreeBits(unsigned int *bits, unsigned int allocationSize, unsig
     return -1;
 }
 
-static_assert(GL_TEXTURE_CUBE_MAP_NEGATIVE_X - GL_TEXTURE_CUBE_MAP_POSITIVE_X == 1, "Unexpected GL cube map enum value.");
-static_assert(GL_TEXTURE_CUBE_MAP_POSITIVE_Y - GL_TEXTURE_CUBE_MAP_POSITIVE_X == 2, "Unexpected GL cube map enum value.");
-static_assert(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y - GL_TEXTURE_CUBE_MAP_POSITIVE_X == 3, "Unexpected GL cube map enum value.");
-static_assert(GL_TEXTURE_CUBE_MAP_POSITIVE_Z - GL_TEXTURE_CUBE_MAP_POSITIVE_X == 4, "Unexpected GL cube map enum value.");
-static_assert(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z - GL_TEXTURE_CUBE_MAP_POSITIVE_X == 5, "Unexpected GL cube map enum value.");
-
-bool IsCubeMapTextureTarget(GLenum target)
-{
-    return (target >= FirstCubeMapTextureTarget && target <= LastCubeMapTextureTarget);
-}
-
-size_t CubeMapTextureTargetToLayerIndex(GLenum target)
-{
-    ASSERT(IsCubeMapTextureTarget(target));
-    return target - static_cast<size_t>(FirstCubeMapTextureTarget);
-}
-
-GLenum LayerIndexToCubeMapTextureTarget(size_t index)
-{
-    ASSERT(index <= (LastCubeMapTextureTarget - FirstCubeMapTextureTarget));
-    return FirstCubeMapTextureTarget + static_cast<GLenum>(index);
-}
-
 IndexRange ComputeIndexRange(GLenum indexType,
                              const GLvoid *indices,
                              size_t count,

@@ -1201,7 +1201,9 @@ bool SupportsOcclusionQueries(const FunctionsGL *functions)
            functions->hasGLESExtension("GL_EXT_occlusion_query_boolean");
 }
 
-bool SupportsNativeRendering(const FunctionsGL *functions, GLenum target, GLenum internalFormat)
+bool SupportsNativeRendering(const FunctionsGL *functions,
+                             gl::TextureType type,
+                             GLenum internalFormat)
 {
     // Some desktop drivers allow rendering to formats that are not required by the spec, this is
     // exposed through the GL_FRAMEBUFFER_RENDERABLE query.
@@ -1209,7 +1211,7 @@ bool SupportsNativeRendering(const FunctionsGL *functions, GLenum target, GLenum
         functions->hasGLExtension("GL_ARB_internalformat_query2"))
     {
         GLint framebufferRenderable = GL_NONE;
-        functions->getInternalformativ(target, internalFormat, GL_FRAMEBUFFER_RENDERABLE, 1,
+        functions->getInternalformativ(ToGLenum(type), internalFormat, GL_FRAMEBUFFER_RENDERABLE, 1,
                                        &framebufferRenderable);
         return framebufferRenderable != GL_NONE;
     }

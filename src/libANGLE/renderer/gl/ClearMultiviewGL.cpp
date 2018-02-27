@@ -154,7 +154,7 @@ void ClearMultiviewGL::attachTextures(const gl::FramebufferState &state, int lay
         }
 
         const auto &imageIndex = attachment->getTextureImageIndex();
-        ASSERT(imageIndex.type == GL_TEXTURE_2D_ARRAY);
+        ASSERT(imageIndex.type == gl::TextureType::_2DArray);
 
         GLenum colorAttachment =
             static_cast<GLenum>(GL_COLOR_ATTACHMENT0 + static_cast<int>(drawBufferId));
@@ -169,7 +169,7 @@ void ClearMultiviewGL::attachTextures(const gl::FramebufferState &state, int lay
     if (depthStencilAttachment != nullptr)
     {
         const auto &imageIndex = depthStencilAttachment->getTextureImageIndex();
-        ASSERT(imageIndex.type == GL_TEXTURE_2D_ARRAY);
+        ASSERT(imageIndex.type == gl::TextureType::_2DArray);
 
         const TextureGL *textureGL = GetImplAs<TextureGL>(depthStencilAttachment->getTexture());
         mFunctions->framebufferTextureLayer(GL_DRAW_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT,
@@ -178,7 +178,7 @@ void ClearMultiviewGL::attachTextures(const gl::FramebufferState &state, int lay
     else if (depthAttachment != nullptr)
     {
         const auto &imageIndex = depthAttachment->getTextureImageIndex();
-        ASSERT(imageIndex.type == GL_TEXTURE_2D_ARRAY);
+        ASSERT(imageIndex.type == gl::TextureType::_2DArray);
 
         const TextureGL *textureGL = GetImplAs<TextureGL>(depthAttachment->getTexture());
         mFunctions->framebufferTextureLayer(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
@@ -187,7 +187,7 @@ void ClearMultiviewGL::attachTextures(const gl::FramebufferState &state, int lay
     else if (stencilAttachment != nullptr)
     {
         const auto &imageIndex = stencilAttachment->getTextureImageIndex();
-        ASSERT(imageIndex.type == GL_TEXTURE_2D_ARRAY);
+        ASSERT(imageIndex.type == gl::TextureType::_2DArray);
 
         const TextureGL *textureGL = GetImplAs<TextureGL>(stencilAttachment->getTexture());
         mFunctions->framebufferTextureLayer(GL_DRAW_FRAMEBUFFER, GL_STENCIL_ATTACHMENT,

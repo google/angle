@@ -40,7 +40,7 @@ gl::ImageIndex GetImageIndex(EGLenum eglTarget, const egl::AttributeMap &attribs
     else
     {
         ASSERT(layer == 0);
-        return gl::ImageIndex::MakeGeneric(ToGLenum(target), mip);
+        return gl::ImageIndex::MakeGeneric(target, mip);
     }
 }
 }  // anonymous namespace

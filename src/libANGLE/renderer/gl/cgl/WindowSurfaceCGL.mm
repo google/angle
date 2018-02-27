@@ -202,7 +202,7 @@ egl::Error WindowSurfaceCGL::initialize(const egl::Display *display)
     for (size_t i = 0; i < ArraySize(mSwapState.textures); ++i)
     {
         mFunctions->genTextures(1, &mSwapState.textures[i].texture);
-        mStateManager->bindTexture(GL_TEXTURE_2D, mSwapState.textures[i].texture);
+        mStateManager->bindTexture(gl::TextureType::_2D, mSwapState.textures[i].texture);
         mFunctions->texImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA,
                                GL_UNSIGNED_BYTE, nullptr);
         mSwapState.textures[i].width  = width;
@@ -254,7 +254,7 @@ egl::Error WindowSurfaceCGL::swap(const gl::Context *context)
 
     if (texture.width != width || texture.height != height)
     {
-        mStateManager->bindTexture(GL_TEXTURE_2D, texture.texture);
+        mStateManager->bindTexture(gl::TextureType::_2D, texture.texture);
         mFunctions->texImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA,
                                GL_UNSIGNED_BYTE, nullptr);
 

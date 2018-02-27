@@ -228,7 +228,7 @@ void Image11::disassociateStorage()
     }
 }
 
-bool Image11::redefine(GLenum target,
+bool Image11::redefine(gl::TextureType type,
                        GLenum internalformat,
                        const gl::Extents &size,
                        bool forceRelease)
@@ -245,7 +245,7 @@ bool Image11::redefine(GLenum target,
         mHeight         = size.height;
         mDepth          = size.depth;
         mInternalFormat = internalformat;
-        mTarget         = target;
+        mType           = type;
 
         // compute the d3d format that will be used
         const d3d11::Format &formatInfo =
@@ -540,76 +540,82 @@ gl::Error Image11::createStagingTexture()
     // adjust size if needed for compressed textures
     d3d11::MakeValidSize(false, dxgiFormat, &width, &height, &lodOffset);
 
-    if (mTarget == GL_TEXTURE_3D)
+    switch (mType)
     {
-        D3D11_TEXTURE3D_DESC desc;
-        desc.Width          = width;
-        desc.Height         = height;
-        desc.Depth          = mDepth;
-        desc.MipLevels      = lodOffset + 1;
-        desc.Format         = dxgiFormat;
-        desc.Usage          = D3D11_USAGE_STAGING;
-        desc.BindFlags      = 0;
-        desc.CPUAccessFlags = D3D11_CPU_ACCESS_READ | D3D11_CPU_ACCESS_WRITE;
-        desc.MiscFlags      = 0;
-
-        if (formatInfo.dataInitializerFunction != nullptr)
+        case gl::TextureType::_3D:
         {
-            std::vector<D3D11_SUBRESOURCE_DATA> initialData;
-            std::vector<std::vector<BYTE>> textureData;
-            d3d11::GenerateInitialTextureData(mInternalFormat, mRenderer->getRenderer11DeviceCaps(),
-                                              width, height, mDepth, lodOffset + 1, &initialData,
-                                              &textureData);
+            D3D11_TEXTURE3D_DESC desc;
+            desc.Width          = width;
+            desc.Height         = height;
+            desc.Depth          = mDepth;
+            desc.MipLevels      = lodOffset + 1;
+            desc.Format         = dxgiFormat;
+            desc.Usage          = D3D11_USAGE_STAGING;
+            desc.BindFlags      = 0;
+            desc.CPUAccessFlags = D3D11_CPU_ACCESS_READ | D3D11_CPU_ACCESS_WRITE;
+            desc.MiscFlags      = 0;
 
-            ANGLE_TRY(
-                mRenderer->allocateTexture(desc, formatInfo, initialData.data(), &mStagingTexture));
+            if (formatInfo.dataInitializerFunction != nullptr)
+            {
+                std::vector<D3D11_SUBRESOURCE_DATA> initialData;
+                std::vector<std::vector<BYTE>> textureData;
+                d3d11::GenerateInitialTextureData(
+                    mInternalFormat, mRenderer->getRenderer11DeviceCaps(), width, height, mDepth,
+                    lodOffset + 1, &initialData, &textureData);
+
+                ANGLE_TRY(mRenderer->allocateTexture(desc, formatInfo, initialData.data(),
+                                                     &mStagingTexture));
+            }
+            else
+            {
+                ANGLE_TRY(mRenderer->allocateTexture(desc, formatInfo, &mStagingTexture));
+            }
+
+            mStagingTexture.setDebugName("Image11::StagingTexture3D");
+            mStagingSubresource = D3D11CalcSubresource(lodOffset, 0, lodOffset + 1);
         }
-        else
+        break;
+
+        case gl::TextureType::_2D:
+        case gl::TextureType::_2DArray:
+        case gl::TextureType::CubeMap:
         {
-            ANGLE_TRY(mRenderer->allocateTexture(desc, formatInfo, &mStagingTexture));
+            D3D11_TEXTURE2D_DESC desc;
+            desc.Width              = width;
+            desc.Height             = height;
+            desc.MipLevels          = lodOffset + 1;
+            desc.ArraySize          = 1;
+            desc.Format             = dxgiFormat;
+            desc.SampleDesc.Count   = 1;
+            desc.SampleDesc.Quality = 0;
+            desc.Usage              = D3D11_USAGE_STAGING;
+            desc.BindFlags          = 0;
+            desc.CPUAccessFlags     = D3D11_CPU_ACCESS_READ | D3D11_CPU_ACCESS_WRITE;
+            desc.MiscFlags          = 0;
+
+            if (formatInfo.dataInitializerFunction != nullptr)
+            {
+                std::vector<D3D11_SUBRESOURCE_DATA> initialData;
+                std::vector<std::vector<BYTE>> textureData;
+                d3d11::GenerateInitialTextureData(
+                    mInternalFormat, mRenderer->getRenderer11DeviceCaps(), width, height, 1,
+                    lodOffset + 1, &initialData, &textureData);
+
+                ANGLE_TRY(mRenderer->allocateTexture(desc, formatInfo, initialData.data(),
+                                                     &mStagingTexture));
+            }
+            else
+            {
+                ANGLE_TRY(mRenderer->allocateTexture(desc, formatInfo, &mStagingTexture));
+            }
+
+            mStagingTexture.setDebugName("Image11::StagingTexture2D");
+            mStagingSubresource = D3D11CalcSubresource(lodOffset, 0, lodOffset + 1);
         }
+        break;
 
-        mStagingTexture.setDebugName("Image11::StagingTexture3D");
-        mStagingSubresource = D3D11CalcSubresource(lodOffset, 0, lodOffset + 1);
-    }
-    else if (mTarget == GL_TEXTURE_2D || mTarget == GL_TEXTURE_2D_ARRAY ||
-             mTarget == GL_TEXTURE_CUBE_MAP)
-    {
-        D3D11_TEXTURE2D_DESC desc;
-        desc.Width              = width;
-        desc.Height             = height;
-        desc.MipLevels          = lodOffset + 1;
-        desc.ArraySize          = 1;
-        desc.Format             = dxgiFormat;
-        desc.SampleDesc.Count   = 1;
-        desc.SampleDesc.Quality = 0;
-        desc.Usage              = D3D11_USAGE_STAGING;
-        desc.BindFlags          = 0;
-        desc.CPUAccessFlags     = D3D11_CPU_ACCESS_READ | D3D11_CPU_ACCESS_WRITE;
-        desc.MiscFlags          = 0;
-
-        if (formatInfo.dataInitializerFunction != nullptr)
-        {
-            std::vector<D3D11_SUBRESOURCE_DATA> initialData;
-            std::vector<std::vector<BYTE>> textureData;
-            d3d11::GenerateInitialTextureData(mInternalFormat, mRenderer->getRenderer11DeviceCaps(),
-                                              width, height, 1, lodOffset + 1, &initialData,
-                                              &textureData);
-
-            ANGLE_TRY(
-                mRenderer->allocateTexture(desc, formatInfo, initialData.data(), &mStagingTexture));
-        }
-        else
-        {
-            ANGLE_TRY(mRenderer->allocateTexture(desc, formatInfo, &mStagingTexture));
-        }
-
-        mStagingTexture.setDebugName("Image11::StagingTexture2D");
-        mStagingSubresource = D3D11CalcSubresource(lodOffset, 0, lodOffset + 1);
-    }
-    else
-    {
-        UNREACHABLE();
+        default:
+            UNREACHABLE();
     }
 
     mDirty = false;

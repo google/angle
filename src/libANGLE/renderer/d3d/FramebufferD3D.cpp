@@ -400,7 +400,8 @@ const gl::AttachmentList &FramebufferD3D::getColorAttachmentsForRender(const gl:
 
             gl::Texture *dummyTex = nullptr;
             // TODO(Jamie): Handle error if dummy texture can't be created.
-            ANGLE_SWALLOW_ERR(mRenderer->getIncompleteTexture(context, GL_TEXTURE_2D, &dummyTex));
+            ANGLE_SWALLOW_ERR(
+                mRenderer->getIncompleteTexture(context, gl::TextureType::_2D, &dummyTex));
             if (dummyTex)
             {
 

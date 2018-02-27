@@ -90,7 +90,7 @@ struct SwizzleState final
 // State from Table 6.9 (state per texture object) in the OpenGL ES 3.0.2 spec.
 struct TextureState final : private angle::NonCopyable
 {
-    TextureState(GLenum target);
+    TextureState(TextureType type);
     ~TextureState();
 
     bool swizzleRequired() const;
@@ -106,11 +106,10 @@ struct TextureState final : private angle::NonCopyable
 
     bool isCubeComplete() const;
 
-    const ImageDesc &getImageDesc(GLenum target, size_t level) const;
+    const ImageDesc &getImageDesc(TextureTarget target, size_t level) const;
     const ImageDesc &getImageDesc(const ImageIndex &imageIndex) const;
 
-    GLenum getTarget() const { return mTarget; }
-    TextureType getType() const;
+    TextureType getType() const { return mType; };
     const SwizzleState &getSwizzleState() const { return mSwizzleState; }
     const SamplerState &getSamplerState() const { return mSamplerState; }
     GLenum getUsage() const { return mUsage; }
@@ -134,11 +133,11 @@ struct TextureState final : private angle::NonCopyable
     bool computeSamplerCompleteness(const SamplerState &samplerState,
                                     const ContextState &data) const;
     bool computeMipmapCompleteness() const;
-    bool computeLevelCompleteness(GLenum target, size_t level) const;
+    bool computeLevelCompleteness(TextureTarget target, size_t level) const;
 
-    GLenum getBaseImageTarget() const;
+    TextureTarget getBaseImageTarget() const;
 
-    void setImageDesc(GLenum target, size_t level, const ImageDesc &desc);
+    void setImageDesc(TextureTarget target, size_t level, const ImageDesc &desc);
     void setImageDescChain(GLuint baselevel,
                            GLuint maxLevel,
                            Extents baseSize,
@@ -150,10 +149,10 @@ struct TextureState final : private angle::NonCopyable
                                       bool fixedSampleLocations,
                                       InitState initState);
 
-    void clearImageDesc(GLenum target, size_t level);
+    void clearImageDesc(TextureTarget target, size_t level);
     void clearImageDescs();
 
-    const GLenum mTarget;
+    const TextureType mType;
 
     SwizzleState mSwizzleState;
 
@@ -188,7 +187,7 @@ bool operator!=(const TextureState &a, const TextureState &b);
 class Texture final : public egl::ImageSibling, public LabeledObject
 {
   public:
-    Texture(rx::GLImplFactory *factory, GLuint id, GLenum target);
+    Texture(rx::GLImplFactory *factory, GLuint id, TextureType type);
     ~Texture() override;
 
     Error onDestroy(const Context *context) override;
@@ -196,7 +195,6 @@ class Texture final : public egl::ImageSibling, public LabeledObject
     void setLabel(const std::string &label) override;
     const std::string &getLabel() const override;
 
-    GLenum getTarget() const;
     TextureType getType() const;
 
     void setSwizzleRed(GLenum swizzleRed);
@@ -264,15 +262,11 @@ class Texture final : public egl::ImageSibling, public LabeledObject
 
     const TextureState &getTextureState() const;
 
-    size_t getWidth(GLenum target, size_t level) const;
     size_t getWidth(TextureTarget target, size_t level) const;
-    size_t getHeight(GLenum target, size_t level) const;
     size_t getHeight(TextureTarget target, size_t level) const;
-    size_t getDepth(GLenum target, size_t level) const;
     size_t getDepth(TextureTarget target, size_t level) const;
-    GLsizei getSamples(GLenum target, size_t level) const;
-    bool getFixedSampleLocations(GLenum target, size_t level) const;
-    const Format &getFormat(GLenum target, size_t level) const;
+    GLsizei getSamples(TextureTarget target, size_t level) const;
+    bool getFixedSampleLocations(TextureTarget target, size_t level) const;
     const Format &getFormat(TextureTarget target, size_t level) const;
 
     // Returns the value called "q" in the GLES 3.0.4 spec section 3.8.10.
@@ -282,7 +276,7 @@ class Texture final : public egl::ImageSibling, public LabeledObject
 
     Error setImage(const Context *context,
                    const PixelUnpackState &unpackState,
-                   GLenum target,
+                   TextureTarget target,
                    size_t level,
                    GLenum internalFormat,
                    const Extents &size,
@@ -291,7 +285,7 @@ class Texture final : public egl::ImageSibling, public LabeledObject
                    const uint8_t *pixels);
     Error setSubImage(const Context *context,
                       const PixelUnpackState &unpackState,
-                      GLenum target,
+                      TextureTarget target,
                       size_t level,
                       const Box &area,
                       GLenum format,
@@ -300,7 +294,7 @@ class Texture final : public egl::ImageSibling, public LabeledObject
 
     Error setCompressedImage(const Context *context,
                              const PixelUnpackState &unpackState,
-                             GLenum target,
+                             TextureTarget target,
                              size_t level,
                              GLenum internalFormat,
                              const Extents &size,
@@ -308,7 +302,7 @@ class Texture final : public egl::ImageSibling, public LabeledObject
                              const uint8_t *pixels);
     Error setCompressedSubImage(const Context *context,
                                 const PixelUnpackState &unpackState,
-                                GLenum target,
+                                TextureTarget target,
                                 size_t level,
                                 const Box &area,
                                 GLenum format,
@@ -316,20 +310,20 @@ class Texture final : public egl::ImageSibling, public LabeledObject
                                 const uint8_t *pixels);
 
     Error copyImage(const Context *context,
-                    GLenum target,
+                    TextureTarget target,
                     size_t level,
                     const Rectangle &sourceArea,
                     GLenum internalFormat,
                     Framebuffer *source);
     Error copySubImage(const Context *context,
-                       GLenum target,
+                       TextureTarget target,
                        size_t level,
                        const Offset &destOffset,
                        const Rectangle &sourceArea,
                        Framebuffer *source);
 
     Error copyTexture(const Context *context,
-                      GLenum target,
+                      TextureTarget target,
                       size_t level,
                       GLenum internalFormat,
                       GLenum type,
@@ -339,7 +333,7 @@ class Texture final : public egl::ImageSibling, public LabeledObject
                       bool unpackUnmultiplyAlpha,
                       Texture *source);
     Error copySubTexture(const Context *context,
-                         GLenum target,
+                         TextureTarget target,
                          size_t level,
                          const Offset &destOffset,
                          size_t sourceLevel,
@@ -351,19 +345,19 @@ class Texture final : public egl::ImageSibling, public LabeledObject
     Error copyCompressedTexture(const Context *context, const Texture *source);
 
     Error setStorage(const Context *context,
-                     GLenum target,
+                     TextureType type,
                      GLsizei levels,
                      GLenum internalFormat,
                      const Extents &size);
 
     Error setStorageMultisample(const Context *context,
-                                GLenum target,
+                                TextureType type,
                                 GLsizei samples,
                                 GLint internalformat,
                                 const Extents &size,
                                 bool fixedSampleLocations);
 
-    Error setEGLImageTarget(const Context *context, GLenum target, egl::Image *imageTarget);
+    Error setEGLImageTarget(const Context *context, TextureType type, egl::Image *imageTarget);
 
     Error generateMipmap(const Context *context);
 
@@ -452,7 +446,7 @@ class Texture final : public egl::ImageSibling, public LabeledObject
     Error releaseTexImageInternal(const Context *context);
 
     Error ensureSubImageInitialized(const Context *context,
-                                    GLenum target,
+                                    TextureTarget target,
                                     size_t level,
                                     const gl::Box &area);
 

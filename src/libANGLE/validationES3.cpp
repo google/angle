@@ -1139,9 +1139,9 @@ bool ValidateFramebufferTextureLayer(Context *context,
         gl::Texture *tex = context->getTexture(texture);
         ASSERT(tex);
 
-        switch (tex->getTarget())
+        switch (tex->getType())
         {
-            case GL_TEXTURE_2D_ARRAY:
+            case TextureType::_2DArray:
             {
                 if (level > gl::log2(caps.max2DTextureSize))
                 {
@@ -1157,7 +1157,7 @@ bool ValidateFramebufferTextureLayer(Context *context,
             }
             break;
 
-            case GL_TEXTURE_3D:
+            case TextureType::_3D:
             {
                 if (level > gl::log2(caps.max3DTextureSize))
                 {
@@ -1178,7 +1178,7 @@ bool ValidateFramebufferTextureLayer(Context *context,
                 return false;
         }
 
-        const auto &format = tex->getFormat(tex->getTarget(), level);
+        const auto &format = tex->getFormat(NonCubeTextureTypeToTarget(tex->getType()), level);
         if (format.info->compressed)
         {
             context->handleError(InvalidOperation());
@@ -2821,9 +2821,9 @@ bool ValidateFramebufferTextureMultiviewLayeredANGLE(Context *context,
         Texture *tex = context->getTexture(texture);
         ASSERT(tex);
 
-        switch (tex->getTarget())
+        switch (tex->getType())
         {
-            case GL_TEXTURE_2D_ARRAY:
+            case TextureType::_2DArray:
             {
                 const Caps &caps = context->getCaps();
                 if (static_cast<GLuint>(baseViewIndex + numViews) > caps.maxArrayTextureLayers)
@@ -2880,9 +2880,9 @@ bool ValidateFramebufferTextureMultiviewSideBySideANGLE(Context *context,
         Texture *tex = context->getTexture(texture);
         ASSERT(tex);
 
-        switch (tex->getTarget())
+        switch (tex->getType())
         {
-            case GL_TEXTURE_2D:
+            case TextureType::_2D:
                 break;
             default:
                 context->handleError(InvalidOperation()

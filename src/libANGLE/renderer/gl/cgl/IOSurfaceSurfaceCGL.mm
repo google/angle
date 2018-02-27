@@ -140,7 +140,7 @@ egl::Error IOSurfaceSurfaceCGL::bindTexImage(gl::Texture *texture, EGLint buffer
 {
     const TextureGL *textureGL = GetImplAs<TextureGL>(texture);
     GLuint textureID           = textureGL->getTextureID();
-    mStateManager->bindTexture(GL_TEXTURE_RECTANGLE, textureID);
+    mStateManager->bindTexture(gl::TextureType::Rectangle, textureID);
 
     const auto &format = kIOSurfaceFormats[mFormatIndex];
     auto error         = CGLTexImageIOSurface2D(

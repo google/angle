@@ -223,9 +223,11 @@ void ShaderProgramManager::deleteObject(const Context *context,
 // TextureManager Implementation.
 
 // static
-Texture *TextureManager::AllocateNewObject(rx::GLImplFactory *factory, GLuint handle, GLenum target)
+Texture *TextureManager::AllocateNewObject(rx::GLImplFactory *factory,
+                                           GLuint handle,
+                                           TextureType type)
 {
-    Texture *texture = new Texture(factory, handle, target);
+    Texture *texture = new Texture(factory, handle, type);
     texture->addRef();
     return texture;
 }

@@ -2453,7 +2453,7 @@ bool ValidateBlitFramebufferANGLE(Context *context,
         if (readColorAttachment && drawColorAttachment)
         {
             if (!(readColorAttachment->type() == GL_TEXTURE &&
-                  readColorAttachment->getTextureImageIndex().type == GL_TEXTURE_2D) &&
+                  readColorAttachment->getTextureImageIndex().type == TextureType::_2D) &&
                 readColorAttachment->type() != GL_RENDERBUFFER &&
                 readColorAttachment->type() != GL_FRAMEBUFFER_DEFAULT)
             {
@@ -2469,7 +2469,7 @@ bool ValidateBlitFramebufferANGLE(Context *context,
                 if (attachment)
                 {
                     if (!(attachment->type() == GL_TEXTURE &&
-                          attachment->getTextureImageIndex().type == GL_TEXTURE_2D) &&
+                          attachment->getTextureImageIndex().type == TextureType::_2D) &&
                         attachment->type() != GL_RENDERBUFFER &&
                         attachment->type() != GL_FRAMEBUFFER_DEFAULT)
                     {
@@ -4098,19 +4098,20 @@ bool ValidateCompressedCopyTextureCHROMIUM(Context *context, GLuint sourceId, GL
         return false;
     }
 
-    if (source->getTarget() != GL_TEXTURE_2D)
+    if (source->getType() != TextureType::_2D)
     {
         context->handleError(InvalidValue() << "Source texture must be of type GL_TEXTURE_2D.");
         return false;
     }
 
-    if (source->getWidth(GL_TEXTURE_2D, 0) == 0 || source->getHeight(GL_TEXTURE_2D, 0) == 0)
+    if (source->getWidth(TextureTarget::_2D, 0) == 0 ||
+        source->getHeight(TextureTarget::_2D, 0) == 0)
     {
         context->handleError(InvalidValue() << "Source texture must level 0 defined.");
         return false;
     }
 
-    const gl::Format &sourceFormat = source->getFormat(GL_TEXTURE_2D, 0);
+    const gl::Format &sourceFormat = source->getFormat(TextureTarget::_2D, 0);
     if (!sourceFormat.info->compressed)
     {
         context->handleError(InvalidOperation()
@@ -4126,7 +4127,7 @@ bool ValidateCompressedCopyTextureCHROMIUM(Context *context, GLuint sourceId, GL
         return false;
     }
 
-    if (dest->getTarget() != GL_TEXTURE_2D)
+    if (dest->getType() != TextureType::_2D)
     {
         context->handleError(InvalidValue()
                              << "Destination texture must be of type GL_TEXTURE_2D.");
@@ -6007,7 +6008,7 @@ bool ValidateFramebufferTexture2D(Context *context,
                     context->handleError(InvalidValue());
                     return false;
                 }
-                if (tex->getTarget() != GL_TEXTURE_2D)
+                if (tex->getType() != TextureType::_2D)
                 {
                     ANGLE_VALIDATION_ERR(context, InvalidOperation(), InvalidTextureTarget);
                     return false;
@@ -6022,7 +6023,7 @@ bool ValidateFramebufferTexture2D(Context *context,
                     context->handleError(InvalidValue());
                     return false;
                 }
-                if (tex->getTarget() != GL_TEXTURE_RECTANGLE_ANGLE)
+                if (tex->getType() != TextureType::Rectangle)
                 {
                     context->handleError(InvalidOperation()
                                          << "Textarget must match the texture target type.");
@@ -6043,7 +6044,7 @@ bool ValidateFramebufferTexture2D(Context *context,
                     context->handleError(InvalidValue());
                     return false;
                 }
-                if (tex->getTarget() != GL_TEXTURE_CUBE_MAP)
+                if (tex->getType() != TextureType::CubeMap)
                 {
                     context->handleError(InvalidOperation()
                                          << "Textarget must match the texture target type.");
@@ -6065,7 +6066,7 @@ bool ValidateFramebufferTexture2D(Context *context,
                     ANGLE_VALIDATION_ERR(context, InvalidValue(), LevelNotZero);
                     return false;
                 }
-                if (tex->getTarget() != GL_TEXTURE_2D_MULTISAMPLE)
+                if (tex->getType() != TextureType::_2DMultisample)
                 {
                     context->handleError(InvalidOperation()
                                          << "Textarget must match the texture target type.");
