@@ -1638,7 +1638,6 @@
 1442 OPENGL D3D11 : dEQP-GLES31.functional.debug.negative_coverage.get_error.texture.copyteximage2d_inequal_width_height_cube = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.debug.negative_coverage.get_error.texture.copyteximage2d_max_width_height = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.debug.negative_coverage.get_error.texture.copytexsubimage2d_invalid_offset = FAIL
-1442 OPENGL D3D11 : dEQP-GLES31.functional.debug.negative_coverage.get_error.texture.copytexsubimage2d_texture_internalformat = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.debug.negative_coverage.get_error.texture.compressedtexsubimage2d = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.debug.negative_coverage.get_error.texture.compressedtexsubimage2d_invalid_size = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.debug.negative_coverage.get_error.texture.texsubimage3d_neg_level = FAIL
