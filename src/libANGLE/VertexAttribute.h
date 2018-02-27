@@ -53,7 +53,7 @@ class VertexBinding final : angle::NonCopyable
 struct VertexAttribute final : private angle::NonCopyable
 {
     explicit VertexAttribute(GLuint bindingIndex);
-    explicit VertexAttribute(VertexAttribute &&attrib);
+    VertexAttribute(VertexAttribute &&attrib);
     VertexAttribute &operator=(VertexAttribute &&attrib);
 
     bool enabled;  // For glEnable/DisableVertexAttribArray
