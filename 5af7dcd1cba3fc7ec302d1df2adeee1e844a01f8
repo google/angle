@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "680e7b9c_2693bce7",
+        "filename": "src/compiler/translator/builtin_function_declarations.txt",
+        "patchSetId": 14
+      },
+      "lineNbr": 308,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-27T16:38:12Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "84d262c7_1bf251d4",
+      "range": {
+        "startLine": 308,
+        "startChar": 102,
+        "endLine": 308,
+        "endChar": 126
+      },
+      "revId": "5af7dcd1cba3fc7ec302d1df2adeee1e844a01f8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c2237e98_d2882cf1",
         "filename": "src/compiler/translator/gen_builtin_symbols.py",
         "patchSetId": 14
