@@ -1231,6 +1231,12 @@ bool ValidateInvalidateSubFramebuffer(Context *context,
                                       GLsizei width,
                                       GLsizei height)
 {
+    if (width < 0 || height < 0)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidValue(), NegativeSize);
+        return false;
+    }
+
     return ValidateInvalidateFramebuffer(context, target, numAttachments, attachments);
 }
 
