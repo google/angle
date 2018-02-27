@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "84d262c7_1bf251d4",
+        "filename": "src/compiler/translator/builtin_function_declarations.txt",
+        "patchSetId": 14
+      },
+      "lineNbr": 308,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-02-27T16:22:37Z",
+      "side": 1,
+      "message": "The issue is that there was a conflict between these extension functions and the core functions in ESSL 3.00 with the same name. Should be fixed now, also added a unit test to cover this.\n\nI think it\u0027s safer to treat these functions as having side effects since the implementation might rely on them being run on all shader invocations done on a primitive. If they\u0027re pruned from some parts of the shader but not others that are inside conditional execution that might cause issues.",
+      "parentUuid": "2da34f5a_a47cccb1",
+      "range": {
+        "startLine": 308,
+        "startChar": 102,
+        "endLine": 308,
+        "endChar": 126
+      },
+      "revId": "5af7dcd1cba3fc7ec302d1df2adeee1e844a01f8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c2237e98_d2882cf1",
         "filename": "src/compiler/translator/gen_builtin_symbols.py",
         "patchSetId": 14
@@ -39,6 +63,24 @@
       "revId": "5af7dcd1cba3fc7ec302d1df2adeee1e844a01f8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cb2c95dd_a24ca973",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 14
+      },
+      "lineNbr": 232,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-02-27T16:22:37Z",
+      "side": 1,
+      "message": "Ah, of course, done.",
+      "parentUuid": "c2237e98_d2882cf1",
+      "revId": "5af7dcd1cba3fc7ec302d1df2adeee1e844a01f8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
