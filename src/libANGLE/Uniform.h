@@ -34,6 +34,7 @@ struct StaticallyUsed
     bool vertexStaticUse;
     bool fragmentStaticUse;
     bool computeStaticUse;
+    bool geometryStaticUse;
 };
 
 // Helper struct representing a single shader uniform

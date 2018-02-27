@@ -14,7 +14,10 @@ namespace gl
 {
 
 StaticallyUsed::StaticallyUsed()
-    : vertexStaticUse(false), fragmentStaticUse(false), computeStaticUse(false)
+    : vertexStaticUse(false),
+      fragmentStaticUse(false),
+      computeStaticUse(false),
+      geometryStaticUse(false)
 {
 }
 
@@ -41,6 +44,10 @@ void StaticallyUsed::setStaticUse(GLenum shaderType, bool used)
             computeStaticUse = used;
             break;
 
+        case GL_GEOMETRY_SHADER_EXT:
+            geometryStaticUse = used;
+            break;
+
         default:
             UNREACHABLE();
     }
@@ -51,6 +58,7 @@ void StaticallyUsed::unionReferencesWith(const StaticallyUsed &other)
     vertexStaticUse |= other.vertexStaticUse;
     fragmentStaticUse |= other.fragmentStaticUse;
     computeStaticUse |= other.computeStaticUse;
+    geometryStaticUse |= other.geometryStaticUse;
 }
 
 LinkedUniform::LinkedUniform()

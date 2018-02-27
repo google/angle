@@ -64,6 +64,80 @@ void SetStaticUse(std::vector<VarT> *list,
     }
 }
 
+// GLSL ES Spec 3.00.3, section 4.3.5.
+LinkMismatchError LinkValidateUniforms(const sh::Uniform &uniform1,
+                                       const sh::Uniform &uniform2,
+                                       std::string *mismatchedStructFieldName)
+{
+#if ANGLE_PROGRAM_LINK_VALIDATE_UNIFORM_PRECISION == ANGLE_ENABLED
+    const bool validatePrecision = true;
+#else
+    const bool validatePrecision = false;
+#endif
+
+    LinkMismatchError linkError = Program::LinkValidateVariablesBase(
+        uniform1, uniform2, validatePrecision, true, mismatchedStructFieldName);
+    if (linkError != LinkMismatchError::NO_MISMATCH)
+    {
+        return linkError;
+    }
+
+    // GLSL ES Spec 3.10.4, section 4.4.5.
+    if (uniform1.binding != -1 && uniform2.binding != -1 && uniform1.binding != uniform2.binding)
+    {
+        return LinkMismatchError::BINDING_MISMATCH;
+    }
+
+    // GLSL ES Spec 3.10.4, section 9.2.1.
+    if (uniform1.location != -1 && uniform2.location != -1 &&
+        uniform1.location != uniform2.location)
+    {
+        return LinkMismatchError::LOCATION_MISMATCH;
+    }
+    if (uniform1.offset != uniform2.offset)
+    {
+        return LinkMismatchError::OFFSET_MISMATCH;
+    }
+
+    return LinkMismatchError::NO_MISMATCH;
+}
+
+using ShaderUniform = std::pair<GLenum, const sh::Uniform *>;
+
+bool ValidateGraphicsUniformsPerShader(const Context *context,
+                                       Shader *shaderToLink,
+                                       bool extendLinkedUniforms,
+                                       std::map<std::string, ShaderUniform> *linkedUniforms,
+                                       InfoLog &infoLog)
+{
+    ASSERT(context && shaderToLink && linkedUniforms);
+
+    for (const sh::Uniform &uniform : shaderToLink->getUniforms(context))
+    {
+        const auto &entry = linkedUniforms->find(uniform.name);
+        if (entry != linkedUniforms->end())
+        {
+            const sh::Uniform &linkedUniform = *(entry->second.second);
+            std::string mismatchedStructFieldName;
+            LinkMismatchError linkError =
+                LinkValidateUniforms(uniform, linkedUniform, &mismatchedStructFieldName);
+            if (linkError != LinkMismatchError::NO_MISMATCH)
+            {
+                LogLinkMismatch(infoLog, uniform.name, "uniform", linkError,
+                                mismatchedStructFieldName, entry->second.first,
+                                shaderToLink->getType());
+                return false;
+            }
+        }
+        else if (extendLinkedUniforms)
+        {
+            (*linkedUniforms)[uniform.name] = std::make_pair(shaderToLink->getType(), &uniform);
+        }
+    }
+
+    return true;
+}
+
 }  // anonymous namespace
 
 UniformLinker::UniformLinker(const ProgramState &state) : mState(state)
@@ -114,74 +188,32 @@ bool UniformLinker::link(const Context *context,
 
 bool UniformLinker::validateGraphicsUniforms(const Context *context, InfoLog &infoLog) const
 {
-    // Check that uniforms defined in the vertex and fragment shaders are identical
-    std::map<std::string, const sh::Uniform *> linkedUniforms;
-    const std::vector<sh::Uniform> &vertexUniforms =
-        mState.getAttachedVertexShader()->getUniforms(context);
-    const std::vector<sh::Uniform> &fragmentUniforms =
-        mState.getAttachedFragmentShader()->getUniforms(context);
-
-    for (const sh::Uniform &vertexUniform : vertexUniforms)
+    // Check that uniforms defined in the graphics shaders are identical
+    std::map<std::string, ShaderUniform> linkedUniforms;
+    for (const sh::Uniform &vertexUniform : mState.getAttachedVertexShader()->getUniforms(context))
     {
-        linkedUniforms[vertexUniform.name] = &vertexUniform;
+        linkedUniforms[vertexUniform.name] = std::make_pair(GL_VERTEX_SHADER, &vertexUniform);
     }
 
-    for (const sh::Uniform &fragmentUniform : fragmentUniforms)
+    std::vector<Shader *> activeShadersToLink;
+    if (mState.getAttachedGeometryShader())
     {
-        auto entry = linkedUniforms.find(fragmentUniform.name);
-        if (entry != linkedUniforms.end())
+        activeShadersToLink.push_back(mState.getAttachedGeometryShader());
+    }
+    activeShadersToLink.push_back(mState.getAttachedFragmentShader());
+
+    const size_t numActiveShadersToLink = activeShadersToLink.size();
+    for (size_t shaderIndex = 0; shaderIndex < numActiveShadersToLink; ++shaderIndex)
+    {
+        bool isLastShader = (shaderIndex == numActiveShadersToLink - 1);
+        if (!ValidateGraphicsUniformsPerShader(context, activeShadersToLink[shaderIndex],
+                                               !isLastShader, &linkedUniforms, infoLog))
         {
-            const sh::Uniform &vertexUniform = *(entry->second);
-            std::string mismatchedStructFieldName;
-            LinkMismatchError linkError =
-                LinkValidateUniforms(vertexUniform, fragmentUniform, &mismatchedStructFieldName);
-            if (linkError != LinkMismatchError::NO_MISMATCH)
-            {
-                LogLinkMismatch(infoLog, fragmentUniform.name, "uniform", linkError,
-                                mismatchedStructFieldName, GL_VERTEX_SHADER, GL_FRAGMENT_SHADER);
-                return false;
-            }
+            return false;
         }
     }
+
     return true;
-}
-
-// GLSL ES Spec 3.00.3, section 4.3.5.
-LinkMismatchError UniformLinker::LinkValidateUniforms(const sh::Uniform &uniform1,
-                                                      const sh::Uniform &uniform2,
-                                                      std::string *mismatchedStructFieldName)
-{
-#if ANGLE_PROGRAM_LINK_VALIDATE_UNIFORM_PRECISION == ANGLE_ENABLED
-    const bool validatePrecision = true;
-#else
-    const bool validatePrecision = false;
-#endif
-
-    LinkMismatchError linkError = Program::LinkValidateVariablesBase(
-        uniform1, uniform2, validatePrecision, true, mismatchedStructFieldName);
-    if (linkError != LinkMismatchError::NO_MISMATCH)
-    {
-        return linkError;
-    }
-
-    // GLSL ES Spec 3.10.4, section 4.4.5.
-    if (uniform1.binding != -1 && uniform2.binding != -1 && uniform1.binding != uniform2.binding)
-    {
-        return LinkMismatchError::BINDING_MISMATCH;
-    }
-
-    // GLSL ES Spec 3.10.4, section 9.2.1.
-    if (uniform1.location != -1 && uniform2.location != -1 &&
-        uniform1.location != uniform2.location)
-    {
-        return LinkMismatchError::LOCATION_MISMATCH;
-    }
-    if (uniform1.offset != uniform2.offset)
-    {
-        return LinkMismatchError::OFFSET_MISMATCH;
-    }
-
-    return LinkMismatchError::NO_MISMATCH;
 }
 
 bool UniformLinker::indexUniforms(InfoLog &infoLog, const ProgramBindings &uniformLocationBindings)
@@ -463,6 +495,22 @@ bool UniformLinker::flattenUniformsAndCheckCaps(const Context *context, InfoLog 
                 "Fragment shader sampler count exceeds MAX_TEXTURE_IMAGE_UNITS (",
                 "Fragment shader image count exceeds MAX_FRAGMENT_IMAGE_UNIFORMS (",
                 "Fragment shader atomic counter count exceeds MAX_FRAGMENT_ATOMIC_COUNTERS (",
+                samplerUniforms, imageUniforms, atomicCounterUniforms, infoLog))
+        {
+            return false;
+        }
+
+        Shader *geometryShader = mState.getAttachedGeometryShader();
+        // TODO (jiawei.shao@intel.com): check whether we need finer-grained component counting
+        if (geometryShader &&
+            !flattenUniformsAndCheckCapsForShader(
+                context, geometryShader, caps.maxGeometryUniformComponents / 4,
+                caps.maxGeometryTextureImageUnits, caps.maxGeometryImageUniforms,
+                caps.maxGeometryAtomicCounters,
+                "Geometry shader active uniforms exceed MAX_GEOMETRY_UNIFORM_VECTORS_EXT (",
+                "Geometry shader sampler count exceeds MAX_GEOMETRY_TEXTURE_IMAGE_UNITS_EXT (",
+                "Geometry shader image count exceeds MAX_GEOMETRY_IMAGE_UNIFORMS_EXT (",
+                "Geometry shader atomic counter count exceeds MAX_GEOMETRY_ATOMIC_COUNTERS_EXT (",
                 samplerUniforms, imageUniforms, atomicCounterUniforms, infoLog))
         {
             return false;

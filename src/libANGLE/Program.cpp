@@ -2466,7 +2466,7 @@ bool Program::linkAtomicCounterBuffers()
         }
     }
     // TODO(jie.a.chen@intel.com): Count each atomic counter buffer to validate against
-    // gl_Max[Vertex|Fragment|Compute|Combined]AtomicCounterBuffers.
+    // gl_Max[Vertex|Fragment|Compute|Geometry|Combined]AtomicCounterBuffers.
 
     return true;
 }
@@ -3108,6 +3108,9 @@ bool Program::linkValidateGlobalNames(const Context *context, InfoLog &infoLog) 
         mState.mAttachedVertexShader->getUniforms(context);
     const std::vector<sh::Uniform> &fragmentUniforms =
         mState.mAttachedFragmentShader->getUniforms(context);
+    const std::vector<sh::Uniform> *geometryUniforms =
+        (mState.mAttachedGeometryShader) ? &mState.mAttachedGeometryShader->getUniforms(context)
+                                         : nullptr;
     const std::vector<sh::Attribute> &attributes =
         mState.mAttachedVertexShader->getActiveAttributes(context);
     for (const auto &attrib : attributes)
@@ -3126,6 +3129,17 @@ bool Program::linkValidateGlobalNames(const Context *context, InfoLog &infoLog) 
             {
                 infoLog << "Name conflicts between a uniform and an attribute: " << attrib.name;
                 return false;
+            }
+        }
+        if (geometryUniforms)
+        {
+            for (const auto &uniform : *geometryUniforms)
+            {
+                if (uniform.name == attrib.name)
+                {
+                    infoLog << "Name conflicts between a uniform and an attribute: " << attrib.name;
+                    return false;
+                }
             }
         }
     }

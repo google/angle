@@ -67,6 +67,7 @@ void WriteShaderVariableBuffer(BinaryOutputStream *stream, const ShaderVariableB
     stream->writeInt(var.vertexStaticUse);
     stream->writeInt(var.fragmentStaticUse);
     stream->writeInt(var.computeStaticUse);
+    stream->writeInt(var.geometryStaticUse);
 
     stream->writeInt(var.memberIndexes.size());
     for (unsigned int memberCounterIndex : var.memberIndexes)
@@ -82,6 +83,7 @@ void LoadShaderVariableBuffer(BinaryInputStream *stream, ShaderVariableBuffer *v
     var->vertexStaticUse   = stream->readBool();
     var->fragmentStaticUse = stream->readBool();
     var->computeStaticUse  = stream->readBool();
+    var->geometryStaticUse = stream->readBool();
 
     unsigned int numMembers = stream->readInt<unsigned int>();
     for (unsigned int blockMemberIndex = 0; blockMemberIndex < numMembers; blockMemberIndex++)

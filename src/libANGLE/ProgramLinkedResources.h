@@ -81,10 +81,6 @@ class UniformLinker final : angle::NonCopyable
 
     bool validateGraphicsUniforms(const Context *context, InfoLog &infoLog) const;
 
-    static LinkMismatchError LinkValidateUniforms(const sh::Uniform &uniform1,
-                                                  const sh::Uniform &uniform2,
-                                                  std::string *mismatchedStructFieldName);
-
     bool flattenUniformsAndCheckCapsForShader(const Context *context,
                                               Shader *shader,
                                               GLuint maxUniformComponents,
