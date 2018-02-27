@@ -1231,13 +1231,6 @@ bool ValidateBlitFramebufferParameters(Context *context,
         return false;
     }
 
-    if (mask == 0)
-    {
-        // ES3.0 spec, section 4.3.2 specifies that a mask of zero is valid and no
-        // buffers are copied.
-        return false;
-    }
-
     // ES3.0 spec, section 4.3.2 states that linear filtering is only available for the
     // color buffer, leaving only nearest being unfiltered from above
     if ((mask & ~GL_COLOR_BUFFER_BIT) != 0 && filter != GL_NEAREST)
@@ -1256,12 +1249,6 @@ bool ValidateBlitFramebufferParameters(Context *context,
         return false;
     }
 
-    if (readFramebuffer->id() == drawFramebuffer->id())
-    {
-        context->handleError(InvalidOperation());
-        return false;
-    }
-
     if (readFramebuffer->checkStatus(context) != GL_FRAMEBUFFER_COMPLETE)
     {
         context->handleError(InvalidFramebufferOperation());
@@ -1271,6 +1258,12 @@ bool ValidateBlitFramebufferParameters(Context *context,
     if (drawFramebuffer->checkStatus(context) != GL_FRAMEBUFFER_COMPLETE)
     {
         context->handleError(InvalidFramebufferOperation());
+        return false;
+    }
+
+    if (readFramebuffer->id() == drawFramebuffer->id())
+    {
+        context->handleError(InvalidOperation());
         return false;
     }
 

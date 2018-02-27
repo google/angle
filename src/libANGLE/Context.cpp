@@ -2930,6 +2930,13 @@ void Context::blitFramebuffer(GLint srcX0,
                               GLbitfield mask,
                               GLenum filter)
 {
+    if (mask == 0)
+    {
+        // ES3.0 spec, section 4.3.2 specifies that a mask of zero is valid and no
+        // buffers are copied.
+        return;
+    }
+
     Framebuffer *drawFramebuffer = mGLState.getDrawFramebuffer();
     ASSERT(drawFramebuffer);
 
