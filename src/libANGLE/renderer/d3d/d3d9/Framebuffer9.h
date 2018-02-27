@@ -10,6 +10,7 @@
 #define LIBANGLE_RENDERER_D3D_D3D9_FRAMBUFFER9_H_
 
 #include "libANGLE/renderer/d3d/FramebufferD3D.h"
+#include "libANGLE/renderer/d3d/d3d9/renderer9_utils.h"
 
 namespace rx
 {
@@ -31,6 +32,19 @@ class Framebuffer9 : public FramebufferD3D
                             const gl::Rectangle &area) override;
 
     gl::Error getSamplePosition(size_t index, GLfloat *xy) const override;
+
+    void syncState(const gl::Context *context,
+                   const gl::Framebuffer::DirtyBits &dirtyBits) override;
+
+    const RenderTargetArray9 &getCachedColorRenderTargets() const
+    {
+        return mCachedColorRenderTargets;
+    }
+
+    const RenderTarget9 *getCachedDepthStencilRenderTarget() const
+    {
+        return mCachedDepthStencilRenderTarget;
+    }
 
   private:
     gl::Error clearImpl(const gl::Context *context, const ClearParameters &clearParams) override;
@@ -55,9 +69,15 @@ class Framebuffer9 : public FramebufferD3D
 
     GLenum getRenderTargetImplementationFormat(RenderTargetD3D *renderTarget) const override;
 
+    void updateColorRenderTarget(const gl::Context *context, size_t colorIndex);
+    void updateDepthStencilRenderTarget(const gl::Context *context);
+
     Renderer9 *const mRenderer;
+
+    RenderTargetArray9 mCachedColorRenderTargets;
+    RenderTarget9 *mCachedDepthStencilRenderTarget;
 };
 
-}
+}  // namespace rx
 
 #endif // LIBANGLE_RENDERER_D3D_D3D9_FRAMBUFFER9_H_

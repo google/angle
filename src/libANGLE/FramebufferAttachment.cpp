@@ -353,6 +353,16 @@ Error FramebufferAttachmentObject::getAttachmentRenderTarget(
     return getAttachmentImpl()->getAttachmentRenderTarget(context, binding, imageIndex, rtOut);
 }
 
+void FramebufferAttachmentObject::onStateChange(const gl::Context *context) const
+{
+    return getAttachmentImpl()->onStateChange(context, angle::SubjectMessage::STATE_CHANGE);
+}
+
+angle::Subject *FramebufferAttachmentObject::getSubject() const
+{
+    return getAttachmentImpl();
+}
+
 Error FramebufferAttachmentObject::initializeContents(const Context *context,
                                                       const ImageIndex &imageIndex)
 {

@@ -30,40 +30,6 @@
 
 namespace rx
 {
-
-namespace
-{
-
-void InvalidateRenderTarget(const gl::Context *context, RenderTarget11 *renderTarget)
-{
-    if (renderTarget)
-    {
-        renderTarget->signalDirty(context);
-    }
-}
-
-RenderTarget11 *GetRenderTarget(std::unique_ptr<RenderTarget11> *pointer)
-{
-    return pointer->get();
-}
-
-template <typename KeyT>
-RenderTarget11 *GetRenderTarget(std::pair<KeyT, std::unique_ptr<RenderTarget11>> *pair)
-{
-    return pair->second.get();
-}
-
-template <typename T>
-void InvalidateRenderTargetContainer(const gl::Context *context, T *renderTargetContainer)
-{
-    for (auto &rt : *renderTargetContainer)
-    {
-        InvalidateRenderTarget(context, GetRenderTarget(&rt));
-    }
-}
-
-}  // anonymous namespace
-
 TextureStorage11::SamplerKey::SamplerKey()
     : baseLevel(0), mipLevels(0), swizzle(false), dropStencil(false)
 {
@@ -928,10 +894,6 @@ gl::Error TextureStorage11_2D::onDestroy(const gl::Context *context)
         mRenderer->getStateManager()->invalidateBoundViews();
     }
 
-    // Invalidate RenderTargets.
-    InvalidateRenderTargetContainer(context, &mRenderTarget);
-    InvalidateRenderTarget(context, mLevelZeroRenderTarget.get());
-
     return gl::NoError();
 }
 
@@ -1024,18 +986,8 @@ gl::Error TextureStorage11_2D::useLevelZeroWorkaroundTexture(const gl::Context *
 
     if (lastSetting != mUseLevelZeroTexture)
     {
-        // Mark everything as dirty to be conservative.
-        if (mLevelZeroRenderTarget)
-        {
-            mLevelZeroRenderTarget->signalDirty(context);
-        }
-        for (auto &renderTarget : mRenderTarget)
-        {
-            if (renderTarget)
-            {
-                renderTarget->signalDirty(context);
-            }
-        }
+        ASSERT(mSubject);
+        mSubject->onStateChange(context, angle::SubjectMessage::DEPENDENT_DIRTY_BITS);
     }
 
     return gl::NoError();
@@ -1892,12 +1844,6 @@ gl::Error TextureStorage11_Cube::onDestroy(const gl::Context *context)
         }
     }
 
-    for (auto &faceRenderTargets : mRenderTarget)
-    {
-        InvalidateRenderTargetContainer(context, &faceRenderTargets);
-    }
-    InvalidateRenderTargetContainer(context, &mLevelZeroRenderTarget);
-
     return gl::NoError();
 }
 
@@ -2542,9 +2488,6 @@ gl::Error TextureStorage11_3D::onDestroy(const gl::Context *context)
         }
     }
 
-    InvalidateRenderTargetContainer(context, &mLevelRenderTargets);
-    InvalidateRenderTargetContainer(context, &mLevelLayerRenderTargets);
-
     return gl::NoError();
 }
 
@@ -2867,8 +2810,6 @@ gl::Error TextureStorage11_2DArray::onDestroy(const gl::Context *context)
         }
     }
     mAssociatedImages.clear();
-
-    InvalidateRenderTargetContainer(context, &mRenderTargets);
 
     return gl::NoError();
 }
@@ -3249,7 +3190,6 @@ TextureStorage11_2DMultisample::TextureStorage11_2DMultisample(Renderer11 *rende
 
 gl::Error TextureStorage11_2DMultisample::onDestroy(const gl::Context *context)
 {
-    InvalidateRenderTarget(context, mRenderTarget.get());
     mRenderTarget.reset();
     return gl::NoError();
 }

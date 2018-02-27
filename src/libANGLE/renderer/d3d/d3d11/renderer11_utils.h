@@ -33,7 +33,7 @@ class Renderer11;
 class RenderTarget11;
 struct Renderer11DeviceCaps;
 
-using RenderTargetArray = std::array<RenderTarget11 *, gl::IMPLEMENTATION_MAX_DRAW_BUFFERS>;
+using RenderTargetArray11 = std::array<RenderTarget11 *, gl::IMPLEMENTATION_MAX_DRAW_BUFFERS>;
 using RTVArray          = std::array<ID3D11RenderTargetView *, gl::IMPLEMENTATION_MAX_DRAW_BUFFERS>;
 
 namespace gl_d3d11

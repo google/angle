@@ -121,10 +121,10 @@ Renderer9::Renderer9(egl::Display *display) : RendererD3D(display), mStateManage
     mMaxNullColorbufferLRU = 0;
     for (int i = 0; i < NUM_NULL_COLORBUFFER_CACHE_ENTRIES; i++)
     {
-        mNullColorbufferCache[i].lruCount = 0;
-        mNullColorbufferCache[i].width    = 0;
-        mNullColorbufferCache[i].height   = 0;
-        mNullColorbufferCache[i].buffer   = nullptr;
+        mNullRenderTargetCache[i].lruCount     = 0;
+        mNullRenderTargetCache[i].width        = 0;
+        mNullRenderTargetCache[i].height       = 0;
+        mNullRenderTargetCache[i].renderTarget = nullptr;
     }
 
     mAppliedVertexShader  = nullptr;
@@ -1043,7 +1043,10 @@ gl::Error Renderer9::updateState(const gl::Context *context, GLenum drawMode)
     gl::Framebuffer *framebuffer = glState.getDrawFramebuffer();
     ASSERT(framebuffer && !framebuffer->hasAnyDirtyBit() && framebuffer->cachedComplete());
 
-    ANGLE_TRY(applyRenderTarget(context, framebuffer));
+    Framebuffer9 *framebuffer9 = GetImplAs<Framebuffer9>(framebuffer);
+
+    ANGLE_TRY(applyRenderTarget(context, framebuffer9->getCachedColorRenderTargets()[0],
+                                framebuffer9->getCachedDepthStencilRenderTarget()));
 
     // Setting viewport state
     setViewport(glState.getViewport(), glState.getNearPlane(), glState.getFarPlane(), drawMode,
@@ -1158,109 +1161,89 @@ bool Renderer9::applyPrimitiveType(GLenum mode, GLsizei count, bool usesPointSiz
     return mPrimitiveCount > 0;
 }
 
-gl::Error Renderer9::getNullColorbuffer(const gl::Context *context,
-                                        const gl::FramebufferAttachment *depthbuffer,
-                                        const gl::FramebufferAttachment **outColorBuffer)
+gl::Error Renderer9::getNullColorRenderTarget(const gl::Context *context,
+                                              const RenderTarget9 *depthRenderTarget,
+                                              const RenderTarget9 **outColorRenderTarget)
 {
-    ASSERT(depthbuffer);
+    ASSERT(depthRenderTarget);
 
-    const gl::Extents &size = depthbuffer->getSize();
+    const gl::Extents &size = depthRenderTarget->getExtents();
 
     // search cached nullcolorbuffers
     for (int i = 0; i < NUM_NULL_COLORBUFFER_CACHE_ENTRIES; i++)
     {
-        if (mNullColorbufferCache[i].buffer != nullptr &&
-            mNullColorbufferCache[i].width == size.width &&
-            mNullColorbufferCache[i].height == size.height)
+        if (mNullRenderTargetCache[i].renderTarget != nullptr &&
+            mNullRenderTargetCache[i].width == size.width &&
+            mNullRenderTargetCache[i].height == size.height)
         {
-            mNullColorbufferCache[i].lruCount = ++mMaxNullColorbufferLRU;
-            *outColorBuffer                   = mNullColorbufferCache[i].buffer;
+            mNullRenderTargetCache[i].lruCount = ++mMaxNullColorbufferLRU;
+            *outColorRenderTarget              = mNullRenderTargetCache[i].renderTarget;
             return gl::NoError();
         }
     }
 
-    auto *implFactory = context->getImplementation();
-
-    gl::Renderbuffer *nullRenderbuffer = new gl::Renderbuffer(implFactory, 0);
-    gl::Error error = nullRenderbuffer->setStorage(context, GL_NONE, size.width, size.height);
-    if (error.isError())
-    {
-        SafeDelete(nullRenderbuffer);
-        return error;
-    }
-
-    gl::FramebufferAttachment *nullbuffer = new gl::FramebufferAttachment(
-        context, GL_RENDERBUFFER, GL_NONE, gl::ImageIndex::MakeInvalid(), nullRenderbuffer);
+    RenderTargetD3D *nullRenderTarget = nullptr;
+    ANGLE_TRY(createRenderTarget(size.width, size.height, GL_NONE, 0, &nullRenderTarget));
 
     // add nullbuffer to the cache
-    NullColorbufferCacheEntry *oldest = &mNullColorbufferCache[0];
+    NullRenderTargetCacheEntry *oldest = &mNullRenderTargetCache[0];
     for (int i = 1; i < NUM_NULL_COLORBUFFER_CACHE_ENTRIES; i++)
     {
-        if (mNullColorbufferCache[i].lruCount < oldest->lruCount)
+        if (mNullRenderTargetCache[i].lruCount < oldest->lruCount)
         {
-            oldest = &mNullColorbufferCache[i];
+            oldest = &mNullRenderTargetCache[i];
         }
     }
 
-    delete oldest->buffer;
-    oldest->buffer   = nullbuffer;
+    SafeDelete(oldest->renderTarget);
+    oldest->renderTarget = GetAs<RenderTarget9>(nullRenderTarget);
     oldest->lruCount = ++mMaxNullColorbufferLRU;
     oldest->width    = size.width;
     oldest->height   = size.height;
 
-    *outColorBuffer = nullbuffer;
+    *outColorRenderTarget = oldest->renderTarget;
     return gl::NoError();
 }
 
 gl::Error Renderer9::applyRenderTarget(const gl::Context *context,
-                                       const gl::FramebufferAttachment *colorAttachment,
-                                       const gl::FramebufferAttachment *depthStencilAttachment)
+                                       const RenderTarget9 *colorRenderTargetIn,
+                                       const RenderTarget9 *depthStencilRenderTarget)
 {
-    const gl::FramebufferAttachment *renderAttachment = colorAttachment;
-
     // if there is no color attachment we must synthesize a NULL colorattachment
     // to keep the D3D runtime happy.  This should only be possible if depth texturing.
-    if (renderAttachment == nullptr)
+    const RenderTarget9 *colorRenderTarget = colorRenderTargetIn;
+    if (colorRenderTarget == nullptr)
     {
-        ANGLE_TRY(getNullColorbuffer(context, depthStencilAttachment, &renderAttachment));
+        ANGLE_TRY(getNullColorRenderTarget(context, depthStencilRenderTarget, &colorRenderTarget));
     }
-    ASSERT(renderAttachment != nullptr);
+    ASSERT(colorRenderTarget != nullptr);
 
     size_t renderTargetWidth     = 0;
     size_t renderTargetHeight    = 0;
     D3DFORMAT renderTargetFormat = D3DFMT_UNKNOWN;
 
-    RenderTarget9 *renderTarget = nullptr;
-    ANGLE_TRY(renderAttachment->getRenderTarget(context, &renderTarget));
-    ASSERT(renderTarget);
-
     bool renderTargetChanged        = false;
-    unsigned int renderTargetSerial = renderTarget->getSerial();
+    unsigned int renderTargetSerial = colorRenderTarget->getSerial();
     if (renderTargetSerial != mAppliedRenderTargetSerial)
     {
         // Apply the render target on the device
-        IDirect3DSurface9 *renderTargetSurface = renderTarget->getSurface();
+        IDirect3DSurface9 *renderTargetSurface = colorRenderTarget->getSurface();
         ASSERT(renderTargetSurface);
 
         mDevice->SetRenderTarget(0, renderTargetSurface);
         SafeRelease(renderTargetSurface);
 
-        renderTargetWidth  = renderTarget->getWidth();
-        renderTargetHeight = renderTarget->getHeight();
-        renderTargetFormat = renderTarget->getD3DFormat();
+        renderTargetWidth  = colorRenderTarget->getWidth();
+        renderTargetHeight = colorRenderTarget->getHeight();
+        renderTargetFormat = colorRenderTarget->getD3DFormat();
 
         mAppliedRenderTargetSerial = renderTargetSerial;
         renderTargetChanged        = true;
     }
 
-    RenderTarget9 *depthStencilRenderTarget = nullptr;
-    unsigned int depthStencilSerial         = 0;
-
-    if (depthStencilAttachment != nullptr)
+    unsigned int depthStencilSerial = 0;
+    if (depthStencilRenderTarget != nullptr)
     {
-        ANGLE_TRY(depthStencilAttachment->getRenderTarget(context, &depthStencilRenderTarget));
-        ASSERT(depthStencilRenderTarget);
-
         depthStencilSerial = depthStencilRenderTarget->getSerial();
     }
 
@@ -1278,8 +1261,11 @@ gl::Error Renderer9::applyRenderTarget(const gl::Context *context,
             mDevice->SetDepthStencilSurface(depthStencilSurface);
             SafeRelease(depthStencilSurface);
 
-            depthSize   = depthStencilAttachment->getDepthSize();
-            stencilSize = depthStencilAttachment->getStencilSize();
+            const gl::InternalFormat &format =
+                gl::GetSizedInternalFormatInfo(depthStencilRenderTarget->getInternalFormat());
+
+            depthSize   = format.depthBits;
+            stencilSize = format.stencilBits;
         }
         else
         {
@@ -1302,13 +1288,6 @@ gl::Error Renderer9::applyRenderTarget(const gl::Context *context,
     }
 
     return gl::NoError();
-}
-
-gl::Error Renderer9::applyRenderTarget(const gl::Context *context,
-                                       const gl::Framebuffer *framebuffer)
-{
-    return applyRenderTarget(context, framebuffer->getColorbuffer(0),
-                             framebuffer->getDepthOrStencilbuffer());
 }
 
 gl::Error Renderer9::applyVertexBuffer(const gl::Context *context,
@@ -1927,8 +1906,8 @@ void Renderer9::applyUniformnbv(const D3DUniform *targetUniform, const GLint *v)
 
 gl::Error Renderer9::clear(const gl::Context *context,
                            const ClearParameters &clearParams,
-                           const gl::FramebufferAttachment *colorBuffer,
-                           const gl::FramebufferAttachment *depthStencilBuffer)
+                           const RenderTarget9 *colorRenderTarget,
+                           const RenderTarget9 *depthStencilRenderTarget)
 {
     if (clearParams.colorType != GL_FLOAT)
     {
@@ -1953,23 +1932,16 @@ gl::Error Renderer9::clear(const gl::Context *context,
     DWORD stencil = clearParams.stencilValue & 0x000000FF;
 
     unsigned int stencilUnmasked = 0x0;
-    if (clearParams.clearStencil && depthStencilBuffer->getStencilSize() > 0)
+    if (clearParams.clearStencil && depthStencilRenderTarget)
     {
-        ASSERT(depthStencilBuffer != nullptr);
-
-        RenderTargetD3D *stencilRenderTarget = nullptr;
-        gl::Error error = depthStencilBuffer->getRenderTarget(context, &stencilRenderTarget);
-        if (error.isError())
+        const gl::InternalFormat &depthStencilFormat =
+            gl::GetSizedInternalFormatInfo(depthStencilRenderTarget->getInternalFormat());
+        if (depthStencilFormat.stencilBits > 0)
         {
-            return error;
+            const d3d9::D3DFormat &d3dFormatInfo =
+                d3d9::GetD3DFormatInfo(depthStencilRenderTarget->getD3DFormat());
+            stencilUnmasked = (0x1 << d3dFormatInfo.stencilBits) - 1;
         }
-
-        RenderTarget9 *stencilRenderTarget9 = GetAs<RenderTarget9>(stencilRenderTarget);
-        ASSERT(stencilRenderTarget9);
-
-        const d3d9::D3DFormat &d3dFormatInfo =
-            d3d9::GetD3DFormatInfo(stencilRenderTarget9->getD3DFormat());
-        stencilUnmasked = (0x1 << d3dFormatInfo.stencilBits) - 1;
     }
 
     const bool needMaskedStencilClear =
@@ -1980,21 +1952,12 @@ gl::Error Renderer9::clear(const gl::Context *context,
     D3DCOLOR color            = D3DCOLOR_ARGB(255, 0, 0, 0);
     if (clearColor)
     {
-        ASSERT(colorBuffer != nullptr);
+        ASSERT(colorRenderTarget != nullptr);
 
-        RenderTargetD3D *colorRenderTarget = nullptr;
-        gl::Error error = colorBuffer->getRenderTarget(context, &colorRenderTarget);
-        if (error.isError())
-        {
-            return error;
-        }
-
-        RenderTarget9 *colorRenderTarget9 = GetAs<RenderTarget9>(colorRenderTarget);
-        ASSERT(colorRenderTarget9);
-
-        const gl::InternalFormat &formatInfo = *colorBuffer->getFormat().info;
+        const gl::InternalFormat &formatInfo =
+            gl::GetSizedInternalFormatInfo(colorRenderTarget->getInternalFormat());
         const d3d9::D3DFormat &d3dFormatInfo =
-            d3d9::GetD3DFormatInfo(colorRenderTarget9->getD3DFormat());
+            d3d9::GetD3DFormatInfo(colorRenderTarget->getD3DFormat());
 
         color =
             D3DCOLOR_ARGB(gl::unorm<8>((formatInfo.alphaBits == 0 && d3dFormatInfo.alphaBits > 0)
@@ -2240,11 +2203,7 @@ void Renderer9::releaseDeviceResources()
 
     for (int i = 0; i < NUM_NULL_COLORBUFFER_CACHE_ENTRIES; i++)
     {
-        if (mNullColorbufferCache[i].buffer)
-        {
-            mNullColorbufferCache[i].buffer->detach(mDisplay->getProxyContext());
-        }
-        SafeDelete(mNullColorbufferCache[i].buffer);
+        SafeDelete(mNullRenderTargetCache[i].renderTarget);
     }
 }
 

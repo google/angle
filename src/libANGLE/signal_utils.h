@@ -28,6 +28,7 @@ using SubjectIndex = size_t;
 enum class SubjectMessage
 {
     STATE_CHANGE,
+    DEPENDENT_DIRTY_BITS,
 };
 
 // The observing class inherits from this interface class.

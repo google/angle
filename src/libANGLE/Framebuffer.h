@@ -391,6 +391,10 @@ class Framebuffer final : public LabeledObject, public angle::ObserverInterface
 
     DirtyBits mDirtyBits;
 
+    // The dirty bits guard is checked when we get a dependent state change message. We verify that
+    // we don't set a dirty bit that isn't already set, when inside the dirty bits syncState.
+    Optional<DirtyBits> mDirtyBitsGuard;
+
     // A cache of attached textures for quick validation of feedback loops.
     mutable Optional<std::set<const FramebufferAttachmentObject *>> mAttachedTextures;
 };

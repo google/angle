@@ -36,6 +36,7 @@ class Blit9;
 class Context9;
 class IndexDataManager;
 class ProgramD3D;
+class RenderTarget9;
 class StreamingIndexBufferInterface;
 class StaticIndexBufferInterface;
 class VertexDataManager;
@@ -139,10 +140,9 @@ class Renderer9 : public RendererD3D
                      GLenum frontFace,
                      bool ignoreViewport);
 
-    gl::Error applyRenderTarget(const gl::Context *context, const gl::Framebuffer *frameBuffer);
     gl::Error applyRenderTarget(const gl::Context *context,
-                                const gl::FramebufferAttachment *colorAttachment,
-                                const gl::FramebufferAttachment *depthStencilAttachment);
+                                const RenderTarget9 *colorRenderTarget,
+                                const RenderTarget9 *depthStencilRenderTarget);
     gl::Error applyUniforms(ProgramD3D *programD3D);
     bool applyPrimitiveType(GLenum primitiveType, GLsizei elementCount, bool usesPointSize);
     gl::Error applyVertexBuffer(const gl::Context *context,
@@ -160,8 +160,8 @@ class Renderer9 : public RendererD3D
 
     gl::Error clear(const gl::Context *context,
                     const ClearParameters &clearParams,
-                    const gl::FramebufferAttachment *colorBuffer,
-                    const gl::FramebufferAttachment *depthStencilBuffer);
+                    const RenderTarget9 *colorRenderTarget,
+                    const RenderTarget9 *depthStencilRenderTarget);
 
     void markAllStateDirty();
 
@@ -436,9 +436,9 @@ class Renderer9 : public RendererD3D
 
     gl::Error getCountingIB(size_t count, StaticIndexBufferInterface **outIB);
 
-    gl::Error getNullColorbuffer(const gl::Context *context,
-                                 const gl::FramebufferAttachment *depthbuffer,
-                                 const gl::FramebufferAttachment **outColorBuffer);
+    gl::Error getNullColorRenderTarget(const gl::Context *context,
+                                       const RenderTarget9 *depthRenderTarget,
+                                       const RenderTarget9 **outColorRenderTarget);
 
     D3DPOOL getBufferPool(DWORD usage) const;
 
@@ -523,13 +523,16 @@ class Renderer9 : public RendererD3D
     {
         NUM_NULL_COLORBUFFER_CACHE_ENTRIES = 12
     };
-    struct NullColorbufferCacheEntry
+    struct NullRenderTargetCacheEntry
     {
         UINT lruCount;
         int width;
         int height;
-        gl::FramebufferAttachment *buffer;
-    } mNullColorbufferCache[NUM_NULL_COLORBUFFER_CACHE_ENTRIES];
+        RenderTarget9 *renderTarget;
+    };
+
+    std::array<NullRenderTargetCacheEntry, NUM_NULL_COLORBUFFER_CACHE_ENTRIES>
+        mNullRenderTargetCache;
     UINT mMaxNullColorbufferLRU;
 
     std::vector<TranslatedAttribute> mTranslatedAttribCache;

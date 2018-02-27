@@ -916,7 +916,7 @@ egl::Stream *Texture::getBoundStream() const
 void Texture::signalDirty(const Context *context, InitState initState)
 {
     mState.mInitState = initState;
-    onStateChange(context, angle::SubjectMessage::STATE_CHANGE);
+    onStateChange(context);
     invalidateCompletenessCache();
 }
 

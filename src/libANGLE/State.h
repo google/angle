@@ -444,6 +444,7 @@ class State : public angle::ObserverInterface, angle::NonCopyable
     void syncDirtyObjects(const Context *context, const DirtyObjects &bitset);
     void syncDirtyObject(const Context *context, GLenum target);
     void setObjectDirty(GLenum target);
+    void setFramebufferDirty(const Framebuffer *framebuffer) const;
 
     // This actually clears the current value dirty bits.
     // TODO(jmadill): Pass mutable dirty bits into Impl.
@@ -601,7 +602,7 @@ class State : public angle::ObserverInterface, angle::NonCopyable
     bool mProgramBinaryCacheEnabled;
 
     DirtyBits mDirtyBits;
-    DirtyObjects mDirtyObjects;
+    mutable DirtyObjects mDirtyObjects;
     mutable AttributesMask mDirtyCurrentValues;
 };
 

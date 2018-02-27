@@ -1773,7 +1773,7 @@ void Framebuffer::updateAttachment(const Context *context,
                        multiviewLayout, viewportOffsets);
     mDirtyBits.set(dirtyBit);
     mState.mResourceNeedsInit.set(dirtyBit, attachment->initState() == InitState::MayNeedInit);
-    onDirtyBinding->bind(resource);
+    onDirtyBinding->bind(resource ? resource->getSubject() : nullptr);
 }
 
 void Framebuffer::resetAttachment(const Context *context, GLenum binding)
@@ -1785,12 +1785,14 @@ void Framebuffer::syncState(const Context *context)
 {
     if (mDirtyBits.any())
     {
+        mDirtyBitsGuard = mDirtyBits;
         mImpl->syncState(context, mDirtyBits);
         mDirtyBits.reset();
         if (mId != 0)
         {
             mCachedStatus.reset();
         }
+        mDirtyBitsGuard.reset();
     }
 }
 
@@ -1798,6 +1800,14 @@ void Framebuffer::onSubjectStateChange(const Context *context,
                                        angle::SubjectIndex index,
                                        angle::SubjectMessage message)
 {
+    if (message == angle::SubjectMessage::DEPENDENT_DIRTY_BITS)
+    {
+        ASSERT(!mDirtyBitsGuard.valid() || mDirtyBitsGuard.value().test(index));
+        mDirtyBits.set(index);
+        context->getGLState().setFramebufferDirty(this);
+        return;
+    }
+
     // Only reset the cached status if this is not the default framebuffer.  The default framebuffer
     // will still use this channel to mark itself dirty.
     if (mId != 0)

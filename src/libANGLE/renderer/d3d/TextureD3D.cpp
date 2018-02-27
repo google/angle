@@ -653,6 +653,9 @@ gl::Error TextureD3D::releaseTexStorage(const gl::Context *context)
     {
         return gl::NoError();
     }
+
+    onStateChange(context, angle::SubjectMessage::DEPENDENT_DIRTY_BITS);
+
     auto err = mTexStorage->onDestroy(context);
     SafeDelete(mTexStorage);
     return err;
@@ -1249,6 +1252,8 @@ gl::Error TextureD3D_2D::bindTexImage(const gl::Context *context, egl::Surface *
     mDirtyImages = false;
     mImageArray[0]->markClean();
 
+    mTexStorage->setSubject(this);
+
     return gl::NoError();
 }
 
@@ -1437,6 +1442,7 @@ gl::Error TextureD3D_2D::createCompleteStorage(bool renderTarget,
     // TODO(geofflang): Determine if the texture creation succeeded
     outStorage->reset(mRenderer->createTextureStorage2D(internalFormat, renderTarget, width, height,
                                                         levels, hintLevelZeroOnly));
+    (*outStorage)->setSubject(this);
 
     return gl::NoError();
 }
@@ -1455,6 +1461,8 @@ gl::Error TextureD3D_2D::setCompleteTexStorage(const gl::Context *context,
 
     ANGLE_TRY(releaseTexStorage(context));
     mTexStorage = newCompleteTexStorage;
+
+    mTexStorage->setSubject(this);
 
     mDirtyImages = true;
 

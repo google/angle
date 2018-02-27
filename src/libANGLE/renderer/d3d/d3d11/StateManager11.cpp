@@ -1751,7 +1751,6 @@ gl::Error StateManager11::syncFramebuffer(const gl::Context *context, gl::Frameb
     // this will not report any gl error but will cause the calling method to return.
     if (framebuffer->id() == 0)
     {
-        ASSERT(!framebuffer11->hasAnyInternalDirtyBit());
         const gl::Extents &size = framebuffer->getFirstColorbuffer()->getSize();
         if (size.width == 0 || size.height == 0)
         {
@@ -1982,12 +1981,6 @@ gl::Error StateManager11::updateState(const gl::Context *context, GLenum drawMod
     gl::Framebuffer *framebuffer = glState.getDrawFramebuffer();
     Framebuffer11 *framebuffer11 = GetImplAs<Framebuffer11>(framebuffer);
     ANGLE_TRY(framebuffer11->markAttachmentsDirty(context));
-
-    if (framebuffer11->hasAnyInternalDirtyBit())
-    {
-        ASSERT(framebuffer->id() != 0);
-        framebuffer11->syncInternalState(context);
-    }
 
     bool pointDrawMode = (drawMode == GL_POINTS);
     if (pointDrawMode != mCurRasterState.pointDrawMode)

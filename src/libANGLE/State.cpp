@@ -2320,7 +2320,7 @@ void State::syncProgramTextures(const Context *context)
             }
 
             // Bind the texture unconditionally, to recieve completeness change notifications.
-            mCompleteTextureBindings[textureUnitIndex].bind(texture);
+            mCompleteTextureBindings[textureUnitIndex].bind(texture->getSubject());
             mActiveTexturesMask.set(textureUnitIndex);
             newActiveTextures.set(textureUnitIndex);
 
@@ -2401,6 +2401,18 @@ void State::setObjectDirty(GLenum target)
             mDirtyObjects.set(DIRTY_OBJECT_PROGRAM_TEXTURES);
             mDirtyBits.set(DIRTY_BIT_TEXTURE_BINDINGS);
             break;
+    }
+}
+
+void State::setFramebufferDirty(const Framebuffer *framebuffer) const
+{
+    if (framebuffer == mReadFramebuffer)
+    {
+        mDirtyObjects.set(DIRTY_OBJECT_READ_FRAMEBUFFER);
+    }
+    if (framebuffer == mDrawFramebuffer)
+    {
+        mDirtyObjects.set(DIRTY_OBJECT_DRAW_FRAMEBUFFER);
     }
 }
 
