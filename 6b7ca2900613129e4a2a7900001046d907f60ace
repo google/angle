@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "5fbf4368_9f2ff269",
+        "filename": "src/compiler/translator/Symbol.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-02-27T14:10:20Z",
+      "side": 1,
+      "message": "True, moved to follow-up patch.",
+      "parentUuid": "16fd9eb1_fabb870a",
+      "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b90c9f91_792d9f55",
         "filename": "src/compiler/translator/builtin_function_declarations.txt",
         "patchSetId": 12
@@ -33,6 +51,24 @@
       "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c9bcc4af_9014961e",
+        "filename": "src/compiler/translator/builtin_function_declarations.txt",
+        "patchSetId": 12
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-02-27T14:10:20Z",
+      "side": 1,
+      "message": "It was used in a few places but is not anymore.",
+      "parentUuid": "b90c9f91_792d9f55",
+      "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "c6527d90_abc048c3",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-02-27T14:10:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "402b9386_73ab73ac",
+      "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "365574de_fc1715ff",
         "filename": "src/compiler/translator/gen_builtin_symbols.py",
         "patchSetId": 12
@@ -67,6 +121,24 @@
       "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5ec75183_3c3dbee1",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-02-27T14:10:20Z",
+      "side": 1,
+      "message": "Yes, simplified it and added a comment.",
+      "parentUuid": "365574de_fc1715ff",
+      "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "4a46dea6_f025ea0c",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-02-27T14:10:20Z",
+      "side": 1,
+      "message": "True, this went unnoticed when I was refactoring this code. Removed.",
+      "parentUuid": "2536c25d_6912c440",
+      "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6e93da79_fd7e8108",
         "filename": "src/compiler/translator/gen_builtin_symbols.py",
         "patchSetId": 12
@@ -104,6 +194,24 @@
     },
     {
       "key": {
+        "uuid": "4f87c289_b3a038e4",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-02-27T14:10:20Z",
+      "side": 1,
+      "message": "Using OrderedDict ensures identical ordering of the json output that can be generated to debug the parsing of the source txt file, but that\u0027s probably a secondary consideration. Removed use of OrderedDict from a bunch of places. Kept it in places where it affects the generated C++ code.",
+      "parentUuid": "6e93da79_fd7e8108",
+      "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "097653ea_bedcff84",
         "filename": "src/compiler/translator/gen_builtin_symbols.py",
         "patchSetId": 12
@@ -115,6 +223,24 @@
       "writtenOn": "2018-02-26T15:42:17Z",
       "side": 1,
       "message": "Maybe the combinatorial explosion of basic type isn\u0027t that huge so we don\u0027t need to have a custom parse and instead can use a lookup dictionnary?",
+      "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7403ab62_ab46921e",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-02-27T14:10:20Z",
+      "side": 1,
+      "message": "I had a lookup dictionary here before but it had a bunch of repetition - I think this version is less prone to mistakes. I\u0027d prefer to keep this structured as is.",
+      "parentUuid": "097653ea_bedcff84",
       "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -144,6 +270,30 @@
     },
     {
       "key": {
+        "uuid": "dab6f803_9126ea08",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 248,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-02-27T14:10:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0fed59cd_929f2bf2",
+      "range": {
+        "startLine": 237,
+        "startChar": 0,
+        "endLine": 248,
+        "endChar": 0
+      },
+      "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "94ba6a10_56b03869",
         "filename": "src/compiler/translator/gen_builtin_symbols.py",
         "patchSetId": 12
@@ -167,6 +317,30 @@
     },
     {
       "key": {
+        "uuid": "9d42dedb_5a7077d1",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 251,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-02-27T14:10:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "94ba6a10_56b03869",
+      "range": {
+        "startLine": 251,
+        "startChar": 31,
+        "endLine": 251,
+        "endChar": 36
+      },
+      "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b14fd39c_f6ba5b39",
         "filename": "src/compiler/translator/gen_builtin_symbols.py",
         "patchSetId": 12
@@ -181,6 +355,24 @@
       "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b1e220e0_5680c170",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 257,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-02-27T14:10:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b14fd39c_f6ba5b39",
+      "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -201,6 +393,24 @@
     },
     {
       "key": {
+        "uuid": "194f9461_8357fca1",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 259,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-02-27T14:10:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fb25ca0c_70ffe633",
+      "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f345fe53_e34258b0",
         "filename": "src/compiler/translator/gen_builtin_symbols.py",
         "patchSetId": 12
@@ -215,6 +425,24 @@
       "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eaf961a8_f6ef286b",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 267,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-02-27T14:10:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f345fe53_e34258b0",
+      "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -235,6 +463,24 @@
     },
     {
       "key": {
+        "uuid": "7ac780f8_2fe9ad95",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 273,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-02-27T14:10:20Z",
+      "side": 1,
+      "message": "Yes, fixed. The more complex normalization code is only useful once we get to built-in variables where the current plan is to parse them from a JSON file.",
+      "parentUuid": "e80d5225_479da2ae",
+      "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4b1517d1_39580dfb",
         "filename": "src/compiler/translator/gen_builtin_symbols.py",
         "patchSetId": 12
@@ -249,6 +495,24 @@
       "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8defd519_de045bbe",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 280,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-02-27T14:10:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4b1517d1_39580dfb",
+      "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -269,6 +533,24 @@
     },
     {
       "key": {
+        "uuid": "22c09adf_4213d08c",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 322,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-02-27T14:10:20Z",
+      "side": 1,
+      "message": "Yes, it works after removing function-specific metadata.",
+      "parentUuid": "150bb40f_75f73fb8",
+      "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8c54a8b0_02b283b2",
         "filename": "src/compiler/translator/gen_builtin_symbols.py",
         "patchSetId": 12
@@ -286,6 +568,24 @@
     },
     {
       "key": {
+        "uuid": "69a6fac9_d5b8db24",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 326,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-02-27T14:10:20Z",
+      "side": 1,
+      "message": "Good suggestion, done.",
+      "parentUuid": "8c54a8b0_02b283b2",
+      "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df63702f_85adfd52",
         "filename": "src/compiler/translator/gen_builtin_symbols.py",
         "patchSetId": 12
@@ -300,6 +600,24 @@
       "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "52057b8e_133c9e0c",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 331,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-02-27T14:10:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "df63702f_85adfd52",
+      "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -326,6 +644,30 @@
     },
     {
       "key": {
+        "uuid": "4f353024_c11cef21",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 334,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-02-27T14:10:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "abe08dfb_096bf497",
+      "range": {
+        "startLine": 334,
+        "startChar": 19,
+        "endLine": 334,
+        "endChar": 32
+      },
+      "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bcd4bd56_f5dd9806",
         "filename": "src/compiler/translator/gen_builtin_symbols.py",
         "patchSetId": 12
@@ -340,6 +682,24 @@
       "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f331699e_bac64704",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 336,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-02-27T14:10:20Z",
+      "side": 1,
+      "message": "Added clearing them implicitly.",
+      "parentUuid": "bcd4bd56_f5dd9806",
+      "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -360,6 +720,24 @@
     },
     {
       "key": {
+        "uuid": "ac771583_36bd6e46",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 367,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-02-27T14:10:20Z",
+      "side": 1,
+      "message": "True, we can probably do without it - just requires changing a few lines in the input txt. I renamed \"DEFAULT\" to \"DEFAULT METADATA\" as well to make it a bit clearer.",
+      "parentUuid": "cca6de98_f0359318",
+      "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "35e12138_a3b6e35d",
         "filename": "src/compiler/translator/gen_builtin_symbols.py",
         "patchSetId": 12
@@ -374,6 +752,24 @@
       "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "174da7b3_509c49b1",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 369,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-02-27T14:10:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "35e12138_a3b6e35d",
+      "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -394,6 +790,24 @@
     },
     {
       "key": {
+        "uuid": "8033701d_1d7e7697",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 442,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-02-27T14:10:20Z",
+      "side": 1,
+      "message": "Whoops, fixed it. Doesn\u0027t affect the output though since only functions with inout parameters are the atomic functions that use \"CallBuiltInFunction\" anyway.",
+      "parentUuid": "89db5cfb_395dec8e",
+      "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7268adcf_d7d05242",
         "filename": "src/compiler/translator/gen_builtin_symbols.py",
         "patchSetId": 12
@@ -408,6 +822,24 @@
       "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "573fae89_0eafb02e",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 474,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-02-27T14:10:20Z",
+      "side": 1,
+      "message": "Renamed to \"get_variable_name_to_store_parameters\".",
+      "parentUuid": "7268adcf_d7d05242",
+      "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -428,6 +860,24 @@
     },
     {
       "key": {
+        "uuid": "9a91fcf0_82beb511",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 477,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-02-27T14:10:20Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "f27be1e3_c9014749",
+      "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "60f77c4a_02c14724",
         "filename": "src/compiler/translator/gen_builtin_symbols.py",
         "patchSetId": 12
@@ -442,6 +892,24 @@
       "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9229cca1_a67d1e97",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 496,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-02-27T14:10:20Z",
+      "side": 1,
+      "message": "The same function can\u0027t have multiple different genType values. Added an exception if this happens and added comments explaining the variant generation.",
+      "parentUuid": "60f77c4a_02c14724",
+      "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -462,6 +930,24 @@
     },
     {
       "key": {
+        "uuid": "fde7700d_41896853",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 505,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-02-27T14:10:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ab360ef6_7c218579",
+      "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9916bf30_dd764b96",
         "filename": "src/compiler/translator/gen_builtin_symbols.py",
         "patchSetId": 12
@@ -476,6 +962,24 @@
       "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "978ab13c_989e4d75",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 523,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-02-27T14:10:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9916bf30_dd764b96",
+      "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -496,6 +1000,24 @@
     },
     {
       "key": {
+        "uuid": "42cff995_80ed8208",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 533,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-02-27T14:10:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "03b0bccf_7779ad42",
+      "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ec0cf60b_4799c3b1",
         "filename": "src/compiler/translator/gen_builtin_symbols.py",
         "patchSetId": 12
@@ -510,6 +1032,24 @@
       "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3367e086_ea2d99e0",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 614,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-02-27T14:10:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ec0cf60b_4799c3b1",
+      "revId": "6b7ca2900613129e4a2a7900001046d907f60ace",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
