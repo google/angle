@@ -45,6 +45,30 @@
       "revId": "4b5b1f52051a131426e213399779daf0701e2fdd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5fda2841_a099676f",
+        "filename": "src/libANGLE/signal_utils.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-27T04:45:07Z",
+      "side": 1,
+      "message": "Is this possible without using std::function or similar bind type callbacks?",
+      "parentUuid": "604725f6_6a640b84",
+      "range": {
+        "startLine": 73,
+        "startChar": 9,
+        "endLine": 73,
+        "endChar": 13
+      },
+      "revId": "4b5b1f52051a131426e213399779daf0701e2fdd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
