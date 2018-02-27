@@ -333,7 +333,7 @@ Context::Context(rx::EGLImplFactory *implFactory,
 
         for (unsigned int i = 0; i < mCaps.maxAtomicCounterBufferBindings; i++)
         {
-            bindBufferRange(BufferBinding::AtomicCounter, 0, i, 0, 0);
+            bindBufferRange(BufferBinding::AtomicCounter, i, 0, 0, 0);
         }
 
         for (unsigned int i = 0; i < mCaps.maxShaderStorageBufferBindings; i++)
