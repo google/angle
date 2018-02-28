@@ -3,15 +3,15 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// signal_utils:
+// Observer:
 //   Implements the Observer pattern for sending state change notifications
 //   from Subject objects to dependent Observer objects.
 //
 //   See design document:
 //   https://docs.google.com/document/d/15Edfotqg6_l1skTEL8ADQudF_oIdNa7i8Po43k6jMd4/
 
-#ifndef LIBANGLE_SIGNAL_UTILS_H_
-#define LIBANGLE_SIGNAL_UTILS_H_
+#ifndef LIBANGLE_OBSERVER_H_
+#define LIBANGLE_OBSERVER_H_
 
 #include "common/angleutils.h"
 
@@ -85,4 +85,4 @@ class ObserverBinding final
 
 }  // namespace angle
 
-#endif  // LIBANGLE_SIGNAL_UTILS_H_
+#endif  // LIBANGLE_OBSERVER_H_

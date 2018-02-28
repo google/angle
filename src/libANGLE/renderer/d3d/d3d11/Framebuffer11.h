@@ -9,9 +9,9 @@
 #ifndef LIBANGLE_RENDERER_D3D_D3D11_FRAMBUFFER11_H_
 #define LIBANGLE_RENDERER_D3D_D3D11_FRAMBUFFER11_H_
 
+#include "libANGLE/Observer.h"
 #include "libANGLE/renderer/d3d/FramebufferD3D.h"
 #include "libANGLE/renderer/d3d/d3d11/renderer11_utils.h"
-#include "libANGLE/signal_utils.h"
 
 namespace rx
 {

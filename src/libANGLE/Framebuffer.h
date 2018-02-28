@@ -18,8 +18,8 @@
 #include "libANGLE/Debug.h"
 #include "libANGLE/Error.h"
 #include "libANGLE/FramebufferAttachment.h"
+#include "libANGLE/Observer.h"
 #include "libANGLE/RefCountObject.h"
-#include "libANGLE/signal_utils.h"
 
 namespace rx
 {

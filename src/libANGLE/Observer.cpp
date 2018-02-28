@@ -3,14 +3,14 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// signal_utils:
+// Observer:
 //   Implements the Observer pattern for sending state change notifications
 //   from Subject objects to dependent Observer objects.
 //
 //   See design document:
 //   https://docs.google.com/document/d/15Edfotqg6_l1skTEL8ADQudF_oIdNa7i8Po43k6jMd4/
 
-#include "libANGLE/signal_utils.h"
+#include "libANGLE/Observer.h"
 
 #include <algorithm>
 

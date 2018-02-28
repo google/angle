@@ -10,10 +10,10 @@
 #define LIBANGLE_RENDERER_D3D_D3D11_VERTEXARRAY11_H_
 
 #include "libANGLE/Framebuffer.h"
+#include "libANGLE/Observer.h"
 #include "libANGLE/renderer/VertexArrayImpl.h"
 #include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
 #include "libANGLE/renderer/d3d/d3d11/renderer11_utils.h"
-#include "libANGLE/signal_utils.h"
 
 namespace rx
 {

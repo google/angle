@@ -3,12 +3,12 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// signal_utils_unittest:
+// Observer_unittest:
 //   Unit tests for Observers and related classes.
 
 #include <gtest/gtest.h>
 
-#include "libANGLE/signal_utils.h"
+#include "libANGLE/Observer.h"
 
 using namespace angle;
 using namespace testing;
