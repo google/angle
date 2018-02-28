@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "bdedc737_6e237412",
+        "filename": "src/libANGLE/ProgramLinkedResources.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 505,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-02-28T17:08:11Z",
+      "side": 1,
+      "message": "If there\u0027s a maxGeometryUniformVectors we should use that instead.",
+      "range": {
+        "startLine": 505,
+        "startChar": 46,
+        "endLine": 505,
+        "endChar": 78
+      },
+      "revId": "636717071a092314a5f9986b6350e56dc30996d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "680e063d_017841cf",
         "filename": "src/libANGLE/ProgramLinkedResources.h",
         "patchSetId": 5
