@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "e3053053_8fd6a4d7",
+        "filename": "src/libANGLE/Framebuffer.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 381,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-28T15:05:04Z",
+      "side": 1,
+      "message": "compiler didn\u0027t like that but I changed it from size_t to another type.",
+      "parentUuid": "bcc52b2d_d05472ba",
+      "range": {
+        "startLine": 381,
+        "startChar": 53,
+        "endLine": 381,
+        "endChar": 59
+      },
+      "revId": "4b5b1f52051a131426e213399779daf0701e2fdd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "604725f6_6a640b84",
         "filename": "src/libANGLE/signal_utils.h",
         "patchSetId": 4
@@ -69,6 +93,30 @@
       "revId": "4b5b1f52051a131426e213399779daf0701e2fdd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bc171fc6_d489f3a4",
+        "filename": "src/libANGLE/signal_utils.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-28T15:05:04Z",
+      "side": 1,
+      "message": "Looked at https://github.com/garrynewman/GWEN/blob/master/gwen/include/Gwen/Events.h - but it got a bit complex. Would mean using some templates to wrap a static_casts, with more boilerplate. Also would need to keep the MessageID to keep sharing bindings in some cases. Can re-investigate but would be happy enough to keep it as is for now.",
+      "parentUuid": "5fda2841_a099676f",
+      "range": {
+        "startLine": 73,
+        "startChar": 9,
+        "endLine": 73,
+        "endChar": 13
+      },
+      "revId": "4b5b1f52051a131426e213399779daf0701e2fdd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }

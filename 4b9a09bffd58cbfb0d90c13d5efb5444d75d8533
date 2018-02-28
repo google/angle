@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "01fe67a7_bccf149c",
+        "filename": "src/libANGLE/ResourceManager.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 252,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-28T15:05:04Z",
+      "side": 1,
+      "message": "True, but the style guide specifically suggests to use auto when dealing with \u0027noisy types\u0027, which is a good description of the std::pair you get from a map iterator.\n\nIn fact this specific case is used in the Google Style guide example. See https://google.github.io/styleguide/cppguide.html#auto",
+      "parentUuid": "0a5a029e_76c2bc4e",
+      "range": {
+        "startLine": 252,
+        "startChar": 9,
+        "endLine": 252,
+        "endChar": 28
+      },
+      "revId": "4b9a09bffd58cbfb0d90c13d5efb5444d75d8533",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df354393_37549ba7",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Framebuffer11.h",
         "patchSetId": 5
@@ -45,6 +69,30 @@
       "revId": "4b9a09bffd58cbfb0d90c13d5efb5444d75d8533",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "23fae1ac_ba735d0e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Framebuffer11.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-28T15:05:04Z",
+      "side": 1,
+      "message": "Done, PTAL.",
+      "parentUuid": "df354393_37549ba7",
+      "range": {
+        "startLine": 20,
+        "startChar": 59,
+        "endLine": 20,
+        "endChar": 73
+      },
+      "revId": "4b9a09bffd58cbfb0d90c13d5efb5444d75d8533",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "5a70174a_57298247",
+        "filename": "src/libANGLE/signal_utils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-28T15:05:04Z",
+      "side": 1,
+      "message": "This is probably a good place not to use auto. Done.",
+      "parentUuid": "30f8b612_b27ad8ff",
+      "range": {
+        "startLine": 49,
+        "startChar": 9,
+        "endLine": 49,
+        "endChar": 30
+      },
+      "revId": "4b9a09bffd58cbfb0d90c13d5efb5444d75d8533",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7fd3be50_9334c53c",
         "filename": "src/libANGLE/signal_utils.cpp",
         "patchSetId": 5
@@ -91,6 +163,30 @@
       "revId": "4b9a09bffd58cbfb0d90c13d5efb5444d75d8533",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2967d123_c70c8a28",
+        "filename": "src/libANGLE/signal_utils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-28T15:05:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7fd3be50_9334c53c",
+      "range": {
+        "startLine": 57,
+        "startChar": 4,
+        "endLine": 57,
+        "endChar": 36
+      },
+      "revId": "4b9a09bffd58cbfb0d90c13d5efb5444d75d8533",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
