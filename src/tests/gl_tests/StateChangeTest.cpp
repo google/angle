@@ -1052,6 +1052,31 @@ TEST_P(SimpleStateChangeTest, RedefineFramebufferInUse)
     ASSERT_GL_NO_ERROR();
 }
 
+// Tests that redefining a Framebuffer Texture Attachment works as expected.
+TEST_P(SimpleStateChangeTest, RedefineFramebufferTexture)
+{
+    GLFramebuffer framebuffer;
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+
+    // Bind a simple 8x8 texture to the framebuffer, draw red.
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 8, 8, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+
+    glViewport(0, 0, 8, 8);
+    simpleDrawWithColor(GLColor::red);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red) << "first draw should be red";
+
+    // Redefine the texture to 32x32, draw green. Verify we get what we expect.
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 32, 32, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glViewport(0, 0, 32, 32);
+    simpleDrawWithColor(GLColor::green);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green) << "second draw should be green";
+}
+
 // Validates disabling cull face really disables it.
 TEST_P(SimpleStateChangeTest, EnableAndDisableCullFace)
 {
