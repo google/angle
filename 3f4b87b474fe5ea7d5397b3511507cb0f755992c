@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3786af16_1ca30821",
+        "filename": "src/tests/egl_tests/EGLIOSurfaceClientBufferTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 1002745
+      },
+      "writtenOn": "2018-02-28T15:56:09Z",
+      "side": 1,
+      "message": "For R16UI, this should be using glClearBufferuiv(GL_COLOR,...) instead.",
+      "range": {
+        "startLine": 171,
+        "startChar": 0,
+        "endLine": 174,
+        "endChar": 29
+      },
+      "revId": "3f4b87b474fe5ea7d5397b3511507cb0f755992c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1e7372ff_89da4bd8",
+        "filename": "src/tests/egl_tests/EGLIOSurfaceClientBufferTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 238,
+      "author": {
+        "id": 1002745
+      },
+      "writtenOn": "2018-02-28T15:56:09Z",
+      "side": 1,
+      "message": "Same.",
+      "range": {
+        "startLine": 237,
+        "startChar": 0,
+        "endLine": 238,
+        "endChar": 37
+      },
+      "revId": "3f4b87b474fe5ea7d5397b3511507cb0f755992c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
