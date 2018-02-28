@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b8f1b89a_3ea68e37",
+        "filename": "src/libANGLE/Context.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 1167,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-28T15:27:23Z",
+      "side": 1,
+      "message": "nit: mostly and ANGLE preference but can we avoid overloading?\n\nsomething like \"isActiveTransformFeedback\" and \"isActiveVertexArray\"\n\nCan you also move these to gl::State?",
+      "range": {
+        "startLine": 1167,
+        "startChar": 9,
+        "endLine": 1167,
+        "endChar": 25
+      },
+      "revId": "a4a274beff8f585a7f211a947cf5cd7f5424caef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f8a3e4c7_650c41ec",
+        "filename": "src/libANGLE/TransformFeedback.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-28T15:27:23Z",
+      "side": 1,
+      "message": "nit: this comment should fit on one line (100 chars wrap)",
+      "range": {
+        "startLine": 82,
+        "startChar": 0,
+        "endLine": 83,
+        "endChar": 14
+      },
+      "revId": "a4a274beff8f585a7f211a947cf5cd7f5424caef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aed32616_83086e70",
+        "filename": "src/libANGLE/VertexAttribute.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-28T15:27:23Z",
+      "side": 1,
+      "message": "nit: can you put this in the cpp?\n\nAlso if this matches the pattern for UpdateBufferBinding, can you make that function more accessible and use it here? (There were one or two other places where it looked like maybe we could re-use it).",
+      "range": {
+        "startLine": 40,
+        "startChar": 1,
+        "endLine": 47,
+        "endChar": 5
+      },
+      "revId": "a4a274beff8f585a7f211a947cf5cd7f5424caef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1b400112_3a693aa2",
+        "filename": "src/libANGLE/VertexAttribute.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-28T15:27:23Z",
+      "side": 1,
+      "message": "nit: also can you put this in the cpp",
+      "range": {
+        "startLine": 49,
+        "startChar": 0,
+        "endLine": 53,
+        "endChar": 5
+      },
+      "revId": "a4a274beff8f585a7f211a947cf5cd7f5424caef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
