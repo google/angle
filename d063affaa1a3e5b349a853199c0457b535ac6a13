@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b9f444fa_718b603f",
+        "filename": "src/libANGLE/ProgramLinkedResources.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-02-28T05:53:17Z",
+      "side": 0,
+      "message": "Is is better to define linkedUniforms like below:\nusing ShaderUniform \u003d std::pair\u003cGLenum, const sh::Uniform *\u003e;\nstd::map\u003cstd::string, ShaderUniform\u003e linkedUniforms;\n\nIn that case, you don\u0027t need to get shader type from uniform name with extra for loop.",
+      "range": {
+        "startLine": 118,
+        "startChar": 4,
+        "endLine": 118,
+        "endChar": 62
+      },
+      "revId": "d063affaa1a3e5b349a853199c0457b535ac6a13",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
