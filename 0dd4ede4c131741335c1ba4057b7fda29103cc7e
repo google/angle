@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "bd9af985_3376165c",
+        "filename": "src/libANGLE/Caps.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 891,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-02-28T15:55:39Z",
+      "side": 1,
+      "message": "We don\u0027t do this for the other caps (all zero\u0027d) to make sure that everything get\u0027s initialized explicitly.",
+      "parentUuid": "2ffd1a15_76fa4fc9",
+      "range": {
+        "startLine": 891,
+        "startChar": 13,
+        "endLine": 891,
+        "endChar": 34
+      },
+      "revId": "0dd4ede4c131741335c1ba4057b7fda29103cc7e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3c29c11b_c00f7186",
         "filename": "src/libANGLE/Caps.cpp",
         "patchSetId": 8
