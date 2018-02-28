@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "492b2d64_a71893ff",
+        "filename": "src/libANGLE/PackedGLEnums.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-02-28T16:15:23Z",
+      "side": 1,
+      "message": "Put this in the default case instead?",
+      "range": {
+        "startLine": 86,
+        "startChar": 4,
+        "endLine": 86,
+        "endChar": 38
+      },
+      "revId": "aa805239b8a5e9f86213b59ad1e73832bad9931d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0506bdd7_d0a4d4dd",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 2621,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-02-28T16:15:23Z",
+      "side": 1,
+      "message": "Think this is not neccessary.",
+      "range": {
+        "startLine": 2621,
+        "startChar": 52,
+        "endLine": 2621,
+        "endChar": 69
+      },
+      "revId": "aa805239b8a5e9f86213b59ad1e73832bad9931d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
