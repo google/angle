@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "b3a05d60_915e7017",
+        "filename": "src/libANGLE/Buffer.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1256148
+      },
+      "writtenOn": "2018-02-28T03:47:26Z",
+      "side": 1,
+      "message": "I would like to use keep using signed here, to avoid implicit signed-\u003eunsigned conversions when we add -1 later.",
+      "parentUuid": "b422b6aa_90bfea10",
+      "range": {
+        "startLine": 62,
+        "startChar": 4,
+        "endLine": 62,
+        "endChar": 8
+      },
+      "revId": "dd3dee742e899dc3582975ba67a7c9e9156feca0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7554e4a1_d8f49655",
         "filename": "src/libANGLE/Buffer.h",
         "patchSetId": 11
@@ -93,6 +117,30 @@
       "revId": "dd3dee742e899dc3582975ba67a7c9e9156feca0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0e613447_429bcbb4",
+        "filename": "src/libANGLE/Buffer.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1256148
+      },
+      "writtenOn": "2018-02-28T03:47:26Z",
+      "side": 1,
+      "message": "The reason I did it this way is to have compilation-time enforcement that there are only two possibilities for the value of this argument. With an int parameter the value can be any number. There\u0027s no use case for that, but it can be a source of errors. You can pass \"false\" to an int parameter and it will silently do nothing instead of decrementing the reference count, with no compiler warning.",
+      "parentUuid": "7554e4a1_d8f49655",
+      "range": {
+        "startLine": 122,
+        "startChar": 26,
+        "endLine": 122,
+        "endChar": 36
+      },
+      "revId": "dd3dee742e899dc3582975ba67a7c9e9156feca0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -190,6 +238,54 @@
     },
     {
       "key": {
+        "uuid": "7b3cf2d4_9b01945a",
+        "filename": "src/libANGLE/Buffer.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1256148
+      },
+      "writtenOn": "2018-02-28T03:47:26Z",
+      "side": 1,
+      "message": "I put it here so it could be inlined by the compiler. If you don\u0027t think it should be inlined then I can move it to the cpp file.",
+      "parentUuid": "d1145abe_c52103d5",
+      "range": {
+        "startLine": 115,
+        "startChar": 0,
+        "endLine": 130,
+        "endChar": 9
+      },
+      "revId": "dd3dee742e899dc3582975ba67a7c9e9156feca0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cee182c0_c9c882ba",
+        "filename": "src/libANGLE/Buffer.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1256148
+      },
+      "writtenOn": "2018-02-28T03:47:26Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "80b9515b_49e7994a",
+      "range": {
+        "startLine": 121,
+        "startChar": 0,
+        "endLine": 130,
+        "endChar": 9
+      },
+      "revId": "dd3dee742e899dc3582975ba67a7c9e9156feca0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "86bf4dc3_741e62ca",
         "filename": "src/libANGLE/ErrorStrings.h",
         "patchSetId": 11
@@ -210,6 +306,30 @@
       "revId": "dd3dee742e899dc3582975ba67a7c9e9156feca0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "86005fc9_ea010675",
+        "filename": "src/libANGLE/ErrorStrings.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1256148
+      },
+      "writtenOn": "2018-02-28T03:47:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "86bf4dc3_741e62ca",
+      "range": {
+        "startLine": 20,
+        "startChar": 7,
+        "endLine": 20,
+        "endChar": 38
+      },
+      "revId": "dd3dee742e899dc3582975ba67a7c9e9156feca0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -236,6 +356,30 @@
     },
     {
       "key": {
+        "uuid": "58c66909_d1538727",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1283,
+      "author": {
+        "id": 1256148
+      },
+      "writtenOn": "2018-02-28T03:47:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4b066ac6_73af5296",
+      "range": {
+        "startLine": 1282,
+        "startChar": 1,
+        "endLine": 1283,
+        "endChar": 67
+      },
+      "revId": "dd3dee742e899dc3582975ba67a7c9e9156feca0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3bdf54cb_a7f42819",
         "filename": "src/libANGLE/State.cpp",
         "patchSetId": 11
@@ -256,6 +400,30 @@
       "revId": "dd3dee742e899dc3582975ba67a7c9e9156feca0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a5ee803e_80f2f446",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1411,
+      "author": {
+        "id": 1256148
+      },
+      "writtenOn": "2018-02-28T03:47:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3bdf54cb_a7f42819",
+      "range": {
+        "startLine": 1409,
+        "startChar": 13,
+        "endLine": 1411,
+        "endChar": 38
+      },
+      "revId": "dd3dee742e899dc3582975ba67a7c9e9156feca0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -282,6 +450,30 @@
     },
     {
       "key": {
+        "uuid": "880cc801_6c319fc1",
+        "filename": "src/libANGLE/TransformFeedback.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 1256148
+      },
+      "writtenOn": "2018-02-28T03:47:26Z",
+      "side": 1,
+      "message": "Done. Storing less state is good.",
+      "parentUuid": "2fb93f53_1be161b0",
+      "range": {
+        "startLine": 164,
+        "startChar": 16,
+        "endLine": 164,
+        "endChar": 24
+      },
+      "revId": "dd3dee742e899dc3582975ba67a7c9e9156feca0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "18a77513_75ae4661",
         "filename": "src/libANGLE/VertexArray.cpp",
         "patchSetId": 11
@@ -305,6 +497,30 @@
     },
     {
       "key": {
+        "uuid": "9a83d4ab_da6c3cae",
+        "filename": "src/libANGLE/VertexArray.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 269,
+      "author": {
+        "id": 1256148
+      },
+      "writtenOn": "2018-02-28T03:47:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "18a77513_75ae4661",
+      "range": {
+        "startLine": 269,
+        "startChar": 18,
+        "endLine": 269,
+        "endChar": 28
+      },
+      "revId": "dd3dee742e899dc3582975ba67a7c9e9156feca0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "248e6974_fc0cd49f",
         "filename": "src/libANGLE/validationES2.cpp",
         "patchSetId": 11
@@ -325,6 +541,30 @@
       "revId": "dd3dee742e899dc3582975ba67a7c9e9156feca0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "646e3ec8_b7657296",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 4245,
+      "author": {
+        "id": 1256148
+      },
+      "writtenOn": "2018-02-28T03:47:26Z",
+      "side": 1,
+      "message": "Looks like a bunch from functional_buffer_(write|read|map|copy).",
+      "parentUuid": "248e6974_fc0cd49f",
+      "range": {
+        "startLine": 4245,
+        "startChar": 33,
+        "endLine": 4245,
+        "endChar": 51
+      },
+      "revId": "dd3dee742e899dc3582975ba67a7c9e9156feca0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
