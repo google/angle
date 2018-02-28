@@ -12,6 +12,8 @@
 
 #include "libANGLE/signal_utils.h"
 
+#include <algorithm>
+
 #include "common/debug.h"
 
 namespace angle
