@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "4a702610_08e56186",
+        "filename": "src/libANGLE/Context.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 1167,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-28T15:28:13Z",
+      "side": 1,
+      "message": "Actually \"current\" is probably better because I think \"active\" already has a special meaning for XFB.",
+      "parentUuid": "b8f1b89a_3ea68e37",
+      "range": {
+        "startLine": 1167,
+        "startChar": 9,
+        "endLine": 1167,
+        "endChar": 25
+      },
+      "revId": "a4a274beff8f585a7f211a947cf5cd7f5424caef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f8a3e4c7_650c41ec",
         "filename": "src/libANGLE/TransformFeedback.h",
         "patchSetId": 15
