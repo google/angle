@@ -4,7 +4,7 @@
 // found in the LICENSE file.
 //
 // signal_utils_unittest:
-//   Unit tests for signals and related utils.
+//   Unit tests for Observers and related classes.
 
 #include <gtest/gtest.h>
 
@@ -16,23 +16,28 @@ using namespace testing;
 namespace
 {
 
-struct SignalThing : public SignalReceiver<>
+struct ObserverClass : public ObserverInterface
 {
-    void signal(uint32_t channelID) override { wasSignaled = true; }
-    bool wasSignaled = false;
+    void onSubjectStateChange(const gl::Context *context,
+                              SubjectIndex index,
+                              SubjectMessage message) override
+    {
+        wasNotified = true;
+    }
+    bool wasNotified = false;
 };
 
-// Test that broadcast signals work.
-TEST(SignalTest, BroadcastSignals)
+// Test that Observer/Subject state change notifications work.
+TEST(ObserverTest, BasicUsage)
 {
-    BroadcastChannel<> channel;
-    SignalThing thing;
-    ChannelBinding<> binding(&thing, 0u);
+    Subject subject;
+    ObserverClass observer;
+    ObserverBinding binding(&observer, 0u);
 
-    binding.bind(&channel);
-    ASSERT_FALSE(thing.wasSignaled);
-    channel.signal();
-    ASSERT_TRUE(thing.wasSignaled);
+    binding.bind(&subject);
+    ASSERT_FALSE(observer.wasNotified);
+    subject.onStateChange(nullptr, SubjectMessage::STATE_CHANGE);
+    ASSERT_TRUE(observer.wasNotified);
 }
 
 }  // anonymous namespace

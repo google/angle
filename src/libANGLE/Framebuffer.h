@@ -133,7 +133,7 @@ class FramebufferState final : angle::NonCopyable
     angle::BitSet<IMPLEMENTATION_MAX_FRAMEBUFFER_ATTACHMENTS + 2> mResourceNeedsInit;
 };
 
-class Framebuffer final : public LabeledObject, public OnAttachmentDirtyReceiver
+class Framebuffer final : public LabeledObject, public angle::ObserverInterface
 {
   public:
     // Constructor to build application-defined framebuffers
@@ -250,22 +250,22 @@ class Framebuffer final : public LabeledObject, public OnAttachmentDirtyReceiver
     Error invalidateSub(const Context *context,
                         size_t count,
                         const GLenum *attachments,
-                        const gl::Rectangle &area);
+                        const Rectangle &area);
 
-    Error clear(const gl::Context *context, GLbitfield mask);
-    Error clearBufferfv(const gl::Context *context,
+    Error clear(const Context *context, GLbitfield mask);
+    Error clearBufferfv(const Context *context,
                         GLenum buffer,
                         GLint drawbuffer,
                         const GLfloat *values);
-    Error clearBufferuiv(const gl::Context *context,
+    Error clearBufferuiv(const Context *context,
                          GLenum buffer,
                          GLint drawbuffer,
                          const GLuint *values);
-    Error clearBufferiv(const gl::Context *context,
+    Error clearBufferiv(const Context *context,
                         GLenum buffer,
                         GLint drawbuffer,
                         const GLint *values);
-    Error clearBufferfi(const gl::Context *context,
+    Error clearBufferfi(const Context *context,
                         GLenum buffer,
                         GLint drawbuffer,
                         GLfloat depth,
@@ -273,13 +273,13 @@ class Framebuffer final : public LabeledObject, public OnAttachmentDirtyReceiver
 
     GLenum getImplementationColorReadFormat(const Context *context) const;
     GLenum getImplementationColorReadType(const Context *context) const;
-    Error readPixels(const gl::Context *context,
-                     const gl::Rectangle &area,
+    Error readPixels(const Context *context,
+                     const Rectangle &area,
                      GLenum format,
                      GLenum type,
                      void *pixels);
 
-    Error blit(const gl::Context *context,
+    Error blit(const Context *context,
                const Rectangle &sourceArea,
                const Rectangle &destArea,
                GLbitfield mask,
@@ -289,7 +289,7 @@ class Framebuffer final : public LabeledObject, public OnAttachmentDirtyReceiver
     {
         DIRTY_BIT_COLOR_ATTACHMENT_0,
         DIRTY_BIT_COLOR_ATTACHMENT_MAX =
-            DIRTY_BIT_COLOR_ATTACHMENT_0 + gl::IMPLEMENTATION_MAX_FRAMEBUFFER_ATTACHMENTS,
+            DIRTY_BIT_COLOR_ATTACHMENT_0 + IMPLEMENTATION_MAX_FRAMEBUFFER_ATTACHMENTS,
         DIRTY_BIT_DEPTH_ATTACHMENT = DIRTY_BIT_COLOR_ATTACHMENT_MAX,
         DIRTY_BIT_STENCIL_ATTACHMENT,
         DIRTY_BIT_DRAW_BUFFERS,
@@ -307,8 +307,10 @@ class Framebuffer final : public LabeledObject, public OnAttachmentDirtyReceiver
 
     void syncState(const Context *context);
 
-    // OnAttachmentChangedReceiver implementation
-    void signal(size_t dirtyBit, InitState state) override;
+    // Observer implementation
+    void onSubjectStateChange(const Context *context,
+                              angle::SubjectIndex index,
+                              angle::SubjectMessage message) override;
 
     bool formsRenderingFeedbackLoopWith(const State &state) const;
     bool formsCopyingFeedbackLoopWith(GLuint copyTextureID,
@@ -355,7 +357,7 @@ class Framebuffer final : public LabeledObject, public OnAttachmentDirtyReceiver
     void updateAttachment(const Context *context,
                           FramebufferAttachment *attachment,
                           size_t dirtyBit,
-                          OnAttachmentDirtyBinding *onDirtyBinding,
+                          angle::ObserverBinding *onDirtyBinding,
                           GLenum type,
                           GLenum binding,
                           const ImageIndex &textureIndex,
@@ -376,14 +378,16 @@ class Framebuffer final : public LabeledObject, public OnAttachmentDirtyReceiver
     bool partialClearNeedsInit(const Context *context, bool color, bool depth, bool stencil);
     bool partialBufferClearNeedsInit(const Context *context, GLenum bufferType);
 
+    FramebufferAttachment *getAttachmentFromSubjectIndex(angle::SubjectIndex index);
+
     FramebufferState mState;
     rx::FramebufferImpl *mImpl;
     GLuint mId;
 
     Optional<GLenum> mCachedStatus;
-    std::vector<OnAttachmentDirtyBinding> mDirtyColorAttachmentBindings;
-    OnAttachmentDirtyBinding mDirtyDepthAttachmentBinding;
-    OnAttachmentDirtyBinding mDirtyStencilAttachmentBinding;
+    std::vector<angle::ObserverBinding> mDirtyColorAttachmentBindings;
+    angle::ObserverBinding mDirtyDepthAttachmentBinding;
+    angle::ObserverBinding mDirtyStencilAttachmentBinding;
 
     DirtyBits mDirtyBits;
 

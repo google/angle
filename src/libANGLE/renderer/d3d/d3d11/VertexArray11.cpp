@@ -21,17 +21,16 @@ namespace rx
 
 namespace
 {
-OnBufferDataDirtyChannel *GetBufferBroadcastChannel(Buffer11 *buffer11,
-                                                    IndexStorageType storageType)
+angle::Subject *GetBufferSubject(Buffer11 *buffer11, IndexStorageType storageType)
 {
     switch (storageType)
     {
         case IndexStorageType::Direct:
-            return buffer11->getDirectBroadcastChannel();
+            return buffer11->getDirectSubject();
         case IndexStorageType::Static:
-            return buffer11->getStaticBroadcastChannel();
+            return buffer11->getStaticSubject();
         case IndexStorageType::Dynamic:
-            return buffer11 ? buffer11->getStaticBroadcastChannel() : nullptr;
+            return buffer11 ? buffer11->getStaticSubject() : nullptr;
         default:
             UNREACHABLE();
             return nullptr;
@@ -157,10 +156,10 @@ bool VertexArray11::updateElementArrayStorage(const gl::Context *context,
     {
         Buffer11 *newBuffer11 = SafeGetImplAs<Buffer11>(newBuffer);
 
-        auto *newChannel = GetBufferBroadcastChannel(newBuffer11, newStorageType);
+        angle::Subject *subject = GetBufferSubject(newBuffer11, newStorageType);
 
         mCurrentElementArrayStorage = newStorageType;
-        mOnElementArrayBufferDataDirty.bind(newChannel);
+        mOnElementArrayBufferDataDirty.bind(subject);
         needsTranslation = true;
     }
 
@@ -222,7 +221,7 @@ void VertexArray11::updateVertexAttribStorage(const gl::Context *context, size_t
 
     if (oldBuffer11 != newBuffer11 || oldStorageType != newStorageType)
     {
-        OnBufferDataDirtyChannel *newChannel = nullptr;
+        angle::Subject *subject = nullptr;
 
         if (newStorageType == VertexStorageType::CURRENT_VALUE)
         {
@@ -235,11 +234,11 @@ void VertexArray11::updateVertexAttribStorage(const gl::Context *context, size_t
             switch (newStorageType)
             {
                 case VertexStorageType::DIRECT:
-                    newChannel = newBuffer11->getDirectBroadcastChannel();
+                    subject = newBuffer11->getDirectSubject();
                     break;
                 case VertexStorageType::STATIC:
                 case VertexStorageType::DYNAMIC:
-                    newChannel = newBuffer11->getStaticBroadcastChannel();
+                    subject = newBuffer11->getStaticSubject();
                     break;
                 default:
                     UNREACHABLE();
@@ -247,7 +246,7 @@ void VertexArray11::updateVertexAttribStorage(const gl::Context *context, size_t
             }
         }
 
-        mOnArrayBufferDataDirty[attribIndex].bind(newChannel);
+        mOnArrayBufferDataDirty[attribIndex].bind(subject);
         mCurrentArrayBuffers[attribIndex].set(context, binding.getBuffer().get());
     }
 }
@@ -348,9 +347,11 @@ const std::vector<TranslatedAttribute> &VertexArray11::getTranslatedAttribs() co
     return mTranslatedAttribs;
 }
 
-void VertexArray11::signal(size_t channelID, const gl::Context *context)
+void VertexArray11::onSubjectStateChange(const gl::Context *context,
+                                         angle::SubjectIndex index,
+                                         angle::SubjectMessage message)
 {
-    if (channelID == mAttributeStorageTypes.size())
+    if (index == mAttributeStorageTypes.size())
     {
         mCachedIndexInfoValid   = false;
         mLastElementType        = GL_NONE;
@@ -358,10 +359,10 @@ void VertexArray11::signal(size_t channelID, const gl::Context *context)
     }
     else
     {
-        ASSERT(mAttributeStorageTypes[channelID] != VertexStorageType::CURRENT_VALUE);
+        ASSERT(mAttributeStorageTypes[index] != VertexStorageType::CURRENT_VALUE);
 
         // This can change a buffer's storage, we'll need to re-check.
-        mAttribsToUpdate.set(channelID);
+        mAttribsToUpdate.set(index);
 
         // Changing the vertex attribute state can affect the vertex shader.
         Renderer11 *renderer = GetImplAs<Context11>(context)->getRenderer();

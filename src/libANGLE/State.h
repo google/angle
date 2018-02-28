@@ -34,7 +34,7 @@ class VertexArray;
 class Context;
 struct Caps;
 
-class State : public OnAttachmentDirtyReceiver, angle::NonCopyable
+class State : public angle::ObserverInterface, angle::NonCopyable
 {
   public:
     State();
@@ -462,8 +462,10 @@ class State : public OnAttachmentDirtyReceiver, angle::NonCopyable
     const std::vector<Texture *> &getCompleteTextureCache() const { return mCompleteTextureCache; }
     ComponentTypeMask getCurrentValuesTypeMask() const { return mCurrentValuesTypeMask; }
 
-    // Handle a dirty texture event.
-    void signal(size_t textureIndex, InitState initState) override;
+    // Observer implementation.
+    void onSubjectStateChange(const Context *context,
+                              angle::SubjectIndex index,
+                              angle::SubjectMessage message) override;
 
     Error clearUnclearedActiveTextures(const Context *context);
 
@@ -527,11 +529,10 @@ class State : public OnAttachmentDirtyReceiver, angle::NonCopyable
 
     // Texture Completeness Caching
     // ----------------------------
-    // The texture completeness cache uses dirty bits to avoid having to scan the list
-    // of textures each draw call. This gl::State class implements OnAttachmentDirtyReceiver,
-    // and keeps an array of bindings to the Texture class. When the Textures are marked dirty,
-    // they send messages to the State class (and any Framebuffers they're attached to) via the
-    // State::signal method (see above). Internally this then invalidates the completeness cache.
+    // The texture completeness cache uses dirty bits to avoid having to scan the list of textures
+    // each draw call. This gl::State class implements angle::Observer interface. When subject
+    // Textures have state changes, messages reach 'State' (also any observing Framebuffers) via the
+    // onSubjectStateChange method (above). This then invalidates the completeness cache.
     //
     // Note this requires that we also invalidate the completeness cache manually on events like
     // re-binding textures/samplers or a change in the program. For more information see the
@@ -541,7 +542,7 @@ class State : public OnAttachmentDirtyReceiver, angle::NonCopyable
     // Don't use BindingPointer because this cache is only valid within a draw call.
     // Also stores a notification channel to the texture itself to handle texture change events.
     std::vector<Texture *> mCompleteTextureCache;
-    std::vector<OnAttachmentDirtyBinding> mCompleteTextureBindings;
+    std::vector<angle::ObserverBinding> mCompleteTextureBindings;
     InitState mCachedTexturesInitState;
     using ActiveTextureMask = angle::BitSet<IMPLEMENTATION_MAX_ACTIVE_TEXTURES>;
     ActiveTextureMask mActiveTexturesMask;

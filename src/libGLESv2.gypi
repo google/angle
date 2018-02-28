@@ -284,6 +284,7 @@
             'libANGLE/renderer/load_functions_table_autogen.cpp',
             'libANGLE/renderer/renderer_utils.cpp',
             'libANGLE/renderer/renderer_utils.h',
+            'libANGLE/signal_utils.cpp',
             'libANGLE/signal_utils.h',
             'libANGLE/validationEGL.cpp',
             'libANGLE/validationEGL.h',

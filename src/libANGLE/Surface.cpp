@@ -151,12 +151,12 @@ Error Surface::destroyImpl(const Display *display)
     return NoError();
 }
 
-void Surface::postSwap()
+void Surface::postSwap(const gl::Context *context)
 {
     if (mRobustResourceInitialization && mSwapBehavior != EGL_BUFFER_PRESERVED)
     {
         mInitState = gl::InitState::MayNeedInit;
-        mDirtyChannel.signal(mInitState);
+        onStateChange(context, angle::SubjectMessage::STATE_CHANGE);
     }
 }
 
@@ -231,14 +231,14 @@ EGLint Surface::getType() const
 Error Surface::swap(const gl::Context *context)
 {
     ANGLE_TRY(mImplementation->swap(context));
-    postSwap();
+    postSwap(context);
     return NoError();
 }
 
 Error Surface::swapWithDamage(const gl::Context *context, EGLint *rects, EGLint n_rects)
 {
     ANGLE_TRY(mImplementation->swapWithDamage(context, rects, n_rects));
-    postSwap();
+    postSwap(context);
     return NoError();
 }
 

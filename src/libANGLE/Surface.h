@@ -187,7 +187,7 @@ class Surface : public gl::FramebufferAttachmentObject
   private:
     Error destroyImpl(const Display *display);
 
-    void postSwap();
+    void postSwap(const gl::Context *context);
 
     gl::InitState mInitState;
 };

@@ -19,7 +19,7 @@ namespace rx
 {
 class Renderer11;
 
-class VertexArray11 : public VertexArrayImpl, public OnBufferDataDirtyReceiver
+class VertexArray11 : public VertexArrayImpl, public angle::ObserverInterface
 {
   public:
     VertexArray11(const gl::VertexArrayState &data);
@@ -38,8 +38,10 @@ class VertexArray11 : public VertexArrayImpl, public OnBufferDataDirtyReceiver
 
     const std::vector<TranslatedAttribute> &getTranslatedAttribs() const;
 
-    // SignalReceiver implementation
-    void signal(size_t channelID, const gl::Context *context) override;
+    // Observer implementation
+    void onSubjectStateChange(const gl::Context *context,
+                              angle::SubjectIndex index,
+                              angle::SubjectMessage message) override;
 
     Serial getCurrentStateSerial() const { return mCurrentStateSerial; }
 
@@ -78,8 +80,8 @@ class VertexArray11 : public VertexArrayImpl, public OnBufferDataDirtyReceiver
     std::vector<gl::BindingPointer<gl::Buffer>> mCurrentArrayBuffers;
     gl::BindingPointer<gl::Buffer> mCurrentElementArrayBuffer;
 
-    std::vector<OnBufferDataDirtyBinding> mOnArrayBufferDataDirty;
-    OnBufferDataDirtyBinding mOnElementArrayBufferDataDirty;
+    std::vector<angle::ObserverBinding> mOnArrayBufferDataDirty;
+    angle::ObserverBinding mOnElementArrayBufferDataDirty;
 
     Serial mCurrentStateSerial;
 

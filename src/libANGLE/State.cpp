@@ -180,7 +180,7 @@ void State::initialize(const Context *context,
     for (uint32_t textureIndex = 0; textureIndex < caps.maxCombinedTextureImageUnits;
          ++textureIndex)
     {
-        mCompleteTextureBindings.emplace_back(OnAttachmentDirtyBinding(this, textureIndex));
+        mCompleteTextureBindings.emplace_back(this, textureIndex);
     }
 
     mSamplers.resize(caps.maxCombinedTextureImageUnits);
@@ -2320,7 +2320,7 @@ void State::syncProgramTextures(const Context *context)
             }
 
             // Bind the texture unconditionally, to recieve completeness change notifications.
-            mCompleteTextureBindings[textureUnitIndex].bind(texture->getDirtyChannel());
+            mCompleteTextureBindings[textureUnitIndex].bind(texture);
             mActiveTexturesMask.set(textureUnitIndex);
             newActiveTextures.set(textureUnitIndex);
 
@@ -2440,13 +2440,16 @@ const ImageUnit &State::getImageUnit(GLuint unit) const
 }
 
 // Handle a dirty texture event.
-void State::signal(size_t textureIndex, InitState initState)
+void State::onSubjectStateChange(const Context *context,
+                                 angle::SubjectIndex index,
+                                 angle::SubjectMessage message)
 {
     // Conservatively assume all textures are dirty.
     // TODO(jmadill): More fine-grained update.
     mDirtyObjects.set(DIRTY_OBJECT_PROGRAM_TEXTURES);
 
-    if (initState == InitState::MayNeedInit)
+    if (!mCompleteTextureCache[index] ||
+        mCompleteTextureCache[index]->initState() == InitState::MayNeedInit)
     {
         mCachedTexturesInitState = InitState::MayNeedInit;
     }

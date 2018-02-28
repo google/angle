@@ -17,7 +17,7 @@ namespace rx
 {
 class Renderer11;
 
-class Framebuffer11 : public FramebufferD3D, public OnRenderTargetDirtyReceiver
+class Framebuffer11 : public FramebufferD3D, public angle::ObserverInterface
 {
   public:
     Framebuffer11(const gl::FramebufferState &data, Renderer11 *renderer);
@@ -52,7 +52,10 @@ class Framebuffer11 : public FramebufferD3D, public OnRenderTargetDirtyReceiver
     bool hasAnyInternalDirtyBit() const;
     void syncInternalState(const gl::Context *context);
 
-    void signal(size_t channelID, const gl::Context *context) override;
+    // Observer implementation.
+    void onSubjectStateChange(const gl::Context *context,
+                              angle::SubjectIndex index,
+                              angle::SubjectMessage message) override;
 
     gl::Error getSamplePosition(size_t index, GLfloat *xy) const override;
 
@@ -93,8 +96,8 @@ class Framebuffer11 : public FramebufferD3D, public OnRenderTargetDirtyReceiver
     RenderTargetArray mCachedColorRenderTargets;
     RenderTarget11 *mCachedDepthStencilRenderTarget;
 
-    std::vector<OnRenderTargetDirtyBinding> mColorRenderTargetsDirty;
-    OnRenderTargetDirtyBinding mDepthStencilRenderTargetDirty;
+    std::vector<angle::ObserverBinding> mColorRenderTargetsDirty;
+    angle::ObserverBinding mDepthStencilRenderTargetDirty;
 
     gl::Framebuffer::DirtyBits mInternalDirtyBits;
 };

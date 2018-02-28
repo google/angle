@@ -566,21 +566,23 @@ class StateManager11 final : angle::NonCopyable
     FragmentConstantBufferArray<GLintptr> mCurrentConstantBufferPSOffset;
     FragmentConstantBufferArray<GLsizeiptr> mCurrentConstantBufferPSSize;
 
-    class OnConstantBufferDirtyReceiver : public OnBufferDataDirtyReceiver
+    class OnConstantBufferDirtyReceiver : public angle::ObserverInterface
     {
       public:
         OnConstantBufferDirtyReceiver();
         ~OnConstantBufferDirtyReceiver() override;
 
-        void signal(size_t messageID, const gl::Context *context) override;
+        void onSubjectStateChange(const gl::Context *context,
+                                  angle::SubjectIndex index,
+                                  angle::SubjectMessage message) override;
 
         void reset();
         void bindVS(size_t index, Buffer11 *buffer);
         void bindPS(size_t index, Buffer11 *buffer);
 
       private:
-        std::vector<OnBufferDataDirtyBinding> mBindingsVS;
-        std::vector<OnBufferDataDirtyBinding> mBindingsPS;
+        std::vector<angle::ObserverBinding> mBindingsVS;
+        std::vector<angle::ObserverBinding> mBindingsPS;
     };
     OnConstantBufferDirtyReceiver mOnConstantBufferDirtyReceiver;
 

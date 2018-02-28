@@ -57,7 +57,7 @@ gl::Error MarkAttachmentsDirty(const gl::Context *context,
 void UpdateCachedRenderTarget(const gl::Context *context,
                               const gl::FramebufferAttachment *attachment,
                               RenderTarget11 *&cachedRenderTarget,
-                              OnRenderTargetDirtyBinding *channelBinding)
+                              angle::ObserverBinding *channelBinding)
 {
     RenderTarget11 *newRenderTarget = nullptr;
     if (attachment)
@@ -71,9 +71,7 @@ void UpdateCachedRenderTarget(const gl::Context *context,
     }
     if (newRenderTarget != cachedRenderTarget)
     {
-        OnRenderTargetDirtyChannel *channel =
-            (newRenderTarget ? newRenderTarget->getBroadcastChannel() : nullptr);
-        channelBinding->bind(channel);
+        channelBinding->bind(newRenderTarget);
         cachedRenderTarget = newRenderTarget;
     }
 }
@@ -451,9 +449,11 @@ void Framebuffer11::syncState(const gl::Context *context,
     }
 }
 
-void Framebuffer11::signal(size_t channelID, const gl::Context *context)
+void Framebuffer11::onSubjectStateChange(const gl::Context *context,
+                                         angle::SubjectIndex index,
+                                         angle::SubjectMessage message)
 {
-    if (channelID == gl::IMPLEMENTATION_MAX_FRAMEBUFFER_ATTACHMENTS)
+    if (index == gl::IMPLEMENTATION_MAX_FRAMEBUFFER_ATTACHMENTS)
     {
         // Stencil is redundant in this case.
         mInternalDirtyBits.set(gl::Framebuffer::DIRTY_BIT_DEPTH_ATTACHMENT);
@@ -461,8 +461,8 @@ void Framebuffer11::signal(size_t channelID, const gl::Context *context)
     }
     else
     {
-        mInternalDirtyBits.set(gl::Framebuffer::DIRTY_BIT_COLOR_ATTACHMENT_0 + channelID);
-        mCachedColorRenderTargets[channelID] = nullptr;
+        mInternalDirtyBits.set(gl::Framebuffer::DIRTY_BIT_COLOR_ATTACHMENT_0 + index);
+        mCachedColorRenderTargets[index] = nullptr;
     }
 
     // Notify the context we need to re-validate the RenderTarget.

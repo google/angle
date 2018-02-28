@@ -20,7 +20,7 @@ namespace rx
 class SwapChain11;
 class Renderer11;
 
-class RenderTarget11 : public RenderTargetD3D
+class RenderTarget11 : public RenderTargetD3D, public angle::Subject
 {
   public:
     RenderTarget11(const d3d11::Format &formatSet);
@@ -35,12 +35,10 @@ class RenderTarget11 : public RenderTargetD3D
     virtual unsigned int getSubresourceIndex() const = 0;
 
     void signalDirty(const gl::Context *context) override;
-    OnRenderTargetDirtyChannel *getBroadcastChannel() { return &mBroadcastChannel; }
 
     const d3d11::Format &getFormatSet() const { return mFormatSet; }
 
   protected:
-    OnRenderTargetDirtyChannel mBroadcastChannel;
     const d3d11::Format &mFormatSet;
 };
 

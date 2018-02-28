@@ -144,9 +144,7 @@ class Buffer11::BufferStorage : angle::NonCopyable
 class Buffer11::NativeStorage : public Buffer11::BufferStorage
 {
   public:
-    NativeStorage(Renderer11 *renderer,
-                  BufferUsage usage,
-                  const OnBufferDataDirtyChannel *onStorageChanged);
+    NativeStorage(Renderer11 *renderer, BufferUsage usage, const angle::Subject *onStorageChanged);
     ~NativeStorage() override;
 
     bool isCPUAccessible(GLbitfield access) const override;
@@ -177,7 +175,7 @@ class Buffer11::NativeStorage : public Buffer11::BufferStorage
     void clearSRVs();
 
     d3d11::Buffer mBuffer;
-    const OnBufferDataDirtyChannel *mOnStorageChanged;
+    const angle::Subject *mOnStorageChanged;
     std::map<DXGI_FORMAT, d3d11::ShaderResourceView> mBufferResourceViews;
 };
 
@@ -403,7 +401,7 @@ gl::Error Buffer11::setSubData(const gl::Context *context,
 
         // Notify any vertex arrays that we have dirty data.
         // TODO(jmadill): Use a more fine grained notification for data updates.
-        mDirectBroadcastChannel.signal(context);
+        mDirectSubject.onStateChange(context, angle::SubjectMessage::STATE_CHANGE);
     }
 
     mSize = std::max(mSize, requiredSize);
@@ -474,7 +472,7 @@ gl::Error Buffer11::copySubData(const gl::Context *context,
     invalidateStaticData(context);
 
     // Also notify that direct buffers are dirty.
-    mDirectBroadcastChannel.signal(context);
+    mDirectSubject.onStateChange(context, angle::SubjectMessage::STATE_CHANGE);
 
     return gl::NoError();
 }
@@ -760,7 +758,7 @@ Buffer11::BufferStorage *Buffer11::allocateStorage(BufferUsage usage)
             return new EmulatedIndexedStorage(mRenderer);
         case BUFFER_USAGE_INDEX:
         case BUFFER_USAGE_VERTEX_OR_TRANSFORM_FEEDBACK:
-            return new NativeStorage(mRenderer, usage, &mDirectBroadcastChannel);
+            return new NativeStorage(mRenderer, usage, &mDirectSubject);
         default:
             return new NativeStorage(mRenderer, usage, nullptr);
     }
@@ -923,7 +921,7 @@ void Buffer11::initializeStaticData(const gl::Context *context)
     BufferD3D::initializeStaticData(context);
 
     // Notify when static data changes.
-    mStaticBroadcastChannel.signal(context);
+    mStaticSubject.onStateChange(context, angle::SubjectMessage::STATE_CHANGE);
 }
 
 void Buffer11::invalidateStaticData(const gl::Context *context)
@@ -931,17 +929,17 @@ void Buffer11::invalidateStaticData(const gl::Context *context)
     BufferD3D::invalidateStaticData(context);
 
     // Notify when static data changes.
-    mStaticBroadcastChannel.signal(context);
+    mStaticSubject.onStateChange(context, angle::SubjectMessage::STATE_CHANGE);
 }
 
-OnBufferDataDirtyChannel *Buffer11::getStaticBroadcastChannel()
+angle::Subject *Buffer11::getStaticSubject()
 {
-    return &mStaticBroadcastChannel;
+    return &mStaticSubject;
 }
 
-OnBufferDataDirtyChannel *Buffer11::getDirectBroadcastChannel()
+angle::Subject *Buffer11::getDirectSubject()
 {
-    return &mDirectBroadcastChannel;
+    return &mDirectSubject;
 }
 
 void Buffer11::onCopyStorage(BufferStorage *dest, BufferStorage *source)
@@ -991,7 +989,7 @@ gl::Error Buffer11::BufferStorage::setData(const uint8_t *data, size_t offset, s
 
 Buffer11::NativeStorage::NativeStorage(Renderer11 *renderer,
                                        BufferUsage usage,
-                                       const OnBufferDataDirtyChannel *onStorageChanged)
+                                       const angle::Subject *onStorageChanged)
     : BufferStorage(renderer, usage), mBuffer(), mOnStorageChanged(onStorageChanged)
 {
 }
@@ -1111,7 +1109,7 @@ gl::Error Buffer11::NativeStorage::resize(const gl::Context *context,
     // Notify that the storage has changed.
     if (mOnStorageChanged)
     {
-        mOnStorageChanged->signal(context);
+        mOnStorageChanged->onStateChange(context, angle::SubjectMessage::STATE_CHANGE);
     }
 
     return gl::NoError();

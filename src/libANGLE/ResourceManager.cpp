@@ -247,7 +247,7 @@ Texture *TextureManager::getTexture(GLuint handle) const
     return mObjectMap.query(handle);
 }
 
-void TextureManager::signalAllTexturesDirty() const
+void TextureManager::signalAllTexturesDirty(const Context *context) const
 {
     for (const auto &texture : mObjectMap)
     {
@@ -255,7 +255,7 @@ void TextureManager::signalAllTexturesDirty() const
         {
             // We don't know if the Texture needs init, but that's ok, since it will only force
             // a re-check, and will not initialize the pixels if it's not needed.
-            texture.second->signalDirty(InitState::MayNeedInit);
+            texture.second->signalDirty(context, InitState::MayNeedInit);
         }
     }
 }

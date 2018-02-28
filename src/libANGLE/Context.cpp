@@ -2625,10 +2625,10 @@ void Context::requestExtension(const char *name)
 
     // Invalidate all textures and framebuffer. Some extensions make new formats renderable or
     // sampleable.
-    mState.mTextures->signalAllTexturesDirty();
+    mState.mTextures->signalAllTexturesDirty(this);
     for (auto &zeroTexture : mZeroTextures)
     {
-        zeroTexture.second->signalDirty(InitState::Initialized);
+        zeroTexture.second->signalDirty(this, InitState::Initialized);
     }
 
     mState.mFramebuffers->invalidateFramebufferComplenessCache();
