@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6d9f5c40_72a895ce",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 311,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-28T23:32:51Z",
+      "side": 1,
+      "message": "nit: always default init to nullptr",
+      "range": {
+        "startLine": 311,
+        "startChar": 23,
+        "endLine": 311,
+        "endChar": 36
+      },
+      "revId": "959297cda216d7beda8c2429ca626c450872b6c8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "96a70e0b_63441fd4",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 333,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-28T23:32:51Z",
+      "side": 1,
+      "message": "we might be able to make this all part of the same \"if\". Presumably you will need a different code path for handling !indices (currently UNIMPLEMENTED) and maybe also type \u003d\u003d GL_UNSIGNED_BYTE. So maybe we can just duplicate the setupDraw call and do away with the second \"if\" statement.",
+      "range": {
+        "startLine": 305,
+        "startChar": 0,
+        "endLine": 333,
+        "endChar": 5
+      },
+      "revId": "959297cda216d7beda8c2429ca626c450872b6c8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2e6eb334_54db25c7",
+        "filename": "src/libANGLE/renderer/vulkan/StreamingBuffer.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-28T23:32:51Z",
+      "side": 1,
+      "message": "this is too hacky- I\u0027ll have to look over the code a bit to see why you needed to do this, but I think there must be a better way to do this.",
+      "range": {
+        "startLine": 76,
+        "startChar": 22,
+        "endLine": 76,
+        "endChar": 81
+      },
+      "revId": "959297cda216d7beda8c2429ca626c450872b6c8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9d33e1bc_59fc485c",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1345,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-28T23:32:51Z",
+      "side": 1,
+      "message": "Because we\u0027re serializing a copy into the line loop buffer in the command stream, we might need to make sure that copy happens before the draw that reads from the line loop handler. thus we might need a read dependency from the draw (reader) to the streaming buffer (the one being read)\n\ngetting this setup is a bit tricky - we are taking the place of the element array buffer, so I think we want to somehow hook into the VertexArrayVk\n\nNote this is a bit tricky to reproduce any bug here, but it might turn up on some kind of sorting or re-ordering.",
+      "range": {
+        "startLine": 1345,
+        "startChar": 22,
+        "endLine": 1345,
+        "endChar": 37
+      },
+      "revId": "959297cda216d7beda8c2429ca626c450872b6c8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3d9b7453_c4473308",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1382,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-28T23:32:51Z",
+      "side": 1,
+      "message": "createIndexBufferFromElementArrayBuffer? the element array buffer clearly comes from GL, while Index buffer only applies to Vulkan.",
+      "range": {
+        "startLine": 1382,
+        "startChar": 27,
+        "endLine": 1382,
+        "endChar": 64
+      },
+      "revId": "959297cda216d7beda8c2429ca626c450872b6c8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "61139058_3dde8879",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1409,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-02-28T23:32:51Z",
+      "side": 1,
+      "message": "this is a bit tricky here - we don\u0027t want to insert a write dependency between the last line loop copy and the present one. Since we always write once, then discard the buffer contents, we can assume the line loop copy write nodes only depend on the current element array buffer. This kind of operation might not be currently supported by the ResourceVk API - we might need to add a new method like \u0027beginOrphanedWriteResource\u0027 or something like that. Or after beginWriteResource, we explicitly indicate that writes are independent. \n\nAside: maybe there\u0027s other operations that are independent and don\u0027t need to be marked as write dependencies?",
+      "range": {
+        "startLine": 1409,
+        "startChar": 35,
+        "endLine": 1409,
+        "endChar": 53
+      },
+      "revId": "959297cda216d7beda8c2429ca626c450872b6c8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
