@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "680e063d_017841cf",
+        "filename": "src/libANGLE/ProgramLinkedResources.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-02-28T16:30:26Z",
+      "side": 1,
+      "message": "Can this be a function in ProgramLinkedResoiurces.cpp instead of static here? (same for ShaderUniform definition)",
+      "range": {
+        "startLine": 85,
+        "startChar": 4,
+        "endLine": 90,
+        "endChar": 26
+      },
+      "revId": "636717071a092314a5f9986b6350e56dc30996d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
