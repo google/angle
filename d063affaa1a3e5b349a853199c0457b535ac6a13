@@ -22,6 +22,30 @@
       "revId": "d063affaa1a3e5b349a853199c0457b535ac6a13",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e5ea5bcb_d34ef58b",
+        "filename": "src/libANGLE/ProgramLinkedResources.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-02-28T08:15:58Z",
+      "side": 0,
+      "message": "Thanks for your great advice! I have updated the patch and it looks much clearer now.",
+      "parentUuid": "b9f444fa_718b603f",
+      "range": {
+        "startLine": 118,
+        "startChar": 4,
+        "endLine": 118,
+        "endChar": 62
+      },
+      "revId": "d063affaa1a3e5b349a853199c0457b535ac6a13",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }

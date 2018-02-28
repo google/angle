@@ -22,6 +22,30 @@
       "revId": "827f3fbe1abdcf7c178c1cde2d4b43be68ba7f59",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e4d21e33_721a69a2",
+        "filename": "src/libANGLE/ProgramLinkedResources.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-02-28T08:15:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e27ada83_6293ae3a",
+      "range": {
+        "startLine": 83,
+        "startChar": 29,
+        "endLine": 83,
+        "endChar": 30
+      },
+      "revId": "827f3fbe1abdcf7c178c1cde2d4b43be68ba7f59",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
