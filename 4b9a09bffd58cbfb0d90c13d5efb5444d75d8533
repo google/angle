@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0a5a029e_76c2bc4e",
+        "filename": "src/libANGLE/ResourceManager.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 252,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-28T02:59:25Z",
+      "side": 1,
+      "message": "If we wouldn\u0027t use auto here, we would see the type of the key and value more easily so the code would be more easily understood without navigating to the definition of the mObjectMap.",
+      "range": {
+        "startLine": 252,
+        "startChar": 9,
+        "endLine": 252,
+        "endChar": 28
+      },
+      "revId": "4b9a09bffd58cbfb0d90c13d5efb5444d75d8533",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "df354393_37549ba7",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Framebuffer11.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-28T02:59:25Z",
+      "side": 1,
+      "message": "Any specific reason why we called that pattern using \"signals\" terminology? \n\nThis is exactly the Observer pattern from the GoF (https://en.wikipedia.org/wiki/Observer_pattern), maybe we should name it so that people recognize the pattern when they see it immediately?",
+      "range": {
+        "startLine": 20,
+        "startChar": 59,
+        "endLine": 20,
+        "endChar": 73
+      },
+      "revId": "4b9a09bffd58cbfb0d90c13d5efb5444d75d8533",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "30f8b612_b27ad8ff",
+        "filename": "src/libANGLE/signal_utils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-28T02:59:25Z",
+      "side": 1,
+      "message": "Same comment about the usage of auto here.",
+      "range": {
+        "startLine": 49,
+        "startChar": 9,
+        "endLine": 49,
+        "endChar": 30
+      },
+      "revId": "4b9a09bffd58cbfb0d90c13d5efb5444d75d8533",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7fd3be50_9334c53c",
+        "filename": "src/libANGLE/signal_utils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-02-28T02:59:25Z",
+      "side": 1,
+      "message": "Same",
+      "range": {
+        "startLine": 57,
+        "startChar": 4,
+        "endLine": 57,
+        "endChar": 36
+      },
+      "revId": "4b9a09bffd58cbfb0d90c13d5efb5444d75d8533",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
