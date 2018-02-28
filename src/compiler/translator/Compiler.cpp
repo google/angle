@@ -193,12 +193,12 @@ class TScopedSymbolTableLevel
   public:
     TScopedSymbolTableLevel(TSymbolTable *table) : mTable(table)
     {
-        ASSERT(mTable->atBuiltInLevel());
+        ASSERT(mTable->isEmpty());
         mTable->push();
     }
     ~TScopedSymbolTableLevel()
     {
-        while (!mTable->atBuiltInLevel())
+        while (!mTable->isEmpty())
             mTable->pop();
     }
 

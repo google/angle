@@ -1169,7 +1169,7 @@ bool TParseContext::declareVariable(const TSourceLoc &line,
     if (needsReservedCheck && !checkIsNotReserved(line, identifier))
         return false;
 
-    if (!symbolTable.declareVariable(*variable))
+    if (!symbolTable.declare(*variable))
     {
         error(line, "redefinition", identifier);
         return false;
@@ -3194,7 +3194,7 @@ TIntermFunctionPrototype *TParseContext::createPrototypeNodeFromFunction(
             // Insert the parameter in the symbol table.
             if (insertParametersToSymbolTable)
             {
-                if (!symbolTable.declareVariable(variable))
+                if (!symbolTable.declare(variable))
                 {
                     error(location, "redefinition", param.name);
                 }
@@ -3792,7 +3792,7 @@ TIntermDeclaration *TParseContext::addInterfaceBlock(
 
     TInterfaceBlock *interfaceBlock = new TInterfaceBlock(
         &symbolTable, blockName, fieldList, blockLayoutQualifier, SymbolType::UserDefined);
-    if (!symbolTable.declareInterfaceBlock(interfaceBlock))
+    if (!symbolTable.declare(interfaceBlock))
     {
         error(nameLine, "redefinition of an interface block name", blockName);
     }
@@ -3826,7 +3826,7 @@ TIntermDeclaration *TParseContext::addInterfaceBlock(
 
             TVariable *fieldVariable =
                 new TVariable(&symbolTable, field->name(), fieldType, SymbolType::UserDefined);
-            if (!symbolTable.declareVariable(fieldVariable))
+            if (!symbolTable.declare(fieldVariable))
             {
                 error(field->line(), "redefinition of an interface block member name",
                       field->name());
@@ -3838,7 +3838,7 @@ TIntermDeclaration *TParseContext::addInterfaceBlock(
         checkIsNotReserved(instanceLine, instanceName);
 
         // add a symbol for this interface block
-        if (!symbolTable.declareVariable(instanceVariable))
+        if (!symbolTable.declare(instanceVariable))
         {
             error(instanceLine, "redefinition of an interface block instance name", instanceName);
         }
@@ -4778,7 +4778,7 @@ TTypeSpecifierNonArray TParseContext::addStructure(const TSourceLoc &structLine,
     if (structSymbolType != SymbolType::Empty)
     {
         checkIsNotReserved(nameLine, structName);
-        if (!symbolTable.declareStructType(structure))
+        if (!symbolTable.declare(structure))
         {
             error(nameLine, "redefinition of a struct", structName);
         }

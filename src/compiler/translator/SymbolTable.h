@@ -43,9 +43,7 @@
 namespace sh
 {
 
-// Define ESymbolLevel as int rather than an enum since level can go
-// above GLOBAL_LEVEL and cause atBuiltInLevel() to fail if the
-// compiler optimizes the >= of the last element to ==.
+// Define ESymbolLevel as int rather than an enum so that we can do arithmetic on it.
 typedef int ESymbolLevel;
 const int COMMON_BUILTINS    = 0;
 const int ESSL1_BUILTINS     = 1;
@@ -55,7 +53,6 @@ const int ESSL3_1_BUILTINS   = 3;
 // features in ANGLE's GLSL backend. They're not visible to the parser.
 const int GLSL_BUILTINS      = 4;
 const int LAST_BUILTIN_LEVEL = GLSL_BUILTINS;
-const int GLOBAL_LEVEL       = 5;
 
 struct UnmangledBuiltIn
 {
@@ -76,22 +73,16 @@ class TSymbolTable : angle::NonCopyable
 
     ~TSymbolTable();
 
-    // When the symbol table is initialized with the built-ins, there should
-    // 'push' calls, so that built-ins are at level 0 and the shader
-    // globals are at level 1.
-    bool isEmpty() const { return mTable.empty(); }
-    bool atBuiltInLevel() const { return currentLevel() <= LAST_BUILTIN_LEVEL; }
-    bool atGlobalLevel() const { return currentLevel() == GLOBAL_LEVEL; }
+    bool isEmpty() const;
+    bool atGlobalLevel() const;
 
     void push();
     void pop();
 
-    // The declare* entry points are used when parsing and declare symbols at the current scope.
-    // They return the created true in case the declaration was successful, and false if the
-    // declaration failed due to redefinition.
-    bool declareVariable(TVariable *variable);
-    bool declareStructType(TStructure *str);
-    bool declareInterfaceBlock(TInterfaceBlock *interfaceBlock);
+    // Declare a non-function symbol at the current scope. Return true in case the declaration was
+    // successful, and false if the declaration failed due to redefinition.
+    bool declare(TSymbol *symbol);
+
     // Functions are always declared at global scope.
     void declareUserDefinedFunction(TFunction *function, bool insertUnmangledName);
 
@@ -151,34 +142,24 @@ class TSymbolTable : angle::NonCopyable
 
     void pushBuiltInLevel();
 
-    ESymbolLevel currentLevel() const
-    {
-        return static_cast<ESymbolLevel>(mTable.size() + LAST_BUILTIN_LEVEL);
-    }
-
     // The insert* entry points are used when initializing the symbol table with built-ins.
-    // They return the created symbol / true in case the declaration was successful, and nullptr /
-    // false if the declaration failed due to redefinition.
-    TVariable *insertVariable(ESymbolLevel level, const ImmutableString &name, const TType *type);
+    void insertVariable(ESymbolLevel level, const ImmutableString &name, const TType *type);
     void insertVariableExt(ESymbolLevel level,
                            TExtension ext,
                            const ImmutableString &name,
                            const TType *type);
-    bool insertVariable(ESymbolLevel level, TVariable *variable);
-    bool insertStructType(ESymbolLevel level, TStructure *str);
-    bool insertInterfaceBlock(ESymbolLevel level, TInterfaceBlock *interfaceBlock);
 
     template <TPrecision precision>
-    bool insertConstInt(ESymbolLevel level, const ImmutableString &name, int value);
+    void insertConstInt(ESymbolLevel level, const ImmutableString &name, int value);
 
     template <TPrecision precision>
-    bool insertConstIntExt(ESymbolLevel level,
+    void insertConstIntExt(ESymbolLevel level,
                            TExtension ext,
                            const ImmutableString &name,
                            int value);
 
     template <TPrecision precision>
-    bool insertConstIvec3(ESymbolLevel level,
+    void insertConstIvec3(ESymbolLevel level,
                           const ImmutableString &name,
                           const std::array<int, 3> &values);
 
@@ -259,7 +240,7 @@ class TSymbolTable : angle::NonCopyable
                               const TType *type,
                               SymbolType symbolType);
 
-    bool insert(ESymbolLevel level, TSymbol *symbol);
+    void insertBuiltIn(ESymbolLevel level, const TSymbol *symbol);
 
     TFunction *findUserDefinedFunction(const ImmutableString &name) const;
 
