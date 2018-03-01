@@ -480,10 +480,16 @@ bool TType::canReplaceWithConstantUnion() const
 const char *TType::buildMangledName() const
 {
     TString mangledName;
+
     if (isMatrix())
-        mangledName += 'm';
-    else if (isVector())
-        mangledName += 'v';
+    {
+        mangledName += static_cast<char>('0' + getCols());
+        mangledName += static_cast<char>('0' + getRows());
+    }
+    else if (getNominalSize() > 1)
+    {
+        mangledName += static_cast<char>('0' + getNominalSize());
+    }
 
     const char *basicMangledName = GetBasicMangledName(type);
     if (basicMangledName != nullptr)
@@ -512,17 +518,6 @@ const char *TType::buildMangledName() const
                 UNREACHABLE();
                 break;
         }
-    }
-
-    if (isMatrix())
-    {
-        mangledName += static_cast<char>('0' + getCols());
-        mangledName += static_cast<char>('x');
-        mangledName += static_cast<char>('0' + getRows());
-    }
-    else
-    {
-        mangledName += static_cast<char>('0' + getNominalSize());
     }
 
     if (mArraySizes)

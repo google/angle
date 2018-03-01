@@ -143,7 +143,7 @@ constexpr const char *GetBasicMangledName(TBasicType t)
         case EbtBool:
             return "b";
         case EbtYuvCscStandardEXT:
-            return "ycs";
+            return "y";
         case EbtSampler2D:
             return "s2";
         case EbtSampler3D:
@@ -151,15 +151,15 @@ constexpr const char *GetBasicMangledName(TBasicType t)
         case EbtSamplerCube:
             return "sC";
         case EbtSampler2DArray:
-            return "s2a";
+            return "sA";
         case EbtSamplerExternalOES:
-            return "sext";
+            return "sX";
         case EbtSamplerExternal2DY2YEXT:
-            return "sext2y2y";
+            return "sY";
         case EbtSampler2DRect:
-            return "s2r";
+            return "sR";
         case EbtSampler2DMS:
-            return "s2ms";
+            return "sM";
         case EbtISampler2D:
             return "is2";
         case EbtISampler3D:
@@ -167,9 +167,9 @@ constexpr const char *GetBasicMangledName(TBasicType t)
         case EbtISamplerCube:
             return "isC";
         case EbtISampler2DArray:
-            return "is2a";
+            return "isA";
         case EbtISampler2DMS:
-            return "is2ms";
+            return "isM";
         case EbtUSampler2D:
             return "us2";
         case EbtUSampler3D:
@@ -177,41 +177,41 @@ constexpr const char *GetBasicMangledName(TBasicType t)
         case EbtUSamplerCube:
             return "usC";
         case EbtUSampler2DArray:
-            return "us2a";
+            return "usA";
         case EbtUSampler2DMS:
-            return "us2ms";
+            return "usM";
         case EbtSampler2DShadow:
             return "s2s";
         case EbtSamplerCubeShadow:
             return "sCs";
         case EbtSampler2DArrayShadow:
-            return "s2as";
+            return "sAs";
         case EbtImage2D:
-            return "im2";
+            return "I2";
         case EbtIImage2D:
-            return "iim2";
+            return "iI2";
         case EbtUImage2D:
-            return "uim2";
+            return "uI2";
         case EbtImage3D:
-            return "im3";
+            return "I3";
         case EbtIImage3D:
-            return "iim3";
+            return "iI3";
         case EbtUImage3D:
-            return "uim3";
+            return "uI3";
         case EbtImage2DArray:
-            return "im2a";
+            return "IA";
         case EbtIImage2DArray:
-            return "iim2a";
+            return "iIA";
         case EbtUImage2DArray:
-            return "uim2a";
+            return "uIA";
         case EbtImageCube:
-            return "imc";
+            return "Ic";
         case EbtIImageCube:
-            return "iimc";
+            return "iIc";
         case EbtUImageCube:
-            return "uimc";
+            return "uIc";
         case EbtAtomicCounter:
-            return "ac";
+            return "a";
         case EbtStruct:
         case EbtInterfaceBlock:
             return nullptr;

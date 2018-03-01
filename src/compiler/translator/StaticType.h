@@ -27,7 +27,7 @@ namespace Helpers
 
 // Size of the maximum possible constexpr-generated mangled name.
 // If this value is too small, the compiler will produce errors.
-static constexpr size_t kStaticMangledNameMaxLength = 10;
+static constexpr size_t kStaticMangledNameMaxLength = 5;
 
 // Type which holds the mangled names for constexpr-generated TTypes.
 // This simple struct is needed so that a char array can be returned by value.
@@ -50,15 +50,13 @@ constexpr StaticMangledName BuildStaticMangledName(TBasicType basicType,
     size_t at = 0;
 
     bool isMatrix = primarySize > 1 && secondarySize > 1;
-    bool isVector = primarySize > 1 && secondarySize == 1;
-
+    if (primarySize > 1)
+    {
+        name.name[at++] = '0' + primarySize;
+    }
     if (isMatrix)
     {
-        name.name[at++] = 'm';
-    }
-    else if (isVector)
-    {
-        name.name[at++] = 'v';
+        name.name[at++] = '0' + secondarySize;
     }
 
     {
@@ -67,13 +65,6 @@ constexpr StaticMangledName BuildStaticMangledName(TBasicType basicType,
         {
             name.name[at++] = basicMangledName[i];
         }
-    }
-
-    name.name[at++] = '0' + primarySize;
-    if (isMatrix)
-    {
-        name.name[at++] = 'x';
-        name.name[at++] = '0' + secondarySize;
     }
 
     name.name[at++] = ';';
