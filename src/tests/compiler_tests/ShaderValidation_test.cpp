@@ -5759,3 +5759,26 @@ TEST_F(FragmentShaderValidationTest, RedeclaringBuiltInFromAnotherShaderStage)
         FAIL() << "Shader compilation failed, expecting success:\n" << mInfoLog;
     }
 }
+
+// Test that standard derivative functions that are in core ESSL 3.00 compile successfully.
+TEST_F(FragmentShaderValidationTest, ESSL300StandardDerivatives)
+{
+    const std::string &shaderString =
+        R"(#version 300 es
+        precision mediump float;
+        in vec4 iv;
+        out vec4 my_FragColor;
+
+        void main()
+        {
+            vec4 v4 = vec4(0.0);
+            v4 += fwidth(iv);
+            v4 += dFdx(iv);
+            v4 += dFdy(iv);
+            my_FragColor = v4;
+        })";
+    if (!compile(shaderString))
+    {
+        FAIL() << "Shader compilation failed, expecting success:\n" << mInfoLog;
+    }
+}
