@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "ecbd3184_9cc4b5aa",
+        "filename": "src/libANGLE/ProgramLinkedResources.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 505,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-03-01T04:47:27Z",
+      "side": 1,
+      "message": "As compute shaders, the SPEC doesn\u0027t define a query on MAX_GEOMETRY_UNIFORM_VECTORS. We can only get maxGeometryUniformCompoments.\n1. [EXT_geometry_shader] \"New Tokens\"\n2. [OpenGL ES 3.2] Chapter 7.6 Page 101",
+      "parentUuid": "bdedc737_6e237412",
+      "range": {
+        "startLine": 505,
+        "startChar": 46,
+        "endLine": 505,
+        "endChar": 78
+      },
+      "revId": "636717071a092314a5f9986b6350e56dc30996d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "680e063d_017841cf",
         "filename": "src/libANGLE/ProgramLinkedResources.h",
         "patchSetId": 5
@@ -45,6 +69,30 @@
       "revId": "636717071a092314a5f9986b6350e56dc30996d8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c9e853bf_6b81fc3b",
+        "filename": "src/libANGLE/ProgramLinkedResources.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-03-01T04:47:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "680e063d_017841cf",
+      "range": {
+        "startLine": 85,
+        "startChar": 4,
+        "endLine": 90,
+        "endChar": 26
+      },
+      "revId": "636717071a092314a5f9986b6350e56dc30996d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
