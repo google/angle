@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "80f4eb64_1c911dc1",
+        "filename": "src/compiler/translator/SymbolTable.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 208,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-03-01T10:12:56Z",
+      "side": 1,
+      "message": "Removed superfluous \"static\" from the name here - there are no longer non-static built-in functions.",
+      "revId": "7c43a6157abf189f21bed9e3db50fde6aec21f13",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
