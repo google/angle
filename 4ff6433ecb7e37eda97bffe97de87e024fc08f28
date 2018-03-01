@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "7625eb3c_1ed5d9bc",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-03-01T22:03:13Z",
+      "side": 1,
+      "message": "Sure, though I don\u0027t feel that\u0027s an improvement for a value that\u0027s only used once.  Just makes you track down the constant, if you\u0027re curious about the value.",
+      "parentUuid": "77c2aaea_249ea8e3",
+      "range": {
+        "startLine": 72,
+        "startChar": 62,
+        "endLine": 73,
+        "endChar": 69
+      },
+      "revId": "4ff6433ecb7e37eda97bffe97de87e024fc08f28",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9a5ae77a_510bf02c",
         "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
         "patchSetId": 6
@@ -45,6 +69,30 @@
       "revId": "4ff6433ecb7e37eda97bffe97de87e024fc08f28",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1c5d5422_d3930fd3",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 309,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-03-01T22:03:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9a5ae77a_510bf02c",
+      "range": {
+        "startLine": 309,
+        "startChar": 53,
+        "endLine": 309,
+        "endChar": 79
+      },
+      "revId": "4ff6433ecb7e37eda97bffe97de87e024fc08f28",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "784075c5_05faaf46",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 313,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-03-01T22:03:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f809eafc_c8da43b1",
+      "range": {
+        "startLine": 312,
+        "startChar": 0,
+        "endLine": 313,
+        "endChar": 24
+      },
+      "revId": "4ff6433ecb7e37eda97bffe97de87e024fc08f28",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9932bffd_6e49fd7a",
         "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
         "patchSetId": 6
@@ -91,6 +163,30 @@
       "revId": "4ff6433ecb7e37eda97bffe97de87e024fc08f28",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c29f0169_49a1c002",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 315,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-03-01T22:03:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9932bffd_6e49fd7a",
+      "range": {
+        "startLine": 315,
+        "startChar": 8,
+        "endLine": 315,
+        "endChar": 15
+      },
+      "revId": "4ff6433ecb7e37eda97bffe97de87e024fc08f28",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "0780d399_fdb58a69",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 332,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-03-01T22:03:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b8828408_3bd60019",
+      "range": {
+        "startLine": 332,
+        "startChar": 7,
+        "endLine": 332,
+        "endChar": 35
+      },
+      "revId": "4ff6433ecb7e37eda97bffe97de87e024fc08f28",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bd24414c_f18f3153",
         "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
         "patchSetId": 6
@@ -137,6 +257,30 @@
       "revId": "4ff6433ecb7e37eda97bffe97de87e024fc08f28",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3d165ddf_30a09958",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 345,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-03-01T22:03:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bd24414c_f18f3153",
+      "range": {
+        "startLine": 345,
+        "startChar": 23,
+        "endLine": 345,
+        "endChar": 36
+      },
+      "revId": "4ff6433ecb7e37eda97bffe97de87e024fc08f28",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -211,6 +355,30 @@
     },
     {
       "key": {
+        "uuid": "efe1eb23_b07d7a8b",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-03-01T22:03:13Z",
+      "side": 1,
+      "message": "I\u0027m not a fan of auto either.  Seems like one-time laziness on the part of the author which results in having to figure out the type many times by many readers.  I did it because I copied existing code.\n\nAnyway, this code goes away in the next patch set.",
+      "parentUuid": "ad383d98_793d35d9",
+      "range": {
+        "startLine": 48,
+        "startChar": 4,
+        "endLine": 49,
+        "endChar": 62
+      },
+      "revId": "4ff6433ecb7e37eda97bffe97de87e024fc08f28",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6899e8fb_969812f2",
         "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
         "patchSetId": 6
@@ -231,6 +399,30 @@
       "revId": "4ff6433ecb7e37eda97bffe97de87e024fc08f28",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ea33fb42_c858c6ab",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-03-01T22:03:13Z",
+      "side": 1,
+      "message": "Yes, that\u0027s what I wanted.\nAnyway I\u0027ve decided against this check in the next patch set where we explicitly track client memory attribs.  Probably just as efficient to do zero iterations over that set.",
+      "parentUuid": "6899e8fb_969812f2",
+      "range": {
+        "startLine": 70,
+        "startChar": 8,
+        "endLine": 70,
+        "endChar": 33
+      },
+      "revId": "4ff6433ecb7e37eda97bffe97de87e024fc08f28",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
