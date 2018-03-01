@@ -429,8 +429,7 @@ if (angle_enable_vulkan) {
       "$angle_root/third_party/vulkan-validation-layers:vulkan_config",
     ]
     if (!is_android) {
-      deps +=
-          [ "$angle_root/third_party/vulkan-validation-layers:vulkan_loader" ]
+      deps += [ "$angle_root/third_party/vulkan-validation-layers:libvulkan" ]
       data_deps += [ "$angle_root/third_party/vulkan-validation-layers:vulkan_gen_json_files" ]
       public_configs += [ "$angle_root/third_party/vulkan-validation-layers:vulkan_loader_config" ]
     }

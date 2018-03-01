@@ -24,3 +24,14 @@ export TRACE_LIBGL="/usr/lib/libGL.so.1" # may require a different path
 apitrace trace -o mytrace ./out/Debug/hello_triangle
 qapitrace mytrace
 ```
+
+## Running ANGLE under GAPID on Linux
+
+[GAPID](https://github.com/google/gapid) can be used to capture trace of Vulkan commands on Linux.
+For it to work, libvulkan has to be a shared library, instead of being statically linked into ANGLE, which is the default behavior.
+This is done with the gn arg:
+```
+angle_shared_libvulkan = true
+```
+
+When capturing traces of gtest based tests built inside Chromium checkout, make sure to run the tests with `--single-process-tests` argument.

@@ -31,6 +31,7 @@ declare_args() {
         (current_cpu == "arm" && android32_ndk_api_level >= 24) ||
         (current_cpu == "arm64" && android64_ndk_api_level >= 24)
   }
+  angle_shared_libvulkan = false
 }
 
 declare_args() {
