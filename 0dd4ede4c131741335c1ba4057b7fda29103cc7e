@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "9cfad5cb_cbc188ee",
+        "filename": "src/libANGLE/Caps.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 891,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-01T04:23:35Z",
+      "side": 1,
+      "message": "Right. I meant rather it should be in both places - here, and a zero init in the constructor.",
+      "parentUuid": "bd9af985_3376165c",
+      "range": {
+        "startLine": 891,
+        "startChar": 13,
+        "endLine": 891,
+        "endChar": 34
+      },
+      "revId": "0dd4ede4c131741335c1ba4057b7fda29103cc7e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3c29c11b_c00f7186",
         "filename": "src/libANGLE/Caps.cpp",
         "patchSetId": 8
