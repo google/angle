@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "d2af1d3d_ed6790ca",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 982,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-03-01T14:57:49Z",
+      "side": 1,
+      "message": "Yes, the only one that will be left after the next patch is [1]",
+      "parentUuid": "ab65eaf2_4b8d60a7",
+      "range": {
+        "startLine": 982,
+        "startChar": 59,
+        "endLine": 982,
+        "endChar": 67
+      },
+      "revId": "35764eede030092f4b1e3dd5a2a39b89e31adde7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5caedb11_cd521515",
         "filename": "src/libANGLE/Context.cpp",
         "patchSetId": 12
@@ -36,6 +60,30 @@
       "writtenOn": "2018-03-01T04:38:16Z",
       "side": 1,
       "message": "how come the zero textures are allowed to be nullptr now?",
+      "range": {
+        "startLine": 2635,
+        "startChar": 12,
+        "endLine": 2635,
+        "endChar": 23
+      },
+      "revId": "35764eede030092f4b1e3dd5a2a39b89e31adde7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "db3f0694_28abb50b",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 2635,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-03-01T14:57:49Z",
+      "side": 1,
+      "message": "TextureMap became a specialization for angle::PackedEnumMap when it was an std::map before. `TextureMap mZeroTextures`. This makes it so all types of textures are present when before only the supported ones were present. We skip over non-supported and uninitialized types with this check.",
+      "parentUuid": "5caedb11_cd521515",
       "range": {
         "startLine": 2635,
         "startChar": 12,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "6fc9d29c_5e27c106",
+        "filename": "src/libANGLE/PackedGLEnums.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-03-01T14:57:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c74a5046_9f9b0321",
+      "range": {
+        "startLine": 5,
+        "startChar": 3,
+        "endLine": 5,
+        "endChar": 24
+      },
+      "revId": "35764eede030092f4b1e3dd5a2a39b89e31adde7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "deeb2449_dc03e5e4",
         "filename": "src/libANGLE/PackedGLEnums.cpp",
         "patchSetId": 12
@@ -85,6 +157,24 @@
       "revId": "35764eede030092f4b1e3dd5a2a39b89e31adde7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7fb65ae7_1d1ca2cc",
+        "filename": "src/libANGLE/PackedGLEnums.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-03-01T14:57:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "deeb2449_dc03e5e4",
+      "revId": "35764eede030092f4b1e3dd5a2a39b89e31adde7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -111,6 +201,47 @@
     },
     {
       "key": {
+        "uuid": "1fa1cf74_709cb946",
+        "filename": "src/libANGLE/packed_gl_enums.json",
+        "patchSetId": 12
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-03-01T14:57:49Z",
+      "side": 1,
+      "message": "Underscore was the nicest I found and it is safe to use because it is not followed by an uppercase letter. Ideally we want something that doesn\u0027t take much space visually so that the eyes skip over to the 2D part immediately.",
+      "parentUuid": "9e263455_40c1da9e",
+      "range": {
+        "startLine": 37,
+        "startChar": 9,
+        "endLine": 37,
+        "endChar": 12
+      },
+      "revId": "35764eede030092f4b1e3dd5a2a39b89e31adde7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "056c3d41_bedd03ee",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 2621,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-03-01T14:57:49Z",
+      "side": 1,
+      "message": "[1]",
+      "revId": "35764eede030092f4b1e3dd5a2a39b89e31adde7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f2cf61ac_0e0a83b0",
         "filename": "src/libANGLE/renderer/renderer_utils.h",
         "patchSetId": 12
@@ -122,6 +253,30 @@
       "writtenOn": "2018-03-01T04:38:16Z",
       "side": 1,
       "message": "this also on the list for upgrades?",
+      "range": {
+        "startLine": 258,
+        "startChar": 13,
+        "endLine": 258,
+        "endChar": 19
+      },
+      "revId": "35764eede030092f4b1e3dd5a2a39b89e31adde7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "84478486_3c7f8a0b",
+        "filename": "src/libANGLE/renderer/renderer_utils.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 258,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-03-01T14:57:49Z",
+      "side": 1,
+      "message": "Yes, but it was difficult to do without changing the backends so it is done in the follow-up patch.",
+      "parentUuid": "f2cf61ac_0e0a83b0",
       "range": {
         "startLine": 258,
         "startChar": 13,
