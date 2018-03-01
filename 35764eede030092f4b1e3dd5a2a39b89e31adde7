@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "c87fc0b2_581a7869",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 2635,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-01T18:59:45Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "db3f0694_28abb50b",
+      "range": {
+        "startLine": 2635,
+        "startChar": 12,
+        "endLine": 2635,
+        "endChar": 23
+      },
+      "revId": "35764eede030092f4b1e3dd5a2a39b89e31adde7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c74a5046_9f9b0321",
         "filename": "src/libANGLE/PackedGLEnums.cpp",
         "patchSetId": 12
@@ -213,6 +237,30 @@
       "side": 1,
       "message": "Underscore was the nicest I found and it is safe to use because it is not followed by an uppercase letter. Ideally we want something that doesn\u0027t take much space visually so that the eyes skip over to the 2D part immediately.",
       "parentUuid": "9e263455_40c1da9e",
+      "range": {
+        "startLine": 37,
+        "startChar": 9,
+        "endLine": 37,
+        "endChar": 12
+      },
+      "revId": "35764eede030092f4b1e3dd5a2a39b89e31adde7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a2a16a54_9fd223f2",
+        "filename": "src/libANGLE/packed_gl_enums.json",
+        "patchSetId": 12
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-01T18:59:45Z",
+      "side": 1,
+      "message": "Yeah. I agree in principle, but underscore naming rules are tricky to in c++, and you\u0027re left with an inconsistent pattern. How about just using Tex everywhere?\n\nTextureType::Tex2D\nTextureType::TexRectangle\n\netc.",
+      "parentUuid": "1fa1cf74_709cb946",
       "range": {
         "startLine": 37,
         "startChar": 9,
