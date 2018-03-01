@@ -45,6 +45,29 @@
       "revId": "c4385bd372f0b9ba5949d0ffb1f9be48b02a2900",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b05052b0_e12a7ff4",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/renderer9_utils.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-01T17:27:57Z",
+      "side": 1,
+      "message": "nit: RenderTarget9Array",
+      "range": {
+        "startLine": 27,
+        "startChar": 6,
+        "endLine": 27,
+        "endChar": 23
+      },
+      "revId": "c4385bd372f0b9ba5949d0ffb1f9be48b02a2900",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
