@@ -190,6 +190,30 @@
     },
     {
       "key": {
+        "uuid": "f10eb6fe_81b74084",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1345,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-03-01T20:37:14Z",
+      "side": 1,
+      "message": "See comment below, done.",
+      "parentUuid": "9d33e1bc_59fc485c",
+      "range": {
+        "startLine": 1345,
+        "startChar": 22,
+        "endLine": 1345,
+        "endChar": 37
+      },
+      "revId": "959297cda216d7beda8c2429ca626c450872b6c8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3d9b7453_c4473308",
         "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
         "patchSetId": 6
@@ -257,6 +281,30 @@
       "revId": "959297cda216d7beda8c2429ca626c450872b6c8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "66ca5681_61753a94",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1409,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-03-01T20:37:14Z",
+      "side": 1,
+      "message": "Fixed by adding an override on VertexArrayVk, this is temporary to have correct behavior until you make the refactoring you have in mind. I think this fixes your previous concern as well.",
+      "parentUuid": "61139058_3dde8879",
+      "range": {
+        "startLine": 1409,
+        "startChar": 35,
+        "endLine": 1409,
+        "endChar": 53
+      },
+      "revId": "959297cda216d7beda8c2429ca626c450872b6c8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
