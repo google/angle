@@ -163,6 +163,30 @@
     },
     {
       "key": {
+        "uuid": "d6a8495f_92f11545",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-01T21:06:55Z",
+      "side": 1,
+      "message": "I think this is a fine use of auto, Luc. We use this pattern for container classes with template arguments and I think it meets with the style guide.",
+      "parentUuid": "075b3a5c_0ca83634",
+      "range": {
+        "startLine": 48,
+        "startChar": 4,
+        "endLine": 49,
+        "endChar": 62
+      },
+      "revId": "4ff6433ecb7e37eda97bffe97de87e024fc08f28",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6899e8fb_969812f2",
         "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
         "patchSetId": 6
