@@ -187,6 +187,30 @@
     },
     {
       "key": {
+        "uuid": "ad383d98_793d35d9",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-03-01T21:14:58Z",
+      "side": 1,
+      "message": "When I went to see what the vector was I understood what it was instantly, but just looking at that, there is no clear indicator of the exact type.\n\nIf you do that everywhere for these specific places we can stay consistent, but I disagree that this is a good usage of auto in general. We should by default avoid auto, unless its specifically in the \"allowed\" sections of the guide:\n\nhttps://google.github.io/styleguide/cppguide.html#auto",
+      "parentUuid": "d6a8495f_92f11545",
+      "range": {
+        "startLine": 48,
+        "startChar": 4,
+        "endLine": 49,
+        "endChar": 62
+      },
+      "revId": "4ff6433ecb7e37eda97bffe97de87e024fc08f28",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6899e8fb_969812f2",
         "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
         "patchSetId": 6
