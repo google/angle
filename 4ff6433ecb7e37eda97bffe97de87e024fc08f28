@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "77c2aaea_249ea8e3",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-03-01T20:40:58Z",
+      "side": 1,
+      "message": "Can we make these 2 into constants? 1024 * 1024 and 1024*8",
+      "range": {
+        "startLine": 72,
+        "startChar": 62,
+        "endLine": 73,
+        "endChar": 69
+      },
+      "revId": "4ff6433ecb7e37eda97bffe97de87e024fc08f28",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "9a5ae77a_510bf02c",
         "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
         "patchSetId": 6
@@ -110,6 +133,29 @@
         "startChar": 23,
         "endLine": 345,
         "endChar": 36
+      },
+      "revId": "4ff6433ecb7e37eda97bffe97de87e024fc08f28",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "075b3a5c_0ca83634",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-03-01T20:40:58Z",
+      "side": 1,
+      "message": "Please use fully qualified type instead of auto since we do not see the type of these collections from just the getter names.",
+      "range": {
+        "startLine": 48,
+        "startChar": 4,
+        "endLine": 49,
+        "endChar": 62
       },
       "revId": "4ff6433ecb7e37eda97bffe97de87e024fc08f28",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
