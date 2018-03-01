@@ -1,0 +1,136 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ab65eaf2_4b8d60a7",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 982,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-01T04:38:16Z",
+      "side": 1,
+      "message": "all these will eventually be upgraded to the packed enum?",
+      "range": {
+        "startLine": 982,
+        "startChar": 59,
+        "endLine": 982,
+        "endChar": 67
+      },
+      "revId": "35764eede030092f4b1e3dd5a2a39b89e31adde7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5caedb11_cd521515",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 2635,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-01T04:38:16Z",
+      "side": 1,
+      "message": "how come the zero textures are allowed to be nullptr now?",
+      "range": {
+        "startLine": 2635,
+        "startChar": 12,
+        "endLine": 2635,
+        "endChar": 23
+      },
+      "revId": "35764eede030092f4b1e3dd5a2a39b89e31adde7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c74a5046_9f9b0321",
+        "filename": "src/libANGLE/PackedGLEnums.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-01T04:38:16Z",
+      "side": 1,
+      "message": "not autogen",
+      "range": {
+        "startLine": 5,
+        "startChar": 3,
+        "endLine": 5,
+        "endChar": 24
+      },
+      "revId": "35764eede030092f4b1e3dd5a2a39b89e31adde7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "deeb2449_dc03e5e4",
+        "filename": "src/libANGLE/PackedGLEnums.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-01T04:38:16Z",
+      "side": 1,
+      "message": "namespace comment.",
+      "revId": "35764eede030092f4b1e3dd5a2a39b89e31adde7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9e263455_40c1da9e",
+        "filename": "src/libANGLE/packed_gl_enums.json",
+        "patchSetId": 12
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-01T04:38:16Z",
+      "side": 1,
+      "message": "I\u0027m fine with any identifier that doesn\u0027t begin with E or underscore. Anything else is fine. (T2D, Tex2D, etc)",
+      "range": {
+        "startLine": 37,
+        "startChar": 9,
+        "endLine": 37,
+        "endChar": 12
+      },
+      "revId": "35764eede030092f4b1e3dd5a2a39b89e31adde7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f2cf61ac_0e0a83b0",
+        "filename": "src/libANGLE/renderer/renderer_utils.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 258,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-01T04:38:16Z",
+      "side": 1,
+      "message": "this also on the list for upgrades?",
+      "range": {
+        "startLine": 258,
+        "startChar": 13,
+        "endLine": 258,
+        "endChar": 19
+      },
+      "revId": "35764eede030092f4b1e3dd5a2a39b89e31adde7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
