@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "b6e2e053_4c99569a",
+        "filename": "src/libANGLE/Caps.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 891,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-03-01T16:40:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9cfad5cb_cbc188ee",
+      "range": {
+        "startLine": 891,
+        "startChar": 13,
+        "endLine": 891,
+        "endChar": 34
+      },
+      "revId": "0dd4ede4c131741335c1ba4057b7fda29103cc7e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3c29c11b_c00f7186",
         "filename": "src/libANGLE/Caps.cpp",
         "patchSetId": 8
@@ -96,6 +120,30 @@
     },
     {
       "key": {
+        "uuid": "b90620a9_239a8cd1",
+        "filename": "src/libANGLE/Caps.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1229,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-03-01T16:40:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3c29c11b_c00f7186",
+      "range": {
+        "startLine": 1228,
+        "startChar": 4,
+        "endLine": 1229,
+        "endChar": 44
+      },
+      "revId": "0dd4ede4c131741335c1ba4057b7fda29103cc7e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0774f44e_8cea6f04",
         "filename": "src/libANGLE/Caps.h",
         "patchSetId": 8
@@ -116,6 +164,30 @@
       "revId": "0dd4ede4c131741335c1ba4057b7fda29103cc7e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "539452c0_311c508a",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 587,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-03-01T16:40:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0774f44e_8cea6f04",
+      "range": {
+        "startLine": 587,
+        "startChar": 7,
+        "endLine": 587,
+        "endChar": 16
+      },
+      "revId": "0dd4ede4c131741335c1ba4057b7fda29103cc7e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
