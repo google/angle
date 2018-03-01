@@ -273,6 +273,30 @@
     },
     {
       "key": {
+        "uuid": "4d368f83_56763a23",
+        "filename": "src/libANGLE/packed_gl_enums.json",
+        "patchSetId": 12
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-03-01T20:29:17Z",
+      "side": 1,
+      "message": "The rules are that __ and _[A-Z] are reserved prefixes for identifiers. I could live with a Tex prefix even if it is a bit verbose, but how about the following, they\u0027re a bit weird:\n\n  gl::TextureType::TexCubeMap\n  gl::TextureTarget::TexCubeMapPositiveX",
+      "parentUuid": "a2a16a54_9fd223f2",
+      "range": {
+        "startLine": 37,
+        "startChar": 9,
+        "endLine": 37,
+        "endChar": 12
+      },
+      "revId": "35764eede030092f4b1e3dd5a2a39b89e31adde7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "056c3d41_bedd03ee",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 12
