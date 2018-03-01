@@ -77,6 +77,8 @@ class ObserverBinding final
     void onStateChange(const gl::Context *context, SubjectMessage message) const;
     void onSubjectReset();
 
+    const Subject *getSubject() const;
+
   private:
     Subject *mSubject;
     ObserverInterface *mObserver;

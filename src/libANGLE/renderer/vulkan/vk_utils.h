@@ -17,6 +17,7 @@
 #include "common/Optional.h"
 #include "common/debug.h"
 #include "libANGLE/Error.h"
+#include "libANGLE/Observer.h"
 #include "libANGLE/renderer/renderer_utils.h"
 
 #define ANGLE_GL_OBJECTS_X(PROC) \
@@ -680,7 +681,7 @@ Error AllocateImageMemory(RendererVk *renderer,
 // first/last vertex and the current commandBuffer. If the user wants to draw a loop between [v1,
 // v2, v3], we will create an indexed buffer with these indexes: [0, 1, 2, 3, 0] to emulate the
 // loop.
-class LineLoopHandler final : angle::NonCopyable
+class LineLoopHandler final : angle::NonCopyable, angle::ObserverInterface
 {
   public:
     LineLoopHandler();
@@ -699,7 +700,13 @@ class LineLoopHandler final : angle::NonCopyable
 
     ResourceVk *getLineLoopBufferResource();
 
+    // Observer interface implementation.
+    void onSubjectStateChange(const gl::Context *context,
+                              angle::SubjectIndex index,
+                              angle::SubjectMessage message) override;
+
   private:
+    angle::ObserverBinding mObserverBinding;
     std::unique_ptr<StreamingBuffer> mStreamingLineLoopIndicesData;
     VkBuffer mLineLoopIndexBuffer;
     VkDeviceSize mLineLoopIndexBufferOffset;

@@ -10,6 +10,7 @@
 #ifndef LIBANGLE_RENDERER_VULKAN_BUFFERVK_H_
 #define LIBANGLE_RENDERER_VULKAN_BUFFERVK_H_
 
+#include "libANGLE/Observer.h"
 #include "libANGLE/renderer/BufferImpl.h"
 #include "libANGLE/renderer/vulkan/vk_utils.h"
 
@@ -17,7 +18,7 @@ namespace rx
 {
 class RendererVk;
 
-class BufferVk : public BufferImpl, public ResourceVk
+class BufferVk : public BufferImpl, public ResourceVk, public angle::Subject
 {
   public:
     BufferVk(const gl::BufferState &state);

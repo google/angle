@@ -1330,7 +1330,8 @@ void GarbageObject::destroy(VkDevice device)
 }
 
 LineLoopHandler::LineLoopHandler()
-    : mStreamingLineLoopIndicesData(
+    : mObserverBinding(this, 0u),
+      mStreamingLineLoopIndicesData(
           new StreamingBuffer(VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
                               kLineLoopStreamingBufferMinSize)),
       mLineLoopIndexBuffer(VK_NULL_HANDLE),
@@ -1385,16 +1386,17 @@ gl::Error LineLoopHandler::createIndexBufferFromElementArrayBuffer(ContextVk *co
 {
     ASSERT(indexType == VK_INDEX_TYPE_UINT16 || indexType == VK_INDEX_TYPE_UINT32);
 
-    if (mLineLoopIndexBuffer != VK_NULL_HANDLE)
+    if (bufferVk == mObserverBinding.getSubject() && mLineLoopIndexBuffer != VK_NULL_HANDLE)
     {
         return gl::NoError();
     }
 
+    // We want to know if the bufferVk changes at any point in time, because if it does we need to
+    // recopy our data on the next call.
+    mObserverBinding.bind(bufferVk);
+
     uint32_t *indices = nullptr;
 
-    // TODO: Use the signal_utils to know when the user's bufferVk has changed and if it did we copy
-    // again. Otherwise if we already created that fake index buffer we keep it and avoid recopying
-    // every time.
     auto unitSize = (indexType == VK_INDEX_TYPE_UINT16 ? sizeof(uint16_t) : sizeof(uint32_t));
     ANGLE_TRY(mStreamingLineLoopIndicesData->allocate(
         contextVk, unitSize * (count + 1), reinterpret_cast<uint8_t **>(&indices),
@@ -1416,12 +1418,12 @@ gl::Error LineLoopHandler::createIndexBufferFromElementArrayBuffer(ContextVk *co
                               copies.data());
 
     ANGLE_TRY(mStreamingLineLoopIndicesData->flush(contextVk));
-
     return gl::NoError();
 }
 
 void LineLoopHandler::destroy(VkDevice device)
 {
+    mObserverBinding.reset();
     mStreamingLineLoopIndicesData->destroy(device);
 }
 
@@ -1437,6 +1439,17 @@ gl::Error LineLoopHandler::draw(int count, CommandBuffer *commandBuffer)
 ResourceVk *LineLoopHandler::getLineLoopBufferResource()
 {
     return mStreamingLineLoopIndicesData.get();
+}
+
+void LineLoopHandler::onSubjectStateChange(const gl::Context *context,
+                                           angle::SubjectIndex index,
+                                           angle::SubjectMessage message)
+{
+    // Indicate we want to recopy on next draw since something changed in the buffer.
+    if (message == angle::SubjectMessage::STATE_CHANGE)
+    {
+        mLineLoopIndexBuffer = VK_NULL_HANDLE;
+    }
 }
 }  // namespace vk
 
