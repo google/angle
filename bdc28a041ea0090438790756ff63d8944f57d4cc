@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "615b4659_52608f3f",
+        "filename": "BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-02T14:17:29Z",
+      "side": 1,
+      "message": "could you make this into a GN option? something like angle_use_extended_constexpr, and make it define ANGLE_CONSTEXPR14. Include a back-reference to this issue with a TODO to re-visit removing it in a year when you upgrade.",
+      "range": {
+        "startLine": 75,
+        "startChar": 5,
+        "endLine": 75,
+        "endChar": 16
+      },
+      "revId": "bdc28a041ea0090438790756ff63d8944f57d4cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a43cbcec_0ece4f7c",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-02T14:17:29Z",
+      "side": 1,
+      "message": "why are you adding static to these methods?",
+      "range": {
+        "startLine": 133,
+        "startChar": 12,
+        "endLine": 133,
+        "endChar": 19
+      },
+      "revId": "bdc28a041ea0090438790756ff63d8944f57d4cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "649af4ca_6d93003f",
+        "filename": "src/compiler/translator/ImmutableString.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-02T14:17:29Z",
+      "side": 1,
+      "message": "why did this need to be passed by reference?",
+      "range": {
+        "startLine": 51,
+        "startChar": 53,
+        "endLine": 51,
+        "endChar": 60
+      },
+      "revId": "bdc28a041ea0090438790756ff63d8944f57d4cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4d0c50b2_40c57a56",
+        "filename": "src/compiler/translator/StaticType.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-02T14:17:29Z",
+      "side": 1,
+      "message": "please also run git cl format.",
+      "range": {
+        "startLine": 41,
+        "startChar": 37,
+        "endLine": 41,
+        "endChar": 59
+      },
+      "revId": "bdc28a041ea0090438790756ff63d8944f57d4cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
