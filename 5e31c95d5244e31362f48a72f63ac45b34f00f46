@@ -105,6 +105,30 @@
       "revId": "5e31c95d5244e31362f48a72f63ac45b34f00f46",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a2455796_76784541",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 646,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-02T17:03:09Z",
+      "side": 1,
+      "message": "When the user calls BufferData we don\u0027t use the binding point they asked for (see BufferGL.cpp) so it\u0027s safe.",
+      "parentUuid": "1f3f28ad_81d99dae",
+      "range": {
+        "startLine": 642,
+        "startChar": 0,
+        "endLine": 646,
+        "endChar": 79
+      },
+      "revId": "5e31c95d5244e31362f48a72f63ac45b34f00f46",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
