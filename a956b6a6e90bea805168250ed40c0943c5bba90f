@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f655912d_f18f083f",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 270,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-02T19:46:54Z",
+      "side": 1,
+      "message": "I think I would prefer if we used nullptr to represent invalid - or at least checking if the code generation for this block does no extra work here when using a default optional. This is on the hyper-critical draw call path so we can do a bit of code tweaking to sacrifice style for speed.",
+      "range": {
+        "startLine": 270,
+        "startChar": 24,
+        "endLine": 270,
+        "endChar": 48
+      },
+      "revId": "a956b6a6e90bea805168250ed40c0943c5bba90f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a1bc12fe_32271f15",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-02T19:46:54Z",
+      "side": 1,
+      "message": "nit: need a more specific name - this is the elementArrayBufferOverride (can probably omit ReadResource, or just use Resource)",
+      "range": {
+        "startLine": 171,
+        "startChar": 47,
+        "endLine": 171,
+        "endChar": 67
+      },
+      "revId": "a956b6a6e90bea805168250ed40c0943c5bba90f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
