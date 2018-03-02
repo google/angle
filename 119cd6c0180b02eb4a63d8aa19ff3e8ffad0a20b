@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f54091e4_1be5b865",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 208,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-02T17:07:48Z",
+      "side": 1,
+      "message": "maybe instead pass the elementArrayOverrideResource to setupDraw - saves on at least one \"if\" (here you could have to set mVertexArrayDirty || override)",
+      "range": {
+        "startLine": 202,
+        "startChar": 29,
+        "endLine": 208,
+        "endChar": 9
+      },
+      "revId": "119cd6c0180b02eb4a63d8aa19ff3e8ffad0a20b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b86852c7_6a77085d",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 1358,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-02T17:07:48Z",
+      "side": 1,
+      "message": "I don\u0027t see anywhere this is anything but HOST_VISIBLE - did I miss it, or did you expose this parameter for another reason?",
+      "range": {
+        "startLine": 1358,
+        "startChar": 23,
+        "endLine": 1358,
+        "endChar": 58
+      },
+      "revId": "119cd6c0180b02eb4a63d8aa19ff3e8ffad0a20b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eef31ef1_fb74cdc1",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 1439,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-02T17:07:48Z",
+      "side": 1,
+      "message": "generally prefer to avoid returning non-const \u0026 - return a pointer if it\u0027s mutable or a const\u0026 if it\u0027s not. We do have some exceptions to this rule, but shouldn\u0027t be necessary here.",
+      "range": {
+        "startLine": 1439,
+        "startChar": 0,
+        "endLine": 1439,
+        "endChar": 12
+      },
+      "revId": "119cd6c0180b02eb4a63d8aa19ff3e8ffad0a20b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
