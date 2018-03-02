@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "2466d3bf_48e10a1e",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2414,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-02T14:50:52Z",
+      "side": 1,
+      "message": "It can. When you bind to GL_FRAMEBUFFER, it implicitly updates READ and DRAW. Also a single FBO can individually be set to READ/DRAW.",
+      "parentUuid": "49e140fd_b6cfecbb",
+      "range": {
+        "startLine": 2409,
+        "startChar": 3,
+        "endLine": 2414,
+        "endChar": 5
+      },
+      "revId": "c4385bd372f0b9ba5949d0ffb1f9be48b02a2900",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "52961c0b_63939504",
         "filename": "src/libANGLE/renderer/d3d/EGLImageD3D.cpp",
         "patchSetId": 7
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "e4ca4088_039b64ea",
+        "filename": "src/libANGLE/renderer/d3d/EGLImageD3D.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-02T14:50:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "52961c0b_63939504",
+      "range": {
+        "startLine": 83,
+        "startChar": 9,
+        "endLine": 83,
+        "endChar": 38
+      },
+      "revId": "c4385bd372f0b9ba5949d0ffb1f9be48b02a2900",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b05052b0_e12a7ff4",
         "filename": "src/libANGLE/renderer/d3d/d3d9/renderer9_utils.h",
         "patchSetId": 7
@@ -68,6 +116,30 @@
       "revId": "c4385bd372f0b9ba5949d0ffb1f9be48b02a2900",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c34ed9c7_ae9d337a",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/renderer9_utils.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-02T14:50:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b05052b0_e12a7ff4",
+      "range": {
+        "startLine": 27,
+        "startChar": 6,
+        "endLine": 27,
+        "endChar": 23
+      },
+      "revId": "c4385bd372f0b9ba5949d0ffb1f9be48b02a2900",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
