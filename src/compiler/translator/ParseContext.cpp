@@ -11,8 +11,10 @@
 
 #include "common/mathutil.h"
 #include "compiler/preprocessor/SourceLocation.h"
+#include "compiler/translator/BuiltIn_autogen.h"
 #include "compiler/translator/Declarator.h"
 #include "compiler/translator/IntermNode_util.h"
+#include "compiler/translator/ParseContext_autogen.h"
 #include "compiler/translator/StaticType.h"
 #include "compiler/translator/ValidateGlobalInitializer.h"
 #include "compiler/translator/ValidateSwitch.h"
@@ -32,33 +34,6 @@ namespace
 {
 
 const int kWebGLMaxStructNesting = 4;
-
-constexpr const ImmutableString kTexelFetchOffsetName("texelFetchOffset");
-constexpr const ImmutableString kTextureLodOffsetName("textureLodOffset");
-constexpr const ImmutableString kTextureProjLodOffsetName("textureProjLodOffset");
-constexpr const ImmutableString kTextureGradOffsetName("textureGradOffset");
-constexpr const ImmutableString kTextureProjGradOffsetName("textureProjGradOffset");
-constexpr const ImmutableString kTextureOffsetName("textureOffset");
-constexpr const ImmutableString kTextureProjOffsetName("textureProjOffset");
-constexpr const ImmutableString kTextureGatherName("textureGather");
-constexpr const ImmutableString kTextureGatherOffsetName("textureGatherOffset");
-
-constexpr const std::array<ImmutableString, 8> kAtomicBuiltin = {
-    {ImmutableString("atomicAdd"), ImmutableString("atomicMin"), ImmutableString("atomicMax"),
-     ImmutableString("atomicAnd"), ImmutableString("atomicOr"), ImmutableString("atomicXor"),
-     ImmutableString("atomicExchange"), ImmutableString("atomicCompSwap")}};
-
-bool IsAtomicBuiltin(const ImmutableString &name)
-{
-    for (size_t i = 0; i < kAtomicBuiltin.size(); ++i)
-    {
-        if (name == kAtomicBuiltin[i])
-        {
-            return true;
-        }
-    }
-    return false;
-}
 
 bool ContainsSampler(const TStructure *structType);
 
@@ -5499,11 +5474,10 @@ TIntermBranch *TParseContext::addBranch(TOperator op,
 void TParseContext::checkTextureGather(TIntermAggregate *functionCall)
 {
     ASSERT(functionCall->getOp() == EOpCallBuiltInFunction);
-    const ImmutableString &name = functionCall->getFunction()->name();
-    bool isTextureGather        = name == kTextureGatherName;
-    bool isTextureGatherOffset  = name == kTextureGatherOffsetName;
-    if (isTextureGather || isTextureGatherOffset)
+    const TFunction *func = functionCall->getFunction();
+    if (BuiltInGroup::isTextureGather(func))
     {
+        bool isTextureGatherOffset = BuiltInGroup::isTextureGatherOffset(func);
         TIntermNode *componentNode = nullptr;
         TIntermSequence *arguments = functionCall->getSequence();
         ASSERT(arguments->size() >= 2u && arguments->size() <= 4u);
@@ -5517,7 +5491,7 @@ void TParseContext::checkTextureGather(TIntermAggregate *functionCall)
             case EbtSampler2DArray:
             case EbtISampler2DArray:
             case EbtUSampler2DArray:
-                if ((isTextureGather && arguments->size() == 3u) ||
+                if ((!isTextureGatherOffset && arguments->size() == 3u) ||
                     (isTextureGatherOffset && arguments->size() == 4u))
                 {
                     componentNode = arguments->back();
@@ -5547,14 +5521,15 @@ void TParseContext::checkTextureGather(TIntermAggregate *functionCall)
             if (componentNode->getAsTyped()->getQualifier() != EvqConst || !componentConstantUnion)
             {
                 error(functionCall->getLine(), "Texture component must be a constant expression",
-                      name);
+                      func->name());
             }
             else
             {
                 int component = componentConstantUnion->getIConst(0);
                 if (component < 0 || component > 3)
                 {
-                    error(functionCall->getLine(), "Component must be in the range [0;3]", name);
+                    error(functionCall->getLine(), "Component must be in the range [0;3]",
+                          func->name());
                 }
             }
         }
@@ -5564,23 +5539,21 @@ void TParseContext::checkTextureGather(TIntermAggregate *functionCall)
 void TParseContext::checkTextureOffsetConst(TIntermAggregate *functionCall)
 {
     ASSERT(functionCall->getOp() == EOpCallBuiltInFunction);
-    const ImmutableString &name            = functionCall->getFunction()->name();
+    const TFunction *func                  = functionCall->getFunction();
     TIntermNode *offset        = nullptr;
     TIntermSequence *arguments = functionCall->getSequence();
     bool useTextureGatherOffsetConstraints = false;
-    if (name == kTexelFetchOffsetName || name == kTextureLodOffsetName ||
-        name == kTextureProjLodOffsetName || name == kTextureGradOffsetName ||
-        name == kTextureProjGradOffsetName)
+    if (BuiltInGroup::isTextureOffsetNoBias(func))
     {
         offset = arguments->back();
     }
-    else if (name == kTextureOffsetName || name == kTextureProjOffsetName)
+    else if (BuiltInGroup::isTextureOffsetBias(func))
     {
-        // A bias parameter might follow the offset parameter.
+        // A bias parameter follows the offset parameter.
         ASSERT(arguments->size() >= 3);
         offset = (*arguments)[2];
     }
-    else if (name == kTextureGatherOffsetName)
+    else if (BuiltInGroup::isTextureGatherOffset(func))
     {
         ASSERT(arguments->size() >= 3u);
         const TIntermTyped *sampler = arguments->front()->getAsTyped();
@@ -5610,7 +5583,8 @@ void TParseContext::checkTextureOffsetConst(TIntermAggregate *functionCall)
         TIntermConstantUnion *offsetConstantUnion = offset->getAsConstantUnion();
         if (offset->getAsTyped()->getQualifier() != EvqConst || !offsetConstantUnion)
         {
-            error(functionCall->getLine(), "Texture offset must be a constant expression", name);
+            error(functionCall->getLine(), "Texture offset must be a constant expression",
+                  func->name());
         }
         else
         {
@@ -5640,8 +5614,8 @@ void TParseContext::checkTextureOffsetConst(TIntermAggregate *functionCall)
 void TParseContext::checkAtomicMemoryBuiltinFunctions(TIntermAggregate *functionCall)
 {
     ASSERT(functionCall->getOp() == EOpCallBuiltInFunction);
-    const ImmutableString &functionName = functionCall->getFunction()->name();
-    if (IsAtomicBuiltin(functionName))
+    const TFunction *func = functionCall->getFunction();
+    if (BuiltInGroup::isAtomicMemory(func))
     {
         TIntermSequence *arguments = functionCall->getSequence();
         TIntermTyped *memNode      = (*arguments)[0]->getAsTyped();
@@ -5663,7 +5637,7 @@ void TParseContext::checkAtomicMemoryBuiltinFunctions(TIntermAggregate *function
         error(memNode->getLine(),
               "The value passed to the mem argument of an atomic memory function does not "
               "correspond to a buffer or shared variable.",
-              functionName);
+              func->name());
     }
 }
 
@@ -5672,15 +5646,16 @@ void TParseContext::checkImageMemoryAccessForBuiltinFunctions(TIntermAggregate *
 {
     ASSERT(functionCall->getOp() == EOpCallBuiltInFunction);
 
-    if (functionCall->getFunction()->isImageFunction())
+    const TFunction *func = functionCall->getFunction();
+
+    if (BuiltInGroup::isImage(func))
     {
-        const ImmutableString &name = functionCall->getFunction()->name();
         TIntermSequence *arguments = functionCall->getSequence();
         TIntermTyped *imageNode    = (*arguments)[0]->getAsTyped();
 
         const TMemoryQualifier &memoryQualifier = imageNode->getMemoryQualifier();
 
-        if (strcmp(name.data() + 5u, "Store") == 0)
+        if (BuiltInGroup::isImageStore(func))
         {
             if (memoryQualifier.readonly)
             {
@@ -5689,7 +5664,7 @@ void TParseContext::checkImageMemoryAccessForBuiltinFunctions(TIntermAggregate *
                       GetImageArgumentToken(imageNode));
             }
         }
-        else if (strcmp(name.data() + 5u, "Load") == 0)
+        else if (BuiltInGroup::isImageLoad(func))
         {
             if (memoryQualifier.writeonly)
             {

@@ -163,6 +163,7 @@ generators = {
         ],
         'outputs': [
             'src/compiler/translator/BuiltIn_autogen.h',
+            'src/compiler/translator/ParseContext_autogen.h',
             'src/compiler/translator/SymbolTable_autogen.cpp',
             'src/tests/compiler_tests/ImmutableString_test_autogen.cpp',
         ],

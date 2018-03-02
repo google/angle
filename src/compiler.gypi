@@ -105,6 +105,7 @@
             'compiler/translator/ParamType.h',
             'compiler/translator/ParseContext.cpp',
             'compiler/translator/ParseContext.h',
+            'compiler/translator/ParseContext_autogen.h',
             'compiler/translator/PoolAlloc.cpp',
             'compiler/translator/PoolAlloc.h',
             'compiler/translator/Pragma.h',

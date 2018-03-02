@@ -377,7 +377,7 @@ GROUP BEGIN TextureESSL300
     float textureProjGrad(sampler2DShadow, vec4, vec2, vec2);
 GROUP END TextureESSL300
 
-GROUP BEGIN TextureOffsetNoBias
+GROUP BEGIN TextureOffsetNoBias {"queryFunction": true}
   DEFAULT METADATA {"level": "ESSL3_BUILTINS", "op": "CallBuiltInFunction"}
     gvec4 textureOffset(gsampler2D, vec2, ivec2);
     gvec4 textureOffset(gsampler3D, vec3, ivec3);
@@ -409,7 +409,7 @@ GROUP BEGIN TextureOffsetNoBias
     float textureProjGradOffset(sampler2DShadow, vec4, vec2, vec2, ivec2);
 GROUP END TextureOffsetNoBias
 
-GROUP BEGIN TextureOffsetBias {"condition": "shaderType == GL_FRAGMENT_SHADER"}
+GROUP BEGIN TextureOffsetBias {"queryFunction": true, "condition": "shaderType == GL_FRAGMENT_SHADER"}
   DEFAULT METADATA {"level": "ESSL3_BUILTINS", "op": "CallBuiltInFunction"}
     gvec4 textureOffset(gsampler2D, vec2, ivec2, float);
     gvec4 textureOffset(gsampler3D, vec3, ivec3, float);
@@ -468,7 +468,7 @@ GROUP BEGIN TexelFetchMS
     gvec4 texelFetch(gsampler2DMS, ivec2, int);
 GROUP END TexelFetchMS
 
-GROUP BEGIN TextureGather
+GROUP BEGIN TextureGather {"queryFunction": true}
   DEFAULT METADATA {"level": "ESSL3_1_BUILTINS", "op": "CallBuiltInFunction"}
     gvec4 textureGather(gsampler2D, vec2);
     gvec4 textureGather(gsampler2D, vec2, int);
@@ -483,7 +483,7 @@ GROUP BEGIN TextureGather
     vec4 textureGather(samplerCubeShadow, vec3);
     vec4 textureGather(samplerCubeShadow, vec3, float);
 
-    GROUP BEGIN Offset
+    GROUP BEGIN Offset {"queryFunction": true}
         gvec4 textureGatherOffset(gsampler2D, vec2, ivec2);
         gvec4 textureGatherOffset(gsampler2D, vec2, ivec2, int);
         gvec4 textureGatherOffset(gsampler2DArray, vec3, ivec2);
@@ -507,7 +507,7 @@ GROUP BEGIN AtomicCounter
     uint atomicCounterDecrement(atomic_uint);
 GROUP END AtomicCounter
 
-GROUP BEGIN AtomicMemory
+GROUP BEGIN AtomicMemory {"queryFunction": true}
   DEFAULT METADATA {"level": "ESSL3_1_BUILTINS", "op": "CallBuiltInFunction"}
     uint atomicAdd(inout uint, uint);
     int atomicAdd(inout int, int);
@@ -527,15 +527,15 @@ GROUP BEGIN AtomicMemory
     int atomicCompSwap(inout int, int, int);
 GROUP END AtomicMemory
 
-GROUP BEGIN Image
+GROUP BEGIN Image {"queryFunction": true}
   DEFAULT METADATA {"level": "ESSL3_1_BUILTINS", "op": "CallBuiltInFunction"}
-    GROUP BEGIN Store
+    GROUP BEGIN Store {"queryFunction": true}
         void imageStore(gimage2D, ivec2, gvec4);
         void imageStore(gimage3D, ivec3, gvec4);
         void imageStore(gimage2DArray, ivec3, gvec4);
         void imageStore(gimageCube, ivec3, gvec4);
     GROUP END Store
-    GROUP BEGIN Load
+    GROUP BEGIN Load {"queryFunction": true}
         gvec4 imageLoad(gimage2D, ivec2);
         gvec4 imageLoad(gimage3D, ivec3);
         gvec4 imageLoad(gimage2DArray, ivec3);
