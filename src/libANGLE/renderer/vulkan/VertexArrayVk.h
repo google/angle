@@ -28,8 +28,8 @@ class VertexArrayVk : public VertexArrayImpl
 
     gl::Error streamVertexData(ContextVk *context,
                                StreamingBuffer *stream,
-                               int firstVertex,
-                               int lastVertex);
+                               size_t firstVertex,
+                               size_t lastVertex);
     void syncState(const gl::Context *context,
                    const gl::VertexArray::DirtyBits &dirtyBits) override;
 
@@ -65,6 +65,10 @@ class VertexArrayVk : public VertexArrayImpl
     gl::AttributesMask mDirtyPackedInputs;
     vk::VertexInputBindings mPackedInputBindings;
     vk::VertexInputAttributes mPackedInputAttributes;
+
+    // Which attributes need to be copied from client memory.
+    // TODO(jmadill): Move this to VertexArrayState. http://anglebug.com/2389
+    gl::AttributesMask mClientMemoryAttribs;
 };
 
 }  // namespace rx

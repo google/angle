@@ -45,45 +45,44 @@ void VertexArrayVk::destroy(const gl::Context *context)
 
 gl::Error VertexArrayVk::streamVertexData(ContextVk *context,
                                           StreamingBuffer *stream,
-                                          int firstVertex,
-                                          int lastVertex)
+                                          size_t firstVertex,
+                                          size_t lastVertex)
 {
     const auto &attribs          = mState.getVertexAttributes();
     const auto &bindings         = mState.getVertexBindings();
     const gl::Program *programGL = context->getGLState().getProgram();
+    const gl::AttributesMask attribsToStream =
+        mClientMemoryAttribs & programGL->getActiveAttribLocationsMask();
 
     // TODO(fjhenigman): When we have a bunch of interleaved attributes, they end up
     // un-interleaved, wasting space and copying time.  Consider improving on that.
-    for (auto attribIndex : programGL->getActiveAttribLocationsMask())
+    for (auto attribIndex : attribsToStream)
     {
-        const auto &attrib   = attribs[attribIndex];
-        const auto &binding  = bindings[attrib.bindingIndex];
-        gl::Buffer *bufferGL = binding.getBuffer().get();
+        const gl::VertexAttribute &attrib = attribs[attribIndex];
+        const gl::VertexBinding &binding  = bindings[attrib.bindingIndex];
+        ASSERT(attrib.enabled && binding.getBuffer().get() == nullptr);
 
-        if (attrib.enabled && !bufferGL)
+        // TODO(fjhenigman): Work with more formats than just GL_FLOAT.
+        if (attrib.type != GL_FLOAT)
         {
-            // TODO(fjhenigman): Work with more formats than just GL_FLOAT.
-            if (attrib.type != GL_FLOAT)
-            {
-                UNIMPLEMENTED();
-                return gl::InternalError();
-            }
-
-            // Only [firstVertex, lastVertex] is needed by the upcoming draw so that
-            // is all we copy, but we allocate space for [0, lastVertex] so indexing
-            // will work.  If we don't start at zero all the indices will be off.
-            // TODO(fjhenigman): See if we can account for indices being off by adjusting
-            // the offset, thus avoiding wasted memory.
-            const size_t firstByte = firstVertex * binding.getStride();
-            const size_t lastByte =
-                lastVertex * binding.getStride() + gl::ComputeVertexAttributeTypeSize(attrib);
-            uint8_t *dst = nullptr;
-            ANGLE_TRY(stream->allocate(context, lastByte, &dst,
-                                       &mCurrentArrayBufferHandles[attribIndex],
-                                       &mCurrentArrayBufferOffsets[attribIndex]));
-            memcpy(dst + firstByte, static_cast<const uint8_t *>(attrib.pointer) + firstByte,
-                   lastByte - firstByte);
+            UNIMPLEMENTED();
+            return gl::InternalError();
         }
+
+        // Only [firstVertex, lastVertex] is needed by the upcoming draw so that
+        // is all we copy, but we allocate space for [0, lastVertex] so indexing
+        // will work.  If we don't start at zero all the indices will be off.
+        // TODO(fjhenigman): See if we can account for indices being off by adjusting
+        // the offset, thus avoiding wasted memory.
+        const size_t firstByte = firstVertex * binding.getStride();
+        const size_t lastByte =
+            lastVertex * binding.getStride() + gl::ComputeVertexAttributeTypeSize(attrib);
+        uint8_t *dst = nullptr;
+        ANGLE_TRY(stream->allocate(context, lastByte, &dst,
+                                   &mCurrentArrayBufferHandles[attribIndex],
+                                   &mCurrentArrayBufferOffsets[attribIndex]));
+        memcpy(dst + firstByte, static_cast<const uint8_t *>(attrib.pointer) + firstByte,
+               lastByte - firstByte);
     }
 
     ANGLE_TRY(stream->flush(context));
@@ -137,17 +136,20 @@ void VertexArrayVk::syncState(const gl::Context *context,
                 BufferVk *bufferVk                        = vk::GetImpl(bufferGL);
                 mCurrentArrayBufferResources[attribIndex] = bufferVk;
                 mCurrentArrayBufferHandles[attribIndex]   = bufferVk->getVkBuffer().getHandle();
+                mClientMemoryAttribs.reset(attribIndex);
             }
             else
             {
                 mCurrentArrayBufferResources[attribIndex] = nullptr;
                 mCurrentArrayBufferHandles[attribIndex]   = VK_NULL_HANDLE;
+                mClientMemoryAttribs.set(attribIndex);
             }
             // TODO(jmadill): Offset handling.  Assume zero for now.
             mCurrentArrayBufferOffsets[attribIndex] = 0;
         }
         else
         {
+            mClientMemoryAttribs.reset(attribIndex);
             UNIMPLEMENTED();
         }
     }
