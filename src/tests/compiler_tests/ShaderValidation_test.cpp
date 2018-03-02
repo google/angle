@@ -5782,3 +5782,58 @@ TEST_F(FragmentShaderValidationTest, ESSL300StandardDerivatives)
         FAIL() << "Shader compilation failed, expecting success:\n" << mInfoLog;
     }
 }
+
+// Test that vertex shader built-in gl_Position is not accessible in fragment shader.
+TEST_F(FragmentShaderValidationTest, GlPosition)
+{
+    const std::string &shaderString =
+        R"(#version 300 es
+        precision mediump float;
+        in vec4 iv;
+        out vec4 my_FragColor;
+
+        void main()
+        {
+            gl_Position = iv;
+            my_FragColor = iv;
+        })";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}
+
+// Test that compute shader built-in gl_LocalInvocationID is not accessible in fragment shader.
+TEST_F(FragmentShaderValidationTest, GlLocalInvocationID)
+{
+    const std::string &shaderString =
+        R"(#version 310 es
+        precision mediump float;
+        out vec3 my_FragColor;
+
+        void main()
+        {
+            my_FragColor = vec3(gl_LocalInvocationID);
+        })";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}
+
+// Test that fragment shader built-in gl_FragCoord is not accessible in vertex shader.
+TEST_F(VertexShaderValidationTest, GlFragCoord)
+{
+    const std::string &shaderString =
+        R"(#version 300 es
+        precision mediump float;
+
+        void main()
+        {
+            gl_Position = vec4(gl_FragCoord);
+        })";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}
