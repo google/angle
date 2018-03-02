@@ -2660,13 +2660,17 @@ bool Program::ValidateGraphicsInterfaceBlocks(
                 return false;
             }
         }
-        else
+
+        // [OpenGL ES 3.1] Chapter 7.6.2 Page 105:
+        // If a uniform block is used by multiple shader stages, each such use counts separately
+        // against this combined limit.
+        // [OpenGL ES 3.1] Chapter 7.8 Page 111:
+        // If a shader storage block in a program is referenced by multiple shaders, each such
+        // reference counts separately against this combined limit.
+        if (fragmentInterfaceBlock.staticUse ||
+            fragmentInterfaceBlock.layout != sh::BLOCKLAYOUT_PACKED)
         {
-            if (fragmentInterfaceBlock.staticUse ||
-                fragmentInterfaceBlock.layout != sh::BLOCKLAYOUT_PACKED)
-            {
-                blockCount += std::max(fragmentInterfaceBlock.arraySize, 1u);
-            }
+            blockCount += std::max(fragmentInterfaceBlock.arraySize, 1u);
         }
     }
 

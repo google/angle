@@ -85,7 +85,6 @@ TEST_P(ShaderStorageBufferTest31, ExceedMaxVertexShaderStorageBlocks)
 
 // Linking should fail if the sum of the number of active shader storage blocks exceeds
 // MAX_COMBINED_SHADER_STORAGE_BLOCKS.
-// This case may generate linking error due to exceeding MAX_FRAGMENT_SHADER_STORAGE_BLOCKS.
 TEST_P(ShaderStorageBufferTest31, ExceedMaxCombinedShaderStorageBlocks)
 {
     std::ostringstream vertexInstanceCount;
@@ -93,13 +92,25 @@ TEST_P(ShaderStorageBufferTest31, ExceedMaxCombinedShaderStorageBlocks)
     glGetIntegerv(GL_MAX_VERTEX_SHADER_STORAGE_BLOCKS, &maxVertexShaderStorageBlocks);
     vertexInstanceCount << maxVertexShaderStorageBlocks;
 
+    GLint maxFragmentShaderStorageBlocks = 0;
+    glGetIntegerv(GL_MAX_FRAGMENT_SHADER_STORAGE_BLOCKS, &maxFragmentShaderStorageBlocks);
+
     GLint maxCombinedShaderStorageBlocks = 0;
     glGetIntegerv(GL_MAX_COMBINED_SHADER_STORAGE_BLOCKS, &maxCombinedShaderStorageBlocks);
     EXPECT_GL_NO_ERROR();
 
-    std::ostringstream fragmentInstanceCount;
+    ASSERT_GE(maxCombinedShaderStorageBlocks, maxVertexShaderStorageBlocks);
+    ASSERT_GE(maxCombinedShaderStorageBlocks, maxFragmentShaderStorageBlocks);
+
+    // As SPEC allows MAX_VERTEX_SHADER_STORAGE_BLOCKS and MAX_FRAGMENT_SHADER_STORAGE_BLOCKS to be
+    // 0, in this situation we should skip this test to prevent these unexpected compile errors.
+    ANGLE_SKIP_TEST_IF(maxVertexShaderStorageBlocks == 0 || maxFragmentShaderStorageBlocks == 0);
+
     GLint fragmentShaderStorageBlocks =
         maxCombinedShaderStorageBlocks - maxVertexShaderStorageBlocks + 1;
+    ANGLE_SKIP_TEST_IF(fragmentShaderStorageBlocks > maxFragmentShaderStorageBlocks);
+
+    std::ostringstream fragmentInstanceCount;
     fragmentInstanceCount << fragmentShaderStorageBlocks;
 
     const std::string &vertexShaderSource =
