@@ -93,6 +93,7 @@
             '<(angle_path)/src/tests/compiler_tests/ShaderValidation_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/ShaderVariable_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/ShCompile_test.cpp',
+            '<(angle_path)/src/tests/compiler_tests/TextureFunction_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/Type_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/TypeTracking_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/UnfoldShortCircuitAST_test.cpp',

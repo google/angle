@@ -33,7 +33,7 @@ namespace
 
 const int kWebGLMaxStructNesting = 4;
 
-constexpr const ImmutableString kTexelFetchOffsetName("texelFetchOffsetName");
+constexpr const ImmutableString kTexelFetchOffsetName("texelFetchOffset");
 constexpr const ImmutableString kTextureLodOffsetName("textureLodOffset");
 constexpr const ImmutableString kTextureProjLodOffsetName("textureProjLodOffset");
 constexpr const ImmutableString kTextureGradOffsetName("textureGradOffset");
