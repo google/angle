@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "736ffd32_d003d328",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 194,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-02T02:18:18Z",
+      "side": 1,
+      "message": "nit: please put in the cpp file in an anonymous namespace.",
+      "range": {
+        "startLine": 193,
+        "startChar": 0,
+        "endLine": 194,
+        "endChar": 64
+      },
+      "revId": "b02f3bbdf4ef8d77250eb5993c067503df2e87e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "30515503_28384bc4",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-02T02:18:18Z",
+      "side": 1,
+      "message": "nice improvement.",
+      "range": {
+        "startLine": 61,
+        "startChar": 4,
+        "endLine": 61,
+        "endChar": 49
+      },
+      "revId": "b02f3bbdf4ef8d77250eb5993c067503df2e87e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3b660995_e4448e41",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-02T02:18:18Z",
+      "side": 1,
+      "message": "I think this isn\u0027t quite correct. we only iterate over dirty attribs in the loop below - you\u0027ll need to set this bit if a dirty attrib changes \"to\" using client memory and clear it if an attrib changes \"from\" client memory.",
+      "range": {
+        "startLine": 99,
+        "startChar": 4,
+        "endLine": 99,
+        "endChar": 24
+      },
+      "revId": "b02f3bbdf4ef8d77250eb5993c067503df2e87e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c6360ea0_105071e5",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-02T02:18:18Z",
+      "side": 1,
+      "message": "nit: no void necessary",
+      "range": {
+        "startLine": 28,
+        "startChar": 36,
+        "endLine": 28,
+        "endChar": 40
+      },
+      "revId": "b02f3bbdf4ef8d77250eb5993c067503df2e87e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "513a040b_3b971126",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-02T02:18:18Z",
+      "side": 1,
+      "message": "use gl::AttributesMask",
+      "range": {
+        "startLine": 70,
+        "startChar": 4,
+        "endLine": 70,
+        "endChar": 30
+      },
+      "revId": "b02f3bbdf4ef8d77250eb5993c067503df2e87e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

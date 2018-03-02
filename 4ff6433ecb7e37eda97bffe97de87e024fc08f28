@@ -423,6 +423,30 @@
       "revId": "4ff6433ecb7e37eda97bffe97de87e024fc08f28",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "582dc198_ea5bc85c",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-02T02:18:18Z",
+      "side": 1,
+      "message": "OK. That\u0027s fine as long as it works. I don\u0027t quite follow the logic.",
+      "parentUuid": "ea33fb42_c858c6ab",
+      "range": {
+        "startLine": 70,
+        "startChar": 8,
+        "endLine": 70,
+        "endChar": 33
+      },
+      "revId": "4ff6433ecb7e37eda97bffe97de87e024fc08f28",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
