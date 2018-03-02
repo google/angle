@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c0300fdc_28e2cff9",
+        "filename": "src/libANGLE/renderer/gl/BlitGL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-02T16:53:15Z",
+      "side": 1,
+      "message": "Shouldn\u0027t this pass textureType?",
+      "range": {
+        "startLine": 174,
+        "startChar": 31,
+        "endLine": 174,
+        "endChar": 51
+      },
+      "revId": "483d994328b30512ae3a46806a38d4b5b3691477",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9deb6110_67c8b32e",
+        "filename": "src/libANGLE/renderer/gl/BlitGL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 494,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-02T16:53:15Z",
+      "side": 1,
+      "message": "Let\u0027s assert that source is a 2D texture.",
+      "range": {
+        "startLine": 494,
+        "startChar": 31,
+        "endLine": 494,
+        "endChar": 51
+      },
+      "revId": "483d994328b30512ae3a46806a38d4b5b3691477",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a11cc1bc_b361a654",
+        "filename": "src/libANGLE/renderer/gl/BlitGL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 561,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-02T16:53:15Z",
+      "side": 1,
+      "message": "Let\u0027s change this to GL_TEXTURE_2D.  It wasn\u0027t really valid to pass the type to begin with.",
+      "range": {
+        "startLine": 561,
+        "startChar": 37,
+        "endLine": 561,
+        "endChar": 64
+      },
+      "revId": "483d994328b30512ae3a46806a38d4b5b3691477",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0d9503c5_3e2f8017",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 774,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-02T16:53:15Z",
+      "side": 1,
+      "message": "Can probably remove this given there is an assert above.",
+      "range": {
+        "startLine": 774,
+        "startChar": 8,
+        "endLine": 774,
+        "endChar": 53
+      },
+      "revId": "483d994328b30512ae3a46806a38d4b5b3691477",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
