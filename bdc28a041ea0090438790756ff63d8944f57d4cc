@@ -91,6 +91,23 @@
       "revId": "bdc28a041ea0090438790756ff63d8944f57d4cc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6a5e2962_f63dbe7f",
+        "filename": "src/compiler/translator/StaticType.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2018-03-02T18:06:47Z",
+      "side": 1,
+      "message": "This doesn\u0027t seems like it will work if constexpr14\u003dconstexpr - otherwise I would have done it.\nJust now, I tried moving the definitions into this function (without your patch), and I got:\n\u003e error: static variable not permitted in a constexpr function",
+      "revId": "bdc28a041ea0090438790756ff63d8944f57d4cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
