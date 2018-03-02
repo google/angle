@@ -287,6 +287,13 @@ GROUP BEGIN ARB_texture_rectangle
     vec4 texture2DRect(sampler2DRect, vec2);
     vec4 texture2DRectProj(sampler2DRect, vec3);
     vec4 texture2DRectProj(sampler2DRect, vec4);
+  DEFAULT METADATA {"level": "ESSL3_BUILTINS", "op": "CallBuiltInFunction", "extension": "ARB_texture_rectangle"}
+    // We don't have a rectangle texture extension for OpenGL ES however based on the behavior of
+    // rectangle texture in desktop OpenGL, they should be sampled with a "texture" overload in
+    // GLSL version that have such an overload. This is the case for ESSL3 and above.
+    vec4 texture(sampler2DRect, vec2);
+    vec4 textureProj(sampler2DRect, vec3);
+    vec4 textureProj(sampler2DRect, vec4);
 GROUP END ARB_texture_rectangle
 
 // The *Grad* variants are new to both vertex and fragment shaders; the fragment

@@ -281,8 +281,8 @@ TEST_P(TextureRectangleTest, FramebufferTexture2DLevel)
     ASSERT_GL_ERROR(GL_INVALID_VALUE);
 }
 
-// Test sampling from a rectangle texture
-TEST_P(TextureRectangleTest, SamplingFromRectangle)
+// Test sampling from a rectangle texture using texture2DRect in ESSL1
+TEST_P(TextureRectangleTest, SamplingFromRectangleESSL1)
 {
     ANGLE_SKIP_TEST_IF(!checkExtensionSupported());
 
@@ -305,6 +305,49 @@ TEST_P(TextureRectangleTest, SamplingFromRectangle)
         "void main()\n"
         "{\n"
         "    gl_FragColor = texture2DRect(tex, vec2(0, 0));\n"
+        "}\n";
+
+    ANGLE_GL_PROGRAM(program, vs, fs);
+    glUseProgram(program);
+
+    GLint location = glGetUniformLocation(program, "tex");
+    ASSERT_NE(-1, location);
+    glUniform1i(location, 0);
+
+    glClearColor(0.0, 0.0, 0.0, 0.0);
+    glClear(GL_COLOR_BUFFER_BIT);
+    drawQuad(program, "position", 0.5f, 1.0f, false);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test sampling from a rectangle texture using the texture overload in ESSL3
+TEST_P(TextureRectangleTestES3, SamplingFromRectangleESSL3)
+{
+    ANGLE_SKIP_TEST_IF(!checkExtensionSupported());
+
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_RECTANGLE_ANGLE, tex);
+    glTexImage2D(GL_TEXTURE_RECTANGLE_ANGLE, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 &GLColor::green);
+
+    const std::string vs =
+        "#version 300 es\n"
+        "in vec4 position;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_Position = vec4(position.xy, 0.0, 1.0);\n"
+        "}\n";
+
+    const std::string fs =
+        "#version 300 es\n"
+        "#extension GL_ARB_texture_rectangle : require\n"
+        "precision mediump float;\n"
+        "uniform sampler2DRect tex;\n"
+        "out vec4 fragColor;\n"
+        "void main()\n"
+        "{\n"
+        "    fragColor = texture(tex, vec2(0, 0));\n"
         "}\n";
 
     ANGLE_GL_PROGRAM(program, vs, fs);
