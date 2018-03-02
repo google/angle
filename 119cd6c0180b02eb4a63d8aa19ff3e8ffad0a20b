@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "544aeb49_25c21463",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 208,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-03-02T18:34:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f54091e4_1be5b865",
+      "range": {
+        "startLine": 202,
+        "startChar": 29,
+        "endLine": 208,
+        "endChar": 9
+      },
+      "revId": "119cd6c0180b02eb4a63d8aa19ff3e8ffad0a20b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b86852c7_6a77085d",
         "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
         "patchSetId": 16
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "ac25e855_58ac31cf",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 1358,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-03-02T18:34:03Z",
+      "side": 1,
+      "message": "I should have removed that. I thought I could use device memory but I can\u0027t. Reverted.",
+      "parentUuid": "b86852c7_6a77085d",
+      "range": {
+        "startLine": 1358,
+        "startChar": 23,
+        "endLine": 1358,
+        "endChar": 58
+      },
+      "revId": "119cd6c0180b02eb4a63d8aa19ff3e8ffad0a20b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "eef31ef1_fb74cdc1",
         "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
         "patchSetId": 16
@@ -68,6 +116,30 @@
       "revId": "119cd6c0180b02eb4a63d8aa19ff3e8ffad0a20b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e62f05b2_b1470883",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 1439,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-03-02T18:34:03Z",
+      "side": 1,
+      "message": "I have to return a pointer then.  Done.",
+      "parentUuid": "eef31ef1_fb74cdc1",
+      "range": {
+        "startLine": 1439,
+        "startChar": 0,
+        "endLine": 1439,
+        "endChar": 12
+      },
+      "revId": "119cd6c0180b02eb4a63d8aa19ff3e8ffad0a20b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
