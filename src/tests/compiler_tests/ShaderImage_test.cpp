@@ -7,11 +7,12 @@
 // Tests for images
 //
 
-#include "angle_gl.h"
-#include "gtest/gtest.h"
 #include "GLSLANG/ShaderLang.h"
-#include "tests/test_utils/compiler_test.h"
+#include "angle_gl.h"
+#include "compiler/translator/StaticType.h"
+#include "gtest/gtest.h"
 #include "tests/test_utils/ShaderCompileTreeTest.h"
+#include "tests/test_utils/compiler_test.h"
 
 using namespace sh;
 
@@ -188,10 +189,16 @@ TEST_F(ShaderImageTest, ImageLoad)
     }
 
     // imageLoad call with image2D passed
-    CheckImageLoadCall(mASTRoot, "imageLoad(I2;2i;", EbtImage2D, 2);
+    std::string mangledName2D = "imageLoad(";
+    mangledName2D += StaticType::GetBasic<EbtImage2D>()->getMangledName();
+    mangledName2D += StaticType::GetBasic<EbtInt, 2>()->getMangledName();
+    CheckImageLoadCall(mASTRoot, mangledName2D.c_str(), EbtImage2D, 2);
 
     // imageLoad call with image3D passed
-    CheckImageLoadCall(mASTRoot, "imageLoad(iI3;3i;", EbtIImage3D, 3);
+    std::string mangledName3D = "imageLoad(";
+    mangledName3D += StaticType::GetBasic<EbtIImage3D>()->getMangledName();
+    mangledName3D += StaticType::GetBasic<EbtInt, 3>()->getMangledName();
+    CheckImageLoadCall(mASTRoot, mangledName3D.c_str(), EbtIImage3D, 3);
 }
 
 // Check that imageStore calls get correctly parsed.
@@ -212,10 +219,18 @@ TEST_F(ShaderImageTest, ImageStore)
     }
 
     // imageStore call with image2D
-    CheckImageStoreCall(mASTRoot, "imageStore(I2;2i;4f;", EbtImage2D, 2, EbtFloat, 4);
+    std::string mangledName2D = "imageStore(";
+    mangledName2D += StaticType::GetBasic<EbtImage2D>()->getMangledName();
+    mangledName2D += StaticType::GetBasic<EbtInt, 2>()->getMangledName();
+    mangledName2D += StaticType::GetBasic<EbtFloat, 4>()->getMangledName();
+    CheckImageStoreCall(mASTRoot, mangledName2D.c_str(), EbtImage2D, 2, EbtFloat, 4);
 
     // imageStore call with image2DArray
-    CheckImageStoreCall(mASTRoot, "imageStore(uIA;3i;4u;", EbtUImage2DArray, 3, EbtUInt, 4);
+    std::string mangledName2DArray = "imageStore(";
+    mangledName2DArray += StaticType::GetBasic<EbtUImage2DArray>()->getMangledName();
+    mangledName2DArray += StaticType::GetBasic<EbtInt, 3>()->getMangledName();
+    mangledName2DArray += StaticType::GetBasic<EbtUInt, 4>()->getMangledName();
+    CheckImageStoreCall(mASTRoot, mangledName2DArray.c_str(), EbtUImage2DArray, 3, EbtUInt, 4);
 }
 
 // Check that memory qualifiers are correctly parsed.

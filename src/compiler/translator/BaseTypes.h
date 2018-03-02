@@ -57,10 +57,12 @@ enum TBasicType
     EbtInt,
     EbtUInt,
     EbtBool,
+
+    EbtAtomicCounter,
     EbtYuvCscStandardEXT,  // Only valid if EXT_YUV_target exists.
 
     EbtGuardSamplerBegin,  // non type: see implementation of IsSampler()
-    EbtSampler2D,
+    EbtSampler2D = EbtGuardSamplerBegin,
     EbtSampler3D,
     EbtSamplerCube,
     EbtSampler2DArray,
@@ -81,11 +83,11 @@ enum TBasicType
     EbtSampler2DShadow,
     EbtSamplerCubeShadow,
     EbtSampler2DArrayShadow,
-    EbtGuardSamplerEnd,  // non type: see implementation of IsSampler()
+    EbtGuardSamplerEnd = EbtSampler2DArrayShadow,  // non type: see implementation of IsSampler()
 
     // images
     EbtGuardImageBegin,
-    EbtImage2D,
+    EbtImage2D = EbtGuardImageBegin,
     EbtIImage2D,
     EbtUImage2D,
     EbtImage3D,
@@ -97,119 +99,41 @@ enum TBasicType
     EbtImageCube,
     EbtIImageCube,
     EbtUImageCube,
-    EbtGuardImageEnd,
+    EbtGuardImageEnd = EbtUImageCube,
+
+    EbtLastSimpleType = EbtGuardImageEnd,
 
     EbtStruct,
     EbtInterfaceBlock,
-    EbtAddress,  // should be deprecated??
-
-    EbtAtomicCounter,
 
     // end of list
-    EbtLast
+    EbtLast = EbtInterfaceBlock
 };
 
-constexpr const char *GetBasicMangledName(TBasicType t)
+constexpr char GetBasicMangledName(TBasicType t)
 {
-    switch (t)
+    if (t > EbtLastSimpleType)
     {
-        case EbtFloat:
-            return "f";
-        case EbtInt:
-            return "i";
-        case EbtUInt:
-            return "u";
-        case EbtBool:
-            return "b";
-        case EbtYuvCscStandardEXT:
-            return "y";
-        case EbtSampler2D:
-            return "s2";
-        case EbtSampler3D:
-            return "s3";
-        case EbtSamplerCube:
-            return "sC";
-        case EbtSampler2DArray:
-            return "sA";
-        case EbtSamplerExternalOES:
-            return "sX";
-        case EbtSamplerExternal2DY2YEXT:
-            return "sY";
-        case EbtSampler2DRect:
-            return "sR";
-        case EbtSampler2DMS:
-            return "sM";
-        case EbtISampler2D:
-            return "is2";
-        case EbtISampler3D:
-            return "is3";
-        case EbtISamplerCube:
-            return "isC";
-        case EbtISampler2DArray:
-            return "isA";
-        case EbtISampler2DMS:
-            return "isM";
-        case EbtUSampler2D:
-            return "us2";
-        case EbtUSampler3D:
-            return "us3";
-        case EbtUSamplerCube:
-            return "usC";
-        case EbtUSampler2DArray:
-            return "usA";
-        case EbtUSampler2DMS:
-            return "usM";
-        case EbtSampler2DShadow:
-            return "s2s";
-        case EbtSamplerCubeShadow:
-            return "sCs";
-        case EbtSampler2DArrayShadow:
-            return "sAs";
-        case EbtImage2D:
-            return "I2";
-        case EbtIImage2D:
-            return "iI2";
-        case EbtUImage2D:
-            return "uI2";
-        case EbtImage3D:
-            return "I3";
-        case EbtIImage3D:
-            return "iI3";
-        case EbtUImage3D:
-            return "uI3";
-        case EbtImage2DArray:
-            return "IA";
-        case EbtIImage2DArray:
-            return "iIA";
-        case EbtUImage2DArray:
-            return "uIA";
-        case EbtImageCube:
-            return "Ic";
-        case EbtIImageCube:
-            return "iIc";
-        case EbtUImageCube:
-            return "uIc";
-        case EbtAtomicCounter:
-            return "a";
-        case EbtStruct:
-        case EbtInterfaceBlock:
-            return nullptr;
-        default:
-            // EbtVoid, EbtAddress and non types
-            return "";
+        return '{';
     }
+    static_assert(EbtLastSimpleType < 52, "We only use alphabetic characters for mangled names");
+    if (t < 26)
+    {
+        return static_cast<char>('A' + t);
+    }
+    return static_cast<char>('a' - 26 + t);
 }
 
 const char *getBasicString(TBasicType t);
 
 inline bool IsSampler(TBasicType type)
 {
-    return type > EbtGuardSamplerBegin && type < EbtGuardSamplerEnd;
+    return type >= EbtGuardSamplerBegin && type <= EbtGuardSamplerEnd;
 }
 
 inline bool IsImage(TBasicType type)
 {
-    return type > EbtGuardImageBegin && type < EbtGuardImageEnd;
+    return type >= EbtGuardImageBegin && type <= EbtGuardImageEnd;
 }
 
 inline bool IsAtomicCounter(TBasicType type)

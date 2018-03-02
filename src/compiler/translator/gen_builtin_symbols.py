@@ -188,47 +188,54 @@ parsed_variables = None
 variables_json_filename = 'builtin_variables.json'
 functions_txt_filename = 'builtin_function_declarations.txt'
 
-basic_mangled_names = {
-    'Float': 'f',
-    'Int': 'i',
-    'UInt': 'u',
-    'Bool': 'b',
-    'YuvCscStandardEXT': 'y',
-    'Sampler2D': 's2',
-    'Sampler3D': 's3',
-    'SamplerCube': 'sC',
-    'Sampler2DArray': 'sA',
-    'SamplerExternalOES': 'sX',
-    'SamplerExternal2DY2YEXT': 'sY',
-    'Sampler2DRect': 'sR',
-    'Sampler2DMS': 'sM',
-    'ISampler2D': 'is2',
-    'ISampler3D': 'is3',
-    'ISamplerCube': 'isC',
-    'ISampler2DArray': 'isA',
-    'ISampler2DMS': 'isM',
-    'USampler2D': 'us2',
-    'USampler3D': 'us3',
-    'USamplerCube': 'usC',
-    'USampler2DArray': 'usA',
-    'USampler2DMS': 'usM',
-    'Sampler2DShadow': 's2s',
-    'SamplerCubeShadow': 'sCs',
-    'Sampler2DArrayShadow': 'sAs',
-    'Image2D': 'I2',
-    'IImage2D': 'iI2',
-    'UImage2D': 'uI2',
-    'Image3D': 'I3',
-    'IImage3D': 'iI3',
-    'UImage3D': 'uI3',
-    'Image2DArray': 'IA',
-    'IImage2DArray': 'iIA',
-    'UImage2DArray': 'uIA',
-    'ImageCube': 'Ic',
-    'IImageCube': 'iIc',
-    'UImageCube': 'uIc',
-    'AtomicCounter': 'a'
-}
+basic_types_enumeration = [
+    'Void',
+    'Float',
+    'Int',
+    'UInt',
+    'Bool',
+    'AtomicCounter',
+    'YuvCscStandardEXT',
+    'Sampler2D',
+    'Sampler3D',
+    'SamplerCube',
+    'Sampler2DArray',
+    'SamplerExternalOES',
+    'SamplerExternal2DY2YEXT',
+    'Sampler2DRect',
+    'Sampler2DMS',
+    'ISampler2D',
+    'ISampler3D',
+    'ISamplerCube',
+    'ISampler2DArray',
+    'ISampler2DMS',
+    'USampler2D',
+    'USampler3D',
+    'USamplerCube',
+    'USampler2DArray',
+    'USampler2DMS',
+    'Sampler2DShadow',
+    'SamplerCubeShadow',
+    'Sampler2DArrayShadow',
+    'Image2D',
+    'IImage2D',
+    'UImage2D',
+    'Image3D',
+    'IImage3D',
+    'UImage3D',
+    'Image2DArray',
+    'IImage2DArray',
+    'UImage2DArray',
+    'ImageCube',
+    'IImageCube',
+    'UImageCube'
+]
+
+def get_basic_mangled_name(basic):
+    index = basic_types_enumeration.index(basic)
+    if index < 26:
+        return chr(ord('A') + index)
+    return chr(ord('a') + index - 26)
 
 levels = ['ESSL3_1_BUILTINS', 'ESSL3_BUILTINS', 'ESSL1_BUILTINS', 'COMMON_BUILTINS']
 
@@ -293,18 +300,16 @@ class TType:
         template_type = 'new TType(Ebt{basic}, Ebp{precision}, Evq{qualifier}, {primarySize}, {secondarySize})'
         return template_type.format(**self.data)
 
-    def get_mangled_name(self, separator = ';'):
+    def get_mangled_name(self):
         mangled_name = ''
 
-        if self.is_matrix():
-            mangled_name += str(self.data['primarySize'])
-            mangled_name += str(self.data['secondarySize'])
-        elif self.data['primarySize'] > 1:
-            mangled_name += str(self.data['primarySize'])
+        size_key = (self.data['secondarySize'] - 1) * 4 + self.data['primarySize'] - 1
+        if size_key < 10:
+            mangled_name += chr(ord('0') + size_key)
+        else:
+            mangled_name += chr(ord('A') + size_key - 10)
 
-        mangled_name += basic_mangled_names[self.data['basic']]
-
-        mangled_name += separator
+        mangled_name += get_basic_mangled_name(self.data['basic'])
         return mangled_name
 
     def is_vector(self):
@@ -589,20 +594,20 @@ def get_function_mangled_name(function_name, parameters):
 def get_unique_identifier_name(function_name, parameters):
     unique_name = function_name + '_'
     for param in parameters:
-        unique_name += param.get_mangled_name('_')
+        unique_name += param.get_mangled_name()
     return unique_name
 
 def get_variable_name_to_store_parameters(parameters):
     if len(parameters) == 0:
         return 'empty'
-    unique_name = 'p_'
+    unique_name = 'p'
     for param in parameters:
         if 'qualifier' in param.data:
             if param.data['qualifier'] == 'Out':
-                unique_name += 'o_'
+                unique_name += '_o_'
             if param.data['qualifier'] == 'InOut':
-                unique_name += 'io_'
-        unique_name += param.get_mangled_name('_')
+                unique_name += '_io_'
+        unique_name += param.get_mangled_name()
     return unique_name
 
 def gen_function_variants(function_name, function_props):
