@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a13d53d_ca5c5c18",
+        "filename": "src/libANGLE/formatutils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-02T17:18:11Z",
+      "side": 1,
+      "message": "Probably doesn\u0027t need to be explicitly inline.",
+      "range": {
+        "startLine": 162,
+        "startChar": 0,
+        "endLine": 166,
+        "endChar": 1
+      },
+      "revId": "6791ebff64727118e019fa4f0eebb6f683d407ac",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0c5aef2c_1375b379",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Image11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 284,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-02T17:18:11Z",
+      "side": 1,
+      "message": "Could you call this pixelDataFormat?  I think that makes it clear that it\u0027s not a property of the texture in any way.  Please update the other files too.",
+      "range": {
+        "startLine": 284,
+        "startChar": 30,
+        "endLine": 284,
+        "endChar": 40
+      },
+      "revId": "6791ebff64727118e019fa4f0eebb6f683d407ac",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
