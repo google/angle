@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "c95d3220_68711d86",
+        "filename": "BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1184734
+      },
+      "writtenOn": "2018-03-03T01:20:40Z",
+      "side": 1,
+      "message": "Sure.",
+      "parentUuid": "615b4659_52608f3f",
+      "range": {
+        "startLine": 75,
+        "startChar": 5,
+        "endLine": 75,
+        "endChar": 16
+      },
+      "revId": "bdc28a041ea0090438790756ff63d8944f57d4cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a43cbcec_0ece4f7c",
         "filename": "src/compiler/translator/BaseTypes.h",
         "patchSetId": 1
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "a0b3dabe_def951f4",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1184734
+      },
+      "writtenOn": "2018-03-03T01:20:40Z",
+      "side": 1,
+      "message": "If not constexpr and not static, this becomes a redundant linkage at link time. (It exists in many TUs)",
+      "parentUuid": "a43cbcec_0ece4f7c",
+      "range": {
+        "startLine": 133,
+        "startChar": 12,
+        "endLine": 133,
+        "endChar": 19
+      },
+      "revId": "bdc28a041ea0090438790756ff63d8944f57d4cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "649af4ca_6d93003f",
         "filename": "src/compiler/translator/ImmutableString.h",
         "patchSetId": 1
@@ -59,6 +107,30 @@
       "writtenOn": "2018-03-02T14:17:29Z",
       "side": 1,
       "message": "why did this need to be passed by reference?",
+      "range": {
+        "startLine": 51,
+        "startChar": 53,
+        "endLine": 51,
+        "endChar": 60
+      },
+      "revId": "bdc28a041ea0090438790756ff63d8944f57d4cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a82aa34b_6808d486",
+        "filename": "src/compiler/translator/ImmutableString.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1184734
+      },
+      "writtenOn": "2018-03-03T01:20:40Z",
+      "side": 1,
+      "message": "If this is not done by reference, ImmutableString(\"foo\") hits this constructor, instead of the template size_t N one, which faults since const char* data isn\u0027t constexpr in c++11.",
+      "parentUuid": "649af4ca_6d93003f",
       "range": {
         "startLine": 51,
         "startChar": 53,
