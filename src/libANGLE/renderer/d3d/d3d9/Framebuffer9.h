@@ -9,6 +9,7 @@
 #ifndef LIBANGLE_RENDERER_D3D_D3D9_FRAMBUFFER9_H_
 #define LIBANGLE_RENDERER_D3D_D3D9_FRAMBUFFER9_H_
 
+#include "libANGLE/renderer/RenderTargetCache.h"
 #include "libANGLE/renderer/d3d/FramebufferD3D.h"
 #include "libANGLE/renderer/d3d/d3d9/renderer9_utils.h"
 
@@ -36,14 +37,14 @@ class Framebuffer9 : public FramebufferD3D
     void syncState(const gl::Context *context,
                    const gl::Framebuffer::DirtyBits &dirtyBits) override;
 
-    const RenderTargetArray9 &getCachedColorRenderTargets() const
+    const gl::AttachmentArray<RenderTarget9 *> &getCachedColorRenderTargets() const
     {
-        return mCachedColorRenderTargets;
+        return mRenderTargetCache.getColors();
     }
 
     const RenderTarget9 *getCachedDepthStencilRenderTarget() const
     {
-        return mCachedDepthStencilRenderTarget;
+        return mRenderTargetCache.getDepthStencil();
     }
 
   private:
@@ -69,13 +70,9 @@ class Framebuffer9 : public FramebufferD3D
 
     GLenum getRenderTargetImplementationFormat(RenderTargetD3D *renderTarget) const override;
 
-    void updateColorRenderTarget(const gl::Context *context, size_t colorIndex);
-    void updateDepthStencilRenderTarget(const gl::Context *context);
-
     Renderer9 *const mRenderer;
 
-    RenderTargetArray9 mCachedColorRenderTargets;
-    RenderTarget9 *mCachedDepthStencilRenderTarget;
+    RenderTargetCache<RenderTarget9> mRenderTargetCache;
 };
 
 }  // namespace rx

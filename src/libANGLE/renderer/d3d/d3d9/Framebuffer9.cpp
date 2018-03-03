@@ -24,33 +24,10 @@
 
 namespace rx
 {
-namespace
-{
-void UpdateCachedRenderTarget(const gl::Context *context,
-                              const gl::FramebufferAttachment *attachment,
-                              RenderTarget9 *&cachedRenderTarget)
-{
-    RenderTarget9 *newRenderTarget = nullptr;
-    if (attachment)
-    {
-        // TODO(jmadill): Don't swallow this error.
-        gl::Error error = attachment->getRenderTarget(context, &newRenderTarget);
-        if (error.isError())
-        {
-            ERR() << "Internal rendertarget error: " << error;
-        }
-    }
-    if (newRenderTarget != cachedRenderTarget)
-    {
-        cachedRenderTarget = newRenderTarget;
-    }
-}
-}  // anonymous namespace
 Framebuffer9::Framebuffer9(const gl::FramebufferState &data, Renderer9 *renderer)
-    : FramebufferD3D(data, renderer), mRenderer(renderer), mCachedDepthStencilRenderTarget(nullptr)
+    : FramebufferD3D(data, renderer), mRenderer(renderer)
 {
     ASSERT(mRenderer != nullptr);
-    mCachedColorRenderTargets.fill(nullptr);
 }
 
 Framebuffer9::~Framebuffer9()
@@ -83,8 +60,8 @@ gl::Error Framebuffer9::invalidateSub(const gl::Context *context,
 
 gl::Error Framebuffer9::clearImpl(const gl::Context *context, const ClearParameters &clearParams)
 {
-    ANGLE_TRY(mRenderer->applyRenderTarget(context, mCachedColorRenderTargets[0],
-                                           mCachedDepthStencilRenderTarget));
+    ANGLE_TRY(mRenderer->applyRenderTarget(context, mRenderTargetCache.getColors()[0],
+                                           mRenderTargetCache.getDepthStencil()));
 
     const gl::State &glState = context->getGLState();
     float nearZ              = glState.getNearPlane();
@@ -94,8 +71,8 @@ gl::Error Framebuffer9::clearImpl(const gl::Context *context, const ClearParamet
 
     mRenderer->setScissorRectangle(glState.getScissor(), glState.isScissorTestEnabled());
 
-    return mRenderer->clear(context, clearParams, mCachedColorRenderTargets[0],
-                            mCachedDepthStencilRenderTarget);
+    return mRenderer->clear(context, clearParams, mRenderTargetCache.getColors()[0],
+                            mRenderTargetCache.getDepthStencil());
 }
 
 gl::Error Framebuffer9::readPixelsImpl(const gl::Context *context,
@@ -435,46 +412,6 @@ void Framebuffer9::syncState(const gl::Context *context,
                              const gl::Framebuffer::DirtyBits &dirtyBits)
 {
     FramebufferD3D::syncState(context, dirtyBits);
-
-    for (auto dirtyBit : dirtyBits)
-    {
-        switch (dirtyBit)
-        {
-            case gl::Framebuffer::DIRTY_BIT_DEPTH_ATTACHMENT:
-            case gl::Framebuffer::DIRTY_BIT_STENCIL_ATTACHMENT:
-                updateDepthStencilRenderTarget(context);
-                break;
-            case gl::Framebuffer::DIRTY_BIT_DRAW_BUFFERS:
-            case gl::Framebuffer::DIRTY_BIT_READ_BUFFER:
-                break;
-            case gl::Framebuffer::DIRTY_BIT_DEFAULT_WIDTH:
-            case gl::Framebuffer::DIRTY_BIT_DEFAULT_HEIGHT:
-            case gl::Framebuffer::DIRTY_BIT_DEFAULT_SAMPLES:
-            case gl::Framebuffer::DIRTY_BIT_DEFAULT_FIXED_SAMPLE_LOCATIONS:
-                break;
-            default:
-            {
-                ASSERT(gl::Framebuffer::DIRTY_BIT_COLOR_ATTACHMENT_0 == 0 &&
-                       dirtyBit < gl::Framebuffer::DIRTY_BIT_COLOR_ATTACHMENT_MAX);
-                size_t colorIndex =
-                    static_cast<size_t>(dirtyBit - gl::Framebuffer::DIRTY_BIT_COLOR_ATTACHMENT_0);
-                updateColorRenderTarget(context, colorIndex);
-                break;
-            }
-        }
-    }
+    mRenderTargetCache.update(context, mState, dirtyBits);
 }
-
-void Framebuffer9::updateColorRenderTarget(const gl::Context *context, size_t colorIndex)
-{
-    UpdateCachedRenderTarget(context, mState.getColorAttachment(colorIndex),
-                             mCachedColorRenderTargets[colorIndex]);
-}
-
-void Framebuffer9::updateDepthStencilRenderTarget(const gl::Context *context)
-{
-    UpdateCachedRenderTarget(context, mState.getDepthOrStencilAttachment(),
-                             mCachedDepthStencilRenderTarget);
-}
-
 }  // namespace rx

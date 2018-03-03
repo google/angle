@@ -53,33 +53,12 @@ gl::Error MarkAttachmentsDirty(const gl::Context *context,
 
     return gl::NoError();
 }
-
-void UpdateCachedRenderTarget(const gl::Context *context,
-                              const gl::FramebufferAttachment *attachment,
-                              RenderTarget11 *&cachedRenderTarget)
-{
-    RenderTarget11 *newRenderTarget = nullptr;
-    if (attachment)
-    {
-        // TODO(jmadill): Don't swallow this error.
-        gl::Error error = attachment->getRenderTarget(context, &newRenderTarget);
-        if (error.isError())
-        {
-            ERR() << "Internal rendertarget error: " << error;
-        }
-    }
-    if (newRenderTarget != cachedRenderTarget)
-    {
-        cachedRenderTarget = newRenderTarget;
-    }
-}
 }  // anonymous namespace
 
 Framebuffer11::Framebuffer11(const gl::FramebufferState &data, Renderer11 *renderer)
-    : FramebufferD3D(data, renderer), mRenderer(renderer), mCachedDepthStencilRenderTarget(nullptr)
+    : FramebufferD3D(data, renderer), mRenderer(renderer)
 {
     ASSERT(mRenderer != nullptr);
-    mCachedColorRenderTargets.fill(nullptr);
 }
 
 Framebuffer11::~Framebuffer11()
@@ -378,48 +357,10 @@ GLenum Framebuffer11::getRenderTargetImplementationFormat(RenderTargetD3D *rende
     return renderTarget11->getFormatSet().format().fboImplementationInternalFormat;
 }
 
-void Framebuffer11::updateColorRenderTarget(const gl::Context *context, size_t colorIndex)
-{
-    UpdateCachedRenderTarget(context, mState.getColorAttachment(colorIndex),
-                             mCachedColorRenderTargets[colorIndex]);
-}
-
-void Framebuffer11::updateDepthStencilRenderTarget(const gl::Context *context)
-{
-    UpdateCachedRenderTarget(context, mState.getDepthOrStencilAttachment(),
-                             mCachedDepthStencilRenderTarget);
-}
-
 void Framebuffer11::syncState(const gl::Context *context,
                               const gl::Framebuffer::DirtyBits &dirtyBits)
 {
-    for (auto dirtyBit : dirtyBits)
-    {
-        switch (dirtyBit)
-        {
-            case gl::Framebuffer::DIRTY_BIT_DEPTH_ATTACHMENT:
-            case gl::Framebuffer::DIRTY_BIT_STENCIL_ATTACHMENT:
-                updateDepthStencilRenderTarget(context);
-                break;
-            case gl::Framebuffer::DIRTY_BIT_DRAW_BUFFERS:
-            case gl::Framebuffer::DIRTY_BIT_READ_BUFFER:
-                break;
-            case gl::Framebuffer::DIRTY_BIT_DEFAULT_WIDTH:
-            case gl::Framebuffer::DIRTY_BIT_DEFAULT_HEIGHT:
-            case gl::Framebuffer::DIRTY_BIT_DEFAULT_SAMPLES:
-            case gl::Framebuffer::DIRTY_BIT_DEFAULT_FIXED_SAMPLE_LOCATIONS:
-                break;
-            default:
-            {
-                ASSERT(gl::Framebuffer::DIRTY_BIT_COLOR_ATTACHMENT_0 == 0 &&
-                       dirtyBit < gl::Framebuffer::DIRTY_BIT_COLOR_ATTACHMENT_MAX);
-                size_t colorIndex =
-                    static_cast<size_t>(dirtyBit - gl::Framebuffer::DIRTY_BIT_COLOR_ATTACHMENT_0);
-                updateColorRenderTarget(context, colorIndex);
-                break;
-            }
-        }
-    }
+    mRenderTargetCache.update(context, mState, dirtyBits);
 
     FramebufferD3D::syncState(context, dirtyBits);
 
@@ -445,7 +386,7 @@ gl::Error Framebuffer11::getSamplePosition(size_t index, GLfloat *xy) const
 
 RenderTarget11 *Framebuffer11::getFirstRenderTarget() const
 {
-    for (auto *renderTarget : mCachedColorRenderTargets)
+    for (auto *renderTarget : mRenderTargetCache.getColors())
     {
         if (renderTarget)
         {
@@ -453,7 +394,7 @@ RenderTarget11 *Framebuffer11::getFirstRenderTarget() const
         }
     }
 
-    return mCachedDepthStencilRenderTarget;
+    return mRenderTargetCache.getDepthStencil();
 }
 
 }  // namespace rx

@@ -24,8 +24,6 @@ namespace rx
 {
 class RenderTarget9;
 
-using RenderTargetArray9 = std::array<RenderTarget9 *, gl::IMPLEMENTATION_MAX_DRAW_BUFFERS>;
-
 namespace gl_d3d9
 {
 

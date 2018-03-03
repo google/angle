@@ -10,6 +10,7 @@
 #define LIBANGLE_RENDERER_D3D_D3D11_FRAMBUFFER11_H_
 
 #include "libANGLE/Observer.h"
+#include "libANGLE/renderer/RenderTargetCache.h"
 #include "libANGLE/renderer/d3d/FramebufferD3D.h"
 #include "libANGLE/renderer/d3d/d3d11/renderer11_utils.h"
 
@@ -38,13 +39,13 @@ class Framebuffer11 : public FramebufferD3D
     void syncState(const gl::Context *context,
                    const gl::Framebuffer::DirtyBits &dirtyBits) override;
 
-    const RenderTargetArray11 &getCachedColorRenderTargets() const
+    const gl::AttachmentArray<RenderTarget11 *> &getCachedColorRenderTargets() const
     {
-        return mCachedColorRenderTargets;
+        return mRenderTargetCache.getColors();
     }
     const RenderTarget11 *getCachedDepthStencilRenderTarget() const
     {
-        return mCachedDepthStencilRenderTarget;
+        return mRenderTargetCache.getDepthStencil();
     }
 
     RenderTarget11 *getFirstRenderTarget() const;
@@ -81,12 +82,8 @@ class Framebuffer11 : public FramebufferD3D
 
     GLenum getRenderTargetImplementationFormat(RenderTargetD3D *renderTarget) const override;
 
-    void updateColorRenderTarget(const gl::Context *context, size_t colorIndex);
-    void updateDepthStencilRenderTarget(const gl::Context *context);
-
     Renderer11 *const mRenderer;
-    RenderTargetArray11 mCachedColorRenderTargets;
-    RenderTarget11 *mCachedDepthStencilRenderTarget;
+    RenderTargetCache<RenderTarget11> mRenderTargetCache;
 };
 
 }  // namespace rx
