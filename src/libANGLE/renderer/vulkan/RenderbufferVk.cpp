@@ -127,6 +127,15 @@ gl::Error RenderbufferVk::setStorage(const gl::Context *context,
         viewInfo.subresourceRange.layerCount     = 1;
 
         ANGLE_TRY(mImageView.init(device, viewInfo));
+
+        // TODO(jmadill): Fold this into the RenderPass load/store ops. http://anglebug.com/2361
+        vk::CommandBuffer *commandBuffer = nullptr;
+        ANGLE_TRY(beginWriteResource(renderer, &commandBuffer));
+        VkClearColorValue black = {{0}};
+        mImage.changeLayoutWithStages(
+            VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+            VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, commandBuffer);
+        commandBuffer->clearSingleColorImage(mImage, black);
     }
 
     return gl::NoError();

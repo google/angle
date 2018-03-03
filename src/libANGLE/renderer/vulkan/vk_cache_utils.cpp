@@ -698,15 +698,17 @@ PackedAttachmentOpsDesc &AttachmentOpsArray::operator[](size_t index)
     return mOps[index];
 }
 
-void AttachmentOpsArray::initDummyOp(size_t index, VkImageLayout finalLayout)
+void AttachmentOpsArray::initDummyOp(size_t index,
+                                     VkImageLayout initialLayout,
+                                     VkImageLayout finalLayout)
 {
     PackedAttachmentOpsDesc &ops = mOps[index];
 
-    ops.loadOp         = VK_ATTACHMENT_LOAD_OP_CLEAR;
+    ops.loadOp         = VK_ATTACHMENT_LOAD_OP_LOAD;
     ops.storeOp        = VK_ATTACHMENT_STORE_OP_STORE;
     ops.stencilLoadOp  = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
     ops.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-    ops.initialLayout  = static_cast<uint16_t>(VK_IMAGE_LAYOUT_UNDEFINED);
+    ops.initialLayout  = static_cast<uint16_t>(initialLayout);
     ops.finalLayout    = static_cast<uint16_t>(finalLayout);
 }
 
@@ -765,12 +767,14 @@ vk::Error RenderPassCache::getCompatibleRenderPass(VkDevice device,
     vk::AttachmentOpsArray ops;
     for (uint32_t colorIndex = 0; colorIndex < desc.colorAttachmentCount(); ++colorIndex)
     {
-        ops.initDummyOp(colorIndex, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL);
+        ops.initDummyOp(colorIndex, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
+                        VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL);
     }
 
     if (desc.depthStencilAttachmentCount() > 0)
     {
         ops.initDummyOp(desc.colorAttachmentCount(),
+                        VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
                         VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
     }
 

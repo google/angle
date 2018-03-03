@@ -467,7 +467,8 @@ gl::Error FramebufferVk::getSamplePosition(size_t index, GLfloat *xy) const
     return gl::InternalError() << "getSamplePosition is unimplemented.";
 }
 
-gl::Error FramebufferVk::getRenderNode(const gl::Context *context, vk::CommandGraphNode **nodeOut)
+gl::Error FramebufferVk::getCommandGraphNodeForDraw(const gl::Context *context,
+                                                    vk::CommandGraphNode **nodeOut)
 {
     ContextVk *contextVk = vk::GetImpl(context);
     RendererVk *renderer = contextVk->getRenderer();
@@ -487,6 +488,10 @@ gl::Error FramebufferVk::getRenderNode(const gl::Context *context, vk::CommandGr
 
     std::vector<VkClearValue> attachmentClearValues;
 
+    vk::CommandBuffer *commandBuffer = nullptr;
+    ANGLE_TRY(node->beginOutsideRenderPassRecording(renderer->getDevice(),
+                                                    renderer->getCommandPool(), &commandBuffer));
+
     // Initialize RenderPass info.
     // TODO(jmadill): Could cache this info, would require dependent state change messaging.
     const auto &colorAttachments = mState.getColorAttachments();
@@ -498,8 +503,11 @@ gl::Error FramebufferVk::getRenderNode(const gl::Context *context, vk::CommandGr
             RenderTargetVk *renderTarget = nullptr;
             ANGLE_SWALLOW_ERR(colorAttachment.getRenderTarget(context, &renderTarget));
 
-            // TODO(jmadill): May need layout transition.
-            renderTarget->image->updateLayout(VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL);
+            // TODO(jmadill): Use automatic layout transition. http://anglebug.com/2361
+            renderTarget->image->changeLayoutWithStages(
+                VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
+                VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+                commandBuffer);
             node->appendColorRenderTarget(currentSerial, renderTarget);
             attachmentClearValues.emplace_back(contextVk->getClearColorValue());
         }
@@ -511,8 +519,15 @@ gl::Error FramebufferVk::getRenderNode(const gl::Context *context, vk::CommandGr
         RenderTargetVk *renderTarget = nullptr;
         ANGLE_SWALLOW_ERR(depthStencilAttachment->getRenderTarget(context, &renderTarget));
 
-        // TODO(jmadill): May need layout transition.
-        renderTarget->image->updateLayout(VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
+        // TODO(jmadill): Use automatic layout transition. http://anglebug.com/2361
+        const angle::Format &format    = renderTarget->format->textureFormat();
+        VkImageAspectFlags aspectFlags = (format.depthBits > 0 ? VK_IMAGE_ASPECT_DEPTH_BIT : 0) |
+                                         (format.stencilBits > 0 ? VK_IMAGE_ASPECT_STENCIL_BIT : 0);
+
+        renderTarget->image->changeLayoutWithStages(
+            aspectFlags, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
+            VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT,
+            commandBuffer);
         node->appendDepthStencilRenderTarget(currentSerial, renderTarget);
         attachmentClearValues.emplace_back(contextVk->getClearDepthStencilValue());
     }

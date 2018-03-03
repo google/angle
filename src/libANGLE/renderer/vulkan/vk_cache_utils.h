@@ -103,7 +103,7 @@ class AttachmentOpsArray final
     PackedAttachmentOpsDesc &operator[](size_t index);
 
     // Initializes an attachment op with whatever values. Used for compatible RenderPass checks.
-    void initDummyOp(size_t index, VkImageLayout finalLayout);
+    void initDummyOp(size_t index, VkImageLayout initialLayout, VkImageLayout finalLayout);
 
     size_t hash() const;
 
