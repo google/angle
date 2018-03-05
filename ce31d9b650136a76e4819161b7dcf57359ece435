@@ -22,6 +22,30 @@
       "revId": "ce31d9b650136a76e4819161b7dcf57359ece435",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "59f2db75_045e1d8a",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 470,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-05T18:24:52Z",
+      "side": 1,
+      "message": "It\u0027s for both the inside and outside now. And it\u0027s not started. But how about \u0027getCommandGraphNodeForDraw\u0027",
+      "parentUuid": "cd782c5e_626d3a31",
+      "range": {
+        "startLine": 470,
+        "startChar": 25,
+        "endLine": 470,
+        "endChar": 38
+      },
+      "revId": "ce31d9b650136a76e4819161b7dcf57359ece435",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
