@@ -345,6 +345,30 @@
     },
     {
       "key": {
+        "uuid": "1aa4e377_b761c839",
+        "filename": "src/libANGLE/packed_gl_enums.json",
+        "patchSetId": 12
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-03-05T18:09:21Z",
+      "side": 1,
+      "message": "Thank you. If we ever need to rename them it should be a simple search/replace now that they are well-typed enums.",
+      "parentUuid": "109ff69c_8fd0f749",
+      "range": {
+        "startLine": 37,
+        "startChar": 9,
+        "endLine": 37,
+        "endChar": 12
+      },
+      "revId": "35764eede030092f4b1e3dd5a2a39b89e31adde7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "056c3d41_bedd03ee",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 12
