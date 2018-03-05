@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f5886310_50b570f7",
+        "filename": "src/common/Color.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-05T14:57:06Z",
+      "side": 1,
+      "message": "nit: can you put this data below the functions? this is an old style bug",
+      "range": {
+        "startLine": 18,
+        "startChar": 0,
+        "endLine": 21,
+        "endChar": 12
+      },
+      "revId": "bb84b3bc2050e047955a4b2d73a0ea64d89da21c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6bd6874a_113cabe4",
+        "filename": "src/libANGLE/State.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 605,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-05T14:57:06Z",
+      "side": 1,
+      "message": "can you make a helper class for this, GLES1State, and store it as a member.",
+      "range": {
+        "startLine": 605,
+        "startChar": 4,
+        "endLine": 605,
+        "endChar": 18
+      },
+      "revId": "bb84b3bc2050e047955a4b2d73a0ea64d89da21c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5009fbf6_14cc3b5f",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-05T14:57:06Z",
+      "side": 1,
+      "message": "same for these",
+      "range": {
+        "startLine": 83,
+        "startChar": 4,
+        "endLine": 84,
+        "endChar": 71
+      },
+      "revId": "bb84b3bc2050e047955a4b2d73a0ea64d89da21c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "653bcced_694305ce",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 342,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-05T14:57:06Z",
+      "side": 1,
+      "message": "nit: update comment?",
+      "range": {
+        "startLine": 342,
+        "startChar": 3,
+        "endLine": 342,
+        "endChar": 33
+      },
+      "revId": "bb84b3bc2050e047955a4b2d73a0ea64d89da21c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
