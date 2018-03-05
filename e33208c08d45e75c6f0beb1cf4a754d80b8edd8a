@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d9d837e4_d4fc1b44",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 24
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-05T14:38:01Z",
+      "side": 1,
+      "message": "nit: please make this into a TODO(oetuaho): and add a link to an anglebug ID to track the TODO (new policy)",
+      "range": {
+        "startLine": 75,
+        "startChar": 3,
+        "endLine": 75,
+        "endChar": 7
+      },
+      "revId": "e33208c08d45e75c6f0beb1cf4a754d80b8edd8a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
