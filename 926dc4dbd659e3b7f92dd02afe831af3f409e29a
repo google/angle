@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "9320b5c5_a6988ade",
+        "filename": "src/libANGLE/renderer/vulkan/RenderbufferVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-05T16:07:53Z",
+      "side": 1,
+      "message": "It\u0027s impossible to re-enter the back-end from this line of code, but done. (also technically we\u0027re releasing the resource to the renderer.. maybe we can clean up the naming later)",
+      "parentUuid": "92b13693_ca54e1cc",
+      "range": {
+        "startLine": 61,
+        "startChar": 12,
+        "endLine": 61,
+        "endChar": 80
+      },
+      "revId": "926dc4dbd659e3b7f92dd02afe831af3f409e29a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "adb80dc1_1309e548",
         "filename": "src/libANGLE/renderer/vulkan/RenderbufferVk.cpp",
         "patchSetId": 7
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "875a8855_c42dfe0b",
+        "filename": "src/libANGLE/renderer/vulkan/RenderbufferVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-05T16:07:53Z",
+      "side": 1,
+      "message": "no, this is a catch-all case for either a) was never initialized. or b) was just freed and is uninitialized.",
+      "parentUuid": "adb80dc1_1309e548",
+      "range": {
+        "startLine": 68,
+        "startChar": 4,
+        "endLine": 71,
+        "endChar": 5
+      },
+      "revId": "926dc4dbd659e3b7f92dd02afe831af3f409e29a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "36efefd3_4abb4450",
         "filename": "src/libANGLE/renderer/vulkan/RenderbufferVk.cpp",
         "patchSetId": 7
@@ -68,6 +116,30 @@
       "revId": "926dc4dbd659e3b7f92dd02afe831af3f409e29a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "de7a7493_693dd49c",
+        "filename": "src/libANGLE/renderer/vulkan/RenderbufferVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-05T16:07:53Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "36efefd3_4abb4450",
+      "range": {
+        "startLine": 72,
+        "startChar": 7,
+        "endLine": 74,
+        "endChar": 75
+      },
+      "revId": "926dc4dbd659e3b7f92dd02afe831af3f409e29a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
