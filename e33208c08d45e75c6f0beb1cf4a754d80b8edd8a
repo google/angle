@@ -22,6 +22,30 @@
       "revId": "e33208c08d45e75c6f0beb1cf4a754d80b8edd8a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "06424121_2a7532b4",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 24
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-03-05T15:00:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d9d837e4_d4fc1b44",
+      "range": {
+        "startLine": 75,
+        "startChar": 3,
+        "endLine": 75,
+        "endChar": 7
+      },
+      "revId": "e33208c08d45e75c6f0beb1cf4a754d80b8edd8a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
