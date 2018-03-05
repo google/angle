@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dc970313_ac85ca8d",
+        "filename": "src/libANGLE/Texture.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-05T14:54:37Z",
+      "side": 1,
+      "message": "nit: can you update the comments to use the GLES1 emulation tag",
+      "range": {
+        "startLine": 174,
+        "startChar": 5,
+        "endLine": 174,
+        "endChar": 37
+      },
+      "revId": "08aef2dea5c99412276786bf90c25a054173f3ed",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c5011f4e_bd890e5e",
+        "filename": "src/libANGLE/Texture.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 378,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-05T14:54:37Z",
+      "side": 1,
+      "message": "nit: can you update the comment to use the GLES1 emulation tag",
+      "range": {
+        "startLine": 378,
+        "startChar": 7,
+        "endLine": 378,
+        "endChar": 12
+      },
+      "revId": "08aef2dea5c99412276786bf90c25a054173f3ed",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
