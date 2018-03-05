@@ -19,7 +19,6 @@ class ValidateSwitch : public TIntermTraverser
 {
   public:
     static bool validate(TBasicType switchType,
-                         int shaderVersion,
                          TDiagnostics *diagnostics,
                          TIntermBlock *statementList,
                          const TSourceLoc &loc);
@@ -40,12 +39,11 @@ class ValidateSwitch : public TIntermTraverser
     bool visitBranch(Visit, TIntermBranch *) override;
 
   private:
-    ValidateSwitch(TBasicType switchType, int shaderVersion, TDiagnostics *context);
+    ValidateSwitch(TBasicType switchType, TDiagnostics *context);
 
     bool validateInternal(const TSourceLoc &loc);
 
     TBasicType mSwitchType;
-    int mShaderVersion;
     TDiagnostics *mDiagnostics;
     bool mCaseTypeMismatch;
     bool mFirstCaseFound;
@@ -60,21 +58,19 @@ class ValidateSwitch : public TIntermTraverser
 };
 
 bool ValidateSwitch::validate(TBasicType switchType,
-                              int shaderVersion,
                               TDiagnostics *diagnostics,
                               TIntermBlock *statementList,
                               const TSourceLoc &loc)
 {
-    ValidateSwitch validate(switchType, shaderVersion, diagnostics);
+    ValidateSwitch validate(switchType, diagnostics);
     ASSERT(statementList);
     statementList->traverse(&validate);
     return validate.validateInternal(loc);
 }
 
-ValidateSwitch::ValidateSwitch(TBasicType switchType, int shaderVersion, TDiagnostics *diagnostics)
+ValidateSwitch::ValidateSwitch(TBasicType switchType, TDiagnostics *diagnostics)
     : TIntermTraverser(true, false, true),
       mSwitchType(switchType),
-      mShaderVersion(shaderVersion),
       mDiagnostics(diagnostics),
       mCaseTypeMismatch(false),
       mFirstCaseFound(false),
@@ -281,39 +277,27 @@ bool ValidateSwitch::validateInternal(const TSourceLoc &loc)
     {
         mDiagnostics->error(loc, "statement before the first label", "switch");
     }
-    bool lastStatementWasCaseError = false;
     if (mLastStatementWasCase)
     {
-        if (mShaderVersion == 300)
-        {
-            lastStatementWasCaseError = true;
-            // This error has been proposed to be made optional in GLSL ES 3.00, but dEQP tests
-            // still require it.
-            mDiagnostics->error(
-                loc, "no statement between the last label and the end of the switch statement",
-                "switch");
-        }
-        else
-        {
-            // The error has been removed from GLSL ES 3.10.
-            mDiagnostics->warning(
-                loc, "no statement between the last label and the end of the switch statement",
-                "switch");
-        }
+        // There have been some differences between versions of GLSL ES specs on whether this should
+        // be an error or not, but as of early 2018 the latest discussion is that this is an error
+        // also on GLSL ES versions newer than 3.00.
+        mDiagnostics->error(
+            loc, "no statement between the last label and the end of the switch statement",
+            "switch");
     }
-    return !mStatementBeforeCase && !lastStatementWasCaseError && !mCaseInsideControlFlow &&
+    return !mStatementBeforeCase && !mLastStatementWasCase && !mCaseInsideControlFlow &&
            !mCaseTypeMismatch && mDefaultCount <= 1 && !mDuplicateCases;
 }
 
 }  // anonymous namespace
 
 bool ValidateSwitchStatementList(TBasicType switchType,
-                                 int shaderVersion,
                                  TDiagnostics *diagnostics,
                                  TIntermBlock *statementList,
                                  const TSourceLoc &loc)
 {
-    return ValidateSwitch::validate(switchType, shaderVersion, diagnostics, statementList, loc);
+    return ValidateSwitch::validate(switchType, diagnostics, statementList, loc);
 }
 
 }  // namespace sh

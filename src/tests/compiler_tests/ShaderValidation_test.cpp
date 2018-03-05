@@ -5069,7 +5069,8 @@ TEST_F(FragmentShaderValidationTest, SwitchFinalCaseHasEmptyDeclaration)
     }
 }
 
-// Test that nothing is needed after the final case in a switch statement in ESSL 3.10.
+// The final case in a switch statement can't be empty in ESSL 3.10 either. This is the intent of
+// the spec though public spec in early 2018 didn't reflect this yet.
 TEST_F(FragmentShaderValidationTest, SwitchFinalCaseEmptyESSL310)
 {
     const std::string &shaderString =
@@ -5087,9 +5088,9 @@ TEST_F(FragmentShaderValidationTest, SwitchFinalCaseEmptyESSL310)
             }
         })";
 
-    if (!compile(shaderString))
+    if (compile(shaderString))
     {
-        FAIL() << "Shader compilation failed, expecting success:\n" << mInfoLog;
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
     }
 }
 
