@@ -48,6 +48,81 @@
     },
     {
       "key": {
+        "uuid": "f24f5de7_79d60b74",
+        "filename": "src/libANGLE/State.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 605,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-03-05T15:37:29Z",
+      "side": 1,
+      "message": "And have all members be initialized by default just to avoid undefined reads on bugs?",
+      "parentUuid": "6bd6874a_113cabe4",
+      "range": {
+        "startLine": 605,
+        "startChar": 4,
+        "endLine": 605,
+        "endChar": 18
+      },
+      "revId": "bb84b3bc2050e047955a4b2d73a0ea64d89da21c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "483a95f4_dbfda401",
+        "filename": "src/libANGLE/State.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 620,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-03-05T15:37:29Z",
+      "side": 1,
+      "message": "nit: unused.",
+      "revId": "bb84b3bc2050e047955a4b2d73a0ea64d89da21c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7688d31c_3bceb986",
+        "filename": "src/libANGLE/State.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 637,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-03-05T15:37:29Z",
+      "side": 1,
+      "message": "nit: have a special struct with one bool per enable or used PackedGLEnums",
+      "revId": "bb84b3bc2050e047955a4b2d73a0ea64d89da21c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d5c5c72a_bdf6d0d7",
+        "filename": "src/libANGLE/State.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 663,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-03-05T15:37:29Z",
+      "side": 1,
+      "message": "nit: either have one bool per state or use PackedGLEnums to avoid unordered_set.",
+      "revId": "bb84b3bc2050e047955a4b2d73a0ea64d89da21c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5009fbf6_14cc3b5f",
         "filename": "src/libANGLE/angletypes.h",
         "patchSetId": 2
@@ -87,6 +162,69 @@
         "startChar": 3,
         "endLine": 342,
         "endChar": 33
+      },
+      "revId": "bb84b3bc2050e047955a4b2d73a0ea64d89da21c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ec70d445_8b416a4a",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 344,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-03-05T15:37:29Z",
+      "side": 1,
+      "message": "nit: unused.",
+      "revId": "bb84b3bc2050e047955a4b2d73a0ea64d89da21c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5e44be76_4570df98",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 348,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-03-05T15:37:29Z",
+      "side": 1,
+      "message": "As far as I can tell, these are only used for GLVal, could they be put inline?",
+      "range": {
+        "startLine": 346,
+        "startChar": 0,
+        "endLine": 348,
+        "endChar": 38
+      },
+      "revId": "bb84b3bc2050e047955a4b2d73a0ea64d89da21c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "364de9f8_c30e919e",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 350,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-03-05T15:37:29Z",
+      "side": 1,
+      "message": "You can use Vector3/4 from vector_utils.h",
+      "range": {
+        "startLine": 349,
+        "startChar": 0,
+        "endLine": 350,
+        "endChar": 38
       },
       "revId": "bb84b3bc2050e047955a4b2d73a0ea64d89da21c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
