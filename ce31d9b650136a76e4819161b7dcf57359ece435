@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cd782c5e_626d3a31",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 470,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-03-05T17:40:46Z",
+      "side": 1,
+      "message": "Someone looking at this method from the outside would not know that this gets a node that has begun recording.\n\nShould we name this differently to convey the fact that this node is actually recording on the outside pass?",
+      "range": {
+        "startLine": 470,
+        "startChar": 25,
+        "endLine": 470,
+        "endChar": 38
+      },
+      "revId": "ce31d9b650136a76e4819161b7dcf57359ece435",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
