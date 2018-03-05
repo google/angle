@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "36d5c0c2_626b64d4",
+        "filename": "src/libANGLE/Texture.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-03-05T21:48:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dc970313_ac85ca8d",
+      "range": {
+        "startLine": 174,
+        "startChar": 5,
+        "endLine": 174,
+        "endChar": 37
+      },
+      "revId": "08aef2dea5c99412276786bf90c25a054173f3ed",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c5011f4e_bd890e5e",
         "filename": "src/libANGLE/Texture.h",
         "patchSetId": 16
@@ -45,6 +69,30 @@
       "revId": "08aef2dea5c99412276786bf90c25a054173f3ed",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b3110b22_394d2918",
+        "filename": "src/libANGLE/Texture.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 378,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-03-05T21:48:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c5011f4e_bd890e5e",
+      "range": {
+        "startLine": 378,
+        "startChar": 7,
+        "endLine": 378,
+        "endChar": 12
+      },
+      "revId": "08aef2dea5c99412276786bf90c25a054173f3ed",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
