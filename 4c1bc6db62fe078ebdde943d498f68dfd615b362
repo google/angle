@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "2cfbe626_66726997",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-03-05T18:18:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d5e25109_caaf670f",
+      "range": {
+        "startLine": 144,
+        "startChar": 4,
+        "endLine": 144,
+        "endChar": 64
+      },
+      "revId": "4c1bc6db62fe078ebdde943d498f68dfd615b362",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "378117a3_08d119c8",
         "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
         "patchSetId": 3
@@ -45,6 +69,30 @@
       "revId": "4c1bc6db62fe078ebdde943d498f68dfd615b362",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ac69abe8_1955e6c9",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1383,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-03-05T18:18:01Z",
+      "side": 1,
+      "message": "good catch, I needed to add a check that the bufferVk I\u0027m receivinghere is the same one I\u0027m observing and if not, invalidate the current line loop buffer.",
+      "parentUuid": "378117a3_08d119c8",
+      "range": {
+        "startLine": 1383,
+        "startChar": 27,
+        "endLine": 1383,
+        "endChar": 66
+      },
+      "revId": "4c1bc6db62fe078ebdde943d498f68dfd615b362",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "75f21336_d472f8cc",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1397,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-03-05T18:18:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "91b4796e_a50032a7",
+      "range": {
+        "startLine": 1397,
+        "startChar": 3,
+        "endLine": 1397,
+        "endChar": 29
+      },
+      "revId": "4c1bc6db62fe078ebdde943d498f68dfd615b362",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "76a0e624_a1fd7299",
         "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
         "patchSetId": 3
@@ -91,6 +163,30 @@
       "revId": "4c1bc6db62fe078ebdde943d498f68dfd615b362",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6d58f5cf_4aa7aece",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1456,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-03-05T18:18:01Z",
+      "side": 1,
+      "message": "ok, Done.",
+      "parentUuid": "76a0e624_a1fd7299",
+      "range": {
+        "startLine": 1456,
+        "startChar": 8,
+        "endLine": 1456,
+        "endChar": 31
+      },
+      "revId": "4c1bc6db62fe078ebdde943d498f68dfd615b362",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
