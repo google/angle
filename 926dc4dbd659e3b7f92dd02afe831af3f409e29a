@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "92b13693_ca54e1cc",
+        "filename": "src/libANGLE/renderer/vulkan/RenderbufferVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1262022
+      },
+      "writtenOn": "2018-03-05T15:51:43Z",
+      "side": 1,
+      "message": "should we notify the state change after the renderer released the resource instead?",
+      "range": {
+        "startLine": 61,
+        "startChar": 12,
+        "endLine": 61,
+        "endChar": 80
+      },
+      "revId": "926dc4dbd659e3b7f92dd02afe831af3f409e29a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "adb80dc1_1309e548",
+        "filename": "src/libANGLE/renderer/vulkan/RenderbufferVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1262022
+      },
+      "writtenOn": "2018-03-05T15:51:43Z",
+      "side": 1,
+      "message": "replace with \"else\" ?",
+      "range": {
+        "startLine": 68,
+        "startChar": 4,
+        "endLine": 71,
+        "endChar": 5
+      },
+      "revId": "926dc4dbd659e3b7f92dd02afe831af3f409e29a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "36efefd3_4abb4450",
+        "filename": "src/libANGLE/renderer/vulkan/RenderbufferVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1262022
+      },
+      "writtenOn": "2018-03-05T15:51:43Z",
+      "side": 1,
+      "message": "This could be constant instead",
+      "range": {
+        "startLine": 72,
+        "startChar": 7,
+        "endLine": 74,
+        "endChar": 75
+      },
+      "revId": "926dc4dbd659e3b7f92dd02afe831af3f409e29a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
