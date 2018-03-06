@@ -45,6 +45,53 @@
       "revId": "6791ebff64727118e019fa4f0eebb6f683d407ac",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eef23ead_23ccff73",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Image11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 284,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-06T16:44:50Z",
+      "side": 1,
+      "message": "How about just pixelBufferFormat or pixelFormat? Since the extension is EXT_pixel_buffer_object, and it refers to pixel pack and unpack buffers.",
+      "parentUuid": "0c5aef2c_1375b379",
+      "range": {
+        "startLine": 284,
+        "startChar": 30,
+        "endLine": 284,
+        "endChar": 40
+      },
+      "revId": "6791ebff64727118e019fa4f0eebb6f683d407ac",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3bc8fe16_cc7e2871",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 757,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-06T16:44:50Z",
+      "side": 1,
+      "message": "same for all of these. PixelFormat or something like that. It could be for Packing or Unpacking.",
+      "range": {
+        "startLine": 757,
+        "startChar": 12,
+        "endLine": 757,
+        "endChar": 29
+      },
+      "revId": "6791ebff64727118e019fa4f0eebb6f683d407ac",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
