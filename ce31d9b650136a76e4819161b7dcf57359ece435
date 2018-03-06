@@ -70,6 +70,30 @@
       "revId": "ce31d9b650136a76e4819161b7dcf57359ece435",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "98214666_a425b9c6",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 470,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-06T16:14:48Z",
+      "side": 1,
+      "message": "Err, rather I mean it doesn\u0027t explicitly start the \u0027inside\u0027 renderPass recording. You\u0027re right it does start the outside recording, and even the inside could be already restarted if we\u0027re batching draws. I changed the name, let me know if this is clear enough.",
+      "parentUuid": "ad6bced0_65bed61f",
+      "range": {
+        "startLine": 470,
+        "startChar": 25,
+        "endLine": 470,
+        "endChar": 38
+      },
+      "revId": "ce31d9b650136a76e4819161b7dcf57359ece435",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
