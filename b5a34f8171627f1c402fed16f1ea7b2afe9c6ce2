@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "175fcb72_af131cbb",
+        "filename": "src/tests/gl_tests/CopyTextureTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1190,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-06T21:05:57Z",
+      "side": 1,
+      "message": "nit: you may want to add the explicit extension enabling code first.  the copy_texture extensions may become enableable in the future.",
+      "revId": "b5a34f8171627f1c402fed16f1ea7b2afe9c6ce2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
