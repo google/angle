@@ -34,6 +34,24 @@
       "revId": "8727211089676eb38221efe996cb271c8cdb1e72",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "98ff8784_bd27e54e",
+        "filename": "src/compiler/preprocessor/numeric_lex.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1001629
+      },
+      "writtenOn": "2018-03-06T16:09:49Z",
+      "side": 1,
+      "message": "Only one way to find out! :-) (And if it does regress fuzzing, it\u0027s probably possible to just add a call to std::isfinite() in this branch – which, if clusterfuzz thinks that it\u0027s necessary, would be a good addition anyhow I suppose.)",
+      "parentUuid": "e70c0ea6_9dfbde10",
+      "revId": "8727211089676eb38221efe996cb271c8cdb1e72",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
