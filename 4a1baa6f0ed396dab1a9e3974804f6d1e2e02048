@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "a63e5094_ca5f66ba",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-06T22:03:38Z",
+      "side": 1,
+      "message": "nit: omit static, has no effect.",
+      "range": {
+        "startLine": 65,
+        "startChar": 10,
+        "endLine": 65,
+        "endChar": 16
+      },
+      "revId": "4a1baa6f0ed396dab1a9e3974804f6d1e2e02048",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "2f83a940_dfaeb498",
         "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
         "patchSetId": 9
@@ -13,6 +36,24 @@
       "writtenOn": "2018-03-06T22:00:45Z",
       "side": 1,
       "message": "maybe we should \u0026 programGL-\u003egetActiveAttribLocationsMask() like in streamVertexData() ?",
+      "revId": "4a1baa6f0ed396dab1a9e3974804f6d1e2e02048",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8cda7ffc_6ae74637",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-06T22:03:38Z",
+      "side": 1,
+      "message": "Yes, I think so.",
+      "parentUuid": "2f83a940_dfaeb498",
       "revId": "4a1baa6f0ed396dab1a9e3974804f6d1e2e02048",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
