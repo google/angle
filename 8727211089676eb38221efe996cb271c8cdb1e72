@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "56661126_27b23df1",
+        "filename": "src/compiler/preprocessor/numeric_lex.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1001629
+      },
+      "writtenOn": "2018-03-06T16:02:12Z",
+      "side": 1,
+      "message": "What about just always using strtod() then? (I\u0027m neither a fan of redundant code paths nor of the c++ streams stuff.) Up to you of course.",
+      "revId": "8727211089676eb38221efe996cb271c8cdb1e72",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
