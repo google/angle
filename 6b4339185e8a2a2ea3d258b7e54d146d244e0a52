@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "adaf1010_2d38ad45",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 21
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-03-06T16:20:40Z",
+      "side": 1,
+      "message": "nit: leave one blank line between method implementations for readability.",
+      "revId": "6b4339185e8a2a2ea3d258b7e54d146d244e0a52",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "228fa53c_1b7f79c8",
+        "filename": "src/tests/compiler_tests/ImmutableString_test_autogen.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-03-06T16:20:40Z",
+      "side": 1,
+      "message": "Can you update run_code_generation with this?",
+      "revId": "6b4339185e8a2a2ea3d258b7e54d146d244e0a52",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
