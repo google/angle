@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "16e88117_de837794",
+        "filename": "src/compiler/translator/SymbolTable.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 397,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-06T21:48:34Z",
+      "side": 1,
+      "message": "can you make sure this is default-init in the constructor.",
+      "range": {
+        "startLine": 397,
+        "startChar": 4,
+        "endLine": 397,
+        "endChar": 15
+      },
+      "revId": "6b4339185e8a2a2ea3d258b7e54d146d244e0a52",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "adaf1010_2d38ad45",
         "filename": "src/compiler/translator/gen_builtin_symbols.py",
         "patchSetId": 21
@@ -30,6 +53,24 @@
       "writtenOn": "2018-03-06T16:20:40Z",
       "side": 1,
       "message": "Can you update run_code_generation with this?",
+      "revId": "6b4339185e8a2a2ea3d258b7e54d146d244e0a52",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "89d6aa63_85991da4",
+        "filename": "src/tests/compiler_tests/ImmutableString_test_autogen.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-06T21:48:34Z",
+      "side": 1,
+      "message": "+1",
+      "parentUuid": "228fa53c_1b7f79c8",
       "revId": "6b4339185e8a2a2ea3d258b7e54d146d244e0a52",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
