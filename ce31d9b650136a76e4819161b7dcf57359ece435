@@ -46,6 +46,30 @@
       "revId": "ce31d9b650136a76e4819161b7dcf57359ece435",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ad6bced0_65bed61f",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 470,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-03-06T14:32:44Z",
+      "side": 1,
+      "message": "I do not understand how its not started if we specifically call \"beginOutsideRenderPassRecording\" now ? Isn\u0027t this starting recording on the outside render pass?\n\nThe name is indeed better like that.",
+      "parentUuid": "59f2db75_045e1d8a",
+      "range": {
+        "startLine": 470,
+        "startChar": 25,
+        "endLine": 470,
+        "endChar": 38
+      },
+      "revId": "ce31d9b650136a76e4819161b7dcf57359ece435",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
