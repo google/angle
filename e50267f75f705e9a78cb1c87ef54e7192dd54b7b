@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "dbc14625_6b9f9a9b",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-06T15:01:20Z",
+      "side": 1,
+      "message": "you need to combine this with activeAttribLocationsMask, you don\u0027t want to stream the data if they program isn\u0027t actively using the attribute.\n\nUse mClientMemoryAttribs \u0026 programGL-\u003egetActiveAttribLocationsMask. You can store this as a temporary outside the for loop statement.",
+      "range": {
+        "startLine": 56,
+        "startChar": 28,
+        "endLine": 56,
+        "endChar": 48
+      },
+      "revId": "e50267f75f705e9a78cb1c87ef54e7192dd54b7b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d44cb061_a8269726",
         "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
         "patchSetId": 1
@@ -18,6 +41,29 @@
         "startChar": 8,
         "endLine": 59,
         "endChar": 61
+      },
+      "revId": "e50267f75f705e9a78cb1c87ef54e7192dd54b7b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ecaf3e73_ef5b41c3",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-06T15:01:20Z",
+      "side": 1,
+      "message": "eventually we\u0027ll want this in VertexArrayState. Can you leave a TODO assigned to me with issue tag http://anglebug.com/2389. Unless you feel like moving it there yourself - just remember it gets a bit tricky because of the differences between bindings and attributes in ES3.1.",
+      "range": {
+        "startLine": 69,
+        "startChar": 23,
+        "endLine": 69,
+        "endChar": 43
       },
       "revId": "e50267f75f705e9a78cb1c87ef54e7192dd54b7b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
