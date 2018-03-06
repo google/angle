@@ -52,6 +52,24 @@
       "revId": "8727211089676eb38221efe996cb271c8cdb1e72",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "151c487a_821a3b5e",
+        "filename": "src/compiler/preprocessor/numeric_lex.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-06T16:30:59Z",
+      "side": 1,
+      "message": "Removed the special-casing of LINUX/ANDROID and added the std::isfinite check.",
+      "parentUuid": "98ff8784_bd27e54e",
+      "revId": "8727211089676eb38221efe996cb271c8cdb1e72",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
