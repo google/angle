@@ -1,0 +1,188 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "78f1176c_30aa7d50",
+        "filename": "src/libANGLE/renderer/gen_load_functions_table.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-06T21:42:13Z",
+      "side": 1,
+      "message": "+1 to adding comment.",
+      "range": {
+        "startLine": 8,
+        "startChar": 50,
+        "endLine": 9,
+        "endChar": 50
+      },
+      "revId": "d65e3fa3b774b1b8e99021f395c95a348a353dd3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4d89dbef_f7ee8615",
+        "filename": "src/libANGLE/renderer/load_functions_data.json",
+        "patchSetId": 4
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-06T21:42:13Z",
+      "side": 1,
+      "message": "does this even work? Looking at the code in FormatTable::initialize, it should be calling GetLoadFunctionsMap with R8_UNORM (mFormatData[formatIndex].textureFormatID) rather than L8_UNORM.",
+      "range": {
+        "startLine": 116,
+        "startChar": 5,
+        "endLine": 116,
+        "endChar": 13
+      },
+      "revId": "d65e3fa3b774b1b8e99021f395c95a348a353dd3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e5d4586d_45e9e8c4",
+        "filename": "src/libANGLE/renderer/load_functions_data.json",
+        "patchSetId": 4
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-06T21:42:13Z",
+      "side": 1,
+      "message": "same here.. need to figure out in the code if this is the converted or non-converted ANGLE format ID.",
+      "range": {
+        "startLine": 172,
+        "startChar": 5,
+        "endLine": 172,
+        "endChar": 15
+      },
+      "revId": "d65e3fa3b774b1b8e99021f395c95a348a353dd3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aa290a69_993ae18e",
+        "filename": "src/libANGLE/renderer/load_functions_table_autogen.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 660,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-06T21:42:13Z",
+      "side": 1,
+      "message": "I think this breaks luminance formats on D3D11. you can see here the old method is hitting the unreachable.",
+      "range": {
+        "startLine": 650,
+        "startChar": 0,
+        "endLine": 660,
+        "endChar": 5
+      },
+      "revId": "d65e3fa3b774b1b8e99021f395c95a348a353dd3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8c2b3233_3ae4656e",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-06T21:42:13Z",
+      "side": 1,
+      "message": "I admire your forward-thinkingness of handling ES3 swizzle parameters. :)",
+      "range": {
+        "startLine": 45,
+        "startChar": 37,
+        "endLine": 45,
+        "endChar": 73
+      },
+      "revId": "d65e3fa3b774b1b8e99021f395c95a348a353dd3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c266767b_f4a18ab7",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-06T21:42:13Z",
+      "side": 1,
+      "message": "usual comment about non-const reference parameters.",
+      "range": {
+        "startLine": 46,
+        "startChar": 37,
+        "endLine": 46,
+        "endChar": 55
+      },
+      "revId": "d65e3fa3b774b1b8e99021f395c95a348a353dd3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ba267542_81f7a39a",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-06T21:42:13Z",
+      "side": 1,
+      "message": "can you break this out under the assignments to improve the code visual formatting?",
+      "range": {
+        "startLine": 182,
+        "startChar": 0,
+        "endLine": 183,
+        "endChar": 61
+      },
+      "revId": "d65e3fa3b774b1b8e99021f395c95a348a353dd3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e54383fa_6d4540ac",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 3722,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-06T21:42:13Z",
+      "side": 1,
+      "message": "test failures are probably because you\u0027ll need to do a lot of test disabling. couldn\u0027t hurt to triage the failures though.",
+      "range": {
+        "startLine": 3722,
+        "startChar": 23,
+        "endLine": 3722,
+        "endChar": 33
+      },
+      "revId": "d65e3fa3b774b1b8e99021f395c95a348a353dd3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
