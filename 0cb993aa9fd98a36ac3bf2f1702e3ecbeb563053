@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "84ddedf5_ff557e7c",
+        "filename": "src/libANGLE/PackedGLEnums.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-03-06T18:15:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4e3b9263_7d71da65",
+      "range": {
+        "startLine": 89,
+        "startChar": 0,
+        "endLine": 110,
+        "endChar": 1
+      },
+      "revId": "0cb993aa9fd98a36ac3bf2f1702e3ecbeb563053",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "43e175be_2094dc85",
         "filename": "src/libANGLE/PackedGLEnums.h",
         "patchSetId": 13
@@ -45,6 +69,30 @@
       "revId": "0cb993aa9fd98a36ac3bf2f1702e3ecbeb563053",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f0dd1f31_4192615b",
+        "filename": "src/libANGLE/PackedGLEnums.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-03-06T18:15:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "43e175be_2094dc85",
+      "range": {
+        "startLine": 145,
+        "startChar": 0,
+        "endLine": 145,
+        "endChar": 6
+      },
+      "revId": "0cb993aa9fd98a36ac3bf2f1702e3ecbeb563053",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "262ee946_be3820d3",
+        "filename": "src/libANGLE/PackedGLEnums.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-03-06T18:15:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b28ef8d5_b4f0a885",
+      "range": {
+        "startLine": 149,
+        "startChar": 7,
+        "endLine": 149,
+        "endChar": 29
+      },
+      "revId": "0cb993aa9fd98a36ac3bf2f1702e3ecbeb563053",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "477999a8_57cc0f39",
         "filename": "src/libANGLE/queryutils.cpp",
         "patchSetId": 13
@@ -82,6 +154,30 @@
       "writtenOn": "2018-03-06T00:19:41Z",
       "side": 1,
       "message": "how about this as an ASSERT? trying to understand when this might happen.",
+      "range": {
+        "startLine": 855,
+        "startChar": 12,
+        "endLine": 855,
+        "endChar": 51
+      },
+      "revId": "0cb993aa9fd98a36ac3bf2f1702e3ecbeb563053",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e2b92d3e_ca1f6460",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 855,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-03-06T18:15:05Z",
+      "side": 1,
+      "message": "This is supposed to return GL_NONE when the attachment isn\u0027t a cube map face.",
+      "parentUuid": "477999a8_57cc0f39",
       "range": {
         "startLine": 855,
         "startChar": 12,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "509133bf_a91c0067",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Image11.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 543,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-03-06T18:15:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "31e54835_bc86db0d",
+      "range": {
+        "startLine": 543,
+        "startChar": 4,
+        "endLine": 543,
+        "endChar": 38
+      },
+      "revId": "0cb993aa9fd98a36ac3bf2f1702e3ecbeb563053",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7b849fc2_741dc076",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.h",
         "patchSetId": 13
@@ -137,6 +257,30 @@
       "revId": "0cb993aa9fd98a36ac3bf2f1702e3ecbeb563053",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "72f7cc63_07378f4a",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-03-06T18:15:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7b849fc2_741dc076",
+      "range": {
+        "startLine": 76,
+        "startChar": 41,
+        "endLine": 76,
+        "endChar": 47
+      },
+      "revId": "0cb993aa9fd98a36ac3bf2f1702e3ecbeb563053",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
