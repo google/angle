@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "57c17de3_fa472bbf",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-03-06T20:10:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dbc14625_6b9f9a9b",
+      "range": {
+        "startLine": 56,
+        "startChar": 28,
+        "endLine": 56,
+        "endChar": 48
+      },
+      "revId": "e50267f75f705e9a78cb1c87ef54e7192dd54b7b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d44cb061_a8269726",
         "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
         "patchSetId": 1
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "a54347ba_306848f8",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-03-06T20:10:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d44cb061_a8269726",
+      "range": {
+        "startLine": 58,
+        "startChar": 8,
+        "endLine": 59,
+        "endChar": 61
+      },
+      "revId": "e50267f75f705e9a78cb1c87ef54e7192dd54b7b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ecaf3e73_ef5b41c3",
         "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.h",
         "patchSetId": 1
@@ -68,6 +116,30 @@
       "revId": "e50267f75f705e9a78cb1c87ef54e7192dd54b7b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5fb58721_ba5a2592",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-03-06T20:10:05Z",
+      "side": 1,
+      "message": "left a TODO for now, in the interest of progress",
+      "parentUuid": "ecaf3e73_ef5b41c3",
+      "range": {
+        "startLine": 69,
+        "startChar": 23,
+        "endLine": 69,
+        "endChar": 43
+      },
+      "revId": "e50267f75f705e9a78cb1c87ef54e7192dd54b7b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
