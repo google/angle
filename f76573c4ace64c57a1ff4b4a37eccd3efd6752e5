@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "0c9df938_96b1aff8",
+        "filename": "src/libANGLE/renderer/vulkan/RenderbufferVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-06T16:14:43Z",
+      "side": 1,
+      "message": "It\u0027s a good idea, but no callbacks use the images yet. These just set dirty bits in the top level. Also there\u0027s complications with early outs like the width/height \u003d\u003d 0. Would be in favor of leaving it here for now and re-visiting in the future if necessary.",
+      "parentUuid": "6b962c8e_d03f2038",
+      "range": {
+        "startLine": 67,
+        "startChar": 12,
+        "endLine": 67,
+        "endChar": 80
+      },
+      "revId": "f76573c4ace64c57a1ff4b4a37eccd3efd6752e5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "08354545_fd322d4b",
         "filename": "src/libANGLE/renderer/vulkan/RenderbufferVk.cpp",
         "patchSetId": 8
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "c6344895_a5afcb53",
+        "filename": "src/libANGLE/renderer/vulkan/RenderbufferVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-06T16:14:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "08354545_fd322d4b",
+      "range": {
+        "startLine": 71,
+        "startChar": 4,
+        "endLine": 71,
+        "endChar": 24
+      },
+      "revId": "f76573c4ace64c57a1ff4b4a37eccd3efd6752e5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fc007a08_d92652da",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
         "patchSetId": 8
@@ -68,6 +116,30 @@
       "revId": "f76573c4ace64c57a1ff4b4a37eccd3efd6752e5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a15e3356_7b3edf16",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-06T16:14:43Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "fc007a08_d92652da",
+      "range": {
+        "startLine": 73,
+        "startChar": 12,
+        "endLine": 73,
+        "endChar": 80
+      },
+      "revId": "f76573c4ace64c57a1ff4b4a37eccd3efd6752e5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
