@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "c10fb6cf_4cc599ee",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-03-06T22:22:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a63e5094_ca5f66ba",
+      "range": {
+        "startLine": 65,
+        "startChar": 10,
+        "endLine": 65,
+        "endChar": 16
+      },
+      "revId": "4a1baa6f0ed396dab1a9e3974804f6d1e2e02048",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2f83a940_dfaeb498",
         "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
         "patchSetId": 9
@@ -57,6 +81,24 @@
       "revId": "4a1baa6f0ed396dab1a9e3974804f6d1e2e02048",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8f4295e3_51a31e3e",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-03-06T22:22:20Z",
+      "side": 1,
+      "message": "Factored out the calculation.",
+      "parentUuid": "8cda7ffc_6ae74637",
+      "revId": "4a1baa6f0ed396dab1a9e3974804f6d1e2e02048",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
