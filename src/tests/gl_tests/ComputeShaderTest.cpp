@@ -528,6 +528,80 @@ TEST_P(ComputeShaderTest, ImageSize)
     EXPECT_GL_NO_ERROR();
 }
 
+// Test that sampling texture works well in compute shader.
+TEST_P(ComputeShaderTest, TextureSampling)
+{
+    ANGLE_SKIP_TEST_IF(IsD3D11());
+
+    const std::string &csSource =
+        R"(#version 310 es
+        layout(local_size_x=16, local_size_y=16) in;
+        precision highp usampler2D;
+        uniform usampler2D tex;
+        layout(std140, binding = 0) buffer buf {
+            uint outData[16][16];
+        };
+
+        void main()
+        {
+            uint x = gl_LocalInvocationID.x;
+            uint y = gl_LocalInvocationID.y;
+            outData[y][x] = texelFetch(tex, ivec2(x, y), 0).x;
+        })";
+
+    constexpr unsigned int kWidth  = 16;
+    constexpr unsigned int kHeight = 16;
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_R32UI, kWidth, kHeight);
+    GLuint texels[kHeight][kWidth] = {{0}};
+    for (unsigned int y = 0; y < kHeight; ++y)
+    {
+        for (unsigned int x = 0; x < kWidth; ++x)
+        {
+            texels[y][x] = x + y * kWidth;
+        }
+    }
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, kWidth, kHeight, GL_RED_INTEGER, GL_UNSIGNED_INT,
+                    texels);
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+    // The array stride are rounded up to the base alignment of a vec4 for std140 layout.
+    constexpr unsigned int kArrayStride = 16;
+    GLBuffer ssbo;
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, kWidth * kHeight * kArrayStride, nullptr,
+                 GL_STREAM_DRAW);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+    EXPECT_GL_NO_ERROR();
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, csSource);
+    glUseProgram(program.get());
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glUniform1i(glGetUniformLocation(program, "tex"), 0);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, ssbo);
+
+    glDispatchCompute(1, 1, 1);
+
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
+    void *ptr = glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, kWidth * kHeight * kArrayStride,
+                                 GL_MAP_READ_BIT);
+    for (unsigned int idx = 0; idx < kWidth * kHeight; idx++)
+    {
+        EXPECT_EQ(idx, *(reinterpret_cast<const GLuint *>(reinterpret_cast<const GLbyte *>(ptr) +
+                                                          idx * kArrayStride)));
+    }
+    glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+    EXPECT_GL_NO_ERROR();
+}
+
 // Use image uniform to read and write Texture2D in compute shader, and verify the contents.
 TEST_P(ComputeShaderTest, BindImageTextureWithTexture2D)
 {

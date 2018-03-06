@@ -2467,7 +2467,8 @@ Error State::syncDirtyObjects(const Context *context)
 
 Error State::syncDirtyObjects(const Context *context, const DirtyObjects &bitset)
 {
-    for (auto dirtyObject : bitset)
+    const DirtyObjects &dirtyObjects = mDirtyObjects & bitset;
+    for (auto dirtyObject : dirtyObjects)
     {
         switch (dirtyObject)
         {
@@ -2493,7 +2494,7 @@ Error State::syncDirtyObjects(const Context *context, const DirtyObjects &bitset
         }
     }
 
-    mDirtyObjects &= ~bitset;
+    mDirtyObjects &= ~dirtyObjects;
     return NoError();
 }
 
