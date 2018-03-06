@@ -16,6 +16,24 @@
       "revId": "8727211089676eb38221efe996cb271c8cdb1e72",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e70c0ea6_9dfbde10",
+        "filename": "src/compiler/preprocessor/numeric_lex.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-06T16:06:09Z",
+      "side": 1,
+      "message": "I\u0027d be fine with that if that doesn\u0027t regress the fuzzing. See http://crbug.com/660702.",
+      "parentUuid": "56661126_27b23df1",
+      "revId": "8727211089676eb38221efe996cb271c8cdb1e72",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
