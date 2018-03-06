@@ -38,6 +38,6 @@ DrawCallPerfParams DrawCallPerfD3D11Params(bool useNullDevice, bool renderToText
 DrawCallPerfParams DrawCallPerfD3D9Params(bool useNullDevice, bool renderToTexture);
 DrawCallPerfParams DrawCallPerfOpenGLOrGLESParams(bool useNullDevice, bool renderToTexture);
 DrawCallPerfParams DrawCallPerfValidationOnly();
-DrawCallPerfParams DrawCallPerfVulkanParams(bool renderToTexture);
+DrawCallPerfParams DrawCallPerfVulkanParams(bool useNullDevice, bool renderToTexture);
 
 #endif  // TESTS_PERF_TESTS_DRAW_CALL_PERF_PARAMS_H_

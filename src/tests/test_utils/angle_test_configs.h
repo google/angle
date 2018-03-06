@@ -99,6 +99,7 @@ EGLPlatformParameters OPENGLES_NULL();
 EGLPlatformParameters OPENGL_OR_GLES(bool useNullDevice);
 
 EGLPlatformParameters VULKAN();
+EGLPlatformParameters VULKAN_NULL();
 
 }  // namespace egl_platform
 
@@ -167,7 +168,9 @@ PlatformParameters ES3_NULL();
 PlatformParameters ES31_NULL();
 
 PlatformParameters ES1_VULKAN();
+PlatformParameters ES1_VULKAN_NULL();
 PlatformParameters ES2_VULKAN();
+PlatformParameters ES2_VULKAN_NULL();
 
 }  // namespace angle
 

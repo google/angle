@@ -71,10 +71,10 @@ DrawCallPerfParams DrawCallPerfValidationOnly()
     return params;
 }
 
-DrawCallPerfParams DrawCallPerfVulkanParams(bool renderToTexture)
+DrawCallPerfParams DrawCallPerfVulkanParams(bool useNullDevice, bool renderToTexture)
 {
     DrawCallPerfParams params;
-    params.eglParameters = VULKAN();
+    params.eglParameters = useNullDevice ? VULKAN_NULL() : VULKAN();
     params.useFBO        = renderToTexture;
     return params;
 }

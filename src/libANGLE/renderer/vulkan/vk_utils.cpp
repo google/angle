@@ -198,6 +198,7 @@ vk::Error AllocateBufferOrImageMemory(RendererVk *renderer,
 }  // anonymous namespace
 
 const char *g_VkLoaderLayersPathEnv    = "VK_LAYER_PATH";
+const char *g_VkICDPathEnv             = "VK_ICD_FILENAMES";
 
 const char *VulkanResultString(VkResult result)
 {

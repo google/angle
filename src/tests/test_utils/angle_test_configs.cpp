@@ -398,6 +398,12 @@ EGLPlatformParameters VULKAN()
     return EGLPlatformParameters(EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE);
 }
 
+EGLPlatformParameters VULKAN_NULL()
+{
+    return EGLPlatformParameters(EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE, EGL_DONT_CARE, EGL_DONT_CARE,
+                                 EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE);
+}
+
 }  // namespace egl_platform
 
 // ANGLE tests platforms
@@ -671,9 +677,19 @@ PlatformParameters ES1_VULKAN()
     return PlatformParameters(1, 0, egl_platform::VULKAN());
 }
 
+PlatformParameters ES1_VULKAN_NULL()
+{
+    return PlatformParameters(1, 0, egl_platform::VULKAN_NULL());
+}
+
 PlatformParameters ES2_VULKAN()
 {
     return PlatformParameters(2, 0, egl_platform::VULKAN());
+}
+
+PlatformParameters ES2_VULKAN_NULL()
+{
+    return PlatformParameters(2, 0, egl_platform::VULKAN_NULL());
 }
 
 }  // namespace angle

@@ -74,6 +74,7 @@ bool GetAvailableValidationLayers(const std::vector<VkLayerProperties> &layerPro
                                   uint32_t *enabledLayerCount);
 
 extern const char *g_VkLoaderLayersPathEnv;
+extern const char *g_VkICDPathEnv;
 
 enum class TextureDimension
 {
