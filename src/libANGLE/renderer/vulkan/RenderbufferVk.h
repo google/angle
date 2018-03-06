@@ -48,7 +48,7 @@ class RenderbufferVk : public RenderbufferImpl, public ResourceVk
     vk::Image mImage;
     vk::DeviceMemory mDeviceMemory;
     vk::ImageView mImageView;
-    size_t mRequiredSize;
+    size_t mAllocatedMemorySize;
     RenderTargetVk mRenderTarget;
 };
 

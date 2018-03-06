@@ -31,12 +31,12 @@ gl::Error TextureVk::onDestroy(const gl::Context *context)
     ContextVk *contextVk = vk::GetImpl(context);
     RendererVk *renderer = contextVk->getRenderer();
 
-    onStateChange(context, angle::SubjectMessage::DEPENDENT_DIRTY_BITS);
-
     renderer->releaseResource(*this, &mImage);
     renderer->releaseResource(*this, &mDeviceMemory);
     renderer->releaseResource(*this, &mImageView);
     renderer->releaseResource(*this, &mSampler);
+
+    onStateChange(context, angle::SubjectMessage::DEPENDENT_DIRTY_BITS);
 
     return gl::NoError();
 }
@@ -66,11 +66,11 @@ gl::Error TextureVk::setImage(const gl::Context *context,
         if (desc.size != size ||
             !gl::Format::SameSized(desc.format, gl::Format(internalFormat, type)))
         {
-            onStateChange(context, angle::SubjectMessage::DEPENDENT_DIRTY_BITS);
-
             renderer->releaseResource(*this, &mImage);
             renderer->releaseResource(*this, &mDeviceMemory);
             renderer->releaseResource(*this, &mImageView);
+
+            onStateChange(context, angle::SubjectMessage::DEPENDENT_DIRTY_BITS);
         }
     }
 

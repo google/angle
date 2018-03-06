@@ -1162,6 +1162,54 @@ TEST_P(SimpleStateChangeTest, ScissorTest)
     EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 2, getWindowHeight() / 2, GLColor::red);
 }
 
+// Tests that changing the storage of a Renderbuffer currently in use by GL works as expected.
+TEST_P(SimpleStateChangeTest, RedefineRenderbufferInUse)
+{
+    GLRenderbuffer renderbuffer;
+    glBindRenderbuffer(GL_RENDERBUFFER, renderbuffer);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, 16, 16);
+
+    GLFramebuffer framebuffer;
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, renderbuffer);
+
+    ASSERT_GL_NO_ERROR();
+    ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
+    ANGLE_GL_PROGRAM(program, kSimpleVertexShader, kSimpleFragmentShader);
+    GLint colorLoc = glGetAttribLocation(program, "color");
+    ASSERT_NE(-1, colorLoc);
+
+    // Set up and draw red to the left half the screen.
+    std::vector<GLColor> redData(6, GLColor::red);
+    GLBuffer vertexBufferRed;
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBufferRed);
+    glBufferData(GL_ARRAY_BUFFER, redData.size() * sizeof(GLColor), redData.data(), GL_STATIC_DRAW);
+    glVertexAttribPointer(colorLoc, 4, GL_UNSIGNED_BYTE, GL_TRUE, 0, nullptr);
+    glEnableVertexAttribArray(colorLoc);
+
+    glViewport(0, 0, 16, 16);
+    drawQuad(program, "position", 0.5f, 1.0f, true);
+
+    // Immediately redefine the Renderbuffer.
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, 64, 64);
+
+    // Set up and draw green to the right half of the screen.
+    std::vector<GLColor> greenData(6, GLColor::green);
+    GLBuffer vertexBufferGreen;
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBufferGreen);
+    glBufferData(GL_ARRAY_BUFFER, greenData.size() * sizeof(GLColor), greenData.data(),
+                 GL_STATIC_DRAW);
+    glVertexAttribPointer(colorLoc, 4, GL_UNSIGNED_BYTE, GL_TRUE, 0, nullptr);
+    glEnableVertexAttribArray(colorLoc);
+
+    glViewport(0, 0, 64, 64);
+    drawQuad(program, "position", 0.5f, 1.0f, true);
+
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 }  // anonymous namespace
 
 ANGLE_INSTANTIATE_TEST(StateChangeTest, ES2_D3D9(), ES2_D3D11(), ES2_OPENGL());
