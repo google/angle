@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2f83a940_dfaeb498",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-03-06T22:00:45Z",
+      "side": 1,
+      "message": "maybe we should \u0026 programGL-\u003egetActiveAttribLocationsMask() like in streamVertexData() ?",
+      "revId": "4a1baa6f0ed396dab1a9e3974804f6d1e2e02048",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

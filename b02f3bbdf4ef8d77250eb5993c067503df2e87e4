@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "2192f056_d2bbefd0",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 194,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-03-06T22:00:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "736ffd32_d003d328",
+      "range": {
+        "startLine": 193,
+        "startChar": 0,
+        "endLine": 194,
+        "endChar": 64
+      },
+      "revId": "b02f3bbdf4ef8d77250eb5993c067503df2e87e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "30515503_28384bc4",
         "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
         "patchSetId": 7
@@ -45,6 +69,30 @@
       "revId": "b02f3bbdf4ef8d77250eb5993c067503df2e87e4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4de8234b_fc76aa5f",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-03-06T22:00:45Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "30515503_28384bc4",
+      "range": {
+        "startLine": 61,
+        "startChar": 4,
+        "endLine": 61,
+        "endChar": 49
+      },
+      "revId": "b02f3bbdf4ef8d77250eb5993c067503df2e87e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "d815dd68_b6d9be00",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-03-06T22:00:45Z",
+      "side": 1,
+      "message": "Done in https://chromium-review.googlesource.com/c/angle/angle/+/947927",
+      "parentUuid": "3b660995_e4448e41",
+      "range": {
+        "startLine": 99,
+        "startChar": 4,
+        "endLine": 99,
+        "endChar": 24
+      },
+      "revId": "b02f3bbdf4ef8d77250eb5993c067503df2e87e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c6360ea0_105071e5",
         "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.h",
         "patchSetId": 7
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "202de0a1_7a508201",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-03-06T22:00:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c6360ea0_105071e5",
+      "range": {
+        "startLine": 28,
+        "startChar": 36,
+        "endLine": 28,
+        "endChar": 40
+      },
+      "revId": "b02f3bbdf4ef8d77250eb5993c067503df2e87e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "513a040b_3b971126",
         "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.h",
         "patchSetId": 7
@@ -114,6 +210,30 @@
       "revId": "b02f3bbdf4ef8d77250eb5993c067503df2e87e4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c9e45fb5_0ee3ad88",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-03-06T22:00:45Z",
+      "side": 1,
+      "message": "Done in https://chromium-review.googlesource.com/c/angle/angle/+/947927",
+      "parentUuid": "513a040b_3b971126",
+      "range": {
+        "startLine": 70,
+        "startChar": 4,
+        "endLine": 70,
+        "endChar": 30
+      },
+      "revId": "b02f3bbdf4ef8d77250eb5993c067503df2e87e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
