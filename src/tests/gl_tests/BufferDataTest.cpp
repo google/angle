@@ -160,6 +160,64 @@ TEST_P(BufferDataTest, RepeatedDrawWithDynamic)
     EXPECT_GL_NO_ERROR();
 }
 
+// Tests for a bug where vertex attribute translation was not being invalidated when switching to
+// DYNAMIC
+TEST_P(BufferDataTest, RepeatedDrawDynamicBug)
+{
+    glUseProgram(mProgram);
+
+    GLint positionLocation = glGetAttribLocation(mProgram, "position");
+    ASSERT_NE(-1, positionLocation);
+
+    auto quadVertices = GetQuadVertices();
+    for (angle::Vector3 &vertex : quadVertices)
+    {
+        vertex.x() *= 1.0f;
+        vertex.y() *= 1.0f;
+        vertex.z() = 0.0f;
+    }
+
+    // Set up quad vertices with DYNAMIC data
+    GLBuffer positionBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, positionBuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * quadVertices.size() * 3, quadVertices.data(),
+                 GL_DYNAMIC_DRAW);
+    glVertexAttribPointer(positionLocation, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glEnableVertexAttribArray(positionLocation);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    EXPECT_GL_NO_ERROR();
+
+    // Set up color data so red is drawn
+    std::vector<GLfloat> data(6, 1.0f);
+
+    // Set data to DYNAMIC
+    glBindBuffer(GL_ARRAY_BUFFER, mBuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * data.size(), data.data(), GL_DYNAMIC_DRAW);
+    glVertexAttribPointer(mAttribLocation, 1, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glEnableVertexAttribArray(mAttribLocation);
+    EXPECT_GL_NO_ERROR();
+
+    // Draw enough times to promote data to DIRECT mode
+    for (int i = 0; i < 20; i++)
+    {
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+    }
+
+    // Verify red was drawn
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    // Set up color value so black is drawn
+    std::fill(data.begin(), data.end(), 0);
+
+    // Update the data, changing back to DYNAMIC mode.
+    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * data.size(), data.data(), GL_DYNAMIC_DRAW);
+
+    // This draw should produce a black quad
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
+    EXPECT_GL_NO_ERROR();
+}
+
 class IndexedBufferCopyTest : public ANGLETest
 {
   protected:

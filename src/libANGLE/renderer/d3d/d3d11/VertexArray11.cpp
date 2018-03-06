@@ -205,7 +205,6 @@ void VertexArray11::updateVertexAttribStorage(const gl::Context *context, size_t
     else
     {
         mAttribsToTranslate.set(attribIndex);
-        stateManager->invalidateVertexAttributeTranslation();
 
         if (oldStorageType == VertexStorageType::DYNAMIC)
         {
@@ -213,6 +212,7 @@ void VertexArray11::updateVertexAttribStorage(const gl::Context *context, size_t
             mDynamicAttribsMask.reset(attribIndex);
         }
     }
+    stateManager->invalidateVertexAttributeTranslation();
 
     gl::Buffer *oldBufferGL = mCurrentArrayBuffers[attribIndex].get();
     gl::Buffer *newBufferGL = binding.getBuffer().get();
