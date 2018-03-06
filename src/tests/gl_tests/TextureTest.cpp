@@ -1237,6 +1237,10 @@ TEST_P(Texture2DTest, QueryBinding)
 
 TEST_P(Texture2DTest, ZeroSizedUploads)
 {
+    // TODO(lucferron): Enable this test on Vulkan after this bug is done.
+    // http://anglebug.com/2392
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     glBindTexture(GL_TEXTURE_2D, mTexture2D);
     EXPECT_GL_ERROR(GL_NO_ERROR);
 
@@ -1570,6 +1574,9 @@ TEST_P(Texture2DTest, CopySubImageFloat_RGBA_RGBA)
 // Run against GL_ALPHA/UNSIGNED_BYTE format, to ensure that D3D11 Feature Level 9_3 correctly handles GL_ALPHA
 TEST_P(Texture2DTest, TextureNPOT_GL_ALPHA_UBYTE)
 {
+    // TODO(lucferron): DIRTY_BIT_UNPACK_STATE isn't implemented on Vulkan yet.
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     const int npotTexSize = 5;
     const int potTexSize = 4; // Should be less than npotTexSize
     GLuint tex2D;
@@ -1658,6 +1665,10 @@ TEST_P(Texture2DTest, TextureNPOT_GL_ALPHA_UBYTE)
 // ANGLE previously rejected this if GL_OES_texture_npot wasn't active, which is incorrect.
 TEST_P(Texture2DTest, NPOTSubImageParameters)
 {
+    // TODO(lucferron): Generate mipmap on vulkan isn't implemented yet. Re-enable this when it
+    // is.
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, mTexture2D);
 
@@ -2379,8 +2390,10 @@ TEST_P(Texture2DTestES3, TextureRGBImplicitAlpha1)
 
 // When sampling a texture without an alpha channel, "1" is returned as the alpha value.
 // ES 3.0.4 table 3.24
-TEST_P(Texture2DTestES3, TextureLuminanceImplicitAlpha1)
+TEST_P(Texture2DTest, TextureLuminanceImplicitAlpha1)
 {
+    setUpProgram();
+
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, mTexture2D);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE, 1, 1, 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, nullptr);
@@ -2391,10 +2404,50 @@ TEST_P(Texture2DTestES3, TextureLuminanceImplicitAlpha1)
     EXPECT_PIXEL_ALPHA_EQ(0, 0, 255);
 }
 
+// Validate that every component of the pixel will be equal to the luminance value we've set
+// and that the alpha channel will be 1 (or 255 to be exact).
+TEST_P(Texture2DTest, TextureLuminanceRGBSame)
+{
+    setUpProgram();
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, mTexture2D);
+    uint8_t pixel = 50;
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE, 1, 1, 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, &pixel);
+    EXPECT_GL_NO_ERROR();
+
+    drawQuad(mProgram, "position", 0.5f);
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor(pixel, pixel, pixel, 255));
+}
+
+// Validate that every component of the pixel will be equal to the luminance value we've set
+// and that the alpha channel will be the second component.
+TEST_P(Texture2DTest, TextureLuminanceAlphaRGBSame)
+{
+    setUpProgram();
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, mTexture2D);
+    uint8_t pixel[] = {50, 25};
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE_ALPHA, 1, 1, 0, GL_LUMINANCE_ALPHA,
+                 GL_UNSIGNED_BYTE, pixel);
+    EXPECT_GL_NO_ERROR();
+
+    drawQuad(mProgram, "position", 0.5f);
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor(pixel[0], pixel[0], pixel[0], pixel[1]));
+}
+
 // When sampling a texture without an alpha channel, "1" is returned as the alpha value.
 // ES 3.0.4 table 3.24
-TEST_P(Texture2DTestES3, TextureLuminance32ImplicitAlpha1)
+TEST_P(Texture2DTest, TextureLuminance32ImplicitAlpha1)
 {
+    // TODO(lucferron): Enable Vulkan when we implement float support in ES3.0.
+    ANGLE_SKIP_TEST_IF(IsVulkan() || IsD3D9());
+
+    setUpProgram();
+
     if (extensionEnabled("GL_OES_texture_float"))
     {
         glActiveTexture(GL_TEXTURE0);
@@ -2410,10 +2463,15 @@ TEST_P(Texture2DTestES3, TextureLuminance32ImplicitAlpha1)
 
 // When sampling a texture without an alpha channel, "1" is returned as the alpha value.
 // ES 3.0.4 table 3.24
-TEST_P(Texture2DTestES3, TextureLuminance16ImplicitAlpha1)
+TEST_P(Texture2DTest, TextureLuminance16ImplicitAlpha1)
 {
+    // TODO(lucferron): Enable Vulkan when we implement float support in ES3.0.
+    ANGLE_SKIP_TEST_IF(IsVulkan() || IsD3D9());
+
     if (extensionEnabled("GL_OES_texture_half_float"))
     {
+        setUpProgram();
+
         ANGLE_SKIP_TEST_IF(IsNVIDIA() && IsOpenGLES());
 
         // TODO(ynovikov): re-enable once root cause of http://anglebug.com/1420 is fixed
@@ -3677,7 +3735,8 @@ ANGLE_INSTANTIATE_TEST(Texture2DTest,
                        ES2_D3D11(),
                        ES2_D3D11_FL9_3(),
                        ES2_OPENGL(),
-                       ES2_OPENGLES());
+                       ES2_OPENGLES(),
+                       ES2_VULKAN());
 ANGLE_INSTANTIATE_TEST(TextureCubeTest,
                        ES2_D3D9(),
                        ES2_D3D11(),

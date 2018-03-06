@@ -17,6 +17,57 @@
 
 namespace rx
 {
+namespace
+{
+VkComponentSwizzle ConvertSwizzleStateToVkSwizzle(const GLenum swizzle)
+{
+    switch (swizzle)
+    {
+        case GL_ALPHA:
+            return VK_COMPONENT_SWIZZLE_A;
+        case GL_RED:
+            return VK_COMPONENT_SWIZZLE_R;
+        case GL_GREEN:
+            return VK_COMPONENT_SWIZZLE_G;
+        case GL_BLUE:
+            return VK_COMPONENT_SWIZZLE_B;
+        case GL_ZERO:
+            return VK_COMPONENT_SWIZZLE_ZERO;
+        case GL_ONE:
+            return VK_COMPONENT_SWIZZLE_ONE;
+        default:
+            UNREACHABLE();
+            return VK_COMPONENT_SWIZZLE_IDENTITY;
+    }
+}
+
+void FillComponentsSwizzleParameters(GLenum internalFormat,
+                                     const gl::SwizzleState &swizzleState,
+                                     VkComponentMapping *componentMapping)
+{
+    switch (internalFormat)
+    {
+        case GL_LUMINANCE:
+            componentMapping->r = ConvertSwizzleStateToVkSwizzle(swizzleState.swizzleRed);
+            componentMapping->g = ConvertSwizzleStateToVkSwizzle(swizzleState.swizzleRed);
+            componentMapping->b = ConvertSwizzleStateToVkSwizzle(swizzleState.swizzleRed);
+            componentMapping->a = ConvertSwizzleStateToVkSwizzle(swizzleState.swizzleAlpha);
+            break;
+        case GL_LUMINANCE_ALPHA:
+            componentMapping->r = ConvertSwizzleStateToVkSwizzle(swizzleState.swizzleRed);
+            componentMapping->g = ConvertSwizzleStateToVkSwizzle(swizzleState.swizzleRed);
+            componentMapping->b = ConvertSwizzleStateToVkSwizzle(swizzleState.swizzleRed);
+            componentMapping->a = ConvertSwizzleStateToVkSwizzle(swizzleState.swizzleGreen);
+            break;
+        default:
+            componentMapping->r = ConvertSwizzleStateToVkSwizzle(swizzleState.swizzleRed);
+            componentMapping->g = ConvertSwizzleStateToVkSwizzle(swizzleState.swizzleGreen);
+            componentMapping->b = ConvertSwizzleStateToVkSwizzle(swizzleState.swizzleBlue);
+            componentMapping->a = ConvertSwizzleStateToVkSwizzle(swizzleState.swizzleAlpha);
+            break;
+    }
+}
+}  // anonymous namespace
 
 TextureVk::TextureVk(const gl::TextureState &state) : TextureImpl(state)
 {
@@ -128,15 +179,14 @@ gl::Error TextureVk::setImage(const gl::Context *context,
         viewInfo.image                           = mImage.getHandle();
         viewInfo.viewType                        = VK_IMAGE_VIEW_TYPE_2D;
         viewInfo.format                          = vkFormat.vkTextureFormat;
-        viewInfo.components.r                    = VK_COMPONENT_SWIZZLE_R;
-        viewInfo.components.g                    = VK_COMPONENT_SWIZZLE_G;
-        viewInfo.components.b                    = VK_COMPONENT_SWIZZLE_B;
-        viewInfo.components.a                    = VK_COMPONENT_SWIZZLE_A;
         viewInfo.subresourceRange.aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT;
         viewInfo.subresourceRange.baseMipLevel   = 0;
         viewInfo.subresourceRange.levelCount     = 1;
         viewInfo.subresourceRange.baseArrayLayer = 0;
         viewInfo.subresourceRange.layerCount     = 1;
+
+        FillComponentsSwizzleParameters(internalFormat, mState.getSwizzleState(),
+                                        &viewInfo.components);
 
         ANGLE_TRY(mImageView.init(device, viewInfo));
 

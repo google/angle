@@ -27,7 +27,7 @@ template_table_autogen_cpp = """// GENERATED FILE - DO NOT EDIT.
 // {out_file_name}:
 //   Queries for full Vulkan format information based on GL format.
 
-#include "libANGLE/renderer/vulkan/formatutilsvk.h"
+#include "libANGLE/renderer/vulkan/vk_format_utils.h"
 
 #include "image_util/copyimage.h"
 #include "image_util/generatemip.h"
@@ -90,21 +90,20 @@ def gen_format_case(angle, internal_format, vk_map):
 
     if isinstance(vk_format_name, dict):
         info = vk_format_name
-        vk_format_name = info["native"]
 
         if "buffer" in info:
             buffer_format_id = info["buffer"]
             vk_buffer_format = vk_map[buffer_format_id]
             assert(not isinstance(vk_buffer_format, dict))
         else:
-            vk_buffer_format = vk_format_name
+            vk_buffer_format = info["native"]
 
         if "texture" in info:
             texture_format_id = info["texture"]
             vk_texture_format = vk_map[texture_format_id]
             assert(not isinstance(vk_texture_format, dict))
         else:
-            vk_texture_format = vk_format_name
+            vk_texture_format = info["native"]
 
     initializer = angle_format.get_internal_format_initializer(
         internal_format, texture_format_id)

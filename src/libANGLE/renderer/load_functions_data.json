@@ -113,7 +113,10 @@
     }
   },
   "GL_LUMINANCE8_EXT": {
-    "NONE": {
+    "R8_UNORM": {
+      "GL_UNSIGNED_BYTE": "LoadToNative<GLubyte, 1>"
+    },
+    "R8G8B8A8_UNORM": {
       "GL_UNSIGNED_BYTE": "LoadL8ToRGBA8"
     }
   },
@@ -166,7 +169,10 @@
     }
   },
   "GL_LUMINANCE8_ALPHA8_EXT": {
-    "NONE": {
+    "R8G8_UNORM": {
+      "GL_UNSIGNED_BYTE": "LoadToNative<GLubyte, 2>"
+    },
+    "R8G8B8A8_UNORM": {
       "GL_UNSIGNED_BYTE": "LoadLA8ToRGBA8"
     }
   },

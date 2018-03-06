@@ -4,7 +4,9 @@
 # found in the LICENSE file.
 #
 # gen_load_functions_table.py:
-#  Code generation for the load function tables used for texture formats
+#  Code generation for the load function tables used for texture formats. These mappings are
+#  not renderer specific. The mappings are done from the GL internal format, to the ANGLE
+#  format ID, and then for the specific data type.
 #
 
 import json, sys
