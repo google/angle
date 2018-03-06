@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d44cb061_a8269726",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1262022
+      },
+      "writtenOn": "2018-03-06T12:27:22Z",
+      "side": 1,
+      "message": "I know you didn\u0027t just change this code, but you can use the full types here please?",
+      "range": {
+        "startLine": 58,
+        "startChar": 8,
+        "endLine": 59,
+        "endChar": 61
+      },
+      "revId": "e50267f75f705e9a78cb1c87ef54e7192dd54b7b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
