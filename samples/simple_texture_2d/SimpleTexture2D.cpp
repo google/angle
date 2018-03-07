@@ -20,8 +20,8 @@
 class SimpleTexture2DSample : public SampleApplication
 {
   public:
-    SimpleTexture2DSample()
-        : SampleApplication("SimpleTexture2D", 1280, 720)
+    SimpleTexture2DSample(EGLint displayType)
+        : SampleApplication("SimpleTexture2D", 1280, 720, 2, 0, displayType)
     {
     }
 
@@ -132,6 +132,13 @@ class SimpleTexture2DSample : public SampleApplication
 
 int main(int argc, char **argv)
 {
-    SimpleTexture2DSample app;
+    EGLint displayType = EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE;
+
+    if (argc > 1)
+    {
+        displayType = GetDisplayTypeFromArg(argv[1]);
+    }
+
+    SimpleTexture2DSample app(displayType);
     return app.run();
 }
