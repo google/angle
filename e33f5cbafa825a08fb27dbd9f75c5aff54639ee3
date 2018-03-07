@@ -22,6 +22,30 @@
       "revId": "e33f5cbafa825a08fb27dbd9f75c5aff54639ee3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "18ce84ac_a16cc901",
+        "filename": "third_party/vulkan-validation-layers/BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2018-03-07T16:51:24Z",
+      "side": 1,
+      "message": "This is what it took to get it to build. I\u0027ve only run \"hello_triangle vulkan\" locally and it works fine. Are there other things I should run?\nAlso should I roll forward the glslang, spirv-tools \u0026 spirv-tools-header versions in DEPs to sync with what\u0027s used in version for LVL update or does that break things?",
+      "parentUuid": "aa7bf067_813a4758",
+      "range": {
+        "startLine": 181,
+        "startChar": 0,
+        "endLine": 186,
+        "endChar": 52
+      },
+      "revId": "e33f5cbafa825a08fb27dbd9f75c5aff54639ee3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
