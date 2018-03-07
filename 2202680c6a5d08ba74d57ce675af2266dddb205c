@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "12bfb6e1_d463c15c",
+        "filename": "src/tests/gl_tests/CopyTextureTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1200,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-07T22:20:14Z",
+      "side": 1,
+      "message": "Ah, it\u0027s a 10x10 texture with only one pixel of data.",
+      "range": {
+        "startLine": 1200,
+        "startChar": 44,
+        "endLine": 1200,
+        "endChar": 50
+      },
+      "revId": "2202680c6a5d08ba74d57ce675af2266dddb205c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
