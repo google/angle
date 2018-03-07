@@ -144,7 +144,7 @@
 1340 WIN : dEQP-EGL.functional.negative_api.get_display = FAIL
 1340 WIN : dEQP-EGL.functional.negative_api.surface_attrib = SKIP
 1340 WIN : dEQP-EGL.functional.negative_api.swap_interval = FAIL
-2382 WIN : dEQP-EGL.functional.native_color_mapping.native_window.* = TIMEOUT
+2382 WIN : dEQP-EGL.functional.native_color_mapping.native_window.* = SKIP
 1340 WIN : dEQP-EGL.functional.native_coord_mapping.native_window.* = FAIL
 1340 WIN : dEQP-EGL.functional.get_proc_address.extension.egl_ext_platform_base = FAIL
 1340 WIN : dEQP-EGL.functional.preserve_swap.preserve.no_read_before_swap.* = SKIP
