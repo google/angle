@@ -22,6 +22,30 @@
       "revId": "15727627654f32733c7eb82bbed50ba1e0b21d37",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ed6993a0_ab10ae46",
+        "filename": "src/libANGLE/renderer/RenderTargetCache.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-07T22:57:22Z",
+      "side": 1,
+      "message": "This is just a code move - the previous code was already swallowing errors, not sure if you noticed. Agree the syncState should return errors now that they\u0027re doing nontrivial work.",
+      "parentUuid": "ca9eb331_9b808488",
+      "range": {
+        "startLine": 140,
+        "startChar": 8,
+        "endLine": 140,
+        "endChar": 25
+      },
+      "revId": "15727627654f32733c7eb82bbed50ba1e0b21d37",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
