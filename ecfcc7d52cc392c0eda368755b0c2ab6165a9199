@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0f331519_c15f9af9",
+        "filename": "src/libANGLE/renderer/load_functions_data.json",
+        "patchSetId": 8
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-07T14:33:38Z",
+      "side": 1,
+      "message": "now that there\u0027s more than one case for L8, can you fill in the expected type here for D3D11? In this case R8G8B8A.",
+      "range": {
+        "startLine": 119,
+        "startChar": 5,
+        "endLine": 119,
+        "endChar": 9
+      },
+      "revId": "ecfcc7d52cc392c0eda368755b0c2ab6165a9199",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ba30df94_bd93c61b",
+        "filename": "src/libANGLE/renderer/load_functions_data.json",
+        "patchSetId": 8
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-07T14:33:38Z",
+      "side": 1,
+      "message": "same here.",
+      "range": {
+        "startLine": 175,
+        "startChar": 5,
+        "endLine": 175,
+        "endChar": 9
+      },
+      "revId": "ecfcc7d52cc392c0eda368755b0c2ab6165a9199",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f760130e_c1079feb",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_map.json",
+        "patchSetId": 8
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-07T14:33:38Z",
+      "side": 1,
+      "message": "ref",
+      "range": {
+        "startLine": 20,
+        "startChar": 0,
+        "endLine": 23,
+        "endChar": 6
+      },
+      "revId": "ecfcc7d52cc392c0eda368755b0c2ab6165a9199",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8144ca95_b980b119",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_map.json",
+        "patchSetId": 8
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-07T14:33:38Z",
+      "side": 1,
+      "message": "see earlier comment.",
+      "range": {
+        "startLine": 101,
+        "startChar": 0,
+        "endLine": 102,
+        "endChar": 41
+      },
+      "revId": "ecfcc7d52cc392c0eda368755b0c2ab6165a9199",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a8f495c6_56b1d407",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2447,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-07T14:33:38Z",
+      "side": 1,
+      "message": "kinda surprised this is failing on D3D9... oh well.",
+      "range": {
+        "startLine": 2447,
+        "startChar": 37,
+        "endLine": 2447,
+        "endChar": 43
+      },
+      "revId": "ecfcc7d52cc392c0eda368755b0c2ab6165a9199",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "06fca7f4_b93edb17",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 3740,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-07T14:33:38Z",
+      "side": 1,
+      "message": "this \u0027lu\u0027 snuck in here.",
+      "range": {
+        "startLine": 3740,
+        "startChar": 0,
+        "endLine": 3740,
+        "endChar": 3
+      },
+      "revId": "ecfcc7d52cc392c0eda368755b0c2ab6165a9199",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

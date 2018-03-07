@@ -72,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "14f94b02_2b9debdc",
+        "filename": "src/libANGLE/renderer/load_functions_data.json",
+        "patchSetId": 4
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-07T14:33:38Z",
+      "side": 1,
+      "message": "Ah okay I see what the problem is. Refer to https://chromium-review.googlesource.com/c/angle/angle/+/742376\n\nYou\u0027ll need to use a block statement and define \"native\" and \"texture\" values in vk_format_map.json - look for the entry for R8G8B8_UNORM. Otherwise I think things might not work as expected.",
+      "parentUuid": "22ffa19a_36d17e62",
+      "range": {
+        "startLine": 116,
+        "startChar": 5,
+        "endLine": 116,
+        "endChar": 13
+      },
+      "revId": "d65e3fa3b774b1b8e99021f395c95a348a353dd3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e5d4586d_45e9e8c4",
         "filename": "src/libANGLE/renderer/load_functions_data.json",
         "patchSetId": 4
@@ -154,6 +178,30 @@
       "side": 1,
       "message": "I\u0027m not sure I understand how it would be possible for D3D11 to end up here since no mapping to L8A8 is done for D3D11?\n\nD3D11 should still hit the default case instead of even coming in to this function at line 1900.",
       "parentUuid": "aa290a69_993ae18e",
+      "range": {
+        "startLine": 650,
+        "startChar": 0,
+        "endLine": 660,
+        "endChar": 5
+      },
+      "revId": "d65e3fa3b774b1b8e99021f395c95a348a353dd3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6c7b26d6_f086f503",
+        "filename": "src/libANGLE/renderer/load_functions_table_autogen.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 660,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-07T14:33:38Z",
+      "side": 1,
+      "message": "No, you\u0027re right. Missed the default case.",
+      "parentUuid": "492fc80d_daf7c03b",
       "range": {
         "startLine": 650,
         "startChar": 0,
@@ -351,6 +399,30 @@
       "revId": "d65e3fa3b774b1b8e99021f395c95a348a353dd3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b6d2211b_d8953fcb",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 3722,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-07T14:33:38Z",
+      "side": 1,
+      "message": "Yep.",
+      "parentUuid": "03e9797a_a68fe018",
+      "range": {
+        "startLine": 3722,
+        "startChar": 23,
+        "endLine": 3722,
+        "endChar": 33
+      },
+      "revId": "d65e3fa3b774b1b8e99021f395c95a348a353dd3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
