@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "6d674e69_e311fc4b",
+        "filename": "src/compiler/translator/SymbolTable.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 397,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-03-07T07:34:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "16e88117_de837794",
+      "range": {
+        "startLine": 397,
+        "startChar": 4,
+        "endLine": 397,
+        "endChar": 15
+      },
+      "revId": "6b4339185e8a2a2ea3d258b7e54d146d244e0a52",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "adaf1010_2d38ad45",
         "filename": "src/compiler/translator/gen_builtin_symbols.py",
         "patchSetId": 21
@@ -39,6 +63,24 @@
       "revId": "6b4339185e8a2a2ea3d258b7e54d146d244e0a52",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "81a1ed7e_5e070825",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 21
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-03-07T07:34:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "adaf1010_2d38ad45",
+      "revId": "6b4339185e8a2a2ea3d258b7e54d146d244e0a52",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -74,6 +116,24 @@
       "revId": "6b4339185e8a2a2ea3d258b7e54d146d244e0a52",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1fead40b_26220fe0",
+        "filename": "src/tests/compiler_tests/ImmutableString_test_autogen.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-03-07T07:34:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "89d6aa63_85991da4",
+      "revId": "6b4339185e8a2a2ea3d258b7e54d146d244e0a52",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
