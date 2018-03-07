@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0a71d8f8_604b289f",
+        "filename": "src/compiler/translator/SymbolTable.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 522,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-03-07T10:16:24Z",
+      "side": 0,
+      "message": "super-nit: Probably better not to do this whitespace cleanup here - the whole initializeBuiltInVariables() function is gone in my next patch for refactoring the symbol table init.",
+      "revId": "e05ffdd19837dc3782636fba164791091c92210e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

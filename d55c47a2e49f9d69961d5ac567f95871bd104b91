@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e124c240_2533dd14",
+        "filename": "src/compiler/translator/builtin_function_declarations.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 291,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-03-07T10:16:24Z",
+      "side": 1,
+      "message": "Could at least add a comment here that these functions don\u0027t actually exist in the extension, but are just an ad-hoc addition to get this working in ESSL 3+. Prevents future head-scratching.",
+      "revId": "d55c47a2e49f9d69961d5ac567f95871bd104b91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
