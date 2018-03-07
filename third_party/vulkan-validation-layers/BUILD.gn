@@ -178,8 +178,11 @@ if (spirv_use_commit_id) {
       "$vulkan_gen_dir/spirv_tools_commit_id.h",
     ]
     args = [
+      "--git_dir",
       "$raw_spirv_tools_dir",
+      "-s",
       "SPIRV_TOOLS_COMMIT_ID",
+      "-o",
       "$raw_vulkan_gen_dir/spirv_tools_commit_id.h",
     ]
   }
