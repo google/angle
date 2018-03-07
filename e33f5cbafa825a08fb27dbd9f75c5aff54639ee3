@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "aa7bf067_813a4758",
+        "filename": "third_party/vulkan-validation-layers/BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-07T15:31:02Z",
+      "side": 1,
+      "message": "this was really the only compile change necessary? feels like usually there\u0027s more than that.",
+      "range": {
+        "startLine": 181,
+        "startChar": 0,
+        "endLine": 186,
+        "endChar": 52
+      },
+      "revId": "e33f5cbafa825a08fb27dbd9f75c5aff54639ee3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
