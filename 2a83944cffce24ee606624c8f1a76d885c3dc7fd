@@ -1,0 +1,274 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7779984b_1945ae62",
+        "filename": "src/libANGLE/gles1/GLES1State.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-07T21:33:46Z",
+      "side": 1,
+      "message": "Pass false as a second parameter and skip the loop below.",
+      "range": {
+        "startLine": 41,
+        "startChar": 41,
+        "endLine": 41,
+        "endChar": 62
+      },
+      "revId": "2a83944cffce24ee606624c8f1a76d885c3dc7fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0ded96aa_62109a83",
+        "filename": "src/libANGLE/gles1/GLES1State.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-07T21:33:46Z",
+      "side": 1,
+      "message": "Now about adding default values for the members of TextureCoordF in the struct so you can just call resize?",
+      "range": {
+        "startLine": 65,
+        "startChar": 56,
+        "endLine": 70,
+        "endChar": 0
+      },
+      "revId": "2a83944cffce24ee606624c8f1a76d885c3dc7fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3fa68424_1cacfdb7",
+        "filename": "src/libANGLE/gles1/GLES1State.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-07T21:33:46Z",
+      "side": 1,
+      "message": "you can add a default constructor of texture environements that sets the default parameters and skip the loop below.",
+      "range": {
+        "startLine": 71,
+        "startChar": 32,
+        "endLine": 71,
+        "endChar": 53
+      },
+      "revId": "2a83944cffce24ee606624c8f1a76d885c3dc7fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "265832c8_32664774",
+        "filename": "src/libANGLE/gles1/GLES1State.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-07T21:33:46Z",
+      "side": 1,
+      "message": "This line is duplicated",
+      "range": {
+        "startLine": 72,
+        "startChar": 4,
+        "endLine": 72,
+        "endChar": 55
+      },
+      "revId": "2a83944cffce24ee606624c8f1a76d885c3dc7fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7152b1ff_502376a1",
+        "filename": "src/libANGLE/gles1/GLES1State.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-07T21:33:46Z",
+      "side": 1,
+      "message": "These parameters just add noise I think, you can leave them out.",
+      "range": {
+        "startLine": 106,
+        "startChar": 26,
+        "endLine": 106,
+        "endChar": 30
+      },
+      "revId": "2a83944cffce24ee606624c8f1a76d885c3dc7fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "125ee4c4_60a442fc",
+        "filename": "src/libANGLE/gles1/GLES1State.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-07T21:33:46Z",
+      "side": 1,
+      "message": "Can pass an initializer value here too.",
+      "range": {
+        "startLine": 108,
+        "startChar": 28,
+        "endLine": 108,
+        "endChar": 49
+      },
+      "revId": "2a83944cffce24ee606624c8f1a76d885c3dc7fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "57037431_292f07e6",
+        "filename": "src/libANGLE/gles1/GLES1State.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-07T21:33:46Z",
+      "side": 1,
+      "message": "Same comment, can add a default constructor for lights.",
+      "range": {
+        "startLine": 124,
+        "startChar": 31,
+        "endLine": 140,
+        "endChar": 5
+      },
+      "revId": "2a83944cffce24ee606624c8f1a76d885c3dc7fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cdec9d7b_da33c470",
+        "filename": "src/libANGLE/gles1/GLES1State.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-07T21:33:46Z",
+      "side": 1,
+      "message": "here too.",
+      "range": {
+        "startLine": 158,
+        "startChar": 9,
+        "endLine": 158,
+        "endChar": 42
+      },
+      "revId": "2a83944cffce24ee606624c8f1a76d885c3dc7fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "16834835_a86536f3",
+        "filename": "src/libANGLE/gles1/GLES1State.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-07T21:33:46Z",
+      "side": 1,
+      "message": "Here too, can pass  Vector4(0.0f, 0.0f, 0.0f, 0.0f)",
+      "range": {
+        "startLine": 163,
+        "startChar": 39,
+        "endLine": 170,
+        "endChar": 5
+      },
+      "revId": "2a83944cffce24ee606624c8f1a76d885c3dc7fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "46e68249_cee4b10c",
+        "filename": "src/libANGLE/gles1/GLES1State.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-07T21:33:46Z",
+      "side": 1,
+      "message": "I\u0027d say this file doesn\u0027t have to live in it\u0027s own folder (can stay in libANGLE).  What do others think?",
+      "revId": "2a83944cffce24ee606624c8f1a76d885c3dc7fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5545cea8_dd56339d",
+        "filename": "src/libANGLE/gles1/GLES1State.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-07T21:33:46Z",
+      "side": 1,
+      "message": "Do we need to store these caps in members as opposed to sizing storage vectors to the right size?",
+      "range": {
+        "startLine": 33,
+        "startChar": 0,
+        "endLine": 38,
+        "endChar": 43
+      },
+      "revId": "2a83944cffce24ee606624c8f1a76d885c3dc7fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "59ab2c7a_3116d5fe",
+        "filename": "src/libANGLE/gles1/GLES1State.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-07T21:33:46Z",
+      "side": 1,
+      "message": "I\u0027d just split this into separate members.",
+      "range": {
+        "startLine": 47,
+        "startChar": 4,
+        "endLine": 55,
+        "endChar": 49
+      },
+      "revId": "2a83944cffce24ee606624c8f1a76d885c3dc7fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
