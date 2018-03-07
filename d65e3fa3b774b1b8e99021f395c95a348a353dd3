@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "22ffa19a_36d17e62",
+        "filename": "src/libANGLE/renderer/load_functions_data.json",
+        "patchSetId": 4
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-03-07T13:07:44Z",
+      "side": 1,
+      "message": "Yes this is what made my tests pass. The angle format ID is actually L8_UNORM, and we use R8_UNORM in vulkan to represent it. The types used at the second level of the tree here are not the actual format types used in each renderer backend, they are the internal representation angle::format::IDs",
+      "parentUuid": "4d89dbef_f7ee8615",
+      "range": {
+        "startLine": 116,
+        "startChar": 5,
+        "endLine": 116,
+        "endChar": 13
+      },
+      "revId": "d65e3fa3b774b1b8e99021f395c95a348a353dd3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e5d4586d_45e9e8c4",
         "filename": "src/libANGLE/renderer/load_functions_data.json",
         "patchSetId": 4
@@ -68,6 +92,30 @@
       "revId": "d65e3fa3b774b1b8e99021f395c95a348a353dd3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dd16c4f7_5712c0dc",
+        "filename": "src/libANGLE/renderer/load_functions_data.json",
+        "patchSetId": 4
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-03-07T13:07:44Z",
+      "side": 1,
+      "message": "I did figure it out and test it, this is the right format to use to end up receiving the right load function for my types.",
+      "parentUuid": "e5d4586d_45e9e8c4",
+      "range": {
+        "startLine": 172,
+        "startChar": 5,
+        "endLine": 172,
+        "endChar": 15
+      },
+      "revId": "d65e3fa3b774b1b8e99021f395c95a348a353dd3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -94,6 +142,30 @@
     },
     {
       "key": {
+        "uuid": "492fc80d_daf7c03b",
+        "filename": "src/libANGLE/renderer/load_functions_table_autogen.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 660,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-03-07T13:07:44Z",
+      "side": 1,
+      "message": "I\u0027m not sure I understand how it would be possible for D3D11 to end up here since no mapping to L8A8 is done for D3D11?\n\nD3D11 should still hit the default case instead of even coming in to this function at line 1900.",
+      "parentUuid": "aa290a69_993ae18e",
+      "range": {
+        "startLine": 650,
+        "startChar": 0,
+        "endLine": 660,
+        "endChar": 5
+      },
+      "revId": "d65e3fa3b774b1b8e99021f395c95a348a353dd3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8c2b3233_3ae4656e",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
         "patchSetId": 4
@@ -105,6 +177,30 @@
       "writtenOn": "2018-03-06T21:42:13Z",
       "side": 1,
       "message": "I admire your forward-thinkingness of handling ES3 swizzle parameters. :)",
+      "range": {
+        "startLine": 45,
+        "startChar": 37,
+        "endLine": 45,
+        "endChar": 73
+      },
+      "revId": "d65e3fa3b774b1b8e99021f395c95a348a353dd3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "45f64376_c744ea11",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-03-07T13:07:44Z",
+      "side": 1,
+      "message": "I wish it was my idea, but it was Geoffs :) Credit where credit is due.",
+      "parentUuid": "8c2b3233_3ae4656e",
       "range": {
         "startLine": 45,
         "startChar": 37,
@@ -140,6 +236,30 @@
     },
     {
       "key": {
+        "uuid": "211e1fff_2466fedb",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-03-07T13:07:44Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "c266767b_f4a18ab7",
+      "range": {
+        "startLine": 46,
+        "startChar": 37,
+        "endLine": 46,
+        "endChar": 55
+      },
+      "revId": "d65e3fa3b774b1b8e99021f395c95a348a353dd3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ba267542_81f7a39a",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
         "patchSetId": 4
@@ -163,6 +283,30 @@
     },
     {
       "key": {
+        "uuid": "3a27fa96_91855029",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-03-07T13:07:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ba267542_81f7a39a",
+      "range": {
+        "startLine": 182,
+        "startChar": 0,
+        "endLine": 183,
+        "endChar": 61
+      },
+      "revId": "d65e3fa3b774b1b8e99021f395c95a348a353dd3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e54383fa_6d4540ac",
         "filename": "src/tests/gl_tests/TextureTest.cpp",
         "patchSetId": 4
@@ -174,6 +318,30 @@
       "writtenOn": "2018-03-06T21:42:13Z",
       "side": 1,
       "message": "test failures are probably because you\u0027ll need to do a lot of test disabling. couldn\u0027t hurt to triage the failures though.",
+      "range": {
+        "startLine": 3722,
+        "startChar": 23,
+        "endLine": 3722,
+        "endChar": 33
+      },
+      "revId": "d65e3fa3b774b1b8e99021f395c95a348a353dd3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "03e9797a_a68fe018",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 3722,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-03-07T13:07:44Z",
+      "side": 1,
+      "message": "Is the right way to skip tests by using this construct? : \n\nANGLE_SKIP_TEST_IF(IsVulkan());",
+      "parentUuid": "e54383fa_6d4540ac",
       "range": {
         "startLine": 3722,
         "startChar": 23,
