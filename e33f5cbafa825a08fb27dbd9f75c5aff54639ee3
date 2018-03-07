@@ -46,6 +46,30 @@
       "revId": "e33f5cbafa825a08fb27dbd9f75c5aff54639ee3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cb76a96e_aa469039",
+        "filename": "third_party/vulkan-validation-layers/BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-07T16:53:34Z",
+      "side": 1,
+      "message": "Sometimes different problems crop up with MSVS vs Clang, and on Linux vs Windows. But we can see in 2/2. I usually also roll glslang and spirv-tools since it\u0027s much easier to do at once, but in this case might not be strictly necessary. I think we should proceed like this for now.",
+      "parentUuid": "18ce84ac_a16cc901",
+      "range": {
+        "startLine": 181,
+        "startChar": 0,
+        "endLine": 186,
+        "endChar": 52
+      },
+      "revId": "e33f5cbafa825a08fb27dbd9f75c5aff54639ee3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
