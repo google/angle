@@ -37,7 +37,7 @@ deps = {
     Var('android_git') + '/platform/external/shaderc/spirv-tools' + '@' + '9996173f363729b3a97309685dbd4d78547a63a7',
 
   'third_party/vulkan-validation-layers/src':
-    Var('android_git') + '/platform/external/vulkan-validation-layers' + '@' + 'd5c8ed406ab2399a80e2847c03aa80b09b269b53',
+    Var('android_git') + '/platform/external/vulkan-validation-layers' + '@' + '354ad3ba8b88136b82b712acab9b8fcb981beaff',
 
   'third_party/zlib':
     Var('chromium_git') + '/chromium/src/third_party/zlib' + '@' + '24ab14872e8e068ba08cc31cc3d43bcc6d5cb832',
