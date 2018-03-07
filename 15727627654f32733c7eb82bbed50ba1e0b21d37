@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ca9eb331_9b808488",
+        "filename": "src/libANGLE/renderer/RenderTargetCache.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-07T22:17:12Z",
+      "side": 1,
+      "message": "The more work we move into dirty bits, the more I see errors being swallowed like this.  We should probably have the syncstate functions return errors (not necessarily in this patch).",
+      "range": {
+        "startLine": 140,
+        "startChar": 8,
+        "endLine": 140,
+        "endChar": 25
+      },
+      "revId": "15727627654f32733c7eb82bbed50ba1e0b21d37",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
