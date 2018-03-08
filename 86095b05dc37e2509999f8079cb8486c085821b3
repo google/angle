@@ -70,6 +70,30 @@
       "revId": "86095b05dc37e2509999f8079cb8486c085821b3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6208a8bf_a825189d",
+        "filename": "src/libANGLE/TransformFeedback.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-08T22:15:01Z",
+      "side": 1,
+      "message": "Oh, and it causes other weird side effects on the tests, then still LGTM without any other change - the ASSERT would be nice to have but not a requirement by any means.",
+      "parentUuid": "dd0894cf_ac79144b",
+      "range": {
+        "startLine": 54,
+        "startChar": 3,
+        "endLine": 54,
+        "endChar": 61
+      },
+      "revId": "86095b05dc37e2509999f8079cb8486c085821b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
