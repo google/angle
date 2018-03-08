@@ -46,6 +46,30 @@
       "revId": "6a473a7f035380f9b36518d503db9ff7e154dd4e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0b0f6ff4_2e937e3c",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 2132,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-03-08T06:43:48Z",
+      "side": 1,
+      "message": "So what you actually want is the \u0027GroupSync\u0027 operation. I am fine with this. Maybe it\u0027s better to add a comment above this line for this.",
+      "parentUuid": "fec476ec_b98fc891",
+      "range": {
+        "startLine": 2132,
+        "startChar": 39,
+        "endLine": 2132,
+        "endChar": 70
+      },
+      "revId": "6a473a7f035380f9b36518d503db9ff7e154dd4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
