@@ -94,6 +94,30 @@
       "revId": "86095b05dc37e2509999f8079cb8486c085821b3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "29a2aeee_74d2d695",
+        "filename": "src/libANGLE/TransformFeedback.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1256148
+      },
+      "writtenOn": "2018-03-08T23:45:31Z",
+      "side": 1,
+      "message": "Thanks. I made the change to BindingPointer and it didn\u0027t cause any tests to fail, so I think I will go ahead with it.",
+      "parentUuid": "6208a8bf_a825189d",
+      "range": {
+        "startLine": 54,
+        "startChar": 3,
+        "endLine": 54,
+        "endChar": 61
+      },
+      "revId": "86095b05dc37e2509999f8079cb8486c085821b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
