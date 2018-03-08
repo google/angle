@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "85071364_a1e4ccd5",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-03-08T19:34:36Z",
+      "side": 1,
+      "message": "this could say \"not implemented for indices in a buffer object\" but I don\u0027t care much",
+      "revId": "c68edfb760595f321e6fc47c0dc97cd840d8c8a7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8082640d_70d65777",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 370,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-03-08T19:34:36Z",
+      "side": 1,
+      "message": "thought you didn\u0027t like auto :)\n\nI think it\u0027s good when the alternative is some templated monstrosity, not so good in place of int or GLubyte",
+      "range": {
+        "startLine": 370,
+        "startChar": 22,
+        "endLine": 370,
+        "endChar": 26
+      },
+      "revId": "c68edfb760595f321e6fc47c0dc97cd840d8c8a7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
