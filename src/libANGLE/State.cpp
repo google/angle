@@ -1831,7 +1831,7 @@ void State::getFloatv(GLenum pname, GLfloat *params)
     }
 }
 
-void State::getIntegerv(const Context *context, GLenum pname, GLint *params)
+Error State::getIntegerv(const Context *context, GLenum pname, GLint *params)
 {
     if (pname >= GL_DRAW_BUFFER0_EXT && pname <= GL_DRAW_BUFFER15_EXT)
     {
@@ -1839,7 +1839,7 @@ void State::getIntegerv(const Context *context, GLenum pname, GLint *params)
         ASSERT(colorAttachment < mMaxDrawBuffers);
         Framebuffer *framebuffer = mDrawFramebuffer;
         *params = framebuffer->getDrawBufferState(colorAttachment);
-        return;
+        return NoError();
     }
 
     // Please note: DEPTH_CLEAR_VALUE is not included in our internal getIntegerv implementation
@@ -1934,12 +1934,16 @@ void State::getIntegerv(const Context *context, GLenum pname, GLint *params)
       case GL_SAMPLES:
         {
             Framebuffer *framebuffer = mDrawFramebuffer;
-            if (framebuffer->checkStatus(context) == GL_FRAMEBUFFER_COMPLETE)
+            bool complete            = false;
+            ANGLE_TRY(framebuffer->isComplete(context, &complete));
+            if (complete)
             {
+                GLint samples = 0;
+                ANGLE_TRY(framebuffer->getSamples(context, &samples));
                 switch (pname)
                 {
                     case GL_SAMPLE_BUFFERS:
-                        if (framebuffer->getSamples(context) != 0)
+                        if (samples != 0)
                         {
                             *params = 1;
                         }
@@ -1949,7 +1953,7 @@ void State::getIntegerv(const Context *context, GLenum pname, GLint *params)
                         }
                         break;
                     case GL_SAMPLES:
-                        *params = framebuffer->getSamples(context);
+                        *params = samples;
                         break;
                 }
             }
@@ -2123,6 +2127,8 @@ void State::getIntegerv(const Context *context, GLenum pname, GLint *params)
         UNREACHABLE();
         break;
     }
+
+    return NoError();
 }
 
 void State::getPointerv(GLenum pname, void **params) const

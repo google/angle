@@ -981,7 +981,7 @@ void Framebuffer::invalidateCompletenessCache()
     }
 }
 
-GLenum Framebuffer::checkStatus(const Context *context)
+Error Framebuffer::checkStatus(const Context *context, GLenum *statusOut)
 {
     // The default framebuffer is always complete except when it is surfaceless in which
     // case it is always unsupported. We return early because the default framebuffer may
@@ -991,18 +991,29 @@ GLenum Framebuffer::checkStatus(const Context *context)
         ASSERT(mCachedStatus.valid());
         ASSERT(mCachedStatus.value() == GL_FRAMEBUFFER_COMPLETE ||
                mCachedStatus.value() == GL_FRAMEBUFFER_UNDEFINED_OES);
-        return mCachedStatus.value();
+        *statusOut = mCachedStatus.value();
+        return NoError();
     }
 
     if (hasAnyDirtyBit() || !mCachedStatus.valid())
     {
-        mCachedStatus = checkStatusImpl(context);
+        mCachedStatus = checkStatusWithGLFrontEnd(context);
+
+        if (mCachedStatus.value() == GL_FRAMEBUFFER_COMPLETE)
+        {
+            ANGLE_TRY(syncState(context));
+            if (!mImpl->checkStatus(context))
+            {
+                mCachedStatus = GL_FRAMEBUFFER_UNSUPPORTED;
+            }
+        }
     }
 
-    return mCachedStatus.value();
+    *statusOut = mCachedStatus.value();
+    return NoError();
 }
 
-GLenum Framebuffer::checkStatusImpl(const Context *context)
+GLenum Framebuffer::checkStatusWithGLFrontEnd(const Context *context)
 {
     const ContextState &state = context->getContextState();
 
@@ -1197,13 +1208,6 @@ GLenum Framebuffer::checkStatusImpl(const Context *context)
         {
             return GL_FRAMEBUFFER_UNSUPPORTED;
         }
-    }
-
-    // TODO(jmadill): Don't swallow an error here. http://anglebug.com/2372
-    ANGLE_SWALLOW_ERR(syncState(context));
-    if (!mImpl->checkStatus(context))
-    {
-        return GL_FRAMEBUFFER_UNSUPPORTED;
     }
 
     return GL_FRAMEBUFFER_COMPLETE;
@@ -1425,14 +1429,12 @@ Error Framebuffer::blit(const Context *context,
     return mImpl->blit(context, sourceArea, destArea, blitMask, filter);
 }
 
-int Framebuffer::getSamples(const Context *context)
+Error Framebuffer::getSamples(const Context *context, int *samplesOut)
 {
-    if (complete(context))
-    {
-        return getCachedSamples(context);
-    }
-
-    return 0;
+    bool completeness = false;
+    ANGLE_TRY(isComplete(context, &completeness));
+    *samplesOut = completeness ? getCachedSamples(context) : 0;
+    return NoError();
 }
 
 int Framebuffer::getCachedSamples(const Context *context)
@@ -1724,6 +1726,8 @@ void Framebuffer::updateAttachment(const Context *context,
     mDirtyBits.set(dirtyBit);
     mState.mResourceNeedsInit.set(dirtyBit, attachment->initState() == InitState::MayNeedInit);
     onDirtyBinding->bind(resource ? resource->getSubject() : nullptr);
+
+    invalidateCompletenessCache();
 }
 
 void Framebuffer::resetAttachment(const Context *context, GLenum binding)
@@ -1738,10 +1742,6 @@ Error Framebuffer::syncState(const Context *context)
         mDirtyBitsGuard = mDirtyBits;
         ANGLE_TRY(mImpl->syncState(context, mDirtyBits));
         mDirtyBits.reset();
-        if (mId != 0)
-        {
-            mCachedStatus.reset();
-        }
         mDirtyBitsGuard.reset();
     }
     return NoError();
@@ -1788,9 +1788,12 @@ FramebufferAttachment *Framebuffer::getAttachmentFromSubjectIndex(angle::Subject
     }
 }
 
-bool Framebuffer::complete(const Context *context)
+Error Framebuffer::isComplete(const Context *context, bool *completeOut)
 {
-    return (checkStatus(context) == GL_FRAMEBUFFER_COMPLETE);
+    GLenum status = GL_NONE;
+    ANGLE_TRY(checkStatus(context, &status));
+    *completeOut = (status == GL_FRAMEBUFFER_COMPLETE);
+    return NoError();
 }
 
 bool Framebuffer::formsRenderingFeedbackLoopWith(const State &state) const
@@ -1901,24 +1904,28 @@ void Framebuffer::setDefaultWidth(GLint defaultWidth)
 {
     mState.mDefaultWidth = defaultWidth;
     mDirtyBits.set(DIRTY_BIT_DEFAULT_WIDTH);
+    invalidateCompletenessCache();
 }
 
 void Framebuffer::setDefaultHeight(GLint defaultHeight)
 {
     mState.mDefaultHeight = defaultHeight;
     mDirtyBits.set(DIRTY_BIT_DEFAULT_HEIGHT);
+    invalidateCompletenessCache();
 }
 
 void Framebuffer::setDefaultSamples(GLint defaultSamples)
 {
     mState.mDefaultSamples = defaultSamples;
     mDirtyBits.set(DIRTY_BIT_DEFAULT_SAMPLES);
+    invalidateCompletenessCache();
 }
 
 void Framebuffer::setDefaultFixedSampleLocations(bool defaultFixedSampleLocations)
 {
     mState.mDefaultFixedSampleLocations = defaultFixedSampleLocations;
     mDirtyBits.set(DIRTY_BIT_DEFAULT_FIXED_SAMPLE_LOCATIONS);
+    invalidateCompletenessCache();
 }
 
 GLsizei Framebuffer::getNumViews() const

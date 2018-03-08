@@ -214,7 +214,7 @@ class Framebuffer final : public angle::ObserverInterface, public LabeledObject
     bool usingExtendedDrawBuffers() const;
 
     // This method calls checkStatus.
-    int getSamples(const Context *context);
+    Error getSamples(const Context *context, int *samplesOut);
 
     Error getSamplePosition(size_t index, GLfloat *xy) const;
 
@@ -229,13 +229,13 @@ class Framebuffer final : public angle::ObserverInterface, public LabeledObject
 
     void invalidateCompletenessCache();
 
-    GLenum checkStatus(const Context *context);
+    Error checkStatus(const Context *context, GLenum *statusOut);
 
     // For when we don't want to check completeness in getSamples().
     int getCachedSamples(const Context *context);
 
     // Helper for checkStatus == GL_FRAMEBUFFER_COMPLETE.
-    bool complete(const Context *context);
+    Error isComplete(const Context *context, bool *completeOut);
 
     bool hasValidDepthStencil() const;
 
@@ -328,7 +328,7 @@ class Framebuffer final : public angle::ObserverInterface, public LabeledObject
                                   GLenum matchType,
                                   GLuint matchId,
                                   size_t dirtyBit);
-    GLenum checkStatusImpl(const Context *context);
+    GLenum checkStatusWithGLFrontEnd(const Context *context);
     void setAttachment(const Context *context,
                        GLenum type,
                        GLenum binding,

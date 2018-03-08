@@ -26,6 +26,7 @@ namespace gl
 {
 class Context;
 struct Format;
+class Framebuffer;
 struct LinkedUniform;
 class Program;
 class Shader;
@@ -591,6 +592,15 @@ bool ValidateGetInternalFormativBase(Context *context,
                                      GLenum pname,
                                      GLsizei bufSize,
                                      GLsizei *numParams);
+
+bool ValidateFramebufferComplete(Context *context, Framebuffer *framebuffer, bool isFramebufferOp);
+bool ValidateFramebufferNotMultisampled(Context *context, Framebuffer *framebuffer);
+
+// Utility macro for handling implementation methods inside Validation.
+#define ANGLE_HANDLE_VALIDATION_ERR(X) \
+    context->handleError(X);           \
+    return false;
+#define ANGLE_VALIDATION_TRY(EXPR) ANGLE_TRY_TEMPLATE(EXPR, ANGLE_HANDLE_VALIDATION_ERR);
 
 }  // namespace gl
 

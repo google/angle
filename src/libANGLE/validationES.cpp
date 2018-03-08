@@ -1245,15 +1245,13 @@ bool ValidateBlitFramebufferParameters(Context *context,
         return false;
     }
 
-    if (readFramebuffer->checkStatus(context) != GL_FRAMEBUFFER_COMPLETE)
+    if (!ValidateFramebufferComplete(context, readFramebuffer, true))
     {
-        context->handleError(InvalidFramebufferOperation());
         return false;
     }
 
-    if (drawFramebuffer->checkStatus(context) != GL_FRAMEBUFFER_COMPLETE)
+    if (!ValidateFramebufferComplete(context, drawFramebuffer, true))
     {
-        context->handleError(InvalidFramebufferOperation());
         return false;
     }
 
@@ -1263,9 +1261,8 @@ bool ValidateBlitFramebufferParameters(Context *context,
         return false;
     }
 
-    if (drawFramebuffer->getSamples(context) != 0)
+    if (!ValidateFramebufferNotMultisampled(context, drawFramebuffer))
     {
-        context->handleError(InvalidOperation());
         return false;
     }
 
@@ -2183,23 +2180,21 @@ bool ValidateStateQuery(Context *context, GLenum pname, GLenum *nativeType, unsi
         case GL_IMPLEMENTATION_COLOR_READ_TYPE:
         case GL_IMPLEMENTATION_COLOR_READ_FORMAT:
         {
-            if (context->getGLState().getReadFramebuffer()->checkStatus(context) !=
-                GL_FRAMEBUFFER_COMPLETE)
+            Framebuffer *readFramebuffer = context->getGLState().getReadFramebuffer();
+            ASSERT(readFramebuffer);
+
+            if (!ValidateFramebufferComplete(context, readFramebuffer, false))
             {
-                context->handleError(InvalidOperation());
                 return false;
             }
 
-            const Framebuffer *framebuffer = context->getGLState().getReadFramebuffer();
-            ASSERT(framebuffer);
-
-            if (framebuffer->getReadBufferState() == GL_NONE)
+            if (readFramebuffer->getReadBufferState() == GL_NONE)
             {
                 ANGLE_VALIDATION_ERR(context, InvalidOperation(), ReadBufferNone);
                 return false;
             }
 
-            const FramebufferAttachment *attachment = framebuffer->getReadColorbuffer();
+            const FramebufferAttachment *attachment = readFramebuffer->getReadColorbuffer();
             if (!attachment)
             {
                 context->handleError(InvalidOperation());
@@ -2293,17 +2288,15 @@ bool ValidateCopyTexImageParametersBase(Context *context,
         return false;
     }
 
-    const auto &state    = context->getGLState();
+    const gl::State &state       = context->getGLState();
     Framebuffer *readFramebuffer = state.getReadFramebuffer();
-    if (readFramebuffer->checkStatus(context) != GL_FRAMEBUFFER_COMPLETE)
+    if (!ValidateFramebufferComplete(context, readFramebuffer, true))
     {
-        context->handleError(InvalidFramebufferOperation());
         return false;
     }
 
-    if (readFramebuffer->id() != 0 && readFramebuffer->getSamples(context) != 0)
+    if (readFramebuffer->id() != 0 && !ValidateFramebufferNotMultisampled(context, readFramebuffer))
     {
-        context->handleError(InvalidOperation());
         return false;
     }
 
@@ -2510,9 +2503,8 @@ bool ValidateDrawBase(Context *context, GLenum mode, GLsizei count)
         }
     }
 
-    if (framebuffer->checkStatus(context) != GL_FRAMEBUFFER_COMPLETE)
+    if (!ValidateFramebufferComplete(context, framebuffer, true))
     {
-        context->handleError(InvalidFramebufferOperation());
         return false;
     }
 
@@ -5169,15 +5161,13 @@ bool ValidateReadPixelsBase(Context *context,
 
     Framebuffer *readFramebuffer = context->getGLState().getReadFramebuffer();
 
-    if (readFramebuffer->checkStatus(context) != GL_FRAMEBUFFER_COMPLETE)
+    if (!ValidateFramebufferComplete(context, readFramebuffer, true))
     {
-        context->handleError(InvalidFramebufferOperation());
         return false;
     }
 
-    if (readFramebuffer->id() != 0 && readFramebuffer->getSamples(context) != 0)
+    if (readFramebuffer->id() != 0 && !ValidateFramebufferNotMultisampled(context, readFramebuffer))
     {
-        context->handleError(InvalidOperation());
         return false;
     }
 
@@ -5921,6 +5911,40 @@ bool ValidateGetInternalFormativBase(Context *context,
         *numParams = std::min(bufSize, maxWriteParams);
     }
 
+    return true;
+}
+
+// We should check with Khronos if returning INVALID_FRAMEBUFFER_OPERATION is OK when querying
+// implementation format info for incomplete framebuffers. It seems like these queries are
+// incongruent with the other errors.
+bool ValidateFramebufferComplete(Context *context, Framebuffer *framebuffer, bool isFramebufferOp)
+{
+    bool complete = false;
+    ANGLE_VALIDATION_TRY(framebuffer->isComplete(context, &complete));
+    if (!complete)
+    {
+        if (isFramebufferOp)
+        {
+            context->handleError(InvalidFramebufferOperation());
+        }
+        else
+        {
+            context->handleError(InvalidOperation());
+        }
+        return false;
+    }
+    return true;
+}
+
+bool ValidateFramebufferNotMultisampled(Context *context, Framebuffer *framebuffer)
+{
+    GLint samples = 0;
+    ANGLE_VALIDATION_TRY(framebuffer->getSamples(context, &samples));
+    if (samples != 0)
+    {
+        context->handleError(InvalidOperation());
+        return false;
+    }
     return true;
 }
 

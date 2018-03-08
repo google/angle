@@ -333,7 +333,7 @@ class State : public angle::ObserverInterface, angle::NonCopyable
     // State query functions
     void getBooleanv(GLenum pname, GLboolean *params);
     void getFloatv(GLenum pname, GLfloat *params);
-    void getIntegerv(const Context *context, GLenum pname, GLint *params);
+    Error getIntegerv(const Context *context, GLenum pname, GLint *params);
     void getPointerv(GLenum pname, void **params) const;
     void getIntegeri_v(GLenum target, GLuint index, GLint *data);
     void getInteger64i_v(GLenum target, GLuint index, GLint64 *data);
