@@ -46,6 +46,30 @@
       "revId": "86095b05dc37e2509999f8079cb8486c085821b3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dd0894cf_ac79144b",
+        "filename": "src/libANGLE/TransformFeedback.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-08T22:08:31Z",
+      "side": 1,
+      "message": "I think that\u0027s a good change. Please go ahead and change BindingPointer::set to store the current object in a temporary, set the current object, then release the old object in the temporary, Also a comment would be welcome.",
+      "parentUuid": "bdcf2b98_e0ce24cf",
+      "range": {
+        "startLine": 54,
+        "startChar": 3,
+        "endLine": 54,
+        "endChar": 61
+      },
+      "revId": "86095b05dc37e2509999f8079cb8486c085821b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
