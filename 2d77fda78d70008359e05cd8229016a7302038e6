@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8975f009_e258d499",
+        "filename": "src/libANGLE/renderer/RenderTargetCache.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-03-08T13:30:23Z",
+      "side": 1,
+      "message": "nit : Should we also assert that getReadIndex is in the boundaries of the array length?",
+      "range": {
+        "startLine": 151,
+        "startChar": 4,
+        "endLine": 151,
+        "endChar": 54
+      },
+      "revId": "2d77fda78d70008359e05cd8229016a7302038e6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7e6a21ca_a78a5302",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-03-08T13:30:23Z",
+      "side": 1,
+      "message": "Is it expected to possibly have a null pointer in that collection? Can we replace with an ASSERT instead?",
+      "range": {
+        "startLine": 152,
+        "startChar": 8,
+        "endLine": 153,
+        "endChar": 9
+      },
+      "revId": "2d77fda78d70008359e05cd8229016a7302038e6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "64d008be_9adeaa80",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 346,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-03-08T13:30:23Z",
+      "side": 1,
+      "message": "Same question, I guess I want to just understand why can this collection have nullptrs in it?",
+      "range": {
+        "startLine": 345,
+        "startChar": 8,
+        "endLine": 346,
+        "endChar": 9
+      },
+      "revId": "2d77fda78d70008359e05cd8229016a7302038e6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
