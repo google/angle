@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "43231533_780ac936",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-03-08T20:31:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "85071364_a1e4ccd5",
+      "revId": "c68edfb760595f321e6fc47c0dc97cd840d8c8a7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8082640d_70d65777",
         "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
         "patchSetId": 2
@@ -63,6 +81,30 @@
       "revId": "c68edfb760595f321e6fc47c0dc97cd840d8c8a7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "611f48b1_72c14096",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 370,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-03-08T20:31:50Z",
+      "side": 1,
+      "message": "This is a textbook usage of auto explained in the style guide. I\u0027m directly casting on the right and the eyes don\u0027t have to go far to understand what type it is.",
+      "parentUuid": "8082640d_70d65777",
+      "range": {
+        "startLine": 370,
+        "startChar": 22,
+        "endLine": 370,
+        "endChar": 26
+      },
+      "revId": "c68edfb760595f321e6fc47c0dc97cd840d8c8a7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
