@@ -22,6 +22,30 @@
       "revId": "86095b05dc37e2509999f8079cb8486c085821b3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bdcf2b98_e0ce24cf",
+        "filename": "src/libANGLE/TransformFeedback.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1256148
+      },
+      "writtenOn": "2018-03-08T21:25:36Z",
+      "side": 1,
+      "message": "The problem is that if the context\u0027s reference to the TransformFeedback is the last reference, setting it to NULL calls onDestroy inside the call to BindingPointer::set, before the pointer is actually changed, so isCurrentTransformFeedback still returns true.\n\nModifying BindingPointer::set to set the pointer before calling RefCountObject::Release would fix that, but I\u0027m not sure if that\u0027s a good idea and it would be a risky change. Let me know what you think.",
+      "parentUuid": "d6e10c0f_a9a2c39f",
+      "range": {
+        "startLine": 54,
+        "startChar": 3,
+        "endLine": 54,
+        "endChar": 61
+      },
+      "revId": "86095b05dc37e2509999f8079cb8486c085821b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
