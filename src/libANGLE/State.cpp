@@ -2227,15 +2227,15 @@ bool State::hasMappedBuffer(BufferBinding target) const
     }
 }
 
-void State::syncDirtyObjects(const Context *context)
+Error State::syncDirtyObjects(const Context *context)
 {
     if (!mDirtyObjects.any())
-        return;
+        return NoError();
 
-    syncDirtyObjects(context, mDirtyObjects);
+    return syncDirtyObjects(context, mDirtyObjects);
 }
 
-void State::syncDirtyObjects(const Context *context, const DirtyObjects &bitset)
+Error State::syncDirtyObjects(const Context *context, const DirtyObjects &bitset)
 {
     for (auto dirtyObject : bitset)
     {
@@ -2264,6 +2264,7 @@ void State::syncDirtyObjects(const Context *context, const DirtyObjects &bitset)
     }
 
     mDirtyObjects &= ~bitset;
+    return NoError();
 }
 
 void State::syncProgramTextures(const Context *context)
@@ -2341,7 +2342,7 @@ void State::syncProgramTextures(const Context *context)
     }
 }
 
-void State::syncDirtyObject(const Context *context, GLenum target)
+Error State::syncDirtyObject(const Context *context, GLenum target)
 {
     DirtyObjects localSet;
 
@@ -2367,7 +2368,7 @@ void State::syncDirtyObject(const Context *context, GLenum target)
             break;
     }
 
-    syncDirtyObjects(context, localSet);
+    return syncDirtyObjects(context, localSet);
 }
 
 void State::setObjectDirty(GLenum target)

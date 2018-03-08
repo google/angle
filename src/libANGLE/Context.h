@@ -1166,12 +1166,12 @@ class Context final : public ValidationContext
 
   private:
     Error prepareForDraw();
-    void syncRendererState();
-    void syncRendererState(const State::DirtyBits &bitMask, const State::DirtyObjects &objectMask);
-    void syncStateForReadPixels();
-    void syncStateForTexImage();
-    void syncStateForClear();
-    void syncStateForBlit();
+    Error syncRendererState();
+    Error syncRendererState(const State::DirtyBits &bitMask, const State::DirtyObjects &objectMask);
+    Error syncStateForReadPixels();
+    Error syncStateForTexImage();
+    Error syncStateForClear();
+    Error syncStateForBlit();
     VertexArray *checkVertexArrayAllocation(GLuint vertexArrayHandle);
     TransformFeedback *checkTransformFeedbackAllocation(GLuint transformFeedback);
 
