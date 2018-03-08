@@ -16,6 +16,41 @@
       "revId": "c82bef53c17bee7c763f824d46c300c6d5ed7742",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "119626ac_72ca6843",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1166,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2018-03-08T05:03:03Z",
+      "side": 1,
+      "message": "How can we write a test to ensure that the correct thing is done in this case?",
+      "parentUuid": "e3a575b0_a1f713b2",
+      "revId": "c82bef53c17bee7c763f824d46c300c6d5ed7742",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e56f5482_be7051b1",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2487,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2018-03-08T05:03:03Z",
+      "side": 1,
+      "message": "If the values were set in an incorrect way while the stencil test is disabled, and then it\u0027s enabled, the error will still be generated because ValidateDrawBase is called for every draw call, correct?",
+      "revId": "c82bef53c17bee7c763f824d46c300c6d5ed7742",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
