@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "fccc2839_10753591",
+        "filename": "src/libANGLE/renderer/RenderTargetCache.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-08T14:28:24Z",
+      "side": 1,
+      "message": "Added another ASSERT ... this was already ASSERTed in getReadIndex twice.",
+      "parentUuid": "8975f009_e258d499",
+      "range": {
+        "startLine": 151,
+        "startChar": 4,
+        "endLine": 151,
+        "endChar": 54
+      },
+      "revId": "2d77fda78d70008359e05cd8229016a7302038e6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7e6a21ca_a78a5302",
         "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
         "patchSetId": 5
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "01bba52e_fb29f789",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-08T14:28:24Z",
+      "side": 1,
+      "message": "A null renderTarget means there is no color attachment there. For instance in ES2, when you have at most one color attachment, indexes 1-15 are all nullptr.\n\nI changed this to iterate based on DrawBuffersMask. I started making this into an iterator helper but it became unwieldy. Can revisit this in the future and make an iterator helper.",
+      "parentUuid": "7e6a21ca_a78a5302",
+      "range": {
+        "startLine": 152,
+        "startChar": 8,
+        "endLine": 153,
+        "endChar": 9
+      },
+      "revId": "2d77fda78d70008359e05cd8229016a7302038e6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "64d008be_9adeaa80",
         "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
         "patchSetId": 5
@@ -68,6 +116,30 @@
       "revId": "2d77fda78d70008359e05cd8229016a7302038e6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f973e321_a7144cb8",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 346,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-08T14:28:24Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "64d008be_9adeaa80",
+      "range": {
+        "startLine": 345,
+        "startChar": 8,
+        "endLine": 346,
+        "endChar": 9
+      },
+      "revId": "2d77fda78d70008359e05cd8229016a7302038e6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
