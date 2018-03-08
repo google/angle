@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ee6d981a_293dea81",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2143,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-03-08T12:40:42Z",
+      "side": 1,
+      "message": "I\u0027m not quite sure how memoryBarrier* functions except for memoryBarrierShared() should be translated. In GLSL these only affect the ordering of transactions done by a single shader invocation, whereas in HLSL it seems like single-invocation barriers do not exist - I\u0027m only aware of HLSL barriers that affect the whole group. Maybe we can ask our MS contacts what are the memory transaction ordering guarantees for HLSL shaders when it comes to transactions by a single shader invocation to confirm whether these barriers are needed at all?",
+      "revId": "702ffdfe1a63786f6e0c81536287f477cc700546",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b7fe8d99_2d9d31e4",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1067,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-03-08T12:40:42Z",
+      "side": 1,
+      "message": "The comment and the test name should be more specific about what is being tested. This test executes only a single group of shaders and only uses specific types of barrier functions, so it\u0027s not a comprehensive test of all the different barriers.",
+      "revId": "702ffdfe1a63786f6e0c81536287f477cc700546",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c2e5ecc0_6750582a",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1076,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-03-08T12:40:42Z",
+      "side": 1,
+      "message": "A comment explaining the algorithm executed by the shader would be helpful. Something like: \"Each invocation first stores a single value in an image. Then each invocation sums up all the values in the image and stores the sum in the image. Barriers are used to ensure that the reads and writes from different invocations are done in order\".",
+      "revId": "702ffdfe1a63786f6e0c81536287f477cc700546",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5d94b2f3_c32be027",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1085,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-03-08T12:40:42Z",
+      "side": 1,
+      "message": "Shouldn\u0027t this be groupMemoryBarrier() since we\u0027re also going to look up values from other invocations in the same group?",
+      "revId": "702ffdfe1a63786f6e0c81536287f477cc700546",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
