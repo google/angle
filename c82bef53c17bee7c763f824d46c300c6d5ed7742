@@ -51,6 +51,47 @@
       "revId": "c82bef53c17bee7c763f824d46c300c6d5ed7742",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7d3c4084_de9d028a",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2487,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-08T15:38:55Z",
+      "side": 1,
+      "message": "Yes, this is called for every draw.",
+      "parentUuid": "e56f5482_be7051b1",
+      "revId": "c82bef53c17bee7c763f824d46c300c6d5ed7742",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e1f3a5c1_65a69192",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1251,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-08T15:38:55Z",
+      "side": 1,
+      "message": "Can you put this in a another function with the expected error as a parameter?",
+      "range": {
+        "startLine": 1196,
+        "startChar": 0,
+        "endLine": 1251,
+        "endChar": 5
+      },
+      "revId": "c82bef53c17bee7c763f824d46c300c6d5ed7742",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
