@@ -54,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "f69bc370_943042f3",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1166,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-08T16:45:56Z",
+      "side": 1,
+      "message": "Can you do this by modifying StateManager11::processFramebufferInvalidation?",
+      "parentUuid": "119626ac_72ca6843",
+      "revId": "c82bef53c17bee7c763f824d46c300c6d5ed7742",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e56f5482_be7051b1",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 7
@@ -106,6 +124,29 @@
     },
     {
       "key": {
+        "uuid": "62835a0c_3784b0f1",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1185,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-08T16:45:56Z",
+      "side": 1,
+      "message": "run git cl format.",
+      "range": {
+        "startLine": 1185,
+        "startChar": 32,
+        "endLine": 1185,
+        "endChar": 33
+      },
+      "revId": "c82bef53c17bee7c763f824d46c300c6d5ed7742",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e1f3a5c1_65a69192",
         "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
         "patchSetId": 7
@@ -117,6 +158,30 @@
       "writtenOn": "2018-03-08T15:38:55Z",
       "side": 1,
       "message": "Can you put this in a another function with the expected error as a parameter?",
+      "range": {
+        "startLine": 1196,
+        "startChar": 0,
+        "endLine": 1251,
+        "endChar": 5
+      },
+      "revId": "c82bef53c17bee7c763f824d46c300c6d5ed7742",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "df096886_8c98784c",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1251,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-08T16:45:56Z",
+      "side": 1,
+      "message": "+1, two separate tests if possible.",
+      "parentUuid": "e1f3a5c1_65a69192",
       "range": {
         "startLine": 1196,
         "startChar": 0,
