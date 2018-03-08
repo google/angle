@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "d93206ea_3e52705a",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2143,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-03-08T20:12:37Z",
+      "side": 1,
+      "message": "+1 EOpBarrier and EOpMemoryBarrierShared LGTM but the others might not be needed like Olli said. The HLSL documentation is really unclear, but the SM5 Assembly one is better: https://msdn.microsoft.com/en-us/library/windows/desktop/hh447241(v\u003dvs.85).aspx\n\nIt looks like we want to do the following:\n - EOpBarrier becomes sync_g_t (sync_t is not allowed)\n - EOpMemoryBarrier becomes sync_g\n - EOpMemoryBarrier[|AtomicCount|Buffer|Image] might be noops? We need to check that\n - EOpGroupMemoryBarrier becomes sync_ugroup_g",
+      "parentUuid": "ee6d981a_293dea81",
+      "revId": "702ffdfe1a63786f6e0c81536287f477cc700546",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b7fe8d99_2d9d31e4",
         "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
         "patchSetId": 10
