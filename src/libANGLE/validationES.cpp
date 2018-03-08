@@ -497,6 +497,30 @@ bool ValidateVertexShaderAttributeTypeMatch(Context *context)
     return true;
 }
 
+bool IsCompatibleDrawModeWithGeometryShader(GLenum drawMode,
+                                            GLenum geometryShaderInputPrimitiveType)
+{
+    // [EXT_geometry_shader] Section 11.1gs.1, Geometry Shader Input Primitives
+    switch (geometryShaderInputPrimitiveType)
+    {
+        case GL_POINTS:
+            return drawMode == GL_POINTS;
+        case GL_LINES:
+            return drawMode == GL_LINES || drawMode == GL_LINE_STRIP || drawMode == GL_LINE_LOOP;
+        case GL_LINES_ADJACENCY_EXT:
+            return drawMode == GL_LINES_ADJACENCY_EXT || drawMode == GL_LINE_STRIP_ADJACENCY_EXT;
+        case GL_TRIANGLES:
+            return drawMode == GL_TRIANGLES || drawMode == GL_TRIANGLE_FAN ||
+                   drawMode == GL_TRIANGLE_STRIP;
+        case GL_TRIANGLES_ADJACENCY_EXT:
+            return drawMode == GL_TRIANGLES_ADJACENCY_EXT ||
+                   drawMode == GL_TRIANGLE_STRIP_ADJACENCY_EXT;
+        default:
+            UNREACHABLE();
+            return false;
+    }
+}
+
 }  // anonymous namespace
 
 bool IsETC2EACFormat(const GLenum format)
@@ -2434,6 +2458,8 @@ bool ValidateCopyTexImageParametersBase(Context *context,
 
 bool ValidateDrawBase(Context *context, GLenum mode, GLsizei count)
 {
+    const Extensions &extensions = context->getExtensions();
+
     switch (mode)
     {
         case GL_POINTS:
@@ -2443,6 +2469,17 @@ bool ValidateDrawBase(Context *context, GLenum mode, GLsizei count)
         case GL_TRIANGLES:
         case GL_TRIANGLE_STRIP:
         case GL_TRIANGLE_FAN:
+            break;
+
+        case GL_LINES_ADJACENCY_EXT:
+        case GL_LINE_STRIP_ADJACENCY_EXT:
+        case GL_TRIANGLES_ADJACENCY_EXT:
+        case GL_TRIANGLE_STRIP_ADJACENCY_EXT:
+            if (!extensions.geometryShader)
+            {
+                ANGLE_VALIDATION_ERR(context, InvalidEnum(), GeometryShaderExtensionNotEnabled);
+                return false;
+            }
             break;
         default:
             ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidDrawMode);
@@ -2456,8 +2493,6 @@ bool ValidateDrawBase(Context *context, GLenum mode, GLsizei count)
     }
 
     const State &state = context->getGLState();
-
-    const Extensions &extensions = context->getExtensions();
 
     // WebGL buffers cannot be mapped/unmapped because the MapBufferRange, FlushMappedBufferRange,
     // and UnmapBuffer entry points are removed from the WebGL 2.0 API.
@@ -2561,6 +2596,18 @@ bool ValidateDrawBase(Context *context, GLenum mode, GLsizei count)
                                                        "GL_TIME_ELAPSED_EXT when the number of "
                                                        "views in the active draw framebuffer is "
                                                        "greater than 1.");
+            return false;
+        }
+    }
+
+    // Do geometry shader specific validations
+    if (program->hasLinkedGeometryShader())
+    {
+        if (!IsCompatibleDrawModeWithGeometryShader(mode,
+                                                    program->getGeometryShaderInputPrimitiveType()))
+        {
+            ANGLE_VALIDATION_ERR(context, InvalidOperation(),
+                                 IncompatibleDrawModeAgainstGeometryShader);
             return false;
         }
     }

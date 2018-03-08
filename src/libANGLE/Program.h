@@ -660,6 +660,11 @@ class Program final : angle::NonCopyable, public LabeledObject
         return mState.mComputeShaderLocalSize;
     }
 
+    GLenum getGeometryShaderInputPrimitiveType() const
+    {
+        return mState.mGeometryShaderInputPrimitiveType;
+    }
+
     const ProgramState &getState() const { return mState; }
 
     static LinkMismatchError LinkValidateVariablesBase(
