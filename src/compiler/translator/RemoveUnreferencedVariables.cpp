@@ -30,7 +30,7 @@ class CollectVariableRefCountsTraverser : public TIntermTraverser
 
     void visitSymbol(TIntermSymbol *node) override;
     bool visitAggregate(Visit visit, TIntermAggregate *node) override;
-    bool visitFunctionPrototype(Visit visit, TIntermFunctionPrototype *node) override;
+    void visitFunctionPrototype(TIntermFunctionPrototype *node) override;
 
   private:
     void incrementStructTypeRefCount(const TType &type);
@@ -108,11 +108,14 @@ bool CollectVariableRefCountsTraverser::visitAggregate(Visit visit, TIntermAggre
     return true;
 }
 
-bool CollectVariableRefCountsTraverser::visitFunctionPrototype(Visit visit,
-                                                               TIntermFunctionPrototype *node)
+void CollectVariableRefCountsTraverser::visitFunctionPrototype(TIntermFunctionPrototype *node)
 {
     incrementStructTypeRefCount(node->getType());
-    return true;
+    size_t paramCount = node->getFunction()->getParamCount();
+    for (size_t i = 0; i < paramCount; ++i)
+    {
+        incrementStructTypeRefCount(node->getFunction()->getParam(i)->getType());
+    }
 }
 
 // Traverser that removes all unreferenced variables on one traversal.

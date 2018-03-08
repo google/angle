@@ -53,10 +53,7 @@ class TIntermTraverser : angle::NonCopyable
     virtual bool visitIfElse(Visit visit, TIntermIfElse *node) { return true; }
     virtual bool visitSwitch(Visit visit, TIntermSwitch *node) { return true; }
     virtual bool visitCase(Visit visit, TIntermCase *node) { return true; }
-    virtual bool visitFunctionPrototype(Visit visit, TIntermFunctionPrototype *node)
-    {
-        return true;
-    }
+    virtual void visitFunctionPrototype(TIntermFunctionPrototype *node) {}
     virtual bool visitFunctionDefinition(Visit visit, TIntermFunctionDefinition *node)
     {
         return true;

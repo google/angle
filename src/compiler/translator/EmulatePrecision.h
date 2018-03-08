@@ -32,7 +32,6 @@ class EmulatePrecision : public TLValueTrackingTraverser
     bool visitAggregate(Visit visit, TIntermAggregate *node) override;
     bool visitInvariantDeclaration(Visit visit, TIntermInvariantDeclaration *node) override;
     bool visitDeclaration(Visit visit, TIntermDeclaration *node) override;
-    bool visitFunctionPrototype(Visit visit, TIntermFunctionPrototype *node) override;
 
     void writeEmulationHelpers(TInfoSinkBase &sink,
                                const int shaderVersion,
@@ -62,7 +61,7 @@ class EmulatePrecision : public TLValueTrackingTraverser
     const TFunction *getInternalFunction(const ImmutableString &functionName,
                                          const TType &returnType,
                                          TIntermSequence *arguments,
-                                         const TVector<TConstParameter> &parameters,
+                                         const TVector<const TVariable *> &parameters,
                                          bool knownToNotHaveSideEffects);
     TIntermAggregate *createRoundingFunctionCallNode(TIntermTyped *roundedChild);
     TIntermAggregate *createCompoundAssignmentFunctionCallNode(TIntermTyped *left,

@@ -116,16 +116,13 @@ class CallDAG::CallDAGCreator : public TIntermTraverser
         return false;
     }
 
-    bool visitFunctionPrototype(Visit visit, TIntermFunctionPrototype *node) override
+    void visitFunctionPrototype(TIntermFunctionPrototype *node) override
     {
         ASSERT(mCurrentFunction == nullptr);
 
         // Function declaration, create an empty record.
         auto &record = mFunctions[node->getFunction()->uniqueId().get()];
         record.name  = node->getFunction()->name();
-
-        // No need to traverse the parameters.
-        return false;
     }
 
     // Track functions called from another function.

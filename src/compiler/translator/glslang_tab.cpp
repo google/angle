@@ -3268,7 +3268,7 @@ yyreduce:
         (yyval.interm.function) = (yyvsp[-1].interm.function);
         if ((yyvsp[0].interm.param).type->getBasicType() != EbtVoid)
         {
-            (yyvsp[-1].interm.function)->addParameter((yyvsp[0].interm.param).turnToConst());
+            (yyvsp[-1].interm.function)->addParameter((yyvsp[0].interm.param).createVariable(&context->symbolTable));
         }
     }
 
@@ -3287,7 +3287,7 @@ yyreduce:
         }
         else
         {
-            (yyvsp[-2].interm.function)->addParameter((yyvsp[0].interm.param).turnToConst());
+            (yyvsp[-2].interm.function)->addParameter((yyvsp[0].interm.param).createVariable(&context->symbolTable));
         }
     }
 

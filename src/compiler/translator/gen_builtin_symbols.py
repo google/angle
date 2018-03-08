@@ -121,9 +121,22 @@ const int TSymbolTable::kLastBuiltInId = {last_builtin_id};
 namespace BuiltInName
 {{
 
+constexpr const ImmutableString _empty("");
 {name_declarations}
 
 }}  // namespace BuiltInName
+
+// TODO(oetuaho): Would be nice to make this a class instead of a namespace so that we could friend
+// this from TVariable. Now symbol constructors taking an id have to be public even though they're
+// not supposed to be accessible from outside of here. http://anglebug.com/2390
+namespace BuiltInVariable
+{{
+
+{variable_declarations}
+
+{get_variable_definitions}
+
+}};  // namespace BuiltInVariable
 
 namespace BuiltInParameters
 {{
@@ -138,18 +151,6 @@ namespace UnmangledBuiltIns
 {unmangled_builtin_declarations}
 
 }}  // namespace UnmangledBuiltIns
-
-// TODO(oetuaho): Would be nice to make this a class instead of a namespace so that we could friend
-// this from TVariable. Now symbol constructors taking an id have to be public even though they're
-// not supposed to be accessible from outside of here. http://anglebug.com/2390
-namespace BuiltInVariable
-{{
-
-{variable_declarations}
-
-{get_variable_definitions}
-
-}};  // namespace BuiltInVariable
 
 // TODO(oetuaho): Would be nice to make this a class instead of a namespace so that we could friend
 // this from TFunction. Now symbol constructors taking an id have to be public even though they're
@@ -630,6 +631,16 @@ def get_unique_identifier_name(function_name, parameters):
         unique_name += param.get_mangled_name()
     return unique_name
 
+def get_variable_name_to_store_parameter(param):
+    unique_name = 'pt'
+    if 'qualifier' in param.data:
+        if param.data['qualifier'] == 'Out':
+            unique_name += '_o_'
+        if param.data['qualifier'] == 'InOut':
+            unique_name += '_io_'
+    unique_name += param.get_mangled_name()
+    return unique_name
+
 def get_variable_name_to_store_parameters(parameters):
     if len(parameters) == 0:
         return 'empty'
@@ -642,6 +653,10 @@ def get_variable_name_to_store_parameters(parameters):
                 unique_name += '_io_'
         unique_name += param.get_mangled_name()
     return unique_name
+
+def define_constexpr_variable(template_args):
+    template_variable_declaration = 'constexpr const TVariable kVar_{name_with_suffix}(BuiltInId::{name_with_suffix}, BuiltInName::{name}, SymbolType::BuiltIn, TExtension::{extension}, {type});'
+    variable_declarations.append(template_variable_declaration.format(**template_args))
 
 def gen_function_variants(function_name, function_props):
     function_variants = []
@@ -688,6 +703,7 @@ def gen_function_variants(function_name, function_props):
     return function_variants
 
 defined_function_variants = set()
+defined_parameter_names = set()
 
 def process_single_function_group(condition, group_name, group):
     global id_counter
@@ -751,15 +767,29 @@ def process_single_function_group(condition, group_name, group):
 
             parameters_list = []
             for param in parameters:
-                template_parameter = 'TConstParameter({param_type})'
-                parameters_list.append(template_parameter.format(param_type = param.get_statictype_string()))
+                unique_param_name = get_variable_name_to_store_parameter(param)
+                param_template_args = {
+                    'name': '_empty',
+                    'name_with_suffix': unique_param_name,
+                    'type': param.get_statictype_string(),
+                    'extension': 'UNDEFINED'
+                }
+                if unique_param_name not in defined_parameter_names:
+                    id_counter += 1
+                    param_template_args['id'] = id_counter
+                    template_builtin_id_declaration = '    static constexpr const TSymbolUniqueId {name_with_suffix} = TSymbolUniqueId({id});'
+                    builtin_id_declarations.append(template_builtin_id_declaration.format(**param_template_args))
+                    define_constexpr_variable(param_template_args)
+                    defined_parameter_names.add(unique_param_name)
+                parameters_list.append('&BuiltInVariable::kVar_{name_with_suffix}'.format(**param_template_args));
+
             template_args['parameters_var_name'] = get_variable_name_to_store_parameters(parameters)
             if len(parameters) > 0:
                 template_args['parameters_list'] = ', '.join(parameters_list)
-                template_parameter_list_declaration = 'constexpr const TConstParameter {parameters_var_name}[{param_count}] = {{ {parameters_list} }};'
+                template_parameter_list_declaration = 'constexpr const TVariable *{parameters_var_name}[{param_count}] = {{ {parameters_list} }};'
                 parameter_declarations.add(template_parameter_list_declaration.format(**template_args))
             else:
-                template_parameter_list_declaration = 'constexpr const TConstParameter *{parameters_var_name} = nullptr;'
+                template_parameter_list_declaration = 'constexpr const TVariable **{parameters_var_name} = nullptr;'
                 parameter_declarations.add(template_parameter_list_declaration.format(**template_args))
 
             template_function_declaration = 'constexpr const TFunction kFunction_{unique_name}(BuiltInId::{unique_name}, BuiltInName::{name_with_suffix}, TExtension::{extension}, BuiltInParameters::{parameters_var_name}, {param_count}, {return_type}, BuiltInName::{unique_name}, EOp{op}, {known_to_not_have_side_effects});'
@@ -891,8 +921,7 @@ def process_single_variable_group(group_name, group):
         else:
             # Handle variables that can be stored as constexpr TVariable like
             # gl_Position, gl_FragColor etc.
-            template_variable_declaration = 'constexpr const TVariable kVar_{name_with_suffix}(BuiltInId::{name_with_suffix}, BuiltInName::{name}, SymbolType::BuiltIn, TExtension::{extension}, {type});'
-            variable_declarations.append(template_variable_declaration.format(**template_args))
+            define_constexpr_variable(template_args)
 
             template_get_variable_declaration = 'const TVariable *{name_with_suffix}();'
             get_variable_declarations.append(template_get_variable_declaration.format(**template_args))

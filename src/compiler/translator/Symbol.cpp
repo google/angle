@@ -164,7 +164,7 @@ TFunction::TFunction(TSymbolTable *symbolTable,
     ASSERT(name != nullptr || symbolType == SymbolType::AngleInternal);
 }
 
-void TFunction::addParameter(const TConstParameter &p)
+void TFunction::addParameter(const TVariable *p)
 {
     ASSERT(mParametersVector);
     mParametersVector->push_back(p);
@@ -189,7 +189,7 @@ ImmutableString TFunction::buildMangledName() const
 
     for (size_t i = 0u; i < mParamCount; ++i)
     {
-        newName += mParameters[i].type->getMangledName();
+        newName += mParameters[i]->getType().getMangledName();
     }
     return ImmutableString(newName);
 }

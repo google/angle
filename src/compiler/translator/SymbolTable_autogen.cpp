@@ -25,945 +25,1019 @@ class BuiltInId
 {
   public:
     static constexpr const TSymbolUniqueId radians_0B                       = TSymbolUniqueId(0);
-    static constexpr const TSymbolUniqueId radians_1B                       = TSymbolUniqueId(1);
-    static constexpr const TSymbolUniqueId radians_2B                       = TSymbolUniqueId(2);
-    static constexpr const TSymbolUniqueId radians_3B                       = TSymbolUniqueId(3);
-    static constexpr const TSymbolUniqueId degrees_0B                       = TSymbolUniqueId(4);
-    static constexpr const TSymbolUniqueId degrees_1B                       = TSymbolUniqueId(5);
-    static constexpr const TSymbolUniqueId degrees_2B                       = TSymbolUniqueId(6);
-    static constexpr const TSymbolUniqueId degrees_3B                       = TSymbolUniqueId(7);
-    static constexpr const TSymbolUniqueId sin_0B                           = TSymbolUniqueId(8);
-    static constexpr const TSymbolUniqueId sin_1B                           = TSymbolUniqueId(9);
-    static constexpr const TSymbolUniqueId sin_2B                           = TSymbolUniqueId(10);
-    static constexpr const TSymbolUniqueId sin_3B                           = TSymbolUniqueId(11);
-    static constexpr const TSymbolUniqueId cos_0B                           = TSymbolUniqueId(12);
-    static constexpr const TSymbolUniqueId cos_1B                           = TSymbolUniqueId(13);
-    static constexpr const TSymbolUniqueId cos_2B                           = TSymbolUniqueId(14);
-    static constexpr const TSymbolUniqueId cos_3B                           = TSymbolUniqueId(15);
-    static constexpr const TSymbolUniqueId tan_0B                           = TSymbolUniqueId(16);
-    static constexpr const TSymbolUniqueId tan_1B                           = TSymbolUniqueId(17);
-    static constexpr const TSymbolUniqueId tan_2B                           = TSymbolUniqueId(18);
-    static constexpr const TSymbolUniqueId tan_3B                           = TSymbolUniqueId(19);
-    static constexpr const TSymbolUniqueId asin_0B                          = TSymbolUniqueId(20);
-    static constexpr const TSymbolUniqueId asin_1B                          = TSymbolUniqueId(21);
-    static constexpr const TSymbolUniqueId asin_2B                          = TSymbolUniqueId(22);
-    static constexpr const TSymbolUniqueId asin_3B                          = TSymbolUniqueId(23);
-    static constexpr const TSymbolUniqueId acos_0B                          = TSymbolUniqueId(24);
-    static constexpr const TSymbolUniqueId acos_1B                          = TSymbolUniqueId(25);
-    static constexpr const TSymbolUniqueId acos_2B                          = TSymbolUniqueId(26);
-    static constexpr const TSymbolUniqueId acos_3B                          = TSymbolUniqueId(27);
-    static constexpr const TSymbolUniqueId atan_0B0B                        = TSymbolUniqueId(28);
-    static constexpr const TSymbolUniqueId atan_1B1B                        = TSymbolUniqueId(29);
-    static constexpr const TSymbolUniqueId atan_2B2B                        = TSymbolUniqueId(30);
-    static constexpr const TSymbolUniqueId atan_3B3B                        = TSymbolUniqueId(31);
-    static constexpr const TSymbolUniqueId atan_0B                          = TSymbolUniqueId(32);
-    static constexpr const TSymbolUniqueId atan_1B                          = TSymbolUniqueId(33);
-    static constexpr const TSymbolUniqueId atan_2B                          = TSymbolUniqueId(34);
-    static constexpr const TSymbolUniqueId atan_3B                          = TSymbolUniqueId(35);
-    static constexpr const TSymbolUniqueId sinh_0B                          = TSymbolUniqueId(36);
-    static constexpr const TSymbolUniqueId sinh_1B                          = TSymbolUniqueId(37);
-    static constexpr const TSymbolUniqueId sinh_2B                          = TSymbolUniqueId(38);
-    static constexpr const TSymbolUniqueId sinh_3B                          = TSymbolUniqueId(39);
-    static constexpr const TSymbolUniqueId cosh_0B                          = TSymbolUniqueId(40);
-    static constexpr const TSymbolUniqueId cosh_1B                          = TSymbolUniqueId(41);
-    static constexpr const TSymbolUniqueId cosh_2B                          = TSymbolUniqueId(42);
-    static constexpr const TSymbolUniqueId cosh_3B                          = TSymbolUniqueId(43);
-    static constexpr const TSymbolUniqueId tanh_0B                          = TSymbolUniqueId(44);
-    static constexpr const TSymbolUniqueId tanh_1B                          = TSymbolUniqueId(45);
-    static constexpr const TSymbolUniqueId tanh_2B                          = TSymbolUniqueId(46);
-    static constexpr const TSymbolUniqueId tanh_3B                          = TSymbolUniqueId(47);
-    static constexpr const TSymbolUniqueId asinh_0B                         = TSymbolUniqueId(48);
-    static constexpr const TSymbolUniqueId asinh_1B                         = TSymbolUniqueId(49);
-    static constexpr const TSymbolUniqueId asinh_2B                         = TSymbolUniqueId(50);
-    static constexpr const TSymbolUniqueId asinh_3B                         = TSymbolUniqueId(51);
-    static constexpr const TSymbolUniqueId acosh_0B                         = TSymbolUniqueId(52);
-    static constexpr const TSymbolUniqueId acosh_1B                         = TSymbolUniqueId(53);
-    static constexpr const TSymbolUniqueId acosh_2B                         = TSymbolUniqueId(54);
-    static constexpr const TSymbolUniqueId acosh_3B                         = TSymbolUniqueId(55);
-    static constexpr const TSymbolUniqueId atanh_0B                         = TSymbolUniqueId(56);
-    static constexpr const TSymbolUniqueId atanh_1B                         = TSymbolUniqueId(57);
-    static constexpr const TSymbolUniqueId atanh_2B                         = TSymbolUniqueId(58);
-    static constexpr const TSymbolUniqueId atanh_3B                         = TSymbolUniqueId(59);
-    static constexpr const TSymbolUniqueId pow_0B0B                         = TSymbolUniqueId(60);
-    static constexpr const TSymbolUniqueId pow_1B1B                         = TSymbolUniqueId(61);
-    static constexpr const TSymbolUniqueId pow_2B2B                         = TSymbolUniqueId(62);
-    static constexpr const TSymbolUniqueId pow_3B3B                         = TSymbolUniqueId(63);
-    static constexpr const TSymbolUniqueId exp_0B                           = TSymbolUniqueId(64);
-    static constexpr const TSymbolUniqueId exp_1B                           = TSymbolUniqueId(65);
-    static constexpr const TSymbolUniqueId exp_2B                           = TSymbolUniqueId(66);
-    static constexpr const TSymbolUniqueId exp_3B                           = TSymbolUniqueId(67);
-    static constexpr const TSymbolUniqueId log_0B                           = TSymbolUniqueId(68);
-    static constexpr const TSymbolUniqueId log_1B                           = TSymbolUniqueId(69);
-    static constexpr const TSymbolUniqueId log_2B                           = TSymbolUniqueId(70);
-    static constexpr const TSymbolUniqueId log_3B                           = TSymbolUniqueId(71);
-    static constexpr const TSymbolUniqueId exp2_0B                          = TSymbolUniqueId(72);
-    static constexpr const TSymbolUniqueId exp2_1B                          = TSymbolUniqueId(73);
-    static constexpr const TSymbolUniqueId exp2_2B                          = TSymbolUniqueId(74);
-    static constexpr const TSymbolUniqueId exp2_3B                          = TSymbolUniqueId(75);
-    static constexpr const TSymbolUniqueId log2_0B                          = TSymbolUniqueId(76);
-    static constexpr const TSymbolUniqueId log2_1B                          = TSymbolUniqueId(77);
-    static constexpr const TSymbolUniqueId log2_2B                          = TSymbolUniqueId(78);
-    static constexpr const TSymbolUniqueId log2_3B                          = TSymbolUniqueId(79);
-    static constexpr const TSymbolUniqueId sqrt_0B                          = TSymbolUniqueId(80);
-    static constexpr const TSymbolUniqueId sqrt_1B                          = TSymbolUniqueId(81);
-    static constexpr const TSymbolUniqueId sqrt_2B                          = TSymbolUniqueId(82);
-    static constexpr const TSymbolUniqueId sqrt_3B                          = TSymbolUniqueId(83);
-    static constexpr const TSymbolUniqueId inversesqrt_0B                   = TSymbolUniqueId(84);
-    static constexpr const TSymbolUniqueId inversesqrt_1B                   = TSymbolUniqueId(85);
-    static constexpr const TSymbolUniqueId inversesqrt_2B                   = TSymbolUniqueId(86);
-    static constexpr const TSymbolUniqueId inversesqrt_3B                   = TSymbolUniqueId(87);
-    static constexpr const TSymbolUniqueId abs_0B                           = TSymbolUniqueId(88);
-    static constexpr const TSymbolUniqueId abs_1B                           = TSymbolUniqueId(89);
-    static constexpr const TSymbolUniqueId abs_2B                           = TSymbolUniqueId(90);
-    static constexpr const TSymbolUniqueId abs_3B                           = TSymbolUniqueId(91);
-    static constexpr const TSymbolUniqueId abs_0C                           = TSymbolUniqueId(92);
-    static constexpr const TSymbolUniqueId abs_1C                           = TSymbolUniqueId(93);
-    static constexpr const TSymbolUniqueId abs_2C                           = TSymbolUniqueId(94);
-    static constexpr const TSymbolUniqueId abs_3C                           = TSymbolUniqueId(95);
-    static constexpr const TSymbolUniqueId sign_0B                          = TSymbolUniqueId(96);
-    static constexpr const TSymbolUniqueId sign_1B                          = TSymbolUniqueId(97);
-    static constexpr const TSymbolUniqueId sign_2B                          = TSymbolUniqueId(98);
-    static constexpr const TSymbolUniqueId sign_3B                          = TSymbolUniqueId(99);
-    static constexpr const TSymbolUniqueId sign_0C                          = TSymbolUniqueId(100);
-    static constexpr const TSymbolUniqueId sign_1C                          = TSymbolUniqueId(101);
-    static constexpr const TSymbolUniqueId sign_2C                          = TSymbolUniqueId(102);
-    static constexpr const TSymbolUniqueId sign_3C                          = TSymbolUniqueId(103);
-    static constexpr const TSymbolUniqueId floor_0B                         = TSymbolUniqueId(104);
-    static constexpr const TSymbolUniqueId floor_1B                         = TSymbolUniqueId(105);
-    static constexpr const TSymbolUniqueId floor_2B                         = TSymbolUniqueId(106);
-    static constexpr const TSymbolUniqueId floor_3B                         = TSymbolUniqueId(107);
-    static constexpr const TSymbolUniqueId trunc_0B                         = TSymbolUniqueId(108);
-    static constexpr const TSymbolUniqueId trunc_1B                         = TSymbolUniqueId(109);
-    static constexpr const TSymbolUniqueId trunc_2B                         = TSymbolUniqueId(110);
-    static constexpr const TSymbolUniqueId trunc_3B                         = TSymbolUniqueId(111);
-    static constexpr const TSymbolUniqueId round_0B                         = TSymbolUniqueId(112);
-    static constexpr const TSymbolUniqueId round_1B                         = TSymbolUniqueId(113);
-    static constexpr const TSymbolUniqueId round_2B                         = TSymbolUniqueId(114);
-    static constexpr const TSymbolUniqueId round_3B                         = TSymbolUniqueId(115);
-    static constexpr const TSymbolUniqueId roundEven_0B                     = TSymbolUniqueId(116);
-    static constexpr const TSymbolUniqueId roundEven_1B                     = TSymbolUniqueId(117);
-    static constexpr const TSymbolUniqueId roundEven_2B                     = TSymbolUniqueId(118);
-    static constexpr const TSymbolUniqueId roundEven_3B                     = TSymbolUniqueId(119);
-    static constexpr const TSymbolUniqueId ceil_0B                          = TSymbolUniqueId(120);
-    static constexpr const TSymbolUniqueId ceil_1B                          = TSymbolUniqueId(121);
-    static constexpr const TSymbolUniqueId ceil_2B                          = TSymbolUniqueId(122);
-    static constexpr const TSymbolUniqueId ceil_3B                          = TSymbolUniqueId(123);
-    static constexpr const TSymbolUniqueId fract_0B                         = TSymbolUniqueId(124);
-    static constexpr const TSymbolUniqueId fract_1B                         = TSymbolUniqueId(125);
-    static constexpr const TSymbolUniqueId fract_2B                         = TSymbolUniqueId(126);
-    static constexpr const TSymbolUniqueId fract_3B                         = TSymbolUniqueId(127);
-    static constexpr const TSymbolUniqueId mod_0B0B                         = TSymbolUniqueId(128);
-    static constexpr const TSymbolUniqueId mod_1B0B                         = TSymbolUniqueId(129);
-    static constexpr const TSymbolUniqueId mod_2B0B                         = TSymbolUniqueId(130);
-    static constexpr const TSymbolUniqueId mod_3B0B                         = TSymbolUniqueId(131);
-    static constexpr const TSymbolUniqueId mod_1B1B                         = TSymbolUniqueId(132);
-    static constexpr const TSymbolUniqueId mod_2B2B                         = TSymbolUniqueId(133);
-    static constexpr const TSymbolUniqueId mod_3B3B                         = TSymbolUniqueId(134);
-    static constexpr const TSymbolUniqueId min_0B0B                         = TSymbolUniqueId(135);
-    static constexpr const TSymbolUniqueId min_1B0B                         = TSymbolUniqueId(136);
-    static constexpr const TSymbolUniqueId min_2B0B                         = TSymbolUniqueId(137);
-    static constexpr const TSymbolUniqueId min_3B0B                         = TSymbolUniqueId(138);
-    static constexpr const TSymbolUniqueId min_1B1B                         = TSymbolUniqueId(139);
-    static constexpr const TSymbolUniqueId min_2B2B                         = TSymbolUniqueId(140);
-    static constexpr const TSymbolUniqueId min_3B3B                         = TSymbolUniqueId(141);
-    static constexpr const TSymbolUniqueId min_0C0C                         = TSymbolUniqueId(142);
-    static constexpr const TSymbolUniqueId min_1C1C                         = TSymbolUniqueId(143);
-    static constexpr const TSymbolUniqueId min_2C2C                         = TSymbolUniqueId(144);
-    static constexpr const TSymbolUniqueId min_3C3C                         = TSymbolUniqueId(145);
-    static constexpr const TSymbolUniqueId min_1C0C                         = TSymbolUniqueId(146);
-    static constexpr const TSymbolUniqueId min_2C0C                         = TSymbolUniqueId(147);
-    static constexpr const TSymbolUniqueId min_3C0C                         = TSymbolUniqueId(148);
-    static constexpr const TSymbolUniqueId min_0D0D                         = TSymbolUniqueId(149);
-    static constexpr const TSymbolUniqueId min_1D1D                         = TSymbolUniqueId(150);
-    static constexpr const TSymbolUniqueId min_2D2D                         = TSymbolUniqueId(151);
-    static constexpr const TSymbolUniqueId min_3D3D                         = TSymbolUniqueId(152);
-    static constexpr const TSymbolUniqueId min_1D0D                         = TSymbolUniqueId(153);
-    static constexpr const TSymbolUniqueId min_2D0D                         = TSymbolUniqueId(154);
-    static constexpr const TSymbolUniqueId min_3D0D                         = TSymbolUniqueId(155);
-    static constexpr const TSymbolUniqueId max_0B0B                         = TSymbolUniqueId(156);
-    static constexpr const TSymbolUniqueId max_1B0B                         = TSymbolUniqueId(157);
-    static constexpr const TSymbolUniqueId max_2B0B                         = TSymbolUniqueId(158);
-    static constexpr const TSymbolUniqueId max_3B0B                         = TSymbolUniqueId(159);
-    static constexpr const TSymbolUniqueId max_1B1B                         = TSymbolUniqueId(160);
-    static constexpr const TSymbolUniqueId max_2B2B                         = TSymbolUniqueId(161);
-    static constexpr const TSymbolUniqueId max_3B3B                         = TSymbolUniqueId(162);
-    static constexpr const TSymbolUniqueId max_0C0C                         = TSymbolUniqueId(163);
-    static constexpr const TSymbolUniqueId max_1C1C                         = TSymbolUniqueId(164);
-    static constexpr const TSymbolUniqueId max_2C2C                         = TSymbolUniqueId(165);
-    static constexpr const TSymbolUniqueId max_3C3C                         = TSymbolUniqueId(166);
-    static constexpr const TSymbolUniqueId max_1C0C                         = TSymbolUniqueId(167);
-    static constexpr const TSymbolUniqueId max_2C0C                         = TSymbolUniqueId(168);
-    static constexpr const TSymbolUniqueId max_3C0C                         = TSymbolUniqueId(169);
-    static constexpr const TSymbolUniqueId max_0D0D                         = TSymbolUniqueId(170);
-    static constexpr const TSymbolUniqueId max_1D1D                         = TSymbolUniqueId(171);
-    static constexpr const TSymbolUniqueId max_2D2D                         = TSymbolUniqueId(172);
-    static constexpr const TSymbolUniqueId max_3D3D                         = TSymbolUniqueId(173);
-    static constexpr const TSymbolUniqueId max_1D0D                         = TSymbolUniqueId(174);
-    static constexpr const TSymbolUniqueId max_2D0D                         = TSymbolUniqueId(175);
-    static constexpr const TSymbolUniqueId max_3D0D                         = TSymbolUniqueId(176);
-    static constexpr const TSymbolUniqueId clamp_0B0B0B                     = TSymbolUniqueId(177);
-    static constexpr const TSymbolUniqueId clamp_1B0B0B                     = TSymbolUniqueId(178);
-    static constexpr const TSymbolUniqueId clamp_2B0B0B                     = TSymbolUniqueId(179);
-    static constexpr const TSymbolUniqueId clamp_3B0B0B                     = TSymbolUniqueId(180);
-    static constexpr const TSymbolUniqueId clamp_1B1B1B                     = TSymbolUniqueId(181);
-    static constexpr const TSymbolUniqueId clamp_2B2B2B                     = TSymbolUniqueId(182);
-    static constexpr const TSymbolUniqueId clamp_3B3B3B                     = TSymbolUniqueId(183);
-    static constexpr const TSymbolUniqueId clamp_0C0C0C                     = TSymbolUniqueId(184);
-    static constexpr const TSymbolUniqueId clamp_1C0C0C                     = TSymbolUniqueId(185);
-    static constexpr const TSymbolUniqueId clamp_2C0C0C                     = TSymbolUniqueId(186);
-    static constexpr const TSymbolUniqueId clamp_3C0C0C                     = TSymbolUniqueId(187);
-    static constexpr const TSymbolUniqueId clamp_1C1C1C                     = TSymbolUniqueId(188);
-    static constexpr const TSymbolUniqueId clamp_2C2C2C                     = TSymbolUniqueId(189);
-    static constexpr const TSymbolUniqueId clamp_3C3C3C                     = TSymbolUniqueId(190);
-    static constexpr const TSymbolUniqueId clamp_0D0D0D                     = TSymbolUniqueId(191);
-    static constexpr const TSymbolUniqueId clamp_1D0D0D                     = TSymbolUniqueId(192);
-    static constexpr const TSymbolUniqueId clamp_2D0D0D                     = TSymbolUniqueId(193);
-    static constexpr const TSymbolUniqueId clamp_3D0D0D                     = TSymbolUniqueId(194);
-    static constexpr const TSymbolUniqueId clamp_1D1D1D                     = TSymbolUniqueId(195);
-    static constexpr const TSymbolUniqueId clamp_2D2D2D                     = TSymbolUniqueId(196);
-    static constexpr const TSymbolUniqueId clamp_3D3D3D                     = TSymbolUniqueId(197);
-    static constexpr const TSymbolUniqueId mix_0B0B0B                       = TSymbolUniqueId(198);
-    static constexpr const TSymbolUniqueId mix_1B1B0B                       = TSymbolUniqueId(199);
-    static constexpr const TSymbolUniqueId mix_2B2B0B                       = TSymbolUniqueId(200);
-    static constexpr const TSymbolUniqueId mix_3B3B0B                       = TSymbolUniqueId(201);
-    static constexpr const TSymbolUniqueId mix_1B1B1B                       = TSymbolUniqueId(202);
-    static constexpr const TSymbolUniqueId mix_2B2B2B                       = TSymbolUniqueId(203);
-    static constexpr const TSymbolUniqueId mix_3B3B3B                       = TSymbolUniqueId(204);
-    static constexpr const TSymbolUniqueId mix_0B0B0E                       = TSymbolUniqueId(205);
-    static constexpr const TSymbolUniqueId mix_1B1B1E                       = TSymbolUniqueId(206);
-    static constexpr const TSymbolUniqueId mix_2B2B2E                       = TSymbolUniqueId(207);
-    static constexpr const TSymbolUniqueId mix_3B3B3E                       = TSymbolUniqueId(208);
-    static constexpr const TSymbolUniqueId step_0B0B                        = TSymbolUniqueId(209);
-    static constexpr const TSymbolUniqueId step_1B1B                        = TSymbolUniqueId(210);
-    static constexpr const TSymbolUniqueId step_2B2B                        = TSymbolUniqueId(211);
-    static constexpr const TSymbolUniqueId step_3B3B                        = TSymbolUniqueId(212);
-    static constexpr const TSymbolUniqueId step_0B1B                        = TSymbolUniqueId(213);
-    static constexpr const TSymbolUniqueId step_0B2B                        = TSymbolUniqueId(214);
-    static constexpr const TSymbolUniqueId step_0B3B                        = TSymbolUniqueId(215);
-    static constexpr const TSymbolUniqueId smoothstep_0B0B0B                = TSymbolUniqueId(216);
-    static constexpr const TSymbolUniqueId smoothstep_1B1B1B                = TSymbolUniqueId(217);
-    static constexpr const TSymbolUniqueId smoothstep_2B2B2B                = TSymbolUniqueId(218);
-    static constexpr const TSymbolUniqueId smoothstep_3B3B3B                = TSymbolUniqueId(219);
-    static constexpr const TSymbolUniqueId smoothstep_0B0B1B                = TSymbolUniqueId(220);
-    static constexpr const TSymbolUniqueId smoothstep_0B0B2B                = TSymbolUniqueId(221);
-    static constexpr const TSymbolUniqueId smoothstep_0B0B3B                = TSymbolUniqueId(222);
-    static constexpr const TSymbolUniqueId modf_0B0B                        = TSymbolUniqueId(223);
-    static constexpr const TSymbolUniqueId modf_1B1B                        = TSymbolUniqueId(224);
-    static constexpr const TSymbolUniqueId modf_2B2B                        = TSymbolUniqueId(225);
-    static constexpr const TSymbolUniqueId modf_3B3B                        = TSymbolUniqueId(226);
-    static constexpr const TSymbolUniqueId isnan_0B                         = TSymbolUniqueId(227);
-    static constexpr const TSymbolUniqueId isnan_1B                         = TSymbolUniqueId(228);
-    static constexpr const TSymbolUniqueId isnan_2B                         = TSymbolUniqueId(229);
-    static constexpr const TSymbolUniqueId isnan_3B                         = TSymbolUniqueId(230);
-    static constexpr const TSymbolUniqueId isinf_0B                         = TSymbolUniqueId(231);
-    static constexpr const TSymbolUniqueId isinf_1B                         = TSymbolUniqueId(232);
-    static constexpr const TSymbolUniqueId isinf_2B                         = TSymbolUniqueId(233);
-    static constexpr const TSymbolUniqueId isinf_3B                         = TSymbolUniqueId(234);
-    static constexpr const TSymbolUniqueId floatBitsToInt_0B                = TSymbolUniqueId(235);
-    static constexpr const TSymbolUniqueId floatBitsToInt_1B                = TSymbolUniqueId(236);
-    static constexpr const TSymbolUniqueId floatBitsToInt_2B                = TSymbolUniqueId(237);
-    static constexpr const TSymbolUniqueId floatBitsToInt_3B                = TSymbolUniqueId(238);
-    static constexpr const TSymbolUniqueId floatBitsToUint_0B               = TSymbolUniqueId(239);
-    static constexpr const TSymbolUniqueId floatBitsToUint_1B               = TSymbolUniqueId(240);
-    static constexpr const TSymbolUniqueId floatBitsToUint_2B               = TSymbolUniqueId(241);
-    static constexpr const TSymbolUniqueId floatBitsToUint_3B               = TSymbolUniqueId(242);
-    static constexpr const TSymbolUniqueId intBitsToFloat_0C                = TSymbolUniqueId(243);
-    static constexpr const TSymbolUniqueId intBitsToFloat_1C                = TSymbolUniqueId(244);
-    static constexpr const TSymbolUniqueId intBitsToFloat_2C                = TSymbolUniqueId(245);
-    static constexpr const TSymbolUniqueId intBitsToFloat_3C                = TSymbolUniqueId(246);
-    static constexpr const TSymbolUniqueId uintBitsToFloat_0D               = TSymbolUniqueId(247);
-    static constexpr const TSymbolUniqueId uintBitsToFloat_1D               = TSymbolUniqueId(248);
-    static constexpr const TSymbolUniqueId uintBitsToFloat_2D               = TSymbolUniqueId(249);
-    static constexpr const TSymbolUniqueId uintBitsToFloat_3D               = TSymbolUniqueId(250);
-    static constexpr const TSymbolUniqueId frexp_0B0C                       = TSymbolUniqueId(251);
-    static constexpr const TSymbolUniqueId frexp_1B1C                       = TSymbolUniqueId(252);
-    static constexpr const TSymbolUniqueId frexp_2B2C                       = TSymbolUniqueId(253);
-    static constexpr const TSymbolUniqueId frexp_3B3C                       = TSymbolUniqueId(254);
-    static constexpr const TSymbolUniqueId ldexp_0B0C                       = TSymbolUniqueId(255);
-    static constexpr const TSymbolUniqueId ldexp_1B1C                       = TSymbolUniqueId(256);
-    static constexpr const TSymbolUniqueId ldexp_2B2C                       = TSymbolUniqueId(257);
-    static constexpr const TSymbolUniqueId ldexp_3B3C                       = TSymbolUniqueId(258);
-    static constexpr const TSymbolUniqueId packSnorm2x16_1B                 = TSymbolUniqueId(259);
-    static constexpr const TSymbolUniqueId packUnorm2x16_1B                 = TSymbolUniqueId(260);
-    static constexpr const TSymbolUniqueId packHalf2x16_1B                  = TSymbolUniqueId(261);
-    static constexpr const TSymbolUniqueId unpackSnorm2x16_0D               = TSymbolUniqueId(262);
-    static constexpr const TSymbolUniqueId unpackUnorm2x16_0D               = TSymbolUniqueId(263);
-    static constexpr const TSymbolUniqueId unpackHalf2x16_0D                = TSymbolUniqueId(264);
-    static constexpr const TSymbolUniqueId packUnorm4x8_3B                  = TSymbolUniqueId(265);
-    static constexpr const TSymbolUniqueId packSnorm4x8_3B                  = TSymbolUniqueId(266);
-    static constexpr const TSymbolUniqueId unpackUnorm4x8_0D                = TSymbolUniqueId(267);
-    static constexpr const TSymbolUniqueId unpackSnorm4x8_0D                = TSymbolUniqueId(268);
-    static constexpr const TSymbolUniqueId length_0B                        = TSymbolUniqueId(269);
-    static constexpr const TSymbolUniqueId length_1B                        = TSymbolUniqueId(270);
-    static constexpr const TSymbolUniqueId length_2B                        = TSymbolUniqueId(271);
-    static constexpr const TSymbolUniqueId length_3B                        = TSymbolUniqueId(272);
-    static constexpr const TSymbolUniqueId distance_0B0B                    = TSymbolUniqueId(273);
-    static constexpr const TSymbolUniqueId distance_1B1B                    = TSymbolUniqueId(274);
-    static constexpr const TSymbolUniqueId distance_2B2B                    = TSymbolUniqueId(275);
-    static constexpr const TSymbolUniqueId distance_3B3B                    = TSymbolUniqueId(276);
-    static constexpr const TSymbolUniqueId dot_0B0B                         = TSymbolUniqueId(277);
-    static constexpr const TSymbolUniqueId dot_1B1B                         = TSymbolUniqueId(278);
-    static constexpr const TSymbolUniqueId dot_2B2B                         = TSymbolUniqueId(279);
-    static constexpr const TSymbolUniqueId dot_3B3B                         = TSymbolUniqueId(280);
-    static constexpr const TSymbolUniqueId cross_2B2B                       = TSymbolUniqueId(281);
-    static constexpr const TSymbolUniqueId normalize_0B                     = TSymbolUniqueId(282);
-    static constexpr const TSymbolUniqueId normalize_1B                     = TSymbolUniqueId(283);
-    static constexpr const TSymbolUniqueId normalize_2B                     = TSymbolUniqueId(284);
-    static constexpr const TSymbolUniqueId normalize_3B                     = TSymbolUniqueId(285);
-    static constexpr const TSymbolUniqueId faceforward_0B0B0B               = TSymbolUniqueId(286);
-    static constexpr const TSymbolUniqueId faceforward_1B1B1B               = TSymbolUniqueId(287);
-    static constexpr const TSymbolUniqueId faceforward_2B2B2B               = TSymbolUniqueId(288);
-    static constexpr const TSymbolUniqueId faceforward_3B3B3B               = TSymbolUniqueId(289);
-    static constexpr const TSymbolUniqueId reflect_0B0B                     = TSymbolUniqueId(290);
-    static constexpr const TSymbolUniqueId reflect_1B1B                     = TSymbolUniqueId(291);
-    static constexpr const TSymbolUniqueId reflect_2B2B                     = TSymbolUniqueId(292);
-    static constexpr const TSymbolUniqueId reflect_3B3B                     = TSymbolUniqueId(293);
-    static constexpr const TSymbolUniqueId refract_0B0B0B                   = TSymbolUniqueId(294);
-    static constexpr const TSymbolUniqueId refract_1B1B0B                   = TSymbolUniqueId(295);
-    static constexpr const TSymbolUniqueId refract_2B2B0B                   = TSymbolUniqueId(296);
-    static constexpr const TSymbolUniqueId refract_3B3B0B                   = TSymbolUniqueId(297);
-    static constexpr const TSymbolUniqueId matrixCompMult_5B5B              = TSymbolUniqueId(298);
-    static constexpr const TSymbolUniqueId matrixCompMult_ABAB              = TSymbolUniqueId(299);
-    static constexpr const TSymbolUniqueId matrixCompMult_FBFB              = TSymbolUniqueId(300);
-    static constexpr const TSymbolUniqueId matrixCompMult_9B9B              = TSymbolUniqueId(301);
-    static constexpr const TSymbolUniqueId matrixCompMult_6B6B              = TSymbolUniqueId(302);
-    static constexpr const TSymbolUniqueId matrixCompMult_DBDB              = TSymbolUniqueId(303);
-    static constexpr const TSymbolUniqueId matrixCompMult_7B7B              = TSymbolUniqueId(304);
-    static constexpr const TSymbolUniqueId matrixCompMult_EBEB              = TSymbolUniqueId(305);
-    static constexpr const TSymbolUniqueId matrixCompMult_BBBB              = TSymbolUniqueId(306);
-    static constexpr const TSymbolUniqueId outerProduct_1B1B                = TSymbolUniqueId(307);
-    static constexpr const TSymbolUniqueId outerProduct_2B2B                = TSymbolUniqueId(308);
-    static constexpr const TSymbolUniqueId outerProduct_3B3B                = TSymbolUniqueId(309);
-    static constexpr const TSymbolUniqueId outerProduct_2B1B                = TSymbolUniqueId(310);
-    static constexpr const TSymbolUniqueId outerProduct_1B2B                = TSymbolUniqueId(311);
-    static constexpr const TSymbolUniqueId outerProduct_3B1B                = TSymbolUniqueId(312);
-    static constexpr const TSymbolUniqueId outerProduct_1B3B                = TSymbolUniqueId(313);
-    static constexpr const TSymbolUniqueId outerProduct_3B2B                = TSymbolUniqueId(314);
-    static constexpr const TSymbolUniqueId outerProduct_2B3B                = TSymbolUniqueId(315);
-    static constexpr const TSymbolUniqueId transpose_5B                     = TSymbolUniqueId(316);
-    static constexpr const TSymbolUniqueId transpose_AB                     = TSymbolUniqueId(317);
-    static constexpr const TSymbolUniqueId transpose_FB                     = TSymbolUniqueId(318);
-    static constexpr const TSymbolUniqueId transpose_6B                     = TSymbolUniqueId(319);
-    static constexpr const TSymbolUniqueId transpose_9B                     = TSymbolUniqueId(320);
-    static constexpr const TSymbolUniqueId transpose_7B                     = TSymbolUniqueId(321);
-    static constexpr const TSymbolUniqueId transpose_DB                     = TSymbolUniqueId(322);
-    static constexpr const TSymbolUniqueId transpose_BB                     = TSymbolUniqueId(323);
-    static constexpr const TSymbolUniqueId transpose_EB                     = TSymbolUniqueId(324);
-    static constexpr const TSymbolUniqueId determinant_5B                   = TSymbolUniqueId(325);
-    static constexpr const TSymbolUniqueId determinant_AB                   = TSymbolUniqueId(326);
-    static constexpr const TSymbolUniqueId determinant_FB                   = TSymbolUniqueId(327);
-    static constexpr const TSymbolUniqueId inverse_5B                       = TSymbolUniqueId(328);
-    static constexpr const TSymbolUniqueId inverse_AB                       = TSymbolUniqueId(329);
-    static constexpr const TSymbolUniqueId inverse_FB                       = TSymbolUniqueId(330);
-    static constexpr const TSymbolUniqueId lessThan_1B1B                    = TSymbolUniqueId(331);
-    static constexpr const TSymbolUniqueId lessThan_2B2B                    = TSymbolUniqueId(332);
-    static constexpr const TSymbolUniqueId lessThan_3B3B                    = TSymbolUniqueId(333);
-    static constexpr const TSymbolUniqueId lessThan_1C1C                    = TSymbolUniqueId(334);
-    static constexpr const TSymbolUniqueId lessThan_2C2C                    = TSymbolUniqueId(335);
-    static constexpr const TSymbolUniqueId lessThan_3C3C                    = TSymbolUniqueId(336);
-    static constexpr const TSymbolUniqueId lessThan_1D1D                    = TSymbolUniqueId(337);
-    static constexpr const TSymbolUniqueId lessThan_2D2D                    = TSymbolUniqueId(338);
-    static constexpr const TSymbolUniqueId lessThan_3D3D                    = TSymbolUniqueId(339);
-    static constexpr const TSymbolUniqueId lessThanEqual_1B1B               = TSymbolUniqueId(340);
-    static constexpr const TSymbolUniqueId lessThanEqual_2B2B               = TSymbolUniqueId(341);
-    static constexpr const TSymbolUniqueId lessThanEqual_3B3B               = TSymbolUniqueId(342);
-    static constexpr const TSymbolUniqueId lessThanEqual_1C1C               = TSymbolUniqueId(343);
-    static constexpr const TSymbolUniqueId lessThanEqual_2C2C               = TSymbolUniqueId(344);
-    static constexpr const TSymbolUniqueId lessThanEqual_3C3C               = TSymbolUniqueId(345);
-    static constexpr const TSymbolUniqueId lessThanEqual_1D1D               = TSymbolUniqueId(346);
-    static constexpr const TSymbolUniqueId lessThanEqual_2D2D               = TSymbolUniqueId(347);
-    static constexpr const TSymbolUniqueId lessThanEqual_3D3D               = TSymbolUniqueId(348);
-    static constexpr const TSymbolUniqueId greaterThan_1B1B                 = TSymbolUniqueId(349);
-    static constexpr const TSymbolUniqueId greaterThan_2B2B                 = TSymbolUniqueId(350);
-    static constexpr const TSymbolUniqueId greaterThan_3B3B                 = TSymbolUniqueId(351);
-    static constexpr const TSymbolUniqueId greaterThan_1C1C                 = TSymbolUniqueId(352);
-    static constexpr const TSymbolUniqueId greaterThan_2C2C                 = TSymbolUniqueId(353);
-    static constexpr const TSymbolUniqueId greaterThan_3C3C                 = TSymbolUniqueId(354);
-    static constexpr const TSymbolUniqueId greaterThan_1D1D                 = TSymbolUniqueId(355);
-    static constexpr const TSymbolUniqueId greaterThan_2D2D                 = TSymbolUniqueId(356);
-    static constexpr const TSymbolUniqueId greaterThan_3D3D                 = TSymbolUniqueId(357);
-    static constexpr const TSymbolUniqueId greaterThanEqual_1B1B            = TSymbolUniqueId(358);
-    static constexpr const TSymbolUniqueId greaterThanEqual_2B2B            = TSymbolUniqueId(359);
-    static constexpr const TSymbolUniqueId greaterThanEqual_3B3B            = TSymbolUniqueId(360);
-    static constexpr const TSymbolUniqueId greaterThanEqual_1C1C            = TSymbolUniqueId(361);
-    static constexpr const TSymbolUniqueId greaterThanEqual_2C2C            = TSymbolUniqueId(362);
-    static constexpr const TSymbolUniqueId greaterThanEqual_3C3C            = TSymbolUniqueId(363);
-    static constexpr const TSymbolUniqueId greaterThanEqual_1D1D            = TSymbolUniqueId(364);
-    static constexpr const TSymbolUniqueId greaterThanEqual_2D2D            = TSymbolUniqueId(365);
-    static constexpr const TSymbolUniqueId greaterThanEqual_3D3D            = TSymbolUniqueId(366);
-    static constexpr const TSymbolUniqueId equal_1B1B                       = TSymbolUniqueId(367);
-    static constexpr const TSymbolUniqueId equal_2B2B                       = TSymbolUniqueId(368);
-    static constexpr const TSymbolUniqueId equal_3B3B                       = TSymbolUniqueId(369);
-    static constexpr const TSymbolUniqueId equal_1C1C                       = TSymbolUniqueId(370);
-    static constexpr const TSymbolUniqueId equal_2C2C                       = TSymbolUniqueId(371);
-    static constexpr const TSymbolUniqueId equal_3C3C                       = TSymbolUniqueId(372);
-    static constexpr const TSymbolUniqueId equal_1D1D                       = TSymbolUniqueId(373);
-    static constexpr const TSymbolUniqueId equal_2D2D                       = TSymbolUniqueId(374);
-    static constexpr const TSymbolUniqueId equal_3D3D                       = TSymbolUniqueId(375);
-    static constexpr const TSymbolUniqueId equal_1E1E                       = TSymbolUniqueId(376);
-    static constexpr const TSymbolUniqueId equal_2E2E                       = TSymbolUniqueId(377);
-    static constexpr const TSymbolUniqueId equal_3E3E                       = TSymbolUniqueId(378);
-    static constexpr const TSymbolUniqueId notEqual_1B1B                    = TSymbolUniqueId(379);
-    static constexpr const TSymbolUniqueId notEqual_2B2B                    = TSymbolUniqueId(380);
-    static constexpr const TSymbolUniqueId notEqual_3B3B                    = TSymbolUniqueId(381);
-    static constexpr const TSymbolUniqueId notEqual_1C1C                    = TSymbolUniqueId(382);
-    static constexpr const TSymbolUniqueId notEqual_2C2C                    = TSymbolUniqueId(383);
-    static constexpr const TSymbolUniqueId notEqual_3C3C                    = TSymbolUniqueId(384);
-    static constexpr const TSymbolUniqueId notEqual_1D1D                    = TSymbolUniqueId(385);
-    static constexpr const TSymbolUniqueId notEqual_2D2D                    = TSymbolUniqueId(386);
-    static constexpr const TSymbolUniqueId notEqual_3D3D                    = TSymbolUniqueId(387);
-    static constexpr const TSymbolUniqueId notEqual_1E1E                    = TSymbolUniqueId(388);
-    static constexpr const TSymbolUniqueId notEqual_2E2E                    = TSymbolUniqueId(389);
-    static constexpr const TSymbolUniqueId notEqual_3E3E                    = TSymbolUniqueId(390);
-    static constexpr const TSymbolUniqueId any_1E                           = TSymbolUniqueId(391);
-    static constexpr const TSymbolUniqueId any_2E                           = TSymbolUniqueId(392);
-    static constexpr const TSymbolUniqueId any_3E                           = TSymbolUniqueId(393);
-    static constexpr const TSymbolUniqueId all_1E                           = TSymbolUniqueId(394);
-    static constexpr const TSymbolUniqueId all_2E                           = TSymbolUniqueId(395);
-    static constexpr const TSymbolUniqueId all_3E                           = TSymbolUniqueId(396);
-    static constexpr const TSymbolUniqueId notFunc_1E                       = TSymbolUniqueId(397);
-    static constexpr const TSymbolUniqueId notFunc_2E                       = TSymbolUniqueId(398);
-    static constexpr const TSymbolUniqueId notFunc_3E                       = TSymbolUniqueId(399);
-    static constexpr const TSymbolUniqueId bitfieldExtract_0C0C0C           = TSymbolUniqueId(400);
-    static constexpr const TSymbolUniqueId bitfieldExtract_1C0C0C           = TSymbolUniqueId(401);
-    static constexpr const TSymbolUniqueId bitfieldExtract_2C0C0C           = TSymbolUniqueId(402);
-    static constexpr const TSymbolUniqueId bitfieldExtract_3C0C0C           = TSymbolUniqueId(403);
-    static constexpr const TSymbolUniqueId bitfieldExtract_0D0C0C           = TSymbolUniqueId(404);
-    static constexpr const TSymbolUniqueId bitfieldExtract_1D0C0C           = TSymbolUniqueId(405);
-    static constexpr const TSymbolUniqueId bitfieldExtract_2D0C0C           = TSymbolUniqueId(406);
-    static constexpr const TSymbolUniqueId bitfieldExtract_3D0C0C           = TSymbolUniqueId(407);
-    static constexpr const TSymbolUniqueId bitfieldInsert_0C0C0C0C          = TSymbolUniqueId(408);
-    static constexpr const TSymbolUniqueId bitfieldInsert_1C1C0C0C          = TSymbolUniqueId(409);
-    static constexpr const TSymbolUniqueId bitfieldInsert_2C2C0C0C          = TSymbolUniqueId(410);
-    static constexpr const TSymbolUniqueId bitfieldInsert_3C3C0C0C          = TSymbolUniqueId(411);
-    static constexpr const TSymbolUniqueId bitfieldInsert_0D0D0C0C          = TSymbolUniqueId(412);
-    static constexpr const TSymbolUniqueId bitfieldInsert_1D1D0C0C          = TSymbolUniqueId(413);
-    static constexpr const TSymbolUniqueId bitfieldInsert_2D2D0C0C          = TSymbolUniqueId(414);
-    static constexpr const TSymbolUniqueId bitfieldInsert_3D3D0C0C          = TSymbolUniqueId(415);
-    static constexpr const TSymbolUniqueId bitfieldReverse_0C               = TSymbolUniqueId(416);
-    static constexpr const TSymbolUniqueId bitfieldReverse_1C               = TSymbolUniqueId(417);
-    static constexpr const TSymbolUniqueId bitfieldReverse_2C               = TSymbolUniqueId(418);
-    static constexpr const TSymbolUniqueId bitfieldReverse_3C               = TSymbolUniqueId(419);
-    static constexpr const TSymbolUniqueId bitfieldReverse_0D               = TSymbolUniqueId(420);
-    static constexpr const TSymbolUniqueId bitfieldReverse_1D               = TSymbolUniqueId(421);
-    static constexpr const TSymbolUniqueId bitfieldReverse_2D               = TSymbolUniqueId(422);
-    static constexpr const TSymbolUniqueId bitfieldReverse_3D               = TSymbolUniqueId(423);
-    static constexpr const TSymbolUniqueId bitCount_0C                      = TSymbolUniqueId(424);
-    static constexpr const TSymbolUniqueId bitCount_1C                      = TSymbolUniqueId(425);
-    static constexpr const TSymbolUniqueId bitCount_2C                      = TSymbolUniqueId(426);
-    static constexpr const TSymbolUniqueId bitCount_3C                      = TSymbolUniqueId(427);
-    static constexpr const TSymbolUniqueId bitCount_0D                      = TSymbolUniqueId(428);
-    static constexpr const TSymbolUniqueId bitCount_1D                      = TSymbolUniqueId(429);
-    static constexpr const TSymbolUniqueId bitCount_2D                      = TSymbolUniqueId(430);
-    static constexpr const TSymbolUniqueId bitCount_3D                      = TSymbolUniqueId(431);
-    static constexpr const TSymbolUniqueId findLSB_0C                       = TSymbolUniqueId(432);
-    static constexpr const TSymbolUniqueId findLSB_1C                       = TSymbolUniqueId(433);
-    static constexpr const TSymbolUniqueId findLSB_2C                       = TSymbolUniqueId(434);
-    static constexpr const TSymbolUniqueId findLSB_3C                       = TSymbolUniqueId(435);
-    static constexpr const TSymbolUniqueId findLSB_0D                       = TSymbolUniqueId(436);
-    static constexpr const TSymbolUniqueId findLSB_1D                       = TSymbolUniqueId(437);
-    static constexpr const TSymbolUniqueId findLSB_2D                       = TSymbolUniqueId(438);
-    static constexpr const TSymbolUniqueId findLSB_3D                       = TSymbolUniqueId(439);
-    static constexpr const TSymbolUniqueId findMSB_0C                       = TSymbolUniqueId(440);
-    static constexpr const TSymbolUniqueId findMSB_1C                       = TSymbolUniqueId(441);
-    static constexpr const TSymbolUniqueId findMSB_2C                       = TSymbolUniqueId(442);
-    static constexpr const TSymbolUniqueId findMSB_3C                       = TSymbolUniqueId(443);
-    static constexpr const TSymbolUniqueId findMSB_0D                       = TSymbolUniqueId(444);
-    static constexpr const TSymbolUniqueId findMSB_1D                       = TSymbolUniqueId(445);
-    static constexpr const TSymbolUniqueId findMSB_2D                       = TSymbolUniqueId(446);
-    static constexpr const TSymbolUniqueId findMSB_3D                       = TSymbolUniqueId(447);
-    static constexpr const TSymbolUniqueId uaddCarry_0D0D0D                 = TSymbolUniqueId(448);
-    static constexpr const TSymbolUniqueId uaddCarry_1D1D1D                 = TSymbolUniqueId(449);
-    static constexpr const TSymbolUniqueId uaddCarry_2D2D2D                 = TSymbolUniqueId(450);
-    static constexpr const TSymbolUniqueId uaddCarry_3D3D3D                 = TSymbolUniqueId(451);
-    static constexpr const TSymbolUniqueId usubBorrow_0D0D0D                = TSymbolUniqueId(452);
-    static constexpr const TSymbolUniqueId usubBorrow_1D1D1D                = TSymbolUniqueId(453);
-    static constexpr const TSymbolUniqueId usubBorrow_2D2D2D                = TSymbolUniqueId(454);
-    static constexpr const TSymbolUniqueId usubBorrow_3D3D3D                = TSymbolUniqueId(455);
-    static constexpr const TSymbolUniqueId umulExtended_0D0D0D0D            = TSymbolUniqueId(456);
-    static constexpr const TSymbolUniqueId umulExtended_1D1D1D1D            = TSymbolUniqueId(457);
-    static constexpr const TSymbolUniqueId umulExtended_2D2D2D2D            = TSymbolUniqueId(458);
-    static constexpr const TSymbolUniqueId umulExtended_3D3D3D3D            = TSymbolUniqueId(459);
-    static constexpr const TSymbolUniqueId imulExtended_0C0C0C0C            = TSymbolUniqueId(460);
-    static constexpr const TSymbolUniqueId imulExtended_1C1C1C1C            = TSymbolUniqueId(461);
-    static constexpr const TSymbolUniqueId imulExtended_2C2C2C2C            = TSymbolUniqueId(462);
-    static constexpr const TSymbolUniqueId imulExtended_3C3C3C3C            = TSymbolUniqueId(463);
-    static constexpr const TSymbolUniqueId texture2D_0H1B                   = TSymbolUniqueId(464);
-    static constexpr const TSymbolUniqueId texture2DProj_0H2B               = TSymbolUniqueId(465);
-    static constexpr const TSymbolUniqueId texture2DProj_0H3B               = TSymbolUniqueId(466);
-    static constexpr const TSymbolUniqueId textureCube_0J2B                 = TSymbolUniqueId(467);
-    static constexpr const TSymbolUniqueId texture2D_0L1B                   = TSymbolUniqueId(468);
-    static constexpr const TSymbolUniqueId texture2DProj_0L2B               = TSymbolUniqueId(469);
-    static constexpr const TSymbolUniqueId texture2DProj_0L3B               = TSymbolUniqueId(470);
-    static constexpr const TSymbolUniqueId texture2DRect_0N1B               = TSymbolUniqueId(471);
-    static constexpr const TSymbolUniqueId texture2DRectProj_0N2B           = TSymbolUniqueId(472);
-    static constexpr const TSymbolUniqueId texture2DRectProj_0N3B           = TSymbolUniqueId(473);
-    static constexpr const TSymbolUniqueId texture_0N1B                     = TSymbolUniqueId(474);
-    static constexpr const TSymbolUniqueId textureProj_0N2B                 = TSymbolUniqueId(475);
-    static constexpr const TSymbolUniqueId textureProj_0N3B                 = TSymbolUniqueId(476);
-    static constexpr const TSymbolUniqueId texture2DGradEXT_0H1B1B1B        = TSymbolUniqueId(477);
-    static constexpr const TSymbolUniqueId texture2DProjGradEXT_0H2B1B1B    = TSymbolUniqueId(478);
-    static constexpr const TSymbolUniqueId texture2DProjGradEXT_0H3B1B1B    = TSymbolUniqueId(479);
-    static constexpr const TSymbolUniqueId textureCubeGradEXT_0J2B2B2B      = TSymbolUniqueId(480);
-    static constexpr const TSymbolUniqueId texture2D_0H1B0B                 = TSymbolUniqueId(481);
-    static constexpr const TSymbolUniqueId texture2DProj_0H2B0B             = TSymbolUniqueId(482);
-    static constexpr const TSymbolUniqueId texture2DProj_0H3B0B             = TSymbolUniqueId(483);
-    static constexpr const TSymbolUniqueId textureCube_0J2B0B               = TSymbolUniqueId(484);
-    static constexpr const TSymbolUniqueId dFdxExt_0B                       = TSymbolUniqueId(485);
-    static constexpr const TSymbolUniqueId dFdxExt_1B                       = TSymbolUniqueId(486);
-    static constexpr const TSymbolUniqueId dFdxExt_2B                       = TSymbolUniqueId(487);
-    static constexpr const TSymbolUniqueId dFdxExt_3B                       = TSymbolUniqueId(488);
-    static constexpr const TSymbolUniqueId dFdyExt_0B                       = TSymbolUniqueId(489);
-    static constexpr const TSymbolUniqueId dFdyExt_1B                       = TSymbolUniqueId(490);
-    static constexpr const TSymbolUniqueId dFdyExt_2B                       = TSymbolUniqueId(491);
-    static constexpr const TSymbolUniqueId dFdyExt_3B                       = TSymbolUniqueId(492);
-    static constexpr const TSymbolUniqueId fwidthExt_0B                     = TSymbolUniqueId(493);
-    static constexpr const TSymbolUniqueId fwidthExt_1B                     = TSymbolUniqueId(494);
-    static constexpr const TSymbolUniqueId fwidthExt_2B                     = TSymbolUniqueId(495);
-    static constexpr const TSymbolUniqueId fwidthExt_3B                     = TSymbolUniqueId(496);
-    static constexpr const TSymbolUniqueId texture2DLodEXT_0H1B0B           = TSymbolUniqueId(497);
-    static constexpr const TSymbolUniqueId texture2DProjLodEXT_0H2B0B       = TSymbolUniqueId(498);
-    static constexpr const TSymbolUniqueId texture2DProjLodEXT_0H3B0B       = TSymbolUniqueId(499);
-    static constexpr const TSymbolUniqueId textureCubeLodEXT_0J2B0B         = TSymbolUniqueId(500);
-    static constexpr const TSymbolUniqueId texture2DLod_0H1B0B              = TSymbolUniqueId(501);
-    static constexpr const TSymbolUniqueId texture2DProjLod_0H2B0B          = TSymbolUniqueId(502);
-    static constexpr const TSymbolUniqueId texture2DProjLod_0H3B0B          = TSymbolUniqueId(503);
-    static constexpr const TSymbolUniqueId textureCubeLod_0J2B0B            = TSymbolUniqueId(504);
-    static constexpr const TSymbolUniqueId texture_0H1B                     = TSymbolUniqueId(505);
-    static constexpr const TSymbolUniqueId texture_0P1B                     = TSymbolUniqueId(506);
-    static constexpr const TSymbolUniqueId texture_0U1B                     = TSymbolUniqueId(507);
-    static constexpr const TSymbolUniqueId texture_0I2B                     = TSymbolUniqueId(508);
-    static constexpr const TSymbolUniqueId texture_0Q2B                     = TSymbolUniqueId(509);
-    static constexpr const TSymbolUniqueId texture_0V2B                     = TSymbolUniqueId(510);
-    static constexpr const TSymbolUniqueId texture_0J2B                     = TSymbolUniqueId(511);
-    static constexpr const TSymbolUniqueId texture_0R2B                     = TSymbolUniqueId(512);
-    static constexpr const TSymbolUniqueId texture_0W2B                     = TSymbolUniqueId(513);
-    static constexpr const TSymbolUniqueId texture_0K2B                     = TSymbolUniqueId(514);
-    static constexpr const TSymbolUniqueId texture_0S2B                     = TSymbolUniqueId(515);
-    static constexpr const TSymbolUniqueId texture_0X2B                     = TSymbolUniqueId(516);
-    static constexpr const TSymbolUniqueId textureProj_0H2B                 = TSymbolUniqueId(517);
-    static constexpr const TSymbolUniqueId textureProj_0P2B                 = TSymbolUniqueId(518);
-    static constexpr const TSymbolUniqueId textureProj_0U2B                 = TSymbolUniqueId(519);
-    static constexpr const TSymbolUniqueId textureProj_0H3B                 = TSymbolUniqueId(520);
-    static constexpr const TSymbolUniqueId textureProj_0P3B                 = TSymbolUniqueId(521);
-    static constexpr const TSymbolUniqueId textureProj_0U3B                 = TSymbolUniqueId(522);
-    static constexpr const TSymbolUniqueId textureProj_0I3B                 = TSymbolUniqueId(523);
-    static constexpr const TSymbolUniqueId textureProj_0Q3B                 = TSymbolUniqueId(524);
-    static constexpr const TSymbolUniqueId textureProj_0V3B                 = TSymbolUniqueId(525);
-    static constexpr const TSymbolUniqueId textureLod_0H1B0B                = TSymbolUniqueId(526);
-    static constexpr const TSymbolUniqueId textureLod_0P1B0B                = TSymbolUniqueId(527);
-    static constexpr const TSymbolUniqueId textureLod_0U1B0B                = TSymbolUniqueId(528);
-    static constexpr const TSymbolUniqueId textureLod_0I2B0B                = TSymbolUniqueId(529);
-    static constexpr const TSymbolUniqueId textureLod_0Q2B0B                = TSymbolUniqueId(530);
-    static constexpr const TSymbolUniqueId textureLod_0V2B0B                = TSymbolUniqueId(531);
-    static constexpr const TSymbolUniqueId textureLod_0J2B0B                = TSymbolUniqueId(532);
-    static constexpr const TSymbolUniqueId textureLod_0R2B0B                = TSymbolUniqueId(533);
-    static constexpr const TSymbolUniqueId textureLod_0W2B0B                = TSymbolUniqueId(534);
-    static constexpr const TSymbolUniqueId textureLod_0K2B0B                = TSymbolUniqueId(535);
-    static constexpr const TSymbolUniqueId textureLod_0S2B0B                = TSymbolUniqueId(536);
-    static constexpr const TSymbolUniqueId textureLod_0X2B0B                = TSymbolUniqueId(537);
-    static constexpr const TSymbolUniqueId texture_0Z2B                     = TSymbolUniqueId(538);
-    static constexpr const TSymbolUniqueId texture_0a3B                     = TSymbolUniqueId(539);
-    static constexpr const TSymbolUniqueId texture_0b3B                     = TSymbolUniqueId(540);
-    static constexpr const TSymbolUniqueId textureProj_0Z3B                 = TSymbolUniqueId(541);
-    static constexpr const TSymbolUniqueId textureLod_0Z2B0B                = TSymbolUniqueId(542);
-    static constexpr const TSymbolUniqueId textureSize_0H0C                 = TSymbolUniqueId(543);
-    static constexpr const TSymbolUniqueId textureSize_0P0C                 = TSymbolUniqueId(544);
-    static constexpr const TSymbolUniqueId textureSize_0U0C                 = TSymbolUniqueId(545);
-    static constexpr const TSymbolUniqueId textureSize_0I0C                 = TSymbolUniqueId(546);
-    static constexpr const TSymbolUniqueId textureSize_0Q0C                 = TSymbolUniqueId(547);
-    static constexpr const TSymbolUniqueId textureSize_0V0C                 = TSymbolUniqueId(548);
-    static constexpr const TSymbolUniqueId textureSize_0J0C                 = TSymbolUniqueId(549);
-    static constexpr const TSymbolUniqueId textureSize_0R0C                 = TSymbolUniqueId(550);
-    static constexpr const TSymbolUniqueId textureSize_0W0C                 = TSymbolUniqueId(551);
-    static constexpr const TSymbolUniqueId textureSize_0K0C                 = TSymbolUniqueId(552);
-    static constexpr const TSymbolUniqueId textureSize_0S0C                 = TSymbolUniqueId(553);
-    static constexpr const TSymbolUniqueId textureSize_0X0C                 = TSymbolUniqueId(554);
-    static constexpr const TSymbolUniqueId textureSize_0Z0C                 = TSymbolUniqueId(555);
-    static constexpr const TSymbolUniqueId textureSize_0a0C                 = TSymbolUniqueId(556);
-    static constexpr const TSymbolUniqueId textureSize_0b0C                 = TSymbolUniqueId(557);
-    static constexpr const TSymbolUniqueId textureSize_0O                   = TSymbolUniqueId(558);
-    static constexpr const TSymbolUniqueId textureSize_0T                   = TSymbolUniqueId(559);
-    static constexpr const TSymbolUniqueId textureSize_0Y                   = TSymbolUniqueId(560);
-    static constexpr const TSymbolUniqueId textureProjLod_0H2B0B            = TSymbolUniqueId(561);
-    static constexpr const TSymbolUniqueId textureProjLod_0P2B0B            = TSymbolUniqueId(562);
-    static constexpr const TSymbolUniqueId textureProjLod_0U2B0B            = TSymbolUniqueId(563);
-    static constexpr const TSymbolUniqueId textureProjLod_0H3B0B            = TSymbolUniqueId(564);
-    static constexpr const TSymbolUniqueId textureProjLod_0P3B0B            = TSymbolUniqueId(565);
-    static constexpr const TSymbolUniqueId textureProjLod_0U3B0B            = TSymbolUniqueId(566);
-    static constexpr const TSymbolUniqueId textureProjLod_0I3B0B            = TSymbolUniqueId(567);
-    static constexpr const TSymbolUniqueId textureProjLod_0Q3B0B            = TSymbolUniqueId(568);
-    static constexpr const TSymbolUniqueId textureProjLod_0V3B0B            = TSymbolUniqueId(569);
-    static constexpr const TSymbolUniqueId textureProjLod_0Z3B0B            = TSymbolUniqueId(570);
-    static constexpr const TSymbolUniqueId texelFetch_0H1C0C                = TSymbolUniqueId(571);
-    static constexpr const TSymbolUniqueId texelFetch_0P1C0C                = TSymbolUniqueId(572);
-    static constexpr const TSymbolUniqueId texelFetch_0U1C0C                = TSymbolUniqueId(573);
-    static constexpr const TSymbolUniqueId texelFetch_0I2C0C                = TSymbolUniqueId(574);
-    static constexpr const TSymbolUniqueId texelFetch_0Q2C0C                = TSymbolUniqueId(575);
-    static constexpr const TSymbolUniqueId texelFetch_0V2C0C                = TSymbolUniqueId(576);
-    static constexpr const TSymbolUniqueId texelFetch_0K2C0C                = TSymbolUniqueId(577);
-    static constexpr const TSymbolUniqueId texelFetch_0S2C0C                = TSymbolUniqueId(578);
-    static constexpr const TSymbolUniqueId texelFetch_0X2C0C                = TSymbolUniqueId(579);
-    static constexpr const TSymbolUniqueId textureGrad_0H1B1B1B             = TSymbolUniqueId(580);
-    static constexpr const TSymbolUniqueId textureGrad_0P1B1B1B             = TSymbolUniqueId(581);
-    static constexpr const TSymbolUniqueId textureGrad_0U1B1B1B             = TSymbolUniqueId(582);
-    static constexpr const TSymbolUniqueId textureGrad_0I2B2B2B             = TSymbolUniqueId(583);
-    static constexpr const TSymbolUniqueId textureGrad_0Q2B2B2B             = TSymbolUniqueId(584);
-    static constexpr const TSymbolUniqueId textureGrad_0V2B2B2B             = TSymbolUniqueId(585);
-    static constexpr const TSymbolUniqueId textureGrad_0J2B2B2B             = TSymbolUniqueId(586);
-    static constexpr const TSymbolUniqueId textureGrad_0R2B2B2B             = TSymbolUniqueId(587);
-    static constexpr const TSymbolUniqueId textureGrad_0W2B2B2B             = TSymbolUniqueId(588);
-    static constexpr const TSymbolUniqueId textureGrad_0Z2B1B1B             = TSymbolUniqueId(589);
-    static constexpr const TSymbolUniqueId textureGrad_0a3B2B2B             = TSymbolUniqueId(590);
-    static constexpr const TSymbolUniqueId textureGrad_0K2B1B1B             = TSymbolUniqueId(591);
-    static constexpr const TSymbolUniqueId textureGrad_0S2B1B1B             = TSymbolUniqueId(592);
-    static constexpr const TSymbolUniqueId textureGrad_0X2B1B1B             = TSymbolUniqueId(593);
-    static constexpr const TSymbolUniqueId textureGrad_0b3B1B1B             = TSymbolUniqueId(594);
-    static constexpr const TSymbolUniqueId textureProjGrad_0H2B1B1B         = TSymbolUniqueId(595);
-    static constexpr const TSymbolUniqueId textureProjGrad_0P2B1B1B         = TSymbolUniqueId(596);
-    static constexpr const TSymbolUniqueId textureProjGrad_0U2B1B1B         = TSymbolUniqueId(597);
-    static constexpr const TSymbolUniqueId textureProjGrad_0H3B1B1B         = TSymbolUniqueId(598);
-    static constexpr const TSymbolUniqueId textureProjGrad_0P3B1B1B         = TSymbolUniqueId(599);
-    static constexpr const TSymbolUniqueId textureProjGrad_0U3B1B1B         = TSymbolUniqueId(600);
-    static constexpr const TSymbolUniqueId textureProjGrad_0I3B2B2B         = TSymbolUniqueId(601);
-    static constexpr const TSymbolUniqueId textureProjGrad_0Q3B2B2B         = TSymbolUniqueId(602);
-    static constexpr const TSymbolUniqueId textureProjGrad_0V3B2B2B         = TSymbolUniqueId(603);
-    static constexpr const TSymbolUniqueId textureProjGrad_0Z3B1B1B         = TSymbolUniqueId(604);
-    static constexpr const TSymbolUniqueId textureOffset_0H1B1C             = TSymbolUniqueId(605);
-    static constexpr const TSymbolUniqueId textureOffset_0P1B1C             = TSymbolUniqueId(606);
-    static constexpr const TSymbolUniqueId textureOffset_0U1B1C             = TSymbolUniqueId(607);
-    static constexpr const TSymbolUniqueId textureOffset_0I2B2C             = TSymbolUniqueId(608);
-    static constexpr const TSymbolUniqueId textureOffset_0Q2B2C             = TSymbolUniqueId(609);
-    static constexpr const TSymbolUniqueId textureOffset_0V2B2C             = TSymbolUniqueId(610);
-    static constexpr const TSymbolUniqueId textureOffset_0Z2B1C             = TSymbolUniqueId(611);
-    static constexpr const TSymbolUniqueId textureOffset_0K2B1C             = TSymbolUniqueId(612);
-    static constexpr const TSymbolUniqueId textureOffset_0S2B1C             = TSymbolUniqueId(613);
-    static constexpr const TSymbolUniqueId textureOffset_0X2B1C             = TSymbolUniqueId(614);
-    static constexpr const TSymbolUniqueId textureProjOffset_0H2B1C         = TSymbolUniqueId(615);
-    static constexpr const TSymbolUniqueId textureProjOffset_0P2B1C         = TSymbolUniqueId(616);
-    static constexpr const TSymbolUniqueId textureProjOffset_0U2B1C         = TSymbolUniqueId(617);
-    static constexpr const TSymbolUniqueId textureProjOffset_0H3B1C         = TSymbolUniqueId(618);
-    static constexpr const TSymbolUniqueId textureProjOffset_0P3B1C         = TSymbolUniqueId(619);
-    static constexpr const TSymbolUniqueId textureProjOffset_0U3B1C         = TSymbolUniqueId(620);
-    static constexpr const TSymbolUniqueId textureProjOffset_0I3B2C         = TSymbolUniqueId(621);
-    static constexpr const TSymbolUniqueId textureProjOffset_0Q3B2C         = TSymbolUniqueId(622);
-    static constexpr const TSymbolUniqueId textureProjOffset_0V3B2C         = TSymbolUniqueId(623);
-    static constexpr const TSymbolUniqueId textureProjOffset_0Z3B1C         = TSymbolUniqueId(624);
-    static constexpr const TSymbolUniqueId textureLodOffset_0H1B0B1C        = TSymbolUniqueId(625);
-    static constexpr const TSymbolUniqueId textureLodOffset_0P1B0B1C        = TSymbolUniqueId(626);
-    static constexpr const TSymbolUniqueId textureLodOffset_0U1B0B1C        = TSymbolUniqueId(627);
-    static constexpr const TSymbolUniqueId textureLodOffset_0I2B0B2C        = TSymbolUniqueId(628);
-    static constexpr const TSymbolUniqueId textureLodOffset_0Q2B0B2C        = TSymbolUniqueId(629);
-    static constexpr const TSymbolUniqueId textureLodOffset_0V2B0B2C        = TSymbolUniqueId(630);
-    static constexpr const TSymbolUniqueId textureLodOffset_0Z2B0B1C        = TSymbolUniqueId(631);
-    static constexpr const TSymbolUniqueId textureLodOffset_0K2B0B1C        = TSymbolUniqueId(632);
-    static constexpr const TSymbolUniqueId textureLodOffset_0S2B0B1C        = TSymbolUniqueId(633);
-    static constexpr const TSymbolUniqueId textureLodOffset_0X2B0B1C        = TSymbolUniqueId(634);
-    static constexpr const TSymbolUniqueId textureProjLodOffset_0H2B0B1C    = TSymbolUniqueId(635);
-    static constexpr const TSymbolUniqueId textureProjLodOffset_0P2B0B1C    = TSymbolUniqueId(636);
-    static constexpr const TSymbolUniqueId textureProjLodOffset_0U2B0B1C    = TSymbolUniqueId(637);
-    static constexpr const TSymbolUniqueId textureProjLodOffset_0H3B0B1C    = TSymbolUniqueId(638);
-    static constexpr const TSymbolUniqueId textureProjLodOffset_0P3B0B1C    = TSymbolUniqueId(639);
-    static constexpr const TSymbolUniqueId textureProjLodOffset_0U3B0B1C    = TSymbolUniqueId(640);
-    static constexpr const TSymbolUniqueId textureProjLodOffset_0I3B0B2C    = TSymbolUniqueId(641);
-    static constexpr const TSymbolUniqueId textureProjLodOffset_0Q3B0B2C    = TSymbolUniqueId(642);
-    static constexpr const TSymbolUniqueId textureProjLodOffset_0V3B0B2C    = TSymbolUniqueId(643);
-    static constexpr const TSymbolUniqueId textureProjLodOffset_0Z3B0B1C    = TSymbolUniqueId(644);
-    static constexpr const TSymbolUniqueId texelFetchOffset_0H1C0C1C        = TSymbolUniqueId(645);
-    static constexpr const TSymbolUniqueId texelFetchOffset_0P1C0C1C        = TSymbolUniqueId(646);
-    static constexpr const TSymbolUniqueId texelFetchOffset_0U1C0C1C        = TSymbolUniqueId(647);
-    static constexpr const TSymbolUniqueId texelFetchOffset_0I2C0C2C        = TSymbolUniqueId(648);
-    static constexpr const TSymbolUniqueId texelFetchOffset_0Q2C0C2C        = TSymbolUniqueId(649);
-    static constexpr const TSymbolUniqueId texelFetchOffset_0V2C0C2C        = TSymbolUniqueId(650);
-    static constexpr const TSymbolUniqueId texelFetchOffset_0K2C0C1C        = TSymbolUniqueId(651);
-    static constexpr const TSymbolUniqueId texelFetchOffset_0S2C0C1C        = TSymbolUniqueId(652);
-    static constexpr const TSymbolUniqueId texelFetchOffset_0X2C0C1C        = TSymbolUniqueId(653);
-    static constexpr const TSymbolUniqueId textureGradOffset_0H1B1B1B1C     = TSymbolUniqueId(654);
-    static constexpr const TSymbolUniqueId textureGradOffset_0P1B1B1B1C     = TSymbolUniqueId(655);
-    static constexpr const TSymbolUniqueId textureGradOffset_0U1B1B1B1C     = TSymbolUniqueId(656);
-    static constexpr const TSymbolUniqueId textureGradOffset_0I2B2B2B2C     = TSymbolUniqueId(657);
-    static constexpr const TSymbolUniqueId textureGradOffset_0Q2B2B2B2C     = TSymbolUniqueId(658);
-    static constexpr const TSymbolUniqueId textureGradOffset_0V2B2B2B2C     = TSymbolUniqueId(659);
-    static constexpr const TSymbolUniqueId textureGradOffset_0Z2B1B1B1C     = TSymbolUniqueId(660);
-    static constexpr const TSymbolUniqueId textureGradOffset_0K2B1B1B1C     = TSymbolUniqueId(661);
-    static constexpr const TSymbolUniqueId textureGradOffset_0S2B1B1B1C     = TSymbolUniqueId(662);
-    static constexpr const TSymbolUniqueId textureGradOffset_0X2B1B1B1C     = TSymbolUniqueId(663);
-    static constexpr const TSymbolUniqueId textureGradOffset_0b3B1B1B1C     = TSymbolUniqueId(664);
-    static constexpr const TSymbolUniqueId textureProjGradOffset_0H2B1B1B1C = TSymbolUniqueId(665);
-    static constexpr const TSymbolUniqueId textureProjGradOffset_0P2B1B1B1C = TSymbolUniqueId(666);
-    static constexpr const TSymbolUniqueId textureProjGradOffset_0U2B1B1B1C = TSymbolUniqueId(667);
-    static constexpr const TSymbolUniqueId textureProjGradOffset_0H3B1B1B1C = TSymbolUniqueId(668);
-    static constexpr const TSymbolUniqueId textureProjGradOffset_0P3B1B1B1C = TSymbolUniqueId(669);
-    static constexpr const TSymbolUniqueId textureProjGradOffset_0U3B1B1B1C = TSymbolUniqueId(670);
-    static constexpr const TSymbolUniqueId textureProjGradOffset_0I3B2B2B2C = TSymbolUniqueId(671);
-    static constexpr const TSymbolUniqueId textureProjGradOffset_0Q3B2B2B2C = TSymbolUniqueId(672);
-    static constexpr const TSymbolUniqueId textureProjGradOffset_0V3B2B2B2C = TSymbolUniqueId(673);
-    static constexpr const TSymbolUniqueId textureProjGradOffset_0Z3B1B1B1C = TSymbolUniqueId(674);
-    static constexpr const TSymbolUniqueId textureOffset_0H1B1C0B           = TSymbolUniqueId(675);
-    static constexpr const TSymbolUniqueId textureOffset_0P1B1C0B           = TSymbolUniqueId(676);
-    static constexpr const TSymbolUniqueId textureOffset_0U1B1C0B           = TSymbolUniqueId(677);
-    static constexpr const TSymbolUniqueId textureOffset_0I2B2C0B           = TSymbolUniqueId(678);
-    static constexpr const TSymbolUniqueId textureOffset_0Q2B2C0B           = TSymbolUniqueId(679);
-    static constexpr const TSymbolUniqueId textureOffset_0V2B2C0B           = TSymbolUniqueId(680);
-    static constexpr const TSymbolUniqueId textureOffset_0Z2B1C0B           = TSymbolUniqueId(681);
-    static constexpr const TSymbolUniqueId textureOffset_0K2B1C0B           = TSymbolUniqueId(682);
-    static constexpr const TSymbolUniqueId textureOffset_0S2B1C0B           = TSymbolUniqueId(683);
-    static constexpr const TSymbolUniqueId textureOffset_0X2B1C0B           = TSymbolUniqueId(684);
-    static constexpr const TSymbolUniqueId textureProjOffset_0H2B1C0B       = TSymbolUniqueId(685);
-    static constexpr const TSymbolUniqueId textureProjOffset_0P2B1C0B       = TSymbolUniqueId(686);
-    static constexpr const TSymbolUniqueId textureProjOffset_0U2B1C0B       = TSymbolUniqueId(687);
-    static constexpr const TSymbolUniqueId textureProjOffset_0H3B1C0B       = TSymbolUniqueId(688);
-    static constexpr const TSymbolUniqueId textureProjOffset_0P3B1C0B       = TSymbolUniqueId(689);
-    static constexpr const TSymbolUniqueId textureProjOffset_0U3B1C0B       = TSymbolUniqueId(690);
-    static constexpr const TSymbolUniqueId textureProjOffset_0I3B2C0B       = TSymbolUniqueId(691);
-    static constexpr const TSymbolUniqueId textureProjOffset_0Q3B2C0B       = TSymbolUniqueId(692);
-    static constexpr const TSymbolUniqueId textureProjOffset_0V3B2C0B       = TSymbolUniqueId(693);
-    static constexpr const TSymbolUniqueId textureProjOffset_0Z3B1C0B       = TSymbolUniqueId(694);
-    static constexpr const TSymbolUniqueId texture_0L1B                     = TSymbolUniqueId(695);
-    static constexpr const TSymbolUniqueId textureProj_0L2B                 = TSymbolUniqueId(696);
-    static constexpr const TSymbolUniqueId textureProj_0L3B                 = TSymbolUniqueId(697);
-    static constexpr const TSymbolUniqueId textureSize_0L0C                 = TSymbolUniqueId(698);
-    static constexpr const TSymbolUniqueId texelFetch_0L1C0C                = TSymbolUniqueId(699);
-    static constexpr const TSymbolUniqueId texture_0M1B                     = TSymbolUniqueId(700);
-    static constexpr const TSymbolUniqueId textureProj_0M2B                 = TSymbolUniqueId(701);
-    static constexpr const TSymbolUniqueId textureProj_0M3B                 = TSymbolUniqueId(702);
-    static constexpr const TSymbolUniqueId rgb_2_yuv_2B0G                   = TSymbolUniqueId(703);
-    static constexpr const TSymbolUniqueId yuv_2_rgb_2B0G                   = TSymbolUniqueId(704);
-    static constexpr const TSymbolUniqueId textureSize_0M0C                 = TSymbolUniqueId(705);
-    static constexpr const TSymbolUniqueId texelFetch_0M1C0C                = TSymbolUniqueId(706);
-    static constexpr const TSymbolUniqueId texture_0H1B0B                   = TSymbolUniqueId(707);
-    static constexpr const TSymbolUniqueId texture_0P1B0B                   = TSymbolUniqueId(708);
-    static constexpr const TSymbolUniqueId texture_0U1B0B                   = TSymbolUniqueId(709);
-    static constexpr const TSymbolUniqueId texture_0I2B0B                   = TSymbolUniqueId(710);
-    static constexpr const TSymbolUniqueId texture_0Q2B0B                   = TSymbolUniqueId(711);
-    static constexpr const TSymbolUniqueId texture_0V2B0B                   = TSymbolUniqueId(712);
-    static constexpr const TSymbolUniqueId texture_0J2B0B                   = TSymbolUniqueId(713);
-    static constexpr const TSymbolUniqueId texture_0R2B0B                   = TSymbolUniqueId(714);
-    static constexpr const TSymbolUniqueId texture_0W2B0B                   = TSymbolUniqueId(715);
-    static constexpr const TSymbolUniqueId texture_0K2B0B                   = TSymbolUniqueId(716);
-    static constexpr const TSymbolUniqueId texture_0S2B0B                   = TSymbolUniqueId(717);
-    static constexpr const TSymbolUniqueId texture_0X2B0B                   = TSymbolUniqueId(718);
-    static constexpr const TSymbolUniqueId textureProj_0H2B0B               = TSymbolUniqueId(719);
-    static constexpr const TSymbolUniqueId textureProj_0P2B0B               = TSymbolUniqueId(720);
-    static constexpr const TSymbolUniqueId textureProj_0U2B0B               = TSymbolUniqueId(721);
-    static constexpr const TSymbolUniqueId textureProj_0H3B0B               = TSymbolUniqueId(722);
-    static constexpr const TSymbolUniqueId textureProj_0P3B0B               = TSymbolUniqueId(723);
-    static constexpr const TSymbolUniqueId textureProj_0U3B0B               = TSymbolUniqueId(724);
-    static constexpr const TSymbolUniqueId textureProj_0I3B0B               = TSymbolUniqueId(725);
-    static constexpr const TSymbolUniqueId textureProj_0Q3B0B               = TSymbolUniqueId(726);
-    static constexpr const TSymbolUniqueId textureProj_0V3B0B               = TSymbolUniqueId(727);
-    static constexpr const TSymbolUniqueId texture_0Z2B0B                   = TSymbolUniqueId(728);
-    static constexpr const TSymbolUniqueId texture_0a3B0B                   = TSymbolUniqueId(729);
-    static constexpr const TSymbolUniqueId textureProj_0Z3B0B               = TSymbolUniqueId(730);
-    static constexpr const TSymbolUniqueId texture_0L1B0B                   = TSymbolUniqueId(731);
-    static constexpr const TSymbolUniqueId textureProj_0L2B0B               = TSymbolUniqueId(732);
-    static constexpr const TSymbolUniqueId textureProj_0L3B0B               = TSymbolUniqueId(733);
-    static constexpr const TSymbolUniqueId texture_0M1B0B                   = TSymbolUniqueId(734);
-    static constexpr const TSymbolUniqueId textureProj_0M2B0B               = TSymbolUniqueId(735);
-    static constexpr const TSymbolUniqueId textureProj_0M3B0B               = TSymbolUniqueId(736);
-    static constexpr const TSymbolUniqueId texelFetch_0O1C0C                = TSymbolUniqueId(737);
-    static constexpr const TSymbolUniqueId texelFetch_0T1C0C                = TSymbolUniqueId(738);
-    static constexpr const TSymbolUniqueId texelFetch_0Y1C0C                = TSymbolUniqueId(739);
-    static constexpr const TSymbolUniqueId textureGather_0H1B               = TSymbolUniqueId(740);
-    static constexpr const TSymbolUniqueId textureGather_0P1B               = TSymbolUniqueId(741);
-    static constexpr const TSymbolUniqueId textureGather_0U1B               = TSymbolUniqueId(742);
-    static constexpr const TSymbolUniqueId textureGather_0H1B0C             = TSymbolUniqueId(743);
-    static constexpr const TSymbolUniqueId textureGather_0P1B0C             = TSymbolUniqueId(744);
-    static constexpr const TSymbolUniqueId textureGather_0U1B0C             = TSymbolUniqueId(745);
-    static constexpr const TSymbolUniqueId textureGather_0K2B               = TSymbolUniqueId(746);
-    static constexpr const TSymbolUniqueId textureGather_0S2B               = TSymbolUniqueId(747);
-    static constexpr const TSymbolUniqueId textureGather_0X2B               = TSymbolUniqueId(748);
-    static constexpr const TSymbolUniqueId textureGather_0K2B0C             = TSymbolUniqueId(749);
-    static constexpr const TSymbolUniqueId textureGather_0S2B0C             = TSymbolUniqueId(750);
-    static constexpr const TSymbolUniqueId textureGather_0X2B0C             = TSymbolUniqueId(751);
-    static constexpr const TSymbolUniqueId textureGather_0J2B               = TSymbolUniqueId(752);
-    static constexpr const TSymbolUniqueId textureGather_0R2B               = TSymbolUniqueId(753);
-    static constexpr const TSymbolUniqueId textureGather_0W2B               = TSymbolUniqueId(754);
-    static constexpr const TSymbolUniqueId textureGather_0J2B0C             = TSymbolUniqueId(755);
-    static constexpr const TSymbolUniqueId textureGather_0R2B0C             = TSymbolUniqueId(756);
-    static constexpr const TSymbolUniqueId textureGather_0W2B0C             = TSymbolUniqueId(757);
-    static constexpr const TSymbolUniqueId textureGather_0Z1B               = TSymbolUniqueId(758);
-    static constexpr const TSymbolUniqueId textureGather_0Z1B0B             = TSymbolUniqueId(759);
-    static constexpr const TSymbolUniqueId textureGather_0b2B               = TSymbolUniqueId(760);
-    static constexpr const TSymbolUniqueId textureGather_0b2B0B             = TSymbolUniqueId(761);
-    static constexpr const TSymbolUniqueId textureGather_0a2B               = TSymbolUniqueId(762);
-    static constexpr const TSymbolUniqueId textureGather_0a2B0B             = TSymbolUniqueId(763);
-    static constexpr const TSymbolUniqueId textureGatherOffset_0H1B1C       = TSymbolUniqueId(764);
-    static constexpr const TSymbolUniqueId textureGatherOffset_0P1B1C       = TSymbolUniqueId(765);
-    static constexpr const TSymbolUniqueId textureGatherOffset_0U1B1C       = TSymbolUniqueId(766);
-    static constexpr const TSymbolUniqueId textureGatherOffset_0H1B1C0C     = TSymbolUniqueId(767);
-    static constexpr const TSymbolUniqueId textureGatherOffset_0P1B1C0C     = TSymbolUniqueId(768);
-    static constexpr const TSymbolUniqueId textureGatherOffset_0U1B1C0C     = TSymbolUniqueId(769);
-    static constexpr const TSymbolUniqueId textureGatherOffset_0K2B1C       = TSymbolUniqueId(770);
-    static constexpr const TSymbolUniqueId textureGatherOffset_0S2B1C       = TSymbolUniqueId(771);
-    static constexpr const TSymbolUniqueId textureGatherOffset_0X2B1C       = TSymbolUniqueId(772);
-    static constexpr const TSymbolUniqueId textureGatherOffset_0K2B1C0C     = TSymbolUniqueId(773);
-    static constexpr const TSymbolUniqueId textureGatherOffset_0S2B1C0C     = TSymbolUniqueId(774);
-    static constexpr const TSymbolUniqueId textureGatherOffset_0X2B1C0C     = TSymbolUniqueId(775);
-    static constexpr const TSymbolUniqueId textureGatherOffset_0Z1B0B1C     = TSymbolUniqueId(776);
-    static constexpr const TSymbolUniqueId textureGatherOffset_0b2B0B1C     = TSymbolUniqueId(777);
-    static constexpr const TSymbolUniqueId dFdx_0B                          = TSymbolUniqueId(778);
-    static constexpr const TSymbolUniqueId dFdx_1B                          = TSymbolUniqueId(779);
-    static constexpr const TSymbolUniqueId dFdx_2B                          = TSymbolUniqueId(780);
-    static constexpr const TSymbolUniqueId dFdx_3B                          = TSymbolUniqueId(781);
-    static constexpr const TSymbolUniqueId dFdy_0B                          = TSymbolUniqueId(782);
-    static constexpr const TSymbolUniqueId dFdy_1B                          = TSymbolUniqueId(783);
-    static constexpr const TSymbolUniqueId dFdy_2B                          = TSymbolUniqueId(784);
-    static constexpr const TSymbolUniqueId dFdy_3B                          = TSymbolUniqueId(785);
-    static constexpr const TSymbolUniqueId fwidth_0B                        = TSymbolUniqueId(786);
-    static constexpr const TSymbolUniqueId fwidth_1B                        = TSymbolUniqueId(787);
-    static constexpr const TSymbolUniqueId fwidth_2B                        = TSymbolUniqueId(788);
-    static constexpr const TSymbolUniqueId fwidth_3B                        = TSymbolUniqueId(789);
-    static constexpr const TSymbolUniqueId atomicCounter_0F                 = TSymbolUniqueId(790);
-    static constexpr const TSymbolUniqueId atomicCounterIncrement_0F        = TSymbolUniqueId(791);
-    static constexpr const TSymbolUniqueId atomicCounterDecrement_0F        = TSymbolUniqueId(792);
-    static constexpr const TSymbolUniqueId atomicAdd_0D0D                   = TSymbolUniqueId(793);
-    static constexpr const TSymbolUniqueId atomicAdd_0C0C                   = TSymbolUniqueId(794);
-    static constexpr const TSymbolUniqueId atomicMin_0D0D                   = TSymbolUniqueId(795);
-    static constexpr const TSymbolUniqueId atomicMin_0C0C                   = TSymbolUniqueId(796);
-    static constexpr const TSymbolUniqueId atomicMax_0D0D                   = TSymbolUniqueId(797);
-    static constexpr const TSymbolUniqueId atomicMax_0C0C                   = TSymbolUniqueId(798);
-    static constexpr const TSymbolUniqueId atomicAnd_0D0D                   = TSymbolUniqueId(799);
-    static constexpr const TSymbolUniqueId atomicAnd_0C0C                   = TSymbolUniqueId(800);
-    static constexpr const TSymbolUniqueId atomicOr_0D0D                    = TSymbolUniqueId(801);
-    static constexpr const TSymbolUniqueId atomicOr_0C0C                    = TSymbolUniqueId(802);
-    static constexpr const TSymbolUniqueId atomicXor_0D0D                   = TSymbolUniqueId(803);
-    static constexpr const TSymbolUniqueId atomicXor_0C0C                   = TSymbolUniqueId(804);
-    static constexpr const TSymbolUniqueId atomicExchange_0D0D              = TSymbolUniqueId(805);
-    static constexpr const TSymbolUniqueId atomicExchange_0C0C              = TSymbolUniqueId(806);
-    static constexpr const TSymbolUniqueId atomicCompSwap_0D0D0D            = TSymbolUniqueId(807);
-    static constexpr const TSymbolUniqueId atomicCompSwap_0C0C0C            = TSymbolUniqueId(808);
-    static constexpr const TSymbolUniqueId imageSize_0c                     = TSymbolUniqueId(809);
-    static constexpr const TSymbolUniqueId imageSize_0d                     = TSymbolUniqueId(810);
-    static constexpr const TSymbolUniqueId imageSize_0e                     = TSymbolUniqueId(811);
-    static constexpr const TSymbolUniqueId imageSize_0f                     = TSymbolUniqueId(812);
-    static constexpr const TSymbolUniqueId imageSize_0g                     = TSymbolUniqueId(813);
-    static constexpr const TSymbolUniqueId imageSize_0h                     = TSymbolUniqueId(814);
-    static constexpr const TSymbolUniqueId imageSize_0i                     = TSymbolUniqueId(815);
-    static constexpr const TSymbolUniqueId imageSize_0j                     = TSymbolUniqueId(816);
-    static constexpr const TSymbolUniqueId imageSize_0k                     = TSymbolUniqueId(817);
-    static constexpr const TSymbolUniqueId imageSize_0l                     = TSymbolUniqueId(818);
-    static constexpr const TSymbolUniqueId imageSize_0m                     = TSymbolUniqueId(819);
-    static constexpr const TSymbolUniqueId imageSize_0n                     = TSymbolUniqueId(820);
-    static constexpr const TSymbolUniqueId imageLoad_0c1C                   = TSymbolUniqueId(821);
-    static constexpr const TSymbolUniqueId imageLoad_0d1C                   = TSymbolUniqueId(822);
-    static constexpr const TSymbolUniqueId imageLoad_0e1C                   = TSymbolUniqueId(823);
-    static constexpr const TSymbolUniqueId imageLoad_0f2C                   = TSymbolUniqueId(824);
-    static constexpr const TSymbolUniqueId imageLoad_0g2C                   = TSymbolUniqueId(825);
-    static constexpr const TSymbolUniqueId imageLoad_0h2C                   = TSymbolUniqueId(826);
-    static constexpr const TSymbolUniqueId imageLoad_0i2C                   = TSymbolUniqueId(827);
-    static constexpr const TSymbolUniqueId imageLoad_0j2C                   = TSymbolUniqueId(828);
-    static constexpr const TSymbolUniqueId imageLoad_0k2C                   = TSymbolUniqueId(829);
-    static constexpr const TSymbolUniqueId imageLoad_0l2C                   = TSymbolUniqueId(830);
-    static constexpr const TSymbolUniqueId imageLoad_0m2C                   = TSymbolUniqueId(831);
-    static constexpr const TSymbolUniqueId imageLoad_0n2C                   = TSymbolUniqueId(832);
-    static constexpr const TSymbolUniqueId imageStore_0c1C3B                = TSymbolUniqueId(833);
-    static constexpr const TSymbolUniqueId imageStore_0d1C3C                = TSymbolUniqueId(834);
-    static constexpr const TSymbolUniqueId imageStore_0e1C3D                = TSymbolUniqueId(835);
-    static constexpr const TSymbolUniqueId imageStore_0f2C3B                = TSymbolUniqueId(836);
-    static constexpr const TSymbolUniqueId imageStore_0g2C3C                = TSymbolUniqueId(837);
-    static constexpr const TSymbolUniqueId imageStore_0h2C3D                = TSymbolUniqueId(838);
-    static constexpr const TSymbolUniqueId imageStore_0i2C3B                = TSymbolUniqueId(839);
-    static constexpr const TSymbolUniqueId imageStore_0j2C3C                = TSymbolUniqueId(840);
-    static constexpr const TSymbolUniqueId imageStore_0k2C3D                = TSymbolUniqueId(841);
-    static constexpr const TSymbolUniqueId imageStore_0l2C3B                = TSymbolUniqueId(842);
-    static constexpr const TSymbolUniqueId imageStore_0m2C3C                = TSymbolUniqueId(843);
-    static constexpr const TSymbolUniqueId imageStore_0n2C3D                = TSymbolUniqueId(844);
-    static constexpr const TSymbolUniqueId memoryBarrier_                   = TSymbolUniqueId(845);
-    static constexpr const TSymbolUniqueId memoryBarrierAtomicCounter_      = TSymbolUniqueId(846);
-    static constexpr const TSymbolUniqueId memoryBarrierBuffer_             = TSymbolUniqueId(847);
-    static constexpr const TSymbolUniqueId memoryBarrierImage_              = TSymbolUniqueId(848);
-    static constexpr const TSymbolUniqueId barrier_                         = TSymbolUniqueId(849);
-    static constexpr const TSymbolUniqueId memoryBarrierShared_             = TSymbolUniqueId(850);
-    static constexpr const TSymbolUniqueId groupMemoryBarrier_              = TSymbolUniqueId(851);
-    static constexpr const TSymbolUniqueId EmitVertex_                      = TSymbolUniqueId(852);
-    static constexpr const TSymbolUniqueId EndPrimitive_                    = TSymbolUniqueId(853);
-    static constexpr const TSymbolUniqueId gl_DepthRangeParameters          = TSymbolUniqueId(854);
-    static constexpr const TSymbolUniqueId gl_DepthRange                    = TSymbolUniqueId(855);
-    static constexpr const TSymbolUniqueId gl_MaxVertexAttribs              = TSymbolUniqueId(856);
-    static constexpr const TSymbolUniqueId gl_MaxVertexUniformVectors       = TSymbolUniqueId(857);
-    static constexpr const TSymbolUniqueId gl_MaxVertexTextureImageUnits    = TSymbolUniqueId(858);
-    static constexpr const TSymbolUniqueId gl_MaxCombinedTextureImageUnits  = TSymbolUniqueId(859);
-    static constexpr const TSymbolUniqueId gl_MaxTextureImageUnits          = TSymbolUniqueId(860);
-    static constexpr const TSymbolUniqueId gl_MaxFragmentUniformVectors     = TSymbolUniqueId(861);
-    static constexpr const TSymbolUniqueId gl_MaxVaryingVectors             = TSymbolUniqueId(862);
-    static constexpr const TSymbolUniqueId gl_MaxDrawBuffers                = TSymbolUniqueId(863);
-    static constexpr const TSymbolUniqueId gl_MaxDualSourceDrawBuffersEXT   = TSymbolUniqueId(864);
-    static constexpr const TSymbolUniqueId gl_MaxVertexOutputVectors        = TSymbolUniqueId(865);
-    static constexpr const TSymbolUniqueId gl_MaxFragmentInputVectors       = TSymbolUniqueId(866);
-    static constexpr const TSymbolUniqueId gl_MinProgramTexelOffset         = TSymbolUniqueId(867);
-    static constexpr const TSymbolUniqueId gl_MaxProgramTexelOffset         = TSymbolUniqueId(868);
-    static constexpr const TSymbolUniqueId gl_MaxImageUnits                 = TSymbolUniqueId(869);
-    static constexpr const TSymbolUniqueId gl_MaxVertexImageUniforms        = TSymbolUniqueId(870);
-    static constexpr const TSymbolUniqueId gl_MaxFragmentImageUniforms      = TSymbolUniqueId(871);
-    static constexpr const TSymbolUniqueId gl_MaxComputeImageUniforms       = TSymbolUniqueId(872);
-    static constexpr const TSymbolUniqueId gl_MaxCombinedImageUniforms      = TSymbolUniqueId(873);
+    static constexpr const TSymbolUniqueId pt0B                             = TSymbolUniqueId(1);
+    static constexpr const TSymbolUniqueId radians_1B                       = TSymbolUniqueId(2);
+    static constexpr const TSymbolUniqueId pt1B                             = TSymbolUniqueId(3);
+    static constexpr const TSymbolUniqueId radians_2B                       = TSymbolUniqueId(4);
+    static constexpr const TSymbolUniqueId pt2B                             = TSymbolUniqueId(5);
+    static constexpr const TSymbolUniqueId radians_3B                       = TSymbolUniqueId(6);
+    static constexpr const TSymbolUniqueId pt3B                             = TSymbolUniqueId(7);
+    static constexpr const TSymbolUniqueId degrees_0B                       = TSymbolUniqueId(8);
+    static constexpr const TSymbolUniqueId degrees_1B                       = TSymbolUniqueId(9);
+    static constexpr const TSymbolUniqueId degrees_2B                       = TSymbolUniqueId(10);
+    static constexpr const TSymbolUniqueId degrees_3B                       = TSymbolUniqueId(11);
+    static constexpr const TSymbolUniqueId sin_0B                           = TSymbolUniqueId(12);
+    static constexpr const TSymbolUniqueId sin_1B                           = TSymbolUniqueId(13);
+    static constexpr const TSymbolUniqueId sin_2B                           = TSymbolUniqueId(14);
+    static constexpr const TSymbolUniqueId sin_3B                           = TSymbolUniqueId(15);
+    static constexpr const TSymbolUniqueId cos_0B                           = TSymbolUniqueId(16);
+    static constexpr const TSymbolUniqueId cos_1B                           = TSymbolUniqueId(17);
+    static constexpr const TSymbolUniqueId cos_2B                           = TSymbolUniqueId(18);
+    static constexpr const TSymbolUniqueId cos_3B                           = TSymbolUniqueId(19);
+    static constexpr const TSymbolUniqueId tan_0B                           = TSymbolUniqueId(20);
+    static constexpr const TSymbolUniqueId tan_1B                           = TSymbolUniqueId(21);
+    static constexpr const TSymbolUniqueId tan_2B                           = TSymbolUniqueId(22);
+    static constexpr const TSymbolUniqueId tan_3B                           = TSymbolUniqueId(23);
+    static constexpr const TSymbolUniqueId asin_0B                          = TSymbolUniqueId(24);
+    static constexpr const TSymbolUniqueId asin_1B                          = TSymbolUniqueId(25);
+    static constexpr const TSymbolUniqueId asin_2B                          = TSymbolUniqueId(26);
+    static constexpr const TSymbolUniqueId asin_3B                          = TSymbolUniqueId(27);
+    static constexpr const TSymbolUniqueId acos_0B                          = TSymbolUniqueId(28);
+    static constexpr const TSymbolUniqueId acos_1B                          = TSymbolUniqueId(29);
+    static constexpr const TSymbolUniqueId acos_2B                          = TSymbolUniqueId(30);
+    static constexpr const TSymbolUniqueId acos_3B                          = TSymbolUniqueId(31);
+    static constexpr const TSymbolUniqueId atan_0B0B                        = TSymbolUniqueId(32);
+    static constexpr const TSymbolUniqueId atan_1B1B                        = TSymbolUniqueId(33);
+    static constexpr const TSymbolUniqueId atan_2B2B                        = TSymbolUniqueId(34);
+    static constexpr const TSymbolUniqueId atan_3B3B                        = TSymbolUniqueId(35);
+    static constexpr const TSymbolUniqueId atan_0B                          = TSymbolUniqueId(36);
+    static constexpr const TSymbolUniqueId atan_1B                          = TSymbolUniqueId(37);
+    static constexpr const TSymbolUniqueId atan_2B                          = TSymbolUniqueId(38);
+    static constexpr const TSymbolUniqueId atan_3B                          = TSymbolUniqueId(39);
+    static constexpr const TSymbolUniqueId sinh_0B                          = TSymbolUniqueId(40);
+    static constexpr const TSymbolUniqueId sinh_1B                          = TSymbolUniqueId(41);
+    static constexpr const TSymbolUniqueId sinh_2B                          = TSymbolUniqueId(42);
+    static constexpr const TSymbolUniqueId sinh_3B                          = TSymbolUniqueId(43);
+    static constexpr const TSymbolUniqueId cosh_0B                          = TSymbolUniqueId(44);
+    static constexpr const TSymbolUniqueId cosh_1B                          = TSymbolUniqueId(45);
+    static constexpr const TSymbolUniqueId cosh_2B                          = TSymbolUniqueId(46);
+    static constexpr const TSymbolUniqueId cosh_3B                          = TSymbolUniqueId(47);
+    static constexpr const TSymbolUniqueId tanh_0B                          = TSymbolUniqueId(48);
+    static constexpr const TSymbolUniqueId tanh_1B                          = TSymbolUniqueId(49);
+    static constexpr const TSymbolUniqueId tanh_2B                          = TSymbolUniqueId(50);
+    static constexpr const TSymbolUniqueId tanh_3B                          = TSymbolUniqueId(51);
+    static constexpr const TSymbolUniqueId asinh_0B                         = TSymbolUniqueId(52);
+    static constexpr const TSymbolUniqueId asinh_1B                         = TSymbolUniqueId(53);
+    static constexpr const TSymbolUniqueId asinh_2B                         = TSymbolUniqueId(54);
+    static constexpr const TSymbolUniqueId asinh_3B                         = TSymbolUniqueId(55);
+    static constexpr const TSymbolUniqueId acosh_0B                         = TSymbolUniqueId(56);
+    static constexpr const TSymbolUniqueId acosh_1B                         = TSymbolUniqueId(57);
+    static constexpr const TSymbolUniqueId acosh_2B                         = TSymbolUniqueId(58);
+    static constexpr const TSymbolUniqueId acosh_3B                         = TSymbolUniqueId(59);
+    static constexpr const TSymbolUniqueId atanh_0B                         = TSymbolUniqueId(60);
+    static constexpr const TSymbolUniqueId atanh_1B                         = TSymbolUniqueId(61);
+    static constexpr const TSymbolUniqueId atanh_2B                         = TSymbolUniqueId(62);
+    static constexpr const TSymbolUniqueId atanh_3B                         = TSymbolUniqueId(63);
+    static constexpr const TSymbolUniqueId pow_0B0B                         = TSymbolUniqueId(64);
+    static constexpr const TSymbolUniqueId pow_1B1B                         = TSymbolUniqueId(65);
+    static constexpr const TSymbolUniqueId pow_2B2B                         = TSymbolUniqueId(66);
+    static constexpr const TSymbolUniqueId pow_3B3B                         = TSymbolUniqueId(67);
+    static constexpr const TSymbolUniqueId exp_0B                           = TSymbolUniqueId(68);
+    static constexpr const TSymbolUniqueId exp_1B                           = TSymbolUniqueId(69);
+    static constexpr const TSymbolUniqueId exp_2B                           = TSymbolUniqueId(70);
+    static constexpr const TSymbolUniqueId exp_3B                           = TSymbolUniqueId(71);
+    static constexpr const TSymbolUniqueId log_0B                           = TSymbolUniqueId(72);
+    static constexpr const TSymbolUniqueId log_1B                           = TSymbolUniqueId(73);
+    static constexpr const TSymbolUniqueId log_2B                           = TSymbolUniqueId(74);
+    static constexpr const TSymbolUniqueId log_3B                           = TSymbolUniqueId(75);
+    static constexpr const TSymbolUniqueId exp2_0B                          = TSymbolUniqueId(76);
+    static constexpr const TSymbolUniqueId exp2_1B                          = TSymbolUniqueId(77);
+    static constexpr const TSymbolUniqueId exp2_2B                          = TSymbolUniqueId(78);
+    static constexpr const TSymbolUniqueId exp2_3B                          = TSymbolUniqueId(79);
+    static constexpr const TSymbolUniqueId log2_0B                          = TSymbolUniqueId(80);
+    static constexpr const TSymbolUniqueId log2_1B                          = TSymbolUniqueId(81);
+    static constexpr const TSymbolUniqueId log2_2B                          = TSymbolUniqueId(82);
+    static constexpr const TSymbolUniqueId log2_3B                          = TSymbolUniqueId(83);
+    static constexpr const TSymbolUniqueId sqrt_0B                          = TSymbolUniqueId(84);
+    static constexpr const TSymbolUniqueId sqrt_1B                          = TSymbolUniqueId(85);
+    static constexpr const TSymbolUniqueId sqrt_2B                          = TSymbolUniqueId(86);
+    static constexpr const TSymbolUniqueId sqrt_3B                          = TSymbolUniqueId(87);
+    static constexpr const TSymbolUniqueId inversesqrt_0B                   = TSymbolUniqueId(88);
+    static constexpr const TSymbolUniqueId inversesqrt_1B                   = TSymbolUniqueId(89);
+    static constexpr const TSymbolUniqueId inversesqrt_2B                   = TSymbolUniqueId(90);
+    static constexpr const TSymbolUniqueId inversesqrt_3B                   = TSymbolUniqueId(91);
+    static constexpr const TSymbolUniqueId abs_0B                           = TSymbolUniqueId(92);
+    static constexpr const TSymbolUniqueId abs_1B                           = TSymbolUniqueId(93);
+    static constexpr const TSymbolUniqueId abs_2B                           = TSymbolUniqueId(94);
+    static constexpr const TSymbolUniqueId abs_3B                           = TSymbolUniqueId(95);
+    static constexpr const TSymbolUniqueId abs_0C                           = TSymbolUniqueId(96);
+    static constexpr const TSymbolUniqueId pt0C                             = TSymbolUniqueId(97);
+    static constexpr const TSymbolUniqueId abs_1C                           = TSymbolUniqueId(98);
+    static constexpr const TSymbolUniqueId pt1C                             = TSymbolUniqueId(99);
+    static constexpr const TSymbolUniqueId abs_2C                           = TSymbolUniqueId(100);
+    static constexpr const TSymbolUniqueId pt2C                             = TSymbolUniqueId(101);
+    static constexpr const TSymbolUniqueId abs_3C                           = TSymbolUniqueId(102);
+    static constexpr const TSymbolUniqueId pt3C                             = TSymbolUniqueId(103);
+    static constexpr const TSymbolUniqueId sign_0B                          = TSymbolUniqueId(104);
+    static constexpr const TSymbolUniqueId sign_1B                          = TSymbolUniqueId(105);
+    static constexpr const TSymbolUniqueId sign_2B                          = TSymbolUniqueId(106);
+    static constexpr const TSymbolUniqueId sign_3B                          = TSymbolUniqueId(107);
+    static constexpr const TSymbolUniqueId sign_0C                          = TSymbolUniqueId(108);
+    static constexpr const TSymbolUniqueId sign_1C                          = TSymbolUniqueId(109);
+    static constexpr const TSymbolUniqueId sign_2C                          = TSymbolUniqueId(110);
+    static constexpr const TSymbolUniqueId sign_3C                          = TSymbolUniqueId(111);
+    static constexpr const TSymbolUniqueId floor_0B                         = TSymbolUniqueId(112);
+    static constexpr const TSymbolUniqueId floor_1B                         = TSymbolUniqueId(113);
+    static constexpr const TSymbolUniqueId floor_2B                         = TSymbolUniqueId(114);
+    static constexpr const TSymbolUniqueId floor_3B                         = TSymbolUniqueId(115);
+    static constexpr const TSymbolUniqueId trunc_0B                         = TSymbolUniqueId(116);
+    static constexpr const TSymbolUniqueId trunc_1B                         = TSymbolUniqueId(117);
+    static constexpr const TSymbolUniqueId trunc_2B                         = TSymbolUniqueId(118);
+    static constexpr const TSymbolUniqueId trunc_3B                         = TSymbolUniqueId(119);
+    static constexpr const TSymbolUniqueId round_0B                         = TSymbolUniqueId(120);
+    static constexpr const TSymbolUniqueId round_1B                         = TSymbolUniqueId(121);
+    static constexpr const TSymbolUniqueId round_2B                         = TSymbolUniqueId(122);
+    static constexpr const TSymbolUniqueId round_3B                         = TSymbolUniqueId(123);
+    static constexpr const TSymbolUniqueId roundEven_0B                     = TSymbolUniqueId(124);
+    static constexpr const TSymbolUniqueId roundEven_1B                     = TSymbolUniqueId(125);
+    static constexpr const TSymbolUniqueId roundEven_2B                     = TSymbolUniqueId(126);
+    static constexpr const TSymbolUniqueId roundEven_3B                     = TSymbolUniqueId(127);
+    static constexpr const TSymbolUniqueId ceil_0B                          = TSymbolUniqueId(128);
+    static constexpr const TSymbolUniqueId ceil_1B                          = TSymbolUniqueId(129);
+    static constexpr const TSymbolUniqueId ceil_2B                          = TSymbolUniqueId(130);
+    static constexpr const TSymbolUniqueId ceil_3B                          = TSymbolUniqueId(131);
+    static constexpr const TSymbolUniqueId fract_0B                         = TSymbolUniqueId(132);
+    static constexpr const TSymbolUniqueId fract_1B                         = TSymbolUniqueId(133);
+    static constexpr const TSymbolUniqueId fract_2B                         = TSymbolUniqueId(134);
+    static constexpr const TSymbolUniqueId fract_3B                         = TSymbolUniqueId(135);
+    static constexpr const TSymbolUniqueId mod_0B0B                         = TSymbolUniqueId(136);
+    static constexpr const TSymbolUniqueId mod_1B0B                         = TSymbolUniqueId(137);
+    static constexpr const TSymbolUniqueId mod_2B0B                         = TSymbolUniqueId(138);
+    static constexpr const TSymbolUniqueId mod_3B0B                         = TSymbolUniqueId(139);
+    static constexpr const TSymbolUniqueId mod_1B1B                         = TSymbolUniqueId(140);
+    static constexpr const TSymbolUniqueId mod_2B2B                         = TSymbolUniqueId(141);
+    static constexpr const TSymbolUniqueId mod_3B3B                         = TSymbolUniqueId(142);
+    static constexpr const TSymbolUniqueId min_0B0B                         = TSymbolUniqueId(143);
+    static constexpr const TSymbolUniqueId min_1B0B                         = TSymbolUniqueId(144);
+    static constexpr const TSymbolUniqueId min_2B0B                         = TSymbolUniqueId(145);
+    static constexpr const TSymbolUniqueId min_3B0B                         = TSymbolUniqueId(146);
+    static constexpr const TSymbolUniqueId min_1B1B                         = TSymbolUniqueId(147);
+    static constexpr const TSymbolUniqueId min_2B2B                         = TSymbolUniqueId(148);
+    static constexpr const TSymbolUniqueId min_3B3B                         = TSymbolUniqueId(149);
+    static constexpr const TSymbolUniqueId min_0C0C                         = TSymbolUniqueId(150);
+    static constexpr const TSymbolUniqueId min_1C1C                         = TSymbolUniqueId(151);
+    static constexpr const TSymbolUniqueId min_2C2C                         = TSymbolUniqueId(152);
+    static constexpr const TSymbolUniqueId min_3C3C                         = TSymbolUniqueId(153);
+    static constexpr const TSymbolUniqueId min_1C0C                         = TSymbolUniqueId(154);
+    static constexpr const TSymbolUniqueId min_2C0C                         = TSymbolUniqueId(155);
+    static constexpr const TSymbolUniqueId min_3C0C                         = TSymbolUniqueId(156);
+    static constexpr const TSymbolUniqueId min_0D0D                         = TSymbolUniqueId(157);
+    static constexpr const TSymbolUniqueId pt0D                             = TSymbolUniqueId(158);
+    static constexpr const TSymbolUniqueId min_1D1D                         = TSymbolUniqueId(159);
+    static constexpr const TSymbolUniqueId pt1D                             = TSymbolUniqueId(160);
+    static constexpr const TSymbolUniqueId min_2D2D                         = TSymbolUniqueId(161);
+    static constexpr const TSymbolUniqueId pt2D                             = TSymbolUniqueId(162);
+    static constexpr const TSymbolUniqueId min_3D3D                         = TSymbolUniqueId(163);
+    static constexpr const TSymbolUniqueId pt3D                             = TSymbolUniqueId(164);
+    static constexpr const TSymbolUniqueId min_1D0D                         = TSymbolUniqueId(165);
+    static constexpr const TSymbolUniqueId min_2D0D                         = TSymbolUniqueId(166);
+    static constexpr const TSymbolUniqueId min_3D0D                         = TSymbolUniqueId(167);
+    static constexpr const TSymbolUniqueId max_0B0B                         = TSymbolUniqueId(168);
+    static constexpr const TSymbolUniqueId max_1B0B                         = TSymbolUniqueId(169);
+    static constexpr const TSymbolUniqueId max_2B0B                         = TSymbolUniqueId(170);
+    static constexpr const TSymbolUniqueId max_3B0B                         = TSymbolUniqueId(171);
+    static constexpr const TSymbolUniqueId max_1B1B                         = TSymbolUniqueId(172);
+    static constexpr const TSymbolUniqueId max_2B2B                         = TSymbolUniqueId(173);
+    static constexpr const TSymbolUniqueId max_3B3B                         = TSymbolUniqueId(174);
+    static constexpr const TSymbolUniqueId max_0C0C                         = TSymbolUniqueId(175);
+    static constexpr const TSymbolUniqueId max_1C1C                         = TSymbolUniqueId(176);
+    static constexpr const TSymbolUniqueId max_2C2C                         = TSymbolUniqueId(177);
+    static constexpr const TSymbolUniqueId max_3C3C                         = TSymbolUniqueId(178);
+    static constexpr const TSymbolUniqueId max_1C0C                         = TSymbolUniqueId(179);
+    static constexpr const TSymbolUniqueId max_2C0C                         = TSymbolUniqueId(180);
+    static constexpr const TSymbolUniqueId max_3C0C                         = TSymbolUniqueId(181);
+    static constexpr const TSymbolUniqueId max_0D0D                         = TSymbolUniqueId(182);
+    static constexpr const TSymbolUniqueId max_1D1D                         = TSymbolUniqueId(183);
+    static constexpr const TSymbolUniqueId max_2D2D                         = TSymbolUniqueId(184);
+    static constexpr const TSymbolUniqueId max_3D3D                         = TSymbolUniqueId(185);
+    static constexpr const TSymbolUniqueId max_1D0D                         = TSymbolUniqueId(186);
+    static constexpr const TSymbolUniqueId max_2D0D                         = TSymbolUniqueId(187);
+    static constexpr const TSymbolUniqueId max_3D0D                         = TSymbolUniqueId(188);
+    static constexpr const TSymbolUniqueId clamp_0B0B0B                     = TSymbolUniqueId(189);
+    static constexpr const TSymbolUniqueId clamp_1B0B0B                     = TSymbolUniqueId(190);
+    static constexpr const TSymbolUniqueId clamp_2B0B0B                     = TSymbolUniqueId(191);
+    static constexpr const TSymbolUniqueId clamp_3B0B0B                     = TSymbolUniqueId(192);
+    static constexpr const TSymbolUniqueId clamp_1B1B1B                     = TSymbolUniqueId(193);
+    static constexpr const TSymbolUniqueId clamp_2B2B2B                     = TSymbolUniqueId(194);
+    static constexpr const TSymbolUniqueId clamp_3B3B3B                     = TSymbolUniqueId(195);
+    static constexpr const TSymbolUniqueId clamp_0C0C0C                     = TSymbolUniqueId(196);
+    static constexpr const TSymbolUniqueId clamp_1C0C0C                     = TSymbolUniqueId(197);
+    static constexpr const TSymbolUniqueId clamp_2C0C0C                     = TSymbolUniqueId(198);
+    static constexpr const TSymbolUniqueId clamp_3C0C0C                     = TSymbolUniqueId(199);
+    static constexpr const TSymbolUniqueId clamp_1C1C1C                     = TSymbolUniqueId(200);
+    static constexpr const TSymbolUniqueId clamp_2C2C2C                     = TSymbolUniqueId(201);
+    static constexpr const TSymbolUniqueId clamp_3C3C3C                     = TSymbolUniqueId(202);
+    static constexpr const TSymbolUniqueId clamp_0D0D0D                     = TSymbolUniqueId(203);
+    static constexpr const TSymbolUniqueId clamp_1D0D0D                     = TSymbolUniqueId(204);
+    static constexpr const TSymbolUniqueId clamp_2D0D0D                     = TSymbolUniqueId(205);
+    static constexpr const TSymbolUniqueId clamp_3D0D0D                     = TSymbolUniqueId(206);
+    static constexpr const TSymbolUniqueId clamp_1D1D1D                     = TSymbolUniqueId(207);
+    static constexpr const TSymbolUniqueId clamp_2D2D2D                     = TSymbolUniqueId(208);
+    static constexpr const TSymbolUniqueId clamp_3D3D3D                     = TSymbolUniqueId(209);
+    static constexpr const TSymbolUniqueId mix_0B0B0B                       = TSymbolUniqueId(210);
+    static constexpr const TSymbolUniqueId mix_1B1B0B                       = TSymbolUniqueId(211);
+    static constexpr const TSymbolUniqueId mix_2B2B0B                       = TSymbolUniqueId(212);
+    static constexpr const TSymbolUniqueId mix_3B3B0B                       = TSymbolUniqueId(213);
+    static constexpr const TSymbolUniqueId mix_1B1B1B                       = TSymbolUniqueId(214);
+    static constexpr const TSymbolUniqueId mix_2B2B2B                       = TSymbolUniqueId(215);
+    static constexpr const TSymbolUniqueId mix_3B3B3B                       = TSymbolUniqueId(216);
+    static constexpr const TSymbolUniqueId mix_0B0B0E                       = TSymbolUniqueId(217);
+    static constexpr const TSymbolUniqueId pt0E                             = TSymbolUniqueId(218);
+    static constexpr const TSymbolUniqueId mix_1B1B1E                       = TSymbolUniqueId(219);
+    static constexpr const TSymbolUniqueId pt1E                             = TSymbolUniqueId(220);
+    static constexpr const TSymbolUniqueId mix_2B2B2E                       = TSymbolUniqueId(221);
+    static constexpr const TSymbolUniqueId pt2E                             = TSymbolUniqueId(222);
+    static constexpr const TSymbolUniqueId mix_3B3B3E                       = TSymbolUniqueId(223);
+    static constexpr const TSymbolUniqueId pt3E                             = TSymbolUniqueId(224);
+    static constexpr const TSymbolUniqueId step_0B0B                        = TSymbolUniqueId(225);
+    static constexpr const TSymbolUniqueId step_1B1B                        = TSymbolUniqueId(226);
+    static constexpr const TSymbolUniqueId step_2B2B                        = TSymbolUniqueId(227);
+    static constexpr const TSymbolUniqueId step_3B3B                        = TSymbolUniqueId(228);
+    static constexpr const TSymbolUniqueId step_0B1B                        = TSymbolUniqueId(229);
+    static constexpr const TSymbolUniqueId step_0B2B                        = TSymbolUniqueId(230);
+    static constexpr const TSymbolUniqueId step_0B3B                        = TSymbolUniqueId(231);
+    static constexpr const TSymbolUniqueId smoothstep_0B0B0B                = TSymbolUniqueId(232);
+    static constexpr const TSymbolUniqueId smoothstep_1B1B1B                = TSymbolUniqueId(233);
+    static constexpr const TSymbolUniqueId smoothstep_2B2B2B                = TSymbolUniqueId(234);
+    static constexpr const TSymbolUniqueId smoothstep_3B3B3B                = TSymbolUniqueId(235);
+    static constexpr const TSymbolUniqueId smoothstep_0B0B1B                = TSymbolUniqueId(236);
+    static constexpr const TSymbolUniqueId smoothstep_0B0B2B                = TSymbolUniqueId(237);
+    static constexpr const TSymbolUniqueId smoothstep_0B0B3B                = TSymbolUniqueId(238);
+    static constexpr const TSymbolUniqueId modf_0B0B                        = TSymbolUniqueId(239);
+    static constexpr const TSymbolUniqueId pt_o_0B                          = TSymbolUniqueId(240);
+    static constexpr const TSymbolUniqueId modf_1B1B                        = TSymbolUniqueId(241);
+    static constexpr const TSymbolUniqueId pt_o_1B                          = TSymbolUniqueId(242);
+    static constexpr const TSymbolUniqueId modf_2B2B                        = TSymbolUniqueId(243);
+    static constexpr const TSymbolUniqueId pt_o_2B                          = TSymbolUniqueId(244);
+    static constexpr const TSymbolUniqueId modf_3B3B                        = TSymbolUniqueId(245);
+    static constexpr const TSymbolUniqueId pt_o_3B                          = TSymbolUniqueId(246);
+    static constexpr const TSymbolUniqueId isnan_0B                         = TSymbolUniqueId(247);
+    static constexpr const TSymbolUniqueId isnan_1B                         = TSymbolUniqueId(248);
+    static constexpr const TSymbolUniqueId isnan_2B                         = TSymbolUniqueId(249);
+    static constexpr const TSymbolUniqueId isnan_3B                         = TSymbolUniqueId(250);
+    static constexpr const TSymbolUniqueId isinf_0B                         = TSymbolUniqueId(251);
+    static constexpr const TSymbolUniqueId isinf_1B                         = TSymbolUniqueId(252);
+    static constexpr const TSymbolUniqueId isinf_2B                         = TSymbolUniqueId(253);
+    static constexpr const TSymbolUniqueId isinf_3B                         = TSymbolUniqueId(254);
+    static constexpr const TSymbolUniqueId floatBitsToInt_0B                = TSymbolUniqueId(255);
+    static constexpr const TSymbolUniqueId floatBitsToInt_1B                = TSymbolUniqueId(256);
+    static constexpr const TSymbolUniqueId floatBitsToInt_2B                = TSymbolUniqueId(257);
+    static constexpr const TSymbolUniqueId floatBitsToInt_3B                = TSymbolUniqueId(258);
+    static constexpr const TSymbolUniqueId floatBitsToUint_0B               = TSymbolUniqueId(259);
+    static constexpr const TSymbolUniqueId floatBitsToUint_1B               = TSymbolUniqueId(260);
+    static constexpr const TSymbolUniqueId floatBitsToUint_2B               = TSymbolUniqueId(261);
+    static constexpr const TSymbolUniqueId floatBitsToUint_3B               = TSymbolUniqueId(262);
+    static constexpr const TSymbolUniqueId intBitsToFloat_0C                = TSymbolUniqueId(263);
+    static constexpr const TSymbolUniqueId intBitsToFloat_1C                = TSymbolUniqueId(264);
+    static constexpr const TSymbolUniqueId intBitsToFloat_2C                = TSymbolUniqueId(265);
+    static constexpr const TSymbolUniqueId intBitsToFloat_3C                = TSymbolUniqueId(266);
+    static constexpr const TSymbolUniqueId uintBitsToFloat_0D               = TSymbolUniqueId(267);
+    static constexpr const TSymbolUniqueId uintBitsToFloat_1D               = TSymbolUniqueId(268);
+    static constexpr const TSymbolUniqueId uintBitsToFloat_2D               = TSymbolUniqueId(269);
+    static constexpr const TSymbolUniqueId uintBitsToFloat_3D               = TSymbolUniqueId(270);
+    static constexpr const TSymbolUniqueId frexp_0B0C                       = TSymbolUniqueId(271);
+    static constexpr const TSymbolUniqueId pt_o_0C                          = TSymbolUniqueId(272);
+    static constexpr const TSymbolUniqueId frexp_1B1C                       = TSymbolUniqueId(273);
+    static constexpr const TSymbolUniqueId pt_o_1C                          = TSymbolUniqueId(274);
+    static constexpr const TSymbolUniqueId frexp_2B2C                       = TSymbolUniqueId(275);
+    static constexpr const TSymbolUniqueId pt_o_2C                          = TSymbolUniqueId(276);
+    static constexpr const TSymbolUniqueId frexp_3B3C                       = TSymbolUniqueId(277);
+    static constexpr const TSymbolUniqueId pt_o_3C                          = TSymbolUniqueId(278);
+    static constexpr const TSymbolUniqueId ldexp_0B0C                       = TSymbolUniqueId(279);
+    static constexpr const TSymbolUniqueId ldexp_1B1C                       = TSymbolUniqueId(280);
+    static constexpr const TSymbolUniqueId ldexp_2B2C                       = TSymbolUniqueId(281);
+    static constexpr const TSymbolUniqueId ldexp_3B3C                       = TSymbolUniqueId(282);
+    static constexpr const TSymbolUniqueId packSnorm2x16_1B                 = TSymbolUniqueId(283);
+    static constexpr const TSymbolUniqueId packUnorm2x16_1B                 = TSymbolUniqueId(284);
+    static constexpr const TSymbolUniqueId packHalf2x16_1B                  = TSymbolUniqueId(285);
+    static constexpr const TSymbolUniqueId unpackSnorm2x16_0D               = TSymbolUniqueId(286);
+    static constexpr const TSymbolUniqueId unpackUnorm2x16_0D               = TSymbolUniqueId(287);
+    static constexpr const TSymbolUniqueId unpackHalf2x16_0D                = TSymbolUniqueId(288);
+    static constexpr const TSymbolUniqueId packUnorm4x8_3B                  = TSymbolUniqueId(289);
+    static constexpr const TSymbolUniqueId packSnorm4x8_3B                  = TSymbolUniqueId(290);
+    static constexpr const TSymbolUniqueId unpackUnorm4x8_0D                = TSymbolUniqueId(291);
+    static constexpr const TSymbolUniqueId unpackSnorm4x8_0D                = TSymbolUniqueId(292);
+    static constexpr const TSymbolUniqueId length_0B                        = TSymbolUniqueId(293);
+    static constexpr const TSymbolUniqueId length_1B                        = TSymbolUniqueId(294);
+    static constexpr const TSymbolUniqueId length_2B                        = TSymbolUniqueId(295);
+    static constexpr const TSymbolUniqueId length_3B                        = TSymbolUniqueId(296);
+    static constexpr const TSymbolUniqueId distance_0B0B                    = TSymbolUniqueId(297);
+    static constexpr const TSymbolUniqueId distance_1B1B                    = TSymbolUniqueId(298);
+    static constexpr const TSymbolUniqueId distance_2B2B                    = TSymbolUniqueId(299);
+    static constexpr const TSymbolUniqueId distance_3B3B                    = TSymbolUniqueId(300);
+    static constexpr const TSymbolUniqueId dot_0B0B                         = TSymbolUniqueId(301);
+    static constexpr const TSymbolUniqueId dot_1B1B                         = TSymbolUniqueId(302);
+    static constexpr const TSymbolUniqueId dot_2B2B                         = TSymbolUniqueId(303);
+    static constexpr const TSymbolUniqueId dot_3B3B                         = TSymbolUniqueId(304);
+    static constexpr const TSymbolUniqueId cross_2B2B                       = TSymbolUniqueId(305);
+    static constexpr const TSymbolUniqueId normalize_0B                     = TSymbolUniqueId(306);
+    static constexpr const TSymbolUniqueId normalize_1B                     = TSymbolUniqueId(307);
+    static constexpr const TSymbolUniqueId normalize_2B                     = TSymbolUniqueId(308);
+    static constexpr const TSymbolUniqueId normalize_3B                     = TSymbolUniqueId(309);
+    static constexpr const TSymbolUniqueId faceforward_0B0B0B               = TSymbolUniqueId(310);
+    static constexpr const TSymbolUniqueId faceforward_1B1B1B               = TSymbolUniqueId(311);
+    static constexpr const TSymbolUniqueId faceforward_2B2B2B               = TSymbolUniqueId(312);
+    static constexpr const TSymbolUniqueId faceforward_3B3B3B               = TSymbolUniqueId(313);
+    static constexpr const TSymbolUniqueId reflect_0B0B                     = TSymbolUniqueId(314);
+    static constexpr const TSymbolUniqueId reflect_1B1B                     = TSymbolUniqueId(315);
+    static constexpr const TSymbolUniqueId reflect_2B2B                     = TSymbolUniqueId(316);
+    static constexpr const TSymbolUniqueId reflect_3B3B                     = TSymbolUniqueId(317);
+    static constexpr const TSymbolUniqueId refract_0B0B0B                   = TSymbolUniqueId(318);
+    static constexpr const TSymbolUniqueId refract_1B1B0B                   = TSymbolUniqueId(319);
+    static constexpr const TSymbolUniqueId refract_2B2B0B                   = TSymbolUniqueId(320);
+    static constexpr const TSymbolUniqueId refract_3B3B0B                   = TSymbolUniqueId(321);
+    static constexpr const TSymbolUniqueId matrixCompMult_5B5B              = TSymbolUniqueId(322);
+    static constexpr const TSymbolUniqueId pt5B                             = TSymbolUniqueId(323);
+    static constexpr const TSymbolUniqueId matrixCompMult_ABAB              = TSymbolUniqueId(324);
+    static constexpr const TSymbolUniqueId ptAB                             = TSymbolUniqueId(325);
+    static constexpr const TSymbolUniqueId matrixCompMult_FBFB              = TSymbolUniqueId(326);
+    static constexpr const TSymbolUniqueId ptFB                             = TSymbolUniqueId(327);
+    static constexpr const TSymbolUniqueId matrixCompMult_9B9B              = TSymbolUniqueId(328);
+    static constexpr const TSymbolUniqueId pt9B                             = TSymbolUniqueId(329);
+    static constexpr const TSymbolUniqueId matrixCompMult_6B6B              = TSymbolUniqueId(330);
+    static constexpr const TSymbolUniqueId pt6B                             = TSymbolUniqueId(331);
+    static constexpr const TSymbolUniqueId matrixCompMult_DBDB              = TSymbolUniqueId(332);
+    static constexpr const TSymbolUniqueId ptDB                             = TSymbolUniqueId(333);
+    static constexpr const TSymbolUniqueId matrixCompMult_7B7B              = TSymbolUniqueId(334);
+    static constexpr const TSymbolUniqueId pt7B                             = TSymbolUniqueId(335);
+    static constexpr const TSymbolUniqueId matrixCompMult_EBEB              = TSymbolUniqueId(336);
+    static constexpr const TSymbolUniqueId ptEB                             = TSymbolUniqueId(337);
+    static constexpr const TSymbolUniqueId matrixCompMult_BBBB              = TSymbolUniqueId(338);
+    static constexpr const TSymbolUniqueId ptBB                             = TSymbolUniqueId(339);
+    static constexpr const TSymbolUniqueId outerProduct_1B1B                = TSymbolUniqueId(340);
+    static constexpr const TSymbolUniqueId outerProduct_2B2B                = TSymbolUniqueId(341);
+    static constexpr const TSymbolUniqueId outerProduct_3B3B                = TSymbolUniqueId(342);
+    static constexpr const TSymbolUniqueId outerProduct_2B1B                = TSymbolUniqueId(343);
+    static constexpr const TSymbolUniqueId outerProduct_1B2B                = TSymbolUniqueId(344);
+    static constexpr const TSymbolUniqueId outerProduct_3B1B                = TSymbolUniqueId(345);
+    static constexpr const TSymbolUniqueId outerProduct_1B3B                = TSymbolUniqueId(346);
+    static constexpr const TSymbolUniqueId outerProduct_3B2B                = TSymbolUniqueId(347);
+    static constexpr const TSymbolUniqueId outerProduct_2B3B                = TSymbolUniqueId(348);
+    static constexpr const TSymbolUniqueId transpose_5B                     = TSymbolUniqueId(349);
+    static constexpr const TSymbolUniqueId transpose_AB                     = TSymbolUniqueId(350);
+    static constexpr const TSymbolUniqueId transpose_FB                     = TSymbolUniqueId(351);
+    static constexpr const TSymbolUniqueId transpose_6B                     = TSymbolUniqueId(352);
+    static constexpr const TSymbolUniqueId transpose_9B                     = TSymbolUniqueId(353);
+    static constexpr const TSymbolUniqueId transpose_7B                     = TSymbolUniqueId(354);
+    static constexpr const TSymbolUniqueId transpose_DB                     = TSymbolUniqueId(355);
+    static constexpr const TSymbolUniqueId transpose_BB                     = TSymbolUniqueId(356);
+    static constexpr const TSymbolUniqueId transpose_EB                     = TSymbolUniqueId(357);
+    static constexpr const TSymbolUniqueId determinant_5B                   = TSymbolUniqueId(358);
+    static constexpr const TSymbolUniqueId determinant_AB                   = TSymbolUniqueId(359);
+    static constexpr const TSymbolUniqueId determinant_FB                   = TSymbolUniqueId(360);
+    static constexpr const TSymbolUniqueId inverse_5B                       = TSymbolUniqueId(361);
+    static constexpr const TSymbolUniqueId inverse_AB                       = TSymbolUniqueId(362);
+    static constexpr const TSymbolUniqueId inverse_FB                       = TSymbolUniqueId(363);
+    static constexpr const TSymbolUniqueId lessThan_1B1B                    = TSymbolUniqueId(364);
+    static constexpr const TSymbolUniqueId lessThan_2B2B                    = TSymbolUniqueId(365);
+    static constexpr const TSymbolUniqueId lessThan_3B3B                    = TSymbolUniqueId(366);
+    static constexpr const TSymbolUniqueId lessThan_1C1C                    = TSymbolUniqueId(367);
+    static constexpr const TSymbolUniqueId lessThan_2C2C                    = TSymbolUniqueId(368);
+    static constexpr const TSymbolUniqueId lessThan_3C3C                    = TSymbolUniqueId(369);
+    static constexpr const TSymbolUniqueId lessThan_1D1D                    = TSymbolUniqueId(370);
+    static constexpr const TSymbolUniqueId lessThan_2D2D                    = TSymbolUniqueId(371);
+    static constexpr const TSymbolUniqueId lessThan_3D3D                    = TSymbolUniqueId(372);
+    static constexpr const TSymbolUniqueId lessThanEqual_1B1B               = TSymbolUniqueId(373);
+    static constexpr const TSymbolUniqueId lessThanEqual_2B2B               = TSymbolUniqueId(374);
+    static constexpr const TSymbolUniqueId lessThanEqual_3B3B               = TSymbolUniqueId(375);
+    static constexpr const TSymbolUniqueId lessThanEqual_1C1C               = TSymbolUniqueId(376);
+    static constexpr const TSymbolUniqueId lessThanEqual_2C2C               = TSymbolUniqueId(377);
+    static constexpr const TSymbolUniqueId lessThanEqual_3C3C               = TSymbolUniqueId(378);
+    static constexpr const TSymbolUniqueId lessThanEqual_1D1D               = TSymbolUniqueId(379);
+    static constexpr const TSymbolUniqueId lessThanEqual_2D2D               = TSymbolUniqueId(380);
+    static constexpr const TSymbolUniqueId lessThanEqual_3D3D               = TSymbolUniqueId(381);
+    static constexpr const TSymbolUniqueId greaterThan_1B1B                 = TSymbolUniqueId(382);
+    static constexpr const TSymbolUniqueId greaterThan_2B2B                 = TSymbolUniqueId(383);
+    static constexpr const TSymbolUniqueId greaterThan_3B3B                 = TSymbolUniqueId(384);
+    static constexpr const TSymbolUniqueId greaterThan_1C1C                 = TSymbolUniqueId(385);
+    static constexpr const TSymbolUniqueId greaterThan_2C2C                 = TSymbolUniqueId(386);
+    static constexpr const TSymbolUniqueId greaterThan_3C3C                 = TSymbolUniqueId(387);
+    static constexpr const TSymbolUniqueId greaterThan_1D1D                 = TSymbolUniqueId(388);
+    static constexpr const TSymbolUniqueId greaterThan_2D2D                 = TSymbolUniqueId(389);
+    static constexpr const TSymbolUniqueId greaterThan_3D3D                 = TSymbolUniqueId(390);
+    static constexpr const TSymbolUniqueId greaterThanEqual_1B1B            = TSymbolUniqueId(391);
+    static constexpr const TSymbolUniqueId greaterThanEqual_2B2B            = TSymbolUniqueId(392);
+    static constexpr const TSymbolUniqueId greaterThanEqual_3B3B            = TSymbolUniqueId(393);
+    static constexpr const TSymbolUniqueId greaterThanEqual_1C1C            = TSymbolUniqueId(394);
+    static constexpr const TSymbolUniqueId greaterThanEqual_2C2C            = TSymbolUniqueId(395);
+    static constexpr const TSymbolUniqueId greaterThanEqual_3C3C            = TSymbolUniqueId(396);
+    static constexpr const TSymbolUniqueId greaterThanEqual_1D1D            = TSymbolUniqueId(397);
+    static constexpr const TSymbolUniqueId greaterThanEqual_2D2D            = TSymbolUniqueId(398);
+    static constexpr const TSymbolUniqueId greaterThanEqual_3D3D            = TSymbolUniqueId(399);
+    static constexpr const TSymbolUniqueId equal_1B1B                       = TSymbolUniqueId(400);
+    static constexpr const TSymbolUniqueId equal_2B2B                       = TSymbolUniqueId(401);
+    static constexpr const TSymbolUniqueId equal_3B3B                       = TSymbolUniqueId(402);
+    static constexpr const TSymbolUniqueId equal_1C1C                       = TSymbolUniqueId(403);
+    static constexpr const TSymbolUniqueId equal_2C2C                       = TSymbolUniqueId(404);
+    static constexpr const TSymbolUniqueId equal_3C3C                       = TSymbolUniqueId(405);
+    static constexpr const TSymbolUniqueId equal_1D1D                       = TSymbolUniqueId(406);
+    static constexpr const TSymbolUniqueId equal_2D2D                       = TSymbolUniqueId(407);
+    static constexpr const TSymbolUniqueId equal_3D3D                       = TSymbolUniqueId(408);
+    static constexpr const TSymbolUniqueId equal_1E1E                       = TSymbolUniqueId(409);
+    static constexpr const TSymbolUniqueId equal_2E2E                       = TSymbolUniqueId(410);
+    static constexpr const TSymbolUniqueId equal_3E3E                       = TSymbolUniqueId(411);
+    static constexpr const TSymbolUniqueId notEqual_1B1B                    = TSymbolUniqueId(412);
+    static constexpr const TSymbolUniqueId notEqual_2B2B                    = TSymbolUniqueId(413);
+    static constexpr const TSymbolUniqueId notEqual_3B3B                    = TSymbolUniqueId(414);
+    static constexpr const TSymbolUniqueId notEqual_1C1C                    = TSymbolUniqueId(415);
+    static constexpr const TSymbolUniqueId notEqual_2C2C                    = TSymbolUniqueId(416);
+    static constexpr const TSymbolUniqueId notEqual_3C3C                    = TSymbolUniqueId(417);
+    static constexpr const TSymbolUniqueId notEqual_1D1D                    = TSymbolUniqueId(418);
+    static constexpr const TSymbolUniqueId notEqual_2D2D                    = TSymbolUniqueId(419);
+    static constexpr const TSymbolUniqueId notEqual_3D3D                    = TSymbolUniqueId(420);
+    static constexpr const TSymbolUniqueId notEqual_1E1E                    = TSymbolUniqueId(421);
+    static constexpr const TSymbolUniqueId notEqual_2E2E                    = TSymbolUniqueId(422);
+    static constexpr const TSymbolUniqueId notEqual_3E3E                    = TSymbolUniqueId(423);
+    static constexpr const TSymbolUniqueId any_1E                           = TSymbolUniqueId(424);
+    static constexpr const TSymbolUniqueId any_2E                           = TSymbolUniqueId(425);
+    static constexpr const TSymbolUniqueId any_3E                           = TSymbolUniqueId(426);
+    static constexpr const TSymbolUniqueId all_1E                           = TSymbolUniqueId(427);
+    static constexpr const TSymbolUniqueId all_2E                           = TSymbolUniqueId(428);
+    static constexpr const TSymbolUniqueId all_3E                           = TSymbolUniqueId(429);
+    static constexpr const TSymbolUniqueId notFunc_1E                       = TSymbolUniqueId(430);
+    static constexpr const TSymbolUniqueId notFunc_2E                       = TSymbolUniqueId(431);
+    static constexpr const TSymbolUniqueId notFunc_3E                       = TSymbolUniqueId(432);
+    static constexpr const TSymbolUniqueId bitfieldExtract_0C0C0C           = TSymbolUniqueId(433);
+    static constexpr const TSymbolUniqueId bitfieldExtract_1C0C0C           = TSymbolUniqueId(434);
+    static constexpr const TSymbolUniqueId bitfieldExtract_2C0C0C           = TSymbolUniqueId(435);
+    static constexpr const TSymbolUniqueId bitfieldExtract_3C0C0C           = TSymbolUniqueId(436);
+    static constexpr const TSymbolUniqueId bitfieldExtract_0D0C0C           = TSymbolUniqueId(437);
+    static constexpr const TSymbolUniqueId bitfieldExtract_1D0C0C           = TSymbolUniqueId(438);
+    static constexpr const TSymbolUniqueId bitfieldExtract_2D0C0C           = TSymbolUniqueId(439);
+    static constexpr const TSymbolUniqueId bitfieldExtract_3D0C0C           = TSymbolUniqueId(440);
+    static constexpr const TSymbolUniqueId bitfieldInsert_0C0C0C0C          = TSymbolUniqueId(441);
+    static constexpr const TSymbolUniqueId bitfieldInsert_1C1C0C0C          = TSymbolUniqueId(442);
+    static constexpr const TSymbolUniqueId bitfieldInsert_2C2C0C0C          = TSymbolUniqueId(443);
+    static constexpr const TSymbolUniqueId bitfieldInsert_3C3C0C0C          = TSymbolUniqueId(444);
+    static constexpr const TSymbolUniqueId bitfieldInsert_0D0D0C0C          = TSymbolUniqueId(445);
+    static constexpr const TSymbolUniqueId bitfieldInsert_1D1D0C0C          = TSymbolUniqueId(446);
+    static constexpr const TSymbolUniqueId bitfieldInsert_2D2D0C0C          = TSymbolUniqueId(447);
+    static constexpr const TSymbolUniqueId bitfieldInsert_3D3D0C0C          = TSymbolUniqueId(448);
+    static constexpr const TSymbolUniqueId bitfieldReverse_0C               = TSymbolUniqueId(449);
+    static constexpr const TSymbolUniqueId bitfieldReverse_1C               = TSymbolUniqueId(450);
+    static constexpr const TSymbolUniqueId bitfieldReverse_2C               = TSymbolUniqueId(451);
+    static constexpr const TSymbolUniqueId bitfieldReverse_3C               = TSymbolUniqueId(452);
+    static constexpr const TSymbolUniqueId bitfieldReverse_0D               = TSymbolUniqueId(453);
+    static constexpr const TSymbolUniqueId bitfieldReverse_1D               = TSymbolUniqueId(454);
+    static constexpr const TSymbolUniqueId bitfieldReverse_2D               = TSymbolUniqueId(455);
+    static constexpr const TSymbolUniqueId bitfieldReverse_3D               = TSymbolUniqueId(456);
+    static constexpr const TSymbolUniqueId bitCount_0C                      = TSymbolUniqueId(457);
+    static constexpr const TSymbolUniqueId bitCount_1C                      = TSymbolUniqueId(458);
+    static constexpr const TSymbolUniqueId bitCount_2C                      = TSymbolUniqueId(459);
+    static constexpr const TSymbolUniqueId bitCount_3C                      = TSymbolUniqueId(460);
+    static constexpr const TSymbolUniqueId bitCount_0D                      = TSymbolUniqueId(461);
+    static constexpr const TSymbolUniqueId bitCount_1D                      = TSymbolUniqueId(462);
+    static constexpr const TSymbolUniqueId bitCount_2D                      = TSymbolUniqueId(463);
+    static constexpr const TSymbolUniqueId bitCount_3D                      = TSymbolUniqueId(464);
+    static constexpr const TSymbolUniqueId findLSB_0C                       = TSymbolUniqueId(465);
+    static constexpr const TSymbolUniqueId findLSB_1C                       = TSymbolUniqueId(466);
+    static constexpr const TSymbolUniqueId findLSB_2C                       = TSymbolUniqueId(467);
+    static constexpr const TSymbolUniqueId findLSB_3C                       = TSymbolUniqueId(468);
+    static constexpr const TSymbolUniqueId findLSB_0D                       = TSymbolUniqueId(469);
+    static constexpr const TSymbolUniqueId findLSB_1D                       = TSymbolUniqueId(470);
+    static constexpr const TSymbolUniqueId findLSB_2D                       = TSymbolUniqueId(471);
+    static constexpr const TSymbolUniqueId findLSB_3D                       = TSymbolUniqueId(472);
+    static constexpr const TSymbolUniqueId findMSB_0C                       = TSymbolUniqueId(473);
+    static constexpr const TSymbolUniqueId findMSB_1C                       = TSymbolUniqueId(474);
+    static constexpr const TSymbolUniqueId findMSB_2C                       = TSymbolUniqueId(475);
+    static constexpr const TSymbolUniqueId findMSB_3C                       = TSymbolUniqueId(476);
+    static constexpr const TSymbolUniqueId findMSB_0D                       = TSymbolUniqueId(477);
+    static constexpr const TSymbolUniqueId findMSB_1D                       = TSymbolUniqueId(478);
+    static constexpr const TSymbolUniqueId findMSB_2D                       = TSymbolUniqueId(479);
+    static constexpr const TSymbolUniqueId findMSB_3D                       = TSymbolUniqueId(480);
+    static constexpr const TSymbolUniqueId uaddCarry_0D0D0D                 = TSymbolUniqueId(481);
+    static constexpr const TSymbolUniqueId pt_o_0D                          = TSymbolUniqueId(482);
+    static constexpr const TSymbolUniqueId uaddCarry_1D1D1D                 = TSymbolUniqueId(483);
+    static constexpr const TSymbolUniqueId pt_o_1D                          = TSymbolUniqueId(484);
+    static constexpr const TSymbolUniqueId uaddCarry_2D2D2D                 = TSymbolUniqueId(485);
+    static constexpr const TSymbolUniqueId pt_o_2D                          = TSymbolUniqueId(486);
+    static constexpr const TSymbolUniqueId uaddCarry_3D3D3D                 = TSymbolUniqueId(487);
+    static constexpr const TSymbolUniqueId pt_o_3D                          = TSymbolUniqueId(488);
+    static constexpr const TSymbolUniqueId usubBorrow_0D0D0D                = TSymbolUniqueId(489);
+    static constexpr const TSymbolUniqueId usubBorrow_1D1D1D                = TSymbolUniqueId(490);
+    static constexpr const TSymbolUniqueId usubBorrow_2D2D2D                = TSymbolUniqueId(491);
+    static constexpr const TSymbolUniqueId usubBorrow_3D3D3D                = TSymbolUniqueId(492);
+    static constexpr const TSymbolUniqueId umulExtended_0D0D0D0D            = TSymbolUniqueId(493);
+    static constexpr const TSymbolUniqueId umulExtended_1D1D1D1D            = TSymbolUniqueId(494);
+    static constexpr const TSymbolUniqueId umulExtended_2D2D2D2D            = TSymbolUniqueId(495);
+    static constexpr const TSymbolUniqueId umulExtended_3D3D3D3D            = TSymbolUniqueId(496);
+    static constexpr const TSymbolUniqueId imulExtended_0C0C0C0C            = TSymbolUniqueId(497);
+    static constexpr const TSymbolUniqueId imulExtended_1C1C1C1C            = TSymbolUniqueId(498);
+    static constexpr const TSymbolUniqueId imulExtended_2C2C2C2C            = TSymbolUniqueId(499);
+    static constexpr const TSymbolUniqueId imulExtended_3C3C3C3C            = TSymbolUniqueId(500);
+    static constexpr const TSymbolUniqueId texture2D_0H1B                   = TSymbolUniqueId(501);
+    static constexpr const TSymbolUniqueId pt0H                             = TSymbolUniqueId(502);
+    static constexpr const TSymbolUniqueId texture2DProj_0H2B               = TSymbolUniqueId(503);
+    static constexpr const TSymbolUniqueId texture2DProj_0H3B               = TSymbolUniqueId(504);
+    static constexpr const TSymbolUniqueId textureCube_0J2B                 = TSymbolUniqueId(505);
+    static constexpr const TSymbolUniqueId pt0J                             = TSymbolUniqueId(506);
+    static constexpr const TSymbolUniqueId texture2D_0L1B                   = TSymbolUniqueId(507);
+    static constexpr const TSymbolUniqueId pt0L                             = TSymbolUniqueId(508);
+    static constexpr const TSymbolUniqueId texture2DProj_0L2B               = TSymbolUniqueId(509);
+    static constexpr const TSymbolUniqueId texture2DProj_0L3B               = TSymbolUniqueId(510);
+    static constexpr const TSymbolUniqueId texture2DRect_0N1B               = TSymbolUniqueId(511);
+    static constexpr const TSymbolUniqueId pt0N                             = TSymbolUniqueId(512);
+    static constexpr const TSymbolUniqueId texture2DRectProj_0N2B           = TSymbolUniqueId(513);
+    static constexpr const TSymbolUniqueId texture2DRectProj_0N3B           = TSymbolUniqueId(514);
+    static constexpr const TSymbolUniqueId texture_0N1B                     = TSymbolUniqueId(515);
+    static constexpr const TSymbolUniqueId textureProj_0N2B                 = TSymbolUniqueId(516);
+    static constexpr const TSymbolUniqueId textureProj_0N3B                 = TSymbolUniqueId(517);
+    static constexpr const TSymbolUniqueId texture2DGradEXT_0H1B1B1B        = TSymbolUniqueId(518);
+    static constexpr const TSymbolUniqueId texture2DProjGradEXT_0H2B1B1B    = TSymbolUniqueId(519);
+    static constexpr const TSymbolUniqueId texture2DProjGradEXT_0H3B1B1B    = TSymbolUniqueId(520);
+    static constexpr const TSymbolUniqueId textureCubeGradEXT_0J2B2B2B      = TSymbolUniqueId(521);
+    static constexpr const TSymbolUniqueId texture2D_0H1B0B                 = TSymbolUniqueId(522);
+    static constexpr const TSymbolUniqueId texture2DProj_0H2B0B             = TSymbolUniqueId(523);
+    static constexpr const TSymbolUniqueId texture2DProj_0H3B0B             = TSymbolUniqueId(524);
+    static constexpr const TSymbolUniqueId textureCube_0J2B0B               = TSymbolUniqueId(525);
+    static constexpr const TSymbolUniqueId dFdxExt_0B                       = TSymbolUniqueId(526);
+    static constexpr const TSymbolUniqueId dFdxExt_1B                       = TSymbolUniqueId(527);
+    static constexpr const TSymbolUniqueId dFdxExt_2B                       = TSymbolUniqueId(528);
+    static constexpr const TSymbolUniqueId dFdxExt_3B                       = TSymbolUniqueId(529);
+    static constexpr const TSymbolUniqueId dFdyExt_0B                       = TSymbolUniqueId(530);
+    static constexpr const TSymbolUniqueId dFdyExt_1B                       = TSymbolUniqueId(531);
+    static constexpr const TSymbolUniqueId dFdyExt_2B                       = TSymbolUniqueId(532);
+    static constexpr const TSymbolUniqueId dFdyExt_3B                       = TSymbolUniqueId(533);
+    static constexpr const TSymbolUniqueId fwidthExt_0B                     = TSymbolUniqueId(534);
+    static constexpr const TSymbolUniqueId fwidthExt_1B                     = TSymbolUniqueId(535);
+    static constexpr const TSymbolUniqueId fwidthExt_2B                     = TSymbolUniqueId(536);
+    static constexpr const TSymbolUniqueId fwidthExt_3B                     = TSymbolUniqueId(537);
+    static constexpr const TSymbolUniqueId texture2DLodEXT_0H1B0B           = TSymbolUniqueId(538);
+    static constexpr const TSymbolUniqueId texture2DProjLodEXT_0H2B0B       = TSymbolUniqueId(539);
+    static constexpr const TSymbolUniqueId texture2DProjLodEXT_0H3B0B       = TSymbolUniqueId(540);
+    static constexpr const TSymbolUniqueId textureCubeLodEXT_0J2B0B         = TSymbolUniqueId(541);
+    static constexpr const TSymbolUniqueId texture2DLod_0H1B0B              = TSymbolUniqueId(542);
+    static constexpr const TSymbolUniqueId texture2DProjLod_0H2B0B          = TSymbolUniqueId(543);
+    static constexpr const TSymbolUniqueId texture2DProjLod_0H3B0B          = TSymbolUniqueId(544);
+    static constexpr const TSymbolUniqueId textureCubeLod_0J2B0B            = TSymbolUniqueId(545);
+    static constexpr const TSymbolUniqueId texture_0H1B                     = TSymbolUniqueId(546);
+    static constexpr const TSymbolUniqueId texture_0P1B                     = TSymbolUniqueId(547);
+    static constexpr const TSymbolUniqueId pt0P                             = TSymbolUniqueId(548);
+    static constexpr const TSymbolUniqueId texture_0U1B                     = TSymbolUniqueId(549);
+    static constexpr const TSymbolUniqueId pt0U                             = TSymbolUniqueId(550);
+    static constexpr const TSymbolUniqueId texture_0I2B                     = TSymbolUniqueId(551);
+    static constexpr const TSymbolUniqueId pt0I                             = TSymbolUniqueId(552);
+    static constexpr const TSymbolUniqueId texture_0Q2B                     = TSymbolUniqueId(553);
+    static constexpr const TSymbolUniqueId pt0Q                             = TSymbolUniqueId(554);
+    static constexpr const TSymbolUniqueId texture_0V2B                     = TSymbolUniqueId(555);
+    static constexpr const TSymbolUniqueId pt0V                             = TSymbolUniqueId(556);
+    static constexpr const TSymbolUniqueId texture_0J2B                     = TSymbolUniqueId(557);
+    static constexpr const TSymbolUniqueId texture_0R2B                     = TSymbolUniqueId(558);
+    static constexpr const TSymbolUniqueId pt0R                             = TSymbolUniqueId(559);
+    static constexpr const TSymbolUniqueId texture_0W2B                     = TSymbolUniqueId(560);
+    static constexpr const TSymbolUniqueId pt0W                             = TSymbolUniqueId(561);
+    static constexpr const TSymbolUniqueId texture_0K2B                     = TSymbolUniqueId(562);
+    static constexpr const TSymbolUniqueId pt0K                             = TSymbolUniqueId(563);
+    static constexpr const TSymbolUniqueId texture_0S2B                     = TSymbolUniqueId(564);
+    static constexpr const TSymbolUniqueId pt0S                             = TSymbolUniqueId(565);
+    static constexpr const TSymbolUniqueId texture_0X2B                     = TSymbolUniqueId(566);
+    static constexpr const TSymbolUniqueId pt0X                             = TSymbolUniqueId(567);
+    static constexpr const TSymbolUniqueId textureProj_0H2B                 = TSymbolUniqueId(568);
+    static constexpr const TSymbolUniqueId textureProj_0P2B                 = TSymbolUniqueId(569);
+    static constexpr const TSymbolUniqueId textureProj_0U2B                 = TSymbolUniqueId(570);
+    static constexpr const TSymbolUniqueId textureProj_0H3B                 = TSymbolUniqueId(571);
+    static constexpr const TSymbolUniqueId textureProj_0P3B                 = TSymbolUniqueId(572);
+    static constexpr const TSymbolUniqueId textureProj_0U3B                 = TSymbolUniqueId(573);
+    static constexpr const TSymbolUniqueId textureProj_0I3B                 = TSymbolUniqueId(574);
+    static constexpr const TSymbolUniqueId textureProj_0Q3B                 = TSymbolUniqueId(575);
+    static constexpr const TSymbolUniqueId textureProj_0V3B                 = TSymbolUniqueId(576);
+    static constexpr const TSymbolUniqueId textureLod_0H1B0B                = TSymbolUniqueId(577);
+    static constexpr const TSymbolUniqueId textureLod_0P1B0B                = TSymbolUniqueId(578);
+    static constexpr const TSymbolUniqueId textureLod_0U1B0B                = TSymbolUniqueId(579);
+    static constexpr const TSymbolUniqueId textureLod_0I2B0B                = TSymbolUniqueId(580);
+    static constexpr const TSymbolUniqueId textureLod_0Q2B0B                = TSymbolUniqueId(581);
+    static constexpr const TSymbolUniqueId textureLod_0V2B0B                = TSymbolUniqueId(582);
+    static constexpr const TSymbolUniqueId textureLod_0J2B0B                = TSymbolUniqueId(583);
+    static constexpr const TSymbolUniqueId textureLod_0R2B0B                = TSymbolUniqueId(584);
+    static constexpr const TSymbolUniqueId textureLod_0W2B0B                = TSymbolUniqueId(585);
+    static constexpr const TSymbolUniqueId textureLod_0K2B0B                = TSymbolUniqueId(586);
+    static constexpr const TSymbolUniqueId textureLod_0S2B0B                = TSymbolUniqueId(587);
+    static constexpr const TSymbolUniqueId textureLod_0X2B0B                = TSymbolUniqueId(588);
+    static constexpr const TSymbolUniqueId texture_0Z2B                     = TSymbolUniqueId(589);
+    static constexpr const TSymbolUniqueId pt0Z                             = TSymbolUniqueId(590);
+    static constexpr const TSymbolUniqueId texture_0a3B                     = TSymbolUniqueId(591);
+    static constexpr const TSymbolUniqueId pt0a                             = TSymbolUniqueId(592);
+    static constexpr const TSymbolUniqueId texture_0b3B                     = TSymbolUniqueId(593);
+    static constexpr const TSymbolUniqueId pt0b                             = TSymbolUniqueId(594);
+    static constexpr const TSymbolUniqueId textureProj_0Z3B                 = TSymbolUniqueId(595);
+    static constexpr const TSymbolUniqueId textureLod_0Z2B0B                = TSymbolUniqueId(596);
+    static constexpr const TSymbolUniqueId textureSize_0H0C                 = TSymbolUniqueId(597);
+    static constexpr const TSymbolUniqueId textureSize_0P0C                 = TSymbolUniqueId(598);
+    static constexpr const TSymbolUniqueId textureSize_0U0C                 = TSymbolUniqueId(599);
+    static constexpr const TSymbolUniqueId textureSize_0I0C                 = TSymbolUniqueId(600);
+    static constexpr const TSymbolUniqueId textureSize_0Q0C                 = TSymbolUniqueId(601);
+    static constexpr const TSymbolUniqueId textureSize_0V0C                 = TSymbolUniqueId(602);
+    static constexpr const TSymbolUniqueId textureSize_0J0C                 = TSymbolUniqueId(603);
+    static constexpr const TSymbolUniqueId textureSize_0R0C                 = TSymbolUniqueId(604);
+    static constexpr const TSymbolUniqueId textureSize_0W0C                 = TSymbolUniqueId(605);
+    static constexpr const TSymbolUniqueId textureSize_0K0C                 = TSymbolUniqueId(606);
+    static constexpr const TSymbolUniqueId textureSize_0S0C                 = TSymbolUniqueId(607);
+    static constexpr const TSymbolUniqueId textureSize_0X0C                 = TSymbolUniqueId(608);
+    static constexpr const TSymbolUniqueId textureSize_0Z0C                 = TSymbolUniqueId(609);
+    static constexpr const TSymbolUniqueId textureSize_0a0C                 = TSymbolUniqueId(610);
+    static constexpr const TSymbolUniqueId textureSize_0b0C                 = TSymbolUniqueId(611);
+    static constexpr const TSymbolUniqueId textureSize_0O                   = TSymbolUniqueId(612);
+    static constexpr const TSymbolUniqueId pt0O                             = TSymbolUniqueId(613);
+    static constexpr const TSymbolUniqueId textureSize_0T                   = TSymbolUniqueId(614);
+    static constexpr const TSymbolUniqueId pt0T                             = TSymbolUniqueId(615);
+    static constexpr const TSymbolUniqueId textureSize_0Y                   = TSymbolUniqueId(616);
+    static constexpr const TSymbolUniqueId pt0Y                             = TSymbolUniqueId(617);
+    static constexpr const TSymbolUniqueId textureProjLod_0H2B0B            = TSymbolUniqueId(618);
+    static constexpr const TSymbolUniqueId textureProjLod_0P2B0B            = TSymbolUniqueId(619);
+    static constexpr const TSymbolUniqueId textureProjLod_0U2B0B            = TSymbolUniqueId(620);
+    static constexpr const TSymbolUniqueId textureProjLod_0H3B0B            = TSymbolUniqueId(621);
+    static constexpr const TSymbolUniqueId textureProjLod_0P3B0B            = TSymbolUniqueId(622);
+    static constexpr const TSymbolUniqueId textureProjLod_0U3B0B            = TSymbolUniqueId(623);
+    static constexpr const TSymbolUniqueId textureProjLod_0I3B0B            = TSymbolUniqueId(624);
+    static constexpr const TSymbolUniqueId textureProjLod_0Q3B0B            = TSymbolUniqueId(625);
+    static constexpr const TSymbolUniqueId textureProjLod_0V3B0B            = TSymbolUniqueId(626);
+    static constexpr const TSymbolUniqueId textureProjLod_0Z3B0B            = TSymbolUniqueId(627);
+    static constexpr const TSymbolUniqueId texelFetch_0H1C0C                = TSymbolUniqueId(628);
+    static constexpr const TSymbolUniqueId texelFetch_0P1C0C                = TSymbolUniqueId(629);
+    static constexpr const TSymbolUniqueId texelFetch_0U1C0C                = TSymbolUniqueId(630);
+    static constexpr const TSymbolUniqueId texelFetch_0I2C0C                = TSymbolUniqueId(631);
+    static constexpr const TSymbolUniqueId texelFetch_0Q2C0C                = TSymbolUniqueId(632);
+    static constexpr const TSymbolUniqueId texelFetch_0V2C0C                = TSymbolUniqueId(633);
+    static constexpr const TSymbolUniqueId texelFetch_0K2C0C                = TSymbolUniqueId(634);
+    static constexpr const TSymbolUniqueId texelFetch_0S2C0C                = TSymbolUniqueId(635);
+    static constexpr const TSymbolUniqueId texelFetch_0X2C0C                = TSymbolUniqueId(636);
+    static constexpr const TSymbolUniqueId textureGrad_0H1B1B1B             = TSymbolUniqueId(637);
+    static constexpr const TSymbolUniqueId textureGrad_0P1B1B1B             = TSymbolUniqueId(638);
+    static constexpr const TSymbolUniqueId textureGrad_0U1B1B1B             = TSymbolUniqueId(639);
+    static constexpr const TSymbolUniqueId textureGrad_0I2B2B2B             = TSymbolUniqueId(640);
+    static constexpr const TSymbolUniqueId textureGrad_0Q2B2B2B             = TSymbolUniqueId(641);
+    static constexpr const TSymbolUniqueId textureGrad_0V2B2B2B             = TSymbolUniqueId(642);
+    static constexpr const TSymbolUniqueId textureGrad_0J2B2B2B             = TSymbolUniqueId(643);
+    static constexpr const TSymbolUniqueId textureGrad_0R2B2B2B             = TSymbolUniqueId(644);
+    static constexpr const TSymbolUniqueId textureGrad_0W2B2B2B             = TSymbolUniqueId(645);
+    static constexpr const TSymbolUniqueId textureGrad_0Z2B1B1B             = TSymbolUniqueId(646);
+    static constexpr const TSymbolUniqueId textureGrad_0a3B2B2B             = TSymbolUniqueId(647);
+    static constexpr const TSymbolUniqueId textureGrad_0K2B1B1B             = TSymbolUniqueId(648);
+    static constexpr const TSymbolUniqueId textureGrad_0S2B1B1B             = TSymbolUniqueId(649);
+    static constexpr const TSymbolUniqueId textureGrad_0X2B1B1B             = TSymbolUniqueId(650);
+    static constexpr const TSymbolUniqueId textureGrad_0b3B1B1B             = TSymbolUniqueId(651);
+    static constexpr const TSymbolUniqueId textureProjGrad_0H2B1B1B         = TSymbolUniqueId(652);
+    static constexpr const TSymbolUniqueId textureProjGrad_0P2B1B1B         = TSymbolUniqueId(653);
+    static constexpr const TSymbolUniqueId textureProjGrad_0U2B1B1B         = TSymbolUniqueId(654);
+    static constexpr const TSymbolUniqueId textureProjGrad_0H3B1B1B         = TSymbolUniqueId(655);
+    static constexpr const TSymbolUniqueId textureProjGrad_0P3B1B1B         = TSymbolUniqueId(656);
+    static constexpr const TSymbolUniqueId textureProjGrad_0U3B1B1B         = TSymbolUniqueId(657);
+    static constexpr const TSymbolUniqueId textureProjGrad_0I3B2B2B         = TSymbolUniqueId(658);
+    static constexpr const TSymbolUniqueId textureProjGrad_0Q3B2B2B         = TSymbolUniqueId(659);
+    static constexpr const TSymbolUniqueId textureProjGrad_0V3B2B2B         = TSymbolUniqueId(660);
+    static constexpr const TSymbolUniqueId textureProjGrad_0Z3B1B1B         = TSymbolUniqueId(661);
+    static constexpr const TSymbolUniqueId textureOffset_0H1B1C             = TSymbolUniqueId(662);
+    static constexpr const TSymbolUniqueId textureOffset_0P1B1C             = TSymbolUniqueId(663);
+    static constexpr const TSymbolUniqueId textureOffset_0U1B1C             = TSymbolUniqueId(664);
+    static constexpr const TSymbolUniqueId textureOffset_0I2B2C             = TSymbolUniqueId(665);
+    static constexpr const TSymbolUniqueId textureOffset_0Q2B2C             = TSymbolUniqueId(666);
+    static constexpr const TSymbolUniqueId textureOffset_0V2B2C             = TSymbolUniqueId(667);
+    static constexpr const TSymbolUniqueId textureOffset_0Z2B1C             = TSymbolUniqueId(668);
+    static constexpr const TSymbolUniqueId textureOffset_0K2B1C             = TSymbolUniqueId(669);
+    static constexpr const TSymbolUniqueId textureOffset_0S2B1C             = TSymbolUniqueId(670);
+    static constexpr const TSymbolUniqueId textureOffset_0X2B1C             = TSymbolUniqueId(671);
+    static constexpr const TSymbolUniqueId textureProjOffset_0H2B1C         = TSymbolUniqueId(672);
+    static constexpr const TSymbolUniqueId textureProjOffset_0P2B1C         = TSymbolUniqueId(673);
+    static constexpr const TSymbolUniqueId textureProjOffset_0U2B1C         = TSymbolUniqueId(674);
+    static constexpr const TSymbolUniqueId textureProjOffset_0H3B1C         = TSymbolUniqueId(675);
+    static constexpr const TSymbolUniqueId textureProjOffset_0P3B1C         = TSymbolUniqueId(676);
+    static constexpr const TSymbolUniqueId textureProjOffset_0U3B1C         = TSymbolUniqueId(677);
+    static constexpr const TSymbolUniqueId textureProjOffset_0I3B2C         = TSymbolUniqueId(678);
+    static constexpr const TSymbolUniqueId textureProjOffset_0Q3B2C         = TSymbolUniqueId(679);
+    static constexpr const TSymbolUniqueId textureProjOffset_0V3B2C         = TSymbolUniqueId(680);
+    static constexpr const TSymbolUniqueId textureProjOffset_0Z3B1C         = TSymbolUniqueId(681);
+    static constexpr const TSymbolUniqueId textureLodOffset_0H1B0B1C        = TSymbolUniqueId(682);
+    static constexpr const TSymbolUniqueId textureLodOffset_0P1B0B1C        = TSymbolUniqueId(683);
+    static constexpr const TSymbolUniqueId textureLodOffset_0U1B0B1C        = TSymbolUniqueId(684);
+    static constexpr const TSymbolUniqueId textureLodOffset_0I2B0B2C        = TSymbolUniqueId(685);
+    static constexpr const TSymbolUniqueId textureLodOffset_0Q2B0B2C        = TSymbolUniqueId(686);
+    static constexpr const TSymbolUniqueId textureLodOffset_0V2B0B2C        = TSymbolUniqueId(687);
+    static constexpr const TSymbolUniqueId textureLodOffset_0Z2B0B1C        = TSymbolUniqueId(688);
+    static constexpr const TSymbolUniqueId textureLodOffset_0K2B0B1C        = TSymbolUniqueId(689);
+    static constexpr const TSymbolUniqueId textureLodOffset_0S2B0B1C        = TSymbolUniqueId(690);
+    static constexpr const TSymbolUniqueId textureLodOffset_0X2B0B1C        = TSymbolUniqueId(691);
+    static constexpr const TSymbolUniqueId textureProjLodOffset_0H2B0B1C    = TSymbolUniqueId(692);
+    static constexpr const TSymbolUniqueId textureProjLodOffset_0P2B0B1C    = TSymbolUniqueId(693);
+    static constexpr const TSymbolUniqueId textureProjLodOffset_0U2B0B1C    = TSymbolUniqueId(694);
+    static constexpr const TSymbolUniqueId textureProjLodOffset_0H3B0B1C    = TSymbolUniqueId(695);
+    static constexpr const TSymbolUniqueId textureProjLodOffset_0P3B0B1C    = TSymbolUniqueId(696);
+    static constexpr const TSymbolUniqueId textureProjLodOffset_0U3B0B1C    = TSymbolUniqueId(697);
+    static constexpr const TSymbolUniqueId textureProjLodOffset_0I3B0B2C    = TSymbolUniqueId(698);
+    static constexpr const TSymbolUniqueId textureProjLodOffset_0Q3B0B2C    = TSymbolUniqueId(699);
+    static constexpr const TSymbolUniqueId textureProjLodOffset_0V3B0B2C    = TSymbolUniqueId(700);
+    static constexpr const TSymbolUniqueId textureProjLodOffset_0Z3B0B1C    = TSymbolUniqueId(701);
+    static constexpr const TSymbolUniqueId texelFetchOffset_0H1C0C1C        = TSymbolUniqueId(702);
+    static constexpr const TSymbolUniqueId texelFetchOffset_0P1C0C1C        = TSymbolUniqueId(703);
+    static constexpr const TSymbolUniqueId texelFetchOffset_0U1C0C1C        = TSymbolUniqueId(704);
+    static constexpr const TSymbolUniqueId texelFetchOffset_0I2C0C2C        = TSymbolUniqueId(705);
+    static constexpr const TSymbolUniqueId texelFetchOffset_0Q2C0C2C        = TSymbolUniqueId(706);
+    static constexpr const TSymbolUniqueId texelFetchOffset_0V2C0C2C        = TSymbolUniqueId(707);
+    static constexpr const TSymbolUniqueId texelFetchOffset_0K2C0C1C        = TSymbolUniqueId(708);
+    static constexpr const TSymbolUniqueId texelFetchOffset_0S2C0C1C        = TSymbolUniqueId(709);
+    static constexpr const TSymbolUniqueId texelFetchOffset_0X2C0C1C        = TSymbolUniqueId(710);
+    static constexpr const TSymbolUniqueId textureGradOffset_0H1B1B1B1C     = TSymbolUniqueId(711);
+    static constexpr const TSymbolUniqueId textureGradOffset_0P1B1B1B1C     = TSymbolUniqueId(712);
+    static constexpr const TSymbolUniqueId textureGradOffset_0U1B1B1B1C     = TSymbolUniqueId(713);
+    static constexpr const TSymbolUniqueId textureGradOffset_0I2B2B2B2C     = TSymbolUniqueId(714);
+    static constexpr const TSymbolUniqueId textureGradOffset_0Q2B2B2B2C     = TSymbolUniqueId(715);
+    static constexpr const TSymbolUniqueId textureGradOffset_0V2B2B2B2C     = TSymbolUniqueId(716);
+    static constexpr const TSymbolUniqueId textureGradOffset_0Z2B1B1B1C     = TSymbolUniqueId(717);
+    static constexpr const TSymbolUniqueId textureGradOffset_0K2B1B1B1C     = TSymbolUniqueId(718);
+    static constexpr const TSymbolUniqueId textureGradOffset_0S2B1B1B1C     = TSymbolUniqueId(719);
+    static constexpr const TSymbolUniqueId textureGradOffset_0X2B1B1B1C     = TSymbolUniqueId(720);
+    static constexpr const TSymbolUniqueId textureGradOffset_0b3B1B1B1C     = TSymbolUniqueId(721);
+    static constexpr const TSymbolUniqueId textureProjGradOffset_0H2B1B1B1C = TSymbolUniqueId(722);
+    static constexpr const TSymbolUniqueId textureProjGradOffset_0P2B1B1B1C = TSymbolUniqueId(723);
+    static constexpr const TSymbolUniqueId textureProjGradOffset_0U2B1B1B1C = TSymbolUniqueId(724);
+    static constexpr const TSymbolUniqueId textureProjGradOffset_0H3B1B1B1C = TSymbolUniqueId(725);
+    static constexpr const TSymbolUniqueId textureProjGradOffset_0P3B1B1B1C = TSymbolUniqueId(726);
+    static constexpr const TSymbolUniqueId textureProjGradOffset_0U3B1B1B1C = TSymbolUniqueId(727);
+    static constexpr const TSymbolUniqueId textureProjGradOffset_0I3B2B2B2C = TSymbolUniqueId(728);
+    static constexpr const TSymbolUniqueId textureProjGradOffset_0Q3B2B2B2C = TSymbolUniqueId(729);
+    static constexpr const TSymbolUniqueId textureProjGradOffset_0V3B2B2B2C = TSymbolUniqueId(730);
+    static constexpr const TSymbolUniqueId textureProjGradOffset_0Z3B1B1B1C = TSymbolUniqueId(731);
+    static constexpr const TSymbolUniqueId textureOffset_0H1B1C0B           = TSymbolUniqueId(732);
+    static constexpr const TSymbolUniqueId textureOffset_0P1B1C0B           = TSymbolUniqueId(733);
+    static constexpr const TSymbolUniqueId textureOffset_0U1B1C0B           = TSymbolUniqueId(734);
+    static constexpr const TSymbolUniqueId textureOffset_0I2B2C0B           = TSymbolUniqueId(735);
+    static constexpr const TSymbolUniqueId textureOffset_0Q2B2C0B           = TSymbolUniqueId(736);
+    static constexpr const TSymbolUniqueId textureOffset_0V2B2C0B           = TSymbolUniqueId(737);
+    static constexpr const TSymbolUniqueId textureOffset_0Z2B1C0B           = TSymbolUniqueId(738);
+    static constexpr const TSymbolUniqueId textureOffset_0K2B1C0B           = TSymbolUniqueId(739);
+    static constexpr const TSymbolUniqueId textureOffset_0S2B1C0B           = TSymbolUniqueId(740);
+    static constexpr const TSymbolUniqueId textureOffset_0X2B1C0B           = TSymbolUniqueId(741);
+    static constexpr const TSymbolUniqueId textureProjOffset_0H2B1C0B       = TSymbolUniqueId(742);
+    static constexpr const TSymbolUniqueId textureProjOffset_0P2B1C0B       = TSymbolUniqueId(743);
+    static constexpr const TSymbolUniqueId textureProjOffset_0U2B1C0B       = TSymbolUniqueId(744);
+    static constexpr const TSymbolUniqueId textureProjOffset_0H3B1C0B       = TSymbolUniqueId(745);
+    static constexpr const TSymbolUniqueId textureProjOffset_0P3B1C0B       = TSymbolUniqueId(746);
+    static constexpr const TSymbolUniqueId textureProjOffset_0U3B1C0B       = TSymbolUniqueId(747);
+    static constexpr const TSymbolUniqueId textureProjOffset_0I3B2C0B       = TSymbolUniqueId(748);
+    static constexpr const TSymbolUniqueId textureProjOffset_0Q3B2C0B       = TSymbolUniqueId(749);
+    static constexpr const TSymbolUniqueId textureProjOffset_0V3B2C0B       = TSymbolUniqueId(750);
+    static constexpr const TSymbolUniqueId textureProjOffset_0Z3B1C0B       = TSymbolUniqueId(751);
+    static constexpr const TSymbolUniqueId texture_0L1B                     = TSymbolUniqueId(752);
+    static constexpr const TSymbolUniqueId textureProj_0L2B                 = TSymbolUniqueId(753);
+    static constexpr const TSymbolUniqueId textureProj_0L3B                 = TSymbolUniqueId(754);
+    static constexpr const TSymbolUniqueId textureSize_0L0C                 = TSymbolUniqueId(755);
+    static constexpr const TSymbolUniqueId texelFetch_0L1C0C                = TSymbolUniqueId(756);
+    static constexpr const TSymbolUniqueId texture_0M1B                     = TSymbolUniqueId(757);
+    static constexpr const TSymbolUniqueId pt0M                             = TSymbolUniqueId(758);
+    static constexpr const TSymbolUniqueId textureProj_0M2B                 = TSymbolUniqueId(759);
+    static constexpr const TSymbolUniqueId textureProj_0M3B                 = TSymbolUniqueId(760);
+    static constexpr const TSymbolUniqueId rgb_2_yuv_2B0G                   = TSymbolUniqueId(761);
+    static constexpr const TSymbolUniqueId pt0G                             = TSymbolUniqueId(762);
+    static constexpr const TSymbolUniqueId yuv_2_rgb_2B0G                   = TSymbolUniqueId(763);
+    static constexpr const TSymbolUniqueId textureSize_0M0C                 = TSymbolUniqueId(764);
+    static constexpr const TSymbolUniqueId texelFetch_0M1C0C                = TSymbolUniqueId(765);
+    static constexpr const TSymbolUniqueId texture_0H1B0B                   = TSymbolUniqueId(766);
+    static constexpr const TSymbolUniqueId texture_0P1B0B                   = TSymbolUniqueId(767);
+    static constexpr const TSymbolUniqueId texture_0U1B0B                   = TSymbolUniqueId(768);
+    static constexpr const TSymbolUniqueId texture_0I2B0B                   = TSymbolUniqueId(769);
+    static constexpr const TSymbolUniqueId texture_0Q2B0B                   = TSymbolUniqueId(770);
+    static constexpr const TSymbolUniqueId texture_0V2B0B                   = TSymbolUniqueId(771);
+    static constexpr const TSymbolUniqueId texture_0J2B0B                   = TSymbolUniqueId(772);
+    static constexpr const TSymbolUniqueId texture_0R2B0B                   = TSymbolUniqueId(773);
+    static constexpr const TSymbolUniqueId texture_0W2B0B                   = TSymbolUniqueId(774);
+    static constexpr const TSymbolUniqueId texture_0K2B0B                   = TSymbolUniqueId(775);
+    static constexpr const TSymbolUniqueId texture_0S2B0B                   = TSymbolUniqueId(776);
+    static constexpr const TSymbolUniqueId texture_0X2B0B                   = TSymbolUniqueId(777);
+    static constexpr const TSymbolUniqueId textureProj_0H2B0B               = TSymbolUniqueId(778);
+    static constexpr const TSymbolUniqueId textureProj_0P2B0B               = TSymbolUniqueId(779);
+    static constexpr const TSymbolUniqueId textureProj_0U2B0B               = TSymbolUniqueId(780);
+    static constexpr const TSymbolUniqueId textureProj_0H3B0B               = TSymbolUniqueId(781);
+    static constexpr const TSymbolUniqueId textureProj_0P3B0B               = TSymbolUniqueId(782);
+    static constexpr const TSymbolUniqueId textureProj_0U3B0B               = TSymbolUniqueId(783);
+    static constexpr const TSymbolUniqueId textureProj_0I3B0B               = TSymbolUniqueId(784);
+    static constexpr const TSymbolUniqueId textureProj_0Q3B0B               = TSymbolUniqueId(785);
+    static constexpr const TSymbolUniqueId textureProj_0V3B0B               = TSymbolUniqueId(786);
+    static constexpr const TSymbolUniqueId texture_0Z2B0B                   = TSymbolUniqueId(787);
+    static constexpr const TSymbolUniqueId texture_0a3B0B                   = TSymbolUniqueId(788);
+    static constexpr const TSymbolUniqueId textureProj_0Z3B0B               = TSymbolUniqueId(789);
+    static constexpr const TSymbolUniqueId texture_0L1B0B                   = TSymbolUniqueId(790);
+    static constexpr const TSymbolUniqueId textureProj_0L2B0B               = TSymbolUniqueId(791);
+    static constexpr const TSymbolUniqueId textureProj_0L3B0B               = TSymbolUniqueId(792);
+    static constexpr const TSymbolUniqueId texture_0M1B0B                   = TSymbolUniqueId(793);
+    static constexpr const TSymbolUniqueId textureProj_0M2B0B               = TSymbolUniqueId(794);
+    static constexpr const TSymbolUniqueId textureProj_0M3B0B               = TSymbolUniqueId(795);
+    static constexpr const TSymbolUniqueId texelFetch_0O1C0C                = TSymbolUniqueId(796);
+    static constexpr const TSymbolUniqueId texelFetch_0T1C0C                = TSymbolUniqueId(797);
+    static constexpr const TSymbolUniqueId texelFetch_0Y1C0C                = TSymbolUniqueId(798);
+    static constexpr const TSymbolUniqueId textureGather_0H1B               = TSymbolUniqueId(799);
+    static constexpr const TSymbolUniqueId textureGather_0P1B               = TSymbolUniqueId(800);
+    static constexpr const TSymbolUniqueId textureGather_0U1B               = TSymbolUniqueId(801);
+    static constexpr const TSymbolUniqueId textureGather_0H1B0C             = TSymbolUniqueId(802);
+    static constexpr const TSymbolUniqueId textureGather_0P1B0C             = TSymbolUniqueId(803);
+    static constexpr const TSymbolUniqueId textureGather_0U1B0C             = TSymbolUniqueId(804);
+    static constexpr const TSymbolUniqueId textureGather_0K2B               = TSymbolUniqueId(805);
+    static constexpr const TSymbolUniqueId textureGather_0S2B               = TSymbolUniqueId(806);
+    static constexpr const TSymbolUniqueId textureGather_0X2B               = TSymbolUniqueId(807);
+    static constexpr const TSymbolUniqueId textureGather_0K2B0C             = TSymbolUniqueId(808);
+    static constexpr const TSymbolUniqueId textureGather_0S2B0C             = TSymbolUniqueId(809);
+    static constexpr const TSymbolUniqueId textureGather_0X2B0C             = TSymbolUniqueId(810);
+    static constexpr const TSymbolUniqueId textureGather_0J2B               = TSymbolUniqueId(811);
+    static constexpr const TSymbolUniqueId textureGather_0R2B               = TSymbolUniqueId(812);
+    static constexpr const TSymbolUniqueId textureGather_0W2B               = TSymbolUniqueId(813);
+    static constexpr const TSymbolUniqueId textureGather_0J2B0C             = TSymbolUniqueId(814);
+    static constexpr const TSymbolUniqueId textureGather_0R2B0C             = TSymbolUniqueId(815);
+    static constexpr const TSymbolUniqueId textureGather_0W2B0C             = TSymbolUniqueId(816);
+    static constexpr const TSymbolUniqueId textureGather_0Z1B               = TSymbolUniqueId(817);
+    static constexpr const TSymbolUniqueId textureGather_0Z1B0B             = TSymbolUniqueId(818);
+    static constexpr const TSymbolUniqueId textureGather_0b2B               = TSymbolUniqueId(819);
+    static constexpr const TSymbolUniqueId textureGather_0b2B0B             = TSymbolUniqueId(820);
+    static constexpr const TSymbolUniqueId textureGather_0a2B               = TSymbolUniqueId(821);
+    static constexpr const TSymbolUniqueId textureGather_0a2B0B             = TSymbolUniqueId(822);
+    static constexpr const TSymbolUniqueId textureGatherOffset_0H1B1C       = TSymbolUniqueId(823);
+    static constexpr const TSymbolUniqueId textureGatherOffset_0P1B1C       = TSymbolUniqueId(824);
+    static constexpr const TSymbolUniqueId textureGatherOffset_0U1B1C       = TSymbolUniqueId(825);
+    static constexpr const TSymbolUniqueId textureGatherOffset_0H1B1C0C     = TSymbolUniqueId(826);
+    static constexpr const TSymbolUniqueId textureGatherOffset_0P1B1C0C     = TSymbolUniqueId(827);
+    static constexpr const TSymbolUniqueId textureGatherOffset_0U1B1C0C     = TSymbolUniqueId(828);
+    static constexpr const TSymbolUniqueId textureGatherOffset_0K2B1C       = TSymbolUniqueId(829);
+    static constexpr const TSymbolUniqueId textureGatherOffset_0S2B1C       = TSymbolUniqueId(830);
+    static constexpr const TSymbolUniqueId textureGatherOffset_0X2B1C       = TSymbolUniqueId(831);
+    static constexpr const TSymbolUniqueId textureGatherOffset_0K2B1C0C     = TSymbolUniqueId(832);
+    static constexpr const TSymbolUniqueId textureGatherOffset_0S2B1C0C     = TSymbolUniqueId(833);
+    static constexpr const TSymbolUniqueId textureGatherOffset_0X2B1C0C     = TSymbolUniqueId(834);
+    static constexpr const TSymbolUniqueId textureGatherOffset_0Z1B0B1C     = TSymbolUniqueId(835);
+    static constexpr const TSymbolUniqueId textureGatherOffset_0b2B0B1C     = TSymbolUniqueId(836);
+    static constexpr const TSymbolUniqueId dFdx_0B                          = TSymbolUniqueId(837);
+    static constexpr const TSymbolUniqueId dFdx_1B                          = TSymbolUniqueId(838);
+    static constexpr const TSymbolUniqueId dFdx_2B                          = TSymbolUniqueId(839);
+    static constexpr const TSymbolUniqueId dFdx_3B                          = TSymbolUniqueId(840);
+    static constexpr const TSymbolUniqueId dFdy_0B                          = TSymbolUniqueId(841);
+    static constexpr const TSymbolUniqueId dFdy_1B                          = TSymbolUniqueId(842);
+    static constexpr const TSymbolUniqueId dFdy_2B                          = TSymbolUniqueId(843);
+    static constexpr const TSymbolUniqueId dFdy_3B                          = TSymbolUniqueId(844);
+    static constexpr const TSymbolUniqueId fwidth_0B                        = TSymbolUniqueId(845);
+    static constexpr const TSymbolUniqueId fwidth_1B                        = TSymbolUniqueId(846);
+    static constexpr const TSymbolUniqueId fwidth_2B                        = TSymbolUniqueId(847);
+    static constexpr const TSymbolUniqueId fwidth_3B                        = TSymbolUniqueId(848);
+    static constexpr const TSymbolUniqueId atomicCounter_0F                 = TSymbolUniqueId(849);
+    static constexpr const TSymbolUniqueId pt0F                             = TSymbolUniqueId(850);
+    static constexpr const TSymbolUniqueId atomicCounterIncrement_0F        = TSymbolUniqueId(851);
+    static constexpr const TSymbolUniqueId atomicCounterDecrement_0F        = TSymbolUniqueId(852);
+    static constexpr const TSymbolUniqueId atomicAdd_0D0D                   = TSymbolUniqueId(853);
+    static constexpr const TSymbolUniqueId pt_io_0D                         = TSymbolUniqueId(854);
+    static constexpr const TSymbolUniqueId atomicAdd_0C0C                   = TSymbolUniqueId(855);
+    static constexpr const TSymbolUniqueId pt_io_0C                         = TSymbolUniqueId(856);
+    static constexpr const TSymbolUniqueId atomicMin_0D0D                   = TSymbolUniqueId(857);
+    static constexpr const TSymbolUniqueId atomicMin_0C0C                   = TSymbolUniqueId(858);
+    static constexpr const TSymbolUniqueId atomicMax_0D0D                   = TSymbolUniqueId(859);
+    static constexpr const TSymbolUniqueId atomicMax_0C0C                   = TSymbolUniqueId(860);
+    static constexpr const TSymbolUniqueId atomicAnd_0D0D                   = TSymbolUniqueId(861);
+    static constexpr const TSymbolUniqueId atomicAnd_0C0C                   = TSymbolUniqueId(862);
+    static constexpr const TSymbolUniqueId atomicOr_0D0D                    = TSymbolUniqueId(863);
+    static constexpr const TSymbolUniqueId atomicOr_0C0C                    = TSymbolUniqueId(864);
+    static constexpr const TSymbolUniqueId atomicXor_0D0D                   = TSymbolUniqueId(865);
+    static constexpr const TSymbolUniqueId atomicXor_0C0C                   = TSymbolUniqueId(866);
+    static constexpr const TSymbolUniqueId atomicExchange_0D0D              = TSymbolUniqueId(867);
+    static constexpr const TSymbolUniqueId atomicExchange_0C0C              = TSymbolUniqueId(868);
+    static constexpr const TSymbolUniqueId atomicCompSwap_0D0D0D            = TSymbolUniqueId(869);
+    static constexpr const TSymbolUniqueId atomicCompSwap_0C0C0C            = TSymbolUniqueId(870);
+    static constexpr const TSymbolUniqueId imageSize_0c                     = TSymbolUniqueId(871);
+    static constexpr const TSymbolUniqueId pt0c                             = TSymbolUniqueId(872);
+    static constexpr const TSymbolUniqueId imageSize_0d                     = TSymbolUniqueId(873);
+    static constexpr const TSymbolUniqueId pt0d                             = TSymbolUniqueId(874);
+    static constexpr const TSymbolUniqueId imageSize_0e                     = TSymbolUniqueId(875);
+    static constexpr const TSymbolUniqueId pt0e                             = TSymbolUniqueId(876);
+    static constexpr const TSymbolUniqueId imageSize_0f                     = TSymbolUniqueId(877);
+    static constexpr const TSymbolUniqueId pt0f                             = TSymbolUniqueId(878);
+    static constexpr const TSymbolUniqueId imageSize_0g                     = TSymbolUniqueId(879);
+    static constexpr const TSymbolUniqueId pt0g                             = TSymbolUniqueId(880);
+    static constexpr const TSymbolUniqueId imageSize_0h                     = TSymbolUniqueId(881);
+    static constexpr const TSymbolUniqueId pt0h                             = TSymbolUniqueId(882);
+    static constexpr const TSymbolUniqueId imageSize_0i                     = TSymbolUniqueId(883);
+    static constexpr const TSymbolUniqueId pt0i                             = TSymbolUniqueId(884);
+    static constexpr const TSymbolUniqueId imageSize_0j                     = TSymbolUniqueId(885);
+    static constexpr const TSymbolUniqueId pt0j                             = TSymbolUniqueId(886);
+    static constexpr const TSymbolUniqueId imageSize_0k                     = TSymbolUniqueId(887);
+    static constexpr const TSymbolUniqueId pt0k                             = TSymbolUniqueId(888);
+    static constexpr const TSymbolUniqueId imageSize_0l                     = TSymbolUniqueId(889);
+    static constexpr const TSymbolUniqueId pt0l                             = TSymbolUniqueId(890);
+    static constexpr const TSymbolUniqueId imageSize_0m                     = TSymbolUniqueId(891);
+    static constexpr const TSymbolUniqueId pt0m                             = TSymbolUniqueId(892);
+    static constexpr const TSymbolUniqueId imageSize_0n                     = TSymbolUniqueId(893);
+    static constexpr const TSymbolUniqueId pt0n                             = TSymbolUniqueId(894);
+    static constexpr const TSymbolUniqueId imageLoad_0c1C                   = TSymbolUniqueId(895);
+    static constexpr const TSymbolUniqueId imageLoad_0d1C                   = TSymbolUniqueId(896);
+    static constexpr const TSymbolUniqueId imageLoad_0e1C                   = TSymbolUniqueId(897);
+    static constexpr const TSymbolUniqueId imageLoad_0f2C                   = TSymbolUniqueId(898);
+    static constexpr const TSymbolUniqueId imageLoad_0g2C                   = TSymbolUniqueId(899);
+    static constexpr const TSymbolUniqueId imageLoad_0h2C                   = TSymbolUniqueId(900);
+    static constexpr const TSymbolUniqueId imageLoad_0i2C                   = TSymbolUniqueId(901);
+    static constexpr const TSymbolUniqueId imageLoad_0j2C                   = TSymbolUniqueId(902);
+    static constexpr const TSymbolUniqueId imageLoad_0k2C                   = TSymbolUniqueId(903);
+    static constexpr const TSymbolUniqueId imageLoad_0l2C                   = TSymbolUniqueId(904);
+    static constexpr const TSymbolUniqueId imageLoad_0m2C                   = TSymbolUniqueId(905);
+    static constexpr const TSymbolUniqueId imageLoad_0n2C                   = TSymbolUniqueId(906);
+    static constexpr const TSymbolUniqueId imageStore_0c1C3B                = TSymbolUniqueId(907);
+    static constexpr const TSymbolUniqueId imageStore_0d1C3C                = TSymbolUniqueId(908);
+    static constexpr const TSymbolUniqueId imageStore_0e1C3D                = TSymbolUniqueId(909);
+    static constexpr const TSymbolUniqueId imageStore_0f2C3B                = TSymbolUniqueId(910);
+    static constexpr const TSymbolUniqueId imageStore_0g2C3C                = TSymbolUniqueId(911);
+    static constexpr const TSymbolUniqueId imageStore_0h2C3D                = TSymbolUniqueId(912);
+    static constexpr const TSymbolUniqueId imageStore_0i2C3B                = TSymbolUniqueId(913);
+    static constexpr const TSymbolUniqueId imageStore_0j2C3C                = TSymbolUniqueId(914);
+    static constexpr const TSymbolUniqueId imageStore_0k2C3D                = TSymbolUniqueId(915);
+    static constexpr const TSymbolUniqueId imageStore_0l2C3B                = TSymbolUniqueId(916);
+    static constexpr const TSymbolUniqueId imageStore_0m2C3C                = TSymbolUniqueId(917);
+    static constexpr const TSymbolUniqueId imageStore_0n2C3D                = TSymbolUniqueId(918);
+    static constexpr const TSymbolUniqueId memoryBarrier_                   = TSymbolUniqueId(919);
+    static constexpr const TSymbolUniqueId memoryBarrierAtomicCounter_      = TSymbolUniqueId(920);
+    static constexpr const TSymbolUniqueId memoryBarrierBuffer_             = TSymbolUniqueId(921);
+    static constexpr const TSymbolUniqueId memoryBarrierImage_              = TSymbolUniqueId(922);
+    static constexpr const TSymbolUniqueId barrier_                         = TSymbolUniqueId(923);
+    static constexpr const TSymbolUniqueId memoryBarrierShared_             = TSymbolUniqueId(924);
+    static constexpr const TSymbolUniqueId groupMemoryBarrier_              = TSymbolUniqueId(925);
+    static constexpr const TSymbolUniqueId EmitVertex_                      = TSymbolUniqueId(926);
+    static constexpr const TSymbolUniqueId EndPrimitive_                    = TSymbolUniqueId(927);
+    static constexpr const TSymbolUniqueId gl_DepthRangeParameters          = TSymbolUniqueId(928);
+    static constexpr const TSymbolUniqueId gl_DepthRange                    = TSymbolUniqueId(929);
+    static constexpr const TSymbolUniqueId gl_MaxVertexAttribs              = TSymbolUniqueId(930);
+    static constexpr const TSymbolUniqueId gl_MaxVertexUniformVectors       = TSymbolUniqueId(931);
+    static constexpr const TSymbolUniqueId gl_MaxVertexTextureImageUnits    = TSymbolUniqueId(932);
+    static constexpr const TSymbolUniqueId gl_MaxCombinedTextureImageUnits  = TSymbolUniqueId(933);
+    static constexpr const TSymbolUniqueId gl_MaxTextureImageUnits          = TSymbolUniqueId(934);
+    static constexpr const TSymbolUniqueId gl_MaxFragmentUniformVectors     = TSymbolUniqueId(935);
+    static constexpr const TSymbolUniqueId gl_MaxVaryingVectors             = TSymbolUniqueId(936);
+    static constexpr const TSymbolUniqueId gl_MaxDrawBuffers                = TSymbolUniqueId(937);
+    static constexpr const TSymbolUniqueId gl_MaxDualSourceDrawBuffersEXT   = TSymbolUniqueId(938);
+    static constexpr const TSymbolUniqueId gl_MaxVertexOutputVectors        = TSymbolUniqueId(939);
+    static constexpr const TSymbolUniqueId gl_MaxFragmentInputVectors       = TSymbolUniqueId(940);
+    static constexpr const TSymbolUniqueId gl_MinProgramTexelOffset         = TSymbolUniqueId(941);
+    static constexpr const TSymbolUniqueId gl_MaxProgramTexelOffset         = TSymbolUniqueId(942);
+    static constexpr const TSymbolUniqueId gl_MaxImageUnits                 = TSymbolUniqueId(943);
+    static constexpr const TSymbolUniqueId gl_MaxVertexImageUniforms        = TSymbolUniqueId(944);
+    static constexpr const TSymbolUniqueId gl_MaxFragmentImageUniforms      = TSymbolUniqueId(945);
+    static constexpr const TSymbolUniqueId gl_MaxComputeImageUniforms       = TSymbolUniqueId(946);
+    static constexpr const TSymbolUniqueId gl_MaxCombinedImageUniforms      = TSymbolUniqueId(947);
     static constexpr const TSymbolUniqueId gl_MaxCombinedShaderOutputResources =
-        TSymbolUniqueId(874);
-    static constexpr const TSymbolUniqueId gl_MaxComputeWorkGroupCount       = TSymbolUniqueId(875);
-    static constexpr const TSymbolUniqueId gl_MaxComputeWorkGroupSize        = TSymbolUniqueId(876);
-    static constexpr const TSymbolUniqueId gl_MaxComputeUniformComponents    = TSymbolUniqueId(877);
-    static constexpr const TSymbolUniqueId gl_MaxComputeTextureImageUnits    = TSymbolUniqueId(878);
-    static constexpr const TSymbolUniqueId gl_MaxComputeAtomicCounters       = TSymbolUniqueId(879);
-    static constexpr const TSymbolUniqueId gl_MaxComputeAtomicCounterBuffers = TSymbolUniqueId(880);
-    static constexpr const TSymbolUniqueId gl_MaxVertexAtomicCounters        = TSymbolUniqueId(881);
-    static constexpr const TSymbolUniqueId gl_MaxFragmentAtomicCounters      = TSymbolUniqueId(882);
-    static constexpr const TSymbolUniqueId gl_MaxCombinedAtomicCounters      = TSymbolUniqueId(883);
-    static constexpr const TSymbolUniqueId gl_MaxAtomicCounterBindings       = TSymbolUniqueId(884);
-    static constexpr const TSymbolUniqueId gl_MaxVertexAtomicCounterBuffers  = TSymbolUniqueId(885);
+        TSymbolUniqueId(948);
+    static constexpr const TSymbolUniqueId gl_MaxComputeWorkGroupCount       = TSymbolUniqueId(949);
+    static constexpr const TSymbolUniqueId gl_MaxComputeWorkGroupSize        = TSymbolUniqueId(950);
+    static constexpr const TSymbolUniqueId gl_MaxComputeUniformComponents    = TSymbolUniqueId(951);
+    static constexpr const TSymbolUniqueId gl_MaxComputeTextureImageUnits    = TSymbolUniqueId(952);
+    static constexpr const TSymbolUniqueId gl_MaxComputeAtomicCounters       = TSymbolUniqueId(953);
+    static constexpr const TSymbolUniqueId gl_MaxComputeAtomicCounterBuffers = TSymbolUniqueId(954);
+    static constexpr const TSymbolUniqueId gl_MaxVertexAtomicCounters        = TSymbolUniqueId(955);
+    static constexpr const TSymbolUniqueId gl_MaxFragmentAtomicCounters      = TSymbolUniqueId(956);
+    static constexpr const TSymbolUniqueId gl_MaxCombinedAtomicCounters      = TSymbolUniqueId(957);
+    static constexpr const TSymbolUniqueId gl_MaxAtomicCounterBindings       = TSymbolUniqueId(958);
+    static constexpr const TSymbolUniqueId gl_MaxVertexAtomicCounterBuffers  = TSymbolUniqueId(959);
     static constexpr const TSymbolUniqueId gl_MaxFragmentAtomicCounterBuffers =
-        TSymbolUniqueId(886);
+        TSymbolUniqueId(960);
     static constexpr const TSymbolUniqueId gl_MaxCombinedAtomicCounterBuffers =
-        TSymbolUniqueId(887);
-    static constexpr const TSymbolUniqueId gl_MaxAtomicCounterBufferSize   = TSymbolUniqueId(888);
-    static constexpr const TSymbolUniqueId gl_MaxGeometryInputComponents   = TSymbolUniqueId(889);
-    static constexpr const TSymbolUniqueId gl_MaxGeometryOutputComponents  = TSymbolUniqueId(890);
-    static constexpr const TSymbolUniqueId gl_MaxGeometryImageUniforms     = TSymbolUniqueId(891);
-    static constexpr const TSymbolUniqueId gl_MaxGeometryTextureImageUnits = TSymbolUniqueId(892);
-    static constexpr const TSymbolUniqueId gl_MaxGeometryOutputVertices    = TSymbolUniqueId(893);
+        TSymbolUniqueId(961);
+    static constexpr const TSymbolUniqueId gl_MaxAtomicCounterBufferSize   = TSymbolUniqueId(962);
+    static constexpr const TSymbolUniqueId gl_MaxGeometryInputComponents   = TSymbolUniqueId(963);
+    static constexpr const TSymbolUniqueId gl_MaxGeometryOutputComponents  = TSymbolUniqueId(964);
+    static constexpr const TSymbolUniqueId gl_MaxGeometryImageUniforms     = TSymbolUniqueId(965);
+    static constexpr const TSymbolUniqueId gl_MaxGeometryTextureImageUnits = TSymbolUniqueId(966);
+    static constexpr const TSymbolUniqueId gl_MaxGeometryOutputVertices    = TSymbolUniqueId(967);
     static constexpr const TSymbolUniqueId gl_MaxGeometryTotalOutputComponents =
-        TSymbolUniqueId(894);
-    static constexpr const TSymbolUniqueId gl_MaxGeometryUniformComponents = TSymbolUniqueId(895);
-    static constexpr const TSymbolUniqueId gl_MaxGeometryAtomicCounters    = TSymbolUniqueId(896);
+        TSymbolUniqueId(968);
+    static constexpr const TSymbolUniqueId gl_MaxGeometryUniformComponents = TSymbolUniqueId(969);
+    static constexpr const TSymbolUniqueId gl_MaxGeometryAtomicCounters    = TSymbolUniqueId(970);
     static constexpr const TSymbolUniqueId gl_MaxGeometryAtomicCounterBuffers =
-        TSymbolUniqueId(897);
-    static constexpr const TSymbolUniqueId gl_FragCoord             = TSymbolUniqueId(898);
-    static constexpr const TSymbolUniqueId gl_FrontFacing           = TSymbolUniqueId(899);
-    static constexpr const TSymbolUniqueId gl_PointCoord            = TSymbolUniqueId(900);
-    static constexpr const TSymbolUniqueId gl_FragColor             = TSymbolUniqueId(901);
-    static constexpr const TSymbolUniqueId gl_FragData              = TSymbolUniqueId(902);
-    static constexpr const TSymbolUniqueId gl_FragDepth             = TSymbolUniqueId(903);
-    static constexpr const TSymbolUniqueId gl_SecondaryFragColorEXT = TSymbolUniqueId(904);
-    static constexpr const TSymbolUniqueId gl_SecondaryFragDataEXT  = TSymbolUniqueId(905);
-    static constexpr const TSymbolUniqueId gl_FragDepthEXT          = TSymbolUniqueId(906);
-    static constexpr const TSymbolUniqueId gl_LastFragData          = TSymbolUniqueId(907);
-    static constexpr const TSymbolUniqueId gl_LastFragColor         = TSymbolUniqueId(908);
-    static constexpr const TSymbolUniqueId gl_LastFragDataNV        = TSymbolUniqueId(909);
-    static constexpr const TSymbolUniqueId gl_LastFragColorARM      = TSymbolUniqueId(910);
-    static constexpr const TSymbolUniqueId gl_PrimitiveID           = TSymbolUniqueId(911);
-    static constexpr const TSymbolUniqueId gl_Layer                 = TSymbolUniqueId(912);
-    static constexpr const TSymbolUniqueId gl_Position              = TSymbolUniqueId(913);
-    static constexpr const TSymbolUniqueId gl_PointSize             = TSymbolUniqueId(914);
-    static constexpr const TSymbolUniqueId gl_InstanceID            = TSymbolUniqueId(915);
-    static constexpr const TSymbolUniqueId gl_VertexID              = TSymbolUniqueId(916);
-    static constexpr const TSymbolUniqueId gl_ViewportIndex         = TSymbolUniqueId(917);
-    static constexpr const TSymbolUniqueId gl_LayerVS               = TSymbolUniqueId(918);
-    static constexpr const TSymbolUniqueId gl_NumWorkGroups         = TSymbolUniqueId(919);
-    static constexpr const TSymbolUniqueId gl_WorkGroupSize         = TSymbolUniqueId(920);
-    static constexpr const TSymbolUniqueId gl_WorkGroupID           = TSymbolUniqueId(921);
-    static constexpr const TSymbolUniqueId gl_LocalInvocationID     = TSymbolUniqueId(922);
-    static constexpr const TSymbolUniqueId gl_GlobalInvocationID    = TSymbolUniqueId(923);
-    static constexpr const TSymbolUniqueId gl_LocalInvocationIndex  = TSymbolUniqueId(924);
-    static constexpr const TSymbolUniqueId gl_PrimitiveIDIn         = TSymbolUniqueId(925);
-    static constexpr const TSymbolUniqueId gl_InvocationID          = TSymbolUniqueId(926);
-    static constexpr const TSymbolUniqueId gl_PrimitiveIDGS         = TSymbolUniqueId(927);
-    static constexpr const TSymbolUniqueId gl_LayerGS               = TSymbolUniqueId(928);
-    static constexpr const TSymbolUniqueId gl_PerVertex             = TSymbolUniqueId(929);
-    static constexpr const TSymbolUniqueId gl_in                    = TSymbolUniqueId(930);
-    static constexpr const TSymbolUniqueId gl_PerVertexOutBlock     = TSymbolUniqueId(931);
-    static constexpr const TSymbolUniqueId gl_PositionGS            = TSymbolUniqueId(932);
-    static constexpr const TSymbolUniqueId gl_ViewID_OVR            = TSymbolUniqueId(933);
-    static constexpr const TSymbolUniqueId gl_ViewID_OVRESSL1       = TSymbolUniqueId(934);
+        TSymbolUniqueId(971);
+    static constexpr const TSymbolUniqueId gl_FragCoord             = TSymbolUniqueId(972);
+    static constexpr const TSymbolUniqueId gl_FrontFacing           = TSymbolUniqueId(973);
+    static constexpr const TSymbolUniqueId gl_PointCoord            = TSymbolUniqueId(974);
+    static constexpr const TSymbolUniqueId gl_FragColor             = TSymbolUniqueId(975);
+    static constexpr const TSymbolUniqueId gl_FragData              = TSymbolUniqueId(976);
+    static constexpr const TSymbolUniqueId gl_FragDepth             = TSymbolUniqueId(977);
+    static constexpr const TSymbolUniqueId gl_SecondaryFragColorEXT = TSymbolUniqueId(978);
+    static constexpr const TSymbolUniqueId gl_SecondaryFragDataEXT  = TSymbolUniqueId(979);
+    static constexpr const TSymbolUniqueId gl_FragDepthEXT          = TSymbolUniqueId(980);
+    static constexpr const TSymbolUniqueId gl_LastFragData          = TSymbolUniqueId(981);
+    static constexpr const TSymbolUniqueId gl_LastFragColor         = TSymbolUniqueId(982);
+    static constexpr const TSymbolUniqueId gl_LastFragDataNV        = TSymbolUniqueId(983);
+    static constexpr const TSymbolUniqueId gl_LastFragColorARM      = TSymbolUniqueId(984);
+    static constexpr const TSymbolUniqueId gl_PrimitiveID           = TSymbolUniqueId(985);
+    static constexpr const TSymbolUniqueId gl_Layer                 = TSymbolUniqueId(986);
+    static constexpr const TSymbolUniqueId gl_Position              = TSymbolUniqueId(987);
+    static constexpr const TSymbolUniqueId gl_PointSize             = TSymbolUniqueId(988);
+    static constexpr const TSymbolUniqueId gl_InstanceID            = TSymbolUniqueId(989);
+    static constexpr const TSymbolUniqueId gl_VertexID              = TSymbolUniqueId(990);
+    static constexpr const TSymbolUniqueId gl_ViewportIndex         = TSymbolUniqueId(991);
+    static constexpr const TSymbolUniqueId gl_LayerVS               = TSymbolUniqueId(992);
+    static constexpr const TSymbolUniqueId gl_NumWorkGroups         = TSymbolUniqueId(993);
+    static constexpr const TSymbolUniqueId gl_WorkGroupSize         = TSymbolUniqueId(994);
+    static constexpr const TSymbolUniqueId gl_WorkGroupID           = TSymbolUniqueId(995);
+    static constexpr const TSymbolUniqueId gl_LocalInvocationID     = TSymbolUniqueId(996);
+    static constexpr const TSymbolUniqueId gl_GlobalInvocationID    = TSymbolUniqueId(997);
+    static constexpr const TSymbolUniqueId gl_LocalInvocationIndex  = TSymbolUniqueId(998);
+    static constexpr const TSymbolUniqueId gl_PrimitiveIDIn         = TSymbolUniqueId(999);
+    static constexpr const TSymbolUniqueId gl_InvocationID          = TSymbolUniqueId(1000);
+    static constexpr const TSymbolUniqueId gl_PrimitiveIDGS         = TSymbolUniqueId(1001);
+    static constexpr const TSymbolUniqueId gl_LayerGS               = TSymbolUniqueId(1002);
+    static constexpr const TSymbolUniqueId gl_PerVertex             = TSymbolUniqueId(1003);
+    static constexpr const TSymbolUniqueId gl_in                    = TSymbolUniqueId(1004);
+    static constexpr const TSymbolUniqueId gl_PerVertexOutBlock     = TSymbolUniqueId(1005);
+    static constexpr const TSymbolUniqueId gl_PositionGS            = TSymbolUniqueId(1006);
+    static constexpr const TSymbolUniqueId gl_ViewID_OVR            = TSymbolUniqueId(1007);
+    static constexpr const TSymbolUniqueId gl_ViewID_OVRESSL1       = TSymbolUniqueId(1008);
 
 };  // namespace BuiltInId
 
@@ -1051,11 +1125,12 @@ constexpr const TSymbolUniqueId BuiltInId::gl_PositionGS;
 constexpr const TSymbolUniqueId BuiltInId::gl_ViewID_OVR;
 constexpr const TSymbolUniqueId BuiltInId::gl_ViewID_OVRESSL1;
 
-const int TSymbolTable::kLastBuiltInId = 934;
+const int TSymbolTable::kLastBuiltInId = 1008;
 
 namespace BuiltInName
 {
 
+constexpr const ImmutableString _empty("");
 constexpr const ImmutableString EmitVertex("EmitVertex");
 constexpr const ImmutableString EmitVertex_("EmitVertex(");
 constexpr const ImmutableString EndPrimitive("EndPrimitive");
@@ -2156,1606 +2231,6 @@ constexpr const ImmutableString yuv_2_rgb_2B0G("yuv_2_rgb(2B0G");
 
 }  // namespace BuiltInName
 
-namespace BuiltInParameters
-{
-
-constexpr const TConstParameter *empty     = nullptr;
-constexpr const TConstParameter p0B0B0B[3] = {
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0B0B0E[3] = {
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0B0B1B[3] = {
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0B0B2B[3] = {
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p0B0B3B[3] = {
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>())};
-constexpr const TConstParameter p0B0B[2] = {
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0B0C[2] = {
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0B1B[2] = {
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0B2B[2] = {
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p0B3B[2] = {
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>())};
-constexpr const TConstParameter p0B[1] = {
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0B_o_0B[2] = {
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqOut, 1, 1>())};
-constexpr const TConstParameter p0B_o_0C[2] = {
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqOut, 1, 1>())};
-constexpr const TConstParameter p0C0C0C0C[4] = {
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0C0C0C[3] = {
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0C0C[2] = {
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0C0C_o_0C_o_0C[4] = {
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqOut, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqOut, 1, 1>())};
-constexpr const TConstParameter p0C[1] = {
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0D0C0C[3] = {
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0D0D0C0C[4] = {
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0D0D0D[3] = {
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0D0D[2] = {
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0D0D_o_0D[3] = {
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqOut, 1, 1>())};
-constexpr const TConstParameter p0D0D_o_0D_o_0D[4] = {
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqOut, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqOut, 1, 1>())};
-constexpr const TConstParameter p0D[1] = {
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0F[1] = {
-    TConstParameter(StaticType::Get<EbtAtomicCounter, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0H0C[2] = {
-    TConstParameter(StaticType::Get<EbtSampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0H1B0B1C[4] = {
-    TConstParameter(StaticType::Get<EbtSampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0H1B0B[3] = {
-    TConstParameter(StaticType::Get<EbtSampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0H1B0C[3] = {
-    TConstParameter(StaticType::Get<EbtSampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0H1B1B1B1C[5] = {
-    TConstParameter(StaticType::Get<EbtSampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0H1B1B1B[4] = {
-    TConstParameter(StaticType::Get<EbtSampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0H1B1C0B[4] = {
-    TConstParameter(StaticType::Get<EbtSampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0H1B1C0C[4] = {
-    TConstParameter(StaticType::Get<EbtSampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0H1B1C[3] = {
-    TConstParameter(StaticType::Get<EbtSampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0H1B[2] = {
-    TConstParameter(StaticType::Get<EbtSampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0H1C0C1C[4] = {
-    TConstParameter(StaticType::Get<EbtSampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0H1C0C[3] = {
-    TConstParameter(StaticType::Get<EbtSampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0H2B0B1C[4] = {
-    TConstParameter(StaticType::Get<EbtSampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0H2B0B[3] = {
-    TConstParameter(StaticType::Get<EbtSampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0H2B1B1B1C[5] = {
-    TConstParameter(StaticType::Get<EbtSampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0H2B1B1B[4] = {
-    TConstParameter(StaticType::Get<EbtSampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0H2B1C0B[4] = {
-    TConstParameter(StaticType::Get<EbtSampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0H2B1C[3] = {
-    TConstParameter(StaticType::Get<EbtSampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0H2B[2] = {
-    TConstParameter(StaticType::Get<EbtSampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p0H3B0B1C[4] = {
-    TConstParameter(StaticType::Get<EbtSampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0H3B0B[3] = {
-    TConstParameter(StaticType::Get<EbtSampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0H3B1B1B1C[5] = {
-    TConstParameter(StaticType::Get<EbtSampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0H3B1B1B[4] = {
-    TConstParameter(StaticType::Get<EbtSampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0H3B1C0B[4] = {
-    TConstParameter(StaticType::Get<EbtSampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0H3B1C[3] = {
-    TConstParameter(StaticType::Get<EbtSampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0H3B[2] = {
-    TConstParameter(StaticType::Get<EbtSampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>())};
-constexpr const TConstParameter p0I0C[2] = {
-    TConstParameter(StaticType::Get<EbtSampler3D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0I2B0B2C[4] = {
-    TConstParameter(StaticType::Get<EbtSampler3D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p0I2B0B[3] = {
-    TConstParameter(StaticType::Get<EbtSampler3D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0I2B2B2B2C[5] = {
-    TConstParameter(StaticType::Get<EbtSampler3D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p0I2B2B2B[4] = {
-    TConstParameter(StaticType::Get<EbtSampler3D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p0I2B2C0B[4] = {
-    TConstParameter(StaticType::Get<EbtSampler3D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0I2B2C[3] = {
-    TConstParameter(StaticType::Get<EbtSampler3D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p0I2B[2] = {
-    TConstParameter(StaticType::Get<EbtSampler3D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p0I2C0C2C[4] = {
-    TConstParameter(StaticType::Get<EbtSampler3D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p0I2C0C[3] = {
-    TConstParameter(StaticType::Get<EbtSampler3D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0I3B0B2C[4] = {
-    TConstParameter(StaticType::Get<EbtSampler3D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p0I3B0B[3] = {
-    TConstParameter(StaticType::Get<EbtSampler3D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0I3B2B2B2C[5] = {
-    TConstParameter(StaticType::Get<EbtSampler3D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p0I3B2B2B[4] = {
-    TConstParameter(StaticType::Get<EbtSampler3D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p0I3B2C0B[4] = {
-    TConstParameter(StaticType::Get<EbtSampler3D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0I3B2C[3] = {
-    TConstParameter(StaticType::Get<EbtSampler3D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p0I3B[2] = {
-    TConstParameter(StaticType::Get<EbtSampler3D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>())};
-constexpr const TConstParameter p0J0C[2] = {
-    TConstParameter(StaticType::Get<EbtSamplerCube, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0J2B0B[3] = {
-    TConstParameter(StaticType::Get<EbtSamplerCube, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0J2B0C[3] = {
-    TConstParameter(StaticType::Get<EbtSamplerCube, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0J2B2B2B[4] = {
-    TConstParameter(StaticType::Get<EbtSamplerCube, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p0J2B[2] = {
-    TConstParameter(StaticType::Get<EbtSamplerCube, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p0K0C[2] = {
-    TConstParameter(StaticType::Get<EbtSampler2DArray, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0K2B0B1C[4] = {
-    TConstParameter(StaticType::Get<EbtSampler2DArray, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0K2B0B[3] = {
-    TConstParameter(StaticType::Get<EbtSampler2DArray, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0K2B0C[3] = {
-    TConstParameter(StaticType::Get<EbtSampler2DArray, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0K2B1B1B1C[5] = {
-    TConstParameter(StaticType::Get<EbtSampler2DArray, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0K2B1B1B[4] = {
-    TConstParameter(StaticType::Get<EbtSampler2DArray, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0K2B1C0B[4] = {
-    TConstParameter(StaticType::Get<EbtSampler2DArray, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0K2B1C0C[4] = {
-    TConstParameter(StaticType::Get<EbtSampler2DArray, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0K2B1C[3] = {
-    TConstParameter(StaticType::Get<EbtSampler2DArray, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0K2B[2] = {
-    TConstParameter(StaticType::Get<EbtSampler2DArray, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p0K2C0C1C[4] = {
-    TConstParameter(StaticType::Get<EbtSampler2DArray, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0K2C0C[3] = {
-    TConstParameter(StaticType::Get<EbtSampler2DArray, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0L0C[2] = {
-    TConstParameter(StaticType::Get<EbtSamplerExternalOES, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0L1B0B[3] = {
-    TConstParameter(StaticType::Get<EbtSamplerExternalOES, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0L1B[2] = {
-    TConstParameter(StaticType::Get<EbtSamplerExternalOES, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0L1C0C[3] = {
-    TConstParameter(StaticType::Get<EbtSamplerExternalOES, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0L2B0B[3] = {
-    TConstParameter(StaticType::Get<EbtSamplerExternalOES, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0L2B[2] = {
-    TConstParameter(StaticType::Get<EbtSamplerExternalOES, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p0L3B0B[3] = {
-    TConstParameter(StaticType::Get<EbtSamplerExternalOES, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0L3B[2] = {
-    TConstParameter(StaticType::Get<EbtSamplerExternalOES, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>())};
-constexpr const TConstParameter p0M0C[2] = {
-    TConstParameter(StaticType::Get<EbtSamplerExternal2DY2YEXT, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0M1B0B[3] = {
-    TConstParameter(StaticType::Get<EbtSamplerExternal2DY2YEXT, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0M1B[2] = {
-    TConstParameter(StaticType::Get<EbtSamplerExternal2DY2YEXT, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0M1C0C[3] = {
-    TConstParameter(StaticType::Get<EbtSamplerExternal2DY2YEXT, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0M2B0B[3] = {
-    TConstParameter(StaticType::Get<EbtSamplerExternal2DY2YEXT, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0M2B[2] = {
-    TConstParameter(StaticType::Get<EbtSamplerExternal2DY2YEXT, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p0M3B0B[3] = {
-    TConstParameter(StaticType::Get<EbtSamplerExternal2DY2YEXT, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0M3B[2] = {
-    TConstParameter(StaticType::Get<EbtSamplerExternal2DY2YEXT, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>())};
-constexpr const TConstParameter p0N1B[2] = {
-    TConstParameter(StaticType::Get<EbtSampler2DRect, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0N2B[2] = {
-    TConstParameter(StaticType::Get<EbtSampler2DRect, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p0N3B[2] = {
-    TConstParameter(StaticType::Get<EbtSampler2DRect, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>())};
-constexpr const TConstParameter p0O1C0C[3] = {
-    TConstParameter(StaticType::Get<EbtSampler2DMS, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0O[1] = {
-    TConstParameter(StaticType::Get<EbtSampler2DMS, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0P0C[2] = {
-    TConstParameter(StaticType::Get<EbtISampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0P1B0B1C[4] = {
-    TConstParameter(StaticType::Get<EbtISampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0P1B0B[3] = {
-    TConstParameter(StaticType::Get<EbtISampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0P1B0C[3] = {
-    TConstParameter(StaticType::Get<EbtISampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0P1B1B1B1C[5] = {
-    TConstParameter(StaticType::Get<EbtISampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0P1B1B1B[4] = {
-    TConstParameter(StaticType::Get<EbtISampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0P1B1C0B[4] = {
-    TConstParameter(StaticType::Get<EbtISampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0P1B1C0C[4] = {
-    TConstParameter(StaticType::Get<EbtISampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0P1B1C[3] = {
-    TConstParameter(StaticType::Get<EbtISampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0P1B[2] = {
-    TConstParameter(StaticType::Get<EbtISampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0P1C0C1C[4] = {
-    TConstParameter(StaticType::Get<EbtISampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0P1C0C[3] = {
-    TConstParameter(StaticType::Get<EbtISampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0P2B0B1C[4] = {
-    TConstParameter(StaticType::Get<EbtISampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0P2B0B[3] = {
-    TConstParameter(StaticType::Get<EbtISampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0P2B1B1B1C[5] = {
-    TConstParameter(StaticType::Get<EbtISampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0P2B1B1B[4] = {
-    TConstParameter(StaticType::Get<EbtISampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0P2B1C0B[4] = {
-    TConstParameter(StaticType::Get<EbtISampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0P2B1C[3] = {
-    TConstParameter(StaticType::Get<EbtISampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0P2B[2] = {
-    TConstParameter(StaticType::Get<EbtISampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p0P3B0B1C[4] = {
-    TConstParameter(StaticType::Get<EbtISampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0P3B0B[3] = {
-    TConstParameter(StaticType::Get<EbtISampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0P3B1B1B1C[5] = {
-    TConstParameter(StaticType::Get<EbtISampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0P3B1B1B[4] = {
-    TConstParameter(StaticType::Get<EbtISampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0P3B1C0B[4] = {
-    TConstParameter(StaticType::Get<EbtISampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0P3B1C[3] = {
-    TConstParameter(StaticType::Get<EbtISampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0P3B[2] = {
-    TConstParameter(StaticType::Get<EbtISampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>())};
-constexpr const TConstParameter p0Q0C[2] = {
-    TConstParameter(StaticType::Get<EbtISampler3D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0Q2B0B2C[4] = {
-    TConstParameter(StaticType::Get<EbtISampler3D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p0Q2B0B[3] = {
-    TConstParameter(StaticType::Get<EbtISampler3D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0Q2B2B2B2C[5] = {
-    TConstParameter(StaticType::Get<EbtISampler3D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p0Q2B2B2B[4] = {
-    TConstParameter(StaticType::Get<EbtISampler3D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p0Q2B2C0B[4] = {
-    TConstParameter(StaticType::Get<EbtISampler3D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0Q2B2C[3] = {
-    TConstParameter(StaticType::Get<EbtISampler3D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p0Q2B[2] = {
-    TConstParameter(StaticType::Get<EbtISampler3D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p0Q2C0C2C[4] = {
-    TConstParameter(StaticType::Get<EbtISampler3D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p0Q2C0C[3] = {
-    TConstParameter(StaticType::Get<EbtISampler3D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0Q3B0B2C[4] = {
-    TConstParameter(StaticType::Get<EbtISampler3D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p0Q3B0B[3] = {
-    TConstParameter(StaticType::Get<EbtISampler3D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0Q3B2B2B2C[5] = {
-    TConstParameter(StaticType::Get<EbtISampler3D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p0Q3B2B2B[4] = {
-    TConstParameter(StaticType::Get<EbtISampler3D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p0Q3B2C0B[4] = {
-    TConstParameter(StaticType::Get<EbtISampler3D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0Q3B2C[3] = {
-    TConstParameter(StaticType::Get<EbtISampler3D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p0Q3B[2] = {
-    TConstParameter(StaticType::Get<EbtISampler3D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>())};
-constexpr const TConstParameter p0R0C[2] = {
-    TConstParameter(StaticType::Get<EbtISamplerCube, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0R2B0B[3] = {
-    TConstParameter(StaticType::Get<EbtISamplerCube, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0R2B0C[3] = {
-    TConstParameter(StaticType::Get<EbtISamplerCube, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0R2B2B2B[4] = {
-    TConstParameter(StaticType::Get<EbtISamplerCube, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p0R2B[2] = {
-    TConstParameter(StaticType::Get<EbtISamplerCube, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p0S0C[2] = {
-    TConstParameter(StaticType::Get<EbtISampler2DArray, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0S2B0B1C[4] = {
-    TConstParameter(StaticType::Get<EbtISampler2DArray, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0S2B0B[3] = {
-    TConstParameter(StaticType::Get<EbtISampler2DArray, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0S2B0C[3] = {
-    TConstParameter(StaticType::Get<EbtISampler2DArray, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0S2B1B1B1C[5] = {
-    TConstParameter(StaticType::Get<EbtISampler2DArray, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0S2B1B1B[4] = {
-    TConstParameter(StaticType::Get<EbtISampler2DArray, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0S2B1C0B[4] = {
-    TConstParameter(StaticType::Get<EbtISampler2DArray, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0S2B1C0C[4] = {
-    TConstParameter(StaticType::Get<EbtISampler2DArray, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0S2B1C[3] = {
-    TConstParameter(StaticType::Get<EbtISampler2DArray, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0S2B[2] = {
-    TConstParameter(StaticType::Get<EbtISampler2DArray, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p0S2C0C1C[4] = {
-    TConstParameter(StaticType::Get<EbtISampler2DArray, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0S2C0C[3] = {
-    TConstParameter(StaticType::Get<EbtISampler2DArray, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0T1C0C[3] = {
-    TConstParameter(StaticType::Get<EbtISampler2DMS, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0T[1] = {
-    TConstParameter(StaticType::Get<EbtISampler2DMS, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0U0C[2] = {
-    TConstParameter(StaticType::Get<EbtUSampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0U1B0B1C[4] = {
-    TConstParameter(StaticType::Get<EbtUSampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0U1B0B[3] = {
-    TConstParameter(StaticType::Get<EbtUSampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0U1B0C[3] = {
-    TConstParameter(StaticType::Get<EbtUSampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0U1B1B1B1C[5] = {
-    TConstParameter(StaticType::Get<EbtUSampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0U1B1B1B[4] = {
-    TConstParameter(StaticType::Get<EbtUSampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0U1B1C0B[4] = {
-    TConstParameter(StaticType::Get<EbtUSampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0U1B1C0C[4] = {
-    TConstParameter(StaticType::Get<EbtUSampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0U1B1C[3] = {
-    TConstParameter(StaticType::Get<EbtUSampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0U1B[2] = {
-    TConstParameter(StaticType::Get<EbtUSampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0U1C0C1C[4] = {
-    TConstParameter(StaticType::Get<EbtUSampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0U1C0C[3] = {
-    TConstParameter(StaticType::Get<EbtUSampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0U2B0B1C[4] = {
-    TConstParameter(StaticType::Get<EbtUSampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0U2B0B[3] = {
-    TConstParameter(StaticType::Get<EbtUSampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0U2B1B1B1C[5] = {
-    TConstParameter(StaticType::Get<EbtUSampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0U2B1B1B[4] = {
-    TConstParameter(StaticType::Get<EbtUSampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0U2B1C0B[4] = {
-    TConstParameter(StaticType::Get<EbtUSampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0U2B1C[3] = {
-    TConstParameter(StaticType::Get<EbtUSampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0U2B[2] = {
-    TConstParameter(StaticType::Get<EbtUSampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p0U3B0B1C[4] = {
-    TConstParameter(StaticType::Get<EbtUSampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0U3B0B[3] = {
-    TConstParameter(StaticType::Get<EbtUSampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0U3B1B1B1C[5] = {
-    TConstParameter(StaticType::Get<EbtUSampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0U3B1B1B[4] = {
-    TConstParameter(StaticType::Get<EbtUSampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0U3B1C0B[4] = {
-    TConstParameter(StaticType::Get<EbtUSampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0U3B1C[3] = {
-    TConstParameter(StaticType::Get<EbtUSampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0U3B[2] = {
-    TConstParameter(StaticType::Get<EbtUSampler2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>())};
-constexpr const TConstParameter p0V0C[2] = {
-    TConstParameter(StaticType::Get<EbtUSampler3D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0V2B0B2C[4] = {
-    TConstParameter(StaticType::Get<EbtUSampler3D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p0V2B0B[3] = {
-    TConstParameter(StaticType::Get<EbtUSampler3D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0V2B2B2B2C[5] = {
-    TConstParameter(StaticType::Get<EbtUSampler3D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p0V2B2B2B[4] = {
-    TConstParameter(StaticType::Get<EbtUSampler3D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p0V2B2C0B[4] = {
-    TConstParameter(StaticType::Get<EbtUSampler3D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0V2B2C[3] = {
-    TConstParameter(StaticType::Get<EbtUSampler3D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p0V2B[2] = {
-    TConstParameter(StaticType::Get<EbtUSampler3D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p0V2C0C2C[4] = {
-    TConstParameter(StaticType::Get<EbtUSampler3D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p0V2C0C[3] = {
-    TConstParameter(StaticType::Get<EbtUSampler3D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0V3B0B2C[4] = {
-    TConstParameter(StaticType::Get<EbtUSampler3D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p0V3B0B[3] = {
-    TConstParameter(StaticType::Get<EbtUSampler3D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0V3B2B2B2C[5] = {
-    TConstParameter(StaticType::Get<EbtUSampler3D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p0V3B2B2B[4] = {
-    TConstParameter(StaticType::Get<EbtUSampler3D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p0V3B2C0B[4] = {
-    TConstParameter(StaticType::Get<EbtUSampler3D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0V3B2C[3] = {
-    TConstParameter(StaticType::Get<EbtUSampler3D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p0V3B[2] = {
-    TConstParameter(StaticType::Get<EbtUSampler3D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>())};
-constexpr const TConstParameter p0W0C[2] = {
-    TConstParameter(StaticType::Get<EbtUSamplerCube, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0W2B0B[3] = {
-    TConstParameter(StaticType::Get<EbtUSamplerCube, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0W2B0C[3] = {
-    TConstParameter(StaticType::Get<EbtUSamplerCube, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0W2B2B2B[4] = {
-    TConstParameter(StaticType::Get<EbtUSamplerCube, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p0W2B[2] = {
-    TConstParameter(StaticType::Get<EbtUSamplerCube, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p0X0C[2] = {
-    TConstParameter(StaticType::Get<EbtUSampler2DArray, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0X2B0B1C[4] = {
-    TConstParameter(StaticType::Get<EbtUSampler2DArray, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0X2B0B[3] = {
-    TConstParameter(StaticType::Get<EbtUSampler2DArray, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0X2B0C[3] = {
-    TConstParameter(StaticType::Get<EbtUSampler2DArray, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0X2B1B1B1C[5] = {
-    TConstParameter(StaticType::Get<EbtUSampler2DArray, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0X2B1B1B[4] = {
-    TConstParameter(StaticType::Get<EbtUSampler2DArray, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0X2B1C0B[4] = {
-    TConstParameter(StaticType::Get<EbtUSampler2DArray, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0X2B1C0C[4] = {
-    TConstParameter(StaticType::Get<EbtUSampler2DArray, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0X2B1C[3] = {
-    TConstParameter(StaticType::Get<EbtUSampler2DArray, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0X2B[2] = {
-    TConstParameter(StaticType::Get<EbtUSampler2DArray, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p0X2C0C1C[4] = {
-    TConstParameter(StaticType::Get<EbtUSampler2DArray, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0X2C0C[3] = {
-    TConstParameter(StaticType::Get<EbtUSampler2DArray, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0Y1C0C[3] = {
-    TConstParameter(StaticType::Get<EbtUSampler2DMS, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0Y[1] = {
-    TConstParameter(StaticType::Get<EbtUSampler2DMS, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0Z0C[2] = {
-    TConstParameter(StaticType::Get<EbtSampler2DShadow, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0Z1B0B1C[4] = {
-    TConstParameter(StaticType::Get<EbtSampler2DShadow, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0Z1B0B[3] = {
-    TConstParameter(StaticType::Get<EbtSampler2DShadow, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0Z1B[2] = {
-    TConstParameter(StaticType::Get<EbtSampler2DShadow, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0Z2B0B1C[4] = {
-    TConstParameter(StaticType::Get<EbtSampler2DShadow, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0Z2B0B[3] = {
-    TConstParameter(StaticType::Get<EbtSampler2DShadow, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0Z2B1B1B1C[5] = {
-    TConstParameter(StaticType::Get<EbtSampler2DShadow, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0Z2B1B1B[4] = {
-    TConstParameter(StaticType::Get<EbtSampler2DShadow, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0Z2B1C0B[4] = {
-    TConstParameter(StaticType::Get<EbtSampler2DShadow, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0Z2B1C[3] = {
-    TConstParameter(StaticType::Get<EbtSampler2DShadow, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0Z2B[2] = {
-    TConstParameter(StaticType::Get<EbtSampler2DShadow, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p0Z3B0B1C[4] = {
-    TConstParameter(StaticType::Get<EbtSampler2DShadow, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0Z3B0B[3] = {
-    TConstParameter(StaticType::Get<EbtSampler2DShadow, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0Z3B1B1B1C[5] = {
-    TConstParameter(StaticType::Get<EbtSampler2DShadow, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0Z3B1B1B[4] = {
-    TConstParameter(StaticType::Get<EbtSampler2DShadow, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0Z3B1C0B[4] = {
-    TConstParameter(StaticType::Get<EbtSampler2DShadow, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0Z3B1C[3] = {
-    TConstParameter(StaticType::Get<EbtSampler2DShadow, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0Z3B[2] = {
-    TConstParameter(StaticType::Get<EbtSampler2DShadow, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>())};
-constexpr const TConstParameter p0a0C[2] = {
-    TConstParameter(StaticType::Get<EbtSamplerCubeShadow, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0a2B0B[3] = {
-    TConstParameter(StaticType::Get<EbtSamplerCubeShadow, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0a2B[2] = {
-    TConstParameter(StaticType::Get<EbtSamplerCubeShadow, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p0a3B0B[3] = {
-    TConstParameter(StaticType::Get<EbtSamplerCubeShadow, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0a3B2B2B[4] = {
-    TConstParameter(StaticType::Get<EbtSamplerCubeShadow, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p0a3B[2] = {
-    TConstParameter(StaticType::Get<EbtSamplerCubeShadow, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>())};
-constexpr const TConstParameter p0b0C[2] = {
-    TConstParameter(StaticType::Get<EbtSampler2DArrayShadow, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0b2B0B1C[4] = {
-    TConstParameter(StaticType::Get<EbtSampler2DArrayShadow, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0b2B0B[3] = {
-    TConstParameter(StaticType::Get<EbtSampler2DArrayShadow, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0b2B[2] = {
-    TConstParameter(StaticType::Get<EbtSampler2DArrayShadow, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p0b3B1B1B1C[5] = {
-    TConstParameter(StaticType::Get<EbtSampler2DArrayShadow, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0b3B1B1B[4] = {
-    TConstParameter(StaticType::Get<EbtSampler2DArrayShadow, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0b3B[2] = {
-    TConstParameter(StaticType::Get<EbtSampler2DArrayShadow, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>())};
-constexpr const TConstParameter p0c1C3B[3] = {
-    TConstParameter(StaticType::Get<EbtImage2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>())};
-constexpr const TConstParameter p0c1C[2] = {
-    TConstParameter(StaticType::Get<EbtImage2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0c[1] = {
-    TConstParameter(StaticType::Get<EbtImage2D, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0d1C3C[3] = {
-    TConstParameter(StaticType::Get<EbtIImage2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>())};
-constexpr const TConstParameter p0d1C[2] = {
-    TConstParameter(StaticType::Get<EbtIImage2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0d[1] = {
-    TConstParameter(StaticType::Get<EbtIImage2D, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0e1C3D[3] = {
-    TConstParameter(StaticType::Get<EbtUImage2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>())};
-constexpr const TConstParameter p0e1C[2] = {
-    TConstParameter(StaticType::Get<EbtUImage2D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p0e[1] = {
-    TConstParameter(StaticType::Get<EbtUImage2D, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0f2C3B[3] = {
-    TConstParameter(StaticType::Get<EbtImage3D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>())};
-constexpr const TConstParameter p0f2C[2] = {
-    TConstParameter(StaticType::Get<EbtImage3D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p0f[1] = {
-    TConstParameter(StaticType::Get<EbtImage3D, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0g2C3C[3] = {
-    TConstParameter(StaticType::Get<EbtIImage3D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>())};
-constexpr const TConstParameter p0g2C[2] = {
-    TConstParameter(StaticType::Get<EbtIImage3D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p0g[1] = {
-    TConstParameter(StaticType::Get<EbtIImage3D, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0h2C3D[3] = {
-    TConstParameter(StaticType::Get<EbtUImage3D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>())};
-constexpr const TConstParameter p0h2C[2] = {
-    TConstParameter(StaticType::Get<EbtUImage3D, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p0h[1] = {
-    TConstParameter(StaticType::Get<EbtUImage3D, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0i2C3B[3] = {
-    TConstParameter(StaticType::Get<EbtImage2DArray, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>())};
-constexpr const TConstParameter p0i2C[2] = {
-    TConstParameter(StaticType::Get<EbtImage2DArray, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p0i[1] = {
-    TConstParameter(StaticType::Get<EbtImage2DArray, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0j2C3C[3] = {
-    TConstParameter(StaticType::Get<EbtIImage2DArray, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>())};
-constexpr const TConstParameter p0j2C[2] = {
-    TConstParameter(StaticType::Get<EbtIImage2DArray, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p0j[1] = {
-    TConstParameter(StaticType::Get<EbtIImage2DArray, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0k2C3D[3] = {
-    TConstParameter(StaticType::Get<EbtUImage2DArray, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>())};
-constexpr const TConstParameter p0k2C[2] = {
-    TConstParameter(StaticType::Get<EbtUImage2DArray, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p0k[1] = {
-    TConstParameter(StaticType::Get<EbtUImage2DArray, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0l2C3B[3] = {
-    TConstParameter(StaticType::Get<EbtImageCube, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>())};
-constexpr const TConstParameter p0l2C[2] = {
-    TConstParameter(StaticType::Get<EbtImageCube, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p0l[1] = {
-    TConstParameter(StaticType::Get<EbtImageCube, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0m2C3C[3] = {
-    TConstParameter(StaticType::Get<EbtIImageCube, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>())};
-constexpr const TConstParameter p0m2C[2] = {
-    TConstParameter(StaticType::Get<EbtIImageCube, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p0m[1] = {
-    TConstParameter(StaticType::Get<EbtIImageCube, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p0n2C3D[3] = {
-    TConstParameter(StaticType::Get<EbtUImageCube, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>())};
-constexpr const TConstParameter p0n2C[2] = {
-    TConstParameter(StaticType::Get<EbtUImageCube, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p0n[1] = {
-    TConstParameter(StaticType::Get<EbtUImageCube, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p1B0B0B[3] = {
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p1B0B[2] = {
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p1B1B0B[3] = {
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p1B1B1B[3] = {
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p1B1B1E[3] = {
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p1B1B[2] = {
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p1B1C[2] = {
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p1B2B[2] = {
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p1B3B[2] = {
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>())};
-constexpr const TConstParameter p1B[1] = {
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p1B_o_1B[2] = {
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqOut, 2, 1>())};
-constexpr const TConstParameter p1B_o_1C[2] = {
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqOut, 2, 1>())};
-constexpr const TConstParameter p1C0C0C[3] = {
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p1C0C[2] = {
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p1C1C0C0C[4] = {
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p1C1C1C[3] = {
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p1C1C[2] = {
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p1C1C_o_1C_o_1C[4] = {
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqOut, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqOut, 2, 1>())};
-constexpr const TConstParameter p1C[1] = {
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p1D0C0C[3] = {
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p1D0D0D[3] = {
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p1D0D[2] = {
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p1D1D0C0C[4] = {
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p1D1D1D[3] = {
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p1D1D[2] = {
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p1D1D_o_1D[3] = {
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqOut, 2, 1>())};
-constexpr const TConstParameter p1D1D_o_1D_o_1D[4] = {
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqOut, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqOut, 2, 1>())};
-constexpr const TConstParameter p1D[1] = {
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p1E1E[2] = {
-    TConstParameter(StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 2, 1>()),
-    TConstParameter(StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p1E[1] = {
-    TConstParameter(StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p2B0B0B[3] = {
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p2B0B[2] = {
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p2B0G[2] = {
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtYuvCscStandardEXT, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p2B1B[2] = {
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p2B2B0B[3] = {
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p2B2B2B[3] = {
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p2B2B2E[3] = {
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p2B2B[2] = {
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p2B2C[2] = {
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p2B3B[2] = {
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>())};
-constexpr const TConstParameter p2B[1] = {
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p2B_o_2B[2] = {
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqOut, 3, 1>())};
-constexpr const TConstParameter p2B_o_2C[2] = {
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqOut, 3, 1>())};
-constexpr const TConstParameter p2C0C0C[3] = {
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p2C0C[2] = {
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p2C2C0C0C[4] = {
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p2C2C2C[3] = {
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p2C2C[2] = {
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p2C2C_o_2C_o_2C[4] = {
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqOut, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqOut, 3, 1>())};
-constexpr const TConstParameter p2C[1] = {
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p2D0C0C[3] = {
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p2D0D0D[3] = {
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p2D0D[2] = {
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p2D2D0C0C[4] = {
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p2D2D2D[3] = {
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p2D2D[2] = {
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p2D2D_o_2D[3] = {
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqOut, 3, 1>())};
-constexpr const TConstParameter p2D2D_o_2D_o_2D[4] = {
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqOut, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqOut, 3, 1>())};
-constexpr const TConstParameter p2D[1] = {
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p2E2E[2] = {
-    TConstParameter(StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 3, 1>()),
-    TConstParameter(StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p2E[1] = {
-    TConstParameter(StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p3B0B0B[3] = {
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p3B0B[2] = {
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p3B1B[2] = {
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>())};
-constexpr const TConstParameter p3B2B[2] = {
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>())};
-constexpr const TConstParameter p3B3B0B[3] = {
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p3B3B3B[3] = {
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>())};
-constexpr const TConstParameter p3B3B3E[3] = {
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 4, 1>())};
-constexpr const TConstParameter p3B3B[2] = {
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>())};
-constexpr const TConstParameter p3B3C[2] = {
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>())};
-constexpr const TConstParameter p3B[1] = {
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>())};
-constexpr const TConstParameter p3B_o_3B[2] = {
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqOut, 4, 1>())};
-constexpr const TConstParameter p3B_o_3C[2] = {
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqOut, 4, 1>())};
-constexpr const TConstParameter p3C0C0C[3] = {
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p3C0C[2] = {
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p3C3C0C0C[4] = {
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p3C3C3C[3] = {
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>())};
-constexpr const TConstParameter p3C3C[2] = {
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>())};
-constexpr const TConstParameter p3C3C_o_3C_o_3C[4] = {
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqOut, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqOut, 4, 1>())};
-constexpr const TConstParameter p3C[1] = {
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>())};
-constexpr const TConstParameter p3D0C0C[3] = {
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p3D0D0D[3] = {
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p3D0D[2] = {
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p3D3D0C0C[4] = {
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p3D3D3D[3] = {
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>())};
-constexpr const TConstParameter p3D3D[2] = {
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>())};
-constexpr const TConstParameter p3D3D_o_3D[3] = {
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqOut, 4, 1>())};
-constexpr const TConstParameter p3D3D_o_3D_o_3D[4] = {
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqOut, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqOut, 4, 1>())};
-constexpr const TConstParameter p3D[1] = {
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>())};
-constexpr const TConstParameter p3E3E[2] = {
-    TConstParameter(StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 4, 1>()),
-    TConstParameter(StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 4, 1>())};
-constexpr const TConstParameter p3E[1] = {
-    TConstParameter(StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 4, 1>())};
-constexpr const TConstParameter p5B5B[2] = {
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 2>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 2>())};
-constexpr const TConstParameter p5B[1] = {
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 2>())};
-constexpr const TConstParameter p6B6B[2] = {
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 2>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 2>())};
-constexpr const TConstParameter p6B[1] = {
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 2>())};
-constexpr const TConstParameter p7B7B[2] = {
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 2>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 2>())};
-constexpr const TConstParameter p7B[1] = {
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 2>())};
-constexpr const TConstParameter p9B9B[2] = {
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 3>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 3>())};
-constexpr const TConstParameter p9B[1] = {
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 3>())};
-constexpr const TConstParameter pABAB[2] = {
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 3>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 3>())};
-constexpr const TConstParameter pAB[1] = {
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 3>())};
-constexpr const TConstParameter pBBBB[2] = {
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 3>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 3>())};
-constexpr const TConstParameter pBB[1] = {
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 3>())};
-constexpr const TConstParameter pDBDB[2] = {
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 4>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 4>())};
-constexpr const TConstParameter pDB[1] = {
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 4>())};
-constexpr const TConstParameter pEBEB[2] = {
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 4>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 4>())};
-constexpr const TConstParameter pEB[1] = {
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 4>())};
-constexpr const TConstParameter pFBFB[2] = {
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 4>()),
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 4>())};
-constexpr const TConstParameter pFB[1] = {
-    TConstParameter(StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 4>())};
-constexpr const TConstParameter p_io_0C0C0C[3] = {
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqInOut, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p_io_0C0C[2] = {
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqInOut, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p_io_0D0D0D[3] = {
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqInOut, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 1, 1>())};
-constexpr const TConstParameter p_io_0D0D[2] = {
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqInOut, 1, 1>()),
-    TConstParameter(StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 1, 1>())};
-
-}  // namespace BuiltInParameters
-
-namespace UnmangledBuiltIns
-{
-
-constexpr const UnmangledBuiltIn ARB_texture_rectangle(TExtension::ARB_texture_rectangle);
-constexpr const UnmangledBuiltIn EXT_YUV_target(TExtension::EXT_YUV_target);
-constexpr const UnmangledBuiltIn EXT_geometry_shader(TExtension::EXT_geometry_shader);
-constexpr const UnmangledBuiltIn EXT_shader_texture_lod(TExtension::EXT_shader_texture_lod);
-constexpr const UnmangledBuiltIn OES_standard_derivatives(TExtension::OES_standard_derivatives);
-constexpr const UnmangledBuiltIn UNDEFINED(TExtension::UNDEFINED);
-
-}  // namespace UnmangledBuiltIns
-
 // TODO(oetuaho): Would be nice to make this a class instead of a namespace so that we could friend
 // this from TVariable. Now symbol constructors taking an id have to be public even though they're
 // not supposed to be accessible from outside of here. http://anglebug.com/2390
@@ -3925,6 +2400,402 @@ constexpr const TVariable kVar_gl_WorkGroupSize(
     SymbolType::BuiltIn,
     TExtension::UNDEFINED,
     StaticType::Get<EbtUInt, EbpUndefined, EvqWorkGroupSize, 3, 1>());
+constexpr const TVariable kVar_pt0B(BuiltInId::pt0B,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>());
+constexpr const TVariable kVar_pt0C(BuiltInId::pt0C,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>());
+constexpr const TVariable kVar_pt0D(BuiltInId::pt0D,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 1, 1>());
+constexpr const TVariable kVar_pt0E(BuiltInId::pt0E,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 1, 1>());
+constexpr const TVariable kVar_pt0F(
+    BuiltInId::pt0F,
+    BuiltInName::_empty,
+    SymbolType::BuiltIn,
+    TExtension::UNDEFINED,
+    StaticType::Get<EbtAtomicCounter, EbpUndefined, EvqGlobal, 1, 1>());
+constexpr const TVariable kVar_pt0G(
+    BuiltInId::pt0G,
+    BuiltInName::_empty,
+    SymbolType::BuiltIn,
+    TExtension::UNDEFINED,
+    StaticType::Get<EbtYuvCscStandardEXT, EbpUndefined, EvqGlobal, 1, 1>());
+constexpr const TVariable kVar_pt0H(BuiltInId::pt0H,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtSampler2D, EbpUndefined, EvqGlobal, 1, 1>());
+constexpr const TVariable kVar_pt0I(BuiltInId::pt0I,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtSampler3D, EbpUndefined, EvqGlobal, 1, 1>());
+constexpr const TVariable kVar_pt0J(
+    BuiltInId::pt0J,
+    BuiltInName::_empty,
+    SymbolType::BuiltIn,
+    TExtension::UNDEFINED,
+    StaticType::Get<EbtSamplerCube, EbpUndefined, EvqGlobal, 1, 1>());
+constexpr const TVariable kVar_pt0K(
+    BuiltInId::pt0K,
+    BuiltInName::_empty,
+    SymbolType::BuiltIn,
+    TExtension::UNDEFINED,
+    StaticType::Get<EbtSampler2DArray, EbpUndefined, EvqGlobal, 1, 1>());
+constexpr const TVariable kVar_pt0L(
+    BuiltInId::pt0L,
+    BuiltInName::_empty,
+    SymbolType::BuiltIn,
+    TExtension::UNDEFINED,
+    StaticType::Get<EbtSamplerExternalOES, EbpUndefined, EvqGlobal, 1, 1>());
+constexpr const TVariable kVar_pt0M(
+    BuiltInId::pt0M,
+    BuiltInName::_empty,
+    SymbolType::BuiltIn,
+    TExtension::UNDEFINED,
+    StaticType::Get<EbtSamplerExternal2DY2YEXT, EbpUndefined, EvqGlobal, 1, 1>());
+constexpr const TVariable kVar_pt0N(
+    BuiltInId::pt0N,
+    BuiltInName::_empty,
+    SymbolType::BuiltIn,
+    TExtension::UNDEFINED,
+    StaticType::Get<EbtSampler2DRect, EbpUndefined, EvqGlobal, 1, 1>());
+constexpr const TVariable kVar_pt0O(
+    BuiltInId::pt0O,
+    BuiltInName::_empty,
+    SymbolType::BuiltIn,
+    TExtension::UNDEFINED,
+    StaticType::Get<EbtSampler2DMS, EbpUndefined, EvqGlobal, 1, 1>());
+constexpr const TVariable kVar_pt0P(
+    BuiltInId::pt0P,
+    BuiltInName::_empty,
+    SymbolType::BuiltIn,
+    TExtension::UNDEFINED,
+    StaticType::Get<EbtISampler2D, EbpUndefined, EvqGlobal, 1, 1>());
+constexpr const TVariable kVar_pt0Q(
+    BuiltInId::pt0Q,
+    BuiltInName::_empty,
+    SymbolType::BuiltIn,
+    TExtension::UNDEFINED,
+    StaticType::Get<EbtISampler3D, EbpUndefined, EvqGlobal, 1, 1>());
+constexpr const TVariable kVar_pt0R(
+    BuiltInId::pt0R,
+    BuiltInName::_empty,
+    SymbolType::BuiltIn,
+    TExtension::UNDEFINED,
+    StaticType::Get<EbtISamplerCube, EbpUndefined, EvqGlobal, 1, 1>());
+constexpr const TVariable kVar_pt0S(
+    BuiltInId::pt0S,
+    BuiltInName::_empty,
+    SymbolType::BuiltIn,
+    TExtension::UNDEFINED,
+    StaticType::Get<EbtISampler2DArray, EbpUndefined, EvqGlobal, 1, 1>());
+constexpr const TVariable kVar_pt0T(
+    BuiltInId::pt0T,
+    BuiltInName::_empty,
+    SymbolType::BuiltIn,
+    TExtension::UNDEFINED,
+    StaticType::Get<EbtISampler2DMS, EbpUndefined, EvqGlobal, 1, 1>());
+constexpr const TVariable kVar_pt0U(
+    BuiltInId::pt0U,
+    BuiltInName::_empty,
+    SymbolType::BuiltIn,
+    TExtension::UNDEFINED,
+    StaticType::Get<EbtUSampler2D, EbpUndefined, EvqGlobal, 1, 1>());
+constexpr const TVariable kVar_pt0V(
+    BuiltInId::pt0V,
+    BuiltInName::_empty,
+    SymbolType::BuiltIn,
+    TExtension::UNDEFINED,
+    StaticType::Get<EbtUSampler3D, EbpUndefined, EvqGlobal, 1, 1>());
+constexpr const TVariable kVar_pt0W(
+    BuiltInId::pt0W,
+    BuiltInName::_empty,
+    SymbolType::BuiltIn,
+    TExtension::UNDEFINED,
+    StaticType::Get<EbtUSamplerCube, EbpUndefined, EvqGlobal, 1, 1>());
+constexpr const TVariable kVar_pt0X(
+    BuiltInId::pt0X,
+    BuiltInName::_empty,
+    SymbolType::BuiltIn,
+    TExtension::UNDEFINED,
+    StaticType::Get<EbtUSampler2DArray, EbpUndefined, EvqGlobal, 1, 1>());
+constexpr const TVariable kVar_pt0Y(
+    BuiltInId::pt0Y,
+    BuiltInName::_empty,
+    SymbolType::BuiltIn,
+    TExtension::UNDEFINED,
+    StaticType::Get<EbtUSampler2DMS, EbpUndefined, EvqGlobal, 1, 1>());
+constexpr const TVariable kVar_pt0Z(
+    BuiltInId::pt0Z,
+    BuiltInName::_empty,
+    SymbolType::BuiltIn,
+    TExtension::UNDEFINED,
+    StaticType::Get<EbtSampler2DShadow, EbpUndefined, EvqGlobal, 1, 1>());
+constexpr const TVariable kVar_pt0a(
+    BuiltInId::pt0a,
+    BuiltInName::_empty,
+    SymbolType::BuiltIn,
+    TExtension::UNDEFINED,
+    StaticType::Get<EbtSamplerCubeShadow, EbpUndefined, EvqGlobal, 1, 1>());
+constexpr const TVariable kVar_pt0b(
+    BuiltInId::pt0b,
+    BuiltInName::_empty,
+    SymbolType::BuiltIn,
+    TExtension::UNDEFINED,
+    StaticType::Get<EbtSampler2DArrayShadow, EbpUndefined, EvqGlobal, 1, 1>());
+constexpr const TVariable kVar_pt0c(BuiltInId::pt0c,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtImage2D, EbpUndefined, EvqGlobal, 1, 1>());
+constexpr const TVariable kVar_pt0d(BuiltInId::pt0d,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtIImage2D, EbpUndefined, EvqGlobal, 1, 1>());
+constexpr const TVariable kVar_pt0e(BuiltInId::pt0e,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtUImage2D, EbpUndefined, EvqGlobal, 1, 1>());
+constexpr const TVariable kVar_pt0f(BuiltInId::pt0f,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtImage3D, EbpUndefined, EvqGlobal, 1, 1>());
+constexpr const TVariable kVar_pt0g(BuiltInId::pt0g,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtIImage3D, EbpUndefined, EvqGlobal, 1, 1>());
+constexpr const TVariable kVar_pt0h(BuiltInId::pt0h,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtUImage3D, EbpUndefined, EvqGlobal, 1, 1>());
+constexpr const TVariable kVar_pt0i(
+    BuiltInId::pt0i,
+    BuiltInName::_empty,
+    SymbolType::BuiltIn,
+    TExtension::UNDEFINED,
+    StaticType::Get<EbtImage2DArray, EbpUndefined, EvqGlobal, 1, 1>());
+constexpr const TVariable kVar_pt0j(
+    BuiltInId::pt0j,
+    BuiltInName::_empty,
+    SymbolType::BuiltIn,
+    TExtension::UNDEFINED,
+    StaticType::Get<EbtIImage2DArray, EbpUndefined, EvqGlobal, 1, 1>());
+constexpr const TVariable kVar_pt0k(
+    BuiltInId::pt0k,
+    BuiltInName::_empty,
+    SymbolType::BuiltIn,
+    TExtension::UNDEFINED,
+    StaticType::Get<EbtUImage2DArray, EbpUndefined, EvqGlobal, 1, 1>());
+constexpr const TVariable kVar_pt0l(BuiltInId::pt0l,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtImageCube, EbpUndefined, EvqGlobal, 1, 1>());
+constexpr const TVariable kVar_pt0m(
+    BuiltInId::pt0m,
+    BuiltInName::_empty,
+    SymbolType::BuiltIn,
+    TExtension::UNDEFINED,
+    StaticType::Get<EbtIImageCube, EbpUndefined, EvqGlobal, 1, 1>());
+constexpr const TVariable kVar_pt0n(
+    BuiltInId::pt0n,
+    BuiltInName::_empty,
+    SymbolType::BuiltIn,
+    TExtension::UNDEFINED,
+    StaticType::Get<EbtUImageCube, EbpUndefined, EvqGlobal, 1, 1>());
+constexpr const TVariable kVar_pt1B(BuiltInId::pt1B,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>());
+constexpr const TVariable kVar_pt1C(BuiltInId::pt1C,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>());
+constexpr const TVariable kVar_pt1D(BuiltInId::pt1D,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 2, 1>());
+constexpr const TVariable kVar_pt1E(BuiltInId::pt1E,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 2, 1>());
+constexpr const TVariable kVar_pt2B(BuiltInId::pt2B,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>());
+constexpr const TVariable kVar_pt2C(BuiltInId::pt2C,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>());
+constexpr const TVariable kVar_pt2D(BuiltInId::pt2D,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 3, 1>());
+constexpr const TVariable kVar_pt2E(BuiltInId::pt2E,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 3, 1>());
+constexpr const TVariable kVar_pt3B(BuiltInId::pt3B,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>());
+constexpr const TVariable kVar_pt3C(BuiltInId::pt3C,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>());
+constexpr const TVariable kVar_pt3D(BuiltInId::pt3D,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>());
+constexpr const TVariable kVar_pt3E(BuiltInId::pt3E,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 4, 1>());
+constexpr const TVariable kVar_pt5B(BuiltInId::pt5B,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 2>());
+constexpr const TVariable kVar_pt6B(BuiltInId::pt6B,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 2>());
+constexpr const TVariable kVar_pt7B(BuiltInId::pt7B,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 2>());
+constexpr const TVariable kVar_pt9B(BuiltInId::pt9B,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 3>());
+constexpr const TVariable kVar_ptAB(BuiltInId::ptAB,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 3>());
+constexpr const TVariable kVar_ptBB(BuiltInId::ptBB,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 3>());
+constexpr const TVariable kVar_ptDB(BuiltInId::ptDB,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 4>());
+constexpr const TVariable kVar_ptEB(BuiltInId::ptEB,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 4>());
+constexpr const TVariable kVar_ptFB(BuiltInId::ptFB,
+                                    BuiltInName::_empty,
+                                    SymbolType::BuiltIn,
+                                    TExtension::UNDEFINED,
+                                    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 4>());
+constexpr const TVariable kVar_pt_io_0C(BuiltInId::pt_io_0C,
+                                        BuiltInName::_empty,
+                                        SymbolType::BuiltIn,
+                                        TExtension::UNDEFINED,
+                                        StaticType::Get<EbtInt, EbpUndefined, EvqInOut, 1, 1>());
+constexpr const TVariable kVar_pt_io_0D(BuiltInId::pt_io_0D,
+                                        BuiltInName::_empty,
+                                        SymbolType::BuiltIn,
+                                        TExtension::UNDEFINED,
+                                        StaticType::Get<EbtUInt, EbpUndefined, EvqInOut, 1, 1>());
+constexpr const TVariable kVar_pt_o_0B(BuiltInId::pt_o_0B,
+                                       BuiltInName::_empty,
+                                       SymbolType::BuiltIn,
+                                       TExtension::UNDEFINED,
+                                       StaticType::Get<EbtFloat, EbpUndefined, EvqOut, 1, 1>());
+constexpr const TVariable kVar_pt_o_0C(BuiltInId::pt_o_0C,
+                                       BuiltInName::_empty,
+                                       SymbolType::BuiltIn,
+                                       TExtension::UNDEFINED,
+                                       StaticType::Get<EbtInt, EbpUndefined, EvqOut, 1, 1>());
+constexpr const TVariable kVar_pt_o_0D(BuiltInId::pt_o_0D,
+                                       BuiltInName::_empty,
+                                       SymbolType::BuiltIn,
+                                       TExtension::UNDEFINED,
+                                       StaticType::Get<EbtUInt, EbpUndefined, EvqOut, 1, 1>());
+constexpr const TVariable kVar_pt_o_1B(BuiltInId::pt_o_1B,
+                                       BuiltInName::_empty,
+                                       SymbolType::BuiltIn,
+                                       TExtension::UNDEFINED,
+                                       StaticType::Get<EbtFloat, EbpUndefined, EvqOut, 2, 1>());
+constexpr const TVariable kVar_pt_o_1C(BuiltInId::pt_o_1C,
+                                       BuiltInName::_empty,
+                                       SymbolType::BuiltIn,
+                                       TExtension::UNDEFINED,
+                                       StaticType::Get<EbtInt, EbpUndefined, EvqOut, 2, 1>());
+constexpr const TVariable kVar_pt_o_1D(BuiltInId::pt_o_1D,
+                                       BuiltInName::_empty,
+                                       SymbolType::BuiltIn,
+                                       TExtension::UNDEFINED,
+                                       StaticType::Get<EbtUInt, EbpUndefined, EvqOut, 2, 1>());
+constexpr const TVariable kVar_pt_o_2B(BuiltInId::pt_o_2B,
+                                       BuiltInName::_empty,
+                                       SymbolType::BuiltIn,
+                                       TExtension::UNDEFINED,
+                                       StaticType::Get<EbtFloat, EbpUndefined, EvqOut, 3, 1>());
+constexpr const TVariable kVar_pt_o_2C(BuiltInId::pt_o_2C,
+                                       BuiltInName::_empty,
+                                       SymbolType::BuiltIn,
+                                       TExtension::UNDEFINED,
+                                       StaticType::Get<EbtInt, EbpUndefined, EvqOut, 3, 1>());
+constexpr const TVariable kVar_pt_o_2D(BuiltInId::pt_o_2D,
+                                       BuiltInName::_empty,
+                                       SymbolType::BuiltIn,
+                                       TExtension::UNDEFINED,
+                                       StaticType::Get<EbtUInt, EbpUndefined, EvqOut, 3, 1>());
+constexpr const TVariable kVar_pt_o_3B(BuiltInId::pt_o_3B,
+                                       BuiltInName::_empty,
+                                       SymbolType::BuiltIn,
+                                       TExtension::UNDEFINED,
+                                       StaticType::Get<EbtFloat, EbpUndefined, EvqOut, 4, 1>());
+constexpr const TVariable kVar_pt_o_3C(BuiltInId::pt_o_3C,
+                                       BuiltInName::_empty,
+                                       SymbolType::BuiltIn,
+                                       TExtension::UNDEFINED,
+                                       StaticType::Get<EbtInt, EbpUndefined, EvqOut, 4, 1>());
+constexpr const TVariable kVar_pt_o_3D(BuiltInId::pt_o_3D,
+                                       BuiltInName::_empty,
+                                       SymbolType::BuiltIn,
+                                       TExtension::UNDEFINED,
+                                       StaticType::Get<EbtUInt, EbpUndefined, EvqOut, 4, 1>());
 
 const TVariable *gl_FragColor()
 {
@@ -4067,6 +2938,813 @@ const TVariable *gl_WorkGroupSize()
 }
 
 };  // namespace BuiltInVariable
+
+namespace BuiltInParameters
+{
+
+constexpr const TVariable **empty      = nullptr;
+constexpr const TVariable *p0B0B0B[3]  = {&BuiltInVariable::kVar_pt0B, &BuiltInVariable::kVar_pt0B,
+                                         &BuiltInVariable::kVar_pt0B};
+constexpr const TVariable *p0B0B0E[3]  = {&BuiltInVariable::kVar_pt0B, &BuiltInVariable::kVar_pt0B,
+                                         &BuiltInVariable::kVar_pt0E};
+constexpr const TVariable *p0B0B1B[3]  = {&BuiltInVariable::kVar_pt0B, &BuiltInVariable::kVar_pt0B,
+                                         &BuiltInVariable::kVar_pt1B};
+constexpr const TVariable *p0B0B2B[3]  = {&BuiltInVariable::kVar_pt0B, &BuiltInVariable::kVar_pt0B,
+                                         &BuiltInVariable::kVar_pt2B};
+constexpr const TVariable *p0B0B3B[3]  = {&BuiltInVariable::kVar_pt0B, &BuiltInVariable::kVar_pt0B,
+                                         &BuiltInVariable::kVar_pt3B};
+constexpr const TVariable *p0B0B[2]    = {&BuiltInVariable::kVar_pt0B, &BuiltInVariable::kVar_pt0B};
+constexpr const TVariable *p0B0C[2]    = {&BuiltInVariable::kVar_pt0B, &BuiltInVariable::kVar_pt0C};
+constexpr const TVariable *p0B1B[2]    = {&BuiltInVariable::kVar_pt0B, &BuiltInVariable::kVar_pt1B};
+constexpr const TVariable *p0B2B[2]    = {&BuiltInVariable::kVar_pt0B, &BuiltInVariable::kVar_pt2B};
+constexpr const TVariable *p0B3B[2]    = {&BuiltInVariable::kVar_pt0B, &BuiltInVariable::kVar_pt3B};
+constexpr const TVariable *p0B[1]      = {&BuiltInVariable::kVar_pt0B};
+constexpr const TVariable *p0B_o_0B[2] = {&BuiltInVariable::kVar_pt0B,
+                                          &BuiltInVariable::kVar_pt_o_0B};
+constexpr const TVariable *p0B_o_0C[2] = {&BuiltInVariable::kVar_pt0B,
+                                          &BuiltInVariable::kVar_pt_o_0C};
+constexpr const TVariable *p0C0C0C0C[4] = {&BuiltInVariable::kVar_pt0C, &BuiltInVariable::kVar_pt0C,
+                                           &BuiltInVariable::kVar_pt0C,
+                                           &BuiltInVariable::kVar_pt0C};
+constexpr const TVariable *p0C0C0C[3]   = {&BuiltInVariable::kVar_pt0C, &BuiltInVariable::kVar_pt0C,
+                                         &BuiltInVariable::kVar_pt0C};
+constexpr const TVariable *p0C0C[2] = {&BuiltInVariable::kVar_pt0C, &BuiltInVariable::kVar_pt0C};
+constexpr const TVariable *p0C0C_o_0C_o_0C[4] = {
+    &BuiltInVariable::kVar_pt0C, &BuiltInVariable::kVar_pt0C, &BuiltInVariable::kVar_pt_o_0C,
+    &BuiltInVariable::kVar_pt_o_0C};
+constexpr const TVariable *p0C[1]       = {&BuiltInVariable::kVar_pt0C};
+constexpr const TVariable *p0D0C0C[3]   = {&BuiltInVariable::kVar_pt0D, &BuiltInVariable::kVar_pt0C,
+                                         &BuiltInVariable::kVar_pt0C};
+constexpr const TVariable *p0D0D0C0C[4] = {&BuiltInVariable::kVar_pt0D, &BuiltInVariable::kVar_pt0D,
+                                           &BuiltInVariable::kVar_pt0C,
+                                           &BuiltInVariable::kVar_pt0C};
+constexpr const TVariable *p0D0D0D[3]   = {&BuiltInVariable::kVar_pt0D, &BuiltInVariable::kVar_pt0D,
+                                         &BuiltInVariable::kVar_pt0D};
+constexpr const TVariable *p0D0D[2] = {&BuiltInVariable::kVar_pt0D, &BuiltInVariable::kVar_pt0D};
+constexpr const TVariable *p0D0D_o_0D[3] = {
+    &BuiltInVariable::kVar_pt0D, &BuiltInVariable::kVar_pt0D, &BuiltInVariable::kVar_pt_o_0D};
+constexpr const TVariable *p0D0D_o_0D_o_0D[4] = {
+    &BuiltInVariable::kVar_pt0D, &BuiltInVariable::kVar_pt0D, &BuiltInVariable::kVar_pt_o_0D,
+    &BuiltInVariable::kVar_pt_o_0D};
+constexpr const TVariable *p0D[1]   = {&BuiltInVariable::kVar_pt0D};
+constexpr const TVariable *p0F[1]   = {&BuiltInVariable::kVar_pt0F};
+constexpr const TVariable *p0H0C[2] = {&BuiltInVariable::kVar_pt0H, &BuiltInVariable::kVar_pt0C};
+constexpr const TVariable *p0H1B0B1C[4] = {&BuiltInVariable::kVar_pt0H, &BuiltInVariable::kVar_pt1B,
+                                           &BuiltInVariable::kVar_pt0B,
+                                           &BuiltInVariable::kVar_pt1C};
+constexpr const TVariable *p0H1B0B[3]   = {&BuiltInVariable::kVar_pt0H, &BuiltInVariable::kVar_pt1B,
+                                         &BuiltInVariable::kVar_pt0B};
+constexpr const TVariable *p0H1B0C[3]   = {&BuiltInVariable::kVar_pt0H, &BuiltInVariable::kVar_pt1B,
+                                         &BuiltInVariable::kVar_pt0C};
+constexpr const TVariable *p0H1B1B1B1C[5] = {
+    &BuiltInVariable::kVar_pt0H, &BuiltInVariable::kVar_pt1B, &BuiltInVariable::kVar_pt1B,
+    &BuiltInVariable::kVar_pt1B, &BuiltInVariable::kVar_pt1C};
+constexpr const TVariable *p0H1B1B1B[4] = {&BuiltInVariable::kVar_pt0H, &BuiltInVariable::kVar_pt1B,
+                                           &BuiltInVariable::kVar_pt1B,
+                                           &BuiltInVariable::kVar_pt1B};
+constexpr const TVariable *p0H1B1C0B[4] = {&BuiltInVariable::kVar_pt0H, &BuiltInVariable::kVar_pt1B,
+                                           &BuiltInVariable::kVar_pt1C,
+                                           &BuiltInVariable::kVar_pt0B};
+constexpr const TVariable *p0H1B1C0C[4] = {&BuiltInVariable::kVar_pt0H, &BuiltInVariable::kVar_pt1B,
+                                           &BuiltInVariable::kVar_pt1C,
+                                           &BuiltInVariable::kVar_pt0C};
+constexpr const TVariable *p0H1B1C[3]   = {&BuiltInVariable::kVar_pt0H, &BuiltInVariable::kVar_pt1B,
+                                         &BuiltInVariable::kVar_pt1C};
+constexpr const TVariable *p0H1B[2] = {&BuiltInVariable::kVar_pt0H, &BuiltInVariable::kVar_pt1B};
+constexpr const TVariable *p0H1C0C1C[4] = {&BuiltInVariable::kVar_pt0H, &BuiltInVariable::kVar_pt1C,
+                                           &BuiltInVariable::kVar_pt0C,
+                                           &BuiltInVariable::kVar_pt1C};
+constexpr const TVariable *p0H1C0C[3]   = {&BuiltInVariable::kVar_pt0H, &BuiltInVariable::kVar_pt1C,
+                                         &BuiltInVariable::kVar_pt0C};
+constexpr const TVariable *p0H2B0B1C[4] = {&BuiltInVariable::kVar_pt0H, &BuiltInVariable::kVar_pt2B,
+                                           &BuiltInVariable::kVar_pt0B,
+                                           &BuiltInVariable::kVar_pt1C};
+constexpr const TVariable *p0H2B0B[3]   = {&BuiltInVariable::kVar_pt0H, &BuiltInVariable::kVar_pt2B,
+                                         &BuiltInVariable::kVar_pt0B};
+constexpr const TVariable *p0H2B1B1B1C[5] = {
+    &BuiltInVariable::kVar_pt0H, &BuiltInVariable::kVar_pt2B, &BuiltInVariable::kVar_pt1B,
+    &BuiltInVariable::kVar_pt1B, &BuiltInVariable::kVar_pt1C};
+constexpr const TVariable *p0H2B1B1B[4] = {&BuiltInVariable::kVar_pt0H, &BuiltInVariable::kVar_pt2B,
+                                           &BuiltInVariable::kVar_pt1B,
+                                           &BuiltInVariable::kVar_pt1B};
+constexpr const TVariable *p0H2B1C0B[4] = {&BuiltInVariable::kVar_pt0H, &BuiltInVariable::kVar_pt2B,
+                                           &BuiltInVariable::kVar_pt1C,
+                                           &BuiltInVariable::kVar_pt0B};
+constexpr const TVariable *p0H2B1C[3]   = {&BuiltInVariable::kVar_pt0H, &BuiltInVariable::kVar_pt2B,
+                                         &BuiltInVariable::kVar_pt1C};
+constexpr const TVariable *p0H2B[2] = {&BuiltInVariable::kVar_pt0H, &BuiltInVariable::kVar_pt2B};
+constexpr const TVariable *p0H3B0B1C[4] = {&BuiltInVariable::kVar_pt0H, &BuiltInVariable::kVar_pt3B,
+                                           &BuiltInVariable::kVar_pt0B,
+                                           &BuiltInVariable::kVar_pt1C};
+constexpr const TVariable *p0H3B0B[3]   = {&BuiltInVariable::kVar_pt0H, &BuiltInVariable::kVar_pt3B,
+                                         &BuiltInVariable::kVar_pt0B};
+constexpr const TVariable *p0H3B1B1B1C[5] = {
+    &BuiltInVariable::kVar_pt0H, &BuiltInVariable::kVar_pt3B, &BuiltInVariable::kVar_pt1B,
+    &BuiltInVariable::kVar_pt1B, &BuiltInVariable::kVar_pt1C};
+constexpr const TVariable *p0H3B1B1B[4] = {&BuiltInVariable::kVar_pt0H, &BuiltInVariable::kVar_pt3B,
+                                           &BuiltInVariable::kVar_pt1B,
+                                           &BuiltInVariable::kVar_pt1B};
+constexpr const TVariable *p0H3B1C0B[4] = {&BuiltInVariable::kVar_pt0H, &BuiltInVariable::kVar_pt3B,
+                                           &BuiltInVariable::kVar_pt1C,
+                                           &BuiltInVariable::kVar_pt0B};
+constexpr const TVariable *p0H3B1C[3]   = {&BuiltInVariable::kVar_pt0H, &BuiltInVariable::kVar_pt3B,
+                                         &BuiltInVariable::kVar_pt1C};
+constexpr const TVariable *p0H3B[2] = {&BuiltInVariable::kVar_pt0H, &BuiltInVariable::kVar_pt3B};
+constexpr const TVariable *p0I0C[2] = {&BuiltInVariable::kVar_pt0I, &BuiltInVariable::kVar_pt0C};
+constexpr const TVariable *p0I2B0B2C[4] = {&BuiltInVariable::kVar_pt0I, &BuiltInVariable::kVar_pt2B,
+                                           &BuiltInVariable::kVar_pt0B,
+                                           &BuiltInVariable::kVar_pt2C};
+constexpr const TVariable *p0I2B0B[3]   = {&BuiltInVariable::kVar_pt0I, &BuiltInVariable::kVar_pt2B,
+                                         &BuiltInVariable::kVar_pt0B};
+constexpr const TVariable *p0I2B2B2B2C[5] = {
+    &BuiltInVariable::kVar_pt0I, &BuiltInVariable::kVar_pt2B, &BuiltInVariable::kVar_pt2B,
+    &BuiltInVariable::kVar_pt2B, &BuiltInVariable::kVar_pt2C};
+constexpr const TVariable *p0I2B2B2B[4] = {&BuiltInVariable::kVar_pt0I, &BuiltInVariable::kVar_pt2B,
+                                           &BuiltInVariable::kVar_pt2B,
+                                           &BuiltInVariable::kVar_pt2B};
+constexpr const TVariable *p0I2B2C0B[4] = {&BuiltInVariable::kVar_pt0I, &BuiltInVariable::kVar_pt2B,
+                                           &BuiltInVariable::kVar_pt2C,
+                                           &BuiltInVariable::kVar_pt0B};
+constexpr const TVariable *p0I2B2C[3]   = {&BuiltInVariable::kVar_pt0I, &BuiltInVariable::kVar_pt2B,
+                                         &BuiltInVariable::kVar_pt2C};
+constexpr const TVariable *p0I2B[2] = {&BuiltInVariable::kVar_pt0I, &BuiltInVariable::kVar_pt2B};
+constexpr const TVariable *p0I2C0C2C[4] = {&BuiltInVariable::kVar_pt0I, &BuiltInVariable::kVar_pt2C,
+                                           &BuiltInVariable::kVar_pt0C,
+                                           &BuiltInVariable::kVar_pt2C};
+constexpr const TVariable *p0I2C0C[3]   = {&BuiltInVariable::kVar_pt0I, &BuiltInVariable::kVar_pt2C,
+                                         &BuiltInVariable::kVar_pt0C};
+constexpr const TVariable *p0I3B0B2C[4] = {&BuiltInVariable::kVar_pt0I, &BuiltInVariable::kVar_pt3B,
+                                           &BuiltInVariable::kVar_pt0B,
+                                           &BuiltInVariable::kVar_pt2C};
+constexpr const TVariable *p0I3B0B[3]   = {&BuiltInVariable::kVar_pt0I, &BuiltInVariable::kVar_pt3B,
+                                         &BuiltInVariable::kVar_pt0B};
+constexpr const TVariable *p0I3B2B2B2C[5] = {
+    &BuiltInVariable::kVar_pt0I, &BuiltInVariable::kVar_pt3B, &BuiltInVariable::kVar_pt2B,
+    &BuiltInVariable::kVar_pt2B, &BuiltInVariable::kVar_pt2C};
+constexpr const TVariable *p0I3B2B2B[4] = {&BuiltInVariable::kVar_pt0I, &BuiltInVariable::kVar_pt3B,
+                                           &BuiltInVariable::kVar_pt2B,
+                                           &BuiltInVariable::kVar_pt2B};
+constexpr const TVariable *p0I3B2C0B[4] = {&BuiltInVariable::kVar_pt0I, &BuiltInVariable::kVar_pt3B,
+                                           &BuiltInVariable::kVar_pt2C,
+                                           &BuiltInVariable::kVar_pt0B};
+constexpr const TVariable *p0I3B2C[3]   = {&BuiltInVariable::kVar_pt0I, &BuiltInVariable::kVar_pt3B,
+                                         &BuiltInVariable::kVar_pt2C};
+constexpr const TVariable *p0I3B[2]   = {&BuiltInVariable::kVar_pt0I, &BuiltInVariable::kVar_pt3B};
+constexpr const TVariable *p0J0C[2]   = {&BuiltInVariable::kVar_pt0J, &BuiltInVariable::kVar_pt0C};
+constexpr const TVariable *p0J2B0B[3] = {&BuiltInVariable::kVar_pt0J, &BuiltInVariable::kVar_pt2B,
+                                         &BuiltInVariable::kVar_pt0B};
+constexpr const TVariable *p0J2B0C[3] = {&BuiltInVariable::kVar_pt0J, &BuiltInVariable::kVar_pt2B,
+                                         &BuiltInVariable::kVar_pt0C};
+constexpr const TVariable *p0J2B2B2B[4] = {&BuiltInVariable::kVar_pt0J, &BuiltInVariable::kVar_pt2B,
+                                           &BuiltInVariable::kVar_pt2B,
+                                           &BuiltInVariable::kVar_pt2B};
+constexpr const TVariable *p0J2B[2] = {&BuiltInVariable::kVar_pt0J, &BuiltInVariable::kVar_pt2B};
+constexpr const TVariable *p0K0C[2] = {&BuiltInVariable::kVar_pt0K, &BuiltInVariable::kVar_pt0C};
+constexpr const TVariable *p0K2B0B1C[4] = {&BuiltInVariable::kVar_pt0K, &BuiltInVariable::kVar_pt2B,
+                                           &BuiltInVariable::kVar_pt0B,
+                                           &BuiltInVariable::kVar_pt1C};
+constexpr const TVariable *p0K2B0B[3]   = {&BuiltInVariable::kVar_pt0K, &BuiltInVariable::kVar_pt2B,
+                                         &BuiltInVariable::kVar_pt0B};
+constexpr const TVariable *p0K2B0C[3]   = {&BuiltInVariable::kVar_pt0K, &BuiltInVariable::kVar_pt2B,
+                                         &BuiltInVariable::kVar_pt0C};
+constexpr const TVariable *p0K2B1B1B1C[5] = {
+    &BuiltInVariable::kVar_pt0K, &BuiltInVariable::kVar_pt2B, &BuiltInVariable::kVar_pt1B,
+    &BuiltInVariable::kVar_pt1B, &BuiltInVariable::kVar_pt1C};
+constexpr const TVariable *p0K2B1B1B[4] = {&BuiltInVariable::kVar_pt0K, &BuiltInVariable::kVar_pt2B,
+                                           &BuiltInVariable::kVar_pt1B,
+                                           &BuiltInVariable::kVar_pt1B};
+constexpr const TVariable *p0K2B1C0B[4] = {&BuiltInVariable::kVar_pt0K, &BuiltInVariable::kVar_pt2B,
+                                           &BuiltInVariable::kVar_pt1C,
+                                           &BuiltInVariable::kVar_pt0B};
+constexpr const TVariable *p0K2B1C0C[4] = {&BuiltInVariable::kVar_pt0K, &BuiltInVariable::kVar_pt2B,
+                                           &BuiltInVariable::kVar_pt1C,
+                                           &BuiltInVariable::kVar_pt0C};
+constexpr const TVariable *p0K2B1C[3]   = {&BuiltInVariable::kVar_pt0K, &BuiltInVariable::kVar_pt2B,
+                                         &BuiltInVariable::kVar_pt1C};
+constexpr const TVariable *p0K2B[2] = {&BuiltInVariable::kVar_pt0K, &BuiltInVariable::kVar_pt2B};
+constexpr const TVariable *p0K2C0C1C[4] = {&BuiltInVariable::kVar_pt0K, &BuiltInVariable::kVar_pt2C,
+                                           &BuiltInVariable::kVar_pt0C,
+                                           &BuiltInVariable::kVar_pt1C};
+constexpr const TVariable *p0K2C0C[3]   = {&BuiltInVariable::kVar_pt0K, &BuiltInVariable::kVar_pt2C,
+                                         &BuiltInVariable::kVar_pt0C};
+constexpr const TVariable *p0L0C[2]   = {&BuiltInVariable::kVar_pt0L, &BuiltInVariable::kVar_pt0C};
+constexpr const TVariable *p0L1B0B[3] = {&BuiltInVariable::kVar_pt0L, &BuiltInVariable::kVar_pt1B,
+                                         &BuiltInVariable::kVar_pt0B};
+constexpr const TVariable *p0L1B[2]   = {&BuiltInVariable::kVar_pt0L, &BuiltInVariable::kVar_pt1B};
+constexpr const TVariable *p0L1C0C[3] = {&BuiltInVariable::kVar_pt0L, &BuiltInVariable::kVar_pt1C,
+                                         &BuiltInVariable::kVar_pt0C};
+constexpr const TVariable *p0L2B0B[3] = {&BuiltInVariable::kVar_pt0L, &BuiltInVariable::kVar_pt2B,
+                                         &BuiltInVariable::kVar_pt0B};
+constexpr const TVariable *p0L2B[2]   = {&BuiltInVariable::kVar_pt0L, &BuiltInVariable::kVar_pt2B};
+constexpr const TVariable *p0L3B0B[3] = {&BuiltInVariable::kVar_pt0L, &BuiltInVariable::kVar_pt3B,
+                                         &BuiltInVariable::kVar_pt0B};
+constexpr const TVariable *p0L3B[2]   = {&BuiltInVariable::kVar_pt0L, &BuiltInVariable::kVar_pt3B};
+constexpr const TVariable *p0M0C[2]   = {&BuiltInVariable::kVar_pt0M, &BuiltInVariable::kVar_pt0C};
+constexpr const TVariable *p0M1B0B[3] = {&BuiltInVariable::kVar_pt0M, &BuiltInVariable::kVar_pt1B,
+                                         &BuiltInVariable::kVar_pt0B};
+constexpr const TVariable *p0M1B[2]   = {&BuiltInVariable::kVar_pt0M, &BuiltInVariable::kVar_pt1B};
+constexpr const TVariable *p0M1C0C[3] = {&BuiltInVariable::kVar_pt0M, &BuiltInVariable::kVar_pt1C,
+                                         &BuiltInVariable::kVar_pt0C};
+constexpr const TVariable *p0M2B0B[3] = {&BuiltInVariable::kVar_pt0M, &BuiltInVariable::kVar_pt2B,
+                                         &BuiltInVariable::kVar_pt0B};
+constexpr const TVariable *p0M2B[2]   = {&BuiltInVariable::kVar_pt0M, &BuiltInVariable::kVar_pt2B};
+constexpr const TVariable *p0M3B0B[3] = {&BuiltInVariable::kVar_pt0M, &BuiltInVariable::kVar_pt3B,
+                                         &BuiltInVariable::kVar_pt0B};
+constexpr const TVariable *p0M3B[2]   = {&BuiltInVariable::kVar_pt0M, &BuiltInVariable::kVar_pt3B};
+constexpr const TVariable *p0N1B[2]   = {&BuiltInVariable::kVar_pt0N, &BuiltInVariable::kVar_pt1B};
+constexpr const TVariable *p0N2B[2]   = {&BuiltInVariable::kVar_pt0N, &BuiltInVariable::kVar_pt2B};
+constexpr const TVariable *p0N3B[2]   = {&BuiltInVariable::kVar_pt0N, &BuiltInVariable::kVar_pt3B};
+constexpr const TVariable *p0O1C0C[3] = {&BuiltInVariable::kVar_pt0O, &BuiltInVariable::kVar_pt1C,
+                                         &BuiltInVariable::kVar_pt0C};
+constexpr const TVariable *p0O[1]     = {&BuiltInVariable::kVar_pt0O};
+constexpr const TVariable *p0P0C[2]   = {&BuiltInVariable::kVar_pt0P, &BuiltInVariable::kVar_pt0C};
+constexpr const TVariable *p0P1B0B1C[4] = {&BuiltInVariable::kVar_pt0P, &BuiltInVariable::kVar_pt1B,
+                                           &BuiltInVariable::kVar_pt0B,
+                                           &BuiltInVariable::kVar_pt1C};
+constexpr const TVariable *p0P1B0B[3]   = {&BuiltInVariable::kVar_pt0P, &BuiltInVariable::kVar_pt1B,
+                                         &BuiltInVariable::kVar_pt0B};
+constexpr const TVariable *p0P1B0C[3]   = {&BuiltInVariable::kVar_pt0P, &BuiltInVariable::kVar_pt1B,
+                                         &BuiltInVariable::kVar_pt0C};
+constexpr const TVariable *p0P1B1B1B1C[5] = {
+    &BuiltInVariable::kVar_pt0P, &BuiltInVariable::kVar_pt1B, &BuiltInVariable::kVar_pt1B,
+    &BuiltInVariable::kVar_pt1B, &BuiltInVariable::kVar_pt1C};
+constexpr const TVariable *p0P1B1B1B[4] = {&BuiltInVariable::kVar_pt0P, &BuiltInVariable::kVar_pt1B,
+                                           &BuiltInVariable::kVar_pt1B,
+                                           &BuiltInVariable::kVar_pt1B};
+constexpr const TVariable *p0P1B1C0B[4] = {&BuiltInVariable::kVar_pt0P, &BuiltInVariable::kVar_pt1B,
+                                           &BuiltInVariable::kVar_pt1C,
+                                           &BuiltInVariable::kVar_pt0B};
+constexpr const TVariable *p0P1B1C0C[4] = {&BuiltInVariable::kVar_pt0P, &BuiltInVariable::kVar_pt1B,
+                                           &BuiltInVariable::kVar_pt1C,
+                                           &BuiltInVariable::kVar_pt0C};
+constexpr const TVariable *p0P1B1C[3]   = {&BuiltInVariable::kVar_pt0P, &BuiltInVariable::kVar_pt1B,
+                                         &BuiltInVariable::kVar_pt1C};
+constexpr const TVariable *p0P1B[2] = {&BuiltInVariable::kVar_pt0P, &BuiltInVariable::kVar_pt1B};
+constexpr const TVariable *p0P1C0C1C[4] = {&BuiltInVariable::kVar_pt0P, &BuiltInVariable::kVar_pt1C,
+                                           &BuiltInVariable::kVar_pt0C,
+                                           &BuiltInVariable::kVar_pt1C};
+constexpr const TVariable *p0P1C0C[3]   = {&BuiltInVariable::kVar_pt0P, &BuiltInVariable::kVar_pt1C,
+                                         &BuiltInVariable::kVar_pt0C};
+constexpr const TVariable *p0P2B0B1C[4] = {&BuiltInVariable::kVar_pt0P, &BuiltInVariable::kVar_pt2B,
+                                           &BuiltInVariable::kVar_pt0B,
+                                           &BuiltInVariable::kVar_pt1C};
+constexpr const TVariable *p0P2B0B[3]   = {&BuiltInVariable::kVar_pt0P, &BuiltInVariable::kVar_pt2B,
+                                         &BuiltInVariable::kVar_pt0B};
+constexpr const TVariable *p0P2B1B1B1C[5] = {
+    &BuiltInVariable::kVar_pt0P, &BuiltInVariable::kVar_pt2B, &BuiltInVariable::kVar_pt1B,
+    &BuiltInVariable::kVar_pt1B, &BuiltInVariable::kVar_pt1C};
+constexpr const TVariable *p0P2B1B1B[4] = {&BuiltInVariable::kVar_pt0P, &BuiltInVariable::kVar_pt2B,
+                                           &BuiltInVariable::kVar_pt1B,
+                                           &BuiltInVariable::kVar_pt1B};
+constexpr const TVariable *p0P2B1C0B[4] = {&BuiltInVariable::kVar_pt0P, &BuiltInVariable::kVar_pt2B,
+                                           &BuiltInVariable::kVar_pt1C,
+                                           &BuiltInVariable::kVar_pt0B};
+constexpr const TVariable *p0P2B1C[3]   = {&BuiltInVariable::kVar_pt0P, &BuiltInVariable::kVar_pt2B,
+                                         &BuiltInVariable::kVar_pt1C};
+constexpr const TVariable *p0P2B[2] = {&BuiltInVariable::kVar_pt0P, &BuiltInVariable::kVar_pt2B};
+constexpr const TVariable *p0P3B0B1C[4] = {&BuiltInVariable::kVar_pt0P, &BuiltInVariable::kVar_pt3B,
+                                           &BuiltInVariable::kVar_pt0B,
+                                           &BuiltInVariable::kVar_pt1C};
+constexpr const TVariable *p0P3B0B[3]   = {&BuiltInVariable::kVar_pt0P, &BuiltInVariable::kVar_pt3B,
+                                         &BuiltInVariable::kVar_pt0B};
+constexpr const TVariable *p0P3B1B1B1C[5] = {
+    &BuiltInVariable::kVar_pt0P, &BuiltInVariable::kVar_pt3B, &BuiltInVariable::kVar_pt1B,
+    &BuiltInVariable::kVar_pt1B, &BuiltInVariable::kVar_pt1C};
+constexpr const TVariable *p0P3B1B1B[4] = {&BuiltInVariable::kVar_pt0P, &BuiltInVariable::kVar_pt3B,
+                                           &BuiltInVariable::kVar_pt1B,
+                                           &BuiltInVariable::kVar_pt1B};
+constexpr const TVariable *p0P3B1C0B[4] = {&BuiltInVariable::kVar_pt0P, &BuiltInVariable::kVar_pt3B,
+                                           &BuiltInVariable::kVar_pt1C,
+                                           &BuiltInVariable::kVar_pt0B};
+constexpr const TVariable *p0P3B1C[3]   = {&BuiltInVariable::kVar_pt0P, &BuiltInVariable::kVar_pt3B,
+                                         &BuiltInVariable::kVar_pt1C};
+constexpr const TVariable *p0P3B[2] = {&BuiltInVariable::kVar_pt0P, &BuiltInVariable::kVar_pt3B};
+constexpr const TVariable *p0Q0C[2] = {&BuiltInVariable::kVar_pt0Q, &BuiltInVariable::kVar_pt0C};
+constexpr const TVariable *p0Q2B0B2C[4] = {&BuiltInVariable::kVar_pt0Q, &BuiltInVariable::kVar_pt2B,
+                                           &BuiltInVariable::kVar_pt0B,
+                                           &BuiltInVariable::kVar_pt2C};
+constexpr const TVariable *p0Q2B0B[3]   = {&BuiltInVariable::kVar_pt0Q, &BuiltInVariable::kVar_pt2B,
+                                         &BuiltInVariable::kVar_pt0B};
+constexpr const TVariable *p0Q2B2B2B2C[5] = {
+    &BuiltInVariable::kVar_pt0Q, &BuiltInVariable::kVar_pt2B, &BuiltInVariable::kVar_pt2B,
+    &BuiltInVariable::kVar_pt2B, &BuiltInVariable::kVar_pt2C};
+constexpr const TVariable *p0Q2B2B2B[4] = {&BuiltInVariable::kVar_pt0Q, &BuiltInVariable::kVar_pt2B,
+                                           &BuiltInVariable::kVar_pt2B,
+                                           &BuiltInVariable::kVar_pt2B};
+constexpr const TVariable *p0Q2B2C0B[4] = {&BuiltInVariable::kVar_pt0Q, &BuiltInVariable::kVar_pt2B,
+                                           &BuiltInVariable::kVar_pt2C,
+                                           &BuiltInVariable::kVar_pt0B};
+constexpr const TVariable *p0Q2B2C[3]   = {&BuiltInVariable::kVar_pt0Q, &BuiltInVariable::kVar_pt2B,
+                                         &BuiltInVariable::kVar_pt2C};
+constexpr const TVariable *p0Q2B[2] = {&BuiltInVariable::kVar_pt0Q, &BuiltInVariable::kVar_pt2B};
+constexpr const TVariable *p0Q2C0C2C[4] = {&BuiltInVariable::kVar_pt0Q, &BuiltInVariable::kVar_pt2C,
+                                           &BuiltInVariable::kVar_pt0C,
+                                           &BuiltInVariable::kVar_pt2C};
+constexpr const TVariable *p0Q2C0C[3]   = {&BuiltInVariable::kVar_pt0Q, &BuiltInVariable::kVar_pt2C,
+                                         &BuiltInVariable::kVar_pt0C};
+constexpr const TVariable *p0Q3B0B2C[4] = {&BuiltInVariable::kVar_pt0Q, &BuiltInVariable::kVar_pt3B,
+                                           &BuiltInVariable::kVar_pt0B,
+                                           &BuiltInVariable::kVar_pt2C};
+constexpr const TVariable *p0Q3B0B[3]   = {&BuiltInVariable::kVar_pt0Q, &BuiltInVariable::kVar_pt3B,
+                                         &BuiltInVariable::kVar_pt0B};
+constexpr const TVariable *p0Q3B2B2B2C[5] = {
+    &BuiltInVariable::kVar_pt0Q, &BuiltInVariable::kVar_pt3B, &BuiltInVariable::kVar_pt2B,
+    &BuiltInVariable::kVar_pt2B, &BuiltInVariable::kVar_pt2C};
+constexpr const TVariable *p0Q3B2B2B[4] = {&BuiltInVariable::kVar_pt0Q, &BuiltInVariable::kVar_pt3B,
+                                           &BuiltInVariable::kVar_pt2B,
+                                           &BuiltInVariable::kVar_pt2B};
+constexpr const TVariable *p0Q3B2C0B[4] = {&BuiltInVariable::kVar_pt0Q, &BuiltInVariable::kVar_pt3B,
+                                           &BuiltInVariable::kVar_pt2C,
+                                           &BuiltInVariable::kVar_pt0B};
+constexpr const TVariable *p0Q3B2C[3]   = {&BuiltInVariable::kVar_pt0Q, &BuiltInVariable::kVar_pt3B,
+                                         &BuiltInVariable::kVar_pt2C};
+constexpr const TVariable *p0Q3B[2]   = {&BuiltInVariable::kVar_pt0Q, &BuiltInVariable::kVar_pt3B};
+constexpr const TVariable *p0R0C[2]   = {&BuiltInVariable::kVar_pt0R, &BuiltInVariable::kVar_pt0C};
+constexpr const TVariable *p0R2B0B[3] = {&BuiltInVariable::kVar_pt0R, &BuiltInVariable::kVar_pt2B,
+                                         &BuiltInVariable::kVar_pt0B};
+constexpr const TVariable *p0R2B0C[3] = {&BuiltInVariable::kVar_pt0R, &BuiltInVariable::kVar_pt2B,
+                                         &BuiltInVariable::kVar_pt0C};
+constexpr const TVariable *p0R2B2B2B[4] = {&BuiltInVariable::kVar_pt0R, &BuiltInVariable::kVar_pt2B,
+                                           &BuiltInVariable::kVar_pt2B,
+                                           &BuiltInVariable::kVar_pt2B};
+constexpr const TVariable *p0R2B[2] = {&BuiltInVariable::kVar_pt0R, &BuiltInVariable::kVar_pt2B};
+constexpr const TVariable *p0S0C[2] = {&BuiltInVariable::kVar_pt0S, &BuiltInVariable::kVar_pt0C};
+constexpr const TVariable *p0S2B0B1C[4] = {&BuiltInVariable::kVar_pt0S, &BuiltInVariable::kVar_pt2B,
+                                           &BuiltInVariable::kVar_pt0B,
+                                           &BuiltInVariable::kVar_pt1C};
+constexpr const TVariable *p0S2B0B[3]   = {&BuiltInVariable::kVar_pt0S, &BuiltInVariable::kVar_pt2B,
+                                         &BuiltInVariable::kVar_pt0B};
+constexpr const TVariable *p0S2B0C[3]   = {&BuiltInVariable::kVar_pt0S, &BuiltInVariable::kVar_pt2B,
+                                         &BuiltInVariable::kVar_pt0C};
+constexpr const TVariable *p0S2B1B1B1C[5] = {
+    &BuiltInVariable::kVar_pt0S, &BuiltInVariable::kVar_pt2B, &BuiltInVariable::kVar_pt1B,
+    &BuiltInVariable::kVar_pt1B, &BuiltInVariable::kVar_pt1C};
+constexpr const TVariable *p0S2B1B1B[4] = {&BuiltInVariable::kVar_pt0S, &BuiltInVariable::kVar_pt2B,
+                                           &BuiltInVariable::kVar_pt1B,
+                                           &BuiltInVariable::kVar_pt1B};
+constexpr const TVariable *p0S2B1C0B[4] = {&BuiltInVariable::kVar_pt0S, &BuiltInVariable::kVar_pt2B,
+                                           &BuiltInVariable::kVar_pt1C,
+                                           &BuiltInVariable::kVar_pt0B};
+constexpr const TVariable *p0S2B1C0C[4] = {&BuiltInVariable::kVar_pt0S, &BuiltInVariable::kVar_pt2B,
+                                           &BuiltInVariable::kVar_pt1C,
+                                           &BuiltInVariable::kVar_pt0C};
+constexpr const TVariable *p0S2B1C[3]   = {&BuiltInVariable::kVar_pt0S, &BuiltInVariable::kVar_pt2B,
+                                         &BuiltInVariable::kVar_pt1C};
+constexpr const TVariable *p0S2B[2] = {&BuiltInVariable::kVar_pt0S, &BuiltInVariable::kVar_pt2B};
+constexpr const TVariable *p0S2C0C1C[4] = {&BuiltInVariable::kVar_pt0S, &BuiltInVariable::kVar_pt2C,
+                                           &BuiltInVariable::kVar_pt0C,
+                                           &BuiltInVariable::kVar_pt1C};
+constexpr const TVariable *p0S2C0C[3]   = {&BuiltInVariable::kVar_pt0S, &BuiltInVariable::kVar_pt2C,
+                                         &BuiltInVariable::kVar_pt0C};
+constexpr const TVariable *p0T1C0C[3]   = {&BuiltInVariable::kVar_pt0T, &BuiltInVariable::kVar_pt1C,
+                                         &BuiltInVariable::kVar_pt0C};
+constexpr const TVariable *p0T[1]       = {&BuiltInVariable::kVar_pt0T};
+constexpr const TVariable *p0U0C[2] = {&BuiltInVariable::kVar_pt0U, &BuiltInVariable::kVar_pt0C};
+constexpr const TVariable *p0U1B0B1C[4] = {&BuiltInVariable::kVar_pt0U, &BuiltInVariable::kVar_pt1B,
+                                           &BuiltInVariable::kVar_pt0B,
+                                           &BuiltInVariable::kVar_pt1C};
+constexpr const TVariable *p0U1B0B[3]   = {&BuiltInVariable::kVar_pt0U, &BuiltInVariable::kVar_pt1B,
+                                         &BuiltInVariable::kVar_pt0B};
+constexpr const TVariable *p0U1B0C[3]   = {&BuiltInVariable::kVar_pt0U, &BuiltInVariable::kVar_pt1B,
+                                         &BuiltInVariable::kVar_pt0C};
+constexpr const TVariable *p0U1B1B1B1C[5] = {
+    &BuiltInVariable::kVar_pt0U, &BuiltInVariable::kVar_pt1B, &BuiltInVariable::kVar_pt1B,
+    &BuiltInVariable::kVar_pt1B, &BuiltInVariable::kVar_pt1C};
+constexpr const TVariable *p0U1B1B1B[4] = {&BuiltInVariable::kVar_pt0U, &BuiltInVariable::kVar_pt1B,
+                                           &BuiltInVariable::kVar_pt1B,
+                                           &BuiltInVariable::kVar_pt1B};
+constexpr const TVariable *p0U1B1C0B[4] = {&BuiltInVariable::kVar_pt0U, &BuiltInVariable::kVar_pt1B,
+                                           &BuiltInVariable::kVar_pt1C,
+                                           &BuiltInVariable::kVar_pt0B};
+constexpr const TVariable *p0U1B1C0C[4] = {&BuiltInVariable::kVar_pt0U, &BuiltInVariable::kVar_pt1B,
+                                           &BuiltInVariable::kVar_pt1C,
+                                           &BuiltInVariable::kVar_pt0C};
+constexpr const TVariable *p0U1B1C[3]   = {&BuiltInVariable::kVar_pt0U, &BuiltInVariable::kVar_pt1B,
+                                         &BuiltInVariable::kVar_pt1C};
+constexpr const TVariable *p0U1B[2] = {&BuiltInVariable::kVar_pt0U, &BuiltInVariable::kVar_pt1B};
+constexpr const TVariable *p0U1C0C1C[4] = {&BuiltInVariable::kVar_pt0U, &BuiltInVariable::kVar_pt1C,
+                                           &BuiltInVariable::kVar_pt0C,
+                                           &BuiltInVariable::kVar_pt1C};
+constexpr const TVariable *p0U1C0C[3]   = {&BuiltInVariable::kVar_pt0U, &BuiltInVariable::kVar_pt1C,
+                                         &BuiltInVariable::kVar_pt0C};
+constexpr const TVariable *p0U2B0B1C[4] = {&BuiltInVariable::kVar_pt0U, &BuiltInVariable::kVar_pt2B,
+                                           &BuiltInVariable::kVar_pt0B,
+                                           &BuiltInVariable::kVar_pt1C};
+constexpr const TVariable *p0U2B0B[3]   = {&BuiltInVariable::kVar_pt0U, &BuiltInVariable::kVar_pt2B,
+                                         &BuiltInVariable::kVar_pt0B};
+constexpr const TVariable *p0U2B1B1B1C[5] = {
+    &BuiltInVariable::kVar_pt0U, &BuiltInVariable::kVar_pt2B, &BuiltInVariable::kVar_pt1B,
+    &BuiltInVariable::kVar_pt1B, &BuiltInVariable::kVar_pt1C};
+constexpr const TVariable *p0U2B1B1B[4] = {&BuiltInVariable::kVar_pt0U, &BuiltInVariable::kVar_pt2B,
+                                           &BuiltInVariable::kVar_pt1B,
+                                           &BuiltInVariable::kVar_pt1B};
+constexpr const TVariable *p0U2B1C0B[4] = {&BuiltInVariable::kVar_pt0U, &BuiltInVariable::kVar_pt2B,
+                                           &BuiltInVariable::kVar_pt1C,
+                                           &BuiltInVariable::kVar_pt0B};
+constexpr const TVariable *p0U2B1C[3]   = {&BuiltInVariable::kVar_pt0U, &BuiltInVariable::kVar_pt2B,
+                                         &BuiltInVariable::kVar_pt1C};
+constexpr const TVariable *p0U2B[2] = {&BuiltInVariable::kVar_pt0U, &BuiltInVariable::kVar_pt2B};
+constexpr const TVariable *p0U3B0B1C[4] = {&BuiltInVariable::kVar_pt0U, &BuiltInVariable::kVar_pt3B,
+                                           &BuiltInVariable::kVar_pt0B,
+                                           &BuiltInVariable::kVar_pt1C};
+constexpr const TVariable *p0U3B0B[3]   = {&BuiltInVariable::kVar_pt0U, &BuiltInVariable::kVar_pt3B,
+                                         &BuiltInVariable::kVar_pt0B};
+constexpr const TVariable *p0U3B1B1B1C[5] = {
+    &BuiltInVariable::kVar_pt0U, &BuiltInVariable::kVar_pt3B, &BuiltInVariable::kVar_pt1B,
+    &BuiltInVariable::kVar_pt1B, &BuiltInVariable::kVar_pt1C};
+constexpr const TVariable *p0U3B1B1B[4] = {&BuiltInVariable::kVar_pt0U, &BuiltInVariable::kVar_pt3B,
+                                           &BuiltInVariable::kVar_pt1B,
+                                           &BuiltInVariable::kVar_pt1B};
+constexpr const TVariable *p0U3B1C0B[4] = {&BuiltInVariable::kVar_pt0U, &BuiltInVariable::kVar_pt3B,
+                                           &BuiltInVariable::kVar_pt1C,
+                                           &BuiltInVariable::kVar_pt0B};
+constexpr const TVariable *p0U3B1C[3]   = {&BuiltInVariable::kVar_pt0U, &BuiltInVariable::kVar_pt3B,
+                                         &BuiltInVariable::kVar_pt1C};
+constexpr const TVariable *p0U3B[2] = {&BuiltInVariable::kVar_pt0U, &BuiltInVariable::kVar_pt3B};
+constexpr const TVariable *p0V0C[2] = {&BuiltInVariable::kVar_pt0V, &BuiltInVariable::kVar_pt0C};
+constexpr const TVariable *p0V2B0B2C[4] = {&BuiltInVariable::kVar_pt0V, &BuiltInVariable::kVar_pt2B,
+                                           &BuiltInVariable::kVar_pt0B,
+                                           &BuiltInVariable::kVar_pt2C};
+constexpr const TVariable *p0V2B0B[3]   = {&BuiltInVariable::kVar_pt0V, &BuiltInVariable::kVar_pt2B,
+                                         &BuiltInVariable::kVar_pt0B};
+constexpr const TVariable *p0V2B2B2B2C[5] = {
+    &BuiltInVariable::kVar_pt0V, &BuiltInVariable::kVar_pt2B, &BuiltInVariable::kVar_pt2B,
+    &BuiltInVariable::kVar_pt2B, &BuiltInVariable::kVar_pt2C};
+constexpr const TVariable *p0V2B2B2B[4] = {&BuiltInVariable::kVar_pt0V, &BuiltInVariable::kVar_pt2B,
+                                           &BuiltInVariable::kVar_pt2B,
+                                           &BuiltInVariable::kVar_pt2B};
+constexpr const TVariable *p0V2B2C0B[4] = {&BuiltInVariable::kVar_pt0V, &BuiltInVariable::kVar_pt2B,
+                                           &BuiltInVariable::kVar_pt2C,
+                                           &BuiltInVariable::kVar_pt0B};
+constexpr const TVariable *p0V2B2C[3]   = {&BuiltInVariable::kVar_pt0V, &BuiltInVariable::kVar_pt2B,
+                                         &BuiltInVariable::kVar_pt2C};
+constexpr const TVariable *p0V2B[2] = {&BuiltInVariable::kVar_pt0V, &BuiltInVariable::kVar_pt2B};
+constexpr const TVariable *p0V2C0C2C[4] = {&BuiltInVariable::kVar_pt0V, &BuiltInVariable::kVar_pt2C,
+                                           &BuiltInVariable::kVar_pt0C,
+                                           &BuiltInVariable::kVar_pt2C};
+constexpr const TVariable *p0V2C0C[3]   = {&BuiltInVariable::kVar_pt0V, &BuiltInVariable::kVar_pt2C,
+                                         &BuiltInVariable::kVar_pt0C};
+constexpr const TVariable *p0V3B0B2C[4] = {&BuiltInVariable::kVar_pt0V, &BuiltInVariable::kVar_pt3B,
+                                           &BuiltInVariable::kVar_pt0B,
+                                           &BuiltInVariable::kVar_pt2C};
+constexpr const TVariable *p0V3B0B[3]   = {&BuiltInVariable::kVar_pt0V, &BuiltInVariable::kVar_pt3B,
+                                         &BuiltInVariable::kVar_pt0B};
+constexpr const TVariable *p0V3B2B2B2C[5] = {
+    &BuiltInVariable::kVar_pt0V, &BuiltInVariable::kVar_pt3B, &BuiltInVariable::kVar_pt2B,
+    &BuiltInVariable::kVar_pt2B, &BuiltInVariable::kVar_pt2C};
+constexpr const TVariable *p0V3B2B2B[4] = {&BuiltInVariable::kVar_pt0V, &BuiltInVariable::kVar_pt3B,
+                                           &BuiltInVariable::kVar_pt2B,
+                                           &BuiltInVariable::kVar_pt2B};
+constexpr const TVariable *p0V3B2C0B[4] = {&BuiltInVariable::kVar_pt0V, &BuiltInVariable::kVar_pt3B,
+                                           &BuiltInVariable::kVar_pt2C,
+                                           &BuiltInVariable::kVar_pt0B};
+constexpr const TVariable *p0V3B2C[3]   = {&BuiltInVariable::kVar_pt0V, &BuiltInVariable::kVar_pt3B,
+                                         &BuiltInVariable::kVar_pt2C};
+constexpr const TVariable *p0V3B[2]   = {&BuiltInVariable::kVar_pt0V, &BuiltInVariable::kVar_pt3B};
+constexpr const TVariable *p0W0C[2]   = {&BuiltInVariable::kVar_pt0W, &BuiltInVariable::kVar_pt0C};
+constexpr const TVariable *p0W2B0B[3] = {&BuiltInVariable::kVar_pt0W, &BuiltInVariable::kVar_pt2B,
+                                         &BuiltInVariable::kVar_pt0B};
+constexpr const TVariable *p0W2B0C[3] = {&BuiltInVariable::kVar_pt0W, &BuiltInVariable::kVar_pt2B,
+                                         &BuiltInVariable::kVar_pt0C};
+constexpr const TVariable *p0W2B2B2B[4] = {&BuiltInVariable::kVar_pt0W, &BuiltInVariable::kVar_pt2B,
+                                           &BuiltInVariable::kVar_pt2B,
+                                           &BuiltInVariable::kVar_pt2B};
+constexpr const TVariable *p0W2B[2] = {&BuiltInVariable::kVar_pt0W, &BuiltInVariable::kVar_pt2B};
+constexpr const TVariable *p0X0C[2] = {&BuiltInVariable::kVar_pt0X, &BuiltInVariable::kVar_pt0C};
+constexpr const TVariable *p0X2B0B1C[4] = {&BuiltInVariable::kVar_pt0X, &BuiltInVariable::kVar_pt2B,
+                                           &BuiltInVariable::kVar_pt0B,
+                                           &BuiltInVariable::kVar_pt1C};
+constexpr const TVariable *p0X2B0B[3]   = {&BuiltInVariable::kVar_pt0X, &BuiltInVariable::kVar_pt2B,
+                                         &BuiltInVariable::kVar_pt0B};
+constexpr const TVariable *p0X2B0C[3]   = {&BuiltInVariable::kVar_pt0X, &BuiltInVariable::kVar_pt2B,
+                                         &BuiltInVariable::kVar_pt0C};
+constexpr const TVariable *p0X2B1B1B1C[5] = {
+    &BuiltInVariable::kVar_pt0X, &BuiltInVariable::kVar_pt2B, &BuiltInVariable::kVar_pt1B,
+    &BuiltInVariable::kVar_pt1B, &BuiltInVariable::kVar_pt1C};
+constexpr const TVariable *p0X2B1B1B[4] = {&BuiltInVariable::kVar_pt0X, &BuiltInVariable::kVar_pt2B,
+                                           &BuiltInVariable::kVar_pt1B,
+                                           &BuiltInVariable::kVar_pt1B};
+constexpr const TVariable *p0X2B1C0B[4] = {&BuiltInVariable::kVar_pt0X, &BuiltInVariable::kVar_pt2B,
+                                           &BuiltInVariable::kVar_pt1C,
+                                           &BuiltInVariable::kVar_pt0B};
+constexpr const TVariable *p0X2B1C0C[4] = {&BuiltInVariable::kVar_pt0X, &BuiltInVariable::kVar_pt2B,
+                                           &BuiltInVariable::kVar_pt1C,
+                                           &BuiltInVariable::kVar_pt0C};
+constexpr const TVariable *p0X2B1C[3]   = {&BuiltInVariable::kVar_pt0X, &BuiltInVariable::kVar_pt2B,
+                                         &BuiltInVariable::kVar_pt1C};
+constexpr const TVariable *p0X2B[2] = {&BuiltInVariable::kVar_pt0X, &BuiltInVariable::kVar_pt2B};
+constexpr const TVariable *p0X2C0C1C[4] = {&BuiltInVariable::kVar_pt0X, &BuiltInVariable::kVar_pt2C,
+                                           &BuiltInVariable::kVar_pt0C,
+                                           &BuiltInVariable::kVar_pt1C};
+constexpr const TVariable *p0X2C0C[3]   = {&BuiltInVariable::kVar_pt0X, &BuiltInVariable::kVar_pt2C,
+                                         &BuiltInVariable::kVar_pt0C};
+constexpr const TVariable *p0Y1C0C[3]   = {&BuiltInVariable::kVar_pt0Y, &BuiltInVariable::kVar_pt1C,
+                                         &BuiltInVariable::kVar_pt0C};
+constexpr const TVariable *p0Y[1]       = {&BuiltInVariable::kVar_pt0Y};
+constexpr const TVariable *p0Z0C[2] = {&BuiltInVariable::kVar_pt0Z, &BuiltInVariable::kVar_pt0C};
+constexpr const TVariable *p0Z1B0B1C[4] = {&BuiltInVariable::kVar_pt0Z, &BuiltInVariable::kVar_pt1B,
+                                           &BuiltInVariable::kVar_pt0B,
+                                           &BuiltInVariable::kVar_pt1C};
+constexpr const TVariable *p0Z1B0B[3]   = {&BuiltInVariable::kVar_pt0Z, &BuiltInVariable::kVar_pt1B,
+                                         &BuiltInVariable::kVar_pt0B};
+constexpr const TVariable *p0Z1B[2] = {&BuiltInVariable::kVar_pt0Z, &BuiltInVariable::kVar_pt1B};
+constexpr const TVariable *p0Z2B0B1C[4] = {&BuiltInVariable::kVar_pt0Z, &BuiltInVariable::kVar_pt2B,
+                                           &BuiltInVariable::kVar_pt0B,
+                                           &BuiltInVariable::kVar_pt1C};
+constexpr const TVariable *p0Z2B0B[3]   = {&BuiltInVariable::kVar_pt0Z, &BuiltInVariable::kVar_pt2B,
+                                         &BuiltInVariable::kVar_pt0B};
+constexpr const TVariable *p0Z2B1B1B1C[5] = {
+    &BuiltInVariable::kVar_pt0Z, &BuiltInVariable::kVar_pt2B, &BuiltInVariable::kVar_pt1B,
+    &BuiltInVariable::kVar_pt1B, &BuiltInVariable::kVar_pt1C};
+constexpr const TVariable *p0Z2B1B1B[4] = {&BuiltInVariable::kVar_pt0Z, &BuiltInVariable::kVar_pt2B,
+                                           &BuiltInVariable::kVar_pt1B,
+                                           &BuiltInVariable::kVar_pt1B};
+constexpr const TVariable *p0Z2B1C0B[4] = {&BuiltInVariable::kVar_pt0Z, &BuiltInVariable::kVar_pt2B,
+                                           &BuiltInVariable::kVar_pt1C,
+                                           &BuiltInVariable::kVar_pt0B};
+constexpr const TVariable *p0Z2B1C[3]   = {&BuiltInVariable::kVar_pt0Z, &BuiltInVariable::kVar_pt2B,
+                                         &BuiltInVariable::kVar_pt1C};
+constexpr const TVariable *p0Z2B[2] = {&BuiltInVariable::kVar_pt0Z, &BuiltInVariable::kVar_pt2B};
+constexpr const TVariable *p0Z3B0B1C[4] = {&BuiltInVariable::kVar_pt0Z, &BuiltInVariable::kVar_pt3B,
+                                           &BuiltInVariable::kVar_pt0B,
+                                           &BuiltInVariable::kVar_pt1C};
+constexpr const TVariable *p0Z3B0B[3]   = {&BuiltInVariable::kVar_pt0Z, &BuiltInVariable::kVar_pt3B,
+                                         &BuiltInVariable::kVar_pt0B};
+constexpr const TVariable *p0Z3B1B1B1C[5] = {
+    &BuiltInVariable::kVar_pt0Z, &BuiltInVariable::kVar_pt3B, &BuiltInVariable::kVar_pt1B,
+    &BuiltInVariable::kVar_pt1B, &BuiltInVariable::kVar_pt1C};
+constexpr const TVariable *p0Z3B1B1B[4] = {&BuiltInVariable::kVar_pt0Z, &BuiltInVariable::kVar_pt3B,
+                                           &BuiltInVariable::kVar_pt1B,
+                                           &BuiltInVariable::kVar_pt1B};
+constexpr const TVariable *p0Z3B1C0B[4] = {&BuiltInVariable::kVar_pt0Z, &BuiltInVariable::kVar_pt3B,
+                                           &BuiltInVariable::kVar_pt1C,
+                                           &BuiltInVariable::kVar_pt0B};
+constexpr const TVariable *p0Z3B1C[3]   = {&BuiltInVariable::kVar_pt0Z, &BuiltInVariable::kVar_pt3B,
+                                         &BuiltInVariable::kVar_pt1C};
+constexpr const TVariable *p0Z3B[2]   = {&BuiltInVariable::kVar_pt0Z, &BuiltInVariable::kVar_pt3B};
+constexpr const TVariable *p0a0C[2]   = {&BuiltInVariable::kVar_pt0a, &BuiltInVariable::kVar_pt0C};
+constexpr const TVariable *p0a2B0B[3] = {&BuiltInVariable::kVar_pt0a, &BuiltInVariable::kVar_pt2B,
+                                         &BuiltInVariable::kVar_pt0B};
+constexpr const TVariable *p0a2B[2]   = {&BuiltInVariable::kVar_pt0a, &BuiltInVariable::kVar_pt2B};
+constexpr const TVariable *p0a3B0B[3] = {&BuiltInVariable::kVar_pt0a, &BuiltInVariable::kVar_pt3B,
+                                         &BuiltInVariable::kVar_pt0B};
+constexpr const TVariable *p0a3B2B2B[4] = {&BuiltInVariable::kVar_pt0a, &BuiltInVariable::kVar_pt3B,
+                                           &BuiltInVariable::kVar_pt2B,
+                                           &BuiltInVariable::kVar_pt2B};
+constexpr const TVariable *p0a3B[2] = {&BuiltInVariable::kVar_pt0a, &BuiltInVariable::kVar_pt3B};
+constexpr const TVariable *p0b0C[2] = {&BuiltInVariable::kVar_pt0b, &BuiltInVariable::kVar_pt0C};
+constexpr const TVariable *p0b2B0B1C[4] = {&BuiltInVariable::kVar_pt0b, &BuiltInVariable::kVar_pt2B,
+                                           &BuiltInVariable::kVar_pt0B,
+                                           &BuiltInVariable::kVar_pt1C};
+constexpr const TVariable *p0b2B0B[3]   = {&BuiltInVariable::kVar_pt0b, &BuiltInVariable::kVar_pt2B,
+                                         &BuiltInVariable::kVar_pt0B};
+constexpr const TVariable *p0b2B[2] = {&BuiltInVariable::kVar_pt0b, &BuiltInVariable::kVar_pt2B};
+constexpr const TVariable *p0b3B1B1B1C[5] = {
+    &BuiltInVariable::kVar_pt0b, &BuiltInVariable::kVar_pt3B, &BuiltInVariable::kVar_pt1B,
+    &BuiltInVariable::kVar_pt1B, &BuiltInVariable::kVar_pt1C};
+constexpr const TVariable *p0b3B1B1B[4] = {&BuiltInVariable::kVar_pt0b, &BuiltInVariable::kVar_pt3B,
+                                           &BuiltInVariable::kVar_pt1B,
+                                           &BuiltInVariable::kVar_pt1B};
+constexpr const TVariable *p0b3B[2]    = {&BuiltInVariable::kVar_pt0b, &BuiltInVariable::kVar_pt3B};
+constexpr const TVariable *p0c1C3B[3]  = {&BuiltInVariable::kVar_pt0c, &BuiltInVariable::kVar_pt1C,
+                                         &BuiltInVariable::kVar_pt3B};
+constexpr const TVariable *p0c1C[2]    = {&BuiltInVariable::kVar_pt0c, &BuiltInVariable::kVar_pt1C};
+constexpr const TVariable *p0c[1]      = {&BuiltInVariable::kVar_pt0c};
+constexpr const TVariable *p0d1C3C[3]  = {&BuiltInVariable::kVar_pt0d, &BuiltInVariable::kVar_pt1C,
+                                         &BuiltInVariable::kVar_pt3C};
+constexpr const TVariable *p0d1C[2]    = {&BuiltInVariable::kVar_pt0d, &BuiltInVariable::kVar_pt1C};
+constexpr const TVariable *p0d[1]      = {&BuiltInVariable::kVar_pt0d};
+constexpr const TVariable *p0e1C3D[3]  = {&BuiltInVariable::kVar_pt0e, &BuiltInVariable::kVar_pt1C,
+                                         &BuiltInVariable::kVar_pt3D};
+constexpr const TVariable *p0e1C[2]    = {&BuiltInVariable::kVar_pt0e, &BuiltInVariable::kVar_pt1C};
+constexpr const TVariable *p0e[1]      = {&BuiltInVariable::kVar_pt0e};
+constexpr const TVariable *p0f2C3B[3]  = {&BuiltInVariable::kVar_pt0f, &BuiltInVariable::kVar_pt2C,
+                                         &BuiltInVariable::kVar_pt3B};
+constexpr const TVariable *p0f2C[2]    = {&BuiltInVariable::kVar_pt0f, &BuiltInVariable::kVar_pt2C};
+constexpr const TVariable *p0f[1]      = {&BuiltInVariable::kVar_pt0f};
+constexpr const TVariable *p0g2C3C[3]  = {&BuiltInVariable::kVar_pt0g, &BuiltInVariable::kVar_pt2C,
+                                         &BuiltInVariable::kVar_pt3C};
+constexpr const TVariable *p0g2C[2]    = {&BuiltInVariable::kVar_pt0g, &BuiltInVariable::kVar_pt2C};
+constexpr const TVariable *p0g[1]      = {&BuiltInVariable::kVar_pt0g};
+constexpr const TVariable *p0h2C3D[3]  = {&BuiltInVariable::kVar_pt0h, &BuiltInVariable::kVar_pt2C,
+                                         &BuiltInVariable::kVar_pt3D};
+constexpr const TVariable *p0h2C[2]    = {&BuiltInVariable::kVar_pt0h, &BuiltInVariable::kVar_pt2C};
+constexpr const TVariable *p0h[1]      = {&BuiltInVariable::kVar_pt0h};
+constexpr const TVariable *p0i2C3B[3]  = {&BuiltInVariable::kVar_pt0i, &BuiltInVariable::kVar_pt2C,
+                                         &BuiltInVariable::kVar_pt3B};
+constexpr const TVariable *p0i2C[2]    = {&BuiltInVariable::kVar_pt0i, &BuiltInVariable::kVar_pt2C};
+constexpr const TVariable *p0i[1]      = {&BuiltInVariable::kVar_pt0i};
+constexpr const TVariable *p0j2C3C[3]  = {&BuiltInVariable::kVar_pt0j, &BuiltInVariable::kVar_pt2C,
+                                         &BuiltInVariable::kVar_pt3C};
+constexpr const TVariable *p0j2C[2]    = {&BuiltInVariable::kVar_pt0j, &BuiltInVariable::kVar_pt2C};
+constexpr const TVariable *p0j[1]      = {&BuiltInVariable::kVar_pt0j};
+constexpr const TVariable *p0k2C3D[3]  = {&BuiltInVariable::kVar_pt0k, &BuiltInVariable::kVar_pt2C,
+                                         &BuiltInVariable::kVar_pt3D};
+constexpr const TVariable *p0k2C[2]    = {&BuiltInVariable::kVar_pt0k, &BuiltInVariable::kVar_pt2C};
+constexpr const TVariable *p0k[1]      = {&BuiltInVariable::kVar_pt0k};
+constexpr const TVariable *p0l2C3B[3]  = {&BuiltInVariable::kVar_pt0l, &BuiltInVariable::kVar_pt2C,
+                                         &BuiltInVariable::kVar_pt3B};
+constexpr const TVariable *p0l2C[2]    = {&BuiltInVariable::kVar_pt0l, &BuiltInVariable::kVar_pt2C};
+constexpr const TVariable *p0l[1]      = {&BuiltInVariable::kVar_pt0l};
+constexpr const TVariable *p0m2C3C[3]  = {&BuiltInVariable::kVar_pt0m, &BuiltInVariable::kVar_pt2C,
+                                         &BuiltInVariable::kVar_pt3C};
+constexpr const TVariable *p0m2C[2]    = {&BuiltInVariable::kVar_pt0m, &BuiltInVariable::kVar_pt2C};
+constexpr const TVariable *p0m[1]      = {&BuiltInVariable::kVar_pt0m};
+constexpr const TVariable *p0n2C3D[3]  = {&BuiltInVariable::kVar_pt0n, &BuiltInVariable::kVar_pt2C,
+                                         &BuiltInVariable::kVar_pt3D};
+constexpr const TVariable *p0n2C[2]    = {&BuiltInVariable::kVar_pt0n, &BuiltInVariable::kVar_pt2C};
+constexpr const TVariable *p0n[1]      = {&BuiltInVariable::kVar_pt0n};
+constexpr const TVariable *p1B0B0B[3]  = {&BuiltInVariable::kVar_pt1B, &BuiltInVariable::kVar_pt0B,
+                                         &BuiltInVariable::kVar_pt0B};
+constexpr const TVariable *p1B0B[2]    = {&BuiltInVariable::kVar_pt1B, &BuiltInVariable::kVar_pt0B};
+constexpr const TVariable *p1B1B0B[3]  = {&BuiltInVariable::kVar_pt1B, &BuiltInVariable::kVar_pt1B,
+                                         &BuiltInVariable::kVar_pt0B};
+constexpr const TVariable *p1B1B1B[3]  = {&BuiltInVariable::kVar_pt1B, &BuiltInVariable::kVar_pt1B,
+                                         &BuiltInVariable::kVar_pt1B};
+constexpr const TVariable *p1B1B1E[3]  = {&BuiltInVariable::kVar_pt1B, &BuiltInVariable::kVar_pt1B,
+                                         &BuiltInVariable::kVar_pt1E};
+constexpr const TVariable *p1B1B[2]    = {&BuiltInVariable::kVar_pt1B, &BuiltInVariable::kVar_pt1B};
+constexpr const TVariable *p1B1C[2]    = {&BuiltInVariable::kVar_pt1B, &BuiltInVariable::kVar_pt1C};
+constexpr const TVariable *p1B2B[2]    = {&BuiltInVariable::kVar_pt1B, &BuiltInVariable::kVar_pt2B};
+constexpr const TVariable *p1B3B[2]    = {&BuiltInVariable::kVar_pt1B, &BuiltInVariable::kVar_pt3B};
+constexpr const TVariable *p1B[1]      = {&BuiltInVariable::kVar_pt1B};
+constexpr const TVariable *p1B_o_1B[2] = {&BuiltInVariable::kVar_pt1B,
+                                          &BuiltInVariable::kVar_pt_o_1B};
+constexpr const TVariable *p1B_o_1C[2] = {&BuiltInVariable::kVar_pt1B,
+                                          &BuiltInVariable::kVar_pt_o_1C};
+constexpr const TVariable *p1C0C0C[3]  = {&BuiltInVariable::kVar_pt1C, &BuiltInVariable::kVar_pt0C,
+                                         &BuiltInVariable::kVar_pt0C};
+constexpr const TVariable *p1C0C[2]    = {&BuiltInVariable::kVar_pt1C, &BuiltInVariable::kVar_pt0C};
+constexpr const TVariable *p1C1C0C0C[4] = {&BuiltInVariable::kVar_pt1C, &BuiltInVariable::kVar_pt1C,
+                                           &BuiltInVariable::kVar_pt0C,
+                                           &BuiltInVariable::kVar_pt0C};
+constexpr const TVariable *p1C1C1C[3]   = {&BuiltInVariable::kVar_pt1C, &BuiltInVariable::kVar_pt1C,
+                                         &BuiltInVariable::kVar_pt1C};
+constexpr const TVariable *p1C1C[2] = {&BuiltInVariable::kVar_pt1C, &BuiltInVariable::kVar_pt1C};
+constexpr const TVariable *p1C1C_o_1C_o_1C[4] = {
+    &BuiltInVariable::kVar_pt1C, &BuiltInVariable::kVar_pt1C, &BuiltInVariable::kVar_pt_o_1C,
+    &BuiltInVariable::kVar_pt_o_1C};
+constexpr const TVariable *p1C[1]     = {&BuiltInVariable::kVar_pt1C};
+constexpr const TVariable *p1D0C0C[3] = {&BuiltInVariable::kVar_pt1D, &BuiltInVariable::kVar_pt0C,
+                                         &BuiltInVariable::kVar_pt0C};
+constexpr const TVariable *p1D0D0D[3] = {&BuiltInVariable::kVar_pt1D, &BuiltInVariable::kVar_pt0D,
+                                         &BuiltInVariable::kVar_pt0D};
+constexpr const TVariable *p1D0D[2]   = {&BuiltInVariable::kVar_pt1D, &BuiltInVariable::kVar_pt0D};
+constexpr const TVariable *p1D1D0C0C[4] = {&BuiltInVariable::kVar_pt1D, &BuiltInVariable::kVar_pt1D,
+                                           &BuiltInVariable::kVar_pt0C,
+                                           &BuiltInVariable::kVar_pt0C};
+constexpr const TVariable *p1D1D1D[3]   = {&BuiltInVariable::kVar_pt1D, &BuiltInVariable::kVar_pt1D,
+                                         &BuiltInVariable::kVar_pt1D};
+constexpr const TVariable *p1D1D[2] = {&BuiltInVariable::kVar_pt1D, &BuiltInVariable::kVar_pt1D};
+constexpr const TVariable *p1D1D_o_1D[3] = {
+    &BuiltInVariable::kVar_pt1D, &BuiltInVariable::kVar_pt1D, &BuiltInVariable::kVar_pt_o_1D};
+constexpr const TVariable *p1D1D_o_1D_o_1D[4] = {
+    &BuiltInVariable::kVar_pt1D, &BuiltInVariable::kVar_pt1D, &BuiltInVariable::kVar_pt_o_1D,
+    &BuiltInVariable::kVar_pt_o_1D};
+constexpr const TVariable *p1D[1]      = {&BuiltInVariable::kVar_pt1D};
+constexpr const TVariable *p1E1E[2]    = {&BuiltInVariable::kVar_pt1E, &BuiltInVariable::kVar_pt1E};
+constexpr const TVariable *p1E[1]      = {&BuiltInVariable::kVar_pt1E};
+constexpr const TVariable *p2B0B0B[3]  = {&BuiltInVariable::kVar_pt2B, &BuiltInVariable::kVar_pt0B,
+                                         &BuiltInVariable::kVar_pt0B};
+constexpr const TVariable *p2B0B[2]    = {&BuiltInVariable::kVar_pt2B, &BuiltInVariable::kVar_pt0B};
+constexpr const TVariable *p2B0G[2]    = {&BuiltInVariable::kVar_pt2B, &BuiltInVariable::kVar_pt0G};
+constexpr const TVariable *p2B1B[2]    = {&BuiltInVariable::kVar_pt2B, &BuiltInVariable::kVar_pt1B};
+constexpr const TVariable *p2B2B0B[3]  = {&BuiltInVariable::kVar_pt2B, &BuiltInVariable::kVar_pt2B,
+                                         &BuiltInVariable::kVar_pt0B};
+constexpr const TVariable *p2B2B2B[3]  = {&BuiltInVariable::kVar_pt2B, &BuiltInVariable::kVar_pt2B,
+                                         &BuiltInVariable::kVar_pt2B};
+constexpr const TVariable *p2B2B2E[3]  = {&BuiltInVariable::kVar_pt2B, &BuiltInVariable::kVar_pt2B,
+                                         &BuiltInVariable::kVar_pt2E};
+constexpr const TVariable *p2B2B[2]    = {&BuiltInVariable::kVar_pt2B, &BuiltInVariable::kVar_pt2B};
+constexpr const TVariable *p2B2C[2]    = {&BuiltInVariable::kVar_pt2B, &BuiltInVariable::kVar_pt2C};
+constexpr const TVariable *p2B3B[2]    = {&BuiltInVariable::kVar_pt2B, &BuiltInVariable::kVar_pt3B};
+constexpr const TVariable *p2B[1]      = {&BuiltInVariable::kVar_pt2B};
+constexpr const TVariable *p2B_o_2B[2] = {&BuiltInVariable::kVar_pt2B,
+                                          &BuiltInVariable::kVar_pt_o_2B};
+constexpr const TVariable *p2B_o_2C[2] = {&BuiltInVariable::kVar_pt2B,
+                                          &BuiltInVariable::kVar_pt_o_2C};
+constexpr const TVariable *p2C0C0C[3]  = {&BuiltInVariable::kVar_pt2C, &BuiltInVariable::kVar_pt0C,
+                                         &BuiltInVariable::kVar_pt0C};
+constexpr const TVariable *p2C0C[2]    = {&BuiltInVariable::kVar_pt2C, &BuiltInVariable::kVar_pt0C};
+constexpr const TVariable *p2C2C0C0C[4] = {&BuiltInVariable::kVar_pt2C, &BuiltInVariable::kVar_pt2C,
+                                           &BuiltInVariable::kVar_pt0C,
+                                           &BuiltInVariable::kVar_pt0C};
+constexpr const TVariable *p2C2C2C[3]   = {&BuiltInVariable::kVar_pt2C, &BuiltInVariable::kVar_pt2C,
+                                         &BuiltInVariable::kVar_pt2C};
+constexpr const TVariable *p2C2C[2] = {&BuiltInVariable::kVar_pt2C, &BuiltInVariable::kVar_pt2C};
+constexpr const TVariable *p2C2C_o_2C_o_2C[4] = {
+    &BuiltInVariable::kVar_pt2C, &BuiltInVariable::kVar_pt2C, &BuiltInVariable::kVar_pt_o_2C,
+    &BuiltInVariable::kVar_pt_o_2C};
+constexpr const TVariable *p2C[1]     = {&BuiltInVariable::kVar_pt2C};
+constexpr const TVariable *p2D0C0C[3] = {&BuiltInVariable::kVar_pt2D, &BuiltInVariable::kVar_pt0C,
+                                         &BuiltInVariable::kVar_pt0C};
+constexpr const TVariable *p2D0D0D[3] = {&BuiltInVariable::kVar_pt2D, &BuiltInVariable::kVar_pt0D,
+                                         &BuiltInVariable::kVar_pt0D};
+constexpr const TVariable *p2D0D[2]   = {&BuiltInVariable::kVar_pt2D, &BuiltInVariable::kVar_pt0D};
+constexpr const TVariable *p2D2D0C0C[4] = {&BuiltInVariable::kVar_pt2D, &BuiltInVariable::kVar_pt2D,
+                                           &BuiltInVariable::kVar_pt0C,
+                                           &BuiltInVariable::kVar_pt0C};
+constexpr const TVariable *p2D2D2D[3]   = {&BuiltInVariable::kVar_pt2D, &BuiltInVariable::kVar_pt2D,
+                                         &BuiltInVariable::kVar_pt2D};
+constexpr const TVariable *p2D2D[2] = {&BuiltInVariable::kVar_pt2D, &BuiltInVariable::kVar_pt2D};
+constexpr const TVariable *p2D2D_o_2D[3] = {
+    &BuiltInVariable::kVar_pt2D, &BuiltInVariable::kVar_pt2D, &BuiltInVariable::kVar_pt_o_2D};
+constexpr const TVariable *p2D2D_o_2D_o_2D[4] = {
+    &BuiltInVariable::kVar_pt2D, &BuiltInVariable::kVar_pt2D, &BuiltInVariable::kVar_pt_o_2D,
+    &BuiltInVariable::kVar_pt_o_2D};
+constexpr const TVariable *p2D[1]      = {&BuiltInVariable::kVar_pt2D};
+constexpr const TVariable *p2E2E[2]    = {&BuiltInVariable::kVar_pt2E, &BuiltInVariable::kVar_pt2E};
+constexpr const TVariable *p2E[1]      = {&BuiltInVariable::kVar_pt2E};
+constexpr const TVariable *p3B0B0B[3]  = {&BuiltInVariable::kVar_pt3B, &BuiltInVariable::kVar_pt0B,
+                                         &BuiltInVariable::kVar_pt0B};
+constexpr const TVariable *p3B0B[2]    = {&BuiltInVariable::kVar_pt3B, &BuiltInVariable::kVar_pt0B};
+constexpr const TVariable *p3B1B[2]    = {&BuiltInVariable::kVar_pt3B, &BuiltInVariable::kVar_pt1B};
+constexpr const TVariable *p3B2B[2]    = {&BuiltInVariable::kVar_pt3B, &BuiltInVariable::kVar_pt2B};
+constexpr const TVariable *p3B3B0B[3]  = {&BuiltInVariable::kVar_pt3B, &BuiltInVariable::kVar_pt3B,
+                                         &BuiltInVariable::kVar_pt0B};
+constexpr const TVariable *p3B3B3B[3]  = {&BuiltInVariable::kVar_pt3B, &BuiltInVariable::kVar_pt3B,
+                                         &BuiltInVariable::kVar_pt3B};
+constexpr const TVariable *p3B3B3E[3]  = {&BuiltInVariable::kVar_pt3B, &BuiltInVariable::kVar_pt3B,
+                                         &BuiltInVariable::kVar_pt3E};
+constexpr const TVariable *p3B3B[2]    = {&BuiltInVariable::kVar_pt3B, &BuiltInVariable::kVar_pt3B};
+constexpr const TVariable *p3B3C[2]    = {&BuiltInVariable::kVar_pt3B, &BuiltInVariable::kVar_pt3C};
+constexpr const TVariable *p3B[1]      = {&BuiltInVariable::kVar_pt3B};
+constexpr const TVariable *p3B_o_3B[2] = {&BuiltInVariable::kVar_pt3B,
+                                          &BuiltInVariable::kVar_pt_o_3B};
+constexpr const TVariable *p3B_o_3C[2] = {&BuiltInVariable::kVar_pt3B,
+                                          &BuiltInVariable::kVar_pt_o_3C};
+constexpr const TVariable *p3C0C0C[3]  = {&BuiltInVariable::kVar_pt3C, &BuiltInVariable::kVar_pt0C,
+                                         &BuiltInVariable::kVar_pt0C};
+constexpr const TVariable *p3C0C[2]    = {&BuiltInVariable::kVar_pt3C, &BuiltInVariable::kVar_pt0C};
+constexpr const TVariable *p3C3C0C0C[4] = {&BuiltInVariable::kVar_pt3C, &BuiltInVariable::kVar_pt3C,
+                                           &BuiltInVariable::kVar_pt0C,
+                                           &BuiltInVariable::kVar_pt0C};
+constexpr const TVariable *p3C3C3C[3]   = {&BuiltInVariable::kVar_pt3C, &BuiltInVariable::kVar_pt3C,
+                                         &BuiltInVariable::kVar_pt3C};
+constexpr const TVariable *p3C3C[2] = {&BuiltInVariable::kVar_pt3C, &BuiltInVariable::kVar_pt3C};
+constexpr const TVariable *p3C3C_o_3C_o_3C[4] = {
+    &BuiltInVariable::kVar_pt3C, &BuiltInVariable::kVar_pt3C, &BuiltInVariable::kVar_pt_o_3C,
+    &BuiltInVariable::kVar_pt_o_3C};
+constexpr const TVariable *p3C[1]     = {&BuiltInVariable::kVar_pt3C};
+constexpr const TVariable *p3D0C0C[3] = {&BuiltInVariable::kVar_pt3D, &BuiltInVariable::kVar_pt0C,
+                                         &BuiltInVariable::kVar_pt0C};
+constexpr const TVariable *p3D0D0D[3] = {&BuiltInVariable::kVar_pt3D, &BuiltInVariable::kVar_pt0D,
+                                         &BuiltInVariable::kVar_pt0D};
+constexpr const TVariable *p3D0D[2]   = {&BuiltInVariable::kVar_pt3D, &BuiltInVariable::kVar_pt0D};
+constexpr const TVariable *p3D3D0C0C[4] = {&BuiltInVariable::kVar_pt3D, &BuiltInVariable::kVar_pt3D,
+                                           &BuiltInVariable::kVar_pt0C,
+                                           &BuiltInVariable::kVar_pt0C};
+constexpr const TVariable *p3D3D3D[3]   = {&BuiltInVariable::kVar_pt3D, &BuiltInVariable::kVar_pt3D,
+                                         &BuiltInVariable::kVar_pt3D};
+constexpr const TVariable *p3D3D[2] = {&BuiltInVariable::kVar_pt3D, &BuiltInVariable::kVar_pt3D};
+constexpr const TVariable *p3D3D_o_3D[3] = {
+    &BuiltInVariable::kVar_pt3D, &BuiltInVariable::kVar_pt3D, &BuiltInVariable::kVar_pt_o_3D};
+constexpr const TVariable *p3D3D_o_3D_o_3D[4] = {
+    &BuiltInVariable::kVar_pt3D, &BuiltInVariable::kVar_pt3D, &BuiltInVariable::kVar_pt_o_3D,
+    &BuiltInVariable::kVar_pt_o_3D};
+constexpr const TVariable *p3D[1]   = {&BuiltInVariable::kVar_pt3D};
+constexpr const TVariable *p3E3E[2] = {&BuiltInVariable::kVar_pt3E, &BuiltInVariable::kVar_pt3E};
+constexpr const TVariable *p3E[1]   = {&BuiltInVariable::kVar_pt3E};
+constexpr const TVariable *p5B5B[2] = {&BuiltInVariable::kVar_pt5B, &BuiltInVariable::kVar_pt5B};
+constexpr const TVariable *p5B[1]   = {&BuiltInVariable::kVar_pt5B};
+constexpr const TVariable *p6B6B[2] = {&BuiltInVariable::kVar_pt6B, &BuiltInVariable::kVar_pt6B};
+constexpr const TVariable *p6B[1]   = {&BuiltInVariable::kVar_pt6B};
+constexpr const TVariable *p7B7B[2] = {&BuiltInVariable::kVar_pt7B, &BuiltInVariable::kVar_pt7B};
+constexpr const TVariable *p7B[1]   = {&BuiltInVariable::kVar_pt7B};
+constexpr const TVariable *p9B9B[2] = {&BuiltInVariable::kVar_pt9B, &BuiltInVariable::kVar_pt9B};
+constexpr const TVariable *p9B[1]   = {&BuiltInVariable::kVar_pt9B};
+constexpr const TVariable *pABAB[2] = {&BuiltInVariable::kVar_ptAB, &BuiltInVariable::kVar_ptAB};
+constexpr const TVariable *pAB[1]   = {&BuiltInVariable::kVar_ptAB};
+constexpr const TVariable *pBBBB[2] = {&BuiltInVariable::kVar_ptBB, &BuiltInVariable::kVar_ptBB};
+constexpr const TVariable *pBB[1]   = {&BuiltInVariable::kVar_ptBB};
+constexpr const TVariable *pDBDB[2] = {&BuiltInVariable::kVar_ptDB, &BuiltInVariable::kVar_ptDB};
+constexpr const TVariable *pDB[1]   = {&BuiltInVariable::kVar_ptDB};
+constexpr const TVariable *pEBEB[2] = {&BuiltInVariable::kVar_ptEB, &BuiltInVariable::kVar_ptEB};
+constexpr const TVariable *pEB[1]   = {&BuiltInVariable::kVar_ptEB};
+constexpr const TVariable *pFBFB[2] = {&BuiltInVariable::kVar_ptFB, &BuiltInVariable::kVar_ptFB};
+constexpr const TVariable *pFB[1]   = {&BuiltInVariable::kVar_ptFB};
+constexpr const TVariable *p_io_0C0C0C[3] = {
+    &BuiltInVariable::kVar_pt_io_0C, &BuiltInVariable::kVar_pt0C, &BuiltInVariable::kVar_pt0C};
+constexpr const TVariable *p_io_0C0C[2]   = {&BuiltInVariable::kVar_pt_io_0C,
+                                           &BuiltInVariable::kVar_pt0C};
+constexpr const TVariable *p_io_0D0D0D[3] = {
+    &BuiltInVariable::kVar_pt_io_0D, &BuiltInVariable::kVar_pt0D, &BuiltInVariable::kVar_pt0D};
+constexpr const TVariable *p_io_0D0D[2] = {&BuiltInVariable::kVar_pt_io_0D,
+                                           &BuiltInVariable::kVar_pt0D};
+
+}  // namespace BuiltInParameters
+
+namespace UnmangledBuiltIns
+{
+
+constexpr const UnmangledBuiltIn ARB_texture_rectangle(TExtension::ARB_texture_rectangle);
+constexpr const UnmangledBuiltIn EXT_YUV_target(TExtension::EXT_YUV_target);
+constexpr const UnmangledBuiltIn EXT_geometry_shader(TExtension::EXT_geometry_shader);
+constexpr const UnmangledBuiltIn EXT_shader_texture_lod(TExtension::EXT_shader_texture_lod);
+constexpr const UnmangledBuiltIn OES_standard_derivatives(TExtension::OES_standard_derivatives);
+constexpr const UnmangledBuiltIn UNDEFINED(TExtension::UNDEFINED);
+
+}  // namespace UnmangledBuiltIns
 
 // TODO(oetuaho): Would be nice to make this a class instead of a namespace so that we could friend
 // this from TFunction. Now symbol constructors taking an id have to be public even though they're

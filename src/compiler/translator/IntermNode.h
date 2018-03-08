@@ -660,7 +660,7 @@ class TIntermBlock : public TIntermNode, public TIntermAggregateBase
 
 // Function prototype. May be in the AST either as a function prototype declaration or as a part of
 // a function definition. The type of the node is the function return type.
-class TIntermFunctionPrototype : public TIntermTyped, public TIntermAggregateBase
+class TIntermFunctionPrototype : public TIntermTyped
 {
   public:
     TIntermFunctionPrototype(const TFunction *function);
@@ -683,17 +683,9 @@ class TIntermFunctionPrototype : public TIntermTyped, public TIntermAggregateBas
         return true;
     }
 
-    // Only intended for initially building the declaration.
-    void appendParameter(TIntermSymbol *parameter);
-
-    TIntermSequence *getSequence() override { return &mParameters; }
-    const TIntermSequence *getSequence() const override { return &mParameters; }
-
     const TFunction *getFunction() const { return mFunction; }
 
   protected:
-    TIntermSequence mParameters;
-
     const TFunction *const mFunction;
 };
 

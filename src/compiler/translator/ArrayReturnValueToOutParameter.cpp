@@ -23,15 +23,6 @@ namespace
 
 constexpr const ImmutableString kReturnValueVariableName("angle_return");
 
-void CopyAggregateChildren(TIntermAggregateBase *from, TIntermAggregateBase *to)
-{
-    const TIntermSequence *fromSequence = from->getSequence();
-    for (size_t ii = 0; ii < fromSequence->size(); ++ii)
-    {
-        to->getSequence()->push_back(fromSequence->at(ii));
-    }
-}
-
 class ArrayReturnValueToOutParameterTraverser : private TIntermTraverser
 {
   public:
@@ -40,7 +31,7 @@ class ArrayReturnValueToOutParameterTraverser : private TIntermTraverser
   private:
     ArrayReturnValueToOutParameterTraverser(TSymbolTable *symbolTable);
 
-    bool visitFunctionPrototype(Visit visit, TIntermFunctionPrototype *node) override;
+    void visitFunctionPrototype(TIntermFunctionPrototype *node) override;
     bool visitFunctionDefinition(Visit visit, TIntermFunctionDefinition *node) override;
     bool visitAggregate(Visit visit, TIntermAggregate *node) override;
     bool visitBranch(Visit visit, TIntermBranch *node) override;
@@ -110,10 +101,9 @@ bool ArrayReturnValueToOutParameterTraverser::visitFunctionDefinition(
     return true;
 }
 
-bool ArrayReturnValueToOutParameterTraverser::visitFunctionPrototype(Visit visit,
-                                                                     TIntermFunctionPrototype *node)
+void ArrayReturnValueToOutParameterTraverser::visitFunctionPrototype(TIntermFunctionPrototype *node)
 {
-    if (visit == PreVisit && node->isArray())
+    if (node->isArray())
     {
         // Replace the whole prototype node with another node that has the out parameter
         // added. Also set the function to return void.
@@ -133,21 +123,16 @@ bool ArrayReturnValueToOutParameterTraverser::visitFunctionPrototype(Visit visit
             {
                 func->addParameter(node->getFunction()->getParam(i));
             }
-            func->addParameter(TConstParameter(
-                kReturnValueVariableName, static_cast<const TType *>(returnValueVariableType)));
+            func->addParameter(changedFunction.returnValueVariable);
             changedFunction.func                = func;
             mChangedFunctions[functionId.get()] = changedFunction;
         }
         TIntermFunctionPrototype *replacement =
             new TIntermFunctionPrototype(mChangedFunctions[functionId.get()].func);
-        CopyAggregateChildren(node, replacement);
-        replacement->getSequence()->push_back(
-            new TIntermSymbol(mChangedFunctions[functionId.get()].returnValueVariable));
         replacement->setLine(node->getLine());
 
         queueReplacement(replacement, OriginalNode::IS_DROPPED);
     }
-    return false;
 }
 
 bool ArrayReturnValueToOutParameterTraverser::visitAggregate(Visit visit, TIntermAggregate *node)

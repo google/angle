@@ -70,7 +70,8 @@ class IntermNodeTest : public testing::Test
         for (TIntermNode *arg : args)
         {
             const TType *type = new TType(arg->getAsTyped()->getType());
-            func->addParameter(TConstParameter(type));
+            func->addParameter(new TVariable(&symbolTable, ImmutableString("param"), type,
+                                             SymbolType::UserDefined));
         }
         return func;
     }

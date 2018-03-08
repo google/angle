@@ -1675,7 +1675,7 @@ void TParseContext::functionCallRValueLValueErrorCheck(const TFunction *fnCandid
 {
     for (size_t i = 0; i < fnCandidate->getParamCount(); ++i)
     {
-        TQualifier qual = fnCandidate->getParam(i).type->getQualifier();
+        TQualifier qual        = fnCandidate->getParam(i)->getType().getQualifier();
         TIntermTyped *argument = (*(fnCall->getSequence()))[i]->getAsTyped();
         if (!IsImage(argument->getBasicType()) && (IsQualifierUnspecified(qual) || qual == EvqIn ||
                                                    qual == EvqInOut || qual == EvqConstReadOnly))
@@ -3155,47 +3155,31 @@ TIntermFunctionPrototype *TParseContext::createPrototypeNodeFromFunction(
 
     for (size_t i = 0; i < function.getParamCount(); i++)
     {
-        const TConstParameter &param = function.getParam(i);
-
-        TIntermSymbol *symbol = nullptr;
+        const TVariable *param = function.getParam(i);
 
         // If the parameter has no name, it's not an error, just don't add it to symbol table (could
         // be used for unused args).
-        if (param.name != nullptr)
+        if (param->symbolType() != SymbolType::Empty)
         {
-            TVariable *variable =
-                new TVariable(&symbolTable, param.name, param.type, SymbolType::UserDefined);
-            symbol = new TIntermSymbol(variable);
-            // Insert the parameter in the symbol table.
             if (insertParametersToSymbolTable)
             {
-                if (!symbolTable.declare(variable))
+                if (!symbolTable.declare(const_cast<TVariable *>(param)))
                 {
-                    error(location, "redefinition", param.name);
+                    error(location, "redefinition", param->name());
                 }
             }
             // Unsized type of a named parameter should have already been checked and sanitized.
-            ASSERT(!param.type->isUnsizedArray());
+            ASSERT(!param->getType().isUnsizedArray());
         }
         else
         {
-            if (param.type->isUnsizedArray())
+            if (param->getType().isUnsizedArray())
             {
                 error(location, "function parameter array must be sized at compile time", "[]");
                 // We don't need to size the arrays since the parameter is unnamed and hence
                 // inaccessible.
             }
         }
-        if (!symbol)
-        {
-            // The parameter had no name or declaring the symbol failed - either way, add a nameless
-            // symbol.
-            TVariable *emptyVariable =
-                new TVariable(&symbolTable, ImmutableString(""), param.type, SymbolType::Empty);
-            symbol = new TIntermSymbol(emptyVariable);
-        }
-        symbol->setLine(location);
-        prototype->appendParameter(symbol);
     }
     return prototype;
 }
@@ -3288,8 +3272,8 @@ TFunction *TParseContext::parseFunctionDeclarator(const TSourceLoc &location, TF
 
     for (size_t i = 0u; i < function->getParamCount(); ++i)
     {
-        auto &param = function->getParam(i);
-        if (param.type->isStructSpecifier())
+        const TVariable *param = function->getParam(i);
+        if (param->getType().isStructSpecifier())
         {
             // ESSL 3.00.6 section 12.10.
             error(location, "Function parameter type cannot be a structure definition",
@@ -3335,12 +3319,12 @@ TFunction *TParseContext::parseFunctionDeclarator(const TSourceLoc &location, TF
         }
         for (size_t i = 0; i < prevDec->getParamCount(); ++i)
         {
-            if (prevDec->getParam(i).type->getQualifier() !=
-                function->getParam(i).type->getQualifier())
+            if (prevDec->getParam(i)->getType().getQualifier() !=
+                function->getParam(i)->getType().getQualifier())
             {
                 error(location,
                       "function must have the same parameter qualifiers in all of its declarations",
-                      function->getParam(i).type->getQualifierString());
+                      function->getParam(i)->getType().getQualifierString());
             }
         }
     }
@@ -5691,7 +5675,7 @@ void TParseContext::checkImageMemoryAccessForUserDefinedFunctions(
     {
         TIntermTyped *typedArgument        = arguments[i]->getAsTyped();
         const TType &functionArgumentType  = typedArgument->getType();
-        const TType &functionParameterType = *functionDefinition->getParam(i).type;
+        const TType &functionParameterType = functionDefinition->getParam(i)->getType();
         ASSERT(functionArgumentType.getBasicType() == functionParameterType.getBasicType());
 
         if (IsImage(functionArgumentType.getBasicType()))

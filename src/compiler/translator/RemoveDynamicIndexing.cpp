@@ -65,13 +65,6 @@ std::string GetIndexFunctionName(const TType &type, bool write)
     return nameSink.str();
 }
 
-TIntermSymbol *CreateParameterSymbol(const TConstParameter &parameter, TSymbolTable *symbolTable)
-{
-    TVariable *variable =
-        new TVariable(symbolTable, parameter.name, parameter.type, SymbolType::AngleInternal);
-    return new TIntermSymbol(variable);
-}
-
 TIntermConstantUnion *CreateIntConstantNode(int i)
 {
     TConstantUnion *constant = new TConstantUnion();
@@ -180,15 +173,12 @@ TIntermFunctionDefinition *GetIndexFunctionDefinition(const TType &type,
     std::string functionName                = GetIndexFunctionName(type, write);
     TIntermFunctionPrototype *prototypeNode = CreateInternalFunctionPrototypeNode(func);
 
-    TIntermSymbol *baseParam = CreateParameterSymbol(func.getParam(0), symbolTable);
-    prototypeNode->getSequence()->push_back(baseParam);
-    TIntermSymbol *indexParam = CreateParameterSymbol(func.getParam(1), symbolTable);
-    prototypeNode->getSequence()->push_back(indexParam);
+    TIntermSymbol *baseParam  = new TIntermSymbol(func.getParam(0));
+    TIntermSymbol *indexParam = new TIntermSymbol(func.getParam(1));
     TIntermSymbol *valueParam = nullptr;
     if (write)
     {
-        valueParam = CreateParameterSymbol(func.getParam(2), symbolTable);
-        prototypeNode->getSequence()->push_back(valueParam);
+        valueParam = new TIntermSymbol(func.getParam(2));
     }
 
     TIntermBlock *statementList = new TIntermBlock();
@@ -408,9 +398,10 @@ bool RemoveDynamicIndexingTraverser::visitBinary(Visit visit, TIntermBinary *nod
                 indexingFunction =
                     new TFunction(mSymbolTable, indexingFunctionName, SymbolType::AngleInternal,
                                   GetFieldType(type), true);
+                indexingFunction->addParameter(new TVariable(
+                    mSymbolTable, kBaseName, GetBaseType(type, false), SymbolType::AngleInternal));
                 indexingFunction->addParameter(
-                    TConstParameter(kBaseName, GetBaseType(type, false)));
-                indexingFunction->addParameter(TConstParameter(kIndexName, kIndexType));
+                    new TVariable(mSymbolTable, kIndexName, kIndexType, SymbolType::AngleInternal));
                 mIndexedVecAndMatrixTypes[type] = indexingFunction;
             }
             else
@@ -458,13 +449,16 @@ bool RemoveDynamicIndexingTraverser::visitBinary(Visit visit, TIntermBinary *nod
                     indexedWriteFunction =
                         new TFunction(mSymbolTable, functionName, SymbolType::AngleInternal,
                                       StaticType::GetBasic<EbtVoid>(), false);
-                    indexedWriteFunction->addParameter(
-                        TConstParameter(kBaseName, GetBaseType(type, true)));
-                    indexedWriteFunction->addParameter(TConstParameter(kIndexName, kIndexType));
+                    indexedWriteFunction->addParameter(new TVariable(mSymbolTable, kBaseName,
+                                                                     GetBaseType(type, true),
+                                                                     SymbolType::AngleInternal));
+                    indexedWriteFunction->addParameter(new TVariable(
+                        mSymbolTable, kIndexName, kIndexType, SymbolType::AngleInternal));
                     TType *valueType = GetFieldType(type);
                     valueType->setQualifier(EvqIn);
-                    indexedWriteFunction->addParameter(
-                        TConstParameter(kValueName, static_cast<const TType *>(valueType)));
+                    indexedWriteFunction->addParameter(new TVariable(
+                        mSymbolTable, kValueName, static_cast<const TType *>(valueType),
+                        SymbolType::AngleInternal));
                     mWrittenVecAndMatrixTypes[type] = indexedWriteFunction;
                 }
                 else

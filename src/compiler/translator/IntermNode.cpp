@@ -264,7 +264,7 @@ bool TIntermBlock::replaceChildNode(TIntermNode *original, TIntermNode *replacem
 
 bool TIntermFunctionPrototype::replaceChildNode(TIntermNode *original, TIntermNode *replacement)
 {
-    return replaceChildNodeInternal(original, replacement);
+    return false;
 }
 
 bool TIntermDeclaration::replaceChildNode(TIntermNode *original, TIntermNode *replacement)
@@ -687,12 +687,6 @@ void TIntermBlock::appendStatement(TIntermNode *statement)
     {
         mStatements.push_back(statement);
     }
-}
-
-void TIntermFunctionPrototype::appendParameter(TIntermSymbol *parameter)
-{
-    ASSERT(parameter != nullptr);
-    mParameters.push_back(parameter);
 }
 
 void TIntermDeclaration::appendDeclarator(TIntermTyped *declarator)

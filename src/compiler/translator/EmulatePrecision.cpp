@@ -618,11 +618,6 @@ bool EmulatePrecision::visitInvariantDeclaration(Visit visit, TIntermInvariantDe
     return false;
 }
 
-bool EmulatePrecision::visitFunctionPrototype(Visit visit, TIntermFunctionPrototype *node)
-{
-    return false;
-}
-
 bool EmulatePrecision::visitAggregate(Visit visit, TIntermAggregate *node)
 {
     if (visit != PreVisit)
@@ -709,7 +704,7 @@ bool EmulatePrecision::SupportedInLanguage(const ShShaderOutput outputLanguage)
 const TFunction *EmulatePrecision::getInternalFunction(const ImmutableString &functionName,
                                                        const TType &returnType,
                                                        TIntermSequence *arguments,
-                                                       const TVector<TConstParameter> &parameters,
+                                                       const TVector<const TVariable *> &parameters,
                                                        bool knownToNotHaveSideEffects)
 {
     ImmutableString mangledName = TFunctionLookup::GetMangledName(functionName.data(), *arguments);
@@ -735,11 +730,13 @@ TIntermAggregate *EmulatePrecision::createRoundingFunctionCallNode(TIntermTyped 
     TIntermSequence *arguments = new TIntermSequence();
     arguments->push_back(roundedChild);
 
-    TVector<TConstParameter> parameters;
+    TVector<const TVariable *> parameters;
     TType *paramType = new TType(roundedChild->getType());
     paramType->setPrecision(EbpHigh);
     paramType->setQualifier(EvqIn);
-    parameters.push_back(TConstParameter(kParamXName, static_cast<const TType *>(paramType)));
+    parameters.push_back(new TVariable(mSymbolTable, kParamXName,
+                                       static_cast<const TType *>(paramType),
+                                       SymbolType::AngleInternal));
 
     return TIntermAggregate::CreateRawFunctionCall(
         *getInternalFunction(*roundFunctionName, roundedChild->getType(), arguments, parameters,
@@ -761,15 +758,19 @@ TIntermAggregate *EmulatePrecision::createCompoundAssignmentFunctionCallNode(TIn
     arguments->push_back(left);
     arguments->push_back(right);
 
-    TVector<TConstParameter> parameters;
+    TVector<const TVariable *> parameters;
     TType *leftParamType = new TType(left->getType());
     leftParamType->setPrecision(EbpHigh);
     leftParamType->setQualifier(EvqOut);
-    parameters.push_back(TConstParameter(kParamXName, static_cast<const TType *>(leftParamType)));
+    parameters.push_back(new TVariable(mSymbolTable, kParamXName,
+                                       static_cast<const TType *>(leftParamType),
+                                       SymbolType::AngleInternal));
     TType *rightParamType = new TType(right->getType());
     rightParamType->setPrecision(EbpHigh);
     rightParamType->setQualifier(EvqIn);
-    parameters.push_back(TConstParameter(kParamYName, static_cast<const TType *>(rightParamType)));
+    parameters.push_back(new TVariable(mSymbolTable, kParamYName,
+                                       static_cast<const TType *>(rightParamType),
+                                       SymbolType::AngleInternal));
 
     return TIntermAggregate::CreateRawFunctionCall(
         *getInternalFunction(functionName, left->getType(), arguments, parameters, false),

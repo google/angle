@@ -43,7 +43,7 @@ class TOutputTraverser : public TIntermTraverser
     bool visitIfElse(Visit visit, TIntermIfElse *node) override;
     bool visitSwitch(Visit visit, TIntermSwitch *node) override;
     bool visitCase(Visit visit, TIntermCase *node) override;
-    bool visitFunctionPrototype(Visit visit, TIntermFunctionPrototype *node) override;
+    void visitFunctionPrototype(TIntermFunctionPrototype *node) override;
     bool visitFunctionDefinition(Visit visit, TIntermFunctionDefinition *node) override;
     bool visitAggregate(Visit visit, TIntermAggregate *) override;
     bool visitBlock(Visit visit, TIntermBlock *) override;
@@ -361,14 +361,20 @@ bool TOutputTraverser::visitInvariantDeclaration(Visit visit, TIntermInvariantDe
     return true;
 }
 
-bool TOutputTraverser::visitFunctionPrototype(Visit visit, TIntermFunctionPrototype *node)
+void TOutputTraverser::visitFunctionPrototype(TIntermFunctionPrototype *node)
 {
     OutputTreeText(mOut, node, mDepth);
     OutputFunction(mOut, "Function Prototype", node->getFunction());
     mOut << " (" << node->getCompleteString() << ")";
     mOut << "\n";
-
-    return true;
+    size_t paramCount = node->getFunction()->getParamCount();
+    for (size_t i = 0; i < paramCount; ++i)
+    {
+        const TVariable *param = node->getFunction()->getParam(i);
+        OutputTreeText(mOut, node, mDepth + 1);
+        mOut << "parameter: " << param->name() << " (" << param->getType().getCompleteString()
+             << ")";
+    }
 }
 
 bool TOutputTraverser::visitAggregate(Visit visit, TIntermAggregate *node)

@@ -171,38 +171,20 @@ class TInterfaceBlock : public TSymbol, public TFieldListCollection
     // Note that we only record matrix packing on a per-field granularity.
 };
 
-// Immutable version of TParameter.
-struct TConstParameter
-{
-    POOL_ALLOCATOR_NEW_DELETE();
-    TConstParameter() : name(""), type(nullptr) {}
-    explicit TConstParameter(const ImmutableString &n) : name(n), type(nullptr) {}
-    constexpr explicit TConstParameter(const TType *t) : name(""), type(t) {}
-    TConstParameter(const ImmutableString &n, const TType *t) : name(n), type(t) {}
-
-    // Both constructor arguments must be const.
-    TConstParameter(ImmutableString *n, TType *t)       = delete;
-    TConstParameter(const ImmutableString *n, TType *t) = delete;
-    TConstParameter(ImmutableString *n, const TType *t) = delete;
-
-    const ImmutableString name;
-    const TType *const type;
-};
-
-// The function sub-class of symbols and the parser will need to
-// share this definition of a function parameter.
+// Parameter class used for parsing user-defined function parameters.
 struct TParameter
 {
-    // Destructively converts to TConstParameter.
+    // Destructively converts to TVariable.
     // This method resets name and type to nullptrs to make sure
     // their content cannot be modified after the call.
-    TConstParameter turnToConst()
+    const TVariable *createVariable(TSymbolTable *symbolTable)
     {
         const ImmutableString constName(name);
         const TType *constType   = type;
         name                     = nullptr;
         type                     = nullptr;
-        return TConstParameter(constName, constType);
+        return new TVariable(symbolTable, constName, constType,
+                             constName.empty() ? SymbolType::Empty : SymbolType::UserDefined);
     }
 
     const char *name;  // either pool allocated or static.
@@ -222,7 +204,7 @@ class TFunction : public TSymbol
 
     bool isFunction() const override { return true; }
 
-    void addParameter(const TConstParameter &p);
+    void addParameter(const TVariable *p);
     void shareParameters(const TFunction &parametersSource);
 
     ImmutableString getMangledName() const override
@@ -244,7 +226,7 @@ class TFunction : public TSymbol
     bool hasPrototypeDeclaration() const { return mHasPrototypeDeclaration; }
 
     size_t getParamCount() const { return mParamCount; }
-    const TConstParameter &getParam(size_t i) const { return mParameters[i]; }
+    const TVariable *getParam(size_t i) const { return mParameters[i]; }
 
     bool isKnownToNotHaveSideEffects() const { return mKnownToNotHaveSideEffects; }
 
@@ -255,7 +237,7 @@ class TFunction : public TSymbol
     constexpr TFunction(const TSymbolUniqueId &id,
                         const ImmutableString &name,
                         TExtension extension,
-                        const TConstParameter *parameters,
+                        const TVariable *const *parameters,
                         size_t paramCount,
                         const TType *retType,
                         const ImmutableString &mangledName,
@@ -277,9 +259,9 @@ class TFunction : public TSymbol
   private:
     ImmutableString buildMangledName() const;
 
-    typedef TVector<TConstParameter> TParamVector;
+    typedef TVector<const TVariable *> TParamVector;
     TParamVector *mParametersVector;
-    const TConstParameter *mParameters;
+    const TVariable *const *mParameters;
     size_t mParamCount;
     const TType *const returnType;
     mutable ImmutableString mMangledName;
