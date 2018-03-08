@@ -45,6 +45,7 @@ VkIndexType GetVkIndexType(GLenum glIndexType)
 {
     switch (glIndexType)
     {
+        case GL_UNSIGNED_BYTE:
         case GL_UNSIGNED_SHORT:
             return VK_INDEX_TYPE_UINT16;
         case GL_UNSIGNED_INT:
@@ -331,13 +332,6 @@ gl::Error ContextVk::drawElements(const gl::Context *context,
     }
     else
     {
-        if (type == GL_UNSIGNED_BYTE)
-        {
-            // TODO(fjhenigman): Index format translation.
-            UNIMPLEMENTED();
-            return gl::InternalError() << "Unsigned byte translation is not yet implemented.";
-        }
-
         ContextVk *contextVk         = vk::GetImpl(context);
         const bool computeIndexRange = vk::GetImpl(vao)->attribsToStream(contextVk).any();
         gl::IndexRange range;
@@ -346,6 +340,14 @@ gl::Error ContextVk::drawElements(const gl::Context *context,
 
         if (elementArrayBuffer)
         {
+            if (type == GL_UNSIGNED_BYTE)
+            {
+                // TODO(fjhenigman): Index format translation.
+                UNIMPLEMENTED();
+                return gl::InternalError() << "Unsigned byte translation is not implemented for "
+                                           << "indices in a buffer object";
+            }
+
             BufferVk *elementArrayBufferVk = vk::GetImpl(elementArrayBuffer);
             buffer                         = elementArrayBufferVk->getVkBuffer().getHandle();
             offset                         = 0;
@@ -359,10 +361,24 @@ gl::Error ContextVk::drawElements(const gl::Context *context,
         else
         {
             const GLsizei amount = sizeof(GLushort) * count;
-            uint8_t *dst         = nullptr;
+            GLubyte *dst         = nullptr;
 
             ANGLE_TRY(mStreamingIndexData.allocate(contextVk, amount, &dst, &buffer, &offset));
-            memcpy(dst, indices, amount);
+            if (type == GL_UNSIGNED_BYTE)
+            {
+                // Unsigned bytes don't have direct support in Vulkan so we have to expand the
+                // memory to a GLushort.
+                const GLubyte *in     = static_cast<const GLubyte *>(indices);
+                GLushort *expandedDst = reinterpret_cast<GLushort *>(dst);
+                for (GLsizei index = 0; index < count; index++)
+                {
+                    expandedDst[index] = static_cast<GLushort>(in[index]);
+                }
+            }
+            else
+            {
+                memcpy(dst, indices, amount);
+            }
             ANGLE_TRY(mStreamingIndexData.flush(contextVk));
 
             if (computeIndexRange)
