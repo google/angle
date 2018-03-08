@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d6e10c0f_a9a2c39f",
+        "filename": "src/libANGLE/TransformFeedback.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-08T13:17:31Z",
+      "side": 1,
+      "message": "can you make this into an ASSERT instead?",
+      "range": {
+        "startLine": 54,
+        "startChar": 3,
+        "endLine": 54,
+        "endChar": 61
+      },
+      "revId": "86095b05dc37e2509999f8079cb8486c085821b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
