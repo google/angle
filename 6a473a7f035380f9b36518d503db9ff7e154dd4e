@@ -22,6 +22,30 @@
       "revId": "6a473a7f035380f9b36518d503db9ff7e154dd4e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fec476ec_b98fc891",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 2132,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2018-03-08T06:19:01Z",
+      "side": 1,
+      "message": "I think it is the cheapest influence of performance.",
+      "parentUuid": "d29bf21e_42c3b27b",
+      "range": {
+        "startLine": 2132,
+        "startChar": 39,
+        "endLine": 2132,
+        "endChar": 70
+      },
+      "revId": "6a473a7f035380f9b36518d503db9ff7e154dd4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
