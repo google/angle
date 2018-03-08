@@ -34,8 +34,8 @@ class Framebuffer9 : public FramebufferD3D
 
     gl::Error getSamplePosition(size_t index, GLfloat *xy) const override;
 
-    void syncState(const gl::Context *context,
-                   const gl::Framebuffer::DirtyBits &dirtyBits) override;
+    gl::Error syncState(const gl::Context *context,
+                        const gl::Framebuffer::DirtyBits &dirtyBits) override;
 
     const gl::AttachmentArray<RenderTarget9 *> &getCachedColorRenderTargets() const
     {

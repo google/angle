@@ -36,8 +36,8 @@ class Framebuffer11 : public FramebufferD3D
     // Invalidate the cached swizzles of all bound texture attachments.
     gl::Error markAttachmentsDirty(const gl::Context *context) const;
 
-    void syncState(const gl::Context *context,
-                   const gl::Framebuffer::DirtyBits &dirtyBits) override;
+    gl::Error syncState(const gl::Context *context,
+                        const gl::Framebuffer::DirtyBits &dirtyBits) override;
 
     const gl::AttachmentArray<RenderTarget11 *> &getCachedColorRenderTargets() const
     {

@@ -606,12 +606,13 @@ bool FramebufferGL::checkStatus(const gl::Context *context) const
     return (status == GL_FRAMEBUFFER_COMPLETE);
 }
 
-void FramebufferGL::syncState(const gl::Context *context, const Framebuffer::DirtyBits &dirtyBits)
+gl::Error FramebufferGL::syncState(const gl::Context *context,
+                                   const Framebuffer::DirtyBits &dirtyBits)
 {
     // Don't need to sync state for the default FBO.
     if (mIsDefault)
     {
-        return;
+        return gl::NoError();
     }
 
     mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
@@ -698,6 +699,8 @@ void FramebufferGL::syncState(const gl::Context *context, const Framebuffer::Dir
         mStateManager->updateMultiviewBaseViewLayerIndexUniform(context->getGLState().getProgram(),
                                                                 getState());
     }
+
+    return gl::NoError();
 }
 
 GLuint FramebufferGL::getFramebufferID() const

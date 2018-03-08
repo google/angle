@@ -305,7 +305,7 @@ class Framebuffer final : public angle::ObserverInterface, public LabeledObject
     using DirtyBits = angle::BitSet<DIRTY_BIT_MAX>;
     bool hasAnyDirtyBit() const { return mDirtyBits.any(); }
 
-    void syncState(const Context *context);
+    Error syncState(const Context *context);
 
     // Observer implementation
     void onSubjectStateChange(const Context *context,

@@ -2243,11 +2243,11 @@ Error State::syncDirtyObjects(const Context *context, const DirtyObjects &bitset
         {
             case DIRTY_OBJECT_READ_FRAMEBUFFER:
                 ASSERT(mReadFramebuffer);
-                mReadFramebuffer->syncState(context);
+                ANGLE_TRY(mReadFramebuffer->syncState(context));
                 break;
             case DIRTY_OBJECT_DRAW_FRAMEBUFFER:
                 ASSERT(mDrawFramebuffer);
-                mDrawFramebuffer->syncState(context);
+                ANGLE_TRY(mDrawFramebuffer->syncState(context));
                 break;
             case DIRTY_OBJECT_VERTEX_ARRAY:
                 ASSERT(mVertexArray);

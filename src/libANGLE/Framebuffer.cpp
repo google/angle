@@ -1199,7 +1199,8 @@ GLenum Framebuffer::checkStatusImpl(const Context *context)
         }
     }
 
-    syncState(context);
+    // TODO(jmadill): Don't swallow an error here. http://anglebug.com/2372
+    ANGLE_SWALLOW_ERR(syncState(context));
     if (!mImpl->checkStatus(context))
     {
         return GL_FRAMEBUFFER_UNSUPPORTED;
@@ -1781,12 +1782,12 @@ void Framebuffer::resetAttachment(const Context *context, GLenum binding)
     setAttachment(context, GL_NONE, binding, ImageIndex::MakeInvalid(), nullptr);
 }
 
-void Framebuffer::syncState(const Context *context)
+Error Framebuffer::syncState(const Context *context)
 {
     if (mDirtyBits.any())
     {
         mDirtyBitsGuard = mDirtyBits;
-        mImpl->syncState(context, mDirtyBits);
+        ANGLE_TRY(mImpl->syncState(context, mDirtyBits));
         mDirtyBits.reset();
         if (mId != 0)
         {
@@ -1794,6 +1795,7 @@ void Framebuffer::syncState(const Context *context)
         }
         mDirtyBitsGuard.reset();
     }
+    return NoError();
 }
 
 void Framebuffer::onSubjectStateChange(const Context *context,

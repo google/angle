@@ -319,15 +319,14 @@ bool FramebufferVk::checkStatus(const gl::Context *context) const
     return true;
 }
 
-void FramebufferVk::syncState(const gl::Context *context,
-                              const gl::Framebuffer::DirtyBits &dirtyBits)
+gl::Error FramebufferVk::syncState(const gl::Context *context,
+                                   const gl::Framebuffer::DirtyBits &dirtyBits)
 {
     ContextVk *contextVk = vk::GetImpl(context);
     RendererVk *renderer = contextVk->getRenderer();
 
     ASSERT(dirtyBits.any());
-
-    mRenderTargetCache.update(context, mState, dirtyBits);
+    ANGLE_TRY(mRenderTargetCache.update(context, mState, dirtyBits));
 
     mRenderPassDesc.reset();
     renderer->releaseResource(*this, &mFramebuffer);
@@ -336,6 +335,8 @@ void FramebufferVk::syncState(const gl::Context *context,
     mLastRenderNodeSerial = Serial();
 
     contextVk->invalidateCurrentPipeline();
+
+    return gl::NoError();
 }
 
 const vk::RenderPassDesc &FramebufferVk::getRenderPassDesc(const gl::Context *context)

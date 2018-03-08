@@ -319,12 +319,12 @@ bool FramebufferD3D::checkStatus(const gl::Context *context) const
     return true;
 }
 
-void FramebufferD3D::syncState(const gl::Context *context,
-                               const gl::Framebuffer::DirtyBits &dirtyBits)
+gl::Error FramebufferD3D::syncState(const gl::Context *context,
+                                    const gl::Framebuffer::DirtyBits &dirtyBits)
 {
     if (!mColorAttachmentsForRender.valid())
     {
-        return;
+        return gl::NoError();
     }
 
     for (auto dirtyBit : dirtyBits)
@@ -336,6 +336,8 @@ void FramebufferD3D::syncState(const gl::Context *context,
             mColorAttachmentsForRender.reset();
         }
     }
+
+    return gl::NoError();
 }
 
 const gl::AttachmentList &FramebufferD3D::getColorAttachmentsForRender(const gl::Context *context)

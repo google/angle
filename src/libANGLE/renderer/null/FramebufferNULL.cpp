@@ -185,9 +185,10 @@ bool FramebufferNULL::checkStatus(const gl::Context *context) const
     return true;
 }
 
-void FramebufferNULL::syncState(const gl::Context *context,
-                                const gl::Framebuffer::DirtyBits &dirtyBits)
+gl::Error FramebufferNULL::syncState(const gl::Context *context,
+                                     const gl::Framebuffer::DirtyBits &dirtyBits)
 {
+    return gl::NoError();
 }
 
 gl::Error FramebufferNULL::getSamplePosition(size_t index, GLfloat *xy) const
