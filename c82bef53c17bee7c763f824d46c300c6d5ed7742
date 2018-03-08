@@ -108,6 +108,24 @@
     },
     {
       "key": {
+        "uuid": "5d135248_663f5ece",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1166,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2018-03-08T23:58:29Z",
+      "side": 1,
+      "message": "Actually, I think I made a mistake in the WebGL tests and here. Let me come back to this.\n\nThe problem is I don\u0027t want the front and back writemasks to be allowed to be different even if the stencil test is disabled.\n(mCurDisableStencil here disables both stencil test and stencil write.)",
+      "parentUuid": "971a41e4_a9139454",
+      "revId": "c82bef53c17bee7c763f824d46c300c6d5ed7742",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e56f5482_be7051b1",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 7
