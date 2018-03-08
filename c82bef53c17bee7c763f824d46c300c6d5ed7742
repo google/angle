@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "f8219dbe_527ec7b9",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1892,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-03-08T16:33:50Z",
+      "side": 1,
+      "message": "Are we guaranteed there are no overflows here?",
+      "revId": "c82bef53c17bee7c763f824d46c300c6d5ed7742",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e3a575b0_a1f713b2",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
         "patchSetId": 7
@@ -66,6 +83,23 @@
       "side": 1,
       "message": "Yes, this is called for every draw.",
       "parentUuid": "e56f5482_be7051b1",
+      "revId": "c82bef53c17bee7c763f824d46c300c6d5ed7742",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "51e57f83_b0418033",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2490,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-03-08T16:33:50Z",
+      "side": 1,
+      "message": "ditto about overflow.",
       "revId": "c82bef53c17bee7c763f824d46c300c6d5ed7742",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
