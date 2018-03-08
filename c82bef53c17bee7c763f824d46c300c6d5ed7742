@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "7b728cc5_b45a5a26",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1892,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2018-03-08T23:47:47Z",
+      "side": 1,
+      "message": "Added assertion (see other comment)",
+      "parentUuid": "f8219dbe_527ec7b9",
+      "revId": "c82bef53c17bee7c763f824d46c300c6d5ed7742",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e3a575b0_a1f713b2",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
         "patchSetId": 7
@@ -72,6 +90,24 @@
     },
     {
       "key": {
+        "uuid": "971a41e4_a9139454",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1166,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2018-03-08T23:47:47Z",
+      "side": 1,
+      "message": "You mean set mCurDisableStencil if stencil test is disabled? I think that would be fine. (Implemented.)\n\nWould it be simpler to just change the above to say\nif (mCurDisableStencil.value() || !glState.getDepthStencilState().stencilTest)\n?\n\nI could test this with an assertion, but can I write a test which asserts what gets passed into OMSetDepthStencilState?",
+      "parentUuid": "f69bc370_943042f3",
+      "revId": "c82bef53c17bee7c763f824d46c300c6d5ed7742",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e56f5482_be7051b1",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 7
@@ -107,6 +143,24 @@
     },
     {
       "key": {
+        "uuid": "4dcd6ffc_2e179576",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2487,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2018-03-08T23:47:47Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "7d3c4084_de9d028a",
+      "revId": "c82bef53c17bee7c763f824d46c300c6d5ed7742",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "51e57f83_b0418033",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 7
@@ -121,6 +175,24 @@
       "revId": "c82bef53c17bee7c763f824d46c300c6d5ed7742",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0fda5137_fdcce1aa",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2490,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2018-03-08T23:47:47Z",
+      "side": 1,
+      "message": "This code was already there (minimumRequiredStencilMask) but it should in fact be guaranteed - it seems to always come from BuildInternalFormatInfoMap. Added an assertion.",
+      "parentUuid": "51e57f83_b0418033",
+      "revId": "c82bef53c17bee7c763f824d46c300c6d5ed7742",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -144,6 +216,30 @@
       "revId": "c82bef53c17bee7c763f824d46c300c6d5ed7742",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "42cf1093_1e969d02",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1185,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2018-03-08T23:47:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "62835a0c_3784b0f1",
+      "range": {
+        "startLine": 1185,
+        "startChar": 32,
+        "endLine": 1185,
+        "endChar": 33
+      },
+      "revId": "c82bef53c17bee7c763f824d46c300c6d5ed7742",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -191,6 +287,30 @@
       "revId": "c82bef53c17bee7c763f824d46c300c6d5ed7742",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "be91cbf2_e51a45aa",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1251,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2018-03-08T23:47:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "df096886_8c98784c",
+      "range": {
+        "startLine": 1196,
+        "startChar": 0,
+        "endLine": 1251,
+        "endChar": 5
+      },
+      "revId": "c82bef53c17bee7c763f824d46c300c6d5ed7742",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
