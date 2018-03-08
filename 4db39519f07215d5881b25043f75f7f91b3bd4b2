@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d56e8f96_b0aa7b82",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 561,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-03-08T06:37:22Z",
+      "side": 1,
+      "message": "Can you combine these two for loops into one? Something looks like below:\n    const size_t numActiveShadersToLink \u003d activeGraphicsInterfaceBlocks.size();\n    for (size_t shaderIndex \u003d 0; shaderIndex \u003c numActiveShadersToLink; ++shaderIndex)\n    {\n        bool isLastShader \u003d (shaderIndex \u003d\u003d numActiveShadersToLink - 1);\n        if (!ValidateGraphicsInterfaceBlocksPerShader(\n                activeGraphicsInterfaceBlocks[shaderIndex], !isLastShader, webglCompatibility,\n                \u0026linkedBlocks, \u0026combinedInterfaceBlockCount, infoLog))\n        {\n            return false;\n        }\n    }",
+      "range": {
+        "startLine": 539,
+        "startChar": 0,
+        "endLine": 561,
+        "endChar": 0
+      },
+      "revId": "4db39519f07215d5881b25043f75f7f91b3bd4b2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
