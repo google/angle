@@ -22,6 +22,30 @@
       "revId": "4db39519f07215d5881b25043f75f7f91b3bd4b2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ba6a66c6_9da1a964",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 561,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-03-08T06:53:19Z",
+      "side": 1,
+      "message": "The first loop is intended to initialize the map linkedBlocks, where the map is empty and map.find() isn\u0027t needed.\nSo I think it isn\u0027t suitable to initialize linkedBlocks by ValidateGraphicsInterfaceBlocksPerShader",
+      "parentUuid": "d56e8f96_b0aa7b82",
+      "range": {
+        "startLine": 539,
+        "startChar": 0,
+        "endLine": 561,
+        "endChar": 0
+      },
+      "revId": "4db39519f07215d5881b25043f75f7f91b3bd4b2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
