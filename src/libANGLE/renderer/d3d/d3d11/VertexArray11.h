@@ -19,7 +19,7 @@ namespace rx
 {
 class Renderer11;
 
-class VertexArray11 : public VertexArrayImpl, public angle::ObserverInterface
+class VertexArray11 : public angle::ObserverInterface, public VertexArrayImpl
 {
   public:
     VertexArray11(const gl::VertexArrayState &data);

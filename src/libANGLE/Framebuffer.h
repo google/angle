@@ -133,7 +133,7 @@ class FramebufferState final : angle::NonCopyable
     angle::BitSet<IMPLEMENTATION_MAX_FRAMEBUFFER_ATTACHMENTS + 2> mResourceNeedsInit;
 };
 
-class Framebuffer final : public LabeledObject, public angle::ObserverInterface
+class Framebuffer final : public angle::ObserverInterface, public LabeledObject
 {
   public:
     // Constructor to build application-defined framebuffers
