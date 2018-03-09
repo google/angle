@@ -225,6 +225,11 @@ if (is_win || is_linux || is_mac || is_android) {
       angle_root + ":libANGLE_config",
     ]
 
+    if (is_linux && !is_component_build) {
+      # Set rpath to find libEGL.so and libGLESv2.so even in a non-component build.
+      configs += [ "//build/config/gcc:rpath_for_built_shared_libraries" ]
+    }
+
     deps = googletest_deps + [
              angle_root + ":angle_util_static",
              angle_root + ":libANGLE",

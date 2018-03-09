@@ -437,6 +437,7 @@ if (!is_android) {
     "$root_out_dir/$data_dir/VkLayer_core_validation.json",
     "$root_out_dir/$data_dir/VkLayer_object_tracker.json",
     "$root_out_dir/$data_dir/VkLayer_parameter_validation.json",
+    "$root_out_dir/$data_dir/VkLayer_standard_validation.json",
     "$root_out_dir/$data_dir/VkLayer_threading.json",
     "$root_out_dir/$data_dir/VkLayer_unique_objects.json",
   ]
@@ -448,6 +449,7 @@ if (!is_android) {
         "src/layers/windows/VkLayer_core_validation.json",
         "src/layers/windows/VkLayer_object_tracker.json",
         "src/layers/windows/VkLayer_parameter_validation.json",
+        "src/layers/windows/VkLayer_standard_validation.json",
         "src/layers/windows/VkLayer_threading.json",
         "src/layers/windows/VkLayer_unique_objects.json",
       ]
@@ -458,6 +460,7 @@ if (!is_android) {
         "src/layers/linux/VkLayer_core_validation.json",
         "src/layers/linux/VkLayer_object_tracker.json",
         "src/layers/linux/VkLayer_parameter_validation.json",
+        "src/layers/linux/VkLayer_standard_validation.json",
         "src/layers/linux/VkLayer_threading.json",
         "src/layers/linux/VkLayer_unique_objects.json",
       ]

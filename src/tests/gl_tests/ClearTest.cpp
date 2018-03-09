@@ -133,9 +133,6 @@ TEST_P(ClearTest, RGBA8Framebuffer)
 
 TEST_P(ClearTest, ClearIssue)
 {
-    // TODO(jmadill): Depth/Stencil clears on Vulkan. http://anglebug.com/2357
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
 
@@ -460,6 +457,8 @@ TEST_P(ScissoredClearTest, BasicScissoredColorClear)
 }
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+// Vulkan support disabled because of incomplete implementation.
+// TODO(jmadill): Fix depth/stencil support on Vulkan. http://anglebug.com/2357
 ANGLE_INSTANTIATE_TEST(ClearTest,
                        ES2_D3D9(),
                        ES2_D3D11(),
@@ -467,8 +466,8 @@ ANGLE_INSTANTIATE_TEST(ClearTest,
                        ES2_OPENGL(),
                        ES3_OPENGL(),
                        ES2_OPENGLES(),
-                       ES3_OPENGLES(),
-                       ES2_VULKAN());
+                       ES3_OPENGLES()/*,
+                       ES2_VULKAN()*/);
 ANGLE_INSTANTIATE_TEST(ClearTestES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
 ANGLE_INSTANTIATE_TEST(ScissoredClearTest, ES2_D3D11(), ES2_OPENGL(), ES2_VULKAN());
 
