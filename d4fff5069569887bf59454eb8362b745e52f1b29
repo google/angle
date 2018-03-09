@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4f0a8363_eae73a83",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 2962,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-09T17:47:20Z",
+      "side": 1,
+      "message": "probably time to remove the renderer keyword from all of these functions.",
+      "range": {
+        "startLine": 2962,
+        "startChar": 15,
+        "endLine": 2962,
+        "endChar": 36
+      },
+      "revId": "d4fff5069569887bf59454eb8362b745e52f1b29",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "714cf7cc_09347aba",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 1966,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-09T17:47:20Z",
+      "side": 1,
+      "message": "probably would make these just gl::BlendState and omit auto",
+      "range": {
+        "startLine": 1966,
+        "startChar": 10,
+        "endLine": 1966,
+        "endChar": 14
+      },
+      "revId": "d4fff5069569887bf59454eb8362b745e52f1b29",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
