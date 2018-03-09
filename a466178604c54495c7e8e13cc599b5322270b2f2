@@ -22,6 +22,86 @@
       "revId": "a466178604c54495c7e8e13cc599b5322270b2f2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2d440ebb_a86273e3",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 38
+      },
+      "lineNbr": 283,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-03-09T18:10:42Z",
+      "side": 1,
+      "message": "columns isn\u0027t used in builtin_variables.json and we could just rename vecSize to primarySize.",
+      "range": {
+        "startLine": 275,
+        "startChar": 0,
+        "endLine": 283,
+        "endChar": 33
+      },
+      "revId": "a466178604c54495c7e8e13cc599b5322270b2f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8aec1f24_cbbde0d7",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 38
+      },
+      "lineNbr": 792,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-03-09T18:10:42Z",
+      "side": 1,
+      "message": "Why can\u0027t this use the static types?",
+      "range": {
+        "startLine": 792,
+        "startChar": 64,
+        "endLine": 792,
+        "endChar": 87
+      },
+      "revId": "a466178604c54495c7e8e13cc599b5322270b2f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "70f44d99_501d6c0f",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 38
+      },
+      "lineNbr": 802,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-03-09T18:10:42Z",
+      "side": 1,
+      "message": "nit: use blank lines to better delimitate code blocks for this if elif elif else",
+      "revId": "a466178604c54495c7e8e13cc599b5322270b2f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9e1c5ed8_c3e45eac",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 38
+      },
+      "lineNbr": 839,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-03-09T18:10:42Z",
+      "side": 1,
+      "message": "For which variable does this happen?",
+      "revId": "a466178604c54495c7e8e13cc599b5322270b2f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
