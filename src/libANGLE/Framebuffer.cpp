@@ -1949,8 +1949,8 @@ Error Framebuffer::ensureClearAttachmentsInitialized(const Context *context, GLb
         return NoError();
     }
 
-    const auto &blend        = glState.getBlendState();
-    const auto &depthStencil = glState.getDepthStencilState();
+    const BlendState &blend               = glState.getBlendState();
+    const DepthStencilState &depthStencil = glState.getDepthStencilState();
 
     bool color   = (mask & GL_COLOR_BUFFER_BIT) != 0 && !IsColorMaskedOut(blend);
     bool depth   = (mask & GL_DEPTH_BUFFER_BIT) != 0 && !IsDepthMaskedOut(depthStencil);
