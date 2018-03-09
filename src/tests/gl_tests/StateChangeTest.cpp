@@ -716,6 +716,91 @@ TEST_P(StateChangeTestES3, VertexArrayObjectAndDisabledAttributes)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
 }
 
+const char kSamplerMetadataVertexShader0[] = R"(#version 300 es
+precision mediump float;
+out vec4 color;
+uniform sampler2D texture;
+void main()
+{
+    vec2 size = vec2(textureSize(texture, 0));
+    color = size.x != 0.0 ? vec4(0.0, 1.0, 0.0, 1.0) : vec4(1.0, 0.0, 0.0, 0.0);
+    vec2 pos = vec2(0.0);
+    switch (gl_VertexID) {
+        case 0: pos = vec2(-1.0, -1.0); break;
+        case 1: pos = vec2(3.0, -1.0); break;
+        case 2: pos = vec2(-1.0, 3.0); break;
+    };
+    gl_Position = vec4(pos, 0.0, 1.0);
+})";
+
+const char kSamplerMetadataVertexShader1[] = R"(#version 300 es
+precision mediump float;
+out vec4 color;
+uniform sampler2D texture1;
+uniform sampler2D texture2;
+void main()
+{
+    vec2 size1 = vec2(textureSize(texture1, 0));
+    vec2 size2 = vec2(textureSize(texture2, 0));
+    color = size1.x * size2.x != 0.0 ? vec4(0.0, 1.0, 0.0, 1.0) : vec4(1.0, 0.0, 0.0, 0.0);
+    vec2 pos = vec2(0.0);
+    switch (gl_VertexID) {
+        case 0: pos = vec2(-1.0, -1.0); break;
+        case 1: pos = vec2(3.0, -1.0); break;
+        case 2: pos = vec2(-1.0, 3.0); break;
+    };
+    gl_Position = vec4(pos, 0.0, 1.0);
+})";
+
+const char kSamplerMetadataFragmentShader[] = R"(#version 300 es
+precision mediump float;
+in vec4 color;
+out vec4 result;
+void main()
+{
+    result = color;
+})";
+
+// Tests that changing an active program invalidates the sampler metadata properly.
+TEST_P(StateChangeTestES3, SamplerMetadataUpdateOnSetProgram)
+{
+    GLVertexArray vertexArray;
+    glBindVertexArray(vertexArray);
+
+    // Create a simple framebuffer.
+    GLTexture texture1, texture2;
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture1);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, texture2);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 3, 3, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    // Create 2 shader programs differing only in the number of active samplers.
+    ANGLE_GL_PROGRAM(program1, kSamplerMetadataVertexShader0, kSamplerMetadataFragmentShader);
+    glUseProgram(program1);
+    glUniform1i(glGetUniformLocation(program1, "texture"), 0);
+    ANGLE_GL_PROGRAM(program2, kSamplerMetadataVertexShader1, kSamplerMetadataFragmentShader);
+    glUseProgram(program2);
+    glUniform1i(glGetUniformLocation(program2, "texture1"), 0);
+    glUniform1i(glGetUniformLocation(program2, "texture2"), 0);
+
+    // Draw a solid green color to the framebuffer.
+    glUseProgram(program1);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+    // Test that our first program is good.
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    // Bind a different program that uses more samplers.
+    // Draw another quad that depends on the sampler metadata.
+    glUseProgram(program2);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+    // Flush via ReadPixels and check that it's still green.
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    ASSERT_GL_NO_ERROR();
+}
+
 // Simple state change tests, primarily focused on basic object lifetime and dependency management
 // with back-ends that don't support that automatically (i.e. Vulkan).
 class SimpleStateChangeTest : public ANGLETest
