@@ -220,11 +220,11 @@ class State : public angle::ObserverInterface, angle::NonCopyable
     bool removeTransformFeedbackBinding(const Context *context, GLuint transformFeedback);
 
     // Query binding manipulation
-    bool isQueryActive(const GLenum type) const;
+    bool isQueryActive(QueryType type) const;
     bool isQueryActive(Query *query) const;
-    void setActiveQuery(const Context *context, GLenum target, Query *query);
-    GLuint getActiveQueryId(GLenum target) const;
-    Query *getActiveQuery(GLenum target) const;
+    void setActiveQuery(const Context *context, QueryType type, Query *query);
+    GLuint getActiveQueryId(QueryType type) const;
+    Query *getActiveQuery(QueryType type) const;
 
     // Program Pipeline binding manipulation
     void setProgramPipelineBinding(const Context *context, ProgramPipeline *pipeline);
@@ -524,7 +524,7 @@ class State : public angle::ObserverInterface, angle::NonCopyable
     Program *mProgram;
     BindingPointer<ProgramPipeline> mProgramPipeline;
 
-    typedef std::vector<VertexAttribCurrentValueData> VertexAttribVector;
+    using VertexAttribVector = std::vector<VertexAttribCurrentValueData>;
     VertexAttribVector mVertexAttribCurrentValues;  // From glVertexAttrib
     VertexArray *mVertexArray;
     ComponentTypeMask mCurrentValuesTypeMask;
@@ -532,8 +532,8 @@ class State : public angle::ObserverInterface, angle::NonCopyable
     // Texture and sampler bindings
     size_t mActiveSampler;  // Active texture unit selector - GL_TEXTURE0
 
-    typedef std::vector<BindingPointer<Texture>> TextureBindingVector;
-    typedef angle::PackedEnumMap<TextureType, TextureBindingVector> TextureBindingMap;
+    using TextureBindingVector = std::vector<BindingPointer<Texture>>;
+    using TextureBindingMap    = angle::PackedEnumMap<TextureType, TextureBindingVector>;
     TextureBindingMap mSamplerTextures;
 
     // Texture Completeness Caching
@@ -556,13 +556,13 @@ class State : public angle::ObserverInterface, angle::NonCopyable
     using ActiveTextureMask = angle::BitSet<IMPLEMENTATION_MAX_ACTIVE_TEXTURES>;
     ActiveTextureMask mActiveTexturesMask;
 
-    typedef std::vector<BindingPointer<Sampler>> SamplerBindingVector;
+    using SamplerBindingVector = std::vector<BindingPointer<Sampler>>;
     SamplerBindingVector mSamplers;
 
-    typedef std::vector<ImageUnit> ImageUnitVector;
+    using ImageUnitVector = std::vector<ImageUnit>;
     ImageUnitVector mImageUnits;
 
-    typedef std::map<GLenum, BindingPointer<Query>> ActiveQueryMap;
+    using ActiveQueryMap = angle::PackedEnumMap<QueryType, BindingPointer<Query>>;
     ActiveQueryMap mActiveQueries;
 
     // Stores the currently bound buffer for each binding point. It has an entry for the element

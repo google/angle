@@ -373,7 +373,7 @@ VertexArrayImpl *ContextNULL::createVertexArray(const gl::VertexArrayState &data
     return new VertexArrayNULL(data);
 }
 
-QueryImpl *ContextNULL::createQuery(GLenum type)
+QueryImpl *ContextNULL::createQuery(gl::QueryType type)
 {
     return new QueryNULL(type);
 }

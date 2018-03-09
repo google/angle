@@ -268,14 +268,14 @@ void ConvertMinFilter(GLenum minFilter, D3DTEXTUREFILTERTYPE *d3dMinFilter, D3DT
     }
 }
 
-D3DQUERYTYPE ConvertQueryType(GLenum queryType)
+D3DQUERYTYPE ConvertQueryType(gl::QueryType type)
 {
-    switch (queryType)
+    switch (type)
     {
-        case GL_ANY_SAMPLES_PASSED_EXT:
-        case GL_ANY_SAMPLES_PASSED_CONSERVATIVE_EXT:
+        case gl::QueryType::AnySamples:
+        case gl::QueryType::AnySamplesConservative:
             return D3DQUERYTYPE_OCCLUSION;
-        case GL_COMMANDS_COMPLETED_CHROMIUM:
+        case gl::QueryType::CommandsCompleted:
             return D3DQUERYTYPE_EVENT;
         default:
             UNREACHABLE();

@@ -18,7 +18,7 @@ namespace rx
 class QueryVk : public QueryImpl
 {
   public:
-    QueryVk(GLenum type);
+    QueryVk(gl::QueryType type);
     ~QueryVk() override;
 
     gl::Error begin() override;

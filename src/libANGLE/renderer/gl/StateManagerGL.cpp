@@ -33,13 +33,6 @@
 namespace rx
 {
 
-static constexpr GLenum QueryTypes[] = {GL_ANY_SAMPLES_PASSED,
-                                        GL_ANY_SAMPLES_PASSED_CONSERVATIVE,
-                                        GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN,
-                                        GL_TIME_ELAPSED,
-                                        GL_COMMANDS_COMPLETED_CHROMIUM,
-                                        GL_PRIMITIVES_GENERATED_EXT};
-
 StateManagerGL::IndexedBufferBinding::IndexedBufferBinding() : offset(0), size(0), buffer(0)
 {
 }
@@ -190,11 +183,8 @@ StateManagerGL::StateManagerGL(const FunctionsGL *functions,
 
     mSampleMaskValues.fill(~GLbitfield(0));
 
-    for (GLenum queryType : QueryTypes)
-    {
-        mQueries[queryType]                = nullptr;
-        mTemporaryPausedQueries[queryType] = nullptr;
-    }
+    mQueries.fill(nullptr);
+    mTemporaryPausedQueries.fill(nullptr);
 
     // Initialize point sprite state for desktop GL
     if (mFunctions->standard == STANDARD_GL_DESKTOP)
@@ -674,23 +664,22 @@ void StateManagerGL::onTransformFeedbackStateChange()
     mLocalDirtyBits.set(gl::State::DIRTY_BIT_TRANSFORM_FEEDBACK_BINDING);
 }
 
-void StateManagerGL::beginQuery(GLenum type, QueryGL *queryObject, GLuint queryId)
+void StateManagerGL::beginQuery(gl::QueryType type, QueryGL *queryObject, GLuint queryId)
 {
     // Make sure this is a valid query type and there is no current active query of this type
-    ASSERT(mQueries.find(type) != mQueries.end());
     ASSERT(mQueries[type] == nullptr);
     ASSERT(queryId != 0);
 
     mQueries[type] = queryObject;
-    mFunctions->beginQuery(type, queryId);
+    mFunctions->beginQuery(ToGLenum(type), queryId);
 }
 
-void StateManagerGL::endQuery(GLenum type, QueryGL *queryObject, GLuint queryId)
+void StateManagerGL::endQuery(gl::QueryType type, QueryGL *queryObject, GLuint queryId)
 {
     ASSERT(queryObject != nullptr);
     ASSERT(mQueries[type] == queryObject);
     mQueries[type] = nullptr;
-    mFunctions->endQuery(type);
+    mFunctions->endQuery(ToGLenum(type));
 }
 
 gl::Error StateManagerGL::setDrawArraysState(const gl::Context *context,
@@ -776,27 +765,29 @@ void StateManagerGL::pauseTransformFeedback()
 
 gl::Error StateManagerGL::pauseAllQueries()
 {
-    for (auto &prevQuery : mQueries)
+    for (gl::QueryType type : angle::AllEnums<gl::QueryType>())
     {
-        if (prevQuery.second)
+        QueryGL *previousQuery = mQueries[type];
+
+        if (previousQuery != nullptr)
         {
-            ANGLE_TRY(prevQuery.second->pause());
-            mTemporaryPausedQueries[prevQuery.first] = prevQuery.second;
-            prevQuery.second                         = nullptr;
+            ANGLE_TRY(previousQuery->pause());
+            mTemporaryPausedQueries[type] = previousQuery;
+            mQueries[type]                = nullptr;
         }
     }
+
     return gl::NoError();
 }
 
-gl::Error StateManagerGL::pauseQuery(GLenum type)
+gl::Error StateManagerGL::pauseQuery(gl::QueryType type)
 {
-    ASSERT(mQueries.find(type) != mQueries.end());
-    ASSERT(mTemporaryPausedQueries.find(type) == mQueries.end());
-    QueryGL *prevQuery = mQueries[type];
-    if (prevQuery)
+    QueryGL *previousQuery = mQueries[type];
+
+    if (previousQuery)
     {
-        ANGLE_TRY(prevQuery->pause());
-        mTemporaryPausedQueries[type] = prevQuery;
+        ANGLE_TRY(previousQuery->pause());
+        mTemporaryPausedQueries[type] = previousQuery;
         mQueries[type]                = nullptr;
     }
 
@@ -805,26 +796,26 @@ gl::Error StateManagerGL::pauseQuery(GLenum type)
 
 gl::Error StateManagerGL::resumeAllQueries()
 {
-    for (auto &pausedQuery : mTemporaryPausedQueries)
+    for (gl::QueryType type : angle::AllEnums<gl::QueryType>())
     {
-        if (pausedQuery.second)
+        QueryGL *pausedQuery = mTemporaryPausedQueries[type];
+
+        if (pausedQuery != nullptr)
         {
-            ASSERT(mQueries[pausedQuery.first] == nullptr);
-            ANGLE_TRY(pausedQuery.second->resume());
-            pausedQuery.second = nullptr;
+            ASSERT(mQueries[type] == nullptr);
+            ANGLE_TRY(pausedQuery->resume());
+            mTemporaryPausedQueries[type] = nullptr;
         }
     }
 
     return gl::NoError();
 }
 
-gl::Error StateManagerGL::resumeQuery(GLenum type)
+gl::Error StateManagerGL::resumeQuery(gl::QueryType type)
 {
-    ASSERT(mQueries.find(type) != mQueries.end());
-    ASSERT(mTemporaryPausedQueries.find(type) != mTemporaryPausedQueries.end());
-
     QueryGL *pausedQuery = mTemporaryPausedQueries[type];
-    if (pausedQuery)
+
+    if (pausedQuery != nullptr)
     {
         ANGLE_TRY(pausedQuery->resume());
         mTemporaryPausedQueries[type] = nullptr;
@@ -841,7 +832,7 @@ gl::Error StateManagerGL::onMakeCurrent(const gl::Context *context)
     // Temporarily pausing queries during context switch is not supported
     for (auto &pausedQuery : mTemporaryPausedQueries)
     {
-        ASSERT(pausedQuery.second == nullptr);
+        ASSERT(pausedQuery == nullptr);
     }
 #endif
 
@@ -849,17 +840,18 @@ gl::Error StateManagerGL::onMakeCurrent(const gl::Context *context)
     auto contextID = context->getContextState().getContextID();
     if (contextID != mPrevDrawContext)
     {
-        for (auto &currentQuery : mQueries)
+        for (gl::QueryType type : angle::AllEnums<gl::QueryType>())
         {
+            QueryGL *currentQuery = mQueries[type];
             // Pause any old query object
-            if (currentQuery.second)
+            if (currentQuery != nullptr)
             {
-                ANGLE_TRY(currentQuery.second->pause());
-                currentQuery.second = nullptr;
+                ANGLE_TRY(currentQuery->pause());
+                mQueries[type] = nullptr;
             }
 
             // Check if this new context needs to resume a query
-            gl::Query *newQuery = glState.getActiveQuery(currentQuery.first);
+            gl::Query *newQuery = glState.getActiveQuery(type);
             if (newQuery != nullptr)
             {
                 QueryGL *queryGL = GetImplAs<QueryGL>(newQuery);

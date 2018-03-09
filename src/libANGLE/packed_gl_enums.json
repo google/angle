@@ -88,6 +88,16 @@
         "Projection" : "GL_PROJECTION",
         "Texture" : "GL_TEXTURE"
     },
+    "QueryType":
+    {
+        "AnySamples": "GL_ANY_SAMPLES_PASSED",
+        "AnySamplesConservative": "GL_ANY_SAMPLES_PASSED_CONSERVATIVE",
+        "CommandsCompleted": "GL_COMMANDS_COMPLETED_CHROMIUM",
+        "PrimitivesGenerated": "GL_PRIMITIVES_GENERATED_EXT",
+        "TimeElapsed": "GL_TIME_ELAPSED_EXT",
+        "Timestamp": "GL_TIMESTAMP_EXT",
+        "TransformFeedbackPrimitivesWritten": "GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN"
+    },
     "ShaderType":
     [
         {"name": "Vertex", "gl_name": "GL_VERTEX_SHADER", "value": 0},

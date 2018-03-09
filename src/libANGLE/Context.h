@@ -151,16 +151,15 @@ class Context final : angle::NonCopyable
     void bindTransformFeedback(GLenum target, GLuint transformFeedbackHandle);
     void bindProgramPipeline(GLuint pipelineHandle);
 
-    void beginQuery(GLenum target, GLuint query);
-    void endQuery(GLenum target);
-    void queryCounter(GLuint id, GLenum target);
-    void getQueryiv(GLenum target, GLenum pname, GLint *params);
-    void getQueryivRobust(GLenum target,
+    void beginQuery(QueryType target, GLuint query);
+    void endQuery(QueryType target);
+    void queryCounter(GLuint id, QueryType target);
+    void getQueryiv(QueryType target, GLenum pname, GLint *params);
+    void getQueryivRobust(QueryType target,
                           GLenum pname,
                           GLsizei bufSize,
                           GLsizei *length,
                           GLint *params);
-
     void getQueryObjectiv(GLuint id, GLenum pname, GLint *params);
     void getQueryObjectivRobust(GLuint id,
                                 GLenum pname,
@@ -352,7 +351,7 @@ class Context final : angle::NonCopyable
     Renderbuffer *getRenderbuffer(GLuint handle) const;
     VertexArray *getVertexArray(GLuint handle) const;
     Sampler *getSampler(GLuint handle) const;
-    Query *getQuery(GLuint handle, bool create, GLenum type);
+    Query *getQuery(GLuint handle, bool create, QueryType type);
     Query *getQuery(GLuint handle) const;
     TransformFeedback *getTransformFeedback(GLuint handle) const;
     ProgramPipeline *getProgramPipeline(GLuint handle) const;

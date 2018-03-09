@@ -1069,7 +1069,7 @@ void Context::bindProgramPipeline(GLuint pipelineHandle)
     mGLState.setProgramPipelineBinding(this, pipeline);
 }
 
-void Context::beginQuery(GLenum target, GLuint query)
+void Context::beginQuery(QueryType target, GLuint query)
 {
     Query *queryObject = getQuery(query, true, target);
     ASSERT(queryObject);
@@ -1081,7 +1081,7 @@ void Context::beginQuery(GLenum target, GLuint query)
     mGLState.setActiveQuery(this, target, queryObject);
 }
 
-void Context::endQuery(GLenum target)
+void Context::endQuery(QueryType target)
 {
     Query *queryObject = mGLState.getActiveQuery(target);
     ASSERT(queryObject);
@@ -1092,9 +1092,9 @@ void Context::endQuery(GLenum target)
     mGLState.setActiveQuery(this, target, nullptr);
 }
 
-void Context::queryCounter(GLuint id, GLenum target)
+void Context::queryCounter(GLuint id, QueryType target)
 {
-    ASSERT(target == GL_TIMESTAMP_EXT);
+    ASSERT(target == QueryType::Timestamp);
 
     Query *queryObject = getQuery(id, true, target);
     ASSERT(queryObject);
@@ -1102,7 +1102,7 @@ void Context::queryCounter(GLuint id, GLenum target)
     handleError(queryObject->queryCounter());
 }
 
-void Context::getQueryiv(GLenum target, GLenum pname, GLint *params)
+void Context::getQueryiv(QueryType target, GLenum pname, GLint *params)
 {
     switch (pname)
     {
@@ -1112,10 +1112,10 @@ void Context::getQueryiv(GLenum target, GLenum pname, GLint *params)
         case GL_QUERY_COUNTER_BITS_EXT:
             switch (target)
             {
-                case GL_TIME_ELAPSED_EXT:
+                case QueryType::TimeElapsed:
                     params[0] = getExtensions().queryCounterBitsTimeElapsed;
                     break;
-                case GL_TIMESTAMP_EXT:
+                case QueryType::Timestamp:
                     params[0] = getExtensions().queryCounterBitsTimestamp;
                     break;
                 default:
@@ -1130,7 +1130,7 @@ void Context::getQueryiv(GLenum target, GLenum pname, GLint *params)
     }
 }
 
-void Context::getQueryivRobust(GLenum target,
+void Context::getQueryivRobust(QueryType target,
                                GLenum pname,
                                GLsizei bufSize,
                                GLsizei *length,
@@ -1205,7 +1205,7 @@ FenceNV *Context::getFenceNV(GLuint handle)
     return mFenceNVMap.query(handle);
 }
 
-Query *Context::getQuery(GLuint handle, bool create, GLenum type)
+Query *Context::getQuery(GLuint handle, bool create, QueryType type)
 {
     if (!mQueryMap.contains(handle))
     {
@@ -1215,6 +1215,7 @@ Query *Context::getQuery(GLuint handle, bool create, GLenum type)
     Query *query = mQueryMap.query(handle);
     if (!query && create)
     {
+        ASSERT(type != QueryType::InvalidEnum);
         query = new Query(mImplementation->createQuery(type), handle);
         query->addRef();
         mQueryMap.assign(handle, query);
@@ -5690,7 +5691,7 @@ void Context::deleteQueries(GLsizei n, const GLuint *ids)
 
 GLboolean Context::isQuery(GLuint id)
 {
-    return (getQuery(id, false, GL_NONE) != nullptr) ? GL_TRUE : GL_FALSE;
+    return (getQuery(id, false, QueryType::InvalidEnum) != nullptr) ? GL_TRUE : GL_FALSE;
 }
 
 void Context::uniformMatrix2x3fv(GLint location,

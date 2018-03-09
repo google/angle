@@ -14,7 +14,7 @@
 namespace rx
 {
 
-QueryVk::QueryVk(GLenum type) : QueryImpl(type)
+QueryVk::QueryVk(gl::QueryType type) : QueryImpl(type)
 {
 }
 

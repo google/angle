@@ -14,7 +14,7 @@
 namespace rx
 {
 
-QueryNULL::QueryNULL(GLenum type) : QueryImpl(type)
+QueryNULL::QueryNULL(gl::QueryType type) : QueryImpl(type)
 {
 }
 

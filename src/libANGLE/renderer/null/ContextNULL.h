@@ -178,7 +178,7 @@ class ContextNULL : public ContextImpl
     VertexArrayImpl *createVertexArray(const gl::VertexArrayState &data) override;
 
     // Query and Fence creation
-    QueryImpl *createQuery(GLenum type) override;
+    QueryImpl *createQuery(gl::QueryType type) override;
     FenceNVImpl *createFenceNV() override;
     SyncImpl *createSync() override;
 

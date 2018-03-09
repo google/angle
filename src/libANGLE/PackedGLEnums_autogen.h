@@ -185,6 +185,24 @@ template <>
 MatrixType FromGLenum<MatrixType>(GLenum from);
 GLenum ToGLenum(MatrixType from);
 
+enum class QueryType : uint8_t
+{
+    AnySamples                         = 0,
+    AnySamplesConservative             = 1,
+    CommandsCompleted                  = 2,
+    PrimitivesGenerated                = 3,
+    TimeElapsed                        = 4,
+    Timestamp                          = 5,
+    TransformFeedbackPrimitivesWritten = 6,
+
+    InvalidEnum = 7,
+    EnumCount   = 7,
+};
+
+template <>
+QueryType FromGLenum<QueryType>(GLenum from);
+GLenum ToGLenum(QueryType from);
+
 enum class ShaderType : uint8_t
 {
     Vertex   = 0,

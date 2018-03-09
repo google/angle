@@ -966,26 +966,21 @@ bool ValidImageDataSize(Context *context,
     return true;
 }
 
-bool ValidQueryType(const Context *context, GLenum queryType)
+bool ValidQueryType(const Context *context, QueryType queryType)
 {
-    static_assert(GL_ANY_SAMPLES_PASSED == GL_ANY_SAMPLES_PASSED_EXT,
-                  "GL extension enums not equal.");
-    static_assert(GL_ANY_SAMPLES_PASSED_CONSERVATIVE == GL_ANY_SAMPLES_PASSED_CONSERVATIVE_EXT,
-                  "GL extension enums not equal.");
-
     switch (queryType)
     {
-        case GL_ANY_SAMPLES_PASSED:
-        case GL_ANY_SAMPLES_PASSED_CONSERVATIVE:
+        case QueryType::AnySamples:
+        case QueryType::AnySamplesConservative:
             return context->getClientMajorVersion() >= 3 ||
                    context->getExtensions().occlusionQueryBoolean;
-        case GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN:
+        case QueryType::TransformFeedbackPrimitivesWritten:
             return (context->getClientMajorVersion() >= 3);
-        case GL_TIME_ELAPSED_EXT:
+        case QueryType::TimeElapsed:
             return context->getExtensions().disjointTimerQuery;
-        case GL_COMMANDS_COMPLETED_CHROMIUM:
+        case QueryType::CommandsCompleted:
             return context->getExtensions().syncQuery;
-        case GL_PRIMITIVES_GENERATED_EXT:
+        case QueryType::PrimitivesGenerated:
             return context->getExtensions().geometryShader;
         default:
             return false;
@@ -1611,7 +1606,7 @@ bool ValidateIsQueryEXT(gl::Context *context, GLuint id)
     return true;
 }
 
-bool ValidateBeginQueryBase(gl::Context *context, GLenum target, GLuint id)
+bool ValidateBeginQueryBase(gl::Context *context, QueryType target, GLuint id)
 {
     if (!ValidQueryType(context, target))
     {
@@ -1666,7 +1661,7 @@ bool ValidateBeginQueryBase(gl::Context *context, GLenum target, GLuint id)
     return true;
 }
 
-bool ValidateBeginQueryEXT(gl::Context *context, GLenum target, GLuint id)
+bool ValidateBeginQueryEXT(gl::Context *context, QueryType target, GLuint id)
 {
     if (!context->getExtensions().occlusionQueryBoolean &&
         !context->getExtensions().disjointTimerQuery && !context->getExtensions().syncQuery)
@@ -1678,7 +1673,7 @@ bool ValidateBeginQueryEXT(gl::Context *context, GLenum target, GLuint id)
     return ValidateBeginQueryBase(context, target, id);
 }
 
-bool ValidateEndQueryBase(gl::Context *context, GLenum target)
+bool ValidateEndQueryBase(gl::Context *context, QueryType target)
 {
     if (!ValidQueryType(context, target))
     {
@@ -1697,7 +1692,7 @@ bool ValidateEndQueryBase(gl::Context *context, GLenum target)
     return true;
 }
 
-bool ValidateEndQueryEXT(gl::Context *context, GLenum target)
+bool ValidateEndQueryEXT(gl::Context *context, QueryType target)
 {
     if (!context->getExtensions().occlusionQueryBoolean &&
         !context->getExtensions().disjointTimerQuery && !context->getExtensions().syncQuery)
@@ -1709,7 +1704,7 @@ bool ValidateEndQueryEXT(gl::Context *context, GLenum target)
     return ValidateEndQueryBase(context, target);
 }
 
-bool ValidateQueryCounterEXT(Context *context, GLuint id, GLenum target)
+bool ValidateQueryCounterEXT(Context *context, GLuint id, QueryType target)
 {
     if (!context->getExtensions().disjointTimerQuery)
     {
@@ -1717,7 +1712,7 @@ bool ValidateQueryCounterEXT(Context *context, GLuint id, GLenum target)
         return false;
     }
 
-    if (target != GL_TIMESTAMP_EXT)
+    if (target != QueryType::Timestamp)
     {
         ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidQueryTarget);
         return false;
@@ -1739,14 +1734,14 @@ bool ValidateQueryCounterEXT(Context *context, GLuint id, GLenum target)
     return true;
 }
 
-bool ValidateGetQueryivBase(Context *context, GLenum target, GLenum pname, GLsizei *numParams)
+bool ValidateGetQueryivBase(Context *context, QueryType target, GLenum pname, GLsizei *numParams)
 {
     if (numParams)
     {
         *numParams = 0;
     }
 
-    if (!ValidQueryType(context, target) && target != GL_TIMESTAMP_EXT)
+    if (!ValidQueryType(context, target) && target != QueryType::Timestamp)
     {
         ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidQueryType);
         return false;
@@ -1755,7 +1750,7 @@ bool ValidateGetQueryivBase(Context *context, GLenum target, GLenum pname, GLsiz
     switch (pname)
     {
         case GL_CURRENT_QUERY_EXT:
-            if (target == GL_TIMESTAMP_EXT)
+            if (target == QueryType::Timestamp)
             {
                 context->handleError(InvalidEnum() << "Cannot use current query for timestamp");
                 return false;
@@ -1763,7 +1758,7 @@ bool ValidateGetQueryivBase(Context *context, GLenum target, GLenum pname, GLsiz
             break;
         case GL_QUERY_COUNTER_BITS_EXT:
             if (!context->getExtensions().disjointTimerQuery ||
-                (target != GL_TIMESTAMP_EXT && target != GL_TIME_ELAPSED_EXT))
+                (target != QueryType::Timestamp && target != QueryType::TimeElapsed))
             {
                 ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidPname);
                 return false;
@@ -1783,7 +1778,7 @@ bool ValidateGetQueryivBase(Context *context, GLenum target, GLenum pname, GLsiz
     return true;
 }
 
-bool ValidateGetQueryivEXT(Context *context, GLenum target, GLenum pname, GLint *params)
+bool ValidateGetQueryivEXT(Context *context, QueryType target, GLenum pname, GLint *params)
 {
     if (!context->getExtensions().occlusionQueryBoolean &&
         !context->getExtensions().disjointTimerQuery && !context->getExtensions().syncQuery)
@@ -1796,7 +1791,7 @@ bool ValidateGetQueryivEXT(Context *context, GLenum target, GLenum pname, GLint 
 }
 
 bool ValidateGetQueryivRobustANGLE(Context *context,
-                                   GLenum target,
+                                   QueryType target,
                                    GLenum pname,
                                    GLsizei bufSize,
                                    GLsizei *length,
@@ -1831,7 +1826,7 @@ bool ValidateGetQueryObjectValueBase(Context *context, GLuint id, GLenum pname, 
         *numParams = 0;
     }
 
-    Query *queryObject = context->getQuery(id, false, GL_NONE);
+    Query *queryObject = context->getQuery(id, false, QueryType::InvalidEnum);
 
     if (!queryObject)
     {
@@ -2728,7 +2723,7 @@ bool ValidateDrawBase(Context *context, GLenum mode, GLsizei count)
         }
 
         if (extensions.disjointTimerQuery && framebufferNumViews > 1 &&
-            state.isQueryActive(GL_TIME_ELAPSED_EXT))
+            state.isQueryActive(QueryType::TimeElapsed))
         {
             context->handleError(InvalidOperation() << "There is an active query for target "
                                                        "GL_TIME_ELAPSED_EXT when the number of "

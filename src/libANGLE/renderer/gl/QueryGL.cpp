@@ -16,24 +16,24 @@
 namespace
 {
 
-GLuint64 MergeQueryResults(GLenum type, GLuint64 currentResult, GLuint64 newResult)
+GLuint64 MergeQueryResults(gl::QueryType type, GLuint64 currentResult, GLuint64 newResult)
 {
     switch (type)
     {
-        case GL_ANY_SAMPLES_PASSED:
-        case GL_ANY_SAMPLES_PASSED_CONSERVATIVE:
+        case gl::QueryType::AnySamples:
+        case gl::QueryType::AnySamplesConservative:
             return (currentResult == GL_TRUE || newResult == GL_TRUE) ? GL_TRUE : GL_FALSE;
 
-        case GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN:
+        case gl::QueryType::TransformFeedbackPrimitivesWritten:
             return currentResult + newResult;
 
-        case GL_TIME_ELAPSED:
+        case gl::QueryType::TimeElapsed:
             return currentResult + newResult;
 
-        case GL_TIMESTAMP:
+        case gl::QueryType::Timestamp:
             return newResult;
 
-        case GL_PRIMITIVES_GENERATED_EXT:
+        case gl::QueryType::PrimitivesGenerated:
             return currentResult + newResult;
 
         default:
@@ -47,7 +47,7 @@ GLuint64 MergeQueryResults(GLenum type, GLuint64 currentResult, GLuint64 newResu
 namespace rx
 {
 
-QueryGL::QueryGL(GLenum type) : QueryImpl(type)
+QueryGL::QueryGL(gl::QueryType type) : QueryImpl(type)
 {
 }
 
@@ -55,7 +55,7 @@ QueryGL::~QueryGL()
 {
 }
 
-StandardQueryGL::StandardQueryGL(GLenum type,
+StandardQueryGL::StandardQueryGL(gl::QueryType type,
                                  const FunctionsGL *functions,
                                  StateManagerGL *stateManager)
     : QueryGL(type),
@@ -98,7 +98,7 @@ gl::Error StandardQueryGL::end()
 
 gl::Error StandardQueryGL::queryCounter()
 {
-    ASSERT(mType == GL_TIMESTAMP);
+    ASSERT(mType == gl::QueryType::Timestamp);
 
     // Directly create a query for the timestamp and add it to the pending query queue, as timestamp
     // queries do not have the traditional begin/end block and never need to be paused/resumed
@@ -282,14 +282,14 @@ class SyncProviderGLQuery : public SyncProviderGL
   public:
     SyncProviderGLQuery(const FunctionsGL *functions,
                         StateManagerGL *stateManager,
-                        GLenum queryType)
+                        gl::QueryType type)
         : mFunctions(functions), mQuery(0)
     {
         mFunctions->genQueries(1, &mQuery);
-        ANGLE_SWALLOW_ERR(stateManager->pauseQuery(queryType));
-        mFunctions->beginQuery(queryType, mQuery);
-        mFunctions->endQuery(queryType);
-        ANGLE_SWALLOW_ERR(stateManager->resumeQuery(queryType));
+        ANGLE_SWALLOW_ERR(stateManager->pauseQuery(type));
+        mFunctions->beginQuery(ToGLenum(type), mQuery);
+        mFunctions->endQuery(ToGLenum(type));
+        ANGLE_SWALLOW_ERR(stateManager->resumeQuery(type));
     }
 
     ~SyncProviderGLQuery() override { mFunctions->deleteQueries(1, &mQuery); }
@@ -317,7 +317,9 @@ class SyncProviderGLQuery : public SyncProviderGL
     GLuint mQuery;
 };
 
-SyncQueryGL::SyncQueryGL(GLenum type, const FunctionsGL *functions, StateManagerGL *stateManager)
+SyncQueryGL::SyncQueryGL(gl::QueryType type,
+                         const FunctionsGL *functions,
+                         StateManagerGL *stateManager)
     : QueryGL(type),
       mFunctions(functions),
       mStateManager(stateManager),
@@ -325,7 +327,7 @@ SyncQueryGL::SyncQueryGL(GLenum type, const FunctionsGL *functions, StateManager
       mFinished(false)
 {
     ASSERT(IsSupported(mFunctions));
-    ASSERT(type == GL_COMMANDS_COMPLETED_CHROMIUM);
+    ASSERT(type == gl::QueryType::CommandsCompleted);
 }
 
 SyncQueryGL::~SyncQueryGL()
@@ -351,7 +353,7 @@ gl::Error SyncQueryGL::end()
     else if (nativegl::SupportsOcclusionQueries(mFunctions))
     {
         mSyncProvider.reset(
-            new SyncProviderGLQuery(mFunctions, mStateManager, GL_ANY_SAMPLES_PASSED));
+            new SyncProviderGLQuery(mFunctions, mStateManager, gl::QueryType::AnySamples));
     }
     else
     {

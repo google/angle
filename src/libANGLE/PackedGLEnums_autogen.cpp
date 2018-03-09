@@ -444,6 +444,54 @@ GLenum ToGLenum(MatrixType from)
 }
 
 template <>
+QueryType FromGLenum<QueryType>(GLenum from)
+{
+    switch (from)
+    {
+        case GL_ANY_SAMPLES_PASSED:
+            return QueryType::AnySamples;
+        case GL_ANY_SAMPLES_PASSED_CONSERVATIVE:
+            return QueryType::AnySamplesConservative;
+        case GL_COMMANDS_COMPLETED_CHROMIUM:
+            return QueryType::CommandsCompleted;
+        case GL_PRIMITIVES_GENERATED_EXT:
+            return QueryType::PrimitivesGenerated;
+        case GL_TIME_ELAPSED_EXT:
+            return QueryType::TimeElapsed;
+        case GL_TIMESTAMP_EXT:
+            return QueryType::Timestamp;
+        case GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN:
+            return QueryType::TransformFeedbackPrimitivesWritten;
+        default:
+            return QueryType::InvalidEnum;
+    }
+}
+
+GLenum ToGLenum(QueryType from)
+{
+    switch (from)
+    {
+        case QueryType::AnySamples:
+            return GL_ANY_SAMPLES_PASSED;
+        case QueryType::AnySamplesConservative:
+            return GL_ANY_SAMPLES_PASSED_CONSERVATIVE;
+        case QueryType::CommandsCompleted:
+            return GL_COMMANDS_COMPLETED_CHROMIUM;
+        case QueryType::PrimitivesGenerated:
+            return GL_PRIMITIVES_GENERATED_EXT;
+        case QueryType::TimeElapsed:
+            return GL_TIME_ELAPSED_EXT;
+        case QueryType::Timestamp:
+            return GL_TIMESTAMP_EXT;
+        case QueryType::TransformFeedbackPrimitivesWritten:
+            return GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN;
+        default:
+            UNREACHABLE();
+            return 0;
+    }
+}
+
+template <>
 ShaderType FromGLenum<ShaderType>(GLenum from)
 {
     switch (from)

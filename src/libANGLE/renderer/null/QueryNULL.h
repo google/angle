@@ -18,7 +18,7 @@ namespace rx
 class QueryNULL : public QueryImpl
 {
   public:
-    QueryNULL(GLenum type);
+    QueryNULL(gl::QueryType type);
     ~QueryNULL() override;
 
     gl::Error begin() override;

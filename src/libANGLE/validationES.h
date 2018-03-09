@@ -74,7 +74,7 @@ bool ValidImageDataSize(Context *context,
                         const void *pixels,
                         GLsizei imageSize);
 
-bool ValidQueryType(const Context *context, GLenum queryType);
+bool ValidQueryType(const Context *context, QueryType queryType);
 
 bool ValidateWebGLVertexAttribPointer(Context *context,
                                       GLenum type,
@@ -167,23 +167,20 @@ bool ValidateReadnPixelsRobustANGLE(Context *context,
 bool ValidateGenQueriesEXT(gl::Context *context, GLsizei n, GLuint *ids);
 bool ValidateDeleteQueriesEXT(gl::Context *context, GLsizei n, const GLuint *ids);
 bool ValidateIsQueryEXT(gl::Context *context, GLuint id);
-bool ValidateBeginQueryBase(Context *context, GLenum target, GLuint id);
-bool ValidateBeginQueryEXT(Context *context, GLenum target, GLuint id);
-bool ValidateEndQueryBase(Context *context, GLenum target);
-bool ValidateEndQueryEXT(Context *context, GLenum target);
-bool ValidateQueryCounterEXT(Context *context, GLuint id, GLenum target);
-bool ValidateGetQueryivBase(Context *context, GLenum target, GLenum pname, GLsizei *numParams);
-bool ValidateGetQueryivEXT(Context *context, GLenum target, GLenum pname, GLint *params);
+bool ValidateBeginQueryBase(Context *context, QueryType target, GLuint id);
+bool ValidateBeginQueryEXT(Context *context, QueryType target, GLuint id);
+bool ValidateEndQueryBase(Context *context, QueryType target);
+bool ValidateEndQueryEXT(Context *context, QueryType target);
+bool ValidateQueryCounterEXT(Context *context, GLuint id, QueryType target);
+bool ValidateGetQueryivBase(Context *context, QueryType target, GLenum pname, GLsizei *numParams);
+bool ValidateGetQueryivEXT(Context *context, QueryType target, GLenum pname, GLint *params);
 bool ValidateGetQueryivRobustANGLE(Context *context,
-                                   GLenum target,
+                                   QueryType target,
                                    GLenum pname,
                                    GLsizei bufSize,
                                    GLsizei *length,
                                    GLint *params);
-bool ValidateGetQueryObjectValueBase(Context *context,
-                                     GLenum target,
-                                     GLenum pname,
-                                     GLsizei *numParams);
+bool ValidateGetQueryObjectValueBase(Context *context, GLuint id, GLenum pname, GLsizei *numParams);
 bool ValidateGetQueryObjectivEXT(Context *context, GLuint id, GLenum pname, GLint *params);
 bool ValidateGetQueryObjectivRobustANGLE(Context *context,
                                          GLuint id,

@@ -560,10 +560,6 @@ gl::Error ShaderConstants11::updateBuffer(Renderer11 *renderer,
     return gl::NoError();
 }
 
-static const GLenum QueryTypes[] = {GL_ANY_SAMPLES_PASSED, GL_ANY_SAMPLES_PASSED_CONSERVATIVE,
-                                    GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN, GL_TIME_ELAPSED_EXT,
-                                    GL_COMMANDS_COMPLETED_CHROMIUM};
-
 StateManager11::StateManager11(Renderer11 *renderer)
     : mRenderer(renderer),
       mInternalDirtyBits(),
@@ -1596,9 +1592,9 @@ gl::Error StateManager11::onMakeCurrent(const gl::Context *context)
     }
     mCurrentQueries.clear();
 
-    for (GLenum queryType : QueryTypes)
+    for (gl::QueryType type : angle::AllEnums<gl::QueryType>())
     {
-        gl::Query *query = state.getActiveQuery(queryType);
+        gl::Query *query = state.getActiveQuery(type);
         if (query != nullptr)
         {
             Query11 *query11 = GetImplAs<Query11>(query);

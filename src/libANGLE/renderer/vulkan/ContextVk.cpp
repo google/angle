@@ -678,7 +678,7 @@ VertexArrayImpl *ContextVk::createVertexArray(const gl::VertexArrayState &state)
     return new VertexArrayVk(state);
 }
 
-QueryImpl *ContextVk::createQuery(GLenum type)
+QueryImpl *ContextVk::createQuery(gl::QueryType type)
 {
     return new QueryVk(type);
 }

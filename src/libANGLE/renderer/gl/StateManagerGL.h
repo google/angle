@@ -75,8 +75,8 @@ class StateManagerGL final : angle::NonCopyable
     void bindRenderbuffer(GLenum type, GLuint renderbuffer);
     void bindTransformFeedback(GLenum type, GLuint transformFeedback);
     void onTransformFeedbackStateChange();
-    void beginQuery(GLenum type, QueryGL *queryObject, GLuint queryId);
-    void endQuery(GLenum type, QueryGL *queryObject, GLuint queryId);
+    void beginQuery(gl::QueryType type, QueryGL *queryObject, GLuint queryId);
+    void endQuery(gl::QueryType type, QueryGL *queryObject, GLuint queryId);
     void onBeginQuery(QueryGL *query);
 
     void setAttributeCurrentData(size_t index, const gl::VertexAttribCurrentValueData &data);
@@ -169,9 +169,9 @@ class StateManagerGL final : angle::NonCopyable
 
     void pauseTransformFeedback();
     gl::Error pauseAllQueries();
-    gl::Error pauseQuery(GLenum type);
+    gl::Error pauseQuery(gl::QueryType type);
     gl::Error resumeAllQueries();
-    gl::Error resumeQuery(GLenum type);
+    gl::Error resumeQuery(gl::QueryType type);
     gl::Error onMakeCurrent(const gl::Context *context);
 
     void syncState(const gl::Context *context, const gl::State::DirtyBits &glDirtyBits);
@@ -253,11 +253,11 @@ class StateManagerGL final : angle::NonCopyable
     TransformFeedbackGL *mCurrentTransformFeedback;
 
     // Queries that are currently running on the driver
-    std::map<GLenum, QueryGL *> mQueries;
+    angle::PackedEnumMap<gl::QueryType, QueryGL *> mQueries;
 
     // Queries that are temporarily in the paused state so that their results will not be affected
     // by other operations
-    std::map<GLenum, QueryGL *> mTemporaryPausedQueries;
+    angle::PackedEnumMap<gl::QueryType, QueryGL *> mTemporaryPausedQueries;
 
     gl::ContextID mPrevDrawContext;
 

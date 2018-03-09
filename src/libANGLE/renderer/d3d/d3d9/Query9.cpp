@@ -14,7 +14,7 @@
 
 namespace rx
 {
-Query9::Query9(Renderer9 *renderer, GLenum type)
+Query9::Query9(Renderer9 *renderer, gl::QueryType type)
     : QueryImpl(type),
       mGetDataAttemptCount(0),
       mResult(GL_FALSE),
@@ -141,8 +141,8 @@ gl::Error Query9::testQuery()
         HRESULT result = S_OK;
         switch (getType())
         {
-            case GL_ANY_SAMPLES_PASSED_EXT:
-            case GL_ANY_SAMPLES_PASSED_CONSERVATIVE_EXT:
+            case gl::QueryType::AnySamples:
+            case gl::QueryType::AnySamplesConservative:
             {
                 DWORD numPixels = 0;
                 result = mQuery->GetData(&numPixels, sizeof(numPixels), D3DGETDATA_FLUSH);
@@ -154,7 +154,7 @@ gl::Error Query9::testQuery()
                 break;
             }
 
-            case GL_COMMANDS_COMPLETED_CHROMIUM:
+            case gl::QueryType::CommandsCompleted:
             {
                 BOOL completed = FALSE;
                 result = mQuery->GetData(&completed, sizeof(completed), D3DGETDATA_FLUSH);

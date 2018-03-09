@@ -22,7 +22,7 @@ class StateManagerGL;
 class QueryGL : public QueryImpl
 {
   public:
-    QueryGL(GLenum type);
+    QueryGL(gl::QueryType type);
     ~QueryGL() override;
 
     // OpenGL is only allowed to have one query of each type active at any given time. Since ANGLE
@@ -38,7 +38,7 @@ class QueryGL : public QueryImpl
 class StandardQueryGL : public QueryGL
 {
   public:
-    StandardQueryGL(GLenum type, const FunctionsGL *functions, StateManagerGL *stateManager);
+    StandardQueryGL(gl::QueryType type, const FunctionsGL *functions, StateManagerGL *stateManager);
     ~StandardQueryGL() override;
 
     gl::Error begin() override;
@@ -59,7 +59,7 @@ class StandardQueryGL : public QueryGL
     template <typename T>
     gl::Error getResultBase(T *params);
 
-    GLenum mType;
+    gl::QueryType mType;
 
     const FunctionsGL *mFunctions;
     StateManagerGL *mStateManager;
@@ -73,7 +73,7 @@ class SyncProviderGL;
 class SyncQueryGL : public QueryGL
 {
   public:
-    SyncQueryGL(GLenum type, const FunctionsGL *functions, StateManagerGL *stateManager);
+    SyncQueryGL(gl::QueryType type, const FunctionsGL *functions, StateManagerGL *stateManager);
     ~SyncQueryGL() override;
 
     static bool IsSupported(const FunctionsGL *functions);

@@ -18,7 +18,7 @@ class Renderer9;
 class Query9 : public QueryImpl
 {
   public:
-    Query9(Renderer9 *renderer, GLenum type);
+    Query9(Renderer9 *renderer, gl::QueryType type);
     ~Query9() override;
 
     gl::Error begin() override;

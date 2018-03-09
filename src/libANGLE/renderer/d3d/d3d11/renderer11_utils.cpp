@@ -1852,19 +1852,19 @@ UINT ConvertMaxAnisotropy(float maxAnisotropy, D3D_FEATURE_LEVEL featureLevel)
     return static_cast<UINT>(std::min(maxAnisotropy, d3d11_gl::GetMaximumAnisotropy(featureLevel)));
 }
 
-D3D11_QUERY ConvertQueryType(GLenum queryType)
+D3D11_QUERY ConvertQueryType(gl::QueryType type)
 {
-    switch (queryType)
+    switch (type)
     {
-        case GL_ANY_SAMPLES_PASSED_EXT:
-        case GL_ANY_SAMPLES_PASSED_CONSERVATIVE_EXT:
+        case gl::QueryType::AnySamples:
+        case gl::QueryType::AnySamplesConservative:
             return D3D11_QUERY_OCCLUSION;
-        case GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN:
+        case gl::QueryType::TransformFeedbackPrimitivesWritten:
             return D3D11_QUERY_SO_STATISTICS;
-        case GL_TIME_ELAPSED_EXT:
+        case gl::QueryType::TimeElapsed:
             // Two internal queries are also created for begin/end timestamps
             return D3D11_QUERY_TIMESTAMP_DISJOINT;
-        case GL_COMMANDS_COMPLETED_CHROMIUM:
+        case gl::QueryType::CommandsCompleted:
             return D3D11_QUERY_EVENT;
         default:
             UNREACHABLE();

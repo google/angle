@@ -91,11 +91,11 @@ VertexArrayImpl *ContextGL::createVertexArray(const gl::VertexArrayState &data)
     return new VertexArrayGL(data, getFunctions(), getStateManager());
 }
 
-QueryImpl *ContextGL::createQuery(GLenum type)
+QueryImpl *ContextGL::createQuery(gl::QueryType type)
 {
     switch (type)
     {
-        case GL_COMMANDS_COMPLETED_CHROMIUM:
+        case gl::QueryType::CommandsCompleted:
             return new SyncQueryGL(type, getFunctions(), getStateManager());
 
         default:

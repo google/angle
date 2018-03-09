@@ -26,18 +26,28 @@
 #include "libANGLE/queryutils.h"
 #include "libANGLE/renderer/ContextImpl.h"
 
+namespace gl
+{
+
 namespace
 {
 
-GLenum ActiveQueryType(const GLenum type)
+bool GetAlternativeQueryType(QueryType type, QueryType *alternativeType)
 {
-    return (type == GL_ANY_SAMPLES_PASSED_CONSERVATIVE) ? GL_ANY_SAMPLES_PASSED : type;
+    switch (type)
+    {
+        case QueryType::AnySamples:
+            *alternativeType = QueryType::AnySamplesConservative;
+            return true;
+        case QueryType::AnySamplesConservative:
+            *alternativeType = QueryType::AnySamples;
+            return true;
+        default:
+            return false;
+    }
 }
 
 }  // anonymous namepace
-
-namespace gl
-{
 
 void UpdateBufferBinding(const Context *context,
                          BindingPointer<Buffer> *binding,
@@ -212,12 +222,10 @@ void State::initialize(const Context *context,
 
     mSamplers.resize(caps.maxCombinedTextureImageUnits);
 
-    mActiveQueries[GL_ANY_SAMPLES_PASSED].set(context, nullptr);
-    mActiveQueries[GL_ANY_SAMPLES_PASSED_CONSERVATIVE].set(context, nullptr);
-    mActiveQueries[GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN].set(context, nullptr);
-    mActiveQueries[GL_TIME_ELAPSED_EXT].set(context, nullptr);
-    mActiveQueries[GL_COMMANDS_COMPLETED_CHROMIUM].set(context, nullptr);
-    mActiveQueries[GL_PRIMITIVES_GENERATED_EXT].set(context, nullptr);
+    for (QueryType type : angle::AllEnums<QueryType>())
+    {
+        mActiveQueries[type].set(context, nullptr);
+    }
 
     mProgram = nullptr;
 
@@ -294,9 +302,9 @@ void State::reset(const Context *context)
         mTransformFeedback->onBindingChanged(context, false);
     mTransformFeedback.set(context, nullptr);
 
-    for (State::ActiveQueryMap::iterator i = mActiveQueries.begin(); i != mActiveQueries.end(); i++)
+    for (QueryType type : angle::AllEnums<QueryType>())
     {
-        i->second.set(context, nullptr);
+        mActiveQueries[type].set(context, nullptr);
     }
 
     for (auto &buf : mUniformBuffers)
@@ -1316,15 +1324,19 @@ void State::detachProgramPipeline(const Context *context, GLuint pipeline)
     mProgramPipeline.set(context, nullptr);
 }
 
-bool State::isQueryActive(const GLenum type) const
+bool State::isQueryActive(QueryType type) const
 {
-    for (auto &iter : mActiveQueries)
+    const Query *query = mActiveQueries[type].get();
+    if (query != nullptr)
     {
-        const Query *query = iter.second.get();
-        if (query != nullptr && ActiveQueryType(query->getType()) == ActiveQueryType(type))
-        {
-            return true;
-        }
+        return true;
+    }
+
+    QueryType alternativeType;
+    if (GetAlternativeQueryType(type, &alternativeType))
+    {
+        query = mActiveQueries[alternativeType].get();
+        return query != nullptr;
     }
 
     return false;
@@ -1332,9 +1344,9 @@ bool State::isQueryActive(const GLenum type) const
 
 bool State::isQueryActive(Query *query) const
 {
-    for (auto &iter : mActiveQueries)
+    for (auto &queryPointer : mActiveQueries)
     {
-        if (iter.second.get() == query)
+        if (queryPointer.get() == query)
         {
             return true;
         }
@@ -1343,25 +1355,20 @@ bool State::isQueryActive(Query *query) const
     return false;
 }
 
-void State::setActiveQuery(const Context *context, GLenum target, Query *query)
+void State::setActiveQuery(const Context *context, QueryType type, Query *query)
 {
-    mActiveQueries[target].set(context, query);
+    mActiveQueries[type].set(context, query);
 }
 
-GLuint State::getActiveQueryId(GLenum target) const
+GLuint State::getActiveQueryId(QueryType type) const
 {
-    const Query *query = getActiveQuery(target);
+    const Query *query = getActiveQuery(type);
     return (query ? query->id() : 0u);
 }
 
-Query *State::getActiveQuery(GLenum target) const
+Query *State::getActiveQuery(QueryType type) const
 {
-    const auto it = mActiveQueries.find(target);
-
-    // All query types should already exist in the activeQueries map
-    ASSERT(it != mActiveQueries.end());
-
-    return it->second.get();
+    return mActiveQueries[type].get();
 }
 
 void State::setBufferBinding(const Context *context, BufferBinding target, Buffer *buffer)

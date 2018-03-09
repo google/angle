@@ -972,13 +972,14 @@ GetQueryivRobustANGLE(GLenum target, GLenum pname, GLsizei bufSize, GLsizei *len
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::GetQueryivRobustANGLE>(target, pname, bufSize, length,
-                                                                 params);
+        QueryType targetPacked = FromGLenum<QueryType>(target);
+        context->gatherParams<EntryPoint::GetQueryivRobustANGLE>(targetPacked, pname, bufSize,
+                                                                 length, params);
 
         if (context->skipValidation() ||
-            ValidateGetQueryivRobustANGLE(context, target, pname, bufSize, length, params))
+            ValidateGetQueryivRobustANGLE(context, targetPacked, pname, bufSize, length, params))
         {
-            context->getQueryivRobust(target, pname, bufSize, length, params);
+            context->getQueryivRobust(targetPacked, pname, bufSize, length, params);
         }
     }
 }
@@ -2726,11 +2727,12 @@ void GL_APIENTRY BeginQueryEXT(GLenum target, GLuint id)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::BeginQueryEXT>(target, id);
+        QueryType targetPacked = FromGLenum<QueryType>(target);
+        context->gatherParams<EntryPoint::BeginQueryEXT>(targetPacked, id);
 
-        if (context->skipValidation() || ValidateBeginQueryEXT(context, target, id))
+        if (context->skipValidation() || ValidateBeginQueryEXT(context, targetPacked, id))
         {
-            context->beginQuery(target, id);
+            context->beginQuery(targetPacked, id);
         }
     }
 }
@@ -2758,11 +2760,12 @@ void GL_APIENTRY EndQueryEXT(GLenum target)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::EndQueryEXT>(target);
+        QueryType targetPacked = FromGLenum<QueryType>(target);
+        context->gatherParams<EntryPoint::EndQueryEXT>(targetPacked);
 
-        if (context->skipValidation() || ValidateEndQueryEXT(context, target))
+        if (context->skipValidation() || ValidateEndQueryEXT(context, targetPacked))
         {
-            context->endQuery(target);
+            context->endQuery(targetPacked);
         }
     }
 }
@@ -2855,11 +2858,13 @@ void GL_APIENTRY GetQueryivEXT(GLenum target, GLenum pname, GLint *params)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::GetQueryivEXT>(target, pname, params);
+        QueryType targetPacked = FromGLenum<QueryType>(target);
+        context->gatherParams<EntryPoint::GetQueryivEXT>(targetPacked, pname, params);
 
-        if (context->skipValidation() || ValidateGetQueryivEXT(context, target, pname, params))
+        if (context->skipValidation() ||
+            ValidateGetQueryivEXT(context, targetPacked, pname, params))
         {
-            context->getQueryiv(target, pname, params);
+            context->getQueryiv(targetPacked, pname, params);
         }
     }
 }
@@ -2889,11 +2894,12 @@ void GL_APIENTRY QueryCounterEXT(GLuint id, GLenum target)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::QueryCounterEXT>(id, target);
+        QueryType targetPacked = FromGLenum<QueryType>(target);
+        context->gatherParams<EntryPoint::QueryCounterEXT>(id, targetPacked);
 
-        if (context->skipValidation() || ValidateQueryCounterEXT(context, id, target))
+        if (context->skipValidation() || ValidateQueryCounterEXT(context, id, targetPacked))
         {
-            context->queryCounter(id, target);
+            context->queryCounter(id, targetPacked);
         }
     }
 }
