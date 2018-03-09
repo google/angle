@@ -41,6 +41,46 @@ uint8_t PackGLBlendOp(GLenum blendOp)
     }
 }
 
+uint8_t PackGLBlendFactor(GLenum blendFactor)
+{
+    switch (blendFactor)
+    {
+        case GL_ZERO:
+            return static_cast<uint8_t>(VK_BLEND_FACTOR_ZERO);
+        case GL_ONE:
+            return static_cast<uint8_t>(VK_BLEND_FACTOR_ONE);
+        case GL_SRC_COLOR:
+            return static_cast<uint8_t>(VK_BLEND_FACTOR_SRC_COLOR);
+        case GL_DST_COLOR:
+            return static_cast<uint8_t>(VK_BLEND_FACTOR_DST_COLOR);
+        case GL_ONE_MINUS_SRC_COLOR:
+            return static_cast<uint8_t>(VK_BLEND_FACTOR_ONE_MINUS_SRC_COLOR);
+        case GL_SRC_ALPHA:
+            return static_cast<uint8_t>(VK_BLEND_FACTOR_SRC_ALPHA);
+        case GL_ONE_MINUS_SRC_ALPHA:
+            return static_cast<uint8_t>(VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA);
+        case GL_DST_ALPHA:
+            return static_cast<uint8_t>(VK_BLEND_FACTOR_DST_ALPHA);
+        case GL_ONE_MINUS_DST_ALPHA:
+            return static_cast<uint8_t>(VK_BLEND_FACTOR_ONE_MINUS_DST_ALPHA);
+        case GL_ONE_MINUS_DST_COLOR:
+            return static_cast<uint8_t>(VK_BLEND_FACTOR_ONE_MINUS_DST_COLOR);
+        case GL_SRC_ALPHA_SATURATE:
+            return static_cast<uint8_t>(VK_BLEND_FACTOR_SRC_ALPHA_SATURATE);
+        case GL_CONSTANT_COLOR:
+            return static_cast<uint8_t>(VK_BLEND_FACTOR_CONSTANT_COLOR);
+        case GL_CONSTANT_ALPHA:
+            return static_cast<uint8_t>(VK_BLEND_FACTOR_CONSTANT_ALPHA);
+        case GL_ONE_MINUS_CONSTANT_COLOR:
+            return static_cast<uint8_t>(VK_BLEND_FACTOR_ONE_MINUS_CONSTANT_COLOR);
+        case GL_ONE_MINUS_CONSTANT_ALPHA:
+            return static_cast<uint8_t>(VK_BLEND_FACTOR_ONE_MINUS_CONSTANT_ALPHA);
+        default:
+            UNREACHABLE();
+            return 0;
+    }
+}
+
 VkSampleCountFlagBits ConvertSamples(GLint sampleCount)
 {
     switch (sampleCount)
@@ -647,11 +687,10 @@ void PipelineDesc::updateBlendFuncs(const gl::BlendState &blendState)
 {
     for (auto &blendAttachmentState : mColorBlendStateInfo.attachments)
     {
-        blendAttachmentState.srcColorBlendFactor = static_cast<uint8_t>(blendState.sourceBlendRGB);
-        blendAttachmentState.dstColorBlendFactor = static_cast<uint8_t>(blendState.destBlendRGB);
-        blendAttachmentState.srcAlphaBlendFactor =
-            static_cast<uint8_t>(blendState.sourceBlendAlpha);
-        blendAttachmentState.dstAlphaBlendFactor = static_cast<uint8_t>(blendState.destBlendAlpha);
+        blendAttachmentState.srcColorBlendFactor = PackGLBlendFactor(blendState.sourceBlendRGB);
+        blendAttachmentState.dstColorBlendFactor = PackGLBlendFactor(blendState.destBlendRGB);
+        blendAttachmentState.srcAlphaBlendFactor = PackGLBlendFactor(blendState.sourceBlendAlpha);
+        blendAttachmentState.dstAlphaBlendFactor = PackGLBlendFactor(blendState.destBlendAlpha);
     }
 }
 
