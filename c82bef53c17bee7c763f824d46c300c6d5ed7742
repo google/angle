@@ -144,6 +144,24 @@
     },
     {
       "key": {
+        "uuid": "e013c0bf_1b8dd768",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1166,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2018-03-09T01:36:14Z",
+      "side": 1,
+      "message": "I misunderstood how STENCIL_TEST works - it actually disables stencil write as well.\nSo I actually do want the front/back writemasks to be allowed to be different when the stencil test is disabled.\n(Or when there is no stencil buffer.)\n\nI\u0027m currently updating the WebGL tests to cover this.",
+      "parentUuid": "44a3a8a2_6b3ba937",
+      "revId": "c82bef53c17bee7c763f824d46c300c6d5ed7742",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e56f5482_be7051b1",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 7
