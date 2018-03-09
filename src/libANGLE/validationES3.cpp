@@ -781,7 +781,7 @@ static bool IsValidES3CopyTexImageCombination(const InternalFormat &textureForma
                   // conversion between these formats.
 }
 
-bool ValidateES3CopyTexImageParametersBase(ValidationContext *context,
+bool ValidateES3CopyTexImageParametersBase(Context *context,
                                            TextureTarget target,
                                            GLint level,
                                            GLenum internalformat,
@@ -847,7 +847,7 @@ bool ValidateES3CopyTexImageParametersBase(ValidationContext *context,
     return (width > 0 && height > 0);
 }
 
-bool ValidateES3CopyTexImage2DParameters(ValidationContext *context,
+bool ValidateES3CopyTexImage2DParameters(Context *context,
                                          TextureTarget target,
                                          GLint level,
                                          GLenum internalformat,
@@ -872,7 +872,7 @@ bool ValidateES3CopyTexImage2DParameters(ValidationContext *context,
                                                  border);
 }
 
-bool ValidateES3CopyTexImage3DParameters(ValidationContext *context,
+bool ValidateES3CopyTexImage3DParameters(Context *context,
                                          TextureType target,
                                          GLint level,
                                          GLenum internalformat,
@@ -1238,7 +1238,7 @@ bool ValidateInvalidateSubFramebuffer(Context *context,
     return ValidateInvalidateFramebuffer(context, target, numAttachments, attachments);
 }
 
-bool ValidateClearBuffer(ValidationContext *context)
+bool ValidateClearBuffer(Context *context)
 {
     if (context->getClientMajorVersion() < 3)
     {
@@ -1727,10 +1727,7 @@ bool ValidateBlitFramebuffer(Context *context,
                                              dstX1, dstY1, mask, filter);
 }
 
-bool ValidateClearBufferiv(ValidationContext *context,
-                           GLenum buffer,
-                           GLint drawbuffer,
-                           const GLint *value)
+bool ValidateClearBufferiv(Context *context, GLenum buffer, GLint drawbuffer, const GLint *value)
 {
     switch (buffer)
     {
@@ -1768,10 +1765,7 @@ bool ValidateClearBufferiv(ValidationContext *context,
     return ValidateClearBuffer(context);
 }
 
-bool ValidateClearBufferuiv(ValidationContext *context,
-                            GLenum buffer,
-                            GLint drawbuffer,
-                            const GLuint *value)
+bool ValidateClearBufferuiv(Context *context, GLenum buffer, GLint drawbuffer, const GLuint *value)
 {
     switch (buffer)
     {
@@ -1801,10 +1795,7 @@ bool ValidateClearBufferuiv(ValidationContext *context,
     return ValidateClearBuffer(context);
 }
 
-bool ValidateClearBufferfv(ValidationContext *context,
-                           GLenum buffer,
-                           GLint drawbuffer,
-                           const GLfloat *value)
+bool ValidateClearBufferfv(Context *context, GLenum buffer, GLint drawbuffer, const GLfloat *value)
 {
     switch (buffer)
     {
@@ -1843,7 +1834,7 @@ bool ValidateClearBufferfv(ValidationContext *context,
     return ValidateClearBuffer(context);
 }
 
-bool ValidateClearBufferfi(ValidationContext *context,
+bool ValidateClearBufferfi(Context *context,
                            GLenum buffer,
                            GLint drawbuffer,
                            GLfloat depth,
@@ -1867,7 +1858,7 @@ bool ValidateClearBufferfi(ValidationContext *context,
     return ValidateClearBuffer(context);
 }
 
-bool ValidateDrawBuffers(ValidationContext *context, GLsizei n, const GLenum *bufs)
+bool ValidateDrawBuffers(Context *context, GLsizei n, const GLenum *bufs)
 {
     if (context->getClientMajorVersion() < 3)
     {
@@ -2262,10 +2253,7 @@ bool ValidateFlushMappedBufferRange(Context *context,
     return ValidateFlushMappedBufferRangeBase(context, target, offset, length);
 }
 
-bool ValidateIndexedStateQuery(ValidationContext *context,
-                               GLenum pname,
-                               GLuint index,
-                               GLsizei *length)
+bool ValidateIndexedStateQuery(Context *context, GLenum pname, GLuint index, GLsizei *length)
 {
     if (length)
     {
@@ -2411,7 +2399,7 @@ bool ValidateIndexedStateQuery(ValidationContext *context,
     return true;
 }
 
-bool ValidateGetIntegeri_v(ValidationContext *context, GLenum target, GLuint index, GLint *data)
+bool ValidateGetIntegeri_v(Context *context, GLenum target, GLuint index, GLint *data)
 {
     if (context->getClientVersion() < ES_3_0)
     {
@@ -2421,7 +2409,7 @@ bool ValidateGetIntegeri_v(ValidationContext *context, GLenum target, GLuint ind
     return ValidateIndexedStateQuery(context, target, index, nullptr);
 }
 
-bool ValidateGetIntegeri_vRobustANGLE(ValidationContext *context,
+bool ValidateGetIntegeri_vRobustANGLE(Context *context,
                                       GLenum target,
                                       GLuint index,
                                       GLsizei bufSize,
@@ -2452,7 +2440,7 @@ bool ValidateGetIntegeri_vRobustANGLE(ValidationContext *context,
     return true;
 }
 
-bool ValidateGetInteger64i_v(ValidationContext *context, GLenum target, GLuint index, GLint64 *data)
+bool ValidateGetInteger64i_v(Context *context, GLenum target, GLuint index, GLint64 *data)
 {
     if (context->getClientVersion() < ES_3_0)
     {
@@ -2462,7 +2450,7 @@ bool ValidateGetInteger64i_v(ValidationContext *context, GLenum target, GLuint i
     return ValidateIndexedStateQuery(context, target, index, nullptr);
 }
 
-bool ValidateGetInteger64i_vRobustANGLE(ValidationContext *context,
+bool ValidateGetInteger64i_vRobustANGLE(Context *context,
                                         GLenum target,
                                         GLuint index,
                                         GLsizei bufSize,
@@ -2493,7 +2481,7 @@ bool ValidateGetInteger64i_vRobustANGLE(ValidationContext *context,
     return true;
 }
 
-bool ValidateCopyBufferSubData(ValidationContext *context,
+bool ValidateCopyBufferSubData(Context *context,
                                BufferBinding readTarget,
                                BufferBinding writeTarget,
                                GLintptr readOffset,
@@ -2630,7 +2618,7 @@ bool ValidateGetStringi(Context *context, GLenum name, GLuint index)
     return true;
 }
 
-bool ValidateRenderbufferStorageMultisample(ValidationContext *context,
+bool ValidateRenderbufferStorageMultisample(Context *context,
                                             GLenum target,
                                             GLsizei samples,
                                             GLenum internalformat,
@@ -2676,7 +2664,7 @@ bool ValidateRenderbufferStorageMultisample(ValidationContext *context,
     return true;
 }
 
-bool ValidateVertexAttribIPointer(ValidationContext *context,
+bool ValidateVertexAttribIPointer(Context *context,
                                   GLuint index,
                                   GLint size,
                                   GLenum type,
@@ -2787,7 +2775,7 @@ bool ValidateGetSynciv(Context *context,
     return true;
 }
 
-bool ValidateDrawElementsInstanced(ValidationContext *context,
+bool ValidateDrawElementsInstanced(Context *context,
                                    GLenum mode,
                                    GLsizei count,
                                    GLenum type,
@@ -3689,7 +3677,7 @@ bool ValidateTexStorage3D(Context *context,
     return true;
 }
 
-bool ValidateGetBufferParameteri64v(ValidationContext *context,
+bool ValidateGetBufferParameteri64v(Context *context,
                                     BufferBinding target,
                                     GLenum pname,
                                     GLint64 *params)

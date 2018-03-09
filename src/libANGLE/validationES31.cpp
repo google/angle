@@ -281,7 +281,7 @@ bool ValidateProgramResourceIndex(const Program *programObject,
     }
 }
 
-bool ValidateProgramUniform(gl::Context *context,
+bool ValidateProgramUniform(Context *context,
                             GLenum valueType,
                             GLuint program,
                             GLint location,
@@ -295,12 +295,12 @@ bool ValidateProgramUniform(gl::Context *context,
     }
 
     const LinkedUniform *uniform = nullptr;
-    gl::Program *programObject   = GetValidProgram(context, program);
+    Program *programObject       = GetValidProgram(context, program);
     return ValidateUniformCommonBase(context, programObject, location, count, &uniform) &&
            ValidateUniformValue(context, valueType, uniform->type);
 }
 
-bool ValidateProgramUniformMatrix(gl::Context *context,
+bool ValidateProgramUniformMatrix(Context *context,
                                   GLenum valueType,
                                   GLuint program,
                                   GLint location,
@@ -315,12 +315,12 @@ bool ValidateProgramUniformMatrix(gl::Context *context,
     }
 
     const LinkedUniform *uniform = nullptr;
-    gl::Program *programObject   = GetValidProgram(context, program);
+    Program *programObject       = GetValidProgram(context, program);
     return ValidateUniformCommonBase(context, programObject, location, count, &uniform) &&
            ValidateUniformMatrixValue(context, valueType, uniform->type);
 }
 
-bool ValidateVertexAttribFormatCommon(ValidationContext *context,
+bool ValidateVertexAttribFormatCommon(Context *context,
                                       GLuint attribIndex,
                                       GLint size,
                                       GLenum type,
@@ -426,7 +426,7 @@ bool ValidateDrawIndirectBase(Context *context, GLenum mode, const void *indirec
         return false;
     }
 
-    gl::Buffer *drawIndirectBuffer = state.getTargetBuffer(BufferBinding::DrawIndirect);
+    Buffer *drawIndirectBuffer = state.getTargetBuffer(BufferBinding::DrawIndirect);
     if (!drawIndirectBuffer)
     {
         context->handleError(InvalidOperation() << "zero is bound to DRAW_INDIRECT_BUFFER");
@@ -463,7 +463,7 @@ bool ValidateDrawIndirectBase(Context *context, GLenum mode, const void *indirec
 bool ValidateDrawArraysIndirect(Context *context, GLenum mode, const void *indirect)
 {
     const State &state                          = context->getGLState();
-    gl::TransformFeedback *curTransformFeedback = state.getCurrentTransformFeedback();
+    TransformFeedback *curTransformFeedback     = state.getCurrentTransformFeedback();
     if (curTransformFeedback && curTransformFeedback->isActive() &&
         !curTransformFeedback->isPaused())
     {
@@ -475,7 +475,7 @@ bool ValidateDrawArraysIndirect(Context *context, GLenum mode, const void *indir
     if (!ValidateDrawIndirectBase(context, mode, indirect))
         return false;
 
-    gl::Buffer *drawIndirectBuffer = state.getTargetBuffer(BufferBinding::DrawIndirect);
+    Buffer *drawIndirectBuffer = state.getTargetBuffer(BufferBinding::DrawIndirect);
     CheckedNumeric<size_t> checkedOffset(reinterpret_cast<size_t>(indirect));
     // In OpenGL ES3.1 spec, session 10.5, it defines the struct of DrawArraysIndirectCommand
     // which's size is 4 * sizeof(uint).
@@ -499,7 +499,7 @@ bool ValidateDrawElementsIndirect(Context *context, GLenum mode, GLenum type, co
 
     const State &state             = context->getGLState();
     const VertexArray *vao         = state.getVertexArray();
-    gl::Buffer *elementArrayBuffer = vao->getElementArrayBuffer().get();
+    Buffer *elementArrayBuffer     = vao->getElementArrayBuffer().get();
     if (!elementArrayBuffer)
     {
         context->handleError(InvalidOperation() << "zero is bound to ELEMENT_ARRAY_BUFFER");
@@ -509,7 +509,7 @@ bool ValidateDrawElementsIndirect(Context *context, GLenum mode, GLenum type, co
     if (!ValidateDrawIndirectBase(context, mode, indirect))
         return false;
 
-    gl::Buffer *drawIndirectBuffer = state.getTargetBuffer(BufferBinding::DrawIndirect);
+    Buffer *drawIndirectBuffer = state.getTargetBuffer(BufferBinding::DrawIndirect);
     CheckedNumeric<size_t> checkedOffset(reinterpret_cast<size_t>(indirect));
     // In OpenGL ES3.1 spec, session 10.5, it defines the struct of DrawElementsIndirectCommand
     // which's size is 5 * sizeof(uint).
@@ -650,7 +650,7 @@ bool ValidateProgramUniform1iv(Context *context,
     }
 
     const LinkedUniform *uniform = nullptr;
-    gl::Program *programObject   = GetValidProgram(context, program);
+    Program *programObject       = GetValidProgram(context, program);
     return ValidateUniformCommonBase(context, programObject, location, count, &uniform) &&
            ValidateUniform1ivValue(context, uniform->type, count, value);
 }
@@ -1195,7 +1195,7 @@ bool ValidateGetProgramResourceIndex(Context *context,
     return true;
 }
 
-bool ValidateBindVertexBuffer(ValidationContext *context,
+bool ValidateBindVertexBuffer(Context *context,
                               GLuint bindingIndex,
                               GLuint buffer,
                               GLintptr offset,
@@ -1245,7 +1245,7 @@ bool ValidateBindVertexBuffer(ValidationContext *context,
     return true;
 }
 
-bool ValidateVertexBindingDivisor(ValidationContext *context, GLuint bindingIndex, GLuint divisor)
+bool ValidateVertexBindingDivisor(Context *context, GLuint bindingIndex, GLuint divisor)
 {
     if (context->getClientVersion() < ES_3_1)
     {
@@ -1272,7 +1272,7 @@ bool ValidateVertexBindingDivisor(ValidationContext *context, GLuint bindingInde
     return true;
 }
 
-bool ValidateVertexAttribFormat(ValidationContext *context,
+bool ValidateVertexAttribFormat(Context *context,
                                 GLuint attribindex,
                                 GLint size,
                                 GLenum type,
@@ -1283,7 +1283,7 @@ bool ValidateVertexAttribFormat(ValidationContext *context,
                                             false);
 }
 
-bool ValidateVertexAttribIFormat(ValidationContext *context,
+bool ValidateVertexAttribIFormat(Context *context,
                                  GLuint attribindex,
                                  GLint size,
                                  GLenum type,
@@ -1292,9 +1292,7 @@ bool ValidateVertexAttribIFormat(ValidationContext *context,
     return ValidateVertexAttribFormatCommon(context, attribindex, size, type, relativeoffset, true);
 }
 
-bool ValidateVertexAttribBinding(ValidationContext *context,
-                                 GLuint attribIndex,
-                                 GLuint bindingIndex)
+bool ValidateVertexAttribBinding(Context *context, GLuint attribIndex, GLuint bindingIndex)
 {
     if (context->getClientVersion() < ES_3_1)
     {
@@ -1444,7 +1442,7 @@ bool ValidateDispatchComputeIndirect(Context *context, GLintptr indirect)
         return false;
     }
 
-    gl::Buffer *dispatchIndirectBuffer = state.getTargetBuffer(BufferBinding::DispatchIndirect);
+    Buffer *dispatchIndirectBuffer = state.getTargetBuffer(BufferBinding::DispatchIndirect);
     if (!dispatchIndirectBuffer)
     {
         ANGLE_VALIDATION_ERR(context, InvalidOperation(), DispatchIndirectBufferNotBound);

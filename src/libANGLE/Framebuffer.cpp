@@ -1437,6 +1437,8 @@ int Framebuffer::getSamples(const Context *context)
 
 int Framebuffer::getCachedSamples(const Context *context)
 {
+    ASSERT(mCachedStatus.valid() && mCachedStatus.value() == GL_FRAMEBUFFER_COMPLETE);
+
     // For a complete framebuffer, all attachments must have the same sample count.
     // In this case return the first nonzero sample size.
     const auto *firstNonNullAttachment = mState.getFirstNonNullAttachment();
@@ -1791,11 +1793,6 @@ bool Framebuffer::complete(const Context *context)
     return (checkStatus(context) == GL_FRAMEBUFFER_COMPLETE);
 }
 
-bool Framebuffer::cachedComplete() const
-{
-    return (mCachedStatus.valid() && mCachedStatus == GL_FRAMEBUFFER_COMPLETE);
-}
-
 bool Framebuffer::formsRenderingFeedbackLoopWith(const State &state) const
 {
     const Program *program = state.getProgram();
@@ -1922,17 +1919,6 @@ void Framebuffer::setDefaultFixedSampleLocations(bool defaultFixedSampleLocation
 {
     mState.mDefaultFixedSampleLocations = defaultFixedSampleLocations;
     mDirtyBits.set(DIRTY_BIT_DEFAULT_FIXED_SAMPLE_LOCATIONS);
-}
-
-// TODO(jmadill): Remove this kludge.
-GLenum Framebuffer::checkStatus(const ValidationContext *context)
-{
-    return checkStatus(static_cast<const Context *>(context));
-}
-
-int Framebuffer::getSamples(const ValidationContext *context)
-{
-    return getSamples(static_cast<const Context *>(context));
 }
 
 GLsizei Framebuffer::getNumViews() const

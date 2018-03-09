@@ -16,7 +16,6 @@
 namespace gl
 {
 class Context;
-class ValidationContext;
 
 bool ValidateGetBooleani_v(Context *context, GLenum target, GLuint index, GLboolean *data);
 bool ValidateGetBooleani_vRobustANGLE(Context *context,
@@ -263,26 +262,24 @@ bool ValidateGetProgramInterfaceiv(Context *context,
                                    GLenum pname,
                                    GLint *params);
 
-bool ValidateBindVertexBuffer(ValidationContext *context,
+bool ValidateBindVertexBuffer(Context *context,
                               GLuint bindingIndex,
                               GLuint buffer,
                               GLintptr offset,
                               GLsizei stride);
-bool ValidateVertexAttribFormat(ValidationContext *context,
+bool ValidateVertexAttribFormat(Context *context,
                                 GLuint attribindex,
                                 GLint size,
                                 GLenum type,
                                 GLboolean normalized,
                                 GLuint relativeoffset);
-bool ValidateVertexAttribIFormat(ValidationContext *context,
+bool ValidateVertexAttribIFormat(Context *context,
                                  GLuint attribindex,
                                  GLint size,
                                  GLenum type,
                                  GLuint relativeoffset);
-bool ValidateVertexAttribBinding(ValidationContext *context,
-                                 GLuint attribIndex,
-                                 GLuint bindingIndex);
-bool ValidateVertexBindingDivisor(ValidationContext *context, GLuint bindingIndex, GLuint divisor);
+bool ValidateVertexAttribBinding(Context *context, GLuint attribIndex, GLuint bindingIndex);
+bool ValidateVertexBindingDivisor(Context *context, GLuint bindingIndex, GLuint divisor);
 
 bool ValidateDispatchCompute(Context *context,
                              GLuint numGroupsX,

@@ -44,7 +44,6 @@ class Renderbuffer;
 class State;
 class Texture;
 class TextureCapsMap;
-class ValidationContext;
 struct Caps;
 struct Extensions;
 struct ImageIndex;
@@ -232,16 +231,11 @@ class Framebuffer final : public angle::ObserverInterface, public LabeledObject
 
     GLenum checkStatus(const Context *context);
 
-    // TODO(jmadill): Remove this kludge.
-    GLenum checkStatus(const ValidationContext *context);
-    int getSamples(const ValidationContext *context);
-
     // For when we don't want to check completeness in getSamples().
     int getCachedSamples(const Context *context);
 
     // Helper for checkStatus == GL_FRAMEBUFFER_COMPLETE.
     bool complete(const Context *context);
-    bool cachedComplete() const;
 
     bool hasValidDepthStencil() const;
 

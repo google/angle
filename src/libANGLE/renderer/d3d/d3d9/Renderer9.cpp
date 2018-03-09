@@ -1041,7 +1041,7 @@ gl::Error Renderer9::updateState(const gl::Context *context, GLenum drawMode)
     // Applies the render target surface, depth stencil surface, viewport rectangle and
     // scissor rectangle to the renderer
     gl::Framebuffer *framebuffer = glState.getDrawFramebuffer();
-    ASSERT(framebuffer && !framebuffer->hasAnyDirtyBit() && framebuffer->cachedComplete());
+    ASSERT(framebuffer && !framebuffer->hasAnyDirtyBit());
 
     Framebuffer9 *framebuffer9 = GetImplAs<Framebuffer9>(framebuffer);
 

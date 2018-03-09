@@ -61,7 +61,7 @@ class VertexArray;
 struct VertexAttribute;
 class ProgramPipeline;
 
-class Context final : public ValidationContext
+class Context final : angle::NonCopyable
 {
   public:
     Context(rx::EGLImplFactory *implFactory,
@@ -73,7 +73,7 @@ class Context final : public ValidationContext
             const egl::DisplayExtensions &displayExtensions);
 
     egl::Error onDestroy(const egl::Display *display);
-    ~Context() override;
+    ~Context();
 
     egl::Error makeCurrent(egl::Display *display, egl::Surface *surface);
     egl::Error releaseSurface(const egl::Display *display);
@@ -1121,7 +1121,7 @@ class Context final : public ValidationContext
     void memoryBarrierByRegion(GLbitfield barriers);
 
     // Consumes the error.
-    void handleError(const Error &error) override;
+    void handleError(const Error &error);
 
     GLenum getError();
     void markContextLost();
@@ -1167,6 +1167,43 @@ class Context final : public ValidationContext
     bool isCurrentTransformFeedback(const TransformFeedback *tf) const;
     bool isCurrentVertexArray(const VertexArray *va) const;
 
+    const ContextState &getContextState() const { return mState; }
+    GLint getClientMajorVersion() const { return mState.getClientMajorVersion(); }
+    GLint getClientMinorVersion() const { return mState.getClientMinorVersion(); }
+    const Version &getClientVersion() const { return mState.getClientVersion(); }
+    const State &getGLState() const { return mState.getState(); }
+    const Caps &getCaps() const { return mState.getCaps(); }
+    const TextureCapsMap &getTextureCaps() const { return mState.getTextureCaps(); }
+    const Extensions &getExtensions() const { return mState.getExtensions(); }
+    const Limitations &getLimitations() const { return mState.getLimitations(); }
+    bool skipValidation() const { return mSkipValidation; }
+
+    // Specific methods needed for validation.
+    bool getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *numParams);
+    bool getIndexedQueryParameterInfo(GLenum target, GLenum *type, unsigned int *numParams);
+
+    Program *getProgram(GLuint handle) const;
+    Shader *getShader(GLuint handle) const;
+
+    bool isTextureGenerated(GLuint texture) const;
+    bool isBufferGenerated(GLuint buffer) const;
+    bool isRenderbufferGenerated(GLuint renderbuffer) const;
+    bool isFramebufferGenerated(GLuint framebuffer) const;
+    bool isProgramPipelineGenerated(GLuint pipeline) const;
+
+    bool usingDisplayTextureShareGroup() const;
+
+    // Hack for the special WebGL 1 "DEPTH_STENCIL" internal format.
+    GLenum getConvertedRenderbufferFormat(GLenum internalformat) const;
+
+    bool isWebGL() const { return mState.isWebGL(); }
+    bool isWebGL1() const { return mState.isWebGL1(); }
+
+    template <typename T>
+    const T &getParams() const;
+
+    bool isValidBufferBinding(BufferBinding binding) const { return mValidBufferBindings[binding]; }
+
   private:
     Error prepareForDraw();
     Error prepareForClear(GLbitfield mask);
@@ -1203,6 +1240,18 @@ class Context final : public ValidationContext
 
     LabeledObject *getLabeledObject(GLenum identifier, GLuint name) const;
     LabeledObject *getLabeledObjectFromPtr(const void *ptr) const;
+
+    ContextState mState;
+    bool mSkipValidation;
+    bool mDisplayTextureShareGroup;
+
+    // Stores for each buffer binding type whether is it allowed to be used in this context.
+    angle::PackedEnumBitSet<BufferBinding> mValidBufferBindings;
+
+    // Caches entry point parameters and values re-used between layers.
+    mutable const ParamTypeInfo *mSavedArgsType;
+    static constexpr size_t kParamsBufferSize = 64u;
+    mutable std::array<uint8_t, kParamsBufferSize> mParamsBuffer;
 
     std::unique_ptr<rx::ContextImpl> mImplementation;
 
@@ -1276,6 +1325,14 @@ class Context final : public ValidationContext
     mutable angle::ScratchBuffer mScratchBuffer;
     mutable angle::ScratchBuffer mZeroFilledBuffer;
 };
+
+template <typename T>
+const T &Context::getParams() const
+{
+    const T *params = reinterpret_cast<T *>(mParamsBuffer.data());
+    ASSERT(mSavedArgsType->hasDynamicType(T::TypeInfo));
+    return *params;
+}
 
 template <EntryPoint EP, typename... ArgsT>
 ANGLE_INLINE void Context::gatherParams(ArgsT &&... args)
