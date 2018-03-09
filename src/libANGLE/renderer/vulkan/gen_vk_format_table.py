@@ -4,7 +4,7 @@
 # found in the LICENSE file.
 #
 # gen_vk_format_table.py:
-#  Code generation for vk format map
+#  Code generation for vk format map. See vk_format_map.json for data source.
 
 from datetime import date
 import json
@@ -65,65 +65,52 @@ empty_format_entry_template = """{space}case angle::Format::ID::{format_id}:
 format_entry_template = """{space}case angle::Format::ID::{format_id}:
 {space}{{
 {space}    internalFormat = {internal_format};
-{space}    textureFormatID = angle::Format::ID::{texture_format_id};
+{space}    textureFormatID = angle::Format::ID::{texture};
 {space}    vkTextureFormat = {vk_texture_format};
-{space}    bufferFormatID = angle::Format::ID::{buffer_format_id};
+{space}    bufferFormatID = angle::Format::ID::{buffer};
 {space}    vkBufferFormat = {vk_buffer_format};
 {space}    dataInitializerFunction = {initializer};
 {space}    break;
 {space}}}
 """
 
-def gen_format_case(angle, internal_format, vk_map):
+def gen_format_case(angle, internal_format, vk_map, vk_overrides):
 
-    if angle not in vk_map or angle == 'NONE':
-        return empty_format_entry_template.format(
-            space = '        ',
-            format_id = angle)
+    args = {
+        "space": "        ",
+        "format_id": angle,
+        "internal_format": internal_format
+    }
 
-    texture_format_id = angle
-    buffer_format_id = angle
+    if (angle not in vk_map and angle not in vk_overrides) or angle == 'NONE':
+        return empty_format_entry_template.format(**args)
 
-    vk_format_name = vk_map[angle]
-    vk_buffer_format = vk_format_name
-    vk_texture_format = vk_format_name
+    if angle in vk_map:
+        args["buffer"] = angle
+        args["texture"] = angle
 
-    if isinstance(vk_format_name, dict):
-        info = vk_format_name
+    if angle in vk_overrides:
+        args.update(vk_overrides[angle])
 
-        if "buffer" in info:
-            buffer_format_id = info["buffer"]
-            vk_buffer_format = vk_map[buffer_format_id]
-            assert(not isinstance(vk_buffer_format, dict))
-        else:
-            vk_buffer_format = info["native"]
+    assert "buffer" in args, "Missing buffer format for " + angle
+    assert "texture" in args, "Missing texture format for " + angle
 
-        if "texture" in info:
-            texture_format_id = info["texture"]
-            vk_texture_format = vk_map[texture_format_id]
-            assert(not isinstance(vk_texture_format, dict))
-        else:
-            vk_texture_format = info["native"]
+    args["vk_buffer_format"]  = vk_map[args["buffer"]]
+    args["vk_texture_format"] = vk_map[args["texture"]]
 
-    initializer = angle_format.get_internal_format_initializer(
-        internal_format, texture_format_id)
+    args["initializer"] = angle_format.get_internal_format_initializer(
+        internal_format, args["texture"])
 
-    return format_entry_template.format(
-        space = '        ',
-        internal_format = internal_format,
-        format_id = angle,
-        texture_format_id = texture_format_id,
-        buffer_format_id = buffer_format_id,
-        vk_buffer_format = vk_buffer_format,
-        vk_texture_format = vk_texture_format,
-        initializer = initializer)
+    return format_entry_template.format(**args)
 
 input_file_name = 'vk_format_map.json'
 out_file_name = 'vk_format_table'
 
 angle_to_gl = angle_format.load_inverse_table(os.path.join('..', 'angle_format_map.json'))
-vk_map = angle_format.load_json(input_file_name)
-vk_cases = [gen_format_case(angle, gl, vk_map) for angle, gl in sorted(angle_to_gl.iteritems())]
+vk_json_data = angle_format.load_json(input_file_name)
+vk_map = vk_json_data["map"]
+vk_overrides = vk_json_data["overrides"]
+vk_cases = [gen_format_case(angle, gl, vk_map, vk_overrides) for angle, gl in sorted(angle_to_gl.iteritems())]
 
 output_cpp = template_table_autogen_cpp.format(
     copyright_year = date.today().year,
