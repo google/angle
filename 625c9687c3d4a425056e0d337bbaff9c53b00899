@@ -46,6 +46,30 @@
       "revId": "625c9687c3d4a425056e0d337bbaff9c53b00899",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fed94e73_2552a10e",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1262022
+      },
+      "writtenOn": "2018-03-09T17:49:30Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "31e3a6ea_4364c160",
+      "range": {
+        "startLine": 187,
+        "startChar": 7,
+        "endLine": 188,
+        "endChar": 100
+      },
+      "revId": "625c9687c3d4a425056e0d337bbaff9c53b00899",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
