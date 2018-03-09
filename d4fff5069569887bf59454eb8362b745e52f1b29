@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "57c35088_4ba68e84",
+        "filename": "src/libANGLE/Context.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 1174,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-09T21:16:16Z",
+      "side": 0,
+      "message": "could you just take these function names and remove all the \"Renderer\" .. so you end with\n\nsyncState()\nsyncDirtyBits()\nsyncDirtyObjects()",
+      "range": {
+        "startLine": 1174,
+        "startChar": 10,
+        "endLine": 1174,
+        "endChar": 27
+      },
+      "revId": "d4fff5069569887bf59454eb8362b745e52f1b29",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
