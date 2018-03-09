@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ec5440e5_c6021287",
+        "filename": "src/compiler/translator/builtin_variables.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-09T17:31:54Z",
+      "side": 1,
+      "message": "tip: use https://jsonformatter.curiousconcept.com/ to format this file.",
+      "revId": "18adccec360606e1dc41b54947d3e6cd778f0947",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

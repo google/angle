@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4b111eca_c7f194df",
+        "filename": "src/compiler/translator/builtin_variables.json",
+        "patchSetId": 38
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-09T17:31:54Z",
+      "side": 1,
+      "message": "nit: can you add a comment entry to the map with the copyright license notice and a description of the file layout?",
+      "range": {
+        "startLine": 2,
+        "startChar": 5,
+        "endLine": 2,
+        "endChar": 12
+      },
+      "revId": "a466178604c54495c7e8e13cc599b5322270b2f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
