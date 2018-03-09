@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0891b281_f23e67ef",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1169,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2018-03-09T20:11:14Z",
+      "side": 1,
+      "message": "Okay, looks like the last commit was basically correct - just missing some assertions here.\n\nStill no test that the actual state is passed down to D3D correctly. Maybe this needs a rendering test if there isn\u0027t already coverage in WebGL?",
+      "revId": "6ca966665de74cb94653eb7ef02361395ea84ba8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
