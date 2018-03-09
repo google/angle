@@ -1,0 +1,320 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6ec2aa81_511b8165",
+        "filename": "src/libANGLE/GLES1State.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-09T16:22:12Z",
+      "side": 1,
+      "message": "nit: just 2018 (no (c))",
+      "range": {
+        "startLine": 2,
+        "startChar": 13,
+        "endLine": 2,
+        "endChar": 21
+      },
+      "revId": "5d9ac3c3c9a0746168646e31fa7a49c8c9c0a8fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "79ed7a8b_5b2824ed",
+        "filename": "src/libANGLE/GLES1State.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-09T16:22:12Z",
+      "side": 1,
+      "message": "nit: can remove extra blank line",
+      "revId": "5d9ac3c3c9a0746168646e31fa7a49c8c9c0a8fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "97449f45_c65d65f0",
+        "filename": "src/libANGLE/GLES1State.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-09T16:22:12Z",
+      "side": 1,
+      "message": "nit: git cl format.",
+      "range": {
+        "startLine": 61,
+        "startChar": 54,
+        "endLine": 61,
+        "endChar": 55
+      },
+      "revId": "5d9ac3c3c9a0746168646e31fa7a49c8c9c0a8fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "14a5841e_8a226bfe",
+        "filename": "src/libANGLE/GLES1State.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-09T16:22:12Z",
+      "side": 1,
+      "message": "nit: you can wrap comments to 100 characters",
+      "range": {
+        "startLine": 77,
+        "startChar": 0,
+        "endLine": 78,
+        "endChar": 18
+      },
+      "revId": "5d9ac3c3c9a0746168646e31fa7a49c8c9c0a8fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cbe2eb8c_62739bf8",
+        "filename": "src/libANGLE/GLES1State.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-09T16:22:12Z",
+      "side": 1,
+      "message": "class GLES1State final : angle::NonCopyable",
+      "range": {
+        "startLine": 23,
+        "startChar": 6,
+        "endLine": 23,
+        "endChar": 16
+      },
+      "revId": "5d9ac3c3c9a0746168646e31fa7a49c8c9c0a8fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1faf5ff7_af49f24c",
+        "filename": "src/libANGLE/GLES1State.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-09T16:22:12Z",
+      "side": 1,
+      "message": "you should make accessors and setters for all the state variables, and make the m variables private. Or make gl::State or gl::Context (or both) friend classes so you don\u0027t need to make setters.",
+      "range": {
+        "startLine": 25,
+        "startChar": 2,
+        "endLine": 25,
+        "endChar": 8
+      },
+      "revId": "5d9ac3c3c9a0746168646e31fa7a49c8c9c0a8fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d25b5390_436bafea",
+        "filename": "src/libANGLE/GLES1State.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-09T16:22:12Z",
+      "side": 1,
+      "message": "please put this in the cpp file, and if could zero init all the variables, that would be helpful.",
+      "range": {
+        "startLine": 26,
+        "startChar": 0,
+        "endLine": 28,
+        "endChar": 0
+      },
+      "revId": "5d9ac3c3c9a0746168646e31fa7a49c8c9c0a8fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "068074ec_9a923731",
+        "filename": "src/libANGLE/GLES1State.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-09T16:22:12Z",
+      "side": 1,
+      "message": "oh I see, you used inline init, could you put these in the cpp file? we do this generally to move as much code as possible out of headers into compiled files.",
+      "range": {
+        "startLine": 36,
+        "startChar": 47,
+        "endLine": 36,
+        "endChar": 53
+      },
+      "revId": "5d9ac3c3c9a0746168646e31fa7a49c8c9c0a8fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e1b96bf7_fd4e40cf",
+        "filename": "src/libANGLE/GLES1State.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-09T16:22:12Z",
+      "side": 1,
+      "message": "for this setting and all the others, if there are GLES 1 tables or sections to back-reference to that would be cool to add in a comment before the state vars.",
+      "range": {
+        "startLine": 84,
+        "startChar": 4,
+        "endLine": 84,
+        "endChar": 15
+      },
+      "revId": "5d9ac3c3c9a0746168646e31fa7a49c8c9c0a8fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "be805fcc_d1e0878c",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1817,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-09T16:22:12Z",
+      "side": 1,
+      "message": "looks like this file got auto-formatted - makes a bit harder to find what changed. not sure why it wasn\u0027t already formatted, sorry about that.",
+      "range": {
+        "startLine": 1812,
+        "startChar": 8,
+        "endLine": 1817,
+        "endChar": 18
+      },
+      "revId": "5d9ac3c3c9a0746168646e31fa7a49c8c9c0a8fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7236cdab_3968901b",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1886,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-09T16:22:12Z",
+      "side": 1,
+      "message": "this comment somehow got more mangled than it already was. can you remove it?",
+      "range": {
+        "startLine": 1885,
+        "startChar": 0,
+        "endLine": 1886,
+        "endChar": 44
+      },
+      "revId": "5d9ac3c3c9a0746168646e31fa7a49c8c9c0a8fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bcb2ff0e_72546fe8",
+        "filename": "src/libANGLE/State.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-09T16:22:12Z",
+      "side": 1,
+      "message": "nit: can remove this",
+      "range": {
+        "startLine": 14,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 24
+      },
+      "revId": "5d9ac3c3c9a0746168646e31fa7a49c8c9c0a8fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "07ade8ad_509069dd",
+        "filename": "src/libANGLE/State.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-09T16:22:12Z",
+      "side": 1,
+      "message": "nit: and these",
+      "range": {
+        "startLine": 19,
+        "startChar": 0,
+        "endLine": 20,
+        "endChar": 32
+      },
+      "revId": "5d9ac3c3c9a0746168646e31fa7a49c8c9c0a8fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "68a8b7c8_5884ff20",
+        "filename": "src/libANGLE/State.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 608,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-09T16:22:12Z",
+      "side": 1,
+      "message": "nit: GLES 1 emulation comment",
+      "range": {
+        "startLine": 608,
+        "startChar": 7,
+        "endLine": 608,
+        "endChar": 18
+      },
+      "revId": "5d9ac3c3c9a0746168646e31fa7a49c8c9c0a8fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
