@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "42abdaa9_79d8af43",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 2962,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-09T21:12:49Z",
+      "side": 1,
+      "message": "see https://chromium-review.googlesource.com/#/c/angle/angle/+/957271",
+      "parentUuid": "4f0a8363_eae73a83",
+      "range": {
+        "startLine": 2962,
+        "startChar": 15,
+        "endLine": 2962,
+        "endChar": 36
+      },
+      "revId": "d4fff5069569887bf59454eb8362b745e52f1b29",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "714cf7cc_09347aba",
         "filename": "src/libANGLE/Framebuffer.cpp",
         "patchSetId": 15
@@ -36,6 +60,30 @@
       "writtenOn": "2018-03-09T17:47:20Z",
       "side": 1,
       "message": "probably would make these just gl::BlendState and omit auto",
+      "range": {
+        "startLine": 1966,
+        "startChar": 10,
+        "endLine": 1966,
+        "endChar": 14
+      },
+      "revId": "d4fff5069569887bf59454eb8362b745e52f1b29",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "34565298_c1ac043d",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 1966,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-09T21:12:49Z",
+      "side": 1,
+      "message": "see https://chromium-review.googlesource.com/#/c/angle/angle/+/957272",
+      "parentUuid": "714cf7cc_09347aba",
       "range": {
         "startLine": 1966,
         "startChar": 10,
