@@ -22,6 +22,30 @@
       "revId": "625c9687c3d4a425056e0d337bbaff9c53b00899",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "31e3a6ea_4364c160",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-09T17:43:38Z",
+      "side": 1,
+      "message": "Well, there\u0027s no mention of the descriptor pool in the command name. The Vulkan c++ header makes this an operation on the Device. I think what we might want in the future is a better handling of descriptor sets as a helper object.. but I didn\u0027t want to leave a TODO and open an issue so I omitted that.",
+      "parentUuid": "dc21417e_d5b3d0af",
+      "range": {
+        "startLine": 187,
+        "startChar": 7,
+        "endLine": 188,
+        "endChar": 100
+      },
+      "revId": "625c9687c3d4a425056e0d337bbaff9c53b00899",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
