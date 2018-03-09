@@ -16,6 +16,24 @@
       "revId": "6ca966665de74cb94653eb7ef02361395ea84ba8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2302a834_74df67a0",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1169,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2018-03-09T21:21:05Z",
+      "side": 1,
+      "message": "There probably isn\u0027t rendering test coverage in WebGL unless the dEQP exercises the stencil buffer, so if you can take a look while this is fresh in your mind that\u0027d be great.",
+      "parentUuid": "0891b281_f23e67ef",
+      "revId": "6ca966665de74cb94653eb7ef02361395ea84ba8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
