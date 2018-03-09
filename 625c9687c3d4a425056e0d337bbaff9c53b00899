@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dc21417e_d5b3d0af",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-03-09T17:39:00Z",
+      "side": 1,
+      "message": "should we not add this call to the descriptorPool directly ?\n\ndescriptorPool-\u003efreeDescriptorSets(...) ?",
+      "range": {
+        "startLine": 187,
+        "startChar": 7,
+        "endLine": 188,
+        "endChar": 100
+      },
+      "revId": "625c9687c3d4a425056e0d337bbaff9c53b00899",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
