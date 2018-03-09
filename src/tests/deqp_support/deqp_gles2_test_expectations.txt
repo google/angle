@@ -186,7 +186,12 @@
 2161 VULKAN : dEQP-GLES2.functional.light_amount.* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.shaders.* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.texture.* = SKIP
-2161 VULKAN : dEQP-GLES2.functional.fragment_ops.* = SKIP
+2161 VULKAN : dEQP-GLES2.functional.fragment_ops.random.* = SKIP
+2161 VULKAN : dEQP-GLES2.functional.fragment_ops.interaction.* = SKIP
+2161 VULKAN : dEQP-GLES2.functional.fragment_ops.depth.* = SKIP
+2161 VULKAN : dEQP-GLES2.functional.fragment_ops.stencil.* = SKIP
+2161 VULKAN : dEQP-GLES2.functional.fragment_ops.depth_stencil.* = SKIP
+2161 VULKAN : dEQP-GLES2.functional.fragment_ops.scissor.* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.fbo.* = SKIP
 // Conflicts with Android expectation, specify the OSs
 2161 VULKAN WIN LINUX MAC : dEQP-GLES2.functional.vertex_arrays.* = SKIP
