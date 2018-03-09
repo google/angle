@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9ba61a09_d950396f",
+        "filename": "src/libANGLE/GLES1State.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-09T15:12:28Z",
+      "side": 1,
+      "message": "I think even these can be handled at the validation layer and can just check the caps directly instead of duplicating the state here.",
+      "range": {
+        "startLine": 23,
+        "startChar": 3,
+        "endLine": 25,
+        "endChar": 69
+      },
+      "revId": "4e02023a2ec2eba31a44613cc485de18a257a7ea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e2800ac2_680c3a4c",
+        "filename": "src/libANGLE/GLES1State.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-09T15:12:28Z",
+      "side": 1,
+      "message": "not necessary with the include guard below.",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 2,
+        "endChar": 0
+      },
+      "revId": "4e02023a2ec2eba31a44613cc485de18a257a7ea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8ad20dc5_b8637b3b",
+        "filename": "src/libANGLE/GLES1State.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-09T15:12:28Z",
+      "side": 1,
+      "message": "Think these can all be removed now.",
+      "range": {
+        "startLine": 33,
+        "startChar": 0,
+        "endLine": 38,
+        "endChar": 43
+      },
+      "revId": "4e02023a2ec2eba31a44613cc485de18a257a7ea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
