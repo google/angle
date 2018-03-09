@@ -298,6 +298,12 @@ bool GetAvailableValidationLayers(const std::vector<VkLayerProperties> &layerPro
 namespace vk
 {
 
+VkRect2D ConvertGlRectToVkRect(const gl::Rectangle &source)
+{
+    return {{source.x, source.y},
+            {static_cast<uint32_t>(source.width), static_cast<uint32_t>(source.height)}};
+}
+
 Error::Error(VkResult result) : mResult(result), mFile(nullptr), mLine(0)
 {
     ASSERT(result == VK_SUCCESS);

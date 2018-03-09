@@ -91,6 +91,8 @@ struct Format;
 template <typename T>
 struct ImplTypeHelper;
 
+VkRect2D ConvertGlRectToVkRect(const gl::Rectangle &source);
+
 // clang-format off
 #define ANGLE_IMPL_TYPE_HELPER_GL(OBJ) \
 template<>                             \

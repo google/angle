@@ -701,8 +701,20 @@ void PipelineDesc::updateRenderPassDesc(const RenderPassDesc &renderPassDesc)
 
 void PipelineDesc::updateScissor(const gl::Rectangle &rect)
 {
-    mScissor = {{rect.x, rect.y},
-                {static_cast<uint32_t>(rect.width), static_cast<uint32_t>(rect.height)}};
+    gl::Rectangle intersection;
+    gl::Rectangle clipRect(static_cast<GLuint>(mViewport.x), static_cast<GLuint>(mViewport.y),
+                           static_cast<GLuint>(mViewport.width),
+                           static_cast<GLuint>(mViewport.height));
+    // Coordinates outside surface aren't valid in Vulkan but not error is returned, the scissor is
+    // just ignored.
+    if (ClipRectangle(rect, clipRect, &intersection))
+    {
+        mScissor = ConvertGlRectToVkRect(intersection);
+    }
+    else
+    {
+        mScissor = ConvertGlRectToVkRect(rect);
+    }
 }
 
 // AttachmentOpsArray implementation.
