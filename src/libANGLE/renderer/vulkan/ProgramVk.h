@@ -120,7 +120,7 @@ class ProgramVk : public ProgramImpl
     void invalidateTextures();
 
   private:
-    void reset(VkDevice device);
+    void reset(ContextVk *contextVk);
     vk::Error initDescriptorSets(ContextVk *contextVk);
     gl::Error initDefaultUniformBlocks(const gl::Context *glContext);
     vk::Error updateDefaultUniformsDescriptorSet(ContextVk *contextVk);

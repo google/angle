@@ -107,7 +107,7 @@ gl::Error ContextVk::initialize()
     VkDescriptorPoolCreateInfo descriptorPoolInfo;
     descriptorPoolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
     descriptorPoolInfo.pNext = nullptr;
-    descriptorPoolInfo.flags = 0;
+    descriptorPoolInfo.flags = VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT;
 
     // TODO(jmadill): Pick non-arbitrary max.
     descriptorPoolInfo.maxSets = 2048;

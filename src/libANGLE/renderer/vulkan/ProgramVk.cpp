@@ -156,12 +156,16 @@ ProgramVk::~ProgramVk()
 
 void ProgramVk::destroy(const gl::Context *contextImpl)
 {
-    VkDevice device = vk::GetImpl(contextImpl)->getDevice();
-    reset(device);
+    ContextVk *contextVk = vk::GetImpl(contextImpl);
+    reset(contextVk);
 }
 
-void ProgramVk::reset(VkDevice device)
+void ProgramVk::reset(ContextVk *contextVk)
 {
+    // TODO(jmadill): Handle re-linking a program that is in-use. http://anglebug.com/2397
+
+    VkDevice device = contextVk->getDevice();
+
     for (auto &uniformBlock : mDefaultUniformBlocks)
     {
         uniformBlock.storage.memory.destroy(device);
@@ -176,7 +180,13 @@ void ProgramVk::reset(VkDevice device)
     mVertexModuleSerial   = Serial();
     mFragmentModuleSerial = Serial();
 
-    // Descriptor Sets are pool allocated, so do not need to be explicitly freed.
+    // Free our descriptor set handles.
+    if (!mDescriptorSets.empty())
+    {
+        vk::DescriptorPool *descriptorPool = contextVk->getDescriptorPool();
+        vkFreeDescriptorSets(device, descriptorPool->getHandle(),
+                             static_cast<uint32_t>(mDescriptorSets.size()), mDescriptorSets.data());
+    }
     mDescriptorSets.clear();
     mUsedDescriptorSetRange.invalidate();
     mDirtyTextures       = false;
@@ -214,7 +224,7 @@ gl::LinkResult ProgramVk::link(const gl::Context *glContext,
     GlslangWrapper *glslangWrapper = renderer->getGlslangWrapper();
     VkDevice device                = renderer->getDevice();
 
-    reset(device);
+    reset(contextVk);
 
     std::vector<uint32_t> vertexCode;
     std::vector<uint32_t> fragmentCode;
