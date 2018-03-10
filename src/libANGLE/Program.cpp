@@ -704,7 +704,8 @@ void Program::onDestroy(const Context *context)
         mState.mAttachedGeometryShader = nullptr;
     }
 
-    mProgram->destroy(context);
+    // TODO(jmadill): Handle error in the Context.
+    ANGLE_SWALLOW_ERR(mProgram->destroy(context));
 
     ASSERT(!mState.mAttachedVertexShader && !mState.mAttachedFragmentShader &&
            !mState.mAttachedComputeShader && !mState.mAttachedGeometryShader);

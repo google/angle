@@ -24,7 +24,7 @@ class ProgramVk : public ProgramImpl
   public:
     ProgramVk(const gl::ProgramState &state);
     ~ProgramVk() override;
-    void destroy(const gl::Context *context) override;
+    gl::Error destroy(const gl::Context *context) override;
 
     gl::LinkResult load(const gl::Context *context,
                         gl::InfoLog &infoLog,
@@ -120,7 +120,7 @@ class ProgramVk : public ProgramImpl
     void invalidateTextures();
 
   private:
-    void reset(ContextVk *contextVk);
+    vk::Error reset(ContextVk *contextVk);
     vk::Error initDescriptorSets(ContextVk *contextVk);
     gl::Error initDefaultUniformBlocks(const gl::Context *glContext);
     vk::Error updateDefaultUniformsDescriptorSet(ContextVk *contextVk);

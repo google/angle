@@ -154,13 +154,13 @@ ProgramVk::~ProgramVk()
 {
 }
 
-void ProgramVk::destroy(const gl::Context *contextImpl)
+gl::Error ProgramVk::destroy(const gl::Context *contextImpl)
 {
     ContextVk *contextVk = vk::GetImpl(contextImpl);
-    reset(contextVk);
+    return reset(contextVk);
 }
 
-void ProgramVk::reset(ContextVk *contextVk)
+vk::Error ProgramVk::reset(ContextVk *contextVk)
 {
     // TODO(jmadill): Handle re-linking a program that is in-use. http://anglebug.com/2397
 
@@ -184,12 +184,14 @@ void ProgramVk::reset(ContextVk *contextVk)
     if (!mDescriptorSets.empty())
     {
         vk::DescriptorPool *descriptorPool = contextVk->getDescriptorPool();
-        vkFreeDescriptorSets(device, descriptorPool->getHandle(),
-                             static_cast<uint32_t>(mDescriptorSets.size()), mDescriptorSets.data());
+        ANGLE_TRY(descriptorPool->freeDescriptorSets(
+            device, static_cast<uint32_t>(mDescriptorSets.size()), mDescriptorSets.data()));
     }
     mDescriptorSets.clear();
     mUsedDescriptorSetRange.invalidate();
     mDirtyTextures       = false;
+
+    return vk::NoError();
 }
 
 gl::LinkResult ProgramVk::load(const gl::Context *contextImpl,
@@ -224,7 +226,7 @@ gl::LinkResult ProgramVk::link(const gl::Context *glContext,
     GlslangWrapper *glslangWrapper = renderer->getGlslangWrapper();
     VkDevice device                = renderer->getDevice();
 
-    reset(contextVk);
+    ANGLE_TRY(reset(contextVk));
 
     std::vector<uint32_t> vertexCode;
     std::vector<uint32_t> fragmentCode;

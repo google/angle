@@ -1107,6 +1107,16 @@ Error DescriptorPool::allocateDescriptorSets(VkDevice device,
     return NoError();
 }
 
+Error DescriptorPool::freeDescriptorSets(VkDevice device,
+                                         uint32_t descriptorSetCount,
+                                         const VkDescriptorSet *descriptorSets)
+{
+    ASSERT(valid());
+    ASSERT(descriptorSetCount > 0);
+    ANGLE_VK_TRY(vkFreeDescriptorSets(device, mHandle, descriptorSetCount, descriptorSets));
+    return NoError();
+}
+
 // Sampler implementation.
 Sampler::Sampler()
 {

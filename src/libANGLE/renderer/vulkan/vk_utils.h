@@ -554,6 +554,9 @@ class DescriptorPool final : public WrappedObject<DescriptorPool, VkDescriptorPo
     Error allocateDescriptorSets(VkDevice device,
                                  const VkDescriptorSetAllocateInfo &allocInfo,
                                  VkDescriptorSet *descriptorSetsOut);
+    Error freeDescriptorSets(VkDevice device,
+                             uint32_t descriptorSetCount,
+                             const VkDescriptorSet *descriptorSets);
 };
 
 class Sampler final : public WrappedObject<Sampler, VkSampler>
