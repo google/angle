@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "b71994e3_bb33f167",
+        "filename": "src/compiler/translator/builtin_variables.json",
+        "patchSetId": 38
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-03-11T09:25:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4b111eca_c7f194df",
+      "range": {
+        "startLine": 2,
+        "startChar": 5,
+        "endLine": 2,
+        "endChar": 12
+      },
+      "revId": "a466178604c54495c7e8e13cc599b5322270b2f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2d440ebb_a86273e3",
         "filename": "src/compiler/translator/gen_builtin_symbols.py",
         "patchSetId": 38
@@ -45,6 +69,30 @@
       "revId": "a466178604c54495c7e8e13cc599b5322270b2f2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e6012fa6_5d252ff5",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 38
+      },
+      "lineNbr": 283,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-03-11T09:25:47Z",
+      "side": 1,
+      "message": "Yeah, I suppose just having primarySize is better, it\u0027s nice to make this code simpler, it doesn\u0027t affect the legibility of builtin_variables.json that much. Done.",
+      "parentUuid": "2d440ebb_a86273e3",
+      "range": {
+        "startLine": 275,
+        "startChar": 0,
+        "endLine": 283,
+        "endChar": 33
+      },
+      "revId": "a466178604c54495c7e8e13cc599b5322270b2f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "55d7451e_a87dd6d6",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 38
+      },
+      "lineNbr": 792,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-03-11T09:25:47Z",
+      "side": 1,
+      "message": "TField types are not const - something I tried to change before but for a reason I can\u0027t precisely recall right now was not trivial to change.",
+      "parentUuid": "8aec1f24_cbbde0d7",
+      "range": {
+        "startLine": 792,
+        "startChar": 64,
+        "endLine": 792,
+        "endChar": 87
+      },
+      "revId": "a466178604c54495c7e8e13cc599b5322270b2f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "70f44d99_501d6c0f",
         "filename": "src/compiler/translator/gen_builtin_symbols.py",
         "patchSetId": 38
@@ -88,6 +160,24 @@
     },
     {
       "key": {
+        "uuid": "2d8d597a_d35f3904",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 38
+      },
+      "lineNbr": 802,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-03-11T09:25:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "70f44d99_501d6c0f",
+      "revId": "a466178604c54495c7e8e13cc599b5322270b2f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9e1c5ed8_c3e45eac",
         "filename": "src/compiler/translator/gen_builtin_symbols.py",
         "patchSetId": 38
@@ -102,6 +192,24 @@
       "revId": "a466178604c54495c7e8e13cc599b5322270b2f2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "228122c3_b227322b",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 38
+      },
+      "lineNbr": 839,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-03-11T09:25:47Z",
+      "side": 1,
+      "message": "gl_Position, gl_FragColor, gl_FragCoord, etc. built-in variables with special meaning.",
+      "parentUuid": "9e1c5ed8_c3e45eac",
+      "revId": "a466178604c54495c7e8e13cc599b5322270b2f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
