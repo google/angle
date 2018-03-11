@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f11bf09d_dbd098fb",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 1825,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-03-11T22:33:24Z",
+      "side": 1,
+      "message": "I don\u0027t follow why do you need this here but not in drawElements(). Wasn\u0027t the idea that ensureIndexRangeResolved() is called from applyVertexBuffer() only when needed, to improve performance?",
+      "range": {
+        "startLine": 1825,
+        "startChar": 17,
+        "endLine": 1825,
+        "endChar": 41
+      },
+      "revId": "9584f52b8b718a022fe587b29cd86570d20f1d8f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "df260e70_c6b4357b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 3205,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-03-11T22:33:24Z",
+      "side": 1,
+      "message": "I am a bit worried that this can return different values before and after ensureIndexRangeResolved() is called. Maybe there should be \"ASSERT(mHasIndexRange \u003d\u003d nullptr);\" here as well?",
+      "range": {
+        "startLine": 3205,
+        "startChar": 11,
+        "endLine": 3205,
+        "endChar": 23
+      },
+      "revId": "9584f52b8b718a022fe587b29cd86570d20f1d8f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4ad0bdf8_a6bc2e34",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 3226,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-03-11T22:33:24Z",
+      "side": 1,
+      "message": "I don\u0027t understand this condition. Seems like it should be a replacement for \"!mFirstVertex.valid()\", but it is not. Since in the old code mFirstVertex would be invalid if !firstVertexDefinitelyZero, which is the opposite of \"mFirstVertex \u003d\u003d 0\".\n\nAlso, looks like mFirstVertex \u003d\u003d mBaseVertex would always be true here, since mHasIndexRange can only be set in the same constructor which initializes mFirstVertex to be baseVertex.\n\nI think this assert is not needed anymore?",
+      "range": {
+        "startLine": 3226,
+        "startChar": 11,
+        "endLine": 3226,
+        "endChar": 28
+      },
+      "revId": "9584f52b8b718a022fe587b29cd86570d20f1d8f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
