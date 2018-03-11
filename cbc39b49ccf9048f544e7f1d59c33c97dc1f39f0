@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9e77ed29_b9416598",
+        "filename": "src/libANGLE/params.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-03-11T23:30:10Z",
+      "side": 1,
+      "message": "I think this was baseVertex in the old code?",
+      "range": {
+        "startLine": 98,
+        "startChar": 19,
+        "endLine": 98,
+        "endChar": 20
+      },
+      "revId": "cbc39b49ccf9048f544e7f1d59c33c97dc1f39f0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "38d7b6ae_34b4fcd9",
+        "filename": "src/libANGLE/params.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-03-11T23:30:10Z",
+      "side": 1,
+      "message": "I understand this is mutable because you want to call ensureIndexRangeResolved() only when necessary. However, current code does not guarantee that ensureIndexRangeResolved() is called before firstVertex(), which is a violation of \"mutable\" contract. Maybe an assert in firstVertex() I suggested in previous patch will fix this.",
+      "range": {
+        "startLine": 137,
+        "startChar": 4,
+        "endLine": 137,
+        "endChar": 12
+      },
+      "revId": "cbc39b49ccf9048f544e7f1d59c33c97dc1f39f0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ac7bfc3b_224fe759",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 242,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-03-11T23:30:10Z",
+      "side": 1,
+      "message": "Seems like you could use mode from vertexParams/drawCallParams?",
+      "range": {
+        "startLine": 242,
+        "startChar": 32,
+        "endLine": 242,
+        "endChar": 43
+      },
+      "revId": "cbc39b49ccf9048f544e7f1d59c33c97dc1f39f0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cea1dde8_e19ed9a4",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 243,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-03-11T23:30:10Z",
+      "side": 1,
+      "message": "drawCallParams",
+      "range": {
+        "startLine": 243,
+        "startChar": 58,
+        "endLine": 243,
+        "endChar": 70
+      },
+      "revId": "cbc39b49ccf9048f544e7f1d59c33c97dc1f39f0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
