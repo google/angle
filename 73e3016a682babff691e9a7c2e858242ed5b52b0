@@ -45,6 +45,40 @@
       "revId": "73e3016a682babff691e9a7c2e858242ed5b52b0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5b56ddca_c854943d",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 345,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-03-12T18:23:39Z",
+      "side": 1,
+      "message": "nit: NormalF is a Vector3",
+      "revId": "73e3016a682babff691e9a7c2e858242ed5b52b0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8083536e_96656c72",
+        "filename": "src/libANGLE/packed_gl_enums.json",
+        "patchSetId": 10
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-03-12T18:23:39Z",
+      "side": 1,
+      "message": "nit: sort keys alphabetiacally.",
+      "revId": "73e3016a682babff691e9a7c2e858242ed5b52b0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
