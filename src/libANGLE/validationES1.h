@@ -203,6 +203,64 @@ bool ValidatePointSizePointerOES(Context *context,
 
 // GL_OES_query_matrix
 bool ValidateQueryMatrixxOES(Context *context, GLfixed *mantissa, GLint *exponent);
-}
+
+// GL_OES_framebuffer_object
+bool ValidateGenFramebuffersOES(Context *context, GLsizei n, GLuint *framebuffers);
+bool ValidateDeleteFramebuffersOES(Context *context, GLsizei n, const GLuint *framebuffers);
+
+bool ValidateGenRenderbuffersOES(Context *context, GLsizei n, GLuint *renderbuffers);
+bool ValidateDeleteRenderbuffersOES(Context *context, GLsizei n, const GLuint *renderbuffers);
+
+bool ValidateBindFramebufferOES(Context *context, GLenum target, GLuint framebuffer);
+bool ValidateBindRenderbufferOES(Context *context, GLenum target, GLuint renderbuffer);
+bool ValidateCheckFramebufferStatusOES(Context *context, GLenum target);
+bool ValidateFramebufferRenderbufferOES(Context *context,
+                                        GLenum target,
+                                        GLenum attachment,
+                                        GLenum rbtarget,
+                                        GLuint renderbuffer);
+bool ValidateFramebufferTexture2DOES(Context *context,
+                                     GLenum target,
+                                     GLenum attachment,
+                                     TextureTarget textarget,
+                                     GLuint texture,
+                                     GLint level);
+
+bool ValidateGenerateMipmapOES(Context *context, TextureType target);
+
+bool ValidateGetFramebufferAttachmentParameterivOES(Context *context,
+                                                    GLenum target,
+                                                    GLenum attachment,
+                                                    GLenum pname,
+                                                    GLint *params);
+
+bool ValidateGetRenderbufferParameterivOES(Context *context,
+                                           GLenum target,
+                                           GLenum pname,
+                                           GLint *params);
+
+bool ValidateIsFramebufferOES(Context *context, GLuint framebuffer);
+bool ValidateIsRenderbufferOES(Context *context, GLuint renderbuffer);
+
+bool ValidateRenderbufferStorageOES(Context *context,
+                                    GLenum target,
+                                    GLint internalformat,
+                                    GLsizei width,
+                                    GLsizei height);
+
+// GL_OES_texture_cube_map
+bool ValidateGetTexGenfvOES(Context *context, GLenum coord, GLenum pname, GLfloat *params);
+bool ValidateGetTexGenivOES(Context *context, GLenum coord, GLenum pname, int *params);
+bool ValidateGetTexGenxvOES(Context *context, GLenum coord, GLenum pname, GLfixed *params);
+
+bool ValidateTexGenfvOES(Context *context, GLenum coord, GLenum pname, const GLfloat *params);
+bool ValidateTexGenivOES(Context *context, GLenum coord, GLenum pname, const GLint *params);
+bool ValidateTexGenxvOES(Context *context, GLenum coord, GLenum pname, const GLfixed *params);
+
+bool ValidateTexGenfOES(Context *context, GLenum coord, GLenum pname, GLfloat param);
+bool ValidateTexGeniOES(Context *context, GLenum coord, GLenum pname, GLint param);
+bool ValidateTexGenxOES(Context *context, GLenum coord, GLenum pname, GLfixed param);
+
+}  // namespace gl
 
 #endif  // LIBANGLE_VALIDATION_ES1_H_

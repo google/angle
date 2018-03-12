@@ -696,4 +696,170 @@ bool ValidateQueryMatrixxOES(Context *context, GLfixed *mantissa, GLint *exponen
     UNIMPLEMENTED();
     return true;
 }
+
+bool ValidateGenFramebuffersOES(Context *context, GLsizei n, GLuint *framebuffers)
+{
+    UNIMPLEMENTED();
+    return true;
+}
+
+bool ValidateDeleteFramebuffersOES(Context *context, GLsizei n, const GLuint *framebuffers)
+{
+    UNIMPLEMENTED();
+    return true;
+}
+
+bool ValidateGenRenderbuffersOES(Context *context, GLsizei n, GLuint *renderbuffers)
+{
+    UNIMPLEMENTED();
+    return true;
+}
+
+bool ValidateDeleteRenderbuffersOES(Context *context, GLsizei n, const GLuint *renderbuffers)
+{
+    UNIMPLEMENTED();
+    return true;
+}
+
+bool ValidateBindFramebufferOES(Context *context, GLenum target, GLuint framebuffer)
+{
+    UNIMPLEMENTED();
+    return true;
+}
+
+bool ValidateBindRenderbufferOES(Context *context, GLenum target, GLuint renderbuffer)
+{
+    UNIMPLEMENTED();
+    return true;
+}
+
+bool ValidateCheckFramebufferStatusOES(Context *context, GLenum target)
+{
+    UNIMPLEMENTED();
+    return true;
+}
+
+bool ValidateFramebufferRenderbufferOES(Context *context,
+                                        GLenum target,
+                                        GLenum attachment,
+                                        GLenum rbtarget,
+                                        GLuint renderbuffer)
+{
+    UNIMPLEMENTED();
+    return true;
+}
+
+bool ValidateFramebufferTexture2DOES(Context *context,
+                                     GLenum target,
+                                     GLenum attachment,
+                                     TextureTarget textarget,
+                                     GLuint texture,
+                                     GLint level)
+{
+    UNIMPLEMENTED();
+    return true;
+}
+
+bool ValidateGenerateMipmapOES(Context *context, TextureType target)
+{
+    UNIMPLEMENTED();
+    return true;
+}
+
+bool ValidateGetFramebufferAttachmentParameterivOES(Context *context,
+                                                    GLenum target,
+                                                    GLenum attachment,
+                                                    GLenum pname,
+                                                    GLint *params)
+{
+    UNIMPLEMENTED();
+    return true;
+}
+
+bool ValidateGetRenderbufferParameterivOES(Context *context,
+                                           GLenum target,
+                                           GLenum pname,
+                                           GLint *params)
+{
+    UNIMPLEMENTED();
+    return true;
+}
+
+bool ValidateIsFramebufferOES(Context *context, GLuint framebuffer)
+{
+    UNIMPLEMENTED();
+    return true;
+}
+
+bool ValidateIsRenderbufferOES(Context *context, GLuint renderbuffer)
+{
+    UNIMPLEMENTED();
+    return true;
+}
+
+bool ValidateRenderbufferStorageOES(Context *context,
+                                    GLenum target,
+                                    GLint internalformat,
+                                    GLsizei width,
+                                    GLsizei height)
+{
+    UNIMPLEMENTED();
+    return true;
+}
+
+// GL_OES_texture_cube_map
+
+bool ValidateGetTexGenfvOES(Context *context, GLenum coord, GLenum pname, GLfloat *params)
+{
+    UNIMPLEMENTED();
+    return true;
+}
+
+bool ValidateGetTexGenivOES(Context *context, GLenum coord, GLenum pname, int *params)
+{
+    UNIMPLEMENTED();
+    return true;
+}
+
+bool ValidateGetTexGenxvOES(Context *context, GLenum coord, GLenum pname, GLfixed *params)
+{
+    UNIMPLEMENTED();
+    return true;
+}
+
+bool ValidateTexGenfvOES(Context *context, GLenum coord, GLenum pname, const GLfloat *params)
+{
+    UNIMPLEMENTED();
+    return true;
+}
+
+bool ValidateTexGenivOES(Context *context, GLenum coord, GLenum pname, const GLint *param)
+{
+    UNIMPLEMENTED();
+    return true;
+}
+
+bool ValidateTexGenxvOES(Context *context, GLenum coord, GLenum pname, const GLint *param)
+{
+    UNIMPLEMENTED();
+    return true;
+}
+
+bool ValidateTexGenfOES(Context *context, GLenum coord, GLenum pname, GLfloat param)
+{
+    UNIMPLEMENTED();
+    return true;
+}
+
+bool ValidateTexGeniOES(Context *context, GLenum coord, GLenum pname, GLint param)
+{
+    UNIMPLEMENTED();
+    return true;
+}
+
+bool ValidateTexGenxOES(Context *context, GLenum coord, GLenum pname, GLfixed param)
+{
+    UNIMPLEMENTED();
+    return true;
+}
 }

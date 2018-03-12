@@ -76,7 +76,13 @@
     "glFramebufferTexture2D": {
         "textarget": "TextureTarget"
     },
+    "glFramebufferTexture2DOES": {
+        "textarget": "TextureTarget"
+    },
     "glGenerateMipmap": {
+        "target": "TextureType"
+    },
+    "glGenerateMipmapOES": {
         "target": "TextureType"
     },
     "glGetBufferParameteriv": {

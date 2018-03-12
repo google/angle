@@ -146,6 +146,7 @@
             'libANGLE/Config.h',
             'libANGLE/Constants.h',
             'libANGLE/Context.cpp',
+            'libANGLE/Context_gles_1_0.cpp',
             'libANGLE/Context.h',
             'libANGLE/ContextState.cpp',
             'libANGLE/ContextState.h',
