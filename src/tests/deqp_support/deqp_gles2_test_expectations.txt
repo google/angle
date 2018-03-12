@@ -196,7 +196,8 @@
 2161 VULKAN WIN LINUX MAC : dEQP-GLES2.functional.vertex_arrays.* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.shader_api.* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.negative_api.* = SKIP
-2161 VULKAN : dEQP-GLES2.functional.rasterization.* = SKIP
+2161 VULKAN : dEQP-GLES2.functional.rasterization.primitives.* = SKIP
+2161 VULKAN : dEQP-GLES2.functional.rasterization.limits.* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.attribute_location.* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.multisample.* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.uniform_api.* = SKIP
