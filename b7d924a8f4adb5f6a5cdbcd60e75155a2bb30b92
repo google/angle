@@ -22,6 +22,30 @@
       "revId": "b7d924a8f4adb5f6a5cdbcd60e75155a2bb30b92",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bf6271e9_76334540",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-12T12:54:37Z",
+      "side": 1,
+      "message": "because allocate was a member of descriptorpool, so free should be as well - and there was a missing error check.",
+      "parentUuid": "8930ee26_a3246b35",
+      "range": {
+        "startLine": 187,
+        "startChar": 8,
+        "endLine": 188,
+        "endChar": 92
+      },
+      "revId": "b7d924a8f4adb5f6a5cdbcd60e75155a2bb30b92",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
