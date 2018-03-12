@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "e4164de6_7b32875a",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 704,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-03-12T15:26:06Z",
+      "side": 1,
+      "message": "Since viewport and scissor are so related, the update of one or the other triggers this code so there will not be a problem with that.",
+      "parentUuid": "c1a5a074_0d6c9e10",
+      "revId": "05aebd4a39277eaf890172db38c8002378eb634d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0a309ccb_0675e542",
         "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
         "patchSetId": 4
@@ -39,6 +57,30 @@
       "revId": "05aebd4a39277eaf890172db38c8002378eb634d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3e481ad8_63903132",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 711,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-03-12T15:26:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0a309ccb_0675e542",
+      "range": {
+        "startLine": 709,
+        "startChar": 12,
+        "endLine": 711,
+        "endChar": 63
+      },
+      "revId": "05aebd4a39277eaf890172db38c8002378eb634d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
