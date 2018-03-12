@@ -22,6 +22,30 @@
       "revId": "b3e546a7b98810ac75344d0e2d8ff438189c427c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ace27f20_78c3c057",
+        "filename": "src/libANGLE/Framebuffer.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 232,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-12T15:41:13Z",
+      "side": 1,
+      "message": "Yeah, I kinda feel that error macro adds nothing, since you still can\u0027t use the result of the macro in an \"if\" statement. I\u0027d be in favor of removing it entirely I think.",
+      "parentUuid": "d71c7115_cf008eaf",
+      "range": {
+        "startLine": 232,
+        "startChar": 4,
+        "endLine": 232,
+        "endChar": 9
+      },
+      "revId": "b3e546a7b98810ac75344d0e2d8ff438189c427c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
