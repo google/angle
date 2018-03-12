@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "e5cb0d99_c93bd7ef",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 1825,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-12T14:54:16Z",
+      "side": 1,
+      "message": "Because the \u0027baseVertex\u0027 parameter is unique to drawElementsIndirect. I added a comment. This is necessary to make some tests pass, at least the way it\u0027s coded now.",
+      "parentUuid": "f11bf09d_dbd098fb",
+      "range": {
+        "startLine": 1825,
+        "startChar": 17,
+        "endLine": 1825,
+        "endChar": 41
+      },
+      "revId": "9584f52b8b718a022fe587b29cd86570d20f1d8f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df260e70_c6b4357b",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
         "patchSetId": 12
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "f9498627_6855e937",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 3205,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-12T14:54:16Z",
+      "side": 1,
+      "message": "We can\u0027t just check mHasIndexRange \u003d\u003d nullptr or we would always need to resolve the index range on the \"fast path\" of drawElements. I moved the ASSERT below here to check this is zero, or the range is resolved. And added a comment.",
+      "parentUuid": "df260e70_c6b4357b",
+      "range": {
+        "startLine": 3205,
+        "startChar": 11,
+        "endLine": 3205,
+        "endChar": 23
+      },
+      "revId": "9584f52b8b718a022fe587b29cd86570d20f1d8f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4ad0bdf8_a6bc2e34",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
         "patchSetId": 12
@@ -68,6 +116,30 @@
       "revId": "9584f52b8b718a022fe587b29cd86570d20f1d8f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "072f5dbe_c87b34b5",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 3226,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-12T14:54:16Z",
+      "side": 1,
+      "message": "I think you\u0027re right, I moved it into firstVertex().",
+      "parentUuid": "4ad0bdf8_a6bc2e34",
+      "range": {
+        "startLine": 3226,
+        "startChar": 11,
+        "endLine": 3226,
+        "endChar": 28
+      },
+      "revId": "9584f52b8b718a022fe587b29cd86570d20f1d8f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
