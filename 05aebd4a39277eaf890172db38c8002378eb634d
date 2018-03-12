@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c1a5a074_0d6c9e10",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 704,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-12T15:19:08Z",
+      "side": 1,
+      "message": "I\u0027m not sure this is enough.  What happens when the viewport is expanded and the scissor is left as the clipped value?",
+      "revId": "05aebd4a39277eaf890172db38c8002378eb634d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0a309ccb_0675e542",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 711,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-12T15:19:08Z",
+      "side": 1,
+      "message": "This formatted really badly, maybe create a viewportRectangle on the line above?",
+      "range": {
+        "startLine": 709,
+        "startChar": 12,
+        "endLine": 711,
+        "endChar": 63
+      },
+      "revId": "05aebd4a39277eaf890172db38c8002378eb634d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
