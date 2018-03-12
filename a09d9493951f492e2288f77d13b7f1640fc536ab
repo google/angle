@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5ee408c6_088c9f14",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-12T15:39:32Z",
+      "side": 1,
+      "message": "can you tag this with the angle bug you were working on?",
+      "revId": "a09d9493951f492e2288f77d13b7f1640fc536ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
