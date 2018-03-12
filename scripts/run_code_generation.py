@@ -165,6 +165,7 @@ generators = {
             'src/compiler/translator/BuiltIn_autogen.h',
             'src/compiler/translator/ParseContext_autogen.h',
             'src/compiler/translator/SymbolTable_autogen.cpp',
+            'src/compiler/translator/SymbolTable_autogen.h',
             'src/tests/compiler_tests/ImmutableString_test_autogen.cpp',
         ],
         'script': 'src/compiler/translator/gen_builtin_symbols.py',

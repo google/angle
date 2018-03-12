@@ -59,22 +59,6 @@ class TSymbolTable::TSymbolTableLevel
     bool mGlobalInvariant;
 };
 
-class TSymbolTable::TSymbolTableBuiltInLevel
-{
-  public:
-    TSymbolTableBuiltInLevel() = default;
-
-    void insert(const TSymbol *symbol);
-    const TSymbol *find(const ImmutableString &name) const;
-
-  private:
-    using tLevel        = TUnorderedMap<ImmutableString,
-                                 const TSymbol *,
-                                 ImmutableString::FowlerNollVoHash<sizeof(size_t)>>;
-    using tLevelPair    = const tLevel::value_type;
-    tLevel mLevel;
-};
-
 bool TSymbolTable::TSymbolTableLevel::insert(TSymbol *symbol)
 {
     // returning true means symbol was added to the table
@@ -96,20 +80,6 @@ TSymbol *TSymbolTable::TSymbolTableLevel::find(const ImmutableString &name) cons
         return (*it).second;
 }
 
-void TSymbolTable::TSymbolTableBuiltInLevel::insert(const TSymbol *symbol)
-{
-    mLevel.insert(tLevelPair(symbol->getMangledName(), symbol));
-}
-
-const TSymbol *TSymbolTable::TSymbolTableBuiltInLevel::find(const ImmutableString &name) const
-{
-    tLevel::const_iterator it = mLevel.find(name);
-    if (it == mLevel.end())
-        return nullptr;
-    else
-        return (*it).second;
-}
-
 TSymbolTable::TSymbolTable() : mUniqueIdCounter(0), mShaderType(GL_FRAGMENT_SHADER)
 {
 }
@@ -124,12 +94,6 @@ bool TSymbolTable::isEmpty() const
 bool TSymbolTable::atGlobalLevel() const
 {
     return mTable.size() == 1u;
-}
-
-void TSymbolTable::pushBuiltInLevel()
-{
-    mBuiltInTable.push_back(
-        std::unique_ptr<TSymbolTableBuiltInLevel>(new TSymbolTableBuiltInLevel));
 }
 
 void TSymbolTable::push()
@@ -208,31 +172,6 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
     return findBuiltIn(name, shaderVersion, false);
 }
 
-const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name,
-                                         int shaderVersion,
-                                         bool includeGLSLBuiltins) const
-{
-    for (int level = LAST_BUILTIN_LEVEL; level >= 0; level--)
-    {
-        if (level == GLSL_BUILTINS && !includeGLSLBuiltins)
-            level--;
-        if (level == ESSL3_1_BUILTINS && shaderVersion != 310)
-            level--;
-        if (level == ESSL3_BUILTINS && shaderVersion < 300)
-            level--;
-        if (level == ESSL1_BUILTINS && shaderVersion != 100)
-            level--;
-
-        const TSymbol *symbol = mBuiltInTable[level]->find(name);
-
-        if (symbol)
-            return symbol;
-    }
-
-    return nullptr;
-}
-
-
 bool TSymbolTable::declare(TSymbol *symbol)
 {
     ASSERT(!mTable.empty());
@@ -250,14 +189,6 @@ void TSymbolTable::declareUserDefinedFunction(TFunction *function, bool insertUn
         mTable[0]->insertUnmangled(function);
     }
     mTable[0]->insert(function);
-}
-
-void TSymbolTable::insertBuiltIn(ESymbolLevel level, const TSymbol *symbol)
-{
-    ASSERT(symbol);
-    ASSERT(level <= LAST_BUILTIN_LEVEL);
-
-    mBuiltInTable[level]->insert(symbol);
 }
 
 void TSymbolTable::setDefaultPrecision(TBasicType type, TPrecision prec)
@@ -329,13 +260,7 @@ void TSymbolTable::initializeBuiltIns(sh::GLenum type,
                                       const ShBuiltInResources &resources)
 {
     mShaderType = type;
-
-    ASSERT(isEmpty());
-    pushBuiltInLevel();  // COMMON_BUILTINS
-    pushBuiltInLevel();  // ESSL1_BUILTINS
-    pushBuiltInLevel();  // ESSL3_BUILTINS
-    pushBuiltInLevel();  // ESSL3_1_BUILTINS
-    pushBuiltInLevel();  // GLSL_BUILTINS
+    mResources  = resources;
 
     // We need just one precision stack level for predefined precisions.
     mPrecisionStack.push_back(std::unique_ptr<PrecisionStackLevel>(new PrecisionStackLevel));
@@ -368,8 +293,7 @@ void TSymbolTable::initializeBuiltIns(sh::GLenum type,
 
     setDefaultPrecision(EbtAtomicCounter, EbpHigh);
 
-    insertBuiltInFunctions(type);
-    insertBuiltInVariables(type, spec, resources);
+    initializeBuiltInVariables(type, spec, resources);
     mUniqueIdCounter = kLastBuiltInId + 1;
 }
 

@@ -516,7 +516,7 @@
         },
         "subgroups":{
             "EXTBlendFuncExtended":{
-                "condition":"resources.EXT_blend_func_extended",
+                "condition":"mResources.EXT_blend_func_extended",
                 "variables":{
                     "gl_SecondaryFragColorEXT":{
                         "level":"ESSL1_BUILTINS",
@@ -536,7 +536,7 @@
                 }
             },
             "EXTFragDepth":{
-                "condition":"resources.EXT_frag_depth",
+                "condition":"mResources.EXT_frag_depth",
                 "variables":{
                     "gl_FragDepthEXT":{
                         "level":"ESSL1_BUILTINS",
@@ -546,7 +546,7 @@
                 }
             },
             "EXTShaderFramebufferFetch":{
-                "condition":"resources.EXT_shader_framebuffer_fetch",
+                "condition":"mResources.EXT_shader_framebuffer_fetch",
                 "variables":{
                     "gl_LastFragData":{
                         "level":"ESSL1_BUILTINS",
@@ -556,7 +556,7 @@
                 }
             },
             "NVShaderFramebufferFetch":{
-                "condition":"resources.NV_shader_framebuffer_fetch",
+                "condition":"mResources.NV_shader_framebuffer_fetch",
                 "variables":{
                     "gl_LastFragColor":{
                         "level":"ESSL1_BUILTINS",
@@ -577,7 +577,7 @@
                 }
             },
             "ARMShaderFramebufferFetch":{
-                "condition":"!resources.EXT_shader_framebuffer_fetch && !resources.NV_shader_framebuffer_fetch && resources.ARM_shader_framebuffer_fetch",
+                "condition":"!mResources.EXT_shader_framebuffer_fetch && !mResources.NV_shader_framebuffer_fetch && mResources.ARM_shader_framebuffer_fetch",
                 "variables":{
                     "gl_LastFragColorARM":{
                         "level":"ESSL1_BUILTINS",
@@ -592,7 +592,7 @@
                 }
             },
             "GeometryShaderSupported":{
-                "condition":"resources.EXT_geometry_shader",
+                "condition":"mResources.EXT_geometry_shader",
                 "variables":{
                     "gl_PrimitiveID":{
                         "level":"ESSL3_1_BUILTINS",
@@ -821,7 +821,7 @@
         }
     },
     "Multiview":{
-        "condition":"resources.OVR_multiview && shaderType != GL_COMPUTE_SHADER",
+        "condition":"mResources.OVR_multiview && shaderType != GL_COMPUTE_SHADER",
         "subgroups":{
             "ESSL3":{
                 "variables":{
