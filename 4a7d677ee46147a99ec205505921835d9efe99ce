@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "af2e29fd_4ca7450b",
+        "filename": "src/tests/third_party/gpu_test_expectations/angle-mods.patch",
+        "patchSetId": 2
+      },
+      "lineNbr": 604,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-12T13:46:47Z",
+      "side": 1,
+      "message": "for some reason angle_config.h is showing up twice in your diff.. can you check that out?",
+      "range": {
+        "startLine": 604,
+        "startChar": 0,
+        "endLine": 604,
+        "endChar": 64
+      },
+      "revId": "4a7d677ee46147a99ec205505921835d9efe99ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
