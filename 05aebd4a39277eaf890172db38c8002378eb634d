@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "96e2bb60_bc145b27",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 704,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-12T15:48:43Z",
+      "side": 1,
+      "message": "SGTM - can\u0027t think of one immediately but maybe this could be ASSERTed.",
+      "parentUuid": "e4164de6_7b32875a",
+      "revId": "05aebd4a39277eaf890172db38c8002378eb634d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0a309ccb_0675e542",
         "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
         "patchSetId": 4

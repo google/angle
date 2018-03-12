@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "62bed6dc_7b39cb41",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 707,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-12T15:48:43Z",
+      "side": 1,
+      "message": "I think this would be clipRect or just viewportRect. You can also use the constructor directly instead of via the assignment operator.",
+      "range": {
+        "startLine": 705,
+        "startChar": 4,
+        "endLine": 707,
+        "endChar": 99
+      },
+      "revId": "7a0d44f1acd4abfe5f80fe35d1a57393ff6d3e1f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e6f92071_6f1695a1",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 714,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-12T15:48:43Z",
+      "side": 1,
+      "message": "nit: maybe we should add helper methods to convert to (maybe also from?) VkRect2D/gl::Rectangle",
+      "range": {
+        "startLine": 712,
+        "startChar": 0,
+        "endLine": 714,
+        "endChar": 66
+      },
+      "revId": "7a0d44f1acd4abfe5f80fe35d1a57393ff6d3e1f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
