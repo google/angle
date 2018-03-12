@@ -81,6 +81,30 @@
       "revId": "4dcd3263096ef418c7ed736eda99fddc1ef8c0df",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "98e4c938_6b8eda7a",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2340,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2018-03-12T10:22:05Z",
+      "side": 1,
+      "message": "This bit is null, it means that sampler or texture is not dirty from last disptch, it should not enter to this function. If enter this function, \"DIRTY_OBJECT_PROGRAM_TEXTURES\" object must be dirty. I think it is better to clear this bit when calling syncDirtyObjects in Context::syncRendererState or Context::prepareForDispatch. Here also needs to consider that sync dirty objects completely for compute pipeline.",
+      "parentUuid": "70397558_63d37094",
+      "range": {
+        "startLine": 2340,
+        "startChar": 9,
+        "endLine": 2340,
+        "endChar": 53
+      },
+      "revId": "4dcd3263096ef418c7ed736eda99fddc1ef8c0df",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
