@@ -39,6 +39,48 @@
       "revId": "4dcd3263096ef418c7ed736eda99fddc1ef8c0df",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "70397558_63d37094",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2340,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-03-12T09:30:22Z",
+      "side": 1,
+      "message": "Yes, it may be null. LinkAndRelinkTestES31.ComputeProgramFailsWithProgramInstalled/ES3_1_OPENGL can catch this error. You can see patch set 1/2\u0027s bots failure. It happens when we call dispatchCompute more than once and use the same program. It does have difference between render pipeline and compute pipeline for syncProgramTextures. In render pipeline, we always call syncDirtyObjects(context) which will implicitly call syncDirtyObjects(context, mDirtyObjects). Here we can see that render pipeline uses mDirtyObjects. That\u0027s why it can ensure that once we enter syncProgramTextures, mDirtyObjects[DIRTY_OBJECT_PROGRAM_TEXTURES] must not be null. But for compute pipeline, we will directly call syncDirtyObjects(context, mComputeDirtyObjects). It can\u0027t make sure that mDirtyObjects must contain DIRTY_OBJECT_PROGRAM_TEXTURES even we enter syncProgramTextures.",
+      "parentUuid": "12b11235_57184c69",
+      "range": {
+        "startLine": 2340,
+        "startChar": 9,
+        "endLine": 2340,
+        "endChar": 53
+      },
+      "revId": "4dcd3263096ef418c7ed736eda99fddc1ef8c0df",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4ef7e6ae_4cad785c",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2340,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-03-12T09:30:22Z",
+      "side": 1,
+      "message": "I am sure that LinkAndRelinkTestES31.ComputeProgramFailsWithProgramInstalled/ES3_1_OPENGL can reach here 100% and don\u0027t need other cases. So I just add a comment to help understanding. Is it ok for you?",
+      "parentUuid": "69cba319_dcbc5ec3",
+      "revId": "4dcd3263096ef418c7ed736eda99fddc1ef8c0df",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
