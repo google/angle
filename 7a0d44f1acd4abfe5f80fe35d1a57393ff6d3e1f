@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "23413c8e_f56e98fb",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 707,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-03-12T18:24:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "62bed6dc_7b39cb41",
+      "range": {
+        "startLine": 705,
+        "startChar": 4,
+        "endLine": 707,
+        "endChar": 99
+      },
+      "revId": "7a0d44f1acd4abfe5f80fe35d1a57393ff6d3e1f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e6f92071_6f1695a1",
         "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
         "patchSetId": 5
@@ -45,6 +69,30 @@
       "revId": "7a0d44f1acd4abfe5f80fe35d1a57393ff6d3e1f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "af660854_c7bcd5bf",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 714,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-03-12T18:24:17Z",
+      "side": 1,
+      "message": "I added one for glRectangle -\u003e vkRect2D since its being done twice, the viewport -\u003e glRect is not really useful though.",
+      "parentUuid": "e6f92071_6f1695a1",
+      "range": {
+        "startLine": 712,
+        "startChar": 0,
+        "endLine": 714,
+        "endChar": 66
+      },
+      "revId": "7a0d44f1acd4abfe5f80fe35d1a57393ff6d3e1f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
