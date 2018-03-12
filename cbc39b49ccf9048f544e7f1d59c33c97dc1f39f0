@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "6da56a27_888f6748",
+        "filename": "src/libANGLE/params.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-12T14:54:32Z",
+      "side": 1,
+      "message": "This was an intentional change with the new design. Let\u0027s assume the bot coverage is sufficient to catch any errors and if something pops up we can add a test.",
+      "parentUuid": "9e77ed29_b9416598",
+      "range": {
+        "startLine": 98,
+        "startChar": 19,
+        "endLine": 98,
+        "endChar": 20
+      },
+      "revId": "cbc39b49ccf9048f544e7f1d59c33c97dc1f39f0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "38d7b6ae_34b4fcd9",
         "filename": "src/libANGLE/params.h",
         "patchSetId": 10
@@ -45,6 +69,30 @@
       "revId": "cbc39b49ccf9048f544e7f1d59c33c97dc1f39f0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6a2169c7_961bf45f",
+        "filename": "src/libANGLE/params.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-12T14:54:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "38d7b6ae_34b4fcd9",
+      "range": {
+        "startLine": 137,
+        "startChar": 4,
+        "endLine": 137,
+        "endChar": 12
+      },
+      "revId": "cbc39b49ccf9048f544e7f1d59c33c97dc1f39f0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "23c1a9b6_fcd271aa",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 242,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-12T14:54:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ac7bfc3b_224fe759",
+      "range": {
+        "startLine": 242,
+        "startChar": 32,
+        "endLine": 242,
+        "endChar": 43
+      },
+      "revId": "cbc39b49ccf9048f544e7f1d59c33c97dc1f39f0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cea1dde8_e19ed9a4",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
         "patchSetId": 10
@@ -91,6 +163,30 @@
       "revId": "cbc39b49ccf9048f544e7f1d59c33c97dc1f39f0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "45ada3ff_6813f429",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 243,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-12T14:54:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cea1dde8_e19ed9a4",
+      "range": {
+        "startLine": 243,
+        "startChar": 58,
+        "endLine": 243,
+        "endChar": 70
+      },
+      "revId": "cbc39b49ccf9048f544e7f1d59c33c97dc1f39f0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
