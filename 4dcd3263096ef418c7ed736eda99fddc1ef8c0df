@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "12b11235_57184c69",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2340,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2018-03-12T08:17:34Z",
+      "side": 1,
+      "message": "return here. Does it mean that this bit may be null? Which case? I think there is no difference for this dirty bit between render pipeline and compute pipeline when use samplers and textures.",
+      "range": {
+        "startLine": 2340,
+        "startChar": 9,
+        "endLine": 2340,
+        "endChar": 53
+      },
+      "revId": "4dcd3263096ef418c7ed736eda99fddc1ef8c0df",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
