@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ac8472f1_5b406162",
+        "filename": "src/libANGLE/State.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 607,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-12T18:19:49Z",
+      "side": 1,
+      "message": "nit: can you rename this to mGLES1State?",
+      "range": {
+        "startLine": 607,
+        "startChar": 15,
+        "endLine": 607,
+        "endChar": 26
+      },
+      "revId": "73e3016a682babff691e9a7c2e858242ed5b52b0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "971a33f2_757a8883",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 345,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-12T18:19:49Z",
+      "side": 1,
+      "message": "would it be possible to put these structs in the GLES 1 State header?",
+      "range": {
+        "startLine": 343,
+        "startChar": 0,
+        "endLine": 345,
+        "endChar": 14
+      },
+      "revId": "73e3016a682babff691e9a7c2e858242ed5b52b0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
