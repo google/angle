@@ -64,14 +64,14 @@ class MockTextureImpl : public TextureImpl
                            size_t,
                            const gl::Rectangle &,
                            GLenum,
-                           const gl::Framebuffer *));
+                           gl::Framebuffer *));
     MOCK_METHOD6(copySubImage,
                  gl::Error(const gl::Context *,
                            gl::TextureTarget,
                            size_t,
                            const gl::Offset &,
                            const gl::Rectangle &,
-                           const gl::Framebuffer *));
+                           gl::Framebuffer *));
     MOCK_METHOD10(copyTexture,
                   gl::Error(const gl::Context *,
                             gl::TextureTarget,

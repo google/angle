@@ -5171,7 +5171,7 @@ bool ValidateReadPixelsBase(Context *context,
         return false;
     }
 
-    const Framebuffer *framebuffer = context->getGLState().getReadFramebuffer();
+    Framebuffer *framebuffer = context->getGLState().getReadFramebuffer();
     ASSERT(framebuffer);
 
     if (framebuffer->getReadBufferState() == GL_NONE)
@@ -5223,8 +5223,12 @@ bool ValidateReadPixelsBase(Context *context,
         }
     }
 
-    GLenum currentFormat        = framebuffer->getImplementationColorReadFormat(context);
-    GLenum currentType          = framebuffer->getImplementationColorReadType(context);
+    GLenum currentFormat = GL_NONE;
+    ANGLE_VALIDATION_TRY(framebuffer->getImplementationColorReadFormat(context, &currentFormat));
+
+    GLenum currentType = GL_NONE;
+    ANGLE_VALIDATION_TRY(framebuffer->getImplementationColorReadType(context, &currentType));
+
     GLenum currentComponentType = readBuffer->getFormat().info->componentType;
 
     bool validFormatTypeCombination =

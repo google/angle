@@ -46,7 +46,7 @@ class BlitGL : angle::NonCopyable
                                                size_t level,
                                                const gl::Rectangle &sourceArea,
                                                GLenum internalFormat,
-                                               const gl::Framebuffer *source);
+                                               gl::Framebuffer *source);
 
     gl::Error copySubImageToLUMAWorkaroundTexture(const gl::Context *context,
                                                   GLuint texture,
@@ -56,7 +56,7 @@ class BlitGL : angle::NonCopyable
                                                   size_t level,
                                                   const gl::Offset &destOffset,
                                                   const gl::Rectangle &sourceArea,
-                                                  const gl::Framebuffer *source);
+                                                  gl::Framebuffer *source);
 
     gl::Error blitColorBufferWithShader(const gl::Framebuffer *source,
                                         const gl::Framebuffer *dest,

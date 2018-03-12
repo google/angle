@@ -78,7 +78,7 @@ gl::Error TextureNULL::copyImage(const gl::Context *context,
                                  size_t level,
                                  const gl::Rectangle &sourceArea,
                                  GLenum internalFormat,
-                                 const gl::Framebuffer *source)
+                                 gl::Framebuffer *source)
 {
     return gl::NoError();
 }
@@ -88,7 +88,7 @@ gl::Error TextureNULL::copySubImage(const gl::Context *context,
                                     size_t level,
                                     const gl::Offset &destOffset,
                                     const gl::Rectangle &sourceArea,
-                                    const gl::Framebuffer *source)
+                                    gl::Framebuffer *source)
 {
     return gl::NoError();
 }

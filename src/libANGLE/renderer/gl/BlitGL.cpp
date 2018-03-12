@@ -169,20 +169,22 @@ gl::Error BlitGL::copyImageToLUMAWorkaroundTexture(const gl::Context *context,
                                                    size_t level,
                                                    const gl::Rectangle &sourceArea,
                                                    GLenum internalFormat,
-                                                   const gl::Framebuffer *source)
+                                                   gl::Framebuffer *source)
 {
     mStateManager->bindTexture(textureType, texture);
 
     // Allocate the texture memory
     GLenum format = gl::GetUnsizedFormat(internalFormat);
 
+    GLenum readType = GL_NONE;
+    ANGLE_TRY(source->getImplementationColorReadType(context, &readType));
+
     gl::PixelUnpackState unpack;
     mStateManager->setPixelUnpackState(unpack);
     mStateManager->setPixelUnpackBuffer(
         context->getGLState().getTargetBuffer(gl::BufferBinding::PixelUnpack));
     mFunctions->texImage2D(ToGLenum(target), static_cast<GLint>(level), internalFormat,
-                           sourceArea.width, sourceArea.height, 0, format,
-                           source->getImplementationColorReadType(context), nullptr);
+                           sourceArea.width, sourceArea.height, 0, format, readType, nullptr);
 
     return copySubImageToLUMAWorkaroundTexture(context, texture, textureType, target, lumaFormat,
                                                level, gl::Offset(0, 0, 0), sourceArea, source);
@@ -196,7 +198,7 @@ gl::Error BlitGL::copySubImageToLUMAWorkaroundTexture(const gl::Context *context
                                                       size_t level,
                                                       const gl::Offset &destOffset,
                                                       const gl::Rectangle &sourceArea,
-                                                      const gl::Framebuffer *source)
+                                                      gl::Framebuffer *source)
 {
     ANGLE_TRY(initializeResources());
 
@@ -207,9 +209,14 @@ gl::Error BlitGL::copySubImageToLUMAWorkaroundTexture(const gl::Context *context
     const FramebufferGL *sourceFramebufferGL = GetImplAs<FramebufferGL>(source);
     mStateManager->bindFramebuffer(GL_FRAMEBUFFER, sourceFramebufferGL->getFramebufferID());
 
-    nativegl::CopyTexImageImageFormat copyTexImageFormat = nativegl::GetCopyTexImageImageFormat(
-        mFunctions, mWorkarounds, source->getImplementationColorReadFormat(context),
-        source->getImplementationColorReadType(context));
+    GLenum readFormat = GL_NONE;
+    ANGLE_TRY(source->getImplementationColorReadFormat(context, &readFormat));
+
+    GLenum readType = GL_NONE;
+    ANGLE_TRY(source->getImplementationColorReadType(context, &readType));
+
+    nativegl::CopyTexImageImageFormat copyTexImageFormat =
+        nativegl::GetCopyTexImageImageFormat(mFunctions, mWorkarounds, readFormat, readType);
 
     mStateManager->bindTexture(gl::TextureType::_2D, mScratchTextures[0]);
     mFunctions->copyTexImage2D(GL_TEXTURE_2D, 0, copyTexImageFormat.internalFormat, sourceArea.x,
@@ -226,10 +233,9 @@ gl::Error BlitGL::copySubImageToLUMAWorkaroundTexture(const gl::Context *context
     // Make a temporary framebuffer using the second scratch texture to render the swizzled result
     // to.
     mStateManager->bindTexture(gl::TextureType::_2D, mScratchTextures[1]);
-    mFunctions->texImage2D(GL_TEXTURE_2D, 0, copyTexImageFormat.internalFormat, sourceArea.width,
-                           sourceArea.height, 0,
-                           gl::GetUnsizedFormat(copyTexImageFormat.internalFormat),
-                           source->getImplementationColorReadType(context), nullptr);
+    mFunctions->texImage2D(
+        GL_TEXTURE_2D, 0, copyTexImageFormat.internalFormat, sourceArea.width, sourceArea.height, 0,
+        gl::GetUnsizedFormat(copyTexImageFormat.internalFormat), readType, nullptr);
 
     mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mScratchFBO);
     mFunctions->framebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,

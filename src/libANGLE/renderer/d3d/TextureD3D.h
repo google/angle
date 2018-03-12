@@ -244,13 +244,13 @@ class TextureD3D_2D : public TextureD3D
                         size_t level,
                         const gl::Rectangle &sourceArea,
                         GLenum internalFormat,
-                        const gl::Framebuffer *source) override;
+                        gl::Framebuffer *source) override;
     gl::Error copySubImage(const gl::Context *context,
                            gl::TextureTarget target,
                            size_t level,
                            const gl::Offset &destOffset,
                            const gl::Rectangle &sourceArea,
-                           const gl::Framebuffer *source) override;
+                           gl::Framebuffer *source) override;
 
     gl::Error copyTexture(const gl::Context *context,
                           gl::TextureTarget target,
@@ -380,13 +380,13 @@ class TextureD3D_Cube : public TextureD3D
                         size_t level,
                         const gl::Rectangle &sourceArea,
                         GLenum internalFormat,
-                        const gl::Framebuffer *source) override;
+                        gl::Framebuffer *source) override;
     gl::Error copySubImage(const gl::Context *context,
                            gl::TextureTarget target,
                            size_t level,
                            const gl::Offset &destOffset,
                            const gl::Rectangle &sourceArea,
-                           const gl::Framebuffer *source) override;
+                           gl::Framebuffer *source) override;
 
     gl::Error copyTexture(const gl::Context *context,
                           gl::TextureTarget target,
@@ -517,13 +517,13 @@ class TextureD3D_3D : public TextureD3D
                         size_t level,
                         const gl::Rectangle &sourceArea,
                         GLenum internalFormat,
-                        const gl::Framebuffer *source) override;
+                        gl::Framebuffer *source) override;
     gl::Error copySubImage(const gl::Context *context,
                            gl::TextureTarget target,
                            size_t level,
                            const gl::Offset &destOffset,
                            const gl::Rectangle &sourceArea,
-                           const gl::Framebuffer *source) override;
+                           gl::Framebuffer *source) override;
 
     gl::Error setStorage(const gl::Context *context,
                          gl::TextureType type,
@@ -631,13 +631,13 @@ class TextureD3D_2DArray : public TextureD3D
                         size_t level,
                         const gl::Rectangle &sourceArea,
                         GLenum internalFormat,
-                        const gl::Framebuffer *source) override;
+                        gl::Framebuffer *source) override;
     gl::Error copySubImage(const gl::Context *context,
                            gl::TextureTarget target,
                            size_t level,
                            const gl::Offset &destOffset,
                            const gl::Rectangle &sourceArea,
-                           const gl::Framebuffer *source) override;
+                           gl::Framebuffer *source) override;
 
     gl::Error setStorage(const gl::Context *context,
                          gl::TextureType type,
@@ -742,13 +742,13 @@ class TextureD3D_External : public TextureD3D
                         size_t level,
                         const gl::Rectangle &sourceArea,
                         GLenum internalFormat,
-                        const gl::Framebuffer *source) override;
+                        gl::Framebuffer *source) override;
     gl::Error copySubImage(const gl::Context *context,
                            gl::TextureTarget target,
                            size_t level,
                            const gl::Offset &destOffset,
                            const gl::Rectangle &sourceArea,
-                           const gl::Framebuffer *source) override;
+                           gl::Framebuffer *source) override;
 
     gl::Error setStorage(const gl::Context *context,
                          gl::TextureType type,
@@ -839,13 +839,13 @@ class TextureD3D_2DMultisample : public TextureD3D
                         size_t level,
                         const gl::Rectangle &sourceArea,
                         GLenum internalFormat,
-                        const gl::Framebuffer *source) override;
+                        gl::Framebuffer *source) override;
     gl::Error copySubImage(const gl::Context *context,
                            gl::TextureTarget target,
                            size_t level,
                            const gl::Offset &destOffset,
                            const gl::Rectangle &sourceArea,
-                           const gl::Framebuffer *source) override;
+                           gl::Framebuffer *source) override;
 
     gl::Error setStorageMultisample(const gl::Context *context,
                                     gl::TextureType type,

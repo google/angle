@@ -1947,12 +1947,14 @@ Error State::getIntegerv(const Context *context, GLenum pname, GLint *params)
         case GL_ELEMENT_ARRAY_BUFFER_BINDING:
             *params = getVertexArray()->getElementArrayBuffer().id();
             break;
-        // case GL_FRAMEBUFFER_BINDING:
-        // now equivalent to GL_DRAW_FRAMEBUFFER_BINDING_ANGLE
-        case GL_DRAW_FRAMEBUFFER_BINDING_ANGLE:
+        case GL_DRAW_FRAMEBUFFER_BINDING:
+            static_assert(GL_DRAW_FRAMEBUFFER_BINDING == GL_DRAW_FRAMEBUFFER_BINDING_ANGLE,
+                          "Enum mismatch");
             *params = mDrawFramebuffer->id();
             break;
-        case GL_READ_FRAMEBUFFER_BINDING_ANGLE:
+        case GL_READ_FRAMEBUFFER_BINDING:
+            static_assert(GL_READ_FRAMEBUFFER_BINDING == GL_READ_FRAMEBUFFER_BINDING_ANGLE,
+                          "Enum mismatch");
             *params = mReadFramebuffer->id();
             break;
         case GL_RENDERBUFFER_BINDING:
@@ -2073,10 +2075,12 @@ Error State::getIntegerv(const Context *context, GLenum pname, GLint *params)
             *params = mStencilClearValue;
             break;
         case GL_IMPLEMENTATION_COLOR_READ_TYPE:
-            *params = mReadFramebuffer->getImplementationColorReadType(context);
+            ANGLE_TRY(mReadFramebuffer->getImplementationColorReadType(
+                context, reinterpret_cast<GLenum *>(params)));
             break;
         case GL_IMPLEMENTATION_COLOR_READ_FORMAT:
-            *params = mReadFramebuffer->getImplementationColorReadFormat(context);
+            ANGLE_TRY(mReadFramebuffer->getImplementationColorReadFormat(
+                context, reinterpret_cast<GLenum *>(params)));
             break;
         case GL_SAMPLE_BUFFERS:
         case GL_SAMPLES:

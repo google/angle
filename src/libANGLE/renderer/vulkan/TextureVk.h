@@ -64,13 +64,13 @@ class TextureVk : public TextureImpl, public ResourceVk
                         size_t level,
                         const gl::Rectangle &sourceArea,
                         GLenum internalFormat,
-                        const gl::Framebuffer *source) override;
+                        gl::Framebuffer *source) override;
     gl::Error copySubImage(const gl::Context *context,
                            gl::TextureTarget target,
                            size_t level,
                            const gl::Offset &destOffset,
                            const gl::Rectangle &sourceArea,
-                           const gl::Framebuffer *source) override;
+                           gl::Framebuffer *source) override;
 
     gl::Error setStorage(const gl::Context *context,
                          gl::TextureType type,

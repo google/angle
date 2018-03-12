@@ -88,13 +88,13 @@ class TextureImpl : public FramebufferAttachmentObjectImpl
                                 size_t level,
                                 const gl::Rectangle &sourceArea,
                                 GLenum internalFormat,
-                                const gl::Framebuffer *source)    = 0;
+                                gl::Framebuffer *source)    = 0;
     virtual gl::Error copySubImage(const gl::Context *context,
                                    gl::TextureTarget target,
                                    size_t level,
                                    const gl::Offset &destOffset,
                                    const gl::Rectangle &sourceArea,
-                                   const gl::Framebuffer *source) = 0;
+                                   gl::Framebuffer *source) = 0;
 
     virtual gl::Error copyTexture(const gl::Context *context,
                                   gl::TextureTarget target,

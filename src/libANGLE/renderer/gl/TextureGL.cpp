@@ -549,9 +549,10 @@ gl::Error TextureGL::copyImage(const gl::Context *context,
                                size_t level,
                                const gl::Rectangle &origSourceArea,
                                GLenum internalFormat,
-                               const gl::Framebuffer *source)
+                               gl::Framebuffer *source)
 {
-    GLenum type = source->getImplementationColorReadType(context);
+    GLenum type = GL_NONE;
+    ANGLE_TRY(source->getImplementationColorReadType(context, &type));
     nativegl::CopyTexImageImageFormat copyTexImageFormat =
         nativegl::GetCopyTexImageImageFormat(mFunctions, mWorkarounds, internalFormat, type);
 
@@ -644,7 +645,7 @@ gl::Error TextureGL::copySubImage(const gl::Context *context,
                                   size_t level,
                                   const gl::Offset &origDestOffset,
                                   const gl::Rectangle &origSourceArea,
-                                  const gl::Framebuffer *source)
+                                  gl::Framebuffer *source)
 {
     const FramebufferGL *sourceFramebufferGL = GetImplAs<FramebufferGL>(source);
 

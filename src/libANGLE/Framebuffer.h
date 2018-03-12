@@ -265,8 +265,10 @@ class Framebuffer final : public angle::ObserverInterface, public LabeledObject
                         GLfloat depth,
                         GLint stencil);
 
-    GLenum getImplementationColorReadFormat(const Context *context) const;
-    GLenum getImplementationColorReadType(const Context *context) const;
+    // These two methods call syncState() internally.
+    Error getImplementationColorReadFormat(const Context *context, GLenum *formatOut);
+    Error getImplementationColorReadType(const Context *context, GLenum *typeOut);
+
     Error readPixels(const Context *context,
                      const Rectangle &area,
                      GLenum format,
