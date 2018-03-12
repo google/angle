@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d71c7115_cf008eaf",
+        "filename": "src/libANGLE/Framebuffer.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 232,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-12T15:09:27Z",
+      "side": 1,
+      "message": "Any reason to not use the ErrorOrResult stuff?",
+      "range": {
+        "startLine": 232,
+        "startChar": 4,
+        "endLine": 232,
+        "endChar": 9
+      },
+      "revId": "b3e546a7b98810ac75344d0e2d8ff438189c427c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
