@@ -1,0 +1,107 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a070b042_291e96fc",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-03-13T02:04:12Z",
+      "side": 1,
+      "message": "if this is the only difference, can this be {indirection_if-needed} to avoid duplicating templates?",
+      "range": {
+        "startLine": 153,
+        "startChar": 39,
+        "endLine": 153,
+        "endChar": 49
+      },
+      "revId": "50b43971d1a2c750fe648c4b5bd4de68d088bde6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "deca57ec_d1289d89",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 286,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-03-13T02:04:12Z",
+      "side": 1,
+      "message": "no need for defaults here since all calls set isGles1. Also python variables (including arguments) are snake_case here and in the rest of the diff.",
+      "range": {
+        "startLine": 286,
+        "startChar": 57,
+        "endLine": 286,
+        "endChar": 65
+      },
+      "revId": "50b43971d1a2c750fe648c4b5bd4de68d088bde6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d9f238c3_007bff56",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 336,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-03-13T02:04:12Z",
+      "side": 1,
+      "message": "nit: Comment on why 1.0 is at the end of the list.",
+      "revId": "50b43971d1a2c750fe648c4b5bd4de68d088bde6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a26b35f1_7ce4622b",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 342,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-03-13T02:04:12Z",
+      "side": 1,
+      "message": "is_gles1 \u003d major_version \u003d\u003d 1\n if is_gles1:\n   name_prefix \u003d ...",
+      "range": {
+        "startLine": 339,
+        "startChar": 0,
+        "endLine": 342,
+        "endChar": 41
+      },
+      "revId": "50b43971d1a2c750fe648c4b5bd4de68d088bde6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aa7b182c_21bd4a2d",
+        "filename": "src/libANGLE/Context.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 1098,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-03-13T02:04:12Z",
+      "side": 1,
+      "message": "nit: getGLES1Emulator()? This would avoid exposing a mutable (!) pointer publicly.",
+      "revId": "50b43971d1a2c750fe648c4b5bd4de68d088bde6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
