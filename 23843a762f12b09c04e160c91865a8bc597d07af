@@ -1,0 +1,159 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3cff5313_3ca0dc9d",
+        "filename": "src/common/angleutils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-13T17:24:20Z",
+      "side": 1,
+      "message": "ref.",
+      "range": {
+        "startLine": 197,
+        "startChar": 8,
+        "endLine": 197,
+        "endChar": 26
+      },
+      "revId": "23843a762f12b09c04e160c91865a8bc597d07af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ea4ee83e_f33e7a6b",
+        "filename": "src/common/angleutils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-13T17:24:20Z",
+      "side": 1,
+      "message": "this is not a typeless format, just call it GL_A1RGB5_ANGLEX. Also put it up with the rest of the hack 16-bit formats.",
+      "range": {
+        "startLine": 210,
+        "startChar": 8,
+        "endLine": 210,
+        "endChar": 36
+      },
+      "revId": "23843a762f12b09c04e160c91865a8bc597d07af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3a506e6e_2432110d",
+        "filename": "src/libANGLE/renderer/angle_format_map.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-13T17:24:20Z",
+      "side": 1,
+      "message": "again, not typeless.",
+      "range": {
+        "startLine": 132,
+        "startChar": 36,
+        "endLine": 132,
+        "endChar": 59
+      },
+      "revId": "23843a762f12b09c04e160c91865a8bc597d07af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c32c889e_fff4ddbd",
+        "filename": "src/libANGLE/renderer/load_functions_data.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 457,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-13T17:24:20Z",
+      "side": 1,
+      "message": "this concerns me a bit - how about BGR and RGB both be native. but LGTM if it passes bots.",
+      "range": {
+        "startLine": 457,
+        "startChar": 7,
+        "endLine": 457,
+        "endChar": 30
+      },
+      "revId": "23843a762f12b09c04e160c91865a8bc597d07af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8543f99c_fdc77877",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_map.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 191,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-13T17:24:20Z",
+      "side": 1,
+      "message": "this can be NONE",
+      "range": {
+        "startLine": 191,
+        "startChar": 23,
+        "endLine": 191,
+        "endChar": 37
+      },
+      "revId": "23843a762f12b09c04e160c91865a8bc597d07af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c733c399_a202c1ef",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_map.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 192,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-13T17:24:20Z",
+      "side": 1,
+      "message": "I understand this is passing the tests, but I want to use the fewest bits possible. What happens when you try to use BGRA4? are they supported on your driver?",
+      "revId": "23843a762f12b09c04e160c91865a8bc597d07af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0f0f0240_b3dbb600",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_map.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-13T17:24:20Z",
+      "side": 1,
+      "message": "this can be NONE",
+      "range": {
+        "startLine": 195,
+        "startChar": 23,
+        "endLine": 195,
+        "endChar": 46
+      },
+      "revId": "23843a762f12b09c04e160c91865a8bc597d07af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
