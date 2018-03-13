@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5378c254_47a27092",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1435,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-13T20:01:07Z",
+      "side": 1,
+      "message": "can you\n\na) instead pass a gl::Buffer by const pointer to this method from Context::deleteBuffer (re-using mState.mBuffers-\u003egetBuffer(buffer) in a temporary)\nb) check getRefCount !\u003d 0 instead of adding the new method.",
+      "range": {
+        "startLine": 1432,
+        "startChar": 0,
+        "endLine": 1435,
+        "endChar": 5
+      },
+      "revId": "c4b140be71db576380ab0fb9f47a6db6ea11c150",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
