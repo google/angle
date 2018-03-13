@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "0e67adcc_733173b6",
+        "filename": "src/common/angleutils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-03-13T17:50:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3cff5313_3ca0dc9d",
+      "range": {
+        "startLine": 197,
+        "startChar": 8,
+        "endLine": 197,
+        "endChar": 26
+      },
+      "revId": "23843a762f12b09c04e160c91865a8bc597d07af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ea4ee83e_f33e7a6b",
         "filename": "src/common/angleutils.h",
         "patchSetId": 2
@@ -45,6 +69,30 @@
       "revId": "23843a762f12b09c04e160c91865a8bc597d07af",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ec46a4b5_879f42b7",
+        "filename": "src/common/angleutils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-03-13T17:50:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ea4ee83e_f33e7a6b",
+      "range": {
+        "startLine": 210,
+        "startChar": 8,
+        "endLine": 210,
+        "endChar": 36
+      },
+      "revId": "23843a762f12b09c04e160c91865a8bc597d07af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "234882bf_b25c7876",
+        "filename": "src/libANGLE/renderer/angle_format_map.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-03-13T17:50:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3a506e6e_2432110d",
+      "range": {
+        "startLine": 132,
+        "startChar": 36,
+        "endLine": 132,
+        "endChar": 59
+      },
+      "revId": "23843a762f12b09c04e160c91865a8bc597d07af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c32c889e_fff4ddbd",
         "filename": "src/libANGLE/renderer/load_functions_data.json",
         "patchSetId": 2
@@ -91,6 +163,30 @@
       "revId": "23843a762f12b09c04e160c91865a8bc597d07af",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "563c70fc_c8d544c8",
+        "filename": "src/libANGLE/renderer/load_functions_data.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 457,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-03-13T17:50:40Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "c32c889e_fff4ddbd",
+      "range": {
+        "startLine": 457,
+        "startChar": 7,
+        "endLine": 457,
+        "endChar": 30
+      },
+      "revId": "23843a762f12b09c04e160c91865a8bc597d07af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "dd567257_cdfbec9e",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_map.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 191,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-03-13T17:50:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8543f99c_fdc77877",
+      "range": {
+        "startLine": 191,
+        "startChar": 23,
+        "endLine": 191,
+        "endChar": 37
+      },
+      "revId": "23843a762f12b09c04e160c91865a8bc597d07af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c733c399_a202c1ef",
         "filename": "src/libANGLE/renderer/vulkan/vk_format_map.json",
         "patchSetId": 2
@@ -128,6 +248,24 @@
       "writtenOn": "2018-03-13T17:24:20Z",
       "side": 1,
       "message": "I understand this is passing the tests, but I want to use the fewest bits possible. What happens when you try to use BGRA4? are they supported on your driver?",
+      "revId": "23843a762f12b09c04e160c91865a8bc597d07af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6cebb4f1_a51c4b5f",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_map.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 192,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-03-13T17:50:40Z",
+      "side": 1,
+      "message": "They are not. Every override I did to a bigger type is because they were not supported with the smaller one, other suggestion than doing this?",
+      "parentUuid": "c733c399_a202c1ef",
       "revId": "23843a762f12b09c04e160c91865a8bc597d07af",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -154,6 +292,30 @@
       "revId": "23843a762f12b09c04e160c91865a8bc597d07af",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "90ab5de7_68e64669",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_map.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-03-13T17:50:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0f0f0240_b3dbb600",
+      "range": {
+        "startLine": 195,
+        "startChar": 23,
+        "endLine": 195,
+        "endChar": 46
+      },
+      "revId": "23843a762f12b09c04e160c91865a8bc597d07af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }

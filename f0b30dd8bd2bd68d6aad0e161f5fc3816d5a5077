@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "9f15e41a_60f7eebc",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_map.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-03-13T17:50:40Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "00f8e3d7_a76c5203",
+      "range": {
+        "startLine": 24,
+        "startChar": 9,
+        "endLine": 24,
+        "endChar": 23
+      },
+      "revId": "f0b30dd8bd2bd68d6aad0e161f5fc3816d5a5077",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1cdff67a_26b49d36",
         "filename": "src/libANGLE/renderer/vulkan/vk_format_map.json",
         "patchSetId": 2
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "d24e04f4_c40e9d90",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_map.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-03-13T17:50:40Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "1cdff67a_26b49d36",
+      "range": {
+        "startLine": 28,
+        "startChar": 9,
+        "endLine": 28,
+        "endChar": 23
+      },
+      "revId": "f0b30dd8bd2bd68d6aad0e161f5fc3816d5a5077",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "52252279_1661b310",
         "filename": "src/libANGLE/renderer/vulkan/vk_format_map.json",
         "patchSetId": 2
@@ -68,6 +116,30 @@
       "revId": "f0b30dd8bd2bd68d6aad0e161f5fc3816d5a5077",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0f43cafe_1bf8e85c",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_map.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-03-13T17:50:40Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "52252279_1661b310",
+      "range": {
+        "startLine": 30,
+        "startChar": 9,
+        "endLine": 30,
+        "endChar": 23
+      },
+      "revId": "f0b30dd8bd2bd68d6aad0e161f5fc3816d5a5077",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
