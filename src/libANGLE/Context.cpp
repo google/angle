@@ -129,20 +129,13 @@ gl::Error GetQueryObjectParameter(gl::Query *query, GLenum pname, T *params)
     }
 }
 
-void MarkTransformFeedbackBufferUsage(gl::TransformFeedback *transformFeedback)
+void MarkTransformFeedbackBufferUsage(gl::TransformFeedback *transformFeedback,
+                                      GLsizei count,
+                                      GLsizei instanceCount)
 {
     if (transformFeedback && transformFeedback->isActive() && !transformFeedback->isPaused())
     {
-        for (size_t tfBufferIndex = 0; tfBufferIndex < transformFeedback->getIndexedBufferCount();
-             tfBufferIndex++)
-        {
-            const gl::OffsetBindingPointer<gl::Buffer> &buffer =
-                transformFeedback->getIndexedBuffer(tfBufferIndex);
-            if (buffer.get() != nullptr)
-            {
-                buffer->onTransformFeedback();
-            }
-        }
+        transformFeedback->onVerticesDrawn(count, instanceCount);
     }
 }
 
@@ -1811,7 +1804,7 @@ void Context::drawArrays(GLenum mode, GLint first, GLsizei count)
 
     ANGLE_CONTEXT_TRY(prepareForDraw());
     ANGLE_CONTEXT_TRY(mImplementation->drawArrays(this, mode, first, count));
-    MarkTransformFeedbackBufferUsage(mGLState.getCurrentTransformFeedback());
+    MarkTransformFeedbackBufferUsage(mGLState.getCurrentTransformFeedback(), count, 1);
 }
 
 void Context::drawArraysInstanced(GLenum mode, GLint first, GLsizei count, GLsizei instanceCount)
@@ -1825,7 +1818,7 @@ void Context::drawArraysInstanced(GLenum mode, GLint first, GLsizei count, GLsiz
     ANGLE_CONTEXT_TRY(prepareForDraw());
     ANGLE_CONTEXT_TRY(
         mImplementation->drawArraysInstanced(this, mode, first, count, instanceCount));
-    MarkTransformFeedbackBufferUsage(mGLState.getCurrentTransformFeedback());
+    MarkTransformFeedbackBufferUsage(mGLState.getCurrentTransformFeedback(), count, instanceCount);
 }
 
 void Context::drawElements(GLenum mode, GLsizei count, GLenum type, const void *indices)

@@ -286,6 +286,66 @@ TEST_P(TransformFeedbackTest, RecordAndDraw)
     EXPECT_GL_NO_ERROR();
 }
 
+// Test that XFB does not allow writing more vertices than fit in the bound buffers.
+// TODO(jmadill): Enable this test after fixing the last case where the buffer size changes after
+// calling glBeginTransformFeedback.
+TEST_P(TransformFeedbackTest, DISABLED_TooSmallBuffers)
+{
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glEnable(GL_RASTERIZER_DISCARD);
+
+    // Set the program's transform feedback varyings (just gl_Position)
+    std::vector<std::string> tfVaryings;
+    tfVaryings.push_back("gl_Position");
+    compileDefaultProgram(tfVaryings, GL_INTERLEAVED_ATTRIBS);
+    GLint positionLocation = glGetAttribLocation(mProgram, "position");
+
+    glUseProgram(mProgram);
+
+    const GLfloat vertices[] = {
+        -1.0f, 1.0f, 0.5f, -1.0f, -1.0f, 0.5f, 1.0f, -1.0f, 0.5f,
+
+        -1.0f, 1.0f, 0.5f, 1.0f,  -1.0f, 0.5f, 1.0f, 1.0f,  0.5f,
+    };
+
+    glVertexAttribPointer(positionLocation, 3, GL_FLOAT, GL_FALSE, 0, vertices);
+    glEnableVertexAttribArray(positionLocation);
+
+    const size_t verticesToDraw = 6;
+    const size_t stride         = sizeof(float) * 4;
+    const size_t bytesNeeded    = stride * verticesToDraw;
+
+    glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, mTransformFeedbackBuffer);
+
+    // Set up the buffer to be the right size
+    uint8_t tfData[stride * verticesToDraw] = {0};
+    glBufferData(GL_TRANSFORM_FEEDBACK_BUFFER, bytesNeeded, &tfData, GL_STATIC_DRAW);
+
+    glBeginTransformFeedback(GL_POINTS);
+    glDrawArrays(GL_POINTS, 0, verticesToDraw);
+    EXPECT_GL_NO_ERROR();
+    glEndTransformFeedback();
+
+    // Set up the buffer to be too small
+    glBufferData(GL_TRANSFORM_FEEDBACK_BUFFER, bytesNeeded - 1, &tfData, GL_STATIC_DRAW);
+
+    glBeginTransformFeedback(GL_POINTS);
+    EXPECT_GL_NO_ERROR();
+    glDrawArrays(GL_POINTS, 0, verticesToDraw);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+    glEndTransformFeedback();
+
+    // Set up the buffer to be the right size but make it smaller after glBeginTransformFeedback
+    glBufferData(GL_TRANSFORM_FEEDBACK_BUFFER, bytesNeeded, &tfData, GL_STATIC_DRAW);
+    glBeginTransformFeedback(GL_POINTS);
+    glBufferData(GL_TRANSFORM_FEEDBACK_BUFFER, bytesNeeded - 1, &tfData, GL_STATIC_DRAW);
+    EXPECT_GL_NO_ERROR();
+    glDrawArrays(GL_POINTS, 0, verticesToDraw);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+    glEndTransformFeedback();
+}
+
 // Test that buffer binding happens only on the current transform feedback object
 TEST_P(TransformFeedbackTest, BufferBinding)
 {

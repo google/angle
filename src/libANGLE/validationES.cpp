@@ -19,6 +19,7 @@
 #include "libANGLE/Texture.h"
 #include "libANGLE/TransformFeedback.h"
 #include "libANGLE/VertexArray.h"
+#include "libANGLE/angletypes.h"
 #include "libANGLE/formatutils.h"
 #include "libANGLE/queryconversions.h"
 #include "libANGLE/validationES2.h"
@@ -2765,13 +2766,7 @@ bool ValidateDrawBase(Context *context, GLenum mode, GLsizei count)
             return false;
         }
 
-        size_t uniformBufferSize = uniformBuffer.getSize();
-        if (uniformBufferSize == 0)
-        {
-            // Bind the whole buffer.
-            uniformBufferSize = static_cast<size_t>(uniformBuffer->getSize());
-        }
-
+        size_t uniformBufferSize = GetBoundBufferAvailableSize(uniformBuffer);
         if (uniformBufferSize < uniformBlock.dataSize)
         {
             // undefined behaviour
@@ -2838,14 +2833,23 @@ bool ValidateDrawArraysCommon(Context *context,
     const State &state                          = context->getGLState();
     gl::TransformFeedback *curTransformFeedback = state.getCurrentTransformFeedback();
     if (curTransformFeedback && curTransformFeedback->isActive() &&
-        !curTransformFeedback->isPaused() && curTransformFeedback->getPrimitiveMode() != mode)
+        !curTransformFeedback->isPaused())
     {
-        // It is an invalid operation to call DrawArrays or DrawArraysInstanced with a draw mode
-        // that does not match the current transform feedback object's draw mode (if transform
-        // feedback
-        // is active), (3.0.2, section 2.14, pg 86)
-        ANGLE_VALIDATION_ERR(context, InvalidOperation(), InvalidDrawModeTransformFeedback);
-        return false;
+        if (curTransformFeedback->getPrimitiveMode() != mode)
+        {
+            // It is an invalid operation to call DrawArrays or DrawArraysInstanced with a draw mode
+            // that does not match the current transform feedback object's draw mode (if transform
+            // feedback
+            // is active), (3.0.2, section 2.14, pg 86)
+            ANGLE_VALIDATION_ERR(context, InvalidOperation(), InvalidDrawModeTransformFeedback);
+            return false;
+        }
+
+        if (!curTransformFeedback->checkBufferSpaceForDraw(count, primcount))
+        {
+            ANGLE_VALIDATION_ERR(context, InvalidOperation(), TransformFeedbackBufferTooSmall);
+            return false;
+        }
     }
 
     if (!ValidateDrawBase(context, mode, count))

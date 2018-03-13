@@ -44,6 +44,8 @@ class TransformFeedbackState final : angle::NonCopyable
     bool mActive;
     GLenum mPrimitiveMode;
     bool mPaused;
+    GLsizeiptr mVerticesDrawn;
+    GLsizeiptr mVertexCapacity;
 
     Program *mProgram;
 
@@ -68,6 +70,14 @@ class TransformFeedback final : public RefCountObject, public LabeledObject
     bool isActive() const;
     bool isPaused() const;
     GLenum getPrimitiveMode() const;
+    // Validates that the vertices produced by a draw call will fit in the bound transform feedback
+    // buffers.
+    bool checkBufferSpaceForDraw(GLsizei count, GLsizei primcount) const;
+    // This must be called after each draw call when transform feedback is enabled to keep track of
+    // how many vertices have been written to the buffers. This information is needed by
+    // checkBufferSpaceForDraw because each draw call appends vertices to the buffers starting just
+    // after the last vertex of the previous draw call.
+    void onVerticesDrawn(GLsizei count, GLsizei primcount);
 
     bool hasBoundProgram(GLuint program) const;
 

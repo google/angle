@@ -358,6 +358,8 @@ class ProgramState final : angle::NonCopyable
     friend class MemoryProgramCache;
     friend class Program;
 
+    void updateTransformFeedbackStrides();
+
     std::string mLabel;
 
     sh::WorkGroupSize mComputeShaderLocalSize;
@@ -431,6 +433,9 @@ class ProgramState final : angle::NonCopyable
     GLenum mGeometryShaderOutputPrimitiveType;
     int mGeometryShaderInvocations;
     int mGeometryShaderMaxVertices;
+
+    // The size of the data written to each transform feedback buffer per vertex.
+    std::vector<GLsizei> mTransformFeedbackStrides;
 };
 
 class ProgramBindings final : angle::NonCopyable
@@ -689,6 +694,11 @@ class Program final : angle::NonCopyable, public LabeledObject
     ComponentTypeMask getDrawBufferTypeMask() const { return mState.mDrawBufferTypeMask; }
     ComponentTypeMask getAttributesTypeMask() const { return mState.mAttributesTypeMask; }
     AttributesMask getAttributesMask() const { return mState.mAttributesMask; }
+
+    const std::vector<GLsizei> &getTransformFeedbackStrides() const
+    {
+        return mState.mTransformFeedbackStrides;
+    }
 
   private:
     ~Program() override;

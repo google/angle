@@ -189,6 +189,7 @@ ERRMSG(TextureNotPow2, "The texture is a non-power-of-two texture.");
 ERRMSG(TransformFeedbackBufferDoubleBound,
        "A transform feedback buffer that would be written to is also bound to a "
        "non-transform-feedback target, which would cause undefined behavior.");
+ERRMSG(TransformFeedbackBufferTooSmall, "Not enough space in bound transform feedback buffers.");
 ERRMSG(TransformFeedbackDoesNotExist, "Transform feedback object that does not exist.");
 ERRMSG(TypeMismatch,
        "Passed in texture target and format must match the one originally used to define the "

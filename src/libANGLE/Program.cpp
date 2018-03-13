@@ -1229,6 +1229,30 @@ void Program::updateLinkedShaderStages()
     }
 }
 
+void ProgramState::updateTransformFeedbackStrides()
+{
+    if (mTransformFeedbackBufferMode == GL_INTERLEAVED_ATTRIBS)
+    {
+        mTransformFeedbackStrides.resize(1);
+        size_t totalSize = 0;
+        for (auto &varying : mLinkedTransformFeedbackVaryings)
+        {
+            totalSize += varying.size() * VariableExternalSize(varying.type);
+        }
+        mTransformFeedbackStrides[0] = static_cast<GLsizei>(totalSize);
+    }
+    else
+    {
+        mTransformFeedbackStrides.resize(mLinkedTransformFeedbackVaryings.size());
+        for (size_t i = 0; i < mLinkedTransformFeedbackVaryings.size(); i++)
+        {
+            auto &varying = mLinkedTransformFeedbackVaryings[i];
+            mTransformFeedbackStrides[i] =
+                static_cast<GLsizei>(varying.size() * VariableExternalSize(varying.type));
+        }
+    }
+}
+
 // Returns the program object to an unlinked state, before re-linking, or at destruction
 void Program::unlink()
 {
@@ -3229,6 +3253,7 @@ void Program::gatherTransformFeedbackVaryings(const ProgramMergedVaryings &varyi
             }
         }
     }
+    mState.updateTransformFeedbackStrides();
 }
 
 ProgramMergedVaryings Program::getMergedVaryings(const Context *context) const

@@ -331,6 +331,11 @@ using DrawBuffersArray = std::array<T, IMPLEMENTATION_MAX_DRAW_BUFFERS>;
 template <typename T>
 using AttribArray = std::array<T, MAX_VERTEX_ATTRIBS>;
 
+// OffsetBindingPointer.getSize() returns the size specified by the user, which may be larger than
+// the size of the bound buffer. This function reduces the returned size to fit the bound buffer if
+// necessary. Returns 0 if no buffer is bound or if integer overflow occurs.
+GLsizeiptr GetBoundBufferAvailableSize(const OffsetBindingPointer<Buffer> &binding);
+
 }  // namespace gl
 
 namespace rx

@@ -428,6 +428,8 @@ LinkResult MemoryProgramCache::Deserialize(const Context *context,
                   "Too many shader types");
     state->mLinkedShaderStages = stream.readInt<unsigned long>();
 
+    state->updateTransformFeedbackStrides();
+
     return program->getImplementation()->load(context, infoLog, &stream);
 }
 
