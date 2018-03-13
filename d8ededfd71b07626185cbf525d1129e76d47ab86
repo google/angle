@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "03b87d5b_a394fa17",
+        "filename": "src/libANGLE/renderer/vulkan/gen_vk_format_table.py",
+        "patchSetId": 20
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-13T21:38:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c7283681_1b0a97ae",
+      "range": {
+        "startLine": 113,
+        "startChar": 4,
+        "endLine": 113,
+        "endChar": 114
+      },
+      "revId": "d8ededfd71b07626185cbf525d1129e76d47ab86",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "052caa40_41307984",
         "filename": "src/libANGLE/renderer/vulkan/gen_vk_format_table.py",
         "patchSetId": 20
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "858229a4_ae91ebca",
+        "filename": "src/libANGLE/renderer/vulkan/gen_vk_format_table.py",
+        "patchSetId": 20
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-13T21:38:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "052caa40_41307984",
+      "range": {
+        "startLine": 152,
+        "startChar": 0,
+        "endLine": 152,
+        "endChar": 102
+      },
+      "revId": "d8ededfd71b07626185cbf525d1129e76d47ab86",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "48af25d8_dd14ed08",
         "filename": "src/libANGLE/renderer/vulkan/vk_format_table_autogen.cpp",
         "patchSetId": 20
@@ -68,6 +116,30 @@
       "revId": "d8ededfd71b07626185cbf525d1129e76d47ab86",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c892fbb3_50552527",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_table_autogen.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 468,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-13T21:38:35Z",
+      "side": 1,
+      "message": "This was a bit of a hack. Changed to check for specific bits.",
+      "parentUuid": "48af25d8_dd14ed08",
+      "range": {
+        "startLine": 468,
+        "startChar": 33,
+        "endLine": 468,
+        "endChar": 55
+      },
+      "revId": "d8ededfd71b07626185cbf525d1129e76d47ab86",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
