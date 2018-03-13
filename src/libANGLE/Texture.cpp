@@ -38,19 +38,6 @@ size_t GetImageDescIndex(TextureTarget target, size_t level)
                : level;
 }
 
-ImageIndex GetImageIndexFromDescIndex(TextureType type, size_t descIndex)
-{
-    if (type == TextureType::CubeMap)
-    {
-        size_t faceIndex = descIndex % 6;
-        size_t mipIndex  = descIndex / 6;
-        return ImageIndex::MakeCube(CubeFaceIndexToTextureTarget(faceIndex),
-                                    static_cast<GLint>(mipIndex));
-    }
-
-    return ImageIndex::MakeGeneric(NonCubeTextureTypeToTarget(type), static_cast<GLint>(descIndex));
-}
-
 InitState DetermineInitState(const Context *context, const uint8_t *pixels)
 {
     // Can happen in tests.
@@ -1228,26 +1215,36 @@ Error Texture::generateMipmap(const Context *context)
     const GLuint baseLevel = mState.getEffectiveBaseLevel();
     const GLuint maxLevel  = mState.getMipmapMaxLevel();
 
-    if (maxLevel > baseLevel)
+    if (maxLevel <= baseLevel)
     {
-        syncState();
-        const ImageDesc &baseImageInfo =
-            mState.getImageDesc(mState.getBaseImageTarget(), baseLevel);
-
-        // TODO(cwallez@chromium.org): This doesn't handle cubemaps correctly.
-        // Clear the base image immediately if necessary.
-        if (context->isRobustResourceInitEnabled() &&
-            baseImageInfo.initState == InitState::MayNeedInit)
-        {
-            ANGLE_TRY(
-                initializeContents(context, GetImageIndexFromDescIndex(mState.mType, baseLevel)));
-        }
-
-        ANGLE_TRY(mTexture->generateMipmap(context));
-
-        mState.setImageDescChain(baseLevel, maxLevel, baseImageInfo.size, baseImageInfo.format,
-                                 InitState::Initialized);
+        return NoError();
     }
+    syncState();
+
+    // Clear the base image(s) immediately if needed
+    if (context->isRobustResourceInitEnabled())
+    {
+        ImageIndexIterator it =
+            ImageIndexIterator::MakeGeneric(mState.mType, baseLevel, baseLevel + 1);
+        while (it.hasNext())
+        {
+            const ImageIndex index = it.next();
+            const ImageDesc &desc  = mState.getImageDesc(index.target, index.mipIndex);
+
+            if (desc.initState == InitState::MayNeedInit)
+            {
+                ANGLE_TRY(initializeContents(context, index));
+            }
+        }
+    }
+
+    ANGLE_TRY(mTexture->generateMipmap(context));
+
+    // Propagate the format and size of the bsae mip to the smaller ones. Cube maps are guaranteed
+    // to have faces of the same size and format so any faces can be picked.
+    const ImageDesc &baseImageInfo = mState.getImageDesc(mState.getBaseImageTarget(), baseLevel);
+    mState.setImageDescChain(baseLevel, maxLevel, baseImageInfo.size, baseImageInfo.format,
+                             InitState::Initialized);
 
     signalDirty(context, InitState::Initialized);
 
@@ -1468,16 +1465,18 @@ Error Texture::ensureInitialized(const Context *context)
 
     bool anyDirty = false;
 
-    for (size_t descIndex = 0; descIndex < mState.mImageDescs.size(); ++descIndex)
+    ImageIndexIterator it =
+        ImageIndexIterator::MakeGeneric(mState.mType, 0, IMPLEMENTATION_MAX_TEXTURE_LEVELS + 1);
+    while (it.hasNext())
     {
-        auto &imageDesc = mState.mImageDescs[descIndex];
-        if (imageDesc.initState == InitState::MayNeedInit)
+        const ImageIndex index = it.next();
+        ImageDesc &desc = mState.mImageDescs[GetImageDescIndex(index.target, index.mipIndex)];
+        if (desc.initState == InitState::MayNeedInit)
         {
             ASSERT(mState.mInitState == InitState::MayNeedInit);
-            const auto &imageIndex = GetImageIndexFromDescIndex(mState.mType, descIndex);
-            ANGLE_TRY(initializeContents(context, imageIndex));
-            imageDesc.initState = InitState::Initialized;
-            anyDirty            = true;
+            ANGLE_TRY(initializeContents(context, index));
+            desc.initState = InitState::Initialized;
+            anyDirty       = true;
         }
     }
     if (anyDirty)

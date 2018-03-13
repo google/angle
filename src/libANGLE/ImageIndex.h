@@ -64,6 +64,13 @@ bool operator<(const ImageIndex &a, const ImageIndex &b);
 bool operator==(const ImageIndex &a, const ImageIndex &b);
 bool operator!=(const ImageIndex &a, const ImageIndex &b);
 
+// To be used like this:
+//
+// ImageIndexIterator it = ...;
+// while (it.hasNext())
+// {
+//     ImageIndex current = it.next();
+// }
 class ImageIndexIterator
 {
   public:
@@ -75,6 +82,7 @@ class ImageIndexIterator
     static ImageIndexIterator Make3D(GLint minMip, GLint maxMip, GLint minLayer, GLint maxLayer);
     static ImageIndexIterator Make2DArray(GLint minMip, GLint maxMip, const GLsizei *layerCounts);
     static ImageIndexIterator Make2DMultisample();
+    static ImageIndexIterator MakeGeneric(TextureType type, GLint minMip, GLint maxMip);
 
     ImageIndex next();
     ImageIndex current() const;

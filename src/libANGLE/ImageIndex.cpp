@@ -163,6 +163,19 @@ ImageIndexIterator ImageIndexIterator::Make2DMultisample()
                               nullptr);
 }
 
+ImageIndexIterator ImageIndexIterator::MakeGeneric(TextureType type, GLint minMip, GLint maxMip)
+{
+    if (type == TextureType::CubeMap)
+    {
+        return MakeCube(minMip, maxMip);
+    }
+
+    TextureTarget target = NonCubeTextureTypeToTarget(type);
+    return ImageIndexIterator(type, target, target, Range<GLint>(minMip, maxMip),
+                              Range<GLint>(ImageIndex::ENTIRE_LEVEL, ImageIndex::ENTIRE_LEVEL),
+                              nullptr);
+}
+
 ImageIndexIterator::ImageIndexIterator(TextureType type,
                                        angle::EnumIterator<TextureTarget> targetLow,
                                        angle::EnumIterator<TextureTarget> targetHigh,
