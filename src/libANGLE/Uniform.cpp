@@ -61,6 +61,21 @@ void StaticallyUsed::unionReferencesWith(const StaticallyUsed &other)
     geometryStaticUse |= other.geometryStaticUse;
 }
 
+ShaderType StaticallyUsed::getFirstStaticUseShaderType() const
+{
+    if (vertexStaticUse)
+        return SHADER_VERTEX;
+    if (fragmentStaticUse)
+        return SHADER_FRAGMENT;
+    if (computeStaticUse)
+        return SHADER_COMPUTE;
+    if (geometryStaticUse)
+        return SHADER_GEOMETRY;
+
+    UNREACHABLE();
+    return SHADER_TYPE_INVALID;
+}
+
 LinkedUniform::LinkedUniform()
     : typeInfo(nullptr), bufferIndex(-1), blockInfo(sh::BlockMemberInfo::getDefaultBlockInfo())
 {

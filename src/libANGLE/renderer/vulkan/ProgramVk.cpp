@@ -99,6 +99,26 @@ void UpdateDefaultUniformBlock(GLsizei count,
     }
 }
 
+template <typename T>
+void ReadFromDefaultUniformBlock(int componentCount,
+                                 T *dst,
+                                 const sh::BlockMemberInfo &layoutInfo,
+                                 const angle::MemoryBuffer *uniformData)
+{
+    ASSERT(layoutInfo.offset != -1);
+
+    int elementSize = sizeof(T) * componentCount;
+    if (layoutInfo.arrayStride == 0 || layoutInfo.arrayStride == elementSize)
+    {
+        const uint8_t *readPtr = uniformData->data() + layoutInfo.offset;
+        memcpy(dst, readPtr, elementSize);
+    }
+    else
+    {
+        UNIMPLEMENTED();
+    }
+}
+
 vk::Error SyncDefaultUniformBlock(VkDevice device,
                                   vk::DeviceMemory *bufferMemory,
                                   const angle::MemoryBuffer &bufferData)
@@ -405,6 +425,12 @@ void ProgramVk::setUniformImpl(GLint location, GLsizei count, const T *v, GLenum
     const gl::VariableLocation &locationInfo = mState.getUniformLocations()[location];
     const gl::LinkedUniform &linkedUniform   = mState.getUniforms()[locationInfo.index];
 
+    if (linkedUniform.isSampler())
+    {
+        UNIMPLEMENTED();
+        return;
+    }
+
     if (linkedUniform.type == entryPointType)
     {
         for (auto &uniformBlock : mDefaultUniformBlocks)
@@ -419,6 +445,28 @@ void ProgramVk::setUniformImpl(GLint location, GLsizei count, const T *v, GLenum
         ASSERT(linkedUniform.type == gl::VariableBoolVectorType(entryPointType));
         UNIMPLEMENTED();
     }
+}
+
+template <typename T>
+void ProgramVk::getUniformImpl(GLint location, T *v, GLenum entryPointType) const
+{
+    const gl::VariableLocation &locationInfo = mState.getUniformLocations()[location];
+    const gl::LinkedUniform &linkedUniform   = mState.getUniforms()[locationInfo.index];
+
+    if (linkedUniform.isSampler())
+    {
+        UNIMPLEMENTED();
+        return;
+    }
+
+    ASSERT(linkedUniform.typeInfo->componentType == entryPointType);
+    const gl::ShaderType shaderType = linkedUniform.getFirstStaticUseShaderType();
+    ASSERT(shaderType != gl::ShaderType::SHADER_TYPE_INVALID);
+
+    const DefaultUniformBlock &uniformBlock = mDefaultUniformBlocks[shaderType];
+    const sh::BlockMemberInfo &layoutInfo   = uniformBlock.uniformLayout[location];
+    ReadFromDefaultUniformBlock(linkedUniform.typeInfo->componentCount, v, layoutInfo,
+                                &uniformBlock.uniformData);
 }
 
 void ProgramVk::setUniform1fv(GLint location, GLsizei count, const GLfloat *v)
@@ -443,7 +491,7 @@ void ProgramVk::setUniform4fv(GLint location, GLsizei count, const GLfloat *v)
 
 void ProgramVk::setUniform1iv(GLint location, GLsizei count, const GLint *v)
 {
-    UNIMPLEMENTED();
+    setUniformImpl(location, count, v, GL_INT);
 }
 
 void ProgramVk::setUniform2iv(GLint location, GLsizei count, const GLint *v)
@@ -617,12 +665,12 @@ vk::Error ProgramVk::initDescriptorSets(ContextVk *contextVk)
 
 void ProgramVk::getUniformfv(const gl::Context *context, GLint location, GLfloat *params) const
 {
-    UNIMPLEMENTED();
+    getUniformImpl(location, params, GL_FLOAT);
 }
 
 void ProgramVk::getUniformiv(const gl::Context *context, GLint location, GLint *params) const
 {
-    UNIMPLEMENTED();
+    getUniformImpl(location, params, GL_INT);
 }
 
 void ProgramVk::getUniformuiv(const gl::Context *context, GLint location, GLuint *params) const

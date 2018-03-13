@@ -125,6 +125,9 @@ class ProgramVk : public ProgramImpl
     gl::Error initDefaultUniformBlocks(const gl::Context *glContext);
     vk::Error updateDefaultUniformsDescriptorSet(ContextVk *contextVk);
 
+    template <class T>
+    void getUniformImpl(GLint location, T *v, GLenum entryPointType) const;
+
     template <typename T>
     void setUniformImpl(GLint location, GLsizei count, const T *v, GLenum entryPointType);
 

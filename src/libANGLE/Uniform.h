@@ -28,6 +28,7 @@ struct StaticallyUsed
 
     StaticallyUsed &operator=(const StaticallyUsed &rhs);
 
+    ShaderType getFirstStaticUseShaderType() const;
     void setStaticUse(GLenum shaderType, bool used);
     void unionReferencesWith(const StaticallyUsed &other);
 
