@@ -24,6 +24,15 @@ generators = {
         ],
         'script': 'src/libANGLE/renderer/gen_angle_format_table.py',
     },
+    'ANGLE load functions table': {
+        'inputs': [
+            'src/libANGLE/renderer/load_functions_data.json',
+        ],
+        'outputs': [
+            'src/libANGLE/renderer/load_functions_table_autogen.cpp',
+        ],
+        'script': 'src/libANGLE/renderer/gen_load_functions_table.py',
+    },
     'D3D11 format': {
         'inputs': [
             'src/libANGLE/renderer/angle_format.py',
