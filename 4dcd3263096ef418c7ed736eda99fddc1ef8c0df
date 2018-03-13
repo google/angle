@@ -105,6 +105,24 @@
       "revId": "4dcd3263096ef418c7ed736eda99fddc1ef8c0df",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e58d60ec_5dd09954",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2340,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-03-13T00:46:50Z",
+      "side": 1,
+      "message": "As the intention of this test isn\u0027t testing this dirty bit, I still think it is better to provide a test for it, then it can better help reviewers know why you add this if-statement.\n\nOr just add \"TEST\u003dLinkAndRelinkTestES31.ComputeProgramFailsWithProgramInstalled/ES3_1_OPENGL\" to the commit message and explain briefly why this case can test the behavior here.",
+      "parentUuid": "4ef7e6ae_4cad785c",
+      "revId": "4dcd3263096ef418c7ed736eda99fddc1ef8c0df",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
