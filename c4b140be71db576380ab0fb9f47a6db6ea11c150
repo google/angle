@@ -46,6 +46,30 @@
       "revId": "c4b140be71db576380ab0fb9f47a6db6ea11c150",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d3ec8c7a_71c89612",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1435,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-13T20:45:19Z",
+      "side": 1,
+      "message": "OK, that\u0027s a fair point. Could you still do the part a) so we don\u0027t query the handle twice?",
+      "parentUuid": "efd5200e_f38531de",
+      "range": {
+        "startLine": 1432,
+        "startChar": 0,
+        "endLine": 1435,
+        "endChar": 5
+      },
+      "revId": "c4b140be71db576380ab0fb9f47a6db6ea11c150",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
