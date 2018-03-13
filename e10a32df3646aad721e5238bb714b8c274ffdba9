@@ -16,6 +16,52 @@
       "revId": "e10a32df3646aad721e5238bb714b8c274ffdba9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f3a61bda_df2fd9a4",
+        "filename": "src/libANGLE/ErrorStrings.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-13T21:30:27Z",
+      "side": 1,
+      "message": "maybe format this like the other extension entry point error messages",
+      "range": {
+        "startLine": 44,
+        "startChar": 7,
+        "endLine": 44,
+        "endChar": 32
+      },
+      "revId": "e10a32df3646aad721e5238bb714b8c274ffdba9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ccd9c790_a9ca18b7",
+        "filename": "src/libANGLE/ErrorStrings.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-13T21:30:27Z",
+      "side": 1,
+      "message": "ref",
+      "range": {
+        "startLine": 168,
+        "startChar": 7,
+        "endLine": 168,
+        "endChar": 31
+      },
+      "revId": "e10a32df3646aad721e5238bb714b8c274ffdba9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
