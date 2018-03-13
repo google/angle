@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "66293063_f3b44595",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-03-13T17:39:44Z",
+      "side": 1,
+      "message": "no doubt I\u0027m blind, but I don\u0027t see this test in this CL",
+      "range": {
+        "startLine": 14,
+        "startChar": 4,
+        "endLine": 14,
+        "endChar": 64
+      },
+      "revId": "2352a640dc24233454404441c5e78e430a353ac0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fc5497d3_7f2299dd",
+        "filename": "include/platform/Extensions.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-03-13T17:39:44Z",
+      "side": 1,
+      "message": "should this be 2018?",
+      "range": {
+        "startLine": 2,
+        "startChar": 13,
+        "endLine": 2,
+        "endChar": 17
+      },
+      "revId": "2352a640dc24233454404441c5e78e430a353ac0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
