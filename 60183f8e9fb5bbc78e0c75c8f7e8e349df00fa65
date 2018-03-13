@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c8846ee0_dc673683",
+        "filename": "src/compiler/translator/Types.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 484,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-03-13T01:54:14Z",
+      "side": 1,
+      "message": "Assign to mangledName directly.",
+      "range": {
+        "startLine": 482,
+        "startChar": 23,
+        "endLine": 484,
+        "endChar": 17
+      },
+      "revId": "60183f8e9fb5bbc78e0c75c8f7e8e349df00fa65",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fedc1118_9a58c3f1",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 18
+      },
+      "lineNbr": 309,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-03-13T01:54:14Z",
+      "side": 1,
+      "message": "This should be an else:",
+      "revId": "60183f8e9fb5bbc78e0c75c8f7e8e349df00fa65",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
