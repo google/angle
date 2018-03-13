@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c7283681_1b0a97ae",
+        "filename": "src/libANGLE/renderer/vulkan/gen_vk_format_table.py",
+        "patchSetId": 20
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-03-13T19:20:09Z",
+      "side": 1,
+      "message": "This wraps over the 120 chars, can you split the condition on multiple lines ?",
+      "range": {
+        "startLine": 113,
+        "startChar": 4,
+        "endLine": 113,
+        "endChar": 114
+      },
+      "revId": "d8ededfd71b07626185cbf525d1129e76d47ab86",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "052caa40_41307984",
+        "filename": "src/libANGLE/renderer/vulkan/gen_vk_format_table.py",
+        "patchSetId": 20
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-03-13T19:20:09Z",
+      "side": 1,
+      "message": "Same, wrapping over the limit",
+      "range": {
+        "startLine": 152,
+        "startChar": 0,
+        "endLine": 152,
+        "endChar": 102
+      },
+      "revId": "d8ededfd71b07626185cbf525d1129e76d47ab86",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "48af25d8_dd14ed08",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_table_autogen.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 468,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-03-13T19:20:09Z",
+      "side": 1,
+      "message": "we only fallback if there is nothing supported at all? What happens if some bits are supported but not the ones we need?",
+      "range": {
+        "startLine": 468,
+        "startChar": 33,
+        "endLine": 468,
+        "endChar": 55
+      },
+      "revId": "d8ededfd71b07626185cbf525d1129e76d47ab86",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
