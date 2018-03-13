@@ -658,14 +658,15 @@ GLuint Context::createShaderProgramv(GLenum type, GLsizei count, const GLchar *c
     return 0u;
 }
 
-void Context::deleteBuffer(GLuint buffer)
+void Context::deleteBuffer(GLuint bufferName)
 {
-    if (mState.mBuffers->getBuffer(buffer))
+    Buffer *buffer = mState.mBuffers->getBuffer(bufferName);
+    if (buffer)
     {
         detachBuffer(buffer);
     }
 
-    mState.mBuffers->deleteObject(this, buffer);
+    mState.mBuffers->deleteObject(this, bufferName);
 }
 
 void Context::deleteShader(GLuint shader)
@@ -2354,7 +2355,7 @@ void Context::detachTexture(GLuint texture)
     mGLState.detachTexture(this, mZeroTextures, texture);
 }
 
-void Context::detachBuffer(GLuint buffer)
+void Context::detachBuffer(Buffer *buffer)
 {
     // Simple pass-through to State's detachBuffer method, since
     // only buffer attachments to container objects that are bound to the current context

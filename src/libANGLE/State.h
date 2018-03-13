@@ -245,7 +245,7 @@ class State : public angle::ObserverInterface, angle::NonCopyable
     const OffsetBindingPointer<Buffer> &getIndexedShaderStorageBuffer(size_t index) const;
 
     // Detach a buffer from all bindings
-    void detachBuffer(const Context *context, GLuint bufferName);
+    void detachBuffer(const Context *context, const Buffer *buffer);
 
     // Vertex attrib manipulation
     void setEnableVertexAttribArray(unsigned int attribNum, bool enabled);

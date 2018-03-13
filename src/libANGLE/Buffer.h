@@ -113,6 +113,7 @@ class Buffer final : public RefCountObject, public LabeledObject
 
     rx::BufferImpl *getImplementation() const { return mImpl; }
 
+    bool isBound() const;
     bool isBoundForTransformFeedbackAndOtherUse() const;
     void onBindingChanged(bool bound, BufferBinding target);
 

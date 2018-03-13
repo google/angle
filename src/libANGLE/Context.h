@@ -1221,7 +1221,7 @@ class Context final : angle::NonCopyable
     VertexArray *checkVertexArrayAllocation(GLuint vertexArrayHandle);
     TransformFeedback *checkTransformFeedbackAllocation(GLuint transformFeedback);
 
-    void detachBuffer(GLuint buffer);
+    void detachBuffer(Buffer *buffer);
     void detachTexture(GLuint texture);
     void detachFramebuffer(GLuint framebuffer);
     void detachRenderbuffer(GLuint renderbuffer);

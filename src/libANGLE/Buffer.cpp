@@ -214,6 +214,11 @@ Error Buffer::getIndexRange(const gl::Context *context,
     return NoError();
 }
 
+bool Buffer::isBound() const
+{
+    return mState.mBindingCount;
+}
+
 bool Buffer::isBoundForTransformFeedbackAndOtherUse() const
 {
     return mState.mTransformFeedbackBindingCount > 0 &&
