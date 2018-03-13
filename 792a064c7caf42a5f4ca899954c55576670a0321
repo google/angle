@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4e497073_0e73ae49",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 301,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-13T18:54:08Z",
+      "side": 0,
+      "message": "unrelated change: this method was not defined.",
+      "range": {
+        "startLine": 301,
+        "startChar": 9,
+        "endLine": 301,
+        "endChar": 32
+      },
+      "revId": "792a064c7caf42a5f4ca899954c55576670a0321",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
