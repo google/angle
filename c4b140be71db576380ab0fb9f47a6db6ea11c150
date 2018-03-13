@@ -22,6 +22,30 @@
       "revId": "c4b140be71db576380ab0fb9f47a6db6ea11c150",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "efd5200e_f38531de",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1435,
+      "author": {
+        "id": 1256148
+      },
+      "writtenOn": "2018-03-13T20:21:52Z",
+      "side": 1,
+      "message": "Refcount and binding count are different. getRefCount can\u0027t legally return 0 because the buffer deletes itself when the refcount reaches 0.",
+      "parentUuid": "5378c254_47a27092",
+      "range": {
+        "startLine": 1432,
+        "startChar": 0,
+        "endLine": 1435,
+        "endChar": 5
+      },
+      "revId": "c4b140be71db576380ab0fb9f47a6db6ea11c150",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
