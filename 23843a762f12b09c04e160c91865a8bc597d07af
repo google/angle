@@ -272,6 +272,24 @@
     },
     {
       "key": {
+        "uuid": "cc56cd9c_89410506",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_map.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 192,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-13T18:11:10Z",
+      "side": 1,
+      "message": "No, this looks good, but we might need to take advantage of whatever support is potentially offered by RGBA4 at some point. You could file a follow up issue to cover this but it\u0027s a bit vague so it\u0027s fine to leave this like you have it here for now.",
+      "parentUuid": "6cebb4f1_a51c4b5f",
+      "revId": "23843a762f12b09c04e160c91865a8bc597d07af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0f0f0240_b3dbb600",
         "filename": "src/libANGLE/renderer/vulkan/vk_format_map.json",
         "patchSetId": 2
