@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3dcd9fd5_fd6a9c3d",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-03-13T22:53:29Z",
+      "side": 1,
+      "message": "whenever you call this function, you know if you are doing depth or stencil or depth+stencil.\nmaybe you could pass that information in and not figure it out again here.",
+      "revId": "996c8e67ed551857e1bee8114a17081af2fe5d61",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1b598784_74cb204f",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-03-13T22:53:29Z",
+      "side": 1,
+      "message": "does it need to support this possibility?\nclearDepth true and clearStencil true but mState.getDepthStencilAttachment() returns null, then it does two clears, one for depth and one for stencil\n\nif not, could it be written as follows?\n\nif depth and stencil\n  clear depthstencil\nelse if depth\n  clear depth\nelse if stencil\n  clear stencil\n\nif so, you might factor out the clear call, i.e.\n\nif depth and stencil\n  att \u003d depthstencil\nelse if depth\n  att \u003d depth\nelse if stencil\n  att \u003d stencil\nclear(att)\n\nor not, if you decide to pass along which case it is, as suggested in other comment",
+      "revId": "996c8e67ed551857e1bee8114a17081af2fe5d61",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
