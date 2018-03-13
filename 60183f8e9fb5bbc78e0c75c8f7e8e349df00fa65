@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "570c0b4a_922aa917",
+        "filename": "src/compiler/translator/Types.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 484,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-03-13T08:14:22Z",
+      "side": 1,
+      "message": "GetSizeMangledName returns just one char, not a string, but I now used the constructor that takes a count and CharT.",
+      "parentUuid": "c8846ee0_dc673683",
+      "range": {
+        "startLine": 482,
+        "startChar": 23,
+        "endLine": 484,
+        "endChar": 17
+      },
+      "revId": "60183f8e9fb5bbc78e0c75c8f7e8e349df00fa65",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fedc1118_9a58c3f1",
         "filename": "src/compiler/translator/gen_builtin_symbols.py",
         "patchSetId": 18
@@ -39,6 +63,24 @@
       "revId": "60183f8e9fb5bbc78e0c75c8f7e8e349df00fa65",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "523868c6_e3bd88fb",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 18
+      },
+      "lineNbr": 309,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-03-13T08:14:22Z",
+      "side": 1,
+      "message": "Huh, that\u0027s true. I suppose I accidentally left some of the old code in here and managed to do it so that it doesn\u0027t actually change the script output.",
+      "parentUuid": "fedc1118_9a58c3f1",
+      "revId": "60183f8e9fb5bbc78e0c75c8f7e8e349df00fa65",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
