@@ -123,6 +123,48 @@
       "revId": "4dcd3263096ef418c7ed736eda99fddc1ef8c0df",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9db49ebf_a9977668",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2340,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-03-14T05:41:12Z",
+      "side": 1,
+      "message": "The code has been changed. We don\u0027t need to worry it now.",
+      "parentUuid": "e58d60ec_5dd09954",
+      "revId": "4dcd3263096ef418c7ed736eda99fddc1ef8c0df",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9242bdc5_1b091dd3",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2340,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-03-14T05:41:12Z",
+      "side": 1,
+      "message": "Make changes in Context::syncDirtyObjects to ensure that if we inter this function,\"DIRTY_OBJECT_PROGRAM_TEXTURES\" object must be dirty. Thanks.",
+      "parentUuid": "98e4c938_6b8eda7a",
+      "range": {
+        "startLine": 2340,
+        "startChar": 9,
+        "endLine": 2340,
+        "endChar": 53
+      },
+      "revId": "4dcd3263096ef418c7ed736eda99fddc1ef8c0df",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
