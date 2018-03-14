@@ -46,6 +46,30 @@
       "revId": "b031a9d1d2814af67f38e27789b036fc2dd44e25",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86c4d1ba_ceba2d74",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 537,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-14T19:13:55Z",
+      "side": 1,
+      "message": "We have ConvertToBool for this.",
+      "parentUuid": "e1fa2e93_e4592af2",
+      "range": {
+        "startLine": 537,
+        "startChar": 12,
+        "endLine": 537,
+        "endChar": 21
+      },
+      "revId": "b031a9d1d2814af67f38e27789b036fc2dd44e25",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
