@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7f09dec7_d0f508e6",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 603,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-14T16:02:51Z",
+      "side": 1,
+      "message": "It\u0027s hard to tell if these functions changed from the diff.  Can you split this into two patches?  One that moves the functions and another that does any modifications?",
+      "range": {
+        "startLine": 412,
+        "startChar": 0,
+        "endLine": 603,
+        "endChar": 0
+      },
+      "revId": "ccbbfc870e9687d7eb4e246e821f0831eec7b602",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e6015be4_a151716f",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-14T16:02:51Z",
+      "side": 1,
+      "message": "Can you convert this into an internal enum?  See https://cs.chromium.org/chromium/src/third_party/angle/src/libANGLE/packed_gl_enums.json and https://cs.chromium.org/chromium/src/third_party/angle/src/libANGLE/gen_packed_gl_enums.py \n\nIt will handle conversion to and from GLenums and iterators.",
+      "range": {
+        "startLine": 43,
+        "startChar": 5,
+        "endLine": 43,
+        "endChar": 15
+      },
+      "revId": "ccbbfc870e9687d7eb4e246e821f0831eec7b602",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "02bc1c70_c702a540",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-14T16:02:51Z",
+      "side": 1,
+      "message": "Can you do an iterator style approach instead of adding new enums?  Like with cube map faces: https://cs.chromium.org/chromium/src/third_party/angle/src/libANGLE/PackedGLEnums.h?type\u003dcs\u0026q\u003dAllCubeFaceTextureTargets\u0026sq\u003dpackage:chromium\u0026l\u003d149",
+      "revId": "ccbbfc870e9687d7eb4e246e821f0831eec7b602",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
