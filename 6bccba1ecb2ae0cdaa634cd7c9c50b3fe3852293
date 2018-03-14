@@ -46,6 +46,30 @@
       "revId": "6bccba1ecb2ae0cdaa634cd7c9c50b3fe3852293",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1d6657f0_b3212477",
+        "filename": "src/libANGLE/renderer/Format_table_autogen.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-03-14T12:11:18Z",
+      "side": 1,
+      "message": "https://chromium-review.googlesource.com/c/angle/angle/+/962321",
+      "parentUuid": "1542753d_fdd4bfe6",
+      "range": {
+        "startLine": 168,
+        "startChar": 13,
+        "endLine": 168,
+        "endChar": 26
+      },
+      "revId": "6bccba1ecb2ae0cdaa634cd7c9c50b3fe3852293",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
