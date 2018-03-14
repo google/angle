@@ -133,6 +133,10 @@ TEST_P(ClearTest, RGBA8Framebuffer)
 
 TEST_P(ClearTest, ClearIssue)
 {
+    // Skip this test because of an issue on older Windows AMD Vulkan drivers.
+    // TODO(jmadill): Re-enable this once Chromium bots are upgraded. http://crbug.com/821522
+    ANGLE_SKIP_TEST_IF(IsVulkan() && IsAMD() && IsWindows());
+
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
 
@@ -166,7 +170,7 @@ TEST_P(ClearTest, ClearIssue)
     setupDefaultProgram();
     drawQuad(mProgram, "position", 0.5f);
 
-    EXPECT_PIXEL_EQ(0, 0, 0, 255, 0, 255);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
 // Requires ES3
@@ -458,7 +462,6 @@ TEST_P(ScissoredClearTest, BasicScissoredColorClear)
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
 // Vulkan support disabled because of incomplete implementation.
-// TODO(jmadill): Fix depth/stencil support on Vulkan. http://anglebug.com/2357
 ANGLE_INSTANTIATE_TEST(ClearTest,
                        ES2_D3D9(),
                        ES2_D3D11(),
@@ -466,8 +469,8 @@ ANGLE_INSTANTIATE_TEST(ClearTest,
                        ES2_OPENGL(),
                        ES3_OPENGL(),
                        ES2_OPENGLES(),
-                       ES3_OPENGLES()/*,
-                       ES2_VULKAN()*/);
+                       ES3_OPENGLES(),
+                       ES2_VULKAN());
 ANGLE_INSTANTIATE_TEST(ClearTestES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
 ANGLE_INSTANTIATE_TEST(ScissoredClearTest, ES2_D3D11(), ES2_OPENGL(), ES2_VULKAN());
 

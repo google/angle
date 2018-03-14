@@ -115,21 +115,50 @@ gl::Error FramebufferVk::invalidateSub(const gl::Context *context,
 
 gl::Error FramebufferVk::clear(const gl::Context *context, GLbitfield mask)
 {
-    if (mState.getDepthAttachment() && (mask & GL_DEPTH_BUFFER_BIT) != 0)
-    {
-        // TODO(jmadill): Depth clear
-        UNIMPLEMENTED();
-    }
+    ContextVk *contextVk = vk::GetImpl(context);
+    RendererVk *renderer = contextVk->getRenderer();
+    Serial currentSerial = renderer->getCurrentQueueSerial();
 
-    if (mState.getStencilAttachment() && (mask & GL_STENCIL_BUFFER_BIT) != 0)
-    {
-        // TODO(jmadill): Stencil clear
-        UNIMPLEMENTED();
-    }
+    // This command buffer is only started once.
+    vk::CommandBuffer *commandBuffer  = nullptr;
+    vk::CommandGraphNode *writingNode = nullptr;
 
-    if ((mask & GL_COLOR_BUFFER_BIT) == 0)
+    const gl::FramebufferAttachment *depthAttachment = mState.getDepthAttachment();
+    bool clearDepth = (depthAttachment && (mask & GL_DEPTH_BUFFER_BIT) != 0);
+    ASSERT(!clearDepth || depthAttachment->isAttached());
+
+    const gl::FramebufferAttachment *stencilAttachment = mState.getStencilAttachment();
+    bool clearStencil = (stencilAttachment && (mask & GL_STENCIL_BUFFER_BIT) != 0);
+    ASSERT(!clearStencil || stencilAttachment->isAttached());
+
+    // Depth/stencil clear.
+    if (clearDepth || clearStencil)
     {
-        return gl::NoError();
+        ANGLE_TRY(beginWriteResource(renderer, &commandBuffer));
+        writingNode = getCurrentWritingNode(currentSerial);
+
+        const VkClearDepthStencilValue &clearDepthStencilValue =
+            contextVk->getClearDepthStencilValue().depthStencil;
+
+        // We only support packed depth/stencil, not separate.
+        ASSERT(!(clearDepth && clearStencil) || mState.getDepthStencilAttachment());
+
+        const VkImageAspectFlags aspectFlags = (clearDepth ? VK_IMAGE_ASPECT_DEPTH_BIT : 0) |
+                                               (clearDepth ? VK_IMAGE_ASPECT_STENCIL_BIT : 0);
+
+        RenderTargetVk *renderTarget = mRenderTargetCache.getDepthStencil();
+        renderTarget->resource->onWriteResource(writingNode, currentSerial);
+        renderTarget->image->changeLayoutWithStages(
+            aspectFlags, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
+            VK_PIPELINE_STAGE_TRANSFER_BIT, commandBuffer);
+
+        commandBuffer->clearSingleDepthStencilImage(*renderTarget->image, aspectFlags,
+                                                    clearDepthStencilValue);
+
+        if ((mask & GL_COLOR_BUFFER_BIT) == 0)
+        {
+            return gl::NoError();
+        }
     }
 
     if (context->getGLState().isScissorTestEnabled())
@@ -143,16 +172,12 @@ gl::Error FramebufferVk::clear(const gl::Context *context, GLbitfield mask)
 
     const auto *attachment = mState.getFirstNonNullAttachment();
     ASSERT(attachment && attachment->isAttached());
-    const auto &size = attachment->getSize();
-    const gl::Rectangle renderArea(0, 0, size.width, size.height);
 
-    ContextVk *contextVk = vk::GetImpl(context);
-    RendererVk *renderer = contextVk->getRenderer();
-
-    vk::CommandBuffer *commandBuffer = nullptr;
-    ANGLE_TRY(beginWriteResource(renderer, &commandBuffer));
-
-    Serial currentSerial = renderer->getCurrentQueueSerial();
+    if (!commandBuffer)
+    {
+        ANGLE_TRY(beginWriteResource(renderer, &commandBuffer));
+        writingNode = getCurrentWritingNode(currentSerial);
+    }
 
     // TODO(jmadill): Support gaps in RenderTargets. http://anglebug.com/2394
     const auto &colorRenderTargets = mRenderTargetCache.getColors();
@@ -160,8 +185,7 @@ gl::Error FramebufferVk::clear(const gl::Context *context, GLbitfield mask)
     {
         RenderTargetVk *colorRenderTarget = colorRenderTargets[colorIndex];
         ASSERT(colorRenderTarget);
-        colorRenderTarget->resource->onWriteResource(getCurrentWritingNode(currentSerial),
-                                                     currentSerial);
+        colorRenderTarget->resource->onWriteResource(writingNode, currentSerial);
 
         colorRenderTarget->image->changeLayoutWithStages(
             VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
@@ -170,8 +194,6 @@ gl::Error FramebufferVk::clear(const gl::Context *context, GLbitfield mask)
         commandBuffer->clearSingleColorImage(*colorRenderTarget->image,
                                              contextVk->getClearColorValue().color);
     }
-
-    // TODO(jmadill): Depth/stencil clear.
 
     return gl::NoError();
 }

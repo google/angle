@@ -14,12 +14,7 @@
 namespace
 {
 constexpr unsigned int kComponentsPerVector = 4;
-bool HasFormatFeatureBits(const VkFormatFeatureFlags featureBits,
-                          const VkFormatProperties &formatProperties)
-{
-    return (formatProperties.optimalTilingFeatures & featureBits) == featureBits;
-}
-}
+}  // anonymous namespace
 
 namespace rx
 {
@@ -126,18 +121,6 @@ void GenerateCaps(const VkPhysicalDeviceProperties &physicalDeviceProperties,
 
     // TODO(jmadill): count reserved varyings
     outCaps->maxVaryingVectors = physicalDeviceProperties.limits.maxVertexOutputComponents / 4;
-}
-
-void FillTextureFormatCaps(const VkFormatProperties &formatProperties,
-                           gl::TextureCaps *outTextureCaps)
-{
-    outTextureCaps->texturable =
-        HasFormatFeatureBits(VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT, formatProperties);
-    outTextureCaps->filterable =
-        HasFormatFeatureBits(VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT, formatProperties);
-    outTextureCaps->renderable =
-        HasFormatFeatureBits(VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT, formatProperties) ||
-        HasFormatFeatureBits(VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT, formatProperties);
 }
 }  // namespace vk
 }  // namespace rx

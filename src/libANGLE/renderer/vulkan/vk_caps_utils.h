@@ -26,17 +26,11 @@ namespace rx
 
 namespace vk
 {
-class FormatTable;
-
 void GenerateCaps(const VkPhysicalDeviceProperties &physicalDeviceProperties,
                   const gl::TextureCapsMap &textureCaps,
                   gl::Caps *outCaps,
                   gl::Extensions *outExtensions,
                   gl::Limitations * /* outLimitations */);
-
-void FillTextureFormatCaps(const VkFormatProperties &formatProperties,
-                           gl::TextureCaps *outTextureCaps);
-
 }  // namespace vk
 }  // namespace rx
 

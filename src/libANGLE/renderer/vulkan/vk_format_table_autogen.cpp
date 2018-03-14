@@ -462,12 +462,22 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
 
         case angle::Format::ID::D24_UNORM_S8_UINT:
         {
-            internalFormat          = GL_DEPTH24_STENCIL8;
-            textureFormatID         = angle::Format::ID::D24_UNORM_S8_UINT;
-            vkTextureFormat         = VK_FORMAT_D24_UNORM_S8_UINT;
-            bufferFormatID          = angle::Format::ID::D24_UNORM_S8_UINT;
-            vkBufferFormat          = VK_FORMAT_D24_UNORM_S8_UINT;
-            dataInitializerFunction = nullptr;
+            internalFormat = GL_DEPTH24_STENCIL8;
+            if (!HasFullFormatSupport(physicalDevice, VK_FORMAT_D24_UNORM_S8_UINT))
+            {
+                textureFormatID         = angle::Format::ID::D32_FLOAT_S8X24_UINT;
+                vkTextureFormat         = VK_FORMAT_D32_SFLOAT_S8_UINT;
+                dataInitializerFunction = nullptr;
+                ASSERT(HasFullFormatSupport(physicalDevice, VK_FORMAT_D32_SFLOAT_S8_UINT));
+            }
+            else
+            {
+                textureFormatID         = angle::Format::ID::D24_UNORM_S8_UINT;
+                vkTextureFormat         = VK_FORMAT_D24_UNORM_S8_UINT;
+                dataInitializerFunction = nullptr;
+            }
+            bufferFormatID = angle::Format::ID::D24_UNORM_S8_UINT;
+            vkBufferFormat = VK_FORMAT_D24_UNORM_S8_UINT;
             break;
         }
 
@@ -483,8 +493,25 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
         }
 
         case angle::Format::ID::D32_FLOAT_S8X24_UINT:
-            // This format is not implemented in Vulkan.
+        {
+            internalFormat = GL_DEPTH32F_STENCIL8;
+            if (!HasFullFormatSupport(physicalDevice, VK_FORMAT_D32_SFLOAT_S8_UINT))
+            {
+                textureFormatID         = angle::Format::ID::D24_UNORM_S8_UINT;
+                vkTextureFormat         = VK_FORMAT_D24_UNORM_S8_UINT;
+                dataInitializerFunction = nullptr;
+                ASSERT(HasFullFormatSupport(physicalDevice, VK_FORMAT_D24_UNORM_S8_UINT));
+            }
+            else
+            {
+                textureFormatID         = angle::Format::ID::D32_FLOAT_S8X24_UINT;
+                vkTextureFormat         = VK_FORMAT_D32_SFLOAT_S8_UINT;
+                dataInitializerFunction = nullptr;
+            }
+            bufferFormatID = angle::Format::ID::D32_FLOAT_S8X24_UINT;
+            vkBufferFormat = VK_FORMAT_D32_SFLOAT_S8_UINT;
             break;
+        }
 
         case angle::Format::ID::D32_UNORM:
             // This format is not implemented in Vulkan.

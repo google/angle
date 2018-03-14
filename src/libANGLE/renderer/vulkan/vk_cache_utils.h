@@ -298,9 +298,11 @@ class PipelineDesc final
     void updateBlendFuncs(const gl::BlendState &blend_state);
     void updateBlendEquations(const gl::BlendState &blend_state);
 
-  private:
-    void fillAllColorAttachments(PackedColorBlendAttachmentState blendAttachmentState);
+    // Depth/stencil states.
+    void updateDepthTestEnabled(const gl::DepthStencilState &depthStencilState);
+    void updateDepthFunc(const gl::DepthStencilState &depthStencilState);
 
+  private:
     // TODO(jmadill): Handle Geometry/Compute shaders when necessary.
     ShaderStageInfo mShaderStageInfo;
     VertexInputBindings mVertexInputBindings;

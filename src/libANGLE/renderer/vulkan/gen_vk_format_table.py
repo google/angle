@@ -74,7 +74,34 @@ format_entry_template = """{space}case angle::Format::ID::{format_id}:
 {space}}}
 """
 
-def gen_format_case(angle, internal_format, vk_map, vk_overrides):
+# This currently only handles texture fallback formats.
+fallback_format_entry_template = """{space}case angle::Format::ID::{format_id}:
+{space}{{
+{space}    internalFormat = {internal_format};
+{space}    if (!HasFullFormatSupport(physicalDevice, {vk_texture_format}))
+{space}    {{
+{space}        textureFormatID = angle::Format::ID::{fallback_texture};
+{space}        vkTextureFormat = {fallback_vk_texture_format};
+{space}        dataInitializerFunction = {fallback_initializer};
+{space}        ASSERT(HasFullFormatSupport(physicalDevice, {fallback_vk_texture_format}));
+{space}    }}
+{space}    else
+{space}    {{
+{space}        textureFormatID = angle::Format::ID::{texture};
+{space}        vkTextureFormat = {vk_texture_format};
+{space}        dataInitializerFunction = {initializer};
+{space}    }}
+{space}    bufferFormatID = angle::Format::ID::{buffer};
+{space}    vkBufferFormat = {vk_buffer_format};
+{space}    break;
+{space}}}
+"""
+
+def gen_format_case(angle, internal_format, vk_json_data):
+
+    vk_map = vk_json_data["map"]
+    vk_overrides = vk_json_data["overrides"]
+    vk_fallbacks = vk_json_data["fallbacks"]
 
     args = {
         "space": "        ",
@@ -82,8 +109,11 @@ def gen_format_case(angle, internal_format, vk_map, vk_overrides):
         "internal_format": internal_format
     }
 
-    if (angle not in vk_map and angle not in vk_overrides) or angle == 'NONE':
+    if ((angle not in vk_map) and (angle not in vk_overrides) and
+        (angle not in vk_fallbacks)) or angle == 'NONE':
         return empty_format_entry_template.format(**args)
+
+    template = format_entry_template
 
     if angle in vk_map:
         args["buffer"] = angle
@@ -91,6 +121,17 @@ def gen_format_case(angle, internal_format, vk_map, vk_overrides):
 
     if angle in vk_overrides:
         args.update(vk_overrides[angle])
+
+    if angle in vk_fallbacks:
+        template = fallback_format_entry_template
+        fallback = vk_fallbacks[angle]
+        assert not "buffer" in fallback, "Buffer fallbacks not yet supported"
+        assert "texture" in fallback, "Fallback must have a texture fallback"
+
+        args["fallback_texture"] = fallback["texture"]
+        args["fallback_vk_texture_format"] = vk_map[fallback["texture"]]
+        args["fallback_initializer"] = angle_format.get_internal_format_initializer(
+            internal_format, fallback["texture"])
 
     assert "buffer" in args, "Missing buffer format for " + angle
     assert "texture" in args, "Missing texture format for " + angle
@@ -101,16 +142,15 @@ def gen_format_case(angle, internal_format, vk_map, vk_overrides):
     args["initializer"] = angle_format.get_internal_format_initializer(
         internal_format, args["texture"])
 
-    return format_entry_template.format(**args)
+    return template.format(**args)
 
 input_file_name = 'vk_format_map.json'
 out_file_name = 'vk_format_table'
 
 angle_to_gl = angle_format.load_inverse_table(os.path.join('..', 'angle_format_map.json'))
 vk_json_data = angle_format.load_json(input_file_name)
-vk_map = vk_json_data["map"]
-vk_overrides = vk_json_data["overrides"]
-vk_cases = [gen_format_case(angle, gl, vk_map, vk_overrides) for angle, gl in sorted(angle_to_gl.iteritems())]
+vk_cases = [gen_format_case(angle, gl, vk_json_data)
+             for angle, gl in sorted(angle_to_gl.iteritems())]
 
 output_cpp = template_table_autogen_cpp.format(
     copyright_year = date.today().year,

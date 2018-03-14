@@ -568,10 +568,10 @@ void ContextVk::syncState(const gl::Context *context, const gl::State::DirtyBits
                 WARN() << "DIRTY_BIT_SAMPLE_MASK unimplemented";
                 break;
             case gl::State::DIRTY_BIT_DEPTH_TEST_ENABLED:
-                WARN() << "DIRTY_BIT_DEPTH_TEST_ENABLED unimplemented";
+                mPipelineDesc->updateDepthTestEnabled(glState.getDepthStencilState());
                 break;
             case gl::State::DIRTY_BIT_DEPTH_FUNC:
-                WARN() << "DIRTY_BIT_DEPTH_FUNC unimplemented";
+                mPipelineDesc->updateDepthFunc(glState.getDepthStencilState());
                 break;
             case gl::State::DIRTY_BIT_DEPTH_MASK:
                 WARN() << "DIRTY_BIT_DEPTH_MASK unimplemented";

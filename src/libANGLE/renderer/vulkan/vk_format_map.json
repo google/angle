@@ -13,9 +13,14 @@
         "formats use the overrides table for emulation.",
         "",
         "We implement formats that aren't natively supported in Vulkan using",
-        "overrides. The overrides are specified by a second dictionary (also keyed on",
+        "fallback and override formats. These are specified as dictionaries (also keyed on",
         "the angle format ID), with two optional entries for Buffer and Texture/Image",
-        "formats overrides. Each entry specifies a format.",
+        "formats. Each entry specifies a fallback or override format.",
+        "",
+        "Override formats are used for emulated support for formats we assume are never",
+        "supported by any Vulkan device, although they might exist. Fallback formats",
+        "differ in that they are tested at runtime for support, and we only fall back",
+        "if the main format is not available on this device.",
         "",
         "Also see gen_vk_format_table.py for the code generation step."
     ],
@@ -124,7 +129,7 @@
         "S8_UINT": "VK_FORMAT_S8_UINT",
         "D16_UNORM_S8_UINT": "VK_FORMAT_D16_UNORM_S8_UINT",
         "D24_UNORM_S8_UINT": "VK_FORMAT_D24_UNORM_S8_UINT",
-        "D32_SFLOAT_S8_UINT": "VK_FORMAT_D32_SFLOAT_S8_UINT",
+        "D32_FLOAT_S8X24_UINT": "VK_FORMAT_D32_SFLOAT_S8_UINT",
         "BC1_RGB_UNORM_BLOCK": "VK_FORMAT_BC1_RGB_UNORM_BLOCK",
         "BC1_RGB_SRGB_BLOCK": "VK_FORMAT_BC1_RGB_SRGB_BLOCK",
         "BC1_RGBA_UNORM_BLOCK": "VK_FORMAT_BC1_RGBA_UNORM_BLOCK",
@@ -191,6 +196,14 @@
         },
         "R8G8B8_UNORM": {
             "texture": "R8G8B8A8_UNORM"
+        }
+    },
+    "fallbacks": {
+        "D32_FLOAT_S8X24_UINT": {
+            "texture": "D24_UNORM_S8_UINT"
+        },
+        "D24_UNORM_S8_UINT": {
+            "texture": "D32_FLOAT_S8X24_UINT"
         }
     }
 }
