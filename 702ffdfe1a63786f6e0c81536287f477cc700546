@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "963038f8_99499b56",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2143,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2018-03-14T09:57:29Z",
+      "side": 1,
+      "message": "Olli \u0026 Corentin, thank you for review, I had carefully checked the ES_GLSL_3.1 spec, msdn and the link https://msdn.microsoft.com/en-us/library/windows/desktop/hh447241(v\u003dvs.85).aspx .\nAlthough memoryBarrier* functions are used to control the ordering of memory transactions issued by a single shader invocation, the target is that memory reads/writes by this invocation in program order are made visible to other invocations before any subsequent memory accesses by this invocation. It is similiar with sm5-asm \"_uglobal\" option, so I think memoryBarrier* functions are also needed to translated.\n\nAnd compiled HLSL sync functions to asm code, the relationship is as below,\nGroupMemoryBarrier()  -- sync_g\nGroupMemoryBarrierWithGroupSync() -- sync_g_t\nDeviceMemoryBarrier() -- sync_uglobal\nDeviceMemoryBarrierWithGroupSync() -- sync_uglobal_t\nAllMemoryBarrier() -- sync_uglobal_g\nAllMemoryBarrierWithGroupSync() -- sync_uglobal_g_t\n\nso I translated the functions as below,\nEOpBarrier -\u003e sync_g_t    --\u003e GroupMemoryBarrierWithGroupSync() // (sync_t is not allowed)\nEOpMemoryBarrierShared -\u003e sync_g -\u003e GroupMemoryBarrier()  \nEOpMemoryBarrier -\u003e sync_uglobal_g -\u003e AllMemoryBarrier() \nEOpMemoryBarrier*[AtomicCount|Buffer|Image] -\u003e sync_uglobal -\u003e DeviceMemoryBarrier()\nEOpGroupMemoryBarrier -\u003e sync_ugroup_g/sync_uglobal_g -\u003e AllMemoryBarrier()   // _ugroup may be not exposed for some implementations, so use _uglobal, some implementations do not distinguish _ugroup from _uglobal, so both operations are equivalent and behave like _uglobal.",
+      "parentUuid": "d93206ea_3e52705a",
+      "revId": "702ffdfe1a63786f6e0c81536287f477cc700546",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b7fe8d99_2d9d31e4",
         "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
         "patchSetId": 10
