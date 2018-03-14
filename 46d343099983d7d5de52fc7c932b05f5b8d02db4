@@ -16,6 +16,24 @@
       "revId": "46d343099983d7d5de52fc7c932b05f5b8d02db4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3f1d04cf_07f1dd1e",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 16
+      },
+      "lineNbr": 797,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-03-14T07:27:39Z",
+      "side": 1,
+      "message": "Ah yes, I was considering that option but since these functions are only needed in ParseContext at the moment, it wasn\u0027t necessary. Cleaned this up.",
+      "parentUuid": "15e5ade4_4ce75424",
+      "revId": "46d343099983d7d5de52fc7c932b05f5b8d02db4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
