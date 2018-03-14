@@ -315,6 +315,8 @@ gl::Error VertexArray11::updateDirtyAndDynamicAttribs(const gl::Context *context
 
     if (mDynamicAttribsMask.any())
     {
+        vertexParams.ensureIndexRangeResolved();
+
         auto activeDynamicAttribs = (mDynamicAttribsMask & activeLocations);
         if (activeDynamicAttribs.none())
         {

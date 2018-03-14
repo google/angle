@@ -148,8 +148,7 @@ class DrawCallVertexParams final : angle::NonCopyable
     DrawCallVertexParams(GLint firstVertex, GLsizei vertexCount, GLsizei instances);
 
     // Use when in a drawElements call.
-    DrawCallVertexParams(bool firstVertexDefinitelyZero,
-                         const gl::HasIndexRange &hasIndexRange,
+    DrawCallVertexParams(const gl::HasIndexRange &hasIndexRange,
                          GLint baseVertex,
                          GLsizei instances);
 
@@ -160,11 +159,11 @@ class DrawCallVertexParams final : angle::NonCopyable
     GLsizei vertexCount() const;
     GLsizei instances() const;
 
-  private:
-    void ensureResolved() const;
+    void ensureIndexRangeResolved() const;
 
+  private:
     mutable const gl::HasIndexRange *mHasIndexRange;
-    mutable Optional<GLint> mFirstVertex;
+    mutable GLint mFirstVertex;
     mutable GLsizei mVertexCount;
     GLsizei mInstances;
     GLint mBaseVertex;

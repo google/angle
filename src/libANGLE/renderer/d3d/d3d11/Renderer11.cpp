@@ -1644,10 +1644,10 @@ gl::Error Renderer11::drawElements(const gl::Context *context,
 
     const auto &lazyIndexRange = context->getParams<gl::HasIndexRange>();
 
+    DrawCallVertexParams vertexParams(lazyIndexRange, 0, instances);
+
     bool usePrimitiveRestartWorkaround =
         UsePrimitiveRestartWorkaround(glState.isPrimitiveRestartEnabled(), type);
-    DrawCallVertexParams vertexParams(!usePrimitiveRestartWorkaround, lazyIndexRange, 0, instances);
-
     ANGLE_TRY(mStateManager.applyIndexBuffer(context, indices, count, type, lazyIndexRange,
                                              usePrimitiveRestartWorkaround));
     ANGLE_TRY(mStateManager.applyVertexBuffer(context, mode, vertexParams, true));
@@ -1821,10 +1821,15 @@ gl::Error Renderer11::drawElementsIndirect(const gl::Context *context,
         reinterpret_cast<const void *>(static_cast<uintptr_t>(firstIndex * typeInfo.bytes));
     gl::HasIndexRange lazyIndexRange(const_cast<gl::Context *>(context), count, type, indices);
 
+    DrawCallVertexParams vertexParams(lazyIndexRange, baseVertex, instances);
+
+    // We must explicitly resolve the index range for the slow-path indirect drawElements to make
+    // sure we are using the correct 'baseVertex'. This parameter does not exist for the direct
+    // drawElements.
+    vertexParams.ensureIndexRangeResolved();
+
     ANGLE_TRY(mStateManager.applyIndexBuffer(context, indices, count, type, lazyIndexRange,
                                              usePrimitiveRestartWorkaround));
-
-    DrawCallVertexParams vertexParams(false, lazyIndexRange, baseVertex, instances);
 
     ANGLE_TRY(mStateManager.applyVertexBuffer(context, mode, vertexParams, true));
 
