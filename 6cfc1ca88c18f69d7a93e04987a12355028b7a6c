@@ -22,6 +22,30 @@
       "revId": "6cfc1ca88c18f69d7a93e04987a12355028b7a6c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "afc48d61_3877f19e",
+        "filename": "src/compiler/translator/PruneEmptyCases.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-03-14T15:30:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fce98655_8ed6c95b",
+      "range": {
+        "startLine": 17,
+        "startChar": 1,
+        "endLine": 17,
+        "endChar": 0
+      },
+      "revId": "6cfc1ca88c18f69d7a93e04987a12355028b7a6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
