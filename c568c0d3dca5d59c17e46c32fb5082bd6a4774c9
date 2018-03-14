@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "73e70e30_8b0348a1",
+        "filename": "src/libANGLE/params.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-14T14:26:28Z",
+      "side": 1,
+      "message": "Still opposed to initializing these here?  The constructors would be much simpler and less prone to bugs if we add new members.",
+      "range": {
+        "startLine": 135,
+        "startChar": 0,
+        "endLine": 144,
+        "endChar": 26
+      },
+      "revId": "c568c0d3dca5d59c17e46c32fb5082bd6a4774c9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
