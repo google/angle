@@ -77,6 +77,7 @@
             '<(angle_path)/src/tests/compiler_tests/NV_draw_buffers_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/OES_standard_derivatives_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/Pack_Unpack_test.cpp',
+            '<(angle_path)/src/tests/compiler_tests/PruneEmptyCases_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/PruneEmptyDeclarations_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/PrunePureLiteralStatements_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/PruneUnusedFunctions_test.cpp',

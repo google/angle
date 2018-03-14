@@ -26,10 +26,10 @@
 #include "compiler/translator/IsASTDepthBelowLimit.h"
 #include "compiler/translator/OutputTree.h"
 #include "compiler/translator/ParseContext.h"
+#include "compiler/translator/PruneEmptyCases.h"
 #include "compiler/translator/PruneNoOps.h"
 #include "compiler/translator/RegenerateStructNames.h"
 #include "compiler/translator/RemoveArrayLengthMethod.h"
-#include "compiler/translator/RemoveEmptySwitchStatements.h"
 #include "compiler/translator/RemoveInvariantDeclaration.h"
 #include "compiler/translator/RemoveNoOpCasesFromEndOfSwitchStatements.h"
 #include "compiler/translator/RemovePow.h"
@@ -473,9 +473,6 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     // state. Relies on that PruneNoOps has already been run.
     RemoveNoOpCasesFromEndOfSwitchStatements(root, &symbolTable);
 
-    // Remove empty switch statements - this makes output simpler.
-    RemoveEmptySwitchStatements(root);
-
     // Create the function DAG and check there is no recursion
     if (!initCallDag(root))
     {
@@ -587,6 +584,8 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     RemoveArrayLengthMethod(root);
 
     RemoveUnreferencedVariables(root, &symbolTable);
+
+    PruneEmptyCases(root);
 
     // Built-in function emulation needs to happen after validateLimitations pass.
     // TODO(jmadill): Remove global pool allocator.
