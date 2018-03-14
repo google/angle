@@ -22,6 +22,30 @@
       "revId": "6bccba1ecb2ae0cdaa634cd7c9c50b3fe3852293",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1542753d_fdd4bfe6",
+        "filename": "src/libANGLE/renderer/Format_table_autogen.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-03-14T11:51:59Z",
+      "side": 1,
+      "message": "Different issue, I wouldn\u0027t mix that with this change.",
+      "parentUuid": "d8859b72_98345fed",
+      "range": {
+        "startLine": 168,
+        "startChar": 13,
+        "endLine": 168,
+        "endChar": 26
+      },
+      "revId": "6bccba1ecb2ae0cdaa634cd7c9c50b3fe3852293",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
