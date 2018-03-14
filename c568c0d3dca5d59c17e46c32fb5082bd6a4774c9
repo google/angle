@@ -22,6 +22,30 @@
       "revId": "c568c0d3dca5d59c17e46c32fb5082bd6a4774c9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e5cff887_a145077e",
+        "filename": "src/libANGLE/params.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-14T14:47:41Z",
+      "side": 1,
+      "message": "I believe the Chromium linter will report this as a violation.\n\nhttps://sites.google.com/a/chromium.org/dev/developers/coding-style/cpp-dos-and-donts\n\nDoesn\u0027t explicitly mention it there but ISTR it giving me warnings for this when I was fixing a bunch of those manually.\n\nMaybe you were thinking of this because of the Extensions CL? There I cheated a bit because I didn\u0027t want to deal with fixing the exporting and importing for the way we link with the tests. Just wanted to clarify that in case it was something you noticed.",
+      "parentUuid": "73e70e30_8b0348a1",
+      "range": {
+        "startLine": 135,
+        "startChar": 0,
+        "endLine": 144,
+        "endChar": 26
+      },
+      "revId": "c568c0d3dca5d59c17e46c32fb5082bd6a4774c9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
