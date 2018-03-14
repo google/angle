@@ -22,6 +22,30 @@
       "revId": "55dec03927df0842781f0040d3aa58c488ecf487",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eb97a14c_1794165c",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1243,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-03-14T17:11:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4bf78349_30bbe38a",
+      "range": {
+        "startLine": 1243,
+        "startChar": 44,
+        "endLine": 1243,
+        "endChar": 49
+      },
+      "revId": "55dec03927df0842781f0040d3aa58c488ecf487",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
