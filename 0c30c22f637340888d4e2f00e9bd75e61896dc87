@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "687a1eea_0c221076",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-14T21:14:13Z",
+      "side": 1,
+      "message": "nit: you can put this comment in one line.",
+      "range": {
+        "startLine": 26,
+        "startChar": 0,
+        "endLine": 28,
+        "endChar": 30
+      },
+      "revId": "0c30c22f637340888d4e2f00e9bd75e61896dc87",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0410b160_e8d6b23c",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 157,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-14T21:14:13Z",
+      "side": 1,
+      "message": "nit: this define should begin with ANGLE_",
+      "range": {
+        "startLine": 157,
+        "startChar": 8,
+        "endLine": 157,
+        "endChar": 38
+      },
+      "revId": "0c30c22f637340888d4e2f00e9bd75e61896dc87",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b269fa80_e4e60b04",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-14T21:14:13Z",
+      "side": 1,
+      "message": "same with this",
+      "range": {
+        "startLine": 160,
+        "startChar": 8,
+        "endLine": 160,
+        "endChar": 25
+      },
+      "revId": "0c30c22f637340888d4e2f00e9bd75e61896dc87",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e2de17ad_ccec31a4",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-14T21:14:13Z",
+      "side": 1,
+      "message": "could you generalize this outside of GLES1? I think we\u0027ll want to adopt it for the other API versions as well.",
+      "range": {
+        "startLine": 148,
+        "startChar": 0,
+        "endLine": 166,
+        "endChar": 109
+      },
+      "revId": "0c30c22f637340888d4e2f00e9bd75e61896dc87",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "56286d78_29f905b3",
+        "filename": "src/libANGLE/ContextGLES1.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-14T21:14:13Z",
+      "side": 1,
+      "message": "maybe we should use the same naming scheme as the entry points?\n\nContext_gles_1_0.cpp\n\nGeoff WDYT",
+      "range": {
+        "startLine": 7,
+        "startChar": 3,
+        "endLine": 7,
+        "endChar": 15
+      },
+      "revId": "0c30c22f637340888d4e2f00e9bd75e61896dc87",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9f0fbcdf_2b15e19e",
+        "filename": "src/libANGLE/ContextGLES1Decls_autogen.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-14T21:14:13Z",
+      "side": 1,
+      "message": "you should use the same naming scheme for the macro and file name either\n\nContext_gles_1_0_api_autogen.h\n\nOr make the macro\n\nANGLE_GL_CONTEXT_GLES_1_DECLS_AUTOGEN",
+      "range": {
+        "startLine": 8,
+        "startChar": 3,
+        "endLine": 8,
+        "endChar": 28
+      },
+      "revId": "0c30c22f637340888d4e2f00e9bd75e61896dc87",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
