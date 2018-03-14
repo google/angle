@@ -4237,6 +4237,33 @@ bool ValidateGetProgramivBase(Context *context, GLuint program, GLenum pname, GL
             }
             break;
 
+        case GL_GEOMETRY_LINKED_INPUT_TYPE_EXT:
+        case GL_GEOMETRY_LINKED_OUTPUT_TYPE_EXT:
+        case GL_GEOMETRY_LINKED_VERTICES_OUT_EXT:
+        case GL_GEOMETRY_SHADER_INVOCATIONS_EXT:
+            if (!context->getExtensions().geometryShader)
+            {
+                ANGLE_VALIDATION_ERR(context, InvalidEnum(), GeometryShaderExtensionNotEnabled);
+                return false;
+            }
+
+            // [EXT_geometry_shader] Chapter 7.12
+            // An INVALID_OPERATION error is generated if GEOMETRY_LINKED_VERTICES_OUT_EXT,
+            // GEOMETRY_LINKED_INPUT_TYPE_EXT, GEOMETRY_LINKED_OUTPUT_TYPE_EXT, or
+            // GEOMETRY_SHADER_INVOCATIONS_EXT are queried for a program which has not been linked
+            // successfully, or which does not contain objects to form a geometry shader.
+            if (!programObject->isLinked())
+            {
+                ANGLE_VALIDATION_ERR(context, InvalidOperation(), ProgramNotLinked);
+                return false;
+            }
+            if (!programObject->hasLinkedGeometryShader())
+            {
+                ANGLE_VALIDATION_ERR(context, InvalidOperation(), NoActiveGeometryShaderStage);
+                return false;
+            }
+            break;
+
         default:
             ANGLE_VALIDATION_ERR(context, InvalidEnum(), EnumNotSupported);
             return false;

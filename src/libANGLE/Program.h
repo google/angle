@@ -664,6 +664,12 @@ class Program final : angle::NonCopyable, public LabeledObject
     {
         return mState.mGeometryShaderInputPrimitiveType;
     }
+    GLenum getGeometryShaderOutputPrimitiveType() const
+    {
+        return mState.mGeometryShaderOutputPrimitiveType;
+    }
+    GLint getGeometryShaderInvocations() const { return mState.mGeometryShaderInvocations; }
+    GLint getGeometryShaderMaxVertices() const { return mState.mGeometryShaderMaxVertices; }
 
     const ProgramState &getState() const { return mState; }
 

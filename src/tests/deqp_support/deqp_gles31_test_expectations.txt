@@ -1566,6 +1566,8 @@
 1941 D3D11 : dEQP-GLES31.functional.shaders.builtin_functions.integer.findmsb.uvec4_mediump_geometry = FAIL
 1941 D3D11 : dEQP-GLES31.functional.shaders.builtin_functions.integer.findmsb.uvec4_highp_geometry = FAIL
 1941 D3D11 : dEQP-GLES31.functional.shaders.builtin_constants.geometry_shader.* = FAIL
+1941 D3D11 : dEQP-GLES31.functional.state_query.program.geometry_shader_state_get_programiv = FAIL
+1941 D3D11 : dEQP-GLES31.functional.geometry_shading.query.* = FAIL
 1941 D3D11 : dEQP-GLES31.functional.geometry_shading.basic.* = FAIL
 1941 D3D11 : dEQP-GLES31.functional.geometry_shading.conversion.* = FAIL
 1941 D3D11 : dEQP-GLES31.functional.geometry_shading.emit.* = FAIL
@@ -1641,8 +1643,8 @@
 1442 OPENGL D3D11 : dEQP-GLES31.functional.debug.negative_coverage.get_error.shader_directive.tessellation_shader = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.debug.object_labels.program_pipeline = FAIL
 
-1941 OPENGL D3D11 : dEQP-GLES31.functional.state_query.program.geometry_shader_state_get_programiv = FAIL
-1941 OPENGL D3D11 : dEQP-GLES31.functional.geometry_shading.query.* = FAIL
+1941 OPENGL D3D11 : dEQP-GLES31.functional.geometry_shading.query.primitives_* = FAIL
+1941 OPENGL D3D11 : dEQP-GLES31.functional.geometry_shading.query.referenced_by_geometry_shader = FAIL
 
 2324 DEBUG RELEASE : dEQP-GLES31.functional.debug.negative_coverage.callbacks.compute.program_not_active = FAIL
 2324 DEBUG RELEASE : dEQP-GLES31.functional.debug.negative_coverage.log.compute.program_not_active = FAIL

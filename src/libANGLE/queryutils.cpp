@@ -1019,6 +1019,18 @@ void QueryProgramiv(const Context *context, const Program *program, GLenum pname
         case GL_ACTIVE_ATOMIC_COUNTER_BUFFERS:
             *params = program->getActiveAtomicCounterBufferCount();
             break;
+        case GL_GEOMETRY_LINKED_INPUT_TYPE_EXT:
+            *params = program->getGeometryShaderInputPrimitiveType();
+            break;
+        case GL_GEOMETRY_LINKED_OUTPUT_TYPE_EXT:
+            *params = program->getGeometryShaderOutputPrimitiveType();
+            break;
+        case GL_GEOMETRY_LINKED_VERTICES_OUT_EXT:
+            *params = program->getGeometryShaderMaxVertices();
+            break;
+        case GL_GEOMETRY_SHADER_INVOCATIONS_EXT:
+            *params = program->getGeometryShaderInvocations();
+            break;
         default:
             UNREACHABLE();
             break;
