@@ -229,7 +229,7 @@ def gen_enum_string(all_angle):
 
 def gen_map_switch_string(gl_to_angle):
     switch_data = '';
-    for gl_format in gl_to_angle:
+    for gl_format in sorted(gl_to_angle.keys()):
         angle_format = gl_to_angle[gl_format]
         switch_data += "        case " + gl_format + ":\nreturn Format::ID::" + angle_format + ";\n"
     switch_data += "        default:\n"
