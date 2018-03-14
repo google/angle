@@ -2944,31 +2944,27 @@ bool ValidateDrawElementsCommon(Context *context,
     else
     {
         // Use the parameter buffer to retrieve and cache the index range.
-        const auto &params        = context->getParams<HasIndexRange>();
-        const auto &indexRangeOpt = params.getIndexRange();
-        if (!indexRangeOpt.valid())
-        {
-            // Unexpected error.
-            return false;
-        }
+        const DrawCallParams &params = context->getParams<DrawCallParams>();
+        ANGLE_VALIDATION_TRY(params.ensureIndexRangeResolved(context));
+        const IndexRange &indexRange = params.getIndexRange();
 
         // If we use an index greater than our maximum supported index range, return an error.
         // The ES3 spec does not specify behaviour here, it is undefined, but ANGLE should always
         // return an error if possible here.
-        if (static_cast<GLuint64>(indexRangeOpt.value().end) >= context->getCaps().maxElementIndex)
+        if (static_cast<GLuint64>(indexRange.end) >= context->getCaps().maxElementIndex)
         {
             ANGLE_VALIDATION_ERR(context, InvalidOperation(), ExceedsMaxElement);
             return false;
         }
 
-        if (!ValidateDrawAttribs(context, primcount, static_cast<GLint>(indexRangeOpt.value().end),
-                                 static_cast<GLint>(indexRangeOpt.value().vertexCount())))
+        if (!ValidateDrawAttribs(context, primcount, static_cast<GLint>(indexRange.end),
+                                 static_cast<GLint>(indexRange.vertexCount())))
         {
             return false;
         }
 
         // No op if there are no real indices in the index data (all are primitive restart).
-        return (indexRangeOpt.value().vertexIndexCount > 0);
+        return (indexRange.vertexIndexCount > 0);
     }
 
     return true;

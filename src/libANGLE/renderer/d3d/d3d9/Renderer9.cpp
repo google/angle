@@ -1317,11 +1317,12 @@ gl::Error Renderer9::applyIndexBuffer(const gl::Context *context,
                                       GLenum type,
                                       TranslatedIndexData *indexInfo)
 {
-    gl::VertexArray *vao           = context->getGLState().getVertexArray();
-    gl::Buffer *elementArrayBuffer = vao->getElementArrayBuffer().get();
-    const auto &lazyIndexRange     = context->getParams<gl::HasIndexRange>();
+    gl::VertexArray *vao                     = context->getGLState().getVertexArray();
+    gl::Buffer *elementArrayBuffer           = vao->getElementArrayBuffer().get();
+    const gl::DrawCallParams &drawCallParams = context->getParams<gl::DrawCallParams>();
 
-    GLenum dstType = GetIndexTranslationDestType(type, lazyIndexRange, false);
+    GLenum dstType = GL_NONE;
+    ANGLE_TRY(GetIndexTranslationDestType(context, drawCallParams, false, &dstType));
 
     ANGLE_TRY(mIndexDataManager->prepareIndexData(context, type, dstType, count, elementArrayBuffer,
                                                   indices, indexInfo));
@@ -1396,8 +1397,10 @@ gl::Error Renderer9::drawElementsImpl(const gl::Context *context,
 
     ANGLE_TRY(applyIndexBuffer(context, indices, count, mode, type, &indexInfo));
 
-    const auto &lazyIndexRange       = context->getParams<gl::HasIndexRange>();
-    const gl::IndexRange &indexRange = lazyIndexRange.getIndexRange().value();
+    const auto &drawCallParams = context->getParams<gl::DrawCallParams>();
+    ANGLE_TRY(drawCallParams.ensureIndexRangeResolved(context));
+
+    const gl::IndexRange &indexRange = drawCallParams.getIndexRange();
     size_t vertexCount               = indexRange.vertexCount();
     ANGLE_TRY(applyVertexBuffer(context, mode, static_cast<GLsizei>(indexRange.start),
                                 static_cast<GLsizei>(vertexCount), instances, &indexInfo));

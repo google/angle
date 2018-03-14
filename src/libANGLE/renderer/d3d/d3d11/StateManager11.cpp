@@ -2730,20 +2730,19 @@ gl::Error StateManager11::applyVertexBuffer(const gl::Context *context,
 }
 
 gl::Error StateManager11::applyIndexBuffer(const gl::Context *context,
-                                           const void *indices,
-                                           GLsizei count,
-                                           GLenum type,
-                                           const gl::HasIndexRange &lazyIndexRange,
+                                           const gl::DrawCallParams &params,
                                            bool usePrimitiveRestartWorkaround)
 {
     const auto &glState  = context->getGLState();
     gl::VertexArray *vao = glState.getVertexArray();
     VertexArray11 *vao11 = GetImplAs<VertexArray11>(vao);
 
-    GLenum destElementType =
-        GetIndexTranslationDestType(type, lazyIndexRange, usePrimitiveRestartWorkaround);
+    GLenum destElementType = GL_NONE;
+    ANGLE_TRY(GetIndexTranslationDestType(context, params, usePrimitiveRestartWorkaround,
+                                          &destElementType));
 
-    if (!vao11->updateElementArrayStorage(context, type, destElementType, indices) &&
+    if (!vao11->updateElementArrayStorage(context, params.type(), destElementType,
+                                          params.indices()) &&
         !mIndexBufferIsDirty)
     {
         // No streaming or index buffer application necessary.
@@ -2753,8 +2752,9 @@ gl::Error StateManager11::applyIndexBuffer(const gl::Context *context,
     gl::Buffer *elementArrayBuffer = vao->getElementArrayBuffer().get();
 
     TranslatedIndexData *indexInfo = vao11->getCachedIndexInfo();
-    ANGLE_TRY(mIndexDataManager.prepareIndexData(context, type, destElementType, count,
-                                                 elementArrayBuffer, indices, indexInfo));
+    ANGLE_TRY(mIndexDataManager.prepareIndexData(context, params.type(), destElementType,
+                                                 params.indexCount(), elementArrayBuffer,
+                                                 params.indices(), indexInfo));
 
     ID3D11Buffer *buffer = nullptr;
     DXGI_FORMAT bufferFormat =

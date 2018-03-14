@@ -441,7 +441,7 @@ gl::Error InputLayoutCache::createInputLayout(
         GLsizei numIndicesPerInstance = 0;
         if (drawCallParams.instances() > 0)
         {
-            // This may trigger an evaluation of the index range.
+            // This requires that the index range is resolved.
             numIndicesPerInstance = drawCallParams.vertexCount();
         }
 

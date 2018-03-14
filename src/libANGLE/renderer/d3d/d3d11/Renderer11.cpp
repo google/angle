@@ -1510,7 +1510,7 @@ gl::Error Renderer11::drawArrays(const gl::Context *context,
         return gl::NoError();
     }
 
-    gl::DrawCallParams drawCallParams(mode, startVertex, count, instances);
+    const gl::DrawCallParams &drawCallParams = context->getParams<gl::DrawCallParams>();
     ANGLE_TRY(mStateManager.applyVertexBuffer(context, drawCallParams));
 
     if (glState.isTransformFeedbackActiveUnpaused())
@@ -1642,15 +1642,13 @@ gl::Error Renderer11::drawElements(const gl::Context *context,
     // API validation layer.
     ASSERT(!glState.isTransformFeedbackActiveUnpaused());
 
-    const auto &lazyIndexRange = context->getParams<gl::HasIndexRange>();
-
-    gl::DrawCallParams drawCallParams(mode, lazyIndexRange, count, type, indices, 0, instances);
+    const gl::DrawCallParams &drawCallParams = context->getParams<gl::DrawCallParams>();
 
     bool usePrimitiveRestartWorkaround =
         UsePrimitiveRestartWorkaround(glState.isPrimitiveRestartEnabled(), type);
 
-    ANGLE_TRY(mStateManager.applyIndexBuffer(context, indices, count, type, lazyIndexRange,
-                                             usePrimitiveRestartWorkaround));
+    ANGLE_TRY(
+        mStateManager.applyIndexBuffer(context, drawCallParams, usePrimitiveRestartWorkaround));
     ANGLE_TRY(mStateManager.applyVertexBuffer(context, drawCallParams));
 
     int startVertex = static_cast<int>(drawCallParams.firstVertex());
@@ -1795,10 +1793,10 @@ gl::Error Renderer11::drawElementsIndirect(const gl::Context *context,
 
     if (!DrawCallNeedsTranslation(context, mode) && !IsStreamingIndexData(context, type))
     {
-        ANGLE_TRY(mStateManager.applyIndexBuffer(context, nullptr, 0, type, gl::HasIndexRange(),
-                                                 usePrimitiveRestartWorkaround));
         gl::DrawCallParams drawCallParams(mode, type, indirect);
         ANGLE_TRY(mStateManager.applyVertexBuffer(context, drawCallParams));
+        ANGLE_TRY(
+            mStateManager.applyIndexBuffer(context, drawCallParams, usePrimitiveRestartWorkaround));
         ID3D11Buffer *buffer = nullptr;
         ANGLE_TRY_RESULT(storage->getBuffer(context, BUFFER_USAGE_INDIRECT), buffer);
         mDeviceContext->DrawIndexedInstancedIndirect(buffer, static_cast<unsigned int>(offset));
@@ -1816,26 +1814,23 @@ gl::Error Renderer11::drawElementsIndirect(const gl::Context *context,
     GLuint firstIndex = cmd->firstIndex;
     GLint baseVertex  = cmd->baseVertex;
 
-    // TODO(jmadill): Fix const cast.
     const gl::Type &typeInfo = gl::GetTypeInfo(type);
     const void *indices =
         reinterpret_cast<const void *>(static_cast<uintptr_t>(firstIndex * typeInfo.bytes));
-    gl::HasIndexRange lazyIndexRange(const_cast<gl::Context *>(context), count, type, indices);
 
-    gl::DrawCallParams drawCallParams(mode, lazyIndexRange, count, type, indices, baseVertex,
-                                      instances);
+    gl::DrawCallParams drawCallParams(mode, count, type, indices, baseVertex, instances);
 
     // We must explicitly resolve the index range for the slow-path indirect drawElements to make
     // sure we are using the correct 'baseVertex'. This parameter does not exist for the direct
     // drawElements.
-    drawCallParams.ensureIndexRangeResolved();
+    ANGLE_TRY(drawCallParams.ensureIndexRangeResolved(context));
 
-    ANGLE_TRY(mStateManager.applyIndexBuffer(context, indices, count, type, lazyIndexRange,
-                                             usePrimitiveRestartWorkaround));
+    ANGLE_TRY(
+        mStateManager.applyIndexBuffer(context, drawCallParams, usePrimitiveRestartWorkaround));
 
     ANGLE_TRY(mStateManager.applyVertexBuffer(context, drawCallParams));
 
-    int baseVertexLocation = -static_cast<int>(lazyIndexRange.getIndexRange().value().start);
+    int baseVertexLocation = -static_cast<int>(drawCallParams.getIndexRange().start);
 
     if (mode == GL_LINE_LOOP)
     {

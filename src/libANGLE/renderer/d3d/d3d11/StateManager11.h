@@ -242,10 +242,7 @@ class StateManager11 final : angle::NonCopyable
                                 const gl::DrawCallParams &drawCallParams);
 
     gl::Error applyIndexBuffer(const gl::Context *context,
-                               const void *indices,
-                               GLsizei count,
-                               GLenum type,
-                               const gl::HasIndexRange &lazyIndexRange,
+                               const gl::DrawCallParams &drawCallParams,
                                bool usePrimitiveRestartWorkaround);
 
     void setIndexBuffer(ID3D11Buffer *buffer, DXGI_FORMAT indexFormat, unsigned int offset);

@@ -315,7 +315,7 @@ gl::Error VertexArray11::updateDirtyAndDynamicAttribs(const gl::Context *context
 
     if (mDynamicAttribsMask.any())
     {
-        drawCallParams.ensureIndexRangeResolved();
+        ANGLE_TRY(drawCallParams.ensureIndexRangeResolved(context));
 
         auto activeDynamicAttribs = (mDynamicAttribsMask & activeLocations);
         if (activeDynamicAttribs.none())
