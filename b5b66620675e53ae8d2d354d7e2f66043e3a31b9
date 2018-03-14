@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ef4eb877_ae38ae22",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 537,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-14T19:11:35Z",
+      "side": 1,
+      "message": "nit: would do if (transpose \u003d\u003d GL_FALSE) { UNIMPLEMENTED(); }",
+      "range": {
+        "startLine": 537,
+        "startChar": 4,
+        "endLine": 537,
+        "endChar": 34
+      },
+      "revId": "b5b66620675e53ae8d2d354d7e2f66043e3a31b9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
