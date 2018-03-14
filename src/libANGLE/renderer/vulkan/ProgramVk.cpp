@@ -81,12 +81,6 @@ void UpdateDefaultUniformBlock(GLsizei count,
                                const sh::BlockMemberInfo &layoutInfo,
                                angle::MemoryBuffer *uniformData)
 {
-    // Assume an offset of -1 means the block is unused.
-    if (layoutInfo.offset == -1)
-    {
-        return;
-    }
-
     int elementSize = sizeof(T) * componentCount;
     if (layoutInfo.arrayStride == 0 || layoutInfo.arrayStride == elementSize)
     {
@@ -436,8 +430,17 @@ void ProgramVk::setUniformImpl(GLint location, GLsizei count, const T *v, GLenum
         for (auto &uniformBlock : mDefaultUniformBlocks)
         {
             const sh::BlockMemberInfo &layoutInfo = uniformBlock.uniformLayout[location];
+
+            // Assume an offset of -1 means the block is unused.
+            if (layoutInfo.offset == -1)
+            {
+                continue;
+            }
+
             UpdateDefaultUniformBlock(count, linkedUniform.typeInfo->componentCount, v, layoutInfo,
                                       &uniformBlock.uniformData);
+
+            uniformBlock.uniformsDirty = true;
         }
     }
     else
