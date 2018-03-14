@@ -90,6 +90,60 @@ class HasIndexRange : public ParamsBase
     mutable Optional<IndexRange> mIndexRange;
 };
 
+// Helper class that encompasses draw call parameters. It uses the HasIndexRange
+// helper class to only pull index range info lazily to prevent unnecessary readback.
+// It is also used when syncing state for the VertexArray implementation, since the
+// vertex and index buffer updates depend on draw call parameters.
+class DrawCallParams final : angle::NonCopyable
+{
+  public:
+    // Called by DrawArrays.
+    DrawCallParams(GLenum mode, GLint firstVertex, GLsizei vertexCount, GLsizei instances);
+
+    // Called by DrawElements.
+    DrawCallParams(GLenum mode,
+                   const HasIndexRange &hasIndexRange,
+                   GLint indexCount,
+                   GLenum type,
+                   const void *indices,
+                   GLint baseVertex,
+                   GLsizei instances);
+
+    // Called by DrawArraysIndirect.
+    DrawCallParams(GLenum mode, const void *indirect);
+
+    // Called by DrawElementsIndirect.
+    DrawCallParams(GLenum mode, GLenum type, const void *indirect);
+
+    // It should be possible to also use an overload to handle the 'slow' indirect draw path.
+    // TODO(jmadill): Indirect draw slow path overload.
+
+    GLenum mode() const;
+    GLint firstVertex() const;
+    GLsizei vertexCount() const;
+    GLsizei indexCount() const;
+    GLint baseVertex() const;
+    GLenum type() const;
+    const void *indices() const;
+    GLsizei instances() const;
+    const void *indirect() const;
+
+    void ensureIndexRangeResolved() const;
+    bool isDrawElements() const;
+
+  private:
+    GLenum mMode;
+    mutable const HasIndexRange *mHasIndexRange;
+    mutable GLint mFirstVertex;
+    mutable GLsizei mVertexCount;
+    GLint mIndexCount;
+    GLint mBaseVertex;
+    GLenum mType;
+    const void *mIndices;
+    GLsizei mInstances;
+    const void *mIndirect;
+};
+
 // Entry point funcs essentially re-map different entry point parameter arrays into
 // the format the parameter type class expects. For example, for HasIndexRange, for the
 // various indexed draw calls, they drop parameters that aren't useful and re-arrange

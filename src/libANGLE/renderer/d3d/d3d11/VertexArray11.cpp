@@ -262,7 +262,7 @@ bool VertexArray11::hasActiveDynamicAttrib(const gl::Context *context)
 
 gl::Error VertexArray11::updateDirtyAndDynamicAttribs(const gl::Context *context,
                                                       VertexDataManager *vertexDataManager,
-                                                      const DrawCallVertexParams &vertexParams)
+                                                      const gl::DrawCallParams &drawCallParams)
 {
     flushAttribUpdates(context);
 
@@ -315,7 +315,7 @@ gl::Error VertexArray11::updateDirtyAndDynamicAttribs(const gl::Context *context
 
     if (mDynamicAttribsMask.any())
     {
-        vertexParams.ensureIndexRangeResolved();
+        drawCallParams.ensureIndexRangeResolved();
 
         auto activeDynamicAttribs = (mDynamicAttribsMask & activeLocations);
         if (activeDynamicAttribs.none())
@@ -337,8 +337,8 @@ gl::Error VertexArray11::updateDirtyAndDynamicAttribs(const gl::Context *context
         }
 
         ANGLE_TRY(vertexDataManager->storeDynamicAttribs(
-            context, &mTranslatedAttribs, activeDynamicAttribs, vertexParams.firstVertex(),
-            vertexParams.vertexCount(), vertexParams.instances()));
+            context, &mTranslatedAttribs, activeDynamicAttribs, drawCallParams.firstVertex(),
+            drawCallParams.vertexCount(), drawCallParams.instances()));
     }
 
     return gl::NoError();
@@ -373,7 +373,7 @@ void VertexArray11::onSubjectStateChange(const gl::Context *context,
 }
 
 void VertexArray11::clearDirtyAndPromoteDynamicAttribs(const gl::Context *context,
-                                                       const DrawCallVertexParams &vertexParams)
+                                                       const gl::DrawCallParams &drawCallParams)
 {
     const gl::State &state      = context->getGLState();
     const gl::Program *program  = state.getProgram();
@@ -385,7 +385,7 @@ void VertexArray11::clearDirtyAndPromoteDynamicAttribs(const gl::Context *contex
     if (activeDynamicAttribs.any())
     {
         VertexDataManager::PromoteDynamicAttribs(context, mTranslatedAttribs, activeDynamicAttribs,
-                                                 vertexParams.vertexCount());
+                                                 drawCallParams.vertexCount());
     }
 }
 

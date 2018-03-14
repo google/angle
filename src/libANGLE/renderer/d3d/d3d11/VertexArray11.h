@@ -32,9 +32,9 @@ class VertexArray11 : public angle::ObserverInterface, public VertexArrayImpl
     bool hasActiveDynamicAttrib(const gl::Context *context);
     gl::Error updateDirtyAndDynamicAttribs(const gl::Context *context,
                                            VertexDataManager *vertexDataManager,
-                                           const DrawCallVertexParams &vertexParams);
+                                           const gl::DrawCallParams &drawCallParams);
     void clearDirtyAndPromoteDynamicAttribs(const gl::Context *context,
-                                            const DrawCallVertexParams &vertexParams);
+                                            const gl::DrawCallParams &drawCallParams);
 
     const std::vector<TranslatedAttribute> &getTranslatedAttribs() const;
 
