@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "7992ec11_04342748",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-14T18:47:58Z",
+      "side": 1,
+      "message": "I guess it\u0027s not that important. All the testing we\u0027ll do on Android won\u0027t require no op drivers, and we can get those measurements on desktop.",
+      "parentUuid": "ef130969_57a85190",
+      "range": {
+        "startLine": 135,
+        "startChar": 8,
+        "endLine": 144,
+        "endChar": 9
+      },
+      "revId": "6675bc4e7a87d3175617b9dc5b57cda1e9db3da9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "69d8210c_1a6da820",
         "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
         "patchSetId": 1
@@ -84,6 +108,30 @@
       "side": 1,
       "message": "The ShouldUseNullICD call at the start of this function above is checking for NULL device type in attribs.\nI\u0027m still not clear on the best way to SET EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE in attribs. Tried to do it in this CL in util/EGLWindow.cpp in same fashion as Vk Validation is set. However, in running hello_triangle I see the code to set the attribs for both validation and icd are skipped. Instead the debug-enabled return check in ShouldUseDebugLayers() causes debug layers to be used by default. I know we don\u0027t want to do this for Mock ICD.\n\nLooking at D3D/OGL for a better idea of how to enable Mock ICD.",
       "parentUuid": "69d8210c_1a6da820",
+      "range": {
+        "startLine": 376,
+        "startChar": 4,
+        "endLine": 376,
+        "endChar": 26
+      },
+      "revId": "6675bc4e7a87d3175617b9dc5b57cda1e9db3da9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f9d85c71_1d174b89",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 376,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-14T18:47:58Z",
+      "side": 1,
+      "message": "No, you had it right, it should be through EGL - but we set this via the angle_test_configs.h. See where we have D3D11_NULL and OPENGL_NULL? you\u0027d define VULKAN_NULL under VULKAN() and then later on define ES2_VULKAN_NULL. The in ANGLE_TEST_INSTANTIATE, the person writing the test would pick the NULL config.\n\nWe don\u0027t really use NULL configs in correctness testing, but we use them all over the place in performance testing. See DrawCallPerfParams.h, and DrawCallPerf.cpp. Does this give the pointers to the right places to help your understanding on how to enable the mock ICD?",
+      "parentUuid": "96d87542_59962966",
       "range": {
         "startLine": 376,
         "startChar": 4,
