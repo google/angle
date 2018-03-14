@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "235b6ccd_4aa6f557",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2972,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-14T14:54:07Z",
+      "side": 1,
+      "message": "ref",
+      "range": {
+        "startLine": 2971,
+        "startChar": 0,
+        "endLine": 2972,
+        "endChar": 48
+      },
+      "revId": "a0419c79467993933037606922038282f6727577",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "58f5709b_3edde527",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2985,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-14T14:54:07Z",
+      "side": 1,
+      "message": "Please move this \"\u0026\" mask combination into State::syncDirtyObjects, similar to the first few lines in Context::syncDirtyBits.",
+      "range": {
+        "startLine": 2984,
+        "startChar": 0,
+        "endLine": 2985,
+        "endChar": 57
+      },
+      "revId": "a0419c79467993933037606922038282f6727577",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
