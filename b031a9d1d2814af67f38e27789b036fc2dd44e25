@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5e8b671d_53a21839",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 537,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-14T19:06:54Z",
+      "side": 1,
+      "message": "tiny nit: technically we can\u0027t assume GLbooleans are \"0\" and \"1\", you should ASSERT(transpose \u003d\u003d GL_FALSE).",
+      "range": {
+        "startLine": 537,
+        "startChar": 12,
+        "endLine": 537,
+        "endChar": 21
+      },
+      "revId": "b031a9d1d2814af67f38e27789b036fc2dd44e25",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
