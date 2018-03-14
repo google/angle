@@ -151,6 +151,79 @@ void main() {
     ASSERT_EQ(floats, expected);
 }
 
+// Test that we can get and set a 2x2 float Matrix uniform successfully.
+TEST_P(SimpleUniformTest, FloatMatrix2UniformStateQuery)
+{
+    constexpr char kFragShader[] = R"(precision mediump float;
+uniform mat2 umat2;
+void main() {
+    gl_FragColor = vec4(umat2);
+})";
+
+    ANGLE_GL_PROGRAM(program, kBasicVertexShader, kFragShader);
+    glUseProgram(program);
+
+    GLint uniformLocation = glGetUniformLocation(program, "umat2");
+    ASSERT_NE(uniformLocation, -1);
+
+    std::vector<GLfloat> expected = {{1.0f, 0.5f, 0.2f, -0.8f}};
+    glUniformMatrix2fv(uniformLocation, 1, false, expected.data());
+
+    std::vector<GLfloat> floats(4, 0);
+    glGetUniformfv(program, uniformLocation, floats.data());
+    ASSERT_GL_NO_ERROR();
+    ASSERT_EQ(floats, expected);
+}
+
+// Test that we can get and set a 3x3 float Matrix uniform successfully.
+TEST_P(SimpleUniformTest, FloatMatrix3UniformStateQuery)
+{
+    constexpr char kFragShader[] = R"(precision mediump float;
+uniform mat3 umat3;
+void main() {
+    gl_FragColor = vec4(umat3);
+})";
+
+    ANGLE_GL_PROGRAM(program, kBasicVertexShader, kFragShader);
+    glUseProgram(program);
+
+    GLint uniformLocation = glGetUniformLocation(program, "umat3");
+    ASSERT_NE(uniformLocation, -1);
+
+    std::vector<GLfloat> expected = {{1.0f, 0.5f, 0.2f, -0.8f, -0.2f, 0.1f, 0.1f, 0.2f, 0.7f}};
+    glUniformMatrix3fv(uniformLocation, 1, false, expected.data());
+
+    std::vector<GLfloat> floats(9, 0);
+    glGetUniformfv(program, uniformLocation, floats.data());
+    ASSERT_GL_NO_ERROR();
+    ASSERT_EQ(floats, expected);
+}
+
+// Test that we can get and set a 4x4 float Matrix uniform successfully.
+TEST_P(SimpleUniformTest, FloatMatrix4UniformStateQuery)
+{
+    constexpr char kFragShader[] = R"(precision mediump float;
+uniform mat4 umat4;
+void main() {
+    gl_FragColor = umat4 * vec4(1.0, 1.0, 1.0, 1.0);
+})";
+
+    ANGLE_GL_PROGRAM(program, kBasicVertexShader, kFragShader);
+    glUseProgram(program);
+
+    GLint uniformLocation = glGetUniformLocation(program, "umat4");
+    ASSERT_NE(uniformLocation, -1);
+
+    std::vector<GLfloat> expected = {{1.0f, 0.5f, 0.2f, -0.8f, -0.2f, 0.1f, 0.1f, 0.2f, 0.7f, 0.1f,
+                                      0.7f, 0.1f, 0.7f, 0.1f, 0.7f, 0.1f}};
+    glUniformMatrix4fv(uniformLocation, 1, false, expected.data());
+
+    std::vector<GLfloat> floats(16, 0);
+    glGetUniformfv(program, uniformLocation, floats.data());
+    ASSERT_GL_NO_ERROR();
+    ASSERT_EQ(floats, expected);
+}
+
 class UniformTest : public ANGLETest
 {
   protected:
