@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "ef130969_57a85190",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2018-03-14T18:34:52Z",
+      "side": 1,
+      "message": "Mock ICD does not run on Android currently. That would be a separate effort in LVL repo. Once it\u0027s working there should be easy to enable on ANGLE as well. How important is having mock on Android?",
+      "parentUuid": "53692b36_f3fe24cf",
+      "range": {
+        "startLine": 135,
+        "startChar": 8,
+        "endLine": 144,
+        "endChar": 9
+      },
+      "revId": "6675bc4e7a87d3175617b9dc5b57cda1e9db3da9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "69d8210c_1a6da820",
         "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2018-03-14T14:21:20Z",
       "side": 1,
       "message": "this isn\u0027t how we want to enable the mock ICD - I would do it by checking \u0027attribs\u0027 for the NULL device type. See similar code in the d3d or opengl backends.",
+      "range": {
+        "startLine": 376,
+        "startChar": 4,
+        "endLine": 376,
+        "endChar": 26
+      },
+      "revId": "6675bc4e7a87d3175617b9dc5b57cda1e9db3da9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "96d87542_59962966",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 376,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2018-03-14T18:34:52Z",
+      "side": 1,
+      "message": "The ShouldUseNullICD call at the start of this function above is checking for NULL device type in attribs.\nI\u0027m still not clear on the best way to SET EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE in attribs. Tried to do it in this CL in util/EGLWindow.cpp in same fashion as Vk Validation is set. However, in running hello_triangle I see the code to set the attribs for both validation and icd are skipped. Instead the debug-enabled return check in ShouldUseDebugLayers() causes debug layers to be used by default. I know we don\u0027t want to do this for Mock ICD.\n\nLooking at D3D/OGL for a better idea of how to enable Mock ICD.",
+      "parentUuid": "69d8210c_1a6da820",
       "range": {
         "startLine": 376,
         "startChar": 4,
