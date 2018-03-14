@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3aafd98e_fcbec199",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 3230,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-14T14:23:47Z",
+      "side": 1,
+      "message": "tiny nit: can you write this as mHasIndexRange \u003d\u003d nullptr?  Right now it reads as \"If not has index range\" which seems opposite of what the function should be doing.",
+      "range": {
+        "startLine": 3230,
+        "startChar": 8,
+        "endLine": 3230,
+        "endChar": 23
+      },
+      "revId": "7c527582a458dcd7ce3306c8625151e9bca5c4cb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
