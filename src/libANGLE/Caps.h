@@ -725,6 +725,9 @@ struct DisplayExtensions
 
     // EGL_ANGLE_iosurface_client_buffer
     bool iosurfaceClientBuffer;
+
+    // EGL_ANGLE_create_context_extensions_enabled
+    bool createContextExtensionsEnabled;
 };
 
 struct DeviceExtensions

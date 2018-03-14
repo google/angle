@@ -201,6 +201,13 @@ bool GetWebGLContext(const egl::AttributeMap &attribs)
     return (attribs.get(EGL_CONTEXT_WEBGL_COMPATIBILITY_ANGLE, EGL_FALSE) == EGL_TRUE);
 }
 
+bool GetExtensionsEnabled(const egl::AttributeMap &attribs, bool webGLContext)
+{
+    // If the context is WebGL, extensions are disabled by default
+    EGLAttrib defaultValue = webGLContext ? EGL_FALSE : EGL_TRUE;
+    return (attribs.get(EGL_EXTENSIONS_ENABLED_ANGLE, defaultValue) == EGL_TRUE);
+}
+
 bool GetBindGeneratesResource(const egl::AttributeMap &attribs)
 {
     return (attribs.get(EGL_CONTEXT_BIND_GENERATES_RESOURCE_CHROMIUM, EGL_TRUE) == EGL_TRUE);
@@ -290,6 +297,7 @@ Context::Context(rx::EGLImplFactory *implFactory,
       mCurrentDisplay(static_cast<egl::Display *>(EGL_NO_DISPLAY)),
       mSurfacelessFramebuffer(nullptr),
       mWebGLContext(GetWebGLContext(attribs)),
+      mExtensionsEnabled(GetExtensionsEnabled(attribs, mWebGLContext)),
       mMemoryProgramCache(memoryProgramCache),
       mScratchBuffer(1000u),
       mZeroFilledBuffer(1000u)
@@ -2774,8 +2782,9 @@ void Context::initCaps(const egl::DisplayExtensions &displayExtensions, bool rob
     mExtensions.webglCompatibility = mWebGLContext;
     for (const auto &extensionInfo : GetExtensionInfoMap())
     {
-        // If this context is for WebGL, disable all enableable extensions
-        if (mWebGLContext && extensionInfo.second.Requestable)
+        // If the user has requested that extensions start disabled and they are requestable,
+        // disable them.
+        if (!mExtensionsEnabled && extensionInfo.second.Requestable)
         {
             mExtensions.*(extensionInfo.second.ExtensionsMember) = false;
         }

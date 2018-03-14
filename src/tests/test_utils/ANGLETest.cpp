@@ -847,6 +847,11 @@ void ANGLETestBase::setWebGLCompatibilityEnabled(bool webglCompatibility)
     mEGLWindow->setWebGLCompatibilityEnabled(webglCompatibility);
 }
 
+void ANGLETestBase::setExtensionsEnabled(bool extensionsEnabled)
+{
+    mEGLWindow->setExtensionsEnabled(extensionsEnabled);
+}
+
 void ANGLETestBase::setRobustAccess(bool enabled)
 {
     mEGLWindow->setRobustAccess(enabled);

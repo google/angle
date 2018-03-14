@@ -738,6 +738,20 @@ Error ValidateCreateContext(Display *display, Config *configuration, gl::Context
               }
               break;
 
+          case EGL_EXTENSIONS_ENABLED_ANGLE:
+              if (!display->getExtensions().createContextExtensionsEnabled)
+              {
+                  return EglBadAttribute()
+                         << "Attribute EGL_EXTENSIONS_ENABLED_ANGLE "
+                            "requires EGL_ANGLE_create_context_extensions_enabled.";
+              }
+              if (value != EGL_TRUE && value != EGL_FALSE)
+              {
+                  return EglBadAttribute() << "EGL_EXTENSIONS_ENABLED_ANGLE must be "
+                                              "either EGL_TRUE or EGL_FALSE.";
+              }
+              break;
+
           default:
               return EglBadAttribute() << "Unknown attribute.";
         }

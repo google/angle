@@ -74,6 +74,7 @@ class ANGLE_EXPORT EGLWindow : angle::NonCopyable
     {
         mWebGLCompatibility = webglCompatibility;
     }
+    void setExtensionsEnabled(bool extensionsEnabled) { mExtensionsEnabled = extensionsEnabled; }
     void setBindGeneratesResource(bool bindGeneratesResource)
     {
         mBindGeneratesResource = bindGeneratesResource;
@@ -149,6 +150,7 @@ class ANGLE_EXPORT EGLWindow : angle::NonCopyable
     bool mDebug;
     bool mNoError;
     bool mWebGLCompatibility;
+    Optional<bool> mExtensionsEnabled;
     bool mBindGeneratesResource;
     bool mClientArraysEnabled;
     bool mRobustAccess;
