@@ -46,6 +46,30 @@
       "revId": "b5b66620675e53ae8d2d354d7e2f66043e3a31b9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d87ff3e5_ec109787",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 537,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-14T20:13:55Z",
+      "side": 1,
+      "message": "transpose is a GLES3 feature... it\u0027s fine to include this check (extra credit)\n\nyou should still return though inside the \"if\", so you don\u0027t call setUniformImpl in this case. Also you will need to run git cl format again.\n\nAlso you want \u003d\u003d GL_TRUE rather than GL_FALSE (or !\u003d)",
+      "parentUuid": "df97ff29_5d5b20dd",
+      "range": {
+        "startLine": 537,
+        "startChar": 4,
+        "endLine": 537,
+        "endChar": 34
+      },
+      "revId": "b5b66620675e53ae8d2d354d7e2f66043e3a31b9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
