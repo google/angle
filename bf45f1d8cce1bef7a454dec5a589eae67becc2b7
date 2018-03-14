@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "349395b0_b6dfadd0",
+        "filename": "extensions/EGL_ANGLE_request_extension.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-14T15:32:00Z",
+      "side": 1,
+      "message": "I think you probably want to include \"create_context\" somewhere in here.",
+      "range": {
+        "startLine": 3,
+        "startChar": 4,
+        "endLine": 3,
+        "endChar": 27
+      },
+      "revId": "bf45f1d8cce1bef7a454dec5a589eae67becc2b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d1f1e29c_4de13235",
+        "filename": "include/EGL/eglext_angle.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-14T15:32:00Z",
+      "side": 1,
+      "message": "are we all out now?",
+      "range": {
+        "startLine": 180,
+        "startChar": 37,
+        "endLine": 180,
+        "endChar": 43
+      },
+      "revId": "bf45f1d8cce1bef7a454dec5a589eae67becc2b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "46bc3dc2_ba47d15b",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 207,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-14T15:32:00Z",
+      "side": 1,
+      "message": "nit: can you put this little expression in its own line",
+      "range": {
+        "startLine": 207,
+        "startChar": 54,
+        "endLine": 207,
+        "endChar": 89
+      },
+      "revId": "bf45f1d8cce1bef7a454dec5a589eae67becc2b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ef1ec734_ca60e930",
+        "filename": "src/tests/gl_tests/RequestExtensionTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-14T15:32:00Z",
+      "side": 1,
+      "message": "nit: comment before test.",
+      "range": {
+        "startLine": 22,
+        "startChar": 0,
+        "endLine": 22,
+        "endChar": 6
+      },
+      "revId": "bf45f1d8cce1bef7a454dec5a589eae67becc2b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
