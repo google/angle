@@ -801,6 +801,92 @@ TEST_P(StateChangeTestES3, SamplerMetadataUpdateOnSetProgram)
     ASSERT_GL_NO_ERROR();
 }
 
+// Tests that redefining Buffer storage syncs with the Transform Feedback object.
+TEST_P(StateChangeTestES3, RedefineTransformFeedbackBuffer)
+{
+    // Create the most simple program possible - simple a passthrough for a float attribute.
+    constexpr char kVertexShader[] = R"(#version 300 es
+in float valueIn;
+out float valueOut;
+void main()
+{
+    gl_Position = vec4(0, 0, 0, 0);
+    valueOut = valueIn;
+})";
+
+    constexpr char kFragmentShader[] = R"(#version 300 es
+out mediump float dummy;
+void main()
+{
+    dummy = 1.0;
+})";
+
+    std::vector<std::string> tfVaryings = {"valueOut"};
+    ANGLE_GL_PROGRAM_TRANSFORM_FEEDBACK(program, kVertexShader, kFragmentShader, tfVaryings,
+                                        GL_SEPARATE_ATTRIBS);
+    glUseProgram(program);
+
+    GLint attribLoc = glGetAttribLocation(program, "valueIn");
+    ASSERT_NE(-1, attribLoc);
+
+    // Disable rasterization - we're not interested in the framebuffer.
+    glEnable(GL_RASTERIZER_DISCARD);
+
+    // Initialize a float vertex buffer with 1.0.
+    std::vector<GLfloat> data1(16, 1.0);
+    GLsizei size1 = static_cast<GLsizei>(sizeof(GLfloat) * data1.size());
+
+    GLBuffer vertexBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+    glBufferData(GL_ARRAY_BUFFER, size1, data1.data(), GL_STATIC_DRAW);
+    glVertexAttribPointer(attribLoc, 1, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glEnableVertexAttribArray(attribLoc);
+
+    ASSERT_GL_NO_ERROR();
+
+    // Initialize a same-sized XFB buffer.
+    GLBuffer xfbBuffer;
+    glBindBuffer(GL_TRANSFORM_FEEDBACK_BUFFER, xfbBuffer);
+    glBufferData(GL_TRANSFORM_FEEDBACK_BUFFER, size1, nullptr, GL_STATIC_DRAW);
+
+    // Draw with XFB enabled.
+    GLTransformFeedback xfb;
+    glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, xfb);
+    glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, xfbBuffer);
+
+    glBeginTransformFeedback(GL_POINTS);
+    glDrawArrays(GL_POINTS, 0, 16);
+    glEndTransformFeedback();
+
+    ASSERT_GL_NO_ERROR();
+
+    // Verify the XFB stage caught the 1.0 attribute values.
+    void *mapped1     = glMapBufferRange(GL_TRANSFORM_FEEDBACK_BUFFER, 0, size1, GL_MAP_READ_BIT);
+    GLfloat *asFloat1 = reinterpret_cast<GLfloat *>(mapped1);
+    std::vector<GLfloat> actualData1(asFloat1, asFloat1 + data1.size());
+    EXPECT_EQ(data1, actualData1);
+    glUnmapBuffer(GL_TRANSFORM_FEEDBACK_BUFFER);
+
+    // Now, reinitialize the XFB buffer to a larger size, and draw with 2.0.
+    std::vector<GLfloat> data2(128, 2.0);
+    const GLsizei size2 = static_cast<GLsizei>(sizeof(GLfloat) * data2.size());
+    glBufferData(GL_ARRAY_BUFFER, size2, data2.data(), GL_STATIC_DRAW);
+    glBufferData(GL_TRANSFORM_FEEDBACK_BUFFER, size2, nullptr, GL_STATIC_DRAW);
+
+    glBeginTransformFeedback(GL_POINTS);
+    glDrawArrays(GL_POINTS, 0, 128);
+    glEndTransformFeedback();
+
+    ASSERT_GL_NO_ERROR();
+
+    // Verify the XFB stage caught the 2.0 attribute values.
+    void *mapped2     = glMapBufferRange(GL_TRANSFORM_FEEDBACK_BUFFER, 0, size2, GL_MAP_READ_BIT);
+    GLfloat *asFloat2 = reinterpret_cast<GLfloat *>(mapped2);
+    std::vector<GLfloat> actualData2(asFloat2, asFloat2 + data2.size());
+    EXPECT_EQ(data2, actualData2);
+    glUnmapBuffer(GL_TRANSFORM_FEEDBACK_BUFFER);
+}
+
 // Simple state change tests, primarily focused on basic object lifetime and dependency management
 // with back-ends that don't support that automatically (i.e. Vulkan).
 class SimpleStateChangeTest : public ANGLETest
