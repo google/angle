@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "34ed15f6_f9fc1a06",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2972,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-03-15T04:17:19Z",
+      "side": 1,
+      "message": "I think this case is not like Context::syncDirtyObjects. Do you really want me to move \"\u0026\" mask combination into mImplementation-\u003esyncState? In that case, we have to do it in all backends. Such as ContextGL::syncState, Context11::syncState, Context9::syncState, ContextVk::syncState.\n\nI prefer the current implementation which is more simple. How do you think?",
+      "parentUuid": "235b6ccd_4aa6f557",
+      "range": {
+        "startLine": 2971,
+        "startChar": 0,
+        "endLine": 2972,
+        "endChar": 48
+      },
+      "revId": "a0419c79467993933037606922038282f6727577",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "58f5709b_3edde527",
         "filename": "src/libANGLE/Context.cpp",
         "patchSetId": 7
@@ -45,6 +69,30 @@
       "revId": "a0419c79467993933037606922038282f6727577",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3a987fab_1c3f9361",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2985,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-03-15T04:17:19Z",
+      "side": 1,
+      "message": "Done for State::syncDirtyObjects.",
+      "parentUuid": "58f5709b_3edde527",
+      "range": {
+        "startLine": 2984,
+        "startChar": 0,
+        "endLine": 2985,
+        "endChar": 57
+      },
+      "revId": "a0419c79467993933037606922038282f6727577",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
