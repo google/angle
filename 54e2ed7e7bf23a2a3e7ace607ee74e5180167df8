@@ -22,6 +22,30 @@
       "revId": "54e2ed7e7bf23a2a3e7ace607ee74e5180167df8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "21bde464_be1ca3b5",
+        "filename": "src/compiler/translator/ParseContext_autogen.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-03-15T19:02:33Z",
+      "side": 1,
+      "message": "True - not directly related to this patch though so I\u0027ll address this separately.",
+      "parentUuid": "c549beeb_4fd323d8",
+      "range": {
+        "startLine": 21,
+        "startChar": 5,
+        "endLine": 21,
+        "endChar": 26
+      },
+      "revId": "54e2ed7e7bf23a2a3e7ace607ee74e5180167df8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
