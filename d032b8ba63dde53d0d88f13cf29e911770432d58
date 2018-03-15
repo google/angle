@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "7f740a6d_4323cf64",
+        "filename": "src/libANGLE/renderer/gl/BlitGL.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 661,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-15T20:17:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "69861dd1_6e3805cf",
+      "revId": "d032b8ba63dde53d0d88f13cf29e911770432d58",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4efd0a85_64d013c8",
         "filename": "src/libANGLE/renderer/gl/BlitGL.cpp",
         "patchSetId": 19
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "e56e2a6a_39d810cd",
+        "filename": "src/libANGLE/renderer/gl/BlitGL.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 767,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-15T20:17:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4efd0a85_64d013c8",
+      "revId": "d032b8ba63dde53d0d88f13cf29e911770432d58",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "02d8c37f_d50b1e4f",
         "filename": "src/libANGLE/renderer/gl/BlitGL.cpp",
         "patchSetId": 19
@@ -47,6 +83,24 @@
       "writtenOn": "2018-03-13T02:28:02Z",
       "side": 1,
       "message": "nit: this could be a static \"GetClearTargetsAndMask\" and the caller is responsible for calling setClearState.",
+      "revId": "d032b8ba63dde53d0d88f13cf29e911770432d58",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3a76bbcf_ea630f56",
+        "filename": "src/libANGLE/renderer/gl/BlitGL.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 859,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-15T20:17:48Z",
+      "side": 1,
+      "message": "Made them static by passing the state manager.",
+      "parentUuid": "02d8c37f_d50b1e4f",
       "revId": "d032b8ba63dde53d0d88f13cf29e911770432d58",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -70,6 +124,24 @@
     },
     {
       "key": {
+        "uuid": "cab6526b_5e341775",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 558,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-15T20:17:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "60717b60_ad4f1e2b",
+      "revId": "d032b8ba63dde53d0d88f13cf29e911770432d58",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a91de23a_7ee238f1",
         "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
         "patchSetId": 19
@@ -81,6 +153,24 @@
       "writtenOn": "2018-03-13T02:28:02Z",
       "side": 1,
       "message": "nit: how about cases where we can call glClear?",
+      "revId": "d032b8ba63dde53d0d88f13cf29e911770432d58",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fe6684dd_104e1772",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 1410,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-15T20:17:48Z",
+      "side": 1,
+      "message": "Not sure what you mean",
+      "parentUuid": "a91de23a_7ee238f1",
       "revId": "d032b8ba63dde53d0d88f13cf29e911770432d58",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -104,6 +194,24 @@
     },
     {
       "key": {
+        "uuid": "95f1a654_95fa9888",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 1449,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-15T20:17:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9f0f353d_3b69f806",
+      "revId": "d032b8ba63dde53d0d88f13cf29e911770432d58",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0a4522cf_d6e3cd59",
         "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
         "patchSetId": 19
@@ -115,6 +223,24 @@
       "writtenOn": "2018-03-13T02:28:02Z",
       "side": 1,
       "message": "Could we simply early out for compressed formats? I don\u0027t think they are ever renderable.",
+      "revId": "d032b8ba63dde53d0d88f13cf29e911770432d58",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "384be146_1c41d8b1",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 1217,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-15T20:17:48Z",
+      "side": 1,
+      "message": "It\u0027s either an early-out here or in TextureGL.cpp, they bot have the same cost and it simplifies some code on the higher levels.",
+      "parentUuid": "0a4522cf_d6e3cd59",
       "revId": "d032b8ba63dde53d0d88f13cf29e911770432d58",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
