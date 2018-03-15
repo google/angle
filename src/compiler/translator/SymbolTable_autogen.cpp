@@ -12769,36 +12769,9 @@ void TSymbolTable::initializeBuiltInVariables(sh::GLenum shaderType,
                       TExtension::EXT_geometry_shader, type_gl_PositionGS);
 }
 
-const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name,
-                                         int shaderVersion,
-                                         bool includeGLSLBuiltins) const
+const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shaderVersion) const
 {
     uint32_t nameHash = name.hash32();
-    if (includeGLSLBuiltins)
-    {
-        if (mShaderType == GL_VERTEX_SHADER)
-        {
-            switch (nameHash)
-            {
-                case 0x02731c1cu:
-                {
-                    if (name == BuiltInName::gl_Layer)
-                    {
-                        return &BuiltInVariable::kVar_gl_LayerVS;
-                    }
-                    break;
-                }
-                case 0x30c87b17u:
-                {
-                    if (name == BuiltInName::gl_ViewportIndex)
-                    {
-                        return &BuiltInVariable::kVar_gl_ViewportIndex;
-                    }
-                    break;
-                }
-            }
-        }
-    }
     if (shaderVersion >= 310)
     {
         switch (nameHash)

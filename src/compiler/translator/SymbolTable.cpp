@@ -151,7 +151,7 @@ const TSymbol *TSymbolTable::find(const ImmutableString &name, int shaderVersion
         userDefinedLevel--;
     }
 
-    return findBuiltIn(name, shaderVersion, false);
+    return findBuiltIn(name, shaderVersion);
 }
 
 TFunction *TSymbolTable::findUserDefinedFunction(const ImmutableString &name) const
@@ -165,11 +165,6 @@ const TSymbol *TSymbolTable::findGlobal(const ImmutableString &name) const
 {
     ASSERT(!mTable.empty());
     return mTable[0]->find(name);
-}
-
-const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shaderVersion) const
-{
-    return findBuiltIn(name, shaderVersion, false);
 }
 
 bool TSymbolTable::declare(TSymbol *symbol)

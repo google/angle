@@ -162,8 +162,6 @@ TEST(ImmutableStringTest, ScriptGeneratedHashesMatch)
     ASSERT_EQ(0x2c29f04du, ImmutableString("any").hash32());
     ASSERT_EQ(0x13254bc4u, ImmutableString("all").hash32());
     ASSERT_EQ(0x29b19c8au, ImmutableString("not").hash32());
-    ASSERT_EQ(0x30c87b17u, ImmutableString("gl_ViewportIndex").hash32());
-    ASSERT_EQ(0x02731c1cu, ImmutableString("gl_Layer").hash32());
     ASSERT_EQ(0xf3de0717u, ImmutableString("frexp(0B0C").hash32());
     ASSERT_EQ(0xa30b98d3u, ImmutableString("frexp(1B1C").hash32());
     ASSERT_EQ(0x17aa3bbfu, ImmutableString("frexp(2B2C").hash32());
@@ -384,6 +382,7 @@ TEST(ImmutableStringTest, ScriptGeneratedHashesMatch)
     ASSERT_EQ(0xc91ada96u, ImmutableString("gl_PrimitiveIDIn").hash32());
     ASSERT_EQ(0xfc2907ccu, ImmutableString("gl_InvocationID").hash32());
     ASSERT_EQ(0x863d719du, ImmutableString("gl_PrimitiveID").hash32());
+    ASSERT_EQ(0x02731c1cu, ImmutableString("gl_Layer").hash32());
     ASSERT_EQ(0xe29142f0u, ImmutableString("gl_PerVertex").hash32());
     ASSERT_EQ(0x02c4bde0u, ImmutableString("gl_Position").hash32());
     ASSERT_EQ(0x556a8827u, ImmutableString("sinh(0B").hash32());

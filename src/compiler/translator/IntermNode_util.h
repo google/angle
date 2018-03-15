@@ -52,7 +52,8 @@ TIntermBlock *EnsureBlock(TIntermNode *node);
 TIntermSymbol *ReferenceGlobalVariable(const ImmutableString &name,
                                        const TSymbolTable &symbolTable);
 
-// Note: this can access desktop GLSL built-ins that are hidden from the parser.
+// Note: this can't access desktop GLSL built-ins. Those can only be accessed directly through
+// BuiltIn_autogen.h.
 TIntermSymbol *ReferenceBuiltInVariable(const ImmutableString &name,
                                         const TSymbolTable &symbolTable,
                                         int shaderVersion);

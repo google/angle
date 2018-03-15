@@ -200,8 +200,7 @@ void TSymbolTable::initializeBuiltInVariables(sh::GLenum shaderType,
 }}
 
 const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name,
-                                         int shaderVersion,
-                                         bool includeGLSLBuiltins) const
+                                         int shaderVersion) const
 {{
     uint32_t nameHash = name.hash32();
 {get_builtin}
@@ -300,12 +299,10 @@ def get_basic_mangled_name(basic):
         return chr(ord('A') + index)
     return chr(ord('a') + index - 26)
 
-levels = ['GLSL_BUILTINS', 'ESSL3_1_BUILTINS', 'ESSL3_BUILTINS', 'ESSL1_BUILTINS', 'COMMON_BUILTINS']
+levels = ['ESSL3_1_BUILTINS', 'ESSL3_BUILTINS', 'ESSL1_BUILTINS', 'COMMON_BUILTINS']
 
 def get_shader_version_condition_for_level(level):
-    if level == 'GLSL_BUILTINS':
-        return 'includeGLSLBuiltins'
-    elif level == 'ESSL3_1_BUILTINS':
+    if level == 'ESSL3_1_BUILTINS':
         return 'shaderVersion >= 310'
     elif level == 'ESSL3_BUILTINS':
         return 'shaderVersion >= 300'
@@ -1019,12 +1016,13 @@ def process_single_variable_group(condition, group_name, group):
 """
             get_variable_definitions.append(template_get_variable_definition.format(**template_args))
 
-            template_name_if = """if (name == BuiltInName::{name})
+            if level != 'GLSL_BUILTINS':
+                template_name_if = """if (name == BuiltInName::{name})
 {{
     return &BuiltInVariable::kVar_{name_with_suffix};
 }}"""
-            name_if = template_name_if.format(**template_args)
-            get_builtin_if_statements.add_obj(level, condition, template_args['name'], {'hash_matched_code': name_if})
+                name_if = template_name_if.format(**template_args)
+                get_builtin_if_statements.add_obj(level, condition, template_args['name'], {'hash_matched_code': name_if})
 
         if is_member:
             get_condition = condition
@@ -1042,13 +1040,14 @@ def process_single_variable_group(condition, group_name, group):
 
             template_declare_member_variable = '{class} *mVar_{name_with_suffix} = nullptr;'
             declare_member_variables.append(template_declare_member_variable.format(**template_args))
-            template_name_if = """if (name == BuiltInName::{name})
+
+            if level != 'GLSL_BUILTINS':
+                template_name_if = """if (name == BuiltInName::{name})
 {{{condition_comment}
     return mVar_{name_with_suffix};
 }}"""
-            name_if = template_name_if.format(**template_args)
-
-            get_builtin_if_statements.add_obj(level, get_condition, variable_name, {'hash_matched_code': name_if})
+                name_if = template_name_if.format(**template_args)
+                get_builtin_if_statements.add_obj(level, get_condition, variable_name, {'hash_matched_code': name_if})
 
         id_counter += 1
 

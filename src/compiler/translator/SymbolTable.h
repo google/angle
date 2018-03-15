@@ -98,10 +98,6 @@ class TSymbolTable : angle::NonCopyable, TSymbolTableBase
 
     const TSymbol *findBuiltIn(const ImmutableString &name, int shaderVersion) const;
 
-    const TSymbol *findBuiltIn(const ImmutableString &name,
-                               int shaderVersion,
-                               bool includeGLSLBuiltins) const;
-
     void setDefaultPrecision(TBasicType type, TPrecision prec);
 
     // Searches down the precisionStack for a precision qualifier
