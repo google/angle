@@ -983,6 +983,8 @@ bool ValidQueryType(const Context *context, GLenum queryType)
             return context->getExtensions().disjointTimerQuery;
         case GL_COMMANDS_COMPLETED_CHROMIUM:
             return context->getExtensions().syncQuery;
+        case GL_PRIMITIVES_GENERATED_EXT:
+            return context->getExtensions().geometryShader;
         default:
             return false;
     }

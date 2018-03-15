@@ -214,6 +214,7 @@ void State::initialize(const Context *context,
     mActiveQueries[GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN].set(context, nullptr);
     mActiveQueries[GL_TIME_ELAPSED_EXT].set(context, nullptr);
     mActiveQueries[GL_COMMANDS_COMPLETED_CHROMIUM].set(context, nullptr);
+    mActiveQueries[GL_PRIMITIVES_GENERATED_EXT].set(context, nullptr);
 
     mProgram = nullptr;
 

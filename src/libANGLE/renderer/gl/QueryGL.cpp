@@ -33,6 +33,9 @@ GLuint64 MergeQueryResults(GLenum type, GLuint64 currentResult, GLuint64 newResu
         case GL_TIMESTAMP:
             return newResult;
 
+        case GL_PRIMITIVES_GENERATED_EXT:
+            return currentResult + newResult;
+
         default:
             UNREACHABLE();
             return 0;
