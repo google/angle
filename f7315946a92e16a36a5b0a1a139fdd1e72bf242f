@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fd757c1b_6fd0e2db",
+        "filename": "src/libANGLE/renderer/d3d/IndexDataManager.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-03-15T22:24:14Z",
+      "side": 1,
+      "message": "Did you consider storing context in drawCallParams, so you won\u0027t need to pass it here?",
+      "range": {
+        "startLine": 97,
+        "startChar": 57,
+        "endLine": 97,
+        "endChar": 64
+      },
+      "revId": "f7315946a92e16a36a5b0a1a139fdd1e72bf242f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ee91046a_1068b115",
+        "filename": "src/libANGLE/renderer/d3d/IndexDataManager.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-03-15T22:24:14Z",
+      "side": 1,
+      "message": "Seems like you can use type from drawCallParams",
+      "range": {
+        "startLine": 98,
+        "startChar": 45,
+        "endLine": 98,
+        "endChar": 52
+      },
+      "revId": "f7315946a92e16a36a5b0a1a139fdd1e72bf242f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0e182dc5_c5fb5984",
+        "filename": "src/libANGLE/validationES.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 608,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-03-15T22:24:14Z",
+      "side": 1,
+      "message": "Do you need this both in the namespace and here?",
+      "range": {
+        "startLine": 608,
+        "startChar": 8,
+        "endLine": 608,
+        "endChar": 35
+      },
+      "revId": "f7315946a92e16a36a5b0a1a139fdd1e72bf242f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
