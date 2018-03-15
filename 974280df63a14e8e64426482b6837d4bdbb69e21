@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "23d53fd4_433ed7fb",
+        "filename": "src/tests/gl_tests/BufferDataTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 169,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-15T16:40:00Z",
+      "side": 1,
+      "message": "can you please add ASSERT_NE(-1, positionLocation)",
+      "range": {
+        "startLine": 169,
+        "startChar": 10,
+        "endLine": 169,
+        "endChar": 26
+      },
+      "revId": "974280df63a14e8e64426482b6837d4bdbb69e21",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "08233026_a8120846",
+        "filename": "src/tests/gl_tests/BufferDataTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-15T16:40:00Z",
+      "side": 1,
+      "message": "can you please use GLBuffer positionBuffer;",
+      "range": {
+        "startLine": 180,
+        "startChar": 4,
+        "endLine": 180,
+        "endChar": 27
+      },
+      "revId": "974280df63a14e8e64426482b6837d4bdbb69e21",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "44d7cb6d_09bd707d",
+        "filename": "src/tests/gl_tests/BufferDataTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-15T16:40:00Z",
+      "side": 1,
+      "message": "can you please make this\n\nstd::vector\u003cGLfloat\u003e data(6, 1.0f);",
+      "range": {
+        "startLine": 191,
+        "startChar": 0,
+        "endLine": 195,
+        "endChar": 5
+      },
+      "revId": "974280df63a14e8e64426482b6837d4bdbb69e21",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8b00f9da_d5d9c7b3",
+        "filename": "src/tests/gl_tests/BufferDataTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-15T16:40:00Z",
+      "side": 1,
+      "message": "nit: EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);",
+      "range": {
+        "startLine": 211,
+        "startChar": 4,
+        "endLine": 211,
+        "endChar": 42
+      },
+      "revId": "974280df63a14e8e64426482b6837d4bdbb69e21",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "72437602_6fc9e1b9",
+        "filename": "src/tests/gl_tests/BufferDataTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 218,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-15T16:40:00Z",
+      "side": 1,
+      "message": "here can you use std:fill?",
+      "range": {
+        "startLine": 214,
+        "startChar": 0,
+        "endLine": 218,
+        "endChar": 5
+      },
+      "revId": "974280df63a14e8e64426482b6837d4bdbb69e21",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "de799a3e_b2c7627e",
+        "filename": "src/tests/gl_tests/BufferDataTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-15T16:40:00Z",
+      "side": 1,
+      "message": "EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);\n\nnote that this mismatches the comment above.",
+      "range": {
+        "startLine": 225,
+        "startChar": 4,
+        "endLine": 225,
+        "endChar": 40
+      },
+      "revId": "974280df63a14e8e64426482b6837d4bdbb69e21",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
