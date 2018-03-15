@@ -15,7 +15,7 @@ namespace sh
 class TIntermBlock;
 
 // Wrap switch statements in the AST into blocks when needed. Returns true if the AST was changed.
-bool WrapSwitchStatementsInBlocks(TIntermBlock *root);
+void WrapSwitchStatementsInBlocks(TIntermBlock *root);
 
 }  // namespace sh
 

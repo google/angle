@@ -31,7 +31,6 @@
 #include "compiler/translator/RegenerateStructNames.h"
 #include "compiler/translator/RemoveArrayLengthMethod.h"
 #include "compiler/translator/RemoveInvariantDeclaration.h"
-#include "compiler/translator/RemoveNoOpCasesFromEndOfSwitchStatements.h"
 #include "compiler/translator/RemovePow.h"
 #include "compiler/translator/RemoveUnreferencedVariables.h"
 #include "compiler/translator/RewriteDoWhile.h"
@@ -466,13 +465,6 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     // After this empty declarations are not allowed in the AST.
     PruneNoOps(root, &symbolTable);
 
-    // In case the last case inside a switch statement is a certain type of no-op, GLSL
-    // compilers in drivers may not accept it. In this case we clean up the dead code from the
-    // end of switch statements. This is also required because PruneNoOps may have left switch
-    // statements that only contained an empty declaration inside the final case in an invalid
-    // state. Relies on that PruneNoOps has already been run.
-    RemoveNoOpCasesFromEndOfSwitchStatements(root, &symbolTable);
-
     // Create the function DAG and check there is no recursion
     if (!initCallDag(root))
     {
@@ -585,6 +577,12 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
 
     RemoveUnreferencedVariables(root, &symbolTable);
 
+    // In case the last case inside a switch statement is a certain type of no-op, GLSL compilers in
+    // drivers may not accept it. In this case we clean up the dead code from the end of switch
+    // statements. This is also required because PruneNoOps or RemoveUnreferencedVariables may have
+    // left switch statements that only contained an empty declaration inside the final case in an
+    // invalid state. Relies on that PruneNoOps and RemoveUnreferencedVariables have already been
+    // run.
     PruneEmptyCases(root);
 
     // Built-in function emulation needs to happen after validateLimitations pass.

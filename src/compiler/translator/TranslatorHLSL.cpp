@@ -13,8 +13,8 @@
 #include "compiler/translator/ExpandIntegerPowExpressions.h"
 #include "compiler/translator/IntermNodePatternMatcher.h"
 #include "compiler/translator/OutputHLSL.h"
+#include "compiler/translator/PruneEmptyCases.h"
 #include "compiler/translator/RemoveDynamicIndexing.h"
-#include "compiler/translator/RemoveNoOpCasesFromEndOfSwitchStatements.h"
 #include "compiler/translator/RewriteElseBlocks.h"
 #include "compiler/translator/RewriteTexelFetchOffset.h"
 #include "compiler/translator/RewriteUnaryMinusOperatorInt.h"
@@ -93,13 +93,10 @@ void TranslatorHLSL::translate(TIntermBlock *root,
     sh::BreakVariableAliasingInInnerLoops(root);
 
     // WrapSwitchStatementsInBlocks should be called after any AST transformations that might
-    // introduce variable declarations inside the main scope of any switch statement.
-    if (WrapSwitchStatementsInBlocks(root))
-    {
-        // The WrapSwitchStatementsInBlocks step might introduce new no-op cases to the end of
-        // switch statements, so make sure to clean up the AST.
-        RemoveNoOpCasesFromEndOfSwitchStatements(root, &getSymbolTable());
-    }
+    // introduce variable declarations inside the main scope of any switch statement. It cannot
+    // result in no-op cases at the end of switch statements, because unreferenced variables
+    // have already been pruned.
+    WrapSwitchStatementsInBlocks(root);
 
     bool precisionEmulation =
         getResources().WEBGL_debug_shader_precision && getPragma().debugShaderPrecision;

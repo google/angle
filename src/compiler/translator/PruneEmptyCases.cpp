@@ -17,6 +17,38 @@ namespace sh
 namespace
 {
 
+bool AreEmptyBlocks(TIntermSequence *statements);
+
+bool IsEmptyBlock(TIntermNode *node)
+{
+    TIntermBlock *asBlock = node->getAsBlock();
+    if (asBlock)
+    {
+        return AreEmptyBlocks(asBlock->getSequence());
+    }
+    // Empty declarations should have already been pruned, otherwise they would need to be handled
+    // here. Note that declarations for struct types do contain a nameless child node.
+    ASSERT(node->getAsDeclarationNode() == nullptr ||
+           !node->getAsDeclarationNode()->getSequence()->empty());
+    // Pure literal statements should also already be pruned.
+    ASSERT(node->getAsConstantUnion() == nullptr);
+    return false;
+}
+
+// Return true if all statements in "statements" consist only of empty blocks and no-op statements.
+// Returns true also if there are no statements.
+bool AreEmptyBlocks(TIntermSequence *statements)
+{
+    for (size_t i = 0u; i < statements->size(); ++i)
+    {
+        if (!IsEmptyBlock(statements->at(i)))
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
 class PruneEmptyCasesTraverser : private TIntermTraverser
 {
   public:
@@ -40,31 +72,31 @@ PruneEmptyCasesTraverser::PruneEmptyCasesTraverser() : TIntermTraverser(true, fa
 
 bool PruneEmptyCasesTraverser::visitSwitch(Visit visit, TIntermSwitch *node)
 {
+    // This may mutate the statementList, but that's okay, since traversal has not yet reached
+    // there.
     TIntermBlock *statementList = node->getStatementList();
     TIntermSequence *statements = statementList->getSequence();
 
-    // Iterate block children in reverse order. Cases that are only followed by other cases are
-    // pruned.
-    size_t i                  = statements->size();
-    bool emptySwitchStatement = true;
+    // Iterate block children in reverse order. Cases that are only followed by other cases or empty
+    // blocks are marked for pruning.
+    size_t i                       = statements->size();
+    size_t lastNoOpInStatementList = i;
     while (i > 0)
     {
         --i;
         TIntermNode *statement = statements->at(i);
-        if (statement->getAsCaseNode())
+        if (statement->getAsCaseNode() || IsEmptyBlock(statement))
         {
-            TIntermSequence emptyReplacement;
-            mMultiReplacements.push_back(
-                NodeReplaceWithMultipleEntry(statementList, statement, emptyReplacement));
+            lastNoOpInStatementList = i;
         }
         else
         {
-            emptySwitchStatement = false;
             break;
         }
     }
-    if (emptySwitchStatement)
+    if (lastNoOpInStatementList == 0)
     {
+        // Remove the entire switch statement, extracting the init expression if needed.
         TIntermTyped *init = node->getInit();
         if (init->hasSideEffects())
         {
@@ -78,6 +110,10 @@ bool PruneEmptyCasesTraverser::visitSwitch(Visit visit, TIntermSwitch *node)
                                                                       node, emptyReplacement));
         }
         return false;
+    }
+    if (lastNoOpInStatementList < statements->size())
+    {
+        statements->erase(statements->begin() + lastNoOpInStatementList, statements->end());
     }
 
     return true;

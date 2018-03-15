@@ -123,8 +123,6 @@
             'compiler/translator/RemoveArrayLengthMethod.h',
             'compiler/translator/RemoveInvariantDeclaration.cpp',
             'compiler/translator/RemoveInvariantDeclaration.h',
-            'compiler/translator/RemoveNoOpCasesFromEndOfSwitchStatements.cpp',
-            'compiler/translator/RemoveNoOpCasesFromEndOfSwitchStatements.h',
             'compiler/translator/RemovePow.cpp',
             'compiler/translator/RemovePow.h',
             'compiler/translator/RemoveUnreferencedVariables.cpp',

@@ -40,6 +40,8 @@ TEST_F(PruneEmptyCasesTest, SwitchStatementWithOnlyNoOps)
             switch (i)
             {
                 case 0:
+                case 1:
+                    { {} }
                     int j;
                     1;
             }
@@ -66,6 +68,8 @@ TEST_F(PruneEmptyCasesTest, SwitchStatementWithOnlyNoOpsAndInitWithSideEffect)
             switch (++i)
             {
                 case 0:
+                case 1:
+                    { {} }
                     int j;
                     1;
             }
@@ -97,6 +101,8 @@ TEST_F(PruneEmptyCasesTest, SwitchStatementLastCaseOnlyNoOps)
                     my_FragColor = vec4(0);
                     break;
                 case 1:
+                case 2:
+                    { {} }
                     int j;
                     1;
             }

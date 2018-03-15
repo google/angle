@@ -40,16 +40,9 @@ namespace
 class WrapSwitchStatementsInBlocksTraverser : public TIntermTraverser
 {
   public:
-    WrapSwitchStatementsInBlocksTraverser() : TIntermTraverser(true, false, false), mDidWrap(false)
-    {
-    }
+    WrapSwitchStatementsInBlocksTraverser() : TIntermTraverser(true, false, false) {}
 
     bool visitSwitch(Visit visit, TIntermSwitch *node) override;
-
-    bool didWrap() const { return mDidWrap; }
-
-  private:
-    bool mDidWrap;
 };
 
 bool WrapSwitchStatementsInBlocksTraverser::visitSwitch(Visit, TIntermSwitch *node)
@@ -88,6 +81,9 @@ bool WrapSwitchStatementsInBlocksTraverser::visitSwitch(Visit, TIntermSwitch *no
                 node->getStatementList(), declaration, emptyReplacement));
 
             declarationInBlock->appendDeclarator(declaratorAsSymbol->deepCopy());
+            // The declaration can't be the last statement inside the switch since unused variables
+            // should already have been pruned.
+            ASSERT(declaration != statementList->back());
         }
         else
         {
@@ -111,7 +107,6 @@ bool WrapSwitchStatementsInBlocksTraverser::visitSwitch(Visit, TIntermSwitch *no
 
     wrapperBlock->appendStatement(node);
     queueReplacement(wrapperBlock, OriginalNode::BECOMES_CHILD);
-    mDidWrap = true;
 
     // Should be fine to process multiple switch statements, even nesting ones in the same
     // traversal.
@@ -121,12 +116,11 @@ bool WrapSwitchStatementsInBlocksTraverser::visitSwitch(Visit, TIntermSwitch *no
 }  // anonymous namespace
 
 // Wrap switch statements in the AST into blocks when needed.
-bool WrapSwitchStatementsInBlocks(TIntermBlock *root)
+void WrapSwitchStatementsInBlocks(TIntermBlock *root)
 {
     WrapSwitchStatementsInBlocksTraverser traverser;
     root->traverse(&traverser);
     traverser.updateTree();
-    return traverser.didWrap();
 }
 
 }  // namespace sh
