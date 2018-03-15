@@ -724,7 +724,7 @@ class LineLoopHandler final : angle::NonCopyable, angle::ObserverInterface
     angle::ObserverBinding mObserverBinding;
     std::unique_ptr<StreamingBuffer> mStreamingLineLoopIndicesData;
     VkBuffer mLineLoopIndexBuffer;
-    VkDeviceSize mLineLoopIndexBufferOffset;
+    uint32_t mLineLoopIndexBufferOffset;
     Optional<int> mLineLoopBufferFirstIndex;
     Optional<int> mLineLoopBufferLastIndex;
 };

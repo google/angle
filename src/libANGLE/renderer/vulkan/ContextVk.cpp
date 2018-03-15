@@ -69,11 +69,13 @@ ContextVk::ContextVk(const gl::ContextState &state, RendererVk *renderer)
       mDynamicDescriptorPool(),
       mVertexArrayDirty(false),
       mTexturesDirty(false),
-      mStreamingVertexData(VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, kStreamingVertexDataSize, 1),
-      mStreamingIndexData(VK_BUFFER_USAGE_INDEX_BUFFER_BIT, kStreamingIndexDataSize, 1)
+      mStreamingVertexData(VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, kStreamingVertexDataSize),
+      mStreamingIndexData(VK_BUFFER_USAGE_INDEX_BUFFER_BIT, kStreamingIndexDataSize)
 {
     memset(&mClearColorValue, 0, sizeof(mClearColorValue));
     memset(&mClearDepthStencilValue, 0, sizeof(mClearDepthStencilValue));
+    mStreamingVertexData.init(1);
+    mStreamingIndexData.init(1);
 }
 
 ContextVk::~ContextVk()
@@ -244,9 +246,12 @@ gl::Error ContextVk::setupDraw(const gl::Context *context,
     {
         ASSERT(!descriptorSets.empty());
         const vk::PipelineLayout &pipelineLayout = mRenderer->getGraphicsPipelineLayout();
+
         (*commandBuffer)
             ->bindDescriptorSets(VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, usedRange.low(),
-                                 usedRange.length(), &descriptorSets[usedRange.low()], 0, nullptr);
+                                 usedRange.length(), &descriptorSets[usedRange.low()],
+                                 programVk->getDynamicOffsetsCount(),
+                                 programVk->getDynamicOffsets());
     }
 
     return gl::NoError();
@@ -318,7 +323,7 @@ gl::Error ContextVk::drawElements(const gl::Context *context,
         const bool computeIndexRange = vk::GetImpl(vao)->attribsToStream(contextVk).any();
         gl::IndexRange range;
         VkBuffer buffer     = VK_NULL_HANDLE;
-        VkDeviceSize offset = 0;
+        uint32_t offset     = 0;
 
         if (elementArrayBuffer)
         {

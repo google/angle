@@ -85,7 +85,7 @@ vk::Error DynamicDescriptorPool::allocateDescriptorSets(
 vk::Error DynamicDescriptorPool::allocateNewPool(const VkDevice &device)
 {
     VkDescriptorPoolSize poolSizes[DescriptorPoolIndexCount];
-    poolSizes[UniformBufferIndex].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+    poolSizes[UniformBufferIndex].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
     poolSizes[UniformBufferIndex].descriptorCount =
         mUniformBufferDescriptorsPerSet * kMaxSets / DescriptorPoolIndexCount;
     poolSizes[TextureIndex].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;

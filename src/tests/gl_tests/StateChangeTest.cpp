@@ -1392,6 +1392,56 @@ TEST_P(SimpleStateChangeTest, ScissorTest)
     EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 2, getWindowHeight() / 2, GLColor::red);
 }
 
+// This test validates we are able to change the valid of a uniform dynamically.
+TEST_P(SimpleStateChangeTest, UniformUpdateTest)
+{
+    constexpr char kPositionUniformVertexShader[] = R"(
+precision mediump float;
+attribute vec2 position;
+uniform vec2 uniPosModifier;
+void main()
+{
+    gl_Position = vec4(position + uniPosModifier, 0, 1);
+})";
+
+    constexpr char kColorUniformFragmentShader[] = R"(
+precision mediump float;
+uniform vec4 uniColor;
+void main()
+{
+    gl_FragColor = uniColor;
+})";
+
+    ANGLE_GL_PROGRAM(program, kPositionUniformVertexShader, kColorUniformFragmentShader);
+    glUseProgram(program);
+
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    GLint posUniformLocation = glGetUniformLocation(program, "uniPosModifier");
+    ASSERT_NE(posUniformLocation, -1);
+    GLint colorUniformLocation = glGetUniformLocation(program, "uniColor");
+    ASSERT_NE(colorUniformLocation, -1);
+
+    // draw a red quad to the left side.
+    glUniform2f(posUniformLocation, -0.5, 0.0);
+    glUniform4f(colorUniformLocation, 1.0, 0.0, 0.0, 1.0);
+    drawQuad(program.get(), "position", 0.0f, 0.5f, true);
+
+    // draw a green quad to the right side.
+    glUniform2f(posUniformLocation, 0.5, 0.0);
+    glUniform4f(colorUniformLocation, 0.0, 1.0, 0.0, 1.0);
+    drawQuad(program.get(), "position", 0.0f, 0.5f, true);
+
+    ASSERT_GL_NO_ERROR();
+
+    // Test the center of the left quad. Should be red.
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 4, getWindowHeight() / 2, GLColor::red);
+
+    // Test the center of the right quad. Should be green.
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 4 * 3, getWindowHeight() / 2, GLColor::green);
+}
+
 // Tests that changing the storage of a Renderbuffer currently in use by GL works as expected.
 TEST_P(SimpleStateChangeTest, RedefineRenderbufferInUse)
 {

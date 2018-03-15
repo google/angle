@@ -829,7 +829,7 @@ vk::Error RendererVk::initGraphicsPipelineLayout()
         auto &layoutBinding = uniformBindings[blockCount];
 
         layoutBinding.binding            = blockCount;
-        layoutBinding.descriptorType     = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+        layoutBinding.descriptorType     = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
         layoutBinding.descriptorCount    = 1;
         layoutBinding.stageFlags         = VK_SHADER_STAGE_VERTEX_BIT;
         layoutBinding.pImmutableSamplers = nullptr;
@@ -841,7 +841,7 @@ vk::Error RendererVk::initGraphicsPipelineLayout()
         auto &layoutBinding = uniformBindings[blockCount];
 
         layoutBinding.binding            = blockCount;
-        layoutBinding.descriptorType     = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+        layoutBinding.descriptorType     = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
         layoutBinding.descriptorCount    = 1;
         layoutBinding.stageFlags         = VK_SHADER_STAGE_FRAGMENT_BIT;
         layoutBinding.pImmutableSamplers = nullptr;

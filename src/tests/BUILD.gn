@@ -222,6 +222,7 @@ if (is_win || is_linux || is_mac || is_android) {
 
     if (angle_enable_vulkan) {
       sources += [ "gl_tests/VulkanFormatTablesTest.cpp" ]
+      sources += [ "gl_tests/VulkanUniformUpdatesTest.cpp" ]
     }
 
     configs += [
