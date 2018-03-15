@@ -166,6 +166,8 @@ void LogLinkMismatch(InfoLog &infoLog,
                      GLenum shaderType1,
                      GLenum shaderType2);
 
+bool IsActiveInterfaceBlock(const sh::InterfaceBlock &interfaceBlock);
+
 // Struct used for correlating uniforms/elements of uniform arrays to handles
 struct VariableLocation
 {
@@ -627,12 +629,6 @@ class Program final : angle::NonCopyable, public LabeledObject
     GLuint getTransformFeedbackVaryingResourceIndex(const GLchar *name) const;
     const TransformFeedbackVarying &getTransformFeedbackVaryingResource(GLuint index) const;
 
-    static LinkMismatchError LinkValidateInterfaceBlockFields(
-        const sh::InterfaceBlockField &blockField1,
-        const sh::InterfaceBlockField &blockField2,
-        bool webglCompatibility,
-        std::string *mismatchedBlockFieldName);
-
     void addRef();
     void release(const Context *context);
     unsigned int getRefCount() const;
@@ -710,13 +706,6 @@ class Program final : angle::NonCopyable, public LabeledObject
 
     bool linkValidateShaders(const Context *context, InfoLog &infoLog);
     bool linkAttributes(const Context *context, InfoLog &infoLog);
-    static bool ValidateGraphicsInterfaceBlocks(
-        const std::vector<sh::InterfaceBlock> &vertexInterfaceBlocks,
-        const std::vector<sh::InterfaceBlock> &fragmentInterfaceBlocks,
-        InfoLog &infoLog,
-        bool webglCompatibility,
-        sh::BlockType blockType,
-        GLuint maxCombinedInterfaceBlocks);
     bool linkInterfaceBlocks(const Context *context, InfoLog &infoLog);
     bool linkVaryings(const Context *context, InfoLog &infoLog) const;
 
@@ -727,11 +716,6 @@ class Program final : angle::NonCopyable, public LabeledObject
     bool linkAtomicCounterBuffers();
 
     void updateLinkedShaderStages();
-
-    static LinkMismatchError AreMatchingInterfaceBlocks(const sh::InterfaceBlock &interfaceBlock1,
-                                                        const sh::InterfaceBlock &interfaceBlock2,
-                                                        bool webglCompatibility,
-                                                        std::string *mismatchedBlockFieldName);
 
     static LinkMismatchError LinkValidateVaryings(const sh::Varying &outputVarying,
                                                   const sh::Varying &inputVarying,

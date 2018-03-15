@@ -396,6 +396,142 @@ const char *GetLinkMismatchErrorString(LinkMismatchError linkError)
     }
 }
 
+LinkMismatchError LinkValidateInterfaceBlockFields(const sh::InterfaceBlockField &blockField1,
+                                                   const sh::InterfaceBlockField &blockField2,
+                                                   bool webglCompatibility,
+                                                   std::string *mismatchedBlockFieldName)
+{
+    if (blockField1.name != blockField2.name)
+    {
+        return LinkMismatchError::FIELD_NAME_MISMATCH;
+    }
+
+    // If webgl, validate precision of UBO fields, otherwise don't.  See Khronos bug 10287.
+    LinkMismatchError linkError = Program::LinkValidateVariablesBase(
+        blockField1, blockField2, webglCompatibility, true, mismatchedBlockFieldName);
+    if (linkError != LinkMismatchError::NO_MISMATCH)
+    {
+        AddParentPrefix(blockField1.name, mismatchedBlockFieldName);
+        return linkError;
+    }
+
+    if (blockField1.isRowMajorLayout != blockField2.isRowMajorLayout)
+    {
+        AddParentPrefix(blockField1.name, mismatchedBlockFieldName);
+        return LinkMismatchError::MATRIX_PACKING_MISMATCH;
+    }
+
+    return LinkMismatchError::NO_MISMATCH;
+}
+
+LinkMismatchError AreMatchingInterfaceBlocks(const sh::InterfaceBlock &interfaceBlock1,
+                                             const sh::InterfaceBlock &interfaceBlock2,
+                                             bool webglCompatibility,
+                                             std::string *mismatchedBlockFieldName)
+{
+    // validate blocks for the same member types
+    if (interfaceBlock1.fields.size() != interfaceBlock2.fields.size())
+    {
+        return LinkMismatchError::FIELD_NUMBER_MISMATCH;
+    }
+    if (interfaceBlock1.arraySize != interfaceBlock2.arraySize)
+    {
+        return LinkMismatchError::ARRAY_SIZE_MISMATCH;
+    }
+    if (interfaceBlock1.layout != interfaceBlock2.layout ||
+        interfaceBlock1.binding != interfaceBlock2.binding)
+    {
+        return LinkMismatchError::LAYOUT_QUALIFIER_MISMATCH;
+    }
+    const unsigned int numBlockMembers = static_cast<unsigned int>(interfaceBlock1.fields.size());
+    for (unsigned int blockMemberIndex = 0; blockMemberIndex < numBlockMembers; blockMemberIndex++)
+    {
+        const sh::InterfaceBlockField &member1 = interfaceBlock1.fields[blockMemberIndex];
+        const sh::InterfaceBlockField &member2 = interfaceBlock2.fields[blockMemberIndex];
+
+        LinkMismatchError linkError = LinkValidateInterfaceBlockFields(
+            member1, member2, webglCompatibility, mismatchedBlockFieldName);
+        if (linkError != LinkMismatchError::NO_MISMATCH)
+        {
+            return linkError;
+        }
+    }
+    return LinkMismatchError::NO_MISMATCH;
+}
+
+bool ValidateGraphicsInterfaceBlocks(const std::vector<sh::InterfaceBlock> &vertexInterfaceBlocks,
+                                     const std::vector<sh::InterfaceBlock> &fragmentInterfaceBlocks,
+                                     InfoLog &infoLog,
+                                     bool webglCompatibility,
+                                     sh::BlockType blockType,
+                                     GLuint maxCombinedInterfaceBlocks)
+{
+    // Check that interface blocks defined in the vertex and fragment shaders are identical
+    typedef std::map<std::string, const sh::InterfaceBlock *> InterfaceBlockMap;
+    InterfaceBlockMap linkedInterfaceBlocks;
+    GLuint blockCount = 0;
+
+    for (const sh::InterfaceBlock &vertexInterfaceBlock : vertexInterfaceBlocks)
+    {
+        linkedInterfaceBlocks[vertexInterfaceBlock.name] = &vertexInterfaceBlock;
+        if (IsActiveInterfaceBlock(vertexInterfaceBlock))
+        {
+            blockCount += std::max(vertexInterfaceBlock.arraySize, 1u);
+        }
+    }
+
+    for (const sh::InterfaceBlock &fragmentInterfaceBlock : fragmentInterfaceBlocks)
+    {
+        auto entry = linkedInterfaceBlocks.find(fragmentInterfaceBlock.name);
+        if (entry != linkedInterfaceBlocks.end())
+        {
+            const sh::InterfaceBlock &vertexInterfaceBlock = *(entry->second);
+            std::string mismatchedBlockFieldName;
+            LinkMismatchError linkError =
+                AreMatchingInterfaceBlocks(vertexInterfaceBlock, fragmentInterfaceBlock,
+                                           webglCompatibility, &mismatchedBlockFieldName);
+            if (linkError != LinkMismatchError::NO_MISMATCH)
+            {
+                LogLinkMismatch(infoLog, fragmentInterfaceBlock.name, "interface block", linkError,
+                                mismatchedBlockFieldName, GL_VERTEX_SHADER, GL_FRAGMENT_SHADER);
+                return false;
+            }
+        }
+
+        // [OpenGL ES 3.1] Chapter 7.6.2 Page 105:
+        // If a uniform block is used by multiple shader stages, each such use counts separately
+        // against this combined limit.
+        // [OpenGL ES 3.1] Chapter 7.8 Page 111:
+        // If a shader storage block in a program is referenced by multiple shaders, each such
+        // reference counts separately against this combined limit.
+        if (IsActiveInterfaceBlock(fragmentInterfaceBlock))
+        {
+            blockCount += std::max(fragmentInterfaceBlock.arraySize, 1u);
+        }
+    }
+
+    if (blockCount > maxCombinedInterfaceBlocks)
+    {
+        switch (blockType)
+        {
+            case sh::BlockType::BLOCK_UNIFORM:
+                infoLog << "The sum of the number of active uniform blocks exceeds "
+                           "MAX_COMBINED_UNIFORM_BLOCKS ("
+                        << maxCombinedInterfaceBlocks << ").";
+                break;
+            case sh::BlockType::BLOCK_BUFFER:
+                infoLog << "The sum of the number of active shader storage blocks exceeds "
+                           "MAX_COMBINED_SHADER_STORAGE_BLOCKS ("
+                        << maxCombinedInterfaceBlocks << ").";
+                break;
+            default:
+                UNREACHABLE();
+        }
+        return false;
+    }
+    return true;
+}
+
 }  // anonymous namespace
 
 const char *const g_fakepath = "C:\\fakepath";
@@ -505,6 +641,12 @@ void LogLinkMismatch(InfoLog &infoLog,
            << GetShaderTypeString(shaderType2) << " shaders.";
 
     infoLog << stream.str();
+}
+
+bool IsActiveInterfaceBlock(const sh::InterfaceBlock &interfaceBlock)
+{
+    // Only 'packed' blocks are allowed to be considered inactive.
+    return interfaceBlock.staticUse || interfaceBlock.layout != sh::BLOCKLAYOUT_PACKED;
 }
 
 // VariableLocation implementation.
@@ -2473,35 +2615,6 @@ bool Program::linkAtomicCounterBuffers()
     return true;
 }
 
-LinkMismatchError Program::LinkValidateInterfaceBlockFields(
-    const sh::InterfaceBlockField &blockField1,
-    const sh::InterfaceBlockField &blockField2,
-    bool webglCompatibility,
-    std::string *mismatchedBlockFieldName)
-{
-    if (blockField1.name != blockField2.name)
-    {
-        return LinkMismatchError::FIELD_NAME_MISMATCH;
-    }
-
-    // If webgl, validate precision of UBO fields, otherwise don't.  See Khronos bug 10287.
-    LinkMismatchError linkError = LinkValidateVariablesBase(
-        blockField1, blockField2, webglCompatibility, true, mismatchedBlockFieldName);
-    if (linkError != LinkMismatchError::NO_MISMATCH)
-    {
-        AddParentPrefix(blockField1.name, mismatchedBlockFieldName);
-        return linkError;
-    }
-
-    if (blockField1.isRowMajorLayout != blockField2.isRowMajorLayout)
-    {
-        AddParentPrefix(blockField1.name, mismatchedBlockFieldName);
-        return LinkMismatchError::MATRIX_PACKING_MISMATCH;
-    }
-
-    return LinkMismatchError::NO_MISMATCH;
-}
-
 // Assigns locations to all attributes from the bindings and program locations.
 bool Program::linkAttributes(const Context *context, InfoLog &infoLog)
 {
@@ -2622,81 +2735,6 @@ bool Program::linkAttributes(const Context *context, InfoLog &infoLog)
     return true;
 }
 
-bool Program::ValidateGraphicsInterfaceBlocks(
-    const std::vector<sh::InterfaceBlock> &vertexInterfaceBlocks,
-    const std::vector<sh::InterfaceBlock> &fragmentInterfaceBlocks,
-    InfoLog &infoLog,
-    bool webglCompatibility,
-    sh::BlockType blockType,
-    GLuint maxCombinedInterfaceBlocks)
-{
-    // Check that interface blocks defined in the vertex and fragment shaders are identical
-    typedef std::map<std::string, const sh::InterfaceBlock *> InterfaceBlockMap;
-    InterfaceBlockMap linkedInterfaceBlocks;
-    GLuint blockCount = 0;
-
-    for (const sh::InterfaceBlock &vertexInterfaceBlock : vertexInterfaceBlocks)
-    {
-        linkedInterfaceBlocks[vertexInterfaceBlock.name] = &vertexInterfaceBlock;
-        if (vertexInterfaceBlock.staticUse || vertexInterfaceBlock.layout != sh::BLOCKLAYOUT_PACKED)
-        {
-            blockCount += std::max(vertexInterfaceBlock.arraySize, 1u);
-        }
-    }
-
-    for (const sh::InterfaceBlock &fragmentInterfaceBlock : fragmentInterfaceBlocks)
-    {
-        auto entry = linkedInterfaceBlocks.find(fragmentInterfaceBlock.name);
-        if (entry != linkedInterfaceBlocks.end())
-        {
-            const sh::InterfaceBlock &vertexInterfaceBlock = *(entry->second);
-            std::string mismatchedBlockFieldName;
-            LinkMismatchError linkError =
-                AreMatchingInterfaceBlocks(vertexInterfaceBlock, fragmentInterfaceBlock,
-                                           webglCompatibility, &mismatchedBlockFieldName);
-            if (linkError != LinkMismatchError::NO_MISMATCH)
-            {
-                LogLinkMismatch(infoLog, fragmentInterfaceBlock.name, "interface block", linkError,
-                                mismatchedBlockFieldName, GL_VERTEX_SHADER, GL_FRAGMENT_SHADER);
-                return false;
-            }
-        }
-
-        // [OpenGL ES 3.1] Chapter 7.6.2 Page 105:
-        // If a uniform block is used by multiple shader stages, each such use counts separately
-        // against this combined limit.
-        // [OpenGL ES 3.1] Chapter 7.8 Page 111:
-        // If a shader storage block in a program is referenced by multiple shaders, each such
-        // reference counts separately against this combined limit.
-        if (fragmentInterfaceBlock.staticUse ||
-            fragmentInterfaceBlock.layout != sh::BLOCKLAYOUT_PACKED)
-        {
-            blockCount += std::max(fragmentInterfaceBlock.arraySize, 1u);
-        }
-    }
-
-    if (blockCount > maxCombinedInterfaceBlocks)
-    {
-        switch (blockType)
-        {
-            case sh::BlockType::BLOCK_UNIFORM:
-                infoLog << "The sum of the number of active uniform blocks exceeds "
-                           "MAX_COMBINED_UNIFORM_BLOCKS ("
-                        << maxCombinedInterfaceBlocks << ").";
-                break;
-            case sh::BlockType::BLOCK_BUFFER:
-                infoLog << "The sum of the number of active shader storage blocks exceeds "
-                           "MAX_COMBINED_SHADER_STORAGE_BLOCKS ("
-                        << maxCombinedInterfaceBlocks << ").";
-                break;
-            default:
-                UNREACHABLE();
-        }
-        return false;
-    }
-    return true;
-}
-
 bool Program::linkInterfaceBlocks(const Context *context, InfoLog &infoLog)
 {
     const auto &caps = context->getCaps();
@@ -2786,41 +2824,6 @@ bool Program::linkInterfaceBlocks(const Context *context, InfoLog &infoLog)
         }
     }
     return true;
-}
-
-LinkMismatchError Program::AreMatchingInterfaceBlocks(const sh::InterfaceBlock &interfaceBlock1,
-                                                      const sh::InterfaceBlock &interfaceBlock2,
-                                                      bool webglCompatibility,
-                                                      std::string *mismatchedBlockFieldName)
-{
-    // validate blocks for the same member types
-    if (interfaceBlock1.fields.size() != interfaceBlock2.fields.size())
-    {
-        return LinkMismatchError::FIELD_NUMBER_MISMATCH;
-    }
-    if (interfaceBlock1.arraySize != interfaceBlock2.arraySize)
-    {
-        return LinkMismatchError::ARRAY_SIZE_MISMATCH;
-    }
-    if (interfaceBlock1.layout != interfaceBlock2.layout ||
-        interfaceBlock1.binding != interfaceBlock2.binding)
-    {
-        return LinkMismatchError::LAYOUT_QUALIFIER_MISMATCH;
-    }
-    const unsigned int numBlockMembers = static_cast<unsigned int>(interfaceBlock1.fields.size());
-    for (unsigned int blockMemberIndex = 0; blockMemberIndex < numBlockMembers; blockMemberIndex++)
-    {
-        const sh::InterfaceBlockField &member1 = interfaceBlock1.fields[blockMemberIndex];
-        const sh::InterfaceBlockField &member2 = interfaceBlock2.fields[blockMemberIndex];
-
-        LinkMismatchError linkError = LinkValidateInterfaceBlockFields(
-            member1, member2, webglCompatibility, mismatchedBlockFieldName);
-        if (linkError != LinkMismatchError::NO_MISMATCH)
-        {
-            return linkError;
-        }
-    }
-    return LinkMismatchError::NO_MISMATCH;
 }
 
 LinkMismatchError Program::LinkValidateVariablesBase(const sh::ShaderVariable &variable1,

@@ -814,8 +814,7 @@ void InterfaceBlockLinker::linkBlocks(const GetBlockSize &getBlockSize,
 
         for (const auto &block : *shaderBlocks.second)
         {
-            // Only 'packed' blocks are allowed to be considered inactive.
-            if (!block.staticUse && block.layout == sh::BLOCKLAYOUT_PACKED)
+            if (!IsActiveInterfaceBlock(block))
                 continue;
 
             if (visitedList.count(block.name) > 0)
