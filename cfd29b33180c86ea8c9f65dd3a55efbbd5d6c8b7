@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0ac16edb_f758556c",
+        "filename": "src/compiler/translator/SymbolTable.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-03-16T09:09:56Z",
+      "side": 1,
+      "message": "This is a bit dirty - would it maybe be better to autogenerate the whole file?",
+      "revId": "cfd29b33180c86ea8c9f65dd3a55efbbd5d6c8b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
