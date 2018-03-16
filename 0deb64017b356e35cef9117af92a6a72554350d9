@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "e2e54b2a_1f54fd9a",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 371,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-03-16T12:44:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2bb9a0ca_db8a5964",
+      "range": {
+        "startLine": 371,
+        "startChar": 64,
+        "endLine": 371,
+        "endChar": 70
+      },
+      "revId": "0deb64017b356e35cef9117af92a6a72554350d9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3a99329a_1ce8a8b4",
         "filename": "src/libANGLE/renderer/vulkan/StreamingBuffer.cpp",
         "patchSetId": 6
@@ -36,6 +60,30 @@
       "writtenOn": "2018-03-16T12:20:58Z",
       "side": 1,
       "message": "this assumes every allocation has the same alignment. that\u0027s fine, but why don\u0027t we then make this a parameter of the constructor, or a \"set\" function if the alignment isn\u0027t available at constructor time?",
+      "range": {
+        "startLine": 64,
+        "startChar": 8,
+        "endLine": 64,
+        "endChar": 23
+      },
+      "revId": "0deb64017b356e35cef9117af92a6a72554350d9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1ea06a44_9e232c07",
+        "filename": "src/libANGLE/renderer/vulkan/StreamingBuffer.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-03-16T12:44:53Z",
+      "side": 1,
+      "message": "I\u0027m not sure I understand this comment. This calculates the amount to allocate on every allocate call, I don\u0027t see how it assumes the allocation has the same alignment on every allocation?",
+      "parentUuid": "3a99329a_1ce8a8b4",
       "range": {
         "startLine": 64,
         "startChar": 8,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "85449294_fc59878a",
+        "filename": "src/libANGLE/renderer/vulkan/StreamingBuffer.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-03-16T12:44:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4e2fef3c_c848dafc",
+      "range": {
+        "startLine": 100,
+        "startChar": 8,
+        "endLine": 100,
+        "endChar": 38
+      },
+      "revId": "0deb64017b356e35cef9117af92a6a72554350d9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "23f549de_a6eb6319",
         "filename": "src/libANGLE/renderer/vulkan/StreamingBuffer.h",
         "patchSetId": 6
@@ -91,6 +163,30 @@
       "revId": "0deb64017b356e35cef9117af92a6a72554350d9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d56b9315_64aa3050",
+        "filename": "src/libANGLE/renderer/vulkan/StreamingBuffer.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-03-16T12:44:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "23f549de_a6eb6319",
+      "range": {
+        "startLine": 30,
+        "startChar": 52,
+        "endLine": 36,
+        "endChar": 48
+      },
+      "revId": "0deb64017b356e35cef9117af92a6a72554350d9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "b3901e7d_65bdf0ea",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-03-16T12:44:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7e1f1a4b_84b80ecb",
+      "range": {
+        "startLine": 84,
+        "startChar": 54,
+        "endLine": 84,
+        "endChar": 62
+      },
+      "revId": "0deb64017b356e35cef9117af92a6a72554350d9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d68ee395_c9d80675",
         "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
         "patchSetId": 6
@@ -137,6 +257,30 @@
       "revId": "0deb64017b356e35cef9117af92a6a72554350d9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9f4c3a59_eb1bd314",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1379,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-03-16T12:44:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d68ee395_c9d80675",
+      "range": {
+        "startLine": 1379,
+        "startChar": 38,
+        "endLine": 1379,
+        "endChar": 51
+      },
+      "revId": "0deb64017b356e35cef9117af92a6a72554350d9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
