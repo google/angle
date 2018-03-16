@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d8be6229_5857d340",
+        "filename": "src/libANGLE/renderer/gl/BlitGL.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 813,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-16T19:52:18Z",
+      "side": 1,
+      "message": "does this account for weird scissor settings? you should be able to make a test for this.",
+      "range": {
+        "startLine": 813,
+        "startChar": 14,
+        "endLine": 813,
+        "endChar": 29
+      },
+      "revId": "69462d0ca27811eed9a9f7a7c2724ef51ba8dea5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ea03922d_f3bef858",
+        "filename": "src/libANGLE/renderer/gl/RenderbufferGL.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-16T19:52:18Z",
+      "side": 1,
+      "message": "nit: ldap and bug",
+      "range": {
+        "startLine": 102,
+        "startChar": 7,
+        "endLine": 102,
+        "endChar": 11
+      },
+      "revId": "69462d0ca27811eed9a9f7a7c2724ef51ba8dea5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
