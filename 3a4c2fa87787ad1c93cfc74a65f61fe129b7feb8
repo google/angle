@@ -66,6 +66,24 @@
     },
     {
       "key": {
+        "uuid": "ce8ce495_b28982f2",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-03-16T14:47:15Z",
+      "side": 1,
+      "message": "Even better, done.",
+      "parentUuid": "004d9c41_ba94e6fe",
+      "revId": "3a4c2fa87787ad1c93cfc74a65f61fe129b7feb8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "aa7841ca_cf7a54b7",
         "filename": "src/compiler/translator/gen_builtin_symbols.py",
         "patchSetId": 7
@@ -89,6 +107,30 @@
     },
     {
       "key": {
+        "uuid": "fc7d5622_7e8cca30",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-03-16T14:47:15Z",
+      "side": 1,
+      "message": "Must have accidentally changed this when I indented the parameters, fixed.",
+      "parentUuid": "aa7841ca_cf7a54b7",
+      "range": {
+        "startLine": 189,
+        "startChar": 35,
+        "endLine": 189,
+        "endChar": 47
+      },
+      "revId": "3a4c2fa87787ad1c93cfc74a65f61fe129b7feb8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a5595966_7c8cc725",
         "filename": "src/compiler/translator/gen_builtin_symbols.py",
         "patchSetId": 7
@@ -109,6 +151,30 @@
       "revId": "3a4c2fa87787ad1c93cfc74a65f61fe129b7feb8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f3934138_b5486356",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 361,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-03-16T14:47:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a5595966_7c8cc725",
+      "range": {
+        "startLine": 361,
+        "startChar": 42,
+        "endLine": 361,
+        "endChar": 66
+      },
+      "revId": "3a4c2fa87787ad1c93cfc74a65f61fe129b7feb8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
