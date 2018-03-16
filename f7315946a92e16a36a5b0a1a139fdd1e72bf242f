@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "802637c8_0ad48391",
+        "filename": "src/libANGLE/renderer/d3d/IndexDataManager.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-16T12:32:42Z",
+      "side": 1,
+      "message": "I think passing it is preferable to storing it. The storing felt pretty hacky.",
+      "parentUuid": "fd757c1b_6fd0e2db",
+      "range": {
+        "startLine": 97,
+        "startChar": 57,
+        "endLine": 97,
+        "endChar": 64
+      },
+      "revId": "f7315946a92e16a36a5b0a1a139fdd1e72bf242f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ee91046a_1068b115",
         "filename": "src/libANGLE/renderer/d3d/IndexDataManager.h",
         "patchSetId": 2
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "f4175576_28cf448b",
+        "filename": "src/libANGLE/renderer/d3d/IndexDataManager.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-16T12:32:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ee91046a_1068b115",
+      "range": {
+        "startLine": 98,
+        "startChar": 45,
+        "endLine": 98,
+        "endChar": 52
+      },
+      "revId": "f7315946a92e16a36a5b0a1a139fdd1e72bf242f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0e182dc5_c5fb5984",
         "filename": "src/libANGLE/validationES.h",
         "patchSetId": 2
@@ -68,6 +116,30 @@
       "revId": "f7315946a92e16a36a5b0a1a139fdd1e72bf242f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4aaf0d04_0c28da66",
+        "filename": "src/libANGLE/validationES.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 608,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-16T12:32:42Z",
+      "side": 1,
+      "message": "No, this was an accident from a merge. Removed.",
+      "parentUuid": "0e182dc5_c5fb5984",
+      "range": {
+        "startLine": 608,
+        "startChar": 8,
+        "endLine": 608,
+        "endChar": 35
+      },
+      "revId": "f7315946a92e16a36a5b0a1a139fdd1e72bf242f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
