@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "92d833cf_cf35af61",
+        "filename": "src/libANGLE/renderer/vulkan/StreamingBuffer.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-16T13:21:00Z",
+      "side": 1,
+      "message": "Because the alignment that the uniform buffers require is on the first byte. So if your alignment is 3, and you allocate 3, then your alignment is 4, and allocate 4, the second alignment should be still at offset 4. But, if you set a single uniform alignment for the buffer, then this problem goes away.",
+      "parentUuid": "1ea06a44_9e232c07",
+      "range": {
+        "startLine": 64,
+        "startChar": 8,
+        "endLine": 64,
+        "endChar": 23
+      },
+      "revId": "0deb64017b356e35cef9117af92a6a72554350d9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "4e2fef3c_c848dafc",
         "filename": "src/libANGLE/renderer/vulkan/StreamingBuffer.cpp",
         "patchSetId": 6

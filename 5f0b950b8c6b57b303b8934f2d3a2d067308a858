@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "716ba9db_d367310a",
+        "filename": "src/libANGLE/renderer/vulkan/StreamingBuffer.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-16T13:21:00Z",
+      "side": 1,
+      "message": "no default arguments. make this a set property on the buffer, and explicitly mention it\u0027s undefined behaviour to change this alignment after the buffer\u0027s had any allocations.",
+      "range": {
+        "startLine": 30,
+        "startChar": 30,
+        "endLine": 30,
+        "endChar": 50
+      },
+      "revId": "5f0b950b8c6b57b303b8934f2d3a2d067308a858",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
