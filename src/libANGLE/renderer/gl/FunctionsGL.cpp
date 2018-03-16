@@ -244,6 +244,7 @@ void FunctionsGL::initializeDummyFunctionsForNULLDriver(const std::set<std::stri
     ASSIGN("glGetString", getString);
     ASSIGN("glGetStringi", getStringi);
     ASSIGN("glGetIntegerv", getIntegerv);
+    ASSIGN("glGetIntegeri_v", getIntegeri_v);
 
     getProgramiv           = &DummyGetProgramiv;
     getShaderiv            = &DummyGetShaderiv;
