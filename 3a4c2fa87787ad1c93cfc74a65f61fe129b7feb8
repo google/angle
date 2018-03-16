@@ -22,6 +22,30 @@
       "revId": "3a4c2fa87787ad1c93cfc74a65f61fe129b7feb8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1598b025_23138c32",
+        "filename": "src/compiler/translator/SymbolTable_autogen.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-03-16T14:08:59Z",
+      "side": 1,
+      "message": "Removed the SH_ prefix.",
+      "parentUuid": "ca4cba57_58dbc6aa",
+      "range": {
+        "startLine": 15,
+        "startChar": 8,
+        "endLine": 15,
+        "endChar": 67
+      },
+      "revId": "3a4c2fa87787ad1c93cfc74a65f61fe129b7feb8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
