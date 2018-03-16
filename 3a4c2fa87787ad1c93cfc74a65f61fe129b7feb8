@@ -46,6 +46,69 @@
       "revId": "3a4c2fa87787ad1c93cfc74a65f61fe129b7feb8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "004d9c41_ba94e6fe",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-03-16T14:26:42Z",
+      "side": 1,
+      "message": "Maybe this could be a base class with protected members instead of a define.",
+      "revId": "3a4c2fa87787ad1c93cfc74a65f61fe129b7feb8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aa7841ca_cf7a54b7",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-03-16T14:26:42Z",
+      "side": 1,
+      "message": "nit: Why the extra spaces? clang-format will take core of this.",
+      "range": {
+        "startLine": 189,
+        "startChar": 35,
+        "endLine": 189,
+        "endChar": 47
+      },
+      "revId": "3a4c2fa87787ad1c93cfc74a65f61fe129b7feb8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a5595966_7c8cc725",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 361,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-03-16T14:26:42Z",
+      "side": 1,
+      "message": "format(name_hash, \u002708X\u0027) here and in the other places hashes are formatted so that they are correctly padded with 0s.",
+      "range": {
+        "startLine": 361,
+        "startChar": 42,
+        "endLine": 361,
+        "endChar": 66
+      },
+      "revId": "3a4c2fa87787ad1c93cfc74a65f61fe129b7feb8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
