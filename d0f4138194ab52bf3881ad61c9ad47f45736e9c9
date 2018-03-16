@@ -1,0 +1,234 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "44e40ef6_d3223e2a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-16T19:35:42Z",
+      "side": 1,
+      "message": "nit: can you phrase this as \"Vulkan: Adding null driver as device option\"",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 38
+      },
+      "revId": "d0f4138194ab52bf3881ad61c9ad47f45736e9c9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e143cf35_19d28bdc",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-16T19:35:42Z",
+      "side": 1,
+      "message": "need to check if we need this.",
+      "range": {
+        "startLine": 10,
+        "startChar": 0,
+        "endLine": 12,
+        "endChar": 21
+      },
+      "revId": "d0f4138194ab52bf3881ad61c9ad47f45736e9c9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3ed96cdc_83d6bfc4",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-16T19:35:42Z",
+      "side": 1,
+      "message": "shouldn\u0027t be necessary.",
+      "range": {
+        "startLine": 27,
+        "startChar": 0,
+        "endLine": 27,
+        "endChar": 65
+      },
+      "revId": "d0f4138194ab52bf3881ad61c9ad47f45736e9c9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "efe3b6e1_42143d8a",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-16T19:35:42Z",
+      "side": 1,
+      "message": "don\u0027t see why this needs to be a member variable. can just make it a local.",
+      "range": {
+        "startLine": 256,
+        "startChar": 4,
+        "endLine": 256,
+        "endChar": 22
+      },
+      "revId": "d0f4138194ab52bf3881ad61c9ad47f45736e9c9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9b4a9964_05517607",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 259,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-16T19:35:42Z",
+      "side": 1,
+      "message": "this expression looks wrong - the default value if not set should be hardware, and the comparison should be if the attribute is null - please refer to the extension text:\n\nhttps://cs.chromium.org/chromium/src/third_party/angle/extensions/EGL_ANGLE_platform_angle.txt",
+      "range": {
+        "startLine": 259,
+        "startChar": 9,
+        "endLine": 259,
+        "endChar": 90
+      },
+      "revId": "d0f4138194ab52bf3881ad61c9ad47f45736e9c9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8c22cba9_de2708b5",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 266,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-16T19:35:42Z",
+      "side": 1,
+      "message": "return a vk Error here is fine if we fail to call SetEnvironmentVar.",
+      "range": {
+        "startLine": 266,
+        "startChar": 12,
+        "endLine": 266,
+        "endChar": 77
+      },
+      "revId": "d0f4138194ab52bf3881ad61c9ad47f45736e9c9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "21f118e7_4f767cdb",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 380,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-16T19:35:42Z",
+      "side": 1,
+      "message": "this feels a bit magical. can you move these constants into constants in an anonymous namespace block?",
+      "range": {
+        "startLine": 378,
+        "startChar": 13,
+        "endLine": 380,
+        "endChar": 89
+      },
+      "revId": "d0f4138194ab52bf3881ad61c9ad47f45736e9c9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cc4e531a_91ec5b3e",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 386,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-16T19:35:42Z",
+      "side": 1,
+      "message": "can you abstract this into a method like \"selectPhysicalDevice\", that takes as a parameter a bool if we should prefer using the NULL device, and returns a VkPhysicalDevice? this might even be a static anonymous method - it might not require any member values.",
+      "range": {
+        "startLine": 363,
+        "startChar": 0,
+        "endLine": 386,
+        "endChar": 5
+      },
+      "revId": "d0f4138194ab52bf3881ad61c9ad47f45736e9c9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "40188c9a_1368e1fc",
+        "filename": "src/tests/test_utils/ANGLETest.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 326,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-16T19:35:42Z",
+      "side": 1,
+      "message": "you should be able to remove this stuff",
+      "range": {
+        "startLine": 325,
+        "startChar": 45,
+        "endLine": 326,
+        "endChar": 44
+      },
+      "revId": "d0f4138194ab52bf3881ad61c9ad47f45736e9c9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "06b438bf_02302671",
+        "filename": "util/EGLWindow.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-16T19:35:42Z",
+      "side": 1,
+      "message": "and all this stuff. the DEVICE_TYPE_NULL_ANGLE is meant to be used as a value of the attribute EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE, not as a key. please see the spec linked before.",
+      "range": {
+        "startLine": 209,
+        "startChar": 0,
+        "endLine": 214,
+        "endChar": 5
+      },
+      "revId": "d0f4138194ab52bf3881ad61c9ad47f45736e9c9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
