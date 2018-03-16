@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "0a5a3986_94337a39",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2018-03-16T22:54:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "44e40ef6_d3223e2a",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 38
+      },
+      "revId": "d0f4138194ab52bf3881ad61c9ad47f45736e9c9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e143cf35_19d28bdc",
         "filename": "/COMMIT_MSG",
         "patchSetId": 3
@@ -71,6 +95,30 @@
     },
     {
       "key": {
+        "uuid": "7d487518_457a2983",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2018-03-16T22:54:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3ed96cdc_83d6bfc4",
+      "range": {
+        "startLine": 27,
+        "startChar": 0,
+        "endLine": 27,
+        "endChar": 65
+      },
+      "revId": "d0f4138194ab52bf3881ad61c9ad47f45736e9c9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "efe3b6e1_42143d8a",
         "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
         "patchSetId": 3
@@ -91,6 +139,30 @@
       "revId": "d0f4138194ab52bf3881ad61c9ad47f45736e9c9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "da991cdb_305c6fb5",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2018-03-16T22:54:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "efe3b6e1_42143d8a",
+      "range": {
+        "startLine": 256,
+        "startChar": 4,
+        "endLine": 256,
+        "endChar": 22
+      },
+      "revId": "d0f4138194ab52bf3881ad61c9ad47f45736e9c9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -117,6 +189,30 @@
     },
     {
       "key": {
+        "uuid": "141a5293_bf27a25e",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 259,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2018-03-16T22:54:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9b4a9964_05517607",
+      "range": {
+        "startLine": 259,
+        "startChar": 9,
+        "endLine": 259,
+        "endChar": 90
+      },
+      "revId": "d0f4138194ab52bf3881ad61c9ad47f45736e9c9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8c22cba9_de2708b5",
         "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
         "patchSetId": 3
@@ -137,6 +233,30 @@
       "revId": "d0f4138194ab52bf3881ad61c9ad47f45736e9c9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4f9c8ed0_ff668c92",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 266,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2018-03-16T22:54:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8c22cba9_de2708b5",
+      "range": {
+        "startLine": 266,
+        "startChar": 12,
+        "endLine": 266,
+        "endChar": 77
+      },
+      "revId": "d0f4138194ab52bf3881ad61c9ad47f45736e9c9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -163,6 +283,30 @@
     },
     {
       "key": {
+        "uuid": "aa968a51_2c5c4272",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 380,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2018-03-16T22:54:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "21f118e7_4f767cdb",
+      "range": {
+        "startLine": 378,
+        "startChar": 13,
+        "endLine": 380,
+        "endChar": 89
+      },
+      "revId": "d0f4138194ab52bf3881ad61c9ad47f45736e9c9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cc4e531a_91ec5b3e",
         "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
         "patchSetId": 3
@@ -174,6 +318,30 @@
       "writtenOn": "2018-03-16T19:35:42Z",
       "side": 1,
       "message": "can you abstract this into a method like \"selectPhysicalDevice\", that takes as a parameter a bool if we should prefer using the NULL device, and returns a VkPhysicalDevice? this might even be a static anonymous method - it might not require any member values.",
+      "range": {
+        "startLine": 363,
+        "startChar": 0,
+        "endLine": 386,
+        "endChar": 5
+      },
+      "revId": "d0f4138194ab52bf3881ad61c9ad47f45736e9c9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "975e9755_c261a34d",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 386,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2018-03-16T22:54:32Z",
+      "side": 1,
+      "message": "Alright, I made a couple passes that this suggestion but wasn\u0027t happy with either of them so the code is still inline. It feels like the appropriate boundary for this function is at the instance level where I pass in the instance and bool to select null driver and I get back the VkPhysicalDevice. Doing that can work but the ANGLE_VK_TRY/ANGLE_VK_CHECK error checking for the Vulkan calls doesn\u0027t work so the error checks were getting eaten and a null physicalDevice would be returned as the error indication. That may be ok, but I didn\u0027t like less error checking on these initialization functions.\n\nAlternatively I tried to make it a full-blown private class function whose side effect is setting mPhysicalDevice and mPhysicalDeviceProperties. This allowed access the instance member var, and also made sense to move mUseNullDriver into member var. I still wasn\u0027t happy with the effect on error handling, though, as it returned vk::Error to be returned to top level if error occurs but the added level of error checking felt clunky.\n\nI\u0027m happy to spend more time on this to get it refactored and clean, but leaving inline for today so that I could get something functional pushed.",
+      "parentUuid": "cc4e531a_91ec5b3e",
       "range": {
         "startLine": 363,
         "startChar": 0,
@@ -209,6 +377,30 @@
     },
     {
       "key": {
+        "uuid": "d0d9d903_5970a630",
+        "filename": "src/tests/test_utils/ANGLETest.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 326,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2018-03-16T22:54:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "40188c9a_1368e1fc",
+      "range": {
+        "startLine": 325,
+        "startChar": 45,
+        "endLine": 326,
+        "endChar": 44
+      },
+      "revId": "d0f4138194ab52bf3881ad61c9ad47f45736e9c9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "06b438bf_02302671",
         "filename": "util/EGLWindow.cpp",
         "patchSetId": 3
@@ -229,6 +421,30 @@
       "revId": "d0f4138194ab52bf3881ad61c9ad47f45736e9c9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6d3b0138_af7a7db6",
+        "filename": "util/EGLWindow.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2018-03-16T22:54:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "06b438bf_02302671",
+      "range": {
+        "startLine": 209,
+        "startChar": 0,
+        "endLine": 214,
+        "endChar": 5
+      },
+      "revId": "d0f4138194ab52bf3881ad61c9ad47f45736e9c9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
