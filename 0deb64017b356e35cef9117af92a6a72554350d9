@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2bb9a0ca_db8a5964",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 371,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-16T12:20:58Z",
+      "side": 1,
+      "message": "I think I would give an alignment of \"1\" here.",
+      "range": {
+        "startLine": 371,
+        "startChar": 64,
+        "endLine": 371,
+        "endChar": 70
+      },
+      "revId": "0deb64017b356e35cef9117af92a6a72554350d9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3a99329a_1ce8a8b4",
+        "filename": "src/libANGLE/renderer/vulkan/StreamingBuffer.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-16T12:20:58Z",
+      "side": 1,
+      "message": "this assumes every allocation has the same alignment. that\u0027s fine, but why don\u0027t we then make this a parameter of the constructor, or a \"set\" function if the alignment isn\u0027t available at constructor time?",
+      "range": {
+        "startLine": 64,
+        "startChar": 8,
+        "endLine": 64,
+        "endChar": 23
+      },
+      "revId": "0deb64017b356e35cef9117af92a6a72554350d9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4e2fef3c_c848dafc",
+        "filename": "src/libANGLE/renderer/vulkan/StreamingBuffer.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-16T12:20:58Z",
+      "side": 1,
+      "message": "if you really want to avoid having a little ignored bool in all the call sites, you could support checking for nullptr here. but i\u0027d be fine just adding a little bool.",
+      "range": {
+        "startLine": 100,
+        "startChar": 8,
+        "endLine": 100,
+        "endChar": 38
+      },
+      "revId": "0deb64017b356e35cef9117af92a6a72554350d9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "23f549de_a6eb6319",
+        "filename": "src/libANGLE/renderer/vulkan/StreamingBuffer.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-16T12:20:58Z",
+      "side": 1,
+      "message": "could we just keep this to one method?",
+      "range": {
+        "startLine": 30,
+        "startChar": 52,
+        "endLine": 36,
+        "endChar": 48
+      },
+      "revId": "0deb64017b356e35cef9117af92a6a72554350d9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7e1f1a4b_84b80ecb",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-16T12:20:58Z",
+      "side": 1,
+      "message": "again this would correspond to an alignment of \u00271\u0027. you could make that the default.",
+      "range": {
+        "startLine": 84,
+        "startChar": 54,
+        "endLine": 84,
+        "endChar": 62
+      },
+      "revId": "0deb64017b356e35cef9117af92a6a72554350d9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d68ee395_c9d80675",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1379,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-16T12:20:58Z",
+      "side": 1,
+      "message": "same for these guys",
+      "range": {
+        "startLine": 1379,
+        "startChar": 38,
+        "endLine": 1379,
+        "endChar": 51
+      },
+      "revId": "0deb64017b356e35cef9117af92a6a72554350d9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
