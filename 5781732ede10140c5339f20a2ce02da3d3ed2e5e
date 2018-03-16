@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f7b1e348_3da1ead6",
+        "filename": "src/libANGLE/renderer/vulkan/DynamicDescriptorPool.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-16T20:51:26Z",
+      "side": 1,
+      "message": "can you add an ASSERT in here the allocated counts are all zero.",
+      "range": {
+        "startLine": 42,
+        "startChar": 33,
+        "endLine": 42,
+        "endChar": 37
+      },
+      "revId": "5781732ede10140c5339f20a2ce02da3d3ed2e5e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
