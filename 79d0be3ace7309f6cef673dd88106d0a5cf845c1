@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "26547482_36de1a35",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-16T16:17:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e5c7f8c9_0c2f5d69",
+      "range": {
+        "startLine": 99,
+        "startChar": 8,
+        "endLine": 99,
+        "endChar": 17
+      },
+      "revId": "79d0be3ace7309f6cef673dd88106d0a5cf845c1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "af63c1e8_2e880487",
         "filename": "src/compiler/translator/TranslatorVulkan.cpp",
         "patchSetId": 2
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "413e6465_f1b038ca",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-16T16:17:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "af63c1e8_2e880487",
+      "range": {
+        "startLine": 111,
+        "startChar": 17,
+        "endLine": 111,
+        "endChar": 31
+      },
+      "revId": "79d0be3ace7309f6cef673dd88106d0a5cf845c1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f3ba8f3e_209e905d",
         "filename": "src/compiler/translator/TranslatorVulkan.cpp",
         "patchSetId": 2
@@ -59,6 +107,30 @@
       "writtenOn": "2018-03-16T06:13:09Z",
       "side": 1,
       "message": "nit: It would make sense to have this qualified as const.",
+      "range": {
+        "startLine": 116,
+        "startChar": 57,
+        "endLine": 116,
+        "endChar": 77
+      },
+      "revId": "79d0be3ace7309f6cef673dd88106d0a5cf845c1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5b1bad7a_c542f79f",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-16T16:17:45Z",
+      "side": 1,
+      "message": "Don\u0027t quiet follow which you want qualified as const, the type parameter? It\u0027s a value, not a variable. The variable \"constantType\" is already const.",
+      "parentUuid": "f3ba8f3e_209e905d",
       "range": {
         "startLine": 116,
         "startChar": 57,
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "7595eade_2ecf8177",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-16T16:17:45Z",
+      "side": 1,
+      "message": "Yes, good catch.",
+      "parentUuid": "a1574e30_32338468",
+      "range": {
+        "startLine": 118,
+        "startChar": 29,
+        "endLine": 118,
+        "endChar": 33
+      },
+      "revId": "79d0be3ace7309f6cef673dd88106d0a5cf845c1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5f718f88_b713cc60",
         "filename": "src/compiler/translator/TranslatorVulkan.cpp",
         "patchSetId": 2
@@ -108,6 +204,24 @@
       "revId": "79d0be3ace7309f6cef673dd88106d0a5cf845c1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "720eff0c_348d4a14",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-16T16:17:45Z",
+      "side": 1,
+      "message": "Thanks for pointing this out, didn\u0027t know it existed. More evidence a guide doc will be helpful. :)",
+      "parentUuid": "5f718f88_b713cc60",
+      "revId": "79d0be3ace7309f6cef673dd88106d0a5cf845c1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
