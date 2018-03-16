@@ -120,6 +120,30 @@
     },
     {
       "key": {
+        "uuid": "c9706d3f_c7d1b4dc",
+        "filename": "src/libANGLE/renderer/vulkan/StreamingBuffer.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-03-16T13:38:40Z",
+      "side": 1,
+      "message": "I\u0027ve replaced the parameter by a constructor argument .",
+      "parentUuid": "92d833cf_cf35af61",
+      "range": {
+        "startLine": 64,
+        "startChar": 8,
+        "endLine": 64,
+        "endChar": 23
+      },
+      "revId": "0deb64017b356e35cef9117af92a6a72554350d9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4e2fef3c_c848dafc",
         "filename": "src/libANGLE/renderer/vulkan/StreamingBuffer.cpp",
         "patchSetId": 6

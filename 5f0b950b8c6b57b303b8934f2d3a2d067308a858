@@ -22,6 +22,30 @@
       "revId": "5f0b950b8c6b57b303b8934f2d3a2d067308a858",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b894ef07_815e5024",
+        "filename": "src/libANGLE/renderer/vulkan/StreamingBuffer.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-03-16T13:38:40Z",
+      "side": 1,
+      "message": "I\u0027ll do a constructor arg instead if we don\u0027t want to be able to change it after.",
+      "parentUuid": "716ba9db_d367310a",
+      "range": {
+        "startLine": 30,
+        "startChar": 30,
+        "endLine": 30,
+        "endChar": 50
+      },
+      "revId": "5f0b950b8c6b57b303b8934f2d3a2d067308a858",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
