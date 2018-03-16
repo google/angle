@@ -13,6 +13,7 @@
 #include "common/utilities.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/renderer/vulkan/ContextVk.h"
+#include "libANGLE/renderer/vulkan/DynamicDescriptorPool.h"
 #include "libANGLE/renderer/vulkan/GlslangWrapper.h"
 #include "libANGLE/renderer/vulkan/RendererVk.h"
 #include "libANGLE/renderer/vulkan/TextureVk.h"
@@ -194,13 +195,6 @@ vk::Error ProgramVk::reset(ContextVk *contextVk)
     mVertexModuleSerial   = Serial();
     mFragmentModuleSerial = Serial();
 
-    // Free our descriptor set handles.
-    if (!mDescriptorSets.empty())
-    {
-        vk::DescriptorPool *descriptorPool = contextVk->getDescriptorPool();
-        ANGLE_TRY(descriptorPool->freeDescriptorSets(
-            device, static_cast<uint32_t>(mDescriptorSets.size()), mDescriptorSets.data()));
-    }
     mDescriptorSets.clear();
     mUsedDescriptorSetRange.invalidate();
     mDirtyTextures       = false;
@@ -661,25 +655,17 @@ vk::Error ProgramVk::initDescriptorSets(ContextVk *contextVk)
     ASSERT(mDescriptorSets.empty());
 
     RendererVk *renderer = contextVk->getRenderer();
-    VkDevice device = contextVk->getDevice();
 
     // Write out to a new a descriptor set.
-    // TODO(jmadill): Handle descriptor set lifetime.
-    vk::DescriptorPool *descriptorPool = contextVk->getDescriptorPool();
+    DynamicDescriptorPool *dynamicDescriptorPool = contextVk->getDynamicDescriptorPool();
 
     const auto &descriptorSetLayouts = renderer->getGraphicsDescriptorSetLayouts();
 
     uint32_t descriptorSetCount = static_cast<uint32_t>(descriptorSetLayouts.size());
 
-    VkDescriptorSetAllocateInfo allocInfo;
-    allocInfo.sType              = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
-    allocInfo.pNext              = nullptr;
-    allocInfo.descriptorPool     = descriptorPool->getHandle();
-    allocInfo.descriptorSetCount = descriptorSetCount;
-    allocInfo.pSetLayouts        = descriptorSetLayouts[0].ptr();
-
     mDescriptorSets.resize(descriptorSetCount, VK_NULL_HANDLE);
-    ANGLE_TRY(descriptorPool->allocateDescriptorSets(device, allocInfo, &mDescriptorSets[0]));
+    ANGLE_TRY(dynamicDescriptorPool->allocateDescriptorSets(
+        contextVk, descriptorSetLayouts[0].ptr(), descriptorSetCount, &mDescriptorSets[0]));
     return vk::NoError();
 }
 

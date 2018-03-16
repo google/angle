@@ -33,6 +33,9 @@ namespace rx
 
 namespace
 {
+// We currently only allocate 2 uniform buffer per descriptor set, one for the fragment shader and
+// one for the vertex shader.
+constexpr size_t kUniformBufferDescriptorsPerDescriptorSet = 2;
 
 VkResult VerifyExtensionsPresent(const std::vector<VkExtensionProperties> &extensionProps,
                                  const std::vector<const char *> &enabledExtensionNames)
@@ -593,6 +596,18 @@ const gl::Limitations &RendererVk::getNativeLimitations() const
     return mNativeLimitations;
 }
 
+uint32_t RendererVk::getMaxActiveTextures()
+{
+    // TODO(lucferron): expose this limitation to GL in Context Caps
+    return std::min<uint32_t>(mPhysicalDeviceProperties.limits.maxPerStageDescriptorSamplers,
+                              gl::IMPLEMENTATION_MAX_ACTIVE_TEXTURES);
+}
+
+uint32_t RendererVk::getUniformBufferDescriptorCount()
+{
+    return kUniformBufferDescriptorsPerDescriptorSet;
+}
+
 const vk::CommandPool &RendererVk::getCommandPool() const
 {
     return mCommandPool;
@@ -847,10 +862,7 @@ vk::Error RendererVk::initGraphicsPipelineLayout()
         mGraphicsDescriptorSetLayouts.push_back(std::move(uniformLayout));
     }
 
-    // TODO(lucferron): expose this limitation to GL in Context Caps
-    std::vector<VkDescriptorSetLayoutBinding> textureBindings(
-        std::min<size_t>(mPhysicalDeviceProperties.limits.maxPerStageDescriptorSamplers,
-                         gl::IMPLEMENTATION_MAX_ACTIVE_TEXTURES));
+    std::vector<VkDescriptorSetLayoutBinding> textureBindings(getMaxActiveTextures());
 
     // TODO(jmadill): This approach might not work well for texture arrays.
     for (uint32_t textureIndex = 0; textureIndex < textureBindings.size(); ++textureIndex)

@@ -19,6 +19,7 @@
 #include "libANGLE/renderer/vulkan/CompilerVk.h"
 #include "libANGLE/renderer/vulkan/ContextVk.h"
 #include "libANGLE/renderer/vulkan/DeviceVk.h"
+#include "libANGLE/renderer/vulkan/DynamicDescriptorPool.h"
 #include "libANGLE/renderer/vulkan/FenceNVVk.h"
 #include "libANGLE/renderer/vulkan/FramebufferVk.h"
 #include "libANGLE/renderer/vulkan/ImageVk.h"
@@ -56,12 +57,6 @@ VkIndexType GetVkIndexType(GLenum glIndexType)
     }
 }
 
-enum DescriptorPoolIndex : uint8_t
-{
-    UniformBufferPool = 0,
-    TexturePool       = 1,
-};
-
 constexpr size_t kStreamingVertexDataSize = 1024 * 1024;
 constexpr size_t kStreamingIndexDataSize  = 1024 * 8;
 
@@ -71,6 +66,7 @@ ContextVk::ContextVk(const gl::ContextState &state, RendererVk *renderer)
     : ContextImpl(state),
       mRenderer(renderer),
       mCurrentDrawMode(GL_NONE),
+      mDynamicDescriptorPool(),
       mVertexArrayDirty(false),
       mTexturesDirty(false),
       mStreamingVertexData(VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, kStreamingVertexDataSize, 1),
@@ -88,7 +84,7 @@ void ContextVk::onDestroy(const gl::Context *context)
 {
     VkDevice device = mRenderer->getDevice();
 
-    mDescriptorPool.destroy(device);
+    mDynamicDescriptorPool.destroy(mRenderer);
     mStreamingVertexData.destroy(device);
     mStreamingIndexData.destroy(device);
     mLineLoopHandler.destroy(device);
@@ -96,27 +92,9 @@ void ContextVk::onDestroy(const gl::Context *context)
 
 gl::Error ContextVk::initialize()
 {
-    VkDevice device = mRenderer->getDevice();
-
-    VkDescriptorPoolSize poolSizes[2];
-    poolSizes[UniformBufferPool].type            = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-    poolSizes[UniformBufferPool].descriptorCount = 1024;
-    poolSizes[TexturePool].type                  = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-    poolSizes[TexturePool].descriptorCount       = 1024;
-
-    VkDescriptorPoolCreateInfo descriptorPoolInfo;
-    descriptorPoolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
-    descriptorPoolInfo.pNext = nullptr;
-    descriptorPoolInfo.flags = VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT;
-
-    // TODO(jmadill): Pick non-arbitrary max.
-    descriptorPoolInfo.maxSets = 2048;
-
-    // Reserve pools for uniform blocks and textures.
-    descriptorPoolInfo.poolSizeCount = 2;
-    descriptorPoolInfo.pPoolSizes    = poolSizes;
-
-    ANGLE_TRY(mDescriptorPool.init(device, descriptorPoolInfo));
+    ANGLE_TRY(mDynamicDescriptorPool.init(this->getDevice(),
+                                          mRenderer->getUniformBufferDescriptorCount(),
+                                          mRenderer->getMaxActiveTextures()));
 
     mPipelineDesc.reset(new vk::PipelineDesc());
     mPipelineDesc->initDefaults();
@@ -885,9 +863,9 @@ gl::Error ContextVk::memoryBarrierByRegion(const gl::Context *context, GLbitfiel
     return gl::InternalError();
 }
 
-vk::DescriptorPool *ContextVk::getDescriptorPool()
+DynamicDescriptorPool *ContextVk::getDynamicDescriptorPool()
 {
-    return &mDescriptorPool;
+    return &mDynamicDescriptorPool;
 }
 
 const VkClearValue &ContextVk::getClearColorValue() const
