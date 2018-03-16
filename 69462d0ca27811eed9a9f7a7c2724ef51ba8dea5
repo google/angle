@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "19b1d905_c7539456",
+        "filename": "src/libANGLE/renderer/gl/BlitGL.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-16T21:31:46Z",
+      "side": 1,
+      "message": "ref",
+      "range": {
+        "startLine": 141,
+        "startChar": 4,
+        "endLine": 141,
+        "endChar": 47
+      },
+      "revId": "69462d0ca27811eed9a9f7a7c2724ef51ba8dea5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d8be6229_5857d340",
         "filename": "src/libANGLE/renderer/gl/BlitGL.cpp",
         "patchSetId": 24
@@ -13,6 +36,30 @@
       "writtenOn": "2018-03-16T19:52:18Z",
       "side": 1,
       "message": "does this account for weird scissor settings? you should be able to make a test for this.",
+      "range": {
+        "startLine": 813,
+        "startChar": 14,
+        "endLine": 813,
+        "endChar": 29
+      },
+      "revId": "69462d0ca27811eed9a9f7a7c2724ef51ba8dea5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0ecdef5e_cc9236ac",
+        "filename": "src/libANGLE/renderer/gl/BlitGL.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 813,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-16T21:31:46Z",
+      "side": 1,
+      "message": "Yes, scissor test is disabled (see ref)",
+      "parentUuid": "d8be6229_5857d340",
       "range": {
         "startLine": 813,
         "startChar": 14,
@@ -45,6 +92,30 @@
       "revId": "69462d0ca27811eed9a9f7a7c2724ef51ba8dea5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "32bbe7a2_27c5d681",
+        "filename": "src/libANGLE/renderer/gl/RenderbufferGL.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-16T21:31:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ea03922d_f3bef858",
+      "range": {
+        "startLine": 102,
+        "startChar": 7,
+        "endLine": 102,
+        "endChar": 11
+      },
+      "revId": "69462d0ca27811eed9a9f7a7c2724ef51ba8dea5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
