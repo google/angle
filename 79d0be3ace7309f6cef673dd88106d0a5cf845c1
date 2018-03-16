@@ -1,0 +1,113 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e5c7f8c9_0c2f5d69",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-03-16T06:13:09Z",
+      "side": 1,
+      "message": "nit: Not really a traverser.",
+      "range": {
+        "startLine": 99,
+        "startChar": 8,
+        "endLine": 99,
+        "endChar": 17
+      },
+      "revId": "79d0be3ace7309f6cef673dd88106d0a5cf845c1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "af63c1e8_2e880487",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-03-16T06:13:09Z",
+      "side": 1,
+      "message": "I\u0027d name this swizzleOffsetZ.",
+      "range": {
+        "startLine": 111,
+        "startChar": 17,
+        "endLine": 111,
+        "endChar": 31
+      },
+      "revId": "79d0be3ace7309f6cef673dd88106d0a5cf845c1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f3ba8f3e_209e905d",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-03-16T06:13:09Z",
+      "side": 1,
+      "message": "nit: It would make sense to have this qualified as const.",
+      "range": {
+        "startLine": 116,
+        "startChar": 57,
+        "endLine": 116,
+        "endChar": 77
+      },
+      "revId": "79d0be3ace7309f6cef673dd88106d0a5cf845c1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a1574e30_32338468",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-03-16T06:13:09Z",
+      "side": 1,
+      "message": "Supposed to be 0.5f?",
+      "range": {
+        "startLine": 118,
+        "startChar": 29,
+        "endLine": 118,
+        "endChar": 33
+      },
+      "revId": "79d0be3ace7309f6cef673dd88106d0a5cf845c1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5f718f88_b713cc60",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-03-16T06:13:09Z",
+      "side": 1,
+      "message": "Use RunAtTheEndOfShader() instead. Now this doesn\u0027t work if main() returns in the middle.",
+      "revId": "79d0be3ace7309f6cef673dd88106d0a5cf845c1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
