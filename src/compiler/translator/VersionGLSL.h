@@ -7,7 +7,7 @@
 #ifndef COMPILER_TRANSLATOR_VERSIONGLSL_H_
 #define COMPILER_TRANSLATOR_VERSIONGLSL_H_
 
-#include "compiler/translator/IntermTraverse.h"
+#include "compiler/translator/tree_util/IntermTraverse.h"
 
 #include "compiler/translator/Pragma.h"
 

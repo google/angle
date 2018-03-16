@@ -10,10 +10,10 @@
 
 #include "compiler/translator/UseInterfaceBlockFields.h"
 
-#include "compiler/translator/FindMain.h"
 #include "compiler/translator/IntermNode.h"
-#include "compiler/translator/IntermNode_util.h"
 #include "compiler/translator/SymbolTable.h"
+#include "compiler/translator/tree_util/FindMain.h"
+#include "compiler/translator/tree_util/IntermNode_util.h"
 #include "compiler/translator/util.h"
 
 namespace sh

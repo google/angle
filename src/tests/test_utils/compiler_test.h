@@ -14,10 +14,10 @@
 
 #include "gtest/gtest.h"
 
+#include "GLSLANG/ShaderLang.h"
 #include "angle_gl.h"
 #include "compiler/translator/TranslatorESSL.h"
-#include "GLSLANG/ShaderLang.h"
-#include "compiler/translator/FindSymbolNode.h"
+#include "compiler/translator/tree_util/FindSymbolNode.h"
 
 namespace sh
 {

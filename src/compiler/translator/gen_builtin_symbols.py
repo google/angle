@@ -60,8 +60,8 @@ template_builtin_header = """// GENERATED FILE - DO NOT EDIT.
 // BuiltIn_autogen.h:
 //   Compile-time initialized built-ins.
 
-#ifndef COMPILER_TRANSLATOR_BUILTIN_AUTOGEN_H_
-#define COMPILER_TRANSLATOR_BUILTIN_AUTOGEN_H_
+#ifndef COMPILER_TRANSLATOR_TREEUTIL_BUILTIN_AUTOGEN_H_
+#define COMPILER_TRANSLATOR_TREEUTIL_BUILTIN_AUTOGEN_H_
 
 namespace sh
 {{
@@ -77,7 +77,7 @@ namespace BuiltInVariable
 
 }}  // namespace sh
 
-#endif  // COMPILER_TRANSLATOR_BUILTIN_AUTOGEN_H_
+#endif  // COMPILER_TRANSLATOR_TREEUTIL_BUILTIN_AUTOGEN_H_
 """
 
 template_symboltable_h = """// GENERATED FILE - DO NOT EDIT.
@@ -1141,7 +1141,7 @@ with open('../../tests/compiler_tests/ImmutableString_test_autogen.cpp', 'wt') a
     output_cpp = template_immutablestringtest_cpp.format(**output_strings)
     outfile_cpp.write(output_cpp)
 
-with open('BuiltIn_autogen.h', 'wt') as outfile_header:
+with open('tree_util/BuiltIn_autogen.h', 'wt') as outfile_header:
     output_header = template_builtin_header.format(**output_strings)
     outfile_header.write(output_header)
 

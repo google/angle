@@ -6,7 +6,7 @@
 // IntermNode_util.cpp: High-level utilities for creating AST nodes and node hierarchies. Mostly
 // meant to be used in AST transforms.
 
-#include "compiler/translator/IntermNode_util.h"
+#include "compiler/translator/tree_util/IntermNode_util.h"
 
 #include "compiler/translator/FunctionLookup.h"
 #include "compiler/translator/SymbolTable.h"
@@ -216,7 +216,7 @@ TVariable *DeclareTempVariable(TSymbolTable *symbolTable,
 {
     TVariable *variable =
         CreateTempVariable(symbolTable, new TType(initializer->getType()), qualifier);
-    *declarationOut     = CreateTempInitDeclarationNode(variable, initializer);
+    *declarationOut = CreateTempInitDeclarationNode(variable, initializer);
     return variable;
 }
 

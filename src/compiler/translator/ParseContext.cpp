@@ -11,14 +11,13 @@
 
 #include "common/mathutil.h"
 #include "compiler/preprocessor/SourceLocation.h"
-#include "compiler/translator/BuiltIn_autogen.h"
 #include "compiler/translator/Declarator.h"
-#include "compiler/translator/IntermNode_util.h"
 #include "compiler/translator/ParseContext_autogen.h"
 #include "compiler/translator/StaticType.h"
 #include "compiler/translator/ValidateGlobalInitializer.h"
 #include "compiler/translator/ValidateSwitch.h"
 #include "compiler/translator/glslang.h"
+#include "compiler/translator/tree_util/IntermNode_util.h"
 #include "compiler/translator/util.h"
 
 namespace sh

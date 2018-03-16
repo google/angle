@@ -8,8 +8,8 @@
 
 #include "compiler/translator/PruneEmptyCases.h"
 
-#include "compiler/translator/IntermTraverse.h"
 #include "compiler/translator/Symbol.h"
+#include "compiler/translator/tree_util/IntermTraverse.h"
 
 namespace sh
 {

@@ -11,7 +11,7 @@
 
 #include "compiler/translator/SeparateArrayConstructorStatements.h"
 
-#include "compiler/translator/IntermTraverse.h"
+#include "compiler/translator/tree_util/IntermTraverse.h"
 
 namespace sh
 {

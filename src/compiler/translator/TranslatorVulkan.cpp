@@ -13,11 +13,11 @@
 
 #include "angle_gl.h"
 #include "common/utilities.h"
-#include "compiler/translator/BuiltIn_autogen.h"
-#include "compiler/translator/IntermNode_util.h"
 #include "compiler/translator/OutputVulkanGLSL.h"
-#include "compiler/translator/RunAtTheEndOfShader.h"
 #include "compiler/translator/StaticType.h"
+#include "compiler/translator/tree_util/BuiltIn_autogen.h"
+#include "compiler/translator/tree_util/IntermNode_util.h"
+#include "compiler/translator/tree_util/RunAtTheEndOfShader.h"
 #include "compiler/translator/util.h"
 
 namespace sh

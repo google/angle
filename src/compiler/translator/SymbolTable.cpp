@@ -17,7 +17,6 @@
 #include <set>
 
 #include "angle_gl.h"
-#include "compiler/translator/BuiltIn_autogen.h"
 #include "compiler/translator/ImmutableString.h"
 #include "compiler/translator/IntermNode.h"
 #include "compiler/translator/StaticType.h"

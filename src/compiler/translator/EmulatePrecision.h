@@ -11,7 +11,7 @@
 #include "common/angleutils.h"
 #include "compiler/translator/Compiler.h"
 #include "compiler/translator/InfoSink.h"
-#include "compiler/translator/IntermTraverse.h"
+#include "compiler/translator/tree_util/IntermTraverse.h"
 
 // This class gathers all compound assignments from the AST and can then write
 // the functions required for their precision emulation. This way there is no

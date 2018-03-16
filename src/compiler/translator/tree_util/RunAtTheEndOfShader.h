@@ -6,8 +6,8 @@
 // RunAtTheEndOfShader.h: Add code to be run at the end of the shader.
 //
 
-#ifndef COMPILER_TRANSLATOR_RUNATTHEENDOFSHADER_H_
-#define COMPILER_TRANSLATOR_RUNATTHEENDOFSHADER_H_
+#ifndef COMPILER_TRANSLATOR_TREEUTIL_RUNATTHEENDOFSHADER_H_
+#define COMPILER_TRANSLATOR_TREEUTIL_RUNATTHEENDOFSHADER_H_
 
 namespace sh
 {
@@ -20,4 +20,4 @@ void RunAtTheEndOfShader(TIntermBlock *root, TIntermNode *codeToRun, TSymbolTabl
 
 }  // namespace sh
 
-#endif  // COMPILER_TRANSLATOR_RUNATTHEENDOFSHADER_H_
+#endif  // COMPILER_TRANSLATOR_TREEUTIL_RUNATTHEENDOFSHADER_H_

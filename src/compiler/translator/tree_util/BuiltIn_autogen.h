@@ -9,8 +9,8 @@
 // BuiltIn_autogen.h:
 //   Compile-time initialized built-ins.
 
-#ifndef COMPILER_TRANSLATOR_BUILTIN_AUTOGEN_H_
-#define COMPILER_TRANSLATOR_BUILTIN_AUTOGEN_H_
+#ifndef COMPILER_TRANSLATOR_TREEUTIL_BUILTIN_AUTOGEN_H_
+#define COMPILER_TRANSLATOR_TREEUTIL_BUILTIN_AUTOGEN_H_
 
 namespace sh
 {
@@ -53,4 +53,4 @@ const TVariable *gl_WorkGroupSize();
 
 }  // namespace sh
 
-#endif  // COMPILER_TRANSLATOR_BUILTIN_AUTOGEN_H_
+#endif  // COMPILER_TRANSLATOR_TREEUTIL_BUILTIN_AUTOGEN_H_

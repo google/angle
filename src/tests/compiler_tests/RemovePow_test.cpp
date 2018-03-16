@@ -7,11 +7,11 @@
 //   Tests for removing pow() function calls from the AST.
 //
 
-#include "angle_gl.h"
-#include "gtest/gtest.h"
 #include "GLSLANG/ShaderLang.h"
-#include "compiler/translator/NodeSearch.h"
+#include "angle_gl.h"
 #include "compiler/translator/TranslatorGLSL.h"
+#include "compiler/translator/tree_util/NodeSearch.h"
+#include "gtest/gtest.h"
 
 using namespace sh;
 

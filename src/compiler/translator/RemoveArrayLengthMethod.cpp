@@ -22,7 +22,7 @@
 #include "compiler/translator/RemoveArrayLengthMethod.h"
 
 #include "compiler/translator/IntermNode.h"
-#include "compiler/translator/IntermTraverse.h"
+#include "compiler/translator/tree_util/IntermTraverse.h"
 
 namespace sh
 {

@@ -6,10 +6,10 @@
 // NodeSearch.h: Utilities for searching translator node graphs
 //
 
-#ifndef COMPILER_TRANSLATOR_NODESEARCH_H_
-#define COMPILER_TRANSLATOR_NODESEARCH_H_
+#ifndef COMPILER_TRANSLATOR_TREEUTIL_NODESEARCH_H_
+#define COMPILER_TRANSLATOR_TREEUTIL_NODESEARCH_H_
 
-#include "compiler/translator/IntermTraverse.h"
+#include "compiler/translator/tree_util/IntermTraverse.h"
 
 namespace sh
 {
@@ -53,4 +53,4 @@ class FindDiscard : public NodeSearchTraverser<FindDiscard>
 };
 }
 
-#endif  // COMPILER_TRANSLATOR_NODESEARCH_H_
+#endif  // COMPILER_TRANSLATOR_TREEUTIL_NODESEARCH_H_

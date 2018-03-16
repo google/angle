@@ -8,7 +8,7 @@
 // traversers.
 //
 
-#include "compiler/translator/IntermNodePatternMatcher.h"
+#include "compiler/translator/tree_util/IntermNodePatternMatcher.h"
 
 #include "compiler/translator/IntermNode.h"
 #include "compiler/translator/SymbolTable.h"

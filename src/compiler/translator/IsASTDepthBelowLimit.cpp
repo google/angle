@@ -6,7 +6,7 @@
 
 #include "compiler/translator/IsASTDepthBelowLimit.h"
 
-#include "compiler/translator/IntermTraverse.h"
+#include "compiler/translator/tree_util/IntermTraverse.h"
 
 namespace sh
 {

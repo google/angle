@@ -22,7 +22,6 @@
 #include "compiler/translator/FoldExpressions.h"
 #include "compiler/translator/Initialize.h"
 #include "compiler/translator/InitializeVariables.h"
-#include "compiler/translator/IntermNodePatternMatcher.h"
 #include "compiler/translator/IsASTDepthBelowLimit.h"
 #include "compiler/translator/OutputTree.h"
 #include "compiler/translator/ParseContext.h"
@@ -46,6 +45,7 @@
 #include "compiler/translator/ValidateVaryingLocations.h"
 #include "compiler/translator/VariablePacker.h"
 #include "compiler/translator/VectorizeVectorScalarArithmetic.h"
+#include "compiler/translator/tree_util/IntermNodePatternMatcher.h"
 #include "compiler/translator/util.h"
 #include "third_party/compiler/ArrayBoundsClamper.h"
 

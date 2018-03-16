@@ -6,8 +6,8 @@
 
 #include "compiler/translator/AddAndTrueToLoopCondition.h"
 
-#include "compiler/translator/IntermNode_util.h"
-#include "compiler/translator/IntermTraverse.h"
+#include "compiler/translator/tree_util/IntermNode_util.h"
+#include "compiler/translator/tree_util/IntermTraverse.h"
 
 namespace sh
 {

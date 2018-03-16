@@ -8,11 +8,11 @@
 
 #include "compiler/translator/ClampPointSize.h"
 
-#include "compiler/translator/BuiltIn_autogen.h"
-#include "compiler/translator/FindSymbolNode.h"
-#include "compiler/translator/IntermNode_util.h"
-#include "compiler/translator/RunAtTheEndOfShader.h"
 #include "compiler/translator/SymbolTable.h"
+#include "compiler/translator/tree_util/BuiltIn_autogen.h"
+#include "compiler/translator/tree_util/FindSymbolNode.h"
+#include "compiler/translator/tree_util/IntermNode_util.h"
+#include "compiler/translator/tree_util/RunAtTheEndOfShader.h"
 
 namespace sh
 {

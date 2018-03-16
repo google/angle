@@ -13,10 +13,10 @@
 
 #include "compiler/translator/EmulateGLFragColorBroadcast.h"
 
-#include "compiler/translator/IntermNode_util.h"
-#include "compiler/translator/IntermTraverse.h"
-#include "compiler/translator/RunAtTheEndOfShader.h"
 #include "compiler/translator/Symbol.h"
+#include "compiler/translator/tree_util/IntermNode_util.h"
+#include "compiler/translator/tree_util/IntermTraverse.h"
+#include "compiler/translator/tree_util/RunAtTheEndOfShader.h"
 
 namespace sh
 {

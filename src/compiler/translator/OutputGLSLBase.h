@@ -11,7 +11,7 @@
 
 #include "compiler/translator/HashNames.h"
 #include "compiler/translator/InfoSink.h"
-#include "compiler/translator/IntermTraverse.h"
+#include "compiler/translator/tree_util/IntermTraverse.h"
 
 namespace sh
 {

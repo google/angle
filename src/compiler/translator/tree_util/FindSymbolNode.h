@@ -6,8 +6,8 @@
 // FindSymbolNode.h:
 //     Utility for finding a symbol node inside an AST tree.
 
-#ifndef COMPILER_TRANSLATOR_FIND_SYMBOL_H_
-#define COMPILER_TRANSLATOR_FIND_SYMBOL_H_
+#ifndef COMPILER_TRANSLATOR_TREEUTIL_FINDSYMBOLNODE_H_
+#define COMPILER_TRANSLATOR_TREEUTIL_FINDSYMBOLNODE_H_
 
 namespace sh
 {
@@ -20,4 +20,4 @@ const TIntermSymbol *FindSymbolNode(TIntermNode *root, const ImmutableString &sy
 
 }  // namespace sh
 
-#endif  // COMPILER_TRANSLATOR_FIND_SYMBOL_H_
+#endif  // COMPILER_TRANSLATOR_TREEUTIL_FINDSYMBOLNODE_H_

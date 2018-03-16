@@ -13,9 +13,9 @@
 #include <vector>
 
 #include "common/mathutil.h"
-#include "compiler/translator/FindMain.h"
-#include "compiler/translator/FindSymbolNode.h"
-#include "compiler/translator/IntermTraverse.h"
+#include "compiler/translator/tree_util/FindMain.h"
+#include "compiler/translator/tree_util/FindSymbolNode.h"
+#include "compiler/translator/tree_util/IntermTraverse.h"
 #include "tests/test_utils/ShaderCompileTreeTest.h"
 
 namespace sh

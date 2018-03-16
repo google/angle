@@ -11,7 +11,6 @@
 #include "compiler/translator/BreakVariableAliasingInInnerLoops.h"
 #include "compiler/translator/EmulatePrecision.h"
 #include "compiler/translator/ExpandIntegerPowExpressions.h"
-#include "compiler/translator/IntermNodePatternMatcher.h"
 #include "compiler/translator/OutputHLSL.h"
 #include "compiler/translator/PruneEmptyCases.h"
 #include "compiler/translator/RemoveDynamicIndexing.h"
@@ -26,6 +25,7 @@
 #include "compiler/translator/SplitSequenceOperator.h"
 #include "compiler/translator/UnfoldShortCircuitToIf.h"
 #include "compiler/translator/WrapSwitchStatementsInBlocks.h"
+#include "compiler/translator/tree_util/IntermNodePatternMatcher.h"
 
 namespace sh
 {

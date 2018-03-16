@@ -16,7 +16,7 @@
 #include "compiler/translator/Compiler.h"
 #include "compiler/translator/FlagStd140Structs.h"
 #include "compiler/translator/ImmutableString.h"
-#include "compiler/translator/IntermTraverse.h"
+#include "compiler/translator/tree_util/IntermTraverse.h"
 
 class BuiltInFunctionEmulator;
 

@@ -10,8 +10,8 @@
 #include "angle_gl.h"
 #include "common/utilities.h"
 #include "compiler/translator/HashNames.h"
-#include "compiler/translator/IntermTraverse.h"
 #include "compiler/translator/SymbolTable.h"
+#include "compiler/translator/tree_util/IntermTraverse.h"
 #include "compiler/translator/util.h"
 
 namespace sh

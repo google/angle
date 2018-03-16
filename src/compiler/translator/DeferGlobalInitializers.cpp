@@ -17,13 +17,13 @@
 
 #include <vector>
 
-#include "compiler/translator/FindMain.h"
 #include "compiler/translator/InitializeVariables.h"
 #include "compiler/translator/IntermNode.h"
-#include "compiler/translator/IntermNode_util.h"
 #include "compiler/translator/ReplaceVariable.h"
 #include "compiler/translator/StaticType.h"
 #include "compiler/translator/SymbolTable.h"
+#include "compiler/translator/tree_util/FindMain.h"
+#include "compiler/translator/tree_util/IntermNode_util.h"
 
 namespace sh
 {

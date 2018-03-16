@@ -6,7 +6,7 @@
 
 // FindMain.cpp: Find the main() function definition in a given AST.
 
-#include "compiler/translator/FindMain.h"
+#include "compiler/translator/tree_util/FindMain.h"
 
 #include "compiler/translator/IntermNode.h"
 #include "compiler/translator/Symbol.h"

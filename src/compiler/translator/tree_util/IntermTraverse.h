@@ -6,8 +6,8 @@
 // IntermTraverse.h : base classes for AST traversers that walk the AST and
 //   also have the ability to transform it by replacing nodes.
 
-#ifndef COMPILER_TRANSLATOR_INTERMTRAVERSE_H_
-#define COMPILER_TRANSLATOR_INTERMTRAVERSE_H_
+#ifndef COMPILER_TRANSLATOR_TREEUTIL_INTERMTRAVERSE_H_
+#define COMPILER_TRANSLATOR_TREEUTIL_INTERMTRAVERSE_H_
 
 #include "compiler/translator/IntermNode.h"
 
@@ -314,4 +314,4 @@ class TLValueTrackingTraverser : public TIntermTraverser
 
 }  // namespace sh
 
-#endif  // COMPILER_TRANSLATOR_INTERMTRAVERSE_H_
+#endif  // COMPILER_TRANSLATOR_TREEUTIL_INTERMTRAVERSE_H_

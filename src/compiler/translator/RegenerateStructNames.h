@@ -7,8 +7,8 @@
 #ifndef COMPILER_TRANSLATOR_REGENERATESTRUCTNAMES_H_
 #define COMPILER_TRANSLATOR_REGENERATESTRUCTNAMES_H_
 
-#include "compiler/translator/IntermTraverse.h"
 #include "compiler/translator/SymbolTable.h"
+#include "compiler/translator/tree_util/IntermTraverse.h"
 
 #include <set>
 

@@ -10,8 +10,8 @@
 
 #include "BreakVariableAliasingInInnerLoops.h"
 
-#include "compiler/translator/IntermNode_util.h"
-#include "compiler/translator/IntermTraverse.h"
+#include "compiler/translator/tree_util/IntermNode_util.h"
+#include "compiler/translator/tree_util/IntermTraverse.h"
 
 // A HLSL compiler developer gave us more details on the root cause and the workaround needed:
 //     The root problem is that if the HLSL compiler is applying aliasing information even on

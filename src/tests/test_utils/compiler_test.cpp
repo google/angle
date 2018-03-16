@@ -11,7 +11,7 @@
 #include "angle_gl.h"
 #include "compiler/translator/Compiler.h"
 #include "compiler/translator/FunctionLookup.h"
-#include "compiler/translator/IntermTraverse.h"
+#include "compiler/translator/tree_util/IntermTraverse.h"
 
 namespace sh
 {

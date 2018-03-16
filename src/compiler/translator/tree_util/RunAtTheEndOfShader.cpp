@@ -19,14 +19,14 @@
 // This way the code will get run even if the return statement inside main is executed.
 //
 
-#include "compiler/translator/RunAtTheEndOfShader.h"
+#include "compiler/translator/tree_util/RunAtTheEndOfShader.h"
 
-#include "compiler/translator/FindMain.h"
 #include "compiler/translator/IntermNode.h"
-#include "compiler/translator/IntermNode_util.h"
-#include "compiler/translator/IntermTraverse.h"
 #include "compiler/translator/StaticType.h"
 #include "compiler/translator/SymbolTable.h"
+#include "compiler/translator/tree_util/FindMain.h"
+#include "compiler/translator/tree_util/IntermNode_util.h"
+#include "compiler/translator/tree_util/IntermTraverse.h"
 
 namespace sh
 {
@@ -86,7 +86,7 @@ void WrapMainAndAppend(TIntermBlock *root,
     //     main0();
     //     codeToRun
     // }
-    TIntermBlock *newMainBody     = new TIntermBlock();
+    TIntermBlock *newMainBody = new TIntermBlock();
     TIntermAggregate *oldMainCall =
         TIntermAggregate::CreateFunctionCall(*oldMain, new TIntermSequence());
     newMainBody->appendStatement(oldMainCall);

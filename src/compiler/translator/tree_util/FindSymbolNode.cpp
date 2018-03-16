@@ -6,11 +6,11 @@
 // FindSymbol.cpp:
 //     Utility for finding a symbol node inside an AST tree.
 
-#include "compiler/translator/FindSymbolNode.h"
+#include "compiler/translator/tree_util/FindSymbolNode.h"
 
 #include "compiler/translator/ImmutableString.h"
-#include "compiler/translator/IntermTraverse.h"
 #include "compiler/translator/Symbol.h"
+#include "compiler/translator/tree_util/IntermTraverse.h"
 
 namespace sh
 {

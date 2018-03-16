@@ -4,11 +4,11 @@
 // found in the LICENSE file.
 //
 
-#include "compiler/translator/IntermTraverse.h"
+#include "compiler/translator/tree_util/IntermTraverse.h"
 
 #include "compiler/translator/InfoSink.h"
-#include "compiler/translator/IntermNode_util.h"
 #include "compiler/translator/SymbolTable.h"
+#include "compiler/translator/tree_util/IntermNode_util.h"
 
 namespace sh
 {
