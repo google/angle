@@ -17,12 +17,13 @@
 
 namespace rx
 {
-StreamingBuffer::StreamingBuffer(VkBufferUsageFlags usage, size_t minSize)
+StreamingBuffer::StreamingBuffer(VkBufferUsageFlags usage, size_t minSize, size_t minAlignment)
     : mUsage(usage),
       mMinSize(minSize),
       mNextWriteOffset(0),
       mLastFlushOffset(0),
       mSize(0),
+      mMinAlignment(minAlignment),
       mMappedMemory(nullptr)
 {
 }
@@ -35,7 +36,8 @@ gl::Error StreamingBuffer::allocate(ContextVk *context,
                                     size_t sizeInBytes,
                                     uint8_t **ptrOut,
                                     VkBuffer *handleOut,
-                                    VkDeviceSize *offsetOut)
+                                    VkDeviceSize *offsetOut,
+                                    bool *outNewBufferAllocated)
 {
     RendererVk *renderer = context->getRenderer();
 
@@ -43,8 +45,10 @@ gl::Error StreamingBuffer::allocate(ContextVk *context,
     // persist longer than one frame.
     updateQueueSerial(renderer->getCurrentQueueSerial());
 
+    size_t sizeToAllocate = roundUp(sizeInBytes, mMinAlignment);
+
     angle::base::CheckedNumeric<size_t> checkedNextWriteOffset = mNextWriteOffset;
-    checkedNextWriteOffset += sizeInBytes;
+    checkedNextWriteOffset += sizeToAllocate;
 
     if (!checkedNextWriteOffset.IsValid() || checkedNextWriteOffset.ValueOrDie() > mSize)
     {
@@ -62,7 +66,7 @@ gl::Error StreamingBuffer::allocate(ContextVk *context,
         createInfo.sType                 = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
         createInfo.pNext                 = nullptr;
         createInfo.flags                 = 0;
-        createInfo.size                  = std::max(sizeInBytes, mMinSize);
+        createInfo.size                  = std::max(sizeToAllocate, mMinSize);
         createInfo.usage                 = mUsage;
         createInfo.sharingMode           = VK_SHARING_MODE_EXCLUSIVE;
         createInfo.queueFamilyIndexCount = 0;
@@ -74,6 +78,18 @@ gl::Error StreamingBuffer::allocate(ContextVk *context,
         ANGLE_TRY(mMemory.map(device, 0, mSize, 0, &mMappedMemory));
         mNextWriteOffset = 0;
         mLastFlushOffset = 0;
+
+        if (outNewBufferAllocated != nullptr)
+        {
+            *outNewBufferAllocated = true;
+        }
+    }
+    else
+    {
+        if (outNewBufferAllocated != nullptr)
+        {
+            *outNewBufferAllocated = false;
+        }
     }
 
     ASSERT(mBuffer.valid());
@@ -82,7 +98,7 @@ gl::Error StreamingBuffer::allocate(ContextVk *context,
     ASSERT(mMappedMemory);
     *ptrOut    = mMappedMemory + mNextWriteOffset;
     *offsetOut = mNextWriteOffset;
-    mNextWriteOffset += sizeInBytes;
+    mNextWriteOffset += sizeToAllocate;
 
     return gl::NoError();
 }

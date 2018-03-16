@@ -83,7 +83,7 @@ gl::Error VertexArrayVk::streamVertexData(ContextVk *context,
         uint8_t *dst = nullptr;
         ANGLE_TRY(stream->allocate(context, lastByte, &dst,
                                    &mCurrentArrayBufferHandles[attribIndex],
-                                   &mCurrentArrayBufferOffsets[attribIndex]));
+                                   &mCurrentArrayBufferOffsets[attribIndex], nullptr));
         memcpy(dst + firstByte, static_cast<const uint8_t *>(attrib.pointer) + firstByte,
                lastByte - firstByte);
     }

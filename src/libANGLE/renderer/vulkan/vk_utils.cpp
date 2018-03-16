@@ -1353,7 +1353,8 @@ LineLoopHandler::LineLoopHandler()
     : mObserverBinding(this, 0u),
       mStreamingLineLoopIndicesData(
           new StreamingBuffer(VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
-                              kLineLoopStreamingBufferMinSize)),
+                              kLineLoopStreamingBufferMinSize,
+                              1)),
       mLineLoopIndexBuffer(VK_NULL_HANDLE),
       mLineLoopIndexBufferOffset(VK_NULL_HANDLE)
 {
@@ -1374,10 +1375,10 @@ gl::Error LineLoopHandler::createIndexBuffer(ContextVk *contextVk, int firstVert
         mLineLoopBufferLastIndex != lastVertex)
     {
         uint32_t *indices = nullptr;
-
+        size_t allocateBytes = sizeof(uint32_t) * (count + 1);
         ANGLE_TRY(mStreamingLineLoopIndicesData->allocate(
-            contextVk, sizeof(uint32_t) * (count + 1), reinterpret_cast<uint8_t **>(&indices),
-            &mLineLoopIndexBuffer, &mLineLoopIndexBufferOffset));
+            contextVk, allocateBytes, reinterpret_cast<uint8_t **>(&indices), &mLineLoopIndexBuffer,
+            &mLineLoopIndexBufferOffset, nullptr));
 
         auto unsignedFirstVertex = static_cast<uint32_t>(firstVertex);
         for (auto vertexIndex = unsignedFirstVertex; vertexIndex < (count + unsignedFirstVertex);
@@ -1418,9 +1419,10 @@ gl::Error LineLoopHandler::createIndexBufferFromElementArrayBuffer(ContextVk *co
     uint32_t *indices = nullptr;
 
     auto unitSize = (indexType == VK_INDEX_TYPE_UINT16 ? sizeof(uint16_t) : sizeof(uint32_t));
+    size_t allocateBytes = unitSize * (count + 1);
     ANGLE_TRY(mStreamingLineLoopIndicesData->allocate(
-        contextVk, unitSize * (count + 1), reinterpret_cast<uint8_t **>(&indices),
-        &mLineLoopIndexBuffer, &mLineLoopIndexBufferOffset));
+        contextVk, allocateBytes, reinterpret_cast<uint8_t **>(&indices), &mLineLoopIndexBuffer,
+        &mLineLoopIndexBufferOffset, nullptr));
 
     VkBufferCopy copy1 = {0, mLineLoopIndexBufferOffset,
                           static_cast<VkDeviceSize>(count) * unitSize};

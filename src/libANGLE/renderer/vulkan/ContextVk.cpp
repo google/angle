@@ -73,8 +73,8 @@ ContextVk::ContextVk(const gl::ContextState &state, RendererVk *renderer)
       mCurrentDrawMode(GL_NONE),
       mVertexArrayDirty(false),
       mTexturesDirty(false),
-      mStreamingVertexData(VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, kStreamingVertexDataSize),
-      mStreamingIndexData(VK_BUFFER_USAGE_INDEX_BUFFER_BIT, kStreamingIndexDataSize)
+      mStreamingVertexData(VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, kStreamingVertexDataSize, 1),
+      mStreamingIndexData(VK_BUFFER_USAGE_INDEX_BUFFER_BIT, kStreamingIndexDataSize, 1)
 {
     memset(&mClearColorValue, 0, sizeof(mClearColorValue));
     memset(&mClearDepthStencilValue, 0, sizeof(mClearDepthStencilValue));
@@ -367,7 +367,8 @@ gl::Error ContextVk::drawElements(const gl::Context *context,
             const GLsizei amount = sizeof(GLushort) * count;
             GLubyte *dst         = nullptr;
 
-            ANGLE_TRY(mStreamingIndexData.allocate(contextVk, amount, &dst, &buffer, &offset));
+            ANGLE_TRY(
+                mStreamingIndexData.allocate(contextVk, amount, &dst, &buffer, &offset, nullptr));
             if (type == GL_UNSIGNED_BYTE)
             {
                 // Unsigned bytes don't have direct support in Vulkan so we have to expand the
