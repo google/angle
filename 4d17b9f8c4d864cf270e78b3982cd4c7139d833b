@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "94fa0327_873f0ddc",
+        "filename": "src/libANGLE/Context_gles_1_0.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-19T15:57:36Z",
+      "side": 1,
+      "message": "nit: update comment",
+      "range": {
+        "startLine": 7,
+        "startChar": 3,
+        "endLine": 7,
+        "endChar": 15
+      },
+      "revId": "4d17b9f8c4d864cf270e78b3982cd4c7139d833b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
