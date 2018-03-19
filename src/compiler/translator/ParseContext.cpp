@@ -2632,7 +2632,7 @@ TIntermInvariantDeclaration *TParseContext::parseInvariantDeclaration(
                                     typeQualifier.line);
     checkMemoryQualifierIsNotSpecified(typeQualifier.memoryQualifier, typeQualifier.line);
 
-    symbolTable.addInvariantVarying(identifier);
+    symbolTable.addInvariantVarying(*variable);
 
     TIntermSymbol *intermSymbol = new TIntermSymbol(variable);
     intermSymbol->setLine(identifierLoc);
