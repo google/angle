@@ -527,6 +527,35 @@ class TType:
 
         raise Exception('Unrecognized type: ' + str(glsl_header_type))
 
+
+ttype_mangled_name_variants = []
+for basic_type in basic_types_enumeration:
+    primary_sizes = [1]
+    secondary_sizes = [1]
+    if basic_type in ['Float', 'Int', 'UInt', 'Bool']:
+        primary_sizes = [1, 2, 3, 4]
+    if basic_type == 'Float':
+        secondary_sizes = [1, 2, 3, 4]
+    for primary_size in primary_sizes:
+        for secondary_size in secondary_sizes:
+            type = TType({'basic': basic_type, 'primarySize': primary_size, 'secondarySize': secondary_size})
+            ttype_mangled_name_variants.append(type.get_mangled_name())
+
+def gen_parameters_mangled_name_variants(str_len):
+    if str_len % 2 != 0:
+        raise Exception('Expecting parameters mangled name length to be divisible by two')
+    num_variants = pow(len(ttype_mangled_name_variants), str_len / 2)
+    for variant_id in xrange(num_variants):
+        variant = ''
+        while (len(variant)) < str_len:
+            parameter_index = len(variant) / 2
+            parameter_variant_index = variant_id
+            for i in xrange(parameter_index):
+                parameter_variant_index = parameter_variant_index / len(ttype_mangled_name_variants)
+            parameter_variant_index = parameter_variant_index % len(ttype_mangled_name_variants)
+            variant += ttype_mangled_name_variants[parameter_variant_index]
+        yield variant
+
 def get_parsed_functions():
 
     def parse_function_parameters(parameters):
@@ -656,15 +685,16 @@ variable_name_count = {}
 
 id_counter = 0
 
-def hash32(str):
+def hash32(str, save_test = True):
     fnvOffsetBasis = 0x811c9dc5
     fnvPrime = 16777619
     hash = fnvOffsetBasis
     for c in str:
         hash = hash ^ ord(c)
         hash = hash * fnvPrime & 0xffffffff
-    sanity_check = '    ASSERT_EQ(0x{hash}u, ImmutableString("{str}").hash32());'.format(hash = ('%08x' % hash), str = str)
-    script_generated_hash_tests.update({sanity_check: None})
+    if save_test:
+        sanity_check = '    ASSERT_EQ(0x{hash}u, ImmutableString("{str}").hash32());'.format(hash = ('%08x' % hash), str = str)
+        script_generated_hash_tests.update({sanity_check: None})
     return hash
 
 def get_suffix(props):
@@ -705,6 +735,25 @@ def get_function_mangled_name(function_name, parameters):
     for param in parameters:
         mangled_name += param.get_mangled_name()
     return mangled_name
+
+def mangled_name_hash_can_collide_with_different_parameters(function_variant_props):
+    # We exhaustively search through all possible lists of parameters and see if any other mangled
+    # name has the same hash.
+    mangled_name = function_variant_props['mangled_name']
+    hash = hash32(mangled_name)
+    mangled_name_prefix = function_variant_props['name'] + '('
+    parameters_mangled_name_len = len(mangled_name) - len(mangled_name_prefix)
+    parameters_mangled_name = mangled_name[len(mangled_name_prefix):]
+    if (parameters_mangled_name_len > 4):
+        # In this case a struct parameter or an array parameter would fit to the space reserved for
+        # parameter mangled names. This increases the complexity of searching for hash collisions
+        # considerably, so rather than doing it we just conservatively assume that a hash collision
+        # may be possible.
+        return True
+    for variant in gen_parameters_mangled_name_variants(parameters_mangled_name_len):
+        if parameters_mangled_name != variant and hash32(mangled_name_prefix + variant, False) == hash:
+            return True
+    return False
 
 def get_unique_identifier_name(function_name, parameters):
     unique_name = function_name + '_'
@@ -831,6 +880,7 @@ def process_single_function_group(condition, group_name, group):
             parameters = get_parameters(function_props)
 
             template_args['unique_name'] = get_unique_identifier_name(template_args['name_with_suffix'], parameters)
+            template_args['unique_name_no_parameters'] = get_unique_identifier_name(template_args['name_with_suffix'], [])
 
             if template_args['unique_name'] in defined_function_variants:
                 continue
@@ -839,12 +889,10 @@ def process_single_function_group(condition, group_name, group):
             template_args['param_count'] = len(parameters)
             template_args['return_type'] = function_props['returnType'].get_statictype_string()
             template_args['mangled_name'] = get_function_mangled_name(function_name, parameters)
+            template_args['mangled_name_length'] = len(template_args['mangled_name'])
 
             template_builtin_id_declaration = '    static constexpr const TSymbolUniqueId {unique_name} = TSymbolUniqueId({id});'
             builtin_id_declarations.append(template_builtin_id_declaration.format(**template_args))
-
-            template_mangled_name_declaration = 'constexpr const ImmutableString {unique_name}("{mangled_name}");'
-            name_declarations.add(template_mangled_name_declaration.format(**template_args))
 
             parameters_list = []
             for param in parameters:
@@ -876,7 +924,21 @@ def process_single_function_group(condition, group_name, group):
             template_function_declaration = 'constexpr const TFunction kFunction_{unique_name}(BuiltInId::{unique_name}, BuiltInName::{name_with_suffix}, TExtension::{extension}, BuiltInParameters::{parameters_var_name}, {param_count}, {return_type}, EOp{op}, {known_to_not_have_side_effects});'
             function_declarations.append(template_function_declaration.format(**template_args))
 
-            template_mangled_if = """if (name == BuiltInName::{unique_name})
+            # If we can make sure that there's no other mangled name with the same length, function
+            # name and hash, then we can only check the mangled name length and the function name
+            # instead of checking the whole mangled name.
+            template_mangled_if = ''
+            if mangled_name_hash_can_collide_with_different_parameters(template_args):
+                template_mangled_name_declaration = 'constexpr const ImmutableString {unique_name}("{mangled_name}");'
+                name_declarations.add(template_mangled_name_declaration.format(**template_args))
+                template_mangled_if = """if (name == BuiltInName::{unique_name})
+{{
+    return &BuiltInFunction::kFunction_{unique_name};
+}}"""
+            else:
+                template_mangled_name_declaration = 'constexpr const ImmutableString {unique_name_no_parameters}("{name}(");'
+                name_declarations.add(template_mangled_name_declaration.format(**template_args))
+                template_mangled_if = """if (name.length() == {mangled_name_length} && name.beginsWith(BuiltInName::{unique_name_no_parameters}))
 {{
     return &BuiltInFunction::kFunction_{unique_name};
 }}"""
