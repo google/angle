@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d5c6d1cb_7bb1779a",
+        "filename": "src/libANGLE/renderer/vulkan/DynamicDescriptorPool.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-19T15:15:38Z",
+      "side": 1,
+      "message": "nit: put this in the enum itself",
+      "range": {
+        "startLine": 88,
+        "startChar": 4,
+        "endLine": 88,
+        "endChar": 40
+      },
+      "revId": "37adc0bcac21b76ae840f247801cce013fe937d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "de5c12fa_2f35692f",
+        "filename": "src/libANGLE/renderer/vulkan/DynamicDescriptorPool.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-19T15:15:38Z",
+      "side": 1,
+      "message": "use \u0027enum class\u0027 and then you can remove the \u0027Pool\u0027 from the enum values.",
+      "range": {
+        "startLine": 20,
+        "startChar": 0,
+        "endLine": 20,
+        "endChar": 5
+      },
+      "revId": "37adc0bcac21b76ae840f247801cce013fe937d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "47db729b_8ab25e3a",
+        "filename": "src/libANGLE/renderer/vulkan/DynamicDescriptorPool.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-19T15:15:38Z",
+      "side": 1,
+      "message": "nit: add the final keyword after DynamicDescriptorPool",
+      "revId": "37adc0bcac21b76ae840f247801cce013fe937d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7b1ef9ef_6b7007a3",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-19T15:15:38Z",
+      "side": 1,
+      "message": "nit: const isn\u0027t needed here.",
+      "range": {
+        "startLine": 69,
+        "startChar": 4,
+        "endLine": 69,
+        "endChar": 10
+      },
+      "revId": "37adc0bcac21b76ae840f247801cce013fe937d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
