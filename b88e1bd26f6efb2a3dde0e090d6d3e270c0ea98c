@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "1addd481_5e2d8ead",
+        "filename": "src/libANGLE/RefCountObject.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1256148
+      },
+      "writtenOn": "2018-03-19T22:33:56Z",
+      "side": 1,
+      "message": "This isn\u0027t specific to transform feedback. I\u0027m also using it in validationES.cpp to validate the size of uniform buffers. In general you need all of this logic whenever you are checking the size of an OffsetBindingPointer. Is there another place it could fit?",
+      "parentUuid": "f25547df_8953c8cb",
+      "range": {
+        "startLine": 175,
+        "startChar": 0,
+        "endLine": 204,
+        "endChar": 5
+      },
+      "revId": "b88e1bd26f6efb2a3dde0e090d6d3e270c0ea98c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "67906f2f_e0865775",
         "filename": "src/libANGLE/TransformFeedback.cpp",
         "patchSetId": 4
