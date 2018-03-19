@@ -1,0 +1,78 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "80ab5f39_7e93444d",
+        "filename": "Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-19T15:21:42Z",
+      "side": 1,
+      "message": "Do we want to have this file live in the repository?",
+      "revId": "5328b884991d4730c54a948e1740900c2a3e97d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6672b598_ab7aaf32",
+        "filename": "angle.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-19T15:21:42Z",
+      "side": 1,
+      "message": "Is this the output of gn desc?  If so, it doesn\u0027t need to be committed.",
+      "revId": "5328b884991d4730c54a948e1740900c2a3e97d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "08fefb9f_ee9e4a96",
+        "filename": "gen_angle_android_bp.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-19T15:21:42Z",
+      "side": 1,
+      "message": "This can live in the scripts folder.",
+      "revId": "5328b884991d4730c54a948e1740900c2a3e97d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "08959e0e_2d4ce290",
+        "filename": "gen_angle_android_bp.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-19T15:21:42Z",
+      "side": 1,
+      "message": "Could you also add simple instructions on how to generate the blueprint file in the android section of the dev setup documentation?",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 37,
+        "endChar": 79
+      },
+      "revId": "5328b884991d4730c54a948e1740900c2a3e97d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
