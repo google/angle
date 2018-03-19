@@ -205,7 +205,7 @@ bool IncludeSameArrayElement(const std::set<std::string> &nameSet, const std::st
     return false;
 }
 
-bool validateInterfaceBlocksCount(GLuint maxInterfaceBlocks,
+bool ValidateInterfaceBlocksCount(GLuint maxInterfaceBlocks,
                                   const std::vector<sh::InterfaceBlock> &interfaceBlocks,
                                   const std::string &errorMessage,
                                   InfoLog &infoLog)
@@ -2744,7 +2744,7 @@ bool Program::linkInterfaceBlocks(const Context *context, InfoLog &infoLog)
         Shader &computeShader              = *mState.mAttachedComputeShader;
         const auto &computeUniformBlocks   = computeShader.getUniformBlocks(context);
 
-        if (!validateInterfaceBlocksCount(
+        if (!ValidateInterfaceBlocksCount(
                 caps.maxComputeUniformBlocks, computeUniformBlocks,
                 "Compute shader uniform block count exceeds GL_MAX_COMPUTE_UNIFORM_BLOCKS (",
                 infoLog))
@@ -2753,7 +2753,7 @@ bool Program::linkInterfaceBlocks(const Context *context, InfoLog &infoLog)
         }
 
         const auto &computeShaderStorageBlocks = computeShader.getShaderStorageBlocks(context);
-        if (!validateInterfaceBlocksCount(caps.maxComputeShaderStorageBlocks,
+        if (!ValidateInterfaceBlocksCount(caps.maxComputeShaderStorageBlocks,
                                           computeShaderStorageBlocks,
                                           "Compute shader shader storage block count exceeds "
                                           "GL_MAX_COMPUTE_SHADER_STORAGE_BLOCKS (",
@@ -2770,13 +2770,13 @@ bool Program::linkInterfaceBlocks(const Context *context, InfoLog &infoLog)
     const auto &vertexUniformBlocks   = vertexShader.getUniformBlocks(context);
     const auto &fragmentUniformBlocks = fragmentShader.getUniformBlocks(context);
 
-    if (!validateInterfaceBlocksCount(
+    if (!ValidateInterfaceBlocksCount(
             caps.maxVertexUniformBlocks, vertexUniformBlocks,
             "Vertex shader uniform block count exceeds GL_MAX_VERTEX_UNIFORM_BLOCKS (", infoLog))
     {
         return false;
     }
-    if (!validateInterfaceBlocksCount(
+    if (!ValidateInterfaceBlocksCount(
             caps.maxFragmentUniformBlocks, fragmentUniformBlocks,
             "Fragment shader uniform block count exceeds GL_MAX_FRAGMENT_UNIFORM_BLOCKS (",
             infoLog))
@@ -2785,6 +2785,20 @@ bool Program::linkInterfaceBlocks(const Context *context, InfoLog &infoLog)
         return false;
     }
 
+    Shader *geometryShader = mState.mAttachedGeometryShader;
+    if (geometryShader)
+    {
+        const auto &geometryUniformBlocks = geometryShader->getUniformBlocks(context);
+        if (!ValidateInterfaceBlocksCount(
+                caps.maxGeometryUniformBlocks, geometryUniformBlocks,
+                "Geometry shader uniform block count exceeds GL_MAX_GEOMETRY_UNIFORM_BLOCKS_EXT (",
+                infoLog))
+        {
+            return false;
+        }
+    }
+
+    // TODO(jiawei.shao@intel.com): validate geometry shader uniform blocks.
     bool webglCompatibility = context->getExtensions().webglCompatibility;
     if (!ValidateGraphicsInterfaceBlocks(vertexUniformBlocks, fragmentUniformBlocks, infoLog,
                                          webglCompatibility, sh::BlockType::BLOCK_UNIFORM,
@@ -2798,7 +2812,7 @@ bool Program::linkInterfaceBlocks(const Context *context, InfoLog &infoLog)
         const auto &vertexShaderStorageBlocks   = vertexShader.getShaderStorageBlocks(context);
         const auto &fragmentShaderStorageBlocks = fragmentShader.getShaderStorageBlocks(context);
 
-        if (!validateInterfaceBlocksCount(caps.maxVertexShaderStorageBlocks,
+        if (!ValidateInterfaceBlocksCount(caps.maxVertexShaderStorageBlocks,
                                           vertexShaderStorageBlocks,
                                           "Vertex shader shader storage block count exceeds "
                                           "GL_MAX_VERTEX_SHADER_STORAGE_BLOCKS (",
@@ -2806,7 +2820,7 @@ bool Program::linkInterfaceBlocks(const Context *context, InfoLog &infoLog)
         {
             return false;
         }
-        if (!validateInterfaceBlocksCount(caps.maxFragmentShaderStorageBlocks,
+        if (!ValidateInterfaceBlocksCount(caps.maxFragmentShaderStorageBlocks,
                                           fragmentShaderStorageBlocks,
                                           "Fragment shader shader storage block count exceeds "
                                           "GL_MAX_FRAGMENT_SHADER_STORAGE_BLOCKS (",
@@ -2816,6 +2830,21 @@ bool Program::linkInterfaceBlocks(const Context *context, InfoLog &infoLog)
             return false;
         }
 
+        if (geometryShader)
+        {
+            const auto &geometryShaderStorageBlocks =
+                geometryShader->getShaderStorageBlocks(context);
+            if (!ValidateInterfaceBlocksCount(caps.maxGeometryShaderStorageBlocks,
+                                              geometryShaderStorageBlocks,
+                                              "Geometry shader shader storage block count exceeds "
+                                              "GL_MAX_GEOMETRY_SHADER_STORAGE_BLOCKS_EXT (",
+                                              infoLog))
+            {
+                return false;
+            }
+        }
+
+        // TODO(jiawei.shao@intel.com): validate geometry shader shader storage blocks.
         if (!ValidateGraphicsInterfaceBlocks(
                 vertexShaderStorageBlocks, fragmentShaderStorageBlocks, infoLog, webglCompatibility,
                 sh::BlockType::BLOCK_BUFFER, caps.maxCombinedShaderStorageBlocks))
