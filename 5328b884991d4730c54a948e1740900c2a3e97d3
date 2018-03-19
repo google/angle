@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "16844b21_cee5ea9a",
+        "filename": "Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-19T17:06:41Z",
+      "side": 1,
+      "message": "I think the alternative is to check this file into the Android repository when you roll ANGLE with a script. This would be a second script - responsible for pulling the latest ANGLE master and re-generating the build files.\n\nI think we would rather store the blueprint inside Android - this way we don\u0027t have to ensure your build files get updated whenever we make an unrelated build file change on our side.",
+      "parentUuid": "3e8e1841_6bb73aea",
+      "revId": "5328b884991d4730c54a948e1740900c2a3e97d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6672b598_ab7aaf32",
         "filename": "angle.json",
         "patchSetId": 2
@@ -66,6 +84,24 @@
       "side": 1,
       "message": "Yes, this is from gen_angle_android_bp.py which calls gn desc for each of the build components.\nThis file is not needed to build, but is handy if you are working with the gen_angle_android_bp.py script. Much quicker to generate the Android.bp using the json.\nI\u0027ll remove it from the CL.",
       "parentUuid": "6672b598_ab7aaf32",
+      "revId": "5328b884991d4730c54a948e1740900c2a3e97d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "423d55d1_2045186d",
+        "filename": "angle.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-19T17:06:41Z",
+      "side": 1,
+      "message": "This should probably just be stored as a temporary value from the second script I was mentioning.",
+      "parentUuid": "94a06999_f1e516f2",
       "revId": "5328b884991d4730c54a948e1740900c2a3e97d3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
