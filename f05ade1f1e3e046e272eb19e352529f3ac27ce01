@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "11dcc0cb_164cdc9c",
+        "filename": "Android.bp",
+        "patchSetId": 4
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-03-19T22:18:29Z",
+      "side": 1,
+      "message": "You mean Ack. Done is for uploading a new patchset with a fix.",
+      "parentUuid": "640d4165_f881f93b",
+      "range": {
+        "startLine": 165,
+        "startChar": 28,
+        "endLine": 165,
+        "endChar": 42
+      },
+      "revId": "f05ade1f1e3e046e272eb19e352529f3ac27ce01",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "74e12b63_a07a9cd5",
         "filename": "scripts/gen_angle_android_bp.py",
         "patchSetId": 4
@@ -143,6 +167,30 @@
     },
     {
       "key": {
+        "uuid": "ea409297_ecc8acab",
+        "filename": "scripts/gen_angle_android_bp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-03-19T22:18:29Z",
+      "side": 1,
+      "message": "We usually put third party stuff into third_party subfolders.\nNot sure what we do with stuff originating from third party and heavily modified.\nJamie, Geoff?",
+      "parentUuid": "53fee225_3d4e9c20",
+      "range": {
+        "startLine": 2,
+        "startChar": 21,
+        "endLine": 2,
+        "endChar": 52
+      },
+      "revId": "f05ade1f1e3e046e272eb19e352529f3ac27ce01",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5157bbc8_517594bd",
         "filename": "scripts/gen_angle_android_bp.py",
         "patchSetId": 4
@@ -178,6 +226,30 @@
       "side": 1,
       "message": "Can we list both here?",
       "parentUuid": "5157bbc8_517594bd",
+      "range": {
+        "startLine": 59,
+        "startChar": 43,
+        "endLine": 59,
+        "endChar": 46
+      },
+      "revId": "f05ade1f1e3e046e272eb19e352529f3ac27ce01",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8798bfb0_d01a737a",
+        "filename": "scripts/gen_angle_android_bp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-03-19T22:18:29Z",
+      "side": 1,
+      "message": "No, you probably need to run this multiple times with different gn_args. Could make this a parameter to gen_angle_android_bp.py",
+      "parentUuid": "5d129b9a_327c14a3",
       "range": {
         "startLine": 59,
         "startChar": 43,
