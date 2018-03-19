@@ -1,0 +1,188 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f73f9836_20ed14f1",
+        "filename": "src/libANGLE/params.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-03-19T03:23:50Z",
+      "side": 1,
+      "message": "Would it be possible to just check mIndirect !\u003d nullptr?",
+      "range": {
+        "startLine": 148,
+        "startChar": 26,
+        "endLine": 148,
+        "endChar": 31
+      },
+      "revId": "69062adc715a0591d69265b7065393a951466606",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a620a729_1b130fb4",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Context11.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-03-19T03:23:50Z",
+      "side": 1,
+      "message": "Can these be removed now (everywhere)?",
+      "range": {
+        "startLine": 225,
+        "startChar": 60,
+        "endLine": 225,
+        "endChar": 99
+      },
+      "revId": "69062adc715a0591d69265b7065393a951466606",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "401372db_284b3e7c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Context11.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 290,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-03-19T03:23:50Z",
+      "side": 1,
+      "message": "drawArrays does more things than the old code used to do.\nI have no idea if this is still correct, and am worried about new code performance for this case.",
+      "range": {
+        "startLine": 290,
+        "startChar": 26,
+        "endLine": 290,
+        "endChar": 36
+      },
+      "revId": "69062adc715a0591d69265b7065393a951466606",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4f9b17a5_4bb935f6",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 1622,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-03-19T03:23:50Z",
+      "side": 1,
+      "message": "I want to understand the formula change.\nFor Indirect case this seems to be unchanged.\nBut, for Direct case, do you assume that baseVertex() would be 0, thus matching the old code?\nI\u0027d like to see an ASSERT(baseVertex !\u003d0 \u003d\u003e DrawElementsIndirect) somewhere.",
+      "range": {
+        "startLine": 1622,
+        "startChar": 39,
+        "endLine": 1622,
+        "endChar": 81
+      },
+      "revId": "69062adc715a0591d69265b7065393a951466606",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cfd2f781_16481b02",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 1445,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-03-19T03:23:50Z",
+      "side": 1,
+      "message": "Seems suspicious that the old code didn\u0027t have this, but still worked.",
+      "range": {
+        "startLine": 1445,
+        "startChar": 4,
+        "endLine": 1445,
+        "endChar": 21
+      },
+      "revId": "69062adc715a0591d69265b7065393a951466606",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "79a8d307_5c6bd67e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 1854,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-03-19T03:23:50Z",
+      "side": 1,
+      "message": "Seems suspicious that the old code didn\u0027t have this, but still worked.",
+      "range": {
+        "startLine": 1854,
+        "startChar": 4,
+        "endLine": 1854,
+        "endChar": 21
+      },
+      "revId": "69062adc715a0591d69265b7065393a951466606",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7bd66b8b_385fe141",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 1896,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-03-19T03:23:50Z",
+      "side": 1,
+      "message": "Why this isn\u0027t mInputLayoutIsDirty, like in the old code?",
+      "range": {
+        "startLine": 1896,
+        "startChar": 8,
+        "endLine": 1896,
+        "endChar": 28
+      },
+      "revId": "69062adc715a0591d69265b7065393a951466606",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3052d361_5e53c4eb",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 2835,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-03-19T03:23:50Z",
+      "side": 1,
+      "message": "Looks like the comment needs to be updated for new formatting.",
+      "range": {
+        "startLine": 2835,
+        "startChar": 16,
+        "endLine": 2835,
+        "endChar": 46
+      },
+      "revId": "69062adc715a0591d69265b7065393a951466606",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

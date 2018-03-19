@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ac389be3_58b5e8fc",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 2730,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-03-19T03:23:50Z",
+      "side": 0,
+      "message": "When does mInputLayoutIsDirty become false now?",
+      "range": {
+        "startLine": 2730,
+        "startChar": 4,
+        "endLine": 2730,
+        "endChar": 31
+      },
+      "revId": "5e9daba86081ddf26d5809e94762fdcfda97bfc5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
