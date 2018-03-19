@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ba0aa53a_1744119a",
+        "filename": "Android.bp",
+        "patchSetId": 4
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-03-19T21:32:32Z",
+      "side": 1,
+      "message": "This should be on only for debug builds. Not sure why it crept in, since you are setting \"is_debug\u003dfalse\".",
+      "range": {
+        "startLine": 68,
+        "startChar": 7,
+        "endLine": 68,
+        "endChar": 37
+      },
+      "revId": "f05ade1f1e3e046e272eb19e352529f3ac27ce01",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2d0d5c05_549dd201",
+        "filename": "Android.bp",
+        "patchSetId": 4
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-03-19T21:32:32Z",
+      "side": 1,
+      "message": "src/libANGLE/renderer/vk is missing.\nYou need to have \"android32_ndk_api_level \u003d 24 android64_ndk_api_level \u003d 24\" in your args.gn.",
+      "range": {
+        "startLine": 165,
+        "startChar": 28,
+        "endLine": 165,
+        "endChar": 42
+      },
+      "revId": "f05ade1f1e3e046e272eb19e352529f3ac27ce01",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "74e12b63_a07a9cd5",
+        "filename": "scripts/gen_angle_android_bp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-03-19T21:32:32Z",
+      "side": 1,
+      "message": "Shouldn\u0027t this have ANGLE license?",
+      "range": {
+        "startLine": 2,
+        "startChar": 21,
+        "endLine": 2,
+        "endChar": 52
+      },
+      "revId": "f05ade1f1e3e046e272eb19e352529f3ac27ce01",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5157bbc8_517594bd",
+        "filename": "scripts/gen_angle_android_bp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-03-19T21:32:32Z",
+      "side": 1,
+      "message": "I think we want both arm and arm64 versions of this?\narm64 can have different defines.",
+      "range": {
+        "startLine": 59,
+        "startChar": 43,
+        "endLine": 59,
+        "endChar": 46
+      },
+      "revId": "f05ade1f1e3e046e272eb19e352529f3ac27ce01",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ffd0dde5_24162dc0",
+        "filename": "scripts/gen_angle_android_bp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 611,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-03-19T21:32:32Z",
+      "side": 1,
+      "message": "How much of this is taken from perfetto? Do we need to mention their license?",
+      "range": {
+        "startLine": 611,
+        "startChar": 61,
+        "endLine": 611,
+        "endChar": 75
+      },
+      "revId": "f05ade1f1e3e046e272eb19e352529f3ac27ce01",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
