@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a8bb22f8_a551f59b",
+        "filename": "src/commit_id.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-19T15:24:07Z",
+      "side": 1,
+      "message": "Did you mark this file as executable too?  It probably doesn\u0027t need it.",
+      "revId": "08eeafe0c847501d897ae4561f4e436ebfa95c75",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
