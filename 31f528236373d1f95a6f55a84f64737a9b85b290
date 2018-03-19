@@ -22,6 +22,30 @@
       "revId": "31f528236373d1f95a6f55a84f64737a9b85b290",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b6e1c55e_6b3b63c0",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 2994,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-19T19:14:40Z",
+      "side": 1,
+      "message": "hm, I think this should be InputLayout is dirty. it\u0027s dealing with vertex buffers not index. thanks for catching. making a test is a bit difficult and this feature is not really supported, so hopefully this is ok.",
+      "parentUuid": "51dc244a_369e1710",
+      "range": {
+        "startLine": 2994,
+        "startChar": 16,
+        "endLine": 2994,
+        "endChar": 35
+      },
+      "revId": "31f528236373d1f95a6f55a84f64737a9b85b290",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
