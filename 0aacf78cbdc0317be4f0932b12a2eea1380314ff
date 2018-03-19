@@ -1,0 +1,113 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "31bd20c4_3e0e60f8",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-19T17:32:36Z",
+      "side": 1,
+      "message": "please also tag this with the ANGLE bug id\n\nBug: angleproject:####",
+      "revId": "0aacf78cbdc0317be4f0932b12a2eea1380314ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "421983ad_f2ed6e76",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-19T17:32:36Z",
+      "side": 1,
+      "message": "nit: use the lower case \"k\" prefix for these as according to the style guide. Also you can move the string constant here too (as a constexpr char []).\n\nhttps://chromium.googlesource.com/angle/angle/+/HEAD/doc/CodingStandard.md#variable-names",
+      "range": {
+        "startLine": 34,
+        "startChar": 15,
+        "endLine": 34,
+        "endChar": 28
+      },
+      "revId": "0aacf78cbdc0317be4f0932b12a2eea1380314ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "deb80d7a_8bd8cbbd",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-19T17:32:36Z",
+      "side": 1,
+      "message": "nit: close anonymous namespaces with }  // anonymous namespace",
+      "range": {
+        "startLine": 36,
+        "startChar": 0,
+        "endLine": 36,
+        "endChar": 1
+      },
+      "revId": "0aacf78cbdc0317be4f0932b12a2eea1380314ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b0141557_25443142",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 264,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-19T17:32:36Z",
+      "side": 1,
+      "message": "nit: probably should put the comment before the ifdef, or after it. C can do weird things with comments and preprocessor statements.",
+      "range": {
+        "startLine": 264,
+        "startChar": 38,
+        "endLine": 264,
+        "endChar": 83
+      },
+      "revId": "0aacf78cbdc0317be4f0932b12a2eea1380314ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d577c77c_a61c56d1",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 275,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-19T17:32:36Z",
+      "side": 1,
+      "message": "rather you should return a vk::Error directly here. You can also use ANGLE_VK_CHECK.",
+      "range": {
+        "startLine": 274,
+        "startChar": 12,
+        "endLine": 275,
+        "endChar": 50
+      },
+      "revId": "0aacf78cbdc0317be4f0932b12a2eea1380314ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

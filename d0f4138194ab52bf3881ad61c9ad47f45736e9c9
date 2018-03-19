@@ -354,6 +354,30 @@
     },
     {
       "key": {
+        "uuid": "79aaf464_627c65c1",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 386,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-19T17:32:36Z",
+      "side": 1,
+      "message": "OK, thanks for explaining. How about this:\n\nvoid ChoosePhysicalDevice(const std::vector\u003cVkPhysicalDevice\u003e \u0026physicalDevices, bool preferMockICD, VkPhysicalDevice *physicalDeviceOut, VkPhysicalDeviceProperties *physicalDevicePropertiesOut)\n{\n  ASSERT(!physicalDevices.empty());\n\n  if (preferMockICD)\n  {\n    for (const VkPhysicalDevice \u0026physicalDevice : physicalDevices)\n    {\n       vkGetPhysicalDeviceProperties(physicalDevice, physicalDevicePropertiesOut);\n       if (mock)\n       {\n          *physicalDeviceOut \u003d physicalDevice;\n          return;\n       }\n    }\n  }\n\n  // Fall back to first device.\n  *physicalDeviceOut \u003d physicalDevices[0];\n  vkGetPhysicalDeviceProperties(*physicalDeviceOut, physicalDevicePropertiesOut);\n}\n\nNo errors needed here. If you did need to return an error, you could via the return value and ANGLE_TRY.",
+      "parentUuid": "975e9755_c261a34d",
+      "range": {
+        "startLine": 363,
+        "startChar": 0,
+        "endLine": 386,
+        "endChar": 5
+      },
+      "revId": "d0f4138194ab52bf3881ad61c9ad47f45736e9c9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "40188c9a_1368e1fc",
         "filename": "src/tests/test_utils/ANGLETest.h",
         "patchSetId": 3
