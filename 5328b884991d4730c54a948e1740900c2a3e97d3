@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "3e8e1841_6bb73aea",
+        "filename": "Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-03-19T16:58:52Z",
+      "side": 1,
+      "message": "The Android build won\u0027t do anything unless it sees an Android.bp or Android.mk file.\nI\u0027m not sure what the alternative would be.",
+      "parentUuid": "80ab5f39_7e93444d",
+      "revId": "5328b884991d4730c54a948e1740900c2a3e97d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6672b598_ab7aaf32",
         "filename": "angle.json",
         "patchSetId": 2
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "94a06999_f1e516f2",
+        "filename": "angle.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-03-19T16:58:52Z",
+      "side": 1,
+      "message": "Yes, this is from gen_angle_android_bp.py which calls gn desc for each of the build components.\nThis file is not needed to build, but is handy if you are working with the gen_angle_android_bp.py script. Much quicker to generate the Android.bp using the json.\nI\u0027ll remove it from the CL.",
+      "parentUuid": "6672b598_ab7aaf32",
+      "revId": "5328b884991d4730c54a948e1740900c2a3e97d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "08fefb9f_ee9e4a96",
         "filename": "gen_angle_android_bp.py",
         "patchSetId": 2
@@ -50,6 +86,24 @@
       "revId": "5328b884991d4730c54a948e1740900c2a3e97d3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "616257fc_66621dbc",
+        "filename": "gen_angle_android_bp.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-03-19T16:58:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "08fefb9f_ee9e4a96",
+      "revId": "5328b884991d4730c54a948e1740900c2a3e97d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -73,6 +127,30 @@
       "revId": "5328b884991d4730c54a948e1740900c2a3e97d3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3fafa28b_5f8e7df9",
+        "filename": "gen_angle_android_bp.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-03-19T16:58:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "08959e0e_2d4ce290",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 37,
+        "endChar": 79
+      },
+      "revId": "5328b884991d4730c54a948e1740900c2a3e97d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
