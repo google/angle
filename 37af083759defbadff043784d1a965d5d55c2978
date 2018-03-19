@@ -22,6 +22,30 @@
       "revId": "37af083759defbadff043784d1a965d5d55c2978",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f287550e_bf02e8e7",
+        "filename": "src/libANGLE/renderer/vulkan/DynamicDescriptorPool.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-03-19T19:00:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e5cb7608_ed5ca6ac",
+      "range": {
+        "startLine": 25,
+        "startChar": 0,
+        "endLine": 25,
+        "endChar": 36
+      },
+      "revId": "37af083759defbadff043784d1a965d5d55c2978",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
