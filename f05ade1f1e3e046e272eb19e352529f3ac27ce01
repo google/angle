@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "2eef8db9_2d15e4d1",
+        "filename": "Android.bp",
+        "patchSetId": 4
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-03-19T22:10:22Z",
+      "side": 1,
+      "message": "Interesting, I\u0027m getting that out of the GN build info. Maybe I had initialized the build for debug? I\u0027ll have to check.",
+      "parentUuid": "ba0aa53a_1744119a",
+      "range": {
+        "startLine": 68,
+        "startChar": 7,
+        "endLine": 68,
+        "endChar": 37
+      },
+      "revId": "f05ade1f1e3e046e272eb19e352529f3ac27ce01",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "2d0d5c05_549dd201",
         "filename": "Android.bp",
         "patchSetId": 4
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "640d4165_f881f93b",
+        "filename": "Android.bp",
+        "patchSetId": 4
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-03-19T22:10:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2d0d5c05_549dd201",
+      "range": {
+        "startLine": 165,
+        "startChar": 28,
+        "endLine": 165,
+        "endChar": 42
+      },
+      "revId": "f05ade1f1e3e046e272eb19e352529f3ac27ce01",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "74e12b63_a07a9cd5",
         "filename": "scripts/gen_angle_android_bp.py",
         "patchSetId": 4
@@ -59,6 +107,30 @@
       "writtenOn": "2018-03-19T21:32:32Z",
       "side": 1,
       "message": "Shouldn\u0027t this have ANGLE license?",
+      "range": {
+        "startLine": 2,
+        "startChar": 21,
+        "endLine": 2,
+        "endChar": 52
+      },
+      "revId": "f05ade1f1e3e046e272eb19e352529f3ac27ce01",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "53fee225_3d4e9c20",
+        "filename": "scripts/gen_angle_android_bp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-03-19T22:10:22Z",
+      "side": 1,
+      "message": "This was copied from Perfetto which was where I started with this script.",
+      "parentUuid": "74e12b63_a07a9cd5",
       "range": {
         "startLine": 2,
         "startChar": 21,
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "5d129b9a_327c14a3",
+        "filename": "scripts/gen_angle_android_bp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-03-19T22:10:22Z",
+      "side": 1,
+      "message": "Can we list both here?",
+      "parentUuid": "5157bbc8_517594bd",
+      "range": {
+        "startLine": 59,
+        "startChar": 43,
+        "endLine": 59,
+        "endChar": 46
+      },
+      "revId": "f05ade1f1e3e046e272eb19e352529f3ac27ce01",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ffd0dde5_24162dc0",
         "filename": "scripts/gen_angle_android_bp.py",
         "patchSetId": 4
@@ -105,6 +201,30 @@
       "writtenOn": "2018-03-19T21:32:32Z",
       "side": 1,
       "message": "How much of this is taken from perfetto? Do we need to mention their license?",
+      "range": {
+        "startLine": 611,
+        "startChar": 61,
+        "endLine": 611,
+        "endChar": 75
+      },
+      "revId": "f05ade1f1e3e046e272eb19e352529f3ac27ce01",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "21d82d90_42b7db1c",
+        "filename": "scripts/gen_angle_android_bp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 611,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-03-19T22:10:22Z",
+      "side": 1,
+      "message": "I started with the perfetto script and modified it as needed to suit our needs.\nRight now, the license at the top of the file is from the perfetto script.",
+      "parentUuid": "ffd0dde5_24162dc0",
       "range": {
         "startLine": 611,
         "startChar": 61,
