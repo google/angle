@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f25547df_8953c8cb",
+        "filename": "src/libANGLE/RefCountObject.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-19T14:50:31Z",
+      "side": 1,
+      "message": "This should live in TransformFeedback.cpp.  It should be a function that takes a OffsetBindingPointer\u003cBuffer\u003e instead of assuming that ObjectType is a buffer.",
+      "range": {
+        "startLine": 175,
+        "startChar": 0,
+        "endLine": 204,
+        "endChar": 5
+      },
+      "revId": "b88e1bd26f6efb2a3dde0e090d6d3e270c0ea98c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "67906f2f_e0865775",
+        "filename": "src/libANGLE/TransformFeedback.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-19T14:50:31Z",
+      "side": 1,
+      "message": "I believe we could pre-compute the maximum number of vertices drawn here.  We can probably reduce the draw-call validation to a couple small operations.",
+      "range": {
+        "startLine": 91,
+        "startChar": 4,
+        "endLine": 91,
+        "endChar": 30
+      },
+      "revId": "b88e1bd26f6efb2a3dde0e090d6d3e270c0ea98c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5237ebf2_2a43f970",
+        "filename": "src/libANGLE/TransformFeedback.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-19T14:50:31Z",
+      "side": 1,
+      "message": "nit: move this above the default.",
+      "range": {
+        "startLine": 178,
+        "startChar": 0,
+        "endLine": 179,
+        "endChar": 63
+      },
+      "revId": "b88e1bd26f6efb2a3dde0e090d6d3e270c0ea98c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8bb94f46_7ebb2529",
+        "filename": "src/libANGLE/TransformFeedback.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-19T14:50:31Z",
+      "side": 1,
+      "message": "I think this can be asserted instead, it\u0027s already checked in Context.",
+      "range": {
+        "startLine": 186,
+        "startChar": 8,
+        "endLine": 186,
+        "endChar": 41
+      },
+      "revId": "b88e1bd26f6efb2a3dde0e090d6d3e270c0ea98c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
