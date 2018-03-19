@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e5cb7608_ed5ca6ac",
+        "filename": "src/libANGLE/renderer/vulkan/DynamicDescriptorPool.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-19T18:41:36Z",
+      "side": 1,
+      "message": "I think you can still probably put this in the enum as a Max value.",
+      "range": {
+        "startLine": 25,
+        "startChar": 0,
+        "endLine": 25,
+        "endChar": 36
+      },
+      "revId": "37af083759defbadff043784d1a965d5d55c2978",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
