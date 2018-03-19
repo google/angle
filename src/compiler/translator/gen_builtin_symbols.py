@@ -621,8 +621,9 @@ name_declarations = set()
 # Declarations of builtin TVariables
 variable_declarations = []
 
-# Declarations of parameter arrays for builtin TFunctions
-parameter_declarations = set()
+# Declarations of parameter arrays for builtin TFunctions. Map from C++ variable name to the full
+# declaration.
+parameter_declarations = {}
 
 # Declarations of builtin TFunctions
 function_declarations = []
@@ -867,10 +868,10 @@ def process_single_function_group(condition, group_name, group):
             if len(parameters) > 0:
                 template_args['parameters_list'] = ', '.join(parameters_list)
                 template_parameter_list_declaration = 'constexpr const TVariable *{parameters_var_name}[{param_count}] = {{ {parameters_list} }};'
-                parameter_declarations.add(template_parameter_list_declaration.format(**template_args))
+                parameter_declarations[template_args['parameters_var_name']] = template_parameter_list_declaration.format(**template_args)
             else:
                 template_parameter_list_declaration = 'constexpr const TVariable **{parameters_var_name} = nullptr;'
-                parameter_declarations.add(template_parameter_list_declaration.format(**template_args))
+                parameter_declarations[template_args['parameters_var_name']] = template_parameter_list_declaration.format(**template_args)
 
             template_function_declaration = 'constexpr const TFunction kFunction_{unique_name}(BuiltInId::{unique_name}, BuiltInName::{name_with_suffix}, TExtension::{extension}, BuiltInParameters::{parameters_var_name}, {param_count}, {return_type}, BuiltInName::{unique_name}, EOp{op}, {known_to_not_have_side_effects});'
             function_declarations.append(template_function_declaration.format(**template_args))
@@ -913,6 +914,27 @@ def process_function_group(group_name, group):
 
 for group_name, group in parsed_functions.iteritems():
     process_function_group(group_name, group)
+
+def prune_parameters_arrays():
+    # We can share parameters arrays between functions in case one array is a subarray of another.
+    global parameter_declarations
+    parameter_variable_name_replacements = {}
+    used_param_variable_names = set()
+    for param_variable_name, param_declaration in sorted(parameter_declarations.iteritems(), key=lambda item: -len(item[0])):
+        replaced = False
+        for used in used_param_variable_names:
+            if used.startswith(param_variable_name):
+                parameter_variable_name_replacements[param_variable_name] = used
+                replaced = True
+                break
+        if not replaced:
+            used_param_variable_names.add(param_variable_name)
+    parameter_declarations = [value for key, value in parameter_declarations.iteritems() if key in used_param_variable_names]
+
+    for i in xrange(len(function_declarations)):
+        for replaced, replacement in parameter_variable_name_replacements.iteritems():
+            function_declarations[i] = function_declarations[i].replace('BuiltInParameters::' + replaced + ',', 'BuiltInParameters::' + replacement + ',')
+prune_parameters_arrays()
 
 def process_single_variable_group(condition, group_name, group):
     global id_counter
