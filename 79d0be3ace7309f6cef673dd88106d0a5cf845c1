@@ -143,6 +143,30 @@
     },
     {
       "key": {
+        "uuid": "e84334b3_357fe62e",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-03-19T07:22:39Z",
+      "side": 1,
+      "message": "I meant using EvqConst here. But it doesn\u0027t matter much.",
+      "parentUuid": "5b1bad7a_c542f79f",
+      "range": {
+        "startLine": 116,
+        "startChar": 57,
+        "endLine": 116,
+        "endChar": 77
+      },
+      "revId": "79d0be3ace7309f6cef673dd88106d0a5cf845c1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a1574e30_32338468",
         "filename": "src/compiler/translator/TranslatorVulkan.cpp",
         "patchSetId": 2
