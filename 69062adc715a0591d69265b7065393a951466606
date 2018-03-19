@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "50e68aab_28dee7bd",
+        "filename": "src/libANGLE/params.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-19T18:12:20Z",
+      "side": 1,
+      "message": "No, mIndirect is an offset into the indirect buffer, like the last argument to DrawElements or VertexAttribPointer. It can be nullptr/0 and still be an indirect call.",
+      "parentUuid": "f73f9836_20ed14f1",
+      "range": {
+        "startLine": 148,
+        "startChar": 26,
+        "endLine": 148,
+        "endChar": 31
+      },
+      "revId": "69062adc715a0591d69265b7065393a951466606",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a620a729_1b130fb4",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Context11.cpp",
         "patchSetId": 23
@@ -45,6 +69,30 @@
       "revId": "69062adc715a0591d69265b7065393a951466606",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "54a2000f_20ecb381",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Context11.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-19T18:12:20Z",
+      "side": 1,
+      "message": "Only from the D3D11 back-end. The GL back-end and Vulkan still use them. Follow-up work but wasn\u0027t planning on doing it for the GL back-end, only Vulkan.",
+      "parentUuid": "a620a729_1b130fb4",
+      "range": {
+        "startLine": 225,
+        "startChar": 60,
+        "endLine": 225,
+        "endChar": 99
+      },
+      "revId": "69062adc715a0591d69265b7065393a951466606",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "cb177dc8_5f86165b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Context11.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 290,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-19T18:12:20Z",
+      "side": 1,
+      "message": "It does things like handle instanced point sprites, and maybe multi-view. I\u0027m not sure if you realize this but the \"ReadbackIndirectBuffer\" above makes this a very very slow case already, and is unavoidable in this case.\n\nI think using the same code path as drawArrays is an improvement in code quality.",
+      "parentUuid": "401372db_284b3e7c",
+      "range": {
+        "startLine": 290,
+        "startChar": 26,
+        "endLine": 290,
+        "endChar": 36
+      },
+      "revId": "69062adc715a0591d69265b7065393a951466606",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4f9b17a5_4bb935f6",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 23
@@ -91,6 +163,30 @@
       "revId": "69062adc715a0591d69265b7065393a951466606",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "be38cf48_a33e70ed",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 1622,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-19T18:12:20Z",
+      "side": 1,
+      "message": "Your assumption is basically correct, but I\u0027m not sure I can add an ASSERT here.\n\nIf we\u0027re calling from Context11::drawElementsIndirect in here for the slow path, the new DrawCallParams no longer has the information this came from an indirect call - it is really a fully emulated DrawElements.\n\nAdded a comment instead.",
+      "parentUuid": "4f9b17a5_4bb935f6",
+      "range": {
+        "startLine": 1622,
+        "startChar": 39,
+        "endLine": 1622,
+        "endChar": 81
+      },
+      "revId": "69062adc715a0591d69265b7065393a951466606",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "4c57c5b6_4aceff55",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 1445,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-19T18:12:20Z",
+      "side": 1,
+      "message": "I tried removing this but it caused regressions. I believe previously we were dirtying things every frame.",
+      "parentUuid": "cfd2f781_16481b02",
+      "range": {
+        "startLine": 1445,
+        "startChar": 4,
+        "endLine": 1445,
+        "endChar": 21
+      },
+      "revId": "69062adc715a0591d69265b7065393a951466606",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "79a8d307_5c6bd67e",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
         "patchSetId": 23
@@ -137,6 +257,30 @@
       "revId": "69062adc715a0591d69265b7065393a951466606",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "760bfdf5_885c4986",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 1854,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-19T18:12:20Z",
+      "side": 1,
+      "message": "Yeah.. I think we were dirtying everything every frame.",
+      "parentUuid": "79a8d307_5c6bd67e",
+      "range": {
+        "startLine": 1854,
+        "startChar": 4,
+        "endLine": 1854,
+        "endChar": 21
+      },
+      "revId": "69062adc715a0591d69265b7065393a951466606",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -163,6 +307,30 @@
     },
     {
       "key": {
+        "uuid": "e8900e61_4f4466db",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 1896,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-19T18:12:20Z",
+      "side": 1,
+      "message": "Again I think this is from a bad merge. Fixed.",
+      "parentUuid": "7bd66b8b_385fe141",
+      "range": {
+        "startLine": 1896,
+        "startChar": 8,
+        "endLine": 1896,
+        "endChar": 28
+      },
+      "revId": "69062adc715a0591d69265b7065393a951466606",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3052d361_5e53c4eb",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
         "patchSetId": 23
@@ -183,6 +351,30 @@
       "revId": "69062adc715a0591d69265b7065393a951466606",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "32b5c909_5342dd3a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 2835,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-19T18:12:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3052d361_5e53c4eb",
+      "range": {
+        "startLine": 2835,
+        "startChar": 16,
+        "endLine": 2835,
+        "endChar": 46
+      },
+      "revId": "69062adc715a0591d69265b7065393a951466606",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }

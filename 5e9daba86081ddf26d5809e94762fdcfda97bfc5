@@ -22,6 +22,30 @@
       "revId": "5e9daba86081ddf26d5809e94762fdcfda97bfc5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "908994d0_7bd293b4",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 2730,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-19T18:12:20Z",
+      "side": 0,
+      "message": "Good catch, this also was mixed up in a merge. Fixed.",
+      "parentUuid": "ac389be3_58b5e8fc",
+      "range": {
+        "startLine": 2730,
+        "startChar": 4,
+        "endLine": 2730,
+        "endChar": 31
+      },
+      "revId": "5e9daba86081ddf26d5809e94762fdcfda97bfc5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
