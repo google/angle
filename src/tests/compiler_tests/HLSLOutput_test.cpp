@@ -156,3 +156,22 @@ TEST_F(HLSLOutputTest, ArrayReturnValue)
         })";
     compile(shaderString);
 }
+
+// Test that writing parameters without a name doesn't assert.
+TEST_F(HLSLOutputTest, ParameterWithNoName)
+{
+    const std::string &shaderString =
+        R"(precision mediump float;
+
+        uniform vec4 v;
+
+        vec4 s(vec4)
+        {
+            return v;
+        }
+        void main()
+        {
+            gl_FragColor = s(v);
+        })";
+    compile(shaderString);
+}

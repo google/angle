@@ -42,8 +42,10 @@ class TSymbol : angle::NonCopyable
     // either statically allocated or pool allocated.
     ~TSymbol() = default;
 
-    // Don't call name() or getMangledName() for empty symbols (symbolType == SymbolType::Empty).
+    // Calling name() for empty symbols (symbolType == SymbolType::Empty) generates a similar name
+    // as for internal variables.
     ImmutableString name() const;
+    // Don't call getMangledName() for empty symbols (symbolType == SymbolType::Empty).
     virtual ImmutableString getMangledName() const;
 
     virtual bool isFunction() const { return false; }

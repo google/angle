@@ -46,11 +46,13 @@ TSymbol::TSymbol(TSymbolTable *symbolTable,
 
 ImmutableString TSymbol::name() const
 {
-    if (mName != "")
+    if (!mName.empty())
     {
         return mName;
     }
-    ASSERT(mSymbolType == SymbolType::AngleInternal);
+    // This can be called for nameless function parameters in HLSL.
+    ASSERT(mSymbolType == SymbolType::AngleInternal ||
+           (mSymbolType == SymbolType::Empty && isVariable()));
     int uniqueId = mUniqueId.get();
     ImmutableStringBuilder symbolNameOut(sizeof(uniqueId) * 2u + 1u);
     symbolNameOut << 's';
