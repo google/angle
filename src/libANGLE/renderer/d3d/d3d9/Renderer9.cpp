@@ -2342,7 +2342,7 @@ bool Renderer9::isRemovedDeviceResettable() const
 
     SafeRelease(d3d9Ex);
 #else
-    ASSERT(UNREACHABLE());
+    UNREACHABLE();
 #endif
 
     return success;
