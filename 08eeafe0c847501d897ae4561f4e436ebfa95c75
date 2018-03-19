@@ -16,6 +16,24 @@
       "revId": "08eeafe0c847501d897ae4561f4e436ebfa95c75",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1e60c75e_ef3d1791",
+        "filename": "src/commit_id.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-03-19T16:56:44Z",
+      "side": 1,
+      "message": "Yes, this is marked as executable and needs it.",
+      "parentUuid": "a8bb22f8_a551f59b",
+      "revId": "08eeafe0c847501d897ae4561f4e436ebfa95c75",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
