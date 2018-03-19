@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "d22359b9_a8633d84",
+        "filename": "src/libANGLE/renderer/vulkan/DynamicDescriptorPool.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-03-19T17:59:59Z",
+      "side": 1,
+      "message": "I can\u0027t because I won\u0027t change that enum to an enum class.",
+      "parentUuid": "d5c6d1cb_7bb1779a",
+      "range": {
+        "startLine": 88,
+        "startChar": 4,
+        "endLine": 88,
+        "endChar": 40
+      },
+      "revId": "37adc0bcac21b76ae840f247801cce013fe937d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "de5c12fa_2f35692f",
         "filename": "src/libANGLE/renderer/vulkan/DynamicDescriptorPool.h",
         "patchSetId": 9
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "ffdf91f7_f829cbc2",
+        "filename": "src/libANGLE/renderer/vulkan/DynamicDescriptorPool.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-03-19T17:59:59Z",
+      "side": 1,
+      "message": "Can\u0027t do that without making the usage of that worse (we use these as indexes so I would need to static_cast everwhere, making the code harder to read). \n\nI looked into using PackedEnumMap, and maybe its because I don\u0027t understand it very well, but it seems really overkill since I\u0027ll now need to have an array stored, and right now I don\u0027t even need that.",
+      "parentUuid": "de5c12fa_2f35692f",
+      "range": {
+        "startLine": 20,
+        "startChar": 0,
+        "endLine": 20,
+        "endChar": 5
+      },
+      "revId": "37adc0bcac21b76ae840f247801cce013fe937d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "47db729b_8ab25e3a",
         "filename": "src/libANGLE/renderer/vulkan/DynamicDescriptorPool.h",
         "patchSetId": 9
@@ -62,6 +110,24 @@
       "revId": "37adc0bcac21b76ae840f247801cce013fe937d0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aeb2d8e7_f1fd684e",
+        "filename": "src/libANGLE/renderer/vulkan/DynamicDescriptorPool.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-03-19T17:59:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "47db729b_8ab25e3a",
+      "revId": "37adc0bcac21b76ae840f247801cce013fe937d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -85,6 +151,30 @@
       "revId": "37adc0bcac21b76ae840f247801cce013fe937d0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bd4d90e5_45723c19",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-03-19T17:59:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7b1ef9ef_6b7007a3",
+      "range": {
+        "startLine": 69,
+        "startChar": 4,
+        "endLine": 69,
+        "endChar": 10
+      },
+      "revId": "37adc0bcac21b76ae840f247801cce013fe937d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
