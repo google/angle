@@ -3474,7 +3474,6 @@ constexpr const TFunction kFunction_radians_0B(
     BuiltInParameters::p0B0C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::radians_0B,
     EOpRadians,
     true);
 constexpr const TFunction kFunction_radians_1B(
@@ -3484,7 +3483,6 @@ constexpr const TFunction kFunction_radians_1B(
     BuiltInParameters::p1B1B0B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::radians_1B,
     EOpRadians,
     true);
 constexpr const TFunction kFunction_radians_2B(
@@ -3494,7 +3492,6 @@ constexpr const TFunction kFunction_radians_2B(
     BuiltInParameters::p2B2C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::radians_2B,
     EOpRadians,
     true);
 constexpr const TFunction kFunction_radians_3B(
@@ -3504,7 +3501,6 @@ constexpr const TFunction kFunction_radians_3B(
     BuiltInParameters::p3B1B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::radians_3B,
     EOpRadians,
     true);
 constexpr const TFunction kFunction_degrees_0B(
@@ -3514,7 +3510,6 @@ constexpr const TFunction kFunction_degrees_0B(
     BuiltInParameters::p0B0C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::degrees_0B,
     EOpDegrees,
     true);
 constexpr const TFunction kFunction_degrees_1B(
@@ -3524,7 +3519,6 @@ constexpr const TFunction kFunction_degrees_1B(
     BuiltInParameters::p1B1B0B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::degrees_1B,
     EOpDegrees,
     true);
 constexpr const TFunction kFunction_degrees_2B(
@@ -3534,7 +3528,6 @@ constexpr const TFunction kFunction_degrees_2B(
     BuiltInParameters::p2B2C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::degrees_2B,
     EOpDegrees,
     true);
 constexpr const TFunction kFunction_degrees_3B(
@@ -3544,7 +3537,6 @@ constexpr const TFunction kFunction_degrees_3B(
     BuiltInParameters::p3B1B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::degrees_3B,
     EOpDegrees,
     true);
 constexpr const TFunction kFunction_sin_0B(
@@ -3554,7 +3546,6 @@ constexpr const TFunction kFunction_sin_0B(
     BuiltInParameters::p0B0C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::sin_0B,
     EOpSin,
     true);
 constexpr const TFunction kFunction_sin_1B(
@@ -3564,7 +3555,6 @@ constexpr const TFunction kFunction_sin_1B(
     BuiltInParameters::p1B1B0B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::sin_1B,
     EOpSin,
     true);
 constexpr const TFunction kFunction_sin_2B(
@@ -3574,7 +3564,6 @@ constexpr const TFunction kFunction_sin_2B(
     BuiltInParameters::p2B2C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::sin_2B,
     EOpSin,
     true);
 constexpr const TFunction kFunction_sin_3B(
@@ -3584,7 +3573,6 @@ constexpr const TFunction kFunction_sin_3B(
     BuiltInParameters::p3B1B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::sin_3B,
     EOpSin,
     true);
 constexpr const TFunction kFunction_cos_0B(
@@ -3594,7 +3582,6 @@ constexpr const TFunction kFunction_cos_0B(
     BuiltInParameters::p0B0C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::cos_0B,
     EOpCos,
     true);
 constexpr const TFunction kFunction_cos_1B(
@@ -3604,7 +3591,6 @@ constexpr const TFunction kFunction_cos_1B(
     BuiltInParameters::p1B1B0B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::cos_1B,
     EOpCos,
     true);
 constexpr const TFunction kFunction_cos_2B(
@@ -3614,7 +3600,6 @@ constexpr const TFunction kFunction_cos_2B(
     BuiltInParameters::p2B2C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::cos_2B,
     EOpCos,
     true);
 constexpr const TFunction kFunction_cos_3B(
@@ -3624,7 +3609,6 @@ constexpr const TFunction kFunction_cos_3B(
     BuiltInParameters::p3B1B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::cos_3B,
     EOpCos,
     true);
 constexpr const TFunction kFunction_tan_0B(
@@ -3634,7 +3618,6 @@ constexpr const TFunction kFunction_tan_0B(
     BuiltInParameters::p0B0C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::tan_0B,
     EOpTan,
     true);
 constexpr const TFunction kFunction_tan_1B(
@@ -3644,7 +3627,6 @@ constexpr const TFunction kFunction_tan_1B(
     BuiltInParameters::p1B1B0B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::tan_1B,
     EOpTan,
     true);
 constexpr const TFunction kFunction_tan_2B(
@@ -3654,7 +3636,6 @@ constexpr const TFunction kFunction_tan_2B(
     BuiltInParameters::p2B2C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::tan_2B,
     EOpTan,
     true);
 constexpr const TFunction kFunction_tan_3B(
@@ -3664,7 +3645,6 @@ constexpr const TFunction kFunction_tan_3B(
     BuiltInParameters::p3B1B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::tan_3B,
     EOpTan,
     true);
 constexpr const TFunction kFunction_asin_0B(
@@ -3674,7 +3654,6 @@ constexpr const TFunction kFunction_asin_0B(
     BuiltInParameters::p0B0C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::asin_0B,
     EOpAsin,
     true);
 constexpr const TFunction kFunction_asin_1B(
@@ -3684,7 +3663,6 @@ constexpr const TFunction kFunction_asin_1B(
     BuiltInParameters::p1B1B0B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::asin_1B,
     EOpAsin,
     true);
 constexpr const TFunction kFunction_asin_2B(
@@ -3694,7 +3672,6 @@ constexpr const TFunction kFunction_asin_2B(
     BuiltInParameters::p2B2C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::asin_2B,
     EOpAsin,
     true);
 constexpr const TFunction kFunction_asin_3B(
@@ -3704,7 +3681,6 @@ constexpr const TFunction kFunction_asin_3B(
     BuiltInParameters::p3B1B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::asin_3B,
     EOpAsin,
     true);
 constexpr const TFunction kFunction_acos_0B(
@@ -3714,7 +3690,6 @@ constexpr const TFunction kFunction_acos_0B(
     BuiltInParameters::p0B0C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::acos_0B,
     EOpAcos,
     true);
 constexpr const TFunction kFunction_acos_1B(
@@ -3724,7 +3699,6 @@ constexpr const TFunction kFunction_acos_1B(
     BuiltInParameters::p1B1B0B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::acos_1B,
     EOpAcos,
     true);
 constexpr const TFunction kFunction_acos_2B(
@@ -3734,7 +3708,6 @@ constexpr const TFunction kFunction_acos_2B(
     BuiltInParameters::p2B2C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::acos_2B,
     EOpAcos,
     true);
 constexpr const TFunction kFunction_acos_3B(
@@ -3744,7 +3717,6 @@ constexpr const TFunction kFunction_acos_3B(
     BuiltInParameters::p3B1B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::acos_3B,
     EOpAcos,
     true);
 constexpr const TFunction kFunction_atan_0B0B(
@@ -3754,7 +3726,6 @@ constexpr const TFunction kFunction_atan_0B0B(
     BuiltInParameters::p0B0B1B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::atan_0B0B,
     EOpAtan,
     true);
 constexpr const TFunction kFunction_atan_1B1B(
@@ -3764,7 +3735,6 @@ constexpr const TFunction kFunction_atan_1B1B(
     BuiltInParameters::p1B1B0B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::atan_1B1B,
     EOpAtan,
     true);
 constexpr const TFunction kFunction_atan_2B2B(
@@ -3774,7 +3744,6 @@ constexpr const TFunction kFunction_atan_2B2B(
     BuiltInParameters::p2B2B0B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::atan_2B2B,
     EOpAtan,
     true);
 constexpr const TFunction kFunction_atan_3B3B(
@@ -3784,7 +3753,6 @@ constexpr const TFunction kFunction_atan_3B3B(
     BuiltInParameters::p3B3B3B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::atan_3B3B,
     EOpAtan,
     true);
 constexpr const TFunction kFunction_atan_0B(
@@ -3794,7 +3762,6 @@ constexpr const TFunction kFunction_atan_0B(
     BuiltInParameters::p0B0C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::atan_0B,
     EOpAtan,
     true);
 constexpr const TFunction kFunction_atan_1B(
@@ -3804,7 +3771,6 @@ constexpr const TFunction kFunction_atan_1B(
     BuiltInParameters::p1B1B0B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::atan_1B,
     EOpAtan,
     true);
 constexpr const TFunction kFunction_atan_2B(
@@ -3814,7 +3780,6 @@ constexpr const TFunction kFunction_atan_2B(
     BuiltInParameters::p2B2C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::atan_2B,
     EOpAtan,
     true);
 constexpr const TFunction kFunction_atan_3B(
@@ -3824,7 +3789,6 @@ constexpr const TFunction kFunction_atan_3B(
     BuiltInParameters::p3B1B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::atan_3B,
     EOpAtan,
     true);
 constexpr const TFunction kFunction_sinh_0B(
@@ -3834,7 +3798,6 @@ constexpr const TFunction kFunction_sinh_0B(
     BuiltInParameters::p0B0C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::sinh_0B,
     EOpSinh,
     true);
 constexpr const TFunction kFunction_sinh_1B(
@@ -3844,7 +3807,6 @@ constexpr const TFunction kFunction_sinh_1B(
     BuiltInParameters::p1B1B0B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::sinh_1B,
     EOpSinh,
     true);
 constexpr const TFunction kFunction_sinh_2B(
@@ -3854,7 +3816,6 @@ constexpr const TFunction kFunction_sinh_2B(
     BuiltInParameters::p2B2C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::sinh_2B,
     EOpSinh,
     true);
 constexpr const TFunction kFunction_sinh_3B(
@@ -3864,7 +3825,6 @@ constexpr const TFunction kFunction_sinh_3B(
     BuiltInParameters::p3B1B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::sinh_3B,
     EOpSinh,
     true);
 constexpr const TFunction kFunction_cosh_0B(
@@ -3874,7 +3834,6 @@ constexpr const TFunction kFunction_cosh_0B(
     BuiltInParameters::p0B0C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::cosh_0B,
     EOpCosh,
     true);
 constexpr const TFunction kFunction_cosh_1B(
@@ -3884,7 +3843,6 @@ constexpr const TFunction kFunction_cosh_1B(
     BuiltInParameters::p1B1B0B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::cosh_1B,
     EOpCosh,
     true);
 constexpr const TFunction kFunction_cosh_2B(
@@ -3894,7 +3852,6 @@ constexpr const TFunction kFunction_cosh_2B(
     BuiltInParameters::p2B2C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::cosh_2B,
     EOpCosh,
     true);
 constexpr const TFunction kFunction_cosh_3B(
@@ -3904,7 +3861,6 @@ constexpr const TFunction kFunction_cosh_3B(
     BuiltInParameters::p3B1B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::cosh_3B,
     EOpCosh,
     true);
 constexpr const TFunction kFunction_tanh_0B(
@@ -3914,7 +3870,6 @@ constexpr const TFunction kFunction_tanh_0B(
     BuiltInParameters::p0B0C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::tanh_0B,
     EOpTanh,
     true);
 constexpr const TFunction kFunction_tanh_1B(
@@ -3924,7 +3879,6 @@ constexpr const TFunction kFunction_tanh_1B(
     BuiltInParameters::p1B1B0B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::tanh_1B,
     EOpTanh,
     true);
 constexpr const TFunction kFunction_tanh_2B(
@@ -3934,7 +3888,6 @@ constexpr const TFunction kFunction_tanh_2B(
     BuiltInParameters::p2B2C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::tanh_2B,
     EOpTanh,
     true);
 constexpr const TFunction kFunction_tanh_3B(
@@ -3944,7 +3897,6 @@ constexpr const TFunction kFunction_tanh_3B(
     BuiltInParameters::p3B1B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::tanh_3B,
     EOpTanh,
     true);
 constexpr const TFunction kFunction_asinh_0B(
@@ -3954,7 +3906,6 @@ constexpr const TFunction kFunction_asinh_0B(
     BuiltInParameters::p0B0C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::asinh_0B,
     EOpAsinh,
     true);
 constexpr const TFunction kFunction_asinh_1B(
@@ -3964,7 +3915,6 @@ constexpr const TFunction kFunction_asinh_1B(
     BuiltInParameters::p1B1B0B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::asinh_1B,
     EOpAsinh,
     true);
 constexpr const TFunction kFunction_asinh_2B(
@@ -3974,7 +3924,6 @@ constexpr const TFunction kFunction_asinh_2B(
     BuiltInParameters::p2B2C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::asinh_2B,
     EOpAsinh,
     true);
 constexpr const TFunction kFunction_asinh_3B(
@@ -3984,7 +3933,6 @@ constexpr const TFunction kFunction_asinh_3B(
     BuiltInParameters::p3B1B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::asinh_3B,
     EOpAsinh,
     true);
 constexpr const TFunction kFunction_acosh_0B(
@@ -3994,7 +3942,6 @@ constexpr const TFunction kFunction_acosh_0B(
     BuiltInParameters::p0B0C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::acosh_0B,
     EOpAcosh,
     true);
 constexpr const TFunction kFunction_acosh_1B(
@@ -4004,7 +3951,6 @@ constexpr const TFunction kFunction_acosh_1B(
     BuiltInParameters::p1B1B0B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::acosh_1B,
     EOpAcosh,
     true);
 constexpr const TFunction kFunction_acosh_2B(
@@ -4014,7 +3960,6 @@ constexpr const TFunction kFunction_acosh_2B(
     BuiltInParameters::p2B2C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::acosh_2B,
     EOpAcosh,
     true);
 constexpr const TFunction kFunction_acosh_3B(
@@ -4024,7 +3969,6 @@ constexpr const TFunction kFunction_acosh_3B(
     BuiltInParameters::p3B1B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::acosh_3B,
     EOpAcosh,
     true);
 constexpr const TFunction kFunction_atanh_0B(
@@ -4034,7 +3978,6 @@ constexpr const TFunction kFunction_atanh_0B(
     BuiltInParameters::p0B0C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::atanh_0B,
     EOpAtanh,
     true);
 constexpr const TFunction kFunction_atanh_1B(
@@ -4044,7 +3987,6 @@ constexpr const TFunction kFunction_atanh_1B(
     BuiltInParameters::p1B1B0B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::atanh_1B,
     EOpAtanh,
     true);
 constexpr const TFunction kFunction_atanh_2B(
@@ -4054,7 +3996,6 @@ constexpr const TFunction kFunction_atanh_2B(
     BuiltInParameters::p2B2C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::atanh_2B,
     EOpAtanh,
     true);
 constexpr const TFunction kFunction_atanh_3B(
@@ -4064,7 +4005,6 @@ constexpr const TFunction kFunction_atanh_3B(
     BuiltInParameters::p3B1B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::atanh_3B,
     EOpAtanh,
     true);
 constexpr const TFunction kFunction_pow_0B0B(
@@ -4074,7 +4014,6 @@ constexpr const TFunction kFunction_pow_0B0B(
     BuiltInParameters::p0B0B1B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::pow_0B0B,
     EOpPow,
     true);
 constexpr const TFunction kFunction_pow_1B1B(
@@ -4084,7 +4023,6 @@ constexpr const TFunction kFunction_pow_1B1B(
     BuiltInParameters::p1B1B0B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::pow_1B1B,
     EOpPow,
     true);
 constexpr const TFunction kFunction_pow_2B2B(
@@ -4094,7 +4032,6 @@ constexpr const TFunction kFunction_pow_2B2B(
     BuiltInParameters::p2B2B0B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::pow_2B2B,
     EOpPow,
     true);
 constexpr const TFunction kFunction_pow_3B3B(
@@ -4104,7 +4041,6 @@ constexpr const TFunction kFunction_pow_3B3B(
     BuiltInParameters::p3B3B3B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::pow_3B3B,
     EOpPow,
     true);
 constexpr const TFunction kFunction_exp_0B(
@@ -4114,7 +4050,6 @@ constexpr const TFunction kFunction_exp_0B(
     BuiltInParameters::p0B0C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::exp_0B,
     EOpExp,
     true);
 constexpr const TFunction kFunction_exp_1B(
@@ -4124,7 +4059,6 @@ constexpr const TFunction kFunction_exp_1B(
     BuiltInParameters::p1B1B0B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::exp_1B,
     EOpExp,
     true);
 constexpr const TFunction kFunction_exp_2B(
@@ -4134,7 +4068,6 @@ constexpr const TFunction kFunction_exp_2B(
     BuiltInParameters::p2B2C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::exp_2B,
     EOpExp,
     true);
 constexpr const TFunction kFunction_exp_3B(
@@ -4144,7 +4077,6 @@ constexpr const TFunction kFunction_exp_3B(
     BuiltInParameters::p3B1B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::exp_3B,
     EOpExp,
     true);
 constexpr const TFunction kFunction_log_0B(
@@ -4154,7 +4086,6 @@ constexpr const TFunction kFunction_log_0B(
     BuiltInParameters::p0B0C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::log_0B,
     EOpLog,
     true);
 constexpr const TFunction kFunction_log_1B(
@@ -4164,7 +4095,6 @@ constexpr const TFunction kFunction_log_1B(
     BuiltInParameters::p1B1B0B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::log_1B,
     EOpLog,
     true);
 constexpr const TFunction kFunction_log_2B(
@@ -4174,7 +4104,6 @@ constexpr const TFunction kFunction_log_2B(
     BuiltInParameters::p2B2C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::log_2B,
     EOpLog,
     true);
 constexpr const TFunction kFunction_log_3B(
@@ -4184,7 +4113,6 @@ constexpr const TFunction kFunction_log_3B(
     BuiltInParameters::p3B1B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::log_3B,
     EOpLog,
     true);
 constexpr const TFunction kFunction_exp2_0B(
@@ -4194,7 +4122,6 @@ constexpr const TFunction kFunction_exp2_0B(
     BuiltInParameters::p0B0C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::exp2_0B,
     EOpExp2,
     true);
 constexpr const TFunction kFunction_exp2_1B(
@@ -4204,7 +4131,6 @@ constexpr const TFunction kFunction_exp2_1B(
     BuiltInParameters::p1B1B0B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::exp2_1B,
     EOpExp2,
     true);
 constexpr const TFunction kFunction_exp2_2B(
@@ -4214,7 +4140,6 @@ constexpr const TFunction kFunction_exp2_2B(
     BuiltInParameters::p2B2C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::exp2_2B,
     EOpExp2,
     true);
 constexpr const TFunction kFunction_exp2_3B(
@@ -4224,7 +4149,6 @@ constexpr const TFunction kFunction_exp2_3B(
     BuiltInParameters::p3B1B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::exp2_3B,
     EOpExp2,
     true);
 constexpr const TFunction kFunction_log2_0B(
@@ -4234,7 +4158,6 @@ constexpr const TFunction kFunction_log2_0B(
     BuiltInParameters::p0B0C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::log2_0B,
     EOpLog2,
     true);
 constexpr const TFunction kFunction_log2_1B(
@@ -4244,7 +4167,6 @@ constexpr const TFunction kFunction_log2_1B(
     BuiltInParameters::p1B1B0B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::log2_1B,
     EOpLog2,
     true);
 constexpr const TFunction kFunction_log2_2B(
@@ -4254,7 +4176,6 @@ constexpr const TFunction kFunction_log2_2B(
     BuiltInParameters::p2B2C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::log2_2B,
     EOpLog2,
     true);
 constexpr const TFunction kFunction_log2_3B(
@@ -4264,7 +4185,6 @@ constexpr const TFunction kFunction_log2_3B(
     BuiltInParameters::p3B1B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::log2_3B,
     EOpLog2,
     true);
 constexpr const TFunction kFunction_sqrt_0B(
@@ -4274,7 +4194,6 @@ constexpr const TFunction kFunction_sqrt_0B(
     BuiltInParameters::p0B0C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::sqrt_0B,
     EOpSqrt,
     true);
 constexpr const TFunction kFunction_sqrt_1B(
@@ -4284,7 +4203,6 @@ constexpr const TFunction kFunction_sqrt_1B(
     BuiltInParameters::p1B1B0B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::sqrt_1B,
     EOpSqrt,
     true);
 constexpr const TFunction kFunction_sqrt_2B(
@@ -4294,7 +4212,6 @@ constexpr const TFunction kFunction_sqrt_2B(
     BuiltInParameters::p2B2C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::sqrt_2B,
     EOpSqrt,
     true);
 constexpr const TFunction kFunction_sqrt_3B(
@@ -4304,7 +4221,6 @@ constexpr const TFunction kFunction_sqrt_3B(
     BuiltInParameters::p3B1B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::sqrt_3B,
     EOpSqrt,
     true);
 constexpr const TFunction kFunction_inversesqrt_0B(
@@ -4314,7 +4230,6 @@ constexpr const TFunction kFunction_inversesqrt_0B(
     BuiltInParameters::p0B0C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::inversesqrt_0B,
     EOpInversesqrt,
     true);
 constexpr const TFunction kFunction_inversesqrt_1B(
@@ -4324,7 +4239,6 @@ constexpr const TFunction kFunction_inversesqrt_1B(
     BuiltInParameters::p1B1B0B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::inversesqrt_1B,
     EOpInversesqrt,
     true);
 constexpr const TFunction kFunction_inversesqrt_2B(
@@ -4334,7 +4248,6 @@ constexpr const TFunction kFunction_inversesqrt_2B(
     BuiltInParameters::p2B2C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::inversesqrt_2B,
     EOpInversesqrt,
     true);
 constexpr const TFunction kFunction_inversesqrt_3B(
@@ -4344,7 +4257,6 @@ constexpr const TFunction kFunction_inversesqrt_3B(
     BuiltInParameters::p3B1B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::inversesqrt_3B,
     EOpInversesqrt,
     true);
 constexpr const TFunction kFunction_abs_0B(
@@ -4354,7 +4266,6 @@ constexpr const TFunction kFunction_abs_0B(
     BuiltInParameters::p0B0C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::abs_0B,
     EOpAbs,
     true);
 constexpr const TFunction kFunction_abs_1B(
@@ -4364,7 +4275,6 @@ constexpr const TFunction kFunction_abs_1B(
     BuiltInParameters::p1B1B0B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::abs_1B,
     EOpAbs,
     true);
 constexpr const TFunction kFunction_abs_2B(
@@ -4374,7 +4284,6 @@ constexpr const TFunction kFunction_abs_2B(
     BuiltInParameters::p2B2C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::abs_2B,
     EOpAbs,
     true);
 constexpr const TFunction kFunction_abs_3B(
@@ -4384,7 +4293,6 @@ constexpr const TFunction kFunction_abs_3B(
     BuiltInParameters::p3B1B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::abs_3B,
     EOpAbs,
     true);
 constexpr const TFunction kFunction_abs_0C(BuiltInId::abs_0C,
@@ -4393,7 +4301,6 @@ constexpr const TFunction kFunction_abs_0C(BuiltInId::abs_0C,
                                            BuiltInParameters::p0C0C_o_0C_o_0C,
                                            1,
                                            StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
-                                           BuiltInName::abs_0C,
                                            EOpAbs,
                                            true);
 constexpr const TFunction kFunction_abs_1C(BuiltInId::abs_1C,
@@ -4402,7 +4309,6 @@ constexpr const TFunction kFunction_abs_1C(BuiltInId::abs_1C,
                                            BuiltInParameters::p1C1C0C0C,
                                            1,
                                            StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>(),
-                                           BuiltInName::abs_1C,
                                            EOpAbs,
                                            true);
 constexpr const TFunction kFunction_abs_2C(BuiltInId::abs_2C,
@@ -4411,7 +4317,6 @@ constexpr const TFunction kFunction_abs_2C(BuiltInId::abs_2C,
                                            BuiltInParameters::p2C2C0C0C,
                                            1,
                                            StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>(),
-                                           BuiltInName::abs_2C,
                                            EOpAbs,
                                            true);
 constexpr const TFunction kFunction_abs_3C(BuiltInId::abs_3C,
@@ -4420,7 +4325,6 @@ constexpr const TFunction kFunction_abs_3C(BuiltInId::abs_3C,
                                            BuiltInParameters::p3C0C0C,
                                            1,
                                            StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-                                           BuiltInName::abs_3C,
                                            EOpAbs,
                                            true);
 constexpr const TFunction kFunction_sign_0B(
@@ -4430,7 +4334,6 @@ constexpr const TFunction kFunction_sign_0B(
     BuiltInParameters::p0B0C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::sign_0B,
     EOpSign,
     true);
 constexpr const TFunction kFunction_sign_1B(
@@ -4440,7 +4343,6 @@ constexpr const TFunction kFunction_sign_1B(
     BuiltInParameters::p1B1B0B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::sign_1B,
     EOpSign,
     true);
 constexpr const TFunction kFunction_sign_2B(
@@ -4450,7 +4352,6 @@ constexpr const TFunction kFunction_sign_2B(
     BuiltInParameters::p2B2C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::sign_2B,
     EOpSign,
     true);
 constexpr const TFunction kFunction_sign_3B(
@@ -4460,7 +4361,6 @@ constexpr const TFunction kFunction_sign_3B(
     BuiltInParameters::p3B1B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::sign_3B,
     EOpSign,
     true);
 constexpr const TFunction kFunction_sign_0C(
@@ -4470,7 +4370,6 @@ constexpr const TFunction kFunction_sign_0C(
     BuiltInParameters::p0C0C_o_0C_o_0C,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::sign_0C,
     EOpSign,
     true);
 constexpr const TFunction kFunction_sign_1C(
@@ -4480,7 +4379,6 @@ constexpr const TFunction kFunction_sign_1C(
     BuiltInParameters::p1C1C0C0C,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::sign_1C,
     EOpSign,
     true);
 constexpr const TFunction kFunction_sign_2C(
@@ -4490,7 +4388,6 @@ constexpr const TFunction kFunction_sign_2C(
     BuiltInParameters::p2C2C0C0C,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::sign_2C,
     EOpSign,
     true);
 constexpr const TFunction kFunction_sign_3C(
@@ -4500,7 +4397,6 @@ constexpr const TFunction kFunction_sign_3C(
     BuiltInParameters::p3C0C0C,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::sign_3C,
     EOpSign,
     true);
 constexpr const TFunction kFunction_floor_0B(
@@ -4510,7 +4406,6 @@ constexpr const TFunction kFunction_floor_0B(
     BuiltInParameters::p0B0C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::floor_0B,
     EOpFloor,
     true);
 constexpr const TFunction kFunction_floor_1B(
@@ -4520,7 +4415,6 @@ constexpr const TFunction kFunction_floor_1B(
     BuiltInParameters::p1B1B0B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::floor_1B,
     EOpFloor,
     true);
 constexpr const TFunction kFunction_floor_2B(
@@ -4530,7 +4424,6 @@ constexpr const TFunction kFunction_floor_2B(
     BuiltInParameters::p2B2C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::floor_2B,
     EOpFloor,
     true);
 constexpr const TFunction kFunction_floor_3B(
@@ -4540,7 +4433,6 @@ constexpr const TFunction kFunction_floor_3B(
     BuiltInParameters::p3B1B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::floor_3B,
     EOpFloor,
     true);
 constexpr const TFunction kFunction_trunc_0B(
@@ -4550,7 +4442,6 @@ constexpr const TFunction kFunction_trunc_0B(
     BuiltInParameters::p0B0C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::trunc_0B,
     EOpTrunc,
     true);
 constexpr const TFunction kFunction_trunc_1B(
@@ -4560,7 +4451,6 @@ constexpr const TFunction kFunction_trunc_1B(
     BuiltInParameters::p1B1B0B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::trunc_1B,
     EOpTrunc,
     true);
 constexpr const TFunction kFunction_trunc_2B(
@@ -4570,7 +4460,6 @@ constexpr const TFunction kFunction_trunc_2B(
     BuiltInParameters::p2B2C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::trunc_2B,
     EOpTrunc,
     true);
 constexpr const TFunction kFunction_trunc_3B(
@@ -4580,7 +4469,6 @@ constexpr const TFunction kFunction_trunc_3B(
     BuiltInParameters::p3B1B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::trunc_3B,
     EOpTrunc,
     true);
 constexpr const TFunction kFunction_round_0B(
@@ -4590,7 +4478,6 @@ constexpr const TFunction kFunction_round_0B(
     BuiltInParameters::p0B0C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::round_0B,
     EOpRound,
     true);
 constexpr const TFunction kFunction_round_1B(
@@ -4600,7 +4487,6 @@ constexpr const TFunction kFunction_round_1B(
     BuiltInParameters::p1B1B0B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::round_1B,
     EOpRound,
     true);
 constexpr const TFunction kFunction_round_2B(
@@ -4610,7 +4496,6 @@ constexpr const TFunction kFunction_round_2B(
     BuiltInParameters::p2B2C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::round_2B,
     EOpRound,
     true);
 constexpr const TFunction kFunction_round_3B(
@@ -4620,7 +4505,6 @@ constexpr const TFunction kFunction_round_3B(
     BuiltInParameters::p3B1B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::round_3B,
     EOpRound,
     true);
 constexpr const TFunction kFunction_roundEven_0B(
@@ -4630,7 +4514,6 @@ constexpr const TFunction kFunction_roundEven_0B(
     BuiltInParameters::p0B0C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::roundEven_0B,
     EOpRoundEven,
     true);
 constexpr const TFunction kFunction_roundEven_1B(
@@ -4640,7 +4523,6 @@ constexpr const TFunction kFunction_roundEven_1B(
     BuiltInParameters::p1B1B0B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::roundEven_1B,
     EOpRoundEven,
     true);
 constexpr const TFunction kFunction_roundEven_2B(
@@ -4650,7 +4532,6 @@ constexpr const TFunction kFunction_roundEven_2B(
     BuiltInParameters::p2B2C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::roundEven_2B,
     EOpRoundEven,
     true);
 constexpr const TFunction kFunction_roundEven_3B(
@@ -4660,7 +4541,6 @@ constexpr const TFunction kFunction_roundEven_3B(
     BuiltInParameters::p3B1B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::roundEven_3B,
     EOpRoundEven,
     true);
 constexpr const TFunction kFunction_ceil_0B(
@@ -4670,7 +4550,6 @@ constexpr const TFunction kFunction_ceil_0B(
     BuiltInParameters::p0B0C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::ceil_0B,
     EOpCeil,
     true);
 constexpr const TFunction kFunction_ceil_1B(
@@ -4680,7 +4559,6 @@ constexpr const TFunction kFunction_ceil_1B(
     BuiltInParameters::p1B1B0B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::ceil_1B,
     EOpCeil,
     true);
 constexpr const TFunction kFunction_ceil_2B(
@@ -4690,7 +4568,6 @@ constexpr const TFunction kFunction_ceil_2B(
     BuiltInParameters::p2B2C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::ceil_2B,
     EOpCeil,
     true);
 constexpr const TFunction kFunction_ceil_3B(
@@ -4700,7 +4577,6 @@ constexpr const TFunction kFunction_ceil_3B(
     BuiltInParameters::p3B1B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::ceil_3B,
     EOpCeil,
     true);
 constexpr const TFunction kFunction_fract_0B(
@@ -4710,7 +4586,6 @@ constexpr const TFunction kFunction_fract_0B(
     BuiltInParameters::p0B0C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::fract_0B,
     EOpFract,
     true);
 constexpr const TFunction kFunction_fract_1B(
@@ -4720,7 +4595,6 @@ constexpr const TFunction kFunction_fract_1B(
     BuiltInParameters::p1B1B0B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::fract_1B,
     EOpFract,
     true);
 constexpr const TFunction kFunction_fract_2B(
@@ -4730,7 +4604,6 @@ constexpr const TFunction kFunction_fract_2B(
     BuiltInParameters::p2B2C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::fract_2B,
     EOpFract,
     true);
 constexpr const TFunction kFunction_fract_3B(
@@ -4740,7 +4613,6 @@ constexpr const TFunction kFunction_fract_3B(
     BuiltInParameters::p3B1B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::fract_3B,
     EOpFract,
     true);
 constexpr const TFunction kFunction_mod_0B0B(
@@ -4750,7 +4622,6 @@ constexpr const TFunction kFunction_mod_0B0B(
     BuiltInParameters::p0B0B1B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::mod_0B0B,
     EOpMod,
     true);
 constexpr const TFunction kFunction_mod_1B0B(
@@ -4760,7 +4631,6 @@ constexpr const TFunction kFunction_mod_1B0B(
     BuiltInParameters::p1B0B0B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::mod_1B0B,
     EOpMod,
     true);
 constexpr const TFunction kFunction_mod_2B0B(
@@ -4770,7 +4640,6 @@ constexpr const TFunction kFunction_mod_2B0B(
     BuiltInParameters::p2B0B0B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::mod_2B0B,
     EOpMod,
     true);
 constexpr const TFunction kFunction_mod_3B0B(
@@ -4780,7 +4649,6 @@ constexpr const TFunction kFunction_mod_3B0B(
     BuiltInParameters::p3B0B0B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::mod_3B0B,
     EOpMod,
     true);
 constexpr const TFunction kFunction_mod_1B1B(
@@ -4790,7 +4658,6 @@ constexpr const TFunction kFunction_mod_1B1B(
     BuiltInParameters::p1B1B0B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::mod_1B1B,
     EOpMod,
     true);
 constexpr const TFunction kFunction_mod_2B2B(
@@ -4800,7 +4667,6 @@ constexpr const TFunction kFunction_mod_2B2B(
     BuiltInParameters::p2B2B0B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::mod_2B2B,
     EOpMod,
     true);
 constexpr const TFunction kFunction_mod_3B3B(
@@ -4810,7 +4676,6 @@ constexpr const TFunction kFunction_mod_3B3B(
     BuiltInParameters::p3B3B3B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::mod_3B3B,
     EOpMod,
     true);
 constexpr const TFunction kFunction_min_0B0B(
@@ -4820,7 +4685,6 @@ constexpr const TFunction kFunction_min_0B0B(
     BuiltInParameters::p0B0B1B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::min_0B0B,
     EOpMin,
     true);
 constexpr const TFunction kFunction_min_1B0B(
@@ -4830,7 +4694,6 @@ constexpr const TFunction kFunction_min_1B0B(
     BuiltInParameters::p1B0B0B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::min_1B0B,
     EOpMin,
     true);
 constexpr const TFunction kFunction_min_2B0B(
@@ -4840,7 +4703,6 @@ constexpr const TFunction kFunction_min_2B0B(
     BuiltInParameters::p2B0B0B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::min_2B0B,
     EOpMin,
     true);
 constexpr const TFunction kFunction_min_3B0B(
@@ -4850,7 +4712,6 @@ constexpr const TFunction kFunction_min_3B0B(
     BuiltInParameters::p3B0B0B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::min_3B0B,
     EOpMin,
     true);
 constexpr const TFunction kFunction_min_1B1B(
@@ -4860,7 +4721,6 @@ constexpr const TFunction kFunction_min_1B1B(
     BuiltInParameters::p1B1B0B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::min_1B1B,
     EOpMin,
     true);
 constexpr const TFunction kFunction_min_2B2B(
@@ -4870,7 +4730,6 @@ constexpr const TFunction kFunction_min_2B2B(
     BuiltInParameters::p2B2B0B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::min_2B2B,
     EOpMin,
     true);
 constexpr const TFunction kFunction_min_3B3B(
@@ -4880,7 +4739,6 @@ constexpr const TFunction kFunction_min_3B3B(
     BuiltInParameters::p3B3B3B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::min_3B3B,
     EOpMin,
     true);
 constexpr const TFunction kFunction_min_0C0C(
@@ -4890,7 +4748,6 @@ constexpr const TFunction kFunction_min_0C0C(
     BuiltInParameters::p0C0C_o_0C_o_0C,
     2,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::min_0C0C,
     EOpMin,
     true);
 constexpr const TFunction kFunction_min_1C1C(
@@ -4900,7 +4757,6 @@ constexpr const TFunction kFunction_min_1C1C(
     BuiltInParameters::p1C1C0C0C,
     2,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::min_1C1C,
     EOpMin,
     true);
 constexpr const TFunction kFunction_min_2C2C(
@@ -4910,7 +4766,6 @@ constexpr const TFunction kFunction_min_2C2C(
     BuiltInParameters::p2C2C0C0C,
     2,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::min_2C2C,
     EOpMin,
     true);
 constexpr const TFunction kFunction_min_3C3C(
@@ -4920,7 +4775,6 @@ constexpr const TFunction kFunction_min_3C3C(
     BuiltInParameters::p3C3C0C0C,
     2,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::min_3C3C,
     EOpMin,
     true);
 constexpr const TFunction kFunction_min_1C0C(
@@ -4930,7 +4784,6 @@ constexpr const TFunction kFunction_min_1C0C(
     BuiltInParameters::p1C0C0C,
     2,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::min_1C0C,
     EOpMin,
     true);
 constexpr const TFunction kFunction_min_2C0C(
@@ -4940,7 +4793,6 @@ constexpr const TFunction kFunction_min_2C0C(
     BuiltInParameters::p2C0C0C,
     2,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::min_2C0C,
     EOpMin,
     true);
 constexpr const TFunction kFunction_min_3C0C(
@@ -4950,7 +4802,6 @@ constexpr const TFunction kFunction_min_3C0C(
     BuiltInParameters::p3C0C0C,
     2,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::min_3C0C,
     EOpMin,
     true);
 constexpr const TFunction kFunction_min_0D0D(
@@ -4960,7 +4811,6 @@ constexpr const TFunction kFunction_min_0D0D(
     BuiltInParameters::p0D0D0C0C,
     2,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::min_0D0D,
     EOpMin,
     true);
 constexpr const TFunction kFunction_min_1D1D(
@@ -4970,7 +4820,6 @@ constexpr const TFunction kFunction_min_1D1D(
     BuiltInParameters::p1D1D0C0C,
     2,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::min_1D1D,
     EOpMin,
     true);
 constexpr const TFunction kFunction_min_2D2D(
@@ -4980,7 +4829,6 @@ constexpr const TFunction kFunction_min_2D2D(
     BuiltInParameters::p2D2D0C0C,
     2,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::min_2D2D,
     EOpMin,
     true);
 constexpr const TFunction kFunction_min_3D3D(
@@ -4990,7 +4838,6 @@ constexpr const TFunction kFunction_min_3D3D(
     BuiltInParameters::p3D3D0C0C,
     2,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::min_3D3D,
     EOpMin,
     true);
 constexpr const TFunction kFunction_min_1D0D(
@@ -5000,7 +4847,6 @@ constexpr const TFunction kFunction_min_1D0D(
     BuiltInParameters::p1D0D0D,
     2,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::min_1D0D,
     EOpMin,
     true);
 constexpr const TFunction kFunction_min_2D0D(
@@ -5010,7 +4856,6 @@ constexpr const TFunction kFunction_min_2D0D(
     BuiltInParameters::p2D0D0D,
     2,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::min_2D0D,
     EOpMin,
     true);
 constexpr const TFunction kFunction_min_3D0D(
@@ -5020,7 +4865,6 @@ constexpr const TFunction kFunction_min_3D0D(
     BuiltInParameters::p3D0D0D,
     2,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::min_3D0D,
     EOpMin,
     true);
 constexpr const TFunction kFunction_max_0B0B(
@@ -5030,7 +4874,6 @@ constexpr const TFunction kFunction_max_0B0B(
     BuiltInParameters::p0B0B1B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::max_0B0B,
     EOpMax,
     true);
 constexpr const TFunction kFunction_max_1B0B(
@@ -5040,7 +4883,6 @@ constexpr const TFunction kFunction_max_1B0B(
     BuiltInParameters::p1B0B0B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::max_1B0B,
     EOpMax,
     true);
 constexpr const TFunction kFunction_max_2B0B(
@@ -5050,7 +4892,6 @@ constexpr const TFunction kFunction_max_2B0B(
     BuiltInParameters::p2B0B0B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::max_2B0B,
     EOpMax,
     true);
 constexpr const TFunction kFunction_max_3B0B(
@@ -5060,7 +4901,6 @@ constexpr const TFunction kFunction_max_3B0B(
     BuiltInParameters::p3B0B0B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::max_3B0B,
     EOpMax,
     true);
 constexpr const TFunction kFunction_max_1B1B(
@@ -5070,7 +4910,6 @@ constexpr const TFunction kFunction_max_1B1B(
     BuiltInParameters::p1B1B0B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::max_1B1B,
     EOpMax,
     true);
 constexpr const TFunction kFunction_max_2B2B(
@@ -5080,7 +4919,6 @@ constexpr const TFunction kFunction_max_2B2B(
     BuiltInParameters::p2B2B0B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::max_2B2B,
     EOpMax,
     true);
 constexpr const TFunction kFunction_max_3B3B(
@@ -5090,7 +4928,6 @@ constexpr const TFunction kFunction_max_3B3B(
     BuiltInParameters::p3B3B3B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::max_3B3B,
     EOpMax,
     true);
 constexpr const TFunction kFunction_max_0C0C(
@@ -5100,7 +4937,6 @@ constexpr const TFunction kFunction_max_0C0C(
     BuiltInParameters::p0C0C_o_0C_o_0C,
     2,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::max_0C0C,
     EOpMax,
     true);
 constexpr const TFunction kFunction_max_1C1C(
@@ -5110,7 +4946,6 @@ constexpr const TFunction kFunction_max_1C1C(
     BuiltInParameters::p1C1C0C0C,
     2,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::max_1C1C,
     EOpMax,
     true);
 constexpr const TFunction kFunction_max_2C2C(
@@ -5120,7 +4955,6 @@ constexpr const TFunction kFunction_max_2C2C(
     BuiltInParameters::p2C2C0C0C,
     2,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::max_2C2C,
     EOpMax,
     true);
 constexpr const TFunction kFunction_max_3C3C(
@@ -5130,7 +4964,6 @@ constexpr const TFunction kFunction_max_3C3C(
     BuiltInParameters::p3C3C0C0C,
     2,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::max_3C3C,
     EOpMax,
     true);
 constexpr const TFunction kFunction_max_1C0C(
@@ -5140,7 +4973,6 @@ constexpr const TFunction kFunction_max_1C0C(
     BuiltInParameters::p1C0C0C,
     2,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::max_1C0C,
     EOpMax,
     true);
 constexpr const TFunction kFunction_max_2C0C(
@@ -5150,7 +4982,6 @@ constexpr const TFunction kFunction_max_2C0C(
     BuiltInParameters::p2C0C0C,
     2,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::max_2C0C,
     EOpMax,
     true);
 constexpr const TFunction kFunction_max_3C0C(
@@ -5160,7 +4991,6 @@ constexpr const TFunction kFunction_max_3C0C(
     BuiltInParameters::p3C0C0C,
     2,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::max_3C0C,
     EOpMax,
     true);
 constexpr const TFunction kFunction_max_0D0D(
@@ -5170,7 +5000,6 @@ constexpr const TFunction kFunction_max_0D0D(
     BuiltInParameters::p0D0D0C0C,
     2,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::max_0D0D,
     EOpMax,
     true);
 constexpr const TFunction kFunction_max_1D1D(
@@ -5180,7 +5009,6 @@ constexpr const TFunction kFunction_max_1D1D(
     BuiltInParameters::p1D1D0C0C,
     2,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::max_1D1D,
     EOpMax,
     true);
 constexpr const TFunction kFunction_max_2D2D(
@@ -5190,7 +5018,6 @@ constexpr const TFunction kFunction_max_2D2D(
     BuiltInParameters::p2D2D0C0C,
     2,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::max_2D2D,
     EOpMax,
     true);
 constexpr const TFunction kFunction_max_3D3D(
@@ -5200,7 +5027,6 @@ constexpr const TFunction kFunction_max_3D3D(
     BuiltInParameters::p3D3D0C0C,
     2,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::max_3D3D,
     EOpMax,
     true);
 constexpr const TFunction kFunction_max_1D0D(
@@ -5210,7 +5036,6 @@ constexpr const TFunction kFunction_max_1D0D(
     BuiltInParameters::p1D0D0D,
     2,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::max_1D0D,
     EOpMax,
     true);
 constexpr const TFunction kFunction_max_2D0D(
@@ -5220,7 +5045,6 @@ constexpr const TFunction kFunction_max_2D0D(
     BuiltInParameters::p2D0D0D,
     2,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::max_2D0D,
     EOpMax,
     true);
 constexpr const TFunction kFunction_max_3D0D(
@@ -5230,7 +5054,6 @@ constexpr const TFunction kFunction_max_3D0D(
     BuiltInParameters::p3D0D0D,
     2,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::max_3D0D,
     EOpMax,
     true);
 constexpr const TFunction kFunction_clamp_0B0B0B(
@@ -5240,7 +5063,6 @@ constexpr const TFunction kFunction_clamp_0B0B0B(
     BuiltInParameters::p0B0B0B,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::clamp_0B0B0B,
     EOpClamp,
     true);
 constexpr const TFunction kFunction_clamp_1B0B0B(
@@ -5250,7 +5072,6 @@ constexpr const TFunction kFunction_clamp_1B0B0B(
     BuiltInParameters::p1B0B0B,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::clamp_1B0B0B,
     EOpClamp,
     true);
 constexpr const TFunction kFunction_clamp_2B0B0B(
@@ -5260,7 +5081,6 @@ constexpr const TFunction kFunction_clamp_2B0B0B(
     BuiltInParameters::p2B0B0B,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::clamp_2B0B0B,
     EOpClamp,
     true);
 constexpr const TFunction kFunction_clamp_3B0B0B(
@@ -5270,7 +5090,6 @@ constexpr const TFunction kFunction_clamp_3B0B0B(
     BuiltInParameters::p3B0B0B,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::clamp_3B0B0B,
     EOpClamp,
     true);
 constexpr const TFunction kFunction_clamp_1B1B1B(
@@ -5280,7 +5099,6 @@ constexpr const TFunction kFunction_clamp_1B1B1B(
     BuiltInParameters::p1B1B1B,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::clamp_1B1B1B,
     EOpClamp,
     true);
 constexpr const TFunction kFunction_clamp_2B2B2B(
@@ -5290,7 +5108,6 @@ constexpr const TFunction kFunction_clamp_2B2B2B(
     BuiltInParameters::p2B2B2B,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::clamp_2B2B2B,
     EOpClamp,
     true);
 constexpr const TFunction kFunction_clamp_3B3B3B(
@@ -5300,7 +5117,6 @@ constexpr const TFunction kFunction_clamp_3B3B3B(
     BuiltInParameters::p3B3B3B,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::clamp_3B3B3B,
     EOpClamp,
     true);
 constexpr const TFunction kFunction_clamp_0C0C0C(
@@ -5310,7 +5126,6 @@ constexpr const TFunction kFunction_clamp_0C0C0C(
     BuiltInParameters::p0C0C0C0C,
     3,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::clamp_0C0C0C,
     EOpClamp,
     true);
 constexpr const TFunction kFunction_clamp_1C0C0C(
@@ -5320,7 +5135,6 @@ constexpr const TFunction kFunction_clamp_1C0C0C(
     BuiltInParameters::p1C0C0C,
     3,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::clamp_1C0C0C,
     EOpClamp,
     true);
 constexpr const TFunction kFunction_clamp_2C0C0C(
@@ -5330,7 +5144,6 @@ constexpr const TFunction kFunction_clamp_2C0C0C(
     BuiltInParameters::p2C0C0C,
     3,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::clamp_2C0C0C,
     EOpClamp,
     true);
 constexpr const TFunction kFunction_clamp_3C0C0C(
@@ -5340,7 +5153,6 @@ constexpr const TFunction kFunction_clamp_3C0C0C(
     BuiltInParameters::p3C0C0C,
     3,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::clamp_3C0C0C,
     EOpClamp,
     true);
 constexpr const TFunction kFunction_clamp_1C1C1C(
@@ -5350,7 +5162,6 @@ constexpr const TFunction kFunction_clamp_1C1C1C(
     BuiltInParameters::p1C1C1C,
     3,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::clamp_1C1C1C,
     EOpClamp,
     true);
 constexpr const TFunction kFunction_clamp_2C2C2C(
@@ -5360,7 +5171,6 @@ constexpr const TFunction kFunction_clamp_2C2C2C(
     BuiltInParameters::p2C2C2C,
     3,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::clamp_2C2C2C,
     EOpClamp,
     true);
 constexpr const TFunction kFunction_clamp_3C3C3C(
@@ -5370,7 +5180,6 @@ constexpr const TFunction kFunction_clamp_3C3C3C(
     BuiltInParameters::p3C3C3C,
     3,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::clamp_3C3C3C,
     EOpClamp,
     true);
 constexpr const TFunction kFunction_clamp_0D0D0D(
@@ -5380,7 +5189,6 @@ constexpr const TFunction kFunction_clamp_0D0D0D(
     BuiltInParameters::p0D0D0D,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::clamp_0D0D0D,
     EOpClamp,
     true);
 constexpr const TFunction kFunction_clamp_1D0D0D(
@@ -5390,7 +5198,6 @@ constexpr const TFunction kFunction_clamp_1D0D0D(
     BuiltInParameters::p1D0D0D,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::clamp_1D0D0D,
     EOpClamp,
     true);
 constexpr const TFunction kFunction_clamp_2D0D0D(
@@ -5400,7 +5207,6 @@ constexpr const TFunction kFunction_clamp_2D0D0D(
     BuiltInParameters::p2D0D0D,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::clamp_2D0D0D,
     EOpClamp,
     true);
 constexpr const TFunction kFunction_clamp_3D0D0D(
@@ -5410,7 +5216,6 @@ constexpr const TFunction kFunction_clamp_3D0D0D(
     BuiltInParameters::p3D0D0D,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::clamp_3D0D0D,
     EOpClamp,
     true);
 constexpr const TFunction kFunction_clamp_1D1D1D(
@@ -5420,7 +5225,6 @@ constexpr const TFunction kFunction_clamp_1D1D1D(
     BuiltInParameters::p1D1D1D,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::clamp_1D1D1D,
     EOpClamp,
     true);
 constexpr const TFunction kFunction_clamp_2D2D2D(
@@ -5430,7 +5234,6 @@ constexpr const TFunction kFunction_clamp_2D2D2D(
     BuiltInParameters::p2D2D2D,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::clamp_2D2D2D,
     EOpClamp,
     true);
 constexpr const TFunction kFunction_clamp_3D3D3D(
@@ -5440,7 +5243,6 @@ constexpr const TFunction kFunction_clamp_3D3D3D(
     BuiltInParameters::p3D3D3D,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::clamp_3D3D3D,
     EOpClamp,
     true);
 constexpr const TFunction kFunction_mix_0B0B0B(
@@ -5450,7 +5252,6 @@ constexpr const TFunction kFunction_mix_0B0B0B(
     BuiltInParameters::p0B0B0B,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::mix_0B0B0B,
     EOpMix,
     true);
 constexpr const TFunction kFunction_mix_1B1B0B(
@@ -5460,7 +5261,6 @@ constexpr const TFunction kFunction_mix_1B1B0B(
     BuiltInParameters::p1B1B0B,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::mix_1B1B0B,
     EOpMix,
     true);
 constexpr const TFunction kFunction_mix_2B2B0B(
@@ -5470,7 +5270,6 @@ constexpr const TFunction kFunction_mix_2B2B0B(
     BuiltInParameters::p2B2B0B,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::mix_2B2B0B,
     EOpMix,
     true);
 constexpr const TFunction kFunction_mix_3B3B0B(
@@ -5480,7 +5279,6 @@ constexpr const TFunction kFunction_mix_3B3B0B(
     BuiltInParameters::p3B3B0B,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::mix_3B3B0B,
     EOpMix,
     true);
 constexpr const TFunction kFunction_mix_1B1B1B(
@@ -5490,7 +5288,6 @@ constexpr const TFunction kFunction_mix_1B1B1B(
     BuiltInParameters::p1B1B1B,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::mix_1B1B1B,
     EOpMix,
     true);
 constexpr const TFunction kFunction_mix_2B2B2B(
@@ -5500,7 +5297,6 @@ constexpr const TFunction kFunction_mix_2B2B2B(
     BuiltInParameters::p2B2B2B,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::mix_2B2B2B,
     EOpMix,
     true);
 constexpr const TFunction kFunction_mix_3B3B3B(
@@ -5510,7 +5306,6 @@ constexpr const TFunction kFunction_mix_3B3B3B(
     BuiltInParameters::p3B3B3B,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::mix_3B3B3B,
     EOpMix,
     true);
 constexpr const TFunction kFunction_mix_0B0B0E(
@@ -5520,7 +5315,6 @@ constexpr const TFunction kFunction_mix_0B0B0E(
     BuiltInParameters::p0B0B0E,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::mix_0B0B0E,
     EOpMix,
     true);
 constexpr const TFunction kFunction_mix_1B1B1E(
@@ -5530,7 +5324,6 @@ constexpr const TFunction kFunction_mix_1B1B1E(
     BuiltInParameters::p1B1B1E,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::mix_1B1B1E,
     EOpMix,
     true);
 constexpr const TFunction kFunction_mix_2B2B2E(
@@ -5540,7 +5333,6 @@ constexpr const TFunction kFunction_mix_2B2B2E(
     BuiltInParameters::p2B2B2E,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::mix_2B2B2E,
     EOpMix,
     true);
 constexpr const TFunction kFunction_mix_3B3B3E(
@@ -5550,7 +5342,6 @@ constexpr const TFunction kFunction_mix_3B3B3E(
     BuiltInParameters::p3B3B3E,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::mix_3B3B3E,
     EOpMix,
     true);
 constexpr const TFunction kFunction_step_0B0B(
@@ -5560,7 +5351,6 @@ constexpr const TFunction kFunction_step_0B0B(
     BuiltInParameters::p0B0B1B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::step_0B0B,
     EOpStep,
     true);
 constexpr const TFunction kFunction_step_1B1B(
@@ -5570,7 +5360,6 @@ constexpr const TFunction kFunction_step_1B1B(
     BuiltInParameters::p1B1B0B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::step_1B1B,
     EOpStep,
     true);
 constexpr const TFunction kFunction_step_2B2B(
@@ -5580,7 +5369,6 @@ constexpr const TFunction kFunction_step_2B2B(
     BuiltInParameters::p2B2B0B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::step_2B2B,
     EOpStep,
     true);
 constexpr const TFunction kFunction_step_3B3B(
@@ -5590,7 +5378,6 @@ constexpr const TFunction kFunction_step_3B3B(
     BuiltInParameters::p3B3B3B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::step_3B3B,
     EOpStep,
     true);
 constexpr const TFunction kFunction_step_0B1B(
@@ -5600,7 +5387,6 @@ constexpr const TFunction kFunction_step_0B1B(
     BuiltInParameters::p0B1B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::step_0B1B,
     EOpStep,
     true);
 constexpr const TFunction kFunction_step_0B2B(
@@ -5610,7 +5396,6 @@ constexpr const TFunction kFunction_step_0B2B(
     BuiltInParameters::p0B2B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::step_0B2B,
     EOpStep,
     true);
 constexpr const TFunction kFunction_step_0B3B(
@@ -5620,7 +5405,6 @@ constexpr const TFunction kFunction_step_0B3B(
     BuiltInParameters::p0B3B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::step_0B3B,
     EOpStep,
     true);
 constexpr const TFunction kFunction_smoothstep_0B0B0B(
@@ -5630,7 +5414,6 @@ constexpr const TFunction kFunction_smoothstep_0B0B0B(
     BuiltInParameters::p0B0B0B,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::smoothstep_0B0B0B,
     EOpSmoothstep,
     true);
 constexpr const TFunction kFunction_smoothstep_1B1B1B(
@@ -5640,7 +5423,6 @@ constexpr const TFunction kFunction_smoothstep_1B1B1B(
     BuiltInParameters::p1B1B1B,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::smoothstep_1B1B1B,
     EOpSmoothstep,
     true);
 constexpr const TFunction kFunction_smoothstep_2B2B2B(
@@ -5650,7 +5432,6 @@ constexpr const TFunction kFunction_smoothstep_2B2B2B(
     BuiltInParameters::p2B2B2B,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::smoothstep_2B2B2B,
     EOpSmoothstep,
     true);
 constexpr const TFunction kFunction_smoothstep_3B3B3B(
@@ -5660,7 +5441,6 @@ constexpr const TFunction kFunction_smoothstep_3B3B3B(
     BuiltInParameters::p3B3B3B,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::smoothstep_3B3B3B,
     EOpSmoothstep,
     true);
 constexpr const TFunction kFunction_smoothstep_0B0B1B(
@@ -5670,7 +5450,6 @@ constexpr const TFunction kFunction_smoothstep_0B0B1B(
     BuiltInParameters::p0B0B1B,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::smoothstep_0B0B1B,
     EOpSmoothstep,
     true);
 constexpr const TFunction kFunction_smoothstep_0B0B2B(
@@ -5680,7 +5459,6 @@ constexpr const TFunction kFunction_smoothstep_0B0B2B(
     BuiltInParameters::p0B0B2B,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::smoothstep_0B0B2B,
     EOpSmoothstep,
     true);
 constexpr const TFunction kFunction_smoothstep_0B0B3B(
@@ -5690,7 +5468,6 @@ constexpr const TFunction kFunction_smoothstep_0B0B3B(
     BuiltInParameters::p0B0B3B,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::smoothstep_0B0B3B,
     EOpSmoothstep,
     true);
 constexpr const TFunction kFunction_modf_0B0B(
@@ -5700,7 +5477,6 @@ constexpr const TFunction kFunction_modf_0B0B(
     BuiltInParameters::p0B_o_0B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::modf_0B0B,
     EOpModf,
     false);
 constexpr const TFunction kFunction_modf_1B1B(
@@ -5710,7 +5486,6 @@ constexpr const TFunction kFunction_modf_1B1B(
     BuiltInParameters::p1B_o_1B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::modf_1B1B,
     EOpModf,
     false);
 constexpr const TFunction kFunction_modf_2B2B(
@@ -5720,7 +5495,6 @@ constexpr const TFunction kFunction_modf_2B2B(
     BuiltInParameters::p2B_o_2B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::modf_2B2B,
     EOpModf,
     false);
 constexpr const TFunction kFunction_modf_3B3B(
@@ -5730,7 +5504,6 @@ constexpr const TFunction kFunction_modf_3B3B(
     BuiltInParameters::p3B_o_3B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::modf_3B3B,
     EOpModf,
     false);
 constexpr const TFunction kFunction_isnan_0B(
@@ -5740,7 +5513,6 @@ constexpr const TFunction kFunction_isnan_0B(
     BuiltInParameters::p0B0C,
     1,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::isnan_0B,
     EOpIsnan,
     true);
 constexpr const TFunction kFunction_isnan_1B(
@@ -5750,7 +5522,6 @@ constexpr const TFunction kFunction_isnan_1B(
     BuiltInParameters::p1B1B0B,
     1,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::isnan_1B,
     EOpIsnan,
     true);
 constexpr const TFunction kFunction_isnan_2B(
@@ -5760,7 +5531,6 @@ constexpr const TFunction kFunction_isnan_2B(
     BuiltInParameters::p2B2C,
     1,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::isnan_2B,
     EOpIsnan,
     true);
 constexpr const TFunction kFunction_isnan_3B(
@@ -5770,7 +5540,6 @@ constexpr const TFunction kFunction_isnan_3B(
     BuiltInParameters::p3B1B,
     1,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::isnan_3B,
     EOpIsnan,
     true);
 constexpr const TFunction kFunction_isinf_0B(
@@ -5780,7 +5549,6 @@ constexpr const TFunction kFunction_isinf_0B(
     BuiltInParameters::p0B0C,
     1,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::isinf_0B,
     EOpIsinf,
     true);
 constexpr const TFunction kFunction_isinf_1B(
@@ -5790,7 +5558,6 @@ constexpr const TFunction kFunction_isinf_1B(
     BuiltInParameters::p1B1B0B,
     1,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::isinf_1B,
     EOpIsinf,
     true);
 constexpr const TFunction kFunction_isinf_2B(
@@ -5800,7 +5567,6 @@ constexpr const TFunction kFunction_isinf_2B(
     BuiltInParameters::p2B2C,
     1,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::isinf_2B,
     EOpIsinf,
     true);
 constexpr const TFunction kFunction_isinf_3B(
@@ -5810,7 +5576,6 @@ constexpr const TFunction kFunction_isinf_3B(
     BuiltInParameters::p3B1B,
     1,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::isinf_3B,
     EOpIsinf,
     true);
 constexpr const TFunction kFunction_floatBitsToInt_0B(
@@ -5820,7 +5585,6 @@ constexpr const TFunction kFunction_floatBitsToInt_0B(
     BuiltInParameters::p0B0C,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::floatBitsToInt_0B,
     EOpFloatBitsToInt,
     true);
 constexpr const TFunction kFunction_floatBitsToInt_1B(
@@ -5830,7 +5594,6 @@ constexpr const TFunction kFunction_floatBitsToInt_1B(
     BuiltInParameters::p1B1B0B,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::floatBitsToInt_1B,
     EOpFloatBitsToInt,
     true);
 constexpr const TFunction kFunction_floatBitsToInt_2B(
@@ -5840,7 +5603,6 @@ constexpr const TFunction kFunction_floatBitsToInt_2B(
     BuiltInParameters::p2B2C,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::floatBitsToInt_2B,
     EOpFloatBitsToInt,
     true);
 constexpr const TFunction kFunction_floatBitsToInt_3B(
@@ -5850,7 +5612,6 @@ constexpr const TFunction kFunction_floatBitsToInt_3B(
     BuiltInParameters::p3B1B,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::floatBitsToInt_3B,
     EOpFloatBitsToInt,
     true);
 constexpr const TFunction kFunction_floatBitsToUint_0B(
@@ -5860,7 +5621,6 @@ constexpr const TFunction kFunction_floatBitsToUint_0B(
     BuiltInParameters::p0B0C,
     1,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::floatBitsToUint_0B,
     EOpFloatBitsToUint,
     true);
 constexpr const TFunction kFunction_floatBitsToUint_1B(
@@ -5870,7 +5630,6 @@ constexpr const TFunction kFunction_floatBitsToUint_1B(
     BuiltInParameters::p1B1B0B,
     1,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::floatBitsToUint_1B,
     EOpFloatBitsToUint,
     true);
 constexpr const TFunction kFunction_floatBitsToUint_2B(
@@ -5880,7 +5639,6 @@ constexpr const TFunction kFunction_floatBitsToUint_2B(
     BuiltInParameters::p2B2C,
     1,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::floatBitsToUint_2B,
     EOpFloatBitsToUint,
     true);
 constexpr const TFunction kFunction_floatBitsToUint_3B(
@@ -5890,7 +5648,6 @@ constexpr const TFunction kFunction_floatBitsToUint_3B(
     BuiltInParameters::p3B1B,
     1,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::floatBitsToUint_3B,
     EOpFloatBitsToUint,
     true);
 constexpr const TFunction kFunction_intBitsToFloat_0C(
@@ -5900,7 +5657,6 @@ constexpr const TFunction kFunction_intBitsToFloat_0C(
     BuiltInParameters::p0C0C_o_0C_o_0C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::intBitsToFloat_0C,
     EOpIntBitsToFloat,
     true);
 constexpr const TFunction kFunction_intBitsToFloat_1C(
@@ -5910,7 +5666,6 @@ constexpr const TFunction kFunction_intBitsToFloat_1C(
     BuiltInParameters::p1C1C0C0C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::intBitsToFloat_1C,
     EOpIntBitsToFloat,
     true);
 constexpr const TFunction kFunction_intBitsToFloat_2C(
@@ -5920,7 +5675,6 @@ constexpr const TFunction kFunction_intBitsToFloat_2C(
     BuiltInParameters::p2C2C0C0C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::intBitsToFloat_2C,
     EOpIntBitsToFloat,
     true);
 constexpr const TFunction kFunction_intBitsToFloat_3C(
@@ -5930,7 +5684,6 @@ constexpr const TFunction kFunction_intBitsToFloat_3C(
     BuiltInParameters::p3C0C0C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::intBitsToFloat_3C,
     EOpIntBitsToFloat,
     true);
 constexpr const TFunction kFunction_uintBitsToFloat_0D(
@@ -5940,7 +5693,6 @@ constexpr const TFunction kFunction_uintBitsToFloat_0D(
     BuiltInParameters::p0D0C0C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::uintBitsToFloat_0D,
     EOpUintBitsToFloat,
     true);
 constexpr const TFunction kFunction_uintBitsToFloat_1D(
@@ -5950,7 +5702,6 @@ constexpr const TFunction kFunction_uintBitsToFloat_1D(
     BuiltInParameters::p1D0C0C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::uintBitsToFloat_1D,
     EOpUintBitsToFloat,
     true);
 constexpr const TFunction kFunction_uintBitsToFloat_2D(
@@ -5960,7 +5711,6 @@ constexpr const TFunction kFunction_uintBitsToFloat_2D(
     BuiltInParameters::p2D2D0C0C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::uintBitsToFloat_2D,
     EOpUintBitsToFloat,
     true);
 constexpr const TFunction kFunction_uintBitsToFloat_3D(
@@ -5970,7 +5720,6 @@ constexpr const TFunction kFunction_uintBitsToFloat_3D(
     BuiltInParameters::p3D0C0C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::uintBitsToFloat_3D,
     EOpUintBitsToFloat,
     true);
 constexpr const TFunction kFunction_frexp_0B0C(
@@ -5980,7 +5729,6 @@ constexpr const TFunction kFunction_frexp_0B0C(
     BuiltInParameters::p0B_o_0C,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::frexp_0B0C,
     EOpFrexp,
     false);
 constexpr const TFunction kFunction_frexp_1B1C(
@@ -5990,7 +5738,6 @@ constexpr const TFunction kFunction_frexp_1B1C(
     BuiltInParameters::p1B_o_1C,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::frexp_1B1C,
     EOpFrexp,
     false);
 constexpr const TFunction kFunction_frexp_2B2C(
@@ -6000,7 +5747,6 @@ constexpr const TFunction kFunction_frexp_2B2C(
     BuiltInParameters::p2B_o_2C,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::frexp_2B2C,
     EOpFrexp,
     false);
 constexpr const TFunction kFunction_frexp_3B3C(
@@ -6010,7 +5756,6 @@ constexpr const TFunction kFunction_frexp_3B3C(
     BuiltInParameters::p3B_o_3C,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::frexp_3B3C,
     EOpFrexp,
     false);
 constexpr const TFunction kFunction_ldexp_0B0C(
@@ -6020,7 +5765,6 @@ constexpr const TFunction kFunction_ldexp_0B0C(
     BuiltInParameters::p0B0C,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::ldexp_0B0C,
     EOpLdexp,
     true);
 constexpr const TFunction kFunction_ldexp_1B1C(
@@ -6030,7 +5774,6 @@ constexpr const TFunction kFunction_ldexp_1B1C(
     BuiltInParameters::p1B1C,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::ldexp_1B1C,
     EOpLdexp,
     true);
 constexpr const TFunction kFunction_ldexp_2B2C(
@@ -6040,7 +5783,6 @@ constexpr const TFunction kFunction_ldexp_2B2C(
     BuiltInParameters::p2B2C,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::ldexp_2B2C,
     EOpLdexp,
     true);
 constexpr const TFunction kFunction_ldexp_3B3C(
@@ -6050,7 +5792,6 @@ constexpr const TFunction kFunction_ldexp_3B3C(
     BuiltInParameters::p3B3C,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::ldexp_3B3C,
     EOpLdexp,
     true);
 constexpr const TFunction kFunction_packSnorm2x16_1B(
@@ -6060,7 +5801,6 @@ constexpr const TFunction kFunction_packSnorm2x16_1B(
     BuiltInParameters::p1B1B0B,
     1,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::packSnorm2x16_1B,
     EOpPackSnorm2x16,
     true);
 constexpr const TFunction kFunction_packUnorm2x16_1B(
@@ -6070,7 +5810,6 @@ constexpr const TFunction kFunction_packUnorm2x16_1B(
     BuiltInParameters::p1B1B0B,
     1,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::packUnorm2x16_1B,
     EOpPackUnorm2x16,
     true);
 constexpr const TFunction kFunction_packHalf2x16_1B(
@@ -6080,7 +5819,6 @@ constexpr const TFunction kFunction_packHalf2x16_1B(
     BuiltInParameters::p1B1B0B,
     1,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::packHalf2x16_1B,
     EOpPackHalf2x16,
     true);
 constexpr const TFunction kFunction_unpackSnorm2x16_0D(
@@ -6090,7 +5828,6 @@ constexpr const TFunction kFunction_unpackSnorm2x16_0D(
     BuiltInParameters::p0D0C0C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::unpackSnorm2x16_0D,
     EOpUnpackSnorm2x16,
     true);
 constexpr const TFunction kFunction_unpackUnorm2x16_0D(
@@ -6100,7 +5837,6 @@ constexpr const TFunction kFunction_unpackUnorm2x16_0D(
     BuiltInParameters::p0D0C0C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::unpackUnorm2x16_0D,
     EOpUnpackUnorm2x16,
     true);
 constexpr const TFunction kFunction_unpackHalf2x16_0D(
@@ -6110,7 +5846,6 @@ constexpr const TFunction kFunction_unpackHalf2x16_0D(
     BuiltInParameters::p0D0C0C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::unpackHalf2x16_0D,
     EOpUnpackHalf2x16,
     true);
 constexpr const TFunction kFunction_packUnorm4x8_3B(
@@ -6120,7 +5855,6 @@ constexpr const TFunction kFunction_packUnorm4x8_3B(
     BuiltInParameters::p3B1B,
     1,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::packUnorm4x8_3B,
     EOpPackUnorm4x8,
     true);
 constexpr const TFunction kFunction_packSnorm4x8_3B(
@@ -6130,7 +5864,6 @@ constexpr const TFunction kFunction_packSnorm4x8_3B(
     BuiltInParameters::p3B1B,
     1,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::packSnorm4x8_3B,
     EOpPackSnorm4x8,
     true);
 constexpr const TFunction kFunction_unpackUnorm4x8_0D(
@@ -6140,7 +5873,6 @@ constexpr const TFunction kFunction_unpackUnorm4x8_0D(
     BuiltInParameters::p0D0C0C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::unpackUnorm4x8_0D,
     EOpUnpackUnorm4x8,
     true);
 constexpr const TFunction kFunction_unpackSnorm4x8_0D(
@@ -6150,7 +5882,6 @@ constexpr const TFunction kFunction_unpackSnorm4x8_0D(
     BuiltInParameters::p0D0C0C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::unpackSnorm4x8_0D,
     EOpUnpackSnorm4x8,
     true);
 constexpr const TFunction kFunction_length_0B(
@@ -6160,7 +5891,6 @@ constexpr const TFunction kFunction_length_0B(
     BuiltInParameters::p0B0C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::length_0B,
     EOpLength,
     true);
 constexpr const TFunction kFunction_length_1B(
@@ -6170,7 +5900,6 @@ constexpr const TFunction kFunction_length_1B(
     BuiltInParameters::p1B1B0B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::length_1B,
     EOpLength,
     true);
 constexpr const TFunction kFunction_length_2B(
@@ -6180,7 +5909,6 @@ constexpr const TFunction kFunction_length_2B(
     BuiltInParameters::p2B2C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::length_2B,
     EOpLength,
     true);
 constexpr const TFunction kFunction_length_3B(
@@ -6190,7 +5918,6 @@ constexpr const TFunction kFunction_length_3B(
     BuiltInParameters::p3B1B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::length_3B,
     EOpLength,
     true);
 constexpr const TFunction kFunction_distance_0B0B(
@@ -6200,7 +5927,6 @@ constexpr const TFunction kFunction_distance_0B0B(
     BuiltInParameters::p0B0B1B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::distance_0B0B,
     EOpDistance,
     true);
 constexpr const TFunction kFunction_distance_1B1B(
@@ -6210,7 +5936,6 @@ constexpr const TFunction kFunction_distance_1B1B(
     BuiltInParameters::p1B1B0B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::distance_1B1B,
     EOpDistance,
     true);
 constexpr const TFunction kFunction_distance_2B2B(
@@ -6220,7 +5945,6 @@ constexpr const TFunction kFunction_distance_2B2B(
     BuiltInParameters::p2B2B0B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::distance_2B2B,
     EOpDistance,
     true);
 constexpr const TFunction kFunction_distance_3B3B(
@@ -6230,7 +5954,6 @@ constexpr const TFunction kFunction_distance_3B3B(
     BuiltInParameters::p3B3B3B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::distance_3B3B,
     EOpDistance,
     true);
 constexpr const TFunction kFunction_dot_0B0B(
@@ -6240,7 +5963,6 @@ constexpr const TFunction kFunction_dot_0B0B(
     BuiltInParameters::p0B0B1B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::dot_0B0B,
     EOpDot,
     true);
 constexpr const TFunction kFunction_dot_1B1B(
@@ -6250,7 +5972,6 @@ constexpr const TFunction kFunction_dot_1B1B(
     BuiltInParameters::p1B1B0B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::dot_1B1B,
     EOpDot,
     true);
 constexpr const TFunction kFunction_dot_2B2B(
@@ -6260,7 +5981,6 @@ constexpr const TFunction kFunction_dot_2B2B(
     BuiltInParameters::p2B2B0B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::dot_2B2B,
     EOpDot,
     true);
 constexpr const TFunction kFunction_dot_3B3B(
@@ -6270,7 +5990,6 @@ constexpr const TFunction kFunction_dot_3B3B(
     BuiltInParameters::p3B3B3B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::dot_3B3B,
     EOpDot,
     true);
 constexpr const TFunction kFunction_cross_2B2B(
@@ -6280,7 +5999,6 @@ constexpr const TFunction kFunction_cross_2B2B(
     BuiltInParameters::p2B2B0B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::cross_2B2B,
     EOpCross,
     true);
 constexpr const TFunction kFunction_normalize_0B(
@@ -6290,7 +6008,6 @@ constexpr const TFunction kFunction_normalize_0B(
     BuiltInParameters::p0B0C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::normalize_0B,
     EOpNormalize,
     true);
 constexpr const TFunction kFunction_normalize_1B(
@@ -6300,7 +6017,6 @@ constexpr const TFunction kFunction_normalize_1B(
     BuiltInParameters::p1B1B0B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::normalize_1B,
     EOpNormalize,
     true);
 constexpr const TFunction kFunction_normalize_2B(
@@ -6310,7 +6026,6 @@ constexpr const TFunction kFunction_normalize_2B(
     BuiltInParameters::p2B2C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::normalize_2B,
     EOpNormalize,
     true);
 constexpr const TFunction kFunction_normalize_3B(
@@ -6320,7 +6035,6 @@ constexpr const TFunction kFunction_normalize_3B(
     BuiltInParameters::p3B1B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::normalize_3B,
     EOpNormalize,
     true);
 constexpr const TFunction kFunction_faceforward_0B0B0B(
@@ -6330,7 +6044,6 @@ constexpr const TFunction kFunction_faceforward_0B0B0B(
     BuiltInParameters::p0B0B0B,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::faceforward_0B0B0B,
     EOpFaceforward,
     true);
 constexpr const TFunction kFunction_faceforward_1B1B1B(
@@ -6340,7 +6053,6 @@ constexpr const TFunction kFunction_faceforward_1B1B1B(
     BuiltInParameters::p1B1B1B,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::faceforward_1B1B1B,
     EOpFaceforward,
     true);
 constexpr const TFunction kFunction_faceforward_2B2B2B(
@@ -6350,7 +6062,6 @@ constexpr const TFunction kFunction_faceforward_2B2B2B(
     BuiltInParameters::p2B2B2B,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::faceforward_2B2B2B,
     EOpFaceforward,
     true);
 constexpr const TFunction kFunction_faceforward_3B3B3B(
@@ -6360,7 +6071,6 @@ constexpr const TFunction kFunction_faceforward_3B3B3B(
     BuiltInParameters::p3B3B3B,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::faceforward_3B3B3B,
     EOpFaceforward,
     true);
 constexpr const TFunction kFunction_reflect_0B0B(
@@ -6370,7 +6080,6 @@ constexpr const TFunction kFunction_reflect_0B0B(
     BuiltInParameters::p0B0B1B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::reflect_0B0B,
     EOpReflect,
     true);
 constexpr const TFunction kFunction_reflect_1B1B(
@@ -6380,7 +6089,6 @@ constexpr const TFunction kFunction_reflect_1B1B(
     BuiltInParameters::p1B1B0B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::reflect_1B1B,
     EOpReflect,
     true);
 constexpr const TFunction kFunction_reflect_2B2B(
@@ -6390,7 +6098,6 @@ constexpr const TFunction kFunction_reflect_2B2B(
     BuiltInParameters::p2B2B0B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::reflect_2B2B,
     EOpReflect,
     true);
 constexpr const TFunction kFunction_reflect_3B3B(
@@ -6400,7 +6107,6 @@ constexpr const TFunction kFunction_reflect_3B3B(
     BuiltInParameters::p3B3B3B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::reflect_3B3B,
     EOpReflect,
     true);
 constexpr const TFunction kFunction_refract_0B0B0B(
@@ -6410,7 +6116,6 @@ constexpr const TFunction kFunction_refract_0B0B0B(
     BuiltInParameters::p0B0B0B,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::refract_0B0B0B,
     EOpRefract,
     true);
 constexpr const TFunction kFunction_refract_1B1B0B(
@@ -6420,7 +6125,6 @@ constexpr const TFunction kFunction_refract_1B1B0B(
     BuiltInParameters::p1B1B0B,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::refract_1B1B0B,
     EOpRefract,
     true);
 constexpr const TFunction kFunction_refract_2B2B0B(
@@ -6430,7 +6134,6 @@ constexpr const TFunction kFunction_refract_2B2B0B(
     BuiltInParameters::p2B2B0B,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::refract_2B2B0B,
     EOpRefract,
     true);
 constexpr const TFunction kFunction_refract_3B3B0B(
@@ -6440,7 +6143,6 @@ constexpr const TFunction kFunction_refract_3B3B0B(
     BuiltInParameters::p3B3B0B,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::refract_3B3B0B,
     EOpRefract,
     true);
 constexpr const TFunction kFunction_matrixCompMult_5B5B(
@@ -6450,7 +6152,6 @@ constexpr const TFunction kFunction_matrixCompMult_5B5B(
     BuiltInParameters::p5B5B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 2>(),
-    BuiltInName::matrixCompMult_5B5B,
     EOpMulMatrixComponentWise,
     true);
 constexpr const TFunction kFunction_matrixCompMult_ABAB(
@@ -6460,7 +6161,6 @@ constexpr const TFunction kFunction_matrixCompMult_ABAB(
     BuiltInParameters::pABAB,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 3>(),
-    BuiltInName::matrixCompMult_ABAB,
     EOpMulMatrixComponentWise,
     true);
 constexpr const TFunction kFunction_matrixCompMult_FBFB(
@@ -6470,7 +6170,6 @@ constexpr const TFunction kFunction_matrixCompMult_FBFB(
     BuiltInParameters::pFBFB,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 4>(),
-    BuiltInName::matrixCompMult_FBFB,
     EOpMulMatrixComponentWise,
     true);
 constexpr const TFunction kFunction_matrixCompMult_9B9B(
@@ -6480,7 +6179,6 @@ constexpr const TFunction kFunction_matrixCompMult_9B9B(
     BuiltInParameters::p9B9B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 3>(),
-    BuiltInName::matrixCompMult_9B9B,
     EOpMulMatrixComponentWise,
     true);
 constexpr const TFunction kFunction_matrixCompMult_6B6B(
@@ -6490,7 +6188,6 @@ constexpr const TFunction kFunction_matrixCompMult_6B6B(
     BuiltInParameters::p6B6B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 2>(),
-    BuiltInName::matrixCompMult_6B6B,
     EOpMulMatrixComponentWise,
     true);
 constexpr const TFunction kFunction_matrixCompMult_DBDB(
@@ -6500,7 +6197,6 @@ constexpr const TFunction kFunction_matrixCompMult_DBDB(
     BuiltInParameters::pDBDB,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 4>(),
-    BuiltInName::matrixCompMult_DBDB,
     EOpMulMatrixComponentWise,
     true);
 constexpr const TFunction kFunction_matrixCompMult_7B7B(
@@ -6510,7 +6206,6 @@ constexpr const TFunction kFunction_matrixCompMult_7B7B(
     BuiltInParameters::p7B7B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 2>(),
-    BuiltInName::matrixCompMult_7B7B,
     EOpMulMatrixComponentWise,
     true);
 constexpr const TFunction kFunction_matrixCompMult_EBEB(
@@ -6520,7 +6215,6 @@ constexpr const TFunction kFunction_matrixCompMult_EBEB(
     BuiltInParameters::pEBEB,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 4>(),
-    BuiltInName::matrixCompMult_EBEB,
     EOpMulMatrixComponentWise,
     true);
 constexpr const TFunction kFunction_matrixCompMult_BBBB(
@@ -6530,7 +6224,6 @@ constexpr const TFunction kFunction_matrixCompMult_BBBB(
     BuiltInParameters::pBBBB,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 3>(),
-    BuiltInName::matrixCompMult_BBBB,
     EOpMulMatrixComponentWise,
     true);
 constexpr const TFunction kFunction_outerProduct_1B1B(
@@ -6540,7 +6233,6 @@ constexpr const TFunction kFunction_outerProduct_1B1B(
     BuiltInParameters::p1B1B0B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 2>(),
-    BuiltInName::outerProduct_1B1B,
     EOpOuterProduct,
     true);
 constexpr const TFunction kFunction_outerProduct_2B2B(
@@ -6550,7 +6242,6 @@ constexpr const TFunction kFunction_outerProduct_2B2B(
     BuiltInParameters::p2B2B0B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 3>(),
-    BuiltInName::outerProduct_2B2B,
     EOpOuterProduct,
     true);
 constexpr const TFunction kFunction_outerProduct_3B3B(
@@ -6560,7 +6251,6 @@ constexpr const TFunction kFunction_outerProduct_3B3B(
     BuiltInParameters::p3B3B3B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 4>(),
-    BuiltInName::outerProduct_3B3B,
     EOpOuterProduct,
     true);
 constexpr const TFunction kFunction_outerProduct_2B1B(
@@ -6570,7 +6260,6 @@ constexpr const TFunction kFunction_outerProduct_2B1B(
     BuiltInParameters::p2B1B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 3>(),
-    BuiltInName::outerProduct_2B1B,
     EOpOuterProduct,
     true);
 constexpr const TFunction kFunction_outerProduct_1B2B(
@@ -6580,7 +6269,6 @@ constexpr const TFunction kFunction_outerProduct_1B2B(
     BuiltInParameters::p1B2B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 2>(),
-    BuiltInName::outerProduct_1B2B,
     EOpOuterProduct,
     true);
 constexpr const TFunction kFunction_outerProduct_3B1B(
@@ -6590,7 +6278,6 @@ constexpr const TFunction kFunction_outerProduct_3B1B(
     BuiltInParameters::p3B1B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 4>(),
-    BuiltInName::outerProduct_3B1B,
     EOpOuterProduct,
     true);
 constexpr const TFunction kFunction_outerProduct_1B3B(
@@ -6600,7 +6287,6 @@ constexpr const TFunction kFunction_outerProduct_1B3B(
     BuiltInParameters::p1B3B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 2>(),
-    BuiltInName::outerProduct_1B3B,
     EOpOuterProduct,
     true);
 constexpr const TFunction kFunction_outerProduct_3B2B(
@@ -6610,7 +6296,6 @@ constexpr const TFunction kFunction_outerProduct_3B2B(
     BuiltInParameters::p3B2B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 4>(),
-    BuiltInName::outerProduct_3B2B,
     EOpOuterProduct,
     true);
 constexpr const TFunction kFunction_outerProduct_2B3B(
@@ -6620,7 +6305,6 @@ constexpr const TFunction kFunction_outerProduct_2B3B(
     BuiltInParameters::p2B3B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 3>(),
-    BuiltInName::outerProduct_2B3B,
     EOpOuterProduct,
     true);
 constexpr const TFunction kFunction_transpose_5B(
@@ -6630,7 +6314,6 @@ constexpr const TFunction kFunction_transpose_5B(
     BuiltInParameters::p5B5B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 2>(),
-    BuiltInName::transpose_5B,
     EOpTranspose,
     true);
 constexpr const TFunction kFunction_transpose_AB(
@@ -6640,7 +6323,6 @@ constexpr const TFunction kFunction_transpose_AB(
     BuiltInParameters::pABAB,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 3>(),
-    BuiltInName::transpose_AB,
     EOpTranspose,
     true);
 constexpr const TFunction kFunction_transpose_FB(
@@ -6650,7 +6332,6 @@ constexpr const TFunction kFunction_transpose_FB(
     BuiltInParameters::pFBFB,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 4>(),
-    BuiltInName::transpose_FB,
     EOpTranspose,
     true);
 constexpr const TFunction kFunction_transpose_6B(
@@ -6660,7 +6341,6 @@ constexpr const TFunction kFunction_transpose_6B(
     BuiltInParameters::p6B6B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 3>(),
-    BuiltInName::transpose_6B,
     EOpTranspose,
     true);
 constexpr const TFunction kFunction_transpose_9B(
@@ -6670,7 +6350,6 @@ constexpr const TFunction kFunction_transpose_9B(
     BuiltInParameters::p9B9B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 2>(),
-    BuiltInName::transpose_9B,
     EOpTranspose,
     true);
 constexpr const TFunction kFunction_transpose_7B(
@@ -6680,7 +6359,6 @@ constexpr const TFunction kFunction_transpose_7B(
     BuiltInParameters::p7B7B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 4>(),
-    BuiltInName::transpose_7B,
     EOpTranspose,
     true);
 constexpr const TFunction kFunction_transpose_DB(
@@ -6690,7 +6368,6 @@ constexpr const TFunction kFunction_transpose_DB(
     BuiltInParameters::pDBDB,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 2>(),
-    BuiltInName::transpose_DB,
     EOpTranspose,
     true);
 constexpr const TFunction kFunction_transpose_BB(
@@ -6700,7 +6377,6 @@ constexpr const TFunction kFunction_transpose_BB(
     BuiltInParameters::pBBBB,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 4>(),
-    BuiltInName::transpose_BB,
     EOpTranspose,
     true);
 constexpr const TFunction kFunction_transpose_EB(
@@ -6710,7 +6386,6 @@ constexpr const TFunction kFunction_transpose_EB(
     BuiltInParameters::pEBEB,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 3>(),
-    BuiltInName::transpose_EB,
     EOpTranspose,
     true);
 constexpr const TFunction kFunction_determinant_5B(
@@ -6720,7 +6395,6 @@ constexpr const TFunction kFunction_determinant_5B(
     BuiltInParameters::p5B5B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::determinant_5B,
     EOpDeterminant,
     true);
 constexpr const TFunction kFunction_determinant_AB(
@@ -6730,7 +6404,6 @@ constexpr const TFunction kFunction_determinant_AB(
     BuiltInParameters::pABAB,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::determinant_AB,
     EOpDeterminant,
     true);
 constexpr const TFunction kFunction_determinant_FB(
@@ -6740,7 +6413,6 @@ constexpr const TFunction kFunction_determinant_FB(
     BuiltInParameters::pFBFB,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::determinant_FB,
     EOpDeterminant,
     true);
 constexpr const TFunction kFunction_inverse_5B(
@@ -6750,7 +6422,6 @@ constexpr const TFunction kFunction_inverse_5B(
     BuiltInParameters::p5B5B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 2>(),
-    BuiltInName::inverse_5B,
     EOpInverse,
     true);
 constexpr const TFunction kFunction_inverse_AB(
@@ -6760,7 +6431,6 @@ constexpr const TFunction kFunction_inverse_AB(
     BuiltInParameters::pABAB,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 3>(),
-    BuiltInName::inverse_AB,
     EOpInverse,
     true);
 constexpr const TFunction kFunction_inverse_FB(
@@ -6770,7 +6440,6 @@ constexpr const TFunction kFunction_inverse_FB(
     BuiltInParameters::pFBFB,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 4>(),
-    BuiltInName::inverse_FB,
     EOpInverse,
     true);
 constexpr const TFunction kFunction_lessThan_1B1B(
@@ -6780,7 +6449,6 @@ constexpr const TFunction kFunction_lessThan_1B1B(
     BuiltInParameters::p1B1B0B,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::lessThan_1B1B,
     EOpLessThanComponentWise,
     true);
 constexpr const TFunction kFunction_lessThan_2B2B(
@@ -6790,7 +6458,6 @@ constexpr const TFunction kFunction_lessThan_2B2B(
     BuiltInParameters::p2B2B0B,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::lessThan_2B2B,
     EOpLessThanComponentWise,
     true);
 constexpr const TFunction kFunction_lessThan_3B3B(
@@ -6800,7 +6467,6 @@ constexpr const TFunction kFunction_lessThan_3B3B(
     BuiltInParameters::p3B3B3B,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::lessThan_3B3B,
     EOpLessThanComponentWise,
     true);
 constexpr const TFunction kFunction_lessThan_1C1C(
@@ -6810,7 +6476,6 @@ constexpr const TFunction kFunction_lessThan_1C1C(
     BuiltInParameters::p1C1C0C0C,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::lessThan_1C1C,
     EOpLessThanComponentWise,
     true);
 constexpr const TFunction kFunction_lessThan_2C2C(
@@ -6820,7 +6485,6 @@ constexpr const TFunction kFunction_lessThan_2C2C(
     BuiltInParameters::p2C2C0C0C,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::lessThan_2C2C,
     EOpLessThanComponentWise,
     true);
 constexpr const TFunction kFunction_lessThan_3C3C(
@@ -6830,7 +6494,6 @@ constexpr const TFunction kFunction_lessThan_3C3C(
     BuiltInParameters::p3C3C0C0C,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::lessThan_3C3C,
     EOpLessThanComponentWise,
     true);
 constexpr const TFunction kFunction_lessThan_1D1D(
@@ -6840,7 +6503,6 @@ constexpr const TFunction kFunction_lessThan_1D1D(
     BuiltInParameters::p1D1D0C0C,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::lessThan_1D1D,
     EOpLessThanComponentWise,
     true);
 constexpr const TFunction kFunction_lessThan_2D2D(
@@ -6850,7 +6512,6 @@ constexpr const TFunction kFunction_lessThan_2D2D(
     BuiltInParameters::p2D2D0C0C,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::lessThan_2D2D,
     EOpLessThanComponentWise,
     true);
 constexpr const TFunction kFunction_lessThan_3D3D(
@@ -6860,7 +6521,6 @@ constexpr const TFunction kFunction_lessThan_3D3D(
     BuiltInParameters::p3D3D0C0C,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::lessThan_3D3D,
     EOpLessThanComponentWise,
     true);
 constexpr const TFunction kFunction_lessThanEqual_1B1B(
@@ -6870,7 +6530,6 @@ constexpr const TFunction kFunction_lessThanEqual_1B1B(
     BuiltInParameters::p1B1B0B,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::lessThanEqual_1B1B,
     EOpLessThanEqualComponentWise,
     true);
 constexpr const TFunction kFunction_lessThanEqual_2B2B(
@@ -6880,7 +6539,6 @@ constexpr const TFunction kFunction_lessThanEqual_2B2B(
     BuiltInParameters::p2B2B0B,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::lessThanEqual_2B2B,
     EOpLessThanEqualComponentWise,
     true);
 constexpr const TFunction kFunction_lessThanEqual_3B3B(
@@ -6890,7 +6548,6 @@ constexpr const TFunction kFunction_lessThanEqual_3B3B(
     BuiltInParameters::p3B3B3B,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::lessThanEqual_3B3B,
     EOpLessThanEqualComponentWise,
     true);
 constexpr const TFunction kFunction_lessThanEqual_1C1C(
@@ -6900,7 +6557,6 @@ constexpr const TFunction kFunction_lessThanEqual_1C1C(
     BuiltInParameters::p1C1C0C0C,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::lessThanEqual_1C1C,
     EOpLessThanEqualComponentWise,
     true);
 constexpr const TFunction kFunction_lessThanEqual_2C2C(
@@ -6910,7 +6566,6 @@ constexpr const TFunction kFunction_lessThanEqual_2C2C(
     BuiltInParameters::p2C2C0C0C,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::lessThanEqual_2C2C,
     EOpLessThanEqualComponentWise,
     true);
 constexpr const TFunction kFunction_lessThanEqual_3C3C(
@@ -6920,7 +6575,6 @@ constexpr const TFunction kFunction_lessThanEqual_3C3C(
     BuiltInParameters::p3C3C0C0C,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::lessThanEqual_3C3C,
     EOpLessThanEqualComponentWise,
     true);
 constexpr const TFunction kFunction_lessThanEqual_1D1D(
@@ -6930,7 +6584,6 @@ constexpr const TFunction kFunction_lessThanEqual_1D1D(
     BuiltInParameters::p1D1D0C0C,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::lessThanEqual_1D1D,
     EOpLessThanEqualComponentWise,
     true);
 constexpr const TFunction kFunction_lessThanEqual_2D2D(
@@ -6940,7 +6593,6 @@ constexpr const TFunction kFunction_lessThanEqual_2D2D(
     BuiltInParameters::p2D2D0C0C,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::lessThanEqual_2D2D,
     EOpLessThanEqualComponentWise,
     true);
 constexpr const TFunction kFunction_lessThanEqual_3D3D(
@@ -6950,7 +6602,6 @@ constexpr const TFunction kFunction_lessThanEqual_3D3D(
     BuiltInParameters::p3D3D0C0C,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::lessThanEqual_3D3D,
     EOpLessThanEqualComponentWise,
     true);
 constexpr const TFunction kFunction_greaterThan_1B1B(
@@ -6960,7 +6611,6 @@ constexpr const TFunction kFunction_greaterThan_1B1B(
     BuiltInParameters::p1B1B0B,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::greaterThan_1B1B,
     EOpGreaterThanComponentWise,
     true);
 constexpr const TFunction kFunction_greaterThan_2B2B(
@@ -6970,7 +6620,6 @@ constexpr const TFunction kFunction_greaterThan_2B2B(
     BuiltInParameters::p2B2B0B,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::greaterThan_2B2B,
     EOpGreaterThanComponentWise,
     true);
 constexpr const TFunction kFunction_greaterThan_3B3B(
@@ -6980,7 +6629,6 @@ constexpr const TFunction kFunction_greaterThan_3B3B(
     BuiltInParameters::p3B3B3B,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::greaterThan_3B3B,
     EOpGreaterThanComponentWise,
     true);
 constexpr const TFunction kFunction_greaterThan_1C1C(
@@ -6990,7 +6638,6 @@ constexpr const TFunction kFunction_greaterThan_1C1C(
     BuiltInParameters::p1C1C0C0C,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::greaterThan_1C1C,
     EOpGreaterThanComponentWise,
     true);
 constexpr const TFunction kFunction_greaterThan_2C2C(
@@ -7000,7 +6647,6 @@ constexpr const TFunction kFunction_greaterThan_2C2C(
     BuiltInParameters::p2C2C0C0C,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::greaterThan_2C2C,
     EOpGreaterThanComponentWise,
     true);
 constexpr const TFunction kFunction_greaterThan_3C3C(
@@ -7010,7 +6656,6 @@ constexpr const TFunction kFunction_greaterThan_3C3C(
     BuiltInParameters::p3C3C0C0C,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::greaterThan_3C3C,
     EOpGreaterThanComponentWise,
     true);
 constexpr const TFunction kFunction_greaterThan_1D1D(
@@ -7020,7 +6665,6 @@ constexpr const TFunction kFunction_greaterThan_1D1D(
     BuiltInParameters::p1D1D0C0C,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::greaterThan_1D1D,
     EOpGreaterThanComponentWise,
     true);
 constexpr const TFunction kFunction_greaterThan_2D2D(
@@ -7030,7 +6674,6 @@ constexpr const TFunction kFunction_greaterThan_2D2D(
     BuiltInParameters::p2D2D0C0C,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::greaterThan_2D2D,
     EOpGreaterThanComponentWise,
     true);
 constexpr const TFunction kFunction_greaterThan_3D3D(
@@ -7040,7 +6683,6 @@ constexpr const TFunction kFunction_greaterThan_3D3D(
     BuiltInParameters::p3D3D0C0C,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::greaterThan_3D3D,
     EOpGreaterThanComponentWise,
     true);
 constexpr const TFunction kFunction_greaterThanEqual_1B1B(
@@ -7050,7 +6692,6 @@ constexpr const TFunction kFunction_greaterThanEqual_1B1B(
     BuiltInParameters::p1B1B0B,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::greaterThanEqual_1B1B,
     EOpGreaterThanEqualComponentWise,
     true);
 constexpr const TFunction kFunction_greaterThanEqual_2B2B(
@@ -7060,7 +6701,6 @@ constexpr const TFunction kFunction_greaterThanEqual_2B2B(
     BuiltInParameters::p2B2B0B,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::greaterThanEqual_2B2B,
     EOpGreaterThanEqualComponentWise,
     true);
 constexpr const TFunction kFunction_greaterThanEqual_3B3B(
@@ -7070,7 +6710,6 @@ constexpr const TFunction kFunction_greaterThanEqual_3B3B(
     BuiltInParameters::p3B3B3B,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::greaterThanEqual_3B3B,
     EOpGreaterThanEqualComponentWise,
     true);
 constexpr const TFunction kFunction_greaterThanEqual_1C1C(
@@ -7080,7 +6719,6 @@ constexpr const TFunction kFunction_greaterThanEqual_1C1C(
     BuiltInParameters::p1C1C0C0C,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::greaterThanEqual_1C1C,
     EOpGreaterThanEqualComponentWise,
     true);
 constexpr const TFunction kFunction_greaterThanEqual_2C2C(
@@ -7090,7 +6728,6 @@ constexpr const TFunction kFunction_greaterThanEqual_2C2C(
     BuiltInParameters::p2C2C0C0C,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::greaterThanEqual_2C2C,
     EOpGreaterThanEqualComponentWise,
     true);
 constexpr const TFunction kFunction_greaterThanEqual_3C3C(
@@ -7100,7 +6737,6 @@ constexpr const TFunction kFunction_greaterThanEqual_3C3C(
     BuiltInParameters::p3C3C0C0C,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::greaterThanEqual_3C3C,
     EOpGreaterThanEqualComponentWise,
     true);
 constexpr const TFunction kFunction_greaterThanEqual_1D1D(
@@ -7110,7 +6746,6 @@ constexpr const TFunction kFunction_greaterThanEqual_1D1D(
     BuiltInParameters::p1D1D0C0C,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::greaterThanEqual_1D1D,
     EOpGreaterThanEqualComponentWise,
     true);
 constexpr const TFunction kFunction_greaterThanEqual_2D2D(
@@ -7120,7 +6755,6 @@ constexpr const TFunction kFunction_greaterThanEqual_2D2D(
     BuiltInParameters::p2D2D0C0C,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::greaterThanEqual_2D2D,
     EOpGreaterThanEqualComponentWise,
     true);
 constexpr const TFunction kFunction_greaterThanEqual_3D3D(
@@ -7130,7 +6764,6 @@ constexpr const TFunction kFunction_greaterThanEqual_3D3D(
     BuiltInParameters::p3D3D0C0C,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::greaterThanEqual_3D3D,
     EOpGreaterThanEqualComponentWise,
     true);
 constexpr const TFunction kFunction_equal_1B1B(
@@ -7140,7 +6773,6 @@ constexpr const TFunction kFunction_equal_1B1B(
     BuiltInParameters::p1B1B0B,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::equal_1B1B,
     EOpEqualComponentWise,
     true);
 constexpr const TFunction kFunction_equal_2B2B(
@@ -7150,7 +6782,6 @@ constexpr const TFunction kFunction_equal_2B2B(
     BuiltInParameters::p2B2B0B,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::equal_2B2B,
     EOpEqualComponentWise,
     true);
 constexpr const TFunction kFunction_equal_3B3B(
@@ -7160,7 +6791,6 @@ constexpr const TFunction kFunction_equal_3B3B(
     BuiltInParameters::p3B3B3B,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::equal_3B3B,
     EOpEqualComponentWise,
     true);
 constexpr const TFunction kFunction_equal_1C1C(
@@ -7170,7 +6800,6 @@ constexpr const TFunction kFunction_equal_1C1C(
     BuiltInParameters::p1C1C0C0C,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::equal_1C1C,
     EOpEqualComponentWise,
     true);
 constexpr const TFunction kFunction_equal_2C2C(
@@ -7180,7 +6809,6 @@ constexpr const TFunction kFunction_equal_2C2C(
     BuiltInParameters::p2C2C0C0C,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::equal_2C2C,
     EOpEqualComponentWise,
     true);
 constexpr const TFunction kFunction_equal_3C3C(
@@ -7190,7 +6818,6 @@ constexpr const TFunction kFunction_equal_3C3C(
     BuiltInParameters::p3C3C0C0C,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::equal_3C3C,
     EOpEqualComponentWise,
     true);
 constexpr const TFunction kFunction_equal_1D1D(
@@ -7200,7 +6827,6 @@ constexpr const TFunction kFunction_equal_1D1D(
     BuiltInParameters::p1D1D0C0C,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::equal_1D1D,
     EOpEqualComponentWise,
     true);
 constexpr const TFunction kFunction_equal_2D2D(
@@ -7210,7 +6836,6 @@ constexpr const TFunction kFunction_equal_2D2D(
     BuiltInParameters::p2D2D0C0C,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::equal_2D2D,
     EOpEqualComponentWise,
     true);
 constexpr const TFunction kFunction_equal_3D3D(
@@ -7220,7 +6845,6 @@ constexpr const TFunction kFunction_equal_3D3D(
     BuiltInParameters::p3D3D0C0C,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::equal_3D3D,
     EOpEqualComponentWise,
     true);
 constexpr const TFunction kFunction_equal_1E1E(
@@ -7230,7 +6854,6 @@ constexpr const TFunction kFunction_equal_1E1E(
     BuiltInParameters::p1E1E,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::equal_1E1E,
     EOpEqualComponentWise,
     true);
 constexpr const TFunction kFunction_equal_2E2E(
@@ -7240,7 +6863,6 @@ constexpr const TFunction kFunction_equal_2E2E(
     BuiltInParameters::p2E2E,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::equal_2E2E,
     EOpEqualComponentWise,
     true);
 constexpr const TFunction kFunction_equal_3E3E(
@@ -7250,7 +6872,6 @@ constexpr const TFunction kFunction_equal_3E3E(
     BuiltInParameters::p3E3E,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::equal_3E3E,
     EOpEqualComponentWise,
     true);
 constexpr const TFunction kFunction_notEqual_1B1B(
@@ -7260,7 +6881,6 @@ constexpr const TFunction kFunction_notEqual_1B1B(
     BuiltInParameters::p1B1B0B,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::notEqual_1B1B,
     EOpNotEqualComponentWise,
     true);
 constexpr const TFunction kFunction_notEqual_2B2B(
@@ -7270,7 +6890,6 @@ constexpr const TFunction kFunction_notEqual_2B2B(
     BuiltInParameters::p2B2B0B,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::notEqual_2B2B,
     EOpNotEqualComponentWise,
     true);
 constexpr const TFunction kFunction_notEqual_3B3B(
@@ -7280,7 +6899,6 @@ constexpr const TFunction kFunction_notEqual_3B3B(
     BuiltInParameters::p3B3B3B,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::notEqual_3B3B,
     EOpNotEqualComponentWise,
     true);
 constexpr const TFunction kFunction_notEqual_1C1C(
@@ -7290,7 +6908,6 @@ constexpr const TFunction kFunction_notEqual_1C1C(
     BuiltInParameters::p1C1C0C0C,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::notEqual_1C1C,
     EOpNotEqualComponentWise,
     true);
 constexpr const TFunction kFunction_notEqual_2C2C(
@@ -7300,7 +6917,6 @@ constexpr const TFunction kFunction_notEqual_2C2C(
     BuiltInParameters::p2C2C0C0C,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::notEqual_2C2C,
     EOpNotEqualComponentWise,
     true);
 constexpr const TFunction kFunction_notEqual_3C3C(
@@ -7310,7 +6926,6 @@ constexpr const TFunction kFunction_notEqual_3C3C(
     BuiltInParameters::p3C3C0C0C,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::notEqual_3C3C,
     EOpNotEqualComponentWise,
     true);
 constexpr const TFunction kFunction_notEqual_1D1D(
@@ -7320,7 +6935,6 @@ constexpr const TFunction kFunction_notEqual_1D1D(
     BuiltInParameters::p1D1D0C0C,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::notEqual_1D1D,
     EOpNotEqualComponentWise,
     true);
 constexpr const TFunction kFunction_notEqual_2D2D(
@@ -7330,7 +6944,6 @@ constexpr const TFunction kFunction_notEqual_2D2D(
     BuiltInParameters::p2D2D0C0C,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::notEqual_2D2D,
     EOpNotEqualComponentWise,
     true);
 constexpr const TFunction kFunction_notEqual_3D3D(
@@ -7340,7 +6953,6 @@ constexpr const TFunction kFunction_notEqual_3D3D(
     BuiltInParameters::p3D3D0C0C,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::notEqual_3D3D,
     EOpNotEqualComponentWise,
     true);
 constexpr const TFunction kFunction_notEqual_1E1E(
@@ -7350,7 +6962,6 @@ constexpr const TFunction kFunction_notEqual_1E1E(
     BuiltInParameters::p1E1E,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::notEqual_1E1E,
     EOpNotEqualComponentWise,
     true);
 constexpr const TFunction kFunction_notEqual_2E2E(
@@ -7360,7 +6971,6 @@ constexpr const TFunction kFunction_notEqual_2E2E(
     BuiltInParameters::p2E2E,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::notEqual_2E2E,
     EOpNotEqualComponentWise,
     true);
 constexpr const TFunction kFunction_notEqual_3E3E(
@@ -7370,7 +6980,6 @@ constexpr const TFunction kFunction_notEqual_3E3E(
     BuiltInParameters::p3E3E,
     2,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::notEqual_3E3E,
     EOpNotEqualComponentWise,
     true);
 constexpr const TFunction kFunction_any_1E(
@@ -7380,7 +6989,6 @@ constexpr const TFunction kFunction_any_1E(
     BuiltInParameters::p1E1E,
     1,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::any_1E,
     EOpAny,
     true);
 constexpr const TFunction kFunction_any_2E(
@@ -7390,7 +6998,6 @@ constexpr const TFunction kFunction_any_2E(
     BuiltInParameters::p2E2E,
     1,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::any_2E,
     EOpAny,
     true);
 constexpr const TFunction kFunction_any_3E(
@@ -7400,7 +7007,6 @@ constexpr const TFunction kFunction_any_3E(
     BuiltInParameters::p3E3E,
     1,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::any_3E,
     EOpAny,
     true);
 constexpr const TFunction kFunction_all_1E(
@@ -7410,7 +7016,6 @@ constexpr const TFunction kFunction_all_1E(
     BuiltInParameters::p1E1E,
     1,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::all_1E,
     EOpAll,
     true);
 constexpr const TFunction kFunction_all_2E(
@@ -7420,7 +7025,6 @@ constexpr const TFunction kFunction_all_2E(
     BuiltInParameters::p2E2E,
     1,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::all_2E,
     EOpAll,
     true);
 constexpr const TFunction kFunction_all_3E(
@@ -7430,7 +7034,6 @@ constexpr const TFunction kFunction_all_3E(
     BuiltInParameters::p3E3E,
     1,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::all_3E,
     EOpAll,
     true);
 constexpr const TFunction kFunction_notFunc_1E(
@@ -7440,7 +7043,6 @@ constexpr const TFunction kFunction_notFunc_1E(
     BuiltInParameters::p1E1E,
     1,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::notFunc_1E,
     EOpLogicalNotComponentWise,
     true);
 constexpr const TFunction kFunction_notFunc_2E(
@@ -7450,7 +7052,6 @@ constexpr const TFunction kFunction_notFunc_2E(
     BuiltInParameters::p2E2E,
     1,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::notFunc_2E,
     EOpLogicalNotComponentWise,
     true);
 constexpr const TFunction kFunction_notFunc_3E(
@@ -7460,7 +7061,6 @@ constexpr const TFunction kFunction_notFunc_3E(
     BuiltInParameters::p3E3E,
     1,
     StaticType::Get<EbtBool, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::notFunc_3E,
     EOpLogicalNotComponentWise,
     true);
 constexpr const TFunction kFunction_bitfieldExtract_0C0C0C(
@@ -7470,7 +7070,6 @@ constexpr const TFunction kFunction_bitfieldExtract_0C0C0C(
     BuiltInParameters::p0C0C0C0C,
     3,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::bitfieldExtract_0C0C0C,
     EOpBitfieldExtract,
     true);
 constexpr const TFunction kFunction_bitfieldExtract_1C0C0C(
@@ -7480,7 +7079,6 @@ constexpr const TFunction kFunction_bitfieldExtract_1C0C0C(
     BuiltInParameters::p1C0C0C,
     3,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::bitfieldExtract_1C0C0C,
     EOpBitfieldExtract,
     true);
 constexpr const TFunction kFunction_bitfieldExtract_2C0C0C(
@@ -7490,7 +7088,6 @@ constexpr const TFunction kFunction_bitfieldExtract_2C0C0C(
     BuiltInParameters::p2C0C0C,
     3,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::bitfieldExtract_2C0C0C,
     EOpBitfieldExtract,
     true);
 constexpr const TFunction kFunction_bitfieldExtract_3C0C0C(
@@ -7500,7 +7097,6 @@ constexpr const TFunction kFunction_bitfieldExtract_3C0C0C(
     BuiltInParameters::p3C0C0C,
     3,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::bitfieldExtract_3C0C0C,
     EOpBitfieldExtract,
     true);
 constexpr const TFunction kFunction_bitfieldExtract_0D0C0C(
@@ -7510,7 +7106,6 @@ constexpr const TFunction kFunction_bitfieldExtract_0D0C0C(
     BuiltInParameters::p0D0C0C,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::bitfieldExtract_0D0C0C,
     EOpBitfieldExtract,
     true);
 constexpr const TFunction kFunction_bitfieldExtract_1D0C0C(
@@ -7520,7 +7115,6 @@ constexpr const TFunction kFunction_bitfieldExtract_1D0C0C(
     BuiltInParameters::p1D0C0C,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::bitfieldExtract_1D0C0C,
     EOpBitfieldExtract,
     true);
 constexpr const TFunction kFunction_bitfieldExtract_2D0C0C(
@@ -7530,7 +7124,6 @@ constexpr const TFunction kFunction_bitfieldExtract_2D0C0C(
     BuiltInParameters::p2D0C0C,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::bitfieldExtract_2D0C0C,
     EOpBitfieldExtract,
     true);
 constexpr const TFunction kFunction_bitfieldExtract_3D0C0C(
@@ -7540,7 +7133,6 @@ constexpr const TFunction kFunction_bitfieldExtract_3D0C0C(
     BuiltInParameters::p3D0C0C,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::bitfieldExtract_3D0C0C,
     EOpBitfieldExtract,
     true);
 constexpr const TFunction kFunction_bitfieldInsert_0C0C0C0C(
@@ -7550,7 +7142,6 @@ constexpr const TFunction kFunction_bitfieldInsert_0C0C0C0C(
     BuiltInParameters::p0C0C0C0C,
     4,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::bitfieldInsert_0C0C0C0C,
     EOpBitfieldInsert,
     true);
 constexpr const TFunction kFunction_bitfieldInsert_1C1C0C0C(
@@ -7560,7 +7151,6 @@ constexpr const TFunction kFunction_bitfieldInsert_1C1C0C0C(
     BuiltInParameters::p1C1C0C0C,
     4,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::bitfieldInsert_1C1C0C0C,
     EOpBitfieldInsert,
     true);
 constexpr const TFunction kFunction_bitfieldInsert_2C2C0C0C(
@@ -7570,7 +7160,6 @@ constexpr const TFunction kFunction_bitfieldInsert_2C2C0C0C(
     BuiltInParameters::p2C2C0C0C,
     4,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::bitfieldInsert_2C2C0C0C,
     EOpBitfieldInsert,
     true);
 constexpr const TFunction kFunction_bitfieldInsert_3C3C0C0C(
@@ -7580,7 +7169,6 @@ constexpr const TFunction kFunction_bitfieldInsert_3C3C0C0C(
     BuiltInParameters::p3C3C0C0C,
     4,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::bitfieldInsert_3C3C0C0C,
     EOpBitfieldInsert,
     true);
 constexpr const TFunction kFunction_bitfieldInsert_0D0D0C0C(
@@ -7590,7 +7178,6 @@ constexpr const TFunction kFunction_bitfieldInsert_0D0D0C0C(
     BuiltInParameters::p0D0D0C0C,
     4,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::bitfieldInsert_0D0D0C0C,
     EOpBitfieldInsert,
     true);
 constexpr const TFunction kFunction_bitfieldInsert_1D1D0C0C(
@@ -7600,7 +7187,6 @@ constexpr const TFunction kFunction_bitfieldInsert_1D1D0C0C(
     BuiltInParameters::p1D1D0C0C,
     4,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::bitfieldInsert_1D1D0C0C,
     EOpBitfieldInsert,
     true);
 constexpr const TFunction kFunction_bitfieldInsert_2D2D0C0C(
@@ -7610,7 +7196,6 @@ constexpr const TFunction kFunction_bitfieldInsert_2D2D0C0C(
     BuiltInParameters::p2D2D0C0C,
     4,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::bitfieldInsert_2D2D0C0C,
     EOpBitfieldInsert,
     true);
 constexpr const TFunction kFunction_bitfieldInsert_3D3D0C0C(
@@ -7620,7 +7205,6 @@ constexpr const TFunction kFunction_bitfieldInsert_3D3D0C0C(
     BuiltInParameters::p3D3D0C0C,
     4,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::bitfieldInsert_3D3D0C0C,
     EOpBitfieldInsert,
     true);
 constexpr const TFunction kFunction_bitfieldReverse_0C(
@@ -7630,7 +7214,6 @@ constexpr const TFunction kFunction_bitfieldReverse_0C(
     BuiltInParameters::p0C0C_o_0C_o_0C,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::bitfieldReverse_0C,
     EOpBitfieldReverse,
     true);
 constexpr const TFunction kFunction_bitfieldReverse_1C(
@@ -7640,7 +7223,6 @@ constexpr const TFunction kFunction_bitfieldReverse_1C(
     BuiltInParameters::p1C1C0C0C,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::bitfieldReverse_1C,
     EOpBitfieldReverse,
     true);
 constexpr const TFunction kFunction_bitfieldReverse_2C(
@@ -7650,7 +7232,6 @@ constexpr const TFunction kFunction_bitfieldReverse_2C(
     BuiltInParameters::p2C2C0C0C,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::bitfieldReverse_2C,
     EOpBitfieldReverse,
     true);
 constexpr const TFunction kFunction_bitfieldReverse_3C(
@@ -7660,7 +7241,6 @@ constexpr const TFunction kFunction_bitfieldReverse_3C(
     BuiltInParameters::p3C0C0C,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::bitfieldReverse_3C,
     EOpBitfieldReverse,
     true);
 constexpr const TFunction kFunction_bitfieldReverse_0D(
@@ -7670,7 +7250,6 @@ constexpr const TFunction kFunction_bitfieldReverse_0D(
     BuiltInParameters::p0D0C0C,
     1,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::bitfieldReverse_0D,
     EOpBitfieldReverse,
     true);
 constexpr const TFunction kFunction_bitfieldReverse_1D(
@@ -7680,7 +7259,6 @@ constexpr const TFunction kFunction_bitfieldReverse_1D(
     BuiltInParameters::p1D0C0C,
     1,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::bitfieldReverse_1D,
     EOpBitfieldReverse,
     true);
 constexpr const TFunction kFunction_bitfieldReverse_2D(
@@ -7690,7 +7268,6 @@ constexpr const TFunction kFunction_bitfieldReverse_2D(
     BuiltInParameters::p2D2D0C0C,
     1,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::bitfieldReverse_2D,
     EOpBitfieldReverse,
     true);
 constexpr const TFunction kFunction_bitfieldReverse_3D(
@@ -7700,7 +7277,6 @@ constexpr const TFunction kFunction_bitfieldReverse_3D(
     BuiltInParameters::p3D0C0C,
     1,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::bitfieldReverse_3D,
     EOpBitfieldReverse,
     true);
 constexpr const TFunction kFunction_bitCount_0C(
@@ -7710,7 +7286,6 @@ constexpr const TFunction kFunction_bitCount_0C(
     BuiltInParameters::p0C0C_o_0C_o_0C,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::bitCount_0C,
     EOpBitCount,
     true);
 constexpr const TFunction kFunction_bitCount_1C(
@@ -7720,7 +7295,6 @@ constexpr const TFunction kFunction_bitCount_1C(
     BuiltInParameters::p1C1C0C0C,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::bitCount_1C,
     EOpBitCount,
     true);
 constexpr const TFunction kFunction_bitCount_2C(
@@ -7730,7 +7304,6 @@ constexpr const TFunction kFunction_bitCount_2C(
     BuiltInParameters::p2C2C0C0C,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::bitCount_2C,
     EOpBitCount,
     true);
 constexpr const TFunction kFunction_bitCount_3C(
@@ -7740,7 +7313,6 @@ constexpr const TFunction kFunction_bitCount_3C(
     BuiltInParameters::p3C0C0C,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::bitCount_3C,
     EOpBitCount,
     true);
 constexpr const TFunction kFunction_bitCount_0D(
@@ -7750,7 +7322,6 @@ constexpr const TFunction kFunction_bitCount_0D(
     BuiltInParameters::p0D0C0C,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::bitCount_0D,
     EOpBitCount,
     true);
 constexpr const TFunction kFunction_bitCount_1D(
@@ -7760,7 +7331,6 @@ constexpr const TFunction kFunction_bitCount_1D(
     BuiltInParameters::p1D0C0C,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::bitCount_1D,
     EOpBitCount,
     true);
 constexpr const TFunction kFunction_bitCount_2D(
@@ -7770,7 +7340,6 @@ constexpr const TFunction kFunction_bitCount_2D(
     BuiltInParameters::p2D2D0C0C,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::bitCount_2D,
     EOpBitCount,
     true);
 constexpr const TFunction kFunction_bitCount_3D(
@@ -7780,7 +7349,6 @@ constexpr const TFunction kFunction_bitCount_3D(
     BuiltInParameters::p3D0C0C,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::bitCount_3D,
     EOpBitCount,
     true);
 constexpr const TFunction kFunction_findLSB_0C(
@@ -7790,7 +7358,6 @@ constexpr const TFunction kFunction_findLSB_0C(
     BuiltInParameters::p0C0C_o_0C_o_0C,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::findLSB_0C,
     EOpFindLSB,
     true);
 constexpr const TFunction kFunction_findLSB_1C(
@@ -7800,7 +7367,6 @@ constexpr const TFunction kFunction_findLSB_1C(
     BuiltInParameters::p1C1C0C0C,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::findLSB_1C,
     EOpFindLSB,
     true);
 constexpr const TFunction kFunction_findLSB_2C(
@@ -7810,7 +7376,6 @@ constexpr const TFunction kFunction_findLSB_2C(
     BuiltInParameters::p2C2C0C0C,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::findLSB_2C,
     EOpFindLSB,
     true);
 constexpr const TFunction kFunction_findLSB_3C(
@@ -7820,7 +7385,6 @@ constexpr const TFunction kFunction_findLSB_3C(
     BuiltInParameters::p3C0C0C,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::findLSB_3C,
     EOpFindLSB,
     true);
 constexpr const TFunction kFunction_findLSB_0D(
@@ -7830,7 +7394,6 @@ constexpr const TFunction kFunction_findLSB_0D(
     BuiltInParameters::p0D0C0C,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::findLSB_0D,
     EOpFindLSB,
     true);
 constexpr const TFunction kFunction_findLSB_1D(
@@ -7840,7 +7403,6 @@ constexpr const TFunction kFunction_findLSB_1D(
     BuiltInParameters::p1D0C0C,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::findLSB_1D,
     EOpFindLSB,
     true);
 constexpr const TFunction kFunction_findLSB_2D(
@@ -7850,7 +7412,6 @@ constexpr const TFunction kFunction_findLSB_2D(
     BuiltInParameters::p2D2D0C0C,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::findLSB_2D,
     EOpFindLSB,
     true);
 constexpr const TFunction kFunction_findLSB_3D(
@@ -7860,7 +7421,6 @@ constexpr const TFunction kFunction_findLSB_3D(
     BuiltInParameters::p3D0C0C,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::findLSB_3D,
     EOpFindLSB,
     true);
 constexpr const TFunction kFunction_findMSB_0C(
@@ -7870,7 +7430,6 @@ constexpr const TFunction kFunction_findMSB_0C(
     BuiltInParameters::p0C0C_o_0C_o_0C,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::findMSB_0C,
     EOpFindMSB,
     true);
 constexpr const TFunction kFunction_findMSB_1C(
@@ -7880,7 +7439,6 @@ constexpr const TFunction kFunction_findMSB_1C(
     BuiltInParameters::p1C1C0C0C,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::findMSB_1C,
     EOpFindMSB,
     true);
 constexpr const TFunction kFunction_findMSB_2C(
@@ -7890,7 +7448,6 @@ constexpr const TFunction kFunction_findMSB_2C(
     BuiltInParameters::p2C2C0C0C,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::findMSB_2C,
     EOpFindMSB,
     true);
 constexpr const TFunction kFunction_findMSB_3C(
@@ -7900,7 +7457,6 @@ constexpr const TFunction kFunction_findMSB_3C(
     BuiltInParameters::p3C0C0C,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::findMSB_3C,
     EOpFindMSB,
     true);
 constexpr const TFunction kFunction_findMSB_0D(
@@ -7910,7 +7466,6 @@ constexpr const TFunction kFunction_findMSB_0D(
     BuiltInParameters::p0D0C0C,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::findMSB_0D,
     EOpFindMSB,
     true);
 constexpr const TFunction kFunction_findMSB_1D(
@@ -7920,7 +7475,6 @@ constexpr const TFunction kFunction_findMSB_1D(
     BuiltInParameters::p1D0C0C,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::findMSB_1D,
     EOpFindMSB,
     true);
 constexpr const TFunction kFunction_findMSB_2D(
@@ -7930,7 +7484,6 @@ constexpr const TFunction kFunction_findMSB_2D(
     BuiltInParameters::p2D2D0C0C,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::findMSB_2D,
     EOpFindMSB,
     true);
 constexpr const TFunction kFunction_findMSB_3D(
@@ -7940,7 +7493,6 @@ constexpr const TFunction kFunction_findMSB_3D(
     BuiltInParameters::p3D0C0C,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::findMSB_3D,
     EOpFindMSB,
     true);
 constexpr const TFunction kFunction_uaddCarry_0D0D0D(
@@ -7950,7 +7502,6 @@ constexpr const TFunction kFunction_uaddCarry_0D0D0D(
     BuiltInParameters::p0D0D_o_0D_o_0D,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::uaddCarry_0D0D0D,
     EOpUaddCarry,
     false);
 constexpr const TFunction kFunction_uaddCarry_1D1D1D(
@@ -7960,7 +7511,6 @@ constexpr const TFunction kFunction_uaddCarry_1D1D1D(
     BuiltInParameters::p1D1D_o_1D_o_1D,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::uaddCarry_1D1D1D,
     EOpUaddCarry,
     false);
 constexpr const TFunction kFunction_uaddCarry_2D2D2D(
@@ -7970,7 +7520,6 @@ constexpr const TFunction kFunction_uaddCarry_2D2D2D(
     BuiltInParameters::p2D2D_o_2D_o_2D,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::uaddCarry_2D2D2D,
     EOpUaddCarry,
     false);
 constexpr const TFunction kFunction_uaddCarry_3D3D3D(
@@ -7980,7 +7529,6 @@ constexpr const TFunction kFunction_uaddCarry_3D3D3D(
     BuiltInParameters::p3D3D_o_3D_o_3D,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::uaddCarry_3D3D3D,
     EOpUaddCarry,
     false);
 constexpr const TFunction kFunction_usubBorrow_0D0D0D(
@@ -7990,7 +7538,6 @@ constexpr const TFunction kFunction_usubBorrow_0D0D0D(
     BuiltInParameters::p0D0D_o_0D_o_0D,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::usubBorrow_0D0D0D,
     EOpUsubBorrow,
     false);
 constexpr const TFunction kFunction_usubBorrow_1D1D1D(
@@ -8000,7 +7547,6 @@ constexpr const TFunction kFunction_usubBorrow_1D1D1D(
     BuiltInParameters::p1D1D_o_1D_o_1D,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::usubBorrow_1D1D1D,
     EOpUsubBorrow,
     false);
 constexpr const TFunction kFunction_usubBorrow_2D2D2D(
@@ -8010,7 +7556,6 @@ constexpr const TFunction kFunction_usubBorrow_2D2D2D(
     BuiltInParameters::p2D2D_o_2D_o_2D,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::usubBorrow_2D2D2D,
     EOpUsubBorrow,
     false);
 constexpr const TFunction kFunction_usubBorrow_3D3D3D(
@@ -8020,7 +7565,6 @@ constexpr const TFunction kFunction_usubBorrow_3D3D3D(
     BuiltInParameters::p3D3D_o_3D_o_3D,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::usubBorrow_3D3D3D,
     EOpUsubBorrow,
     false);
 constexpr const TFunction kFunction_umulExtended_0D0D0D0D(
@@ -8030,7 +7574,6 @@ constexpr const TFunction kFunction_umulExtended_0D0D0D0D(
     BuiltInParameters::p0D0D_o_0D_o_0D,
     4,
     StaticType::Get<EbtVoid, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::umulExtended_0D0D0D0D,
     EOpUmulExtended,
     false);
 constexpr const TFunction kFunction_umulExtended_1D1D1D1D(
@@ -8040,7 +7583,6 @@ constexpr const TFunction kFunction_umulExtended_1D1D1D1D(
     BuiltInParameters::p1D1D_o_1D_o_1D,
     4,
     StaticType::Get<EbtVoid, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::umulExtended_1D1D1D1D,
     EOpUmulExtended,
     false);
 constexpr const TFunction kFunction_umulExtended_2D2D2D2D(
@@ -8050,7 +7592,6 @@ constexpr const TFunction kFunction_umulExtended_2D2D2D2D(
     BuiltInParameters::p2D2D_o_2D_o_2D,
     4,
     StaticType::Get<EbtVoid, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::umulExtended_2D2D2D2D,
     EOpUmulExtended,
     false);
 constexpr const TFunction kFunction_umulExtended_3D3D3D3D(
@@ -8060,7 +7601,6 @@ constexpr const TFunction kFunction_umulExtended_3D3D3D3D(
     BuiltInParameters::p3D3D_o_3D_o_3D,
     4,
     StaticType::Get<EbtVoid, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::umulExtended_3D3D3D3D,
     EOpUmulExtended,
     false);
 constexpr const TFunction kFunction_imulExtended_0C0C0C0C(
@@ -8070,7 +7610,6 @@ constexpr const TFunction kFunction_imulExtended_0C0C0C0C(
     BuiltInParameters::p0C0C_o_0C_o_0C,
     4,
     StaticType::Get<EbtVoid, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::imulExtended_0C0C0C0C,
     EOpImulExtended,
     false);
 constexpr const TFunction kFunction_imulExtended_1C1C1C1C(
@@ -8080,7 +7619,6 @@ constexpr const TFunction kFunction_imulExtended_1C1C1C1C(
     BuiltInParameters::p1C1C_o_1C_o_1C,
     4,
     StaticType::Get<EbtVoid, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::imulExtended_1C1C1C1C,
     EOpImulExtended,
     false);
 constexpr const TFunction kFunction_imulExtended_2C2C2C2C(
@@ -8090,7 +7628,6 @@ constexpr const TFunction kFunction_imulExtended_2C2C2C2C(
     BuiltInParameters::p2C2C_o_2C_o_2C,
     4,
     StaticType::Get<EbtVoid, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::imulExtended_2C2C2C2C,
     EOpImulExtended,
     false);
 constexpr const TFunction kFunction_imulExtended_3C3C3C3C(
@@ -8100,7 +7637,6 @@ constexpr const TFunction kFunction_imulExtended_3C3C3C3C(
     BuiltInParameters::p3C3C_o_3C_o_3C,
     4,
     StaticType::Get<EbtVoid, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::imulExtended_3C3C3C3C,
     EOpImulExtended,
     false);
 constexpr const TFunction kFunction_texture2D_0H1B(
@@ -8110,7 +7646,6 @@ constexpr const TFunction kFunction_texture2D_0H1B(
     BuiltInParameters::p0H1B1B1B1C,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texture2D_0H1B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture2DProj_0H2B(
@@ -8120,7 +7655,6 @@ constexpr const TFunction kFunction_texture2DProj_0H2B(
     BuiltInParameters::p0H2B0B1C,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texture2DProj_0H2B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture2DProj_0H3B(
@@ -8130,7 +7664,6 @@ constexpr const TFunction kFunction_texture2DProj_0H3B(
     BuiltInParameters::p0H3B0B1C,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texture2DProj_0H3B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureCube_0J2B(
@@ -8140,7 +7673,6 @@ constexpr const TFunction kFunction_textureCube_0J2B(
     BuiltInParameters::p0J2B2B2B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureCube_0J2B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture2D_0L1B(
@@ -8150,7 +7682,6 @@ constexpr const TFunction kFunction_texture2D_0L1B(
     BuiltInParameters::p0L1B0B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texture2D_0L1B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture2DProj_0L2B(
@@ -8160,7 +7691,6 @@ constexpr const TFunction kFunction_texture2DProj_0L2B(
     BuiltInParameters::p0L2B0B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texture2DProj_0L2B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture2DProj_0L3B(
@@ -8170,7 +7700,6 @@ constexpr const TFunction kFunction_texture2DProj_0L3B(
     BuiltInParameters::p0L3B0B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texture2DProj_0L3B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture2DRect_0N1B(
@@ -8180,7 +7709,6 @@ constexpr const TFunction kFunction_texture2DRect_0N1B(
     BuiltInParameters::p0N1B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texture2DRect_0N1B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture2DRectProj_0N2B(
@@ -8190,7 +7718,6 @@ constexpr const TFunction kFunction_texture2DRectProj_0N2B(
     BuiltInParameters::p0N2B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texture2DRectProj_0N2B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture2DRectProj_0N3B(
@@ -8200,7 +7727,6 @@ constexpr const TFunction kFunction_texture2DRectProj_0N3B(
     BuiltInParameters::p0N3B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texture2DRectProj_0N3B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture_0N1B(
@@ -8210,7 +7736,6 @@ constexpr const TFunction kFunction_texture_0N1B(
     BuiltInParameters::p0N1B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texture_0N1B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProj_0N2B(
@@ -8220,7 +7745,6 @@ constexpr const TFunction kFunction_textureProj_0N2B(
     BuiltInParameters::p0N2B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProj_0N2B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProj_0N3B(
@@ -8230,7 +7754,6 @@ constexpr const TFunction kFunction_textureProj_0N3B(
     BuiltInParameters::p0N3B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProj_0N3B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture2DGradEXT_0H1B1B1B(
@@ -8240,7 +7763,6 @@ constexpr const TFunction kFunction_texture2DGradEXT_0H1B1B1B(
     BuiltInParameters::p0H1B1B1B1C,
     4,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texture2DGradEXT_0H1B1B1B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture2DProjGradEXT_0H2B1B1B(
@@ -8250,7 +7772,6 @@ constexpr const TFunction kFunction_texture2DProjGradEXT_0H2B1B1B(
     BuiltInParameters::p0H2B1B1B1C,
     4,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texture2DProjGradEXT_0H2B1B1B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture2DProjGradEXT_0H3B1B1B(
@@ -8260,7 +7781,6 @@ constexpr const TFunction kFunction_texture2DProjGradEXT_0H3B1B1B(
     BuiltInParameters::p0H3B1B1B1C,
     4,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texture2DProjGradEXT_0H3B1B1B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureCubeGradEXT_0J2B2B2B(
@@ -8270,7 +7790,6 @@ constexpr const TFunction kFunction_textureCubeGradEXT_0J2B2B2B(
     BuiltInParameters::p0J2B2B2B,
     4,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureCubeGradEXT_0J2B2B2B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture2D_0H1B0B(
@@ -8280,7 +7799,6 @@ constexpr const TFunction kFunction_texture2D_0H1B0B(
     BuiltInParameters::p0H1B0B1C,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texture2D_0H1B0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture2DProj_0H2B0B(
@@ -8290,7 +7808,6 @@ constexpr const TFunction kFunction_texture2DProj_0H2B0B(
     BuiltInParameters::p0H2B0B1C,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texture2DProj_0H2B0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture2DProj_0H3B0B(
@@ -8300,7 +7817,6 @@ constexpr const TFunction kFunction_texture2DProj_0H3B0B(
     BuiltInParameters::p0H3B0B1C,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texture2DProj_0H3B0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureCube_0J2B0B(
@@ -8310,7 +7826,6 @@ constexpr const TFunction kFunction_textureCube_0J2B0B(
     BuiltInParameters::p0J2B0B,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureCube_0J2B0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_dFdxExt_0B(
@@ -8320,7 +7835,6 @@ constexpr const TFunction kFunction_dFdxExt_0B(
     BuiltInParameters::p0B0C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::dFdxExt_0B,
     EOpDFdx,
     false);
 constexpr const TFunction kFunction_dFdxExt_1B(
@@ -8330,7 +7844,6 @@ constexpr const TFunction kFunction_dFdxExt_1B(
     BuiltInParameters::p1B1B0B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::dFdxExt_1B,
     EOpDFdx,
     false);
 constexpr const TFunction kFunction_dFdxExt_2B(
@@ -8340,7 +7853,6 @@ constexpr const TFunction kFunction_dFdxExt_2B(
     BuiltInParameters::p2B2C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::dFdxExt_2B,
     EOpDFdx,
     false);
 constexpr const TFunction kFunction_dFdxExt_3B(
@@ -8350,7 +7862,6 @@ constexpr const TFunction kFunction_dFdxExt_3B(
     BuiltInParameters::p3B1B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::dFdxExt_3B,
     EOpDFdx,
     false);
 constexpr const TFunction kFunction_dFdyExt_0B(
@@ -8360,7 +7871,6 @@ constexpr const TFunction kFunction_dFdyExt_0B(
     BuiltInParameters::p0B0C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::dFdyExt_0B,
     EOpDFdy,
     false);
 constexpr const TFunction kFunction_dFdyExt_1B(
@@ -8370,7 +7880,6 @@ constexpr const TFunction kFunction_dFdyExt_1B(
     BuiltInParameters::p1B1B0B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::dFdyExt_1B,
     EOpDFdy,
     false);
 constexpr const TFunction kFunction_dFdyExt_2B(
@@ -8380,7 +7889,6 @@ constexpr const TFunction kFunction_dFdyExt_2B(
     BuiltInParameters::p2B2C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::dFdyExt_2B,
     EOpDFdy,
     false);
 constexpr const TFunction kFunction_dFdyExt_3B(
@@ -8390,7 +7898,6 @@ constexpr const TFunction kFunction_dFdyExt_3B(
     BuiltInParameters::p3B1B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::dFdyExt_3B,
     EOpDFdy,
     false);
 constexpr const TFunction kFunction_fwidthExt_0B(
@@ -8400,7 +7907,6 @@ constexpr const TFunction kFunction_fwidthExt_0B(
     BuiltInParameters::p0B0C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::fwidthExt_0B,
     EOpFwidth,
     false);
 constexpr const TFunction kFunction_fwidthExt_1B(
@@ -8410,7 +7916,6 @@ constexpr const TFunction kFunction_fwidthExt_1B(
     BuiltInParameters::p1B1B0B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::fwidthExt_1B,
     EOpFwidth,
     false);
 constexpr const TFunction kFunction_fwidthExt_2B(
@@ -8420,7 +7925,6 @@ constexpr const TFunction kFunction_fwidthExt_2B(
     BuiltInParameters::p2B2C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::fwidthExt_2B,
     EOpFwidth,
     false);
 constexpr const TFunction kFunction_fwidthExt_3B(
@@ -8430,7 +7934,6 @@ constexpr const TFunction kFunction_fwidthExt_3B(
     BuiltInParameters::p3B1B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::fwidthExt_3B,
     EOpFwidth,
     false);
 constexpr const TFunction kFunction_texture2DLodEXT_0H1B0B(
@@ -8440,7 +7943,6 @@ constexpr const TFunction kFunction_texture2DLodEXT_0H1B0B(
     BuiltInParameters::p0H1B0B1C,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texture2DLodEXT_0H1B0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture2DProjLodEXT_0H2B0B(
@@ -8450,7 +7952,6 @@ constexpr const TFunction kFunction_texture2DProjLodEXT_0H2B0B(
     BuiltInParameters::p0H2B0B1C,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texture2DProjLodEXT_0H2B0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture2DProjLodEXT_0H3B0B(
@@ -8460,7 +7961,6 @@ constexpr const TFunction kFunction_texture2DProjLodEXT_0H3B0B(
     BuiltInParameters::p0H3B0B1C,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texture2DProjLodEXT_0H3B0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureCubeLodEXT_0J2B0B(
@@ -8470,7 +7970,6 @@ constexpr const TFunction kFunction_textureCubeLodEXT_0J2B0B(
     BuiltInParameters::p0J2B0B,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureCubeLodEXT_0J2B0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture2DLod_0H1B0B(
@@ -8480,7 +7979,6 @@ constexpr const TFunction kFunction_texture2DLod_0H1B0B(
     BuiltInParameters::p0H1B0B1C,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texture2DLod_0H1B0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture2DProjLod_0H2B0B(
@@ -8490,7 +7988,6 @@ constexpr const TFunction kFunction_texture2DProjLod_0H2B0B(
     BuiltInParameters::p0H2B0B1C,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texture2DProjLod_0H2B0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture2DProjLod_0H3B0B(
@@ -8500,7 +7997,6 @@ constexpr const TFunction kFunction_texture2DProjLod_0H3B0B(
     BuiltInParameters::p0H3B0B1C,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texture2DProjLod_0H3B0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureCubeLod_0J2B0B(
@@ -8510,7 +8006,6 @@ constexpr const TFunction kFunction_textureCubeLod_0J2B0B(
     BuiltInParameters::p0J2B0B,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureCubeLod_0J2B0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture_0H1B(
@@ -8520,7 +8015,6 @@ constexpr const TFunction kFunction_texture_0H1B(
     BuiltInParameters::p0H1B1B1B1C,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texture_0H1B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture_0P1B(
@@ -8530,7 +8024,6 @@ constexpr const TFunction kFunction_texture_0P1B(
     BuiltInParameters::p0P1B0C,
     2,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texture_0P1B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture_0U1B(
@@ -8540,7 +8033,6 @@ constexpr const TFunction kFunction_texture_0U1B(
     BuiltInParameters::p0U1B0B1C,
     2,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texture_0U1B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture_0I2B(
@@ -8550,7 +8042,6 @@ constexpr const TFunction kFunction_texture_0I2B(
     BuiltInParameters::p0I2B0B2C,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texture_0I2B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture_0Q2B(
@@ -8560,7 +8051,6 @@ constexpr const TFunction kFunction_texture_0Q2B(
     BuiltInParameters::p0Q2B0B2C,
     2,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texture_0Q2B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture_0V2B(
@@ -8570,7 +8060,6 @@ constexpr const TFunction kFunction_texture_0V2B(
     BuiltInParameters::p0V2B2B2B2C,
     2,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texture_0V2B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture_0J2B(
@@ -8580,7 +8069,6 @@ constexpr const TFunction kFunction_texture_0J2B(
     BuiltInParameters::p0J2B2B2B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texture_0J2B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture_0R2B(
@@ -8590,7 +8078,6 @@ constexpr const TFunction kFunction_texture_0R2B(
     BuiltInParameters::p0R2B2B2B,
     2,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texture_0R2B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture_0W2B(
@@ -8600,7 +8087,6 @@ constexpr const TFunction kFunction_texture_0W2B(
     BuiltInParameters::p0W2B0B,
     2,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texture_0W2B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture_0K2B(
@@ -8610,7 +8096,6 @@ constexpr const TFunction kFunction_texture_0K2B(
     BuiltInParameters::p0K2B0B1C,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texture_0K2B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture_0S2B(
@@ -8620,7 +8105,6 @@ constexpr const TFunction kFunction_texture_0S2B(
     BuiltInParameters::p0S2B0B1C,
     2,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texture_0S2B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture_0X2B(
@@ -8630,7 +8114,6 @@ constexpr const TFunction kFunction_texture_0X2B(
     BuiltInParameters::p0X2B1C0C,
     2,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texture_0X2B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProj_0H2B(
@@ -8640,7 +8123,6 @@ constexpr const TFunction kFunction_textureProj_0H2B(
     BuiltInParameters::p0H2B0B1C,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProj_0H2B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProj_0P2B(
@@ -8650,7 +8132,6 @@ constexpr const TFunction kFunction_textureProj_0P2B(
     BuiltInParameters::p0P2B0B1C,
     2,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProj_0P2B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProj_0U2B(
@@ -8660,7 +8141,6 @@ constexpr const TFunction kFunction_textureProj_0U2B(
     BuiltInParameters::p0U2B1B1B1C,
     2,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProj_0U2B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProj_0H3B(
@@ -8670,7 +8150,6 @@ constexpr const TFunction kFunction_textureProj_0H3B(
     BuiltInParameters::p0H3B0B1C,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProj_0H3B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProj_0P3B(
@@ -8680,7 +8159,6 @@ constexpr const TFunction kFunction_textureProj_0P3B(
     BuiltInParameters::p0P3B0B1C,
     2,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProj_0P3B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProj_0U3B(
@@ -8690,7 +8168,6 @@ constexpr const TFunction kFunction_textureProj_0U3B(
     BuiltInParameters::p0U3B1C0B,
     2,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProj_0U3B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProj_0I3B(
@@ -8700,7 +8177,6 @@ constexpr const TFunction kFunction_textureProj_0I3B(
     BuiltInParameters::p0I3B2C0B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProj_0I3B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProj_0Q3B(
@@ -8710,7 +8186,6 @@ constexpr const TFunction kFunction_textureProj_0Q3B(
     BuiltInParameters::p0Q3B0B2C,
     2,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProj_0Q3B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProj_0V3B(
@@ -8720,7 +8195,6 @@ constexpr const TFunction kFunction_textureProj_0V3B(
     BuiltInParameters::p0V3B2B2B2C,
     2,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProj_0V3B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureLod_0H1B0B(
@@ -8730,7 +8204,6 @@ constexpr const TFunction kFunction_textureLod_0H1B0B(
     BuiltInParameters::p0H1B0B1C,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureLod_0H1B0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureLod_0P1B0B(
@@ -8740,7 +8213,6 @@ constexpr const TFunction kFunction_textureLod_0P1B0B(
     BuiltInParameters::p0P1B0B1C,
     3,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureLod_0P1B0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureLod_0U1B0B(
@@ -8750,7 +8222,6 @@ constexpr const TFunction kFunction_textureLod_0U1B0B(
     BuiltInParameters::p0U1B0B1C,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureLod_0U1B0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureLod_0I2B0B(
@@ -8760,7 +8231,6 @@ constexpr const TFunction kFunction_textureLod_0I2B0B(
     BuiltInParameters::p0I2B0B2C,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureLod_0I2B0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureLod_0Q2B0B(
@@ -8770,7 +8240,6 @@ constexpr const TFunction kFunction_textureLod_0Q2B0B(
     BuiltInParameters::p0Q2B0B2C,
     3,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureLod_0Q2B0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureLod_0V2B0B(
@@ -8780,7 +8249,6 @@ constexpr const TFunction kFunction_textureLod_0V2B0B(
     BuiltInParameters::p0V2B0B2C,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureLod_0V2B0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureLod_0J2B0B(
@@ -8790,7 +8258,6 @@ constexpr const TFunction kFunction_textureLod_0J2B0B(
     BuiltInParameters::p0J2B0B,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureLod_0J2B0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureLod_0R2B0B(
@@ -8800,7 +8267,6 @@ constexpr const TFunction kFunction_textureLod_0R2B0B(
     BuiltInParameters::p0R2B0B,
     3,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureLod_0R2B0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureLod_0W2B0B(
@@ -8810,7 +8276,6 @@ constexpr const TFunction kFunction_textureLod_0W2B0B(
     BuiltInParameters::p0W2B0B,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureLod_0W2B0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureLod_0K2B0B(
@@ -8820,7 +8285,6 @@ constexpr const TFunction kFunction_textureLod_0K2B0B(
     BuiltInParameters::p0K2B0B1C,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureLod_0K2B0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureLod_0S2B0B(
@@ -8830,7 +8294,6 @@ constexpr const TFunction kFunction_textureLod_0S2B0B(
     BuiltInParameters::p0S2B0B1C,
     3,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureLod_0S2B0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureLod_0X2B0B(
@@ -8840,7 +8303,6 @@ constexpr const TFunction kFunction_textureLod_0X2B0B(
     BuiltInParameters::p0X2B0B1C,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureLod_0X2B0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture_0Z2B(
@@ -8850,7 +8312,6 @@ constexpr const TFunction kFunction_texture_0Z2B(
     BuiltInParameters::p0Z2B1B1B1C,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::texture_0Z2B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture_0a3B(
@@ -8860,7 +8321,6 @@ constexpr const TFunction kFunction_texture_0a3B(
     BuiltInParameters::p0a3B2B2B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::texture_0a3B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture_0b3B(
@@ -8870,7 +8330,6 @@ constexpr const TFunction kFunction_texture_0b3B(
     BuiltInParameters::p0b3B1B1B1C,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::texture_0b3B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProj_0Z3B(
@@ -8880,7 +8339,6 @@ constexpr const TFunction kFunction_textureProj_0Z3B(
     BuiltInParameters::p0Z3B0B1C,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::textureProj_0Z3B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureLod_0Z2B0B(
@@ -8890,7 +8348,6 @@ constexpr const TFunction kFunction_textureLod_0Z2B0B(
     BuiltInParameters::p0Z2B0B1C,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::textureLod_0Z2B0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureSize_0H0C(
@@ -8900,7 +8357,6 @@ constexpr const TFunction kFunction_textureSize_0H0C(
     BuiltInParameters::p0H0C,
     2,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::textureSize_0H0C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureSize_0P0C(
@@ -8910,7 +8366,6 @@ constexpr const TFunction kFunction_textureSize_0P0C(
     BuiltInParameters::p0P0C,
     2,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::textureSize_0P0C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureSize_0U0C(
@@ -8920,7 +8375,6 @@ constexpr const TFunction kFunction_textureSize_0U0C(
     BuiltInParameters::p0U0C,
     2,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::textureSize_0U0C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureSize_0I0C(
@@ -8930,7 +8384,6 @@ constexpr const TFunction kFunction_textureSize_0I0C(
     BuiltInParameters::p0I0C,
     2,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::textureSize_0I0C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureSize_0Q0C(
@@ -8940,7 +8393,6 @@ constexpr const TFunction kFunction_textureSize_0Q0C(
     BuiltInParameters::p0Q0C,
     2,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::textureSize_0Q0C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureSize_0V0C(
@@ -8950,7 +8402,6 @@ constexpr const TFunction kFunction_textureSize_0V0C(
     BuiltInParameters::p0V0C,
     2,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::textureSize_0V0C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureSize_0J0C(
@@ -8960,7 +8411,6 @@ constexpr const TFunction kFunction_textureSize_0J0C(
     BuiltInParameters::p0J0C,
     2,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::textureSize_0J0C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureSize_0R0C(
@@ -8970,7 +8420,6 @@ constexpr const TFunction kFunction_textureSize_0R0C(
     BuiltInParameters::p0R0C,
     2,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::textureSize_0R0C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureSize_0W0C(
@@ -8980,7 +8429,6 @@ constexpr const TFunction kFunction_textureSize_0W0C(
     BuiltInParameters::p0W0C,
     2,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::textureSize_0W0C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureSize_0K0C(
@@ -8990,7 +8438,6 @@ constexpr const TFunction kFunction_textureSize_0K0C(
     BuiltInParameters::p0K0C,
     2,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::textureSize_0K0C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureSize_0S0C(
@@ -9000,7 +8447,6 @@ constexpr const TFunction kFunction_textureSize_0S0C(
     BuiltInParameters::p0S0C,
     2,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::textureSize_0S0C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureSize_0X0C(
@@ -9010,7 +8456,6 @@ constexpr const TFunction kFunction_textureSize_0X0C(
     BuiltInParameters::p0X0C,
     2,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::textureSize_0X0C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureSize_0Z0C(
@@ -9020,7 +8465,6 @@ constexpr const TFunction kFunction_textureSize_0Z0C(
     BuiltInParameters::p0Z0C,
     2,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::textureSize_0Z0C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureSize_0a0C(
@@ -9030,7 +8474,6 @@ constexpr const TFunction kFunction_textureSize_0a0C(
     BuiltInParameters::p0a0C,
     2,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::textureSize_0a0C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureSize_0b0C(
@@ -9040,7 +8483,6 @@ constexpr const TFunction kFunction_textureSize_0b0C(
     BuiltInParameters::p0b0C,
     2,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::textureSize_0b0C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureSize_0O(
@@ -9050,7 +8492,6 @@ constexpr const TFunction kFunction_textureSize_0O(
     BuiltInParameters::p0O1C0C,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::textureSize_0O,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureSize_0T(
@@ -9060,7 +8501,6 @@ constexpr const TFunction kFunction_textureSize_0T(
     BuiltInParameters::p0T1C0C,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::textureSize_0T,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureSize_0Y(
@@ -9070,7 +8510,6 @@ constexpr const TFunction kFunction_textureSize_0Y(
     BuiltInParameters::p0Y1C0C,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::textureSize_0Y,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjLod_0H2B0B(
@@ -9080,7 +8519,6 @@ constexpr const TFunction kFunction_textureProjLod_0H2B0B(
     BuiltInParameters::p0H2B0B1C,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProjLod_0H2B0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjLod_0P2B0B(
@@ -9090,7 +8528,6 @@ constexpr const TFunction kFunction_textureProjLod_0P2B0B(
     BuiltInParameters::p0P2B0B1C,
     3,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProjLod_0P2B0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjLod_0U2B0B(
@@ -9100,7 +8537,6 @@ constexpr const TFunction kFunction_textureProjLod_0U2B0B(
     BuiltInParameters::p0U2B0B1C,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProjLod_0U2B0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjLod_0H3B0B(
@@ -9110,7 +8546,6 @@ constexpr const TFunction kFunction_textureProjLod_0H3B0B(
     BuiltInParameters::p0H3B0B1C,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProjLod_0H3B0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjLod_0P3B0B(
@@ -9120,7 +8555,6 @@ constexpr const TFunction kFunction_textureProjLod_0P3B0B(
     BuiltInParameters::p0P3B0B1C,
     3,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProjLod_0P3B0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjLod_0U3B0B(
@@ -9130,7 +8564,6 @@ constexpr const TFunction kFunction_textureProjLod_0U3B0B(
     BuiltInParameters::p0U3B0B1C,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProjLod_0U3B0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjLod_0I3B0B(
@@ -9140,7 +8573,6 @@ constexpr const TFunction kFunction_textureProjLod_0I3B0B(
     BuiltInParameters::p0I3B0B2C,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProjLod_0I3B0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjLod_0Q3B0B(
@@ -9150,7 +8582,6 @@ constexpr const TFunction kFunction_textureProjLod_0Q3B0B(
     BuiltInParameters::p0Q3B0B2C,
     3,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProjLod_0Q3B0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjLod_0V3B0B(
@@ -9160,7 +8591,6 @@ constexpr const TFunction kFunction_textureProjLod_0V3B0B(
     BuiltInParameters::p0V3B0B2C,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProjLod_0V3B0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjLod_0Z3B0B(
@@ -9170,7 +8600,6 @@ constexpr const TFunction kFunction_textureProjLod_0Z3B0B(
     BuiltInParameters::p0Z3B0B1C,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::textureProjLod_0Z3B0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texelFetch_0H1C0C(
@@ -9180,7 +8609,6 @@ constexpr const TFunction kFunction_texelFetch_0H1C0C(
     BuiltInParameters::p0H1C0C1C,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texelFetch_0H1C0C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texelFetch_0P1C0C(
@@ -9190,7 +8618,6 @@ constexpr const TFunction kFunction_texelFetch_0P1C0C(
     BuiltInParameters::p0P1C0C1C,
     3,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texelFetch_0P1C0C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texelFetch_0U1C0C(
@@ -9200,7 +8627,6 @@ constexpr const TFunction kFunction_texelFetch_0U1C0C(
     BuiltInParameters::p0U1C0C1C,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texelFetch_0U1C0C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texelFetch_0I2C0C(
@@ -9210,7 +8636,6 @@ constexpr const TFunction kFunction_texelFetch_0I2C0C(
     BuiltInParameters::p0I2C0C2C,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texelFetch_0I2C0C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texelFetch_0Q2C0C(
@@ -9220,7 +8645,6 @@ constexpr const TFunction kFunction_texelFetch_0Q2C0C(
     BuiltInParameters::p0Q2C0C2C,
     3,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texelFetch_0Q2C0C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texelFetch_0V2C0C(
@@ -9230,7 +8654,6 @@ constexpr const TFunction kFunction_texelFetch_0V2C0C(
     BuiltInParameters::p0V2C0C2C,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texelFetch_0V2C0C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texelFetch_0K2C0C(
@@ -9240,7 +8663,6 @@ constexpr const TFunction kFunction_texelFetch_0K2C0C(
     BuiltInParameters::p0K2C0C1C,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texelFetch_0K2C0C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texelFetch_0S2C0C(
@@ -9250,7 +8672,6 @@ constexpr const TFunction kFunction_texelFetch_0S2C0C(
     BuiltInParameters::p0S2C0C1C,
     3,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texelFetch_0S2C0C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texelFetch_0X2C0C(
@@ -9260,7 +8681,6 @@ constexpr const TFunction kFunction_texelFetch_0X2C0C(
     BuiltInParameters::p0X2C0C1C,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texelFetch_0X2C0C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGrad_0H1B1B1B(
@@ -9270,7 +8690,6 @@ constexpr const TFunction kFunction_textureGrad_0H1B1B1B(
     BuiltInParameters::p0H1B1B1B1C,
     4,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureGrad_0H1B1B1B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGrad_0P1B1B1B(
@@ -9280,7 +8699,6 @@ constexpr const TFunction kFunction_textureGrad_0P1B1B1B(
     BuiltInParameters::p0P1B1B1B1C,
     4,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureGrad_0P1B1B1B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGrad_0U1B1B1B(
@@ -9290,7 +8708,6 @@ constexpr const TFunction kFunction_textureGrad_0U1B1B1B(
     BuiltInParameters::p0U1B1B1B1C,
     4,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureGrad_0U1B1B1B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGrad_0I2B2B2B(
@@ -9300,7 +8717,6 @@ constexpr const TFunction kFunction_textureGrad_0I2B2B2B(
     BuiltInParameters::p0I2B2B2B2C,
     4,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureGrad_0I2B2B2B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGrad_0Q2B2B2B(
@@ -9310,7 +8726,6 @@ constexpr const TFunction kFunction_textureGrad_0Q2B2B2B(
     BuiltInParameters::p0Q2B2B2B2C,
     4,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureGrad_0Q2B2B2B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGrad_0V2B2B2B(
@@ -9320,7 +8735,6 @@ constexpr const TFunction kFunction_textureGrad_0V2B2B2B(
     BuiltInParameters::p0V2B2B2B2C,
     4,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureGrad_0V2B2B2B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGrad_0J2B2B2B(
@@ -9330,7 +8744,6 @@ constexpr const TFunction kFunction_textureGrad_0J2B2B2B(
     BuiltInParameters::p0J2B2B2B,
     4,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureGrad_0J2B2B2B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGrad_0R2B2B2B(
@@ -9340,7 +8753,6 @@ constexpr const TFunction kFunction_textureGrad_0R2B2B2B(
     BuiltInParameters::p0R2B2B2B,
     4,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureGrad_0R2B2B2B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGrad_0W2B2B2B(
@@ -9350,7 +8762,6 @@ constexpr const TFunction kFunction_textureGrad_0W2B2B2B(
     BuiltInParameters::p0W2B2B2B,
     4,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureGrad_0W2B2B2B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGrad_0Z2B1B1B(
@@ -9360,7 +8771,6 @@ constexpr const TFunction kFunction_textureGrad_0Z2B1B1B(
     BuiltInParameters::p0Z2B1B1B1C,
     4,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::textureGrad_0Z2B1B1B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGrad_0a3B2B2B(
@@ -9370,7 +8780,6 @@ constexpr const TFunction kFunction_textureGrad_0a3B2B2B(
     BuiltInParameters::p0a3B2B2B,
     4,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::textureGrad_0a3B2B2B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGrad_0K2B1B1B(
@@ -9380,7 +8789,6 @@ constexpr const TFunction kFunction_textureGrad_0K2B1B1B(
     BuiltInParameters::p0K2B1B1B1C,
     4,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureGrad_0K2B1B1B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGrad_0S2B1B1B(
@@ -9390,7 +8798,6 @@ constexpr const TFunction kFunction_textureGrad_0S2B1B1B(
     BuiltInParameters::p0S2B1B1B1C,
     4,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureGrad_0S2B1B1B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGrad_0X2B1B1B(
@@ -9400,7 +8807,6 @@ constexpr const TFunction kFunction_textureGrad_0X2B1B1B(
     BuiltInParameters::p0X2B1B1B1C,
     4,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureGrad_0X2B1B1B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGrad_0b3B1B1B(
@@ -9410,7 +8816,6 @@ constexpr const TFunction kFunction_textureGrad_0b3B1B1B(
     BuiltInParameters::p0b3B1B1B1C,
     4,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::textureGrad_0b3B1B1B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjGrad_0H2B1B1B(
@@ -9420,7 +8825,6 @@ constexpr const TFunction kFunction_textureProjGrad_0H2B1B1B(
     BuiltInParameters::p0H2B1B1B1C,
     4,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProjGrad_0H2B1B1B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjGrad_0P2B1B1B(
@@ -9430,7 +8834,6 @@ constexpr const TFunction kFunction_textureProjGrad_0P2B1B1B(
     BuiltInParameters::p0P2B1B1B1C,
     4,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProjGrad_0P2B1B1B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjGrad_0U2B1B1B(
@@ -9440,7 +8843,6 @@ constexpr const TFunction kFunction_textureProjGrad_0U2B1B1B(
     BuiltInParameters::p0U2B1B1B1C,
     4,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProjGrad_0U2B1B1B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjGrad_0H3B1B1B(
@@ -9450,7 +8852,6 @@ constexpr const TFunction kFunction_textureProjGrad_0H3B1B1B(
     BuiltInParameters::p0H3B1B1B1C,
     4,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProjGrad_0H3B1B1B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjGrad_0P3B1B1B(
@@ -9460,7 +8861,6 @@ constexpr const TFunction kFunction_textureProjGrad_0P3B1B1B(
     BuiltInParameters::p0P3B1B1B1C,
     4,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProjGrad_0P3B1B1B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjGrad_0U3B1B1B(
@@ -9470,7 +8870,6 @@ constexpr const TFunction kFunction_textureProjGrad_0U3B1B1B(
     BuiltInParameters::p0U3B1B1B1C,
     4,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProjGrad_0U3B1B1B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjGrad_0I3B2B2B(
@@ -9480,7 +8879,6 @@ constexpr const TFunction kFunction_textureProjGrad_0I3B2B2B(
     BuiltInParameters::p0I3B2B2B2C,
     4,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProjGrad_0I3B2B2B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjGrad_0Q3B2B2B(
@@ -9490,7 +8888,6 @@ constexpr const TFunction kFunction_textureProjGrad_0Q3B2B2B(
     BuiltInParameters::p0Q3B2B2B2C,
     4,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProjGrad_0Q3B2B2B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjGrad_0V3B2B2B(
@@ -9500,7 +8897,6 @@ constexpr const TFunction kFunction_textureProjGrad_0V3B2B2B(
     BuiltInParameters::p0V3B2B2B2C,
     4,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProjGrad_0V3B2B2B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjGrad_0Z3B1B1B(
@@ -9510,7 +8906,6 @@ constexpr const TFunction kFunction_textureProjGrad_0Z3B1B1B(
     BuiltInParameters::p0Z3B1B1B1C,
     4,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::textureProjGrad_0Z3B1B1B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureOffset_0H1B1C(
@@ -9520,7 +8915,6 @@ constexpr const TFunction kFunction_textureOffset_0H1B1C(
     BuiltInParameters::p0H1B1C0B,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureOffset_0H1B1C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureOffset_0P1B1C(
@@ -9530,7 +8924,6 @@ constexpr const TFunction kFunction_textureOffset_0P1B1C(
     BuiltInParameters::p0P1B1C0B,
     3,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureOffset_0P1B1C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureOffset_0U1B1C(
@@ -9540,7 +8933,6 @@ constexpr const TFunction kFunction_textureOffset_0U1B1C(
     BuiltInParameters::p0U1B1C0C,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureOffset_0U1B1C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureOffset_0I2B2C(
@@ -9550,7 +8942,6 @@ constexpr const TFunction kFunction_textureOffset_0I2B2C(
     BuiltInParameters::p0I2B2C0B,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureOffset_0I2B2C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureOffset_0Q2B2C(
@@ -9560,7 +8951,6 @@ constexpr const TFunction kFunction_textureOffset_0Q2B2C(
     BuiltInParameters::p0Q2B2C0B,
     3,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureOffset_0Q2B2C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureOffset_0V2B2C(
@@ -9570,7 +8960,6 @@ constexpr const TFunction kFunction_textureOffset_0V2B2C(
     BuiltInParameters::p0V2B2C0B,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureOffset_0V2B2C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureOffset_0Z2B1C(
@@ -9580,7 +8969,6 @@ constexpr const TFunction kFunction_textureOffset_0Z2B1C(
     BuiltInParameters::p0Z2B1C0B,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::textureOffset_0Z2B1C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureOffset_0K2B1C(
@@ -9590,7 +8978,6 @@ constexpr const TFunction kFunction_textureOffset_0K2B1C(
     BuiltInParameters::p0K2B1C0B,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureOffset_0K2B1C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureOffset_0S2B1C(
@@ -9600,7 +8987,6 @@ constexpr const TFunction kFunction_textureOffset_0S2B1C(
     BuiltInParameters::p0S2B1C0B,
     3,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureOffset_0S2B1C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureOffset_0X2B1C(
@@ -9610,7 +8996,6 @@ constexpr const TFunction kFunction_textureOffset_0X2B1C(
     BuiltInParameters::p0X2B1C0C,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureOffset_0X2B1C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjOffset_0H2B1C(
@@ -9620,7 +9005,6 @@ constexpr const TFunction kFunction_textureProjOffset_0H2B1C(
     BuiltInParameters::p0H2B1C0B,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProjOffset_0H2B1C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjOffset_0P2B1C(
@@ -9630,7 +9014,6 @@ constexpr const TFunction kFunction_textureProjOffset_0P2B1C(
     BuiltInParameters::p0P2B1C0B,
     3,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProjOffset_0P2B1C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjOffset_0U2B1C(
@@ -9640,7 +9023,6 @@ constexpr const TFunction kFunction_textureProjOffset_0U2B1C(
     BuiltInParameters::p0U2B1C0B,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProjOffset_0U2B1C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjOffset_0H3B1C(
@@ -9650,7 +9032,6 @@ constexpr const TFunction kFunction_textureProjOffset_0H3B1C(
     BuiltInParameters::p0H3B1C0B,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProjOffset_0H3B1C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjOffset_0P3B1C(
@@ -9660,7 +9041,6 @@ constexpr const TFunction kFunction_textureProjOffset_0P3B1C(
     BuiltInParameters::p0P3B1C0B,
     3,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProjOffset_0P3B1C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjOffset_0U3B1C(
@@ -9670,7 +9050,6 @@ constexpr const TFunction kFunction_textureProjOffset_0U3B1C(
     BuiltInParameters::p0U3B1C0B,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProjOffset_0U3B1C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjOffset_0I3B2C(
@@ -9680,7 +9059,6 @@ constexpr const TFunction kFunction_textureProjOffset_0I3B2C(
     BuiltInParameters::p0I3B2C0B,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProjOffset_0I3B2C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjOffset_0Q3B2C(
@@ -9690,7 +9068,6 @@ constexpr const TFunction kFunction_textureProjOffset_0Q3B2C(
     BuiltInParameters::p0Q3B2C0B,
     3,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProjOffset_0Q3B2C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjOffset_0V3B2C(
@@ -9700,7 +9077,6 @@ constexpr const TFunction kFunction_textureProjOffset_0V3B2C(
     BuiltInParameters::p0V3B2C0B,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProjOffset_0V3B2C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjOffset_0Z3B1C(
@@ -9710,7 +9086,6 @@ constexpr const TFunction kFunction_textureProjOffset_0Z3B1C(
     BuiltInParameters::p0Z3B1C0B,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::textureProjOffset_0Z3B1C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureLodOffset_0H1B0B1C(
@@ -9720,7 +9095,6 @@ constexpr const TFunction kFunction_textureLodOffset_0H1B0B1C(
     BuiltInParameters::p0H1B0B1C,
     4,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureLodOffset_0H1B0B1C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureLodOffset_0P1B0B1C(
@@ -9730,7 +9104,6 @@ constexpr const TFunction kFunction_textureLodOffset_0P1B0B1C(
     BuiltInParameters::p0P1B0B1C,
     4,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureLodOffset_0P1B0B1C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureLodOffset_0U1B0B1C(
@@ -9740,7 +9113,6 @@ constexpr const TFunction kFunction_textureLodOffset_0U1B0B1C(
     BuiltInParameters::p0U1B0B1C,
     4,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureLodOffset_0U1B0B1C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureLodOffset_0I2B0B2C(
@@ -9750,7 +9122,6 @@ constexpr const TFunction kFunction_textureLodOffset_0I2B0B2C(
     BuiltInParameters::p0I2B0B2C,
     4,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureLodOffset_0I2B0B2C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureLodOffset_0Q2B0B2C(
@@ -9760,7 +9131,6 @@ constexpr const TFunction kFunction_textureLodOffset_0Q2B0B2C(
     BuiltInParameters::p0Q2B0B2C,
     4,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureLodOffset_0Q2B0B2C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureLodOffset_0V2B0B2C(
@@ -9770,7 +9140,6 @@ constexpr const TFunction kFunction_textureLodOffset_0V2B0B2C(
     BuiltInParameters::p0V2B0B2C,
     4,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureLodOffset_0V2B0B2C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureLodOffset_0Z2B0B1C(
@@ -9780,7 +9149,6 @@ constexpr const TFunction kFunction_textureLodOffset_0Z2B0B1C(
     BuiltInParameters::p0Z2B0B1C,
     4,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::textureLodOffset_0Z2B0B1C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureLodOffset_0K2B0B1C(
@@ -9790,7 +9158,6 @@ constexpr const TFunction kFunction_textureLodOffset_0K2B0B1C(
     BuiltInParameters::p0K2B0B1C,
     4,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureLodOffset_0K2B0B1C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureLodOffset_0S2B0B1C(
@@ -9800,7 +9167,6 @@ constexpr const TFunction kFunction_textureLodOffset_0S2B0B1C(
     BuiltInParameters::p0S2B0B1C,
     4,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureLodOffset_0S2B0B1C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureLodOffset_0X2B0B1C(
@@ -9810,7 +9176,6 @@ constexpr const TFunction kFunction_textureLodOffset_0X2B0B1C(
     BuiltInParameters::p0X2B0B1C,
     4,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureLodOffset_0X2B0B1C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjLodOffset_0H2B0B1C(
@@ -9820,7 +9185,6 @@ constexpr const TFunction kFunction_textureProjLodOffset_0H2B0B1C(
     BuiltInParameters::p0H2B0B1C,
     4,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProjLodOffset_0H2B0B1C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjLodOffset_0P2B0B1C(
@@ -9830,7 +9194,6 @@ constexpr const TFunction kFunction_textureProjLodOffset_0P2B0B1C(
     BuiltInParameters::p0P2B0B1C,
     4,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProjLodOffset_0P2B0B1C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjLodOffset_0U2B0B1C(
@@ -9840,7 +9203,6 @@ constexpr const TFunction kFunction_textureProjLodOffset_0U2B0B1C(
     BuiltInParameters::p0U2B0B1C,
     4,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProjLodOffset_0U2B0B1C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjLodOffset_0H3B0B1C(
@@ -9850,7 +9212,6 @@ constexpr const TFunction kFunction_textureProjLodOffset_0H3B0B1C(
     BuiltInParameters::p0H3B0B1C,
     4,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProjLodOffset_0H3B0B1C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjLodOffset_0P3B0B1C(
@@ -9860,7 +9221,6 @@ constexpr const TFunction kFunction_textureProjLodOffset_0P3B0B1C(
     BuiltInParameters::p0P3B0B1C,
     4,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProjLodOffset_0P3B0B1C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjLodOffset_0U3B0B1C(
@@ -9870,7 +9230,6 @@ constexpr const TFunction kFunction_textureProjLodOffset_0U3B0B1C(
     BuiltInParameters::p0U3B0B1C,
     4,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProjLodOffset_0U3B0B1C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjLodOffset_0I3B0B2C(
@@ -9880,7 +9239,6 @@ constexpr const TFunction kFunction_textureProjLodOffset_0I3B0B2C(
     BuiltInParameters::p0I3B0B2C,
     4,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProjLodOffset_0I3B0B2C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjLodOffset_0Q3B0B2C(
@@ -9890,7 +9248,6 @@ constexpr const TFunction kFunction_textureProjLodOffset_0Q3B0B2C(
     BuiltInParameters::p0Q3B0B2C,
     4,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProjLodOffset_0Q3B0B2C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjLodOffset_0V3B0B2C(
@@ -9900,7 +9257,6 @@ constexpr const TFunction kFunction_textureProjLodOffset_0V3B0B2C(
     BuiltInParameters::p0V3B0B2C,
     4,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProjLodOffset_0V3B0B2C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjLodOffset_0Z3B0B1C(
@@ -9910,7 +9266,6 @@ constexpr const TFunction kFunction_textureProjLodOffset_0Z3B0B1C(
     BuiltInParameters::p0Z3B0B1C,
     4,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::textureProjLodOffset_0Z3B0B1C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texelFetchOffset_0H1C0C1C(
@@ -9920,7 +9275,6 @@ constexpr const TFunction kFunction_texelFetchOffset_0H1C0C1C(
     BuiltInParameters::p0H1C0C1C,
     4,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texelFetchOffset_0H1C0C1C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texelFetchOffset_0P1C0C1C(
@@ -9930,7 +9284,6 @@ constexpr const TFunction kFunction_texelFetchOffset_0P1C0C1C(
     BuiltInParameters::p0P1C0C1C,
     4,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texelFetchOffset_0P1C0C1C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texelFetchOffset_0U1C0C1C(
@@ -9940,7 +9293,6 @@ constexpr const TFunction kFunction_texelFetchOffset_0U1C0C1C(
     BuiltInParameters::p0U1C0C1C,
     4,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texelFetchOffset_0U1C0C1C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texelFetchOffset_0I2C0C2C(
@@ -9950,7 +9302,6 @@ constexpr const TFunction kFunction_texelFetchOffset_0I2C0C2C(
     BuiltInParameters::p0I2C0C2C,
     4,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texelFetchOffset_0I2C0C2C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texelFetchOffset_0Q2C0C2C(
@@ -9960,7 +9311,6 @@ constexpr const TFunction kFunction_texelFetchOffset_0Q2C0C2C(
     BuiltInParameters::p0Q2C0C2C,
     4,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texelFetchOffset_0Q2C0C2C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texelFetchOffset_0V2C0C2C(
@@ -9970,7 +9320,6 @@ constexpr const TFunction kFunction_texelFetchOffset_0V2C0C2C(
     BuiltInParameters::p0V2C0C2C,
     4,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texelFetchOffset_0V2C0C2C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texelFetchOffset_0K2C0C1C(
@@ -9980,7 +9329,6 @@ constexpr const TFunction kFunction_texelFetchOffset_0K2C0C1C(
     BuiltInParameters::p0K2C0C1C,
     4,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texelFetchOffset_0K2C0C1C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texelFetchOffset_0S2C0C1C(
@@ -9990,7 +9338,6 @@ constexpr const TFunction kFunction_texelFetchOffset_0S2C0C1C(
     BuiltInParameters::p0S2C0C1C,
     4,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texelFetchOffset_0S2C0C1C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texelFetchOffset_0X2C0C1C(
@@ -10000,7 +9347,6 @@ constexpr const TFunction kFunction_texelFetchOffset_0X2C0C1C(
     BuiltInParameters::p0X2C0C1C,
     4,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texelFetchOffset_0X2C0C1C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGradOffset_0H1B1B1B1C(
@@ -10010,7 +9356,6 @@ constexpr const TFunction kFunction_textureGradOffset_0H1B1B1B1C(
     BuiltInParameters::p0H1B1B1B1C,
     5,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureGradOffset_0H1B1B1B1C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGradOffset_0P1B1B1B1C(
@@ -10020,7 +9365,6 @@ constexpr const TFunction kFunction_textureGradOffset_0P1B1B1B1C(
     BuiltInParameters::p0P1B1B1B1C,
     5,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureGradOffset_0P1B1B1B1C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGradOffset_0U1B1B1B1C(
@@ -10030,7 +9374,6 @@ constexpr const TFunction kFunction_textureGradOffset_0U1B1B1B1C(
     BuiltInParameters::p0U1B1B1B1C,
     5,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureGradOffset_0U1B1B1B1C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGradOffset_0I2B2B2B2C(
@@ -10040,7 +9383,6 @@ constexpr const TFunction kFunction_textureGradOffset_0I2B2B2B2C(
     BuiltInParameters::p0I2B2B2B2C,
     5,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureGradOffset_0I2B2B2B2C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGradOffset_0Q2B2B2B2C(
@@ -10050,7 +9392,6 @@ constexpr const TFunction kFunction_textureGradOffset_0Q2B2B2B2C(
     BuiltInParameters::p0Q2B2B2B2C,
     5,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureGradOffset_0Q2B2B2B2C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGradOffset_0V2B2B2B2C(
@@ -10060,7 +9401,6 @@ constexpr const TFunction kFunction_textureGradOffset_0V2B2B2B2C(
     BuiltInParameters::p0V2B2B2B2C,
     5,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureGradOffset_0V2B2B2B2C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGradOffset_0Z2B1B1B1C(
@@ -10070,7 +9410,6 @@ constexpr const TFunction kFunction_textureGradOffset_0Z2B1B1B1C(
     BuiltInParameters::p0Z2B1B1B1C,
     5,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::textureGradOffset_0Z2B1B1B1C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGradOffset_0K2B1B1B1C(
@@ -10080,7 +9419,6 @@ constexpr const TFunction kFunction_textureGradOffset_0K2B1B1B1C(
     BuiltInParameters::p0K2B1B1B1C,
     5,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureGradOffset_0K2B1B1B1C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGradOffset_0S2B1B1B1C(
@@ -10090,7 +9428,6 @@ constexpr const TFunction kFunction_textureGradOffset_0S2B1B1B1C(
     BuiltInParameters::p0S2B1B1B1C,
     5,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureGradOffset_0S2B1B1B1C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGradOffset_0X2B1B1B1C(
@@ -10100,7 +9437,6 @@ constexpr const TFunction kFunction_textureGradOffset_0X2B1B1B1C(
     BuiltInParameters::p0X2B1B1B1C,
     5,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureGradOffset_0X2B1B1B1C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGradOffset_0b3B1B1B1C(
@@ -10110,7 +9446,6 @@ constexpr const TFunction kFunction_textureGradOffset_0b3B1B1B1C(
     BuiltInParameters::p0b3B1B1B1C,
     5,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::textureGradOffset_0b3B1B1B1C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjGradOffset_0H2B1B1B1C(
@@ -10120,7 +9455,6 @@ constexpr const TFunction kFunction_textureProjGradOffset_0H2B1B1B1C(
     BuiltInParameters::p0H2B1B1B1C,
     5,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProjGradOffset_0H2B1B1B1C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjGradOffset_0P2B1B1B1C(
@@ -10130,7 +9464,6 @@ constexpr const TFunction kFunction_textureProjGradOffset_0P2B1B1B1C(
     BuiltInParameters::p0P2B1B1B1C,
     5,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProjGradOffset_0P2B1B1B1C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjGradOffset_0U2B1B1B1C(
@@ -10140,7 +9473,6 @@ constexpr const TFunction kFunction_textureProjGradOffset_0U2B1B1B1C(
     BuiltInParameters::p0U2B1B1B1C,
     5,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProjGradOffset_0U2B1B1B1C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjGradOffset_0H3B1B1B1C(
@@ -10150,7 +9482,6 @@ constexpr const TFunction kFunction_textureProjGradOffset_0H3B1B1B1C(
     BuiltInParameters::p0H3B1B1B1C,
     5,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProjGradOffset_0H3B1B1B1C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjGradOffset_0P3B1B1B1C(
@@ -10160,7 +9491,6 @@ constexpr const TFunction kFunction_textureProjGradOffset_0P3B1B1B1C(
     BuiltInParameters::p0P3B1B1B1C,
     5,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProjGradOffset_0P3B1B1B1C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjGradOffset_0U3B1B1B1C(
@@ -10170,7 +9500,6 @@ constexpr const TFunction kFunction_textureProjGradOffset_0U3B1B1B1C(
     BuiltInParameters::p0U3B1B1B1C,
     5,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProjGradOffset_0U3B1B1B1C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjGradOffset_0I3B2B2B2C(
@@ -10180,7 +9509,6 @@ constexpr const TFunction kFunction_textureProjGradOffset_0I3B2B2B2C(
     BuiltInParameters::p0I3B2B2B2C,
     5,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProjGradOffset_0I3B2B2B2C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjGradOffset_0Q3B2B2B2C(
@@ -10190,7 +9518,6 @@ constexpr const TFunction kFunction_textureProjGradOffset_0Q3B2B2B2C(
     BuiltInParameters::p0Q3B2B2B2C,
     5,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProjGradOffset_0Q3B2B2B2C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjGradOffset_0V3B2B2B2C(
@@ -10200,7 +9527,6 @@ constexpr const TFunction kFunction_textureProjGradOffset_0V3B2B2B2C(
     BuiltInParameters::p0V3B2B2B2C,
     5,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProjGradOffset_0V3B2B2B2C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjGradOffset_0Z3B1B1B1C(
@@ -10210,7 +9536,6 @@ constexpr const TFunction kFunction_textureProjGradOffset_0Z3B1B1B1C(
     BuiltInParameters::p0Z3B1B1B1C,
     5,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::textureProjGradOffset_0Z3B1B1B1C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureOffset_0H1B1C0B(
@@ -10220,7 +9545,6 @@ constexpr const TFunction kFunction_textureOffset_0H1B1C0B(
     BuiltInParameters::p0H1B1C0B,
     4,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureOffset_0H1B1C0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureOffset_0P1B1C0B(
@@ -10230,7 +9554,6 @@ constexpr const TFunction kFunction_textureOffset_0P1B1C0B(
     BuiltInParameters::p0P1B1C0B,
     4,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureOffset_0P1B1C0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureOffset_0U1B1C0B(
@@ -10240,7 +9563,6 @@ constexpr const TFunction kFunction_textureOffset_0U1B1C0B(
     BuiltInParameters::p0U1B1C0B,
     4,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureOffset_0U1B1C0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureOffset_0I2B2C0B(
@@ -10250,7 +9572,6 @@ constexpr const TFunction kFunction_textureOffset_0I2B2C0B(
     BuiltInParameters::p0I2B2C0B,
     4,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureOffset_0I2B2C0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureOffset_0Q2B2C0B(
@@ -10260,7 +9581,6 @@ constexpr const TFunction kFunction_textureOffset_0Q2B2C0B(
     BuiltInParameters::p0Q2B2C0B,
     4,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureOffset_0Q2B2C0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureOffset_0V2B2C0B(
@@ -10270,7 +9590,6 @@ constexpr const TFunction kFunction_textureOffset_0V2B2C0B(
     BuiltInParameters::p0V2B2C0B,
     4,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureOffset_0V2B2C0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureOffset_0Z2B1C0B(
@@ -10280,7 +9599,6 @@ constexpr const TFunction kFunction_textureOffset_0Z2B1C0B(
     BuiltInParameters::p0Z2B1C0B,
     4,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::textureOffset_0Z2B1C0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureOffset_0K2B1C0B(
@@ -10290,7 +9608,6 @@ constexpr const TFunction kFunction_textureOffset_0K2B1C0B(
     BuiltInParameters::p0K2B1C0B,
     4,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureOffset_0K2B1C0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureOffset_0S2B1C0B(
@@ -10300,7 +9617,6 @@ constexpr const TFunction kFunction_textureOffset_0S2B1C0B(
     BuiltInParameters::p0S2B1C0B,
     4,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureOffset_0S2B1C0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureOffset_0X2B1C0B(
@@ -10310,7 +9626,6 @@ constexpr const TFunction kFunction_textureOffset_0X2B1C0B(
     BuiltInParameters::p0X2B1C0B,
     4,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureOffset_0X2B1C0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjOffset_0H2B1C0B(
@@ -10320,7 +9635,6 @@ constexpr const TFunction kFunction_textureProjOffset_0H2B1C0B(
     BuiltInParameters::p0H2B1C0B,
     4,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProjOffset_0H2B1C0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjOffset_0P2B1C0B(
@@ -10330,7 +9644,6 @@ constexpr const TFunction kFunction_textureProjOffset_0P2B1C0B(
     BuiltInParameters::p0P2B1C0B,
     4,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProjOffset_0P2B1C0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjOffset_0U2B1C0B(
@@ -10340,7 +9653,6 @@ constexpr const TFunction kFunction_textureProjOffset_0U2B1C0B(
     BuiltInParameters::p0U2B1C0B,
     4,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProjOffset_0U2B1C0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjOffset_0H3B1C0B(
@@ -10350,7 +9662,6 @@ constexpr const TFunction kFunction_textureProjOffset_0H3B1C0B(
     BuiltInParameters::p0H3B1C0B,
     4,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProjOffset_0H3B1C0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjOffset_0P3B1C0B(
@@ -10360,7 +9671,6 @@ constexpr const TFunction kFunction_textureProjOffset_0P3B1C0B(
     BuiltInParameters::p0P3B1C0B,
     4,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProjOffset_0P3B1C0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjOffset_0U3B1C0B(
@@ -10370,7 +9680,6 @@ constexpr const TFunction kFunction_textureProjOffset_0U3B1C0B(
     BuiltInParameters::p0U3B1C0B,
     4,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProjOffset_0U3B1C0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjOffset_0I3B2C0B(
@@ -10380,7 +9689,6 @@ constexpr const TFunction kFunction_textureProjOffset_0I3B2C0B(
     BuiltInParameters::p0I3B2C0B,
     4,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProjOffset_0I3B2C0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjOffset_0Q3B2C0B(
@@ -10390,7 +9698,6 @@ constexpr const TFunction kFunction_textureProjOffset_0Q3B2C0B(
     BuiltInParameters::p0Q3B2C0B,
     4,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProjOffset_0Q3B2C0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjOffset_0V3B2C0B(
@@ -10400,7 +9707,6 @@ constexpr const TFunction kFunction_textureProjOffset_0V3B2C0B(
     BuiltInParameters::p0V3B2C0B,
     4,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProjOffset_0V3B2C0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjOffset_0Z3B1C0B(
@@ -10410,7 +9716,6 @@ constexpr const TFunction kFunction_textureProjOffset_0Z3B1C0B(
     BuiltInParameters::p0Z3B1C0B,
     4,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::textureProjOffset_0Z3B1C0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture_0L1B(
@@ -10420,7 +9725,6 @@ constexpr const TFunction kFunction_texture_0L1B(
     BuiltInParameters::p0L1B0B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texture_0L1B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProj_0L2B(
@@ -10430,7 +9734,6 @@ constexpr const TFunction kFunction_textureProj_0L2B(
     BuiltInParameters::p0L2B0B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProj_0L2B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProj_0L3B(
@@ -10440,7 +9743,6 @@ constexpr const TFunction kFunction_textureProj_0L3B(
     BuiltInParameters::p0L3B0B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProj_0L3B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureSize_0L0C(
@@ -10450,7 +9752,6 @@ constexpr const TFunction kFunction_textureSize_0L0C(
     BuiltInParameters::p0L0C,
     2,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::textureSize_0L0C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texelFetch_0L1C0C(
@@ -10460,7 +9761,6 @@ constexpr const TFunction kFunction_texelFetch_0L1C0C(
     BuiltInParameters::p0L1C0C,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texelFetch_0L1C0C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture_0M1B(
@@ -10470,7 +9770,6 @@ constexpr const TFunction kFunction_texture_0M1B(
     BuiltInParameters::p0M1B0B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texture_0M1B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProj_0M2B(
@@ -10480,7 +9779,6 @@ constexpr const TFunction kFunction_textureProj_0M2B(
     BuiltInParameters::p0M2B0B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProj_0M2B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProj_0M3B(
@@ -10490,7 +9788,6 @@ constexpr const TFunction kFunction_textureProj_0M3B(
     BuiltInParameters::p0M3B0B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProj_0M3B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_rgb_2_yuv_2B0G(
@@ -10500,7 +9797,6 @@ constexpr const TFunction kFunction_rgb_2_yuv_2B0G(
     BuiltInParameters::p2B0G,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::rgb_2_yuv_2B0G,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_yuv_2_rgb_2B0G(
@@ -10510,7 +9806,6 @@ constexpr const TFunction kFunction_yuv_2_rgb_2B0G(
     BuiltInParameters::p2B0G,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::yuv_2_rgb_2B0G,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureSize_0M0C(
@@ -10520,7 +9815,6 @@ constexpr const TFunction kFunction_textureSize_0M0C(
     BuiltInParameters::p0M0C,
     2,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::textureSize_0M0C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texelFetch_0M1C0C(
@@ -10530,7 +9824,6 @@ constexpr const TFunction kFunction_texelFetch_0M1C0C(
     BuiltInParameters::p0M1C0C,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texelFetch_0M1C0C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture_0H1B0B(
@@ -10540,7 +9833,6 @@ constexpr const TFunction kFunction_texture_0H1B0B(
     BuiltInParameters::p0H1B0B1C,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texture_0H1B0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture_0P1B0B(
@@ -10550,7 +9842,6 @@ constexpr const TFunction kFunction_texture_0P1B0B(
     BuiltInParameters::p0P1B0B1C,
     3,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texture_0P1B0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture_0U1B0B(
@@ -10560,7 +9851,6 @@ constexpr const TFunction kFunction_texture_0U1B0B(
     BuiltInParameters::p0U1B0B1C,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texture_0U1B0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture_0I2B0B(
@@ -10570,7 +9860,6 @@ constexpr const TFunction kFunction_texture_0I2B0B(
     BuiltInParameters::p0I2B0B2C,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texture_0I2B0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture_0Q2B0B(
@@ -10580,7 +9869,6 @@ constexpr const TFunction kFunction_texture_0Q2B0B(
     BuiltInParameters::p0Q2B0B2C,
     3,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texture_0Q2B0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture_0V2B0B(
@@ -10590,7 +9878,6 @@ constexpr const TFunction kFunction_texture_0V2B0B(
     BuiltInParameters::p0V2B0B2C,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texture_0V2B0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture_0J2B0B(
@@ -10600,7 +9887,6 @@ constexpr const TFunction kFunction_texture_0J2B0B(
     BuiltInParameters::p0J2B0B,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texture_0J2B0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture_0R2B0B(
@@ -10610,7 +9896,6 @@ constexpr const TFunction kFunction_texture_0R2B0B(
     BuiltInParameters::p0R2B0B,
     3,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texture_0R2B0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture_0W2B0B(
@@ -10620,7 +9905,6 @@ constexpr const TFunction kFunction_texture_0W2B0B(
     BuiltInParameters::p0W2B0B,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texture_0W2B0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture_0K2B0B(
@@ -10630,7 +9914,6 @@ constexpr const TFunction kFunction_texture_0K2B0B(
     BuiltInParameters::p0K2B0B1C,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texture_0K2B0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture_0S2B0B(
@@ -10640,7 +9923,6 @@ constexpr const TFunction kFunction_texture_0S2B0B(
     BuiltInParameters::p0S2B0B1C,
     3,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texture_0S2B0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture_0X2B0B(
@@ -10650,7 +9932,6 @@ constexpr const TFunction kFunction_texture_0X2B0B(
     BuiltInParameters::p0X2B0B1C,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texture_0X2B0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProj_0H2B0B(
@@ -10660,7 +9941,6 @@ constexpr const TFunction kFunction_textureProj_0H2B0B(
     BuiltInParameters::p0H2B0B1C,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProj_0H2B0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProj_0P2B0B(
@@ -10670,7 +9950,6 @@ constexpr const TFunction kFunction_textureProj_0P2B0B(
     BuiltInParameters::p0P2B0B1C,
     3,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProj_0P2B0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProj_0U2B0B(
@@ -10680,7 +9959,6 @@ constexpr const TFunction kFunction_textureProj_0U2B0B(
     BuiltInParameters::p0U2B0B1C,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProj_0U2B0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProj_0H3B0B(
@@ -10690,7 +9968,6 @@ constexpr const TFunction kFunction_textureProj_0H3B0B(
     BuiltInParameters::p0H3B0B1C,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProj_0H3B0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProj_0P3B0B(
@@ -10700,7 +9977,6 @@ constexpr const TFunction kFunction_textureProj_0P3B0B(
     BuiltInParameters::p0P3B0B1C,
     3,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProj_0P3B0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProj_0U3B0B(
@@ -10710,7 +9986,6 @@ constexpr const TFunction kFunction_textureProj_0U3B0B(
     BuiltInParameters::p0U3B0B1C,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProj_0U3B0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProj_0I3B0B(
@@ -10720,7 +9995,6 @@ constexpr const TFunction kFunction_textureProj_0I3B0B(
     BuiltInParameters::p0I3B0B2C,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProj_0I3B0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProj_0Q3B0B(
@@ -10730,7 +10004,6 @@ constexpr const TFunction kFunction_textureProj_0Q3B0B(
     BuiltInParameters::p0Q3B0B2C,
     3,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProj_0Q3B0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProj_0V3B0B(
@@ -10740,7 +10013,6 @@ constexpr const TFunction kFunction_textureProj_0V3B0B(
     BuiltInParameters::p0V3B0B2C,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProj_0V3B0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture_0Z2B0B(
@@ -10750,7 +10022,6 @@ constexpr const TFunction kFunction_texture_0Z2B0B(
     BuiltInParameters::p0Z2B0B1C,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::texture_0Z2B0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture_0a3B0B(
@@ -10760,7 +10031,6 @@ constexpr const TFunction kFunction_texture_0a3B0B(
     BuiltInParameters::p0a3B0B,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::texture_0a3B0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProj_0Z3B0B(
@@ -10770,7 +10040,6 @@ constexpr const TFunction kFunction_textureProj_0Z3B0B(
     BuiltInParameters::p0Z3B0B1C,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::textureProj_0Z3B0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture_0L1B0B(
@@ -10780,7 +10049,6 @@ constexpr const TFunction kFunction_texture_0L1B0B(
     BuiltInParameters::p0L1B0B,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texture_0L1B0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProj_0L2B0B(
@@ -10790,7 +10058,6 @@ constexpr const TFunction kFunction_textureProj_0L2B0B(
     BuiltInParameters::p0L2B0B,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProj_0L2B0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProj_0L3B0B(
@@ -10800,7 +10067,6 @@ constexpr const TFunction kFunction_textureProj_0L3B0B(
     BuiltInParameters::p0L3B0B,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProj_0L3B0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture_0M1B0B(
@@ -10810,7 +10076,6 @@ constexpr const TFunction kFunction_texture_0M1B0B(
     BuiltInParameters::p0M1B0B,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texture_0M1B0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProj_0M2B0B(
@@ -10820,7 +10085,6 @@ constexpr const TFunction kFunction_textureProj_0M2B0B(
     BuiltInParameters::p0M2B0B,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProj_0M2B0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProj_0M3B0B(
@@ -10830,7 +10094,6 @@ constexpr const TFunction kFunction_textureProj_0M3B0B(
     BuiltInParameters::p0M3B0B,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureProj_0M3B0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texelFetch_0O1C0C(
@@ -10840,7 +10103,6 @@ constexpr const TFunction kFunction_texelFetch_0O1C0C(
     BuiltInParameters::p0O1C0C,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texelFetch_0O1C0C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texelFetch_0T1C0C(
@@ -10850,7 +10112,6 @@ constexpr const TFunction kFunction_texelFetch_0T1C0C(
     BuiltInParameters::p0T1C0C,
     3,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texelFetch_0T1C0C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texelFetch_0Y1C0C(
@@ -10860,7 +10121,6 @@ constexpr const TFunction kFunction_texelFetch_0Y1C0C(
     BuiltInParameters::p0Y1C0C,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::texelFetch_0Y1C0C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGather_0H1B(
@@ -10870,7 +10130,6 @@ constexpr const TFunction kFunction_textureGather_0H1B(
     BuiltInParameters::p0H1B1B1B1C,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureGather_0H1B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGather_0P1B(
@@ -10880,7 +10139,6 @@ constexpr const TFunction kFunction_textureGather_0P1B(
     BuiltInParameters::p0P1B0C,
     2,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureGather_0P1B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGather_0U1B(
@@ -10890,7 +10148,6 @@ constexpr const TFunction kFunction_textureGather_0U1B(
     BuiltInParameters::p0U1B0B1C,
     2,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureGather_0U1B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGather_0H1B0C(
@@ -10900,7 +10157,6 @@ constexpr const TFunction kFunction_textureGather_0H1B0C(
     BuiltInParameters::p0H1B0C,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureGather_0H1B0C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGather_0P1B0C(
@@ -10910,7 +10166,6 @@ constexpr const TFunction kFunction_textureGather_0P1B0C(
     BuiltInParameters::p0P1B0C,
     3,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureGather_0P1B0C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGather_0U1B0C(
@@ -10920,7 +10175,6 @@ constexpr const TFunction kFunction_textureGather_0U1B0C(
     BuiltInParameters::p0U1B0C,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureGather_0U1B0C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGather_0K2B(
@@ -10930,7 +10184,6 @@ constexpr const TFunction kFunction_textureGather_0K2B(
     BuiltInParameters::p0K2B0B1C,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureGather_0K2B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGather_0S2B(
@@ -10940,7 +10193,6 @@ constexpr const TFunction kFunction_textureGather_0S2B(
     BuiltInParameters::p0S2B0B1C,
     2,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureGather_0S2B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGather_0X2B(
@@ -10950,7 +10202,6 @@ constexpr const TFunction kFunction_textureGather_0X2B(
     BuiltInParameters::p0X2B1C0C,
     2,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureGather_0X2B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGather_0K2B0C(
@@ -10960,7 +10211,6 @@ constexpr const TFunction kFunction_textureGather_0K2B0C(
     BuiltInParameters::p0K2B0C,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureGather_0K2B0C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGather_0S2B0C(
@@ -10970,7 +10220,6 @@ constexpr const TFunction kFunction_textureGather_0S2B0C(
     BuiltInParameters::p0S2B0C,
     3,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureGather_0S2B0C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGather_0X2B0C(
@@ -10980,7 +10229,6 @@ constexpr const TFunction kFunction_textureGather_0X2B0C(
     BuiltInParameters::p0X2B0C,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureGather_0X2B0C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGather_0J2B(
@@ -10990,7 +10238,6 @@ constexpr const TFunction kFunction_textureGather_0J2B(
     BuiltInParameters::p0J2B2B2B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureGather_0J2B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGather_0R2B(
@@ -11000,7 +10247,6 @@ constexpr const TFunction kFunction_textureGather_0R2B(
     BuiltInParameters::p0R2B2B2B,
     2,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureGather_0R2B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGather_0W2B(
@@ -11010,7 +10256,6 @@ constexpr const TFunction kFunction_textureGather_0W2B(
     BuiltInParameters::p0W2B0B,
     2,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureGather_0W2B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGather_0J2B0C(
@@ -11020,7 +10265,6 @@ constexpr const TFunction kFunction_textureGather_0J2B0C(
     BuiltInParameters::p0J2B0C,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureGather_0J2B0C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGather_0R2B0C(
@@ -11030,7 +10274,6 @@ constexpr const TFunction kFunction_textureGather_0R2B0C(
     BuiltInParameters::p0R2B0C,
     3,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureGather_0R2B0C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGather_0W2B0C(
@@ -11040,7 +10283,6 @@ constexpr const TFunction kFunction_textureGather_0W2B0C(
     BuiltInParameters::p0W2B0C,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureGather_0W2B0C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGather_0Z1B(
@@ -11050,7 +10292,6 @@ constexpr const TFunction kFunction_textureGather_0Z1B(
     BuiltInParameters::p0Z1B0B1C,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureGather_0Z1B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGather_0Z1B0B(
@@ -11060,7 +10301,6 @@ constexpr const TFunction kFunction_textureGather_0Z1B0B(
     BuiltInParameters::p0Z1B0B1C,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureGather_0Z1B0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGather_0b2B(
@@ -11070,7 +10310,6 @@ constexpr const TFunction kFunction_textureGather_0b2B(
     BuiltInParameters::p0b2B0B1C,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureGather_0b2B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGather_0b2B0B(
@@ -11080,7 +10319,6 @@ constexpr const TFunction kFunction_textureGather_0b2B0B(
     BuiltInParameters::p0b2B0B1C,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureGather_0b2B0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGather_0a2B(
@@ -11090,7 +10328,6 @@ constexpr const TFunction kFunction_textureGather_0a2B(
     BuiltInParameters::p0a2B0B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureGather_0a2B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGather_0a2B0B(
@@ -11100,7 +10337,6 @@ constexpr const TFunction kFunction_textureGather_0a2B0B(
     BuiltInParameters::p0a2B0B,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureGather_0a2B0B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGatherOffset_0H1B1C(
@@ -11110,7 +10346,6 @@ constexpr const TFunction kFunction_textureGatherOffset_0H1B1C(
     BuiltInParameters::p0H1B1C0B,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureGatherOffset_0H1B1C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGatherOffset_0P1B1C(
@@ -11120,7 +10355,6 @@ constexpr const TFunction kFunction_textureGatherOffset_0P1B1C(
     BuiltInParameters::p0P1B1C0B,
     3,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureGatherOffset_0P1B1C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGatherOffset_0U1B1C(
@@ -11130,7 +10364,6 @@ constexpr const TFunction kFunction_textureGatherOffset_0U1B1C(
     BuiltInParameters::p0U1B1C0C,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureGatherOffset_0U1B1C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGatherOffset_0H1B1C0C(
@@ -11140,7 +10373,6 @@ constexpr const TFunction kFunction_textureGatherOffset_0H1B1C0C(
     BuiltInParameters::p0H1B1C0C,
     4,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureGatherOffset_0H1B1C0C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGatherOffset_0P1B1C0C(
@@ -11150,7 +10382,6 @@ constexpr const TFunction kFunction_textureGatherOffset_0P1B1C0C(
     BuiltInParameters::p0P1B1C0C,
     4,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureGatherOffset_0P1B1C0C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGatherOffset_0U1B1C0C(
@@ -11160,7 +10391,6 @@ constexpr const TFunction kFunction_textureGatherOffset_0U1B1C0C(
     BuiltInParameters::p0U1B1C0C,
     4,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureGatherOffset_0U1B1C0C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGatherOffset_0K2B1C(
@@ -11170,7 +10400,6 @@ constexpr const TFunction kFunction_textureGatherOffset_0K2B1C(
     BuiltInParameters::p0K2B1C0B,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureGatherOffset_0K2B1C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGatherOffset_0S2B1C(
@@ -11180,7 +10409,6 @@ constexpr const TFunction kFunction_textureGatherOffset_0S2B1C(
     BuiltInParameters::p0S2B1C0B,
     3,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureGatherOffset_0S2B1C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGatherOffset_0X2B1C(
@@ -11190,7 +10418,6 @@ constexpr const TFunction kFunction_textureGatherOffset_0X2B1C(
     BuiltInParameters::p0X2B1C0C,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureGatherOffset_0X2B1C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGatherOffset_0K2B1C0C(
@@ -11200,7 +10427,6 @@ constexpr const TFunction kFunction_textureGatherOffset_0K2B1C0C(
     BuiltInParameters::p0K2B1C0C,
     4,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureGatherOffset_0K2B1C0C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGatherOffset_0S2B1C0C(
@@ -11210,7 +10436,6 @@ constexpr const TFunction kFunction_textureGatherOffset_0S2B1C0C(
     BuiltInParameters::p0S2B1C0C,
     4,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureGatherOffset_0S2B1C0C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGatherOffset_0X2B1C0C(
@@ -11220,7 +10445,6 @@ constexpr const TFunction kFunction_textureGatherOffset_0X2B1C0C(
     BuiltInParameters::p0X2B1C0C,
     4,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureGatherOffset_0X2B1C0C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGatherOffset_0Z1B0B1C(
@@ -11230,7 +10454,6 @@ constexpr const TFunction kFunction_textureGatherOffset_0Z1B0B1C(
     BuiltInParameters::p0Z1B0B1C,
     4,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureGatherOffset_0Z1B0B1C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGatherOffset_0b2B0B1C(
@@ -11240,7 +10463,6 @@ constexpr const TFunction kFunction_textureGatherOffset_0b2B0B1C(
     BuiltInParameters::p0b2B0B1C,
     4,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::textureGatherOffset_0b2B0B1C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_dFdx_0B(
@@ -11250,7 +10472,6 @@ constexpr const TFunction kFunction_dFdx_0B(
     BuiltInParameters::p0B0C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::dFdx_0B,
     EOpDFdx,
     false);
 constexpr const TFunction kFunction_dFdx_1B(
@@ -11260,7 +10481,6 @@ constexpr const TFunction kFunction_dFdx_1B(
     BuiltInParameters::p1B1B0B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::dFdx_1B,
     EOpDFdx,
     false);
 constexpr const TFunction kFunction_dFdx_2B(
@@ -11270,7 +10490,6 @@ constexpr const TFunction kFunction_dFdx_2B(
     BuiltInParameters::p2B2C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::dFdx_2B,
     EOpDFdx,
     false);
 constexpr const TFunction kFunction_dFdx_3B(
@@ -11280,7 +10499,6 @@ constexpr const TFunction kFunction_dFdx_3B(
     BuiltInParameters::p3B1B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::dFdx_3B,
     EOpDFdx,
     false);
 constexpr const TFunction kFunction_dFdy_0B(
@@ -11290,7 +10508,6 @@ constexpr const TFunction kFunction_dFdy_0B(
     BuiltInParameters::p0B0C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::dFdy_0B,
     EOpDFdy,
     false);
 constexpr const TFunction kFunction_dFdy_1B(
@@ -11300,7 +10517,6 @@ constexpr const TFunction kFunction_dFdy_1B(
     BuiltInParameters::p1B1B0B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::dFdy_1B,
     EOpDFdy,
     false);
 constexpr const TFunction kFunction_dFdy_2B(
@@ -11310,7 +10526,6 @@ constexpr const TFunction kFunction_dFdy_2B(
     BuiltInParameters::p2B2C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::dFdy_2B,
     EOpDFdy,
     false);
 constexpr const TFunction kFunction_dFdy_3B(
@@ -11320,7 +10535,6 @@ constexpr const TFunction kFunction_dFdy_3B(
     BuiltInParameters::p3B1B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::dFdy_3B,
     EOpDFdy,
     false);
 constexpr const TFunction kFunction_fwidth_0B(
@@ -11330,7 +10544,6 @@ constexpr const TFunction kFunction_fwidth_0B(
     BuiltInParameters::p0B0C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::fwidth_0B,
     EOpFwidth,
     false);
 constexpr const TFunction kFunction_fwidth_1B(
@@ -11340,7 +10553,6 @@ constexpr const TFunction kFunction_fwidth_1B(
     BuiltInParameters::p1B1B0B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::fwidth_1B,
     EOpFwidth,
     false);
 constexpr const TFunction kFunction_fwidth_2B(
@@ -11350,7 +10562,6 @@ constexpr const TFunction kFunction_fwidth_2B(
     BuiltInParameters::p2B2C,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::fwidth_2B,
     EOpFwidth,
     false);
 constexpr const TFunction kFunction_fwidth_3B(
@@ -11360,7 +10571,6 @@ constexpr const TFunction kFunction_fwidth_3B(
     BuiltInParameters::p3B1B,
     1,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::fwidth_3B,
     EOpFwidth,
     false);
 constexpr const TFunction kFunction_atomicCounter_0F(
@@ -11370,7 +10580,6 @@ constexpr const TFunction kFunction_atomicCounter_0F(
     BuiltInParameters::p0F,
     1,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::atomicCounter_0F,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_atomicCounterIncrement_0F(
@@ -11380,7 +10589,6 @@ constexpr const TFunction kFunction_atomicCounterIncrement_0F(
     BuiltInParameters::p0F,
     1,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::atomicCounterIncrement_0F,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_atomicCounterDecrement_0F(
@@ -11390,7 +10598,6 @@ constexpr const TFunction kFunction_atomicCounterDecrement_0F(
     BuiltInParameters::p0F,
     1,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::atomicCounterDecrement_0F,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_atomicAdd_0D0D(
@@ -11400,7 +10607,6 @@ constexpr const TFunction kFunction_atomicAdd_0D0D(
     BuiltInParameters::p_io_0D0D0D,
     2,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::atomicAdd_0D0D,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_atomicAdd_0C0C(
@@ -11410,7 +10616,6 @@ constexpr const TFunction kFunction_atomicAdd_0C0C(
     BuiltInParameters::p_io_0C0C0C,
     2,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::atomicAdd_0C0C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_atomicMin_0D0D(
@@ -11420,7 +10625,6 @@ constexpr const TFunction kFunction_atomicMin_0D0D(
     BuiltInParameters::p_io_0D0D0D,
     2,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::atomicMin_0D0D,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_atomicMin_0C0C(
@@ -11430,7 +10634,6 @@ constexpr const TFunction kFunction_atomicMin_0C0C(
     BuiltInParameters::p_io_0C0C0C,
     2,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::atomicMin_0C0C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_atomicMax_0D0D(
@@ -11440,7 +10643,6 @@ constexpr const TFunction kFunction_atomicMax_0D0D(
     BuiltInParameters::p_io_0D0D0D,
     2,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::atomicMax_0D0D,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_atomicMax_0C0C(
@@ -11450,7 +10652,6 @@ constexpr const TFunction kFunction_atomicMax_0C0C(
     BuiltInParameters::p_io_0C0C0C,
     2,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::atomicMax_0C0C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_atomicAnd_0D0D(
@@ -11460,7 +10661,6 @@ constexpr const TFunction kFunction_atomicAnd_0D0D(
     BuiltInParameters::p_io_0D0D0D,
     2,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::atomicAnd_0D0D,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_atomicAnd_0C0C(
@@ -11470,7 +10670,6 @@ constexpr const TFunction kFunction_atomicAnd_0C0C(
     BuiltInParameters::p_io_0C0C0C,
     2,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::atomicAnd_0C0C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_atomicOr_0D0D(
@@ -11480,7 +10679,6 @@ constexpr const TFunction kFunction_atomicOr_0D0D(
     BuiltInParameters::p_io_0D0D0D,
     2,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::atomicOr_0D0D,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_atomicOr_0C0C(
@@ -11490,7 +10688,6 @@ constexpr const TFunction kFunction_atomicOr_0C0C(
     BuiltInParameters::p_io_0C0C0C,
     2,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::atomicOr_0C0C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_atomicXor_0D0D(
@@ -11500,7 +10697,6 @@ constexpr const TFunction kFunction_atomicXor_0D0D(
     BuiltInParameters::p_io_0D0D0D,
     2,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::atomicXor_0D0D,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_atomicXor_0C0C(
@@ -11510,7 +10706,6 @@ constexpr const TFunction kFunction_atomicXor_0C0C(
     BuiltInParameters::p_io_0C0C0C,
     2,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::atomicXor_0C0C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_atomicExchange_0D0D(
@@ -11520,7 +10715,6 @@ constexpr const TFunction kFunction_atomicExchange_0D0D(
     BuiltInParameters::p_io_0D0D0D,
     2,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::atomicExchange_0D0D,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_atomicExchange_0C0C(
@@ -11530,7 +10724,6 @@ constexpr const TFunction kFunction_atomicExchange_0C0C(
     BuiltInParameters::p_io_0C0C0C,
     2,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::atomicExchange_0C0C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_atomicCompSwap_0D0D0D(
@@ -11540,7 +10733,6 @@ constexpr const TFunction kFunction_atomicCompSwap_0D0D0D(
     BuiltInParameters::p_io_0D0D0D,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::atomicCompSwap_0D0D0D,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_atomicCompSwap_0C0C0C(
@@ -11550,7 +10742,6 @@ constexpr const TFunction kFunction_atomicCompSwap_0C0C0C(
     BuiltInParameters::p_io_0C0C0C,
     3,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::atomicCompSwap_0C0C0C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_imageSize_0c(
@@ -11560,7 +10751,6 @@ constexpr const TFunction kFunction_imageSize_0c(
     BuiltInParameters::p0c1C3B,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::imageSize_0c,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_imageSize_0d(
@@ -11570,7 +10760,6 @@ constexpr const TFunction kFunction_imageSize_0d(
     BuiltInParameters::p0d1C3C,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::imageSize_0d,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_imageSize_0e(
@@ -11580,7 +10769,6 @@ constexpr const TFunction kFunction_imageSize_0e(
     BuiltInParameters::p0e1C3D,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::imageSize_0e,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_imageSize_0f(
@@ -11590,7 +10778,6 @@ constexpr const TFunction kFunction_imageSize_0f(
     BuiltInParameters::p0f2C3B,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::imageSize_0f,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_imageSize_0g(
@@ -11600,7 +10787,6 @@ constexpr const TFunction kFunction_imageSize_0g(
     BuiltInParameters::p0g2C3C,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::imageSize_0g,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_imageSize_0h(
@@ -11610,7 +10796,6 @@ constexpr const TFunction kFunction_imageSize_0h(
     BuiltInParameters::p0h2C3D,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::imageSize_0h,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_imageSize_0i(
@@ -11620,7 +10805,6 @@ constexpr const TFunction kFunction_imageSize_0i(
     BuiltInParameters::p0i2C3B,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::imageSize_0i,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_imageSize_0j(
@@ -11630,7 +10814,6 @@ constexpr const TFunction kFunction_imageSize_0j(
     BuiltInParameters::p0j2C3C,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::imageSize_0j,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_imageSize_0k(
@@ -11640,7 +10823,6 @@ constexpr const TFunction kFunction_imageSize_0k(
     BuiltInParameters::p0k2C3D,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>(),
-    BuiltInName::imageSize_0k,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_imageSize_0l(
@@ -11650,7 +10832,6 @@ constexpr const TFunction kFunction_imageSize_0l(
     BuiltInParameters::p0l2C3B,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::imageSize_0l,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_imageSize_0m(
@@ -11660,7 +10841,6 @@ constexpr const TFunction kFunction_imageSize_0m(
     BuiltInParameters::p0m2C3C,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::imageSize_0m,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_imageSize_0n(
@@ -11670,7 +10850,6 @@ constexpr const TFunction kFunction_imageSize_0n(
     BuiltInParameters::p0n2C3D,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>(),
-    BuiltInName::imageSize_0n,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_imageLoad_0c1C(
@@ -11680,7 +10859,6 @@ constexpr const TFunction kFunction_imageLoad_0c1C(
     BuiltInParameters::p0c1C3B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::imageLoad_0c1C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_imageLoad_0d1C(
@@ -11690,7 +10868,6 @@ constexpr const TFunction kFunction_imageLoad_0d1C(
     BuiltInParameters::p0d1C3C,
     2,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::imageLoad_0d1C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_imageLoad_0e1C(
@@ -11700,7 +10877,6 @@ constexpr const TFunction kFunction_imageLoad_0e1C(
     BuiltInParameters::p0e1C3D,
     2,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::imageLoad_0e1C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_imageLoad_0f2C(
@@ -11710,7 +10886,6 @@ constexpr const TFunction kFunction_imageLoad_0f2C(
     BuiltInParameters::p0f2C3B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::imageLoad_0f2C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_imageLoad_0g2C(
@@ -11720,7 +10895,6 @@ constexpr const TFunction kFunction_imageLoad_0g2C(
     BuiltInParameters::p0g2C3C,
     2,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::imageLoad_0g2C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_imageLoad_0h2C(
@@ -11730,7 +10904,6 @@ constexpr const TFunction kFunction_imageLoad_0h2C(
     BuiltInParameters::p0h2C3D,
     2,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::imageLoad_0h2C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_imageLoad_0i2C(
@@ -11740,7 +10913,6 @@ constexpr const TFunction kFunction_imageLoad_0i2C(
     BuiltInParameters::p0i2C3B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::imageLoad_0i2C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_imageLoad_0j2C(
@@ -11750,7 +10922,6 @@ constexpr const TFunction kFunction_imageLoad_0j2C(
     BuiltInParameters::p0j2C3C,
     2,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::imageLoad_0j2C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_imageLoad_0k2C(
@@ -11760,7 +10931,6 @@ constexpr const TFunction kFunction_imageLoad_0k2C(
     BuiltInParameters::p0k2C3D,
     2,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::imageLoad_0k2C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_imageLoad_0l2C(
@@ -11770,7 +10940,6 @@ constexpr const TFunction kFunction_imageLoad_0l2C(
     BuiltInParameters::p0l2C3B,
     2,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::imageLoad_0l2C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_imageLoad_0m2C(
@@ -11780,7 +10949,6 @@ constexpr const TFunction kFunction_imageLoad_0m2C(
     BuiltInParameters::p0m2C3C,
     2,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::imageLoad_0m2C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_imageLoad_0n2C(
@@ -11790,7 +10958,6 @@ constexpr const TFunction kFunction_imageLoad_0n2C(
     BuiltInParameters::p0n2C3D,
     2,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    BuiltInName::imageLoad_0n2C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_imageStore_0c1C3B(
@@ -11800,7 +10967,6 @@ constexpr const TFunction kFunction_imageStore_0c1C3B(
     BuiltInParameters::p0c1C3B,
     3,
     StaticType::Get<EbtVoid, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::imageStore_0c1C3B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_imageStore_0d1C3C(
@@ -11810,7 +10976,6 @@ constexpr const TFunction kFunction_imageStore_0d1C3C(
     BuiltInParameters::p0d1C3C,
     3,
     StaticType::Get<EbtVoid, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::imageStore_0d1C3C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_imageStore_0e1C3D(
@@ -11820,7 +10985,6 @@ constexpr const TFunction kFunction_imageStore_0e1C3D(
     BuiltInParameters::p0e1C3D,
     3,
     StaticType::Get<EbtVoid, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::imageStore_0e1C3D,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_imageStore_0f2C3B(
@@ -11830,7 +10994,6 @@ constexpr const TFunction kFunction_imageStore_0f2C3B(
     BuiltInParameters::p0f2C3B,
     3,
     StaticType::Get<EbtVoid, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::imageStore_0f2C3B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_imageStore_0g2C3C(
@@ -11840,7 +11003,6 @@ constexpr const TFunction kFunction_imageStore_0g2C3C(
     BuiltInParameters::p0g2C3C,
     3,
     StaticType::Get<EbtVoid, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::imageStore_0g2C3C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_imageStore_0h2C3D(
@@ -11850,7 +11012,6 @@ constexpr const TFunction kFunction_imageStore_0h2C3D(
     BuiltInParameters::p0h2C3D,
     3,
     StaticType::Get<EbtVoid, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::imageStore_0h2C3D,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_imageStore_0i2C3B(
@@ -11860,7 +11021,6 @@ constexpr const TFunction kFunction_imageStore_0i2C3B(
     BuiltInParameters::p0i2C3B,
     3,
     StaticType::Get<EbtVoid, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::imageStore_0i2C3B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_imageStore_0j2C3C(
@@ -11870,7 +11030,6 @@ constexpr const TFunction kFunction_imageStore_0j2C3C(
     BuiltInParameters::p0j2C3C,
     3,
     StaticType::Get<EbtVoid, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::imageStore_0j2C3C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_imageStore_0k2C3D(
@@ -11880,7 +11039,6 @@ constexpr const TFunction kFunction_imageStore_0k2C3D(
     BuiltInParameters::p0k2C3D,
     3,
     StaticType::Get<EbtVoid, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::imageStore_0k2C3D,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_imageStore_0l2C3B(
@@ -11890,7 +11048,6 @@ constexpr const TFunction kFunction_imageStore_0l2C3B(
     BuiltInParameters::p0l2C3B,
     3,
     StaticType::Get<EbtVoid, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::imageStore_0l2C3B,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_imageStore_0m2C3C(
@@ -11900,7 +11057,6 @@ constexpr const TFunction kFunction_imageStore_0m2C3C(
     BuiltInParameters::p0m2C3C,
     3,
     StaticType::Get<EbtVoid, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::imageStore_0m2C3C,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_imageStore_0n2C3D(
@@ -11910,7 +11066,6 @@ constexpr const TFunction kFunction_imageStore_0n2C3D(
     BuiltInParameters::p0n2C3D,
     3,
     StaticType::Get<EbtVoid, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::imageStore_0n2C3D,
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_memoryBarrier_(
@@ -11920,7 +11075,6 @@ constexpr const TFunction kFunction_memoryBarrier_(
     BuiltInParameters::empty,
     0,
     StaticType::Get<EbtVoid, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::memoryBarrier_,
     EOpMemoryBarrier,
     false);
 constexpr const TFunction kFunction_memoryBarrierAtomicCounter_(
@@ -11930,7 +11084,6 @@ constexpr const TFunction kFunction_memoryBarrierAtomicCounter_(
     BuiltInParameters::empty,
     0,
     StaticType::Get<EbtVoid, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::memoryBarrierAtomicCounter_,
     EOpMemoryBarrierAtomicCounter,
     false);
 constexpr const TFunction kFunction_memoryBarrierBuffer_(
@@ -11940,7 +11093,6 @@ constexpr const TFunction kFunction_memoryBarrierBuffer_(
     BuiltInParameters::empty,
     0,
     StaticType::Get<EbtVoid, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::memoryBarrierBuffer_,
     EOpMemoryBarrierBuffer,
     false);
 constexpr const TFunction kFunction_memoryBarrierImage_(
@@ -11950,7 +11102,6 @@ constexpr const TFunction kFunction_memoryBarrierImage_(
     BuiltInParameters::empty,
     0,
     StaticType::Get<EbtVoid, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::memoryBarrierImage_,
     EOpMemoryBarrierImage,
     false);
 constexpr const TFunction kFunction_barrier_(
@@ -11960,7 +11111,6 @@ constexpr const TFunction kFunction_barrier_(
     BuiltInParameters::empty,
     0,
     StaticType::Get<EbtVoid, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::barrier_,
     EOpBarrier,
     false);
 constexpr const TFunction kFunction_memoryBarrierShared_(
@@ -11970,7 +11120,6 @@ constexpr const TFunction kFunction_memoryBarrierShared_(
     BuiltInParameters::empty,
     0,
     StaticType::Get<EbtVoid, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::memoryBarrierShared_,
     EOpMemoryBarrierShared,
     false);
 constexpr const TFunction kFunction_groupMemoryBarrier_(
@@ -11980,7 +11129,6 @@ constexpr const TFunction kFunction_groupMemoryBarrier_(
     BuiltInParameters::empty,
     0,
     StaticType::Get<EbtVoid, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::groupMemoryBarrier_,
     EOpGroupMemoryBarrier,
     false);
 constexpr const TFunction kFunction_EmitVertex_(
@@ -11990,7 +11138,6 @@ constexpr const TFunction kFunction_EmitVertex_(
     BuiltInParameters::empty,
     0,
     StaticType::Get<EbtVoid, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::EmitVertex_,
     EOpEmitVertex,
     false);
 constexpr const TFunction kFunction_EndPrimitive_(
@@ -12000,7 +11147,6 @@ constexpr const TFunction kFunction_EndPrimitive_(
     BuiltInParameters::empty,
     0,
     StaticType::Get<EbtVoid, EbpUndefined, EvqGlobal, 1, 1>(),
-    BuiltInName::EndPrimitive_,
     EOpEndPrimitive,
     false);
 

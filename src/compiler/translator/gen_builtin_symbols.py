@@ -873,7 +873,7 @@ def process_single_function_group(condition, group_name, group):
                 template_parameter_list_declaration = 'constexpr const TVariable **{parameters_var_name} = nullptr;'
                 parameter_declarations[template_args['parameters_var_name']] = template_parameter_list_declaration.format(**template_args)
 
-            template_function_declaration = 'constexpr const TFunction kFunction_{unique_name}(BuiltInId::{unique_name}, BuiltInName::{name_with_suffix}, TExtension::{extension}, BuiltInParameters::{parameters_var_name}, {param_count}, {return_type}, BuiltInName::{unique_name}, EOp{op}, {known_to_not_have_side_effects});'
+            template_function_declaration = 'constexpr const TFunction kFunction_{unique_name}(BuiltInId::{unique_name}, BuiltInName::{name_with_suffix}, TExtension::{extension}, BuiltInParameters::{parameters_var_name}, {param_count}, {return_type}, EOp{op}, {known_to_not_have_side_effects});'
             function_declarations.append(template_function_declaration.format(**template_args))
 
             template_mangled_if = """if (name == BuiltInName::{unique_name})
