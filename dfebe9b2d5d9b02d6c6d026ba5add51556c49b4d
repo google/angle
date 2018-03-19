@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "27f7ff18_24ca3339",
+        "filename": "infra/config/cq.cfg",
+        "patchSetId": 2
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1141499
+      },
+      "writtenOn": "2018-03-19T17:32:26Z",
+      "side": 0,
+      "message": "oops, I didn\u0027t notice these lines at 6am when I lgtm-ed this CL. this is essentially a no-op, something else is the cause.",
+      "range": {
+        "startLine": 27,
+        "startChar": 7,
+        "endLine": 27,
+        "endChar": 69
+      },
+      "revId": "dfebe9b2d5d9b02d6c6d026ba5add51556c49b4d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
