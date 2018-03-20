@@ -1,0 +1,550 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b0513e94_dcab6a3f",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-20T20:46:58Z",
+      "side": 1,
+      "message": "I\u0027m not sure if you really need this helper method - you should be able to call Context::getGLState and vk::GetImpl on state.getProgram.",
+      "range": {
+        "startLine": 122,
+        "startChar": 0,
+        "endLine": 127,
+        "endChar": 1
+      },
+      "revId": "90f31a6f3e12d6195071de32c0b3ba8a7a5a2e91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e1906123_374b7985",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 260,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-20T20:46:58Z",
+      "side": 1,
+      "message": "this is a bit too fragile/hacky - \n\nhow about making two methods on program:\n\ngetDynamicOffsetCount -\u003e returns uint32_t\ngetDynamicOffsets -\u003e returns const uint32_t *.\n\ninside each of these methods, if there are *any* uniforms (check mState.getUniforms().empty, and ASSERT descriptor set range contains zero), it returns 0 or nullptr.\nif there are program uniforms, they return \u003e 0 and non-nullptr.\n\nthis method turns into a simple query.",
+      "range": {
+        "startLine": 260,
+        "startChar": 8,
+        "endLine": 260,
+        "endChar": 34
+      },
+      "revId": "90f31a6f3e12d6195071de32c0b3ba8a7a5a2e91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ef3a2923_342b37e0",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-20T20:46:58Z",
+      "side": 1,
+      "message": "nit: rename this parameter (and other references) to blockSize/blockSizeOut.",
+      "range": {
+        "startLine": 31,
+        "startChar": 42,
+        "endLine": 31,
+        "endChar": 57
+      },
+      "revId": "90f31a6f3e12d6195071de32c0b3ba8a7a5a2e91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c480fd52_4550a557",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-20T20:46:58Z",
+      "side": 1,
+      "message": "can you update StreamingBuffer::allocate to return uint32_t for offset? we can\u0027t really support offsets larger than maxuint anyway.",
+      "range": {
+        "startLine": 108,
+        "startChar": 4,
+        "endLine": 108,
+        "endChar": 57
+      },
+      "revId": "90f31a6f3e12d6195071de32c0b3ba8a7a5a2e91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e4fcada9_0c855088",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-20T20:46:58Z",
+      "side": 1,
+      "message": "can you make this into a constant somewhere and justify the initial size.",
+      "range": {
+        "startLine": 139,
+        "startChar": 85,
+        "endLine": 139,
+        "endChar": 94
+      },
+      "revId": "90f31a6f3e12d6195071de32c0b3ba8a7a5a2e91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0aacb66f_e81a3a82",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 270,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-20T20:46:58Z",
+      "side": 1,
+      "message": "I don\u0027t quite follow why this is necessary.",
+      "range": {
+        "startLine": 269,
+        "startChar": 0,
+        "endLine": 270,
+        "endChar": 61
+      },
+      "revId": "90f31a6f3e12d6195071de32c0b3ba8a7a5a2e91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2d631561_1751e6cf",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 285,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-20T20:46:58Z",
+      "side": 1,
+      "message": "ref",
+      "range": {
+        "startLine": 285,
+        "startChar": 16,
+        "endLine": 285,
+        "endChar": 24
+      },
+      "revId": "90f31a6f3e12d6195071de32c0b3ba8a7a5a2e91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bd5e28d1_8db052c0",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 354,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-20T20:46:58Z",
+      "side": 1,
+      "message": "the renderer is already cached in a temporary above.",
+      "range": {
+        "startLine": 354,
+        "startChar": 36,
+        "endLine": 354,
+        "endChar": 60
+      },
+      "revId": "90f31a6f3e12d6195071de32c0b3ba8a7a5a2e91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fcb87541_6f5bffca",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 356,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-20T20:46:58Z",
+      "side": 1,
+      "message": "the formatting in here got screwed up - please make a temporary variable and pass it to init.",
+      "range": {
+        "startLine": 354,
+        "startChar": 16,
+        "endLine": 356,
+        "endChar": 80
+      },
+      "revId": "90f31a6f3e12d6195071de32c0b3ba8a7a5a2e91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "92e9b010_ae423db2",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 360,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-20T20:46:58Z",
+      "side": 1,
+      "message": "\"Initialize uniform buffer memory to zero by default.\"",
+      "range": {
+        "startLine": 360,
+        "startChar": 15,
+        "endLine": 360,
+        "endChar": 98
+      },
+      "revId": "90f31a6f3e12d6195071de32c0b3ba8a7a5a2e91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3c6116d8_7f5c1ad0",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 397,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-20T20:46:58Z",
+      "side": 1,
+      "message": "what\u0027s the deal with moving this out of anyDirty? Can\u0027t we skip this if we don\u0027t have any uniforms?",
+      "range": {
+        "startLine": 376,
+        "startChar": 0,
+        "endLine": 397,
+        "endChar": 5
+      },
+      "revId": "90f31a6f3e12d6195071de32c0b3ba8a7a5a2e91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eaa68844_6f7febce",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 657,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-20T20:46:58Z",
+      "side": 1,
+      "message": "how about calling this allocateDescriptorSets to make it clear we can reallocate.",
+      "range": {
+        "startLine": 657,
+        "startChar": 21,
+        "endLine": 657,
+        "endChar": 39
+      },
+      "revId": "90f31a6f3e12d6195071de32c0b3ba8a7a5a2e91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "94c042e2_80935cf8",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 659,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-20T20:46:58Z",
+      "side": 1,
+      "message": "if you plan on reinitialization you can remove this.",
+      "range": {
+        "startLine": 659,
+        "startChar": 4,
+        "endLine": 659,
+        "endChar": 36
+      },
+      "revId": "90f31a6f3e12d6195071de32c0b3ba8a7a5a2e91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fac3c171_432beca8",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 671,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-20T20:46:58Z",
+      "side": 1,
+      "message": "it\u0027s wasteful to reallocate texture descriptors when we only care about the uniforms. please open an issue to resolve this and leave a TODO. similarly when changing textures we wouldn\u0027t want to reallocate Uniform descriptor sets.",
+      "range": {
+        "startLine": 671,
+        "startChar": 37,
+        "endLine": 671,
+        "endChar": 59
+      },
+      "revId": "90f31a6f3e12d6195071de32c0b3ba8a7a5a2e91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a7533e69_4b1faadf",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 703,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-20T20:46:58Z",
+      "side": 1,
+      "message": "bufferModified isn\u0027t quite right - streaming in new data is modifying the buffer but doesn\u0027t require updating the descriptor sets. rather you are seeing a new buffer handle. how about anyNewBufferAllocated",
+      "range": {
+        "startLine": 703,
+        "startChar": 9,
+        "endLine": 703,
+        "endChar": 27
+      },
+      "revId": "90f31a6f3e12d6195071de32c0b3ba8a7a5a2e91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "91fb3d7c_419c7b03",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 714,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-20T20:46:58Z",
+      "side": 1,
+      "message": "can you set it up to pass the reference to this value instead of passing a temporary?",
+      "range": {
+        "startLine": 714,
+        "startChar": 12,
+        "endLine": 714,
+        "endChar": 33
+      },
+      "revId": "90f31a6f3e12d6195071de32c0b3ba8a7a5a2e91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6751206f_e4a4071b",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 726,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-20T20:46:58Z",
+      "side": 1,
+      "message": "newly allocated",
+      "range": {
+        "startLine": 726,
+        "startChar": 61,
+        "endLine": 726,
+        "endChar": 69
+      },
+      "revId": "90f31a6f3e12d6195071de32c0b3ba8a7a5a2e91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "376e4374_ecdd3c47",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 728,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-20T20:46:58Z",
+      "side": 1,
+      "message": "this seems unnecessary.",
+      "range": {
+        "startLine": 728,
+        "startChar": 8,
+        "endLine": 728,
+        "endChar": 32
+      },
+      "revId": "90f31a6f3e12d6195071de32c0b3ba8a7a5a2e91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "79c878e7_48f1346b",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-20T20:46:58Z",
+      "side": 1,
+      "message": "keep the order of the includes separate:\n\nhttps://google.github.io/styleguide/cppguide.html#Names_and_Order_of_Includes",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 13,
+        "endChar": 16
+      },
+      "revId": "90f31a6f3e12d6195071de32c0b3ba8a7a5a2e91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2fd31071_2b3fd025",
+        "filename": "src/libANGLE/renderer/vulkan/StreamingBuffer.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-20T20:46:58Z",
+      "side": 1,
+      "message": "can we rename this initialSize?",
+      "range": {
+        "startLine": 20,
+        "startChar": 66,
+        "endLine": 20,
+        "endChar": 73
+      },
+      "revId": "90f31a6f3e12d6195071de32c0b3ba8a7a5a2e91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fdb9fa76_e442b4a6",
+        "filename": "src/libANGLE/renderer/vulkan/StreamingBuffer.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-20T20:46:58Z",
+      "side": 1,
+      "message": "minimum alignment isn\u0027t quite precise - how about just allocation alignment or just alignment?",
+      "range": {
+        "startLine": 26,
+        "startChar": 6,
+        "endLine": 26,
+        "endChar": 19
+      },
+      "revId": "90f31a6f3e12d6195071de32c0b3ba8a7a5a2e91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "656bd65c_e9828069",
+        "filename": "src/libANGLE/renderer/vulkan/StreamingBuffer.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-20T20:46:58Z",
+      "side": 1,
+      "message": "nit: initial size again.",
+      "range": {
+        "startLine": 152,
+        "startChar": 22,
+        "endLine": 152,
+        "endChar": 36
+      },
+      "revId": "90f31a6f3e12d6195071de32c0b3ba8a7a5a2e91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e340c8d2_cba0278d",
+        "filename": "src/tests/gl_tests/VulkanUniformUpdatesTest.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-20T20:46:58Z",
+      "side": 1,
+      "message": "nit: technically it would be once every 8 or so updates... two uniforms (vec2 \u0026 vec4) would use at most 32 bytes of the 256 size limit.",
+      "range": {
+        "startLine": 65,
+        "startChar": 49,
+        "endLine": 65,
+        "endChar": 73
+      },
+      "revId": "90f31a6f3e12d6195071de32c0b3ba8a7a5a2e91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d7c14a70_1c0fd106",
+        "filename": "src/tests/gl_tests/VulkanUniformUpdatesTest.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-20T20:46:58Z",
+      "side": 1,
+      "message": "might want to lower this to 128 -- or increase the iteration count -- to ensure we flip the buffer a few times instead of once.",
+      "revId": "90f31a6f3e12d6195071de32c0b3ba8a7a5a2e91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
