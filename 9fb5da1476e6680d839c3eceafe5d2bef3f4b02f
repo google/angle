@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa1215c9_1500c282",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 320,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-20T20:09:20Z",
+      "side": 1,
+      "message": "can you make this a helper method in vk::Image that takes as input aspect/mipLevel/arrayLayer and returns (as out parameter) a subresource layout? then use this helper in TextureVk.cpp as well.",
+      "range": {
+        "startLine": 320,
+        "startChar": 4,
+        "endLine": 320,
+        "endChar": 31
+      },
+      "revId": "9fb5da1476e6680d839c3eceafe5d2bef3f4b02f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
