@@ -447,10 +447,7 @@ void TParseContext::checkPrecisionSpecified(const TSourceLoc &line,
 // an l-value that can be operated on this way.
 bool TParseContext::checkCanBeLValue(const TSourceLoc &line, const char *op, TIntermTyped *node)
 {
-    TIntermSymbol *symNode      = node->getAsSymbolNode();
-    TIntermBinary *binaryNode   = node->getAsBinaryNode();
     TIntermSwizzle *swizzleNode = node->getAsSwizzleNode();
-
     if (swizzleNode)
     {
         bool ok = checkCanBeLValue(line, op, swizzleNode->getOperand());
@@ -462,6 +459,7 @@ bool TParseContext::checkCanBeLValue(const TSourceLoc &line, const char *op, TIn
         return ok;
     }
 
+    TIntermBinary *binaryNode = node->getAsBinaryNode();
     if (binaryNode)
     {
         switch (binaryNode->getOp())
@@ -582,40 +580,31 @@ bool TParseContext::checkCanBeLValue(const TSourceLoc &line, const char *op, TIn
             }
     }
 
-    if (message.empty() && binaryNode == 0 && symNode == 0)
+    ASSERT(binaryNode == nullptr && swizzleNode == nullptr);
+    TIntermSymbol *symNode = node->getAsSymbolNode();
+    if (message.empty() && symNode != nullptr)
     {
-        error(line, "l-value required", op);
-
-        return false;
-    }
-
-    //
-    // Everything else is okay, no error.
-    //
-    if (message.empty())
         return true;
-
-    //
-    // If we get here, we have an error and a message.
-    //
-    if (symNode)
-    {
-        // Symbol inside an expression can't be nameless.
-        ASSERT(symNode->variable().symbolType() != SymbolType::Empty);
-
-        const ImmutableString &symbol = symNode->getName();
-        std::stringstream reasonStream;
-        reasonStream << "l-value required (" << message << " \"" << symbol << "\")";
-        std::string reason = reasonStream.str();
-        error(line, reason.c_str(), op);
     }
-    else
+
+    std::stringstream reasonStream;
+    reasonStream << "l-value required";
+    if (!message.empty())
     {
-        std::stringstream reasonStream;
-        reasonStream << "l-value required (" << message << ")";
-        std::string reason = reasonStream.str();
-        error(line, reason.c_str(), op);
+        if (symNode)
+        {
+            // Symbol inside an expression can't be nameless.
+            ASSERT(symNode->variable().symbolType() != SymbolType::Empty);
+            const ImmutableString &symbol = symNode->getName();
+            reasonStream << " (" << message << " \"" << symbol << "\")";
+        }
+        else
+        {
+            reasonStream << " (" << message << ")";
+        }
     }
+    std::string reason = reasonStream.str();
+    error(line, reason.c_str(), op);
 
     return false;
 }
