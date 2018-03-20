@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "065920ab_41ebbfcd",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-03-20T04:28:40Z",
+      "side": 1,
+      "message": "How about: \"AOSP build file generation\"?",
+      "range": {
+        "startLine": 7,
+        "startChar": 4,
+        "endLine": 7,
+        "endChar": 12
+      },
+      "revId": "f6f9037fb3dbd808875840d26c1fde30a2b0a9e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2f494105_8b132932",
+        "filename": "scripts/gen_angle_android_bp.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-03-20T04:28:40Z",
+      "side": 1,
+      "message": "Please use the template from https://chromium.googlesource.com/angle/angle/+/HEAD/doc/CodingStandard.md\nand put it on top of the file.",
+      "range": {
+        "startLine": 16,
+        "startChar": 2,
+        "endLine": 16,
+        "endChar": 51
+      },
+      "revId": "f6f9037fb3dbd808875840d26c1fde30a2b0a9e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4b375abc_10394807",
+        "filename": "scripts/gen_angle_android_bp.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-03-20T04:28:40Z",
+      "side": 1,
+      "message": "I\u0027d be happy if you found a way to use it, like run \"gn gen\" with it before \"gn desc\", otherwise it\u0027s confusing.\nAlso, we don\u0027t define build_with_android.",
+      "range": {
+        "startLine": 92,
+        "startChar": 0,
+        "endLine": 92,
+        "endChar": 8
+      },
+      "revId": "f6f9037fb3dbd808875840d26c1fde30a2b0a9e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5322da9e_80e4820f",
+        "filename": "scripts/gen_angle_android_bp.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 288,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-03-20T04:28:40Z",
+      "side": 1,
+      "message": "Could you put some ANGLE GN label here?",
+      "range": {
+        "startLine": 288,
+        "startChar": 33,
+        "endLine": 288,
+        "endChar": 47
+      },
+      "revId": "f6f9037fb3dbd808875840d26c1fde30a2b0a9e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2c19c2c1_85d3a98b",
+        "filename": "scripts/gen_angle_android_bp.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 660,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-03-20T04:28:40Z",
+      "side": 1,
+      "message": "Do we need to have a license in Android.bp file?",
+      "range": {
+        "startLine": 660,
+        "startChar": 14,
+        "endLine": 660,
+        "endChar": 64
+      },
+      "revId": "f6f9037fb3dbd808875840d26c1fde30a2b0a9e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

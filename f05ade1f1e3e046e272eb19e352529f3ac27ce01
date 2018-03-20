@@ -430,6 +430,30 @@
     },
     {
       "key": {
+        "uuid": "d9ab52e3_c2829f7e",
+        "filename": "scripts/gen_angle_android_bp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-03-20T04:28:40Z",
+      "side": 1,
+      "message": "Android.bp had IS32_BIT defined. Which should be defined only for arm. For arm64 IS64_BIT should be defined.",
+      "parentUuid": "69476ced_2b799b3a",
+      "range": {
+        "startLine": 59,
+        "startChar": 43,
+        "endLine": 59,
+        "endChar": 46
+      },
+      "revId": "f05ade1f1e3e046e272eb19e352529f3ac27ce01",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ffd0dde5_24162dc0",
         "filename": "scripts/gen_angle_android_bp.py",
         "patchSetId": 4
