@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7ef389ac_5b3752fb",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Context11.cpp",
+        "patchSetId": 26
+      },
+      "lineNbr": 228,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-20T20:15:24Z",
+      "side": 1,
+      "message": "Can you add assertions in this file that the DrawCallParams helpers for isIndirect and isDrawElements are correct?",
+      "revId": "c139b2710604fb88b543ea2078a9e819cf08b666",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
