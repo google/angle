@@ -73,6 +73,24 @@
     },
     {
       "key": {
+        "uuid": "09a2934a_1c557733",
+        "filename": "Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-20T15:45:36Z",
+      "side": 1,
+      "message": "Sounds good. I think for now you will require a developer machine with Chrome installed to do it via triggering the roll script.",
+      "parentUuid": "50b1d34b_38c68c96",
+      "revId": "5328b884991d4730c54a948e1740900c2a3e97d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6672b598_ab7aaf32",
         "filename": "angle.json",
         "patchSetId": 2

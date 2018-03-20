@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2d9a0213_609b13b5",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-20T15:45:36Z",
+      "side": 1,
+      "message": "please open a bug for this, and tag it with the issue, if you don\u0027t mind.",
+      "range": {
+        "startLine": 10,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 7
+      },
+      "revId": "ad348c8d7aec96b986596a72c6521662bba9764e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4ecf0ff1_d0c97914",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 7
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-20T15:45:36Z",
+      "side": 1,
+      "message": "I think we can omit this section since we won\u0027t be storing the android bp file in the tree.",
+      "range": {
+        "startLine": 128,
+        "startChar": 3,
+        "endLine": 134,
+        "endChar": 129
+      },
+      "revId": "ad348c8d7aec96b986596a72c6521662bba9764e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1c0a9584_1e754242",
+        "filename": "scripts/gen_angle_android_bp.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-20T15:45:36Z",
+      "side": 1,
+      "message": "Instead of including both licenses, can we link to the perfetto file, and mention the license is there? This is all Google-owned code.",
+      "range": {
+        "startLine": 3,
+        "startChar": 1,
+        "endLine": 48,
+        "endChar": 0
+      },
+      "revId": "ad348c8d7aec96b986596a72c6521662bba9764e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "15340b26_2ef8ae7d",
+        "filename": "scripts/gen_angle_android_bp.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-20T15:45:36Z",
+      "side": 1,
+      "message": "Can we start implementing the roll script, and move the gn args / desc stuff into there? Let\u0027s keep this script entirely focused on generating blueprint from the json, and move the responsibility of generating the json to the rolling script.",
+      "range": {
+        "startLine": 62,
+        "startChar": 0,
+        "endLine": 64,
+        "endChar": 1
+      },
+      "revId": "ad348c8d7aec96b986596a72c6521662bba9764e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f09fd421_1163a490",
+        "filename": "scripts/gen_angle_android_bp.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-20T15:45:36Z",
+      "side": 1,
+      "message": "again this would be a part of your rolling script.",
+      "range": {
+        "startLine": 91,
+        "startChar": 0,
+        "endLine": 92,
+        "endChar": 87
+      },
+      "revId": "ad348c8d7aec96b986596a72c6521662bba9764e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d9b6679d_fc996476",
+        "filename": "scripts/gen_angle_android_bp.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-20T15:45:36Z",
+      "side": 1,
+      "message": "Shouldn\u0027t these be filtered out by the whitelist?",
+      "range": {
+        "startLine": 117,
+        "startChar": 0,
+        "endLine": 121,
+        "endChar": 1
+      },
+      "revId": "ad348c8d7aec96b986596a72c6521662bba9764e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
