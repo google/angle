@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "02ba993b_3a865dff",
+        "filename": "scripts/gen_angle_android_bp.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-03-20T20:37:56Z",
+      "side": 1,
+      "message": "Okay, then I think the choices are that I put both license text here or create a NOTICE file that contains the Apache and Angle licenses.\nAs it happens, I have to create that NOTICE file for Android, so maybe that\u0027s the easiest.",
+      "parentUuid": "a4dfbdf0_fd2749b7",
+      "range": {
+        "startLine": 8,
+        "startChar": 3,
+        "endLine": 8,
+        "endChar": 62
+      },
+      "revId": "233e62e4a5142039a429da2081b26d4ed05a3dea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d6d60ab4_b7e8ba50",
         "filename": "scripts/gen_angle_android_bp.py",
         "patchSetId": 8
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "9dcfc92a_2fa3c379",
+        "filename": "scripts/gen_angle_android_bp.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-03-20T20:37:56Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "d6d60ab4_b7e8ba50",
+      "range": {
+        "startLine": 44,
+        "startChar": 0,
+        "endLine": 44,
+        "endChar": 7
+      },
+      "revId": "233e62e4a5142039a429da2081b26d4ed05a3dea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a2bb74dc_16f2ab18",
         "filename": "src/commit_id.py",
         "patchSetId": 8
@@ -62,6 +110,24 @@
       "revId": "233e62e4a5142039a429da2081b26d4ed05a3dea",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e8cb6e2a_5caf76d6",
+        "filename": "src/commit_id.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-03-20T20:37:56Z",
+      "side": 1,
+      "message": "This is a truly generated file. It only exists in the output folder.\nI do not see license text on other generated content.\nE.g. out/soong/.intermediates/hardware/interfaces/graphics/composer/2.2/android.hardware.graphics.composer@2.2_genc++_headers/gen/android/hardware/graphics/composer/2.2/IComposerClient.h\nThis and related headers are generated as part of the HAL abstraction layer (HIDL).",
+      "parentUuid": "a2bb74dc_16f2ab18",
+      "revId": "233e62e4a5142039a429da2081b26d4ed05a3dea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
