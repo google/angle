@@ -522,6 +522,30 @@
       "revId": "f05ade1f1e3e046e272eb19e352529f3ac27ce01",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "93993d53_8256ff91",
+        "filename": "scripts/gen_angle_android_bp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 611,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-03-20T13:50:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f881ea99_b8cd38ba",
+      "range": {
+        "startLine": 611,
+        "startChar": 61,
+        "endLine": 611,
+        "endChar": 75
+      },
+      "revId": "f05ade1f1e3e046e272eb19e352529f3ac27ce01",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }

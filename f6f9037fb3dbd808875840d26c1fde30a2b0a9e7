@@ -71,6 +71,30 @@
     },
     {
       "key": {
+        "uuid": "1d68015f_36a3fe97",
+        "filename": "scripts/gen_angle_android_bp.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-03-20T13:50:04Z",
+      "side": 1,
+      "message": "I could do that. May need a hand getting the gn command right.",
+      "parentUuid": "4b375abc_10394807",
+      "range": {
+        "startLine": 92,
+        "startChar": 0,
+        "endLine": 92,
+        "endChar": 8
+      },
+      "revId": "f6f9037fb3dbd808875840d26c1fde30a2b0a9e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5322da9e_80e4820f",
         "filename": "scripts/gen_angle_android_bp.py",
         "patchSetId": 5
@@ -94,6 +118,30 @@
     },
     {
       "key": {
+        "uuid": "62206669_3c922bbb",
+        "filename": "scripts/gen_angle_android_bp.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 288,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-03-20T13:50:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5322da9e_80e4820f",
+      "range": {
+        "startLine": 288,
+        "startChar": 33,
+        "endLine": 288,
+        "endChar": 47
+      },
+      "revId": "f6f9037fb3dbd808875840d26c1fde30a2b0a9e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2c19c2c1_85d3a98b",
         "filename": "scripts/gen_angle_android_bp.py",
         "patchSetId": 5
@@ -114,6 +162,30 @@
       "revId": "f6f9037fb3dbd808875840d26c1fde30a2b0a9e7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c4050b1a_51312a89",
+        "filename": "scripts/gen_angle_android_bp.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 660,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-03-20T13:50:04Z",
+      "side": 1,
+      "message": "Looks like it\u0027s not needed. At least not on generated files. I\u0027ll just leave in the generated line.",
+      "parentUuid": "2c19c2c1_85d3a98b",
+      "range": {
+        "startLine": 660,
+        "startChar": 14,
+        "endLine": 660,
+        "endChar": 64
+      },
+      "revId": "f6f9037fb3dbd808875840d26c1fde30a2b0a9e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
