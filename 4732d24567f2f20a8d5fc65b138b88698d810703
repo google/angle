@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3735eee4_d2b3ab5a",
+        "filename": "src/tests/perf_tests/DispatchComputePerf.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2018-03-20T08:48:08Z",
+      "side": 1,
+      "message": "I think it is not reasonable that ANGLERenderTest is parent class for DispatchComputePerfBenchmark. Some ANGLERenderTest\u0027s members does not exist in compute pipeline, for example, ANGLERenderTest::getWindow.\nI think you should re-write this class for Compute pipeline, \"ANGLEDispatchTest\"?\nDo you think so?",
+      "range": {
+        "startLine": 37,
+        "startChar": 44,
+        "endLine": 37,
+        "endChar": 59
+      },
+      "revId": "4732d24567f2f20a8d5fc65b138b88698d810703",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
