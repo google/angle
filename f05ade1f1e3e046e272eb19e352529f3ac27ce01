@@ -239,6 +239,30 @@
     },
     {
       "key": {
+        "uuid": "55149a88_d49c0dbb",
+        "filename": "scripts/gen_angle_android_bp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-03-20T01:33:40Z",
+      "side": 1,
+      "message": "So, seems like according to Apache License, we need to have both ANGLE and the original license here.",
+      "parentUuid": "c6e9aeea_ba5a85c4",
+      "range": {
+        "startLine": 2,
+        "startChar": 21,
+        "endLine": 2,
+        "endChar": 52
+      },
+      "revId": "f05ade1f1e3e046e272eb19e352529f3ac27ce01",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5157bbc8_517594bd",
         "filename": "scripts/gen_angle_android_bp.py",
         "patchSetId": 4
