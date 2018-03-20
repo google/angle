@@ -213,7 +213,7 @@ bool ValidateInterfaceBlocksCount(GLuint maxInterfaceBlocks,
     GLuint blockCount = 0;
     for (const sh::InterfaceBlock &block : interfaceBlocks)
     {
-        if (block.staticUse || block.layout != sh::BLOCKLAYOUT_PACKED)
+        if (block.active || block.layout != sh::BLOCKLAYOUT_PACKED)
         {
             blockCount += (block.arraySize ? block.arraySize : 1);
             if (blockCount > maxInterfaceBlocks)
@@ -646,7 +646,7 @@ void LogLinkMismatch(InfoLog &infoLog,
 bool IsActiveInterfaceBlock(const sh::InterfaceBlock &interfaceBlock)
 {
     // Only 'packed' blocks are allowed to be considered inactive.
-    return interfaceBlock.staticUse || interfaceBlock.layout != sh::BLOCKLAYOUT_PACKED;
+    return interfaceBlock.active || interfaceBlock.layout != sh::BLOCKLAYOUT_PACKED;
 }
 
 // VariableLocation implementation.
@@ -2440,7 +2440,9 @@ bool Program::linkValidateShaderInterfaceMatching(const Context *context,
             }
         }
 
-        // We permit unmatched, unreferenced varyings
+        // We permit unmatched, unreferenced varyings. Note that this specifically depends on
+        // whether the input is statically used - a statically used input should fail this test even
+        // if it is not active. GLSL ES 3.00.6 section 4.3.10.
         if (!matched && input.staticUse)
         {
             infoLog << GetShaderTypeString(consumingShader->getType()) << " varying " << input.name

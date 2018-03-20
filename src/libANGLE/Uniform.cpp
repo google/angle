@@ -13,39 +13,36 @@
 namespace gl
 {
 
-StaticallyUsed::StaticallyUsed()
-    : vertexStaticUse(false),
-      fragmentStaticUse(false),
-      computeStaticUse(false),
-      geometryStaticUse(false)
+ActiveVariable::ActiveVariable()
+    : vertexActive(false), fragmentActive(false), computeActive(false), geometryActive(false)
 {
 }
 
-StaticallyUsed::~StaticallyUsed()
+ActiveVariable::~ActiveVariable()
 {
 }
 
-StaticallyUsed::StaticallyUsed(const StaticallyUsed &rhs) = default;
-StaticallyUsed &StaticallyUsed::operator=(const StaticallyUsed &rhs) = default;
+ActiveVariable::ActiveVariable(const ActiveVariable &rhs) = default;
+ActiveVariable &ActiveVariable::operator=(const ActiveVariable &rhs) = default;
 
-void StaticallyUsed::setStaticUse(GLenum shaderType, bool used)
+void ActiveVariable::setActive(GLenum shaderType, bool used)
 {
     switch (shaderType)
     {
         case GL_VERTEX_SHADER:
-            vertexStaticUse = used;
+            vertexActive = used;
             break;
 
         case GL_FRAGMENT_SHADER:
-            fragmentStaticUse = used;
+            fragmentActive = used;
             break;
 
         case GL_COMPUTE_SHADER:
-            computeStaticUse = used;
+            computeActive = used;
             break;
 
         case GL_GEOMETRY_SHADER_EXT:
-            geometryStaticUse = used;
+            geometryActive = used;
             break;
 
         default:
@@ -53,23 +50,23 @@ void StaticallyUsed::setStaticUse(GLenum shaderType, bool used)
     }
 }
 
-void StaticallyUsed::unionReferencesWith(const StaticallyUsed &other)
+void ActiveVariable::unionReferencesWith(const ActiveVariable &other)
 {
-    vertexStaticUse |= other.vertexStaticUse;
-    fragmentStaticUse |= other.fragmentStaticUse;
-    computeStaticUse |= other.computeStaticUse;
-    geometryStaticUse |= other.geometryStaticUse;
+    vertexActive |= other.vertexActive;
+    fragmentActive |= other.fragmentActive;
+    computeActive |= other.computeActive;
+    geometryActive |= other.geometryActive;
 }
 
-ShaderType StaticallyUsed::getFirstStaticUseShaderType() const
+ShaderType ActiveVariable::getFirstShaderTypeWhereActive() const
 {
-    if (vertexStaticUse)
+    if (vertexActive)
         return SHADER_VERTEX;
-    if (fragmentStaticUse)
+    if (fragmentActive)
         return SHADER_FRAGMENT;
-    if (computeStaticUse)
+    if (computeActive)
         return SHADER_COMPUTE;
-    if (geometryStaticUse)
+    if (geometryActive)
         return SHADER_GEOMETRY;
 
     UNREACHABLE();
@@ -115,7 +112,7 @@ LinkedUniform::LinkedUniform(const sh::Uniform &uniform)
 
 LinkedUniform::LinkedUniform(const LinkedUniform &uniform)
     : sh::Uniform(uniform),
-      StaticallyUsed(uniform),
+      ActiveVariable(uniform),
       typeInfo(uniform.typeInfo),
       bufferIndex(uniform.bufferIndex),
       blockInfo(uniform.blockInfo)
@@ -125,7 +122,7 @@ LinkedUniform::LinkedUniform(const LinkedUniform &uniform)
 LinkedUniform &LinkedUniform::operator=(const LinkedUniform &uniform)
 {
     sh::Uniform::operator=(uniform);
-    StaticallyUsed::operator=(uniform);
+    ActiveVariable::operator=(uniform);
     typeInfo             = uniform.typeInfo;
     bufferIndex          = uniform.bufferIndex;
     blockInfo            = uniform.blockInfo;

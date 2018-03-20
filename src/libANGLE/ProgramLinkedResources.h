@@ -114,7 +114,7 @@ class UniformLinker final : angle::NonCopyable
         std::vector<LinkedUniform> *imageUniforms,
         std::vector<LinkedUniform> *atomicCounterUniforms,
         GLenum shaderType,
-        bool markStaticUse,
+        bool markActive,
         int binding,
         int offset,
         int *location);
@@ -126,7 +126,7 @@ class UniformLinker final : angle::NonCopyable
                                             std::vector<LinkedUniform> *imageUniforms,
                                             std::vector<LinkedUniform> *atomicCounterUniforms,
                                             GLenum shaderType,
-                                            bool markStaticUse,
+                                            bool markActive,
                                             int binding,
                                             int offset,
                                             int *location);
@@ -138,12 +138,12 @@ class UniformLinker final : angle::NonCopyable
                                            std::vector<LinkedUniform> *imageUniforms,
                                            std::vector<LinkedUniform> *atomicCounterUniforms,
                                            GLenum shaderType,
-                                           bool markStaticUse,
+                                           bool markActive,
                                            int binding,
                                            int offset,
                                            int *location);
 
-    // markStaticUse is given as a separate parameter because it is tracked here at struct
+    // markActive is given as a separate parameter because it is tracked here at struct
     // granularity.
     ShaderUniformCount flattenUniformImpl(const sh::ShaderVariable &uniform,
                                           const std::string &fullName,
@@ -152,7 +152,7 @@ class UniformLinker final : angle::NonCopyable
                                           std::vector<LinkedUniform> *imageUniforms,
                                           std::vector<LinkedUniform> *atomicCounterUniforms,
                                           GLenum shaderType,
-                                          bool markStaticUse,
+                                          bool markActive,
                                           int binding,
                                           int offset,
                                           int *location);
@@ -225,9 +225,9 @@ class InterfaceBlockLinker : angle::NonCopyable
                                        int topLevelArraySize,
                                        GLenum shaderType) const                 = 0;
     virtual size_t getCurrentBlockMemberIndex() const                           = 0;
-    virtual void updateBlockMemberStaticUsedImpl(const std::string &fullName,
-                                                 GLenum shaderType,
-                                                 bool staticUse) const          = 0;
+    virtual void updateBlockMemberActiveImpl(const std::string &fullName,
+                                             GLenum shaderType,
+                                             bool active) const                 = 0;
 
     using ShaderBlocks = std::pair<GLenum, const std::vector<sh::InterfaceBlock> *>;
     std::vector<ShaderBlocks> mShaderBlocks;
@@ -263,9 +263,9 @@ class UniformBlockLinker final : public InterfaceBlockLinker
                                int topLevelArraySize,
                                GLenum shaderType) const override;
     size_t getCurrentBlockMemberIndex() const override;
-    void updateBlockMemberStaticUsedImpl(const std::string &fullName,
-                                         GLenum shaderType,
-                                         bool staticUse) const override;
+    void updateBlockMemberActiveImpl(const std::string &fullName,
+                                     GLenum shaderType,
+                                     bool active) const override;
     std::vector<LinkedUniform> *mUniformsOut;
 };
 
@@ -285,9 +285,9 @@ class ShaderStorageBlockLinker final : public InterfaceBlockLinker
                                int topLevelArraySize,
                                GLenum shaderType) const override;
     size_t getCurrentBlockMemberIndex() const override;
-    void updateBlockMemberStaticUsedImpl(const std::string &fullName,
-                                         GLenum shaderType,
-                                         bool staticUse) const override;
+    void updateBlockMemberActiveImpl(const std::string &fullName,
+                                     GLenum shaderType,
+                                     bool active) const override;
     std::vector<BufferVariable> *mBufferVariablesOut;
 };
 

@@ -221,7 +221,7 @@ void UniformBlockInfo::getShaderBlockInfo(const gl::Context *context, gl::Shader
 {
     for (const sh::InterfaceBlock &interfaceBlock : shader->getUniformBlocks(context))
     {
-        if (!interfaceBlock.staticUse && interfaceBlock.layout == sh::BLOCKLAYOUT_PACKED)
+        if (!interfaceBlock.active && interfaceBlock.layout == sh::BLOCKLAYOUT_PACKED)
             continue;
 
         if (mBlockSizes.count(interfaceBlock.name) > 0)
@@ -234,7 +234,7 @@ void UniformBlockInfo::getShaderBlockInfo(const gl::Context *context, gl::Shader
 
 size_t UniformBlockInfo::getBlockInfo(const sh::InterfaceBlock &interfaceBlock)
 {
-    ASSERT(interfaceBlock.staticUse || interfaceBlock.layout != sh::BLOCKLAYOUT_PACKED);
+    ASSERT(interfaceBlock.active || interfaceBlock.layout != sh::BLOCKLAYOUT_PACKED);
 
     // define member uniforms
     sh::Std140BlockEncoder std140Encoder;
@@ -1806,14 +1806,14 @@ void ProgramD3D::initializeUniformBlocks()
 
         D3DUniformBlock d3dUniformBlock;
 
-        if (uniformBlock.vertexStaticUse)
+        if (uniformBlock.vertexActive)
         {
             ASSERT(vertexShaderD3D != nullptr);
             unsigned int baseRegister = vertexShaderD3D->getUniformBlockRegister(uniformBlock.name);
             d3dUniformBlock.vsRegisterIndex = baseRegister + uniformBlockElement;
         }
 
-        if (uniformBlock.fragmentStaticUse)
+        if (uniformBlock.fragmentActive)
         {
             ASSERT(fragmentShaderD3D != nullptr);
             unsigned int baseRegister =
@@ -1821,7 +1821,7 @@ void ProgramD3D::initializeUniformBlocks()
             d3dUniformBlock.psRegisterIndex = baseRegister + uniformBlockElement;
         }
 
-        if (uniformBlock.computeStaticUse)
+        if (uniformBlock.computeActive)
         {
             ASSERT(computeShaderD3D != nullptr);
             unsigned int baseRegister =
@@ -1916,12 +1916,12 @@ void ProgramD3D::updateUniformBufferCache(const gl::Caps &caps,
         GLuint blockBinding                 = mState.getUniformBlockBinding(uniformBlockIndex);
 
         // Unnecessary to apply an unreferenced standard or shared UBO
-        if (!uniformBlock.vertexStaticUse() && !uniformBlock.fragmentStaticUse())
+        if (!uniformBlock.vertexActive() && !uniformBlock.fragmentActive())
         {
             continue;
         }
 
-        if (uniformBlock.vertexStaticUse())
+        if (uniformBlock.vertexActive())
         {
             unsigned int registerIndex = uniformBlock.vsRegisterIndex - reservedVertex;
             ASSERT(registerIndex < caps.maxVertexUniformBlocks);
@@ -1935,7 +1935,7 @@ void ProgramD3D::updateUniformBufferCache(const gl::Caps &caps,
             mVertexUBOCache[registerIndex] = blockBinding;
         }
 
-        if (uniformBlock.fragmentStaticUse())
+        if (uniformBlock.fragmentActive())
         {
             unsigned int registerIndex = uniformBlock.psRegisterIndex - reservedFragment;
             ASSERT(registerIndex < caps.maxFragmentUniformBlocks);
@@ -2120,7 +2120,7 @@ void ProgramD3D::defineUniformsAndAssignRegisters(const gl::Context *context)
     {
         for (const sh::Uniform &computeUniform : computeShader->getUniforms(context))
         {
-            if (computeUniform.staticUse)
+            if (computeUniform.active)
             {
                 defineUniformBase(computeShader, computeUniform, &uniformMap);
             }
@@ -2131,7 +2131,7 @@ void ProgramD3D::defineUniformsAndAssignRegisters(const gl::Context *context)
         gl::Shader *vertexShader = mState.getAttachedVertexShader();
         for (const sh::Uniform &vertexUniform : vertexShader->getUniforms(context))
         {
-            if (vertexUniform.staticUse)
+            if (vertexUniform.active)
             {
                 defineUniformBase(vertexShader, vertexUniform, &uniformMap);
             }
@@ -2140,7 +2140,7 @@ void ProgramD3D::defineUniformsAndAssignRegisters(const gl::Context *context)
         gl::Shader *fragmentShader = mState.getAttachedFragmentShader();
         for (const sh::Uniform &fragmentUniform : fragmentShader->getUniforms(context))
         {
-            if (fragmentUniform.staticUse)
+            if (fragmentUniform.active)
             {
                 defineUniformBase(fragmentShader, fragmentUniform, &uniformMap);
             }

@@ -1286,7 +1286,7 @@ void DynamicHLSL::getPixelShaderOutputKey(const gl::ContextState &data,
             const std::string &elementString =
                 (outputVariable.isArray() ? Str(outputLocation.arrayIndex) : "");
 
-            ASSERT(outputVariable.staticUse);
+            ASSERT(outputVariable.active);
 
             PixelShaderOutputVariable outputKeyVariable;
             outputKeyVariable.type        = outputVariable.type;

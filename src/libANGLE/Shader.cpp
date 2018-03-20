@@ -35,7 +35,7 @@ std::vector<VarT> GetActiveShaderVariables(const std::vector<VarT> *variableList
     for (size_t varIndex = 0; varIndex < variableList->size(); varIndex++)
     {
         const VarT &var = variableList->at(varIndex);
-        if (var.staticUse)
+        if (var.active)
         {
             result.push_back(var);
         }

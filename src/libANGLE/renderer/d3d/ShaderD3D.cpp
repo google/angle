@@ -204,7 +204,7 @@ bool ShaderD3D::postTranslateCompile(gl::Compiler *compiler, std::string *infoLo
 
     for (const sh::InterfaceBlock &interfaceBlock : mData.getUniformBlocks())
     {
-        if (interfaceBlock.staticUse)
+        if (interfaceBlock.active)
         {
             unsigned int index = static_cast<unsigned int>(-1);
             bool blockRegisterResult =

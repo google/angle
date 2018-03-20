@@ -44,6 +44,7 @@ void WriteShaderVar(BinaryOutputStream *stream, const sh::ShaderVariable &var)
     stream->writeString(var.mappedName);
     stream->writeIntVector(var.arraySizes);
     stream->writeInt(var.staticUse);
+    stream->writeInt(var.active);
     stream->writeString(var.structName);
     ASSERT(var.fields.empty());
 }
@@ -56,6 +57,7 @@ void LoadShaderVar(BinaryInputStream *stream, sh::ShaderVariable *var)
     var->mappedName = stream->readString();
     stream->readIntVector<unsigned int>(&var->arraySizes);
     var->staticUse  = stream->readBool();
+    var->active     = stream->readBool();
     var->structName = stream->readString();
 }
 
@@ -64,10 +66,10 @@ void WriteShaderVariableBuffer(BinaryOutputStream *stream, const ShaderVariableB
     stream->writeInt(var.binding);
     stream->writeInt(var.dataSize);
 
-    stream->writeInt(var.vertexStaticUse);
-    stream->writeInt(var.fragmentStaticUse);
-    stream->writeInt(var.computeStaticUse);
-    stream->writeInt(var.geometryStaticUse);
+    stream->writeInt(var.vertexActive);
+    stream->writeInt(var.fragmentActive);
+    stream->writeInt(var.computeActive);
+    stream->writeInt(var.geometryActive);
 
     stream->writeInt(var.memberIndexes.size());
     for (unsigned int memberCounterIndex : var.memberIndexes)
@@ -80,10 +82,10 @@ void LoadShaderVariableBuffer(BinaryInputStream *stream, ShaderVariableBuffer *v
 {
     var->binding           = stream->readInt<int>();
     var->dataSize          = stream->readInt<unsigned int>();
-    var->vertexStaticUse   = stream->readBool();
-    var->fragmentStaticUse = stream->readBool();
-    var->computeStaticUse  = stream->readBool();
-    var->geometryStaticUse = stream->readBool();
+    var->vertexActive      = stream->readBool();
+    var->fragmentActive    = stream->readBool();
+    var->computeActive     = stream->readBool();
+    var->geometryActive    = stream->readBool();
 
     unsigned int numMembers = stream->readInt<unsigned int>();
     for (unsigned int blockMemberIndex = 0; blockMemberIndex < numMembers; blockMemberIndex++)
@@ -103,9 +105,9 @@ void WriteBufferVariable(BinaryOutputStream *stream, const BufferVariable &var)
     stream->writeInt(var.blockInfo.isRowMajorMatrix);
     stream->writeInt(var.blockInfo.topLevelArrayStride);
     stream->writeInt(var.topLevelArraySize);
-    stream->writeInt(var.vertexStaticUse);
-    stream->writeInt(var.fragmentStaticUse);
-    stream->writeInt(var.computeStaticUse);
+    stream->writeInt(var.vertexActive);
+    stream->writeInt(var.fragmentActive);
+    stream->writeInt(var.computeActive);
 }
 
 void LoadBufferVariable(BinaryInputStream *stream, BufferVariable *var)
@@ -119,9 +121,9 @@ void LoadBufferVariable(BinaryInputStream *stream, BufferVariable *var)
     var->blockInfo.isRowMajorMatrix    = stream->readBool();
     var->blockInfo.topLevelArrayStride = stream->readInt<int>();
     var->topLevelArraySize             = stream->readInt<int>();
-    var->vertexStaticUse               = stream->readBool();
-    var->fragmentStaticUse             = stream->readBool();
-    var->computeStaticUse              = stream->readBool();
+    var->vertexActive                  = stream->readBool();
+    var->fragmentActive                = stream->readBool();
+    var->computeActive                 = stream->readBool();
 }
 
 void WriteInterfaceBlock(BinaryOutputStream *stream, const InterfaceBlock &block)

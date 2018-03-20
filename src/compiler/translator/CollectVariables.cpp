@@ -83,6 +83,7 @@ void MarkStaticallyUsed(ShaderVariable *variable)
             }
         }
         variable->staticUse = true;
+        variable->active    = true;
     }
 }
 
@@ -96,6 +97,7 @@ ShaderVariable *FindVariableInInterfaceBlock(const ImmutableString &name,
 
     // Set static use on the parent interface block here
     namedBlock->staticUse = true;
+    namedBlock->active    = true;
     return FindVariable(name, &namedBlock->fields);
 }
 
@@ -284,6 +286,7 @@ void CollectVariablesTraverser::recordBuiltInVaryingUsed(const ImmutableString &
         Varying info;
         setBuiltInInfoFromSymbolTable(name, &info);
         info.staticUse   = true;
+        info.active      = true;
         info.isInvariant = mSymbolTable->isVaryingInvariant(name);
         varyings->push_back(info);
         (*addedFlag) = true;
@@ -298,6 +301,7 @@ void CollectVariablesTraverser::recordBuiltInFragmentOutputUsed(const ImmutableS
         OutputVariable info;
         setBuiltInInfoFromSymbolTable(name, &info);
         info.staticUse = true;
+        info.active    = true;
         mOutputVariables->push_back(info);
         (*addedFlag) = true;
     }
@@ -311,6 +315,7 @@ void CollectVariablesTraverser::recordBuiltInAttributeUsed(const ImmutableString
         Attribute info;
         setBuiltInInfoFromSymbolTable(name, &info);
         info.staticUse = true;
+        info.active    = true;
         info.location  = -1;
         mAttribs->push_back(info);
         (*addedFlag) = true;
@@ -325,6 +330,7 @@ InterfaceBlock *CollectVariablesTraverser::recordGLInUsed(const TType &glInType)
         InterfaceBlock info;
         recordInterfaceBlock("gl_in", glInType, &info);
         info.staticUse = true;
+        info.active    = true;
 
         mPerVertexInAdded = true;
         mInBlocks->push_back(info);
@@ -385,6 +391,7 @@ void CollectVariablesTraverser::visitSymbol(TIntermSymbol *symbol)
             info.type          = GL_NONE;
             info.precision     = GL_NONE;
             info.staticUse     = true;
+            info.active        = true;
 
             ShaderVariable nearInfo(GL_FLOAT);
             const char kNearName[] = "near";
@@ -392,6 +399,7 @@ void CollectVariablesTraverser::visitSymbol(TIntermSymbol *symbol)
             nearInfo.mappedName    = kNearName;
             nearInfo.precision     = GL_HIGH_FLOAT;
             nearInfo.staticUse     = true;
+            nearInfo.active        = true;
 
             ShaderVariable farInfo(GL_FLOAT);
             const char kFarName[] = "far";
@@ -399,6 +407,7 @@ void CollectVariablesTraverser::visitSymbol(TIntermSymbol *symbol)
             farInfo.mappedName    = kFarName;
             farInfo.precision     = GL_HIGH_FLOAT;
             farInfo.staticUse     = true;
+            farInfo.active        = true;
 
             ShaderVariable diffInfo(GL_FLOAT);
             const char kDiffName[] = "diff";
@@ -406,6 +415,7 @@ void CollectVariablesTraverser::visitSymbol(TIntermSymbol *symbol)
             diffInfo.mappedName    = kDiffName;
             diffInfo.precision     = GL_HIGH_FLOAT;
             diffInfo.staticUse     = true;
+            diffInfo.active        = true;
 
             info.fields.push_back(nearInfo);
             info.fields.push_back(farInfo);
@@ -476,6 +486,7 @@ void CollectVariablesTraverser::visitSymbol(TIntermSymbol *symbol)
                     info.type          = GL_INT;
                     info.precision     = GL_HIGH_INT;  // Defined by spec.
                     info.staticUse     = true;
+                    info.active        = true;
                     info.location      = -1;
                     mAttribs->push_back(info);
                     mInstanceIDAdded = true;
@@ -510,6 +521,7 @@ void CollectVariablesTraverser::visitSymbol(TIntermSymbol *symbol)
                         info.arraySizes.back() = 1u;
                     }
                     info.staticUse = true;
+                    info.active    = true;
                     mOutputVariables->push_back(info);
                     mFragDataAdded = true;
                 }
@@ -883,9 +895,11 @@ bool CollectVariablesTraverser::visitBinary(Visit, TIntermBinary *binaryNode)
         }
         ASSERT(namedBlock);
         namedBlock->staticUse   = true;
+        namedBlock->active      = true;
         unsigned int fieldIndex = static_cast<unsigned int>(constantUnion->getIConst(0));
         ASSERT(fieldIndex < namedBlock->fields.size());
         namedBlock->fields[fieldIndex].staticUse = true;
+        namedBlock->fields[fieldIndex].active    = true;
 
         if (traverseIndexExpression)
         {

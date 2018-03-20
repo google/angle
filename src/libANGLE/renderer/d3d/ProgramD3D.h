@@ -97,11 +97,11 @@ struct D3DUniformBlock
     {
     }
 
-    bool vertexStaticUse() const { return vsRegisterIndex != GL_INVALID_INDEX; }
+    bool vertexActive() const { return vsRegisterIndex != GL_INVALID_INDEX; }
 
-    bool fragmentStaticUse() const { return psRegisterIndex != GL_INVALID_INDEX; }
+    bool fragmentActive() const { return psRegisterIndex != GL_INVALID_INDEX; }
 
-    bool computeStaticUse() const { return csRegisterIndex != GL_INVALID_INDEX; }
+    bool computeActive() const { return csRegisterIndex != GL_INVALID_INDEX; }
 
     unsigned int vsRegisterIndex;
     unsigned int psRegisterIndex;

@@ -457,7 +457,7 @@ void ProgramVk::getUniformImpl(GLint location, T *v, GLenum entryPointType) cons
     }
 
     ASSERT(linkedUniform.typeInfo->componentType == entryPointType);
-    const gl::ShaderType shaderType = linkedUniform.getFirstStaticUseShaderType();
+    const gl::ShaderType shaderType = linkedUniform.getFirstShaderTypeWhereActive();
     ASSERT(shaderType != gl::ShaderType::SHADER_TYPE_INVALID);
 
     const DefaultUniformBlock &uniformBlock = mDefaultUniformBlocks[shaderType];

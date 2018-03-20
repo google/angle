@@ -138,13 +138,13 @@ gl::LinkResult GlslangWrapper::linkProgram(const gl::Context *glContext,
 
         std::string setBindingString = "set = 1, binding = " + Str(textureCount);
 
-        ASSERT(samplerUniform.vertexStaticUse || samplerUniform.fragmentStaticUse);
-        if (samplerUniform.vertexStaticUse)
+        ASSERT(samplerUniform.vertexActive || samplerUniform.fragmentActive);
+        if (samplerUniform.vertexActive)
         {
             InsertLayoutSpecifierString(&vertexSource, samplerUniform.name, setBindingString);
         }
 
-        if (samplerUniform.fragmentStaticUse)
+        if (samplerUniform.fragmentActive)
         {
             InsertLayoutSpecifierString(&fragmentSource, samplerUniform.name, setBindingString);
         }
