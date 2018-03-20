@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "58119d9b_30e18758",
+        "filename": "src/libANGLE/RefCountObject.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-20T01:32:23Z",
+      "side": 1,
+      "message": "Ok, sounds good that it should be more visible.  It would probably fit best in (the rather poorly named) angletypes.h.",
+      "parentUuid": "1addd481_5e2d8ead",
+      "range": {
+        "startLine": 175,
+        "startChar": 0,
+        "endLine": 204,
+        "endChar": 5
+      },
+      "revId": "b88e1bd26f6efb2a3dde0e090d6d3e270c0ea98c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "67906f2f_e0865775",
         "filename": "src/libANGLE/TransformFeedback.cpp",
         "patchSetId": 4
