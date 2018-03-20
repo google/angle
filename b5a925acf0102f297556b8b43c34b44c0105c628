@@ -16,6 +16,24 @@
       "revId": "b5a925acf0102f297556b8b43c34b44c0105c628",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9422d071_4b58e865",
+        "filename": "scripts/gen_angle_android_bp.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-03-20T21:03:39Z",
+      "side": 1,
+      "message": "I vote for 2)\nAnd a mention here that Perfetto\u0027s license is in NOTICE file.",
+      "parentUuid": "7b49a604_4fe783e1",
+      "revId": "b5a925acf0102f297556b8b43c34b44c0105c628",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
