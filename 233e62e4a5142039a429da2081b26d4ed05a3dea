@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "337909d8_ac78c70b",
+        "filename": "scripts/gen_angle_android_bp.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-20T23:07:25Z",
+      "side": 1,
+      "message": "I would prefer then we rewrite this file to not be a derivative work of perfetto. That, or we can just include the ANGLE license. Sorry but I would prefer not to include the NOTICE file or include the apache license.",
+      "parentUuid": "02ba993b_3a865dff",
+      "range": {
+        "startLine": 8,
+        "startChar": 3,
+        "endLine": 8,
+        "endChar": 62
+      },
+      "revId": "233e62e4a5142039a429da2081b26d4ed05a3dea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d6d60ab4_b7e8ba50",
         "filename": "scripts/gen_angle_android_bp.py",
         "patchSetId": 8
