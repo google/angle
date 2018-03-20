@@ -757,6 +757,20 @@ Error Image::bindMemory(VkDevice device, const vk::DeviceMemory &deviceMemory)
     return NoError();
 }
 
+void Image::getSubresourceLayout(VkDevice device,
+                                 VkImageAspectFlagBits aspectMask,
+                                 uint32_t mipLevel,
+                                 uint32_t arrayLayer,
+                                 VkSubresourceLayout *outSubresourceLayout)
+{
+    VkImageSubresource subresource;
+    subresource.aspectMask = aspectMask;
+    subresource.mipLevel   = mipLevel;
+    subresource.arrayLayer = arrayLayer;
+
+    vkGetImageSubresourceLayout(device, getHandle(), &subresource, outSubresourceLayout);
+}
+
 // ImageView implementation.
 ImageView::ImageView()
 {

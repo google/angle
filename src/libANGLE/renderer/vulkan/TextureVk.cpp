@@ -298,15 +298,10 @@ gl::Error TextureVk::setSubImageImpl(ContextVk *contextVk,
     const uint8_t *source = pixels + inputSkipBytes;
 
     // Get the subresource layout. This has important parameters like row pitch.
-    // TODO(jmadill): Fill out this structure based on input parameters.
-    VkImageSubresource subresource;
-    subresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-    subresource.mipLevel   = 0;
-    subresource.arrayLayer = 0;
-
+    // TODO(jmadill): Fill out these parameters based on input parameters.
     VkSubresourceLayout subresourceLayout;
-    vkGetImageSubresourceLayout(device, stagingImage.getImage().getHandle(), &subresource,
-                                &subresourceLayout);
+    stagingImage.getImage().getSubresourceLayout(device, VK_IMAGE_ASPECT_COLOR_BIT, 0, 0,
+                                                 &subresourceLayout);
 
     loadFunction.loadFunction(size.width, size.height, size.depth, source, inputRowPitch,
                               inputDepthPitch, mapPointer,

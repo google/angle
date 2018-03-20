@@ -431,6 +431,11 @@ class Image final : public WrappedObject<Image, VkImage>
     Error bindMemory(VkDevice device, const vk::DeviceMemory &deviceMemory);
 
     VkImageLayout getCurrentLayout() const { return mCurrentLayout; }
+    void getSubresourceLayout(VkDevice device,
+                              VkImageAspectFlagBits aspectMask,
+                              uint32_t mipLevel,
+                              uint32_t arrayLayer,
+                              VkSubresourceLayout *outSubresourceLayout);
     void updateLayout(VkImageLayout layout) { mCurrentLayout = layout; }
 
   private:
