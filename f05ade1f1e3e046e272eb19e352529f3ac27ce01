@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "d4dcd4bb_b4dae9a1",
+        "filename": "Android.bp",
+        "patchSetId": 4
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-03-20T03:19:16Z",
+      "side": 1,
+      "message": "The build configuration I was using did not set is_debug\u003dfalse. I\u0027ve rebuilt with that setting and this debug define is gone.",
+      "parentUuid": "2eef8db9_2d15e4d1",
+      "range": {
+        "startLine": 68,
+        "startChar": 7,
+        "endLine": 68,
+        "endChar": 37
+      },
+      "revId": "f05ade1f1e3e046e272eb19e352529f3ac27ce01",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2d0d5c05_549dd201",
         "filename": "Android.bp",
         "patchSetId": 4
@@ -117,6 +141,30 @@
       "revId": "f05ade1f1e3e046e272eb19e352529f3ac27ce01",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e4276a2c_c9b4f021",
+        "filename": "Android.bp",
+        "patchSetId": 4
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-03-20T03:19:16Z",
+      "side": 1,
+      "message": "Will not include Vulkan for at this point, that will be follow-up task.",
+      "parentUuid": "11dcc0cb_164cdc9c",
+      "range": {
+        "startLine": 165,
+        "startChar": 28,
+        "endLine": 165,
+        "endChar": 42
+      },
+      "revId": "f05ade1f1e3e046e272eb19e352529f3ac27ce01",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -263,6 +311,30 @@
     },
     {
       "key": {
+        "uuid": "7867f9c1_2fbb844e",
+        "filename": "scripts/gen_angle_android_bp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-03-20T03:19:16Z",
+      "side": 1,
+      "message": "I\u0027ve put both for now.",
+      "parentUuid": "55149a88_d49c0dbb",
+      "range": {
+        "startLine": 2,
+        "startChar": 21,
+        "endLine": 2,
+        "endChar": 52
+      },
+      "revId": "f05ade1f1e3e046e272eb19e352529f3ac27ce01",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5157bbc8_517594bd",
         "filename": "scripts/gen_angle_android_bp.py",
         "patchSetId": 4
@@ -334,6 +406,30 @@
     },
     {
       "key": {
+        "uuid": "69476ced_2b799b3a",
+        "filename": "scripts/gen_angle_android_bp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-03-20T03:19:16Z",
+      "side": 1,
+      "message": "It looks like Android automatically build both the 32bit and 64bit versions of targets specified in Android.bp. We\u0027ll probably need some addition ifdef\u0027ing to take advantage of that. I\u0027ll leave that to a future CL.",
+      "parentUuid": "8798bfb0_d01a737a",
+      "range": {
+        "startLine": 59,
+        "startChar": 43,
+        "endLine": 59,
+        "endChar": 46
+      },
+      "revId": "f05ade1f1e3e046e272eb19e352529f3ac27ce01",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ffd0dde5_24162dc0",
         "filename": "scripts/gen_angle_android_bp.py",
         "patchSetId": 4
@@ -378,6 +474,30 @@
       "revId": "f05ade1f1e3e046e272eb19e352529f3ac27ce01",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f881ea99_b8cd38ba",
+        "filename": "scripts/gen_angle_android_bp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 611,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-03-20T03:19:16Z",
+      "side": 1,
+      "message": "I\u0027ve added the ANGLE license as well.",
+      "parentUuid": "21d82d90_42b7db1c",
+      "range": {
+        "startLine": 611,
+        "startChar": 61,
+        "endLine": 611,
+        "endChar": 75
+      },
+      "revId": "f05ade1f1e3e046e272eb19e352529f3ac27ce01",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }

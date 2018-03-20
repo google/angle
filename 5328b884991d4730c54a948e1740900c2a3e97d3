@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "50b1d34b_38c68c96",
+        "filename": "Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-03-20T03:19:16Z",
+      "side": 1,
+      "message": "Okay, I\u0027ll pull it out and it will live in the Android mirror of Angle.\nStill challenging to figure out when to update as we need to use Chromium gn build files to do that. I think sorting that all out will be a long-term project.",
+      "parentUuid": "16844b21_cee5ea9a",
+      "revId": "5328b884991d4730c54a948e1740900c2a3e97d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6672b598_ab7aaf32",
         "filename": "angle.json",
         "patchSetId": 2
@@ -102,6 +120,24 @@
       "side": 1,
       "message": "This should probably just be stored as a temporary value from the second script I was mentioning.",
       "parentUuid": "94a06999_f1e516f2",
+      "revId": "5328b884991d4730c54a948e1740900c2a3e97d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0096aafd_e3bfcf39",
+        "filename": "angle.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-03-20T03:19:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "423d55d1_2045186d",
       "revId": "5328b884991d4730c54a948e1740900c2a3e97d3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
