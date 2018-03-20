@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7b49a604_4fe783e1",
+        "filename": "scripts/gen_angle_android_bp.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-03-20T20:59:32Z",
+      "side": 1,
+      "message": "Note: I\u0027m looking for folks feedback on options:\n1) Include Apache and ANGLE copyright info\n2) Include just ANGLE, add NOTICE file to repository that includes both ANGLE and Apache copyright (this is what Android requires for projects that include files with a variety of copyrights).",
+      "revId": "b5a925acf0102f297556b8b43c34b44c0105c628",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
