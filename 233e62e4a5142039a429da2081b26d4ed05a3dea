@@ -146,6 +146,24 @@
       "revId": "233e62e4a5142039a429da2081b26d4ed05a3dea",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0e81f116_63ee5cf4",
+        "filename": "src/commit_id.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-03-20T20:57:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cbd5c1ad_c13a7616",
+      "revId": "233e62e4a5142039a429da2081b26d4ed05a3dea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
