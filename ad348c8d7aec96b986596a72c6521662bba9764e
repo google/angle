@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "05a219b0_791a9b1b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-03-20T19:47:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2d9a0213_609b13b5",
+      "range": {
+        "startLine": 10,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 7
+      },
+      "revId": "ad348c8d7aec96b986596a72c6521662bba9764e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4ecf0ff1_d0c97914",
         "filename": "doc/DevSetup.md",
         "patchSetId": 7
@@ -45,6 +69,30 @@
       "revId": "ad348c8d7aec96b986596a72c6521662bba9764e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ad8433a4_900d3db2",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 7
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-03-20T19:47:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4ecf0ff1_d0c97914",
+      "range": {
+        "startLine": 128,
+        "startChar": 3,
+        "endLine": 134,
+        "endChar": 129
+      },
+      "revId": "ad348c8d7aec96b986596a72c6521662bba9764e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "da46bbee_42ac9d1d",
+        "filename": "scripts/gen_angle_android_bp.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-03-20T19:47:03Z",
+      "side": 1,
+      "message": "Replaced with template from CodingStandard.\nAdded reference to Perfetto.",
+      "parentUuid": "1c0a9584_1e754242",
+      "range": {
+        "startLine": 3,
+        "startChar": 1,
+        "endLine": 48,
+        "endChar": 0
+      },
+      "revId": "ad348c8d7aec96b986596a72c6521662bba9764e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "15340b26_2ef8ae7d",
         "filename": "scripts/gen_angle_android_bp.py",
         "patchSetId": 7
@@ -82,6 +154,30 @@
       "writtenOn": "2018-03-20T15:45:36Z",
       "side": 1,
       "message": "Can we start implementing the roll script, and move the gn args / desc stuff into there? Let\u0027s keep this script entirely focused on generating blueprint from the json, and move the responsibility of generating the json to the rolling script.",
+      "range": {
+        "startLine": 62,
+        "startChar": 0,
+        "endLine": 64,
+        "endChar": 1
+      },
+      "revId": "ad348c8d7aec96b986596a72c6521662bba9764e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d84170fa_0383afe8",
+        "filename": "scripts/gen_angle_android_bp.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-03-20T19:47:03Z",
+      "side": 1,
+      "message": "How about I just take out the options and leave that for the Android instructions since it\u0027s more useful on that side.",
+      "parentUuid": "15340b26_2ef8ae7d",
       "range": {
         "startLine": 62,
         "startChar": 0,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "ac231711_733e34e8",
+        "filename": "scripts/gen_angle_android_bp.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-03-20T19:47:03Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "f09fd421_1163a490",
+      "range": {
+        "startLine": 91,
+        "startChar": 0,
+        "endLine": 92,
+        "endChar": 87
+      },
+      "revId": "ad348c8d7aec96b986596a72c6521662bba9764e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d9b6679d_fc996476",
         "filename": "scripts/gen_angle_android_bp.py",
         "patchSetId": 7
@@ -137,6 +257,30 @@
       "revId": "ad348c8d7aec96b986596a72c6521662bba9764e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "946cf5f1_041ad2af",
+        "filename": "scripts/gen_angle_android_bp.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-03-20T19:47:03Z",
+      "side": 1,
+      "message": "Yeah, this can go away now.",
+      "parentUuid": "d9b6679d_fc996476",
+      "range": {
+        "startLine": 117,
+        "startChar": 0,
+        "endLine": 121,
+        "endChar": 1
+      },
+      "revId": "ad348c8d7aec96b986596a72c6521662bba9764e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
