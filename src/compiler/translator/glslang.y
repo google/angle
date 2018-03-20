@@ -1304,11 +1304,11 @@ compound_statement_no_new_scope
 statement_list
     : statement {
         $$ = new TIntermBlock();
-        $$->appendStatement($1);
+        context->appendStatement($$, $1);
     }
     | statement_list statement {
         $$ = $1;
-        $$->appendStatement($2);
+        context->appendStatement($$, $2);
     }
     ;
 

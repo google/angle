@@ -113,6 +113,7 @@ class CollectVariablesTest : public testing::Test
         const OutputVariable &outputVariable = outputVariables[varIndex];
         EXPECT_EQ(-1, outputVariable.location);
         EXPECT_TRUE(outputVariable.staticUse);
+        EXPECT_TRUE(outputVariable.active);
         EXPECT_EQ(varName, outputVariable.name);
         *outResult = &outputVariable;
     }
@@ -124,6 +125,17 @@ class CollectVariablesTest : public testing::Test
     }
 
     void compile(const std::string &shaderString) { compile(shaderString, 0u); }
+
+    void checkUniformStaticallyUsedButNotActive(const char *name)
+    {
+        const auto &uniforms = mTranslator->getUniforms();
+        ASSERT_EQ(1u, uniforms.size());
+
+        const Uniform &uniform = uniforms[0];
+        EXPECT_EQ(name, uniform.name);
+        EXPECT_TRUE(uniform.staticUse);
+        EXPECT_FALSE(uniform.active);
+    }
 
     ::GLenum mShaderType;
     std::unique_ptr<TranslatorGLSL> mTranslator;
@@ -247,6 +259,7 @@ TEST_F(CollectFragmentVariablesTest, SimpleOutputVar)
     EXPECT_EQ(-1, outputVariable.location);
     EXPECT_GLENUM_EQ(GL_MEDIUM_FLOAT, outputVariable.precision);
     EXPECT_TRUE(outputVariable.staticUse);
+    EXPECT_TRUE(outputVariable.active);
     EXPECT_GLENUM_EQ(GL_FLOAT_VEC4, outputVariable.type);
     EXPECT_EQ("out_fragColor", outputVariable.name);
 }
@@ -272,6 +285,7 @@ TEST_F(CollectFragmentVariablesTest, LocationOutputVar)
     EXPECT_EQ(5, outputVariable.location);
     EXPECT_GLENUM_EQ(GL_MEDIUM_FLOAT, outputVariable.precision);
     EXPECT_TRUE(outputVariable.staticUse);
+    EXPECT_TRUE(outputVariable.active);
     EXPECT_GLENUM_EQ(GL_FLOAT_VEC4, outputVariable.type);
     EXPECT_EQ("out_fragColor", outputVariable.name);
 }
@@ -296,6 +310,7 @@ TEST_F(CollectVertexVariablesTest, LocationAttribute)
     EXPECT_EQ(5, attribute.location);
     EXPECT_GLENUM_EQ(GL_HIGH_FLOAT, attribute.precision);
     EXPECT_TRUE(attribute.staticUse);
+    EXPECT_TRUE(attribute.active);
     EXPECT_GLENUM_EQ(GL_FLOAT_VEC4, attribute.type);
     EXPECT_EQ("in_Position", attribute.name);
 }
@@ -322,6 +337,7 @@ TEST_F(CollectVertexVariablesTest, SimpleInterfaceBlock)
     EXPECT_EQ(BLOCKLAYOUT_SHARED, interfaceBlock.layout);
     EXPECT_EQ("b", interfaceBlock.name);
     EXPECT_TRUE(interfaceBlock.staticUse);
+    EXPECT_TRUE(interfaceBlock.active);
 
     ASSERT_EQ(1u, interfaceBlock.fields.size());
 
@@ -329,6 +345,7 @@ TEST_F(CollectVertexVariablesTest, SimpleInterfaceBlock)
 
     EXPECT_GLENUM_EQ(GL_HIGH_FLOAT, field.precision);
     EXPECT_TRUE(field.staticUse);
+    EXPECT_TRUE(field.active);
     EXPECT_GLENUM_EQ(GL_FLOAT, field.type);
     EXPECT_EQ("f", field.name);
     EXPECT_FALSE(field.isRowMajorLayout);
@@ -358,6 +375,7 @@ TEST_F(CollectVertexVariablesTest, SimpleInstancedInterfaceBlock)
     EXPECT_EQ("b", interfaceBlock.name);
     EXPECT_EQ("blockInstance", interfaceBlock.instanceName);
     EXPECT_TRUE(interfaceBlock.staticUse);
+    EXPECT_TRUE(interfaceBlock.active);
 
     ASSERT_EQ(1u, interfaceBlock.fields.size());
 
@@ -365,6 +383,7 @@ TEST_F(CollectVertexVariablesTest, SimpleInstancedInterfaceBlock)
 
     EXPECT_GLENUM_EQ(GL_HIGH_FLOAT, field.precision);
     EXPECT_TRUE(field.staticUse);
+    EXPECT_TRUE(field.active);
     EXPECT_GLENUM_EQ(GL_FLOAT, field.type);
     EXPECT_EQ("f", field.name);
     EXPECT_FALSE(field.isRowMajorLayout);
@@ -395,25 +414,27 @@ TEST_F(CollectVertexVariablesTest, StructInterfaceBlock)
     EXPECT_EQ("b", interfaceBlock.name);
     EXPECT_EQ(DecorateName("b"), interfaceBlock.mappedName);
     EXPECT_TRUE(interfaceBlock.staticUse);
+    EXPECT_TRUE(interfaceBlock.active);
 
     ASSERT_EQ(1u, interfaceBlock.fields.size());
 
-    const InterfaceBlockField &field = interfaceBlock.fields[0];
+    const InterfaceBlockField &blockField = interfaceBlock.fields[0];
 
-    EXPECT_TRUE(field.isStruct());
-    EXPECT_TRUE(field.staticUse);
-    EXPECT_EQ("s", field.name);
-    EXPECT_EQ(DecorateName("s"), field.mappedName);
-    EXPECT_FALSE(field.isRowMajorLayout);
+    EXPECT_TRUE(blockField.isStruct());
+    EXPECT_TRUE(blockField.staticUse);
+    EXPECT_TRUE(blockField.active);
+    EXPECT_EQ("s", blockField.name);
+    EXPECT_EQ(DecorateName("s"), blockField.mappedName);
+    EXPECT_FALSE(blockField.isRowMajorLayout);
 
-    const ShaderVariable &member = field.fields[0];
+    const ShaderVariable &structField = blockField.fields[0];
 
-    // NOTE: we don't currently mark struct members as statically used or not
-    EXPECT_FALSE(member.isStruct());
-    EXPECT_EQ("f", member.name);
-    EXPECT_EQ(DecorateName("f"), member.mappedName);
-    EXPECT_GLENUM_EQ(GL_FLOAT, member.type);
-    EXPECT_GLENUM_EQ(GL_HIGH_FLOAT, member.precision);
+    // NOTE: we don't track static use or active at individual struct member granularity.
+    EXPECT_FALSE(structField.isStruct());
+    EXPECT_EQ("f", structField.name);
+    EXPECT_EQ(DecorateName("f"), structField.mappedName);
+    EXPECT_GLENUM_EQ(GL_FLOAT, structField.type);
+    EXPECT_GLENUM_EQ(GL_HIGH_FLOAT, structField.precision);
 }
 
 TEST_F(CollectVertexVariablesTest, StructInstancedInterfaceBlock)
@@ -441,25 +462,27 @@ TEST_F(CollectVertexVariablesTest, StructInstancedInterfaceBlock)
     EXPECT_EQ(DecorateName("b"), interfaceBlock.mappedName);
     EXPECT_EQ("instanceName", interfaceBlock.instanceName);
     EXPECT_TRUE(interfaceBlock.staticUse);
+    EXPECT_TRUE(interfaceBlock.active);
 
     ASSERT_EQ(1u, interfaceBlock.fields.size());
 
-    const InterfaceBlockField &field = interfaceBlock.fields[0];
+    const InterfaceBlockField &blockField = interfaceBlock.fields[0];
 
-    EXPECT_TRUE(field.isStruct());
-    EXPECT_TRUE(field.staticUse);
-    EXPECT_EQ("s", field.name);
-    EXPECT_EQ(DecorateName("s"), field.mappedName);
-    EXPECT_FALSE(field.isRowMajorLayout);
+    EXPECT_TRUE(blockField.isStruct());
+    EXPECT_TRUE(blockField.staticUse);
+    EXPECT_TRUE(blockField.active);
+    EXPECT_EQ("s", blockField.name);
+    EXPECT_EQ(DecorateName("s"), blockField.mappedName);
+    EXPECT_FALSE(blockField.isRowMajorLayout);
 
-    const ShaderVariable &member = field.fields[0];
+    const ShaderVariable &structField = blockField.fields[0];
 
-    // NOTE: we don't currently mark struct members as statically used or not
-    EXPECT_FALSE(member.isStruct());
-    EXPECT_EQ("f", member.name);
-    EXPECT_EQ(DecorateName("f"), member.mappedName);
-    EXPECT_GLENUM_EQ(GL_FLOAT, member.type);
-    EXPECT_GLENUM_EQ(GL_HIGH_FLOAT, member.precision);
+    // NOTE: we don't track static use or active at individual struct member granularity.
+    EXPECT_FALSE(structField.isStruct());
+    EXPECT_EQ("f", structField.name);
+    EXPECT_EQ(DecorateName("f"), structField.mappedName);
+    EXPECT_GLENUM_EQ(GL_FLOAT, structField.type);
+    EXPECT_GLENUM_EQ(GL_HIGH_FLOAT, structField.precision);
 }
 
 TEST_F(CollectVertexVariablesTest, NestedStructRowMajorInterfaceBlock)
@@ -486,25 +509,27 @@ TEST_F(CollectVertexVariablesTest, NestedStructRowMajorInterfaceBlock)
     EXPECT_EQ("b", interfaceBlock.name);
     EXPECT_EQ(DecorateName("b"), interfaceBlock.mappedName);
     EXPECT_TRUE(interfaceBlock.staticUse);
+    EXPECT_TRUE(interfaceBlock.active);
 
     ASSERT_EQ(1u, interfaceBlock.fields.size());
 
-    const InterfaceBlockField &field = interfaceBlock.fields[0];
+    const InterfaceBlockField &blockField = interfaceBlock.fields[0];
 
-    EXPECT_TRUE(field.isStruct());
-    EXPECT_TRUE(field.staticUse);
-    EXPECT_EQ("s", field.name);
-    EXPECT_EQ(DecorateName("s"), field.mappedName);
-    EXPECT_TRUE(field.isRowMajorLayout);
+    EXPECT_TRUE(blockField.isStruct());
+    EXPECT_TRUE(blockField.staticUse);
+    EXPECT_TRUE(blockField.active);
+    EXPECT_EQ("s", blockField.name);
+    EXPECT_EQ(DecorateName("s"), blockField.mappedName);
+    EXPECT_TRUE(blockField.isRowMajorLayout);
 
-    const ShaderVariable &member = field.fields[0];
+    const ShaderVariable &structField = blockField.fields[0];
 
-    // NOTE: we don't currently mark struct members as statically used or not
-    EXPECT_FALSE(member.isStruct());
-    EXPECT_EQ("m", member.name);
-    EXPECT_EQ(DecorateName("m"), member.mappedName);
-    EXPECT_GLENUM_EQ(GL_FLOAT_MAT2, member.type);
-    EXPECT_GLENUM_EQ(GL_HIGH_FLOAT, member.precision);
+    // NOTE: we don't track static use or active at individual struct member granularity.
+    EXPECT_FALSE(structField.isStruct());
+    EXPECT_EQ("m", structField.name);
+    EXPECT_EQ(DecorateName("m"), structField.mappedName);
+    EXPECT_GLENUM_EQ(GL_FLOAT_MAT2, structField.type);
+    EXPECT_GLENUM_EQ(GL_HIGH_FLOAT, structField.precision);
 }
 
 TEST_F(CollectVertexVariablesTest, VaryingInterpolation)
@@ -533,6 +558,7 @@ TEST_F(CollectVertexVariablesTest, VaryingInterpolation)
     EXPECT_FALSE(varying->isArray());
     EXPECT_GLENUM_EQ(GL_MEDIUM_FLOAT, varying->precision);
     EXPECT_TRUE(varying->staticUse);
+    EXPECT_TRUE(varying->active);
     EXPECT_GLENUM_EQ(GL_FLOAT, varying->type);
     EXPECT_EQ("vary", varying->name);
     EXPECT_EQ(DecorateName("vary"), varying->mappedName);
@@ -795,6 +821,7 @@ TEST_F(CollectHashedVertexVariablesTest, InstancedInterfaceBlock)
     EXPECT_EQ("blockInstance", interfaceBlock.instanceName);
     EXPECT_EQ("webgl_9", interfaceBlock.mappedName);
     EXPECT_TRUE(interfaceBlock.staticUse);
+    EXPECT_TRUE(interfaceBlock.active);
 
     ASSERT_EQ(1u, interfaceBlock.fields.size());
 
@@ -802,6 +829,7 @@ TEST_F(CollectHashedVertexVariablesTest, InstancedInterfaceBlock)
 
     EXPECT_GLENUM_EQ(GL_HIGH_FLOAT, field.precision);
     EXPECT_TRUE(field.staticUse);
+    EXPECT_TRUE(field.active);
     EXPECT_GLENUM_EQ(GL_FLOAT, field.type);
     EXPECT_EQ("field", field.name);
     EXPECT_EQ("webgl_5", field.mappedName);
@@ -837,13 +865,17 @@ TEST_F(CollectHashedVertexVariablesTest, StructUniform)
     EXPECT_EQ("webgl_1", uniform.mappedName);
     EXPECT_EQ("sType", uniform.structName);
     EXPECT_TRUE(uniform.staticUse);
+    EXPECT_TRUE(uniform.active);
 
     ASSERT_EQ(1u, uniform.fields.size());
 
     const ShaderVariable &field = uniform.fields[0];
 
     EXPECT_GLENUM_EQ(GL_HIGH_FLOAT, field.precision);
-    // EXPECT_TRUE(field.staticUse); // we don't yet support struct static use
+    // We don't yet support tracking static use per field, but fields are marked statically used in
+    // case the struct is.
+    EXPECT_TRUE(field.staticUse);
+    EXPECT_TRUE(field.active);
     EXPECT_GLENUM_EQ(GL_FLOAT, field.type);
     EXPECT_EQ("field", field.name);
     EXPECT_EQ("webgl_5", field.mappedName);
@@ -877,13 +909,17 @@ TEST_F(CollectHashedVertexVariablesTest, NamelessStructUniform)
     EXPECT_EQ("webgl_1", uniform.mappedName);
     EXPECT_EQ("", uniform.structName);
     EXPECT_TRUE(uniform.staticUse);
+    EXPECT_TRUE(uniform.active);
 
     ASSERT_EQ(1u, uniform.fields.size());
 
     const ShaderVariable &field = uniform.fields[0];
 
     EXPECT_GLENUM_EQ(GL_HIGH_FLOAT, field.precision);
-    // EXPECT_TRUE(field.staticUse); // we don't yet support struct static use
+    // We don't yet support tracking static use per field, but fields are marked statically used in
+    // case the struct is.
+    EXPECT_TRUE(field.staticUse);
+    EXPECT_TRUE(field.active);
     EXPECT_GLENUM_EQ(GL_FLOAT, field.type);
     EXPECT_EQ("field", field.name);
     EXPECT_EQ("webgl_5", field.mappedName);
@@ -913,6 +949,7 @@ TEST_F(CollectFragmentVariablesTest, MultiDeclaration)
     EXPECT_FALSE(uniform.isArray());
     EXPECT_GLENUM_EQ(GL_MEDIUM_FLOAT, uniform.precision);
     EXPECT_TRUE(uniform.staticUse);
+    EXPECT_TRUE(uniform.active);
     EXPECT_GLENUM_EQ(GL_FLOAT, uniform.type);
     EXPECT_EQ("uA", uniform.name);
 
@@ -920,6 +957,7 @@ TEST_F(CollectFragmentVariablesTest, MultiDeclaration)
     EXPECT_FALSE(uniformB.isArray());
     EXPECT_GLENUM_EQ(GL_MEDIUM_FLOAT, uniformB.precision);
     EXPECT_TRUE(uniformB.staticUse);
+    EXPECT_TRUE(uniformB.active);
     EXPECT_GLENUM_EQ(GL_FLOAT, uniformB.type);
     EXPECT_EQ("uB", uniformB.name);
 }
@@ -946,6 +984,7 @@ TEST_F(CollectFragmentVariablesTest, EmptyDeclarator)
     EXPECT_FALSE(uniformB.isArray());
     EXPECT_GLENUM_EQ(GL_MEDIUM_FLOAT, uniformB.precision);
     EXPECT_TRUE(uniformB.staticUse);
+    EXPECT_TRUE(uniformB.active);
     EXPECT_GLENUM_EQ(GL_FLOAT, uniformB.type);
     EXPECT_EQ("uB", uniformB.name);
 }
@@ -1008,6 +1047,7 @@ TEST_F(CollectGeometryVariablesTest, CollectGLInFields)
     EXPECT_EQ("gl_PerVertex", inBlock->name);
     EXPECT_EQ("gl_in", inBlock->instanceName);
     EXPECT_TRUE(inBlock->staticUse);
+    EXPECT_TRUE(inBlock->active);
     EXPECT_TRUE(inBlock->isBuiltIn());
 
     ASSERT_EQ(1u, inBlock->fields.size());
@@ -1017,6 +1057,7 @@ TEST_F(CollectGeometryVariablesTest, CollectGLInFields)
     EXPECT_FALSE(glPositionField.isArray());
     EXPECT_FALSE(glPositionField.isStruct());
     EXPECT_TRUE(glPositionField.staticUse);
+    EXPECT_TRUE(glPositionField.active);
     EXPECT_TRUE(glPositionField.isBuiltIn());
     EXPECT_GLENUM_EQ(GL_HIGH_FLOAT, glPositionField.precision);
     EXPECT_GLENUM_EQ(GL_FLOAT_VEC4, glPositionField.type);
@@ -1076,6 +1117,7 @@ TEST_F(CollectGeometryVariablesTest, CollectPrimitiveIDIn)
     EXPECT_FALSE(varying->isArray());
     EXPECT_FALSE(varying->isStruct());
     EXPECT_TRUE(varying->staticUse);
+    EXPECT_TRUE(varying->active);
     EXPECT_TRUE(varying->isBuiltIn());
     EXPECT_GLENUM_EQ(GL_HIGH_INT, varying->precision);
     EXPECT_GLENUM_EQ(GL_INT, varying->type);
@@ -1108,6 +1150,7 @@ TEST_F(CollectGeometryVariablesTest, CollectInvocationID)
     EXPECT_FALSE(varying->isArray());
     EXPECT_FALSE(varying->isStruct());
     EXPECT_TRUE(varying->staticUse);
+    EXPECT_TRUE(varying->active);
     EXPECT_TRUE(varying->isBuiltIn());
     EXPECT_GLENUM_EQ(GL_HIGH_INT, varying->precision);
     EXPECT_GLENUM_EQ(GL_INT, varying->type);
@@ -1169,6 +1212,7 @@ TEST_F(CollectGeometryVariablesTest, CollectPosition)
     EXPECT_FALSE(varying->isArray());
     EXPECT_FALSE(varying->isStruct());
     EXPECT_TRUE(varying->staticUse);
+    EXPECT_TRUE(varying->active);
     EXPECT_TRUE(varying->isBuiltIn());
     EXPECT_GLENUM_EQ(GL_HIGH_FLOAT, varying->precision);
     EXPECT_GLENUM_EQ(GL_FLOAT_VEC4, varying->type);
@@ -1200,6 +1244,7 @@ TEST_F(CollectGeometryVariablesTest, CollectPrimitiveID)
     EXPECT_FALSE(varying->isArray());
     EXPECT_FALSE(varying->isStruct());
     EXPECT_TRUE(varying->staticUse);
+    EXPECT_TRUE(varying->active);
     EXPECT_TRUE(varying->isBuiltIn());
     EXPECT_GLENUM_EQ(GL_HIGH_INT, varying->precision);
     EXPECT_GLENUM_EQ(GL_INT, varying->type);
@@ -1231,6 +1276,7 @@ TEST_F(CollectGeometryVariablesTest, CollectLayer)
     EXPECT_FALSE(varying->isArray());
     EXPECT_FALSE(varying->isStruct());
     EXPECT_TRUE(varying->staticUse);
+    EXPECT_TRUE(varying->active);
     EXPECT_TRUE(varying->isBuiltIn());
     EXPECT_GLENUM_EQ(GL_HIGH_INT, varying->precision);
     EXPECT_GLENUM_EQ(GL_INT, varying->type);
@@ -1262,6 +1308,7 @@ TEST_F(CollectFragmentVariablesEXTGeometryShaderTest, CollectPrimitiveID)
     EXPECT_FALSE(varying->isArray());
     EXPECT_FALSE(varying->isStruct());
     EXPECT_TRUE(varying->staticUse);
+    EXPECT_TRUE(varying->active);
     EXPECT_TRUE(varying->isBuiltIn());
     EXPECT_GLENUM_EQ(GL_HIGH_INT, varying->precision);
     EXPECT_GLENUM_EQ(GL_INT, varying->type);
@@ -1293,6 +1340,7 @@ TEST_F(CollectFragmentVariablesEXTGeometryShaderTest, CollectLayer)
     EXPECT_FALSE(varying->isArray());
     EXPECT_FALSE(varying->isStruct());
     EXPECT_TRUE(varying->staticUse);
+    EXPECT_TRUE(varying->active);
     EXPECT_TRUE(varying->isBuiltIn());
     EXPECT_GLENUM_EQ(GL_HIGH_INT, varying->precision);
     EXPECT_GLENUM_EQ(GL_INT, varying->type);
@@ -1385,6 +1433,7 @@ TEST_F(CollectGeometryVariablesTest, CollectInputs)
         EXPECT_TRUE(varying.isArray());
         EXPECT_FALSE(varying.isStruct());
         EXPECT_TRUE(varying.staticUse);
+        EXPECT_TRUE(varying.active);
         EXPECT_FALSE(varying.isBuiltIn());
         EXPECT_GLENUM_EQ(GL_HIGH_FLOAT, varying.precision);
         EXPECT_GLENUM_EQ(GL_FLOAT_VEC4, varying.type);
@@ -1548,8 +1597,442 @@ TEST_F(CollectFragmentVariablesTest, VaryingUsedInsideFoldedTernary)
     EXPECT_FALSE(varying->isArray());
     EXPECT_GLENUM_EQ(GL_HIGH_FLOAT, varying->precision);
     EXPECT_TRUE(varying->staticUse);
+    EXPECT_TRUE(varying->active);
     EXPECT_GLENUM_EQ(GL_FLOAT, varying->type);
     EXPECT_EQ("vary", varying->name);
     EXPECT_EQ(DecorateName("vary"), varying->mappedName);
     EXPECT_EQ(INTERPOLATION_CENTROID, varying->interpolation);
+}
+
+// Test a variable that is statically used but not active. The variable is used in a branch of a
+// ternary op that is not evaluated.
+TEST_F(CollectFragmentVariablesTest, StaticallyUsedButNotActiveInTernaryOp)
+{
+    const std::string &shaderString =
+        R"(#version 300 es
+        precision mediump float;
+        out vec4 out_fragColor;
+        uniform float u;
+        void main()
+        {
+            out_fragColor = vec4(true ? 0.0 : u);
+        })";
+
+    compile(shaderString);
+    checkUniformStaticallyUsedButNotActive("u");
+}
+
+// Test a variable that is statically used but not active. The variable is a return value in an
+// unused function.
+TEST_F(CollectFragmentVariablesTest, StaticallyUsedButNotActiveAsReturnValue)
+{
+    const std::string &shaderString =
+        R"(#version 300 es
+        precision mediump float;
+        out vec4 out_fragColor;
+        uniform float u;
+        float f() {
+            return u;
+        }
+        void main()
+        {
+            out_fragColor = vec4(0.0);
+        })";
+
+    compile(shaderString);
+    checkUniformStaticallyUsedButNotActive("u");
+}
+
+// Test a variable that is statically used but not active. The variable is an if statement condition
+// inside a block that is not executed.
+TEST_F(CollectFragmentVariablesTest, StaticallyUsedButNotActiveAsIfCondition)
+{
+    const std::string &shaderString =
+        R"(#version 300 es
+        precision mediump float;
+        out vec4 out_fragColor;
+        uniform bool u;
+        void main()
+        {
+            if (false) {
+                if (u) {
+                    out_fragColor = vec4(1.0);
+                }
+            }
+            out_fragColor = vec4(0.0);
+        })";
+
+    compile(shaderString);
+    checkUniformStaticallyUsedButNotActive("u");
+}
+
+// Test a variable that is statically used but not active. The variable is a constructor argument in
+// a block that is not executed.
+TEST_F(CollectFragmentVariablesTest, StaticallyUsedButNotActiveAsConstructorArgument)
+{
+    const std::string &shaderString =
+        R"(#version 300 es
+        precision mediump float;
+        out vec4 out_fragColor;
+        uniform float u;
+        void main()
+        {
+            if (false) {
+                out_fragColor = vec4(u);
+            }
+            out_fragColor = vec4(0.0);
+        })";
+
+    compile(shaderString);
+    checkUniformStaticallyUsedButNotActive("u");
+}
+
+// Test a variable that is statically used but not active. The variable is a binary operator operand
+// in a block that is not executed.
+TEST_F(CollectFragmentVariablesTest, StaticallyUsedButNotActiveAsBinaryOpOperand)
+{
+    const std::string &shaderString =
+        R"(#version 300 es
+        precision mediump float;
+        out vec4 out_fragColor;
+        uniform vec4 u;
+        void main()
+        {
+            if (false) {
+                out_fragColor = u + 1.0;
+            }
+            out_fragColor = vec4(0.0);
+        })";
+
+    compile(shaderString);
+    checkUniformStaticallyUsedButNotActive("u");
+}
+
+// Test a variable that is statically used but not active. The variable is a comparison operator
+// operand in a block that is not executed.
+TEST_F(CollectFragmentVariablesTest, StaticallyUsedButNotActiveAsComparisonOpOperand)
+{
+    const std::string &shaderString =
+        R"(#version 300 es
+        precision mediump float;
+        out vec4 out_fragColor;
+        uniform vec4 u;
+        void main()
+        {
+            if (false) {
+                if (u == vec4(1.0))
+                {
+                    out_fragColor = vec4(1.0);
+                }
+            }
+            out_fragColor = vec4(0.0);
+        })";
+
+    compile(shaderString);
+    checkUniformStaticallyUsedButNotActive("u");
+}
+
+// Test a variable that is statically used but not active. The variable is an unary operator operand
+// in a block that is not executed.
+TEST_F(CollectFragmentVariablesTest, StaticallyUsedButNotActiveAsUnaryOpOperand)
+{
+    const std::string &shaderString =
+        R"(#version 300 es
+        precision mediump float;
+        out vec4 out_fragColor;
+        uniform vec4 u;
+        void main()
+        {
+            if (false) {
+                out_fragColor = -u;
+            }
+            out_fragColor = vec4(0.0);
+        })";
+
+    compile(shaderString);
+    checkUniformStaticallyUsedButNotActive("u");
+}
+
+// Test a variable that is statically used but not active. The variable is an rvalue in an assigment
+// in a block that is not executed.
+TEST_F(CollectFragmentVariablesTest, StaticallyUsedButNotActiveAsAssignmentRValue)
+{
+    const std::string &shaderString =
+        R"(#version 300 es
+        precision mediump float;
+        out vec4 out_fragColor;
+        uniform vec4 u;
+        void main()
+        {
+            if (false) {
+                out_fragColor = u;
+            }
+            out_fragColor = vec4(0.0);
+        })";
+
+    compile(shaderString);
+    checkUniformStaticallyUsedButNotActive("u");
+}
+
+// Test a variable that is statically used but not active. The variable is a comma operator operand
+// in a block that is not executed.
+TEST_F(CollectFragmentVariablesTest, StaticallyUsedButNotActiveAsCommaOperand)
+{
+    const std::string &shaderString =
+        R"(#version 300 es
+        precision mediump float;
+        out vec4 out_fragColor;
+        uniform vec4 u;
+        void main()
+        {
+            if (false) {
+                out_fragColor = u, vec4(1.0);
+            }
+            out_fragColor = vec4(0.0);
+        })";
+
+    compile(shaderString);
+    checkUniformStaticallyUsedButNotActive("u");
+}
+
+// Test a variable that is statically used but not active. The variable is a switch init statement
+// in a block that is not executed.
+TEST_F(CollectFragmentVariablesTest, StaticallyUsedButNotActiveAsSwitchInitStatement)
+{
+    const std::string &shaderString =
+        R"(#version 300 es
+        precision mediump float;
+        out vec4 out_fragColor;
+        uniform int u;
+        void main()
+        {
+            if (false)
+            {
+                switch (u)
+                {
+                    case 1:
+                        out_fragColor = vec4(2.0);
+                    default:
+                        out_fragColor = vec4(1.0);
+                }
+            }
+            out_fragColor = vec4(0.0);
+        })";
+
+    compile(shaderString);
+    checkUniformStaticallyUsedButNotActive("u");
+}
+
+// Test a variable that is statically used but not active. The variable is a loop condition in a
+// block that is not executed.
+TEST_F(CollectFragmentVariablesTest, StaticallyUsedButNotActiveAsLoopCondition)
+{
+    const std::string &shaderString =
+        R"(#version 300 es
+        precision mediump float;
+        out vec4 out_fragColor;
+        uniform bool u;
+        void main()
+        {
+            int counter = 0;
+            if (false)
+            {
+                while (u)
+                {
+                    if (++counter > 2)
+                    {
+                        break;
+                    }
+                }
+            }
+            out_fragColor = vec4(0.0);
+        })";
+
+    compile(shaderString);
+    checkUniformStaticallyUsedButNotActive("u");
+}
+
+// Test a variable that is statically used but not active. The variable is a loop expression in a
+// block that is not executed.
+TEST_F(CollectFragmentVariablesTest, StaticallyUsedButNotActiveAsLoopExpression)
+{
+    const std::string &shaderString =
+        R"(#version 300 es
+        precision mediump float;
+        out vec4 out_fragColor;
+        uniform bool u;
+        void main()
+        {
+            if (false)
+            {
+                for (int i = 0; i < 3; u)
+                {
+                    ++i;
+                }
+            }
+            out_fragColor = vec4(0.0);
+        })";
+
+    compile(shaderString);
+    checkUniformStaticallyUsedButNotActive("u");
+}
+
+// Test a variable that is statically used but not active. The variable is a vector index in a block
+// that is not executed.
+TEST_F(CollectFragmentVariablesTest, StaticallyUsedButNotActiveAsVectorIndex)
+{
+    const std::string &shaderString =
+        R"(#version 300 es
+        precision mediump float;
+        out vec4 out_fragColor;
+        uniform int u;
+        void main()
+        {
+            vec4 color = vec4(0.0);
+            if (false)
+            {
+                color[u] = 1.0;
+            }
+            out_fragColor = color;
+        })";
+
+    compile(shaderString);
+    checkUniformStaticallyUsedButNotActive("u");
+}
+
+// Test a variable that is statically used but not active. The variable is referenced in a block
+// that's not executed. This is a bit of a corner case with some room for interpretation, but we
+// treat the variable as statically used.
+TEST_F(CollectFragmentVariablesTest, StaticallyUsedButNotActiveJustAReference)
+{
+    const std::string &shaderString =
+        R"(#version 300 es
+        precision mediump float;
+        out vec4 out_fragColor;
+        uniform int u;
+        void main()
+        {
+            vec4 color = vec4(0.0);
+            if (false)
+            {
+                u;
+            }
+            out_fragColor = color;
+        })";
+
+    compile(shaderString);
+    checkUniformStaticallyUsedButNotActive("u");
+}
+
+// Test a variable that is statically used but not active. The variable is referenced in a block
+// without braces that's not executed. This is a bit of a corner case with some room for
+// interpretation, but we treat the variable as statically used.
+TEST_F(CollectFragmentVariablesTest, StaticallyUsedButNotActiveJustAReferenceNoBracesIf)
+{
+    const std::string &shaderString =
+        R"(#version 300 es
+        precision mediump float;
+        out vec4 out_fragColor;
+        uniform int u;
+        void main()
+        {
+            vec4 color = vec4(0.0);
+            if (false)
+                u;
+            out_fragColor = color;
+        })";
+
+    compile(shaderString);
+    checkUniformStaticallyUsedButNotActive("u");
+}
+
+// Test a variable that is referenced in a loop body without braces.
+TEST_F(CollectFragmentVariablesTest, JustAVariableReferenceInNoBracesLoop)
+{
+    const std::string &shaderString =
+        R"(#version 300 es
+        precision mediump float;
+        out vec4 out_fragColor;
+        uniform int u;
+        void main()
+        {
+            vec4 color = vec4(0.0);
+            while (false)
+                u;
+            out_fragColor = color;
+        })";
+
+    compile(shaderString);
+
+    const auto &uniforms = mTranslator->getUniforms();
+    ASSERT_EQ(1u, uniforms.size());
+
+    const Uniform &uniform = uniforms[0];
+    EXPECT_EQ("u", uniform.name);
+    EXPECT_TRUE(uniform.staticUse);
+    // Note that we don't check the active flag here - the usage of the uniform is not currently
+    // being optimized away.
+}
+
+// Test an interface block member variable that is statically used but not active.
+TEST_F(CollectVertexVariablesTest, StaticallyUsedButNotActiveSimpleInterfaceBlock)
+{
+    const std::string &shaderString =
+        R"(#version 300 es
+        uniform b
+        {
+            float f;
+        };
+        void main() {
+            gl_Position = vec4(true ? 0.0 : f);
+        })";
+
+    compile(shaderString);
+
+    const std::vector<InterfaceBlock> &interfaceBlocks = mTranslator->getInterfaceBlocks();
+    ASSERT_EQ(1u, interfaceBlocks.size());
+    const InterfaceBlock &interfaceBlock = interfaceBlocks[0];
+
+    EXPECT_EQ("b", interfaceBlock.name);
+    EXPECT_TRUE(interfaceBlock.staticUse);
+    EXPECT_FALSE(interfaceBlock.active);
+
+    ASSERT_EQ(1u, interfaceBlock.fields.size());
+    const InterfaceBlockField &field = interfaceBlock.fields[0];
+
+    EXPECT_EQ("f", field.name);
+    EXPECT_TRUE(field.staticUse);
+    EXPECT_FALSE(field.active);
+}
+
+// Test an interface block instance variable that is statically used but not active.
+TEST_F(CollectVertexVariablesTest, StaticallyUsedButNotActiveInstancedInterfaceBlock)
+{
+    const std::string &shaderString =
+        R"(#version 300 es
+        uniform b
+        {
+            float f;
+        } blockInstance;
+        void main() {
+            gl_Position = vec4(true ? 0.0 : blockInstance.f);
+        })";
+
+    compile(shaderString);
+
+    const std::vector<InterfaceBlock> &interfaceBlocks = mTranslator->getInterfaceBlocks();
+    ASSERT_EQ(1u, interfaceBlocks.size());
+    const InterfaceBlock &interfaceBlock = interfaceBlocks[0];
+
+    EXPECT_EQ("b", interfaceBlock.name);
+    EXPECT_TRUE(interfaceBlock.staticUse);
+    EXPECT_FALSE(interfaceBlock.active);
+
+    ASSERT_EQ(1u, interfaceBlock.fields.size());
+    const InterfaceBlockField &field = interfaceBlock.fields[0];
+
+    EXPECT_EQ("f", field.name);
+    // See TODO in CollectVariables.cpp about tracking instanced interface block field static use.
+    // EXPECT_TRUE(field.staticUse);
+    EXPECT_FALSE(field.active);
 }

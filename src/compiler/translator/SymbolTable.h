@@ -90,6 +90,16 @@ class TSymbolTable : angle::NonCopyable, TSymbolTableBase
     const TFunction *setFunctionParameterNamesFromDefinition(const TFunction *function,
                                                              bool *wasDefinedOut);
 
+    // Return false if the gl_in array size has already been initialized with a mismatching value.
+    bool setGlInArraySize(unsigned int inputArraySize);
+    TVariable *getGlInVariableWithArraySize() const;
+
+    void markStaticRead(const TVariable &variable);
+    void markStaticWrite(const TVariable &variable);
+
+    // Note: Should not call this for constant variables.
+    bool isStaticallyUsed(const TVariable &variable) const;
+
     // find() is guaranteed not to retain a reference to the ImmutableString, so an ImmutableString
     // with a reference to a short-lived char * is fine to pass here.
     const TSymbol *find(const ImmutableString &name, int shaderVersion) const;
@@ -154,6 +164,20 @@ class TSymbolTable : angle::NonCopyable, TSymbolTableBase
 
     sh::GLenum mShaderType;
     ShBuiltInResources mResources;
+
+    struct VariableMetadata
+    {
+        VariableMetadata();
+        bool staticRead;
+        bool staticWrite;
+    };
+
+    // Indexed by unique id. Map instead of vector since the variables are fairly sparse.
+    std::map<int, VariableMetadata> mVariableMetadata;
+
+    // Store gl_in variable with its array size once the array size can be determined. The array
+    // size can also be checked against latter input primitive type declaration.
+    TVariable *mGlInVariableWithArraySize;
 };
 
 }  // namespace sh

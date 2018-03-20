@@ -79,7 +79,8 @@ TSymbol *TSymbolTable::TSymbolTableLevel::find(const ImmutableString &name) cons
         return (*it).second;
 }
 
-TSymbolTable::TSymbolTable() : mUniqueIdCounter(0), mShaderType(GL_FRAGMENT_SHADER)
+TSymbolTable::TSymbolTable()
+    : mUniqueIdCounter(0), mShaderType(GL_FRAGMENT_SHADER), mGlInVariableWithArraySize(nullptr)
 {
 }
 
@@ -135,6 +136,56 @@ const TFunction *TSymbolTable::setFunctionParameterNamesFromDefinition(const TFu
     *wasDefinedOut = firstDeclaration->isDefined();
     firstDeclaration->setDefined();
     return firstDeclaration;
+}
+
+bool TSymbolTable::setGlInArraySize(unsigned int inputArraySize)
+{
+    if (mGlInVariableWithArraySize)
+    {
+        return mGlInVariableWithArraySize->getType().getOutermostArraySize() == inputArraySize;
+    }
+    const TInterfaceBlock *glPerVertex = mVar_gl_PerVertex;
+    TType *glInType = new TType(glPerVertex, EvqPerVertexIn, TLayoutQualifier::Create());
+    glInType->makeArray(inputArraySize);
+    mGlInVariableWithArraySize =
+        new TVariable(this, ImmutableString("gl_in"), glInType, SymbolType::BuiltIn,
+                      TExtension::EXT_geometry_shader);
+    return true;
+}
+
+TVariable *TSymbolTable::getGlInVariableWithArraySize() const
+{
+    return mGlInVariableWithArraySize;
+}
+
+void TSymbolTable::markStaticWrite(const TVariable &variable)
+{
+    int id    = variable.uniqueId().get();
+    auto iter = mVariableMetadata.find(id);
+    if (iter == mVariableMetadata.end())
+    {
+        iter = mVariableMetadata.insert(std::make_pair(id, VariableMetadata())).first;
+    }
+    iter->second.staticWrite = true;
+}
+
+void TSymbolTable::markStaticRead(const TVariable &variable)
+{
+    int id    = variable.uniqueId().get();
+    auto iter = mVariableMetadata.find(id);
+    if (iter == mVariableMetadata.end())
+    {
+        iter = mVariableMetadata.insert(std::make_pair(id, VariableMetadata())).first;
+    }
+    iter->second.staticRead = true;
+}
+
+bool TSymbolTable::isStaticallyUsed(const TVariable &variable) const
+{
+    ASSERT(!variable.getConstPointer());
+    int id    = variable.uniqueId().get();
+    auto iter = mVariableMetadata.find(id);
+    return iter != mVariableMetadata.end();
 }
 
 const TSymbol *TSymbolTable::find(const ImmutableString &name, int shaderVersion) const
@@ -238,6 +289,8 @@ void TSymbolTable::setGlobalInvariant(bool invariant)
 void TSymbolTable::clearCompilationResults()
 {
     mUniqueIdCounter = kLastBuiltInId + 1;
+    mVariableMetadata.clear();
+    mGlInVariableWithArraySize = nullptr;
 
     // User-defined scopes should have already been cleared when the compilation finished.
     ASSERT(mTable.size() == 0u);
@@ -295,6 +348,10 @@ void TSymbolTable::initSamplerDefaultPrecision(TBasicType samplerType)
 {
     ASSERT(samplerType >= EbtGuardSamplerBegin && samplerType <= EbtGuardSamplerEnd);
     setDefaultPrecision(samplerType, EbpLow);
+}
+
+TSymbolTable::VariableMetadata::VariableMetadata() : staticRead(false), staticWrite(false)
+{
 }
 
 }  // namespace sh

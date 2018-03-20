@@ -419,6 +419,8 @@ class TParseContext : angle::NonCopyable
     TIntermBranch *addBranch(TOperator op, const TSourceLoc &loc);
     TIntermBranch *addBranch(TOperator op, TIntermTyped *expression, const TSourceLoc &loc);
 
+    void appendStatement(TIntermBlock *block, TIntermNode *statement);
+
     void checkTextureGather(TIntermAggregate *functionCall);
     void checkTextureOffsetConst(TIntermAggregate *functionCall);
     void checkImageMemoryAccessForBuiltinFunctions(TIntermAggregate *functionCall);
@@ -463,6 +465,8 @@ class TParseContext : angle::NonCopyable
     // TODO(jie.a.chen@intel.com): Double check this once the spec vagueness is resolved.
     // Note that there may be tests in AtomicCounter_test that will need to be updated as well.
     constexpr static size_t kAtomicCounterArrayStride = 4;
+
+    void markStaticReadIfSymbol(TIntermNode *node);
 
     // Returns a clamped index. If it prints out an error message, the token is "[]".
     int checkIndexLessThan(bool outOfRangeIndexIsError,
@@ -638,10 +642,6 @@ class TParseContext : angle::NonCopyable
     int mGeometryShaderMaxVertices;
     int mMaxGeometryShaderInvocations;
     int mMaxGeometryShaderMaxVertices;
-
-    // Store gl_in variable with its array size once the array size can be determined. The array
-    // size can also be checked against latter input primitive type declaration.
-    const TVariable *mGlInVariableWithArraySize;
 };
 
 int PaParseStrings(size_t count,

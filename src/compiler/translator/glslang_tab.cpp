@@ -4630,7 +4630,7 @@ yyreduce:
 
     {
         (yyval.interm.intermBlock) = new TIntermBlock();
-        (yyval.interm.intermBlock)->appendStatement((yyvsp[0].interm.intermNode));
+        context->appendStatement((yyval.interm.intermBlock), (yyvsp[0].interm.intermNode));
     }
 
     break;
@@ -4639,7 +4639,7 @@ yyreduce:
 
     {
         (yyval.interm.intermBlock) = (yyvsp[-1].interm.intermBlock);
-        (yyval.interm.intermBlock)->appendStatement((yyvsp[0].interm.intermNode));
+        context->appendStatement((yyval.interm.intermBlock), (yyvsp[0].interm.intermNode));
     }
 
     break;

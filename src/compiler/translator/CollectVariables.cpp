@@ -68,21 +68,21 @@ VarT *FindVariable(const ImmutableString &name, std::vector<VarT> *infoList)
     return nullptr;
 }
 
-// Note that this shouldn't be called for interface blocks - static use information is collected for
+// Note that this shouldn't be called for interface blocks - active information is collected for
 // individual fields in case of interface blocks.
-void MarkStaticallyUsed(ShaderVariable *variable)
+void MarkActive(ShaderVariable *variable)
 {
-    if (!variable->staticUse)
+    if (!variable->active)
     {
         if (variable->isStruct())
         {
             // Conservatively assume all fields are statically used as well.
             for (auto &field : variable->fields)
             {
-                MarkStaticallyUsed(&field);
+                MarkActive(&field);
             }
         }
-        variable->staticUse = true;
+        ASSERT(variable->staticUse);
         variable->active    = true;
     }
 }
@@ -126,9 +126,12 @@ class CollectVariablesTraverser : public TIntermTraverser
   private:
     std::string getMappedName(const TSymbol *symbol) const;
 
-    void setFieldOrVariableProperties(const TType &type, ShaderVariable *variableOut) const;
+    void setFieldOrVariableProperties(const TType &type,
+                                      bool staticUse,
+                                      ShaderVariable *variableOut) const;
     void setFieldProperties(const TType &type,
                             const ImmutableString &name,
+                            bool staticUse,
                             ShaderVariable *variableOut) const;
     void setCommonVariableProperties(const TType &type,
                                      const TVariable &variable,
@@ -322,8 +325,6 @@ InterfaceBlock *CollectVariablesTraverser::recordGLInUsed(const TType &glInType)
         ASSERT(glInType.getQualifier() == EvqPerVertexIn);
         InterfaceBlock info;
         recordInterfaceBlock("gl_in", glInType, &info);
-        info.staticUse = true;
-        info.active    = true;
 
         mPerVertexInAdded = true;
         mInBlocks->push_back(info);
@@ -551,14 +552,17 @@ void CollectVariablesTraverser::visitSymbol(TIntermSymbol *symbol)
     }
     if (var)
     {
-        MarkStaticallyUsed(var);
+        MarkActive(var);
     }
 }
 
 void CollectVariablesTraverser::setFieldOrVariableProperties(const TType &type,
+                                                             bool staticUse,
                                                              ShaderVariable *variableOut) const
 {
     ASSERT(variableOut);
+
+    variableOut->staticUse = staticUse;
 
     const TStructure *structure = type.getStruct();
     if (!structure)
@@ -582,7 +586,7 @@ void CollectVariablesTraverser::setFieldOrVariableProperties(const TType &type,
             // Regardless of the variable type (uniform, in/out etc.) its fields are always plain
             // ShaderVariable objects.
             ShaderVariable fieldVariable;
-            setFieldProperties(*field->type(), field->name(), &fieldVariable);
+            setFieldProperties(*field->type(), field->name(), staticUse, &fieldVariable);
             variableOut->fields.push_back(fieldVariable);
         }
     }
@@ -594,10 +598,11 @@ void CollectVariablesTraverser::setFieldOrVariableProperties(const TType &type,
 
 void CollectVariablesTraverser::setFieldProperties(const TType &type,
                                                    const ImmutableString &name,
+                                                   bool staticUse,
                                                    ShaderVariable *variableOut) const
 {
     ASSERT(variableOut);
-    setFieldOrVariableProperties(type, variableOut);
+    setFieldOrVariableProperties(type, staticUse, variableOut);
     variableOut->name.assign(name.data(), name.length());
     variableOut->mappedName = HashName(name, mHashFunction, nullptr).data();
 }
@@ -608,7 +613,8 @@ void CollectVariablesTraverser::setCommonVariableProperties(const TType &type,
 {
     ASSERT(variableOut);
 
-    setFieldOrVariableProperties(type, variableOut);
+    variableOut->staticUse = mSymbolTable->isStaticallyUsed(variable);
+    setFieldOrVariableProperties(type, variableOut->staticUse, variableOut);
     ASSERT(variable.symbolType() != SymbolType::Empty);
     variableOut->name.assign(variable.name().data(), variable.name().length());
     variableOut->mappedName = getMappedName(&variable);
@@ -684,6 +690,18 @@ void CollectVariablesTraverser::recordInterfaceBlock(const char *instanceName,
     if (instanceName != nullptr)
     {
         interfaceBlock->instanceName = instanceName;
+        const TSymbol *blockSymbol   = nullptr;
+        if (strncmp(instanceName, "gl_in", 5u) == 0)
+        {
+            blockSymbol = mSymbolTable->getGlInVariableWithArraySize();
+        }
+        else
+        {
+            blockSymbol = mSymbolTable->findGlobal(ImmutableString(instanceName));
+        }
+        ASSERT(blockSymbol && blockSymbol->isVariable());
+        interfaceBlock->staticUse =
+            mSymbolTable->isStaticallyUsed(*static_cast<const TVariable *>(blockSymbol));
     }
     ASSERT(!interfaceBlockType.isArrayOfArrays());  // Disallowed by GLSL ES 3.10 section 4.3.9
     interfaceBlock->arraySize = interfaceBlockType.isArray() ? interfaceBlockType.getOutermostArraySize() : 0;
@@ -699,15 +717,35 @@ void CollectVariablesTraverser::recordInterfaceBlock(const char *instanceName,
     }
 
     // Gather field information
+    bool anyFieldStaticallyUsed = false;
     for (const TField *field : blockType->fields())
     {
         const TType &fieldType = *field->type();
 
+        bool staticUse = false;
+        if (instanceName == nullptr)
+        {
+            // Static use of individual fields has been recorded, since they are present in the
+            // symbol table as variables.
+            const TSymbol *fieldSymbol = mSymbolTable->findGlobal(field->name());
+            ASSERT(fieldSymbol && fieldSymbol->isVariable());
+            staticUse =
+                mSymbolTable->isStaticallyUsed(*static_cast<const TVariable *>(fieldSymbol));
+            if (staticUse)
+            {
+                anyFieldStaticallyUsed = true;
+            }
+        }
+
         InterfaceBlockField fieldVariable;
-        setFieldProperties(fieldType, field->name(), &fieldVariable);
+        setFieldProperties(fieldType, field->name(), staticUse, &fieldVariable);
         fieldVariable.isRowMajorLayout =
             (fieldType.getLayoutQualifier().matrixPacking == EmpRowMajor);
         interfaceBlock->fields.push_back(fieldVariable);
+    }
+    if (anyFieldStaticallyUsed)
+    {
+        interfaceBlock->staticUse = true;
     }
 }
 
@@ -826,7 +864,7 @@ bool CollectVariablesTraverser::visitBinary(Visit, TIntermBinary *binaryNode)
 {
     if (binaryNode->getOp() == EOpIndexDirectInterfaceBlock)
     {
-        // NOTE: we do not determine static use for individual blocks of an array
+        // NOTE: we do not determine static use / activeness for individual blocks of an array.
         TIntermTyped *blockNode = binaryNode->getLeft()->getAsTyped();
         ASSERT(blockNode);
 
@@ -860,10 +898,13 @@ bool CollectVariablesTraverser::visitBinary(Visit, TIntermBinary *binaryNode)
             namedBlock = findNamedInterfaceBlock(interfaceBlock->name());
         }
         ASSERT(namedBlock);
-        namedBlock->staticUse   = true;
+        ASSERT(namedBlock->staticUse);
         namedBlock->active      = true;
         unsigned int fieldIndex = static_cast<unsigned int>(constantUnion->getIConst(0));
         ASSERT(fieldIndex < namedBlock->fields.size());
+        // TODO(oetuaho): Would be nicer to record static use of fields of named interface blocks
+        // more accurately at parse time - now we only mark the fields statically used if they are
+        // active. http://anglebug.com/2440
         namedBlock->fields[fieldIndex].staticUse = true;
         namedBlock->fields[fieldIndex].active    = true;
 

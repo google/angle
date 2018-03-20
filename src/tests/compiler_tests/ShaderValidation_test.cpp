@@ -5884,3 +5884,38 @@ TEST_F(VertexShaderValidationTest, LValueSwizzleDuplicateComponents)
         FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
     }
 }
+
+// Test that a fragment shader with nested if statements without braces compiles successfully.
+TEST_F(FragmentShaderValidationTest, HandleIfInnerIfStatementAlwaysTriviallyPruned)
+{
+    const std::string &shaderString =
+        R"(precision mediump float;
+        void main()
+        {
+            if (true)
+                if (false)
+                    gl_FragColor = vec4(0.0);
+        })";
+    if (!compile(shaderString))
+    {
+        FAIL() << "Shader compilation failed, expecting success:\n" << mInfoLog;
+    }
+}
+
+// Test that a fragment shader with an if statement nested in a loop without braces compiles
+// successfully.
+TEST_F(FragmentShaderValidationTest, HandleLoopInnerIfStatementAlwaysTriviallyPruned)
+{
+    const std::string &shaderString =
+        R"(precision mediump float;
+        void main()
+        {
+            while (false)
+                if (false)
+                    gl_FragColor = vec4(0.0);
+        })";
+    if (!compile(shaderString))
+    {
+        FAIL() << "Shader compilation failed, expecting success:\n" << mInfoLog;
+    }
+}

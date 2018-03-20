@@ -793,8 +793,8 @@ void DynamicHLSL::generateShaderLinkHLSL(const gl::Context *context,
         ASSERT(!varying.isBuiltIn() && !varying.isStruct());
 
         // Don't reference VS-only transform feedback varyings in the PS. Note that we're relying on
-        // that the staticUse flag is set according to usage in the fragment shader.
-        if (packedVarying.vertexOnly || !varying.staticUse)
+        // that the active flag is set according to usage in the fragment shader.
+        if (packedVarying.vertexOnly || !varying.active)
             continue;
 
         pixelStream << "    ";
