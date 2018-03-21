@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "704f1b81_ea60a435",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 4622,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-03-21T19:46:47Z",
+      "side": 1,
+      "message": "I don\u0027t think we need to tag all GLES1 stuff with GLES1 blocks.",
+      "revId": "d48d9b5a0997351deb13052f8cb76d16c2ce0738",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b4442246_851200f7",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 4624,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-03-21T19:46:47Z",
+      "side": 1,
+      "message": "Can we have a pointer in the spec explaining how the rescaling should work?",
+      "revId": "d48d9b5a0997351deb13052f8cb76d16c2ce0738",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9da279d0_33fe3223",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 4647,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-03-21T19:46:47Z",
+      "side": 1,
+      "message": "ditto here, it would be nice to have an explanation.",
+      "revId": "d48d9b5a0997351deb13052f8cb76d16c2ce0738",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "83d64c17_947a8ce2",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 6585,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-03-21T19:46:47Z",
+      "side": 1,
+      "message": "ditto.",
+      "revId": "d48d9b5a0997351deb13052f8cb76d16c2ce0738",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1dfa5504_7cae1c7f",
+        "filename": "src/libANGLE/Context_gles_1_0.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-03-21T19:46:47Z",
+      "side": 1,
+      "message": "nit: Don\u0027t leave commented out code.",
+      "revId": "d48d9b5a0997351deb13052f8cb76d16c2ce0738",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b7e84460_2d28262b",
+        "filename": "src/libANGLE/State.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 477,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-03-21T19:46:47Z",
+      "side": 1,
+      "message": "ditto.",
+      "revId": "d48d9b5a0997351deb13052f8cb76d16c2ce0738",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
