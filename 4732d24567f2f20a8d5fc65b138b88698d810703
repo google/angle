@@ -22,6 +22,30 @@
       "revId": "4732d24567f2f20a8d5fc65b138b88698d810703",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "08733fbf_c1e941a5",
+        "filename": "src/tests/perf_tests/DispatchComputePerf.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-03-21T07:36:20Z",
+      "side": 1,
+      "message": "I think it\u0027s naming problem. Even we add an ANGLEDispatchTest, it will be very similar with ANGLERenderTest which is not necessary. Maybe renaming ANGLERenderTest to ANGLEBenchmarkTest makes it easier to understand. But it still should be in a separate PR which will do the renaming thing.",
+      "parentUuid": "3735eee4_d2b3ab5a",
+      "range": {
+        "startLine": 37,
+        "startChar": 44,
+        "endLine": 37,
+        "endChar": 59
+      },
+      "revId": "4732d24567f2f20a8d5fc65b138b88698d810703",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
