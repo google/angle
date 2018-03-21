@@ -202,13 +202,21 @@ void TSymbolTable::initializeBuiltInVariables(sh::GLenum shaderType,
 const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name,
                                          int shaderVersion) const
 {{
-    uint32_t nameHash = name.hash32();
+    if (name.length() > {max_mangled_name_length})
+    {{
+        return nullptr;
+    }}
+    uint32_t nameHash = name.mangledNameHash();
 {get_builtin}
 }}
 
 const UnmangledBuiltIn *TSymbolTable::getUnmangledBuiltInForShaderVersion(const ImmutableString &name, int shaderVersion)
 {{
-    uint32_t nameHash = name.hash32();
+    if (name.length() > {max_unmangled_name_length})
+    {{
+        return nullptr;
+    }}
+    uint32_t nameHash = name.mangledNameHash();
 {get_unmangled_builtin}
 }}
 
@@ -317,6 +325,7 @@ class GroupedList:
     """"Class for storing a list of objects grouped by symbol table level and condition."""
     def __init__(self):
         self.objs = OrderedDict()
+        self.max_name_length = 0
         # We need to add all the levels here instead of lazily since they must be in a specific order.
         for l in levels:
             self.objs[l] = OrderedDict()
@@ -327,6 +336,8 @@ class GroupedList:
         if condition not in self.objs[level]:
             self.objs[level][condition] = OrderedDict()
         self.objs[level][condition][name] = obj
+        if len(name) > self.max_name_length:
+            self.max_name_length = len(name)
 
     def has_key(self, level, condition, name):
         if (level not in levels):
@@ -339,6 +350,9 @@ class GroupedList:
         if self.has_key(level, condition, name):
             return self.objs[level][condition][name]
         return None
+
+    def get_max_name_length(self):
+        return self.max_name_length
 
     def get_switch_code(self):
         code = []
@@ -357,7 +371,7 @@ class GroupedList:
 
                     switch = {}
                     for name, obj in objs.iteritems():
-                        name_hash = hash32(name)
+                        name_hash = mangledNameHash(name)
                         if name_hash not in switch:
                             switch[name_hash] = []
                         switch[name_hash].append(obj['hash_matched_code'])
@@ -685,15 +699,22 @@ variable_name_count = {}
 
 id_counter = 0
 
-def hash32(str, save_test = True):
+def mangledNameHash(str, save_test = True):
     fnvOffsetBasis = 0x811c9dc5
     fnvPrime = 16777619
     hash = fnvOffsetBasis
+    index = 0
+    max_six_bit_value = (1 << 6) - 1
+    paren_location = max_six_bit_value
     for c in str:
         hash = hash ^ ord(c)
         hash = hash * fnvPrime & 0xffffffff
+        if c == '(':
+            paren_location = index
+        index += 1
+    hash = ((hash >> 12) ^ (hash & 0xfff)) | (paren_location << 26) | (index << 20)
     if save_test:
-        sanity_check = '    ASSERT_EQ(0x{hash}u, ImmutableString("{str}").hash32());'.format(hash = ('%08x' % hash), str = str)
+        sanity_check = '    ASSERT_EQ(0x{hash}u, ImmutableString("{str}").mangledNameHash());'.format(hash = ('%08x' % hash), str = str)
         script_generated_hash_tests.update({sanity_check: None})
     return hash
 
@@ -740,7 +761,7 @@ def mangled_name_hash_can_collide_with_different_parameters(function_variant_pro
     # We exhaustively search through all possible lists of parameters and see if any other mangled
     # name has the same hash.
     mangled_name = function_variant_props['mangled_name']
-    hash = hash32(mangled_name)
+    hash = mangledNameHash(mangled_name)
     mangled_name_prefix = function_variant_props['name'] + '('
     parameters_mangled_name_len = len(mangled_name) - len(mangled_name_prefix)
     parameters_mangled_name = mangled_name[len(mangled_name_prefix):]
@@ -751,7 +772,7 @@ def mangled_name_hash_can_collide_with_different_parameters(function_variant_pro
         # may be possible.
         return True
     for variant in gen_parameters_mangled_name_variants(parameters_mangled_name_len):
-        if parameters_mangled_name != variant and hash32(mangled_name_prefix + variant, False) == hash:
+        if parameters_mangled_name != variant and mangledNameHash(mangled_name_prefix + variant, False) == hash:
             return True
     return False
 
@@ -880,7 +901,6 @@ def process_single_function_group(condition, group_name, group):
             parameters = get_parameters(function_props)
 
             template_args['unique_name'] = get_unique_identifier_name(template_args['name_with_suffix'], parameters)
-            template_args['unique_name_no_parameters'] = get_unique_identifier_name(template_args['name_with_suffix'], [])
 
             if template_args['unique_name'] in defined_function_variants:
                 continue
@@ -936,10 +956,9 @@ def process_single_function_group(condition, group_name, group):
     return &BuiltInFunction::kFunction_{unique_name};
 }}"""
             else:
-                template_mangled_name_declaration = 'constexpr const ImmutableString {unique_name_no_parameters}("{name}(");'
-                name_declarations.add(template_mangled_name_declaration.format(**template_args))
-                template_mangled_if = """if (name.length() == {mangled_name_length} && name.beginsWith(BuiltInName::{unique_name_no_parameters}))
+                template_mangled_if = """if (name.beginsWith(BuiltInName::{name_with_suffix}))
 {{
+    ASSERT(name.length() == {mangled_name_length});
     return &BuiltInFunction::kFunction_{unique_name};
 }}"""
             mangled_if = template_mangled_if.format(**template_args)
@@ -1195,6 +1214,8 @@ output_strings = {
 
     'get_unmangled_builtin': unmangled_function_if_statements.get_switch_code(),
     'get_builtin': get_builtin_if_statements.get_switch_code(),
+    'max_unmangled_name_length': unmangled_function_if_statements.get_max_name_length(),
+    'max_mangled_name_length': get_builtin_if_statements.get_max_name_length(),
 
     'script_generated_hash_tests': '\n'.join(script_generated_hash_tests.iterkeys())
 }

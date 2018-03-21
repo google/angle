@@ -1132,54 +1132,31 @@ namespace BuiltInName
 
 constexpr const ImmutableString _empty("");
 constexpr const ImmutableString EmitVertex("EmitVertex");
-constexpr const ImmutableString EmitVertex_("EmitVertex(");
 constexpr const ImmutableString EndPrimitive("EndPrimitive");
-constexpr const ImmutableString EndPrimitive_("EndPrimitive(");
 constexpr const ImmutableString abs("abs");
-constexpr const ImmutableString abs_("abs(");
 constexpr const ImmutableString acos("acos");
-constexpr const ImmutableString acos_("acos(");
 constexpr const ImmutableString acosh("acosh");
-constexpr const ImmutableString acosh_("acosh(");
 constexpr const ImmutableString all("all");
-constexpr const ImmutableString all_("all(");
 constexpr const ImmutableString any("any");
-constexpr const ImmutableString any_("any(");
 constexpr const ImmutableString asin("asin");
-constexpr const ImmutableString asin_("asin(");
 constexpr const ImmutableString asinh("asinh");
-constexpr const ImmutableString asinh_("asinh(");
 constexpr const ImmutableString atan("atan");
-constexpr const ImmutableString atan_("atan(");
 constexpr const ImmutableString atanh("atanh");
-constexpr const ImmutableString atanh_("atanh(");
 constexpr const ImmutableString atomicAdd("atomicAdd");
-constexpr const ImmutableString atomicAdd_("atomicAdd(");
 constexpr const ImmutableString atomicAnd("atomicAnd");
-constexpr const ImmutableString atomicAnd_("atomicAnd(");
 constexpr const ImmutableString atomicCompSwap("atomicCompSwap");
 constexpr const ImmutableString atomicCompSwap_0C0C0C("atomicCompSwap(0C0C0C");
 constexpr const ImmutableString atomicCompSwap_0D0D0D("atomicCompSwap(0D0D0D");
 constexpr const ImmutableString atomicCounter("atomicCounter");
 constexpr const ImmutableString atomicCounterDecrement("atomicCounterDecrement");
-constexpr const ImmutableString atomicCounterDecrement_("atomicCounterDecrement(");
 constexpr const ImmutableString atomicCounterIncrement("atomicCounterIncrement");
-constexpr const ImmutableString atomicCounterIncrement_("atomicCounterIncrement(");
-constexpr const ImmutableString atomicCounter_("atomicCounter(");
 constexpr const ImmutableString atomicExchange("atomicExchange");
-constexpr const ImmutableString atomicExchange_("atomicExchange(");
 constexpr const ImmutableString atomicMax("atomicMax");
-constexpr const ImmutableString atomicMax_("atomicMax(");
 constexpr const ImmutableString atomicMin("atomicMin");
-constexpr const ImmutableString atomicMin_("atomicMin(");
 constexpr const ImmutableString atomicOr("atomicOr");
-constexpr const ImmutableString atomicOr_("atomicOr(");
 constexpr const ImmutableString atomicXor("atomicXor");
-constexpr const ImmutableString atomicXor_("atomicXor(");
 constexpr const ImmutableString barrier("barrier");
-constexpr const ImmutableString barrier_("barrier(");
 constexpr const ImmutableString bitCount("bitCount");
-constexpr const ImmutableString bitCount_("bitCount(");
 constexpr const ImmutableString bitfieldExtract("bitfieldExtract");
 constexpr const ImmutableString bitfieldExtract_0C0C0C("bitfieldExtract(0C0C0C");
 constexpr const ImmutableString bitfieldExtract_0D0C0C("bitfieldExtract(0D0C0C");
@@ -1199,9 +1176,7 @@ constexpr const ImmutableString bitfieldInsert_2D2D0C0C("bitfieldInsert(2D2D0C0C
 constexpr const ImmutableString bitfieldInsert_3C3C0C0C("bitfieldInsert(3C3C0C0C");
 constexpr const ImmutableString bitfieldInsert_3D3D0C0C("bitfieldInsert(3D3D0C0C");
 constexpr const ImmutableString bitfieldReverse("bitfieldReverse");
-constexpr const ImmutableString bitfieldReverse_("bitfieldReverse(");
 constexpr const ImmutableString ceil("ceil");
-constexpr const ImmutableString ceil_("ceil(");
 constexpr const ImmutableString clamp("clamp");
 constexpr const ImmutableString clamp_0B0B0B("clamp(0B0B0B");
 constexpr const ImmutableString clamp_0C0C0C("clamp(0C0C0C");
@@ -1225,34 +1200,20 @@ constexpr const ImmutableString clamp_3C3C3C("clamp(3C3C3C");
 constexpr const ImmutableString clamp_3D0D0D("clamp(3D0D0D");
 constexpr const ImmutableString clamp_3D3D3D("clamp(3D3D3D");
 constexpr const ImmutableString cos("cos");
-constexpr const ImmutableString cos_("cos(");
 constexpr const ImmutableString cosh("cosh");
-constexpr const ImmutableString cosh_("cosh(");
 constexpr const ImmutableString cross("cross");
-constexpr const ImmutableString cross_("cross(");
 constexpr const ImmutableString dFdx("dFdx");
 constexpr const ImmutableString dFdxExt("dFdx");
-constexpr const ImmutableString dFdxExt_("dFdx(");
-constexpr const ImmutableString dFdx_("dFdx(");
 constexpr const ImmutableString dFdy("dFdy");
 constexpr const ImmutableString dFdyExt("dFdy");
-constexpr const ImmutableString dFdyExt_("dFdy(");
-constexpr const ImmutableString dFdy_("dFdy(");
 constexpr const ImmutableString degrees("degrees");
-constexpr const ImmutableString degrees_("degrees(");
 constexpr const ImmutableString determinant("determinant");
-constexpr const ImmutableString determinant_("determinant(");
 constexpr const ImmutableString diff("diff");
 constexpr const ImmutableString distance("distance");
-constexpr const ImmutableString distance_("distance(");
 constexpr const ImmutableString dot("dot");
-constexpr const ImmutableString dot_("dot(");
 constexpr const ImmutableString equal("equal");
-constexpr const ImmutableString equal_("equal(");
 constexpr const ImmutableString exp("exp");
 constexpr const ImmutableString exp2("exp2");
-constexpr const ImmutableString exp2_("exp2(");
-constexpr const ImmutableString exp_("exp(");
 constexpr const ImmutableString faceforward("faceforward");
 constexpr const ImmutableString faceforward_0B0B0B("faceforward(0B0B0B");
 constexpr const ImmutableString faceforward_1B1B1B("faceforward(1B1B1B");
@@ -1260,23 +1221,14 @@ constexpr const ImmutableString faceforward_2B2B2B("faceforward(2B2B2B");
 constexpr const ImmutableString faceforward_3B3B3B("faceforward(3B3B3B");
 constexpr const ImmutableString far("far");
 constexpr const ImmutableString findLSB("findLSB");
-constexpr const ImmutableString findLSB_("findLSB(");
 constexpr const ImmutableString findMSB("findMSB");
-constexpr const ImmutableString findMSB_("findMSB(");
 constexpr const ImmutableString floatBitsToInt("floatBitsToInt");
-constexpr const ImmutableString floatBitsToInt_("floatBitsToInt(");
 constexpr const ImmutableString floatBitsToUint("floatBitsToUint");
-constexpr const ImmutableString floatBitsToUint_("floatBitsToUint(");
 constexpr const ImmutableString floor("floor");
-constexpr const ImmutableString floor_("floor(");
 constexpr const ImmutableString fract("fract");
-constexpr const ImmutableString fract_("fract(");
 constexpr const ImmutableString frexp("frexp");
-constexpr const ImmutableString frexp_("frexp(");
 constexpr const ImmutableString fwidth("fwidth");
 constexpr const ImmutableString fwidthExt("fwidth");
-constexpr const ImmutableString fwidthExt_("fwidth(");
-constexpr const ImmutableString fwidth_("fwidth(");
 constexpr const ImmutableString gl_DepthRange("gl_DepthRange");
 constexpr const ImmutableString gl_DepthRangeParameters("gl_DepthRangeParameters");
 constexpr const ImmutableString gl_FragColor("gl_FragColor");
@@ -1360,14 +1312,10 @@ constexpr const ImmutableString gl_WorkGroupSize("gl_WorkGroupSize");
 constexpr const ImmutableString gl_in("gl_in");
 constexpr const ImmutableString greaterThan("greaterThan");
 constexpr const ImmutableString greaterThanEqual("greaterThanEqual");
-constexpr const ImmutableString greaterThanEqual_("greaterThanEqual(");
-constexpr const ImmutableString greaterThan_("greaterThan(");
 constexpr const ImmutableString groupMemoryBarrier("groupMemoryBarrier");
-constexpr const ImmutableString groupMemoryBarrier_("groupMemoryBarrier(");
 constexpr const ImmutableString imageLoad("imageLoad");
-constexpr const ImmutableString imageLoad_("imageLoad(");
+constexpr const ImmutableString imageLoad_0d1C("imageLoad(0d1C");
 constexpr const ImmutableString imageSize("imageSize");
-constexpr const ImmutableString imageSize_("imageSize(");
 constexpr const ImmutableString imageStore("imageStore");
 constexpr const ImmutableString imageStore_0c1C3B("imageStore(0c1C3B");
 constexpr const ImmutableString imageStore_0d1C3C("imageStore(0d1C3C");
@@ -1387,43 +1335,24 @@ constexpr const ImmutableString imulExtended_1C1C1C1C("imulExtended(1C1C1C1C");
 constexpr const ImmutableString imulExtended_2C2C2C2C("imulExtended(2C2C2C2C");
 constexpr const ImmutableString imulExtended_3C3C3C3C("imulExtended(3C3C3C3C");
 constexpr const ImmutableString intBitsToFloat("intBitsToFloat");
-constexpr const ImmutableString intBitsToFloat_("intBitsToFloat(");
 constexpr const ImmutableString inverse("inverse");
-constexpr const ImmutableString inverse_("inverse(");
 constexpr const ImmutableString inversesqrt("inversesqrt");
-constexpr const ImmutableString inversesqrt_("inversesqrt(");
 constexpr const ImmutableString isinf("isinf");
-constexpr const ImmutableString isinf_("isinf(");
 constexpr const ImmutableString isnan("isnan");
-constexpr const ImmutableString isnan_("isnan(");
 constexpr const ImmutableString ldexp("ldexp");
-constexpr const ImmutableString ldexp_("ldexp(");
 constexpr const ImmutableString length("length");
-constexpr const ImmutableString length_("length(");
 constexpr const ImmutableString lessThan("lessThan");
 constexpr const ImmutableString lessThanEqual("lessThanEqual");
-constexpr const ImmutableString lessThanEqual_("lessThanEqual(");
-constexpr const ImmutableString lessThan_("lessThan(");
 constexpr const ImmutableString log("log");
 constexpr const ImmutableString log2("log2");
-constexpr const ImmutableString log2_("log2(");
-constexpr const ImmutableString log_("log(");
 constexpr const ImmutableString matrixCompMult("matrixCompMult");
-constexpr const ImmutableString matrixCompMult_("matrixCompMult(");
 constexpr const ImmutableString max("max");
-constexpr const ImmutableString max_("max(");
 constexpr const ImmutableString memoryBarrier("memoryBarrier");
 constexpr const ImmutableString memoryBarrierAtomicCounter("memoryBarrierAtomicCounter");
-constexpr const ImmutableString memoryBarrierAtomicCounter_("memoryBarrierAtomicCounter(");
 constexpr const ImmutableString memoryBarrierBuffer("memoryBarrierBuffer");
-constexpr const ImmutableString memoryBarrierBuffer_("memoryBarrierBuffer(");
 constexpr const ImmutableString memoryBarrierImage("memoryBarrierImage");
-constexpr const ImmutableString memoryBarrierImage_("memoryBarrierImage(");
 constexpr const ImmutableString memoryBarrierShared("memoryBarrierShared");
-constexpr const ImmutableString memoryBarrierShared_("memoryBarrierShared(");
-constexpr const ImmutableString memoryBarrier_("memoryBarrier(");
 constexpr const ImmutableString min("min");
-constexpr const ImmutableString min_("min(");
 constexpr const ImmutableString mix("mix");
 constexpr const ImmutableString mix_0B0B0B("mix(0B0B0B");
 constexpr const ImmutableString mix_0B0B0E("mix(0B0B0E");
@@ -1437,51 +1366,31 @@ constexpr const ImmutableString mix_3B3B0B("mix(3B3B0B");
 constexpr const ImmutableString mix_3B3B3B("mix(3B3B3B");
 constexpr const ImmutableString mix_3B3B3E("mix(3B3B3E");
 constexpr const ImmutableString mod("mod");
-constexpr const ImmutableString mod_("mod(");
 constexpr const ImmutableString modf("modf");
-constexpr const ImmutableString modf_("modf(");
 constexpr const ImmutableString near("near");
 constexpr const ImmutableString normalize("normalize");
-constexpr const ImmutableString normalize_("normalize(");
 constexpr const ImmutableString notEqual("notEqual");
-constexpr const ImmutableString notEqual_("notEqual(");
 constexpr const ImmutableString notFunc("not");
-constexpr const ImmutableString notFunc_("not(");
 constexpr const ImmutableString outerProduct("outerProduct");
-constexpr const ImmutableString outerProduct_("outerProduct(");
 constexpr const ImmutableString packHalf2x16("packHalf2x16");
-constexpr const ImmutableString packHalf2x16_("packHalf2x16(");
 constexpr const ImmutableString packSnorm2x16("packSnorm2x16");
-constexpr const ImmutableString packSnorm2x16_("packSnorm2x16(");
 constexpr const ImmutableString packSnorm4x8("packSnorm4x8");
-constexpr const ImmutableString packSnorm4x8_("packSnorm4x8(");
 constexpr const ImmutableString packUnorm2x16("packUnorm2x16");
-constexpr const ImmutableString packUnorm2x16_("packUnorm2x16(");
 constexpr const ImmutableString packUnorm4x8("packUnorm4x8");
-constexpr const ImmutableString packUnorm4x8_("packUnorm4x8(");
 constexpr const ImmutableString pow("pow");
-constexpr const ImmutableString pow_("pow(");
 constexpr const ImmutableString radians("radians");
-constexpr const ImmutableString radians_("radians(");
 constexpr const ImmutableString reflect("reflect");
-constexpr const ImmutableString reflect_("reflect(");
 constexpr const ImmutableString refract("refract");
 constexpr const ImmutableString refract_0B0B0B("refract(0B0B0B");
 constexpr const ImmutableString refract_1B1B0B("refract(1B1B0B");
 constexpr const ImmutableString refract_2B2B0B("refract(2B2B0B");
 constexpr const ImmutableString refract_3B3B0B("refract(3B3B0B");
 constexpr const ImmutableString rgb_2_yuv("rgb_2_yuv");
-constexpr const ImmutableString rgb_2_yuv_("rgb_2_yuv(");
 constexpr const ImmutableString round("round");
 constexpr const ImmutableString roundEven("roundEven");
-constexpr const ImmutableString roundEven_("roundEven(");
-constexpr const ImmutableString round_("round(");
 constexpr const ImmutableString sign("sign");
-constexpr const ImmutableString sign_("sign(");
 constexpr const ImmutableString sin("sin");
-constexpr const ImmutableString sin_("sin(");
 constexpr const ImmutableString sinh("sinh");
-constexpr const ImmutableString sinh_("sinh(");
 constexpr const ImmutableString smoothstep("smoothstep");
 constexpr const ImmutableString smoothstep_0B0B0B("smoothstep(0B0B0B");
 constexpr const ImmutableString smoothstep_0B0B1B("smoothstep(0B0B1B");
@@ -1491,13 +1400,9 @@ constexpr const ImmutableString smoothstep_1B1B1B("smoothstep(1B1B1B");
 constexpr const ImmutableString smoothstep_2B2B2B("smoothstep(2B2B2B");
 constexpr const ImmutableString smoothstep_3B3B3B("smoothstep(3B3B3B");
 constexpr const ImmutableString sqrt("sqrt");
-constexpr const ImmutableString sqrt_("sqrt(");
 constexpr const ImmutableString step("step");
-constexpr const ImmutableString step_("step(");
 constexpr const ImmutableString tan("tan");
-constexpr const ImmutableString tan_("tan(");
 constexpr const ImmutableString tanh("tanh");
-constexpr const ImmutableString tanh_("tanh(");
 constexpr const ImmutableString texelFetch("texelFetch");
 constexpr const ImmutableString texelFetchOffset("texelFetchOffset");
 constexpr const ImmutableString texelFetchOffset_0H1C0C1C("texelFetchOffset(0H1C0C1C");
@@ -1541,14 +1446,10 @@ constexpr const ImmutableString texture2DProjLodEXT_0H2B0B("texture2DProjLodEXT(
 constexpr const ImmutableString texture2DProjLodEXT_0H3B0B("texture2DProjLodEXT(0H3B0B");
 constexpr const ImmutableString texture2DProjLod_0H2B0B("texture2DProjLod(0H2B0B");
 constexpr const ImmutableString texture2DProjLod_0H3B0B("texture2DProjLod(0H3B0B");
-constexpr const ImmutableString texture2DProj_("texture2DProj(");
 constexpr const ImmutableString texture2DProj_0H2B0B("texture2DProj(0H2B0B");
 constexpr const ImmutableString texture2DProj_0H3B0B("texture2DProj(0H3B0B");
 constexpr const ImmutableString texture2DRect("texture2DRect");
 constexpr const ImmutableString texture2DRectProj("texture2DRectProj");
-constexpr const ImmutableString texture2DRectProj_("texture2DRectProj(");
-constexpr const ImmutableString texture2DRect_("texture2DRect(");
-constexpr const ImmutableString texture2D_("texture2D(");
 constexpr const ImmutableString texture2D_0H1B0B("texture2D(0H1B0B");
 constexpr const ImmutableString textureCube("textureCube");
 constexpr const ImmutableString textureCubeGradEXT("textureCubeGradEXT");
@@ -1557,7 +1458,6 @@ constexpr const ImmutableString textureCubeLod("textureCubeLod");
 constexpr const ImmutableString textureCubeLodEXT("textureCubeLodEXT");
 constexpr const ImmutableString textureCubeLodEXT_0J2B0B("textureCubeLodEXT(0J2B0B");
 constexpr const ImmutableString textureCubeLod_0J2B0B("textureCubeLod(0J2B0B");
-constexpr const ImmutableString textureCube_("textureCube(");
 constexpr const ImmutableString textureCube_0J2B0B("textureCube(0J2B0B");
 constexpr const ImmutableString textureGather("textureGather");
 constexpr const ImmutableString textureGatherOffset("textureGatherOffset");
@@ -1575,7 +1475,6 @@ constexpr const ImmutableString textureGatherOffset_0X2B1C("textureGatherOffset(
 constexpr const ImmutableString textureGatherOffset_0X2B1C0C("textureGatherOffset(0X2B1C0C");
 constexpr const ImmutableString textureGatherOffset_0Z1B0B1C("textureGatherOffset(0Z1B0B1C");
 constexpr const ImmutableString textureGatherOffset_0b2B0B1C("textureGatherOffset(0b2B0B1C");
-constexpr const ImmutableString textureGather_("textureGather(");
 constexpr const ImmutableString textureGather_0H1B0C("textureGather(0H1B0C");
 constexpr const ImmutableString textureGather_0J2B0C("textureGather(0J2B0C");
 constexpr const ImmutableString textureGather_0K2B0C("textureGather(0K2B0C");
@@ -1738,7 +1637,6 @@ constexpr const ImmutableString textureProjOffset_0V3B2C("textureProjOffset(0V3B
 constexpr const ImmutableString textureProjOffset_0V3B2C0B("textureProjOffset(0V3B2C0B");
 constexpr const ImmutableString textureProjOffset_0Z3B1C("textureProjOffset(0Z3B1C");
 constexpr const ImmutableString textureProjOffset_0Z3B1C0B("textureProjOffset(0Z3B1C0B");
-constexpr const ImmutableString textureProj_("textureProj(");
 constexpr const ImmutableString textureProj_0H2B0B("textureProj(0H2B0B");
 constexpr const ImmutableString textureProj_0H3B0B("textureProj(0H3B0B");
 constexpr const ImmutableString textureProj_0I3B0B("textureProj(0I3B0B");
@@ -1754,14 +1652,13 @@ constexpr const ImmutableString textureProj_0U3B0B("textureProj(0U3B0B");
 constexpr const ImmutableString textureProj_0V3B0B("textureProj(0V3B0B");
 constexpr const ImmutableString textureProj_0Z3B0B("textureProj(0Z3B0B");
 constexpr const ImmutableString textureSize("textureSize");
-constexpr const ImmutableString textureSize_("textureSize(");
-constexpr const ImmutableString texture_("texture(");
 constexpr const ImmutableString texture_0H1B0B("texture(0H1B0B");
 constexpr const ImmutableString texture_0I2B0B("texture(0I2B0B");
 constexpr const ImmutableString texture_0J2B0B("texture(0J2B0B");
 constexpr const ImmutableString texture_0K2B0B("texture(0K2B0B");
 constexpr const ImmutableString texture_0L1B0B("texture(0L1B0B");
 constexpr const ImmutableString texture_0M1B0B("texture(0M1B0B");
+constexpr const ImmutableString texture_0N1B("texture(0N1B");
 constexpr const ImmutableString texture_0P1B0B("texture(0P1B0B");
 constexpr const ImmutableString texture_0Q2B0B("texture(0Q2B0B");
 constexpr const ImmutableString texture_0R2B0B("texture(0R2B0B");
@@ -1773,38 +1670,29 @@ constexpr const ImmutableString texture_0X2B0B("texture(0X2B0B");
 constexpr const ImmutableString texture_0Z2B0B("texture(0Z2B0B");
 constexpr const ImmutableString texture_0a3B0B("texture(0a3B0B");
 constexpr const ImmutableString transpose("transpose");
-constexpr const ImmutableString transpose_("transpose(");
 constexpr const ImmutableString trunc("trunc");
-constexpr const ImmutableString trunc_("trunc(");
 constexpr const ImmutableString uaddCarry("uaddCarry");
 constexpr const ImmutableString uaddCarry_0D0D0D("uaddCarry(0D0D0D");
 constexpr const ImmutableString uaddCarry_1D1D1D("uaddCarry(1D1D1D");
 constexpr const ImmutableString uaddCarry_2D2D2D("uaddCarry(2D2D2D");
 constexpr const ImmutableString uaddCarry_3D3D3D("uaddCarry(3D3D3D");
 constexpr const ImmutableString uintBitsToFloat("uintBitsToFloat");
-constexpr const ImmutableString uintBitsToFloat_("uintBitsToFloat(");
 constexpr const ImmutableString umulExtended("umulExtended");
 constexpr const ImmutableString umulExtended_0D0D0D0D("umulExtended(0D0D0D0D");
 constexpr const ImmutableString umulExtended_1D1D1D1D("umulExtended(1D1D1D1D");
 constexpr const ImmutableString umulExtended_2D2D2D2D("umulExtended(2D2D2D2D");
 constexpr const ImmutableString umulExtended_3D3D3D3D("umulExtended(3D3D3D3D");
 constexpr const ImmutableString unpackHalf2x16("unpackHalf2x16");
-constexpr const ImmutableString unpackHalf2x16_("unpackHalf2x16(");
 constexpr const ImmutableString unpackSnorm2x16("unpackSnorm2x16");
-constexpr const ImmutableString unpackSnorm2x16_("unpackSnorm2x16(");
 constexpr const ImmutableString unpackSnorm4x8("unpackSnorm4x8");
-constexpr const ImmutableString unpackSnorm4x8_("unpackSnorm4x8(");
 constexpr const ImmutableString unpackUnorm2x16("unpackUnorm2x16");
-constexpr const ImmutableString unpackUnorm2x16_("unpackUnorm2x16(");
 constexpr const ImmutableString unpackUnorm4x8("unpackUnorm4x8");
-constexpr const ImmutableString unpackUnorm4x8_("unpackUnorm4x8(");
 constexpr const ImmutableString usubBorrow("usubBorrow");
 constexpr const ImmutableString usubBorrow_0D0D0D("usubBorrow(0D0D0D");
 constexpr const ImmutableString usubBorrow_1D1D1D("usubBorrow(1D1D1D");
 constexpr const ImmutableString usubBorrow_2D2D2D("usubBorrow(2D2D2D");
 constexpr const ImmutableString usubBorrow_3D3D3D("usubBorrow(3D3D3D");
 constexpr const ImmutableString yuv_2_rgb("yuv_2_rgb");
-constexpr const ImmutableString yuv_2_rgb_("yuv_2_rgb(");
 
 }  // namespace BuiltInName
 
@@ -11209,740 +11097,627 @@ void TSymbolTable::initializeBuiltInVariables(sh::GLenum shaderType,
 
 const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shaderVersion) const
 {
-    uint32_t nameHash = name.hash32();
+    if (name.length() > 35)
+    {
+        return nullptr;
+    }
+    uint32_t nameHash = name.mangledNameHash();
     if (shaderVersion >= 310)
     {
         switch (nameHash)
         {
-            case 0x008583a0u:
+            case 0x14a125a4u:
             {
-                if (name == BuiltInName::imageStore_0k2C3D)
+                if (name.beginsWith(BuiltInName::ldexp))
                 {
-                    return &BuiltInFunction::kFunction_imageStore_0k2C3D;
-                }
-                break;
-            }
-            case 0x00a05f04u:
-            {
-                if (name.length() == 14 && name.beginsWith(BuiltInName::imageLoad_))
-                {
-                    return &BuiltInFunction::kFunction_imageLoad_0g2C;
-                }
-                break;
-            }
-            case 0x01a83888u:
-            {
-                if (name == BuiltInName::textureGatherOffset_0S2B1C0C)
-                {
-                    return &BuiltInFunction::kFunction_textureGatherOffset_0S2B1C0C;
-                }
-                break;
-            }
-            case 0x0296d786u:
-            {
-                if (name.length() == 10 && name.beginsWith(BuiltInName::findMSB_))
-                {
-                    return &BuiltInFunction::kFunction_findMSB_3C;
-                }
-                break;
-            }
-            case 0x029d3b2bu:
-            {
-                if (name == BuiltInName::gl_MaxComputeTextureImageUnits)
-                {
-                    return mVar_gl_MaxComputeTextureImageUnits;
-                }
-                break;
-            }
-            case 0x032be593u:
-            {
-                if (name.length() == 11 && name.beginsWith(BuiltInName::bitCount_))
-                {
-                    return &BuiltInFunction::kFunction_bitCount_2D;
-                }
-                break;
-            }
-            case 0x047e2010u:
-            {
-                if (name == BuiltInName::textureGather_0U1B0C)
-                {
-                    return &BuiltInFunction::kFunction_textureGather_0U1B0C;
-                }
-                break;
-            }
-            case 0x0596dc3fu:
-            {
-                if (name.length() == 10 && name.beginsWith(BuiltInName::findMSB_))
-                {
-                    return &BuiltInFunction::kFunction_findMSB_3D;
-                }
-                break;
-            }
-            case 0x082bed72u:
-            {
-                if (name.length() == 11 && name.beginsWith(BuiltInName::bitCount_))
-                {
-                    return &BuiltInFunction::kFunction_bitCount_2C;
-                }
-                break;
-            }
-            case 0x0a15fba3u:
-            {
-                if (name == BuiltInName::bitfieldInsert_3D3D0C0C)
-                {
-                    return &BuiltInFunction::kFunction_bitfieldInsert_3D3D0C0C;
-                }
-                break;
-            }
-            case 0x0a58432du:
-            {
-                if (name == BuiltInName::imulExtended_2C2C2C2C)
-                {
-                    return &BuiltInFunction::kFunction_imulExtended_2C2C2C2C;
-                }
-                break;
-            }
-            case 0x0b8d8d0eu:
-            {
-                if (name.length() == 16 && name.beginsWith(BuiltInName::atomicCounter_))
-                {
-                    return &BuiltInFunction::kFunction_atomicCounter_0F;
-                }
-                break;
-            }
-            case 0x0f0c6701u:
-            {
-                if (name.length() == 18 && name.beginsWith(BuiltInName::bitfieldReverse_))
-                {
-                    return &BuiltInFunction::kFunction_bitfieldReverse_3D;
-                }
-                break;
-            }
-            case 0x0f61635eu:
-            {
-                if (name.length() == 18 && name.beginsWith(BuiltInName::textureGather_))
-                {
-                    return &BuiltInFunction::kFunction_textureGather_0P1B;
-                }
-                break;
-            }
-            case 0x0fab9dd9u:
-            {
-                if (name == BuiltInName::atomicCompSwap_0C0C0C)
-                {
-                    return &BuiltInFunction::kFunction_atomicCompSwap_0C0C0C;
-                }
-                break;
-            }
-            case 0x100c00dfu:
-            {
-                if (name == BuiltInName::bitfieldInsert_3C3C0C0C)
-                {
-                    return &BuiltInFunction::kFunction_bitfieldInsert_3C3C0C0C;
-                }
-                break;
-            }
-            case 0x100c6894u:
-            {
-                if (name.length() == 18 && name.beginsWith(BuiltInName::bitfieldReverse_))
-                {
-                    return &BuiltInFunction::kFunction_bitfieldReverse_3C;
-                }
-                break;
-            }
-            case 0x107540dfu:
-            {
-                if (name == BuiltInName::gl_MaxVertexAtomicCounterBuffers)
-                {
-                    return mVar_gl_MaxVertexAtomicCounterBuffers;
-                }
-                break;
-            }
-            case 0x11253fd8u:
-            {
-                if (name.length() == 11 && name.beginsWith(BuiltInName::bitCount_))
-                {
-                    return &BuiltInFunction::kFunction_bitCount_1D;
-                }
-                break;
-            }
-            case 0x11c8ccddu:
-            {
-                if (name.length() == 14 && name.beginsWith(BuiltInName::imageLoad_))
-                {
-                    return &BuiltInFunction::kFunction_imageLoad_0h2C;
-                }
-                break;
-            }
-            case 0x1230974bu:
-            {
-                if (name == BuiltInName::textureGather_0P1B0C)
-                {
-                    return &BuiltInFunction::kFunction_textureGather_0P1B0C;
-                }
-                break;
-            }
-            case 0x124f3157u:
-            {
-                if (name.length() == 10 && name.beginsWith(BuiltInName::ldexp_))
-                {
+                    ASSERT(name.length() == 10);
                     return &BuiltInFunction::kFunction_ldexp_1B1C;
                 }
                 break;
             }
-            case 0x129034f1u:
+            case 0x14a1711cu:
             {
-                if (name.length() == 10 && name.beginsWith(BuiltInName::findMSB_))
+                if (name.beginsWith(BuiltInName::frexp))
                 {
-                    return &BuiltInFunction::kFunction_findMSB_0C;
-                }
-                break;
-            }
-            case 0x13903684u:
-            {
-                if (name.length() == 10 && name.beginsWith(BuiltInName::findMSB_))
-                {
-                    return &BuiltInFunction::kFunction_findMSB_0D;
-                }
-                break;
-            }
-            case 0x16f120efu:
-            {
-                if (name.length() == 14 && name.beginsWith(BuiltInName::atomicXor_))
-                {
-                    return &BuiltInFunction::kFunction_atomicXor_0C0C;
-                }
-                break;
-            }
-            case 0x174429d9u:
-            {
-                if (name.length() == 14 && name.beginsWith(BuiltInName::atomicAdd_))
-                {
-                    return &BuiltInFunction::kFunction_atomicAdd_0C0C;
-                }
-                break;
-            }
-            case 0x17aa3bbfu:
-            {
-                if (name.length() == 10 && name.beginsWith(BuiltInName::frexp_))
-                {
+                    ASSERT(name.length() == 10);
                     return &BuiltInFunction::kFunction_frexp_2B2C;
                 }
                 break;
             }
-            case 0x181a7211u:
+            case 0x14a5788fu:
             {
-                if (name.length() == 18 && name.beginsWith(BuiltInName::textureGather_))
+                if (name.beginsWith(BuiltInName::ldexp))
                 {
-                    return &BuiltInFunction::kFunction_textureGather_0U1B;
-                }
-                break;
-            }
-            case 0x18254addu:
-            {
-                if (name.length() == 11 && name.beginsWith(BuiltInName::bitCount_))
-                {
-                    return &BuiltInFunction::kFunction_bitCount_1C;
-                }
-                break;
-            }
-            case 0x1bc77874u:
-            {
-                if (name == BuiltInName::bitfieldExtract_2C0C0C)
-                {
-                    return &BuiltInFunction::kFunction_bitfieldExtract_2C0C0C;
-                }
-                break;
-            }
-            case 0x1e102f26u:
-            {
-                if (name == BuiltInName::usubBorrow_3D3D3D)
-                {
-                    return &BuiltInFunction::kFunction_usubBorrow_3D3D3D;
-                }
-                break;
-            }
-            case 0x1ef52e53u:
-            {
-                if (name == BuiltInName::bitfieldExtract_0D0C0C)
-                {
-                    return &BuiltInFunction::kFunction_bitfieldExtract_0D0C0C;
-                }
-                break;
-            }
-            case 0x221a7f03u:
-            {
-                if (name == BuiltInName::bitfieldInsert_1C1C0C0C)
-                {
-                    return &BuiltInFunction::kFunction_bitfieldInsert_1C1C0C0C;
-                }
-                break;
-            }
-            case 0x243de78bu:
-            {
-                if (name.length() == 14 && name.beginsWith(BuiltInName::imageLoad_))
-                {
-                    return &BuiltInFunction::kFunction_imageLoad_0n2C;
-                }
-                break;
-            }
-            case 0x2691af51u:
-            {
-                if (name == BuiltInName::umulExtended_0D0D0D0D)
-                {
-                    return &BuiltInFunction::kFunction_umulExtended_0D0D0D0D;
-                }
-                break;
-            }
-            case 0x26e63818u:
-            {
-                if (name == BuiltInName::bitfieldExtract_3D0C0C)
-                {
-                    return &BuiltInFunction::kFunction_bitfieldExtract_3D0C0C;
-                }
-                break;
-            }
-            case 0x282a4a31u:
-            {
-                if (name == BuiltInName::umulExtended_3D3D3D3D)
-                {
-                    return &BuiltInFunction::kFunction_umulExtended_3D3D3D3D;
-                }
-                break;
-            }
-            case 0x28a31a5fu:
-            {
-                if (name.length() == 14 && name.beginsWith(BuiltInName::imageLoad_))
-                {
-                    return &BuiltInFunction::kFunction_imageLoad_0j2C;
-                }
-                break;
-            }
-            case 0x2bceb1c6u:
-            {
-                if (name.length() == 17 && name.beginsWith(BuiltInName::unpackSnorm4x8_))
-                {
-                    return &BuiltInFunction::kFunction_unpackSnorm4x8_0D;
-                }
-                break;
-            }
-            case 0x2c4d0487u:
-            {
-                if (name == BuiltInName::gl_MaxImageUnits)
-                {
-                    return mVar_gl_MaxImageUnits;
-                }
-                break;
-            }
-            case 0x2c65fc52u:
-            {
-                if (name == BuiltInName::bitfieldExtract_0C0C0C)
-                {
-                    return &BuiltInFunction::kFunction_bitfieldExtract_0C0C0C;
-                }
-                break;
-            }
-            case 0x2d76ad27u:
-            {
-                if (name == BuiltInName::usubBorrow_2D2D2D)
-                {
-                    return &BuiltInFunction::kFunction_usubBorrow_2D2D2D;
-                }
-                break;
-            }
-            case 0x2e198dddu:
-            {
-                if (name == BuiltInName::bitfieldExtract_3C0C0C)
-                {
-                    return &BuiltInFunction::kFunction_bitfieldExtract_3C0C0C;
-                }
-                break;
-            }
-            case 0x2e205f43u:
-            {
-                if (name == BuiltInName::texelFetch_0O1C0C)
-                {
-                    return &BuiltInFunction::kFunction_texelFetch_0O1C0C;
-                }
-                break;
-            }
-            case 0x2f35a524u:
-            {
-                if (name.length() == 14 && name.beginsWith(BuiltInName::atomicMin_))
-                {
-                    return &BuiltInFunction::kFunction_atomicMin_0C0C;
-                }
-                break;
-            }
-            case 0x301e7aa3u:
-            {
-                if (name == BuiltInName::bitfieldExtract_1C0C0C)
-                {
-                    return &BuiltInFunction::kFunction_bitfieldExtract_1C0C0C;
-                }
-                break;
-            }
-            case 0x3292a5e8u:
-            {
-                if (name.length() == 10 && name.beginsWith(BuiltInName::findMSB_))
-                {
-                    return &BuiltInFunction::kFunction_findMSB_1C;
-                }
-                break;
-            }
-            case 0x32d4301fu:
-            {
-                if (name.length() == 19 && name.beginsWith(BuiltInName::atomicExchange_))
-                {
-                    return &BuiltInFunction::kFunction_atomicExchange_0D0D;
-                }
-                break;
-            }
-            case 0x361fe182u:
-            {
-                if (name == BuiltInName::gl_MaxGeometryTextureImageUnits)
-                {
-                    return mVar_gl_MaxGeometryTextureImageUnits;
-                }
-                break;
-            }
-            case 0x3620853du:
-            {
-                if (name == BuiltInName::gl_MaxGeometryOutputVertices)
-                {
-                    return mVar_gl_MaxGeometryOutputVertices;
-                }
-                break;
-            }
-            case 0x36e65c71u:
-            {
-                if (name == BuiltInName::textureGather_0b2B0B)
-                {
-                    return &BuiltInFunction::kFunction_textureGather_0b2B0B;
-                }
-                break;
-            }
-            case 0x36e78b70u:
-            {
-                if (name == BuiltInName::textureGather_0X2B0C)
-                {
-                    return &BuiltInFunction::kFunction_textureGather_0X2B0C;
-                }
-                break;
-            }
-            case 0x3727ba41u:
-            {
-                if (name.length() == 11 && name.beginsWith(BuiltInName::bitCount_))
-                {
-                    return &BuiltInFunction::kFunction_bitCount_0D;
-                }
-                break;
-            }
-            case 0x37f0f1d0u:
-            {
-                if (name == BuiltInName::gl_MaxCombinedImageUniforms)
-                {
-                    return mVar_gl_MaxCombinedImageUniforms;
-                }
-                break;
-            }
-            case 0x380ee623u:
-            {
-                if (name.length() == 18 && name.beginsWith(BuiltInName::bitfieldReverse_))
-                {
-                    return &BuiltInFunction::kFunction_bitfieldReverse_0C;
-                }
-                break;
-            }
-            case 0x3827bbd4u:
-            {
-                if (name.length() == 11 && name.beginsWith(BuiltInName::bitCount_))
-                {
-                    return &BuiltInFunction::kFunction_bitCount_0C;
-                }
-                break;
-            }
-            case 0x38ed38e5u:
-            {
-                if (name == BuiltInName::textureGatherOffset_0X2B1C0C)
-                {
-                    return &BuiltInFunction::kFunction_textureGatherOffset_0X2B1C0C;
-                }
-                break;
-            }
-            case 0x38ee90d7u:
-            {
-                if (name == BuiltInName::textureGatherOffset_0P1B1C)
-                {
-                    return &BuiltInFunction::kFunction_textureGatherOffset_0P1B1C;
-                }
-                break;
-            }
-            case 0x3992b0edu:
-            {
-                if (name.length() == 10 && name.beginsWith(BuiltInName::findMSB_))
-                {
-                    return &BuiltInFunction::kFunction_findMSB_1D;
-                }
-                break;
-            }
-            case 0x3d0eee02u:
-            {
-                if (name.length() == 18 && name.beginsWith(BuiltInName::bitfieldReverse_))
-                {
-                    return &BuiltInFunction::kFunction_bitfieldReverse_0D;
-                }
-                break;
-            }
-            case 0x3d7510bbu:
-            {
-                if (name == BuiltInName::bitfieldInsert_1D1D0C0C)
-                {
-                    return &BuiltInFunction::kFunction_bitfieldInsert_1D1D0C0C;
-                }
-                break;
-            }
-            case 0x3d856f72u:
-            {
-                if (name == BuiltInName::gl_MaxCombinedAtomicCounterBuffers)
-                {
-                    return mVar_gl_MaxCombinedAtomicCounterBuffers;
-                }
-                break;
-            }
-            case 0x3dc1da39u:
-            {
-                if (name == BuiltInName::gl_MaxGeometryImageUniforms)
-                {
-                    return mVar_gl_MaxGeometryImageUniforms;
-                }
-                break;
-            }
-            case 0x3f682f01u:
-            {
-                if (name == BuiltInName::textureGatherOffset_0K2B1C)
-                {
-                    return &BuiltInFunction::kFunction_textureGatherOffset_0K2B1C;
-                }
-                break;
-            }
-            case 0x449a297fu:
-            {
-                if (name.length() == 13 && name.beginsWith(BuiltInName::atomicOr_))
-                {
-                    return &BuiltInFunction::kFunction_atomicOr_0D0D;
-                }
-                break;
-            }
-            case 0x4591b147u:
-            {
-                if (name == BuiltInName::gl_MaxFragmentAtomicCounters)
-                {
-                    return mVar_gl_MaxFragmentAtomicCounters;
-                }
-                break;
-            }
-            case 0x48923c61u:
-            {
-                if (name.length() == 14 && name.beginsWith(BuiltInName::atomicAdd_))
-                {
-                    return &BuiltInFunction::kFunction_atomicAdd_0D0D;
-                }
-                break;
-            }
-            case 0x4cbd309du:
-            {
-                if (name == BuiltInName::gl_MaxVertexAtomicCounters)
-                {
-                    return mVar_gl_MaxVertexAtomicCounters;
-                }
-                break;
-            }
-            case 0x4d3ff831u:
-            {
-                if (name == BuiltInName::umulExtended_2D2D2D2D)
-                {
-                    return &BuiltInFunction::kFunction_umulExtended_2D2D2D2D;
-                }
-                break;
-            }
-            case 0x50828f41u:
-            {
-                if (name == BuiltInName::bitfieldExtract_2D0C0C)
-                {
-                    return &BuiltInFunction::kFunction_bitfieldExtract_2D0C0C;
-                }
-                break;
-            }
-            case 0x50a3ba69u:
-            {
-                if (name == BuiltInName::textureGatherOffset_0S2B1C)
-                {
-                    return &BuiltInFunction::kFunction_textureGatherOffset_0S2B1C;
-                }
-                break;
-            }
-            case 0x529504a4u:
-            {
-                if (name == BuiltInName::atomicCompSwap_0D0D0D)
-                {
-                    return &BuiltInFunction::kFunction_atomicCompSwap_0D0D0D;
-                }
-                break;
-            }
-            case 0x551515f4u:
-            {
-                if (name == BuiltInName::gl_MaxComputeImageUniforms)
-                {
-                    return mVar_gl_MaxComputeImageUniforms;
-                }
-                break;
-            }
-            case 0x56a8a0b4u:
-            {
-                if (name == BuiltInName::usubBorrow_1D1D1D)
-                {
-                    return &BuiltInFunction::kFunction_usubBorrow_1D1D1D;
-                }
-                break;
-            }
-            case 0x573d1826u:
-            {
-                if (name.length() == 18 && name.beginsWith(BuiltInName::textureGather_))
-                {
-                    return &BuiltInFunction::kFunction_textureGather_0H1B;
-                }
-                break;
-            }
-            case 0x57b9431bu:
-            {
-                if (name.length() == 10 && name.beginsWith(BuiltInName::ldexp_))
-                {
+                    ASSERT(name.length() == 10);
                     return &BuiltInFunction::kFunction_ldexp_0B0C;
                 }
                 break;
             }
-            case 0x59490119u:
+            case 0x14a7dfddu:
             {
-                if (name == BuiltInName::textureGatherOffset_0U1B1C0C)
+                if (name.beginsWith(BuiltInName::frexp))
                 {
-                    return &BuiltInFunction::kFunction_textureGatherOffset_0U1B1C0C;
+                    ASSERT(name.length() == 10);
+                    return &BuiltInFunction::kFunction_frexp_3B3C;
                 }
                 break;
             }
-            case 0x5aeafb40u:
+            case 0x14a941e1u:
             {
-                if (name == BuiltInName::gl_MaxAtomicCounterBindings)
+                if (name.beginsWith(BuiltInName::ldexp))
                 {
-                    return mVar_gl_MaxAtomicCounterBindings;
+                    ASSERT(name.length() == 10);
+                    return &BuiltInFunction::kFunction_ldexp_2B2C;
                 }
                 break;
             }
-            case 0x5ba8f703u:
+            case 0x14aa386au:
             {
-                if (name == BuiltInName::imageStore_0d1C3C)
+                if (name.beginsWith(BuiltInName::frexp))
                 {
-                    return &BuiltInFunction::kFunction_imageStore_0d1C3C;
+                    ASSERT(name.length() == 10);
+                    return &BuiltInFunction::kFunction_frexp_1B1C;
                 }
                 break;
             }
-            case 0x5e97fd5au:
+            case 0x14af3af7u:
             {
-                if (name.length() == 18 && name.beginsWith(BuiltInName::textureGather_))
+                if (name.beginsWith(BuiltInName::frexp))
                 {
-                    return &BuiltInFunction::kFunction_textureGather_0a2B;
+                    ASSERT(name.length() == 10);
+                    return &BuiltInFunction::kFunction_frexp_0B0C;
                 }
                 break;
             }
-            case 0x602a3963u:
+            case 0x14afab5au:
             {
-                if (name.length() == 11 && name.beginsWith(BuiltInName::bitCount_))
+                if (name.beginsWith(BuiltInName::ldexp))
                 {
+                    ASSERT(name.length() == 10);
+                    return &BuiltInFunction::kFunction_ldexp_3B3C;
+                }
+                break;
+            }
+            case 0x1ca02eebu:
+            {
+                if (name.beginsWith(BuiltInName::findMSB))
+                {
+                    ASSERT(name.length() == 10);
+                    return &BuiltInFunction::kFunction_findMSB_3C;
+                }
+                break;
+            }
+            case 0x1ca05552u:
+            {
+                if (name.beginsWith(BuiltInName::findMSB))
+                {
+                    ASSERT(name.length() == 10);
+                    return &BuiltInFunction::kFunction_findMSB_3D;
+                }
+                break;
+            }
+            case 0x1ca12df2u:
+            {
+                if (name.beginsWith(BuiltInName::findMSB))
+                {
+                    ASSERT(name.length() == 10);
+                    return &BuiltInFunction::kFunction_findMSB_0C;
+                }
+                break;
+            }
+            case 0x1ca13f87u:
+            {
+                if (name.beginsWith(BuiltInName::findMSB))
+                {
+                    ASSERT(name.length() == 10);
+                    return &BuiltInFunction::kFunction_findMSB_0D;
+                }
+                break;
+            }
+            case 0x1ca32cc2u:
+            {
+                if (name.beginsWith(BuiltInName::findMSB))
+                {
+                    ASSERT(name.length() == 10);
+                    return &BuiltInFunction::kFunction_findMSB_1C;
+                }
+                break;
+            }
+            case 0x1ca399c6u:
+            {
+                if (name.beginsWith(BuiltInName::findMSB))
+                {
+                    ASSERT(name.length() == 10);
+                    return &BuiltInFunction::kFunction_findMSB_1D;
+                }
+                break;
+            }
+            case 0x1ca9155eu:
+            {
+                if (name.beginsWith(BuiltInName::findLSB))
+                {
+                    ASSERT(name.length() == 10);
+                    return &BuiltInFunction::kFunction_findLSB_2C;
+                }
+                break;
+            }
+            case 0x1ca94816u:
+            {
+                if (name.beginsWith(BuiltInName::findLSB))
+                {
+                    ASSERT(name.length() == 10);
+                    return &BuiltInFunction::kFunction_findLSB_2D;
+                }
+                break;
+            }
+            case 0x1caa1274u:
+            {
+                if (name.beginsWith(BuiltInName::findLSB))
+                {
+                    ASSERT(name.length() == 10);
+                    return &BuiltInFunction::kFunction_findLSB_1C;
+                }
+                break;
+            }
+            case 0x1caa21e1u:
+            {
+                if (name.beginsWith(BuiltInName::findLSB))
+                {
+                    ASSERT(name.length() == 10);
+                    return &BuiltInFunction::kFunction_findLSB_1D;
+                }
+                break;
+            }
+            case 0x1cac1124u:
+            {
+                if (name.beginsWith(BuiltInName::findLSB))
+                {
+                    ASSERT(name.length() == 10);
+                    return &BuiltInFunction::kFunction_findLSB_0C;
+                }
+                break;
+            }
+            case 0x1cac8e20u:
+            {
+                if (name.beginsWith(BuiltInName::findLSB))
+                {
+                    ASSERT(name.length() == 10);
+                    return &BuiltInFunction::kFunction_findLSB_0D;
+                }
+                break;
+            }
+            case 0x1cad7c7bu:
+            {
+                if (name.beginsWith(BuiltInName::findMSB))
+                {
+                    ASSERT(name.length() == 10);
+                    return &BuiltInFunction::kFunction_findMSB_2D;
+                }
+                break;
+            }
+            case 0x1cada0b2u:
+            {
+                if (name.beginsWith(BuiltInName::findMSB))
+                {
+                    ASSERT(name.length() == 10);
+                    return &BuiltInFunction::kFunction_findMSB_2C;
+                }
+                break;
+            }
+            case 0x1cae685au:
+            {
+                if (name.beginsWith(BuiltInName::findLSB))
+                {
+                    ASSERT(name.length() == 10);
+                    return &BuiltInFunction::kFunction_findLSB_3D;
+                }
+                break;
+            }
+            case 0x1cae9c83u:
+            {
+                if (name.beginsWith(BuiltInName::findLSB))
+                {
+                    ASSERT(name.length() == 10);
+                    return &BuiltInFunction::kFunction_findLSB_3C;
+                }
+                break;
+            }
+            case 0x20b0372du:
+            {
+                if (name.beginsWith(BuiltInName::bitCount))
+                {
+                    ASSERT(name.length() == 11);
+                    return &BuiltInFunction::kFunction_bitCount_2D;
+                }
+                break;
+            }
+            case 0x20b08fccu:
+            {
+                if (name.beginsWith(BuiltInName::bitCount))
+                {
+                    ASSERT(name.length() == 11);
+                    return &BuiltInFunction::kFunction_bitCount_2C;
+                }
+                break;
+            }
+            case 0x20b11d8bu:
+            {
+                if (name.beginsWith(BuiltInName::bitCount))
+                {
+                    ASSERT(name.length() == 11);
+                    return &BuiltInFunction::kFunction_bitCount_1D;
+                }
+                break;
+            }
+            case 0x20b18889u:
+            {
+                if (name.beginsWith(BuiltInName::bitCount))
+                {
+                    ASSERT(name.length() == 11);
+                    return &BuiltInFunction::kFunction_bitCount_1C;
+                }
+                break;
+            }
+            case 0x20b3783au:
+            {
+                if (name.beginsWith(BuiltInName::bitCount))
+                {
+                    ASSERT(name.length() == 11);
+                    return &BuiltInFunction::kFunction_bitCount_0D;
+                }
+                break;
+            }
+            case 0x20b389afu:
+            {
+                if (name.beginsWith(BuiltInName::bitCount))
+                {
+                    ASSERT(name.length() == 11);
+                    return &BuiltInFunction::kFunction_bitCount_0C;
+                }
+                break;
+            }
+            case 0x20b60bc0u:
+            {
+                if (name.beginsWith(BuiltInName::bitCount))
+                {
+                    ASSERT(name.length() == 11);
                     return &BuiltInFunction::kFunction_bitCount_3C;
                 }
                 break;
             }
-            case 0x62f2ce12u:
+            case 0x20b653e6u:
             {
-                if (name.length() == 14 && name.beginsWith(BuiltInName::imageLoad_))
+                if (name.beginsWith(BuiltInName::bitCount))
                 {
-                    return &BuiltInFunction::kFunction_imageLoad_0m2C;
-                }
-                break;
-            }
-            case 0x652a4142u:
-            {
-                if (name.length() == 11 && name.beginsWith(BuiltInName::bitCount_))
-                {
+                    ASSERT(name.length() == 11);
                     return &BuiltInFunction::kFunction_bitCount_3D;
                 }
                 break;
             }
-            case 0x68f37977u:
+            case 0x20d440ddu:
             {
-                if (name.length() == 19 && name.beginsWith(BuiltInName::atomicExchange_))
+                if (name.beginsWith(BuiltInName::atomicOr))
                 {
-                    return &BuiltInFunction::kFunction_atomicExchange_0C0C;
+                    ASSERT(name.length() == 13);
+                    return &BuiltInFunction::kFunction_atomicOr_0D0D;
                 }
                 break;
             }
-            case 0x6b51f121u:
+            case 0x20d79994u:
             {
-                if (name == BuiltInName::umulExtended_1D1D1D1D)
+                if (name.beginsWith(BuiltInName::atomicOr))
                 {
-                    return &BuiltInFunction::kFunction_umulExtended_1D1D1D1D;
+                    ASSERT(name.length() == 13);
+                    return &BuiltInFunction::kFunction_atomicOr_0C0C;
                 }
                 break;
             }
-            case 0x6bd9dd3bu:
+            case 0x24cb34d4u:
             {
-                if (name == BuiltInName::bitfieldInsert_0D0D0C0C)
+                if (name.beginsWith(BuiltInName::imageSize))
                 {
-                    return &BuiltInFunction::kFunction_bitfieldInsert_0D0D0C0C;
+                    ASSERT(name.length() == 12);
+                    return &BuiltInFunction::kFunction_imageSize_0c;
                 }
                 break;
             }
-            case 0x6c195e87u:
+            case 0x24cb7e98u:
             {
-                if (name.length() == 14 && name.beginsWith(BuiltInName::imageLoad_))
+                if (name.beginsWith(BuiltInName::imageSize))
                 {
+                    ASSERT(name.length() == 12);
+                    return &BuiltInFunction::kFunction_imageSize_0g;
+                }
+                break;
+            }
+            case 0x24cb8f2bu:
+            {
+                if (name.beginsWith(BuiltInName::imageSize))
+                {
+                    ASSERT(name.length() == 12);
+                    return &BuiltInFunction::kFunction_imageSize_0f;
+                }
+                break;
+            }
+            case 0x24cb9d46u:
+            {
+                if (name.beginsWith(BuiltInName::imageSize))
+                {
+                    ASSERT(name.length() == 12);
+                    return &BuiltInFunction::kFunction_imageSize_0e;
+                }
+                break;
+            }
+            case 0x24cba3d0u:
+            {
+                if (name.beginsWith(BuiltInName::imageSize))
+                {
+                    ASSERT(name.length() == 12);
+                    return &BuiltInFunction::kFunction_imageSize_0d;
+                }
+                break;
+            }
+            case 0x24cbb06du:
+            {
+                if (name.beginsWith(BuiltInName::imageSize))
+                {
+                    ASSERT(name.length() == 12);
+                    return &BuiltInFunction::kFunction_imageSize_0k;
+                }
+                break;
+            }
+            case 0x24cbc6feu:
+            {
+                if (name.beginsWith(BuiltInName::imageSize))
+                {
+                    ASSERT(name.length() == 12);
+                    return &BuiltInFunction::kFunction_imageSize_0j;
+                }
+                break;
+            }
+            case 0x24cbd70bu:
+            {
+                if (name.beginsWith(BuiltInName::imageSize))
+                {
+                    ASSERT(name.length() == 12);
+                    return &BuiltInFunction::kFunction_imageSize_0i;
+                }
+                break;
+            }
+            case 0x24cbe5a4u:
+            {
+                if (name.beginsWith(BuiltInName::imageSize))
+                {
+                    ASSERT(name.length() == 12);
+                    return &BuiltInFunction::kFunction_imageSize_0h;
+                }
+                break;
+            }
+            case 0x24cc0842u:
+            {
+                if (name.beginsWith(BuiltInName::imageSize))
+                {
+                    ASSERT(name.length() == 12);
+                    return &BuiltInFunction::kFunction_imageSize_0n;
+                }
+                break;
+            }
+            case 0x24cc1edfu:
+            {
+                if (name.beginsWith(BuiltInName::imageSize))
+                {
+                    ASSERT(name.length() == 12);
+                    return &BuiltInFunction::kFunction_imageSize_0m;
+                }
+                break;
+            }
+            case 0x24cc2f68u:
+            {
+                if (name.beginsWith(BuiltInName::imageSize))
+                {
+                    ASSERT(name.length() == 12);
+                    return &BuiltInFunction::kFunction_imageSize_0l;
+                }
+                break;
+            }
+            case 0x24e00501u:
+            {
+                if (name.beginsWith(BuiltInName::imageLoad))
+                {
+                    ASSERT(name.length() == 14);
+                    return &BuiltInFunction::kFunction_imageLoad_0g2C;
+                }
+                break;
+            }
+            case 0x24e11051u:
+            {
+                if (name.beginsWith(BuiltInName::imageLoad))
+                {
+                    ASSERT(name.length() == 14);
+                    return &BuiltInFunction::kFunction_imageLoad_0h2C;
+                }
+                break;
+            }
+            case 0x24e16ffdu:
+            {
+                if (name.beginsWith(BuiltInName::atomicXor))
+                {
+                    ASSERT(name.length() == 14);
+                    return &BuiltInFunction::kFunction_atomicXor_0C0C;
+                }
+                break;
+            }
+            case 0x24e17d9bu:
+            {
+                if (name.beginsWith(BuiltInName::atomicAdd))
+                {
+                    ASSERT(name.length() == 14);
+                    return &BuiltInFunction::kFunction_atomicAdd_0C0C;
+                }
+                break;
+            }
+            case 0x24e24455u:
+            {
+                if (name.beginsWith(BuiltInName::imageLoad))
+                {
+                    ASSERT(name.length() == 14);
+                    return &BuiltInFunction::kFunction_imageLoad_0n2C;
+                }
+                break;
+            }
+            case 0x24e2806eu:
+            {
+                if (name.beginsWith(BuiltInName::imageLoad))
+                {
+                    ASSERT(name.length() == 14);
+                    return &BuiltInFunction::kFunction_imageLoad_0j2C;
+                }
+                break;
+            }
+            case 0x24e2f67eu:
+            {
+                if (name.beginsWith(BuiltInName::atomicMin))
+                {
+                    ASSERT(name.length() == 14);
+                    return &BuiltInFunction::kFunction_atomicMin_0C0C;
+                }
+                break;
+            }
+            case 0x24e48542u:
+            {
+                if (name.beginsWith(BuiltInName::atomicAdd))
+                {
+                    ASSERT(name.length() == 14);
+                    return &BuiltInFunction::kFunction_atomicAdd_0D0D;
+                }
+                break;
+            }
+            case 0x24e6213eu:
+            {
+                if (name.beginsWith(BuiltInName::imageLoad))
+                {
+                    ASSERT(name.length() == 14);
+                    return &BuiltInFunction::kFunction_imageLoad_0m2C;
+                }
+                break;
+            }
+            case 0x24e6cf12u:
+            {
+                if (name.beginsWith(BuiltInName::imageLoad))
+                {
+                    ASSERT(name.length() == 14);
                     return &BuiltInFunction::kFunction_imageLoad_0c1C;
                 }
                 break;
             }
-            case 0x6c3a75d8u:
+            case 0x24e752d1u:
             {
-                if (name == BuiltInName::gl_MaxComputeUniformComponents)
-                {
-                    return mVar_gl_MaxComputeUniformComponents;
-                }
-                break;
-            }
-            case 0x6d7cd09au:
-            {
-                if (name.length() == 15 && name.beginsWith(BuiltInName::packSnorm4x8_))
-                {
-                    return &BuiltInFunction::kFunction_packSnorm4x8_3B;
-                }
-                break;
-            }
-            case 0x70f71a0bu:
-            {
-                if (name == BuiltInName::bitfieldInsert_2D2D0C0C)
-                {
-                    return &BuiltInFunction::kFunction_bitfieldInsert_2D2D0C0C;
-                }
-                break;
-            }
-            case 0x753e7136u:
-            {
-                if (name.length() == 14 && name.beginsWith(BuiltInName::imageLoad_))
+                if (name == BuiltInName::imageLoad_0d1C)
                 {
                     return &BuiltInFunction::kFunction_imageLoad_0d1C;
                 }
                 break;
             }
-            case 0x76d26c06u:
+            case 0x24e7ac0cu:
+            {
+                if (name.beginsWith(BuiltInName::atomicMax))
+                {
+                    ASSERT(name.length() == 14);
+                    return &BuiltInFunction::kFunction_atomicMax_0D0D;
+                }
+                break;
+            }
+            case 0x24e7d770u:
+            {
+                if (name.beginsWith(BuiltInName::atomicMin))
+                {
+                    ASSERT(name.length() == 14);
+                    return &BuiltInFunction::kFunction_atomicMin_0D0D;
+                }
+                break;
+            }
+            case 0x24e8de55u:
+            {
+                if (name.beginsWith(BuiltInName::imageLoad))
+                {
+                    ASSERT(name.length() == 14);
+                    return &BuiltInFunction::kFunction_imageLoad_0k2C;
+                }
+                break;
+            }
+            case 0x24e8f7afu:
+            {
+                if (name.beginsWith(BuiltInName::atomicAnd))
+                {
+                    ASSERT(name.length() == 14);
+                    return &BuiltInFunction::kFunction_atomicAnd_0C0C;
+                }
+                break;
+            }
+            case 0x24e9aaedu:
+            {
+                if (name.beginsWith(BuiltInName::imageLoad))
+                {
+                    ASSERT(name.length() == 14);
+                    return &BuiltInFunction::kFunction_imageLoad_0f2C;
+                }
+                break;
+            }
+            case 0x24ea7eeeu:
+            {
+                if (name.beginsWith(BuiltInName::imageLoad))
+                {
+                    ASSERT(name.length() == 14);
+                    return &BuiltInFunction::kFunction_imageLoad_0i2C;
+                }
+                break;
+            }
+            case 0x24ea98bbu:
+            {
+                if (name.beginsWith(BuiltInName::imageLoad))
+                {
+                    ASSERT(name.length() == 14);
+                    return &BuiltInFunction::kFunction_imageLoad_0e1C;
+                }
+                break;
+            }
+            case 0x24ec9041u:
+            {
+                if (name.beginsWith(BuiltInName::atomicAnd))
+                {
+                    ASSERT(name.length() == 14);
+                    return &BuiltInFunction::kFunction_atomicAnd_0D0D;
+                }
+                break;
+            }
+            case 0x24ece2e2u:
+            {
+                if (name.beginsWith(BuiltInName::imageLoad))
+                {
+                    ASSERT(name.length() == 14);
+                    return &BuiltInFunction::kFunction_imageLoad_0l2C;
+                }
+                break;
+            }
+            case 0x24ee0a8au:
+            {
+                if (name.beginsWith(BuiltInName::atomicXor))
+                {
+                    ASSERT(name.length() == 14);
+                    return &BuiltInFunction::kFunction_atomicXor_0D0D;
+                }
+                break;
+            }
+            case 0x24ef375bu:
+            {
+                if (name.beginsWith(BuiltInName::atomicMax))
+                {
+                    ASSERT(name.length() == 14);
+                    return &BuiltInFunction::kFunction_atomicMax_0C0C;
+                }
+                break;
+            }
+            case 0x25076120u:
             {
                 if (name == BuiltInName::uaddCarry_0D0D0D)
                 {
@@ -11950,39 +11725,896 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                 }
                 break;
             }
-            case 0x77ff0931u:
+            case 0x2508354bu:
             {
-                if (name.length() == 18 && name.beginsWith(BuiltInName::textureGather_))
+                if (name == BuiltInName::uaddCarry_2D2D2D)
                 {
+                    return &BuiltInFunction::kFunction_uaddCarry_2D2D2D;
+                }
+                break;
+            }
+            case 0x250850e3u:
+            {
+                if (name == BuiltInName::uaddCarry_3D3D3D)
+                {
+                    return &BuiltInFunction::kFunction_uaddCarry_3D3D3D;
+                }
+                break;
+            }
+            case 0x25086989u:
+            {
+                if (name == BuiltInName::uaddCarry_1D1D1D)
+                {
+                    return &BuiltInFunction::kFunction_uaddCarry_1D1D1D;
+                }
+                break;
+            }
+            case 0x29100bf8u:
+            {
+                if (name == BuiltInName::imageStore_0k2C3D)
+                {
+                    return &BuiltInFunction::kFunction_imageStore_0k2C3D;
+                }
+                break;
+            }
+            case 0x2911ee24u:
+            {
+                if (name == BuiltInName::usubBorrow_3D3D3D)
+                {
+                    return &BuiltInFunction::kFunction_usubBorrow_3D3D3D;
+                }
+                break;
+            }
+            case 0x2912da4du:
+            {
+                if (name == BuiltInName::usubBorrow_2D2D2D)
+                {
+                    return &BuiltInFunction::kFunction_usubBorrow_2D2D2D;
+                }
+                break;
+            }
+            case 0x2912ed46u:
+            {
+                if (name == BuiltInName::texelFetch_0O1C0C)
+                {
+                    return &BuiltInFunction::kFunction_texelFetch_0O1C0C;
+                }
+                break;
+            }
+            case 0x29156a3eu:
+            {
+                if (name == BuiltInName::usubBorrow_1D1D1D)
+                {
+                    return &BuiltInFunction::kFunction_usubBorrow_1D1D1D;
+                }
+                break;
+            }
+            case 0x2915bd8cu:
+            {
+                if (name == BuiltInName::imageStore_0d1C3C)
+                {
+                    return &BuiltInFunction::kFunction_imageStore_0d1C3C;
+                }
+                break;
+            }
+            case 0x29183d18u:
+            {
+                if (name == BuiltInName::texelFetch_0T1C0C)
+                {
+                    return &BuiltInFunction::kFunction_texelFetch_0T1C0C;
+                }
+                break;
+            }
+            case 0x29188a68u:
+            {
+                if (name == BuiltInName::imageStore_0f2C3B)
+                {
+                    return &BuiltInFunction::kFunction_imageStore_0f2C3B;
+                }
+                break;
+            }
+            case 0x291af7dcu:
+            {
+                if (name == BuiltInName::imageStore_0c1C3B)
+                {
+                    return &BuiltInFunction::kFunction_imageStore_0c1C3B;
+                }
+                break;
+            }
+            case 0x291b086bu:
+            {
+                if (name == BuiltInName::imageStore_0g2C3C)
+                {
+                    return &BuiltInFunction::kFunction_imageStore_0g2C3C;
+                }
+                break;
+            }
+            case 0x291ba62eu:
+            {
+                if (name == BuiltInName::imageStore_0l2C3B)
+                {
+                    return &BuiltInFunction::kFunction_imageStore_0l2C3B;
+                }
+                break;
+            }
+            case 0x291bb1d9u:
+            {
+                if (name == BuiltInName::texelFetch_0Y1C0C)
+                {
+                    return &BuiltInFunction::kFunction_texelFetch_0Y1C0C;
+                }
+                break;
+            }
+            case 0x291c4ce8u:
+            {
+                if (name == BuiltInName::imageStore_0m2C3C)
+                {
+                    return &BuiltInFunction::kFunction_imageStore_0m2C3C;
+                }
+                break;
+            }
+            case 0x291cf877u:
+            {
+                if (name == BuiltInName::imageStore_0j2C3C)
+                {
+                    return &BuiltInFunction::kFunction_imageStore_0j2C3C;
+                }
+                break;
+            }
+            case 0x291d8e34u:
+            {
+                if (name == BuiltInName::imageStore_0n2C3D)
+                {
+                    return &BuiltInFunction::kFunction_imageStore_0n2C3D;
+                }
+                break;
+            }
+            case 0x291e4ebau:
+            {
+                if (name == BuiltInName::imageStore_0e1C3D)
+                {
+                    return &BuiltInFunction::kFunction_imageStore_0e1C3D;
+                }
+                break;
+            }
+            case 0x291eef4cu:
+            {
+                if (name == BuiltInName::usubBorrow_0D0D0D)
+                {
+                    return &BuiltInFunction::kFunction_usubBorrow_0D0D0D;
+                }
+                break;
+            }
+            case 0x291f0ca5u:
+            {
+                if (name == BuiltInName::imageStore_0h2C3D)
+                {
+                    return &BuiltInFunction::kFunction_imageStore_0h2C3D;
+                }
+                break;
+            }
+            case 0x291fa1cau:
+            {
+                if (name == BuiltInName::imageStore_0i2C3B)
+                {
+                    return &BuiltInFunction::kFunction_imageStore_0i2C3B;
+                }
+                break;
+            }
+            case 0x30f6d757u:
+            {
+                if (name.beginsWith(BuiltInName::packSnorm4x8))
+                {
+                    ASSERT(name.length() == 15);
+                    return &BuiltInFunction::kFunction_packSnorm4x8_3B;
+                }
+                break;
+            }
+            case 0x30f8217au:
+            {
+                if (name.beginsWith(BuiltInName::packUnorm4x8))
+                {
+                    ASSERT(name.length() == 15);
+                    return &BuiltInFunction::kFunction_packUnorm4x8_3B;
+                }
+                break;
+            }
+            case 0x3150a6a9u:
+            {
+                if (name == BuiltInName::imulExtended_2C2C2C2C)
+                {
+                    return &BuiltInFunction::kFunction_imulExtended_2C2C2C2C;
+                }
+                break;
+            }
+            case 0x3152664bu:
+            {
+                if (name == BuiltInName::umulExtended_0D0D0D0D)
+                {
+                    return &BuiltInFunction::kFunction_umulExtended_0D0D0D0D;
+                }
+                break;
+            }
+            case 0x31528895u:
+            {
+                if (name == BuiltInName::umulExtended_3D3D3D3D)
+                {
+                    return &BuiltInFunction::kFunction_umulExtended_3D3D3D3D;
+                }
+                break;
+            }
+            case 0x3154dbceu:
+            {
+                if (name == BuiltInName::umulExtended_2D2D2D2D)
+                {
+                    return &BuiltInFunction::kFunction_umulExtended_2D2D2D2D;
+                }
+                break;
+            }
+            case 0x3156b43eu:
+            {
+                if (name == BuiltInName::umulExtended_1D1D1D1D)
+                {
+                    return &BuiltInFunction::kFunction_umulExtended_1D1D1D1D;
+                }
+                break;
+            }
+            case 0x31582937u:
+            {
+                if (name == BuiltInName::imulExtended_3C3C3C3C)
+                {
+                    return &BuiltInFunction::kFunction_imulExtended_3C3C3C3C;
+                }
+                break;
+            }
+            case 0x31584c20u:
+            {
+                if (name == BuiltInName::imulExtended_0C0C0C0C)
+                {
+                    return &BuiltInFunction::kFunction_imulExtended_0C0C0C0C;
+                }
+                break;
+            }
+            case 0x315ccad6u:
+            {
+                if (name == BuiltInName::imulExtended_1C1C1C1C)
+                {
+                    return &BuiltInFunction::kFunction_imulExtended_1C1C1C1C;
+                }
+                break;
+            }
+            case 0x34ea7717u:
+            {
+                if (name.beginsWith(BuiltInName::memoryBarrier))
+                {
+                    ASSERT(name.length() == 14);
+                    return &BuiltInFunction::kFunction_memoryBarrier_;
+                }
+                break;
+            }
+            case 0x3500b5d6u:
+            {
+                if (name.beginsWith(BuiltInName::atomicCounter))
+                {
+                    ASSERT(name.length() == 16);
+                    return &BuiltInFunction::kFunction_atomicCounter_0F;
+                }
+                break;
+            }
+            case 0x3520f548u:
+            {
+                if (name.beginsWith(BuiltInName::textureGather))
+                {
+                    ASSERT(name.length() == 18);
+                    return &BuiltInFunction::kFunction_textureGather_0P1B;
+                }
+                break;
+            }
+            case 0x352183b6u:
+            {
+                if (name.beginsWith(BuiltInName::textureGather))
+                {
+                    ASSERT(name.length() == 18);
+                    return &BuiltInFunction::kFunction_textureGather_0U1B;
+                }
+                break;
+            }
+            case 0x35257bf7u:
+            {
+                if (name.beginsWith(BuiltInName::textureGather))
+                {
+                    ASSERT(name.length() == 18);
+                    return &BuiltInFunction::kFunction_textureGather_0H1B;
+                }
+                break;
+            }
+            case 0x3525e425u:
+            {
+                if (name.beginsWith(BuiltInName::textureGather))
+                {
+                    ASSERT(name.length() == 18);
+                    return &BuiltInFunction::kFunction_textureGather_0a2B;
+                }
+                break;
+            }
+            case 0x352776c1u:
+            {
+                if (name.beginsWith(BuiltInName::textureGather))
+                {
+                    ASSERT(name.length() == 18);
                     return &BuiltInFunction::kFunction_textureGather_0X2B;
                 }
                 break;
             }
-            case 0x797c3e57u:
+            case 0x3527b70eu:
             {
-                if (name.length() == 13 && name.beginsWith(BuiltInName::atomicOr_))
+                if (name.beginsWith(BuiltInName::textureGather))
                 {
-                    return &BuiltInFunction::kFunction_atomicOr_0C0C;
-                }
-                break;
-            }
-            case 0x7a93e532u:
-            {
-                if (name.length() == 14 && name.beginsWith(BuiltInName::atomicMax_))
-                {
-                    return &BuiltInFunction::kFunction_atomicMax_0D0D;
-                }
-                break;
-            }
-            case 0x7bff68f8u:
-            {
-                if (name.length() == 18 && name.beginsWith(BuiltInName::textureGather_))
-                {
+                    ASSERT(name.length() == 18);
                     return &BuiltInFunction::kFunction_textureGather_0W2B;
                 }
                 break;
             }
-            case 0x7dab4220u:
+            case 0x35280d85u:
+            {
+                if (name.beginsWith(BuiltInName::textureGather))
+                {
+                    ASSERT(name.length() == 18);
+                    return &BuiltInFunction::kFunction_textureGather_0S2B;
+                }
+                break;
+            }
+            case 0x352889a7u:
+            {
+                if (name.beginsWith(BuiltInName::textureGather))
+                {
+                    ASSERT(name.length() == 18);
+                    return &BuiltInFunction::kFunction_textureGather_0K2B;
+                }
+                break;
+            }
+            case 0x352c3259u:
+            {
+                if (name.beginsWith(BuiltInName::textureGather))
+                {
+                    ASSERT(name.length() == 18);
+                    return &BuiltInFunction::kFunction_textureGather_0Z1B;
+                }
+                break;
+            }
+            case 0x352dc0eau:
+            {
+                if (name.beginsWith(BuiltInName::textureGather))
+                {
+                    ASSERT(name.length() == 18);
+                    return &BuiltInFunction::kFunction_textureGather_0b2B;
+                }
+                break;
+            }
+            case 0x352e6efdu:
+            {
+                if (name.beginsWith(BuiltInName::textureGather))
+                {
+                    ASSERT(name.length() == 18);
+                    return &BuiltInFunction::kFunction_textureGather_0R2B;
+                }
+                break;
+            }
+            case 0x352f0d8au:
+            {
+                if (name.beginsWith(BuiltInName::textureGather))
+                {
+                    ASSERT(name.length() == 18);
+                    return &BuiltInFunction::kFunction_textureGather_0J2B;
+                }
+                break;
+            }
+            case 0x354047f2u:
+            {
+                if (name == BuiltInName::textureGather_0U1B0C)
+                {
+                    return &BuiltInFunction::kFunction_textureGather_0U1B0C;
+                }
+                break;
+            }
+            case 0x35412442u:
+            {
+                if (name == BuiltInName::textureGather_0P1B0C)
+                {
+                    return &BuiltInFunction::kFunction_textureGather_0P1B0C;
+                }
+                break;
+            }
+            case 0x35436214u:
+            {
+                if (name == BuiltInName::textureGather_0b2B0B)
+                {
+                    return &BuiltInFunction::kFunction_textureGather_0b2B0B;
+                }
+                break;
+            }
+            case 0x35436508u:
+            {
+                if (name == BuiltInName::textureGather_0X2B0C)
+                {
+                    return &BuiltInFunction::kFunction_textureGather_0X2B0C;
+                }
+                break;
+            }
+            case 0x3547e2f2u:
+            {
+                if (name == BuiltInName::textureGather_0S2B0C)
+                {
+                    return &BuiltInFunction::kFunction_textureGather_0S2B0C;
+                }
+                break;
+            }
+            case 0x3549192du:
+            {
+                if (name == BuiltInName::textureGather_0J2B0C)
+                {
+                    return &BuiltInFunction::kFunction_textureGather_0J2B0C;
+                }
+                break;
+            }
+            case 0x35498b6fu:
+            {
+                if (name == BuiltInName::textureGather_0H1B0C)
+                {
+                    return &BuiltInFunction::kFunction_textureGather_0H1B0C;
+                }
+                break;
+            }
+            case 0x354af264u:
+            {
+                if (name == BuiltInName::textureGather_0a2B0B)
+                {
+                    return &BuiltInFunction::kFunction_textureGather_0a2B0B;
+                }
+                break;
+            }
+            case 0x354b0049u:
+            {
+                if (name == BuiltInName::textureGather_0R2B0C)
+                {
+                    return &BuiltInFunction::kFunction_textureGather_0R2B0C;
+                }
+                break;
+            }
+            case 0x354bc853u:
+            {
+                if (name == BuiltInName::textureGather_0Z1B0B)
+                {
+                    return &BuiltInFunction::kFunction_textureGather_0Z1B0B;
+                }
+                break;
+            }
+            case 0x354d8e0fu:
+            {
+                if (name == BuiltInName::textureGather_0W2B0C)
+                {
+                    return &BuiltInFunction::kFunction_textureGather_0W2B0C;
+                }
+                break;
+            }
+            case 0x354f052bu:
+            {
+                if (name == BuiltInName::textureGather_0K2B0C)
+                {
+                    return &BuiltInFunction::kFunction_textureGather_0K2B0C;
+                }
+                break;
+            }
+            case 0x3912bd2du:
+            {
+                if (name.beginsWith(BuiltInName::unpackSnorm4x8))
+                {
+                    ASSERT(name.length() == 17);
+                    return &BuiltInFunction::kFunction_unpackSnorm4x8_0D;
+                }
+                break;
+            }
+            case 0x3917e321u:
+            {
+                if (name.beginsWith(BuiltInName::unpackUnorm4x8))
+                {
+                    ASSERT(name.length() == 17);
+                    return &BuiltInFunction::kFunction_unpackUnorm4x8_0D;
+                }
+                break;
+            }
+            case 0x39332d5cu:
+            {
+                if (name.beginsWith(BuiltInName::atomicExchange))
+                {
+                    ASSERT(name.length() == 19);
+                    return &BuiltInFunction::kFunction_atomicExchange_0D0D;
+                }
+                break;
+            }
+            case 0x39368640u:
+            {
+                if (name.beginsWith(BuiltInName::atomicExchange))
+                {
+                    ASSERT(name.length() == 19);
+                    return &BuiltInFunction::kFunction_atomicExchange_0C0C;
+                }
+                break;
+            }
+            case 0x3950f760u:
+            {
+                if (name == BuiltInName::atomicCompSwap_0C0C0C)
+                {
+                    return &BuiltInFunction::kFunction_atomicCompSwap_0C0C0C;
+                }
+                break;
+            }
+            case 0x39552df4u:
+            {
+                if (name == BuiltInName::atomicCompSwap_0D0D0D)
+                {
+                    return &BuiltInFunction::kFunction_atomicCompSwap_0D0D0D;
+                }
+                break;
+            }
+            case 0x3970aafcu:
+            {
+                if (name == BuiltInName::bitfieldInsert_3D3D0C0C)
+                {
+                    return &BuiltInFunction::kFunction_bitfieldInsert_3D3D0C0C;
+                }
+                break;
+            }
+            case 0x3971001fu:
+            {
+                if (name == BuiltInName::bitfieldInsert_3C3C0C0C)
+                {
+                    return &BuiltInFunction::kFunction_bitfieldInsert_3C3C0C0C;
+                }
+                break;
+            }
+            case 0x39722ea4u:
+            {
+                if (name == BuiltInName::bitfieldInsert_1C1C0C0C)
+                {
+                    return &BuiltInFunction::kFunction_bitfieldInsert_1C1C0C0C;
+                }
+                break;
+            }
+            case 0x3973d7eau:
+            {
+                if (name == BuiltInName::bitfieldInsert_1D1D0C0C)
+                {
+                    return &BuiltInFunction::kFunction_bitfieldInsert_1D1D0C0C;
+                }
+                break;
+            }
+            case 0x3976b0a6u:
+            {
+                if (name == BuiltInName::bitfieldInsert_0D0D0C0C)
+                {
+                    return &BuiltInFunction::kFunction_bitfieldInsert_0D0D0C0C;
+                }
+                break;
+            }
+            case 0x3977057au:
+            {
+                if (name == BuiltInName::bitfieldInsert_2D2D0C0C)
+                {
+                    return &BuiltInFunction::kFunction_bitfieldInsert_2D2D0C0C;
+                }
+                break;
+            }
+            case 0x397bc0a4u:
+            {
+                if (name == BuiltInName::bitfieldInsert_0C0C0C0C)
+                {
+                    return &BuiltInFunction::kFunction_bitfieldInsert_0C0C0C0C;
+                }
+                break;
+            }
+            case 0x397f475fu:
+            {
+                if (name == BuiltInName::bitfieldInsert_2C2C0C0C)
+                {
+                    return &BuiltInFunction::kFunction_bitfieldInsert_2C2C0C0C;
+                }
+                break;
+            }
+            case 0x3d20f7c7u:
+            {
+                if (name.beginsWith(BuiltInName::bitfieldReverse))
+                {
+                    ASSERT(name.length() == 18);
+                    return &BuiltInFunction::kFunction_bitfieldReverse_3D;
+                }
+                break;
+            }
+            case 0x3d210852u:
+            {
+                if (name.beginsWith(BuiltInName::bitfieldReverse))
+                {
+                    ASSERT(name.length() == 18);
+                    return &BuiltInFunction::kFunction_bitfieldReverse_3C;
+                }
+                break;
+            }
+            case 0x3d2386cdu:
+            {
+                if (name.beginsWith(BuiltInName::bitfieldReverse))
+                {
+                    ASSERT(name.length() == 18);
+                    return &BuiltInFunction::kFunction_bitfieldReverse_0C;
+                }
+                break;
+            }
+            case 0x3d23deecu:
+            {
+                if (name.beginsWith(BuiltInName::bitfieldReverse))
+                {
+                    ASSERT(name.length() == 18);
+                    return &BuiltInFunction::kFunction_bitfieldReverse_0D;
+                }
+                break;
+            }
+            case 0x3d2db471u:
+            {
+                if (name.beginsWith(BuiltInName::bitfieldReverse))
+                {
+                    ASSERT(name.length() == 18);
+                    return &BuiltInFunction::kFunction_bitfieldReverse_1D;
+                }
+                break;
+            }
+            case 0x3d2e0c10u:
+            {
+                if (name.beginsWith(BuiltInName::bitfieldReverse))
+                {
+                    ASSERT(name.length() == 18);
+                    return &BuiltInFunction::kFunction_bitfieldReverse_1C;
+                }
+                break;
+            }
+            case 0x3d2e9c06u:
+            {
+                if (name.beginsWith(BuiltInName::bitfieldReverse))
+                {
+                    ASSERT(name.length() == 18);
+                    return &BuiltInFunction::kFunction_bitfieldReverse_2D;
+                }
+                break;
+            }
+            case 0x3d2f0702u:
+            {
+                if (name.beginsWith(BuiltInName::bitfieldReverse))
+                {
+                    ASSERT(name.length() == 18);
+                    return &BuiltInFunction::kFunction_bitfieldReverse_2C;
+                }
+                break;
+            }
+            case 0x3d61b403u:
+            {
+                if (name == BuiltInName::bitfieldExtract_2C0C0C)
+                {
+                    return &BuiltInFunction::kFunction_bitfieldExtract_2C0C0C;
+                }
+                break;
+            }
+            case 0x3d61e101u:
+            {
+                if (name == BuiltInName::bitfieldExtract_0D0C0C)
+                {
+                    return &BuiltInFunction::kFunction_bitfieldExtract_0D0C0C;
+                }
+                break;
+            }
+            case 0x3d62667bu:
+            {
+                if (name == BuiltInName::bitfieldExtract_3D0C0C)
+                {
+                    return &BuiltInFunction::kFunction_bitfieldExtract_3D0C0C;
+                }
+                break;
+            }
+            case 0x3d62ca0du:
+            {
+                if (name == BuiltInName::bitfieldExtract_0C0C0C)
+                {
+                    return &BuiltInFunction::kFunction_bitfieldExtract_0C0C0C;
+                }
+                break;
+            }
+            case 0x3d62ec45u:
+            {
+                if (name == BuiltInName::bitfieldExtract_3C0C0C)
+                {
+                    return &BuiltInFunction::kFunction_bitfieldExtract_3C0C0C;
+                }
+                break;
+            }
+            case 0x3d630b44u:
+            {
+                if (name == BuiltInName::bitfieldExtract_1C0C0C)
+                {
+                    return &BuiltInFunction::kFunction_bitfieldExtract_1C0C0C;
+                }
+                break;
+            }
+            case 0x3d650769u:
+            {
+                if (name == BuiltInName::bitfieldExtract_2D0C0C)
+                {
+                    return &BuiltInFunction::kFunction_bitfieldExtract_2D0C0C;
+                }
+                break;
+            }
+            case 0x3d6bea76u:
+            {
+                if (name == BuiltInName::bitfieldExtract_1D0C0C)
+                {
+                    return &BuiltInFunction::kFunction_bitfieldExtract_1D0C0C;
+                }
+                break;
+            }
+            case 0x493cdf59u:
+            {
+                if (name.beginsWith(BuiltInName::memoryBarrierImage))
+                {
+                    ASSERT(name.length() == 19);
+                    return &BuiltInFunction::kFunction_memoryBarrierImage_;
+                }
+                break;
+            }
+            case 0x4d4ffc7cu:
+            {
+                if (name.beginsWith(BuiltInName::memoryBarrierBuffer))
+                {
+                    ASSERT(name.length() == 20);
+                    return &BuiltInFunction::kFunction_memoryBarrierBuffer_;
+                }
+                break;
+            }
+            case 0x4da38e3eu:
+            {
+                if (name == BuiltInName::textureGatherOffset_0P1B1C)
+                {
+                    return &BuiltInFunction::kFunction_textureGatherOffset_0P1B1C;
+                }
+                break;
+            }
+            case 0x4da3f983u:
+            {
+                if (name == BuiltInName::textureGatherOffset_0K2B1C)
+                {
+                    return &BuiltInFunction::kFunction_textureGatherOffset_0K2B1C;
+                }
+                break;
+            }
+            case 0x4da50052u:
+            {
+                if (name == BuiltInName::textureGatherOffset_0S2B1C)
+                {
+                    return &BuiltInFunction::kFunction_textureGatherOffset_0S2B1C;
+                }
+                break;
+            }
+            case 0x4dae37ebu:
+            {
+                if (name == BuiltInName::textureGatherOffset_0X2B1C)
+                {
+                    return &BuiltInFunction::kFunction_textureGatherOffset_0X2B1C;
+                }
+                break;
+            }
+            case 0x4dae3f95u:
+            {
+                if (name == BuiltInName::textureGatherOffset_0H1B1C)
+                {
+                    return &BuiltInFunction::kFunction_textureGatherOffset_0H1B1C;
+                }
+                break;
+            }
+            case 0x4daf95ffu:
+            {
+                if (name == BuiltInName::textureGatherOffset_0U1B1C)
+                {
+                    return &BuiltInFunction::kFunction_textureGatherOffset_0U1B1C;
+                }
+                break;
+            }
+            case 0x4dc0120bu:
+            {
+                if (name == BuiltInName::textureGatherOffset_0S2B1C0C)
+                {
+                    return &BuiltInFunction::kFunction_textureGatherOffset_0S2B1C0C;
+                }
+                break;
+            }
+            case 0x4dc38636u:
+            {
+                if (name == BuiltInName::textureGatherOffset_0X2B1C0C)
+                {
+                    return &BuiltInFunction::kFunction_textureGatherOffset_0X2B1C0C;
+                }
+                break;
+            }
+            case 0x4dc59589u:
+            {
+                if (name == BuiltInName::textureGatherOffset_0U1B1C0C)
+                {
+                    return &BuiltInFunction::kFunction_textureGatherOffset_0U1B1C0C;
+                }
+                break;
+            }
+            case 0x4dc89c91u:
+            {
+                if (name == BuiltInName::textureGatherOffset_0K2B1C0C)
+                {
+                    return &BuiltInFunction::kFunction_textureGatherOffset_0K2B1C0C;
+                }
+                break;
+            }
+            case 0x4dc8f1feu:
+            {
+                if (name == BuiltInName::textureGatherOffset_0H1B1C0C)
+                {
+                    return &BuiltInFunction::kFunction_textureGatherOffset_0H1B1C0C;
+                }
+                break;
+            }
+            case 0x4dcb06fcu:
+            {
+                if (name == BuiltInName::textureGatherOffset_0Z1B0B1C)
+                {
+                    return &BuiltInFunction::kFunction_textureGatherOffset_0Z1B0B1C;
+                }
+                break;
+            }
+            case 0x4dcb704cu:
+            {
+                if (name == BuiltInName::textureGatherOffset_0P1B1C0C)
+                {
+                    return &BuiltInFunction::kFunction_textureGatherOffset_0P1B1C0C;
+                }
+                break;
+            }
+            case 0x4dcd2cb2u:
+            {
+                if (name == BuiltInName::textureGatherOffset_0b2B0B1C)
+                {
+                    return &BuiltInFunction::kFunction_textureGatherOffset_0b2B0B1C;
+                }
+                break;
+            }
+            case 0x599f07cfu:
+            {
+                if (name.beginsWith(BuiltInName::atomicCounterIncrement))
+                {
+                    ASSERT(name.length() == 25);
+                    return &BuiltInFunction::kFunction_atomicCounterIncrement_0F;
+                }
+                break;
+            }
+            case 0x599f5c0eu:
+            {
+                if (name.beginsWith(BuiltInName::atomicCounterDecrement))
+                {
+                    ASSERT(name.length() == 25);
+                    return &BuiltInFunction::kFunction_atomicCounterDecrement_0F;
+                }
+                break;
+            }
+            case 0x69bd8347u:
+            {
+                if (name.beginsWith(BuiltInName::memoryBarrierAtomicCounter))
+                {
+                    ASSERT(name.length() == 27);
+                    return &BuiltInFunction::kFunction_memoryBarrierAtomicCounter_;
+                }
+                break;
+            }
+            case 0xfc57d894u:
             {
                 if (name == BuiltInName::gl_in)
                 {
@@ -11991,744 +12623,15 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                 }
                 break;
             }
-            case 0x7dbee433u:
+            case 0xfd02c057u:
             {
-                if (name.length() == 10 && name.beginsWith(BuiltInName::frexp_))
+                if (name == BuiltInName::gl_MaxImageUnits)
                 {
-                    return &BuiltInFunction::kFunction_frexp_3B3C;
+                    return mVar_gl_MaxImageUnits;
                 }
                 break;
             }
-            case 0x7de6c91cu:
-            {
-                if (name.length() == 14 && name.beginsWith(BuiltInName::atomicMin_))
-                {
-                    return &BuiltInFunction::kFunction_atomicMin_0D0D;
-                }
-                break;
-            }
-            case 0x7e0ed3ccu:
-            {
-                if (name.length() == 17 && name.beginsWith(BuiltInName::unpackUnorm4x8_))
-                {
-                    return &BuiltInFunction::kFunction_unpackUnorm4x8_0D;
-                }
-                break;
-            }
-            case 0x7e927bd5u:
-            {
-                if (name == BuiltInName::textureGather_0S2B0C)
-                {
-                    return &BuiltInFunction::kFunction_textureGather_0S2B0C;
-                }
-                break;
-            }
-            case 0x80649bccu:
-            {
-                if (name.length() == 18 && name.beginsWith(BuiltInName::textureGather_))
-                {
-                    return &BuiltInFunction::kFunction_textureGather_0S2B;
-                }
-                break;
-            }
-            case 0x8277ae4du:
-            {
-                if (name == BuiltInName::imulExtended_3C3C3C3C)
-                {
-                    return &BuiltInFunction::kFunction_imulExtended_3C3C3C3C;
-                }
-                break;
-            }
-            case 0x82903444u:
-            {
-                if (name == BuiltInName::gl_MaxCombinedAtomicCounters)
-                {
-                    return mVar_gl_MaxCombinedAtomicCounters;
-                }
-                break;
-            }
-            case 0x82b86afcu:
-            {
-                if (name.length() == 15 && name.beginsWith(BuiltInName::packUnorm4x8_))
-                {
-                    return &BuiltInFunction::kFunction_packUnorm4x8_3B;
-                }
-                break;
-            }
-            case 0x830df594u:
-            {
-                if (name == BuiltInName::uaddCarry_2D2D2D)
-                {
-                    return &BuiltInFunction::kFunction_uaddCarry_2D2D2D;
-                }
-                break;
-            }
-            case 0x83a9e786u:
-            {
-                if (name == BuiltInName::texelFetch_0T1C0C)
-                {
-                    return &BuiltInFunction::kFunction_texelFetch_0T1C0C;
-                }
-                break;
-            }
-            case 0x84d951b5u:
-            {
-                if (name == BuiltInName::imulExtended_0C0C0C0C)
-                {
-                    return &BuiltInFunction::kFunction_imulExtended_0C0C0C0C;
-                }
-                break;
-            }
-            case 0x8539932du:
-            {
-                if (name == BuiltInName::gl_MaxGeometryInputComponents)
-                {
-                    return mVar_gl_MaxGeometryInputComponents;
-                }
-                break;
-            }
-            case 0x859069e5u:
-            {
-                if (name == BuiltInName::uaddCarry_3D3D3D)
-                {
-                    return &BuiltInFunction::kFunction_uaddCarry_3D3D3D;
-                }
-                break;
-            }
-            case 0x8638ea07u:
-            {
-                if (name == BuiltInName::uaddCarry_1D1D1D)
-                {
-                    return &BuiltInFunction::kFunction_uaddCarry_1D1D1D;
-                }
-                break;
-            }
-            case 0x886bdcd5u:
-            {
-                if (name == BuiltInName::imageStore_0f2C3B)
-                {
-                    return &BuiltInFunction::kFunction_imageStore_0f2C3B;
-                }
-                break;
-            }
-            case 0x889130b4u:
-            {
-                if (name.length() == 18 && name.beginsWith(BuiltInName::textureGather_))
-                {
-                    return &BuiltInFunction::kFunction_textureGather_0K2B;
-                }
-                break;
-            }
-            case 0x899b1520u:
-            {
-                if (name == BuiltInName::textureGatherOffset_0K2B1C0C)
-                {
-                    return &BuiltInFunction::kFunction_textureGatherOffset_0K2B1C0C;
-                }
-                break;
-            }
-            case 0x8d315d40u:
-            {
-                if (name.length() == 14 && name.beginsWith(BuiltInName::imageLoad_))
-                {
-                    return &BuiltInFunction::kFunction_imageLoad_0k2C;
-                }
-                break;
-            }
-            case 0x8dd1ae75u:
-            {
-                if (name == BuiltInName::gl_MaxCombinedShaderOutputResources)
-                {
-                    return mVar_gl_MaxCombinedShaderOutputResources;
-                }
-                break;
-            }
-            case 0x8f5a420bu:
-            {
-                if (name.length() == 14 && name.beginsWith(BuiltInName::atomicAnd_))
-                {
-                    return &BuiltInFunction::kFunction_atomicAnd_0C0C;
-                }
-                break;
-            }
-            case 0x8fa34bcau:
-            {
-                if (name == BuiltInName::textureGatherOffset_0H1B1C0C)
-                {
-                    return &BuiltInFunction::kFunction_textureGatherOffset_0H1B1C0C;
-                }
-                break;
-            }
-            case 0x91ba0efeu:
-            {
-                if (name.length() == 10 && name.beginsWith(BuiltInName::findLSB_))
-                {
-                    return &BuiltInFunction::kFunction_findLSB_2C;
-                }
-                break;
-            }
-            case 0x91e7b756u:
-            {
-                if (name == BuiltInName::textureGather_0J2B0C)
-                {
-                    return &BuiltInFunction::kFunction_textureGather_0J2B0C;
-                }
-                break;
-            }
-            case 0x94ba13b7u:
-            {
-                if (name.length() == 10 && name.beginsWith(BuiltInName::findLSB_))
-                {
-                    return &BuiltInFunction::kFunction_findLSB_2D;
-                }
-                break;
-            }
-            case 0x94d22cc3u:
-            {
-                if (name.length() == 10 && name.beginsWith(BuiltInName::ldexp_))
-                {
-                    return &BuiltInFunction::kFunction_ldexp_2B2C;
-                }
-                break;
-            }
-            case 0x98a09aa9u:
-            {
-                if (name == BuiltInName::gl_MaxAtomicCounterBufferSize)
-                {
-                    return mVar_gl_MaxAtomicCounterBufferSize;
-                }
-                break;
-            }
-            case 0x98b5c033u:
-            {
-                if (name == BuiltInName::textureGather_0H1B0C)
-                {
-                    return &BuiltInFunction::kFunction_textureGather_0H1B0C;
-                }
-                break;
-            }
-            case 0x9923396au:
-            {
-                if (name == BuiltInName::gl_MaxGeometryTotalOutputComponents)
-                {
-                    return mVar_gl_MaxGeometryTotalOutputComponents;
-                }
-                break;
-            }
-            case 0x9ad4e7a3u:
-            {
-                if (name.length() == 14 && name.beginsWith(BuiltInName::imageLoad_))
-                {
-                    return &BuiltInFunction::kFunction_imageLoad_0f2C;
-                }
-                break;
-            }
-            case 0xa1b1d969u:
-            {
-                if (name.length() == 10 && name.beginsWith(BuiltInName::findLSB_))
-                {
-                    return &BuiltInFunction::kFunction_findLSB_1C;
-                }
-                break;
-            }
-            case 0xa2b1dafcu:
-            {
-                if (name.length() == 10 && name.beginsWith(BuiltInName::findLSB_))
-                {
-                    return &BuiltInFunction::kFunction_findLSB_1D;
-                }
-                break;
-            }
-            case 0xa30b98d3u:
-            {
-                if (name.length() == 10 && name.beginsWith(BuiltInName::frexp_))
-                {
-                    return &BuiltInFunction::kFunction_frexp_1B1C;
-                }
-                break;
-            }
-            case 0xa7570267u:
-            {
-                if (name.length() == 14 && name.beginsWith(BuiltInName::memoryBarrier_))
-                {
-                    return &BuiltInFunction::kFunction_memoryBarrier_;
-                }
-                break;
-            }
-            case 0xa7a68486u:
-            {
-                if (name.length() == 14 && name.beginsWith(BuiltInName::imageLoad_))
-                {
-                    return &BuiltInFunction::kFunction_imageLoad_0i2C;
-                }
-                break;
-            }
-            case 0xa9d0e5b5u:
-            {
-                if (name.length() == 14 && name.beginsWith(BuiltInName::imageLoad_))
-                {
-                    return &BuiltInFunction::kFunction_imageLoad_0e1C;
-                }
-                break;
-            }
-            case 0xacde249eu:
-            {
-                if (name == BuiltInName::gl_MaxComputeAtomicCounterBuffers)
-                {
-                    return mVar_gl_MaxComputeAtomicCounterBuffers;
-                }
-                break;
-            }
-            case 0xaf6251f9u:
-            {
-                if (name == BuiltInName::imageStore_0c1C3B)
-                {
-                    return &BuiltInFunction::kFunction_imageStore_0c1C3B;
-                }
-                break;
-            }
-            case 0xafef0c94u:
-            {
-                if (name == BuiltInName::textureGather_0a2B0B)
-                {
-                    return &BuiltInFunction::kFunction_textureGather_0a2B0B;
-                }
-                break;
-            }
-            case 0xb0002869u:
-            {
-                if (name == BuiltInName::imageStore_0g2C3C)
-                {
-                    return &BuiltInFunction::kFunction_imageStore_0g2C3C;
-                }
-                break;
-            }
-            case 0xb006f693u:
-            {
-                if (name == BuiltInName::textureGatherOffset_0Z1B0B1C)
-                {
-                    return &BuiltInFunction::kFunction_textureGatherOffset_0Z1B0B1C;
-                }
-                break;
-            }
-            case 0xb00a70eeu:
-            {
-                if (name == BuiltInName::textureGather_0R2B0C)
-                {
-                    return &BuiltInFunction::kFunction_textureGather_0R2B0C;
-                }
-                break;
-            }
-            case 0xb32c4610u:
-            {
-                if (name.length() == 12 && name.beginsWith(BuiltInName::imageSize_))
-                {
-                    return &BuiltInFunction::kFunction_imageSize_0c;
-                }
-                break;
-            }
-            case 0xb72c4c5cu:
-            {
-                if (name.length() == 12 && name.beginsWith(BuiltInName::imageSize_))
-                {
-                    return &BuiltInFunction::kFunction_imageSize_0g;
-                }
-                break;
-            }
-            case 0xb7b5eb12u:
-            {
-                if (name == BuiltInName::textureGatherOffset_0P1B1C0C)
-                {
-                    return &BuiltInFunction::kFunction_textureGatherOffset_0P1B1C0C;
-                }
-                break;
-            }
-            case 0xb82c4defu:
-            {
-                if (name.length() == 12 && name.beginsWith(BuiltInName::imageSize_))
-                {
-                    return &BuiltInFunction::kFunction_imageSize_0f;
-                }
-                break;
-            }
-            case 0xb92c4f82u:
-            {
-                if (name.length() == 12 && name.beginsWith(BuiltInName::imageSize_))
-                {
-                    return &BuiltInFunction::kFunction_imageSize_0e;
-                }
-                break;
-            }
-            case 0xba2c5115u:
-            {
-                if (name.length() == 12 && name.beginsWith(BuiltInName::imageSize_))
-                {
-                    return &BuiltInFunction::kFunction_imageSize_0d;
-                }
-                break;
-            }
-            case 0xbaead883u:
-            {
-                if (name == BuiltInName::imageStore_0l2C3B)
-                {
-                    return &BuiltInFunction::kFunction_imageStore_0l2C3B;
-                }
-                break;
-            }
-            case 0xbb2c52a8u:
-            {
-                if (name.length() == 12 && name.beginsWith(BuiltInName::imageSize_))
-                {
-                    return &BuiltInFunction::kFunction_imageSize_0k;
-                }
-                break;
-            }
-            case 0xbbdb8c61u:
-            {
-                if (name == BuiltInName::texelFetch_0Y1C0C)
-                {
-                    return &BuiltInFunction::kFunction_texelFetch_0Y1C0C;
-                }
-                break;
-            }
-            case 0xbc2c543bu:
-            {
-                if (name.length() == 12 && name.beginsWith(BuiltInName::imageSize_))
-                {
-                    return &BuiltInFunction::kFunction_imageSize_0j;
-                }
-                break;
-            }
-            case 0xbcf1974au:
-            {
-                if (name == BuiltInName::textureGather_0Z1B0B)
-                {
-                    return &BuiltInFunction::kFunction_textureGather_0Z1B0B;
-                }
-                break;
-            }
-            case 0xbcfd7f73u:
-            {
-                if (name == BuiltInName::bitfieldInsert_0C0C0C0C)
-                {
-                    return &BuiltInFunction::kFunction_bitfieldInsert_0C0C0C0C;
-                }
-                break;
-            }
-            case 0xbd2c55ceu:
-            {
-                if (name.length() == 12 && name.beginsWith(BuiltInName::imageSize_))
-                {
-                    return &BuiltInFunction::kFunction_imageSize_0i;
-                }
-                break;
-            }
-            case 0xbe2c5761u:
-            {
-                if (name.length() == 12 && name.beginsWith(BuiltInName::imageSize_))
-                {
-                    return &BuiltInFunction::kFunction_imageSize_0h;
-                }
-                break;
-            }
-            case 0xbecd46a2u:
-            {
-                if (name == BuiltInName::bitfieldExtract_1D0C0C)
-                {
-                    return &BuiltInFunction::kFunction_bitfieldExtract_1D0C0C;
-                }
-                break;
-            }
-            case 0xc02c5a87u:
-            {
-                if (name.length() == 12 && name.beginsWith(BuiltInName::imageSize_))
-                {
-                    return &BuiltInFunction::kFunction_imageSize_0n;
-                }
-                break;
-            }
-            case 0xc0ec9f01u:
-            {
-                if (name == BuiltInName::gl_MaxGeometryUniformComponents)
-                {
-                    return mVar_gl_MaxGeometryUniformComponents;
-                }
-                break;
-            }
-            case 0xc12c5c1au:
-            {
-                if (name.length() == 12 && name.beginsWith(BuiltInName::imageSize_))
-                {
-                    return &BuiltInFunction::kFunction_imageSize_0m;
-                }
-                break;
-            }
-            case 0xc1b44a60u:
-            {
-                if (name.length() == 10 && name.beginsWith(BuiltInName::findLSB_))
-                {
-                    return &BuiltInFunction::kFunction_findLSB_0C;
-                }
-                break;
-            }
-            case 0xc22c5dadu:
-            {
-                if (name.length() == 12 && name.beginsWith(BuiltInName::imageSize_))
-                {
-                    return &BuiltInFunction::kFunction_imageSize_0l;
-                }
-                break;
-            }
-            case 0xc3a870f0u:
-            {
-                if (name == BuiltInName::gl_MaxComputeAtomicCounters)
-                {
-                    return mVar_gl_MaxComputeAtomicCounters;
-                }
-                break;
-            }
-            case 0xc3dadff4u:
-            {
-                if (name.length() == 18 && name.beginsWith(BuiltInName::textureGather_))
-                {
-                    return &BuiltInFunction::kFunction_textureGather_0Z1B;
-                }
-                break;
-            }
-            case 0xc4d9f177u:
-            {
-                if (name == BuiltInName::imageStore_0m2C3C)
-                {
-                    return &BuiltInFunction::kFunction_imageStore_0m2C3C;
-                }
-                break;
-            }
-            case 0xc8b45565u:
-            {
-                if (name.length() == 10 && name.beginsWith(BuiltInName::findLSB_))
-                {
-                    return &BuiltInFunction::kFunction_findLSB_0D;
-                }
-                break;
-            }
-            case 0xc90f20b3u:
-            {
-                if (name.length() == 14 && name.beginsWith(BuiltInName::atomicAnd_))
-                {
-                    return &BuiltInFunction::kFunction_atomicAnd_0D0D;
-                }
-                break;
-            }
-            case 0xcc193b45u:
-            {
-                if (name == BuiltInName::imulExtended_1C1C1C1C)
-                {
-                    return &BuiltInFunction::kFunction_imulExtended_1C1C1C1C;
-                }
-                break;
-            }
-            case 0xcd7ff8a6u:
-            {
-                if (name.length() == 19 && name.beginsWith(BuiltInName::memoryBarrierImage_))
-                {
-                    return &BuiltInFunction::kFunction_memoryBarrierImage_;
-                }
-                break;
-            }
-            case 0xce50b7e9u:
-            {
-                if (name.length() == 14 && name.beginsWith(BuiltInName::imageLoad_))
-                {
-                    return &BuiltInFunction::kFunction_imageLoad_0l2C;
-                }
-                break;
-            }
-            case 0xcf4a9cdeu:
-            {
-                if (name == BuiltInName::imageStore_0j2C3C)
-                {
-                    return &BuiltInFunction::kFunction_imageStore_0j2C3C;
-                }
-                break;
-            }
-            case 0xd26bc9eau:
-            {
-                if (name == BuiltInName::gl_MaxGeometryOutputComponents)
-                {
-                    return mVar_gl_MaxGeometryOutputComponents;
-                }
-                break;
-            }
-            case 0xd26cea7cu:
-            {
-                if (name == BuiltInName::textureGatherOffset_0b2B0B1C)
-                {
-                    return &BuiltInFunction::kFunction_textureGatherOffset_0b2B0B1C;
-                }
-                break;
-            }
-            case 0xd54f2797u:
-            {
-                if (name == BuiltInName::gl_MaxComputeWorkGroupCount)
-                {
-                    return mVar_gl_MaxComputeWorkGroupCount;
-                }
-                break;
-            }
-            case 0xd794553eu:
-            {
-                if (name.length() == 10 && name.beginsWith(BuiltInName::findMSB_))
-                {
-                    return &BuiltInFunction::kFunction_findMSB_2D;
-                }
-                break;
-            }
-            case 0xd8373034u:
-            {
-                if (name.length() == 27 &&
-                    name.beginsWith(BuiltInName::memoryBarrierAtomicCounter_))
-                {
-                    return &BuiltInFunction::kFunction_memoryBarrierAtomicCounter_;
-                }
-                break;
-            }
-            case 0xd840ea01u:
-            {
-                if (name == BuiltInName::textureGather_0W2B0C)
-                {
-                    return &BuiltInFunction::kFunction_textureGather_0W2B0C;
-                }
-                break;
-            }
-            case 0xd8dff3cbu:
-            {
-                if (name == BuiltInName::imageStore_0n2C3D)
-                {
-                    return &BuiltInFunction::kFunction_imageStore_0n2C3D;
-                }
-                break;
-            }
-            case 0xd96c18afu:
-            {
-                if (name == BuiltInName::gl_MaxGeometryAtomicCounters)
-                {
-                    return mVar_gl_MaxGeometryAtomicCounters;
-                }
-                break;
-            }
-            case 0xda9459f7u:
-            {
-                if (name.length() == 10 && name.beginsWith(BuiltInName::findMSB_))
-                {
-                    return &BuiltInFunction::kFunction_findMSB_2C;
-                }
-                break;
-            }
-            case 0xdb122553u:
-            {
-                if (name.length() == 18 && name.beginsWith(BuiltInName::bitfieldReverse_))
-                {
-                    return &BuiltInFunction::kFunction_bitfieldReverse_1D;
-                }
-                break;
-            }
-            case 0xdc0090e3u:
-            {
-                if (name.length() == 18 && name.beginsWith(BuiltInName::textureGather_))
-                {
-                    return &BuiltInFunction::kFunction_textureGather_0b2B;
-                }
-                break;
-            }
-            case 0xe0122d32u:
-            {
-                if (name.length() == 18 && name.beginsWith(BuiltInName::bitfieldReverse_))
-                {
-                    return &BuiltInFunction::kFunction_bitfieldReverse_1C;
-                }
-                break;
-            }
-            case 0xe0d1d797u:
-            {
-                if (name.length() == 14 && name.beginsWith(BuiltInName::atomicXor_))
-                {
-                    return &BuiltInFunction::kFunction_atomicXor_0D0D;
-                }
-                break;
-            }
-            case 0xe353b519u:
-            {
-                if (name == BuiltInName::gl_MaxGeometryAtomicCounterBuffers)
-                {
-                    return mVar_gl_MaxGeometryAtomicCounterBuffers;
-                }
-                break;
-            }
-            case 0xe3b7a4efu:
-            {
-                if (name == BuiltInName::textureGatherOffset_0H1B1C)
-                {
-                    return &BuiltInFunction::kFunction_textureGatherOffset_0H1B1C;
-                }
-                break;
-            }
-            case 0xe3bd7c3cu:
-            {
-                if (name == BuiltInName::textureGatherOffset_0X2B1C)
-                {
-                    return &BuiltInFunction::kFunction_textureGatherOffset_0X2B1C;
-                }
-                break;
-            }
-            case 0xe495b7e1u:
-            {
-                if (name == BuiltInName::imageStore_0e1C3D)
-                {
-                    return &BuiltInFunction::kFunction_imageStore_0e1C3D;
-                }
-                break;
-            }
-            case 0xe6b6c336u:
-            {
-                if (name.length() == 10 && name.beginsWith(BuiltInName::findLSB_))
-                {
-                    return &BuiltInFunction::kFunction_findLSB_3D;
-                }
-                break;
-            }
-            case 0xe6f2e1d3u:
-            {
-                if (name.length() == 18 && name.beginsWith(BuiltInName::textureGather_))
-                {
-                    return &BuiltInFunction::kFunction_textureGather_0R2B;
-                }
-                break;
-            }
-            case 0xe909ec98u:
-            {
-                if (name.length() == 18 && name.beginsWith(BuiltInName::bitfieldReverse_))
-                {
-                    return &BuiltInFunction::kFunction_bitfieldReverse_2D;
-                }
-                break;
-            }
-            case 0xe9637851u:
-            {
-                if (name == BuiltInName::gl_MaxFragmentImageUniforms)
-                {
-                    return mVar_gl_MaxFragmentImageUniforms;
-                }
-                break;
-            }
-            case 0xe9b6c7efu:
-            {
-                if (name.length() == 10 && name.beginsWith(BuiltInName::findLSB_))
-                {
-                    return &BuiltInFunction::kFunction_findLSB_3C;
-                }
-                break;
-            }
-            case 0xeacd9c77u:
+            case 0xfd9ea0aeu:
             {
                 if (name == BuiltInName::gl_MaxVertexImageUniforms)
                 {
@@ -12736,7 +12639,23 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                 }
                 break;
             }
-            case 0xec875d49u:
+            case 0xfda4cb4eu:
+            {
+                if (name == BuiltInName::gl_MaxVertexAtomicCounters)
+                {
+                    return mVar_gl_MaxVertexAtomicCounters;
+                }
+                break;
+            }
+            case 0xfda554a5u:
+            {
+                if (name == BuiltInName::gl_MaxComputeImageUniforms)
+                {
+                    return mVar_gl_MaxComputeImageUniforms;
+                }
+                break;
+            }
+            case 0xfdaec53cu:
             {
                 if (name == BuiltInName::gl_MaxComputeWorkGroupSize)
                 {
@@ -12744,87 +12663,175 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                 }
                 break;
             }
-            case 0xee0c9f85u:
+            case 0xfdb37edfu:
             {
-                if (name == BuiltInName::usubBorrow_0D0D0D)
+                if (name == BuiltInName::gl_MaxCombinedImageUniforms)
                 {
-                    return &BuiltInFunction::kFunction_usubBorrow_0D0D0D;
+                    return mVar_gl_MaxCombinedImageUniforms;
                 }
                 break;
             }
-            case 0xf009f79du:
+            case 0xfdb3d624u:
             {
-                if (name.length() == 18 && name.beginsWith(BuiltInName::bitfieldReverse_))
+                if (name == BuiltInName::gl_MaxGeometryImageUniforms)
                 {
-                    return &BuiltInFunction::kFunction_bitfieldReverse_2C;
+                    return mVar_gl_MaxGeometryImageUniforms;
                 }
                 break;
             }
-            case 0xf05b183bu:
+            case 0xfdb5a5efu:
             {
-                if (name.length() == 18 && name.beginsWith(BuiltInName::textureGather_))
+                if (name == BuiltInName::gl_MaxAtomicCounterBindings)
                 {
-                    return &BuiltInFunction::kFunction_textureGather_0J2B;
+                    return mVar_gl_MaxAtomicCounterBindings;
                 }
                 break;
             }
-            case 0xf0b36e1du:
+            case 0xfdbc3a77u:
             {
-                if (name == BuiltInName::textureGather_0K2B0C)
+                if (name == BuiltInName::gl_MaxComputeAtomicCounters)
                 {
-                    return &BuiltInFunction::kFunction_textureGather_0K2B0C;
+                    return mVar_gl_MaxComputeAtomicCounters;
                 }
                 break;
             }
-            case 0xf0cb4011u:
+            case 0xfdbd5365u:
             {
-                if (name == BuiltInName::imageStore_0h2C3D)
+                if (name == BuiltInName::gl_MaxComputeWorkGroupCount)
                 {
-                    return &BuiltInFunction::kFunction_imageStore_0h2C3D;
+                    return mVar_gl_MaxComputeWorkGroupCount;
                 }
                 break;
             }
-            case 0xf0f5289du:
+            case 0xfdbe9e66u:
             {
-                if (name.length() == 25 && name.beginsWith(BuiltInName::atomicCounterIncrement_))
+                if (name == BuiltInName::gl_MaxFragmentImageUniforms)
                 {
-                    return &BuiltInFunction::kFunction_atomicCounterIncrement_0F;
+                    return mVar_gl_MaxFragmentImageUniforms;
                 }
                 break;
             }
-            case 0xf35a12fau:
+            case 0xfdc36735u:
             {
-                if (name.length() == 14 && name.beginsWith(BuiltInName::atomicMax_))
+                if (name == BuiltInName::gl_MaxGeometryOutputVertices)
                 {
-                    return &BuiltInFunction::kFunction_atomicMax_0C0C;
+                    return mVar_gl_MaxGeometryOutputVertices;
                 }
                 break;
             }
-            case 0xf3de0717u:
+            case 0xfdc4585cu:
             {
-                if (name.length() == 10 && name.beginsWith(BuiltInName::frexp_))
+                if (name == BuiltInName::gl_MaxFragmentAtomicCounters)
                 {
-                    return &BuiltInFunction::kFunction_frexp_0B0C;
+                    return mVar_gl_MaxFragmentAtomicCounters;
                 }
                 break;
             }
-            case 0xf4fc8897u:
+            case 0xfdc82d47u:
             {
-                if (name == BuiltInName::bitfieldInsert_2C2C0C0C)
+                if (name == BuiltInName::gl_MaxCombinedAtomicCounters)
                 {
-                    return &BuiltInFunction::kFunction_bitfieldInsert_2C2C0C0C;
+                    return mVar_gl_MaxCombinedAtomicCounters;
                 }
                 break;
             }
-            case 0xf5adf6d1u:
+            case 0xfdcd9e6eu:
             {
-                if (name.length() == 25 && name.beginsWith(BuiltInName::atomicCounterDecrement_))
+                if (name == BuiltInName::gl_MaxGeometryAtomicCounters)
                 {
-                    return &BuiltInFunction::kFunction_atomicCounterDecrement_0F;
+                    return mVar_gl_MaxGeometryAtomicCounters;
                 }
                 break;
             }
-            case 0xf6212c11u:
+            case 0xfdd850b4u:
+            {
+                if (name == BuiltInName::gl_MaxGeometryInputComponents)
+                {
+                    return mVar_gl_MaxGeometryInputComponents;
+                }
+                break;
+            }
+            case 0xfdd980a0u:
+            {
+                if (name == BuiltInName::gl_MaxAtomicCounterBufferSize)
+                {
+                    return mVar_gl_MaxAtomicCounterBufferSize;
+                }
+                break;
+            }
+            case 0xfde022f8u:
+            {
+                if (name == BuiltInName::gl_MaxComputeTextureImageUnits)
+                {
+                    return mVar_gl_MaxComputeTextureImageUnits;
+                }
+                break;
+            }
+            case 0xfde6c67fu:
+            {
+                if (name == BuiltInName::gl_MaxComputeUniformComponents)
+                {
+                    return mVar_gl_MaxComputeUniformComponents;
+                }
+                break;
+            }
+            case 0xfded2f56u:
+            {
+                if (name == BuiltInName::gl_MaxGeometryOutputComponents)
+                {
+                    return mVar_gl_MaxGeometryOutputComponents;
+                }
+                break;
+            }
+            case 0xfdf3607cu:
+            {
+                if (name == BuiltInName::gl_MaxGeometryTextureImageUnits)
+                {
+                    return mVar_gl_MaxGeometryTextureImageUnits;
+                }
+                break;
+            }
+            case 0xfdfc01c8u:
+            {
+                if (name == BuiltInName::gl_MaxGeometryUniformComponents)
+                {
+                    return mVar_gl_MaxGeometryUniformComponents;
+                }
+                break;
+            }
+            case 0xfe01078bu:
+            {
+                if (name == BuiltInName::gl_MaxVertexAtomicCounterBuffers)
+                {
+                    return mVar_gl_MaxVertexAtomicCounterBuffers;
+                }
+                break;
+            }
+            case 0xfe1ac97cu:
+            {
+                if (name == BuiltInName::gl_MaxComputeAtomicCounterBuffers)
+                {
+                    return mVar_gl_MaxComputeAtomicCounterBuffers;
+                }
+                break;
+            }
+            case 0xfe23d724u:
+            {
+                if (name == BuiltInName::gl_MaxCombinedAtomicCounterBuffers)
+                {
+                    return mVar_gl_MaxCombinedAtomicCounterBuffers;
+                }
+                break;
+            }
+            case 0xfe2e3022u:
+            {
+                if (name == BuiltInName::gl_MaxGeometryAtomicCounterBuffers)
+                {
+                    return mVar_gl_MaxGeometryAtomicCounterBuffers;
+                }
+                break;
+            }
+            case 0xfe2f6e03u:
             {
                 if (name == BuiltInName::gl_MaxFragmentAtomicCounterBuffers)
                 {
@@ -12832,35 +12839,19 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                 }
                 break;
             }
-            case 0xf91ef410u:
+            case 0xfe38d36fu:
             {
-                if (name == BuiltInName::textureGatherOffset_0U1B1C)
+                if (name == BuiltInName::gl_MaxCombinedShaderOutputResources)
                 {
-                    return &BuiltInFunction::kFunction_textureGatherOffset_0U1B1C;
+                    return mVar_gl_MaxCombinedShaderOutputResources;
                 }
                 break;
             }
-            case 0xfa7d2618u:
+            case 0xfe399b59u:
             {
-                if (name == BuiltInName::imageStore_0i2C3B)
+                if (name == BuiltInName::gl_MaxGeometryTotalOutputComponents)
                 {
-                    return &BuiltInFunction::kFunction_imageStore_0i2C3B;
-                }
-                break;
-            }
-            case 0xfae6d537u:
-            {
-                if (name.length() == 10 && name.beginsWith(BuiltInName::ldexp_))
-                {
-                    return &BuiltInFunction::kFunction_ldexp_3B3C;
-                }
-                break;
-            }
-            case 0xff425859u:
-            {
-                if (name.length() == 20 && name.beginsWith(BuiltInName::memoryBarrierBuffer_))
-                {
-                    return &BuiltInFunction::kFunction_memoryBarrierBuffer_;
+                    return mVar_gl_MaxGeometryTotalOutputComponents;
                 }
                 break;
             }
@@ -12869,39 +12860,34 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
         {
             switch (nameHash)
             {
-                case 0x121ffe70u:
+                case 0x1c8349e8u:
                 {
-                    if (name == BuiltInName::gl_WorkGroupSize)
+                    if (name.beginsWith(BuiltInName::barrier))
                     {
-                        return &BuiltInVariable::kVar_gl_WorkGroupSize;
-                    }
-                    break;
-                }
-                case 0x34af0318u:
-                {
-                    if (name.length() == 8 && name.beginsWith(BuiltInName::barrier_))
-                    {
+                        ASSERT(name.length() == 8);
                         return &BuiltInFunction::kFunction_barrier_;
                     }
                     break;
                 }
-                case 0x4bbe0c1du:
+                case 0x493df1afu:
                 {
-                    if (name == BuiltInName::gl_LocalInvocationID)
+                    if (name.beginsWith(BuiltInName::groupMemoryBarrier))
                     {
-                        return &BuiltInVariable::kVar_gl_LocalInvocationID;
+                        ASSERT(name.length() == 19);
+                        return &BuiltInFunction::kFunction_groupMemoryBarrier_;
                     }
                     break;
                 }
-                case 0x56624254u:
+                case 0x4d49a5a0u:
                 {
-                    if (name == BuiltInName::gl_NumWorkGroups)
+                    if (name.beginsWith(BuiltInName::memoryBarrierShared))
                     {
-                        return &BuiltInVariable::kVar_gl_NumWorkGroups;
+                        ASSERT(name.length() == 20);
+                        return &BuiltInFunction::kFunction_memoryBarrierShared_;
                     }
                     break;
                 }
-                case 0x6fced514u:
+                case 0xfce6f9f9u:
                 {
                     if (name == BuiltInName::gl_WorkGroupID)
                     {
@@ -12909,23 +12895,31 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                     }
                     break;
                 }
-                case 0x99f53c3cu:
+                case 0xfd012f8fu:
                 {
-                    if (name == BuiltInName::gl_LocalInvocationIndex)
+                    if (name == BuiltInName::gl_WorkGroupSize)
                     {
-                        return &BuiltInVariable::kVar_gl_LocalInvocationIndex;
+                        return &BuiltInVariable::kVar_gl_WorkGroupSize;
                     }
                     break;
                 }
-                case 0x9a984c24u:
+                case 0xfd056470u:
                 {
-                    if (name.length() == 20 && name.beginsWith(BuiltInName::memoryBarrierShared_))
+                    if (name == BuiltInName::gl_NumWorkGroups)
                     {
-                        return &BuiltInFunction::kFunction_memoryBarrierShared_;
+                        return &BuiltInVariable::kVar_gl_NumWorkGroups;
                     }
                     break;
                 }
-                case 0xa34369b3u:
+                case 0xfd44b7fdu:
+                {
+                    if (name == BuiltInName::gl_LocalInvocationID)
+                    {
+                        return &BuiltInVariable::kVar_gl_LocalInvocationID;
+                    }
+                    break;
+                }
+                case 0xfd5a3d85u:
                 {
                     if (name == BuiltInName::gl_GlobalInvocationID)
                     {
@@ -12933,11 +12927,11 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                     }
                     break;
                 }
-                case 0xdf09d132u:
+                case 0xfd79936fu:
                 {
-                    if (name.length() == 19 && name.beginsWith(BuiltInName::groupMemoryBarrier_))
+                    if (name == BuiltInName::gl_LocalInvocationIndex)
                     {
-                        return &BuiltInFunction::kFunction_groupMemoryBarrier_;
+                        return &BuiltInVariable::kVar_gl_LocalInvocationIndex;
                     }
                     break;
                 }
@@ -12947,7 +12941,25 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
         {
             switch (nameHash)
             {
-                case 0x02731c1cu:
+                case 0x28bab062u:
+                {
+                    if (name.beginsWith(BuiltInName::EmitVertex))
+                    {
+                        ASSERT(name.length() == 11);
+                        return &BuiltInFunction::kFunction_EmitVertex_;
+                    }
+                    break;
+                }
+                case 0x30dfadf2u:
+                {
+                    if (name.beginsWith(BuiltInName::EndPrimitive))
+                    {
+                        ASSERT(name.length() == 13);
+                        return &BuiltInFunction::kFunction_EndPrimitive_;
+                    }
+                    break;
+                }
+                case 0xfc802b2du:
                 {
                     if (name == BuiltInName::gl_Layer)
                     {
@@ -12955,7 +12967,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                     }
                     break;
                 }
-                case 0x02c4bde0u:
+                case 0xfcb021abu:
                 {
                     if (name == BuiltInName::gl_Position)
                     {
@@ -12963,31 +12975,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                     }
                     break;
                 }
-                case 0x863d719du:
-                {
-                    if (name == BuiltInName::gl_PrimitiveID)
-                    {
-                        return &BuiltInVariable::kVar_gl_PrimitiveIDGS;
-                    }
-                    break;
-                }
-                case 0xab932950u:
-                {
-                    if (name.length() == 11 && name.beginsWith(BuiltInName::EmitVertex_))
-                    {
-                        return &BuiltInFunction::kFunction_EmitVertex_;
-                    }
-                    break;
-                }
-                case 0xc91ada96u:
-                {
-                    if (name == BuiltInName::gl_PrimitiveIDIn)
-                    {
-                        return &BuiltInVariable::kVar_gl_PrimitiveIDIn;
-                    }
-                    break;
-                }
-                case 0xe29142f0u:
+                case 0xfcce2be4u:
                 {
                     if (name == BuiltInName::gl_PerVertex)
                     {
@@ -12995,19 +12983,27 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                     }
                     break;
                 }
-                case 0xfa01fdedu:
+                case 0xfce8624au:
                 {
-                    if (name.length() == 13 && name.beginsWith(BuiltInName::EndPrimitive_))
+                    if (name == BuiltInName::gl_PrimitiveID)
                     {
-                        return &BuiltInFunction::kFunction_EndPrimitive_;
+                        return &BuiltInVariable::kVar_gl_PrimitiveIDGS;
                     }
                     break;
                 }
-                case 0xfc2907ccu:
+                case 0xfcffc55cu:
                 {
                     if (name == BuiltInName::gl_InvocationID)
                     {
                         return &BuiltInVariable::kVar_gl_InvocationID;
+                    }
+                    break;
+                }
+                case 0xfd0c9b3bu:
+                {
+                    if (name == BuiltInName::gl_PrimitiveIDIn)
+                    {
+                        return &BuiltInVariable::kVar_gl_PrimitiveIDIn;
                     }
                     break;
                 }
@@ -13017,7 +13013,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
         {
             switch (nameHash)
             {
-                case 0x02731c1cu:
+                case 0xfc802b2du:
                 {
                     if (name == BuiltInName::gl_Layer)
                     {
@@ -13025,7 +13021,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                     }
                     break;
                 }
-                case 0x863d719du:
+                case 0xfce8624au:
                 {
                     if (name == BuiltInName::gl_PrimitiveID)
                     {
@@ -13040,1671 +13036,295 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
     {
         switch (nameHash)
         {
-            case 0x000dfdb7u:
+            case 0x0c610961u:
             {
-                if (name == BuiltInName::clamp_2C2C2C)
+                if (name.beginsWith(BuiltInName::abs))
                 {
-                    return &BuiltInFunction::kFunction_clamp_2C2C2C;
-                }
-                break;
-            }
-            case 0x013cb578u:
-            {
-                if (name.length() == 12 && name.beginsWith(BuiltInName::roundEven_))
-                {
-                    return &BuiltInFunction::kFunction_roundEven_3B;
-                }
-                break;
-            }
-            case 0x017a65d7u:
-            {
-                if (name == BuiltInName::textureGrad_0I2B2B2B)
-                {
-                    return &BuiltInFunction::kFunction_textureGrad_0I2B2B2B;
-                }
-                break;
-            }
-            case 0x01882d1au:
-            {
-                if (name == BuiltInName::textureProjOffset_0U3B1C)
-                {
-                    return &BuiltInFunction::kFunction_textureProjOffset_0U3B1C;
-                }
-                break;
-            }
-            case 0x01cd0981u:
-            {
-                if (name.length() == 9 && name.beginsWith(BuiltInName::modf_))
-                {
-                    return &BuiltInFunction::kFunction_modf_3B3B;
-                }
-                break;
-            }
-            case 0x0233df8fu:
-            {
-                if (name == BuiltInName::texelFetch_0V2C0C)
-                {
-                    return &BuiltInFunction::kFunction_texelFetch_0V2C0C;
-                }
-                break;
-            }
-            case 0x0246537au:
-            {
-                if (name.length() == 8 && name.beginsWith(BuiltInName::asinh_))
-                {
-                    return &BuiltInFunction::kFunction_asinh_2B;
-                }
-                break;
-            }
-            case 0x039cfeb9u:
-            {
-                if (name.length() == 7 && name.beginsWith(BuiltInName::tanh_))
-                {
-                    return &BuiltInFunction::kFunction_tanh_3B;
-                }
-                break;
-            }
-            case 0x04a657b6u:
-            {
-                if (name.length() == 18 && name.beginsWith(BuiltInName::floatBitsToUint_))
-                {
-                    return &BuiltInFunction::kFunction_floatBitsToUint_0B;
-                }
-                break;
-            }
-            case 0x04cd89bbu:
-            {
-                if (name.length() == 12 && name.beginsWith(BuiltInName::transpose_))
-                {
-                    return &BuiltInFunction::kFunction_transpose_AB;
-                }
-                break;
-            }
-            case 0x05fa8e2fu:
-            {
-                if (name.length() == 16 && name.beginsWith(BuiltInName::textureProj_))
-                {
-                    return &BuiltInFunction::kFunction_textureProj_0U3B;
-                }
-                break;
-            }
-            case 0x0671c30au:
-            {
-                if (name.length() == 10 && name.beginsWith(BuiltInName::inverse_))
-                {
-                    return &BuiltInFunction::kFunction_inverse_5B;
-                }
-                break;
-            }
-            case 0x072c92c3u:
-            {
-                if (name == BuiltInName::textureLod_0X2B0B)
-                {
-                    return &BuiltInFunction::kFunction_textureLod_0X2B0B;
-                }
-                break;
-            }
-            case 0x0776d647u:
-            {
-                if (name == BuiltInName::textureProjOffset_0U2B1C)
-                {
-                    return &BuiltInFunction::kFunction_textureProjOffset_0U2B1C;
-                }
-                break;
-            }
-            case 0x077c06e5u:
-            {
-                if (name.length() == 16 && name.beginsWith(BuiltInName::textureSize_))
-                {
-                    return &BuiltInFunction::kFunction_textureSize_0I0C;
-                }
-                break;
-            }
-            case 0x098595d1u:
-            {
-                if (name == BuiltInName::textureGradOffset_0U1B1B1B1C)
-                {
-                    return &BuiltInFunction::kFunction_textureGradOffset_0U1B1B1B1C;
-                }
-                break;
-            }
-            case 0x09e0f252u:
-            {
-                if (name == BuiltInName::textureProjLod_0Q3B0B)
-                {
-                    return &BuiltInFunction::kFunction_textureProjLod_0Q3B0B;
-                }
-                break;
-            }
-            case 0x0ad28199u:
-            {
-                if (name == BuiltInName::clamp_1D0D0D)
-                {
-                    return &BuiltInFunction::kFunction_clamp_1D0D0D;
-                }
-                break;
-            }
-            case 0x0b283d1du:
-            {
-                if (name.length() == 12 && name.beginsWith(BuiltInName::texture_))
-                {
-                    return &BuiltInFunction::kFunction_texture_0S2B;
-                }
-                break;
-            }
-            case 0x0b5bd931u:
-            {
-                if (name.length() == 13 && name.beginsWith(BuiltInName::lessThan_))
-                {
-                    return &BuiltInFunction::kFunction_lessThan_3D3D;
-                }
-                break;
-            }
-            case 0x0be139b9u:
-            {
-                if (name.length() == 16 && name.beginsWith(BuiltInName::textureSize_))
-                {
-                    return &BuiltInFunction::kFunction_textureSize_0M0C;
-                }
-                break;
-            }
-            case 0x0c15d48au:
-            {
-                if (name.length() == 17 && name.beginsWith(BuiltInName::intBitsToFloat_))
-                {
-                    return &BuiltInFunction::kFunction_intBitsToFloat_2C;
-                }
-                break;
-            }
-            case 0x0c26b204u:
-            {
-                if (name.length() == 17 && name.beginsWith(BuiltInName::outerProduct_))
-                {
-                    return &BuiltInFunction::kFunction_outerProduct_2B3B;
-                }
-                break;
-            }
-            case 0x0c3745dau:
-            {
-                if (name.length() == 8 && name.beginsWith(BuiltInName::isnan_))
-                {
-                    return &BuiltInFunction::kFunction_isnan_2B;
-                }
-                break;
-            }
-            case 0x0c793f9bu:
-            {
-                if (name.length() == 8 && name.beginsWith(BuiltInName::round_))
-                {
-                    return &BuiltInFunction::kFunction_round_0B;
-                }
-                break;
-            }
-            case 0x0d1f9db8u:
-            {
-                if (name.length() == 16 && name.beginsWith(BuiltInName::textureProj_))
-                {
-                    return &BuiltInFunction::kFunction_textureProj_0P3B;
-                }
-                break;
-            }
-            case 0x0da46ec0u:
-            {
-                if (name == BuiltInName::texelFetchOffset_0X2C0C1C)
-                {
-                    return &BuiltInFunction::kFunction_texelFetchOffset_0X2C0C1C;
-                }
-                break;
-            }
-            case 0x0f7d6756u:
-            {
-                if (name.length() == 10 && name.beginsWith(BuiltInName::inverse_))
-                {
-                    return &BuiltInFunction::kFunction_inverse_AB;
-                }
-                break;
-            }
-            case 0x0f88eaa3u:
-            {
-                if (name.length() == 19 && name.beginsWith(BuiltInName::matrixCompMult_))
-                {
-                    return &BuiltInFunction::kFunction_matrixCompMult_9B9B;
-                }
-                break;
-            }
-            case 0x0faba203u:
-            {
-                if (name.length() == 17 && name.beginsWith(BuiltInName::floatBitsToInt_))
-                {
-                    return &BuiltInFunction::kFunction_floatBitsToInt_2B;
-                }
-                break;
-            }
-            case 0x101493beu:
-            {
-                if (name == BuiltInName::textureOffset_0P1B1C)
-                {
-                    return &BuiltInFunction::kFunction_textureOffset_0P1B1C;
-                }
-                break;
-            }
-            case 0x10769e08u:
-            {
-                if (name.length() == 6 && name.beginsWith(BuiltInName::abs_))
-                {
+                    ASSERT(name.length() == 6);
                     return &BuiltInFunction::kFunction_abs_0C;
                 }
                 break;
             }
-            case 0x119658feu:
+            case 0x0c638c06u:
             {
-                if (name.length() == 7 && name.beginsWith(BuiltInName::tanh_))
+                if (name.beginsWith(BuiltInName::abs))
                 {
-                    return &BuiltInFunction::kFunction_tanh_0B;
-                }
-                break;
-            }
-            case 0x12a67064u:
-            {
-                if (name == BuiltInName::textureLod_0Q2B0B)
-                {
-                    return &BuiltInFunction::kFunction_textureLod_0Q2B0B;
-                }
-                break;
-            }
-            case 0x12fad71du:
-            {
-                if (name.length() == 17 && name.beginsWith(BuiltInName::outerProduct_))
-                {
-                    return &BuiltInFunction::kFunction_outerProduct_1B1B;
-                }
-                break;
-            }
-            case 0x138e5608u:
-            {
-                if (name == BuiltInName::textureOffset_0V2B2C)
-                {
-                    return &BuiltInFunction::kFunction_textureOffset_0V2B2C;
-                }
-                break;
-            }
-            case 0x13bfb65fu:
-            {
-                if (name.length() == 8 && name.beginsWith(BuiltInName::min_))
-                {
-                    return &BuiltInFunction::kFunction_min_2D0D;
-                }
-                break;
-            }
-            case 0x147c8362u:
-            {
-                if (name == BuiltInName::textureProjGradOffset_0U3B1B1B1C)
-                {
-                    return &BuiltInFunction::kFunction_textureProjGradOffset_0U3B1B1B1C;
-                }
-                break;
-            }
-            case 0x154b0321u:
-            {
-                if (name.length() == 16 && name.beginsWith(BuiltInName::textureSize_))
-                {
-                    return &BuiltInFunction::kFunction_textureSize_0U0C;
-                }
-                break;
-            }
-            case 0x15d42df8u:
-            {
-                if (name == BuiltInName::textureProjOffset_0H2B1C)
-                {
-                    return &BuiltInFunction::kFunction_textureProjOffset_0H2B1C;
-                }
-                break;
-            }
-            case 0x164d5fdcu:
-            {
-                if (name == BuiltInName::textureProjLod_0P2B0B)
-                {
-                    return &BuiltInFunction::kFunction_textureProjLod_0P2B0B;
-                }
-                break;
-            }
-            case 0x17d44f4au:
-            {
-                if (name == BuiltInName::texelFetch_0Q2C0C)
-                {
-                    return &BuiltInFunction::kFunction_texelFetch_0Q2C0C;
-                }
-                break;
-            }
-            case 0x1830b4d0u:
-            {
-                if (name == BuiltInName::textureProjGradOffset_0V3B2B2B2C)
-                {
-                    return &BuiltInFunction::kFunction_textureProjGradOffset_0V3B2B2B2C;
-                }
-                break;
-            }
-            case 0x196baf10u:
-            {
-                if (name.length() == 17 && name.beginsWith(BuiltInName::outerProduct_))
-                {
-                    return &BuiltInFunction::kFunction_outerProduct_3B2B;
-                }
-                break;
-            }
-            case 0x198ec035u:
-            {
-                if (name.length() == 10 && name.beginsWith(BuiltInName::inverse_))
-                {
-                    return &BuiltInFunction::kFunction_inverse_FB;
-                }
-                break;
-            }
-            case 0x19b1fbf8u:
-            {
-                if (name == BuiltInName::gl_MaxVertexOutputVectors)
-                {
-                    return mVar_gl_MaxVertexOutputVectors;
-                }
-                break;
-            }
-            case 0x1a4b729au:
-            {
-                if (name == BuiltInName::textureProjLodOffset_0Z3B0B1C)
-                {
-                    return &BuiltInFunction::kFunction_textureProjLodOffset_0Z3B0B1C;
-                }
-                break;
-            }
-            case 0x1b502a44u:
-            {
-                if (name == BuiltInName::clamp_1C0C0C)
-                {
-                    return &BuiltInFunction::kFunction_clamp_1C0C0C;
-                }
-                break;
-            }
-            case 0x1b87f4a5u:
-            {
-                if (name == BuiltInName::textureProjLod_0H3B0B)
-                {
-                    return &BuiltInFunction::kFunction_textureProjLod_0H3B0B;
-                }
-                break;
-            }
-            case 0x1c0f31f5u:
-            {
-                if (name.length() == 17 && name.beginsWith(BuiltInName::intBitsToFloat_))
-                {
-                    return &BuiltInFunction::kFunction_intBitsToFloat_1C;
-                }
-                break;
-            }
-            case 0x1c1e5a64u:
-            {
-                if (name == BuiltInName::texelFetchOffset_0I2C0C2C)
-                {
-                    return &BuiltInFunction::kFunction_texelFetchOffset_0I2C0C2C;
-                }
-                break;
-            }
-            case 0x1f00492au:
-            {
-                if (name.length() == 8 && name.beginsWith(BuiltInName::max_))
-                {
-                    return &BuiltInFunction::kFunction_max_1C0C;
-                }
-                break;
-            }
-            case 0x206d8524u:
-            {
-                if (name == BuiltInName::gl_MaxProgramTexelOffset)
-                {
-                    return mVar_gl_MaxProgramTexelOffset;
-                }
-                break;
-            }
-            case 0x20f43162u:
-            {
-                if (name.length() == 17 && name.beginsWith(BuiltInName::outerProduct_))
-                {
-                    return &BuiltInFunction::kFunction_outerProduct_1B2B;
-                }
-                break;
-            }
-            case 0x22a80e3du:
-            {
-                if (name == BuiltInName::texelFetchOffset_0S2C0C1C)
-                {
-                    return &BuiltInFunction::kFunction_texelFetchOffset_0S2C0C1C;
-                }
-                break;
-            }
-            case 0x22d26116u:
-            {
-                if (name == BuiltInName::textureOffset_0H1B1C)
-                {
-                    return &BuiltInFunction::kFunction_textureOffset_0H1B1C;
-                }
-                break;
-            }
-            case 0x2337ed89u:
-            {
-                if (name == BuiltInName::textureGrad_0W2B2B2B)
-                {
-                    return &BuiltInFunction::kFunction_textureGrad_0W2B2B2B;
-                }
-                break;
-            }
-            case 0x2448c797u:
-            {
-                if (name.length() == 8 && name.beginsWith(BuiltInName::asinh_))
-                {
-                    return &BuiltInFunction::kFunction_asinh_3B;
-                }
-                break;
-            }
-            case 0x25704cc5u:
-            {
-                if (name.length() == 7 && name.beginsWith(BuiltInName::sinh_))
-                {
-                    return &BuiltInFunction::kFunction_sinh_2B;
-                }
-                break;
-            }
-            case 0x25876e15u:
-            {
-                if (name.length() == 12 && name.beginsWith(BuiltInName::texture_))
-                {
-                    return &BuiltInFunction::kFunction_texture_0K2B;
-                }
-                break;
-            }
-            case 0x2620dd52u:
-            {
-                if (name.length() == 16 && name.beginsWith(BuiltInName::greaterThan_))
-                {
-                    return &BuiltInFunction::kFunction_greaterThan_3D3D;
-                }
-                break;
-            }
-            case 0x267a1e16u:
-            {
-                if (name.length() == 21 && name.beginsWith(BuiltInName::greaterThanEqual_))
-                {
-                    return &BuiltInFunction::kFunction_greaterThanEqual_2D2D;
-                }
-                break;
-            }
-            case 0x26c07245u:
-            {
-                if (name.length() == 8 && name.beginsWith(BuiltInName::trunc_))
-                {
-                    return &BuiltInFunction::kFunction_trunc_0B;
-                }
-                break;
-            }
-            case 0x28be44dau:
-            {
-                if (name == BuiltInName::texelFetch_0P1C0C)
-                {
-                    return &BuiltInFunction::kFunction_texelFetch_0P1C0C;
-                }
-                break;
-            }
-            case 0x2a98dd2au:
-            {
-                if (name == BuiltInName::textureGrad_0a3B2B2B)
-                {
-                    return &BuiltInFunction::kFunction_textureGrad_0a3B2B2B;
-                }
-                break;
-            }
-            case 0x2b3f362du:
-            {
-                if (name.length() == 12 && name.beginsWith(BuiltInName::roundEven_))
-                {
-                    return &BuiltInFunction::kFunction_roundEven_2B;
-                }
-                break;
-            }
-            case 0x2cbb3831u:
-            {
-                if (name.length() == 13 && name.beginsWith(BuiltInName::lessThan_))
-                {
-                    return &BuiltInFunction::kFunction_lessThan_2D2D;
-                }
-                break;
-            }
-            case 0x2d30964eu:
-            {
-                if (name == BuiltInName::textureLodOffset_0X2B0B1C)
-                {
-                    return &BuiltInFunction::kFunction_textureLodOffset_0X2B0B1C;
-                }
-                break;
-            }
-            case 0x2d7ebf02u:
-            {
-                if (name.length() == 16 && name.beginsWith(BuiltInName::greaterThan_))
-                {
-                    return &BuiltInFunction::kFunction_greaterThan_1D1D;
-                }
-                break;
-            }
-            case 0x2db85505u:
-            {
-                if (name.length() == 16 && name.beginsWith(BuiltInName::textureProj_))
-                {
-                    return &BuiltInFunction::kFunction_textureProj_0H2B;
-                }
-                break;
-            }
-            case 0x2fd29b2cu:
-            {
-                if (name == BuiltInName::textureGradOffset_0K2B1B1B1C)
-                {
-                    return &BuiltInFunction::kFunction_textureGradOffset_0K2B1B1B1C;
-                }
-                break;
-            }
-            case 0x319bd053u:
-            {
-                if (name == BuiltInName::textureGrad_0H1B1B1B)
-                {
-                    return &BuiltInFunction::kFunction_textureGrad_0H1B1B1B;
-                }
-                break;
-            }
-            case 0x327bba04u:
-            {
-                if (name.length() == 8 && name.beginsWith(BuiltInName::round_))
-                {
-                    return &BuiltInFunction::kFunction_round_3B;
-                }
-                break;
-            }
-            case 0x32a42332u:
-            {
-                if (name == BuiltInName::textureProjGrad_0V3B2B2B)
-                {
-                    return &BuiltInFunction::kFunction_textureProjGrad_0V3B2B2B;
-                }
-                break;
-            }
-            case 0x32c6e76fu:
-            {
-                if (name == BuiltInName::textureGrad_0Q2B2B2B)
-                {
-                    return &BuiltInFunction::kFunction_textureGrad_0Q2B2B2B;
-                }
-                break;
-            }
-            case 0x3368140au:
-            {
-                if (name.length() == 7 && name.beginsWith(BuiltInName::sinh_))
-                {
-                    return &BuiltInFunction::kFunction_sinh_1B;
-                }
-                break;
-            }
-            case 0x3398cd1bu:
-            {
-                if (name.length() == 7 && name.beginsWith(BuiltInName::tanh_))
-                {
-                    return &BuiltInFunction::kFunction_tanh_1B;
-                }
-                break;
-            }
-            case 0x339c450du:
-            {
-                if (name == BuiltInName::textureLod_0V2B0B)
-                {
-                    return &BuiltInFunction::kFunction_textureLod_0V2B0B;
-                }
-                break;
-            }
-            case 0x346dec93u:
-            {
-                if (name.length() == 19 && name.beginsWith(BuiltInName::matrixCompMult_))
-                {
-                    return &BuiltInFunction::kFunction_matrixCompMult_7B7B;
-                }
-                break;
-            }
-            case 0x348a8ebfu:
-            {
-                if (name == BuiltInName::gl_MaxFragmentInputVectors)
-                {
-                    return mVar_gl_MaxFragmentInputVectors;
-                }
-                break;
-            }
-            case 0x34b8398au:
-            {
-                if (name.length() == 8 && name.beginsWith(BuiltInName::trunc_))
-                {
-                    return &BuiltInFunction::kFunction_trunc_3B;
-                }
-                break;
-            }
-            case 0x35ae1c6cu:
-            {
-                if (name.length() == 17 && name.beginsWith(BuiltInName::floatBitsToInt_))
-                {
-                    return &BuiltInFunction::kFunction_floatBitsToInt_1B;
-                }
-                break;
-            }
-            case 0x37221e6du:
-            {
-                if (name.length() == 16 && name.beginsWith(BuiltInName::textureProj_))
-                {
-                    return &BuiltInFunction::kFunction_textureProj_0P2B;
-                }
-                break;
-            }
-            case 0x38791b97u:
-            {
-                if (name.length() == 6 && name.beginsWith(BuiltInName::abs_))
-                {
+                    ASSERT(name.length() == 6);
                     return &BuiltInFunction::kFunction_abs_3C;
                 }
                 break;
             }
-            case 0x38a66077u:
+            case 0x0c6e080au:
             {
-                if (name == BuiltInName::texelFetchOffset_0P1C0C1C)
+                if (name.beginsWith(BuiltInName::abs))
                 {
-                    return &BuiltInFunction::kFunction_texelFetchOffset_0P1C0C1C;
+                    ASSERT(name.length() == 6);
+                    return &BuiltInFunction::kFunction_abs_2C;
                 }
                 break;
             }
-            case 0x393c36c2u:
+            case 0x0c6f0a53u:
             {
-                if (name.length() == 12 && name.beginsWith(BuiltInName::texture_))
+                if (name.beginsWith(BuiltInName::abs))
                 {
-                    return &BuiltInFunction::kFunction_texture_0V2B;
+                    ASSERT(name.length() == 6);
+                    return &BuiltInFunction::kFunction_abs_1C;
                 }
                 break;
             }
-            case 0x39c4a805u:
+            case 0x0c813da4u:
             {
-                if (name == BuiltInName::textureOffset_0U1B1C)
+                if (name.beginsWith(BuiltInName::min))
                 {
-                    return &BuiltInFunction::kFunction_textureOffset_0U1B1C;
+                    ASSERT(name.length() == 8);
+                    return &BuiltInFunction::kFunction_min_2D0D;
                 }
                 break;
             }
-            case 0x3ba7cb8au:
+            case 0x0c81f92eu:
             {
-                if (name.length() == 16 && name.beginsWith(BuiltInName::greaterThan_))
+                if (name.beginsWith(BuiltInName::max))
                 {
-                    return &BuiltInFunction::kFunction_greaterThan_2D2D;
+                    ASSERT(name.length() == 8);
+                    return &BuiltInFunction::kFunction_max_1C0C;
                 }
                 break;
             }
-            case 0x3c0d8cafu:
+            case 0x0c840c87u:
             {
-                if (name == BuiltInName::textureProjGrad_0Q3B2B2B)
+                if (name.beginsWith(BuiltInName::min))
                 {
-                    return &BuiltInFunction::kFunction_textureProjGrad_0Q3B2B2B;
-                }
-                break;
-            }
-            case 0x3c11a2ecu:
-            {
-                if (name.length() == 17 && name.beginsWith(BuiltInName::intBitsToFloat_))
-                {
-                    return &BuiltInFunction::kFunction_intBitsToFloat_0C;
-                }
-                break;
-            }
-            case 0x3da16996u:
-            {
-                if (name.length() == 12 && name.beginsWith(BuiltInName::texture_))
-                {
-                    return &BuiltInFunction::kFunction_texture_0Z2B;
-                }
-                break;
-            }
-            case 0x3e2a3dd6u:
-            {
-                if (name == BuiltInName::textureGrad_0J2B2B2B)
-                {
-                    return &BuiltInFunction::kFunction_textureGrad_0J2B2B2B;
-                }
-                break;
-            }
-            case 0x3e30e0d4u:
-            {
-                if (name.length() == 16 && name.beginsWith(BuiltInName::textureSize_))
-                {
-                    return &BuiltInFunction::kFunction_textureSize_0J0C;
-                }
-                break;
-            }
-            case 0x3f5e397eu:
-            {
-                if (name.length() == 16 && name.beginsWith(BuiltInName::textureProj_))
-                {
-                    return &BuiltInFunction::kFunction_textureProj_0V3B;
-                }
-                break;
-            }
-            case 0x404f56ddu:
-            {
-                if (name == BuiltInName::texelFetch_0M1C0C)
-                {
-                    return &BuiltInFunction::kFunction_texelFetch_0M1C0C;
-                }
-                break;
-            }
-            case 0x405da95du:
-            {
-                if (name.length() == 8 && name.beginsWith(BuiltInName::min_))
-                {
+                    ASSERT(name.length() == 8);
                     return &BuiltInFunction::kFunction_min_0D0D;
                 }
                 break;
             }
-            case 0x40b0dfadu:
+            case 0x0c8470b5u:
             {
-                if (name == BuiltInName::clamp_0C0C0C)
+                if (name.beginsWith(BuiltInName::min))
                 {
-                    return &BuiltInFunction::kFunction_clamp_0C0C0C;
-                }
-                break;
-            }
-            case 0x4257e234u:
-            {
-                if (name == BuiltInName::textureProjLod_0H2B0B)
-                {
-                    return &BuiltInFunction::kFunction_textureProjLod_0H2B0B;
-                }
-                break;
-            }
-            case 0x42f6a57fu:
-            {
-                if (name.length() == 17 && name.beginsWith(BuiltInName::outerProduct_))
-                {
-                    return &BuiltInFunction::kFunction_outerProduct_1B3B;
-                }
-                break;
-            }
-            case 0x4455c12cu:
-            {
-                if (name == BuiltInName::texelFetch_0S2C0C)
-                {
-                    return &BuiltInFunction::kFunction_texelFetch_0S2C0C;
-                }
-                break;
-            }
-            case 0x455afa58u:
-            {
-                if (name == BuiltInName::textureProjGradOffset_0P2B1B1B1C)
-                {
-                    return &BuiltInFunction::kFunction_textureProjGradOffset_0P2B1B1B1C;
-                }
-                break;
-            }
-            case 0x45e11f4au:
-            {
-                if (name == BuiltInName::clamp_2D0D0D)
-                {
-                    return &BuiltInFunction::kFunction_clamp_2D0D0D;
-                }
-                break;
-            }
-            case 0x469db0f5u:
-            {
-                if (name == BuiltInName::textureProjGradOffset_0H3B1B1B1C)
-                {
-                    return &BuiltInFunction::kFunction_textureProjGradOffset_0H3B1B1B1C;
-                }
-                break;
-            }
-            case 0x4759a1c9u:
-            {
-                if (name == BuiltInName::textureGradOffset_0X2B1B1B1C)
-                {
-                    return &BuiltInFunction::kFunction_textureGradOffset_0X2B1B1B1C;
-                }
-                break;
-            }
-            case 0x47a2ba6cu:
-            {
-                if (name == BuiltInName::textureGrad_0X2B1B1B)
-                {
-                    return &BuiltInFunction::kFunction_textureGrad_0X2B1B1B;
-                }
-                break;
-            }
-            case 0x47bb8b0du:
-            {
-                if (name.length() == 8 && name.beginsWith(BuiltInName::min_))
-                {
+                    ASSERT(name.length() == 8);
                     return &BuiltInFunction::kFunction_min_2D2D;
                 }
                 break;
             }
-            case 0x4869dbd3u:
+            case 0x0c84903fu:
             {
-                if (name.length() == 18 && name.beginsWith(BuiltInName::lessThanEqual_))
+                if (name.beginsWith(BuiltInName::min))
                 {
-                    return &BuiltInFunction::kFunction_lessThanEqual_2D2D;
-                }
-                break;
-            }
-            case 0x499e99d6u:
-            {
-                if (name.length() == 8 && name.beginsWith(BuiltInName::min_))
-                {
+                    ASSERT(name.length() == 8);
                     return &BuiltInFunction::kFunction_min_3C0C;
                 }
                 break;
             }
-            case 0x49e092b7u:
+            case 0x0c849cbeu:
             {
-                if (name.length() == 8 && name.beginsWith(BuiltInName::min_))
+                if (name.beginsWith(BuiltInName::min))
                 {
+                    ASSERT(name.length() == 8);
                     return &BuiltInFunction::kFunction_min_2C0C;
                 }
                 break;
             }
-            case 0x4a5c1bf4u:
+            case 0x0c850224u:
             {
-                if (name == BuiltInName::textureLodOffset_0Z2B0B1C)
+                if (name.beginsWith(BuiltInName::max))
                 {
-                    return &BuiltInFunction::kFunction_textureLodOffset_0Z2B0B1C;
-                }
-                break;
-            }
-            case 0x4b027db7u:
-            {
-                if (name.length() == 16 && name.beginsWith(BuiltInName::textureSize_))
-                {
-                    return &BuiltInFunction::kFunction_textureSize_0S0C;
-                }
-                break;
-            }
-            case 0x4b343265u:
-            {
-                if (name.length() == 10 && name.beginsWith(BuiltInName::equal_))
-                {
-                    return &BuiltInFunction::kFunction_equal_2D2D;
-                }
-                break;
-            }
-            case 0x4b60ca6fu:
-            {
-                if (name.length() == 12 && name.beginsWith(BuiltInName::texture_))
-                {
-                    return &BuiltInFunction::kFunction_texture_0I2B;
-                }
-                break;
-            }
-            case 0x4ba47222u:
-            {
-                if (name == BuiltInName::clamp_3C0C0C)
-                {
-                    return &BuiltInFunction::kFunction_clamp_3C0C0C;
-                }
-                break;
-            }
-            case 0x4bfe4a10u:
-            {
-                if (name.length() == 16 && name.beginsWith(BuiltInName::textureSize_))
-                {
-                    return &BuiltInFunction::kFunction_textureSize_0V0C;
-                }
-                break;
-            }
-            case 0x4cc044ccu:
-            {
-                if (name.length() == 8 && name.beginsWith(BuiltInName::isinf_))
-                {
-                    return &BuiltInFunction::kFunction_isinf_2B;
-                }
-                break;
-            }
-            case 0x4cd78002u:
-            {
-                if (name == BuiltInName::textureLod_0S2B0B)
-                {
-                    return &BuiltInFunction::kFunction_textureLod_0S2B0B;
-                }
-                break;
-            }
-            case 0x4ee30447u:
-            {
-                if (name == BuiltInName::textureLodOffset_0V2B0B2C)
-                {
-                    return &BuiltInFunction::kFunction_textureLodOffset_0V2B0B2C;
-                }
-                break;
-            }
-            case 0x505a7783u:
-            {
-                if (name.length() == 8 && name.beginsWith(BuiltInName::max_))
-                {
+                    ASSERT(name.length() == 8);
                     return &BuiltInFunction::kFunction_max_2D2D;
                 }
                 break;
             }
-            case 0x515a7a59u:
+            case 0x0c8536c3u:
             {
-                if (name.length() == 9 && name.beginsWith(BuiltInName::modf_))
+                if (name.beginsWith(BuiltInName::max))
                 {
-                    return &BuiltInFunction::kFunction_modf_1B1B;
-                }
-                break;
-            }
-            case 0x528b682cu:
-            {
-                if (name.length() == 16 && name.beginsWith(BuiltInName::textureSize_))
-                {
-                    return &BuiltInFunction::kFunction_textureSize_0b0C;
-                }
-                break;
-            }
-            case 0x5306a6a9u:
-            {
-                if (name.length() == 8 && name.beginsWith(BuiltInName::max_))
-                {
+                    ASSERT(name.length() == 8);
                     return &BuiltInFunction::kFunction_max_2C0C;
                 }
                 break;
             }
-            case 0x556a8827u:
+            case 0x0c85921fu:
             {
-                if (name.length() == 7 && name.beginsWith(BuiltInName::sinh_))
+                if (name.beginsWith(BuiltInName::max))
                 {
-                    return &BuiltInFunction::kFunction_sinh_0B;
-                }
-                break;
-            }
-            case 0x559bf8bdu:
-            {
-                if (name == BuiltInName::textureProjLodOffset_0H2B0B1C)
-                {
-                    return &BuiltInFunction::kFunction_textureProjLodOffset_0H2B0B1C;
-                }
-                break;
-            }
-            case 0x56baada7u:
-            {
-                if (name.length() == 8 && name.beginsWith(BuiltInName::trunc_))
-                {
-                    return &BuiltInFunction::kFunction_trunc_2B;
-                }
-                break;
-            }
-            case 0x5729921cu:
-            {
-                if (name == BuiltInName::clamp_1C1C1C)
-                {
-                    return &BuiltInFunction::kFunction_clamp_1C1C1C;
-                }
-                break;
-            }
-            case 0x574855cdu:
-            {
-                if (name == BuiltInName::textureProjGradOffset_0I3B2B2B2C)
-                {
-                    return &BuiltInFunction::kFunction_textureProjGradOffset_0I3B2B2B2C;
-                }
-                break;
-            }
-            case 0x58585f7fu:
-            {
-                if (name == BuiltInName::textureLodOffset_0S2B0B1C)
-                {
-                    return &BuiltInFunction::kFunction_textureLodOffset_0S2B0B1C;
-                }
-                break;
-            }
-            case 0x593a41bbu:
-            {
-                if (name.length() == 8 && name.beginsWith(BuiltInName::max_))
-                {
+                    ASSERT(name.length() == 8);
                     return &BuiltInFunction::kFunction_max_3D3D;
                 }
                 break;
             }
-            case 0x593a5ce2u:
+            case 0x0c859e3eu:
             {
-                if (name.length() == 13 && name.beginsWith(BuiltInName::notEqual_))
+                if (name.beginsWith(BuiltInName::min))
                 {
-                    return &BuiltInFunction::kFunction_notEqual_1D1D;
-                }
-                break;
-            }
-            case 0x5997f741u:
-            {
-                if (name.length() == 8 && name.beginsWith(BuiltInName::min_))
-                {
+                    ASSERT(name.length() == 8);
                     return &BuiltInFunction::kFunction_min_3C3C;
                 }
                 break;
             }
-            case 0x5999aca5u:
+            case 0x0c86138du:
             {
-                if (name == BuiltInName::texelFetchOffset_0K2C0C1C)
+                if (name.beginsWith(BuiltInName::min))
                 {
-                    return &BuiltInFunction::kFunction_texelFetchOffset_0K2C0C1C;
-                }
-                break;
-            }
-            case 0x599b4784u:
-            {
-                if (name.length() == 7 && name.beginsWith(BuiltInName::tanh_))
-                {
-                    return &BuiltInFunction::kFunction_tanh_2B;
-                }
-                break;
-            }
-            case 0x59a05651u:
-            {
-                if (name == BuiltInName::textureProjOffset_0Q3B2C)
-                {
-                    return &BuiltInFunction::kFunction_textureProjOffset_0Q3B2C;
-                }
-                break;
-            }
-            case 0x59e1f1f2u:
-            {
-                if (name == BuiltInName::textureGradOffset_0b3B1B1B1C)
-                {
-                    return &BuiltInFunction::kFunction_textureGradOffset_0b3B1B1B1C;
-                }
-                break;
-            }
-            case 0x59ec8230u:
-            {
-                if (name == BuiltInName::textureOffset_0S2B1C)
-                {
-                    return &BuiltInFunction::kFunction_textureOffset_0S2B1C;
-                }
-                break;
-            }
-            case 0x5b723064u:
-            {
-                if (name.length() == 7 && name.beginsWith(BuiltInName::sign_))
-                {
-                    return &BuiltInFunction::kFunction_sign_1C;
-                }
-                break;
-            }
-            case 0x5bcc4eaau:
-            {
-                if (name.length() == 16 && name.beginsWith(BuiltInName::textureProj_))
-                {
-                    return &BuiltInFunction::kFunction_textureProj_0M2B;
-                }
-                break;
-            }
-            case 0x5be66575u:
-            {
-                if (name == BuiltInName::textureProjOffset_0H3B1C)
-                {
-                    return &BuiltInFunction::kFunction_textureProjOffset_0H3B1C;
-                }
-                break;
-            }
-            case 0x5c02c345u:
-            {
-                if (name.length() == 18 && name.beginsWith(BuiltInName::uintBitsToFloat_))
-                {
-                    return &BuiltInFunction::kFunction_uintBitsToFloat_3D;
-                }
-                break;
-            }
-            case 0x5c0b0c3cu:
-            {
-                if (name == BuiltInName::textureProjLodOffset_0Q3B0B2C)
-                {
-                    return &BuiltInFunction::kFunction_textureProjLodOffset_0Q3B0B2C;
-                }
-                break;
-            }
-            case 0x5fb09d21u:
-            {
-                if (name.length() == 17 && name.beginsWith(BuiltInName::floatBitsToInt_))
-                {
-                    return &BuiltInFunction::kFunction_floatBitsToInt_0B;
-                }
-                break;
-            }
-            case 0x61168ef7u:
-            {
-                if (name.length() == 8 && name.beginsWith(BuiltInName::atanh_))
-                {
-                    return &BuiltInFunction::kFunction_atanh_2B;
-                }
-                break;
-            }
-            case 0x61475731u:
-            {
-                if (name == BuiltInName::clamp_1D1D1D)
-                {
-                    return &BuiltInFunction::kFunction_clamp_1D1D1D;
-                }
-                break;
-            }
-            case 0x61bd085du:
-            {
-                if (name.length() == 8 && name.beginsWith(BuiltInName::min_))
-                {
+                    ASSERT(name.length() == 8);
                     return &BuiltInFunction::kFunction_min_3D3D;
                 }
                 break;
             }
-            case 0x622e51a9u:
+            case 0x0c86f921u:
             {
-                if (name == BuiltInName::textureLod_0J2B0B)
+                if (name.beginsWith(BuiltInName::min))
                 {
-                    return &BuiltInFunction::kFunction_textureLod_0J2B0B;
-                }
-                break;
-            }
-            case 0x640bb15fu:
-            {
-                if (name == BuiltInName::texelFetchOffset_0H1C0C1C)
-                {
-                    return &BuiltInFunction::kFunction_texelFetchOffset_0H1C0C1C;
-                }
-                break;
-            }
-            case 0x6414207bu:
-            {
-                if (name.length() == 17 && name.beginsWith(BuiltInName::intBitsToFloat_))
-                {
-                    return &BuiltInFunction::kFunction_intBitsToFloat_3C;
-                }
-                break;
-            }
-            case 0x64ce27feu:
-            {
-                if (name == BuiltInName::textureProjLod_0U3B0B)
-                {
-                    return &BuiltInFunction::kFunction_textureProjLod_0U3B0B;
-                }
-                break;
-            }
-            case 0x6509abb0u:
-            {
-                if (name == BuiltInName::textureProjGrad_0H3B1B1B)
-                {
-                    return &BuiltInFunction::kFunction_textureProjGrad_0H3B1B1B;
-                }
-                break;
-            }
-            case 0x66fac460u:
-            {
-                if (name == BuiltInName::textureLod_0H1B0B)
-                {
-                    return &BuiltInFunction::kFunction_textureLod_0H1B0B;
-                }
-                break;
-            }
-            case 0x68df806eu:
-            {
-                if (name == BuiltInName::textureGrad_0R2B2B2B)
-                {
-                    return &BuiltInFunction::kFunction_textureGrad_0R2B2B2B;
-                }
-                break;
-            }
-            case 0x68fefbb2u:
-            {
-                if (name.length() == 7 && name.beginsWith(BuiltInName::cosh_))
-                {
-                    return &BuiltInFunction::kFunction_cosh_0B;
-                }
-                break;
-            }
-            case 0x6e70010cu:
-            {
-                if (name.length() == 14 && name.beginsWith(BuiltInName::textureSize_))
-                {
-                    return &BuiltInFunction::kFunction_textureSize_0Y;
-                }
-                break;
-            }
-            case 0x6f92d00cu:
-            {
-                if (name.length() == 8 && name.beginsWith(BuiltInName::min_))
-                {
+                    ASSERT(name.length() == 8);
                     return &BuiltInFunction::kFunction_min_1D0D;
                 }
                 break;
             }
-            case 0x6fa329a5u:
+            case 0x0c87fdd9u:
             {
-                if (name == BuiltInName::textureProjGrad_0P2B1B1B)
+                if (name.beginsWith(BuiltInName::min))
                 {
-                    return &BuiltInFunction::kFunction_textureProjGrad_0P2B1B1B;
-                }
-                break;
-            }
-            case 0x70c27acdu:
-            {
-                if (name == BuiltInName::textureOffset_0X2B1C)
-                {
-                    return &BuiltInFunction::kFunction_textureOffset_0X2B1C;
-                }
-                break;
-            }
-            case 0x71ef80d7u:
-            {
-                if (name.length() == 12 && name.beginsWith(BuiltInName::texture_))
-                {
-                    return &BuiltInFunction::kFunction_texture_0Q2B;
-                }
-                break;
-            }
-            case 0x72403404u:
-            {
-                if (name == BuiltInName::textureProjLodOffset_0I3B0B2C)
-                {
-                    return &BuiltInFunction::kFunction_textureProjLodOffset_0I3B0B2C;
-                }
-                break;
-            }
-            case 0x726d9e79u:
-            {
-                if (name.length() == 16 && name.beginsWith(BuiltInName::textureProj_))
-                {
-                    return &BuiltInFunction::kFunction_textureProj_0L2B;
-                }
-                break;
-            }
-            case 0x737008ebu:
-            {
-                if (name.length() == 14 && name.beginsWith(BuiltInName::textureSize_))
-                {
-                    return &BuiltInFunction::kFunction_textureSize_0T;
-                }
-                break;
-            }
-            case 0x73713e4bu:
-            {
-                if (name == BuiltInName::textureOffset_0Z2B1C)
-                {
-                    return &BuiltInFunction::kFunction_textureOffset_0Z2B1C;
-                }
-                break;
-            }
-            case 0x73cbbd41u:
-            {
-                if (name == BuiltInName::textureProjLodOffset_0V3B0B2C)
-                {
-                    return &BuiltInFunction::kFunction_textureProjLodOffset_0V3B0B2C;
-                }
-                break;
-            }
-            case 0x75c877acu:
-            {
-                if (name.length() == 12 && name.beginsWith(BuiltInName::texture_))
-                {
-                    return &BuiltInFunction::kFunction_texture_0M1B;
-                }
-                break;
-            }
-            case 0x76c2c581u:
-            {
-                if (name.length() == 8 && name.beginsWith(BuiltInName::isinf_))
-                {
-                    return &BuiltInFunction::kFunction_isinf_3B;
-                }
-                break;
-            }
-            case 0x7732f2f2u:
-            {
-                if (name == BuiltInName::texelFetch_0I2C0C)
-                {
-                    return &BuiltInFunction::kFunction_texelFetch_0I2C0C;
-                }
-                break;
-            }
-            case 0x78036035u:
-            {
-                if (name == BuiltInName::textureOffset_0Q2B2C)
-                {
-                    return &BuiltInFunction::kFunction_textureOffset_0Q2B2C;
-                }
-                break;
-            }
-            case 0x793a7cc1u:
-            {
-                if (name == BuiltInName::textureLodOffset_0P1B0B1C)
-                {
-                    return &BuiltInFunction::kFunction_textureLodOffset_0P1B0B1C;
-                }
-                break;
-            }
-            case 0x798a0c0fu:
-            {
-                if (name == BuiltInName::textureProjLod_0U2B0B)
-                {
-                    return &BuiltInFunction::kFunction_textureProjLod_0U2B0B;
-                }
-                break;
-            }
-            case 0x7a053116u:
-            {
-                if (name.length() == 18 && name.beginsWith(BuiltInName::uintBitsToFloat_))
-                {
-                    return &BuiltInFunction::kFunction_uintBitsToFloat_0D;
-                }
-                break;
-            }
-            case 0x7b08fc96u:
-            {
-                if (name == BuiltInName::gl_MinProgramTexelOffset)
-                {
-                    return mVar_gl_MinProgramTexelOffset;
-                }
-                break;
-            }
-            case 0x7b6d0290u:
-            {
-                if (name.length() == 7 && name.beginsWith(BuiltInName::sinh_))
-                {
-                    return &BuiltInFunction::kFunction_sinh_3B;
-                }
-                break;
-            }
-            case 0x7c291893u:
-            {
-                if (name.length() == 14 && name.beginsWith(BuiltInName::yuv_2_rgb_))
-                {
-                    return &BuiltInFunction::kFunction_yuv_2_rgb_2B0G;
-                }
-                break;
-            }
-            case 0x7c675aa4u:
-            {
-                if (name == BuiltInName::textureProjLodOffset_0H3B0B1C)
-                {
-                    return &BuiltInFunction::kFunction_textureProjLodOffset_0H3B0B1C;
-                }
-                break;
-            }
-            case 0x7c701716u:
-            {
-                if (name.length() == 14 && name.beginsWith(BuiltInName::textureSize_))
-                {
-                    return &BuiltInFunction::kFunction_textureSize_0O;
-                }
-                break;
-            }
-            case 0x7cbd2810u:
-            {
-                if (name.length() == 8 && name.beginsWith(BuiltInName::trunc_))
-                {
-                    return &BuiltInFunction::kFunction_trunc_1B;
-                }
-                break;
-            }
-            case 0x7da4e4cdu:
-            {
-                if (name == BuiltInName::textureGradOffset_0I2B2B2B2C)
-                {
-                    return &BuiltInFunction::kFunction_textureGradOffset_0I2B2B2B2C;
-                }
-                break;
-            }
-            case 0x7dcec2c7u:
-            {
-                if (name.length() == 16 && name.beginsWith(BuiltInName::textureProj_))
-                {
-                    return &BuiltInFunction::kFunction_textureProj_0M3B;
-                }
-                break;
-            }
-            case 0x7f4a0e15u:
-            {
-                if (name.length() == 9 && name.beginsWith(BuiltInName::modf_))
-                {
-                    return &BuiltInFunction::kFunction_modf_0B0B;
-                }
-                break;
-            }
-            case 0x7fbf762eu:
-            {
-                if (name.length() == 8 && name.beginsWith(BuiltInName::min_))
-                {
+                    ASSERT(name.length() == 8);
                     return &BuiltInFunction::kFunction_min_3D0D;
                 }
                 break;
             }
-            case 0x7fe4d147u:
+            case 0x0c880c7au:
             {
-                if (name == BuiltInName::textureProjGrad_0I3B2B2B)
+                if (name.beginsWith(BuiltInName::min))
                 {
-                    return &BuiltInFunction::kFunction_textureProjGrad_0I3B2B2B;
-                }
-                break;
-            }
-            case 0x80b45ae8u:
-            {
-                if (name == BuiltInName::textureOffset_0K2B1C)
-                {
-                    return &BuiltInFunction::kFunction_textureOffset_0K2B1C;
-                }
-                break;
-            }
-            case 0x80de719du:
-            {
-                if (name.length() == 8 && name.beginsWith(BuiltInName::min_))
-                {
+                    ASSERT(name.length() == 8);
                     return &BuiltInFunction::kFunction_min_1C1C;
                 }
                 break;
             }
-            case 0x81dadab1u:
+            case 0x0c88171cu:
             {
-                if (name.length() == 8 && name.beginsWith(BuiltInName::min_))
+                if (name.beginsWith(BuiltInName::min))
                 {
+                    ASSERT(name.length() == 8);
                     return &BuiltInFunction::kFunction_min_2C2C;
                 }
                 break;
             }
-            case 0x8374adf3u:
+            case 0x0c884c7au:
             {
-                if (name.length() == 7 && name.beginsWith(BuiltInName::sign_))
+                if (name.beginsWith(BuiltInName::max))
                 {
-                    return &BuiltInFunction::kFunction_sign_2C;
-                }
-                break;
-            }
-            case 0x83b69dd0u:
-            {
-                if (name.length() == 16 && name.beginsWith(BuiltInName::textureProj_))
-                {
-                    return &BuiltInFunction::kFunction_textureProj_0H3B;
-                }
-                break;
-            }
-            case 0x8411eff2u:
-            {
-                if (name.length() == 16 && name.beginsWith(BuiltInName::textureProj_))
-                {
-                    return &BuiltInFunction::kFunction_textureProj_0Z3B;
-                }
-                break;
-            }
-            case 0x8454b931u:
-            {
-                if (name.length() == 8 && name.beginsWith(BuiltInName::max_))
-                {
+                    ASSERT(name.length() == 8);
                     return &BuiltInFunction::kFunction_max_2D0D;
                 }
                 break;
             }
-            case 0x84bc1fc6u:
+            case 0x0c8912a9u:
             {
-                if (name.length() == 8 && name.beginsWith(BuiltInName::isinf_))
+                if (name.beginsWith(BuiltInName::max))
                 {
-                    return &BuiltInFunction::kFunction_isinf_0B;
-                }
-                break;
-            }
-            case 0x85509e6au:
-            {
-                if (name.length() == 16 && name.beginsWith(BuiltInName::textureSize_))
-                {
-                    return &BuiltInFunction::kFunction_textureSize_0H0C;
-                }
-                break;
-            }
-            case 0x87190960u:
-            {
-                if (name.length() == 8 && name.beginsWith(BuiltInName::atanh_))
-                {
-                    return &BuiltInFunction::kFunction_atanh_1B;
-                }
-                break;
-            }
-            case 0x88ee5a65u:
-            {
-                if (name == BuiltInName::textureProjGradOffset_0Q3B2B2B2C)
-                {
-                    return &BuiltInFunction::kFunction_textureProjGradOffset_0Q3B2B2B2C;
-                }
-                break;
-            }
-            case 0x8952b249u:
-            {
-                if (name == BuiltInName::textureProjOffset_0I3B2C)
-                {
-                    return &BuiltInFunction::kFunction_textureProjOffset_0I3B2C;
-                }
-                break;
-            }
-            case 0x89b5d13eu:
-            {
-                if (name.length() == 16 && name.beginsWith(BuiltInName::textureSize_))
-                {
-                    return &BuiltInFunction::kFunction_textureSize_0L0C;
-                }
-                break;
-            }
-            case 0x8b016fcfu:
-            {
-                if (name.length() == 7 && name.beginsWith(BuiltInName::cosh_))
-                {
-                    return &BuiltInFunction::kFunction_cosh_1B;
-                }
-                break;
-            }
-            case 0x8b97d9fbu:
-            {
-                if (name.length() == 12 && name.beginsWith(BuiltInName::texture_))
-                {
-                    return &BuiltInFunction::kFunction_texture_0b3B;
-                }
-                break;
-            }
-            case 0x8e47a097u:
-            {
-                if (name == BuiltInName::textureProjGradOffset_0Z3B1B1B1C)
-                {
-                    return &BuiltInFunction::kFunction_textureProjGradOffset_0Z3B1B1B1C;
-                }
-                break;
-            }
-            case 0x8e78ffabu:
-            {
-                if (name.length() == 16 && name.beginsWith(BuiltInName::textureSize_))
-                {
-                    return &BuiltInFunction::kFunction_textureSize_0W0C;
-                }
-                break;
-            }
-            case 0x8ee6e7c6u:
-            {
-                if (name.length() == 12 && name.beginsWith(BuiltInName::texture_))
-                {
-                    return &BuiltInFunction::kFunction_texture_0J2B;
-                }
-                break;
-            }
-            case 0x8f2182ebu:
-            {
-                if (name == BuiltInName::textureGrad_0P1B1B1B)
-                {
-                    return &BuiltInFunction::kFunction_textureGrad_0P1B1B1B;
-                }
-                break;
-            }
-            case 0x8f8e3971u:
-            {
-                if (name.length() == 12 && name.beginsWith(BuiltInName::texture_))
-                {
-                    return &BuiltInFunction::kFunction_texture_0W2B;
-                }
-                break;
-            }
-            case 0x8fd50890u:
-            {
-                if (name == BuiltInName::texelFetchOffset_0U1C0C1C)
-                {
-                    return &BuiltInFunction::kFunction_texelFetchOffset_0U1C0C1C;
-                }
-                break;
-            }
-            case 0x90a846c6u:
-            {
-                if (name == BuiltInName::textureLodOffset_0Q2B0B2C)
-                {
-                    return &BuiltInFunction::kFunction_textureLodOffset_0Q2B0B2C;
-                }
-                break;
-            }
-            case 0x90b39384u:
-            {
-                if (name.length() == 16 && name.beginsWith(BuiltInName::textureSize_))
-                {
-                    return &BuiltInFunction::kFunction_textureSize_0Z0C;
-                }
-                break;
-            }
-            case 0x919deb77u:
-            {
-                if (name.length() == 8 && name.beginsWith(BuiltInName::max_))
-                {
+                    ASSERT(name.length() == 8);
                     return &BuiltInFunction::kFunction_max_3C3C;
                 }
                 break;
             }
-            case 0x9215c4d9u:
+            case 0x0c895321u:
             {
-                if (name == BuiltInName::textureLodOffset_0H1B0B1C)
+                if (name.beginsWith(BuiltInName::min))
                 {
-                    return &BuiltInFunction::kFunction_textureLodOffset_0H1B0B1C;
+                    ASSERT(name.length() == 8);
+                    return &BuiltInFunction::kFunction_min_1D1D;
                 }
                 break;
             }
-            case 0x938e9938u:
+            case 0x0c89b596u:
             {
-                if (name.length() == 12 && name.beginsWith(BuiltInName::texture_))
+                if (name.beginsWith(BuiltInName::max))
                 {
-                    return &BuiltInFunction::kFunction_texture_0X2B;
+                    ASSERT(name.length() == 8);
+                    return &BuiltInFunction::kFunction_max_2C2C;
                 }
                 break;
             }
-            case 0x93b01b17u:
+            case 0x0c8a0c9au:
             {
-                if (name.length() == 19 && name.beginsWith(BuiltInName::matrixCompMult_))
+                if (name.beginsWith(BuiltInName::min))
                 {
-                    return &BuiltInFunction::kFunction_matrixCompMult_6B6B;
+                    ASSERT(name.length() == 8);
+                    return &BuiltInFunction::kFunction_min_1C0C;
                 }
                 break;
             }
-            case 0x95305b7au:
+            case 0x0c8a492cu:
+            {
+                if (name.beginsWith(BuiltInName::max))
+                {
+                    ASSERT(name.length() == 8);
+                    return &BuiltInFunction::kFunction_max_1D0D;
+                }
+                break;
+            }
+            case 0x0c8aaf96u:
+            {
+                if (name.beginsWith(BuiltInName::max))
+                {
+                    ASSERT(name.length() == 8);
+                    return &BuiltInFunction::kFunction_max_0C0C;
+                }
+                break;
+            }
+            case 0x0c8bd2a5u:
+            {
+                if (name.beginsWith(BuiltInName::min))
+                {
+                    ASSERT(name.length() == 8);
+                    return &BuiltInFunction::kFunction_min_0C0C;
+                }
+                break;
+            }
+            case 0x0c8c2b46u:
+            {
+                if (name.beginsWith(BuiltInName::max))
+                {
+                    ASSERT(name.length() == 8);
+                    return &BuiltInFunction::kFunction_max_1D1D;
+                }
+                break;
+            }
+            case 0x0c8e4658u:
+            {
+                if (name.beginsWith(BuiltInName::max))
+                {
+                    ASSERT(name.length() == 8);
+                    return &BuiltInFunction::kFunction_max_0D0D;
+                }
+                break;
+            }
+            case 0x0c8e71adu:
+            {
+                if (name.beginsWith(BuiltInName::max))
+                {
+                    ASSERT(name.length() == 8);
+                    return &BuiltInFunction::kFunction_max_3D0D;
+                }
+                break;
+            }
+            case 0x0c8e9eabu:
+            {
+                if (name.beginsWith(BuiltInName::max))
+                {
+                    ASSERT(name.length() == 8);
+                    return &BuiltInFunction::kFunction_max_3C0C;
+                }
+                break;
+            }
+            case 0x0c8f6447u:
+            {
+                if (name.beginsWith(BuiltInName::max))
+                {
+                    ASSERT(name.length() == 8);
+                    return &BuiltInFunction::kFunction_max_1C1C;
+                }
+                break;
+            }
+            case 0x0ca9587fu:
             {
                 if (name == BuiltInName::mix_2B2B2E)
                 {
@@ -14712,367 +13332,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                 }
                 break;
             }
-            case 0x95954a75u:
-            {
-                if (name.length() == 8 && name.beginsWith(BuiltInName::min_))
-                {
-                    return &BuiltInFunction::kFunction_min_1D1D;
-                }
-                break;
-            }
-            case 0x96a71f27u:
-            {
-                if (name == BuiltInName::textureProjGrad_0U3B1B1B)
-                {
-                    return &BuiltInFunction::kFunction_textureProjGrad_0U3B1B1B;
-                }
-                break;
-            }
-            case 0x96d47d37u:
-            {
-                if (name == BuiltInName::textureProjGradOffset_0U2B1B1B1C)
-                {
-                    return &BuiltInFunction::kFunction_textureProjGradOffset_0U2B1B1B1C;
-                }
-                break;
-            }
-            case 0x97123500u:
-            {
-                if (name.length() == 8 && name.beginsWith(BuiltInName::acosh_))
-                {
-                    return &BuiltInFunction::kFunction_acosh_1B;
-                }
-                break;
-            }
-            case 0x987daeb7u:
-            {
-                if (name.length() == 19 && name.beginsWith(BuiltInName::matrixCompMult_))
-                {
-                    return &BuiltInFunction::kFunction_matrixCompMult_BBBB;
-                }
-                break;
-            }
-            case 0x999dc041u:
-            {
-                if (name == BuiltInName::textureLod_0R2B0B)
-                {
-                    return &BuiltInFunction::kFunction_textureLod_0R2B0B;
-                }
-                break;
-            }
-            case 0x9a695ee0u:
-            {
-                if (name == BuiltInName::textureProjOffset_0P2B1C)
-                {
-                    return &BuiltInFunction::kFunction_textureProjOffset_0P2B1C;
-                }
-                break;
-            }
-            case 0x9b0b952fu:
-            {
-                if (name.length() == 8 && name.beginsWith(BuiltInName::max_))
-                {
-                    return &BuiltInFunction::kFunction_max_2C2C;
-                }
-                break;
-            }
-            case 0x9cd7735fu:
-            {
-                if (name.length() == 12 && name.beginsWith(BuiltInName::transpose_))
-                {
-                    return &BuiltInFunction::kFunction_transpose_EB;
-                }
-                break;
-            }
-            case 0x9d0abd32u:
-            {
-                if (name == BuiltInName::clamp_2D2D2D)
-                {
-                    return &BuiltInFunction::kFunction_clamp_2D2D2D;
-                }
-                break;
-            }
-            case 0x9e7b5ec8u:
-            {
-                if (name.length() == 14 && name.beginsWith(BuiltInName::determinant_))
-                {
-                    return &BuiltInFunction::kFunction_determinant_FB;
-                }
-                break;
-            }
-            case 0x9ef04df5u:
-            {
-                if (name.length() == 16 && name.beginsWith(BuiltInName::packSnorm2x16_))
-                {
-                    return &BuiltInFunction::kFunction_packSnorm2x16_1B;
-                }
-                break;
-            }
-            case 0xa09a8937u:
-            {
-                if (name == BuiltInName::textureLodOffset_0K2B0B1C)
-                {
-                    return &BuiltInFunction::kFunction_textureLodOffset_0K2B0B1C;
-                }
-                break;
-            }
-            case 0xa0c1a478u:
-            {
-                if (name == BuiltInName::textureProjGrad_0P3B1B1B)
-                {
-                    return &BuiltInFunction::kFunction_textureProjGrad_0P3B1B1B;
-                }
-                break;
-            }
-            case 0xa0e0e294u:
-            {
-                if (name.length() == 8 && name.beginsWith(BuiltInName::min_))
-                {
-                    return &BuiltInFunction::kFunction_min_1C0C;
-                }
-                break;
-            }
-            case 0xa1c52958u:
-            {
-                if (name.length() == 12 && name.beginsWith(BuiltInName::transpose_))
-                {
-                    return &BuiltInFunction::kFunction_transpose_6B;
-                }
-                break;
-            }
-            case 0xa3b5f7d4u:
-            {
-                if (name == BuiltInName::texelFetch_0K2C0C)
-                {
-                    return &BuiltInFunction::kFunction_texelFetch_0K2C0C;
-                }
-                break;
-            }
-            case 0xa4df529fu:
-            {
-                if (name == BuiltInName::textureGrad_0b3B1B1B)
-                {
-                    return &BuiltInFunction::kFunction_textureGrad_0b3B1B1B;
-                }
-                break;
-            }
-            case 0xa4fce6e2u:
-            {
-                if (name.length() == 8 && name.beginsWith(BuiltInName::max_))
-                {
-                    return &BuiltInFunction::kFunction_max_1D0D;
-                }
-                break;
-            }
-            case 0xa506c0ccu:
-            {
-                if (name == BuiltInName::textureProjOffset_0V3B2C)
-                {
-                    return &BuiltInFunction::kFunction_textureProjOffset_0V3B2C;
-                }
-                break;
-            }
-            case 0xa687812eu:
-            {
-                if (name == BuiltInName::textureLod_0W2B0B)
-                {
-                    return &BuiltInFunction::kFunction_textureLod_0W2B0B;
-                }
-                break;
-            }
-            case 0xa6a99553u:
-            {
-                if (name.length() == 18 && name.beginsWith(BuiltInName::floatBitsToUint_))
-                {
-                    return &BuiltInFunction::kFunction_floatBitsToUint_1B;
-                }
-                break;
-            }
-            case 0xa6be93e3u:
-            {
-                if (name.length() == 8 && name.beginsWith(BuiltInName::isinf_))
-                {
-                    return &BuiltInFunction::kFunction_isinf_1B;
-                }
-                break;
-            }
-            case 0xa78e0f2cu:
-            {
-                if (name == BuiltInName::textureLod_0I2B0B)
-                {
-                    return &BuiltInFunction::kFunction_textureLod_0I2B0B;
-                }
-                break;
-            }
-            case 0xa807b817u:
-            {
-                if (name.length() == 18 && name.beginsWith(BuiltInName::uintBitsToFloat_))
-                {
-                    return &BuiltInFunction::kFunction_uintBitsToFloat_1D;
-                }
-                break;
-            }
-            case 0xa8f6aea4u:
-            {
-                if (name == BuiltInName::textureGradOffset_0S2B1B1B1C)
-                {
-                    return &BuiltInFunction::kFunction_textureGradOffset_0S2B1B1B1C;
-                }
-                break;
-            }
-            case 0xaaa9d50bu:
-            {
-                if (name.length() == 8 && name.beginsWith(BuiltInName::max_))
-                {
-                    return &BuiltInFunction::kFunction_max_0C0C;
-                }
-                break;
-            }
-            case 0xaad0cda4u:
-            {
-                if (name.length() == 12 && name.beginsWith(BuiltInName::transpose_))
-                {
-                    return &BuiltInFunction::kFunction_transpose_BB;
-                }
-                break;
-            }
-            case 0xab46cb2du:
-            {
-                if (name.length() == 18 && name.beginsWith(BuiltInName::unpackSnorm2x16_))
-                {
-                    return &BuiltInFunction::kFunction_unpackSnorm2x16_0D;
-                }
-                break;
-            }
-            case 0xab772b82u:
-            {
-                if (name.length() == 7 && name.beginsWith(BuiltInName::sign_))
-                {
-                    return &BuiltInFunction::kFunction_sign_3C;
-                }
-                break;
-            }
-            case 0xabf9e1fcu:
-            {
-                if (name == BuiltInName::textureProjLodOffset_0P3B0B1C)
-                {
-                    return &BuiltInFunction::kFunction_textureProjLodOffset_0P3B0B1C;
-                }
-                break;
-            }
-            case 0xad25bf79u:
-            {
-                if (name == BuiltInName::textureGrad_0S2B1B1B)
-                {
-                    return &BuiltInFunction::kFunction_textureGrad_0S2B1B1B;
-                }
-                break;
-            }
-            case 0xae38f077u:
-            {
-                if (name.length() == 8 && name.beginsWith(BuiltInName::isnan_))
-                {
-                    return &BuiltInFunction::kFunction_isnan_3B;
-                }
-                break;
-            }
-            case 0xae3dea39u:
-            {
-                if (name.length() == 13 && name.beginsWith(BuiltInName::lessThan_))
-                {
-                    return &BuiltInFunction::kFunction_lessThan_1D1D;
-                }
-                break;
-            }
-            case 0xaec45456u:
-            {
-                if (name == BuiltInName::clamp_3C3C3C)
-                {
-                    return &BuiltInFunction::kFunction_clamp_3C3C3C;
-                }
-                break;
-            }
-            case 0xaf4ae965u:
-            {
-                if (name == BuiltInName::textureGradOffset_0Q2B2B2B2C)
-                {
-                    return &BuiltInFunction::kFunction_textureGradOffset_0Q2B2B2B2C;
-                }
-                break;
-            }
-            case 0xb087ded7u:
-            {
-                if (name == BuiltInName::textureProjLod_0V3B0B)
-                {
-                    return &BuiltInFunction::kFunction_textureProjLod_0V3B0B;
-                }
-                break;
-            }
-            case 0xb103ea38u:
-            {
-                if (name.length() == 7 && name.beginsWith(BuiltInName::cosh_))
-                {
-                    return &BuiltInFunction::kFunction_cosh_2B;
-                }
-                break;
-            }
-            case 0xb11b8a15u:
-            {
-                if (name.length() == 8 && name.beginsWith(BuiltInName::atanh_))
-                {
-                    return &BuiltInFunction::kFunction_atanh_0B;
-                }
-                break;
-            }
-            case 0xb190dd9cu:
-            {
-                if (name == BuiltInName::texelFetchOffset_0Q2C0C2C)
-                {
-                    return &BuiltInFunction::kFunction_texelFetchOffset_0Q2C0C2C;
-                }
-                break;
-            }
-            case 0xb3a4f203u:
-            {
-                if (name.length() == 12 && name.beginsWith(BuiltInName::transpose_))
-                {
-                    return &BuiltInFunction::kFunction_transpose_9B;
-                }
-                break;
-            }
-            case 0xb3da1777u:
-            {
-                if (name.length() == 14 && name.beginsWith(BuiltInName::rgb_2_yuv_))
-                {
-                    return &BuiltInFunction::kFunction_rgb_2_yuv_2B0G;
-                }
-                break;
-            }
-            case 0xb5ff7f5cu:
-            {
-                if (name.length() == 18 && name.beginsWith(BuiltInName::uintBitsToFloat_))
-                {
-                    return &BuiltInFunction::kFunction_uintBitsToFloat_2D;
-                }
-                break;
-            }
-            case 0xb6286939u:
-            {
-                if (name.length() == 17 && name.beginsWith(BuiltInName::outerProduct_))
-                {
-                    return &BuiltInFunction::kFunction_outerProduct_2B2B;
-                }
-                break;
-            }
-            case 0xb6a81eddu:
-            {
-                if (name == BuiltInName::textureProjGrad_0H2B1B1B)
-                {
-                    return &BuiltInFunction::kFunction_textureProjGrad_0H2B1B1B;
-                }
-                break;
-            }
-            case 0xb6c1d1ecu:
+            case 0x0cab6df1u:
             {
                 if (name == BuiltInName::mix_0B0B0E)
                 {
@@ -15080,311 +13340,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                 }
                 break;
             }
-            case 0xb6f9d1ebu:
-            {
-                if (name == BuiltInName::clamp_3D0D0D)
-                {
-                    return &BuiltInFunction::kFunction_clamp_3D0D0D;
-                }
-                break;
-            }
-            case 0xb7326e16u:
-            {
-                if (name.length() == 16 && name.beginsWith(BuiltInName::textureProj_))
-                {
-                    return &BuiltInFunction::kFunction_textureProj_0N3B;
-                }
-                break;
-            }
-            case 0xb91a42d3u:
-            {
-                if (name.length() == 16 && name.beginsWith(BuiltInName::textureProj_))
-                {
-                    return &BuiltInFunction::kFunction_textureProj_0I3B;
-                }
-                break;
-            }
-            case 0xb937c6f2u:
-            {
-                if (name.length() == 12 && name.beginsWith(BuiltInName::roundEven_))
-                {
-                    return &BuiltInFunction::kFunction_roundEven_1B;
-                }
-                break;
-            }
-            case 0xbb0a6cb5u:
-            {
-                if (name.length() == 17 && name.beginsWith(BuiltInName::unpackHalf2x16_))
-                {
-                    return &BuiltInFunction::kFunction_unpackHalf2x16_0D;
-                }
-                break;
-            }
-            case 0xbb36aeedu:
-            {
-                if (name == BuiltInName::textureProjLod_0P3B0B)
-                {
-                    return &BuiltInFunction::kFunction_textureProjLod_0P3B0B;
-                }
-                break;
-            }
-            case 0xbb7088edu:
-            {
-                if (name.length() == 7 && name.beginsWith(BuiltInName::sign_))
-                {
-                    return &BuiltInFunction::kFunction_sign_0C;
-                }
-                break;
-            }
-            case 0xbc4bed83u:
-            {
-                if (name.length() == 18 && name.beginsWith(BuiltInName::lessThanEqual_))
-                {
-                    return &BuiltInFunction::kFunction_lessThanEqual_1D1D;
-                }
-                break;
-            }
-            case 0xbd22ce5eu:
-            {
-                if (name == BuiltInName::textureLodOffset_0I2B0B2C)
-                {
-                    return &BuiltInFunction::kFunction_textureLodOffset_0I2B0B2C;
-                }
-                break;
-            }
-            case 0xbdf50df5u:
-            {
-                if (name.length() == 8 && name.beginsWith(BuiltInName::min_))
-                {
-                    return &BuiltInFunction::kFunction_min_0C0C;
-                }
-                break;
-            }
-            case 0xbe73df8fu:
-            {
-                if (name == BuiltInName::textureProjOffset_0Z3B1C)
-                {
-                    return &BuiltInFunction::kFunction_textureProjOffset_0Z3B1C;
-                }
-                break;
-            }
-            case 0xbed19cffu:
-            {
-                if (name.length() == 12 && name.beginsWith(BuiltInName::texture_))
-                {
-                    return &BuiltInFunction::kFunction_texture_0H1B;
-                }
-                break;
-            }
-            case 0xbf14e45au:
-            {
-                if (name.length() == 8 && name.beginsWith(BuiltInName::atanh_))
-                {
-                    return &BuiltInFunction::kFunction_atanh_3B;
-                }
-                break;
-            }
-            case 0xbfd16903u:
-            {
-                if (name.length() == 15 && name.beginsWith(BuiltInName::packHalf2x16_))
-                {
-                    return &BuiltInFunction::kFunction_packHalf2x16_1B;
-                }
-                break;
-            }
-            case 0xc011536du:
-            {
-                if (name.length() == 10 && name.beginsWith(BuiltInName::equal_))
-                {
-                    return &BuiltInFunction::kFunction_equal_1D1D;
-                }
-                break;
-            }
-            case 0xc01ff0f1u:
-            {
-                if (name == BuiltInName::texelFetch_0X2C0C)
-                {
-                    return &BuiltInFunction::kFunction_texelFetch_0X2C0C;
-                }
-                break;
-            }
-            case 0xc114b5b5u:
-            {
-                if (name.length() == 8 && name.beginsWith(BuiltInName::acosh_))
-                {
-                    return &BuiltInFunction::kFunction_acosh_0B;
-                }
-                break;
-            }
-            case 0xc1997dcfu:
-            {
-                if (name.length() == 16 && name.beginsWith(BuiltInName::textureSize_))
-                {
-                    return &BuiltInFunction::kFunction_textureSize_0K0C;
-                }
-                break;
-            }
-            case 0xc282793bu:
-            {
-                if (name.length() == 16 && name.beginsWith(BuiltInName::textureProj_))
-                {
-                    return &BuiltInFunction::kFunction_textureProj_0Q3B;
-                }
-                break;
-            }
-            case 0xc2b695f3u:
-            {
-                if (name == BuiltInName::clamp_2C0C0C)
-                {
-                    return &BuiltInFunction::kFunction_clamp_2C0C0C;
-                }
-                break;
-            }
-            case 0xc2d9edc8u:
-            {
-                if (name.length() == 12 && name.beginsWith(BuiltInName::transpose_))
-                {
-                    return &BuiltInFunction::kFunction_transpose_FB;
-                }
-                break;
-            }
-            case 0xc2ff54b3u:
-            {
-                if (name.length() == 8 && name.beginsWith(BuiltInName::max_))
-                {
-                    return &BuiltInFunction::kFunction_max_1D1D;
-                }
-                break;
-            }
-            case 0xc336cfd3u:
-            {
-                if (name.length() == 12 && name.beginsWith(BuiltInName::texture_))
-                {
-                    return &BuiltInFunction::kFunction_texture_0L1B;
-                }
-                break;
-            }
-            case 0xc36ef945u:
-            {
-                if (name.length() == 17 && name.beginsWith(BuiltInName::outerProduct_))
-                {
-                    return &BuiltInFunction::kFunction_outerProduct_3B3B;
-                }
-                break;
-            }
-            case 0xc3bc1280u:
-            {
-                if (name == BuiltInName::clamp_0D0D0D)
-                {
-                    return &BuiltInFunction::kFunction_clamp_0D0D0D;
-                }
-                break;
-            }
-            case 0xc3be50cau:
-            {
-                if (name.length() == 12 && name.beginsWith(BuiltInName::texture_))
-                {
-                    return &BuiltInFunction::kFunction_texture_0a3B;
-                }
-                break;
-            }
-            case 0xc421c37eu:
-            {
-                if (name.length() == 17 && name.beginsWith(BuiltInName::outerProduct_))
-                {
-                    return &BuiltInFunction::kFunction_outerProduct_2B1B;
-                }
-                break;
-            }
-            case 0xc53620b2u:
-            {
-                if (name.length() == 13 && name.beginsWith(BuiltInName::notEqual_))
-                {
-                    return &BuiltInFunction::kFunction_notEqual_3D3D;
-                }
-                break;
-            }
-            case 0xc5462e10u:
-            {
-                if (name == BuiltInName::textureGradOffset_0V2B2B2B2C)
-                {
-                    return &BuiltInFunction::kFunction_textureGradOffset_0V2B2B2B2C;
-                }
-                break;
-            }
-            case 0xc5a2d6f5u:
-            {
-                if (name.length() == 12 && name.beginsWith(BuiltInName::texture_))
-                {
-                    return &BuiltInFunction::kFunction_texture_0N1B;
-                }
-                break;
-            }
-            case 0xc6608dc1u:
-            {
-                if (name == BuiltInName::texelFetchOffset_0V2C0C2C)
-                {
-                    return &BuiltInFunction::kFunction_texelFetchOffset_0V2C0C2C;
-                }
-                break;
-            }
-            case 0xc799e0bcu:
-            {
-                if (name.length() == 16 && name.beginsWith(BuiltInName::textureSize_))
-                {
-                    return &BuiltInFunction::kFunction_textureSize_0R0C;
-                }
-                break;
-            }
-            case 0xc86a5444u:
-            {
-                if (name.length() == 16 && name.beginsWith(BuiltInName::textureProj_))
-                {
-                    return &BuiltInFunction::kFunction_textureProj_0L3B;
-                }
-                break;
-            }
-            case 0xca4a7880u:
-            {
-                if (name.length() == 8 && name.beginsWith(BuiltInName::asinh_))
-                {
-                    return &BuiltInFunction::kFunction_asinh_0B;
-                }
-                break;
-            }
-            case 0xca53d58au:
-            {
-                if (name == BuiltInName::textureProjGrad_0Z3B1B1B)
-                {
-                    return &BuiltInFunction::kFunction_textureProjGrad_0Z3B1B1B;
-                }
-                break;
-            }
-            case 0xcbaf14edu:
-            {
-                if (name == BuiltInName::textureOffset_0I2B2C)
-                {
-                    return &BuiltInFunction::kFunction_textureOffset_0I2B2C;
-                }
-                break;
-            }
-            case 0xcbc7aa0du:
-            {
-                if (name.length() == 12 && name.beginsWith(BuiltInName::transpose_))
-                {
-                    return &BuiltInFunction::kFunction_transpose_7B;
-                }
-                break;
-            }
-            case 0xcbf66d8du:
-            {
-                if (name == BuiltInName::textureProjGradOffset_0P3B1B1B1C)
-                {
-                    return &BuiltInFunction::kFunction_textureProjGradOffset_0P3B1B1B1C;
-                }
-                break;
-            }
-            case 0xcc917983u:
+            case 0x0cacc094u:
             {
                 if (name == BuiltInName::mix_3B3B3E)
                 {
@@ -15392,511 +13348,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                 }
                 break;
             }
-            case 0xccac0fbcu:
-            {
-                if (name.length() == 18 && name.beginsWith(BuiltInName::floatBitsToUint_))
-                {
-                    return &BuiltInFunction::kFunction_floatBitsToUint_2B;
-                }
-                break;
-            }
-            case 0xcd2de632u:
-            {
-                if (name.length() == 16 && name.beginsWith(BuiltInName::textureSize_))
-                {
-                    return &BuiltInFunction::kFunction_textureSize_0P0C;
-                }
-                break;
-            }
-            case 0xce15eaeau:
-            {
-                if (name.length() == 13 && name.beginsWith(BuiltInName::notEqual_))
-                {
-                    return &BuiltInFunction::kFunction_notEqual_2D2D;
-                }
-                break;
-            }
-            case 0xcf0e0ffau:
-            {
-                if (name.length() == 8 && name.beginsWith(BuiltInName::acosh_))
-                {
-                    return &BuiltInFunction::kFunction_acosh_3B;
-                }
-                break;
-            }
-            case 0xd04f80efu:
-            {
-                if (name == BuiltInName::textureGradOffset_0Z2B1B1B1C)
-                {
-                    return &BuiltInFunction::kFunction_textureGradOffset_0Z2B1B1B1C;
-                }
-                break;
-            }
-            case 0xd095b9adu:
-            {
-                if (name.length() == 16 && name.beginsWith(BuiltInName::textureSize_))
-                {
-                    return &BuiltInFunction::kFunction_textureSize_0Q0C;
-                }
-                break;
-            }
-            case 0xd1427cfeu:
-            {
-                if (name.length() == 21 && name.beginsWith(BuiltInName::greaterThanEqual_))
-                {
-                    return &BuiltInFunction::kFunction_greaterThanEqual_3D3D;
-                }
-                break;
-            }
-            case 0xd43b6ae0u:
-            {
-                if (name.length() == 8 && name.beginsWith(BuiltInName::isnan_))
-                {
-                    return &BuiltInFunction::kFunction_isnan_0B;
-                }
-                break;
-            }
-            case 0xd45005c2u:
-            {
-                if (name == BuiltInName::textureGrad_0Z2B1B1B)
-                {
-                    return &BuiltInFunction::kFunction_textureGrad_0Z2B1B1B;
-                }
-                break;
-            }
-            case 0xd6961c9au:
-            {
-                if (name.length() == 16 && name.beginsWith(BuiltInName::textureSize_))
-                {
-                    return &BuiltInFunction::kFunction_textureSize_0X0C;
-                }
-                break;
-            }
-            case 0xd75220b5u:
-            {
-                if (name.length() == 10 && name.beginsWith(BuiltInName::equal_))
-                {
-                    return &BuiltInFunction::kFunction_equal_3D3D;
-                }
-                break;
-            }
-            case 0xd763566fu:
-            {
-                if (name.length() == 14 && name.beginsWith(BuiltInName::determinant_))
-                {
-                    return &BuiltInFunction::kFunction_determinant_5B;
-                }
-                break;
-            }
-            case 0xd7cedc37u:
-            {
-                if (name.length() == 19 && name.beginsWith(BuiltInName::matrixCompMult_))
-                {
-                    return &BuiltInFunction::kFunction_matrixCompMult_DBDB;
-                }
-                break;
-            }
-            case 0xd846ba4au:
-            {
-                if (name == BuiltInName::textureLod_0K2B0B)
-                {
-                    return &BuiltInFunction::kFunction_textureLod_0K2B0B;
-                }
-                break;
-            }
-            case 0xd8a05eaeu:
-            {
-                if (name.length() == 21 && name.beginsWith(BuiltInName::greaterThanEqual_))
-                {
-                    return &BuiltInFunction::kFunction_greaterThanEqual_1D1D;
-                }
-                break;
-            }
-            case 0xd934e233u:
-            {
-                if (name.length() == 16 && name.beginsWith(BuiltInName::textureProj_))
-                {
-                    return &BuiltInFunction::kFunction_textureProj_0N2B;
-                }
-                break;
-            }
-            case 0xda6f4215u:
-            {
-                if (name == BuiltInName::texelFetch_0U1C0C)
-                {
-                    return &BuiltInFunction::kFunction_texelFetch_0U1C0C;
-                }
-                break;
-            }
-            case 0xdb066aedu:
-            {
-                if (name.length() == 7 && name.beginsWith(BuiltInName::cosh_))
-                {
-                    return &BuiltInFunction::kFunction_cosh_3B;
-                }
-                break;
-            }
-            case 0xdb3a3b0fu:
-            {
-                if (name.length() == 12 && name.beginsWith(BuiltInName::roundEven_))
-                {
-                    return &BuiltInFunction::kFunction_roundEven_0B;
-                }
-                break;
-            }
-            case 0xdb6a1034u:
-            {
-                if (name.length() == 12 && name.beginsWith(BuiltInName::texture_))
-                {
-                    return &BuiltInFunction::kFunction_texture_0U1B;
-                }
-                break;
-            }
-            case 0xdb880a9du:
-            {
-                if (name.length() == 16 && name.beginsWith(BuiltInName::textureSize_))
-                {
-                    return &BuiltInFunction::kFunction_textureSize_0a0C;
-                }
-                break;
-            }
-            case 0xdc7d7139u:
-            {
-                if (name.length() == 8 && name.beginsWith(BuiltInName::round_))
-                {
-                    return &BuiltInFunction::kFunction_round_2B;
-                }
-                break;
-            }
-            case 0xdce2d84eu:
-            {
-                if (name == BuiltInName::texelFetch_0L1C0C)
-                {
-                    return &BuiltInFunction::kFunction_texelFetch_0L1C0C;
-                }
-                break;
-            }
-            case 0xddbc72f5u:
-            {
-                if (name == BuiltInName::textureProjLodOffset_0P2B0B1C)
-                {
-                    return &BuiltInFunction::kFunction_textureProjLodOffset_0P2B0B1C;
-                }
-                break;
-            }
-            case 0xdf19eb73u:
-            {
-                if (name == BuiltInName::textureProjLod_0Z3B0B)
-                {
-                    return &BuiltInFunction::kFunction_textureProjLod_0Z3B0B;
-                }
-                break;
-            }
-            case 0xdf2d350bu:
-            {
-                if (name.length() == 18 && name.beginsWith(BuiltInName::lessThanEqual_))
-                {
-                    return &BuiltInFunction::kFunction_lessThanEqual_3D3D;
-                }
-                break;
-            }
-            case 0xdf3e61ddu:
-            {
-                if (name == BuiltInName::textureProjOffset_0P3B1C)
-                {
-                    return &BuiltInFunction::kFunction_textureProjOffset_0P3B1C;
-                }
-                break;
-            }
-            case 0xe0101092u:
-            {
-                if (name == BuiltInName::textureGradOffset_0H1B1B1B1C)
-                {
-                    return &BuiltInFunction::kFunction_textureGradOffset_0H1B1B1B1C;
-                }
-                break;
-            }
-            case 0xe06efabbu:
-            {
-                if (name.length() == 14 && name.beginsWith(BuiltInName::determinant_))
-                {
-                    return &BuiltInFunction::kFunction_determinant_AB;
-                }
-                break;
-            }
-            case 0xe07acfa6u:
-            {
-                if (name.length() == 6 && name.beginsWith(BuiltInName::abs_))
-                {
-                    return &BuiltInFunction::kFunction_abs_2C;
-                }
-                break;
-            }
-            case 0xe0e2d862u:
-            {
-                if (name == BuiltInName::textureProjGrad_0U2B1B1B)
-                {
-                    return &BuiltInFunction::kFunction_textureProjGrad_0U2B1B1B;
-                }
-                break;
-            }
-            case 0xe12111f7u:
-            {
-                if (name.length() == 18 && name.beginsWith(BuiltInName::unpackUnorm2x16_))
-                {
-                    return &BuiltInFunction::kFunction_unpackUnorm2x16_0D;
-                }
-                break;
-            }
-            case 0xe17cbae1u:
-            {
-                if (name == BuiltInName::textureGrad_0K2B1B1B)
-                {
-                    return &BuiltInFunction::kFunction_textureGrad_0K2B1B1B;
-                }
-                break;
-            }
-            case 0xe3f81a12u:
-            {
-                if (name.length() == 16 && name.beginsWith(BuiltInName::textureProj_))
-                {
-                    return &BuiltInFunction::kFunction_textureProj_0U2B;
-                }
-                break;
-            }
-            case 0xe4231ee7u:
-            {
-                if (name.length() == 12 && name.beginsWith(BuiltInName::texture_))
-                {
-                    return &BuiltInFunction::kFunction_texture_0P1B;
-                }
-                break;
-            }
-            case 0xe45eb3b3u:
-            {
-                if (name.length() == 8 && name.beginsWith(BuiltInName::max_))
-                {
-                    return &BuiltInFunction::kFunction_max_0D0D;
-                }
-                break;
-            }
-            case 0xe707edcau:
-            {
-                if (name == BuiltInName::textureGradOffset_0P1B1B1B1C)
-                {
-                    return &BuiltInFunction::kFunction_textureGradOffset_0P1B1B1B1C;
-                }
-                break;
-            }
-            case 0xe732d280u:
-            {
-                if (name.length() == 8 && name.beginsWith(BuiltInName::max_))
-                {
-                    return &BuiltInFunction::kFunction_max_3D0D;
-                }
-                break;
-            }
-            case 0xe73def97u:
-            {
-                if (name.length() == 16 && name.beginsWith(BuiltInName::packUnorm2x16_))
-                {
-                    return &BuiltInFunction::kFunction_packUnorm2x16_1B;
-                }
-                break;
-            }
-            case 0xe7a84898u:
-            {
-                if (name == BuiltInName::textureGrad_0U1B1B1B)
-                {
-                    return &BuiltInFunction::kFunction_textureGrad_0U1B1B1B;
-                }
-                break;
-            }
-            case 0xe99c3768u:
-            {
-                if (name.length() == 8 && name.beginsWith(BuiltInName::max_))
-                {
-                    return &BuiltInFunction::kFunction_max_3C0C;
-                }
-                break;
-            }
-            case 0xea76cb7eu:
-            {
-                if (name.length() == 8 && name.beginsWith(BuiltInName::round_))
-                {
-                    return &BuiltInFunction::kFunction_round_1B;
-                }
-                break;
-            }
-            case 0xeb86dc53u:
-            {
-                if (name == BuiltInName::clamp_3D3D3D)
-                {
-                    return &BuiltInFunction::kFunction_clamp_3D3D3D;
-                }
-                break;
-            }
-            case 0xeda8ca9eu:
-            {
-                if (name == BuiltInName::textureProjLodOffset_0U2B0B1C)
-                {
-                    return &BuiltInFunction::kFunction_textureProjLodOffset_0U2B0B1C;
-                }
-                break;
-            }
-            case 0xeda92de6u:
-            {
-                if (name.length() == 17 && name.beginsWith(BuiltInName::floatBitsToInt_))
-                {
-                    return &BuiltInFunction::kFunction_floatBitsToInt_3B;
-                }
-                break;
-            }
-            case 0xee116f63u:
-            {
-                if (name == BuiltInName::textureLod_0U1B0B)
-                {
-                    return &BuiltInFunction::kFunction_textureLod_0U1B0B;
-                }
-                break;
-            }
-            case 0xef12ada0u:
-            {
-                if (name == BuiltInName::textureProjGradOffset_0H2B1B1B1C)
-                {
-                    return &BuiltInFunction::kFunction_textureProjGradOffset_0H2B1B1B1C;
-                }
-                break;
-            }
-            case 0xf058b46au:
-            {
-                if (name == BuiltInName::textureProjLod_0I3B0B)
-                {
-                    return &BuiltInFunction::kFunction_textureProjLod_0I3B0B;
-                }
-                break;
-            }
-            case 0xf0742d11u:
-            {
-                if (name.length() == 6 && name.beginsWith(BuiltInName::abs_))
-                {
-                    return &BuiltInFunction::kFunction_abs_1C;
-                }
-                break;
-            }
-            case 0xf1108417u:
-            {
-                if (name.length() == 8 && name.beginsWith(BuiltInName::acosh_))
-                {
-                    return &BuiltInFunction::kFunction_acosh_2B;
-                }
-                break;
-            }
-            case 0xf36934a7u:
-            {
-                if (name.length() == 17 && name.beginsWith(BuiltInName::outerProduct_))
-                {
-                    return &BuiltInFunction::kFunction_outerProduct_3B1B;
-                }
-                break;
-            }
-            case 0xf44cf935u:
-            {
-                if (name.length() == 8 && name.beginsWith(BuiltInName::asinh_))
-                {
-                    return &BuiltInFunction::kFunction_asinh_1B;
-                }
-                break;
-            }
-            case 0xf486ed4eu:
-            {
-                if (name.length() == 12 && name.beginsWith(BuiltInName::texture_))
-                {
-                    return &BuiltInFunction::kFunction_texture_0R2B;
-                }
-                break;
-            }
-            case 0xf4880c75u:
-            {
-                if (name.length() == 9 && name.beginsWith(BuiltInName::modf_))
-                {
-                    return &BuiltInFunction::kFunction_modf_2B2B;
-                }
-                break;
-            }
-            case 0xf48ef6a2u:
-            {
-                if (name == BuiltInName::textureLodOffset_0U1B0B1C)
-                {
-                    return &BuiltInFunction::kFunction_textureLodOffset_0U1B0B1C;
-                }
-                break;
-            }
-            case 0xf68d511bu:
-            {
-                if (name.length() == 19 && name.beginsWith(BuiltInName::matrixCompMult_))
-                {
-                    return &BuiltInFunction::kFunction_matrixCompMult_EBEB;
-                }
-                break;
-            }
-            case 0xf6ae9071u:
-            {
-                if (name.length() == 18 && name.beginsWith(BuiltInName::floatBitsToUint_))
-                {
-                    return &BuiltInFunction::kFunction_floatBitsToUint_3B;
-                }
-                break;
-            }
-            case 0xf6fdcb9bu:
-            {
-                if (name.length() == 8 && name.beginsWith(BuiltInName::max_))
-                {
-                    return &BuiltInFunction::kFunction_max_1C1C;
-                }
-                break;
-            }
-            case 0xf9c25078u:
-            {
-                if (name == BuiltInName::textureLod_0P1B0B)
-                {
-                    return &BuiltInFunction::kFunction_textureLod_0P1B0B;
-                }
-                break;
-            }
-            case 0xfad5c8c2u:
-            {
-                if (name.length() == 12 && name.beginsWith(BuiltInName::transpose_))
-                {
-                    return &BuiltInFunction::kFunction_transpose_DB;
-                }
-                break;
-            }
-            case 0xfb4c331fu:
-            {
-                if (name == BuiltInName::textureProjLodOffset_0U3B0B1C)
-                {
-                    return &BuiltInFunction::kFunction_textureProjLodOffset_0U3B0B1C;
-                }
-                break;
-            }
-            case 0xfb768e02u:
-            {
-                if (name == BuiltInName::texelFetch_0H1C0C)
-                {
-                    return &BuiltInFunction::kFunction_texelFetch_0H1C0C;
-                }
-                break;
-            }
-            case 0xfbc1e56fu:
-            {
-                if (name.length() == 12 && name.beginsWith(BuiltInName::transpose_))
-                {
-                    return &BuiltInFunction::kFunction_transpose_5B;
-                }
-                break;
-            }
-            case 0xfc8b17f5u:
+            case 0x0cafcf44u:
             {
                 if (name == BuiltInName::mix_1B1B1E)
                 {
@@ -15904,7 +13356,1139 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                 }
                 break;
             }
-            case 0xfcf90ed9u:
+            case 0x10703776u:
+            {
+                if (name.beginsWith(BuiltInName::tanh))
+                {
+                    ASSERT(name.length() == 7);
+                    return &BuiltInFunction::kFunction_tanh_3B;
+                }
+                break;
+            }
+            case 0x1071119bu:
+            {
+                if (name.beginsWith(BuiltInName::tanh))
+                {
+                    ASSERT(name.length() == 7);
+                    return &BuiltInFunction::kFunction_tanh_0B;
+                }
+                break;
+            }
+            case 0x10725bc1u:
+            {
+                if (name.beginsWith(BuiltInName::sinh))
+                {
+                    ASSERT(name.length() == 7);
+                    return &BuiltInFunction::kFunction_sinh_2B;
+                }
+                break;
+            }
+            case 0x1073328bu:
+            {
+                if (name.beginsWith(BuiltInName::sinh))
+                {
+                    ASSERT(name.length() == 7);
+                    return &BuiltInFunction::kFunction_sinh_1B;
+                }
+                break;
+            }
+            case 0x10733497u:
+            {
+                if (name.beginsWith(BuiltInName::tanh))
+                {
+                    ASSERT(name.length() == 7);
+                    return &BuiltInFunction::kFunction_tanh_1B;
+                }
+                break;
+            }
+            case 0x10755e8fu:
+            {
+                if (name.beginsWith(BuiltInName::sinh))
+                {
+                    ASSERT(name.length() == 7);
+                    return &BuiltInFunction::kFunction_sinh_0B;
+                }
+                break;
+            }
+            case 0x10759e30u:
+            {
+                if (name.beginsWith(BuiltInName::tanh))
+                {
+                    ASSERT(name.length() == 7);
+                    return &BuiltInFunction::kFunction_tanh_2B;
+                }
+                break;
+            }
+            case 0x1075b747u:
+            {
+                if (name.beginsWith(BuiltInName::sign))
+                {
+                    ASSERT(name.length() == 7);
+                    return &BuiltInFunction::kFunction_sign_1C;
+                }
+                break;
+            }
+            case 0x1076845du:
+            {
+                if (name.beginsWith(BuiltInName::cosh))
+                {
+                    ASSERT(name.length() == 7);
+                    return &BuiltInFunction::kFunction_cosh_0B;
+                }
+                break;
+            }
+            case 0x1077b440u:
+            {
+                if (name.beginsWith(BuiltInName::sinh))
+                {
+                    ASSERT(name.length() == 7);
+                    return &BuiltInFunction::kFunction_sinh_3B;
+                }
+                break;
+            }
+            case 0x10783ab9u:
+            {
+                if (name.beginsWith(BuiltInName::sign))
+                {
+                    ASSERT(name.length() == 7);
+                    return &BuiltInFunction::kFunction_sign_2C;
+                }
+                break;
+            }
+            case 0x1078bfd9u:
+            {
+                if (name.beginsWith(BuiltInName::cosh))
+                {
+                    ASSERT(name.length() == 7);
+                    return &BuiltInFunction::kFunction_cosh_1B;
+                }
+                break;
+            }
+            case 0x107abcf0u:
+            {
+                if (name.beginsWith(BuiltInName::sign))
+                {
+                    ASSERT(name.length() == 7);
+                    return &BuiltInFunction::kFunction_sign_3C;
+                }
+                break;
+            }
+            case 0x107b1a06u:
+            {
+                if (name.beginsWith(BuiltInName::cosh))
+                {
+                    ASSERT(name.length() == 7);
+                    return &BuiltInFunction::kFunction_cosh_2B;
+                }
+                break;
+            }
+            case 0x107bbfe5u:
+            {
+                if (name.beginsWith(BuiltInName::sign))
+                {
+                    ASSERT(name.length() == 7);
+                    return &BuiltInFunction::kFunction_sign_0C;
+                }
+                break;
+            }
+            case 0x107dba8bu:
+            {
+                if (name.beginsWith(BuiltInName::cosh))
+                {
+                    ASSERT(name.length() == 7);
+                    return &BuiltInFunction::kFunction_cosh_3B;
+                }
+                break;
+            }
+            case 0x10901551u:
+            {
+                if (name.beginsWith(BuiltInName::modf))
+                {
+                    ASSERT(name.length() == 9);
+                    return &BuiltInFunction::kFunction_modf_3B3B;
+                }
+                break;
+            }
+            case 0x10951ffeu:
+            {
+                if (name.beginsWith(BuiltInName::modf))
+                {
+                    ASSERT(name.length() == 9);
+                    return &BuiltInFunction::kFunction_modf_1B1B;
+                }
+                break;
+            }
+            case 0x1097fab5u:
+            {
+                if (name.beginsWith(BuiltInName::modf))
+                {
+                    ASSERT(name.length() == 9);
+                    return &BuiltInFunction::kFunction_modf_0B0B;
+                }
+                break;
+            }
+            case 0x109f44f5u:
+            {
+                if (name.beginsWith(BuiltInName::modf))
+                {
+                    ASSERT(name.length() == 9);
+                    return &BuiltInFunction::kFunction_modf_2B2B;
+                }
+                break;
+            }
+            case 0x1480271fu:
+            {
+                if (name.beginsWith(BuiltInName::asinh))
+                {
+                    ASSERT(name.length() == 8);
+                    return &BuiltInFunction::kFunction_asinh_2B;
+                }
+                break;
+            }
+            case 0x1480c6aeu:
+            {
+                if (name.beginsWith(BuiltInName::isnan))
+                {
+                    ASSERT(name.length() == 8);
+                    return &BuiltInFunction::kFunction_isnan_2B;
+                }
+                break;
+            }
+            case 0x1480c808u:
+            {
+                if (name.beginsWith(BuiltInName::round))
+                {
+                    ASSERT(name.length() == 8);
+                    return &BuiltInFunction::kFunction_round_0B;
+                }
+                break;
+            }
+            case 0x1482431bu:
+            {
+                if (name.beginsWith(BuiltInName::asinh))
+                {
+                    ASSERT(name.length() == 8);
+                    return &BuiltInFunction::kFunction_asinh_3B;
+                }
+                break;
+            }
+            case 0x14826e42u:
+            {
+                if (name.beginsWith(BuiltInName::trunc))
+                {
+                    ASSERT(name.length() == 8);
+                    return &BuiltInFunction::kFunction_trunc_0B;
+                }
+                break;
+            }
+            case 0x14832dbfu:
+            {
+                if (name.beginsWith(BuiltInName::round))
+                {
+                    ASSERT(name.length() == 8);
+                    return &BuiltInFunction::kFunction_round_3B;
+                }
+                break;
+            }
+            case 0x14834209u:
+            {
+                if (name.beginsWith(BuiltInName::trunc))
+                {
+                    ASSERT(name.length() == 8);
+                    return &BuiltInFunction::kFunction_trunc_3B;
+                }
+                break;
+            }
+            case 0x1484c8c8u:
+            {
+                if (name.beginsWith(BuiltInName::isinf))
+                {
+                    ASSERT(name.length() == 8);
+                    return &BuiltInFunction::kFunction_isinf_2B;
+                }
+                break;
+            }
+            case 0x1485660du:
+            {
+                if (name.beginsWith(BuiltInName::trunc))
+                {
+                    ASSERT(name.length() == 8);
+                    return &BuiltInFunction::kFunction_trunc_2B;
+                }
+                break;
+            }
+            case 0x14861f9fu:
+            {
+                if (name.beginsWith(BuiltInName::atanh))
+                {
+                    ASSERT(name.length() == 8);
+                    return &BuiltInFunction::kFunction_atanh_2B;
+                }
+                break;
+            }
+            case 0x148769adu:
+            {
+                if (name.beginsWith(BuiltInName::isinf))
+                {
+                    ASSERT(name.length() == 8);
+                    return &BuiltInFunction::kFunction_isinf_3B;
+                }
+                break;
+            }
+            case 0x1487c3c2u:
+            {
+                if (name.beginsWith(BuiltInName::trunc))
+                {
+                    ASSERT(name.length() == 8);
+                    return &BuiltInFunction::kFunction_trunc_1B;
+                }
+                break;
+            }
+            case 0x14884407u:
+            {
+                if (name.beginsWith(BuiltInName::isinf))
+                {
+                    ASSERT(name.length() == 8);
+                    return &BuiltInFunction::kFunction_isinf_0B;
+                }
+                break;
+            }
+            case 0x148878f0u:
+            {
+                if (name.beginsWith(BuiltInName::atanh))
+                {
+                    ASSERT(name.length() == 8);
+                    return &BuiltInFunction::kFunction_atanh_1B;
+                }
+                break;
+            }
+            case 0x14897423u:
+            {
+                if (name.beginsWith(BuiltInName::acosh))
+                {
+                    ASSERT(name.length() == 8);
+                    return &BuiltInFunction::kFunction_acosh_1B;
+                }
+                break;
+            }
+            case 0x148a680au:
+            {
+                if (name.beginsWith(BuiltInName::isinf))
+                {
+                    ASSERT(name.length() == 8);
+                    return &BuiltInFunction::kFunction_isinf_1B;
+                }
+                break;
+            }
+            case 0x148ae3f8u:
+            {
+                if (name.beginsWith(BuiltInName::isnan))
+                {
+                    ASSERT(name.length() == 8);
+                    return &BuiltInFunction::kFunction_isnan_3B;
+                }
+                break;
+            }
+            case 0x148b1badu:
+            {
+                if (name.beginsWith(BuiltInName::atanh))
+                {
+                    ASSERT(name.length() == 8);
+                    return &BuiltInFunction::kFunction_atanh_0B;
+                }
+                break;
+            }
+            case 0x148bf514u:
+            {
+                if (name.beginsWith(BuiltInName::atanh))
+                {
+                    ASSERT(name.length() == 8);
+                    return &BuiltInFunction::kFunction_atanh_3B;
+                }
+                break;
+            }
+            case 0x148c14feu:
+            {
+                if (name.beginsWith(BuiltInName::acosh))
+                {
+                    ASSERT(name.length() == 8);
+                    return &BuiltInFunction::kFunction_acosh_0B;
+                }
+                break;
+            }
+            case 0x148cac27u:
+            {
+                if (name.beginsWith(BuiltInName::asinh))
+                {
+                    ASSERT(name.length() == 8);
+                    return &BuiltInFunction::kFunction_asinh_0B;
+                }
+                break;
+            }
+            case 0x148cff1au:
+            {
+                if (name.beginsWith(BuiltInName::acosh))
+                {
+                    ASSERT(name.length() == 8);
+                    return &BuiltInFunction::kFunction_acosh_3B;
+                }
+                break;
+            }
+            case 0x148d4956u:
+            {
+                if (name.beginsWith(BuiltInName::isnan))
+                {
+                    ASSERT(name.length() == 8);
+                    return &BuiltInFunction::kFunction_isnan_0B;
+                }
+                break;
+            }
+            case 0x148dc6eeu:
+            {
+                if (name.beginsWith(BuiltInName::round))
+                {
+                    ASSERT(name.length() == 8);
+                    return &BuiltInFunction::kFunction_round_2B;
+                }
+                break;
+            }
+            case 0x148eac12u:
+            {
+                if (name.beginsWith(BuiltInName::round))
+                {
+                    ASSERT(name.length() == 8);
+                    return &BuiltInFunction::kFunction_round_1B;
+                }
+                break;
+            }
+            case 0x148f151fu:
+            {
+                if (name.beginsWith(BuiltInName::acosh))
+                {
+                    ASSERT(name.length() == 8);
+                    return &BuiltInFunction::kFunction_acosh_2B;
+                }
+                break;
+            }
+            case 0x148f4dfau:
+            {
+                if (name.beginsWith(BuiltInName::asinh))
+                {
+                    ASSERT(name.length() == 8);
+                    return &BuiltInFunction::kFunction_asinh_1B;
+                }
+                break;
+            }
+            case 0x148fe84bu:
+            {
+                if (name.beginsWith(BuiltInName::isnan))
+                {
+                    ASSERT(name.length() == 8);
+                    return &BuiltInFunction::kFunction_isnan_1B;
+                }
+                break;
+            }
+            case 0x14a4b126u:
+            {
+                if (name.beginsWith(BuiltInName::equal))
+                {
+                    ASSERT(name.length() == 10);
+                    return &BuiltInFunction::kFunction_equal_2D2D;
+                }
+                break;
+            }
+            case 0x14ac0278u:
+            {
+                if (name.beginsWith(BuiltInName::equal))
+                {
+                    ASSERT(name.length() == 10);
+                    return &BuiltInFunction::kFunction_equal_1D1D;
+                }
+                break;
+            }
+            case 0x14ad7597u:
+            {
+                if (name.beginsWith(BuiltInName::equal))
+                {
+                    ASSERT(name.length() == 10);
+                    return &BuiltInFunction::kFunction_equal_3D3D;
+                }
+                break;
+            }
+            case 0x14c00d68u:
+            {
+                if (name == BuiltInName::clamp_2C2C2C)
+                {
+                    return &BuiltInFunction::kFunction_clamp_2C2C2C;
+                }
+                break;
+            }
+            case 0x14c0acb1u:
+            {
+                if (name == BuiltInName::clamp_1D0D0D)
+                {
+                    return &BuiltInFunction::kFunction_clamp_1D0D0D;
+                }
+                break;
+            }
+            case 0x14c1bf46u:
+            {
+                if (name == BuiltInName::clamp_1C0C0C)
+                {
+                    return &BuiltInFunction::kFunction_clamp_1C0C0C;
+                }
+                break;
+            }
+            case 0x14c404a0u:
+            {
+                if (name == BuiltInName::clamp_0C0C0C)
+                {
+                    return &BuiltInFunction::kFunction_clamp_0C0C0C;
+                }
+                break;
+            }
+            case 0x14c4515bu:
+            {
+                if (name == BuiltInName::clamp_2D0D0D)
+                {
+                    return &BuiltInFunction::kFunction_clamp_2D0D0D;
+                }
+                break;
+            }
+            case 0x14c4b865u:
+            {
+                if (name == BuiltInName::clamp_3C0C0C)
+                {
+                    return &BuiltInFunction::kFunction_clamp_3C0C0C;
+                }
+                break;
+            }
+            case 0x14c57085u:
+            {
+                if (name == BuiltInName::clamp_1C1C1C)
+                {
+                    return &BuiltInFunction::kFunction_clamp_1C1C1C;
+                }
+                break;
+            }
+            case 0x14c61344u:
+            {
+                if (name == BuiltInName::clamp_1D1D1D)
+                {
+                    return &BuiltInFunction::kFunction_clamp_1D1D1D;
+                }
+                break;
+            }
+            case 0x14c9dd99u:
+            {
+                if (name == BuiltInName::clamp_2D2D2D)
+                {
+                    return &BuiltInFunction::kFunction_clamp_2D2D2D;
+                }
+                break;
+            }
+            case 0x14cae813u:
+            {
+                if (name == BuiltInName::clamp_3C3C3C)
+                {
+                    return &BuiltInFunction::kFunction_clamp_3C3C3C;
+                }
+                break;
+            }
+            case 0x14cb6e76u:
+            {
+                if (name == BuiltInName::clamp_3D0D0D)
+                {
+                    return &BuiltInFunction::kFunction_clamp_3D0D0D;
+                }
+                break;
+            }
+            case 0x14cc2e9au:
+            {
+                if (name == BuiltInName::clamp_2C0C0C)
+                {
+                    return &BuiltInFunction::kFunction_clamp_2C0C0C;
+                }
+                break;
+            }
+            case 0x14cc3941u:
+            {
+                if (name == BuiltInName::clamp_0D0D0D)
+                {
+                    return &BuiltInFunction::kFunction_clamp_0D0D0D;
+                }
+                break;
+            }
+            case 0x14ceb43eu:
+            {
+                if (name == BuiltInName::clamp_3D3D3D)
+                {
+                    return &BuiltInFunction::kFunction_clamp_3D3D3D;
+                }
+                break;
+            }
+            case 0x1ca06416u:
+            {
+                if (name.beginsWith(BuiltInName::inverse))
+                {
+                    ASSERT(name.length() == 10);
+                    return &BuiltInFunction::kFunction_inverse_5B;
+                }
+                break;
+            }
+            case 0x1ca0f080u:
+            {
+                if (name.beginsWith(BuiltInName::inverse))
+                {
+                    ASSERT(name.length() == 10);
+                    return &BuiltInFunction::kFunction_inverse_AB;
+                }
+                break;
+            }
+            case 0x1ca198d9u:
+            {
+                if (name.beginsWith(BuiltInName::inverse))
+                {
+                    ASSERT(name.length() == 10);
+                    return &BuiltInFunction::kFunction_inverse_FB;
+                }
+                break;
+            }
+            case 0x1cc0bf9eu:
+            {
+                if (name.beginsWith(BuiltInName::texture))
+                {
+                    ASSERT(name.length() == 12);
+                    return &BuiltInFunction::kFunction_texture_0S2B;
+                }
+                break;
+            }
+            case 0x1cc25663u:
+            {
+                if (name.beginsWith(BuiltInName::texture))
+                {
+                    ASSERT(name.length() == 12);
+                    return &BuiltInFunction::kFunction_texture_0K2B;
+                }
+                break;
+            }
+            case 0x1cc39501u:
+            {
+                if (name.beginsWith(BuiltInName::texture))
+                {
+                    ASSERT(name.length() == 12);
+                    return &BuiltInFunction::kFunction_texture_0V2B;
+                }
+                break;
+            }
+            case 0x1cc3d380u:
+            {
+                if (name.beginsWith(BuiltInName::texture))
+                {
+                    ASSERT(name.length() == 12);
+                    return &BuiltInFunction::kFunction_texture_0Z2B;
+                }
+                break;
+            }
+            case 0x1cc4bc63u:
+            {
+                if (name.beginsWith(BuiltInName::texture))
+                {
+                    ASSERT(name.length() == 12);
+                    return &BuiltInFunction::kFunction_texture_0I2B;
+                }
+                break;
+            }
+            case 0x1cc71e2fu:
+            {
+                if (name.beginsWith(BuiltInName::texture))
+                {
+                    ASSERT(name.length() == 12);
+                    return &BuiltInFunction::kFunction_texture_0Q2B;
+                }
+                break;
+            }
+            case 0x1cc75b2bu:
+            {
+                if (name.beginsWith(BuiltInName::texture))
+                {
+                    ASSERT(name.length() == 12);
+                    return &BuiltInFunction::kFunction_texture_0M1B;
+                }
+                break;
+            }
+            case 0x1cc8b086u:
+            {
+                if (name.beginsWith(BuiltInName::texture))
+                {
+                    ASSERT(name.length() == 12);
+                    return &BuiltInFunction::kFunction_texture_0b3B;
+                }
+                break;
+            }
+            case 0x1cc8e9a8u:
+            {
+                if (name.beginsWith(BuiltInName::texture))
+                {
+                    ASSERT(name.length() == 12);
+                    return &BuiltInFunction::kFunction_texture_0J2B;
+                }
+                break;
+            }
+            case 0x1cc8f192u:
+            {
+                if (name.beginsWith(BuiltInName::texture))
+                {
+                    ASSERT(name.length() == 12);
+                    return &BuiltInFunction::kFunction_texture_0W2B;
+                }
+                break;
+            }
+            case 0x1cc931d1u:
+            {
+                if (name.beginsWith(BuiltInName::texture))
+                {
+                    ASSERT(name.length() == 12);
+                    return &BuiltInFunction::kFunction_texture_0X2B;
+                }
+                break;
+            }
+            case 0x1ccbe1e6u:
+            {
+                if (name.beginsWith(BuiltInName::texture))
+                {
+                    ASSERT(name.length() == 12);
+                    return &BuiltInFunction::kFunction_texture_0H1B;
+                }
+                break;
+            }
+            case 0x1ccc3b2fu:
+            {
+                if (name.beginsWith(BuiltInName::texture))
+                {
+                    ASSERT(name.length() == 12);
+                    return &BuiltInFunction::kFunction_texture_0a3B;
+                }
+                break;
+            }
+            case 0x1ccc3cbfu:
+            {
+                if (name.beginsWith(BuiltInName::texture))
+                {
+                    ASSERT(name.length() == 12);
+                    return &BuiltInFunction::kFunction_texture_0L1B;
+                }
+                break;
+            }
+            case 0x1ccc5cd8u:
+            {
+                if (name == BuiltInName::texture_0N1B)
+                {
+                    return &BuiltInFunction::kFunction_texture_0N1B;
+                }
+                break;
+            }
+            case 0x1ccdb695u:
+            {
+                if (name.beginsWith(BuiltInName::texture))
+                {
+                    ASSERT(name.length() == 12);
+                    return &BuiltInFunction::kFunction_texture_0U1B;
+                }
+                break;
+            }
+            case 0x1cce4cd6u:
+            {
+                if (name.beginsWith(BuiltInName::texture))
+                {
+                    ASSERT(name.length() == 12);
+                    return &BuiltInFunction::kFunction_texture_0P1B;
+                }
+                break;
+            }
+            case 0x1ccf4520u:
+            {
+                if (name.beginsWith(BuiltInName::texture))
+                {
+                    ASSERT(name.length() == 12);
+                    return &BuiltInFunction::kFunction_texture_0R2B;
+                }
+                break;
+            }
+            case 0x20d0bc8cu:
+            {
+                if (name.beginsWith(BuiltInName::lessThan))
+                {
+                    ASSERT(name.length() == 13);
+                    return &BuiltInFunction::kFunction_lessThan_3D3D;
+                }
+                break;
+            }
+            case 0x20d2c382u:
+            {
+                if (name.beginsWith(BuiltInName::lessThan))
+                {
+                    ASSERT(name.length() == 13);
+                    return &BuiltInFunction::kFunction_lessThan_2D2D;
+                }
+                break;
+            }
+            case 0x20d59f47u:
+            {
+                if (name.beginsWith(BuiltInName::notEqual))
+                {
+                    ASSERT(name.length() == 13);
+                    return &BuiltInFunction::kFunction_notEqual_1D1D;
+                }
+                break;
+            }
+            case 0x20dae9e7u:
+            {
+                if (name.beginsWith(BuiltInName::lessThan))
+                {
+                    ASSERT(name.length() == 13);
+                    return &BuiltInFunction::kFunction_lessThan_1D1D;
+                }
+                break;
+            }
+            case 0x20dc53d0u:
+            {
+                if (name.beginsWith(BuiltInName::notEqual))
+                {
+                    ASSERT(name.length() == 13);
+                    return &BuiltInFunction::kFunction_notEqual_3D3D;
+                }
+                break;
+            }
+            case 0x20dcebb4u:
+            {
+                if (name.beginsWith(BuiltInName::notEqual))
+                {
+                    ASSERT(name.length() == 13);
+                    return &BuiltInFunction::kFunction_notEqual_2D2D;
+                }
+                break;
+            }
+            case 0x24c016b3u:
+            {
+                if (name.beginsWith(BuiltInName::roundEven))
+                {
+                    ASSERT(name.length() == 12);
+                    return &BuiltInFunction::kFunction_roundEven_3B;
+                }
+                break;
+            }
+            case 0x24c04563u:
+            {
+                if (name.beginsWith(BuiltInName::transpose))
+                {
+                    ASSERT(name.length() == 12);
+                    return &BuiltInFunction::kFunction_transpose_AB;
+                }
+                break;
+            }
+            case 0x24c2b5deu:
+            {
+                if (name.beginsWith(BuiltInName::roundEven))
+                {
+                    ASSERT(name.length() == 12);
+                    return &BuiltInFunction::kFunction_roundEven_2B;
+                }
+                break;
+            }
+            case 0x24c9ce28u:
+            {
+                if (name.beginsWith(BuiltInName::transpose))
+                {
+                    ASSERT(name.length() == 12);
+                    return &BuiltInFunction::kFunction_transpose_EB;
+                }
+                break;
+            }
+            case 0x24ca150au:
+            {
+                if (name.beginsWith(BuiltInName::transpose))
+                {
+                    ASSERT(name.length() == 12);
+                    return &BuiltInFunction::kFunction_transpose_6B;
+                }
+                break;
+            }
+            case 0x24caa0a8u:
+            {
+                if (name.beginsWith(BuiltInName::transpose))
+                {
+                    ASSERT(name.length() == 12);
+                    return &BuiltInFunction::kFunction_transpose_BB;
+                }
+                break;
+            }
+            case 0x24cb384cu:
+            {
+                if (name.beginsWith(BuiltInName::transpose))
+                {
+                    ASSERT(name.length() == 12);
+                    return &BuiltInFunction::kFunction_transpose_9B;
+                }
+                break;
+            }
+            case 0x24cb958eu:
+            {
+                if (name.beginsWith(BuiltInName::roundEven))
+                {
+                    ASSERT(name.length() == 12);
+                    return &BuiltInFunction::kFunction_roundEven_1B;
+                }
+                break;
+            }
+            case 0x24cc2056u:
+            {
+                if (name.beginsWith(BuiltInName::transpose))
+                {
+                    ASSERT(name.length() == 12);
+                    return &BuiltInFunction::kFunction_transpose_FB;
+                }
+                break;
+            }
+            case 0x24ccb677u:
+            {
+                if (name.beginsWith(BuiltInName::transpose))
+                {
+                    ASSERT(name.length() == 12);
+                    return &BuiltInFunction::kFunction_transpose_7B;
+                }
+                break;
+            }
+            case 0x24cdb8acu:
+            {
+                if (name.beginsWith(BuiltInName::roundEven))
+                {
+                    ASSERT(name.length() == 12);
+                    return &BuiltInFunction::kFunction_roundEven_0B;
+                }
+                break;
+            }
+            case 0x24cfa59eu:
+            {
+                if (name.beginsWith(BuiltInName::transpose))
+                {
+                    ASSERT(name.length() == 12);
+                    return &BuiltInFunction::kFunction_transpose_DB;
+                }
+                break;
+            }
+            case 0x24cfb971u:
+            {
+                if (name.beginsWith(BuiltInName::transpose))
+                {
+                    ASSERT(name.length() == 12);
+                    return &BuiltInFunction::kFunction_transpose_5B;
+                }
+                break;
+            }
+            case 0x24e7ca02u:
+            {
+                if (name.beginsWith(BuiltInName::yuv_2_rgb))
+                {
+                    ASSERT(name.length() == 14);
+                    return &BuiltInFunction::kFunction_yuv_2_rgb_2B0G;
+                }
+                break;
+            }
+            case 0x24eb3ad6u:
+            {
+                if (name.beginsWith(BuiltInName::rgb_2_yuv))
+                {
+                    ASSERT(name.length() == 14);
+                    return &BuiltInFunction::kFunction_rgb_2_yuv_2B0G;
+                }
+                break;
+            }
+            case 0x29102cb2u:
+            {
+                if (name == BuiltInName::texelFetch_0V2C0C)
+                {
+                    return &BuiltInFunction::kFunction_texelFetch_0V2C0C;
+                }
+                break;
+            }
+            case 0x2910700au:
+            {
+                if (name == BuiltInName::textureLod_0X2B0B)
+                {
+                    return &BuiltInFunction::kFunction_textureLod_0X2B0B;
+                }
+                break;
+            }
+            case 0x29112a03u:
+            {
+                if (name == BuiltInName::textureLod_0Q2B0B)
+                {
+                    return &BuiltInFunction::kFunction_textureLod_0Q2B0B;
+                }
+                break;
+            }
+            case 0x2911720eu:
+            {
+                if (name == BuiltInName::texelFetch_0Q2C0C)
+                {
+                    return &BuiltInFunction::kFunction_texelFetch_0Q2C0C;
+                }
+                break;
+            }
+            case 0x29128f3eu:
+            {
+                if (name == BuiltInName::texelFetch_0P1C0C)
+                {
+                    return &BuiltInFunction::kFunction_texelFetch_0P1C0C;
+                }
+                break;
+            }
+            case 0x29133cc9u:
+            {
+                if (name == BuiltInName::textureLod_0V2B0B)
+                {
+                    return &BuiltInFunction::kFunction_textureLod_0V2B0B;
+                }
+                break;
+            }
+            case 0x29140228u:
+            {
+                if (name == BuiltInName::texelFetch_0M1C0C)
+                {
+                    return &BuiltInFunction::kFunction_texelFetch_0M1C0C;
+                }
+                break;
+            }
+            case 0x29144470u:
+            {
+                if (name == BuiltInName::texelFetch_0S2C0C)
+                {
+                    return &BuiltInFunction::kFunction_texelFetch_0S2C0C;
+                }
+                break;
+            }
+            case 0x2914cd7au:
+            {
+                if (name == BuiltInName::textureLod_0S2B0B)
+                {
+                    return &BuiltInFunction::kFunction_textureLod_0S2B0B;
+                }
+                break;
+            }
+            case 0x2916234cu:
+            {
+                if (name == BuiltInName::textureLod_0J2B0B)
+                {
+                    return &BuiltInFunction::kFunction_textureLod_0J2B0B;
+                }
+                break;
+            }
+            case 0x29166bccu:
+            {
+                if (name == BuiltInName::textureLod_0H1B0B)
+                {
+                    return &BuiltInFunction::kFunction_textureLod_0H1B0B;
+                }
+                break;
+            }
+            case 0x291771ddu:
+            {
+                if (name == BuiltInName::texelFetch_0I2C0C)
+                {
+                    return &BuiltInFunction::kFunction_texelFetch_0I2C0C;
+                }
+                break;
+            }
+            case 0x2919999du:
+            {
+                if (name == BuiltInName::textureLod_0R2B0B)
+                {
+                    return &BuiltInFunction::kFunction_textureLod_0R2B0B;
+                }
+                break;
+            }
+            case 0x291a3c8bu:
+            {
+                if (name == BuiltInName::texelFetch_0K2C0C)
+                {
+                    return &BuiltInFunction::kFunction_texelFetch_0K2C0C;
+                }
+                break;
+            }
+            case 0x291a6956u:
+            {
+                if (name == BuiltInName::textureLod_0W2B0B)
+                {
+                    return &BuiltInFunction::kFunction_textureLod_0W2B0B;
+                }
+                break;
+            }
+            case 0x291a77ccu:
+            {
+                if (name == BuiltInName::textureLod_0I2B0B)
+                {
+                    return &BuiltInFunction::kFunction_textureLod_0I2B0B;
+                }
+                break;
+            }
+            case 0x291c010eu:
+            {
+                if (name == BuiltInName::texelFetch_0X2C0C)
+                {
+                    return &BuiltInFunction::kFunction_texelFetch_0X2C0C;
+                }
+                break;
+            }
+            case 0x291d8e21u:
+            {
+                if (name == BuiltInName::textureLod_0K2B0B)
+                {
+                    return &BuiltInFunction::kFunction_textureLod_0K2B0B;
+                }
+                break;
+            }
+            case 0x291da4e1u:
+            {
+                if (name == BuiltInName::texelFetch_0U1C0C)
+                {
+                    return &BuiltInFunction::kFunction_texelFetch_0U1C0C;
+                }
+                break;
+            }
+            case 0x291dc663u:
+            {
+                if (name == BuiltInName::texelFetch_0L1C0C)
+                {
+                    return &BuiltInFunction::kFunction_texelFetch_0L1C0C;
+                }
+                break;
+            }
+            case 0x291eee75u:
+            {
+                if (name == BuiltInName::textureLod_0U1B0B)
+                {
+                    return &BuiltInFunction::kFunction_textureLod_0U1B0B;
+                }
+                break;
+            }
+            case 0x291f9c5du:
+            {
+                if (name == BuiltInName::textureLod_0P1B0B)
+                {
+                    return &BuiltInFunction::kFunction_textureLod_0P1B0B;
+                }
+                break;
+            }
+            case 0x291fb96au:
+            {
+                if (name == BuiltInName::texelFetch_0H1C0C)
+                {
+                    return &BuiltInFunction::kFunction_texelFetch_0H1C0C;
+                }
+                break;
+            }
+            case 0x291fc149u:
             {
                 if (name == BuiltInName::textureLod_0Z2B0B)
                 {
@@ -15912,19 +14496,1640 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                 }
                 break;
             }
-            case 0xfe3deb95u:
+            case 0x2ce6e60cu:
             {
-                if (name.length() == 8 && name.beginsWith(BuiltInName::isnan_))
+                if (name.beginsWith(BuiltInName::textureSize))
                 {
-                    return &BuiltInFunction::kFunction_isnan_1B;
+                    ASSERT(name.length() == 14);
+                    return &BuiltInFunction::kFunction_textureSize_0Y;
                 }
                 break;
             }
-            case 0xfe5d9a62u:
+            case 0x2ce73febu:
+            {
+                if (name.beginsWith(BuiltInName::textureSize))
+                {
+                    ASSERT(name.length() == 14);
+                    return &BuiltInFunction::kFunction_textureSize_0T;
+                }
+                break;
+            }
+            case 0x2ce7c017u:
+            {
+                if (name.beginsWith(BuiltInName::textureSize))
+                {
+                    ASSERT(name.length() == 14);
+                    return &BuiltInFunction::kFunction_textureSize_0O;
+                }
+                break;
+            }
+            case 0x2ce9e97du:
+            {
+                if (name.beginsWith(BuiltInName::determinant))
+                {
+                    ASSERT(name.length() == 14);
+                    return &BuiltInFunction::kFunction_determinant_FB;
+                }
+                break;
+            }
+            case 0x2ced705au:
+            {
+                if (name.beginsWith(BuiltInName::determinant))
+                {
+                    ASSERT(name.length() == 14);
+                    return &BuiltInFunction::kFunction_determinant_5B;
+                }
+                break;
+            }
+            case 0x2cee0c54u:
+            {
+                if (name.beginsWith(BuiltInName::determinant))
+                {
+                    ASSERT(name.length() == 14);
+                    return &BuiltInFunction::kFunction_determinant_AB;
+                }
+                break;
+            }
+            case 0x2d005187u:
+            {
+                if (name.beginsWith(BuiltInName::textureProj))
+                {
+                    ASSERT(name.length() == 16);
+                    return &BuiltInFunction::kFunction_textureProj_0U3B;
+                }
+                break;
+            }
+            case 0x2d007125u:
+            {
+                if (name.beginsWith(BuiltInName::textureSize))
+                {
+                    ASSERT(name.length() == 16);
+                    return &BuiltInFunction::kFunction_textureSize_0I0C;
+                }
+                break;
+            }
+            case 0x2d00b7aau:
+            {
+                if (name.beginsWith(BuiltInName::textureSize))
+                {
+                    ASSERT(name.length() == 16);
+                    return &BuiltInFunction::kFunction_textureSize_0M0C;
+                }
+                break;
+            }
+            case 0x2d00dc41u:
+            {
+                if (name.beginsWith(BuiltInName::textureProj))
+                {
+                    ASSERT(name.length() == 16);
+                    return &BuiltInFunction::kFunction_textureProj_0P3B;
+                }
+                break;
+            }
+            case 0x2d015791u:
+            {
+                if (name.beginsWith(BuiltInName::textureSize))
+                {
+                    ASSERT(name.length() == 16);
+                    return &BuiltInFunction::kFunction_textureSize_0U0C;
+                }
+                break;
+            }
+            case 0x2d026f5fu:
+            {
+                if (name.beginsWith(BuiltInName::greaterThan))
+                {
+                    ASSERT(name.length() == 16);
+                    return &BuiltInFunction::kFunction_greaterThan_3D3D;
+                }
+                break;
+            }
+            case 0x2d02d8e9u:
+            {
+                if (name.beginsWith(BuiltInName::greaterThan))
+                {
+                    ASSERT(name.length() == 16);
+                    return &BuiltInFunction::kFunction_greaterThan_1D1D;
+                }
+                break;
+            }
+            case 0x2d02de80u:
+            {
+                if (name.beginsWith(BuiltInName::textureProj))
+                {
+                    ASSERT(name.length() == 16);
+                    return &BuiltInFunction::kFunction_textureProj_0H2B;
+                }
+                break;
+            }
+            case 0x2d037c4cu:
+            {
+                if (name.beginsWith(BuiltInName::textureProj))
+                {
+                    ASSERT(name.length() == 16);
+                    return &BuiltInFunction::kFunction_textureProj_0P2B;
+                }
+                break;
+            }
+            case 0x2d03b1f6u:
+            {
+                if (name.beginsWith(BuiltInName::greaterThan))
+                {
+                    ASSERT(name.length() == 16);
+                    return &BuiltInFunction::kFunction_greaterThan_2D2D;
+                }
+                break;
+            }
+            case 0x2d03e3dau:
+            {
+                if (name.beginsWith(BuiltInName::textureSize))
+                {
+                    ASSERT(name.length() == 16);
+                    return &BuiltInFunction::kFunction_textureSize_0J0C;
+                }
+                break;
+            }
+            case 0x2d03fc9du:
+            {
+                if (name.beginsWith(BuiltInName::textureProj))
+                {
+                    ASSERT(name.length() == 16);
+                    return &BuiltInFunction::kFunction_textureProj_0V3B;
+                }
+                break;
+            }
+            case 0x2d04b5f4u:
+            {
+                if (name.beginsWith(BuiltInName::textureSize))
+                {
+                    ASSERT(name.length() == 16);
+                    return &BuiltInFunction::kFunction_textureSize_0V0C;
+                }
+                break;
+            }
+            case 0x2d04bd90u:
+            {
+                if (name.beginsWith(BuiltInName::textureSize))
+                {
+                    ASSERT(name.length() == 16);
+                    return &BuiltInFunction::kFunction_textureSize_0S0C;
+                }
+                break;
+            }
+            case 0x2d05209au:
+            {
+                if (name.beginsWith(BuiltInName::textureSize))
+                {
+                    ASSERT(name.length() == 16);
+                    return &BuiltInFunction::kFunction_textureSize_0b0C;
+                }
+                break;
+            }
+            case 0x2d05b26eu:
+            {
+                if (name.beginsWith(BuiltInName::textureProj))
+                {
+                    ASSERT(name.length() == 16);
+                    return &BuiltInFunction::kFunction_textureProj_0M2B;
+                }
+                break;
+            }
+            case 0x2d0728a0u:
+            {
+                if (name.beginsWith(BuiltInName::textureProj))
+                {
+                    ASSERT(name.length() == 16);
+                    return &BuiltInFunction::kFunction_textureProj_0L2B;
+                }
+                break;
+            }
+            case 0x2d07de2bu:
+            {
+                if (name.beginsWith(BuiltInName::textureProj))
+                {
+                    ASSERT(name.length() == 16);
+                    return &BuiltInFunction::kFunction_textureProj_0M3B;
+                }
+                break;
+            }
+            case 0x2d0836b9u:
+            {
+                if (name.beginsWith(BuiltInName::textureProj))
+                {
+                    ASSERT(name.length() == 16);
+                    return &BuiltInFunction::kFunction_textureProj_0H3B;
+                }
+                break;
+            }
+            case 0x2d084eecu:
+            {
+                if (name.beginsWith(BuiltInName::textureProj))
+                {
+                    ASSERT(name.length() == 16);
+                    return &BuiltInFunction::kFunction_textureProj_0Z3B;
+                }
+                break;
+            }
+            case 0x2d085b63u:
+            {
+                if (name.beginsWith(BuiltInName::textureSize))
+                {
+                    ASSERT(name.length() == 16);
+                    return &BuiltInFunction::kFunction_textureSize_0H0C;
+                }
+                break;
+            }
+            case 0x2d089a63u:
+            {
+                if (name.beginsWith(BuiltInName::textureSize))
+                {
+                    ASSERT(name.length() == 16);
+                    return &BuiltInFunction::kFunction_textureSize_0L0C;
+                }
+                break;
+            }
+            case 0x2d08e824u:
+            {
+                if (name.beginsWith(BuiltInName::textureSize))
+                {
+                    ASSERT(name.length() == 16);
+                    return &BuiltInFunction::kFunction_textureSize_0W0C;
+                }
+                break;
+            }
+            case 0x2d0908bdu:
+            {
+                if (name.beginsWith(BuiltInName::textureSize))
+                {
+                    ASSERT(name.length() == 16);
+                    return &BuiltInFunction::kFunction_textureSize_0Z0C;
+                }
+                break;
+            }
+            case 0x2d0b7d30u:
+            {
+                if (name.beginsWith(BuiltInName::textureProj))
+                {
+                    ASSERT(name.length() == 16);
+                    return &BuiltInFunction::kFunction_textureProj_0N3B;
+                }
+                break;
+            }
+            case 0x2d0b9377u:
+            {
+                if (name.beginsWith(BuiltInName::textureProj))
+                {
+                    ASSERT(name.length() == 16);
+                    return &BuiltInFunction::kFunction_textureProj_0I3B;
+                }
+                break;
+            }
+            case 0x2d0c1458u:
+            {
+                if (name.beginsWith(BuiltInName::textureSize))
+                {
+                    ASSERT(name.length() == 16);
+                    return &BuiltInFunction::kFunction_textureSize_0K0C;
+                }
+                break;
+            }
+            case 0x2d0c211cu:
+            {
+                if (name.beginsWith(BuiltInName::textureProj))
+                {
+                    ASSERT(name.length() == 16);
+                    return &BuiltInFunction::kFunction_textureProj_0Q3B;
+                }
+                break;
+            }
+            case 0x2d0c7922u:
+            {
+                if (name.beginsWith(BuiltInName::textureSize))
+                {
+                    ASSERT(name.length() == 16);
+                    return &BuiltInFunction::kFunction_textureSize_0R0C;
+                }
+                break;
+            }
+            case 0x2d0c82e1u:
+            {
+                if (name.beginsWith(BuiltInName::textureProj))
+                {
+                    ASSERT(name.length() == 16);
+                    return &BuiltInFunction::kFunction_textureProj_0L3B;
+                }
+                break;
+            }
+            case 0x2d0cd4ecu:
+            {
+                if (name.beginsWith(BuiltInName::textureSize))
+                {
+                    ASSERT(name.length() == 16);
+                    return &BuiltInFunction::kFunction_textureSize_0P0C;
+                }
+                break;
+            }
+            case 0x2d0d00f6u:
+            {
+                if (name.beginsWith(BuiltInName::textureSize))
+                {
+                    ASSERT(name.length() == 16);
+                    return &BuiltInFunction::kFunction_textureSize_0Q0C;
+                }
+                break;
+            }
+            case 0x2d0d65fbu:
+            {
+                if (name.beginsWith(BuiltInName::textureSize))
+                {
+                    ASSERT(name.length() == 16);
+                    return &BuiltInFunction::kFunction_textureSize_0X0C;
+                }
+                break;
+            }
+            case 0x2d0d917du:
+            {
+                if (name.beginsWith(BuiltInName::textureProj))
+                {
+                    ASSERT(name.length() == 16);
+                    return &BuiltInFunction::kFunction_textureProj_0N2B;
+                }
+                break;
+            }
+            case 0x2d0db21du:
+            {
+                if (name.beginsWith(BuiltInName::textureSize))
+                {
+                    ASSERT(name.length() == 16);
+                    return &BuiltInFunction::kFunction_textureSize_0a0C;
+                }
+                break;
+            }
+            case 0x2d0e3593u:
+            {
+                if (name.beginsWith(BuiltInName::textureProj))
+                {
+                    ASSERT(name.length() == 16);
+                    return &BuiltInFunction::kFunction_textureProj_0U2B;
+                }
+                break;
+            }
+            case 0x2d401271u:
+            {
+                if (name == BuiltInName::textureGrad_0I2B2B2B)
+                {
+                    return &BuiltInFunction::kFunction_textureGrad_0I2B2B2B;
+                }
+                break;
+            }
+            case 0x2d423ef7u:
+            {
+                if (name == BuiltInName::textureGrad_0W2B2B2B)
+                {
+                    return &BuiltInFunction::kFunction_textureGrad_0W2B2B2B;
+                }
+                break;
+            }
+            case 0x2d42a4a7u:
+            {
+                if (name == BuiltInName::textureGrad_0a3B2B2B)
+                {
+                    return &BuiltInFunction::kFunction_textureGrad_0a3B2B2B;
+                }
+                break;
+            }
+            case 0x2d4319eeu:
+            {
+                if (name == BuiltInName::textureGrad_0H1B1B1B)
+                {
+                    return &BuiltInFunction::kFunction_textureGrad_0H1B1B1B;
+                }
+                break;
+            }
+            case 0x2d432b01u:
+            {
+                if (name == BuiltInName::textureGrad_0Q2B2B2B)
+                {
+                    return &BuiltInFunction::kFunction_textureGrad_0Q2B2B2B;
+                }
+                break;
+            }
+            case 0x2d43ef75u:
+            {
+                if (name == BuiltInName::textureGrad_0J2B2B2B)
+                {
+                    return &BuiltInFunction::kFunction_textureGrad_0J2B2B2B;
+                }
+                break;
+            }
+            case 0x2d447047u:
+            {
+                if (name == BuiltInName::textureGrad_0X2B1B1B)
+                {
+                    return &BuiltInFunction::kFunction_textureGrad_0X2B1B1B;
+                }
+                break;
+            }
+            case 0x2d468d96u:
+            {
+                if (name == BuiltInName::textureGrad_0R2B2B2B)
+                {
+                    return &BuiltInFunction::kFunction_textureGrad_0R2B2B2B;
+                }
+                break;
+            }
+            case 0x2d48f0f3u:
+            {
+                if (name == BuiltInName::textureGrad_0P1B1B1B)
+                {
+                    return &BuiltInFunction::kFunction_textureGrad_0P1B1B1B;
+                }
+                break;
+            }
+            case 0x2d4a4f6au:
+            {
+                if (name == BuiltInName::textureGrad_0b3B1B1B)
+                {
+                    return &BuiltInFunction::kFunction_textureGrad_0b3B1B1B;
+                }
+                break;
+            }
+            case 0x2d4add22u:
+            {
+                if (name == BuiltInName::textureGrad_0S2B1B1B)
+                {
+                    return &BuiltInFunction::kFunction_textureGrad_0S2B1B1B;
+                }
+                break;
+            }
+            case 0x2d4d40c2u:
+            {
+                if (name == BuiltInName::textureGrad_0Z2B1B1B)
+                {
+                    return &BuiltInFunction::kFunction_textureGrad_0Z2B1B1B;
+                }
+                break;
+            }
+            case 0x2d4e1d2au:
+            {
+                if (name == BuiltInName::textureGrad_0K2B1B1B)
+                {
+                    return &BuiltInFunction::kFunction_textureGrad_0K2B1B1B;
+                }
+                break;
+            }
+            case 0x2d4e721cu:
+            {
+                if (name == BuiltInName::textureGrad_0U1B1B1B)
+                {
+                    return &BuiltInFunction::kFunction_textureGrad_0U1B1B1B;
+                }
+                break;
+            }
+            case 0x2d4fefbbu:
             {
                 if (name == BuiltInName::textureGrad_0V2B2B2B)
                 {
                     return &BuiltInFunction::kFunction_textureGrad_0V2B2B2B;
+                }
+                break;
+            }
+            case 0x30fbf415u:
+            {
+                if (name.beginsWith(BuiltInName::packHalf2x16))
+                {
+                    ASSERT(name.length() == 15);
+                    return &BuiltInFunction::kFunction_packHalf2x16_1B;
+                }
+                break;
+            }
+            case 0x3110c06fu:
+            {
+                if (name.beginsWith(BuiltInName::outerProduct))
+                {
+                    ASSERT(name.length() == 17);
+                    return &BuiltInFunction::kFunction_outerProduct_2B3B;
+                }
+                break;
+            }
+            case 0x311128b0u:
+            {
+                if (name.beginsWith(BuiltInName::outerProduct))
+                {
+                    ASSERT(name.length() == 17);
+                    return &BuiltInFunction::kFunction_outerProduct_1B1B;
+                }
+                break;
+            }
+            case 0x311199aau:
+            {
+                if (name.beginsWith(BuiltInName::outerProduct))
+                {
+                    ASSERT(name.length() == 17);
+                    return &BuiltInFunction::kFunction_outerProduct_3B2B;
+                }
+                break;
+            }
+            case 0x31120e21u:
+            {
+                if (name.beginsWith(BuiltInName::outerProduct))
+                {
+                    ASSERT(name.length() == 17);
+                    return &BuiltInFunction::kFunction_outerProduct_1B2B;
+                }
+                break;
+            }
+            case 0x31142a15u:
+            {
+                if (name.beginsWith(BuiltInName::outerProduct))
+                {
+                    ASSERT(name.length() == 17);
+                    return &BuiltInFunction::kFunction_outerProduct_1B3B;
+                }
+                break;
+            }
+            case 0x311b6bbfu:
+            {
+                if (name.beginsWith(BuiltInName::outerProduct))
+                {
+                    ASSERT(name.length() == 17);
+                    return &BuiltInFunction::kFunction_outerProduct_2B2B;
+                }
+                break;
+            }
+            case 0x311c3faau:
+            {
+                if (name.beginsWith(BuiltInName::outerProduct))
+                {
+                    ASSERT(name.length() == 17);
+                    return &BuiltInFunction::kFunction_outerProduct_3B3B;
+                }
+                break;
+            }
+            case 0x311c4162u:
+            {
+                if (name.beginsWith(BuiltInName::outerProduct))
+                {
+                    ASSERT(name.length() == 17);
+                    return &BuiltInFunction::kFunction_outerProduct_2B1B;
+                }
+                break;
+            }
+            case 0x311f3234u:
+            {
+                if (name.beginsWith(BuiltInName::outerProduct))
+                {
+                    ASSERT(name.length() == 17);
+                    return &BuiltInFunction::kFunction_outerProduct_3B1B;
+                }
+                break;
+            }
+            case 0x3509e2f1u:
+            {
+                if (name.beginsWith(BuiltInName::packSnorm2x16))
+                {
+                    ASSERT(name.length() == 16);
+                    return &BuiltInFunction::kFunction_packSnorm2x16_1B;
+                }
+                break;
+            }
+            case 0x350e7c49u:
+            {
+                if (name.beginsWith(BuiltInName::packUnorm2x16))
+                {
+                    ASSERT(name.length() == 16);
+                    return &BuiltInFunction::kFunction_packUnorm2x16_1B;
+                }
+                break;
+            }
+            case 0x35248d4eu:
+            {
+                if (name.beginsWith(BuiltInName::lessThanEqual))
+                {
+                    ASSERT(name.length() == 18);
+                    return &BuiltInFunction::kFunction_lessThanEqual_2D2D;
+                }
+                break;
+            }
+            case 0x352bc93du:
+            {
+                if (name.beginsWith(BuiltInName::lessThanEqual))
+                {
+                    ASSERT(name.length() == 18);
+                    return &BuiltInFunction::kFunction_lessThanEqual_1D1D;
+                }
+                break;
+            }
+            case 0x352df7d8u:
+            {
+                if (name.beginsWith(BuiltInName::lessThanEqual))
+                {
+                    ASSERT(name.length() == 18);
+                    return &BuiltInFunction::kFunction_lessThanEqual_3D3D;
+                }
+                break;
+            }
+            case 0x354102f7u:
+            {
+                if (name == BuiltInName::textureOffset_0P1B1C)
+                {
+                    return &BuiltInFunction::kFunction_textureOffset_0P1B1C;
+                }
+                break;
+            }
+            case 0x35413eedu:
+            {
+                if (name == BuiltInName::textureOffset_0V2B2C)
+                {
+                    return &BuiltInFunction::kFunction_textureOffset_0V2B2C;
+                }
+                break;
+            }
+            case 0x35422c30u:
+            {
+                if (name == BuiltInName::textureOffset_0H1B1C)
+                {
+                    return &BuiltInFunction::kFunction_textureOffset_0H1B1C;
+                }
+                break;
+            }
+            case 0x3543944fu:
+            {
+                if (name == BuiltInName::textureOffset_0U1B1C)
+                {
+                    return &BuiltInFunction::kFunction_textureOffset_0U1B1C;
+                }
+                break;
+            }
+            case 0x35459cf8u:
+            {
+                if (name == BuiltInName::textureOffset_0S2B1C)
+                {
+                    return &BuiltInFunction::kFunction_textureOffset_0S2B1C;
+                }
+                break;
+            }
+            case 0x354706eau:
+            {
+                if (name == BuiltInName::textureOffset_0X2B1C)
+                {
+                    return &BuiltInFunction::kFunction_textureOffset_0X2B1C;
+                }
+                break;
+            }
+            case 0x35473958u:
+            {
+                if (name == BuiltInName::textureOffset_0Z2B1C)
+                {
+                    return &BuiltInFunction::kFunction_textureOffset_0Z2B1C;
+                }
+                break;
+            }
+            case 0x35478003u:
+            {
+                if (name == BuiltInName::textureOffset_0Q2B2C)
+                {
+                    return &BuiltInFunction::kFunction_textureOffset_0Q2B2C;
+                }
+                break;
+            }
+            case 0x354801adu:
+            {
+                if (name == BuiltInName::textureOffset_0K2B1C)
+                {
+                    return &BuiltInFunction::kFunction_textureOffset_0K2B1C;
+                }
+                break;
+            }
+            case 0x354cbe1cu:
+            {
+                if (name == BuiltInName::textureOffset_0I2B2C)
+                {
+                    return &BuiltInFunction::kFunction_textureOffset_0I2B2C;
+                }
+                break;
+            }
+            case 0x3910c5d7u:
+            {
+                if (name.beginsWith(BuiltInName::intBitsToFloat))
+                {
+                    ASSERT(name.length() == 17);
+                    return &BuiltInFunction::kFunction_intBitsToFloat_2C;
+                }
+                break;
+            }
+            case 0x3910f8b9u:
+            {
+                if (name.beginsWith(BuiltInName::floatBitsToInt))
+                {
+                    ASSERT(name.length() == 17);
+                    return &BuiltInFunction::kFunction_floatBitsToInt_2B;
+                }
+                break;
+            }
+            case 0x3911c106u:
+            {
+                if (name.beginsWith(BuiltInName::intBitsToFloat))
+                {
+                    ASSERT(name.length() == 17);
+                    return &BuiltInFunction::kFunction_intBitsToFloat_1C;
+                }
+                break;
+            }
+            case 0x3913568du:
+            {
+                if (name.beginsWith(BuiltInName::floatBitsToInt))
+                {
+                    ASSERT(name.length() == 17);
+                    return &BuiltInFunction::kFunction_floatBitsToInt_1B;
+                }
+                break;
+            }
+            case 0x3913c3f6u:
+            {
+                if (name.beginsWith(BuiltInName::intBitsToFloat))
+                {
+                    ASSERT(name.length() == 17);
+                    return &BuiltInFunction::kFunction_intBitsToFloat_0C;
+                }
+                break;
+            }
+            case 0x3915f628u:
+            {
+                if (name.beginsWith(BuiltInName::floatBitsToInt))
+                {
+                    ASSERT(name.length() == 17);
+                    return &BuiltInFunction::kFunction_floatBitsToInt_0B;
+                }
+                break;
+            }
+            case 0x39164139u:
+            {
+                if (name.beginsWith(BuiltInName::intBitsToFloat))
+                {
+                    ASSERT(name.length() == 17);
+                    return &BuiltInFunction::kFunction_intBitsToFloat_3C;
+                }
+                break;
+            }
+            case 0x391bbc13u:
+            {
+                if (name.beginsWith(BuiltInName::unpackHalf2x16))
+                {
+                    ASSERT(name.length() == 17);
+                    return &BuiltInFunction::kFunction_unpackHalf2x16_0D;
+                }
+                break;
+            }
+            case 0x391ed774u:
+            {
+                if (name.beginsWith(BuiltInName::floatBitsToInt))
+                {
+                    ASSERT(name.length() == 17);
+                    return &BuiltInFunction::kFunction_floatBitsToInt_3B;
+                }
+                break;
+            }
+            case 0x3930f22du:
+            {
+                if (name.beginsWith(BuiltInName::matrixCompMult))
+                {
+                    ASSERT(name.length() == 19);
+                    return &BuiltInFunction::kFunction_matrixCompMult_9B9B;
+                }
+                break;
+            }
+            case 0x39334a4du:
+            {
+                if (name.beginsWith(BuiltInName::matrixCompMult))
+                {
+                    ASSERT(name.length() == 19);
+                    return &BuiltInFunction::kFunction_matrixCompMult_7B7B;
+                }
+                break;
+            }
+            case 0x39393016u:
+            {
+                if (name.beginsWith(BuiltInName::matrixCompMult))
+                {
+                    ASSERT(name.length() == 19);
+                    return &BuiltInFunction::kFunction_matrixCompMult_6B6B;
+                }
+                break;
+            }
+            case 0x3939896du:
+            {
+                if (name.beginsWith(BuiltInName::matrixCompMult))
+                {
+                    ASSERT(name.length() == 19);
+                    return &BuiltInFunction::kFunction_matrixCompMult_BBBB;
+                }
+                break;
+            }
+            case 0x393d70dau:
+            {
+                if (name.beginsWith(BuiltInName::matrixCompMult))
+                {
+                    ASSERT(name.length() == 19);
+                    return &BuiltInFunction::kFunction_matrixCompMult_DBDB;
+                }
+                break;
+            }
+            case 0x393f69ceu:
+            {
+                if (name.beginsWith(BuiltInName::matrixCompMult))
+                {
+                    ASSERT(name.length() == 19);
+                    return &BuiltInFunction::kFunction_matrixCompMult_EBEB;
+                }
+                break;
+            }
+            case 0x39509c5du:
+            {
+                if (name == BuiltInName::textureProjLod_0Q3B0B)
+                {
+                    return &BuiltInFunction::kFunction_textureProjLod_0Q3B0B;
+                }
+                break;
+            }
+            case 0x39516b09u:
+            {
+                if (name == BuiltInName::textureProjLod_0P2B0B)
+                {
+                    return &BuiltInFunction::kFunction_textureProjLod_0P2B0B;
+                }
+                break;
+            }
+            case 0x3951bcdau:
+            {
+                if (name == BuiltInName::textureProjLod_0H3B0B)
+                {
+                    return &BuiltInFunction::kFunction_textureProjLod_0H3B0B;
+                }
+                break;
+            }
+            case 0x3954274au:
+            {
+                if (name == BuiltInName::textureProjLod_0H2B0B)
+                {
+                    return &BuiltInFunction::kFunction_textureProjLod_0H2B0B;
+                }
+                break;
+            }
+            case 0x39564b1cu:
+            {
+                if (name == BuiltInName::textureProjLod_0U3B0B)
+                {
+                    return &BuiltInFunction::kFunction_textureProjLod_0U3B0B;
+                }
+                break;
+            }
+            case 0x395794afu:
+            {
+                if (name == BuiltInName::textureProjLod_0U2B0B)
+                {
+                    return &BuiltInFunction::kFunction_textureProjLod_0U2B0B;
+                }
+                break;
+            }
+            case 0x395b06aau:
+            {
+                if (name == BuiltInName::textureProjLod_0V3B0B)
+                {
+                    return &BuiltInFunction::kFunction_textureProjLod_0V3B0B;
+                }
+                break;
+            }
+            case 0x395bbd87u:
+            {
+                if (name == BuiltInName::textureProjLod_0P3B0B)
+                {
+                    return &BuiltInFunction::kFunction_textureProjLod_0P3B0B;
+                }
+                break;
+            }
+            case 0x395dfaedu:
+            {
+                if (name == BuiltInName::textureProjLod_0Z3B0B)
+                {
+                    return &BuiltInFunction::kFunction_textureProjLod_0Z3B0B;
+                }
+                break;
+            }
+            case 0x395f01e1u:
+            {
+                if (name == BuiltInName::textureProjLod_0I3B0B)
+                {
+                    return &BuiltInFunction::kFunction_textureProjLod_0I3B0B;
+                }
+                break;
+            }
+            case 0x3d204dd3u:
+            {
+                if (name.beginsWith(BuiltInName::floatBitsToUint))
+                {
+                    ASSERT(name.length() == 18);
+                    return &BuiltInFunction::kFunction_floatBitsToUint_0B;
+                }
+                break;
+            }
+            case 0x3d25c369u:
+            {
+                if (name.beginsWith(BuiltInName::uintBitsToFloat))
+                {
+                    ASSERT(name.length() == 18);
+                    return &BuiltInFunction::kFunction_uintBitsToFloat_3D;
+                }
+                break;
+            }
+            case 0x3d27a145u:
+            {
+                if (name.beginsWith(BuiltInName::uintBitsToFloat))
+                {
+                    ASSERT(name.length() == 18);
+                    return &BuiltInFunction::kFunction_uintBitsToFloat_0D;
+                }
+                break;
+            }
+            case 0x3d2a6fcau:
+            {
+                if (name.beginsWith(BuiltInName::floatBitsToUint))
+                {
+                    ASSERT(name.length() == 18);
+                    return &BuiltInFunction::kFunction_floatBitsToUint_1B;
+                }
+                break;
+            }
+            case 0x3d2a886cu:
+            {
+                if (name.beginsWith(BuiltInName::uintBitsToFloat))
+                {
+                    ASSERT(name.length() == 18);
+                    return &BuiltInFunction::kFunction_uintBitsToFloat_1D;
+                }
+                break;
+            }
+            case 0x3d2abf41u:
+            {
+                if (name.beginsWith(BuiltInName::unpackSnorm2x16))
+                {
+                    ASSERT(name.length() == 18);
+                    return &BuiltInFunction::kFunction_unpackSnorm2x16_0D;
+                }
+                break;
+            }
+            case 0x3d2b50abu:
+            {
+                if (name.beginsWith(BuiltInName::uintBitsToFloat))
+                {
+                    ASSERT(name.length() == 18);
+                    return &BuiltInFunction::kFunction_uintBitsToFloat_2D;
+                }
+                break;
+            }
+            case 0x3d2cc57cu:
+            {
+                if (name.beginsWith(BuiltInName::floatBitsToUint))
+                {
+                    ASSERT(name.length() == 18);
+                    return &BuiltInFunction::kFunction_floatBitsToUint_2B;
+                }
+                break;
+            }
+            case 0x3d2e13e6u:
+            {
+                if (name.beginsWith(BuiltInName::unpackUnorm2x16))
+                {
+                    ASSERT(name.length() == 18);
+                    return &BuiltInFunction::kFunction_unpackUnorm2x16_0D;
+                }
+                break;
+            }
+            case 0x3d2f6a98u:
+            {
+                if (name.beginsWith(BuiltInName::floatBitsToUint))
+                {
+                    ASSERT(name.length() == 18);
+                    return &BuiltInFunction::kFunction_floatBitsToUint_3B;
+                }
+                break;
+            }
+            case 0x3d832970u:
+            {
+                if (name == BuiltInName::textureProjGrad_0V3B2B2B)
+                {
+                    return &BuiltInFunction::kFunction_textureProjGrad_0V3B2B2B;
+                }
+                break;
+            }
+            case 0x3d83cc77u:
+            {
+                if (name == BuiltInName::textureProjGrad_0Q3B2B2B)
+                {
+                    return &BuiltInFunction::kFunction_textureProjGrad_0Q3B2B2B;
+                }
+                break;
+            }
+            case 0x3d865b2au:
+            {
+                if (name == BuiltInName::textureProjGrad_0H3B1B1B)
+                {
+                    return &BuiltInFunction::kFunction_textureProjGrad_0H3B1B1B;
+                }
+                break;
+            }
+            case 0x3d86f397u:
+            {
+                if (name == BuiltInName::textureProjGrad_0P2B1B1B)
+                {
+                    return &BuiltInFunction::kFunction_textureProjGrad_0P2B1B1B;
+                }
+                break;
+            }
+            case 0x3d87ff0au:
+            {
+                if (name == BuiltInName::textureProjGrad_0I3B2B2B)
+                {
+                    return &BuiltInFunction::kFunction_textureProjGrad_0I3B2B2B;
+                }
+                break;
+            }
+            case 0x3d896556u:
+            {
+                if (name == BuiltInName::textureProjGrad_0U3B1B1B)
+                {
+                    return &BuiltInFunction::kFunction_textureProjGrad_0U3B1B1B;
+                }
+                break;
+            }
+            case 0x3d8a0862u:
+            {
+                if (name == BuiltInName::textureProjGrad_0P3B1B1B)
+                {
+                    return &BuiltInFunction::kFunction_textureProjGrad_0P3B1B1B;
+                }
+                break;
+            }
+            case 0x3d8b645cu:
+            {
+                if (name == BuiltInName::textureProjGrad_0H2B1B1B)
+                {
+                    return &BuiltInFunction::kFunction_textureProjGrad_0H2B1B1B;
+                }
+                break;
+            }
+            case 0x3d8ca0b7u:
+            {
+                if (name == BuiltInName::textureProjGrad_0Z3B1B1B)
+                {
+                    return &BuiltInFunction::kFunction_textureProjGrad_0Z3B1B1B;
+                }
+                break;
+            }
+            case 0x3d8e064fu:
+            {
+                if (name == BuiltInName::textureProjGrad_0U2B1B1B)
+                {
+                    return &BuiltInFunction::kFunction_textureProjGrad_0U2B1B1B;
+                }
+                break;
+            }
+            case 0x415269b7u:
+            {
+                if (name.beginsWith(BuiltInName::greaterThanEqual))
+                {
+                    ASSERT(name.length() == 21);
+                    return &BuiltInFunction::kFunction_greaterThanEqual_2D2D;
+                }
+                break;
+            }
+            case 0x415d18d9u:
+            {
+                if (name.beginsWith(BuiltInName::greaterThanEqual))
+                {
+                    ASSERT(name.length() == 21);
+                    return &BuiltInFunction::kFunction_greaterThanEqual_3D3D;
+                }
+                break;
+            }
+            case 0x415d84abu:
+            {
+                if (name.beginsWith(BuiltInName::greaterThanEqual))
+                {
+                    ASSERT(name.length() == 21);
+                    return &BuiltInFunction::kFunction_greaterThanEqual_1D1D;
+                }
+                break;
+            }
+            case 0x4190d486u:
+            {
+                if (name == BuiltInName::texelFetchOffset_0X2C0C1C)
+                {
+                    return &BuiltInFunction::kFunction_texelFetchOffset_0X2C0C1C;
+                }
+                break;
+            }
+            case 0x4191cb81u:
+            {
+                if (name == BuiltInName::texelFetchOffset_0I2C0C2C)
+                {
+                    return &BuiltInFunction::kFunction_texelFetchOffset_0I2C0C2C;
+                }
+                break;
+            }
+            case 0x419224bdu:
+            {
+                if (name == BuiltInName::texelFetchOffset_0S2C0C1C)
+                {
+                    return &BuiltInFunction::kFunction_texelFetchOffset_0S2C0C1C;
+                }
+                break;
+            }
+            case 0x4192d547u:
+            {
+                if (name == BuiltInName::textureLodOffset_0X2B0B1C)
+                {
+                    return &BuiltInFunction::kFunction_textureLodOffset_0X2B0B1C;
+                }
+                break;
+            }
+            case 0x41938a11u:
+            {
+                if (name == BuiltInName::texelFetchOffset_0P1C0C1C)
+                {
+                    return &BuiltInFunction::kFunction_texelFetchOffset_0P1C0C1C;
+                }
+                break;
+            }
+            case 0x4194ae35u:
+            {
+                if (name == BuiltInName::textureLodOffset_0Z2B0B1C)
+                {
+                    return &BuiltInFunction::kFunction_textureLodOffset_0Z2B0B1C;
+                }
+                break;
+            }
+            case 0x4194ea77u:
+            {
+                if (name == BuiltInName::textureLodOffset_0V2B0B2C)
+                {
+                    return &BuiltInFunction::kFunction_textureLodOffset_0V2B0B2C;
+                }
+                break;
+            }
+            case 0x41958afau:
+            {
+                if (name == BuiltInName::textureLodOffset_0S2B0B1C)
+                {
+                    return &BuiltInFunction::kFunction_textureLodOffset_0S2B0B1C;
+                }
+                break;
+            }
+            case 0x4195953fu:
+            {
+                if (name == BuiltInName::texelFetchOffset_0K2C0C1C)
+                {
+                    return &BuiltInFunction::kFunction_texelFetchOffset_0K2C0C1C;
+                }
+                break;
+            }
+            case 0x419641e4u:
+            {
+                if (name == BuiltInName::texelFetchOffset_0H1C0C1C)
+                {
+                    return &BuiltInFunction::kFunction_texelFetchOffset_0H1C0C1C;
+                }
+                break;
+            }
+            case 0x41979f66u:
+            {
+                if (name == BuiltInName::textureLodOffset_0P1B0B1C)
+                {
+                    return &BuiltInFunction::kFunction_textureLodOffset_0P1B0B1C;
+                }
+                break;
+            }
+            case 0x4198f5c0u:
+            {
+                if (name == BuiltInName::texelFetchOffset_0U1C0C1C)
+                {
+                    return &BuiltInFunction::kFunction_texelFetchOffset_0U1C0C1C;
+                }
+                break;
+            }
+            case 0x41990c42u:
+            {
+                if (name == BuiltInName::textureLodOffset_0Q2B0B2C)
+                {
+                    return &BuiltInFunction::kFunction_textureLodOffset_0Q2B0B2C;
+                }
+                break;
+            }
+            case 0x41992585u:
+            {
+                if (name == BuiltInName::textureLodOffset_0H1B0B1C)
+                {
+                    return &BuiltInFunction::kFunction_textureLodOffset_0H1B0B1C;
+                }
+                break;
+            }
+            case 0x419a009fu:
+            {
+                if (name == BuiltInName::textureLodOffset_0K2B0B1C)
+                {
+                    return &BuiltInFunction::kFunction_textureLodOffset_0K2B0B1C;
+                }
+                break;
+            }
+            case 0x419b1491u:
+            {
+                if (name == BuiltInName::texelFetchOffset_0Q2C0C2C)
+                {
+                    return &BuiltInFunction::kFunction_texelFetchOffset_0Q2C0C2C;
+                }
+                break;
+            }
+            case 0x419bdc72u:
+            {
+                if (name == BuiltInName::textureLodOffset_0I2B0B2C)
+                {
+                    return &BuiltInFunction::kFunction_textureLodOffset_0I2B0B2C;
+                }
+                break;
+            }
+            case 0x419c6bc9u:
+            {
+                if (name == BuiltInName::texelFetchOffset_0V2C0C2C)
+                {
+                    return &BuiltInFunction::kFunction_texelFetchOffset_0V2C0C2C;
+                }
+                break;
+            }
+            case 0x419f4e4du:
+            {
+                if (name == BuiltInName::textureLodOffset_0U1B0B1C)
+                {
+                    return &BuiltInFunction::kFunction_textureLodOffset_0U1B0B1C;
+                }
+                break;
+            }
+            case 0x45801598u:
+            {
+                if (name == BuiltInName::textureProjOffset_0U3B1C)
+                {
+                    return &BuiltInFunction::kFunction_textureProjOffset_0U3B1C;
+                }
+                break;
+            }
+            case 0x4580712au:
+            {
+                if (name == BuiltInName::textureProjOffset_0U2B1C)
+                {
+                    return &BuiltInFunction::kFunction_textureProjOffset_0U2B1C;
+                }
+                break;
+            }
+            case 0x458150bau:
+            {
+                if (name == BuiltInName::textureProjOffset_0H2B1C)
+                {
+                    return &BuiltInFunction::kFunction_textureProjOffset_0H2B1C;
+                }
+                break;
+            }
+            case 0x45859c54u:
+            {
+                if (name == BuiltInName::textureProjOffset_0Q3B2C)
+                {
+                    return &BuiltInFunction::kFunction_textureProjOffset_0Q3B2C;
+                }
+                break;
+            }
+            case 0x4585bb13u:
+            {
+                if (name == BuiltInName::textureProjOffset_0H3B1C)
+                {
+                    return &BuiltInFunction::kFunction_textureProjOffset_0H3B1C;
+                }
+                break;
+            }
+            case 0x45889762u:
+            {
+                if (name == BuiltInName::textureProjOffset_0I3B2C)
+                {
+                    return &BuiltInFunction::kFunction_textureProjOffset_0I3B2C;
+                }
+                break;
+            }
+            case 0x4589a875u:
+            {
+                if (name == BuiltInName::textureProjOffset_0P2B1C)
+                {
+                    return &BuiltInFunction::kFunction_textureProjOffset_0P2B1C;
+                }
+                break;
+            }
+            case 0x458a50a0u:
+            {
+                if (name == BuiltInName::textureProjOffset_0V3B2C)
+                {
+                    return &BuiltInFunction::kFunction_textureProjOffset_0V3B2C;
+                }
+                break;
+            }
+            case 0x458be8b2u:
+            {
+                if (name == BuiltInName::textureProjOffset_0Z3B1C)
+                {
+                    return &BuiltInFunction::kFunction_textureProjOffset_0Z3B1C;
+                }
+                break;
+            }
+            case 0x458df23bu:
+            {
+                if (name == BuiltInName::textureProjOffset_0P3B1C)
+                {
+                    return &BuiltInFunction::kFunction_textureProjOffset_0P3B1C;
+                }
+                break;
+            }
+            case 0x45c09d88u:
+            {
+                if (name == BuiltInName::textureGradOffset_0U1B1B1B1C)
+                {
+                    return &BuiltInFunction::kFunction_textureGradOffset_0U1B1B1B1C;
+                }
+                break;
+            }
+            case 0x45c2f605u:
+            {
+                if (name == BuiltInName::textureGradOffset_0K2B1B1B1C)
+                {
+                    return &BuiltInFunction::kFunction_textureGradOffset_0K2B1B1B1C;
+                }
+                break;
+            }
+            case 0x45c47453u:
+            {
+                if (name == BuiltInName::textureGradOffset_0X2B1B1B1C)
+                {
+                    return &BuiltInFunction::kFunction_textureGradOffset_0X2B1B1B1C;
+                }
+                break;
+            }
+            case 0x45c59fedu:
+            {
+                if (name == BuiltInName::textureGradOffset_0b3B1B1B1C)
+                {
+                    return &BuiltInFunction::kFunction_textureGradOffset_0b3B1B1B1C;
+                }
+                break;
+            }
+            case 0x45c7de83u:
+            {
+                if (name == BuiltInName::textureGradOffset_0I2B2B2B2C)
+                {
+                    return &BuiltInFunction::kFunction_textureGradOffset_0I2B2B2B2C;
+                }
+                break;
+            }
+            case 0x45ca81ceu:
+            {
+                if (name == BuiltInName::textureGradOffset_0S2B1B1B1C)
+                {
+                    return &BuiltInFunction::kFunction_textureGradOffset_0S2B1B1B1C;
+                }
+                break;
+            }
+            case 0x45cafdcbu:
+            {
+                if (name == BuiltInName::textureGradOffset_0Q2B2B2B2C)
+                {
+                    return &BuiltInFunction::kFunction_textureGradOffset_0Q2B2B2B2C;
+                }
+                break;
+            }
+            case 0x45cc5a72u:
+            {
+                if (name == BuiltInName::textureGradOffset_0V2B2B2B2C)
+                {
+                    return &BuiltInFunction::kFunction_textureGradOffset_0V2B2B2B2C;
+                }
+                break;
+            }
+            case 0x45cd0417u:
+            {
+                if (name == BuiltInName::textureGradOffset_0Z2B1B1B1C)
+                {
+                    return &BuiltInFunction::kFunction_textureGradOffset_0Z2B1B1B1C;
+                }
+                break;
+            }
+            case 0x45ce0193u:
+            {
+                if (name == BuiltInName::textureGradOffset_0H1B1B1B1C)
+                {
+                    return &BuiltInFunction::kFunction_textureGradOffset_0H1B1B1B1C;
+                }
+                break;
+            }
+            case 0x45ce7db4u:
+            {
+                if (name == BuiltInName::textureGradOffset_0P1B1B1B1C)
+                {
+                    return &BuiltInFunction::kFunction_textureGradOffset_0P1B1B1B1C;
+                }
+                break;
+            }
+            case 0x51d1a62du:
+            {
+                if (name == BuiltInName::textureProjLodOffset_0Z3B0B1C)
+                {
+                    return &BuiltInFunction::kFunction_textureProjLodOffset_0Z3B0B1C;
+                }
+                break;
+            }
+            case 0x51d55102u:
+            {
+                if (name == BuiltInName::textureProjLodOffset_0H2B0B1C)
+                {
+                    return &BuiltInFunction::kFunction_textureProjLodOffset_0H2B0B1C;
+                }
+                break;
+            }
+            case 0x51d5cc8cu:
+            {
+                if (name == BuiltInName::textureProjLodOffset_0Q3B0B2C)
+                {
+                    return &BuiltInFunction::kFunction_textureProjLodOffset_0Q3B0B2C;
+                }
+                break;
+            }
+            case 0x51d72007u:
+            {
+                if (name == BuiltInName::textureProjLodOffset_0I3B0B2C)
+                {
+                    return &BuiltInFunction::kFunction_textureProjLodOffset_0I3B0B2C;
+                }
+                break;
+            }
+            case 0x51d731fau:
+            {
+                if (name == BuiltInName::textureProjLodOffset_0V3B0B2C)
+                {
+                    return &BuiltInFunction::kFunction_textureProjLodOffset_0V3B0B2C;
+                }
+                break;
+            }
+            case 0x51d7ccd1u:
+            {
+                if (name == BuiltInName::textureProjLodOffset_0H3B0B1C)
+                {
+                    return &BuiltInFunction::kFunction_textureProjLodOffset_0H3B0B1C;
+                }
+                break;
+            }
+            case 0x51dabe62u:
+            {
+                if (name == BuiltInName::textureProjLodOffset_0P3B0B1C)
+                {
+                    return &BuiltInFunction::kFunction_textureProjLodOffset_0P3B0B1C;
+                }
+                break;
+            }
+            case 0x51ddd932u:
+            {
+                if (name == BuiltInName::textureProjLodOffset_0P2B0B1C)
+                {
+                    return &BuiltInFunction::kFunction_textureProjLodOffset_0P2B0B1C;
+                }
+                break;
+            }
+            case 0x51ded012u:
+            {
+                if (name == BuiltInName::textureProjLodOffset_0U2B0B1C)
+                {
+                    return &BuiltInFunction::kFunction_textureProjLodOffset_0U2B0B1C;
+                }
+                break;
+            }
+            case 0x51dfb7dcu:
+            {
+                if (name == BuiltInName::textureProjLodOffset_0U3B0B1C)
+                {
+                    return &BuiltInFunction::kFunction_textureProjLodOffset_0U3B0B1C;
+                }
+                break;
+            }
+            case 0x560144aau:
+            {
+                if (name == BuiltInName::textureProjGradOffset_0U3B1B1B1C)
+                {
+                    return &BuiltInFunction::kFunction_textureProjGradOffset_0U3B1B1B1C;
+                }
+                break;
+            }
+            case 0x560187dbu:
+            {
+                if (name == BuiltInName::textureProjGradOffset_0V3B2B2B2C)
+                {
+                    return &BuiltInFunction::kFunction_textureProjGradOffset_0V3B2B2B2C;
+                }
+                break;
+            }
+            case 0x56045ff7u:
+            {
+                if (name == BuiltInName::textureProjGradOffset_0P2B1B1B1C)
+                {
+                    return &BuiltInFunction::kFunction_textureProjGradOffset_0P2B1B1B1C;
+                }
+                break;
+            }
+            case 0x5604692eu:
+            {
+                if (name == BuiltInName::textureProjGradOffset_0H3B1B1B1C)
+                {
+                    return &BuiltInFunction::kFunction_textureProjGradOffset_0H3B1B1B1C;
+                }
+                break;
+            }
+            case 0x56057148u:
+            {
+                if (name == BuiltInName::textureProjGradOffset_0I3B2B2B2C)
+                {
+                    return &BuiltInFunction::kFunction_textureProjGradOffset_0I3B2B2B2C;
+                }
+                break;
+            }
+            case 0x56088480u:
+            {
+                if (name == BuiltInName::textureProjGradOffset_0Q3B2B2B2C)
+                {
+                    return &BuiltInFunction::kFunction_textureProjGradOffset_0Q3B2B2B2C;
+                }
+                break;
+            }
+            case 0x5608e4edu:
+            {
+                if (name == BuiltInName::textureProjGradOffset_0Z3B1B1B1C)
+                {
+                    return &BuiltInFunction::kFunction_textureProjGradOffset_0Z3B1B1B1C;
+                }
+                break;
+            }
+            case 0x56096070u:
+            {
+                if (name == BuiltInName::textureProjGradOffset_0U2B1B1B1C)
+                {
+                    return &BuiltInFunction::kFunction_textureProjGradOffset_0U2B1B1B1C;
+                }
+                break;
+            }
+            case 0x560cb2ebu:
+            {
+                if (name == BuiltInName::textureProjGradOffset_0P3B1B1B1C)
+                {
+                    return &BuiltInFunction::kFunction_textureProjGradOffset_0P3B1B1B1C;
+                }
+                break;
+            }
+            case 0x560efc8au:
+            {
+                if (name == BuiltInName::textureProjGradOffset_0H2B1B1B1C)
+                {
+                    return &BuiltInFunction::kFunction_textureProjGradOffset_0H2B1B1B1C;
+                }
+                break;
+            }
+            case 0xfd8203fcu:
+            {
+                if (name == BuiltInName::gl_MaxProgramTexelOffset)
+                {
+                    return mVar_gl_MaxProgramTexelOffset;
+                }
+                break;
+            }
+            case 0xfd87bc19u:
+            {
+                if (name == BuiltInName::gl_MinProgramTexelOffset)
+                {
+                    return mVar_gl_MinProgramTexelOffset;
+                }
+                break;
+            }
+            case 0xfd9190e7u:
+            {
+                if (name == BuiltInName::gl_MaxVertexOutputVectors)
+                {
+                    return mVar_gl_MaxVertexOutputVectors;
+                }
+                break;
+            }
+            case 0xfda34617u:
+            {
+                if (name == BuiltInName::gl_MaxFragmentInputVectors)
+                {
+                    return mVar_gl_MaxFragmentInputVectors;
                 }
                 break;
             }
@@ -15933,15 +16138,115 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
         {
             switch (nameHash)
             {
-                case 0x02c4537au:
+                case 0x1072a9fbu:
                 {
-                    if (name == BuiltInName::textureProj_0L3B0B)
+                    if (name.beginsWith(BuiltInName::dFdy))
                     {
-                        return &BuiltInFunction::kFunction_textureProj_0L3B0B;
+                        ASSERT(name.length() == 7);
+                        return &BuiltInFunction::kFunction_dFdy_0B;
                     }
                     break;
                 }
-                case 0x042a180au:
+                case 0x1073030fu:
+                {
+                    if (name.beginsWith(BuiltInName::dFdx))
+                    {
+                        ASSERT(name.length() == 7);
+                        return &BuiltInFunction::kFunction_dFdx_0B;
+                    }
+                    break;
+                }
+                case 0x1074c546u:
+                {
+                    if (name.beginsWith(BuiltInName::dFdy))
+                    {
+                        ASSERT(name.length() == 7);
+                        return &BuiltInFunction::kFunction_dFdy_1B;
+                    }
+                    break;
+                }
+                case 0x10756758u:
+                {
+                    if (name.beginsWith(BuiltInName::dFdx))
+                    {
+                        ASSERT(name.length() == 7);
+                        return &BuiltInFunction::kFunction_dFdx_3B;
+                    }
+                    break;
+                }
+                case 0x10772880u:
+                {
+                    if (name.beginsWith(BuiltInName::dFdy))
+                    {
+                        ASSERT(name.length() == 7);
+                        return &BuiltInFunction::kFunction_dFdy_2B;
+                    }
+                    break;
+                }
+                case 0x1078043du:
+                {
+                    if (name.beginsWith(BuiltInName::dFdx))
+                    {
+                        ASSERT(name.length() == 7);
+                        return &BuiltInFunction::kFunction_dFdx_2B;
+                    }
+                    break;
+                }
+                case 0x1078ecffu:
+                {
+                    if (name.beginsWith(BuiltInName::dFdx))
+                    {
+                        ASSERT(name.length() == 7);
+                        return &BuiltInFunction::kFunction_dFdx_1B;
+                    }
+                    break;
+                }
+                case 0x1079c835u:
+                {
+                    if (name.beginsWith(BuiltInName::dFdy))
+                    {
+                        ASSERT(name.length() == 7);
+                        return &BuiltInFunction::kFunction_dFdy_3B;
+                    }
+                    break;
+                }
+                case 0x189044e9u:
+                {
+                    if (name.beginsWith(BuiltInName::fwidth))
+                    {
+                        ASSERT(name.length() == 9);
+                        return &BuiltInFunction::kFunction_fwidth_1B;
+                    }
+                    break;
+                }
+                case 0x189a6fa9u:
+                {
+                    if (name.beginsWith(BuiltInName::fwidth))
+                    {
+                        ASSERT(name.length() == 9);
+                        return &BuiltInFunction::kFunction_fwidth_0B;
+                    }
+                    break;
+                }
+                case 0x189cc19du:
+                {
+                    if (name.beginsWith(BuiltInName::fwidth))
+                    {
+                        ASSERT(name.length() == 9);
+                        return &BuiltInFunction::kFunction_fwidth_3B;
+                    }
+                    break;
+                }
+                case 0x189f6338u:
+                {
+                    if (name.beginsWith(BuiltInName::fwidth))
+                    {
+                        ASSERT(name.length() == 9);
+                        return &BuiltInFunction::kFunction_fwidth_2B;
+                    }
+                    break;
+                }
+                case 0x1ce04aabu:
                 {
                     if (name == BuiltInName::texture_0U1B0B)
                     {
@@ -15949,47 +16254,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                     }
                     break;
                 }
-                case 0x04c9f876u:
-                {
-                    if (name.length() == 9 && name.beginsWith(BuiltInName::fwidth_))
-                    {
-                        return &BuiltInFunction::kFunction_fwidth_1B;
-                    }
-                    break;
-                }
-                case 0x112e5c27u:
-                {
-                    if (name == BuiltInName::textureOffset_0Q2B2C0B)
-                    {
-                        return &BuiltInFunction::kFunction_textureOffset_0Q2B2C0B;
-                    }
-                    break;
-                }
-                case 0x13b5a742u:
-                {
-                    if (name == BuiltInName::textureProjOffset_0V3B2C0B)
-                    {
-                        return &BuiltInFunction::kFunction_textureProjOffset_0V3B2C0B;
-                    }
-                    break;
-                }
-                case 0x14a54bb5u:
-                {
-                    if (name == BuiltInName::textureProj_0M3B0B)
-                    {
-                        return &BuiltInFunction::kFunction_textureProj_0M3B0B;
-                    }
-                    break;
-                }
-                case 0x18e874deu:
-                {
-                    if (name == BuiltInName::textureOffset_0V2B2C0B)
-                    {
-                        return &BuiltInFunction::kFunction_textureOffset_0V2B2C0B;
-                    }
-                    break;
-                }
-                case 0x1e7afc2eu:
+                case 0x1ce1eb81u:
                 {
                     if (name == BuiltInName::texture_0X2B0B)
                     {
@@ -15997,47 +16262,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                     }
                     break;
                 }
-                case 0x201ad4aeu:
-                {
-                    if (name == BuiltInName::textureProj_0P3B0B)
-                    {
-                        return &BuiltInFunction::kFunction_textureProj_0P3B0B;
-                    }
-                    break;
-                }
-                case 0x212162acu:
-                {
-                    if (name == BuiltInName::textureProj_0Z3B0B)
-                    {
-                        return &BuiltInFunction::kFunction_textureProj_0Z3B0B;
-                    }
-                    break;
-                }
-                case 0x2a65dfa6u:
-                {
-                    if (name.length() == 7 && name.beginsWith(BuiltInName::dFdy_))
-                    {
-                        return &BuiltInFunction::kFunction_dFdy_0B;
-                    }
-                    break;
-                }
-                case 0x305a9bdfu:
-                {
-                    if (name == BuiltInName::textureOffset_0X2B1C0B)
-                    {
-                        return &BuiltInFunction::kFunction_textureOffset_0X2B1C0B;
-                    }
-                    break;
-                }
-                case 0x30de4eebu:
-                {
-                    if (name.length() == 7 && name.beginsWith(BuiltInName::dFdx_))
-                    {
-                        return &BuiltInFunction::kFunction_dFdx_0B;
-                    }
-                    break;
-                }
-                case 0x3171cee2u:
+                case 0x1ce319feu:
                 {
                     if (name == BuiltInName::texture_0M1B0B)
                     {
@@ -16045,7 +16270,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                     }
                     break;
                 }
-                case 0x38c7ba95u:
+                case 0x1ce386eeu:
                 {
                     if (name == BuiltInName::texture_0P1B0B)
                     {
@@ -16053,23 +16278,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                     }
                     break;
                 }
-                case 0x3b753944u:
-                {
-                    if (name == BuiltInName::textureProj_0M2B0B)
-                    {
-                        return &BuiltInFunction::kFunction_textureProj_0M2B0B;
-                    }
-                    break;
-                }
-                case 0x3b7b4d8cu:
-                {
-                    if (name == BuiltInName::textureProj_0U2B0B)
-                    {
-                        return &BuiltInFunction::kFunction_textureProj_0U2B0B;
-                    }
-                    break;
-                }
-                case 0x43c5755cu:
+                case 0x1ce4390bu:
                 {
                     if (name == BuiltInName::texture_0V2B0B)
                     {
@@ -16077,7 +16286,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                     }
                     break;
                 }
-                case 0x44531081u:
+                case 0x1ce445b0u:
                 {
                     if (name == BuiltInName::texture_0L1B0B)
                     {
@@ -16085,63 +16294,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                     }
                     break;
                 }
-                case 0x4b4881e9u:
-                {
-                    if (name == BuiltInName::textureProj_0Q3B0B)
-                    {
-                        return &BuiltInFunction::kFunction_textureProj_0Q3B0B;
-                    }
-                    break;
-                }
-                case 0x4c6853c3u:
-                {
-                    if (name.length() == 7 && name.beginsWith(BuiltInName::dFdy_))
-                    {
-                        return &BuiltInFunction::kFunction_dFdy_1B;
-                    }
-                    break;
-                }
-                case 0x522fa659u:
-                {
-                    if (name == BuiltInName::textureOffset_0Z2B1C0B)
-                    {
-                        return &BuiltInFunction::kFunction_textureOffset_0Z2B1C0B;
-                    }
-                    break;
-                }
-                case 0x53bcaf1du:
-                {
-                    if (name == BuiltInName::textureProj_0U3B0B)
-                    {
-                        return &BuiltInFunction::kFunction_textureProj_0U3B0B;
-                    }
-                    break;
-                }
-                case 0x563bd7d7u:
-                {
-                    if (name == BuiltInName::textureOffset_0U1B1C0B)
-                    {
-                        return &BuiltInFunction::kFunction_textureOffset_0U1B1C0B;
-                    }
-                    break;
-                }
-                case 0x56e0c954u:
-                {
-                    if (name.length() == 7 && name.beginsWith(BuiltInName::dFdx_))
-                    {
-                        return &BuiltInFunction::kFunction_dFdx_3B;
-                    }
-                    break;
-                }
-                case 0x5ab4ebd4u:
-                {
-                    if (name == BuiltInName::textureProjOffset_0U3B1C0B)
-                    {
-                        return &BuiltInFunction::kFunction_textureProjOffset_0U3B1C0B;
-                    }
-                    break;
-                }
-                case 0x68d90930u:
+                case 0x1ce684a0u:
                 {
                     if (name == BuiltInName::texture_0Z2B0B)
                     {
@@ -16149,15 +16302,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                     }
                     break;
                 }
-                case 0x696b3b81u:
-                {
-                    if (name == BuiltInName::textureProj_0I3B0B)
-                    {
-                        return &BuiltInFunction::kFunction_textureProj_0I3B0B;
-                    }
-                    break;
-                }
-                case 0x6c785ca5u:
+                case 0x1ce6cb20u:
                 {
                     if (name == BuiltInName::texture_0Q2B0B)
                     {
@@ -16165,31 +16310,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                     }
                     break;
                 }
-                case 0x726ace2cu:
-                {
-                    if (name.length() == 7 && name.beginsWith(BuiltInName::dFdy_))
-                    {
-                        return &BuiltInFunction::kFunction_dFdy_2B;
-                    }
-                    break;
-                }
-                case 0x7b1b7dcfu:
-                {
-                    if (name == BuiltInName::textureProjOffset_0P3B1C0B)
-                    {
-                        return &BuiltInFunction::kFunction_textureProjOffset_0P3B1C0B;
-                    }
-                    break;
-                }
-                case 0x7cb00963u:
-                {
-                    if (name == BuiltInName::textureProjOffset_0Q3B2C0B)
-                    {
-                        return &BuiltInFunction::kFunction_textureProjOffset_0Q3B2C0B;
-                    }
-                    break;
-                }
-                case 0x7f200dc3u:
+                case 0x1ce7ffc3u:
                 {
                     if (name == BuiltInName::texture_0W2B0B)
                     {
@@ -16197,15 +16318,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                     }
                     break;
                 }
-                case 0x80e34a09u:
-                {
-                    if (name.length() == 7 && name.beginsWith(BuiltInName::dFdx_))
-                    {
-                        return &BuiltInFunction::kFunction_dFdx_2B;
-                    }
-                    break;
-                }
-                case 0x875430c7u:
+                case 0x1ce87584u:
                 {
                     if (name == BuiltInName::texture_0K2B0B)
                     {
@@ -16213,39 +16326,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                     }
                     break;
                 }
-                case 0x88103c08u:
-                {
-                    if (name == BuiltInName::gl_FragDepth)
-                    {
-                        return &BuiltInVariable::kVar_gl_FragDepth;
-                    }
-                    break;
-                }
-                case 0x8edb114eu:
-                {
-                    if (name.length() == 7 && name.beginsWith(BuiltInName::dFdx_))
-                    {
-                        return &BuiltInFunction::kFunction_dFdx_1B;
-                    }
-                    break;
-                }
-                case 0x9c6d4ee1u:
-                {
-                    if (name.length() == 7 && name.beginsWith(BuiltInName::dFdy_))
-                    {
-                        return &BuiltInFunction::kFunction_dFdy_3B;
-                    }
-                    break;
-                }
-                case 0xa6cba313u:
-                {
-                    if (name.length() == 9 && name.beginsWith(BuiltInName::fwidth_))
-                    {
-                        return &BuiltInFunction::kFunction_fwidth_0B;
-                    }
-                    break;
-                }
-                case 0xa702218fu:
+                case 0x1cea71adu:
                 {
                     if (name == BuiltInName::texture_0S2B0B)
                     {
@@ -16253,47 +16334,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                     }
                     break;
                 }
-                case 0xa8305e3fu:
-                {
-                    if (name == BuiltInName::textureProj_0P2B0B)
-                    {
-                        return &BuiltInFunction::kFunction_textureProj_0P2B0B;
-                    }
-                    break;
-                }
-                case 0xa9904518u:
-                {
-                    if (name == BuiltInName::textureProj_0V3B0B)
-                    {
-                        return &BuiltInFunction::kFunction_textureProj_0V3B0B;
-                    }
-                    break;
-                }
-                case 0xaee18cb0u:
-                {
-                    if (name == BuiltInName::textureOffset_0H1B1C0B)
-                    {
-                        return &BuiltInFunction::kFunction_textureOffset_0H1B1C0B;
-                    }
-                    break;
-                }
-                case 0xb07a78bfu:
-                {
-                    if (name == BuiltInName::textureOffset_0I2B2C0B)
-                    {
-                        return &BuiltInFunction::kFunction_textureOffset_0I2B2C0B;
-                    }
-                    break;
-                }
-                case 0xb1a6333du:
-                {
-                    if (name == BuiltInName::textureProjOffset_0Z3B1C0B)
-                    {
-                        return &BuiltInFunction::kFunction_textureProjOffset_0Z3B1C0B;
-                    }
-                    break;
-                }
-                case 0xb92bf800u:
+                case 0x1ceb9abfu:
                 {
                     if (name == BuiltInName::texture_0J2B0B)
                     {
@@ -16301,63 +16342,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                     }
                     break;
                 }
-                case 0xc44ccce7u:
-                {
-                    if (name == BuiltInName::textureProjOffset_0H3B1C0B)
-                    {
-                        return &BuiltInFunction::kFunction_textureProjOffset_0H3B1C0B;
-                    }
-                    break;
-                }
-                case 0xc4f49a7eu:
-                {
-                    if (name == BuiltInName::textureOffset_0K2B1C0B)
-                    {
-                        return &BuiltInFunction::kFunction_textureOffset_0K2B1C0B;
-                    }
-                    break;
-                }
-                case 0xcae04b35u:
-                {
-                    if (name == BuiltInName::textureProjOffset_0U2B1C0B)
-                    {
-                        return &BuiltInFunction::kFunction_textureProjOffset_0U2B1C0B;
-                    }
-                    break;
-                }
-                case 0xcae3e8c6u:
-                {
-                    if (name == BuiltInName::textureProj_0H3B0B)
-                    {
-                        return &BuiltInFunction::kFunction_textureProj_0H3B0B;
-                    }
-                    break;
-                }
-                case 0xccce1d7cu:
-                {
-                    if (name.length() == 9 && name.beginsWith(BuiltInName::fwidth_))
-                    {
-                        return &BuiltInFunction::kFunction_fwidth_3B;
-                    }
-                    break;
-                }
-                case 0xd4ea75bbu:
-                {
-                    if (name == BuiltInName::textureProjOffset_0I3B2C0B)
-                    {
-                        return &BuiltInFunction::kFunction_textureProjOffset_0I3B2C0B;
-                    }
-                    break;
-                }
-                case 0xddf5b9e6u:
-                {
-                    if (name == BuiltInName::textureOffset_0S2B1C0B)
-                    {
-                        return &BuiltInFunction::kFunction_textureOffset_0S2B1C0B;
-                    }
-                    break;
-                }
-                case 0xde51954du:
+                case 0x1cede054u:
                 {
                     if (name == BuiltInName::texture_0H1B0B)
                     {
@@ -16365,31 +16350,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                     }
                     break;
                 }
-                case 0xdf67b56eu:
-                {
-                    if (name == BuiltInName::textureProjOffset_0H2B1C0B)
-                    {
-                        return &BuiltInFunction::kFunction_textureProjOffset_0H2B1C0B;
-                    }
-                    break;
-                }
-                case 0xdf9fccd7u:
-                {
-                    if (name == BuiltInName::textureProj_0H2B0B)
-                    {
-                        return &BuiltInFunction::kFunction_textureProj_0H2B0B;
-                    }
-                    break;
-                }
-                case 0xdfde92d8u:
-                {
-                    if (name == BuiltInName::textureOffset_0P1B1C0B)
-                    {
-                        return &BuiltInFunction::kFunction_textureOffset_0P1B1C0B;
-                    }
-                    break;
-                }
-                case 0xe5810cc8u:
+                case 0x1cee54d8u:
                 {
                     if (name == BuiltInName::texture_0R2B0B)
                     {
@@ -16397,23 +16358,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                     }
                     break;
                 }
-                case 0xec06a1b6u:
-                {
-                    if (name == BuiltInName::textureProjOffset_0P2B1C0B)
-                    {
-                        return &BuiltInFunction::kFunction_textureProjOffset_0P2B1C0B;
-                    }
-                    break;
-                }
-                case 0xf6d09e31u:
-                {
-                    if (name.length() == 9 && name.beginsWith(BuiltInName::fwidth_))
-                    {
-                        return &BuiltInFunction::kFunction_fwidth_2B;
-                    }
-                    break;
-                }
-                case 0xf79abc24u:
+                case 0x1cef758fu:
                 {
                     if (name == BuiltInName::texture_0a3B0B)
                     {
@@ -16421,7 +16366,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                     }
                     break;
                 }
-                case 0xfbe2aeddu:
+                case 0x1cefb0f7u:
                 {
                     if (name == BuiltInName::texture_0I2B0B)
                     {
@@ -16429,11 +16374,283 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                     }
                     break;
                 }
-                case 0xfcf64e0bu:
+                case 0x2d202f3fu:
+                {
+                    if (name == BuiltInName::textureProj_0L3B0B)
+                    {
+                        return &BuiltInFunction::kFunction_textureProj_0L3B0B;
+                    }
+                    break;
+                }
+                case 0x2d2141e1u:
+                {
+                    if (name == BuiltInName::textureProj_0M3B0B)
+                    {
+                        return &BuiltInFunction::kFunction_textureProj_0M3B0B;
+                    }
+                    break;
+                }
+                case 0x2d220503u:
+                {
+                    if (name == BuiltInName::textureProj_0P3B0B)
+                    {
+                        return &BuiltInFunction::kFunction_textureProj_0P3B0B;
+                    }
+                    break;
+                }
+                case 0x2d2210bau:
+                {
+                    if (name == BuiltInName::textureProj_0Z3B0B)
+                    {
+                        return &BuiltInFunction::kFunction_textureProj_0Z3B0B;
+                    }
+                    break;
+                }
+                case 0x2d23ba38u:
+                {
+                    if (name == BuiltInName::textureProj_0U2B0B)
+                    {
+                        return &BuiltInFunction::kFunction_textureProj_0U2B0B;
+                    }
+                    break;
+                }
+                case 0x2d23be17u:
+                {
+                    if (name == BuiltInName::textureProj_0M2B0B)
+                    {
+                        return &BuiltInFunction::kFunction_textureProj_0M2B0B;
+                    }
+                    break;
+                }
+                case 0x2d24b561u:
+                {
+                    if (name == BuiltInName::textureProj_0Q3B0B)
+                    {
+                        return &BuiltInFunction::kFunction_textureProj_0Q3B0B;
+                    }
+                    break;
+                }
+                case 0x2d2534d7u:
+                {
+                    if (name == BuiltInName::textureProj_0U3B0B)
+                    {
+                        return &BuiltInFunction::kFunction_textureProj_0U3B0B;
+                    }
+                    break;
+                }
+                case 0x2d269d32u:
+                {
+                    if (name == BuiltInName::textureProj_0I3B0B)
+                    {
+                        return &BuiltInFunction::kFunction_textureProj_0I3B0B;
+                    }
+                    break;
+                }
+                case 0x2d2a8d3au:
+                {
+                    if (name == BuiltInName::textureProj_0P2B0B)
+                    {
+                        return &BuiltInFunction::kFunction_textureProj_0P2B0B;
+                    }
+                    break;
+                }
+                case 0x2d2a9c1cu:
+                {
+                    if (name == BuiltInName::textureProj_0V3B0B)
+                    {
+                        return &BuiltInFunction::kFunction_textureProj_0V3B0B;
+                    }
+                    break;
+                }
+                case 0x2d2ca6f8u:
+                {
+                    if (name == BuiltInName::textureProj_0H3B0B)
+                    {
+                        return &BuiltInFunction::kFunction_textureProj_0H3B0B;
+                    }
+                    break;
+                }
+                case 0x2d2df52bu:
+                {
+                    if (name == BuiltInName::textureProj_0H2B0B)
+                    {
+                        return &BuiltInFunction::kFunction_textureProj_0H2B0B;
+                    }
+                    break;
+                }
+                case 0x2d2fc16fu:
                 {
                     if (name == BuiltInName::textureProj_0L2B0B)
                     {
                         return &BuiltInFunction::kFunction_textureProj_0L2B0B;
+                    }
+                    break;
+                }
+                case 0x35611ec2u:
+                {
+                    if (name == BuiltInName::textureOffset_0Q2B2C0B)
+                    {
+                        return &BuiltInFunction::kFunction_textureOffset_0Q2B2C0B;
+                    }
+                    break;
+                }
+                case 0x35618a59u:
+                {
+                    if (name == BuiltInName::textureOffset_0V2B2C0B)
+                    {
+                        return &BuiltInFunction::kFunction_textureOffset_0V2B2C0B;
+                    }
+                    break;
+                }
+                case 0x35630e76u:
+                {
+                    if (name == BuiltInName::textureOffset_0X2B1C0B)
+                    {
+                        return &BuiltInFunction::kFunction_textureOffset_0X2B1C0B;
+                    }
+                    break;
+                }
+                case 0x356524a3u:
+                {
+                    if (name == BuiltInName::textureOffset_0Z2B1C0B)
+                    {
+                        return &BuiltInFunction::kFunction_textureOffset_0Z2B1C0B;
+                    }
+                    break;
+                }
+                case 0x3565646au:
+                {
+                    if (name == BuiltInName::textureOffset_0U1B1C0B)
+                    {
+                        return &BuiltInFunction::kFunction_textureOffset_0U1B1C0B;
+                    }
+                    break;
+                }
+                case 0x356ae2a8u:
+                {
+                    if (name == BuiltInName::textureOffset_0H1B1C0B)
+                    {
+                        return &BuiltInFunction::kFunction_textureOffset_0H1B1C0B;
+                    }
+                    break;
+                }
+                case 0x356b0f18u:
+                {
+                    if (name == BuiltInName::textureOffset_0I2B2C0B)
+                    {
+                        return &BuiltInFunction::kFunction_textureOffset_0I2B2C0B;
+                    }
+                    break;
+                }
+                case 0x356c4537u:
+                {
+                    if (name == BuiltInName::textureOffset_0K2B1C0B)
+                    {
+                        return &BuiltInFunction::kFunction_textureOffset_0K2B1C0B;
+                    }
+                    break;
+                }
+                case 0x356dd6bdu:
+                {
+                    if (name == BuiltInName::textureOffset_0S2B1C0B)
+                    {
+                        return &BuiltInFunction::kFunction_textureOffset_0S2B1C0B;
+                    }
+                    break;
+                }
+                case 0x356dff31u:
+                {
+                    if (name == BuiltInName::textureOffset_0P1B1C0B)
+                    {
+                        return &BuiltInFunction::kFunction_textureOffset_0P1B1C0B;
+                    }
+                    break;
+                }
+                case 0x45a13c18u:
+                {
+                    if (name == BuiltInName::textureProjOffset_0V3B2C0B)
+                    {
+                        return &BuiltInFunction::kFunction_textureProjOffset_0V3B2C0B;
+                    }
+                    break;
+                }
+                case 0x45a5a09au:
+                {
+                    if (name == BuiltInName::textureProjOffset_0U3B1C0B)
+                    {
+                        return &BuiltInFunction::kFunction_textureProjOffset_0U3B1C0B;
+                    }
+                    break;
+                }
+                case 0x45a7bc78u:
+                {
+                    if (name == BuiltInName::textureProjOffset_0P3B1C0B)
+                    {
+                        return &BuiltInFunction::kFunction_textureProjOffset_0P3B1C0B;
+                    }
+                    break;
+                }
+                case 0x45a7c263u:
+                {
+                    if (name == BuiltInName::textureProjOffset_0Q3B2C0B)
+                    {
+                        return &BuiltInFunction::kFunction_textureProjOffset_0Q3B2C0B;
+                    }
+                    break;
+                }
+                case 0x45ab195eu:
+                {
+                    if (name == BuiltInName::textureProjOffset_0Z3B1C0B)
+                    {
+                        return &BuiltInFunction::kFunction_textureProjOffset_0Z3B1C0B;
+                    }
+                    break;
+                }
+                case 0x45ac482bu:
+                {
+                    if (name == BuiltInName::textureProjOffset_0H3B1C0B)
+                    {
+                        return &BuiltInFunction::kFunction_textureProjOffset_0H3B1C0B;
+                    }
+                    break;
+                }
+                case 0x45aca531u:
+                {
+                    if (name == BuiltInName::textureProjOffset_0U2B1C0B)
+                    {
+                        return &BuiltInFunction::kFunction_textureProjOffset_0U2B1C0B;
+                    }
+                    break;
+                }
+                case 0x45ad4b1cu:
+                {
+                    if (name == BuiltInName::textureProjOffset_0I3B2C0B)
+                    {
+                        return &BuiltInFunction::kFunction_textureProjOffset_0I3B2C0B;
+                    }
+                    break;
+                }
+                case 0x45adf315u:
+                {
+                    if (name == BuiltInName::textureProjOffset_0H2B1C0B)
+                    {
+                        return &BuiltInFunction::kFunction_textureProjOffset_0H2B1C0B;
+                    }
+                    break;
+                }
+                case 0x45aec1dcu:
+                {
+                    if (name == BuiltInName::textureProjOffset_0P2B1C0B)
+                    {
+                        return &BuiltInFunction::kFunction_textureProjOffset_0P2B1C0B;
+                    }
+                    break;
+                }
+                case 0xfcc88d0bu:
+                {
+                    if (name == BuiltInName::gl_FragDepth)
+                    {
+                        return &BuiltInVariable::kVar_gl_FragDepth;
                     }
                     break;
                 }
@@ -16443,19 +16660,19 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
         {
             switch (nameHash)
             {
-                case 0x7e8a502du:
-                {
-                    if (name == BuiltInName::gl_InstanceID)
-                    {
-                        return &BuiltInVariable::kVar_gl_InstanceID;
-                    }
-                    break;
-                }
-                case 0xf39cf560u:
+                case 0xfcbf3cafu:
                 {
                     if (name == BuiltInName::gl_VertexID)
                     {
                         return &BuiltInVariable::kVar_gl_VertexID;
+                    }
+                    break;
+                }
+                case 0xfcd7e888u:
+                {
+                    if (name == BuiltInName::gl_InstanceID)
+                    {
+                        return &BuiltInVariable::kVar_gl_InstanceID;
                     }
                     break;
                 }
@@ -16465,7 +16682,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
         {
             switch (nameHash)
             {
-                case 0xec388c2du:
+                case 0xfcdecfa5u:
                 {
                     if (name == BuiltInName::gl_ViewID_OVR)
                     {
@@ -16480,31 +16697,113 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
     {
         switch (nameHash)
         {
-            case 0x05cd2a61u:
+            case 0x24e2c4e7u:
             {
-                if (name.length() == 18 && name.beginsWith(BuiltInName::texture2DRect_))
+                if (name.beginsWith(BuiltInName::texture2D))
                 {
-                    return &BuiltInFunction::kFunction_texture2DRect_0N1B;
-                }
-                break;
-            }
-            case 0x11ea9d29u:
-            {
-                if (name.length() == 16 && name.beginsWith(BuiltInName::textureCube_))
-                {
-                    return &BuiltInFunction::kFunction_textureCube_0J2B;
-                }
-                break;
-            }
-            case 0x2c852cb5u:
-            {
-                if (name.length() == 14 && name.beginsWith(BuiltInName::texture2D_))
-                {
+                    ASSERT(name.length() == 14);
                     return &BuiltInFunction::kFunction_texture2D_0H1B;
                 }
                 break;
             }
-            case 0x33484f89u:
+            case 0x24ee7b56u:
+            {
+                if (name.beginsWith(BuiltInName::texture2D))
+                {
+                    ASSERT(name.length() == 14);
+                    return &BuiltInFunction::kFunction_texture2D_0L1B;
+                }
+                break;
+            }
+            case 0x2d011380u:
+            {
+                if (name.beginsWith(BuiltInName::textureCube))
+                {
+                    ASSERT(name.length() == 16);
+                    return &BuiltInFunction::kFunction_textureCube_0J2B;
+                }
+                break;
+            }
+            case 0x352056b3u:
+            {
+                if (name.beginsWith(BuiltInName::texture2DRect))
+                {
+                    ASSERT(name.length() == 18);
+                    return &BuiltInFunction::kFunction_texture2DRect_0N1B;
+                }
+                break;
+            }
+            case 0x3525221bu:
+            {
+                if (name.beginsWith(BuiltInName::texture2DProj))
+                {
+                    ASSERT(name.length() == 18);
+                    return &BuiltInFunction::kFunction_texture2DProj_0L2B;
+                }
+                break;
+            }
+            case 0x352b0152u:
+            {
+                if (name.beginsWith(BuiltInName::texture2DProj))
+                {
+                    ASSERT(name.length() == 18);
+                    return &BuiltInFunction::kFunction_texture2DProj_0L3B;
+                }
+                break;
+            }
+            case 0x352b4775u:
+            {
+                if (name.beginsWith(BuiltInName::texture2DProj))
+                {
+                    ASSERT(name.length() == 18);
+                    return &BuiltInFunction::kFunction_texture2DProj_0H3B;
+                }
+                break;
+            }
+            case 0x352d6339u:
+            {
+                if (name.beginsWith(BuiltInName::texture2DProj))
+                {
+                    ASSERT(name.length() == 18);
+                    return &BuiltInFunction::kFunction_texture2DProj_0H2B;
+                }
+                break;
+            }
+            case 0x41972dabu:
+            {
+                if (name == BuiltInName::texture2DGradEXT_0H1B1B1B)
+                {
+                    return &BuiltInFunction::kFunction_texture2DGradEXT_0H1B1B1B;
+                }
+                break;
+            }
+            case 0x456a76c4u:
+            {
+                if (name.beginsWith(BuiltInName::texture2DRectProj))
+                {
+                    ASSERT(name.length() == 22);
+                    return &BuiltInFunction::kFunction_texture2DRectProj_0N3B;
+                }
+                break;
+            }
+            case 0x456c9272u:
+            {
+                if (name.beginsWith(BuiltInName::texture2DRectProj))
+                {
+                    ASSERT(name.length() == 22);
+                    return &BuiltInFunction::kFunction_texture2DRectProj_0N2B;
+                }
+                break;
+            }
+            case 0x49b79cd7u:
+            {
+                if (name == BuiltInName::textureCubeGradEXT_0J2B2B2B)
+                {
+                    return &BuiltInFunction::kFunction_textureCubeGradEXT_0J2B2B2B;
+                }
+                break;
+            }
+            case 0x51d33b0du:
             {
                 if (name == BuiltInName::texture2DProjGradEXT_0H3B1B1B)
                 {
@@ -16512,7 +16811,15 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                 }
                 break;
             }
-            case 0x4153e697u:
+            case 0x51dab294u:
+            {
+                if (name == BuiltInName::texture2DProjGradEXT_0H2B1B1B)
+                {
+                    return &BuiltInFunction::kFunction_texture2DProjGradEXT_0H2B1B1B;
+                }
+                break;
+            }
+            case 0xfcb413a9u:
             {
                 if (name == BuiltInName::gl_FragData)
                 {
@@ -16521,31 +16828,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                 }
                 break;
             }
-            case 0x5270451fu:
-            {
-                if (name.length() == 18 && name.beginsWith(BuiltInName::texture2DProj_))
-                {
-                    return &BuiltInFunction::kFunction_texture2DProj_0L2B;
-                }
-                break;
-            }
-            case 0x72093d38u:
-            {
-                if (name == BuiltInName::texture2DGradEXT_0H1B1B1B)
-                {
-                    return &BuiltInFunction::kFunction_texture2DGradEXT_0H1B1B1B;
-                }
-                break;
-            }
-            case 0x79171da6u:
-            {
-                if (name == BuiltInName::textureCubeGradEXT_0J2B2B2B)
-                {
-                    return &BuiltInFunction::kFunction_textureCubeGradEXT_0J2B2B2B;
-                }
-                break;
-            }
-            case 0x86a48dcbu:
+            case 0xfcf86783u:
             {
                 if (name == BuiltInName::gl_FragDepthEXT)
                 {
@@ -16555,7 +16838,15 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                 }
                 break;
             }
-            case 0x9dae09f6u:
+            case 0xfd4d8991u:
+            {
+                if (name == BuiltInName::gl_MaxVaryingVectors)
+                {
+                    return mVar_gl_MaxVaryingVectors;
+                }
+                break;
+            }
+            case 0xfd79d316u:
             {
                 if (name == BuiltInName::gl_SecondaryFragDataEXT)
                 {
@@ -16565,188 +16856,120 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                 }
                 break;
             }
-            case 0xa777e1bau:
-            {
-                if (name.length() == 22 && name.beginsWith(BuiltInName::texture2DRectProj_))
-                {
-                    return &BuiltInFunction::kFunction_texture2DRectProj_0N3B;
-                }
-                break;
-            }
-            case 0xabd48fdcu:
-            {
-                if (name == BuiltInName::texture2DProjGradEXT_0H2B1B1B)
-                {
-                    return &BuiltInFunction::kFunction_texture2DProjGradEXT_0H2B1B1B;
-                }
-                break;
-            }
-            case 0xb06d0782u:
-            {
-                if (name.length() == 18 && name.beginsWith(BuiltInName::texture2DProj_))
-                {
-                    return &BuiltInFunction::kFunction_texture2DProj_0L3B;
-                }
-                break;
-            }
-            case 0xb4d23a56u:
-            {
-                if (name.length() == 18 && name.beginsWith(BuiltInName::texture2DProj_))
-                {
-                    return &BuiltInFunction::kFunction_texture2DProj_0H3B;
-                }
-                break;
-            }
-            case 0xc97a55d7u:
-            {
-                if (name.length() == 22 && name.beginsWith(BuiltInName::texture2DRectProj_))
-                {
-                    return &BuiltInFunction::kFunction_texture2DRectProj_0N2B;
-                }
-                break;
-            }
-            case 0xd6d4ae73u:
-            {
-                if (name.length() == 18 && name.beginsWith(BuiltInName::texture2DProj_))
-                {
-                    return &BuiltInFunction::kFunction_texture2DProj_0H2B;
-                }
-                break;
-            }
-            case 0xd87bae2bu:
-            {
-                if (name == BuiltInName::gl_MaxVaryingVectors)
-                {
-                    return mVar_gl_MaxVaryingVectors;
-                }
-                break;
-            }
-            case 0xe7d17641u:
-            {
-                if (name.length() == 14 && name.beginsWith(BuiltInName::texture2D_))
-                {
-                    return &BuiltInFunction::kFunction_texture2D_0L1B;
-                }
-                break;
-            }
         }
         if (mShaderType == GL_FRAGMENT_SHADER)
         {
             switch (nameHash)
             {
-                case 0x04c9f876u:
+                case 0x1072a9fbu:
                 {
-                    if (name.length() == 9 && name.beginsWith(BuiltInName::fwidthExt_))
+                    if (name.beginsWith(BuiltInName::dFdyExt))
                     {
-                        return &BuiltInFunction::kFunction_fwidthExt_1B;
-                    }
-                    break;
-                }
-                case 0x1af4d39eu:
-                {
-                    if (name == BuiltInName::gl_FragColor)
-                    {
-                        return &BuiltInVariable::kVar_gl_FragColor;
-                    }
-                    break;
-                }
-                case 0x2a65dfa6u:
-                {
-                    if (name.length() == 7 && name.beginsWith(BuiltInName::dFdyExt_))
-                    {
+                        ASSERT(name.length() == 7);
                         return &BuiltInFunction::kFunction_dFdyExt_0B;
                     }
                     break;
                 }
-                case 0x30daf170u:
+                case 0x1073030fu:
                 {
-                    if (name == BuiltInName::texture2DProj_0H3B0B)
+                    if (name.beginsWith(BuiltInName::dFdxExt))
                     {
-                        return &BuiltInFunction::kFunction_texture2DProj_0H3B0B;
-                    }
-                    break;
-                }
-                case 0x30de4eebu:
-                {
-                    if (name.length() == 7 && name.beginsWith(BuiltInName::dFdxExt_))
-                    {
+                        ASSERT(name.length() == 7);
                         return &BuiltInFunction::kFunction_dFdxExt_0B;
                     }
                     break;
                 }
-                case 0x39021baeu:
+                case 0x1074c546u:
                 {
-                    if (name == BuiltInName::texture2DProjLodEXT_0H3B0B)
+                    if (name.beginsWith(BuiltInName::dFdyExt))
                     {
-                        return &BuiltInFunction::kFunction_texture2DProjLodEXT_0H3B0B;
-                    }
-                    break;
-                }
-                case 0x43f81965u:
-                {
-                    if (name == BuiltInName::textureCubeLodEXT_0J2B0B)
-                    {
-                        return &BuiltInFunction::kFunction_textureCubeLodEXT_0J2B0B;
-                    }
-                    break;
-                }
-                case 0x4c6853c3u:
-                {
-                    if (name.length() == 7 && name.beginsWith(BuiltInName::dFdyExt_))
-                    {
+                        ASSERT(name.length() == 7);
                         return &BuiltInFunction::kFunction_dFdyExt_1B;
                     }
                     break;
                 }
-                case 0x56e0c954u:
+                case 0x10756758u:
                 {
-                    if (name.length() == 7 && name.beginsWith(BuiltInName::dFdxExt_))
+                    if (name.beginsWith(BuiltInName::dFdxExt))
                     {
+                        ASSERT(name.length() == 7);
                         return &BuiltInFunction::kFunction_dFdxExt_3B;
                     }
                     break;
                 }
-                case 0x726ace2cu:
+                case 0x10772880u:
                 {
-                    if (name.length() == 7 && name.beginsWith(BuiltInName::dFdyExt_))
+                    if (name.beginsWith(BuiltInName::dFdyExt))
                     {
+                        ASSERT(name.length() == 7);
                         return &BuiltInFunction::kFunction_dFdyExt_2B;
                     }
                     break;
                 }
-                case 0x80e34a09u:
+                case 0x1078043du:
                 {
-                    if (name.length() == 7 && name.beginsWith(BuiltInName::dFdxExt_))
+                    if (name.beginsWith(BuiltInName::dFdxExt))
                     {
+                        ASSERT(name.length() == 7);
                         return &BuiltInFunction::kFunction_dFdxExt_2B;
                     }
                     break;
                 }
-                case 0x8682af79u:
+                case 0x1078ecffu:
                 {
-                    if (name == BuiltInName::texture2DLodEXT_0H1B0B)
+                    if (name.beginsWith(BuiltInName::dFdxExt))
                     {
-                        return &BuiltInFunction::kFunction_texture2DLodEXT_0H1B0B;
-                    }
-                    break;
-                }
-                case 0x88cd05e1u:
-                {
-                    if (name == BuiltInName::texture2DProj_0H2B0B)
-                    {
-                        return &BuiltInFunction::kFunction_texture2DProj_0H2B0B;
-                    }
-                    break;
-                }
-                case 0x8edb114eu:
-                {
-                    if (name.length() == 7 && name.beginsWith(BuiltInName::dFdxExt_))
-                    {
+                        ASSERT(name.length() == 7);
                         return &BuiltInFunction::kFunction_dFdxExt_1B;
                     }
                     break;
                 }
-                case 0x8ee03ca7u:
+                case 0x1079c835u:
+                {
+                    if (name.beginsWith(BuiltInName::dFdyExt))
+                    {
+                        ASSERT(name.length() == 7);
+                        return &BuiltInFunction::kFunction_dFdyExt_3B;
+                    }
+                    break;
+                }
+                case 0x189044e9u:
+                {
+                    if (name.beginsWith(BuiltInName::fwidthExt))
+                    {
+                        ASSERT(name.length() == 9);
+                        return &BuiltInFunction::kFunction_fwidthExt_1B;
+                    }
+                    break;
+                }
+                case 0x189a6fa9u:
+                {
+                    if (name.beginsWith(BuiltInName::fwidthExt))
+                    {
+                        ASSERT(name.length() == 9);
+                        return &BuiltInFunction::kFunction_fwidthExt_0B;
+                    }
+                    break;
+                }
+                case 0x189cc19du:
+                {
+                    if (name.beginsWith(BuiltInName::fwidthExt))
+                    {
+                        ASSERT(name.length() == 9);
+                        return &BuiltInFunction::kFunction_fwidthExt_3B;
+                    }
+                    break;
+                }
+                case 0x189f6338u:
+                {
+                    if (name.beginsWith(BuiltInName::fwidthExt))
+                    {
+                        ASSERT(name.length() == 9);
+                        return &BuiltInFunction::kFunction_fwidthExt_2B;
+                    }
+                    break;
+                }
+                case 0x2508e2a4u:
                 {
                     if (name == BuiltInName::texture2D_0H1B0B)
                     {
@@ -16754,39 +16977,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                     }
                     break;
                 }
-                case 0x9c6d4ee1u:
-                {
-                    if (name.length() == 7 && name.beginsWith(BuiltInName::dFdyExt_))
-                    {
-                        return &BuiltInFunction::kFunction_dFdyExt_3B;
-                    }
-                    break;
-                }
-                case 0xa6cba313u:
-                {
-                    if (name.length() == 9 && name.beginsWith(BuiltInName::fwidthExt_))
-                    {
-                        return &BuiltInFunction::kFunction_fwidthExt_0B;
-                    }
-                    break;
-                }
-                case 0xc117a53fu:
-                {
-                    if (name == BuiltInName::texture2DProjLodEXT_0H2B0B)
-                    {
-                        return &BuiltInFunction::kFunction_texture2DProjLodEXT_0H2B0B;
-                    }
-                    break;
-                }
-                case 0xccce1d7cu:
-                {
-                    if (name.length() == 9 && name.beginsWith(BuiltInName::fwidthExt_))
-                    {
-                        return &BuiltInFunction::kFunction_fwidthExt_3B;
-                    }
-                    break;
-                }
-                case 0xd649f15bu:
+                case 0x2d2d65c4u:
                 {
                     if (name == BuiltInName::textureCube_0J2B0B)
                     {
@@ -16794,11 +16985,59 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                     }
                     break;
                 }
-                case 0xf6d09e31u:
+                case 0x35430cdfu:
                 {
-                    if (name.length() == 9 && name.beginsWith(BuiltInName::fwidthExt_))
+                    if (name == BuiltInName::texture2DProj_0H3B0B)
                     {
-                        return &BuiltInFunction::kFunction_fwidthExt_2B;
+                        return &BuiltInFunction::kFunction_texture2DProj_0H3B0B;
+                    }
+                    break;
+                }
+                case 0x35488931u:
+                {
+                    if (name == BuiltInName::texture2DProj_0H2B0B)
+                    {
+                        return &BuiltInFunction::kFunction_texture2DProj_0H2B0B;
+                    }
+                    break;
+                }
+                case 0x3d686753u:
+                {
+                    if (name == BuiltInName::texture2DLodEXT_0H1B0B)
+                    {
+                        return &BuiltInFunction::kFunction_texture2DLodEXT_0H1B0B;
+                    }
+                    break;
+                }
+                case 0x458436e4u:
+                {
+                    if (name == BuiltInName::textureCubeLodEXT_0J2B0B)
+                    {
+                        return &BuiltInFunction::kFunction_textureCubeLodEXT_0J2B0B;
+                    }
+                    break;
+                }
+                case 0x4da39b8fu:
+                {
+                    if (name == BuiltInName::texture2DProjLodEXT_0H3B0B)
+                    {
+                        return &BuiltInFunction::kFunction_texture2DProjLodEXT_0H3B0B;
+                    }
+                    break;
+                }
+                case 0x4dac1445u:
+                {
+                    if (name == BuiltInName::texture2DProjLodEXT_0H2B0B)
+                    {
+                        return &BuiltInFunction::kFunction_texture2DProjLodEXT_0H2B0B;
+                    }
+                    break;
+                }
+                case 0xfcc1acd3u:
+                {
+                    if (name == BuiltInName::gl_FragColor)
+                    {
+                        return &BuiltInVariable::kVar_gl_FragColor;
                     }
                     break;
                 }
@@ -16808,7 +17047,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
         {
             switch (nameHash)
             {
-                case 0x0cf3085au:
+                case 0x3130c76au:
                 {
                     if (name == BuiltInName::texture2DLod_0H1B0B)
                     {
@@ -16816,15 +17055,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                     }
                     break;
                 }
-                case 0x157c8b27u:
-                {
-                    if (name == BuiltInName::texture2DProjLod_0H3B0B)
-                    {
-                        return &BuiltInFunction::kFunction_texture2DProjLod_0H3B0B;
-                    }
-                    break;
-                }
-                case 0x8238ae88u:
+                case 0x39582d02u:
                 {
                     if (name == BuiltInName::textureCubeLod_0J2B0B)
                     {
@@ -16832,7 +17063,15 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                     }
                     break;
                 }
-                case 0x8ea43616u:
+                case 0x41715cefu:
+                {
+                    if (name == BuiltInName::texture2DProjLod_0H3B0B)
+                    {
+                        return &BuiltInFunction::kFunction_texture2DProjLod_0H3B0B;
+                    }
+                    break;
+                }
+                case 0x4178ec55u:
                 {
                     if (name == BuiltInName::texture2DProjLod_0H2B0B)
                     {
@@ -16846,7 +17085,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
         {
             switch (nameHash)
             {
-                case 0xae48fef9u:
+                case 0xfd8aea76u:
                 {
                     if (name == BuiltInName::gl_SecondaryFragColorEXT)
                     {
@@ -16860,7 +17099,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
         {
             switch (nameHash)
             {
-                case 0x2ca6b5f7u:
+                case 0xfcf2cf9cu:
                 {
                     if (name == BuiltInName::gl_LastFragData)
                     {
@@ -16874,19 +17113,19 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
         {
             switch (nameHash)
             {
-                case 0x048d047eu:
-                {
-                    if (name == BuiltInName::gl_LastFragColor)
-                    {
-                        return &BuiltInVariable::kVar_gl_LastFragColor;
-                    }
-                    break;
-                }
-                case 0x2ca6b5f7u:
+                case 0xfcf2cf9cu:
                 {
                     if (name == BuiltInName::gl_LastFragData)
                     {
                         return mVar_gl_LastFragDataNV;
+                    }
+                    break;
+                }
+                case 0xfd004caeu:
+                {
+                    if (name == BuiltInName::gl_LastFragColor)
+                    {
+                        return &BuiltInVariable::kVar_gl_LastFragColor;
                     }
                     break;
                 }
@@ -16898,7 +17137,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
         {
             switch (nameHash)
             {
-                case 0xe1ad07e0u:
+                case 0xfd3e1d30u:
                 {
                     if (name == BuiltInName::gl_LastFragColorARM)
                     {
@@ -16912,7 +17151,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
         {
             switch (nameHash)
             {
-                case 0xec388c2du:
+                case 0xfcdecfa5u:
                 {
                     if (name == BuiltInName::gl_ViewID_OVR)
                     {
@@ -16925,223 +17164,565 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
     }
     switch (nameHash)
     {
-        case 0x009846a3u:
+        case 0x0c60bd37u:
         {
-            if (name.length() == 8 && name.beginsWith(BuiltInName::max_))
+            if (name.beginsWith(BuiltInName::log))
             {
-                return &BuiltInFunction::kFunction_max_2B2B;
-            }
-            break;
-        }
-        case 0x046a9b13u:
-        {
-            if (name.length() == 8 && name.beginsWith(BuiltInName::mod_))
-            {
-                return &BuiltInFunction::kFunction_mod_2B0B;
-            }
-            break;
-        }
-        case 0x05339330u:
-        {
-            if (name.length() == 7 && name.beginsWith(BuiltInName::acos_))
-            {
-                return &BuiltInFunction::kFunction_acos_3B;
-            }
-            break;
-        }
-        case 0x0548e241u:
-        {
-            if (name.length() == 9 && name.beginsWith(BuiltInName::atan_))
-            {
-                return &BuiltInFunction::kFunction_atan_3B3B;
-            }
-            break;
-        }
-        case 0x061a7a4fu:
-        {
-            if (name.length() == 8 && name.beginsWith(BuiltInName::fract_))
-            {
-                return &BuiltInFunction::kFunction_fract_0B;
-            }
-            break;
-        }
-        case 0x081f826fu:
-        {
-            if (name == BuiltInName::gl_MaxCombinedTextureImageUnits)
-            {
-                return mVar_gl_MaxCombinedTextureImageUnits;
-            }
-            break;
-        }
-        case 0x0887a662u:
-        {
-            if (name.length() == 13 && name.beginsWith(BuiltInName::distance_))
-            {
-                return &BuiltInFunction::kFunction_distance_3B3B;
-            }
-            break;
-        }
-        case 0x0b09eda9u:
-        {
-            if (name.length() == 6 && name.beginsWith(BuiltInName::log_))
-            {
+                ASSERT(name.length() == 6);
                 return &BuiltInFunction::kFunction_log_0B;
             }
             break;
         }
-        case 0x0c4b44deu:
+        case 0x0c60fbdau:
         {
-            if (name == BuiltInName::refract_1B1B0B)
+            if (name.beginsWith(BuiltInName::all))
             {
-                return &BuiltInFunction::kFunction_refract_1B1B0B;
-            }
-            break;
-        }
-        case 0x0f84439eu:
-        {
-            if (name.length() == 6 && name.beginsWith(BuiltInName::all_))
-            {
+                ASSERT(name.length() == 6);
                 return &BuiltInFunction::kFunction_all_1E;
             }
             break;
         }
-        case 0x0fc88166u:
+        case 0x0c610070u:
         {
-            if (name.length() == 10 && name.beginsWith(BuiltInName::degrees_))
+            if (name.beginsWith(BuiltInName::tan))
             {
-                return &BuiltInFunction::kFunction_degrees_2B;
-            }
-            break;
-        }
-        case 0x108d38a3u:
-        {
-            if (name.length() == 6 && name.beginsWith(BuiltInName::tan_))
-            {
+                ASSERT(name.length() == 6);
                 return &BuiltInFunction::kFunction_tan_1B;
             }
             break;
         }
-        case 0x11769f9bu:
+        case 0x0c6118f2u:
         {
-            if (name.length() == 6 && name.beginsWith(BuiltInName::abs_))
+            if (name.beginsWith(BuiltInName::abs))
             {
+                ASSERT(name.length() == 6);
                 return &BuiltInFunction::kFunction_abs_0B;
             }
             break;
         }
-        case 0x128e361eu:
+        case 0x0c612efdu:
         {
-            if (name.length() == 6 && name.beginsWith(BuiltInName::notFunc_))
+            if (name.beginsWith(BuiltInName::notFunc))
             {
+                ASSERT(name.length() == 6);
                 return &BuiltInFunction::kFunction_notFunc_3E;
             }
             break;
         }
-        case 0x13c35068u:
+        case 0x0c617c1cu:
         {
-            if (name == BuiltInName::smoothstep_0B0B1B)
+            if (name.beginsWith(BuiltInName::cos))
             {
-                return &BuiltInFunction::kFunction_smoothstep_0B0B1B;
-            }
-            break;
-        }
-        case 0x13e5dde0u:
-        {
-            if (name.length() == 8 && name.beginsWith(BuiltInName::mod_))
-            {
-                return &BuiltInFunction::kFunction_mod_1B0B;
-            }
-            break;
-        }
-        case 0x14414e83u:
-        {
-            if (name.length() == 7 && name.beginsWith(BuiltInName::exp2_))
-            {
-                return &BuiltInFunction::kFunction_exp2_3B;
-            }
-            break;
-        }
-        case 0x15095167u:
-        {
-            if (name.length() == 14 && name.beginsWith(BuiltInName::inversesqrt_))
-            {
-                return &BuiltInFunction::kFunction_inversesqrt_2B;
-            }
-            break;
-        }
-        case 0x15c84f3cu:
-        {
-            if (name.length() == 7 && name.beginsWith(BuiltInName::ceil_))
-            {
-                return &BuiltInFunction::kFunction_ceil_2B;
-            }
-            break;
-        }
-        case 0x1655eae2u:
-        {
-            if (name == BuiltInName::faceforward_3B3B3B)
-            {
-                return &BuiltInFunction::kFunction_faceforward_3B3B3B;
-            }
-            break;
-        }
-        case 0x1731e675u:
-        {
-            if (name.length() == 9 && name.beginsWith(BuiltInName::length_))
-            {
-                return &BuiltInFunction::kFunction_length_0B;
-            }
-            break;
-        }
-        case 0x177cf26du:
-        {
-            if (name.length() == 8 && name.beginsWith(BuiltInName::min_))
-            {
-                return &BuiltInFunction::kFunction_min_2B2B;
-            }
-            break;
-        }
-        case 0x17fa43b8u:
-        {
-            if (name.length() == 6 && name.beginsWith(BuiltInName::cos_))
-            {
+                ASSERT(name.length() == 6);
                 return &BuiltInFunction::kFunction_cos_2B;
             }
             break;
         }
-        case 0x1901b4eeu:
+        case 0x0c6194f5u:
         {
-            if (name.length() == 6 && name.beginsWith(BuiltInName::log_))
+            if (name.beginsWith(BuiltInName::log))
             {
+                ASSERT(name.length() == 6);
                 return &BuiltInFunction::kFunction_log_3B;
             }
             break;
         }
-        case 0x1a10ccb7u:
+        case 0x0c632bd9u:
         {
-            if (name.length() == 7 && name.beginsWith(BuiltInName::sqrt_))
+            if (name.beginsWith(BuiltInName::any))
             {
-                return &BuiltInFunction::kFunction_sqrt_0B;
+                ASSERT(name.length() == 6);
+                return &BuiltInFunction::kFunction_any_1E;
             }
             break;
         }
-        case 0x1a473286u:
+        case 0x0c637d95u:
         {
-            if (name.length() == 13 && name.beginsWith(BuiltInName::distance_))
+            if (name.beginsWith(BuiltInName::abs))
             {
-                return &BuiltInFunction::kFunction_distance_2B2B;
+                ASSERT(name.length() == 6);
+                return &BuiltInFunction::kFunction_abs_3B;
             }
             break;
         }
-        case 0x1da7dd5eu:
+        case 0x0c63b949u:
         {
-            if (name.length() == 13 && name.beginsWith(BuiltInName::notEqual_))
+            if (name.beginsWith(BuiltInName::log))
             {
-                return &BuiltInFunction::kFunction_notEqual_1E1E;
+                ASSERT(name.length() == 6);
+                return &BuiltInFunction::kFunction_log_2B;
             }
             break;
         }
-        case 0x1f8d8da5u:
+        case 0x0c641ba1u:
+        {
+            if (name.beginsWith(BuiltInName::cos))
+            {
+                ASSERT(name.length() == 6);
+                return &BuiltInFunction::kFunction_cos_3B;
+            }
+            break;
+        }
+        case 0x0c65e3b3u:
+        {
+            if (name.beginsWith(BuiltInName::any))
+            {
+                ASSERT(name.length() == 6);
+                return &BuiltInFunction::kFunction_any_3E;
+            }
+            break;
+        }
+        case 0x0c6604cbu:
+        {
+            if (name.beginsWith(BuiltInName::sin))
+            {
+                ASSERT(name.length() == 6);
+                return &BuiltInFunction::kFunction_sin_1B;
+            }
+            break;
+        }
+        case 0x0c66131eu:
+        {
+            if (name.beginsWith(BuiltInName::log))
+            {
+                ASSERT(name.length() == 6);
+                return &BuiltInFunction::kFunction_log_1B;
+            }
+            break;
+        }
+        case 0x0c682adeu:
+        {
+            if (name.beginsWith(BuiltInName::any))
+            {
+                ASSERT(name.length() == 6);
+                return &BuiltInFunction::kFunction_any_2E;
+            }
+            break;
+        }
+        case 0x0c68a536u:
+        {
+            if (name.beginsWith(BuiltInName::sin))
+            {
+                ASSERT(name.length() == 6);
+                return &BuiltInFunction::kFunction_sin_0B;
+            }
+            break;
+        }
+        case 0x0c698f82u:
+        {
+            if (name.beginsWith(BuiltInName::sin))
+            {
+                ASSERT(name.length() == 6);
+                return &BuiltInFunction::kFunction_sin_3B;
+            }
+            break;
+        }
+        case 0x0c6a5499u:
+        {
+            if (name.beginsWith(BuiltInName::exp))
+            {
+                ASSERT(name.length() == 6);
+                return &BuiltInFunction::kFunction_exp_3B;
+            }
+            break;
+        }
+        case 0x0c6b32c8u:
+        {
+            if (name.beginsWith(BuiltInName::exp))
+            {
+                ASSERT(name.length() == 6);
+                return &BuiltInFunction::kFunction_exp_0B;
+            }
+            break;
+        }
+        case 0x0c6b658bu:
+        {
+            if (name.beginsWith(BuiltInName::tan))
+            {
+                ASSERT(name.length() == 6);
+                return &BuiltInFunction::kFunction_tan_2B;
+            }
+            break;
+        }
+        case 0x0c6ba397u:
+        {
+            if (name.beginsWith(BuiltInName::sin))
+            {
+                ASSERT(name.length() == 6);
+                return &BuiltInFunction::kFunction_sin_2B;
+            }
+            break;
+        }
+        case 0x0c6bff3cu:
+        {
+            if (name.beginsWith(BuiltInName::all))
+            {
+                ASSERT(name.length() == 6);
+                return &BuiltInFunction::kFunction_all_2E;
+            }
+            break;
+        }
+        case 0x0c6cfa67u:
+        {
+            if (name.beginsWith(BuiltInName::cos))
+            {
+                ASSERT(name.length() == 6);
+                return &BuiltInFunction::kFunction_cos_0B;
+            }
+            break;
+        }
+        case 0x0c6d5636u:
+        {
+            if (name.beginsWith(BuiltInName::exp))
+            {
+                ASSERT(name.length() == 6);
+                return &BuiltInFunction::kFunction_exp_1B;
+            }
+            break;
+        }
+        case 0x0c6db950u:
+        {
+            if (name.beginsWith(BuiltInName::all))
+            {
+                ASSERT(name.length() == 6);
+                return &BuiltInFunction::kFunction_all_3E;
+            }
+            break;
+        }
+        case 0x0c6ded4fu:
+        {
+            if (name.beginsWith(BuiltInName::notFunc))
+            {
+                ASSERT(name.length() == 6);
+                return &BuiltInFunction::kFunction_notFunc_1E;
+            }
+            break;
+        }
+        case 0x0c6e046eu:
+        {
+            if (name.beginsWith(BuiltInName::tan))
+            {
+                ASSERT(name.length() == 6);
+                return &BuiltInFunction::kFunction_tan_3B;
+            }
+            break;
+        }
+        case 0x0c6e1694u:
+        {
+            if (name.beginsWith(BuiltInName::abs))
+            {
+                ASSERT(name.length() == 6);
+                return &BuiltInFunction::kFunction_abs_2B;
+            }
+            break;
+        }
+        case 0x0c6ee660u:
+        {
+            if (name.beginsWith(BuiltInName::notFunc))
+            {
+                ASSERT(name.length() == 6);
+                return &BuiltInFunction::kFunction_notFunc_2E;
+            }
+            break;
+        }
+        case 0x0c6eec2au:
+        {
+            if (name.beginsWith(BuiltInName::tan))
+            {
+                ASSERT(name.length() == 6);
+                return &BuiltInFunction::kFunction_tan_0B;
+            }
+            break;
+        }
+        case 0x0c6efc3cu:
+        {
+            if (name.beginsWith(BuiltInName::abs))
+            {
+                ASSERT(name.length() == 6);
+                return &BuiltInFunction::kFunction_abs_1B;
+            }
+            break;
+        }
+        case 0x0c6f1633u:
+        {
+            if (name.beginsWith(BuiltInName::cos))
+            {
+                ASSERT(name.length() == 6);
+                return &BuiltInFunction::kFunction_cos_1B;
+            }
+            break;
+        }
+        case 0x0c6fbdb1u:
+        {
+            if (name.beginsWith(BuiltInName::exp))
+            {
+                ASSERT(name.length() == 6);
+                return &BuiltInFunction::kFunction_exp_2B;
+            }
+            break;
+        }
+        case 0x0c800f27u:
+        {
+            if (name.beginsWith(BuiltInName::max))
+            {
+                ASSERT(name.length() == 8);
+                return &BuiltInFunction::kFunction_max_2B2B;
+            }
+            break;
+        }
+        case 0x0c804dbau:
+        {
+            if (name.beginsWith(BuiltInName::mod))
+            {
+                ASSERT(name.length() == 8);
+                return &BuiltInFunction::kFunction_mod_2B0B;
+            }
+            break;
+        }
+        case 0x0c8133bdu:
+        {
+            if (name.beginsWith(BuiltInName::mod))
+            {
+                ASSERT(name.length() == 8);
+                return &BuiltInFunction::kFunction_mod_1B0B;
+            }
+            break;
+        }
+        case 0x0c8175a2u:
+        {
+            if (name.beginsWith(BuiltInName::min))
+            {
+                ASSERT(name.length() == 8);
+                return &BuiltInFunction::kFunction_min_2B2B;
+            }
+            break;
+        }
+        case 0x0c82396bu:
+        {
+            if (name.beginsWith(BuiltInName::min))
+            {
+                ASSERT(name.length() == 8);
+                return &BuiltInFunction::kFunction_min_1B0B;
+            }
+            break;
+        }
+        case 0x0c82ace0u:
+        {
+            if (name.beginsWith(BuiltInName::dot))
+            {
+                ASSERT(name.length() == 8);
+                return &BuiltInFunction::kFunction_dot_3B3B;
+            }
+            break;
+        }
+        case 0x0c831999u:
+        {
+            if (name.beginsWith(BuiltInName::pow))
+            {
+                ASSERT(name.length() == 8);
+                return &BuiltInFunction::kFunction_pow_3B3B;
+            }
+            break;
+        }
+        case 0x0c83ba4au:
+        {
+            if (name.beginsWith(BuiltInName::min))
+            {
+                ASSERT(name.length() == 8);
+                return &BuiltInFunction::kFunction_min_0B0B;
+            }
+            break;
+        }
+        case 0x0c83d010u:
+        {
+            if (name.beginsWith(BuiltInName::mod))
+            {
+                ASSERT(name.length() == 8);
+                return &BuiltInFunction::kFunction_mod_1B1B;
+            }
+            break;
+        }
+        case 0x0c8412a7u:
+        {
+            if (name.beginsWith(BuiltInName::dot))
+            {
+                ASSERT(name.length() == 8);
+                return &BuiltInFunction::kFunction_dot_1B1B;
+            }
+            break;
+        }
+        case 0x0c844fb5u:
+        {
+            if (name.beginsWith(BuiltInName::max))
+            {
+                ASSERT(name.length() == 8);
+                return &BuiltInFunction::kFunction_max_3B3B;
+            }
+            break;
+        }
+        case 0x0c84da0eu:
+        {
+            if (name.beginsWith(BuiltInName::min))
+            {
+                ASSERT(name.length() == 8);
+                return &BuiltInFunction::kFunction_min_1B1B;
+            }
+            break;
+        }
+        case 0x0c8540c8u:
+        {
+            if (name.beginsWith(BuiltInName::mod))
+            {
+                ASSERT(name.length() == 8);
+                return &BuiltInFunction::kFunction_mod_2B2B;
+            }
+            break;
+        }
+        case 0x0c860330u:
+        {
+            if (name.beginsWith(BuiltInName::pow))
+            {
+                ASSERT(name.length() == 8);
+                return &BuiltInFunction::kFunction_pow_2B2B;
+            }
+            break;
+        }
+        case 0x0c86a229u:
+        {
+            if (name.beginsWith(BuiltInName::max))
+            {
+                ASSERT(name.length() == 8);
+                return &BuiltInFunction::kFunction_max_3B0B;
+            }
+            break;
+        }
+        case 0x0c87043eu:
+        {
+            if (name.beginsWith(BuiltInName::pow))
+            {
+                ASSERT(name.length() == 8);
+                return &BuiltInFunction::kFunction_pow_1B1B;
+            }
+            break;
+        }
+        case 0x0c8a02a9u:
+        {
+            if (name.beginsWith(BuiltInName::max))
+            {
+                ASSERT(name.length() == 8);
+                return &BuiltInFunction::kFunction_max_1B0B;
+            }
+            break;
+        }
+        case 0x0c8a0e3eu:
+        {
+            if (name.beginsWith(BuiltInName::dot))
+            {
+                ASSERT(name.length() == 8);
+                return &BuiltInFunction::kFunction_dot_0B0B;
+            }
+            break;
+        }
+        case 0x0c8ae761u:
+        {
+            if (name.beginsWith(BuiltInName::mod))
+            {
+                ASSERT(name.length() == 8);
+                return &BuiltInFunction::kFunction_mod_3B3B;
+            }
+            break;
+        }
+        case 0x0c8bcf1bu:
+        {
+            if (name.beginsWith(BuiltInName::mod))
+            {
+                ASSERT(name.length() == 8);
+                return &BuiltInFunction::kFunction_mod_3B0B;
+            }
+            break;
+        }
+        case 0x0c8bed0fu:
+        {
+            if (name.beginsWith(BuiltInName::min))
+            {
+                ASSERT(name.length() == 8);
+                return &BuiltInFunction::kFunction_min_3B3B;
+            }
+            break;
+        }
+        case 0x0c8c26cdu:
+        {
+            if (name.beginsWith(BuiltInName::max))
+            {
+                ASSERT(name.length() == 8);
+                return &BuiltInFunction::kFunction_max_1B1B;
+            }
+            break;
+        }
+        case 0x0c8c41a3u:
+        {
+            if (name.beginsWith(BuiltInName::dot))
+            {
+                ASSERT(name.length() == 8);
+                return &BuiltInFunction::kFunction_dot_2B2B;
+            }
+            break;
+        }
+        case 0x0c8c7030u:
+        {
+            if (name.beginsWith(BuiltInName::min))
+            {
+                ASSERT(name.length() == 8);
+                return &BuiltInFunction::kFunction_min_2B0B;
+            }
+            break;
+        }
+        case 0x0c8cc54du:
+        {
+            if (name.beginsWith(BuiltInName::min))
+            {
+                ASSERT(name.length() == 8);
+                return &BuiltInFunction::kFunction_min_3B0B;
+            }
+            break;
+        }
+        case 0x0c8d02a1u:
+        {
+            if (name.beginsWith(BuiltInName::max))
+            {
+                ASSERT(name.length() == 8);
+                return &BuiltInFunction::kFunction_max_2B0B;
+            }
+            break;
+        }
+        case 0x0c8d484cu:
+        {
+            if (name.beginsWith(BuiltInName::pow))
+            {
+                ASSERT(name.length() == 8);
+                return &BuiltInFunction::kFunction_pow_0B0B;
+            }
+            break;
+        }
+        case 0x0c8e7928u:
+        {
+            if (name.beginsWith(BuiltInName::max))
+            {
+                ASSERT(name.length() == 8);
+                return &BuiltInFunction::kFunction_max_0B0B;
+            }
+            break;
+        }
+        case 0x0c8ed10eu:
+        {
+            if (name.beginsWith(BuiltInName::mod))
+            {
+                ASSERT(name.length() == 8);
+                return &BuiltInFunction::kFunction_mod_0B0B;
+            }
+            break;
+        }
+        case 0x0ca1f57du:
         {
             if (name == BuiltInName::mix_1B1B0B)
             {
@@ -17149,519 +17730,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
             }
             break;
         }
-        case 0x22da85d0u:
-        {
-            if (name.length() == 9 && name.beginsWith(BuiltInName::step_))
-            {
-                return &BuiltInFunction::kFunction_step_0B1B;
-            }
-            break;
-        }
-        case 0x23497dfcu:
-        {
-            if (name.length() == 8 && name.beginsWith(BuiltInName::min_))
-            {
-                return &BuiltInFunction::kFunction_min_1B0B;
-            }
-            break;
-        }
-        case 0x242c7b45u:
-        {
-            if (name.length() == 10 && name.beginsWith(BuiltInName::equal_))
-            {
-                return &BuiltInFunction::kFunction_equal_3E3E;
-            }
-            break;
-        }
-        case 0x2529adbau:
-        {
-            if (name.length() == 9 && name.beginsWith(BuiltInName::length_))
-            {
-                return &BuiltInFunction::kFunction_length_3B;
-            }
-            break;
-        }
-        case 0x2530925bu:
-        {
-            if (name.length() == 19 && name.beginsWith(BuiltInName::matrixCompMult_))
-            {
-                return &BuiltInFunction::kFunction_matrixCompMult_5B5B;
-            }
-            break;
-        }
-        case 0x29eb2c34u:
-        {
-            if (name == BuiltInName::smoothstep_1B1B1B)
-            {
-                return &BuiltInFunction::kFunction_smoothstep_1B1B1B;
-            }
-            break;
-        }
-        case 0x2a4048e4u:
-        {
-            if (name.length() == 8 && name.beginsWith(BuiltInName::dot_))
-            {
-                return &BuiltInFunction::kFunction_dot_3B3B;
-            }
-            break;
-        }
-        case 0x2ba422c6u:
-        {
-            if (name.length() == 13 && name.beginsWith(BuiltInName::notEqual_))
-            {
-                return &BuiltInFunction::kFunction_notEqual_2E2E;
-            }
-            break;
-        }
-        case 0x2c1cf4b8u:
-        {
-            if (name.length() == 8 && name.beginsWith(BuiltInName::fract_))
-            {
-                return &BuiltInFunction::kFunction_fract_3B;
-            }
-            break;
-        }
-        case 0x2e4fef86u:
-        {
-            if (name.length() == 16 && name.beginsWith(BuiltInName::greaterThan_))
-            {
-                return &BuiltInFunction::kFunction_greaterThan_1B1B;
-            }
-            break;
-        }
-        case 0x2f3613e5u:
-        {
-            if (name.length() == 7 && name.beginsWith(BuiltInName::acos_))
-            {
-                return &BuiltInFunction::kFunction_acos_2B;
-            }
-            break;
-        }
-        case 0x31a9230bu:
-        {
-            if (name.length() == 8 && name.beginsWith(BuiltInName::pow_))
-            {
-                return &BuiltInFunction::kFunction_pow_3B3B;
-            }
-            break;
-        }
-        case 0x31caf583u:
-        {
-            if (name.length() == 10 && name.beginsWith(BuiltInName::degrees_))
-            {
-                return &BuiltInFunction::kFunction_degrees_3B;
-            }
-            break;
-        }
-        case 0x32a4419du:
-        {
-            if (name.length() == 6 && name.beginsWith(BuiltInName::any_))
-            {
-                return &BuiltInFunction::kFunction_any_1E;
-            }
-            break;
-        }
-        case 0x33d780d9u:
-        {
-            if (name == BuiltInName::clamp_3B3B3B)
-            {
-                return &BuiltInFunction::kFunction_clamp_3B3B3B;
-            }
-            break;
-        }
-        case 0x343e737eu:
-        {
-            if (name == BuiltInName::refract_3B3B0B)
-            {
-                return &BuiltInFunction::kFunction_refract_3B3B0B;
-            }
-            break;
-        }
-        case 0x3446c6cau:
-        {
-            if (name == BuiltInName::refract_2B2B0B)
-            {
-                return &BuiltInFunction::kFunction_refract_2B2B0B;
-            }
-            break;
-        }
-        case 0x34e1bad1u:
-        {
-            if (name.length() == 10 && name.beginsWith(BuiltInName::equal_))
-            {
-                return &BuiltInFunction::kFunction_equal_3B3B;
-            }
-            break;
-        }
-        case 0x35731765u:
-        {
-            if (name.length() == 9 && name.beginsWith(BuiltInName::step_))
-            {
-                return &BuiltInFunction::kFunction_step_2B2B;
-            }
-            break;
-        }
-        case 0x35d2bc55u:
-        {
-            if (name.length() == 13 && name.beginsWith(BuiltInName::lessThan_))
-            {
-                return &BuiltInFunction::kFunction_lessThan_1B1B;
-            }
-            break;
-        }
-        case 0x36d7afdeu:
-        {
-            if (name.length() == 16 && name.beginsWith(BuiltInName::greaterThan_))
-            {
-                return &BuiltInFunction::kFunction_greaterThan_3C3C;
-            }
-            break;
-        }
-        case 0x372206a6u:
-        {
-            if (name == BuiltInName::smoothstep_3B3B3B)
-            {
-                return &BuiltInFunction::kFunction_smoothstep_3B3B3B;
-            }
-            break;
-        }
-        case 0x37791a04u:
-        {
-            if (name.length() == 6 && name.beginsWith(BuiltInName::abs_))
-            {
-                return &BuiltInFunction::kFunction_abs_3B;
-            }
-            break;
-        }
-        case 0x3a43c8ecu:
-        {
-            if (name.length() == 7 && name.beginsWith(BuiltInName::exp2_))
-            {
-                return &BuiltInFunction::kFunction_exp2_0B;
-            }
-            break;
-        }
-        case 0x3a4f7670u:
-        {
-            if (name == BuiltInName::faceforward_1B1B1B)
-            {
-                return &BuiltInFunction::kFunction_faceforward_1B1B1B;
-            }
-            break;
-        }
-        case 0x3b04290bu:
-        {
-            if (name.length() == 6 && name.beginsWith(BuiltInName::log_))
-            {
-                return &BuiltInFunction::kFunction_log_2B;
-            }
-            break;
-        }
-        case 0x3b0bcbd0u:
-        {
-            if (name.length() == 14 && name.beginsWith(BuiltInName::inversesqrt_))
-            {
-                return &BuiltInFunction::kFunction_inversesqrt_1B;
-            }
-            break;
-        }
-        case 0x3b8c728du:
-        {
-            if (name.length() == 8 && name.beginsWith(BuiltInName::min_))
-            {
-                return &BuiltInFunction::kFunction_min_0B0B;
-            }
-            break;
-        }
-        case 0x3d2f6e2au:
-        {
-            if (name.length() == 7 && name.beginsWith(BuiltInName::acos_))
-            {
-                return &BuiltInFunction::kFunction_acos_1B;
-            }
-            break;
-        }
-        case 0x3de18904u:
-        {
-            if (name == BuiltInName::gl_MaxDualSourceDrawBuffersEXT)
-            {
-                return mVar_gl_MaxDualSourceDrawBuffersEXT;
-            }
-            break;
-        }
-        case 0x3de85e95u:
-        {
-            if (name.length() == 8 && name.beginsWith(BuiltInName::mod_))
-            {
-                return &BuiltInFunction::kFunction_mod_1B1B;
-            }
-            break;
-        }
-        case 0x3fcacff1u:
-        {
-            if (name.length() == 7 && name.beginsWith(BuiltInName::ceil_))
-            {
-                return &BuiltInFunction::kFunction_ceil_3B;
-            }
-            break;
-        }
-        case 0x40134720u:
-        {
-            if (name.length() == 7 && name.beginsWith(BuiltInName::sqrt_))
-            {
-                return &BuiltInFunction::kFunction_sqrt_3B;
-            }
-            break;
-        }
-        case 0x40514dceu:
-        {
-            if (name.length() == 12 && name.beginsWith(BuiltInName::reflect_))
-            {
-                return &BuiltInFunction::kFunction_reflect_2B2B;
-            }
-            break;
-        }
-        case 0x41aa3804u:
-        {
-            if (name.length() == 8 && name.beginsWith(BuiltInName::dot_))
-            {
-                return &BuiltInFunction::kFunction_dot_1B1B;
-            }
-            break;
-        }
-        case 0x41fcc46du:
-        {
-            if (name.length() == 6 && name.beginsWith(BuiltInName::cos_))
-            {
-                return &BuiltInFunction::kFunction_cos_3B;
-            }
-            break;
-        }
-        case 0x421d21e5u:
-        {
-            if (name.length() == 13 && name.beginsWith(BuiltInName::lessThan_))
-            {
-                return &BuiltInFunction::kFunction_lessThan_3C3C;
-            }
-            break;
-        }
-        case 0x42355230u:
-        {
-            if (name == BuiltInName::gl_MaxVertexTextureImageUnits)
-            {
-                return mVar_gl_MaxVertexTextureImageUnits;
-            }
-            break;
-        }
-        case 0x44c523e7u:
-        {
-            if (name.length() == 8 && name.beginsWith(BuiltInName::max_))
-            {
-                return &BuiltInFunction::kFunction_max_3B3B;
-            }
-            break;
-        }
-        case 0x44eb729fu:
-        {
-            if (name.length() == 12 && name.beginsWith(BuiltInName::normalize_))
-            {
-                return &BuiltInFunction::kFunction_normalize_1B;
-            }
-            break;
-        }
-        case 0x45ccdddfu:
-        {
-            if (name == BuiltInName::smoothstep_2B2B2B)
-            {
-                return &BuiltInFunction::kFunction_smoothstep_2B2B2B;
-            }
-            break;
-        }
-        case 0x472c21d7u:
-        {
-            if (name.length() == 9 && name.beginsWith(BuiltInName::length_))
-            {
-                return &BuiltInFunction::kFunction_length_2B;
-            }
-            break;
-        }
-        case 0x4c59f3f1u:
-        {
-            if (name.length() == 13 && name.beginsWith(BuiltInName::lessThan_))
-            {
-                return &BuiltInFunction::kFunction_lessThan_2B2B;
-            }
-            break;
-        }
-        case 0x4c7e8006u:
-        {
-            if (name.length() == 13 && name.beginsWith(BuiltInName::notEqual_))
-            {
-                return &BuiltInFunction::kFunction_notEqual_2C2C;
-            }
-            break;
-        }
-        case 0x4c9b39c9u:
-        {
-            if (name.length() == 10 && name.beginsWith(BuiltInName::cross_))
-            {
-                return &BuiltInFunction::kFunction_cross_2B2B;
-            }
-            break;
-        }
-        case 0x4d4bfeb1u:
-        {
-            if (name.length() == 8 && name.beginsWith(BuiltInName::min_))
-            {
-                return &BuiltInFunction::kFunction_min_1B1B;
-            }
-            break;
-        }
-        case 0x4dc29736u:
-        {
-            if (name.length() == 7 && name.beginsWith(BuiltInName::ceil_))
-            {
-                return &BuiltInFunction::kFunction_ceil_0B;
-            }
-            break;
-        }
-        case 0x525f6fa6u:
-        {
-            if (name.length() == 16 && name.beginsWith(BuiltInName::greaterThan_))
-            {
-                return &BuiltInFunction::kFunction_greaterThan_3B3B;
-            }
-            break;
-        }
-        case 0x546f9631u:
-        {
-            if (name.length() == 8 && name.beginsWith(BuiltInName::mod_))
-            {
-                return &BuiltInFunction::kFunction_mod_2B2B;
-            }
-            break;
-        }
-        case 0x54d4c019u:
-        {
-            if (name.length() == 9 && name.beginsWith(BuiltInName::atan_))
-            {
-                return &BuiltInFunction::kFunction_atan_1B1B;
-            }
-            break;
-        }
-        case 0x55895c64u:
-        {
-            if (name == BuiltInName::gl_MaxDrawBuffers)
-            {
-                return mVar_gl_MaxDrawBuffers;
-            }
-            break;
-        }
-        case 0x561f756du:
-        {
-            if (name.length() == 8 && name.beginsWith(BuiltInName::fract_))
-            {
-                return &BuiltInFunction::kFunction_fract_2B;
-            }
-            break;
-        }
-        case 0x5625f9cau:
-        {
-            if (name == BuiltInName::gl_MaxTextureImageUnits)
-            {
-                return mVar_gl_MaxTextureImageUnits;
-            }
-            break;
-        }
-        case 0x57cd6fecu:
-        {
-            if (name.length() == 10 && name.beginsWith(BuiltInName::degrees_))
-            {
-                return &BuiltInFunction::kFunction_degrees_0B;
-            }
-            break;
-        }
-        case 0x58ce58e6u:
-        {
-            if (name.length() == 13 && name.beginsWith(BuiltInName::notEqual_))
-            {
-                return &BuiltInFunction::kFunction_notEqual_1B1B;
-            }
-            break;
-        }
-        case 0x5a89e3d6u:
-        {
-            if (name == BuiltInName::gl_MaxVertexAttribs)
-            {
-                return mVar_gl_MaxVertexAttribs;
-            }
-            break;
-        }
-        case 0x5c63b321u:
-        {
-            if (name == BuiltInName::gl_DepthRange)
-            {
-                return mVar_gl_DepthRange;
-            }
-            break;
-        }
-        case 0x5c7231f7u:
-        {
-            if (name.length() == 7 && name.beginsWith(BuiltInName::sign_))
-            {
-                return &BuiltInFunction::kFunction_sign_1B;
-            }
-            break;
-        }
-        case 0x5e39910fu:
-        {
-            if (name == BuiltInName::clamp_1B0B0B)
-            {
-                return &BuiltInFunction::kFunction_clamp_1B0B0B;
-            }
-            break;
-        }
-        case 0x5e435845u:
-        {
-            if (name.length() == 7 && name.beginsWith(BuiltInName::atan_))
-            {
-                return &BuiltInFunction::kFunction_atan_2B;
-            }
-            break;
-        }
-        case 0x5ea009b3u:
-        {
-            if (name.length() == 6 && name.beginsWith(BuiltInName::any_))
-            {
-                return &BuiltInFunction::kFunction_any_3E;
-            }
-            break;
-        }
-        case 0x5f31e247u:
-        {
-            if (name.length() == 7 && name.beginsWith(BuiltInName::acos_))
-            {
-                return &BuiltInFunction::kFunction_acos_0B;
-            }
-            break;
-        }
-        case 0x5ff73ab9u:
-        {
-            if (name.length() == 10 && name.beginsWith(BuiltInName::radians_))
-            {
-                return &BuiltInFunction::kFunction_radians_0B;
-            }
-            break;
-        }
-        case 0x60053498u:
-        {
-            if (name.length() == 6 && name.beginsWith(BuiltInName::sin_))
-            {
-                return &BuiltInFunction::kFunction_sin_1B;
-            }
-            break;
-        }
-        case 0x60348539u:
+        case 0x0ca60671u:
         {
             if (name == BuiltInName::mix_2B2B0B)
             {
@@ -17669,263 +17738,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
             }
             break;
         }
-        case 0x60d77e47u:
-        {
-            if (name.length() == 8 && name.beginsWith(BuiltInName::pow_))
-            {
-                return &BuiltInFunction::kFunction_pow_2B2B;
-            }
-            break;
-        }
-        case 0x6106a374u:
-        {
-            if (name.length() == 6 && name.beginsWith(BuiltInName::log_))
-            {
-                return &BuiltInFunction::kFunction_log_1B;
-            }
-            break;
-        }
-        case 0x619b508au:
-        {
-            if (name.length() == 12 && name.beginsWith(BuiltInName::reflect_))
-            {
-                return &BuiltInFunction::kFunction_reflect_3B3B;
-            }
-            break;
-        }
-        case 0x63c84382u:
-        {
-            if (name.length() == 21 && name.beginsWith(BuiltInName::greaterThanEqual_))
-            {
-                return &BuiltInFunction::kFunction_greaterThanEqual_2C2C;
-            }
-            break;
-        }
-        case 0x641f1576u:
-        {
-            if (name.length() == 12 && name.beginsWith(BuiltInName::reflect_))
-            {
-                return &BuiltInFunction::kFunction_reflect_0B0B;
-            }
-            break;
-        }
-        case 0x644649a1u:
-        {
-            if (name.length() == 7 && name.beginsWith(BuiltInName::exp2_))
-            {
-                return &BuiltInFunction::kFunction_exp2_1B;
-            }
-            break;
-        }
-        case 0x646d7617u:
-        {
-            if (name.length() == 19 && name.beginsWith(BuiltInName::matrixCompMult_))
-            {
-                return &BuiltInFunction::kFunction_matrixCompMult_FBFB;
-            }
-            break;
-        }
-        case 0x658a699au:
-        {
-            if (name.length() == 13 && name.beginsWith(BuiltInName::notEqual_))
-            {
-                return &BuiltInFunction::kFunction_notEqual_1C1C;
-            }
-            break;
-        }
-        case 0x68b063ddu:
-        {
-            if (name.length() == 8 && name.beginsWith(BuiltInName::floor_))
-            {
-                return &BuiltInFunction::kFunction_floor_0B;
-            }
-            break;
-        }
-        case 0x69652f41u:
-        {
-            if (name.length() == 13 && name.beginsWith(BuiltInName::lessThan_))
-            {
-                return &BuiltInFunction::kFunction_lessThan_1C1C;
-            }
-            break;
-        }
-        case 0x6a15c7d5u:
-        {
-            if (name.length() == 7 && name.beginsWith(BuiltInName::sqrt_))
-            {
-                return &BuiltInFunction::kFunction_sqrt_2B;
-            }
-            break;
-        }
-        case 0x6ac79e50u:
-        {
-            if (name.length() == 8 && name.beginsWith(BuiltInName::max_))
-            {
-                return &BuiltInFunction::kFunction_max_3B0B;
-            }
-            break;
-        }
-        case 0x6aeded08u:
-        {
-            if (name.length() == 12 && name.beginsWith(BuiltInName::normalize_))
-            {
-                return &BuiltInFunction::kFunction_normalize_2B;
-            }
-            break;
-        }
-        case 0x6b620a41u:
-        {
-            if (name == BuiltInName::gl_MaxVertexUniformVectors)
-            {
-                return mVar_gl_MaxVertexUniformVectors;
-            }
-            break;
-        }
-        case 0x6b80211bu:
-        {
-            if (name == BuiltInName::clamp_1B1B1B)
-            {
-                return &BuiltInFunction::kFunction_clamp_1B1B1B;
-            }
-            break;
-        }
-        case 0x6c3b1f8au:
-        {
-            if (name.length() == 7 && name.beginsWith(BuiltInName::atan_))
-            {
-                return &BuiltInFunction::kFunction_atan_1B;
-            }
-            break;
-        }
-        case 0x6df094feu:
-        {
-            if (name.length() == 10 && name.beginsWith(BuiltInName::radians_))
-            {
-                return &BuiltInFunction::kFunction_radians_3B;
-            }
-            break;
-        }
-        case 0x7000d433u:
-        {
-            if (name.length() == 8 && name.beginsWith(BuiltInName::pow_))
-            {
-                return &BuiltInFunction::kFunction_pow_1B1B;
-            }
-            break;
-        }
-        case 0x7173e986u:
-        {
-            if (name.length() == 13 && name.beginsWith(BuiltInName::notEqual_))
-            {
-                return &BuiltInFunction::kFunction_notEqual_3B3B;
-            }
-            break;
-        }
-        case 0x762ec4e2u:
-        {
-            if (name == BuiltInName::refract_0B0B0B)
-            {
-                return &BuiltInFunction::kFunction_refract_0B0B0B;
-            }
-            break;
-        }
-        case 0x76a82b22u:
-        {
-            if (name.length() == 8 && name.beginsWith(BuiltInName::floor_))
-            {
-                return &BuiltInFunction::kFunction_floor_3B;
-            }
-            break;
-        }
-        case 0x780d8f1au:
-        {
-            if (name.length() == 7 && name.beginsWith(BuiltInName::sqrt_))
-            {
-                return &BuiltInFunction::kFunction_sqrt_1B;
-            }
-            break;
-        }
-        case 0x785bc622u:
-        {
-            if (name.length() == 13 && name.beginsWith(BuiltInName::notEqual_))
-            {
-                return &BuiltInFunction::kFunction_notEqual_3E3E;
-            }
-            break;
-        }
-        case 0x81cff0a1u:
-        {
-            if (name.length() == 10 && name.beginsWith(BuiltInName::degrees_))
-            {
-                return &BuiltInFunction::kFunction_degrees_1B;
-            }
-            break;
-        }
-        case 0x8274ac60u:
-        {
-            if (name.length() == 7 && name.beginsWith(BuiltInName::sign_))
-            {
-                return &BuiltInFunction::kFunction_sign_2B;
-            }
-            break;
-        }
-        case 0x82a280f6u:
-        {
-            if (name.length() == 6 && name.beginsWith(BuiltInName::any_))
-            {
-                return &BuiltInFunction::kFunction_any_2E;
-            }
-            break;
-        }
-        case 0x82c5e6d5u:
-        {
-            if (name.length() == 9 && name.beginsWith(BuiltInName::atan_))
-            {
-                return &BuiltInFunction::kFunction_atan_0B0B;
-            }
-            break;
-        }
-        case 0x8417e089u:
-        {
-            if (name.length() == 10 && name.beginsWith(BuiltInName::equal_))
-            {
-                return &BuiltInFunction::kFunction_equal_2C2C;
-            }
-            break;
-        }
-        case 0x89745003u:
-        {
-            if (name == BuiltInName::gl_MaxFragmentUniformVectors)
-            {
-                return mVar_gl_MaxFragmentUniformVectors;
-            }
-            break;
-        }
-        case 0x8a07b54du:
-        {
-            if (name.length() == 6 && name.beginsWith(BuiltInName::sin_))
-            {
-                return &BuiltInFunction::kFunction_sin_0B;
-            }
-            break;
-        }
-        case 0x8e3d93a7u:
-        {
-            if (name.length() == 7 && name.beginsWith(BuiltInName::atan_))
-            {
-                return &BuiltInFunction::kFunction_atan_0B;
-            }
-            break;
-        }
-        case 0x8ff3091bu:
-        {
-            if (name.length() == 10 && name.beginsWith(BuiltInName::radians_))
-            {
-                return &BuiltInFunction::kFunction_radians_2B;
-            }
-            break;
-        }
-        case 0x9030539bu:
+        case 0x0ca9009eu:
         {
             if (name == BuiltInName::mix_2B2B2B)
             {
@@ -17933,207 +17746,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
             }
             break;
         }
-        case 0x92458549u:
-        {
-            if (name.length() == 9 && name.beginsWith(BuiltInName::step_))
-            {
-                return &BuiltInFunction::kFunction_step_1B1B;
-            }
-            break;
-        }
-        case 0x931af97fu:
-        {
-            if (name.length() == 18 && name.beginsWith(BuiltInName::lessThanEqual_))
-            {
-                return &BuiltInFunction::kFunction_lessThanEqual_2C2C;
-            }
-            break;
-        }
-        case 0x94f06dbdu:
-        {
-            if (name.length() == 12 && name.beginsWith(BuiltInName::normalize_))
-            {
-                return &BuiltInFunction::kFunction_normalize_3B;
-            }
-            break;
-        }
-        case 0x95a6e964u:
-        {
-            if (name.length() == 7 && name.beginsWith(BuiltInName::asin_))
-            {
-                return &BuiltInFunction::kFunction_asin_0B;
-            }
-            break;
-        }
-        case 0x965473c7u:
-        {
-            if (name.length() == 18 && name.beginsWith(BuiltInName::lessThanEqual_))
-            {
-                return &BuiltInFunction::kFunction_lessThanEqual_3C3C;
-            }
-            break;
-        }
-        case 0x97b032ceu:
-        {
-            if (name.length() == 13 && name.beginsWith(BuiltInName::distance_))
-            {
-                return &BuiltInFunction::kFunction_distance_0B0B;
-            }
-            break;
-        }
-        case 0x98010f92u:
-        {
-            if (name.length() == 6 && name.beginsWith(BuiltInName::sin_))
-            {
-                return &BuiltInFunction::kFunction_sin_3B;
-            }
-            break;
-        }
-        case 0x98571f82u:
-        {
-            if (name.length() == 21 && name.beginsWith(BuiltInName::greaterThanEqual_))
-            {
-                return &BuiltInFunction::kFunction_greaterThanEqual_1B1B;
-            }
-            break;
-        }
-        case 0x98aa9f3fu:
-        {
-            if (name.length() == 8 && name.beginsWith(BuiltInName::floor_))
-            {
-                return &BuiltInFunction::kFunction_floor_2B;
-            }
-            break;
-        }
-        case 0x99b92ec5u:
-        {
-            if (name.length() == 10 && name.beginsWith(BuiltInName::equal_))
-            {
-                return &BuiltInFunction::kFunction_equal_2B2B;
-            }
-            break;
-        }
-        case 0x9be659d3u:
-        {
-            if (name.length() == 7 && name.beginsWith(BuiltInName::log2_))
-            {
-                return &BuiltInFunction::kFunction_log2_2B;
-            }
-            break;
-        }
-        case 0xa02bb012u:
-        {
-            if (name.length() == 8 && name.beginsWith(BuiltInName::max_))
-            {
-                return &BuiltInFunction::kFunction_max_1B0B;
-            }
-            break;
-        }
-        case 0xa05f6bc8u:
-        {
-            if (name.length() == 8 && name.beginsWith(BuiltInName::dot_))
-            {
-                return &BuiltInFunction::kFunction_dot_0B0B;
-            }
-            break;
-        }
-        case 0xa0dedfdau:
-        {
-            if (name.length() == 21 && name.beginsWith(BuiltInName::greaterThanEqual_))
-            {
-                return &BuiltInFunction::kFunction_greaterThanEqual_3C3C;
-            }
-            break;
-        }
-        case 0xa2e83502u:
-        {
-            if (name.length() == 12 && name.beginsWith(BuiltInName::normalize_))
-            {
-                return &BuiltInFunction::kFunction_normalize_0B;
-            }
-            break;
-        }
-        case 0xa46f126au:
-        {
-            if (name.length() == 16 && name.beginsWith(BuiltInName::greaterThan_))
-            {
-                return &BuiltInFunction::kFunction_greaterThan_2B2B;
-            }
-            break;
-        }
-        case 0xa5ac8e51u:
-        {
-            if (name.length() == 6 && name.beginsWith(BuiltInName::exp_))
-            {
-                return &BuiltInFunction::kFunction_exp_3B;
-            }
-            break;
-        }
-        case 0xa694989du:
-        {
-            if (name.length() == 13 && name.beginsWith(BuiltInName::lessThan_))
-            {
-                return &BuiltInFunction::kFunction_lessThan_3B3B;
-            }
-            break;
-        }
-        case 0xab5a7a95u:
-        {
-            if (name.length() == 10 && name.beginsWith(BuiltInName::equal_))
-            {
-                return &BuiltInFunction::kFunction_equal_1C1C;
-            }
-            break;
-        }
-        case 0xac772d15u:
-        {
-            if (name.length() == 7 && name.beginsWith(BuiltInName::sign_))
-            {
-                return &BuiltInFunction::kFunction_sign_3B;
-            }
-            break;
-        }
-        case 0xaeabcdddu:
-        {
-            if (name.length() == 8 && name.beginsWith(BuiltInName::mod_))
-            {
-                return &BuiltInFunction::kFunction_mod_3B3B;
-            }
-            break;
-        }
-        case 0xb154856du:
-        {
-            if (name == BuiltInName::clamp_3B0B0B)
-            {
-                return &BuiltInFunction::kFunction_clamp_3B0B0B;
-            }
-            break;
-        }
-        case 0xb3a5e896u:
-        {
-            if (name.length() == 6 && name.beginsWith(BuiltInName::exp_))
-            {
-                return &BuiltInFunction::kFunction_exp_0B;
-            }
-            break;
-        }
-        case 0xb4400e10u:
-        {
-            if (name.length() == 7 && name.beginsWith(BuiltInName::atan_))
-            {
-                return &BuiltInFunction::kFunction_atan_3B;
-            }
-            break;
-        }
-        case 0xb5a0c6cau:
-        {
-            if (name.length() == 13 && name.beginsWith(BuiltInName::notEqual_))
-            {
-                return &BuiltInFunction::kFunction_notEqual_2B2B;
-            }
-            break;
-        }
-        case 0xb5c1d059u:
+        case 0x0cab5c44u:
         {
             if (name == BuiltInName::mix_0B0B0B)
             {
@@ -18141,143 +17754,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
             }
             break;
         }
-        case 0xb5f58384u:
-        {
-            if (name.length() == 10 && name.beginsWith(BuiltInName::radians_))
-            {
-                return &BuiltInFunction::kFunction_radians_1B;
-            }
-            break;
-        }
-        case 0xb6907c8cu:
-        {
-            if (name.length() == 6 && name.beginsWith(BuiltInName::tan_))
-            {
-                return &BuiltInFunction::kFunction_tan_2B;
-            }
-            break;
-        }
-        case 0xb9cf953au:
-        {
-            if (name.length() == 16 && name.beginsWith(BuiltInName::greaterThan_))
-            {
-                return &BuiltInFunction::kFunction_greaterThan_1C1C;
-            }
-            break;
-        }
-        case 0xba0383afu:
-        {
-            if (name.length() == 6 && name.beginsWith(BuiltInName::sin_))
-            {
-                return &BuiltInFunction::kFunction_sin_2B;
-            }
-            break;
-        }
-        case 0xba1060a6u:
-        {
-            if (name.length() == 16 && name.beginsWith(BuiltInName::greaterThan_))
-            {
-                return &BuiltInFunction::kFunction_greaterThan_2C2C;
-            }
-            break;
-        }
-        case 0xba70875au:
-        {
-            if (name.length() == 7 && name.beginsWith(BuiltInName::sign_))
-            {
-                return &BuiltInFunction::kFunction_sign_0B;
-            }
-            break;
-        }
-        case 0xbb7abcffu:
-        {
-            if (name.length() == 18 && name.beginsWith(BuiltInName::lessThanEqual_))
-            {
-                return &BuiltInFunction::kFunction_lessThanEqual_1B1B;
-            }
-            break;
-        }
-        case 0xbc669fa2u:
-        {
-            if (name.length() == 21 && name.beginsWith(BuiltInName::greaterThanEqual_))
-            {
-                return &BuiltInFunction::kFunction_greaterThanEqual_3B3B;
-            }
-            break;
-        }
-        case 0xbca39522u:
-        {
-            if (name.length() == 8 && name.beginsWith(BuiltInName::mod_))
-            {
-                return &BuiltInFunction::kFunction_mod_3B0B;
-            }
-            break;
-        }
-        case 0xbdc5079du:
-        {
-            if (name == BuiltInName::smoothstep_0B0B0B)
-            {
-                return &BuiltInFunction::kFunction_smoothstep_0B0B0B;
-            }
-            break;
-        }
-        case 0xbe0f6df9u:
-        {
-            if (name.length() == 8 && name.beginsWith(BuiltInName::min_))
-            {
-                return &BuiltInFunction::kFunction_min_3B3B;
-            }
-            break;
-        }
-        case 0xbe16c602u:
-        {
-            if (name == BuiltInName::clamp_0B0B0B)
-            {
-                return &BuiltInFunction::kFunction_clamp_0B0B0B;
-            }
-            break;
-        }
-        case 0xbead19a8u:
-        {
-            if (name.length() == 8 && name.beginsWith(BuiltInName::floor_))
-            {
-                return &BuiltInFunction::kFunction_floor_1B;
-            }
-            break;
-        }
-        case 0xbf879745u:
-        {
-            if (name.length() == 6 && name.beginsWith(BuiltInName::all_))
-            {
-                return &BuiltInFunction::kFunction_all_2E;
-            }
-            break;
-        }
-        case 0xbfa96a19u:
-        {
-            if (name.length() == 7 && name.beginsWith(BuiltInName::asin_))
-            {
-                return &BuiltInFunction::kFunction_asin_1B;
-            }
-            break;
-        }
-        case 0xc1e8d43cu:
-        {
-            if (name.length() == 7 && name.beginsWith(BuiltInName::log2_))
-            {
-                return &BuiltInFunction::kFunction_log2_1B;
-            }
-            break;
-        }
-        case 0xc22e242fu:
-        {
-            if (name.length() == 8 && name.beginsWith(BuiltInName::max_))
-            {
-                return &BuiltInFunction::kFunction_max_1B1B;
-            }
-            break;
-        }
-        case 0xc398271du:
+        case 0x0cac3e9fu:
         {
             if (name == BuiltInName::mix_3B3B0B)
             {
@@ -18285,127 +17762,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
             }
             break;
         }
-        case 0xc42d3370u:
-        {
-            if (name.length() == 8 && name.beginsWith(BuiltInName::dot_))
-            {
-                return &BuiltInFunction::kFunction_dot_2B2B;
-            }
-            break;
-        }
-        case 0xc777f74fu:
-        {
-            if (name.length() == 8 && name.beginsWith(BuiltInName::min_))
-            {
-                return &BuiltInFunction::kFunction_min_2B0B;
-            }
-            break;
-        }
-        case 0xca322aeau:
-        {
-            if (name.length() == 12 && name.beginsWith(BuiltInName::reflect_))
-            {
-                return &BuiltInFunction::kFunction_reflect_1B1B;
-            }
-            break;
-        }
-        case 0xcab81737u:
-        {
-            if (name.length() == 18 && name.beginsWith(BuiltInName::lessThanEqual_))
-            {
-                return &BuiltInFunction::kFunction_lessThanEqual_3B3B;
-            }
-            break;
-        }
-        case 0xcbbe61e2u:
-        {
-            if (name == BuiltInName::smoothstep_0B0B3B)
-            {
-                return &BuiltInFunction::kFunction_smoothstep_0B0B3B;
-            }
-            break;
-        }
-        case 0xcc07353eu:
-        {
-            if (name.length() == 8 && name.beginsWith(BuiltInName::min_))
-            {
-                return &BuiltInFunction::kFunction_min_3B0B;
-            }
-            break;
-        }
-        case 0xccc2d6c8u:
-        {
-            if (name == BuiltInName::clamp_2B0B0B)
-            {
-                return &BuiltInFunction::kFunction_clamp_2B0B0B;
-            }
-            break;
-        }
-        case 0xccdc3d05u:
-        {
-            if (name.length() == 9 && name.beginsWith(BuiltInName::step_))
-            {
-                return &BuiltInFunction::kFunction_step_0B0B;
-            }
-            break;
-        }
-        case 0xcda2c45eu:
-        {
-            if (name.length() == 7 && name.beginsWith(BuiltInName::asin_))
-            {
-                return &BuiltInFunction::kFunction_asin_2B;
-            }
-            break;
-        }
-        case 0xce0b0283u:
-        {
-            if (name.length() == 19 && name.beginsWith(BuiltInName::matrixCompMult_))
-            {
-                return &BuiltInFunction::kFunction_matrixCompMult_ABAB;
-            }
-            break;
-        }
-        case 0xce27bec6u:
-        {
-            if (name.length() == 21 && name.beginsWith(BuiltInName::greaterThanEqual_))
-            {
-                return &BuiltInFunction::kFunction_greaterThanEqual_2B2B;
-            }
-            break;
-        }
-        case 0xcf6001f1u:
-        {
-            if (name.length() == 9 && name.beginsWith(BuiltInName::step_))
-            {
-                return &BuiltInFunction::kFunction_step_3B3B;
-            }
-            break;
-        }
-        case 0xcff55532u:
-        {
-            if (name.length() == 6 && name.beginsWith(BuiltInName::cos_))
-            {
-                return &BuiltInFunction::kFunction_cos_0B;
-            }
-            break;
-        }
-        case 0xd06a4419u:
-        {
-            if (name.length() == 10 && name.beginsWith(BuiltInName::equal_))
-            {
-                return &BuiltInFunction::kFunction_equal_3C3C;
-            }
-            break;
-        }
-        case 0xd09e0b41u:
-        {
-            if (name.length() == 8 && name.beginsWith(BuiltInName::max_))
-            {
-                return &BuiltInFunction::kFunction_max_2B0B;
-            }
-            break;
-        }
-        case 0xd1918162u:
+        case 0x0cad187au:
         {
             if (name == BuiltInName::mix_3B3B3B)
             {
@@ -18413,255 +17770,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
             }
             break;
         }
-        case 0xd4d6b527u:
-        {
-            if (name.length() == 8 && name.beginsWith(BuiltInName::pow_))
-            {
-                return &BuiltInFunction::kFunction_pow_0B0B;
-            }
-            break;
-        }
-        case 0xd4f4bd1bu:
-        {
-            if (name == BuiltInName::faceforward_2B2B2B)
-            {
-                return &BuiltInFunction::kFunction_faceforward_2B2B2B;
-            }
-            break;
-        }
-        case 0xd5a85cb3u:
-        {
-            if (name.length() == 6 && name.beginsWith(BuiltInName::exp_))
-            {
-                return &BuiltInFunction::kFunction_exp_1B;
-            }
-            break;
-        }
-        case 0xd5eb603eu:
-        {
-            if (name.length() == 13 && name.beginsWith(BuiltInName::notEqual_))
-            {
-                return &BuiltInFunction::kFunction_notEqual_3C3C;
-            }
-            break;
-        }
-        case 0xdad5974au:
-        {
-            if (name.length() == 9 && name.beginsWith(BuiltInName::step_))
-            {
-                return &BuiltInFunction::kFunction_step_0B3B;
-            }
-            break;
-        }
-        case 0xdb8a01f0u:
-        {
-            if (name.length() == 6 && name.beginsWith(BuiltInName::all_))
-            {
-                return &BuiltInFunction::kFunction_all_3E;
-            }
-            break;
-        }
-        case 0xdc6a3fd9u:
-        {
-            if (name.length() == 10 && name.beginsWith(BuiltInName::equal_))
-            {
-                return &BuiltInFunction::kFunction_equal_2E2E;
-            }
-            break;
-        }
-        case 0xdcd239f5u:
-        {
-            if (name == BuiltInName::gl_DepthRangeParameters)
-            {
-                return mVar_gl_DepthRangeParameters;
-            }
-            break;
-        }
-        case 0xde93f470u:
-        {
-            if (name.length() == 6 && name.beginsWith(BuiltInName::notFunc_))
-            {
-                return &BuiltInFunction::kFunction_notFunc_1E;
-            }
-            break;
-        }
-        case 0xdeb59d35u:
-        {
-            if (name.length() == 9 && name.beginsWith(BuiltInName::atan_))
-            {
-                return &BuiltInFunction::kFunction_atan_2B2B;
-            }
-            break;
-        }
-        case 0xe092fd41u:
-        {
-            if (name.length() == 6 && name.beginsWith(BuiltInName::tan_))
-            {
-                return &BuiltInFunction::kFunction_tan_3B;
-            }
-            break;
-        }
-        case 0xe17ad139u:
-        {
-            if (name.length() == 6 && name.beginsWith(BuiltInName::abs_))
-            {
-                return &BuiltInFunction::kFunction_abs_2B;
-            }
-            break;
-        }
-        case 0xe3884196u:
-        {
-            if (name.length() == 21 && name.beginsWith(BuiltInName::greaterThanEqual_))
-            {
-                return &BuiltInFunction::kFunction_greaterThanEqual_1C1C;
-            }
-            break;
-        }
-        case 0xe4180632u:
-        {
-            if (name.length() == 8 && name.beginsWith(BuiltInName::fract_))
-            {
-                return &BuiltInFunction::kFunction_fract_1B;
-            }
-            break;
-        }
-        case 0xe50d8305u:
-        {
-            if (name.length() == 14 && name.beginsWith(BuiltInName::inversesqrt_))
-            {
-                return &BuiltInFunction::kFunction_inversesqrt_0B;
-            }
-            break;
-        }
-        case 0xe7f2b603u:
-        {
-            if (name.length() == 8 && name.beginsWith(BuiltInName::max_))
-            {
-                return &BuiltInFunction::kFunction_max_0B0B;
-            }
-            break;
-        }
-        case 0xeba3b9c1u:
-        {
-            if (name.length() == 10 && name.beginsWith(BuiltInName::equal_))
-            {
-                return &BuiltInFunction::kFunction_equal_1E1E;
-            }
-            break;
-        }
-        case 0xebeb54f1u:
-        {
-            if (name.length() == 7 && name.beginsWith(BuiltInName::log2_))
-            {
-                return &BuiltInFunction::kFunction_log2_0B;
-            }
-            break;
-        }
-        case 0xed15f051u:
-        {
-            if (name.length() == 8 && name.beginsWith(BuiltInName::mod_))
-            {
-                return &BuiltInFunction::kFunction_mod_0B0B;
-            }
-            break;
-        }
-        case 0xed2f65c0u:
-        {
-            if (name.length() == 9 && name.beginsWith(BuiltInName::length_))
-            {
-                return &BuiltInFunction::kFunction_length_1B;
-            }
-            break;
-        }
-        case 0xedc0d5ffu:
-        {
-            if (name == BuiltInName::smoothstep_0B0B2B)
-            {
-                return &BuiltInFunction::kFunction_smoothstep_0B0B2B;
-            }
-            break;
-        }
-        case 0xee8ac486u:
-        {
-            if (name.length() == 6 && name.beginsWith(BuiltInName::tan_))
-            {
-                return &BuiltInFunction::kFunction_tan_0B;
-            }
-            break;
-        }
-        case 0xee8bbedbu:
-        {
-            if (name.length() == 6 && name.beginsWith(BuiltInName::notFunc_))
-            {
-                return &BuiltInFunction::kFunction_notFunc_2E;
-            }
-            break;
-        }
-        case 0xef0d2febu:
-        {
-            if (name.length() == 18 && name.beginsWith(BuiltInName::lessThanEqual_))
-            {
-                return &BuiltInFunction::kFunction_lessThanEqual_1C1C;
-            }
-            break;
-        }
-        case 0xef742b7eu:
-        {
-            if (name.length() == 6 && name.beginsWith(BuiltInName::abs_))
-            {
-                return &BuiltInFunction::kFunction_abs_1B;
-            }
-            break;
-        }
-        case 0xefa5387bu:
-        {
-            if (name.length() == 7 && name.beginsWith(BuiltInName::asin_))
-            {
-                return &BuiltInFunction::kFunction_asin_3B;
-            }
-            break;
-        }
-        case 0xefc5d4d3u:
-        {
-            if (name.length() == 7 && name.beginsWith(BuiltInName::ceil_))
-            {
-                return &BuiltInFunction::kFunction_ceil_1B;
-            }
-            break;
-        }
-        case 0xf0909e70u:
-        {
-            if (name == BuiltInName::clamp_2B2B2B)
-            {
-                return &BuiltInFunction::kFunction_clamp_2B2B2B;
-            }
-            break;
-        }
-        case 0xf1f7c94fu:
-        {
-            if (name.length() == 6 && name.beginsWith(BuiltInName::cos_))
-            {
-                return &BuiltInFunction::kFunction_cos_1B;
-            }
-            break;
-        }
-        case 0xf23eda66u:
-        {
-            if (name.length() == 7 && name.beginsWith(BuiltInName::exp2_))
-            {
-                return &BuiltInFunction::kFunction_exp2_2B;
-            }
-            break;
-        }
-        case 0xf306dd4au:
-        {
-            if (name.length() == 14 && name.beginsWith(BuiltInName::inversesqrt_))
-            {
-                return &BuiltInFunction::kFunction_inversesqrt_3B;
-            }
-            break;
-        }
-        case 0xf58b0cf0u:
+        case 0x0caf5440u:
         {
             if (name == BuiltInName::mix_1B1B1B)
             {
@@ -18669,39 +17778,1165 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
             }
             break;
         }
-        case 0xf68b9ca9u:
+        case 0x10705009u:
         {
-            if (name.length() == 10 && name.beginsWith(BuiltInName::equal_))
+            if (name.beginsWith(BuiltInName::acos))
             {
-                return &BuiltInFunction::kFunction_equal_1B1B;
+                ASSERT(name.length() == 7);
+                return &BuiltInFunction::kFunction_acos_3B;
             }
             break;
         }
-        case 0xf707f2d5u:
+        case 0x10714a97u:
         {
-            if (name.length() == 13 && name.beginsWith(BuiltInName::lessThan_))
+            if (name.beginsWith(BuiltInName::exp2))
             {
-                return &BuiltInFunction::kFunction_lessThan_2C2C;
+                ASSERT(name.length() == 7);
+                return &BuiltInFunction::kFunction_exp2_3B;
             }
             break;
         }
-        case 0xf9e31c36u:
+        case 0x107153b8u:
         {
-            if (name.length() == 7 && name.beginsWith(BuiltInName::log2_))
+            if (name.beginsWith(BuiltInName::ceil))
             {
+                ASSERT(name.length() == 7);
+                return &BuiltInFunction::kFunction_ceil_2B;
+            }
+            break;
+        }
+        case 0x1071adbbu:
+        {
+            if (name.beginsWith(BuiltInName::sqrt))
+            {
+                ASSERT(name.length() == 7);
+                return &BuiltInFunction::kFunction_sqrt_0B;
+            }
+            break;
+        }
+        case 0x1072f084u:
+        {
+            if (name.beginsWith(BuiltInName::acos))
+            {
+                ASSERT(name.length() == 7);
+                return &BuiltInFunction::kFunction_acos_2B;
+            }
+            break;
+        }
+        case 0x1073acd0u:
+        {
+            if (name.beginsWith(BuiltInName::exp2))
+            {
+                ASSERT(name.length() == 7);
+                return &BuiltInFunction::kFunction_exp2_0B;
+            }
+            break;
+        }
+        case 0x1073dcdcu:
+        {
+            if (name.beginsWith(BuiltInName::acos))
+            {
+                ASSERT(name.length() == 7);
+                return &BuiltInFunction::kFunction_acos_1B;
+            }
+            break;
+        }
+        case 0x1073f35du:
+        {
+            if (name.beginsWith(BuiltInName::ceil))
+            {
+                ASSERT(name.length() == 7);
+                return &BuiltInFunction::kFunction_ceil_3B;
+            }
+            break;
+        }
+        case 0x10740614u:
+        {
+            if (name.beginsWith(BuiltInName::sqrt))
+            {
+                ASSERT(name.length() == 7);
+                return &BuiltInFunction::kFunction_sqrt_3B;
+            }
+            break;
+        }
+        case 0x1074db1fu:
+        {
+            if (name.beginsWith(BuiltInName::ceil))
+            {
+                ASSERT(name.length() == 7);
+                return &BuiltInFunction::kFunction_ceil_0B;
+            }
+            break;
+        }
+        case 0x1075c6d4u:
+        {
+            if (name.beginsWith(BuiltInName::sign))
+            {
+                ASSERT(name.length() == 7);
+                return &BuiltInFunction::kFunction_sign_1B;
+            }
+            break;
+        }
+        case 0x1075ec70u:
+        {
+            if (name.beginsWith(BuiltInName::atan))
+            {
+                ASSERT(name.length() == 7);
+                return &BuiltInFunction::kFunction_atan_2B;
+            }
+            break;
+        }
+        case 0x1075f159u:
+        {
+            if (name.beginsWith(BuiltInName::acos))
+            {
+                ASSERT(name.length() == 7);
+                return &BuiltInFunction::kFunction_acos_0B;
+            }
+            break;
+        }
+        case 0x10764dc5u:
+        {
+            if (name.beginsWith(BuiltInName::exp2))
+            {
+                ASSERT(name.length() == 7);
+                return &BuiltInFunction::kFunction_exp2_1B;
+            }
+            break;
+        }
+        case 0x1076a689u:
+        {
+            if (name.beginsWith(BuiltInName::sqrt))
+            {
+                ASSERT(name.length() == 7);
+                return &BuiltInFunction::kFunction_sqrt_2B;
+            }
+            break;
+        }
+        case 0x1076cc3bu:
+        {
+            if (name.beginsWith(BuiltInName::atan))
+            {
+                ASSERT(name.length() == 7);
+                return &BuiltInFunction::kFunction_atan_1B;
+            }
+            break;
+        }
+        case 0x10778fc2u:
+        {
+            if (name.beginsWith(BuiltInName::sqrt))
+            {
+                ASSERT(name.length() == 7);
+                return &BuiltInFunction::kFunction_sqrt_1B;
+            }
+            break;
+        }
+        case 0x10782b2au:
+        {
+            if (name.beginsWith(BuiltInName::sign))
+            {
+                ASSERT(name.length() == 7);
+                return &BuiltInFunction::kFunction_sign_2B;
+            }
+            break;
+        }
+        case 0x1078e07eu:
+        {
+            if (name.beginsWith(BuiltInName::atan))
+            {
+                ASSERT(name.length() == 7);
+                return &BuiltInFunction::kFunction_atan_0B;
+            }
+            break;
+        }
+        case 0x1079530au:
+        {
+            if (name.beginsWith(BuiltInName::asin))
+            {
+                ASSERT(name.length() == 7);
+                return &BuiltInFunction::kFunction_asin_0B;
+            }
+            break;
+        }
+        case 0x1079b7b6u:
+        {
+            if (name.beginsWith(BuiltInName::log2))
+            {
+                ASSERT(name.length() == 7);
+                return &BuiltInFunction::kFunction_log2_2B;
+            }
+            break;
+        }
+        case 0x107aca67u:
+        {
+            if (name.beginsWith(BuiltInName::sign))
+            {
+                ASSERT(name.length() == 7);
+                return &BuiltInFunction::kFunction_sign_3B;
+            }
+            break;
+        }
+        case 0x107b4a10u:
+        {
+            if (name.beginsWith(BuiltInName::atan))
+            {
+                ASSERT(name.length() == 7);
+                return &BuiltInFunction::kFunction_atan_3B;
+            }
+            break;
+        }
+        case 0x107ba052u:
+        {
+            if (name.beginsWith(BuiltInName::sign))
+            {
+                ASSERT(name.length() == 7);
+                return &BuiltInFunction::kFunction_sign_0B;
+            }
+            break;
+        }
+        case 0x107bf08fu:
+        {
+            if (name.beginsWith(BuiltInName::asin))
+            {
+                ASSERT(name.length() == 7);
+                return &BuiltInFunction::kFunction_asin_1B;
+            }
+            break;
+        }
+        case 0x107c1ab1u:
+        {
+            if (name.beginsWith(BuiltInName::log2))
+            {
+                ASSERT(name.length() == 7);
+                return &BuiltInFunction::kFunction_log2_1B;
+            }
+            break;
+        }
+        case 0x107cde72u:
+        {
+            if (name.beginsWith(BuiltInName::asin))
+            {
+                ASSERT(name.length() == 7);
+                return &BuiltInFunction::kFunction_asin_2B;
+            }
+            break;
+        }
+        case 0x107eba44u:
+        {
+            if (name.beginsWith(BuiltInName::log2))
+            {
+                ASSERT(name.length() == 7);
+                return &BuiltInFunction::kFunction_log2_0B;
+            }
+            break;
+        }
+        case 0x107ef228u:
+        {
+            if (name.beginsWith(BuiltInName::asin))
+            {
+                ASSERT(name.length() == 7);
+                return &BuiltInFunction::kFunction_asin_3B;
+            }
+            break;
+        }
+        case 0x107ef88eu:
+        {
+            if (name.beginsWith(BuiltInName::ceil))
+            {
+                ASSERT(name.length() == 7);
+                return &BuiltInFunction::kFunction_ceil_1B;
+            }
+            break;
+        }
+        case 0x107f298bu:
+        {
+            if (name.beginsWith(BuiltInName::exp2))
+            {
+                ASSERT(name.length() == 7);
+                return &BuiltInFunction::kFunction_exp2_2B;
+            }
+            break;
+        }
+        case 0x107f9207u:
+        {
+            if (name.beginsWith(BuiltInName::log2))
+            {
+                ASSERT(name.length() == 7);
                 return &BuiltInFunction::kFunction_log2_3B;
             }
             break;
         }
-        case 0xf9e4df73u:
+        case 0x109056cfu:
         {
-            if (name.length() == 18 && name.beginsWith(BuiltInName::lessThanEqual_))
+            if (name.beginsWith(BuiltInName::atan))
             {
-                return &BuiltInFunction::kFunction_lessThanEqual_2B2B;
+                ASSERT(name.length() == 9);
+                return &BuiltInFunction::kFunction_atan_3B3B;
             }
             break;
         }
-        case 0xfa8639d9u:
+        case 0x10922878u:
+        {
+            if (name.beginsWith(BuiltInName::step))
+            {
+                ASSERT(name.length() == 9);
+                return &BuiltInFunction::kFunction_step_0B1B;
+            }
+            break;
+        }
+        case 0x10935054u:
+        {
+            if (name.beginsWith(BuiltInName::step))
+            {
+                ASSERT(name.length() == 9);
+                return &BuiltInFunction::kFunction_step_2B2B;
+            }
+            break;
+        }
+        case 0x10954d55u:
+        {
+            if (name.beginsWith(BuiltInName::atan))
+            {
+                ASSERT(name.length() == 9);
+                return &BuiltInFunction::kFunction_atan_1B1B;
+            }
+            break;
+        }
+        case 0x10982a8bu:
+        {
+            if (name.beginsWith(BuiltInName::atan))
+            {
+                ASSERT(name.length() == 9);
+                return &BuiltInFunction::kFunction_atan_0B0B;
+            }
+            break;
+        }
+        case 0x10992111u:
+        {
+            if (name.beginsWith(BuiltInName::step))
+            {
+                ASSERT(name.length() == 9);
+                return &BuiltInFunction::kFunction_step_1B1B;
+            }
+            break;
+        }
+        case 0x109cc0c6u:
+        {
+            if (name.beginsWith(BuiltInName::step))
+            {
+                ASSERT(name.length() == 9);
+                return &BuiltInFunction::kFunction_step_0B0B;
+            }
+            break;
+        }
+        case 0x109cf7f1u:
+        {
+            if (name.beginsWith(BuiltInName::step))
+            {
+                ASSERT(name.length() == 9);
+                return &BuiltInFunction::kFunction_step_3B3B;
+            }
+            break;
+        }
+        case 0x109daa13u:
+        {
+            if (name.beginsWith(BuiltInName::step))
+            {
+                ASSERT(name.length() == 9);
+                return &BuiltInFunction::kFunction_step_0B3B;
+            }
+            break;
+        }
+        case 0x109de66cu:
+        {
+            if (name.beginsWith(BuiltInName::atan))
+            {
+                ASSERT(name.length() == 9);
+                return &BuiltInFunction::kFunction_atan_2B2B;
+            }
+            break;
+        }
+        case 0x109fc6e7u:
+        {
+            if (name.beginsWith(BuiltInName::step))
+            {
+                ASSERT(name.length() == 9);
+                return &BuiltInFunction::kFunction_step_0B2B;
+            }
+            break;
+        }
+        case 0x14806be8u:
+        {
+            if (name.beginsWith(BuiltInName::fract))
+            {
+                ASSERT(name.length() == 8);
+                return &BuiltInFunction::kFunction_fract_0B;
+            }
+            break;
+        }
+        case 0x1482c577u:
+        {
+            if (name.beginsWith(BuiltInName::fract))
+            {
+                ASSERT(name.length() == 8);
+                return &BuiltInFunction::kFunction_fract_3B;
+            }
+            break;
+        }
+        case 0x1485649au:
+        {
+            if (name.beginsWith(BuiltInName::fract))
+            {
+                ASSERT(name.length() == 8);
+                return &BuiltInFunction::kFunction_fract_2B;
+            }
+            break;
+        }
+        case 0x148688dbu:
+        {
+            if (name.beginsWith(BuiltInName::floor))
+            {
+                ASSERT(name.length() == 8);
+                return &BuiltInFunction::kFunction_floor_0B;
+            }
+            break;
+        }
+        case 0x148761a0u:
+        {
+            if (name.beginsWith(BuiltInName::floor))
+            {
+                ASSERT(name.length() == 8);
+                return &BuiltInFunction::kFunction_floor_3B;
+            }
+            break;
+        }
+        case 0x14898596u:
+        {
+            if (name.beginsWith(BuiltInName::floor))
+            {
+                ASSERT(name.length() == 8);
+                return &BuiltInFunction::kFunction_floor_2B;
+            }
+            break;
+        }
+        case 0x148be379u:
+        {
+            if (name.beginsWith(BuiltInName::floor))
+            {
+                ASSERT(name.length() == 8);
+                return &BuiltInFunction::kFunction_floor_1B;
+            }
+            break;
+        }
+        case 0x148e47b2u:
+        {
+            if (name.beginsWith(BuiltInName::fract))
+            {
+                ASSERT(name.length() == 8);
+                return &BuiltInFunction::kFunction_fract_1B;
+            }
+            break;
+        }
+        case 0x14a24982u:
+        {
+            if (name.beginsWith(BuiltInName::equal))
+            {
+                ASSERT(name.length() == 10);
+                return &BuiltInFunction::kFunction_equal_3E3E;
+            }
+            break;
+        }
+        case 0x14a344cau:
+        {
+            if (name.beginsWith(BuiltInName::equal))
+            {
+                ASSERT(name.length() == 10);
+                return &BuiltInFunction::kFunction_equal_3B3B;
+            }
+            break;
+        }
+        case 0x14a4c07au:
+        {
+            if (name.beginsWith(BuiltInName::cross))
+            {
+                ASSERT(name.length() == 10);
+                return &BuiltInFunction::kFunction_cross_2B2B;
+            }
+            break;
+        }
+        case 0x14a841f7u:
+        {
+            if (name.beginsWith(BuiltInName::equal))
+            {
+                ASSERT(name.length() == 10);
+                return &BuiltInFunction::kFunction_equal_2C2C;
+            }
+            break;
+        }
+        case 0x14a99557u:
+        {
+            if (name.beginsWith(BuiltInName::equal))
+            {
+                ASSERT(name.length() == 10);
+                return &BuiltInFunction::kFunction_equal_2B2B;
+            }
+            break;
+        }
+        case 0x14aabf32u:
+        {
+            if (name.beginsWith(BuiltInName::equal))
+            {
+                ASSERT(name.length() == 10);
+                return &BuiltInFunction::kFunction_equal_1C1C;
+            }
+            break;
+        }
+        case 0x14ad02bdu:
+        {
+            if (name.beginsWith(BuiltInName::equal))
+            {
+                ASSERT(name.length() == 10);
+                return &BuiltInFunction::kFunction_equal_3C3C;
+            }
+            break;
+        }
+        case 0x14adc97au:
+        {
+            if (name.beginsWith(BuiltInName::equal))
+            {
+                ASSERT(name.length() == 10);
+                return &BuiltInFunction::kFunction_equal_2E2E;
+            }
+            break;
+        }
+        case 0x14aeb3fau:
+        {
+            if (name.beginsWith(BuiltInName::equal))
+            {
+                ASSERT(name.length() == 10);
+                return &BuiltInFunction::kFunction_equal_1E1E;
+            }
+            break;
+        }
+        case 0x14af6410u:
+        {
+            if (name.beginsWith(BuiltInName::equal))
+            {
+                ASSERT(name.length() == 10);
+                return &BuiltInFunction::kFunction_equal_1B1B;
+            }
+            break;
+        }
+        case 0x14c33da1u:
+        {
+            if (name == BuiltInName::clamp_3B3B3B)
+            {
+                return &BuiltInFunction::kFunction_clamp_3B3B3B;
+            }
+            break;
+        }
+        case 0x14c5e296u:
+        {
+            if (name == BuiltInName::clamp_1B0B0B)
+            {
+                return &BuiltInFunction::kFunction_clamp_1B0B0B;
+            }
+            break;
+        }
+        case 0x14c6b919u:
+        {
+            if (name == BuiltInName::clamp_1B1B1B)
+            {
+                return &BuiltInFunction::kFunction_clamp_1B1B1B;
+            }
+            break;
+        }
+        case 0x14cb1025u:
+        {
+            if (name == BuiltInName::clamp_3B0B0B)
+            {
+                return &BuiltInFunction::kFunction_clamp_3B0B0B;
+            }
+            break;
+        }
+        case 0x14cbe76eu:
+        {
+            if (name == BuiltInName::clamp_0B0B0B)
+            {
+                return &BuiltInFunction::kFunction_clamp_0B0B0B;
+            }
+            break;
+        }
+        case 0x14cccae5u:
+        {
+            if (name == BuiltInName::clamp_2B0B0B)
+            {
+                return &BuiltInFunction::kFunction_clamp_2B0B0B;
+            }
+            break;
+        }
+        case 0x14cf0779u:
+        {
+            if (name == BuiltInName::clamp_2B2B2B)
+            {
+                return &BuiltInFunction::kFunction_clamp_2B2B2B;
+            }
+            break;
+        }
+        case 0x1891756bu:
+        {
+            if (name.beginsWith(BuiltInName::length))
+            {
+                ASSERT(name.length() == 9);
+                return &BuiltInFunction::kFunction_length_0B;
+            }
+            break;
+        }
+        case 0x18925f20u:
+        {
+            if (name.beginsWith(BuiltInName::length))
+            {
+                ASSERT(name.length() == 9);
+                return &BuiltInFunction::kFunction_length_3B;
+            }
+            break;
+        }
+        case 0x18947315u:
+        {
+            if (name.beginsWith(BuiltInName::length))
+            {
+                ASSERT(name.length() == 9);
+                return &BuiltInFunction::kFunction_length_2B;
+            }
+            break;
+        }
+        case 0x189ed736u:
+        {
+            if (name.beginsWith(BuiltInName::length))
+            {
+                ASSERT(name.length() == 9);
+                return &BuiltInFunction::kFunction_length_1B;
+            }
+            break;
+        }
+        case 0x1ca0fdeeu:
+        {
+            if (name.beginsWith(BuiltInName::degrees))
+            {
+                ASSERT(name.length() == 10);
+                return &BuiltInFunction::kFunction_degrees_2B;
+            }
+            break;
+        }
+        case 0x1ca3192cu:
+        {
+            if (name.beginsWith(BuiltInName::degrees))
+            {
+                ASSERT(name.length() == 10);
+                return &BuiltInFunction::kFunction_degrees_3B;
+            }
+            break;
+        }
+        case 0x1ca5733au:
+        {
+            if (name.beginsWith(BuiltInName::degrees))
+            {
+                ASSERT(name.length() == 10);
+                return &BuiltInFunction::kFunction_degrees_0B;
+            }
+            break;
+        }
+        case 0x1ca5f5cau:
+        {
+            if (name.beginsWith(BuiltInName::radians))
+            {
+                ASSERT(name.length() == 10);
+                return &BuiltInFunction::kFunction_radians_0B;
+            }
+            break;
+        }
+        case 0x1ca6dbf7u:
+        {
+            if (name.beginsWith(BuiltInName::radians))
+            {
+                ASSERT(name.length() == 10);
+                return &BuiltInFunction::kFunction_radians_3B;
+            }
+            break;
+        }
+        case 0x1ca81c5eu:
+        {
+            if (name.beginsWith(BuiltInName::degrees))
+            {
+                ASSERT(name.length() == 10);
+                return &BuiltInFunction::kFunction_degrees_1B;
+            }
+            break;
+        }
+        case 0x1ca8f62bu:
+        {
+            if (name.beginsWith(BuiltInName::radians))
+            {
+                ASSERT(name.length() == 10);
+                return &BuiltInFunction::kFunction_radians_2B;
+            }
+            break;
+        }
+        case 0x1cab5cdcu:
+        {
+            if (name.beginsWith(BuiltInName::radians))
+            {
+                ASSERT(name.length() == 10);
+                return &BuiltInFunction::kFunction_radians_1B;
+            }
+            break;
+        }
+        case 0x1cc408dau:
+        {
+            if (name.beginsWith(BuiltInName::reflect))
+            {
+                ASSERT(name.length() == 12);
+                return &BuiltInFunction::kFunction_reflect_2B2B;
+            }
+            break;
+        }
+        case 0x1cc6193fu:
+        {
+            if (name.beginsWith(BuiltInName::reflect))
+            {
+                ASSERT(name.length() == 12);
+                return &BuiltInFunction::kFunction_reflect_3B3B;
+            }
+            break;
+        }
+        case 0x1cc64487u:
+        {
+            if (name.beginsWith(BuiltInName::reflect))
+            {
+                ASSERT(name.length() == 12);
+                return &BuiltInFunction::kFunction_reflect_0B0B;
+            }
+            break;
+        }
+        case 0x1ccca9c8u:
+        {
+            if (name.beginsWith(BuiltInName::reflect))
+            {
+                ASSERT(name.length() == 12);
+                return &BuiltInFunction::kFunction_reflect_1B1B;
+            }
+            break;
+        }
+        case 0x1ce0c06au:
+        {
+            if (name == BuiltInName::refract_1B1B0B)
+            {
+                return &BuiltInFunction::kFunction_refract_1B1B0B;
+            }
+            break;
+        }
+        case 0x1ce34099u:
+        {
+            if (name == BuiltInName::refract_3B3B0B)
+            {
+                return &BuiltInFunction::kFunction_refract_3B3B0B;
+            }
+            break;
+        }
+        case 0x1ce342a6u:
+        {
+            if (name == BuiltInName::refract_2B2B0B)
+            {
+                return &BuiltInFunction::kFunction_refract_2B2B0B;
+            }
+            break;
+        }
+        case 0x1ce7660eu:
+        {
+            if (name == BuiltInName::refract_0B0B0B)
+            {
+                return &BuiltInFunction::kFunction_refract_0B0B0B;
+            }
+            break;
+        }
+        case 0x20d08e18u:
+        {
+            if (name.beginsWith(BuiltInName::distance))
+            {
+                ASSERT(name.length() == 13);
+                return &BuiltInFunction::kFunction_distance_3B3B;
+            }
+            break;
+        }
+        case 0x20d1a6f5u:
+        {
+            if (name.beginsWith(BuiltInName::distance))
+            {
+                ASSERT(name.length() == 13);
+                return &BuiltInFunction::kFunction_distance_2B2B;
+            }
+            break;
+        }
+        case 0x20d1d723u:
+        {
+            if (name.beginsWith(BuiltInName::notEqual))
+            {
+                ASSERT(name.length() == 13);
+                return &BuiltInFunction::kFunction_notEqual_1E1E;
+            }
+            break;
+        }
+        case 0x20d2b884u:
+        {
+            if (name.beginsWith(BuiltInName::notEqual))
+            {
+                ASSERT(name.length() == 13);
+                return &BuiltInFunction::kFunction_notEqual_2E2E;
+            }
+            break;
+        }
+        case 0x20d3517eu:
+        {
+            if (name.beginsWith(BuiltInName::lessThan))
+            {
+                ASSERT(name.length() == 13);
+                return &BuiltInFunction::kFunction_lessThan_1B1B;
+            }
+            break;
+        }
+        case 0x20d42037u:
+        {
+            if (name.beginsWith(BuiltInName::lessThan))
+            {
+                ASSERT(name.length() == 13);
+                return &BuiltInFunction::kFunction_lessThan_3C3C;
+            }
+            break;
+        }
+        case 0x20d4c66eu:
+        {
+            if (name.beginsWith(BuiltInName::lessThan))
+            {
+                ASSERT(name.length() == 13);
+                return &BuiltInFunction::kFunction_lessThan_2B2B;
+            }
+            break;
+        }
+        case 0x20d4c7eeu:
+        {
+            if (name.beginsWith(BuiltInName::notEqual))
+            {
+                ASSERT(name.length() == 13);
+                return &BuiltInFunction::kFunction_notEqual_2C2C;
+            }
+            break;
+        }
+        case 0x20d58403u:
+        {
+            if (name.beginsWith(BuiltInName::notEqual))
+            {
+                ASSERT(name.length() == 13);
+                return &BuiltInFunction::kFunction_notEqual_1B1B;
+            }
+            break;
+        }
+        case 0x20d6513cu:
+        {
+            if (name.beginsWith(BuiltInName::notEqual))
+            {
+                ASSERT(name.length() == 13);
+                return &BuiltInFunction::kFunction_notEqual_1C1C;
+            }
+            break;
+        }
+        case 0x20d69913u:
+        {
+            if (name.beginsWith(BuiltInName::lessThan))
+            {
+                ASSERT(name.length() == 13);
+                return &BuiltInFunction::kFunction_lessThan_1C1C;
+            }
+            break;
+        }
+        case 0x20d71eb8u:
+        {
+            if (name.beginsWith(BuiltInName::notEqual))
+            {
+                ASSERT(name.length() == 13);
+                return &BuiltInFunction::kFunction_notEqual_3B3B;
+            }
+            break;
+        }
+        case 0x20d7839eu:
+        {
+            if (name.beginsWith(BuiltInName::notEqual))
+            {
+                ASSERT(name.length() == 13);
+                return &BuiltInFunction::kFunction_notEqual_3E3E;
+            }
+            break;
+        }
+        case 0x20d979cdu:
+        {
+            if (name.beginsWith(BuiltInName::distance))
+            {
+                ASSERT(name.length() == 13);
+                return &BuiltInFunction::kFunction_distance_0B0B;
+            }
+            break;
+        }
+        case 0x20da61d4u:
+        {
+            if (name.beginsWith(BuiltInName::lessThan))
+            {
+                ASSERT(name.length() == 13);
+                return &BuiltInFunction::kFunction_lessThan_3B3B;
+            }
+            break;
+        }
+        case 0x20db5cc6u:
+        {
+            if (name.beginsWith(BuiltInName::notEqual))
+            {
+                ASSERT(name.length() == 13);
+                return &BuiltInFunction::kFunction_notEqual_2B2B;
+            }
+            break;
+        }
+        case 0x20dd5e88u:
+        {
+            if (name.beginsWith(BuiltInName::notEqual))
+            {
+                ASSERT(name.length() == 13);
+                return &BuiltInFunction::kFunction_notEqual_3C3C;
+            }
+            break;
+        }
+        case 0x20df72aau:
+        {
+            if (name.beginsWith(BuiltInName::lessThan))
+            {
+                ASSERT(name.length() == 13);
+                return &BuiltInFunction::kFunction_lessThan_2C2C;
+            }
+            break;
+        }
+        case 0x20dfd70fu:
+        {
+            if (name.beginsWith(BuiltInName::distance))
+            {
+                ASSERT(name.length() == 13);
+                return &BuiltInFunction::kFunction_distance_1B1B;
+            }
+            break;
+        }
+        case 0x24c44c28u:
+        {
+            if (name.beginsWith(BuiltInName::normalize))
+            {
+                ASSERT(name.length() == 12);
+                return &BuiltInFunction::kFunction_normalize_1B;
+            }
+            break;
+        }
+        case 0x24c6a3d6u:
+        {
+            if (name.beginsWith(BuiltInName::normalize))
+            {
+                ASSERT(name.length() == 12);
+                return &BuiltInFunction::kFunction_normalize_2B;
+            }
+            break;
+        }
+        case 0x24c942bbu:
+        {
+            if (name.beginsWith(BuiltInName::normalize))
+            {
+                ASSERT(name.length() == 12);
+                return &BuiltInFunction::kFunction_normalize_3B;
+            }
+            break;
+        }
+        case 0x24ca2b81u:
+        {
+            if (name.beginsWith(BuiltInName::normalize))
+            {
+                ASSERT(name.length() == 12);
+                return &BuiltInFunction::kFunction_normalize_0B;
+            }
+            break;
+        }
+        case 0x29113c5du:
+        {
+            if (name == BuiltInName::smoothstep_0B0B1B)
+            {
+                return &BuiltInFunction::kFunction_smoothstep_0B0B1B;
+            }
+            break;
+        }
+        case 0x29129286u:
+        {
+            if (name == BuiltInName::smoothstep_1B1B1B)
+            {
+                return &BuiltInFunction::kFunction_smoothstep_1B1B1B;
+            }
+            break;
+        }
+        case 0x29137486u:
+        {
+            if (name == BuiltInName::smoothstep_3B3B3B)
+            {
+                return &BuiltInFunction::kFunction_smoothstep_3B3B3B;
+            }
+            break;
+        }
+        case 0x29145112u:
+        {
+            if (name == BuiltInName::smoothstep_2B2B2B)
+            {
+                return &BuiltInFunction::kFunction_smoothstep_2B2B2B;
+            }
+            break;
+        }
+        case 0x291bdbcdu:
+        {
+            if (name == BuiltInName::smoothstep_0B0B0B)
+            {
+                return &BuiltInFunction::kFunction_smoothstep_0B0B0B;
+            }
+            break;
+        }
+        case 0x291cba04u:
+        {
+            if (name == BuiltInName::smoothstep_0B0B3B)
+            {
+                return &BuiltInFunction::kFunction_smoothstep_0B0B3B;
+            }
+            break;
+        }
+        case 0x291ed9f2u:
+        {
+            if (name == BuiltInName::smoothstep_0B0B2B)
+            {
+                return &BuiltInFunction::kFunction_smoothstep_0B0B2B;
+            }
+            break;
+        }
+        case 0x2ce151f2u:
+        {
+            if (name.beginsWith(BuiltInName::inversesqrt))
+            {
+                ASSERT(name.length() == 14);
+                return &BuiltInFunction::kFunction_inversesqrt_2B;
+            }
+            break;
+        }
+        case 0x2ce3bb6cu:
+        {
+            if (name.beginsWith(BuiltInName::inversesqrt))
+            {
+                ASSERT(name.length() == 14);
+                return &BuiltInFunction::kFunction_inversesqrt_1B;
+            }
+            break;
+        }
+        case 0x2cee53ddu:
+        {
+            if (name.beginsWith(BuiltInName::inversesqrt))
+            {
+                ASSERT(name.length() == 14);
+                return &BuiltInFunction::kFunction_inversesqrt_0B;
+            }
+            break;
+        }
+        case 0x2cef3d27u:
+        {
+            if (name.beginsWith(BuiltInName::inversesqrt))
+            {
+                ASSERT(name.length() == 14);
+                return &BuiltInFunction::kFunction_inversesqrt_3B;
+            }
+            break;
+        }
+        case 0x2d02eb78u:
+        {
+            if (name.beginsWith(BuiltInName::greaterThan))
+            {
+                ASSERT(name.length() == 16);
+                return &BuiltInFunction::kFunction_greaterThan_1B1B;
+            }
+            break;
+        }
+        case 0x2d0362a4u:
+        {
+            if (name.beginsWith(BuiltInName::greaterThan))
+            {
+                ASSERT(name.length() == 16);
+                return &BuiltInFunction::kFunction_greaterThan_3C3C;
+            }
+            break;
+        }
+        case 0x2d052a50u:
+        {
+            if (name.beginsWith(BuiltInName::greaterThan))
+            {
+                ASSERT(name.length() == 16);
+                return &BuiltInFunction::kFunction_greaterThan_3B3B;
+            }
+            break;
+        }
+        case 0x2d0a449bu:
+        {
+            if (name.beginsWith(BuiltInName::greaterThan))
+            {
+                ASSERT(name.length() == 16);
+                return &BuiltInFunction::kFunction_greaterThan_2B2B;
+            }
+            break;
+        }
+        case 0x2d0b99c3u:
+        {
+            if (name.beginsWith(BuiltInName::greaterThan))
+            {
+                ASSERT(name.length() == 16);
+                return &BuiltInFunction::kFunction_greaterThan_1C1C;
+            }
+            break;
+        }
+        case 0x2d0ba1a0u:
+        {
+            if (name.beginsWith(BuiltInName::greaterThan))
+            {
+                ASSERT(name.length() == 16);
+                return &BuiltInFunction::kFunction_greaterThan_2C2C;
+            }
+            break;
+        }
+        case 0x2d216fbcu:
+        {
+            if (name == BuiltInName::faceforward_3B3B3B)
+            {
+                return &BuiltInFunction::kFunction_faceforward_3B3B3B;
+            }
+            break;
+        }
+        case 0x2d23a287u:
+        {
+            if (name == BuiltInName::faceforward_1B1B1B)
+            {
+                return &BuiltInFunction::kFunction_faceforward_1B1B1B;
+            }
+            break;
+        }
+        case 0x2d2d4250u:
+        {
+            if (name == BuiltInName::faceforward_2B2B2B)
+            {
+                return &BuiltInFunction::kFunction_faceforward_2B2B2B;
+            }
+            break;
+        }
+        case 0x2d2fa1bau:
         {
             if (name == BuiltInName::faceforward_0B0B0B)
             {
@@ -18709,27 +18944,218 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
             }
             break;
         }
-        case 0xfbaad71cu:
+        case 0x352938d0u:
         {
-            if (name.length() == 6 && name.beginsWith(BuiltInName::exp_))
+            if (name.beginsWith(BuiltInName::lessThanEqual))
             {
-                return &BuiltInFunction::kFunction_exp_2B;
+                ASSERT(name.length() == 18);
+                return &BuiltInFunction::kFunction_lessThanEqual_2C2C;
             }
             break;
         }
-        case 0xfcd80b67u:
+        case 0x35296680u:
         {
-            if (name.length() == 9 && name.beginsWith(BuiltInName::step_))
+            if (name.beginsWith(BuiltInName::lessThanEqual))
             {
-                return &BuiltInFunction::kFunction_step_0B2B;
+                ASSERT(name.length() == 18);
+                return &BuiltInFunction::kFunction_lessThanEqual_3C3C;
             }
             break;
         }
-        case 0xfdc4db42u:
+        case 0x352bbb54u:
         {
-            if (name.length() == 13 && name.beginsWith(BuiltInName::distance_))
+            if (name.beginsWith(BuiltInName::lessThanEqual))
             {
-                return &BuiltInFunction::kFunction_distance_1B1B;
+                ASSERT(name.length() == 18);
+                return &BuiltInFunction::kFunction_lessThanEqual_1B1B;
+            }
+            break;
+        }
+        case 0x352cacb6u:
+        {
+            if (name.beginsWith(BuiltInName::lessThanEqual))
+            {
+                ASSERT(name.length() == 18);
+                return &BuiltInFunction::kFunction_lessThanEqual_3B3B;
+            }
+            break;
+        }
+        case 0x352eff39u:
+        {
+            if (name.beginsWith(BuiltInName::lessThanEqual))
+            {
+                ASSERT(name.length() == 18);
+                return &BuiltInFunction::kFunction_lessThanEqual_1C1C;
+            }
+            break;
+        }
+        case 0x352f913eu:
+        {
+            if (name.beginsWith(BuiltInName::lessThanEqual))
+            {
+                ASSERT(name.length() == 18);
+                return &BuiltInFunction::kFunction_lessThanEqual_2B2B;
+            }
+            break;
+        }
+        case 0x39325152u:
+        {
+            if (name.beginsWith(BuiltInName::matrixCompMult))
+            {
+                ASSERT(name.length() == 19);
+                return &BuiltInFunction::kFunction_matrixCompMult_5B5B;
+            }
+            break;
+        }
+        case 0x393640c0u:
+        {
+            if (name.beginsWith(BuiltInName::matrixCompMult))
+            {
+                ASSERT(name.length() == 19);
+                return &BuiltInFunction::kFunction_matrixCompMult_FBFB;
+            }
+            break;
+        }
+        case 0x393ce233u:
+        {
+            if (name.beginsWith(BuiltInName::matrixCompMult))
+            {
+                ASSERT(name.length() == 19);
+                return &BuiltInFunction::kFunction_matrixCompMult_ABAB;
+            }
+            break;
+        }
+        case 0x41563f06u:
+        {
+            if (name.beginsWith(BuiltInName::greaterThanEqual))
+            {
+                ASSERT(name.length() == 21);
+                return &BuiltInFunction::kFunction_greaterThanEqual_2C2C;
+            }
+            break;
+        }
+        case 0x41598af3u:
+        {
+            if (name.beginsWith(BuiltInName::greaterThanEqual))
+            {
+                ASSERT(name.length() == 21);
+                return &BuiltInFunction::kFunction_greaterThanEqual_1B1B;
+            }
+            break;
+        }
+        case 0x415a0237u:
+        {
+            if (name.beginsWith(BuiltInName::greaterThanEqual))
+            {
+                ASSERT(name.length() == 21);
+                return &BuiltInFunction::kFunction_greaterThanEqual_3C3C;
+            }
+            break;
+        }
+        case 0x415bc9cbu:
+        {
+            if (name.beginsWith(BuiltInName::greaterThanEqual))
+            {
+                ASSERT(name.length() == 21);
+                return &BuiltInFunction::kFunction_greaterThanEqual_3B3B;
+            }
+            break;
+        }
+        case 0x415cecbdu:
+        {
+            if (name.beginsWith(BuiltInName::greaterThanEqual))
+            {
+                ASSERT(name.length() == 21);
+                return &BuiltInFunction::kFunction_greaterThanEqual_2B2B;
+            }
+            break;
+        }
+        case 0x415e3912u:
+        {
+            if (name.beginsWith(BuiltInName::greaterThanEqual))
+            {
+                ASSERT(name.length() == 21);
+                return &BuiltInFunction::kFunction_greaterThanEqual_1C1C;
+            }
+            break;
+        }
+        case 0xfcd5c51au:
+        {
+            if (name == BuiltInName::gl_DepthRange)
+            {
+                return mVar_gl_DepthRange;
+            }
+            break;
+        }
+        case 0xfd1554f1u:
+        {
+            if (name == BuiltInName::gl_MaxDrawBuffers)
+            {
+                return mVar_gl_MaxDrawBuffers;
+            }
+            break;
+        }
+        case 0xfd35ab48u:
+        {
+            if (name == BuiltInName::gl_MaxVertexAttribs)
+            {
+                return mVar_gl_MaxVertexAttribs;
+            }
+            break;
+        }
+        case 0xfd756b95u:
+        {
+            if (name == BuiltInName::gl_MaxTextureImageUnits)
+            {
+                return mVar_gl_MaxTextureImageUnits;
+            }
+            break;
+        }
+        case 0xfd7dc4d6u:
+        {
+            if (name == BuiltInName::gl_DepthRangeParameters)
+            {
+                return mVar_gl_DepthRangeParameters;
+            }
+            break;
+        }
+        case 0xfda6bc61u:
+        {
+            if (name == BuiltInName::gl_MaxVertexUniformVectors)
+            {
+                return mVar_gl_MaxVertexUniformVectors;
+            }
+            break;
+        }
+        case 0xfdc89746u:
+        {
+            if (name == BuiltInName::gl_MaxFragmentUniformVectors)
+            {
+                return mVar_gl_MaxFragmentUniformVectors;
+            }
+            break;
+        }
+        case 0xfdd42165u:
+        {
+            if (name == BuiltInName::gl_MaxVertexTextureImageUnits)
+            {
+                return mVar_gl_MaxVertexTextureImageUnits;
+            }
+            break;
+        }
+        case 0xfde3d71cu:
+        {
+            if (name == BuiltInName::gl_MaxDualSourceDrawBuffersEXT)
+            {
+                return mVar_gl_MaxDualSourceDrawBuffersEXT;
+            }
+            break;
+        }
+        case 0xfdf08397u:
+        {
+            if (name == BuiltInName::gl_MaxCombinedTextureImageUnits)
+            {
+                return mVar_gl_MaxCombinedTextureImageUnits;
             }
             break;
         }
@@ -18738,15 +19164,15 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
     {
         switch (nameHash)
         {
-            case 0x6024403cu:
+            case 0xfcc997bcu:
             {
-                if (name == BuiltInName::gl_FrontFacing)
+                if (name == BuiltInName::gl_FragCoord)
                 {
-                    return &BuiltInVariable::kVar_gl_FrontFacing;
+                    return &BuiltInVariable::kVar_gl_FragCoord;
                 }
                 break;
             }
-            case 0x86d91640u:
+            case 0xfcd86bd1u:
             {
                 if (name == BuiltInName::gl_PointCoord)
                 {
@@ -18754,11 +19180,11 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                 }
                 break;
             }
-            case 0x99ac8d74u:
+            case 0xfce60278u:
             {
-                if (name == BuiltInName::gl_FragCoord)
+                if (name == BuiltInName::gl_FrontFacing)
                 {
-                    return &BuiltInVariable::kVar_gl_FragCoord;
+                    return &BuiltInVariable::kVar_gl_FrontFacing;
                 }
                 break;
             }
@@ -18768,7 +19194,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
     {
         switch (nameHash)
         {
-            case 0x02c4bde0u:
+            case 0xfcb021abu:
             {
                 if (name == BuiltInName::gl_Position)
                 {
@@ -18776,7 +19202,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                 }
                 break;
             }
-            case 0x70b0d69au:
+            case 0xfcc70d97u:
             {
                 if (name == BuiltInName::gl_PointSize)
                 {
@@ -18793,156 +19219,16 @@ const UnmangledBuiltIn *TSymbolTable::getUnmangledBuiltInForShaderVersion(
     const ImmutableString &name,
     int shaderVersion)
 {
-    uint32_t nameHash = name.hash32();
+    if (name.length() > 26)
+    {
+        return nullptr;
+    }
+    uint32_t nameHash = name.mangledNameHash();
     if (shaderVersion >= 310)
     {
         switch (nameHash)
         {
-            case 0x026813a3u:
-            {
-                if (name == BuiltInName::atomicAdd)
-                {
-                    return &UnmangledBuiltIns::UNDEFINED;
-                }
-                break;
-            }
-            case 0x1150d92eu:
-            {
-                if (name == BuiltInName::atomicMax)
-                {
-                    return &UnmangledBuiltIns::UNDEFINED;
-                }
-                break;
-            }
-            case 0x23647d3cu:
-            {
-                if (name == BuiltInName::atomicMin)
-                {
-                    return &UnmangledBuiltIns::UNDEFINED;
-                }
-                break;
-            }
-            case 0x2568837fu:
-            {
-                if (name == BuiltInName::bitCount)
-                {
-                    return &UnmangledBuiltIns::UNDEFINED;
-                }
-                break;
-            }
-            case 0x310cbdf3u:
-            {
-                if (name == BuiltInName::findLSB)
-                {
-                    return &UnmangledBuiltIns::UNDEFINED;
-                }
-                break;
-            }
-            case 0x33b8cbf8u:
-            {
-                if (name == BuiltInName::unpackUnorm4x8)
-                {
-                    return &UnmangledBuiltIns::UNDEFINED;
-                }
-                break;
-            }
-            case 0x3815d075u:
-            {
-                if (name == BuiltInName::memoryBarrier)
-                {
-                    return &UnmangledBuiltIns::UNDEFINED;
-                }
-                break;
-            }
-            case 0x44a612d1u:
-            {
-                if (name == BuiltInName::texelFetch)
-                {
-                    return &UnmangledBuiltIns::UNDEFINED;
-                }
-                break;
-            }
-            case 0x493c8c52u:
-            {
-                if (name == BuiltInName::imageLoad)
-                {
-                    return &UnmangledBuiltIns::UNDEFINED;
-                }
-                break;
-            }
-            case 0x4d4a19b5u:
-            {
-                if (name == BuiltInName::packSnorm4x8)
-                {
-                    return &UnmangledBuiltIns::UNDEFINED;
-                }
-                break;
-            }
-            case 0x4dafa4aau:
-            {
-                if (name == BuiltInName::memoryBarrierImage)
-                {
-                    return &UnmangledBuiltIns::UNDEFINED;
-                }
-                break;
-            }
-            case 0x4f0e8e9bu:
-            {
-                if (name == BuiltInName::imageStore)
-                {
-                    return &UnmangledBuiltIns::UNDEFINED;
-                }
-                break;
-            }
-            case 0x55fde64fu:
-            {
-                if (name == BuiltInName::imulExtended)
-                {
-                    return &UnmangledBuiltIns::UNDEFINED;
-                }
-                break;
-            }
-            case 0x666490f9u:
-            {
-                if (name == BuiltInName::atomicCounterIncrement)
-                {
-                    return &UnmangledBuiltIns::UNDEFINED;
-                }
-                break;
-            }
-            case 0x6ef2b1c3u:
-            {
-                if (name == BuiltInName::imageSize)
-                {
-                    return &UnmangledBuiltIns::UNDEFINED;
-                }
-                break;
-            }
-            case 0x6fdf21cbu:
-            {
-                if (name == BuiltInName::memoryBarrierBuffer)
-                {
-                    return &UnmangledBuiltIns::UNDEFINED;
-                }
-                break;
-            }
-            case 0x7ba9e270u:
-            {
-                if (name == BuiltInName::findMSB)
-                {
-                    return &UnmangledBuiltIns::UNDEFINED;
-                }
-                break;
-            }
-            case 0x7c07f1eeu:
-            {
-                if (name == BuiltInName::unpackSnorm4x8)
-                {
-                    return &UnmangledBuiltIns::UNDEFINED;
-                }
-                break;
-            }
-            case 0x8c63f160u:
+            case 0xfc58c75fu:
             {
                 if (name == BuiltInName::ldexp)
                 {
@@ -18950,7 +19236,7 @@ const UnmangledBuiltIn *TSymbolTable::getUnmangledBuiltInForShaderVersion(
                 }
                 break;
             }
-            case 0xa30cdef4u:
+            case 0xfc5a3e39u:
             {
                 if (name == BuiltInName::frexp)
                 {
@@ -18958,79 +19244,31 @@ const UnmangledBuiltIn *TSymbolTable::getUnmangledBuiltInForShaderVersion(
                 }
                 break;
             }
-            case 0xa3a03233u:
+            case 0xfc731d38u:
             {
-                if (name == BuiltInName::textureGather)
+                if (name == BuiltInName::findLSB)
                 {
                     return &UnmangledBuiltIns::UNDEFINED;
                 }
                 break;
             }
-            case 0xae0f4e53u:
+            case 0xfc77b8eeu:
             {
-                if (name == BuiltInName::packUnorm4x8)
+                if (name == BuiltInName::findMSB)
                 {
                     return &UnmangledBuiltIns::UNDEFINED;
                 }
                 break;
             }
-            case 0xb24338c0u:
+            case 0xfc8255f7u:
             {
-                if (name == BuiltInName::textureGatherOffset)
+                if (name == BuiltInName::bitCount)
                 {
                     return &UnmangledBuiltIns::UNDEFINED;
                 }
                 break;
             }
-            case 0xb5e7ff54u:
-            {
-                if (name == BuiltInName::memoryBarrierAtomicCounter)
-                {
-                    return &UnmangledBuiltIns::UNDEFINED;
-                }
-                break;
-            }
-            case 0xb82cbfe3u:
-            {
-                if (name == BuiltInName::usubBorrow)
-                {
-                    return &UnmangledBuiltIns::UNDEFINED;
-                }
-                break;
-            }
-            case 0xb94d85ddu:
-            {
-                if (name == BuiltInName::atomicExchange)
-                {
-                    return &UnmangledBuiltIns::UNDEFINED;
-                }
-                break;
-            }
-            case 0xbfd854b5u:
-            {
-                if (name == BuiltInName::atomicXor)
-                {
-                    return &UnmangledBuiltIns::UNDEFINED;
-                }
-                break;
-            }
-            case 0xc1e02fa4u:
-            {
-                if (name == BuiltInName::atomicCounter)
-                {
-                    return &UnmangledBuiltIns::UNDEFINED;
-                }
-                break;
-            }
-            case 0xca0f40eeu:
-            {
-                if (name == BuiltInName::uaddCarry)
-                {
-                    return &UnmangledBuiltIns::UNDEFINED;
-                }
-                break;
-            }
-            case 0xd2b1c53du:
+            case 0xfc8d2e21u:
             {
                 if (name == BuiltInName::atomicOr)
                 {
@@ -19038,23 +19276,63 @@ const UnmangledBuiltIn *TSymbolTable::getUnmangledBuiltInForShaderVersion(
                 }
                 break;
             }
-            case 0xd651bc5du:
+            case 0xfc902522u:
             {
-                if (name == BuiltInName::atomicCounterDecrement)
+                if (name == BuiltInName::atomicAdd)
                 {
                     return &UnmangledBuiltIns::UNDEFINED;
                 }
                 break;
             }
-            case 0xe5c5029au:
+            case 0xfc911c23u:
             {
-                if (name == BuiltInName::bitfieldReverse)
+                if (name == BuiltInName::atomicMax)
                 {
                     return &UnmangledBuiltIns::UNDEFINED;
                 }
                 break;
             }
-            case 0xe676f219u:
+            case 0xfc923b7bu:
+            {
+                if (name == BuiltInName::atomicMin)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xfc949f9au:
+            {
+                if (name == BuiltInName::imageLoad)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xfc96eee8u:
+            {
+                if (name == BuiltInName::imageSize)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xfc9bf930u:
+            {
+                if (name == BuiltInName::atomicXor)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xfc9ca01au:
+            {
+                if (name == BuiltInName::uaddCarry)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xfc9e6576u:
             {
                 if (name == BuiltInName::atomicAnd)
                 {
@@ -19062,7 +19340,55 @@ const UnmangledBuiltIn *TSymbolTable::getUnmangledBuiltInForShaderVersion(
                 }
                 break;
             }
-            case 0xebfef903u:
+            case 0xfca448b0u:
+            {
+                if (name == BuiltInName::texelFetch)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xfca4fe73u:
+            {
+                if (name == BuiltInName::imageStore)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xfcab8d28u:
+            {
+                if (name == BuiltInName::usubBorrow)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xfcc4dd14u:
+            {
+                if (name == BuiltInName::packSnorm4x8)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xfcc55991u:
+            {
+                if (name == BuiltInName::imulExtended)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xfccaeea7u:
+            {
+                if (name == BuiltInName::packUnorm4x8)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xfcceb6ecu:
             {
                 if (name == BuiltInName::umulExtended)
                 {
@@ -19070,7 +19396,55 @@ const UnmangledBuiltIn *TSymbolTable::getUnmangledBuiltInForShaderVersion(
                 }
                 break;
             }
-            case 0xf3bd9210u:
+            case 0xfcd38128u:
+            {
+                if (name == BuiltInName::memoryBarrier)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xfcda3830u:
+            {
+                if (name == BuiltInName::textureGather)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xfcdc11a6u:
+            {
+                if (name == BuiltInName::atomicCounter)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xfce33074u:
+            {
+                if (name == BuiltInName::unpackUnorm4x8)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xfce7c191u:
+            {
+                if (name == BuiltInName::unpackSnorm4x8)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xfceb9105u:
+            {
+                if (name == BuiltInName::atomicExchange)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xfcef39c9u:
             {
                 if (name == BuiltInName::atomicCompSwap)
                 {
@@ -19078,7 +19452,23 @@ const UnmangledBuiltIn *TSymbolTable::getUnmangledBuiltInForShaderVersion(
                 }
                 break;
             }
-            case 0xf50788fdu:
+            case 0xfcef8089u:
+            {
+                if (name == BuiltInName::bitfieldInsert)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xfcfe5ecau:
+            {
+                if (name == BuiltInName::bitfieldReverse)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xfcff5885u:
             {
                 if (name == BuiltInName::bitfieldExtract)
                 {
@@ -19086,9 +19476,49 @@ const UnmangledBuiltIn *TSymbolTable::getUnmangledBuiltInForShaderVersion(
                 }
                 break;
             }
-            case 0xf81301b9u:
+            case 0xfd24de50u:
             {
-                if (name == BuiltInName::bitfieldInsert)
+                if (name == BuiltInName::memoryBarrierImage)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xfd36fc39u:
+            {
+                if (name == BuiltInName::memoryBarrierBuffer)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xfd3b2cf3u:
+            {
+                if (name == BuiltInName::textureGatherOffset)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xfd6666b0u:
+            {
+                if (name == BuiltInName::atomicCounterIncrement)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xfd6d6946u:
+            {
+                if (name == BuiltInName::atomicCounterDecrement)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xfdab512bu:
+            {
+                if (name == BuiltInName::memoryBarrierAtomicCounter)
                 {
                     return &UnmangledBuiltIns::UNDEFINED;
                 }
@@ -19099,7 +19529,7 @@ const UnmangledBuiltIn *TSymbolTable::getUnmangledBuiltInForShaderVersion(
         {
             switch (nameHash)
             {
-                case 0x3d693fa0u:
+                case 0xfc73d933u:
                 {
                     if (name == BuiltInName::barrier)
                     {
@@ -19107,7 +19537,7 @@ const UnmangledBuiltIn *TSymbolTable::getUnmangledBuiltInForShaderVersion(
                     }
                     break;
                 }
-                case 0x7afaf16eu:
+                case 0xfd27aec1u:
                 {
                     if (name == BuiltInName::groupMemoryBarrier)
                     {
@@ -19115,7 +19545,7 @@ const UnmangledBuiltIn *TSymbolTable::getUnmangledBuiltInForShaderVersion(
                     }
                     break;
                 }
-                case 0xe85fa9e4u:
+                case 0xfd3e8c1eu:
                 {
                     if (name == BuiltInName::memoryBarrierShared)
                     {
@@ -19129,17 +19559,17 @@ const UnmangledBuiltIn *TSymbolTable::getUnmangledBuiltInForShaderVersion(
         {
             switch (nameHash)
             {
-                case 0xb413b257u:
+                case 0xfcab5e6cu:
                 {
-                    if (name == BuiltInName::EndPrimitive)
+                    if (name == BuiltInName::EmitVertex)
                     {
                         return &UnmangledBuiltIns::EXT_geometry_shader;
                     }
                     break;
                 }
-                case 0xb5d34358u:
+                case 0xfccb436cu:
                 {
-                    if (name == BuiltInName::EmitVertex)
+                    if (name == BuiltInName::EndPrimitive)
                     {
                         return &UnmangledBuiltIns::EXT_geometry_shader;
                     }
@@ -19152,119 +19582,7 @@ const UnmangledBuiltIn *TSymbolTable::getUnmangledBuiltInForShaderVersion(
     {
         switch (nameHash)
         {
-            case 0x023feff3u:
-            {
-                if (name == BuiltInName::textureLod)
-                {
-                    return &UnmangledBuiltIns::UNDEFINED;
-                }
-                break;
-            }
-            case 0x04644cdeu:
-            {
-                if (name == BuiltInName::greaterThan)
-                {
-                    return &UnmangledBuiltIns::UNDEFINED;
-                }
-                break;
-            }
-            case 0x0491f109u:
-            {
-                if (name == BuiltInName::lessThanEqual)
-                {
-                    return &UnmangledBuiltIns::UNDEFINED;
-                }
-                break;
-            }
-            case 0x05fc75c3u:
-            {
-                if (name == BuiltInName::lessThan)
-                {
-                    return &UnmangledBuiltIns::UNDEFINED;
-                }
-                break;
-            }
-            case 0x07275075u:
-            {
-                if (name == BuiltInName::atanh)
-                {
-                    return &UnmangledBuiltIns::UNDEFINED;
-                }
-                break;
-            }
-            case 0x092855d0u:
-            {
-                if (name == BuiltInName::tanh)
-                {
-                    return &UnmangledBuiltIns::UNDEFINED;
-                }
-                break;
-            }
-            case 0x0cbc8ba4u:
-            {
-                if (name == BuiltInName::sign)
-                {
-                    return &UnmangledBuiltIns::UNDEFINED;
-                }
-                break;
-            }
-            case 0x10d2583fu:
-            {
-                if (name == BuiltInName::sinh)
-                {
-                    return &UnmangledBuiltIns::UNDEFINED;
-                }
-                break;
-            }
-            case 0x12b2640eu:
-            {
-                if (name == BuiltInName::texelFetchOffset)
-                {
-                    return &UnmangledBuiltIns::UNDEFINED;
-                }
-                break;
-            }
-            case 0x1535b7a5u:
-            {
-                if (name == BuiltInName::textureProjLodOffset)
-                {
-                    return &UnmangledBuiltIns::UNDEFINED;
-                }
-                break;
-            }
-            case 0x2485bbbeu:
-            {
-                if (name == BuiltInName::notEqual)
-                {
-                    return &UnmangledBuiltIns::UNDEFINED;
-                }
-                break;
-            }
-            case 0x25680679u:
-            {
-                if (name == BuiltInName::unpackUnorm2x16)
-                {
-                    return &UnmangledBuiltIns::UNDEFINED;
-                }
-                break;
-            }
-            case 0x26ac11d8u:
-            {
-                if (name == BuiltInName::isinf)
-                {
-                    return &UnmangledBuiltIns::UNDEFINED;
-                }
-                break;
-            }
-            case 0x28cedbc3u:
-            {
-                if (name == BuiltInName::unpackHalf2x16)
-                {
-                    return &UnmangledBuiltIns::UNDEFINED;
-                }
-                break;
-            }
-            case 0x2a48023bu:
+            case 0xfc32a6bbu:
             {
                 if (name == BuiltInName::abs)
                 {
@@ -19272,255 +19590,7 @@ const UnmangledBuiltIn *TSymbolTable::getUnmangledBuiltInForShaderVersion(
                 }
                 break;
             }
-            case 0x2f7508efu:
-            {
-                if (name == BuiltInName::equal)
-                {
-                    return &UnmangledBuiltIns::UNDEFINED;
-                }
-                break;
-            }
-            case 0x33a56e6cu:
-            {
-                if (name == BuiltInName::textureGrad)
-                {
-                    return &UnmangledBuiltIns::UNDEFINED;
-                }
-                break;
-            }
-            case 0x39d34980u:
-            {
-                if (name == BuiltInName::textureLodOffset)
-                {
-                    return &UnmangledBuiltIns::UNDEFINED;
-                }
-                break;
-            }
-            case 0x3c6468f4u:
-            {
-                if (name == BuiltInName::texture)
-                {
-                    return &UnmangledBuiltIns::UNDEFINED;
-                }
-                break;
-            }
-            case 0x4326f80au:
-            {
-                if (name == BuiltInName::packSnorm2x16)
-                {
-                    return &UnmangledBuiltIns::UNDEFINED;
-                }
-                break;
-            }
-            case 0x44a612d1u:
-            {
-                if (name == BuiltInName::texelFetch)
-                {
-                    return &UnmangledBuiltIns::UNDEFINED;
-                }
-                break;
-            }
-            case 0x4f0be23bu:
-            {
-                if (name == BuiltInName::round)
-                {
-                    return &UnmangledBuiltIns::UNDEFINED;
-                }
-                break;
-            }
-            case 0x5bd36438u:
-            {
-                if (name == BuiltInName::packHalf2x16)
-                {
-                    return &UnmangledBuiltIns::UNDEFINED;
-                }
-                break;
-            }
-            case 0x6b0ca057u:
-            {
-                if (name == BuiltInName::textureGradOffset)
-                {
-                    return &UnmangledBuiltIns::UNDEFINED;
-                }
-                break;
-            }
-            case 0x6e02ba1bu:
-            {
-                if (name == BuiltInName::unpackSnorm2x16)
-                {
-                    return &UnmangledBuiltIns::UNDEFINED;
-                }
-                break;
-            }
-            case 0x6ff78d04u:
-            {
-                if (name == BuiltInName::packUnorm2x16)
-                {
-                    return &UnmangledBuiltIns::UNDEFINED;
-                }
-                break;
-            }
-            case 0x767e36c0u:
-            {
-                if (name == BuiltInName::determinant)
-                {
-                    return &UnmangledBuiltIns::UNDEFINED;
-                }
-                break;
-            }
-            case 0x7bf8de3bu:
-            {
-                if (name == BuiltInName::textureProjGrad)
-                {
-                    return &UnmangledBuiltIns::UNDEFINED;
-                }
-                break;
-            }
-            case 0x88c917cfu:
-            {
-                if (name == BuiltInName::textureOffset)
-                {
-                    return &UnmangledBuiltIns::UNDEFINED;
-                }
-                break;
-            }
-            case 0x8b45ed38u:
-            {
-                if (name == BuiltInName::textureProjGradOffset)
-                {
-                    return &UnmangledBuiltIns::UNDEFINED;
-                }
-                break;
-            }
-            case 0x8f8617abu:
-            {
-                if (name == BuiltInName::outerProduct)
-                {
-                    return &UnmangledBuiltIns::UNDEFINED;
-                }
-                break;
-            }
-            case 0x94b08f7fu:
-            {
-                if (name == BuiltInName::textureProj)
-                {
-                    return &UnmangledBuiltIns::UNDEFINED;
-                }
-                break;
-            }
-            case 0xa4639127u:
-            {
-                if (name == BuiltInName::roundEven)
-                {
-                    return &UnmangledBuiltIns::UNDEFINED;
-                }
-                break;
-            }
-            case 0xa5212424u:
-            {
-                if (name == BuiltInName::textureProjOffset)
-                {
-                    return &UnmangledBuiltIns::UNDEFINED;
-                }
-                break;
-            }
-            case 0xa6789406u:
-            {
-                if (name == BuiltInName::rgb_2_yuv)
-                {
-                    return &UnmangledBuiltIns::EXT_YUV_target;
-                }
-                break;
-            }
-            case 0xa82efcbcu:
-            {
-                if (name == BuiltInName::clamp)
-                {
-                    return &UnmangledBuiltIns::UNDEFINED;
-                }
-                break;
-            }
-            case 0xb15a3cc9u:
-            {
-                if (name == BuiltInName::floatBitsToInt)
-                {
-                    return &UnmangledBuiltIns::UNDEFINED;
-                }
-                break;
-            }
-            case 0xb1b3c06au:
-            {
-                if (name == BuiltInName::isnan)
-                {
-                    return &UnmangledBuiltIns::UNDEFINED;
-                }
-                break;
-            }
-            case 0xb201f283u:
-            {
-                if (name == BuiltInName::inverse)
-                {
-                    return &UnmangledBuiltIns::UNDEFINED;
-                }
-                break;
-            }
-            case 0xb755b482u:
-            {
-                if (name == BuiltInName::textureProjLod)
-                {
-                    return &UnmangledBuiltIns::UNDEFINED;
-                }
-                break;
-            }
-            case 0xbab19e4au:
-            {
-                if (name == BuiltInName::asinh)
-                {
-                    return &UnmangledBuiltIns::UNDEFINED;
-                }
-                break;
-            }
-            case 0xc03183c0u:
-            {
-                if (name == BuiltInName::transpose)
-                {
-                    return &UnmangledBuiltIns::UNDEFINED;
-                }
-                break;
-            }
-            case 0xc29ffa7eu:
-            {
-                if (name == BuiltInName::uintBitsToFloat)
-                {
-                    return &UnmangledBuiltIns::UNDEFINED;
-                }
-                break;
-            }
-            case 0xc73e788du:
-            {
-                if (name == BuiltInName::textureSize)
-                {
-                    return &UnmangledBuiltIns::UNDEFINED;
-                }
-                break;
-            }
-            case 0xc7818fa2u:
-            {
-                if (name == BuiltInName::yuv_2_rgb)
-                {
-                    return &UnmangledBuiltIns::EXT_YUV_target;
-                }
-                break;
-            }
-            case 0xc8575388u:
-            {
-                if (name == BuiltInName::floatBitsToUint)
-                {
-                    return &UnmangledBuiltIns::UNDEFINED;
-                }
-                break;
-            }
-            case 0xc98f4557u:
+            case 0xfc3c9da3u:
             {
                 if (name == BuiltInName::min)
                 {
@@ -19528,23 +19598,7 @@ const UnmangledBuiltIn *TSymbolTable::getUnmangledBuiltInForShaderVersion(
                 }
                 break;
             }
-            case 0xd55e61e5u:
-            {
-                if (name == BuiltInName::trunc)
-                {
-                    return &UnmangledBuiltIns::UNDEFINED;
-                }
-                break;
-            }
-            case 0xd5f05125u:
-            {
-                if (name == BuiltInName::matrixCompMult)
-                {
-                    return &UnmangledBuiltIns::UNDEFINED;
-                }
-                break;
-            }
-            case 0xd78f5b61u:
+            case 0xfc3d7394u:
             {
                 if (name == BuiltInName::mix)
                 {
@@ -19552,7 +19606,7 @@ const UnmangledBuiltIn *TSymbolTable::getUnmangledBuiltInForShaderVersion(
                 }
                 break;
             }
-            case 0xd7a2e319u:
+            case 0xfc3d7937u:
             {
                 if (name == BuiltInName::max)
                 {
@@ -19560,7 +19614,31 @@ const UnmangledBuiltIn *TSymbolTable::getUnmangledBuiltInForShaderVersion(
                 }
                 break;
             }
-            case 0xeb6ede7fu:
+            case 0xfc409755u:
+            {
+                if (name == BuiltInName::tanh)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xfc40c06cu:
+            {
+                if (name == BuiltInName::sign)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xfc41051au:
+            {
+                if (name == BuiltInName::sinh)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xfc4eb892u:
             {
                 if (name == BuiltInName::modf)
                 {
@@ -19568,23 +19646,7 @@ const UnmangledBuiltIn *TSymbolTable::getUnmangledBuiltInForShaderVersion(
                 }
                 break;
             }
-            case 0xed7dc722u:
-            {
-                if (name == BuiltInName::greaterThanEqual)
-                {
-                    return &UnmangledBuiltIns::UNDEFINED;
-                }
-                break;
-            }
-            case 0xedf2c855u:
-            {
-                if (name == BuiltInName::acosh)
-                {
-                    return &UnmangledBuiltIns::UNDEFINED;
-                }
-                break;
-            }
-            case 0xf45c461cu:
+            case 0xfc4f43d8u:
             {
                 if (name == BuiltInName::cosh)
                 {
@@ -19592,9 +19654,377 @@ const UnmangledBuiltIn *TSymbolTable::getUnmangledBuiltInForShaderVersion(
                 }
                 break;
             }
-            case 0xfc501e17u:
+            case 0xfc507200u:
+            {
+                if (name == BuiltInName::atanh)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xfc526b19u:
+            {
+                if (name == BuiltInName::isinf)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xfc52ffbfu:
+            {
+                if (name == BuiltInName::equal)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xfc54f285u:
+            {
+                if (name == BuiltInName::round)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xfc5a8e53u:
+            {
+                if (name == BuiltInName::clamp)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xfc5b1b56u:
+            {
+                if (name == BuiltInName::isnan)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xfc5ba553u:
+            {
+                if (name == BuiltInName::asinh)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xfc5d5403u:
+            {
+                if (name == BuiltInName::trunc)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xfc5ed779u:
+            {
+                if (name == BuiltInName::acosh)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xfc73ceb2u:
+            {
+                if (name == BuiltInName::texture)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xfc7b229cu:
+            {
+                if (name == BuiltInName::inverse)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xfc805a04u:
+            {
+                if (name == BuiltInName::lessThan)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xfc8243e5u:
+            {
+                if (name == BuiltInName::notEqual)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xfc9a471eu:
+            {
+                if (name == BuiltInName::roundEven)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xfc9a638fu:
+            {
+                if (name == BuiltInName::rgb_2_yuv)
+                {
+                    return &UnmangledBuiltIns::EXT_YUV_target;
+                }
+                break;
+            }
+            case 0xfc9c00d8u:
+            {
+                if (name == BuiltInName::transpose)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xfc9c77bau:
+            {
+                if (name == BuiltInName::yuv_2_rgb)
+                {
+                    return &UnmangledBuiltIns::EXT_YUV_target;
+                }
+                break;
+            }
+            case 0xfca02c0du:
+            {
+                if (name == BuiltInName::textureLod)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xfca448b0u:
+            {
+                if (name == BuiltInName::texelFetch)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xfcb04a9au:
+            {
+                if (name == BuiltInName::greaterThan)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xfcb3343au:
+            {
+                if (name == BuiltInName::textureGrad)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xfcb76123u:
+            {
+                if (name == BuiltInName::determinant)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xfcb94477u:
+            {
+                if (name == BuiltInName::textureProj)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xfcbc7b6au:
+            {
+                if (name == BuiltInName::textureSize)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xfcc5b90eu:
+            {
+                if (name == BuiltInName::packHalf2x16)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xfcc8ffcau:
+            {
+                if (name == BuiltInName::outerProduct)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xfcd04816u:
+            {
+                if (name == BuiltInName::lessThanEqual)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xfcd43a65u:
+            {
+                if (name == BuiltInName::packSnorm2x16)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xfcd6f27cu:
+            {
+                if (name == BuiltInName::packUnorm2x16)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xfcd88b5eu:
+            {
+                if (name == BuiltInName::textureOffset)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xfce2872eu:
+            {
+                if (name == BuiltInName::unpackHalf2x16)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xfceb196au:
+            {
+                if (name == BuiltInName::floatBitsToInt)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xfceb71d9u:
+            {
+                if (name == BuiltInName::textureProjLod)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xfced5e20u:
+            {
+                if (name == BuiltInName::matrixCompMult)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xfcefcb16u:
             {
                 if (name == BuiltInName::intBitsToFloat)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xfcf250f9u:
+            {
+                if (name == BuiltInName::unpackUnorm2x16)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xfcf6ea30u:
+            {
+                if (name == BuiltInName::unpackSnorm2x16)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xfcf7b1b6u:
+            {
+                if (name == BuiltInName::textureProjGrad)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xfcfc2381u:
+            {
+                if (name == BuiltInName::uintBitsToFloat)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xfcfc86fdu:
+            {
+                if (name == BuiltInName::floatBitsToUint)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xfd012f28u:
+            {
+                if (name == BuiltInName::texelFetchOffset)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xfd0394b4u:
+            {
+                if (name == BuiltInName::textureLodOffset)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xfd0ed0feu:
+            {
+                if (name == BuiltInName::greaterThanEqual)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xfd16b09du:
+            {
+                if (name == BuiltInName::textureGradOffset)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xfd1a5636u:
+            {
+                if (name == BuiltInName::textureProjOffset)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xfd4154feu:
+            {
+                if (name == BuiltInName::textureProjLodOffset)
+                {
+                    return &UnmangledBuiltIns::UNDEFINED;
+                }
+                break;
+            }
+            case 0xfd58b966u:
+            {
+                if (name == BuiltInName::textureProjGradOffset)
                 {
                     return &UnmangledBuiltIns::UNDEFINED;
                 }
@@ -19605,15 +20035,7 @@ const UnmangledBuiltIn *TSymbolTable::getUnmangledBuiltInForShaderVersion(
         {
             switch (nameHash)
             {
-                case 0x4b6e55d3u:
-                {
-                    if (name == BuiltInName::fwidth)
-                    {
-                        return &UnmangledBuiltIns::UNDEFINED;
-                    }
-                    break;
-                }
-                case 0xc78598f8u:
+                case 0xfc4c70a1u:
                 {
                     if (name == BuiltInName::dFdy)
                     {
@@ -19621,9 +20043,17 @@ const UnmangledBuiltIn *TSymbolTable::getUnmangledBuiltInForShaderVersion(
                     }
                     break;
                 }
-                case 0xc8859a8bu:
+                case 0xfc4c82d2u:
                 {
                     if (name == BuiltInName::dFdx)
+                    {
+                        return &UnmangledBuiltIns::UNDEFINED;
+                    }
+                    break;
+                }
+                case 0xfc64b336u:
+                {
+                    if (name == BuiltInName::fwidth)
                     {
                         return &UnmangledBuiltIns::UNDEFINED;
                     }
@@ -19636,7 +20066,7 @@ const UnmangledBuiltIn *TSymbolTable::getUnmangledBuiltInForShaderVersion(
     {
         switch (nameHash)
         {
-            case 0x18a9c042u:
+            case 0xfc918adeu:
             {
                 if (name == BuiltInName::texture2D)
                 {
@@ -19644,15 +20074,15 @@ const UnmangledBuiltIn *TSymbolTable::getUnmangledBuiltInForShaderVersion(
                 }
                 break;
             }
-            case 0x1d18f29cu:
+            case 0xfcbfe6dbu:
             {
-                if (name == BuiltInName::textureCubeGradEXT)
+                if (name == BuiltInName::textureCube)
                 {
-                    return &UnmangledBuiltIns::EXT_shader_texture_lod;
+                    return &UnmangledBuiltIns::UNDEFINED;
                 }
                 break;
             }
-            case 0x3d4abf10u:
+            case 0xfcd3dbbbu:
             {
                 if (name == BuiltInName::texture2DRect)
                 {
@@ -19660,23 +20090,7 @@ const UnmangledBuiltIn *TSymbolTable::getUnmangledBuiltInForShaderVersion(
                 }
                 break;
             }
-            case 0x4040698cu:
-            {
-                if (name == BuiltInName::texture2DProjGradEXT)
-                {
-                    return &UnmangledBuiltIns::EXT_shader_texture_lod;
-                }
-                break;
-            }
-            case 0x6dc0e8e3u:
-            {
-                if (name == BuiltInName::texture2DRectProj)
-                {
-                    return &UnmangledBuiltIns::ARB_texture_rectangle;
-                }
-                break;
-            }
-            case 0xc7cb8969u:
+            case 0xfcdc75d1u:
             {
                 if (name == BuiltInName::texture2DProj)
                 {
@@ -19684,7 +20098,7 @@ const UnmangledBuiltIn *TSymbolTable::getUnmangledBuiltInForShaderVersion(
                 }
                 break;
             }
-            case 0xd1836639u:
+            case 0xfd0d1e0fu:
             {
                 if (name == BuiltInName::texture2DGradEXT)
                 {
@@ -19692,11 +20106,27 @@ const UnmangledBuiltIn *TSymbolTable::getUnmangledBuiltInForShaderVersion(
                 }
                 break;
             }
-            case 0xfece2a39u:
+            case 0xfd16d4edu:
             {
-                if (name == BuiltInName::textureCube)
+                if (name == BuiltInName::texture2DRectProj)
                 {
-                    return &UnmangledBuiltIns::UNDEFINED;
+                    return &UnmangledBuiltIns::ARB_texture_rectangle;
+                }
+                break;
+            }
+            case 0xfd21d313u:
+            {
+                if (name == BuiltInName::textureCubeGradEXT)
+                {
+                    return &UnmangledBuiltIns::EXT_shader_texture_lod;
+                }
+                break;
+            }
+            case 0xfd440d8au:
+            {
+                if (name == BuiltInName::texture2DProjGradEXT)
+                {
+                    return &UnmangledBuiltIns::EXT_shader_texture_lod;
                 }
                 break;
             }
@@ -19705,39 +20135,7 @@ const UnmangledBuiltIn *TSymbolTable::getUnmangledBuiltInForShaderVersion(
         {
             switch (nameHash)
             {
-                case 0x4b6e55d3u:
-                {
-                    if (name == BuiltInName::fwidthExt)
-                    {
-                        return &UnmangledBuiltIns::OES_standard_derivatives;
-                    }
-                    break;
-                }
-                case 0x7150ceb8u:
-                {
-                    if (name == BuiltInName::texture2DLodEXT)
-                    {
-                        return &UnmangledBuiltIns::EXT_shader_texture_lod;
-                    }
-                    break;
-                }
-                case 0x7309b987u:
-                {
-                    if (name == BuiltInName::textureCubeLodEXT)
-                    {
-                        return &UnmangledBuiltIns::EXT_shader_texture_lod;
-                    }
-                    break;
-                }
-                case 0xbacaedf7u:
-                {
-                    if (name == BuiltInName::texture2DProjLodEXT)
-                    {
-                        return &UnmangledBuiltIns::EXT_shader_texture_lod;
-                    }
-                    break;
-                }
-                case 0xc78598f8u:
+                case 0xfc4c70a1u:
                 {
                     if (name == BuiltInName::dFdyExt)
                     {
@@ -19745,11 +20143,43 @@ const UnmangledBuiltIn *TSymbolTable::getUnmangledBuiltInForShaderVersion(
                     }
                     break;
                 }
-                case 0xc8859a8bu:
+                case 0xfc4c82d2u:
                 {
                     if (name == BuiltInName::dFdxExt)
                     {
                         return &UnmangledBuiltIns::OES_standard_derivatives;
+                    }
+                    break;
+                }
+                case 0xfc64b336u:
+                {
+                    if (name == BuiltInName::fwidthExt)
+                    {
+                        return &UnmangledBuiltIns::OES_standard_derivatives;
+                    }
+                    break;
+                }
+                case 0xfcf71bb4u:
+                {
+                    if (name == BuiltInName::texture2DLodEXT)
+                    {
+                        return &UnmangledBuiltIns::EXT_shader_texture_lod;
+                    }
+                    break;
+                }
+                case 0xfd17391cu:
+                {
+                    if (name == BuiltInName::textureCubeLodEXT)
+                    {
+                        return &UnmangledBuiltIns::EXT_shader_texture_lod;
+                    }
+                    break;
+                }
+                case 0xfd3ba159u:
+                {
+                    if (name == BuiltInName::texture2DProjLodEXT)
+                    {
+                        return &UnmangledBuiltIns::EXT_shader_texture_lod;
                     }
                     break;
                 }
@@ -19759,15 +20189,15 @@ const UnmangledBuiltIn *TSymbolTable::getUnmangledBuiltInForShaderVersion(
         {
             switch (nameHash)
             {
-                case 0x30ed9cfcu:
+                case 0xfccfa39eu:
                 {
-                    if (name == BuiltInName::texture2DProjLod)
+                    if (name == BuiltInName::texture2DLod)
                     {
                         return &UnmangledBuiltIns::UNDEFINED;
                     }
                     break;
                 }
-                case 0xb35e342cu:
+                case 0xfceb31cfu:
                 {
                     if (name == BuiltInName::textureCubeLod)
                     {
@@ -19775,9 +20205,9 @@ const UnmangledBuiltIn *TSymbolTable::getUnmangledBuiltInForShaderVersion(
                     }
                     break;
                 }
-                case 0xfa79f401u:
+                case 0xfd030225u:
                 {
-                    if (name == BuiltInName::texture2DLod)
+                    if (name == BuiltInName::texture2DProjLod)
                     {
                         return &UnmangledBuiltIns::UNDEFINED;
                     }
@@ -19788,63 +20218,7 @@ const UnmangledBuiltIn *TSymbolTable::getUnmangledBuiltInForShaderVersion(
     }
     switch (nameHash)
     {
-        case 0x04644cdeu:
-        {
-            if (name == BuiltInName::greaterThan)
-            {
-                return &UnmangledBuiltIns::UNDEFINED;
-            }
-            break;
-        }
-        case 0x0491f109u:
-        {
-            if (name == BuiltInName::lessThanEqual)
-            {
-                return &UnmangledBuiltIns::UNDEFINED;
-            }
-            break;
-        }
-        case 0x05fc75c3u:
-        {
-            if (name == BuiltInName::lessThan)
-            {
-                return &UnmangledBuiltIns::UNDEFINED;
-            }
-            break;
-        }
-        case 0x066c705cu:
-        {
-            if (name == BuiltInName::refract)
-            {
-                return &UnmangledBuiltIns::UNDEFINED;
-            }
-            break;
-        }
-        case 0x0678cabfu:
-        {
-            if (name == BuiltInName::atan)
-            {
-                return &UnmangledBuiltIns::UNDEFINED;
-            }
-            break;
-        }
-        case 0x0cbc8ba4u:
-        {
-            if (name == BuiltInName::sign)
-            {
-                return &UnmangledBuiltIns::UNDEFINED;
-            }
-            break;
-        }
-        case 0x10031ed9u:
-        {
-            if (name == BuiltInName::log2)
-            {
-                return &UnmangledBuiltIns::UNDEFINED;
-            }
-            break;
-        }
-        case 0x13254bc4u:
+        case 0xfc313990u:
         {
             if (name == BuiltInName::all)
             {
@@ -19852,15 +20226,7 @@ const UnmangledBuiltIn *TSymbolTable::getUnmangledBuiltInForShaderVersion(
             }
             break;
         }
-        case 0x2485bbbeu:
-        {
-            if (name == BuiltInName::notEqual)
-            {
-                return &UnmangledBuiltIns::UNDEFINED;
-            }
-            break;
-        }
-        case 0x29b19c8au:
+        case 0xfc329793u:
         {
             if (name == BuiltInName::notFunc)
             {
@@ -19868,15 +20234,7 @@ const UnmangledBuiltIn *TSymbolTable::getUnmangledBuiltInForShaderVersion(
             }
             break;
         }
-        case 0x29f5189bu:
-        {
-            if (name == BuiltInName::cross)
-            {
-                return &UnmangledBuiltIns::UNDEFINED;
-            }
-            break;
-        }
-        case 0x2a48023bu:
+        case 0xfc32a6bbu:
         {
             if (name == BuiltInName::abs)
             {
@@ -19884,7 +20242,7 @@ const UnmangledBuiltIn *TSymbolTable::getUnmangledBuiltInForShaderVersion(
             }
             break;
         }
-        case 0x2c29f04du:
+        case 0xfc32c2d2u:
         {
             if (name == BuiltInName::any)
             {
@@ -19892,31 +20250,7 @@ const UnmangledBuiltIn *TSymbolTable::getUnmangledBuiltInForShaderVersion(
             }
             break;
         }
-        case 0x2eb31462u:
-        {
-            if (name == BuiltInName::distance)
-            {
-                return &UnmangledBuiltIns::UNDEFINED;
-            }
-            break;
-        }
-        case 0x2f7508efu:
-        {
-            if (name == BuiltInName::equal)
-            {
-                return &UnmangledBuiltIns::UNDEFINED;
-            }
-            break;
-        }
-        case 0x3c01df1fu:
-        {
-            if (name == BuiltInName::acos)
-            {
-                return &UnmangledBuiltIns::UNDEFINED;
-            }
-            break;
-        }
-        case 0x3f515151u:
+        case 0xfc33f444u:
         {
             if (name == BuiltInName::log)
             {
@@ -19924,7 +20258,7 @@ const UnmangledBuiltIn *TSymbolTable::getUnmangledBuiltInForShaderVersion(
             }
             break;
         }
-        case 0x58336ad5u:
+        case 0xfc3589e3u:
         {
             if (name == BuiltInName::pow)
             {
@@ -19932,23 +20266,7 @@ const UnmangledBuiltIn *TSymbolTable::getUnmangledBuiltInForShaderVersion(
             }
             break;
         }
-        case 0x5fd55fe1u:
-        {
-            if (name == BuiltInName::faceforward)
-            {
-                return &UnmangledBuiltIns::UNDEFINED;
-            }
-            break;
-        }
-        case 0x62e4e208u:
-        {
-            if (name == BuiltInName::ceil)
-            {
-                return &UnmangledBuiltIns::UNDEFINED;
-            }
-            break;
-        }
-        case 0x72a68728u:
+        case 0xfc372d40u:
         {
             if (name == BuiltInName::exp)
             {
@@ -19956,55 +20274,7 @@ const UnmangledBuiltIn *TSymbolTable::getUnmangledBuiltInForShaderVersion(
             }
             break;
         }
-        case 0x7dee3bcfu:
-        {
-            if (name == BuiltInName::sqrt)
-            {
-                return &UnmangledBuiltIns::UNDEFINED;
-            }
-            break;
-        }
-        case 0x83d03615u:
-        {
-            if (name == BuiltInName::length)
-            {
-                return &UnmangledBuiltIns::UNDEFINED;
-            }
-            break;
-        }
-        case 0x856a57e1u:
-        {
-            if (name == BuiltInName::radians)
-            {
-                return &UnmangledBuiltIns::UNDEFINED;
-            }
-            break;
-        }
-        case 0x92c778aau:
-        {
-            if (name == BuiltInName::reflect)
-            {
-                return &UnmangledBuiltIns::UNDEFINED;
-            }
-            break;
-        }
-        case 0x95964e7du:
-        {
-            if (name == BuiltInName::smoothstep)
-            {
-                return &UnmangledBuiltIns::UNDEFINED;
-            }
-            break;
-        }
-        case 0x9626adeeu:
-        {
-            if (name == BuiltInName::exp2)
-            {
-                return &UnmangledBuiltIns::UNDEFINED;
-            }
-            break;
-        }
-        case 0x9cf73498u:
+        case 0xfc39cbebu:
         {
             if (name == BuiltInName::tan)
             {
@@ -20012,39 +20282,7 @@ const UnmangledBuiltIn *TSymbolTable::getUnmangledBuiltInForShaderVersion(
             }
             break;
         }
-        case 0xa82efcbcu:
-        {
-            if (name == BuiltInName::clamp)
-            {
-                return &UnmangledBuiltIns::UNDEFINED;
-            }
-            break;
-        }
-        case 0xaf5442eeu:
-        {
-            if (name == BuiltInName::degrees)
-            {
-                return &UnmangledBuiltIns::UNDEFINED;
-            }
-            break;
-        }
-        case 0xb8e70c1du:
-        {
-            if (name == BuiltInName::floor)
-            {
-                return &UnmangledBuiltIns::UNDEFINED;
-            }
-            break;
-        }
-        case 0xc7441a0fu:
-        {
-            if (name == BuiltInName::step)
-            {
-                return &UnmangledBuiltIns::UNDEFINED;
-            }
-            break;
-        }
-        case 0xc98f4557u:
+        case 0xfc3c9da3u:
         {
             if (name == BuiltInName::min)
             {
@@ -20052,15 +20290,7 @@ const UnmangledBuiltIn *TSymbolTable::getUnmangledBuiltInForShaderVersion(
             }
             break;
         }
-        case 0xce79296cu:
-        {
-            if (name == BuiltInName::normalize)
-            {
-                return &UnmangledBuiltIns::UNDEFINED;
-            }
-            break;
-        }
-        case 0xd3689f20u:
+        case 0xfc3d39a9u:
         {
             if (name == BuiltInName::dot)
             {
@@ -20068,15 +20298,7 @@ const UnmangledBuiltIn *TSymbolTable::getUnmangledBuiltInForShaderVersion(
             }
             break;
         }
-        case 0xd5f05125u:
-        {
-            if (name == BuiltInName::matrixCompMult)
-            {
-                return &UnmangledBuiltIns::UNDEFINED;
-            }
-            break;
-        }
-        case 0xd78f5b61u:
+        case 0xfc3d7394u:
         {
             if (name == BuiltInName::mix)
             {
@@ -20084,7 +20306,7 @@ const UnmangledBuiltIn *TSymbolTable::getUnmangledBuiltInForShaderVersion(
             }
             break;
         }
-        case 0xd7a2e319u:
+        case 0xfc3d7937u:
         {
             if (name == BuiltInName::max)
             {
@@ -20092,7 +20314,7 @@ const UnmangledBuiltIn *TSymbolTable::getUnmangledBuiltInForShaderVersion(
             }
             break;
         }
-        case 0xdf9e7283u:
+        case 0xfc3dfb64u:
         {
             if (name == BuiltInName::mod)
             {
@@ -20100,7 +20322,7 @@ const UnmangledBuiltIn *TSymbolTable::getUnmangledBuiltInForShaderVersion(
             }
             break;
         }
-        case 0xe0302a4du:
+        case 0xfc3e094fu:
         {
             if (name == BuiltInName::sin)
             {
@@ -20108,31 +20330,7 @@ const UnmangledBuiltIn *TSymbolTable::getUnmangledBuiltInForShaderVersion(
             }
             break;
         }
-        case 0xe8b548a5u:
-        {
-            if (name == BuiltInName::inversesqrt)
-            {
-                return &UnmangledBuiltIns::UNDEFINED;
-            }
-            break;
-        }
-        case 0xed7dc722u:
-        {
-            if (name == BuiltInName::greaterThanEqual)
-            {
-                return &UnmangledBuiltIns::UNDEFINED;
-            }
-            break;
-        }
-        case 0xeef29a67u:
-        {
-            if (name == BuiltInName::fract)
-            {
-                return &UnmangledBuiltIns::UNDEFINED;
-            }
-            break;
-        }
-        case 0xfb8de29cu:
+        case 0xfc3fba42u:
         {
             if (name == BuiltInName::cos)
             {
@@ -20140,9 +20338,241 @@ const UnmangledBuiltIn *TSymbolTable::getUnmangledBuiltInForShaderVersion(
             }
             break;
         }
-        case 0xfeae7ea6u:
+        case 0xfc406d33u:
+        {
+            if (name == BuiltInName::atan)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0xfc40c06cu:
+        {
+            if (name == BuiltInName::sign)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0xfc410ee8u:
+        {
+            if (name == BuiltInName::log2)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0xfc43cf02u:
+        {
+            if (name == BuiltInName::acos)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0xfc462c46u:
+        {
+            if (name == BuiltInName::ceil)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0xfc47d52cu:
+        {
+            if (name == BuiltInName::sqrt)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0xfc496f84u:
+        {
+            if (name == BuiltInName::exp2)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0xfc4c7e4eu:
+        {
+            if (name == BuiltInName::step)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0xfc4fe441u:
         {
             if (name == BuiltInName::asin)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0xfc5297cau:
+        {
+            if (name == BuiltInName::cross)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0xfc52ffbfu:
+        {
+            if (name == BuiltInName::equal)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0xfc5a8e53u:
+        {
+            if (name == BuiltInName::clamp)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0xfc5b826du:
+        {
+            if (name == BuiltInName::floor)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0xfc5ee54eu:
+        {
+            if (name == BuiltInName::fract)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0xfc683b16u:
+        {
+            if (name == BuiltInName::length)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0xfc70669bu:
+        {
+            if (name == BuiltInName::refract)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0xfc785144u:
+        {
+            if (name == BuiltInName::radians)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0xfc7924ddu:
+        {
+            if (name == BuiltInName::reflect)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0xfc7af7aau:
+        {
+            if (name == BuiltInName::degrees)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0xfc805a04u:
+        {
+            if (name == BuiltInName::lessThan)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0xfc8243e5u:
+        {
+            if (name == BuiltInName::notEqual)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0xfc82ef53u:
+        {
+            if (name == BuiltInName::distance)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0xfc9ceefeu:
+        {
+            if (name == BuiltInName::normalize)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0xfca95719u:
+        {
+            if (name == BuiltInName::smoothstep)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0xfcb04a9au:
+        {
+            if (name == BuiltInName::greaterThan)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0xfcb5f2b4u:
+        {
+            if (name == BuiltInName::faceforward)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0xfcbe83f1u:
+        {
+            if (name == BuiltInName::inversesqrt)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0xfcd04816u:
+        {
+            if (name == BuiltInName::lessThanEqual)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0xfced5e20u:
+        {
+            if (name == BuiltInName::matrixCompMult)
+            {
+                return &UnmangledBuiltIns::UNDEFINED;
+            }
+            break;
+        }
+        case 0xfd0ed0feu:
+        {
+            if (name == BuiltInName::greaterThanEqual)
             {
                 return &UnmangledBuiltIns::UNDEFINED;
             }
