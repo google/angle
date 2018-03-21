@@ -267,7 +267,6 @@ gl::LinkResult ProgramVk::link(const gl::Context *glContext,
         mFragmentModuleSerial = renderer->issueProgramSerial();
     }
 
-    ANGLE_TRY(allocateDescriptorSets(contextVk));
     ANGLE_TRY(initDefaultUniformBlocks(glContext));
 
     if (!mState.getSamplerUniformRange().empty())
@@ -650,23 +649,25 @@ Serial ProgramVk::getFragmentModuleSerial() const
     return mFragmentModuleSerial;
 }
 
-vk::Error ProgramVk::allocateDescriptorSets(ContextVk *contextVk)
+vk::Error ProgramVk::allocateDescriptorSet(ContextVk *contextVk, uint32_t descriptorSetIndex)
 {
     RendererVk *renderer = contextVk->getRenderer();
 
     // Write out to a new a descriptor set.
     DynamicDescriptorPool *dynamicDescriptorPool = contextVk->getDynamicDescriptorPool();
-
     const auto &descriptorSetLayouts = renderer->getGraphicsDescriptorSetLayouts();
-    uint32_t descriptorSetCount = static_cast<uint32_t>(descriptorSetLayouts.size());
 
-    mDescriptorSets.resize(descriptorSetCount, VK_NULL_HANDLE);
+    uint32_t potentialNewCount = descriptorSetIndex + 1;
+    if (potentialNewCount > mDescriptorSets.size())
+    {
+        mDescriptorSets.resize(potentialNewCount, VK_NULL_HANDLE);
+    }
 
-    // TODO(lucferron): Its wasteful to reallocate the texture descriptor sets when we only
-    // care about the uniforms.
-    // http://anglebug.com/2421
-    ANGLE_TRY(dynamicDescriptorPool->allocateDescriptorSets(
-        contextVk, descriptorSetLayouts[0].ptr(), descriptorSetCount, &mDescriptorSets[0]));
+    const VkDescriptorSetLayout *descriptorSetLayout =
+        descriptorSetLayouts[descriptorSetIndex].ptr();
+
+    ANGLE_TRY(dynamicDescriptorPool->allocateDescriptorSets(contextVk, descriptorSetLayout, 1,
+                                                            &mDescriptorSets[descriptorSetIndex]));
     return vk::NoError();
 }
 
@@ -721,7 +722,7 @@ vk::Error ProgramVk::updateUniforms(ContextVk *contextVk)
     {
         // We need to reinitialize the descriptor sets if we newly allocated buffers since we can't
         // modify the descriptor sets once initialized.
-        ANGLE_TRY(allocateDescriptorSets(contextVk));
+        ANGLE_TRY(allocateDescriptorSet(contextVk, UniformBufferIndex));
         ANGLE_TRY(updateDefaultUniformsDescriptorSet(contextVk));
     }
 
@@ -800,12 +801,14 @@ const gl::RangeUI &ProgramVk::getUsedDescriptorSetRange() const
     return mUsedDescriptorSetRange;
 }
 
-void ProgramVk::updateTexturesDescriptorSet(ContextVk *contextVk)
+vk::Error ProgramVk::updateTexturesDescriptorSet(ContextVk *contextVk)
 {
     if (mState.getSamplerBindings().empty() || !mDirtyTextures)
     {
-        return;
+        return vk::NoError();
     }
+
+    ANGLE_TRY(allocateDescriptorSet(contextVk, TextureIndex));
 
     ASSERT(mUsedDescriptorSetRange.contains(1));
     VkDescriptorSet descriptorSet = mDescriptorSets[1];
@@ -862,6 +865,7 @@ void ProgramVk::updateTexturesDescriptorSet(ContextVk *contextVk)
     vkUpdateDescriptorSets(device, imageCount, writeDescriptorInfo.data(), 0, nullptr);
 
     mDirtyTextures = false;
+    return vk::NoError();
 }
 
 void ProgramVk::invalidateTextures()

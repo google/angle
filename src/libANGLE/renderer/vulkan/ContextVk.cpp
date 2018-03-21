@@ -236,7 +236,7 @@ gl::Error ContextVk::setupDraw(const gl::Context *context,
 
     // TODO(jmadill): Can probably use more dirty bits here.
     ANGLE_TRY(programVk->updateUniforms(this));
-    programVk->updateTexturesDescriptorSet(this);
+    ANGLE_TRY(programVk->updateTexturesDescriptorSet(this));
 
     // Bind the graphics descriptor sets.
     // TODO(jmadill): Handle multiple command buffers.
