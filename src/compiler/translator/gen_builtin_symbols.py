@@ -9,15 +9,35 @@
 from collections import OrderedDict
 from datetime import date
 import argparse
+import hashlib
 import json
 import re
 import os
+import sys
 
 def set_working_dir():
     script_dir = os.path.dirname(os.path.abspath(__file__))
     os.chdir(script_dir)
 
 set_working_dir()
+
+variables_json_filename = 'builtin_variables.json'
+functions_txt_filename = 'builtin_function_declarations.txt'
+hash_filename = 'builtin_symbols_hash_autogen.txt'
+
+all_inputs = [os.path.abspath(__file__), variables_json_filename, functions_txt_filename]
+# This script takes a while to run since it searches for hash collisions of mangled names. To avoid
+# running it unnecessarily, we first check if we've already ran it with the same inputs.
+m = hashlib.md5()
+for input_path in all_inputs:
+    with open(input_path, 'rU') as input_file:
+        m.update(input_file.read())
+input_hash = m.hexdigest()
+if os.path.exists(hash_filename):
+    with open(hash_filename) as hash_file:
+        if input_hash == hash_file.read():
+            print "Canceling ESSL static builtins code generator - generated hash matches inputs."
+            sys.exit(0)
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--dump-intermediate-json', help='Dump parsed function data as a JSON file builtin_functions.json', action="store_true")
@@ -207,6 +227,11 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name,
         return nullptr;
     }}
     uint32_t nameHash = name.mangledNameHash();
+    if ((nameHash >> 31) != 0)
+    {{
+        // The name contains [ or {{.
+        return nullptr;
+    }}
 {get_builtin}
 }}
 
@@ -254,9 +279,6 @@ namespace BuiltInGroup
 """
 
 parsed_variables = None
-
-variables_json_filename = 'builtin_variables.json'
-functions_txt_filename = 'builtin_function_declarations.txt'
 
 basic_types_enumeration = [
     'Void',
@@ -541,35 +563,6 @@ class TType:
 
         raise Exception('Unrecognized type: ' + str(glsl_header_type))
 
-
-ttype_mangled_name_variants = []
-for basic_type in basic_types_enumeration:
-    primary_sizes = [1]
-    secondary_sizes = [1]
-    if basic_type in ['Float', 'Int', 'UInt', 'Bool']:
-        primary_sizes = [1, 2, 3, 4]
-    if basic_type == 'Float':
-        secondary_sizes = [1, 2, 3, 4]
-    for primary_size in primary_sizes:
-        for secondary_size in secondary_sizes:
-            type = TType({'basic': basic_type, 'primarySize': primary_size, 'secondarySize': secondary_size})
-            ttype_mangled_name_variants.append(type.get_mangled_name())
-
-def gen_parameters_mangled_name_variants(str_len):
-    if str_len % 2 != 0:
-        raise Exception('Expecting parameters mangled name length to be divisible by two')
-    num_variants = pow(len(ttype_mangled_name_variants), str_len / 2)
-    for variant_id in xrange(num_variants):
-        variant = ''
-        while (len(variant)) < str_len:
-            parameter_index = len(variant) / 2
-            parameter_variant_index = variant_id
-            for i in xrange(parameter_index):
-                parameter_variant_index = parameter_variant_index / len(ttype_mangled_name_variants)
-            parameter_variant_index = parameter_variant_index % len(ttype_mangled_name_variants)
-            variant += ttype_mangled_name_variants[parameter_variant_index]
-        yield variant
-
 def get_parsed_functions():
 
     def parse_function_parameters(parameters):
@@ -699,20 +692,28 @@ variable_name_count = {}
 
 id_counter = 0
 
-def mangledNameHash(str, save_test = True):
+fnvPrime = 16777619
+def hash32(str):
     fnvOffsetBasis = 0x811c9dc5
-    fnvPrime = 16777619
     hash = fnvOffsetBasis
+    for c in str:
+        hash = hash ^ ord(c)
+        hash = (hash * fnvPrime) & 0xffffffff
+    return hash
+
+def mangledNameHash(str, save_test = True):
+    hash = hash32(str)
     index = 0
     max_six_bit_value = (1 << 6) - 1
     paren_location = max_six_bit_value
+    has_array_or_block_param_bit = 0
     for c in str:
-        hash = hash ^ ord(c)
-        hash = hash * fnvPrime & 0xffffffff
         if c == '(':
             paren_location = index
+        elif c == '{' or c == '[':
+            has_array_or_block_param_bit = 1
         index += 1
-    hash = ((hash >> 12) ^ (hash & 0xfff)) | (paren_location << 26) | (index << 20)
+    hash = ((hash >> 13) ^ (hash & 0x1fff)) | (index << 19) | (paren_location << 25) | (has_array_or_block_param_bit << 31)
     if save_test:
         sanity_check = '    ASSERT_EQ(0x{hash}u, ImmutableString("{str}").mangledNameHash());'.format(hash = ('%08x' % hash), str = str)
         script_generated_hash_tests.update({sanity_check: None})
@@ -757,22 +758,78 @@ def get_function_mangled_name(function_name, parameters):
         mangled_name += param.get_mangled_name()
     return mangled_name
 
+ttype_mangled_name_variants = []
+for basic_type in basic_types_enumeration:
+    primary_sizes = [1]
+    secondary_sizes = [1]
+    if basic_type in ['Float', 'Int', 'UInt', 'Bool']:
+        primary_sizes = [1, 2, 3, 4]
+    if basic_type == 'Float':
+        secondary_sizes = [1, 2, 3, 4]
+    for primary_size in primary_sizes:
+        for secondary_size in secondary_sizes:
+            type = TType({'basic': basic_type, 'primarySize': primary_size, 'secondarySize': secondary_size})
+            ttype_mangled_name_variants.append(type.get_mangled_name())
+
+def gen_parameters_variant_ids(str_len):
+    # Note that this doesn't generate variants with array parameters or struct / interface block parameters. They are assumed to have been filtered out separately.
+    if str_len % 2 != 0:
+        raise Exception('Expecting parameters mangled name length to be divisible by two')
+    num_variants = pow(len(ttype_mangled_name_variants), str_len / 2)
+    return xrange(num_variants)
+
+def get_parameters_mangled_name_variant(variant_id, paren_location, total_length):
+    str_len = total_length - paren_location - 1
+    if str_len % 2 != 0:
+        raise Exception('Expecting parameters mangled name length to be divisible by two')
+    variant = ''
+    while (len(variant)) < str_len:
+        parameter_index = len(variant) / 2
+        parameter_variant_index = variant_id
+        for i in xrange(parameter_index):
+            parameter_variant_index = parameter_variant_index / len(ttype_mangled_name_variants)
+        parameter_variant_index = parameter_variant_index % len(ttype_mangled_name_variants)
+        variant += ttype_mangled_name_variants[parameter_variant_index]
+    return variant
+
+# Calculate the mangled name hash of a common prefix string that's been pre-hashed with hash32()
+# plus a variant of the parameters. This is faster than constructing the whole string and then
+# calculating the hash for that.
+num_type_variants = len(ttype_mangled_name_variants)
+def get_mangled_name_variant_hash(prefix_hash32, variant_id, paren_location, total_length):
+    hash = prefix_hash32
+    parameter_count = (total_length - paren_location) >> 1
+    parameter_variant_id_base = variant_id
+    for parameter_index in xrange(parameter_count):
+        parameter_variant_index = parameter_variant_id_base % num_type_variants
+        param_str = ttype_mangled_name_variants[parameter_variant_index]
+        hash = hash ^ ord(param_str[0])
+        hash = (hash * fnvPrime) & 0xffffffff
+        hash = hash ^ ord(param_str[1])
+        hash = (hash * fnvPrime) & 0xffffffff
+        parameter_variant_id_base = parameter_variant_id_base / num_type_variants
+    return ((hash >> 13) ^ (hash & 0x1fff)) | (total_length << 19) | (paren_location << 25)
+
+# Sanity check for get_mangled_name_variant_hash:
+if get_mangled_name_variant_hash(hash32("atan("), 3, 4, len("atan(0123")) != mangledNameHash("atan(" + get_parameters_mangled_name_variant(3, 4, len("atan(0123"))):
+    raise Exception("get_mangled_name_variant_hash sanity check failed")
+
 def mangled_name_hash_can_collide_with_different_parameters(function_variant_props):
     # We exhaustively search through all possible lists of parameters and see if any other mangled
     # name has the same hash.
     mangled_name = function_variant_props['mangled_name']
+    mangled_name_len = len(mangled_name)
     hash = mangledNameHash(mangled_name)
     mangled_name_prefix = function_variant_props['name'] + '('
+    paren_location = len(mangled_name_prefix) - 1
+    prefix_hash32 = hash32(mangled_name_prefix)
     parameters_mangled_name_len = len(mangled_name) - len(mangled_name_prefix)
     parameters_mangled_name = mangled_name[len(mangled_name_prefix):]
-    if (parameters_mangled_name_len > 4):
-        # In this case a struct parameter or an array parameter would fit to the space reserved for
-        # parameter mangled names. This increases the complexity of searching for hash collisions
-        # considerably, so rather than doing it we just conservatively assume that a hash collision
-        # may be possible.
+    if (parameters_mangled_name_len > 6):
+        # This increases the complexity of searching for hash collisions considerably, so rather than doing it we just conservatively assume that a hash collision may be possible.
         return True
-    for variant in gen_parameters_mangled_name_variants(parameters_mangled_name_len):
-        if parameters_mangled_name != variant and mangledNameHash(mangled_name_prefix + variant, False) == hash:
+    for variant_id in gen_parameters_variant_ids(parameters_mangled_name_len):
+        if get_mangled_name_variant_hash(prefix_hash32, variant_id, paren_location, mangled_name_len) == hash and get_parameters_mangled_name_variant(variant_id, paren_location, mangled_name_len) != parameters_mangled_name:
             return True
     return False
 
@@ -1239,3 +1296,6 @@ with open('ParseContext_autogen.h', 'wt') as outfile_header:
 with open('SymbolTable_autogen.h', 'wt') as outfile_h:
     output_h = template_symboltable_h.format(**output_strings)
     outfile_h.write(output_h)
+
+with open(hash_filename, 'wt') as hash_file:
+    hash_file.write(input_hash)
