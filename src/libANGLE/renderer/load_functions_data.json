@@ -271,6 +271,9 @@
     }
   },
   "GL_ALPHA8_EXT": {
+    "R8_UNORM": {
+      "GL_UNSIGNED_BYTE": "LoadToNative<GLubyte, 1>"
+    },
     "A8_UNORM": {
       "GL_UNSIGNED_BYTE": "LoadToNative<GLubyte, 1>"
     },

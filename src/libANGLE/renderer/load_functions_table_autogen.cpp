@@ -148,6 +148,18 @@ LoadImageFunctionInfo ALPHA8_EXT_to_R8G8B8A8_UNORM(GLenum type)
     }
 }
 
+LoadImageFunctionInfo ALPHA8_EXT_to_R8_UNORM(GLenum type)
+{
+    switch (type)
+    {
+        case GL_UNSIGNED_BYTE:
+            return LoadImageFunctionInfo(LoadToNative<GLubyte, 1>, false);
+        default:
+            UNREACHABLE();
+            return LoadImageFunctionInfo(UnreachableLoadFunction, true);
+    }
+}
+
 LoadImageFunctionInfo BGR565_ANGLEX_to_B5G6R5_UNORM(GLenum type)
 {
     switch (type)
@@ -1625,6 +1637,8 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, Format::ID angleForma
                     return ALPHA8_EXT_to_A8_UNORM;
                 case Format::ID::R8G8B8A8_UNORM:
                     return ALPHA8_EXT_to_R8G8B8A8_UNORM;
+                case Format::ID::R8_UNORM:
+                    return ALPHA8_EXT_to_R8_UNORM;
                 default:
                     break;
             }

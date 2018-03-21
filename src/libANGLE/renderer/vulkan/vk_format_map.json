@@ -186,6 +186,10 @@
         "ASTC_12x12_SRGB_BLOC": "VK_FORMAT_ASTC_12x12_SRGB_BLOCK"
     },
     "overrides": {
+        "A8_UNORM": {
+            "buffer": "NONE",
+            "texture": "R8_UNORM"
+        },
         "L8_UNORM": {
             "buffer": "NONE",
             "texture": "R8_UNORM"

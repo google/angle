@@ -59,6 +59,12 @@ void FillComponentsSwizzleParameters(GLenum internalFormat,
             componentMapping->b = ConvertSwizzleStateToVkSwizzle(swizzleState.swizzleRed);
             componentMapping->a = ConvertSwizzleStateToVkSwizzle(swizzleState.swizzleGreen);
             break;
+        case GL_ALPHA:
+            componentMapping->r = VK_COMPONENT_SWIZZLE_ZERO;
+            componentMapping->g = VK_COMPONENT_SWIZZLE_ZERO;
+            componentMapping->b = VK_COMPONENT_SWIZZLE_ZERO;
+            componentMapping->a = ConvertSwizzleStateToVkSwizzle(swizzleState.swizzleRed);
+            break;
         default:
             componentMapping->r = ConvertSwizzleStateToVkSwizzle(swizzleState.swizzleRed);
             componentMapping->g = ConvertSwizzleStateToVkSwizzle(swizzleState.swizzleGreen);

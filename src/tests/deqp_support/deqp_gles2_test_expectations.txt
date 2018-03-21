@@ -187,7 +187,7 @@
 2161 VULKAN : dEQP-GLES2.functional.buffer.* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.light_amount.* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.shaders.* = SKIP
-2161 VULKAN : dEQP-GLES2.functional.texture.format.a8* = SKIP
+2161 VULKAN : dEQP-GLES2.functional.texture.format.a8_cube_pot = SKIP
 2161 VULKAN : dEQP-GLES2.functional.texture.format.l8_cube_pot = SKIP
 2161 VULKAN : dEQP-GLES2.functional.texture.format.la88_cube_pot = SKIP
 2161 VULKAN : dEQP-GLES2.functional.texture.format.rgb565_cube_pot = SKIP
