@@ -2,6 +2,40 @@
   "comments": [
     {
       "key": {
+        "uuid": "fcc32609_bcbd7b55",
+        "filename": "src/tests/perf_tests/DispatchComputePerf.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-21T16:25:36Z",
+      "side": 1,
+      "message": "We will want to mostly testing the perfect overhead of making the dispatch calls. You may want to make these smaller so it mostly stresses the cpu.",
+      "revId": "4732d24567f2f20a8d5fc65b138b88698d810703",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3f532ea5_0e22a659",
+        "filename": "src/tests/perf_tests/DispatchComputePerf.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-21T16:25:36Z",
+      "side": 1,
+      "message": "This should use the parameters to generate a unique string. It\u0027s used by the perfect test runner to generate graphs.",
+      "revId": "4732d24567f2f20a8d5fc65b138b88698d810703",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3735eee4_d2b3ab5a",
         "filename": "src/tests/perf_tests/DispatchComputePerf.cpp",
         "patchSetId": 2
@@ -43,6 +77,57 @@
         "endLine": 37,
         "endChar": 59
       },
+      "revId": "4732d24567f2f20a8d5fc65b138b88698d810703",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ef07745f_e2f7336b",
+        "filename": "src/tests/perf_tests/DispatchComputePerf.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-21T16:25:36Z",
+      "side": 1,
+      "message": "Nit: looks like it needs formatting.",
+      "revId": "4732d24567f2f20a8d5fc65b138b88698d810703",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "63845482_b47733df",
+        "filename": "src/tests/perf_tests/DispatchComputePerf.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-21T16:25:36Z",
+      "side": 1,
+      "message": "Declare these each on their own line using the constructor that takes a size and initial value.",
+      "revId": "4732d24567f2f20a8d5fc65b138b88698d810703",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "82970340_a3833aea",
+        "filename": "src/tests/perf_tests/DispatchComputePerf.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-21T16:25:36Z",
+      "side": 1,
+      "message": "Can you also try running it against angle go with the stubbed driver?",
       "revId": "4732d24567f2f20a8d5fc65b138b88698d810703",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
