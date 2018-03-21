@@ -1043,9 +1043,6 @@ class TransformFeedbackLifetimeTest : public TransformFeedbackTest
 // Tests a bug with state syncing and deleted transform feedback buffers.
 TEST_P(TransformFeedbackLifetimeTest, DeletedBuffer)
 {
-    // anglebug.com/2398
-    ANGLE_SKIP_TEST_IF(IsWindows() && IsIntel() && IsDesktopOpenGL());
-
     // First stream vertex data to mTransformFeedbackBuffer.
     glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, mTransformFeedback);
     glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, mTransformFeedbackBuffer);
