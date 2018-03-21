@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2aa2bf5a_8a2eb4a0",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 1169,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2018-03-21T22:21:11Z",
+      "side": 1,
+      "message": "Ok, working on this issue locally. FTR, this assert is hit, so that\u0027s probably related to the failures.",
+      "revId": "1b131661e4e01e87d8c29260315eaa33bd40baa6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
