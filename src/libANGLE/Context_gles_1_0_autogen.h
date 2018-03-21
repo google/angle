@@ -11,8 +11,8 @@
 #define ANGLE_CONTEXT_GLES_1_0_AUTOGEN_H_
 
 #define ANGLE_GLES1_CONTEXT_API                                                            \
-    void alphaFunc(GLenum func, GLfloat ref);                                              \
-    void alphaFuncx(GLenum func, GLfixed ref);                                             \
+    void alphaFunc(AlphaTestFunc funcPacked, GLfloat ref);                                 \
+    void alphaFuncx(AlphaTestFunc funcPacked, GLfixed ref);                                \
     void clearColorx(GLfixed red, GLfixed green, GLfixed blue, GLfixed alpha);             \
     void clearDepthx(GLfixed depth);                                                       \
     void clientActiveTexture(GLenum texture);                                              \

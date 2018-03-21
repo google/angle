@@ -6373,6 +6373,21 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
         return true;
     }
 
+    if (getClientVersion() < Version(2, 0))
+    {
+        switch (pname)
+        {
+            case GL_ALPHA_TEST_FUNC:
+                *type      = GL_INT;
+                *numParams = 1;
+                return true;
+            case GL_ALPHA_TEST_REF:
+                *type      = GL_FLOAT;
+                *numParams = 1;
+                return true;
+        }
+    }
+
     if (getClientVersion() < Version(3, 0))
     {
         return false;

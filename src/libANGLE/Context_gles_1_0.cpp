@@ -8,19 +8,20 @@
 
 #include "libANGLE/Context.h"
 
+#include "common/mathutil.h"
 #include "common/utilities.h"
 
 namespace gl
 {
 
-void Context::alphaFunc(GLenum func, GLfloat ref)
+void Context::alphaFunc(AlphaTestFunc func, GLfloat ref)
 {
-    UNIMPLEMENTED();
+    mGLState.gles1().setAlphaFunc(func, ref);
 }
 
-void Context::alphaFuncx(GLenum func, GLfixed ref)
+void Context::alphaFuncx(AlphaTestFunc func, GLfixed ref)
 {
-    UNIMPLEMENTED();
+    mGLState.gles1().setAlphaFunc(func, FixedToFloat(ref));
 }
 
 void Context::clearColorx(GLfixed red, GLfixed green, GLfixed blue, GLfixed alpha)

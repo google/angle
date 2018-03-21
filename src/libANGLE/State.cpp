@@ -98,7 +98,9 @@ State::State()
 {
 }
 
-State::~State() {}
+State::~State()
+{
+}
 
 void State::initialize(const Context *context,
                        bool debug,
@@ -764,6 +766,12 @@ void State::setEnableFeature(GLenum feature, bool enabled)
         case GL_FRAMEBUFFER_SRGB_EXT:
             setFramebufferSRGB(enabled);
             break;
+
+        // GLES1 emulation
+        case GL_ALPHA_TEST:
+            mGLES1State.mAlphaTestEnabled = enabled;
+            break;
+
         default:
             UNREACHABLE();
     }
@@ -815,6 +823,10 @@ bool State::getEnableFeature(GLenum feature) const
             return mRobustResourceInit;
         case GL_PROGRAM_CACHE_ENABLED_ANGLE:
             return mProgramBinaryCacheEnabled;
+
+        // GLES1 emulation
+        case GL_ALPHA_TEST:
+            return mGLES1State.mAlphaTestEnabled;
 
         default:
             UNREACHABLE();
@@ -1915,6 +1927,9 @@ void State::getFloatv(GLenum pname, GLfloat *params)
         case GL_COVERAGE_MODULATION_CHROMIUM:
             params[0] = static_cast<GLfloat>(mCoverageModulation);
             break;
+        case GL_ALPHA_TEST_REF:
+            *params = mGLES1State.mAlphaTestRef;
+            break;
         default:
             UNREACHABLE();
             break;
@@ -2285,6 +2300,9 @@ Error State::getIntegerv(const Context *context, GLenum pname, GLint *params)
             break;
         case GL_DISPATCH_INDIRECT_BUFFER_BINDING:
             *params = mBoundBuffers[BufferBinding::DispatchIndirect].id();
+            break;
+        case GL_ALPHA_TEST_FUNC:
+            *params = ToGLenum(mGLES1State.mAlphaTestFunc);
             break;
         default:
             UNREACHABLE();

@@ -46,6 +46,7 @@ ERRMSG(FramebufferIncompleteAttachment,
        "Attachment type must be compatible with attachment object.");
 ERRMSG(GenerateMipmapNotAllowed, "Texture format does not support mipmap generation.");
 ERRMSG(GeometryShaderExtensionNotEnabled, "GL_EXT_geometry_shader extension not enabled.");
+ERRMSG(GLES1Only, "GLES1-only function.");
 ERRMSG(IncompatibleDrawModeAgainstGeometryShader,
        "Primitive mode is incompatible with the input primitive type of the geometry shader.");
 ERRMSG(IndexExceedsMaxActiveUniform, "Index exceeds program active uniform count.");
@@ -146,7 +147,7 @@ ERRMSG(NoActiveGeometryShaderStage, "No active geometry shader stage in this pro
 ERRMSG(NoActiveProgramWithComputeShader, "No active program for the compute shader stage.");
 ERRMSG(NoSuchPath, "No such path object.");
 ERRMSG(NoTransformFeedbackOutputVariables,
-    "The active program has specified no output variables to record.");
+       "The active program has specified no output variables to record.");
 ERRMSG(NoZeroDivisor, "At least one enabled attribute must have a divisor of zero.");
 ERRMSG(NVFenceNotSupported, "GL_NV_fence is not supported");
 ERRMSG(ObjectNotGenerated, "Object cannot be used because it has not been generated.");

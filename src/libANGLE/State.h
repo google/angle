@@ -474,6 +474,9 @@ class State : public angle::ObserverInterface, angle::NonCopyable
     bool isCurrentTransformFeedback(const TransformFeedback *tf) const;
     bool isCurrentVertexArray(const VertexArray *va) const;
 
+    GLES1State &gles1() { return mGLES1State; }
+    const GLES1State &gles1() const { return mGLES1State; }
+
   private:
     void syncProgramTextures(const Context *context);
 
@@ -603,7 +606,6 @@ class State : public angle::ObserverInterface, angle::NonCopyable
     bool mProgramBinaryCacheEnabled;
 
     // GLES1 emulation: state specific to GLES1
-    friend class GLES1State;
     GLES1State mGLES1State;
 
     DirtyBits mDirtyBits;

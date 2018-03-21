@@ -179,6 +179,7 @@ if (is_win || is_linux || is_mac || is_android) {
              angle_root + ":angle_image_util",
              angle_root + ":angle_util",
              angle_root + ":libEGL${angle_libs_suffix}",
+             angle_root + ":libGLESv1_CM${angle_libs_suffix}",
              angle_root + ":libGLESv2${angle_libs_suffix}",
              angle_root + ":preprocessor",
              angle_root + ":translator",

@@ -47,6 +47,7 @@
             '<(angle_path)/src/tests/gl_tests/FramebufferRenderMipmapTest.cpp',
             '<(angle_path)/src/tests/gl_tests/FramebufferTest.cpp',
             '<(angle_path)/src/tests/gl_tests/GeometryShaderTest.cpp',
+            '<(angle_path)/src/tests/gl_tests/gles1/AlphaFuncTest.cpp',
             '<(angle_path)/src/tests/gl_tests/GLSLTest.cpp',
             '<(angle_path)/src/tests/gl_tests/ImageTest.cpp',
             '<(angle_path)/src/tests/gl_tests/IncompleteTextureTest.cpp',
@@ -147,6 +148,7 @@
         # This lets us filter test configs more intelligently.
         '<(angle_path)/src/angle.gyp:libANGLE_renderer_config',
         '<(angle_path)/src/angle.gyp:libEGL',
+        '<(angle_path)/src/angle.gyp:libGLESv1_CM',
         '<(angle_path)/src/angle.gyp:libGLESv2',
         '<(angle_path)/src/tests/tests.gyp:angle_test_support',
         '<(angle_path)/util/util.gyp:angle_util',

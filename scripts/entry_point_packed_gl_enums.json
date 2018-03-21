@@ -1,4 +1,10 @@
 {
+    "glAlphaFunc": {
+        "func": "AlphaTestFunc"
+    },
+    "glAlphaFuncx": {
+        "func": "AlphaTestFunc"
+    },
     "glBindBuffer": {
         "target": "BufferBinding"
     },

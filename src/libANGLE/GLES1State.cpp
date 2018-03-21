@@ -34,7 +34,7 @@ GLES1State::GLES1State()
       mCurrentNormal({0.0f, 0.0f, 0.0f}),
       mCurrMatrixMode(MatrixType::Modelview),
       mShadeModel(ShadingModel::Smooth),
-      mAlphaFunc(AlphaTestFunc::AlwaysPass),
+      mAlphaTestFunc(AlphaTestFunc::AlwaysPass),
       mAlphaTestRef(0.0f),
       mLogicOp(LogicalOperation::Copy),
       mLineSmoothHint(HintSetting::DontCare),
@@ -118,8 +118,8 @@ void GLES1State::initialize(const Context *context)
 
     mShadeModel = ShadingModel::Smooth;
 
-    mAlphaFunc    = AlphaTestFunc::AlwaysPass;
-    mAlphaTestRef = 0.0f;
+    mAlphaTestFunc = AlphaTestFunc::AlwaysPass;
+    mAlphaTestRef  = 0.0f;
 
     mLogicOp = LogicalOperation::Copy;
 
@@ -140,6 +140,12 @@ void GLES1State::initialize(const Context *context)
     mPointSmoothHint           = HintSetting::DontCare;
     mPerspectiveCorrectionHint = HintSetting::DontCare;
     mFogHint                   = HintSetting::DontCare;
+}
+
+void GLES1State::setAlphaFunc(AlphaTestFunc func, GLfloat ref)
+{
+    mAlphaTestFunc = func;
+    mAlphaTestRef  = ref;
 }
 
 }  // namespace gl

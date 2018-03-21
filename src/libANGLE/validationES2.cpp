@@ -792,6 +792,10 @@ bool ValidCap(const Context *context, GLenum cap, bool queryOnly)
         case GL_ROBUST_RESOURCE_INITIALIZATION_ANGLE:
             return queryOnly && context->getExtensions().robustResourceInitialization;
 
+        // GLES1 emulation: GLES1-specific caps
+        case GL_ALPHA_TEST:
+            return context->getClientVersion() < Version(2, 0);
+
         default:
             return false;
     }

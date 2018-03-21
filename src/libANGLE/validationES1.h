@@ -18,8 +18,8 @@ namespace gl
 {
 class Context;
 
-bool ValidateAlphaFunc(Context *context, GLenum func, GLfloat ref);
-bool ValidateAlphaFuncx(Context *context, GLenum func, GLfixed ref);
+bool ValidateAlphaFunc(Context *context, AlphaTestFunc func, GLfloat ref);
+bool ValidateAlphaFuncx(Context *context, AlphaTestFunc func, GLfixed ref);
 bool ValidateClearColorx(Context *context, GLfixed red, GLfixed green, GLfixed blue, GLfixed alpha);
 bool ValidateClearDepthx(Context *context, GLfixed depth);
 bool ValidateClientActiveTexture(Context *context, GLenum texture);

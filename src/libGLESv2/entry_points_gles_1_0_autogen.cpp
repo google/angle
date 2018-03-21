@@ -23,11 +23,12 @@ void GL_APIENTRY AlphaFunc(GLenum func, GLfloat ref)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::AlphaFunc>(func, ref);
+        AlphaTestFunc funcPacked = FromGLenum<AlphaTestFunc>(func);
+        context->gatherParams<EntryPoint::AlphaFunc>(funcPacked, ref);
 
-        if (context->skipValidation() || ValidateAlphaFunc(context, func, ref))
+        if (context->skipValidation() || ValidateAlphaFunc(context, funcPacked, ref))
         {
-            context->alphaFunc(func, ref);
+            context->alphaFunc(funcPacked, ref);
         }
     }
 }
@@ -39,11 +40,12 @@ void GL_APIENTRY AlphaFuncx(GLenum func, GLfixed ref)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::AlphaFuncx>(func, ref);
+        AlphaTestFunc funcPacked = FromGLenum<AlphaTestFunc>(func);
+        context->gatherParams<EntryPoint::AlphaFuncx>(funcPacked, ref);
 
-        if (context->skipValidation() || ValidateAlphaFuncx(context, func, ref))
+        if (context->skipValidation() || ValidateAlphaFuncx(context, funcPacked, ref))
         {
-            context->alphaFuncx(func, ref);
+            context->alphaFuncx(funcPacked, ref);
         }
     }
 }

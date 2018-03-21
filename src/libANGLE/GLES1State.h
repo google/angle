@@ -109,6 +109,7 @@ struct PointParameters
 };
 
 class Context;
+class State;
 class GLES1State final : angle::NonCopyable
 {
   public:
@@ -117,7 +118,11 @@ class GLES1State final : angle::NonCopyable
 
     void initialize(const Context *context);
 
+    void setAlphaFunc(AlphaTestFunc func, GLfloat ref);
+
   private:
+    friend class State;
+
     // All initial state values come from the
     // OpenGL ES 1.1 spec.
     struct TextureEnables
@@ -179,7 +184,7 @@ class GLES1State final : angle::NonCopyable
     PointParameters mPointParameters;
 
     // Table 6.16
-    AlphaTestFunc mAlphaFunc;
+    AlphaTestFunc mAlphaTestFunc;
     GLfloat mAlphaTestRef;
     LogicalOperation mLogicOp;
 
