@@ -48,7 +48,7 @@ ShaderD3D::ShaderD3D(const gl::ShaderState &data,
     {
         mAdditionalOptions |= SH_EMULATE_ISNAN_FLOAT_FUNCTION;
     }
-    if (workarounds.skipVSConstantRegisterZero && mData.getShaderType() == GL_VERTEX_SHADER)
+    if (workarounds.skipVSConstantRegisterZero && mData.getShaderType() == gl::ShaderType::Vertex)
     {
         mAdditionalOptions |= SH_SKIP_D3D_CONSTANT_REGISTER_ZERO;
     }

@@ -147,7 +147,7 @@ bool ShaderGL::postTranslateCompile(gl::Compiler *compiler, std::string *infoLog
     const char *translatedSourceCString = mData.getTranslatedSource().c_str();
 
     // Generate a shader object and set the source
-    mShaderID = mFunctions->createShader(mData.getShaderType());
+    mShaderID = mFunctions->createShader(ToGLenum(mData.getShaderType()));
     mFunctions->shaderSource(mShaderID, 1, &translatedSourceCString, nullptr);
     mFunctions->compileShader(mShaderID);
 

@@ -937,7 +937,7 @@ gl::Error Renderer9::setSamplerState(const gl::Context *context,
                                      gl::Texture *texture,
                                      const gl::SamplerState &samplerState)
 {
-    CurSamplerState &appliedSampler = (type == gl::SHADER_FRAGMENT)
+    CurSamplerState &appliedSampler = (type == gl::ShaderType::Fragment)
                                           ? mCurPixelSamplerStates[index]
                                           : mCurVertexSamplerStates[index];
 
@@ -955,7 +955,7 @@ gl::Error Renderer9::setSamplerState(const gl::Context *context,
     if (appliedSampler.forceSet || appliedSampler.baseLevel != baseLevel ||
         memcmp(&samplerState, &appliedSampler, sizeof(gl::SamplerState)) != 0)
     {
-        int d3dSamplerOffset = (type == gl::SHADER_FRAGMENT) ? 0 : D3DVERTEXTEXTURESAMPLER0;
+        int d3dSamplerOffset = (type == gl::ShaderType::Fragment) ? 0 : D3DVERTEXTEXTURESAMPLER0;
         int d3dSampler       = index + d3dSamplerOffset;
 
         mDevice->SetSamplerState(d3dSampler, D3DSAMP_ADDRESSU,
@@ -995,13 +995,13 @@ gl::Error Renderer9::setTexture(const gl::Context *context,
                                 int index,
                                 gl::Texture *texture)
 {
-    int d3dSamplerOffset = (type == gl::SHADER_FRAGMENT) ? 0 : D3DVERTEXTEXTURESAMPLER0;
+    int d3dSamplerOffset = (type == gl::ShaderType::Fragment) ? 0 : D3DVERTEXTEXTURESAMPLER0;
     int d3dSampler                    = index + d3dSamplerOffset;
     IDirect3DBaseTexture9 *d3dTexture = nullptr;
     bool forceSetTexture              = false;
 
     std::vector<uintptr_t> &appliedTextures =
-        (type == gl::SHADER_FRAGMENT) ? mCurPixelTextures : mCurVertexTextures;
+        (type == gl::ShaderType::Fragment) ? mCurPixelTextures : mCurVertexTextures;
 
     if (texture)
     {
@@ -2656,7 +2656,7 @@ gl::Error Renderer9::loadExecutable(const uint8_t *function,
 
     switch (type)
     {
-        case gl::SHADER_VERTEX:
+        case gl::ShaderType::Vertex:
         {
             IDirect3DVertexShader9 *vshader = nullptr;
             gl::Error error = createVertexShader((DWORD *)function, length, &vshader);
@@ -2667,7 +2667,7 @@ gl::Error Renderer9::loadExecutable(const uint8_t *function,
             *outExecutable = new ShaderExecutable9(function, length, vshader);
         }
         break;
-        case gl::SHADER_FRAGMENT:
+        case gl::ShaderType::Fragment:
         {
             IDirect3DPixelShader9 *pshader = nullptr;
             gl::Error error                = createPixelShader((DWORD *)function, length, &pshader);
@@ -2701,10 +2701,10 @@ gl::Error Renderer9::compileToExecutable(gl::InfoLog &infoLog,
 
     switch (type)
     {
-        case gl::SHADER_VERTEX:
+        case gl::ShaderType::Vertex:
             profileStream << "vs";
             break;
-        case gl::SHADER_FRAGMENT:
+        case gl::ShaderType::Fragment:
             profileStream << "ps";
             break;
         default:
@@ -3235,8 +3235,9 @@ gl::Error Renderer9::applyTextures(const gl::Context *context, gl::ShaderType sh
     }
 
     // Set all the remaining textures to NULL
-    size_t samplerCount = (shaderType == gl::SHADER_FRAGMENT) ? caps.maxTextureImageUnits
-                                                              : caps.maxVertexTextureImageUnits;
+    size_t samplerCount = (shaderType == gl::ShaderType::Fragment)
+                              ? caps.maxTextureImageUnits
+                              : caps.maxVertexTextureImageUnits;
 
     // TODO(jmadill): faster way?
     for (size_t samplerIndex = samplerRange; samplerIndex < samplerCount; samplerIndex++)
@@ -3249,8 +3250,8 @@ gl::Error Renderer9::applyTextures(const gl::Context *context, gl::ShaderType sh
 
 gl::Error Renderer9::applyTextures(const gl::Context *context)
 {
-    ANGLE_TRY(applyTextures(context, gl::SHADER_VERTEX));
-    ANGLE_TRY(applyTextures(context, gl::SHADER_FRAGMENT));
+    ANGLE_TRY(applyTextures(context, gl::ShaderType::Vertex));
+    ANGLE_TRY(applyTextures(context, gl::ShaderType::Fragment));
     return gl::NoError();
 }
 

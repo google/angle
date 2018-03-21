@@ -105,12 +105,13 @@ GLuint GL_APIENTRY CreateShaderProgramv(GLenum type, GLsizei count, const GLchar
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::CreateShaderProgramv>(type, count, strings);
+        ShaderType typePacked = FromGLenum<ShaderType>(type);
+        context->gatherParams<EntryPoint::CreateShaderProgramv>(typePacked, count, strings);
 
         if (context->skipValidation() ||
-            ValidateCreateShaderProgramv(context, type, count, strings))
+            ValidateCreateShaderProgramv(context, typePacked, count, strings))
         {
-            return context->createShaderProgramv(type, count, strings);
+            return context->createShaderProgramv(typePacked, count, strings);
         }
     }
 

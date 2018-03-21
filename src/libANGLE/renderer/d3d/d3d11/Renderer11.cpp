@@ -2725,7 +2725,7 @@ gl::Error Renderer11::loadExecutable(const uint8_t *function,
 
     switch (type)
     {
-        case gl::SHADER_VERTEX:
+        case gl::ShaderType::Vertex:
         {
             d3d11::VertexShader vertexShader;
             d3d11::GeometryShader streamOutShader;
@@ -2756,21 +2756,21 @@ gl::Error Renderer11::loadExecutable(const uint8_t *function,
                                                     std::move(streamOutShader));
         }
         break;
-        case gl::SHADER_FRAGMENT:
+        case gl::ShaderType::Fragment:
         {
             d3d11::PixelShader pixelShader;
             ANGLE_TRY(allocateResource(shaderData, &pixelShader));
             *outExecutable = new ShaderExecutable11(function, length, std::move(pixelShader));
         }
         break;
-        case gl::SHADER_GEOMETRY:
+        case gl::ShaderType::Geometry:
         {
             d3d11::GeometryShader geometryShader;
             ANGLE_TRY(allocateResource(shaderData, &geometryShader));
             *outExecutable = new ShaderExecutable11(function, length, std::move(geometryShader));
         }
         break;
-        case gl::SHADER_COMPUTE:
+        case gl::ShaderType::Compute:
         {
             d3d11::ComputeShader computeShader;
             ANGLE_TRY(allocateResource(shaderData, &computeShader));
@@ -2797,16 +2797,16 @@ gl::Error Renderer11::compileToExecutable(gl::InfoLog &infoLog,
 
     switch (type)
     {
-        case gl::SHADER_VERTEX:
+        case gl::ShaderType::Vertex:
             profileStream << "vs";
             break;
-        case gl::SHADER_FRAGMENT:
+        case gl::ShaderType::Fragment:
             profileStream << "ps";
             break;
-        case gl::SHADER_GEOMETRY:
+        case gl::ShaderType::Geometry:
             profileStream << "gs";
             break;
-        case gl::SHADER_COMPUTE:
+        case gl::ShaderType::Compute:
             profileStream << "cs";
             break;
         default:

@@ -167,6 +167,21 @@ template <>
 MatrixType FromGLenum<MatrixType>(GLenum from);
 GLenum ToGLenum(MatrixType from);
 
+enum class ShaderType : uint8_t
+{
+    Vertex   = 0,
+    Fragment = 1,
+    Geometry = 2,
+    Compute  = 3,
+
+    InvalidEnum = 4,
+    EnumCount   = 4,
+};
+
+template <>
+ShaderType FromGLenum<ShaderType>(GLenum from);
+GLenum ToGLenum(ShaderType from);
+
 enum class ShadingModel : uint8_t
 {
     Flat   = 0,

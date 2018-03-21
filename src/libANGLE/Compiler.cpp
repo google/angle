@@ -200,22 +200,22 @@ Compiler::~Compiler()
     ANGLE_SWALLOW_ERR(mImplementation->release());
 }
 
-ShHandle Compiler::getCompilerHandle(GLenum type)
+ShHandle Compiler::getCompilerHandle(ShaderType type)
 {
     ShHandle *compiler = nullptr;
     switch (type)
     {
-        case GL_VERTEX_SHADER:
+        case ShaderType::Vertex:
             compiler = &mVertexCompiler;
             break;
 
-        case GL_FRAGMENT_SHADER:
+        case ShaderType::Fragment:
             compiler = &mFragmentCompiler;
             break;
-        case GL_COMPUTE_SHADER:
+        case ShaderType::Compute:
             compiler = &mComputeCompiler;
             break;
-        case GL_GEOMETRY_SHADER_EXT:
+        case ShaderType::Geometry:
             compiler = &mGeometryCompiler;
             break;
         default:
@@ -230,7 +230,7 @@ ShHandle Compiler::getCompilerHandle(GLenum type)
             sh::Initialize();
         }
 
-        *compiler = sh::ConstructCompiler(type, mSpec, mOutputType, &mResources);
+        *compiler = sh::ConstructCompiler(ToGLenum(type), mSpec, mOutputType, &mResources);
         ASSERT(*compiler);
         activeCompilerHandles++;
     }
@@ -238,7 +238,7 @@ ShHandle Compiler::getCompilerHandle(GLenum type)
     return *compiler;
 }
 
-const std::string &Compiler::getBuiltinResourcesString(GLenum type)
+const std::string &Compiler::getBuiltinResourcesString(ShaderType type)
 {
     return sh::GetBuiltInResourcesString(getCompilerHandle(type));
 }

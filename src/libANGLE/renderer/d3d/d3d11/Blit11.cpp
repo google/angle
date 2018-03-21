@@ -2043,7 +2043,8 @@ gl::ErrorOrResult<TextureHelper11> Blit11::resolveDepth(const gl::Context *conte
     stateManager->setSimpleViewport(extents);
 
     // Set the viewport
-    stateManager->setShaderResourceShared(gl::SHADER_FRAGMENT, 0, &depth->getShaderResourceView());
+    stateManager->setShaderResourceShared(gl::ShaderType::Fragment, 0,
+                                          &depth->getShaderResourceView());
 
     // Trigger the blit on the GPU.
     deviceContext->Draw(6, 0);
@@ -2201,9 +2202,9 @@ gl::ErrorOrResult<TextureHelper11> Blit11::resolveStencil(const gl::Context *con
 
     // Set the viewport
     stateManager->setSimpleViewport(extents);
-    stateManager->setShaderResourceShared(gl::SHADER_FRAGMENT, 0,
+    stateManager->setShaderResourceShared(gl::ShaderType::Fragment, 0,
                                           &depthStencil->getShaderResourceView());
-    stateManager->setShaderResource(gl::SHADER_FRAGMENT, 1, &mStencilSRV);
+    stateManager->setShaderResource(gl::ShaderType::Fragment, 1, &mStencilSRV);
 
     // Trigger the blit on the GPU.
     deviceContext->Draw(6, 0);

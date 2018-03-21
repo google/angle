@@ -80,6 +80,13 @@
         "Projection" : "GL_PROJECTION",
         "Texture" : "GL_TEXTURE"
     },
+    "ShaderType":
+    [
+        {"name": "Vertex", "gl_name": "GL_VERTEX_SHADER", "value": 0},
+        {"name": "Fragment", "gl_name": "GL_FRAGMENT_SHADER", "value": 1},
+        {"name": "Geometry", "gl_name": "GL_GEOMETRY_SHADER_EXT", "value": 2},
+        {"name": "Compute", "gl_name": "GL_COMPUTE_SHADER", "value": 3}
+    ],
     "ShadingModel":
     {
         "Flat" : "GL_FLAT",

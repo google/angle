@@ -126,6 +126,7 @@ vk::Error SyncDefaultUniformBlock(VkDevice device,
     return vk::NoError();
 }
 
+// TODO(jiawei.shao@intel.com): Fully remove this enum by gl::ShaderType. (BUG=angleproject:2169)
 enum ShaderIndex : uint32_t
 {
     MinShaderIndex = 0,
@@ -139,9 +140,9 @@ gl::Shader *GetShader(const gl::ProgramState &programState, uint32_t shaderIndex
     switch (shaderIndex)
     {
         case VertexShader:
-            return programState.getAttachedVertexShader();
+            return programState.getAttachedShader(gl::ShaderType::Vertex);
         case FragmentShader:
-            return programState.getAttachedFragmentShader();
+            return programState.getAttachedShader(gl::ShaderType::Fragment);
         default:
             UNREACHABLE();
             return nullptr;
@@ -458,9 +459,10 @@ void ProgramVk::getUniformImpl(GLint location, T *v, GLenum entryPointType) cons
 
     ASSERT(linkedUniform.typeInfo->componentType == entryPointType);
     const gl::ShaderType shaderType = linkedUniform.getFirstShaderTypeWhereActive();
-    ASSERT(shaderType != gl::ShaderType::SHADER_TYPE_INVALID);
+    ASSERT(shaderType != gl::ShaderType::InvalidEnum);
 
-    const DefaultUniformBlock &uniformBlock = mDefaultUniformBlocks[shaderType];
+    const DefaultUniformBlock &uniformBlock =
+        mDefaultUniformBlocks[static_cast<GLuint>(shaderType)];
     const sh::BlockMemberInfo &layoutInfo   = uniformBlock.uniformLayout[location];
     ReadFromDefaultUniformBlock(linkedUniform.typeInfo->componentCount, v, layoutInfo,
                                 &uniformBlock.uniformData);

@@ -1383,7 +1383,7 @@ bool ValidateDispatchCompute(Context *context,
     const State &state = context->getGLState();
     Program *program   = state.getProgram();
 
-    if (program == nullptr || !program->hasLinkedComputeShader())
+    if (program == nullptr || !program->hasLinkedShaderStage(ShaderType::Compute))
     {
         ANGLE_VALIDATION_ERR(context, InvalidOperation(), NoActiveProgramWithComputeShader);
         return false;
@@ -1426,7 +1426,7 @@ bool ValidateDispatchComputeIndirect(Context *context, GLintptr indirect)
     const State &state = context->getGLState();
     Program *program   = state.getProgram();
 
-    if (program == nullptr || !program->hasLinkedComputeShader())
+    if (program == nullptr || !program->hasLinkedShaderStage(ShaderType::Compute))
     {
         ANGLE_VALIDATION_ERR(context, InvalidOperation(), NoActiveProgramWithComputeShader);
         return false;
@@ -1756,7 +1756,7 @@ bool ValidateActiveShaderProgram(Context *context, GLuint pipeline, GLuint progr
 }
 
 bool ValidateCreateShaderProgramv(Context *context,
-                                  GLenum type,
+                                  ShaderType type,
                                   GLsizei count,
                                   const GLchar *const *strings)
 {

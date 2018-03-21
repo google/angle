@@ -132,8 +132,8 @@ ImageIndexIterator ImageIndexIterator::MakeRectangle(GLint minMip, GLint maxMip)
 
 ImageIndexIterator ImageIndexIterator::MakeCube(GLint minMip, GLint maxMip)
 {
-    return ImageIndexIterator(TextureType::CubeMap, kFirstCubeMapTextureTarget,
-                              kLastCubeMapTextureTarget, Range<GLint>(minMip, maxMip),
+    return ImageIndexIterator(TextureType::CubeMap, kCubeMapTextureTargetMin,
+                              kCubeMapTextureTargetMax, Range<GLint>(minMip, maxMip),
                               Range<GLint>(ImageIndex::ENTIRE_LEVEL, ImageIndex::ENTIRE_LEVEL),
                               nullptr);
 }

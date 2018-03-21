@@ -277,22 +277,13 @@ void InitUniformBlockLinker(const gl::Context *context,
                             const ProgramState &state,
                             UniformBlockLinker *blockLinker)
 {
-    if (state.getAttachedVertexShader())
+    for (ShaderType shaderType : AllShaderTypes())
     {
-        blockLinker->addShaderBlocks(GL_VERTEX_SHADER,
-                                     &state.getAttachedVertexShader()->getUniformBlocks(context));
-    }
-
-    if (state.getAttachedFragmentShader())
-    {
-        blockLinker->addShaderBlocks(GL_FRAGMENT_SHADER,
-                                     &state.getAttachedFragmentShader()->getUniformBlocks(context));
-    }
-
-    if (state.getAttachedComputeShader())
-    {
-        blockLinker->addShaderBlocks(GL_COMPUTE_SHADER,
-                                     &state.getAttachedComputeShader()->getUniformBlocks(context));
+        Shader *shader = state.getAttachedShader(shaderType);
+        if (shader)
+        {
+            blockLinker->addShaderBlocks(shaderType, &shader->getUniformBlocks(context));
+        }
     }
 }
 
@@ -300,23 +291,13 @@ void InitShaderStorageBlockLinker(const gl::Context *context,
                                   const ProgramState &state,
                                   ShaderStorageBlockLinker *blockLinker)
 {
-    if (state.getAttachedVertexShader())
+    for (ShaderType shaderType : AllShaderTypes())
     {
-        blockLinker->addShaderBlocks(
-            GL_VERTEX_SHADER, &state.getAttachedVertexShader()->getShaderStorageBlocks(context));
-    }
-
-    if (state.getAttachedFragmentShader())
-    {
-        blockLinker->addShaderBlocks(
-            GL_FRAGMENT_SHADER,
-            &state.getAttachedFragmentShader()->getShaderStorageBlocks(context));
-    }
-
-    if (state.getAttachedComputeShader())
-    {
-        blockLinker->addShaderBlocks(
-            GL_COMPUTE_SHADER, &state.getAttachedComputeShader()->getShaderStorageBlocks(context));
+        Shader *shader = state.getAttachedShader(shaderType);
+        if (shader != nullptr)
+        {
+            blockLinker->addShaderBlocks(shaderType, &shader->getShaderStorageBlocks(context));
+        }
     }
 }
 
@@ -493,7 +474,7 @@ bool ValidateGraphicsInterfaceBlocks(const std::vector<sh::InterfaceBlock> &vert
             if (linkError != LinkMismatchError::NO_MISMATCH)
             {
                 LogLinkMismatch(infoLog, fragmentInterfaceBlock.name, "interface block", linkError,
-                                mismatchedBlockFieldName, GL_VERTEX_SHADER, GL_FRAGMENT_SHADER);
+                                mismatchedBlockFieldName, ShaderType::Vertex, ShaderType::Fragment);
                 return false;
             }
         }
@@ -625,8 +606,8 @@ void LogLinkMismatch(InfoLog &infoLog,
                      const char *variableType,
                      LinkMismatchError linkError,
                      const std::string &mismatchedStructOrBlockFieldName,
-                     GLenum shaderType1,
-                     GLenum shaderType2)
+                     ShaderType shaderType1,
+                     ShaderType shaderType2)
 {
     std::ostringstream stream;
     stream << GetLinkMismatchErrorString(linkError) << "s of " << variableType << " '"
@@ -750,6 +731,24 @@ const std::string &ProgramState::getLabel()
     return mLabel;
 }
 
+Shader *ProgramState::getAttachedShader(ShaderType shaderType) const
+{
+    switch (shaderType)
+    {
+        case ShaderType::Vertex:
+            return mAttachedVertexShader;
+        case ShaderType::Fragment:
+            return mAttachedFragmentShader;
+        case ShaderType::Compute:
+            return mAttachedComputeShader;
+        case ShaderType::Geometry:
+            return mAttachedGeometryShader;
+        default:
+            UNREACHABLE();
+            return nullptr;
+    }
+}
+
 GLuint ProgramState::getUniformIndexFromName(const std::string &name) const
 {
     return GetResourceIndexFromName(mUniforms, name);
@@ -870,28 +869,28 @@ void Program::attachShader(Shader *shader)
 {
     switch (shader->getType())
     {
-        case GL_VERTEX_SHADER:
+        case ShaderType::Vertex:
         {
             ASSERT(!mState.mAttachedVertexShader);
             mState.mAttachedVertexShader = shader;
             mState.mAttachedVertexShader->addRef();
             break;
         }
-        case GL_FRAGMENT_SHADER:
+        case ShaderType::Fragment:
         {
             ASSERT(!mState.mAttachedFragmentShader);
             mState.mAttachedFragmentShader = shader;
             mState.mAttachedFragmentShader->addRef();
             break;
         }
-        case GL_COMPUTE_SHADER:
+        case ShaderType::Compute:
         {
             ASSERT(!mState.mAttachedComputeShader);
             mState.mAttachedComputeShader = shader;
             mState.mAttachedComputeShader->addRef();
             break;
         }
-        case GL_GEOMETRY_SHADER_EXT:
+        case ShaderType::Geometry:
         {
             ASSERT(!mState.mAttachedGeometryShader);
             mState.mAttachedGeometryShader = shader;
@@ -907,28 +906,28 @@ void Program::detachShader(const Context *context, Shader *shader)
 {
     switch (shader->getType())
     {
-        case GL_VERTEX_SHADER:
+        case ShaderType::Vertex:
         {
             ASSERT(mState.mAttachedVertexShader == shader);
             shader->release(context);
             mState.mAttachedVertexShader = nullptr;
             break;
         }
-        case GL_FRAGMENT_SHADER:
+        case ShaderType::Fragment:
         {
             ASSERT(mState.mAttachedFragmentShader == shader);
             shader->release(context);
             mState.mAttachedFragmentShader = nullptr;
             break;
         }
-        case GL_COMPUTE_SHADER:
+        case ShaderType::Compute:
         {
             ASSERT(mState.mAttachedComputeShader == shader);
             shader->release(context);
             mState.mAttachedComputeShader = nullptr;
             break;
         }
-        case GL_GEOMETRY_SHADER_EXT:
+        case ShaderType::Geometry:
         {
             ASSERT(mState.mAttachedGeometryShader == shader);
             shader->release(context);
@@ -944,6 +943,11 @@ int Program::getAttachedShadersCount() const
 {
     return (mState.mAttachedVertexShader ? 1 : 0) + (mState.mAttachedFragmentShader ? 1 : 0) +
            (mState.mAttachedComputeShader ? 1 : 0) + (mState.mAttachedGeometryShader ? 1 : 0);
+}
+
+const Shader *Program::getAttachedShader(ShaderType shaderType) const
+{
+    return mState.getAttachedShader(shaderType);
 }
 
 void Program::bindAttributeLocation(GLuint index, const char *name)
@@ -967,7 +971,7 @@ BindingInfo Program::getFragmentInputBindingInfo(const Context *context, GLint i
     ret.type  = GL_NONE;
     ret.valid = false;
 
-    Shader *fragmentShader = mState.getAttachedFragmentShader();
+    Shader *fragmentShader = mState.getAttachedShader(ShaderType::Fragment);
     ASSERT(fragmentShader);
 
     // Find the actual fragment shader varying we're interested in
@@ -1206,22 +1210,22 @@ void Program::updateLinkedShaderStages()
 
     if (mState.mAttachedVertexShader)
     {
-        mState.mLinkedShaderStages.set(SHADER_VERTEX);
+        mState.mLinkedShaderStages.set(ShaderType::Vertex);
     }
 
     if (mState.mAttachedFragmentShader)
     {
-        mState.mLinkedShaderStages.set(SHADER_FRAGMENT);
+        mState.mLinkedShaderStages.set(ShaderType::Fragment);
     }
 
     if (mState.mAttachedComputeShader)
     {
-        mState.mLinkedShaderStages.set(SHADER_COMPUTE);
+        mState.mLinkedShaderStages.set(ShaderType::Compute);
     }
 
     if (mState.mAttachedGeometryShader)
     {
-        mState.mLinkedShaderStages.set(SHADER_GEOMETRY);
+        mState.mLinkedShaderStages.set(ShaderType::Geometry);
     }
 }
 
@@ -1261,6 +1265,12 @@ void Program::unlink()
 bool Program::isLinked() const
 {
     return mLinked;
+}
+
+bool Program::hasLinkedShaderStage(ShaderType shaderType) const
+{
+    ASSERT(shaderType != ShaderType::InvalidEnum);
+    return mState.mLinkedShaderStages[shaderType];
 }
 
 Error Program::loadBinary(const Context *context,
@@ -2246,7 +2256,7 @@ bool Program::linkValidateShaders(const Context *context, InfoLog &infoLog)
             infoLog << "Attached compute shader is not compiled.";
             return false;
         }
-        ASSERT(computeShader->getType() == GL_COMPUTE_SHADER);
+        ASSERT(computeShader->getType() == ShaderType::Compute);
 
         mState.mComputeShaderLocalSize = computeShader->getWorkGroupSize(context);
 
@@ -2265,14 +2275,14 @@ bool Program::linkValidateShaders(const Context *context, InfoLog &infoLog)
             infoLog << "No compiled fragment shader when at least one graphics shader is attached.";
             return false;
         }
-        ASSERT(fragmentShader->getType() == GL_FRAGMENT_SHADER);
+        ASSERT(fragmentShader->getType() == ShaderType::Fragment);
 
         if (!vertexShader || !vertexShader->isCompiled(context))
         {
             infoLog << "No compiled vertex shader when at least one graphics shader is attached.";
             return false;
         }
-        ASSERT(vertexShader->getType() == GL_VERTEX_SHADER);
+        ASSERT(vertexShader->getType() == ShaderType::Vertex);
 
         int vertexShaderVersion = vertexShader->getShaderVersion(context);
         if (fragmentShader->getShaderVersion(context) != vertexShaderVersion)
@@ -2304,7 +2314,7 @@ bool Program::linkValidateShaders(const Context *context, InfoLog &infoLog)
                 mInfoLog << "Geometry shader version does not match vertex shader version.";
                 return false;
             }
-            ASSERT(geometryShader->getType() == GL_GEOMETRY_SHADER_EXT);
+            ASSERT(geometryShader->getType() == ShaderType::Geometry);
 
             Optional<GLenum> inputPrimitive =
                 geometryShader->getGeometryShaderInputPrimitiveType(context);
@@ -2405,7 +2415,7 @@ bool Program::linkValidateShaderInterfaceMatching(const Context *context,
     const std::vector<sh::Varying> &outputVaryings = generatingShader->getOutputVaryings(context);
     const std::vector<sh::Varying> &inputVaryings  = consumingShader->getInputVaryings(context);
 
-    bool validateGeometryShaderInputs = consumingShader->getType() == GL_GEOMETRY_SHADER_EXT;
+    bool validateGeometryShaderInputs = consumingShader->getType() == ShaderType::Geometry;
 
     for (const sh::Varying &input : inputVaryings)
     {
@@ -2621,7 +2631,7 @@ bool Program::linkAtomicCounterBuffers()
 bool Program::linkAttributes(const Context *context, InfoLog &infoLog)
 {
     const ContextState &data = context->getContextState();
-    auto *vertexShader       = mState.getAttachedVertexShader();
+    Shader *vertexShader     = mState.getAttachedShader(ShaderType::Vertex);
 
     unsigned int usedLocations = 0;
     mState.mAttributes         = vertexShader->getActiveAttributes(context);

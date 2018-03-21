@@ -131,9 +131,10 @@ gl::LinkResult ProgramGL::link(const gl::Context *context,
 {
     preLink();
 
-    if (mState.getAttachedComputeShader())
+    if (mState.getAttachedShader(gl::ShaderType::Compute))
     {
-        const ShaderGL *computeShaderGL = GetImplAs<ShaderGL>(mState.getAttachedComputeShader());
+        const ShaderGL *computeShaderGL =
+            GetImplAs<ShaderGL>(mState.getAttachedShader(gl::ShaderType::Compute));
 
         mFunctions->attachShader(mProgramID, computeShaderGL->getShaderID());
 
@@ -150,8 +151,8 @@ gl::LinkResult ProgramGL::link(const gl::Context *context,
         for (const auto &tfVarying : mState.getTransformFeedbackVaryingNames())
         {
             std::string tfVaryingMappedName =
-                mState.getAttachedVertexShader()->getTransformFeedbackVaryingMappedName(tfVarying,
-                                                                                        context);
+                mState.getAttachedShader(gl::ShaderType::Vertex)
+                    ->getTransformFeedbackVaryingMappedName(tfVarying, context);
             transformFeedbackVaryingMappedNames.push_back(tfVaryingMappedName);
         }
 
@@ -176,10 +177,12 @@ gl::LinkResult ProgramGL::link(const gl::Context *context,
                 &transformFeedbackVaryings[0], mState.getTransformFeedbackBufferMode());
         }
 
-        const ShaderGL *vertexShaderGL   = GetImplAs<ShaderGL>(mState.getAttachedVertexShader());
-        const ShaderGL *fragmentShaderGL = GetImplAs<ShaderGL>(mState.getAttachedFragmentShader());
-        const ShaderGL *geometryShaderGL =
-            rx::SafeGetImplAs<ShaderGL, gl::Shader>(mState.getAttachedGeometryShader());
+        const ShaderGL *vertexShaderGL =
+            GetImplAs<ShaderGL>(mState.getAttachedShader(gl::ShaderType::Vertex));
+        const ShaderGL *fragmentShaderGL =
+            GetImplAs<ShaderGL>(mState.getAttachedShader(gl::ShaderType::Fragment));
+        const ShaderGL *geometryShaderGL = rx::SafeGetImplAs<ShaderGL, gl::Shader>(
+            mState.getAttachedShader(gl::ShaderType::Geometry));
 
         // Attach the shaders
         mFunctions->attachShader(mProgramID, vertexShaderGL->getShaderID());

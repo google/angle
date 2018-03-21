@@ -2563,7 +2563,8 @@ bool ValidateDrawBase(Context *context, GLenum mode, GLsizei count)
     // vertex shader stage or fragment shader stage is a undefined behaviour.
     // But ANGLE should clearly generate an INVALID_OPERATION error instead of
     // produce undefined result.
-    if (!program->hasLinkedVertexShader() || !program->hasLinkedFragmentShader())
+    if (!program->hasLinkedShaderStage(ShaderType::Vertex) ||
+        !program->hasLinkedShaderStage(ShaderType::Fragment))
     {
         context->handleError(InvalidOperation() << "It is a undefined behaviour to render without "
                                                    "vertex shader stage or fragment shader stage.");
@@ -2610,7 +2611,7 @@ bool ValidateDrawBase(Context *context, GLenum mode, GLsizei count)
     }
 
     // Do geometry shader specific validations
-    if (program->hasLinkedGeometryShader())
+    if (program->hasLinkedShaderStage(ShaderType::Geometry))
     {
         if (!IsCompatibleDrawModeWithGeometryShader(mode,
                                                     program->getGeometryShaderInputPrimitiveType()))
@@ -4235,7 +4236,7 @@ bool ValidateGetProgramivBase(Context *context, GLuint program, GLenum pname, GL
                 ANGLE_VALIDATION_ERR(context, InvalidOperation(), ProgramNotLinked);
                 return false;
             }
-            if (!programObject->hasLinkedComputeShader())
+            if (!programObject->hasLinkedShaderStage(ShaderType::Compute))
             {
                 ANGLE_VALIDATION_ERR(context, InvalidOperation(), NoActiveComputeShaderStage);
                 return false;
@@ -4262,7 +4263,7 @@ bool ValidateGetProgramivBase(Context *context, GLuint program, GLenum pname, GL
                 ANGLE_VALIDATION_ERR(context, InvalidOperation(), ProgramNotLinked);
                 return false;
             }
-            if (!programObject->hasLinkedGeometryShader())
+            if (!programObject->hasLinkedShaderStage(ShaderType::Geometry))
             {
                 ANGLE_VALIDATION_ERR(context, InvalidOperation(), NoActiveGeometryShaderStage);
                 return false;

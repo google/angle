@@ -200,7 +200,7 @@ bool TextureState::isCubeComplete() const
 {
     ASSERT(mType == TextureType::CubeMap);
 
-    angle::EnumIterator<TextureTarget> face = kFirstCubeMapTextureTarget;
+    angle::EnumIterator<TextureTarget> face = kCubeMapTextureTargetMin;
     const ImageDesc &baseImageDesc          = getImageDesc(*face, getEffectiveBaseLevel());
     if (baseImageDesc.size.width == 0 || baseImageDesc.size.width != baseImageDesc.size.height)
     {
@@ -209,7 +209,7 @@ bool TextureState::isCubeComplete() const
 
     ++face;
 
-    for (; face != kAfterLastCubeMapTextureTarget; ++face)
+    for (; face != kAfterCubeMapTextureTargetMax; ++face)
     {
         const ImageDesc &faceImageDesc = getImageDesc(*face, getEffectiveBaseLevel());
         if (faceImageDesc.size.width != baseImageDesc.size.width ||
@@ -464,7 +464,7 @@ bool TextureState::computeLevelCompleteness(TextureTarget target, size_t level) 
 
 TextureTarget TextureState::getBaseImageTarget() const
 {
-    return mType == TextureType::CubeMap ? kFirstCubeMapTextureTarget
+    return mType == TextureType::CubeMap ? kCubeMapTextureTargetMin
                                          : NonCubeTextureTypeToTarget(mType);
 }
 

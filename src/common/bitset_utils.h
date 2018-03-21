@@ -115,7 +115,10 @@ class BitSetT final
     {
         return (static_cast<BitsT>(1) << static_cast<size_t>(x));
     }
-    constexpr static BitsT Mask(std::size_t x) { return ((Bit(x - 1) - 1) << 1) + 1; }
+    constexpr static BitsT Mask(std::size_t x)
+    {
+        return ((Bit(static_cast<ParamT>(x - 1)) - 1) << 1) + 1;
+    }
 
     BitsT mBits;
 };

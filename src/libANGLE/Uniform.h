@@ -29,7 +29,7 @@ struct ActiveVariable
     ActiveVariable &operator=(const ActiveVariable &rhs);
 
     ShaderType getFirstShaderTypeWhereActive() const;
-    void setActive(GLenum shaderType, bool used);
+    void setActive(ShaderType shaderType, bool used);
     void unionReferencesWith(const ActiveVariable &other);
 
     bool vertexActive;

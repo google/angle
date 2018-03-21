@@ -89,8 +89,8 @@ gl::LinkResult GlslangWrapper::linkProgram(const gl::Context *glContext,
                                            std::vector<uint32_t> *vertexCodeOut,
                                            std::vector<uint32_t> *fragmentCodeOut)
 {
-    gl::Shader *glVertexShader   = programState.getAttachedVertexShader();
-    gl::Shader *glFragmentShader = programState.getAttachedFragmentShader();
+    gl::Shader *glVertexShader   = programState.getAttachedShader(gl::ShaderType::Vertex);
+    gl::Shader *glFragmentShader = programState.getAttachedShader(gl::ShaderType::Fragment);
 
     std::string vertexSource   = glVertexShader->getTranslatedSource(glContext);
     std::string fragmentSource = glFragmentShader->getTranslatedSource(glContext);

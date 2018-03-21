@@ -130,7 +130,7 @@ class ShaderProgramManager : public ResourceManagerBase<HandleAllocator>
 
     GLuint createShader(rx::GLImplFactory *factory,
                         const Limitations &rendererLimitations,
-                        GLenum type);
+                        ShaderType type);
     void deleteShader(const Context *context, GLuint shader);
     Shader *getShader(GLuint handle) const;
 

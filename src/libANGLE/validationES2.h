@@ -352,7 +352,7 @@ bool ValidateCopySubTextureCHROMIUM(Context *context,
                                     GLboolean unpackUnmultiplyAlpha);
 bool ValidateCompressedCopyTextureCHROMIUM(Context *context, GLuint sourceId, GLuint destId);
 
-bool ValidateCreateShader(Context *context, GLenum type);
+bool ValidateCreateShader(Context *context, ShaderType type);
 bool ValidateBufferData(Context *context,
                         BufferBinding target,
                         GLsizeiptr size,

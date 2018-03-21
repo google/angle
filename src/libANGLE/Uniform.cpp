@@ -25,23 +25,23 @@ ActiveVariable::~ActiveVariable()
 ActiveVariable::ActiveVariable(const ActiveVariable &rhs) = default;
 ActiveVariable &ActiveVariable::operator=(const ActiveVariable &rhs) = default;
 
-void ActiveVariable::setActive(GLenum shaderType, bool used)
+void ActiveVariable::setActive(ShaderType shaderType, bool used)
 {
     switch (shaderType)
     {
-        case GL_VERTEX_SHADER:
+        case ShaderType::Vertex:
             vertexActive = used;
             break;
 
-        case GL_FRAGMENT_SHADER:
+        case ShaderType::Fragment:
             fragmentActive = used;
             break;
 
-        case GL_COMPUTE_SHADER:
+        case ShaderType::Compute:
             computeActive = used;
             break;
 
-        case GL_GEOMETRY_SHADER_EXT:
+        case ShaderType::Geometry:
             geometryActive = used;
             break;
 
@@ -61,16 +61,16 @@ void ActiveVariable::unionReferencesWith(const ActiveVariable &other)
 ShaderType ActiveVariable::getFirstShaderTypeWhereActive() const
 {
     if (vertexActive)
-        return SHADER_VERTEX;
+        return ShaderType::Vertex;
     if (fragmentActive)
-        return SHADER_FRAGMENT;
+        return ShaderType::Fragment;
     if (computeActive)
-        return SHADER_COMPUTE;
+        return ShaderType::Compute;
     if (geometryActive)
-        return SHADER_GEOMETRY;
+        return ShaderType::Geometry;
 
     UNREACHABLE();
-    return SHADER_TYPE_INVALID;
+    return ShaderType::InvalidEnum;
 }
 
 LinkedUniform::LinkedUniform()

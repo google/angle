@@ -82,13 +82,13 @@ class Context final : angle::NonCopyable
     // These create  and destroy methods are merely pass-throughs to
     // ResourceManager, which owns these object types
     GLuint createBuffer();
-    GLuint createShader(GLenum type);
+    GLuint createShader(ShaderType type);
     GLuint createProgram();
     GLuint createTexture();
     GLuint createRenderbuffer();
     GLuint createPaths(GLsizei range);
     GLuint createProgramPipeline();
-    GLuint createShaderProgramv(GLenum type, GLsizei count, const GLchar *const *strings);
+    GLuint createShaderProgramv(ShaderType type, GLsizei count, const GLchar *const *strings);
 
     void deleteBuffer(GLuint buffer);
     void deleteShader(GLuint shader);

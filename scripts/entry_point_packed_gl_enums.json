@@ -61,6 +61,12 @@
         "readTarget": "BufferBinding",
         "writeTarget": "BufferBinding"
     },
+    "glCreateShader": {
+        "type": "ShaderType"
+    },
+    "glCreateShaderProgramv": {
+        "type": "ShaderType"
+    },
     "glCullFace": {
         "mode": "CullFaceMode"
     },

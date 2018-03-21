@@ -51,7 +51,7 @@ enum class CompileStatus
 class ShaderState final : angle::NonCopyable
 {
   public:
-    ShaderState(GLenum shaderType);
+    ShaderState(ShaderType shaderType);
     ~ShaderState();
 
     const std::string &getLabel() const { return mLabel; }
@@ -59,7 +59,7 @@ class ShaderState final : angle::NonCopyable
     const std::string &getSource() const { return mSource; }
     const std::string &getTranslatedSource() const { return mTranslatedSource; }
 
-    GLenum getShaderType() const { return mShaderType; }
+    ShaderType getShaderType() const { return mShaderType; }
     int getShaderVersion() const { return mShaderVersion; }
 
     const std::vector<sh::Varying> &getInputVaryings() const { return mInputVaryings; }
@@ -83,7 +83,7 @@ class ShaderState final : angle::NonCopyable
 
     std::string mLabel;
 
-    GLenum mShaderType;
+    ShaderType mShaderType;
     int mShaderVersion;
     std::string mTranslatedSource;
     std::string mSource;
@@ -117,7 +117,7 @@ class Shader final : angle::NonCopyable, public LabeledObject
     Shader(ShaderProgramManager *manager,
            rx::GLImplFactory *implFactory,
            const gl::Limitations &rendererLimitations,
-           GLenum type,
+           ShaderType type,
            GLuint handle);
 
     void onDestroy(const Context *context);
@@ -125,7 +125,7 @@ class Shader final : angle::NonCopyable, public LabeledObject
     void setLabel(const std::string &label) override;
     const std::string &getLabel() const override;
 
-    GLenum getType() const { return mType; }
+    ShaderType getType() const { return mType; }
     GLuint getHandle() const;
 
     rx::ShaderImpl *getImplementation() const { return mImplementation.get(); }
@@ -200,7 +200,7 @@ class Shader final : angle::NonCopyable, public LabeledObject
     std::unique_ptr<rx::ShaderImpl> mImplementation;
     const gl::Limitations &mRendererLimitations;
     const GLuint mHandle;
-    const GLenum mType;
+    const ShaderType mType;
     unsigned int mRefCount;     // Number of program objects this shader is attached to
     bool mDeleteStatus;         // Flag to indicate that the shader can be deleted when no longer in use
     std::string mInfoLog;
@@ -213,7 +213,7 @@ class Shader final : angle::NonCopyable, public LabeledObject
 
 bool CompareShaderVar(const sh::ShaderVariable &x, const sh::ShaderVariable &y);
 
-const char *GetShaderTypeString(GLenum type);
+const char *GetShaderTypeString(ShaderType type);
 }  // namespace gl
 
 #endif   // LIBANGLE_SHADER_H_

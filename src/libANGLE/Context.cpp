@@ -614,7 +614,7 @@ GLuint Context::createProgram()
     return mState.mShaderPrograms->createProgram(mImplementation.get());
 }
 
-GLuint Context::createShader(GLenum type)
+GLuint Context::createShader(ShaderType type)
 {
     return mState.mShaderPrograms->createShader(mImplementation.get(), mLimitations, type);
 }
@@ -661,7 +661,7 @@ GLuint Context::createProgramPipeline()
     return mState.mPipelines->createProgramPipeline();
 }
 
-GLuint Context::createShaderProgramv(GLenum type, GLsizei count, const GLchar *const *strings)
+GLuint Context::createShaderProgramv(ShaderType type, GLsizei count, const GLchar *const *strings)
 {
     UNIMPLEMENTED();
     return 0u;

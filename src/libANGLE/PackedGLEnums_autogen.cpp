@@ -404,6 +404,42 @@ GLenum ToGLenum(MatrixType from)
 }
 
 template <>
+ShaderType FromGLenum<ShaderType>(GLenum from)
+{
+    switch (from)
+    {
+        case GL_VERTEX_SHADER:
+            return ShaderType::Vertex;
+        case GL_FRAGMENT_SHADER:
+            return ShaderType::Fragment;
+        case GL_GEOMETRY_SHADER_EXT:
+            return ShaderType::Geometry;
+        case GL_COMPUTE_SHADER:
+            return ShaderType::Compute;
+        default:
+            return ShaderType::InvalidEnum;
+    }
+}
+
+GLenum ToGLenum(ShaderType from)
+{
+    switch (from)
+    {
+        case ShaderType::Vertex:
+            return GL_VERTEX_SHADER;
+        case ShaderType::Fragment:
+            return GL_FRAGMENT_SHADER;
+        case ShaderType::Geometry:
+            return GL_GEOMETRY_SHADER_EXT;
+        case ShaderType::Compute:
+            return GL_COMPUTE_SHADER;
+        default:
+            UNREACHABLE();
+            return GL_NONE;
+    }
+}
+
+template <>
 ShadingModel FromGLenum<ShadingModel>(GLenum from)
 {
     switch (from)

@@ -303,7 +303,7 @@ bool ValidateIsProgramPipeline(Context *context, GLuint pipeline);
 bool ValidateUseProgramStages(Context *context, GLuint pipeline, GLbitfield stages, GLuint program);
 bool ValidateActiveShaderProgram(Context *context, GLuint pipeline, GLuint program);
 bool ValidateCreateShaderProgramv(Context *context,
-                                  GLenum type,
+                                  ShaderType type,
                                   GLsizei count,
                                   const GLchar *const *strings);
 bool ValidateGetProgramPipelineiv(Context *context, GLuint pipeline, GLenum pname, GLint *params);

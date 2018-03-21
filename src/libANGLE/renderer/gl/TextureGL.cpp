@@ -1395,7 +1395,7 @@ const LevelInfoGL &TextureGL::getBaseLevelInfo() const
 {
     GLint effectiveBaseLevel = mState.getEffectiveBaseLevel();
     gl::TextureTarget target = getType() == gl::TextureType::CubeMap
-                                   ? gl::kFirstCubeMapTextureTarget
+                                   ? gl::kCubeMapTextureTargetMin
                                    : gl::NonCubeTextureTypeToTarget(getType());
     return getLevelInfo(target, effectiveBaseLevel);
 }

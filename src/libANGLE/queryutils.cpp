@@ -1098,7 +1098,7 @@ void QueryShaderiv(const Context *context, Shader *shader, GLenum pname, GLint *
     switch (pname)
     {
         case GL_SHADER_TYPE:
-            *params = shader->getType();
+            *params = static_cast<GLint>(ToGLenum(shader->getType()));
             return;
         case GL_DELETE_STATUS:
             *params = shader->isFlaggedForDeletion();

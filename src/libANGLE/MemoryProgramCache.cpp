@@ -424,7 +424,8 @@ LinkResult MemoryProgramCache::Deserialize(const Context *context,
     unsigned int atomicCounterRangeHigh = stream.readInt<unsigned int>();
     state->mAtomicCounterUniformRange   = RangeUI(atomicCounterRangeLow, atomicCounterRangeHigh);
 
-    static_assert(SHADER_TYPE_MAX <= sizeof(unsigned long) * 8, "Too many shader types");
+    static_assert(static_cast<unsigned long>(ShaderType::EnumCount) <= sizeof(unsigned long) * 8,
+                  "Too many shader types");
     state->mLinkedShaderStages = stream.readInt<unsigned long>();
 
     return program->getImplementation()->load(context, infoLog, &stream);
@@ -616,14 +617,12 @@ void MemoryProgramCache::ComputeHash(const Context *context,
                                      const Program *program,
                                      ProgramHash *hashOut)
 {
-    const Shader *vertexShader   = program->getAttachedVertexShader();
-    const Shader *fragmentShader = program->getAttachedFragmentShader();
-    const Shader *computeShader  = program->getAttachedComputeShader();
-    const Shader *geometryShader = program->getAttachedGeometryShader();
-
     // Compute the program hash. Start with the shader hashes and resource strings.
     HashStream hashStream;
-    hashStream << vertexShader << fragmentShader << computeShader << geometryShader;
+    for (ShaderType shaderType : AllShaderTypes())
+    {
+        hashStream << program->getAttachedShader(shaderType);
+    }
 
     // Add some ANGLE metadata and Context properties, such as version and back-end.
     hashStream << ANGLE_COMMIT_HASH << context->getClientMajorVersion()

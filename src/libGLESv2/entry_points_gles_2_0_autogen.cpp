@@ -530,11 +530,12 @@ GLuint GL_APIENTRY CreateShader(GLenum type)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::CreateShader>(type);
+        ShaderType typePacked = FromGLenum<ShaderType>(type);
+        context->gatherParams<EntryPoint::CreateShader>(typePacked);
 
-        if (context->skipValidation() || ValidateCreateShader(context, type))
+        if (context->skipValidation() || ValidateCreateShader(context, typePacked))
         {
-            return context->createShader(type);
+            return context->createShader(typePacked);
         }
     }
 

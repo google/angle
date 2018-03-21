@@ -161,10 +161,9 @@ void ShaderProgramManager::reset(const Context *context)
 
 GLuint ShaderProgramManager::createShader(rx::GLImplFactory *factory,
                                           const gl::Limitations &rendererLimitations,
-                                          GLenum type)
+                                          ShaderType type)
 {
-    ASSERT(type == GL_VERTEX_SHADER || type == GL_FRAGMENT_SHADER || type == GL_COMPUTE_SHADER ||
-           type == GL_GEOMETRY_SHADER_EXT);
+    ASSERT(type != ShaderType::InvalidEnum);
     GLuint handle    = mHandleAllocator.allocate();
     mShaders.assign(handle, new Shader(this, factory, rendererLimitations, type, handle));
     return handle;

@@ -163,8 +163,8 @@ void LogLinkMismatch(InfoLog &infoLog,
                      const char *variableType,
                      LinkMismatchError linkError,
                      const std::string &mismatchedStructOrBlockFieldName,
-                     GLenum shaderType1,
-                     GLenum shaderType2);
+                     ShaderType shaderType1,
+                     ShaderType shaderType2);
 
 bool IsActiveInterfaceBlock(const sh::InterfaceBlock &interfaceBlock);
 
@@ -277,7 +277,7 @@ struct ImageBinding
     std::vector<GLuint> boundImageUnits;
 };
 
-using ShaderStagesMask = angle::BitSet<SHADER_TYPE_MAX>;
+using ShaderStagesMask = angle::PackedEnumBitSet<ShaderType>;
 
 class ProgramState final : angle::NonCopyable
 {
@@ -287,10 +287,7 @@ class ProgramState final : angle::NonCopyable
 
     const std::string &getLabel();
 
-    Shader *getAttachedVertexShader() const { return mAttachedVertexShader; }
-    Shader *getAttachedFragmentShader() const { return mAttachedFragmentShader; }
-    Shader *getAttachedComputeShader() const { return mAttachedComputeShader; }
-    Shader *getAttachedGeometryShader() const { return mAttachedGeometryShader; }
+    Shader *getAttachedShader(ShaderType shaderType) const;
     const std::vector<std::string> &getTransformFeedbackVaryingNames() const
     {
         return mTransformFeedbackVaryingNames;
@@ -480,10 +477,7 @@ class Program final : angle::NonCopyable, public LabeledObject
     void detachShader(const Context *context, Shader *shader);
     int getAttachedShadersCount() const;
 
-    const Shader *getAttachedVertexShader() const { return mState.mAttachedVertexShader; }
-    const Shader *getAttachedFragmentShader() const { return mState.mAttachedFragmentShader; }
-    const Shader *getAttachedComputeShader() const { return mState.mAttachedComputeShader; }
-    const Shader *getAttachedGeometryShader() const { return mState.mAttachedGeometryShader; }
+    const Shader *getAttachedShader(ShaderType shaderType) const;
 
     void bindAttributeLocation(GLuint index, const char *name);
     void bindUniformLocation(GLuint index, const char *name);
@@ -500,10 +494,7 @@ class Program final : angle::NonCopyable, public LabeledObject
     Error link(const gl::Context *context);
     bool isLinked() const;
 
-    bool hasLinkedVertexShader() const { return mState.mLinkedShaderStages[SHADER_VERTEX]; }
-    bool hasLinkedFragmentShader() const { return mState.mLinkedShaderStages[SHADER_FRAGMENT]; }
-    bool hasLinkedComputeShader() const { return mState.mLinkedShaderStages[SHADER_COMPUTE]; }
-    bool hasLinkedGeometryShader() const { return mState.mLinkedShaderStages[SHADER_GEOMETRY]; }
+    bool hasLinkedShaderStage(ShaderType shaderType) const;
 
     Error loadBinary(const Context *context,
                      GLenum binaryFormat,

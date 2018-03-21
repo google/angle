@@ -4159,15 +4159,15 @@ bool ValidateCompressedCopyTextureCHROMIUM(Context *context, GLuint sourceId, GL
     return true;
 }
 
-bool ValidateCreateShader(Context *context, GLenum type)
+bool ValidateCreateShader(Context *context, ShaderType type)
 {
     switch (type)
     {
-        case GL_VERTEX_SHADER:
-        case GL_FRAGMENT_SHADER:
+        case ShaderType::Vertex:
+        case ShaderType::Fragment:
             break;
 
-        case GL_COMPUTE_SHADER:
+        case ShaderType::Compute:
             if (context->getClientVersion() < Version(3, 1))
             {
                 ANGLE_VALIDATION_ERR(context, InvalidEnum(), ES31Required);
@@ -4175,7 +4175,7 @@ bool ValidateCreateShader(Context *context, GLenum type)
             }
             break;
 
-        case GL_GEOMETRY_SHADER_EXT:
+        case ShaderType::Geometry:
             if (!context->getExtensions().geometryShader)
             {
                 ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidShaderType);
@@ -4357,47 +4357,10 @@ bool ValidateAttachShader(Context *context, GLuint program, GLuint shader)
         return false;
     }
 
-    switch (shaderObject->getType())
+    if (programObject->getAttachedShader(shaderObject->getType()))
     {
-        case GL_VERTEX_SHADER:
-        {
-            if (programObject->getAttachedVertexShader())
-            {
-                ANGLE_VALIDATION_ERR(context, InvalidOperation(), ShaderAttachmentHasShader);
-                return false;
-            }
-            break;
-        }
-        case GL_FRAGMENT_SHADER:
-        {
-            if (programObject->getAttachedFragmentShader())
-            {
-                ANGLE_VALIDATION_ERR(context, InvalidOperation(), ShaderAttachmentHasShader);
-                return false;
-            }
-            break;
-        }
-        case GL_COMPUTE_SHADER:
-        {
-            if (programObject->getAttachedComputeShader())
-            {
-                ANGLE_VALIDATION_ERR(context, InvalidOperation(), ShaderAttachmentHasShader);
-                return false;
-            }
-            break;
-        }
-        case GL_GEOMETRY_SHADER_EXT:
-        {
-            if (programObject->getAttachedGeometryShader())
-            {
-                ANGLE_VALIDATION_ERR(context, InvalidOperation(), ShaderAttachmentHasShader);
-                return false;
-            }
-            break;
-        }
-        default:
-            UNREACHABLE();
-            break;
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ShaderAttachmentHasShader);
+        return false;
     }
 
     return true;
@@ -4988,35 +4951,7 @@ bool ValidateDetachShader(Context *context, GLuint program, GLuint shader)
         return false;
     }
 
-    const Shader *attachedShader = nullptr;
-
-    switch (shaderObject->getType())
-    {
-        case GL_VERTEX_SHADER:
-        {
-            attachedShader = programObject->getAttachedVertexShader();
-            break;
-        }
-        case GL_FRAGMENT_SHADER:
-        {
-            attachedShader = programObject->getAttachedFragmentShader();
-            break;
-        }
-        case GL_COMPUTE_SHADER:
-        {
-            attachedShader = programObject->getAttachedComputeShader();
-            break;
-        }
-        case GL_GEOMETRY_SHADER_EXT:
-        {
-            attachedShader = programObject->getAttachedGeometryShader();
-            break;
-        }
-        default:
-            UNREACHABLE();
-            return false;
-    }
-
+    const Shader *attachedShader = programObject->getAttachedShader(shaderObject->getType());
     if (attachedShader != shaderObject)
     {
         ANGLE_VALIDATION_ERR(context, InvalidOperation(), ShaderToDetachMustBeAttached);
