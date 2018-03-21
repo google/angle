@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6fe7a2bc_3a73e678",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 4643,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-21T19:59:20Z",
+      "side": 1,
+      "message": "I\u0027d prefer a vector of size numParams, I\u0027m not too concerned about dynamic allocations on these get calls.",
+      "range": {
+        "startLine": 4643,
+        "startChar": 12,
+        "endLine": 4643,
+        "endChar": 35
+      },
+      "revId": "117ee2d12559a9827d6fc8fd12535b4a8818b0bb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "71ba6004_789f838f",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 4647,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-21T19:59:20Z",
+      "side": 1,
+      "message": "refactor this into a function if you can, queryconversions.h is the home for most of that.",
+      "range": {
+        "startLine": 4647,
+        "startChar": 28,
+        "endLine": 4647,
+        "endChar": 97
+      },
+      "revId": "117ee2d12559a9827d6fc8fd12535b4a8818b0bb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cc873bd4_bf8e2bb5",
+        "filename": "src/libANGLE/Context_gles_1_0.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-21T19:59:20Z",
+      "side": 1,
+      "message": "This can probably live in a header (mathutil.h).  Also a slight preference for calling it FixedToFloat.",
+      "range": {
+        "startLine": 16,
+        "startChar": 15,
+        "endLine": 16,
+        "endChar": 26
+      },
+      "revId": "117ee2d12559a9827d6fc8fd12535b4a8818b0bb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bdae7359_09373f7c",
+        "filename": "src/libANGLE/Context_gles_1_0.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-21T19:59:20Z",
+      "side": 1,
+      "message": "nit: static_cast",
+      "range": {
+        "startLine": 18,
+        "startChar": 12,
+        "endLine": 18,
+        "endChar": 21
+      },
+      "revId": "117ee2d12559a9827d6fc8fd12535b4a8818b0bb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "14786f6f_f03097d8",
+        "filename": "src/libANGLE/validationES1.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-21T19:59:20Z",
+      "side": 1,
+      "message": "I\u0027d rather that we have a switch that covers all the valid enums with a default case returning the invalid enum.  It requires that developers explicitly cover new enums added in extensions instead of them automatically being accepted with no extension checks.",
+      "range": {
+        "startLine": 19,
+        "startChar": 4,
+        "endLine": 24,
+        "endChar": 0
+      },
+      "revId": "117ee2d12559a9827d6fc8fd12535b4a8818b0bb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "06bff4f4_6e692819",
+        "filename": "src/libANGLE/validationES1.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-21T19:59:20Z",
+      "side": 1,
+      "message": "nit: put this in an anonymous namespace.",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 26,
+        "endChar": 1
+      },
+      "revId": "117ee2d12559a9827d6fc8fd12535b4a8818b0bb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
