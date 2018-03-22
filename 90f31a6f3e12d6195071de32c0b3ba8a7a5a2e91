@@ -990,6 +990,30 @@
     },
     {
       "key": {
+        "uuid": "7281095a_d266045a",
+        "filename": "src/libANGLE/renderer/vulkan/StreamingBuffer.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-03-22T17:29:59Z",
+      "side": 1,
+      "message": "the keyword here is \"could\". \n\nThis is not what the code does now, if we change it to have that behavior, we can rename it then. It would be misleading to do it now since this is not what it currently represents.",
+      "parentUuid": "62b1b078_78a34e3a",
+      "range": {
+        "startLine": 20,
+        "startChar": 66,
+        "endLine": 20,
+        "endChar": 73
+      },
+      "revId": "90f31a6f3e12d6195071de32c0b3ba8a7a5a2e91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fdb9fa76_e442b4a6",
         "filename": "src/libANGLE/renderer/vulkan/StreamingBuffer.cpp",
         "patchSetId": 16
