@@ -70,6 +70,16 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+// Failures related to the depth_range on Windows / NVIDIA and ATI.
+2426 D3D11 : dEQP-GLES2.functional.depth_range.write.reverse = FAIL
+2426 D3D11 : dEQP-GLES2.functional.depth_range.write.half_to_zero = FAIL
+2426 D3D11 : dEQP-GLES2.functional.depth_range.write.one_to_half = FAIL
+2426 D3D11 : dEQP-GLES2.functional.depth_range.write.0_8_to_third = FAIL
+2426 D3D11 : dEQP-GLES2.functional.depth_range.compare.reverse = FAIL
+2426 D3D11 : dEQP-GLES2.functional.depth_range.compare.half_to_zero = FAIL
+2426 D3D11 : dEQP-GLES2.functional.depth_range.compare.one_to_half = FAIL
+2426 D3D11 : dEQP-GLES2.functional.depth_range.compare.0_8_to_third = FAIL
+
 // Only fails in D3D11 32-bit.
 1418 D3D11 : dEQP-GLES2.functional.clipping.triangle_vertex.clip_three.clip_pos_x_pos_y_pos_z_and_neg_x_pos_y_pos_z_and_neg_x_neg_y_neg_z = FAIL
 
@@ -349,3 +359,7 @@
 2161 VULKAN : dEQP-GLES2.functional.default_vertex_attrib.* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.lifetime.* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.debug_marker.* = SKIP
+
+// Scissored depth/stencil clear isn't implemented yet.
+2427 VULKAN : dEQP-GLES2.functional.fragment_ops.scissor.clear_depth = SKIP
+2427 VULKAN : dEQP-GLES2.functional.fragment_ops.scissor.clear_stencil = SKIP

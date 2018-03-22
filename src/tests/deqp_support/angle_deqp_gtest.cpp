@@ -64,7 +64,7 @@ const APIInfo *g_initAPI = nullptr;
 constexpr const char *g_deqpEGLConfigNameString = "--deqp-gl-config-name=";
 
 // Default the config to RGBA8
-const char *g_eglConfigName = "rgba8888";
+const char *g_eglConfigName = "rgba8888d24s8";
 
 // Returns the default API for a platform.
 const char *GetDefaultAPIName()

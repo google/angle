@@ -49,6 +49,18 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+// Failures related to using a depth/stencil enabled backbuffer on Windows / NVIDIA.
+2428 D3D11 NVIDIA : dEQP-GLES3.functional.shaders.invariance.highp.common_subexpression_1 = FAIL
+2428 D3D11 NVIDIA : dEQP-GLES3.functional.shaders.invariance.mediump.common_subexpression_1 = FAIL
+2428 D3D11 NVIDIA : dEQP-GLES3.functional.shaders.invariance.lowp.common_subexpression_1 = FAIL
+2428 D3D11 NVIDIA : dEQP-GLES3.functional.fbo.invalidate.default.render_all = SKIP
+2428 D3D11 NVIDIA : dEQP-GLES3.functional.fbo.invalidate.default.render_depth_stencil = SKIP
+2428 D3D11 NVIDIA : dEQP-GLES3.functional.fbo.invalidate.default.bind_depth_stencil = SKIP
+2428 D3D11 NVIDIA : dEQP-GLES3.functional.fbo.invalidate.default.draw_framebuffer_all = SKIP
+2428 D3D11 NVIDIA : dEQP-GLES3.functional.fbo.invalidate.default.read_framebuffer_all = SKIP
+2428 D3D11 NVIDIA : dEQP-GLES3.functional.fbo.invalidate.default.bind_all = SKIP
+2428 D3D11 NVIDIA : dEQP-GLES3.functional.polygon_offset.default_render_with_units = SKIP
+
 // TODO(jmadill): Find why this fails when run in a certain sequence, but not singly.
 1098 WIN : dEQP-GLES3.functional.uniform_api.random.50 = FAIL
 
