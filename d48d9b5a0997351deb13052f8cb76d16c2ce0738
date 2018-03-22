@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "a039566a_bcaee743",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 4622,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-03-22T16:54:22Z",
+      "side": 1,
+      "message": "Turns out these inserted lines aren\u0027t needed; we can put some GLES1-specific cases in queryconversions.cpp instead. However, if they end up there, I think a GLES1 emulation tag is appropriate. LMK what you think on the next patch set.",
+      "parentUuid": "704f1b81_ea60a435",
+      "revId": "d48d9b5a0997351deb13052f8cb76d16c2ce0738",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b4442246_851200f7",
         "filename": "src/libANGLE/Context.cpp",
         "patchSetId": 1
@@ -33,6 +51,24 @@
       "revId": "d48d9b5a0997351deb13052f8cb76d16c2ce0738",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4dd9aa4e_a2d0af7d",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 4624,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-03-22T16:54:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b4442246_851200f7",
+      "revId": "d48d9b5a0997351deb13052f8cb76d16c2ce0738",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -53,6 +89,42 @@
     },
     {
       "key": {
+        "uuid": "08a7aac0_83322d83",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 4647,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-03-22T16:54:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9da279d0_33fe3223",
+      "revId": "d48d9b5a0997351deb13052f8cb76d16c2ce0738",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10dee74b_f5a4209e",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 4647,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-03-22T16:54:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9da279d0_33fe3223",
+      "revId": "d48d9b5a0997351deb13052f8cb76d16c2ce0738",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "83d64c17_947a8ce2",
         "filename": "src/libANGLE/Context.cpp",
         "patchSetId": 1
@@ -67,6 +139,42 @@
       "revId": "d48d9b5a0997351deb13052f8cb76d16c2ce0738",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7956738a_08370f80",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 6585,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-03-22T16:54:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "83d64c17_947a8ce2",
+      "revId": "d48d9b5a0997351deb13052f8cb76d16c2ce0738",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dcd08165_ac65c2bd",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 6585,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-03-22T16:54:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "83d64c17_947a8ce2",
+      "revId": "d48d9b5a0997351deb13052f8cb76d16c2ce0738",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -87,6 +195,24 @@
     },
     {
       "key": {
+        "uuid": "6e35d993_db6a34e4",
+        "filename": "src/libANGLE/Context_gles_1_0.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-03-22T16:54:22Z",
+      "side": 1,
+      "message": "Done (moved to mathutils.h)",
+      "parentUuid": "1dfa5504_7cae1c7f",
+      "revId": "d48d9b5a0997351deb13052f8cb76d16c2ce0738",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b7e84460_2d28262b",
         "filename": "src/libANGLE/State.h",
         "patchSetId": 1
@@ -101,6 +227,24 @@
       "revId": "d48d9b5a0997351deb13052f8cb76d16c2ce0738",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8d5b6844_4ed3d1f9",
+        "filename": "src/libANGLE/State.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 477,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-03-22T16:54:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b7e84460_2d28262b",
+      "revId": "d48d9b5a0997351deb13052f8cb76d16c2ce0738",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
