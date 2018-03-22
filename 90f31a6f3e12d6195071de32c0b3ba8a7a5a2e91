@@ -284,6 +284,30 @@
     },
     {
       "key": {
+        "uuid": "89c08c5f_4b2f02bb",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 270,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-22T17:27:39Z",
+      "side": 1,
+      "message": "Per offline discussion... if we remove the allocate call from the default block init, then we should be able to restore the old behaviour where the default blocks aren\u0027t initted for programs with zero uniforms.",
+      "parentUuid": "c02edaa7_0dc786aa",
+      "range": {
+        "startLine": 269,
+        "startChar": 0,
+        "endLine": 270,
+        "endChar": 61
+      },
+      "revId": "90f31a6f3e12d6195071de32c0b3ba8a7a5a2e91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "2d631561_1751e6cf",
         "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
         "patchSetId": 16
@@ -930,6 +954,30 @@
       "side": 1,
       "message": "I don\u0027t agree, this is really the minimum size of the internal buffer, its not just the initial size. Whenever we\u0027ll allocate a new buffer, its going to be std:max between this size, and the new size to allocate requested. min size seems to be the right selection of word here.",
       "parentUuid": "2fd31071_2b3fd025",
+      "range": {
+        "startLine": 20,
+        "startChar": 66,
+        "endLine": 20,
+        "endChar": 73
+      },
+      "revId": "90f31a6f3e12d6195071de32c0b3ba8a7a5a2e91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "62b1b078_78a34e3a",
+        "filename": "src/libANGLE/renderer/vulkan/StreamingBuffer.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-22T17:27:39Z",
+      "side": 1,
+      "message": "Well, my point of view is slightly different. Say we decide the initial size was too big, we could internally reallocate smaller buffers - so minimum size wouldn\u0027t be quite right in this case. Or if we wanted to internally release the buffer after several minutes of being unused. Very minor thing though.",
+      "parentUuid": "c56afd3f_193b0938",
       "range": {
         "startLine": 20,
         "startChar": 66,
