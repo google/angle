@@ -6,7 +6,7 @@
 // ReplaceVariable.cpp: Replace all references to a specific variable in the AST with references to
 // another variable.
 
-#include "compiler/translator/ReplaceVariable.h"
+#include "compiler/translator/tree_util/ReplaceVariable.h"
 
 #include "compiler/translator/IntermNode.h"
 #include "compiler/translator/tree_util/IntermTraverse.h"

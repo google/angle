@@ -18,12 +18,12 @@
 #include <vector>
 
 #include "compiler/translator/IntermNode.h"
-#include "compiler/translator/ReplaceVariable.h"
 #include "compiler/translator/StaticType.h"
 #include "compiler/translator/SymbolTable.h"
 #include "compiler/translator/tree_ops/InitializeVariables.h"
 #include "compiler/translator/tree_util/FindMain.h"
 #include "compiler/translator/tree_util/IntermNode_util.h"
+#include "compiler/translator/tree_util/ReplaceVariable.h"
 
 namespace sh
 {

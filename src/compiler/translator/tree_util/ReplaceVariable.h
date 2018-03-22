@@ -6,8 +6,8 @@
 // ReplaceVariable.h: Replace all references to a specific variable in the AST with references to
 // another variable.
 
-#ifndef COMPILER_TRANSLATOR_REPLACEVARIABLE_H_
-#define COMPILER_TRANSLATOR_REPLACEVARIABLE_H_
+#ifndef COMPILER_TRANSLATOR_TREEUTIL_REPLACEVARIABLE_H_
+#define COMPILER_TRANSLATOR_TREEUTIL_REPLACEVARIABLE_H_
 
 namespace sh
 {
@@ -21,4 +21,4 @@ void ReplaceVariable(TIntermBlock *root,
 
 }  // namespace sh
 
-#endif  // COMPILER_TRANSLATOR_REPLACEVARIABLE_H_
+#endif  // COMPILER_TRANSLATOR_TREEUTIL_REPLACEVARIABLE_H_
