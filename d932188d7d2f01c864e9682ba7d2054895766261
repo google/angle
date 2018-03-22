@@ -25,6 +25,23 @@
     },
     {
       "key": {
+        "uuid": "615c05a7_fb53789f",
+        "filename": "src/libANGLE/Compiler.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-03-22T16:15:05Z",
+      "side": 1,
+      "message": "In a follow-up patch this could become a PackedEnumMap",
+      "revId": "d932188d7d2f01c864e9682ba7d2054895766261",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "daac9d13_73164d8e",
         "filename": "src/libANGLE/PackedGLEnums.h",
         "patchSetId": 2
@@ -128,6 +145,40 @@
         "endLine": 159,
         "endChar": 29
       },
+      "revId": "d932188d7d2f01c864e9682ba7d2054895766261",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6e8dfcca_133598ec",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 280,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-03-22T16:15:05Z",
+      "side": 1,
+      "message": "What\u0027s great is that now a bunch of these functions will be able to iterate over the shader stages instead of having code for each of them.",
+      "revId": "d932188d7d2f01c864e9682ba7d2054895766261",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2fcdad6e_990011fd",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 280,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-03-22T16:15:05Z",
+      "side": 1,
+      "message": "nit: angle::PackedEnumBitSet",
       "revId": "d932188d7d2f01c864e9682ba7d2054895766261",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
