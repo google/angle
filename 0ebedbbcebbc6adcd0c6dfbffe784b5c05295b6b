@@ -131,6 +131,30 @@
     },
     {
       "key": {
+        "uuid": "ca5be692_c65682f6",
+        "filename": "src/tests/deqp_support/deqp_gles2_test_expectations.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-23T14:49:16Z",
+      "side": 1,
+      "message": "Looks like two bugs were opened for these failures, can you check that again?",
+      "parentUuid": "fe4624d2_4f18f984",
+      "range": {
+        "startLine": 75,
+        "startChar": 0,
+        "endLine": 82,
+        "endChar": 74
+      },
+      "revId": "0ebedbbcebbc6adcd0c6dfbffe784b5c05295b6b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dad9e897_83eef617",
         "filename": "src/tests/deqp_support/deqp_gles2_test_expectations.txt",
         "patchSetId": 2
