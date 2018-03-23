@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "323cba89_685db250",
+        "filename": "src/libANGLE/Compiler.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-03-23T08:43:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d73c4b96_c46e0790",
+      "range": {
+        "startLine": 26,
+        "startChar": 0,
+        "endLine": 26,
+        "endChar": 32
+      },
+      "revId": "d932188d7d2f01c864e9682ba7d2054895766261",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "615c05a7_fb53789f",
         "filename": "src/libANGLE/Compiler.h",
         "patchSetId": 2
@@ -42,6 +66,24 @@
     },
     {
       "key": {
+        "uuid": "cbc04697_c0e255d2",
+        "filename": "src/libANGLE/Compiler.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-03-23T08:43:15Z",
+      "side": 1,
+      "message": "I will do it in the next patch.",
+      "parentUuid": "615c05a7_fb53789f",
+      "revId": "d932188d7d2f01c864e9682ba7d2054895766261",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "daac9d13_73164d8e",
         "filename": "src/libANGLE/PackedGLEnums.h",
         "patchSetId": 2
@@ -53,6 +95,24 @@
       "writtenOn": "2018-03-22T15:40:23Z",
       "side": 1,
       "message": "in angletypes.h, can you add this type\n\ntemplate \u003ctypename T\u003e\nclass ShaderMap \u003d angle::PackedEnumMap\u003cShaderType, T\u003e;",
+      "revId": "d932188d7d2f01c864e9682ba7d2054895766261",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1f87f8a8_af60001d",
+        "filename": "src/libANGLE/PackedGLEnums.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-03-23T08:43:15Z",
+      "side": 1,
+      "message": "Got it.\nI will do it in the next patch.",
+      "parentUuid": "daac9d13_73164d8e",
       "revId": "d932188d7d2f01c864e9682ba7d2054895766261",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -82,6 +142,30 @@
     },
     {
       "key": {
+        "uuid": "6885ea6c_6b08eab8",
+        "filename": "src/libANGLE/PackedGLEnums.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-03-23T08:43:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "44ae9f32_e7c2d3e9",
+      "range": {
+        "startLine": 144,
+        "startChar": 0,
+        "endLine": 154,
+        "endChar": 0
+      },
+      "revId": "d932188d7d2f01c864e9682ba7d2054895766261",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ff9ed362_f04d4452",
         "filename": "src/libANGLE/PackedGLEnums.h",
         "patchSetId": 2
@@ -105,6 +189,30 @@
     },
     {
       "key": {
+        "uuid": "67fd9fda_8a32978d",
+        "filename": "src/libANGLE/PackedGLEnums.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-03-23T08:43:15Z",
+      "side": 1,
+      "message": "They aren\u0027t used now so I remove them.\nI plan to use them in link mismatch checks among graphics shaders.",
+      "parentUuid": "ff9ed362_f04d4452",
+      "range": {
+        "startLine": 155,
+        "startChar": 21,
+        "endLine": 155,
+        "endChar": 46
+      },
+      "revId": "d932188d7d2f01c864e9682ba7d2054895766261",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "24c46772_ea2a1428",
         "filename": "src/libANGLE/PackedGLEnums.h",
         "patchSetId": 2
@@ -116,6 +224,30 @@
       "writtenOn": "2018-03-22T15:40:23Z",
       "side": 1,
       "message": "this needs a better name. what do you use this for?",
+      "range": {
+        "startLine": 157,
+        "startChar": 21,
+        "endLine": 157,
+        "endChar": 50
+      },
+      "revId": "d932188d7d2f01c864e9682ba7d2054895766261",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8c5fd452_e3832de9",
+        "filename": "src/libANGLE/PackedGLEnums.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 157,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-03-23T08:43:15Z",
+      "side": 1,
+      "message": "For AllGraphicsShaderTypes::end(). Just like AllCubeFaceTextureTargets::end().",
+      "parentUuid": "24c46772_ea2a1428",
       "range": {
         "startLine": 157,
         "startChar": 21,
@@ -168,6 +300,24 @@
     },
     {
       "key": {
+        "uuid": "f51ba9a7_a5ff8021",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 280,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-03-23T08:43:15Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "6e8dfcca_133598ec",
+      "revId": "d932188d7d2f01c864e9682ba7d2054895766261",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2fcdad6e_990011fd",
         "filename": "src/libANGLE/Program.h",
         "patchSetId": 2
@@ -185,6 +335,24 @@
     },
     {
       "key": {
+        "uuid": "bc0e89c7_aa777c6d",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 280,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-03-23T08:43:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2fcdad6e_990011fd",
+      "revId": "d932188d7d2f01c864e9682ba7d2054895766261",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c7e7d798_9b42fc95",
         "filename": "src/libANGLE/Program.h",
         "patchSetId": 2
@@ -196,6 +364,30 @@
       "writtenOn": "2018-03-22T15:40:23Z",
       "side": 1,
       "message": "can you make these into a ShaderMap?\n\nIf you want, you can make all of the Map changes I request into a separate second CL, it would probably make the review easier.",
+      "range": {
+        "startLine": 368,
+        "startChar": 0,
+        "endLine": 371,
+        "endChar": 36
+      },
+      "revId": "d932188d7d2f01c864e9682ba7d2054895766261",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f2a89be7_3affeb94",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 371,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-03-23T08:43:15Z",
+      "side": 1,
+      "message": "I will do it in the next patch.",
+      "parentUuid": "c7e7d798_9b42fc95",
       "range": {
         "startLine": 368,
         "startChar": 0,
@@ -231,6 +423,30 @@
     },
     {
       "key": {
+        "uuid": "1c84de5d_a6c851f1",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 518,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-03-23T08:43:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c6baa837_7b603256",
+      "range": {
+        "startLine": 503,
+        "startChar": 0,
+        "endLine": 518,
+        "endChar": 5
+      },
+      "revId": "d932188d7d2f01c864e9682ba7d2054895766261",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "604bd59e_46e71da9",
         "filename": "src/libANGLE/ProgramLinkedResources.h",
         "patchSetId": 2
@@ -251,6 +467,30 @@
       "revId": "d932188d7d2f01c864e9682ba7d2054895766261",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3a8c6e20_468cde79",
+        "filename": "src/libANGLE/ProgramLinkedResources.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-03-23T08:43:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "604bd59e_46e71da9",
+      "range": {
+        "startLine": 42,
+        "startChar": 0,
+        "endLine": 42,
+        "endChar": 32
+      },
+      "revId": "d932188d7d2f01c864e9682ba7d2054895766261",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -300,6 +540,30 @@
     },
     {
       "key": {
+        "uuid": "3d0e18df_e8320162",
+        "filename": "src/libANGLE/Uniform.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-03-23T08:43:15Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "9770e10e_6903bac8",
+      "range": {
+        "startLine": 34,
+        "startChar": 0,
+        "endLine": 38,
+        "endChar": 27
+      },
+      "revId": "d932188d7d2f01c864e9682ba7d2054895766261",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6f0a1ecd_877d4ea3",
         "filename": "src/libANGLE/packed_gl_enums.json",
         "patchSetId": 2
@@ -311,6 +575,30 @@
       "writtenOn": "2018-03-22T15:40:23Z",
       "side": 1,
       "message": "I think we should make the order\n\nVertex\nFragment\nGeometry\nCompute\n\nThen in ES 2.0 situations we know we only need to scan [0,1]",
+      "range": {
+        "startLine": 85,
+        "startChar": 0,
+        "endLine": 88,
+        "endChar": 71
+      },
+      "revId": "d932188d7d2f01c864e9682ba7d2054895766261",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b0f55710_f5f90ce2",
+        "filename": "src/libANGLE/packed_gl_enums.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-03-23T08:43:15Z",
+      "side": 1,
+      "message": "I use this order because in a graphics pipeline the geometry shader is executed before a fragment shader. This order can simplify the code in the program link validation, e.g. validating varyings in vertex-geometry and geometry-fragment order.\n\nIt may also a bit misleading that \"Fragment\" is before \"Geometry\". For example, for funcion ActiveVariable::getFirstShaderTypeWhereActive in Uniforms.cpp, if a uniform is defined in both geometry and fragment shaders, I believe it is not suitable to say the first shader type where it is active is fragment shader.",
+      "parentUuid": "6f0a1ecd_877d4ea3",
       "range": {
         "startLine": 85,
         "startChar": 0,
@@ -412,6 +700,30 @@
       "revId": "d932188d7d2f01c864e9682ba7d2054895766261",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "762c763c_44705d0b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-03-23T08:43:15Z",
+      "side": 1,
+      "message": "Ack\nI will use ShaderMap in the next patch.",
+      "parentUuid": "2c1e316e_2dd069c3",
+      "range": {
+        "startLine": 239,
+        "startChar": 20,
+        "endLine": 239,
+        "endChar": 34
+      },
+      "revId": "d932188d7d2f01c864e9682ba7d2054895766261",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -518,6 +830,30 @@
       "writtenOn": "2018-03-22T15:40:23Z",
       "side": 1,
       "message": "can you please also tag this with the bug id, so that when the bug is closed we know this TODO is fixed?",
+      "range": {
+        "startLine": 136,
+        "startChar": 0,
+        "endLine": 138,
+        "endChar": 18
+      },
+      "revId": "d932188d7d2f01c864e9682ba7d2054895766261",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "363f4aa4_75c61ae2",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-03-23T08:43:15Z",
+      "side": 1,
+      "message": "Done\nI have to add this because Vulkan back-end always assumes there are only two graphics shaders and it should be done in another patch to replace ShaderIndex by ShaderType.",
+      "parentUuid": "2bfba55f_bef2b58f",
       "range": {
         "startLine": 136,
         "startChar": 0,
