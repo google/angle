@@ -97,6 +97,30 @@
     },
     {
       "key": {
+        "uuid": "801be83e_d29630f1",
+        "filename": "BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 595,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-03-23T02:13:09Z",
+      "side": 1,
+      "message": "Looks like there is no usecase for loading ANGLE suffixed libs in Chrome for now.\nAndroid uses static linking and on Linux GAPID can\u0027t trace GLES, and for apitrace adding suffix is not enough.\nSo, going to move the defines only to tests which use them.",
+      "parentUuid": "76fda5b8_0947f63d",
+      "range": {
+        "startLine": 595,
+        "startChar": 15,
+        "endLine": 595,
+        "endChar": 40
+      },
+      "revId": "979bd68de4afe91ad7d6d4fbe90266910f22f3a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f9c33902_d917119f",
         "filename": "doc/DebuggingTips.md",
         "patchSetId": 1
@@ -188,6 +212,30 @@
       "revId": "979bd68de4afe91ad7d6d4fbe90266910f22f3a4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ac79351e_6c985af3",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-03-23T02:13:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "00662c97_c2df413f",
+      "range": {
+        "startLine": 35,
+        "startChar": 3,
+        "endLine": 35,
+        "endChar": 14
+      },
+      "revId": "979bd68de4afe91ad7d6d4fbe90266910f22f3a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -310,6 +358,30 @@
     },
     {
       "key": {
+        "uuid": "34f3765c_fcebf508",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-03-23T02:13:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ffd3a539_559ecfd7",
+      "range": {
+        "startLine": 36,
+        "startChar": 46,
+        "endLine": 36,
+        "endChar": 64
+      },
+      "revId": "979bd68de4afe91ad7d6d4fbe90266910f22f3a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3157a46b_4934d08d",
         "filename": "doc/DebuggingTips.md",
         "patchSetId": 1
@@ -426,6 +498,30 @@
       "revId": "979bd68de4afe91ad7d6d4fbe90266910f22f3a4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6b0deeaa_18f20dcf",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-03-23T02:13:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f6b827c6_a752bcdc",
+      "range": {
+        "startLine": 38,
+        "startChar": 3,
+        "endLine": 38,
+        "endChar": 43
+      },
+      "revId": "979bd68de4afe91ad7d6d4fbe90266910f22f3a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
