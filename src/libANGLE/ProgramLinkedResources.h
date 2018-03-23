@@ -115,6 +115,7 @@ class UniformLinker final : angle::NonCopyable
         std::vector<LinkedUniform> *atomicCounterUniforms,
         GLenum shaderType,
         bool markActive,
+        bool markStaticUse,
         int binding,
         int offset,
         int *location);
@@ -127,6 +128,7 @@ class UniformLinker final : angle::NonCopyable
                                             std::vector<LinkedUniform> *atomicCounterUniforms,
                                             GLenum shaderType,
                                             bool markActive,
+                                            bool markStaticUse,
                                             int binding,
                                             int offset,
                                             int *location);
@@ -139,12 +141,13 @@ class UniformLinker final : angle::NonCopyable
                                            std::vector<LinkedUniform> *atomicCounterUniforms,
                                            GLenum shaderType,
                                            bool markActive,
+                                           bool markStaticUse,
                                            int binding,
                                            int offset,
                                            int *location);
 
-    // markActive is given as a separate parameter because it is tracked here at struct
-    // granularity.
+    // markActive and markStaticUse are given as separate parameters because they are tracked here
+    // at struct granularity.
     ShaderUniformCount flattenUniformImpl(const sh::ShaderVariable &uniform,
                                           const std::string &fullName,
                                           const std::string &fullMappedName,
@@ -153,6 +156,7 @@ class UniformLinker final : angle::NonCopyable
                                           std::vector<LinkedUniform> *atomicCounterUniforms,
                                           GLenum shaderType,
                                           bool markActive,
+                                          bool markStaticUse,
                                           int binding,
                                           int offset,
                                           int *location);
@@ -160,7 +164,6 @@ class UniformLinker final : angle::NonCopyable
     bool indexUniforms(InfoLog &infoLog, const ProgramBindings &uniformLocationBindings);
     bool gatherUniformLocationsAndCheckConflicts(InfoLog &infoLog,
                                                  const ProgramBindings &uniformLocationBindings,
-                                                 std::set<GLuint> *reservedLocations,
                                                  std::set<GLuint> *ignoredLocations,
                                                  int *maxUniformLocation);
     void pruneUnusedUniforms();
