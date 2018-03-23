@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e27b0905_91fdf0d2",
+        "filename": "src/tests/deqp_support/deqp_gles2_test_expectations.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-23T05:13:09Z",
+      "side": 1,
+      "message": "can you revert this whitespace change?",
+      "revId": "0ebedbbcebbc6adcd0c6dfbffe784b5c05295b6b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6ea95999_9f106840",
+        "filename": "src/tests/deqp_support/deqp_gles2_test_expectations.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-23T05:13:09Z",
+      "side": 1,
+      "message": "probably would just make this titled specifically about depth_range.",
+      "range": {
+        "startLine": 74,
+        "startChar": 2,
+        "endLine": 74,
+        "endChar": 92
+      },
+      "revId": "0ebedbbcebbc6adcd0c6dfbffe784b5c05295b6b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "933729aa_5ceed953",
+        "filename": "src/tests/deqp_support/deqp_gles2_test_expectations.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-23T05:13:09Z",
+      "side": 1,
+      "message": "oh, hm, I thought this was the whole suite of depth range tests failing, but it doesn\u0027t appear so. I\u0027ll update the bug title again.",
+      "range": {
+        "startLine": 75,
+        "startChar": 0,
+        "endLine": 82,
+        "endChar": 74
+      },
+      "revId": "0ebedbbcebbc6adcd0c6dfbffe784b5c05295b6b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dad9e897_83eef617",
+        "filename": "src/tests/deqp_support/deqp_gles2_test_expectations.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 274,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-23T05:13:09Z",
+      "side": 1,
+      "message": "probably would retitle this scissored depth/stencil clear.",
+      "range": {
+        "startLine": 274,
+        "startChar": 0,
+        "endLine": 274,
+        "endChar": 92
+      },
+      "revId": "0ebedbbcebbc6adcd0c6dfbffe784b5c05295b6b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
