@@ -1471,6 +1471,39 @@ void main()
     }
 }
 
+// Test that even inactive attributes are taken into account when checking for aliasing in case the
+// shader version is >= 3.00. GLSL ES 3.00.6 section 12.46.
+TEST_P(VertexAttributeTestES3, InactiveAttributeAliasing)
+{
+    const std::string &vertexShader =
+        R"(#version 300 es
+        precision mediump float;
+        in vec4 input_active;
+        in vec4 input_unused;
+        void main()
+        {
+            gl_Position = input_active;
+        })";
+
+    const std::string &fragmentShader =
+        R"(#version 300 es
+        precision mediump float;
+        out vec4 color;
+        void main()
+        {
+            color = vec4(0.0);
+        })";
+
+    ANGLE_GL_PROGRAM(program, vertexShader, fragmentShader);
+    glBindAttribLocation(program, 0, "input_active");
+    glBindAttribLocation(program, 0, "input_unused");
+    glLinkProgram(program);
+    EXPECT_GL_NO_ERROR();
+    GLint linkStatus = 0;
+    glGetProgramiv(program, GL_LINK_STATUS, &linkStatus);
+    EXPECT_GL_FALSE(linkStatus);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 // D3D11 Feature Level 9_3 uses different D3D formats for vertex attribs compared to Feature Levels

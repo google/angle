@@ -71,6 +71,7 @@ class ShaderState final : angle::NonCopyable
         return mShaderStorageBlocks;
     }
     const std::vector<sh::Attribute> &getActiveAttributes() const { return mActiveAttributes; }
+    const std::vector<sh::Attribute> &getAllAttributes() const { return mAllAttributes; }
     const std::vector<sh::OutputVariable> &getActiveOutputVariables() const
     {
         return mActiveOutputVariables;
@@ -95,6 +96,7 @@ class ShaderState final : angle::NonCopyable
     std::vector<sh::Uniform> mUniforms;
     std::vector<sh::InterfaceBlock> mUniformBlocks;
     std::vector<sh::InterfaceBlock> mShaderStorageBlocks;
+    std::vector<sh::Attribute> mAllAttributes;
     std::vector<sh::Attribute> mActiveAttributes;
     std::vector<sh::OutputVariable> mActiveOutputVariables;
 
@@ -165,6 +167,7 @@ class Shader final : angle::NonCopyable, public LabeledObject
     const std::vector<sh::InterfaceBlock> &getUniformBlocks(const Context *context);
     const std::vector<sh::InterfaceBlock> &getShaderStorageBlocks(const Context *context);
     const std::vector<sh::Attribute> &getActiveAttributes(const Context *context);
+    const std::vector<sh::Attribute> &getAllAttributes(const Context *context);
     const std::vector<sh::OutputVariable> &getActiveOutputVariables(const Context *context);
 
     // Returns mapped name of a transform feedback varying. The original name may contain array

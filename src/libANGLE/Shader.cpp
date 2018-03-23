@@ -403,8 +403,8 @@ void Shader::resolveCompile(const Context *context)
         {
             {
                 mState.mOutputVaryings = GetShaderVariables(sh::GetOutputVaryings(compilerHandle));
-                mState.mActiveAttributes =
-                    GetActiveShaderVariables(sh::GetAttributes(compilerHandle));
+                mState.mAllAttributes    = GetShaderVariables(sh::GetAttributes(compilerHandle));
+                mState.mActiveAttributes = GetActiveShaderVariables(&mState.mAllAttributes);
                 mState.mNumViews = sh::GetVertexShaderNumViews(compilerHandle);
             }
             break;
@@ -527,6 +527,12 @@ const std::vector<sh::Attribute> &Shader::getActiveAttributes(const Context *con
 {
     resolveCompile(context);
     return mState.getActiveAttributes();
+}
+
+const std::vector<sh::Attribute> &Shader::getAllAttributes(const Context *context)
+{
+    resolveCompile(context);
+    return mState.getAllAttributes();
 }
 
 const std::vector<sh::OutputVariable> &Shader::getActiveOutputVariables(const Context *context)
