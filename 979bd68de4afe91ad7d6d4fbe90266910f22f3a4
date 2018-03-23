@@ -121,6 +121,30 @@
     },
     {
       "key": {
+        "uuid": "83211ae6_071e650a",
+        "filename": "BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 595,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-23T04:32:56Z",
+      "side": 1,
+      "message": "I thought we had a use case for OSX - ISTR Corentin was having to clone ANGLE into differently named libs for Mac.. but things changed a lot since back then so I don\u0027t know what the current state is.",
+      "parentUuid": "801be83e_d29630f1",
+      "range": {
+        "startLine": 595,
+        "startChar": 15,
+        "endLine": 595,
+        "endChar": 40
+      },
+      "revId": "979bd68de4afe91ad7d6d4fbe90266910f22f3a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f9c33902_d917119f",
         "filename": "doc/DebuggingTips.md",
         "patchSetId": 1

@@ -1,0 +1,188 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "58e36ccf_4e999185",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-23T04:32:56Z",
+      "side": 1,
+      "message": "capture a trace of the Vulkan or OpenGL ES command stream on Android.",
+      "range": {
+        "startLine": 41,
+        "startChar": 64,
+        "endLine": 41,
+        "endChar": 70
+      },
+      "revId": "2a64a2ee00dbe742b58114d9377a4eb91f9e0dff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d9d3390a_70b940a1",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-23T04:32:56Z",
+      "side": 1,
+      "message": "from the system OpenGL libraries.",
+      "range": {
+        "startLine": 42,
+        "startChar": 65,
+        "endLine": 42,
+        "endChar": 72
+      },
+      "revId": "2a64a2ee00dbe742b58114d9377a4eb91f9e0dff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "37a34464_200416ac",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-23T04:32:56Z",
+      "side": 1,
+      "message": "prior to capturing your test trace,",
+      "range": {
+        "startLine": 48,
+        "startChar": 277,
+        "endLine": 48,
+        "endChar": 282
+      },
+      "revId": "2a64a2ee00dbe742b58114d9377a4eb91f9e0dff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f881e2d4_6c4298aa",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-23T04:32:56Z",
+      "side": 1,
+      "message": "The best way to install the APK is with",
+      "range": {
+        "startLine": 48,
+        "startChar": 344,
+        "endLine": 48,
+        "endChar": 349
+      },
+      "revId": "2a64a2ee00dbe742b58114d9377a4eb91f9e0dff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8046bcb6_0d6379c2",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-23T04:32:56Z",
+      "side": 1,
+      "message": "this sentence is hard to parse.. can you rephrase?",
+      "range": {
+        "startLine": 48,
+        "startChar": 370,
+        "endLine": 48,
+        "endChar": 415
+      },
+      "revId": "2a64a2ee00dbe742b58114d9377a4eb91f9e0dff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7f60436c_0ab82202",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-23T04:32:56Z",
+      "side": 1,
+      "message": "The mandatory extra intent argument",
+      "range": {
+        "startLine": 54,
+        "startChar": 0,
+        "endLine": 54,
+        "endChar": 10
+      },
+      "revId": "2a64a2ee00dbe742b58114d9377a4eb91f9e0dff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f36afbec_30ca3ca4",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-23T04:32:56Z",
+      "side": 1,
+      "message": "either the",
+      "range": {
+        "startLine": 54,
+        "startChar": 251,
+        "endLine": 54,
+        "endChar": 258
+      },
+      "revId": "2a64a2ee00dbe742b58114d9377a4eb91f9e0dff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b31cce78_4aef389c",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-23T04:32:56Z",
+      "side": 1,
+      "message": ". \u003cfull stop\u003e Without it..",
+      "range": {
+        "startLine": 54,
+        "startChar": 182,
+        "endLine": 54,
+        "endChar": 185
+      },
+      "revId": "2a64a2ee00dbe742b58114d9377a4eb91f9e0dff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
