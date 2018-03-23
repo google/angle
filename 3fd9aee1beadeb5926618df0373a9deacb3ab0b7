@@ -1,0 +1,326 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b8007cc4_b6a965be",
+        "filename": "src/common/mathutil.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 453,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-23T05:29:48Z",
+      "side": 1,
+      "message": "nit: kHighest/kLowest.",
+      "range": {
+        "startLine": 453,
+        "startChar": 30,
+        "endLine": 453,
+        "endChar": 38
+      },
+      "revId": "3fd9aee1beadeb5926618df0373a9deacb3ab0b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9c492b9b_931ab179",
+        "filename": "src/libANGLE/GLES1State.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-23T05:29:48Z",
+      "side": 1,
+      "message": "nit: setAlphaFunc",
+      "range": {
+        "startLine": 145,
+        "startChar": 17,
+        "endLine": 145,
+        "endChar": 26
+      },
+      "revId": "3fd9aee1beadeb5926618df0373a9deacb3ab0b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "13614504_1782d9d7",
+        "filename": "src/libANGLE/GLES1State.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-23T05:29:48Z",
+      "side": 1,
+      "message": "nit: put this below after private:",
+      "range": {
+        "startLine": 115,
+        "startChar": 4,
+        "endLine": 115,
+        "endChar": 23
+      },
+      "revId": "3fd9aee1beadeb5926618df0373a9deacb3ab0b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b9398ed9_ec4be54a",
+        "filename": "src/libANGLE/State.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 478,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-23T05:29:48Z",
+      "side": 1,
+      "message": "you can use an overloaded getter for this. not sure if this const pattern is a common thing, but this is pretty much the only place we use overloading.",
+      "range": {
+        "startLine": 478,
+        "startChar": 22,
+        "endLine": 478,
+        "endChar": 33
+      },
+      "revId": "3fd9aee1beadeb5926618df0373a9deacb3ab0b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "96f8461a_e4dc1fbd",
+        "filename": "src/libANGLE/validationES1.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-23T05:29:48Z",
+      "side": 1,
+      "message": "could you use an error from ErrorStrings.h?",
+      "range": {
+        "startLine": 31,
+        "startChar": 12,
+        "endLine": 31,
+        "endChar": 52
+      },
+      "revId": "3fd9aee1beadeb5926618df0373a9deacb3ab0b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dded6ecc_330f9e06",
+        "filename": "src/libANGLE/validationES1.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-23T05:29:48Z",
+      "side": 1,
+      "message": "nit:  //  anonymous namespace",
+      "range": {
+        "startLine": 36,
+        "startChar": 6,
+        "endLine": 36,
+        "endChar": 15
+      },
+      "revId": "3fd9aee1beadeb5926618df0373a9deacb3ab0b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "29853483_658d09e4",
+        "filename": "src/libANGLE/validationES1.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-23T05:29:48Z",
+      "side": 1,
+      "message": "should probably validate we\u0027re on GLES 1... otherwise you could dynamically load the entry point with OS methods and call it directly, even if you skip getProcAddress.",
+      "range": {
+        "startLine": 41,
+        "startChar": 5,
+        "endLine": 41,
+        "endChar": 22
+      },
+      "revId": "3fd9aee1beadeb5926618df0373a9deacb3ab0b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4a413eb7_9ae0a759",
+        "filename": "src/libANGLE/validationES1.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-23T05:29:48Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 46,
+        "startChar": 5,
+        "endLine": 46,
+        "endChar": 23
+      },
+      "revId": "3fd9aee1beadeb5926618df0373a9deacb3ab0b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "408d1373_139fb4b3",
+        "filename": "src/tests/angle_end2end_tests.gypi",
+        "patchSetId": 5
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-23T05:29:48Z",
+      "side": 1,
+      "message": "maybe we should make a subdir for GLES1 tests (like gles1_tests) (or make it clear in the test name)",
+      "range": {
+        "startLine": 18,
+        "startChar": 37,
+        "endLine": 18,
+        "endChar": 45
+      },
+      "revId": "3fd9aee1beadeb5926618df0373a9deacb3ab0b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "50952d9e_c34721ab",
+        "filename": "src/tests/gl_tests/AlphaFuncTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-23T05:29:48Z",
+      "side": 1,
+      "message": "please use a top-level comment",
+      "range": {
+        "startLine": 5,
+        "startChar": 2,
+        "endLine": 5,
+        "endChar": 0
+      },
+      "revId": "3fd9aee1beadeb5926618df0373a9deacb3ab0b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dfc5bf2e_72ffc301",
+        "filename": "src/tests/gl_tests/AlphaFuncTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-23T05:29:48Z",
+      "side": 1,
+      "message": "nit: you might want to use a default size of 32x32 or something like that - 1x1 windows can be a bit odd.",
+      "range": {
+        "startLine": 21,
+        "startChar": 0,
+        "endLine": 22,
+        "endChar": 27
+      },
+      "revId": "3fd9aee1beadeb5926618df0373a9deacb3ab0b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5b770da8_510f05ab",
+        "filename": "src/tests/gl_tests/AlphaFuncTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-23T05:29:48Z",
+      "side": 1,
+      "message": "nit: you can omit this.",
+      "range": {
+        "startLine": 29,
+        "startChar": 0,
+        "endLine": 32,
+        "endChar": 55
+      },
+      "revId": "3fd9aee1beadeb5926618df0373a9deacb3ab0b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5da0cadf_19a20d1d",
+        "filename": "src/tests/gl_tests/AlphaFuncTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-23T05:29:48Z",
+      "side": 1,
+      "message": "can you please comment before every test?",
+      "range": {
+        "startLine": 35,
+        "startChar": 0,
+        "endLine": 35,
+        "endChar": 6
+      },
+      "revId": "3fd9aee1beadeb5926618df0373a9deacb3ab0b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b8754405_758b67d0",
+        "filename": "src/tests/gl_tests/AlphaFuncTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-23T05:29:48Z",
+      "side": 1,
+      "message": "please use the EXPECT_GL_FALSE/EXPECT_GL_TRUE macros for these.",
+      "range": {
+        "startLine": 37,
+        "startChar": 4,
+        "endLine": 37,
+        "endChar": 13
+      },
+      "revId": "3fd9aee1beadeb5926618df0373a9deacb3ab0b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
