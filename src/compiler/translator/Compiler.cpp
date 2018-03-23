@@ -602,7 +602,7 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         ASSERT(!variablesCollected);
         CollectVariables(root, &attributes, &outputVariables, &uniforms, &inputVaryings,
                          &outputVaryings, &uniformBlocks, &shaderStorageBlocks, &inBlocks,
-                         hashFunction, &symbolTable, shaderVersion, shaderType, extensionBehavior);
+                         hashFunction, &symbolTable, shaderType, extensionBehavior);
         collectInterfaceBlocks();
         variablesCollected = true;
         if (compileOptions & SH_USE_UNUSED_STANDARD_SHARED_BLOCKS)
