@@ -50,6 +50,7 @@ VertexArray11::VertexArray11(const gl::VertexArrayState &data)
       mLastElementType(GL_NONE),
       mLastDrawElementsOffset(0),
       mCurrentElementArrayStorage(IndexStorageType::Invalid),
+      mCachedIndexInfo{0},
       mCachedIndexInfoValid(false)
 {
     for (size_t attribIndex = 0; attribIndex < mCurrentArrayBuffers.size(); ++attribIndex)

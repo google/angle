@@ -143,6 +143,13 @@ bool DrawCallParams::isDrawElements() const
     return (mType != GL_NONE);
 }
 
+bool DrawCallParams::isDrawIndirect() const
+{
+    // This is a bit of a hack - it's quite possible for a direct call to have a zero count, but we
+    // assume these calls are filtered out before they make it to this code.
+    return (mIndexCount == 0 && mVertexCount == 0);
+}
+
 Error DrawCallParams::ensureIndexRangeResolved(const Context *context) const
 {
     if (mIndexRange.valid() || !isDrawElements())

@@ -108,6 +108,7 @@ class DrawCallParams final : angle::NonCopyable
 
     Error ensureIndexRangeResolved(const Context *context) const;
     bool isDrawElements() const;
+    bool isDrawIndirect() const;
 
     // ensureIndexRangeResolved must be called first.
     const IndexRange &getIndexRange() const;

@@ -380,24 +380,10 @@ class Renderer11 : public RendererD3D
 
     DeviceImpl *createEGLDevice() override;
 
-    gl::Error drawArrays(const gl::Context *context,
-                         GLenum mode,
-                         GLint startVertex,
-                         GLsizei count,
-                         GLsizei instances);
-
-    gl::Error drawElements(const gl::Context *context,
-                           GLenum mode,
-                           GLsizei count,
-                           GLenum type,
-                           const void *indices,
-                           GLsizei instances);
-
-    gl::Error drawArraysIndirect(const gl::Context *context, GLenum mode, const void *indirect);
-    gl::Error drawElementsIndirect(const gl::Context *context,
-                                   GLenum mode,
-                                   GLenum type,
-                                   const void *indirect);
+    gl::Error drawArrays(const gl::Context *context, const gl::DrawCallParams &params);
+    gl::Error drawElements(const gl::Context *context, const gl::DrawCallParams &params);
+    gl::Error drawArraysIndirect(const gl::Context *context, const gl::DrawCallParams &params);
+    gl::Error drawElementsIndirect(const gl::Context *context, const gl::DrawCallParams &params);
 
     // Necessary hack for default framebuffers in D3D.
     FramebufferImpl *createDefaultFramebuffer(const gl::FramebufferState &state) override;

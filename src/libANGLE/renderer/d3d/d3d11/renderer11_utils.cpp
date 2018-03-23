@@ -2358,46 +2358,6 @@ bool UsePrimitiveRestartWorkaround(bool primitiveRestartFixedIndexEnabled, GLenu
     return (!primitiveRestartFixedIndexEnabled && type == GL_UNSIGNED_SHORT);
 }
 
-bool IsStreamingIndexData(const gl::Context *context, GLenum srcType)
-{
-    const auto &glState = context->getGLState();
-    gl::Buffer *glBuffer = glState.getVertexArray()->getElementArrayBuffer().get();
-
-    // Case 1: the indices are passed by pointer, which forces the streaming of index data
-    if (glBuffer == nullptr)
-    {
-        return true;
-    }
-
-    bool primitiveRestartWorkaround =
-        UsePrimitiveRestartWorkaround(glState.isPrimitiveRestartEnabled(), srcType);
-
-    BufferD3D *buffer    = GetImplAs<BufferD3D>(glBuffer);
-    const GLenum dstType = (srcType == GL_UNSIGNED_INT || primitiveRestartWorkaround)
-                               ? GL_UNSIGNED_INT
-                               : GL_UNSIGNED_SHORT;
-
-    // Case 2a: the buffer can be used directly
-    if (buffer->supportsDirectBinding() && dstType == srcType)
-    {
-        return false;
-    }
-
-    // Case 2b: use a static translated copy or fall back to streaming
-    StaticIndexBufferInterface *staticBuffer = buffer->getStaticIndexBuffer();
-    if (staticBuffer == nullptr)
-    {
-        return true;
-    }
-
-    if ((staticBuffer->getBufferSize() == 0) || (staticBuffer->getIndexType() != dstType))
-    {
-        return true;
-    }
-
-    return false;
-}
-
 IndexStorageType ClassifyIndexStorage(const gl::State &glState,
                                       const gl::Buffer *elementArrayBuffer,
                                       GLenum elementType,

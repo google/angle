@@ -201,17 +201,9 @@ class StateManager11 final : angle::NonCopyable
 
     void setInputLayout(const d3d11::InputLayout *inputLayout);
 
-    // TODO(jmadill): Migrate to d3d11::Buffer.
-    bool queueVertexBufferChange(size_t bufferIndex,
-                                 ID3D11Buffer *buffer,
-                                 UINT stride,
-                                 UINT offset);
-    bool queueVertexOffsetChange(size_t bufferIndex, UINT offsetOnly);
-    void applyVertexBufferChanges();
-
     void setSingleVertexBuffer(const d3d11::Buffer *buffer, UINT stride, UINT offset);
 
-    gl::Error updateState(const gl::Context *context, GLenum drawMode);
+    gl::Error updateState(const gl::Context *context, const gl::DrawCallParams &drawCallParams);
 
     void setShaderResourceShared(gl::ShaderType shaderType,
                                  UINT resourceSlot,
@@ -341,6 +333,17 @@ class StateManager11 final : angle::NonCopyable
     void processFramebufferInvalidation(const gl::Context *context);
 
     bool syncIndexBuffer(ID3D11Buffer *buffer, DXGI_FORMAT indexFormat, unsigned int offset);
+
+    bool setInputLayoutInternal(const d3d11::InputLayout *inputLayout);
+
+    gl::Error applyVertexBuffers(const gl::Context *context,
+                                 const gl::DrawCallParams &drawCallParams);
+    // TODO(jmadill): Migrate to d3d11::Buffer.
+    bool queueVertexBufferChange(size_t bufferIndex,
+                                 ID3D11Buffer *buffer,
+                                 UINT stride,
+                                 UINT offset);
+    void applyVertexBufferChanges();
 
     enum DirtyBitType
     {
@@ -519,6 +522,9 @@ class StateManager11 final : angle::NonCopyable
 
     ResourceSerial mCurrentComputeConstantBuffer;
     ResourceSerial mCurrentGeometryConstantBuffer;
+
+    d3d11::Buffer mPointSpriteVertexBuffer;
+    d3d11::Buffer mPointSpriteIndexBuffer;
 
     template <typename T>
     using VertexConstantBufferArray =

@@ -397,7 +397,6 @@ enum class StagingAccess
 
 bool UsePresentPathFast(const Renderer11 *renderer, const gl::FramebufferAttachment *colorbuffer);
 bool UsePrimitiveRestartWorkaround(bool primitiveRestartFixedIndexEnabled, GLenum type);
-bool IsStreamingIndexData(const gl::Context *context, GLenum srcType);
 
 enum class IndexStorageType
 {
