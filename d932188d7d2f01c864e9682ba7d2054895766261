@@ -611,6 +611,30 @@
     },
     {
       "key": {
+        "uuid": "e0578ddc_87e33eed",
+        "filename": "src/libANGLE/packed_gl_enums.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-23T14:35:29Z",
+      "side": 1,
+      "message": "Could you please reconsider? It would allow us to use better iteration in the Vulkan back-end, or other GLES 2.0-only back-ends like D3D9.\n\nI understand it may change the way errors are reported, but I don\u0027t think it will violate the spec in any way.",
+      "parentUuid": "b0f55710_f5f90ce2",
+      "range": {
+        "startLine": 85,
+        "startChar": 0,
+        "endLine": 88,
+        "endChar": 71
+      },
+      "revId": "d932188d7d2f01c864e9682ba7d2054895766261",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "118b17ed_9191bade",
         "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.h",
         "patchSetId": 2
