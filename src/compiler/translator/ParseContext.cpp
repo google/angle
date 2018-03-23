@@ -5327,41 +5327,34 @@ TIntermTyped *TParseContext::addBinaryMathBooleanResult(TOperator op,
     return node;
 }
 
-TIntermBinary *TParseContext::createAssign(TOperator op,
-                                           TIntermTyped *left,
-                                           TIntermTyped *right,
-                                           const TSourceLoc &loc)
-{
-    if (binaryOpCommonCheck(op, left, right, loc))
-    {
-        if (op == EOpMulAssign)
-        {
-            op = TIntermBinary::GetMulAssignOpBasedOnOperands(left->getType(), right->getType());
-            if (!isMultiplicationTypeCombinationValid(op, left->getType(), right->getType()))
-            {
-                return nullptr;
-            }
-        }
-        TIntermBinary *node = new TIntermBinary(op, left, right);
-        node->setLine(loc);
-
-        return node;
-    }
-    return nullptr;
-}
-
 TIntermTyped *TParseContext::addAssign(TOperator op,
                                        TIntermTyped *left,
                                        TIntermTyped *right,
                                        const TSourceLoc &loc)
 {
     checkCanBeLValue(loc, "assign", left);
-    TIntermTyped *node = createAssign(op, left, right, loc);
+    TIntermBinary *node = nullptr;
+    if (binaryOpCommonCheck(op, left, right, loc))
+    {
+        if (op == EOpMulAssign)
+        {
+            op = TIntermBinary::GetMulAssignOpBasedOnOperands(left->getType(), right->getType());
+            if (isMultiplicationTypeCombinationValid(op, left->getType(), right->getType()))
+            {
+                node = new TIntermBinary(op, left, right);
+            }
+        }
+        else
+        {
+            node = new TIntermBinary(op, left, right);
+        }
+    }
     if (node == nullptr)
     {
         assignError(loc, "assign", left->getCompleteString(), right->getCompleteString());
         return left;
     }
+    node->setLine(loc);
     return node;
 }
 
