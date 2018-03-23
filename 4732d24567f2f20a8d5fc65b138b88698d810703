@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "16b7a12e_9d5ab7d5",
+        "filename": "src/tests/perf_tests/DispatchComputePerf.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-03-23T09:41:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fcc32609_bcbd7b55",
+      "revId": "4732d24567f2f20a8d5fc65b138b88698d810703",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3f532ea5_0e22a659",
         "filename": "src/tests/perf_tests/DispatchComputePerf.cpp",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2018-03-21T16:25:36Z",
       "side": 1,
       "message": "This should use the parameters to generate a unique string. It\u0027s used by the perfect test runner to generate graphs.",
+      "revId": "4732d24567f2f20a8d5fc65b138b88698d810703",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c113d231_82ce6f11",
+        "filename": "src/tests/perf_tests/DispatchComputePerf.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-03-23T09:41:43Z",
+      "side": 1,
+      "message": "Override suffix() to get a unique string.",
+      "parentUuid": "3f532ea5_0e22a659",
       "revId": "4732d24567f2f20a8d5fc65b138b88698d810703",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -100,6 +136,24 @@
     },
     {
       "key": {
+        "uuid": "9c603acd_6546bd95",
+        "filename": "src/tests/perf_tests/DispatchComputePerf.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-03-23T09:41:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ef07745f_e2f7336b",
+      "revId": "4732d24567f2f20a8d5fc65b138b88698d810703",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "63845482_b47733df",
         "filename": "src/tests/perf_tests/DispatchComputePerf.cpp",
         "patchSetId": 2
@@ -117,6 +171,24 @@
     },
     {
       "key": {
+        "uuid": "7e69c1ee_d8430a7d",
+        "filename": "src/tests/perf_tests/DispatchComputePerf.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-03-23T09:41:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "63845482_b47733df",
+      "revId": "4732d24567f2f20a8d5fc65b138b88698d810703",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "82970340_a3833aea",
         "filename": "src/tests/perf_tests/DispatchComputePerf.cpp",
         "patchSetId": 2
@@ -131,6 +203,24 @@
       "revId": "4732d24567f2f20a8d5fc65b138b88698d810703",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "771b037b_387d6663",
+        "filename": "src/tests/perf_tests/DispatchComputePerf.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-03-23T09:41:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "82970340_a3833aea",
+      "revId": "4732d24567f2f20a8d5fc65b138b88698d810703",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
