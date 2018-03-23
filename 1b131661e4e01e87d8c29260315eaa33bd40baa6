@@ -16,6 +16,41 @@
       "revId": "1b131661e4e01e87d8c29260315eaa33bd40baa6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f2144644_c26ff95d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 1169,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2018-03-23T22:12:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2aa2bf5a_8a2eb4a0",
+      "revId": "1b131661e4e01e87d8c29260315eaa33bd40baa6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "39ee2dd1_8d2b9709",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 1391,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2018-03-23T22:12:49Z",
+      "side": 1,
+      "message": "I don\u0027t think it\u0027s valid to be checking the stencilTest here (processFramebufferInvalidation) so I\u0027m moving it back into syncDepthStencilState.",
+      "revId": "1b131661e4e01e87d8c29260315eaa33bd40baa6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
