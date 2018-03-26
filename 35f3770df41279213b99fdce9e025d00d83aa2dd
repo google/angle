@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e3444d7c_4dce6338",
+        "filename": "src/libANGLE/renderer/gl/BlitGL.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 719,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-26T14:29:48Z",
+      "side": 1,
+      "message": "would be nice if there were a way to do this without triggering the std allocator.",
+      "range": {
+        "startLine": 719,
+        "startChar": 4,
+        "endLine": 719,
+        "endChar": 36
+      },
+      "revId": "35f3770df41279213b99fdce9e025d00d83aa2dd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c7e53de5_3d57f560",
+        "filename": "src/libANGLE/renderer/gl/BlitGL.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 727,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-26T14:29:48Z",
+      "side": 1,
+      "message": "nit: ASSERT not assert",
+      "range": {
+        "startLine": 727,
+        "startChar": 8,
+        "endLine": 727,
+        "endChar": 14
+      },
+      "revId": "35f3770df41279213b99fdce9e025d00d83aa2dd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9192b6ad_48cfd65b",
+        "filename": "src/libANGLE/renderer/gl/RenderbufferGL.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-26T14:29:48Z",
+      "side": 1,
+      "message": "rather than storing the blitter as a member - could you please use GetImplAs to cast the context to a ContextGL and retrieve it from the Renderer?",
+      "range": {
+        "startLine": 116,
+        "startChar": 21,
+        "endLine": 116,
+        "endChar": 38
+      },
+      "revId": "35f3770df41279213b99fdce9e025d00d83aa2dd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2e3cd9b9_170d72e5",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 1214,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-26T14:29:48Z",
+      "side": 1,
+      "message": "nit: might want to remind the reader that this is very wrong.",
+      "range": {
+        "startLine": 1213,
+        "startChar": 0,
+        "endLine": 1214,
+        "endChar": 72
+      },
+      "revId": "35f3770df41279213b99fdce9e025d00d83aa2dd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
