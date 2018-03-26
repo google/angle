@@ -1,0 +1,174 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "38c6cd5f_b7c5c3f3",
+        "filename": "src/libANGLE/Compiler.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-03-26T17:09:43Z",
+      "side": 1,
+      "message": "This can be a packed enum map too.",
+      "revId": "f8ede77ff385e15d32f7e7f32327b4af2a1adb5e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c1781ae8_bb22a965",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 280,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-03-26T17:09:43Z",
+      "side": 1,
+      "message": "The body of InitUniformBlockLinker could be replaced with something like:\n\n  for (ShaderType type : AllGraphicsShaderTypes()) {\n    Shader* shader \u003d state.getAttachedShader(type);\n    if (shader !\u003d nullptr) {\n      blockLinker-\u003eaddShaderBlocks(type, shader-\u003egetUniformBlocks());\n    }\n  }",
+      "revId": "f8ede77ff385e15d32f7e7f32327b4af2a1adb5e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "24e1ac4f_e997cff8",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 303,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-03-26T17:09:43Z",
+      "side": 1,
+      "message": "ditto for InitShaderStorageBlockLinker",
+      "revId": "f8ede77ff385e15d32f7e7f32327b4af2a1adb5e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "96feffec_d5c30488",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 870,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-03-26T17:09:43Z",
+      "side": 1,
+      "message": "This function\u0027s body can be replaced with\n\n  ShaderType type \u003d shader-\u003egetType();\n  ASSERT(mState.mAttachedShaders[type] \u003d\u003d nullptr);\n  shader-\u003eaddRef();\n  mState.mAttachedShaders[type] \u003d shader;",
+      "revId": "f8ede77ff385e15d32f7e7f32327b4af2a1adb5e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "39332a6f_70ff894a",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 909,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-03-26T17:09:43Z",
+      "side": 1,
+      "message": "Somthing similar here",
+      "revId": "f8ede77ff385e15d32f7e7f32327b4af2a1adb5e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6bab729e_3ebfafa5",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1208,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-03-26T17:09:43Z",
+      "side": 1,
+      "message": "Could make use of a loop over all shader stages?",
+      "revId": "f8ede77ff385e15d32f7e7f32327b4af2a1adb5e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c4a8279f_dbaf6ac6",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 290,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-03-26T17:09:43Z",
+      "side": 1,
+      "message": "This 4 getters can become a single function takes a ShaderType",
+      "revId": "f8ede77ff385e15d32f7e7f32327b4af2a1adb5e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "db773e2b_efda6ce2",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 368,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-03-26T17:09:43Z",
+      "side": 1,
+      "message": "These 4 members can become a PackedEnumMap",
+      "revId": "f8ede77ff385e15d32f7e7f32327b4af2a1adb5e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2226d12a_95423f2f",
+        "filename": "src/libANGLE/Uniform.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-03-26T17:09:43Z",
+      "side": 1,
+      "message": "IIRC this will become an packed enum bitset in follow patches?",
+      "revId": "f8ede77ff385e15d32f7e7f32327b4af2a1adb5e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c6b8a291_cdf33d91",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2863,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-03-26T17:09:43Z",
+      "side": 1,
+      "message": "the three cases below are the same, can they be coalesced?",
+      "revId": "f8ede77ff385e15d32f7e7f32327b4af2a1adb5e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
