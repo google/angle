@@ -14,6 +14,7 @@
     {
         'angle_unittests_sources':
         [
+            '<(angle_path)/src/common/FixedVector_unittest.cpp',
             '<(angle_path)/src/common/Optional_unittest.cpp',
             '<(angle_path)/src/common/aligned_memory_unittest.cpp',
             '<(angle_path)/src/common/angleutils_unittest.cpp',

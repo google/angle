@@ -10,6 +10,7 @@
         [
             'common/Color.h',
             'common/Color.inl',
+            'common/FixedVector.h',
             'common/Float16ToFloat32.cpp',
             'common/MemoryBuffer.cpp',
             'common/MemoryBuffer.h',

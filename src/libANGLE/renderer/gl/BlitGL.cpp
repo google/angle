@@ -8,6 +8,7 @@
 
 #include "libANGLE/renderer/gl/BlitGL.h"
 
+#include "common/FixedVector.h"
 #include "common/utilities.h"
 #include "common/vector_utils.h"
 #include "image_util/copyimage.h"
@@ -143,9 +144,11 @@ gl::Error SetClearState(StateManagerGL *stateManager,
     return gl::NoError();
 }
 
+using ClearBindTargetVector = angle::FixedVector<GLenum, 3>;
+
 gl::Error PrepareForClear(StateManagerGL *stateManager,
                           GLenum sizedInternalFormat,
-                          std::vector<GLenum> *outBindtargets,
+                          ClearBindTargetVector *outBindtargets,
                           GLbitfield *outClearMask)
 {
     const gl::InternalFormat &internalFormatInfo =
@@ -175,7 +178,7 @@ gl::Error PrepareForClear(StateManagerGL *stateManager,
 
 void UnbindAttachments(const FunctionsGL *functions,
                        GLenum framebufferTarget,
-                       const std::vector<GLenum> &bindTargets)
+                       const ClearBindTargetVector &bindTargets)
 {
     for (GLenum bindTarget : bindTargets)
     {
@@ -729,7 +732,7 @@ gl::ErrorOrResult<bool> BlitGL::clearRenderableTexture(TextureGL *source,
 {
     ANGLE_TRY(initializeResources());
 
-    std::vector<GLenum> bindTargets;
+    ClearBindTargetVector bindTargets;
     GLbitfield clearMask = 0;
     ANGLE_TRY(PrepareForClear(mStateManager, sizedInternalFormat, &bindTargets, &clearMask));
 
@@ -821,7 +824,7 @@ gl::Error BlitGL::clearRenderbuffer(RenderbufferGL *source, GLenum sizedInternal
 {
     ANGLE_TRY(initializeResources());
 
-    std::vector<GLenum> bindTargets;
+    ClearBindTargetVector bindTargets;
     GLbitfield clearMask = 0;
     ANGLE_TRY(PrepareForClear(mStateManager, sizedInternalFormat, &bindTargets, &clearMask));
 
