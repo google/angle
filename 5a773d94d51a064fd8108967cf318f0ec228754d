@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "66d27ef2_23a5cda4",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 652,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-26T14:56:26Z",
+      "side": 1,
+      "message": "could you try to use the gl::RangeUI class to do the allocation instead of introducing this new enum?",
+      "range": {
+        "startLine": 652,
+        "startChar": 44,
+        "endLine": 652,
+        "endChar": 91
+      },
+      "revId": "5a773d94d51a064fd8108967cf318f0ec228754d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1f8ee515_c98fc0a2",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 659,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-26T14:56:26Z",
+      "side": 1,
+      "message": "nit: don\u0027t forget to default init all locals. but you might not need them if you use RangeUI",
+      "range": {
+        "startLine": 659,
+        "startChar": 13,
+        "endLine": 659,
+        "endChar": 31
+      },
+      "revId": "5a773d94d51a064fd8108967cf318f0ec228754d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "adf7f79e_efc979dd",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 872,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-26T14:56:26Z",
+      "side": 1,
+      "message": "this could be done as a follow-up, but Texture updates require us to allocate a new descriptor set for Textures if they are currently in use. We could conservatively allocate a new DS every update here using the new parameters you\u0027re adding to allocateDescriptorSets.",
+      "range": {
+        "startLine": 872,
+        "startChar": 4,
+        "endLine": 872,
+        "endChar": 26
+      },
+      "revId": "5a773d94d51a064fd8108967cf318f0ec228754d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
