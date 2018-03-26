@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "35f613ad_f022eabd",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 591,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-26T19:05:26Z",
+      "side": 1,
+      "message": "I think you want to keep it as \"l-value required\" rather than \"l-value-required\" which isn\u0027t really English",
+      "range": {
+        "startLine": 591,
+        "startChar": 21,
+        "endLine": 591,
+        "endChar": 37
+      },
+      "revId": "4f1e115e10dceaeb888c9118637aac461e252f64",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
