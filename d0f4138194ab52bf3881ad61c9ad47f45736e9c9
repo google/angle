@@ -378,6 +378,30 @@
     },
     {
       "key": {
+        "uuid": "dbfecd9d_6fddb6f0",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 386,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2018-03-26T17:05:48Z",
+      "side": 1,
+      "message": "Yeah, this is a good compromise.",
+      "parentUuid": "79aaf464_627c65c1",
+      "range": {
+        "startLine": 363,
+        "startChar": 0,
+        "endLine": 386,
+        "endChar": 5
+      },
+      "revId": "d0f4138194ab52bf3881ad61c9ad47f45736e9c9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "40188c9a_1368e1fc",
         "filename": "src/tests/test_utils/ANGLETest.h",
         "patchSetId": 3

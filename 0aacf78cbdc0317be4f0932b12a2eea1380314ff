@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "3e1fadf9_c929c933",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2018-03-26T17:05:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "31bd20c4_3e0e60f8",
+      "revId": "0aacf78cbdc0317be4f0932b12a2eea1380314ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "421983ad_f2ed6e76",
         "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
         "patchSetId": 4
@@ -39,6 +57,30 @@
       "revId": "0aacf78cbdc0317be4f0932b12a2eea1380314ff",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7c04d8e2_c4d3aeb7",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2018-03-26T17:05:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "421983ad_f2ed6e76",
+      "range": {
+        "startLine": 34,
+        "startChar": 15,
+        "endLine": 34,
+        "endChar": 28
+      },
+      "revId": "0aacf78cbdc0317be4f0932b12a2eea1380314ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -65,6 +107,30 @@
     },
     {
       "key": {
+        "uuid": "89c516dc_c8903c5a",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2018-03-26T17:05:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "deb80d7a_8bd8cbbd",
+      "range": {
+        "startLine": 36,
+        "startChar": 0,
+        "endLine": 36,
+        "endChar": 1
+      },
+      "revId": "0aacf78cbdc0317be4f0932b12a2eea1380314ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b0141557_25443142",
         "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
         "patchSetId": 4
@@ -85,6 +151,30 @@
       "revId": "0aacf78cbdc0317be4f0932b12a2eea1380314ff",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2db41a92_c4d32ed1",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 264,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2018-03-26T17:05:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b0141557_25443142",
+      "range": {
+        "startLine": 264,
+        "startChar": 38,
+        "endLine": 264,
+        "endChar": 83
+      },
+      "revId": "0aacf78cbdc0317be4f0932b12a2eea1380314ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -111,6 +201,30 @@
     },
     {
       "key": {
+        "uuid": "1c61c894_8c136c27",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 275,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2018-03-26T17:05:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d577c77c_a61c56d1",
+      "range": {
+        "startLine": 274,
+        "startChar": 12,
+        "endLine": 275,
+        "endChar": 50
+      },
+      "revId": "0aacf78cbdc0317be4f0932b12a2eea1380314ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d642c301_2cba8091",
         "filename": "src/tests/perf_tests/DrawCallPerf.cpp",
         "patchSetId": 4
@@ -122,6 +236,30 @@
       "writtenOn": "2018-03-19T20:41:32Z",
       "side": 1,
       "message": "For D3D11 and GL this is \"(true, true), false\"",
+      "range": {
+        "startLine": 195,
+        "startChar": 59,
+        "endLine": 195,
+        "endChar": 78
+      },
+      "revId": "0aacf78cbdc0317be4f0932b12a2eea1380314ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f6175a4c_3863fc73",
+        "filename": "src/tests/perf_tests/DrawCallPerf.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2018-03-26T17:05:48Z",
+      "side": 1,
+      "message": "Hi Yuly,\nDo you want me to add tests for this case? The second param sets renderToTexture and there were no existing Vulkan test cases for that mode so I didn\u0027t add one in the initial change but easily can.",
+      "parentUuid": "d642c301_2cba8091",
       "range": {
         "startLine": 195,
         "startChar": 59,
