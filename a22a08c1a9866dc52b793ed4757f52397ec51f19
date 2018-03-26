@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b284f68d_27f7e9ec",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/VertexArray11.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-26T21:31:32Z",
+      "side": 1,
+      "message": "Is this a bug fix? Should it be a separate CL with the test?",
+      "range": {
+        "startLine": 197,
+        "startChar": 30,
+        "endLine": 197,
+        "endChar": 83
+      },
+      "revId": "a22a08c1a9866dc52b793ed4757f52397ec51f19",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
