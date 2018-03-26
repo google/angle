@@ -143,6 +143,30 @@
     },
     {
       "key": {
+        "uuid": "421f5148_8487e95c",
+        "filename": "src/libANGLE/renderer/gl/RenderbufferGL.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-26T17:56:25Z",
+      "side": 1,
+      "message": "Yeah, it avoids keeping redundant pointers and having to pass extra arguments. Very minor thing but would be nice.",
+      "parentUuid": "e077117c_3ed5f5fd",
+      "range": {
+        "startLine": 116,
+        "startChar": 21,
+        "endLine": 116,
+        "endChar": 38
+      },
+      "revId": "35f3770df41279213b99fdce9e025d00d83aa2dd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "2e3cd9b9_170d72e5",
         "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
         "patchSetId": 25
