@@ -1,0 +1,234 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "68d816b6_4535f732",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-26T15:14:34Z",
+      "side": 1,
+      "message": "now that you\u0027re calling into the XFB object above, you can move this block into the new method.",
+      "range": {
+        "startLine": 139,
+        "startChar": 0,
+        "endLine": 148,
+        "endChar": 9
+      },
+      "revId": "0f8f888087f4a240bbc646808e38af540fb4fa84",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7bb0c07d_c5c23c29",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1035,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-26T15:14:34Z",
+      "side": 1,
+      "message": "can you make this called from gather?",
+      "range": {
+        "startLine": 1035,
+        "startChar": 8,
+        "endLine": 1035,
+        "endChar": 48
+      },
+      "revId": "0f8f888087f4a240bbc646808e38af540fb4fa84",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c0bc1dcc_35ad1b8e",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 437,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-26T15:14:34Z",
+      "side": 1,
+      "message": "nit: ANGLE uses 100 character line width, this could fit on one line.",
+      "range": {
+        "startLine": 435,
+        "startChar": 0,
+        "endLine": 437,
+        "endChar": 14
+      },
+      "revId": "0f8f888087f4a240bbc646808e38af540fb4fa84",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "480f23a0_eb8f93d5",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 438,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-26T15:14:34Z",
+      "side": 1,
+      "message": "maybe \"Strides\" is more succinct than \"PerVertexSizes\"? Or is that already used somewhere?",
+      "range": {
+        "startLine": 438,
+        "startChar": 25,
+        "endLine": 438,
+        "endChar": 57
+      },
+      "revId": "0f8f888087f4a240bbc646808e38af540fb4fa84",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "00cdc8be_82a26bc8",
+        "filename": "src/libANGLE/TransformFeedback.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-26T15:14:34Z",
+      "side": 1,
+      "message": "false doesn\u0027t seem like a normal value for CheckedNumeric\u003cGLsizeiptr\u003e. Maybe 0?",
+      "range": {
+        "startLine": 29,
+        "startChar": 15,
+        "endLine": 29,
+        "endChar": 20
+      },
+      "revId": "0f8f888087f4a240bbc646808e38af540fb4fa84",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "60e7548d_5a28e905",
+        "filename": "src/libANGLE/TransformFeedback.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-26T15:14:34Z",
+      "side": 1,
+      "message": "nit: double space",
+      "range": {
+        "startLine": 31,
+        "startChar": 79,
+        "endLine": 31,
+        "endChar": 81
+      },
+      "revId": "0f8f888087f4a240bbc646808e38af540fb4fa84",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8c20d063_96ae5abb",
+        "filename": "src/libANGLE/TransformFeedback.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-26T15:14:34Z",
+      "side": 1,
+      "message": "you should initialize capacity too",
+      "range": {
+        "startLine": 53,
+        "startChar": 6,
+        "endLine": 53,
+        "endChar": 20
+      },
+      "revId": "0f8f888087f4a240bbc646808e38af540fb4fa84",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5ebcfaa2_07ee9116",
+        "filename": "src/libANGLE/TransformFeedback.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-26T15:14:34Z",
+      "side": 1,
+      "message": "!vertexSizes.empty()",
+      "range": {
+        "startLine": 125,
+        "startChar": 66,
+        "endLine": 125,
+        "endChar": 88
+      },
+      "revId": "0f8f888087f4a240bbc646808e38af540fb4fa84",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "72c1958d_e6cebb2c",
+        "filename": "src/libANGLE/TransformFeedback.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-26T15:14:34Z",
+      "side": 1,
+      "message": "nit: can you replace auto with the type here? In general for simple types (non-templated/decorated), prefer using the real type.",
+      "range": {
+        "startLine": 179,
+        "startChar": 4,
+        "endLine": 179,
+        "endChar": 9
+      },
+      "revId": "0f8f888087f4a240bbc646808e38af540fb4fa84",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "66946e6b_b918d63d",
+        "filename": "src/libANGLE/angletypes.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 345,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-26T15:14:34Z",
+      "side": 1,
+      "message": "nit: this needs a more descriptive name, something like GetBoundBufferAvailableSize",
+      "range": {
+        "startLine": 345,
+        "startChar": 11,
+        "endLine": 345,
+        "endChar": 27
+      },
+      "revId": "0f8f888087f4a240bbc646808e38af540fb4fa84",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
