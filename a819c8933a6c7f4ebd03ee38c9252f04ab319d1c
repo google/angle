@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9ad86bf9_64c9901b",
+        "filename": "third_party/vulkan-validation-layers/BUILD.gn",
+        "patchSetId": 7
+      },
+      "lineNbr": 263,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-26T19:18:33Z",
+      "side": 1,
+      "message": "thanks for removing the ICD dir - can you consolidate these two environment variables into a single one? You can keep ANGLE_VK_LAYERS_DIR if you want. Otherwise something like ANGLE_VK_DATA_DIR is appropriate.",
+      "range": {
+        "startLine": 263,
+        "startChar": 5,
+        "endLine": 263,
+        "endChar": 26
+      },
+      "revId": "a819c8933a6c7f4ebd03ee38c9252f04ab319d1c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
