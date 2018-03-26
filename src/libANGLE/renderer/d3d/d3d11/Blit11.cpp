@@ -1551,7 +1551,7 @@ gl::Error Blit11::copyAndConvert(const TextureHelper11 &source,
     if (mRenderer->getWorkarounds().depthStencilBlitExtraCopy)
     {
         D3D11_MAPPED_SUBRESOURCE mapped;
-        deviceContext->Map(destStaging.get(), 0, D3D11_MAP_READ, 0, &mapped);
+        ANGLE_TRY(mRenderer->mapResource(destStaging.get(), 0, D3D11_MAP_READ, 0, &mapped));
         deviceContext->UpdateSubresource(dest.get(), destSubresource, nullptr, mapped.pData,
                                          mapped.RowPitch, mapped.DepthPitch);
         deviceContext->Unmap(destStaging.get(), 0);
