@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ff8c369c_f2814d5e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 593,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-26T21:25:45Z",
+      "side": 1,
+      "message": "The primitive draw modes in GL start at 0.  Defaulting this to GL_NONE is the same as GL_POINTS.  Maybe a test that draws points first would trigger this.",
+      "range": {
+        "startLine": 593,
+        "startChar": 27,
+        "endLine": 593,
+        "endChar": 34
+      },
+      "revId": "199f6196a4ebe5221237dffe038a5e305e8e421b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
