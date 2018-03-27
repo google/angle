@@ -224,6 +224,64 @@ void main() {
     ASSERT_EQ(floats, expected);
 }
 
+// Test that we can get and set a float array of uniforms.
+TEST_P(SimpleUniformTest, FloatArrayUniformStateQuery)
+{
+    constexpr char kFragShader[] = R"(
+precision mediump float;
+uniform float ufloats[4];
+void main() {
+    gl_FragColor = vec4(ufloats[0], ufloats[1], ufloats[2], ufloats[3]);
+})";
+
+    ANGLE_GL_PROGRAM(program, kBasicVertexShader, kFragShader);
+    glUseProgram(program);
+    std::vector<GLfloat> expected = {{0.1f, 0.2f, 0.3f, 0.4f}};
+
+    for (size_t i = 0; i < expected.size(); i++)
+    {
+        std::string locationName = "ufloats[" + std::to_string(i) + "]";
+        GLint uniformLocation    = glGetUniformLocation(program, locationName.c_str());
+        glUniform1f(uniformLocation, expected[i]);
+        ASSERT_GL_NO_ERROR();
+        ASSERT_NE(uniformLocation, -1);
+
+        GLfloat result = 0;
+        glGetUniformfv(program, uniformLocation, &result);
+        ASSERT_GL_NO_ERROR();
+        ASSERT_EQ(result, expected[i]);
+    }
+}
+
+// Test that we can get and set an int array of uniforms.
+TEST_P(SimpleUniformTest, FloatIntUniformStateQuery)
+{
+    constexpr char kFragShader[] = R"(
+precision mediump float;
+uniform int uints[4];
+void main() {
+    gl_FragColor = vec4(uints[0], uints[1], uints[2], uints[3]);
+})";
+
+    ANGLE_GL_PROGRAM(program, kBasicVertexShader, kFragShader);
+    glUseProgram(program);
+    std::vector<GLint> expected = {{1, 2, 3, 4}};
+
+    for (size_t i = 0; i < expected.size(); i++)
+    {
+        std::string locationName = "uints[" + std::to_string(i) + "]";
+        GLint uniformLocation    = glGetUniformLocation(program, locationName.c_str());
+        glUniform1i(uniformLocation, expected[i]);
+        ASSERT_GL_NO_ERROR();
+        ASSERT_NE(uniformLocation, -1);
+
+        GLint result = 0;
+        glGetUniformiv(program, uniformLocation, &result);
+        ASSERT_GL_NO_ERROR();
+        ASSERT_EQ(result, expected[i]);
+    }
+}
+
 class UniformTest : public ANGLETest
 {
   protected:
