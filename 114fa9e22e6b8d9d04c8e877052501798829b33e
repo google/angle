@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "aa0dccd5_b983c3e0",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-27T14:03:01Z",
+      "side": 1,
+      "message": "This is probably the constant we want to use for the map sizes.  I see \u00272\u0027 is used in a bunch of places in this file so feel free to update it later.",
+      "range": {
+        "startLine": 121,
+        "startChar": 4,
+        "endLine": 121,
+        "endChar": 19
+      },
+      "revId": "114fa9e22e6b8d9d04c8e877052501798829b33e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1f0f42d9_6146eda1",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 781,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-27T14:03:01Z",
+      "side": 1,
+      "message": "Can you add a comment explaining why containing 0 skips things?",
+      "range": {
+        "startLine": 780,
+        "startChar": 0,
+        "endLine": 781,
+        "endChar": 23
+      },
+      "revId": "114fa9e22e6b8d9d04c8e877052501798829b33e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "986747f6_7ee31a38",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.h",
+        "patchSetId": 19
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-27T14:03:01Z",
+      "side": 1,
+      "message": "nit: call it setDefaultUniformBlocksMinSizeForTesting so it\u0027s not possible to mistake it",
+      "range": {
+        "startLine": 126,
+        "startChar": 9,
+        "endLine": 126,
+        "endChar": 39
+      },
+      "revId": "114fa9e22e6b8d9d04c8e877052501798829b33e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e5d88265_343beabe",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.h",
+        "patchSetId": 19
+      },
+      "lineNbr": 163,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-27T14:03:01Z",
+      "side": 1,
+      "message": "nit: can you add a constant kShaderTypeCount for these?",
+      "range": {
+        "startLine": 163,
+        "startChar": 25,
+        "endLine": 163,
+        "endChar": 26
+      },
+      "revId": "114fa9e22e6b8d9d04c8e877052501798829b33e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c5d19988_cc0c0a0a",
+        "filename": "src/libANGLE/renderer/vulkan/StreamingBuffer.h",
+        "patchSetId": 19
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-27T14:03:01Z",
+      "side": 1,
+      "message": "same nit: setMinimumSizeForTesting",
+      "range": {
+        "startLine": 37,
+        "startChar": 9,
+        "endLine": 37,
+        "endChar": 23
+      },
+      "revId": "114fa9e22e6b8d9d04c8e877052501798829b33e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
