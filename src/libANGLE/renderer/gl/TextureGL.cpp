@@ -771,8 +771,14 @@ gl::Error TextureGL::copySubTextureHelper(const gl::Context *context,
         sourceFormatContainSupersetOfDestFormat && sourceComponentType == destComponentType &&
         !destSRGB)
     {
-        return mBlitter->copyTexSubImage(sourceGL, sourceLevel, this, target, level, sourceArea,
-                                         destOffset);
+        bool copySucceded = false;
+        ANGLE_TRY_RESULT(mBlitter->copyTexSubImage(sourceGL, sourceLevel, this, target, level,
+                                                   sourceArea, destOffset),
+                         copySucceded);
+        if (copySucceded)
+        {
+            return gl::NoError();
+        }
     }
 
     // Check if the destination is renderable and copy on the GPU
@@ -780,11 +786,17 @@ gl::Error TextureGL::copySubTextureHelper(const gl::Context *context,
     if (!destSRGB && nativegl::SupportsNativeRendering(mFunctions, getType(),
                                                        destLevelInfo.nativeInternalFormat))
     {
-        return mBlitter->copySubTexture(context, sourceGL, sourceLevel, sourceComponentType, this,
-                                        target, level, destComponentType, sourceImageDesc.size,
-                                        sourceArea, destOffset, needsLumaWorkaround,
-                                        sourceLevelInfo.sourceFormat, unpackFlipY,
-                                        unpackPremultiplyAlpha, unpackUnmultiplyAlpha);
+        bool copySucceded = false;
+        ANGLE_TRY_RESULT(mBlitter->copySubTexture(
+                             context, sourceGL, sourceLevel, sourceComponentType, this, target,
+                             level, destComponentType, sourceImageDesc.size, sourceArea, destOffset,
+                             needsLumaWorkaround, sourceLevelInfo.sourceFormat, unpackFlipY,
+                             unpackPremultiplyAlpha, unpackUnmultiplyAlpha),
+                         copySucceded);
+        if (copySucceded)
+        {
+            return gl::NoError();
+        }
     }
 
     // Fall back to CPU-readback

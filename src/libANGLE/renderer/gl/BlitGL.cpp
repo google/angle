@@ -514,25 +514,36 @@ gl::Error BlitGL::blitColorBufferWithShader(const gl::Framebuffer *source,
     return gl::NoError();
 }
 
-gl::Error BlitGL::copySubTexture(const gl::Context *context,
-                                 TextureGL *source,
-                                 size_t sourceLevel,
-                                 GLenum sourceComponentType,
-                                 TextureGL *dest,
-                                 gl::TextureTarget destTarget,
-                                 size_t destLevel,
-                                 GLenum destComponentType,
-                                 const gl::Extents &sourceSize,
-                                 const gl::Rectangle &sourceArea,
-                                 const gl::Offset &destOffset,
-                                 bool needsLumaWorkaround,
-                                 GLenum lumaFormat,
-                                 bool unpackFlipY,
-                                 bool unpackPremultiplyAlpha,
-                                 bool unpackUnmultiplyAlpha)
+gl::ErrorOrResult<bool> BlitGL::copySubTexture(const gl::Context *context,
+                                               TextureGL *source,
+                                               size_t sourceLevel,
+                                               GLenum sourceComponentType,
+                                               TextureGL *dest,
+                                               gl::TextureTarget destTarget,
+                                               size_t destLevel,
+                                               GLenum destComponentType,
+                                               const gl::Extents &sourceSize,
+                                               const gl::Rectangle &sourceArea,
+                                               const gl::Offset &destOffset,
+                                               bool needsLumaWorkaround,
+                                               GLenum lumaFormat,
+                                               bool unpackFlipY,
+                                               bool unpackPremultiplyAlpha,
+                                               bool unpackUnmultiplyAlpha)
 {
     ASSERT(source->getType() == gl::TextureType::_2D);
     ANGLE_TRY(initializeResources());
+
+    // Make sure the destination texture can be rendered to before setting anything else up.  Some
+    // cube maps may not be renderable until all faces have been filled.
+    mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mScratchFBO);
+    mFunctions->framebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, ToGLenum(destTarget),
+                                     dest->getTextureID(), static_cast<GLint>(destLevel));
+    GLenum status = mFunctions->checkFramebufferStatus(GL_FRAMEBUFFER);
+    if (status != GL_FRAMEBUFFER_COMPLETE)
+    {
+        return false;
+    }
 
     BlitProgramType blitProgramType = getBlitProgramType(sourceComponentType, destComponentType);
     BlitProgram *blitProgram        = nullptr;
@@ -598,14 +609,10 @@ gl::Error BlitGL::copySubTexture(const gl::Context *context,
         mFunctions->uniform1i(blitProgram->unMultiplyAlphaLocation, unpackUnmultiplyAlpha);
     }
 
-    mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mScratchFBO);
-    mFunctions->framebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, ToGLenum(destTarget),
-                                     dest->getTextureID(), static_cast<GLint>(destLevel));
-
     mStateManager->bindVertexArray(mVAO, 0);
     mFunctions->drawArrays(GL_TRIANGLES, 0, 3);
 
-    return gl::NoError();
+    return true;
 }
 
 gl::Error BlitGL::copySubTextureCPUReadback(const gl::Context *context,
@@ -686,19 +693,25 @@ gl::Error BlitGL::copySubTextureCPUReadback(const gl::Context *context,
     return gl::NoError();
 }
 
-gl::Error BlitGL::copyTexSubImage(TextureGL *source,
-                                  size_t sourceLevel,
-                                  TextureGL *dest,
-                                  gl::TextureTarget destTarget,
-                                  size_t destLevel,
-                                  const gl::Rectangle &sourceArea,
-                                  const gl::Offset &destOffset)
+gl::ErrorOrResult<bool> BlitGL::copyTexSubImage(TextureGL *source,
+                                                size_t sourceLevel,
+                                                TextureGL *dest,
+                                                gl::TextureTarget destTarget,
+                                                size_t destLevel,
+                                                const gl::Rectangle &sourceArea,
+                                                const gl::Offset &destOffset)
 {
     ANGLE_TRY(initializeResources());
 
+    // Make sure the source texture can create a complete framebuffer before continuing.
     mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mScratchFBO);
     mFunctions->framebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
                                      source->getTextureID(), static_cast<GLint>(sourceLevel));
+    GLenum status = mFunctions->checkFramebufferStatus(GL_FRAMEBUFFER);
+    if (status != GL_FRAMEBUFFER_COMPLETE)
+    {
+        return false;
+    }
 
     mStateManager->bindTexture(dest->getType(), dest->getTextureID());
 
@@ -706,7 +719,7 @@ gl::Error BlitGL::copyTexSubImage(TextureGL *source,
                                   destOffset.y, sourceArea.x, sourceArea.y, sourceArea.width,
                                   sourceArea.height);
 
-    return gl::NoError();
+    return true;
 }
 
 gl::ErrorOrResult<bool> BlitGL::clearRenderableTexture(TextureGL *source,
