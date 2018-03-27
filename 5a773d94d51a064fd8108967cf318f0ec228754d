@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "6a26e68a_83757a00",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 652,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-27T13:10:10Z",
+      "side": 1,
+      "message": "Yeah, it\u0027s better to use a RangeUI here. We already have enum DescriptorPoolIndex in DynamicDescriptorPool.h. What you should do is start with an empty RangeUI, and call RangeUI::extend(TextureIndex) (or UniformBufferIndex) on reallocation. In this function you don\u0027t care about the type of the sets at all.",
+      "parentUuid": "74cce483_ed2d3412",
+      "range": {
+        "startLine": 652,
+        "startChar": 44,
+        "endLine": 652,
+        "endChar": 91
+      },
+      "revId": "5a773d94d51a064fd8108967cf318f0ec228754d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "1f8ee515_c98fc0a2",
         "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
         "patchSetId": 3
@@ -96,6 +120,29 @@
     },
     {
       "key": {
+        "uuid": "ff7b8ec5_8951e9d8",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 700,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-27T13:10:10Z",
+      "side": 1,
+      "message": "ref",
+      "range": {
+        "startLine": 700,
+        "startChar": 21,
+        "endLine": 700,
+        "endChar": 35
+      },
+      "revId": "5a773d94d51a064fd8108967cf318f0ec228754d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "adf7f79e_efc979dd",
         "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
         "patchSetId": 3
@@ -131,6 +178,30 @@
       "side": 1,
       "message": "am I not already allocating a new descriptor set? \n\nIf you look at line 736, I do call \"allocateDescriptorSets\" before I call this function to make sure I do allocate a new descriptor set for the texture before.",
       "parentUuid": "adf7f79e_efc979dd",
+      "range": {
+        "startLine": 872,
+        "startChar": 4,
+        "endLine": 872,
+        "endChar": 26
+      },
+      "revId": "5a773d94d51a064fd8108967cf318f0ec228754d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f0ca4ded_2c4691ea",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 872,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-27T13:10:10Z",
+      "side": 1,
+      "message": "That\u0027s correct, you\u0027re not. Line 736 is for uniform buffers, not textures.",
+      "parentUuid": "dc2deecf_a26b2501",
       "range": {
         "startLine": 872,
         "startChar": 4,
