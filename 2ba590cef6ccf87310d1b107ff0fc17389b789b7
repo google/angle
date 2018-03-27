@@ -46,6 +46,30 @@
       "revId": "2ba590cef6ccf87310d1b107ff0fc17389b789b7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2c13d1cb_02190ee3",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 269,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-27T13:03:32Z",
+      "side": 1,
+      "message": "Right.. you can remove it in the next patch, when we reallocate Texture descriptor sets on a change. Doesn\u0027t make sense to remove it now.",
+      "parentUuid": "e97d1135_70436b53",
+      "range": {
+        "startLine": 269,
+        "startChar": 4,
+        "endLine": 269,
+        "endChar": 49
+      },
+      "revId": "2ba590cef6ccf87310d1b107ff0fc17389b789b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
