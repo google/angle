@@ -153,40 +153,54 @@ class VertexArray final : public LabeledObject
         return mState.getEnabledAttributesMask();
     }
 
+    // Dirty bits for VertexArrays use a heirarchical design. At the top level, each attribute
+    // has a single dirty bit. Then an array of MAX_ATTRIBS dirty bits each has a dirty bit for
+    // enabled/pointer/format/binding. Bindings are handled similarly. Note that because the
+    // total number of dirty bits is 33, it will not be as fast on a 32-bit machine, which
+    // can't support the advanced 64-bit scanning intrinsics. We could consider packing the
+    // binding and attribute bits together if this becomes a problem.
     enum DirtyBitType
     {
         DIRTY_BIT_ELEMENT_ARRAY_BUFFER,
 
-        // Reserve bits for enabled flags
-        DIRTY_BIT_ATTRIB_0_ENABLED,
-        DIRTY_BIT_ATTRIB_MAX_ENABLED = DIRTY_BIT_ATTRIB_0_ENABLED + gl::MAX_VERTEX_ATTRIBS,
+        // Dirty bits for attributes.
+        DIRTY_BIT_ATTRIB_0,
+        DIRTY_BIT_ATTRIB_MAX = DIRTY_BIT_ATTRIB_0 + gl::MAX_VERTEX_ATTRIBS,
 
-        // Reserve bits for attrib pointers
-        DIRTY_BIT_ATTRIB_0_POINTER   = DIRTY_BIT_ATTRIB_MAX_ENABLED,
-        DIRTY_BIT_ATTRIB_MAX_POINTER = DIRTY_BIT_ATTRIB_0_POINTER + gl::MAX_VERTEX_ATTRIBS,
+        // Dirty bits for bindings.
+        DIRTY_BIT_BINDING_0   = DIRTY_BIT_ATTRIB_MAX,
+        DIRTY_BIT_BINDING_MAX = DIRTY_BIT_BINDING_0 + gl::MAX_VERTEX_ATTRIB_BINDINGS,
 
-        // Reserve bits for changes to VertexAttribFormat
-        DIRTY_BIT_ATTRIB_0_FORMAT   = DIRTY_BIT_ATTRIB_MAX_POINTER,
-        DIRTY_BIT_ATTRIB_MAX_FORMAT = DIRTY_BIT_ATTRIB_0_FORMAT + gl::MAX_VERTEX_ATTRIBS,
-
-        // Reserve bits for changes to VertexAttribBinding
-        DIRTY_BIT_ATTRIB_0_BINDING   = DIRTY_BIT_ATTRIB_MAX_FORMAT,
-        DIRTY_BIT_ATTRIB_MAX_BINDING = DIRTY_BIT_ATTRIB_0_BINDING + gl::MAX_VERTEX_ATTRIBS,
-
-        // Reserve bits for changes to BindVertexBuffer
-        DIRTY_BIT_BINDING_0_BUFFER   = DIRTY_BIT_ATTRIB_MAX_BINDING,
-        DIRTY_BIT_BINDING_MAX_BUFFER = DIRTY_BIT_BINDING_0_BUFFER + gl::MAX_VERTEX_ATTRIB_BINDINGS,
-
-        // Reserve bits for binding divisors
-        DIRTY_BIT_BINDING_0_DIVISOR = DIRTY_BIT_BINDING_MAX_BUFFER,
-        DIRTY_BIT_BINDING_MAX_DIVISOR =
-            DIRTY_BIT_BINDING_0_DIVISOR + gl::MAX_VERTEX_ATTRIB_BINDINGS,
-
-        DIRTY_BIT_UNKNOWN = DIRTY_BIT_BINDING_MAX_DIVISOR,
+        DIRTY_BIT_UNKNOWN = DIRTY_BIT_BINDING_MAX,
         DIRTY_BIT_MAX     = DIRTY_BIT_UNKNOWN,
     };
 
+    // We want to keep the number of dirty bits within 64 to keep iteration times fast.
+    static_assert(DIRTY_BIT_MAX <= 64, "Too many vertex array dirty bits.");
+
+    enum DirtyAttribBitType
+    {
+        DIRTY_ATTRIB_ENABLED,
+        DIRTY_ATTRIB_POINTER,
+        DIRTY_ATTRIB_FORMAT,
+        DIRTY_ATTRIB_BINDING,
+        DIRTY_ATTRIB_UNKNOWN,
+        DIRTY_ATTRIB_MAX = DIRTY_ATTRIB_UNKNOWN,
+    };
+
+    enum DirtyBindingBitType
+    {
+        DIRTY_BINDING_BUFFER,
+        DIRTY_BINDING_DIVISOR,
+        DIRTY_BINDING_UNKNOWN,
+        DIRTY_BINDING_MAX = DIRTY_BINDING_UNKNOWN,
+    };
+
     using DirtyBits = angle::BitSet<DIRTY_BIT_MAX>;
+    using DirtyAttribBits       = angle::BitSet<DIRTY_ATTRIB_MAX>;
+    using DirtyBindingBits      = angle::BitSet<DIRTY_BINDING_MAX>;
+    using DirtyAttribBitsArray  = std::array<DirtyAttribBits, gl::MAX_VERTEX_ATTRIBS>;
+    using DirtyBindingBitsArray = std::array<DirtyBindingBits, gl::MAX_VERTEX_ATTRIB_BINDINGS>;
 
     static size_t GetVertexIndexFromDirtyBit(size_t dirtyBit);
 
@@ -201,10 +215,15 @@ class VertexArray final : public LabeledObject
   private:
     ~VertexArray() override;
 
+    void setDirtyAttribBit(size_t attribIndex, DirtyAttribBitType dirtyAttribBit);
+    void setDirtyBindingBit(size_t bindingIndex, DirtyBindingBitType dirtyBindingBit);
+
     GLuint mId;
 
     VertexArrayState mState;
     DirtyBits mDirtyBits;
+    DirtyAttribBitsArray mDirtyAttribBits;
+    DirtyBindingBitsArray mDirtyBindingBits;
 
     rx::VertexArrayImpl *mVertexArray;
 };

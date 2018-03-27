@@ -111,7 +111,19 @@ size_t VertexArray::GetVertexIndexFromDirtyBit(size_t dirtyBit)
     static_assert(gl::MAX_VERTEX_ATTRIBS == gl::MAX_VERTEX_ATTRIB_BINDINGS,
                   "The stride of vertex attributes should equal to that of vertex bindings.");
     ASSERT(dirtyBit > DIRTY_BIT_ELEMENT_ARRAY_BUFFER);
-    return (dirtyBit - DIRTY_BIT_ATTRIB_0_ENABLED) % gl::MAX_VERTEX_ATTRIBS;
+    return (dirtyBit - DIRTY_BIT_ATTRIB_0) % gl::MAX_VERTEX_ATTRIBS;
+}
+
+void VertexArray::setDirtyAttribBit(size_t attribIndex, DirtyAttribBitType dirtyAttribBit)
+{
+    mDirtyBits.set(DIRTY_BIT_ATTRIB_0 + attribIndex);
+    mDirtyAttribBits[attribIndex].set(dirtyAttribBit);
+}
+
+void VertexArray::setDirtyBindingBit(size_t bindingIndex, DirtyBindingBitType dirtyBindingBit)
+{
+    mDirtyBits.set(DIRTY_BIT_BINDING_0 + bindingIndex);
+    mDirtyBindingBits[bindingIndex].set(dirtyBindingBit);
 }
 
 void VertexArray::bindVertexBufferImpl(const Context *context,
@@ -137,8 +149,7 @@ void VertexArray::bindVertexBuffer(const Context *context,
                                    GLsizei stride)
 {
     bindVertexBufferImpl(context, bindingIndex, boundBuffer, offset, stride);
-
-    mDirtyBits.set(DIRTY_BIT_BINDING_0_BUFFER + bindingIndex);
+    setDirtyBindingBit(bindingIndex, DIRTY_BINDING_BUFFER);
 }
 
 void VertexArray::setVertexAttribBinding(const Context *context,
@@ -153,8 +164,9 @@ void VertexArray::setVertexAttribBinding(const Context *context,
         ASSERT(context->getClientVersion() >= ES_3_1);
         mState.mVertexAttributes[attribIndex].bindingIndex = bindingIndex;
 
-        mDirtyBits.set(DIRTY_BIT_ATTRIB_0_BINDING + attribIndex);
+        setDirtyAttribBit(attribIndex, DIRTY_ATTRIB_BINDING);
     }
+    mState.mVertexAttributes[attribIndex].bindingIndex = static_cast<GLuint>(bindingIndex);
 }
 
 void VertexArray::setVertexBindingDivisor(size_t bindingIndex, GLuint divisor)
@@ -162,8 +174,7 @@ void VertexArray::setVertexBindingDivisor(size_t bindingIndex, GLuint divisor)
     ASSERT(bindingIndex < getMaxBindings());
 
     mState.mVertexBindings[bindingIndex].setDivisor(divisor);
-
-    mDirtyBits.set(DIRTY_BIT_BINDING_0_DIVISOR + bindingIndex);
+    setDirtyBindingBit(bindingIndex, DIRTY_BINDING_DIVISOR);
 }
 
 void VertexArray::setVertexAttribFormatImpl(size_t attribIndex,
@@ -194,8 +205,7 @@ void VertexArray::setVertexAttribFormat(size_t attribIndex,
                                         GLuint relativeOffset)
 {
     setVertexAttribFormatImpl(attribIndex, size, type, normalized, pureInteger, relativeOffset);
-
-    mDirtyBits.set(DIRTY_BIT_ATTRIB_0_FORMAT + attribIndex);
+    setDirtyAttribBit(attribIndex, DIRTY_ATTRIB_FORMAT);
 }
 
 void VertexArray::setVertexAttribDivisor(const Context *context, size_t attribIndex, GLuint divisor)
@@ -214,7 +224,7 @@ void VertexArray::enableAttribute(size_t attribIndex, bool enabledState)
     mState.mVertexAttributesTypeMask.setIndex(
         GetVertexAttributeBaseType(mState.mVertexAttributes[attribIndex]), attribIndex);
 
-    mDirtyBits.set(DIRTY_BIT_ATTRIB_0_ENABLED + attribIndex);
+    setDirtyAttribBit(attribIndex, DIRTY_ATTRIB_ENABLED);
 
     // Update state cache
     mState.mEnabledAttributesMask.set(attribIndex, enabledState);
@@ -246,7 +256,7 @@ void VertexArray::setVertexAttribPointer(const Context *context,
 
     bindVertexBufferImpl(context, attribIndex, boundBuffer, offset, effectiveStride);
 
-    mDirtyBits.set(DIRTY_BIT_ATTRIB_0_POINTER + attribIndex);
+    setDirtyAttribBit(attribIndex, DIRTY_ATTRIB_POINTER);
 }
 
 void VertexArray::setElementArrayBuffer(const Context *context, Buffer *buffer)
@@ -264,8 +274,15 @@ void VertexArray::syncState(const Context *context)
 {
     if (mDirtyBits.any())
     {
-        mVertexArray->syncState(context, mDirtyBits);
+        mVertexArray->syncState(context, mDirtyBits, mDirtyAttribBits, mDirtyBindingBits);
         mDirtyBits.reset();
+
+        // This is a bit of an implementation hack - but since we know the implementation
+        // details of the dirty bit class it should always have the same effect as iterating
+        // individual attribs. We could also look into schemes where iterating the dirty
+        // bit set also resets it as you pass through it.
+        memset(&mDirtyAttribBits, 0, sizeof(mDirtyAttribBits));
+        memset(&mDirtyBindingBits, 0, sizeof(mDirtyBindingBits));
     }
 }
 

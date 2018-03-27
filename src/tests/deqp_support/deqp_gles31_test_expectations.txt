@@ -1603,6 +1603,9 @@
 2272 WIN NVIDIA OPENGL : dEQP-GLES31.functional.ssbo.layout.random.nested_structs* = FAIL
 2272 WIN NVIDIA OPENGL : dEQP-GLES31.functional.ssbo.layout.random.all* = FAIL
 
+// An NVIDIA bug seems to occur when sending GL commands in a certain order to the driver
+2432 NVIDIA OPENGL : dEQP-GLES31.functional.vertex_attribute_binding.usage.mixed_usage.mixed_api_change_binding_point = SKIP
+
 // OpenGL and D3D11 Failing Tests
 1442 OPENGL D3D11 : dEQP-GLES31.functional.shaders.opaque_type_indexing.* = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.shaders.helper_invocation.* = FAIL

@@ -640,56 +640,99 @@ void VertexArrayGL::updateBindingDivisor(size_t bindingIndex)
     mAppliedBindings[bindingIndex].setDivisor(adjustedDivisor);
 }
 
-void VertexArrayGL::syncState(const gl::Context *context, const VertexArray::DirtyBits &dirtyBits)
+void VertexArrayGL::syncDirtyAttrib(const gl::Context *context,
+                                    size_t attribIndex,
+                                    const gl::VertexArray::DirtyAttribBits &dirtyAttribBits)
+{
+    ASSERT(dirtyAttribBits.any());
+
+    for (size_t dirtyBit : dirtyAttribBits)
+    {
+        switch (dirtyBit)
+        {
+            case VertexArray::DIRTY_ATTRIB_ENABLED:
+                updateAttribEnabled(attribIndex);
+                break;
+
+            case VertexArray::DIRTY_ATTRIB_POINTER:
+                updateAttribPointer(context, attribIndex);
+                break;
+
+            case VertexArray::DIRTY_ATTRIB_FORMAT:
+                ASSERT(supportVertexAttribBinding());
+                updateAttribFormat(attribIndex);
+                break;
+
+            case VertexArray::DIRTY_ATTRIB_BINDING:
+                ASSERT(supportVertexAttribBinding());
+                updateAttribBinding(attribIndex);
+                break;
+
+            default:
+                UNREACHABLE();
+                break;
+        }
+    }
+}
+
+void VertexArrayGL::syncDirtyBinding(const gl::Context *context,
+                                     size_t bindingIndex,
+                                     const gl::VertexArray::DirtyBindingBits &dirtyBindingBits)
+{
+    ASSERT(dirtyBindingBits.any());
+
+    for (size_t dirtyBit : dirtyBindingBits)
+    {
+        switch (dirtyBit)
+        {
+            case VertexArray::DIRTY_BINDING_BUFFER:
+                ASSERT(supportVertexAttribBinding());
+                updateBindingBuffer(context, bindingIndex);
+                break;
+
+            case VertexArray::DIRTY_BINDING_DIVISOR:
+                updateBindingDivisor(bindingIndex);
+                break;
+
+            default:
+                UNREACHABLE();
+                break;
+        }
+    }
+}
+
+void VertexArrayGL::syncState(const gl::Context *context,
+                              const VertexArray::DirtyBits &dirtyBits,
+                              const gl::VertexArray::DirtyAttribBitsArray &attribBits,
+                              const gl::VertexArray::DirtyBindingBitsArray &bindingBits)
 {
     mStateManager->bindVertexArray(mVertexArrayID, getAppliedElementArrayBufferID());
 
     for (size_t dirtyBit : dirtyBits)
     {
-        if (dirtyBit == VertexArray::DIRTY_BIT_ELEMENT_ARRAY_BUFFER)
+        switch (dirtyBit)
         {
-            updateElementArrayBufferBinding(context);
-            continue;
-        }
+            case VertexArray::DIRTY_BIT_ELEMENT_ARRAY_BUFFER:
+                updateElementArrayBufferBinding(context);
+                break;
 
-        size_t index = VertexArray::GetVertexIndexFromDirtyBit(dirtyBit);
-        if (dirtyBit >= VertexArray::DIRTY_BIT_ATTRIB_0_ENABLED &&
-            dirtyBit < VertexArray::DIRTY_BIT_ATTRIB_MAX_ENABLED)
-        {
-            updateAttribEnabled(index);
+            default:
+            {
+                ASSERT(dirtyBit >= VertexArray::DIRTY_BIT_ATTRIB_0);
+                size_t index = VertexArray::GetVertexIndexFromDirtyBit(dirtyBit);
+                if (dirtyBit < VertexArray::DIRTY_BIT_ATTRIB_MAX)
+                {
+                    syncDirtyAttrib(context, index, attribBits[index]);
+                }
+                else
+                {
+                    ASSERT(dirtyBit >= VertexArray::DIRTY_BIT_BINDING_0 &&
+                           dirtyBit < VertexArray::DIRTY_BIT_BINDING_MAX);
+                    syncDirtyBinding(context, index, bindingBits[index]);
+                }
+                break;
+            }
         }
-        else if (dirtyBit >= VertexArray::DIRTY_BIT_ATTRIB_0_POINTER &&
-                 dirtyBit < VertexArray::DIRTY_BIT_ATTRIB_MAX_POINTER)
-        {
-            updateAttribPointer(context, index);
-        }
-
-        else if (dirtyBit >= VertexArray::DIRTY_BIT_ATTRIB_0_FORMAT &&
-                 dirtyBit < VertexArray::DIRTY_BIT_ATTRIB_MAX_FORMAT)
-        {
-            ASSERT(supportVertexAttribBinding());
-            updateAttribFormat(index);
-        }
-        else if (dirtyBit >= VertexArray::DIRTY_BIT_ATTRIB_0_BINDING &&
-                 dirtyBit < VertexArray::DIRTY_BIT_ATTRIB_MAX_BINDING)
-        {
-            ASSERT(supportVertexAttribBinding());
-            updateAttribBinding(index);
-        }
-        else if (dirtyBit >= VertexArray::DIRTY_BIT_BINDING_0_BUFFER &&
-                 dirtyBit < VertexArray::DIRTY_BIT_BINDING_MAX_BUFFER)
-        {
-            ASSERT(supportVertexAttribBinding());
-            updateBindingBuffer(context, index);
-        }
-
-        else if (dirtyBit >= VertexArray::DIRTY_BIT_BINDING_0_DIVISOR &&
-                 dirtyBit < VertexArray::DIRTY_BIT_BINDING_MAX_DIVISOR)
-        {
-            updateBindingDivisor(index);
-        }
-        else
-            UNREACHABLE();
     }
 }
 

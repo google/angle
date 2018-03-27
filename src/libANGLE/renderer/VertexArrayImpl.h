@@ -21,7 +21,10 @@ class VertexArrayImpl : angle::NonCopyable
 {
   public:
     VertexArrayImpl(const gl::VertexArrayState &state) : mState(state) {}
-    virtual void syncState(const gl::Context *context, const gl::VertexArray::DirtyBits &dirtyBits)
+    virtual void syncState(const gl::Context *context,
+                           const gl::VertexArray::DirtyBits &dirtyBits,
+                           const gl::VertexArray::DirtyAttribBitsArray &attribBits,
+                           const gl::VertexArray::DirtyBindingBitsArray &bindingBits)
     {
     }
 
@@ -32,6 +35,6 @@ class VertexArrayImpl : angle::NonCopyable
     const gl::VertexArrayState &mState;
 };
 
-}
+}  // namespace rx
 
 #endif // LIBANGLE_RENDERER_VERTEXARRAYIMPL_H_

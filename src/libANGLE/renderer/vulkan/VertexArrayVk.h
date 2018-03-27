@@ -32,7 +32,9 @@ class VertexArrayVk : public VertexArrayImpl
                                size_t firstVertex,
                                size_t lastVertex);
     void syncState(const gl::Context *context,
-                   const gl::VertexArray::DirtyBits &dirtyBits) override;
+                   const gl::VertexArray::DirtyBits &dirtyBits,
+                   const gl::VertexArray::DirtyAttribBitsArray &attribBits,
+                   const gl::VertexArray::DirtyBindingBitsArray &bindingBits) override;
 
     const gl::AttribArray<VkBuffer> &getCurrentArrayBufferHandles() const;
     const gl::AttribArray<VkDeviceSize> &getCurrentArrayBufferOffsets() const;

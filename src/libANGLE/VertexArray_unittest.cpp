@@ -19,7 +19,7 @@ using namespace gl;
 TEST(VertexArrayTest, VerifyGetIndexFromDirtyBit)
 {
     VertexArray::DirtyBits dirtyBits;
-    constexpr size_t bits[] = {1, 4, 9, 16, 25, 36, 49, 64, 81, 92};
+    constexpr size_t bits[] = {1, 4, 9, 16, 25};
     constexpr GLint count   = sizeof(bits) / sizeof(size_t);
     for (GLint i = 0; i < count; i++)
     {
@@ -29,29 +29,13 @@ TEST(VertexArrayTest, VerifyGetIndexFromDirtyBit)
     for (size_t dirtyBit : dirtyBits)
     {
         const size_t index = VertexArray::GetVertexIndexFromDirtyBit(dirtyBit);
-        if (dirtyBit < VertexArray::DIRTY_BIT_ATTRIB_MAX_ENABLED)
+        if (dirtyBit < VertexArray::DIRTY_BIT_ATTRIB_MAX)
         {
-            EXPECT_EQ(dirtyBit - VertexArray::DIRTY_BIT_ATTRIB_0_ENABLED, index);
+            EXPECT_EQ(dirtyBit - VertexArray::DIRTY_BIT_ATTRIB_0, index);
         }
-        else if (dirtyBit < VertexArray::DIRTY_BIT_ATTRIB_MAX_POINTER)
+        else if (dirtyBit < VertexArray::DIRTY_BIT_BINDING_MAX)
         {
-            EXPECT_EQ(dirtyBit - VertexArray::DIRTY_BIT_ATTRIB_0_POINTER, index);
-        }
-        else if (dirtyBit < VertexArray::DIRTY_BIT_ATTRIB_MAX_FORMAT)
-        {
-            EXPECT_EQ(dirtyBit - VertexArray::DIRTY_BIT_ATTRIB_0_FORMAT, index);
-        }
-        else if (dirtyBit < VertexArray::DIRTY_BIT_ATTRIB_MAX_BINDING)
-        {
-            EXPECT_EQ(dirtyBit - VertexArray::DIRTY_BIT_ATTRIB_0_BINDING, index);
-        }
-        else if (dirtyBit < VertexArray::DIRTY_BIT_BINDING_MAX_BUFFER)
-        {
-            EXPECT_EQ(dirtyBit - VertexArray::DIRTY_BIT_BINDING_0_BUFFER, index);
-        }
-        else if (dirtyBit < VertexArray::DIRTY_BIT_BINDING_MAX_DIVISOR)
-        {
-            EXPECT_EQ(dirtyBit - VertexArray::DIRTY_BIT_BINDING_0_DIVISOR, index);
+            EXPECT_EQ(dirtyBit - VertexArray::DIRTY_BIT_BINDING_0, index);
         }
         else
             ASSERT_TRUE(false);

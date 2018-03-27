@@ -27,7 +27,9 @@ class VertexArray11 : public angle::ObserverInterface, public VertexArrayImpl
     void destroy(const gl::Context *context) override;
 
     void syncState(const gl::Context *context,
-                   const gl::VertexArray::DirtyBits &dirtyBits) override;
+                   const gl::VertexArray::DirtyBits &dirtyBits,
+                   const gl::VertexArray::DirtyAttribBitsArray &attribBits,
+                   const gl::VertexArray::DirtyBindingBitsArray &bindingBits) override;
     // This will flush any pending attrib updates and then check the dynamic attribs mask.
     bool hasActiveDynamicAttrib(const gl::Context *context);
     gl::Error updateDirtyAndDynamicAttribs(const gl::Context *context,
