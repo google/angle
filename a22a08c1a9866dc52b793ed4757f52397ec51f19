@@ -22,6 +22,30 @@
       "revId": "a22a08c1a9866dc52b793ed4757f52397ec51f19",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7b042082_88cf5cea",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/VertexArray11.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-27T15:03:18Z",
+      "side": 1,
+      "message": "Good eye, it is a somewhat unreleated fix. The impact is that in some cases, where you\u0027re using a lot of \u0027current value\u0027 attributes and updating dependent buffers that are attached to disabled attributes, this will be very marginally faster. :)\n\nCould still split it off.",
+      "parentUuid": "b284f68d_27f7e9ec",
+      "range": {
+        "startLine": 197,
+        "startChar": 30,
+        "endLine": 197,
+        "endChar": 83
+      },
+      "revId": "a22a08c1a9866dc52b793ed4757f52397ec51f19",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
