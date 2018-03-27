@@ -2,6 +2,52 @@
   "comments": [
     {
       "key": {
+        "uuid": "e5548729_feb9ec60",
+        "filename": "src/libANGLE/ErrorStrings.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 208,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-27T15:09:53Z",
+      "side": 1,
+      "message": "nit: can you sort this alphabetically?",
+      "range": {
+        "startLine": 208,
+        "startChar": 0,
+        "endLine": 208,
+        "endChar": 42
+      },
+      "revId": "6363d5b844b4303cc83b87c48a2896fabd81f447",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "175104fe_0d9ddb4d",
+        "filename": "src/libANGLE/validationES1.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-27T15:09:53Z",
+      "side": 1,
+      "message": "this pattern happens a lost (if !test -\u003e ANGLE_VALIDATION_ERR, return false)\n\nI think it\u0027s a good idea to macro-ize it, though maybe we could generalize it at some point.\n\nFor now can you just use an ANGLE_ prefix for your macro?",
+      "range": {
+        "startLine": 15,
+        "startChar": 8,
+        "endLine": 15,
+        "endChar": 25
+      },
+      "revId": "6363d5b844b4303cc83b87c48a2896fabd81f447",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "54f6586e_7ce647e6",
         "filename": "src/libANGLE/validationES1.cpp",
         "patchSetId": 6
