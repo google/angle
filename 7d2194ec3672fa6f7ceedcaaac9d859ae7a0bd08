@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "207ad379_c7f53908",
+        "filename": "README.chromium",
+        "patchSetId": 2
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-03-27T19:49:10Z",
+      "side": 1,
+      "message": "It doesn\u0027t actually open with an \"s\"",
+      "range": {
+        "startLine": 2,
+        "startChar": 9,
+        "endLine": 2,
+        "endChar": 10
+      },
+      "revId": "7d2194ec3672fa6f7ceedcaaac9d859ae7a0bd08",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "833cf3a7_3197252b",
+        "filename": "README.chromium",
+        "patchSetId": 2
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-03-27T19:49:10Z",
+      "side": 1,
+      "message": "I wonder what this number means.",
+      "range": {
+        "startLine": 3,
+        "startChar": 9,
+        "endLine": 3,
+        "endChar": 13
+      },
+      "revId": "7d2194ec3672fa6f7ceedcaaac9d859ae7a0bd08",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "63ff2e1c_bdaeb6ab",
+        "filename": "README.chromium",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-03-27T19:49:10Z",
+      "side": 1,
+      "message": "seems a bit outdated",
+      "range": {
+        "startLine": 8,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 56
+      },
+      "revId": "7d2194ec3672fa6f7ceedcaaac9d859ae7a0bd08",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

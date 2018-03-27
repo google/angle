@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f6b76aa4_523593e0",
+        "filename": "LICENSE",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-03-27T19:49:10Z",
+      "side": 1,
+      "message": "I think you can remove the whitespace here.",
+      "range": {
+        "startLine": 11,
+        "startChar": 62,
+        "endLine": 11,
+        "endChar": 63
+      },
+      "revId": "f36d75ae25cae98ead376ff196efe1c9f0f3bf1d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "efbb6f0c_fbd58158",
+        "filename": "LICENSE",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-03-27T19:49:10Z",
+      "side": 1,
+      "message": "and here",
+      "range": {
+        "startLine": 22,
+        "startChar": 68,
+        "endLine": 22,
+        "endChar": 69
+      },
+      "revId": "f36d75ae25cae98ead376ff196efe1c9f0f3bf1d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
