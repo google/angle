@@ -633,8 +633,16 @@ gl::Error BlitGL::copySubTextureCPUReadback(const gl::Context *context,
                                             bool unpackPremultiplyAlpha,
                                             bool unpackUnmultiplyAlpha)
 {
+    ANGLE_TRY(initializeResources());
+
     ASSERT(source->getType() == gl::TextureType::_2D);
     const auto &destInternalFormatInfo = gl::GetInternalFormatInfo(destFormat, destType);
+
+    mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mScratchFBO);
+    mFunctions->framebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+                                     source->getTextureID(), static_cast<GLint>(sourceLevel));
+    GLenum status = mFunctions->checkFramebufferStatus(GL_FRAMEBUFFER);
+    ASSERT(status == GL_FRAMEBUFFER_COMPLETE);
 
     // Create a buffer for holding the source and destination memory
     const size_t sourcePixelSize = 4;
@@ -646,9 +654,6 @@ gl::Error BlitGL::copySubTextureCPUReadback(const gl::Context *context,
     uint8_t *sourceMemory = buffer->data();
     uint8_t *destMemory   = buffer->data() + sourceBufferSize;
 
-    mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mScratchFBO);
-    mFunctions->framebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
-                                     source->getTextureID(), static_cast<GLint>(sourceLevel));
 
     GLenum readPixelsFormat        = GL_NONE;
     ColorReadFunction readFunction = nullptr;
@@ -689,6 +694,7 @@ gl::Error BlitGL::copySubTextureCPUReadback(const gl::Context *context,
     nativegl::TexSubImageFormat texSubImageFormat =
         nativegl::GetTexSubImageFormat(mFunctions, mWorkarounds, destFormat, destType);
 
+    mStateManager->bindTexture(dest->getType(), dest->getTextureID());
     mFunctions->texSubImage2D(ToGLenum(destTarget), static_cast<GLint>(destLevel), destOffset.x,
                               destOffset.y, sourceArea.width, sourceArea.height,
                               texSubImageFormat.format, texSubImageFormat.type, destMemory);

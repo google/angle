@@ -1288,6 +1288,29 @@ TEST_P(CopyTextureTestES3, ES3UnormFormats)
         testOutput(destTexture, expectedColor);
     };
 
+    auto testSubCopyCombination = [this, testOutput](
+                                      GLenum sourceInternalFormat, GLenum sourceFormat,
+                                      GLenum sourceType, const GLColor &sourceColor,
+                                      GLenum destInternalFormat, GLenum destFormat, GLenum destType,
+                                      bool flipY, bool premultiplyAlpha, bool unmultiplyAlpha,
+                                      const GLColor &expectedColor) {
+
+        GLTexture sourceTexture;
+        glBindTexture(GL_TEXTURE_2D, sourceTexture);
+        glTexImage2D(GL_TEXTURE_2D, 0, sourceInternalFormat, 1, 1, 0, sourceFormat, sourceType,
+                     &sourceColor);
+
+        GLTexture destTexture;
+        glBindTexture(GL_TEXTURE_2D, destTexture);
+
+        glTexImage2D(GL_TEXTURE_2D, 0, destInternalFormat, 1, 1, 0, destFormat, destType, nullptr);
+        glCopySubTextureCHROMIUM(sourceTexture, 0, GL_TEXTURE_2D, destTexture, 0, 0, 0, 0, 0, 1, 1,
+                                 flipY, premultiplyAlpha, unmultiplyAlpha);
+        ASSERT_GL_NO_ERROR();
+
+        testOutput(destTexture, expectedColor);
+    };
+
     // New LUMA source formats
     testCopyCombination(GL_LUMINANCE, GL_LUMINANCE, GL_UNSIGNED_BYTE, GLColor(128, 0, 0, 0), GL_RGB,
                         GL_UNSIGNED_BYTE, false, false, false, GLColor(128, 128, 128, 255));
@@ -1315,6 +1338,14 @@ TEST_P(CopyTextureTestES3, ES3UnormFormats)
     testCopyCombination(GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, GLColor(128, 64, 32, 128),
                         GL_SRGB_ALPHA_EXT, GL_UNSIGNED_BYTE, false, false, false,
                         GLColor(55, 13, 4, 128));
+
+    testSubCopyCombination(GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, GLColor(128, 64, 32, 128), GL_SRGB,
+                           GL_SRGB, GL_UNSIGNED_BYTE, false, false, false, GLColor(55, 13, 4, 255));
+    testSubCopyCombination(GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, GLColor(128, 64, 32, 128), GL_SRGB,
+                           GL_SRGB, GL_UNSIGNED_BYTE, false, true, false, GLColor(13, 4, 1, 255));
+    testSubCopyCombination(GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, GLColor(128, 64, 32, 128),
+                           GL_SRGB_ALPHA_EXT, GL_SRGB_ALPHA_EXT, GL_UNSIGNED_BYTE, false, false,
+                           false, GLColor(55, 13, 4, 128));
 }
 
 // Test the newly added ES3 float formats
