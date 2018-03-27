@@ -148,8 +148,6 @@ class Renderer11 : public RendererD3D
                                    HANDLE shareHandle,
                                    const egl::AttributeMap &attribs) const override;
 
-    bool applyPrimitiveType(const gl::State &glState, GLenum mode, GLsizei count);
-
     // lost device
     bool testDeviceLost() override;
     bool testDeviceResettable() override;

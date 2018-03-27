@@ -185,6 +185,12 @@ size_t GetReservedBufferCount(bool usesPointSpriteEmulation)
 {
     return usesPointSpriteEmulation ? 1 : 0;
 }
+
+bool CullsEverything(const gl::State &glState)
+{
+    return (glState.getRasterizerState().cullFace &&
+            glState.getRasterizerState().cullMode == gl::CullFaceMode::FrontAndBack);
+}
 }  // anonymous namespace
 
 // StateManager11::ViewCache Implementation.
@@ -585,6 +591,8 @@ StateManager11::StateManager11(Renderer11 *renderer)
       mVertexAttribsNeedTranslation(false),
       mDirtyVertexBufferRange(gl::MAX_VERTEX_ATTRIBS, 0),
       mCurrentPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_UNDEFINED),
+      mLastAppliedDrawMode(GL_INVALID_INDEX),
+      mCurrentMinimumDrawCount(0),
       mDirtySwizzles(false),
       mAppliedIB(nullptr),
       mAppliedIBFormat(DXGI_FORMAT_UNKNOWN),
@@ -923,18 +931,21 @@ void StateManager11::syncState(const gl::Context *context, const gl::State::Dirt
                 if (state.getRasterizerState().cullFace != mCurRasterState.cullFace)
                 {
                     mInternalDirtyBits.set(DIRTY_BIT_RASTERIZER_STATE);
+                    mInternalDirtyBits.set(DIRTY_BIT_PRIMITIVE_TOPOLOGY);
                 }
                 break;
             case gl::State::DIRTY_BIT_CULL_FACE:
                 if (state.getRasterizerState().cullMode != mCurRasterState.cullMode)
                 {
                     mInternalDirtyBits.set(DIRTY_BIT_RASTERIZER_STATE);
+                    mInternalDirtyBits.set(DIRTY_BIT_PRIMITIVE_TOPOLOGY);
                 }
                 break;
             case gl::State::DIRTY_BIT_FRONT_FACE:
                 if (state.getRasterizerState().frontFace != mCurRasterState.frontFace)
                 {
                     mInternalDirtyBits.set(DIRTY_BIT_RASTERIZER_STATE);
+                    mInternalDirtyBits.set(DIRTY_BIT_PRIMITIVE_TOPOLOGY);
                 }
                 break;
             case gl::State::DIRTY_BIT_POLYGON_OFFSET_FILL_ENABLED:
@@ -1020,7 +1031,8 @@ void StateManager11::syncState(const gl::Context *context, const gl::State::Dirt
                 break;
             case gl::State::DIRTY_BIT_PROGRAM_EXECUTABLE:
             {
-                mInternalDirtyBits.set(DIRTY_BIT_SHADERS);
+                mInternalDirtyBits.set(DIRTY_BIT_PRIMITIVE_TOPOLOGY);
+                invalidateShaders();
                 invalidateVertexBuffer();
                 invalidateRenderTarget();
                 invalidateTexturesAndSamplers();
@@ -1205,11 +1217,12 @@ gl::Error StateManager11::syncDepthStencilState(const gl::State &glState)
     return gl::NoError();
 }
 
-gl::Error StateManager11::syncRasterizerState(const gl::Context *context, bool pointDrawMode)
+gl::Error StateManager11::syncRasterizerState(const gl::Context *context,
+                                              const gl::DrawCallParams &drawCallParams)
 {
     // TODO: Remove pointDrawMode and multiSample from gl::RasterizerState.
     gl::RasterizerState rasterState = context->getGLState().getRasterizerState();
-    rasterState.pointDrawMode       = pointDrawMode;
+    rasterState.pointDrawMode       = (drawCallParams.mode() == GL_POINTS);
     rasterState.multiSample         = mCurRasterState.multiSample;
 
     ID3D11RasterizerState *dxRasterState = nullptr;
@@ -2011,15 +2024,6 @@ gl::Error StateManager11::updateState(const gl::Context *context,
     Framebuffer11 *framebuffer11 = GetImplAs<Framebuffer11>(framebuffer);
     ANGLE_TRY(framebuffer11->markAttachmentsDirty(context));
 
-    bool pointDrawMode = (drawCallParams.mode() == GL_POINTS);
-    if (pointDrawMode != mCurRasterState.pointDrawMode)
-    {
-        mInternalDirtyBits.set(DIRTY_BIT_RASTERIZER_STATE);
-
-        // Changing from points to not points (or vice-versa) affects the geometry shader.
-        invalidateShaders();
-    }
-
     // TODO(jiawei.shao@intel.com): This can be recomputed only on framebuffer or multisample mask
     // state changes.
     RenderTarget11 *firstRT = framebuffer11->getFirstRenderTarget();
@@ -2036,6 +2040,21 @@ gl::Error StateManager11::updateState(const gl::Context *context,
     if (vao11->flushAttribUpdates(context))
     {
         mInternalDirtyBits.set(DIRTY_BIT_SHADERS);
+    }
+
+    if (mLastAppliedDrawMode != drawCallParams.mode())
+    {
+        mLastAppliedDrawMode = drawCallParams.mode();
+        mInternalDirtyBits.set(DIRTY_BIT_PRIMITIVE_TOPOLOGY);
+
+        bool pointDrawMode = (drawCallParams.mode() == GL_POINTS);
+        if (pointDrawMode != mCurRasterState.pointDrawMode)
+        {
+            mInternalDirtyBits.set(DIRTY_BIT_RASTERIZER_STATE);
+
+            // Changing from points to not points (or vice-versa) affects the geometry shader.
+            invalidateShaders();
+        }
     }
 
     auto dirtyBitsCopy = mInternalDirtyBits;
@@ -2055,7 +2074,7 @@ gl::Error StateManager11::updateState(const gl::Context *context,
                 syncScissorRectangle(glState.getScissor(), glState.isScissorTestEnabled());
                 break;
             case DIRTY_BIT_RASTERIZER_STATE:
-                ANGLE_TRY(syncRasterizerState(context, pointDrawMode));
+                ANGLE_TRY(syncRasterizerState(context, drawCallParams));
                 break;
             case DIRTY_BIT_BLEND_STATE:
                 ANGLE_TRY(syncBlendState(context, framebuffer, glState.getBlendState(),
@@ -2086,6 +2105,9 @@ gl::Error StateManager11::updateState(const gl::Context *context,
                 break;
             case DIRTY_BIT_TRANSFORM_FEEDBACK:
                 ANGLE_TRY(syncTransformFeedbackBuffers(context));
+                break;
+            case DIRTY_BIT_PRIMITIVE_TOPOLOGY:
+                syncPrimitiveTopology(glState, programD3D, drawCallParams.mode());
                 break;
             default:
                 UNREACHABLE();
@@ -2121,10 +2143,23 @@ void StateManager11::setShaderResource(gl::ShaderType shaderType,
 
 void StateManager11::setPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY primitiveTopology)
 {
+    if (setPrimitiveTopologyInternal(primitiveTopology))
+    {
+        mInternalDirtyBits.set(DIRTY_BIT_PRIMITIVE_TOPOLOGY);
+    }
+}
+
+bool StateManager11::setPrimitiveTopologyInternal(D3D11_PRIMITIVE_TOPOLOGY primitiveTopology)
+{
     if (primitiveTopology != mCurrentPrimitiveTopology)
     {
         mRenderer->getDeviceContext()->IASetPrimitiveTopology(primitiveTopology);
         mCurrentPrimitiveTopology = primitiveTopology;
+        return true;
+    }
+    else
+    {
+        return false;
     }
 }
 
@@ -3433,6 +3468,78 @@ void StateManager11::OnConstantBufferDirtyReceiver::reset()
     {
         psBinding.bind(nullptr);
     }
+}
+
+void StateManager11::syncPrimitiveTopology(const gl::State &glState,
+                                           ProgramD3D *programD3D,
+                                           GLenum currentDrawMode)
+{
+    D3D11_PRIMITIVE_TOPOLOGY primitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_UNDEFINED;
+
+    switch (currentDrawMode)
+    {
+        case GL_POINTS:
+        {
+            bool usesPointSize = programD3D->usesPointSize();
+
+            // ProgramBinary assumes non-point rendering if gl_PointSize isn't written,
+            // which affects varying interpolation. Since the value of gl_PointSize is
+            // undefined when not written, just skip drawing to avoid unexpected results.
+            if (!usesPointSize && !glState.isTransformFeedbackActiveUnpaused())
+            {
+                // Notify developers of risking undefined behavior.
+                WARN() << "Point rendering without writing to gl_PointSize.";
+                mCurrentMinimumDrawCount = std::numeric_limits<GLsizei>::max();
+                return;
+            }
+
+            // If instanced pointsprites are enabled and the shader uses gl_PointSize, the topology
+            // must be D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST.
+            if (usesPointSize && mRenderer->getWorkarounds().useInstancedPointSpriteEmulation)
+            {
+                primitiveTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+            }
+            else
+            {
+                primitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_POINTLIST;
+            }
+            mCurrentMinimumDrawCount = 1;
+            break;
+        }
+        case GL_LINES:
+            primitiveTopology        = D3D_PRIMITIVE_TOPOLOGY_LINELIST;
+            mCurrentMinimumDrawCount = 2;
+            break;
+        case GL_LINE_LOOP:
+            primitiveTopology        = D3D_PRIMITIVE_TOPOLOGY_LINESTRIP;
+            mCurrentMinimumDrawCount = 2;
+            break;
+        case GL_LINE_STRIP:
+            primitiveTopology        = D3D_PRIMITIVE_TOPOLOGY_LINESTRIP;
+            mCurrentMinimumDrawCount = 2;
+            break;
+        case GL_TRIANGLES:
+            primitiveTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+            mCurrentMinimumDrawCount =
+                CullsEverything(glState) ? std::numeric_limits<GLsizei>::max() : 3;
+            break;
+        case GL_TRIANGLE_STRIP:
+            primitiveTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
+            mCurrentMinimumDrawCount =
+                CullsEverything(glState) ? std::numeric_limits<GLsizei>::max() : 3;
+            break;
+        // emulate fans via rewriting index buffer
+        case GL_TRIANGLE_FAN:
+            primitiveTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+            mCurrentMinimumDrawCount =
+                CullsEverything(glState) ? std::numeric_limits<GLsizei>::max() : 3;
+            break;
+        default:
+            UNREACHABLE();
+            break;
+    }
+
+    setPrimitiveTopologyInternal(primitiveTopology);
 }
 
 }  // namespace rx

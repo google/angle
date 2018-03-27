@@ -251,6 +251,8 @@ class StateManager11 final : angle::NonCopyable
     // Only used in testing.
     InputLayoutCache *getInputLayoutCache() { return &mInputLayoutCache; }
 
+    GLsizei getCurrentMinimumDrawCount() const { return mCurrentMinimumDrawCount; }
+
   private:
     template <typename SRVType>
     void setShaderResourceInternal(gl::ShaderType shaderType,
@@ -276,7 +278,8 @@ class StateManager11 final : angle::NonCopyable
 
     gl::Error syncDepthStencilState(const gl::State &glState);
 
-    gl::Error syncRasterizerState(const gl::Context *context, bool pointDrawMode);
+    gl::Error syncRasterizerState(const gl::Context *context,
+                                  const gl::DrawCallParams &drawCallParams);
 
     void syncScissorRectangle(const gl::Rectangle &scissor, bool enabled);
 
@@ -344,6 +347,10 @@ class StateManager11 final : angle::NonCopyable
                                  UINT stride,
                                  UINT offset);
     void applyVertexBufferChanges();
+    bool setPrimitiveTopologyInternal(D3D11_PRIMITIVE_TOPOLOGY primitiveTopology);
+    void syncPrimitiveTopology(const gl::State &glState,
+                               ProgramD3D *programD3D,
+                               GLenum currentDrawMode);
 
     enum DirtyBitType
     {
@@ -360,6 +367,7 @@ class StateManager11 final : angle::NonCopyable
         DIRTY_BIT_SHADERS,
         DIRTY_BIT_CURRENT_VALUE_ATTRIBS,
         DIRTY_BIT_TRANSFORM_FEEDBACK,
+        DIRTY_BIT_PRIMITIVE_TOPOLOGY,
         DIRTY_BIT_INVALID,
         DIRTY_BIT_MAX = DIRTY_BIT_INVALID,
     };
@@ -479,6 +487,8 @@ class StateManager11 final : angle::NonCopyable
 
     // Currently applied primitive topology
     D3D11_PRIMITIVE_TOPOLOGY mCurrentPrimitiveTopology;
+    GLenum mLastAppliedDrawMode;
+    GLsizei mCurrentMinimumDrawCount;
 
     // Currently applied shaders
     ResourceSerial mAppliedVertexShader;

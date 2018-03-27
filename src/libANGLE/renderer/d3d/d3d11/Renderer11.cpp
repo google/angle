@@ -407,12 +407,6 @@ void PopulateFormatDeviceCaps(ID3D11Device *device,
     }
 }
 
-bool CullsEverything(const gl::State &glState)
-{
-    return (glState.getRasterizerState().cullFace &&
-            glState.getRasterizerState().cullMode == gl::CullFaceMode::FrontAndBack);
-}
-
 }  // anonymous namespace
 
 Renderer11DeviceCaps::Renderer11DeviceCaps() = default;
@@ -1404,85 +1398,14 @@ void *Renderer11::getD3DDevice()
     return reinterpret_cast<void *>(mDevice);
 }
 
-bool Renderer11::applyPrimitiveType(const gl::State &glState, GLenum mode, GLsizei count)
-{
-    D3D11_PRIMITIVE_TOPOLOGY primitiveTopology = D3D_PRIMITIVE_TOPOLOGY_UNDEFINED;
-
-    GLsizei minCount = 0;
-
-    switch (mode)
-    {
-        case GL_POINTS:
-        {
-            bool usesPointSize = GetImplAs<ProgramD3D>(glState.getProgram())->usesPointSize();
-
-            // ProgramBinary assumes non-point rendering if gl_PointSize isn't written,
-            // which affects varying interpolation. Since the value of gl_PointSize is
-            // undefined when not written, just skip drawing to avoid unexpected results.
-            if (!usesPointSize && !glState.isTransformFeedbackActiveUnpaused())
-            {
-                // Notify developers of risking undefined behavior.
-                WARN() << "Point rendering without writing to gl_PointSize.";
-                return false;
-            }
-
-            // If instanced pointsprites are enabled and the shader uses gl_PointSize, the topology
-            // must be D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST.
-            if (usesPointSize && getWorkarounds().useInstancedPointSpriteEmulation)
-            {
-                primitiveTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-            }
-            else
-            {
-                primitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_POINTLIST;
-            }
-            minCount = 1;
-            break;
-        }
-        case GL_LINES:
-            primitiveTopology = D3D_PRIMITIVE_TOPOLOGY_LINELIST;
-            minCount          = 2;
-            break;
-        case GL_LINE_LOOP:
-            primitiveTopology = D3D_PRIMITIVE_TOPOLOGY_LINESTRIP;
-            minCount          = 2;
-            break;
-        case GL_LINE_STRIP:
-            primitiveTopology = D3D_PRIMITIVE_TOPOLOGY_LINESTRIP;
-            minCount          = 2;
-            break;
-        case GL_TRIANGLES:
-            primitiveTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-            minCount          = CullsEverything(glState) ? std::numeric_limits<GLsizei>::max() : 3;
-            break;
-        case GL_TRIANGLE_STRIP:
-            primitiveTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
-            minCount          = CullsEverything(glState) ? std::numeric_limits<GLsizei>::max() : 3;
-            break;
-        // emulate fans via rewriting index buffer
-        case GL_TRIANGLE_FAN:
-            primitiveTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-            minCount          = CullsEverything(glState) ? std::numeric_limits<GLsizei>::max() : 3;
-            break;
-        default:
-            UNREACHABLE();
-            return false;
-    }
-
-    mStateManager.setPrimitiveTopology(primitiveTopology);
-
-    return count >= minCount;
-}
-
 gl::Error Renderer11::drawArrays(const gl::Context *context, const gl::DrawCallParams &params)
 {
-    const auto &glState = context->getGLState();
-
-    if (!applyPrimitiveType(glState, params.mode(), params.vertexCount()))
+    if (params.vertexCount() < mStateManager.getCurrentMinimumDrawCount())
     {
         return gl::NoError();
     }
 
+    const auto &glState = context->getGLState();
     if (glState.isTransformFeedbackActiveUnpaused())
     {
         ANGLE_TRY(markTransformFeedbackUsage(context));
@@ -1602,15 +1525,14 @@ gl::Error Renderer11::drawArrays(const gl::Context *context, const gl::DrawCallP
 
 gl::Error Renderer11::drawElements(const gl::Context *context, const gl::DrawCallParams &params)
 {
-    const auto &glState = context->getGLState();
-
-    if (!applyPrimitiveType(glState, params.mode(), params.indexCount()))
+    if (params.indexCount() < mStateManager.getCurrentMinimumDrawCount())
     {
         return gl::NoError();
     }
 
     // Transform feedback is not allowed for DrawElements, this error should have been caught at the
     // API validation layer.
+    const auto &glState = context->getGLState();
     ASSERT(!glState.isTransformFeedbackActiveUnpaused());
 
     bool usePrimitiveRestartWorkaround =
@@ -1693,13 +1615,13 @@ gl::Error Renderer11::drawElements(const gl::Context *context, const gl::DrawCal
 gl::Error Renderer11::drawArraysIndirect(const gl::Context *context,
                                          const gl::DrawCallParams &params)
 {
-    const auto &glState = context->getGLState();
-    ASSERT(!glState.isTransformFeedbackActiveUnpaused());
-
-    if (!applyPrimitiveType(glState, params.mode(), std::numeric_limits<int>::max() - 1))
+    if (std::numeric_limits<GLsizei>::max() == mStateManager.getCurrentMinimumDrawCount())
     {
         return gl::NoError();
     }
+
+    const gl::State &glState = context->getGLState();
+    ASSERT(!glState.isTransformFeedbackActiveUnpaused());
 
     ANGLE_TRY(mStateManager.applyVertexBuffer(context, params));
 
@@ -1718,13 +1640,13 @@ gl::Error Renderer11::drawArraysIndirect(const gl::Context *context,
 gl::Error Renderer11::drawElementsIndirect(const gl::Context *context,
                                            const gl::DrawCallParams &params)
 {
-    const auto &glState = context->getGLState();
-    ASSERT(!glState.isTransformFeedbackActiveUnpaused());
-
-    if (!applyPrimitiveType(glState, params.mode(), std::numeric_limits<int>::max() - 1))
+    if (std::numeric_limits<GLsizei>::max() == mStateManager.getCurrentMinimumDrawCount())
     {
         return gl::NoError();
     }
+
+    const gl::State &glState = context->getGLState();
+    ASSERT(!glState.isTransformFeedbackActiveUnpaused());
 
     gl::Buffer *drawIndirectBuffer = glState.getTargetBuffer(gl::BufferBinding::DrawIndirect);
     ASSERT(drawIndirectBuffer);
