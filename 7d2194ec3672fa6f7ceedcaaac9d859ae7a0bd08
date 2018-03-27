@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "3b82ca65_81836122",
+        "filename": "LICENSE",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-03-27T20:35:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e7c97f39_29f9e7b5",
+      "range": {
+        "startLine": 1,
+        "startChar": 13,
+        "endLine": 1,
+        "endChar": 22
+      },
+      "revId": "7d2194ec3672fa6f7ceedcaaac9d859ae7a0bd08",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "207ad379_c7f53908",
         "filename": "README.chromium",
         "patchSetId": 2
@@ -45,6 +69,30 @@
       "revId": "7d2194ec3672fa6f7ceedcaaac9d859ae7a0bd08",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "32b9c97d_f54ae381",
+        "filename": "README.chromium",
+        "patchSetId": 2
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-03-27T20:35:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "207ad379_c7f53908",
+      "range": {
+        "startLine": 2,
+        "startChar": 9,
+        "endLine": 2,
+        "endChar": 10
+      },
+      "revId": "7d2194ec3672fa6f7ceedcaaac9d859ae7a0bd08",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -83,6 +131,30 @@
       "side": 1,
       "message": "Nothing.. we ditched version numbers a long time ago. Can replace it with \u0027unknown\u0027",
       "parentUuid": "833cf3a7_3197252b",
+      "range": {
+        "startLine": 3,
+        "startChar": 9,
+        "endLine": 3,
+        "endChar": 13
+      },
+      "revId": "7d2194ec3672fa6f7ceedcaaac9d859ae7a0bd08",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "83d9441b_6c82394d",
+        "filename": "README.chromium",
+        "patchSetId": 2
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-03-27T20:35:03Z",
+      "side": 1,
+      "message": "If unknown, should we just remove that field?",
+      "parentUuid": "cc094ee1_73ecf280",
       "range": {
         "startLine": 3,
         "startChar": 9,
@@ -139,6 +211,30 @@
       "revId": "7d2194ec3672fa6f7ceedcaaac9d859ae7a0bd08",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "13e57e4f_03a18e7c",
+        "filename": "README.chromium",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-03-27T20:35:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "917fb751_3f23be4a",
+      "range": {
+        "startLine": 8,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 56
+      },
+      "revId": "7d2194ec3672fa6f7ceedcaaac9d859ae7a0bd08",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
