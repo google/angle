@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "0f590434_37e1a9b1",
+        "filename": "src/libANGLE/Compiler.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-03-27T07:05:22Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "38c6cd5f_b7c5c3f3",
+      "revId": "f8ede77ff385e15d32f7e7f32327b4af2a1adb5e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c1781ae8_bb22a965",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 4
@@ -33,6 +51,24 @@
       "revId": "f8ede77ff385e15d32f7e7f32327b4af2a1adb5e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5d65611c_f16bef2d",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 280,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-03-27T07:05:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c1781ae8_bb22a965",
+      "revId": "f8ede77ff385e15d32f7e7f32327b4af2a1adb5e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "53e436c3_7f89eec6",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 303,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-03-27T07:05:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "24e1ac4f_e997cff8",
+      "revId": "f8ede77ff385e15d32f7e7f32327b4af2a1adb5e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "96feffec_d5c30488",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 4
@@ -64,6 +118,24 @@
       "writtenOn": "2018-03-26T17:09:43Z",
       "side": 1,
       "message": "This function\u0027s body can be replaced with\n\n  ShaderType type \u003d shader-\u003egetType();\n  ASSERT(mState.mAttachedShaders[type] \u003d\u003d nullptr);\n  shader-\u003eaddRef();\n  mState.mAttachedShaders[type] \u003d shader;",
+      "revId": "f8ede77ff385e15d32f7e7f32327b4af2a1adb5e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "89c95500_51a8abee",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 870,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-03-27T07:05:22Z",
+      "side": 1,
+      "message": "I will do it in the patch that introduces ShaderMap, where mState.mAttachedShaders is implemented by ShaderMap\u003cgl::Shader\u003e.",
+      "parentUuid": "96feffec_d5c30488",
       "revId": "f8ede77ff385e15d32f7e7f32327b4af2a1adb5e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "4e4a9c4a_2ac470e3",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 909,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-03-27T07:05:22Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "39332a6f_70ff894a",
+      "revId": "f8ede77ff385e15d32f7e7f32327b4af2a1adb5e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6bab729e_3ebfafa5",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 4
@@ -101,6 +191,24 @@
       "revId": "f8ede77ff385e15d32f7e7f32327b4af2a1adb5e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "161cff8a_ab27d11f",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1208,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-03-27T07:05:22Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "6bab729e_3ebfafa5",
+      "revId": "f8ede77ff385e15d32f7e7f32327b4af2a1adb5e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -121,6 +229,24 @@
     },
     {
       "key": {
+        "uuid": "7d44941d_e3329f51",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 290,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-03-27T07:05:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c4a8279f_dbaf6ac6",
+      "revId": "f8ede77ff385e15d32f7e7f32327b4af2a1adb5e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "db773e2b_efda6ce2",
         "filename": "src/libANGLE/Program.h",
         "patchSetId": 4
@@ -135,6 +261,24 @@
       "revId": "f8ede77ff385e15d32f7e7f32327b4af2a1adb5e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1ba20dba_326a9977",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 368,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-03-27T07:05:22Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "db773e2b_efda6ce2",
+      "revId": "f8ede77ff385e15d32f7e7f32327b4af2a1adb5e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -155,6 +299,24 @@
     },
     {
       "key": {
+        "uuid": "4f574fc1_0c427960",
+        "filename": "src/libANGLE/Uniform.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-03-27T07:05:22Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "2226d12a_95423f2f",
+      "revId": "f8ede77ff385e15d32f7e7f32327b4af2a1adb5e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c6b8a291_cdf33d91",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 4
@@ -166,6 +328,24 @@
       "writtenOn": "2018-03-26T17:09:43Z",
       "side": 1,
       "message": "the three cases below are the same, can they be coalesced?",
+      "revId": "f8ede77ff385e15d32f7e7f32327b4af2a1adb5e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2d03af9f_0bda05cc",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2863,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-03-27T07:05:22Z",
+      "side": 1,
+      "message": "Yes. I will do it when ShaderMap is introduced and used in ShaderExecutable11.",
+      "parentUuid": "c6b8a291_cdf33d91",
       "revId": "f8ede77ff385e15d32f7e7f32327b4af2a1adb5e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
