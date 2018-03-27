@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1f52feff_678ee160",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 788,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-27T15:05:01Z",
+      "side": 1,
+      "message": "looks like a typo here",
+      "range": {
+        "startLine": 788,
+        "startChar": 0,
+        "endLine": 788,
+        "endChar": 1
+      },
+      "revId": "0f6065ea384c6539a13e20d11893d05211ea5588",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
