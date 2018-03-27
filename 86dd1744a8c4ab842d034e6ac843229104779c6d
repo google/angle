@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4a395d44_406a4db7",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 749,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-27T13:15:11Z",
+      "side": 1,
+      "message": "this could be replaced with an ASSERT and a static_cast when you do your patch to make a ShaderTypeMap.",
+      "range": {
+        "startLine": 736,
+        "startChar": 0,
+        "endLine": 749,
+        "endChar": 5
+      },
+      "revId": "86dd1744a8c4ab842d034e6ac843229104779c6d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "74391a24_fbb0f21e",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-27T13:15:11Z",
+      "side": 1,
+      "message": "can you do a follow-up work to remove this enum and use gl::ShaderType?",
+      "range": {
+        "startLine": 142,
+        "startChar": 13,
+        "endLine": 142,
+        "endChar": 25
+      },
+      "revId": "86dd1744a8c4ab842d034e6ac843229104779c6d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
