@@ -22,6 +22,53 @@
       "revId": "199f6196a4ebe5221237dffe038a5e305e8e421b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "079ff9f1_e77f2b6f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 593,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-27T13:50:40Z",
+      "side": 1,
+      "message": "Good catch - this isn\u0027t something that could trigger a bug right now since all state is initially marked dirty. I changed this to GL_INVALID_INDEX but no test is possible.",
+      "parentUuid": "ff8c369c_f2814d5e",
+      "range": {
+        "startLine": 593,
+        "startChar": 27,
+        "endLine": 593,
+        "endChar": 34
+      },
+      "revId": "199f6196a4ebe5221237dffe038a5e305e8e421b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d96ff6fc_19aa8ea8",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 646,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-27T13:50:40Z",
+      "side": 1,
+      "message": "ref",
+      "range": {
+        "startLine": 646,
+        "startChar": 4,
+        "endLine": 646,
+        "endChar": 29
+      },
+      "revId": "199f6196a4ebe5221237dffe038a5e305e8e421b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
