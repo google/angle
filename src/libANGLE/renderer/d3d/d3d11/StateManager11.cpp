@@ -3262,7 +3262,7 @@ gl::Error StateManager11::syncUniformBuffers(const gl::Context *context, Program
     ID3D11DeviceContext *deviceContext   = mRenderer->getDeviceContext();
     ID3D11DeviceContext1 *deviceContext1 = mRenderer->getDeviceContext1IfSupported();
 
-    mOnConstantBufferDirtyReceiver.reset();
+    mConstantBufferObserver.reset();
 
     for (size_t bufferIndex = 0; bufferIndex < vertexUniformBuffers.size(); bufferIndex++)
     {
@@ -3317,7 +3317,7 @@ gl::Error StateManager11::syncUniformBuffers(const gl::Context *context, Program
         mCurrentConstantBufferVSOffset[appliedIndex] = uniformBufferOffset;
         mCurrentConstantBufferVSSize[appliedIndex]   = uniformBufferSize;
 
-        mOnConstantBufferDirtyReceiver.bindVS(bufferIndex, bufferStorage);
+        mConstantBufferObserver.bindVS(bufferIndex, bufferStorage);
     }
 
     for (size_t bufferIndex = 0; bufferIndex < fragmentUniformBuffers.size(); bufferIndex++)
@@ -3372,7 +3372,7 @@ gl::Error StateManager11::syncUniformBuffers(const gl::Context *context, Program
         mCurrentConstantBufferPSOffset[appliedIndex] = uniformBufferOffset;
         mCurrentConstantBufferPSSize[appliedIndex]   = uniformBufferSize;
 
-        mOnConstantBufferDirtyReceiver.bindPS(bufferIndex, bufferStorage);
+        mConstantBufferObserver.bindPS(bufferIndex, bufferStorage);
     }
 
     return gl::NoError();
@@ -3414,8 +3414,8 @@ gl::Error StateManager11::syncTransformFeedbackBuffers(const gl::Context *contex
     return gl::NoError();
 }
 
-// OnConstantBufferDirtyReceiver implementation.
-StateManager11::OnConstantBufferDirtyReceiver::OnConstantBufferDirtyReceiver()
+// ConstantBufferObserver implementation.
+StateManager11::ConstantBufferObserver::ConstantBufferObserver()
 {
     for (size_t vsIndex = 0; vsIndex < gl::IMPLEMENTATION_MAX_VERTEX_SHADER_UNIFORM_BUFFERS;
          ++vsIndex)
@@ -3430,34 +3430,37 @@ StateManager11::OnConstantBufferDirtyReceiver::OnConstantBufferDirtyReceiver()
     }
 }
 
-StateManager11::OnConstantBufferDirtyReceiver::~OnConstantBufferDirtyReceiver()
+StateManager11::ConstantBufferObserver::~ConstantBufferObserver()
 {
 }
 
-void StateManager11::OnConstantBufferDirtyReceiver::onSubjectStateChange(
-    const gl::Context *context,
-    angle::SubjectIndex index,
-    angle::SubjectMessage message)
+void StateManager11::ConstantBufferObserver::onSubjectStateChange(const gl::Context *context,
+                                                                  angle::SubjectIndex index,
+                                                                  angle::SubjectMessage message)
 {
-    StateManager11 *stateManager = GetImplAs<Context11>(context)->getRenderer()->getStateManager();
-    stateManager->invalidateProgramUniformBuffers();
+    if (message == angle::SubjectMessage::STORAGE_CHANGED)
+    {
+        StateManager11 *stateManager =
+            GetImplAs<Context11>(context)->getRenderer()->getStateManager();
+        stateManager->invalidateProgramUniformBuffers();
+    }
 }
 
-void StateManager11::OnConstantBufferDirtyReceiver::bindVS(size_t index, Buffer11 *buffer)
+void StateManager11::ConstantBufferObserver::bindVS(size_t index, Buffer11 *buffer)
 {
     ASSERT(buffer);
     ASSERT(index < mBindingsVS.size());
-    mBindingsVS[index].bind(buffer->getDirectSubject());
+    mBindingsVS[index].bind(buffer);
 }
 
-void StateManager11::OnConstantBufferDirtyReceiver::bindPS(size_t index, Buffer11 *buffer)
+void StateManager11::ConstantBufferObserver::bindPS(size_t index, Buffer11 *buffer)
 {
     ASSERT(buffer);
     ASSERT(index < mBindingsPS.size());
-    mBindingsPS[index].bind(buffer->getDirectSubject());
+    mBindingsPS[index].bind(buffer);
 }
 
-void StateManager11::OnConstantBufferDirtyReceiver::reset()
+void StateManager11::ConstantBufferObserver::reset()
 {
     for (angle::ObserverBinding &vsBinding : mBindingsVS)
     {

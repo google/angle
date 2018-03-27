@@ -353,9 +353,9 @@ Error FramebufferAttachmentObject::getAttachmentRenderTarget(
     return getAttachmentImpl()->getAttachmentRenderTarget(context, binding, imageIndex, rtOut);
 }
 
-void FramebufferAttachmentObject::onStateChange(const gl::Context *context) const
+void FramebufferAttachmentObject::onStorageChange(const gl::Context *context) const
 {
-    return getAttachmentImpl()->onStateChange(context, angle::SubjectMessage::STATE_CHANGE);
+    return getAttachmentImpl()->onStateChange(context, angle::SubjectMessage::STORAGE_CHANGED);
 }
 
 angle::Subject *FramebufferAttachmentObject::getSubject() const

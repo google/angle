@@ -84,7 +84,7 @@ gl::Error BufferVk::setData(const gl::Context *context,
         ANGLE_TRY(setDataImpl(contextVk, static_cast<const uint8_t *>(data), size, 0));
     }
 
-    onStateChange(context, angle::SubjectMessage::STATE_CHANGE);
+    onStateChange(context, angle::SubjectMessage::STORAGE_CHANGED);
     return gl::NoError();
 }
 
@@ -100,7 +100,7 @@ gl::Error BufferVk::setSubData(const gl::Context *context,
     ContextVk *contextVk = vk::GetImpl(context);
     ANGLE_TRY(setDataImpl(contextVk, static_cast<const uint8_t *>(data), size, offset));
 
-    onStateChange(context, angle::SubjectMessage::STATE_CHANGE);
+    onStateChange(context, angle::SubjectMessage::STORAGE_CHANGED);
     return gl::NoError();
 }
 
@@ -124,7 +124,7 @@ gl::Error BufferVk::map(const gl::Context *context, GLenum access, void **mapPtr
     ANGLE_TRY(
         mBufferMemory.map(device, 0, mState.getSize(), 0, reinterpret_cast<uint8_t **>(mapPtr)));
 
-    onStateChange(context, angle::SubjectMessage::STATE_CHANGE);
+    onStateChange(context, angle::SubjectMessage::STORAGE_CHANGED);
     return gl::NoError();
 }
 
@@ -141,7 +141,7 @@ gl::Error BufferVk::mapRange(const gl::Context *context,
 
     ANGLE_TRY(mBufferMemory.map(device, offset, length, 0, reinterpret_cast<uint8_t **>(mapPtr)));
 
-    onStateChange(context, angle::SubjectMessage::STATE_CHANGE);
+    onStateChange(context, angle::SubjectMessage::STORAGE_CHANGED);
     return gl::NoError();
 }
 
@@ -154,7 +154,7 @@ gl::Error BufferVk::unmap(const gl::Context *context, GLboolean *result)
 
     mBufferMemory.unmap(device);
 
-    onStateChange(context, angle::SubjectMessage::STATE_CHANGE);
+    onStateChange(context, angle::SubjectMessage::STORAGE_CHANGED);
     return gl::NoError();
 }
 

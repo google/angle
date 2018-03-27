@@ -18,26 +18,6 @@ using namespace angle;
 
 namespace rx
 {
-
-namespace
-{
-angle::Subject *GetBufferSubject(Buffer11 *buffer11, IndexStorageType storageType)
-{
-    switch (storageType)
-    {
-        case IndexStorageType::Direct:
-            return buffer11->getDirectSubject();
-        case IndexStorageType::Static:
-            return buffer11->getStaticSubject();
-        case IndexStorageType::Dynamic:
-            return buffer11 ? buffer11->getStaticSubject() : nullptr;
-        default:
-            UNREACHABLE();
-            return nullptr;
-    }
-}
-}  // anonymous namespace
-
 VertexArray11::VertexArray11(const gl::VertexArrayState &data)
     : VertexArrayImpl(data),
       mAttributeStorageTypes(data.getMaxAttribs(), VertexStorageType::CURRENT_VALUE),
@@ -157,10 +137,8 @@ bool VertexArray11::updateElementArrayStorage(const gl::Context *context,
     {
         Buffer11 *newBuffer11 = SafeGetImplAs<Buffer11>(newBuffer);
 
-        angle::Subject *subject = GetBufferSubject(newBuffer11, newStorageType);
-
         mCurrentElementArrayStorage = newStorageType;
-        mOnElementArrayBufferDataDirty.bind(subject);
+        mOnElementArrayBufferDataDirty.bind(newBuffer11);
         needsTranslation = true;
     }
 
@@ -216,38 +194,18 @@ void VertexArray11::updateVertexAttribStorage(const gl::Context *context, size_t
     stateManager->invalidateVertexAttributeTranslation();
 
     gl::Buffer *oldBufferGL = mCurrentArrayBuffers[attribIndex].get();
-    gl::Buffer *newBufferGL = binding.getBuffer().get();
+    gl::Buffer *newBufferGL = attrib.enabled ? binding.getBuffer().get() : nullptr;
     Buffer11 *oldBuffer11   = oldBufferGL ? GetImplAs<Buffer11>(oldBufferGL) : nullptr;
     Buffer11 *newBuffer11   = newBufferGL ? GetImplAs<Buffer11>(newBufferGL) : nullptr;
 
     if (oldBuffer11 != newBuffer11 || oldStorageType != newStorageType)
     {
-        angle::Subject *subject = nullptr;
-
         if (newStorageType == VertexStorageType::CURRENT_VALUE)
         {
             stateManager->invalidateCurrentValueAttrib(attribIndex);
         }
-        else if (newBuffer11 != nullptr)
-        {
-            // Note that for static callbacks, promotion to a static buffer from a dynamic buffer
-            // means we need to tag dynamic buffers with static callbacks.
-            switch (newStorageType)
-            {
-                case VertexStorageType::DIRECT:
-                    subject = newBuffer11->getDirectSubject();
-                    break;
-                case VertexStorageType::STATIC:
-                case VertexStorageType::DYNAMIC:
-                    subject = newBuffer11->getStaticSubject();
-                    break;
-                default:
-                    UNREACHABLE();
-                    break;
-            }
-        }
 
-        mOnArrayBufferDataDirty[attribIndex].bind(subject);
+        mOnArrayBufferDataDirty[attribIndex].bind(newBuffer11);
         mCurrentArrayBuffers[attribIndex].set(context, binding.getBuffer().get());
     }
 }
@@ -365,11 +323,15 @@ void VertexArray11::onSubjectStateChange(const gl::Context *context,
         ASSERT(mAttributeStorageTypes[index] != VertexStorageType::CURRENT_VALUE);
 
         // This can change a buffer's storage, we'll need to re-check.
-        mAttribsToUpdate.set(index);
+        if (mAttributeStorageTypes[index] != VertexStorageType::DIRECT ||
+            message != angle::SubjectMessage::CONTENTS_CHANGED)
+        {
+            mAttribsToUpdate.set(index);
 
-        // Changing the vertex attribute state can affect the vertex shader.
-        Renderer11 *renderer = GetImplAs<Context11>(context)->getRenderer();
-        renderer->getStateManager()->invalidateShaders();
+            // Changing the vertex attribute state can affect the vertex shader.
+            Renderer11 *renderer = GetImplAs<Context11>(context)->getRenderer();
+            renderer->getStateManager()->invalidateShaders();
+        }
     }
 }
 

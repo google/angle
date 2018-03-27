@@ -277,6 +277,65 @@ TEST_P(StateChangeTest, FramebufferIncompleteDepthStencilAttachment)
     ASSERT_GL_NO_ERROR();
 }
 
+const char kSimpleAttributeVS[] = R"(attribute vec2 position;
+attribute vec4 testAttrib;
+varying vec4 testVarying;
+void main()
+{
+    gl_Position = vec4(position, 0, 1);
+    testVarying = testAttrib;
+})";
+
+const char kSimpleAttributeFS[] = R"(precision mediump float;
+varying vec4 testVarying;
+void main()
+{
+    gl_FragColor = testVarying;
+})";
+
+// Tests that using a buffered attribute, then disabling it and using current value, works.
+TEST_P(StateChangeTest, DisablingBufferedVertexAttribute)
+{
+    ANGLE_GL_PROGRAM(program, kSimpleAttributeVS, kSimpleAttributeFS);
+    glUseProgram(program);
+    GLint attribLoc   = glGetAttribLocation(program, "testAttrib");
+    GLint positionLoc = glGetAttribLocation(program, "position");
+    ASSERT_NE(-1, attribLoc);
+    ASSERT_NE(-1, positionLoc);
+
+    // Set up the buffered attribute.
+    std::vector<GLColor> red(6, GLColor::red);
+    GLBuffer attribBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, attribBuffer);
+    glBufferData(GL_ARRAY_BUFFER, red.size() * sizeof(GLColor), red.data(), GL_STATIC_DRAW);
+    glEnableVertexAttribArray(attribLoc);
+    glVertexAttribPointer(attribLoc, 4, GL_UNSIGNED_BYTE, GL_TRUE, 0, nullptr);
+
+    // Also set the current value to green now.
+    glVertexAttrib4f(attribLoc, 0.0f, 1.0f, 0.0f, 1.0f);
+
+    // Set up the position attribute as well.
+    setupQuadVertexBuffer(0.5f, 1.0f);
+    glEnableVertexAttribArray(positionLoc);
+    glVertexAttribPointer(positionLoc, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+
+    // Draw with the buffered attribute. Verify red.
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    // Draw with the disabled "current value attribute". Verify green.
+    glDisableVertexAttribArray(attribLoc);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    // Verify setting buffer data on the disabled buffer doesn't change anything.
+    std::vector<GLColor> blue(128, GLColor::blue);
+    glBindBuffer(GL_ARRAY_BUFFER, attribBuffer);
+    glBufferData(GL_ARRAY_BUFFER, blue.size() * sizeof(GLColor), blue.data(), GL_STATIC_DRAW);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 // Ensure that CopyTexSubImage3D syncs framebuffer changes.
 TEST_P(StateChangeTestES3, CopyTexSubImage3DSync)
 {

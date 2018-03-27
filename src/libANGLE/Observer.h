@@ -27,7 +27,8 @@ using SubjectIndex = size_t;
 
 enum class SubjectMessage
 {
-    STATE_CHANGE,
+    CONTENTS_CHANGED,
+    STORAGE_CHANGED,
     DEPENDENT_DIRTY_BITS,
 };
 

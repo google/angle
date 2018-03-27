@@ -210,7 +210,7 @@ class FramebufferAttachmentObject
 
     Error initializeContents(const Context *context, const ImageIndex &imageIndex);
 
-    void onStateChange(const gl::Context *context) const;
+    void onStorageChange(const gl::Context *context) const;
     angle::Subject *getSubject() const;
 
   protected:
