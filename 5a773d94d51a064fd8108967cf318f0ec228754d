@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "998b0024_87ec9dd4",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 269,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-27T13:41:39Z",
+      "side": 1,
+      "message": "you can remove this if you reallocate Texture sets now.",
+      "range": {
+        "startLine": 269,
+        "startChar": 4,
+        "endLine": 269,
+        "endChar": 73
+      },
+      "revId": "5a773d94d51a064fd8108967cf318f0ec228754d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "66d27ef2_23a5cda4",
         "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
         "patchSetId": 3
@@ -61,6 +84,30 @@
       "side": 1,
       "message": "Yeah, it\u0027s better to use a RangeUI here. We already have enum DescriptorPoolIndex in DynamicDescriptorPool.h. What you should do is start with an empty RangeUI, and call RangeUI::extend(TextureIndex) (or UniformBufferIndex) on reallocation. In this function you don\u0027t care about the type of the sets at all.",
       "parentUuid": "74cce483_ed2d3412",
+      "range": {
+        "startLine": 652,
+        "startChar": 44,
+        "endLine": 652,
+        "endChar": 91
+      },
+      "revId": "5a773d94d51a064fd8108967cf318f0ec228754d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "92008282_63cdfba4",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 652,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-27T13:41:39Z",
+      "side": 1,
+      "message": "Alternately you could do away with the multiple allocation and only have this function allocate a single set, since we\u0027ll be reallocating Textures and Uniforms separately.",
+      "parentUuid": "6a26e68a_83757a00",
       "range": {
         "startLine": 652,
         "startChar": 44,
