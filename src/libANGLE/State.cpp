@@ -2501,7 +2501,7 @@ Error State::syncDirtyObjects(const Context *context, const DirtyObjects &bitset
                 break;
             case DIRTY_OBJECT_VERTEX_ARRAY:
                 ASSERT(mVertexArray);
-                mVertexArray->syncState(context);
+                ANGLE_TRY(mVertexArray->syncState(context));
                 break;
             case DIRTY_OBJECT_PROGRAM_TEXTURES:
                 syncProgramTextures(context);

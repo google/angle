@@ -56,10 +56,10 @@ void VertexArray11::destroy(const gl::Context *context)
     mCurrentElementArrayBuffer.set(context, nullptr);
 }
 
-void VertexArray11::syncState(const gl::Context *context,
-                              const gl::VertexArray::DirtyBits &dirtyBits,
-                              const gl::VertexArray::DirtyAttribBitsArray &attribBits,
-                              const gl::VertexArray::DirtyBindingBitsArray &bindingBits)
+gl::Error VertexArray11::syncState(const gl::Context *context,
+                                   const gl::VertexArray::DirtyBits &dirtyBits,
+                                   const gl::VertexArray::DirtyAttribBitsArray &attribBits,
+                                   const gl::VertexArray::DirtyBindingBitsArray &bindingBits)
 {
     ASSERT(dirtyBits.any());
 
@@ -86,6 +86,8 @@ void VertexArray11::syncState(const gl::Context *context,
             mAttribsToUpdate.set(index);
         }
     }
+
+    return gl::NoError();
 }
 
 bool VertexArray11::flushAttribUpdates(const gl::Context *context)

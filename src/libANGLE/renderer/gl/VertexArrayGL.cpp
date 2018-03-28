@@ -701,10 +701,10 @@ void VertexArrayGL::syncDirtyBinding(const gl::Context *context,
     }
 }
 
-void VertexArrayGL::syncState(const gl::Context *context,
-                              const VertexArray::DirtyBits &dirtyBits,
-                              const gl::VertexArray::DirtyAttribBitsArray &attribBits,
-                              const gl::VertexArray::DirtyBindingBitsArray &bindingBits)
+gl::Error VertexArrayGL::syncState(const gl::Context *context,
+                                   const VertexArray::DirtyBits &dirtyBits,
+                                   const gl::VertexArray::DirtyAttribBitsArray &attribBits,
+                                   const gl::VertexArray::DirtyBindingBitsArray &bindingBits)
 {
     mStateManager->bindVertexArray(mVertexArrayID, getAppliedElementArrayBufferID());
 
@@ -734,6 +734,8 @@ void VertexArrayGL::syncState(const gl::Context *context,
             }
         }
     }
+
+    return gl::NoError();
 }
 
 void VertexArrayGL::applyNumViewsToDivisor(int numViews)

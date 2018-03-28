@@ -21,11 +21,12 @@ class VertexArrayImpl : angle::NonCopyable
 {
   public:
     VertexArrayImpl(const gl::VertexArrayState &state) : mState(state) {}
-    virtual void syncState(const gl::Context *context,
-                           const gl::VertexArray::DirtyBits &dirtyBits,
-                           const gl::VertexArray::DirtyAttribBitsArray &attribBits,
-                           const gl::VertexArray::DirtyBindingBitsArray &bindingBits)
+    virtual gl::Error syncState(const gl::Context *context,
+                                const gl::VertexArray::DirtyBits &dirtyBits,
+                                const gl::VertexArray::DirtyAttribBitsArray &attribBits,
+                                const gl::VertexArray::DirtyBindingBitsArray &bindingBits)
     {
+        return gl::NoError();
     }
 
     virtual void destroy(const gl::Context *context) {}

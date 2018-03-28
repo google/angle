@@ -270,11 +270,12 @@ void VertexArray::setElementArrayBuffer(const Context *context, Buffer *buffer)
     mDirtyBits.set(DIRTY_BIT_ELEMENT_ARRAY_BUFFER);
 }
 
-void VertexArray::syncState(const Context *context)
+gl::Error VertexArray::syncState(const Context *context)
 {
     if (mDirtyBits.any())
     {
-        mVertexArray->syncState(context, mDirtyBits, mDirtyAttribBits, mDirtyBindingBits);
+        ANGLE_TRY(
+            mVertexArray->syncState(context, mDirtyBits, mDirtyAttribBits, mDirtyBindingBits));
         mDirtyBits.reset();
 
         // This is a bit of an implementation hack - but since we know the implementation
@@ -284,6 +285,7 @@ void VertexArray::syncState(const Context *context)
         memset(&mDirtyAttribBits, 0, sizeof(mDirtyAttribBits));
         memset(&mDirtyBindingBits, 0, sizeof(mDirtyBindingBits));
     }
+    return gl::NoError();
 }
 
 void VertexArray::onBindingChanged(bool bound)

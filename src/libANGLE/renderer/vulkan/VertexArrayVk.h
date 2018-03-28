@@ -31,10 +31,10 @@ class VertexArrayVk : public VertexArrayImpl
                                StreamingBuffer *stream,
                                size_t firstVertex,
                                size_t lastVertex);
-    void syncState(const gl::Context *context,
-                   const gl::VertexArray::DirtyBits &dirtyBits,
-                   const gl::VertexArray::DirtyAttribBitsArray &attribBits,
-                   const gl::VertexArray::DirtyBindingBitsArray &bindingBits) override;
+    gl::Error syncState(const gl::Context *context,
+                        const gl::VertexArray::DirtyBits &dirtyBits,
+                        const gl::VertexArray::DirtyAttribBitsArray &attribBits,
+                        const gl::VertexArray::DirtyBindingBitsArray &bindingBits) override;
 
     const gl::AttribArray<VkBuffer> &getCurrentArrayBufferHandles() const;
     const gl::AttribArray<VkDeviceSize> &getCurrentArrayBufferOffsets() const;
