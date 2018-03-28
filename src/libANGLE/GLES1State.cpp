@@ -32,6 +32,7 @@ GLES1State::GLES1State()
       mReflectionMapEnabled(false),
       mCurrentColor({0.0f, 0.0f, 0.0f, 0.0f}),
       mCurrentNormal({0.0f, 0.0f, 0.0f}),
+      mClientActiveTexture(0),
       mCurrMatrixMode(MatrixType::Modelview),
       mShadeModel(ShadingModel::Smooth),
       mAlphaTestFunc(AlphaTestFunc::AlwaysPass),
@@ -80,8 +81,8 @@ void GLES1State::initialize(const Context *context)
 
     mCurrentColor  = {1.0f, 1.0f, 1.0f, 1.0f};
     mCurrentNormal = {0.0f, 0.0f, 1.0f};
-
     mCurrentTextureCoords.resize(caps.maxMultitextureUnits);
+    mClientActiveTexture = 0;
 
     mTextureEnvironments.resize(caps.maxMultitextureUnits);
 
@@ -146,6 +147,16 @@ void GLES1State::setAlphaFunc(AlphaTestFunc func, GLfloat ref)
 {
     mAlphaTestFunc = func;
     mAlphaTestRef  = ref;
+}
+
+void GLES1State::setClientTextureUnit(unsigned int unit)
+{
+    mClientActiveTexture = unit;
+}
+
+unsigned int GLES1State::getClientTextureUnit() const
+{
+    return mClientActiveTexture;
 }
 
 }  // namespace gl

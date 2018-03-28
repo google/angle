@@ -72,7 +72,14 @@ bool ValidateClearDepthx(Context *context, GLfixed depth)
 
 bool ValidateClientActiveTexture(Context *context, GLenum texture)
 {
-    UNIMPLEMENTED();
+    ANGLE_VALIDATE_IS_GLES1(context);
+    if (texture < GL_TEXTURE0 ||
+        texture > GL_TEXTURE0 + context->getCaps().maxMultitextureUnits - 1)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidMultitextureUnit);
+        return false;
+    }
+
     return true;
 }
 

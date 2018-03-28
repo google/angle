@@ -64,6 +64,8 @@ ERRMSG(InvalidBorder, "Border must be 0.");
 ERRMSG(InvalidBufferTypes, "Invalid buffer target enum.");
 ERRMSG(InvalidBufferUsage, "Invalid buffer usage enum.");
 ERRMSG(InvalidClearMask, "Invalid mask bits.");
+ERRMSG(InvalidCombinedImageUnit,
+       "Specified unit must be in [GL_TEXTURE0, GL_TEXTURE0 + GL_MAX_COMBINED_IMAGE_UNITS)");
 ERRMSG(InvalidConstantColor,
        "CONSTANT_COLOR (or ONE_MINUS_CONSTANT_COLOR) and CONSTANT_ALPHA (or "
        "ONE_MINUS_CONSTANT_ALPHA) cannot be used together as source and destination factors in the "
@@ -91,6 +93,8 @@ ERRMSG(InvalidInternalFormat, "Invalid internal format.");
 ERRMSG(InvalidMatrixMode, "Invalid matrix mode.");
 ERRMSG(InvalidMemoryBarrierBit, "Invalid memory barrier bit.");
 ERRMSG(InvalidMipLevel, "Level of detail outside of range.");
+ERRMSG(InvalidMultitextureUnit,
+       "Specified unit must be in [GL_TEXTURE0, GL_TEXTURE0 + GL_MAX_TEXTURE_UNITS)");
 ERRMSG(InvalidName, "Invalid name.");
 ERRMSG(InvalidNameCharacters, "Name contains invalid characters.");
 ERRMSG(InvalidPname, "Invalid pname.");

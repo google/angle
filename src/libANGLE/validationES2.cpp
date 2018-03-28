@@ -4340,7 +4340,7 @@ bool ValidateActiveTexture(Context *context, GLenum texture)
     if (texture < GL_TEXTURE0 ||
         texture > GL_TEXTURE0 + context->getCaps().maxCombinedTextureImageUnits - 1)
     {
-        context->handleError(InvalidEnum());
+        ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidCombinedImageUnit);
         return false;
     }
 

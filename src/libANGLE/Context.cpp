@@ -1602,6 +1602,10 @@ void Context::getIntegervImpl(GLenum pname, GLint *params)
         case GL_MAX_GEOMETRY_SHADER_STORAGE_BLOCKS_EXT:
             *params = mCaps.maxGeometryShaderStorageBlocks;
             break;
+        // GLES1 emulation: Caps queries
+        case GL_MAX_TEXTURE_UNITS:
+            *params = mCaps.maxMultitextureUnits;
+            break;
         default:
             handleError(mGLState.getIntegerv(this, pname, params));
             break;
@@ -6383,6 +6387,14 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
                 return true;
             case GL_ALPHA_TEST_REF:
                 *type      = GL_FLOAT;
+                *numParams = 1;
+                return true;
+            case GL_MAX_TEXTURE_UNITS:
+                *type      = GL_INT;
+                *numParams = 1;
+                return true;
+            case GL_CLIENT_ACTIVE_TEXTURE:
+                *type      = GL_INT;
                 *numParams = 1;
                 return true;
         }

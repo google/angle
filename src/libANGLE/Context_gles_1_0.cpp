@@ -36,7 +36,7 @@ void Context::clearDepthx(GLfixed depth)
 
 void Context::clientActiveTexture(GLenum texture)
 {
-    UNIMPLEMENTED();
+    mGLState.gles1().setClientTextureUnit(texture - GL_TEXTURE0);
 }
 
 void Context::clipPlanef(GLenum p, const GLfloat *eqn)

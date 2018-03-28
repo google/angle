@@ -2304,6 +2304,9 @@ Error State::getIntegerv(const Context *context, GLenum pname, GLint *params)
         case GL_ALPHA_TEST_FUNC:
             *params = ToGLenum(mGLES1State.mAlphaTestFunc);
             break;
+        case GL_CLIENT_ACTIVE_TEXTURE:
+            *params = mGLES1State.mClientActiveTexture + GL_TEXTURE0;
+            break;
         default:
             UNREACHABLE();
             break;

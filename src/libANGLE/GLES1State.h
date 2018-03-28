@@ -119,6 +119,8 @@ class GLES1State final : angle::NonCopyable
     void initialize(const Context *context);
 
     void setAlphaFunc(AlphaTestFunc func, GLfloat ref);
+    void setClientTextureUnit(unsigned int unit);
+    unsigned int getClientTextureUnit() const;
 
   private:
     friend class State;
@@ -156,7 +158,11 @@ class GLES1State final : angle::NonCopyable
     // Table 6.3
     ColorF mCurrentColor;
     angle::Vector3 mCurrentNormal;
+    // Invariant: mCurrentTextureCoords size is == GL_MAX_TEXTURE_UNITS.
     std::vector<TextureCoordF> mCurrentTextureCoords;
+
+    // Table 6.4
+    unsigned int mClientActiveTexture;
 
     // Table 6.7
     using MatrixStack = std::vector<angle::Mat4>;
