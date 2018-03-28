@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1cc12d6f_2cedae35",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 12
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-28T15:36:57Z",
+      "side": 1,
+      "message": "nit: can you please change this description to be\n\n\u003cshort description \u003c\u003d 65 chars\u003e\n\u003cspace\u003e\n\u003cparagraph with longer description wrapped to 71 chars\u003e",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 8,
+        "endChar": 39
+      },
+      "revId": "369536de0ff924c36a924d5f8e4d7f17dbcd2f46",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c99c76a5_94a2f283",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 1197,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-28T15:36:57Z",
+      "side": 1,
+      "message": "nit: kExpectedValue",
+      "range": {
+        "startLine": 1197,
+        "startChar": 21,
+        "endLine": 1197,
+        "endChar": 35
+      },
+      "revId": "369536de0ff924c36a924d5f8e4d7f17dbcd2f46",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
