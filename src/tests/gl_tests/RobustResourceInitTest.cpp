@@ -531,6 +531,9 @@ TEST_P(RobustResourceInitTest, ReuploadingClearsTexture)
 {
     ANGLE_SKIP_TEST_IF(!hasGLExtension());
 
+    // crbug.com/826576
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsNVIDIA() && IsDesktopOpenGL());
+
     // Put some data into the texture
     std::array<GLColor, kWidth * kHeight> data;
     data.fill(GLColor::white);
