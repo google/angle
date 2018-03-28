@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b90eb185_87930f82",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2309,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-28T19:06:52Z",
+      "side": 1,
+      "message": "nit: put this in context.cpp and return the member of the Caps.",
+      "range": {
+        "startLine": 2307,
+        "startChar": 7,
+        "endLine": 2309,
+        "endChar": 18
+      },
+      "revId": "f754fee3b6bc8f6bfa2e03bff13921c63e0a9170",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "38841971_64519e56",
+        "filename": "src/libANGLE/validationES1.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-28T19:06:52Z",
+      "side": 1,
+      "message": "Can you create a message for this?  You can update ValidateActiveTexture too (or refactor)",
+      "range": {
+        "startLine": 79,
+        "startChar": 29,
+        "endLine": 79,
+        "endChar": 42
+      },
+      "revId": "f754fee3b6bc8f6bfa2e03bff13921c63e0a9170",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cdbbf8c3_0e21f879",
+        "filename": "src/tests/gl_tests/gles1/ClientActiveTextureTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-28T19:06:52Z",
+      "side": 1,
+      "message": "nit: just use an int and avoid the casts.",
+      "range": {
+        "startLine": 36,
+        "startChar": 4,
+        "endLine": 36,
+        "endChar": 10
+      },
+      "revId": "f754fee3b6bc8f6bfa2e03bff13921c63e0a9170",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fb83443b_96336471",
+        "filename": "src/tests/gl_tests/gles1/ClientActiveTextureTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-03-28T19:06:52Z",
+      "side": 1,
+      "message": "same for this",
+      "range": {
+        "startLine": 62,
+        "startChar": 8,
+        "endLine": 62,
+        "endChar": 14
+      },
+      "revId": "f754fee3b6bc8f6bfa2e03bff13921c63e0a9170",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
