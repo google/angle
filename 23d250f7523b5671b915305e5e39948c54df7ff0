@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "786727da_8e6563c0",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1391,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-03-28T22:07:01Z",
+      "side": 1,
+      "message": "onPixelUnpack seemed more correct.",
+      "range": {
+        "startLine": 1391,
+        "startChar": 22,
+        "endLine": 1391,
+        "endChar": 33
+      },
+      "revId": "23d250f7523b5671b915305e5e39948c54df7ff0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9f7ceed3_69e6a2bd",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/VertexArray11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-03-28T22:07:01Z",
+      "side": 1,
+      "message": "Are we losing an optimization by checking getActiveAttribLocationsMask() here?",
+      "range": {
+        "startLine": 80,
+        "startChar": 20,
+        "endLine": 80,
+        "endChar": 45
+      },
+      "revId": "23d250f7523b5671b915305e5e39948c54df7ff0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "46dec881_c3a7a02c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/VertexArray11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-03-28T22:07:01Z",
+      "side": 1,
+      "message": "I think this name is inconsistent with other funcInternal() names, where func() calls funcInternal(). Maybe updateState() is better?",
+      "range": {
+        "startLine": 104,
+        "startChar": 25,
+        "endLine": 104,
+        "endChar": 42
+      },
+      "revId": "23d250f7523b5671b915305e5e39948c54df7ff0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
