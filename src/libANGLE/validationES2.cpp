@@ -3483,6 +3483,16 @@ bool ValidateStencilStrokePathCHROMIUM(Context *context, GLuint path, GLint refe
     return true;
 }
 
+bool ValidateCoverFillPathCHROMIUM(Context *context, GLuint path, GLenum coverMode)
+{
+    return ValidateCoverPathCHROMIUM(context, path, coverMode);
+}
+
+bool ValidateCoverStrokePathCHROMIUM(Context *context, GLuint path, GLenum coverMode)
+{
+    return ValidateCoverPathCHROMIUM(context, path, coverMode);
+}
+
 bool ValidateCoverPathCHROMIUM(Context *context, GLuint path, GLenum coverMode)
 {
     if (!context->getExtensions().pathRendering)
@@ -3528,7 +3538,7 @@ bool ValidateStencilThenCoverStrokePathCHROMIUM(Context *context,
            ValidateCoverPathCHROMIUM(context, path, coverMode);
 }
 
-bool ValidateIsPathCHROMIUM(Context *context)
+bool ValidateIsPathCHROMIUM(Context *context, GLuint path)
 {
     if (!context->getExtensions().pathRendering)
     {

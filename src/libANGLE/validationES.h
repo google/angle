@@ -31,6 +31,7 @@ struct LinkedUniform;
 class Program;
 class Shader;
 
+void SetRobustLengthParam(GLsizei *length, GLsizei value);
 bool IsETC2EACFormat(const GLenum format);
 bool ValidTextureTarget(const Context *context, TextureType type);
 bool ValidTexture2DTarget(const Context *context, TextureType type);
@@ -227,12 +228,30 @@ bool ValidateUniformMatrix(Context *context,
                            GLint location,
                            GLsizei count,
                            GLboolean transpose);
-
+bool ValidateGetBooleanvRobustANGLE(Context *context,
+                                    GLenum pname,
+                                    GLsizei bufSize,
+                                    GLsizei *length,
+                                    GLboolean *params);
+bool ValidateGetFloatvRobustANGLE(Context *context,
+                                  GLenum pname,
+                                  GLsizei bufSize,
+                                  GLsizei *length,
+                                  GLfloat *params);
 bool ValidateStateQuery(Context *context,
                         GLenum pname,
                         GLenum *nativeType,
                         unsigned int *numParams);
-
+bool ValidateGetIntegervRobustANGLE(Context *context,
+                                    GLenum pname,
+                                    GLsizei bufSize,
+                                    GLsizei *length,
+                                    GLint *data);
+bool ValidateGetInteger64vRobustANGLE(Context *context,
+                                      GLenum pname,
+                                      GLsizei bufSize,
+                                      GLsizei *length,
+                                      GLint64 *data);
 bool ValidateRobustStateQuery(Context *context,
                               GLenum pname,
                               GLsizei bufSize,
@@ -391,7 +410,8 @@ bool ValidateGetFramebufferAttachmentParameterivRobustANGLE(Context *context,
                                                             GLenum attachment,
                                                             GLenum pname,
                                                             GLsizei bufSize,
-                                                            GLsizei *numParams);
+                                                            GLsizei *length,
+                                                            GLint *params);
 
 bool ValidateGetBufferParameterBase(Context *context,
                                     BufferBinding target,
@@ -417,7 +437,8 @@ bool ValidateGetProgramivRobustANGLE(Context *context,
                                      GLuint program,
                                      GLenum pname,
                                      GLsizei bufSize,
-                                     GLsizei *numParams);
+                                     GLsizei *length,
+                                     GLint *params);
 
 bool ValidateGetRenderbufferParameterivBase(Context *context,
                                             GLenum target,
@@ -481,7 +502,7 @@ bool ValidateGetSamplerParameterfvRobustANGLE(Context *context,
 bool ValidateGetSamplerParameterivRobustANGLE(Context *context,
                                               GLuint sampler,
                                               GLenum pname,
-                                              GLuint bufSize,
+                                              GLsizei bufSize,
                                               GLsizei *length,
                                               GLint *params);
 

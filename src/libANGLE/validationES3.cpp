@@ -2194,15 +2194,19 @@ bool ValidateGetBufferPointervRobustANGLE(Context *context,
         return false;
     }
 
-    if (!ValidateGetBufferPointervBase(context, target, pname, length, params))
+    GLsizei numParams = 0;
+
+    if (!ValidateGetBufferPointervBase(context, target, pname, &numParams, params))
     {
         return false;
     }
 
-    if (!ValidateRobustBufferSize(context, bufSize, *length))
+    if (!ValidateRobustBufferSize(context, bufSize, numParams))
     {
         return false;
     }
+
+    SetRobustLengthParam(length, numParams);
 
     return true;
 }
@@ -2421,15 +2425,19 @@ bool ValidateGetIntegeri_vRobustANGLE(Context *context,
         return false;
     }
 
-    if (!ValidateIndexedStateQuery(context, target, index, length))
+    GLsizei numParams = 0;
+
+    if (!ValidateIndexedStateQuery(context, target, index, &numParams))
     {
         return false;
     }
 
-    if (!ValidateRobustBufferSize(context, bufSize, *length))
+    if (!ValidateRobustBufferSize(context, bufSize, numParams))
     {
         return false;
     }
+
+    SetRobustLengthParam(length, numParams);
 
     return true;
 }
@@ -2462,15 +2470,19 @@ bool ValidateGetInteger64i_vRobustANGLE(Context *context,
         return false;
     }
 
-    if (!ValidateIndexedStateQuery(context, target, index, length))
+    GLsizei numParams = 0;
+
+    if (!ValidateIndexedStateQuery(context, target, index, &numParams))
     {
         return false;
     }
 
-    if (!ValidateRobustBufferSize(context, bufSize, *length))
+    if (!ValidateRobustBufferSize(context, bufSize, numParams))
     {
         return false;
     }
+
+    SetRobustLengthParam(length, numParams);
 
     return true;
 }
