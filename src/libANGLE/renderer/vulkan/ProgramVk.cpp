@@ -513,17 +513,17 @@ void ProgramVk::setUniform1iv(GLint location, GLsizei count, const GLint *v)
 
 void ProgramVk::setUniform2iv(GLint location, GLsizei count, const GLint *v)
 {
-    UNIMPLEMENTED();
+    setUniformImpl(location, count, v, GL_INT_VEC2);
 }
 
 void ProgramVk::setUniform3iv(GLint location, GLsizei count, const GLint *v)
 {
-    UNIMPLEMENTED();
+    setUniformImpl(location, count, v, GL_INT_VEC3);
 }
 
 void ProgramVk::setUniform4iv(GLint location, GLsizei count, const GLint *v)
 {
-    UNIMPLEMENTED();
+    setUniformImpl(location, count, v, GL_INT_VEC4);
 }
 
 void ProgramVk::setUniform1uiv(GLint location, GLsizei count, const GLuint *v)
