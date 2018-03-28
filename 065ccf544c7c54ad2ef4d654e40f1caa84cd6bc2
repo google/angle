@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "877f8a9a_70529d5e",
+        "filename": "src/libANGLE/ErrorStrings.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-03-28T20:57:22Z",
+      "side": 1,
+      "message": "Should this end of the interval be open? ditto below.",
+      "range": {
+        "startLine": 68,
+        "startChar": 47,
+        "endLine": 68,
+        "endChar": 90
+      },
+      "revId": "065ccf544c7c54ad2ef4d654e40f1caa84cd6bc2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "48824377_a41d06fc",
+        "filename": "src/tests/gl_tests/gles1/ClientActiveTextureTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-03-28T20:57:22Z",
+      "side": 1,
+      "message": "Should this be queried instead? Also should we have a test to check that the maxTextureUnits is at least what the spec mandates?",
+      "range": {
+        "startLine": 48,
+        "startChar": 40,
+        "endLine": 48,
+        "endChar": 42
+      },
+      "revId": "065ccf544c7c54ad2ef4d654e40f1caa84cd6bc2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
