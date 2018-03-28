@@ -25,6 +25,52 @@
     },
     {
       "key": {
+        "uuid": "328c2906_b0d15f3d",
+        "filename": "src/tests/gl_tests/gles1/ClientActiveTextureTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-28T21:05:11Z",
+      "side": 1,
+      "message": "always use c++-style casts in ANGLE code",
+      "range": {
+        "startLine": 37,
+        "startChar": 44,
+        "endLine": 37,
+        "endChar": 53
+      },
+      "revId": "065ccf544c7c54ad2ef4d654e40f1caa84cd6bc2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cbb1616a_67eea7a5",
+        "filename": "src/tests/gl_tests/gles1/ClientActiveTextureTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-28T21:05:11Z",
+      "side": 1,
+      "message": "we have an EXPECT_GLENUM_EQ macro for specific comparisons (though I think the warning is currently broken/disabled)",
+      "range": {
+        "startLine": 39,
+        "startChar": 4,
+        "endLine": 39,
+        "endChar": 13
+      },
+      "revId": "065ccf544c7c54ad2ef4d654e40f1caa84cd6bc2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "48824377_a41d06fc",
         "filename": "src/tests/gl_tests/gles1/ClientActiveTextureTest.cpp",
         "patchSetId": 3
