@@ -22,6 +22,30 @@
       "revId": "c7575da546a49152db47811416c62029f7c266ab",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "07e5d511_0b9170a8",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2042,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-28T23:44:02Z",
+      "side": 0,
+      "message": "It didn\u0027t do anything... invalidateShaders was being called correctly inside VertexArray11::syncStateInternal.",
+      "parentUuid": "f8a67150_3dbabcb1",
+      "range": {
+        "startLine": 2042,
+        "startChar": 31,
+        "endLine": 2042,
+        "endChar": 48
+      },
+      "revId": "c7575da546a49152db47811416c62029f7c266ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
