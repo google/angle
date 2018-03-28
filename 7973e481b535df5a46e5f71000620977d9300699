@@ -25,6 +25,29 @@
     },
     {
       "key": {
+        "uuid": "eda8751d_766c6a62",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-28T21:37:28Z",
+      "side": 1,
+      "message": "you should probably cache this value outside the loop",
+      "range": {
+        "startLine": 83,
+        "startChar": 36,
+        "endLine": 83,
+        "endChar": 75
+      },
+      "revId": "7973e481b535df5a46e5f71000620977d9300699",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "91c97264_9292792f",
         "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
         "patchSetId": 4
