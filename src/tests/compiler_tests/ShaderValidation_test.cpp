@@ -5838,3 +5838,49 @@ TEST_F(VertexShaderValidationTest, GlFragCoord)
         FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
     }
 }
+
+// Test that a long sequence of repeated swizzling on an l-value does not cause a stack overflow.
+TEST_F(VertexShaderValidationTest, LValueRepeatedSwizzle)
+{
+    std::stringstream shaderString;
+    shaderString << R"(#version 300 es
+        precision mediump float;
+
+        uniform vec2 u;
+
+        void main()
+        {
+            vec2 f;
+            f)";
+    for (int i = 0; i < 1000; ++i)
+    {
+        shaderString << ".yx.yx";
+    }
+    shaderString << R"( = vec2(0.0);
+        })";
+
+    if (!compile(shaderString.str()))
+    {
+        FAIL() << "Shader compilation failed, expecting success:\n" << mInfoLog;
+    }
+}
+
+// Test that swizzling that contains duplicate components can't form an l-value, even if it is
+// swizzled again so that the final result does not contain duplicate components.
+TEST_F(VertexShaderValidationTest, LValueSwizzleDuplicateComponents)
+{
+
+    const std::string &shaderString = R"(#version 300 es
+        precision mediump float;
+
+        void main()
+        {
+            vec2 f;
+            (f.xxyy).xz = vec2(0.0);
+        })";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}

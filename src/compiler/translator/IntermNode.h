@@ -431,6 +431,7 @@ class TIntermSwizzle : public TIntermExpression
     void writeOffsetsAsXYZW(TInfoSinkBase *out) const;
 
     bool hasDuplicateOffsets() const;
+    void setHasFoldedDuplicateOffsets(bool hasFoldedDuplicateOffsets);
     bool offsetsMatch(int offset) const;
 
     TIntermTyped *fold(TDiagnostics *diagnostics) override;
@@ -438,6 +439,7 @@ class TIntermSwizzle : public TIntermExpression
   protected:
     TIntermTyped *mOperand;
     TVector<int> mSwizzleOffsets;
+    bool mHasFoldedDuplicateOffsets;
 
   private:
     void promote();
