@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "74215ecc_d209e624",
+        "filename": "src/tests/gl_tests/RobustResourceInitTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 532,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-03-28T01:32:40Z",
+      "side": 1,
+      "message": "(IsOSX() \u0026\u0026 IsNVIDIA() \u0026\u0026 IsDesktopOpenGL())\nAlso please add http://crbug.com/826576 comment",
+      "range": {
+        "startLine": 532,
+        "startChar": 44,
+        "endLine": 532,
+        "endChar": 51
+      },
+      "revId": "d5ea9ff89d6bd458d8f4950dac37f3e7322c7779",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
