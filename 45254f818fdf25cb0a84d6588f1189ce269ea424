@@ -22,6 +22,30 @@
       "revId": "45254f818fdf25cb0a84d6588f1189ce269ea424",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9fad457a_b31e22c4",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-03-29T14:16:49Z",
+      "side": 1,
+      "message": "Do you know of an alternative approach for determining whether there can be a hash collision rather than generating possible variations of the hashed string and calculating a hash for each of them? The script to do this can also be optimized by reducing string allocations or something similar, but not necessarily so much that it would make a huge difference.\n\nOr do you think we should develop collision check as a native application / use some existing tool for this?",
+      "parentUuid": "5c83459d_367c0e59",
+      "range": {
+        "startLine": 36,
+        "startChar": 0,
+        "endLine": 39,
+        "endChar": 49
+      },
+      "revId": "45254f818fdf25cb0a84d6588f1189ce269ea424",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
