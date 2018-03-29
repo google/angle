@@ -396,8 +396,8 @@ UniformsParams MatrixUniforms(const EGLPlatformParameters &egl, DataMode dataMod
     params.dataMode      = dataMode;
 
     // Reduce the number of uniforms to fit within smaller upper limits on some configs.
-    params.numVertexUniforms   = 56;
-    params.numFragmentUniforms = 56;
+    params.numVertexUniforms   = 55;
+    params.numFragmentUniforms = 55;
 
     return params;
 }
