@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bdd8241c_dbfb2535",
+        "filename": "src/tests/gl_tests/SRGBTextureTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-03-29T17:46:01Z",
+      "side": 0,
+      "message": "I thought this is no error with GLES3",
+      "range": {
+        "startLine": 127,
+        "startChar": 12,
+        "endLine": 127,
+        "endChar": 30
+      },
+      "revId": "0af5b86aeec7a649866ea083d9e574dc7fb49a20",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
