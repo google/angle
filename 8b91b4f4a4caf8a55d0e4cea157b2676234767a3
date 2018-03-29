@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "28a88c7f_531afb7c",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1933,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-03-29T14:46:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8e27f35e_bbf4e3d7",
+      "range": {
+        "startLine": 1933,
+        "startChar": 8,
+        "endLine": 1933,
+        "endChar": 30
+      },
+      "revId": "8b91b4f4a4caf8a55d0e4cea157b2676234767a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fe07eab4_95f4eeb4",
         "filename": "src/tests/gl_tests/gles1/CurrentColorTest.cpp",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2018-03-29T14:34:52Z",
       "side": 1,
       "message": "nit: technically you can use angle::GLColor32f for this - and EXPECT_PIXEL_COLOR32F_EQ. You\u0027ll need to define a new kFloatWhite.",
+      "range": {
+        "startLine": 36,
+        "startChar": 0,
+        "endLine": 42,
+        "endChar": 29
+      },
+      "revId": "8b91b4f4a4caf8a55d0e4cea157b2676234767a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ba5c74d6_af9e2388",
+        "filename": "src/tests/gl_tests/gles1/CurrentColorTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-03-29T14:46:00Z",
+      "side": 1,
+      "message": "I looked at EXPECT_PIXEL_COLOR32F_EQ and it seems to use glReadPixels---this test isn\u0027t meant to be clearing or drawing anything. Plus, I\u0027d have to convert from GLfloat color[4]. Was there an alternative way of using it that you had in mind?",
+      "parentUuid": "fe07eab4_95f4eeb4",
       "range": {
         "startLine": 36,
         "startChar": 0,
