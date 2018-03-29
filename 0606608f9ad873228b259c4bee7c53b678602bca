@@ -22,6 +22,30 @@
       "revId": "0606608f9ad873228b259c4bee7c53b678602bca",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9f1a10ab_f9adf195",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 491,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-03-29T16:57:10Z",
+      "side": 1,
+      "message": "For a very specific test case where the float results in a hex like this: 0x00aabbcc, this ends up being interpreted as false because only the first byte is read in the standard codepath (00).\n\nI think the other renderer converts the value when its being set instead of converting it on read.\n\nI could convert it that way, but we would need some similar inversed code in the write method instead.",
+      "parentUuid": "9d409f99_e1e84a38",
+      "range": {
+        "startLine": 477,
+        "startChar": 4,
+        "endLine": 491,
+        "endChar": 5
+      },
+      "revId": "0606608f9ad873228b259c4bee7c53b678602bca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
