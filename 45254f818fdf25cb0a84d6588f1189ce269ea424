@@ -46,6 +46,30 @@
       "revId": "45254f818fdf25cb0a84d6588f1189ce269ea424",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "82d5f202_08cb42dd",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-29T15:14:11Z",
+      "side": 1,
+      "message": "It\u0027s a good question. An an emergency measure we can remove the gen from run_code_generation.py.\n\nI think maybe moving to a flat sorted array with binary search might be an improvement to both script generation time and code size, with a cost of performance. Though the cost might not be too bad.",
+      "parentUuid": "9fad457a_b31e22c4",
+      "range": {
+        "startLine": 36,
+        "startChar": 0,
+        "endLine": 39,
+        "endChar": 49
+      },
+      "revId": "45254f818fdf25cb0a84d6588f1189ce269ea424",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
