@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1277b545_20c84228",
+        "filename": "src/common/utilities.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 835,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-29T15:11:30Z",
+      "side": 1,
+      "message": "can probably put this in validationES.cpp and expose it in validationES.h.",
+      "range": {
+        "startLine": 828,
+        "startChar": 0,
+        "endLine": 835,
+        "endChar": 0
+      },
+      "revId": "45567c2d36515daf0b4cf235c104fff4139c0983",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
