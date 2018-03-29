@@ -70,6 +70,30 @@
       "revId": "45254f818fdf25cb0a84d6588f1189ce269ea424",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "330a7c9e_7d69c8be",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-03-29T15:46:52Z",
+      "side": 1,
+      "message": "Flat sorted array of what, exactly? Remember that the current approach avoids storing all the full mangled names, which saves a lot of binary size.\n\nI have managed to make the script a bit faster, so now it takes about one minute on my Core i7. This is getting closer to acceptable.",
+      "parentUuid": "82d5f202_08cb42dd",
+      "range": {
+        "startLine": 36,
+        "startChar": 0,
+        "endLine": 39,
+        "endChar": 49
+      },
+      "revId": "45254f818fdf25cb0a84d6588f1189ce269ea424",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
