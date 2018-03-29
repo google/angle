@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "0cd69eb5_2b10c0bf",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-03-29T11:07:59Z",
+      "side": 1,
+      "message": "This is actually important and gets hit all the time as soon as we have arrays. Vulkan seems to optimize memory and allocate bigger blocks of memory automatically. I need to skip the stride for every value just like its done.",
+      "parentUuid": "b4ea779a_2c023a0d",
+      "range": {
+        "startLine": 77,
+        "startChar": 8,
+        "endLine": 78,
+        "endChar": 42
+      },
+      "revId": "7973e481b535df5a46e5f71000620977d9300699",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "eda8751d_766c6a62",
         "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
         "patchSetId": 4
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "44badaca_75138f5b",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-03-29T11:07:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "eda8751d_766c6a62",
+      "range": {
+        "startLine": 83,
+        "startChar": 36,
+        "endLine": 83,
+        "endChar": 75
+      },
+      "revId": "7973e481b535df5a46e5f71000620977d9300699",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "91c97264_9292792f",
         "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
         "patchSetId": 4
@@ -68,6 +116,30 @@
       "revId": "7973e481b535df5a46e5f71000620977d9300699",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "24d61b9c_24b07b05",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-03-29T11:07:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "91c97264_9292792f",
+      "range": {
+        "startLine": 109,
+        "startChar": 9,
+        "endLine": 111,
+        "endChar": 27
+      },
+      "revId": "7973e481b535df5a46e5f71000620977d9300699",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
