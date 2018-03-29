@@ -1144,7 +1144,7 @@ TEST_P(ComputeShaderTest, groupMemoryBarrierAndBarrierTest)
 {
     // TODO(xinghua.cao@intel.com): Figure out why we get this error message
     // that shader uses features not recognized by this D3D version.
-    ANGLE_SKIP_TEST_IF(IsAMD() && IsD3D11());
+    ANGLE_SKIP_TEST_IF((IsAMD() || IsNVIDIA()) && IsD3D11());
 
     GLTexture texture;
     GLFramebuffer framebuffer;
