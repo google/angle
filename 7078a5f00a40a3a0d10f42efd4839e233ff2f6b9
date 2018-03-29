@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e4d28f35_22b74c88",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 461,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-29T14:27:33Z",
+      "side": 0,
+      "message": "you should add the appropriate ASSERT (linkedUniform.type \u003d\u003d entryPointType)",
+      "range": {
+        "startLine": 461,
+        "startChar": 7,
+        "endLine": 461,
+        "endChar": 81
+      },
+      "revId": "7078a5f00a40a3a0d10f42efd4839e233ff2f6b9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

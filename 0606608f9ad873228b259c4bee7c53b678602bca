@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9d409f99_e1e84a38",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 491,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-29T14:27:33Z",
+      "side": 1,
+      "message": "I\u0027m slightly confused as to the code right now, since Program::getUniformInternal does a cast already, and our D3D back-end does no cast. Can you explain why tests fail in Vulkan when you remove this code?",
+      "range": {
+        "startLine": 477,
+        "startChar": 4,
+        "endLine": 491,
+        "endChar": 5
+      },
+      "revId": "0606608f9ad873228b259c4bee7c53b678602bca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
