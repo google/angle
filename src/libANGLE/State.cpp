@@ -1939,6 +1939,14 @@ void State::getFloatv(GLenum pname, GLfloat *params)
             params[3]         = color.alpha;
             break;
         }
+        case GL_CURRENT_NORMAL:
+        {
+            const auto &normal = mGLES1State.mCurrentNormal;
+            params[0]          = normal[0];
+            params[1]          = normal[1];
+            params[2]          = normal[2];
+            break;
+        }
         default:
             UNREACHABLE();
             break;

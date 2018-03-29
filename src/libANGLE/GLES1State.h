@@ -121,8 +121,12 @@ class GLES1State final : angle::NonCopyable
     void setAlphaFunc(AlphaTestFunc func, GLfloat ref);
     void setClientTextureUnit(unsigned int unit);
     unsigned int getClientTextureUnit() const;
-    void setCurrentColor(ColorF color);
+
+    void setCurrentColor(const ColorF &color);
     const ColorF &getCurrentColor() const;
+
+    void setCurrentNormal(const angle::Vector3 &normal);
+    const angle::Vector3 &getCurrentNormal() const;
 
   private:
     friend class State;

@@ -289,12 +289,12 @@ void Context::multiTexCoord4x(GLenum texture, GLfixed s, GLfixed t, GLfixed r, G
 
 void Context::normal3f(GLfloat nx, GLfloat ny, GLfloat nz)
 {
-    UNIMPLEMENTED();
+    mGLState.gles1().setCurrentNormal({nx, ny, nz});
 }
 
 void Context::normal3x(GLfixed nx, GLfixed ny, GLfixed nz)
 {
-    UNIMPLEMENTED();
+    mGLState.gles1().setCurrentNormal({FixedToFloat(nx), FixedToFloat(ny), FixedToFloat(nz)});
 }
 
 void Context::normalPointer(GLenum type, GLsizei stride, const void *ptr)

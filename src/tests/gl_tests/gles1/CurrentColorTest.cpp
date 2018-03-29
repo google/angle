@@ -4,7 +4,7 @@
 // found in the LICENSE file.
 //
 
-// CurrentColorTest.cpp: Tests basic usage of glClientActiveTexture.
+// CurrentColorTest.cpp: Tests basic usage of glColor4(f|ub|x).
 
 #include "test_utils/ANGLETest.h"
 #include "test_utils/gl_raii.h"

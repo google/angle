@@ -417,13 +417,13 @@ bool ValidateMultiTexCoord4x(Context *context,
 
 bool ValidateNormal3f(Context *context, GLfloat nx, GLfloat ny, GLfloat nz)
 {
-    UNIMPLEMENTED();
+    ANGLE_VALIDATE_IS_GLES1(context);
     return true;
 }
 
 bool ValidateNormal3x(Context *context, GLfixed nx, GLfixed ny, GLfixed nz)
 {
-    UNIMPLEMENTED();
+    ANGLE_VALIDATE_IS_GLES1(context);
     return true;
 }
 

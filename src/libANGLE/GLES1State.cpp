@@ -159,7 +159,7 @@ unsigned int GLES1State::getClientTextureUnit() const
     return mClientActiveTexture;
 }
 
-void GLES1State::setCurrentColor(ColorF color)
+void GLES1State::setCurrentColor(const ColorF &color)
 {
     mCurrentColor = color;
 }
@@ -167,6 +167,16 @@ void GLES1State::setCurrentColor(ColorF color)
 const ColorF &GLES1State::getCurrentColor() const
 {
     return mCurrentColor;
+}
+
+void GLES1State::setCurrentNormal(const angle::Vector3 &normal)
+{
+    mCurrentNormal = normal;
+}
+
+const angle::Vector3 &GLES1State::getCurrentNormal() const
+{
+    return mCurrentNormal;
 }
 
 }  // namespace gl
