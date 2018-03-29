@@ -132,7 +132,18 @@ gl::Error FramebufferVk::clear(const gl::Context *context, GLbitfield mask)
     bool clearStencil = (stencilAttachment && (mask & GL_STENCIL_BUFFER_BIT) != 0);
     ASSERT(!clearStencil || stencilAttachment->isAttached());
 
-    // Depth/stencil clear.
+    bool clearColor = IsMaskFlagSet(static_cast<int>(mask), GL_COLOR_BUFFER_BIT);
+
+    if (context->getGLState().isScissorTestEnabled())
+    {
+        // With scissor test enabled, we clear very differently and we don't need to access
+        // the image inside each attachment we can just use clearCmdAttachments with our
+        // scissor region instead.
+        ANGLE_TRY(clearAttachmentsWithScissorRegion(context, clearColor, clearDepth, clearStencil));
+        return gl::NoError();
+    }
+
+    // Standard Depth/stencil clear without scissor.
     if (clearDepth || clearStencil)
     {
         ANGLE_TRY(beginWriteResource(renderer, &commandBuffer));
@@ -157,21 +168,13 @@ gl::Error FramebufferVk::clear(const gl::Context *context, GLbitfield mask)
         commandBuffer->clearSingleDepthStencilImage(renderTarget->image->getImage(), aspectFlags,
                                                     clearDepthStencilValue);
 
-        if ((mask & GL_COLOR_BUFFER_BIT) == 0)
+        if (!clearColor)
         {
             return gl::NoError();
         }
     }
 
-    if (context->getGLState().isScissorTestEnabled())
-    {
-        // With scissor test enabled, we clear very differently and we don't need to access
-        // the image inside each attachment we can just use clearCmdAttachments with our
-        // scissor region instead.
-        ANGLE_TRY(clearColorAttachmentsWithScissorRegion(context));
-        return gl::NoError();
-    }
-
+    ASSERT(clearColor);
     const auto *attachment = mState.getFirstNonNullAttachment();
     ASSERT(attachment && attachment->isAttached());
 
@@ -465,7 +468,10 @@ gl::ErrorOrResult<vk::Framebuffer *> FramebufferVk::getFramebuffer(const gl::Con
     return &mFramebuffer;
 }
 
-gl::Error FramebufferVk::clearColorAttachmentsWithScissorRegion(const gl::Context *context)
+gl::Error FramebufferVk::clearAttachmentsWithScissorRegion(const gl::Context *context,
+                                                           bool clearColor,
+                                                           bool clearDepth,
+                                                           bool clearStencil)
 {
     ContextVk *contextVk = vk::GetImpl(context);
     RendererVk *renderer = contextVk->getRenderer();
@@ -484,16 +490,51 @@ gl::Error FramebufferVk::clearColorAttachmentsWithScissorRegion(const gl::Contex
         ANGLE_TRY(node->beginInsideRenderPassRecording(renderer, &commandBuffer));
     }
 
-    const std::vector<gl::FramebufferAttachment> &colorAttachments = mState.getColorAttachments();
     gl::AttachmentArray<VkClearAttachment> clearAttachments;
     int clearAttachmentIndex = 0;
-    for (auto colorIndex : mState.getEnabledDrawBuffers())
+
+    if (clearColor)
     {
+        // TODO(jmadill): Support gaps in RenderTargets. http://anglebug.com/2394
+        for (size_t colorIndex : mState.getEnabledDrawBuffers())
+        {
+            VkClearAttachment &clearAttachment = clearAttachments[clearAttachmentIndex];
+            clearAttachment.aspectMask         = VK_IMAGE_ASPECT_COLOR_BIT;
+            clearAttachment.colorAttachment    = static_cast<uint32_t>(colorIndex);
+            clearAttachment.clearValue         = contextVk->getClearColorValue();
+            ++clearAttachmentIndex;
+        }
+    }
+
+    if (clearDepth && clearStencil && mState.getDepthStencilAttachment() != nullptr)
+    {
+        // When we have a packed depth/stencil attachment we can do 1 clear for both when it
+        // applies.
         VkClearAttachment &clearAttachment = clearAttachments[clearAttachmentIndex];
-        clearAttachment.aspectMask         = VK_IMAGE_ASPECT_COLOR_BIT;
-        clearAttachment.colorAttachment    = static_cast<uint32_t>(colorIndex);
-        clearAttachment.clearValue         = contextVk->getClearColorValue();
+        clearAttachment.aspectMask      = VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT;
+        clearAttachment.colorAttachment = VK_ATTACHMENT_UNUSED;
+        clearAttachment.clearValue      = contextVk->getClearDepthStencilValue();
         ++clearAttachmentIndex;
+    }
+    else
+    {
+        if (clearDepth)
+        {
+            VkClearAttachment &clearAttachment = clearAttachments[clearAttachmentIndex];
+            clearAttachment.aspectMask         = VK_IMAGE_ASPECT_DEPTH_BIT;
+            clearAttachment.colorAttachment    = VK_ATTACHMENT_UNUSED;
+            clearAttachment.clearValue         = contextVk->getClearDepthStencilValue();
+            ++clearAttachmentIndex;
+        }
+
+        if (clearStencil)
+        {
+            VkClearAttachment &clearAttachment = clearAttachments[clearAttachmentIndex];
+            clearAttachment.aspectMask         = VK_IMAGE_ASPECT_STENCIL_BIT;
+            clearAttachment.colorAttachment    = VK_ATTACHMENT_UNUSED;
+            clearAttachment.clearValue         = contextVk->getClearDepthStencilValue();
+            ++clearAttachmentIndex;
+        }
     }
 
     // We assume for now that we always need to clear only 1 layer starting at the
@@ -504,7 +545,7 @@ gl::Error FramebufferVk::clearColorAttachmentsWithScissorRegion(const gl::Contex
     clearRect.layerCount     = 1;
     clearRect.rect           = contextVk->getScissor();
 
-    commandBuffer->clearAttachments(static_cast<uint32_t>(colorAttachments.size()),
+    commandBuffer->clearAttachments(static_cast<uint32_t>(clearAttachmentIndex),
                                     clearAttachments.data(), 1, &clearRect);
     return gl::NoError();
 }
