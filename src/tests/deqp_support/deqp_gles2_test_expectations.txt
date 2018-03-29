@@ -230,7 +230,6 @@
 2161 VULKAN : dEQP-GLES2.functional.texture.vertex.* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.fragment_ops.random.* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.fragment_ops.interaction.* = SKIP
-2161 VULKAN : dEQP-GLES2.functional.fragment_ops.stencil.* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.fragment_ops.depth_stencil.* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.fbo.* = SKIP
 // Conflicts with Android expectation, specify the OSs
@@ -338,6 +337,3 @@
 2161 VULKAN : dEQP-GLES2.functional.default_vertex_attrib.* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.lifetime.* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.debug_marker.* = SKIP
-
-// Stencil state support isn't implemented yet.
-2427 VULKAN : dEQP-GLES2.functional.fragment_ops.scissor.clear_stencil = SKIP

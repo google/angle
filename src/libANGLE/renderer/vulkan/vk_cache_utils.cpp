@@ -81,6 +81,32 @@ uint8_t PackGLBlendFactor(GLenum blendFactor)
     }
 }
 
+uint8_t PackGLStencilOp(GLenum compareOp)
+{
+    switch (compareOp)
+    {
+        case GL_KEEP:
+            return VK_STENCIL_OP_KEEP;
+        case GL_ZERO:
+            return VK_STENCIL_OP_ZERO;
+        case GL_REPLACE:
+            return VK_STENCIL_OP_REPLACE;
+        case GL_INCR:
+            return VK_STENCIL_OP_INCREMENT_AND_CLAMP;
+        case GL_DECR:
+            return VK_STENCIL_OP_DECREMENT_AND_CLAMP;
+        case GL_INCR_WRAP:
+            return VK_STENCIL_OP_INCREMENT_AND_WRAP;
+        case GL_DECR_WRAP:
+            return VK_STENCIL_OP_DECREMENT_AND_WRAP;
+        case GL_INVERT:
+            return VK_STENCIL_OP_INVERT;
+        default:
+            UNREACHABLE();
+            return 0;
+    }
+}
+
 uint8_t PackGLCompareFunc(GLenum compareFunc)
 {
     switch (compareFunc)
@@ -706,6 +732,56 @@ void PipelineDesc::updateDepthTestEnabled(const gl::DepthStencilState &depthSten
 void PipelineDesc::updateDepthFunc(const gl::DepthStencilState &depthStencilState)
 {
     mDepthStencilStateInfo.depthCompareOp = PackGLCompareFunc(depthStencilState.depthFunc);
+}
+
+void PipelineDesc::updateStencilTestEnabled(const gl::DepthStencilState &depthStencilState)
+{
+    mDepthStencilStateInfo.stencilTestEnable = static_cast<uint8_t>(depthStencilState.stencilTest);
+}
+
+void PipelineDesc::updateStencilFrontFuncs(GLint ref,
+                                           const gl::DepthStencilState &depthStencilState)
+{
+    mDepthStencilStateInfo.front.reference   = ref;
+    mDepthStencilStateInfo.front.compareOp   = PackGLCompareFunc(depthStencilState.stencilFunc);
+    mDepthStencilStateInfo.front.compareMask = static_cast<uint32_t>(depthStencilState.stencilMask);
+}
+
+void PipelineDesc::updateStencilBackFuncs(GLint ref, const gl::DepthStencilState &depthStencilState)
+{
+    mDepthStencilStateInfo.back.reference = ref;
+    mDepthStencilStateInfo.back.compareOp = PackGLCompareFunc(depthStencilState.stencilBackFunc);
+    mDepthStencilStateInfo.back.compareMask =
+        static_cast<uint32_t>(depthStencilState.stencilBackMask);
+}
+
+void PipelineDesc::updateStencilFrontOps(const gl::DepthStencilState &depthStencilState)
+{
+    mDepthStencilStateInfo.front.passOp = PackGLStencilOp(depthStencilState.stencilPassDepthPass);
+    mDepthStencilStateInfo.front.failOp = PackGLStencilOp(depthStencilState.stencilFail);
+    mDepthStencilStateInfo.front.depthFailOp =
+        PackGLStencilOp(depthStencilState.stencilPassDepthFail);
+}
+
+void PipelineDesc::updateStencilBackOps(const gl::DepthStencilState &depthStencilState)
+{
+    mDepthStencilStateInfo.back.passOp =
+        PackGLStencilOp(depthStencilState.stencilBackPassDepthPass);
+    mDepthStencilStateInfo.back.failOp = PackGLStencilOp(depthStencilState.stencilBackFail);
+    mDepthStencilStateInfo.back.depthFailOp =
+        PackGLStencilOp(depthStencilState.stencilBackPassDepthFail);
+}
+
+void PipelineDesc::updateStencilFrontWriteMask(const gl::DepthStencilState &depthStencilState)
+{
+    mDepthStencilStateInfo.front.writeMask =
+        static_cast<uint32_t>(depthStencilState.stencilWritemask);
+}
+
+void PipelineDesc::updateStencilBackWriteMask(const gl::DepthStencilState &depthStencilState)
+{
+    mDepthStencilStateInfo.back.writeMask =
+        static_cast<uint32_t>(depthStencilState.stencilBackWritemask);
 }
 
 void PipelineDesc::updateRenderPassDesc(const RenderPassDesc &renderPassDesc)

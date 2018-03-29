@@ -548,25 +548,27 @@ void ContextVk::syncState(const gl::Context *context, const gl::State::DirtyBits
                 WARN() << "DIRTY_BIT_DEPTH_MASK unimplemented";
                 break;
             case gl::State::DIRTY_BIT_STENCIL_TEST_ENABLED:
-                WARN() << "DIRTY_BIT_STENCIL_TEST_ENABLED unimplemented";
+                mPipelineDesc->updateStencilTestEnabled(glState.getDepthStencilState());
                 break;
             case gl::State::DIRTY_BIT_STENCIL_FUNCS_FRONT:
-                WARN() << "DIRTY_BIT_STENCIL_FUNCS_FRONT unimplemented";
+                mPipelineDesc->updateStencilFrontFuncs(glState.getStencilRef(),
+                                                       glState.getDepthStencilState());
                 break;
             case gl::State::DIRTY_BIT_STENCIL_FUNCS_BACK:
-                WARN() << "DIRTY_BIT_STENCIL_FUNCS_BACK unimplemented";
+                mPipelineDesc->updateStencilBackFuncs(glState.getStencilBackRef(),
+                                                      glState.getDepthStencilState());
                 break;
             case gl::State::DIRTY_BIT_STENCIL_OPS_FRONT:
-                WARN() << "DIRTY_BIT_STENCIL_OPS_FRONT unimplemented";
+                mPipelineDesc->updateStencilFrontOps(glState.getDepthStencilState());
                 break;
             case gl::State::DIRTY_BIT_STENCIL_OPS_BACK:
-                WARN() << "DIRTY_BIT_STENCIL_OPS_BACK unimplemented";
+                mPipelineDesc->updateStencilBackOps(glState.getDepthStencilState());
                 break;
             case gl::State::DIRTY_BIT_STENCIL_WRITEMASK_FRONT:
-                WARN() << "DIRTY_BIT_STENCIL_WRITEMASK_FRONT unimplemented";
+                mPipelineDesc->updateStencilFrontWriteMask(glState.getDepthStencilState());
                 break;
             case gl::State::DIRTY_BIT_STENCIL_WRITEMASK_BACK:
-                WARN() << "DIRTY_BIT_STENCIL_WRITEMASK_BACK unimplemented";
+                mPipelineDesc->updateStencilBackWriteMask(glState.getDepthStencilState());
                 break;
             case gl::State::DIRTY_BIT_CULL_FACE_ENABLED:
             case gl::State::DIRTY_BIT_CULL_FACE:
