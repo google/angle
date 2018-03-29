@@ -51,17 +51,20 @@ void Context::clipPlanex(GLenum plane, const GLfixed *equation)
 
 void Context::color4f(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha)
 {
-    UNIMPLEMENTED();
+    mGLState.gles1().setCurrentColor({red, green, blue, alpha});
 }
 
 void Context::color4ub(GLubyte red, GLubyte green, GLubyte blue, GLubyte alpha)
 {
-    UNIMPLEMENTED();
+    mGLState.gles1().setCurrentColor(
+        {normalizedToFloat<uint8_t>(red), normalizedToFloat<uint8_t>(green),
+         normalizedToFloat<uint8_t>(blue), normalizedToFloat<uint8_t>(alpha)});
 }
 
 void Context::color4x(GLfixed red, GLfixed green, GLfixed blue, GLfixed alpha)
 {
-    UNIMPLEMENTED();
+    mGLState.gles1().setCurrentColor(
+        {FixedToFloat(red), FixedToFloat(green), FixedToFloat(blue), FixedToFloat(alpha)});
 }
 
 void Context::colorPointer(GLint size, GLenum type, GLsizei stride, const void *ptr)

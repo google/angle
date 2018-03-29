@@ -49,6 +49,7 @@
             '<(angle_path)/src/tests/gl_tests/GeometryShaderTest.cpp',
             '<(angle_path)/src/tests/gl_tests/gles1/AlphaFuncTest.cpp',
             '<(angle_path)/src/tests/gl_tests/gles1/ClientActiveTextureTest.cpp',
+            '<(angle_path)/src/tests/gl_tests/gles1/CurrentColorTest.cpp',
             '<(angle_path)/src/tests/gl_tests/GLSLTest.cpp',
             '<(angle_path)/src/tests/gl_tests/ImageTest.cpp',
             '<(angle_path)/src/tests/gl_tests/IncompleteTextureTest.cpp',

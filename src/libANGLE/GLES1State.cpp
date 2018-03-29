@@ -159,4 +159,14 @@ unsigned int GLES1State::getClientTextureUnit() const
     return mClientActiveTexture;
 }
 
+void GLES1State::setCurrentColor(ColorF color)
+{
+    mCurrentColor = color;
+}
+
+const ColorF &GLES1State::getCurrentColor() const
+{
+    return mCurrentColor;
+}
+
 }  // namespace gl

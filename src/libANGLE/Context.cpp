@@ -6397,6 +6397,10 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
                 *type      = GL_INT;
                 *numParams = 1;
                 return true;
+            case GL_CURRENT_COLOR:
+                *type      = GL_FLOAT;
+                *numParams = 4;
+                return true;
         }
     }
 
