@@ -93,6 +93,30 @@
       "revId": "8b91b4f4a4caf8a55d0e4cea157b2676234767a3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3d5cca6a_663eee2a",
+        "filename": "src/tests/gl_tests/gles1/CurrentColorTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-29T15:04:06Z",
+      "side": 1,
+      "message": "Sorry, you\u0027d just EXPECT_EQ. \n\nGLColor32f actualColor;\nglGetFloatv(GL_CURRENT_COLOR, \u0026actualColor);\nEXPECT_GL_NO_ERROR();\nEXPECT_EQ(kFloatWhite, actualColor);",
+      "parentUuid": "ba5c74d6_af9e2388",
+      "range": {
+        "startLine": 36,
+        "startChar": 0,
+        "endLine": 42,
+        "endChar": 29
+      },
+      "revId": "8b91b4f4a4caf8a55d0e4cea157b2676234767a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
