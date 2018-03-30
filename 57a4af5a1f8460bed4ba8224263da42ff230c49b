@@ -19,6 +19,52 @@
     },
     {
       "key": {
+        "uuid": "39f5bc0a_760d64e6",
+        "filename": "src/libANGLE/Context_gles_1_0.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 288,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-30T16:36:28Z",
+      "side": 1,
+      "message": "can you add an ASSERT here that this value is in range?",
+      "range": {
+        "startLine": 288,
+        "startChar": 8,
+        "endLine": 288,
+        "endChar": 28
+      },
+      "revId": "57a4af5a1f8460bed4ba8224263da42ff230c49b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2141ad40_82d6bf9e",
+        "filename": "src/libANGLE/GLES1State.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-30T16:36:28Z",
+      "side": 1,
+      "message": "Can you implement these (including the default init for members, but in a constructor) in the cpp?",
+      "range": {
+        "startLine": 26,
+        "startChar": 4,
+        "endLine": 38,
+        "endChar": 21
+      },
+      "revId": "57a4af5a1f8460bed4ba8224263da42ff230c49b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a5db5c8a_d4e28d3b",
         "filename": "src/libANGLE/State.cpp",
         "patchSetId": 1
@@ -47,6 +93,29 @@
       "writtenOn": "2018-03-30T01:17:21Z",
       "side": 1,
       "message": "Is it ever possible for maxMultitextureUnits to be different from maxConbinedTextureUnits when in OpenGL ES 1 mode? Maybe we could have a single caps so we don\u0027t need a GLES1 check in ValidateActiveTexture.",
+      "revId": "57a4af5a1f8460bed4ba8224263da42ff230c49b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e1343724_7a68e560",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 6038,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-30T16:36:28Z",
+      "side": 1,
+      "message": "you can use \u003e\u003d instead of the -1",
+      "range": {
+        "startLine": 6038,
+        "startChar": 16,
+        "endLine": 6038,
+        "endChar": 17
+      },
       "revId": "57a4af5a1f8460bed4ba8224263da42ff230c49b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
