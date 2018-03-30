@@ -11,6 +11,7 @@
 #include "common/debug.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/ErrorStrings.h"
+#include "libANGLE/validationES.h"
 
 #define ANGLE_VALIDATE_IS_GLES1(context)                              \
     if (context->getClientMajorVersion() > 1)                         \
@@ -73,14 +74,7 @@ bool ValidateClearDepthx(Context *context, GLfixed depth)
 bool ValidateClientActiveTexture(Context *context, GLenum texture)
 {
     ANGLE_VALIDATE_IS_GLES1(context);
-    if (texture < GL_TEXTURE0 ||
-        texture > GL_TEXTURE0 + context->getCaps().maxMultitextureUnits - 1)
-    {
-        ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidMultitextureUnit);
-        return false;
-    }
-
-    return true;
+    return ValidateMultitextureUnit(context, texture);
 }
 
 bool ValidateClipPlanef(Context *context, GLenum p, const GLfloat *eqn)
@@ -400,19 +394,19 @@ bool ValidateMultiTexCoord4f(Context *context,
                              GLfloat r,
                              GLfloat q)
 {
-    UNIMPLEMENTED();
-    return true;
+    ANGLE_VALIDATE_IS_GLES1(context);
+    return ValidateMultitextureUnit(context, target);
 }
 
 bool ValidateMultiTexCoord4x(Context *context,
-                             GLenum texture,
+                             GLenum target,
                              GLfixed s,
                              GLfixed t,
                              GLfixed r,
                              GLfixed q)
 {
-    UNIMPLEMENTED();
-    return true;
+    ANGLE_VALIDATE_IS_GLES1(context);
+    return ValidateMultitextureUnit(context, target);
 }
 
 bool ValidateNormal3f(Context *context, GLfloat nx, GLfloat ny, GLfloat nz)

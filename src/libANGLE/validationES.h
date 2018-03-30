@@ -617,6 +617,8 @@ bool ValidateGetInternalFormativBase(Context *context,
 bool ValidateFramebufferComplete(Context *context, Framebuffer *framebuffer, bool isFramebufferOp);
 bool ValidateFramebufferNotMultisampled(Context *context, Framebuffer *framebuffer);
 
+bool ValidateMultitextureUnit(Context *context, GLenum texture);
+
 // Utility macro for handling implementation methods inside Validation.
 #define ANGLE_HANDLE_VALIDATION_ERR(X) \
     context->handleError(X);           \

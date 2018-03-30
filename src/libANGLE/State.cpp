@@ -1947,6 +1947,15 @@ void State::getFloatv(GLenum pname, GLfloat *params)
             params[2]          = normal[2];
             break;
         }
+        case GL_CURRENT_TEXTURE_COORDS:
+        {
+            const auto &texcoord = mGLES1State.mCurrentTextureCoords[mActiveSampler];
+            params[0]            = texcoord.s;
+            params[1]            = texcoord.t;
+            params[2]            = texcoord.r;
+            params[3]            = texcoord.q;
+            break;
+        }
         default:
             UNREACHABLE();
             break;

@@ -23,6 +23,10 @@ namespace gl
 // State types specific to GLES1 contexts, from the OpenGL ES 1.1 spec "State Tables" section
 struct TextureCoordF
 {
+    TextureCoordF();
+    TextureCoordF(float _s, float _t, float _r, float _q);
+    bool operator==(const TextureCoordF &other) const;
+
     GLfloat s = 0.0f;
     GLfloat t = 0.0f;
     GLfloat r = 0.0f;
@@ -127,6 +131,9 @@ class GLES1State final : angle::NonCopyable
 
     void setCurrentNormal(const angle::Vector3 &normal);
     const angle::Vector3 &getCurrentNormal() const;
+
+    void setCurrentTextureCoords(unsigned int unit, const TextureCoordF &coords);
+    const TextureCoordF &getCurrentTextureCoords(unsigned int unit) const;
 
   private:
     friend class State;

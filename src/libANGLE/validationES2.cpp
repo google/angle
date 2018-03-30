@@ -4347,6 +4347,11 @@ bool ValidateRequestExtensionANGLE(Context *context, const GLchar *name)
 
 bool ValidateActiveTexture(Context *context, GLenum texture)
 {
+    if (context->getClientMajorVersion() < 2)
+    {
+        return ValidateMultitextureUnit(context, texture);
+    }
+
     if (texture < GL_TEXTURE0 ||
         texture > GL_TEXTURE0 + context->getCaps().maxCombinedTextureImageUnits - 1)
     {

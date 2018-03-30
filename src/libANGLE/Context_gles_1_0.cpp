@@ -279,12 +279,17 @@ void Context::multMatrixx(const GLfixed *m)
 
 void Context::multiTexCoord4f(GLenum target, GLfloat s, GLfloat t, GLfloat r, GLfloat q)
 {
-    UNIMPLEMENTED();
+    unsigned int unit = target - GL_TEXTURE0;
+    ASSERT(target >= GL_TEXTURE0 && unit < getCaps().maxMultitextureUnits);
+    mGLState.gles1().setCurrentTextureCoords(unit, {s, t, r, q});
 }
 
-void Context::multiTexCoord4x(GLenum texture, GLfixed s, GLfixed t, GLfixed r, GLfixed q)
+void Context::multiTexCoord4x(GLenum target, GLfixed s, GLfixed t, GLfixed r, GLfixed q)
 {
-    UNIMPLEMENTED();
+    unsigned int unit = target - GL_TEXTURE0;
+    ASSERT(target >= GL_TEXTURE0 && unit < getCaps().maxMultitextureUnits);
+    mGLState.gles1().setCurrentTextureCoords(
+        unit, {FixedToFloat(s), FixedToFloat(t), FixedToFloat(r), FixedToFloat(q)});
 }
 
 void Context::normal3f(GLfloat nx, GLfloat ny, GLfloat nz)
