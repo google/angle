@@ -31,11 +31,10 @@ struct ActiveVariable
     ShaderType getFirstShaderTypeWhereActive() const;
     void setActive(ShaderType shaderType, bool used);
     void unionReferencesWith(const ActiveVariable &other);
+    bool isActive(ShaderType shaderType) const;
 
-    bool vertexActive;
-    bool fragmentActive;
-    bool computeActive;
-    bool geometryActive;
+  private:
+    ShaderBitSet mActiveUseBits;
 };
 
 // Helper struct representing a single shader uniform

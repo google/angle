@@ -172,6 +172,8 @@ struct AllShaderTypes
     angle::EnumIterator<ShaderType> end() const { return kAfterShaderTypeMax; }
 };
 
+using ShaderBitSet = angle::PackedEnumBitSet<ShaderType>;
+
 TextureType SamplerTypeToTextureType(GLenum samplerType);
 
 }  // namespace gl

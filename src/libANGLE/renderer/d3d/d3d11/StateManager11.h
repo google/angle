@@ -127,11 +127,9 @@ class ShaderConstants11 : angle::NonCopyable
     bool updateSamplerMetadata(SamplerMetadata *data, const gl::Texture &texture);
 
     Vertex mVertex;
-    bool mVertexDirty;
     Pixel mPixel;
-    bool mPixelDirty;
     Compute mCompute;
-    bool mComputeDirty;
+    gl::ShaderBitSet mShaderConstantsDirty;
 
     std::vector<SamplerMetadata> mSamplerMetadataVS;
     int mNumActiveVSSamplers;

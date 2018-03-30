@@ -308,9 +308,11 @@ class ProgramD3D : public ProgramImpl
     bool hasGeometryExecutableForPrimitiveType(GLenum drawMode);
     bool hasPixelExecutableForCachedOutputLayout();
 
-    bool areVertexUniformsDirty() const { return mVertexUniformsDirty; }
-    bool areFragmentUniformsDirty() const { return mFragmentUniformsDirty; }
-    bool areComputeUniformsDirty() const { return mComputeUniformsDirty; }
+    bool anyShaderUniformsDirty() const;
+    bool areShaderUniformsDirty(gl::ShaderType shaderType) const
+    {
+        return mShaderUniformsDirty[shaderType];
+    }
     const std::vector<D3DUniform *> &getD3DUniforms() const { return mD3DUniforms; }
     void markUniformsClean();
 
@@ -550,9 +552,7 @@ class ProgramD3D : public ProgramImpl
     std::map<std::string, int> mImageBindingMap;
     std::vector<D3DUniformBlock> mD3DUniformBlocks;
 
-    bool mVertexUniformsDirty;
-    bool mFragmentUniformsDirty;
-    bool mComputeUniformsDirty;
+    gl::ShaderBitSet mShaderUniformsDirty;
 
     static unsigned int issueSerial();
     static unsigned int mCurrentSerial;

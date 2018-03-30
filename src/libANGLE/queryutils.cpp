@@ -727,13 +727,13 @@ void GetShaderVariableBufferResourceProperty(const ShaderVariableBuffer &buffer,
             }
             break;
         case GL_REFERENCED_BY_VERTEX_SHADER:
-            params[(*outputPosition)++] = static_cast<GLint>(buffer.vertexActive);
+            params[(*outputPosition)++] = static_cast<GLint>(buffer.isActive(ShaderType::Vertex));
             break;
         case GL_REFERENCED_BY_FRAGMENT_SHADER:
-            params[(*outputPosition)++] = static_cast<GLint>(buffer.fragmentActive);
+            params[(*outputPosition)++] = static_cast<GLint>(buffer.isActive(ShaderType::Fragment));
             break;
         case GL_REFERENCED_BY_COMPUTE_SHADER:
-            params[(*outputPosition)++] = static_cast<GLint>(buffer.computeActive);
+            params[(*outputPosition)++] = static_cast<GLint>(buffer.isActive(ShaderType::Compute));
             break;
         default:
             UNREACHABLE();
@@ -1425,13 +1425,13 @@ GLint GetUniformResourceProperty(const Program *program, GLuint index, const GLe
             return static_cast<GLint>(uniform.blockInfo.isRowMajorMatrix);
 
         case GL_REFERENCED_BY_VERTEX_SHADER:
-            return uniform.vertexActive;
+            return uniform.isActive(ShaderType::Vertex);
 
         case GL_REFERENCED_BY_FRAGMENT_SHADER:
-            return uniform.fragmentActive;
+            return uniform.isActive(ShaderType::Fragment);
 
         case GL_REFERENCED_BY_COMPUTE_SHADER:
-            return uniform.computeActive;
+            return uniform.isActive(ShaderType::Compute);
 
         case GL_ATOMIC_COUNTER_BUFFER_INDEX:
             return (uniform.isAtomicCounter() ? uniform.bufferIndex : -1);
@@ -1468,13 +1468,13 @@ GLint GetBufferVariableResourceProperty(const Program *program, GLuint index, co
             return static_cast<GLint>(bufferVariable.blockInfo.isRowMajorMatrix);
 
         case GL_REFERENCED_BY_VERTEX_SHADER:
-            return bufferVariable.vertexActive;
+            return bufferVariable.isActive(ShaderType::Vertex);
 
         case GL_REFERENCED_BY_FRAGMENT_SHADER:
-            return bufferVariable.fragmentActive;
+            return bufferVariable.isActive(ShaderType::Fragment);
 
         case GL_REFERENCED_BY_COMPUTE_SHADER:
-            return bufferVariable.computeActive;
+            return bufferVariable.isActive(ShaderType::Compute);
 
         case GL_TOP_LEVEL_ARRAY_SIZE:
             return bufferVariable.topLevelArraySize;

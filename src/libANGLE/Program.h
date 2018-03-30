@@ -277,8 +277,6 @@ struct ImageBinding
     std::vector<GLuint> boundImageUnits;
 };
 
-using ShaderStagesMask = angle::PackedEnumBitSet<ShaderType>;
-
 class ProgramState final : angle::NonCopyable
 {
   public:
@@ -352,7 +350,7 @@ class ProgramState final : angle::NonCopyable
     int getNumViews() const { return mNumViews; }
     bool usesMultiview() const { return mNumViews != -1; }
 
-    const ShaderStagesMask &getLinkedShaderStages() const { return mLinkedShaderStages; }
+    const ShaderBitSet &getLinkedShaderStages() const { return mLinkedShaderStages; }
 
   private:
     friend class MemoryProgramCache;
@@ -423,7 +421,7 @@ class ProgramState final : angle::NonCopyable
 
     bool mBinaryRetrieveableHint;
     bool mSeparable;
-    ShaderStagesMask mLinkedShaderStages;
+    ShaderBitSet mLinkedShaderStages;
 
     // ANGLE_multiview.
     int mNumViews;

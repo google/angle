@@ -14,7 +14,6 @@ namespace gl
 {
 
 ActiveVariable::ActiveVariable()
-    : vertexActive(false), fragmentActive(false), computeActive(false), geometryActive(false)
 {
 }
 
@@ -27,50 +26,24 @@ ActiveVariable &ActiveVariable::operator=(const ActiveVariable &rhs) = default;
 
 void ActiveVariable::setActive(ShaderType shaderType, bool used)
 {
-    switch (shaderType)
-    {
-        case ShaderType::Vertex:
-            vertexActive = used;
-            break;
+    ASSERT(shaderType != ShaderType::InvalidEnum);
+    mActiveUseBits.set(shaderType, used);
+}
 
-        case ShaderType::Fragment:
-            fragmentActive = used;
-            break;
-
-        case ShaderType::Compute:
-            computeActive = used;
-            break;
-
-        case ShaderType::Geometry:
-            geometryActive = used;
-            break;
-
-        default:
-            UNREACHABLE();
-    }
+bool ActiveVariable::isActive(ShaderType shaderType) const
+{
+    ASSERT(shaderType != ShaderType::InvalidEnum);
+    return mActiveUseBits[shaderType];
 }
 
 void ActiveVariable::unionReferencesWith(const ActiveVariable &other)
 {
-    vertexActive |= other.vertexActive;
-    fragmentActive |= other.fragmentActive;
-    computeActive |= other.computeActive;
-    geometryActive |= other.geometryActive;
+    mActiveUseBits |= other.mActiveUseBits;
 }
 
 ShaderType ActiveVariable::getFirstShaderTypeWhereActive() const
 {
-    if (vertexActive)
-        return ShaderType::Vertex;
-    if (fragmentActive)
-        return ShaderType::Fragment;
-    if (computeActive)
-        return ShaderType::Compute;
-    if (geometryActive)
-        return ShaderType::Geometry;
-
-    UNREACHABLE();
-    return ShaderType::InvalidEnum;
+    return static_cast<ShaderType>(gl::ScanForward(mActiveUseBits.bits()));
 }
 
 LinkedUniform::LinkedUniform()

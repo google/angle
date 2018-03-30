@@ -40,10 +40,10 @@ class BitSetT final
       private:
         friend class BitSetT;
 
-        Reference(BitSetT *parent, std::size_t bit) : mParent(parent), mBit(bit) {}
+        Reference(BitSetT *parent, ParamT bit) : mParent(parent), mBit(bit) {}
 
         BitSetT *mParent;
-        std::size_t mBit;
+        ParamT mBit;
     };
 
     class Iterator final
