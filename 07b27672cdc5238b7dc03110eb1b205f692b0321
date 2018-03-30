@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "52d8ae48_b8c1b48d",
+        "filename": "src/libANGLE/GLES1State.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-03-30T16:04:39Z",
+      "side": 1,
+      "message": "please make sure to run git cl format",
+      "range": {
+        "startLine": 125,
+        "startChar": 32,
+        "endLine": 125,
+        "endChar": 39
+      },
+      "revId": "07b27672cdc5238b7dc03110eb1b205f692b0321",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
