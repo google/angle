@@ -25,7 +25,7 @@ constexpr VkClearColorValue kBlackClearColorValue                 = {{0}};
 
 RenderbufferVk::RenderbufferVk(const gl::RenderbufferState &state) : RenderbufferImpl(state)
 {
-    mRenderTarget.image     = &mImage.getImage();
+    mRenderTarget.image     = &mImage;
     mRenderTarget.imageView = &mImageView;
     mRenderTarget.resource  = this;
 }
@@ -70,13 +70,6 @@ gl::Error RenderbufferVk::setStorage(const gl::Context *context,
         }
     }
 
-    // Init RenderTarget.
-    mRenderTarget.extents.width  = static_cast<int>(width);
-    mRenderTarget.extents.height = static_cast<int>(height);
-    mRenderTarget.extents.depth  = 1;
-    mRenderTarget.format         = &vkFormat;
-    mRenderTarget.samples        = VK_SAMPLE_COUNT_1_BIT;  // TODO(jmadill): Multisample bits.
-
     if (!mImage.valid() && (width != 0 || height != 0))
     {
         const angle::Format &textureFormat = vkFormat.textureFormat();
@@ -87,7 +80,8 @@ gl::Error RenderbufferVk::setStorage(const gl::Context *context,
             (textureFormat.redBits > 0 ? VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT : 0) |
             (isDepthOrStencilFormat ? VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT : 0);
 
-        ANGLE_TRY(mImage.init2D(device, mRenderTarget.extents, vkFormat, 1, usage));
+        gl::Extents extents(static_cast<int>(width), static_cast<int>(height), 1);
+        ANGLE_TRY(mImage.init2D(device, extents, vkFormat, 1, usage));
 
         VkMemoryPropertyFlags flags = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
         ANGLE_TRY(mImage.initMemory(device, renderer->getMemoryProperties(), flags));

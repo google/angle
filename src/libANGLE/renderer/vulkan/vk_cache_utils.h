@@ -54,8 +54,8 @@ class RenderPassDesc final
     RenderPassDesc &operator=(const RenderPassDesc &other);
 
     // Depth stencil attachments must be packed after color attachments.
-    void packColorAttachment(const Format &format, GLsizei samples);
-    void packDepthStencilAttachment(const Format &format, GLsizei samples);
+    void packColorAttachment(const ImageHelper &imageHelper);
+    void packDepthStencilAttachment(const ImageHelper &imageHelper);
 
     size_t hash() const;
 
@@ -65,7 +65,7 @@ class RenderPassDesc final
     const PackedAttachmentDesc &operator[](size_t index) const;
 
   private:
-    void packAttachment(uint32_t index, const vk::Format &format, GLsizei samples);
+    void packAttachment(uint32_t index, const ImageHelper &imageHelper);
 
     uint32_t mColorAttachmentCount;
     uint32_t mDepthStencilAttachmentCount;

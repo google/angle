@@ -52,6 +52,9 @@ void MapSwizzleState(GLenum internalFormat,
 
 TextureVk::TextureVk(const gl::TextureState &state) : TextureImpl(state)
 {
+    mRenderTarget.image     = &mImage;
+    mRenderTarget.imageView = &mImageView;
+    mRenderTarget.resource  = this;
 }
 
 TextureVk::~TextureVk()
@@ -104,8 +107,6 @@ gl::Error TextureVk::setImage(const gl::Context *context,
             onStateChange(context, angle::SubjectMessage::DEPENDENT_DIRTY_BITS);
         }
     }
-
-    mRenderTarget.reset();
 
     // Early-out on empty textures, don't create a zero-sized storage.
     if (size.width == 0 || size.height == 0 || size.depth == 0)
@@ -173,13 +174,6 @@ gl::Error TextureVk::setImage(const gl::Context *context,
         ANGLE_TRY(mSampler.init(device, samplerInfo));
     }
 
-    mRenderTarget.image     = &mImage.getImage();
-    mRenderTarget.imageView = &mImageView;
-    mRenderTarget.format    = &vkFormat;
-    mRenderTarget.extents   = size;
-    mRenderTarget.samples   = VK_SAMPLE_COUNT_1_BIT;
-    mRenderTarget.resource  = this;
-
     // Handle initial data.
     if (pixels)
     {
@@ -212,8 +206,8 @@ gl::Error TextureVk::setSubImageImpl(ContextVk *contextVk,
 {
     RendererVk *renderer       = contextVk->getRenderer();
     VkDevice device            = renderer->getDevice();
-    const gl::Extents &size    = mRenderTarget.extents;
-    const vk::Format &vkFormat = *mRenderTarget.format;
+    const gl::Extents &size    = mImage.getExtents();
+    const vk::Format &vkFormat = mImage.getFormat();
 
     vk::ImageHelper stagingImage;
     ANGLE_TRY(stagingImage.init2DStaging(device, renderer->getMemoryProperties(), vkFormat, size,

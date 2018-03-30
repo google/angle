@@ -140,17 +140,14 @@ void CommandGraphNode::storeRenderPassInfo(const Framebuffer &framebuffer,
 
 void CommandGraphNode::appendColorRenderTarget(Serial serial, RenderTargetVk *colorRenderTarget)
 {
-    // TODO(jmadill): Layout transition?
-    mRenderPassDesc.packColorAttachment(*colorRenderTarget->format, colorRenderTarget->samples);
+    mRenderPassDesc.packColorAttachment(*colorRenderTarget->image);
     colorRenderTarget->resource->onWriteResource(this, serial);
 }
 
 void CommandGraphNode::appendDepthStencilRenderTarget(Serial serial,
                                                       RenderTargetVk *depthStencilRenderTarget)
 {
-    // TODO(jmadill): Layout transition?
-    mRenderPassDesc.packDepthStencilAttachment(*depthStencilRenderTarget->format,
-                                               depthStencilRenderTarget->samples);
+    mRenderPassDesc.packDepthStencilAttachment(*depthStencilRenderTarget->image);
     depthStencilRenderTarget->resource->onWriteResource(this, serial);
 }
 

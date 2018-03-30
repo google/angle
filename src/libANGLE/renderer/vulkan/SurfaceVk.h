@@ -128,13 +128,13 @@ class WindowSurfaceVk : public SurfaceImpl, public ResourceVk
     // problem with needing to know the next available image index before we acquire it.
     vk::Semaphore mAcquireNextImageSemaphore;
 
-    struct SwapchainImage
+    struct SwapchainImage : angle::NonCopyable
     {
         SwapchainImage();
         SwapchainImage(SwapchainImage &&other);
         ~SwapchainImage();
 
-        vk::Image image;
+        vk::ImageHelper image;
         vk::ImageView imageView;
         vk::Framebuffer framebuffer;
         vk::Semaphore imageAcquiredSemaphore;
@@ -143,8 +143,7 @@ class WindowSurfaceVk : public SurfaceImpl, public ResourceVk
 
     std::vector<SwapchainImage> mSwapchainImages;
 
-    vk::Image mDepthStencilImage;
-    vk::DeviceMemory mDepthStencilDeviceMemory;
+    vk::ImageHelper mDepthStencilImage;
     vk::ImageView mDepthStencilImageView;
 };
 

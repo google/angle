@@ -232,29 +232,30 @@ RenderPassDesc::RenderPassDesc(const RenderPassDesc &other)
     memcpy(this, &other, sizeof(RenderPassDesc));
 }
 
-void RenderPassDesc::packAttachment(uint32_t index, const vk::Format &format, GLsizei samples)
+void RenderPassDesc::packAttachment(uint32_t index, const ImageHelper &imageHelper)
 {
     PackedAttachmentDesc &desc = mAttachmentDescs[index];
 
     // TODO(jmadill): We would only need this flag for duplicated attachments.
     desc.flags = VK_ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT;
-    ASSERT(desc.samples < std::numeric_limits<uint8_t>::max());
-    desc.samples = static_cast<uint8_t>(samples);
+    ASSERT(imageHelper.getSamples() < std::numeric_limits<uint8_t>::max());
+    desc.samples         = static_cast<uint8_t>(imageHelper.getSamples());
+    const Format &format = imageHelper.getFormat();
     ASSERT(format.vkTextureFormat < std::numeric_limits<uint16_t>::max());
     desc.format = static_cast<uint16_t>(format.vkTextureFormat);
 }
 
-void RenderPassDesc::packColorAttachment(const vk::Format &format, GLsizei samples)
+void RenderPassDesc::packColorAttachment(const ImageHelper &imageHelper)
 {
     ASSERT(mDepthStencilAttachmentCount == 0);
     ASSERT(mColorAttachmentCount < gl::IMPLEMENTATION_MAX_DRAW_BUFFERS);
-    packAttachment(mColorAttachmentCount++, format, samples);
+    packAttachment(mColorAttachmentCount++, imageHelper);
 }
 
-void RenderPassDesc::packDepthStencilAttachment(const vk::Format &format, GLsizei samples)
+void RenderPassDesc::packDepthStencilAttachment(const ImageHelper &imageHelper)
 {
     ASSERT(mDepthStencilAttachmentCount == 0);
-    packAttachment(mColorAttachmentCount + mDepthStencilAttachmentCount++, format, samples);
+    packAttachment(mColorAttachmentCount + mDepthStencilAttachmentCount++, imageHelper);
 }
 
 RenderPassDesc &RenderPassDesc::operator=(const RenderPassDesc &other)

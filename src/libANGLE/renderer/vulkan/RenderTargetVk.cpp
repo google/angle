@@ -11,20 +11,7 @@
 
 namespace rx
 {
-
-RenderTargetVk::RenderTargetVk()
+RenderTargetVk::RenderTargetVk() : image(nullptr), imageView(nullptr), resource(nullptr)
 {
-    reset();
 }
-
-void RenderTargetVk::reset()
-{
-    format    = nullptr;
-    image     = nullptr;
-    imageView = nullptr;
-    extents   = gl::Extents();
-    samples   = VK_SAMPLE_COUNT_1_BIT;
-    resource  = nullptr;
-}
-
 }  // namespace rx

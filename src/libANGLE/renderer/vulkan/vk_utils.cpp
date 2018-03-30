@@ -1425,6 +1425,16 @@ ImageHelper::ImageHelper() : mFormat(nullptr), mSamples(0), mAllocatedMemorySize
 {
 }
 
+ImageHelper::ImageHelper(ImageHelper &&other)
+    : mImage(std::move(other.mImage)),
+      mDeviceMemory(std::move(other.mDeviceMemory)),
+      mExtents(other.mExtents),
+      mFormat(other.mFormat),
+      mSamples(other.mSamples),
+      mAllocatedMemorySize(other.mAllocatedMemorySize)
+{
+}
+
 ImageHelper::~ImageHelper()
 {
     ASSERT(!valid());
@@ -1480,6 +1490,7 @@ Error ImageHelper::initMemory(VkDevice device,
                               const MemoryProperties &memoryProperties,
                               VkMemoryPropertyFlags flags)
 {
+    // TODO(jmadill): Memory sub-allocation. http://anglebug.com/2162
     ANGLE_TRY(AllocateBufferOrImageMemory(device, memoryProperties, flags, &mImage, &mDeviceMemory,
                                           &mAllocatedMemorySize));
     return NoError();
@@ -1515,6 +1526,20 @@ void ImageHelper::destroy(VkDevice device)
 {
     mImage.destroy(device);
     mDeviceMemory.destroy(device);
+}
+
+void ImageHelper::init2DWeakReference(VkImage handle,
+                                      const gl::Extents &extents,
+                                      const Format &format,
+                                      GLint samples)
+{
+    ASSERT(!valid());
+
+    mExtents = extents;
+    mFormat  = &format;
+    mSamples = samples;
+
+    mImage.setHandle(handle);
 }
 
 Error ImageHelper::init2DStaging(VkDevice device,

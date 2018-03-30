@@ -20,10 +20,9 @@ class ResourceVk;
 
 namespace vk
 {
-struct Format;
-class Image;
+class ImageHelper;
 class ImageView;
-}
+}  // namespace vk
 
 // This is a very light-weight class that does not own to the resources it points to.
 // It's meant only to copy across some information from a FramebufferAttachment to the
@@ -33,13 +32,8 @@ class RenderTargetVk final : public FramebufferAttachmentRenderTarget
   public:
     RenderTargetVk();
 
-    void reset();
-
-    const vk::Format *format;
-    vk::Image *image;
+    vk::ImageHelper *image;
     vk::ImageView *imageView;
-    gl::Extents extents;
-    VkSampleCountFlagBits samples;
     ResourceVk *resource;
 };
 

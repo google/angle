@@ -707,6 +707,7 @@ class ImageHelper final : angle::NonCopyable
 {
   public:
     ImageHelper();
+    ImageHelper(ImageHelper &&other);
     ~ImageHelper();
 
     bool valid() const;
@@ -716,6 +717,10 @@ class ImageHelper final : angle::NonCopyable
                  const Format &format,
                  GLint samples,
                  VkImageUsageFlags usage);
+    void init2DWeakReference(VkImage handle,
+                             const gl::Extents &extents,
+                             const Format &format,
+                             GLint samples);
     Error initMemory(VkDevice device,
                      const MemoryProperties &memoryProperties,
                      VkMemoryPropertyFlags flags);
