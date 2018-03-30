@@ -1,0 +1,78 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "96afec2e_deeb4d8a",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 6410,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-03-30T01:17:21Z",
+      "side": 1,
+      "message": "The spec says the returned type if \"2 * x T\" I\u0027m not sure how to interpret it, \"2 *\" isn\u0027t defined in the table of types. That said 4 looks correct.",
+      "revId": "57a4af5a1f8460bed4ba8224263da42ff230c49b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a5db5c8a_d4e28d3b",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1952,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-03-30T01:17:21Z",
+      "side": 1,
+      "message": "We\u0027ll have to be careful about mActiveSampler vs. mActiveClientSampler. Looks correct here.",
+      "revId": "57a4af5a1f8460bed4ba8224263da42ff230c49b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "42c7db76_333a3bb2",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 6035,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-03-30T01:17:21Z",
+      "side": 1,
+      "message": "Is it ever possible for maxMultitextureUnits to be different from maxConbinedTextureUnits when in OpenGL ES 1 mode? Maybe we could have a single caps so we don\u0027t need a GLES1 check in ValidateActiveTexture.",
+      "revId": "57a4af5a1f8460bed4ba8224263da42ff230c49b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ccbdd5ea_f0cd5c34",
+        "filename": "src/tests/gl_tests/gles1/CurrentTextureCoordsTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-03-30T01:17:21Z",
+      "side": 1,
+      "message": "this is already tested above.",
+      "range": {
+        "startLine": 69,
+        "startChar": 0,
+        "endLine": 72,
+        "endChar": 37
+      },
+      "revId": "57a4af5a1f8460bed4ba8224263da42ff230c49b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
