@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "4dd27241_68fb589a",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 6410,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-03-30T22:35:16Z",
+      "side": 1,
+      "message": "Ack; I think the T is referring to the 4 s/t/r/q components, and 2* means that there are at least 2 of T (and 2 is the spec minimum # of texture units)",
+      "parentUuid": "96afec2e_deeb4d8a",
+      "revId": "57a4af5a1f8460bed4ba8224263da42ff230c49b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "39f5bc0a_760d64e6",
         "filename": "src/libANGLE/Context_gles_1_0.cpp",
         "patchSetId": 1
@@ -39,6 +57,30 @@
       "revId": "57a4af5a1f8460bed4ba8224263da42ff230c49b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2f5da5d5_a97c3c39",
+        "filename": "src/libANGLE/Context_gles_1_0.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 288,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-03-30T22:35:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "39f5bc0a_760d64e6",
+      "range": {
+        "startLine": 288,
+        "startChar": 8,
+        "endLine": 288,
+        "endChar": 28
+      },
+      "revId": "57a4af5a1f8460bed4ba8224263da42ff230c49b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -65,6 +107,30 @@
     },
     {
       "key": {
+        "uuid": "f556bf9a_91f81e9d",
+        "filename": "src/libANGLE/GLES1State.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-03-30T22:35:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2141ad40_82d6bf9e",
+      "range": {
+        "startLine": 26,
+        "startChar": 4,
+        "endLine": 38,
+        "endChar": 21
+      },
+      "revId": "57a4af5a1f8460bed4ba8224263da42ff230c49b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a5db5c8a_d4e28d3b",
         "filename": "src/libANGLE/State.cpp",
         "patchSetId": 1
@@ -82,6 +148,24 @@
     },
     {
       "key": {
+        "uuid": "4fe64818_6a655d06",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1952,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-03-30T22:35:16Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "a5db5c8a_d4e28d3b",
+      "revId": "57a4af5a1f8460bed4ba8224263da42ff230c49b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "42c7db76_333a3bb2",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 1
@@ -96,6 +180,24 @@
       "revId": "57a4af5a1f8460bed4ba8224263da42ff230c49b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "12a90f1d_3006cc82",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 6035,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-03-30T22:35:16Z",
+      "side": 1,
+      "message": "Yes, they are at least semantically different, and I\u0027ve also chosen to limit the number of multitexturing units to 4:\n\n1. There\u0027s a semantic distinction between multitexturing units versus combined image units (https://www.khronos.org/opengl/wiki/Common_Mistakes#Texture_Unit).\n\nMultitexturing units also involved the vertex processing; texture coordinates / texture matrices.\n\nThis distinction is not completely without consequence, since after I added more varyings to the shader for further texture coordinates, the Intel GPU I was running seemed to fall back completely to software (or had some other huge slowdown).\n\n2. 4 units is the most we can get away with on systems with 8 image units without needing dynamic recompilation of the gles1 draw shader (sampler2D + samplerCube for each unit).\n\n3. It seems popular for gles1 apps to expect only 2-4 multitexturing units.",
+      "parentUuid": "42c7db76_333a3bb2",
+      "revId": "57a4af5a1f8460bed4ba8224263da42ff230c49b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -122,6 +224,30 @@
     },
     {
       "key": {
+        "uuid": "19a2759d_e4fe2b3e",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 6038,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-03-30T22:35:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e1343724_7a68e560",
+      "range": {
+        "startLine": 6038,
+        "startChar": 16,
+        "endLine": 6038,
+        "endChar": 17
+      },
+      "revId": "57a4af5a1f8460bed4ba8224263da42ff230c49b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ccbdd5ea_f0cd5c34",
         "filename": "src/tests/gl_tests/gles1/CurrentTextureCoordsTest.cpp",
         "patchSetId": 1
@@ -142,6 +268,30 @@
       "revId": "57a4af5a1f8460bed4ba8224263da42ff230c49b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f9b4e19b_e4209412",
+        "filename": "src/tests/gl_tests/gles1/CurrentTextureCoordsTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-03-30T22:35:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ccbdd5ea_f0cd5c34",
+      "range": {
+        "startLine": 69,
+        "startChar": 0,
+        "endLine": 72,
+        "endChar": 37
+      },
+      "revId": "57a4af5a1f8460bed4ba8224263da42ff230c49b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
