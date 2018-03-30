@@ -45,10 +45,8 @@ class RenderbufferVk : public RenderbufferImpl, public ResourceVk
                                  const gl::ImageIndex &imageIndex) override;
 
   private:
-    vk::Image mImage;
-    vk::DeviceMemory mDeviceMemory;
+    vk::ImageHelper mImage;
     vk::ImageView mImageView;
-    size_t mAllocatedMemorySize;
     RenderTargetVk mRenderTarget;
 };
 

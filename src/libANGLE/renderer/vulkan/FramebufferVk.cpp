@@ -261,9 +261,10 @@ gl::Error FramebufferVk::readPixels(const gl::Context *context,
     ASSERT(renderTarget);
 
     vk::Image *readImage = renderTarget->image;
-    vk::StagingImage stagingImage;
-    ANGLE_TRY(stagingImage.init(contextVk, TextureDimension::TEX_2D, *renderTarget->format,
-                                gl::Extents(area.width, area.height, 1), vk::StagingUsage::Read));
+    vk::ImageHelper stagingImage;
+    ANGLE_TRY(stagingImage.init2DStaging(
+        device, renderer->getMemoryProperties(), *renderTarget->format,
+        gl::Extents(area.width, area.height, 1), vk::StagingUsage::Read));
 
     vk::CommandBuffer *commandBuffer = nullptr;
     ANGLE_TRY(beginWriteResource(renderer, &commandBuffer));
@@ -302,10 +303,10 @@ gl::Error FramebufferVk::readPixels(const gl::Context *context,
 
     // TODO(jmadill): parameters
     uint8_t *mapPointer = nullptr;
-    ANGLE_TRY(
-        stagingImage.getDeviceMemory().map(device, 0, stagingImage.getSize(), 0, &mapPointer));
+    ANGLE_TRY(stagingImage.getDeviceMemory().map(device, 0, stagingImage.getAllocatedMemorySize(),
+                                                 0, &mapPointer));
 
-    const auto &angleFormat = renderTarget->format->textureFormat();
+    const angle::Format &angleFormat = renderTarget->format->textureFormat();
 
     // TODO(jmadill): Use pixel bytes from the ANGLE format directly.
     const auto &glFormat = gl::GetSizedInternalFormatInfo(angleFormat.glInternalFormat);

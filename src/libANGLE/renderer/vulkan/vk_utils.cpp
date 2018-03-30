@@ -173,15 +173,13 @@ vk::Error FindAndAllocateCompatibleMemory(VkDevice device,
 }
 
 template <typename T>
-vk::Error AllocateBufferOrImageMemory(RendererVk *renderer,
+vk::Error AllocateBufferOrImageMemory(VkDevice device,
+                                      const vk::MemoryProperties &memoryProperties,
                                       VkMemoryPropertyFlags memoryPropertyFlags,
                                       T *bufferOrImage,
                                       vk::DeviceMemory *deviceMemoryOut,
                                       size_t *requiredSizeOut)
 {
-    VkDevice device                              = renderer->getDevice();
-    const vk::MemoryProperties &memoryProperties = renderer->getMemoryProperties();
-
     // Call driver to determine memory requirements.
     VkMemoryRequirements memoryRequirements;
     bufferOrImage->getMemoryRequirements(device, &memoryRequirements);
@@ -906,79 +904,6 @@ Error RenderPass::init(VkDevice device, const VkRenderPassCreateInfo &createInfo
     return NoError();
 }
 
-// StagingImage implementation.
-StagingImage::StagingImage() : mSize(0)
-{
-}
-
-StagingImage::StagingImage(StagingImage &&other)
-    : mImage(std::move(other.mImage)),
-      mDeviceMemory(std::move(other.mDeviceMemory)),
-      mSize(other.mSize)
-{
-    other.mSize = 0;
-}
-
-void StagingImage::destroy(VkDevice device)
-{
-    mImage.destroy(device);
-    mDeviceMemory.destroy(device);
-}
-
-Error StagingImage::init(ContextVk *contextVk,
-                         TextureDimension dimension,
-                         const Format &format,
-                         const gl::Extents &extent,
-                         StagingUsage usage)
-{
-    VkDevice device           = contextVk->getDevice();
-    RendererVk *renderer      = contextVk->getRenderer();
-    uint32_t queueFamilyIndex = renderer->getQueueFamilyIndex();
-
-    VkImageCreateInfo createInfo;
-
-    createInfo.sType                 = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
-    createInfo.pNext                 = nullptr;
-    createInfo.flags                 = 0;
-    createInfo.imageType             = VK_IMAGE_TYPE_2D;
-    createInfo.format                = format.vkTextureFormat;
-    createInfo.extent.width          = static_cast<uint32_t>(extent.width);
-    createInfo.extent.height         = static_cast<uint32_t>(extent.height);
-    createInfo.extent.depth          = static_cast<uint32_t>(extent.depth);
-    createInfo.mipLevels             = 1;
-    createInfo.arrayLayers           = 1;
-    createInfo.samples               = VK_SAMPLE_COUNT_1_BIT;
-    createInfo.tiling                = VK_IMAGE_TILING_LINEAR;
-    createInfo.usage                 = GetStagingImageUsageFlags(usage);
-    createInfo.sharingMode           = VK_SHARING_MODE_EXCLUSIVE;
-    createInfo.queueFamilyIndexCount = 1;
-    createInfo.pQueueFamilyIndices   = &queueFamilyIndex;
-
-    // Use Preinitialized for writable staging images - in these cases we want to map the memory
-    // before we do a copy. For readback images, use an undefined layout.
-    createInfo.initialLayout = usage == vk::StagingUsage::Read ? VK_IMAGE_LAYOUT_UNDEFINED
-                                                               : VK_IMAGE_LAYOUT_PREINITIALIZED;
-
-    ANGLE_TRY(mImage.init(device, createInfo));
-
-    // Allocate and bind host visible and coherent Image memory.
-    // TODO(ynovikov): better approach would be to request just visible memory,
-    // and call vkInvalidateMappedMemoryRanges if the allocated memory is not coherent.
-    // This would solve potential issues of:
-    // 1) not having (enough) coherent memory and 2) coherent memory being slower
-    VkMemoryPropertyFlags memoryPropertyFlags =
-        (VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
-    ANGLE_TRY(AllocateImageMemory(renderer, memoryPropertyFlags, &mImage, &mDeviceMemory, &mSize));
-
-    return NoError();
-}
-
-void StagingImage::dumpResources(Serial serial, std::vector<vk::GarbageObject> *garbageQueue)
-{
-    mImage.dumpResources(serial, garbageQueue);
-    mDeviceMemory.dumpResources(serial, garbageQueue);
-}
-
 // Buffer implementation.
 Buffer::Buffer()
 {
@@ -1269,8 +1194,11 @@ Error AllocateBufferMemory(RendererVk *renderer,
                            DeviceMemory *deviceMemoryOut,
                            size_t *requiredSizeOut)
 {
-    return AllocateBufferOrImageMemory(renderer, memoryPropertyFlags, buffer, deviceMemoryOut,
-                                       requiredSizeOut);
+    VkDevice device                              = renderer->getDevice();
+    const vk::MemoryProperties &memoryProperties = renderer->getMemoryProperties();
+
+    return AllocateBufferOrImageMemory(device, memoryProperties, memoryPropertyFlags, buffer,
+                                       deviceMemoryOut, requiredSizeOut);
 }
 
 Error AllocateImageMemory(RendererVk *renderer,
@@ -1279,8 +1207,11 @@ Error AllocateImageMemory(RendererVk *renderer,
                           DeviceMemory *deviceMemoryOut,
                           size_t *requiredSizeOut)
 {
-    return AllocateBufferOrImageMemory(renderer, memoryPropertyFlags, image, deviceMemoryOut,
-                                       requiredSizeOut);
+    VkDevice device                              = renderer->getDevice();
+    const vk::MemoryProperties &memoryProperties = renderer->getMemoryProperties();
+
+    return AllocateBufferOrImageMemory(device, memoryProperties, memoryPropertyFlags, image,
+                                       deviceMemoryOut, requiredSizeOut);
 }
 
 // GarbageObject implementation.
@@ -1488,6 +1419,200 @@ void LineLoopHandler::onSubjectStateChange(const gl::Context *context,
         mLineLoopIndexBuffer = VK_NULL_HANDLE;
     }
 }
+
+// ImageHelper implementation.
+ImageHelper::ImageHelper() : mFormat(nullptr), mSamples(0), mAllocatedMemorySize(0)
+{
+}
+
+ImageHelper::~ImageHelper()
+{
+    ASSERT(!valid());
+}
+
+bool ImageHelper::valid() const
+{
+    return mImage.valid();
+}
+
+Error ImageHelper::init2D(VkDevice device,
+                          const gl::Extents &extents,
+                          const Format &format,
+                          GLint samples,
+                          VkImageUsageFlags usage)
+{
+    ASSERT(!valid());
+
+    mExtents = extents;
+    mFormat  = &format;
+    mSamples = samples;
+
+    VkImageCreateInfo imageInfo;
+    imageInfo.sType                 = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
+    imageInfo.pNext                 = nullptr;
+    imageInfo.flags                 = 0;
+    imageInfo.imageType             = VK_IMAGE_TYPE_2D;
+    imageInfo.format                = format.vkTextureFormat;
+    imageInfo.extent.width          = static_cast<uint32_t>(extents.width);
+    imageInfo.extent.height         = static_cast<uint32_t>(extents.height);
+    imageInfo.extent.depth          = 1;
+    imageInfo.mipLevels             = 1;
+    imageInfo.arrayLayers           = 1;
+    imageInfo.samples               = gl_vk::GetSamples(samples);
+    imageInfo.tiling                = VK_IMAGE_TILING_OPTIMAL;
+    imageInfo.usage                 = usage;
+    imageInfo.sharingMode           = VK_SHARING_MODE_EXCLUSIVE;
+    imageInfo.queueFamilyIndexCount = 0;
+    imageInfo.pQueueFamilyIndices   = nullptr;
+    imageInfo.initialLayout         = VK_IMAGE_LAYOUT_UNDEFINED;
+
+    ANGLE_TRY(mImage.init(device, imageInfo));
+    return NoError();
+}
+
+void ImageHelper::release(Serial serial, RendererVk *renderer)
+{
+    renderer->releaseObject(serial, &mImage);
+    renderer->releaseObject(serial, &mDeviceMemory);
+}
+
+Error ImageHelper::initMemory(VkDevice device,
+                              const MemoryProperties &memoryProperties,
+                              VkMemoryPropertyFlags flags)
+{
+    ANGLE_TRY(AllocateBufferOrImageMemory(device, memoryProperties, flags, &mImage, &mDeviceMemory,
+                                          &mAllocatedMemorySize));
+    return NoError();
+}
+
+Error ImageHelper::initImageView(VkDevice device,
+                                 VkImageAspectFlags aspectMask,
+                                 const gl::SwizzleState &swizzleMap,
+                                 vk::ImageView *imageViewOut)
+{
+    VkImageViewCreateInfo viewInfo;
+    viewInfo.sType                           = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+    viewInfo.pNext                           = nullptr;
+    viewInfo.flags                           = 0;
+    viewInfo.image                           = mImage.getHandle();
+    viewInfo.viewType                        = VK_IMAGE_VIEW_TYPE_2D;
+    viewInfo.format                          = mFormat->vkTextureFormat;
+    viewInfo.components.r                    = gl_vk::GetSwizzle(swizzleMap.swizzleRed);
+    viewInfo.components.g                    = gl_vk::GetSwizzle(swizzleMap.swizzleGreen);
+    viewInfo.components.b                    = gl_vk::GetSwizzle(swizzleMap.swizzleBlue);
+    viewInfo.components.a                    = gl_vk::GetSwizzle(swizzleMap.swizzleAlpha);
+    viewInfo.subresourceRange.aspectMask     = aspectMask;
+    viewInfo.subresourceRange.baseMipLevel   = 0;
+    viewInfo.subresourceRange.levelCount     = 1;
+    viewInfo.subresourceRange.baseArrayLayer = 0;
+    viewInfo.subresourceRange.layerCount     = 1;
+
+    ANGLE_TRY(imageViewOut->init(device, viewInfo));
+    return NoError();
+}
+
+void ImageHelper::destroy(VkDevice device)
+{
+    mImage.destroy(device);
+    mDeviceMemory.destroy(device);
+}
+
+Error ImageHelper::init2DStaging(VkDevice device,
+                                 const MemoryProperties &memoryProperties,
+                                 const Format &format,
+                                 const gl::Extents &extents,
+                                 StagingUsage usage)
+{
+    ASSERT(!valid());
+
+    mExtents = extents;
+    mFormat  = &format;
+    mSamples = 1;
+
+    // Use Preinitialized for writable staging images - in these cases we want to map the memory
+    // before we do a copy. For readback images, use an undefined layout.
+    VkImageLayout initialLayout = usage == vk::StagingUsage::Read ? VK_IMAGE_LAYOUT_UNDEFINED
+                                                                  : VK_IMAGE_LAYOUT_PREINITIALIZED;
+
+    VkImageCreateInfo imageInfo;
+    imageInfo.sType                 = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
+    imageInfo.pNext                 = nullptr;
+    imageInfo.flags                 = 0;
+    imageInfo.imageType             = VK_IMAGE_TYPE_2D;
+    imageInfo.format                = format.vkTextureFormat;
+    imageInfo.extent.width          = static_cast<uint32_t>(extents.width);
+    imageInfo.extent.height         = static_cast<uint32_t>(extents.height);
+    imageInfo.extent.depth          = 1;
+    imageInfo.mipLevels             = 1;
+    imageInfo.arrayLayers           = 1;
+    imageInfo.samples               = gl_vk::GetSamples(mSamples);
+    imageInfo.tiling                = VK_IMAGE_TILING_LINEAR;
+    imageInfo.usage                 = GetStagingImageUsageFlags(usage);
+    imageInfo.sharingMode           = VK_SHARING_MODE_EXCLUSIVE;
+    imageInfo.queueFamilyIndexCount = 0;
+    imageInfo.pQueueFamilyIndices   = nullptr;
+    imageInfo.initialLayout         = initialLayout;
+
+    ANGLE_TRY(mImage.init(device, imageInfo));
+
+    // Allocate and bind host visible and coherent Image memory.
+    // TODO(ynovikov): better approach would be to request just visible memory,
+    // and call vkInvalidateMappedMemoryRanges if the allocated memory is not coherent.
+    // This would solve potential issues of:
+    // 1) not having (enough) coherent memory and 2) coherent memory being slower
+    VkMemoryPropertyFlags memoryPropertyFlags =
+        (VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+    ANGLE_TRY(initMemory(device, memoryProperties, memoryPropertyFlags));
+
+    return NoError();
+}
+
+void ImageHelper::dumpResources(Serial serial, std::vector<vk::GarbageObject> *garbageQueue)
+{
+    mImage.dumpResources(serial, garbageQueue);
+    mDeviceMemory.dumpResources(serial, garbageQueue);
+}
+
+Image &ImageHelper::getImage()
+{
+    return mImage;
+}
+
+const Image &ImageHelper::getImage() const
+{
+    return mImage;
+}
+
+DeviceMemory &ImageHelper::getDeviceMemory()
+{
+    return mDeviceMemory;
+}
+
+const DeviceMemory &ImageHelper::getDeviceMemory() const
+{
+    return mDeviceMemory;
+}
+
+const gl::Extents &ImageHelper::getExtents() const
+{
+    return mExtents;
+}
+
+const Format &ImageHelper::getFormat() const
+{
+    return *mFormat;
+}
+
+GLint ImageHelper::getSamples() const
+{
+    return mSamples;
+}
+
+size_t ImageHelper::getAllocatedMemorySize() const
+{
+    return mAllocatedMemorySize;
+}
+
 }  // namespace vk
 
 namespace gl_vk
@@ -1552,6 +1677,50 @@ VkFrontFace GetFrontFace(GLenum frontFace)
     }
 }
 
+VkSampleCountFlagBits GetSamples(GLint sampleCount)
+{
+    switch (sampleCount)
+    {
+        case 0:
+        case 1:
+            return VK_SAMPLE_COUNT_1_BIT;
+        case 2:
+            return VK_SAMPLE_COUNT_2_BIT;
+        case 4:
+            return VK_SAMPLE_COUNT_4_BIT;
+        case 8:
+            return VK_SAMPLE_COUNT_8_BIT;
+        case 16:
+            return VK_SAMPLE_COUNT_16_BIT;
+        case 32:
+            return VK_SAMPLE_COUNT_32_BIT;
+        default:
+            UNREACHABLE();
+            return VK_SAMPLE_COUNT_FLAG_BITS_MAX_ENUM;
+    }
+}
+
+VkComponentSwizzle GetSwizzle(const GLenum swizzle)
+{
+    switch (swizzle)
+    {
+        case GL_ALPHA:
+            return VK_COMPONENT_SWIZZLE_A;
+        case GL_RED:
+            return VK_COMPONENT_SWIZZLE_R;
+        case GL_GREEN:
+            return VK_COMPONENT_SWIZZLE_G;
+        case GL_BLUE:
+            return VK_COMPONENT_SWIZZLE_B;
+        case GL_ZERO:
+            return VK_COMPONENT_SWIZZLE_ZERO;
+        case GL_ONE:
+            return VK_COMPONENT_SWIZZLE_ONE;
+        default:
+            UNREACHABLE();
+            return VK_COMPONENT_SWIZZLE_IDENTITY;
+    }
+}
 }  // namespace gl_vk
 
 ResourceVk::ResourceVk() : mCurrentWritingNode(nullptr)

@@ -71,10 +71,7 @@ bool IsMipmapFiltered(const SamplerState &samplerState)
 }
 
 SwizzleState::SwizzleState()
-    : swizzleRed(GL_INVALID_INDEX),
-      swizzleGreen(GL_INVALID_INDEX),
-      swizzleBlue(GL_INVALID_INDEX),
-      swizzleAlpha(GL_INVALID_INDEX)
+    : swizzleRed(GL_RED), swizzleGreen(GL_GREEN), swizzleBlue(GL_BLUE), swizzleAlpha(GL_ALPHA)
 {
 }
 
@@ -102,7 +99,6 @@ bool SwizzleState::operator!=(const SwizzleState &other) const
 
 TextureState::TextureState(TextureType type)
     : mType(type),
-      mSwizzleState(GL_RED, GL_GREEN, GL_BLUE, GL_ALPHA),
       mSamplerState(SamplerState::CreateDefaultForTarget(type)),
       mBaseLevel(0),
       mMaxLevel(1000),

@@ -19,57 +19,32 @@ namespace rx
 {
 namespace
 {
-VkComponentSwizzle ConvertSwizzleStateToVkSwizzle(const GLenum swizzle)
-{
-    switch (swizzle)
-    {
-        case GL_ALPHA:
-            return VK_COMPONENT_SWIZZLE_A;
-        case GL_RED:
-            return VK_COMPONENT_SWIZZLE_R;
-        case GL_GREEN:
-            return VK_COMPONENT_SWIZZLE_G;
-        case GL_BLUE:
-            return VK_COMPONENT_SWIZZLE_B;
-        case GL_ZERO:
-            return VK_COMPONENT_SWIZZLE_ZERO;
-        case GL_ONE:
-            return VK_COMPONENT_SWIZZLE_ONE;
-        default:
-            UNREACHABLE();
-            return VK_COMPONENT_SWIZZLE_IDENTITY;
-    }
-}
-
-void FillComponentsSwizzleParameters(GLenum internalFormat,
-                                     const gl::SwizzleState &swizzleState,
-                                     VkComponentMapping *componentMapping)
+void MapSwizzleState(GLenum internalFormat,
+                     const gl::SwizzleState &swizzleState,
+                     gl::SwizzleState *swizzleStateOut)
 {
     switch (internalFormat)
     {
         case GL_LUMINANCE:
-            componentMapping->r = ConvertSwizzleStateToVkSwizzle(swizzleState.swizzleRed);
-            componentMapping->g = ConvertSwizzleStateToVkSwizzle(swizzleState.swizzleRed);
-            componentMapping->b = ConvertSwizzleStateToVkSwizzle(swizzleState.swizzleRed);
-            componentMapping->a = ConvertSwizzleStateToVkSwizzle(swizzleState.swizzleAlpha);
+            swizzleStateOut->swizzleRed   = swizzleState.swizzleRed;
+            swizzleStateOut->swizzleGreen = swizzleState.swizzleRed;
+            swizzleStateOut->swizzleBlue  = swizzleState.swizzleRed;
+            swizzleStateOut->swizzleAlpha = GL_ONE;
             break;
         case GL_LUMINANCE_ALPHA:
-            componentMapping->r = ConvertSwizzleStateToVkSwizzle(swizzleState.swizzleRed);
-            componentMapping->g = ConvertSwizzleStateToVkSwizzle(swizzleState.swizzleRed);
-            componentMapping->b = ConvertSwizzleStateToVkSwizzle(swizzleState.swizzleRed);
-            componentMapping->a = ConvertSwizzleStateToVkSwizzle(swizzleState.swizzleGreen);
+            swizzleStateOut->swizzleRed   = swizzleState.swizzleRed;
+            swizzleStateOut->swizzleGreen = swizzleState.swizzleRed;
+            swizzleStateOut->swizzleBlue  = swizzleState.swizzleRed;
+            swizzleStateOut->swizzleAlpha = swizzleState.swizzleGreen;
             break;
         case GL_ALPHA:
-            componentMapping->r = VK_COMPONENT_SWIZZLE_ZERO;
-            componentMapping->g = VK_COMPONENT_SWIZZLE_ZERO;
-            componentMapping->b = VK_COMPONENT_SWIZZLE_ZERO;
-            componentMapping->a = ConvertSwizzleStateToVkSwizzle(swizzleState.swizzleRed);
+            swizzleStateOut->swizzleRed   = GL_ZERO;
+            swizzleStateOut->swizzleGreen = GL_ZERO;
+            swizzleStateOut->swizzleBlue  = GL_ZERO;
+            swizzleStateOut->swizzleAlpha = swizzleState.swizzleRed;
             break;
         default:
-            componentMapping->r = ConvertSwizzleStateToVkSwizzle(swizzleState.swizzleRed);
-            componentMapping->g = ConvertSwizzleStateToVkSwizzle(swizzleState.swizzleGreen);
-            componentMapping->b = ConvertSwizzleStateToVkSwizzle(swizzleState.swizzleBlue);
-            componentMapping->a = ConvertSwizzleStateToVkSwizzle(swizzleState.swizzleAlpha);
+            *swizzleStateOut = swizzleState;
             break;
     }
 }
@@ -88,8 +63,8 @@ gl::Error TextureVk::onDestroy(const gl::Context *context)
     ContextVk *contextVk = vk::GetImpl(context);
     RendererVk *renderer = contextVk->getRenderer();
 
-    renderer->releaseResource(*this, &mImage);
-    renderer->releaseResource(*this, &mDeviceMemory);
+    mImage.release(renderer->getCurrentQueueSerial(), renderer);
+
     renderer->releaseResource(*this, &mImageView);
     renderer->releaseResource(*this, &mSampler);
 
@@ -123,8 +98,7 @@ gl::Error TextureVk::setImage(const gl::Context *context,
         if (desc.size != size ||
             !gl::Format::SameSized(desc.format, gl::Format(internalFormat, type)))
         {
-            renderer->releaseResource(*this, &mImage);
-            renderer->releaseResource(*this, &mDeviceMemory);
+            mImage.release(renderer->getCurrentQueueSerial(), renderer);
             renderer->releaseResource(*this, &mImageView);
 
             onStateChange(context, angle::SubjectMessage::DEPENDENT_DIRTY_BITS);
@@ -148,62 +122,28 @@ gl::Error TextureVk::setImage(const gl::Context *context,
 
     if (!mImage.valid())
     {
-        ASSERT(!mDeviceMemory.valid() && !mImageView.valid());
+        VkImageUsageFlags usage =
+            (VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT |
+             VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_SAMPLED_BIT);
+        ANGLE_TRY(mImage.init2D(device, size, vkFormat, 1, usage));
 
-        VkImageCreateInfo imageInfo;
-        imageInfo.sType         = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
-        imageInfo.pNext         = nullptr;
-        imageInfo.flags         = 0;
-        imageInfo.imageType     = VK_IMAGE_TYPE_2D;
-        imageInfo.format        = vkFormat.vkTextureFormat;
-        imageInfo.extent.width  = size.width;
-        imageInfo.extent.height = size.height;
-        imageInfo.extent.depth  = size.depth;
-        imageInfo.mipLevels     = 1;
-        imageInfo.arrayLayers   = 1;
-        imageInfo.samples       = VK_SAMPLE_COUNT_1_BIT;
-        imageInfo.tiling        = VK_IMAGE_TILING_OPTIMAL;
+        VkMemoryPropertyFlags flags = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
+        ANGLE_TRY(mImage.initMemory(device, renderer->getMemoryProperties(), flags));
 
-        // TODO(jmadill): Are all these image transfer bits necessary?
-        imageInfo.usage = (VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT |
-                           VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_SAMPLED_BIT);
-        imageInfo.sharingMode           = VK_SHARING_MODE_EXCLUSIVE;
-        imageInfo.queueFamilyIndexCount = 0;
-        imageInfo.pQueueFamilyIndices   = nullptr;
-        imageInfo.initialLayout         = VK_IMAGE_LAYOUT_UNDEFINED;
+        gl::SwizzleState mappedSwizzle;
+        MapSwizzleState(formatInfo.internalFormat, mState.getSwizzleState(), &mappedSwizzle);
 
-        ANGLE_TRY(mImage.init(device, imageInfo));
-
-        VkMemoryPropertyFlags flags = (VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
-        size_t requiredSize         = 0;
-        ANGLE_TRY(vk::AllocateImageMemory(renderer, flags, &mImage, &mDeviceMemory, &requiredSize));
-
-        VkImageViewCreateInfo viewInfo;
-        viewInfo.sType                           = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
-        viewInfo.pNext                           = nullptr;
-        viewInfo.flags                           = 0;
-        viewInfo.image                           = mImage.getHandle();
-        viewInfo.viewType                        = VK_IMAGE_VIEW_TYPE_2D;
-        viewInfo.format                          = vkFormat.vkTextureFormat;
-        viewInfo.subresourceRange.aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT;
-        viewInfo.subresourceRange.baseMipLevel   = 0;
-        viewInfo.subresourceRange.levelCount     = 1;
-        viewInfo.subresourceRange.baseArrayLayer = 0;
-        viewInfo.subresourceRange.layerCount     = 1;
-
-        FillComponentsSwizzleParameters(internalFormat, mState.getSwizzleState(),
-                                        &viewInfo.components);
-
-        ANGLE_TRY(mImageView.init(device, viewInfo));
+        ANGLE_TRY(
+            mImage.initImageView(device, VK_IMAGE_ASPECT_COLOR_BIT, mappedSwizzle, &mImageView));
 
         // TODO(jmadill): Fold this into the RenderPass load/store ops. http://anglebug.com/2361
         vk::CommandBuffer *commandBuffer = nullptr;
         ANGLE_TRY(beginWriteResource(renderer, &commandBuffer));
         VkClearColorValue black = {{0}};
-        mImage.changeLayoutWithStages(
+        mImage.getImage().changeLayoutWithStages(
             VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
             VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, commandBuffer);
-        commandBuffer->clearSingleColorImage(mImage, black);
+        commandBuffer->clearSingleColorImage(mImage.getImage(), black);
     }
 
     if (!mSampler.valid())
@@ -233,7 +173,7 @@ gl::Error TextureVk::setImage(const gl::Context *context,
         ANGLE_TRY(mSampler.init(device, samplerInfo));
     }
 
-    mRenderTarget.image     = &mImage;
+    mRenderTarget.image     = &mImage.getImage();
     mRenderTarget.imageView = &mImageView;
     mRenderTarget.format    = &vkFormat;
     mRenderTarget.extents   = size;
@@ -275,9 +215,9 @@ gl::Error TextureVk::setSubImageImpl(ContextVk *contextVk,
     const gl::Extents &size    = mRenderTarget.extents;
     const vk::Format &vkFormat = *mRenderTarget.format;
 
-    vk::StagingImage stagingImage;
-    ANGLE_TRY(stagingImage.init(contextVk, TextureDimension::TEX_2D, vkFormat, size,
-                                vk::StagingUsage::Write));
+    vk::ImageHelper stagingImage;
+    ANGLE_TRY(stagingImage.init2DStaging(device, renderer->getMemoryProperties(), vkFormat, size,
+                                         vk::StagingUsage::Write));
 
     GLuint inputRowPitch = 0;
     ANGLE_TRY_RESULT(
@@ -322,12 +262,12 @@ gl::Error TextureVk::setSubImageImpl(ContextVk *contextVk,
     stagingImage.getImage().changeLayoutWithStages(
         VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
         VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, commandBuffer);
-    mImage.changeLayoutWithStages(VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-                                  VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
-                                  VK_PIPELINE_STAGE_TRANSFER_BIT, commandBuffer);
+    mImage.getImage().changeLayoutWithStages(
+        VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+        VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, commandBuffer);
 
     gl::Box wholeRegion(0, 0, 0, size.width, size.height, size.depth);
-    commandBuffer->copySingleImage(stagingImage.getImage(), mImage, wholeRegion,
+    commandBuffer->copySingleImage(stagingImage.getImage(), mImage.getImage(), wholeRegion,
                                    VK_IMAGE_ASPECT_COLOR_BIT);
 
     // Immediately release staging image.
@@ -472,12 +412,12 @@ gl::Error TextureVk::initializeContents(const gl::Context *context,
 const vk::Image &TextureVk::getImage() const
 {
     ASSERT(mImage.valid());
-    return mImage;
+    return mImage.getImage();
 }
 
 const vk::ImageView &TextureVk::getImageView() const
 {
-    ASSERT(mImageView.valid());
+    ASSERT(mImage.valid());
     return mImageView;
 }
 

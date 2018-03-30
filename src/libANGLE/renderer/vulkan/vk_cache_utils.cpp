@@ -107,36 +107,13 @@ uint8_t PackGLCompareFunc(GLenum compareFunc)
     }
 }
 
-VkSampleCountFlagBits ConvertSamples(GLint sampleCount)
-{
-    switch (sampleCount)
-    {
-        case 0:
-        case 1:
-            return VK_SAMPLE_COUNT_1_BIT;
-        case 2:
-            return VK_SAMPLE_COUNT_2_BIT;
-        case 4:
-            return VK_SAMPLE_COUNT_4_BIT;
-        case 8:
-            return VK_SAMPLE_COUNT_8_BIT;
-        case 16:
-            return VK_SAMPLE_COUNT_16_BIT;
-        case 32:
-            return VK_SAMPLE_COUNT_32_BIT;
-        default:
-            UNREACHABLE();
-            return VK_SAMPLE_COUNT_FLAG_BITS_MAX_ENUM;
-    }
-}
-
 void UnpackAttachmentDesc(VkAttachmentDescription *desc,
                           const vk::PackedAttachmentDesc &packedDesc,
                           const vk::PackedAttachmentOpsDesc &ops)
 {
     desc->flags          = static_cast<VkAttachmentDescriptionFlags>(packedDesc.flags);
     desc->format         = static_cast<VkFormat>(packedDesc.format);
-    desc->samples        = ConvertSamples(packedDesc.samples);
+    desc->samples        = gl_vk::GetSamples(packedDesc.samples);
     desc->loadOp         = static_cast<VkAttachmentLoadOp>(ops.loadOp);
     desc->storeOp        = static_cast<VkAttachmentStoreOp>(ops.storeOp);
     desc->stencilLoadOp  = static_cast<VkAttachmentLoadOp>(ops.stencilLoadOp);
@@ -545,7 +522,7 @@ Error PipelineDesc::initializePipeline(VkDevice device,
     multisampleState.pNext = nullptr;
     multisampleState.flags = 0;
     multisampleState.rasterizationSamples =
-        ConvertSamples(mMultisampleStateInfo.rasterizationSamples);
+        gl_vk::GetSamples(mMultisampleStateInfo.rasterizationSamples);
     multisampleState.sampleShadingEnable =
         static_cast<VkBool32>(mMultisampleStateInfo.sampleShadingEnable);
     multisampleState.minSampleShading = mMultisampleStateInfo.minSampleShading;

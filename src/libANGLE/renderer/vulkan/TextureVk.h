@@ -122,9 +122,7 @@ class TextureVk : public TextureImpl, public ResourceVk
                               GLenum type,
                               const uint8_t *pixels);
 
-    // TODO(jmadill): support a more flexible storage back-end.
-    vk::Image mImage;
-    vk::DeviceMemory mDeviceMemory;
+    vk::ImageHelper mImage;
     vk::ImageView mImageView;
     vk::Sampler mSampler;
 

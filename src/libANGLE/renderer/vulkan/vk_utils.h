@@ -41,6 +41,7 @@ struct Box;
 struct Extents;
 struct RasterizerState;
 struct Rectangle;
+struct SwizzleState;
 struct VertexAttribute;
 class VertexBinding;
 
@@ -586,34 +587,6 @@ class Fence final : public WrappedObject<Fence, VkFence>
     VkResult getStatus(VkDevice device) const;
 };
 
-// Helper class for managing a CPU/GPU transfer Image.
-class StagingImage final : angle::NonCopyable
-{
-  public:
-    StagingImage();
-    StagingImage(StagingImage &&other);
-    void destroy(VkDevice device);
-
-    vk::Error init(ContextVk *contextVk,
-                   TextureDimension dimension,
-                   const Format &format,
-                   const gl::Extents &extent,
-                   StagingUsage usage);
-
-    Image &getImage() { return mImage; }
-    const Image &getImage() const { return mImage; }
-    DeviceMemory &getDeviceMemory() { return mDeviceMemory; }
-    const DeviceMemory &getDeviceMemory() const { return mDeviceMemory; }
-    VkDeviceSize getSize() const { return mSize; }
-
-    void dumpResources(Serial serial, std::vector<vk::GarbageObject> *garbageQueue);
-
-  private:
-    Image mImage;
-    DeviceMemory mDeviceMemory;
-    size_t mSize;
-};
-
 // Similar to StagingImage, for Buffers.
 class StagingBuffer final : angle::NonCopyable
 {
@@ -730,6 +703,58 @@ class LineLoopHandler final : angle::NonCopyable, angle::ObserverInterface
     Optional<int> mLineLoopBufferLastIndex;
 };
 
+class ImageHelper final : angle::NonCopyable
+{
+  public:
+    ImageHelper();
+    ~ImageHelper();
+
+    bool valid() const;
+
+    Error init2D(VkDevice device,
+                 const gl::Extents &extents,
+                 const Format &format,
+                 GLint samples,
+                 VkImageUsageFlags usage);
+    Error initMemory(VkDevice device,
+                     const MemoryProperties &memoryProperties,
+                     VkMemoryPropertyFlags flags);
+    Error initImageView(VkDevice device,
+                        VkImageAspectFlags aspectMask,
+                        const gl::SwizzleState &swizzleMap,
+                        ImageView *imageViewOut);
+    Error init2DStaging(VkDevice device,
+                        const MemoryProperties &memoryProperties,
+                        const Format &format,
+                        const gl::Extents &extent,
+                        StagingUsage usage);
+
+    void release(Serial serial, RendererVk *renderer);
+    void destroy(VkDevice device);
+    void dumpResources(Serial serial, std::vector<vk::GarbageObject> *garbageQueue);
+
+    Image &getImage();
+    const Image &getImage() const;
+    DeviceMemory &getDeviceMemory();
+    const DeviceMemory &getDeviceMemory() const;
+
+    const gl::Extents &getExtents() const;
+    const Format &getFormat() const;
+    GLint getSamples() const;
+    size_t getAllocatedMemorySize() const;
+
+  private:
+    // Vulkan objects.
+    Image mImage;
+    DeviceMemory mDeviceMemory;
+
+    // Image properties.
+    gl::Extents mExtents;
+    const Format *mFormat;
+    GLint mSamples;
+    size_t mAllocatedMemorySize;
+};
+
 }  // namespace vk
 
 namespace gl_vk
@@ -737,6 +762,8 @@ namespace gl_vk
 VkPrimitiveTopology GetPrimitiveTopology(GLenum mode);
 VkCullModeFlags GetCullMode(const gl::RasterizerState &rasterState);
 VkFrontFace GetFrontFace(GLenum frontFace);
+VkSampleCountFlagBits GetSamples(GLint sampleCount);
+VkComponentSwizzle GetSwizzle(const GLenum swizzle);
 }  // namespace gl_vk
 
 // This is a helper class for back-end objects used in Vk command buffers. It records a serial
