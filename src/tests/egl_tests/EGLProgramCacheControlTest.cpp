@@ -13,7 +13,7 @@
 using namespace angle;
 
 constexpr EGLint kEnabledCacheSize = 0x10000;
-constexpr char kEGLExtName[]       = "EGL_ANGLE_program_cache_control ";
+constexpr char kEGLExtName[]       = "EGL_ANGLE_program_cache_control";
 
 void TestCacheProgram(PlatformMethods *platform,
                       const ProgramKeyType &key,
@@ -237,6 +237,26 @@ TEST_P(EGLProgramCacheControlTest, SaveAndReload)
 
     // Verify no new shader was compiled.
     EXPECT_TRUE(mCachedBinary.empty());
+}
+
+// Tests that trying to link a program without correct shaders doesn't buggily call the cache.
+TEST_P(EGLProgramCacheControlTest, LinkProgramWithBadShaders)
+{
+    ANGLE_SKIP_TEST_IF(!extensionAvailable());
+
+    GLuint shader = glCreateShader(GL_FRAGMENT_SHADER);
+
+    GLuint program = glCreateProgram();
+    glAttachShader(program, shader);
+    glLinkProgram(program);
+
+    GLint linkStatus = 0;
+    glGetProgramiv(program, GL_LINK_STATUS, &linkStatus);
+    EXPECT_GL_FALSE(linkStatus);
+    EXPECT_GL_NO_ERROR();
+
+    glDeleteShader(shader);
+    glDeleteProgram(program);
 }
 
 ANGLE_INSTANTIATE_TEST(EGLProgramCacheControlTest, ES2_D3D9(), ES2_D3D11(), ES2_OPENGL());
