@@ -23,8 +23,7 @@ TextureNULL::~TextureNULL()
 }
 
 gl::Error TextureNULL::setImage(const gl::Context *context,
-                                gl::TextureTarget target,
-                                size_t level,
+                                const gl::ImageIndex &index,
                                 GLenum internalFormat,
                                 const gl::Extents &size,
                                 GLenum format,
@@ -38,8 +37,7 @@ gl::Error TextureNULL::setImage(const gl::Context *context,
 }
 
 gl::Error TextureNULL::setSubImage(const gl::Context *context,
-                                   gl::TextureTarget target,
-                                   size_t level,
+                                   const gl::ImageIndex &index,
                                    const gl::Box &area,
                                    GLenum format,
                                    GLenum type,
@@ -50,8 +48,7 @@ gl::Error TextureNULL::setSubImage(const gl::Context *context,
 }
 
 gl::Error TextureNULL::setCompressedImage(const gl::Context *context,
-                                          gl::TextureTarget target,
-                                          size_t level,
+                                          const gl::ImageIndex &index,
                                           GLenum internalFormat,
                                           const gl::Extents &size,
                                           const gl::PixelUnpackState &unpack,
@@ -62,8 +59,7 @@ gl::Error TextureNULL::setCompressedImage(const gl::Context *context,
 }
 
 gl::Error TextureNULL::setCompressedSubImage(const gl::Context *context,
-                                             gl::TextureTarget target,
-                                             size_t level,
+                                             const gl::ImageIndex &index,
                                              const gl::Box &area,
                                              GLenum format,
                                              const gl::PixelUnpackState &unpack,
@@ -74,8 +70,7 @@ gl::Error TextureNULL::setCompressedSubImage(const gl::Context *context,
 }
 
 gl::Error TextureNULL::copyImage(const gl::Context *context,
-                                 gl::TextureTarget target,
-                                 size_t level,
+                                 const gl::ImageIndex &index,
                                  const gl::Rectangle &sourceArea,
                                  GLenum internalFormat,
                                  gl::Framebuffer *source)
@@ -84,8 +79,7 @@ gl::Error TextureNULL::copyImage(const gl::Context *context,
 }
 
 gl::Error TextureNULL::copySubImage(const gl::Context *context,
-                                    gl::TextureTarget target,
-                                    size_t level,
+                                    const gl::ImageIndex &index,
                                     const gl::Offset &destOffset,
                                     const gl::Rectangle &sourceArea,
                                     gl::Framebuffer *source)

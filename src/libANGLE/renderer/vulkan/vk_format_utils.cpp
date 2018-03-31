@@ -81,6 +81,7 @@ bool HasFullFormatSupport(VkPhysicalDevice physicalDevice, VkFormat vkFormat)
            HasFormatFeatureBits(kBitsDepth, formatProperties);
 }
 
+// Format implementation.
 Format::Format()
     : internalFormat(GL_NONE),
       textureFormatID(angle::Format::ID::NONE),
@@ -102,6 +103,17 @@ const angle::Format &Format::bufferFormat() const
     return angle::Format::Get(bufferFormatID);
 }
 
+bool operator==(const Format &lhs, const Format &rhs)
+{
+    return &lhs == &rhs;
+}
+
+bool operator!=(const Format &lhs, const Format &rhs)
+{
+    return &lhs != &rhs;
+}
+
+// FormatTable implementation.
 FormatTable::FormatTable()
 {
 }

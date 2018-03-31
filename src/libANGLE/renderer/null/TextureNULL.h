@@ -22,8 +22,7 @@ class TextureNULL : public TextureImpl
     ~TextureNULL() override;
 
     gl::Error setImage(const gl::Context *context,
-                       gl::TextureTarget target,
-                       size_t level,
+                       const gl::ImageIndex &index,
                        GLenum internalFormat,
                        const gl::Extents &size,
                        GLenum format,
@@ -31,8 +30,7 @@ class TextureNULL : public TextureImpl
                        const gl::PixelUnpackState &unpack,
                        const uint8_t *pixels) override;
     gl::Error setSubImage(const gl::Context *context,
-                          gl::TextureTarget target,
-                          size_t level,
+                          const gl::ImageIndex &index,
                           const gl::Box &area,
                           GLenum format,
                           GLenum type,
@@ -40,16 +38,14 @@ class TextureNULL : public TextureImpl
                           const uint8_t *pixels) override;
 
     gl::Error setCompressedImage(const gl::Context *context,
-                                 gl::TextureTarget target,
-                                 size_t level,
+                                 const gl::ImageIndex &index,
                                  GLenum internalFormat,
                                  const gl::Extents &size,
                                  const gl::PixelUnpackState &unpack,
                                  size_t imageSize,
                                  const uint8_t *pixels) override;
     gl::Error setCompressedSubImage(const gl::Context *context,
-                                    gl::TextureTarget target,
-                                    size_t level,
+                                    const gl::ImageIndex &index,
                                     const gl::Box &area,
                                     GLenum format,
                                     const gl::PixelUnpackState &unpack,
@@ -57,14 +53,12 @@ class TextureNULL : public TextureImpl
                                     const uint8_t *pixels) override;
 
     gl::Error copyImage(const gl::Context *context,
-                        gl::TextureTarget target,
-                        size_t level,
+                        const gl::ImageIndex &index,
                         const gl::Rectangle &sourceArea,
                         GLenum internalFormat,
                         gl::Framebuffer *source) override;
     gl::Error copySubImage(const gl::Context *context,
-                           gl::TextureTarget target,
-                           size_t level,
+                           const gl::ImageIndex &index,
                            const gl::Offset &destOffset,
                            const gl::Rectangle &sourceArea,
                            gl::Framebuffer *source) override;

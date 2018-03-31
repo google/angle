@@ -168,21 +168,16 @@ gl::Error TextureVk::onDestroy(const gl::Context *context)
     ContextVk *contextVk = vk::GetImpl(context);
     RendererVk *renderer = contextVk->getRenderer();
 
-    mImage.release(renderer->getCurrentQueueSerial(), renderer);
-
-    renderer->releaseResource(*this, &mImageView);
+    releaseImage(context, renderer);
     renderer->releaseResource(*this, &mSampler);
 
     mStagingStorage.release(renderer);
-
-    onStateChange(context, angle::SubjectMessage::DEPENDENT_DIRTY_BITS);
 
     return gl::NoError();
 }
 
 gl::Error TextureVk::setImage(const gl::Context *context,
-                              gl::TextureTarget target,
-                              size_t level,
+                              const gl::ImageIndex &index,
                               GLenum internalFormat,
                               const gl::Extents &size,
                               GLenum format,
@@ -195,20 +190,18 @@ gl::Error TextureVk::setImage(const gl::Context *context,
     VkDevice device      = contextVk->getDevice();
 
     // TODO(jmadill): support multi-level textures.
-    ASSERT(level == 0);
+    ASSERT(index.mipIndex == 0);
+
+    // Convert internalFormat to sized internal format.
+    const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(internalFormat, type);
 
     if (mImage.valid())
     {
-        const gl::ImageDesc &desc = mState.getImageDesc(target, level);
-
-        // TODO(jmadill): Consider comparing stored vk::Format.
-        if (desc.size != size ||
-            !gl::Format::SameSized(desc.format, gl::Format(internalFormat, type)))
+        const gl::ImageDesc &desc  = mState.getImageDesc(index);
+        const vk::Format &vkFormat = renderer->getFormat(formatInfo.sizedInternalFormat);
+        if (desc.size != size || mImage.getFormat() != vkFormat)
         {
-            mImage.release(renderer->getCurrentQueueSerial(), renderer);
-            renderer->releaseResource(*this, &mImageView);
-
-            onStateChange(context, angle::SubjectMessage::DEPENDENT_DIRTY_BITS);
+            releaseImage(context, renderer);
         }
     }
 
@@ -219,7 +212,7 @@ gl::Error TextureVk::setImage(const gl::Context *context,
     }
 
     // TODO(jmadill): Cube map textures. http://anglebug.com/2318
-    if (target != gl::TextureTarget::_2D)
+    if (index.target != gl::TextureTarget::_2D)
     {
         UNIMPLEMENTED();
         return gl::InternalError();
@@ -258,8 +251,6 @@ gl::Error TextureVk::setImage(const gl::Context *context,
     // Handle initial data.
     if (pixels)
     {
-        // Convert internalFormat to sized internal format.
-        const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(internalFormat, type);
         ANGLE_TRY(mStagingStorage.stageSubresourceUpdate(contextVk, size, formatInfo, unpack, type,
                                                          pixels));
     }
@@ -268,8 +259,7 @@ gl::Error TextureVk::setImage(const gl::Context *context,
 }
 
 gl::Error TextureVk::setSubImage(const gl::Context *context,
-                                 gl::TextureTarget target,
-                                 size_t level,
+                                 const gl::ImageIndex &index,
                                  const gl::Box &area,
                                  GLenum format,
                                  GLenum type,
@@ -285,8 +275,7 @@ gl::Error TextureVk::setSubImage(const gl::Context *context,
 }
 
 gl::Error TextureVk::setCompressedImage(const gl::Context *context,
-                                        gl::TextureTarget target,
-                                        size_t level,
+                                        const gl::ImageIndex &index,
                                         GLenum internalFormat,
                                         const gl::Extents &size,
                                         const gl::PixelUnpackState &unpack,
@@ -298,8 +287,7 @@ gl::Error TextureVk::setCompressedImage(const gl::Context *context,
 }
 
 gl::Error TextureVk::setCompressedSubImage(const gl::Context *context,
-                                           gl::TextureTarget target,
-                                           size_t level,
+                                           const gl::ImageIndex &index,
                                            const gl::Box &area,
                                            GLenum format,
                                            const gl::PixelUnpackState &unpack,
@@ -311,8 +299,7 @@ gl::Error TextureVk::setCompressedSubImage(const gl::Context *context,
 }
 
 gl::Error TextureVk::copyImage(const gl::Context *context,
-                               gl::TextureTarget target,
-                               size_t level,
+                               const gl::ImageIndex &index,
                                const gl::Rectangle &sourceArea,
                                GLenum internalFormat,
                                gl::Framebuffer *source)
@@ -322,8 +309,7 @@ gl::Error TextureVk::copyImage(const gl::Context *context,
 }
 
 gl::Error TextureVk::copySubImage(const gl::Context *context,
-                                  gl::TextureTarget target,
-                                  size_t level,
+                                  const gl::ImageIndex &index,
                                   const gl::Offset &destOffset,
                                   const gl::Rectangle &sourceArea,
                                   gl::Framebuffer *source)
@@ -494,6 +480,13 @@ const vk::Sampler &TextureVk::getSampler() const
 {
     ASSERT(mSampler.valid());
     return mSampler;
+}
+
+void TextureVk::releaseImage(const gl::Context *context, RendererVk *renderer)
+{
+    mImage.release(renderer->getCurrentQueueSerial(), renderer);
+    renderer->releaseResource(*this, &mImageView);
+    onStateChange(context, angle::SubjectMessage::DEPENDENT_DIRTY_BITS);
 }
 
 }  // namespace rx

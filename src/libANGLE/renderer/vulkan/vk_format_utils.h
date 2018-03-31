@@ -49,6 +49,9 @@ struct Format final : private angle::NonCopyable
     LoadFunctionMap loadFunctions;
 };
 
+bool operator==(const Format &lhs, const Format &rhs);
+bool operator!=(const Format &lhs, const Format &rhs);
+
 class FormatTable final : angle::NonCopyable
 {
   public:

@@ -51,8 +51,7 @@ class TextureVk : public TextureImpl, public vk::CommandGraphResource
     gl::Error onDestroy(const gl::Context *context) override;
 
     gl::Error setImage(const gl::Context *context,
-                       gl::TextureTarget target,
-                       size_t level,
+                       const gl::ImageIndex &index,
                        GLenum internalFormat,
                        const gl::Extents &size,
                        GLenum format,
@@ -60,8 +59,7 @@ class TextureVk : public TextureImpl, public vk::CommandGraphResource
                        const gl::PixelUnpackState &unpack,
                        const uint8_t *pixels) override;
     gl::Error setSubImage(const gl::Context *context,
-                          gl::TextureTarget target,
-                          size_t level,
+                          const gl::ImageIndex &index,
                           const gl::Box &area,
                           GLenum format,
                           GLenum type,
@@ -69,16 +67,14 @@ class TextureVk : public TextureImpl, public vk::CommandGraphResource
                           const uint8_t *pixels) override;
 
     gl::Error setCompressedImage(const gl::Context *context,
-                                 gl::TextureTarget target,
-                                 size_t level,
+                                 const gl::ImageIndex &index,
                                  GLenum internalFormat,
                                  const gl::Extents &size,
                                  const gl::PixelUnpackState &unpack,
                                  size_t imageSize,
                                  const uint8_t *pixels) override;
     gl::Error setCompressedSubImage(const gl::Context *context,
-                                    gl::TextureTarget target,
-                                    size_t level,
+                                    const gl::ImageIndex &index,
                                     const gl::Box &area,
                                     GLenum format,
                                     const gl::PixelUnpackState &unpack,
@@ -86,14 +82,12 @@ class TextureVk : public TextureImpl, public vk::CommandGraphResource
                                     const uint8_t *pixels) override;
 
     gl::Error copyImage(const gl::Context *context,
-                        gl::TextureTarget target,
-                        size_t level,
+                        const gl::ImageIndex &index,
                         const gl::Rectangle &sourceArea,
                         GLenum internalFormat,
                         gl::Framebuffer *source) override;
     gl::Error copySubImage(const gl::Context *context,
-                           gl::TextureTarget target,
-                           size_t level,
+                           const gl::ImageIndex &index,
                            const gl::Offset &destOffset,
                            const gl::Rectangle &sourceArea,
                            gl::Framebuffer *source) override;
@@ -144,6 +138,8 @@ class TextureVk : public TextureImpl, public vk::CommandGraphResource
     vk::Error ensureImageInitialized(RendererVk *renderer);
 
   private:
+    void releaseImage(const gl::Context *context, RendererVk *renderer);
+
     vk::ImageHelper mImage;
     vk::ImageView mImageView;
     vk::Sampler mSampler;

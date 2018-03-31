@@ -108,7 +108,7 @@ TEST(ImageTest, RespecificationReleasesReferences)
 
     gl::PixelUnpackState defaultUnpackState;
 
-    EXPECT_CALL(*textureImpl, setImage(_, _, _, _, _, _, _, _, _))
+    EXPECT_CALL(*textureImpl, setImage(_, _, _, _, _, _, _, _))
         .WillOnce(Return(gl::NoError()))
         .RetiresOnSaturation();
     EXPECT_FALSE(texture
@@ -132,7 +132,7 @@ TEST(ImageTest, RespecificationReleasesReferences)
     // Respecify the texture and verify that the image releases its reference
     rx::MockImageImpl *imageImpl = static_cast<rx::MockImageImpl *>(image->getImplementation());
     EXPECT_CALL(*imageImpl, orphan(_, _)).WillOnce(Return(gl::NoError())).RetiresOnSaturation();
-    EXPECT_CALL(*textureImpl, setImage(_, _, _, _, _, _, _, _, _))
+    EXPECT_CALL(*textureImpl, setImage(_, _, _, _, _, _, _, _))
         .WillOnce(Return(gl::NoError()))
         .RetiresOnSaturation();
 
