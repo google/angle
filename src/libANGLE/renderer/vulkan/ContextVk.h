@@ -13,9 +13,7 @@
 #include <vulkan/vulkan.h>
 
 #include "libANGLE/renderer/ContextImpl.h"
-#include "libANGLE/renderer/vulkan/DynamicBuffer.h"
-#include "libANGLE/renderer/vulkan/DynamicDescriptorPool.h"
-#include "libANGLE/renderer/vulkan/vk_cache_utils.h"
+#include "libANGLE/renderer/vulkan/vk_helpers.h"
 
 namespace rx
 {
@@ -156,7 +154,7 @@ class ContextVk : public ContextImpl
 
     void invalidateCurrentPipeline();
 
-    DynamicDescriptorPool *getDynamicDescriptorPool();
+    vk::DynamicDescriptorPool *getDynamicDescriptorPool();
 
     const VkClearValue &getClearColorValue() const;
     const VkClearValue &getClearDepthStencilValue() const;
@@ -179,7 +177,7 @@ class ContextVk : public ContextImpl
 
     // The dynamic descriptor pool is externally sychronized, so cannot be accessed from different
     // threads simultaneously. Hence, we keep it in the ContextVk instead of the RendererVk.
-    DynamicDescriptorPool mDynamicDescriptorPool;
+    vk::DynamicDescriptorPool mDynamicDescriptorPool;
 
     // Triggers adding dependencies to the command graph.
     bool mTexturesDirty;
@@ -189,7 +187,6 @@ class ContextVk : public ContextImpl
     VkClearValue mClearColorValue;
     VkClearValue mClearDepthStencilValue;
 };
-
 }  // namespace rx
 
 #endif  // LIBANGLE_RENDERER_VULKAN_CONTEXTVK_H_

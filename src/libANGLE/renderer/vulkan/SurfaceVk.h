@@ -14,7 +14,7 @@
 
 #include "libANGLE/renderer/SurfaceImpl.h"
 #include "libANGLE/renderer/vulkan/RenderTargetVk.h"
-#include "libANGLE/renderer/vulkan/vk_utils.h"
+#include "libANGLE/renderer/vulkan/vk_helpers.h"
 
 namespace rx
 {
@@ -60,7 +60,7 @@ class OffscreenSurfaceVk : public SurfaceImpl
     EGLint mHeight;
 };
 
-class WindowSurfaceVk : public SurfaceImpl, public ResourceVk
+class WindowSurfaceVk : public SurfaceImpl, public vk::CommandGraphResource
 {
   public:
     WindowSurfaceVk(const egl::SurfaceState &surfaceState,

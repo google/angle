@@ -19,6 +19,8 @@ namespace rx
 
 namespace vk
 {
+class ImageHelper;
+
 // Packed Vk resource descriptions.
 // Most Vk types use many more bits than required to represent the underlying data.
 // Since ANGLE wants cache things like RenderPasses and Pipeline State Objects using

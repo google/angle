@@ -13,7 +13,6 @@
 #include "common/utilities.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/renderer/vulkan/ContextVk.h"
-#include "libANGLE/renderer/vulkan/DynamicDescriptorPool.h"
 #include "libANGLE/renderer/vulkan/GlslangWrapper.h"
 #include "libANGLE/renderer/vulkan/RendererVk.h"
 #include "libANGLE/renderer/vulkan/TextureVk.h"
@@ -114,7 +113,7 @@ void ReadFromDefaultUniformBlock(int componentCount,
 }
 
 vk::Error SyncDefaultUniformBlock(RendererVk *renderer,
-                                  DynamicBuffer *dynamicBuffer,
+                                  vk::DynamicBuffer *dynamicBuffer,
                                   const angle::MemoryBuffer &bufferData,
                                   uint32_t *outOffset,
                                   bool *outBufferModified)
@@ -702,7 +701,7 @@ vk::Error ProgramVk::allocateDescriptorSet(ContextVk *contextVk, uint32_t descri
     RendererVk *renderer = contextVk->getRenderer();
 
     // Write out to a new a descriptor set.
-    DynamicDescriptorPool *dynamicDescriptorPool = contextVk->getDynamicDescriptorPool();
+    vk::DynamicDescriptorPool *dynamicDescriptorPool = contextVk->getDynamicDescriptorPool();
     const auto &descriptorSetLayouts = renderer->getGraphicsDescriptorSetLayouts();
 
     uint32_t potentialNewCount = descriptorSetIndex + 1;
@@ -770,7 +769,7 @@ vk::Error ProgramVk::updateUniforms(ContextVk *contextVk)
     {
         // We need to reinitialize the descriptor sets if we newly allocated buffers since we can't
         // modify the descriptor sets once initialized.
-        ANGLE_TRY(allocateDescriptorSet(contextVk, UniformBufferIndex));
+        ANGLE_TRY(allocateDescriptorSet(contextVk, vk::UniformBufferIndex));
         ANGLE_TRY(updateDefaultUniformsDescriptorSet(contextVk));
     }
 
@@ -856,7 +855,7 @@ vk::Error ProgramVk::updateTexturesDescriptorSet(ContextVk *contextVk)
         return vk::NoError();
     }
 
-    ANGLE_TRY(allocateDescriptorSet(contextVk, TextureIndex));
+    ANGLE_TRY(allocateDescriptorSet(contextVk, vk::TextureIndex));
 
     ASSERT(mUsedDescriptorSetRange.contains(1));
     VkDescriptorSet descriptorSet = mDescriptorSets[1];
@@ -925,7 +924,7 @@ void ProgramVk::setDefaultUniformBlocksMinSizeForTesting(size_t minSize)
 {
     for (DefaultUniformBlock &block : mDefaultUniformBlocks)
     {
-        block.storage.setMinimumSize(minSize);
+        block.storage.setMinimumSizeForTesting(minSize);
     }
 }
 }  // namespace rx

@@ -11,13 +11,14 @@
 #define LIBANGLE_RENDERER_VULKAN_TEXTUREVK_H_
 
 #include "libANGLE/renderer/TextureImpl.h"
+#include "libANGLE/renderer/vulkan/CommandGraph.h"
 #include "libANGLE/renderer/vulkan/RenderTargetVk.h"
-#include "libANGLE/renderer/vulkan/vk_utils.h"
+#include "libANGLE/renderer/vulkan/vk_helpers.h"
 
 namespace rx
 {
 
-class TextureVk : public TextureImpl, public ResourceVk
+class TextureVk : public TextureImpl, public vk::CommandGraphResource
 {
   public:
     TextureVk(const gl::TextureState &state);

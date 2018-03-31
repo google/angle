@@ -51,6 +51,98 @@ Error InitAndBeginCommandBuffer(VkDevice device,
 
 }  // anonymous namespace
 
+// CommandGraphResource implementation.
+CommandGraphResource::CommandGraphResource() : mCurrentWritingNode(nullptr)
+{
+}
+
+CommandGraphResource::~CommandGraphResource()
+{
+}
+
+void CommandGraphResource::updateQueueSerial(Serial queueSerial)
+{
+    ASSERT(queueSerial >= mStoredQueueSerial);
+
+    if (queueSerial > mStoredQueueSerial)
+    {
+        mCurrentWritingNode = nullptr;
+        mCurrentReadingNodes.clear();
+        mStoredQueueSerial = queueSerial;
+    }
+}
+
+Serial CommandGraphResource::getQueueSerial() const
+{
+    return mStoredQueueSerial;
+}
+
+bool CommandGraphResource::hasCurrentWritingNode(Serial currentSerial) const
+{
+    return (mStoredQueueSerial == currentSerial && mCurrentWritingNode != nullptr &&
+            !mCurrentWritingNode->hasChildren());
+}
+
+CommandGraphNode *CommandGraphResource::getCurrentWritingNode(Serial currentSerial)
+{
+    ASSERT(currentSerial == mStoredQueueSerial);
+    return mCurrentWritingNode;
+}
+
+CommandGraphNode *CommandGraphResource::getNewWritingNode(RendererVk *renderer)
+{
+    CommandGraphNode *newCommands = renderer->allocateCommandNode();
+    onWriteResource(newCommands, renderer->getCurrentQueueSerial());
+    return newCommands;
+}
+
+Error CommandGraphResource::beginWriteResource(RendererVk *renderer,
+                                               CommandBuffer **commandBufferOut)
+{
+    CommandGraphNode *commands = getNewWritingNode(renderer);
+
+    VkDevice device = renderer->getDevice();
+    ANGLE_TRY(commands->beginOutsideRenderPassRecording(device, renderer->getCommandPool(),
+                                                        commandBufferOut));
+    return NoError();
+}
+
+void CommandGraphResource::onWriteResource(CommandGraphNode *writingNode, Serial serial)
+{
+    updateQueueSerial(serial);
+
+    // Make sure any open reads and writes finish before we execute 'newCommands'.
+    if (!mCurrentReadingNodes.empty())
+    {
+        CommandGraphNode::SetHappensBeforeDependencies(mCurrentReadingNodes, writingNode);
+        mCurrentReadingNodes.clear();
+    }
+
+    if (mCurrentWritingNode && mCurrentWritingNode != writingNode)
+    {
+        CommandGraphNode::SetHappensBeforeDependency(mCurrentWritingNode, writingNode);
+    }
+
+    mCurrentWritingNode = writingNode;
+}
+
+void CommandGraphResource::onReadResource(CommandGraphNode *readingNode, Serial serial)
+{
+    if (hasCurrentWritingNode(serial))
+    {
+        // Ensure 'readOperation' happens after the current write commands.
+        CommandGraphNode::SetHappensBeforeDependency(getCurrentWritingNode(serial), readingNode);
+        ASSERT(mStoredQueueSerial == serial);
+    }
+    else
+    {
+        updateQueueSerial(serial);
+    }
+
+    // Add the read operation to the list of nodes currently reading this resource.
+    mCurrentReadingNodes.push_back(readingNode);
+}
+
 // CommandGraphNode implementation.
 
 CommandGraphNode::CommandGraphNode() : mHasChildren(false), mVisitedState(VisitedState::Unvisited)
@@ -354,7 +446,7 @@ Error CommandGraph::submitCommands(VkDevice device,
     ANGLE_TRY(primaryCommandBufferOut->end());
 
     // TODO(jmadill): Use pool allocation so we don't need to deallocate command graph.
-    for (vk::CommandGraphNode *node : mNodes)
+    for (CommandGraphNode *node : mNodes)
     {
         delete node;
     }

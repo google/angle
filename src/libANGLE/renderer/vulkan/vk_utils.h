@@ -53,11 +53,10 @@ ANGLE_GL_OBJECTS_X(ANGLE_PRE_DECLARE_OBJECT);
 
 namespace rx
 {
+class CommandGraphResource;
 class DisplayVk;
-class DynamicBuffer;
 class RenderTargetVk;
 class RendererVk;
-class ResourceVk;
 class RenderPassCache;
 
 ANGLE_GL_OBJECTS_X(ANGLE_PRE_DECLARE_VK_OBJECT);
@@ -636,127 +635,12 @@ struct BufferAndMemory final : private angle::NonCopyable
     DeviceMemory memory;
 };
 
-Error AllocateImageMemory(RendererVk *renderer,
+Error AllocateImageMemory(VkDevice device,
+                          const MemoryProperties &memoryProperties,
                           VkMemoryPropertyFlags memoryPropertyFlags,
                           Image *image,
                           DeviceMemory *deviceMemoryOut,
                           size_t *requiredSizeOut);
-
-// This class' responsibility is to create index buffers needed to support line loops in Vulkan.
-// In the setup phase of drawing, the createIndexBuffer method should be called with the
-// current draw call parameters. If an element array buffer is bound for an indexed draw, use
-// createIndexBufferFromElementArrayBuffer.
-//
-// If the user wants to draw a loop between [v1, v2, v3], we will create an indexed buffer with
-// these indexes: [0, 1, 2, 3, 0] to emulate the loop.
-class LineLoopHandler final : angle::NonCopyable
-{
-  public:
-    LineLoopHandler();
-    ~LineLoopHandler();
-
-    gl::Error createIndexBuffer(RendererVk *renderer,
-                                const gl::DrawCallParams &drawCallParams,
-                                VkBuffer *bufferHandleOut,
-                                VkDeviceSize *offsetOut);
-    gl::Error createIndexBufferFromElementArrayBuffer(RendererVk *renderer,
-                                                      BufferVk *elementArrayBufferVk,
-                                                      VkIndexType indexType,
-                                                      int indexCount,
-                                                      VkBuffer *bufferHandleOut,
-                                                      VkDeviceSize *bufferOffsetOut);
-    void destroy(VkDevice device);
-
-    static void Draw(int count, CommandBuffer *commandBuffer);
-
-    ResourceVk *getLineLoopBufferResource();
-
-  private:
-    std::unique_ptr<DynamicBuffer> mDynamicLineLoopIndicesData;
-};
-
-class ImageHelper final : angle::NonCopyable
-{
-  public:
-    ImageHelper();
-    ImageHelper(ImageHelper &&other);
-    ~ImageHelper();
-
-    bool valid() const;
-
-    Error init2D(VkDevice device,
-                 const gl::Extents &extents,
-                 const Format &format,
-                 GLint samples,
-                 VkImageUsageFlags usage);
-    Error initMemory(VkDevice device,
-                     const MemoryProperties &memoryProperties,
-                     VkMemoryPropertyFlags flags);
-    Error initImageView(VkDevice device,
-                        VkImageAspectFlags aspectMask,
-                        const gl::SwizzleState &swizzleMap,
-                        ImageView *imageViewOut);
-    Error init2DStaging(VkDevice device,
-                        const MemoryProperties &memoryProperties,
-                        const Format &format,
-                        const gl::Extents &extent,
-                        StagingUsage usage);
-
-    void release(Serial serial, RendererVk *renderer);
-    void destroy(VkDevice device);
-    void dumpResources(Serial serial, std::vector<GarbageObject> *garbageQueue);
-
-    void init2DWeakReference(VkImage handle,
-                             const gl::Extents &extents,
-                             const Format &format,
-                             GLint samples);
-    void resetImageWeakReference();
-
-    const Image &getImage() const;
-    const DeviceMemory &getDeviceMemory() const;
-
-    const gl::Extents &getExtents() const;
-    const Format &getFormat() const;
-    GLint getSamples() const;
-    size_t getAllocatedMemorySize() const;
-
-    VkImageLayout getCurrentLayout() const { return mCurrentLayout; }
-    void updateLayout(VkImageLayout layout) { mCurrentLayout = layout; }
-
-    void changeLayoutWithStages(VkImageAspectFlags aspectMask,
-                                VkImageLayout newLayout,
-                                VkPipelineStageFlags srcStageMask,
-                                VkPipelineStageFlags dstStageMask,
-                                CommandBuffer *commandBuffer);
-
-    void clearColor(const VkClearColorValue &color, CommandBuffer *commandBuffer);
-
-    void clearDepthStencil(VkImageAspectFlags aspectFlags,
-                           const VkClearDepthStencilValue &depthStencil,
-                           CommandBuffer *commandBuffer);
-
-    static void Copy(ImageHelper *srcImage,
-                     ImageHelper *dstImage,
-                     const gl::Offset &srcOffset,
-                     const gl::Offset &dstOffset,
-                     const gl::Extents &copySize,
-                     VkImageAspectFlags aspectMask,
-                     CommandBuffer *commandBuffer);
-
-  private:
-    // Vulkan objects.
-    Image mImage;
-    DeviceMemory mDeviceMemory;
-
-    // Image properties.
-    gl::Extents mExtents;
-    const Format *mFormat;
-    GLint mSamples;
-    size_t mAllocatedMemorySize;
-
-    // Current state.
-    VkImageLayout mCurrentLayout;
-};
 }  // namespace vk
 
 namespace gl_vk
@@ -768,46 +652,6 @@ VkSampleCountFlagBits GetSamples(GLint sampleCount);
 VkComponentSwizzle GetSwizzle(const GLenum swizzle);
 VkIndexType GetIndexType(GLenum elementType);
 }  // namespace gl_vk
-
-// This is a helper class for back-end objects used in Vk command buffers. It records a serial
-// at command recording times indicating an order in the queue. We use Fences to detect when
-// commands finish, and then release any unreferenced and deleted resources based on the stored
-// queue serial in a special 'garbage' queue. Resources also track current read and write
-// dependencies. Only one command buffer node can be writing to the Resource at a time, but many
-// can be reading from it. Together the dependencies will form a command graph at submission time.
-class ResourceVk
-{
-  public:
-    ResourceVk();
-    virtual ~ResourceVk();
-
-    void updateQueueSerial(Serial queueSerial);
-    Serial getQueueSerial() const;
-
-    // Returns true if any tracked read or write nodes match 'currentSerial'.
-    bool hasCurrentWritingNode(Serial currentSerial) const;
-
-    // Returns the active write node, and asserts 'currentSerial' matches the stored serial.
-    vk::CommandGraphNode *getCurrentWritingNode(Serial currentSerial);
-
-    // Allocates a new write node and calls onWriteResource internally.
-    vk::CommandGraphNode *getNewWritingNode(RendererVk *renderer);
-
-    // Allocates a write node via getNewWriteNode and returns a started command buffer.
-    // The started command buffer will render outside of a RenderPass.
-    vk::Error beginWriteResource(RendererVk *renderer, vk::CommandBuffer **commandBufferOut);
-
-    // Sets up dependency relations. 'writingNode' will modify 'this' ResourceVk.
-    void onWriteResource(vk::CommandGraphNode *writingNode, Serial serial);
-
-    // Sets up dependency relations. 'readingNode' will read from 'this' ResourceVk.
-    void onReadResource(vk::CommandGraphNode *readingNode, Serial serial);
-
-  private:
-    Serial mStoredQueueSerial;
-    std::vector<vk::CommandGraphNode *> mCurrentReadingNodes;
-    vk::CommandGraphNode *mCurrentWritingNode;
-};
 
 }  // namespace rx
 

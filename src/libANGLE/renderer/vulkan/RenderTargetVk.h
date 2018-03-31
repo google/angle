@@ -16,10 +16,9 @@
 
 namespace rx
 {
-class ResourceVk;
-
 namespace vk
 {
+class CommandGraphResource;
 class ImageHelper;
 class ImageView;
 }  // namespace vk
@@ -34,7 +33,7 @@ class RenderTargetVk final : public FramebufferAttachmentRenderTarget
 
     vk::ImageHelper *image;
     vk::ImageView *imageView;
-    ResourceVk *resource;
+    vk::CommandGraphResource *resource;
 };
 
 }  // namespace rx

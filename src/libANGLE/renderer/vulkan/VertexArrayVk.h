@@ -11,8 +11,8 @@
 #define LIBANGLE_RENDERER_VULKAN_VERTEXARRAYVK_H_
 
 #include "libANGLE/renderer/VertexArrayImpl.h"
-#include "libANGLE/renderer/vulkan/DynamicBuffer.h"
 #include "libANGLE/renderer/vulkan/vk_cache_utils.h"
+#include "libANGLE/renderer/vulkan/vk_helpers.h"
 
 namespace gl
 {
@@ -22,7 +22,12 @@ class DrawCallParams;
 namespace rx
 {
 class BufferVk;
+
+namespace vk
+{
+class CommandGraphResource;
 class DynamicBuffer;
+}  // namespace vk
 
 class VertexArrayVk : public VertexArrayImpl
 {
@@ -39,6 +44,12 @@ class VertexArrayVk : public VertexArrayImpl
 
     const gl::AttribArray<VkBuffer> &getCurrentArrayBufferHandles() const;
     const gl::AttribArray<VkDeviceSize> &getCurrentArrayBufferOffsets() const;
+
+    void updateDrawDependencies(vk::CommandGraphNode *readNode,
+                                const gl::AttributesMask &activeAttribsMask,
+                                vk::CommandGraphResource *elementArrayBufferOverride,
+                                Serial serial,
+                                bool isDrawElements);
 
     void getPackedInputDescriptions(vk::PipelineDesc *pipelineDesc);
 
@@ -90,10 +101,10 @@ class VertexArrayVk : public VertexArrayImpl
 
     gl::AttribArray<VkBuffer> mCurrentArrayBufferHandles;
     gl::AttribArray<VkDeviceSize> mCurrentArrayBufferOffsets;
-    gl::AttribArray<ResourceVk *> mCurrentArrayBufferResources;
+    gl::AttribArray<vk::CommandGraphResource *> mCurrentArrayBufferResources;
     VkBuffer mCurrentElementArrayBufferHandle;
     VkDeviceSize mCurrentElementArrayBufferOffset;
-    ResourceVk *mCurrentElementArrayBufferResource;
+    vk::CommandGraphResource *mCurrentElementArrayBufferResource;
 
     // Keep a cache of binding and attribute descriptions for easy pipeline updates.
     // This is copied out of here into the pipeline description on a Context state change.
@@ -105,8 +116,8 @@ class VertexArrayVk : public VertexArrayImpl
     // TODO(jmadill): Move this to VertexArrayState. http://anglebug.com/2389
     gl::AttributesMask mClientMemoryAttribs;
 
-    DynamicBuffer mDynamicVertexData;
-    DynamicBuffer mDynamicIndexData;
+    vk::DynamicBuffer mDynamicVertexData;
+    vk::DynamicBuffer mDynamicIndexData;
 
     vk::LineLoopHandler mLineLoopHandler;
     Optional<int> mLineLoopBufferFirstIndex;

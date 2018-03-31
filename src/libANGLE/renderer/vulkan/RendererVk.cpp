@@ -797,7 +797,7 @@ Serial RendererVk::getCurrentQueueSerial() const
     return mCurrentQueueSerial;
 }
 
-bool RendererVk::isResourceInUse(const ResourceVk &resource)
+bool RendererVk::isResourceInUse(const vk::CommandGraphResource &resource)
 {
     return isSerialInUse(resource.getQueueSerial());
 }
