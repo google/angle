@@ -278,10 +278,7 @@ gl::Error FramebufferVk::readPixels(const gl::Context *context,
                                                  0, &mapPointer));
 
     const angle::Format &angleFormat = renderTarget->image->getFormat().textureFormat();
-
-    // TODO(jmadill): Use pixel bytes from the ANGLE format directly.
-    const auto &glFormat = gl::GetSizedInternalFormatInfo(angleFormat.glInternalFormat);
-    int outputPitch      = glFormat.pixelBytes * area.width;
+    GLuint outputPitch               = angleFormat.pixelBytes * area.width;
 
     // Get the staging image pitch and use it to pack the pixels later.
     VkSubresourceLayout subresourceLayout;

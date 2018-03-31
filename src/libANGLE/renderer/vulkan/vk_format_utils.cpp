@@ -125,8 +125,6 @@ void FormatTable::initialize(VkPhysicalDevice physicalDevice,
 
         if (!mFormatData[formatIndex].valid())
         {
-            // TODO(lucferron): Implement support for more OpenGL Texture formats
-            // http://anglebug.com/2358
             continue;
         }
 
@@ -140,9 +138,7 @@ void FormatTable::initialize(VkPhysicalDevice physicalDevice,
         FillTextureFormatCaps(formatProperties, &textureCaps);
         outTextureCapsMap->set(formatID, textureCaps);
 
-        // TODO(lucferron): Optimize this by including compressed bool in the FormatID
-        // http://anglebug.com/2358
-        if (gl::GetSizedInternalFormatInfo(internalFormat).compressed)
+        if (angleFormat.isBlock)
         {
             outCompressedTextureFormats->push_back(internalFormat);
         }
