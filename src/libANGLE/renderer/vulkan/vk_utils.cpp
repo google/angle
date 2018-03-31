@@ -475,48 +475,25 @@ void CommandBuffer::copyBuffer(const VkBuffer &srcBuffer,
     vkCmdCopyBuffer(mHandle, srcBuffer, destBuffer, regionCount, regions);
 }
 
-void CommandBuffer::clearSingleColorImage(const vk::Image &image, const VkClearColorValue &color)
+void CommandBuffer::clearColorImage(const vk::Image &image,
+                                    VkImageLayout imageLayout,
+                                    const VkClearColorValue &color,
+                                    uint32_t rangeCount,
+                                    const VkImageSubresourceRange *ranges)
 {
     ASSERT(valid());
-    ASSERT(image.getCurrentLayout() == VK_IMAGE_LAYOUT_GENERAL ||
-           image.getCurrentLayout() == VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
-
-    VkImageSubresourceRange range;
-    range.aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT;
-    range.baseMipLevel   = 0;
-    range.levelCount     = 1;
-    range.baseArrayLayer = 0;
-    range.layerCount     = 1;
-
-    vkCmdClearColorImage(mHandle, image.getHandle(), image.getCurrentLayout(), &color, 1, &range);
-}
-
-void CommandBuffer::clearSingleDepthStencilImage(const vk::Image &image,
-                                                 VkImageAspectFlags aspectFlags,
-                                                 const VkClearDepthStencilValue &depthStencil)
-{
-    VkImageSubresourceRange clearRange = {
-        /*aspectMask*/ aspectFlags,
-        /*baseMipLevel*/ 0,
-        /*levelCount*/ 1,
-        /*baseArrayLayer*/ 0,
-        /*layerCount*/ 1,
-    };
-
-    clearDepthStencilImage(image, depthStencil, 1, &clearRange);
+    vkCmdClearColorImage(mHandle, image.getHandle(), imageLayout, &color, rangeCount, ranges);
 }
 
 void CommandBuffer::clearDepthStencilImage(const vk::Image &image,
+                                           VkImageLayout imageLayout,
                                            const VkClearDepthStencilValue &depthStencil,
                                            uint32_t rangeCount,
                                            const VkImageSubresourceRange *ranges)
 {
     ASSERT(valid());
-    ASSERT(image.getCurrentLayout() == VK_IMAGE_LAYOUT_GENERAL ||
-           image.getCurrentLayout() == VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
-
-    vkCmdClearDepthStencilImage(mHandle, image.getHandle(), image.getCurrentLayout(), &depthStencil,
-                                rangeCount, ranges);
+    vkCmdClearDepthStencilImage(mHandle, image.getHandle(), imageLayout, &depthStencil, rangeCount,
+                                ranges);
 }
 
 void CommandBuffer::clearAttachments(uint32_t attachmentCount,
@@ -529,45 +506,16 @@ void CommandBuffer::clearAttachments(uint32_t attachmentCount,
     vkCmdClearAttachments(mHandle, attachmentCount, attachments, rectCount, rects);
 }
 
-void CommandBuffer::copySingleImage(const vk::Image &srcImage,
-                                    const vk::Image &destImage,
-                                    const gl::Box &copyRegion,
-                                    VkImageAspectFlags aspectMask)
-{
-    VkImageCopy region;
-    region.srcSubresource.aspectMask     = aspectMask;
-    region.srcSubresource.mipLevel       = 0;
-    region.srcSubresource.baseArrayLayer = 0;
-    region.srcSubresource.layerCount     = 1;
-    region.srcOffset.x                   = copyRegion.x;
-    region.srcOffset.y                   = copyRegion.y;
-    region.srcOffset.z                   = copyRegion.z;
-    region.dstSubresource.aspectMask     = aspectMask;
-    region.dstSubresource.mipLevel       = 0;
-    region.dstSubresource.baseArrayLayer = 0;
-    region.dstSubresource.layerCount     = 1;
-    region.dstOffset.x                   = copyRegion.x;
-    region.dstOffset.y                   = copyRegion.y;
-    region.dstOffset.z                   = copyRegion.z;
-    region.extent.width                  = copyRegion.width;
-    region.extent.height                 = copyRegion.height;
-    region.extent.depth                  = copyRegion.depth;
-
-    copyImage(srcImage, destImage, 1, &region);
-}
-
 void CommandBuffer::copyImage(const vk::Image &srcImage,
+                              VkImageLayout srcImageLayout,
                               const vk::Image &dstImage,
+                              VkImageLayout dstImageLayout,
                               uint32_t regionCount,
                               const VkImageCopy *regions)
 {
     ASSERT(valid() && srcImage.valid() && dstImage.valid());
-    ASSERT(srcImage.getCurrentLayout() == VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL ||
-           srcImage.getCurrentLayout() == VK_IMAGE_LAYOUT_GENERAL);
-    ASSERT(dstImage.getCurrentLayout() == VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL ||
-           dstImage.getCurrentLayout() == VK_IMAGE_LAYOUT_GENERAL);
-    vkCmdCopyImage(mHandle, srcImage.getHandle(), srcImage.getCurrentLayout(), dstImage.getHandle(),
-                   dstImage.getCurrentLayout(), 1, regions);
+    vkCmdCopyImage(mHandle, srcImage.getHandle(), srcImageLayout, dstImage.getHandle(),
+                   dstImageLayout, 1, regions);
 }
 
 void CommandBuffer::beginRenderPass(const VkRenderPassBeginInfo &beginInfo,
@@ -647,7 +595,7 @@ void CommandBuffer::executeCommands(uint32_t commandBufferCount,
 }
 
 // Image implementation.
-Image::Image() : mCurrentLayout(VK_IMAGE_LAYOUT_UNDEFINED)
+Image::Image()
 {
 }
 
@@ -674,73 +622,7 @@ Error Image::init(VkDevice device, const VkImageCreateInfo &createInfo)
 {
     ASSERT(!valid());
     ANGLE_VK_TRY(vkCreateImage(device, &createInfo, nullptr, &mHandle));
-    mCurrentLayout = createInfo.initialLayout;
     return NoError();
-}
-
-void Image::changeLayoutTop(VkImageAspectFlags aspectMask,
-                            VkImageLayout newLayout,
-                            CommandBuffer *commandBuffer)
-{
-    if (newLayout == mCurrentLayout)
-    {
-        // No-op.
-        return;
-    }
-
-    changeLayoutWithStages(aspectMask, newLayout, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-                           VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, commandBuffer);
-}
-
-void Image::changeLayoutWithStages(VkImageAspectFlags aspectMask,
-                                   VkImageLayout newLayout,
-                                   VkPipelineStageFlags srcStageMask,
-                                   VkPipelineStageFlags dstStageMask,
-                                   CommandBuffer *commandBuffer)
-{
-    VkImageMemoryBarrier imageMemoryBarrier;
-    imageMemoryBarrier.sType               = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-    imageMemoryBarrier.pNext               = nullptr;
-    imageMemoryBarrier.srcAccessMask       = 0;
-    imageMemoryBarrier.dstAccessMask       = 0;
-    imageMemoryBarrier.oldLayout           = mCurrentLayout;
-    imageMemoryBarrier.newLayout           = newLayout;
-    imageMemoryBarrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-    imageMemoryBarrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-    imageMemoryBarrier.image               = mHandle;
-
-    // TODO(jmadill): Is this needed for mipped/layer images?
-    imageMemoryBarrier.subresourceRange.aspectMask     = aspectMask;
-    imageMemoryBarrier.subresourceRange.baseMipLevel   = 0;
-    imageMemoryBarrier.subresourceRange.levelCount     = 1;
-    imageMemoryBarrier.subresourceRange.baseArrayLayer = 0;
-    imageMemoryBarrier.subresourceRange.layerCount     = 1;
-
-    // TODO(jmadill): Test all the permutations of the access flags.
-    imageMemoryBarrier.srcAccessMask = GetBasicLayoutAccessFlags(mCurrentLayout);
-
-    if (mCurrentLayout == VK_IMAGE_LAYOUT_PREINITIALIZED)
-    {
-        imageMemoryBarrier.srcAccessMask |= VK_ACCESS_HOST_WRITE_BIT;
-    }
-
-    imageMemoryBarrier.dstAccessMask = GetBasicLayoutAccessFlags(newLayout);
-
-    if (newLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL)
-    {
-        imageMemoryBarrier.srcAccessMask |=
-            (VK_ACCESS_HOST_WRITE_BIT | VK_ACCESS_TRANSFER_WRITE_BIT);
-        imageMemoryBarrier.dstAccessMask |= VK_ACCESS_SHADER_READ_BIT;
-    }
-
-    if (newLayout == VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL)
-    {
-        imageMemoryBarrier.dstAccessMask |= VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
-    }
-
-    commandBuffer->singleImageBarrier(srcStageMask, dstStageMask, 0, imageMemoryBarrier);
-
-    mCurrentLayout = newLayout;
 }
 
 void Image::getMemoryRequirements(VkDevice device, VkMemoryRequirements *requirementsOut) const
@@ -760,7 +642,7 @@ void Image::getSubresourceLayout(VkDevice device,
                                  VkImageAspectFlagBits aspectMask,
                                  uint32_t mipLevel,
                                  uint32_t arrayLayer,
-                                 VkSubresourceLayout *outSubresourceLayout)
+                                 VkSubresourceLayout *outSubresourceLayout) const
 {
     VkImageSubresource subresource;
     subresource.aspectMask = aspectMask;
@@ -869,7 +751,7 @@ Error DeviceMemory::map(VkDevice device,
                         VkDeviceSize offset,
                         VkDeviceSize size,
                         VkMemoryMapFlags flags,
-                        uint8_t **mapPointer)
+                        uint8_t **mapPointer) const
 {
     ASSERT(valid());
     ANGLE_VK_TRY(
@@ -877,7 +759,7 @@ Error DeviceMemory::map(VkDevice device,
     return NoError();
 }
 
-void DeviceMemory::unmap(VkDevice device)
+void DeviceMemory::unmap(VkDevice device) const
 {
     ASSERT(valid());
     vkUnmapMemory(device, mHandle);
@@ -1421,7 +1303,11 @@ void LineLoopHandler::onSubjectStateChange(const gl::Context *context,
 }
 
 // ImageHelper implementation.
-ImageHelper::ImageHelper() : mFormat(nullptr), mSamples(0), mAllocatedMemorySize(0)
+ImageHelper::ImageHelper()
+    : mFormat(nullptr),
+      mSamples(0),
+      mAllocatedMemorySize(0),
+      mCurrentLayout(VK_IMAGE_LAYOUT_UNDEFINED)
 {
 }
 
@@ -1431,7 +1317,8 @@ ImageHelper::ImageHelper(ImageHelper &&other)
       mExtents(other.mExtents),
       mFormat(other.mFormat),
       mSamples(other.mSamples),
-      mAllocatedMemorySize(other.mAllocatedMemorySize)
+      mAllocatedMemorySize(other.mAllocatedMemorySize),
+      mCurrentLayout(other.mCurrentLayout)
 {
 }
 
@@ -1476,6 +1363,8 @@ Error ImageHelper::init2D(VkDevice device,
     imageInfo.pQueueFamilyIndices   = nullptr;
     imageInfo.initialLayout         = VK_IMAGE_LAYOUT_UNDEFINED;
 
+    mCurrentLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+
     ANGLE_TRY(mImage.init(device, imageInfo));
     return NoError();
 }
@@ -1484,6 +1373,11 @@ void ImageHelper::release(Serial serial, RendererVk *renderer)
 {
     renderer->releaseObject(serial, &mImage);
     renderer->releaseObject(serial, &mDeviceMemory);
+}
+
+void ImageHelper::resetImageWeakReference()
+{
+    mImage.reset();
 }
 
 Error ImageHelper::initMemory(VkDevice device,
@@ -1556,8 +1450,8 @@ Error ImageHelper::init2DStaging(VkDevice device,
 
     // Use Preinitialized for writable staging images - in these cases we want to map the memory
     // before we do a copy. For readback images, use an undefined layout.
-    VkImageLayout initialLayout = usage == vk::StagingUsage::Read ? VK_IMAGE_LAYOUT_UNDEFINED
-                                                                  : VK_IMAGE_LAYOUT_PREINITIALIZED;
+    mCurrentLayout = usage == vk::StagingUsage::Read ? VK_IMAGE_LAYOUT_UNDEFINED
+                                                     : VK_IMAGE_LAYOUT_PREINITIALIZED;
 
     VkImageCreateInfo imageInfo;
     imageInfo.sType                 = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
@@ -1576,7 +1470,7 @@ Error ImageHelper::init2DStaging(VkDevice device,
     imageInfo.sharingMode           = VK_SHARING_MODE_EXCLUSIVE;
     imageInfo.queueFamilyIndexCount = 0;
     imageInfo.pQueueFamilyIndices   = nullptr;
-    imageInfo.initialLayout         = initialLayout;
+    imageInfo.initialLayout         = mCurrentLayout;
 
     ANGLE_TRY(mImage.init(device, imageInfo));
 
@@ -1598,19 +1492,9 @@ void ImageHelper::dumpResources(Serial serial, std::vector<vk::GarbageObject> *g
     mDeviceMemory.dumpResources(serial, garbageQueue);
 }
 
-Image &ImageHelper::getImage()
-{
-    return mImage;
-}
-
 const Image &ImageHelper::getImage() const
 {
     return mImage;
-}
-
-DeviceMemory &ImageHelper::getDeviceMemory()
-{
-    return mDeviceMemory;
 }
 
 const DeviceMemory &ImageHelper::getDeviceMemory() const
@@ -1636,6 +1520,146 @@ GLint ImageHelper::getSamples() const
 size_t ImageHelper::getAllocatedMemorySize() const
 {
     return mAllocatedMemorySize;
+}
+
+void ImageHelper::changeLayoutWithStages(VkImageAspectFlags aspectMask,
+                                         VkImageLayout newLayout,
+                                         VkPipelineStageFlags srcStageMask,
+                                         VkPipelineStageFlags dstStageMask,
+                                         CommandBuffer *commandBuffer)
+{
+    VkImageMemoryBarrier imageMemoryBarrier;
+    imageMemoryBarrier.sType               = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+    imageMemoryBarrier.pNext               = nullptr;
+    imageMemoryBarrier.srcAccessMask       = 0;
+    imageMemoryBarrier.dstAccessMask       = 0;
+    imageMemoryBarrier.oldLayout           = mCurrentLayout;
+    imageMemoryBarrier.newLayout           = newLayout;
+    imageMemoryBarrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+    imageMemoryBarrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+    imageMemoryBarrier.image               = mImage.getHandle();
+
+    // TODO(jmadill): Is this needed for mipped/layer images?
+    imageMemoryBarrier.subresourceRange.aspectMask     = aspectMask;
+    imageMemoryBarrier.subresourceRange.baseMipLevel   = 0;
+    imageMemoryBarrier.subresourceRange.levelCount     = 1;
+    imageMemoryBarrier.subresourceRange.baseArrayLayer = 0;
+    imageMemoryBarrier.subresourceRange.layerCount     = 1;
+
+    // TODO(jmadill): Test all the permutations of the access flags.
+    imageMemoryBarrier.srcAccessMask = GetBasicLayoutAccessFlags(mCurrentLayout);
+
+    if (mCurrentLayout == VK_IMAGE_LAYOUT_PREINITIALIZED)
+    {
+        imageMemoryBarrier.srcAccessMask |= VK_ACCESS_HOST_WRITE_BIT;
+    }
+
+    imageMemoryBarrier.dstAccessMask = GetBasicLayoutAccessFlags(newLayout);
+
+    if (newLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL)
+    {
+        imageMemoryBarrier.srcAccessMask |=
+            (VK_ACCESS_HOST_WRITE_BIT | VK_ACCESS_TRANSFER_WRITE_BIT);
+        imageMemoryBarrier.dstAccessMask |= VK_ACCESS_SHADER_READ_BIT;
+    }
+
+    if (newLayout == VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL)
+    {
+        imageMemoryBarrier.dstAccessMask |= VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+    }
+
+    commandBuffer->singleImageBarrier(srcStageMask, dstStageMask, 0, imageMemoryBarrier);
+
+    mCurrentLayout = newLayout;
+}
+
+void ImageHelper::clearColor(const VkClearColorValue &color, CommandBuffer *commandBuffer)
+{
+    ASSERT(valid());
+
+    changeLayoutWithStages(VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+                           VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT,
+                           commandBuffer);
+
+    VkImageSubresourceRange range;
+    range.aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT;
+    range.baseMipLevel   = 0;
+    range.levelCount     = 1;
+    range.baseArrayLayer = 0;
+    range.layerCount     = 1;
+
+    commandBuffer->clearColorImage(mImage, mCurrentLayout, color, 1, &range);
+}
+
+void ImageHelper::clearDepthStencil(VkImageAspectFlags aspectFlags,
+                                    const VkClearDepthStencilValue &depthStencil,
+                                    CommandBuffer *commandBuffer)
+{
+    ASSERT(valid());
+
+    changeLayoutWithStages(aspectFlags, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+                           VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT,
+                           commandBuffer);
+
+    VkImageSubresourceRange clearRange = {
+        /*aspectMask*/ aspectFlags,
+        /*baseMipLevel*/ 0,
+        /*levelCount*/ 1,
+        /*baseArrayLayer*/ 0,
+        /*layerCount*/ 1,
+    };
+
+    commandBuffer->clearDepthStencilImage(mImage, mCurrentLayout, depthStencil, 1, &clearRange);
+}
+
+// static
+void ImageHelper::Copy(vk::ImageHelper *srcImage,
+                       vk::ImageHelper *dstImage,
+                       const gl::Offset &srcOffset,
+                       const gl::Offset &dstOffset,
+                       const gl::Extents &copySize,
+                       VkImageAspectFlags aspectMask,
+                       CommandBuffer *commandBuffer)
+{
+    ASSERT(commandBuffer->valid() && srcImage->valid() && dstImage->valid());
+
+    if (srcImage->getCurrentLayout() != VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL &&
+        srcImage->getCurrentLayout() != VK_IMAGE_LAYOUT_GENERAL)
+    {
+        srcImage->changeLayoutWithStages(
+            VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+            VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, commandBuffer);
+    }
+
+    if (dstImage->getCurrentLayout() != VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL &&
+        dstImage->getCurrentLayout() != VK_IMAGE_LAYOUT_GENERAL)
+    {
+        dstImage->changeLayoutWithStages(
+            VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+            VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, commandBuffer);
+    }
+
+    VkImageCopy region;
+    region.srcSubresource.aspectMask     = aspectMask;
+    region.srcSubresource.mipLevel       = 0;
+    region.srcSubresource.baseArrayLayer = 0;
+    region.srcSubresource.layerCount     = 1;
+    region.srcOffset.x                   = srcOffset.x;
+    region.srcOffset.y                   = srcOffset.y;
+    region.srcOffset.z                   = srcOffset.z;
+    region.dstSubresource.aspectMask     = aspectMask;
+    region.dstSubresource.mipLevel       = 0;
+    region.dstSubresource.baseArrayLayer = 0;
+    region.dstSubresource.layerCount     = 1;
+    region.dstOffset.x                   = dstOffset.x;
+    region.dstOffset.y                   = dstOffset.y;
+    region.dstOffset.z                   = dstOffset.z;
+    region.extent.width                  = copySize.width;
+    region.extent.height                 = copySize.height;
+    region.extent.depth                  = copySize.depth;
+
+    commandBuffer->copyImage(srcImage->getImage(), srcImage->getCurrentLayout(),
+                             dstImage->getImage(), dstImage->getCurrentLayout(), 1, &region);
 }
 
 }  // namespace vk

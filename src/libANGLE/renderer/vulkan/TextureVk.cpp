@@ -141,10 +141,7 @@ gl::Error TextureVk::setImage(const gl::Context *context,
         vk::CommandBuffer *commandBuffer = nullptr;
         ANGLE_TRY(beginWriteResource(renderer, &commandBuffer));
         VkClearColorValue black = {{0}};
-        mImage.getImage().changeLayoutWithStages(
-            VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-            VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, commandBuffer);
-        commandBuffer->clearSingleColorImage(mImage.getImage(), black);
+        mImage.clearColor(black, commandBuffer);
     }
 
     if (!mSampler.valid())
@@ -253,16 +250,8 @@ gl::Error TextureVk::setSubImageImpl(ContextVk *contextVk,
     vk::CommandBuffer *commandBuffer = nullptr;
     ANGLE_TRY(beginWriteResource(renderer, &commandBuffer));
 
-    stagingImage.getImage().changeLayoutWithStages(
-        VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
-        VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, commandBuffer);
-    mImage.getImage().changeLayoutWithStages(
-        VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-        VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, commandBuffer);
-
-    gl::Box wholeRegion(0, 0, 0, size.width, size.height, size.depth);
-    commandBuffer->copySingleImage(stagingImage.getImage(), mImage.getImage(), wholeRegion,
-                                   VK_IMAGE_ASPECT_COLOR_BIT);
+    vk::ImageHelper::Copy(&stagingImage, &mImage, gl::Offset(), gl::Offset(), size,
+                          VK_IMAGE_ASPECT_COLOR_BIT, commandBuffer);
 
     // Immediately release staging image.
     // TODO(jmadill): Staging image re-use.
@@ -403,10 +392,10 @@ gl::Error TextureVk::initializeContents(const gl::Context *context,
     return gl::NoError();
 }
 
-const vk::Image &TextureVk::getImage() const
+const vk::ImageHelper &TextureVk::getImage() const
 {
     ASSERT(mImage.valid());
-    return mImage.getImage();
+    return mImage;
 }
 
 const vk::ImageView &TextureVk::getImageView() const

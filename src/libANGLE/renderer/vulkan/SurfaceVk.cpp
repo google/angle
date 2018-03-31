@@ -203,7 +203,7 @@ void WindowSurfaceVk::destroy(const egl::Display *display)
     for (SwapchainImage &swapchainImage : mSwapchainImages)
     {
         // Although we don't own the swapchain image handles, we need to keep our shutdown clean.
-        swapchainImage.image.getImage().reset();
+        swapchainImage.image.resetImageWeakReference();
         swapchainImage.image.destroy(device);
         swapchainImage.imageView.destroy(device);
         swapchainImage.framebuffer.destroy(device);
@@ -400,10 +400,7 @@ vk::Error WindowSurfaceVk::initializeImpl(RendererVk *renderer)
                                    &member.imageView);
 
         // Set transfer dest layout, and clear the image to black.
-        member.image.getImage().changeLayoutWithStages(
-            VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-            VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, commandBuffer);
-        commandBuffer->clearSingleColorImage(member.image.getImage(), transparentBlack);
+        member.image.clearColor(transparentBlack, commandBuffer);
 
         ANGLE_TRY(member.imageAcquiredSemaphore.init(device));
         ANGLE_TRY(member.commandsCompleteSemaphore.init(device));
@@ -432,11 +429,7 @@ vk::Error WindowSurfaceVk::initializeImpl(RendererVk *renderer)
         VkClearDepthStencilValue depthStencilClearValue = {1.0f, 0};
 
         // Set transfer dest layout, and clear the image.
-        mDepthStencilImage.getImage().changeLayoutWithStages(
-            aspect, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT,
-            VK_PIPELINE_STAGE_TRANSFER_BIT, commandBuffer);
-        commandBuffer->clearSingleDepthStencilImage(mDepthStencilImage.getImage(), aspect,
-                                                    depthStencilClearValue);
+        mDepthStencilImage.clearDepthStencil(aspect, depthStencilClearValue, commandBuffer);
 
         ANGLE_TRY(mDepthStencilImage.initImageView(device, aspect, gl::SwizzleState(),
                                                    &mDepthStencilImageView));
@@ -466,9 +459,9 @@ egl::Error WindowSurfaceVk::swap(const gl::Context *context)
 
     SwapchainImage &image = mSwapchainImages[mCurrentSwapchainImageIndex];
 
-    image.image.getImage().changeLayoutWithStages(
-        VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_PRESENT_SRC_KHR,
-        VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, swapCommands);
+    image.image.changeLayoutWithStages(VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_PRESENT_SRC_KHR,
+                                       VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
+                                       VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, swapCommands);
 
     ANGLE_TRY(
         renderer->flush(context, image.imageAcquiredSemaphore, image.commandsCompleteSemaphore));

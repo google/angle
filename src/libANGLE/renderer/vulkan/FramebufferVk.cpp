@@ -161,12 +161,7 @@ gl::Error FramebufferVk::clear(const gl::Context *context, GLbitfield mask)
 
         RenderTargetVk *renderTarget = mRenderTargetCache.getDepthStencil();
         renderTarget->resource->onWriteResource(writingNode, currentSerial);
-        renderTarget->image->getImage().changeLayoutWithStages(
-            aspectFlags, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
-            VK_PIPELINE_STAGE_TRANSFER_BIT, commandBuffer);
-
-        commandBuffer->clearSingleDepthStencilImage(renderTarget->image->getImage(), aspectFlags,
-                                                    clearDepthStencilValue);
+        renderTarget->image->clearDepthStencil(aspectFlags, clearDepthStencilValue, commandBuffer);
 
         if (!clearColor)
         {
@@ -191,13 +186,7 @@ gl::Error FramebufferVk::clear(const gl::Context *context, GLbitfield mask)
         RenderTargetVk *colorRenderTarget = colorRenderTargets[colorIndex];
         ASSERT(colorRenderTarget);
         colorRenderTarget->resource->onWriteResource(writingNode, currentSerial);
-
-        colorRenderTarget->image->getImage().changeLayoutWithStages(
-            VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-            VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, commandBuffer);
-
-        commandBuffer->clearSingleColorImage(colorRenderTarget->image->getImage(),
-                                             contextVk->getClearColorValue().color);
+        colorRenderTarget->image->clearColor(contextVk->getClearColorValue().color, commandBuffer);
     }
 
     return gl::NoError();
@@ -264,7 +253,6 @@ gl::Error FramebufferVk::readPixels(const gl::Context *context,
     RenderTargetVk *renderTarget = mRenderTargetCache.getColorRead(mState);
     ASSERT(renderTarget);
 
-    vk::Image &readImage = renderTarget->image->getImage();
     vk::ImageHelper stagingImage;
     ANGLE_TRY(stagingImage.init2DStaging(
         device, renderer->getMemoryProperties(), renderTarget->image->getFormat(),
@@ -273,33 +261,13 @@ gl::Error FramebufferVk::readPixels(const gl::Context *context,
     vk::CommandBuffer *commandBuffer = nullptr;
     ANGLE_TRY(beginWriteResource(renderer, &commandBuffer));
 
-    stagingImage.getImage().changeLayoutTop(VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_GENERAL,
-                                            commandBuffer);
+    stagingImage.changeLayoutWithStages(VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_GENERAL,
+                                        VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
+                                        VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, commandBuffer);
 
-    readImage.changeLayoutWithStages(
-        VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
-        VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, commandBuffer);
-
-    VkImageCopy region;
-    region.srcSubresource.aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT;
-    region.srcSubresource.mipLevel       = 0;
-    region.srcSubresource.baseArrayLayer = 0;
-    region.srcSubresource.layerCount     = 1;
-    region.srcOffset.x                   = area.x;
-    region.srcOffset.y                   = area.y;
-    region.srcOffset.z                   = 0;
-    region.dstSubresource.aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT;
-    region.dstSubresource.mipLevel       = 0;
-    region.dstSubresource.baseArrayLayer = 0;
-    region.dstSubresource.layerCount     = 1;
-    region.dstOffset.x                   = 0;
-    region.dstOffset.y                   = 0;
-    region.dstOffset.z                   = 0;
-    region.extent.width                  = area.width;
-    region.extent.height                 = area.height;
-    region.extent.depth                  = 1;
-
-    commandBuffer->copyImage(readImage, stagingImage.getImage(), 1, &region);
+    vk::ImageHelper::Copy(renderTarget->image, &stagingImage, gl::Offset(area.x, area.y, 0),
+                          gl::Offset(), gl::Extents(area.width, area.height, 1),
+                          VK_IMAGE_ASPECT_COLOR_BIT, commandBuffer);
 
     // Triggers a full finish.
     // TODO(jmadill): Don't block on asynchronous readback.
@@ -590,7 +558,7 @@ gl::Error FramebufferVk::getCommandGraphNodeForDraw(const gl::Context *context,
         ASSERT(colorRenderTarget);
 
         // TODO(jmadill): Use automatic layout transition. http://anglebug.com/2361
-        colorRenderTarget->image->getImage().changeLayoutWithStages(
+        colorRenderTarget->image->changeLayoutWithStages(
             VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
             VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
             commandBuffer);
@@ -606,7 +574,7 @@ gl::Error FramebufferVk::getCommandGraphNodeForDraw(const gl::Context *context,
         VkImageAspectFlags aspectFlags = (format.depthBits > 0 ? VK_IMAGE_ASPECT_DEPTH_BIT : 0) |
                                          (format.stencilBits > 0 ? VK_IMAGE_ASPECT_STENCIL_BIT : 0);
 
-        depthStencilRenderTarget->image->getImage().changeLayoutWithStages(
+        depthStencilRenderTarget->image->changeLayoutWithStages(
             aspectFlags, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
             VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT,
             commandBuffer);
