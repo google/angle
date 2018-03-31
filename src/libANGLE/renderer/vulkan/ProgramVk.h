@@ -14,8 +14,8 @@
 
 #include "libANGLE/Constants.h"
 #include "libANGLE/renderer/ProgramImpl.h"
+#include "libANGLE/renderer/vulkan/DynamicBuffer.h"
 #include "libANGLE/renderer/vulkan/RendererVk.h"
-#include "libANGLE/renderer/vulkan/StreamingBuffer.h"
 #include "libANGLE/renderer/vulkan/vk_utils.h"
 
 namespace rx
@@ -153,7 +153,7 @@ class ProgramVk : public ProgramImpl
         DefaultUniformBlock();
         ~DefaultUniformBlock();
 
-        StreamingBuffer storage;
+        DynamicBuffer storage;
 
         // Shadow copies of the shader uniform data.
         angle::MemoryBuffer uniformData;

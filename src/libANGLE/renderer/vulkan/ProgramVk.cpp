@@ -16,7 +16,6 @@
 #include "libANGLE/renderer/vulkan/DynamicDescriptorPool.h"
 #include "libANGLE/renderer/vulkan/GlslangWrapper.h"
 #include "libANGLE/renderer/vulkan/RendererVk.h"
-#include "libANGLE/renderer/vulkan/StreamingBuffer.h"
 #include "libANGLE/renderer/vulkan/TextureVk.h"
 
 namespace rx
@@ -25,7 +24,7 @@ namespace rx
 namespace
 {
 
-constexpr size_t kUniformBlockStreamingBufferMinSize = 256 * 128;
+constexpr size_t kUniformBlockDynamicBufferMinSize = 256 * 128;
 
 gl::Error InitDefaultUniformBlock(const gl::Context *context,
                                   gl::Shader *shader,
@@ -115,7 +114,7 @@ void ReadFromDefaultUniformBlock(int componentCount,
 }
 
 vk::Error SyncDefaultUniformBlock(ContextVk *contextVk,
-                                  StreamingBuffer &streamingBuffer,
+                                  DynamicBuffer &dynamicBuffer,
                                   const angle::MemoryBuffer &bufferData,
                                   uint32_t *outOffset,
                                   bool *outBufferModified)
@@ -124,11 +123,11 @@ vk::Error SyncDefaultUniformBlock(ContextVk *contextVk,
     uint8_t *data       = nullptr;
     VkBuffer *outBuffer = nullptr;
     uint32_t offset;
-    ANGLE_TRY(streamingBuffer.allocate(contextVk, bufferData.size(), &data, outBuffer, &offset,
-                                       outBufferModified));
+    ANGLE_TRY(dynamicBuffer.allocate(contextVk, bufferData.size(), &data, outBuffer, &offset,
+                                     outBufferModified));
     *outOffset = offset;
     memcpy(data, bufferData.data(), bufferData.size());
-    ANGLE_TRY(streamingBuffer.flush(contextVk));
+    ANGLE_TRY(dynamicBuffer.flush(contextVk));
     return vk::NoError();
 }
 
@@ -159,7 +158,7 @@ gl::Shader *GetShader(const gl::ProgramState &programState, uint32_t shaderIndex
 
 ProgramVk::DefaultUniformBlock::DefaultUniformBlock()
     : storage(VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
-              kUniformBlockStreamingBufferMinSize),
+              kUniformBlockDynamicBufferMinSize),
       uniformData(),
       uniformsDirty(false),
       uniformLayout()

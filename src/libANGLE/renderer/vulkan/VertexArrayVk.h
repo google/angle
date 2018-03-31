@@ -21,7 +21,7 @@ class DrawCallParams;
 namespace rx
 {
 class BufferVk;
-class StreamingBuffer;
+class DynamicBuffer;
 
 class VertexArrayVk : public VertexArrayImpl
 {
@@ -32,8 +32,9 @@ class VertexArrayVk : public VertexArrayImpl
     void destroy(const gl::Context *context) override;
 
     gl::Error streamVertexData(const gl::Context *context,
-                               StreamingBuffer *stream,
+                               DynamicBuffer *dynamicBuffer,
                                const gl::DrawCallParams &drawCallParams);
+
     gl::Error syncState(const gl::Context *context,
                         const gl::VertexArray::DirtyBits &dirtyBits,
                         const gl::VertexArray::DirtyAttribBitsArray &attribBits,

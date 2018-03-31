@@ -13,8 +13,8 @@
 #include <vulkan/vulkan.h>
 
 #include "libANGLE/renderer/ContextImpl.h"
+#include "libANGLE/renderer/vulkan/DynamicBuffer.h"
 #include "libANGLE/renderer/vulkan/DynamicDescriptorPool.h"
-#include "libANGLE/renderer/vulkan/StreamingBuffer.h"
 #include "libANGLE/renderer/vulkan/vk_cache_utils.h"
 
 namespace rx
@@ -190,8 +190,8 @@ class ContextVk : public ContextImpl
     VkClearValue mClearColorValue;
     VkClearValue mClearDepthStencilValue;
 
-    StreamingBuffer mStreamingVertexData;
-    StreamingBuffer mStreamingIndexData;
+    DynamicBuffer mDynamicVertexData;
+    DynamicBuffer mDynamicIndexData;
 
     vk::LineLoopHandler mLineLoopHandler;
 };

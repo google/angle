@@ -3,7 +3,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// StreamingBuffer:
+// DynamicBuffer:
 //    Create, map and flush buffers as needed to hold data, returning a handle and offset for each
 //    chunk.
 //
@@ -16,13 +16,13 @@
 namespace rx
 {
 
-class StreamingBuffer : public ResourceVk
+class DynamicBuffer : public ResourceVk
 {
   public:
-    StreamingBuffer(VkBufferUsageFlags usage, size_t minSize);
+    DynamicBuffer(VkBufferUsageFlags usage, size_t minSize);
     void init(size_t alignment);
     bool valid();
-    ~StreamingBuffer();
+    ~DynamicBuffer();
     vk::Error allocate(ContextVk *context,
                        size_t sizeInBytes,
                        uint8_t **ptrOut,

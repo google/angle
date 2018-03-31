@@ -17,11 +17,9 @@
 
 namespace rx
 {
-
 namespace
 {
-
-constexpr int kLineLoopStreamingBufferMinSize = 1024 * 1024;
+constexpr int kLineLoopDynamicBufferMinSize = 1024 * 1024;
 
 GLenum DefaultGLErrorCode(VkResult result)
 {
@@ -1179,13 +1177,13 @@ void GarbageObject::destroy(VkDevice device)
 
 LineLoopHandler::LineLoopHandler()
     : mObserverBinding(this, 0u),
-      mStreamingLineLoopIndicesData(
-          new StreamingBuffer(VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
-                              kLineLoopStreamingBufferMinSize)),
+      mDynamicLineLoopIndicesData(
+          new DynamicBuffer(VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
+                            kLineLoopDynamicBufferMinSize)),
       mLineLoopIndexBuffer(VK_NULL_HANDLE),
       mLineLoopIndexBufferOffset(VK_NULL_HANDLE)
 {
-    mStreamingLineLoopIndicesData->init(1);
+    mDynamicLineLoopIndicesData->init(1);
 }
 
 LineLoopHandler::~LineLoopHandler() = default;
@@ -1204,7 +1202,7 @@ gl::Error LineLoopHandler::createIndexBuffer(ContextVk *contextVk, int firstVert
     {
         uint32_t *indices = nullptr;
         size_t allocateBytes = sizeof(uint32_t) * (count + 1);
-        ANGLE_TRY(mStreamingLineLoopIndicesData->allocate(
+        ANGLE_TRY(mDynamicLineLoopIndicesData->allocate(
             contextVk, allocateBytes, reinterpret_cast<uint8_t **>(&indices), &mLineLoopIndexBuffer,
             &mLineLoopIndexBufferOffset, nullptr));
 
@@ -1217,9 +1215,9 @@ gl::Error LineLoopHandler::createIndexBuffer(ContextVk *contextVk, int firstVert
         *indices = unsignedFirstVertex;
 
         // Since we are not using the VK_MEMORY_PROPERTY_HOST_COHERENT_BIT flag when creating the
-        // device memory in the StreamingBuffer, we always need to make sure we flush it after
+        // device memory in the DynamicBuffer, we always need to make sure we flush it after
         // writing.
-        ANGLE_TRY(mStreamingLineLoopIndicesData->flush(contextVk));
+        ANGLE_TRY(mDynamicLineLoopIndicesData->flush(contextVk));
 
         mLineLoopBufferFirstIndex = firstVertex;
         mLineLoopBufferLastIndex  = lastVertex;
@@ -1248,7 +1246,7 @@ gl::Error LineLoopHandler::createIndexBufferFromElementArrayBuffer(ContextVk *co
 
     auto unitSize = (indexType == VK_INDEX_TYPE_UINT16 ? sizeof(uint16_t) : sizeof(uint32_t));
     size_t allocateBytes = unitSize * (count + 1);
-    ANGLE_TRY(mStreamingLineLoopIndicesData->allocate(
+    ANGLE_TRY(mDynamicLineLoopIndicesData->allocate(
         contextVk, allocateBytes, reinterpret_cast<uint8_t **>(&indices), &mLineLoopIndexBuffer,
         &mLineLoopIndexBufferOffset, nullptr));
 
@@ -1259,22 +1257,22 @@ gl::Error LineLoopHandler::createIndexBufferFromElementArrayBuffer(ContextVk *co
     std::array<VkBufferCopy, 2> copies = {{copy1, copy2}};
 
     vk::CommandBuffer *commandBuffer;
-    mStreamingLineLoopIndicesData->beginWriteResource(contextVk->getRenderer(), &commandBuffer);
+    mDynamicLineLoopIndicesData->beginWriteResource(contextVk->getRenderer(), &commandBuffer);
 
     Serial currentSerial = contextVk->getRenderer()->getCurrentQueueSerial();
-    bufferVk->onReadResource(mStreamingLineLoopIndicesData->getCurrentWritingNode(currentSerial),
+    bufferVk->onReadResource(mDynamicLineLoopIndicesData->getCurrentWritingNode(currentSerial),
                              currentSerial);
     commandBuffer->copyBuffer(bufferVk->getVkBuffer().getHandle(), mLineLoopIndexBuffer, 2,
                               copies.data());
 
-    ANGLE_TRY(mStreamingLineLoopIndicesData->flush(contextVk));
+    ANGLE_TRY(mDynamicLineLoopIndicesData->flush(contextVk));
     return gl::NoError();
 }
 
 void LineLoopHandler::destroy(VkDevice device)
 {
     mObserverBinding.reset();
-    mStreamingLineLoopIndicesData->destroy(device);
+    mDynamicLineLoopIndicesData->destroy(device);
 }
 
 gl::Error LineLoopHandler::draw(int count, CommandBuffer *commandBuffer)
@@ -1288,7 +1286,7 @@ gl::Error LineLoopHandler::draw(int count, CommandBuffer *commandBuffer)
 
 ResourceVk *LineLoopHandler::getLineLoopBufferResource()
 {
-    return mStreamingLineLoopIndicesData.get();
+    return mDynamicLineLoopIndicesData.get();
 }
 
 void LineLoopHandler::onSubjectStateChange(const gl::Context *context,

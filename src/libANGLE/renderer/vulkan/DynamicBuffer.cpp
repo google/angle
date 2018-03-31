@@ -3,12 +3,12 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// StreamingBuffer:
+// DynamicBuffer:
 //    Create, map and flush buffers as needed to hold data, returning a handle and offset for each
 //    chunk.
 //
 
-#include "StreamingBuffer.h"
+#include "libANGLE/renderer/vulkan/DynamicBuffer.h"
 
 #include "anglebase/numerics/safe_math.h"
 
@@ -17,7 +17,7 @@
 
 namespace rx
 {
-StreamingBuffer::StreamingBuffer(VkBufferUsageFlags usage, size_t minSize)
+DynamicBuffer::DynamicBuffer(VkBufferUsageFlags usage, size_t minSize)
     : mUsage(usage),
       mMinSize(minSize),
       mNextWriteOffset(0),
@@ -28,28 +28,28 @@ StreamingBuffer::StreamingBuffer(VkBufferUsageFlags usage, size_t minSize)
 {
 }
 
-void StreamingBuffer::init(size_t alignment)
+void DynamicBuffer::init(size_t alignment)
 {
     ASSERT(alignment > 0);
     mAlignment = alignment;
 }
 
-StreamingBuffer::~StreamingBuffer()
+DynamicBuffer::~DynamicBuffer()
 {
     ASSERT(mAlignment == 0);
 }
 
-bool StreamingBuffer::valid()
+bool DynamicBuffer::valid()
 {
     return mAlignment > 0;
 }
 
-vk::Error StreamingBuffer::allocate(ContextVk *context,
-                                    size_t sizeInBytes,
-                                    uint8_t **ptrOut,
-                                    VkBuffer *handleOut,
-                                    uint32_t *offsetOut,
-                                    bool *outNewBufferAllocated)
+vk::Error DynamicBuffer::allocate(ContextVk *context,
+                                  size_t sizeInBytes,
+                                  uint8_t **ptrOut,
+                                  VkBuffer *handleOut,
+                                  uint32_t *offsetOut,
+                                  bool *outNewBufferAllocated)
 {
     ASSERT(valid());
     RendererVk *renderer = context->getRenderer();
@@ -121,7 +121,7 @@ vk::Error StreamingBuffer::allocate(ContextVk *context,
     return vk::NoError();
 }
 
-vk::Error StreamingBuffer::flush(ContextVk *context)
+vk::Error DynamicBuffer::flush(ContextVk *context)
 {
     if (mNextWriteOffset > mLastFlushOffset)
     {
@@ -138,19 +138,19 @@ vk::Error StreamingBuffer::flush(ContextVk *context)
     return vk::NoError();
 }
 
-void StreamingBuffer::destroy(VkDevice device)
+void DynamicBuffer::destroy(VkDevice device)
 {
     mAlignment = 0;
     mBuffer.destroy(device);
     mMemory.destroy(device);
 }
 
-VkBuffer StreamingBuffer::getCurrentBufferHandle() const
+VkBuffer DynamicBuffer::getCurrentBufferHandle() const
 {
     return mBuffer.getHandle();
 }
 
-void StreamingBuffer::setMinimumSize(size_t minSize)
+void DynamicBuffer::setMinimumSize(size_t minSize)
 {
     // This will really only have an effect next time we call allocate.
     mMinSize = minSize;
